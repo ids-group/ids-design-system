@@ -1,0 +1,67 @@
+/* Sidenav parent container only.
+ *
+ * Item / group / group-label styles live in the child components
+ * (sidenav-item.component.scss / sidenav-group.component.scss) so that
+ * Angular's emulated encapsulation `_ngcontent` markers match the
+ * elements they target. Cross-component selectors like `.sidenav .item`
+ * would never match because the `.item` lives in the child's view.
+ *
+ * Collapsed-state visuals for inner items / labels are handled in the
+ * child components via `:host-context(.sidenav.collapsed)`.
+ */
+
+:host {
+  --ds-sidenav-bg:              var(--surface-default);
+  --ds-sidenav-border:          var(--border-divider);
+  --ds-sidenav-width:           var(--sidenav-w);
+  --ds-sidenav-width-collapsed: var(--sidenav-w-collapsed);
+  --ds-sidenav-mark-bg:         var(--brand);
+  --ds-sidenav-mark-fg:         var(--brand-on);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  width: var(--ds-sidenav-width);
+  background: var(--ds-sidenav-bg);
+  border-right: var(--bw-default) solid var(--ds-sidenav-border);
+  padding: var(--s-5);
+}
+
+.brand {
+  font: var(--fw-extrabold) var(--fs-h5)/var(--lh-snug) var(--font-sans);
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-2) var(--s-6);
+}
+
+.mark {
+  width: var(--sidenav-logo-size);
+  height: var(--sidenav-logo-size);
+  border-radius: var(--r-md);
+  background: var(--ds-sidenav-mark-bg);
+  display: grid;
+  place-items: center;
+  color: var(--ds-sidenav-mark-fg);
+  font-size: var(--fs-s);
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font: var(--fw-extrabold) var(--fs-h5)/var(--lh-snug) var(--font-sans);
+}
+
+:host(.collapsed) {
+  width: var(--ds-sidenav-width-collapsed);
+  padding: var(--s-3);
+  align-items: center;
+
+  .brand {
+    padding: var(--sidenav-pad-brand-y) 0 var(--sidenav-pad-brand-b);
+    justify-content: center;
+  }
+
+  .brand-name {
+    display: none;
+  }
+}

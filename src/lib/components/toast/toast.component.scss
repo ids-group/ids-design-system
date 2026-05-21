@@ -1,0 +1,33 @@
+/* Toast pill — single notification surface. Consumed by ToastRegion (service-
+   driven runtime stack) and by static showcases. */
+
+:host { display: block; }
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  background: var(--surface-overlay);
+  border: var(--bw-default) solid var(--border-default);
+  border-left: var(--toast-bar-w) solid var(--brand);
+  border-radius: var(--r-lg);
+  padding: var(--s-3) var(--s-4);
+  box-shadow: var(--shadow-toast);
+  min-width: var(--toast-minw);
+  max-width: var(--toast-maxw);
+  animation: ds-toast-in var(--dur-slow) var(--ease-decelerate);
+
+  .icon  { color: var(--brand); flex-shrink: 0; margin-top: var(--s-0-5); }
+  .body  { flex: 1; font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans); color: var(--text-secondary); }
+  .title { font-weight: var(--fw-bold); color: var(--text-primary); margin-bottom: var(--s-0-5); }
+  .close { border: 0; background: transparent; color: var(--icon-default); cursor: pointer; padding: var(--s-0-5); }
+
+  &.success { border-left-color: var(--success);       .icon { color: var(--success); } }
+  &.warning { border-left-color: var(--warning-hover); .icon { color: var(--warning-hover); } }
+  &.error   { border-left-color: var(--danger);        .icon { color: var(--danger); } }
+}
+
+@keyframes ds-toast-in {
+  from { transform: translateY(calc(var(--s-2) * -1)); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}

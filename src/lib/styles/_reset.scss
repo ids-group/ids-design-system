@@ -1,0 +1,12 @@
+// Reset — ported from CLAUDE_DESIGN_DS/tokens.css §Base.
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background: var(--surface-canvas);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+button, input, select, textarea { font-family: inherit; }

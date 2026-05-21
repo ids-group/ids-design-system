@@ -1,0 +1,123 @@
+/* ============================================================
+   DROPDOWN (custom-styled popover)
+   Trigger styled like .field .control; panel ported from
+   vendor/claude-design-ds menu / popover rules.
+   ============================================================ */
+:host {
+  display: block;
+  width: 100%;
+}
+
+.dropdown-label {
+  font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--s-1);
+  margin-bottom: var(--s-1-5);
+}
+
+.dropdown {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  width: 100%;
+  background: var(--surface-default);
+  border: var(--bw-default) solid var(--border-default);
+  border-radius: var(--r-md);
+  padding: var(--field-pad-y) var(--field-pad-x);
+  height: var(--hit-cozy);
+  font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-standard),
+    box-shadow var(--dur-fast) var(--ease-standard),
+    background var(--dur-fast) var(--ease-standard);
+
+  .trigger-text {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &.is-placeholder {
+      color: var(--text-tertiary);
+    }
+  }
+
+  .chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--icon-default);
+    transition: transform var(--dur-fast) var(--ease-standard);
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--border-strong);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: var(--focus-field);
+  }
+
+  &.open {
+    border-color: var(--brand);
+    box-shadow: var(--focus-field);
+
+    .chevron {
+      transform: rotate(180deg);
+    }
+  }
+
+  &.error {
+    background: var(--danger-subtle);
+    border-color: var(--danger);
+
+    &:focus-visible {
+      box-shadow: var(--focus-field-error);
+    }
+  }
+
+  &.disabled,
+  &:disabled {
+    background: var(--surface-disabled);
+    border-color: var(--border-disabled);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+    opacity: var(--opacity-muted);
+
+    .chevron { color: var(--icon-muted); }
+  }
+
+  &.readonly {
+    background: var(--surface-secondary);
+    border-color: var(--border-divider);
+    color: var(--text-secondary);
+    cursor: default;
+
+    &:hover { border-color: var(--border-divider); }
+    .chevron { display: none; }
+  }
+
+  &.sm {
+    height: var(--hit-min);
+    padding: 0 var(--s-2);
+  }
+
+  &.lg {
+    height: var(--field-h-lg);
+  }
+}
+
+/* ============================================================
+   PANEL — rendered via CDK Overlay, lives outside :host. Styles
+   for the portaled panel live in
+   prototype/ds/src/lib/styles/_dropdown-overlay.scss, keyed off
+   the `ds-dropdown-panel` class set on the overlay config.
+   ============================================================ */

@@ -1,0 +1,17 @@
+// Public DS stylesheet entry. Consumers import once at the top of their styles.scss:
+//   @use 'styles/ds';
+//
+// Bundles the default theme (palette primitives) for out-of-the-box rendering.
+// Advanced consumers who want a different palette can skip this entry and
+// cherry-pick: @use 'themes/theme-X'; @use 'styles/tokens'; @use 'styles/…';
+
+@forward '../themes/theme-default';
+@forward 'tokens';
+@forward 'tokens-charts';
+@forward 'reset';
+@forward 'typography';
+@forward 'layout-utils';
+@forward 'scrollbar';
+@forward 'icon-base';
+@forward 'dropdown-overlay';
+@forward 'skeleton-shimmer';

@@ -1,0 +1,9 @@
+@for (entry of entries(); track entry.id) {
+  <ds-toast
+    [variant]="entry.variant"
+    [title]="entry.title ?? ''"
+    [message]="entry.body"
+    [dismissible]="entry.dismissible ?? false"
+    (dismissed)="remove(entry.id)"
+  />
+}

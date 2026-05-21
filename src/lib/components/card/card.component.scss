@@ -1,0 +1,49 @@
+/* ============================================================
+   CARD
+   Ported verbatim from vendor/claude-design-ds/components.css (lines 603-614).
+   Padding modifiers (padding-none/-sm/-md/-lg) are our addition; the
+   base .card already carries padding var(--s-6) which equals .padding-md.
+   ============================================================ */
+:host {
+  display: block;
+}
+
+:host {
+  display: block;
+
+  // Public component variables — override via higher-specificity selector
+  // (e.g. `ds-card.kpi { --ds-card-pad: var(--s-3); }` or in theme files:
+  // `[data-brand="..."] ds-card { --ds-card-pad: ...; }`).
+  --ds-card-bg:           var(--surface-default);
+  --ds-card-border:       var(--border-divider);
+  --ds-card-radius:       var(--r-lg);
+  --ds-card-pad:          var(--s-6);
+  --ds-card-shadow:       none;
+  --ds-card-shadow-hover: var(--z100);
+  --ds-card-focus-shadow: var(--focus-ring);
+  --ds-card-hover-lift:   var(--card-hover-lift);
+}
+
+.card {
+  background: var(--ds-card-bg);
+  border: var(--bw-default) solid var(--ds-card-border);
+  border-radius: var(--ds-card-radius);
+  padding: var(--ds-card-pad);
+  box-shadow: var(--ds-card-shadow);
+  transition: box-shadow var(--dur-base) var(--ease-standard), transform var(--dur-base) var(--ease-standard);
+
+  &.flat { box-shadow: none; }
+  &.raised { box-shadow: var(--ds-card-shadow-hover); border-color: transparent; }
+  &.hover:hover {
+    box-shadow: var(--ds-card-shadow-hover);
+    transform: translateY(calc(var(--ds-card-hover-lift) * -1));
+  }
+  &.interactive { cursor: pointer; }
+  &.interactive:focus-visible { outline: none; box-shadow: var(--ds-card-focus-shadow); }
+
+  // Modifiers re-set the token on `.card` (higher specificity than `:host`).
+  &.padding-none { --ds-card-pad: 0; }
+  &.padding-sm   { --ds-card-pad: var(--s-4); }
+  &.padding-md   { --ds-card-pad: var(--s-6); }
+  &.padding-lg   { --ds-card-pad: var(--s-8); }
+}

@@ -1,0 +1,8 @@
+<button type="button" class="head" [attr.aria-expanded]="expanded()" (click)="toggle()">
+  <span>{{ title() }}</span>
+  <ng-content select="[badge]"></ng-content>
+  <ds-icon name="chevronRight" class="chev" [size]="16" />
+</button>
+@if (expanded()) {
+  <div class="body"><ng-content></ng-content></div>
+}

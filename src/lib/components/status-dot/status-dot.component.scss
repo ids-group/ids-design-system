@@ -1,0 +1,31 @@
+/* Status dot atom — ported verbatim from vendor/claude-design-ds/components.css */
+:host {
+  // inline-flex with explicit 1em height so the dot is vertically centered
+  // against the surrounding text line regardless of the parent layout mode
+  // (inline, flex row, grid cell). Width shrinks to dot intrinsic.
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  height: 1em;
+}
+
+.status-dot {
+  --ds-statusdot-size: var(--status-dot-size);
+  --ds-statusdot-color: var(--icon-muted);
+
+  display: block;
+  width: var(--ds-statusdot-size);
+  height: var(--ds-statusdot-size);
+  border-radius: var(--r-pill);
+  flex-shrink: 0;
+  background: var(--ds-statusdot-color);
+
+  &.planning  { --ds-statusdot-color: var(--icon-muted); }
+  &.confirmed { --ds-statusdot-color: var(--brand); }
+  &.active    { --ds-statusdot-color: var(--success); }
+  &.completed { --ds-statusdot-color: var(--icon-strong); }
+  &.warning   { --ds-statusdot-color: var(--warning-hover); }
+  &.error     { --ds-statusdot-color: var(--danger); }
+  &.secondary { --ds-statusdot-color: var(--secondary); }
+}

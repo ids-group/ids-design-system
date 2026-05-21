@@ -1,0 +1,45 @@
+<!-- Selector-scoped slots ([icon], [trailing]) coexist with no default
+     <ng-content> here — projection goes via attributes only, so consumers
+     can compose icon + label + arbitrary trailing content (status pill,
+     status icon, etc.). -->
+@if (routerLink()) {
+  <a
+    [routerLink]="routerLink()"
+    routerLinkActive="active"
+    [class]="linkClasses()"
+  >
+    @if (icon()) {
+      <ds-icon class="icon" [name]="icon()!" [size]="20"></ds-icon>
+    } @else {
+      <span class="icon"><ng-content select="[icon]"></ng-content></span>
+    }
+    @if (label()) {
+      <span class="item-label">{{ label() }}</span>
+    }
+    <span class="trailing"><ng-content select="[trailing]"></ng-content></span>
+    @if (badge() !== null) {
+      <span class="count">{{ badge() }}</span>
+    }
+    @if (hasAlert()) {
+      <span class="alert"></span>
+    }
+  </a>
+} @else {
+  <a [href]="href() || '#'" [class]="linkClasses()">
+    @if (icon()) {
+      <ds-icon class="icon" [name]="icon()!" [size]="20"></ds-icon>
+    } @else {
+      <span class="icon"><ng-content select="[icon]"></ng-content></span>
+    }
+    @if (label()) {
+      <span class="item-label">{{ label() }}</span>
+    }
+    <span class="trailing"><ng-content select="[trailing]"></ng-content></span>
+    @if (badge() !== null) {
+      <span class="count">{{ badge() }}</span>
+    }
+    @if (hasAlert()) {
+      <span class="alert"></span>
+    }
+  </a>
+}

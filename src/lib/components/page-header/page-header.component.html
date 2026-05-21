@@ -1,0 +1,16 @@
+<header [class]="classes()">
+  <ng-content select="[breadcrumbs]"></ng-content>
+  <div class="row title-row">
+    <div class="title-block">
+      @if (eyebrow()) { <div class="eyebrow">{{ eyebrow() }}</div> }
+      <div class="title-line">
+        <h1 class="title">{{ title() }}</h1>
+        <ng-content select="[title-badge]"></ng-content>
+      </div>
+      @if (sub()) { <p class="sub">{{ sub() }}</p> }
+    </div>
+    <div class="actions"><ng-content select="[actions]"></ng-content></div>
+  </div>
+  <div class="row meta"><ng-content select="[meta]"></ng-content></div>
+  <ng-content select="[tabs]"></ng-content>
+</header>

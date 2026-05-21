@@ -1,0 +1,87 @@
+// Dropdown panel styles — GLOBAL because the panel is portaled via CDK
+// Overlay outside the host component's DOM tree, so emulated encapsulation
+// (and any `:host ::ng-deep` selectors) cannot reach it. The component sets
+// `panelClass: 'ds-dropdown-panel'` on the overlay config; this partial
+// declares the matching rules so the portaled panel renders styled.
+
+.ds-dropdown-panel {
+  .dropdown-panel {
+    // Fill the cdk-overlay-pane width (set from trigger.getBoundingClientRect()
+    // in dropdown.component.ts). Without `width: 100%` the panel is a flex
+    // child of the pane and shrinks to its own option content width.
+    width: 100%;
+    background: var(--surface-overlay);
+    border: var(--bw-default) solid var(--border-default);
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-popover);
+    padding: var(--s-1);
+    max-height: 320px;
+    overflow-y: auto;
+    z-index: var(--layer-popover);
+  }
+
+  .dropdown-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    width: 100%;
+    padding: var(--s-2) var(--s-2-5);
+    border: 0;
+    background: transparent;
+    font: var(--fw-medium) var(--fs-s)/var(--lh-flat) var(--font-sans);
+    color: var(--text-primary);
+    cursor: pointer;
+    border-radius: var(--r-sm);
+    text-align: left;
+
+    .option-icon {
+      color: var(--icon-default);
+      flex: 0 0 auto;
+    }
+
+    .option-label {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .option-check {
+      color: var(--brand);
+      flex: 0 0 auto;
+    }
+
+    &:hover:not(.is-disabled),
+    &.is-active:not(.is-disabled) {
+      background: var(--surface-secondary);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    &.is-selected {
+      background: var(--brand-subtle);
+      color: var(--brand-strong);
+
+      .option-icon { color: var(--brand-strong); }
+    }
+
+    &.is-disabled {
+      color: var(--text-disabled);
+      cursor: not-allowed;
+      opacity: var(--opacity-muted);
+    }
+  }
+}

@@ -1,0 +1,100 @@
+:host {
+  display: contents;
+}
+
+.modal {
+  --ds-modal-bg:                var(--surface-overlay);
+  --ds-modal-radius:            var(--r-lg);
+  --ds-modal-shadow:            var(--shadow-modal);
+  --ds-modal-divider:           var(--border-divider);
+  --ds-modal-title-fg:          var(--text-primary);
+  --ds-modal-title-fg-danger:   var(--danger-text);
+  --ds-modal-close-fg:          var(--icon-default);
+  --ds-modal-close-fg-hover:    var(--icon-strong);
+  --ds-modal-backdrop:          var(--surface-scrim);
+
+  background: var(--ds-modal-bg);
+  border-radius: var(--ds-modal-radius);
+  box-shadow: var(--ds-modal-shadow);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow: hidden;
+
+  &.sm { width: var(--modal-w-sm); }
+  &.md { width: var(--modal-w-md); }
+  &.lg { width: var(--modal-w-lg); }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--s-4) var(--s-5);
+    border-bottom: var(--bw-default) solid var(--ds-modal-divider);
+  }
+
+  .title {
+    font: var(--fw-bold) var(--fs-h5)/var(--lh-snug) var(--font-heading);
+    margin: 0;
+    color: var(--ds-modal-title-fg);
+  }
+
+  .close {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: var(--ds-modal-close-fg);
+    width: var(--modal-close-size);
+    height: var(--modal-close-size);
+    display: grid;
+    place-items: center;
+
+    &:hover { color: var(--ds-modal-close-fg-hover); }
+  }
+
+  .body {
+    padding: var(--s-5);
+    overflow-y: auto;
+  }
+
+  .actions {
+    display: flex;
+    gap: var(--s-3);
+    justify-content: flex-end;
+    padding: var(--s-4) var(--s-5);
+    border-top: var(--bw-default) solid var(--ds-modal-divider);
+  }
+
+  &.danger {
+    .title { color: var(--ds-modal-title-fg-danger); }
+  }
+
+  .impact {
+    margin-top: var(--s-3);
+    &:empty { display: none; }
+
+    .list {
+      margin: var(--s-1) 0 0;
+      padding-left: var(--s-4);
+      font: var(--fw-regular) var(--fs-xs)/var(--lh-base) var(--font-sans);
+      color: var(--warning-text);
+    }
+  }
+}
+
+.modal-backdrop {
+  --ds-modal-backdrop: var(--surface-scrim);
+
+  position: fixed;
+  inset: 0;
+  background: var(--ds-modal-backdrop);
+  z-index: var(--layer-modal);
+  display: grid;
+  place-items: center;
+  animation: fade-in var(--dur-base) var(--ease-decelerate);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

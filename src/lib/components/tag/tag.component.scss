@@ -1,0 +1,40 @@
+/* Tag — styles on host. Variants: solid (default) + .ghost. */
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tag-gap);
+  padding: var(--tag-pad-y) var(--tag-pad-x);
+  border-radius: var(--r-md);
+  background: var(--brand);
+  color: var(--brand-on);
+  font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
+}
+
+:host(.closable) {
+  padding-right: var(--tag-pad-x-close);
+}
+
+:host(.ghost) {
+  background: var(--surface-secondary);
+  color: var(--text-primary);
+  border: var(--bw-default) solid var(--border-divider);
+  padding: calc(var(--tag-pad-y) - 1px) calc(var(--tag-pad-x) - 1px);
+}
+
+:host(.ghost.closable) {
+  padding-right: calc(var(--tag-pad-x-close) - 1px);
+}
+
+.close {
+  cursor: pointer;
+  border-radius: var(--r-sm);
+  padding: var(--tag-close-pad);
+  margin-left: var(--tag-close-pad);
+  background: color-mix(in oklab, currentColor calc(var(--opacity-state-hover) * 100%), transparent);
+  transition: background var(--dur-fast) var(--ease-standard);
+
+  &:hover {
+    background: color-mix(in oklab, currentColor calc(var(--opacity-state-pressed) * 100%), transparent);
+  }
+}

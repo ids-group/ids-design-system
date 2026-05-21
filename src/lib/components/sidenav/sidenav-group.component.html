@@ -1,0 +1,34 @@
+<!-- Single <ng-content> outside any @if blocks. Angular accepts only one
+     default slot per component; duplicate <ng-content> elements caused
+     children to silently drop when control flow chose a non-matching branch. -->
+@if (expandable()) {
+  <button
+    type="button"
+    class="group-header"
+    (click)="toggle()"
+    [attr.aria-expanded]="expanded()"
+  >
+    @if (icon()) {
+      <ds-icon class="group-icon" [name]="icon()!" [size]="18"></ds-icon>
+    } @else {
+      <!-- `[ds-group-icon]` is selector-distinct from `[icon]` slots used on
+           sidenav-item children, so projected icons don't get swallowed when
+           a consumer puts items inside the group. -->
+      <span class="group-icon"><ng-content select="[ds-group-icon]"></ng-content></span>
+    }
+    @if (label()) {
+      <span class="group-title">{{ label() }}</span>
+    }
+    <ds-icon
+      class="group-caret"
+      [class.open]="expanded()"
+      name="chevronDown"
+      [size]="14"
+    ></ds-icon>
+  </button>
+} @else if (label()) {
+  <span class="group-label">{{ label() }}</span>
+}
+<div class="group-body" [class.hidden]="expandable() && !expanded()">
+  <ng-content></ng-content>
+</div>

@@ -1,0 +1,30 @@
+:host {
+  display: block;
+  width: 100%;
+  height: var(--progress-h);
+  background: var(--surface-muted);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+
+  > span {
+    display: block;
+    height: 100%;
+    background: var(--brand);
+    border-radius: var(--r-pill);
+    transition: width var(--dur-base) var(--ease-standard);
+  }
+}
+
+:host(.success) > span { background: var(--success); }
+:host(.warn)    > span { background: var(--warning-hover); }
+:host(.error)   > span { background: var(--danger); }
+
+:host(.indeterminate) > span {
+  width: 30%;
+  animation: progress-indet var(--dur-loop-slow) var(--ease-standard) infinite;
+}
+
+@keyframes progress-indet {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}

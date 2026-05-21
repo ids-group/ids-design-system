@@ -1,0 +1,23 @@
+<nav [class]="tabsClasses()">
+  @for (tab of tabs(); track $index) {
+    <button
+      type="button"
+      [class]="tabClasses($index, tab.disabled())"
+      [disabled]="tab.disabled()"
+      (click)="select($index, tab.disabled())"
+    >
+      @if (tab.icon()) {
+        <ds-icon [name]="tab.icon()!" [size]="14"></ds-icon>
+      }
+      <span>{{ tab.label() }}</span>
+      @if (tab.count() !== null) {
+        <span class="badge neutral count">{{ tab.count() }}</span>
+      }
+    </button>
+  }
+</nav>
+<div class="panel">
+  @if (selectedTemplate(); as tpl) {
+    <ng-container *ngTemplateOutlet="tpl"></ng-container>
+  }
+</div>

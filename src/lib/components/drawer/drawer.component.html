@@ -1,0 +1,12 @@
+@if (open()) {
+  <div [class]="classes()">
+    <header class="header">
+      <h4 class="title">{{ title() }}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="onClose()">
+        <ds-icon name="x" [size]="16" />
+      </button>
+    </header>
+    <div class="body"><ng-content select="[drawer-body]"></ng-content></div>
+    <div class="footer"><ng-content select="[drawer-footer]"></ng-content></div>
+  </div>
+}

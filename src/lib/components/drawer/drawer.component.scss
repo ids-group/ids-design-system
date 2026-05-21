@@ -1,0 +1,66 @@
+/* Drawer — slide-in right-side panel. Host is display:contents so
+   the conditionally-rendered .drawer is the visible layout root. */
+
+:host { display: contents; }
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--drawer-w-md);
+  max-width: 100vw;
+  background: var(--surface-overlay);
+  box-shadow: var(--shadow-modal);
+  z-index: var(--layer-modal);
+  display: flex;
+  flex-direction: column;
+  animation: drawer-in var(--dur-slow) var(--ease-decelerate);
+
+  &.lg { width: var(--drawer-w-lg); }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    padding: var(--s-5) var(--s-6);
+    border-bottom: var(--bw-default) solid var(--border-divider);
+  }
+
+  .title {
+    font: var(--fw-bold) var(--fs-h5)/var(--lh-snug) var(--font-sans);
+    margin: 0;
+    flex: 1;
+  }
+
+  .close {
+    background: transparent;
+    border: 0;
+    width: var(--modal-close-size);
+    height: var(--modal-close-size);
+    color: var(--icon-default);
+    cursor: pointer;
+    padding: 0;
+
+    &:hover { color: var(--icon-strong); }
+  }
+
+  .body {
+    flex: 1;
+    padding: var(--s-6);
+    overflow-y: auto;
+  }
+
+  .footer {
+    padding: var(--s-4) var(--s-6);
+    border-top: var(--bw-default) solid var(--border-divider);
+    display: flex;
+    gap: var(--s-2);
+    justify-content: flex-end;
+  }
+}
+
+@keyframes drawer-in {
+  from { transform: translateX(100%); }
+  to   { transform: none; }
+}

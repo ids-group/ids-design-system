@@ -1,0 +1,45 @@
+/* ============================================================
+   AVATAR
+
+   Group-overlap visuals (border + negative margins for stacked
+   avatars) live in avatar-group.component.scss. They target the
+   projected `<ds-avatar>` host element from inside the
+   `<ds-avatar-group>` view via `::ng-deep`, because emulated
+   encapsulation otherwise scopes both stylesheets independently.
+   ============================================================ */
+:host {
+  --ds-avatar-size:        var(--avatar-md);
+  --ds-avatar-bg:          var(--brand-muted);
+  --ds-avatar-fg:          var(--brand-strong);
+  --ds-avatar-radius:      var(--r-pill);
+  --ds-avatar-ring-color:  var(--surface-default);
+  --ds-avatar-ring-width:  var(--avatar-bw-group);
+
+  display: inline-grid;
+  place-items: center;
+  width: var(--ds-avatar-size);
+  height: var(--ds-avatar-size);
+  border-radius: var(--ds-avatar-radius);
+  background: var(--ds-avatar-bg);
+  color: var(--ds-avatar-fg);
+  font: var(--fw-bold) var(--fs-xs)/var(--lh-flat) var(--font-sans);
+  letter-spacing: var(--ls-wide);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+:host(.xs) { width: var(--avatar-xs); height: var(--avatar-xs); font-size: var(--fs-4xs); }
+:host(.sm) { width: var(--avatar-sm); height: var(--avatar-sm); font-size: var(--fs-3xs); }
+:host(.lg) { width: var(--avatar-lg); height: var(--avatar-lg); font-size: var(--fs-s); }
+
+/* Neutral tint — used by the +N overflow chip in avatar groups. */
+:host(.neutral) {
+  --ds-avatar-bg: var(--surface-secondary);
+  --ds-avatar-fg: var(--text-secondary);
+}

@@ -1,0 +1,86 @@
+:host {
+  display: block;
+}
+
+.empty-state {
+  --ds-empty-state-tile-bg:    var(--surface-tint);
+  --ds-empty-state-tile-fg:    var(--text-secondary);
+  --ds-empty-state-title-fg:   var(--text-primary);
+  --ds-empty-state-body-fg:    var(--text-secondary);
+  --ds-empty-state-body-maxw:  var(--empty-body-maxw);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--s-12) var(--s-6);
+  gap: var(--s-3);
+  position: relative;
+
+  .icon-tile {
+    width: var(--empty-icon-size);
+    height: var(--empty-icon-size);
+    border-radius: var(--r-lg);
+    background: var(--ds-empty-state-tile-bg);
+    color: var(--ds-empty-state-tile-fg);
+    display: grid;
+    place-items: center;
+    margin-bottom: var(--s-2);
+  }
+  .title {
+    font: var(--fw-bold) var(--fs-h5)/var(--lh-snug) var(--font-sans);
+    color: var(--ds-empty-state-title-fg);
+    margin: 0;
+  }
+  .body {
+    font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+    color: var(--ds-empty-state-body-fg);
+    max-width: var(--ds-empty-state-body-maxw);
+    margin: 0;
+  }
+  .cta {
+    margin-top: var(--s-3);
+    display: inline-flex;
+    gap: var(--s-2);
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    &:empty { display: none; margin-top: 0; }
+  }
+
+  .overlay-spin {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 1;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: hsla(0, 0%, 100%, 0.5);
+      backdrop-filter: blur(var(--blur-sm));
+      border-radius: inherit;
+    }
+
+    /* Lift the global .spinner above the scrim ::before. The global
+       _spinner.scss has no positioning; ::before is absolute-inset so
+       without a stacking context the spinner gets covered. */
+    .spinner {
+      position: relative;
+      z-index: 1;
+    }
+  }
+  &.error {
+    --ds-empty-state-tile-bg: var(--danger-subtle);
+    --ds-empty-state-tile-fg: var(--danger-text);
+  }
+
+  &.locked {
+    --ds-empty-state-tile-bg: var(--surface-muted);
+    --ds-empty-state-tile-fg: var(--text-tertiary);
+  }
+}
+

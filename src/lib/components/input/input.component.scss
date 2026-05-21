@@ -1,0 +1,217 @@
+/* ============================================================
+   FIELD (single-line text input subset)
+   Ported from vendor/claude-design-ds/components.css (FIELD block, lines 165–292).
+   Subset scope: base wrapper, label, control box, single-line <input>,
+   hint, addon prefix/suffix, sizes (sm/lg), states (error/success/disabled),
+   hover/focus. Textarea, select, number-stepper and floating-label rules
+   are intentionally omitted — those belong to future Textarea / Select /
+   Number components.
+   ============================================================ */
+:host {
+  --ds-input-bg: var(--surface-default);
+  --ds-input-border: var(--border-default);
+  --ds-input-border-hover: var(--border-strong);
+  --ds-input-border-focus: var(--brand);
+  --ds-input-fg: var(--text-primary);
+  --ds-input-placeholder: var(--text-tertiary);
+  --ds-input-radius: var(--r-md);
+  --ds-input-pad-x: var(--field-pad-x);
+  --ds-input-pad-y: var(--field-pad-y);
+  --ds-input-focus-shadow: var(--focus-field);
+  --ds-input-border-error: var(--danger);
+  --ds-input-bg-error: var(--danger-subtle);
+  --ds-input-border-success: var(--success);
+  --ds-input-bg-disabled: var(--surface-disabled);
+
+  display: block;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1-5);
+  width: 100%;
+
+  .label {
+    font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--s-1);
+
+    .req {
+      color: var(--danger);
+      font-weight: var(--fw-semibold);
+    }
+
+    .optional-marker {
+      color: var(--text-tertiary);
+      font-weight: var(--fw-regular);
+    }
+  }
+
+  .control {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    background: var(--ds-input-bg);
+    border: var(--bw-default) solid var(--ds-input-border);
+    border-radius: var(--ds-input-radius);
+    padding: var(--ds-input-pad-y) var(--ds-input-pad-x);
+    height: var(--hit-cozy);
+    transition:
+      border-color var(--dur-fast) var(--ease-standard),
+      box-shadow var(--dur-fast) var(--ease-standard),
+      background var(--dur-fast) var(--ease-standard);
+
+    input {
+      flex: 1;
+      min-width: 0;
+      appearance: none;
+      -webkit-appearance: none;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      color: var(--ds-input-fg);
+
+      &::placeholder {
+        color: var(--ds-input-placeholder);
+      }
+
+      // We render our own clear button (see .clear-btn below) — suppress
+      // the native type=search cancel/decoration so it doesn't double up.
+      &[type='search'] {
+        &::-webkit-search-cancel-button,
+        &::-webkit-search-decoration { display: none; appearance: none; -webkit-appearance: none; }
+      }
+    }
+
+    // Inline × clear button (Material/PrimeNG-style). Visible whenever
+    // the input has a non-empty value and clearable resolves to true.
+    .clear-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--icon-md);
+      height: var(--icon-md);
+      padding: 0;
+      border: 0;
+      background-color: var(--text-tertiary);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background-color var(--dur-fast) var(--ease-standard);
+      -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'><path d='M18 6L6 18M6 6l12 12'/></svg>") center/contain no-repeat;
+              mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'><path d='M18 6L6 18M6 6l12 12'/></svg>") center/contain no-repeat;
+
+      &:hover { background-color: var(--text-primary); }
+      &:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
+        border-radius: var(--r-sm);
+      }
+    }
+
+    &:hover {
+      border-color: var(--ds-input-border-hover);
+    }
+
+    &:focus-within {
+      border-color: var(--ds-input-border-focus);
+      box-shadow: var(--ds-input-focus-shadow);
+    }
+  }
+
+  .hint {
+    font: var(--fw-regular) var(--fs-xs)/var(--lh-base) var(--font-sans);
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    gap: var(--s-1);
+  }
+
+  &.disabled {
+    .control {
+      background: var(--ds-input-bg-disabled);
+      border-color: var(--border-disabled);
+    }
+    input {
+      color: var(--text-disabled);
+    }
+  }
+
+  &.error {
+    .control {
+      background: var(--ds-input-bg-error);
+      border-color: var(--ds-input-border-error);
+
+      &:focus-within {
+        box-shadow: var(--focus-field-error);
+      }
+    }
+    .hint {
+      color: var(--danger-text);
+    }
+  }
+
+  &.success {
+    .control {
+      border-color: var(--ds-input-border-success);
+    }
+    .hint {
+      color: var(--success-text);
+    }
+  }
+
+  /* Sizes */
+  &.sm .control {
+    height: var(--hit-min);
+    padding: 0 var(--s-2);
+  }
+  &.lg .control {
+    height: var(--field-h-lg);
+  }
+
+  /* Addon slots */
+  .addon-slot {
+    display: inline-flex;
+    align-items: center;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+
+    &:empty { display: none; }
+  }
+
+  /* Label-pill addons (e.g. "https://" url prefix) — bare icons use .addon-slot instead. */
+  .addon {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 var(--s-3);
+    margin: calc(var(--field-affix-overlap) * -1);
+    background: var(--surface-secondary);
+    color: var(--text-secondary);
+    font: var(--fw-medium) var(--fs-s)/var(--lh-flat) var(--font-sans);
+    align-self: stretch;
+    border-right: var(--bw-default) solid var(--border-divider);
+
+    &.right {
+      border-right: 0;
+      border-left: var(--bw-default) solid var(--border-divider);
+    }
+  }
+
+  &.with-addon .control {
+    padding-left: 0;
+  }
+  &.with-addon-right .control {
+    padding-right: 0;
+  }
+  &.with-addon .addon:first-child {
+    border-top-left-radius: var(--ds-input-radius);
+    border-bottom-left-radius: var(--ds-input-radius);
+  }
+  &.with-addon-right .addon:last-child {
+    border-top-right-radius: var(--ds-input-radius);
+    border-bottom-right-radius: var(--ds-input-radius);
+  }
+}

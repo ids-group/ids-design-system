@@ -1,0 +1,10 @@
+<input
+  type="radio"
+  class="radio"
+  [checked]="checked()"
+  [disabled]="disabled()"
+  [attr.name]="name() || null"
+  [attr.value]="value() || null"
+  [attr.id]="inputId()"
+  (change)="onChange($event)"
+/>

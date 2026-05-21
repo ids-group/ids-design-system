@@ -1,0 +1,10 @@
+<input
+  type="checkbox"
+  class="check"
+  [checked]="checked()"
+  [indeterminate]="indeterminate()"
+  [disabled]="disabled()"
+  [attr.name]="name()"
+  [attr.id]="inputId()"
+  (change)="onChange($event)"
+/>

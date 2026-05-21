@@ -1,0 +1,111 @@
+/* ============================================================
+   TABS
+   Ported from CLAUDE_DESIGN_DS/components.css (TABS block).
+   [aria-selected="true"] selectors replaced with .active.
+   [disabled] attribute selectors kept (native attribute, not a11y).
+   ============================================================ */
+
+:host {
+  display: block;
+
+  --ds-tab-fg: var(--text-secondary);
+  --ds-tab-fg-hover: var(--text-primary);
+  --ds-tab-fg-active: var(--brand);
+  --ds-tab-indicator-color: var(--brand);
+  --ds-tab-indicator-width: var(--bw-strong);
+  --ds-tab-pad-x: var(--s-4);
+  --ds-tab-pad-y: var(--s-3);
+  --ds-tabs-divider: var(--border-divider);
+  --ds-tabs-pills-bg: var(--surface-secondary);
+  --ds-tab-pill-bg-active: var(--surface-default);
+}
+
+.tabs {
+  display: flex;
+  gap: var(--s-2);
+  border-bottom: var(--bw-default) solid var(--ds-tabs-divider);
+
+  .tab {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: var(--ds-tab-pad-y) var(--ds-tab-pad-x);
+    border: 0;
+    background: transparent;
+    font: var(--fw-semibold) var(--fs-s) / var(--lh-flat) var(--font-sans);
+    color: var(--ds-tab-fg);
+    cursor: pointer;
+    border-bottom: var(--ds-tab-indicator-width) solid transparent;
+    margin-bottom: calc(-1 * var(--bw-default));
+    transition:
+      color var(--dur-fast) var(--ease-standard),
+      border-color var(--dur-fast) var(--ease-standard);
+
+    &:hover {
+      color: var(--ds-tab-fg-hover);
+    }
+
+    &.active {
+      color: var(--ds-tab-fg-active);
+      border-bottom-color: var(--ds-tab-indicator-color);
+    }
+
+    .badge {
+      margin-left: var(--s-1);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+      border-radius: var(--r-sm);
+    }
+
+    &[disabled],
+    &.disabled {
+      color: var(--text-disabled);
+      cursor: not-allowed;
+    }
+  }
+
+  /* Secondary variant — opt-in secondary-toned active indicator + label.
+     Aliases to brand under the default theme; becomes a true secondary hue
+     when --secondary is overridden by a brand. */
+  &.secondary .tab.active {
+    --ds-tab-fg-active: var(--secondary-strong);
+    --ds-tab-indicator-color: var(--secondary);
+  }
+
+  /* Pills variant — segmented filter row, no underline */
+  &.pills {
+    border-bottom: 0;
+    gap: var(--s-1);
+    padding: var(--s-1);
+    background: var(--ds-tabs-pills-bg);
+    border-radius: var(--r-pill);
+    display: inline-flex;
+
+    .tab {
+      padding: var(--s-2) var(--s-3);
+      border-bottom: 0;
+      margin-bottom: 0;
+      border-radius: var(--r-pill);
+      color: var(--ds-tab-fg);
+
+      &:hover {
+        background: var(--ds-tab-pill-bg-active);
+        color: var(--ds-tab-fg-hover);
+      }
+
+      &.active {
+        background: var(--ds-tab-pill-bg-active);
+        color: var(--ds-tab-fg-hover);
+        border-bottom: 0;
+        box-shadow: var(--z100);
+      }
+    }
+  }
+}
+
+.panel {
+  padding-top: var(--s-3);
+}

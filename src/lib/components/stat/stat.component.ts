@@ -1,0 +1,45 @@
+import { Component, ViewEncapsulation, computed, input } from '@angular/core';
+import { IconComponent } from '../../icons/icon.component';
+
+@Component({
+  selector: 'ds-stat',
+  standalone: true,
+  imports: [IconComponent],
+  templateUrl: './stat.component.html',
+  styleUrl: './stat.component.scss',
+  encapsulation: ViewEncapsulation.Emulated,
+  host: {
+    '[class.danger]': "variant() === 'danger'",
+  },
+})
+export class StatComponent {
+  readonly label = input.required<string>();
+  readonly value = input.required<string | number>();
+  readonly delta = input<number | null>(null);
+  readonly deltaLabel = input<string>('');
+  readonly caption = input<string>('');
+  readonly unit = input<string>('');
+  readonly variant = input<'default' | 'danger'>('default');
+
+  protected readonly deltaClasses = computed(() => {
+    const delta = this.delta();
+    if (delta === null) return '';
+    if (delta > 0) return 'delta up';
+    if (delta < 0) return 'delta down';
+    return 'delta';
+  });
+
+  protected readonly deltaIcon = computed<'arrowUp' | 'arrowDown' | null>(() => {
+    const delta = this.delta();
+    if (delta === null || delta === 0) return null;
+    return delta > 0 ? 'arrowUp' : 'arrowDown';
+  });
+
+  protected readonly deltaText = computed(() => {
+    const delta = this.delta();
+    if (delta === null) return '';
+    const magnitude = Math.abs(delta);
+    const suffix = this.deltaLabel() ? ` ${this.deltaLabel()}` : '';
+    return `${magnitude}${suffix}`;
+  });
+}

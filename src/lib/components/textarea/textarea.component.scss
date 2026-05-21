@@ -1,0 +1,147 @@
+/* ============================================================
+   FIELD (multiline text input subset)
+   Mirrors input.component.scss `.field` shell so consumers can
+   override via the same `--ds-input-*` token family. The only
+   visual divergence is the inner <textarea>: vertical resize,
+   min-height driven by --field-textarea-rows-min, and a
+   stretched .control box (height: auto) so it grows with rows.
+   ============================================================ */
+:host {
+  display: block;
+}
+
+.field {
+  --ds-input-bg: var(--surface-default);
+  --ds-input-border: var(--border-default);
+  --ds-input-border-hover: var(--border-strong);
+  --ds-input-border-focus: var(--brand);
+  --ds-input-fg: var(--text-primary);
+  --ds-input-placeholder: var(--text-tertiary);
+  --ds-input-radius: var(--r-md);
+  --ds-input-pad-x: var(--field-pad-x);
+  /* Textarea-specific override: single-line <ds-input> has zero vertical
+     padding (height set via --field-h). A multiline textarea needs real
+     breathing room above/below the text-shape — matches Material outlined
+     textarea (~12px) and IBM Carbon (~11px). */
+  --ds-input-pad-y: var(--s-3);
+  --ds-input-focus-shadow: var(--focus-field);
+  --ds-input-border-error: var(--danger);
+  --ds-input-bg-error: var(--danger-subtle);
+  --ds-input-border-success: var(--success);
+  --ds-input-bg-disabled: var(--surface-disabled);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1-5);
+  width: 100%;
+
+  .label {
+    font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--s-1);
+
+    .req {
+      color: var(--danger);
+      font-weight: var(--fw-semibold);
+    }
+
+    .optional-marker {
+      color: var(--text-tertiary);
+      font-weight: var(--fw-regular);
+    }
+  }
+
+  .control {
+    display: flex;
+    align-items: stretch;
+    gap: var(--s-2);
+    background: var(--ds-input-bg);
+    border: var(--bw-default) solid var(--ds-input-border);
+    border-radius: var(--ds-input-radius);
+    padding: var(--ds-input-pad-y) var(--ds-input-pad-x);
+    height: auto;
+    transition:
+      border-color var(--dur-fast) var(--ease-standard),
+      box-shadow var(--dur-fast) var(--ease-standard),
+      background var(--dur-fast) var(--ease-standard);
+
+    textarea {
+      flex: 1;
+      min-width: 0;
+      appearance: none;
+      -webkit-appearance: none;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      color: var(--ds-input-fg);
+      resize: vertical;
+      min-height: var(--field-textarea-rows-min, 60px);
+
+      &::placeholder {
+        color: var(--ds-input-placeholder);
+      }
+    }
+
+    &:hover {
+      border-color: var(--ds-input-border-hover);
+    }
+
+    &:focus-within {
+      border-color: var(--ds-input-border-focus);
+      box-shadow: var(--ds-input-focus-shadow);
+    }
+  }
+
+  .hint {
+    font: var(--fw-regular) var(--fs-xs)/var(--lh-base) var(--font-sans);
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    gap: var(--s-1);
+  }
+
+  &.disabled {
+    .control {
+      background: var(--ds-input-bg-disabled);
+      border-color: var(--border-disabled);
+    }
+    textarea {
+      color: var(--text-disabled);
+    }
+  }
+
+  &.error {
+    .control {
+      background: var(--ds-input-bg-error);
+      border-color: var(--ds-input-border-error);
+
+      &:focus-within {
+        box-shadow: var(--focus-field-error);
+      }
+    }
+    .hint {
+      color: var(--danger-text);
+    }
+  }
+
+  &.success {
+    .control {
+      border-color: var(--ds-input-border-success);
+    }
+    .hint {
+      color: var(--success-text);
+    }
+  }
+
+  /* Sizes — only padding scales; height stays driven by rows + resize.
+     Vertical pad scales with size; horizontal still uses the input-family. */
+  &.sm .control {
+    padding: var(--s-2) var(--s-2);
+  }
+  &.lg .control {
+    padding: var(--s-4) var(--s-3);
+  }
+}

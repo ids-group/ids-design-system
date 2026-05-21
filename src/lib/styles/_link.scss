@@ -1,0 +1,71 @@
+/* Global .link helper — pure CSS class (no Angular wrapper) so consumers
+   can apply it to inline anchors inside <p> text without disrupting line
+   flow. Modifiers: .quiet, .inline, .standalone, .xs, .sm, .lg. */
+
+.link {
+  --ds-link-color:        var(--text-link);
+  --ds-link-color-hover:  color-mix(in srgb, var(--text-link) 80%, black);
+  --ds-link-color-active: color-mix(in srgb, var(--text-link) 65%, black);
+
+  color: var(--ds-link-color);
+  text-decoration: underline;
+  text-decoration-color: var(--ds-link-color);
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-standard), text-decoration-color var(--dur-fast) var(--ease-standard);
+
+  &:hover {
+    color: var(--ds-link-color-hover);
+    text-decoration-color: var(--ds-link-color-hover);
+  }
+
+  &:active {
+    color: var(--ds-link-color-active);
+    text-decoration-color: var(--ds-link-color-active);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: var(--r-sm);
+    text-decoration-color: var(--ds-link-color);
+  }
+
+  &[aria-disabled="true"] {
+    color: var(--text-disabled);
+    text-decoration-color: var(--text-disabled);
+    pointer-events: none;
+    cursor: default;
+  }
+
+  .icon {
+    color: currentColor;
+    flex-shrink: 0;
+  }
+
+  &.quiet {
+    color: var(--text-secondary);
+    font-weight: var(--fw-medium);
+
+    &:hover {
+      color: var(--text-primary);
+      text-decoration-color: var(--text-primary);
+    }
+  }
+
+  &.inline {
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  &.standalone {
+    font-weight: var(--fw-bold);
+  }
+
+  &.xs { font-size: var(--fs-xs); }
+  &.sm { font-size: var(--fs-s); }
+  &.lg { font-size: var(--fs-l); }
+}

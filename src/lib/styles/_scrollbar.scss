@@ -1,0 +1,17 @@
+// Scrollbar — ported verbatim from CLAUDE_DESIGN_DS/components-extras.css §Global scrollbar.
+// Brand-tinted neutral thumb applied globally.
+
+html { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) transparent; }
+*::-webkit-scrollbar { width: var(--scrollbar-w); height: var(--scrollbar-w); }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: var(--r-pill);
+  border: var(--s-0-5) solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover  { background: var(--scrollbar-thumb-hover); background-clip: padding-box; }
+*::-webkit-scrollbar-thumb:active { background: var(--scrollbar-thumb-active); background-clip: padding-box; }
+
+// Global text-selection — sourced from components-extras.css line 910.
+::selection { background: var(--select-bg, color-mix(in srgb, var(--brand) 22%, transparent)); color: var(--text-primary); }

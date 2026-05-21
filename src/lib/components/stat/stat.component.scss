@@ -1,0 +1,60 @@
+/* ============================================================
+   STAT TILE
+   Ported verbatim from vendor/claude-design-ds/components.css (lines 1159–1169).
+   ============================================================ */
+:host {
+  display: block;
+}
+
+:host(.danger) .value { color: var(--danger-text); }
+
+.stat {
+  --ds-stat-bg:           var(--surface-default);
+  --ds-stat-border:       var(--border-divider);
+  --ds-stat-radius:       var(--r-lg);
+  --ds-stat-pad:          var(--s-5);
+  --ds-stat-label-color:  var(--text-tertiary);
+  --ds-stat-value-color:  var(--text-primary);
+  --ds-stat-up-color:     var(--success-text);
+  --ds-stat-down-color:   var(--danger-text);
+
+  background: var(--ds-stat-bg);
+  border: var(--bw-default) solid var(--ds-stat-border);
+  border-radius: var(--ds-stat-radius);
+  padding: var(--ds-stat-pad);
+
+  .label {
+    font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
+    letter-spacing: var(--ls-wider);
+    text-transform: uppercase;
+    color: var(--ds-stat-label-color);
+    margin: 0 0 var(--s-2);
+  }
+
+  .value {
+    font: var(--fw-extrabold) var(--fs-h2)/var(--lh-flat) var(--font-sans);
+    letter-spacing: var(--ls-snug);
+    color: var(--ds-stat-value-color);
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .delta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-1);
+    font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
+    margin-top: var(--s-2);
+
+    &.up        { color: var(--ds-stat-up-color); }
+    &.down      { color: var(--ds-stat-down-color); }
+    &.neutral   { color: var(--text-tertiary); }
+    &.secondary { color: var(--secondary-strong); }
+  }
+
+  .caption {
+    font: var(--fw-regular) var(--fs-xs)/var(--lh-base) var(--font-sans);
+    color: var(--text-tertiary);
+    margin-top: var(--s-2);
+  }
+}

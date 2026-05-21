@@ -1,0 +1,795 @@
+@use './fonts';
+@use './link';
+
+/* ============================================================
+   Design Tokens — semantic + component layer.
+   Tier 1 colour primitives (palette ramps + brand/danger HSL
+   channels + shadow-tint channels) live in
+   ../themes/_theme-default.scss. Brand overrides extend or replace
+   that theme; see prototype/mm-broker/src/app/styles/_brand-*.scss.
+
+   This file owns:
+     1 · Semantic roles  (surface, border, text, focus, status, …)
+     2 · Component-scoped (heights, widths, geometries, …)
+
+   Components consume only Tier 2/3 tokens. Direct use of palette
+   primitives (--violet-600, --neutral-200, …) inside component
+   styles is a violation — fix by introducing or reusing a role.
+   ============================================================ */
+
+:root {
+  /* ============================================================
+     1 · SEMANTIC ROLES (light theme)
+     ============================================================ */
+
+  /* Surfaces — six-stop scale.
+     · canvas    : page background
+     · default   : cards, sheets, toolbars (the “paper”)
+     · secondary : hover lanes, table heads, addons, code blocks
+     · overlay   : modals, drawers, popovers (paired with scrim)
+     · tint      : brand-tinted (active rows, sidenav active item)
+     · inverted  : dark-on-light callouts, toasts
+     Conceptual elevation is communicated by SHADOW tokens,
+     not by surface tokens. Hover/pressed states use
+     --opacity-state-* overlays on top of the underlying surface. */
+  --surface-canvas:         var(--neutral-50);
+  --surface-default:        var(--neutral-0);
+  --surface-secondary:      var(--neutral-100);
+  --surface-overlay:        var(--neutral-0);
+  --surface-inverted:       var(--neutral-900);
+  --surface-inverted-hover: var(--neutral-800);
+  --surface-tint:           var(--violet-50);
+  --surface-disabled:       var(--neutral-100);
+  --surface-muted:          var(--neutral-150);
+
+  /* Scrim — modal/drawer backdrop. Derived from inverted surface
+     so dark-mode override flips automatically. */
+  --surface-scrim:     hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .55);
+
+  /* Visible-on-coloured-fill divider. The split-button right-hand chevron
+     sits ON the brand fill, so a transparent white hairline reads correctly
+     across any brand hue. Override per theme if the brand is too light. */
+  --btn-split-divider: hsla(0, 0%, 100%, .25);
+
+  /* Visited link — derives from --brand-muted by default so it sympathetically
+     shifts with the brand hue. Override (e.g. for financial dashboards that
+     want neutral-grey visited links) by setting this token directly. */
+  --link-visited:      hsl(var(--brand-h) calc(var(--brand-s) * 0.6) 45%);
+
+  /* Borders */
+  --border-default:    var(--neutral-200);
+  --border-strong:     var(--neutral-300);
+  --border-subtle:     var(--neutral-150);
+  --border-divider:    var(--neutral-150);
+  --border-inverted:   var(--neutral-700);
+  --border-disabled:   var(--neutral-150);
+
+  /* Text */
+  --text-primary:      var(--neutral-900);
+  --text-secondary:    var(--neutral-700);
+  --text-tertiary:     var(--neutral-500);
+  --text-muted:        var(--neutral-400);
+  --text-disabled:     var(--neutral-400);
+  --text-inverted:     var(--neutral-0);
+  --text-link:         var(--violet-700);
+  --text-on-brand:     var(--neutral-0);
+  --text-on-success:   var(--neutral-0);
+  --text-on-error:     var(--neutral-0);
+
+  /* Icons */
+  --icon-default:      var(--neutral-500);
+  --icon-strong:       var(--neutral-700);
+  --icon-muted:        var(--neutral-400);
+  --icon-on-brand:     var(--neutral-0);
+
+  /* Brand roles.
+     Hover / pressed / selected-hover are DERIVED from --brand at runtime via
+     color-mix() so a brand swap (overriding only --brand) propagates to every
+     interaction state automatically. A brand that wants a non-derived hover
+     hue can still override these tokens directly.
+     Step sizes (12% / 24% darker) mirror the violet 600→700→800 ramp. */
+  --brand:                 var(--violet-600);
+  --brand-hover:           color-mix(in srgb, var(--brand) 88%, black);
+  --brand-pressed:         color-mix(in srgb, var(--brand) 76%, black);
+  --brand-selected-hover:  color-mix(in srgb, var(--brand) 88%, black);
+  --brand-subtle:          var(--violet-50);
+  --brand-muted:           var(--violet-100);
+  --brand-muted-strong:    var(--violet-200);
+  --brand-strong:          var(--violet-700);
+  --brand-on:              var(--neutral-0);
+
+  /* Accent / secondary role — composed from --secondary-h/s/l channels.
+     Channels default to brand values so unbranded apps render identical to
+     --brand. Override --secondary-h/s/l per-brand (or via the tweaks panel)
+     to introduce a true secondary hue — --secondary recomposes automatically.
+     Hover/pressed derive from --secondary so any hue change propagates. */
+  --secondary-h:       var(--brand-h);
+  --secondary-s:       var(--brand-s);
+  --secondary-l:       var(--brand-l);
+
+  --secondary:         hsl(var(--secondary-h), var(--secondary-s), var(--secondary-l));
+  --secondary-hover:   color-mix(in srgb, var(--secondary) 88%, black);
+  --secondary-pressed: color-mix(in srgb, var(--secondary) 76%, black);
+  --secondary-strong:  hsl(var(--secondary-h), var(--secondary-s), calc(var(--secondary-l) - 11%));
+  --secondary-subtle:  hsl(var(--secondary-h), 100%, 97%);
+  --secondary-muted:   hsl(var(--secondary-h), 95%, 94%);
+  --secondary-on:      var(--brand-on);
+
+  /* Accent — interactive visual marker (input focus border, tab indicator,
+     switcher accent, sidenav active rail, …). Mirrors the --brand /
+     --secondary token-family shape: HSL channels for halo composition,
+     hover/pressed via color-mix, subtle/muted ramps for accent surfaces.
+     Defaults to brand channels so single-accent themes render identical
+     to --brand. Multi-accent brands (e.g. MM2026: Topaz alongside Deep
+     Teal + Coral) override --accent-h/s/l (and optionally --accent
+     directly for non-HSL values). */
+  --accent-h:       var(--brand-h);
+  --accent-s:       var(--brand-s);
+  --accent-l:       var(--brand-l);
+
+  --accent:         hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+  --accent-hover:   color-mix(in srgb, var(--accent) 88%, black);
+  --accent-pressed: color-mix(in srgb, var(--accent) 76%, black);
+  --accent-strong:  hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 11%));
+  --accent-subtle:  hsl(var(--accent-h), 100%, 97%);
+  --accent-muted:   hsl(var(--accent-h), 95%, 94%);
+  --accent-on:      var(--brand-on);
+
+  /* Status roles.
+     -hover / -pressed are derived from the base role via the same color-mix()
+     rule as --brand-hover. Override per role if a brand needs a non-derived
+     hue. -text / -border / -subtle / -muted stay as ramp picks because their
+     contrast targets are tuned, not procedural. */
+  --success:           var(--green-500);
+  --success-hover:     color-mix(in srgb, var(--success) 88%, black);
+  --success-subtle:    var(--green-50);
+  --success-muted:     var(--green-100);
+  --success-border:    var(--green-200);
+  --success-text:      var(--green-700);
+
+  --warning:           var(--yellow-400);
+  --warning-hover:     color-mix(in srgb, var(--warning) 88%, black);
+  --warning-subtle:    var(--yellow-50);
+  --warning-muted:     var(--yellow-100);
+  --warning-border:    var(--yellow-200);
+  --warning-text:      var(--yellow-700);
+
+  --danger:            var(--red-500);
+  --danger-hover:      color-mix(in srgb, var(--danger) 88%, black);
+  --danger-pressed:    color-mix(in srgb, var(--danger) 76%, black);
+  --danger-subtle:     var(--red-50);
+  --danger-muted:      var(--red-100);
+  --danger-border:     var(--red-200);
+  --danger-text:       var(--red-600);
+
+  --info:              var(--blue-500);
+  --info-hover:        color-mix(in srgb, var(--info) 88%, black);
+  --info-subtle:       var(--blue-50);
+  --info-muted:        var(--blue-100);
+  --info-border:       var(--blue-200);
+  --info-text:         var(--blue-700);
+
+  /* Status pills (event lifecycle).
+     DECISION: --status-confirmed-* chains through --brand-* so a
+     brand re-skin moves Confirmed with it. The other lifecycle
+     stages are deliberately neutral/green/dark to keep semantic
+     distance from brand. */
+  /* Status pills — canonical (single system).
+     Legacy classes `.badge--active` (single) and ad-hoc semantic
+     pills are unified in the Badge component to consume these tokens. */
+  --status-planning-bg:   var(--neutral-150);
+  --status-planning-fg:   var(--neutral-700);
+  --status-confirmed-bg:  var(--brand-subtle);
+  --status-confirmed-fg:  var(--brand-strong);
+  --status-active-bg:     var(--green-50);
+  --status-active-fg:     var(--green-700);
+  --status-completed-bg:  var(--neutral-900);
+  --status-completed-fg:  var(--neutral-0);
+
+  /* Focus rings.
+     Outer halos use hsla() composed from brand/danger HSL channels
+     so re-skinning --brand-h propagates into focus state.
+     The inner halo reads --surface-canvas so the ring stays visible
+     in both light and dark themes (canvas flips, ring adapts). */
+  --focus-ring-inner:        var(--surface-canvas);
+  --focus-ring-outer-h:      var(--brand-h);
+  --focus-ring-outer-s:      var(--brand-s);
+  --focus-ring-outer-l:      var(--brand-l);
+  --focus-ring-outer-alpha:  1;
+
+  --focus-ring:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsla(var(--focus-ring-outer-h), var(--focus-ring-outer-s), var(--focus-ring-outer-l), var(--focus-ring-outer-alpha));
+  --focus-ring-inverted:
+    0 0 0 2px var(--neutral-900),
+    0 0 0 4px var(--violet-300);
+  --focus-ring-danger:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsla(var(--danger-h), var(--danger-s), var(--danger-l), 1);
+
+  /* Field focus — coloured halo only (no double-ring). Derived from
+     brand HSL so it tracks rebrand. Alpha is a token so dark themes
+     can boost it for legibility. */
+  --focus-field-alpha: .22;
+  --focus-field:
+    0 0 0 3px hsla(var(--brand-h), var(--brand-s), var(--brand-l), var(--focus-field-alpha));
+  --focus-field-error:
+    0 0 0 3px hsla(var(--danger-h), var(--danger-s), var(--danger-l), var(--focus-field-alpha));
+
+  /* ============================================================
+     Spacing — 4 px base, with named half-steps where atoms need them
+     ============================================================ */
+  --s-0:    0;
+  --s-px:   1px;
+  --s-0-5:  2px;     /* hairline insets, icon close button pad */
+  --s-1:    4px;
+  --s-1-5:  6px;     /* badge gap, tag gap, field-label gap */
+  --s-2:    8px;
+  --s-2-5: 10px;     /* tooltip pad-x, badge pad-x */
+  --s-3:   12px;
+  --s-4:   16px;
+  --s-5:   20px;
+  --s-6:   24px;
+  --s-8:   32px;
+  --s-10:  40px;
+  --s-12:  48px;
+  --s-14:  56px;
+  --s-16:  64px;
+  --s-20:  80px;
+  --s-24:  96px;
+  --s-32: 128px;
+
+  /* ============================================================
+     Radius — six-stop scale.
+     Each step is functionally distinct; adjacent steps are
+     visually distinguishable at standard zoom.
+     ============================================================ */
+  --r-0:        0;
+  --r-sm:       4px;   /* kbd, indeterminate-checkbox tick, link focus halo */
+  --r-md:       8px;   /* buttons, fields, tooltips, search, segmented, tags */
+  --r-lg:      12px;   /* menus, popovers, dropdowns, cards, modals, drawers, empty-state icons, toasts */
+  --r-2xl:     24px;   /* heroic surfaces — reserved, no current consumer */
+
+  /* --r-pill is configurable so themes can override pill-shaped surfaces
+     (switches, status chips, avatars, segmented thumb) without forking the
+     full radius scale. A spreadsheet-style client can square pills with:
+       :root[data-theme="spreadsheet"] { --r-pill-value: var(--r-sm); } */
+  --r-pill-value: 999px;
+  --r-pill: var(--r-pill-value);
+
+  /* Component-scoped radius — kept only when the semantic intent matters
+     beyond the value itself, OR when the global scale doesn't fit. */
+  --r-flat:         var(--r-0);    /* explicit "intentionally squared" — middle of btn-group, in-range datepicker */
+
+  /* ============================================================
+     Border widths — two-stop scale.
+     Adjacent widths must be visually distinguishable; 1.5/2.5
+     mid-stops were dropped because they read identically to
+     1/2 on standard displays.
+     ============================================================ */
+  --bw-default: 1px;   /* every border, divider, field outline */
+  --bw-strong:  2px;   /* radio dot, slider thumb, tabs underline, focus ring inner band, dropzone dash */
+
+  /* ============================================================
+     Elevation
+     Channel-split substrate so a re-skin can re-tint shadows.
+     Light theme: cool near-black slate (225 / 39% / 7%).
+     Dark  theme: override --shadow-tint-l to ~95% so the same
+     alphas render as soft light glows over dark surfaces.
+     The alpha values stay constant across themes — only the
+     hue/saturation/lightness become configurable.
+     ============================================================ */
+  /* --shadow-tint-h/s/l live in themes/_theme-default.scss — theme-affected
+     so dark themes can override --shadow-tint-l → ~95% for soft light glows. */
+
+  --z100: 0 1px 2px  hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .06),
+          0 1px 3px  hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .08);
+  --z200: 0 4px 8px  hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .06),
+          0 4px 16px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .10);
+  --z300: 0 8px 16px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .08),
+          0 16px 32px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .14);
+  --z400: 0 16px 32px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .12),
+          0 24px 48px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .18);
+  --shadow-popover: var(--z200);
+  --shadow-modal:   var(--z400);
+  --shadow-toast:   var(--z300);
+  --shadow-card:    var(--z100);
+
+  /* Backdrop blur */
+  --blur-sm: 4px;
+  --blur-md: 8px;
+
+  /* ============================================================
+     Z-index — global stacking scale.
+     Component-internal stacking (e.g. sticky headers within a
+     scroll container) uses component-scoped tokens derived from
+     the global scale so refactors stay local. */
+  --layer-base:      0;
+  --layer-raised:    1;
+  --layer-sticky:    100;
+  --layer-dropdown:  1000;
+  --layer-overlay:   1100;
+  --layer-drawer:    1200;
+  --layer-modal:     1300;
+  --layer-popover:   1400;
+  --layer-toast:     1500;
+  --layer-tooltip:   1600;
+
+  /* Component-scoped stacking */
+  --table-sticky-header-z: var(--layer-raised);
+  --table-sticky-col-z:    var(--layer-raised);
+  --table-sticky-corner-z: 2;          /* sticky col header sits over both axes */
+  --btn-focus-z:           var(--layer-raised);
+  --btn-group-focus-z:     2;          /* focused button rises above its neighbour */
+
+  /* ============================================================
+     Motion
+     ============================================================ */
+  --dur-instant: 80ms;
+  --dur-fast:    120ms;
+  --dur-base:    180ms;
+  --dur-slow:    260ms;
+  --dur-slower:  400ms;
+
+  /* Loop durations — for indeterminate spinners, skeletons, progress.
+     These deliberately sit outside the transition scale because
+     they describe rhythm, not response. */
+  --dur-loop-fast: 700ms;
+  --dur-loop-slow: 1400ms;
+
+  /* Easing.
+     - standard:   default for transitions; decelerates into rest.
+                   Use for state changes (hover, focus, toggle).
+     - emphasized: accelerate-decelerate; bigger movements that
+                   "pick up and put down". Use for entries/exits
+                   of overlays, modals, drawers.
+     - decelerate: incoming-only (out → in). Use when something
+                   appears (toast, tooltip, popover open).
+     - accelerate: outgoing-only (in → out). Use when something
+                   leaves (toast dismiss, modal close).
+     - spring:     playful overshoot; sparingly. Reserved for
+                   small celebratory feedback. */
+  --ease-standard:   cubic-bezier(.2,  0,    0,   1);
+  --ease-emphasized: cubic-bezier(.3,  0,    .1,  1.4);
+  --ease-decelerate: cubic-bezier(0,   0,    0,   1);
+  --ease-accelerate: cubic-bezier(.3,  0,    1,   1);
+  --ease-spring:     cubic-bezier(.5,  1.5, .5,   1);
+
+  /* Opacity — semantic, purpose-named (Material/Carbon/Polaris convention).
+     Each token has a real consumer in the codebase; symmetric "unused"
+     numeric stops are deliberately omitted. */
+  --opacity-disabled:        0.5;   /* full disabled state on interactive components */
+  --opacity-muted:           0.6;   /* legacy alias — being phased out in favour of --text-* roles */
+  --opacity-text-disabled:   0.38;  /* disabled text alpha (WCAG-derived) */
+  --opacity-text-disabled:   0.38;  /* disabled text where a colour token isn't available */
+  --opacity-scrim:           0.55;  /* modal/drawer backdrop overlay (light theme) */
+  --opacity-state-hover:     0.08;  /* hover layer over surface (overlay vs surface swap) */
+  --opacity-state-pressed:   0.16;  /* active/pressed layer */
+
+  /* ============================================================
+     Breakpoints
+     ============================================================ */
+  --bp-xs:  480px;
+  --bp-sm:  640px;
+  --bp-md:  768px;
+  --bp-lg: 1024px;
+  --bp-2xl:1536px;
+
+  /* ============================================================
+     System chrome
+     ============================================================ */
+  --scrollbar-w: 10px;
+  --scrollbar-thumb:        var(--neutral-300);
+  --scrollbar-thumb-hover:  var(--neutral-400);
+  --scrollbar-thumb-active: var(--neutral-500);
+  --select-bg: color-mix(in srgb, var(--brand) 22%, transparent);
+  --col-cap-text:    720px;
+  --col-cap-content: 1280px;
+
+  /* ============================================================
+     Typography
+     ============================================================ */
+  --font-sans:    "Mulish", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Display + heading stacks default to body sans so an unconfigured
+     theme is visually consistent. Override --font-heading or
+     --font-display in a client theme to mix a serif/display family
+     without touching component code. */
+  --font-display: var(--font-sans);
+  --font-heading: var(--font-sans);
+
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+  --fw-extrabold:800;
+
+  --fs-display: 64px;
+  --fs-h1:      48px;
+  --fs-h2:      36px;
+  --fs-h3:      28px;
+  --fs-h4:      22px;
+  --fs-h5:      18px;
+  --fs-h5-strong: 20px;   /* modal titles, condensed headers */
+  --fs-l:       18px;
+  --fs-m:       16px;
+  --fs-s:       14px;
+  --fs-xs:      12px;
+  --fs-2xs:     11px;
+  --fs-3xs:     10px;     /* avatar-sm font */
+  --fs-4xs:      9px;     /* avatar-xs font */
+  --fs-mono:    13px;
+
+  --lh-tight: 1.1;
+  --lh-snug:  1.25;
+  --lh-base:  1.4;
+  --lh-loose: 1.6;
+  --lh-flat:  1;          /* button labels, single-line UI */
+
+  --ls-tight: -.02em;
+  --ls-snug:  -.01em;
+  --ls-normal: 0;
+  --ls-wide:   .02em;
+  --ls-wider:  .08em;
+
+  /* ============================================================
+     Hit targets — the canonical size scale for interactive height
+     ============================================================ */
+  --hit-xs:    24px;   /* btn-s, datepicker nav, modal close */
+  --hit-sm:    28px;   /* segmented btn, stepper node */
+  --hit-md:    36px;   /* search, pagination, tag-input rows */
+  --hit-min:   32px;   /* dense desktop default (alias of --hit-cozy-tier-0) */
+  --hit-cozy:  40px;   /* default control height */
+  --hit-comfy: 44px;   /* WCAG min for touch */
+  --hit-touch: 48px;   /* mobile-friendly — also used by floating-label fields */
+
+  /* ============================================================
+     Iconography
+     ============================================================ */
+  --icon-2xs: 10px;
+  --icon-xs:  12px;
+  --icon-sm:  14px;
+  --icon-md:  16px;
+  --icon-lg:  20px;
+
+  /* ============================================================
+     3 · COMPONENT-SCOPED dimensions
+     Atom-level geometry that doesn't fit cleanly in a global
+     scale. Density Tweaks override these at :root.
+     ============================================================ */
+
+  /* Field padding — density-aware, consumed by .field__control,
+     .search, .field__textarea. Tokenised so the ultra-compact
+     tier can compress without component edits. */
+  --field-pad-x:       var(--s-3);
+  --field-pad-y:       0;
+
+  /* Table cell padding — density-aware, consumed by .tbl td/th. */
+  --table-cell-pad-x:  var(--s-4);
+  --table-cell-pad-y:  var(--s-3);
+  --table-head-pad-y:  var(--s-3);
+  --check-size:        20px;
+  --check-bw:          var(--bw-default);
+  --check-tick-size:   12px;
+  --check-indet-w:     10px;
+  --check-indet-h:     2px;
+  --radio-dot-size:    10px;
+  --radio-bw-checked:  var(--bw-strong);
+
+  /* Switch */
+  --switch-track-w:    36px;
+  --switch-track-h:    20px;
+  --switch-thumb-size: 16px;
+  --switch-thumb-pad:  2px;
+  --switch-thumb-travel: 16px;   /* track-w − thumb − 2*pad */
+
+  /* Slider */
+  --slider-track-h:    4px;
+  --slider-thumb-size: 18px;
+  --slider-thumb-bw:   var(--bw-strong);
+
+  /* Status dot, badge dot */
+  --status-dot-size:   8px;
+  --badge-dot-size:    6px;
+
+  /* Badge */
+  --badge-pad-y:       4px;
+  --badge-pad-x:       10px;
+  --badge-gap:         var(--s-1-5);
+  --badge-count-size:  20px;
+
+  /* Tag */
+  --tag-pad-y:         6px;
+  --tag-pad-x:         10px;
+  --tag-pad-x-close:   6px;
+  --tag-gap:           var(--s-1-5);
+  --tag-close-size:    14px;
+  --tag-close-pad:     2px;
+
+  /* Avatar */
+  --avatar-xs:  20px;
+  --avatar-sm:  24px;
+  --avatar-md:  32px;
+  --avatar-lg:  40px;
+  --avatar-bw-group: var(--bw-strong);
+
+  /* Spinner */
+  --spinner-sm: 12px;
+  --spinner-md: 16px;
+  --spinner-lg: 24px;
+  --spinner-bw: var(--bw-strong);
+
+  /* Progress */
+  --progress-h: 6px;
+
+  /* Stepper */
+  --stepper-node-size: 28px;   /* === --hit-sm */
+  --stepper-bar-w:     56px;
+  --stepper-bar-h:     2px;
+
+  /* Segmented control */
+  --segmented-btn-h:   var(--hit-sm);
+  --segmented-r-inner: var(--r-md);
+  --segmented-pad:     2px;
+
+  /* Sidenav */
+  --sidenav-w:           240px;
+  --sidenav-w-collapsed: 64px;
+
+  /* Modal */
+  --modal-w-sm: 480px;
+  --modal-w-md: 640px;
+  --modal-w-lg: 800px;
+
+  /* Drawer */
+  --drawer-w-md: 480px;
+  --drawer-w-lg: 640px;
+
+  /* Popover / cmdk */
+  --popover-maxh: 360px;
+
+  /* Field */
+  --field-gap-label:   var(--s-1-5);   /* label↔control */
+  --field-gap-req:     var(--s-1);     /* label↔asterisk */
+  --field-h-sm:        var(--hit-min);
+  --field-h-md:        var(--hit-cozy);
+  --field-h-lg:        var(--hit-touch);
+  --field-h-floating:  var(--hit-touch);
+  --field-textarea-min: 96px;
+  --field-floating-label-fs: var(--fs-2xs);
+  --field-floating-label-lh: 14px;
+  --field-floating-label-top: 8px;
+  --field-num-stepper-w: var(--s-8);
+
+  /* Search */
+  --search-h: var(--hit-md);
+  --search-maxw: 320px;
+
+  /* ============================================================
+     3b · COMPONENT-SCOPED dimensions (Phase 4 additions)
+     Tokens for atom geometries that previously lived as literals
+     inside component CSS. Grouped by component for readability.
+     ============================================================ */
+
+  /* Top bar / app shell */
+  --topbar-h:                var(--s-14);            /* 56px — global app bar height */
+
+  /* Sidenav internals — w / w-collapsed defined above */
+  --sidenav-pad-brand-y:     var(--s-2);             /* logo top padding */
+  --sidenav-pad-brand-b:     var(--s-6);             /* logo bottom padding */
+  --sidenav-logo-size:       var(--hit-sm);          /* 28px — square brand mark */
+  --sidenav-collapsed-item:  var(--hit-cozy);        /* 40px — collapsed nav-item hit area */
+  --sidenav-section-pad-b:   var(--s-1-5);           /* nav-section bottom padding */
+
+  /* Form section grid */
+  --form-section-label-w:    280px;                  /* labels column width */
+
+  /* Page header */
+  --page-header-sub-mt:      var(--s-1);             /* subtitle top margin */
+
+  /* Field internals */
+  --field-textarea-rows-min: 60px;                   /* min-h for inline textarea inside .field__control */
+  --field-floating-pad-t:    18px;                   /* top padding when --floating, leaves room for label */
+  --field-select-pad-r:      var(--s-6);             /* select chevron clearance */
+  --field-affix-overlap:     var(--bw-default);     /* affix bleed over field border */
+
+  /* Button group */
+  --btn-group-overlap:       calc(var(--bw-default) * -1); /* -1px — collapses adjacent borders */
+  --btn-link-uloff:          3px;                    /* underline-offset on link buttons */
+
+  /* Card */
+  --card-hover-lift:         1px;                    /* translateY on .card--hover */
+
+  /* Sort icon (table headers) */
+  --sort-ic-size:            var(--icon-xs);         /* 12px */
+  --sort-ic-gap:             var(--s-1-5);           /* 6px */
+
+  /* Tag close glyph (when literal svg sits inside .tag .x) */
+  --tag-close-glyph:         var(--icon-xs);         /* 12px */
+
+  /* Bulk action toolbar */
+  --bulk-bar-offset:         var(--s-4);             /* sticky offset from container bottom */
+
+  /* Menu */
+  --menu-minw:               200px;                  /* dropdown menu min width */
+  --menu-sep-h:              var(--bw-default);
+
+  /* Tooltip */
+  --tooltip-maxw:            240px;
+  --tooltip-arrow:           var(--s-2);             /* 8px — caret edge length, halved for offset */
+
+  /* Popover */
+  --popover-maxw:            320px;
+
+  /* Toast */
+  --toast-minw:              320px;
+  --toast-maxw:              480px;
+  --toast-bar-w:             3px;                    /* left accent bar */
+  --toast-enter-y:           var(--s-1);             /* slide-in distance */
+
+  /* Banner / Alert */
+  --banner-bar-w:            4px;                    /* left accent bar */
+  --banner-ic-mt:            var(--bw-default);     /* optical bump for icon alignment */
+
+  /* Empty state */
+  --empty-icon-size:         var(--s-16);            /* 64px */
+  --empty-body-maxw:         360px;
+
+  /* Combobox */
+  --combobox-offset:         var(--s-1);             /* gap below trigger */
+  --combobox-maxh:           280px;                  /* listbox max height */
+
+  /* Command palette (cmdk) */
+  --cmdk-w:                  560px;
+  --cmdk-list-maxh:          var(--popover-maxh);    /* alias — keeps cmdk + popover synced */
+
+  /* Datepicker */
+  --datepicker-w:            280px;
+  --datepicker-cell-gap:     var(--s-0-5);           /* 2px — grid gap between day cells */
+  --datepicker-nav-size:     var(--hit-xs);          /* 24px — month-step buttons */
+
+  /* Modal close button */
+  --modal-close-size:        var(--hit-xs);          /* 24px */
+  --modal-enter-y:           var(--s-2);             /* 8px slide-in */
+
+  /* Error page */
+  --errorpage-body-maxw:     520px;
+
+  /* Wizard (extras) */
+  --wizard-body-minh:        200px;
+  --wizard-step-bar-w:       var(--s-8);             /* 32px connector */
+
+  /* Inline edit */
+  --inline-edit-input-minw:  var(--s-20);            /* 80px */
+  --inline-edit-btn-size:    var(--hit-xs);          /* 24px */
+
+  /* Settings */
+  --settings-nav-w:          220px;
+  --settings-row-label-w:    240px;
+  --settings-row-label-gap:  var(--s-0-5);           /* 2px between strong + helper */
+
+  /* Matrix */
+  --matrix-maxh:             360px;                  /* shares optical with --popover-maxh by intent */
+  --matrix-cell-pad-y:       var(--s-2);             /* 8px */
+  --matrix-cell-pad-x:       var(--s-2-5);           /* 10px */
+  --matrix-cell-minw:        var(--s-16);            /* 64px */
+  --matrix-rowhdr-minw:      160px;
+
+  /* Calendar / timeline */
+  --calendar-rowlabel-w:     160px;
+  --calendar-row-h:          var(--hit-touch);       /* 48px */
+  --calendar-cell-min:       var(--hit-cozy);        /* 40px minimum column width */
+  --calendar-cell-pad:       var(--s-1);             /* 4px inner padding */
+  --calendar-bar-h:          var(--s-8);             /* 32px */
+  --calendar-bar-inset-y:    var(--s-2);             /* 8px from top of cell */
+
+  /* Bin pack visualisation */
+  --binpack-bay-h:           var(--hit-touch);       /* 48px */
+
+  /* Map placeholder chip */
+  --map-chip-pad-y:          var(--s-1-5);           /* 6px */
+  --map-chip-pad-x:          var(--s-2-5);           /* 10px */
+  --map-chip-inset:          var(--s-3);             /* 12px from top-left */
+
+  /* KBD badge */
+  --kbd-pad-y:               var(--s-0-5);           /* 2px */
+  --kbd-pad-x:               var(--s-1-5);           /* 6px */
+
+  /* Chart */
+  --chart-empty-h:           160px;
+  --chart-skeleton-h:        160px;
+  --chart-legend-dot:        var(--icon-2xs);        /* 10px */
+
+  /* Compare layout */
+  --compare-dt-w:            90px;
+
+  /* Do/Don't stage */
+  --dodont-stage-minh:       100px;
+
+  /* Statemap arrow */
+  --statemap-arrow-w:        var(--s-8);             /* 32px */
+  --statemap-arrow-cap:      var(--s-1);             /* 4px caret border-width */
+
+  /* Page composition (extras) */
+  --grid-table-min:          220px;                  /* auto-fit minmax */
+  --grid-cols-card-minh:     120px;
+  --grid-cols-card-thumb:    80px;
+  --dl-spec-label-w:         120px;
+  --scroll-spec-h:           220px;
+  --tab-spec-maxw:           220px;
+  --tab-spec-dot-offset:     var(--bw-strong);       /* -2px notification offset (negated inline) */
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-instant: 0ms;
+    --dur-fast:    0ms;
+    --dur-base:    0ms;
+    --dur-slow:    0ms;
+    --dur-slower:  0ms;
+    --dur-loop-fast: 0ms;
+    --dur-loop-slow: 0ms;
+  }
+  *, *::before, *::after {
+    transition-duration: 0ms !important;
+    animation-duration:  0ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* ============================================================
+   Density tiers — applied by Tweaks panel via [data-density]
+   ============================================================ */
+[data-density="ultra-compact"] {
+  /* Power-user / tradesperson tier: financial dashboards, log viewers,
+     dense data grids. 24px hits sit BELOW WCAG 2.5.5 (44px enhanced)
+     and WCAG 2.5.8 (24px minimum) margins — acceptable only when:
+       (a) the screen is keyboard-first, (b) input is mouse/keys not
+       touch, (c) accidental-tap risk is low, (d) the user opted in.
+     Do not enable for mobile / field-ops layouts. */
+  --hit-cozy:          24px;
+  --hit-min:           24px;
+  --check-size:        14px;
+  --switch-track-w:    24px;
+  --switch-thumb-size: 12px;
+  --segmented-btn-h:   20px;
+  --field-pad-x:       var(--s-2);
+  --field-pad-y:       var(--s-1);
+  --table-cell-pad-x:  var(--s-2);
+  --table-cell-pad-y:  var(--s-1);
+  --table-head-pad-y:  var(--s-1);
+}
+[data-density="compact"] {
+  --hit-cozy:  32px;
+  --check-size: 16px;
+  --switch-track-w: 30px;
+  --switch-track-h: 16px;
+  --switch-thumb-size: 12px;
+  --switch-thumb-travel: 14px;
+  --avatar-md: 24px;
+  --badge-dot-size: 5px;
+  --status-dot-size: 6px;
+  --sidenav-w: 220px;
+  --field-floating-label-top: 6px;
+  --segmented-btn-h: 24px;
+}
+[data-density="cozy"] {
+  --hit-cozy:  40px;
+  /* defaults */
+}
+[data-density="comfy"] {
+  --hit-cozy:  48px;
+  --check-size: 22px;
+  --switch-track-w: 44px;
+  --switch-track-h: 24px;
+  --switch-thumb-size: 20px;
+  --switch-thumb-travel: 20px;
+  --avatar-md: 36px;
+  --badge-dot-size: 8px;
+  --status-dot-size: 10px;
+  --sidenav-w: 264px;
+  --segmented-btn-h: 32px;
+}

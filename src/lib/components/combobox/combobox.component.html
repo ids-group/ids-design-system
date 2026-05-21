@@ -1,0 +1,32 @@
+<button #trigger type="button" class="combo-trigger" (click)="toggle()">
+  @if (multiple()) {
+    @for (selectedOption of selectedTags(); track selectedOption.value) {
+      <ds-tag [closable]="true" (closed)="remove(selectedOption.value)">{{ selectedOption.label }}</ds-tag>
+    }
+  } @else if (displayLabel()) {
+    <span class="combo-value">{{ displayLabel() }}</span>
+  }
+  <input #filter type="text" class="combo-input"
+         [value]="query()" (input)="onFilter($event)"
+         [placeholder]="placeholderText()" />
+  <ds-icon name="chevronDown" [size]="16" class="combo-chevron" />
+</button>
+
+<ng-template #panel>
+  <div class="combo-list">
+    @for (option of filteredOptions(); track option.value) {
+      <div [class]="optionClass(option)" [attr.aria-selected]="isSelected(option)" (click)="onPick(option)">
+        @if (multiple()) {
+          <input type="checkbox" class="check" [checked]="isSelected(option)" />
+        }
+        <span>{{ option.label }}</span>
+        @if (!multiple() && isSelected(option)) {
+          <ds-icon name="check" class="icon" [size]="14" />
+        }
+      </div>
+    }
+    @if (filteredOptions().length === 0) {
+      <div class="empty t-s">No matches</div>
+    }
+  </div>
+</ng-template>

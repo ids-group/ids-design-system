@@ -1,0 +1,13 @@
+<div [class]="classes()">
+  <ds-icon class="icon" [name]="icon() ?? defaultIcon()" [size]="16" />
+  <div class="body">
+    @if (title()) { <div class="title">{{ title() }}</div> }
+    {{ message() }}
+    <ng-content></ng-content>
+  </div>
+  @if (dismissible()) {
+    <button type="button" class="close" (click)="onDismiss()" aria-label="Dismiss">
+      <ds-icon name="x" [size]="14" />
+    </button>
+  }
+</div>

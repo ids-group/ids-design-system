@@ -1,0 +1,23 @@
+/* w3w — pill for what3words location identifiers (///daring.lion.race).
+   Mono + brand-coloured body, danger-red .mark prefix. */
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1-5);
+  padding: var(--s-1) var(--s-2);
+  background: var(--brand-subtle);
+  color: var(--brand);
+  border-radius: var(--r-md);
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-standard);
+
+  &:hover { background: var(--brand-muted); }
+
+  .mark {
+    color: var(--danger);
+    font-weight: var(--fw-bold);
+  }
+}

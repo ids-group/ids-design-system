@@ -1,0 +1,173 @@
+/* ============================================================
+   PAGE HEADER
+   Ported from vendor/claude-design-ds/components-extras.css
+   (canonical .page-hdr block, lines 636–706). Defect 4 fix:
+   the .page-header rules in patterns.css are the dropped
+   duplicate — not sourced from here.
+   ============================================================ */
+:host {
+  display: block;
+}
+
+:host(.eyebrow-secondary) {
+  --ds-pagehdr-eyebrow-fg: var(--secondary-strong);
+}
+
+.page-header {
+  --ds-pagehdr-eyebrow-fg: var(--text-tertiary);
+  --ds-pagehdr-title-fg: var(--text-primary);
+  --ds-pagehdr-sub-fg: var(--text-secondary);
+  --ds-pagehdr-meta-fg: var(--text-secondary);
+  --ds-pagehdr-meta-icon-fg: var(--icon-default);
+  --ds-pagehdr-divider: var(--border-divider);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+
+  /* Bottom divider is opt-in via the `divider` input. Default-on for the
+     standard "header separated from content" composition; consumers turn
+     it off when a tabs strip or other element supplies its own border. */
+  &.with-divider {
+    padding-bottom: var(--s-4);
+    border-bottom: var(--bw-default) solid var(--ds-pagehdr-divider);
+  }
+
+  /* When tabs are projected, the strip supplies its own bottom border —
+     suppress the page-header divider so we don't paint two stacked lines
+     even if the consumer left the default `divider` on. */
+  &:has(> [tabs]) {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .row {
+    display: flex;
+    /* flex-start is load-bearing: title-block must hug the row's top so its
+       internal title→sub stack stays independent of the actions slot height.
+       Don't relax to center/stretch without re-checking that coupling. */
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--s-4);
+    flex-wrap: wrap;
+  }
+
+  .title-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1);
+    min-width: 0;
+    flex: 1 1 0;
+    align-self: flex-start;
+  }
+
+  .eyebrow {
+    font: var(--fw-bold) var(--fs-2xs)/var(--lh-flat) var(--font-sans);
+    letter-spacing: var(--ls-wide);
+    text-transform: uppercase;
+    color: var(--ds-pagehdr-eyebrow-fg);
+  }
+
+  .title {
+    font: var(--fw-extrabold) var(--fs-h2)/var(--lh-tight) var(--font-display);
+    color: var(--ds-pagehdr-title-fg);
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .title-line {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    flex-wrap: wrap;
+  }
+
+  /* Breadcrumb trail above the title — typical on deep record pages. */
+  .crumbs-trail {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    font: var(--fw-regular) var(--fs-s)/var(--lh-flat) var(--font-sans);
+    color: var(--text-tertiary);
+    min-width: 0;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    padding-bottom: var(--s-1);
+  }
+  .crumb {
+    color: var(--text-tertiary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 24ch;
+
+    &:hover { color: var(--brand); }
+    &.crumb--current {
+      color: var(--text-primary);
+      font-weight: var(--fw-bold);
+      max-width: 32ch;
+    }
+  }
+  .crumb-sep { color: var(--icon-muted); display: inline-flex; align-items: center; }
+
+  .sub {
+    font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+    color: var(--ds-pagehdr-sub-fg);
+    margin: 0;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-3);
+
+    /* Hide the wrapper entirely when no meta content was projected — no
+       orphan border-top, no padding eating space. */
+    &:not(:has(> *)) { display: none; }
+  }
+
+  &.with-meta-divider .meta {
+    padding-top: var(--s-2);
+    border-top: var(--bw-default) solid var(--ds-pagehdr-divider);
+  }
+
+  .meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-1-5);
+    font: var(--fw-medium) var(--fs-xs)/var(--lh-flat) var(--font-sans);
+    color: var(--ds-pagehdr-meta-fg);
+
+    .icon {
+      width: var(--icon-sm);
+      height: var(--icon-sm);
+      color: var(--ds-pagehdr-meta-icon-fg);
+    }
+  }
+
+  &.compact {
+    gap: var(--s-2);
+    padding-bottom: var(--s-3);
+
+    .title {
+      font-size: var(--fs-h4);
+    }
+  }
+}
+
+@media (max-width: 720px) {
+  .page-header .actions { width: 100%; }
+}

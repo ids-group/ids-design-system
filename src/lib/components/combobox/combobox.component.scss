@@ -1,0 +1,95 @@
+/* Combobox — trigger lives on host; listbox panel is rendered via
+   TemplatePortal so its DOM carries this component's encapsulation attrs.
+   Both halves are styled here. */
+
+:host {
+  display: inline-block;
+  width: 100%;
+  position: relative;
+}
+
+.combo-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  width: 100%;
+  min-height: var(--hit-cozy);
+  padding: var(--s-1) var(--s-2);
+  background: var(--surface-default);
+  border: var(--bw-default) solid var(--border-default);
+  border-radius: var(--r-md);
+  cursor: text;
+  text-align: left;
+  flex-wrap: wrap;
+
+  &:hover { border-color: var(--border-strong); }
+  &:focus-within {
+    border-color: var(--brand);
+    box-shadow: var(--focus-ring);
+    outline: 0;
+  }
+}
+
+.combo-value {
+  font: var(--fw-medium) var(--fs-s)/var(--lh-flat) var(--font-sans);
+  color: var(--text-primary);
+}
+
+.combo-input {
+  flex: 1;
+  min-width: 80px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: var(--fw-regular) var(--fs-s)/var(--lh-flat) var(--font-sans);
+  color: var(--text-primary);
+}
+
+.combo-chevron {
+  color: var(--icon-default);
+  margin-left: auto;
+}
+
+.combo-list {
+  /* Fill the cdk-overlay-pane width (set from trigger.getBoundingClientRect()
+     in combobox.component.ts). Without `width: 100%` the panel shrinks
+     to its own option content width inside the absolutely-positioned pane. */
+  width: 100%;
+  background: var(--surface-overlay);
+  border: var(--bw-default) solid var(--border-default);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-popover);
+  margin-top: var(--combobox-offset);
+  max-height: var(--combobox-maxh);
+  overflow-y: auto;
+  z-index: var(--layer-popover);
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: var(--s-2) var(--s-3);
+    font: var(--fw-medium) var(--fs-s)/var(--lh-base) var(--font-sans);
+    cursor: pointer;
+
+    &:hover,
+    &[aria-selected="true"] {
+      background: var(--surface-secondary);
+    }
+
+    .icon {
+      color: var(--brand);
+      margin-left: auto;
+    }
+
+    &.check {
+      padding-left: var(--s-2);
+    }
+  }
+
+  .empty {
+    padding: var(--s-3) var(--s-4);
+    color: var(--text-tertiary);
+    text-align: center;
+  }
+}

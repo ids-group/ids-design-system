@@ -1,0 +1,100 @@
+:host {
+  display: block;
+}
+
+.dropzone {
+  --ds-dropzone-bg:               var(--surface-default);
+  --ds-dropzone-bg-hover:         var(--brand-subtle);
+  --ds-dropzone-bg-active:        var(--brand-subtle);
+  --ds-dropzone-border:           var(--border-default);
+  --ds-dropzone-border-hover:     var(--brand);
+  --ds-dropzone-border-active:    var(--brand);
+  --ds-dropzone-fg:               var(--text-secondary);
+  --ds-dropzone-fg-active:        var(--brand-strong);
+  --ds-dropzone-radius:           var(--r-lg);
+  --ds-dropzone-file-progress:    var(--brand);
+  --ds-dropzone-file-success:     var(--success);
+  --ds-dropzone-file-error:       var(--danger);
+  --ds-dropzone-opacity-disabled: 0.5;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  border: var(--bw-strong) dashed var(--ds-dropzone-border);
+  border-radius: var(--ds-dropzone-radius);
+  padding: var(--s-6);
+  text-align: center;
+  background: var(--ds-dropzone-bg);
+  cursor: pointer;
+  min-height: 160px;
+
+  &:hover {
+    border-color: var(--ds-dropzone-border-hover);
+    background: var(--ds-dropzone-bg-hover);
+  }
+
+  &.active {
+    border-color: var(--ds-dropzone-border-active);
+    background: var(--ds-dropzone-bg-active);
+  }
+
+  &.has-files {
+    align-items: stretch;
+    text-align: left;
+    min-height: 0;
+    cursor: default;
+  }
+
+  &[disabled],
+  &.disabled {
+    opacity: var(--ds-dropzone-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  .title {
+    font: var(--fw-bold) var(--fs-m)/var(--lh-snug) var(--font-heading);
+    margin: 0 0 var(--s-1);
+  }
+
+  .hint {
+    font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+    color: var(--ds-dropzone-fg);
+  }
+
+  .file-list {
+    width: 100%;
+    margin-top: var(--s-4);
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .file {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    padding: var(--s-3);
+    border: var(--bw-default) solid var(--border-default);
+    border-radius: var(--r-md);
+    background: var(--surface-default);
+
+    .icon { flex-shrink: 0; color: var(--icon-default); }
+    .main { flex: 1; min-width: 0; }
+    .name { font: var(--fw-medium) var(--fs-s)/var(--lh-base) var(--font-sans); color: var(--text-primary); }
+    .meta { font: var(--fw-regular) var(--fs-xs)/var(--lh-base) var(--font-sans); color: var(--text-tertiary); }
+    .progress { height: var(--bw-strong); background: var(--surface-secondary); border-radius: var(--r-pill); margin-top: var(--s-1); }
+    .progress-fill { height: 100%; background: var(--ds-dropzone-file-progress); border-radius: var(--r-pill); transition: width var(--dur-base) var(--ease-standard); }
+    .remove {
+      background: none;
+      border: 0;
+      cursor: pointer;
+      color: var(--icon-default);
+      &:hover { color: var(--icon-strong); }
+    }
+
+    &.uploading .icon { color: var(--ds-dropzone-file-progress); }
+    &.success { border-color: var(--ds-dropzone-file-success); .icon { color: var(--ds-dropzone-file-success); } }
+    &.error   { border-color: var(--ds-dropzone-file-error);  .icon { color: var(--ds-dropzone-file-error); } }
+  }
+}

@@ -1,0 +1,81 @@
+// Ported from vendor/claude-design-ds/components.css ".search" block.
+// Source markup uses bare descendants (.search input, .search kbd).
+// Our port introduces explicit nested elements .input and .kbd
+// so styling targets are explicit and decoupled from raw tag selectors.
+
+:host {
+  display: block;
+}
+
+.search {
+  --ds-search-bg: var(--surface-secondary);
+  --ds-search-bg-focus: var(--surface-default);
+  --ds-search-border: transparent;
+  --ds-search-border-hover: var(--border-default);
+  --ds-search-border-focus: var(--brand);
+  --ds-search-focus-shadow: var(--focus-field);
+  --ds-search-fg: var(--text-primary);
+  --ds-search-placeholder: var(--text-tertiary);
+  --ds-search-radius: var(--r-md);
+  --ds-search-height: var(--search-h);
+
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  background: var(--ds-search-bg);
+  border: var(--bw-default) solid var(--ds-search-border);
+  border-radius: var(--ds-search-radius);
+  padding: 0 var(--s-3);
+  height: var(--ds-search-height);
+  width: 100%;
+  max-width: var(--search-maxw);
+  transition:
+    border-color var(--dur-fast) var(--ease-standard),
+    background var(--dur-fast) var(--ease-standard);
+
+  &:hover {
+    border-color: var(--ds-search-border-hover);
+  }
+
+  &:focus-within {
+    background: var(--ds-search-bg-focus);
+    border-color: var(--ds-search-border-focus);
+    box-shadow: var(--ds-search-focus-shadow);
+  }
+
+  .icon {
+    width: var(--icon-md);
+    height: var(--icon-md);
+    color: var(--icon-default);
+  }
+
+  .input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font: var(--fw-regular) var(--fs-s) / var(--lh-flat) var(--font-sans);
+    color: var(--ds-search-fg);
+
+    &::placeholder {
+      color: var(--ds-search-placeholder);
+    }
+  }
+
+  .kbd {
+    font: var(--fw-medium) var(--fs-2xs) / var(--lh-flat) var(--font-mono);
+    padding: var(--s-px) var(--s-1-5);
+    background: var(--surface-default);
+    border: var(--bw-default) solid var(--border-divider);
+    border-radius: var(--r-sm);
+    color: var(--text-tertiary);
+  }
+
+  /* Size modifiers — opt-in, align search with the canonical hit-target scale
+     when sitting in a control row beside input/select/button. Default stays at
+     --search-h (36px / --hit-md) for back-compat. */
+  &.sm { --ds-search-height: var(--hit-min); }
+  &.md { --ds-search-height: var(--hit-cozy); }
+  &.lg { --ds-search-height: var(--field-h-lg); }
+}

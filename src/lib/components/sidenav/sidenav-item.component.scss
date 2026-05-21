@@ -1,0 +1,127 @@
+// Tokens on :host so consumer overrides (ds-sidenav-item { --ds-…: … }) win
+// against the inner .item rule's specificity.
+:host {
+  --ds-sidenav-item-fg:               var(--text-secondary);
+  --ds-sidenav-item-fg-hover:         var(--text-primary);
+  --ds-sidenav-item-bg-hover:         var(--surface-secondary);
+  --ds-sidenav-item-bg-active:        var(--brand);
+  --ds-sidenav-item-fg-active:        var(--text-on-brand);
+  --ds-sidenav-item-bg-active-hover:  color-mix(in srgb, var(--ds-sidenav-item-bg-active) 88%, white);
+  --ds-sidenav-item-accent:           var(--secondary);
+  --ds-sidenav-item-radius:           var(--r-md);
+  --ds-sidenav-alert-color:           var(--danger);
+
+  display: block;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--ds-sidenav-item-radius);
+  color: var(--ds-sidenav-item-fg);
+  text-decoration: none;
+  font: var(--fw-semibold) var(--fs-s)/var(--lh-base) var(--font-sans);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease-standard),
+    color var(--dur-fast) var(--ease-standard);
+  position: relative;
+
+  &:hover {
+    background: var(--ds-sidenav-item-bg-hover);
+    color: var(--ds-sidenav-item-fg-hover);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  &.active {
+    background: var(--ds-sidenav-item-bg-active);
+    color: var(--ds-sidenav-item-fg-active);
+
+    /* inset box-shadow follows the item's rounded corners */
+    box-shadow: inset 3px 0 0 var(--ds-sidenav-item-accent);
+  }
+
+  &.active:hover {
+    background: var(--ds-sidenav-item-bg-active-hover);
+  }
+
+  .icon {
+    width: var(--icon-lg);
+    height: var(--icon-lg);
+    color: currentColor;
+    flex-shrink: 0;
+  }
+
+  .item-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .count {
+    min-width: var(--badge-count-size);
+    height: var(--badge-count-size);
+    padding: 0 var(--s-1-5);
+    display: inline-grid;
+    place-items: center;
+    border-radius: var(--r-pill);
+    background: var(--surface-secondary);
+    color: var(--text-secondary);
+    font: var(--fw-bold) var(--fs-2xs)/var(--lh-base) var(--font-sans);
+    letter-spacing: var(--ls-wide);
+    margin-left: auto;
+  }
+
+  .alert {
+    width: var(--badge-dot-size);
+    height: var(--badge-dot-size);
+    background: var(--ds-sidenav-alert-color);
+    border-radius: var(--r-pill);
+    margin-left: auto;
+  }
+
+  .trailing {
+    display: inline-flex;
+    align-items: center;
+    margin-left: auto;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+  }
+
+  &.active .trailing { color: currentColor; }
+}
+
+:host-context(.sidenav.collapsed) {
+  .item {
+    justify-content: center;
+    padding: 0;
+    width: var(--sidenav-collapsed-item);
+    height: var(--sidenav-collapsed-item);
+    gap: 0;
+    font-size: 0;
+
+    .icon {
+      font-size: 0;
+    }
+
+    .item-label,
+    .count {
+      display: none;
+    }
+
+    .alert {
+      position: absolute;
+      top: var(--s-1-5);
+      right: var(--s-1-5);
+      margin: 0;
+    }
+  }
+}

@@ -1,0 +1,56 @@
+/* Skeleton — shimmer placeholder.
+   The shimmer band reads a SHARED viewport-anchored offset
+   (`--skeleton-shimmer-x`, animated once on :root in
+   ds/src/lib/styles/_skeleton-shimmer.scss). Every skeleton on the page
+   reveals the same moving slice in lock-step, so the animation looks
+   like one light pass across the whole surface instead of N independent
+   loops per element.
+
+   Base layer    : solid --surface-secondary on host.
+   Shimmer layer : ::after solid --surface-muted, clipped by a viewport-
+                   anchored mask gradient whose position tracks the shared
+                   custom property.
+   Container has overflow: hidden so the ::after stays inside the skeleton.
+
+   Variants: .circle (avatars / dots), .inline (inline-block flow). */
+
+:host {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-secondary);
+  border-radius: var(--r-md);
+}
+
+:host(.circle) { border-radius: var(--r-pill); }
+:host(.inline) { display: inline-block; vertical-align: middle; }
+
+:host::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--surface-muted);
+  pointer-events: none;
+  will-change: mask-position;
+
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 30%,
+    #000 50%,
+    transparent 70%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 30%,
+    #000 50%,
+    transparent 70%
+  );
+  -webkit-mask-size: 200vw 100%;
+  mask-size: 200vw 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-attachment: fixed;
+  mask-attachment: fixed;
+  -webkit-mask-position: var(--skeleton-shimmer-x, 100vw) 0;
+  mask-position: var(--skeleton-shimmer-x, 100vw) 0;
+}

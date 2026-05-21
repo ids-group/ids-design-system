@@ -1,0 +1,246 @@
+/* ============================================================
+   TABLE
+   Ported from CLAUDE_DESIGN_DS/components.css (TABLE block, lines 619–698).
+   Notes:
+   - [aria-sort="ascending"] / [aria-sort="descending"] replaced with
+     class-based .sorted-asc / .sorted-desc (no a11y in this prototype).
+   - The cell-content shimmer placeholder uses the GLOBAL `.skeleton` class.
+     `.table.skeleton-mode` is the row-level loading flag — distinct so the
+     global class is not shadowed.
+   - .is-forced-* selectors are docs-only and live in _forced-states.scss.
+   ============================================================ */
+
+:host {
+  display: block;
+}
+
+.scroll-wrap {
+  --ds-table-radius: var(--r-xl);
+
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--ds-table-radius);
+  background: var(--surface-default);
+
+  /* Overlay-loading positions the spinner over the existing rows so
+     the user keeps their context during refresh / re-sort / re-filter.
+     The overlay covers ONLY the tbody area — thead stays interactive so
+     users can re-sort even while data refreshes. */
+  &.loading-overlay {
+    position: relative;
+  }
+
+  .overlay {
+    position: absolute;
+    inset: var(--ds-table-head-h, 40px) 0 0 0;
+    z-index: var(--layer-popover, 30);
+    display: grid;
+    place-items: center;
+    background: hsla(0, 0%, 100%, 0.6);
+    backdrop-filter: blur(1px);
+    pointer-events: all;
+  }
+
+  .spinner {
+    width: var(--spinner-md, 24px);
+    height: var(--spinner-md, 24px);
+    border: var(--bw-strong, 2px) solid var(--border-default);
+    border-top-color: var(--brand);
+    border-radius: var(--r-pill);
+    animation: ds-table-overlay-spin var(--dur-loop-fast, 700ms) linear infinite;
+  }
+}
+
+@keyframes ds-table-overlay-spin {
+  to { transform: rotate(360deg); }
+}
+
+.table {
+  --ds-table-bg:              var(--surface-default);
+  --ds-table-row-hover-bg:    var(--surface-secondary);
+  --ds-table-row-selected-bg: var(--brand-subtle);
+  --ds-table-head-bg:         var(--surface-secondary);
+  --ds-table-head-fg:         var(--text-tertiary);
+  --ds-table-divider:         var(--border-divider);
+  --ds-table-sort-active-fg:  var(--brand);
+  --ds-table-cell-pad-x:      var(--table-cell-pad-x);
+  --ds-table-cell-pad-y:      var(--table-cell-pad-y);
+  --ds-table-radius:          var(--r-xl);
+
+  width: 100%;
+  border-collapse: collapse;
+  font: var(--fw-regular) var(--fs-s) / var(--lh-base) var(--font-sans);
+  color: var(--text-primary);
+  background: var(--ds-table-bg);
+
+  thead th {
+    text-align: left;
+    padding: var(--table-head-pad-y) var(--ds-table-cell-pad-x);
+    font: var(--fw-bold) var(--fs-xs) / var(--lh-base) var(--font-sans);
+    letter-spacing: var(--ls-wider);
+    text-transform: uppercase;
+    color: var(--ds-table-head-fg);
+    background: var(--ds-table-head-bg);
+    border-bottom: var(--bw-default) solid var(--ds-table-divider);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: var(--table-sticky-header-z);
+
+    &.sortable {
+      cursor: pointer;
+      user-select: none;
+
+      &:hover {
+        color: var(--text-secondary);
+      }
+    }
+
+    .sort-icon {
+      display: inline-block;
+      width: var(--sort-ic-size);
+      height: var(--sort-ic-size);
+      margin-left: var(--sort-ic-gap);
+      vertical-align: middle;
+      /* Nudge up by 1px: vertical-align:middle aligns to x-height centre,
+         but the header label is UPPERCASE — its visual centre sits at
+         cap-height/2, ~1px higher. Compensates the optical offset. */
+      transform: translateY(-1px);
+      color: var(--icon-default);
+      opacity: 0.4;
+
+      /* Inner <svg class="icon"> defaults to var(--icon-md) (16px) via the
+         global .icon rule — force it back to the host's sort-ic-size so the
+         glyph actually sits at the centre of the header label. */
+      .icon {
+        width: var(--sort-ic-size);
+        height: var(--sort-ic-size);
+        display: block;
+      }
+    }
+
+    &.sorted-asc .sort-icon,
+    &.sorted-desc .sort-icon {
+      opacity: 1;
+      color: var(--ds-table-sort-active-fg);
+    }
+
+    &.numeric {
+      text-align: right;
+    }
+
+    &.select-col {
+      width: var(--s-10);
+    }
+  }
+
+  tbody {
+    td {
+      padding: var(--ds-table-cell-pad-y) var(--ds-table-cell-pad-x);
+      line-height: var(--lh-flat);
+      /* Inset shadow instead of border-bottom so the divider paints inside
+         the cell — row height stays identical regardless of selected/hover
+         background and is not affected by border-collapse quirks. */
+      box-shadow: inset 0 calc(-1 * var(--bw-default)) 0 var(--ds-table-divider);
+      vertical-align: middle;
+
+      &.numeric {
+        text-align: right;
+      }
+
+      &.empty {
+        text-align: center;
+        color: var(--text-tertiary);
+        padding: var(--s-4);
+      }
+    }
+
+    tr {
+      &:last-child td {
+        box-shadow: none;
+      }
+
+      &:hover td {
+        background: var(--ds-table-row-hover-bg);
+      }
+
+      &.selected td {
+        background: var(--ds-table-row-selected-bg);
+      }
+
+      &.clickable {
+        cursor: pointer;
+      }
+    }
+  }
+
+  &.compact {
+    tbody td,
+    thead th {
+      padding: var(--s-2) var(--s-3);
+    }
+  }
+
+  /* Skeleton/loading state — disable hover & selection visuals
+     so the placeholder doesn't read as interactive. */
+  &.skeleton-mode {
+    tbody tr:hover td {
+      background: transparent;
+      cursor: default;
+    }
+    tbody tr.clickable {
+      cursor: default;
+    }
+  }
+
+  /* Sticky first column */
+  &.sticky-col {
+    tbody td:first-child,
+    thead th:first-child {
+      position: sticky;
+      left: 0;
+      background: inherit;
+      z-index: var(--table-sticky-col-z);
+    }
+    thead th:first-child {
+      z-index: var(--table-sticky-corner-z);
+    }
+  }
+}
+
+/* Bulk action bar */
+.bulk-bar {
+  position: sticky;
+  bottom: var(--bulk-bar-offset);
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  background: var(--surface-inverted);
+  color: var(--text-inverted);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-toast);
+  margin: var(--s-4) auto 0;
+  width: fit-content;
+
+  .count {
+    font: var(--fw-bold) var(--fs-s) / var(--lh-flat) var(--font-sans);
+  }
+
+  .sep {
+    width: var(--bw-default);
+    height: var(--s-4);
+    background: var(--border-inverted);
+  }
+
+  .button {
+    background: transparent;
+    color: var(--text-inverted);
+
+    &:hover {
+      background: var(--surface-inverted-hover);
+    }
+  }
+}

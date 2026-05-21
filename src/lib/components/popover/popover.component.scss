@@ -1,0 +1,17 @@
+/* Popover — light surface panel rendered via TemplatePortal into the CDK
+   overlay. The `<div class="popover">` lives inside this component's template,
+   so Angular tags it with our _ngcontent attr — styles below reach it even
+   after it's mounted in document.body. The host element itself is a layout
+   no-op anchor in the consumer DOM. */
+
+:host { display: contents; }
+
+.popover {
+  background: var(--surface-overlay);
+  border: var(--bw-default) solid var(--border-default);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-popover);
+  padding: var(--s-3);
+  z-index: var(--layer-popover);
+  max-width: var(--popover-maxw);
+}

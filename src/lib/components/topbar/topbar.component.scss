@@ -1,0 +1,72 @@
+:host {
+  display: block;
+}
+
+.topbar {
+  --ds-topbar-bg: var(--surface-default);
+  --ds-topbar-border: var(--border-divider);
+  --ds-topbar-height: var(--topbar-h);
+  --ds-topbar-action-fg: var(--icon-default);
+  --ds-topbar-action-fg-hover: var(--icon-strong);
+  --ds-topbar-action-bg-hover: var(--surface-secondary);
+  --ds-topbar-title-fg: var(--text-primary);
+  --ds-topbar-ping-color: var(--danger);
+
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  height: var(--ds-topbar-height);
+  padding: 0 var(--s-6);
+  background: var(--ds-topbar-bg);
+  border-bottom: var(--bw-default) solid var(--ds-topbar-border);
+
+  .title {
+    font: var(--fw-bold) var(--fs-h5)/var(--lh-snug) var(--font-sans);
+    color: var(--ds-topbar-title-fg);
+  }
+
+  .spacer {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    margin-left: auto;
+  }
+
+  /* Breadcrumb trail anchored next to the brand title — used on deep
+     record pages where context outweighs lookup. */
+  .crumbs-trail {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    font: var(--fw-regular) var(--fs-s)/var(--lh-flat) var(--font-sans);
+    color: var(--text-tertiary);
+    min-width: 0;
+    max-width: 100%;
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+  .crumb {
+    color: var(--text-tertiary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 24ch;
+
+    &:hover { color: var(--brand); }
+    &.crumb--current {
+      color: var(--text-primary);
+      font-weight: var(--fw-bold);
+      max-width: 32ch;
+    }
+  }
+  .crumb-sep { color: var(--icon-muted); display: inline-flex; align-items: center; }
+}

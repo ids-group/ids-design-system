@@ -1,0 +1,100 @@
+<div class="scroll-wrap" [class.loading-overlay]="isOverlayLoading()">
+  @if (isOverlayLoading()) {
+    <div class="overlay" aria-hidden="true">
+      <span class="spinner"></span>
+    </div>
+  }
+  <table [class]="tableClasses()">
+    <thead>
+      <tr>
+        @if (selectable()) {
+          <th class="select-col">
+            <input
+              type="checkbox"
+              class="check"
+              [checked]="allSelected()"
+              [indeterminate]="someSelected()"
+              (change)="onToggleAll($event)"
+            />
+          </th>
+        }
+        @for (col of columns(); track col.key) {
+          <th
+            [class]="headerClasses(col)"
+            [class.numeric]="col.align === 'right'"
+            (click)="onSort(col)"
+          >
+            {{ col.label }}
+            @if (col.sortable) {
+              <ds-icon class="sort-icon" [name]="sortIcon(col)" [size]="12"></ds-icon>
+            }
+          </th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @if (isSkeletonLoading()) {
+        @for (_ of skeletonArray(); track $index; let rowIndex = $index) {
+          <tr>
+            @if (selectable()) {
+              <td><ds-skeleton width="14px" height="14px" [inline]="true" /></td>
+            }
+            @for (col of columns(); track col.key) {
+              <td [class.numeric]="col.align === 'right'">
+                <ds-skeleton [width]="skeletonWidth(col, rowIndex)" height="14px" [inline]="true" />
+              </td>
+            }
+          </tr>
+        }
+      } @else if (!data().length) {
+        <tr>
+          <td
+            [attr.colspan]="columns().length + (selectable() ? 1 : 0)"
+            class="empty"
+          >
+            <ng-content select="[empty]"></ng-content>
+          </td>
+        </tr>
+      } @else {
+        @for (row of data(); track row.id) {
+          <tr
+            [class.selected]="isSelected(row)"
+            [class.clickable]="true"
+            (click)="onRowClick(row, $event)"
+          >
+            @if (selectable()) {
+              <td>
+                <input
+                  type="checkbox"
+                  class="check"
+                  [checked]="isSelected(row)"
+                  (change)="onToggleRow(row, $event)"
+                  (click)="$event.stopPropagation()"
+                />
+              </td>
+            }
+            @for (col of columns(); track col.key) {
+              <td [class.numeric]="col.align === 'right'">
+                @if (cellTemplate(col); as tpl) {
+                  <ng-container
+                    [ngTemplateOutlet]="tpl"
+                    [ngTemplateOutletContext]="{ $implicit: row, row: row }"
+                  ></ng-container>
+                } @else {
+                  {{ cellValue(row, col) }}
+                }
+              </td>
+            }
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
+@if (selectable() && someSelected()) {
+  <div class="bulk-bar">
+    <span class="count">{{ selectedIds().size }} selected</span>
+    <span class="sep"></span>
+    <ng-content select="[bulk-actions]"></ng-content>
+  </div>
+}

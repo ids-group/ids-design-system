@@ -1,0 +1,49 @@
+:host { display: inline-flex; align-items: center; }
+
+.check {
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--check-size);
+  height: var(--check-size);
+  border: var(--check-bw) solid var(--border-strong);
+  background: var(--surface-default);
+  cursor: pointer;
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  margin: 0;
+  border-radius: var(--r-sm);
+  transition: background var(--dur-fast) var(--ease-standard),
+              border-color var(--dur-fast) var(--ease-standard);
+
+  &:hover:not(:disabled) { border-color: var(--brand); }
+  &:focus-visible        { outline: none; box-shadow: var(--focus-ring); }
+  &:disabled {
+    background: var(--surface-disabled);
+    border-color: var(--border-disabled);
+    cursor: not-allowed;
+  }
+
+  &:checked {
+    background: var(--brand);
+    border-color: var(--brand);
+    &::after {
+      content: "";
+      width: var(--check-tick-size);
+      height: var(--check-tick-size);
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'><path d='M2 6.5l2.5 2.5L10 3.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
+    }
+  }
+
+  &:indeterminate {
+    background: var(--brand);
+    border-color: var(--brand);
+    &::after {
+      content: "";
+      width: var(--check-indet-w);
+      height: var(--check-indet-h);
+      background: var(--neutral-0);
+      border-radius: var(--r-sm);
+    }
+  }
+}

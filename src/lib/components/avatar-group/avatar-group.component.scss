@@ -1,0 +1,41 @@
+/* ============================================================
+   AVATAR GROUP
+
+   Stacked-avatar overlap (border ring + negative margin).
+   The projected `<ds-avatar>` host elements are in this component's
+   view, so we use `::ng-deep` to penetrate emulated encapsulation
+   and reach their host element. The overflow `+N` chip is rendered
+   inside this template — its base `.avatar` look is duplicated here
+   on `.avatar-overflow` because the styles in avatar.component.scss
+   only target the `<ds-avatar>` host and would not match a plain span.
+   ============================================================ */
+:host {
+  --ds-avatargroup-overlap: calc(-1 * var(--s-2));
+  --ds-avatargroup-ring:    var(--surface-default);
+
+  display: inline-flex;
+}
+
+::ng-deep ds-avatar {
+  border: var(--avatar-bw-group) solid var(--ds-avatargroup-ring);
+  margin-left: var(--ds-avatargroup-overlap);
+}
+
+::ng-deep ds-avatar:first-child {
+  margin-left: 0;
+}
+
+.avatar-overflow {
+  display: inline-grid;
+  place-items: center;
+  width: var(--avatar-md);
+  height: var(--avatar-md);
+  border-radius: var(--r-pill);
+  background: var(--brand-muted);
+  color: var(--brand-strong);
+  font: var(--fw-bold) var(--fs-xs)/var(--lh-flat) var(--font-sans);
+  letter-spacing: var(--ls-wide);
+  flex-shrink: 0;
+  border: var(--avatar-bw-group) solid var(--ds-avatargroup-ring);
+  margin-left: var(--ds-avatargroup-overlap);
+}

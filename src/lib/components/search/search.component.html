@@ -1,0 +1,14 @@
+<div class="search">
+  @if (showIcon()) {
+    <ds-icon name="search" [size]="16"></ds-icon>
+  }
+  <input
+    class="input"
+    [(ngModel)]="value"
+    [placeholder]="placeholder()"
+    (keydown.enter)="onSubmit()"
+  />
+  @if (shortcut()) {
+    <kbd class="kbd">{{ shortcut() }}</kbd>
+  }
+</div>

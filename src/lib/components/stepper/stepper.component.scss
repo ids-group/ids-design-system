@@ -1,0 +1,36 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+
+  .node {
+    width: var(--stepper-node-size);
+    height: var(--stepper-node-size);
+    border-radius: var(--r-pill);
+    display: grid;
+    place-items: center;
+    border: var(--bw-default) solid var(--border-strong);
+    background: var(--surface-default);
+    color: var(--text-tertiary);
+    font: var(--fw-bold) var(--fs-xs)/var(--lh-flat) var(--font-sans);
+
+    &.done {
+      background: var(--brand-subtle);
+      border-color: var(--brand);
+      color: var(--brand);
+    }
+
+    &.active {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: var(--brand-on);
+    }
+  }
+
+  .bar {
+    height: var(--stepper-bar-h);
+    width: var(--stepper-bar-w);
+    background: var(--border-divider);
+
+    &.done { background: var(--brand); }
+  }
+}

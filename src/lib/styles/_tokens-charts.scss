@@ -1,0 +1,71 @@
+/* ============================================================
+   Boilerplate — Chart / dataviz tokens
+   ------------------------------------------------------------
+   Categorical: 8 hues, ordered by perceptual distance not
+   ramp position. First six are AA against both light and
+   dark surface-default; the last two are reserved for
+   "rest" / "other" buckets where contrast is less critical.
+
+   Sequential: single-hue ramp (violet) for ordinal data —
+   "low → high" magnitudes.
+
+   Divergent: red ↔ neutral ↔ green for signed data —
+   "bad ← zero → good". Used for Excess / Shortage matrix.
+   ============================================================ */
+
+:root {
+  /* CATEGORICAL (8) ----------------------------------------- */
+  --chart-cat-1: hsl(229, 100%, 59%);   /* violet (brand) */
+  --chart-cat-2: hsl(165,  72%, 38%);   /* teal */
+  --chart-cat-3: hsl( 24,  95%, 55%);   /* orange */
+  --chart-cat-4: hsl(330,  82%, 55%);   /* magenta */
+  --chart-cat-5: hsl(45,   95%, 50%);   /* amber */
+  --chart-cat-6: hsl(190,  85%, 45%);   /* cyan */
+  --chart-cat-7: hsl(280,  60%, 60%);   /* lavender */
+  --chart-cat-8: hsl(130,  45%, 50%);   /* moss */
+
+  /* SEQUENTIAL — single-hue, light → dark */
+  --chart-seq-1: var(--violet-100);
+  --chart-seq-2: var(--violet-200);
+  --chart-seq-3: var(--violet-300);
+  --chart-seq-4: var(--violet-500);
+  --chart-seq-5: var(--violet-700);
+  --chart-seq-6: var(--violet-900);
+
+  /* DIVERGENT — red ← neutral → green
+     Values taken verbatim from the source design prototype
+     (CLAUDE_DESIGN_DS/patterns.css) so the Excess/Shortage matrix
+     matches the reference one-for-one. Explicit HSL keeps the ramp
+     independent of palette retunes — re-skinning brand/red/green
+     should not shift the dataviz colour story. */
+  --chart-div--3: hsl(0 70% 40%);       /* large negative (worst) */
+  --chart-div--2: hsl(0 60% 58%);
+  --chart-div--1: hsl(0 50% 80%);
+  --chart-div-0:  hsl(225 8% 92%);      /* zero */
+  --chart-div-1:  hsl(140 35% 80%);
+  --chart-div-2:  hsl(140 45% 55%);
+  --chart-div-3:  hsl(140 55% 35%);     /* large positive (best) */
+
+  /* AXIS / GRID / LEGEND */
+  --chart-axis-line:    var(--neutral-300);
+  --chart-axis-label:   var(--text-tertiary);
+  --chart-axis-title:   var(--text-secondary);
+  --chart-grid-line:    var(--neutral-150);
+  --chart-grid-line-strong: var(--neutral-200);
+  --chart-tick-size:    4px;
+  --chart-axis-fs:      var(--fs-2xs);
+
+  /* HIGHLIGHT / HOVER */
+  --chart-hover-bg:     hsla(225, 39%, 7%, .04);
+  --chart-cursor-line:  var(--neutral-400);
+  --chart-tooltip-bg:   var(--neutral-900);
+  --chart-tooltip-fg:   var(--neutral-0);
+  --chart-tooltip-border: var(--neutral-700);
+
+  /* DIMENSIONS */
+  --chart-bar-gap:      4px;
+  --chart-line-w:       2px;
+  --chart-line-w-bold:  3px;
+  --chart-dot-r:        4px;
+  --chart-dot-r-active: 6px;
+}

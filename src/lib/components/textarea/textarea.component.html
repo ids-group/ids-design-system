@@ -1,0 +1,25 @@
+<div [class]="wrapperClasses()">
+  @if (label()) {
+    <span class="label">
+      {{ label() }}
+      @if (required()) {
+        <span class="req" aria-hidden="true">*</span>
+      } @else if (optional()) {
+        <span class="optional-marker" aria-hidden="true">(optional)</span>
+      }
+    </span>
+  }
+  <div class="control">
+    <textarea
+      [rows]="rows()"
+      [(ngModel)]="value"
+      [attr.name]="name()"
+      [attr.placeholder]="placeholder() || null"
+      [disabled]="disabled()"
+      [required]="required()"
+    ></textarea>
+  </div>
+  @if (hint()) {
+    <span class="hint">{{ hint() }}</span>
+  }
+</div>

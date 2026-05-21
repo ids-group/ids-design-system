@@ -1,0 +1,49 @@
+@if (label()) {
+  <span class="select-label">
+    {{ label() }}
+    @if (required()) {
+      <span class="req" aria-hidden="true">*</span>
+    } @else if (optional()) {
+      <span class="optional-marker" aria-hidden="true">(optional)</span>
+    }
+  </span>
+}
+
+<button
+  #trigger
+  type="button"
+  [class]="triggerClasses()"
+  [attr.name]="name()"
+  [disabled]="disabled()"
+  (click)="toggle()"
+  (keydown)="onTriggerKeydown($event)"
+>
+  <span class="trigger-text" [class.is-placeholder]="!hasValue()">{{ displayLabel() }}</span>
+  <span class="chevron"><ds-icon name="chevronDown" [size]="14" /></span>
+</button>
+
+<ng-template #panel>
+  <div class="dropdown-panel">
+    <ul class="dropdown-list">
+      @for (opt of options(); track opt.value; let i = $index) {
+        <li>
+          <button
+            type="button"
+            class="option"
+            [class.is-selected]="isSelected(opt)"
+            [class.is-active]="isActive(i)"
+            [class.is-disabled]="opt.disabled"
+            [disabled]="opt.disabled"
+            (click)="pick(opt)"
+            (mouseenter)="activeIndex.set(i)"
+          >
+            <span class="option-label">{{ opt.label }}</span>
+            @if (isSelected(opt)) {
+              <ds-icon class="option-check" name="check" [size]="14" />
+            }
+          </button>
+        </li>
+      }
+    </ul>
+  </div>
+</ng-template>
