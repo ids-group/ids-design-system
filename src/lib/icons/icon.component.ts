@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, computed, inject, input } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
+import { DS_ICON_REGISTRY } from './icon-registry';
 import { ICONS, type IconName } from './icons.data';
 
 @Component({
@@ -28,10 +29,15 @@ import { ICONS, type IconName } from './icons.data';
 })
 export class IconComponent {
   private readonly sanitizer = inject(DomSanitizer);
+  // Consumer-supplied icons via provideDsIcons(...). Empty record by default.
+  private readonly registry = inject(DS_ICON_REGISTRY);
   readonly name = input.required<IconName>();
   readonly size = input<number>(16);
   readonly stroke = input<number>(1.75);
-  protected readonly paths = computed<SafeHtml>(() =>
-    this.sanitizer.bypassSecurityTrustHtml(ICONS[this.name()]),
-  );
+  protected readonly paths = computed<SafeHtml>(() => {
+    const key = this.name();
+    // Built-in DS set wins over consumer registry — see provideDsIcons() docs.
+    const body = (ICONS as Record<string, string>)[key] ?? this.registry[key] ?? '';
+    return this.sanitizer.bypassSecurityTrustHtml(body);
+  });
 }

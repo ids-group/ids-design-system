@@ -17,7 +17,11 @@
   --ds-tab-pad-y: var(--s-3);
   --ds-tabs-divider: var(--border-divider);
   --ds-tabs-pills-bg: var(--surface-secondary);
+  --ds-tab-pill-bg-hover: var(--brand-subtle);
   --ds-tab-pill-bg-active: var(--surface-default);
+  --ds-tab-pill-bg-active-hover: var(--brand-subtle);
+  --ds-tab-pill-fg-active: var(--brand-strong);
+  --ds-tab-pill-radius: var(--r-md);
 }
 
 .tabs {
@@ -81,26 +85,32 @@
     gap: var(--s-1);
     padding: var(--s-1);
     background: var(--ds-tabs-pills-bg);
-    border-radius: var(--r-pill);
+    border-radius: var(--ds-tab-pill-radius);
     display: inline-flex;
 
     .tab {
       padding: var(--s-2) var(--s-3);
       border-bottom: 0;
       margin-bottom: 0;
-      border-radius: var(--r-pill);
+      border-radius: var(--ds-tab-pill-radius);
       color: var(--ds-tab-fg);
 
+      /* Inactive hover — subtle brand tint, distinct from active surface */
       &:hover {
-        background: var(--ds-tab-pill-bg-active);
+        background: var(--ds-tab-pill-bg-hover);
         color: var(--ds-tab-fg-hover);
       }
 
       &.active {
         background: var(--ds-tab-pill-bg-active);
-        color: var(--ds-tab-fg-hover);
+        color: var(--ds-tab-pill-fg-active);
         border-bottom: 0;
         box-shadow: var(--z100);
+
+        /* Active hover — wash the elevated card with a brand tint */
+        &:hover {
+          background: var(--ds-tab-pill-bg-active-hover);
+        }
       }
     }
   }

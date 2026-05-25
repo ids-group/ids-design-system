@@ -6,6 +6,25 @@
 # Node artifact files
 node_modules/
 dist/
+out-tsc/
+tmp/
+coverage/
+*.tsbuildinfo
+
+# Angular build cache
+.angular/
+
+# Sass cache
+.sass-cache/
+
+# VS Code local history
+.history/
+
+# Claude Code local settings
+.claude/
+
+# Screenshot regression captures (per-branch baselines + diff output)
+screenshots/
 
 # Compiled Java class files
 *.class
@@ -21,7 +40,6 @@ dist/
 
 # Maven
 target/
-dist/
 
 # JetBrains IDE
 .idea/
@@ -48,6 +66,8 @@ Thumbs.db
 *.mov
 *.wmv
 
-# Visual Studio 2015 cache/options directory
+# Visual studio
 .vs/
-
+Anton_local
+# Local docs scratchpad (not tracked).
+/docs/

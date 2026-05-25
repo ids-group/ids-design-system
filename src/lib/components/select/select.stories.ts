@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { SelectComponent } from './select.component';
+import type { SelectItem } from './select.types';
 
 const PRODUCTS = [
   { label: 'All Products', value: '' },
@@ -7,6 +8,30 @@ const PRODUCTS = [
   { label: 'Critical Illness', value: 'ci' },
   { label: 'Accident', value: 'acc' },
   { label: 'Life Insurance', value: 'life' },
+];
+
+const GROUPED_AUDIENCE: SelectItem[] = [
+  {
+    label: 'Whole population',
+    options: [{ label: 'All customers', value: 'all' }],
+  },
+  {
+    label: 'Customer state',
+    options: [
+      { label: 'Convert & recommend', value: 'convert-recommend' },
+      { label: 'Reduced coverage', value: 'reduced-coverage' },
+      { label: 'Empty nesters', value: 'empty-nesters' },
+      { label: 'Disengage', value: 'disengage' },
+    ],
+  },
+  {
+    label: 'Temporal',
+    options: [{ label: 'Renewing within 9 months', value: 'renewing-9m' }],
+  },
+  {
+    label: 'Other',
+    options: [{ label: 'Custom segment (mocked)', value: 'custom' }],
+  },
 ];
 
 const meta: Meta<SelectComponent> = {
@@ -56,5 +81,12 @@ export const WithLabel: Story = {
   render: (args) => ({
     props: args,
     template: `<div style="max-width:280px"><ds-select label="Product" [options]="options" placeholder="Choose one…"></ds-select></div>`,
+  }),
+};
+export const WithGroups: Story = {
+  args: { ...Default.args, options: GROUPED_AUDIENCE, placeholder: 'Choose a segment…', value: 'all' },
+  render: (args) => ({
+    props: args,
+    template: `<div style="max-width:320px"><ds-select label="Filter preset" [(value)]="value" [options]="options" [placeholder]="placeholder"></ds-select></div>`,
   }),
 };

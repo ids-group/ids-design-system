@@ -4,6 +4,7 @@
 export const ICONS = {
   search: '<circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />',
   plus: '<path d="M12 5v14M5 12h14" />',
+  minus: '<path d="M5 12h14" />',
   check: '<path d="m4 12 5 5L20 6" />',
   x: '<path d="M6 6l12 12M18 6L6 18" />',
   chevronDown: '<path d="m6 9 6 6 6-6" />',
@@ -81,6 +82,11 @@ export const ICONS = {
   mail: '<rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" />',
   'eye-off': '<path d="M3 3l18 18" /><path d="M10.6 6.1A10 10 0 0 1 12 6c6 0 10 7 10 7a14 14 0 0 1-2.4 3.1" /><path d="M6.7 6.7A14 14 0 0 0 2 12s4 7 10 7a10 10 0 0 0 4.5-1" /><path d="M9.9 14.1A3 3 0 0 1 9 12a3 3 0 0 1 3-3 3 3 0 0 1 2.1.9" />',
   'check-circle': '<circle cx="12" cy="12" r="9" /><path d="m8 12 3 3 5-6" />',
+  // Drag handle: 6 dots in 2 cols × 3 rows. Use 1.6 radius to read at 12-16px.
+  drag: '<circle cx="9" cy="6" r="1.6" /><circle cx="15" cy="6" r="1.6" /><circle cx="9" cy="12" r="1.6" /><circle cx="15" cy="12" r="1.6" /><circle cx="9" cy="18" r="1.6" /><circle cx="15" cy="18" r="1.6" />',
 } as const;
 
-export type IconName = keyof typeof ICONS;
+/** Built-in DS icon names. Consumers can extend the runtime set via `provideDsIcons({...})` —
+ * the type widens to `string` so any custom name is accepted at the call site (at the cost of
+ * autocomplete for those custom names). */
+export type IconName = keyof typeof ICONS | (string & {});

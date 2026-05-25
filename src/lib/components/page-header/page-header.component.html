@@ -7,10 +7,10 @@
         <h1 class="title">{{ title() }}</h1>
         <ng-content select="[title-badge]"></ng-content>
       </div>
-      @if (sub()) { <p class="sub">{{ sub() }}</p> }
+      @if (subtitle()) { <p class="subtitle">{{ subtitle() }}</p> }
+      <div class="meta"><ng-content select="[meta]"></ng-content></div>
     </div>
     <div class="actions"><ng-content select="[actions]"></ng-content></div>
   </div>
-  <div class="row meta"><ng-content select="[meta]"></ng-content></div>
   <ng-content select="[tabs]"></ng-content>
 </header>

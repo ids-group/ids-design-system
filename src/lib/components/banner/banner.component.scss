@@ -19,9 +19,12 @@
   gap: var(--s-3);
   padding: var(--ds-banner-pad-y) var(--ds-banner-pad-x);
   border-radius: var(--ds-banner-radius);
-  border-left: var(--ds-banner-bar-width) solid var(--ds-banner-bar);
   background: var(--ds-banner-bg);
   color: var(--ds-banner-fg);
+
+  :host(:not(.no-rail)) & {
+    border-left: var(--ds-banner-bar-width) solid var(--ds-banner-bar);
+  }
 
   &.success {
     --ds-banner-bar:    var(--success);

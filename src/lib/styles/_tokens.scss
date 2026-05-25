@@ -373,7 +373,23 @@
   --bp-sm:  640px;
   --bp-md:  768px;
   --bp-lg: 1024px;
+  --bp-xl: 1441px;   /* Page-grid wide-tier threshold (12 cols, container caps at --col-cap-content). */
   --bp-2xl:1536px;
+
+  /* ============================================================
+     Page grid — tier-specific gutters + margins.
+     Consumed by `.page-grid` in _page-grid.scss; one column-count
+     per tier (4 / 8 / 12 / 12) with `--page-gutter` and
+     `--page-margin` swapping at the matching min-width breakpoint.
+     ============================================================ */
+  --page-gutter-mobile:  var(--s-3);   /* 12px — <= 640px, 4-col tier */
+  --page-gutter-tablet:  var(--s-4);   /* 16px — 641–1024px, 8-col tier */
+  --page-gutter-desktop: var(--s-5);   /* 20px — 1025–1440px, 12-col tier */
+  --page-gutter-wide:    var(--s-6);   /* 24px — >= 1441px, 12-col tier, container caps */
+  --page-margin-mobile:  var(--s-4);   /* 16px */
+  --page-margin-tablet:  var(--s-6);   /* 24px */
+  --page-margin-desktop: var(--s-8);   /* 32px */
+  --page-margin-wide:    var(--s-10);  /* 40px */
 
   /* ============================================================
      System chrome
@@ -458,9 +474,9 @@
      scale. Density Tweaks override these at :root.
      ============================================================ */
 
-  /* Field padding — density-aware, consumed by .field__control,
-     .search, .field__textarea. Tokenised so the ultra-compact
-     tier can compress without component edits. */
+  /* Field padding — density-aware, consumed by input, search and
+     textarea controls. Tokenised so the ultra-compact tier can
+     compress without component edits. */
   --field-pad-x:       var(--s-3);
   --field-pad-y:       0;
 
@@ -588,7 +604,7 @@
   --page-header-sub-mt:      var(--s-1);             /* subtitle top margin */
 
   /* Field internals */
-  --field-textarea-rows-min: 60px;                   /* min-h for inline textarea inside .field__control */
+  --field-textarea-rows-min: 60px;                   /* min-h for inline textarea inside the field wrapper */
   --field-floating-pad-t:    18px;                   /* top padding when --floating, leaves room for label */
   --field-select-pad-r:      var(--s-6);             /* select chevron clearance */
   --field-affix-overlap:     var(--bw-default);     /* affix bleed over field border */
@@ -599,6 +615,7 @@
 
   /* Card */
   --card-hover-lift:         1px;                    /* translateY on .card--hover */
+  --card-title-fs:           var(--fs-h4);
 
   /* Sort icon (table headers) */
   --sort-ic-size:            var(--icon-xs);         /* 12px */

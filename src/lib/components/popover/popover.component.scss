@@ -14,4 +14,10 @@
   padding: var(--s-3);
   z-index: var(--layer-popover);
   max-width: var(--popover-maxw);
+
+  // ds-menu items already have their own per-item padding; outer padding here
+  // would double-pad. Drop it when the popover hosts a menu.
+  &:has(ds-menu) {
+    padding: 0;
+  }
 }

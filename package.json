@@ -1,12 +1,41 @@
 {
   "name": "ds",
   "version": "0.0.1",
+  "scripts": {
+    "ng": "ng",
+    "build": "ng build ds",
+    "build:dev": "ng build ds --configuration development",
+    "watch": "ng build ds --watch --configuration development"
+  },
   "peerDependencies": {
+    "@angular/cdk": "^21.2.0",
     "@angular/common": "^21.2.0",
-    "@angular/core": "^21.2.0"
+    "@angular/core": "^21.2.0",
+    "@angular/forms": "^21.2.0",
+    "@angular/platform-browser": "^21.2.0",
+    "@angular/router": "^21.2.0",
+    "@fontsource/jetbrains-mono": "^5.2.0",
+    "@fontsource/mulish": "^5.2.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.2.0",
+    "@angular/cdk": "^21.2.0",
+    "@angular/cli": "^21.2.0",
+    "@angular/common": "^21.2.0",
+    "@angular/compiler": "^21.2.0",
+    "@angular/compiler-cli": "^21.2.0",
+    "@angular/core": "^21.2.0",
+    "@angular/forms": "^21.2.0",
+    "@angular/platform-browser": "^21.2.0",
+    "@angular/router": "^21.2.0",
+    "@fontsource/jetbrains-mono": "5.2.8",
+    "@fontsource/mulish": "5.2.8",
+    "ng-packagr": "^21.2.0",
+    "rxjs": "~7.8.0",
+    "typescript": "~5.9.2"
   },
   "sideEffects": false
 }

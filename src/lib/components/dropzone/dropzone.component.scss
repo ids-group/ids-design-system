@@ -1,8 +1,14 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 .dropzone {
+  // Fill the host when it's placed in a flex parent — keeps the dropzone the
+  // same height as sibling cards. `min-height` below is the floor when there
+  // is no parent flex stretch.
+  flex: 1;
   --ds-dropzone-bg:               var(--surface-default);
   --ds-dropzone-bg-hover:         var(--brand-subtle);
   --ds-dropzone-bg-active:        var(--brand-subtle);
@@ -61,6 +67,21 @@
   .hint {
     font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
     color: var(--ds-dropzone-fg);
+  }
+
+  // Consumer-provided secondary hint (e.g. "Max file size: 5GB | CSV | UTF-8").
+  // Project via `<p hint>...</p>`; styled separately from .hint so consumers
+  // don't have to fight the host "or click to browse" line. Subtle top border
+  // visually separates the meta hint from the dropzone's main affordance.
+  [hint] {
+    margin: var(--s-3) calc(var(--s-6) * -1) 0;
+    padding: var(--s-3) var(--s-6) 0;
+    border-top: var(--bw-default) solid var(--border-subtle);
+    align-self: stretch;
+    text-align: center;
+    font: var(--fw-regular) var(--fs-xs)/var(--lh-base) var(--font-sans);
+    color: var(--text-tertiary);
+    letter-spacing: var(--ls-wide);
   }
 
   .file-list {

@@ -21,11 +21,19 @@ import type { SortChangeEvent, SortDir, TableColumn } from './table.types';
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  host: {
+    '[class.bordered]': 'bordered()',
+  },
 })
 export class TableComponent<T extends { id: string }> {
   readonly data = input.required<readonly T[]>();
   readonly columns = input.required<readonly TableColumn<T>[]>();
   readonly selectable = input<boolean>(false);
+  /** Opt-in outer border + radius. Off by default so tables flush inside a
+   *  `<ds-card padding="none">` (workspaces, programs-list) don't double-border.
+   *  When `true`, the scroll-wrap gets a `var(--border-default)` outline and
+   *  `var(--r-md)` radius — useful when the table stands alone in a padded card. */
+  readonly bordered = input<boolean>(false);
   /** false  — no loading state.
    *  'skeleton' — first-load placeholder; rows are replaced with shimmer
    *  rows that read the global --skeleton-shimmer-x driver.

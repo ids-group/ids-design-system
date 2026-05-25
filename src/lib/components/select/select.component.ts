@@ -15,7 +15,13 @@ import {
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { IconComponent } from '../../icons/icon.component';
-import type { SelectOption, SelectSize } from './select.types';
+import {
+  isSelectOptionGroup,
+  type SelectItem,
+  type SelectOption,
+  type SelectOptionGroup,
+  type SelectSize,
+} from './select.types';
 
 @Component({
   selector: 'ds-select',
@@ -30,7 +36,7 @@ export class SelectComponent {
   private readonly vcr = inject(ViewContainerRef);
 
   readonly value = model<string>('');
-  readonly options = input<SelectOption[]>([]);
+  readonly options = input<SelectItem[]>([]);
   readonly placeholder = input<string>('');
   readonly size = input<SelectSize>('md');
   readonly label = input<string>('');
@@ -47,10 +53,28 @@ export class SelectComponent {
 
   private overlayRef: OverlayRef | null = null;
 
+  // Flattened list of selectable options paired with the parent-group `disabled`
+  // state, so keyboard nav and selection ignore group-header labels and respect
+  // group-level disable. Index of an entry here corresponds to `activeIndex`.
+  protected readonly flatOptions = computed<{ option: SelectOption; groupDisabled: boolean }[]>(() => {
+    const out: { option: SelectOption; groupDisabled: boolean }[] = [];
+    for (const item of this.options()) {
+      if (isSelectOptionGroup(item)) {
+        const groupDisabled = !!item.disabled;
+        for (const opt of item.options) {
+          out.push({ option: opt, groupDisabled });
+        }
+      } else {
+        out.push({ option: item, groupDisabled: false });
+      }
+    }
+    return out;
+  });
+
   protected readonly selectedOption = computed<SelectOption | null>(() => {
     const current = this.value();
-    const found = this.options().find((o) => o.value === current);
-    return found ?? null;
+    const found = this.flatOptions().find(({ option }) => option.value === current);
+    return found?.option ?? null;
   });
 
   protected readonly displayLabel = computed<string>(() => {
@@ -72,9 +96,19 @@ export class SelectComponent {
   constructor() {
     effect(() => {
       if (!this.open()) return;
-      const idx = this.options().findIndex((o) => o.value === this.value());
+      const idx = this.flatOptions().findIndex(({ option }) => option.value === this.value());
       this.activeIndex.set(idx >= 0 ? idx : this.firstEnabledIndex());
     });
+  }
+
+  protected isOptionGroup(item: SelectItem): item is SelectOptionGroup {
+    return isSelectOptionGroup(item);
+  }
+
+  // Resolve the flat-index for a given option so click/hover/selection
+  // map back to the same indices keyboard nav uses (no double bookkeeping).
+  protected flatIndexOf(opt: SelectOption): number {
+    return this.flatOptions().findIndex(({ option }) => option === opt);
   }
 
   protected toggle(): void {
@@ -121,8 +155,8 @@ export class SelectComponent {
     this.activeIndex.set(-1);
   }
 
-  protected pick(option: SelectOption): void {
-    if (option.disabled) return;
+  protected pick(option: SelectOption, groupDisabled = false): void {
+    if (option.disabled || groupDisabled) return;
     this.value.set(option.value);
     this.close();
     this.trigger().nativeElement.focus();
@@ -130,6 +164,10 @@ export class SelectComponent {
 
   protected isSelected(option: SelectOption): boolean {
     return option.value === this.value();
+  }
+
+  protected isOptionDisabled(option: SelectOption, groupDisabled = false): boolean {
+    return !!option.disabled || groupDisabled;
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
@@ -160,8 +198,8 @@ export class SelectComponent {
     if (key === 'Enter' || key === ' ') {
       event.preventDefault();
       const idx = this.activeIndex();
-      const opt = this.options()[idx];
-      if (opt) this.pick(opt);
+      const entry = this.flatOptions()[idx];
+      if (entry) this.pick(entry.option, entry.groupDisabled);
       return;
     }
     if (key === 'Home') {
@@ -180,13 +218,13 @@ export class SelectComponent {
   }
 
   private moveActive(delta: number): void {
-    const opts = this.options();
+    const opts = this.flatOptions();
     if (opts.length === 0) return;
     let next = this.activeIndex();
     for (let attempts = 0; attempts < opts.length; attempts++) {
       next = (next + delta + opts.length) % opts.length;
       const candidate = opts[next];
-      if (candidate && !candidate.disabled) {
+      if (candidate && !candidate.option.disabled && !candidate.groupDisabled) {
         this.activeIndex.set(next);
         return;
       }
@@ -194,19 +232,19 @@ export class SelectComponent {
   }
 
   private firstEnabledIndex(): number {
-    const opts = this.options();
+    const opts = this.flatOptions();
     for (let i = 0; i < opts.length; i++) {
       const candidate = opts[i];
-      if (candidate && !candidate.disabled) return i;
+      if (candidate && !candidate.option.disabled && !candidate.groupDisabled) return i;
     }
     return -1;
   }
 
   private lastEnabledIndex(): number {
-    const opts = this.options();
+    const opts = this.flatOptions();
     for (let i = opts.length - 1; i >= 0; i--) {
       const candidate = opts[i];
-      if (candidate && !candidate.disabled) return i;
+      if (candidate && !candidate.option.disabled && !candidate.groupDisabled) return i;
     }
     return -1;
   }

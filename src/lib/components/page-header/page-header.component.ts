@@ -10,10 +10,10 @@ import { Component, ViewEncapsulation, computed, input } from '@angular/core';
 export class PageHeaderComponent {
   readonly eyebrow = input<string>('');
   readonly title = input.required<string>();
-  readonly sub = input<string>('');
+  readonly subtitle = input<string>('');
   readonly compact = input<boolean>(false);
-  readonly divider = input<boolean>(true);
-  readonly metaDivider = input<boolean>(true);
+  readonly divider = input<boolean>(false);
+  readonly metaDivider = input<boolean>(false);
 
   protected readonly classes = computed(() => {
     const parts = ['page-header'];

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, computed, input, output } from '@angular/core';
+import { Component, HostBinding, ViewEncapsulation, computed, input, output } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
 import type { BannerVariant } from './banner.types';
@@ -18,7 +18,13 @@ export class BannerComponent {
   readonly icon = input<IconName | null>(null);
   readonly compact = input<boolean>(false);
   readonly layout = input<'stacked' | 'row'>('stacked');
+  readonly accentRail = input<boolean>(true);
   readonly dismissed = output<void>();
+
+  @HostBinding('class.no-rail')
+  protected get noRail(): boolean {
+    return !this.accentRail();
+  }
 
   protected readonly classes = computed(() => {
     const parts = ['banner', this.variant(), `layout-${this.layout()}`];

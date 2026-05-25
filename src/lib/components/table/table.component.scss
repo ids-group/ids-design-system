@@ -12,17 +12,32 @@
 
 :host {
   display: block;
+
+  // Public component variables — override via higher-specificity selector
+  // (e.g. `ds-table.compact-card { --ds-table-border: transparent; }`).
+  --ds-table-border: var(--border-default);
+  --ds-table-radius: var(--r-md);
+  --ds-table-header-fg: var(--text-secondary);
+  --ds-table-header-bg: var(--surface-secondary);
+  --ds-table-header-fs: var(--fs-xs);
+}
+
+/* Opt-in outer frame via `[bordered]="true"` — gives standalone tables
+   (data-ingest preview, segmentation preview, offers tab, summary tab) a
+   defined edge. Tables flush inside `<ds-card padding="none">` stay clean
+   without it. Tokens above remain public so consumers can override per-instance. */
+:host(.bordered) .scroll-wrap {
+  border: var(--bw-default) solid var(--ds-table-border);
+  border-radius: var(--ds-table-radius);
 }
 
 .scroll-wrap {
-  --ds-table-radius: var(--r-xl);
-
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  border-radius: var(--ds-table-radius);
   background: var(--surface-default);
+  box-sizing: border-box;
 
   /* Overlay-loading positions the spinner over the existing rows so
      the user keeps their context during refresh / re-sort / re-filter.
@@ -61,13 +76,10 @@
   --ds-table-bg:              var(--surface-default);
   --ds-table-row-hover-bg:    var(--surface-secondary);
   --ds-table-row-selected-bg: var(--brand-subtle);
-  --ds-table-head-bg:         var(--surface-secondary);
-  --ds-table-head-fg:         var(--text-tertiary);
   --ds-table-divider:         var(--border-divider);
   --ds-table-sort-active-fg:  var(--brand);
   --ds-table-cell-pad-x:      var(--table-cell-pad-x);
   --ds-table-cell-pad-y:      var(--table-cell-pad-y);
-  --ds-table-radius:          var(--r-xl);
 
   width: 100%;
   border-collapse: collapse;
@@ -78,11 +90,11 @@
   thead th {
     text-align: left;
     padding: var(--table-head-pad-y) var(--ds-table-cell-pad-x);
-    font: var(--fw-bold) var(--fs-xs) / var(--lh-base) var(--font-sans);
+    font: var(--fw-bold) var(--ds-table-header-fs) / var(--lh-base) var(--font-sans);
     letter-spacing: var(--ls-wider);
     text-transform: uppercase;
-    color: var(--ds-table-head-fg);
-    background: var(--ds-table-head-bg);
+    color: var(--ds-table-header-fg);
+    background: var(--ds-table-header-bg);
     border-bottom: var(--bw-default) solid var(--ds-table-divider);
     white-space: nowrap;
     position: sticky;

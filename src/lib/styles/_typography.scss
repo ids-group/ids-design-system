@@ -7,6 +7,7 @@
 .t-h3         { font: var(--fw-extrabold) var(--fs-h3)/var(--lh-snug) var(--font-heading); letter-spacing: var(--ls-snug); }
 .t-h4         { font: var(--fw-bold) var(--fs-h4)/var(--lh-snug) var(--font-heading); }
 .t-h5         { font: var(--fw-bold) var(--fs-h5)/var(--lh-snug) var(--font-heading); }
+.t-card-title { font: var(--fw-bold) var(--card-title-fs)/var(--lh-snug) var(--font-heading); margin: 0; color: var(--text-primary); }
 .t-l          { font: var(--fw-regular) var(--fs-l)/var(--lh-base) var(--font-sans); }
 .t-l-bold     { font: var(--fw-bold) var(--fs-l)/var(--lh-base) var(--font-sans); }
 .t-m          { font: var(--fw-regular) var(--fs-m)/var(--lh-base) var(--font-sans); }
