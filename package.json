@@ -5,7 +5,11 @@
     "ng": "ng",
     "build": "ng build ds",
     "build:dev": "ng build ds --configuration development",
-    "watch": "ng build ds --watch --configuration development"
+    "watch": "ng build ds --watch --configuration development",
+    "start": "ng serve ds-docs",
+    "serve:docs": "ng serve ds-docs",
+    "build:docs": "ng build ds-docs",
+    "build:docs:dev": "ng build ds-docs --configuration development"
   },
   "peerDependencies": {
     "@angular/cdk": "^21.2.0",
@@ -35,7 +39,8 @@
     "@fontsource/mulish": "5.2.8",
     "ng-packagr": "^21.2.0",
     "rxjs": "~7.8.0",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "zone.js": "~0.15.0"
   },
   "sideEffects": false
 }

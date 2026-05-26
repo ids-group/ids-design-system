@@ -1,0 +1,14 @@
+// AUTO-GENERATED — do not edit by hand.
+// Source: prototype/scripts/sync-showcase-mirrors.ts
+// Run `npm --prefix prototype run sync:showcase-mirrors` to refresh.
+
+/* Popover surface — mirrored from popover.component.scss. Selector: .popover. */
+.popover {
+  background: var(--surface-overlay);
+  border: var(--bw-default) solid var(--border-default);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-popover);
+  padding: var(--s-3);
+  z-index: var(--layer-popover);
+  max-width: var(--popover-maxw);
+}

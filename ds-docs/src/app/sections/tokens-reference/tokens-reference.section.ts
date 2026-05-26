@@ -1,0 +1,1424 @@
+import { Component, ViewEncapsulation } from '@angular/core';
+
+interface ColourRow { name: string; value: string; notes: string; inverted?: boolean; }
+interface RampSpec { label: string; prefix: string; stops: readonly number[]; notes: string; }
+interface TypeRow { name: string; value: string; sample: string; sampleClass: 'sample-fs' | 'sample-lh' | 'sample-ls' | 'sample-fw' | 'sample-font'; notes: string; }
+interface SpacingRow { name: string; value: string; notes: string; }
+interface RadiusRow { name: string; value: string; notes: string; }
+interface ShadowRow { name: string; alias: string; notes: string; }
+interface MotionRow { name: string; value: string; notes: string; }
+interface SizeRow { name: string; value: string; notes: string; }
+interface LayoutRow { name: string; value: string; notes: string; }
+interface MiscRow { name: string; value: string; renderAs: 'bar' | 'opacity' | 'literal'; notes: string; }
+
+const SEMANTIC_BRAND: readonly ColourRow[] = [
+  { name: '--brand',                value: 'var(--violet-600)',                       notes: 'Primary brand fill (buttons, links, focus ring outer).' },
+  { name: '--brand-hover',          value: 'color-mix(--brand 88%, black)',           notes: 'Hover state on brand fill.' },
+  { name: '--brand-pressed',        value: 'color-mix(--brand 76%, black)',           notes: 'Active / pressed state on brand fill.' },
+  { name: '--brand-selected-hover', value: 'color-mix(--brand 88%, black)',           notes: 'Hover on already-selected brand surfaces (e.g. active sidenav item hover).' },
+  { name: '--brand-subtle',         value: 'var(--violet-50)',                        notes: 'Light brand tint (active row, sidenav active item).' },
+  { name: '--brand-muted',          value: 'var(--violet-100)',                       notes: 'Slightly stronger tint than subtle.' },
+  { name: '--brand-muted-strong',   value: 'var(--violet-200)',                       notes: 'Strongest tint in the brand-muted family.' },
+  { name: '--brand-strong',         value: 'var(--violet-700)',                       notes: 'Darker brand for text on brand tints.' },
+  { name: '--brand-on',             value: 'var(--neutral-0)',                        notes: 'Text/icon colour ON brand fill.', inverted: true },
+];
+
+const SEMANTIC_ACCENT: readonly ColourRow[] = [
+  { name: '--accent',         value: 'hsl(--accent-h, --accent-s, --accent-l)',  notes: 'Interactive marker — input focus border, tab indicator, switcher accent.' },
+  { name: '--accent-hover',   value: 'color-mix(--accent 88%, black)',           notes: 'Hover on accent fill.' },
+  { name: '--accent-pressed', value: 'color-mix(--accent 76%, black)',           notes: 'Pressed accent fill.' },
+  { name: '--accent-strong',  value: 'hsl(--accent-h, --accent-s, --accent-l - 11%)', notes: 'Darker accent for text on accent tints.' },
+  { name: '--accent-subtle',  value: 'hsl(--accent-h, 100%, 97%)',               notes: 'Light accent tint surface.' },
+  { name: '--accent-muted',   value: 'hsl(--accent-h, 95%, 94%)',                notes: 'Slightly stronger tint than subtle.' },
+  { name: '--accent-on',      value: 'var(--brand-on)',                          notes: 'Text/icon colour ON accent fill.', inverted: true },
+];
+
+const SEMANTIC_DANGER: readonly ColourRow[] = [
+  { name: '--danger',         value: 'var(--red-500)', notes: 'Destructive action fill, error border.' },
+  { name: '--danger-hover',   value: 'var(--red-600)', notes: 'Hover on danger fill.' },
+  { name: '--danger-pressed', value: 'var(--red-700)', notes: 'Pressed danger fill.' },
+  { name: '--danger-subtle',  value: 'var(--red-50)',  notes: 'Inline error banner background.' },
+  { name: '--danger-muted',   value: 'var(--red-100)', notes: 'Slightly stronger tint than subtle.' },
+  { name: '--danger-border',  value: 'var(--red-200)', notes: 'Border on subtle danger surfaces.' },
+  { name: '--danger-text',    value: 'var(--red-600)', notes: 'Body text on danger surfaces.' },
+];
+
+const SEMANTIC_SUCCESS: readonly ColourRow[] = [
+  { name: '--success',        value: 'var(--green-500)', notes: 'Success fill, confirmation dot.' },
+  { name: '--success-hover',  value: 'var(--green-600)', notes: 'Hover on success fill.' },
+  { name: '--success-subtle', value: 'var(--green-50)',  notes: 'Success banner background.' },
+  { name: '--success-muted',  value: 'var(--green-100)', notes: 'Slightly stronger tint than subtle.' },
+  { name: '--success-border', value: 'var(--green-200)', notes: 'Border on subtle success surfaces.' },
+  { name: '--success-text',   value: 'var(--green-700)', notes: 'Body text on success surfaces.' },
+];
+
+const SEMANTIC_WARNING: readonly ColourRow[] = [
+  { name: '--warning',        value: 'var(--yellow-400)', notes: 'Warning fill / attention badge.' },
+  { name: '--warning-hover',  value: 'var(--yellow-500)', notes: 'Hover on warning fill.' },
+  { name: '--warning-subtle', value: 'var(--yellow-50)',  notes: 'Warning banner background.' },
+  { name: '--warning-muted',  value: 'var(--yellow-100)', notes: 'Slightly stronger tint than subtle.' },
+  { name: '--warning-border', value: 'var(--yellow-200)', notes: 'Border on subtle warning surfaces.' },
+  { name: '--warning-text',   value: 'var(--yellow-700)', notes: 'Body text on warning surfaces.' },
+];
+
+const SEMANTIC_INFO: readonly ColourRow[] = [
+  { name: '--info',        value: 'var(--blue-500)', notes: 'Informational fill / icon.' },
+  { name: '--info-hover',  value: 'var(--blue-600)', notes: 'Hover on info fill.' },
+  { name: '--info-subtle', value: 'var(--blue-50)',  notes: 'Info banner background.' },
+  { name: '--info-muted',  value: 'var(--blue-100)', notes: 'Slightly stronger tint than subtle.' },
+  { name: '--info-border', value: 'var(--blue-200)', notes: 'Border on subtle info surfaces.' },
+  { name: '--info-text',   value: 'var(--blue-700)', notes: 'Body text on info surfaces.' },
+];
+
+const SEMANTIC_TEXT: readonly ColourRow[] = [
+  { name: '--text-primary',    value: 'var(--neutral-900)', notes: 'Primary body text.' },
+  { name: '--text-secondary',  value: 'var(--neutral-700)', notes: 'Secondary text, table cell.' },
+  { name: '--text-tertiary',   value: 'var(--neutral-500)', notes: 'Tertiary, meta text, labels.' },
+  { name: '--text-muted',      value: 'var(--neutral-400)', notes: 'Muted text, placeholders.' },
+  { name: '--text-disabled',   value: 'var(--neutral-400)', notes: 'Disabled control text.' },
+  { name: '--text-inverted',   value: 'var(--neutral-0)',   notes: 'Text ON dark surfaces.', inverted: true },
+  { name: '--text-link',       value: 'var(--violet-700)',  notes: 'Hyperlink text.' },
+  { name: '--text-on-brand',   value: 'var(--neutral-0)',   notes: 'Text on brand fill.', inverted: true },
+  { name: '--text-on-success', value: 'var(--neutral-0)',   notes: 'Text on solid success fill.', inverted: true },
+  { name: '--text-on-error',   value: 'var(--neutral-0)',   notes: 'Text on solid error fill.', inverted: true },
+];
+
+const SEMANTIC_SURFACE: readonly ColourRow[] = [
+  { name: '--surface-canvas',    value: 'var(--neutral-50)',  notes: 'Page background.' },
+  { name: '--surface-default',   value: 'var(--neutral-0)',   notes: 'Cards, sheets, toolbars (the "paper").' },
+  { name: '--surface-secondary', value: 'var(--neutral-100)', notes: 'Hover lane, table head, addons, code blocks.' },
+  { name: '--surface-overlay',   value: 'var(--neutral-0)',   notes: 'Modals, drawers, popovers (with scrim).' },
+  { name: '--surface-tint',      value: 'var(--violet-50)',   notes: 'Brand-tinted surfaces.' },
+  { name: '--surface-disabled',  value: 'var(--neutral-100)', notes: 'Disabled control fill.' },
+  { name: '--surface-inverted',       value: 'var(--neutral-900)', notes: 'Dark-on-light callouts, toasts.', inverted: true },
+  { name: '--surface-inverted-hover', value: 'var(--neutral-800)', notes: 'Hover state on inverted surfaces.', inverted: true },
+  { name: '--surface-muted',          value: 'var(--neutral-150)', notes: 'Muted neutral chip background (stat icon chip, etc.).' },
+];
+
+const SEMANTIC_BORDER: readonly ColourRow[] = [
+  { name: '--border-default',  value: 'var(--neutral-200)', notes: 'Default field / card border.' },
+  { name: '--border-strong',   value: 'var(--neutral-300)', notes: 'Hover / emphasised border.' },
+  { name: '--border-subtle',   value: 'var(--neutral-150)', notes: 'Faint border, light dividers.' },
+  { name: '--border-divider',  value: 'var(--neutral-150)', notes: 'Section dividers, table rows.' },
+  { name: '--border-inverted', value: 'var(--neutral-700)', notes: 'Border on dark surfaces.', inverted: true },
+  { name: '--border-disabled', value: 'var(--neutral-150)', notes: 'Disabled control border.' },
+];
+
+const SEMANTIC_FOCUS: readonly ColourRow[] = [
+  { name: '--focus-ring-inner',       value: 'var(--surface-canvas)', notes: 'Inner ring band (reads canvas — flips with theme).' },
+  { name: '--focus-ring-outer-h',     value: 'var(--brand-h)',        notes: 'Outer halo hue channel — re-skin propagates.' },
+  { name: '--focus-ring-outer-s',     value: 'var(--brand-s)',        notes: 'Outer halo saturation channel.' },
+  { name: '--focus-ring-outer-l',     value: 'var(--brand-l)',        notes: 'Outer halo lightness channel.' },
+  { name: '--focus-ring-outer-alpha', value: '1',                     notes: 'Outer halo alpha.' },
+  { name: '--focus-field-alpha',      value: '.22',                   notes: 'Field focus halo alpha (boost in dark themes).' },
+];
+
+const RAMPS: readonly RampSpec[] = [
+  { label: 'Neutral', prefix: 'neutral', stops: [0, 50, 100, 150, 200, 300, 400, 500, 600, 700, 800, 900, 950], notes: '13 stops. Base for surface/border/text.' },
+  { label: 'Violet (brand)', prefix: 'violet', stops: [50, 100, 200, 300, 400, 500, 600, 700, 800, 900], notes: 'HSL-channel split — drives focus halos and brand re-skin.' },
+  { label: 'Orange', prefix: 'orange', stops: [50, 100, 200, 300, 400, 500, 600, 700, 800], notes: 'Secondary signal, focus accent.' },
+  { label: 'Green (success)', prefix: 'green', stops: [50, 100, 200, 300, 400, 500, 600, 700], notes: 'Status — success / confirmed.' },
+  { label: 'Yellow (warning)', prefix: 'yellow', stops: [50, 100, 200, 300, 400, 500, 600, 700], notes: 'Status — attention / warning.' },
+  { label: 'Red (danger)', prefix: 'red', stops: [50, 100, 200, 300, 400, 500, 600, 700], notes: 'HSL-channel split — drives danger halos.' },
+  { label: 'Blue (info)', prefix: 'blue', stops: [50, 100, 200, 300, 400, 500, 600, 700], notes: 'Informational — distinct from violet brand.' },
+];
+
+const TYPOGRAPHY_FONT: readonly TypeRow[] = [
+  { name: '--font-sans',    value: 'Mulish, system-ui',         sample: 'The quick brown fox jumps over the lazy dog', sampleClass: 'sample-font', notes: 'Body and UI text.' },
+  { name: '--font-mono',    value: 'JetBrains Mono, ui-monospace', sample: 'const total = items.reduce(sum, 0);',     sampleClass: 'sample-font', notes: 'Code, tokens, kbd, numeric.' },
+  { name: '--font-display', value: 'var(--font-sans)',          sample: 'Display sample',                              sampleClass: 'sample-font', notes: 'Hero / display headings. Themable.' },
+  { name: '--font-heading', value: 'var(--font-sans)',          sample: 'Heading sample',                              sampleClass: 'sample-font', notes: 'h1–h5 headings. Themable.' },
+];
+
+const TYPOGRAPHY_SIZE: readonly TypeRow[] = [
+  { name: '--fs-display',    value: '64px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Display hero.' },
+  { name: '--fs-h1',         value: '48px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Page title.' },
+  { name: '--fs-h2',         value: '36px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Section title.' },
+  { name: '--fs-h3',         value: '28px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Sub-section.' },
+  { name: '--fs-h4',         value: '22px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Card / panel title.' },
+  { name: '--fs-h5',         value: '18px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Small heading.' },
+  { name: '--fs-h5-strong',  value: '20px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Modal titles, condensed headers.' },
+  { name: '--fs-l',          value: '18px', sample: 'Body large',               sampleClass: 'sample-fs', notes: 'Lede paragraph.' },
+  { name: '--fs-m',          value: '16px', sample: 'Body medium',              sampleClass: 'sample-fs', notes: 'Default body.' },
+  { name: '--fs-s',          value: '14px', sample: 'Body small',               sampleClass: 'sample-fs', notes: 'Dense body, table cells.' },
+  { name: '--fs-xs',         value: '12px', sample: 'Body xs',                  sampleClass: 'sample-fs', notes: 'Captions, table head, helper text.' },
+  { name: '--fs-2xs',        value: '11px', sample: 'Tiny',                     sampleClass: 'sample-fs', notes: 'Overline labels.' },
+  { name: '--fs-3xs',        value: '10px', sample: 'Micro',                    sampleClass: 'sample-fs', notes: 'avatar-sm font.' },
+  { name: '--fs-4xs',        value: '9px',  sample: 'Micro',                    sampleClass: 'sample-fs', notes: 'avatar-xs font.' },
+  { name: '--fs-mono',       value: '13px', sample: 'const x = 42;',            sampleClass: 'sample-fs', notes: 'Inline mono / code blocks.' },
+];
+
+const TYPOGRAPHY_LH: readonly TypeRow[] = [
+  { name: '--lh-tight', value: '1.1',  sample: 'Tight leading — display\nand h1 headings.',              sampleClass: 'sample-lh', notes: 'Display + h1.' },
+  { name: '--lh-snug',  value: '1.25', sample: 'Snug leading — sub-headings\nand condensed UI.',         sampleClass: 'sample-lh', notes: 'h2–h5.' },
+  { name: '--lh-base',  value: '1.4',  sample: 'Base leading — body copy\nand most UI.',                 sampleClass: 'sample-lh', notes: 'Body default.' },
+  { name: '--lh-loose', value: '1.6',  sample: 'Loose leading — long-form\nreading and editorial.',      sampleClass: 'sample-lh', notes: 'Long-form prose, mono blocks.' },
+  { name: '--lh-flat',  value: '1',    sample: 'Flat leading',                                            sampleClass: 'sample-lh', notes: 'Button labels, single-line UI.' },
+];
+
+const TYPOGRAPHY_LS: readonly TypeRow[] = [
+  { name: '--ls-tight',  value: '-.02em', sample: 'Tight tracking — display, h1', sampleClass: 'sample-ls', notes: 'Display / h1.' },
+  { name: '--ls-snug',   value: '-.01em', sample: 'Snug tracking — h2, h3',       sampleClass: 'sample-ls', notes: 'h2 / h3.' },
+  { name: '--ls-normal', value: '0',      sample: 'Normal tracking — body text',  sampleClass: 'sample-ls', notes: 'Default body.' },
+  { name: '--ls-wide',   value: '.02em',  sample: 'Wide tracking — labels',       sampleClass: 'sample-ls', notes: 'Subtle emphasis.' },
+  { name: '--ls-wider',  value: '.08em',  sample: 'WIDER TRACKING — OVERLINE',    sampleClass: 'sample-ls', notes: 'Overline / uppercase eyebrows.' },
+];
+
+const TYPOGRAPHY_FW: readonly TypeRow[] = [
+  { name: '--fw-regular',   value: '400', sample: 'Regular — body text',     sampleClass: 'sample-fw', notes: 'Body default.' },
+  { name: '--fw-medium',    value: '500', sample: 'Medium — mono / nav',     sampleClass: 'sample-fw', notes: 'Mono code, nav items.' },
+  { name: '--fw-semibold',  value: '600', sample: 'Semibold — emphasis',     sampleClass: 'sample-fw', notes: 'Field labels, mild emphasis.' },
+  { name: '--fw-bold',      value: '700', sample: 'Bold — headings h4/h5',   sampleClass: 'sample-fw', notes: 'h4–h5, strong body.' },
+  { name: '--fw-extrabold', value: '800', sample: 'Extrabold — display, h1', sampleClass: 'sample-fw', notes: 'Display + h1–h3.' },
+];
+
+const SPACING: readonly SpacingRow[] = [
+  { name: '--s-0',   value: '0',     notes: 'Zero — explicit no-gap.' },
+  { name: '--s-px',  value: '1px',   notes: 'Hairline — border-width equivalents.' },
+  { name: '--s-0-5', value: '2px',   notes: 'Hairline insets, icon close button pad.' },
+  { name: '--s-1',   value: '4px',   notes: 'Atom-level gap.' },
+  { name: '--s-1-5', value: '6px',   notes: 'Badge / tag gap, field-label gap.' },
+  { name: '--s-2',   value: '8px',   notes: 'Small gap.' },
+  { name: '--s-2-5', value: '10px',  notes: 'Tooltip pad-x, badge pad-x.' },
+  { name: '--s-3',   value: '12px',  notes: 'Default gap, field pad-x.' },
+  { name: '--s-4',   value: '16px',  notes: 'Card padding, row gap.' },
+  { name: '--s-5',   value: '20px',  notes: 'Medium block separation.' },
+  { name: '--s-6',   value: '24px',  notes: 'Section padding.' },
+  { name: '--s-8',   value: '32px',  notes: 'Group separation.' },
+  { name: '--s-10',  value: '40px',  notes: 'Empty-state padding.' },
+  { name: '--s-12',  value: '48px',  notes: 'Page section spacing.' },
+  { name: '--s-14',  value: '56px',  notes: 'Top bar height token.' },
+  { name: '--s-16',  value: '64px',  notes: 'Empty-state icon size, hero padding.' },
+  { name: '--s-20',  value: '80px',  notes: 'Wide page-level gap.' },
+  { name: '--s-24',  value: '96px',  notes: 'Hero gap.' },
+  { name: '--s-32',  value: '128px', notes: 'Maximum scale step.' },
+];
+
+const RADIUS: readonly RadiusRow[] = [
+  { name: '--r-0',         value: '0',     notes: 'Squared — explicit no-radius.' },
+  { name: '--r-sm',        value: '4px',   notes: 'kbd, indeterminate-checkbox tick, link focus halo.' },
+  { name: '--r-md',        value: '8px',   notes: 'Buttons, fields, tooltips, search, segmented, tags.' },
+  { name: '--r-lg',        value: '12px',  notes: 'Menus, popovers, cards, modals, drawers, toasts.' },
+  { name: '--r-2xl',       value: '24px',  notes: 'Heroic surfaces — reserved.' },
+  { name: '--r-pill-value', value: '999px', notes: 'Configurable pill — themes can override.' },
+  { name: '--r-pill',      value: 'var(--r-pill-value)', notes: 'Pills, avatars, switches, segmented thumb.' },
+  { name: '--r-flat',      value: 'var(--r-0)', notes: 'Intentionally squared — btn-group middle, in-range datepicker.' },
+];
+
+const SHADOWS: readonly ShadowRow[] = [
+  { name: '--z100',           alias: '',                notes: 'Lowest elevation — cards.' },
+  { name: '--z200',           alias: '',                notes: 'Popovers, dropdowns.' },
+  { name: '--z300',           alias: '',                notes: 'Toasts.' },
+  { name: '--z400',           alias: '',                notes: 'Modals, highest elevation.' },
+  { name: '--shadow-card',    alias: 'var(--z100)',     notes: 'Alias — applied to .card.' },
+  { name: '--shadow-popover', alias: 'var(--z200)',     notes: 'Alias — popovers, dropdowns.' },
+  { name: '--shadow-toast',   alias: 'var(--z300)',     notes: 'Alias — toasts.' },
+  { name: '--shadow-modal',   alias: 'var(--z400)',     notes: 'Alias — modals.' },
+  { name: '--shadow-tint-h',  alias: '225',             notes: 'Shadow hue channel — themable.' },
+  { name: '--shadow-tint-s',  alias: '39%',             notes: 'Shadow saturation channel.' },
+  { name: '--shadow-tint-l',  alias: '7%',              notes: 'Shadow lightness — flip in dark mode.' },
+];
+
+const MOTION_DUR: readonly MotionRow[] = [
+  { name: '--dur-instant',   value: '80ms',   notes: 'Near-instant feedback.' },
+  { name: '--dur-fast',      value: '120ms',  notes: 'Quick state changes (hover/focus).' },
+  { name: '--dur-base',      value: '180ms',  notes: 'Default transitions.' },
+  { name: '--dur-slow',      value: '260ms',  notes: 'Layout/expand transitions.' },
+  { name: '--dur-slower',    value: '400ms',  notes: 'Long enter/exit (modals, drawers).' },
+  { name: '--dur-loop-fast', value: '700ms',  notes: 'Indeterminate spinner rhythm.' },
+  { name: '--dur-loop-slow', value: '1400ms', notes: 'Skeleton shimmer rhythm.' },
+];
+
+const MOTION_EASE: readonly MotionRow[] = [
+  { name: '--ease-standard',   value: 'cubic-bezier(.2, 0, 0, 1)',     notes: 'Default — decelerates into rest.' },
+  { name: '--ease-emphasized', value: 'cubic-bezier(.3, 0, .1, 1.4)',  notes: 'Pick up and put down — overlays.' },
+  { name: '--ease-decelerate', value: 'cubic-bezier(0, 0, 0, 1)',      notes: 'Incoming only — appears.' },
+  { name: '--ease-accelerate', value: 'cubic-bezier(.3, 0, 1, 1)',     notes: 'Outgoing only — leaves.' },
+  { name: '--ease-spring',     value: 'cubic-bezier(.5, 1.5, .5, 1)',  notes: 'Playful overshoot — sparingly.' },
+];
+
+const DENSITY_HIT: readonly SizeRow[] = [
+  { name: '--hit-xs',    value: '24px', notes: 'btn-s, datepicker nav, modal close.' },
+  { name: '--hit-sm',    value: '28px', notes: 'segmented btn, stepper node.' },
+  { name: '--hit-md',    value: '36px', notes: 'search, pagination, tag-input rows.' },
+  { name: '--hit-min',   value: '32px', notes: 'Dense desktop default.' },
+  { name: '--hit-cozy',  value: '40px', notes: 'Default control height.' },
+  { name: '--hit-comfy', value: '44px', notes: 'WCAG minimum for touch.' },
+  { name: '--hit-touch', value: '48px', notes: 'Mobile-friendly, floating-label fields.' },
+];
+
+const DENSITY_TIERS: readonly { name: string; value: string; notes: string }[] = [
+  { name: 'ultra-compact', value: '24px hit', notes: 'Power-user tier — keyboard-first, opt-in only.' },
+  { name: 'compact',       value: '32px hit', notes: 'Dense desktop default.' },
+  { name: 'cozy',          value: '40px hit', notes: 'Default — most products.' },
+  { name: 'comfy',         value: '48px hit', notes: 'Touch-friendly.' },
+];
+
+const LAYOUT_BP: readonly LayoutRow[] = [
+  { name: '--bp-xs',  value: '480px',  notes: 'Phone landscape.' },
+  { name: '--bp-sm',  value: '640px',  notes: 'Small tablet.' },
+  { name: '--bp-md',  value: '768px',  notes: 'Tablet.' },
+  { name: '--bp-lg',  value: '1024px', notes: 'Small desktop.' },
+  { name: '--bp-2xl', value: '1536px', notes: 'Wide desktop.' },
+];
+
+const LAYOUT_COL: readonly LayoutRow[] = [
+  { name: '--col-cap-text',    value: '720px',  notes: 'Optimal reading column for prose.' },
+  { name: '--col-cap-content', value: '1280px', notes: 'Maximum content column for app layouts.' },
+];
+
+const ICONS: readonly SizeRow[] = [
+  { name: '--icon-2xs', value: '10px', notes: 'Status dot, chart legend dot.' },
+  { name: '--icon-xs',  value: '12px', notes: 'Sort caret, tag close glyph.' },
+  { name: '--icon-sm',  value: '14px', notes: 'Button icon (small), inline icon.' },
+  { name: '--icon-md',  value: '16px', notes: 'Default button icon, field affix.' },
+  { name: '--icon-lg',  value: '20px', notes: 'Topbar, sidenav, modal header icon.' },
+];
+
+const MISC_BW: readonly MiscRow[] = [
+  { name: '--bw-default', value: '1px', renderAs: 'bar', notes: 'Every border, divider, field outline.' },
+  { name: '--bw-strong',  value: '2px', renderAs: 'bar', notes: 'Radio dot, slider thumb, tabs underline, dropzone dash.' },
+];
+
+const MISC_OPACITY: readonly MiscRow[] = [
+  { name: '--opacity-disabled',       value: '0.5',  renderAs: 'opacity', notes: 'Full disabled state on interactive components.' },
+  { name: '--opacity-muted',          value: '0.6',  renderAs: 'opacity', notes: 'Legacy alias — being phased out.' },
+  { name: '--opacity-text-disabled',  value: '0.38', renderAs: 'opacity', notes: 'Disabled text where colour token unavailable.' },
+  { name: '--opacity-scrim',          value: '0.55', renderAs: 'opacity', notes: 'Modal/drawer backdrop overlay.' },
+  { name: '--opacity-state-hover',    value: '0.08', renderAs: 'opacity', notes: 'Hover layer over surface.' },
+  { name: '--opacity-state-pressed',  value: '0.16', renderAs: 'opacity', notes: 'Active/pressed layer.' },
+];
+
+const MISC_BLUR: readonly MiscRow[] = [
+  { name: '--blur-sm', value: '4px', renderAs: 'literal', notes: 'Subtle backdrop blur.' },
+  { name: '--blur-md', value: '8px', renderAs: 'literal', notes: 'Stronger backdrop blur — modals, drawers.' },
+];
+
+interface ComponentTokenRow { name: string; value: string; notes: string; }
+interface ComponentTokenGroup { component: string; selector: string; description: string; tokens: readonly ComponentTokenRow[]; }
+
+const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
+  {
+    component: 'Button',
+    selector: '.button',
+    description: 'Surface, fg, border, focus shadow, disabled, radius. Variants re-set only --ds-button-bg* / --ds-button-fg.',
+    tokens: [
+      { name: '--ds-button-bg',           value: 'var(--brand)',            notes: 'Surface fill.' },
+      { name: '--ds-button-bg-hover',     value: 'var(--brand-hover)',      notes: 'Hover fill.' },
+      { name: '--ds-button-bg-active',    value: 'var(--brand-pressed)',    notes: 'Active/pressed fill.' },
+      { name: '--ds-button-fg',           value: 'var(--brand-on)',         notes: 'Label/icon colour.' },
+      { name: '--ds-button-border',       value: 'transparent',             notes: 'Border colour (variants override).' },
+      { name: '--ds-button-bg-disabled',  value: 'var(--surface-disabled)', notes: 'Disabled fill.' },
+      { name: '--ds-button-fg-disabled',  value: 'var(--text-disabled)',    notes: 'Disabled label.' },
+      { name: '--ds-button-radius',       value: 'var(--r-md)',             notes: 'Corner radius.' },
+      { name: '--ds-button-focus-shadow', value: 'var(--focus-ring)',       notes: 'Focus halo.' },
+    ],
+  },
+  {
+    component: 'Badge',
+    selector: '.badge',
+    description: 'Lifecycle/semantic modifiers override --ds-badge-bg and --ds-badge-fg.',
+    tokens: [
+      { name: '--ds-badge-bg',          value: 'var(--surface-secondary)', notes: 'Surface fill.' },
+      { name: '--ds-badge-fg',          value: 'var(--text-secondary)',    notes: 'Label colour.' },
+      { name: '--ds-badge-radius',      value: 'var(--r-pill)',            notes: 'Pill radius.' },
+      { name: '--ds-badge-pad-x',       value: 'var(--badge-pad-x)',       notes: 'Horizontal padding.' },
+      { name: '--ds-badge-pad-y',       value: 'var(--badge-pad-y)',       notes: 'Vertical padding.' },
+      { name: '--ds-badge-font-weight', value: 'var(--fw-bold)',           notes: 'Label weight.' },
+    ],
+  },
+  {
+    component: 'Status dot',
+    selector: '.status-dot',
+    description: 'Severity classes only override --ds-statusdot-color.',
+    tokens: [
+      { name: '--ds-statusdot-size',  value: 'var(--status-dot-size)', notes: 'Diameter.' },
+      { name: '--ds-statusdot-color', value: 'var(--neutral-400)',     notes: 'Default = planning.' },
+    ],
+  },
+  {
+    component: 'Avatar',
+    selector: ':host (ds-avatar)',
+    description: 'Initials & image avatar. Used inside avatar-group with ring.',
+    tokens: [
+      { name: '--ds-avatar-size',        value: 'var(--avatar-md)',       notes: 'Width / height.' },
+      { name: '--ds-avatar-bg',          value: 'var(--brand-muted)',     notes: 'Surface fill.' },
+      { name: '--ds-avatar-fg',          value: 'var(--brand-strong)',    notes: 'Initials colour.' },
+      { name: '--ds-avatar-radius',      value: 'var(--r-pill)',          notes: 'Pill / square.' },
+      { name: '--ds-avatar-ring-color',  value: 'var(--surface-default)', notes: 'Ring when stacked.' },
+      { name: '--ds-avatar-ring-width',  value: 'var(--avatar-bw-group)', notes: 'Ring width when stacked.' },
+    ],
+  },
+  {
+    component: 'Avatar group',
+    selector: ':host (ds-avatar-group)',
+    description: 'Stack overlap + ring colour.',
+    tokens: [
+      { name: '--ds-avatargroup-overlap', value: 'calc(-1 * var(--s-2))', notes: 'Negative gap between avatars.' },
+      { name: '--ds-avatargroup-ring',    value: 'var(--surface-default)', notes: 'Outline between stacked avatars.' },
+    ],
+  },
+  {
+    component: 'Card',
+    selector: '.card',
+    description: 'Surface, border, radius, padding, shadow (flat / raised / hover / interactive).',
+    tokens: [
+      { name: '--ds-card-bg',           value: 'var(--surface-default)', notes: 'Card fill.' },
+      { name: '--ds-card-border',       value: 'var(--border-divider)',  notes: 'Card border.' },
+      { name: '--ds-card-radius',       value: 'var(--r-lg)',            notes: 'Corner radius.' },
+      { name: '--ds-card-pad',          value: 'var(--s-6)',             notes: 'Inner padding.' },
+      { name: '--ds-card-shadow',       value: 'none',                   notes: 'Default (flat).' },
+      { name: '--ds-card-shadow-hover', value: 'var(--z100)',            notes: 'Hover lift shadow.' },
+      { name: '--ds-card-focus-shadow', value: 'var(--focus-ring)',      notes: 'Focus halo on interactive cards.' },
+      { name: '--ds-card-hover-lift',   value: 'var(--card-hover-lift)', notes: 'Translate-Y on hover.' },
+    ],
+  },
+  {
+    component: 'Stat',
+    selector: '.stat',
+    description: 'KPI tile: surface, label, value, delta up/down.',
+    tokens: [
+      { name: '--ds-stat-bg',          value: 'var(--surface-default)', notes: 'Tile fill.' },
+      { name: '--ds-stat-border',      value: 'var(--border-divider)',  notes: 'Tile border.' },
+      { name: '--ds-stat-radius',      value: 'var(--r-lg)',            notes: 'Corner radius.' },
+      { name: '--ds-stat-pad',         value: 'var(--s-5)',             notes: 'Inner padding.' },
+      { name: '--ds-stat-label-color', value: 'var(--text-tertiary)',   notes: 'Label colour.' },
+      { name: '--ds-stat-value-color', value: 'var(--text-primary)',    notes: 'Value colour.' },
+      { name: '--ds-stat-up-color',    value: 'var(--success-text)',    notes: 'Positive delta.' },
+      { name: '--ds-stat-down-color',  value: 'var(--danger-text)',     notes: 'Negative delta.' },
+    ],
+  },
+  {
+    component: 'Tabs',
+    selector: '.tabs',
+    description: 'Underline + pills variants. Pills tokens activate inside .tabs.pills.',
+    tokens: [
+      { name: '--ds-tab-fg',                 value: 'var(--text-secondary)',    notes: 'Default tab label.' },
+      { name: '--ds-tab-fg-hover',           value: 'var(--text-primary)',      notes: 'Hover label.' },
+      { name: '--ds-tab-fg-active',          value: 'var(--brand)',             notes: 'Active label.' },
+      { name: '--ds-tab-indicator-color',    value: 'var(--brand)',             notes: 'Underline colour.' },
+      { name: '--ds-tab-indicator-width',    value: 'var(--bw-strong)',         notes: 'Underline thickness.' },
+      { name: '--ds-tab-pad-x',              value: 'var(--s-4)',               notes: 'Horizontal padding.' },
+      { name: '--ds-tab-pad-y',              value: 'var(--s-3)',               notes: 'Vertical padding.' },
+      { name: '--ds-tabs-divider',           value: 'var(--border-divider)',    notes: 'Bottom divider.' },
+      { name: '--ds-tabs-pills-bg',          value: 'var(--surface-secondary)', notes: 'Pills track fill.' },
+      { name: '--ds-tab-pill-bg-active',     value: 'var(--surface-default)',   notes: 'Active pill thumb.' },
+    ],
+  },
+  {
+    component: 'Input',
+    selector: '.field',
+    description: 'Default field — surface, border (default/hover/focus), error/success/disabled, focus shadow.',
+    tokens: [
+      { name: '--ds-input-bg',             value: 'var(--surface-default)',  notes: 'Field fill.' },
+      { name: '--ds-input-border',         value: 'var(--border-default)',   notes: 'Default border.' },
+      { name: '--ds-input-border-hover',   value: 'var(--border-strong)',    notes: 'Hover border.' },
+      { name: '--ds-input-border-focus',   value: 'var(--brand)',            notes: 'Focus border.' },
+      { name: '--ds-input-fg',             value: 'var(--text-primary)',     notes: 'Value text.' },
+      { name: '--ds-input-placeholder',    value: 'var(--text-tertiary)',    notes: 'Placeholder text.' },
+      { name: '--ds-input-radius',         value: 'var(--r-md)',             notes: 'Corner radius.' },
+      { name: '--ds-input-pad-x',          value: 'var(--field-pad-x)',      notes: 'Horizontal padding.' },
+      { name: '--ds-input-pad-y',          value: 'var(--field-pad-y)',      notes: 'Vertical padding.' },
+      { name: '--ds-input-focus-shadow',   value: 'var(--focus-field)',      notes: 'Focus halo.' },
+      { name: '--ds-input-border-error',   value: 'var(--danger)',           notes: 'Error border.' },
+      { name: '--ds-input-bg-error',       value: 'var(--danger-subtle)',    notes: 'Error fill tint.' },
+      { name: '--ds-input-border-success', value: 'var(--success)',          notes: 'Success border.' },
+      { name: '--ds-input-bg-disabled',    value: 'var(--surface-disabled)', notes: 'Disabled fill.' },
+    ],
+  },
+  {
+    component: 'Select',
+    selector: '.field (select)',
+    description: 'Same surface as Input. --ds-select-* vars default to the matching --ds-input-* var.',
+    tokens: [
+      { name: '--ds-input-bg',             value: 'var(--surface-default)',  notes: 'Field fill.' },
+      { name: '--ds-input-border',         value: 'var(--border-default)',   notes: 'Default border.' },
+      { name: '--ds-input-border-hover',   value: 'var(--border-strong)',    notes: 'Hover border.' },
+      { name: '--ds-input-border-focus',   value: 'var(--brand)',            notes: 'Focus border.' },
+      { name: '--ds-input-fg',             value: 'var(--text-primary)',     notes: 'Value text.' },
+      { name: '--ds-input-radius',         value: 'var(--r-md)',             notes: 'Corner radius.' },
+      { name: '--ds-input-focus-shadow',   value: 'var(--focus-field)',      notes: 'Focus halo.' },
+      { name: '--ds-input-border-error',   value: 'var(--danger)',           notes: 'Error border.' },
+      { name: '--ds-input-border-success', value: 'var(--success)',          notes: 'Success border.' },
+      { name: '--ds-input-bg-disabled',    value: 'var(--surface-disabled)', notes: 'Disabled fill.' },
+    ],
+  },
+  {
+    component: 'Search',
+    selector: '.search',
+    description: 'Compact search pill — secondary surface by default, brand-focused border.',
+    tokens: [
+      { name: '--ds-search-bg',           value: 'var(--surface-secondary)', notes: 'Default fill.' },
+      { name: '--ds-search-bg-focus',     value: 'var(--surface-default)',   notes: 'Focused fill.' },
+      { name: '--ds-search-border',       value: 'transparent',              notes: 'Default border.' },
+      { name: '--ds-search-border-hover', value: 'var(--border-default)',    notes: 'Hover border.' },
+      { name: '--ds-search-border-focus', value: 'var(--brand)',             notes: 'Focus border.' },
+      { name: '--ds-search-focus-shadow', value: 'var(--focus-field)',       notes: 'Focus halo.' },
+      { name: '--ds-search-fg',           value: 'var(--text-primary)',      notes: 'Query text.' },
+      { name: '--ds-search-placeholder',  value: 'var(--text-tertiary)',     notes: 'Placeholder.' },
+      { name: '--ds-search-radius',       value: 'var(--r-md)',              notes: 'Corner radius.' },
+      { name: '--ds-search-height',       value: 'var(--search-h)',          notes: 'Control height.' },
+    ],
+  },
+  {
+    component: 'Table',
+    selector: '.table',
+    description: 'Data table — surface, head, divider, hover/selected row, sort accent.',
+    tokens: [
+      { name: '--ds-table-bg',              value: 'var(--surface-default)',   notes: 'Table fill.' },
+      { name: '--ds-table-row-hover-bg',    value: 'var(--surface-secondary)', notes: 'Row hover fill.' },
+      { name: '--ds-table-row-selected-bg', value: 'var(--brand-subtle)',      notes: 'Selected row.' },
+      { name: '--ds-table-head-bg',         value: 'var(--surface-secondary)', notes: 'Head fill.' },
+      { name: '--ds-table-head-fg',         value: 'var(--text-tertiary)',     notes: 'Head label.' },
+      { name: '--ds-table-divider',         value: 'var(--border-divider)',    notes: 'Row divider.' },
+      { name: '--ds-table-sort-active-fg',  value: 'var(--brand)',             notes: 'Active sort caret.' },
+      { name: '--ds-table-cell-pad-x',      value: 'var(--table-cell-pad-x)',  notes: 'Cell horizontal padding.' },
+      { name: '--ds-table-cell-pad-y',      value: 'var(--table-cell-pad-y)',  notes: 'Cell vertical padding.' },
+      { name: '--ds-table-radius',          value: 'var(--r-xl)',              notes: 'Outer corner radius.' },
+    ],
+  },
+  {
+    component: 'Pagination',
+    selector: '.pagination',
+    description: 'Pager buttons + active state.',
+    tokens: [
+      { name: '--ds-pagination-btn-bg',       value: 'var(--surface-default)',   notes: 'Button fill.' },
+      { name: '--ds-pagination-btn-bg-hover', value: 'var(--surface-secondary)', notes: 'Hover fill.' },
+      { name: '--ds-pagination-btn-fg',       value: 'var(--text-secondary)',    notes: 'Button label.' },
+      { name: '--ds-pagination-btn-fg-hover', value: 'var(--text-primary)',      notes: 'Hover label.' },
+      { name: '--ds-pagination-btn-border',   value: 'var(--border-default)',    notes: 'Button border.' },
+      { name: '--ds-pagination-active-bg',    value: 'var(--brand)',             notes: 'Active page fill.' },
+      { name: '--ds-pagination-active-fg',    value: 'var(--brand-on)',          notes: 'Active page label.' },
+      { name: '--ds-pagination-radius',       value: 'var(--r-md)',              notes: 'Button radius.' },
+    ],
+  },
+  {
+    component: 'Date picker',
+    selector: '.calendar',
+    description: 'Pop-over surface + day cell states (today / selected / range / disabled).',
+    tokens: [
+      { name: '--ds-datepicker-bg',              value: 'var(--surface-overlay)',   notes: 'Popover fill.' },
+      { name: '--ds-datepicker-border',          value: 'var(--border-default)',    notes: 'Popover border.' },
+      { name: '--ds-datepicker-shadow',          value: 'var(--shadow-popover)',    notes: 'Popover shadow.' },
+      { name: '--ds-datepicker-day-hover-bg',    value: 'var(--surface-secondary)', notes: 'Day hover fill.' },
+      { name: '--ds-datepicker-day-today-fg',    value: 'var(--brand)',             notes: 'Today label.' },
+      { name: '--ds-datepicker-day-selected-bg', value: 'var(--brand)',             notes: 'Selected day fill.' },
+      { name: '--ds-datepicker-day-selected-fg', value: 'var(--brand-on)',          notes: 'Selected day label.' },
+      { name: '--ds-datepicker-day-range-bg',    value: 'var(--brand-subtle)',      notes: 'Range fill.' },
+      { name: '--ds-datepicker-day-range-fg',    value: 'var(--brand-strong)',      notes: 'Range label.' },
+      { name: '--ds-datepicker-day-disabled-fg', value: 'var(--text-disabled)',     notes: 'Disabled day label.' },
+      { name: '--ds-datepicker-width',           value: 'var(--datepicker-w)',      notes: 'Calendar width.' },
+    ],
+  },
+  {
+    component: 'Breadcrumbs',
+    selector: '.breadcrumbs',
+    description: 'Inline link trail.',
+    tokens: [
+      { name: '--ds-breadcrumbs-fg',           value: 'var(--text-tertiary)', notes: 'Link colour.' },
+      { name: '--ds-breadcrumbs-fg-hover',     value: 'var(--brand)',         notes: 'Link hover.' },
+      { name: '--ds-breadcrumbs-current-fg',   value: 'var(--text-primary)',  notes: 'Current crumb.' },
+      { name: '--ds-breadcrumbs-separator-fg', value: 'var(--icon-muted)',    notes: 'Chevron / slash.' },
+    ],
+  },
+  {
+    component: 'Sidenav',
+    selector: ':host / .item / .group-label',
+    description: 'Left rail chrome + items + group labels. Host vs item vs group vars are independent.',
+    tokens: [
+      { name: '--ds-sidenav-bg',              value: 'var(--surface-default)',   notes: 'Rail fill.' },
+      { name: '--ds-sidenav-border',          value: 'var(--border-divider)',    notes: 'Rail border.' },
+      { name: '--ds-sidenav-width',           value: 'var(--sidenav-w)',         notes: 'Expanded width.' },
+      { name: '--ds-sidenav-width-collapsed', value: 'var(--sidenav-w-collapsed)', notes: 'Collapsed width.' },
+      { name: '--ds-sidenav-mark-bg',         value: 'var(--brand)',             notes: 'Brand mark fill.' },
+      { name: '--ds-sidenav-mark-fg',         value: 'var(--brand-on)',          notes: 'Brand mark label.' },
+      { name: '--ds-sidenav-item-fg',         value: 'var(--text-secondary)',    notes: 'Item label.' },
+      { name: '--ds-sidenav-item-fg-hover',   value: 'var(--text-primary)',      notes: 'Item hover label.' },
+      { name: '--ds-sidenav-item-bg-hover',   value: 'var(--surface-secondary)', notes: 'Item hover fill.' },
+      { name: '--ds-sidenav-item-bg-active',  value: 'var(--brand-subtle)',      notes: 'Active item fill.' },
+      { name: '--ds-sidenav-item-fg-active',  value: 'var(--brand-strong)',      notes: 'Active item label.' },
+      { name: '--ds-sidenav-item-radius',     value: 'var(--r-md)',              notes: 'Item radius.' },
+      { name: '--ds-sidenav-alert-color',     value: 'var(--danger)',            notes: 'Alert pip colour.' },
+      { name: '--ds-sidenav-group-fg',        value: 'var(--text-tertiary)',     notes: 'Group label colour.' },
+    ],
+  },
+  {
+    component: 'Topbar',
+    selector: '.topbar',
+    description: 'App top bar — title, actions, ping indicator.',
+    tokens: [
+      { name: '--ds-topbar-bg',              value: 'var(--surface-default)',   notes: 'Bar fill.' },
+      { name: '--ds-topbar-border',          value: 'var(--border-divider)',    notes: 'Bottom border.' },
+      { name: '--ds-topbar-height',          value: 'var(--topbar-h)',          notes: 'Bar height.' },
+      { name: '--ds-topbar-action-fg',       value: 'var(--icon-default)',      notes: 'Action icon colour.' },
+      { name: '--ds-topbar-action-fg-hover', value: 'var(--icon-strong)',       notes: 'Action hover icon.' },
+      { name: '--ds-topbar-action-bg-hover', value: 'var(--surface-secondary)', notes: 'Action hover fill.' },
+      { name: '--ds-topbar-title-fg',        value: 'var(--text-primary)',      notes: 'Title colour.' },
+      { name: '--ds-topbar-ping-color',      value: 'var(--danger)',            notes: 'Notification ping.' },
+    ],
+  },
+  {
+    component: 'Page header',
+    selector: '.page-header',
+    description: 'Title block + meta row.',
+    tokens: [
+      { name: '--ds-pagehdr-eyebrow-fg',   value: 'var(--text-tertiary)', notes: 'Eyebrow label.' },
+      { name: '--ds-pagehdr-title-fg',     value: 'var(--text-primary)',  notes: 'Title.' },
+      { name: '--ds-pagehdr-sub-fg',       value: 'var(--text-secondary)', notes: 'Subtitle.' },
+      { name: '--ds-pagehdr-meta-fg',      value: 'var(--text-secondary)', notes: 'Meta text.' },
+      { name: '--ds-pagehdr-meta-icon-fg', value: 'var(--icon-default)',   notes: 'Meta icon.' },
+      { name: '--ds-pagehdr-divider',      value: 'var(--border-divider)', notes: 'Divider below header.' },
+    ],
+  },
+  {
+    component: 'Modal',
+    selector: '.modal',
+    description: 'Overlay dialog. Danger title fg is separate (--ds-modal-title-fg-danger).',
+    tokens: [
+      { name: '--ds-modal-bg',              value: 'var(--surface-overlay)', notes: 'Dialog fill.' },
+      { name: '--ds-modal-radius',          value: 'var(--r-lg)',            notes: 'Corner radius.' },
+      { name: '--ds-modal-shadow',          value: 'var(--shadow-modal)',    notes: 'Dialog shadow.' },
+      { name: '--ds-modal-divider',         value: 'var(--border-divider)',  notes: 'Header/actions divider.' },
+      { name: '--ds-modal-title-fg',        value: 'var(--text-primary)',    notes: 'Title colour.' },
+      { name: '--ds-modal-title-fg-danger', value: 'var(--danger-text)',     notes: 'Danger title colour.' },
+      { name: '--ds-modal-close-fg',        value: 'var(--icon-default)',    notes: 'Close icon.' },
+      { name: '--ds-modal-close-fg-hover',  value: 'var(--icon-strong)',     notes: 'Close icon hover.' },
+      { name: '--ds-modal-backdrop',        value: 'var(--surface-scrim)',   notes: 'Backdrop scrim.' },
+    ],
+  },
+  {
+    component: 'Banner',
+    selector: '.banner',
+    description: 'Severity modifiers (success/warning/severe/error) re-set bg, fg, bar, border.',
+    tokens: [
+      { name: '--ds-banner-bg',             value: 'var(--info-subtle)',    notes: 'Banner fill (default = info).' },
+      { name: '--ds-banner-fg',             value: 'var(--info-text)',      notes: 'Body text.' },
+      { name: '--ds-banner-bar',            value: 'var(--info)',           notes: 'Left bar colour.' },
+      { name: '--ds-banner-border',         value: 'var(--info-border)',    notes: 'Outer border.' },
+      { name: '--ds-banner-title-fg',       value: 'var(--text-primary)',   notes: 'Title colour.' },
+      { name: '--ds-banner-close-fg',       value: 'var(--icon-default)',   notes: 'Close icon.' },
+      { name: '--ds-banner-close-fg-hover', value: 'var(--icon-strong)',    notes: 'Close icon hover.' },
+      { name: '--ds-banner-radius',         value: 'var(--r-md)',           notes: 'Corner radius.' },
+      { name: '--ds-banner-bar-width',      value: 'var(--banner-bar-w)',   notes: 'Left bar width.' },
+    ],
+  },
+  {
+    component: 'Dropzone',
+    selector: '.dropzone',
+    description: 'File drop target + per-file state colours (progress / success / error).',
+    tokens: [
+      { name: '--ds-dropzone-bg',            value: 'var(--surface-default)', notes: 'Default fill.' },
+      { name: '--ds-dropzone-bg-hover',      value: 'var(--brand-subtle)',    notes: 'Hover fill.' },
+      { name: '--ds-dropzone-bg-active',     value: 'var(--brand-subtle)',    notes: 'Drag-active fill.' },
+      { name: '--ds-dropzone-border',        value: 'var(--border-default)',  notes: 'Default border.' },
+      { name: '--ds-dropzone-border-hover',  value: 'var(--brand)',           notes: 'Hover border.' },
+      { name: '--ds-dropzone-border-active', value: 'var(--brand)',           notes: 'Drag-active border.' },
+      { name: '--ds-dropzone-fg',            value: 'var(--text-secondary)',  notes: 'Body text.' },
+      { name: '--ds-dropzone-fg-active',     value: 'var(--brand-strong)',    notes: 'Drag-active text.' },
+      { name: '--ds-dropzone-radius',        value: 'var(--r-lg)',            notes: 'Corner radius.' },
+      { name: '--ds-dropzone-file-progress', value: 'var(--brand)',           notes: 'Upload progress.' },
+      { name: '--ds-dropzone-file-success',  value: 'var(--success)',         notes: 'Per-file success.' },
+      { name: '--ds-dropzone-file-error',    value: 'var(--danger)',          notes: 'Per-file error.' },
+    ],
+  },
+];
+
+@Component({
+  selector: 'section-tokens-reference',
+  standalone: true,
+  encapsulation: ViewEncapsulation.Emulated,
+  template: `
+    <section id="section-tokens-reference" data-anchor="tokens-reference" class="section">
+      <div class="eyebrow t-overline">Reference</div>
+      <h2 class="t-h2">Tokens reference</h2>
+      <p class="lede t-m">
+        Every CSS custom property in the design system. Search-friendly catalogue grouped by purpose.
+      </p>
+
+      <!-- ============================================================ Colour — semantic -->
+      <h3 class="block-title t-h4">Colour &mdash; semantic</h3>
+      <p class="block-desc t-s">Role tokens that components consume. Re-skinning means remapping these to a different ramp.</p>
+
+      <div class="cat-sub t-overline">Brand</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Resolved</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of brandSemantic; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="swatch-chip" [class.is-inverted]="row.inverted" [style.background]="'var(' + row.name + ')'"></span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Accent (interactive marker)</div>
+      <p class="block-desc t-s">
+        Interactive accent — input focus border, tab indicator, switcher rail, sidenav active rail. Channels default to brand HSL so single-accent themes render identical to <code class="t-mono">--brand</code>; multi-accent brands override <code class="t-mono">--accent-h/s/l</code>.
+      </p>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Resolved</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of accentSemantic; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="swatch-chip" [class.is-inverted]="row.inverted" [style.background]="'var(' + row.name + ')'"></span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Danger</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Resolved</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of dangerSemantic; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="swatch-chip" [style.background]="'var(' + row.name + ')'"></span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Success</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Resolved</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of successSemantic; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="swatch-chip" [style.background]="'var(' + row.name + ')'"></span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Warning</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Resolved</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of warningSemantic; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="swatch-chip" [style.background]="'var(' + row.name + ')'"></span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Info</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Resolved</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of infoSemantic; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="swatch-chip" [style.background]="'var(' + row.name + ')'"></span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Text</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Resolved</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of textSemantic; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="swatch-chip" [class.is-inverted]="row.inverted" [style.background]="'var(' + row.name + ')'"></span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Surface</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Resolved</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of surfaceSemantic; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="swatch-chip" [class.is-inverted]="row.inverted" [style.background]="'var(' + row.name + ')'"></span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Border</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Resolved</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of borderSemantic; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="swatch-chip" [class.is-inverted]="row.inverted" [style.background]="'var(' + row.name + ')'"></span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Focus ring channels</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Resolved</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of focusSemantic; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="literal-value t-mono">channel</span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+          <tr>
+            <td><code class="t-mono">--focus-ring</code></td>
+            <td><code class="t-mono">composed shadow</code></td>
+            <td><span class="focus-demo focus-demo--ring"></span></td>
+            <td>2px canvas inner band + 4px brand outer halo.</td>
+          </tr>
+          <tr>
+            <td><code class="t-mono">--focus-field</code></td>
+            <td><code class="t-mono">composed shadow</code></td>
+            <td><span class="focus-demo focus-demo--field"></span></td>
+            <td>3px brand &alpha; 0.22 — single coloured halo.</td>
+          </tr>
+          <tr>
+            <td><code class="t-mono">--focus-ring-danger</code></td>
+            <td><code class="t-mono">composed shadow</code></td>
+            <td><span class="focus-demo focus-demo--danger"></span></td>
+            <td>Same shape as ring, danger hue.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ============================================================ Colour ramps -->
+      <h3 class="block-title t-h4">Colour &mdash; ramps</h3>
+      <p class="block-desc t-s">Raw primitive ramps. Stop names map 1:1 to CSS custom properties (e.g. <code class="t-mono">--violet-600</code>).</p>
+      @for (ramp of ramps; track ramp.prefix) {
+        <div class="cat-sub t-overline">{{ ramp.label }} &mdash; {{ ramp.notes }}</div>
+        <table class="ref-table">
+          <thead><tr><th class="col-name">Token</th><th class="col-value">Stop</th><th class="col-resolved">Resolved</th><th class="col-notes">Notes</th></tr></thead>
+          <tbody>
+            @for (stop of ramp.stops; track stop) {
+              <tr>
+                <td><code class="t-mono">--{{ ramp.prefix }}-{{ stop }}</code></td>
+                <td><code class="t-mono">{{ stop }}</code></td>
+                <td><span class="swatch-chip" [style.background]="'var(--' + ramp.prefix + '-' + stop + ')'"></span></td>
+                <td>{{ ramp.label }} ramp · stop {{ stop }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+
+      <!-- ============================================================ Typography -->
+      <h3 class="block-title t-h4">Typography</h3>
+      <p class="block-desc t-s">Font stacks, sizes, line-heights, letter-spacings, weights.</p>
+
+      <div class="cat-sub t-overline">Font families</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Sample</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of typeFont; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="sample-font" [style.font-family]="'var(' + row.name + ')'">{{ row.sample }}</span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Font sizes</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Sample</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of typeSize; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="sample-fs" [style.font-size]="'var(' + row.name + ')'">{{ row.sample }}</span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Line heights</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Sample</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of typeLh; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="sample-lh" [style.line-height]="'var(' + row.name + ')'">{{ row.sample }}</span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Letter spacing</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Sample</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of typeLs; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="sample-ls" [style.letter-spacing]="'var(' + row.name + ')'">{{ row.sample }}</span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Font weights</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Sample</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of typeFw; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="sample-fw" [style.font-weight]="'var(' + row.name + ')'">{{ row.sample }}</span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- ============================================================ Spacing -->
+      <h3 class="block-title t-h4">Spacing</h3>
+      <p class="block-desc t-s">4px base scale with named half-steps where atoms need them. Bars render at the true CSS value.</p>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Bar (width)</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of spacing; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="size-bar" [style.width]="'var(' + row.name + ')'"></span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- ============================================================ Radius -->
+      <h3 class="block-title t-h4">Radius</h3>
+      <p class="block-desc t-s">Six-stop scale. Each step is functionally distinct at standard zoom.</p>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Sample</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of radius; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="radius-sample" [style.border-radius]="'var(' + row.name + ')'"></span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- ============================================================ Elevation -->
+      <h3 class="block-title t-h4">Elevation &mdash; shadows</h3>
+      <p class="block-desc t-s">Channel-split substrate so a re-skin can re-tint shadows. Alphas constant across themes.</p>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Sample</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of shadows; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.alias || 'composed' }}</code></td>
+              <td>
+                @if (hasShadowSample(row.name)) {
+                  <span class="shadow-sample" [style.box-shadow]="'var(' + row.name + ')'"></span>
+                } @else {
+                  <span class="literal-value t-mono">channel</span>
+                }
+              </td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- ============================================================ Motion -->
+      <h3 class="block-title t-h4">Motion</h3>
+      <p class="block-desc t-s">Durations describe response time; loop durations describe rhythm. Easings shape the curve.</p>
+
+      <div class="cat-sub t-overline">Durations</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Sample</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of motionDur; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="literal-value t-mono">{{ row.value }}</span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Easings</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Sample</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of motionEase; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="literal-value t-mono">curve</span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- ============================================================ Density -->
+      <h3 class="block-title t-h4">Density &mdash; hit targets</h3>
+      <p class="block-desc t-s">Canonical size scale for interactive height. Density tiers rewrite these at <code class="t-mono">:root</code> via <code class="t-mono">[data-density]</code>.</p>
+
+      <div class="cat-sub t-overline">Hit-target scale</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Square sample</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of densityHit; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="hit-sample" [style.width]="'var(' + row.name + ')'" [style.height]="'var(' + row.name + ')'"></span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Density tiers</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Tier (data-density)</th><th class="col-value">--hit-cozy</th><th class="col-resolved">Sample</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of densityTiers; track row.name) {
+            <tr>
+              <td><code class="t-mono">[data-density=&quot;{{ row.name }}&quot;]</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="literal-value t-mono">override block</span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- ============================================================ Layout -->
+      <h3 class="block-title t-h4">Layout</h3>
+      <p class="block-desc t-s">Breakpoints and content column caps.</p>
+
+      <div class="cat-sub t-overline">Breakpoints</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Sample</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of layoutBp; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="literal-value t-mono">{{ row.value }}</span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Column caps</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Sample</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of layoutCol; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="literal-value t-mono">{{ row.value }}</span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- ============================================================ Icons -->
+      <h3 class="block-title t-h4">Icons</h3>
+      <p class="block-desc t-s">Icon size scale. Squares render at the true CSS value.</p>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Square</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of icons; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="icon-sample" [style.width]="'var(' + row.name + ')'" [style.height]="'var(' + row.name + ')'"></span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- ============================================================ Misc -->
+      <h3 class="block-title t-h4">Misc &mdash; borders, opacity, blur</h3>
+      <p class="block-desc t-s">Border widths, opacity scale, backdrop blurs.</p>
+
+      <div class="cat-sub t-overline">Border widths</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Sample</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of miscBw; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="bw-sample" [style.border-top-width]="'var(' + row.name + ')'"></span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Opacity</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Sample</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of miscOpacity; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="opacity-sample" [style.opacity]="'var(' + row.name + ')'">Aa</span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="cat-sub t-overline">Backdrop blur</div>
+      <table class="ref-table">
+        <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Sample</th><th class="col-notes">Notes</th></tr></thead>
+        <tbody>
+          @for (row of miscBlur; track row.name) {
+            <tr>
+              <td><code class="t-mono">{{ row.name }}</code></td>
+              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><span class="literal-value t-mono">{{ row.value }}</span></td>
+              <td>{{ row.notes }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- ============================================================ Component tokens -->
+      <h3 class="block-title t-h4">Component tokens</h3>
+      <p class="block-desc t-s">
+        Per-component <code class="t-mono">--ds-&lt;component&gt;-*</code> custom properties. Each defaults to a global semantic token (see above).
+        Override at <code class="t-mono">:root</code>, on a scoped ancestor, or inline on the host to re-skin a component without forking its class internals.
+      </p>
+      @for (group of componentTokens; track group.component) {
+        <details class="component-token-group">
+          <summary>
+            <span class="component-token-name t-h5">{{ group.component }}</span>
+            <span class="component-token-selector t-mono">{{ group.selector }}</span>
+            <span class="component-token-count t-mono">{{ group.tokens.length }} vars</span>
+          </summary>
+          <p class="component-token-desc t-s">{{ group.description }}</p>
+          <table class="ref-table">
+            <thead><tr><th class="col-name">Token</th><th class="col-value">Default</th><th class="col-resolved">Resolved</th><th class="col-notes">Notes</th></tr></thead>
+            <tbody>
+              @for (row of group.tokens; track row.name) {
+                <tr>
+                  <td><code class="t-mono">{{ row.name }}</code></td>
+                  <td><code class="t-mono">{{ row.value }}</code></td>
+                  <td>
+                    @if (isColorValue(row.value)) {
+                      <span class="swatch-chip" [style.background]="row.value"></span>
+                    } @else {
+                      <span class="literal-value t-mono">geometry</span>
+                    }
+                  </td>
+                  <td>{{ row.notes }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </details>
+      }
+    </section>
+  `,
+  styles: [`
+    :host { display: block; }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
+    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--s-10); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
+    .cat-sub {
+      margin-top: var(--s-5);
+      margin-bottom: var(--s-2);
+      color: var(--text-tertiary);
+    }
+
+    /* ---------- Reference table ---------- */
+    .ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+    }
+    .ref-table thead th {
+      text-align: left;
+      padding: var(--s-2) var(--s-3);
+      background: var(--surface-secondary);
+      border-bottom: var(--bw-default) solid var(--border-divider);
+      font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
+      letter-spacing: var(--ls-wider);
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+    .ref-table tbody td {
+      padding: var(--s-2) var(--s-3);
+      border-bottom: var(--bw-default) solid var(--border-divider);
+      vertical-align: middle;
+      color: var(--text-secondary);
+      word-break: break-word;
+    }
+    .ref-table .col-name     { width: 26%; }
+    .ref-table .col-value    { width: 22%; }
+    .ref-table .col-resolved { width: 18%; }
+    .ref-table .col-notes    { width: 34%; }
+
+    /* ---------- Resolved-value renderers ---------- */
+    .swatch-chip {
+      display: inline-block;
+      width: var(--s-10);
+      height: var(--s-6);
+      border-radius: var(--r-sm);
+      border: var(--bw-default) solid var(--border-default);
+      vertical-align: middle;
+    }
+    .swatch-chip.is-inverted { border-color: var(--border-strong); }
+
+    .size-bar {
+      display: inline-block;
+      height: var(--s-3);
+      min-width: 1px;
+      background: var(--brand);
+      border-radius: var(--r-sm);
+      vertical-align: middle;
+    }
+
+    .radius-sample {
+      display: inline-block;
+      width: var(--s-10);
+      height: var(--s-10);
+      background: var(--brand-subtle);
+      border: var(--bw-default) solid var(--brand-muted);
+      vertical-align: middle;
+    }
+
+    .shadow-sample {
+      display: inline-block;
+      width: var(--s-10);
+      height: var(--s-10);
+      background: var(--surface-default);
+      border-radius: var(--r-md);
+      vertical-align: middle;
+    }
+
+    .hit-sample {
+      display: inline-block;
+      background: var(--brand-subtle);
+      border: var(--bw-default) solid var(--brand-muted);
+      border-radius: var(--r-sm);
+      vertical-align: middle;
+    }
+
+    .icon-sample {
+      display: inline-block;
+      background: var(--icon-default);
+      border-radius: var(--r-sm);
+      vertical-align: middle;
+    }
+
+    .bw-sample {
+      display: inline-block;
+      width: var(--s-16);
+      height: 1px;
+      border-top-style: solid;
+      border-top-color: var(--text-primary);
+      vertical-align: middle;
+    }
+
+    .opacity-sample {
+      display: inline-block;
+      padding: 0 var(--s-2);
+      font: var(--fw-bold) var(--fs-m)/var(--lh-flat) var(--font-sans);
+      color: var(--text-primary);
+      background: var(--surface-default);
+      border: var(--bw-default) solid var(--border-default);
+      border-radius: var(--r-sm);
+    }
+
+    .literal-value {
+      color: var(--text-tertiary);
+    }
+
+    .focus-demo {
+      display: inline-block;
+      width: var(--s-10);
+      height: var(--s-6);
+      background: var(--surface-default);
+      border-radius: var(--r-md);
+      vertical-align: middle;
+    }
+    .focus-demo--ring   { box-shadow: var(--focus-ring); }
+    .focus-demo--field  { box-shadow: var(--focus-field); }
+    .focus-demo--danger { box-shadow: var(--focus-ring-danger); }
+
+    /* ---------- Typography samples ---------- */
+    .sample-font {
+      color: var(--text-primary);
+    }
+    .sample-fs {
+      color: var(--text-primary);
+      line-height: var(--lh-flat);
+    }
+    .sample-lh {
+      display: inline-block;
+      color: var(--text-primary);
+      white-space: pre-line;
+      font: var(--fw-regular) var(--fs-s) var(--font-sans);
+    }
+    .sample-ls {
+      color: var(--text-primary);
+      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+    }
+    .sample-fw {
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: var(--fs-s);
+      line-height: var(--lh-base);
+    }
+
+    /* ---------- Component tokens — collapsible group ---------- */
+    .component-token-group {
+      margin-top: var(--s-4);
+      border: var(--bw-default) solid var(--border-divider);
+      border-radius: var(--r-md);
+      background: var(--surface-default);
+      overflow: hidden;
+    }
+    .component-token-group > summary {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+      padding: var(--s-3) var(--s-4);
+      cursor: pointer;
+      list-style: none;
+      background: var(--surface-secondary);
+    }
+    .component-token-group > summary::-webkit-details-marker { display: none; }
+    .component-token-group > summary::before {
+      content: '\\203A';
+      color: var(--text-tertiary);
+      transition: transform var(--dur-base) var(--ease-standard);
+      display: inline-block;
+    }
+    .component-token-group[open] > summary::before {
+      transform: rotate(90deg);
+    }
+    .component-token-name {
+      color: var(--text-primary);
+    }
+    .component-token-selector {
+      color: var(--text-tertiary);
+      font-size: var(--fs-xs);
+    }
+    .component-token-count {
+      margin-left: auto;
+      color: var(--text-tertiary);
+      font-size: var(--fs-xs);
+    }
+    .component-token-desc {
+      padding: var(--s-3) var(--s-4) 0;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+    .component-token-group .ref-table {
+      margin: var(--s-3) 0 0;
+    }
+  `],
+})
+export class TokensReferenceSection {
+  protected readonly brandSemantic   = SEMANTIC_BRAND;
+  protected readonly accentSemantic  = SEMANTIC_ACCENT;
+  protected readonly dangerSemantic  = SEMANTIC_DANGER;
+  protected readonly successSemantic = SEMANTIC_SUCCESS;
+  protected readonly warningSemantic = SEMANTIC_WARNING;
+  protected readonly infoSemantic    = SEMANTIC_INFO;
+  protected readonly textSemantic    = SEMANTIC_TEXT;
+  protected readonly surfaceSemantic = SEMANTIC_SURFACE;
+  protected readonly borderSemantic  = SEMANTIC_BORDER;
+  protected readonly focusSemantic   = SEMANTIC_FOCUS;
+  protected readonly ramps           = RAMPS;
+  protected readonly typeFont        = TYPOGRAPHY_FONT;
+  protected readonly typeSize        = TYPOGRAPHY_SIZE;
+  protected readonly typeLh          = TYPOGRAPHY_LH;
+  protected readonly typeLs          = TYPOGRAPHY_LS;
+  protected readonly typeFw          = TYPOGRAPHY_FW;
+  protected readonly spacing         = SPACING;
+  protected readonly radius          = RADIUS;
+  protected readonly shadows         = SHADOWS;
+  protected readonly motionDur       = MOTION_DUR;
+  protected readonly motionEase      = MOTION_EASE;
+  protected readonly densityHit      = DENSITY_HIT;
+  protected readonly densityTiers    = DENSITY_TIERS;
+  protected readonly layoutBp        = LAYOUT_BP;
+  protected readonly layoutCol       = LAYOUT_COL;
+  protected readonly icons           = ICONS;
+  protected readonly miscBw          = MISC_BW;
+  protected readonly miscOpacity     = MISC_OPACITY;
+  protected readonly miscBlur        = MISC_BLUR;
+  protected readonly componentTokens = COMPONENT_TOKENS;
+
+  protected hasShadowSample(name: string): boolean {
+    return name === '--z100' || name === '--z200' || name === '--z300' || name === '--z400'
+      || name === '--shadow-card' || name === '--shadow-popover' || name === '--shadow-toast' || name === '--shadow-modal';
+  }
+
+  /** True when the default value resolves to a colour token (drives the swatch chip vs "geometry" placeholder). */
+  protected isColorValue(value: string): boolean {
+    const colourTokens = [
+      'brand', 'danger', 'success', 'warning', 'info',
+      'text-', 'icon-', 'surface-', 'border-', 'neutral-',
+    ];
+    if (value === 'transparent' || value === 'none') return false;
+    return colourTokens.some(prefix => value.includes(prefix));
+  }
+}
