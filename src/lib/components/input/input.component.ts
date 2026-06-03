@@ -2,6 +2,10 @@ import { Component, ViewEncapsulation, computed, input, model } from '@angular/c
 import { FormsModule } from '@angular/forms';
 import type { InputSize, InputType } from './input.types';
 
+/** Process-wide counter so each control gets a stable, unique id for
+ *  label/hint association (no DOM dependency, SSR-safe). */
+let nextId = 0;
+
 @Component({
   selector: 'ds-input',
   standalone: true,
@@ -22,6 +26,16 @@ export class InputComponent {
   readonly required = input<boolean>(false);
   readonly optional = input<boolean>(false);
   readonly name = input<string | null>(null);
+  // Numeric constraints (applied when type="number").
+  readonly min = input<number | null>(null);
+  readonly max = input<number | null>(null);
+  readonly step = input<number | null>(null);
+  /** Native autocomplete token (e.g. "email", "current-password"). */
+  readonly autocomplete = input<string | null>(null);
+  readonly autofocus = input<boolean>(false);
+  /** Accessible name when no visible `label` is provided (falls back to the
+   *  placeholder so the control is never unnamed). */
+  readonly ariaLabel = input<string | null>(null);
   /**
    * Show an inline clear (×) button when the input has a non-empty value.
    * Mirrors the Material/PrimeNG pattern: explicit button (not native search
@@ -36,6 +50,13 @@ export class InputComponent {
     if (explicit !== null) return explicit;
     return this.type() === 'search';
   });
+
+  protected readonly uid = `ds-input-${++nextId}`;
+  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  /** Only name via aria-label when there's no visible `<label for>`. */
+  protected readonly resolvedAriaLabel = computed(() =>
+    this.label() ? null : this.ariaLabel() || this.placeholder() || null,
+  );
 
   protected readonly wrapperClasses = computed(() => {
     const parts = ['field'];

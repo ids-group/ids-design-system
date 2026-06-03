@@ -16,6 +16,8 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { IconComponent } from '../../icons/icon.component';
 import type { DatePickerMode, DatePickerSize, RangeValue } from './date-picker.types';
 
+let nextId = 0;
+
 interface DayCell {
   date: Date;
   day: number;
@@ -47,6 +49,89 @@ export class DatePickerComponent {
   readonly hint = input<string>('');
   readonly required = input<boolean>(false);
   readonly optional = input<boolean>(false);
+  /** Accessible name when no visible `label` is provided. */
+  readonly ariaLabel = input<string | null>(null);
+
+  protected readonly uid = `ds-datepicker-${++nextId}`;
+  protected readonly labelId = `${this.uid}-label`;
+  protected readonly isOpen = signal(false);
+  /** The day that holds keyboard focus in the open grid (roving tabindex). */
+  protected readonly gridFocus = signal<Date | null>(null);
+  protected readonly resolvedAriaLabel = computed(() =>
+    this.label() ? null : this.ariaLabel() || this.placeholder() || null,
+  );
+
+  protected dayKey(d: Date): string {
+    return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+  }
+
+  protected isFocusDay(cell: DayCell): boolean {
+    const f = this.gridFocus();
+    return !!f && this.dayKey(f) === this.dayKey(cell.date);
+  }
+
+  /** Arrow-key roving navigation across the calendar grid (APG date grid). */
+  protected onGridKeydown(event: KeyboardEvent, cell: DayCell): void {
+    const f = this.gridFocus() ?? cell.date;
+    let next: Date | null = null;
+    switch (event.key) {
+      case 'ArrowLeft': next = this.addDays(f, -1); break;
+      case 'ArrowRight': next = this.addDays(f, 1); break;
+      case 'ArrowUp': next = this.addDays(f, -7); break;
+      case 'ArrowDown': next = this.addDays(f, 7); break;
+      case 'Home': next = this.addDays(f, -((f.getDay() + 6) % 7)); break;
+      case 'End': next = this.addDays(f, 6 - ((f.getDay() + 6) % 7)); break;
+      case 'PageUp': next = this.addMonths(f, -1); break;
+      case 'PageDown': next = this.addMonths(f, 1); break;
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        this.selectDay(cell);
+        return;
+      case 'Escape':
+        event.preventDefault();
+        this.close();
+        this.trigger().nativeElement.focus();
+        return;
+      default:
+        return;
+    }
+    event.preventDefault();
+    this.gridFocus.set(next);
+    this.viewMonth.set(new Date(next.getFullYear(), next.getMonth(), 1));
+    setTimeout(() => this.focusGridDay());
+  }
+
+  private addDays(date: Date, n: number): Date {
+    const d = new Date(date);
+    d.setDate(d.getDate() + n);
+    return d;
+  }
+
+  private addMonths(date: Date, n: number): Date {
+    const d = new Date(date);
+    d.setMonth(d.getMonth() + n);
+    return d;
+  }
+
+  private focusGridDay(): void {
+    const f = this.gridFocus();
+    if (!f || !this.overlayRef) return;
+    const el = this.overlayRef.overlayElement.querySelector(
+      `[data-day="${this.dayKey(f)}"]`,
+    ) as HTMLElement | null;
+    el?.focus();
+  }
+
+  /** Full, unambiguous date for a day cell's accessible name. */
+  protected dayLabel(cell: DayCell): string {
+    return cell.date.toLocaleDateString(undefined, {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  }
 
   protected readonly triggerClasses = computed(() => {
     const size = this.size();
@@ -147,11 +232,22 @@ export class DatePickerComponent {
     this.overlayRef.backdropClick().subscribe(() => this.close());
     const portal = new TemplatePortal(this.panelTpl(), this.vcr);
     this.overlayRef.attach(portal);
+    this.isOpen.set(true);
+    // Seed grid focus on the selected day (or today) and move focus into it.
+    const selected =
+      this.mode() === 'single'
+        ? (this.value() as Date | null)
+        : ((this.value() as RangeValue | null)?.[0] ?? null);
+    const focus = selected ?? new Date();
+    this.gridFocus.set(focus);
+    this.viewMonth.set(new Date(focus.getFullYear(), focus.getMonth(), 1));
+    setTimeout(() => this.focusGridDay());
   }
 
   protected close(): void {
     this.overlayRef?.dispose();
     this.overlayRef = null;
+    this.isOpen.set(false);
   }
 
   protected prevMonth(): void {
@@ -170,6 +266,7 @@ export class DatePickerComponent {
     if (this.mode() === 'single') {
       this.value.set(new Date(cell.date));
       this.close();
+      this.trigger().nativeElement.focus();
       return;
     }
     const r = (this.value() as RangeValue | null) ?? [null, null];
@@ -177,11 +274,13 @@ export class DatePickerComponent {
     const b = r[1];
     if (!a || (a && b)) {
       this.value.set([new Date(cell.date), null]);
+      this.gridFocus.set(new Date(cell.date));
     } else {
       const picked = new Date(cell.date);
       const range: RangeValue = a.getTime() <= picked.getTime() ? [a, picked] : [picked, a];
       this.value.set(range);
       this.close();
+      this.trigger().nativeElement.focus();
     }
   }
 

@@ -17,6 +17,8 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { IconComponent } from '../../icons/icon.component';
 import type { DropdownOption, DropdownSize } from './dropdown.types';
 
+let nextId = 0;
+
 @Component({
   selector: 'ds-dropdown',
   standalone: true,
@@ -38,6 +40,18 @@ export class DropdownComponent {
   readonly readOnly = input<boolean>(false);
   readonly error = input<boolean>(false);
   readonly name = input<string | null>(null);
+  /** Accessible name when no visible `label` is provided. */
+  readonly ariaLabel = input<string | null>(null);
+
+  protected readonly uid = `ds-dropdown-${++nextId}`;
+  protected readonly labelId = `${this.uid}-label`;
+  protected readonly listboxId = `${this.uid}-listbox`;
+  protected optionId(index: number): string {
+    return `${this.uid}-opt-${index}`;
+  }
+  protected readonly resolvedAriaLabel = computed(() =>
+    this.label() ? null : this.ariaLabel() || this.placeholder() || null,
+  );
 
   protected readonly trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
   protected readonly panelTpl = viewChild.required<TemplateRef<unknown>>('panel');
@@ -57,6 +71,11 @@ export class DropdownComponent {
   });
 
   protected readonly hasValue = computed<boolean>(() => !!this.selectedOption());
+
+  protected readonly activeDescendant = computed(() => {
+    const idx = this.activeIndex();
+    return this.open() && idx >= 0 ? this.optionId(idx) : null;
+  });
 
   protected readonly wrapperClasses = computed<string>(() => {
     const parts = ['dropdown'];

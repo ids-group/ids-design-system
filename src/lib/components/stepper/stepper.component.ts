@@ -8,10 +8,18 @@ import { IconComponent } from '../../icons/icon.component';
   templateUrl: './stepper.component.html',
   styleUrl: './stepper.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  host: { role: 'list', 'aria-label': 'Progress' },
 })
 export class StepperComponent {
   readonly steps = input<readonly string[]>([]);
   readonly current = input<number>(0);
+
+  protected stepState(i: number): 'completed' | 'current' | 'upcoming' {
+    const c = this.current();
+    if (i < c) return 'completed';
+    if (i === c) return 'current';
+    return 'upcoming';
+  }
 
   protected nodeClass(i: number): string {
     const c = this.current();

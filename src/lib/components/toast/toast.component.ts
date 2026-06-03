@@ -25,6 +25,11 @@ export class ToastComponent {
 
   protected readonly classes = computed(() => `toast ${this.variant()}`);
 
+  /** Errors/warnings interrupt (assertive); info/success wait their turn. */
+  protected readonly role = computed<'alert' | 'status'>(() =>
+    this.variant() === 'error' || this.variant() === 'warning' ? 'alert' : 'status',
+  );
+
   protected readonly defaultIcon = computed<IconName>(() => {
     switch (this.variant()) {
       case 'success': return 'success';

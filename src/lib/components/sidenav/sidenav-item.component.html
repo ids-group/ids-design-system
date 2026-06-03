@@ -6,7 +6,10 @@
   <a
     [routerLink]="routerLink()"
     routerLinkActive="active"
+    #rla="routerLinkActive"
     [class]="linkClasses()"
+    [attr.aria-label]="label()"
+    [attr.aria-current]="rla.isActive ? 'page' : null"
   >
     @if (icon()) {
       <ds-icon class="icon" [name]="icon()!" [size]="20"></ds-icon>
@@ -25,7 +28,12 @@
     }
   </a>
 } @else {
-  <a [href]="href() || '#'" [class]="linkClasses()">
+  <a
+    [href]="href() || '#'"
+    [class]="linkClasses()"
+    [attr.aria-label]="label()"
+    [attr.aria-current]="active() ? 'page' : null"
+  >
     @if (icon()) {
       <ds-icon class="icon" [name]="icon()!" [size]="20"></ds-icon>
     } @else {

@@ -20,6 +20,11 @@
 
     &:hover { background: var(--surface-secondary); }
 
+    &:focus-visible {
+      outline: var(--bw-strong, 2px) solid var(--brand);
+      outline-offset: -2px;
+    }
+
     .chev {
       margin-left: auto;
       transition: transform var(--dur-base) var(--ease-standard);

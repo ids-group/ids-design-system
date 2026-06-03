@@ -9,6 +9,10 @@ import type { ToastEntry } from './toast.types';
   templateUrl: './toast-region.component.html',
   styleUrl: './toast-region.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  host: {
+    role: 'region',
+    'aria-label': 'Notifications',
+  },
 })
 export class ToastRegionComponent {
   protected readonly entries = signal<readonly ToastEntry[]>([]);

@@ -4,14 +4,21 @@
       <span class="spinner"></span>
     </div>
   }
-  <table [class]="tableClasses()">
+  <div class="visually-hidden" role="status" aria-live="polite">
+    @if (loading() !== false) { Loading… }
+  </div>
+  <table [class]="tableClasses()" [attr.aria-busy]="loading() !== false ? 'true' : null">
+    @if (caption()) {
+      <caption class="visually-hidden">{{ caption() }}</caption>
+    }
     <thead>
       <tr>
         @if (selectable()) {
-          <th class="select-col">
+          <th scope="col" class="select-col">
             <input
               type="checkbox"
               class="check"
+              aria-label="Select all rows"
               [checked]="allSelected()"
               [indeterminate]="someSelected()"
               (change)="onToggleAll($event)"
@@ -20,13 +27,18 @@
         }
         @for (col of columns(); track col.key) {
           <th
+            scope="col"
             [class]="headerClasses(col)"
             [class.numeric]="col.align === 'right'"
-            (click)="onSort(col)"
+            [attr.aria-sort]="ariaSort(col)"
           >
-            {{ col.label }}
             @if (col.sortable) {
-              <ds-icon class="sort-icon" [name]="sortIcon(col)" [size]="12"></ds-icon>
+              <button type="button" class="th-label" (click)="onSort(col)">
+                {{ col.label }}
+                <ds-icon class="sort-icon" [name]="sortIcon(col)" [size]="12"></ds-icon>
+              </button>
+            } @else {
+              <span class="th-label">{{ col.label }}</span>
             }
           </th>
         }
@@ -52,21 +64,31 @@
             [attr.colspan]="columns().length + (selectable() ? 1 : 0)"
             class="empty"
           >
-            <ng-content select="[empty]"></ng-content>
+            @if (emptyTemplate()) {
+              <ng-container [ngTemplateOutlet]="emptyTemplate()!"></ng-container>
+            } @else {
+              <ng-content select="[empty]"></ng-content>
+            }
           </td>
         </tr>
       } @else {
         @for (row of data(); track row.id) {
           <tr
             [class.selected]="isSelected(row)"
-            [class.clickable]="true"
+            [class.clickable]="rowInteractive()"
+            [attr.role]="rowInteractive() ? 'button' : null"
+            [attr.tabindex]="rowInteractive() ? 0 : null"
+            [attr.aria-label]="rowInteractive() ? rowAriaLabel(row) : null"
             (click)="onRowClick(row, $event)"
+            (keydown.enter)="onRowKey(row, $event)"
+            (keydown.space)="onRowKey(row, $event)"
           >
             @if (selectable()) {
               <td>
                 <input
                   type="checkbox"
                   class="check"
+                  [attr.aria-label]="'Select ' + rowAriaLabel(row)"
                   [checked]="isSelected(row)"
                   (change)="onToggleRow(row, $event)"
                   (click)="$event.stopPropagation()"

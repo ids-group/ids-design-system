@@ -5,6 +5,7 @@ import {
   ViewEncapsulation,
   inject,
   input,
+  signal,
   viewChild,
 } from '@angular/core';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
@@ -28,6 +29,9 @@ export class PopoverComponent {
 
   readonly align = input<PopoverAlign>('start');
 
+  /** Open/closed state — for callers binding `aria-expanded` on the trigger. */
+  readonly opened = signal(false);
+
   toggle(trigger: HTMLElement): void {
     if (this.ref) {
       this.close();
@@ -48,11 +52,20 @@ export class PopoverComponent {
     };
     this.ref = this.overlay.create(cfg);
     this.ref.backdropClick().subscribe(() => this.close());
+    this.ref.keydownEvents().subscribe((event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        this.close();
+        trigger.focus();
+      }
+    });
     this.ref.attach(new TemplatePortal(this.panelTpl(), this.vcr));
+    this.opened.set(true);
   }
 
   close(): void {
     this.ref?.dispose();
     this.ref = null;
+    this.opened.set(false);
   }
 }

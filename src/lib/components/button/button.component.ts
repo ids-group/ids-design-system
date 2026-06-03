@@ -15,13 +15,15 @@ export class ButtonComponent {
   readonly disabled = input<boolean>(false);
   readonly loading = input<boolean>(false);
   readonly iconOnly = input<boolean>(false);
+  /** Accessible name — required for icon-only buttons (no visible text). */
+  readonly ariaLabel = input<string | null>(null);
   readonly pressed = output<MouseEvent>();
 
   protected readonly classes = computed(() => {
     const variant = this.variant();
     const parts = [
       'button',
-      variant === 'primary' ? '' : variant,
+      variant,
       this.size(),
       this.iconOnly() ? 'icon-only' : '',
       this.loading() ? 'loading' : '',

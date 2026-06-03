@@ -77,6 +77,15 @@
   }
 
   /* Variants */
+  /* Primary CTA — deeper brand fill lets the label go white and still clear
+     AA. Falls back to the plain --brand surface + on-brand text when a theme
+     doesn't define the CTA tokens (e.g. the DS default theme). */
+  &.primary {
+    --ds-button-bg:        var(--brand-cta, var(--brand));
+    --ds-button-bg-hover:  var(--brand-cta-hover, var(--brand-hover));
+    --ds-button-bg-active: var(--brand-cta-active, var(--brand-pressed));
+    --ds-button-fg:        var(--brand-on-cta, var(--brand-on));
+  }
   &.secondary {
     --ds-button-bg:        var(--brand-muted);
     --ds-button-fg:        var(--brand-strong);
@@ -180,6 +189,7 @@
     }
   }
 
+  &.primary.loading::after { color: var(--brand-on-cta, var(--brand-on)); }
   &.secondary.loading::after,
   &.tertiary.loading::after,
   &.ghost.loading::after { color: var(--brand-strong); }

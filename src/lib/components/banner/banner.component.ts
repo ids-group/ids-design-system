@@ -26,6 +26,20 @@ export class BannerComponent {
     return !this.accentRail();
   }
 
+  // Announce banners to assistive tech: errors/warnings interrupt (alert),
+  // info/success wait their turn (status). A statically-rendered banner is
+  // present at first paint, so a `status` region won't be re-read needlessly.
+  @HostBinding('attr.role')
+  protected get ariaRole(): 'alert' | 'status' {
+    const v = this.variant();
+    return v === 'error' || v === 'warning' || v === 'severe' ? 'alert' : 'status';
+  }
+
+  @HostBinding('attr.aria-live')
+  protected get ariaLive(): 'assertive' | 'polite' {
+    return this.ariaRole === 'alert' ? 'assertive' : 'polite';
+  }
+
   protected readonly classes = computed(() => {
     const parts = ['banner', this.variant(), `layout-${this.layout()}`];
     if (this.compact()) parts.push('compact');

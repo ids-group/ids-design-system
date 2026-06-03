@@ -2,6 +2,8 @@ export interface TableColumn<T = unknown> {
   key: string;
   label: string;
   sortable?: boolean;
+  filterable?: boolean;
+  truncate?: boolean;
   align?: 'left' | 'right' | 'center';
   cell?: (row: T) => string;
 }

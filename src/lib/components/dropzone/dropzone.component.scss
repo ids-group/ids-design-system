@@ -4,6 +4,26 @@
   min-width: 0;
 }
 
+// Keep the file input out of view but focusable (display:none would drop it
+// from the tab order), so keyboard users can open the picker with Enter/Space.
+.dz-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Surface keyboard focus on the zone when its (visually-hidden) input is focused.
+.dropzone:focus-within {
+  outline: var(--bw-strong, 2px) solid var(--brand);
+  outline-offset: 2px;
+}
+
 .dropzone {
   // Fill the host when it's placed in a flex parent — keeps the dropzone the
   // same height as sibling cards. `min-height` below is the floor when there

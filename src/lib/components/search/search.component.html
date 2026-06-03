@@ -3,11 +3,18 @@
     <ds-icon name="search" [size]="16"></ds-icon>
   }
   <input
+    #searchInput
     class="input"
     [(ngModel)]="value"
     [placeholder]="placeholder()"
+    [attr.aria-label]="ariaLabel() || placeholder() || null"
     (keydown.enter)="onSubmit()"
   />
+  @if (clearable() && value()) {
+    <button type="button" class="search-clear" aria-label="Clear search" (click)="clear()">
+      <ds-icon name="x" [size]="14"></ds-icon>
+    </button>
+  }
   @if (shortcut()) {
     <kbd class="kbd">{{ shortcut() }}</kbd>
   }

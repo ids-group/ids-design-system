@@ -2,6 +2,8 @@ import { Component, ViewEncapsulation, computed, input, output } from '@angular/
 import { IconComponent } from '../../icons/icon.component';
 import type { ModalSize } from './modal.types';
 
+let nextId = 0;
+
 @Component({
   selector: 'ds-modal-card',
   standalone: true,
@@ -16,6 +18,8 @@ export class ModalCardComponent {
   readonly title = input.required<string>();
   readonly showClose = input<boolean>(true);
   readonly closed = output<void>();
+
+  protected readonly titleId = `ds-modal-title-${++nextId}`;
 
   protected readonly classes = computed(() => {
     const parts = ['modal', this.size()];

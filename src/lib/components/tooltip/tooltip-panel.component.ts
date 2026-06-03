@@ -7,6 +7,8 @@ import type { TooltipPlacement } from './tooltip.types';
   template: `{{ text() }}`,
   styleUrl: './tooltip-panel.component.scss',
   host: {
+    role: 'tooltip',
+    '[attr.id]': 'panelId()',
     '[class.top]': "placement() === 'top'",
     '[class.bottom]': "placement() === 'bottom'",
     '[class.left]': "placement() === 'left'",
@@ -17,4 +19,5 @@ import type { TooltipPlacement } from './tooltip.types';
 export class TooltipPanelComponent {
   readonly text = input.required<string>();
   readonly placement = input.required<TooltipPlacement>();
+  readonly panelId = input<string>('');
 }

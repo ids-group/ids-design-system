@@ -9,7 +9,12 @@ import { IconComponent } from '../../icons/icon.component';
   styleUrl: './w3w.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   host: {
+    '[attr.role]': "copyable() ? 'button' : null",
+    '[attr.tabindex]': 'copyable() ? 0 : null',
+    '[attr.aria-label]': "copyable() ? ('Copy what3words address ' + prefix() + address()) : null",
     '(click)': 'onCopy()',
+    '(keydown.enter)': 'onCopy()',
+    '(keydown.space)': 'onKeyActivate($event)',
   },
 })
 export class W3wComponent {
@@ -17,6 +22,11 @@ export class W3wComponent {
   readonly address = input.required<string>();
   readonly copyable = input<boolean>(true);
   readonly copied = output<string>();
+
+  protected onKeyActivate(event: Event): void {
+    event.preventDefault();
+    this.onCopy();
+  }
 
   protected onCopy(): void {
     if (!this.copyable()) return;
