@@ -75,6 +75,9 @@
   --text-on-brand:     var(--neutral-0);
   --text-on-success:   var(--neutral-0);
   --text-on-error:     var(--neutral-0);
+  /* Warning fill is yellow (--yellow-400) — white text fails contrast on it,
+     so on-warning text is the darkest neutral (≈14:1 on the yellow fill). */
+  --text-on-warning:   var(--neutral-900);
 
   /* Icons */
   --icon-default:      var(--neutral-500);

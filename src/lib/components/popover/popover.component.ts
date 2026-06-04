@@ -49,6 +49,17 @@ export class PopoverComponent {
     this.ref = this.overlay.create(cfg);
     this.ref.backdropClick().subscribe(() => this.close());
     this.ref.attach(new TemplatePortal(this.panelTpl(), this.vcr));
+
+    // Dismiss when an actionable menu item inside the panel is clicked, so a
+    // menu behaves like a menu (pick → close). Disabled items render a disabled
+    // <button> that never fires click, so they won't dismiss it. The item's own
+    // (pressed) handler runs first (target phase) before this bubbled listener.
+    this.ref.overlayElement.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest('ds-menu-item')) {
+        this.close();
+      }
+    });
   }
 
   close(): void {

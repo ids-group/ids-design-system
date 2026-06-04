@@ -7,6 +7,7 @@ import type { ButtonSize, ButtonType, ButtonVariant } from './button.types';
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  host: { '[class.is-block]': 'block()' },
 })
 export class ButtonComponent {
   readonly variant = input<ButtonVariant>('primary');
@@ -15,6 +16,10 @@ export class ButtonComponent {
   readonly disabled = input<boolean>(false);
   readonly loading = input<boolean>(false);
   readonly iconOnly = input<boolean>(false);
+  /** Stretch the button to fill its container (replaces per-page ::ng-deep width hacks). */
+  readonly block = input<boolean>(false);
+  /** Accessible label, forwarded to the inner <button>. Required for icon-only buttons. */
+  readonly ariaLabel = input<string>('');
   readonly pressed = output<MouseEvent>();
 
   protected readonly classes = computed(() => {
