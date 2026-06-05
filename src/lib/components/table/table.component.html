@@ -7,7 +7,7 @@
   <div class="visually-hidden" role="status" aria-live="polite">
     @if (loading() !== false) { Loading… }
   </div>
-  <table [class]="tableClasses()" [attr.aria-busy]="loading() !== false ? 'true' : null">
+  <table [class]="tableClasses()" [attr.role]="rowInteractive() ? 'grid' : null" [attr.aria-busy]="loading() !== false ? 'true' : null">
     @if (caption()) {
       <caption class="visually-hidden">{{ caption() }}</caption>
     }
@@ -76,7 +76,6 @@
           <tr
             [class.selected]="isSelected(row)"
             [class.clickable]="rowInteractive()"
-            [attr.role]="rowInteractive() ? 'button' : null"
             [attr.tabindex]="rowInteractive() ? 0 : null"
             [attr.aria-label]="rowInteractive() ? rowAriaLabel(row) : null"
             (click)="onRowClick(row, $event)"

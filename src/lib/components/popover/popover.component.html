@@ -1,3 +1,11 @@
 <ng-template #panel>
-  <div class="popover"><ng-content></ng-content></div>
+  <div
+    class="popover"
+    [attr.role]="panelRole()"
+    [attr.aria-label]="panelLabel()"
+    [cdkTrapFocus]="!!panelRole()"
+    [cdkTrapFocusAutoCapture]="!!panelRole()"
+  >
+    <ng-content></ng-content>
+  </div>
 </ng-template>
