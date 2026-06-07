@@ -77,7 +77,6 @@
       background: transparent;
       font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
       color: var(--ds-input-fg);
-      resize: vertical;
       min-height: var(--field-textarea-rows-min, 60px);
 
       &::placeholder {
@@ -143,5 +142,10 @@
   }
   &.lg .control {
     padding: var(--s-4) var(--s-3);
+  }
+
+  &.autosize .control textarea {
+    field-sizing: content;
+    overflow: hidden;
   }
 }

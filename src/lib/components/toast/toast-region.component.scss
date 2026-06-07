@@ -1,12 +1,8 @@
-/* Toast region — fixed top-right stack. Individual toast styling lives in
-   <ds-toast>; this component owns ONLY the stack positioning. */
+/* Toast region — vertical stack of toasts. Placement is owned by the overlay
+   (ToastService position strategy); this component lays out the stack only. */
 
 :host {
-  position: fixed;
-  top: var(--s-6);
-  right: var(--s-6);
   display: flex;
   flex-direction: column;
   gap: var(--s-2);
-  z-index: var(--layer-toast);
 }

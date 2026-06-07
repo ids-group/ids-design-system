@@ -15,6 +15,7 @@ import { ICONS, type IconName } from './icons.data';
   template: `
     <svg
       class="icon"
+      [style.--ds-icon-size]="size() + 'px'"
       [attr.width]="size()"
       [attr.height]="size()"
       viewBox="0 0 24 24"

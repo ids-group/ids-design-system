@@ -1,4 +1,4 @@
 <ng-content></ng-content>
 @if (closable()) {
-  <ds-icon name="x" class="close" [size]="12" (click)="closed.emit()" />
+  <ds-icon name="x" class="close" [size]="12" (click)="$event.stopPropagation(); closed.emit()" />
 }

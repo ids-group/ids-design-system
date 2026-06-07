@@ -8,9 +8,9 @@
 }
 
 .search {
-  --ds-search-bg: var(--surface-secondary);
+  --ds-search-bg: var(--surface-default);
   --ds-search-bg-focus: var(--surface-default);
-  --ds-search-border: transparent;
+  --ds-search-border: var(--border-default);
   --ds-search-border-hover: var(--border-default);
   --ds-search-border-focus: var(--brand);
   --ds-search-focus-shadow: var(--focus-field);

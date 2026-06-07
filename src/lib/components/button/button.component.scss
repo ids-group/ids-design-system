@@ -31,6 +31,7 @@
   border-radius: var(--ds-button-radius);
   padding: 0 var(--s-5);
   height: var(--hit-cozy);
+  width: 100%;
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
@@ -96,6 +97,14 @@
     --ds-button-bg-hover:  var(--surface-secondary);
     --ds-button-bg-active: var(--surface-secondary);
   }
+  /* Like ghost, but keeps its border in icon-only mode (bordered tool button). */
+  &.outline {
+    --ds-button-bg:        var(--surface-default);
+    --ds-button-fg:        var(--text-primary);
+    --ds-button-border:    var(--border-default);
+    --ds-button-bg-hover:  var(--surface-secondary);
+    --ds-button-bg-active: var(--surface-secondary);
+  }
   &.danger {
     --ds-button-bg:        var(--danger);
     --ds-button-bg-hover:  var(--danger-hover);
@@ -123,7 +132,7 @@
     --ds-button-border:    transparent;
     --ds-button-bg-hover:  transparent;
     --ds-button-bg-active: transparent;
-    padding: 0; height: auto;
+    padding: 0; height: auto; width: auto;
     text-decoration: underline;
     text-underline-offset: var(--btn-link-uloff);
 

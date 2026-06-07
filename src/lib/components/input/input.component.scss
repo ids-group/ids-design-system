@@ -22,6 +22,12 @@
   --ds-input-bg-error: var(--danger-subtle);
   --ds-input-border-success: var(--success);
   --ds-input-bg-disabled: var(--surface-disabled);
+  --ds-input-label-color: var(--text-secondary);
+  --ds-input-label-fs: var(--fs-xs);
+  --ds-input-label-fw: var(--fw-bold);
+  --ds-input-hint-color: var(--text-tertiary);
+  --ds-input-hint-fs: var(--fs-xs);
+  --ds-input-fs: var(--fs-s);
 
   display: block;
 }
@@ -33,8 +39,8 @@
   width: 100%;
 
   .label {
-    font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
-    color: var(--text-secondary);
+    font: var(--ds-input-label-fw) var(--ds-input-label-fs)/var(--lh-base) var(--font-sans);
+    color: var(--ds-input-label-color);
     display: flex;
     align-items: center;
     gap: var(--s-1);
@@ -72,7 +78,7 @@
       border: 0;
       outline: 0;
       background: transparent;
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--fw-regular) var(--ds-input-fs)/var(--lh-base) var(--font-sans);
       color: var(--ds-input-fg);
 
       &::placeholder {
@@ -112,6 +118,26 @@
       }
     }
 
+    .password-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: color var(--dur-fast) var(--ease-standard);
+
+      &:hover { color: var(--text-primary); }
+      &:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
+        border-radius: var(--r-sm);
+      }
+    }
+
     &:hover {
       border-color: var(--ds-input-border-hover);
     }
@@ -123,8 +149,8 @@
   }
 
   .hint {
-    font: var(--fw-regular) var(--fs-xs)/var(--lh-base) var(--font-sans);
-    color: var(--text-tertiary);
+    font: var(--fw-regular) var(--ds-input-hint-fs)/var(--lh-base) var(--font-sans);
+    color: var(--ds-input-hint-color);
     display: flex;
     align-items: center;
     gap: var(--s-1);

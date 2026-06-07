@@ -1,14 +1,25 @@
 /* Toast pill — single notification surface. Consumed by ToastRegion (service-
    driven runtime stack) and by static showcases. */
 
-:host { display: block; }
+:host {
+  display: block;
+  transition:
+    opacity var(--dur-base) var(--ease-standard),
+    transform var(--dur-base) var(--ease-standard);
+}
+
+:host(.leaving) {
+  opacity: 0;
+  transform: translateY(calc(var(--s-2) * -1));
+  pointer-events: none;
+}
 
 .toast {
   display: flex;
   align-items: flex-start;
   gap: var(--s-3);
-  background: var(--surface-overlay);
-  border: var(--bw-default) solid var(--border-default);
+  background: var(--ds-toast-bg, var(--surface-overlay));
+  border: var(--bw-default) solid var(--ds-toast-border, var(--border-default));
   border-left: var(--toast-bar-w) solid var(--brand);
   border-radius: var(--r-lg);
   padding: var(--s-3) var(--s-4);
@@ -22,9 +33,53 @@
   .title { font-weight: var(--fw-bold); color: var(--text-primary); margin-bottom: var(--s-0-5); }
   .close { border: 0; background: transparent; color: var(--icon-default); cursor: pointer; padding: var(--s-0-5); }
 
-  &.success { border-left-color: var(--success);       .icon { color: var(--success); } }
-  &.warning { border-left-color: var(--warning-hover); .icon { color: var(--warning-hover); } }
-  &.error   { border-left-color: var(--danger);        .icon { color: var(--danger); } }
+  .action {
+    flex-shrink: 0;
+    align-self: center;
+    border: 0;
+    background: transparent;
+    color: var(--brand-strong);
+    font: var(--fw-bold) var(--fs-s)/var(--lh-flat) var(--font-sans);
+    cursor: pointer;
+    padding: var(--s-1) var(--s-2);
+    border-radius: var(--r-sm);
+
+    &:hover { background: var(--surface-secondary); }
+    &:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+  }
+
+  .actions {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    flex-shrink: 0;
+
+    &:empty { display: none; }
+  }
+
+  &.info {
+    background: var(--ds-toast-bg-info, var(--ds-toast-bg, var(--surface-overlay)));
+    border-color: var(--ds-toast-border-info, var(--ds-toast-border, var(--border-default)));
+    border-left-color: var(--brand);
+  }
+  &.success {
+    background: var(--ds-toast-bg-success, var(--ds-toast-bg, var(--surface-overlay)));
+    border-color: var(--ds-toast-border-success, var(--ds-toast-border, var(--border-default)));
+    border-left-color: var(--success);
+    .icon { color: var(--success); }
+  }
+  &.warning {
+    background: var(--ds-toast-bg-warning, var(--ds-toast-bg, var(--surface-overlay)));
+    border-color: var(--ds-toast-border-warning, var(--ds-toast-border, var(--border-default)));
+    border-left-color: var(--warning-hover);
+    .icon { color: var(--warning-hover); }
+  }
+  &.error {
+    background: var(--ds-toast-bg-error, var(--ds-toast-bg, var(--surface-overlay)));
+    border-color: var(--ds-toast-border-error, var(--ds-toast-border, var(--border-default)));
+    border-left-color: var(--danger);
+    .icon { color: var(--danger); }
+  }
 }
 
 @keyframes ds-toast-in {

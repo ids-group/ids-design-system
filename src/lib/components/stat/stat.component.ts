@@ -10,6 +10,8 @@ import { IconComponent } from '../../icons/icon.component';
   encapsulation: ViewEncapsulation.Emulated,
   host: {
     '[class.danger]': "variant() === 'danger'",
+    '[class.size-sm]': "size() === 'sm'",
+    '[class.size-lg]': "size() === 'lg'",
   },
 })
 export class StatComponent {
@@ -20,6 +22,7 @@ export class StatComponent {
   readonly caption = input<string>('');
   readonly unit = input<string>('');
   readonly variant = input<'default' | 'danger'>('default');
+  readonly size = input<'sm' | 'md' | 'lg'>('md');
 
   protected readonly deltaClasses = computed(() => {
     const delta = this.delta();
