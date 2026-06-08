@@ -173,6 +173,14 @@ interface VariantSpec {
         </ds-button>
       </div>
 
+      <!-- ============================================================ Full width -->
+      <h3 class="block-title t-h4">Full width</h3>
+      <p class="block-desc t-s">Set <code class="t-mono">fullWidth</code> to stretch the button to its container — for mobile primary CTAs and full-bleed form submits. The host becomes block-level at 100% width.</p>
+      <div class="fullwidth-demo">
+        <ds-button fullWidth>Continue</ds-button>
+        <ds-button variant="outline" fullWidth>Cancel</ds-button>
+      </div>
+
       <!-- ============================================================ Group · split · toggle · text -->
       <h3 class="block-title t-h4">Button group · split · toggle · text</h3>
       <div class="row">
@@ -221,6 +229,14 @@ interface VariantSpec {
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); }
     .row { display: flex; gap: var(--s-3); align-items: center; flex-wrap: wrap; margin-top: var(--s-3); }
+    .fullwidth-demo {
+      display: flex; flex-direction: column; gap: var(--s-3);
+      margin-top: var(--s-3);
+      max-width: 320px;
+      padding: var(--s-4);
+      background: var(--surface-secondary);
+      border-radius: var(--r-lg);
+    }
 
     /* ---------- Variants × sizes matrix ---------- */
     .matrix {

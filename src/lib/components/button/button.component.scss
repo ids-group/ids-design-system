@@ -5,6 +5,13 @@
   display: inline-flex;
 }
 
+/* Full-width — host stretches to its container; the inner .button is already
+   width:100%, so it fills. Set via the `fullWidth` input. */
+:host(.full-width) {
+  display: block;
+  width: 100%;
+}
+
 .button {
   /* Surface */
   --ds-button-bg:            var(--primary);

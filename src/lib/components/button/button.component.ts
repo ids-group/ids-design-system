@@ -7,6 +7,7 @@ import type { ButtonSize, ButtonType, ButtonVariant } from './button.types';
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  host: { '[class.full-width]': 'fullWidth()' },
 })
 export class ButtonComponent {
   readonly variant = input<ButtonVariant>('primary');
@@ -14,6 +15,10 @@ export class ButtonComponent {
   readonly type = input<ButtonType>('button');
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly loading = input(false, { transform: booleanAttribute });
+  /** Stretch the button to fill its container — the host becomes block-level
+      and 100% wide (the inner control is already full-width). Use for mobile
+      primary CTAs and full-bleed form submit buttons. */
+  readonly fullWidth = input(false, { transform: booleanAttribute });
   readonly pressed = output<MouseEvent>();
 
   protected readonly classes = computed(() => {

@@ -110,7 +110,7 @@ The DS aggregate (`@use 'styles/ds'`) forwards the full stack: theme primitives 
 ### Form & input
 
 #### `<ds-button>` — `ButtonComponent`
-Inputs: `variant: ButtonVariant = 'primary'` (`'primary' | 'secondary' | 'tertiary' | 'outline' | 'error' | 'success' | 'warning' | 'text'`), `size: ButtonSize = 'l'` (`'s' | 'm' | 'l' | 'sm' | 'md' | 'lg'` — legacy s/m/l = 24/32/40, canonical sm/md/lg = 32/40/48), `type: 'button' | 'submit' | 'reset' = 'button'`, `disabled: boolean = false`, `loading: boolean = false`
+Inputs: `variant: ButtonVariant = 'primary'` (`'primary' | 'secondary' | 'tertiary' | 'outline' | 'error' | 'success' | 'warning' | 'text'`), `size: ButtonSize = 'l'` (`'s' | 'm' | 'l' | 'sm' | 'md' | 'lg'` — legacy s/m/l = 24/32/40, canonical sm/md/lg = 32/40/48), `type: 'button' | 'submit' | 'reset' = 'button'`, `disabled: boolean = false`, `loading: boolean = false`, `fullWidth: boolean = false` (stretches the host to `display: block; width: 100%` — for mobile primary CTAs and full-bleed submits)
 Variant → role mapping: `primary` → `--primary` fill · `secondary` → `--secondary` fill · `tertiary` → `--secondary-muted` tonal fill · `outline` → bordered neutral surface · `error/success/warning` → status fills · `text` → no-chrome text button. (Renamed 2026-06 from danger→error, link→text, ghost→outline.)
 Output: `(pressed): MouseEvent` — only fires when not disabled and not loading
 Content slots: default (label / leading or trailing icon). For icon-only actions use `<ds-icon-button>`.
