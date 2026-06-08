@@ -6,17 +6,26 @@
   display: block;
 }
 
-:host(.danger) .value { color: var(--danger-text); }
+:host(.danger) .value { color: var(--error-text); }
+
+:host(.size-sm) .stat {
+  .label { font-size: var(--fs-2xs); letter-spacing: var(--ls-wide); }
+  .value { font-size: var(--fs-h4); }
+}
+:host(.size-lg) .stat {
+  .label { font-size: var(--fs-s); }
+  .value { font-size: var(--fs-h1); }
+}
 
 .stat {
   --ds-stat-bg:           var(--surface-default);
   --ds-stat-border:       var(--border-divider);
   --ds-stat-radius:       var(--r-lg);
-  --ds-stat-pad:          var(--s-5);
+  --ds-stat-pad:          var(--ds-container-pad);
   --ds-stat-label-color:  var(--text-tertiary);
   --ds-stat-value-color:  var(--text-primary);
   --ds-stat-up-color:     var(--success-text);
-  --ds-stat-down-color:   var(--danger-text);
+  --ds-stat-down-color:   var(--error-text);
 
   background: var(--ds-stat-bg);
   border: var(--bw-default) solid var(--ds-stat-border);

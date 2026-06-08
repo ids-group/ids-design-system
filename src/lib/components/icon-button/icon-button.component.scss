@@ -1,0 +1,93 @@
+/* ============================================================
+   ICON BUTTON — square icon-only action with its own taxonomy.
+   ============================================================ */
+:host {
+  display: inline-flex;
+}
+
+.icon-button {
+  /* Tokens (override per-instance: ds-icon-button { --ds-icon-button-…: … }) */
+  --ds-icon-button-bg:        transparent;
+  --ds-icon-button-fg:        var(--text-secondary);
+  --ds-icon-button-border:    transparent;
+  --ds-icon-button-bg-hover:  var(--surface-muted);
+  --ds-icon-button-fg-hover:  var(--text-primary);
+  --ds-icon-button-radius:    var(--r-md);
+  --ds-icon-button-focus-shadow: var(--focus-ring);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--hit-cozy);
+  height: var(--hit-cozy);
+  aspect-ratio: 1;
+  padding: 0;
+  border: var(--bw-default) solid var(--ds-icon-button-border);
+  border-radius: var(--ds-icon-button-radius);
+  background: var(--ds-icon-button-bg);
+  color: var(--ds-icon-button-fg);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard),
+    color var(--dur-fast) var(--ease-standard),
+    box-shadow var(--dur-fast) var(--ease-standard);
+
+  &:hover {
+    background: var(--ds-icon-button-bg-hover);
+    color: var(--ds-icon-button-fg-hover);
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--ds-icon-button-focus-shadow);
+  }
+  &[disabled] {
+    color: var(--text-disabled);
+    background: transparent;
+    border-color: transparent;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* Sizes — align with field/button heights (32 / 40 / 48). */
+  &.sm { width: var(--hit-min);     height: var(--hit-min); }
+  &.md { width: var(--hit-cozy);    height: var(--hit-cozy); }
+  &.lg { width: var(--field-h-lg);  height: var(--field-h-lg); }
+
+  /* Variants */
+  &.standard {
+    --ds-icon-button-bg:        transparent;
+    --ds-icon-button-fg:        var(--text-secondary);
+    --ds-icon-button-border:    transparent;
+    --ds-icon-button-bg-hover:  var(--surface-muted);
+  }
+  &.filled {
+    --ds-icon-button-bg:        var(--primary);
+    --ds-icon-button-fg:        var(--primary-on);
+    --ds-icon-button-bg-hover:  var(--primary-hover);
+    --ds-icon-button-fg-hover:  var(--primary-on);
+  }
+  &.tonal {
+    --ds-icon-button-bg:        var(--primary-muted);
+    --ds-icon-button-fg:        var(--primary-strong);
+    --ds-icon-button-bg-hover:  var(--primary-subtle);
+    --ds-icon-button-fg-hover:  var(--primary-strong);
+  }
+  &.outlined {
+    --ds-icon-button-bg:        var(--surface-default);
+    --ds-icon-button-fg:        var(--text-primary);
+    --ds-icon-button-border:    var(--border-default);
+    --ds-icon-button-bg-hover:  var(--surface-secondary);
+    --ds-icon-button-fg-hover:  var(--text-primary);
+  }
+
+  /* Toggle — pressed/active look. Wins over the resting variant fill. */
+  &.selected {
+    --ds-icon-button-bg:        var(--primary);
+    --ds-icon-button-fg:        var(--primary-on);
+    --ds-icon-button-border:    transparent;
+    --ds-icon-button-bg-hover:  var(--primary-hover);
+    --ds-icon-button-fg-hover:  var(--primary-on);
+  }
+}

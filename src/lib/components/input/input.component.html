@@ -13,7 +13,7 @@
     <span class="addon-slot prefix"><ng-content select="[dsInputPrefix]"></ng-content></span>
     <input
       [id]="uid"
-      [type]="type()"
+      [type]="effectiveType()"
       [(ngModel)]="value"
       [attr.name]="name()"
       [attr.min]="min()"
@@ -26,11 +26,25 @@
       [attr.aria-invalid]="invalid() ? 'true' : null"
       [attr.aria-describedby]="hintId()"
       [attr.aria-required]="required() ? 'true' : null"
+      [attr.enterkeyhint]="enterKeyHint()"
+      [attr.inputmode]="inputMode()"
       [disabled]="disabled()"
       [required]="required()"
+      (blur)="blurred.emit()"
     />
     @if (canClear() && value() && !disabled()) {
       <button type="button" class="clear-btn" (click)="clear()" aria-label="Clear input"></button>
+    }
+    @if (showPasswordToggle()) {
+      <button
+        type="button"
+        class="password-toggle"
+        tabindex="-1"
+        [attr.aria-label]="passwordVisible() ? 'Hide password' : 'Show password'"
+        (click)="togglePassword()"
+      >
+        <ds-icon [name]="passwordVisible() ? 'eye-off' : 'eye'" [size]="16" />
+      </button>
     }
     <span class="addon-slot suffix"><ng-content select="[dsInputSuffix]"></ng-content></span>
   </div>

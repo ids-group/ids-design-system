@@ -14,7 +14,7 @@
   --ds-input-bg: var(--surface-default);
   --ds-input-border: var(--border-default);
   --ds-input-border-hover: var(--border-strong);
-  --ds-input-border-focus: var(--brand);
+  --ds-input-border-focus: var(--primary);
   --ds-input-fg: var(--text-primary);
   --ds-input-placeholder: var(--text-tertiary);
   --ds-input-radius: var(--r-md);
@@ -25,8 +25,8 @@
      textarea (~12px) and IBM Carbon (~11px). */
   --ds-input-pad-y: var(--s-3);
   --ds-input-focus-shadow: var(--focus-field);
-  --ds-input-border-error: var(--danger);
-  --ds-input-bg-error: var(--danger-subtle);
+  --ds-input-border-error: var(--error);
+  --ds-input-bg-error: var(--error-subtle);
   --ds-input-border-success: var(--success);
   --ds-input-bg-disabled: var(--surface-disabled);
 
@@ -43,7 +43,7 @@
     gap: var(--s-1);
 
     .req {
-      color: var(--danger);
+      color: var(--error);
       font-weight: var(--fw-semibold);
     }
 
@@ -77,7 +77,6 @@
       background: transparent;
       font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
       color: var(--ds-input-fg);
-      resize: vertical;
       min-height: var(--field-textarea-rows-min, 60px);
 
       &::placeholder {
@@ -123,7 +122,7 @@
       }
     }
     .hint {
-      color: var(--danger-text);
+      color: var(--error-text);
     }
   }
 
@@ -143,5 +142,10 @@
   }
   &.lg .control {
     padding: var(--s-4) var(--s-3);
+  }
+
+  &.autosize .control textarea {
+    field-sizing: content;
+    overflow: hidden;
   }
 }

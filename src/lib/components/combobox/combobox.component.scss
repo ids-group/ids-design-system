@@ -24,7 +24,7 @@
 
   &:hover { border-color: var(--border-strong); }
   &:focus-within {
-    border-color: var(--brand);
+    border-color: var(--primary);
     box-shadow: var(--focus-ring);
     outline: 0;
   }
@@ -81,7 +81,7 @@
     }
 
     .icon {
-      color: var(--brand);
+      color: var(--primary);
       margin-left: auto;
     }
 

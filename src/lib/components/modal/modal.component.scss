@@ -8,7 +8,7 @@
   --ds-modal-shadow:            var(--shadow-modal);
   --ds-modal-divider:           var(--border-divider);
   --ds-modal-title-fg:          var(--text-primary);
-  --ds-modal-title-fg-danger:   var(--danger-text);
+  --ds-modal-title-fg-error:   var(--error-text);
   --ds-modal-close-fg:          var(--icon-default);
   --ds-modal-close-fg-hover:    var(--icon-strong);
   --ds-modal-backdrop:          var(--surface-scrim);
@@ -66,7 +66,7 @@
   }
 
   &.danger {
-    .title { color: var(--ds-modal-title-fg-danger); }
+    .title { color: var(--ds-modal-title-fg-error); }
   }
 
   .impact {

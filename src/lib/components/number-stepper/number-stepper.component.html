@@ -1,0 +1,23 @@
+<div [class]="stepperClass()">
+  <button
+    type="button"
+    class="step minus"
+    (click)="dec()"
+    [disabled]="atMin() || disabled()"
+  >−</button>
+  <input
+    type="number"
+    class="qty"
+    [min]="min()"
+    [max]="max() ?? undefined"
+    [value]="value()"
+    [disabled]="disabled()"
+    (input)="setRaw($any($event.target).value)"
+  />
+  <button
+    type="button"
+    class="step plus"
+    (click)="inc()"
+    [disabled]="atMax() || disabled()"
+  >+</button>
+</div>

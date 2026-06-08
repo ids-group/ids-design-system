@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, computed, input, output } from '@angular/core';
+import { Component, ViewEncapsulation, booleanAttribute, computed, input, output } from '@angular/core';
 import type { ButtonSize, ButtonType, ButtonVariant } from './button.types';
 
 @Component({
@@ -12,10 +12,10 @@ export class ButtonComponent {
   readonly variant = input<ButtonVariant>('primary');
   readonly size = input<ButtonSize>('l');
   readonly type = input<ButtonType>('button');
-  readonly disabled = input<boolean>(false);
-  readonly loading = input<boolean>(false);
-  readonly iconOnly = input<boolean>(false);
-  /** Accessible name — required for icon-only buttons (no visible text). */
+  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly loading = input(false, { transform: booleanAttribute });
+  /** Accessible name — forwarded to the inner <button> as aria-label. Use when
+      the visible label is absent or non-descriptive. */
   readonly ariaLabel = input<string | null>(null);
   readonly pressed = output<MouseEvent>();
 
@@ -23,9 +23,8 @@ export class ButtonComponent {
     const variant = this.variant();
     const parts = [
       'button',
-      variant,
+      variant === 'primary' ? '' : variant,
       this.size(),
-      this.iconOnly() ? 'icon-only' : '',
       this.loading() ? 'loading' : '',
     ];
     return parts.filter(Boolean).join(' ');

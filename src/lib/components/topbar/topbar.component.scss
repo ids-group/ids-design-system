@@ -10,7 +10,7 @@
   --ds-topbar-action-fg-hover: var(--icon-strong);
   --ds-topbar-action-bg-hover: var(--surface-secondary);
   --ds-topbar-title-fg: var(--text-primary);
-  --ds-topbar-ping-color: var(--danger);
+  --ds-topbar-ping-color: var(--error);
 
   display: flex;
   align-items: center;
@@ -61,7 +61,7 @@
     white-space: nowrap;
     max-width: 24ch;
 
-    &:hover { color: var(--brand); }
+    &:hover { color: var(--primary); }
     &.crumb--current {
       color: var(--text-primary);
       font-weight: var(--fw-bold);

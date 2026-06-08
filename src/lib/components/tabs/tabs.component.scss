@@ -10,17 +10,17 @@
 
   --ds-tab-fg: var(--text-secondary);
   --ds-tab-fg-hover: var(--text-primary);
-  --ds-tab-fg-active: var(--brand);
-  --ds-tab-indicator-color: var(--brand);
+  --ds-tab-fg-active: var(--primary);
+  --ds-tab-indicator-color: var(--primary);
   --ds-tab-indicator-width: var(--bw-strong);
   --ds-tab-pad-x: var(--s-4);
   --ds-tab-pad-y: var(--s-3);
   --ds-tabs-divider: var(--border-divider);
   --ds-tabs-pills-bg: var(--surface-secondary);
-  --ds-tab-pill-bg-hover: var(--brand-subtle);
+  --ds-tab-pill-bg-hover: var(--primary-subtle);
   --ds-tab-pill-bg-active: var(--surface-default);
-  --ds-tab-pill-bg-active-hover: var(--brand-subtle);
-  --ds-tab-pill-fg-active: var(--brand-strong);
+  --ds-tab-pill-bg-active-hover: var(--primary-subtle);
+  --ds-tab-pill-fg-active: var(--primary-strong);
   --ds-tab-pill-radius: var(--r-md);
 }
 
@@ -118,4 +118,11 @@
 
 .panel {
   padding-top: var(--s-3);
+
+  /* When tabs are used purely as a filter selector (content rendered outside
+     the panel), the empty panel would still add its padding-top as a phantom
+     gap. Collapse it when there's nothing to show. */
+  &:empty {
+    display: none;
+  }
 }

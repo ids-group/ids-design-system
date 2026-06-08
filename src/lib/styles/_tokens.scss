@@ -2,220 +2,27 @@
 @use './link';
 
 /* ============================================================
-   Design Tokens — semantic + component layer.
-   Tier 1 colour primitives (palette ramps + brand/danger HSL
-   channels + shadow-tint channels) live in
-   ../themes/_theme-default.scss. Brand overrides extend or replace
-   that theme; see prototype/mm-broker/src/app/styles/_brand-*.scss.
+   Design Tokens — Tier 3 component + scale layer.
 
-   This file owns:
-     1 · Semantic roles  (surface, border, text, focus, status, …)
-     2 · Component-scoped (heights, widths, geometries, …)
+   Tier 1 colour primitives (ramps + HSL channels) live in
+   ../themes/default/_palette.scss. Tier 2 semantic role assignments
+   (surface, border, text, primary/secondary/tertiary, status, focus)
+   live in ../themes/default/_theme.scss.
+
+   THIS file owns the theme-INDEPENDENT layer:
+     · scales      — spacing, radius, sizes, hit targets, breakpoints
+     · typography  — families, sizes, weights, line-height, tracking
+     · motion      — durations, easings
+     · elevation   — shadows, blur, z-index layers
+     · opacity     — state-overlay alphas
+     · component   — Tier 3 --ds-*-* tokens (per-component geometry)
 
    Components consume only Tier 2/3 tokens. Direct use of palette
-   primitives (--violet-600, --neutral-200, …) inside component
+   primitives (--blue-600, --neutral-200, …) inside component
    styles is a violation — fix by introducing or reusing a role.
    ============================================================ */
 
 :root {
-  /* ============================================================
-     1 · SEMANTIC ROLES (light theme)
-     ============================================================ */
-
-  /* Surfaces — six-stop scale.
-     · canvas    : page background
-     · default   : cards, sheets, toolbars (the “paper”)
-     · secondary : hover lanes, table heads, addons, code blocks
-     · overlay   : modals, drawers, popovers (paired with scrim)
-     · tint      : brand-tinted (active rows, sidenav active item)
-     · inverted  : dark-on-light callouts, toasts
-     Conceptual elevation is communicated by SHADOW tokens,
-     not by surface tokens. Hover/pressed states use
-     --opacity-state-* overlays on top of the underlying surface. */
-  --surface-canvas:         var(--neutral-50);
-  --surface-default:        var(--neutral-0);
-  --surface-secondary:      var(--neutral-100);
-  --surface-overlay:        var(--neutral-0);
-  --surface-inverted:       var(--neutral-900);
-  --surface-inverted-hover: var(--neutral-800);
-  --surface-tint:           var(--violet-50);
-  --surface-disabled:       var(--neutral-100);
-  --surface-muted:          var(--neutral-150);
-
-  /* Scrim — modal/drawer backdrop. Derived from inverted surface
-     so dark-mode override flips automatically. */
-  --surface-scrim:     hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .55);
-
-  /* Visible-on-coloured-fill divider. The split-button right-hand chevron
-     sits ON the brand fill, so a transparent white hairline reads correctly
-     across any brand hue. Override per theme if the brand is too light. */
-  --btn-split-divider: hsla(0, 0%, 100%, .25);
-
-  /* Visited link — derives from --brand-muted by default so it sympathetically
-     shifts with the brand hue. Override (e.g. for financial dashboards that
-     want neutral-grey visited links) by setting this token directly. */
-  --link-visited:      hsl(var(--brand-h) calc(var(--brand-s) * 0.6) 45%);
-
-  /* Borders */
-  --border-default:    var(--neutral-200);
-  --border-strong:     var(--neutral-300);
-  --border-subtle:     var(--neutral-150);
-  --border-divider:    var(--neutral-150);
-  --border-inverted:   var(--neutral-700);
-  --border-disabled:   var(--neutral-150);
-
-  /* Text */
-  --text-primary:      var(--neutral-900);
-  --text-secondary:    var(--neutral-700);
-  --text-tertiary:     var(--neutral-500);
-  --text-muted:        var(--neutral-400);
-  --text-disabled:     var(--neutral-400);
-  --text-inverted:     var(--neutral-0);
-  --text-link:         var(--violet-700);
-  --text-on-brand:     var(--neutral-0);
-  --text-on-success:   var(--neutral-0);
-  --text-on-error:     var(--neutral-0);
-
-  /* Icons */
-  --icon-default:      var(--neutral-500);
-  --icon-strong:       var(--neutral-700);
-  --icon-muted:        var(--neutral-400);
-  --icon-on-brand:     var(--neutral-0);
-
-  /* Brand roles.
-     Hover / pressed / selected-hover are DERIVED from --brand at runtime via
-     color-mix() so a brand swap (overriding only --brand) propagates to every
-     interaction state automatically. A brand that wants a non-derived hover
-     hue can still override these tokens directly.
-     Step sizes (12% / 24% darker) mirror the violet 600→700→800 ramp. */
-  --brand:                 var(--violet-600);
-  --brand-hover:           color-mix(in srgb, var(--brand) 88%, black);
-  --brand-pressed:         color-mix(in srgb, var(--brand) 76%, black);
-  --brand-selected-hover:  color-mix(in srgb, var(--brand) 88%, black);
-  --brand-subtle:          var(--violet-50);
-  --brand-muted:           var(--violet-100);
-  --brand-muted-strong:    var(--violet-200);
-  --brand-strong:          var(--violet-700);
-  --brand-on:              var(--neutral-0);
-
-  /* Accent / secondary role — composed from --secondary-h/s/l channels.
-     Channels default to brand values so unbranded apps render identical to
-     --brand. Override --secondary-h/s/l per-brand (or via the tweaks panel)
-     to introduce a true secondary hue — --secondary recomposes automatically.
-     Hover/pressed derive from --secondary so any hue change propagates. */
-  --secondary-h:       var(--brand-h);
-  --secondary-s:       var(--brand-s);
-  --secondary-l:       var(--brand-l);
-
-  --secondary:         hsl(var(--secondary-h), var(--secondary-s), var(--secondary-l));
-  --secondary-hover:   color-mix(in srgb, var(--secondary) 88%, black);
-  --secondary-pressed: color-mix(in srgb, var(--secondary) 76%, black);
-  --secondary-strong:  hsl(var(--secondary-h), var(--secondary-s), calc(var(--secondary-l) - 11%));
-  --secondary-subtle:  hsl(var(--secondary-h), 100%, 97%);
-  --secondary-muted:   hsl(var(--secondary-h), 95%, 94%);
-  --secondary-on:      var(--brand-on);
-
-  /* Accent — interactive visual marker (input focus border, tab indicator,
-     switcher accent, sidenav active rail, …). Mirrors the --brand /
-     --secondary token-family shape: HSL channels for halo composition,
-     hover/pressed via color-mix, subtle/muted ramps for accent surfaces.
-     Defaults to brand channels so single-accent themes render identical
-     to --brand. Multi-accent brands (e.g. MM2026: Topaz alongside Deep
-     Teal + Coral) override --accent-h/s/l (and optionally --accent
-     directly for non-HSL values). */
-  --accent-h:       var(--brand-h);
-  --accent-s:       var(--brand-s);
-  --accent-l:       var(--brand-l);
-
-  --accent:         hsl(var(--accent-h), var(--accent-s), var(--accent-l));
-  --accent-hover:   color-mix(in srgb, var(--accent) 88%, black);
-  --accent-pressed: color-mix(in srgb, var(--accent) 76%, black);
-  --accent-strong:  hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 11%));
-  --accent-subtle:  hsl(var(--accent-h), 100%, 97%);
-  --accent-muted:   hsl(var(--accent-h), 95%, 94%);
-  --accent-on:      var(--brand-on);
-
-  /* Status roles.
-     -hover / -pressed are derived from the base role via the same color-mix()
-     rule as --brand-hover. Override per role if a brand needs a non-derived
-     hue. -text / -border / -subtle / -muted stay as ramp picks because their
-     contrast targets are tuned, not procedural. */
-  --success:           var(--green-500);
-  --success-hover:     color-mix(in srgb, var(--success) 88%, black);
-  --success-subtle:    var(--green-50);
-  --success-muted:     var(--green-100);
-  --success-border:    var(--green-200);
-  --success-text:      var(--green-700);
-
-  --warning:           var(--yellow-400);
-  --warning-hover:     color-mix(in srgb, var(--warning) 88%, black);
-  --warning-subtle:    var(--yellow-50);
-  --warning-muted:     var(--yellow-100);
-  --warning-border:    var(--yellow-200);
-  --warning-text:      var(--yellow-700);
-
-  --danger:            var(--red-500);
-  --danger-hover:      color-mix(in srgb, var(--danger) 88%, black);
-  --danger-pressed:    color-mix(in srgb, var(--danger) 76%, black);
-  --danger-subtle:     var(--red-50);
-  --danger-muted:      var(--red-100);
-  --danger-border:     var(--red-200);
-  --danger-text:       var(--red-600);
-
-  --info:              var(--blue-500);
-  --info-hover:        color-mix(in srgb, var(--info) 88%, black);
-  --info-subtle:       var(--blue-50);
-  --info-muted:        var(--blue-100);
-  --info-border:       var(--blue-200);
-  --info-text:         var(--blue-700);
-
-  /* Status pills (event lifecycle).
-     DECISION: --status-confirmed-* chains through --brand-* so a
-     brand re-skin moves Confirmed with it. The other lifecycle
-     stages are deliberately neutral/green/dark to keep semantic
-     distance from brand. */
-  /* Status pills — canonical (single system).
-     Legacy classes `.badge--active` (single) and ad-hoc semantic
-     pills are unified in the Badge component to consume these tokens. */
-  --status-planning-bg:   var(--neutral-150);
-  --status-planning-fg:   var(--neutral-700);
-  --status-confirmed-bg:  var(--brand-subtle);
-  --status-confirmed-fg:  var(--brand-strong);
-  --status-active-bg:     var(--green-50);
-  --status-active-fg:     var(--green-700);
-  --status-completed-bg:  var(--neutral-900);
-  --status-completed-fg:  var(--neutral-0);
-
-  /* Focus rings.
-     Outer halos use hsla() composed from brand/danger HSL channels
-     so re-skinning --brand-h propagates into focus state.
-     The inner halo reads --surface-canvas so the ring stays visible
-     in both light and dark themes (canvas flips, ring adapts). */
-  --focus-ring-inner:        var(--surface-canvas);
-  --focus-ring-outer-h:      var(--brand-h);
-  --focus-ring-outer-s:      var(--brand-s);
-  --focus-ring-outer-l:      var(--brand-l);
-  --focus-ring-outer-alpha:  1;
-
-  --focus-ring:
-    0 0 0 2px var(--focus-ring-inner),
-    0 0 0 4px hsla(var(--focus-ring-outer-h), var(--focus-ring-outer-s), var(--focus-ring-outer-l), var(--focus-ring-outer-alpha));
-  --focus-ring-inverted:
-    0 0 0 2px var(--neutral-900),
-    0 0 0 4px var(--violet-300);
-  --focus-ring-danger:
-    0 0 0 2px var(--focus-ring-inner),
-    0 0 0 4px hsla(var(--danger-h), var(--danger-s), var(--danger-l), 1);
-
-  /* Field focus — coloured halo only (no double-ring). Derived from
-     brand HSL so it tracks rebrand. Alpha is a token so dark themes
-     can boost it for legibility. */
-  --focus-field-alpha: .22;
-  --focus-field:
-    0 0 0 3px hsla(var(--brand-h), var(--brand-s), var(--brand-l), var(--focus-field-alpha));
-  --focus-field-error:
-    0 0 0 3px hsla(var(--danger-h), var(--danger-s), var(--danger-l), var(--focus-field-alpha));
-
   /* ============================================================
      Spacing — 4 px base, with named half-steps where atoms need them
      ============================================================ */
@@ -248,6 +55,7 @@
   --r-sm:       4px;   /* kbd, indeterminate-checkbox tick, link focus halo */
   --r-md:       8px;   /* buttons, fields, tooltips, search, segmented, tags */
   --r-lg:      12px;   /* menus, popovers, dropdowns, cards, modals, drawers, empty-state icons, toasts */
+  --r-xl:      16px;   /* large containers — viewport/scanner frames, hero cards */
   --r-2xl:     24px;   /* heroic surfaces — reserved, no current consumer */
 
   /* --r-pill is configurable so themes can override pill-shaped surfaces
@@ -279,8 +87,8 @@
      The alpha values stay constant across themes — only the
      hue/saturation/lightness become configurable.
      ============================================================ */
-  /* --shadow-tint-h/s/l live in themes/_theme-default.scss — theme-affected
-     so dark themes can override --shadow-tint-l → ~95% for soft light glows. */
+  /* --shadow-tint-h/s/l live in themes/default/_palette.scss — palette-level
+     so dark palettes can override --shadow-tint-l → ~95% for soft light glows. */
 
   --z100: 0 1px 2px  hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .06),
           0 1px 3px  hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .08);
@@ -361,7 +169,6 @@
   --opacity-disabled:        0.5;   /* full disabled state on interactive components */
   --opacity-muted:           0.6;   /* legacy alias — being phased out in favour of --text-* roles */
   --opacity-text-disabled:   0.38;  /* disabled text alpha (WCAG-derived) */
-  --opacity-text-disabled:   0.38;  /* disabled text where a colour token isn't available */
   --opacity-scrim:           0.55;  /* modal/drawer backdrop overlay (light theme) */
   --opacity-state-hover:     0.08;  /* hover layer over surface (overlay vs surface swap) */
   --opacity-state-pressed:   0.16;  /* active/pressed layer */
@@ -398,22 +205,16 @@
   --scrollbar-thumb:        var(--neutral-300);
   --scrollbar-thumb-hover:  var(--neutral-400);
   --scrollbar-thumb-active: var(--neutral-500);
-  --select-bg: color-mix(in srgb, var(--brand) 22%, transparent);
+  --select-bg: color-mix(in srgb, var(--primary) 22%, transparent);
   --col-cap-text:    720px;
   --col-cap-content: 1280px;
 
   /* ============================================================
-     Typography
+     Typography scale (theme-independent). Font FAMILIES are a theme
+     choice and live in themes/default/_theme.scss (--font-sans/mono/
+     display/heading); the size/weight/leading/tracking scale below is
+     constant across themes.
      ============================================================ */
-  --font-sans:    "Mulish", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  /* Display + heading stacks default to body sans so an unconfigured
-     theme is visually consistent. Override --font-heading or
-     --font-display in a client theme to mix a serif/display family
-     without touching component code. */
-  --font-display: var(--font-sans);
-  --font-heading: var(--font-sans);
-
   --fw-regular:  400;
   --fw-medium:   500;
   --fw-semibold: 600;
@@ -479,6 +280,10 @@
      compress without component edits. */
   --field-pad-x:       var(--s-3);
   --field-pad-y:       0;
+
+  /* Shared inner padding for surface containers (card, stat, …). Components
+     default their own --ds-*-pad to this, so a consumer retunes all at once. */
+  --ds-container-pad:  var(--s-6);
 
   /* Table cell padding — density-aware, consumed by .tbl td/th. */
   --table-cell-pad-x:  var(--s-4);

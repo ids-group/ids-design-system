@@ -1,0 +1,133 @@
+// =========================================================================
+// Default palette — Tier 1 concrete colour primitives.
+//
+// This file DEFINES the colours: raw ramps (--neutral-*, --blue-*, --red-*,
+// --green-*, --yellow-*, --sky-*, --orange-*) + the HSL channels (--blue-h/s/l,
+// --red-h/s/l, --shadow-tint-h/s/l) they compose from. Tokens are named by the
+// COLOUR itself — the palette does not know what a colour is "for".
+//
+// The companion theme (themes/default/_theme.scss) SETS these onto semantic
+// roles (--primary → --blue-600, --error → --red-500, …). Components consume
+// only those roles, never this palette directly.
+//
+// A sibling palette (e.g. _palette-dark.scss) ships different ramp values; pair
+// it with a matching theme file. Default = "Blue + Slate baseline".
+// =========================================================================
+
+:root {
+  // -----------------------------------------------------------------------
+  // Neutral ramp (13 stops)
+  // -----------------------------------------------------------------------
+  --neutral-0:   #FFFFFF;
+  --neutral-50:  #F8FAFC;
+  --neutral-100: #F1F4F9;
+  --neutral-150: #E8ECF2;
+  --neutral-200: #DCE1EA;
+  --neutral-300: #C2C9D6;
+  --neutral-400: #9BA3B4;
+  --neutral-500: #6B7388;
+  --neutral-600: #4D5468;
+  --neutral-700: #353B4D;
+  --neutral-800: #232838;
+  --neutral-900: #161A28;
+  --neutral-950: #0B0E18;
+
+  // -----------------------------------------------------------------------
+  // Blue — defined as HSL channels so we can compose hsla() halos and tints
+  // from the same source. #2F54FF ≈ hsl(229, 100%, 59%). This is the ramp the
+  // default theme maps --primary onto (see styles/_tokens.scss). Naming is
+  // concrete (the colour) — the semantic --primary mapping lives in the lib.
+  // -----------------------------------------------------------------------
+  --blue-h: 229;
+  --blue-s: 100%;
+  --blue-l: 59%;
+
+  --blue-50:  hsl(var(--blue-h), 100%, 97%);
+  --blue-100: hsl(var(--blue-h),  95%, 94%);
+  --blue-200: hsl(var(--blue-h),  95%, 89%);
+  --blue-300: hsl(var(--blue-h),  98%, 82%);
+  --blue-400: hsl(var(--blue-h), 100%, 75%);
+  --blue-500: hsl(var(--blue-h), 100%, 66%);
+  --blue-600: hsl(var(--blue-h), var(--blue-s), var(--blue-l));
+  --blue-700: hsl(var(--blue-h),  85%, 52%);
+  --blue-800: hsl(var(--blue-h),  79%, 40%);
+  --blue-900: hsl(var(--blue-h),  77%, 30%);
+
+  // -----------------------------------------------------------------------
+  // Orange — focus / secondary signal
+  // -----------------------------------------------------------------------
+  --orange-50:  #FFF7F0;
+  --orange-100: #FFEEDF;
+  --orange-200: #FFD9B8;
+  --orange-300: #FFC59C;
+  --orange-400: #FF9755;
+  --orange-500: #FF7A2E;
+  --orange-600: #E8631A;
+  --orange-700: #B84812;
+  --orange-800: #8A340A;
+
+  // -----------------------------------------------------------------------
+  // Green — success
+  // -----------------------------------------------------------------------
+  --green-50:  #ECFAEE;
+  --green-100: #D6F3DB;
+  --green-200: #BBE8C2;
+  --green-300: #8EDA9A;
+  --green-400: #4FC368;
+  --green-500: #22A33A;
+  --green-600: #1B8A2E;
+  --green-700: #156822;
+
+  // -----------------------------------------------------------------------
+  // Yellow — attention / warning
+  // -----------------------------------------------------------------------
+  --yellow-50:  #FFFBEA;
+  --yellow-100: #FEF8DC;
+  --yellow-200: #FCEFA1;
+  --yellow-300: #F9E25F;
+  --yellow-400: #F4D43A;
+  --yellow-500: #E0BE00;
+  --yellow-600: #B89B00;
+  --yellow-700: #8A7400;
+
+  // -----------------------------------------------------------------------
+  // Red — HSL-channel-split for halo derivation. #D81F1F ≈ hsl(0, 75%, 49%).
+  // The default theme maps --error onto this ramp (see styles/_tokens.scss).
+  // -----------------------------------------------------------------------
+  --red-h: 0;
+  --red-s: 75%;
+  --red-l: 49%;
+
+  --red-50:  hsl(var(--red-h), 86%, 97%);
+  --red-100: hsl(var(--red-h), 86%, 95%);
+  --red-200: hsl(var(--red-h), 86%, 88%);
+  --red-300: hsl(var(--red-h), 84%, 76%);
+  --red-400: hsl(var(--red-h), 87%, 57%);
+  --red-500: hsl(var(--red-h), var(--red-s), var(--red-l));
+  --red-600: hsl(var(--red-h), 78%, 41%);
+  --red-700: hsl(var(--red-h), 78%, 31%);
+
+  // -----------------------------------------------------------------------
+  // Sky — info role ramp. A brighter, cooler blue (#3B82F6) kept distinct
+  // from the primary --blue ramp (#2F54FF) so "informational" reads apart
+  // from "primary action".
+  // -----------------------------------------------------------------------
+  --sky-50:  #EFF6FF;
+  --sky-100: #DBEAFE;
+  --sky-200: #BFDBFE;
+  --sky-300: #93C5FD;
+  --sky-400: #60A5FA;
+  --sky-500: #3B82F6;
+  --sky-600: #2563EB;
+  --sky-700: #1D4ED8;
+
+  // -----------------------------------------------------------------------
+  // Shadow tint — channel-split substrate. Light theme uses a cool
+  // near-black slate (225 / 39% / 7%). A dark theme would override
+  // --shadow-tint-l to ~95% so the same alphas render as soft light
+  // glows over dark surfaces.
+  // -----------------------------------------------------------------------
+  --shadow-tint-h: 225;
+  --shadow-tint-s: 39%;
+  --shadow-tint-l: 7%;
+}

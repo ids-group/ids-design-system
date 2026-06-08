@@ -9,8 +9,8 @@
    ============================================================ */
 :host {
   --ds-avatar-size:        var(--avatar-md);
-  --ds-avatar-bg:          var(--brand-muted);
-  --ds-avatar-fg:          var(--brand-strong);
+  --ds-avatar-bg:          var(--primary-muted);
+  --ds-avatar-fg:          var(--primary-strong);
   --ds-avatar-radius:      var(--r-pill);
   --ds-avatar-ring-color:  var(--surface-default);
   --ds-avatar-ring-width:  var(--avatar-bw-group);

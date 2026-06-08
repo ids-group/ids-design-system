@@ -22,6 +22,10 @@
       [attr.aria-required]="required() ? 'true' : null"
       [disabled]="disabled()"
       [required]="required()"
+      [style.resize]="effectiveResize()"
+      [style.min-height]="autosizeMinHeight()"
+      [style.max-height]="autosizeMaxHeight()"
+      [style.overflow-y]="autosize() && maxRows() ? 'auto' : null"
     ></textarea>
   </div>
   @if (hint()) {

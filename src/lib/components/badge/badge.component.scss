@@ -11,37 +11,36 @@
 }
 
 .badge {
-  --ds-badge-bg: var(--surface-secondary);
-  --ds-badge-fg: var(--text-secondary);
-  --ds-badge-radius: var(--r-pill);
-  --ds-badge-pad-x: var(--badge-pad-x);
-  --ds-badge-pad-y: var(--badge-pad-y);
-  --ds-badge-font-weight: var(--fw-bold);
+  /* Public --ds-badge-* tokens are CONSUMED with private fallbacks and never
+     declared by DS itself, so a consumer declaration anywhere up the tree
+     (host element included) always wins over the variant defaults. */
+  --_badge-bg: var(--surface-secondary);
+  --_badge-fg: var(--text-secondary);
 
   display: inline-flex;
   align-items: center;
   gap: var(--badge-gap);
-  padding: var(--ds-badge-pad-y) var(--ds-badge-pad-x);
-  border-radius: var(--ds-badge-radius);
-  font: var(--ds-badge-font-weight) var(--fs-xs)/var(--lh-base) var(--font-sans);
+  padding: var(--ds-badge-pad-y, var(--badge-pad-y)) var(--ds-badge-pad-x, var(--badge-pad-x));
+  border-radius: var(--ds-badge-radius, var(--r-pill));
+  font: var(--ds-badge-font-weight, var(--fw-bold)) var(--fs-xs)/var(--lh-base) var(--font-sans);
   letter-spacing: var(--ls-wide);
   white-space: nowrap;
-  background: var(--ds-badge-bg);
-  color: var(--ds-badge-fg);
+  background: var(--ds-badge-bg, var(--_badge-bg));
+  color: var(--ds-badge-fg, var(--_badge-fg));
 
   .dot { width: var(--badge-dot-size); height: var(--badge-dot-size); border-radius: var(--r-pill); background: currentColor; }
 
-  &.planning  { --ds-badge-bg: var(--status-planning-bg);  --ds-badge-fg: var(--status-planning-fg); }
-  &.confirmed { --ds-badge-bg: var(--status-confirmed-bg); --ds-badge-fg: var(--status-confirmed-fg); }
-  &.active    { --ds-badge-bg: var(--status-active-bg);    --ds-badge-fg: var(--status-active-fg); }
-  &.completed { --ds-badge-bg: var(--status-completed-bg); --ds-badge-fg: var(--status-completed-fg); }
-  &.info      { --ds-badge-bg: var(--info-subtle);    --ds-badge-fg: var(--info-text); }
-  &.success   { --ds-badge-bg: var(--success-subtle); --ds-badge-fg: var(--success-text); }
-  &.warning   { --ds-badge-bg: var(--warning-subtle); --ds-badge-fg: var(--warning-text); }
-  &.error     { --ds-badge-bg: var(--danger-subtle);  --ds-badge-fg: var(--danger-text); }
-  &.neutral   { --ds-badge-bg: var(--surface-secondary); --ds-badge-fg: var(--text-secondary); }
-  &.secondary { --ds-badge-bg: var(--secondary-subtle); --ds-badge-fg: var(--secondary-strong); }
-  &.solid     { --ds-badge-bg: var(--brand);    --ds-badge-fg: var(--brand-on); }
+  &.planning  { --_badge-bg: var(--status-planning-bg);  --_badge-fg: var(--status-planning-fg); }
+  &.confirmed { --_badge-bg: var(--status-confirmed-bg); --_badge-fg: var(--status-confirmed-fg); }
+  &.active    { --_badge-bg: var(--status-active-bg);    --_badge-fg: var(--status-active-fg); }
+  &.completed { --_badge-bg: var(--status-completed-bg); --_badge-fg: var(--status-completed-fg); }
+  &.info      { --_badge-bg: var(--info-subtle);    --_badge-fg: var(--info-text); }
+  &.success   { --_badge-bg: var(--success-subtle); --_badge-fg: var(--success-text); }
+  &.warning   { --_badge-bg: var(--warning-subtle); --_badge-fg: var(--warning-text); }
+  &.error     { --_badge-bg: var(--error-subtle);  --_badge-fg: var(--error-text); }
+  &.neutral   { --_badge-bg: var(--surface-secondary); --_badge-fg: var(--text-secondary); }
+  &.secondary { --_badge-bg: var(--secondary-subtle); --_badge-fg: var(--secondary-strong); }
+  &.solid     { --_badge-bg: var(--primary);    --_badge-fg: var(--primary-on); }
   &.count {
     min-width: var(--badge-count-size); height: var(--badge-count-size); padding: 0 var(--s-1-5);
     display: inline-grid; place-items: center;

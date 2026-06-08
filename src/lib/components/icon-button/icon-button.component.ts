@@ -1,0 +1,48 @@
+import { Component, ViewEncapsulation, booleanAttribute, computed, input, output } from '@angular/core';
+import { IconComponent } from '../../icons/icon.component';
+import type { IconName } from '../../icons/icons.data';
+import type { IconButtonSize, IconButtonType, IconButtonVariant } from './icon-button.types';
+
+/**
+ * Icon-only action button with its own variant taxonomy (standard / filled /
+ * tonal / outlined) + an optional toggle (`selected`) state. Distinct from
+ * `ds-button` — use this for square/round icon affordances; use `ds-button`
+ * for labelled actions. `ariaLabel` is REQUIRED (icon-only has no text label).
+ */
+@Component({
+  selector: 'ds-icon-button',
+  standalone: true,
+  imports: [IconComponent],
+  templateUrl: './icon-button.component.html',
+  styleUrl: './icon-button.component.scss',
+  encapsulation: ViewEncapsulation.Emulated,
+})
+export class IconButtonComponent {
+  readonly icon = input.required<IconName>();
+  readonly ariaLabel = input.required<string>();
+  readonly variant = input<IconButtonVariant>('standard');
+  readonly size = input<IconButtonSize>('md');
+  readonly type = input<IconButtonType>('button');
+  readonly disabled = input(false, { transform: booleanAttribute });
+  /** Toggle state — renders the pressed/active look and sets aria-pressed. */
+  readonly selected = input(false, { transform: booleanAttribute });
+  readonly pressed = output<MouseEvent>();
+
+  protected readonly classes = computed(() => {
+    const parts = ['icon-button', this.variant(), this.size()];
+    if (this.selected()) parts.push('selected');
+    return parts.join(' ');
+  });
+
+  protected readonly iconSize = computed(() => {
+    const size = this.size();
+    if (size === 'sm') return 16;
+    if (size === 'lg') return 24;
+    return 20;
+  });
+
+  protected onClick(event: MouseEvent): void {
+    if (this.disabled()) return;
+    this.pressed.emit(event);
+  }
+}

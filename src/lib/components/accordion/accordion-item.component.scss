@@ -21,7 +21,7 @@
     &:hover { background: var(--surface-secondary); }
 
     &:focus-visible {
-      outline: var(--bw-strong, 2px) solid var(--brand);
+      outline: var(--bw-strong, 2px) solid var(--primary);
       outline-offset: -2px;
     }
 

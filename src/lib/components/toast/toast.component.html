@@ -10,6 +10,10 @@
     {{ message() }}
     <ng-content></ng-content>
   </div>
+  @if (action(); as act) {
+    <button type="button" class="action" (click)="onAction(act)">{{ act.label }}</button>
+  }
+  <span class="actions"><ng-content select="[actions]"></ng-content></span>
   @if (dismissible()) {
     <button type="button" class="close" (click)="onDismiss()" aria-label="Dismiss">
       <ds-icon name="x" [size]="14" />

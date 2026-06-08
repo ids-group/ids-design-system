@@ -1,0 +1,6 @@
+// Toast overlay panel — GLOBAL (portaled via CDK Overlay, outside component DOM).
+// ToastService sets panelClass: 'ds-toast-panel'. CDK overlays stack by DOM
+// insertion order, so lift the toast wrapper above modals/drawers explicitly.
+.cdk-global-overlay-wrapper:has(> .ds-toast-panel) {
+  z-index: var(--layer-toast);
+}

@@ -1,0 +1,41 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 100vh;
+  height: 100vh;
+  transition: grid-template-columns var(--dur-fast) var(--ease-standard);
+}
+
+// Note: the :root.ds-docs-sidebar-collapsed override for .layout lives in
+// the GLOBAL styles.scss because Angular's view encapsulation mangles :root
+// selectors here (adds [_ngcontent-…] which <html> can't satisfy).
+
+.side {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.main {
+  overflow-y: auto;
+  min-height: 0;
+}
+// Note: content-width cap + horizontal centering lives on each routed
+// page's :host (e.g. <page-docs>), not here — view-encapsulation blocks
+// `.main > *` from styling the routed component.
+
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 220px 1fr; }
+}
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .side { display: none; }
+}

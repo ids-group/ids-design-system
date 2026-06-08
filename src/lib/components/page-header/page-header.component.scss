@@ -106,7 +106,7 @@
     white-space: nowrap;
     max-width: 24ch;
 
-    &:hover { color: var(--brand); }
+    &:hover { color: var(--primary); }
     &.crumb--current {
       color: var(--text-primary);
       font-weight: var(--fw-bold);

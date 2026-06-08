@@ -1,5 +1,6 @@
-import { Component, ViewEncapsulation, computed, input, model } from '@angular/core';
+import { Component, ViewEncapsulation, booleanAttribute, computed, input, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { IconComponent } from '../../icons/icon.component';
 import type { InputSize, InputType } from './input.types';
 
 /** Process-wide counter so each control gets a stable, unique id for
@@ -9,7 +10,7 @@ let nextId = 0;
 @Component({
   selector: 'ds-input',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, IconComponent],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -36,6 +37,11 @@ export class InputComponent {
   /** Accessible name when no visible `label` is provided (falls back to the
    *  placeholder so the control is never unnamed). */
   readonly ariaLabel = input<string | null>(null);
+  /** Mobile keyboard hints — forwarded to the native input as attributes. */
+  readonly enterKeyHint = input<'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send' | null>(null);
+  readonly inputMode = input<'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url' | null>(null);
+  /** Emits when the native input loses focus. */
+  readonly blurred = output<void>();
   /**
    * Show an inline clear (×) button when the input has a non-empty value.
    * Mirrors the Material/PrimeNG pattern: explicit button (not native search
@@ -44,6 +50,9 @@ export class InputComponent {
    * an explicit boolean to override.
    */
   readonly clearable = input<boolean | null>(null);
+
+  readonly passwordToggle = input(false, { transform: booleanAttribute });
+  readonly passwordVisible = model<boolean>(false);
 
   protected readonly canClear = computed<boolean>(() => {
     const explicit = this.clearable();
@@ -57,6 +66,20 @@ export class InputComponent {
   protected readonly resolvedAriaLabel = computed(() =>
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,
   );
+
+  protected readonly showPasswordToggle = computed<boolean>(
+    () => this.passwordToggle() && this.type() === 'password' && !this.disabled(),
+  );
+
+  protected readonly effectiveType = computed<InputType>(() =>
+    this.passwordToggle() && this.type() === 'password' && this.passwordVisible()
+      ? 'text'
+      : this.type(),
+  );
+
+  protected togglePassword(): void {
+    this.passwordVisible.update((visible) => !visible);
+  }
 
   protected readonly wrapperClasses = computed(() => {
     const parts = ['field'];

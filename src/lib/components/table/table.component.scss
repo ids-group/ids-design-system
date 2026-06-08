@@ -75,7 +75,7 @@
     width: var(--spinner-md, 24px);
     height: var(--spinner-md, 24px);
     border: var(--bw-strong, 2px) solid var(--border-default);
-    border-top-color: var(--brand);
+    border-top-color: var(--primary);
     border-radius: var(--r-pill);
     animation: ds-table-overlay-spin var(--dur-loop-fast, 700ms) linear infinite;
   }
@@ -88,9 +88,9 @@
 .table {
   --ds-table-bg:              var(--surface-default);
   --ds-table-row-hover-bg:    var(--surface-secondary);
-  --ds-table-row-selected-bg: var(--brand-subtle);
+  --ds-table-row-selected-bg: var(--primary-subtle);
   --ds-table-divider:         var(--border-divider);
-  --ds-table-sort-active-fg:  var(--brand);
+  --ds-table-sort-active-fg:  var(--primary);
   --ds-table-cell-pad-x:      var(--table-cell-pad-x);
   --ds-table-cell-pad-y:      var(--table-cell-pad-y);
 
@@ -140,7 +140,7 @@
       }
 
       &:focus-visible {
-        outline: var(--bw-strong, 2px) solid var(--brand);
+        outline: var(--bw-strong, 2px) solid var(--primary);
         outline-offset: 2px;
         border-radius: var(--r-xs, 3px);
       }
@@ -223,7 +223,7 @@
       }
 
       &.clickable:focus-visible {
-        outline: var(--bw-strong, 2px) solid var(--brand);
+        outline: var(--bw-strong, 2px) solid var(--primary);
         outline-offset: -2px;
       }
     }

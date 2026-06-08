@@ -47,6 +47,10 @@
 
   &.quiet {
     color: var(--text-secondary);
+    /* Pull the underline down to match the muted text — the base rule sets
+       text-decoration-color to --ds-link-color (link blue), which would leave
+       a bright underline under grey text at rest. */
+    text-decoration-color: var(--text-secondary);
     font-weight: var(--fw-medium);
 
     &:hover {
