@@ -3,7 +3,7 @@ import { ButtonComponent, IconComponent } from 'ds';
 
 interface VariantSpec {
   readonly label: string;
-  readonly key: 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'error';
+  readonly key: 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'outline' | 'error';
 }
 
 @Component({
@@ -318,6 +318,7 @@ export class ButtonSection {
     { label: 'Secondary', key: 'secondary' },
     { label: 'Tertiary',  key: 'tertiary' },
     { label: 'Ghost',     key: 'ghost' },
-    { label: 'Error',    key: 'error' },
+    { label: 'Outline',   key: 'outline' },
+    { label: 'Error',     key: 'error' },
   ];
 }

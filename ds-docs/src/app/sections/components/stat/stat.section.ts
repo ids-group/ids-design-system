@@ -22,6 +22,17 @@ import { StatComponent } from 'ds';
         <ds-stat label="Pending recomputes" value="12" caption="Last sync 4m ago" />
       </div>
 
+      <!-- ============================================================ Sizes -->
+      <h3 class="block-title t-h4">Sizes</h3>
+      <p class="block-desc t-s">
+        <code class="t-mono">[size]</code> scales the value typography for dense dashboards (<code class="t-mono">sm</code>) or hero KPIs (<code class="t-mono">lg</code>). Default is <code class="t-mono">md</code>.
+      </p>
+      <div class="grid-4">
+        <ds-stat size="sm" label="Compact" value="147" [delta]="12" />
+        <ds-stat label="Default" value="147" [delta]="12" />
+        <ds-stat size="lg" label="Hero KPI" value="147" [delta]="12" />
+      </div>
+
       <!-- ============================================================ Truncation -->
       <h3 class="block-title t-h4">Truncation</h3>
       <div class="trunc">

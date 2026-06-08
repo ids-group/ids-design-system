@@ -32,6 +32,14 @@ import { ButtonComponent, ToastComponent, ToastService } from 'ds';
         <ds-button variant="ghost" size="m" (click)="fire('warning')">Warning</ds-button>
         <ds-button variant="ghost" size="m" (click)="fire('error')">Error</ds-button>
       </div>
+
+      <h3 class="block-title t-h4">With action</h3>
+      <p class="block-desc t-s">
+        Pass <code class="t-mono">action: {{ '{' }} label, handler {{ '}' }}</code> to <code class="t-mono">ToastService.show()</code> to render a trailing action button (e.g. Undo).
+      </p>
+      <div class="demo">
+        <ds-button variant="ghost" size="m" (click)="fireWithAction()">Delete with Undo</ds-button>
+      </div>
     </section>
   `,
   styles: [`
@@ -83,5 +91,14 @@ export class ToastSection {
     };
     const message = messages[variant];
     this.toast.show({ title: message.title, body: message.body, variant });
+  }
+
+  fireWithAction(): void {
+    const ref = this.toast.show({
+      title: 'Record deleted',
+      body: 'Project Alpha was removed.',
+      variant: 'info',
+      action: { label: 'Undo', handler: () => ref.dismiss() },
+    });
   }
 }

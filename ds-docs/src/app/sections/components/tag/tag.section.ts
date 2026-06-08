@@ -28,6 +28,16 @@ import { TagComponent } from 'ds';
         <ds-tag variant="ghost" [closable]="true">Filter · Site North</ds-tag>
       </div>
 
+      <h3 class="block-title t-h4">Interactive · selectable</h3>
+      <p class="block-desc t-s">
+        <code class="t-mono">[interactive]</code> makes the tag a toggle button that emits <code class="t-mono">(toggled)</code> on click; <code class="t-mono">[selected]</code> renders the active state. Use for filter-chip rows.
+      </p>
+      <div class="row">
+        <ds-tag variant="ghost" [interactive]="true" [selected]="true" (toggled)="toggle('north')">Site North</ds-tag>
+        <ds-tag variant="ghost" [interactive]="true" [selected]="false" (toggled)="toggle('south')">Site South</ds-tag>
+        <ds-tag variant="ghost" [interactive]="true" [selected]="false" (toggled)="toggle('east')">Site East</ds-tag>
+      </div>
+
       <h3 class="block-title t-h4">Truncation</h3>
       <div class="trunc">
         <div class="trunc__title">Truncation</div>
@@ -99,4 +109,8 @@ import { TagComponent } from 'ds';
     }
   `],
 })
-export class TagSection {}
+export class TagSection {
+  protected toggle(_site: string): void {
+    // demo-only: real consumers flip their own selected state
+  }
+}

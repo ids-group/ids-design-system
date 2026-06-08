@@ -81,6 +81,7 @@ const SEMANTIC_TEXT: readonly ColourRow[] = [
   { name: '--text-on-primary',   value: 'var(--neutral-0)',   notes: 'Text on brand fill.', inverted: true },
   { name: '--text-on-success', value: 'var(--neutral-0)',   notes: 'Text on solid success fill.', inverted: true },
   { name: '--text-on-error',   value: 'var(--neutral-0)',   notes: 'Text on solid error fill.', inverted: true },
+  { name: '--text-on-media',   value: 'var(--neutral-0)',   notes: 'Text over photos / camera feeds; pair with --text-on-media-shadow.', inverted: true },
 ];
 
 const SEMANTIC_SURFACE: readonly ColourRow[] = [
@@ -192,6 +193,7 @@ const SPACING: readonly SpacingRow[] = [
   { name: '--s-20',  value: '80px',  notes: 'Wide page-level gap.' },
   { name: '--s-24',  value: '96px',  notes: 'Hero gap.' },
   { name: '--s-32',  value: '128px', notes: 'Maximum scale step.' },
+  { name: '--ds-container-pad', value: 'var(--s-6)', notes: 'Shared container padding — components default their own --ds-*-pad to this so a single override re-pads card / stat / etc.' },
 ];
 
 const RADIUS: readonly RadiusRow[] = [
@@ -199,6 +201,7 @@ const RADIUS: readonly RadiusRow[] = [
   { name: '--r-sm',        value: '4px',   notes: 'kbd, indeterminate-checkbox tick, link focus halo.' },
   { name: '--r-md',        value: '8px',   notes: 'Buttons, fields, tooltips, search, segmented, tags.' },
   { name: '--r-lg',        value: '12px',  notes: 'Menus, popovers, cards, modals, drawers, toasts.' },
+  { name: '--r-xl',        value: '16px',  notes: 'Large containers — viewport / scanner frames, hero cards.' },
   { name: '--r-2xl',       value: '24px',  notes: 'Heroic surfaces — reserved.' },
   { name: '--r-pill-value', value: '999px', notes: 'Configurable pill — themes can override.' },
   { name: '--r-pill',      value: 'var(--r-pill-value)', notes: 'Pills, avatars, switches, segmented thumb.' },

@@ -3,6 +3,7 @@ import {
   DropdownComponent,
   IconComponent,
   InputComponent,
+  NumberStepperComponent,
   SearchComponent,
   TagComponent,
   TextareaComponent,
@@ -16,6 +17,7 @@ import {
     DropdownComponent,
     IconComponent,
     InputComponent,
+    NumberStepperComponent,
     SearchComponent,
     TagComponent,
     TextareaComponent,
@@ -266,15 +268,18 @@ import {
         </div>
         <div class="field">
           <span class="label">Team size</span>
-          <!-- Number stepper: not a DS component yet. Raw markup needed. -->
-          <div class="number">
-            <input type="number" value="42" />
-            <div class="steppers">
-              <button type="button"><ds-icon name="chevronUp" [size]="12" /></button>
-              <button type="button"><ds-icon name="chevronDown" [size]="12" /></button>
-            </div>
-          </div>
+          <ds-number-stepper [value]="42" [min]="0" />
         </div>
+      </div>
+
+      <!-- ============================================================ Textarea autosize -->
+      <h3 class="block-title t-h4">Textarea · autosize</h3>
+      <p class="block-desc t-s">
+        <code class="t-mono">[autosize]="true"</code> grows the textarea with its content (forces <code class="t-mono">resize="none"</code>). Bound by <code class="t-mono">[minRows]</code> / <code class="t-mono">[maxRows]</code>.
+      </p>
+      <div class="grid-2">
+        <ds-textarea label="Auto-growing note" [autosize]="true" [minRows]="2" [maxRows]="8"
+          value="Type more lines and the field grows up to 8 rows, then scrolls." />
       </div>
 
       <!-- ============================================================ Clearable -->
@@ -286,6 +291,15 @@ import {
       <div class="grid-2">
         <ds-input type="search" label="Search (auto-clearable)" [value]="'Project Alpha'" placeholder="Search projects…" />
         <ds-input label="Email (explicitly clearable)" [value]="'user@example.com'" [clearable]="true" placeholder="you@company.com" />
+      </div>
+
+      <!-- ============================================================ Password toggle -->
+      <h3 class="block-title t-h4">Password toggle</h3>
+      <p class="block-desc t-s">
+        On <code class="t-mono">type="password"</code>, <code class="t-mono">[passwordToggle]="true"</code> adds an eye button that flips the field between masked and plain text. Two-way <code class="t-mono">[(passwordVisible)]</code> exposes the state.
+      </p>
+      <div class="grid-2">
+        <ds-input type="password" label="Password" [passwordToggle]="true" [value]="'hunter2'" placeholder="Enter password" />
       </div>
 
       <!-- ============================================================ Required vs optional -->
