@@ -146,6 +146,12 @@ Tokens: `--ds-input-bg`, `--ds-input-border`, `--ds-input-border-hover`, `--ds-i
 Multi-line counterpart to `<ds-input>` — same wrapper/states, reuses the `--ds-input-*` token family. No prefix/suffix slots.
 Inputs: `value: model<string>`, `size: 'sm' | 'md' | 'lg' = 'md'`, `label`, `hint`, `placeholder`, `disabled`, `invalid`, `required`, `optional: boolean = false`, `name`, `rows: number = 3`
 Tokens: same `--ds-input-*` family as `<ds-input>` (textarea overrides `--ds-input-pad-y` to `--s-3` for vertical breathing room).
+New: `autosize: boolean = false` (grows with content; forces `resize='none'`), `minRows`/`maxRows: number | null = null`, `resize: 'none' | 'vertical' | 'horizontal' | 'both' = 'vertical'`.
+
+#### `<ds-number-stepper>` — `NumberStepperComponent`
+Spinbox for bounded quantities — −/+ buttons around a numeric value.
+Inputs: `value: model<number> = 0`, `min: number = 0`, `max: number | null = null`, `step: number = 1`, `size: 'sm' | 'md' | 'lg' = 'md'`, `disabled: boolean = false`
+Methods: `inc()`, `dec()` (clamp to min/max). Buttons disable at the bounds.
 
 #### `<ds-checkbox>` — `CheckboxComponent`
 Inputs: `checked: model<boolean>`, `indeterminate: boolean = false`, `disabled: boolean = false`, `name: string | null = null`, `inputId: string | null = null`
@@ -317,6 +323,12 @@ Side panel (no `side` input — always anchored right).
 Inputs: `open: model<boolean> = false`, `size: 'md' | 'lg' = 'md'`, `title: string = ''`
 Output: `(closed): void`
 Content slots: `[drawer-body]`, `[drawer-footer]`.
+
+#### `<ds-bottom-sheet>` — `BottomSheetComponent`
+Mobile-first panel anchored to the bottom edge (touch equivalent of drawer/modal). Drag-down on the grab strip, scrim tap, or Esc dismisses; body scroll locks while open; caps width + centres on wide viewports.
+Inputs: `open: model<boolean> = false`, `title: string = ''`
+Output: `(closed): void`
+Content slots: default (body), `[actions]` (footer).
 
 #### `<ds-popover>` — `PopoverComponent`
 Floating panel anchored to a trigger via CDK overlay. Input: `align: 'start' | 'end' = 'start'` — controls overlay alignment relative to the trigger (`start` = left-edge anchored, `end` = right-edge anchored). Open via the component method `toggle(triggerElement)` (or `close()`), and project the panel body inside a `<ng-template #panel>` (read internally via `viewChild`).

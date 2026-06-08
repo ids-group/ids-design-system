@@ -5,7 +5,7 @@
   -webkit-appearance: none;
   width: var(--switch-track-w);
   height: var(--switch-track-h);
-  background: var(--neutral-300);
+  background: var(--border-strong);
   border-radius: var(--r-pill);
   position: relative;
   cursor: pointer;
@@ -20,7 +20,7 @@
     left: var(--switch-thumb-pad);
     width: var(--switch-thumb-size);
     height: var(--switch-thumb-size);
-    background: var(--neutral-0);
+    background: var(--surface-default);
     border-radius: var(--r-pill);
     box-shadow: var(--z100);
     transition: transform var(--dur-base) var(--ease-standard);

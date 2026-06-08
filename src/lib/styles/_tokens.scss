@@ -78,6 +78,7 @@
   --text-link:         var(--blue-700);
   --text-on-primary:     var(--neutral-0);
   --text-on-success:   var(--neutral-0);
+  --text-on-warning:   var(--neutral-0);
   --text-on-error:     var(--neutral-0);
 
   /* Icons */
@@ -378,7 +379,6 @@
   --opacity-disabled:        0.5;   /* full disabled state on interactive components */
   --opacity-muted:           0.6;   /* legacy alias — being phased out in favour of --text-* roles */
   --opacity-text-disabled:   0.38;  /* disabled text alpha (WCAG-derived) */
-  --opacity-text-disabled:   0.38;  /* disabled text where a colour token isn't available */
   --opacity-scrim:           0.55;  /* modal/drawer backdrop overlay (light theme) */
   --opacity-state-hover:     0.08;  /* hover layer over surface (overlay vs surface swap) */
   --opacity-state-pressed:   0.16;  /* active/pressed layer */
