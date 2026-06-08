@@ -25,7 +25,7 @@ Registry of components from `CLAUDE_DESIGN_DS` source. Ported components live in
 | Sidenav family | `ds-sidenav`, `ds-sidenav-group`, `ds-sidenav-item` | `components.css` §SIDENAV — defect 4 partial (`.sidenav__item` canonical) |
 | TopBar | `ds-topbar` | `components.css` §TOPBAR |
 | PageHeader | `ds-page-header` | `components-extras.css` `.page-hdr` — defect 4 (canonical version) |
-| Modal | `ds-modal` | `components.css` §MODAL + extras `.modal--danger` — defects 2, 6 |
+| Modal | `ds-modal` | `components.css` §MODAL + extras `.modal--error` — defects 2, 6 |
 | Banner | `ds-banner` | `components.css` §BANNER — defect 10 |
 | Dropzone | `ds-dropzone` | `components-extras.css` §DROPZONE — defect 8 |
 

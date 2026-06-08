@@ -35,16 +35,16 @@ export const NEUTRAL_TOKENS: Readonly<Record<NeutralToken, string>> = {
 export type VioletToken = '50' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900';
 
 export const VIOLET_TOKENS: Readonly<Record<VioletToken, string>> = {
-  '50': '--violet-50',
-  '100': '--violet-100',
-  '200': '--violet-200',
-  '300': '--violet-300',
-  '400': '--violet-400',
-  '500': '--violet-500',
-  '600': '--violet-600',
-  '700': '--violet-700',
-  '800': '--violet-800',
-  '900': '--violet-900',
+  '50': '--blue-50',
+  '100': '--blue-100',
+  '200': '--blue-200',
+  '300': '--blue-300',
+  '400': '--blue-400',
+  '500': '--blue-500',
+  '600': '--blue-600',
+  '700': '--blue-700',
+  '800': '--blue-800',
+  '900': '--blue-900',
 };
 
 export type OrangeToken = '50' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800';
@@ -103,14 +103,14 @@ export const RED_TOKENS: Readonly<Record<RedToken, string>> = {
 export type BlueToken = '50' | '100' | '200' | '300' | '400' | '500' | '600' | '700';
 
 export const BLUE_TOKENS: Readonly<Record<BlueToken, string>> = {
-  '50': '--blue-50',
-  '100': '--blue-100',
-  '200': '--blue-200',
-  '300': '--blue-300',
-  '400': '--blue-400',
-  '500': '--blue-500',
-  '600': '--blue-600',
-  '700': '--blue-700',
+  '50': '--sky-50',
+  '100': '--sky-100',
+  '200': '--sky-200',
+  '300': '--sky-300',
+  '400': '--sky-400',
+  '500': '--sky-500',
+  '600': '--sky-600',
+  '700': '--sky-700',
 };
 
 export type BrandChannelToken = 'brand-h' | 'brand-s' | 'brand-l' | 'danger-h' | 'danger-s' | 'danger-l';

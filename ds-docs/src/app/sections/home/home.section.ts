@@ -46,7 +46,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
               <p class="howto-body">
                 Create <code class="t-mono">_brand-&lt;client&gt;.scss</code> in the consumer app's
                 styles folder. Inside <code class="t-mono">[data-brand="&lt;client&gt;"]</code>,
-                override the palette ramp (<code class="t-mono">--violet-50…900</code>),
+                override the palette ramp (<code class="t-mono">--blue-50…900</code>),
                 brand HSL channels (<code class="t-mono">--primary-h/s/l</code>) and font stack.
                 Activate with <code class="t-mono">&lt;html data-brand="&lt;client&gt;"&gt;</code>.
                 Components stay untouched.

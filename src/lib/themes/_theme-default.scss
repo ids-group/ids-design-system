@@ -2,16 +2,19 @@
 // Default theme — Tier 1 colour primitives.
 //
 // The DS itself (styles/_tokens.scss) is brand-agnostic: it defines the
-// semantic role tokens (--primary, --text-primary, --surface-default, etc.)
-// and references colour primitives by name (--violet-600, --neutral-0, etc.).
-// THIS file ships those primitives. Components never consume Tier 1 directly.
+// semantic role tokens (--primary, --error, --text-primary, etc.) and the
+// semantic→palette bridge (--primary → --blue-600, --primary-h → --blue-h,
+// --error → --red-500, …). THIS file ships only concrete colour primitives,
+// named by the colour itself (--blue, --red, --sky, --neutral). It does NOT
+// know what a colour is "for" — that meaning lives in the lib's semantic layer.
+// Components never consume Tier 1 directly.
 //
-// Sibling themes (e.g. mm-broker/app/styles/_brand-manage-my.scss) override
-// either the ramps below or the role aliases in _tokens.scss to re-skin the
-// system. Default theme = "Violet + Slate baseline".
+// Sibling themes (e.g. a brand override) replace the ramps / channels below,
+// or re-map the semantic roles in _tokens.scss, to re-skin the system.
+// Default theme = "Blue + Slate baseline".
 //
 // Future themes can live alongside this file:
-//   themes/_theme-default.scss     ← this (light, violet-based)
+//   themes/_theme-default.scss     ← this (light, blue-based)
 //   themes/_theme-dark.scss        ← future (dark surfaces, lifted shadows)
 //   themes/_theme-high-contrast.scss ← future (a11y boost)
 // =========================================================================
@@ -35,23 +38,25 @@
   --neutral-950: #0B0E18;
 
   // -----------------------------------------------------------------------
-  // Brand · Violet — defined as HSL channels so we can compose hsla()
-  // halos and tints from the same source. 2F54FF ≈ hsl(229, 100%, 59%).
+  // Blue — defined as HSL channels so we can compose hsla() halos and tints
+  // from the same source. #2F54FF ≈ hsl(229, 100%, 59%). This is the ramp the
+  // default theme maps --primary onto (see styles/_tokens.scss). Naming is
+  // concrete (the colour) — the semantic --primary mapping lives in the lib.
   // -----------------------------------------------------------------------
-  --primary-h: 229;
-  --primary-s: 100%;
-  --primary-l: 59%;
+  --blue-h: 229;
+  --blue-s: 100%;
+  --blue-l: 59%;
 
-  --violet-50:  hsl(var(--primary-h), 100%, 97%);
-  --violet-100: hsl(var(--primary-h),  95%, 94%);
-  --violet-200: hsl(var(--primary-h),  95%, 89%);
-  --violet-300: hsl(var(--primary-h),  98%, 82%);
-  --violet-400: hsl(var(--primary-h), 100%, 75%);
-  --violet-500: hsl(var(--primary-h), 100%, 66%);
-  --violet-600: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
-  --violet-700: hsl(var(--primary-h),  85%, 52%);
-  --violet-800: hsl(var(--primary-h),  79%, 40%);
-  --violet-900: hsl(var(--primary-h),  77%, 30%);
+  --blue-50:  hsl(var(--blue-h), 100%, 97%);
+  --blue-100: hsl(var(--blue-h),  95%, 94%);
+  --blue-200: hsl(var(--blue-h),  95%, 89%);
+  --blue-300: hsl(var(--blue-h),  98%, 82%);
+  --blue-400: hsl(var(--blue-h), 100%, 75%);
+  --blue-500: hsl(var(--blue-h), 100%, 66%);
+  --blue-600: hsl(var(--blue-h), var(--blue-s), var(--blue-l));
+  --blue-700: hsl(var(--blue-h),  85%, 52%);
+  --blue-800: hsl(var(--blue-h),  79%, 40%);
+  --blue-900: hsl(var(--blue-h),  77%, 30%);
 
   // -----------------------------------------------------------------------
   // Orange — focus / secondary signal
@@ -91,33 +96,35 @@
   --yellow-700: #8A7400;
 
   // -----------------------------------------------------------------------
-  // Danger — Red, also HSL-channel-split for halo derivation.
-  // D81F1F ≈ hsl(0, 75%, 49%).
+  // Red — HSL-channel-split for halo derivation. #D81F1F ≈ hsl(0, 75%, 49%).
+  // The default theme maps --error onto this ramp (see styles/_tokens.scss).
   // -----------------------------------------------------------------------
-  --error-h: 0;
-  --error-s: 75%;
-  --error-l: 49%;
+  --red-h: 0;
+  --red-s: 75%;
+  --red-l: 49%;
 
-  --red-50:  hsl(var(--error-h), 86%, 97%);
-  --red-100: hsl(var(--error-h), 86%, 95%);
-  --red-200: hsl(var(--error-h), 86%, 88%);
-  --red-300: hsl(var(--error-h), 84%, 76%);
-  --red-400: hsl(var(--error-h), 87%, 57%);
-  --red-500: hsl(var(--error-h), var(--error-s), var(--error-l));
-  --red-600: hsl(var(--error-h), 78%, 41%);
-  --red-700: hsl(var(--error-h), 78%, 31%);
+  --red-50:  hsl(var(--red-h), 86%, 97%);
+  --red-100: hsl(var(--red-h), 86%, 95%);
+  --red-200: hsl(var(--red-h), 86%, 88%);
+  --red-300: hsl(var(--red-h), 84%, 76%);
+  --red-400: hsl(var(--red-h), 87%, 57%);
+  --red-500: hsl(var(--red-h), var(--red-s), var(--red-l));
+  --red-600: hsl(var(--red-h), 78%, 41%);
+  --red-700: hsl(var(--red-h), 78%, 31%);
 
   // -----------------------------------------------------------------------
-  // Info — Blue (distinct from violet brand)
+  // Sky — info role ramp. A brighter, cooler blue (#3B82F6) kept distinct
+  // from the primary --blue ramp (#2F54FF) so "informational" reads apart
+  // from "primary action".
   // -----------------------------------------------------------------------
-  --blue-50:  #EFF6FF;
-  --blue-100: #DBEAFE;
-  --blue-200: #BFDBFE;
-  --blue-300: #93C5FD;
-  --blue-400: #60A5FA;
-  --blue-500: #3B82F6;
-  --blue-600: #2563EB;
-  --blue-700: #1D4ED8;
+  --sky-50:  #EFF6FF;
+  --sky-100: #DBEAFE;
+  --sky-200: #BFDBFE;
+  --sky-300: #93C5FD;
+  --sky-400: #60A5FA;
+  --sky-500: #3B82F6;
+  --sky-600: #2563EB;
+  --sky-700: #1D4ED8;
 
   // -----------------------------------------------------------------------
   // Shadow tint — channel-split substrate. Light theme uses a cool

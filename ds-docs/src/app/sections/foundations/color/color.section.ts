@@ -175,7 +175,7 @@ interface RampSpec {
 
       <!-- ============================================================ Primitive ramps -->
       <h3 class="block-title t-h4">Primitive ramps</h3>
-      <p class="block-desc t-s">Raw colour ramps. Stop names map 1:1 to CSS custom properties (e.g. <code class="t-mono">--violet-600</code>).</p>
+      <p class="block-desc t-s">Raw colour ramps. Stop names map 1:1 to CSS custom properties (e.g. <code class="t-mono">--blue-600</code>).</p>
       @for (ramp of ramps; track ramp.prefix) {
         <div class="ramp">
           <div class="ramp__head">
@@ -434,9 +434,9 @@ export class ColorSection {
 
   protected readonly ramps: readonly RampSpec[] = [
     {
-      label: 'Brand · Violet',
-      desc: 'Primary action, selected state, brand surfaces. Stop 600 is the canonical action.',
-      prefix: 'violet',
+      label: 'Blue',
+      desc: 'The default theme maps --primary onto this ramp. Stop 600 is the canonical action.',
+      prefix: 'blue',
       stops: [50, 100, 200, 300, 400, 500, 600, 700, 800, 900],
     },
     {
@@ -446,8 +446,8 @@ export class ColorSection {
       stops: [0, 50, 100, 150, 200, 300, 400, 500, 600, 700, 800, 900, 950],
     },
     {
-      label: 'Danger · Red',
-      desc: 'Validation failures, destructive confirmations, conflict.',
+      label: 'Red',
+      desc: 'The default theme maps --error onto this ramp. Validation failures, destructive confirmations, conflict.',
       prefix: 'red',
       stops: [50, 100, 200, 300, 400, 500, 600, 700],
     },
@@ -464,9 +464,9 @@ export class ColorSection {
       stops: [50, 100, 200, 300, 400, 500, 600, 700],
     },
     {
-      label: 'Info · Blue',
-      desc: 'Informational only. Distinct from brand violet so info is never confused with primary action.',
-      prefix: 'blue',
+      label: 'Sky',
+      desc: 'The default theme maps --info onto this ramp. A brighter blue, kept distinct from the primary --blue ramp so info is never confused with primary action.',
+      prefix: 'sky',
       stops: [50, 100, 200, 300, 400, 500, 600, 700],
     },
   ];

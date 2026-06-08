@@ -13,7 +13,7 @@
      2 · Component-scoped (heights, widths, geometries, …)
 
    Components consume only Tier 2/3 tokens. Direct use of palette
-   primitives (--violet-600, --neutral-200, …) inside component
+   primitives (--blue-600, --neutral-200, …) inside component
    styles is a violation — fix by introducing or reusing a role.
    ============================================================ */
 
@@ -38,7 +38,7 @@
   --surface-overlay:        var(--neutral-0);
   --surface-inverted:       var(--neutral-900);
   --surface-inverted-hover: var(--neutral-800);
-  --surface-tint:           var(--violet-50);
+  --surface-tint:           var(--blue-50);
   --surface-disabled:       var(--neutral-100);
   --surface-muted:          var(--neutral-150);
 
@@ -75,7 +75,7 @@
      guaranteed-light colour with a contrast shadow. */
   --text-on-media:        var(--neutral-0);
   --text-on-media-shadow: 0 1px 3px hsla(0, 0%, 0%, .7);
-  --text-link:         var(--violet-700);
+  --text-link:         var(--blue-700);
   --text-on-primary:     var(--neutral-0);
   --text-on-success:   var(--neutral-0);
   --text-on-error:     var(--neutral-0);
@@ -86,20 +86,33 @@
   --icon-muted:        var(--neutral-400);
   --icon-on-primary:     var(--neutral-0);
 
-  /* Brand roles.
+  /* Semantic → palette bridge. The lib knows colours by PURPOSE; the theme
+     (themes/_theme-default.scss) ships the concrete ramps + HSL channels. This
+     is the one place that maps semantic roles onto a concrete palette. A brand
+     re-skins by overriding either the palette (--blue-*, --red-*) or these
+     role tokens directly.
+     Channel mappings let hsla() halos/tints compose from the same hue source. */
+  --primary-h:  var(--blue-h);
+  --primary-s:  var(--blue-s);
+  --primary-l:  var(--blue-l);
+  --error-h:    var(--red-h);
+  --error-s:    var(--red-s);
+  --error-l:    var(--red-l);
+
+  /* Primary roles.
      Hover / pressed / selected-hover are DERIVED from --primary at runtime via
      color-mix() so a brand swap (overriding only --primary) propagates to every
      interaction state automatically. A brand that wants a non-derived hover
      hue can still override these tokens directly.
-     Step sizes (12% / 24% darker) mirror the violet 600→700→800 ramp. */
-  --primary:                 var(--violet-600);
+     Step sizes (12% / 24% darker) mirror the blue 600→700→800 ramp. */
+  --primary:                 var(--blue-600);
   --primary-hover:           color-mix(in srgb, var(--primary) 88%, black);
   --primary-pressed:         color-mix(in srgb, var(--primary) 76%, black);
   --primary-selected-hover:  color-mix(in srgb, var(--primary) 88%, black);
-  --primary-subtle:          var(--violet-50);
-  --primary-muted:           var(--violet-100);
-  --primary-muted-strong:    var(--violet-200);
-  --primary-strong:          var(--violet-700);
+  --primary-subtle:          var(--blue-50);
+  --primary-muted:           var(--blue-100);
+  --primary-muted-strong:    var(--blue-200);
+  --primary-strong:          var(--blue-700);
   --primary-on:              var(--neutral-0);
 
   /* Accent / secondary role — composed from --secondary-h/s/l channels.
@@ -165,12 +178,12 @@
   --error-border:     var(--red-200);
   --error-text:       var(--red-600);
 
-  --info:              var(--blue-500);
+  --info:              var(--sky-500);
   --info-hover:        color-mix(in srgb, var(--info) 88%, black);
-  --info-subtle:       var(--blue-50);
-  --info-muted:        var(--blue-100);
-  --info-border:       var(--blue-200);
-  --info-text:         var(--blue-700);
+  --info-subtle:       var(--sky-50);
+  --info-muted:        var(--sky-100);
+  --info-border:       var(--sky-200);
+  --info-text:         var(--sky-700);
 
   /* Status pills (event lifecycle).
      DECISION: --status-confirmed-* chains through --primary-* so a
@@ -205,7 +218,7 @@
     0 0 0 4px hsla(var(--focus-ring-outer-h), var(--focus-ring-outer-s), var(--focus-ring-outer-l), var(--focus-ring-outer-alpha));
   --focus-ring-inverted:
     0 0 0 2px var(--neutral-900),
-    0 0 0 4px var(--violet-300);
+    0 0 0 4px var(--blue-300);
   --focus-ring-error:
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsla(var(--error-h), var(--error-s), var(--error-l), 1);

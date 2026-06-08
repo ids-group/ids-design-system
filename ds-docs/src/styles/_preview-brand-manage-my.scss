@@ -29,17 +29,17 @@
   --font-display: var(--font-sans);
   --font-heading: var(--font-sans);
 
-  // Brand ramp — overrides the DS violet ramp consumed by --primary* roles.
-  --violet-50:  #E4F0F2;       // brand-subtle (Ice Gray tinted)
-  --violet-100: #C7E0E3;       // brand-muted
-  --violet-200: #99C7CC;
-  --violet-300: #5C9EA8;
-  --violet-400: #2D7984;
-  --violet-500: #006271;
-  --violet-600: #00414B;       // brand
-  --violet-700: #002B32;       // brand-hover / brand-strong (darker)
-  --violet-800: #001F25;       // brand-pressed
-  --violet-900: #00141A;
+  // Brand ramp — overrides the DS blue ramp consumed by --primary* roles.
+  --blue-50:  #E4F0F2;       // brand-subtle (Ice Gray tinted)
+  --blue-100: #C7E0E3;       // brand-muted
+  --blue-200: #99C7CC;
+  --blue-300: #5C9EA8;
+  --blue-400: #2D7984;
+  --blue-500: #006271;
+  --blue-600: #00414B;       // brand
+  --blue-700: #002B32;       // brand-hover / brand-strong (darker)
+  --blue-800: #001F25;       // brand-pressed
+  --blue-900: #00141A;
 
   // Direct brand role overrides so consumers using --primary-* land on the
   // calibrated palette even when not derived from the ramp above.

@@ -3,9 +3,9 @@
 // avoid pulling in brand-specific overrides — those live in mm-broker (or
 // any other host app that opts in via `<html data-brand="…">`).
 //
-// Theme contract: palette primitives (--violet-*, --neutral-*, ramps + HSL
+// Theme contract: palette primitives (--blue-*, --neutral-*, ramps + HSL
 // channels) live in a theme file. Load BEFORE semantic tokens so role
-// aliases (var(--violet-600) etc.) resolve. The default theme ships with DS.
+// aliases (var(--blue-600) etc.) resolve. The default theme ships with DS.
 @use 'themes/theme-default';
 @use 'styles/tokens';
 @use 'styles/tokens-charts';
