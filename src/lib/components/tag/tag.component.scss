@@ -1,4 +1,4 @@
-/* Tag — styles on host. Variants: solid (default) + .ghost. */
+/* Tag — styles on host. Variants: solid (default) + .neutral. */
 
 :host {
   display: inline-flex;
@@ -15,14 +15,14 @@
   padding-right: var(--tag-pad-x-close);
 }
 
-:host(.ghost) {
+:host(.neutral) {
   background: var(--ds-tag-bg, var(--surface-secondary));
   color: var(--text-primary);
   border: var(--bw-default) solid var(--border-divider);
   padding: calc(var(--ds-tag-pad-y, var(--tag-pad-y)) - var(--bw-default)) calc(var(--ds-tag-pad-x, var(--tag-pad-x)) - var(--bw-default));
 }
 
-:host(.ghost.closable) {
+:host(.neutral.closable) {
   padding-right: calc(var(--tag-pad-x-close) - 1px);
 }
 

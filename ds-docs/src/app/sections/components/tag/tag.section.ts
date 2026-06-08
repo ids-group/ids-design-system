@@ -12,20 +12,20 @@ import { TagComponent } from 'ds';
       <h2 class="t-h2">Tag</h2>
       <p class="lede t-m">
         Pill-shaped chip for short labels. Solid (brand-fill) for selected tokens in
-        multi-select inputs; ghost (neutral) for filter chips and metadata. Add
+        multi-select inputs; neutral (grey, bordered) for filter chips and metadata. Add
         <code class="t-mono">[closable]</code> to render a close affordance.
       </p>
 
       <h3 class="block-title t-h4">Variants</h3>
       <div class="row">
         <ds-tag>Solid · default</ds-tag>
-        <ds-tag variant="ghost">Ghost</ds-tag>
+        <ds-tag variant="neutral">Ghost</ds-tag>
       </div>
 
       <h3 class="block-title t-h4">Closable</h3>
       <div class="row">
         <ds-tag [closable]="true">Project Alpha</ds-tag>
-        <ds-tag variant="ghost" [closable]="true">Filter · Site North</ds-tag>
+        <ds-tag variant="neutral" [closable]="true">Filter · Site North</ds-tag>
       </div>
 
       <h3 class="block-title t-h4">Interactive · selectable</h3>
@@ -33,9 +33,9 @@ import { TagComponent } from 'ds';
         <code class="t-mono">[interactive]</code> makes the tag a toggle button that emits <code class="t-mono">(toggled)</code> on click; <code class="t-mono">[selected]</code> renders the active state. Use for filter-chip rows.
       </p>
       <div class="row">
-        <ds-tag variant="ghost" [interactive]="true" [selected]="true" (toggled)="toggle('north')">Site North</ds-tag>
-        <ds-tag variant="ghost" [interactive]="true" [selected]="false" (toggled)="toggle('south')">Site South</ds-tag>
-        <ds-tag variant="ghost" [interactive]="true" [selected]="false" (toggled)="toggle('east')">Site East</ds-tag>
+        <ds-tag variant="neutral" [interactive]="true" [selected]="true" (toggled)="toggle('north')">Site North</ds-tag>
+        <ds-tag variant="neutral" [interactive]="true" [selected]="false" (toggled)="toggle('south')">Site South</ds-tag>
+        <ds-tag variant="neutral" [interactive]="true" [selected]="false" (toggled)="toggle('east')">Site East</ds-tag>
       </div>
 
       <h3 class="block-title t-h4">Truncation</h3>

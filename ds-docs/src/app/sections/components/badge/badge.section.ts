@@ -114,9 +114,9 @@ import { BadgeComponent, IconComponent, StatusDotComponent, TagComponent } from 
         </div>
         <div class="state-cell">
           <div class="state-cell__stage">
-            <ds-tag variant="ghost" [closable]="true">Project Beta</ds-tag>
+            <ds-tag variant="neutral" [closable]="true">Project Beta</ds-tag>
           </div>
-          <div class="state-cell__label">Tag · ghost</div>
+          <div class="state-cell__label">Tag · neutral</div>
         </div>
         <div class="state-cell">
           <div class="state-cell__stage">

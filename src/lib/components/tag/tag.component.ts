@@ -10,7 +10,7 @@ import type { TagVariant } from './tag.types';
   styleUrl: './tag.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   host: {
-    '[class.ghost]': "variant() === 'ghost'",
+    '[class.neutral]': "variant() === 'neutral'",
     '[class.closable]': 'closable()',
     '[class.interactive]': 'interactive()',
     '[class.is-active]': 'selected()',

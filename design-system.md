@@ -191,7 +191,7 @@ Content: label text. Use for status pills, counts, lifecycle markers.
 Input: `status: StatusValue = 'planning'` (`'planning' | 'confirmed' | 'active' | 'completed' | 'warning' | 'error' | 'secondary'`). Tiny coloured dot.
 
 #### `<ds-tag>` — `TagComponent`
-Inputs: `variant: 'solid' | 'ghost' = 'solid'`, `closable: boolean = false`
+Inputs: `variant: 'solid' | 'neutral' = 'solid'`, `closable: boolean = false`
 Output: `(closed): void` — emits when the close button is pressed
 Content: label.
 
