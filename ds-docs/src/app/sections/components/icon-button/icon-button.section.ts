@@ -13,7 +13,7 @@ import { IconButtonComponent } from 'ds';
       <p class="lede t-m">
         Icon-only action with its own variant taxonomy — distinct from <code class="t-mono">&lt;ds-button&gt;</code>.
         Use for toolbars, table-row actions, close / back / overflow affordances. <code class="t-mono">[ariaLabel]</code>
-        is required (an icon has no text label). Prefer this over the deprecated <code class="t-mono">&lt;ds-button iconOnly&gt;</code>.
+        is required (an icon has no text label). This replaces the former <code class="t-mono">ds-button iconOnly</code> flag.
       </p>
 
       <!-- ============================================================ Variants -->

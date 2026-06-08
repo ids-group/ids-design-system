@@ -97,7 +97,8 @@
     --ds-button-bg-hover:  var(--surface-secondary);
     --ds-button-bg-active: var(--surface-secondary);
   }
-  /* Like ghost, but keeps its border in icon-only mode (bordered tool button). */
+  /* Alias of ghost for text buttons (bordered neutral). Kept as a separate
+     name for call-site intent; icon-only affordances now live in ds-icon-button. */
   &.outline {
     --ds-button-bg:        var(--surface-default);
     --ds-button-fg:        var(--text-primary);
@@ -137,41 +138,6 @@
     text-underline-offset: var(--btn-link-uloff);
 
     &:hover { color: var(--primary-pressed); }
-  }
-
-  /* Icon-only — square hit area, Material/PrimeNG-style polish.
-     Removes :active nudge (chunky on a square), enforces 1:1 via
-     aspect-ratio, and turns ghost into a borderless transparent
-     surface that reveals affordance on hover/focus only. */
-  &.icon-only {
-    padding: 0;
-    width: var(--hit-cozy);
-    aspect-ratio: 1;
-
-    &.m  { width: var(--hit-min); }
-    &.s  { width: var(--hit-xs); }
-    &.lg { width: var(--field-h-lg); }
-    &.md { width: var(--hit-cozy); }
-    &.sm { width: var(--hit-min); }
-
-    /* Drop the 1px translate on press — icon stays put, only bg shifts. */
-    &:active { transform: none; }
-
-    /* Ghost icon-only: borderless transparent chrome, hover-tint reveal.
-       Overrides the opaque-ghost rule (which exists so text-ghost buttons
-       don't look hollow on tinted parents); icon-only ghost is the Material
-       "tool button" pattern and looks best when chromeless at rest.
-       Hover steps to --surface-muted so the affordance stays visible on
-       --surface-secondary parents (e.g. zoom track in offer-journey). */
-    &.ghost {
-      --ds-button-bg:        transparent;
-      --ds-button-border:    transparent;
-      --ds-button-fg:        var(--text-secondary);
-      --ds-button-bg-hover:  var(--surface-muted);
-      --ds-button-bg-active: var(--surface-muted);
-
-      &:hover { color: var(--text-primary); }
-    }
   }
 
   /* Loading */

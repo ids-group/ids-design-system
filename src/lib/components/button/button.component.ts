@@ -14,13 +14,6 @@ export class ButtonComponent {
   readonly type = input<ButtonType>('button');
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly loading = input(false, { transform: booleanAttribute });
-  /**
-   * @deprecated Use the dedicated `<ds-icon-button>` component for icon-only
-   * actions (it has its own standard/filled/tonal/outlined taxonomy, a toggle
-   * state, and a required aria-label). `iconOnly` is retained for back-compat
-   * and will be removed once consumers migrate.
-   */
-  readonly iconOnly = input(false, { transform: booleanAttribute });
   readonly pressed = output<MouseEvent>();
 
   protected readonly classes = computed(() => {
@@ -29,7 +22,6 @@ export class ButtonComponent {
       'button',
       variant === 'primary' ? '' : variant,
       this.size(),
-      this.iconOnly() ? 'icon-only' : '',
       this.loading() ? 'loading' : '',
     ];
     return parts.filter(Boolean).join(' ');

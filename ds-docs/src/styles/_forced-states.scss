@@ -110,13 +110,6 @@
     &:hover { color: var(--primary-pressed); }
   }
 
-  &.icon-only {
-    padding: 0; width: var(--hit-cozy);
-
-    &.m { width: var(--hit-min); }
-    &.s { width: var(--hit-xs); }
-  }
-
   &.loading {
     color: transparent !important; pointer-events: none;
 

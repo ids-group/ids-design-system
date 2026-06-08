@@ -15,7 +15,7 @@ interface VariantSpec {
     <section id="section-button" data-anchor="button" class="section">
       <div class="eyebrow t-overline">Components</div>
       <h2 class="t-h2">Buttons</h2>
-      <p class="lede t-m">5 variants × 3 sizes × 5 states. Plus icon · icon-only · button-group · split · toggle.</p>
+      <p class="lede t-m">Text-label actions across variants, sizes and states. Plus leading icon · button-group · split · toggle. For icon-only actions see the Icon button component.</p>
 
       <!-- ============================================================ Variants × sizes -->
       <h3 class="block-title t-h4">Variants × sizes</h3>
@@ -67,12 +67,6 @@ interface VariantSpec {
             <button class="button"><ds-icon name="plus" [size]="16" />New record</button>
           </div>
           <div class="state-cell__label">With icon</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <button class="button icon-only" aria-label="Settings"><ds-icon name="settings" [size]="16" /></button>
-          </div>
-          <div class="state-cell__label">Icon-only</div>
         </div>
         <div class="state-cell">
           <div class="state-cell__stage">
@@ -164,8 +158,9 @@ interface VariantSpec {
         </div>
       </div>
 
-      <!-- ============================================================ With icon · icon-only -->
-      <h3 class="block-title t-h4">With icon · icon-only</h3>
+      <!-- ============================================================ With icon -->
+      <h3 class="block-title t-h4">With icon</h3>
+      <p class="block-desc t-s">Leading or trailing icon alongside a label. For icon-only actions use <code class="t-mono">&lt;ds-icon-button&gt;</code> (see the Icon button section).</p>
       <div class="row">
         <ds-button>
           <ds-icon name="plus" [size]="16" /> New record
@@ -175,15 +170,6 @@ interface VariantSpec {
         </ds-button>
         <ds-button variant="ghost">
           <ds-icon name="download" [size]="16" /> Export CSV
-        </ds-button>
-        <ds-button [iconOnly]="true">
-          <ds-icon name="settings" [size]="16" />
-        </ds-button>
-        <ds-button [iconOnly]="true" variant="ghost">
-          <ds-icon name="moreH" [size]="16" />
-        </ds-button>
-        <ds-button [iconOnly]="true" variant="ghost" size="m">
-          <ds-icon name="edit" [size]="14" />
         </ds-button>
       </div>
 
