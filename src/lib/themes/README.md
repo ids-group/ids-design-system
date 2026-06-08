@@ -1,22 +1,23 @@
-# Themes — palette primitives
+# Themes — palette + role assignments
 
-Tier 1 colour tokens (palette ramps + brand/danger HSL channels + shadow-tint channels) live here.
-
-The DS itself (`../styles/_tokens.scss`) defines only Tier 2 semantic roles and Tier 3 component-scoped tokens; it references palette by name (`var(--blue-600)`, `var(--neutral-0)`, etc.). A theme provides those names with concrete values.
+Colour lives in two files here: a **palette** (defines the concrete colours) and a **theme** (assigns them to semantic roles). The geometry/component layer is separate (`../styles/_tokens.scss`).
 
 ## Architecture: three tiers
 
 | Tier | Lives in | Examples | Consumers |
 |---|---|---|---|
-| **Tier 1 — Palette primitives** | `themes/_theme-*.scss` | `--blue-600`, `--neutral-0`, `--red-500`, `--primary-h/s/l`, `--shadow-tint-h/s/l` | Only `_tokens.scss` (Tier 2 defs) |
-| **Tier 2 — Semantic roles** | `styles/_tokens.scss` | `--primary`, `--text-primary`, `--surface-default`, `--border-divider`, `--success`, `--focus-ring` | Components |
-| **Tier 3 — Component scoped** | `styles/_tokens.scss` and inside `*.component.scss` | `--ds-button-bg`, `--ds-progress-h`, `--tooltip-maxw` | Components (their own) |
+| **Tier 1 — Palette** (defines colours) | `themes/_palette-*.scss` | `--blue-600`, `--neutral-0`, `--red-500`, `--blue-h/s/l`, `--shadow-tint-h/s/l` | Only the theme file |
+| **Tier 2 — Theme** (sets roles) | `themes/_theme-*.scss` | `--primary: var(--blue-600)`, `--text-primary`, `--surface-default`, `--success`, `--focus-ring`, `--primary-h: var(--blue-h)` | Components |
+| **Tier 3 — Component / scale** | `styles/_tokens.scss` and inside `*.component.scss` | `--s-*`, `--r-*`, `--ds-button-bg`, `--dur-fast`, `--layer-modal` | Components (their own) |
 
-**Hard rule:** components NEVER consume Tier 1 directly. If you write `var(--blue-600)` inside `button.component.scss`, that's a bug — introduce or reuse a Tier 2 role.
+**Hard rule:** components NEVER consume Tier 1 palette directly. If you write `var(--blue-600)` inside `button.component.scss`, that's a bug — introduce or reuse a Tier 2 role.
 
-## Available themes
+**Why split palette from theme:** the palette says *what colours exist*; the theme says *what each role is*. A dark theme ships a different palette (different ramp values) + a theme map that re-points roles. Swapping either re-skins the system without touching components.
 
-- **`_theme-default.scss`** — Light theme, blue brand + slate neutrals. Bundled into `styles/ds.scss` so consumers using `@use 'styles/ds';` get it for free.
+## Available palette + theme
+
+- **`_palette-default.scss`** — Blue + slate ramps (the concrete colours).
+- **`_theme-default.scss`** — Light role map onto the default palette. Both are bundled into `styles/ds.scss` (palette → theme → tokens) so `@use 'styles/ds';` works out of the box.
 
 Future:
 - `_theme-dark.scss` — Dark-mode flip (`--shadow-tint-l` → ~95%, neutrals inverted, etc.).

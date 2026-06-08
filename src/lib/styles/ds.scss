@@ -1,10 +1,14 @@
 // Public DS stylesheet entry. Consumers import once at the top of their styles.scss:
 //   @use 'styles/ds';
 //
-// Bundles the default theme (palette primitives) for out-of-the-box rendering.
-// Advanced consumers who want a different palette can skip this entry and
-// cherry-pick: @use 'themes/theme-X'; @use 'styles/tokens'; @use 'styles/…';
+// Bundles the default palette + theme for out-of-the-box rendering. Layers:
+//   palette-default — Tier 1 concrete colours (ramps + HSL channels)
+//   theme-default   — Tier 2 semantic role → palette assignments
+//   tokens          — Tier 3 geometry / typography / motion / component tokens
+// Advanced consumers can swap the palette/theme and keep tokens:
+//   @use 'themes/palette-X'; @use 'themes/theme-X'; @use 'styles/tokens'; …
 
+@forward '../themes/palette-default';
 @forward '../themes/theme-default';
 @forward 'tokens';
 @forward 'tokens-charts';
