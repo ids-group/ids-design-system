@@ -6,7 +6,7 @@
 // --red-h/s/l, --shadow-tint-h/s/l) they compose from. Tokens are named by the
 // COLOUR itself — the palette does not know what a colour is "for".
 //
-// The companion theme (themes/_theme-default.scss) SETS these onto semantic
+// The companion theme (themes/default/_theme.scss) SETS these onto semantic
 // roles (--primary → --blue-600, --error → --red-500, …). Components consume
 // only those roles, never this palette directly.
 //

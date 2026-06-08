@@ -5,9 +5,9 @@
    Design Tokens — Tier 3 component + scale layer.
 
    Tier 1 colour primitives (ramps + HSL channels) live in
-   ../themes/_palette-default.scss. Tier 2 semantic role assignments
+   ../themes/default/_palette.scss. Tier 2 semantic role assignments
    (surface, border, text, primary/secondary/tertiary, status, focus)
-   live in ../themes/_theme-default.scss.
+   live in ../themes/default/_theme.scss.
 
    THIS file owns the theme-INDEPENDENT layer:
      · scales      — spacing, radius, sizes, hit targets, breakpoints
@@ -87,7 +87,7 @@
      The alpha values stay constant across themes — only the
      hue/saturation/lightness become configurable.
      ============================================================ */
-  /* --shadow-tint-h/s/l live in themes/_palette-default.scss — palette-level
+  /* --shadow-tint-h/s/l live in themes/default/_palette.scss — palette-level
      so dark palettes can override --shadow-tint-l → ~95% for soft light glows. */
 
   --z100: 0 1px 2px  hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .06),
@@ -210,17 +210,11 @@
   --col-cap-content: 1280px;
 
   /* ============================================================
-     Typography
+     Typography scale (theme-independent). Font FAMILIES are a theme
+     choice and live in themes/default/_theme.scss (--font-sans/mono/
+     display/heading); the size/weight/leading/tracking scale below is
+     constant across themes.
      ============================================================ */
-  --font-sans:    "Mulish", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  /* Display + heading stacks default to body sans so an unconfigured
-     theme is visually consistent. Override --font-heading or
-     --font-display in a client theme to mix a serif/display family
-     without touching component code. */
-  --font-display: var(--font-sans);
-  --font-heading: var(--font-sans);
-
   --fw-regular:  400;
   --fw-medium:   500;
   --fw-semibold: 600;

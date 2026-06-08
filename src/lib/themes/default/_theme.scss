@@ -1,7 +1,7 @@
 // =========================================================================
 // Default theme — Tier 2 semantic role ASSIGNMENTS (light).
 //
-// The palette (themes/_palette-default.scss) DEFINES the concrete colours
+// The palette (themes/default/_palette.scss) DEFINES the concrete colours
 // (--blue-*, --red-*, --neutral-*, … + HSL channels). THIS file SETS them
 // onto semantic roles (--primary → --blue-600, --surface-canvas → --neutral-50,
 // --error → --red-500, …). Components consume only these roles, never the
@@ -78,8 +78,17 @@
   --icon-muted:        var(--neutral-400);
   --icon-on-primary:     var(--neutral-0);
 
+  /* Font families — a theme/brand choice (the size/weight/leading SCALE is
+     theme-independent and lives in styles/_tokens.scss). Display + heading
+     default to body sans; a brand can mix a serif/display family here without
+     touching component code. */
+  --font-sans:    "Mulish", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: var(--font-sans);
+  --font-heading: var(--font-sans);
+
   /* Semantic → palette bridge. The lib knows colours by PURPOSE; the theme
-     (themes/_theme-default.scss) ships the concrete ramps + HSL channels. This
+     (themes/default/_theme.scss) ships the concrete ramps + HSL channels. This
      is the one place that maps semantic roles onto a concrete palette. A brand
      re-skins by overriding either the palette (--blue-*, --red-*) or these
      role tokens directly.
