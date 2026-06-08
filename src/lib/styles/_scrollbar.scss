@@ -14,4 +14,4 @@ html { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) transparen
 *::-webkit-scrollbar-thumb:active { background: var(--scrollbar-thumb-active); background-clip: padding-box; }
 
 // Global text-selection — sourced from components-extras.css line 910.
-::selection { background: var(--select-bg, color-mix(in srgb, var(--brand) 22%, transparent)); color: var(--text-primary); }
+::selection { background: var(--select-bg, color-mix(in srgb, var(--primary) 22%, transparent)); color: var(--text-primary); }

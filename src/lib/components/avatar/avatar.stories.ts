@@ -12,8 +12,8 @@ const meta: Meta<AvatarComponent> = {
       description: {
         component: `### Tokens
 - \`--ds-avatar-size\` — default \`var(--avatar-md)\`
-- \`--ds-avatar-bg\` — default \`var(--brand-muted)\` — surface fill
-- \`--ds-avatar-fg\` — default \`var(--brand-strong)\` — initials colour
+- \`--ds-avatar-bg\` — default \`var(--primary-muted)\` — surface fill
+- \`--ds-avatar-fg\` — default \`var(--primary-strong)\` — initials colour
 - \`--ds-avatar-radius\` — default \`var(--r-pill)\`
 - \`--ds-avatar-ring-color\` — default \`var(--surface-default)\` (used in group)
 - \`--ds-avatar-ring-width\` — default \`var(--avatar-bw-group)\``,

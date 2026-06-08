@@ -10,7 +10,7 @@ const meta: Meta<BreadcrumbsComponent> = {
       description: {
         component: `### Tokens
 - \`--ds-breadcrumbs-fg\` — default \`var(--text-tertiary)\`
-- \`--ds-breadcrumbs-fg-hover\` — default \`var(--brand)\`
+- \`--ds-breadcrumbs-fg-hover\` — default \`var(--primary)\`
 - \`--ds-breadcrumbs-current-fg\` — default \`var(--text-primary)\`
 - \`--ds-breadcrumbs-separator-fg\` — default \`var(--icon-muted)\``,
       },

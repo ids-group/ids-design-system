@@ -77,8 +77,8 @@
     }
   }
   &.error {
-    --_es-tile-bg: var(--danger-subtle);
-    --_es-tile-fg: var(--danger-text);
+    --_es-tile-bg: var(--error-subtle);
+    --_es-tile-fg: var(--error-text);
   }
 
   &.locked {

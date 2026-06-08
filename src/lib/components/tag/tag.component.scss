@@ -6,8 +6,8 @@
   gap: var(--tag-gap);
   padding: var(--ds-tag-pad-y, var(--tag-pad-y)) var(--ds-tag-pad-x, var(--tag-pad-x));
   border-radius: var(--ds-tag-radius, var(--r-md));
-  background: var(--ds-tag-bg, var(--brand));
-  color: var(--brand-on);
+  background: var(--ds-tag-bg, var(--primary));
+  color: var(--primary-on);
   font: var(--ds-tag-fw, var(--fw-bold)) var(--ds-tag-fs, var(--fs-xs))/var(--ds-tag-lh, var(--lh-base)) var(--font-sans);
 }
 
@@ -41,9 +41,9 @@
 }
 
 :host(.interactive.is-active) {
-  background: var(--ds-tag-active-bg, var(--brand-muted));
-  color: var(--ds-tag-active-fg, var(--brand-strong));
-  box-shadow: inset 0 0 0 var(--bw-default) var(--ds-tag-active-border, var(--brand));
+  background: var(--ds-tag-active-bg, var(--primary-muted));
+  color: var(--ds-tag-active-fg, var(--primary-strong));
+  box-shadow: inset 0 0 0 var(--bw-default) var(--ds-tag-active-border, var(--primary));
 }
 
 .close {

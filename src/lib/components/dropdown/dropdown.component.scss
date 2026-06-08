@@ -62,12 +62,12 @@
 
   &:focus-visible {
     outline: none;
-    border-color: var(--brand);
+    border-color: var(--primary);
     box-shadow: var(--focus-field);
   }
 
   &.open {
-    border-color: var(--brand);
+    border-color: var(--primary);
     box-shadow: var(--focus-field);
 
     .chevron {
@@ -76,8 +76,8 @@
   }
 
   &.error {
-    background: var(--danger-subtle);
-    border-color: var(--danger);
+    background: var(--error-subtle);
+    border-color: var(--error);
 
     &:focus-visible {
       box-shadow: var(--focus-field-error);

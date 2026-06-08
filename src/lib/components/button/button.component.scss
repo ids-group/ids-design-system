@@ -7,10 +7,10 @@
 
 .button {
   /* Surface */
-  --ds-button-bg:            var(--brand);
-  --ds-button-bg-hover:      var(--brand-hover);
-  --ds-button-bg-active:     var(--brand-pressed);
-  --ds-button-fg:            var(--brand-on);
+  --ds-button-bg:            var(--primary);
+  --ds-button-bg-hover:      var(--primary-hover);
+  --ds-button-bg-active:     var(--primary-pressed);
+  --ds-button-fg:            var(--primary-on);
   --ds-button-border:        transparent;
   /* State */
   --ds-button-bg-disabled:   var(--surface-disabled);
@@ -79,16 +79,16 @@
 
   /* Variants */
   &.secondary {
-    --ds-button-bg:        var(--brand-muted);
-    --ds-button-fg:        var(--brand-strong);
-    --ds-button-bg-hover:  var(--brand-muted-strong);
-    --ds-button-bg-active: var(--brand-muted-strong);
+    --ds-button-bg:        var(--primary-muted);
+    --ds-button-fg:        var(--primary-strong);
+    --ds-button-bg-hover:  var(--primary-muted-strong);
+    --ds-button-bg-active: var(--primary-muted-strong);
   }
   &.tertiary {
     --ds-button-bg:        transparent;
-    --ds-button-fg:        var(--brand-strong);
-    --ds-button-bg-hover:  var(--brand-subtle);
-    --ds-button-bg-active: var(--brand-muted);
+    --ds-button-fg:        var(--primary-strong);
+    --ds-button-bg-hover:  var(--primary-subtle);
+    --ds-button-bg-active: var(--primary-muted);
   }
   &.ghost {
     --ds-button-bg:        var(--surface-default);
@@ -105,11 +105,11 @@
     --ds-button-bg-hover:  var(--surface-secondary);
     --ds-button-bg-active: var(--surface-secondary);
   }
-  &.danger {
-    --ds-button-bg:        var(--danger);
-    --ds-button-bg-hover:  var(--danger-hover);
-    --ds-button-bg-active: var(--danger-pressed);
-    --ds-button-focus-shadow: var(--focus-ring-danger);
+  &.error {
+    --ds-button-bg:        var(--error);
+    --ds-button-bg-hover:  var(--error-hover);
+    --ds-button-bg-active: var(--error-pressed);
+    --ds-button-focus-shadow: var(--focus-ring-error);
   }
   &.success {
     --ds-button-bg:        var(--success);
@@ -126,7 +126,7 @@
     --ds-button-border:    transparent;
   }
 
-  &.link {
+  &.text {
     --ds-button-bg:        transparent;
     --ds-button-fg:        var(--text-link);
     --ds-button-border:    transparent;
@@ -136,7 +136,7 @@
     text-decoration: underline;
     text-underline-offset: var(--btn-link-uloff);
 
-    &:hover { color: var(--brand-pressed); }
+    &:hover { color: var(--primary-pressed); }
   }
 
   /* Icon-only — square hit area, Material/PrimeNG-style polish.
@@ -184,14 +184,14 @@
       border: var(--bw-strong) solid currentColor;
       border-right-color: transparent;
       border-radius: var(--r-pill);
-      color: var(--brand-on);
+      color: var(--primary-on);
       animation: spin var(--dur-loop-fast) linear infinite;
     }
   }
 
   &.secondary.loading::after,
   &.tertiary.loading::after,
-  &.ghost.loading::after { color: var(--brand-strong); }
+  &.ghost.loading::after { color: var(--primary-strong); }
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -238,9 +238,9 @@
 
   &:hover { background: var(--surface-secondary); color: var(--text-primary); }
   &[aria-pressed="true"] {
-    background: var(--brand-subtle);
-    border-color: var(--brand);
-    color: var(--brand-strong);
+    background: var(--primary-subtle);
+    border-color: var(--primary);
+    color: var(--primary-strong);
   }
   &:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 }

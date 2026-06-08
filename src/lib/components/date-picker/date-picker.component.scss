@@ -19,7 +19,7 @@
     gap: var(--s-1);
 
     .req {
-      color: var(--danger);
+      color: var(--error);
       font-weight: var(--fw-semibold);
     }
 
@@ -78,12 +78,12 @@
   --ds-datepicker-border:                   var(--border-default);
   --ds-datepicker-shadow:                   var(--shadow-popover);
   --ds-datepicker-day-hover-bg:             var(--surface-secondary);
-  --ds-datepicker-day-today-fg:             var(--brand);
-  --ds-datepicker-day-selected-bg:          var(--brand);
-  --ds-datepicker-day-selected-bg-hover:    var(--brand-selected-hover);
-  --ds-datepicker-day-selected-fg:          var(--brand-on);
-  --ds-datepicker-day-range-bg:             var(--brand-subtle);
-  --ds-datepicker-day-range-fg:             var(--brand-strong);
+  --ds-datepicker-day-today-fg:             var(--primary);
+  --ds-datepicker-day-selected-bg:          var(--primary);
+  --ds-datepicker-day-selected-bg-hover:    var(--primary-selected-hover);
+  --ds-datepicker-day-selected-fg:          var(--primary-on);
+  --ds-datepicker-day-range-bg:             var(--primary-subtle);
+  --ds-datepicker-day-range-fg:             var(--primary-strong);
   --ds-datepicker-day-disabled-fg:          var(--text-disabled);
   --ds-datepicker-width:                    var(--datepicker-w);
 

@@ -116,12 +116,12 @@ export const BLUE_TOKENS: Readonly<Record<BlueToken, string>> = {
 export type BrandChannelToken = 'brand-h' | 'brand-s' | 'brand-l' | 'danger-h' | 'danger-s' | 'danger-l';
 
 export const BRAND_CHANNEL_TOKENS: Readonly<Record<BrandChannelToken, string>> = {
-  'brand-h': '--brand-h',
-  'brand-s': '--brand-s',
-  'brand-l': '--brand-l',
-  'danger-h': '--danger-h',
-  'danger-s': '--danger-s',
-  'danger-l': '--danger-l',
+  'brand-h': '--primary-h',
+  'brand-s': '--primary-s',
+  'brand-l': '--primary-l',
+  'danger-h': '--error-h',
+  'danger-s': '--error-s',
+  'danger-l': '--error-l',
 };
 
 export type SurfaceToken = 'canvas' | 'default' | 'secondary' | 'overlay' | 'inverted' | 'inverted-hover' | 'tint' | 'disabled' | 'muted' | 'scrim';
@@ -160,7 +160,7 @@ export const TEXT_TOKENS: Readonly<Record<TextToken, string>> = {
   'disabled': '--text-disabled',
   'inverted': '--text-inverted',
   'link': '--text-link',
-  'on-brand': '--text-on-brand',
+  'on-brand': '--text-on-primary',
   'on-success': '--text-on-success',
   'on-error': '--text-on-error',
 };
@@ -171,21 +171,21 @@ export const ICON_ROLE_TOKENS: Readonly<Record<IconRoleToken, string>> = {
   'default': '--icon-default',
   'strong': '--icon-strong',
   'muted': '--icon-muted',
-  'on-brand': '--icon-on-brand',
+  'on-brand': '--icon-on-primary',
 };
 
 export type BrandToken = 'brand' | 'brand-hover' | 'brand-pressed' | 'brand-selected-hover' | 'brand-subtle' | 'brand-muted' | 'brand-muted-strong' | 'brand-strong' | 'brand-on';
 
 export const BRAND_TOKENS: Readonly<Record<BrandToken, string>> = {
-  'brand': '--brand',
-  'brand-hover': '--brand-hover',
-  'brand-pressed': '--brand-pressed',
-  'brand-selected-hover': '--brand-selected-hover',
-  'brand-subtle': '--brand-subtle',
-  'brand-muted': '--brand-muted',
-  'brand-muted-strong': '--brand-muted-strong',
-  'brand-strong': '--brand-strong',
-  'brand-on': '--brand-on',
+  'brand': '--primary',
+  'brand-hover': '--primary-hover',
+  'brand-pressed': '--primary-pressed',
+  'brand-selected-hover': '--primary-selected-hover',
+  'brand-subtle': '--primary-subtle',
+  'brand-muted': '--primary-muted',
+  'brand-muted-strong': '--primary-muted-strong',
+  'brand-strong': '--primary-strong',
+  'brand-on': '--primary-on',
 };
 
 export type SecondaryToken = 'secondary' | 'secondary-hover' | 'secondary-pressed' | 'secondary-strong' | 'secondary-subtle' | 'secondary-muted' | 'secondary-on' | 'secondary-h' | 'secondary-s' | 'secondary-l';
@@ -242,13 +242,13 @@ export const WARNING_TOKENS: Readonly<Record<WarningToken, string>> = {
 export type DangerToken = 'danger' | 'danger-hover' | 'danger-pressed' | 'danger-subtle' | 'danger-muted' | 'danger-border' | 'danger-text';
 
 export const DANGER_TOKENS: Readonly<Record<DangerToken, string>> = {
-  'danger': '--danger',
-  'danger-hover': '--danger-hover',
-  'danger-pressed': '--danger-pressed',
-  'danger-subtle': '--danger-subtle',
-  'danger-muted': '--danger-muted',
-  'danger-border': '--danger-border',
-  'danger-text': '--danger-text',
+  'danger': '--error',
+  'danger-hover': '--error-hover',
+  'danger-pressed': '--error-pressed',
+  'danger-subtle': '--error-subtle',
+  'danger-muted': '--error-muted',
+  'danger-border': '--error-border',
+  'danger-text': '--error-text',
 };
 
 export type InfoToken = 'info' | 'info-hover' | 'info-subtle' | 'info-muted' | 'info-border' | 'info-text';
@@ -272,7 +272,7 @@ export const FOCUS_TOKENS: Readonly<Record<FocusToken, string>> = {
   'ring-outer-alpha': '--focus-ring-outer-alpha',
   'ring': '--focus-ring',
   'ring-inverted': '--focus-ring-inverted',
-  'ring-danger': '--focus-ring-danger',
+  'ring-danger': '--focus-ring-error',
   'field-alpha': '--focus-field-alpha',
   'field': '--focus-field',
   'field-error': '--focus-field-error',

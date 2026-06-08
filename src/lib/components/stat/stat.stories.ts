@@ -16,7 +16,7 @@ const meta: Meta<StatComponent> = {
 - \`--ds-stat-label-color\` — default \`var(--text-tertiary)\`
 - \`--ds-stat-value-color\` — default \`var(--text-primary)\`
 - \`--ds-stat-up-color\` — default \`var(--success-text)\`
-- \`--ds-stat-down-color\` — default \`var(--danger-text)\``,
+- \`--ds-stat-down-color\` — default \`var(--error-text)\``,
       },
     },
   },

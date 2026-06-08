@@ -14,15 +14,15 @@ const meta: Meta<TextareaComponent> = {
 - \`--ds-input-bg\` — default \`var(--surface-default)\`
 - \`--ds-input-border\` — default \`var(--border-default)\`
 - \`--ds-input-border-hover\` — default \`var(--border-strong)\`
-- \`--ds-input-border-focus\` — default \`var(--brand)\`
+- \`--ds-input-border-focus\` — default \`var(--primary)\`
 - \`--ds-input-fg\` — default \`var(--text-primary)\`
 - \`--ds-input-placeholder\` — default \`var(--text-tertiary)\`
 - \`--ds-input-radius\` — default \`var(--r-md)\`
 - \`--ds-input-pad-x\` — default \`var(--field-pad-x)\`
 - \`--ds-input-pad-y\` — default \`var(--field-pad-y)\`
 - \`--ds-input-focus-shadow\` — default \`var(--focus-field)\`
-- \`--ds-input-border-error\` — default \`var(--danger)\`
-- \`--ds-input-bg-error\` — default \`var(--danger-subtle)\`
+- \`--ds-input-border-error\` — default \`var(--error)\`
+- \`--ds-input-bg-error\` — default \`var(--error-subtle)\`
 - \`--ds-input-border-success\` — default \`var(--success)\`
 - \`--ds-input-bg-disabled\` — default \`var(--surface-disabled)\`
 - \`--field-textarea-rows-min\` — default \`60px\` (governs min-height of the inner textarea)`,

@@ -11,17 +11,17 @@ const meta: Meta<DropzoneComponent> = {
       description: {
         component: `### Tokens
 - \`--ds-dropzone-bg\` — default \`var(--surface-default)\`
-- \`--ds-dropzone-bg-hover\` — default \`var(--brand-subtle)\`
-- \`--ds-dropzone-bg-active\` — default \`var(--brand-subtle)\`
+- \`--ds-dropzone-bg-hover\` — default \`var(--primary-subtle)\`
+- \`--ds-dropzone-bg-active\` — default \`var(--primary-subtle)\`
 - \`--ds-dropzone-border\` — default \`var(--border-default)\`
-- \`--ds-dropzone-border-hover\` — default \`var(--brand)\`
-- \`--ds-dropzone-border-active\` — default \`var(--brand)\`
+- \`--ds-dropzone-border-hover\` — default \`var(--primary)\`
+- \`--ds-dropzone-border-active\` — default \`var(--primary)\`
 - \`--ds-dropzone-fg\` — default \`var(--text-secondary)\`
-- \`--ds-dropzone-fg-active\` — default \`var(--brand-strong)\`
+- \`--ds-dropzone-fg-active\` — default \`var(--primary-strong)\`
 - \`--ds-dropzone-radius\` — default \`var(--r-lg)\`
-- \`--ds-dropzone-file-progress\` — default \`var(--brand)\`
+- \`--ds-dropzone-file-progress\` — default \`var(--primary)\`
 - \`--ds-dropzone-file-success\` — default \`var(--success)\`
-- \`--ds-dropzone-file-error\` — default \`var(--danger)\``,
+- \`--ds-dropzone-file-error\` — default \`var(--error)\``,
       },
     },
   },

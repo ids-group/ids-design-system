@@ -16,17 +16,17 @@ Sidenav host:
 - \`--ds-sidenav-border\` — default \`var(--border-divider)\`
 - \`--ds-sidenav-width\` — default \`var(--sidenav-w)\`
 - \`--ds-sidenav-width-collapsed\` — default \`var(--sidenav-w-collapsed)\`
-- \`--ds-sidenav-mark-bg\` — default \`var(--brand)\`
-- \`--ds-sidenav-mark-fg\` — default \`var(--brand-on)\`
+- \`--ds-sidenav-mark-bg\` — default \`var(--primary)\`
+- \`--ds-sidenav-mark-fg\` — default \`var(--primary-on)\`
 
 Item (\`<ds-sidenav-item>\`):
 - \`--ds-sidenav-item-fg\` — default \`var(--text-secondary)\`
 - \`--ds-sidenav-item-fg-hover\` — default \`var(--text-primary)\`
 - \`--ds-sidenav-item-bg-hover\` — default \`var(--surface-secondary)\`
-- \`--ds-sidenav-item-bg-active\` — default \`var(--brand-subtle)\`
-- \`--ds-sidenav-item-fg-active\` — default \`var(--brand-strong)\`
+- \`--ds-sidenav-item-bg-active\` — default \`var(--primary-subtle)\`
+- \`--ds-sidenav-item-fg-active\` — default \`var(--primary-strong)\`
 - \`--ds-sidenav-item-radius\` — default \`var(--r-md)\`
-- \`--ds-sidenav-alert-color\` — default \`var(--danger)\`
+- \`--ds-sidenav-alert-color\` — default \`var(--error)\`
 
 Group label (\`<ds-sidenav-group>\`):
 - \`--ds-sidenav-group-fg\` — default \`var(--text-tertiary)\``,

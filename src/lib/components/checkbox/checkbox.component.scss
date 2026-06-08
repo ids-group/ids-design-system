@@ -16,7 +16,7 @@
   transition: background var(--dur-fast) var(--ease-standard),
               border-color var(--dur-fast) var(--ease-standard);
 
-  &:hover:not(:disabled) { border-color: var(--brand); }
+  &:hover:not(:disabled) { border-color: var(--primary); }
   &:focus-visible        { outline: none; box-shadow: var(--focus-ring); }
   &:disabled {
     background: var(--surface-disabled);
@@ -25,8 +25,8 @@
   }
 
   &:checked {
-    background: var(--brand);
-    border-color: var(--brand);
+    background: var(--primary);
+    border-color: var(--primary);
     &::after {
       content: "";
       width: var(--check-tick-size);
@@ -36,8 +36,8 @@
   }
 
   &:indeterminate {
-    background: var(--brand);
-    border-color: var(--brand);
+    background: var(--primary);
+    border-color: var(--primary);
     &::after {
       content: "";
       width: var(--check-indet-w);

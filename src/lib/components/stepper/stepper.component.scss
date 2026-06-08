@@ -14,15 +14,15 @@
     font: var(--fw-bold) var(--fs-xs)/var(--lh-flat) var(--font-sans);
 
     &.done {
-      background: var(--brand-subtle);
-      border-color: var(--brand);
-      color: var(--brand);
+      background: var(--primary-subtle);
+      border-color: var(--primary);
+      color: var(--primary);
     }
 
     &.active {
-      background: var(--brand);
-      border-color: var(--brand);
-      color: var(--brand-on);
+      background: var(--primary);
+      border-color: var(--primary);
+      color: var(--primary-on);
     }
   }
 
@@ -31,6 +31,6 @@
     width: var(--stepper-bar-w);
     background: var(--border-divider);
 
-    &.done { background: var(--brand); }
+    &.done { background: var(--primary); }
   }
 }

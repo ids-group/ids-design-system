@@ -15,7 +15,7 @@ const meta: Meta<ModalComponent> = {
 - \`--ds-modal-shadow\` — default \`var(--shadow-modal)\`
 - \`--ds-modal-divider\` — default \`var(--border-divider)\`
 - \`--ds-modal-title-fg\` — default \`var(--text-primary)\`
-- \`--ds-modal-title-fg-danger\` — default \`var(--danger-text)\`
+- \`--ds-modal-title-fg-error\` — default \`var(--error-text)\`
 - \`--ds-modal-close-fg\` — default \`var(--icon-default)\`
 - \`--ds-modal-close-fg-hover\` — default \`var(--icon-strong)\`
 - \`--ds-modal-backdrop\` — default \`var(--surface-scrim)\``,

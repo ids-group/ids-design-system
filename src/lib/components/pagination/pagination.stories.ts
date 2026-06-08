@@ -14,8 +14,8 @@ const meta: Meta<PaginationComponent> = {
 - \`--ds-pagination-btn-fg\` — default \`var(--text-secondary)\`
 - \`--ds-pagination-btn-fg-hover\` — default \`var(--text-primary)\`
 - \`--ds-pagination-btn-border\` — default \`var(--border-default)\`
-- \`--ds-pagination-active-bg\` — default \`var(--brand)\`
-- \`--ds-pagination-active-fg\` — default \`var(--brand-on)\`
+- \`--ds-pagination-active-bg\` — default \`var(--primary)\`
+- \`--ds-pagination-active-fg\` — default \`var(--primary-on)\`
 - \`--ds-pagination-radius\` — default \`var(--r-md)\``,
       },
     },

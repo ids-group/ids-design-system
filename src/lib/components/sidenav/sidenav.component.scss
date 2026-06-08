@@ -15,8 +15,8 @@
   --ds-sidenav-border:          var(--border-divider);
   --ds-sidenav-width:           var(--sidenav-w);
   --ds-sidenav-width-collapsed: var(--sidenav-w-collapsed);
-  --ds-sidenav-mark-bg:         var(--brand);
-  --ds-sidenav-mark-fg:         var(--brand-on);
+  --ds-sidenav-mark-bg:         var(--primary);
+  --ds-sidenav-mark-fg:         var(--primary-on);
 
   display: flex;
   flex-direction: column;

@@ -20,7 +20,7 @@
   gap: var(--s-3);
   background: var(--ds-toast-bg, var(--surface-overlay));
   border: var(--bw-default) solid var(--ds-toast-border, var(--border-default));
-  border-left: var(--toast-bar-w) solid var(--brand);
+  border-left: var(--toast-bar-w) solid var(--primary);
   border-radius: var(--r-lg);
   padding: var(--s-3) var(--s-4);
   box-shadow: var(--shadow-toast);
@@ -28,7 +28,7 @@
   max-width: var(--toast-maxw);
   animation: ds-toast-in var(--dur-slow) var(--ease-decelerate);
 
-  .icon  { color: var(--brand); flex-shrink: 0; margin-top: var(--s-0-5); }
+  .icon  { color: var(--primary); flex-shrink: 0; margin-top: var(--s-0-5); }
   .body  { flex: 1; font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans); color: var(--text-secondary); }
   .title { font-weight: var(--fw-bold); color: var(--text-primary); margin-bottom: var(--s-0-5); }
   .close { border: 0; background: transparent; color: var(--icon-default); cursor: pointer; padding: var(--s-0-5); }
@@ -38,7 +38,7 @@
     align-self: center;
     border: 0;
     background: transparent;
-    color: var(--brand-strong);
+    color: var(--primary-strong);
     font: var(--fw-bold) var(--fs-s)/var(--lh-flat) var(--font-sans);
     cursor: pointer;
     padding: var(--s-1) var(--s-2);
@@ -60,7 +60,7 @@
   &.info {
     background: var(--ds-toast-bg-info, var(--ds-toast-bg, var(--surface-overlay)));
     border-color: var(--ds-toast-border-info, var(--ds-toast-border, var(--border-default)));
-    border-left-color: var(--brand);
+    border-left-color: var(--primary);
   }
   &.success {
     background: var(--ds-toast-bg-success, var(--ds-toast-bg, var(--surface-overlay)));
@@ -77,8 +77,8 @@
   &.error {
     background: var(--ds-toast-bg-error, var(--ds-toast-bg, var(--surface-overlay)));
     border-color: var(--ds-toast-border-error, var(--ds-toast-border, var(--border-default)));
-    border-left-color: var(--danger);
-    .icon { color: var(--danger); }
+    border-left-color: var(--error);
+    .icon { color: var(--error); }
   }
 }
 

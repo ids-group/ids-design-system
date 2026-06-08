@@ -37,11 +37,11 @@ const meta: Meta<TableComponent<Rule>> = {
         component: `### Tokens
 - \`--ds-table-bg\` — default \`var(--surface-default)\`
 - \`--ds-table-row-hover-bg\` — default \`var(--surface-secondary)\`
-- \`--ds-table-row-selected-bg\` — default \`var(--brand-subtle)\`
+- \`--ds-table-row-selected-bg\` — default \`var(--primary-subtle)\`
 - \`--ds-table-head-bg\` — default \`var(--surface-secondary)\`
 - \`--ds-table-head-fg\` — default \`var(--text-tertiary)\`
 - \`--ds-table-divider\` — default \`var(--border-divider)\`
-- \`--ds-table-sort-active-fg\` — default \`var(--brand)\`
+- \`--ds-table-sort-active-fg\` — default \`var(--primary)\`
 - \`--ds-table-cell-pad-x\` — default \`var(--table-cell-pad-x)\`
 - \`--ds-table-cell-pad-y\` — default \`var(--table-cell-pad-y)\`
 - \`--ds-table-radius\` — default \`var(--r-xl)\``,

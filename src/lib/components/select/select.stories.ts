@@ -46,11 +46,11 @@ Mirrors the input field — \`--ds-select-*\` defaults to the matching \`--ds-in
 - \`--ds-input-bg\` — default \`var(--surface-default)\`
 - \`--ds-input-border\` — default \`var(--border-default)\`
 - \`--ds-input-border-hover\` — default \`var(--border-strong)\`
-- \`--ds-input-border-focus\` — default \`var(--brand)\`
+- \`--ds-input-border-focus\` — default \`var(--primary)\`
 - \`--ds-input-fg\` — default \`var(--text-primary)\`
 - \`--ds-input-radius\` — default \`var(--r-md)\`
 - \`--ds-input-focus-shadow\` — default \`var(--focus-field)\`
-- \`--ds-input-border-error\` — default \`var(--danger)\`
+- \`--ds-input-border-error\` — default \`var(--error)\`
 - \`--ds-input-border-success\` — default \`var(--success)\`
 - \`--ds-input-bg-disabled\` — default \`var(--surface-disabled)\``,
       },

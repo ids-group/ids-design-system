@@ -26,11 +26,11 @@
     transition: transform var(--dur-base) var(--ease-standard);
   }
 
-  &:checked         { background: var(--brand); }
+  &:checked         { background: var(--primary); }
   &:checked::after  { transform: translateX(var(--switch-thumb-travel)); }
   &:focus-visible   { outline: none; box-shadow: var(--focus-ring); }
   &:disabled        { opacity: var(--opacity-disabled); cursor: not-allowed; }
 
   &.success:checked { background: var(--success); }
-  &.error:checked   { background: var(--danger); }
+  &.error:checked   { background: var(--error); }
 }

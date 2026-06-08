@@ -13,11 +13,11 @@ const meta: Meta<DatePickerComponent> = {
 - \`--ds-datepicker-border\` — default \`var(--border-default)\`
 - \`--ds-datepicker-shadow\` — default \`var(--shadow-popover)\`
 - \`--ds-datepicker-day-hover-bg\` — default \`var(--surface-secondary)\`
-- \`--ds-datepicker-day-today-fg\` — default \`var(--brand)\`
-- \`--ds-datepicker-day-selected-bg\` — default \`var(--brand)\`
-- \`--ds-datepicker-day-selected-fg\` — default \`var(--brand-on)\`
-- \`--ds-datepicker-day-range-bg\` — default \`var(--brand-subtle)\`
-- \`--ds-datepicker-day-range-fg\` — default \`var(--brand-strong)\`
+- \`--ds-datepicker-day-today-fg\` — default \`var(--primary)\`
+- \`--ds-datepicker-day-selected-bg\` — default \`var(--primary)\`
+- \`--ds-datepicker-day-selected-fg\` — default \`var(--primary-on)\`
+- \`--ds-datepicker-day-range-bg\` — default \`var(--primary-subtle)\`
+- \`--ds-datepicker-day-range-fg\` — default \`var(--primary-strong)\`
 - \`--ds-datepicker-day-disabled-fg\` — default \`var(--text-disabled)\`
 - \`--ds-datepicker-width\` — default \`var(--datepicker-w)\``,
       },

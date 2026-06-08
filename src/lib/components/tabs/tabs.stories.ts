@@ -13,8 +13,8 @@ const meta: Meta<TabsComponent> = {
         component: `### Tokens
 - \`--ds-tab-fg\` — default \`var(--text-secondary)\`
 - \`--ds-tab-fg-hover\` — default \`var(--text-primary)\`
-- \`--ds-tab-fg-active\` — default \`var(--brand)\`
-- \`--ds-tab-indicator-color\` — default \`var(--brand)\`
+- \`--ds-tab-fg-active\` — default \`var(--primary)\`
+- \`--ds-tab-indicator-color\` — default \`var(--primary)\`
 - \`--ds-tab-indicator-width\` — default \`var(--bw-strong)\`
 - \`--ds-tab-pad-x\` — default \`var(--s-4)\`
 - \`--ds-tab-pad-y\` — default \`var(--s-3)\`

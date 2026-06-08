@@ -19,7 +19,7 @@ const meta: Meta<TopBarComponent> = {
 - \`--ds-topbar-action-fg-hover\` — default \`var(--icon-strong)\`
 - \`--ds-topbar-action-bg-hover\` — default \`var(--surface-secondary)\`
 - \`--ds-topbar-title-fg\` — default \`var(--text-primary)\`
-- \`--ds-topbar-ping-color\` — default \`var(--danger)\``,
+- \`--ds-topbar-ping-color\` — default \`var(--error)\``,
       },
     },
   },

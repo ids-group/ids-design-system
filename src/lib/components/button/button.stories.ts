@@ -9,21 +9,21 @@ const meta: Meta<ButtonComponent> = {
     docs: {
       description: {
         component: `### Tokens
-- \`--ds-button-bg\` — default \`var(--brand)\` — surface fill
-- \`--ds-button-bg-hover\` — default \`var(--brand-hover)\`
-- \`--ds-button-bg-active\` — default \`var(--brand-pressed)\`
-- \`--ds-button-fg\` — default \`var(--brand-on)\`
+- \`--ds-button-bg\` — default \`var(--primary)\` — surface fill
+- \`--ds-button-bg-hover\` — default \`var(--primary-hover)\`
+- \`--ds-button-bg-active\` — default \`var(--primary-pressed)\`
+- \`--ds-button-fg\` — default \`var(--primary-on)\`
 - \`--ds-button-border\` — default \`transparent\`
 - \`--ds-button-bg-disabled\` — default \`var(--surface-disabled)\`
 - \`--ds-button-fg-disabled\` — default \`var(--text-disabled)\`
 - \`--ds-button-radius\` — default \`var(--r-md)\`
 - \`--ds-button-focus-shadow\` — default \`var(--focus-ring)\`
-Variant modifiers (\`.secondary/.tertiary/.ghost/.danger/.link\`) only re-set \`--ds-button-bg*\` and \`--ds-button-fg\`.`,
+Variant modifiers (\`.secondary/.tertiary/.ghost/.outline/.error/.success/.warning/.text\`) only re-set \`--ds-button-bg*\` and \`--ds-button-fg\`.`,
       },
     },
   },
   argTypes: {
-    variant: { control: 'select', options: ['primary', 'secondary', 'tertiary', 'ghost', 'danger', 'link'] },
+    variant: { control: 'select', options: ['primary', 'secondary', 'tertiary', 'ghost', 'outline', 'error', 'success', 'warning', 'text'] },
     size: { control: 'select', options: ['s', 'm', 'l'] },
     disabled: { control: 'boolean' },
     loading: { control: 'boolean' },
@@ -42,8 +42,9 @@ export const Primary: Story = {
 export const Secondary: Story = { ...Primary, args: { variant: 'secondary' } };
 export const Tertiary: Story = { ...Primary, args: { variant: 'tertiary' } };
 export const Ghost: Story = { ...Primary, args: { variant: 'ghost' } };
-export const Danger: Story = { ...Primary, args: { variant: 'danger' } };
-export const LinkVariant: Story = { ...Primary, args: { variant: 'link' } };
+export const Outline: Story = { ...Primary, args: { variant: 'outline' } };
+export const Error: Story = { ...Primary, args: { variant: 'error' } };
+export const TextVariant: Story = { ...Primary, args: { variant: 'text' } };
 export const Small: Story = { ...Primary, args: { size: 's' } };
 export const Medium: Story = { ...Primary, args: { size: 'm' } };
 export const Loading: Story = { ...Primary, args: { loading: true } };

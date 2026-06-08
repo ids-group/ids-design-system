@@ -37,10 +37,10 @@
   &.info      { --_badge-bg: var(--info-subtle);    --_badge-fg: var(--info-text); }
   &.success   { --_badge-bg: var(--success-subtle); --_badge-fg: var(--success-text); }
   &.warning   { --_badge-bg: var(--warning-subtle); --_badge-fg: var(--warning-text); }
-  &.error     { --_badge-bg: var(--danger-subtle);  --_badge-fg: var(--danger-text); }
+  &.error     { --_badge-bg: var(--error-subtle);  --_badge-fg: var(--error-text); }
   &.neutral   { --_badge-bg: var(--surface-secondary); --_badge-fg: var(--text-secondary); }
   &.secondary { --_badge-bg: var(--secondary-subtle); --_badge-fg: var(--secondary-strong); }
-  &.solid     { --_badge-bg: var(--brand);    --_badge-fg: var(--brand-on); }
+  &.solid     { --_badge-bg: var(--primary);    --_badge-fg: var(--primary-on); }
   &.count {
     min-width: var(--badge-count-size); height: var(--badge-count-size); padding: 0 var(--s-1-5);
     display: inline-grid; place-items: center;

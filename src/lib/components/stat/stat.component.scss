@@ -6,7 +6,7 @@
   display: block;
 }
 
-:host(.danger) .value { color: var(--danger-text); }
+:host(.danger) .value { color: var(--error-text); }
 
 :host(.size-sm) .stat {
   .label { font-size: var(--fs-2xs); letter-spacing: var(--ls-wide); }
@@ -25,7 +25,7 @@
   --ds-stat-label-color:  var(--text-tertiary);
   --ds-stat-value-color:  var(--text-primary);
   --ds-stat-up-color:     var(--success-text);
-  --ds-stat-down-color:   var(--danger-text);
+  --ds-stat-down-color:   var(--error-text);
 
   background: var(--ds-stat-bg);
   border: var(--bw-default) solid var(--ds-stat-border);

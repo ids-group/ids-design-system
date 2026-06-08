@@ -13,7 +13,7 @@ const meta: Meta<SearchComponent> = {
 - \`--ds-search-bg-focus\` — default \`var(--surface-default)\`
 - \`--ds-search-border\` — default \`transparent\`
 - \`--ds-search-border-hover\` — default \`var(--border-default)\`
-- \`--ds-search-border-focus\` — default \`var(--brand)\`
+- \`--ds-search-border-focus\` — default \`var(--primary)\`
 - \`--ds-search-focus-shadow\` — default \`var(--focus-field)\`
 - \`--ds-search-fg\` — default \`var(--text-primary)\`
 - \`--ds-search-placeholder\` — default \`var(--text-tertiary)\`

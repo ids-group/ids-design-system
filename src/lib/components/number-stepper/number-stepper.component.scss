@@ -11,7 +11,7 @@
   overflow: hidden;
 
   &:focus-within {
-    border-color: var(--brand);
+    border-color: var(--primary);
     box-shadow: var(--focus-field);
   }
 
@@ -67,7 +67,7 @@
   }
 
   &:active:not(:disabled) {
-    background: var(--brand-muted);
+    background: var(--primary-muted);
   }
 
   &:disabled {

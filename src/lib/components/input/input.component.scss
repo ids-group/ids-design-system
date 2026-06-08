@@ -11,15 +11,15 @@
   --ds-input-bg: var(--surface-default);
   --ds-input-border: var(--border-default);
   --ds-input-border-hover: var(--border-strong);
-  --ds-input-border-focus: var(--brand);
+  --ds-input-border-focus: var(--primary);
   --ds-input-fg: var(--text-primary);
   --ds-input-placeholder: var(--text-tertiary);
   --ds-input-radius: var(--r-md);
   --ds-input-pad-x: var(--field-pad-x);
   --ds-input-pad-y: var(--field-pad-y);
   --ds-input-focus-shadow: var(--focus-field);
-  --ds-input-border-error: var(--danger);
-  --ds-input-bg-error: var(--danger-subtle);
+  --ds-input-border-error: var(--error);
+  --ds-input-bg-error: var(--error-subtle);
   --ds-input-border-success: var(--success);
   --ds-input-bg-disabled: var(--surface-disabled);
   --ds-input-label-color: var(--text-secondary);
@@ -46,7 +46,7 @@
     gap: var(--s-1);
 
     .req {
-      color: var(--danger);
+      color: var(--error);
       font-weight: var(--fw-semibold);
     }
 
@@ -176,7 +176,7 @@
       }
     }
     .hint {
-      color: var(--danger-text);
+      color: var(--error-text);
     }
   }
 

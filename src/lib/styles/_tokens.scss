@@ -51,10 +51,10 @@
      across any brand hue. Override per theme if the brand is too light. */
   --btn-split-divider: hsla(0, 0%, 100%, .25);
 
-  /* Visited link — derives from --brand-muted by default so it sympathetically
+  /* Visited link — derives from --primary-muted by default so it sympathetically
      shifts with the brand hue. Override (e.g. for financial dashboards that
      want neutral-grey visited links) by setting this token directly. */
-  --link-visited:      hsl(var(--brand-h) calc(var(--brand-s) * 0.6) 45%);
+  --link-visited:      hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%);
 
   /* Borders */
   --border-default:    var(--neutral-200);
@@ -76,7 +76,7 @@
   --text-on-media:        var(--neutral-0);
   --text-on-media-shadow: 0 1px 3px hsla(0, 0%, 0%, .7);
   --text-link:         var(--violet-700);
-  --text-on-brand:     var(--neutral-0);
+  --text-on-primary:     var(--neutral-0);
   --text-on-success:   var(--neutral-0);
   --text-on-error:     var(--neutral-0);
 
@@ -84,32 +84,32 @@
   --icon-default:      var(--neutral-500);
   --icon-strong:       var(--neutral-700);
   --icon-muted:        var(--neutral-400);
-  --icon-on-brand:     var(--neutral-0);
+  --icon-on-primary:     var(--neutral-0);
 
   /* Brand roles.
-     Hover / pressed / selected-hover are DERIVED from --brand at runtime via
-     color-mix() so a brand swap (overriding only --brand) propagates to every
+     Hover / pressed / selected-hover are DERIVED from --primary at runtime via
+     color-mix() so a brand swap (overriding only --primary) propagates to every
      interaction state automatically. A brand that wants a non-derived hover
      hue can still override these tokens directly.
      Step sizes (12% / 24% darker) mirror the violet 600→700→800 ramp. */
-  --brand:                 var(--violet-600);
-  --brand-hover:           color-mix(in srgb, var(--brand) 88%, black);
-  --brand-pressed:         color-mix(in srgb, var(--brand) 76%, black);
-  --brand-selected-hover:  color-mix(in srgb, var(--brand) 88%, black);
-  --brand-subtle:          var(--violet-50);
-  --brand-muted:           var(--violet-100);
-  --brand-muted-strong:    var(--violet-200);
-  --brand-strong:          var(--violet-700);
-  --brand-on:              var(--neutral-0);
+  --primary:                 var(--violet-600);
+  --primary-hover:           color-mix(in srgb, var(--primary) 88%, black);
+  --primary-pressed:         color-mix(in srgb, var(--primary) 76%, black);
+  --primary-selected-hover:  color-mix(in srgb, var(--primary) 88%, black);
+  --primary-subtle:          var(--violet-50);
+  --primary-muted:           var(--violet-100);
+  --primary-muted-strong:    var(--violet-200);
+  --primary-strong:          var(--violet-700);
+  --primary-on:              var(--neutral-0);
 
   /* Accent / secondary role — composed from --secondary-h/s/l channels.
      Channels default to brand values so unbranded apps render identical to
-     --brand. Override --secondary-h/s/l per-brand (or via the tweaks panel)
+     --primary. Override --secondary-h/s/l per-brand (or via the tweaks panel)
      to introduce a true secondary hue — --secondary recomposes automatically.
      Hover/pressed derive from --secondary so any hue change propagates. */
-  --secondary-h:       var(--brand-h);
-  --secondary-s:       var(--brand-s);
-  --secondary-l:       var(--brand-l);
+  --secondary-h:       var(--primary-h);
+  --secondary-s:       var(--primary-s);
+  --secondary-l:       var(--primary-l);
 
   --secondary:         hsl(var(--secondary-h), var(--secondary-s), var(--secondary-l));
   --secondary-hover:   color-mix(in srgb, var(--secondary) 88%, black);
@@ -117,31 +117,30 @@
   --secondary-strong:  hsl(var(--secondary-h), var(--secondary-s), calc(var(--secondary-l) - 11%));
   --secondary-subtle:  hsl(var(--secondary-h), 100%, 97%);
   --secondary-muted:   hsl(var(--secondary-h), 95%, 94%);
-  --secondary-on:      var(--brand-on);
+  --secondary-on:      var(--primary-on);
 
-  /* Accent — interactive visual marker (input focus border, tab indicator,
-     switcher accent, sidenav active rail, …). Mirrors the --brand /
-     --secondary token-family shape: HSL channels for halo composition,
-     hover/pressed via color-mix, subtle/muted ramps for accent surfaces.
-     Defaults to brand channels so single-accent themes render identical
-     to --brand. Multi-accent brands (e.g. MM2026: Topaz alongside Deep
-     Teal + Coral) override --accent-h/s/l (and optionally --accent
-     directly for non-HSL values). */
-  --accent-h:       var(--brand-h);
-  --accent-s:       var(--brand-s);
-  --accent-l:       var(--brand-l);
+  /* Tertiary — third brand hue. Used by the tertiary button variant and
+     tonal accents (decorative chips, hierarchy tones, indicators). Mirrors
+     the --primary / --secondary token-family shape: HSL channels for halo
+     composition, hover/pressed via color-mix, subtle/muted ramps for tonal
+     surfaces. Defaults to --primary channels so single-hue themes render
+     identical to primary. Multi-hue brands override --tertiary-h/s/l (or
+     --tertiary directly for non-HSL values). */
+  --tertiary-h:       var(--primary-h);
+  --tertiary-s:       var(--primary-s);
+  --tertiary-l:       var(--primary-l);
 
-  --accent:         hsl(var(--accent-h), var(--accent-s), var(--accent-l));
-  --accent-hover:   color-mix(in srgb, var(--accent) 88%, black);
-  --accent-pressed: color-mix(in srgb, var(--accent) 76%, black);
-  --accent-strong:  hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 11%));
-  --accent-subtle:  hsl(var(--accent-h), 100%, 97%);
-  --accent-muted:   hsl(var(--accent-h), 95%, 94%);
-  --accent-on:      var(--brand-on);
+  --tertiary:         hsl(var(--tertiary-h), var(--tertiary-s), var(--tertiary-l));
+  --tertiary-hover:   color-mix(in srgb, var(--tertiary) 88%, black);
+  --tertiary-pressed: color-mix(in srgb, var(--tertiary) 76%, black);
+  --tertiary-strong:  hsl(var(--tertiary-h), var(--tertiary-s), calc(var(--tertiary-l) - 11%));
+  --tertiary-subtle:  hsl(var(--tertiary-h), 100%, 97%);
+  --tertiary-muted:   hsl(var(--tertiary-h), 95%, 94%);
+  --tertiary-on:      var(--primary-on);
 
   /* Status roles.
      -hover / -pressed are derived from the base role via the same color-mix()
-     rule as --brand-hover. Override per role if a brand needs a non-derived
+     rule as --primary-hover. Override per role if a brand needs a non-derived
      hue. -text / -border / -subtle / -muted stay as ramp picks because their
      contrast targets are tuned, not procedural. */
   --success:           var(--green-500);
@@ -158,13 +157,13 @@
   --warning-border:    var(--yellow-200);
   --warning-text:      var(--yellow-700);
 
-  --danger:            var(--red-500);
-  --danger-hover:      color-mix(in srgb, var(--danger) 88%, black);
-  --danger-pressed:    color-mix(in srgb, var(--danger) 76%, black);
-  --danger-subtle:     var(--red-50);
-  --danger-muted:      var(--red-100);
-  --danger-border:     var(--red-200);
-  --danger-text:       var(--red-600);
+  --error:            var(--red-500);
+  --error-hover:      color-mix(in srgb, var(--error) 88%, black);
+  --error-pressed:    color-mix(in srgb, var(--error) 76%, black);
+  --error-subtle:     var(--red-50);
+  --error-muted:      var(--red-100);
+  --error-border:     var(--red-200);
+  --error-text:       var(--red-600);
 
   --info:              var(--blue-500);
   --info-hover:        color-mix(in srgb, var(--info) 88%, black);
@@ -174,7 +173,7 @@
   --info-text:         var(--blue-700);
 
   /* Status pills (event lifecycle).
-     DECISION: --status-confirmed-* chains through --brand-* so a
+     DECISION: --status-confirmed-* chains through --primary-* so a
      brand re-skin moves Confirmed with it. The other lifecycle
      stages are deliberately neutral/green/dark to keep semantic
      distance from brand. */
@@ -183,8 +182,8 @@
      pills are unified in the Badge component to consume these tokens. */
   --status-planning-bg:   var(--neutral-150);
   --status-planning-fg:   var(--neutral-700);
-  --status-confirmed-bg:  var(--brand-subtle);
-  --status-confirmed-fg:  var(--brand-strong);
+  --status-confirmed-bg:  var(--primary-subtle);
+  --status-confirmed-fg:  var(--primary-strong);
   --status-active-bg:     var(--green-50);
   --status-active-fg:     var(--green-700);
   --status-completed-bg:  var(--neutral-900);
@@ -192,13 +191,13 @@
 
   /* Focus rings.
      Outer halos use hsla() composed from brand/danger HSL channels
-     so re-skinning --brand-h propagates into focus state.
+     so re-skinning --primary-h propagates into focus state.
      The inner halo reads --surface-canvas so the ring stays visible
      in both light and dark themes (canvas flips, ring adapts). */
   --focus-ring-inner:        var(--surface-canvas);
-  --focus-ring-outer-h:      var(--brand-h);
-  --focus-ring-outer-s:      var(--brand-s);
-  --focus-ring-outer-l:      var(--brand-l);
+  --focus-ring-outer-h:      var(--primary-h);
+  --focus-ring-outer-s:      var(--primary-s);
+  --focus-ring-outer-l:      var(--primary-l);
   --focus-ring-outer-alpha:  1;
 
   --focus-ring:
@@ -207,18 +206,18 @@
   --focus-ring-inverted:
     0 0 0 2px var(--neutral-900),
     0 0 0 4px var(--violet-300);
-  --focus-ring-danger:
+  --focus-ring-error:
     0 0 0 2px var(--focus-ring-inner),
-    0 0 0 4px hsla(var(--danger-h), var(--danger-s), var(--danger-l), 1);
+    0 0 0 4px hsla(var(--error-h), var(--error-s), var(--error-l), 1);
 
   /* Field focus — coloured halo only (no double-ring). Derived from
      brand HSL so it tracks rebrand. Alpha is a token so dark themes
      can boost it for legibility. */
   --focus-field-alpha: .22;
   --focus-field:
-    0 0 0 3px hsla(var(--brand-h), var(--brand-s), var(--brand-l), var(--focus-field-alpha));
+    0 0 0 3px hsla(var(--primary-h), var(--primary-s), var(--primary-l), var(--focus-field-alpha));
   --focus-field-error:
-    0 0 0 3px hsla(var(--danger-h), var(--danger-s), var(--danger-l), var(--focus-field-alpha));
+    0 0 0 3px hsla(var(--error-h), var(--error-s), var(--error-l), var(--focus-field-alpha));
 
   /* ============================================================
      Spacing — 4 px base, with named half-steps where atoms need them
@@ -403,7 +402,7 @@
   --scrollbar-thumb:        var(--neutral-300);
   --scrollbar-thumb-hover:  var(--neutral-400);
   --scrollbar-thumb-active: var(--neutral-500);
-  --select-bg: color-mix(in srgb, var(--brand) 22%, transparent);
+  --select-bg: color-mix(in srgb, var(--primary) 22%, transparent);
   --col-cap-text:    720px;
   --col-cap-content: 1280px;
 
