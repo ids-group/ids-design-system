@@ -199,7 +199,7 @@ const COL_CAPS: readonly ColumnCap[] = [
     }
     .grid-tier__viz span {
       background: color-mix(in srgb, var(--primary) 16%, transparent);
-      border-radius: var(--r-xs);
+      border-radius: var(--r-sm);
     }
     .grid-tier__meta {
       display: grid;
