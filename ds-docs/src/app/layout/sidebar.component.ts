@@ -115,8 +115,8 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
       width: var(--s-8);
       height: var(--s-8);
       border-radius: var(--r-md);
-      background: var(--brand);
-      color: var(--brand-on);
+      background: var(--primary);
+      color: var(--primary-on);
       display: grid;
       place-items: center;
       font: var(--fw-extrabold) 16px/1 var(--font-sans);
@@ -154,8 +154,8 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
     }
     .link:hover { background: var(--surface-secondary); color: var(--text-primary); }
     .link.is-active {
-      background: var(--brand-subtle);
-      color: var(--brand-strong);
+      background: var(--primary-subtle);
+      color: var(--primary-strong);
       font-weight: var(--fw-bold);
     }
 

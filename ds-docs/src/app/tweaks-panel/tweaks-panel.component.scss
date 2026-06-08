@@ -49,15 +49,15 @@
       color: var(--text-secondary);
       &:hover { background: var(--surface-secondary); }
       &.active {
-        background: var(--brand-subtle);
-        color: var(--brand-strong);
+        background: var(--primary-subtle);
+        color: var(--primary-strong);
       }
     }
   }
 
   input[type="range"] {
     width: 100%;
-    accent-color: var(--brand);
+    accent-color: var(--primary);
   }
 
   .reset {

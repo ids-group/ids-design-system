@@ -14,10 +14,10 @@
   /* Per-component CSS tokens — defaults route through global semantic tokens.
      Aligned with ds/src/lib/components/button/button.component.scss so docs
      consumers can override the same vars. */
-  --ds-button-bg:           var(--brand);
-  --ds-button-bg-hover:     var(--brand-hover);
-  --ds-button-bg-active:    var(--brand-pressed);
-  --ds-button-fg:           var(--brand-on);
+  --ds-button-bg:           var(--primary);
+  --ds-button-bg-hover:     var(--primary-hover);
+  --ds-button-bg-active:    var(--primary-pressed);
+  --ds-button-fg:           var(--primary-on);
   --ds-button-border:       transparent;
   --ds-button-bg-disabled:  var(--surface-disabled);
   --ds-button-fg-disabled:  var(--text-disabled);
@@ -30,8 +30,8 @@
   gap: var(--s-2);
   font: var(--fw-extrabold) var(--fs-m)/var(--lh-flat) var(--font-sans);
   letter-spacing: var(--ls-wide);
-  color: var(--ds-button-fg, var(--brand-on));
-  background: var(--ds-button-bg, var(--brand));
+  color: var(--ds-button-fg, var(--primary-on));
+  background: var(--ds-button-bg, var(--primary));
   border: var(--bw-default) solid var(--ds-button-border, transparent);
   border-radius: var(--ds-button-radius, var(--r-md));
   padding: 0 var(--s-5);
@@ -47,8 +47,8 @@
     box-shadow var(--dur-fast) var(--ease-standard),
     color var(--dur-fast) var(--ease-standard);
 
-  &:hover  { background: var(--ds-button-bg-hover, var(--brand-hover)); }
-  &:active { background: var(--ds-button-bg-active, var(--brand-pressed)); transform: translateY(1px); }
+  &:hover  { background: var(--ds-button-bg-hover, var(--primary-hover)); }
+  &:active { background: var(--ds-button-bg-active, var(--primary-pressed)); transform: translateY(1px); }
   &:focus-visible { outline: none; box-shadow: var(--ds-button-focus-shadow, var(--focus-ring)); z-index: var(--btn-focus-z); }
 
   &[disabled],
@@ -73,16 +73,16 @@
   }
 
   &.secondary {
-    --ds-button-bg:        var(--brand-subtle);
-    --ds-button-fg:        var(--brand-strong);
-    --ds-button-bg-hover:  var(--brand-muted);
+    --ds-button-bg:        var(--primary-subtle);
+    --ds-button-fg:        var(--primary-strong);
+    --ds-button-bg-hover:  var(--primary-muted);
     --ds-button-bg-active: var(--violet-200);
   }
   &.tertiary {
     --ds-button-bg:        transparent;
-    --ds-button-fg:        var(--brand-strong);
-    --ds-button-bg-hover:  var(--brand-subtle);
-    --ds-button-bg-active: var(--brand-muted);
+    --ds-button-fg:        var(--primary-strong);
+    --ds-button-bg-hover:  var(--primary-subtle);
+    --ds-button-bg-active: var(--primary-muted);
   }
   &.ghost {
     --ds-button-bg:        transparent;
@@ -91,13 +91,13 @@
     --ds-button-bg-hover:  var(--surface-secondary);
     --ds-button-bg-active: var(--surface-secondary);
   }
-  &.danger {
-    --ds-button-bg:           var(--danger);
-    --ds-button-bg-hover:     var(--danger-hover);
-    --ds-button-bg-active:    var(--danger-pressed);
-    --ds-button-focus-shadow: var(--focus-ring-danger);
+  &.error {
+    --ds-button-bg:           var(--error);
+    --ds-button-bg-hover:     var(--error-hover);
+    --ds-button-bg-active:    var(--error-pressed);
+    --ds-button-focus-shadow: var(--focus-ring-error);
   }
-  &.link {
+  &.text {
     --ds-button-bg:        transparent;
     --ds-button-fg:        var(--text-link);
     --ds-button-border:    transparent;
@@ -107,7 +107,7 @@
     text-decoration: underline;
     text-underline-offset: var(--btn-link-uloff);
 
-    &:hover { color: var(--brand-pressed); }
+    &:hover { color: var(--primary-pressed); }
   }
 
   &.icon-only {
@@ -126,13 +126,13 @@
       border: var(--bw-strong) solid currentColor;
       border-right-color: transparent;
       border-radius: var(--r-pill);
-      color: var(--brand-on);
+      color: var(--primary-on);
       animation: ds-docs-spin var(--dur-loop-fast) linear infinite;
     }
   }
   &.secondary.loading::after,
   &.tertiary.loading::after,
-  &.ghost.loading::after { color: var(--brand-strong); }
+  &.ghost.loading::after { color: var(--primary-strong); }
 }
 
 @keyframes ds-docs-spin { to { transform: rotate(360deg); } }
@@ -176,9 +176,9 @@
 
   &:hover { background: var(--surface-secondary); color: var(--text-primary); }
   &[aria-pressed="true"] {
-    background: var(--brand-subtle);
-    border-color: var(--brand);
-    color: var(--brand-strong);
+    background: var(--primary-subtle);
+    border-color: var(--primary);
+    color: var(--primary-strong);
   }
   &:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 }
@@ -187,12 +187,12 @@
    Forced-state hooks — visually pin a component to one state.
    Ported from source `patterns.css`, adapted to our class names.
    ============================================================ */
-.button.is-forced-hover  { background: var(--ds-button-bg-hover, var(--brand-hover)); }
-.button.is-forced-active { background: var(--ds-button-bg-active, var(--brand-pressed)); transform: translateY(1px); }
+.button.is-forced-hover  { background: var(--ds-button-bg-hover, var(--primary-hover)); }
+.button.is-forced-active { background: var(--ds-button-bg-active, var(--primary-pressed)); transform: translateY(1px); }
 .button.is-forced-focus  { outline: none; box-shadow: var(--ds-button-focus-shadow, var(--focus-ring)); z-index: var(--btn-focus-z); }
-.button.link.is-forced-hover { background: transparent; text-decoration: underline; }
-.button.link.is-forced-focus { background: transparent; }
-.button.danger.is-forced-focus { box-shadow: var(--ds-button-focus-shadow, var(--focus-ring-danger)); }
+.button.text.is-forced-hover { background: transparent; text-decoration: underline; }
+.button.text.is-forced-focus { background: transparent; }
+.button.error.is-forced-focus { box-shadow: var(--ds-button-focus-shadow, var(--focus-ring-error)); }
 
 .button-toggle.is-forced-hover { background: var(--surface-secondary); }
 .button-toggle.is-forced-focus { outline: none; box-shadow: var(--focus-ring); }
@@ -213,15 +213,15 @@
   --ds-input-bg:             var(--surface-default);
   --ds-input-border:         var(--border-default);
   --ds-input-border-hover:   var(--border-strong);
-  --ds-input-border-focus:   var(--brand);
+  --ds-input-border-focus:   var(--primary);
   --ds-input-fg:             var(--text-primary);
   --ds-input-placeholder:    var(--text-tertiary);
   --ds-input-radius:         var(--r-md);
   --ds-input-pad-x:          var(--field-pad-x);
   --ds-input-pad-y:          var(--field-pad-y);
   --ds-input-focus-shadow:   var(--focus-field);
-  --ds-input-border-error:   var(--danger);
-  --ds-input-bg-error:       var(--danger-subtle);
+  --ds-input-border-error:   var(--error);
+  --ds-input-bg-error:       var(--error-subtle);
   --ds-input-border-success: var(--success);
   --ds-input-bg-disabled:    var(--surface-disabled);
 
@@ -235,7 +235,7 @@
     color: var(--text-secondary);
     display: flex; align-items: center; gap: var(--s-1);
   }
-  .label .req { color: var(--danger-text); }
+  .label .req { color: var(--error-text); }
 
   .control {
     display: flex; align-items: center; gap: var(--s-2);
@@ -265,7 +265,7 @@
 
     &:hover { border-color: var(--ds-input-border-hover, var(--border-strong)); }
     &:focus-within {
-      border-color: var(--ds-input-border-focus, var(--brand));
+      border-color: var(--ds-input-border-focus, var(--primary));
       box-shadow: var(--ds-input-focus-shadow, var(--focus-field));
     }
 
@@ -297,7 +297,7 @@
     /* Forced-state hooks — pin the visual without interaction. */
     &.is-forced-hover { border-color: var(--ds-input-border-hover, var(--border-strong)); }
     &.is-forced-focus {
-      border-color: var(--ds-input-border-focus, var(--brand));
+      border-color: var(--ds-input-border-focus, var(--primary));
       box-shadow: var(--ds-input-focus-shadow, var(--focus-field));
     }
   }
@@ -318,13 +318,13 @@
   &.disabled .control select { opacity: var(--opacity-muted); }
 
   &.error .control {
-    background: var(--ds-input-bg-error, var(--danger-subtle));
-    border-color: var(--ds-input-border-error, var(--danger));
+    background: var(--ds-input-bg-error, var(--error-subtle));
+    border-color: var(--ds-input-border-error, var(--error));
 
     &:focus-within { box-shadow: var(--focus-field-error); }
     &.is-forced-focus { box-shadow: var(--focus-field-error); }
   }
-  &.error .hint { color: var(--danger-text); }
+  &.error .hint { color: var(--error-text); }
 
   &.success .control { border-color: var(--ds-input-border-success, var(--success)); }
   &.success .hint { color: var(--success-text); }
@@ -395,7 +395,7 @@
     box-shadow var(--dur-fast) var(--ease-standard);
 
   &:hover { border-color: var(--border-strong); }
-  &:focus { border-color: var(--brand); box-shadow: var(--focus-field); }
+  &:focus { border-color: var(--primary); box-shadow: var(--focus-field); }
 }
 
 /* Number input with stacked steppers. */
@@ -407,7 +407,7 @@
   height: var(--hit-cozy);
   overflow: hidden;
 
-  &:focus-within { border-color: var(--brand); box-shadow: var(--focus-field); }
+  &:focus-within { border-color: var(--primary); box-shadow: var(--focus-field); }
 
   input {
     flex: 1; border: 0; outline: 0; padding: 0 var(--s-3);
@@ -482,11 +482,11 @@
 
   &.is-forced-hover { border-color: var(--border-strong); }
   &.is-forced-focus {
-    border-color: var(--brand);
+    border-color: var(--primary);
     box-shadow: var(--focus-field);
   }
   &.open {
-    border-color: var(--brand);
+    border-color: var(--primary);
     box-shadow: var(--focus-field);
 
     .chevron { transform: rotate(180deg); }
@@ -525,14 +525,14 @@
       flex: 1; min-width: 0;
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
-    .option-check { color: var(--brand); flex: 0 0 auto; }
+    .option-check { color: var(--primary); flex: 0 0 auto; }
 
     &.is-active { background: var(--surface-secondary); }
     &.is-selected {
-      background: var(--brand-subtle);
-      color: var(--brand-strong);
+      background: var(--primary-subtle);
+      color: var(--primary-strong);
 
-      .option-icon { color: var(--brand-strong); }
+      .option-icon { color: var(--primary-strong); }
     }
     &.is-disabled {
       color: var(--text-disabled);
@@ -568,7 +568,7 @@
     background var(--dur-fast) var(--ease-standard),
     border-color var(--dur-fast) var(--ease-standard);
 
-  &:hover:not(:disabled) { border-color: var(--brand); }
+  &:hover:not(:disabled) { border-color: var(--primary); }
   &:focus-visible        { outline: none; box-shadow: var(--focus-ring); }
   &:disabled {
     background: var(--surface-disabled);
@@ -576,7 +576,7 @@
     cursor: not-allowed;
   }
 
-  &.is-forced-hover { border-color: var(--brand); }
+  &.is-forced-hover { border-color: var(--primary); }
   &.is-forced-focus { outline: none; box-shadow: var(--focus-ring); }
 }
 
@@ -584,8 +584,8 @@
   border-radius: var(--r-sm);
 
   &:checked {
-    background: var(--brand);
-    border-color: var(--brand);
+    background: var(--primary);
+    border-color: var(--primary);
 
     &::after {
       content: "";
@@ -596,8 +596,8 @@
   }
 
   &:indeterminate {
-    background: var(--brand);
-    border-color: var(--brand);
+    background: var(--primary);
+    border-color: var(--primary);
 
     &::after {
       content: "";
@@ -613,7 +613,7 @@
   border-radius: var(--r-pill);
 
   &:checked {
-    border-color: var(--brand);
+    border-color: var(--primary);
     border-width: var(--radio-bw-checked);
 
     &::after {
@@ -621,7 +621,7 @@
       width: var(--radio-dot-size);
       height: var(--radio-dot-size);
       border-radius: var(--r-pill);
-      background: var(--brand);
+      background: var(--primary);
     }
   }
 }
@@ -652,13 +652,13 @@
     transition: transform var(--dur-base) var(--ease-standard);
   }
 
-  &:checked         { background: var(--brand); }
+  &:checked         { background: var(--primary); }
   &:checked::after  { transform: translateX(var(--switch-thumb-travel)); }
   &:focus-visible   { outline: none; box-shadow: var(--focus-ring); }
   &:disabled        { opacity: var(--opacity-disabled); cursor: not-allowed; }
 
   &.success:checked { background: var(--success); }
-  &.error:checked   { background: var(--danger); }
+  &.error:checked   { background: var(--error); }
 
   &.is-forced-focus { outline: none; box-shadow: var(--focus-ring); }
 }
@@ -719,7 +719,7 @@
     height: var(--slider-thumb-size);
     border-radius: var(--r-pill);
     background: var(--surface-default);
-    border: var(--slider-thumb-bw) solid var(--brand);
+    border: var(--slider-thumb-bw) solid var(--primary);
     cursor: grab;
     box-shadow: var(--z100);
   }
@@ -728,7 +728,7 @@
     height: var(--slider-thumb-size);
     border-radius: var(--r-pill);
     background: var(--surface-default);
-    border: var(--slider-thumb-bw) solid var(--brand);
+    border: var(--slider-thumb-bw) solid var(--primary);
     cursor: grab;
     box-shadow: var(--z100);
   }
@@ -751,7 +751,7 @@
      `.value` colour is intentionally left to inherit (original behaviour). */
   --ds-stat-label-color: var(--text-tertiary);
   --ds-stat-up-color:    var(--success-text);
-  --ds-stat-down-color:  var(--danger-text);
+  --ds-stat-down-color:  var(--error-text);
 
   .label {
     font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
@@ -767,7 +767,7 @@
     margin: 0;
     white-space: nowrap;
 
-    &.danger { color: var(--ds-stat-down-color, var(--danger-text)); }
+    &.danger { color: var(--ds-stat-down-color, var(--error-text)); }
   }
 
   .delta {
@@ -778,7 +778,7 @@
     margin-top: var(--s-2);
 
     &.up   { color: var(--ds-stat-up-color, var(--success-text)); }
-    &.down { color: var(--ds-stat-down-color, var(--danger-text)); }
+    &.down { color: var(--ds-stat-down-color, var(--error-text)); }
   }
 }
 
@@ -797,8 +797,8 @@
      Aligned with ds/src/lib/components/tabs/tabs.component.scss. */
   --ds-tab-fg:              var(--text-secondary);
   --ds-tab-fg-hover:        var(--text-primary);
-  --ds-tab-fg-active:       var(--brand);
-  --ds-tab-indicator-color: var(--brand);
+  --ds-tab-fg-active:       var(--primary);
+  --ds-tab-indicator-color: var(--primary);
   --ds-tab-indicator-width: var(--bw-strong);
   --ds-tab-pad-x:           var(--s-4);
   --ds-tab-pad-y:           var(--s-3);
@@ -828,8 +828,8 @@
 
     &:hover { color: var(--ds-tab-fg-hover, var(--text-primary)); }
     &.active {
-      color: var(--ds-tab-fg-active, var(--brand));
-      border-bottom-color: var(--ds-tab-indicator-color, var(--brand));
+      color: var(--ds-tab-fg-active, var(--primary));
+      border-bottom-color: var(--ds-tab-indicator-color, var(--primary));
     }
     &:focus-visible {
       outline: none;
@@ -918,8 +918,8 @@
   --ds-pagination-btn-fg:        var(--text-secondary);
   --ds-pagination-btn-fg-hover:  var(--text-primary);
   --ds-pagination-btn-border:    var(--border-default);
-  --ds-pagination-active-bg:     var(--brand);
-  --ds-pagination-active-fg:     var(--brand-on);
+  --ds-pagination-active-bg:     var(--primary);
+  --ds-pagination-active-fg:     var(--primary-on);
   --ds-pagination-radius:        var(--r-md);
 
   min-width: var(--hit-min);
@@ -939,9 +939,9 @@
     color: var(--ds-pagination-btn-fg-hover, var(--text-primary));
   }
   &.is-active {
-    background: var(--ds-pagination-active-bg, var(--brand));
-    color: var(--ds-pagination-active-fg, var(--brand-on));
-    border-color: var(--ds-pagination-active-bg, var(--brand));
+    background: var(--ds-pagination-active-bg, var(--primary));
+    color: var(--ds-pagination-active-fg, var(--primary-on));
+    border-color: var(--ds-pagination-active-bg, var(--primary));
   }
   &[disabled] {
     color: var(--text-disabled);
@@ -972,8 +972,8 @@
   /* Per-component CSS tokens — defaults route through global semantic tokens.
      Aligned with ds/src/lib/components/avatar/avatar.component.scss. */
   --ds-avatar-size:       var(--avatar-md);
-  --ds-avatar-bg:         var(--brand-muted);
-  --ds-avatar-fg:         var(--brand-strong);
+  --ds-avatar-bg:         var(--primary-muted);
+  --ds-avatar-fg:         var(--primary-strong);
   --ds-avatar-radius:     var(--r-pill);
   --ds-avatar-ring-color: var(--surface-default);
   --ds-avatar-ring-width: var(--avatar-bw-group);
@@ -983,8 +983,8 @@
   width: var(--ds-avatar-size, var(--avatar-md));
   height: var(--ds-avatar-size, var(--avatar-md));
   border-radius: var(--ds-avatar-radius, var(--r-pill));
-  background: var(--ds-avatar-bg, var(--brand-muted));
-  color: var(--ds-avatar-fg, var(--brand-strong));
+  background: var(--ds-avatar-bg, var(--primary-muted));
+  color: var(--ds-avatar-fg, var(--primary-strong));
   font: var(--fw-bold) var(--fs-xs)/var(--lh-flat) var(--font-sans);
   letter-spacing: var(--ls-wide);
   flex-shrink: 0;
@@ -1030,16 +1030,16 @@
   &:hover:not(.disabled):not([disabled]) { background: var(--ds-datepicker-day-hover-bg, var(--surface-secondary)); }
 
   &.muted        { color: var(--text-muted); }
-  &.today        { font-weight: var(--fw-bold); color: var(--ds-datepicker-day-today-fg, var(--brand)); }
-  &.selected     { background: var(--ds-datepicker-day-selected-bg, var(--brand)); color: var(--ds-datepicker-day-selected-fg, var(--brand-on)); }
-  &.in-range     { background: var(--ds-datepicker-day-range-bg, var(--brand-subtle)); color: var(--ds-datepicker-day-range-fg, var(--brand-strong)); border-radius: var(--r-flat); }
-  &.range-start  { border-top-left-radius: var(--r-sm); border-bottom-left-radius: var(--r-sm); background: var(--ds-datepicker-day-selected-bg, var(--brand)); color: var(--ds-datepicker-day-selected-fg, var(--brand-on)); }
-  &.range-end    { border-top-right-radius: var(--r-sm); border-bottom-right-radius: var(--r-sm); background: var(--ds-datepicker-day-selected-bg, var(--brand)); color: var(--ds-datepicker-day-selected-fg, var(--brand-on)); }
+  &.today        { font-weight: var(--fw-bold); color: var(--ds-datepicker-day-today-fg, var(--primary)); }
+  &.selected     { background: var(--ds-datepicker-day-selected-bg, var(--primary)); color: var(--ds-datepicker-day-selected-fg, var(--primary-on)); }
+  &.in-range     { background: var(--ds-datepicker-day-range-bg, var(--primary-subtle)); color: var(--ds-datepicker-day-range-fg, var(--primary-strong)); border-radius: var(--r-flat); }
+  &.range-start  { border-top-left-radius: var(--r-sm); border-bottom-left-radius: var(--r-sm); background: var(--ds-datepicker-day-selected-bg, var(--primary)); color: var(--ds-datepicker-day-selected-fg, var(--primary-on)); }
+  &.range-end    { border-top-right-radius: var(--r-sm); border-bottom-right-radius: var(--r-sm); background: var(--ds-datepicker-day-selected-bg, var(--primary)); color: var(--ds-datepicker-day-selected-fg, var(--primary-on)); }
   &.selected:hover:not(.disabled):not([disabled]),
   &.range-start:hover:not(.disabled):not([disabled]),
   &.range-end:hover:not(.disabled):not([disabled]) {
-    background: var(--ds-datepicker-day-selected-bg-hover, var(--brand-selected-hover));
-    color: var(--ds-datepicker-day-selected-fg, var(--brand-on));
+    background: var(--ds-datepicker-day-selected-bg-hover, var(--primary-selected-hover));
+    color: var(--ds-datepicker-day-selected-fg, var(--primary-on));
   }
   &.disabled,
   &[disabled]    { color: var(--ds-datepicker-day-disabled-fg, var(--text-disabled)); cursor: not-allowed; background: transparent; }
@@ -1048,8 +1048,8 @@
   &.selected.is-forced-hover,
   &.range-start.is-forced-hover,
   &.range-end.is-forced-hover {
-    background: var(--ds-datepicker-day-selected-bg-hover, var(--brand-selected-hover));
-    color: var(--ds-datepicker-day-selected-fg, var(--brand-on));
+    background: var(--ds-datepicker-day-selected-bg-hover, var(--primary-selected-hover));
+    color: var(--ds-datepicker-day-selected-fg, var(--primary-on));
   }
   &.is-forced-focus { outline: none; box-shadow: var(--focus-ring); }
 }
@@ -1077,11 +1077,11 @@
      Aligned with ds/src/lib/components/table/table.component.scss. */
   --ds-table-bg:              var(--surface-default);
   --ds-table-row-hover-bg:    var(--surface-secondary);
-  --ds-table-row-selected-bg: var(--brand-subtle);
+  --ds-table-row-selected-bg: var(--primary-subtle);
   --ds-table-head-bg:         var(--surface-secondary);
   --ds-table-head-fg:         var(--text-tertiary);
   --ds-table-divider:         var(--border-divider);
-  --ds-table-sort-active-fg:  var(--brand);
+  --ds-table-sort-active-fg:  var(--primary);
   --ds-table-cell-pad-x:      var(--table-cell-pad-x);
   --ds-table-cell-pad-y:      var(--table-cell-pad-y);
   --ds-table-radius:          var(--r-xl);
@@ -1145,7 +1145,7 @@
     }
 
     &.sorted-asc .sort-icon,
-    &.sorted-desc .sort-icon { opacity: 1; color: var(--ds-table-sort-active-fg, var(--brand)); }
+    &.sorted-desc .sort-icon { opacity: 1; color: var(--ds-table-sort-active-fg, var(--primary)); }
 
     &.numeric { text-align: right; }
     &.select-col { width: var(--s-10); }
@@ -1170,7 +1170,7 @@
     tr {
       &:last-child td { box-shadow: none; }
       &:hover td { background: var(--ds-table-row-hover-bg, var(--surface-secondary)); }
-      &.selected td { background: var(--ds-table-row-selected-bg, var(--brand-subtle)); }
+      &.selected td { background: var(--ds-table-row-selected-bg, var(--primary-subtle)); }
       &.clickable { cursor: pointer; }
     }
   }
@@ -1182,7 +1182,7 @@
 
   /* Zebra rows — odd-row tint for dense scans. */
   &.zebra tbody tr:nth-child(odd) td { background: var(--ds-table-row-hover-bg, var(--surface-secondary)); }
-  &.zebra tbody tr:hover td { background: var(--ds-table-row-selected-bg, var(--brand-subtle)); }
+  &.zebra tbody tr:hover td { background: var(--ds-table-row-selected-bg, var(--primary-subtle)); }
 
   &.skeleton-mode {
     tbody tr:hover td { background: transparent; cursor: default; }
@@ -1192,10 +1192,10 @@
   /* Forced-state hooks — pin a header / row to one state for static specimens. */
   thead th.is-forced-hover { background: var(--ds-table-row-hover-bg, var(--surface-secondary)); color: var(--text-secondary); }
   thead th.is-forced-sorted-asc .sort-icon,
-  thead th.is-forced-sorted-desc .sort-icon { opacity: 1; color: var(--ds-table-sort-active-fg, var(--brand)); }
+  thead th.is-forced-sorted-desc .sort-icon { opacity: 1; color: var(--ds-table-sort-active-fg, var(--primary)); }
 
   tbody tr.is-forced-hover td { background: var(--ds-table-row-hover-bg, var(--surface-secondary)); }
-  tbody tr.is-forced-selected td { background: var(--ds-table-row-selected-bg, var(--brand-subtle)); }
+  tbody tr.is-forced-selected td { background: var(--ds-table-row-selected-bg, var(--primary-subtle)); }
 }
 
 /* Bulk action bar — sticky pill at the bottom of a selection table. */
@@ -1268,17 +1268,17 @@
   /* Per-component CSS tokens — defaults route through global semantic tokens.
      Aligned with ds/src/lib/components/dropzone/dropzone.component.scss. */
   --ds-dropzone-bg:            var(--surface-default);
-  --ds-dropzone-bg-hover:      var(--brand-subtle);
-  --ds-dropzone-bg-active:     var(--brand-subtle);
+  --ds-dropzone-bg-hover:      var(--primary-subtle);
+  --ds-dropzone-bg-active:     var(--primary-subtle);
   --ds-dropzone-border:        var(--border-default);
-  --ds-dropzone-border-hover:  var(--brand);
-  --ds-dropzone-border-active: var(--brand);
+  --ds-dropzone-border-hover:  var(--primary);
+  --ds-dropzone-border-active: var(--primary);
   --ds-dropzone-fg:            var(--text-secondary);
-  --ds-dropzone-fg-active:     var(--brand-strong);
+  --ds-dropzone-fg-active:     var(--primary-strong);
   --ds-dropzone-radius:        var(--r-lg);
-  --ds-dropzone-file-progress: var(--brand);
+  --ds-dropzone-file-progress: var(--primary);
   --ds-dropzone-file-success:  var(--success);
-  --ds-dropzone-file-error:    var(--danger);
+  --ds-dropzone-file-error:    var(--error);
 
   display: flex;
   flex-direction: column;
@@ -1298,15 +1298,15 @@
     background var(--dur-fast) var(--ease-standard);
 
   &:hover:not(.disabled):not([disabled]) {
-    border-color: var(--ds-dropzone-border-hover, var(--brand));
-    background: var(--ds-dropzone-bg-hover, var(--brand-subtle));
-    color: var(--ds-dropzone-fg-active, var(--brand-strong));
+    border-color: var(--ds-dropzone-border-hover, var(--primary));
+    background: var(--ds-dropzone-bg-hover, var(--primary-subtle));
+    color: var(--ds-dropzone-fg-active, var(--primary-strong));
   }
   &.active,
   &.is-forced-active {
-    border-color: var(--ds-dropzone-border-active, var(--brand));
-    background: var(--ds-dropzone-bg-active, var(--brand-subtle));
-    color: var(--ds-dropzone-fg-active, var(--brand-strong));
+    border-color: var(--ds-dropzone-border-active, var(--primary));
+    background: var(--ds-dropzone-bg-active, var(--primary-subtle));
+    color: var(--ds-dropzone-fg-active, var(--primary-strong));
   }
   &.has-files {
     align-items: stretch;
@@ -1375,7 +1375,7 @@
   }
   .progress-fill {
     height: 100%;
-    background: var(--ds-dropzone-file-progress, var(--brand));
+    background: var(--ds-dropzone-file-progress, var(--primary));
     border-radius: var(--r-pill);
     transition: width var(--dur-base) var(--ease-standard);
   }
@@ -1392,16 +1392,16 @@
   }
 
   &.uploading {
-    .icon { color: var(--ds-dropzone-file-progress, var(--brand)); }
+    .icon { color: var(--ds-dropzone-file-progress, var(--primary)); }
   }
   &.success {
     border-color: var(--ds-dropzone-file-success, var(--success));
     .icon { color: var(--ds-dropzone-file-success, var(--success)); }
   }
   &.error {
-    border-color: var(--ds-dropzone-file-error, var(--danger));
-    .icon { color: var(--ds-dropzone-file-error, var(--danger)); }
-    .meta { color: var(--danger-text); }
+    border-color: var(--ds-dropzone-file-error, var(--error));
+    .icon { color: var(--ds-dropzone-file-error, var(--error)); }
+    .meta { color: var(--error-text); }
   }
 }
 
@@ -1464,18 +1464,18 @@
    so docs sections can render specimens without real interaction.
    ============================================================ */
 .link.is-forced-hover {
-  text-decoration-color: var(--brand);
-  color: var(--brand);
+  text-decoration-color: var(--primary);
+  color: var(--primary);
 }
 .link.is-forced-active {
-  color: var(--brand-strong);
-  text-decoration-color: var(--brand-strong);
+  color: var(--primary-strong);
+  text-decoration-color: var(--primary-strong);
 }
 .link.is-forced-focus {
   outline: none;
   box-shadow: var(--focus-ring);
   border-radius: var(--r-sm);
-  text-decoration-color: var(--brand);
+  text-decoration-color: var(--primary);
 }
 .link.is-disabled {
   color: var(--text-disabled);

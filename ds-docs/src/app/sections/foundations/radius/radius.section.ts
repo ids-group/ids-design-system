@@ -88,8 +88,8 @@ const RADII: readonly RadiusStop[] = [
         <div class="applied-cell">
           <div class="applied-cell__stage">
             <div class="demo-hero">
-              <div class="t-overline" style="color:var(--text-on-brand); opacity:.7">Q3 summary</div>
-              <div class="t-h4" style="color:var(--text-on-brand)">All systems green</div>
+              <div class="t-overline" style="color:var(--text-on-primary); opacity:.7">Q3 summary</div>
+              <div class="t-h4" style="color:var(--text-on-primary)">All systems green</div>
             </div>
           </div>
           <div class="applied-cell__label">--r-2xl · hero</div>
@@ -109,7 +109,7 @@ const RADII: readonly RadiusStop[] = [
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
@@ -197,8 +197,8 @@ const RADII: readonly RadiusStop[] = [
     .demo-btn {
       height: 40px; padding: 0 var(--s-4);
       font: var(--fw-semibold) var(--fs-s)/var(--lh-flat) var(--font-sans);
-      color: var(--text-on-brand);
-      background: var(--brand);
+      color: var(--text-on-primary);
+      background: var(--primary);
       border: 0;
       border-radius: var(--r-md);
       cursor: default;
@@ -221,7 +221,7 @@ const RADII: readonly RadiusStop[] = [
       width: 100%;
       display: grid; gap: var(--s-1);
       padding: var(--s-5) var(--s-5);
-      background: var(--brand);
+      background: var(--primary);
       border-radius: var(--r-2xl);
     }
 

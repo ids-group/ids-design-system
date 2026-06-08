@@ -341,7 +341,7 @@ import {
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); }
@@ -389,7 +389,7 @@ import {
        .control without real interaction. ::ng-deep reaches past the
        component's emulated encapsulation boundary. */
     .state-cell__stage.force-focus ::ng-deep .control {
-      border-color: var(--brand);
+      border-color: var(--primary);
       box-shadow: var(--focus-field);
     }
     .state-cell__stage.force-hover ::ng-deep .control {

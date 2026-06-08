@@ -186,7 +186,7 @@ const TRUNC: TruncRow[] = [
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); }
@@ -227,7 +227,7 @@ const TRUNC: TruncRow[] = [
       height: 24px;
       margin-top: -12px;
       border-radius: var(--r-pill);
-      background: var(--brand);
+      background: var(--primary);
     }
     /* Durations · shared easing, varying duration. Hover plays once.
        Animate 'left' (not translateX) — % inside translate references the

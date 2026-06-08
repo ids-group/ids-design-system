@@ -109,7 +109,7 @@ import { InputComponent, SelectComponent, ButtonComponent, IconComponent, type S
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
@@ -198,9 +198,9 @@ import { InputComponent, SelectComponent, ButtonComponent, IconComponent, type S
     }
     .pill--ghost { background: transparent; color: var(--text-secondary); }
     .pill--primary {
-      background: var(--brand);
-      color: var(--text-on-brand, #fff);
-      border-color: var(--brand);
+      background: var(--primary);
+      color: var(--text-on-primary, #fff);
+      border-color: var(--primary);
     }
 
     .rules {

@@ -147,7 +147,7 @@ const COL_CAPS: readonly ColumnCap[] = [
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
@@ -172,7 +172,7 @@ const COL_CAPS: readonly ColumnCap[] = [
       border-radius: var(--r-pill);
       overflow: hidden;
     }
-    .bp-row__fill { height: 100%; background: var(--brand); }
+    .bp-row__fill { height: 100%; background: var(--primary); }
 
     /* ---------- Grid tiers ---------- */
     .grid-tiers {
@@ -198,7 +198,7 @@ const COL_CAPS: readonly ColumnCap[] = [
       height: 48px;
     }
     .grid-tier__viz span {
-      background: color-mix(in srgb, var(--brand) 16%, transparent);
+      background: color-mix(in srgb, var(--primary) 16%, transparent);
       border-radius: var(--r-xs);
     }
     .grid-tier__meta {

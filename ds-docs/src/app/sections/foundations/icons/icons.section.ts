@@ -74,9 +74,9 @@ const SIZES: readonly SizeRow[] = [
           <ds-icon name="settings" [size]="20" />
           <code class="t-mono role-cell__tok">--icon-muted</code>
         </div>
-        <div class="role-cell role-cell--on-brand" style="color: var(--icon-on-brand)">
+        <div class="role-cell role-cell--on-brand" style="color: var(--icon-on-primary)">
           <ds-icon name="settings" [size]="20" />
-          <code class="t-mono role-cell__tok">--icon-on-brand</code>
+          <code class="t-mono role-cell__tok">--icon-on-primary</code>
         </div>
       </div>
 
@@ -104,7 +104,7 @@ const SIZES: readonly SizeRow[] = [
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
@@ -174,8 +174,8 @@ const SIZES: readonly SizeRow[] = [
       background: var(--surface-default);
     }
     .role-cell--on-brand {
-      background: var(--brand);
-      border-color: var(--brand);
+      background: var(--primary);
+      border-color: var(--primary);
     }
     .role-cell__tok {
       font-size: 11px;

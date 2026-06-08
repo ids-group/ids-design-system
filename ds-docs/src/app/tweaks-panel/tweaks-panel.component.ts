@@ -15,9 +15,9 @@ export class TweaksPanelComponent {
   protected readonly open = signal(false);
   protected readonly density = signal<'compact' | 'cozy' | 'comfy'>('cozy');
   protected readonly brand = signal<BrandPreview>('default');
-  protected readonly brandH = signal(218);
-  protected readonly brandS = signal(88);
-  protected readonly brandL = signal(48);
+  protected readonly primaryH = signal(218);
+  protected readonly primaryS = signal(88);
+  protected readonly primaryL = signal(48);
   protected readonly secondaryH = signal(218);
   protected readonly secondaryS = signal(88);
   protected readonly secondaryL = signal(48);
@@ -49,20 +49,20 @@ export class TweaksPanelComponent {
       // SSR / privacy-mode — silently ignore; signal state still applies.
     }
   }
-  protected setBrandH(value: string): void {
+  protected setPrimaryH(value: string): void {
     const v = Number(value);
-    this.brandH.set(v);
-    document.documentElement.style.setProperty('--brand-h', `${v}`);
+    this.primaryH.set(v);
+    document.documentElement.style.setProperty('--primary-h', `${v}`);
   }
-  protected setBrandS(value: string): void {
+  protected setPrimaryS(value: string): void {
     const v = Number(value);
-    this.brandS.set(v);
-    document.documentElement.style.setProperty('--brand-s', `${v}%`);
+    this.primaryS.set(v);
+    document.documentElement.style.setProperty('--primary-s', `${v}%`);
   }
-  protected setBrandL(value: string): void {
+  protected setPrimaryL(value: string): void {
     const v = Number(value);
-    this.brandL.set(v);
-    document.documentElement.style.setProperty('--brand-l', `${v}%`);
+    this.primaryL.set(v);
+    document.documentElement.style.setProperty('--primary-l', `${v}%`);
   }
   protected setSecondaryH(value: string): void {
     const v = Number(value);
@@ -85,15 +85,15 @@ export class TweaksPanelComponent {
     document.documentElement.style.setProperty('font-size', `${v}px`);
   }
   protected reset(): void {
-    ['--brand-h', '--brand-s', '--brand-l', '--secondary-h', '--secondary-s', '--secondary-l', 'font-size'].forEach((p) =>
+    ['--primary-h', '--primary-s', '--primary-l', '--secondary-h', '--secondary-s', '--secondary-l', 'font-size'].forEach((p) =>
       document.documentElement.style.removeProperty(p),
     );
     document.documentElement.removeAttribute('data-density');
     this.setBrand('default');
     this.density.set('cozy');
-    this.brandH.set(218);
-    this.brandS.set(88);
-    this.brandL.set(48);
+    this.primaryH.set(218);
+    this.primaryS.set(88);
+    this.primaryL.set(48);
     this.secondaryH.set(218);
     this.secondaryS.set(88);
     this.secondaryL.set(48);

@@ -86,7 +86,7 @@ import { BreadcrumbsComponent, IconComponent, SearchComponent, TopBarComponent, 
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
@@ -123,7 +123,7 @@ import { BreadcrumbsComponent, IconComponent, SearchComponent, TopBarComponent, 
         right: var(--s-1-5);
         width: var(--status-dot-size);
         height: var(--status-dot-size);
-        background: var(--danger);
+        background: var(--error);
         border: var(--bw-strong) solid var(--surface-default);
         border-radius: var(--r-pill);
       }
@@ -134,8 +134,8 @@ import { BreadcrumbsComponent, IconComponent, SearchComponent, TopBarComponent, 
       width: var(--avatar-sm);
       height: var(--avatar-sm);
       border-radius: var(--r-pill);
-      background: var(--brand-muted);
-      color: var(--brand-strong);
+      background: var(--primary-muted);
+      color: var(--primary-strong);
       font: var(--fw-bold) var(--fs-2xs)/var(--lh-flat) var(--font-sans);
       display: inline-grid;
       place-items: center;

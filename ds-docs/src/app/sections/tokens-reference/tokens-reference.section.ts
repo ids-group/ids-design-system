@@ -11,36 +11,36 @@ interface SizeRow { name: string; value: string; notes: string; }
 interface LayoutRow { name: string; value: string; notes: string; }
 interface MiscRow { name: string; value: string; renderAs: 'bar' | 'opacity' | 'literal'; notes: string; }
 
-const SEMANTIC_BRAND: readonly ColourRow[] = [
-  { name: '--brand',                value: 'var(--violet-600)',                       notes: 'Primary brand fill (buttons, links, focus ring outer).' },
-  { name: '--brand-hover',          value: 'color-mix(--brand 88%, black)',           notes: 'Hover state on brand fill.' },
-  { name: '--brand-pressed',        value: 'color-mix(--brand 76%, black)',           notes: 'Active / pressed state on brand fill.' },
-  { name: '--brand-selected-hover', value: 'color-mix(--brand 88%, black)',           notes: 'Hover on already-selected brand surfaces (e.g. active sidenav item hover).' },
-  { name: '--brand-subtle',         value: 'var(--violet-50)',                        notes: 'Light brand tint (active row, sidenav active item).' },
-  { name: '--brand-muted',          value: 'var(--violet-100)',                       notes: 'Slightly stronger tint than subtle.' },
-  { name: '--brand-muted-strong',   value: 'var(--violet-200)',                       notes: 'Strongest tint in the brand-muted family.' },
-  { name: '--brand-strong',         value: 'var(--violet-700)',                       notes: 'Darker brand for text on brand tints.' },
-  { name: '--brand-on',             value: 'var(--neutral-0)',                        notes: 'Text/icon colour ON brand fill.', inverted: true },
+const SEMANTIC_PRIMARY: readonly ColourRow[] = [
+  { name: '--primary',                value: 'var(--violet-600)',                       notes: 'Primary brand fill (buttons, links, focus ring outer).' },
+  { name: '--primary-hover',          value: 'color-mix(--primary 88%, black)',           notes: 'Hover state on brand fill.' },
+  { name: '--primary-pressed',        value: 'color-mix(--primary 76%, black)',           notes: 'Active / pressed state on brand fill.' },
+  { name: '--primary-selected-hover', value: 'color-mix(--primary 88%, black)',           notes: 'Hover on already-selected brand surfaces (e.g. active sidenav item hover).' },
+  { name: '--primary-subtle',         value: 'var(--violet-50)',                        notes: 'Light brand tint (active row, sidenav active item).' },
+  { name: '--primary-muted',          value: 'var(--violet-100)',                       notes: 'Slightly stronger tint than subtle.' },
+  { name: '--primary-muted-strong',   value: 'var(--violet-200)',                       notes: 'Strongest tint in the brand-muted family.' },
+  { name: '--primary-strong',         value: 'var(--violet-700)',                       notes: 'Darker brand for text on brand tints.' },
+  { name: '--primary-on',             value: 'var(--neutral-0)',                        notes: 'Text/icon colour ON brand fill.', inverted: true },
 ];
 
-const SEMANTIC_ACCENT: readonly ColourRow[] = [
-  { name: '--accent',         value: 'hsl(--accent-h, --accent-s, --accent-l)',  notes: 'Interactive marker — input focus border, tab indicator, switcher accent.' },
-  { name: '--accent-hover',   value: 'color-mix(--accent 88%, black)',           notes: 'Hover on accent fill.' },
-  { name: '--accent-pressed', value: 'color-mix(--accent 76%, black)',           notes: 'Pressed accent fill.' },
-  { name: '--accent-strong',  value: 'hsl(--accent-h, --accent-s, --accent-l - 11%)', notes: 'Darker accent for text on accent tints.' },
-  { name: '--accent-subtle',  value: 'hsl(--accent-h, 100%, 97%)',               notes: 'Light accent tint surface.' },
-  { name: '--accent-muted',   value: 'hsl(--accent-h, 95%, 94%)',                notes: 'Slightly stronger tint than subtle.' },
-  { name: '--accent-on',      value: 'var(--brand-on)',                          notes: 'Text/icon colour ON accent fill.', inverted: true },
+const SEMANTIC_TERTIARY: readonly ColourRow[] = [
+  { name: '--tertiary',         value: 'hsl(--tertiary-h, --tertiary-s, --tertiary-l)',  notes: 'Third brand hue — tertiary button fill, tonal chips, indicators.' },
+  { name: '--tertiary-hover',   value: 'color-mix(--tertiary 88%, black)',           notes: 'Hover on tertiary fill.' },
+  { name: '--tertiary-pressed', value: 'color-mix(--tertiary 76%, black)',           notes: 'Pressed tertiary fill.' },
+  { name: '--tertiary-strong',  value: 'hsl(--tertiary-h, --tertiary-s, --tertiary-l - 11%)', notes: 'Darker tertiary for text on tertiary tints.' },
+  { name: '--tertiary-subtle',  value: 'hsl(--tertiary-h, 100%, 97%)',               notes: 'Light tertiary tint surface.' },
+  { name: '--tertiary-muted',   value: 'hsl(--tertiary-h, 95%, 94%)',                notes: 'Slightly stronger tint than subtle.' },
+  { name: '--tertiary-on',      value: 'var(--primary-on)',                          notes: 'Text/icon colour ON tertiary fill.', inverted: true },
 ];
 
-const SEMANTIC_DANGER: readonly ColourRow[] = [
-  { name: '--danger',         value: 'var(--red-500)', notes: 'Destructive action fill, error border.' },
-  { name: '--danger-hover',   value: 'var(--red-600)', notes: 'Hover on danger fill.' },
-  { name: '--danger-pressed', value: 'var(--red-700)', notes: 'Pressed danger fill.' },
-  { name: '--danger-subtle',  value: 'var(--red-50)',  notes: 'Inline error banner background.' },
-  { name: '--danger-muted',   value: 'var(--red-100)', notes: 'Slightly stronger tint than subtle.' },
-  { name: '--danger-border',  value: 'var(--red-200)', notes: 'Border on subtle danger surfaces.' },
-  { name: '--danger-text',    value: 'var(--red-600)', notes: 'Body text on danger surfaces.' },
+const SEMANTIC_ERROR: readonly ColourRow[] = [
+  { name: '--error',         value: 'var(--red-500)', notes: 'Destructive action fill, error border.' },
+  { name: '--error-hover',   value: 'var(--red-600)', notes: 'Hover on danger fill.' },
+  { name: '--error-pressed', value: 'var(--red-700)', notes: 'Pressed danger fill.' },
+  { name: '--error-subtle',  value: 'var(--red-50)',  notes: 'Inline error banner background.' },
+  { name: '--error-muted',   value: 'var(--red-100)', notes: 'Slightly stronger tint than subtle.' },
+  { name: '--error-border',  value: 'var(--red-200)', notes: 'Border on subtle danger surfaces.' },
+  { name: '--error-text',    value: 'var(--red-600)', notes: 'Body text on danger surfaces.' },
 ];
 
 const SEMANTIC_SUCCESS: readonly ColourRow[] = [
@@ -78,7 +78,7 @@ const SEMANTIC_TEXT: readonly ColourRow[] = [
   { name: '--text-disabled',   value: 'var(--neutral-400)', notes: 'Disabled control text.' },
   { name: '--text-inverted',   value: 'var(--neutral-0)',   notes: 'Text ON dark surfaces.', inverted: true },
   { name: '--text-link',       value: 'var(--violet-700)',  notes: 'Hyperlink text.' },
-  { name: '--text-on-brand',   value: 'var(--neutral-0)',   notes: 'Text on brand fill.', inverted: true },
+  { name: '--text-on-primary',   value: 'var(--neutral-0)',   notes: 'Text on brand fill.', inverted: true },
   { name: '--text-on-success', value: 'var(--neutral-0)',   notes: 'Text on solid success fill.', inverted: true },
   { name: '--text-on-error',   value: 'var(--neutral-0)',   notes: 'Text on solid error fill.', inverted: true },
 ];
@@ -106,9 +106,9 @@ const SEMANTIC_BORDER: readonly ColourRow[] = [
 
 const SEMANTIC_FOCUS: readonly ColourRow[] = [
   { name: '--focus-ring-inner',       value: 'var(--surface-canvas)', notes: 'Inner ring band (reads canvas — flips with theme).' },
-  { name: '--focus-ring-outer-h',     value: 'var(--brand-h)',        notes: 'Outer halo hue channel — re-skin propagates.' },
-  { name: '--focus-ring-outer-s',     value: 'var(--brand-s)',        notes: 'Outer halo saturation channel.' },
-  { name: '--focus-ring-outer-l',     value: 'var(--brand-l)',        notes: 'Outer halo lightness channel.' },
+  { name: '--focus-ring-outer-h',     value: 'var(--primary-h)',        notes: 'Outer halo hue channel — re-skin propagates.' },
+  { name: '--focus-ring-outer-s',     value: 'var(--primary-s)',        notes: 'Outer halo saturation channel.' },
+  { name: '--focus-ring-outer-l',     value: 'var(--primary-l)',        notes: 'Outer halo lightness channel.' },
   { name: '--focus-ring-outer-alpha', value: '1',                     notes: 'Outer halo alpha.' },
   { name: '--focus-field-alpha',      value: '.22',                   notes: 'Field focus halo alpha (boost in dark themes).' },
 ];
@@ -303,10 +303,10 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     selector: '.button',
     description: 'Surface, fg, border, focus shadow, disabled, radius. Variants re-set only --ds-button-bg* / --ds-button-fg.',
     tokens: [
-      { name: '--ds-button-bg',           value: 'var(--brand)',            notes: 'Surface fill.' },
-      { name: '--ds-button-bg-hover',     value: 'var(--brand-hover)',      notes: 'Hover fill.' },
-      { name: '--ds-button-bg-active',    value: 'var(--brand-pressed)',    notes: 'Active/pressed fill.' },
-      { name: '--ds-button-fg',           value: 'var(--brand-on)',         notes: 'Label/icon colour.' },
+      { name: '--ds-button-bg',           value: 'var(--primary)',            notes: 'Surface fill.' },
+      { name: '--ds-button-bg-hover',     value: 'var(--primary-hover)',      notes: 'Hover fill.' },
+      { name: '--ds-button-bg-active',    value: 'var(--primary-pressed)',    notes: 'Active/pressed fill.' },
+      { name: '--ds-button-fg',           value: 'var(--primary-on)',         notes: 'Label/icon colour.' },
       { name: '--ds-button-border',       value: 'transparent',             notes: 'Border colour (variants override).' },
       { name: '--ds-button-bg-disabled',  value: 'var(--surface-disabled)', notes: 'Disabled fill.' },
       { name: '--ds-button-fg-disabled',  value: 'var(--text-disabled)',    notes: 'Disabled label.' },
@@ -342,8 +342,8 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     description: 'Initials & image avatar. Used inside avatar-group with ring.',
     tokens: [
       { name: '--ds-avatar-size',        value: 'var(--avatar-md)',       notes: 'Width / height.' },
-      { name: '--ds-avatar-bg',          value: 'var(--brand-muted)',     notes: 'Surface fill.' },
-      { name: '--ds-avatar-fg',          value: 'var(--brand-strong)',    notes: 'Initials colour.' },
+      { name: '--ds-avatar-bg',          value: 'var(--primary-muted)',     notes: 'Surface fill.' },
+      { name: '--ds-avatar-fg',          value: 'var(--primary-strong)',    notes: 'Initials colour.' },
       { name: '--ds-avatar-radius',      value: 'var(--r-pill)',          notes: 'Pill / square.' },
       { name: '--ds-avatar-ring-color',  value: 'var(--surface-default)', notes: 'Ring when stacked.' },
       { name: '--ds-avatar-ring-width',  value: 'var(--avatar-bw-group)', notes: 'Ring width when stacked.' },
@@ -385,7 +385,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-stat-label-color', value: 'var(--text-tertiary)',   notes: 'Label colour.' },
       { name: '--ds-stat-value-color', value: 'var(--text-primary)',    notes: 'Value colour.' },
       { name: '--ds-stat-up-color',    value: 'var(--success-text)',    notes: 'Positive delta.' },
-      { name: '--ds-stat-down-color',  value: 'var(--danger-text)',     notes: 'Negative delta.' },
+      { name: '--ds-stat-down-color',  value: 'var(--error-text)',     notes: 'Negative delta.' },
     ],
   },
   {
@@ -395,8 +395,8 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     tokens: [
       { name: '--ds-tab-fg',                 value: 'var(--text-secondary)',    notes: 'Default tab label.' },
       { name: '--ds-tab-fg-hover',           value: 'var(--text-primary)',      notes: 'Hover label.' },
-      { name: '--ds-tab-fg-active',          value: 'var(--brand)',             notes: 'Active label.' },
-      { name: '--ds-tab-indicator-color',    value: 'var(--brand)',             notes: 'Underline colour.' },
+      { name: '--ds-tab-fg-active',          value: 'var(--primary)',             notes: 'Active label.' },
+      { name: '--ds-tab-indicator-color',    value: 'var(--primary)',             notes: 'Underline colour.' },
       { name: '--ds-tab-indicator-width',    value: 'var(--bw-strong)',         notes: 'Underline thickness.' },
       { name: '--ds-tab-pad-x',              value: 'var(--s-4)',               notes: 'Horizontal padding.' },
       { name: '--ds-tab-pad-y',              value: 'var(--s-3)',               notes: 'Vertical padding.' },
@@ -413,15 +413,15 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-input-bg',             value: 'var(--surface-default)',  notes: 'Field fill.' },
       { name: '--ds-input-border',         value: 'var(--border-default)',   notes: 'Default border.' },
       { name: '--ds-input-border-hover',   value: 'var(--border-strong)',    notes: 'Hover border.' },
-      { name: '--ds-input-border-focus',   value: 'var(--brand)',            notes: 'Focus border.' },
+      { name: '--ds-input-border-focus',   value: 'var(--primary)',            notes: 'Focus border.' },
       { name: '--ds-input-fg',             value: 'var(--text-primary)',     notes: 'Value text.' },
       { name: '--ds-input-placeholder',    value: 'var(--text-tertiary)',    notes: 'Placeholder text.' },
       { name: '--ds-input-radius',         value: 'var(--r-md)',             notes: 'Corner radius.' },
       { name: '--ds-input-pad-x',          value: 'var(--field-pad-x)',      notes: 'Horizontal padding.' },
       { name: '--ds-input-pad-y',          value: 'var(--field-pad-y)',      notes: 'Vertical padding.' },
       { name: '--ds-input-focus-shadow',   value: 'var(--focus-field)',      notes: 'Focus halo.' },
-      { name: '--ds-input-border-error',   value: 'var(--danger)',           notes: 'Error border.' },
-      { name: '--ds-input-bg-error',       value: 'var(--danger-subtle)',    notes: 'Error fill tint.' },
+      { name: '--ds-input-border-error',   value: 'var(--error)',           notes: 'Error border.' },
+      { name: '--ds-input-bg-error',       value: 'var(--error-subtle)',    notes: 'Error fill tint.' },
       { name: '--ds-input-border-success', value: 'var(--success)',          notes: 'Success border.' },
       { name: '--ds-input-bg-disabled',    value: 'var(--surface-disabled)', notes: 'Disabled fill.' },
     ],
@@ -434,11 +434,11 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-input-bg',             value: 'var(--surface-default)',  notes: 'Field fill.' },
       { name: '--ds-input-border',         value: 'var(--border-default)',   notes: 'Default border.' },
       { name: '--ds-input-border-hover',   value: 'var(--border-strong)',    notes: 'Hover border.' },
-      { name: '--ds-input-border-focus',   value: 'var(--brand)',            notes: 'Focus border.' },
+      { name: '--ds-input-border-focus',   value: 'var(--primary)',            notes: 'Focus border.' },
       { name: '--ds-input-fg',             value: 'var(--text-primary)',     notes: 'Value text.' },
       { name: '--ds-input-radius',         value: 'var(--r-md)',             notes: 'Corner radius.' },
       { name: '--ds-input-focus-shadow',   value: 'var(--focus-field)',      notes: 'Focus halo.' },
-      { name: '--ds-input-border-error',   value: 'var(--danger)',           notes: 'Error border.' },
+      { name: '--ds-input-border-error',   value: 'var(--error)',           notes: 'Error border.' },
       { name: '--ds-input-border-success', value: 'var(--success)',          notes: 'Success border.' },
       { name: '--ds-input-bg-disabled',    value: 'var(--surface-disabled)', notes: 'Disabled fill.' },
     ],
@@ -452,7 +452,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-search-bg-focus',     value: 'var(--surface-default)',   notes: 'Focused fill.' },
       { name: '--ds-search-border',       value: 'transparent',              notes: 'Default border.' },
       { name: '--ds-search-border-hover', value: 'var(--border-default)',    notes: 'Hover border.' },
-      { name: '--ds-search-border-focus', value: 'var(--brand)',             notes: 'Focus border.' },
+      { name: '--ds-search-border-focus', value: 'var(--primary)',             notes: 'Focus border.' },
       { name: '--ds-search-focus-shadow', value: 'var(--focus-field)',       notes: 'Focus halo.' },
       { name: '--ds-search-fg',           value: 'var(--text-primary)',      notes: 'Query text.' },
       { name: '--ds-search-placeholder',  value: 'var(--text-tertiary)',     notes: 'Placeholder.' },
@@ -467,11 +467,11 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     tokens: [
       { name: '--ds-table-bg',              value: 'var(--surface-default)',   notes: 'Table fill.' },
       { name: '--ds-table-row-hover-bg',    value: 'var(--surface-secondary)', notes: 'Row hover fill.' },
-      { name: '--ds-table-row-selected-bg', value: 'var(--brand-subtle)',      notes: 'Selected row.' },
+      { name: '--ds-table-row-selected-bg', value: 'var(--primary-subtle)',      notes: 'Selected row.' },
       { name: '--ds-table-head-bg',         value: 'var(--surface-secondary)', notes: 'Head fill.' },
       { name: '--ds-table-head-fg',         value: 'var(--text-tertiary)',     notes: 'Head label.' },
       { name: '--ds-table-divider',         value: 'var(--border-divider)',    notes: 'Row divider.' },
-      { name: '--ds-table-sort-active-fg',  value: 'var(--brand)',             notes: 'Active sort caret.' },
+      { name: '--ds-table-sort-active-fg',  value: 'var(--primary)',             notes: 'Active sort caret.' },
       { name: '--ds-table-cell-pad-x',      value: 'var(--table-cell-pad-x)',  notes: 'Cell horizontal padding.' },
       { name: '--ds-table-cell-pad-y',      value: 'var(--table-cell-pad-y)',  notes: 'Cell vertical padding.' },
       { name: '--ds-table-radius',          value: 'var(--r-xl)',              notes: 'Outer corner radius.' },
@@ -487,8 +487,8 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-pagination-btn-fg',       value: 'var(--text-secondary)',    notes: 'Button label.' },
       { name: '--ds-pagination-btn-fg-hover', value: 'var(--text-primary)',      notes: 'Hover label.' },
       { name: '--ds-pagination-btn-border',   value: 'var(--border-default)',    notes: 'Button border.' },
-      { name: '--ds-pagination-active-bg',    value: 'var(--brand)',             notes: 'Active page fill.' },
-      { name: '--ds-pagination-active-fg',    value: 'var(--brand-on)',          notes: 'Active page label.' },
+      { name: '--ds-pagination-active-bg',    value: 'var(--primary)',             notes: 'Active page fill.' },
+      { name: '--ds-pagination-active-fg',    value: 'var(--primary-on)',          notes: 'Active page label.' },
       { name: '--ds-pagination-radius',       value: 'var(--r-md)',              notes: 'Button radius.' },
     ],
   },
@@ -501,11 +501,11 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-datepicker-border',          value: 'var(--border-default)',    notes: 'Popover border.' },
       { name: '--ds-datepicker-shadow',          value: 'var(--shadow-popover)',    notes: 'Popover shadow.' },
       { name: '--ds-datepicker-day-hover-bg',    value: 'var(--surface-secondary)', notes: 'Day hover fill.' },
-      { name: '--ds-datepicker-day-today-fg',    value: 'var(--brand)',             notes: 'Today label.' },
-      { name: '--ds-datepicker-day-selected-bg', value: 'var(--brand)',             notes: 'Selected day fill.' },
-      { name: '--ds-datepicker-day-selected-fg', value: 'var(--brand-on)',          notes: 'Selected day label.' },
-      { name: '--ds-datepicker-day-range-bg',    value: 'var(--brand-subtle)',      notes: 'Range fill.' },
-      { name: '--ds-datepicker-day-range-fg',    value: 'var(--brand-strong)',      notes: 'Range label.' },
+      { name: '--ds-datepicker-day-today-fg',    value: 'var(--primary)',             notes: 'Today label.' },
+      { name: '--ds-datepicker-day-selected-bg', value: 'var(--primary)',             notes: 'Selected day fill.' },
+      { name: '--ds-datepicker-day-selected-fg', value: 'var(--primary-on)',          notes: 'Selected day label.' },
+      { name: '--ds-datepicker-day-range-bg',    value: 'var(--primary-subtle)',      notes: 'Range fill.' },
+      { name: '--ds-datepicker-day-range-fg',    value: 'var(--primary-strong)',      notes: 'Range label.' },
       { name: '--ds-datepicker-day-disabled-fg', value: 'var(--text-disabled)',     notes: 'Disabled day label.' },
       { name: '--ds-datepicker-width',           value: 'var(--datepicker-w)',      notes: 'Calendar width.' },
     ],
@@ -516,7 +516,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     description: 'Inline link trail.',
     tokens: [
       { name: '--ds-breadcrumbs-fg',           value: 'var(--text-tertiary)', notes: 'Link colour.' },
-      { name: '--ds-breadcrumbs-fg-hover',     value: 'var(--brand)',         notes: 'Link hover.' },
+      { name: '--ds-breadcrumbs-fg-hover',     value: 'var(--primary)',         notes: 'Link hover.' },
       { name: '--ds-breadcrumbs-current-fg',   value: 'var(--text-primary)',  notes: 'Current crumb.' },
       { name: '--ds-breadcrumbs-separator-fg', value: 'var(--icon-muted)',    notes: 'Chevron / slash.' },
     ],
@@ -530,15 +530,15 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-sidenav-border',          value: 'var(--border-divider)',    notes: 'Rail border.' },
       { name: '--ds-sidenav-width',           value: 'var(--sidenav-w)',         notes: 'Expanded width.' },
       { name: '--ds-sidenav-width-collapsed', value: 'var(--sidenav-w-collapsed)', notes: 'Collapsed width.' },
-      { name: '--ds-sidenav-mark-bg',         value: 'var(--brand)',             notes: 'Brand mark fill.' },
-      { name: '--ds-sidenav-mark-fg',         value: 'var(--brand-on)',          notes: 'Brand mark label.' },
+      { name: '--ds-sidenav-mark-bg',         value: 'var(--primary)',             notes: 'Brand mark fill.' },
+      { name: '--ds-sidenav-mark-fg',         value: 'var(--primary-on)',          notes: 'Brand mark label.' },
       { name: '--ds-sidenav-item-fg',         value: 'var(--text-secondary)',    notes: 'Item label.' },
       { name: '--ds-sidenav-item-fg-hover',   value: 'var(--text-primary)',      notes: 'Item hover label.' },
       { name: '--ds-sidenav-item-bg-hover',   value: 'var(--surface-secondary)', notes: 'Item hover fill.' },
-      { name: '--ds-sidenav-item-bg-active',  value: 'var(--brand-subtle)',      notes: 'Active item fill.' },
-      { name: '--ds-sidenav-item-fg-active',  value: 'var(--brand-strong)',      notes: 'Active item label.' },
+      { name: '--ds-sidenav-item-bg-active',  value: 'var(--primary-subtle)',      notes: 'Active item fill.' },
+      { name: '--ds-sidenav-item-fg-active',  value: 'var(--primary-strong)',      notes: 'Active item label.' },
       { name: '--ds-sidenav-item-radius',     value: 'var(--r-md)',              notes: 'Item radius.' },
-      { name: '--ds-sidenav-alert-color',     value: 'var(--danger)',            notes: 'Alert pip colour.' },
+      { name: '--ds-sidenav-alert-color',     value: 'var(--error)',            notes: 'Alert pip colour.' },
       { name: '--ds-sidenav-group-fg',        value: 'var(--text-tertiary)',     notes: 'Group label colour.' },
     ],
   },
@@ -554,7 +554,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-topbar-action-fg-hover', value: 'var(--icon-strong)',       notes: 'Action hover icon.' },
       { name: '--ds-topbar-action-bg-hover', value: 'var(--surface-secondary)', notes: 'Action hover fill.' },
       { name: '--ds-topbar-title-fg',        value: 'var(--text-primary)',      notes: 'Title colour.' },
-      { name: '--ds-topbar-ping-color',      value: 'var(--danger)',            notes: 'Notification ping.' },
+      { name: '--ds-topbar-ping-color',      value: 'var(--error)',            notes: 'Notification ping.' },
     ],
   },
   {
@@ -573,14 +573,14 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
   {
     component: 'Modal',
     selector: '.modal',
-    description: 'Overlay dialog. Danger title fg is separate (--ds-modal-title-fg-danger).',
+    description: 'Overlay dialog. Danger title fg is separate (--ds-modal-title-fg-error).',
     tokens: [
       { name: '--ds-modal-bg',              value: 'var(--surface-overlay)', notes: 'Dialog fill.' },
       { name: '--ds-modal-radius',          value: 'var(--r-lg)',            notes: 'Corner radius.' },
       { name: '--ds-modal-shadow',          value: 'var(--shadow-modal)',    notes: 'Dialog shadow.' },
       { name: '--ds-modal-divider',         value: 'var(--border-divider)',  notes: 'Header/actions divider.' },
       { name: '--ds-modal-title-fg',        value: 'var(--text-primary)',    notes: 'Title colour.' },
-      { name: '--ds-modal-title-fg-danger', value: 'var(--danger-text)',     notes: 'Danger title colour.' },
+      { name: '--ds-modal-title-fg-error', value: 'var(--error-text)',     notes: 'Danger title colour.' },
       { name: '--ds-modal-close-fg',        value: 'var(--icon-default)',    notes: 'Close icon.' },
       { name: '--ds-modal-close-fg-hover',  value: 'var(--icon-strong)',     notes: 'Close icon hover.' },
       { name: '--ds-modal-backdrop',        value: 'var(--surface-scrim)',   notes: 'Backdrop scrim.' },
@@ -608,17 +608,17 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     description: 'File drop target + per-file state colours (progress / success / error).',
     tokens: [
       { name: '--ds-dropzone-bg',            value: 'var(--surface-default)', notes: 'Default fill.' },
-      { name: '--ds-dropzone-bg-hover',      value: 'var(--brand-subtle)',    notes: 'Hover fill.' },
-      { name: '--ds-dropzone-bg-active',     value: 'var(--brand-subtle)',    notes: 'Drag-active fill.' },
+      { name: '--ds-dropzone-bg-hover',      value: 'var(--primary-subtle)',    notes: 'Hover fill.' },
+      { name: '--ds-dropzone-bg-active',     value: 'var(--primary-subtle)',    notes: 'Drag-active fill.' },
       { name: '--ds-dropzone-border',        value: 'var(--border-default)',  notes: 'Default border.' },
-      { name: '--ds-dropzone-border-hover',  value: 'var(--brand)',           notes: 'Hover border.' },
-      { name: '--ds-dropzone-border-active', value: 'var(--brand)',           notes: 'Drag-active border.' },
+      { name: '--ds-dropzone-border-hover',  value: 'var(--primary)',           notes: 'Hover border.' },
+      { name: '--ds-dropzone-border-active', value: 'var(--primary)',           notes: 'Drag-active border.' },
       { name: '--ds-dropzone-fg',            value: 'var(--text-secondary)',  notes: 'Body text.' },
-      { name: '--ds-dropzone-fg-active',     value: 'var(--brand-strong)',    notes: 'Drag-active text.' },
+      { name: '--ds-dropzone-fg-active',     value: 'var(--primary-strong)',    notes: 'Drag-active text.' },
       { name: '--ds-dropzone-radius',        value: 'var(--r-lg)',            notes: 'Corner radius.' },
-      { name: '--ds-dropzone-file-progress', value: 'var(--brand)',           notes: 'Upload progress.' },
+      { name: '--ds-dropzone-file-progress', value: 'var(--primary)',           notes: 'Upload progress.' },
       { name: '--ds-dropzone-file-success',  value: 'var(--success)',         notes: 'Per-file success.' },
-      { name: '--ds-dropzone-file-error',    value: 'var(--danger)',          notes: 'Per-file error.' },
+      { name: '--ds-dropzone-file-error',    value: 'var(--error)',          notes: 'Per-file error.' },
     ],
   },
 ];
@@ -639,11 +639,11 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       <h3 class="block-title t-h4">Colour &mdash; semantic</h3>
       <p class="block-desc t-s">Role tokens that components consume. Re-skinning means remapping these to a different ramp.</p>
 
-      <div class="cat-sub t-overline">Brand</div>
+      <div class="cat-sub t-overline">Primary</div>
       <table class="ref-table">
         <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Resolved</th><th class="col-notes">Notes</th></tr></thead>
         <tbody>
-          @for (row of brandSemantic; track row.name) {
+          @for (row of primarySemantic; track row.name) {
             <tr>
               <td><code class="t-mono">{{ row.name }}</code></td>
               <td><code class="t-mono">{{ row.value }}</code></td>
@@ -654,14 +654,14 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         </tbody>
       </table>
 
-      <div class="cat-sub t-overline">Accent (interactive marker)</div>
+      <div class="cat-sub t-overline">Tertiary (third brand hue)</div>
       <p class="block-desc t-s">
-        Interactive accent — input focus border, tab indicator, switcher rail, sidenav active rail. Channels default to brand HSL so single-accent themes render identical to <code class="t-mono">--brand</code>; multi-accent brands override <code class="t-mono">--accent-h/s/l</code>.
+        Third brand hue — tertiary button fill, tonal chips, hierarchy tones, indicators. Channels default to <code class="t-mono">--primary</code> HSL so single-hue themes render identical to primary; multi-hue brands override <code class="t-mono">--tertiary-h/s/l</code>.
       </p>
       <table class="ref-table">
         <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Resolved</th><th class="col-notes">Notes</th></tr></thead>
         <tbody>
-          @for (row of accentSemantic; track row.name) {
+          @for (row of tertiarySemantic; track row.name) {
             <tr>
               <td><code class="t-mono">{{ row.name }}</code></td>
               <td><code class="t-mono">{{ row.value }}</code></td>
@@ -672,11 +672,11 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         </tbody>
       </table>
 
-      <div class="cat-sub t-overline">Danger</div>
+      <div class="cat-sub t-overline">Error</div>
       <table class="ref-table">
         <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Resolved</th><th class="col-notes">Notes</th></tr></thead>
         <tbody>
-          @for (row of dangerSemantic; track row.name) {
+          @for (row of errorSemantic; track row.name) {
             <tr>
               <td><code class="t-mono">{{ row.name }}</code></td>
               <td><code class="t-mono">{{ row.value }}</code></td>
@@ -802,9 +802,9 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
             <td>3px brand &alpha; 0.22 — single coloured halo.</td>
           </tr>
           <tr>
-            <td><code class="t-mono">--focus-ring-danger</code></td>
+            <td><code class="t-mono">--focus-ring-error</code></td>
             <td><code class="t-mono">composed shadow</code></td>
-            <td><span class="focus-demo focus-demo--danger"></span></td>
+            <td><span class="focus-demo focus-demo--error"></span></td>
             <td>Same shape as ring, danger hue.</td>
           </tr>
         </tbody>
@@ -1174,7 +1174,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-10); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
@@ -1228,7 +1228,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       display: inline-block;
       height: var(--s-3);
       min-width: 1px;
-      background: var(--brand);
+      background: var(--primary);
       border-radius: var(--r-sm);
       vertical-align: middle;
     }
@@ -1237,8 +1237,8 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       display: inline-block;
       width: var(--s-10);
       height: var(--s-10);
-      background: var(--brand-subtle);
-      border: var(--bw-default) solid var(--brand-muted);
+      background: var(--primary-subtle);
+      border: var(--bw-default) solid var(--primary-muted);
       vertical-align: middle;
     }
 
@@ -1253,8 +1253,8 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
 
     .hit-sample {
       display: inline-block;
-      background: var(--brand-subtle);
-      border: var(--bw-default) solid var(--brand-muted);
+      background: var(--primary-subtle);
+      border: var(--bw-default) solid var(--primary-muted);
       border-radius: var(--r-sm);
       vertical-align: middle;
     }
@@ -1299,7 +1299,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     }
     .focus-demo--ring   { box-shadow: var(--focus-ring); }
     .focus-demo--field  { box-shadow: var(--focus-field); }
-    .focus-demo--danger { box-shadow: var(--focus-ring-danger); }
+    .focus-demo--error { box-shadow: var(--focus-ring-error); }
 
     /* ---------- Typography samples ---------- */
     .sample-font {
@@ -1376,9 +1376,9 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
   `],
 })
 export class TokensReferenceSection {
-  protected readonly brandSemantic   = SEMANTIC_BRAND;
-  protected readonly accentSemantic  = SEMANTIC_ACCENT;
-  protected readonly dangerSemantic  = SEMANTIC_DANGER;
+  protected readonly primarySemantic   = SEMANTIC_PRIMARY;
+  protected readonly tertiarySemantic  = SEMANTIC_TERTIARY;
+  protected readonly errorSemantic  = SEMANTIC_ERROR;
   protected readonly successSemantic = SEMANTIC_SUCCESS;
   protected readonly warningSemantic = SEMANTIC_WARNING;
   protected readonly infoSemantic    = SEMANTIC_INFO;

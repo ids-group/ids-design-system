@@ -53,8 +53,8 @@ interface RampSpec {
       <h3 class="block-title t-h4">Secondary role</h3>
       <p class="block-desc t-s">
         The <code class="t-mono">--secondary</code> family is the DS's secondary colour role &mdash; a complementary tone for non-interactive emphasis (active rails, decorative indicators, accent pills).
-        Defaults at <code class="t-mono">:root</code> alias <code class="t-mono">--secondary</code> to <code class="t-mono">--brand</code> so unbranded apps render unchanged; per-brand overrides introduce a true secondary hue.
-        Secondary is <em>not</em> a second CTA &mdash; primary action stays on <code class="t-mono">--brand</code>. Opt-in adoptions: <code class="t-mono">&lt;ds-tabs class="secondary"&gt;</code>, <code class="t-mono">&lt;ds-badge variant="secondary"&gt;</code>, sidenav active rail, stat delta neutral.
+        Defaults at <code class="t-mono">:root</code> alias <code class="t-mono">--secondary</code> to <code class="t-mono">--primary</code> so unbranded apps render unchanged; per-brand overrides introduce a true secondary hue.
+        Secondary is <em>not</em> a second CTA &mdash; primary action stays on <code class="t-mono">--primary</code>. Opt-in adoptions: <code class="t-mono">&lt;ds-tabs class="secondary"&gt;</code>, <code class="t-mono">&lt;ds-badge variant="secondary"&gt;</code>, sidenav active rail, stat delta neutral.
       </p>
       <div class="role-grid">
         <div class="role-group">
@@ -96,7 +96,7 @@ interface RampSpec {
 
       <!-- ============================================================ Secondary in use -->
       <h3 class="block-title t-h4">Secondary in use</h3>
-      <p class="block-desc t-s">Live opt-in adoptions of <code class="t-mono">--secondary</code>. Default theme renders these identically to <code class="t-mono">--brand</code>; override via <code class="t-mono">[data-brand="..."]</code> to see the secondary hue.</p>
+      <p class="block-desc t-s">Live opt-in adoptions of <code class="t-mono">--secondary</code>. Default theme renders these identically to <code class="t-mono">--primary</code>; override via <code class="t-mono">[data-brand="..."]</code> to see the secondary hue.</p>
       <div class="secondary-demos">
         <div class="demo">
           <div class="t-overline">ds-badge</div>
@@ -150,7 +150,7 @@ interface RampSpec {
           <code class="t-mono">&lt;ds-card style="border-top: 3px solid var(--secondary)"&gt;</code>
         </div>
       </div>
-      <p class="block-desc t-s">All adoptions are opt-in (use a class or variant input). Default theme aliases <code class="t-mono">--secondary</code> to <code class="t-mono">--brand</code> so unbranded apps see no visual difference. Under <code class="t-mono">[data-brand="manage-my"]</code>, <code class="t-mono">--secondary</code> is Coral (#FF6156) &mdash; these examples then render in the brand accent.</p>
+      <p class="block-desc t-s">All adoptions are opt-in (use a class or variant input). Default theme aliases <code class="t-mono">--secondary</code> to <code class="t-mono">--primary</code> so unbranded apps see no visual difference. Under <code class="t-mono">[data-brand="manage-my"]</code>, <code class="t-mono">--secondary</code> is Coral (#FF6156) &mdash; these examples then render in the brand accent.</p>
 
       <!-- ============================================================ Semantic groups -->
       <h3 class="block-title t-h4">Semantic roles</h3>
@@ -198,7 +198,7 @@ interface RampSpec {
       <!-- ============================================================ Halo proof -->
       <h3 class="block-title t-h4">Focus halo proof</h3>
       <p class="block-desc t-s">
-        Outer halo is composed from brand HSL channels &mdash; a re-skin of <code class="t-mono">--brand-h</code> propagates straight into focus state.
+        Outer halo is composed from brand HSL channels &mdash; a re-skin of <code class="t-mono">--primary-h</code> propagates straight into focus state.
         Inner ring reads <code class="t-mono">--surface-canvas</code> so it stays visible across themes.
       </p>
       <div class="halo-stage">
@@ -222,10 +222,10 @@ interface RampSpec {
         </div>
         <div class="halo-cell">
           <div class="halo-stage__well">
-            <button class="halo-demo halo-demo--danger" type="button">Danger ring</button>
+            <button class="halo-demo halo-demo--error" type="button">Danger ring</button>
           </div>
           <div class="halo-cell__label">
-            <div class="halo-cell__title">--focus-ring-danger</div>
+            <div class="halo-cell__title">--focus-ring-error</div>
             <code class="t-mono">2px canvas + 4px danger</code>
           </div>
         </div>
@@ -278,7 +278,7 @@ interface RampSpec {
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
@@ -308,10 +308,10 @@ interface RampSpec {
     .halo-cell { display: grid; gap: var(--s-3); justify-items: center; }
     .halo-stage__well { display: grid; place-items: center; width: 100%; min-height: 96px; padding: var(--s-5); background: var(--surface-default); border: var(--bw-default) solid var(--border-default); border-radius: var(--r-md); }
     .halo-stage__well--inverted { background: var(--surface-inverted); border-color: var(--border-inverted); }
-    .halo-demo { font: var(--fw-bold) var(--fs-s)/var(--lh-flat) var(--font-sans); padding: var(--s-2) var(--s-4); background: var(--brand); color: var(--brand-on); border: var(--bw-default) solid transparent; border-radius: var(--r-md); cursor: pointer; }
+    .halo-demo { font: var(--fw-bold) var(--fs-s)/var(--lh-flat) var(--font-sans); padding: var(--s-2) var(--s-4); background: var(--primary); color: var(--primary-on); border: var(--bw-default) solid transparent; border-radius: var(--r-md); cursor: pointer; }
     .halo-demo--ring { box-shadow: var(--focus-ring); }
-    .halo-demo--field { background: var(--surface-default); color: var(--text-primary); border-color: var(--brand); box-shadow: var(--focus-field); }
-    .halo-demo--danger { background: var(--danger); color: var(--text-on-error); box-shadow: var(--focus-ring-danger); }
+    .halo-demo--field { background: var(--surface-default); color: var(--text-primary); border-color: var(--primary); box-shadow: var(--focus-field); }
+    .halo-demo--error { background: var(--error); color: var(--text-on-error); box-shadow: var(--focus-ring-error); }
     .halo-demo--inverted { background: var(--surface-inverted); color: var(--text-inverted); box-shadow: var(--focus-ring-inverted); }
     .halo-cell__label { text-align: center; display: grid; gap: var(--s-0-5); }
     .halo-cell__title { font: var(--fw-bold) var(--fs-2xs)/var(--lh-base) var(--font-sans); letter-spacing: var(--ls-wider); text-transform: uppercase; color: var(--text-tertiary); }
@@ -352,23 +352,23 @@ export class ColorSection {
 
   protected readonly groups: readonly SemanticGroup[] = [
     {
-      label: 'Brand',
+      label: 'Primary',
       swatches: [
-        { name: 'brand', token: '--brand' },
-        { name: 'brand-hover', token: '--brand-hover' },
-        { name: 'brand-pressed', token: '--brand-pressed' },
-        { name: 'brand-subtle', token: '--brand-subtle' },
-        { name: 'brand-muted', token: '--brand-muted' },
+        { name: 'primary', token: '--primary' },
+        { name: 'primary-hover', token: '--primary-hover' },
+        { name: 'primary-pressed', token: '--primary-pressed' },
+        { name: 'primary-subtle', token: '--primary-subtle' },
+        { name: 'primary-muted', token: '--primary-muted' },
       ],
     },
     {
-      label: 'Danger',
+      label: 'Error',
       swatches: [
-        { name: 'danger', token: '--danger' },
-        { name: 'danger-hover', token: '--danger-hover' },
-        { name: 'danger-subtle', token: '--danger-subtle' },
-        { name: 'danger-muted', token: '--danger-muted' },
-        { name: 'danger-border', token: '--danger-border' },
+        { name: 'error', token: '--error' },
+        { name: 'error-hover', token: '--error-hover' },
+        { name: 'error-subtle', token: '--error-subtle' },
+        { name: 'error-muted', token: '--error-muted' },
+        { name: 'error-border', token: '--error-border' },
       ],
     },
     {

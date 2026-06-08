@@ -61,7 +61,7 @@ import { IconComponent } from 'ds';
         </dd>
         <dt>Theme-color</dt>
         <dd>
-          <code class="t-mono">&lt;meta name="theme-color"&gt;</code> matches <code class="t-mono">--brand</code>
+          <code class="t-mono">&lt;meta name="theme-color"&gt;</code> matches <code class="t-mono">--primary</code>
           for branded chrome; reset to <code class="t-mono">--surface-default</code> on logout to avoid
           carry-over branding.
         </dd>
@@ -76,7 +76,7 @@ import { IconComponent } from 'ds';
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
 
@@ -120,8 +120,8 @@ import { IconComponent } from 'ds';
       .fav {
         width: var(--icon-md);
         height: var(--icon-md);
-        background: var(--brand);
-        color: var(--brand-on);
+        background: var(--primary);
+        color: var(--primary-on);
         border-radius: var(--r-sm);
         display: grid;
         place-items: center;
@@ -136,7 +136,7 @@ import { IconComponent } from 'ds';
           right: calc(var(--tab-spec-dot-offset) * -1);
           width: var(--s-2);
           height: var(--s-2);
-          background: var(--danger);
+          background: var(--error);
           border-radius: var(--r-pill);
           border: var(--bw-default) solid var(--surface-default);
         }

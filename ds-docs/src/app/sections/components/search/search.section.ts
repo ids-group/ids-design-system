@@ -83,7 +83,7 @@ import { IconComponent, SearchComponent } from 'ds';
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); }
@@ -118,7 +118,7 @@ import { IconComponent, SearchComponent } from 'ds';
 
     /* Showcase-only: pin focus-within visual without real interaction. */
     .state-cell__stage.force-focus ::ng-deep .search {
-      border-color: var(--brand);
+      border-color: var(--primary);
       box-shadow: var(--focus-ring);
     }
 

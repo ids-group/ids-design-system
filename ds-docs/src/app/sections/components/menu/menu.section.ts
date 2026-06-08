@@ -43,7 +43,7 @@ import { MenuComponent, MenuItemComponent } from 'ds';
 
       <!-- ============================================================ Danger -->
       <h3 class="block-title t-h4">Danger</h3>
-      <p class="block-desc t-s">Destructive action — colour pulled from <code>--danger-text</code>.</p>
+      <p class="block-desc t-s">Destructive action — colour pulled from <code>--error-text</code>.</p>
       <div class="stage">
         <ds-menu>
           <ds-menu-item icon="x" [danger]="true">Delete project</ds-menu-item>
@@ -66,7 +66,7 @@ import { MenuComponent, MenuItemComponent } from 'ds';
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); }

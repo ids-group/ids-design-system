@@ -78,7 +78,7 @@ interface TokenPair {
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
@@ -123,7 +123,7 @@ interface TokenPair {
     }
     .tile--good { background: var(--success-subtle, var(--surface-subtle)); }
     .tile--bad {
-      background: var(--danger-subtle, var(--surface-subtle));
+      background: var(--error-subtle, var(--surface-subtle));
       border-left: var(--bw-default) solid var(--border-divider);
     }
     .tile__tag {
@@ -137,8 +137,8 @@ interface TokenPair {
       text-transform: uppercase;
       letter-spacing: var(--ls-wider);
     }
-    .tile--good .tile__tag { background: var(--success, #1b8a4a); color: var(--text-on-brand, #fff); }
-    .tile--bad .tile__tag { background: var(--danger, #b3261e); color: var(--text-on-brand, #fff); }
+    .tile--good .tile__tag { background: var(--success, #1b8a4a); color: var(--text-on-primary, #fff); }
+    .tile--bad .tile__tag { background: var(--error, #b3261e); color: var(--text-on-primary, #fff); }
     .tile__code {
       margin: 0;
       padding: var(--s-2) var(--s-3);

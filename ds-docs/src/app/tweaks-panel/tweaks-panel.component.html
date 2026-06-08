@@ -20,16 +20,16 @@
         </div>
       </div>
       <div class="row">
-        <label class="label">Brand H ({{ brandH() }}°)</label>
-        <input type="range" min="0" max="360" [value]="brandH()" (input)="setBrandH($any($event.target).value)" />
+        <label class="label">Primary H ({{ primaryH() }}°)</label>
+        <input type="range" min="0" max="360" [value]="primaryH()" (input)="setPrimaryH($any($event.target).value)" />
       </div>
       <div class="row">
-        <label class="label">Brand S ({{ brandS() }}%)</label>
-        <input type="range" min="0" max="100" [value]="brandS()" (input)="setBrandS($any($event.target).value)" />
+        <label class="label">Primary S ({{ primaryS() }}%)</label>
+        <input type="range" min="0" max="100" [value]="primaryS()" (input)="setPrimaryS($any($event.target).value)" />
       </div>
       <div class="row">
-        <label class="label">Brand L ({{ brandL() }}%)</label>
-        <input type="range" min="0" max="100" [value]="brandL()" (input)="setBrandL($any($event.target).value)" />
+        <label class="label">Primary L ({{ primaryL() }}%)</label>
+        <input type="range" min="0" max="100" [value]="primaryL()" (input)="setPrimaryL($any($event.target).value)" />
       </div>
       <div class="row">
         <label class="label">Secondary H ({{ secondaryH() }}°)</label>

@@ -47,7 +47,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
                 Create <code class="t-mono">_brand-&lt;client&gt;.scss</code> in the consumer app's
                 styles folder. Inside <code class="t-mono">[data-brand="&lt;client&gt;"]</code>,
                 override the palette ramp (<code class="t-mono">--violet-50…900</code>),
-                brand HSL channels (<code class="t-mono">--brand-h/s/l</code>) and font stack.
+                brand HSL channels (<code class="t-mono">--primary-h/s/l</code>) and font stack.
                 Activate with <code class="t-mono">&lt;html data-brand="&lt;client&gt;"&gt;</code>.
                 Components stay untouched.
               </p>
@@ -151,7 +151,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
       border-bottom: var(--bw-default) solid var(--border-divider);
       margin-bottom: var(--s-12);
     }
-    .page-hero .eyebrow { color: var(--brand); }
+    .page-hero .eyebrow { color: var(--primary); }
     .page-hero .display {
       font: var(--fw-extrabold) 56px/1.05 var(--font-sans);
       letter-spacing: var(--ls-tight);
@@ -178,8 +178,8 @@ import { Component, ViewEncapsulation } from '@angular/core';
       font: var(--fw-semibold) var(--fs-xs)/1 var(--font-sans);
     }
     .badge.badge--solid {
-      background: var(--brand);
-      color: var(--brand-on);
+      background: var(--primary);
+      color: var(--primary-on);
     }
     .badge.badge--neutral {
       background: var(--surface-secondary);
@@ -189,7 +189,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 
     /* Start-here section */
     .start-section { display: block; }
-    .eyebrow { color: var(--brand); }
+    .eyebrow { color: var(--primary); }
     .title {
       font: var(--fw-extrabold) var(--fs-h2)/var(--lh-tight) var(--font-display);
       letter-spacing: var(--ls-tight);
@@ -225,7 +225,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
       font: var(--fw-extrabold) var(--fs-xs)/1 var(--font-sans);
       letter-spacing: var(--ls-wider);
       text-transform: uppercase;
-      color: var(--brand-strong);
+      color: var(--primary-strong);
       margin-bottom: var(--s-3);
     }
     .howto-title {
@@ -278,8 +278,8 @@ import { Component, ViewEncapsulation } from '@angular/core';
       width: 40px;
       height: 40px;
       border-radius: var(--r-md);
-      background: var(--brand-subtle);
-      color: var(--brand-strong);
+      background: var(--primary-subtle);
+      color: var(--primary-strong);
       display: grid;
       place-items: center;
       font: var(--fw-extrabold) var(--fs-m)/1 var(--font-sans);
@@ -300,7 +300,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
                   color var(--dur-fast) var(--ease-standard);
     }
     .start-link:hover .start-link__arrow {
-      color: var(--brand);
+      color: var(--primary);
       transform: translateX(2px);
     }
 

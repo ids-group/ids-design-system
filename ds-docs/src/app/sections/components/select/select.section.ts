@@ -291,7 +291,7 @@ import { DropdownComponent, IconComponent, type DropdownOption } from 'ds';
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); }
@@ -349,7 +349,7 @@ import { DropdownComponent, IconComponent, type DropdownOption } from 'ds';
       font: var(--fw-regular) var(--fs-xs)/var(--lh-base) var(--font-sans);
       color: var(--text-tertiary);
 
-      &.error { color: var(--danger-text); }
+      &.error { color: var(--error-text); }
     }
 
     .trunc {

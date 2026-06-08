@@ -19,9 +19,9 @@
 [data-brand="manage-my"] {
   // Brand colour channels (Deep Teal · #00414B ≈ hsl(189, 100%, 15%)).
   // Channel-split lets focus rings + halos retint with the brand.
-  --brand-h: 189;
-  --brand-s: 100%;
-  --brand-l: 15%;
+  --primary-h: 189;
+  --primary-s: 100%;
+  --primary-l: 15%;
 
   // Type stack — Manrope is the official Aeonik substitute documented in the
   // broker mockup; we follow the source CSS literally.
@@ -29,7 +29,7 @@
   --font-display: var(--font-sans);
   --font-heading: var(--font-sans);
 
-  // Brand ramp — overrides the DS violet ramp consumed by --brand* roles.
+  // Brand ramp — overrides the DS violet ramp consumed by --primary* roles.
   --violet-50:  #E4F0F2;       // brand-subtle (Ice Gray tinted)
   --violet-100: #C7E0E3;       // brand-muted
   --violet-200: #99C7CC;
@@ -41,17 +41,17 @@
   --violet-800: #001F25;       // brand-pressed
   --violet-900: #00141A;
 
-  // Direct brand role overrides so consumers using --brand-* land on the
+  // Direct brand role overrides so consumers using --primary-* land on the
   // calibrated palette even when not derived from the ramp above.
-  // --brand-hover / --brand-pressed are intentionally omitted — the DS
-  // derives them at runtime via color-mix(in srgb, var(--brand) 88%/76%, black),
-  // so a brand only needs to set --brand and the interaction states track it
+  // --primary-hover / --primary-pressed are intentionally omitted — the DS
+  // derives them at runtime via color-mix(in srgb, var(--primary) 88%/76%, black),
+  // so a brand only needs to set --primary and the interaction states track it
   // automatically.
-  --brand:         #00414B;
-  --brand-strong:  #002B32;
-  --brand-subtle:  #DAEAF0;    // Ice Gray
-  --brand-muted:   #B8D2DA;
-  --brand-on:      #FFFFFF;
+  --primary:         #00414B;
+  --primary-strong:  #002B32;
+  --primary-subtle:  #DAEAF0;    // Ice Gray
+  --primary-muted:   #B8D2DA;
+  --primary-on:      #FFFFFF;
 
   // Surfaces — light canvas with a touch of warmth.
   --surface-canvas:    #F5F5F7;       // Off White (page background)
@@ -72,7 +72,7 @@
   --text-tertiary:  #8A9AA1;
   --text-muted:     #A8B4BA;
   --text-link:      #002B32;
-  --text-on-brand:  #FFFFFF;
+  --text-on-primary:  #FFFFFF;
 
   // Icon roles
   --icon-default: #4D6670;
@@ -87,9 +87,9 @@
   --green-700:  #006A68;
 
   // Danger uses Coral (brand accent) instead of the default red.
-  --danger-h: 5;
-  --danger-s: 100%;
-  --danger-l: 67%;
+  --error-h: 5;
+  --error-s: 100%;
+  --error-l: 67%;
   --red-50:  #FFE6E3;
   --red-100: #FACFCB;
   --red-500: #FF6156;
@@ -97,7 +97,7 @@
   --red-700: #C2362C;
 
   // Accent role — Coral (PDF "Accent") and its Pale Apricot tint (PDF
-  // "Pale Apricot"). Distinct from --danger so we don't conflate "alert"
+  // "Pale Apricot"). Distinct from --error so we don't conflate "alert"
   // semantics with the brand-decorative accent used in hierarchy tones,
   // money-flow rows, and the H3 hierarchy node.
   --secondary-h: 5;
@@ -113,7 +113,7 @@
 
   // Hierarchy tone — H2 ring colour. Topaz (--green-500) at high luminance
   // for icon/tag chip backgrounds where the h2 node sits.
-  --brand-tint:     #C1E4E3;     // Topaz @ ~85% L (matches --green-100)
+  --primary-tint:     #C1E4E3;     // Topaz @ ~85% L (matches --green-100)
 
   // Muted Blue (PDF) — used as the h4 hierarchy tone for icons + amounts.
   // Distinct from --text-secondary which is a slightly different muted neutral.

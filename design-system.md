@@ -17,14 +17,14 @@ Loaded via `@use 'styles/tokens';` (when the consumer also `@use 'styles/ds';` t
 **Colour roles:**
 - Surfaces: `--surface-canvas`, `--surface-default`, `--surface-secondary`, `--surface-overlay`, `--surface-tint`, `--surface-disabled`, `--surface-muted`, `--surface-inverted`, `--surface-inverted-hover`, `--surface-scrim`
 - Borders: `--border-default`, `--border-strong`, `--border-subtle`, `--border-divider`, `--border-disabled`, `--border-inverted`
-- Text: `--text-primary`, `--text-secondary`, `--text-tertiary`, `--text-muted`, `--text-disabled`, `--text-inverted`, `--text-link`, `--text-on-brand`, `--text-on-success`, `--text-on-error`
-- Icons: `--icon-default`, `--icon-strong`, `--icon-muted`, `--icon-on-brand`
-- Brand: `--brand`, `--brand-hover`, `--brand-pressed`, `--brand-selected-hover`, `--brand-strong`, `--brand-subtle`, `--brand-muted`, `--brand-muted-strong`, `--brand-on`
-- Brand HSL channels: `--brand-h`, `--brand-s`, `--brand-l`
-- Secondary: `--secondary`, `--secondary-hover`, `--secondary-pressed`, `--secondary-strong`, `--secondary-subtle`, `--secondary-muted`, `--secondary-on` + HSL channels `--secondary-h/s/l`
-- Accent (interactive marker — focus borders, indicators): `--accent`, `--accent-hover`, `--accent-pressed`, `--accent-strong`, `--accent-subtle`, `--accent-muted`, `--accent-on` + HSL channels `--accent-h/s/l`
+- Text: `--text-primary`, `--text-secondary`, `--text-tertiary`, `--text-muted`, `--text-disabled`, `--text-inverted`, `--text-link`, `--text-on-primary`, `--text-on-success`, `--text-on-error`
+- Icons: `--icon-default`, `--icon-strong`, `--icon-muted`, `--icon-on-primary`
+- Primary (main brand fill): `--primary`, `--primary-hover`, `--primary-pressed`, `--primary-selected-hover`, `--primary-strong`, `--primary-subtle`, `--primary-muted`, `--primary-muted-strong`, `--primary-on` + HSL channels `--primary-h/s/l`
+- Secondary (paired CTAs, accent rails, opt-in variants): `--secondary`, `--secondary-hover`, `--secondary-pressed`, `--secondary-strong`, `--secondary-subtle`, `--secondary-muted`, `--secondary-on` + HSL channels `--secondary-h/s/l`
+- Tertiary (third brand hue — tertiary button, tonal chips, indicators): `--tertiary`, `--tertiary-hover`, `--tertiary-pressed`, `--tertiary-strong`, `--tertiary-subtle`, `--tertiary-muted`, `--tertiary-on` + HSL channels `--tertiary-h/s/l`
+- Error (destructive, was --danger): `--error`, `--error-hover`, `--error-pressed`, `--error-subtle`, `--error-muted`, `--error-border`, `--error-text` + HSL channels `--error-h/s/l`
 - Status: `--success`, `--success-hover`, `--success-subtle`, `--success-muted`, `--success-border`, `--success-text`
-- Status (warning/danger/info): same shape with prefix swapped
+- Status (warning/info): same shape with prefix swapped
 - Status pills: `--status-planning-bg/fg`, `--status-confirmed-bg/fg`, `--status-active-bg/fg`, `--status-completed-bg/fg`
 
 **Geometry:**
@@ -53,7 +53,7 @@ Loaded via `@use 'styles/tokens';` (when the consumer also `@use 'styles/ds';` t
 **Z-index:**
 - `--layer-base`, `--layer-raised`, `--layer-sticky`, `--layer-dropdown`, `--layer-overlay`, `--layer-drawer`, `--layer-modal`, `--layer-popover`, `--layer-toast`, `--layer-tooltip`
 
-**Focus rings:** `--focus-ring`, `--focus-ring-inverted`, `--focus-ring-danger`, `--focus-field`, `--focus-field-error`
+**Focus rings:** `--focus-ring`, `--focus-ring-inverted`, `--focus-ring-error`, `--focus-field`, `--focus-field-error`
 
 ---
 
@@ -110,7 +110,8 @@ The DS aggregate (`@use 'styles/ds'`) forwards the full stack: theme primitives 
 ### Form & input
 
 #### `<ds-button>` — `ButtonComponent`
-Inputs: `variant: ButtonVariant = 'primary'` (`'primary' | 'secondary' | 'tertiary' | 'ghost' | 'danger' | 'link'`), `size: ButtonSize = 'l'` (`'s' | 'm' | 'l' | 'sm' | 'md' | 'lg'` — legacy s/m/l = 24/32/40, canonical sm/md/lg = 32/40/48), `type: 'button' | 'submit' | 'reset' = 'button'`, `disabled: boolean = false`, `loading: boolean = false`, `iconOnly: boolean = false`
+Inputs: `variant: ButtonVariant = 'primary'` (`'primary' | 'secondary' | 'tertiary' | 'ghost' | 'outline' | 'error' | 'success' | 'warning' | 'text'`), `size: ButtonSize = 'l'` (`'s' | 'm' | 'l' | 'sm' | 'md' | 'lg'` — legacy s/m/l = 24/32/40, canonical sm/md/lg = 32/40/48), `type: 'button' | 'submit' | 'reset' = 'button'`, `disabled: boolean = false`, `loading: boolean = false`, `iconOnly: boolean = false`
+Variant → role mapping: `primary` → `--primary` fill · `secondary` → `--secondary` fill · `tertiary` → `--secondary-muted` tonal fill · `ghost` → chrome-on-hover (chromeless at rest in iconOnly) · `outline` → bordered surface (keeps border in iconOnly) · `error/success/warning` → status fills · `text` → no-chrome text button. (Renamed 2026-06 from danger→error, link→text; ghost+outline both kept — they differ in iconOnly mode.)
 Output: `(pressed): MouseEvent` — only fires when not disabled and not loading
 Content slots: default (label / leading or trailing icon)
 Tokens: `--ds-button-bg`, `--ds-button-bg-hover`, `--ds-button-bg-active`, `--ds-button-bg-disabled`, `--ds-button-fg`, `--ds-button-fg-disabled`, `--ds-button-border`, `--ds-button-radius`, `--ds-button-focus-shadow`
@@ -242,7 +243,7 @@ When `expandable=true` renders header button with toggle + caret; collapses body
 #### `<ds-sidenav-item>` — `SidenavItemComponent`
 Inputs: `icon: IconName | null = null` (optional — falls back to `[icon]` slot), `label: required string`, `href: string = ''`, `routerLink: string | readonly unknown[] | null = null`, `active: boolean = false`, `badge: number | null = null`, `hasAlert: boolean = false`
 Content slots: `[icon]` (custom icon when not using a DS IconName), `[trailing]` (right-aligned chrome — badges, indicators, kbd shortcuts)
-Tokens (on `:host`): `--ds-sidenav-item-fg`, `--ds-sidenav-item-fg-hover`, `--ds-sidenav-item-bg-hover`, `--ds-sidenav-item-bg-active` (default: `--brand`), `--ds-sidenav-item-fg-active` (default: `--text-on-brand`), `--ds-sidenav-item-accent` (left rail, default: `--secondary`), `--ds-sidenav-item-radius`, `--ds-sidenav-alert-color`
+Tokens (on `:host`): `--ds-sidenav-item-fg`, `--ds-sidenav-item-fg-hover`, `--ds-sidenav-item-bg-hover`, `--ds-sidenav-item-bg-active` (default: `--primary`), `--ds-sidenav-item-fg-active` (default: `--text-on-primary`), `--ds-sidenav-item-rail` (left rail, default: `--secondary`), `--ds-sidenav-item-radius`, `--ds-sidenav-alert-color`
 
 #### `<ds-topbar>` — `TopBarComponent`
 No inputs.
@@ -266,7 +267,7 @@ Output: `(navigate): BreadcrumbItem` — emits when an item with `href` is click
 Container holds `<ds-tab label="…">` children.
 Tabs inputs: `selectedIndex: model<number> = 0`, `variant: 'line' | 'pills' = 'line'`
 Tab inputs: `label: required string`, `icon: IconName | null = null`, `count: number | null = null`, `disabled: boolean = false`. The tab's projected content renders in the active panel.
-Tokens: `--ds-tab-fg`, `--ds-tab-fg-hover`, `--ds-tab-fg-active`, `--ds-tab-indicator-color`, `--ds-tab-indicator-width`, `--ds-tab-pad-x`, `--ds-tab-pad-y`, `--ds-tabs-divider`, `--ds-tabs-pills-bg`, `--ds-tab-pill-bg-hover` (inactive hover, defaults to `var(--brand-subtle)`), `--ds-tab-pill-bg-active` (defaults to `var(--surface-default)` — elevated card), `--ds-tab-pill-bg-active-hover` (defaults to `var(--brand-subtle)`), `--ds-tab-pill-fg-active` (defaults to `var(--brand-strong)`), `--ds-tab-pill-radius` (defaults to `var(--r-md)` — same as buttons/inputs; override per-instance to `var(--r-pill)` for fully round pills).
+Tokens: `--ds-tab-fg`, `--ds-tab-fg-hover`, `--ds-tab-fg-active`, `--ds-tab-indicator-color`, `--ds-tab-indicator-width`, `--ds-tab-pad-x`, `--ds-tab-pad-y`, `--ds-tabs-divider`, `--ds-tabs-pills-bg`, `--ds-tab-pill-bg-hover` (inactive hover, defaults to `var(--primary-subtle)`), `--ds-tab-pill-bg-active` (defaults to `var(--surface-default)` — elevated card), `--ds-tab-pill-bg-active-hover` (defaults to `var(--primary-subtle)`), `--ds-tab-pill-fg-active` (defaults to `var(--primary-strong)`), `--ds-tab-pill-radius` (defaults to `var(--r-md)` — same as buttons/inputs; override per-instance to `var(--r-pill)` for fully round pills).
 
 #### `<ds-stepper>` — `StepperComponent`
 Inputs: `steps: readonly string[] = []`, `current: number = 0`. Horizontal step indicator with done/active/upcoming nodes.

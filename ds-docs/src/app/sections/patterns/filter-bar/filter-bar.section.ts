@@ -38,7 +38,7 @@ import { SearchComponent, ButtonComponent, IconComponent, SelectComponent, TagCo
             <ds-tag [closable]="true">Member: Acme Holdings</ds-tag>
           </div>
 
-          <ds-button variant="link" size="m">Clear filters</ds-button>
+          <ds-button variant="text" size="m">Clear filters</ds-button>
         </div>
       </div>
 
@@ -64,7 +64,7 @@ import { SearchComponent, ButtonComponent, IconComponent, SelectComponent, TagCo
               <ds-tag [closable]="true">Confirmed</ds-tag>
               <ds-tag [closable]="true">Acme Holdings</ds-tag>
             </span>
-            <ds-button variant="link" size="s">Clear</ds-button>
+            <ds-button variant="text" size="s">Clear</ds-button>
           </div>
         </div>
       </div>
@@ -81,7 +81,7 @@ import { SearchComponent, ButtonComponent, IconComponent, SelectComponent, TagCo
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }

@@ -263,7 +263,7 @@ import { BadgeComponent, ButtonComponent, IconComponent } from 'ds';
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
 
@@ -286,7 +286,7 @@ import { BadgeComponent, ButtonComponent, IconComponent } from 'ds';
       width: 3px;
     }
     .pair::before { left: 0; background: var(--success, #1b8a4a); }
-    .pair::after { right: 0; background: var(--danger, #b3261e); }
+    .pair::after { right: 0; background: var(--error, #b3261e); }
     .cell {
       padding: var(--s-5);
       display: flex;
@@ -307,7 +307,7 @@ import { BadgeComponent, ButtonComponent, IconComponent } from 'ds';
       letter-spacing: var(--ls-wider);
     }
     .cell__tag--do { background: var(--success-subtle, #e4f5ec); color: var(--success-text, #0f5c2f); }
-    .cell__tag--dont { background: var(--danger-subtle, #fde7e6); color: var(--danger-text, #7a1812); }
+    .cell__tag--dont { background: var(--error-subtle, #fde7e6); color: var(--error-text, #7a1812); }
     .caption { color: var(--text-secondary); margin: 0; }
 
     .stage {
@@ -347,7 +347,7 @@ import { BadgeComponent, ButtonComponent, IconComponent } from 'ds';
       font-size: var(--fs-xs);
       margin-top: var(--s-1);
     }
-    .mini--drawer { border-left: 3px solid var(--brand); }
+    .mini--drawer { border-left: 3px solid var(--primary); }
     .mini--modal { box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.08)); }
     .mini--modal-stack {
       box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.08));
@@ -410,7 +410,7 @@ import { BadgeComponent, ButtonComponent, IconComponent } from 'ds';
       margin-top: var(--s-2);
       padding: var(--s-1) var(--s-2);
       background: var(--surface-inverted, #1a1a1a);
-      color: var(--text-on-brand, #fff);
+      color: var(--text-on-primary, #fff);
       font-size: var(--fs-xs);
       border-radius: var(--r-sm);
     }

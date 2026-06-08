@@ -3,7 +3,7 @@ import { ButtonComponent, IconComponent } from 'ds';
 
 interface VariantSpec {
   readonly label: string;
-  readonly key: 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'danger';
+  readonly key: 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'error';
 }
 
 @Component({
@@ -89,7 +89,7 @@ interface VariantSpec {
       </div>
 
       <!-- ============================================================ Variant states matrix -->
-      <h3 class="block-title t-h4">Variant states — secondary · ghost · danger · link</h3>
+      <h3 class="block-title t-h4">Variant states — secondary · ghost · error · text</h3>
       <div class="states states--cols-4">
         <!-- Secondary row -->
         <div class="state-cell">
@@ -127,40 +127,40 @@ interface VariantSpec {
           <div class="state-cell__label">Ghost · disabled</div>
         </div>
 
-        <!-- Danger row -->
+        <!-- Error row -->
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button danger">Delete</button></div>
-          <div class="state-cell__label">Danger · default</div>
+          <div class="state-cell__stage"><button class="button error">Delete</button></div>
+          <div class="state-cell__label">Error · default</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button danger is-forced-hover">Delete</button></div>
-          <div class="state-cell__label">Danger · hover</div>
+          <div class="state-cell__stage"><button class="button error is-forced-hover">Delete</button></div>
+          <div class="state-cell__label">Error · hover</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button danger is-forced-focus">Delete</button></div>
-          <div class="state-cell__label">Danger · focus</div>
+          <div class="state-cell__stage"><button class="button error is-forced-focus">Delete</button></div>
+          <div class="state-cell__label">Error · focus</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button danger" disabled>Delete</button></div>
-          <div class="state-cell__label">Danger · disabled</div>
+          <div class="state-cell__stage"><button class="button error" disabled>Delete</button></div>
+          <div class="state-cell__label">Error · disabled</div>
         </div>
 
-        <!-- Link row -->
+        <!-- Text row -->
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button link">View log</button></div>
-          <div class="state-cell__label">Link · default</div>
+          <div class="state-cell__stage"><button class="button text">View log</button></div>
+          <div class="state-cell__label">Text · default</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button link is-forced-hover">View log</button></div>
-          <div class="state-cell__label">Link · hover</div>
+          <div class="state-cell__stage"><button class="button text is-forced-hover">View log</button></div>
+          <div class="state-cell__label">Text · hover</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button link is-forced-focus">View log</button></div>
-          <div class="state-cell__label">Link · focus</div>
+          <div class="state-cell__stage"><button class="button text is-forced-focus">View log</button></div>
+          <div class="state-cell__label">Text · focus</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button link" disabled>View log</button></div>
-          <div class="state-cell__label">Link · disabled</div>
+          <div class="state-cell__stage"><button class="button text" disabled>View log</button></div>
+          <div class="state-cell__label">Text · disabled</div>
         </div>
       </div>
 
@@ -187,8 +187,8 @@ interface VariantSpec {
         </ds-button>
       </div>
 
-      <!-- ============================================================ Group · split · toggle · link -->
-      <h3 class="block-title t-h4">Button group · split · toggle · link</h3>
+      <!-- ============================================================ Group · split · toggle · text -->
+      <h3 class="block-title t-h4">Button group · split · toggle · text</h3>
       <div class="row">
         <div class="button-group">
           <button class="button ghost"><ds-icon name="grid" [size]="16" /></button>
@@ -201,7 +201,7 @@ interface VariantSpec {
         </div>
         <button class="button-toggle" aria-pressed="false"><ds-icon name="filter" [size]="14" /> Conflicts only</button>
         <button class="button-toggle" aria-pressed="true"><ds-icon name="check" [size]="14" /> Confirmed</button>
-        <ds-button variant="link">View activity log</ds-button>
+        <ds-button variant="text">View activity log</ds-button>
       </div>
 
       <!-- ============================================================ Truncation -->
@@ -230,7 +230,7 @@ interface VariantSpec {
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); }
@@ -318,6 +318,6 @@ export class ButtonSection {
     { label: 'Secondary', key: 'secondary' },
     { label: 'Tertiary',  key: 'tertiary' },
     { label: 'Ghost',     key: 'ghost' },
-    { label: 'Danger',    key: 'danger' },
+    { label: 'Error',    key: 'error' },
   ];
 }

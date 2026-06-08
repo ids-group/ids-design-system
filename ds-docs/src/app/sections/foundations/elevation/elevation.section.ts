@@ -147,7 +147,7 @@ const TRUNC: TruncRow[] = [
                   <div class="demo-menu-item">Edit row</div>
                   <div class="demo-menu-item">Duplicate</div>
                   <div class="demo-menu-sep"></div>
-                  <div class="demo-menu-item demo-menu-item--danger">Delete</div>
+                  <div class="demo-menu-item demo-menu-item--error">Delete</div>
                 </div>
               }
               @if (demo.stage === 'toast') {
@@ -196,7 +196,7 @@ const TRUNC: TruncRow[] = [
   styles: [`
     :host { display: block; }
     section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--brand); margin-bottom: var(--s-2); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); }
@@ -281,7 +281,7 @@ const TRUNC: TruncRow[] = [
       color: var(--text-primary);
       border-radius: var(--r-md);
     }
-    .demo-menu-item--danger { color: var(--danger-text); }
+    .demo-menu-item--error { color: var(--error-text); }
     .demo-menu-sep {
       height: var(--bw-default);
       margin: var(--s-1) var(--s-2);
@@ -350,7 +350,7 @@ const TRUNC: TruncRow[] = [
     .demo-btn {
       height: 28px;
       padding: 0 var(--s-3);
-      background: var(--brand);
+      background: var(--primary);
       color: var(--neutral-0);
       border: 0;
       border-radius: var(--r-md);
