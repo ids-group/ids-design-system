@@ -118,4 +118,11 @@
 
 .panel {
   padding-top: var(--s-3);
+
+  /* When tabs are used purely as a filter selector (content rendered outside
+     the panel), the empty panel would still add its padding-top as a phantom
+     gap. Collapse it when there's nothing to show. */
+  &:empty {
+    display: none;
+  }
 }
