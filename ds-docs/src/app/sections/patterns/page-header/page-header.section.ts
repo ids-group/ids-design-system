@@ -46,7 +46,7 @@ import {
             <ds-badge variant="active" [withDot]="true">Active</ds-badge>
           </div>
           <div actions>
-            <ds-button variant="ghost">
+            <ds-button variant="outline">
               <ds-icon name="download" [size]="14" /> Export
             </ds-button>
             <ds-button>
@@ -77,7 +77,7 @@ import {
           subtitle="3 lanes affected · auto-recompute on save"
         >
           <div actions>
-            <ds-button variant="ghost">Discard</ds-button>
+            <ds-button variant="outline">Discard</ds-button>
             <ds-button>Save</ds-button>
           </div>
         </ds-page-header>

@@ -61,7 +61,7 @@ import { ButtonComponent, EmptyStateComponent, IconComponent } from 'ds';
               <ds-button actions variant="primary" size="m">
                 <ds-icon name="rotate" [size]="14" /> Retry
               </ds-button>
-              <ds-button actions variant="ghost" size="m">Report issue</ds-button>
+              <ds-button actions variant="outline" size="m">Report issue</ds-button>
             </ds-empty-state>
           </div>
         </div>
@@ -78,8 +78,8 @@ import { ButtonComponent, EmptyStateComponent, IconComponent } from 'ds';
               variant="locked"
               title="You don't have access to this Logistics plan"
               body="Logistics plans are restricted to Logistics and Producer roles. Ask Alex Park or your team lead.">
-              <ds-button actions variant="ghost" size="m">Back to dashboard</ds-button>
-              <ds-button actions variant="ghost" size="m">Request access</ds-button>
+              <ds-button actions variant="outline" size="m">Back to dashboard</ds-button>
+              <ds-button actions variant="outline" size="m">Request access</ds-button>
             </ds-empty-state>
           </div>
         </div>

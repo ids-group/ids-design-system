@@ -71,7 +71,7 @@ import { BannerComponent, IconComponent } from 'ds';
               Changing the build start will recompute 3 Logistics plans and 12 Resource allocations across Alpha, Beta and Gamma.
               <ng-container actions>
                 <button class="button m">Preview impact</button>
-                <button class="button ghost m">Cancel</button>
+                <button class="button outline m">Cancel</button>
               </ng-container>
             </ds-banner>
           </div>
@@ -121,7 +121,7 @@ import { BannerComponent, IconComponent } from 'ds';
               Lane 04 is at 92% of the 95% volume cap. Re-balance allocations or raise the cap before scheduling new pickups.
               <ng-container actions>
                 <button class="button m">Re-balance</button>
-                <button class="button ghost m">Raise cap</button>
+                <button class="button outline m">Raise cap</button>
               </ng-container>
             </ds-banner>
           </div>

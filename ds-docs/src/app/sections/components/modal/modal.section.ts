@@ -25,7 +25,7 @@ import { BannerComponent, DropdownComponent, type DropdownOption, IconComponent,
             <ds-modal-card title="Quick confirm" size="sm" [showClose]="false">
               <span body>Tight modal for binary confirmations and short messages.</span>
               <ng-container actions>
-                <button class="button ghost">Cancel</button>
+                <button class="button outline">Cancel</button>
                 <button class="button">Confirm</button>
               </ng-container>
             </ds-modal-card>
@@ -37,7 +37,7 @@ import { BannerComponent, DropdownComponent, type DropdownOption, IconComponent,
             <ds-modal-card title="Edit Project Alpha" size="md" [showClose]="false">
               <span body>Default size. Most edits, detail dialogs, and confirmations with a paragraph of context.</span>
               <ng-container actions>
-                <button class="button ghost">Cancel</button>
+                <button class="button outline">Cancel</button>
                 <button class="button">Save</button>
               </ng-container>
             </ds-modal-card>
@@ -49,7 +49,7 @@ import { BannerComponent, DropdownComponent, type DropdownOption, IconComponent,
             <ds-modal-card title="Run report" size="lg" [showClose]="false">
               <span body>Wider canvas for forms, multi-column previews, and bulk-edit dialogs.</span>
               <ng-container actions>
-                <button class="button ghost">Cancel</button>
+                <button class="button outline">Cancel</button>
                 <button class="button">Run</button>
               </ng-container>
             </ds-modal-card>
@@ -67,7 +67,7 @@ import { BannerComponent, DropdownComponent, type DropdownOption, IconComponent,
             <ds-modal-card title="Save changes?" size="sm" [showClose]="false">
               <span body>Apply schedule changes to all 24 records?</span>
               <ng-container actions>
-                <button class="button ghost">Cancel</button>
+                <button class="button outline">Cancel</button>
                 <button class="button">Apply</button>
               </ng-container>
             </ds-modal-card>
@@ -79,7 +79,7 @@ import { BannerComponent, DropdownComponent, type DropdownOption, IconComponent,
             <ds-modal-card title="Delete record?" size="sm" [danger]="true" [showClose]="false">
               <span body>This cannot be undone. 12 resource allocations will be released.</span>
               <ng-container actions>
-                <button class="button ghost">Cancel</button>
+                <button class="button outline">Cancel</button>
                 <button class="button error">Delete</button>
               </ng-container>
             </ds-modal-card>
@@ -98,7 +98,7 @@ import { BannerComponent, DropdownComponent, type DropdownOption, IconComponent,
                 </ul>
               </ds-banner>
               <ng-container actions>
-                <button class="button ghost">Cancel</button>
+                <button class="button outline">Cancel</button>
                 <button class="button">Recompute &amp; save</button>
               </ng-container>
             </ds-modal-card>
@@ -129,7 +129,7 @@ import { BannerComponent, DropdownComponent, type DropdownOption, IconComponent,
                 </div>
               </div>
               <ng-container actions>
-                <button class="button ghost">Cancel</button>
+                <button class="button outline">Cancel</button>
                 <button class="button">Save changes</button>
               </ng-container>
             </ds-modal-card>

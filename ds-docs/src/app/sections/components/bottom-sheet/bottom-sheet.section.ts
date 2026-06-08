@@ -28,7 +28,7 @@ import { BottomSheetComponent, ButtonComponent } from 'ds';
             Update the vehicle registration. Changes apply to the current event only.
           </p>
           <div actions>
-            <ds-button variant="ghost" (pressed)="open.set(false)">Cancel</ds-button>
+            <ds-button variant="outline" (pressed)="open.set(false)">Cancel</ds-button>
             <ds-button (pressed)="open.set(false)">Save</ds-button>
           </div>
         </ds-bottom-sheet>

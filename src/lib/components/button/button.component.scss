@@ -90,15 +90,8 @@
     --ds-button-bg-hover:  var(--primary-subtle);
     --ds-button-bg-active: var(--primary-muted);
   }
-  &.ghost {
-    --ds-button-bg:        var(--surface-default);
-    --ds-button-fg:        var(--text-primary);
-    --ds-button-border:    var(--border-default);
-    --ds-button-bg-hover:  var(--surface-secondary);
-    --ds-button-bg-active: var(--surface-secondary);
-  }
-  /* Alias of ghost for text buttons (bordered neutral). Kept as a separate
-     name for call-site intent; icon-only affordances now live in ds-icon-button. */
+  /* Bordered neutral, low-emphasis. (Was also exposed as `ghost`; removed —
+     `ghost` implied chromeless, which this isn't. Icon-only lives in ds-icon-button.) */
   &.outline {
     --ds-button-bg:        var(--surface-default);
     --ds-button-fg:        var(--text-primary);
@@ -157,7 +150,7 @@
 
   &.secondary.loading::after,
   &.tertiary.loading::after,
-  &.ghost.loading::after { color: var(--primary-strong); }
+  &.outline.loading::after { color: var(--primary-strong); }
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }

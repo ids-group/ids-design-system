@@ -40,7 +40,7 @@ export const Default: Story = {
       <ds-modal [open]="open" [size]="size" [danger]="danger" [title]="title">
         <p body style="margin: 0">Are you sure you want to continue with this action?</p>
         <ng-container actions>
-          <ds-button variant="ghost">Cancel</ds-button>
+          <ds-button variant="outline">Cancel</ds-button>
           <ds-button variant="primary">Confirm</ds-button>
         </ng-container>
       </ds-modal>

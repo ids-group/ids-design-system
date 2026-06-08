@@ -26,7 +26,7 @@ import { SearchComponent, ButtonComponent, IconComponent, SelectComponent, TagCo
           <ds-select [options]="statusOptions" placeholder="Status" size="sm" />
           <ds-select [options]="memberOptions" placeholder="Member" size="sm" />
 
-          <ds-button variant="ghost" size="m">
+          <ds-button variant="outline" size="m">
             <ds-icon name="filter" [size]="14" /> More filters
           </ds-button>
 
@@ -57,7 +57,7 @@ import { SearchComponent, ButtonComponent, IconComponent, SelectComponent, TagCo
           <div class="row row--bottom">
             <ds-select [options]="statusOptions" placeholder="Status" size="sm" />
             <ds-select [options]="memberOptions" placeholder="Member" size="sm" />
-            <ds-button variant="ghost" size="s">
+            <ds-button variant="outline" size="s">
               <ds-icon name="filter" [size]="14" /> More
             </ds-button>
             <span class="applied applied--stacked">

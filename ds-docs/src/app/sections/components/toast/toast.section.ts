@@ -27,10 +27,10 @@ import { ButtonComponent, ToastComponent, ToastService } from 'ds';
       <h3 class="block-title t-h4">Live demo</h3>
       <p class="block-desc t-s">Click a button to trigger a toast (auto-dismisses after 5 s).</p>
       <div class="demo">
-        <ds-button variant="ghost" size="m" (click)="fire('info')">Info</ds-button>
-        <ds-button variant="ghost" size="m" (click)="fire('success')">Success</ds-button>
-        <ds-button variant="ghost" size="m" (click)="fire('warning')">Warning</ds-button>
-        <ds-button variant="ghost" size="m" (click)="fire('error')">Error</ds-button>
+        <ds-button variant="outline" size="m" (click)="fire('info')">Info</ds-button>
+        <ds-button variant="outline" size="m" (click)="fire('success')">Success</ds-button>
+        <ds-button variant="outline" size="m" (click)="fire('warning')">Warning</ds-button>
+        <ds-button variant="outline" size="m" (click)="fire('error')">Error</ds-button>
       </div>
 
       <h3 class="block-title t-h4">With action</h3>
@@ -38,7 +38,7 @@ import { ButtonComponent, ToastComponent, ToastService } from 'ds';
         Pass <code class="t-mono">action: {{ '{' }} label, handler {{ '}' }}</code> to <code class="t-mono">ToastService.show()</code> to render a trailing action button (e.g. Undo).
       </p>
       <div class="demo">
-        <ds-button variant="ghost" size="m" (click)="fireWithAction()">Delete with Undo</ds-button>
+        <ds-button variant="outline" size="m" (click)="fireWithAction()">Delete with Undo</ds-button>
       </div>
     </section>
   `,

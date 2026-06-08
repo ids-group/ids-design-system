@@ -181,10 +181,10 @@ interface EventRow {
         <div class="bulk-bar">
           <span class="count">3 selected</span>
           <span class="divider"></span>
-          <button class="button ghost"><ds-icon name="archive" [size]="14" /> Archive</button>
-          <button class="button ghost"><ds-icon name="download" [size]="14" /> Export</button>
+          <button class="button outline"><ds-icon name="archive" [size]="14" /> Archive</button>
+          <button class="button outline"><ds-icon name="download" [size]="14" /> Export</button>
           <span class="divider"></span>
-          <button class="button ghost">Clear</button>
+          <button class="button outline">Clear</button>
         </div>
       </div>
 
@@ -312,7 +312,7 @@ interface EventRow {
                   icon="search"
                   title="No matches for your filters"
                   body="Try a broader query or clear the active filters to see every record.">
-                  <ds-button actions variant="ghost" size="m">Clear filters</ds-button>
+                  <ds-button actions variant="outline" size="m">Clear filters</ds-button>
                 </ds-empty-state>
               </td>
             </tr>

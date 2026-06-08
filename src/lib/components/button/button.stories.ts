@@ -18,12 +18,12 @@ const meta: Meta<ButtonComponent> = {
 - \`--ds-button-fg-disabled\` — default \`var(--text-disabled)\`
 - \`--ds-button-radius\` — default \`var(--r-md)\`
 - \`--ds-button-focus-shadow\` — default \`var(--focus-ring)\`
-Variant modifiers (\`.secondary/.tertiary/.ghost/.outline/.error/.success/.warning/.text\`) only re-set \`--ds-button-bg*\` and \`--ds-button-fg\`.`,
+Variant modifiers (\`.secondary/.tertiary/.outline/.error/.success/.warning/.text\`) only re-set \`--ds-button-bg*\` and \`--ds-button-fg\`.`,
       },
     },
   },
   argTypes: {
-    variant: { control: 'select', options: ['primary', 'secondary', 'tertiary', 'ghost', 'outline', 'error', 'success', 'warning', 'text'] },
+    variant: { control: 'select', options: ['primary', 'secondary', 'tertiary', 'outline', 'error', 'success', 'warning', 'text'] },
     size: { control: 'select', options: ['s', 'm', 'l'] },
     disabled: { control: 'boolean' },
     loading: { control: 'boolean' },
@@ -41,7 +41,6 @@ export const Primary: Story = {
 };
 export const Secondary: Story = { ...Primary, args: { variant: 'secondary' } };
 export const Tertiary: Story = { ...Primary, args: { variant: 'tertiary' } };
-export const Ghost: Story = { ...Primary, args: { variant: 'ghost' } };
 export const Outline: Story = { ...Primary, args: { variant: 'outline' } };
 export const Error: Story = { ...Primary, args: { variant: 'error' } };
 export const TextVariant: Story = { ...Primary, args: { variant: 'text' } };

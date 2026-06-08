@@ -3,7 +3,7 @@ import { ButtonComponent, IconComponent } from 'ds';
 
 interface VariantSpec {
   readonly label: string;
-  readonly key: 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'outline' | 'error';
+  readonly key: 'primary' | 'secondary' | 'tertiary' | 'outline' | 'error';
 }
 
 @Component({
@@ -83,7 +83,7 @@ interface VariantSpec {
       </div>
 
       <!-- ============================================================ Variant states matrix -->
-      <h3 class="block-title t-h4">Variant states — secondary · ghost · error · text</h3>
+      <h3 class="block-title t-h4">Variant states — secondary · outline · error · text</h3>
       <div class="states states--cols-4">
         <!-- Secondary row -->
         <div class="state-cell">
@@ -103,22 +103,22 @@ interface VariantSpec {
           <div class="state-cell__label">Secondary · disabled</div>
         </div>
 
-        <!-- Ghost row -->
+        <!-- Outline row -->
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button ghost">More</button></div>
-          <div class="state-cell__label">Ghost · default</div>
+          <div class="state-cell__stage"><button class="button outline">More</button></div>
+          <div class="state-cell__label">Outline · default</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button ghost is-forced-hover">More</button></div>
-          <div class="state-cell__label">Ghost · hover</div>
+          <div class="state-cell__stage"><button class="button outline is-forced-hover">More</button></div>
+          <div class="state-cell__label">Outline · hover</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button ghost is-forced-focus">More</button></div>
-          <div class="state-cell__label">Ghost · focus</div>
+          <div class="state-cell__stage"><button class="button outline is-forced-focus">More</button></div>
+          <div class="state-cell__label">Outline · focus</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button ghost" disabled>More</button></div>
-          <div class="state-cell__label">Ghost · disabled</div>
+          <div class="state-cell__stage"><button class="button outline" disabled>More</button></div>
+          <div class="state-cell__label">Outline · disabled</div>
         </div>
 
         <!-- Error row -->
@@ -168,7 +168,7 @@ interface VariantSpec {
         <ds-button variant="secondary">
           Filters <ds-icon name="chevronDown" [size]="14" />
         </ds-button>
-        <ds-button variant="ghost">
+        <ds-button variant="outline">
           <ds-icon name="download" [size]="16" /> Export CSV
         </ds-button>
       </div>
@@ -177,9 +177,9 @@ interface VariantSpec {
       <h3 class="block-title t-h4">Button group · split · toggle · text</h3>
       <div class="row">
         <div class="button-group">
-          <button class="button ghost"><ds-icon name="grid" [size]="16" /></button>
-          <button class="button ghost"><ds-icon name="list" [size]="16" /></button>
-          <button class="button ghost"><ds-icon name="map" [size]="16" /></button>
+          <button class="button outline"><ds-icon name="grid" [size]="16" /></button>
+          <button class="button outline"><ds-icon name="list" [size]="16" /></button>
+          <button class="button outline"><ds-icon name="map" [size]="16" /></button>
         </div>
         <div class="button-split">
           <button class="button">Save</button>
@@ -303,7 +303,6 @@ export class ButtonSection {
     { label: 'Primary',   key: 'primary' },
     { label: 'Secondary', key: 'secondary' },
     { label: 'Tertiary',  key: 'tertiary' },
-    { label: 'Ghost',     key: 'ghost' },
     { label: 'Outline',   key: 'outline' },
     { label: 'Error',     key: 'error' },
   ];

@@ -84,7 +84,7 @@
     --ds-button-bg-hover:  var(--primary-subtle);
     --ds-button-bg-active: var(--primary-muted);
   }
-  &.ghost {
+  &.outline {
     --ds-button-bg:        transparent;
     --ds-button-fg:        var(--text-primary);
     --ds-button-border:    var(--border-default);
@@ -125,7 +125,7 @@
   }
   &.secondary.loading::after,
   &.tertiary.loading::after,
-  &.ghost.loading::after { color: var(--primary-strong); }
+  &.outline.loading::after { color: var(--primary-strong); }
 }
 
 @keyframes ds-docs-spin { to { transform: rotate(360deg); } }

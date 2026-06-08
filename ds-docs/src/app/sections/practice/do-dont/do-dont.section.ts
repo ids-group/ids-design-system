@@ -24,7 +24,7 @@ import { BadgeComponent, ButtonComponent, IconComponent } from 'ds';
             competes with Save.
           </p>
           <div class="stage stage--row">
-            <ds-button variant="ghost" size="m">Cancel</ds-button>
+            <ds-button variant="outline" size="m">Cancel</ds-button>
             <ds-button variant="secondary" size="m">Save draft</ds-button>
             <ds-button size="m">Publish</ds-button>
           </div>
@@ -186,7 +186,7 @@ import { BadgeComponent, ButtonComponent, IconComponent } from 'ds';
           <div class="stage stage--empty">
             <p class="t-m empty-title">Nothing here yet</p>
             <p class="t-s empty-sub empty-sub--muted">Looks like you haven't created anything!</p>
-            <ds-button variant="ghost" size="m">Learn more</ds-button>
+            <ds-button variant="outline" size="m">Learn more</ds-button>
           </div>
         </div>
       </div>

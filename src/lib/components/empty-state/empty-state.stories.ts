@@ -74,7 +74,7 @@ export const Error: Story = {
         <ds-button actions variant="primary" size="m">
           <ds-icon name="rotate" [size]="14" /> Retry
         </ds-button>
-        <ds-button actions variant="ghost" size="m">Report issue</ds-button>
+        <ds-button actions variant="outline" size="m">Report issue</ds-button>
       </ds-empty-state>
     `,
   }),
@@ -90,8 +90,8 @@ export const Locked: Story = {
     props: args,
     template: `
       <ds-empty-state [variant]="variant" [title]="title" [body]="body">
-        <ds-button actions variant="ghost" size="m">Back to dashboard</ds-button>
-        <ds-button actions variant="ghost" size="m">Request access</ds-button>
+        <ds-button actions variant="outline" size="m">Back to dashboard</ds-button>
+        <ds-button actions variant="outline" size="m">Request access</ds-button>
       </ds-empty-state>
     `,
   }),

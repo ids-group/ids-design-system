@@ -33,7 +33,7 @@ import { ButtonComponent, PageFooterComponent } from 'ds';
         <ds-page-footer variant="compact">
           <div brand>147 trades · Last hour</div>
           <div actions>
-            <ds-button variant="ghost" size="m">Export</ds-button>
+            <ds-button variant="outline" size="m">Export</ds-button>
             <ds-button variant="primary" size="m">Refresh</ds-button>
           </div>
         </ds-page-footer>
@@ -44,7 +44,7 @@ import { ButtonComponent, PageFooterComponent } from 'ds';
         <ds-page-footer variant="save">
           <div brand>Unsaved changes · 3 fields edited</div>
           <div actions>
-            <ds-button variant="ghost" size="m">Discard</ds-button>
+            <ds-button variant="outline" size="m">Discard</ds-button>
             <ds-button variant="primary" size="m">Save changes</ds-button>
           </div>
         </ds-page-footer>

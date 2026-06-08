@@ -51,10 +51,10 @@ import { ButtonComponent, TooltipDirective, TooltipPanelComponent } from 'ds';
       <h3 class="block-title t-h4">Live demo</h3>
       <p class="block-desc t-s">Hover or tab into the button to trigger the directive.</p>
       <div class="demo">
-        <ds-button [dsTooltip]="'Recompute pending — 3 affected'" dsTooltipPlacement="top" variant="ghost" size="m">
+        <ds-button [dsTooltip]="'Recompute pending — 3 affected'" dsTooltipPlacement="top" variant="outline" size="m">
           Hover me · top
         </ds-button>
-        <ds-button [dsTooltip]="'Last synced 14m ago'" dsTooltipPlacement="bottom" variant="ghost" size="m">
+        <ds-button [dsTooltip]="'Last synced 14m ago'" dsTooltipPlacement="bottom" variant="outline" size="m">
           Hover me · bottom
         </ds-button>
       </div>

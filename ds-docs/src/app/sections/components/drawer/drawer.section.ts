@@ -24,7 +24,7 @@ import { ButtonComponent, DrawerComponent } from 'ds';
             <p class="t-s">Drawer body content goes here. Forms, lists, anything that needs vertical room.</p>
           </ng-container>
           <ng-container drawer-footer>
-            <ds-button variant="ghost">Cancel</ds-button>
+            <ds-button variant="outline">Cancel</ds-button>
             <ds-button variant="primary">Save changes</ds-button>
           </ng-container>
         </ds-drawer>
@@ -44,7 +44,7 @@ import { ButtonComponent, DrawerComponent } from 'ds';
           </p>
         </ng-container>
         <ng-container drawer-footer>
-          <ds-button variant="ghost" (click)="open.set(false)">Cancel</ds-button>
+          <ds-button variant="outline" (click)="open.set(false)">Cancel</ds-button>
           <ds-button variant="primary">Save</ds-button>
         </ng-container>
       </ds-drawer>

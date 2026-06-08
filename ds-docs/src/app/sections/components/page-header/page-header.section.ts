@@ -20,8 +20,8 @@ import { BadgeComponent, BreadcrumbsComponent, ButtonComponent, IconComponent, P
       <div class="stage">
         <ds-page-header title="Project Alpha" subtitle="30 Apr – 3 May · North Site · 4 sub-records">
           <ng-container actions>
-            <ds-button variant="ghost"><ds-icon name="archive" [size]="14" /> Archive</ds-button>
-            <ds-button variant="ghost"><ds-icon name="download" [size]="14" /> Export</ds-button>
+            <ds-button variant="outline"><ds-icon name="archive" [size]="14" /> Archive</ds-button>
+            <ds-button variant="outline"><ds-icon name="download" [size]="14" /> Export</ds-button>
             <ds-button><ds-icon name="plus" [size]="14" /> Add sub-record</ds-button>
           </ng-container>
           <ds-tabs tabs>
@@ -41,7 +41,7 @@ import { BadgeComponent, BreadcrumbsComponent, ButtonComponent, IconComponent, P
       <div class="stage">
         <ds-page-header title="Records" [compact]="true">
           <ng-container actions>
-            <ds-button variant="ghost"><ds-icon name="filter" [size]="14" /> Filters</ds-button>
+            <ds-button variant="outline"><ds-icon name="filter" [size]="14" /> Filters</ds-button>
             <ds-button><ds-icon name="plus" [size]="14" /> New record</ds-button>
           </ng-container>
         </ds-page-header>

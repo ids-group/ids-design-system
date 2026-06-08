@@ -71,7 +71,7 @@ import { InputComponent, SelectComponent, ButtonComponent, IconComponent, type S
           </div>
 
           <div class="form-footer">
-            <ds-button variant="ghost">Discard</ds-button>
+            <ds-button variant="outline">Discard</ds-button>
             <ds-button>Save changes</ds-button>
           </div>
         </form>

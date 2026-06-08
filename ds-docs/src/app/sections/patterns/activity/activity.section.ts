@@ -66,7 +66,7 @@ interface ActivityEntry {
             Edits, status changes and allocations will appear here. Make the first change to
             kick off the log.
           </p>
-          <ds-button variant="ghost" size="m">
+          <ds-button variant="outline" size="m">
             <ds-icon name="edit" [size]="14" /> Edit record
           </ds-button>
         </div>
