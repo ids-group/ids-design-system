@@ -17,9 +17,7 @@
     "@angular/core": "^21.2.0",
     "@angular/forms": "^21.2.0",
     "@angular/platform-browser": "^21.2.0",
-    "@angular/router": "^21.2.0",
-    "@fontsource/jetbrains-mono": "^5.2.0",
-    "@fontsource/mulish": "^5.2.0"
+    "@angular/router": "^21.2.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
@@ -35,8 +33,6 @@
     "@angular/forms": "^21.2.0",
     "@angular/platform-browser": "^21.2.0",
     "@angular/router": "^21.2.0",
-    "@fontsource/jetbrains-mono": "5.2.8",
-    "@fontsource/mulish": "5.2.8",
     "ng-packagr": "^21.2.0",
     "rxjs": "~7.8.0",
     "typescript": "~5.9.2",

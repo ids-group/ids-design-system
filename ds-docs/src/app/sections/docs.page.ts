@@ -28,6 +28,7 @@ import { CardSection } from './components/card/card.section';
 import { StatSection } from './components/stat/stat.section';
 import { TabsSection } from './components/tabs/tabs.section';
 import { InputSection } from './components/input/input.section';
+import { NumberStepperSection } from './components/number-stepper/number-stepper.section';
 import { SearchSection } from './components/search/search.section';
 import { SelectSection } from './components/select/select.section';
 import { SelectionSection } from './components/selection/selection.section';
@@ -52,6 +53,7 @@ import { TooltipSection } from './components/tooltip/tooltip.section';
 import { PopoverSection } from './components/popover/popover.section';
 import { ToastSection } from './components/toast/toast.section';
 import { DrawerSection } from './components/drawer/drawer.section';
+import { BottomSheetSection } from './components/bottom-sheet/bottom-sheet.section';
 import { TagSection } from './components/tag/tag.section';
 import { W3wSection } from './components/w3w/w3w.section';
 import { LinkSection } from './components/link/link.section';
@@ -79,13 +81,13 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     BordersSection, OpacitySection,
     SurfaceLevelsSection, ZIndexSection, BrowserTabSection, ChartsSection,
     IconSection, ButtonSection, BadgeSection, StatusDotSection, AvatarSection, CardSection,
-    StatSection, TabsSection, InputSection, SearchSection, SelectSection, SelectionSection, TableSection,
+    StatSection, TabsSection, InputSection, NumberStepperSection, SearchSection, SelectSection, SelectionSection, TableSection,
     PaginationSection, DatePickerSection, BreadcrumbsSection, SidenavSection, TopbarSection,
     ComponentsPageHeaderSection, ModalSection, MenuSection, BannerSection, DropzoneSection,
     EmptyStateComponentSection,
     ProgressSection, SpinnerSection, SkeletonSection,
     AccordionSection, StepperSection,
-    TooltipSection, PopoverSection, ToastSection, DrawerSection,
+    TooltipSection, PopoverSection, ToastSection, DrawerSection, BottomSheetSection,
     TagSection, W3wSection, LinkSection, PageFooterSection,
     ComboboxSection,
     PatternsPageHeaderSection, FilterBarSection, FormLayoutSection, ActivitySection, EmptyStateSection,
@@ -100,6 +102,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     <section-components-button />
     <section-components-icon />
     <section-components-input />
+    <section-components-number-stepper />
     <section-components-search />
     <section-components-select />
     <section-components-selection />
@@ -131,6 +134,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     <section-components-popover />
     <section-components-toast />
     <section-components-drawer />
+    <section-components-bottom-sheet />
     <section-components-tag />
     <section-components-w3w />
     <section-components-link />
@@ -195,6 +199,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     section-components-icon, section-components-button, section-components-badge,
     section-components-status-dot, section-components-avatar, section-components-card,
     section-components-stat, section-components-tabs, section-components-input,
+    section-components-number-stepper,
     section-components-search, section-components-select, section-components-selection, section-components-table,
     section-components-pagination, section-components-date-picker, section-components-breadcrumbs,
     section-components-sidenav, section-components-topbar, section-components-page-header,
@@ -203,6 +208,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     section-components-progress, section-components-spinner, section-components-skeleton,
     section-components-accordion, section-components-stepper,
     section-components-tooltip, section-components-popover, section-components-toast, section-components-drawer,
+    section-components-bottom-sheet,
     section-components-tag, section-components-w3w, section-components-link, section-components-page-footer,
     section-components-combobox,
     pattern-page-header, pattern-filter-bar, pattern-form-layout, pattern-activity, pattern-empty-state,
