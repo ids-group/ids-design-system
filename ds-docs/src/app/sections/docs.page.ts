@@ -21,6 +21,7 @@ import { ChartsSection } from './foundations/charts/charts.section';
 
 import { IconSection } from './components/icon/icon.section';
 import { ButtonSection } from './components/button/button.section';
+import { IconButtonSection } from './components/icon-button/icon-button.section';
 import { BadgeSection } from './components/badge/badge.section';
 import { StatusDotSection } from './components/status-dot/status-dot.section';
 import { AvatarSection } from './components/avatar/avatar.section';
@@ -80,7 +81,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     MotionSection, DensitySection, IconsSection, LayoutSection, ScrollbarSection,
     BordersSection, OpacitySection,
     SurfaceLevelsSection, ZIndexSection, BrowserTabSection, ChartsSection,
-    IconSection, ButtonSection, BadgeSection, StatusDotSection, AvatarSection, CardSection,
+    IconSection, ButtonSection, IconButtonSection, BadgeSection, StatusDotSection, AvatarSection, CardSection,
     StatSection, TabsSection, InputSection, NumberStepperSection, SearchSection, SelectSection, SelectionSection, TableSection,
     PaginationSection, DatePickerSection, BreadcrumbsSection, SidenavSection, TopbarSection,
     ComponentsPageHeaderSection, ModalSection, MenuSection, BannerSection, DropzoneSection,
@@ -100,6 +101,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <h1 class="group-title t-h2">Components</h1>
     <section-components-button />
+    <section-components-icon-button />
     <section-components-icon />
     <section-components-input />
     <section-components-number-stepper />
@@ -196,7 +198,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     section-foundations-density, section-foundations-icons, section-foundations-layout,
     section-foundations-scrollbar, section-foundations-borders, section-foundations-opacity,
     section-foundations-surface-levels, section-foundations-z-index, section-foundations-browser-tab, section-foundations-charts,
-    section-components-icon, section-components-button, section-components-badge,
+    section-components-icon, section-components-button, section-components-icon-button, section-components-badge,
     section-components-status-dot, section-components-avatar, section-components-card,
     section-components-stat, section-components-tabs, section-components-input,
     section-components-number-stepper,

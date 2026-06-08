@@ -4,6 +4,7 @@
 export * from './lib/config/ds-config';
 export * from './lib/icons';
 export * from './lib/components/button';
+export * from './lib/components/icon-button';
 export * from './lib/components/badge';
 export * from './lib/components/status-dot';
 export * from './lib/components/avatar';

@@ -115,6 +115,14 @@ Variant → role mapping: `primary` → `--primary` fill · `secondary` → `--s
 Output: `(pressed): MouseEvent` — only fires when not disabled and not loading
 Content slots: default (label / leading or trailing icon)
 Tokens: `--ds-button-bg`, `--ds-button-bg-hover`, `--ds-button-bg-active`, `--ds-button-bg-disabled`, `--ds-button-fg`, `--ds-button-fg-disabled`, `--ds-button-border`, `--ds-button-radius`, `--ds-button-focus-shadow`
+> **`iconOnly` is deprecated** — use `<ds-icon-button>` for icon-only actions. Retained for back-compat until consumers migrate.
+
+#### `<ds-icon-button>` — `IconButtonComponent`
+Icon-only action with its own taxonomy, distinct from `ds-button`. `ariaLabel` is required (icon-only must be labelled for a11y).
+Inputs: `icon: required IconName`, `ariaLabel: required string`, `variant: IconButtonVariant = 'standard'` (`'standard' | 'filled' | 'tonal' | 'outlined'`), `size: IconButtonSize = 'md'` (`'sm' | 'md' | 'lg'` = 32/40/48), `type: 'button' | 'submit' | 'reset' = 'button'`, `disabled: boolean = false`, `selected: boolean = false` (toggle — sets `aria-pressed`)
+Output: `(pressed): MouseEvent` — fires when not disabled
+Variant emphasis: `standard` chromeless (hover-reveal) · `filled` `--primary` · `tonal` `--primary-muted` · `outlined` bordered. `selected` renders the pressed/active fill.
+Tokens: `--ds-icon-button-bg`, `--ds-icon-button-fg`, `--ds-icon-button-border`, `--ds-icon-button-bg-hover`, `--ds-icon-button-fg-hover`, `--ds-icon-button-radius`, `--ds-icon-button-focus-shadow`
 
 #### `<ds-input>` — `InputComponent`
 Inputs: `value: model<string>`, `type: InputType = 'text'` (`'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search'`), `size: 'sm' | 'md' | 'lg' = 'md'`, `label: string = ''`, `hint: string = ''`, `placeholder: string = ''`, `disabled: boolean = false`, `invalid: boolean = false`, `required: boolean = false`, `optional: boolean = false`, `name: string | null = null`, `clearable: boolean | null = null` (inline clear (×) button; `null` resolves to `true` for `type="search"` and `false` otherwise)

@@ -1,0 +1,10 @@
+<button
+  [class]="classes()"
+  [type]="type()"
+  [disabled]="disabled()"
+  [attr.aria-label]="ariaLabel()"
+  [attr.aria-pressed]="selected() ? true : null"
+  (click)="onClick($event)"
+>
+  <ds-icon [name]="icon()" [size]="iconSize()" />
+</button>

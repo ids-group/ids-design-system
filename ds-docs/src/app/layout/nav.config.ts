@@ -23,6 +23,7 @@ export const NAV: NavGroup[] = [
     title: 'Components',
     items: [
       { label: 'Buttons',              anchor: 'button' },
+      { label: 'Icon button',          anchor: 'icon-button' },
       { label: 'Icon',                 anchor: 'icon' },
       { label: 'Fields',               anchor: 'input' },
       { label: 'Number stepper',       anchor: 'number-stepper' },
