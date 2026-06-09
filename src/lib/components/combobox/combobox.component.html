@@ -15,7 +15,7 @@
          [attr.aria-label]="ariaLabel() || placeholder()"
          [value]="query()" (input)="onFilter($event)" (focus)="openPanel()" (keydown)="onKeydown($event)"
          [placeholder]="placeholderText()" />
-  <ds-icon name="chevronDown" [size]="16" class="combo-chevron" (click)="onChevronClick($event)" />
+  <ds-icon name="chevronDown" [size]="16" class="combo-chevron" (click)="togglePanel($event)" />
 </div>
 
 <ng-template #panel>
@@ -35,7 +35,7 @@
       </li>
     }
     @if (filteredOptions().length === 0) {
-      <li class="empty t-s" role="presentation">No matches</li>
+      <li class="empty t-s" role="option" [attr.aria-disabled]="true">No matches</li>
     }
   </ul>
 </ng-template>

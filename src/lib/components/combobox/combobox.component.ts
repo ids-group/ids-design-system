@@ -103,7 +103,7 @@ export class ComboboxComponent<T = unknown> {
     if (!this.overlayRef) this.openPanel();
   }
 
-  protected onChevronClick(event: MouseEvent): void {
+  protected togglePanel(event: MouseEvent): void {
     event.stopPropagation();
     if (this.overlayRef) {
       this.close();
@@ -142,14 +142,6 @@ export class ComboboxComponent<T = unknown> {
         }
         break;
     }
-  }
-
-  protected toggle(): void {
-    if (this.overlayRef) {
-      this.close();
-      return;
-    }
-    this.openPanel();
   }
 
   protected openPanel(): void {
