@@ -66,7 +66,9 @@
   /* ================================================================
      ПОДХОД A — «как сейчас в button»: компонент ОБЪЯВЛЯЕТ публичные
      токены прямо на элементе. Ровно та же механика, что в
-     button.component.scss сегодня.
+     button.component.scss сегодня. Атрибут [data-ng] симулирует
+     Angular-овский [_ngcontent-*]: даёт ту же специфичность (0,2,0),
+     что у скомпилированного .button[_ngcontent].
      ================================================================ */
   .dbtn { display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
           height: var(--hit-cozy); padding: 0 var(--s-5); border-radius: var(--r-md);
@@ -74,15 +76,22 @@
           color: var(--text-on-primary); font: var(--fw-semibold) var(--fs-s)/1 var(--font-sans);
           transition: background .15s ease, box-shadow .15s ease; }
 
-  .btn-declared {
+  /* Консьюмерский ХАК для сценария 1b — селектор внутрь компонента. Стоит ДО
+     «компонентных» правил, как в реальности (Angular инжектит стили компонентов
+     после глобальных), поэтому дубль класса обязателен: .btn-declared.btn-declared
+     в связке с .zone-hack даёт (0,3,0) и перебивает компонентные (0,2,0);
+     без дубля была бы ничья, и компонент победил бы порядком. */
+  .zone-hack .btn-declared.btn-declared { --ds-button-bg: #0d9488; }
+
+  .btn-declared[data-ng] {
     --ds-button-bg:        var(--primary);          /* объявлен НА элементе — глушит внешнее значение */
     --ds-button-bg-hover:  var(--primary-hover);
     --ds-button-bg-active: var(--primary-pressed);
     background: var(--ds-button-bg);
   }
-  .btn-declared:hover  { background: var(--ds-button-bg-hover); }
-  .btn-declared:active { background: var(--ds-button-bg-active);
-                         box-shadow: 0 0 0 3px color-mix(in srgb, var(--ds-button-bg-active) 35%, transparent); }
+  .btn-declared[data-ng]:hover  { background: var(--ds-button-bg-hover); }
+  .btn-declared[data-ng]:active { background: var(--ds-button-bg-active);
+                                  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ds-button-bg-active) 35%, transparent); }
 
   /* ================================================================
      ПОДХОД B — «как в badge»: публичные токены НЕ объявляются, а
@@ -152,7 +161,7 @@
     <div class="duo">
       <div class="lane">
         <div class="lane-title"><b>A</b> — объявление (как сейчас)</div>
-        <div class="zone"><button class="dbtn btn-declared">Сохранить</button><span class="hint">наведи — hover, зажми — pressed</span></div>
+        <div class="zone"><button class="dbtn btn-declared" data-ng>Сохранить</button><span class="hint">наведи — hover, зажми — pressed</span></div>
         <p class="res good">✓ Работает.</p>
       </div>
       <div class="lane">
@@ -179,13 +188,34 @@
     <div class="duo">
       <div class="lane">
         <div class="lane-title"><b>A</b> — объявление (как сейчас)</div>
-        <div class="zone" data-consumer><button class="dbtn btn-declared">Сохранить</button></div>
-        <p class="res bad">✗ Проигнорировано. Собственное объявление токена на элементе сильнее значения, унаследованного снаружи: не работает ни селектор по хосту (даже с <code>!important</code>), ни <code>:root</code>, ни inline-стиль. Единственная лазейка — селектор ВНУТРЬ приватной структуры с хаком специфичности (<code>ds-button .button.button { … }</code>), т.е. завязка на внутренние классы вместо публичного API — так field уже живёт с ds-banner/ds-tabs. Проверено Playwright'ом на собранном ds-docs (2026-06-10).</p>
+        <div class="zone" data-consumer><button class="dbtn btn-declared" data-ng>Сохранить</button></div>
+        <p class="res bad">✗ Проигнорировано. Собственное объявление токена на элементе сильнее значения, унаследованного снаружи: не работает ни селектор по хосту (даже с <code>!important</code>), ни <code>:root</code>, ни inline-стиль. Единственная лазейка — селектор ВНУТРЬ приватной структуры с хаком специфичности, т.е. завязка на внутренние классы вместо публичного API — живой пример в сценарии 1b ниже. Проверено Playwright'ом на собранном ds-docs (2026-06-10).</p>
       </div>
       <div class="lane">
         <div class="lane-title"><b>B</b> — чтение с fallback (как в badge)</div>
         <div class="zone" data-consumer><button class="dbtn btn-fallback">Сохранить</button></div>
         <p class="res good">✓ Один токен — и bg, hover, pressed, halo пересчитались сами. Наведи и зажми: полутона уже от нового цвета.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ сценарий 1b ============ -->
+  <section class="card">
+    <div class="card-head"><span class="step">Сценарий 1b</span><h2>Лазейка в подходе A — хак специфичности внутрь компонента</h2></div>
+    <pre class="snippet"><span class="cm">/* так сегодня выживает field (_ds-overrides.scss, кейсы ds-banner / ds-tabs):
+   селектор лезет в ПРИВАТНЫЙ .button, а дубль класса перебивает
+   специфичность encapsulation-атрибута: .button.button (0,2,1) > .button[_ngcontent] (0,2,0) */</span>
+.toolbar ds-button <span class="hl">.button.button</span> { --ds-button-bg: #0d9488; }</pre>
+    <div class="duo">
+      <div class="lane">
+        <div class="lane-title"><b>A</b> — объявление + хак <span class="hint">(наведи и зажми!)</span></div>
+        <div class="zone zone-hack"><button class="dbtn btn-declared" data-ng>Сохранить</button></div>
+        <p class="res bad">✗ Пробились — но в покое кнопка тиловая, а hover и pressed ОСТАЛИСЬ СИНИМИ: деривации в подходе A нет, каждый полутон надо так же переписывать руками (<code>-bg-hover</code>, <code>-bg-active</code>, halo…). Плюс завязка на приватный класс <code>.button</code> и дубль ради специфичности — сломается при любом рефакторинге внутренностей. Хак статичный (#0d9488), пикер из сценария 1 на него не влияет.</p>
+      </div>
+      <div class="lane">
+        <div class="lane-title"><b>B</b> — чтение с fallback: хак не нужен</div>
+        <div class="zone" data-consumer><button class="dbtn btn-fallback">Сохранить</button></div>
+        <p class="res good">✓ Тот же перекрас — одним токеном на хосте, без залезания внутрь, и полутона подтянулись сами.</p>
       </div>
     </div>
   </section>
@@ -200,7 +230,7 @@
     <div class="duo">
       <div class="lane">
         <div class="lane-title"><b>A</b> — объявление (как сейчас)</div>
-        <div class="zone" data-consumer style="--ds-button-bg-active:#4c1d95"><button class="dbtn btn-declared">Удерживай меня</button></div>
+        <div class="zone" data-consumer style="--ds-button-bg-active:#4c1d95"><button class="dbtn btn-declared" data-ng>Удерживай меня</button></div>
         <p class="res bad">✗ Всё ещё игнор.</p>
       </div>
       <div class="lane">
@@ -263,7 +293,7 @@
   <section class="card verdict-card">
     <div class="card-head"><span class="step">Вердикт</span><h2>Рекомендация: подход B — «как в badge»</h2></div>
     <ul>
-      <li><b>«Как везде» — на самом деле не везде.</b> Объявляют токены только старшие компоненты (button, icon-button, sidenav-item). Новые — badge, tag, toast, empty-state — уже читают с fallback. Это и есть актуальная конвенция репо; кнопки до неё просто не доехали.</li>
+      <li><b>«Как везде» — на самом деле зоопарк из трёх механик</b> (аудит 2026-06-10): ~15 компонентов объявляют токены на внутреннем элементе (button, icon-button, banner, modal…) — переопределение снаружи мертво; ~10 — на <code>:host</code> (input, sidenav-item, card, tabs…) — работает, только если селектор консьюмера бьёт (0,1,0), голый <code>ds-input { }</code> и <code>:root</code> — нет; и лишь 4 самых новых читают с fallback (badge, tag, toast, empty-state) — единственная механика, где публичный токен работает отовсюду. Предложение — сделать её конвенцией, начав с кнопок.</li>
       <li><b>Подход A чинить нечем:</b> пока компонент объявляет публичный токен на своём элементе, переопределение снаружи (хост / <code>:root</code> / inline / <code>!important</code>) не работает в принципе — это правило каскада CSS. Обойти можно только селектором внутрь приватного <code>.button</code> с дублированием класса ради специфичности — хрупкий хак, которым консьюмеры (field, `_ds-overrides.scss`) уже вынуждены пользоваться для banner/tabs.</li>
       <li><b>B даёт ровно вашу концепцию:</b> из коробки само → один токен тянет полутона → любой токен точечно переписывается.</li>
       <li><b>Визуально ничего не ломается:</b> для primary / error / filled / selected дефолтная деривация совпадает с текущими цветами один в один; у success / warning появится чуть более тёмный pressed (сейчас он равен hover).</li>
