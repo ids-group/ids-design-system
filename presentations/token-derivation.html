@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DS — Токены кнопок: «как сейчас в button» vs «как в badge»</title>
+<link rel="stylesheet" href="ds.css">
+<style>
+  /* ----------------------------------------------------------------
+     Demo-only page (NOT part of the lib). Compares two token wiring
+     strategies for ds-button / ds-icon-button using real DS tokens.
+     ---------------------------------------------------------------- */
+  body { margin: 0; background: var(--surface-canvas); color: var(--text-primary); font-family: var(--font-sans); }
+  .page { max-width: 1080px; margin: 0 auto; padding: var(--s-10) var(--s-6) var(--s-20); }
+
+  .masthead h1 { font: var(--fw-bold) 26px/1.25 var(--font-heading); margin: 0 0 var(--s-2); }
+  .masthead p { color: var(--text-secondary); max-width: 78ch; margin: var(--s-2) 0 0; font: var(--fw-regular) var(--fs-s)/1.6 var(--font-sans); }
+  .masthead code, .lane p code, .verdict-card code {
+    font: var(--fw-medium) var(--fs-2xs)/1 var(--font-mono); color: var(--primary-strong);
+    background: var(--primary-subtle); padding: 2px 6px; border-radius: var(--r-sm); }
+
+  .card { background: var(--surface-default); border: var(--bw-default) solid var(--border-divider);
+          border-radius: var(--r-lg); padding: var(--s-6); box-shadow: var(--z100);
+          margin-top: var(--s-6); display: flex; flex-direction: column; gap: var(--s-4); }
+  .card-head { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+  .card-head h2 { font: var(--fw-bold) var(--fs-h4)/1.2 var(--font-heading); margin: 0; }
+  .step { font: var(--fw-bold) var(--fs-3xs)/1 var(--font-sans); text-transform: uppercase; letter-spacing: var(--ls-wider);
+          padding: 5px 9px; border-radius: var(--r-pill); background: var(--primary-subtle); color: var(--primary-strong); white-space: nowrap; }
+  .card > .note { color: var(--text-tertiary); font: var(--fw-regular) var(--fs-xs)/1.55 var(--font-sans); margin: 0; }
+
+  .snippet { background: var(--surface-secondary); border: var(--bw-default) solid var(--border-divider);
+             border-radius: var(--r-sm); padding: var(--s-3) var(--s-4); margin: 0;
+             font: var(--fw-medium) var(--fs-xs)/1.7 var(--font-mono); color: var(--text-primary);
+             overflow-x: auto; white-space: pre; }
+  .snippet .cm { color: var(--text-tertiary); }
+  .snippet .hl { color: var(--primary-strong); font-weight: var(--fw-bold); }
+
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-5); }
+  @media (max-width: 880px) { .duo { grid-template-columns: 1fr; } }
+
+  .lane { display: flex; flex-direction: column; gap: var(--s-3); }
+  .lane-title { font: var(--fw-semibold) var(--fs-xs)/1.3 var(--font-sans); color: var(--text-secondary); }
+  .lane-title b { color: var(--text-primary); }
+
+  .zone { border: var(--bw-default) dashed var(--border-default); border-radius: var(--r-md);
+          padding: var(--s-5); display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap;
+          background: var(--surface-canvas); }
+
+  .res { font: var(--fw-regular) var(--fs-xs)/1.55 var(--font-sans); margin: 0; }
+  .res.bad  { color: var(--error-text); }
+  .res.good { color: var(--success-text); }
+
+  .hint { color: var(--text-tertiary); font: var(--fw-regular) var(--fs-2xs)/1.4 var(--font-sans); }
+
+  /* ---- controls (live brand color) ---- */
+  .controls { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap;
+              padding: var(--s-3) var(--s-4); background: var(--surface-secondary);
+              border-radius: var(--r-md); }
+  .controls .label { font: var(--fw-semibold) var(--fs-xs)/1 var(--font-sans); color: var(--text-secondary); }
+  .swatch { width: 28px; height: 28px; border-radius: var(--r-pill); cursor: pointer;
+            border: 2px solid transparent; padding: 0; }
+  .swatch.on { border-color: var(--text-primary); }
+  input[type="color"] { width: 44px; height: 28px; padding: 0; border: var(--bw-default) solid var(--border-default);
+                        border-radius: var(--r-sm); background: var(--surface-default); cursor: pointer; }
+
+  /* ================================================================
+     ПОДХОД A — «как сейчас в button»: компонент ОБЪЯВЛЯЕТ публичные
+     токены прямо на элементе. Ровно та же механика, что в
+     button.component.scss сегодня.
+     ================================================================ */
+  .dbtn { display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
+          height: var(--hit-cozy); padding: 0 var(--s-5); border-radius: var(--r-md);
+          border: var(--bw-default) solid transparent; cursor: pointer; user-select: none;
+          color: var(--text-on-primary); font: var(--fw-semibold) var(--fs-s)/1 var(--font-sans);
+          transition: background .15s ease, box-shadow .15s ease; }
+
+  .btn-declared {
+    --ds-button-bg:        var(--primary);          /* объявлен НА элементе — глушит внешнее значение */
+    --ds-button-bg-hover:  var(--primary-hover);
+    --ds-button-bg-active: var(--primary-pressed);
+    background: var(--ds-button-bg);
+  }
+  .btn-declared:hover  { background: var(--ds-button-bg-hover); }
+  .btn-declared:active { background: var(--ds-button-bg-active);
+                         box-shadow: 0 0 0 3px color-mix(in srgb, var(--ds-button-bg-active) 35%, transparent); }
+
+  /* ================================================================
+     ПОДХОД B — «как в badge»: публичные токены НЕ объявляются, а
+     ЧИТАЮТСЯ с fallback-дефолтом. Полутона по дефолту деривируются
+     от разрешённого bg (рецептура 88% / 76% — как у --primary-hover
+     и --primary-pressed в теме).
+     ================================================================ */
+  .btn-fallback {
+    --_bg:        var(--ds-button-bg,        var(--primary));
+    --_bg-hover:  var(--ds-button-bg-hover,  color-mix(in srgb, var(--_bg) 88%, black));
+    --_bg-active: var(--ds-button-bg-active, color-mix(in srgb, var(--_bg) 76%, black));
+    background: var(--_bg);
+  }
+  .btn-fallback:hover  { background: var(--_bg-hover); }
+  .btn-fallback:active { background: var(--_bg-active);
+                         box-shadow: 0 0 0 3px color-mix(in srgb, var(--_bg-active) 35%, transparent); }
+
+  /* ---- то же для icon-button (filled) ---- */
+  .dibtn { display: inline-flex; align-items: center; justify-content: center;
+           width: var(--hit-cozy); height: var(--hit-cozy); aspect-ratio: 1; padding: 0;
+           border: var(--bw-default) solid transparent; border-radius: var(--r-md);
+           color: var(--text-on-primary); cursor: pointer; user-select: none;
+           transition: background .15s ease; }
+  .ic { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.75;
+        stroke-linecap: round; stroke-linejoin: round; }
+
+  .ibtn-declared {
+    --ds-icon-button-bg:        var(--primary);
+    --ds-icon-button-bg-hover:  var(--primary-hover);
+    --ds-icon-button-bg-active: var(--primary-pressed);
+    background: var(--ds-icon-button-bg);
+  }
+  .ibtn-declared:hover  { background: var(--ds-icon-button-bg-hover); }
+  .ibtn-declared:active { background: var(--ds-icon-button-bg-active); }
+
+  .ibtn-fallback {
+    --_bg:        var(--ds-icon-button-bg,        var(--primary));
+    --_bg-hover:  var(--ds-icon-button-bg-hover,  color-mix(in srgb, var(--_bg) 88%, black));
+    --_bg-active: var(--ds-icon-button-bg-active, color-mix(in srgb, var(--_bg) 76%, black));
+    background: var(--_bg);
+  }
+  .ibtn-fallback:hover  { background: var(--_bg-hover); }
+  .ibtn-fallback:active { background: var(--_bg-active); }
+
+  /* ---- verdict ---- */
+  .verdict-card { border-color: var(--success-text); }
+  .verdict-card ul { margin: 0; padding-left: var(--s-5); display: flex; flex-direction: column; gap: var(--s-2);
+                     color: var(--text-secondary); font: var(--fw-regular) var(--fs-s)/1.55 var(--font-sans); }
+  .verdict-card b { color: var(--text-primary); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <h1>Токены кнопок: «как сейчас в button» vs «как в badge»</h1>
+    <p>Вопрос: где живут значения публичных токенов <code>--ds-button-*</code>.
+       <b>Подход A</b> (сейчас в button/icon-button) — компонент <b>объявляет</b> токены на самом элементе.
+       <b>Подход B</b> (сейчас в badge/tag/toast/empty-state) — компонент токены <b>читает</b> через
+       <code>var(--ds-…, дефолт)</code>, а полутона hover/active по дефолту считаются от базового цвета.
+       Публичные токены — одни и те же в обоих подходах, API не меняется. Разница только в поведении — она ниже, вживую.</p>
+  </header>
+
+  <!-- ============ сценарий 0 ============ -->
+  <section class="card">
+    <div class="card-head"><span class="step">Сценарий 0</span><h2>Из коробки — ничего не переопределяли</h2></div>
+    <div class="duo">
+      <div class="lane">
+        <div class="lane-title"><b>A</b> — объявление (как сейчас)</div>
+        <div class="zone"><button class="dbtn btn-declared">Сохранить</button><span class="hint">наведи — hover, зажми — pressed</span></div>
+        <p class="res good">✓ Работает.</p>
+      </div>
+      <div class="lane">
+        <div class="lane-title"><b>B</b> — чтение с fallback (как в badge)</div>
+        <div class="zone"><button class="dbtn btn-fallback">Сохранить</button><span class="hint">наведи — hover, зажми — pressed</span></div>
+        <p class="res good">✓ Работает. Пиксель в пиксель как A: дефолтная деривация (88% / 76% чёрного) — та же рецептура, что у <code>--primary-hover</code> / <code>--primary-pressed</code> в теме.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ сценарий 1 ============ -->
+  <section class="card">
+    <div class="card-head"><span class="step">Сценарий 1</span><h2>Потребитель задаёт ОДИН токен</h2></div>
+    <pre class="snippet">.toolbar ds-button { <span class="hl">--ds-button-bg: <b class="hex-now">#0d9488</b>;</span> }   <span class="cm">/* и больше НИЧЕГО */</span></pre>
+    <div class="controls">
+      <span class="label">Цвет бренда:</span>
+      <button class="swatch" data-color="#0d9488" style="background:#0d9488" title="teal"></button>
+      <button class="swatch" data-color="#7c3aed" style="background:#7c3aed" title="violet"></button>
+      <button class="swatch" data-color="#ea580c" style="background:#ea580c" title="orange"></button>
+      <button class="swatch" data-color="#be185d" style="background:#be185d" title="pink"></button>
+      <input type="color" id="brand-picker" value="#0d9488" title="свой цвет">
+      <span class="hint">применяется к сценариям 1–3</span>
+    </div>
+    <div class="duo">
+      <div class="lane">
+        <div class="lane-title"><b>A</b> — объявление (как сейчас)</div>
+        <div class="zone" data-consumer><button class="dbtn btn-declared">Сохранить</button></div>
+        <p class="res bad">✗ Проигнорировано. Собственное объявление токена на элементе всегда сильнее значения, унаследованного снаружи. Не пробивается ничем: ни селектором, ни <code>:root</code>, ни inline-стилем. Это сегодняшний баг ds-button / ds-icon-button.</p>
+      </div>
+      <div class="lane">
+        <div class="lane-title"><b>B</b> — чтение с fallback (как в badge)</div>
+        <div class="zone" data-consumer><button class="dbtn btn-fallback">Сохранить</button></div>
+        <p class="res good">✓ Один токен — и bg, hover, pressed, halo пересчитались сами. Наведи и зажми: полутона уже от нового цвета.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ сценарий 2 ============ -->
+  <section class="card">
+    <div class="card-head"><span class="step">Сценарий 2</span><h2>…но если захочу — точечно перепишу и active</h2></div>
+    <pre class="snippet">.toolbar ds-button {
+  <span class="hl">--ds-button-bg: <b class="hex-now">#0d9488</b>;</span>
+  <span class="hl">--ds-button-bg-active: #4c1d95;</span>   <span class="cm">/* своё значение вместо деривации */</span>
+}</pre>
+    <div class="duo">
+      <div class="lane">
+        <div class="lane-title"><b>A</b> — объявление (как сейчас)</div>
+        <div class="zone" data-consumer style="--ds-button-bg-active:#4c1d95"><button class="dbtn btn-declared">Удерживай меня</button></div>
+        <p class="res bad">✗ Всё ещё игнор.</p>
+      </div>
+      <div class="lane">
+        <div class="lane-title"><b>B</b> — чтение с fallback (как в badge)</div>
+        <div class="zone" data-consumer style="--ds-button-bg-active:#4c1d95"><button class="dbtn btn-fallback">Удерживай меня</button></div>
+        <p class="res good">✓ Hover по-прежнему деривируется от bg, а pressed — фиолетовый, заданный руками. Точечное значение всегда побеждает деривацию: <code>var(--ds-button-bg-active, …дефолт)</code> сначала смотрит на ваше.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ сценарий 3 ============ -->
+  <section class="card">
+    <div class="card-head"><span class="step">Сценарий 3</span><h2>То же самое для ds-icon-button (filled / selected)</h2></div>
+    <div class="duo">
+      <div class="lane">
+        <div class="lane-title"><b>A</b> — объявление (как сейчас)</div>
+        <div class="zone" data-consumer>
+          <button class="dibtn ibtn-declared" title="edit"><svg class="ic" viewBox="0 0 24 24"><path d="M4 20h4L18 10l-4-4L4 16zM14 6l4 4"/></svg></button>
+          <button class="dibtn ibtn-declared" title="star"><svg class="ic" viewBox="0 0 24 24"><path d="m12 4 2.4 5 5.6.8-4 3.9 1 5.6-5-2.7-5 2.7 1-5.6-4-3.9 5.6-.8z"/></svg></button>
+        </div>
+        <p class="res bad">✗ Игнор.</p>
+      </div>
+      <div class="lane">
+        <div class="lane-title"><b>B</b> — чтение с fallback (как в badge)</div>
+        <div class="zone" data-consumer>
+          <button class="dibtn ibtn-fallback" title="edit"><svg class="ic" viewBox="0 0 24 24"><path d="M4 20h4L18 10l-4-4L4 16zM14 6l4 4"/></svg></button>
+          <button class="dibtn ibtn-fallback" title="star"><svg class="ic" viewBox="0 0 24 24"><path d="m12 4 2.4 5 5.6.8-4 3.9 1 5.6-5-2.7-5 2.7 1-5.6-4-3.9 5.6-.8z"/></svg></button>
+        </div>
+        <p class="res good">✓ Один <code>--ds-icon-button-bg</code> — hover/pressed сами.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ код ============ -->
+  <section class="card">
+    <div class="card-head"><span class="step">Код</span><h2>Что меняется внутри компонента (вариант error)</h2></div>
+    <div class="duo">
+      <div class="lane">
+        <div class="lane-title"><b>A</b> — сейчас: каждый полутон задаётся отдельно</div>
+        <pre class="snippet">&.error {
+  --ds-button-bg:        var(--error);
+  --ds-button-bg-hover:  var(--error-hover);
+  --ds-button-bg-active: var(--error-pressed);
+}</pre>
+      </div>
+      <div class="lane">
+        <div class="lane-title"><b>B</b> — станет: один цвет, полутона сами</div>
+        <pre class="snippet">&.error {
+  --_button-bg: var(--ds-button-bg, var(--error));
+  <span class="cm">/* hover / active / halo — деривация от bg */</span>
+}</pre>
+      </div>
+    </div>
+    <p class="note">Приватный <code>--_button-bg</code> — внутренняя деталь («разрешённое значение»), снаружи не виден и не является API.
+       Где деривация не к месту (secondary / tertiary / outline — пастельные и прозрачные фоны, чёрная подмесь даёт грязный тон),
+       дефолты остаются явными ramp-значениями — но и там потребительский токен теперь будет работать.</p>
+  </section>
+
+  <!-- ============ вердикт ============ -->
+  <section class="card verdict-card">
+    <div class="card-head"><span class="step">Вердикт</span><h2>Рекомендация: подход B — «как в badge»</h2></div>
+    <ul>
+      <li><b>«Как везде» — на самом деле не везде.</b> Объявляют токены только старшие компоненты (button, icon-button, sidenav-item). Новые — badge, tag, toast, empty-state — уже читают с fallback. Это и есть актуальная конвенция репо; кнопки до неё просто не доехали.</li>
+      <li><b>Подход A чинить нечем:</b> пока компонент объявляет публичный токен на своём элементе, сценарии 1–3 не работают в принципе — это правило каскада CSS, а не вопрос специфичности.</li>
+      <li><b>B даёт ровно вашу концепцию:</b> из коробки само → один токен тянет полутона → любой токен точечно переписывается.</li>
+      <li><b>Визуально ничего не ломается:</b> для primary / error / filled / selected дефолтная деривация совпадает с текущими цветами один в один; у success / warning появится чуть более тёмный pressed (сейчас он равен hover).</li>
+    </ul>
+  </section>
+
+</div>
+<script>
+  const zones = document.querySelectorAll('[data-consumer]');
+  const hexLabels = document.querySelectorAll('.hex-now');
+  const swatches = document.querySelectorAll('.swatch');
+  const picker = document.getElementById('brand-picker');
+
+  function setBrand(hex) {
+    zones.forEach(zone => {
+      zone.style.setProperty('--ds-button-bg', hex);
+      zone.style.setProperty('--ds-icon-button-bg', hex);
+    });
+    hexLabels.forEach(label => label.textContent = hex);
+    swatches.forEach(swatch => swatch.classList.toggle('on', swatch.dataset.color === hex));
+  }
+
+  swatches.forEach(swatch => swatch.addEventListener('click', () => setBrand(swatch.dataset.color)));
+  picker.addEventListener('input', event => setBrand(event.target.value));
+  setBrand('#0d9488');
+</script>
+</body>
+</html>
