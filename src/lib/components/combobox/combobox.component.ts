@@ -103,6 +103,16 @@ export class ComboboxComponent<T = unknown> {
     if (!this.overlayRef) this.openPanel();
   }
 
+  protected onChevronClick(event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.overlayRef) {
+      this.close();
+    } else {
+      this.filterInput().nativeElement.focus();
+      this.openPanel();
+    }
+  }
+
   protected onKeydown(event: KeyboardEvent): void {
     const opts = this.filteredOptions();
     switch (event.key) {

@@ -46,7 +46,13 @@ export class TooltipDirective implements OnDestroy {
     }
     this.ref?.dispose();
     this.ref = null;
-    this.host.nativeElement.removeAttribute('aria-describedby');
+    const host = this.host.nativeElement;
+    const remaining = (host.getAttribute('aria-describedby') ?? '')
+      .split(' ')
+      .filter((id: string) => id && id !== this.tipId)
+      .join(' ');
+    if (remaining) host.setAttribute('aria-describedby', remaining);
+    else host.removeAttribute('aria-describedby');
   }
 
   @HostListener('keydown.escape')
@@ -69,7 +75,9 @@ export class TooltipDirective implements OnDestroy {
     cmpRef.setInput('text', this.dsTooltip());
     cmpRef.setInput('placement', placement);
     cmpRef.setInput('panelId', this.tipId);
-    this.host.nativeElement.setAttribute('aria-describedby', this.tipId);
+    const host = this.host.nativeElement;
+    const existing = host.getAttribute('aria-describedby');
+    host.setAttribute('aria-describedby', existing ? `${existing} ${this.tipId}` : this.tipId);
   }
 
   private positionFor(p: TooltipPlacement) {
