@@ -1,7 +1,7 @@
-import { Component, ViewEncapsulation, inject, input, output } from '@angular/core';
+import { Component, ElementRef, ViewEncapsulation, inject, input, output, signal, viewChild } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
-import { PopoverRef } from '../popover/popover-ref';
+import { DismissibleOverlay } from '../../overlay/dismissible-overlay';
 
 @Component({
   selector: 'ds-menu-item',
@@ -15,18 +15,40 @@ import { PopoverRef } from '../popover/popover-ref';
   host: { role: 'none' },
 })
 export class MenuItemComponent {
-  // A containing popover, if any — selecting an item dismisses it (a menu pick
-  // closes the menu). Optional, so menu-items also work outside a popover.
-  private readonly popoverRef = inject(PopoverRef, { optional: true });
+  // A dismissible container (e.g. popover), if any — selecting an item closes it
+  // (a menu pick closes the menu). Optional, so menu-items also work standalone.
+  private readonly overlay = inject(DismissibleOverlay, { optional: true });
+  private readonly button = viewChild.required<ElementRef<HTMLButtonElement>>('button');
 
   readonly icon = input<IconName | null>(null);
   readonly disabled = input<boolean>(false);
   readonly danger = input<boolean>(false);
   readonly pressed = output<MouseEvent>();
 
+  /** Roving tabindex, owned by ds-menu — exactly one item is tabbable (0), the
+   *  rest -1. Defaults true so a standalone item (outside ds-menu) stays
+   *  reachable. */
+  readonly tabbable = signal(true);
+
+  /** Move keyboard focus to this item's control. */
+  focus(): void {
+    this.button().nativeElement.focus();
+  }
+
+  /** Whether `node` lives inside this item's control (used by ds-menu to find
+   *  the currently focused item during keyboard nav). */
+  contains(node: Node | null): boolean {
+    return !!node && this.button().nativeElement.contains(node);
+  }
+
+  /** Visible label text — used by ds-menu's type-ahead. */
+  label(): string {
+    return this.button().nativeElement.textContent?.trim() ?? '';
+  }
+
   protected onClick(event: MouseEvent): void {
     if (this.disabled()) return;
     this.pressed.emit(event);
-    this.popoverRef?.close();
+    this.overlay?.close();
   }
 }
