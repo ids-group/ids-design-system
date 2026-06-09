@@ -1,8 +1,10 @@
 import {
   Component,
+  OnDestroy,
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
+  forwardRef,
   inject,
   input,
   signal,
@@ -11,6 +13,7 @@ import {
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
+import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
 
 export type PopoverAlign = 'start' | 'end';
 
@@ -21,8 +24,11 @@ export type PopoverAlign = 'start' | 'end';
   templateUrl: './popover.component.html',
   styleUrl: './popover.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  // Expose this popover as a DsOverlayCloseRef so projected content (e.g.
+  // ds-menu-item) can close it via DI — the popover never references a child.
+  providers: [{ provide: DsOverlayCloseRef, useExisting: forwardRef(() => PopoverComponent) }],
 })
-export class PopoverComponent {
+export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   protected readonly panelTpl = viewChild.required<TemplateRef<unknown>>('panel');
@@ -76,5 +82,9 @@ export class PopoverComponent {
     this.ref?.dispose();
     this.ref = null;
     this.opened.set(false);
+  }
+
+  ngOnDestroy(): void {
+    this.close();
   }
 }

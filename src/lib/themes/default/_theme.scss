@@ -69,7 +69,9 @@
   --text-link:         var(--blue-700);
   --text-on-primary:     var(--neutral-0);
   --text-on-success:   var(--neutral-0);
-  --text-on-warning:   var(--neutral-0);
+  /* Warning fill is yellow (--yellow-400 #F4D43A) — white text on it is only
+     ~1.5:1 (fails WCAG). On-warning text is the darkest neutral (~10:1). */
+  --text-on-warning:   var(--neutral-900);
   --text-on-error:     var(--neutral-0);
 
   /* Icons */

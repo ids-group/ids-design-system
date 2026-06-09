@@ -2,6 +2,7 @@
  * Public surface of @manage-my/ds.
  */
 export * from './lib/config/ds-config';
+export * from './lib/overlay/ds-overlay-close-ref';
 export * from './lib/icons';
 export * from './lib/components/button';
 export * from './lib/components/icon-button';

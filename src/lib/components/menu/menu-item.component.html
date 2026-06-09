@@ -1,7 +1,9 @@
 <button
+  #button
   class="menu-item"
   type="button"
   role="menuitem"
+  [attr.tabindex]="tabbable() ? 0 : -1"
   [disabled]="disabled()"
   [class.danger]="danger()"
   (click)="onClick($event)"

@@ -11,6 +11,7 @@
   --ds-icon-button-fg:        var(--text-secondary);
   --ds-icon-button-border:    transparent;
   --ds-icon-button-bg-hover:  var(--surface-muted);
+  --ds-icon-button-bg-active: var(--ds-icon-button-bg-hover);
   --ds-icon-button-fg-hover:  var(--text-primary);
   --ds-icon-button-radius:    var(--r-md);
   --ds-icon-button-focus-shadow: var(--focus-ring);
@@ -37,6 +38,11 @@
   &:hover {
     background: var(--ds-icon-button-bg-hover);
     color: var(--ds-icon-button-fg-hover);
+  }
+  /* Pressed — bg shift only; a square icon button takes no inset/translate on
+     press (no layout nudge, no halo), just a deeper fill. */
+  &:active {
+    background: var(--ds-icon-button-bg-active);
   }
   &:focus-visible {
     outline: none;
@@ -66,12 +72,14 @@
     --ds-icon-button-bg:        var(--primary);
     --ds-icon-button-fg:        var(--primary-on);
     --ds-icon-button-bg-hover:  var(--primary-hover);
+    --ds-icon-button-bg-active: var(--primary-pressed);
     --ds-icon-button-fg-hover:  var(--primary-on);
   }
   &.tonal {
     --ds-icon-button-bg:        var(--primary-muted);
     --ds-icon-button-fg:        var(--primary-strong);
     --ds-icon-button-bg-hover:  var(--primary-subtle);
+    --ds-icon-button-bg-active: var(--primary-muted-strong);
     --ds-icon-button-fg-hover:  var(--primary-strong);
   }
   &.outlined {
@@ -79,6 +87,7 @@
     --ds-icon-button-fg:        var(--text-primary);
     --ds-icon-button-border:    var(--border-default);
     --ds-icon-button-bg-hover:  var(--surface-secondary);
+    --ds-icon-button-bg-active: var(--surface-muted);
     --ds-icon-button-fg-hover:  var(--text-primary);
   }
 
@@ -88,6 +97,7 @@
     --ds-icon-button-fg:        var(--primary-on);
     --ds-icon-button-border:    transparent;
     --ds-icon-button-bg-hover:  var(--primary-hover);
+    --ds-icon-button-bg-active: var(--primary-pressed);
     --ds-icon-button-fg-hover:  var(--primary-on);
   }
 }

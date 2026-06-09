@@ -26,6 +26,11 @@
   --ds-button-radius:        var(--r-md);
   --ds-button-focus-shadow:  var(--focus-ring);
 
+  /* Pressed halo — soft glow ring on :active (no layout shift). Derived from
+     the variant's own active background, so it auto-tints for danger/success/
+     warning/ghost without per-variant overrides. */
+  --ds-button-pressed-shadow: 0 0 0 3px color-mix(in srgb, var(--ds-button-bg-active) 35%, transparent);
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -46,12 +51,11 @@
   transition:
     background var(--dur-fast) var(--ease-standard),
     border-color var(--dur-fast) var(--ease-standard),
-    transform var(--dur-fast) var(--ease-standard),
     box-shadow var(--dur-fast) var(--ease-standard),
     color var(--dur-fast) var(--ease-standard);
 
   &:hover  { background: var(--ds-button-bg-hover); }
-  &:active { background: var(--ds-button-bg-active); transform: translateY(1px); }
+  &:active { background: var(--ds-button-bg-active); box-shadow: var(--ds-button-pressed-shadow); }
   &:focus-visible { outline: none; box-shadow: var(--ds-button-focus-shadow); z-index: var(--btn-focus-z); }
 
   &[disabled] {
