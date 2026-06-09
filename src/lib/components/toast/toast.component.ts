@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, computed, input, output } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
-import type { ToastVariant } from './toast.types';
+import type { ToastAction, ToastVariant } from './toast.types';
 
 /**
  * Single toast pill. Consumed by ToastRegion for service-driven runtime toasts
@@ -21,9 +21,20 @@ export class ToastComponent {
   readonly message = input<string>('');
   readonly dismissible = input<boolean>(false);
   readonly icon = input<IconName | null>(null);
+  readonly action = input<ToastAction | null>(null);
   readonly dismissed = output<void>();
 
+  protected onAction(action: ToastAction): void {
+    action.handler();
+    this.dismissed.emit();
+  }
+
   protected readonly classes = computed(() => `toast ${this.variant()}`);
+
+  /** Errors/warnings interrupt (assertive); info/success wait their turn. */
+  protected readonly role = computed<'alert' | 'status'>(() =>
+    this.variant() === 'error' || this.variant() === 'warning' ? 'alert' : 'status',
+  );
 
   protected readonly defaultIcon = computed<IconName>(() => {
     switch (this.variant()) {

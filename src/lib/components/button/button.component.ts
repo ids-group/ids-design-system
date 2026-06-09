@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, computed, input, output } from '@angular/core';
+import { Component, ViewEncapsulation, booleanAttribute, computed, input, output } from '@angular/core';
 import type { ButtonSize, ButtonType, ButtonVariant } from './button.types';
 
 @Component({
@@ -7,19 +7,21 @@ import type { ButtonSize, ButtonType, ButtonVariant } from './button.types';
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
-  host: { '[class.is-block]': 'block()' },
+  host: { '[class.full-width]': 'fullWidth()' },
 })
 export class ButtonComponent {
   readonly variant = input<ButtonVariant>('primary');
   readonly size = input<ButtonSize>('l');
   readonly type = input<ButtonType>('button');
-  readonly disabled = input<boolean>(false);
-  readonly loading = input<boolean>(false);
-  readonly iconOnly = input<boolean>(false);
-  /** Stretch the button to fill its container (replaces per-page ::ng-deep width hacks). */
-  readonly block = input<boolean>(false);
-  /** Accessible label, forwarded to the inner <button>. Required for icon-only buttons. */
-  readonly ariaLabel = input<string>('');
+  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly loading = input(false, { transform: booleanAttribute });
+  /** Stretch the button to fill its container — the host becomes block-level
+      and 100% wide (the inner control is already full-width). Use for mobile
+      primary CTAs and full-bleed form submit buttons. */
+  readonly fullWidth = input(false, { transform: booleanAttribute });
+  /** Accessible name — forwarded to the inner <button> as aria-label. Use when
+      the visible label is absent or non-descriptive. */
+  readonly ariaLabel = input<string | null>(null);
   readonly pressed = output<MouseEvent>();
 
   protected readonly classes = computed(() => {
@@ -28,7 +30,6 @@ export class ButtonComponent {
       'button',
       variant === 'primary' ? '' : variant,
       this.size(),
-      this.iconOnly() ? 'icon-only' : '',
       this.loading() ? 'loading' : '',
     ];
     return parts.filter(Boolean).join(' ');

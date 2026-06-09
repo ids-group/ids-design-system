@@ -23,6 +23,8 @@ import {
   type SelectSize,
 } from './select.types';
 
+let nextId = 0;
+
 @Component({
   selector: 'ds-select',
   standalone: true,
@@ -45,6 +47,23 @@ export class SelectComponent {
   readonly required = input<boolean>(false);
   readonly optional = input<boolean>(false);
   readonly name = input<string | null>(null);
+  /** Accessible name when no visible `label` is provided. */
+  readonly ariaLabel = input<string | null>(null);
+
+  protected readonly uid = `ds-select-${++nextId}`;
+  protected readonly labelId = `${this.uid}-label`;
+  protected readonly listboxId = `${this.uid}-listbox`;
+  protected optionId(flatIdx: number): string {
+    return `${this.uid}-opt-${flatIdx}`;
+  }
+  /** Active option for `aria-activedescendant` (combobox keeps DOM focus). */
+  protected readonly activeDescendant = computed(() => {
+    const idx = this.activeIndex();
+    return this.open() && idx >= 0 ? this.optionId(idx) : null;
+  });
+  protected readonly resolvedAriaLabel = computed(() =>
+    this.label() ? null : this.ariaLabel() || this.placeholder() || null,
+  );
 
   protected readonly trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
   protected readonly panelTpl = viewChild.required<TemplateRef<unknown>>('panel');

@@ -9,6 +9,9 @@ import type { IconName } from '../../icons/icons.data';
   templateUrl: './menu-item.component.html',
   styleUrl: './menu-item.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  // The host sits between the role="menu" <ul> and the role="menuitem" button,
+  // so mark it presentational to keep the menu→menuitem ownership intact.
+  host: { role: 'none' },
 })
 export class MenuItemComponent {
   readonly icon = input<IconName | null>(null);

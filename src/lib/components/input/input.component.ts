@@ -1,11 +1,16 @@
-import { Component, ViewEncapsulation, computed, input, model } from '@angular/core';
+import { Component, ViewEncapsulation, booleanAttribute, computed, input, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { IconComponent } from '../../icons/icon.component';
 import type { InputSize, InputType } from './input.types';
+
+/** Process-wide counter so each control gets a stable, unique id for
+ *  label/hint association (no DOM dependency, SSR-safe). */
+let nextId = 0;
 
 @Component({
   selector: 'ds-input',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, IconComponent],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -22,6 +27,21 @@ export class InputComponent {
   readonly required = input<boolean>(false);
   readonly optional = input<boolean>(false);
   readonly name = input<string | null>(null);
+  // Numeric constraints (applied when type="number").
+  readonly min = input<number | null>(null);
+  readonly max = input<number | null>(null);
+  readonly step = input<number | null>(null);
+  /** Native autocomplete token (e.g. "email", "current-password"). */
+  readonly autocomplete = input<string | null>(null);
+  readonly autofocus = input<boolean>(false);
+  /** Accessible name when no visible `label` is provided (falls back to the
+   *  placeholder so the control is never unnamed). */
+  readonly ariaLabel = input<string | null>(null);
+  /** Mobile keyboard hints — forwarded to the native input as attributes. */
+  readonly enterKeyHint = input<'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send' | null>(null);
+  readonly inputMode = input<'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url' | null>(null);
+  /** Emits when the native input loses focus. */
+  readonly blurred = output<void>();
   /**
    * Show an inline clear (×) button when the input has a non-empty value.
    * Mirrors the Material/PrimeNG pattern: explicit button (not native search
@@ -31,11 +51,35 @@ export class InputComponent {
    */
   readonly clearable = input<boolean | null>(null);
 
+  readonly passwordToggle = input(false, { transform: booleanAttribute });
+  readonly passwordVisible = model<boolean>(false);
+
   protected readonly canClear = computed<boolean>(() => {
     const explicit = this.clearable();
     if (explicit !== null) return explicit;
     return this.type() === 'search';
   });
+
+  protected readonly uid = `ds-input-${++nextId}`;
+  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  /** Only name via aria-label when there's no visible `<label for>`. */
+  protected readonly resolvedAriaLabel = computed(() =>
+    this.label() ? null : this.ariaLabel() || this.placeholder() || null,
+  );
+
+  protected readonly showPasswordToggle = computed<boolean>(
+    () => this.passwordToggle() && this.type() === 'password' && !this.disabled(),
+  );
+
+  protected readonly effectiveType = computed<InputType>(() =>
+    this.passwordToggle() && this.type() === 'password' && this.passwordVisible()
+      ? 'text'
+      : this.type(),
+  );
+
+  protected togglePassword(): void {
+    this.passwordVisible.update((visible) => !visible);
+  }
 
   protected readonly wrapperClasses = computed(() => {
     const parts = ['field'];

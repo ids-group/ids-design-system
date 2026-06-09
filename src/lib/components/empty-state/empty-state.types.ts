@@ -1,1 +1,1 @@
-export type EmptyStateVariant = 'none' | 'loading' | 'error' | 'locked';
+export type EmptyStateVariant = 'none' | 'loading' | 'error' | 'locked' | 'success';

@@ -6,7 +6,7 @@
    dark surface-default; the last two are reserved for
    "rest" / "other" buckets where contrast is less critical.
 
-   Sequential: single-hue ramp (violet) for ordinal data —
+   Sequential: single-hue ramp (blue) for ordinal data —
    "low → high" magnitudes.
 
    Divergent: red ↔ neutral ↔ green for signed data —
@@ -15,7 +15,7 @@
 
 :root {
   /* CATEGORICAL (8) ----------------------------------------- */
-  --chart-cat-1: hsl(229, 100%, 59%);   /* violet (brand) */
+  --chart-cat-1: hsl(229, 100%, 59%);   /* blue (primary) */
   --chart-cat-2: hsl(165,  72%, 38%);   /* teal */
   --chart-cat-3: hsl( 24,  95%, 55%);   /* orange */
   --chart-cat-4: hsl(330,  82%, 55%);   /* magenta */
@@ -25,12 +25,12 @@
   --chart-cat-8: hsl(130,  45%, 50%);   /* moss */
 
   /* SEQUENTIAL — single-hue, light → dark */
-  --chart-seq-1: var(--violet-100);
-  --chart-seq-2: var(--violet-200);
-  --chart-seq-3: var(--violet-300);
-  --chart-seq-4: var(--violet-500);
-  --chart-seq-5: var(--violet-700);
-  --chart-seq-6: var(--violet-900);
+  --chart-seq-1: var(--blue-100);
+  --chart-seq-2: var(--blue-200);
+  --chart-seq-3: var(--blue-300);
+  --chart-seq-4: var(--blue-500);
+  --chart-seq-5: var(--blue-700);
+  --chart-seq-6: var(--blue-900);
 
   /* DIVERGENT — red ← neutral → green
      Values taken verbatim from the source design prototype

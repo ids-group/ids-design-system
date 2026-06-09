@@ -3,11 +3,14 @@
 }
 
 .empty-state {
-  --ds-empty-state-tile-bg:    var(--surface-tint);
-  --ds-empty-state-tile-fg:    var(--text-secondary);
-  --ds-empty-state-title-fg:   var(--text-primary);
-  --ds-empty-state-body-fg:    var(--text-secondary);
-  --ds-empty-state-body-maxw:  var(--empty-body-maxw);
+  /* Public --ds-empty-state-* tokens are consumed with private fallbacks and
+     never declared by DS, so consumer declarations (host level included)
+     always win over variant defaults. */
+  --_es-tile-bg:    var(--surface-tint);
+  --_es-tile-fg:    var(--text-secondary);
+  --_es-title-fg:   var(--text-primary);
+  --_es-body-fg:    var(--text-secondary);
+  --_es-body-maxw:  var(--empty-body-maxw);
 
   display: flex;
   flex-direction: column;
@@ -21,21 +24,21 @@
     width: var(--empty-icon-size);
     height: var(--empty-icon-size);
     border-radius: var(--r-lg);
-    background: var(--ds-empty-state-tile-bg);
-    color: var(--ds-empty-state-tile-fg);
+    background: var(--ds-empty-state-tile-bg, var(--_es-tile-bg));
+    color: var(--ds-empty-state-tile-fg, var(--_es-tile-fg));
     display: grid;
     place-items: center;
     margin-bottom: var(--s-2);
   }
   .title {
     font: var(--fw-bold) var(--fs-h5)/var(--lh-snug) var(--font-sans);
-    color: var(--ds-empty-state-title-fg);
+    color: var(--ds-empty-state-title-fg, var(--_es-title-fg));
     margin: 0;
   }
   .body {
     font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
-    color: var(--ds-empty-state-body-fg);
-    max-width: var(--ds-empty-state-body-maxw);
+    color: var(--ds-empty-state-body-fg, var(--_es-body-fg));
+    max-width: var(--ds-empty-state-body-maxw, var(--_es-body-maxw));
     margin: 0;
   }
   .cta {
@@ -74,13 +77,18 @@
     }
   }
   &.error {
-    --ds-empty-state-tile-bg: var(--danger-subtle);
-    --ds-empty-state-tile-fg: var(--danger-text);
+    --_es-tile-bg: var(--error-subtle);
+    --_es-tile-fg: var(--error-text);
   }
 
   &.locked {
-    --ds-empty-state-tile-bg: var(--surface-muted);
-    --ds-empty-state-tile-fg: var(--text-tertiary);
+    --_es-tile-bg: var(--surface-muted);
+    --_es-tile-fg: var(--text-tertiary);
+  }
+
+  &.success {
+    --_es-tile-bg: var(--success-subtle);
+    --_es-tile-fg: var(--success-text);
   }
 }
 

@@ -45,9 +45,30 @@ export class TableComponent<T extends { id: string }> {
   readonly sortKey = model<string | null>(null);
   readonly sortDir = model<SortDir>(null);
   readonly skeletonRows = input<number>(5);
+  /** Accessible name for the table (rendered as a visually-hidden caption).
+   *  Without it, screen-reader users get an unlabelled table. */
+  readonly caption = input<string>('');
+  /** When true, each row becomes a keyboard-operable control (role=button,
+   *  tabindex, Enter/Space → rowClick) with an accessible name from the first
+   *  column. Off by default so non-navigating tables don't advertise a false
+   *  click affordance. */
+  readonly rowInteractive = input<boolean>(false);
 
   readonly rowClick = output<T>();
   readonly sortChange = output<SortChangeEvent>();
+
+  /** Cell templates supplied as an explicit map instead of (or in addition to)
+   *  projected `dsCellTemplate` directives. Lets a wrapper component (e.g.
+   *  ids-data-table) collect the directives itself and pass them down, since
+   *  content projected through a wrapper's `<ng-content>` is not seen by this
+   *  component's content query. Entries here override projected ones. */
+  readonly cellTemplateMap = input<
+    Record<string, TemplateRef<{ $implicit: unknown; row: unknown }>>
+  >({});
+
+  /** Empty-state template, as an alternative to the `[empty]` content slot —
+   *  again for wrappers that can't rely on slot re-projection. */
+  readonly emptyTemplate = input<TemplateRef<unknown> | null>(null);
 
   protected readonly cellTemplateDirectives = contentChildren(CellTemplateDirective);
 
@@ -58,7 +79,7 @@ export class TableComponent<T extends { id: string }> {
     for (const dir of this.cellTemplateDirectives()) {
       map[dir.dsCellTemplate()] = dir.template;
     }
-    return map;
+    return { ...map, ...this.cellTemplateMap() };
   });
 
   protected cellTemplate(col: TableColumn<T>): TemplateRef<{ $implicit: unknown; row: unknown }> | null {
@@ -119,6 +140,27 @@ export class TableComponent<T extends { id: string }> {
   protected onRowClick(row: T, event: Event): void {
     if ((event.target as HTMLElement).closest('input')) return;
     this.rowClick.emit(row);
+  }
+
+  protected onRowKey(row: T, event: Event): void {
+    if (!this.rowInteractive()) return;
+    event.preventDefault();
+    this.rowClick.emit(row);
+  }
+
+  /** Accessible name for an interactive row, taken from the first column. */
+  protected rowAriaLabel(row: T): string {
+    const first = this.columns()[0];
+    return first ? this.cellValue(row, first) : '';
+  }
+
+  /** `aria-sort` value for a header: only meaningful on sortable columns. */
+  protected ariaSort(col: TableColumn<T>): 'ascending' | 'descending' | 'none' | null {
+    if (!col.sortable) return null;
+    if (this.sortKey() === col.key && this.sortDir()) {
+      return this.sortDir() === 'asc' ? 'ascending' : 'descending';
+    }
+    return 'none';
   }
 
   protected onSort(col: TableColumn<T>): void {

@@ -1,6 +1,6 @@
 @if (open()) {
-  <div class="modal-backdrop" (click)="onBackdrop($event)">
-    <ds-modal-card [size]="size()" [danger]="danger()" [title]="title()" (closed)="onClose()">
+  <div class="modal-backdrop" (click)="onBackdrop($event)" (keydown.escape)="onClose()">
+    <ds-modal-card cdkTrapFocus cdkTrapFocusAutoCapture [size]="size()" [danger]="danger()" [title]="title()" (closed)="onClose()">
       <ng-container body><ng-content select="[body]"></ng-content></ng-container>
       <ng-container impact><ng-content select="[impact]"></ng-content></ng-container>
       <ng-container actions><ng-content select="[actions]"></ng-content></ng-container>

@@ -3,7 +3,9 @@
     [variant]="entry.variant"
     [title]="entry.title ?? ''"
     [message]="entry.body"
-    [dismissible]="entry.dismissible ?? false"
+    [dismissible]="entry.dismissible"
+    [action]="entry.action ?? null"
+    [class.leaving]="isLeaving(entry.id)"
     (dismissed)="remove(entry.id)"
   />
 }

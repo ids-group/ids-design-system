@@ -4,12 +4,12 @@
   --ds-sidenav-item-fg:               var(--text-secondary);
   --ds-sidenav-item-fg-hover:         var(--text-primary);
   --ds-sidenav-item-bg-hover:         var(--surface-secondary);
-  --ds-sidenav-item-bg-active:        var(--brand);
-  --ds-sidenav-item-fg-active:        var(--text-on-brand);
+  --ds-sidenav-item-bg-active:        var(--primary);
+  --ds-sidenav-item-fg-active:        var(--text-on-primary);
   --ds-sidenav-item-bg-active-hover:  color-mix(in srgb, var(--ds-sidenav-item-bg-active) 88%, white);
-  --ds-sidenav-item-accent:           var(--secondary);
+  --ds-sidenav-item-rail:           var(--secondary);
   --ds-sidenav-item-radius:           var(--r-md);
-  --ds-sidenav-alert-color:           var(--danger);
+  --ds-sidenav-alert-color:           var(--error);
 
   display: block;
 }
@@ -44,7 +44,7 @@
     color: var(--ds-sidenav-item-fg-active);
 
     /* inset box-shadow follows the item's rounded corners */
-    box-shadow: inset 3px 0 0 var(--ds-sidenav-item-accent);
+    box-shadow: inset 3px 0 0 var(--ds-sidenav-item-rail);
   }
 
   &.active:hover {
@@ -111,9 +111,9 @@
     .icon {
       font-size: 0;
     }
-
     .item-label,
-    .count {
+    .count,
+    .trailing {
       display: none;
     }
 

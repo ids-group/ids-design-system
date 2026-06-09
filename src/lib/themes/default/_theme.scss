@@ -1,0 +1,237 @@
+// =========================================================================
+// Default theme — Tier 2 semantic role ASSIGNMENTS (light).
+//
+// The palette (themes/default/_palette.scss) DEFINES the concrete colours
+// (--blue-*, --red-*, --neutral-*, … + HSL channels). THIS file SETS them
+// onto semantic roles (--primary → --blue-600, --surface-canvas → --neutral-50,
+// --error → --red-500, …). Components consume only these roles, never the
+// palette directly — so swapping the palette, or re-mapping here, re-skins the
+// whole system. A sibling theme (e.g. dark) ships its own palette + this map.
+//
+// Tier 3 (component-scoped tokens, geometry, typography, motion) lives in
+// styles/_tokens.scss and is theme-independent.
+// =========================================================================
+
+:root {
+  /* Surfaces — six-stop scale.
+     · canvas    : page background
+     · default   : cards, sheets, toolbars (the “paper”)
+     · secondary : hover lanes, table heads, addons, code blocks
+     · overlay   : modals, drawers, popovers (paired with scrim)
+     · tint      : brand-tinted (active rows, sidenav active item)
+     · inverted  : dark-on-light callouts, toasts
+     Conceptual elevation is communicated by SHADOW tokens,
+     not by surface tokens. Hover/pressed states use
+     --opacity-state-* overlays on top of the underlying surface. */
+  --surface-canvas:         var(--neutral-50);
+  --surface-default:        var(--neutral-0);
+  --surface-secondary:      var(--neutral-100);
+  --surface-overlay:        var(--neutral-0);
+  --surface-inverted:       var(--neutral-900);
+  --surface-inverted-hover: var(--neutral-800);
+  --surface-tint:           var(--blue-50);
+  --surface-disabled:       var(--neutral-100);
+  --surface-muted:          var(--neutral-150);
+
+  /* Scrim — modal/drawer backdrop. Derived from inverted surface
+     so dark-mode override flips automatically. */
+  --surface-scrim:     hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .55);
+
+  /* Visible-on-coloured-fill divider. The split-button right-hand chevron
+     sits ON the brand fill, so a transparent white hairline reads correctly
+     across any brand hue. Override per theme if the brand is too light. */
+  --btn-split-divider: hsla(0, 0%, 100%, .25);
+
+  /* Visited link — derives from --primary-muted by default so it sympathetically
+     shifts with the brand hue. Override (e.g. for financial dashboards that
+     want neutral-grey visited links) by setting this token directly. */
+  --link-visited:      hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%);
+
+  /* Borders */
+  --border-default:    var(--neutral-200);
+  --border-strong:     var(--neutral-300);
+  --border-subtle:     var(--neutral-150);
+  --border-divider:    var(--neutral-150);
+  --border-inverted:   var(--neutral-700);
+  --border-disabled:   var(--neutral-150);
+
+  /* Text */
+  --text-primary:      var(--neutral-900);
+  --text-secondary:    var(--neutral-700);
+  --text-tertiary:     var(--neutral-500);
+  --text-muted:        var(--neutral-400);
+  --text-disabled:     var(--neutral-400);
+  --text-inverted:     var(--neutral-0);
+  /* Text overlaid on arbitrary imagery (camera feeds, photos) — pairs a
+     guaranteed-light colour with a contrast shadow. */
+  --text-on-media:        var(--neutral-0);
+  --text-on-media-shadow: 0 1px 3px hsla(0, 0%, 0%, .7);
+  --text-link:         var(--blue-700);
+  --text-on-primary:     var(--neutral-0);
+  --text-on-success:   var(--neutral-0);
+  /* Warning fill is yellow (--yellow-400 #F4D43A) — white text on it is only
+     ~1.5:1 (fails WCAG). On-warning text is the darkest neutral (~10:1). */
+  --text-on-warning:   var(--neutral-900);
+  --text-on-error:     var(--neutral-0);
+
+  /* Icons */
+  --icon-default:      var(--neutral-500);
+  --icon-strong:       var(--neutral-700);
+  --icon-muted:        var(--neutral-400);
+  --icon-on-primary:     var(--neutral-0);
+
+  /* Font families — a theme/brand choice (the size/weight/leading SCALE is
+     theme-independent and lives in styles/_tokens.scss). Display + heading
+     default to body sans; a brand can mix a serif/display family here without
+     touching component code. */
+  --font-sans:    "Mulish", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: var(--font-sans);
+  --font-heading: var(--font-sans);
+
+  /* Semantic → palette bridge. The lib knows colours by PURPOSE; the theme
+     (themes/default/_theme.scss) ships the concrete ramps + HSL channels. This
+     is the one place that maps semantic roles onto a concrete palette. A brand
+     re-skins by overriding either the palette (--blue-*, --red-*) or these
+     role tokens directly.
+     Channel mappings let hsla() halos/tints compose from the same hue source. */
+  --primary-h:  var(--blue-h);
+  --primary-s:  var(--blue-s);
+  --primary-l:  var(--blue-l);
+  --error-h:    var(--red-h);
+  --error-s:    var(--red-s);
+  --error-l:    var(--red-l);
+
+  /* Primary roles.
+     Hover / pressed / selected-hover are DERIVED from --primary at runtime via
+     color-mix() so a brand swap (overriding only --primary) propagates to every
+     interaction state automatically. A brand that wants a non-derived hover
+     hue can still override these tokens directly.
+     Step sizes (12% / 24% darker) mirror the blue 600→700→800 ramp. */
+  --primary:                 var(--blue-600);
+  --primary-hover:           color-mix(in srgb, var(--primary) 88%, black);
+  --primary-pressed:         color-mix(in srgb, var(--primary) 76%, black);
+  --primary-selected-hover:  color-mix(in srgb, var(--primary) 88%, black);
+  --primary-subtle:          var(--blue-50);
+  --primary-muted:           var(--blue-100);
+  --primary-muted-strong:    var(--blue-200);
+  --primary-strong:          var(--blue-700);
+  --primary-on:              var(--neutral-0);
+
+  /* Accent / secondary role — composed from --secondary-h/s/l channels.
+     Channels default to brand values so unbranded apps render identical to
+     --primary. Override --secondary-h/s/l per-brand (or via the tweaks panel)
+     to introduce a true secondary hue — --secondary recomposes automatically.
+     Hover/pressed derive from --secondary so any hue change propagates. */
+  --secondary-h:       var(--primary-h);
+  --secondary-s:       var(--primary-s);
+  --secondary-l:       var(--primary-l);
+
+  --secondary:         hsl(var(--secondary-h), var(--secondary-s), var(--secondary-l));
+  --secondary-hover:   color-mix(in srgb, var(--secondary) 88%, black);
+  --secondary-pressed: color-mix(in srgb, var(--secondary) 76%, black);
+  --secondary-strong:  hsl(var(--secondary-h), var(--secondary-s), calc(var(--secondary-l) - 11%));
+  --secondary-subtle:  hsl(var(--secondary-h), 100%, 97%);
+  --secondary-muted:   hsl(var(--secondary-h), 95%, 94%);
+  --secondary-on:      var(--primary-on);
+
+  /* Tertiary — third brand hue. Used by the tertiary button variant and
+     tonal accents (decorative chips, hierarchy tones, indicators). Mirrors
+     the --primary / --secondary token-family shape: HSL channels for halo
+     composition, hover/pressed via color-mix, subtle/muted ramps for tonal
+     surfaces. Defaults to --primary channels so single-hue themes render
+     identical to primary. Multi-hue brands override --tertiary-h/s/l (or
+     --tertiary directly for non-HSL values). */
+  --tertiary-h:       var(--primary-h);
+  --tertiary-s:       var(--primary-s);
+  --tertiary-l:       var(--primary-l);
+
+  --tertiary:         hsl(var(--tertiary-h), var(--tertiary-s), var(--tertiary-l));
+  --tertiary-hover:   color-mix(in srgb, var(--tertiary) 88%, black);
+  --tertiary-pressed: color-mix(in srgb, var(--tertiary) 76%, black);
+  --tertiary-strong:  hsl(var(--tertiary-h), var(--tertiary-s), calc(var(--tertiary-l) - 11%));
+  --tertiary-subtle:  hsl(var(--tertiary-h), 100%, 97%);
+  --tertiary-muted:   hsl(var(--tertiary-h), 95%, 94%);
+  --tertiary-on:      var(--primary-on);
+
+  /* Status roles.
+     -hover / -pressed are derived from the base role via the same color-mix()
+     rule as --primary-hover. Override per role if a brand needs a non-derived
+     hue. -text / -border / -subtle / -muted stay as ramp picks because their
+     contrast targets are tuned, not procedural. */
+  --success:           var(--green-500);
+  --success-hover:     color-mix(in srgb, var(--success) 88%, black);
+  --success-subtle:    var(--green-50);
+  --success-muted:     var(--green-100);
+  --success-border:    var(--green-200);
+  --success-text:      var(--green-700);
+
+  --warning:           var(--yellow-400);
+  --warning-hover:     color-mix(in srgb, var(--warning) 88%, black);
+  --warning-subtle:    var(--yellow-50);
+  --warning-muted:     var(--yellow-100);
+  --warning-border:    var(--yellow-200);
+  --warning-text:      var(--yellow-700);
+
+  --error:            var(--red-500);
+  --error-hover:      color-mix(in srgb, var(--error) 88%, black);
+  --error-pressed:    color-mix(in srgb, var(--error) 76%, black);
+  --error-subtle:     var(--red-50);
+  --error-muted:      var(--red-100);
+  --error-border:     var(--red-200);
+  --error-text:       var(--red-600);
+
+  --info:              var(--sky-500);
+  --info-hover:        color-mix(in srgb, var(--info) 88%, black);
+  --info-subtle:       var(--sky-50);
+  --info-muted:        var(--sky-100);
+  --info-border:       var(--sky-200);
+  --info-text:         var(--sky-700);
+
+  /* Status pills (event lifecycle).
+     DECISION: --status-confirmed-* chains through --primary-* so a
+     brand re-skin moves Confirmed with it. The other lifecycle
+     stages are deliberately neutral/green/dark to keep semantic
+     distance from brand. */
+  /* Status pills — canonical (single system).
+     Legacy classes `.badge--active` (single) and ad-hoc semantic
+     pills are unified in the Badge component to consume these tokens. */
+  --status-planning-bg:   var(--neutral-150);
+  --status-planning-fg:   var(--neutral-700);
+  --status-confirmed-bg:  var(--primary-subtle);
+  --status-confirmed-fg:  var(--primary-strong);
+  --status-active-bg:     var(--green-50);
+  --status-active-fg:     var(--green-700);
+  --status-completed-bg:  var(--neutral-900);
+  --status-completed-fg:  var(--neutral-0);
+
+  /* Focus rings.
+     Outer halos use hsla() composed from brand/danger HSL channels
+     so re-skinning --primary-h propagates into focus state.
+     The inner halo reads --surface-canvas so the ring stays visible
+     in both light and dark themes (canvas flips, ring adapts). */
+  --focus-ring-inner:        var(--surface-canvas);
+  --focus-ring-outer-h:      var(--primary-h);
+  --focus-ring-outer-s:      var(--primary-s);
+  --focus-ring-outer-l:      var(--primary-l);
+  --focus-ring-outer-alpha:  1;
+
+  --focus-ring:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsla(var(--focus-ring-outer-h), var(--focus-ring-outer-s), var(--focus-ring-outer-l), var(--focus-ring-outer-alpha));
+  --focus-ring-inverted:
+    0 0 0 2px var(--neutral-900),
+    0 0 0 4px var(--blue-300);
+  --focus-ring-error:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsla(var(--error-h), var(--error-s), var(--error-l), 1);
+
+  /* Field focus — coloured halo only (no double-ring). Derived from
+     brand HSL so it tracks rebrand. Alpha is a token so dark themes
+     can boost it for legibility. */
+  --focus-field-alpha: .22;
+  --focus-field:
+    0 0 0 3px hsla(var(--primary-h), var(--primary-s), var(--primary-l), var(--focus-field-alpha));
+  --focus-field-error:
+    0 0 0 3px hsla(var(--error-h), var(--error-s), var(--error-l), var(--focus-field-alpha));
+}

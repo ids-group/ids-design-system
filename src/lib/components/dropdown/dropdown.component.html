@@ -1,12 +1,20 @@
 @if (label()) {
-  <span class="dropdown-label">{{ label() }}</span>
+  <span class="dropdown-label" [id]="labelId">{{ label() }}</span>
 }
 
 <button
   #trigger
   type="button"
+  role="combobox"
+  aria-haspopup="listbox"
   [class]="wrapperClasses()"
   [attr.name]="name()"
+  [attr.aria-expanded]="open()"
+  [attr.aria-controls]="listboxId"
+  [attr.aria-activedescendant]="activeDescendant()"
+  [attr.aria-labelledby]="label() ? labelId : null"
+  [attr.aria-label]="resolvedAriaLabel()"
+  [attr.aria-invalid]="error() ? 'true' : null"
   [disabled]="disabled()"
   (click)="toggle()"
   (keydown)="onTriggerKeydown($event)"
@@ -17,12 +25,16 @@
 
 <ng-template #panel>
   <div class="dropdown-panel">
-    <ul class="dropdown-list" role="listbox">
+    <ul class="dropdown-list" role="listbox" [id]="listboxId" [attr.aria-labelledby]="label() ? labelId : null">
       @for (opt of options(); track opt.value; let i = $index) {
-        <li>
+        <li role="presentation">
           <button
             type="button"
+            role="option"
             class="option"
+            [id]="optionId(i)"
+            [attr.aria-selected]="isSelected(opt)"
+            [attr.aria-disabled]="opt.disabled ? 'true' : null"
             [class.is-selected]="isSelected(opt)"
             [class.is-active]="isActive(i)"
             [class.is-disabled]="opt.disabled"

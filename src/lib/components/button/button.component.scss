@@ -5,21 +5,19 @@
   display: inline-flex;
 }
 
-/* Full-width button (opt-in via [block]="true"). Replaces per-page ::ng-deep
-   width hacks — the host stretches and the inner control fills it. */
-:host(.is-block) {
-  display: flex;
+/* Full-width — host stretches to its container; the inner .button is already
+   width:100%, so it fills. Set via the `fullWidth` input. */
+:host(.full-width) {
+  display: block;
   width: 100%;
-
-  .button { width: 100%; }
 }
 
 .button {
   /* Surface */
-  --ds-button-bg:            var(--brand);
-  --ds-button-bg-hover:      var(--brand-hover);
-  --ds-button-bg-active:     var(--brand-pressed);
-  --ds-button-fg:            var(--brand-on);
+  --ds-button-bg:            var(--primary);
+  --ds-button-bg-hover:      var(--primary-hover);
+  --ds-button-bg-active:     var(--primary-pressed);
+  --ds-button-fg:            var(--primary-on);
   --ds-button-border:        transparent;
   /* State */
   --ds-button-bg-disabled:   var(--surface-disabled);
@@ -45,6 +43,7 @@
   border-radius: var(--ds-button-radius);
   padding: 0 var(--s-5);
   height: var(--hit-cozy);
+  width: 100%;
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
@@ -91,29 +90,31 @@
 
   /* Variants */
   &.secondary {
-    --ds-button-bg:        var(--brand-muted);
-    --ds-button-fg:        var(--brand-strong);
-    --ds-button-bg-hover:  var(--brand-muted-strong);
-    --ds-button-bg-active: var(--brand-muted-strong);
+    --ds-button-bg:        var(--primary-muted);
+    --ds-button-fg:        var(--primary-strong);
+    --ds-button-bg-hover:  var(--primary-muted-strong);
+    --ds-button-bg-active: var(--primary-muted-strong);
   }
   &.tertiary {
     --ds-button-bg:        transparent;
-    --ds-button-fg:        var(--brand-strong);
-    --ds-button-bg-hover:  var(--brand-subtle);
-    --ds-button-bg-active: var(--brand-muted);
+    --ds-button-fg:        var(--primary-strong);
+    --ds-button-bg-hover:  var(--primary-subtle);
+    --ds-button-bg-active: var(--primary-muted);
   }
-  &.ghost {
+  /* Bordered neutral, low-emphasis. (Was also exposed as `ghost`; removed —
+     `ghost` implied chromeless, which this isn't. Icon-only lives in ds-icon-button.) */
+  &.outline {
     --ds-button-bg:        var(--surface-default);
     --ds-button-fg:        var(--text-primary);
     --ds-button-border:    var(--border-default);
     --ds-button-bg-hover:  var(--surface-secondary);
     --ds-button-bg-active: var(--surface-secondary);
   }
-  &.danger {
-    --ds-button-bg:        var(--danger);
-    --ds-button-bg-hover:  var(--danger-hover);
-    --ds-button-bg-active: var(--danger-pressed);
-    --ds-button-focus-shadow: var(--focus-ring-danger);
+  &.error {
+    --ds-button-bg:        var(--error);
+    --ds-button-bg-hover:  var(--error-hover);
+    --ds-button-bg-active: var(--error-pressed);
+    --ds-button-focus-shadow: var(--focus-ring-error);
   }
   &.success {
     --ds-button-bg:        var(--success);
@@ -126,56 +127,21 @@
     --ds-button-bg:        var(--warning);
     --ds-button-bg-hover:  var(--warning-hover);
     --ds-button-bg-active: var(--warning-hover);
-    --ds-button-fg:        var(--text-on-warning, var(--neutral-0));
+    --ds-button-fg:        var(--text-on-warning);
     --ds-button-border:    transparent;
   }
 
-  &.link {
+  &.text {
     --ds-button-bg:        transparent;
     --ds-button-fg:        var(--text-link);
     --ds-button-border:    transparent;
     --ds-button-bg-hover:  transparent;
     --ds-button-bg-active: transparent;
-    padding: 0; height: auto;
+    padding: 0; height: auto; width: auto;
     text-decoration: underline;
     text-underline-offset: var(--btn-link-uloff);
 
-    &:hover { color: var(--brand-pressed); }
-  }
-
-  /* Icon-only — square hit area, Material/PrimeNG-style polish.
-     Removes :active nudge (chunky on a square), enforces 1:1 via
-     aspect-ratio, and turns ghost into a borderless transparent
-     surface that reveals affordance on hover/focus only. */
-  &.icon-only {
-    padding: 0;
-    width: var(--hit-cozy);
-    aspect-ratio: 1;
-
-    &.m  { width: var(--hit-min); }
-    &.s  { width: var(--hit-xs); }
-    &.lg { width: var(--field-h-lg); }
-    &.md { width: var(--hit-cozy); }
-    &.sm { width: var(--hit-min); }
-
-    /* No pressed inset on a square icon button — only bg shifts on press. */
-    &:active { box-shadow: none; }
-
-    /* Ghost icon-only: borderless transparent chrome, hover-tint reveal.
-       Overrides the opaque-ghost rule (which exists so text-ghost buttons
-       don't look hollow on tinted parents); icon-only ghost is the Material
-       "tool button" pattern and looks best when chromeless at rest.
-       Hover steps to --surface-muted so the affordance stays visible on
-       --surface-secondary parents (e.g. zoom track in offer-journey). */
-    &.ghost {
-      --ds-button-bg:        transparent;
-      --ds-button-border:    transparent;
-      --ds-button-fg:        var(--text-secondary);
-      --ds-button-bg-hover:  var(--surface-muted);
-      --ds-button-bg-active: var(--surface-muted);
-
-      &:hover { color: var(--text-primary); }
-    }
+    &:hover { color: var(--primary-pressed); }
   }
 
   /* Loading */
@@ -188,14 +154,14 @@
       border: var(--bw-strong) solid currentColor;
       border-right-color: transparent;
       border-radius: var(--r-pill);
-      color: var(--brand-on);
+      color: var(--primary-on);
       animation: spin var(--dur-loop-fast) linear infinite;
     }
   }
 
   &.secondary.loading::after,
   &.tertiary.loading::after,
-  &.ghost.loading::after { color: var(--brand-strong); }
+  &.outline.loading::after { color: var(--primary-strong); }
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -242,9 +208,9 @@
 
   &:hover { background: var(--surface-secondary); color: var(--text-primary); }
   &[aria-pressed="true"] {
-    background: var(--brand-subtle);
-    border-color: var(--brand);
-    color: var(--brand-strong);
+    background: var(--primary-subtle);
+    border-color: var(--primary);
+    color: var(--primary-strong);
   }
   &:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 }

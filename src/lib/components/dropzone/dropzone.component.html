@@ -6,10 +6,11 @@
 >
   <input
     type="file"
+    class="dz-input"
+    aria-label="Upload files"
     [attr.accept]="accept() || null"
     [multiple]="multiple()"
     (change)="onPickerChange($event)"
-    style="display: none"
   />
   @if (files().length === 0) {
     <ds-icon name="upload" [size]="24"></ds-icon>
@@ -28,7 +29,7 @@
               <div class="progress"><div class="progress-fill" [style.width.%]="file.progress"></div></div>
             }
           </div>
-          <button class="remove" type="button" (click)="onRemove(file); $event.preventDefault(); $event.stopPropagation()">
+          <button class="remove" type="button" [attr.aria-label]="'Remove ' + file.name" (click)="onRemove(file); $event.preventDefault(); $event.stopPropagation()">
             <ds-icon name="x" [size]="14"></ds-icon>
           </button>
         </div>

@@ -9,7 +9,7 @@
   > span {
     display: block;
     height: 100%;
-    background: var(--brand);
+    background: var(--primary);
     border-radius: var(--r-pill);
     transition: width var(--dur-base) var(--ease-standard);
   }
@@ -17,7 +17,7 @@
 
 :host(.success) > span { background: var(--success); }
 :host(.warn)    > span { background: var(--warning-hover); }
-:host(.error)   > span { background: var(--danger); }
+:host(.error)   > span { background: var(--error); }
 
 :host(.indeterminate) > span {
   width: 30%;

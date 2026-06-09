@@ -45,13 +45,13 @@
     --ds-banner-border: var(--warning-border);
   }
   &.error   {
-    --ds-banner-bar:    var(--danger);
-    --ds-banner-bg:     var(--danger-subtle);
-    --ds-banner-fg:     var(--danger-text);
-    --ds-banner-border: var(--danger-border);
+    --ds-banner-bar:    var(--error);
+    --ds-banner-bg:     var(--error-subtle);
+    --ds-banner-fg:     var(--error-text);
+    --ds-banner-border: var(--error-border);
   }
   &.neutral {
-    --ds-banner-bar:    var(--neutral-300);
+    --ds-banner-bar:    var(--border-strong);
     --ds-banner-bg:     var(--surface-secondary);
     --ds-banner-fg:     var(--text-secondary);
     --ds-banner-border: var(--border-default);

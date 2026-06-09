@@ -29,6 +29,7 @@ export class EmptyStateComponent {
     const variant = this.variant();
     if (variant === 'error') return 'warn';
     if (variant === 'locked') return 'lock';
+    if (variant === 'success') return 'success';
     if (variant === 'loading') return 'package';
     return 'package';
   });

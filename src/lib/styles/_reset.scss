@@ -10,3 +10,8 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 button, input, select, textarea { font-family: inherit; }
+
+/* Zero the browser's default heading margins (~0.83em) — they otherwise leak
+   into consumers and mangle spacing. Headings get their size from .t-* utils;
+   spacing is owned by the surrounding layout (gap / margin), not the element. */
+h1, h2, h3, h4, h5, h6 { margin: 0; }

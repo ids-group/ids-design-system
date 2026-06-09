@@ -87,7 +87,7 @@
     }
 
     .option-check {
-      color: var(--brand);
+      color: var(--primary);
       flex: 0 0 auto;
     }
 
@@ -102,10 +102,10 @@
     }
 
     &.is-selected {
-      background: var(--brand-subtle);
-      color: var(--brand-strong);
+      background: var(--primary-subtle);
+      color: var(--primary-strong);
 
-      .option-icon { color: var(--brand-strong); }
+      .option-icon { color: var(--primary-strong); }
     }
 
     &.is-disabled {

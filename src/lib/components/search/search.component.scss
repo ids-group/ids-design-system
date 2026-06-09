@@ -8,11 +8,11 @@
 }
 
 .search {
-  --ds-search-bg: var(--surface-secondary);
+  --ds-search-bg: var(--surface-default);
   --ds-search-bg-focus: var(--surface-default);
-  --ds-search-border: transparent;
+  --ds-search-border: var(--border-default);
   --ds-search-border-hover: var(--border-default);
-  --ds-search-border-focus: var(--brand);
+  --ds-search-border-focus: var(--primary);
   --ds-search-focus-shadow: var(--focus-field);
   --ds-search-fg: var(--text-primary);
   --ds-search-placeholder: var(--text-tertiary);
@@ -60,6 +60,29 @@
 
     &::placeholder {
       color: var(--ds-search-placeholder);
+    }
+  }
+
+  .search-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 2px;
+    border: 0;
+    background: transparent;
+    border-radius: var(--r-pill, 999px);
+    color: var(--icon-default);
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity var(--dur-fast) var(--ease-standard),
+      background var(--dur-fast) var(--ease-standard);
+
+    .icon { width: 14px; height: 14px; }
+
+    &:hover {
+      opacity: 1;
+      background: var(--surface-muted, rgb(0 0 0 / 6%));
     }
   }
 

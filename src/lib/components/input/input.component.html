@@ -1,30 +1,54 @@
 <div [class]="wrapperClasses()">
   @if (label()) {
-    <span class="label">
+    <label class="label" [attr.for]="uid">
       {{ label() }}
       @if (required()) {
         <span class="req" aria-hidden="true">*</span>
       } @else if (optional()) {
         <span class="optional-marker" aria-hidden="true">(optional)</span>
       }
-    </span>
+    </label>
   }
   <div class="control">
     <span class="addon-slot prefix"><ng-content select="[dsInputPrefix]"></ng-content></span>
     <input
-      [type]="type()"
+      [id]="uid"
+      [type]="effectiveType()"
       [(ngModel)]="value"
       [attr.name]="name()"
+      [attr.min]="min()"
+      [attr.max]="max()"
+      [attr.step]="step()"
+      [attr.autocomplete]="autocomplete()"
+      [attr.autofocus]="autofocus() ? '' : null"
       [attr.placeholder]="placeholder() || null"
+      [attr.aria-label]="resolvedAriaLabel()"
+      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-describedby]="hintId()"
+      [attr.aria-required]="required() ? 'true' : null"
+      [attr.enterkeyhint]="enterKeyHint()"
+      [attr.inputmode]="inputMode()"
       [disabled]="disabled()"
       [required]="required()"
+      (blur)="blurred.emit()"
     />
     @if (canClear() && value() && !disabled()) {
-      <button type="button" class="clear-btn" (click)="clear()" tabindex="-1" aria-label="Clear input"></button>
+      <button type="button" class="clear-btn" (click)="clear()" aria-label="Clear input"></button>
+    }
+    @if (showPasswordToggle()) {
+      <button
+        type="button"
+        class="password-toggle"
+        tabindex="-1"
+        [attr.aria-label]="passwordVisible() ? 'Hide password' : 'Show password'"
+        (click)="togglePassword()"
+      >
+        <ds-icon [name]="passwordVisible() ? 'eye-off' : 'eye'" [size]="16" />
+      </button>
     }
     <span class="addon-slot suffix"><ng-content select="[dsInputSuffix]"></ng-content></span>
   </div>
   @if (hint()) {
-    <span class="hint">{{ hint() }}</span>
+    <span class="hint" [id]="hintId()" [attr.role]="invalid() ? 'alert' : null">{{ hint() }}</span>
   }
 </div>

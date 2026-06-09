@@ -14,7 +14,10 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "preserve",
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "ds": ["./dist/ds"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
@@ -27,6 +30,9 @@
   "references": [
     {
       "path": "./tsconfig.lib.json"
+    },
+    {
+      "path": "./ds-docs/tsconfig.app.json"
     }
   ]
 }

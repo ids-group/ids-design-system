@@ -11,6 +11,8 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { TooltipPanelComponent } from './tooltip-panel.component';
 import type { TooltipPlacement } from './tooltip.types';
 
+let nextId = 0;
+
 @Directive({
   selector: '[dsTooltip]',
   standalone: true,
@@ -25,6 +27,7 @@ export class TooltipDirective implements OnDestroy {
 
   private ref: OverlayRef | null = null;
   private timer: number | null = null;
+  private readonly tipId = `ds-tooltip-${++nextId}`;
 
   @HostListener('mouseenter')
   @HostListener('focus')
@@ -43,6 +46,18 @@ export class TooltipDirective implements OnDestroy {
     }
     this.ref?.dispose();
     this.ref = null;
+    const host = this.host.nativeElement;
+    const remaining = (host.getAttribute('aria-describedby') ?? '')
+      .split(' ')
+      .filter((id: string) => id && id !== this.tipId)
+      .join(' ');
+    if (remaining) host.setAttribute('aria-describedby', remaining);
+    else host.removeAttribute('aria-describedby');
+  }
+
+  @HostListener('keydown.escape')
+  protected onEscape(): void {
+    if (this.ref) this.onClose();
   }
 
   private show(): void {
@@ -59,6 +74,10 @@ export class TooltipDirective implements OnDestroy {
     const cmpRef = this.ref.attach(new ComponentPortal(TooltipPanelComponent));
     cmpRef.setInput('text', this.dsTooltip());
     cmpRef.setInput('placement', placement);
+    cmpRef.setInput('panelId', this.tipId);
+    const host = this.host.nativeElement;
+    const existing = host.getAttribute('aria-describedby');
+    host.setAttribute('aria-describedby', existing ? `${existing} ${this.tipId}` : this.tipId);
   }
 
   private positionFor(p: TooltipPlacement) {

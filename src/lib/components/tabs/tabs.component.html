@@ -1,10 +1,16 @@
-<nav [class]="tabsClasses()">
+<div [class]="tabsClasses()" role="tablist">
   @for (tab of tabs(); track $index) {
     <button
       type="button"
+      role="tab"
+      [id]="tabId($index)"
       [class]="tabClasses($index, tab.disabled())"
+      [attr.aria-selected]="$index === selectedIndex()"
+      [attr.aria-controls]="panelId($index)"
+      [attr.tabindex]="$index === selectedIndex() ? 0 : -1"
       [disabled]="tab.disabled()"
       (click)="select($index, tab.disabled())"
+      (keydown)="onKeydown($event, $index)"
     >
       @if (tab.icon()) {
         <ds-icon [name]="tab.icon()!" [size]="14"></ds-icon>
@@ -15,8 +21,14 @@
       }
     </button>
   }
-</nav>
-<div class="panel">
+</div>
+<div
+  class="panel"
+  role="tabpanel"
+  [id]="panelId(selectedIndex())"
+  [attr.aria-labelledby]="tabId(selectedIndex())"
+  tabindex="0"
+>
   @if (selectedTemplate(); as tpl) {
     <ng-container *ngTemplateOutlet="tpl"></ng-container>
   }

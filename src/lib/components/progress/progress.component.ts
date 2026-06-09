@@ -9,6 +9,11 @@ import type { ProgressVariant } from './progress.types';
   styleUrl: './progress.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   host: {
+    role: 'progressbar',
+    'aria-valuemin': '0',
+    'aria-valuemax': '100',
+    '[attr.aria-valuenow]': 'isIndet() ? null : clampedValue()',
+    '[attr.aria-label]': 'ariaLabel()',
     '[class.success]': "variant() === 'success'",
     '[class.warn]':    "variant() === 'warn'",
     '[class.error]':   "variant() === 'error'",
@@ -18,6 +23,8 @@ import type { ProgressVariant } from './progress.types';
 export class ProgressComponent {
   readonly value = input<number>(0);
   readonly variant = input<ProgressVariant>('default');
+  /** Accessible name for the progress bar (e.g. "Upload progress"). */
+  readonly ariaLabel = input<string | null>(null);
 
   protected readonly clampedValue = computed(() => {
     const v = this.value();

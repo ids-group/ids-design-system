@@ -22,6 +22,19 @@
   --ds-table-header-fs: var(--fs-xs);
 }
 
+// Visually-hidden but screen-reader-available (table caption + loading status).
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Opt-in outer frame via `[bordered]="true"` — gives standalone tables
    (data-ingest preview, segmentation preview, offers tab, summary tab) a
    defined edge. Tables flush inside `<ds-card padding="none">` stay clean
@@ -62,7 +75,7 @@
     width: var(--spinner-md, 24px);
     height: var(--spinner-md, 24px);
     border: var(--bw-strong, 2px) solid var(--border-default);
-    border-top-color: var(--brand);
+    border-top-color: var(--primary);
     border-radius: var(--r-pill);
     animation: ds-table-overlay-spin var(--dur-loop-fast, 700ms) linear infinite;
   }
@@ -75,9 +88,9 @@
 .table {
   --ds-table-bg:              var(--surface-default);
   --ds-table-row-hover-bg:    var(--surface-secondary);
-  --ds-table-row-selected-bg: var(--brand-subtle);
+  --ds-table-row-selected-bg: var(--primary-subtle);
   --ds-table-divider:         var(--border-divider);
-  --ds-table-sort-active-fg:  var(--brand);
+  --ds-table-sort-active-fg:  var(--primary);
   --ds-table-cell-pad-x:      var(--table-cell-pad-x);
   --ds-table-cell-pad-y:      var(--table-cell-pad-y);
 
@@ -101,12 +114,35 @@
     top: 0;
     z-index: var(--table-sticky-header-z);
 
-    &.sortable {
+    .th-label {
+      display: inline-flex;
+      align-items: center;
+      vertical-align: middle;
+      // Button reset so the sortable <button> matches the plain header label.
+      appearance: none;
+      background: none;
+      border: 0;
+      margin: 0;
+      padding: 0;
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      color: inherit;
+      text-align: left;
+    }
+
+    button.th-label {
       cursor: pointer;
       user-select: none;
 
       &:hover {
         color: var(--text-secondary);
+      }
+
+      &:focus-visible {
+        outline: var(--bw-strong, 2px) solid var(--primary);
+        outline-offset: 2px;
+        border-radius: var(--r-sm);
       }
     }
 
@@ -184,6 +220,11 @@
 
       &.clickable {
         cursor: pointer;
+      }
+
+      &.clickable:focus-visible {
+        outline: var(--bw-strong, 2px) solid var(--primary);
+        outline-offset: -2px;
       }
     }
   }
