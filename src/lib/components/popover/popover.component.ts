@@ -1,8 +1,11 @@
 import {
   Component,
+  OnDestroy,
+  Renderer2,
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
+  booleanAttribute,
   inject,
   input,
   signal,
@@ -22,11 +25,13 @@ export type PopoverAlign = 'start' | 'end';
   styleUrl: './popover.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
 })
-export class PopoverComponent {
+export class PopoverComponent implements OnDestroy {
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
+  private readonly renderer = inject(Renderer2);
   protected readonly panelTpl = viewChild.required<TemplateRef<unknown>>('panel');
   private ref: OverlayRef | null = null;
+  private dismissUnlisten: (() => void) | null = null;
 
   readonly align = input<PopoverAlign>('start');
 
@@ -37,6 +42,13 @@ export class PopoverComponent {
   readonly panelRole = input<string | null>(null);
   /** Accessible name for the panel; pair with `panelRole`. */
   readonly panelLabel = input<string | null>(null);
+
+  /** Auto-dismiss when an actionable item (`[role="menuitem"]`) inside the panel
+   *  is clicked, so a popover used as a menu closes on pick. Keyed off the ARIA
+   *  role, not a component selector, so the popover stays decoupled from
+   *  ds-menu-item. Disabled items render a disabled <button> that never fires
+   *  click. Set false for popovers that aren't menus. */
+  readonly dismissOnSelect = input(true, { transform: booleanAttribute });
 
   /** Open/closed state — for callers binding `aria-expanded` on the trigger. */
   readonly opened = signal(false);
@@ -71,21 +83,31 @@ export class PopoverComponent {
     this.ref.attach(new TemplatePortal(this.panelTpl(), this.vcr));
     this.opened.set(true);
 
-    // Dismiss when an actionable menu item inside the panel is clicked, so a
-    // menu behaves like a menu (pick → close). Disabled items render a disabled
-    // <button> that never fires click, so they won't dismiss it. The item's own
-    // (pressed) handler runs first (target phase) before this bubbled listener.
-    this.ref.overlayElement.addEventListener('click', (event) => {
-      const target = event.target as HTMLElement | null;
-      if (target?.closest('ds-menu-item')) {
-        this.close();
-      }
-    });
+    // The clicked item's own (pressed) handler runs first (target phase) before
+    // this bubbled listener. Renderer2.listen returns an unlisten fn dropped in
+    // close(), so nothing outlives the open panel.
+    if (this.dismissOnSelect()) {
+      this.dismissUnlisten = this.renderer.listen(
+        this.ref.overlayElement,
+        'click',
+        (event: Event) => {
+          if ((event.target as Element | null)?.closest('[role="menuitem"]')) {
+            this.close();
+          }
+        },
+      );
+    }
   }
 
   close(): void {
+    this.dismissUnlisten?.();
+    this.dismissUnlisten = null;
     this.ref?.dispose();
     this.ref = null;
     this.opened.set(false);
+  }
+
+  ngOnDestroy(): void {
+    this.close();
   }
 }
