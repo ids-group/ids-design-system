@@ -13,7 +13,7 @@ import {
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
-import { DismissibleOverlay } from '../../overlay/dismissible-overlay';
+import { DsDismissRef } from '../../overlay/ds-dismiss-ref';
 
 export type PopoverAlign = 'start' | 'end';
 
@@ -24,11 +24,11 @@ export type PopoverAlign = 'start' | 'end';
   templateUrl: './popover.component.html',
   styleUrl: './popover.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
-  // Expose this popover as a DismissibleOverlay so projected content (e.g.
+  // Expose this popover as a DsDismissRef so projected content (e.g.
   // ds-menu-item) can close it via DI — the popover never references a child.
-  providers: [{ provide: DismissibleOverlay, useExisting: forwardRef(() => PopoverComponent) }],
+  providers: [{ provide: DsDismissRef, useExisting: forwardRef(() => PopoverComponent) }],
 })
-export class PopoverComponent implements OnDestroy, DismissibleOverlay {
+export class PopoverComponent implements OnDestroy, DsDismissRef {
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   protected readonly panelTpl = viewChild.required<TemplateRef<unknown>>('panel');

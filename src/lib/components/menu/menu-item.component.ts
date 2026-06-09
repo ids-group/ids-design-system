@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewEncapsulation, inject, input, output, signal, viewChild } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
-import { DismissibleOverlay } from '../../overlay/dismissible-overlay';
+import { DsDismissRef } from '../../overlay/ds-dismiss-ref';
 
 @Component({
   selector: 'ds-menu-item',
@@ -15,9 +15,9 @@ import { DismissibleOverlay } from '../../overlay/dismissible-overlay';
   host: { role: 'none' },
 })
 export class MenuItemComponent {
-  // A dismissible container (e.g. popover), if any — selecting an item closes it
-  // (a menu pick closes the menu). Optional, so menu-items also work standalone.
-  private readonly overlay = inject(DismissibleOverlay, { optional: true });
+  // A dismiss handle for the containing overlay (e.g. popover), if any —
+  // selecting an item closes it. Optional, so menu-items also work standalone.
+  private readonly dismissRef = inject(DsDismissRef, { optional: true });
   private readonly button = viewChild.required<ElementRef<HTMLButtonElement>>('button');
 
   readonly icon = input<IconName | null>(null);
@@ -49,6 +49,6 @@ export class MenuItemComponent {
   protected onClick(event: MouseEvent): void {
     if (this.disabled()) return;
     this.pressed.emit(event);
-    this.overlay?.close();
+    this.dismissRef?.close();
   }
 }
