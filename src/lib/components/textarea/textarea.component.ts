@@ -2,6 +2,8 @@ import { Component, ViewEncapsulation, booleanAttribute, computed, input, model 
 import { FormsModule } from '@angular/forms';
 import type { TextareaSize, TextareaResize } from './textarea.types';
 
+let nextId = 0;
+
 @Component({
   selector: 'ds-textarea',
   standalone: true,
@@ -26,6 +28,14 @@ export class TextareaComponent {
   readonly minRows = input<number | null>(null);
   readonly maxRows = input<number | null>(null);
   readonly resize = input<TextareaResize>('vertical');
+  /** Accessible name when no visible `label` is provided. */
+  readonly ariaLabel = input<string | null>(null);
+
+  protected readonly uid = `ds-textarea-${++nextId}`;
+  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly resolvedAriaLabel = computed(() =>
+    this.label() ? null : this.ariaLabel() || this.placeholder() || null,
+  );
 
   protected readonly wrapperClasses = computed(() => {
     const parts = ['field'];

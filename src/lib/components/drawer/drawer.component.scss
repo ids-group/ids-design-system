@@ -3,6 +3,19 @@
 
 :host { display: contents; }
 
+.drawer-scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--scrim, hsla(220, 20%, 12%, 0.45));
+  z-index: var(--layer-modal);
+  animation: drawer-scrim-in var(--dur-fast, 120ms) var(--ease-decelerate, ease-out);
+}
+
+@keyframes drawer-scrim-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .drawer {
   position: fixed;
   top: 0;

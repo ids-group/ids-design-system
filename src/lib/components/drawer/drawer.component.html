@@ -1,7 +1,16 @@
 @if (open()) {
-  <div [class]="classes()">
+  <div class="drawer-scrim" (click)="onClose()"></div>
+  <div
+    [class]="classes()"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="title() ? titleId : null"
+    cdkTrapFocus
+    cdkTrapFocusAutoCapture
+    (keydown.escape)="onClose()"
+  >
     <header class="header">
-      <h4 class="title">{{ title() }}</h4>
+      <h4 class="title" [id]="titleId">{{ title() }}</h4>
       <button type="button" class="close" aria-label="Close" (click)="onClose()">
         <ds-icon name="x" [size]="16" />
       </button>

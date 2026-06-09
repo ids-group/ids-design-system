@@ -1,4 +1,4 @@
-<nav class="breadcrumbs" [class.is-static]="!effectiveClickable()">
+<nav class="breadcrumbs" aria-label="Breadcrumb" [class.is-static]="!effectiveClickable()">
   @for (item of resolvedItems(); track $index; let last = $last) {
     @if (item.href && !last && effectiveClickable()) {
       <a [href]="item.href" (click)="onNav($event, item)">
@@ -6,11 +6,11 @@
         @if (item.label) { <span class="label">{{ item.label }}</span> }
       </a>
     } @else {
-      <span [class.current]="last">
+      <span [class.current]="last" [attr.aria-current]="last ? 'page' : null">
         @if (item.icon) { <ds-icon [name]="item.icon" [size]="14" /> }
         @if (item.label) { <span class="label">{{ item.label }}</span> }
       </span>
     }
-    @if (!last) { <span class="sep"><ds-icon [name]="effectiveSeparator()" [size]="12" /></span> }
+    @if (!last) { <span class="sep" aria-hidden="true"><ds-icon [name]="effectiveSeparator()" [size]="12" /></span> }
   }
 </nav>

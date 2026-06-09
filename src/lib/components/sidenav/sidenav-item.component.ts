@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, ViewEncapsulation, computed, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IconComponent } from '../../icons/icon.component';
@@ -6,7 +7,7 @@ import type { IconName } from '../../icons/icons.data';
 @Component({
   selector: 'ds-sidenav-item',
   standalone: true,
-  imports: [IconComponent, RouterLink, RouterLinkActive],
+  imports: [IconComponent, RouterLink, RouterLinkActive, NgTemplateOutlet],
   templateUrl: './sidenav-item.component.html',
   styleUrl: './sidenav-item.component.scss',
   encapsulation: ViewEncapsulation.Emulated,

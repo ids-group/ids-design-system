@@ -55,11 +55,13 @@
      in combobox.component.ts). Without `width: 100%` the panel shrinks
      to its own option content width inside the absolutely-positioned pane. */
   width: 100%;
+  list-style: none;
+  padding: 0;
   background: var(--surface-overlay);
   border: var(--bw-default) solid var(--border-default);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow-popover);
-  margin-top: var(--combobox-offset);
+  margin: var(--combobox-offset) 0 0;
   max-height: var(--combobox-maxh);
   overflow-y: auto;
   z-index: var(--layer-popover);
@@ -73,6 +75,7 @@
     cursor: pointer;
 
     &:hover,
+    &.is-active,
     &[aria-selected="true"] {
       background: var(--surface-secondary);
     }

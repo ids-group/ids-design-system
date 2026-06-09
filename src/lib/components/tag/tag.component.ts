@@ -19,9 +19,11 @@ import type { TagVariant } from './tag.types';
 })
 export class TagComponent {
   readonly variant = input<TagVariant>('solid');
-  readonly closable = input<boolean>(false);
+  readonly closable = input(false, { transform: booleanAttribute });
   readonly interactive = input(false, { transform: booleanAttribute });
   readonly selected = input(false, { transform: booleanAttribute });
+  /** Accessible label for the close button (e.g. "Remove Source filter"). */
+  readonly closeLabel = input<string>('Remove');
   readonly closed = output<void>();
   readonly toggled = output<void>();
 

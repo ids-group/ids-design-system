@@ -1,6 +1,6 @@
 <div class="field">
   @if (label()) {
-    <span class="label">
+    <span class="label" [id]="labelId">
       {{ label() }}
       @if (required()) {
         <span class="req" aria-hidden="true">*</span>
@@ -12,7 +12,11 @@
   <button
     #trigger
     type="button"
+    aria-haspopup="dialog"
     [class]="triggerClasses()"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-labelledby]="label() ? labelId : null"
+    [attr.aria-label]="resolvedAriaLabel()"
     [attr.aria-required]="required() ? 'true' : null"
     (click)="open()"
   >
@@ -46,7 +50,17 @@
       <span class="dow">Sa</span>
       <span class="dow">Su</span>
       @for (cell of daysGrid(); track $index) {
-        <button type="button" [class]="cellClasses(cell)" (click)="selectDay(cell)">
+        <button
+          type="button"
+          [class]="cellClasses(cell)"
+          [attr.data-day]="dayKey(cell.date)"
+          [attr.tabindex]="isFocusDay(cell) ? 0 : -1"
+          [attr.aria-label]="dayLabel(cell)"
+          [attr.aria-pressed]="cell.isSelected"
+          [attr.aria-current]="cell.isToday ? 'date' : null"
+          (click)="selectDay(cell)"
+          (keydown)="onGridKeydown($event, cell)"
+        >
           {{ cell.day }}
         </button>
       }

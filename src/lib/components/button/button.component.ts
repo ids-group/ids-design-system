@@ -19,6 +19,9 @@ export class ButtonComponent {
       and 100% wide (the inner control is already full-width). Use for mobile
       primary CTAs and full-bleed form submit buttons. */
   readonly fullWidth = input(false, { transform: booleanAttribute });
+  /** Accessible name — forwarded to the inner <button> as aria-label. Use when
+      the visible label is absent or non-descriptive. */
+  readonly ariaLabel = input<string | null>(null);
   readonly pressed = output<MouseEvent>();
 
   protected readonly classes = computed(() => {

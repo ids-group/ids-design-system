@@ -12,6 +12,10 @@ const LEAVE_DURATION_MS = 180;
   templateUrl: './toast-region.component.html',
   styleUrl: './toast-region.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  host: {
+    role: 'region',
+    'aria-label': 'Notifications',
+  },
 })
 export class ToastRegionComponent {
   protected readonly entries = signal<readonly ToastEntry[]>([]);

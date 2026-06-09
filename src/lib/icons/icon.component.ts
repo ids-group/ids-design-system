@@ -24,6 +24,9 @@ import { ICONS, type IconName } from './icons.data';
       [attr.stroke-width]="stroke()"
       stroke-linecap="round"
       stroke-linejoin="round"
+      [attr.role]="ariaLabel() ? 'img' : null"
+      [attr.aria-label]="ariaLabel()"
+      [attr.aria-hidden]="ariaLabel() ? null : 'true'"
       [innerHTML]="paths()"
     ></svg>
   `,
@@ -35,6 +38,9 @@ export class IconComponent {
   readonly name = input.required<IconName>();
   readonly size = input<number>(16);
   readonly stroke = input<number>(1.75);
+  /** When set, the icon is exposed to assistive tech as an image with this
+   *  name; otherwise it is decorative and hidden (`aria-hidden`). */
+  readonly ariaLabel = input<string | null>(null);
   protected readonly paths = computed<SafeHtml>(() => {
     const key = this.name();
     // Built-in DS set wins over consumer registry — see provideDsIcons() docs.
