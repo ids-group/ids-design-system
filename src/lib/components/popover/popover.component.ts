@@ -1,11 +1,10 @@
 import {
   Component,
   OnDestroy,
-  Renderer2,
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
-  booleanAttribute,
+  forwardRef,
   inject,
   input,
   signal,
@@ -14,6 +13,7 @@ import {
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
+import { PopoverRef } from './popover-ref';
 
 export type PopoverAlign = 'start' | 'end';
 
@@ -24,14 +24,15 @@ export type PopoverAlign = 'start' | 'end';
   templateUrl: './popover.component.html',
   styleUrl: './popover.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  // Expose this popover as a PopoverRef so projected content (e.g. ds-menu-item)
+  // can dismiss it via DI — the popover never references a specific child.
+  providers: [{ provide: PopoverRef, useExisting: forwardRef(() => PopoverComponent) }],
 })
-export class PopoverComponent implements OnDestroy {
+export class PopoverComponent implements OnDestroy, PopoverRef {
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
-  private readonly renderer = inject(Renderer2);
   protected readonly panelTpl = viewChild.required<TemplateRef<unknown>>('panel');
   private ref: OverlayRef | null = null;
-  private dismissUnlisten: (() => void) | null = null;
 
   readonly align = input<PopoverAlign>('start');
 
@@ -42,13 +43,6 @@ export class PopoverComponent implements OnDestroy {
   readonly panelRole = input<string | null>(null);
   /** Accessible name for the panel; pair with `panelRole`. */
   readonly panelLabel = input<string | null>(null);
-
-  /** Auto-dismiss when an actionable item (`[role="menuitem"]`) inside the panel
-   *  is clicked, so a popover used as a menu closes on pick. Keyed off the ARIA
-   *  role, not a component selector, so the popover stays decoupled from
-   *  ds-menu-item. Disabled items render a disabled <button> that never fires
-   *  click. Set false for popovers that aren't menus. */
-  readonly dismissOnSelect = input(true, { transform: booleanAttribute });
 
   /** Open/closed state — for callers binding `aria-expanded` on the trigger. */
   readonly opened = signal(false);
@@ -82,26 +76,9 @@ export class PopoverComponent implements OnDestroy {
     });
     this.ref.attach(new TemplatePortal(this.panelTpl(), this.vcr));
     this.opened.set(true);
-
-    // The clicked item's own (pressed) handler runs first (target phase) before
-    // this bubbled listener. Renderer2.listen returns an unlisten fn dropped in
-    // close(), so nothing outlives the open panel.
-    if (this.dismissOnSelect()) {
-      this.dismissUnlisten = this.renderer.listen(
-        this.ref.overlayElement,
-        'click',
-        (event: Event) => {
-          if ((event.target as Element | null)?.closest('[role="menuitem"]')) {
-            this.close();
-          }
-        },
-      );
-    }
   }
 
   close(): void {
-    this.dismissUnlisten?.();
-    this.dismissUnlisten = null;
     this.ref?.dispose();
     this.ref = null;
     this.opened.set(false);
