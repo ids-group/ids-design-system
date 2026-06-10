@@ -9,7 +9,11 @@
     "start": "ng serve ds-docs",
     "serve:docs": "ng serve ds-docs",
     "build:docs": "ng build ds-docs",
-    "build:docs:dev": "ng build ds-docs --configuration development"
+    "build:docs:dev": "ng build ds-docs --configuration development",
+    "build:showcase": "ng build ds-docs --configuration showcase && node tools/showcase/inline.mjs",
+    "test:showcase": "node --test tools/showcase/",
+    "setup:hooks": "git config core.hooksPath .githooks",
+    "prepare": "git config core.hooksPath .githooks"
   },
   "peerDependencies": {
     "@angular/cdk": "^21.2.0",

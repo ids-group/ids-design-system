@@ -81,6 +81,14 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "showcase": {
+              "optimization": {
+                "scripts": true,
+                "styles": { "minify": true, "inlineCritical": false },
+                "fonts": false
+              },
+              "outputHashing": "none"
             }
           },
           "defaultConfiguration": "production"
