@@ -3,13 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DS — Интеракции по формуле: контракт ds-interactive</title>
+<title>DS — Интеракции по формуле v2: калибровка по нарисованной рампе</title>
 <link rel="stylesheet" href="ds.css">
 <style>
   /* ----------------------------------------------------------------
-     Demo-only page (NOT part of the lib). Compares today's interaction
-     colours (ramp picks / surface swap) with the proposed global
-     formula contract. Real DS tokens from ds.css.
+     Demo-only page (NOT part of the lib). v2: same single formula,
+     but the mix DIRECTION depends on context (brand hue / cool ink /
+     white), and the steps are calibrated to reproduce the designed
+     ramp stops almost exactly. Real DS tokens from ds.css.
      ---------------------------------------------------------------- */
   body { margin: 0; background: var(--surface-canvas); color: var(--text-primary); font-family: var(--font-sans); }
   .page { max-width: 1120px; margin: 0 auto; padding: var(--s-10) var(--s-6) var(--s-20); }
@@ -24,6 +25,7 @@
           margin-top: var(--s-6); display: flex; flex-direction: column; gap: var(--s-4); }
   .card h2 { font: var(--fw-bold) var(--fs-h4)/1.2 var(--font-heading); margin: 0; }
   .card > .note { color: var(--text-tertiary); font: var(--fw-regular) var(--fs-xs)/1.55 var(--font-sans); margin: 0; max-width: 92ch; }
+  .card > .note b { color: var(--text-secondary); }
 
   .snippet { background: var(--surface-secondary); border: var(--bw-default) solid var(--border-divider);
              border-radius: var(--r-sm); padding: var(--s-3) var(--s-4); margin: 0;
@@ -46,31 +48,57 @@
   .hint { color: var(--text-tertiary); font: var(--fw-regular) var(--fs-2xs)/1.4 var(--font-sans); margin: 0; }
 
   /* ================================================================
-     THE CONTRACT (prototype of styles/_interaction.scss).
-     The formula text exists exactly ONCE. Everything below it only
-     sets --interactive-base / --state-into / step overrides.
+     THE CONTRACT v2 (prototype of styles/_interaction.scss).
+     ONE formula. Context presets change only WHERE it darkens to
+     (--state-into) and HOW MUCH (steps). Steps are calibrated so the
+     formula reproduces the hand-designed ramp stops.
      ================================================================ */
   :root {
-    --state-step-hover:   12%;
-    --state-step-pressed: 24%;  /* = 2 x hover */
-    --state-ink-hover:     5%;
-    --state-ink-pressed:  10%;
-    --state-into:         black;
+    /* fill: saturated bases (buttons) — unchanged from today's theme */
+    --state-step-hover:        12%;
+    --state-step-pressed:      24%;   /* = 2 x hover */
+    --state-into:              black;
+    /* tint: light brand fills darken TOWARD THE BRAND, not black */
+    --state-tint-hover:        14%;   /* blue-100 + 14% brand = blue-200 exactly */
+    --state-tint-pressed:      28%;
+    /* accent ink: transparent base, brand-coloured layer */
+    --state-accent-ink-hover:   7%;   /* white + 7% brand = blue-50 exactly */
+    --state-accent-ink-pressed: 14%;  /* = blue-100 exactly */
+    /* neutral ink: cool slate, calibrated to the neutral ramp */
+    --state-ink:               hsl(215, 35%, 45%);
+    --state-ink-hover:         6.5%;  /* ~= neutral-100 */
+    --state-ink-pressed:       13%;   /* = neutral-150 exactly */
+    /* text (links): today's steps, centralised */
+    --state-text-hover:        20%;
+    --state-text-pressed:      35%;
   }
   .fx {
-    --interactive-hover:  color-mix(in srgb, var(--interactive-base) calc(100% - var(--state-step-hover)),   var(--state-into));
-    --interactive-active: color-mix(in srgb, var(--interactive-base) calc(100% - var(--state-step-pressed)), var(--state-into));
+    /* override slots: a hand-picked colour wins over the formula when set */
+    --interactive-hover:  var(--interactive-hover-set,
+      color-mix(in srgb, var(--interactive-base) calc(100% - var(--state-step-hover)),   var(--state-into)));
+    --interactive-active: var(--interactive-active-set,
+      color-mix(in srgb, var(--interactive-base) calc(100% - var(--state-step-pressed)), var(--state-into)));
   }
   .fx-bg { background: var(--interactive-base); }
   .fx-bg:hover  { background: var(--interactive-hover); }
   .fx-bg:active { background: var(--interactive-active); }
   .fx-text:hover  { color: var(--interactive-hover);  text-decoration-color: var(--interactive-hover); }
   .fx-text:active { color: var(--interactive-active); text-decoration-color: var(--interactive-active); }
-  .ink { --state-step-hover: var(--state-ink-hover); --state-step-pressed: var(--state-ink-pressed); --state-into: var(--text-primary); }
+
+  /* presets */
+  .tint       { --state-step-hover: var(--state-tint-hover); --state-step-pressed: var(--state-tint-pressed);
+                --state-into: var(--interactive-accent, var(--primary)); }
+  .accent-ink { --interactive-base: transparent;
+                --state-step-hover: var(--state-accent-ink-hover); --state-step-pressed: var(--state-accent-ink-pressed);
+                --state-into: var(--interactive-accent, var(--primary)); }
+  .inked      { --state-step-hover: var(--state-ink-hover); --state-step-pressed: var(--state-ink-pressed);
+                --state-into: var(--state-ink); }
   .surface-fx { --interactive-base: transparent;
                 --state-step-hover: var(--state-ink-hover); --state-step-pressed: var(--state-ink-pressed);
-                --state-into: var(--text-primary); }
-  .into-light { --state-into: white; }
+                --state-into: var(--state-ink); }
+  .into-light { --state-into: white; }                                  /* brand-dark: sidenav */
+  .into-light.dim { --state-step-hover: 6.5%; --state-step-pressed: 13%; } /* dark surfaces: inverted */
+  .text-fx    { --state-step-hover: var(--state-text-hover); --state-step-pressed: var(--state-text-pressed); }
 
   /* "Today" lane: element reproduces the exact tokens components use now */
   .cur { background: var(--cb); }
@@ -99,8 +127,8 @@
            border-radius: var(--r-md); padding: var(--s-1); box-shadow: var(--z200); }
   .dmi { padding: var(--s-2) var(--s-3); border-radius: var(--r-sm); cursor: pointer;
          font: var(--fw-regular) var(--fs-s)/1.4 var(--font-sans); transition: background .12s ease; }
-  .dmi.cur:hover { background: var(--surface-secondary); }      /* today: token swap */
-  .dmi.cur:active { background: var(--surface-secondary); }
+  .dmi.cur:hover  { background: var(--cbh, var(--surface-secondary)); }
+  .dmi.cur:active { background: var(--cba, var(--surface-secondary)); }  /* today: no pressed distinction */
 
   .dnav { display: inline-flex; align-items: center; height: var(--hit-cozy); padding: 0 var(--s-4);
           border-radius: var(--r-md); cursor: pointer; color: var(--text-on-primary);
@@ -128,23 +156,31 @@
 <div class="page">
 
   <header class="masthead">
-    <h1>Интеракции по формуле: контракт <code class="tok">ds-interactive</code></h1>
-    <p>Слева — как цвета состояний заданы <b>сейчас</b> (ramp-пики и подмена токенов).
-       Справа — <b>формула</b>: компонент задаёт только базу (<code class="tok">--interactive-base</code>),
-       hover и pressed выводятся глобальным правилом. Наводи мышь и <b>зажимай</b> кнопку, чтобы увидеть pressed.
-       Рядом с каждым элементом — статичные триады <i>база / hover / pressed</i> для сравнения «в покое».</p>
+    <h1>Интеракции по формуле <b>v2</b>: калибровка по нарисованной рампе</h1>
+    <p>v1 глушила цвета, потому что смешивала с чёрным. v2 — та же единая формула, но <b>направление</b>
+       смешивания зависит от контекста: светлые брендовые тинты темнеют <b>в сторону бренда</b>,
+       нейтральные поверхности — в сторону холодных «чернил» <code class="tok">hsl(215, 35%, 45%)</code>,
+       тёмные базы — к белому. Проценты откалиброваны так, что формула попадает в нарисованные стопы рампы
+       почти точно (pressed-чернила = <b>ровно</b> neutral-150, tertiary = ровно blue-50/100).
+       Наводи мышь, <b>зажимай</b> для pressed, сравнивай триады «база / hover / pressed».</p>
   </header>
 
   <div class="card">
-    <h2>Формула (живёт глобально, ровно один раз)</h2>
-<pre class="snippet"><span class="cm">/* styles/_interaction.scss — единственное место с формулой */</span>
+    <h2>Формула одна, контексты задают направление и шаг</h2>
+<pre class="snippet"><span class="cm">/* styles/_interaction.scss — формула живёт ровно один раз */</span>
 .ds-interactive {
-  --interactive-hover:  color-mix(in srgb, var(--interactive-base) <span class="hl">calc(100% - var(--state-step-hover))</span>,   var(--state-into));
-  --interactive-active: color-mix(in srgb, var(--interactive-base) <span class="hl">calc(100% - var(--state-step-pressed))</span>, var(--state-into));
+  --interactive-hover:  <span class="hl">var(--interactive-hover-set,</span>  color-mix(in srgb, var(--interactive-base) calc(100% - var(--state-step-hover)),   <span class="hl">var(--state-into)</span>)<span class="hl">)</span>;
+  --interactive-active: <span class="hl">var(--interactive-active-set,</span> color-mix(in srgb, var(--interactive-base) calc(100% - var(--state-step-pressed)), <span class="hl">var(--state-into)</span>)<span class="hl">)</span>;
 }
-<span class="cm">/* константы: --state-step-hover: 12%; --state-step-pressed: 24% (= 2 × hover);
-   направление --state-into: black (тёмная база/тема → white);
-   нейтральные поверхности: прозрачная база + чернильные шаги 5% / 10% */</span></pre>
+<span class="cm">/* --interactive-*-set — слот ручного override: где формула груба, дизайнер
+   задаёт точный цвет, формула остаётся fallback (см. вопрос В4 ниже) */</span>
+<span class="cm">/* контекст        база          куда темнеем        hover/pressed   попадание в рампу */</span>
+<span class="cm">/* заливка         primary       black               12% / 24%       = текущая тема    */</span>
+<span class="cm">/* тинт            blue-100      бренд               14% / 28%       blue-200 точно    */</span>
+<span class="cm">/* бренд-чернила   transparent   бренд                7% / 14%       blue-50/100 точно */</span>
+<span class="cm">/* нейтр. чернила  transparent   hsl(215,35%,45%)   6.5% / 13%       n-100 ~, n-150 =  */</span>
+<span class="cm">/* тёмная база     n-900         white              6.5% / 13%       n-800 ~           */</span>
+<span class="cm">/* текст/ссылки    text-link     black               20% / 35%       = текущие         */</span></pre>
     <div class="controls">
       <span class="label">Брендовый --primary:</span>
       <button class="swatch on" data-c="" style="background: var(--blue-600)" title="Синий (по умолчанию)"></button>
@@ -152,18 +188,71 @@
       <button class="swatch" data-c="#7C3AED" style="background:#7C3AED" title="Фиолетовый"></button>
       <button class="swatch" data-c="#D97706" style="background:#D97706" title="Оранжевый"></button>
       <input type="color" id="brand" value="#2563EB" title="Свой цвет">
-      <span class="hint">Меняется ТОЛЬКО <code class="tok">--primary</code> — формульная сторона пересчитывает все состояния сама.</span>
+      <span class="hint">Меняется ТОЛЬКО <code class="tok">--primary</code>: брендовые чернила и тинт-направление следуют сами.</span>
     </div>
+  </div>
+
+  <!-- ============ Industry context ============ -->
+  <div class="card">
+    <h2>Как делают лучшие <span class="hint" style="font-weight: var(--fw-regular);">(проверено по первоисточникам, полный отчёт — docs/interaction-states-research.md)</span></h2>
+    <div style="overflow-x: auto;">
+      <table style="border-collapse: collapse; width: 100%; font: var(--fw-regular) var(--fs-xs)/1.5 var(--font-sans);">
+        <thead>
+          <tr style="text-align: left; color: var(--text-secondary);">
+            <th style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-default);">Система</th>
+            <th style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-default);">Механизм состояний</th>
+            <th style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-default);">pressed vs hover</th>
+            <th style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-default);">Против «грязных» цветов</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);"><b>Material 3</b></td>
+            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">формула в рантайме: state layer с фикс. opacity</td>
+            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">≈ 1.25–1.5×</td>
+            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">слой цветом <b>on-color</b> (родственный hue), не чёрным</td>
+          </tr>
+          <tr>
+            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);"><b>Fluent 2</b></td>
+            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">ручные ступени рамп (alias-токены)</td>
+            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">немонотонно: в dark hover светлее, pressed темнее</td>
+            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">направление к контрасту с фоном</td>
+          </tr>
+          <tr>
+            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);"><b>Carbon</b></td>
+            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">ступени рамп + рукописные half-steps для hover</td>
+            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">active ≈ 4× hover</td>
+            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">переворот направления на середине шкалы (Gray 70/60)</td>
+          </tr>
+          <tr>
+            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);"><b>Radix</b></td>
+            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">фикс. индексы 12-шаговой рампы (3/4/5, 9/10)</td>
+            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">2× (дискретно)</td>
+            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">кураторская chroma шага 9</td>
+          </tr>
+          <tr>
+            <td style="padding: var(--s-2) var(--s-3);"><b>Spectrum</b></td>
+            <td style="padding: var(--s-2) var(--s-3);">генерация на сборке (Leonardo, contrast ratios) + ручная курация</td>
+            <td style="padding: var(--s-2) var(--s-3);">равные шаги (+1 / +1)</td>
+            <td style="padding: var(--s-2) var(--s-3);">CIECAM02-UCS + ручная кривая lightness</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Выводы для v2: наши пресеты направления (к бренду / к чернилам / к белому) совпадают с приёмами M3 и Carbon;
+       «pressed = 2×hover» — у всех лишь калиброванный дефолт, не закон (у нас шаги тоже свои на контекст);
+       Spectrum от первого лица: чистый алгоритм без калибровки эстетически провалился — поэтому v2 калибрована по нарисованной рампе.
+       Carbon сам признал рукописные half-steps техдолгом и хотел заменить вычисляемым затемнением (issue #4049) — прецедент нашего подхода.</p>
   </div>
 
   <!-- ============ 1. Fills ============ -->
   <div class="card">
-    <h2>1. Заливки</h2>
-    <p class="note">Primary и error уже формульные в теме — стороны совпадают (это подтверждение совместимости).
-       У success/warning сегодня <b>нет pressed</b> (active повторяет hover) — формула даёт его бесплатно.</p>
+    <h2>1. Заливки — без изменений</h2>
+    <p class="note">Эти цвета ты уже одобрил: v2 их не трогает (то же затемнение к чёрному 12% / 24%).
+       Бонус формулы остаётся: у success/warning появляется настоящий pressed.</p>
     <div class="duo">
       <div>
-        <p class="lane-title">Сейчас: <b>токены на каждое состояние</b></p>
+        <p class="lane-title">Сейчас</p>
         <div class="zone" style="flex-direction: column; align-items: stretch;">
           <div class="pair"><span class="row-label">primary</span>
             <button class="dbtn cur" style="--cb: var(--primary); --cbh: var(--primary-hover); --cba: var(--primary-pressed)">Кнопка</button>
@@ -174,13 +263,10 @@
           <div class="pair"><span class="row-label">success</span>
             <button class="dbtn cur" style="--cb: var(--success); --cbh: var(--success-hover); --cba: var(--success-hover)">Готово</button>
             <span class="triad" style="--cb: var(--success); --cbh: var(--success-hover); --cba: var(--success-hover)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
-          <div class="pair"><span class="row-label">warning</span>
-            <button class="dbtn cur" style="--cb: var(--warning); --cbh: var(--warning-hover); --cba: var(--warning-hover); --df: var(--text-on-warning)">Внимание</button>
-            <span class="triad" style="--cb: var(--warning); --cbh: var(--warning-hover); --cba: var(--warning-hover)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
         </div>
       </div>
       <div>
-        <p class="lane-title">Формула: <b>только база</b></p>
+        <p class="lane-title">Формула v2</p>
         <div class="zone" style="flex-direction: column; align-items: stretch;">
           <div class="pair"><span class="row-label">primary</span>
             <button class="dbtn fx fx-bg" style="--interactive-base: var(--primary)">Кнопка</button>
@@ -191,9 +277,6 @@
           <div class="pair"><span class="row-label">success</span>
             <button class="dbtn fx fx-bg" style="--interactive-base: var(--success)">Готово</button>
             <span class="triad fx" style="--interactive-base: var(--success)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
-          <div class="pair"><span class="row-label">warning</span>
-            <button class="dbtn fx fx-bg" style="--interactive-base: var(--warning); --df: var(--text-on-warning)">Внимание</button>
-            <span class="triad fx" style="--interactive-base: var(--warning)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
         </div>
       </div>
     </div>
@@ -201,10 +284,10 @@
 
   <!-- ============ 2. Tonal / outline ============ -->
   <div class="card">
-    <h2>2. Тональные и контурные</h2>
-    <p class="note">Сейчас: hover — это <b>другой токен рампы</b> (muted → muted-strong, transparent → subtle → muted).
-       Формула: secondary темнеет от своей базы; tertiary — «чернильный» слой, где чернила = бренд
-       (<code class="tok">--state-into: var(--primary)</code>); outline — нейтральные чернила 5% / 10%.</p>
+    <h2>2. Тональные и контурные — главное исправление v2</h2>
+    <p class="note">Темнеем <b>в сторону бренда</b>: secondary hover = blue-100 + 14% бренда = <b>ровно blue-200</b>
+       (то, что нарисовано). Tertiary = брендовые чернила 7% / 14% = <b>ровно blue-50 / blue-100</b>.
+       Outline = нейтральные чернила по сплошной базе. Цвета больше не глохнут.</p>
     <div class="duo">
       <div>
         <p class="lane-title">Сейчас</p>
@@ -221,17 +304,17 @@
         </div>
       </div>
       <div>
-        <p class="lane-title">Формула</p>
+        <p class="lane-title">Формула v2: <b>к бренду, не к чёрному</b></p>
         <div class="zone" style="flex-direction: column; align-items: stretch;">
           <div class="pair"><span class="row-label">secondary</span>
-            <button class="dbtn fx fx-bg" style="--interactive-base: var(--primary-muted); --df: var(--primary-strong)">Кнопка</button>
-            <span class="triad fx" style="--interactive-base: var(--primary-muted)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+            <button class="dbtn fx fx-bg tint" style="--interactive-base: var(--primary-muted); --df: var(--primary-strong)">Кнопка</button>
+            <span class="triad fx tint" style="--interactive-base: var(--primary-muted)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
           <div class="pair"><span class="row-label">tertiary</span>
-            <button class="dbtn fx fx-bg surface-fx" style="--state-into: var(--primary); --df: var(--primary-strong)">Кнопка</button>
-            <span class="triad fx surface-fx" style="--state-into: var(--primary)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+            <button class="dbtn fx fx-bg accent-ink" style="--df: var(--primary-strong)">Кнопка</button>
+            <span class="triad fx accent-ink"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
           <div class="pair"><span class="row-label">outline</span>
-            <button class="dbtn fx fx-bg ink" style="--interactive-base: var(--surface-default); --df: var(--text-primary); --db: var(--border-default)">Кнопка</button>
-            <span class="triad fx ink" style="--interactive-base: var(--surface-default)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+            <button class="dbtn fx fx-bg inked" style="--interactive-base: var(--surface-default); --df: var(--text-primary); --db: var(--border-default)">Кнопка</button>
+            <span class="triad fx inked" style="--interactive-base: var(--surface-default)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
         </div>
       </div>
     </div>
@@ -239,10 +322,10 @@
 
   <!-- ============ 3. Neutral surfaces ============ -->
   <div class="card">
-    <h2>3. Нейтральные поверхности (меню, строки)</h2>
-    <p class="note">Сейчас hover — подмена на <b>непрозрачный</b> <code class="tok">--surface-secondary</code>:
-       на белом ок, но на тонированном фоне «дырявит» подложку. Формульный чернильный слой
-       (прозрачная база + 5% / 10% чернил) работает поверх <b>любого</b> фона.</p>
+    <h2>3. Нейтральные поверхности — холодные чернила</h2>
+    <p class="note">Чернила теперь не серые, а холодные <code class="tok">hsl(215, 35%, 45%)</code>, откалиброванные
+       по нейтральной рампе: hover ≈ neutral-100, pressed = <b>ровно</b> neutral-150. Голубоватый тон нарисованной
+       рампы сохраняется, и слой по-прежнему работает на любом фоне (низ — тонированная подложка).</p>
     <div class="duo">
       <div>
         <p class="lane-title">Сейчас: <b>подмена токена</b></p>
@@ -261,7 +344,7 @@
         </div>
       </div>
       <div>
-        <p class="lane-title">Формула: <b>чернильный слой</b></p>
+        <p class="lane-title">Формула v2: <b>чернильный слой</b></p>
         <div class="zone on-white">
           <div class="dmenu">
             <div class="dmi fx fx-bg surface-fx">Открыть</div>
@@ -281,10 +364,10 @@
 
   <!-- ============ 4. Dark bases ============ -->
   <div class="card">
-    <h2>4. Тёмные базы — направление переключается токеном</h2>
-    <p class="note">Sidenav сегодня делает то же самое <b>локальной</b> формулой (mix 88% white) — справа она стала глобальной
-       (<code class="tok">--state-into: white</code>), результат идентичен. Инвертированная панель сегодня —
-       абсолютный пик <code class="tok">--neutral-800</code>; формула даёт почти тот же тон.</p>
+    <h2>4. Тёмные базы — к белому</h2>
+    <p class="note">Sidenav: глобальная формула с <code class="tok">--state-into: white</code> повторяет нынешнюю локальную
+       (12% к белому) один в один. Инвертированная панель: калиброванные 6.5% / 13% к белому ≈ нарисованный neutral-800
+       вместо абсолютного пика.</p>
     <div class="duo">
       <div>
         <p class="lane-title">Сейчас</p>
@@ -298,14 +381,14 @@
         </div>
       </div>
       <div>
-        <p class="lane-title">Формула + <code class="tok">--state-into: white</code></p>
+        <p class="lane-title">Формула v2 + <code class="tok">--state-into: white</code></p>
         <div class="zone" style="flex-direction: column; align-items: stretch;">
           <div class="pair"><span class="row-label">sidenav active</span>
             <span class="dnav fx fx-bg into-light" style="--interactive-base: var(--primary)">Объекты</span>
             <span class="triad fx into-light" style="--interactive-base: var(--primary)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
           <div class="pair"><span class="row-label">inverted</span>
-            <span class="invbar"><button class="dbtn fx fx-bg into-light" style="--interactive-base: var(--surface-inverted)">Снять выбор</button></span>
-            <span class="triad fx into-light" style="--interactive-base: var(--surface-inverted)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+            <span class="invbar"><button class="dbtn fx fx-bg into-light dim" style="--interactive-base: var(--surface-inverted)">Снять выбор</button></span>
+            <span class="triad fx into-light dim" style="--interactive-base: var(--surface-inverted)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
         </div>
       </div>
     </div>
@@ -313,12 +396,12 @@
 
   <!-- ============ 5. Links ============ -->
   <div class="card">
-    <h2>5. Ссылки — единственный нарушитель пропорции</h2>
-    <p class="note">Сейчас: −20% hover / −35% active (и pressed ≠ 2 × hover). Формула: стандартные −12% / −24%.
-       Сравни, не слишком ли слабым станет hover.</p>
+    <h2>5. Ссылки — без изменений</h2>
+    <p class="note">v2 принимает текущие усиленные шаги текста (−20% / −35%) как стандарт «текстового» контекста —
+       стороны идентичны, просто константы переезжают из <code class="tok">_link.scss</code> в глобальные токены.</p>
     <div class="duo">
       <div>
-        <p class="lane-title">Сейчас: 80% / 65%</p>
+        <p class="lane-title">Сейчас</p>
         <div class="zone">
           <a class="dlink cur-text" style="--cbh: color-mix(in srgb, var(--text-link) 80%, black); --cba: color-mix(in srgb, var(--text-link) 65%, black)">Открыть отчёт за май</a>
           <span class="triad txt" style="--cbh: color-mix(in srgb, var(--text-link) 80%, black); --cba: color-mix(in srgb, var(--text-link) 65%, black)">
@@ -326,30 +409,94 @@
         </div>
       </div>
       <div>
-        <p class="lane-title">Формула: 88% / 76%</p>
+        <p class="lane-title">Формула v2 (текстовый контекст)</p>
         <div class="zone">
-          <a class="dlink fx fx-text" style="--interactive-base: var(--text-link)">Открыть отчёт за май</a>
-          <span class="triad txt fx" style="--interactive-base: var(--text-link)">
+          <a class="dlink fx fx-text text-fx" style="--interactive-base: var(--text-link)">Открыть отчёт за май</a>
+          <span class="triad txt fx text-fx" style="--interactive-base: var(--text-link)">
             <i style="color: var(--interactive-base)">Aa</i><i style="color: var(--interactive-hover)">Aa</i><i style="color: var(--interactive-active)">Aa</i></span>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- ============ 6. Open questions ============ -->
+  <div class="card">
+    <h2>6. Открытые вопросы — выбирай глазами</h2>
+
+    <div>
+      <p class="lane-title"><b>В1. Шаг pressed для тинтов:</b> 28% (правило 2×hover) или 34% (точное попадание в нарисованный blue-300)? Зажми обе кнопки и сравни триады.</p>
+      <div class="zone">
+        <div class="pair"><span class="row-label">А: 28%</span>
+          <button class="dbtn fx fx-bg tint" style="--interactive-base: var(--primary-muted); --df: var(--primary-strong)">Кнопка</button>
+          <span class="triad fx tint" style="--interactive-base: var(--primary-muted)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+        <div class="pair"><span class="row-label">Б: 34%</span>
+          <button class="dbtn fx fx-bg tint" style="--interactive-base: var(--primary-muted); --state-tint-pressed: 34%; --df: var(--primary-strong)">Кнопка</button>
+          <span class="triad fx tint" style="--interactive-base: var(--primary-muted); --state-tint-pressed: 34%"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+      </div>
+    </div>
+
+    <div>
+      <p class="lane-title"><b>В2. Нужен ли pressed нейтральным поверхностям вообще?</b> Сейчас у меню/строк pressed нет (зажатие выглядит как hover). Формула даёт его бесплатно (13% чернил). Зажми пункты в обоих меню.</p>
+      <div class="zone">
+        <div class="pair"><span class="row-label">А: сейчас</span>
+          <div class="dmenu"><div class="dmi cur">Зажми меня — ничего</div></div></div>
+        <div class="pair"><span class="row-label">Б: формула</span>
+          <div class="dmenu"><div class="dmi fx fx-bg surface-fx">Зажми меня — темнеет</div></div></div>
+      </div>
+    </div>
+
+    <div>
+      <p class="lane-title"><b>В3. Кейс danger-пункта меню:</b> сейчас hover — рукописный <code class="tok">--error-subtle</code>; формула — те же бренд-чернила, но с акцентом error. Должны совпасть почти точно — проверь.</p>
+      <div class="zone">
+        <div class="pair"><span class="row-label">А: сейчас</span>
+          <div class="dmenu"><div class="dmi cur" style="--cbh: var(--error-subtle); --cba: var(--error-subtle); color: var(--error-text)">Удалить объект</div></div></div>
+        <div class="pair"><span class="row-label">Б: формула</span>
+          <div class="dmenu"><div class="dmi fx fx-bg accent-ink" style="--interactive-accent: var(--error); color: var(--error-text)">Удалить объект</div></div></div>
+      </div>
+    </div>
+
+    <div>
+      <p class="lane-title"><b>В4. Override-слот — API для «рука лучше формулы»:</b> любой токен состояния можно задать вручную, формула остаётся fallback. Обе кнопки ниже выглядят почти одинаково; вопрос — согласны ли, что такой эскейп-хетч нужен (прецедент: half-steps в Carbon).</p>
+      <div class="zone">
+        <div class="pair"><span class="row-label">формула</span>
+          <button class="dbtn fx fx-bg tint" style="--interactive-base: var(--primary-muted); --df: var(--primary-strong)">hover = mix 14%</button></div>
+        <div class="pair"><span class="row-label">override</span>
+          <button class="dbtn fx fx-bg tint" style="--interactive-base: var(--primary-muted); --interactive-hover-set: var(--primary-muted-strong); --df: var(--primary-strong)">hover = blue-200 рукой</button></div>
+      </div>
+<pre class="snippet"><span class="cm">/* где формула груба — точечный override, остальное продолжает выводиться */</span>
+.button.secondary { --interactive-hover-set: var(--primary-muted-strong); }</pre>
+    </div>
+
+    <div>
+      <p class="lane-title"><b>В5. Вводим ли pressed для success/warning кнопок?</b> Сейчас его нет (active = hover). Формула даёт — см. карточку 1, зажми «Готово» в правой полосе. Это новое видимое состояние: вводим или глушим шаг до hover?</p>
+    </div>
+  </div>
+
+  <!-- ============ 7. Concerns ============ -->
+  <div class="card">
+    <h2>7. Концерны и ограничения</h2>
+    <p class="note"><b>К1. Рантайм color-mix в проде не делает никто из проверенных систем</b> — все запекают значения на этапе дизайна/сборки; ближайший аналог нашего подхода — state layers Material 3. Митигация: override-слоты (В4) + прецедент Carbon #4049 (сами хотели заменить рукописные half-steps вычисляемым затемнением).</p>
+    <p class="note"><b>К2. Поддержка браузеров:</b> color-mix — baseline с 2023 (Chrome 111+, Safari 16.2+, Firefox 113+); у нас он уже в проде в теме (--primary-hover) — риск не новый.</p>
+    <p class="note"><b>К3. Класс в шаблоне:</b> контракт вешается классом <code class="tok">ds-interactive</code> (+ пресет) на каждый интерактивный элемент. При миграции старые state-правила компонента удаляются — иначе они перекроют контракт по специфичности.</p>
+    <p class="note"><b>К4. Тёмная тема — отдельная калибровка:</b> у всех проверенных систем в dark mode другие направления и шаги (Fluent даже немонотонен: hover светлее, pressed темнее). Токены v2 это умеют (--state-into, шаги), но числа надо вывести заново, не переиспользовать светлые.</p>
+    <p class="note"><b>К5. Прозрачные слои зависят от подложки:</b> для tinted-фонов это фича (карточка 3), но перед массовой миграцией прогнать реальные экраны ds-docs — особенно вложенные поверхности (меню на карточке на канвасе).</p>
+  </div>
+
   <!-- ============ Verdict ============ -->
   <div class="card">
     <h2>Что остаётся в компоненте</h2>
 <pre class="snippet"><span class="cm">/* button.component.scss — токен-блок наверху, только необходимое */</span>
-.button          { <span class="hl">--interactive-base: var(--primary);</span> }
-.button.error    { <span class="hl">--interactive-base: var(--error);</span> }
-.button.success  { <span class="hl">--interactive-base: var(--success);</span> }
-.menu-item       { <span class="cm">/* класс ds-interactive surface в шаблоне — и всё */</span> }
+.button            { <span class="hl">--interactive-base: var(--primary);</span> }            <span class="cm">/* заливка */</span>
+.button.error      { <span class="hl">--interactive-base: var(--error);</span> }
+.button.secondary  { <span class="hl">--interactive-base: var(--primary-muted);</span> }      <span class="cm">/* + класс tint */</span>
+.button.tertiary   { <span class="cm">/* класс accent-ink — даже базы не нужно */</span> }
+.menu-item         { <span class="cm">/* класс surface — и всё */</span> }
 
-<span class="cm">/* уходит из компонентов: --ds-*-bg-hover, --ds-*-bg-active на каждый вариант,
-   локальные color-mix (sidenav), ramp-пики состояний (secondary/tertiary/outline) */</span></pre>
-    <p class="note">Не охвачено контрактом (остаётся семантикой): focus-кольца (уже единые через
-      <code class="tok">--focus-ring</code>), смена бордеров <code class="tok">default → strong</code> и текста
-      <code class="tok">secondary → primary</code>.</p>
+<span class="cm">/* уходит: --ds-*-bg-hover / -active на каждый вариант, локальные color-mix,
+   ramp-пики состояний. Калибровочные проценты живут в _tokens.scss. */</span></pre>
+    <p class="note"><b>Проверка калибровки:</b> tint hover = blue-200 (Δ 0.5), tertiary hover/pressed = blue-50/100
+      (Δ 0.4 / 1.1), чернила pressed = neutral-150 (Δ 0.5), чернила hover ≈ neutral-100 (Δ 2.7),
+      inverted ≈ neutral-800 (Δ 3.1). Δ — расстояние в RGB-каналах, ниже ~4 глазом не отличить.</p>
   </div>
 
 </div>
