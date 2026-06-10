@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
-    "build": "ng build ds",
+    "build": "ng build ds && node tools/clean-dist-package.mjs",
     "build:dev": "ng build ds --configuration development",
     "watch": "ng build ds --watch --configuration development",
     "start": "ng serve ds-docs",
