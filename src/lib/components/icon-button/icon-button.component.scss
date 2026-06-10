@@ -62,7 +62,7 @@
   &.lg { width: var(--field-h-lg);  height: var(--field-h-lg); }
 
   /* Variants re-bind the resolvers (consumer token still wins). `standard`
-     equals the base defaults — its old block duplicated them, dropped. */
+     equals the base defaults (no block needed). */
   &.filled {
     --_icon-button-bg:        var(--ds-icon-button-bg,        var(--primary));
     --_icon-button-fg:        var(--ds-icon-button-fg,        var(--primary-on));
