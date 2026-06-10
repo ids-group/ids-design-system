@@ -6,6 +6,10 @@
 .layout {
   display: grid;
   grid-template-columns: 280px 1fr;
+  /* Constrain the single row to the viewport so the .main grid item scrolls
+     internally (overflow-y: auto). Without an explicit row track the implicit
+     row is `auto` and grows to content height, pushing the scroll onto <html>. */
+  grid-template-rows: minmax(0, 1fr);
   min-height: 100vh;
   height: 100vh;
   transition: grid-template-columns var(--dur-fast) var(--ease-standard);

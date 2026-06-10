@@ -1,10 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { AvatarComponent } from 'ds';
+import { AvatarComponent, AvatarGroupComponent } from 'ds';
 
 @Component({
   selector: 'section-components-avatar',
   standalone: true,
-  imports: [AvatarComponent],
+  imports: [AvatarComponent, AvatarGroupComponent],
   encapsulation: ViewEncapsulation.Emulated,
   template: `
     <section id="section-avatar" data-anchor="avatar" class="section">
@@ -24,12 +24,11 @@ import { AvatarComponent } from 'ds';
       <!-- ============================================================ Group -->
       <h3 class="block-title t-h4">Group</h3>
       <div class="row">
-        <div class="avatar-group">
+        <ds-avatar-group [max]="3" [total]="7">
           <ds-avatar initials="AB" />
           <ds-avatar initials="JR" [tint]="{ bg: 'var(--orange-100)', fg: 'var(--orange-700)' }" />
           <ds-avatar initials="SK" [tint]="{ bg: 'var(--green-100)', fg: 'var(--green-700)' }" />
-          <ds-avatar initials="+4" tint="neutral" />
-        </div>
+        </ds-avatar-group>
       </div>
 
       <!-- ============================================================ Truncation -->

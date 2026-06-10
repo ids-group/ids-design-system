@@ -17,19 +17,6 @@ import { ButtonComponent, DrawerComponent } from 'ds';
         the underlying page state.
       </p>
 
-      <h3 class="block-title t-h4">Static specimen (rendered inline)</h3>
-      <div class="specimen-stage">
-        <ds-drawer [open]="true" title="Edit Sub-record" size="md">
-          <ng-container drawer-body>
-            <p class="t-s">Drawer body content goes here. Forms, lists, anything that needs vertical room.</p>
-          </ng-container>
-          <ng-container drawer-footer>
-            <ds-button variant="outline">Cancel</ds-button>
-            <ds-button variant="primary">Save changes</ds-button>
-          </ng-container>
-        </ds-drawer>
-      </div>
-
       <h3 class="block-title t-h4">Live demo</h3>
       <p class="block-desc t-s">Click to open the drawer at viewport-right. Click the X to close.</p>
       <div class="demo">
@@ -57,27 +44,6 @@ import { ButtonComponent, DrawerComponent } from 'ds';
     .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--s-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
-
-    .specimen-stage {
-      margin-top: var(--s-3);
-      padding: var(--s-4);
-      background: var(--surface-secondary);
-      border-radius: var(--r-lg);
-
-      /* Showcase-only: pull <ds-drawer> out of fixed overlay flow so the
-         static specimen sits inline within this stage. DS lib component
-         itself stays unaware of showcase. */
-      ::ng-deep .drawer {
-        position: relative;
-        inset: auto;
-        width: 100%;
-        max-width: 480px;
-        animation: none;
-        box-shadow: none;
-        border: var(--bw-default) solid var(--border-divider);
-        border-radius: var(--r-lg);
-      }
-    }
 
     .demo {
       margin-top: var(--s-3);

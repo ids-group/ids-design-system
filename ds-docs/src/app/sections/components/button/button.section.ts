@@ -244,6 +244,9 @@ interface VariantSpec {
       grid-template-columns: 120px repeat(3, 1fr);
       gap: var(--s-4) var(--s-6);
       align-items: center;
+      /* Hug each button to its label instead of letting the grid stretch it
+         across the column — otherwise S/M/L read identically wide. */
+      justify-items: start;
       margin-top: var(--s-3);
     }
     .matrix__row-label { color: var(--text-tertiary); }
