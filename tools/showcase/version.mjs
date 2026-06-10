@@ -1,14 +1,10 @@
 import { execFileSync } from 'node:child_process';
 
-// Current source state — emitted as a classic script (a JSON file can't be
-// loaded from file://, where fetch/XHR are blocked; a <script src> can). Refreshed
-// by the pre-commit hook so staleness updates per commit without a rebuild.
-export function renderSourceStamp({ srcHash, commit, date }) {
-  return `window.__DS_SOURCE_STAMP__ = ${JSON.stringify({ srcHash, commit, date }, null, 2)};\n`;
-}
-
 // Build provenance — the source state the showcase was built from. Emitted as a
 // sibling classic script (not inlined) so the stamp lives in its own file.
+// Staleness is checked at runtime in the browser (the banner re-hashes src on
+// demand via a folder pick and compares to this), so there's no committed
+// "current source" stamp to keep fresh — nothing churns per commit.
 export function renderBuildStamp({ srcHash, commit, date }) {
   return `window.__DS_BUILD_STAMP__ = ${JSON.stringify({ srcHash, commit, date }, null, 2)};\n`;
 }

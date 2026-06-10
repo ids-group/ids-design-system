@@ -50,12 +50,10 @@ test('transformHtml inlines js + css + favicon, rewrites base, injects globals',
   assert.ok(out.includes('<script type="module">var m=1;</script>'));
   assert.ok(out.includes('href="data:image/x-icon;base64,SUNP"'));
   assert.ok(!out.includes('href="favicon.ico"'));
-  // build stamp + source stamp both load as external siblings (not inline)
-  assert.ok(out.includes('<script src="./build-stamp.js"></script>'));
-  assert.ok(out.includes('<script src="./source-stamp.js"></script>'));
+  // build stamp loads as an external sibling (not inline), at the top of <head>
+  assert.ok(out.includes('<head><script src="./build-stamp.js"></script>'));
   assert.ok(!out.includes('window.__DS_BUILD_STAMP__'));
-  // placed at the very top of <head> (before <base> and the stylesheet)
-  assert.ok(out.includes('<head><script src="./build-stamp.js"></script><script src="./source-stamp.js"></script>'));
+  assert.ok(!out.includes('source-stamp.js'));
   assert.ok(out.indexOf('build-stamp.js') < out.indexOf('data:image/x-icon'));
 });
 

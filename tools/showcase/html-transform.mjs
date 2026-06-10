@@ -37,9 +37,9 @@ export function inlineCssUrls(css, resolve) {
 
 // assets:        Map<filename, { type: 'js' | 'css', content: string }>
 // resolveBinary: (ref) -> { mime, base64 } | null — for the favicon
-// Build stamp (__DS_BUILD_STAMP__) and source stamp (__DS_SOURCE_STAMP__) both
-// load as sibling classic scripts — nothing is inlined into <head>.
-export function transformHtml(html, { assets, resolveBinary = () => null, buildStampScript = 'build-stamp.js', sourceStampScript = 'source-stamp.js' }) {
+// Build stamp (__DS_BUILD_STAMP__) loads as a sibling classic script — nothing
+// is inlined into <head>. Staleness is checked at runtime in the browser.
+export function transformHtml(html, { assets, resolveBinary = () => null, buildStampScript = 'build-stamp.js' }) {
   let out = html;
 
   // 1. relative base for file://
@@ -72,12 +72,9 @@ export function transformHtml(html, { assets, resolveBinary = () => null, buildS
       return `${before}data:${data.mime};base64,${data.base64}${after}`;
     });
 
-  // 6. inject sibling loaders: build stamp (__DS_BUILD_STAMP__) + source stamp
-  //    (__DS_SOURCE_STAMP__). Both external (no inline), placed at the very top
-  //    of <head> so the globals are set before anything else.
-  const inject =
-    `<script src="./${buildStampScript}"></script>` +
-    `<script src="./${sourceStampScript}"></script>`;
+  // 6. inject the build-stamp loader (__DS_BUILD_STAMP__) at the very top of
+  //    <head>, external (no inline), so the global is set before anything else.
+  const inject = `<script src="./${buildStampScript}"></script>`;
   out = out.replace(/<head\b[^>]*>/i, (head) => `${head}${inject}`);
 
   return out;
