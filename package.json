@@ -12,8 +12,11 @@
     "build:docs:dev": "ng build ds-docs --configuration development",
     "build:showcase": "ng build ds-docs --configuration showcase && node tools/showcase/inline.mjs",
     "test:showcase": "node --test \"tools/showcase/*.test.mjs\" \"ds-docs/src/**/*.spec.mjs\"",
-    "setup:hooks": "git config core.hooksPath .githooks",
-    "prepare": "git config core.hooksPath .githooks"
+    "setup:hooks": "simple-git-hooks",
+    "prepare": "simple-git-hooks"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "node tools/showcase/write-version.mjs && git add showcase/source-stamp.js"
   },
   "peerDependencies": {
     "@angular/cdk": "^21.2.0",
@@ -39,6 +42,7 @@
     "@angular/router": "^21.2.0",
     "ng-packagr": "^21.2.0",
     "rxjs": "~7.8.0",
+    "simple-git-hooks": "^2.13.1",
     "typescript": "~5.9.2",
     "zone.js": "~0.15.0"
   },

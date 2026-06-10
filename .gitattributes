@@ -1,2 +1,0 @@
-# Shell hooks must stay LF — CRLF breaks /bin/sh on checkout.
-.githooks/* text eol=lf
