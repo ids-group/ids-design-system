@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DS — Button API: variant × tone</title>
+<link rel="stylesheet" href="ds.css">
+<style>
+  /* ----------------------------------------------------------------
+     Demo-only page (NOT part of the lib). Прототип разделения API
+     кнопки на две оси: variant (иерархия) × tone (семантика).
+     CSS ниже — это и есть эскиз реализации: tone-классы ремапят
+     «слоты» цветового семейства, варианты потребляют слоты.
+     ---------------------------------------------------------------- */
+  body { margin: 0; background: var(--surface-canvas); color: var(--text-primary); font-family: var(--font-sans); }
+  .page { max-width: 1180px; margin: 0 auto; padding: var(--s-10) var(--s-6) var(--s-20); }
+
+  .masthead h1 { font: var(--fw-bold) 26px/1.25 var(--font-heading); margin: 0 0 var(--s-2); }
+  .masthead p { color: var(--text-secondary); max-width: 86ch; margin: var(--s-2) 0 0; font: var(--fw-regular) var(--fs-s)/1.6 var(--font-sans); }
+  code.tk, .masthead code, .q-list code, .note code {
+    font: var(--fw-medium) var(--fs-2xs)/1 var(--font-mono); color: var(--primary-strong);
+    background: var(--primary-subtle); padding: 2px 6px; border-radius: var(--r-sm); }
+
+  .card { background: var(--surface-default); border: var(--bw-default) solid var(--border-divider);
+          border-radius: var(--r-lg); padding: var(--s-6); box-shadow: var(--z100);
+          margin-top: var(--s-6); display: flex; flex-direction: column; gap: var(--s-4); }
+  .card-head { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+  .card-head h2 { font: var(--fw-bold) var(--fs-h4)/1.2 var(--font-heading); margin: 0; }
+  .step { font: var(--fw-bold) var(--fs-3xs)/1 var(--font-sans); text-transform: uppercase; letter-spacing: var(--ls-wider);
+          padding: 5px 9px; border-radius: var(--r-pill); background: var(--primary-subtle); color: var(--primary-strong); white-space: nowrap; }
+  .note { color: var(--text-tertiary); font: var(--fw-regular) var(--fs-xs)/1.55 var(--font-sans); margin: 0; }
+
+  .snippet { background: var(--surface-secondary); border: var(--bw-default) solid var(--border-divider);
+             border-radius: var(--r-sm); padding: var(--s-3) var(--s-4); margin: 0;
+             font: var(--fw-medium) var(--fs-xs)/1.7 var(--font-mono); color: var(--text-primary);
+             overflow-x: auto; white-space: pre; }
+  .snippet .cm { color: var(--text-tertiary); }
+  .snippet .hl { color: var(--primary-strong); font-weight: var(--fw-bold); }
+
+  /* ================================================================
+     ЭСКИЗ РЕАЛИЗАЦИИ.
+     .pbtn держит «слоты» семейства (--t-*), по умолчанию = primary-
+     семейство (tone="neutral"). Tone-классы ремапят ТОЛЬКО слоты.
+     Вариантные классы потребляют слоты и НЕ дублируются по тонам.
+     В реальном компоненте поверх этого остаётся слой публичных
+     --ds-button-* (read-with-fallback) — здесь он опущен для ясности.
+     ================================================================ */
+  .pbtn {
+    --t-fill:           var(--primary);
+    --t-fill-on:        var(--primary-on);
+    --t-tonal:          var(--primary-muted);
+    --t-tonal-strong:   var(--primary-muted-strong);
+    --t-subtle:         var(--primary-subtle);
+    --t-strong:         var(--primary-strong);
+    --t-outline-fg:     var(--text-primary);
+    --t-outline-border: var(--border-default);
+    --t-outline-hover:  var(--surface-secondary);
+    --t-link:           var(--text-link);
+    --t-link-hover:     var(--primary-pressed);
+    --t-ring:           var(--focus-ring);
+
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
+    font: var(--fw-extrabold) var(--fs-m)/var(--lh-flat) var(--font-sans);
+    letter-spacing: var(--ls-wide);
+    border: var(--bw-default) solid var(--_border, transparent);
+    border-radius: var(--r-md);
+    padding: 0 var(--s-5); height: var(--hit-cozy);
+    cursor: pointer; white-space: nowrap; user-select: none;
+    color: var(--_fg); background: var(--_bg);
+    transition: background var(--dur-fast) var(--ease-standard),
+                border-color var(--dur-fast) var(--ease-standard),
+                box-shadow var(--dur-fast) var(--ease-standard),
+                color var(--dur-fast) var(--ease-standard);
+  }
+  .pbtn:hover  { background: var(--_bg-h); }
+  .pbtn:active { background: var(--_bg-a);
+                 box-shadow: 0 0 0 3px color-mix(in srgb, var(--_bg-a) 35%, transparent); }
+  .pbtn:focus-visible { outline: none; box-shadow: var(--t-ring); }
+
+  .tone-error {
+    --t-fill:           var(--error);
+    --t-fill-on:        var(--primary-on);
+    --t-tonal:          var(--error-muted);
+    --t-tonal-strong:   var(--error-border);   /* нет роли -muted-strong → тот же шаг рампы (red-200), вопрос №3 */
+    --t-subtle:         var(--error-subtle);
+    --t-strong:         var(--error-text);
+    --t-outline-fg:     var(--error-text);
+    --t-outline-border: var(--error-border);
+    --t-outline-hover:  var(--error-subtle);
+    --t-link:           var(--error-text);
+    --t-link-hover:     color-mix(in srgb, var(--error-text) 76%, black);
+    --t-ring:           var(--focus-ring-error);
+  }
+  .tone-success {
+    --t-fill:           var(--success);
+    --t-fill-on:        var(--text-on-success);
+    --t-tonal:          var(--success-muted);
+    --t-tonal-strong:   var(--success-border);
+    --t-subtle:         var(--success-subtle);
+    --t-strong:         var(--success-text);
+    --t-outline-fg:     var(--success-text);
+    --t-outline-border: var(--success-border);
+    --t-outline-hover:  var(--success-subtle);
+    --t-link:           var(--success-text);
+    --t-link-hover:     color-mix(in srgb, var(--success-text) 76%, black);
+  }
+  .tone-warning {
+    --t-fill:           var(--warning);
+    --t-fill-on:        var(--text-on-warning);
+    --t-tonal:          var(--warning-muted);
+    --t-tonal-strong:   var(--warning-border);
+    --t-subtle:         var(--warning-subtle);
+    --t-strong:         var(--warning-text);
+    --t-outline-fg:     var(--warning-text);
+    --t-outline-border: var(--warning-border);
+    --t-outline-hover:  var(--warning-subtle);
+    --t-link:           var(--warning-text);
+    --t-link-hover:     color-mix(in srgb, var(--warning-text) 76%, black);
+  }
+
+  .v-primary {
+    --_bg:   var(--t-fill);
+    --_fg:   var(--t-fill-on);
+    --_bg-h: color-mix(in srgb, var(--t-fill) 88%, black);
+    --_bg-a: color-mix(in srgb, var(--t-fill) 76%, black);
+  }
+  .v-secondary {
+    --_bg:   var(--t-tonal);
+    --_fg:   var(--t-strong);
+    --_bg-h: var(--t-tonal-strong);
+    --_bg-a: var(--t-tonal-strong);
+  }
+  .v-tertiary {
+    --_bg:   transparent;
+    --_fg:   var(--t-strong);
+    --_bg-h: var(--t-subtle);
+    --_bg-a: var(--t-tonal);
+  }
+  .v-outline {
+    --_bg:     var(--surface-default);
+    --_fg:     var(--t-outline-fg);
+    --_border: var(--t-outline-border);
+    --_bg-h:   var(--t-outline-hover);
+    --_bg-a:   var(--t-outline-hover);
+  }
+  .v-text {
+    --_bg: transparent; --_bg-h: transparent; --_bg-a: transparent;
+    --_fg: var(--t-link);
+    padding: 0; height: auto;
+    text-decoration: underline; text-underline-offset: 3px;
+  }
+  .v-text:hover { color: var(--t-link-hover); }
+  .v-text:active { box-shadow: none; }
+
+  /* outline, альтернатива B — нейтральная рамка, цветной текст */
+  .v-outline.alt-neutral-border { --_border: var(--border-default); --_bg-h: var(--surface-secondary); --_bg-a: var(--surface-secondary); }
+
+  /* ---- сетка ---- */
+  .matrix { display: grid; grid-template-columns: 150px repeat(4, 1fr); gap: var(--s-2); align-items: stretch; }
+  .matrix .head { font: var(--fw-bold) var(--fs-xs)/1.3 var(--font-sans); color: var(--text-primary);
+                  padding: var(--s-2) var(--s-3); display: flex; flex-direction: column; gap: 2px; }
+  .matrix .head small { font: var(--fw-regular) var(--fs-3xs)/1.3 var(--font-mono); color: var(--text-tertiary); }
+  .matrix .rowlab { font: var(--fw-semibold) var(--fs-xs)/1.35 var(--font-sans); color: var(--text-secondary);
+                    display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: var(--s-2) var(--s-3); }
+  .matrix .rowlab b { color: var(--text-primary); font-family: var(--font-mono); }
+
+  .cell { position: relative; border: var(--bw-default) dashed var(--border-divider); border-radius: var(--r-md);
+          background: var(--surface-canvas); padding: var(--s-5) var(--s-4); min-height: 84px;
+          display: flex; align-items: center; justify-content: center; }
+  .cell.is-ban { background: color-mix(in srgb, var(--surface-canvas) 60%, white); }
+  .cell.is-ban .pbtn { opacity: .35; filter: saturate(.4); }
+
+  .stamp { position: absolute; top: 6px; right: 6px; width: 26px; height: 26px;
+           border-radius: var(--r-pill); border: var(--bw-default) solid var(--border-default);
+           background: var(--surface-default); cursor: pointer; padding: 0;
+           font: var(--fw-bold) var(--fs-xs)/1 var(--font-sans);
+           display: inline-flex; align-items: center; justify-content: center; }
+  .stamp[data-v="allow"] { background: var(--success-subtle); border-color: var(--success-border); color: var(--success-text); }
+  .stamp[data-v="ban"]   { background: var(--error-subtle);   border-color: var(--error-border);   color: var(--error-text); }
+  .stamp[data-v="maybe"] { background: var(--warning-subtle); border-color: var(--warning-border); color: var(--warning-text); }
+
+  .legend { display: flex; gap: var(--s-5); flex-wrap: wrap; font: var(--fw-regular) var(--fs-xs)/1.4 var(--font-sans); color: var(--text-secondary); }
+  .legend .stamp { position: static; pointer-events: none; }
+  .legend span { display: inline-flex; align-items: center; gap: var(--s-2); }
+
+  .q-list { margin: 0; padding-left: var(--s-5); display: flex; flex-direction: column; gap: var(--s-3);
+            font: var(--fw-regular) var(--fs-s)/1.6 var(--font-sans); }
+  .q-list b { color: var(--text-primary); }
+  .q-list .rec { color: var(--success-text); font-weight: var(--fw-semibold); }
+  .mini-demo { display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap; margin-top: var(--s-2);
+               padding: var(--s-4); border: var(--bw-default) dashed var(--border-default);
+               border-radius: var(--r-md); background: var(--surface-canvas); }
+  .mini-demo .lbl { font: var(--fw-regular) var(--fs-2xs)/1.3 var(--font-sans); color: var(--text-tertiary); }
+
+  @media (max-width: 980px) { .matrix { grid-template-columns: 110px repeat(4, 1fr); } .cell { padding: var(--s-3) var(--s-2); } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <h1>Button API: <code>variant</code> × <code>tone</code></h1>
+    <p>Сейчас <code>ButtonVariant</code> смешивает три оси в одном enum: иерархию (<code>primary/secondary/tertiary</code>),
+       стиль (<code>outline/text</code>) и семантику (<code>error/success/warning</code>). Статусные кнопки существуют только
+       как сплошная заливка — «тихое» деструктивное действие (тональный Delete рядом с primary Save) сделать нельзя.</p>
+    <p>Предложение (модель Polaris): <code>variant: primary | secondary | tertiary | outline | text</code> — паттерн заливки
+       и уровень акцента, как сегодня минус статусы. <code>tone: neutral | error | success | warning</code> — переключает
+       цветовое семейство, не трогая паттерн. Дефолт <code>neutral</code>. Hard rename, без алиасов:
+       старый <code>variant="error"</code> → <code>variant="primary" tone="error"</code>.</p>
+  </header>
+
+  <section class="card">
+    <div class="card-head"><span class="step">API</span><h2>Было → станет</h2></div>
+<pre class="snippet"><span class="cm">&lt;!-- сегодня: статус — только «громкий» --&gt;</span>
+&lt;ds-button variant="error"&gt;Удалить&lt;/ds-button&gt;
+
+<span class="cm">&lt;!-- станет: семантика и громкость независимы --&gt;</span>
+&lt;ds-button <span class="hl">variant="primary" tone="error"</span>&gt;Удалить&lt;/ds-button&gt;     <span class="cm">&lt;!-- = старый error --&gt;</span>
+&lt;ds-button <span class="hl">variant="secondary" tone="error"</span>&gt;Удалить&lt;/ds-button&gt;   <span class="cm">&lt;!-- НОВОЕ: тихий destructive --&gt;</span>
+&lt;ds-button <span class="hl">variant="text" tone="error"</span>&gt;Удалить черновик&lt;/ds-button&gt;</pre>
+    <p class="note">Реализация: tone-класс ремапит «слоты» семейства (<code>--t-fill / --t-tonal / --t-subtle / --t-strong …</code>)
+       с primary-семейства на статусное; вариантные правила потребляют слоты и не дублируются. CSS этой страницы — рабочий эскиз
+       (см. исходник). Слой публичных <code>--ds-button-*</code> остаётся поверх без изменений. Disabled одинаков для всех тонов
+       (<code>--surface-disabled</code>).</p>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><span class="step">Сетка</span><h2>variant × tone — живые кнопки</h2></div>
+    <p class="note">Кнопки настоящие: наводите и зажимайте — hover/active/pressed-halo считаются из тех же токенов, что пойдут в код.
+       Кликайте по штампу в углу ячейки, чтобы сменить вердикт: ✓ легализуем · ? обсудить · ✗ запрещаем (тип сузит компилятор).
+       Предзаполнено моей рекомендацией.</p>
+    <div class="legend">
+      <span><button class="stamp" data-v="allow">✓</button> легализуем</span>
+      <span><button class="stamp" data-v="maybe">?</button> обсудить</span>
+      <span><button class="stamp" data-v="ban">✗</button> запрещаем</span>
+    </div>
+
+    <div class="matrix" id="matrix">
+      <div class="head"></div>
+      <div class="head">neutral <small>дефолт · primary-семейство</small></div>
+      <div class="head">error <small>red-семейство</small></div>
+      <div class="head">success <small>green-семейство</small></div>
+      <div class="head">warning <small>yellow-семейство</small></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><span class="step">Вопросы</span><h2>Открытые решения</h2></div>
+    <ol class="q-list">
+      <li><b>Имя второй оси:</b> <code>tone</code> (Polaris) vs <code>intent</code> (Blueprint) vs <code>status</code>.
+          <span class="rec">Рекомендую tone</span> — не конфликтует со статус-компонентами (status-dot) и читается как «окраска», а не «состояние».</li>
+      <li><b>outline × tone — какая рамка?</b> В сетке вариант A (цветные рамка и текст). Альтернатива B — нейтральная рамка, цветной только текст:
+          <div class="mini-demo">
+            <span class="lbl">A · цветная рамка</span>
+            <button class="pbtn v-outline tone-error">Удалить</button>
+            <span class="lbl">B · нейтральная рамка</span>
+            <button class="pbtn v-outline alt-neutral-border tone-error">Удалить</button>
+          </div></li>
+      <li><b>Дырка в теме:</b> для hover тональной кнопки нужен шаг «muted-strong»; у primary-семейства он есть
+          (<code>--primary-muted-strong</code>), у статусных — нет. Прототип берёт <code>--error-border</code> (тот же шаг рампы, red-200).
+          <span class="rec">Рекомендую добавить роли</span> <code>--error/success/warning-muted-strong</code> в тему, а не перегружать смысл border-токена.</li>
+      <li><b>Focus-ring:</b> <code>--focus-ring-error</code> существует (tone="error" его берёт), success/warning-колец нет —
+          в сетке у них нейтральное синее кольцо (Tab по кнопкам, чтобы посмотреть). Добавлять роли или оставить нейтральное?</li>
+      <li><b>warning-колонка:</b> жёлтое семейство слабоконтрастно в тихих уровнях (yellow-700 текст на yellow-50/100),
+          underline-ссылка читается как «сломанная». Поэтому предзаполнено ✗/? — смотрите глазами.</li>
+      <li><b>text × tone hover:</b> у neutral — ручной <code>--primary-pressed</code>, у тонов — формула
+          <code>color-mix(*-text 76%, black)</code>. По нашему правилу hand-tuned &gt; формулы — если тон легализуем, подобрать ручные пики?</li>
+      <li><b>Спиннер loading</b> уже в todo (прокинуть через <code>--_button-fg</code>) — после этого tone подхватится автоматически, отдельной работы нет.</li>
+    </ol>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><span class="step">Итог</span><h2>Вердикт (обновляется кликами по штампам)</h2></div>
+    <pre class="snippet" id="verdict"></pre>
+    <p class="note">Когда расставите штампы — скиньте мне этот блок (или скриншот), и я пишу спеку: тип <code>ButtonTone</code>,
+       легальные комбинации, ремап слотов, миграция lib + ds-docs + showcase.</p>
+  </section>
+
+</div>
+
+<script>
+  const VARIANTS = [
+    { key: 'primary',   note: 'сплошная заливка' },
+    { key: 'secondary', note: 'тональная' },
+    { key: 'tertiary',  note: 'прозрачная' },
+    { key: 'outline',   note: 'рамка' },
+    { key: 'text',      note: 'ссылка' },
+  ];
+  const TONES = ['neutral', 'error', 'success', 'warning'];
+  const LABELS = { neutral: 'Сохранить', error: 'Удалить', success: 'Подтвердить', warning: 'Продолжить' };
+
+  // предзаполненная рекомендация: allow | maybe | ban
+  const PRESET = {
+    neutral: { primary: 'allow', secondary: 'allow', tertiary: 'allow', outline: 'allow', text: 'allow' },
+    error:   { primary: 'allow', secondary: 'allow', tertiary: 'allow', outline: 'maybe', text: 'allow' },
+    success: { primary: 'allow', secondary: 'maybe', tertiary: 'ban',   outline: 'ban',   text: 'ban' },
+    warning: { primary: 'allow', secondary: 'maybe', tertiary: 'ban',   outline: 'ban',   text: 'ban' },
+  };
+  const GLYPH = { allow: '✓', maybe: '?', ban: '✗' };
+  const CYCLE = { allow: 'maybe', maybe: 'ban', ban: 'allow' };
+
+  const matrix = document.getElementById('matrix');
+  for (const variant of VARIANTS) {
+    const lab = document.createElement('div');
+    lab.className = 'rowlab';
+    lab.innerHTML = `<b>${variant.key}</b><span>${variant.note}</span>`;
+    matrix.appendChild(lab);
+
+    for (const tone of TONES) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.dataset.variant = variant.key;
+      cell.dataset.tone = tone;
+
+      const btn = document.createElement('button');
+      btn.className = `pbtn v-${variant.key}` + (tone === 'neutral' ? '' : ` tone-${tone}`);
+      btn.textContent = LABELS[tone];
+      cell.appendChild(btn);
+
+      const stamp = document.createElement('button');
+      stamp.className = 'stamp';
+      stamp.title = 'клик — сменить вердикт';
+      setVerdict(cell, stamp, PRESET[tone][variant.key]);
+      stamp.addEventListener('click', () => setVerdict(cell, stamp, CYCLE[stamp.dataset.v]));
+      cell.appendChild(stamp);
+
+      matrix.appendChild(cell);
+    }
+  }
+
+  function setVerdict(cell, stamp, verdict) {
+    stamp.dataset.v = verdict;
+    stamp.textContent = GLYPH[verdict];
+    cell.classList.toggle('is-ban', verdict === 'ban');
+    renderSummary();
+  }
+
+  function renderSummary() {
+    const lines = [];
+    for (const tone of TONES) {
+      const parts = VARIANTS.map(variant => {
+        const stamp = matrix.querySelector(`.cell[data-variant="${variant.key}"][data-tone="${tone}"] .stamp`);
+        return stamp ? `${variant.key} ${GLYPH[stamp.dataset.v]}` : `${variant.key} …`;
+      });
+      lines.push(`tone=${tone.padEnd(7)} → ${parts.join(' · ')}`);
+    }
+    document.getElementById('verdict').textContent = lines.join('\n');
+  }
+  renderSummary();
+</script>
+</body>
+</html>
