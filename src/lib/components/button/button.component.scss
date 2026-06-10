@@ -19,23 +19,26 @@
 }
 
 .button {
-  /* Surface */
-  --ds-button-bg:            var(--primary);
-  --ds-button-bg-hover:      var(--primary-hover);
-  --ds-button-bg-active:     var(--primary-pressed);
-  --ds-button-fg:            var(--primary-on);
-  --ds-button-border:        transparent;
-  /* State */
-  --ds-button-bg-disabled:   var(--surface-disabled);
-  --ds-button-fg-disabled:   var(--text-disabled);
-  /* Geometry */
-  --ds-button-radius:        var(--r-md);
-  --ds-button-focus-shadow:  var(--focus-ring);
+  /* Public --ds-button-* tokens are READ here (and re-bound per variant),
+     never declared — a consumer declaration anywhere up the tree (host
+     element included) wins over the variant defaults. Hover/active default
+     to a color-mix derivation from the resolved bg (the theme's
+     --primary-hover/-pressed recipe: 88% / 76% base + black), so overriding
+     ONE bg token retints hover, pressed and the pressed halo automatically;
+     any state token stays individually overridable. One-shot tokens
+     (radius, disabled colors) are read inline at their usage site. */
+  --_button-bg:        var(--ds-button-bg,        var(--primary));
+  --_button-bg-hover:  var(--ds-button-bg-hover,  color-mix(in srgb, var(--_button-bg) 88%, black));
+  --_button-bg-active: var(--ds-button-bg-active, color-mix(in srgb, var(--_button-bg) 76%, black));
+  --_button-fg:        var(--ds-button-fg,        var(--primary-on));
+  --_button-border:    var(--ds-button-border,    transparent);
+  --_button-focus-shadow: var(--ds-button-focus-shadow, var(--focus-ring));
 
   /* Pressed halo — soft glow ring on :active (no layout shift). Derived from
-     the variant's own active background, so it auto-tints for danger/success/
-     warning/ghost without per-variant overrides. */
-  --ds-button-pressed-shadow: 0 0 0 3px color-mix(in srgb, var(--ds-button-bg-active) 35%, transparent);
+     the variant's own active background, so it auto-tints for error/success/
+     warning without per-variant overrides. */
+  --_button-pressed-shadow: var(--ds-button-pressed-shadow,
+                              0 0 0 3px color-mix(in srgb, var(--_button-bg-active) 35%, transparent));
 
   display: inline-flex;
   align-items: center;
@@ -43,10 +46,10 @@
   gap: var(--s-2);
   font: var(--fw-extrabold) var(--fs-m)/var(--lh-flat) var(--font-sans);
   letter-spacing: var(--ls-wide);
-  color: var(--ds-button-fg);
-  background: var(--ds-button-bg);
-  border: var(--bw-default) solid var(--ds-button-border);
-  border-radius: var(--ds-button-radius);
+  color: var(--_button-fg);
+  background: var(--_button-bg);
+  border: var(--bw-default) solid var(--_button-border);
+  border-radius: var(--ds-button-radius, var(--r-md));
   padding: 0 var(--s-5);
   height: var(--hit-cozy);
   width: 100%;
@@ -60,13 +63,13 @@
     box-shadow var(--dur-fast) var(--ease-standard),
     color var(--dur-fast) var(--ease-standard);
 
-  &:hover  { background: var(--ds-button-bg-hover); }
-  &:active { background: var(--ds-button-bg-active); box-shadow: var(--ds-button-pressed-shadow); }
-  &:focus-visible { outline: none; box-shadow: var(--ds-button-focus-shadow); z-index: var(--btn-focus-z); }
+  &:hover  { background: var(--_button-bg-hover); }
+  &:active { background: var(--_button-bg-active); box-shadow: var(--_button-pressed-shadow); }
+  &:focus-visible { outline: none; box-shadow: var(--_button-focus-shadow); z-index: var(--btn-focus-z); }
 
   &[disabled] {
-    background: var(--ds-button-bg-disabled);
-    color: var(--ds-button-fg-disabled);
+    background: var(--ds-button-bg-disabled, var(--surface-disabled));
+    color: var(--ds-button-fg-disabled, var(--text-disabled));
     border-color: transparent;
     cursor: not-allowed;
     pointer-events: none;
@@ -94,55 +97,49 @@
     .icon { width: var(--icon-sm); height: var(--icon-sm); }
   }
 
-  /* Variants */
+  /* Variants — re-bind the private resolvers; the consumer token still wins
+     over the variant default. Solid status variants (error/success/warning)
+     keep the derived hover/active; tonal/transparent/neutral variants pin
+     explicit ramp picks (a black mix into pastel tints desaturates). */
   &.secondary {
-    --ds-button-bg:        var(--primary-muted);
-    --ds-button-fg:        var(--primary-strong);
-    --ds-button-bg-hover:  var(--primary-muted-strong);
-    --ds-button-bg-active: var(--primary-muted-strong);
+    --_button-bg:        var(--ds-button-bg,        var(--primary-muted));
+    --_button-fg:        var(--ds-button-fg,        var(--primary-strong));
+    --_button-bg-hover:  var(--ds-button-bg-hover,  var(--primary-muted-strong));
+    --_button-bg-active: var(--ds-button-bg-active, var(--primary-muted-strong));
   }
   &.tertiary {
-    --ds-button-bg:        transparent;
-    --ds-button-fg:        var(--primary-strong);
-    --ds-button-bg-hover:  var(--primary-subtle);
-    --ds-button-bg-active: var(--primary-muted);
+    --_button-bg:        var(--ds-button-bg,        transparent);
+    --_button-fg:        var(--ds-button-fg,        var(--primary-strong));
+    --_button-bg-hover:  var(--ds-button-bg-hover,  var(--primary-subtle));
+    --_button-bg-active: var(--ds-button-bg-active, var(--primary-muted));
   }
   /* Bordered neutral, low-emphasis. (Was also exposed as `ghost`; removed —
      `ghost` implied chromeless, which this isn't. Icon-only lives in ds-icon-button.) */
   &.outline {
-    --ds-button-bg:        var(--surface-default);
-    --ds-button-fg:        var(--text-primary);
-    --ds-button-border:    var(--border-default);
-    --ds-button-bg-hover:  var(--surface-secondary);
-    --ds-button-bg-active: var(--surface-secondary);
+    --_button-bg:        var(--ds-button-bg,        var(--surface-default));
+    --_button-fg:        var(--ds-button-fg,        var(--text-primary));
+    --_button-border:    var(--ds-button-border,    var(--border-default));
+    --_button-bg-hover:  var(--ds-button-bg-hover,  var(--surface-secondary));
+    --_button-bg-active: var(--ds-button-bg-active, var(--surface-secondary));
   }
   &.error {
-    --ds-button-bg:        var(--error);
-    --ds-button-bg-hover:  var(--error-hover);
-    --ds-button-bg-active: var(--error-pressed);
-    --ds-button-focus-shadow: var(--focus-ring-error);
+    --_button-bg:           var(--ds-button-bg,           var(--error));
+    --_button-focus-shadow: var(--ds-button-focus-shadow, var(--focus-ring-error));
   }
   &.success {
-    --ds-button-bg:        var(--success);
-    --ds-button-bg-hover:  var(--success-hover);
-    --ds-button-bg-active: var(--success-hover);
-    --ds-button-fg:        var(--text-on-success);
-    --ds-button-border:    transparent;
+    --_button-bg: var(--ds-button-bg, var(--success));
+    --_button-fg: var(--ds-button-fg, var(--text-on-success));
   }
   &.warning {
-    --ds-button-bg:        var(--warning);
-    --ds-button-bg-hover:  var(--warning-hover);
-    --ds-button-bg-active: var(--warning-hover);
-    --ds-button-fg:        var(--text-on-warning);
-    --ds-button-border:    transparent;
+    --_button-bg: var(--ds-button-bg, var(--warning));
+    --_button-fg: var(--ds-button-fg, var(--text-on-warning));
   }
 
   &.text {
-    --ds-button-bg:        transparent;
-    --ds-button-fg:        var(--text-link);
-    --ds-button-border:    transparent;
-    --ds-button-bg-hover:  transparent;
-    --ds-button-bg-active: transparent;
+    --_button-bg:        var(--ds-button-bg,        transparent);
+    --_button-fg:        var(--ds-button-fg,        var(--text-link));
+    --_button-bg-hover:  var(--ds-button-bg-hover,  transparent);
+    --_button-bg-active: var(--ds-button-bg-active, transparent);
     padding: 0; height: auto; width: auto;
     text-decoration: underline;
     text-underline-offset: var(--btn-link-uloff);
