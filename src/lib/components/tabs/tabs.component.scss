@@ -7,51 +7,52 @@
 
 :host {
   display: block;
-
-  --ds-tab-fg: var(--text-secondary);
-  --ds-tab-fg-hover: var(--text-primary);
-  --ds-tab-fg-active: var(--primary);
-  --ds-tab-indicator-color: var(--primary);
-  --ds-tab-indicator-width: var(--border-width-strong);
-  --ds-tab-pad-x: var(--space-4);
-  --ds-tab-pad-y: var(--space-3);
-  --ds-tabs-divider: var(--border-divider);
-  --ds-tabs-pills-bg: var(--surface-secondary);
-  --ds-tab-pill-bg-hover: var(--primary-subtle);
-  --ds-tab-pill-bg-active: var(--surface-default);
-  --ds-tab-pill-bg-active-hover: var(--primary-subtle);
-  --ds-tab-pill-fg-active: var(--primary-strong);
-  --ds-tab-pill-radius: var(--radius-md);
 }
 
 .tabs {
+  /* Public --ds-tab*-/-tabs-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_tabs-divider:          var(--ds-tabs-divider,          var(--border-divider));
+  --_tab-pad-x:             var(--ds-tab-pad-x,             var(--space-4));
+  --_tab-pad-y:             var(--ds-tab-pad-y,             var(--space-3));
+  --_tab-fg:                var(--ds-tab-fg,                var(--text-secondary));
+  --_tab-fg-hover:          var(--ds-tab-fg-hover,          var(--text-primary));
+  --_tab-fg-active:         var(--ds-tab-fg-active,         var(--primary));
+  --_tab-indicator-color:   var(--ds-tab-indicator-color,   var(--primary));
+  --_tab-indicator-width:   var(--ds-tab-indicator-width,   var(--border-width-strong));
+  --_tabs-pills-bg:         var(--ds-tabs-pills-bg,         var(--surface-secondary));
+  --_tab-pill-bg-hover:     var(--ds-tab-pill-bg-hover,     var(--primary-subtle));
+  --_tab-pill-bg-active:    var(--ds-tab-pill-bg-active,    var(--surface-default));
+  --_tab-pill-bg-active-hover: var(--ds-tab-pill-bg-active-hover, var(--primary-subtle));
+  --_tab-pill-fg-active:    var(--ds-tab-pill-fg-active,    var(--primary-strong));
+  --_tab-pill-radius:       var(--ds-tab-pill-radius,       var(--radius-md));
+
   display: flex;
   gap: var(--space-2);
-  border-bottom: var(--border-width-default) solid var(--ds-tabs-divider);
+  border-bottom: var(--border-width-default) solid var(--_tabs-divider);
 
   .tab {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    padding: var(--ds-tab-pad-y) var(--ds-tab-pad-x);
+    padding: var(--_tab-pad-y) var(--_tab-pad-x);
     border: 0;
     background: transparent;
     font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-    color: var(--ds-tab-fg);
+    color: var(--_tab-fg);
     cursor: pointer;
-    border-bottom: var(--ds-tab-indicator-width) solid transparent;
+    border-bottom: var(--_tab-indicator-width) solid transparent;
     margin-bottom: calc(-1 * var(--border-width-default));
     transition:
       color var(--duration-fast) var(--ease-standard),
       border-color var(--duration-fast) var(--ease-standard);
 
     &:hover {
-      color: var(--ds-tab-fg-hover);
+      color: var(--_tab-fg-hover);
     }
 
     &.active {
-      color: var(--ds-tab-fg-active);
-      border-bottom-color: var(--ds-tab-indicator-color);
+      color: var(--_tab-fg-active);
+      border-bottom-color: var(--_tab-indicator-color);
     }
 
     .badge {
@@ -75,8 +76,8 @@
      Aliases to brand under the default theme; becomes a true secondary hue
      when --secondary is overridden by a brand. */
   &.secondary .tab.active {
-    --ds-tab-fg-active: var(--secondary-strong);
-    --ds-tab-indicator-color: var(--secondary);
+    --_tab-fg-active: var(--ds-tab-fg-active, var(--secondary-strong));
+    --_tab-indicator-color: var(--ds-tab-indicator-color, var(--secondary));
   }
 
   /* Pills variant — segmented filter row, no underline */
@@ -84,32 +85,32 @@
     border-bottom: 0;
     gap: var(--space-1);
     padding: var(--space-1);
-    background: var(--ds-tabs-pills-bg);
-    border-radius: var(--ds-tab-pill-radius);
+    background: var(--_tabs-pills-bg);
+    border-radius: var(--_tab-pill-radius);
     display: inline-flex;
 
     .tab {
       padding: var(--space-2) var(--space-3);
       border-bottom: 0;
       margin-bottom: 0;
-      border-radius: var(--ds-tab-pill-radius);
-      color: var(--ds-tab-fg);
+      border-radius: var(--_tab-pill-radius);
+      color: var(--_tab-fg);
 
       /* Inactive hover — subtle brand tint, distinct from active surface */
       &:hover {
-        background: var(--ds-tab-pill-bg-hover);
-        color: var(--ds-tab-fg-hover);
+        background: var(--_tab-pill-bg-hover);
+        color: var(--_tab-fg-hover);
       }
 
       &.active {
-        background: var(--ds-tab-pill-bg-active);
-        color: var(--ds-tab-pill-fg-active);
+        background: var(--_tab-pill-bg-active);
+        color: var(--_tab-pill-fg-active);
         border-bottom: 0;
         box-shadow: var(--z100);
 
         /* Active hover — wash the elevated card with a brand tint */
         &:hover {
-          background: var(--ds-tab-pill-bg-active-hover);
+          background: var(--_tab-pill-bg-active-hover);
         }
       }
     }

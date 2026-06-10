@@ -1,7 +1,8 @@
 :host {
-  --ds-bottom-sheet-maxw: 480px;
-  --ds-bottom-sheet-maxh: 80%;
-  --ds-bottom-sheet-radius: var(--radius-lg);
+  /* Public --ds-bottom-sheet-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_bottom-sheet-maxw:   var(--ds-bottom-sheet-maxw,   480px);
+  --_bottom-sheet-maxh:   var(--ds-bottom-sheet-maxh,   80%);
+  --_bottom-sheet-radius: var(--ds-bottom-sheet-radius, var(--radius-lg));
 
   display: contents;
 }
@@ -19,13 +20,13 @@
 
 .sheet {
   position: relative;
-  width: min(100%, var(--ds-bottom-sheet-maxw));
+  width: min(100%, var(--_bottom-sheet-maxw));
   margin-inline: auto;
   background: var(--surface-default);
-  border-radius: var(--ds-bottom-sheet-radius) var(--ds-bottom-sheet-radius) 0 0;
+  border-radius: var(--_bottom-sheet-radius) var(--_bottom-sheet-radius) 0 0;
   padding: 0 var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom));
   animation: ds-sheet-up var(--duration-base) var(--ease-decelerate);
-  max-height: var(--ds-bottom-sheet-maxh);
+  max-height: var(--_bottom-sheet-maxh);
   display: flex;
   flex-direction: column;
   transition: transform var(--duration-base) var(--ease-decelerate);

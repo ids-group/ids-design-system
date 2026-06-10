@@ -12,14 +12,6 @@
 
 :host {
   display: block;
-
-  // Public component variables — override via higher-specificity selector
-  // (e.g. `ds-table.compact-card { --ds-table-border: transparent; }`).
-  --ds-table-border: var(--border-default);
-  --ds-table-radius: var(--radius-md);
-  --ds-table-header-fg: var(--text-secondary);
-  --ds-table-header-bg: var(--surface-secondary);
-  --ds-table-header-fs: var(--font-size-xs);
 }
 
 // Visually-hidden but screen-reader-available (table caption + loading status).
@@ -38,13 +30,17 @@
 /* Opt-in outer frame via `[bordered]="true"` — gives standalone tables
    (data-ingest preview, segmentation preview, offers tab, summary tab) a
    defined edge. Tables flush inside `<ds-card padding="none">` stay clean
-   without it. Tokens above remain public so consumers can override per-instance. */
+   without it. */
 :host(.bordered) .scroll-wrap {
-  border: var(--border-width-default) solid var(--ds-table-border);
-  border-radius: var(--ds-table-radius);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--_table-radius);
 }
 
 .scroll-wrap {
+  /* Public --ds-table-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_table-radius: var(--ds-table-radius, var(--radius-md));
+  --_table-bg:     var(--ds-table-bg,     var(--surface-default));
+
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
@@ -86,29 +82,33 @@
 }
 
 .table {
-  --ds-table-bg:              var(--surface-default);
-  --ds-table-row-hover-bg:    var(--surface-secondary);
-  --ds-table-row-selected-bg: var(--primary-subtle);
-  --ds-table-divider:         var(--border-divider);
-  --ds-table-sort-active-fg:  var(--primary);
-  --ds-table-cell-pad-x:      var(--table-cell-pad-x);
-  --ds-table-cell-pad-y:      var(--table-cell-pad-y);
+  /* Public --ds-table-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_table-bg:              var(--ds-table-bg,              var(--surface-default));
+  --_table-row-hover-bg:    var(--ds-table-row-hover-bg,    var(--surface-secondary));
+  --_table-row-selected-bg: var(--ds-table-row-selected-bg, var(--primary-subtle));
+  --_table-head-fg:         var(--ds-table-head-fg,         var(--text-secondary));
+  --_table-head-bg:         var(--ds-table-head-bg,         var(--surface-secondary));
+  --_table-head-fs:         var(--ds-table-head-fs,         var(--font-size-xs));
+  --_table-divider:         var(--ds-table-divider,         var(--border-divider));
+  --_table-sort-active-fg:  var(--ds-table-sort-active-fg,  var(--primary));
+  --_table-cell-pad-x:      var(--ds-table-cell-pad-x,      var(--table-cell-pad-x));
+  --_table-cell-pad-y:      var(--ds-table-cell-pad-y,      var(--table-cell-pad-y));
 
   width: 100%;
   border-collapse: collapse;
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--text-primary);
-  background: var(--ds-table-bg);
+  background: var(--_table-bg);
 
   thead th {
     text-align: left;
-    padding: var(--table-head-pad-y) var(--ds-table-cell-pad-x);
-    font: var(--font-weight-bold) var(--ds-table-header-fs) / var(--line-height-base) var(--font-sans);
+    padding: var(--table-head-pad-y) var(--_table-cell-pad-x);
+    font: var(--font-weight-bold) var(--_table-head-fs) / var(--line-height-base) var(--font-sans);
     letter-spacing: var(--letter-spacing-wider);
     text-transform: uppercase;
-    color: var(--ds-table-header-fg);
-    background: var(--ds-table-header-bg);
-    border-bottom: var(--border-width-default) solid var(--ds-table-divider);
+    color: var(--_table-head-fg);
+    background: var(--_table-head-bg);
+    border-bottom: var(--border-width-default) solid var(--_table-divider);
     white-space: nowrap;
     position: sticky;
     top: 0;
@@ -172,7 +172,7 @@
     &.sorted-asc .sort-icon,
     &.sorted-desc .sort-icon {
       opacity: 1;
-      color: var(--ds-table-sort-active-fg);
+      color: var(--_table-sort-active-fg);
     }
 
     &.numeric {
@@ -186,12 +186,12 @@
 
   tbody {
     td {
-      padding: var(--ds-table-cell-pad-y) var(--ds-table-cell-pad-x);
+      padding: var(--_table-cell-pad-y) var(--_table-cell-pad-x);
       line-height: var(--line-height-flat);
       /* Inset shadow instead of border-bottom so the divider paints inside
          the cell — row height stays identical regardless of selected/hover
          background and is not affected by border-collapse quirks. */
-      box-shadow: inset 0 calc(-1 * var(--border-width-default)) 0 var(--ds-table-divider);
+      box-shadow: inset 0 calc(-1 * var(--border-width-default)) 0 var(--_table-divider);
       vertical-align: middle;
 
       &.numeric {
@@ -211,11 +211,11 @@
       }
 
       &:hover td {
-        background: var(--ds-table-row-hover-bg);
+        background: var(--_table-row-hover-bg);
       }
 
       &.selected td {
-        background: var(--ds-table-row-selected-bg);
+        background: var(--_table-row-selected-bg);
       }
 
       &.clickable {
