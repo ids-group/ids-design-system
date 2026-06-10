@@ -20,8 +20,7 @@ import { computeContentHashFromFiles } from './source-hash.browser';
     @if (buildStamp) {
       <div class="ds-stamp" [class.is-stale]="status() === 'stale'" [class.is-current]="status() === 'current'" role="status">
         <span class="ds-stamp__info">
-          Showcase built <strong>{{ age() }}</strong> ·
-          src <code>{{ shortHash() }}</code> · commit <code>{{ shortCommit() }}</code>
+          Showcase built <strong>{{ age() }}</strong> · commit <code>{{ shortCommit() }}</code> · {{ builtAt() }}
         </span>
 
         @switch (status()) {
@@ -41,6 +40,7 @@ import { computeContentHashFromFiles } from './source-hash.browser';
           }
           @default {
             <label class="ds-stamp__btn">Check freshness<input type="file" webkitdirectory hidden (change)="onPick($event)"></label>
+            <span class="ds-stamp__hint">→ select the repo root folder (<code>ids-design-system</code>)</span>
           }
         }
       </div>
@@ -74,14 +74,22 @@ import { computeContentHashFromFiles } from './source-hash.browser';
       white-space: nowrap;
     }
     .ds-stamp__btn:hover { background: var(--surface-muted); }
+    .ds-stamp__hint { color: var(--text-tertiary); font-weight: var(--font-weight-regular); }
   `],
 })
 export class ShowcaseStatusComponent {
   protected readonly buildStamp = readBuildStamp();
   protected readonly status = signal<ShowcaseStatus>(this.buildStamp ? 'idle' : 'unknown');
 
-  protected shortHash(): string { return (this.buildStamp?.srcHash ?? '').slice(0, 8); }
   protected shortCommit(): string { return (this.buildStamp?.commit ?? '').slice(0, 8); }
+
+  // Absolute build timestamp (local), e.g. "2026-06-10 16:30".
+  protected builtAt(): string {
+    const date = this.buildStamp?.date ? new Date(this.buildStamp.date) : null;
+    if (!date || Number.isNaN(date.getTime())) return '';
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  }
 
   protected age(): string {
     const built = this.buildStamp?.date ? new Date(this.buildStamp.date).getTime() : NaN;

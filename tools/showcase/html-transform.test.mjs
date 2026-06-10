@@ -41,7 +41,8 @@ test('transformHtml inlines js + css + favicon, rewrites base, injects globals',
   ]);
   const resolveBinary = (ref) =>
     ref === 'favicon.ico' ? { mime: 'image/x-icon', base64: 'SUNP' } : null;
-  const out = transformHtml(html, { assets, resolveBinary });
+  const buildStampJs = 'window.__DS_BUILD_STAMP__ = {"srcHash":"abc"};\n';
+  const out = transformHtml(html, { assets, resolveBinary, buildStampJs });
 
   assert.ok(out.includes('<base href="./">'));
   assert.ok(!out.includes('modulepreload'));
@@ -50,11 +51,11 @@ test('transformHtml inlines js + css + favicon, rewrites base, injects globals',
   assert.ok(out.includes('<script type="module">var m=1;</script>'));
   assert.ok(out.includes('href="data:image/x-icon;base64,SUNP"'));
   assert.ok(!out.includes('href="favicon.ico"'));
-  // build stamp loads as an external sibling (not inline), at the top of <head>
-  assert.ok(out.includes('<head><script src="./build-stamp.js"></script>'));
-  assert.ok(!out.includes('window.__DS_BUILD_STAMP__'));
+  // build stamp inlined at the top of <head> — single self-contained file
+  assert.ok(out.includes('<head><script>window.__DS_BUILD_STAMP__ = {"srcHash":"abc"};'));
+  assert.ok(!out.includes('build-stamp.js'));
   assert.ok(!out.includes('source-stamp.js'));
-  assert.ok(out.indexOf('build-stamp.js') < out.indexOf('data:image/x-icon'));
+  assert.ok(out.indexOf('__DS_BUILD_STAMP__') < out.indexOf('data:image/x-icon'));
 });
 
 test('transformHtml leaves favicon untouched when resolver finds nothing', () => {

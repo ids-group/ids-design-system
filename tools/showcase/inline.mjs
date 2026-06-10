@@ -53,9 +53,8 @@ for (const asset of assets.values()) {
 const srcHash = await computeContentHash(HASH_ROOTS);
 const built = { srcHash, commit: readGitCommit(), date: new Date().toISOString() };
 
-const html = transformHtml(indexHtml, { assets, resolveBinary });
+const html = transformHtml(indexHtml, { assets, resolveBinary, buildStampJs: renderBuildStamp(built) });
 
 await mkdir(OUT_DIR, { recursive: true });
 await writeFile(join(OUT_DIR, 'index.html'), html, 'utf8');
-await writeFile(join(OUT_DIR, 'build-stamp.js'), renderBuildStamp(built), 'utf8');
 console.log(`showcase: built index.html (srcHash ${srcHash.slice(0, 8)}, ${html.length} bytes)`);

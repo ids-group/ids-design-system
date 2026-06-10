@@ -37,9 +37,10 @@ export function inlineCssUrls(css, resolve) {
 
 // assets:        Map<filename, { type: 'js' | 'css', content: string }>
 // resolveBinary: (ref) -> { mime, base64 } | null — for the favicon
-// Build stamp (__DS_BUILD_STAMP__) loads as a sibling classic script — nothing
-// is inlined into <head>. Staleness is checked at runtime in the browser.
-export function transformHtml(html, { assets, resolveBinary = () => null, buildStampScript = 'build-stamp.js' }) {
+// buildStampJs: the `window.__DS_BUILD_STAMP__ = {…};` assignment, inlined into
+// <head> so the showcase ships as a single self-contained index.html. Staleness
+// is checked at runtime in the browser (folder pick + re-hash).
+export function transformHtml(html, { assets, resolveBinary = () => null, buildStampJs = '' }) {
   let out = html;
 
   // 1. relative base for file://
@@ -72,9 +73,9 @@ export function transformHtml(html, { assets, resolveBinary = () => null, buildS
       return `${before}data:${data.mime};base64,${data.base64}${after}`;
     });
 
-  // 6. inject the build-stamp loader (__DS_BUILD_STAMP__) at the very top of
-  //    <head>, external (no inline), so the global is set before anything else.
-  const inject = `<script src="./${buildStampScript}"></script>`;
+  // 6. inline the build stamp (__DS_BUILD_STAMP__) at the very top of <head> so
+  //    the global is set before anything else — single-file, no sibling.
+  const inject = `<script>${escapeForInlineScript(buildStampJs)}</script>`;
   out = out.replace(/<head\b[^>]*>/i, (head) => `${head}${inject}`);
 
   return out;
