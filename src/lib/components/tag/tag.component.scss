@@ -1,14 +1,22 @@
-/* Tag — styles on host. Variants: solid (default) + .neutral. */
+/* Public --ds-tag-* are read with fallbacks, never declared — consumer overrides inherit in. */
 
 :host {
+  --_tag-pad-y:        var(--ds-tag-pad-y, var(--tag-pad-y));
+  --_tag-pad-x:        var(--ds-tag-pad-x, var(--tag-pad-x));
+  --_tag-radius:       var(--ds-tag-radius, var(--radius-md));
+  --_tag-bg:           var(--ds-tag-bg, var(--primary));
+  --_tag-fw:           var(--ds-tag-fw, var(--font-weight-bold));
+  --_tag-fs:           var(--ds-tag-fs, var(--font-size-xs));
+  --_tag-lh:           var(--ds-tag-lh, var(--line-height-base));
+
   display: inline-flex;
   align-items: center;
   gap: var(--tag-gap);
-  padding: var(--ds-tag-pad-y, var(--tag-pad-y)) var(--ds-tag-pad-x, var(--tag-pad-x));
-  border-radius: var(--ds-tag-radius, var(--radius-md));
-  background: var(--ds-tag-bg, var(--primary));
+  padding: var(--_tag-pad-y) var(--_tag-pad-x);
+  border-radius: var(--_tag-radius);
+  background: var(--_tag-bg);
   color: var(--primary-on);
-  font: var(--ds-tag-fw, var(--font-weight-bold)) var(--ds-tag-fs, var(--font-size-xs))/var(--ds-tag-lh, var(--line-height-base)) var(--font-sans);
+  font: var(--_tag-fw) var(--_tag-fs)/var(--_tag-lh) var(--font-sans);
 }
 
 :host(.closable) {
@@ -16,10 +24,12 @@
 }
 
 :host(.neutral) {
-  background: var(--ds-tag-bg, var(--surface-secondary));
+  --_tag-bg: var(--ds-tag-bg, var(--surface-secondary));
+
+  background: var(--_tag-bg);
   color: var(--text-primary);
   border: var(--border-width-default) solid var(--border-divider);
-  padding: calc(var(--ds-tag-pad-y, var(--tag-pad-y)) - var(--border-width-default)) calc(var(--ds-tag-pad-x, var(--tag-pad-x)) - var(--border-width-default));
+  padding: calc(var(--_tag-pad-y) - var(--border-width-default)) calc(var(--_tag-pad-x) - var(--border-width-default));
 }
 
 :host(.neutral.closable) {
@@ -36,14 +46,20 @@
 }
 
 :host(.interactive:hover):not(.is-active) {
-  background: var(--ds-tag-hover-bg, var(--surface-muted));
+  --_tag-hover-bg: var(--ds-tag-hover-bg, var(--surface-muted));
+
+  background: var(--_tag-hover-bg);
   color: var(--text-primary);
 }
 
 :host(.interactive.is-active) {
-  background: var(--ds-tag-active-bg, var(--primary-muted));
-  color: var(--ds-tag-active-fg, var(--primary-strong));
-  box-shadow: inset 0 0 0 var(--border-width-default) var(--ds-tag-active-border, var(--primary));
+  --_tag-active-bg:     var(--ds-tag-active-bg,     var(--primary-muted));
+  --_tag-active-fg:     var(--ds-tag-active-fg,     var(--primary-strong));
+  --_tag-active-border: var(--ds-tag-active-border, var(--primary));
+
+  background: var(--_tag-active-bg);
+  color: var(--_tag-active-fg);
+  box-shadow: inset 0 0 0 var(--border-width-default) var(--_tag-active-border);
 }
 
 .close {
