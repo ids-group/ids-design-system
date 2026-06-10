@@ -304,17 +304,20 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
   {
     component: 'Button',
     selector: '.button',
-    description: 'Surface, fg, border, focus shadow, disabled, radius. Variants re-set only --ds-button-bg* / --ds-button-fg.',
+    description: 'Read with fallbacks, never declared by DS — override on the host or any ancestor. '
+      + 'For solid variants (primary/error/success/warning) hover/active/halo derive from --ds-button-bg '
+      + 'via color-mix (88% / 76% + black); tonal variants keep explicit ramp defaults.',
     tokens: [
-      { name: '--ds-button-bg',           value: 'var(--primary)',            notes: 'Surface fill.' },
-      { name: '--ds-button-bg-hover',     value: 'var(--primary-hover)',      notes: 'Hover fill.' },
-      { name: '--ds-button-bg-active',    value: 'var(--primary-pressed)',    notes: 'Active/pressed fill.' },
-      { name: '--ds-button-fg',           value: 'var(--primary-on)',         notes: 'Label/icon colour.' },
-      { name: '--ds-button-border',       value: 'transparent',             notes: 'Border colour (variants override).' },
-      { name: '--ds-button-bg-disabled',  value: 'var(--surface-disabled)', notes: 'Disabled fill.' },
-      { name: '--ds-button-fg-disabled',  value: 'var(--text-disabled)',    notes: 'Disabled label.' },
-      { name: '--ds-button-radius',       value: 'var(--r-md)',             notes: 'Corner radius.' },
-      { name: '--ds-button-focus-shadow', value: 'var(--focus-ring)',       notes: 'Focus halo.' },
+      { name: '--ds-button-bg',             value: 'var(--primary)',                    notes: 'Surface fill — variants re-point the default.' },
+      { name: '--ds-button-bg-hover',       value: 'color-mix(bg 88%, black)',          notes: 'Hover fill — derived from the resolved bg unless set.' },
+      { name: '--ds-button-bg-active',      value: 'color-mix(bg 76%, black)',          notes: 'Active/pressed fill — derived from the resolved bg unless set.' },
+      { name: '--ds-button-fg',             value: 'var(--primary-on)',                 notes: 'Label/icon colour.' },
+      { name: '--ds-button-border',         value: 'transparent',                       notes: 'Border colour (outline variant overrides).' },
+      { name: '--ds-button-bg-disabled',    value: 'var(--surface-disabled)',           notes: 'Disabled fill.' },
+      { name: '--ds-button-fg-disabled',    value: 'var(--text-disabled)',              notes: 'Disabled label.' },
+      { name: '--ds-button-radius',         value: 'var(--r-md)',                       notes: 'Corner radius.' },
+      { name: '--ds-button-focus-shadow',   value: 'var(--focus-ring)',                 notes: 'Focus halo.' },
+      { name: '--ds-button-pressed-shadow', value: '0 0 0 3px color-mix(bg-active 35%, transparent)', notes: 'Pressed halo — follows the active fill.' },
     ],
   },
   {
