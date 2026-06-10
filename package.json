@@ -11,7 +11,7 @@
     "build:docs": "ng build ds-docs",
     "build:docs:dev": "ng build ds-docs --configuration development",
     "build:showcase": "ng build ds-docs --configuration showcase && node tools/showcase/inline.mjs",
-    "test:showcase": "node --test tools/showcase/",
+    "test:showcase": "node --test \"tools/showcase/*.test.mjs\" \"ds-docs/src/**/*.spec.mjs\"",
     "setup:hooks": "git config core.hooksPath .githooks",
     "prepare": "git config core.hooksPath .githooks"
   },
