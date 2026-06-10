@@ -4,20 +4,20 @@
 :host {
   display: inline-flex;
   align-items: center;
-  gap: var(--s-1-5);
-  padding: var(--s-1) var(--s-2);
+  gap: var(--space-1-5);
+  padding: var(--space-1) var(--space-2);
   background: var(--primary-subtle);
   color: var(--primary);
-  border-radius: var(--r-md);
+  border-radius: var(--radius-md);
   font-family: var(--font-mono);
-  font-size: var(--fs-mono);
+  font-size: var(--font-size-mono);
   cursor: pointer;
-  transition: background var(--dur-fast) var(--ease-standard);
+  transition: background var(--duration-fast) var(--ease-standard);
 
   &:hover { background: var(--primary-muted); }
 
   .mark {
     color: var(--error);
-    font-weight: var(--fw-bold);
+    font-weight: var(--font-weight-bold);
   }
 }

@@ -80,32 +80,32 @@ import { SearchComponent, ButtonComponent, IconComponent, SelectComponent, TagCo
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
     .stage {
-      margin-top: var(--s-3);
-      padding: var(--s-5);
+      margin-top: var(--space-3);
+      padding: var(--space-5);
       background: var(--surface-secondary);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .stage--narrow { max-width: 560px; }
     .filterbar {
       display: flex;
       flex-wrap: wrap;
-      gap: var(--s-2);
+      gap: var(--space-2);
       align-items: center;
-      padding: var(--s-3);
+      padding: var(--space-3);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-md);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-md);
     }
     .filterbar--stacked {
       flex-direction: column;
       align-items: stretch;
-      gap: var(--s-3);
+      gap: var(--space-3);
     }
     /* ds-select and ds-search default to host width:100%; in the filterbar
        they sit inline so we cap them to content-width with a min-width. */
@@ -113,7 +113,7 @@ import { SearchComponent, ButtonComponent, IconComponent, SelectComponent, TagCo
     .filterbar ds-search { width: auto; flex: 1 1 200px; max-width: 320px; }
     .row {
       display: flex;
-      gap: var(--s-2);
+      gap: var(--space-2);
       align-items: center;
       flex-wrap: wrap;
     }
@@ -125,28 +125,28 @@ import { SearchComponent, ButtonComponent, IconComponent, SelectComponent, TagCo
       width: 1px;
       align-self: stretch;
       background: var(--border-divider);
-      margin: 0 var(--s-1);
+      margin: 0 var(--space-1);
     }
     .applied-label { color: var(--text-tertiary); }
-    .applied { display: inline-flex; gap: var(--s-2); flex-wrap: wrap; }
-    .applied--stacked { gap: var(--s-1); }
+    .applied { display: inline-flex; gap: var(--space-2); flex-wrap: wrap; }
+    .applied--stacked { gap: var(--space-1); }
     .tag {
       display: inline-flex;
       align-items: center;
-      gap: var(--s-1);
-      padding: var(--s-1) var(--s-2);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-pill);
+      gap: var(--space-1);
+      padding: var(--space-1) var(--space-2);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-pill);
       background: var(--surface-default);
       color: var(--text-secondary);
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
     }
     .rules {
-      margin-top: var(--s-3);
-      padding-left: var(--s-5);
+      margin-top: var(--space-3);
+      padding-left: var(--space-5);
       color: var(--text-secondary);
       display: grid;
-      gap: var(--s-2);
+      gap: var(--space-2);
       max-width: var(--col-cap-text);
     }
   `],

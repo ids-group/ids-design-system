@@ -4,7 +4,7 @@
 
 .modal {
   --ds-modal-bg:                var(--surface-overlay);
-  --ds-modal-radius:            var(--r-lg);
+  --ds-modal-radius:            var(--radius-lg);
   --ds-modal-shadow:            var(--shadow-modal);
   --ds-modal-divider:           var(--border-divider);
   --ds-modal-title-fg:          var(--text-primary);
@@ -29,12 +29,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--s-4) var(--s-5);
-    border-bottom: var(--bw-default) solid var(--ds-modal-divider);
+    padding: var(--space-4) var(--space-5);
+    border-bottom: var(--border-width-default) solid var(--ds-modal-divider);
   }
 
   .title {
-    font: var(--fw-bold) var(--fs-h5)/var(--lh-snug) var(--font-heading);
+    font: var(--font-weight-bold) var(--font-size-h5)/var(--line-height-snug) var(--font-heading);
     margin: 0;
     color: var(--ds-modal-title-fg);
   }
@@ -53,16 +53,16 @@
   }
 
   .body {
-    padding: var(--s-5);
+    padding: var(--space-5);
     overflow-y: auto;
   }
 
   .actions {
     display: flex;
-    gap: var(--s-3);
+    gap: var(--space-3);
     justify-content: flex-end;
-    padding: var(--s-4) var(--s-5);
-    border-top: var(--bw-default) solid var(--ds-modal-divider);
+    padding: var(--space-4) var(--space-5);
+    border-top: var(--border-width-default) solid var(--ds-modal-divider);
   }
 
   &.danger {
@@ -70,13 +70,13 @@
   }
 
   .impact {
-    margin-top: var(--s-3);
+    margin-top: var(--space-3);
     &:empty { display: none; }
 
     .list {
-      margin: var(--s-1) 0 0;
-      padding-left: var(--s-4);
-      font: var(--fw-regular) var(--fs-xs)/var(--lh-base) var(--font-sans);
+      margin: var(--space-1) 0 0;
+      padding-left: var(--space-4);
+      font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
       color: var(--warning-text);
     }
   }
@@ -91,7 +91,7 @@
   z-index: var(--layer-modal);
   display: grid;
   place-items: center;
-  animation: fade-in var(--dur-base) var(--ease-decelerate);
+  animation: fade-in var(--duration-base) var(--ease-decelerate);
 }
 
 @keyframes fade-in {

@@ -1,7 +1,7 @@
 :host {
   --ds-bottom-sheet-maxw: 480px;
   --ds-bottom-sheet-maxh: 80%;
-  --ds-bottom-sheet-radius: var(--r-lg);
+  --ds-bottom-sheet-radius: var(--radius-lg);
 
   display: contents;
 }
@@ -14,7 +14,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  animation: ds-sheet-fade-in var(--dur-fast) var(--ease-decelerate);
+  animation: ds-sheet-fade-in var(--duration-fast) var(--ease-decelerate);
 }
 
 .sheet {
@@ -23,12 +23,12 @@
   margin-inline: auto;
   background: var(--surface-default);
   border-radius: var(--ds-bottom-sheet-radius) var(--ds-bottom-sheet-radius) 0 0;
-  padding: 0 var(--s-4) calc(var(--s-4) + env(safe-area-inset-bottom));
-  animation: ds-sheet-up var(--dur-base) var(--ease-decelerate);
+  padding: 0 var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom));
+  animation: ds-sheet-up var(--duration-base) var(--ease-decelerate);
   max-height: var(--ds-bottom-sheet-maxh);
   display: flex;
   flex-direction: column;
-  transition: transform var(--dur-base) var(--ease-decelerate);
+  transition: transform var(--duration-base) var(--ease-decelerate);
 
   &.dragging {
     transition: none;
@@ -36,8 +36,8 @@
 }
 
 .grab {
-  padding: var(--s-3) 0;
-  margin: 0 calc(var(--s-4) * -1);
+  padding: var(--space-3) 0;
+  margin: 0 calc(var(--space-4) * -1);
   cursor: grab;
   touch-action: none;
 }
@@ -46,35 +46,35 @@
   width: 36px;
   height: 4px;
   background: var(--border-strong);
-  border-radius: var(--r-pill);
+  border-radius: var(--radius-pill);
   margin: 0 auto;
 }
 
 .sheet-title {
-  font: var(--fw-semibold) var(--fs-l)/var(--lh-snug) var(--font-sans);
+  font: var(--font-weight-semibold) var(--font-size-l)/var(--line-height-snug) var(--font-sans);
   color: var(--text-primary);
-  margin: 0 0 var(--s-3);
+  margin: 0 0 var(--space-3);
 }
 
 .sheet-body {
   display: flex;
   flex-direction: column;
-  gap: var(--s-2);
+  gap: var(--space-2);
   overflow-y: auto;
   min-height: 0;
   // Scroll containers clip at the padding box - reserve room so focus halos
   // on edge-to-edge children survive, compensated to keep the layout width.
-  padding: var(--s-1);
-  margin: calc(var(--s-1) * -1);
+  padding: var(--space-1);
+  margin: calc(var(--space-1) * -1);
 }
 
 .sheet-actions {
   display: flex;
   flex-direction: column;
-  gap: var(--s-2);
+  gap: var(--space-2);
 
   &:not(:empty) {
-    margin-top: var(--s-3);
+    margin-top: var(--space-3);
   }
 }
 

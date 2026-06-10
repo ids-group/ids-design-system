@@ -16,7 +16,7 @@
 }
 
 :root {
-  animation: ds-skeleton-shimmer-loop var(--dur-loop-slow, 1400ms) linear infinite;
+  animation: ds-skeleton-shimmer-loop var(--duration-loop-slow, 1400ms) linear infinite;
 }
 
 @keyframes ds-skeleton-shimmer-loop {

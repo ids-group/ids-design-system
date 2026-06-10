@@ -23,48 +23,48 @@
   /* ============================================================
      Spacing — 4 px base, with named half-steps where atoms need them
      ============================================================ */
-  --s-0:    0;
-  --s-px:   1px;
-  --s-0-5:  2px;     /* hairline insets, icon close button pad */
-  --s-1:    4px;
-  --s-1-5:  6px;     /* badge gap, tag gap, field-label gap */
-  --s-2:    8px;
-  --s-2-5: 10px;     /* tooltip pad-x, badge pad-x */
-  --s-3:   12px;
-  --s-4:   16px;
-  --s-5:   20px;
-  --s-6:   24px;
-  --s-8:   32px;
-  --s-10:  40px;
-  --s-12:  48px;
-  --s-14:  56px;
-  --s-16:  64px;
-  --s-20:  80px;
-  --s-24:  96px;
-  --s-32: 128px;
+  --space-0:    0;
+  --space-px:   1px;
+  --space-0-5:  2px;     /* hairline insets, icon close button pad */
+  --space-1:    4px;
+  --space-1-5:  6px;     /* badge gap, tag gap, field-label gap */
+  --space-2:    8px;
+  --space-2-5: 10px;     /* tooltip pad-x, badge pad-x */
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-14:  56px;
+  --space-16:  64px;
+  --space-20:  80px;
+  --space-24:  96px;
+  --space-32: 128px;
 
   /* ============================================================
      Radius — six-stop scale.
      Each step is functionally distinct; adjacent steps are
      visually distinguishable at standard zoom.
      ============================================================ */
-  --r-0:        0;
-  --r-sm:       4px;   /* kbd, indeterminate-checkbox tick, link focus halo */
-  --r-md:       8px;   /* buttons, fields, tooltips, search, segmented, tags */
-  --r-lg:      12px;   /* menus, popovers, dropdowns, cards, modals, drawers, empty-state icons, toasts */
-  --r-xl:      16px;   /* large containers — viewport/scanner frames, hero cards */
-  --r-2xl:     24px;   /* heroic surfaces — reserved, no current consumer */
+  --radius-0:        0;
+  --radius-sm:       4px;   /* kbd, indeterminate-checkbox tick, link focus halo */
+  --radius-md:       8px;   /* buttons, fields, tooltips, search, segmented, tags */
+  --radius-lg:      12px;   /* menus, popovers, dropdowns, cards, modals, drawers, empty-state icons, toasts */
+  --radius-xl:      16px;   /* large containers — viewport/scanner frames, hero cards */
+  --radius-2xl:     24px;   /* heroic surfaces — reserved, no current consumer */
 
-  /* --r-pill is configurable so themes can override pill-shaped surfaces
+  /* --radius-pill is configurable so themes can override pill-shaped surfaces
      (switches, status chips, avatars, segmented thumb) without forking the
      full radius scale. A spreadsheet-style client can square pills with:
-       :root[data-theme="spreadsheet"] { --r-pill-value: var(--r-sm); } */
-  --r-pill-value: 999px;
-  --r-pill: var(--r-pill-value);
+       :root[data-theme="spreadsheet"] { --radius-pill-value: var(--radius-sm); } */
+  --radius-pill-value: 999px;
+  --radius-pill: var(--radius-pill-value);
 
   /* Component-scoped radius — kept only when the semantic intent matters
      beyond the value itself, OR when the global scale doesn't fit. */
-  --r-flat:         var(--r-0);    /* explicit "intentionally squared" — middle of btn-group, in-range datepicker */
+  --radius-flat:         var(--radius-0);    /* explicit "intentionally squared" — middle of btn-group, in-range datepicker */
 
   /* ============================================================
      Border widths — two-stop scale.
@@ -72,8 +72,8 @@
      mid-stops were dropped because they read identically to
      1/2 on standard displays.
      ============================================================ */
-  --bw-default: 1px;   /* every border, divider, field outline */
-  --bw-strong:  2px;   /* radio dot, slider thumb, tabs underline, focus ring inner band, dropzone dash */
+  --border-width-default: 1px;   /* every border, divider, field outline */
+  --border-width-strong:  2px;   /* radio dot, slider thumb, tabs underline, focus ring inner band, dropzone dash */
 
   /* ============================================================
      Elevation
@@ -130,17 +130,17 @@
   /* ============================================================
      Motion
      ============================================================ */
-  --dur-instant: 80ms;
-  --dur-fast:    120ms;
-  --dur-base:    180ms;
-  --dur-slow:    260ms;
-  --dur-slower:  400ms;
+  --duration-instant: 80ms;
+  --duration-fast:    120ms;
+  --duration-base:    180ms;
+  --duration-slow:    260ms;
+  --duration-slower:  400ms;
 
   /* Loop durations — for indeterminate spinners, skeletons, progress.
      These deliberately sit outside the transition scale because
      they describe rhythm, not response. */
-  --dur-loop-fast: 700ms;
-  --dur-loop-slow: 1400ms;
+  --duration-loop-fast: 700ms;
+  --duration-loop-slow: 1400ms;
 
   /* Easing.
      - standard:   default for transitions; decelerates into rest.
@@ -186,14 +186,14 @@
      per tier (4 / 8 / 12 / 12) with `--page-gutter` and
      `--page-margin` swapping at the matching min-width breakpoint.
      ============================================================ */
-  --page-gutter-mobile:  var(--s-3);   /* 12px — <= 640px, 4-col tier */
-  --page-gutter-tablet:  var(--s-4);   /* 16px — 641–1024px, 8-col tier */
-  --page-gutter-desktop: var(--s-5);   /* 20px — 1025–1440px, 12-col tier */
-  --page-gutter-wide:    var(--s-6);   /* 24px — >= 1441px, 12-col tier, container caps */
-  --page-margin-mobile:  var(--s-4);   /* 16px */
-  --page-margin-tablet:  var(--s-6);   /* 24px */
-  --page-margin-desktop: var(--s-8);   /* 32px */
-  --page-margin-wide:    var(--s-10);  /* 40px */
+  --page-gutter-mobile:  var(--space-3);   /* 12px — <= 640px, 4-col tier */
+  --page-gutter-tablet:  var(--space-4);   /* 16px — 641–1024px, 8-col tier */
+  --page-gutter-desktop: var(--space-5);   /* 20px — 1025–1440px, 12-col tier */
+  --page-gutter-wide:    var(--space-6);   /* 24px — >= 1441px, 12-col tier, container caps */
+  --page-margin-mobile:  var(--space-4);   /* 16px */
+  --page-margin-tablet:  var(--space-6);   /* 24px */
+  --page-margin-desktop: var(--space-8);   /* 32px */
+  --page-margin-wide:    var(--space-10);  /* 40px */
 
   /* ============================================================
      System chrome
@@ -212,39 +212,39 @@
      display/heading); the size/weight/leading/tracking scale below is
      constant across themes.
      ============================================================ */
-  --fw-regular:  400;
-  --fw-medium:   500;
-  --fw-semibold: 600;
-  --fw-bold:     700;
-  --fw-extrabold:800;
+  --font-weight-regular:  400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+  --font-weight-extrabold:800;
 
-  --fs-display: 64px;
-  --fs-h1:      48px;
-  --fs-h2:      36px;
-  --fs-h3:      28px;
-  --fs-h4:      22px;
-  --fs-h5:      18px;
-  --fs-h5-strong: 20px;   /* modal titles, condensed headers */
-  --fs-l:       18px;
-  --fs-m:       16px;
-  --fs-s:       14px;
-  --fs-xs:      12px;
-  --fs-2xs:     11px;
-  --fs-3xs:     10px;     /* avatar-sm font */
-  --fs-4xs:      9px;     /* avatar-xs font */
-  --fs-mono:    13px;
+  --font-size-display: 64px;
+  --font-size-h1:      48px;
+  --font-size-h2:      36px;
+  --font-size-h3:      28px;
+  --font-size-h4:      22px;
+  --font-size-h5:      18px;
+  --font-size-h5-strong: 20px;   /* modal titles, condensed headers */
+  --font-size-l:       18px;
+  --font-size-m:       16px;
+  --font-size-s:       14px;
+  --font-size-xs:      12px;
+  --font-size-2xs:     11px;
+  --font-size-3xs:     10px;     /* avatar-sm font */
+  --font-size-4xs:      9px;     /* avatar-xs font */
+  --font-size-mono:    13px;
 
-  --lh-tight: 1.1;
-  --lh-snug:  1.25;
-  --lh-base:  1.4;
-  --lh-loose: 1.6;
-  --lh-flat:  1;          /* button labels, single-line UI */
+  --line-height-tight: 1.1;
+  --line-height-snug:  1.25;
+  --line-height-base:  1.4;
+  --line-height-loose: 1.6;
+  --line-height-flat:  1;          /* button labels, single-line UI */
 
-  --ls-tight: -.02em;
-  --ls-snug:  -.01em;
-  --ls-normal: 0;
-  --ls-wide:   .02em;
-  --ls-wider:  .08em;
+  --letter-spacing-tight: -.02em;
+  --letter-spacing-snug:  -.01em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide:   .02em;
+  --letter-spacing-wider:  .08em;
 
   /* ============================================================
      Hit targets — the canonical size scale for interactive height
@@ -275,24 +275,24 @@
   /* Field padding — density-aware, consumed by input, search and
      textarea controls. Tokenised so the ultra-compact tier can
      compress without component edits. */
-  --field-pad-x:       var(--s-3);
+  --field-pad-x:       var(--space-3);
   --field-pad-y:       0;
 
   /* Shared inner padding for surface containers (card, stat, …). Components
      default their own --ds-*-pad to this, so a consumer retunes all at once. */
-  --ds-container-pad:  var(--s-6);
+  --ds-container-pad:  var(--space-6);
 
   /* Table cell padding — density-aware, consumed by .tbl td/th. */
-  --table-cell-pad-x:  var(--s-4);
-  --table-cell-pad-y:  var(--s-3);
-  --table-head-pad-y:  var(--s-3);
+  --table-cell-pad-x:  var(--space-4);
+  --table-cell-pad-y:  var(--space-3);
+  --table-head-pad-y:  var(--space-3);
   --check-size:        20px;
-  --check-bw:          var(--bw-default);
+  --check-bw:          var(--border-width-default);
   --check-tick-size:   12px;
   --check-indet-w:     10px;
   --check-indet-h:     2px;
   --radio-dot-size:    10px;
-  --radio-bw-checked:  var(--bw-strong);
+  --radio-bw-checked:  var(--border-width-strong);
 
   /* Switch */
   --switch-track-w:    36px;
@@ -304,7 +304,7 @@
   /* Slider */
   --slider-track-h:    4px;
   --slider-thumb-size: 18px;
-  --slider-thumb-bw:   var(--bw-strong);
+  --slider-thumb-bw:   var(--border-width-strong);
 
   /* Status dot, badge dot */
   --status-dot-size:   8px;
@@ -313,14 +313,14 @@
   /* Badge */
   --badge-pad-y:       4px;
   --badge-pad-x:       10px;
-  --badge-gap:         var(--s-1-5);
+  --badge-gap:         var(--space-1-5);
   --badge-count-size:  20px;
 
   /* Tag */
   --tag-pad-y:         6px;
   --tag-pad-x:         10px;
   --tag-pad-x-close:   6px;
-  --tag-gap:           var(--s-1-5);
+  --tag-gap:           var(--space-1-5);
   --tag-close-size:    14px;
   --tag-close-pad:     2px;
 
@@ -329,13 +329,13 @@
   --avatar-sm:  24px;
   --avatar-md:  32px;
   --avatar-lg:  40px;
-  --avatar-bw-group: var(--bw-strong);
+  --avatar-bw-group: var(--border-width-strong);
 
   /* Spinner */
   --spinner-sm: 12px;
   --spinner-md: 16px;
   --spinner-lg: 24px;
-  --spinner-bw: var(--bw-strong);
+  --spinner-bw: var(--border-width-strong);
 
   /* Progress */
   --progress-h: 6px;
@@ -347,7 +347,7 @@
 
   /* Segmented control */
   --segmented-btn-h:   var(--hit-sm);
-  --segmented-r-inner: var(--r-md);
+  --segmented-r-inner: var(--radius-md);
   --segmented-pad:     2px;
 
   /* Sidenav */
@@ -367,17 +367,17 @@
   --popover-maxh: 360px;
 
   /* Field */
-  --field-gap-label:   var(--s-1-5);   /* label↔control */
-  --field-gap-req:     var(--s-1);     /* label↔asterisk */
+  --field-gap-label:   var(--space-1-5);   /* label↔control */
+  --field-gap-req:     var(--space-1);     /* label↔asterisk */
   --field-h-sm:        var(--hit-min);
   --field-h-md:        var(--hit-cozy);
   --field-h-lg:        var(--hit-touch);
   --field-h-floating:  var(--hit-touch);
   --field-textarea-min: 96px;
-  --field-floating-label-fs: var(--fs-2xs);
+  --field-floating-label-fs: var(--font-size-2xs);
   --field-floating-label-lh: 14px;
   --field-floating-label-top: 8px;
-  --field-num-stepper-w: var(--s-8);
+  --field-num-stepper-w: var(--space-8);
 
   /* Search */
   --search-h: var(--hit-md);
@@ -390,52 +390,52 @@
      ============================================================ */
 
   /* Top bar / app shell */
-  --topbar-h:                var(--s-14);            /* 56px — global app bar height */
+  --topbar-h:                var(--space-14);            /* 56px — global app bar height */
 
   /* Sidenav internals — w / w-collapsed defined above */
-  --sidenav-pad-brand-y:     var(--s-2);             /* logo top padding */
-  --sidenav-pad-brand-b:     var(--s-6);             /* logo bottom padding */
+  --sidenav-pad-brand-y:     var(--space-2);             /* logo top padding */
+  --sidenav-pad-brand-b:     var(--space-6);             /* logo bottom padding */
   --sidenav-logo-size:       var(--hit-sm);          /* 28px — square brand mark */
   --sidenav-collapsed-item:  var(--hit-cozy);        /* 40px — collapsed nav-item hit area */
-  --sidenav-section-pad-b:   var(--s-1-5);           /* nav-section bottom padding */
+  --sidenav-section-pad-b:   var(--space-1-5);           /* nav-section bottom padding */
 
   /* Form section grid */
   --form-section-label-w:    280px;                  /* labels column width */
 
   /* Page header */
-  --page-header-sub-mt:      var(--s-1);             /* subtitle top margin */
+  --page-header-sub-mt:      var(--space-1);             /* subtitle top margin */
 
   /* Field internals */
   --field-textarea-rows-min: 60px;                   /* min-h for inline textarea inside the field wrapper */
   --field-floating-pad-t:    18px;                   /* top padding when --floating, leaves room for label */
-  --field-select-pad-r:      var(--s-6);             /* select chevron clearance */
-  --field-affix-overlap:     var(--bw-default);     /* affix bleed over field border */
+  --field-select-pad-r:      var(--space-6);             /* select chevron clearance */
+  --field-affix-overlap:     var(--border-width-default);     /* affix bleed over field border */
 
   /* Button group */
-  --btn-group-overlap:       calc(var(--bw-default) * -1); /* -1px — collapses adjacent borders */
+  --btn-group-overlap:       calc(var(--border-width-default) * -1); /* -1px — collapses adjacent borders */
   --btn-link-uloff:          3px;                    /* underline-offset on link buttons */
 
   /* Card */
   --card-hover-lift:         1px;                    /* translateY on .card--hover */
-  --card-title-fs:           var(--fs-h4);
+  --card-title-fs:           var(--font-size-h4);
 
   /* Sort icon (table headers) */
   --sort-ic-size:            var(--icon-xs);         /* 12px */
-  --sort-ic-gap:             var(--s-1-5);           /* 6px */
+  --sort-ic-gap:             var(--space-1-5);           /* 6px */
 
   /* Tag close glyph (when literal svg sits inside .tag .x) */
   --tag-close-glyph:         var(--icon-xs);         /* 12px */
 
   /* Bulk action toolbar */
-  --bulk-bar-offset:         var(--s-4);             /* sticky offset from container bottom */
+  --bulk-bar-offset:         var(--space-4);             /* sticky offset from container bottom */
 
   /* Menu */
   --menu-minw:               200px;                  /* dropdown menu min width */
-  --menu-sep-h:              var(--bw-default);
+  --menu-sep-h:              var(--border-width-default);
 
   /* Tooltip */
   --tooltip-maxw:            240px;
-  --tooltip-arrow:           var(--s-2);             /* 8px — caret edge length, halved for offset */
+  --tooltip-arrow:           var(--space-2);             /* 8px — caret edge length, halved for offset */
 
   /* Popover */
   --popover-maxw:            320px;
@@ -444,18 +444,18 @@
   --toast-minw:              320px;
   --toast-maxw:              480px;
   --toast-bar-w:             3px;                    /* left accent bar */
-  --toast-enter-y:           var(--s-1);             /* slide-in distance */
+  --toast-enter-y:           var(--space-1);             /* slide-in distance */
 
   /* Banner / Alert */
   --banner-bar-w:            4px;                    /* left accent bar */
-  --banner-ic-mt:            var(--bw-default);     /* optical bump for icon alignment */
+  --banner-ic-mt:            var(--border-width-default);     /* optical bump for icon alignment */
 
   /* Empty state */
-  --empty-icon-size:         var(--s-16);            /* 64px */
+  --empty-icon-size:         var(--space-16);            /* 64px */
   --empty-body-maxw:         360px;
 
   /* Combobox */
-  --combobox-offset:         var(--s-1);             /* gap below trigger */
+  --combobox-offset:         var(--space-1);             /* gap below trigger */
   --combobox-maxh:           280px;                  /* listbox max height */
 
   /* Command palette (cmdk) */
@@ -464,55 +464,55 @@
 
   /* Datepicker */
   --datepicker-w:            280px;
-  --datepicker-cell-gap:     var(--s-0-5);           /* 2px — grid gap between day cells */
+  --datepicker-cell-gap:     var(--space-0-5);           /* 2px — grid gap between day cells */
   --datepicker-nav-size:     var(--hit-xs);          /* 24px — month-step buttons */
 
   /* Modal close button */
   --modal-close-size:        var(--hit-xs);          /* 24px */
-  --modal-enter-y:           var(--s-2);             /* 8px slide-in */
+  --modal-enter-y:           var(--space-2);             /* 8px slide-in */
 
   /* Error page */
   --errorpage-body-maxw:     520px;
 
   /* Wizard (extras) */
   --wizard-body-minh:        200px;
-  --wizard-step-bar-w:       var(--s-8);             /* 32px connector */
+  --wizard-step-bar-w:       var(--space-8);             /* 32px connector */
 
   /* Inline edit */
-  --inline-edit-input-minw:  var(--s-20);            /* 80px */
+  --inline-edit-input-minw:  var(--space-20);            /* 80px */
   --inline-edit-btn-size:    var(--hit-xs);          /* 24px */
 
   /* Settings */
   --settings-nav-w:          220px;
   --settings-row-label-w:    240px;
-  --settings-row-label-gap:  var(--s-0-5);           /* 2px between strong + helper */
+  --settings-row-label-gap:  var(--space-0-5);           /* 2px between strong + helper */
 
   /* Matrix */
   --matrix-maxh:             360px;                  /* shares optical with --popover-maxh by intent */
-  --matrix-cell-pad-y:       var(--s-2);             /* 8px */
-  --matrix-cell-pad-x:       var(--s-2-5);           /* 10px */
-  --matrix-cell-minw:        var(--s-16);            /* 64px */
+  --matrix-cell-pad-y:       var(--space-2);             /* 8px */
+  --matrix-cell-pad-x:       var(--space-2-5);           /* 10px */
+  --matrix-cell-minw:        var(--space-16);            /* 64px */
   --matrix-rowhdr-minw:      160px;
 
   /* Calendar / timeline */
   --calendar-rowlabel-w:     160px;
   --calendar-row-h:          var(--hit-touch);       /* 48px */
   --calendar-cell-min:       var(--hit-cozy);        /* 40px minimum column width */
-  --calendar-cell-pad:       var(--s-1);             /* 4px inner padding */
-  --calendar-bar-h:          var(--s-8);             /* 32px */
-  --calendar-bar-inset-y:    var(--s-2);             /* 8px from top of cell */
+  --calendar-cell-pad:       var(--space-1);             /* 4px inner padding */
+  --calendar-bar-h:          var(--space-8);             /* 32px */
+  --calendar-bar-inset-y:    var(--space-2);             /* 8px from top of cell */
 
   /* Bin pack visualisation */
   --binpack-bay-h:           var(--hit-touch);       /* 48px */
 
   /* Map placeholder chip */
-  --map-chip-pad-y:          var(--s-1-5);           /* 6px */
-  --map-chip-pad-x:          var(--s-2-5);           /* 10px */
-  --map-chip-inset:          var(--s-3);             /* 12px from top-left */
+  --map-chip-pad-y:          var(--space-1-5);           /* 6px */
+  --map-chip-pad-x:          var(--space-2-5);           /* 10px */
+  --map-chip-inset:          var(--space-3);             /* 12px from top-left */
 
   /* KBD badge */
-  --kbd-pad-y:               var(--s-0-5);           /* 2px */
-  --kbd-pad-x:               var(--s-1-5);           /* 6px */
+  --kbd-pad-y:               var(--space-0-5);           /* 2px */
+  --kbd-pad-x:               var(--space-1-5);           /* 6px */
 
   /* Chart */
   --chart-empty-h:           160px;
@@ -526,8 +526,8 @@
   --dodont-stage-minh:       100px;
 
   /* Statemap arrow */
-  --statemap-arrow-w:        var(--s-8);             /* 32px */
-  --statemap-arrow-cap:      var(--s-1);             /* 4px caret border-width */
+  --statemap-arrow-w:        var(--space-8);             /* 32px */
+  --statemap-arrow-cap:      var(--space-1);             /* 4px caret border-width */
 
   /* Page composition (extras) */
   --grid-table-min:          220px;                  /* auto-fit minmax */
@@ -536,7 +536,7 @@
   --dl-spec-label-w:         120px;
   --scroll-spec-h:           220px;
   --tab-spec-maxw:           220px;
-  --tab-spec-dot-offset:     var(--bw-strong);       /* -2px notification offset (negated inline) */
+  --tab-spec-dot-offset:     var(--border-width-strong);       /* -2px notification offset (negated inline) */
 }
 
 /* ============================================================
@@ -544,13 +544,13 @@
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --dur-instant: 0ms;
-    --dur-fast:    0ms;
-    --dur-base:    0ms;
-    --dur-slow:    0ms;
-    --dur-slower:  0ms;
-    --dur-loop-fast: 0ms;
-    --dur-loop-slow: 0ms;
+    --duration-instant: 0ms;
+    --duration-fast:    0ms;
+    --duration-base:    0ms;
+    --duration-slow:    0ms;
+    --duration-slower:  0ms;
+    --duration-loop-fast: 0ms;
+    --duration-loop-slow: 0ms;
   }
   *, *::before, *::after {
     transition-duration: 0ms !important;
@@ -575,11 +575,11 @@
   --switch-track-w:    24px;
   --switch-thumb-size: 12px;
   --segmented-btn-h:   20px;
-  --field-pad-x:       var(--s-2);
-  --field-pad-y:       var(--s-1);
-  --table-cell-pad-x:  var(--s-2);
-  --table-cell-pad-y:  var(--s-1);
-  --table-head-pad-y:  var(--s-1);
+  --field-pad-x:       var(--space-2);
+  --field-pad-y:       var(--space-1);
+  --table-cell-pad-x:  var(--space-2);
+  --table-cell-pad-y:  var(--space-1);
+  --table-head-pad-y:  var(--space-1);
 }
 [data-density="compact"] {
   --hit-cozy:  32px;

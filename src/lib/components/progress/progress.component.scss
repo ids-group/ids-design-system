@@ -3,15 +3,15 @@
   width: 100%;
   height: var(--progress-h);
   background: var(--surface-muted);
-  border-radius: var(--r-pill);
+  border-radius: var(--radius-pill);
   overflow: hidden;
 
   > span {
     display: block;
     height: 100%;
     background: var(--primary);
-    border-radius: var(--r-pill);
-    transition: width var(--dur-base) var(--ease-standard);
+    border-radius: var(--radius-pill);
+    transition: width var(--duration-base) var(--ease-standard);
   }
 }
 
@@ -21,7 +21,7 @@
 
 :host(.indeterminate) > span {
   width: 30%;
-  animation: progress-indet var(--dur-loop-slow) var(--ease-standard) infinite;
+  animation: progress-indet var(--duration-loop-slow) var(--ease-standard) infinite;
 }
 
 @keyframes progress-indet {

@@ -10,13 +10,13 @@
   --ds-banner-title-fg:       var(--text-primary);
   --ds-banner-close-fg:       var(--icon-default);
   --ds-banner-close-fg-hover: var(--icon-strong);
-  --ds-banner-radius:         var(--r-md);
+  --ds-banner-radius:         var(--radius-md);
   --ds-banner-bar-width:      var(--banner-bar-w);
-  --ds-banner-pad-y:          var(--s-3);
-  --ds-banner-pad-x:          var(--s-4);
+  --ds-banner-pad-y:          var(--space-3);
+  --ds-banner-pad-x:          var(--space-4);
 
   display: flex;
-  gap: var(--s-3);
+  gap: var(--space-3);
   padding: var(--ds-banner-pad-y) var(--ds-banner-pad-x);
   border-radius: var(--ds-banner-radius);
   background: var(--ds-banner-bg);
@@ -69,9 +69,9 @@
   }
 
   .title {
-    font: var(--fw-bold) var(--fs-s)/var(--lh-base) var(--font-sans);
+    font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
     color: var(--ds-banner-title-fg);
-    margin: 0 0 var(--s-1);
+    margin: 0 0 var(--space-1);
   }
 
   .close {
@@ -85,7 +85,7 @@
 
   .actions {
     display: flex;
-    gap: var(--s-2);
+    gap: var(--space-2);
 
     &:empty { display: none; }
   }
@@ -96,8 +96,8 @@
 
     .actions {
       flex-basis: 100%;
-      margin-top: var(--s-2);
-      padding-left: calc(20px + var(--s-3));
+      margin-top: var(--space-2);
+      padding-left: calc(20px + var(--space-3));
     }
   }
 
@@ -110,8 +110,8 @@
 
   &.compact {
     align-items: center;
-    --ds-banner-pad-y: var(--s-2);
-    --ds-banner-pad-x: var(--s-3);
+    --ds-banner-pad-y: var(--space-2);
+    --ds-banner-pad-x: var(--space-3);
 
     .icon { margin-top: 0; }
     .title { margin: 0; white-space: nowrap; }

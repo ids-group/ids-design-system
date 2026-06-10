@@ -262,18 +262,18 @@ import { BadgeComponent, ButtonComponent, IconComponent } from 'ds';
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
 
     .pair {
-      margin-top: var(--s-3);
+      margin-top: var(--space-3);
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-lg);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
       overflow: hidden;
       position: relative;
     }
@@ -288,23 +288,23 @@ import { BadgeComponent, ButtonComponent, IconComponent } from 'ds';
     .pair::before { left: 0; background: var(--success, #1b8a4a); }
     .pair::after { right: 0; background: var(--error, #b3261e); }
     .cell {
-      padding: var(--s-5);
+      padding: var(--space-5);
       display: flex;
       flex-direction: column;
-      gap: var(--s-3);
+      gap: var(--space-3);
       min-width: 0;
     }
-    .cell--do { border-right: var(--bw-default) solid var(--border-divider); }
+    .cell--do { border-right: var(--border-width-default) solid var(--border-divider); }
     .cell__tag {
       display: inline-flex;
       align-items: center;
-      gap: var(--s-1);
+      gap: var(--space-1);
       align-self: flex-start;
       padding: 2px 8px;
-      border-radius: var(--r-pill);
-      font: var(--fw-bold) var(--fs-2xs)/1 var(--font-sans);
+      border-radius: var(--radius-pill);
+      font: var(--font-weight-bold) var(--font-size-2xs)/1 var(--font-sans);
       text-transform: uppercase;
-      letter-spacing: var(--ls-wider);
+      letter-spacing: var(--letter-spacing-wider);
     }
     .cell__tag--do { background: var(--success-subtle, #e4f5ec); color: var(--success-text, #0f5c2f); }
     .cell__tag--dont { background: var(--error-subtle, #fde7e6); color: var(--error-text, #7a1812); }
@@ -312,40 +312,40 @@ import { BadgeComponent, ButtonComponent, IconComponent } from 'ds';
 
     .stage {
       margin-top: auto;
-      padding: var(--s-3);
+      padding: var(--space-3);
       background: var(--surface-secondary);
-      border-radius: var(--r-md);
+      border-radius: var(--radius-md);
       display: grid;
-      gap: var(--s-2);
+      gap: var(--space-2);
       min-height: 100px;
     }
-    .stage--row { display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; }
-    .stage--stack { gap: var(--s-2); position: relative; }
+    .stage--row { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+    .stage--stack { gap: var(--space-2); position: relative; }
     .stage--empty {
       text-align: center;
-      padding: var(--s-5);
-      gap: var(--s-1);
+      padding: var(--space-5);
+      gap: var(--space-1);
       justify-items: center;
       display: grid;
     }
     .stage--center { display: grid; place-items: center; }
     .empty-title { margin: 0; color: var(--text-primary); }
-    .empty-sub { margin: 0 0 var(--s-3); color: var(--text-secondary); }
+    .empty-sub { margin: 0 0 var(--space-3); color: var(--text-secondary); }
     .empty-sub--muted { color: var(--text-tertiary); }
 
     .mini {
-      padding: var(--s-3);
-      border-radius: var(--r-sm);
+      padding: var(--space-3);
+      border-radius: var(--radius-sm);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
+      border: var(--border-width-default) solid var(--border-divider);
       color: var(--text-primary);
-      font-size: var(--fs-s);
+      font-size: var(--font-size-s);
     }
     .mini__sub {
       display: block;
       color: var(--text-tertiary);
-      font-size: var(--fs-xs);
-      margin-top: var(--s-1);
+      font-size: var(--font-size-xs);
+      margin-top: var(--space-1);
     }
     .mini--drawer { border-left: 3px solid var(--primary); }
     .mini--modal { box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.08)); }
@@ -353,32 +353,32 @@ import { BadgeComponent, ButtonComponent, IconComponent } from 'ds';
       box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.08));
     }
     .mini--1 { margin-left: 0; opacity: 0.6; }
-    .mini--2 { margin-left: var(--s-3); opacity: 0.85; }
-    .mini--3 { margin-left: var(--s-6); }
+    .mini--2 { margin-left: var(--space-3); opacity: 0.85; }
+    .mini--3 { margin-left: var(--space-6); }
 
     .row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: var(--s-3);
+      gap: var(--space-3);
       background: var(--surface-default);
-      border-radius: var(--r-sm);
+      border-radius: var(--radius-sm);
       color: var(--text-primary);
-      font-size: var(--fs-s);
+      font-size: var(--font-size-s);
     }
-    .row--cozy { padding: var(--s-3) var(--s-4); }
-    .row--tight { padding: 2px var(--s-3); font-size: var(--fs-xs); }
+    .row--cozy { padding: var(--space-3) var(--space-4); }
+    .row--tight { padding: 2px var(--space-3); font-size: var(--font-size-xs); }
     .meta { color: var(--text-tertiary); }
     .badges-everywhere {
       flex-wrap: wrap;
       justify-content: flex-start;
-      gap: var(--s-1);
+      gap: var(--space-1);
     }
 
     .dot {
       width: 12px;
       height: 12px;
-      border-radius: var(--r-pill);
+      border-radius: var(--radius-pill);
       display: inline-block;
     }
     .dot--active { background: var(--success, #1b8a4a); }
@@ -386,12 +386,12 @@ import { BadgeComponent, ButtonComponent, IconComponent } from 'ds';
 
     .mock-banner {
       display: flex;
-      gap: var(--s-2);
-      padding: var(--s-3);
+      gap: var(--space-2);
+      padding: var(--space-3);
       background: var(--warning-subtle, var(--surface-subtle));
       color: var(--warning-text, var(--text-primary));
-      border-radius: var(--r-sm);
-      border: var(--bw-default) solid var(--border-divider);
+      border-radius: var(--radius-sm);
+      border: var(--border-width-default) solid var(--border-divider);
     }
     .mock-banner p { margin: 2px 0 0; color: var(--text-secondary); }
 
@@ -400,26 +400,26 @@ import { BadgeComponent, ButtonComponent, IconComponent } from 'ds';
       place-items: center;
       width: 24px;
       height: 24px;
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-pill);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-pill);
       background: var(--surface-default);
       color: var(--text-tertiary);
       cursor: pointer;
     }
     .tooltip {
-      margin-top: var(--s-2);
-      padding: var(--s-1) var(--s-2);
+      margin-top: var(--space-2);
+      padding: var(--space-1) var(--space-2);
       background: var(--surface-inverted, #1a1a1a);
       color: var(--text-on-primary, #fff);
-      font-size: var(--fs-xs);
-      border-radius: var(--r-sm);
+      font-size: var(--font-size-xs);
+      border-radius: var(--radius-sm);
     }
 
     @media (max-width: 820px) {
       .pair { grid-template-columns: 1fr; }
       .cell--do {
         border-right: 0;
-        border-bottom: var(--bw-default) solid var(--border-divider);
+        border-bottom: var(--border-width-default) solid var(--border-divider);
       }
     }
   `],

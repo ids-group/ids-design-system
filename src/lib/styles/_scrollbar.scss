@@ -6,8 +6,8 @@ html { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) transparen
 *::-webkit-scrollbar-track { background: transparent; }
 *::-webkit-scrollbar-thumb {
   background: var(--scrollbar-thumb);
-  border-radius: var(--r-pill);
-  border: var(--s-0-5) solid transparent;
+  border-radius: var(--radius-pill);
+  border: var(--space-0-5) solid transparent;
   background-clip: padding-box;
 }
 *::-webkit-scrollbar-thumb:hover  { background: var(--scrollbar-thumb-hover); background-clip: padding-box; }

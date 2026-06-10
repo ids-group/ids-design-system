@@ -11,13 +11,13 @@
 .combo-trigger {
   display: flex;
   align-items: center;
-  gap: var(--s-2);
+  gap: var(--space-2);
   width: 100%;
   min-height: var(--hit-cozy);
-  padding: var(--s-1) var(--s-2);
+  padding: var(--space-1) var(--space-2);
   background: var(--surface-default);
-  border: var(--bw-default) solid var(--border-default);
-  border-radius: var(--r-md);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
   cursor: text;
   text-align: left;
   flex-wrap: wrap;
@@ -31,7 +31,7 @@
 }
 
 .combo-value {
-  font: var(--fw-medium) var(--fs-s)/var(--lh-flat) var(--font-sans);
+  font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
   color: var(--text-primary);
 }
 
@@ -41,7 +41,7 @@
   border: 0;
   outline: 0;
   background: transparent;
-  font: var(--fw-regular) var(--fs-s)/var(--lh-flat) var(--font-sans);
+  font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
   color: var(--text-primary);
 }
 
@@ -58,8 +58,8 @@
   list-style: none;
   padding: 0;
   background: var(--surface-overlay);
-  border: var(--bw-default) solid var(--border-default);
-  border-radius: var(--r-lg);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-popover);
   margin: var(--combobox-offset) 0 0;
   max-height: var(--combobox-maxh);
@@ -69,9 +69,9 @@
   .option {
     display: flex;
     align-items: center;
-    gap: var(--s-2);
-    padding: var(--s-2) var(--s-3);
-    font: var(--fw-medium) var(--fs-s)/var(--lh-base) var(--font-sans);
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-base) var(--font-sans);
     cursor: pointer;
 
     &:hover,
@@ -86,12 +86,12 @@
     }
 
     &.check {
-      padding-left: var(--s-2);
+      padding-left: var(--space-2);
     }
   }
 
   .empty {
-    padding: var(--s-3) var(--s-4);
+    padding: var(--space-3) var(--space-4);
     color: var(--text-tertiary);
     text-align: center;
   }

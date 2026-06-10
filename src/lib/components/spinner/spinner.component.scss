@@ -6,20 +6,20 @@
   height: var(--spinner-md);
   border: var(--spinner-bw) solid var(--border-default);
   border-top-color: var(--primary);
-  border-radius: var(--r-pill);
-  animation: spinner-rotate var(--dur-loop-fast) linear infinite;
+  border-radius: var(--radius-pill);
+  animation: spinner-rotate var(--duration-loop-fast) linear infinite;
 }
 
 :host(.sm) {
   width: var(--spinner-sm);
   height: var(--spinner-sm);
-  border-width: var(--bw-default);
+  border-width: var(--border-width-default);
 }
 
 :host(.lg) {
   width: var(--spinner-lg);
   height: var(--spinner-lg);
-  border-width: var(--bw-strong);
+  border-width: var(--border-width-strong);
 }
 
 @keyframes spinner-rotate {

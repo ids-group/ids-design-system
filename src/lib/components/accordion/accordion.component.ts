@@ -8,8 +8,8 @@ import { Component, ViewEncapsulation } from '@angular/core';
   styles: [`
     :host {
       display: block;
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-lg);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
       overflow: hidden;
     }
   `],

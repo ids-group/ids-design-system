@@ -69,17 +69,17 @@ import { ButtonComponent, PopoverComponent } from 'ds';
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
 
     .specimen-stage {
-      margin-top: var(--s-3);
-      padding: var(--s-6);
+      margin-top: var(--space-3);
+      padding: var(--space-6);
       background: var(--surface-secondary);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
       display: flex;
       justify-content: flex-start;
     }
@@ -89,18 +89,18 @@ import { ButtonComponent, PopoverComponent } from 'ds';
     .specimen-stage .popover { width: 260px; position: static; }
 
     .demo {
-      margin-top: var(--s-3);
-      padding: var(--s-4);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-lg);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
     }
     .trigger-btn {
-      padding: var(--s-2) var(--s-3);
+      padding: var(--space-2) var(--space-3);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-default);
-      border-radius: var(--r-md);
-      font: var(--fw-medium) var(--fs-s)/var(--lh-flat) var(--font-sans);
+      border: var(--border-width-default) solid var(--border-default);
+      border-radius: var(--radius-md);
+      font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
       color: var(--text-primary);
       cursor: pointer;
     }
@@ -108,7 +108,7 @@ import { ButtonComponent, PopoverComponent } from 'ds';
 
     .demo--row {
       display: flex;
-      gap: var(--s-4);
+      gap: var(--space-4);
       justify-content: space-between;
     }
     .demo__col { display: flex; flex-direction: column; }

@@ -41,14 +41,14 @@ const STOPS: readonly SpacingStop[] = [
 
       <!-- ============================================================ Scale visualisation -->
       <h3 class="block-title t-h4">Scale</h3>
-      <p class="block-desc t-s">Every <code class="t-mono">--s-*</code> token as a bar. Token name, computed pixel value, then the bar at true scale.</p>
+      <p class="block-desc t-s">Every <code class="t-mono">--space-*</code> token as a bar. Token name, computed pixel value, then the bar at true scale.</p>
       <div class="scale-list">
         @for (stop of stops; track stop.name) {
           <div class="scale-row">
-            <code class="t-mono token-name">--s-{{ stop.name }}</code>
+            <code class="t-mono token-name">--space-{{ stop.name }}</code>
             <code class="t-mono token-px">{{ stop.px }}</code>
             <div class="bar-track">
-              <div class="bar" [style.width]="'var(--s-' + stop.name + ')'"></div>
+              <div class="bar" [style.width]="'var(--space-' + stop.name + ')'"></div>
             </div>
           </div>
         }
@@ -57,40 +57,40 @@ const STOPS: readonly SpacingStop[] = [
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
 
     .scale-list {
       display: grid;
-      gap: var(--s-2);
-      margin-top: var(--s-4);
+      gap: var(--space-2);
+      margin-top: var(--space-4);
     }
     .scale-row {
       display: grid;
       grid-template-columns: 96px 64px 1fr;
-      gap: var(--s-4);
+      gap: var(--space-4);
       align-items: center;
-      padding: var(--s-2) var(--s-3);
+      padding: var(--space-2) var(--space-3);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-sm);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-sm);
     }
     .token-name { color: var(--text-secondary); }
     .token-px { color: var(--text-tertiary); }
     .bar-track {
       height: 16px;
       background: var(--surface-secondary);
-      border-radius: var(--r-sm);
+      border-radius: var(--radius-sm);
       overflow: hidden;
     }
     .bar {
       height: 100%;
       min-width: 1px;
       background: var(--primary);
-      border-radius: var(--r-sm);
+      border-radius: var(--radius-sm);
     }
   `],
 })

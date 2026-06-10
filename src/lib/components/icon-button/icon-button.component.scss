@@ -24,17 +24,17 @@
   height: var(--hit-cozy);
   aspect-ratio: 1;
   padding: 0;
-  border: var(--bw-default) solid var(--_icon-button-border);
-  border-radius: var(--ds-icon-button-radius, var(--r-md));
+  border: var(--border-width-default) solid var(--_icon-button-border);
+  border-radius: var(--ds-icon-button-radius, var(--radius-md));
   background: var(--_icon-button-bg);
   color: var(--_icon-button-fg);
   cursor: pointer;
   user-select: none;
   transition:
-    background var(--dur-fast) var(--ease-standard),
-    border-color var(--dur-fast) var(--ease-standard),
-    color var(--dur-fast) var(--ease-standard),
-    box-shadow var(--dur-fast) var(--ease-standard);
+    background var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
 
   &:hover {
     background: var(--_icon-button-bg-hover);

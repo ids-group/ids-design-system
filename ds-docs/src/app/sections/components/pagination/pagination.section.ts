@@ -109,42 +109,42 @@ import { PaginationComponent, IconComponent } from 'ds';
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--s-1); }
-    .row { display: flex; gap: var(--s-3); align-items: center; flex-wrap: wrap; margin-top: var(--s-3); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); }
+    .row { display: flex; gap: var(--space-3); align-items: center; flex-wrap: wrap; margin-top: var(--space-3); }
     code {
-      font: var(--fw-medium) var(--fs-2xs)/var(--lh-flat) var(--font-mono);
-      padding: 0 var(--s-1);
+      font: var(--font-weight-medium) var(--font-size-2xs)/var(--line-height-flat) var(--font-mono);
+      padding: 0 var(--space-1);
       background: var(--surface-secondary);
-      border-radius: var(--r-sm);
+      border-radius: var(--radius-sm);
     }
 
     /* ---------- States showcase ---------- */
     .states {
       display: grid;
-      gap: var(--s-3);
-      margin-top: var(--s-3);
-      padding: var(--s-4);
+      gap: var(--space-3);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-secondary);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .states--cols-4 { grid-template-columns: repeat(4, 1fr); }
-    .state-cell { display: flex; flex-direction: column; gap: var(--s-2); }
+    .state-cell { display: flex; flex-direction: column; gap: var(--space-2); }
     .state-cell__stage {
       display: flex; align-items: center; justify-content: center;
-      padding: var(--s-4);
+      padding: var(--space-4);
       min-height: 72px;
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-default);
-      border-radius: var(--r-md);
+      border: var(--border-width-default) solid var(--border-default);
+      border-radius: var(--radius-md);
     }
     .state-cell__label {
       text-align: center;
-      font: var(--fw-bold) var(--fs-2xs)/var(--lh-base) var(--font-sans);
-      letter-spacing: var(--ls-wider);
+      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--text-tertiary);
     }
@@ -152,19 +152,19 @@ import { PaginationComponent, IconComponent } from 'ds';
     /* ---------- Ranges block ---------- */
     .ranges {
       display: flex; flex-direction: column;
-      gap: var(--s-4);
-      margin-top: var(--s-3);
-      padding: var(--s-4);
+      gap: var(--space-4);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-secondary);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .ranges__row {
       display: flex; flex-direction: column;
-      gap: var(--s-2);
-      padding: var(--s-3);
+      gap: var(--space-2);
+      padding: var(--space-3);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-default);
-      border-radius: var(--r-md);
+      border: var(--border-width-default) solid var(--border-default);
+      border-radius: var(--radius-md);
     }
     .ranges__label { color: var(--text-tertiary); }
 
@@ -174,45 +174,45 @@ import { PaginationComponent, IconComponent } from 'ds';
       align-items: center;
       justify-content: flex-start;
       flex-wrap: wrap;
-      gap: var(--s-4);
-      margin-top: var(--s-3);
-      padding: var(--s-4);
+      gap: var(--space-4);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-secondary);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
 
     /* ---------- Truncation block ---------- */
     .trunc {
-      margin-top: var(--s-3);
-      padding: var(--s-4);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-secondary);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .trunc__title {
-      display: inline-flex; align-items: center; gap: var(--s-2);
-      font: var(--fw-bold) var(--fs-2xs)/var(--lh-base) var(--font-sans);
-      letter-spacing: var(--ls-wider);
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--text-tertiary);
-      margin-bottom: var(--s-3);
+      margin-bottom: var(--space-3);
     }
     .trunc__list {
       list-style: none; margin: 0; padding: 0;
       display: flex; flex-direction: column;
-      gap: var(--s-2);
+      gap: var(--space-2);
     }
     .trunc__list li {
       display: grid;
       grid-template-columns: 200px 1fr;
-      gap: var(--s-4);
+      gap: var(--space-4);
       align-items: start;
     }
     .trunc__field {
-      font: var(--fw-bold) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-primary);
     }
     .trunc__behaviour {
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
   `],

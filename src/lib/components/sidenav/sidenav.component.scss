@@ -20,40 +20,40 @@
 
   display: flex;
   flex-direction: column;
-  gap: var(--s-1);
+  gap: var(--space-1);
   width: var(--ds-sidenav-width);
   background: var(--ds-sidenav-bg);
-  border-right: var(--bw-default) solid var(--ds-sidenav-border);
-  padding: var(--s-5);
+  border-right: var(--border-width-default) solid var(--ds-sidenav-border);
+  padding: var(--space-5);
 }
 
 .brand {
-  font: var(--fw-extrabold) var(--fs-h5)/var(--lh-snug) var(--font-sans);
+  font: var(--font-weight-extrabold) var(--font-size-h5)/var(--line-height-snug) var(--font-sans);
   display: flex;
   align-items: center;
-  gap: var(--s-2);
-  padding: var(--s-2) var(--s-2) var(--s-6);
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-2) var(--space-6);
 }
 
 .mark {
   width: var(--sidenav-logo-size);
   height: var(--sidenav-logo-size);
-  border-radius: var(--r-md);
+  border-radius: var(--radius-md);
   background: var(--ds-sidenav-mark-bg);
   display: grid;
   place-items: center;
   color: var(--ds-sidenav-mark-fg);
-  font-size: var(--fs-s);
+  font-size: var(--font-size-s);
   flex-shrink: 0;
 }
 
 .brand-name {
-  font: var(--fw-extrabold) var(--fs-h5)/var(--lh-snug) var(--font-sans);
+  font: var(--font-weight-extrabold) var(--font-size-h5)/var(--line-height-snug) var(--font-sans);
 }
 
 :host(.collapsed) {
   width: var(--ds-sidenav-width-collapsed);
-  padding: var(--s-3);
+  padding: var(--space-3);
   align-items: center;
 
   .brand {

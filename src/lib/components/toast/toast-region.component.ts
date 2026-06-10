@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { ToastComponent } from './toast.component';
 import type { ToastEntry } from './toast.types';
 
-// Must match the leave transition on :host in toast.component.scss (--dur-base).
+// Must match the leave transition on :host in toast.component.scss (--duration-base).
 const LEAVE_DURATION_MS = 180;
 
 @Component({

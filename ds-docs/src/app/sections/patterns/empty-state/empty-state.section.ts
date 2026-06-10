@@ -122,75 +122,75 @@ import { ButtonComponent, EmptyStateComponent, IconComponent } from 'ds';
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
 
     .blocks {
       display: flex;
       flex-direction: column;
-      gap: var(--s-4);
-      margin-top: var(--s-4);
+      gap: var(--space-4);
+      margin-top: var(--space-4);
     }
     .block {
       display: flex;
       flex-direction: column;
     }
     .block .block-title { margin-top: 0; }
-    .block .block-desc { margin-bottom: var(--s-3); }
+    .block .block-desc { margin-bottom: var(--space-3); }
 
     .card {
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-lg);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
       padding: 0;
       position: relative;
       overflow: hidden;
     }
 
     .rules {
-      margin-top: var(--s-3);
-      padding-left: var(--s-5);
+      margin-top: var(--space-3);
+      padding-left: var(--space-5);
       color: var(--text-secondary);
       display: grid;
-      gap: var(--s-2);
+      gap: var(--space-2);
       max-width: var(--col-cap-text);
     }
 
     /* ---------- Truncation block ---------- */
     .trunc {
-      margin-top: var(--s-3);
-      padding: var(--s-4);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-secondary);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .trunc__title {
-      display: inline-flex; align-items: center; gap: var(--s-2);
-      font: var(--fw-bold) var(--fs-2xs)/var(--lh-base) var(--font-sans);
-      letter-spacing: var(--ls-wider);
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--text-tertiary);
-      margin-bottom: var(--s-3);
+      margin-bottom: var(--space-3);
     }
     .trunc__list {
       list-style: none; margin: 0; padding: 0;
       display: flex; flex-direction: column;
-      gap: var(--s-2);
+      gap: var(--space-2);
     }
     .trunc__list li {
       display: grid;
       grid-template-columns: 200px 1fr;
-      gap: var(--s-4);
+      gap: var(--space-4);
       align-items: start;
     }
     .trunc__field {
-      font: var(--fw-bold) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-primary);
     }
     .trunc__behaviour {
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
   `],

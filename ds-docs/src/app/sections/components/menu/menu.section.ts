@@ -65,17 +65,17 @@ import { MenuComponent, MenuItemComponent } from 'ds';
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--s-1); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); }
 
     .stage {
-      margin-top: var(--s-3);
-      padding: var(--s-4);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-secondary);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
       display: flex;
       justify-content: center;
     }
@@ -84,10 +84,10 @@ import { MenuComponent, MenuItemComponent } from 'ds';
     .stage ds-menu { width: 280px; }
 
     code {
-      font: var(--fw-medium) var(--fs-xs)/var(--lh-base) var(--font-mono);
-      padding: 0 var(--s-1);
+      font: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-base) var(--font-mono);
+      padding: 0 var(--space-1);
       background: var(--surface-secondary);
-      border-radius: var(--r-sm);
+      border-radius: var(--radius-sm);
     }
   `],
 })

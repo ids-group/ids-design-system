@@ -6,5 +6,5 @@ export const DS_TOAST_POSITION = new InjectionToken<DsToastPosition>('DS_TOAST_P
 export const DS_TOAST_POSITION_DEFAULT: DsToastPosition = {
   horizontalPosition: 'right',
   verticalPosition: 'top',
-  offset: 'var(--s-6)',
+  offset: 'var(--space-6)',
 };

@@ -3,36 +3,36 @@
 
 :host {
   display: block;
-  height: var(--bw-default);
+  height: var(--border-width-default);
   background: var(--border-divider);
-  margin: var(--s-2) 0;
+  margin: var(--space-2) 0;
   border: 0;
 }
 
 :host(.spacing-none) { margin: 0; }
-:host(.spacing-sm)   { margin: var(--s-1) 0; }
-:host(.spacing-md)   { margin: var(--s-2) 0; }
-:host(.spacing-lg)   { margin: var(--s-4) 0; }
+:host(.spacing-sm)   { margin: var(--space-1) 0; }
+:host(.spacing-md)   { margin: var(--space-2) 0; }
+:host(.spacing-lg)   { margin: var(--space-4) 0; }
 
 :host(.strong) {
   background: var(--border-default);
 }
 
 :host(.vertical) {
-  width: var(--bw-default);
+  width: var(--border-width-default);
   height: auto;
   align-self: stretch;
-  margin: 0 var(--s-3);
+  margin: 0 var(--space-3);
 }
 
 :host(.label) {
   display: flex;
   align-items: center;
-  gap: var(--s-3);
+  gap: var(--space-3);
   background: transparent;
   height: auto;
-  font: var(--fw-bold) var(--fs-2xs)/var(--lh-base) var(--font-sans);
-  letter-spacing: var(--ls-wider);
+  font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+  letter-spacing: var(--letter-spacing-wider);
   text-transform: uppercase;
   color: var(--text-tertiary);
 
@@ -40,7 +40,7 @@
   &::after {
     content: "";
     flex: 1;
-    height: var(--bw-default);
+    height: var(--border-width-default);
     background: var(--border-divider);
   }
 }

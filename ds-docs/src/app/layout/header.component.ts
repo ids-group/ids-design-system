@@ -20,17 +20,17 @@ import { RouterLink } from '@angular/router';
       top: 0;
       z-index: var(--layer-sticky);
       background: var(--surface-default);
-      border-bottom: var(--bw-default) solid var(--border-divider);
-      padding: var(--s-3) var(--s-5);
+      border-bottom: var(--border-width-default) solid var(--border-divider);
+      padding: var(--space-3) var(--space-5);
       display: flex;
       align-items: center;
-      gap: var(--s-3);
+      gap: var(--space-3);
       height: var(--topbar-h);
     }
     .brand {
       display: flex;
       align-items: baseline;
-      gap: var(--s-2);
+      gap: var(--space-2);
       text-decoration: none;
       color: var(--text-primary);
     }

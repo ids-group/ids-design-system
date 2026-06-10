@@ -132,80 +132,80 @@ const TYPOGRAPHY_FONT: readonly TypeRow[] = [
 ];
 
 const TYPOGRAPHY_SIZE: readonly TypeRow[] = [
-  { name: '--fs-display',    value: '64px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Display hero.' },
-  { name: '--fs-h1',         value: '48px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Page title.' },
-  { name: '--fs-h2',         value: '36px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Section title.' },
-  { name: '--fs-h3',         value: '28px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Sub-section.' },
-  { name: '--fs-h4',         value: '22px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Card / panel title.' },
-  { name: '--fs-h5',         value: '18px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Small heading.' },
-  { name: '--fs-h5-strong',  value: '20px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Modal titles, condensed headers.' },
-  { name: '--fs-l',          value: '18px', sample: 'Body large',               sampleClass: 'sample-fs', notes: 'Lede paragraph.' },
-  { name: '--fs-m',          value: '16px', sample: 'Body medium',              sampleClass: 'sample-fs', notes: 'Default body.' },
-  { name: '--fs-s',          value: '14px', sample: 'Body small',               sampleClass: 'sample-fs', notes: 'Dense body, table cells.' },
-  { name: '--fs-xs',         value: '12px', sample: 'Body xs',                  sampleClass: 'sample-fs', notes: 'Captions, table head, helper text.' },
-  { name: '--fs-2xs',        value: '11px', sample: 'Tiny',                     sampleClass: 'sample-fs', notes: 'Overline labels.' },
-  { name: '--fs-3xs',        value: '10px', sample: 'Micro',                    sampleClass: 'sample-fs', notes: 'avatar-sm font.' },
-  { name: '--fs-4xs',        value: '9px',  sample: 'Micro',                    sampleClass: 'sample-fs', notes: 'avatar-xs font.' },
-  { name: '--fs-mono',       value: '13px', sample: 'const x = 42;',            sampleClass: 'sample-fs', notes: 'Inline mono / code blocks.' },
+  { name: '--font-size-display',    value: '64px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Display hero.' },
+  { name: '--font-size-h1',         value: '48px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Page title.' },
+  { name: '--font-size-h2',         value: '36px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Section title.' },
+  { name: '--font-size-h3',         value: '28px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Sub-section.' },
+  { name: '--font-size-h4',         value: '22px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Card / panel title.' },
+  { name: '--font-size-h5',         value: '18px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Small heading.' },
+  { name: '--font-size-h5-strong',  value: '20px', sample: 'Aa',                       sampleClass: 'sample-fs', notes: 'Modal titles, condensed headers.' },
+  { name: '--font-size-l',          value: '18px', sample: 'Body large',               sampleClass: 'sample-fs', notes: 'Lede paragraph.' },
+  { name: '--font-size-m',          value: '16px', sample: 'Body medium',              sampleClass: 'sample-fs', notes: 'Default body.' },
+  { name: '--font-size-s',          value: '14px', sample: 'Body small',               sampleClass: 'sample-fs', notes: 'Dense body, table cells.' },
+  { name: '--font-size-xs',         value: '12px', sample: 'Body xs',                  sampleClass: 'sample-fs', notes: 'Captions, table head, helper text.' },
+  { name: '--font-size-2xs',        value: '11px', sample: 'Tiny',                     sampleClass: 'sample-fs', notes: 'Overline labels.' },
+  { name: '--font-size-3xs',        value: '10px', sample: 'Micro',                    sampleClass: 'sample-fs', notes: 'avatar-sm font.' },
+  { name: '--font-size-4xs',        value: '9px',  sample: 'Micro',                    sampleClass: 'sample-fs', notes: 'avatar-xs font.' },
+  { name: '--font-size-mono',       value: '13px', sample: 'const x = 42;',            sampleClass: 'sample-fs', notes: 'Inline mono / code blocks.' },
 ];
 
 const TYPOGRAPHY_LH: readonly TypeRow[] = [
-  { name: '--lh-tight', value: '1.1',  sample: 'Tight leading — display\nand h1 headings.',              sampleClass: 'sample-lh', notes: 'Display + h1.' },
-  { name: '--lh-snug',  value: '1.25', sample: 'Snug leading — sub-headings\nand condensed UI.',         sampleClass: 'sample-lh', notes: 'h2–h5.' },
-  { name: '--lh-base',  value: '1.4',  sample: 'Base leading — body copy\nand most UI.',                 sampleClass: 'sample-lh', notes: 'Body default.' },
-  { name: '--lh-loose', value: '1.6',  sample: 'Loose leading — long-form\nreading and editorial.',      sampleClass: 'sample-lh', notes: 'Long-form prose, mono blocks.' },
-  { name: '--lh-flat',  value: '1',    sample: 'Flat leading',                                            sampleClass: 'sample-lh', notes: 'Button labels, single-line UI.' },
+  { name: '--line-height-tight', value: '1.1',  sample: 'Tight leading — display\nand h1 headings.',              sampleClass: 'sample-lh', notes: 'Display + h1.' },
+  { name: '--line-height-snug',  value: '1.25', sample: 'Snug leading — sub-headings\nand condensed UI.',         sampleClass: 'sample-lh', notes: 'h2–h5.' },
+  { name: '--line-height-base',  value: '1.4',  sample: 'Base leading — body copy\nand most UI.',                 sampleClass: 'sample-lh', notes: 'Body default.' },
+  { name: '--line-height-loose', value: '1.6',  sample: 'Loose leading — long-form\nreading and editorial.',      sampleClass: 'sample-lh', notes: 'Long-form prose, mono blocks.' },
+  { name: '--line-height-flat',  value: '1',    sample: 'Flat leading',                                            sampleClass: 'sample-lh', notes: 'Button labels, single-line UI.' },
 ];
 
 const TYPOGRAPHY_LS: readonly TypeRow[] = [
-  { name: '--ls-tight',  value: '-.02em', sample: 'Tight tracking — display, h1', sampleClass: 'sample-ls', notes: 'Display / h1.' },
-  { name: '--ls-snug',   value: '-.01em', sample: 'Snug tracking — h2, h3',       sampleClass: 'sample-ls', notes: 'h2 / h3.' },
-  { name: '--ls-normal', value: '0',      sample: 'Normal tracking — body text',  sampleClass: 'sample-ls', notes: 'Default body.' },
-  { name: '--ls-wide',   value: '.02em',  sample: 'Wide tracking — labels',       sampleClass: 'sample-ls', notes: 'Subtle emphasis.' },
-  { name: '--ls-wider',  value: '.08em',  sample: 'WIDER TRACKING — OVERLINE',    sampleClass: 'sample-ls', notes: 'Overline / uppercase eyebrows.' },
+  { name: '--letter-spacing-tight',  value: '-.02em', sample: 'Tight tracking — display, h1', sampleClass: 'sample-ls', notes: 'Display / h1.' },
+  { name: '--letter-spacing-snug',   value: '-.01em', sample: 'Snug tracking — h2, h3',       sampleClass: 'sample-ls', notes: 'h2 / h3.' },
+  { name: '--letter-spacing-normal', value: '0',      sample: 'Normal tracking — body text',  sampleClass: 'sample-ls', notes: 'Default body.' },
+  { name: '--letter-spacing-wide',   value: '.02em',  sample: 'Wide tracking — labels',       sampleClass: 'sample-ls', notes: 'Subtle emphasis.' },
+  { name: '--letter-spacing-wider',  value: '.08em',  sample: 'WIDER TRACKING — OVERLINE',    sampleClass: 'sample-ls', notes: 'Overline / uppercase eyebrows.' },
 ];
 
 const TYPOGRAPHY_FW: readonly TypeRow[] = [
-  { name: '--fw-regular',   value: '400', sample: 'Regular — body text',     sampleClass: 'sample-fw', notes: 'Body default.' },
-  { name: '--fw-medium',    value: '500', sample: 'Medium — mono / nav',     sampleClass: 'sample-fw', notes: 'Mono code, nav items.' },
-  { name: '--fw-semibold',  value: '600', sample: 'Semibold — emphasis',     sampleClass: 'sample-fw', notes: 'Field labels, mild emphasis.' },
-  { name: '--fw-bold',      value: '700', sample: 'Bold — headings h4/h5',   sampleClass: 'sample-fw', notes: 'h4–h5, strong body.' },
-  { name: '--fw-extrabold', value: '800', sample: 'Extrabold — display, h1', sampleClass: 'sample-fw', notes: 'Display + h1–h3.' },
+  { name: '--font-weight-regular',   value: '400', sample: 'Regular — body text',     sampleClass: 'sample-fw', notes: 'Body default.' },
+  { name: '--font-weight-medium',    value: '500', sample: 'Medium — mono / nav',     sampleClass: 'sample-fw', notes: 'Mono code, nav items.' },
+  { name: '--font-weight-semibold',  value: '600', sample: 'Semibold — emphasis',     sampleClass: 'sample-fw', notes: 'Field labels, mild emphasis.' },
+  { name: '--font-weight-bold',      value: '700', sample: 'Bold — headings h4/h5',   sampleClass: 'sample-fw', notes: 'h4–h5, strong body.' },
+  { name: '--font-weight-extrabold', value: '800', sample: 'Extrabold — display, h1', sampleClass: 'sample-fw', notes: 'Display + h1–h3.' },
 ];
 
 const SPACING: readonly SpacingRow[] = [
-  { name: '--s-0',   value: '0',     notes: 'Zero — explicit no-gap.' },
-  { name: '--s-px',  value: '1px',   notes: 'Hairline — border-width equivalents.' },
-  { name: '--s-0-5', value: '2px',   notes: 'Hairline insets, icon close button pad.' },
-  { name: '--s-1',   value: '4px',   notes: 'Atom-level gap.' },
-  { name: '--s-1-5', value: '6px',   notes: 'Badge / tag gap, field-label gap.' },
-  { name: '--s-2',   value: '8px',   notes: 'Small gap.' },
-  { name: '--s-2-5', value: '10px',  notes: 'Tooltip pad-x, badge pad-x.' },
-  { name: '--s-3',   value: '12px',  notes: 'Default gap, field pad-x.' },
-  { name: '--s-4',   value: '16px',  notes: 'Card padding, row gap.' },
-  { name: '--s-5',   value: '20px',  notes: 'Medium block separation.' },
-  { name: '--s-6',   value: '24px',  notes: 'Section padding.' },
-  { name: '--s-8',   value: '32px',  notes: 'Group separation.' },
-  { name: '--s-10',  value: '40px',  notes: 'Empty-state padding.' },
-  { name: '--s-12',  value: '48px',  notes: 'Page section spacing.' },
-  { name: '--s-14',  value: '56px',  notes: 'Top bar height token.' },
-  { name: '--s-16',  value: '64px',  notes: 'Empty-state icon size, hero padding.' },
-  { name: '--s-20',  value: '80px',  notes: 'Wide page-level gap.' },
-  { name: '--s-24',  value: '96px',  notes: 'Hero gap.' },
-  { name: '--s-32',  value: '128px', notes: 'Maximum scale step.' },
-  { name: '--ds-container-pad', value: 'var(--s-6)', notes: 'Shared container padding — components default their own --ds-*-pad to this so a single override re-pads card / stat / etc.' },
+  { name: '--space-0',   value: '0',     notes: 'Zero — explicit no-gap.' },
+  { name: '--space-px',  value: '1px',   notes: 'Hairline — border-width equivalents.' },
+  { name: '--space-0-5', value: '2px',   notes: 'Hairline insets, icon close button pad.' },
+  { name: '--space-1',   value: '4px',   notes: 'Atom-level gap.' },
+  { name: '--space-1-5', value: '6px',   notes: 'Badge / tag gap, field-label gap.' },
+  { name: '--space-2',   value: '8px',   notes: 'Small gap.' },
+  { name: '--space-2-5', value: '10px',  notes: 'Tooltip pad-x, badge pad-x.' },
+  { name: '--space-3',   value: '12px',  notes: 'Default gap, field pad-x.' },
+  { name: '--space-4',   value: '16px',  notes: 'Card padding, row gap.' },
+  { name: '--space-5',   value: '20px',  notes: 'Medium block separation.' },
+  { name: '--space-6',   value: '24px',  notes: 'Section padding.' },
+  { name: '--space-8',   value: '32px',  notes: 'Group separation.' },
+  { name: '--space-10',  value: '40px',  notes: 'Empty-state padding.' },
+  { name: '--space-12',  value: '48px',  notes: 'Page section spacing.' },
+  { name: '--space-14',  value: '56px',  notes: 'Top bar height token.' },
+  { name: '--space-16',  value: '64px',  notes: 'Empty-state icon size, hero padding.' },
+  { name: '--space-20',  value: '80px',  notes: 'Wide page-level gap.' },
+  { name: '--space-24',  value: '96px',  notes: 'Hero gap.' },
+  { name: '--space-32',  value: '128px', notes: 'Maximum scale step.' },
+  { name: '--ds-container-pad', value: 'var(--space-6)', notes: 'Shared container padding — components default their own --ds-*-pad to this so a single override re-pads card / stat / etc.' },
 ];
 
 const RADIUS: readonly RadiusRow[] = [
-  { name: '--r-0',         value: '0',     notes: 'Squared — explicit no-radius.' },
-  { name: '--r-sm',        value: '4px',   notes: 'kbd, indeterminate-checkbox tick, link focus halo.' },
-  { name: '--r-md',        value: '8px',   notes: 'Buttons, fields, tooltips, search, segmented, tags.' },
-  { name: '--r-lg',        value: '12px',  notes: 'Menus, popovers, cards, modals, drawers, toasts.' },
-  { name: '--r-xl',        value: '16px',  notes: 'Large containers — viewport / scanner frames, hero cards.' },
-  { name: '--r-2xl',       value: '24px',  notes: 'Heroic surfaces — reserved.' },
-  { name: '--r-pill-value', value: '999px', notes: 'Configurable pill — themes can override.' },
-  { name: '--r-pill',      value: 'var(--r-pill-value)', notes: 'Pills, avatars, switches, segmented thumb.' },
-  { name: '--r-flat',      value: 'var(--r-0)', notes: 'Intentionally squared — btn-group middle, in-range datepicker.' },
+  { name: '--radius-0',         value: '0',     notes: 'Squared — explicit no-radius.' },
+  { name: '--radius-sm',        value: '4px',   notes: 'kbd, indeterminate-checkbox tick, link focus halo.' },
+  { name: '--radius-md',        value: '8px',   notes: 'Buttons, fields, tooltips, search, segmented, tags.' },
+  { name: '--radius-lg',        value: '12px',  notes: 'Menus, popovers, cards, modals, drawers, toasts.' },
+  { name: '--radius-xl',        value: '16px',  notes: 'Large containers — viewport / scanner frames, hero cards.' },
+  { name: '--radius-2xl',       value: '24px',  notes: 'Heroic surfaces — reserved.' },
+  { name: '--radius-pill-value', value: '999px', notes: 'Configurable pill — themes can override.' },
+  { name: '--radius-pill',      value: 'var(--radius-pill-value)', notes: 'Pills, avatars, switches, segmented thumb.' },
+  { name: '--radius-flat',      value: 'var(--radius-0)', notes: 'Intentionally squared — btn-group middle, in-range datepicker.' },
 ];
 
 const SHADOWS: readonly ShadowRow[] = [
@@ -223,13 +223,13 @@ const SHADOWS: readonly ShadowRow[] = [
 ];
 
 const MOTION_DUR: readonly MotionRow[] = [
-  { name: '--dur-instant',   value: '80ms',   notes: 'Near-instant feedback.' },
-  { name: '--dur-fast',      value: '120ms',  notes: 'Quick state changes (hover/focus).' },
-  { name: '--dur-base',      value: '180ms',  notes: 'Default transitions.' },
-  { name: '--dur-slow',      value: '260ms',  notes: 'Layout/expand transitions.' },
-  { name: '--dur-slower',    value: '400ms',  notes: 'Long enter/exit (modals, drawers).' },
-  { name: '--dur-loop-fast', value: '700ms',  notes: 'Indeterminate spinner rhythm.' },
-  { name: '--dur-loop-slow', value: '1400ms', notes: 'Skeleton shimmer rhythm.' },
+  { name: '--duration-instant',   value: '80ms',   notes: 'Near-instant feedback.' },
+  { name: '--duration-fast',      value: '120ms',  notes: 'Quick state changes (hover/focus).' },
+  { name: '--duration-base',      value: '180ms',  notes: 'Default transitions.' },
+  { name: '--duration-slow',      value: '260ms',  notes: 'Layout/expand transitions.' },
+  { name: '--duration-slower',    value: '400ms',  notes: 'Long enter/exit (modals, drawers).' },
+  { name: '--duration-loop-fast', value: '700ms',  notes: 'Indeterminate spinner rhythm.' },
+  { name: '--duration-loop-slow', value: '1400ms', notes: 'Skeleton shimmer rhythm.' },
 ];
 
 const MOTION_EASE: readonly MotionRow[] = [
@@ -279,8 +279,8 @@ const ICONS: readonly SizeRow[] = [
 ];
 
 const MISC_BW: readonly MiscRow[] = [
-  { name: '--bw-default', value: '1px', renderAs: 'bar', notes: 'Every border, divider, field outline.' },
-  { name: '--bw-strong',  value: '2px', renderAs: 'bar', notes: 'Radio dot, slider thumb, tabs underline, dropzone dash.' },
+  { name: '--border-width-default', value: '1px', renderAs: 'bar', notes: 'Every border, divider, field outline.' },
+  { name: '--border-width-strong',  value: '2px', renderAs: 'bar', notes: 'Radio dot, slider thumb, tabs underline, dropzone dash.' },
 ];
 
 const MISC_OPACITY: readonly MiscRow[] = [
@@ -315,7 +315,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-button-border',         value: 'transparent',                       notes: 'Border colour (outline variant overrides).' },
       { name: '--ds-button-bg-disabled',    value: 'var(--surface-disabled)',           notes: 'Disabled fill.' },
       { name: '--ds-button-fg-disabled',    value: 'var(--text-disabled)',              notes: 'Disabled label.' },
-      { name: '--ds-button-radius',         value: 'var(--r-md)',                       notes: 'Corner radius.' },
+      { name: '--ds-button-radius',         value: 'var(--radius-md)',                       notes: 'Corner radius.' },
       { name: '--ds-button-focus-shadow',   value: 'var(--focus-ring)',                 notes: 'Focus halo.' },
       { name: '--ds-button-pressed-shadow', value: '0 0 0 3px color-mix(bg-active 35%, transparent)', notes: 'Pressed halo — follows the active fill.' },
     ],
@@ -327,10 +327,10 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     tokens: [
       { name: '--ds-badge-bg',          value: 'var(--surface-secondary)', notes: 'Surface fill.' },
       { name: '--ds-badge-fg',          value: 'var(--text-secondary)',    notes: 'Label colour.' },
-      { name: '--ds-badge-radius',      value: 'var(--r-pill)',            notes: 'Pill radius.' },
+      { name: '--ds-badge-radius',      value: 'var(--radius-pill)',            notes: 'Pill radius.' },
       { name: '--ds-badge-pad-x',       value: 'var(--badge-pad-x)',       notes: 'Horizontal padding.' },
       { name: '--ds-badge-pad-y',       value: 'var(--badge-pad-y)',       notes: 'Vertical padding.' },
-      { name: '--ds-badge-font-weight', value: 'var(--fw-bold)',           notes: 'Label weight.' },
+      { name: '--ds-badge-font-weight', value: 'var(--font-weight-bold)',           notes: 'Label weight.' },
     ],
   },
   {
@@ -350,7 +350,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-avatar-size',        value: 'var(--avatar-md)',       notes: 'Width / height.' },
       { name: '--ds-avatar-bg',          value: 'var(--primary-muted)',     notes: 'Surface fill.' },
       { name: '--ds-avatar-fg',          value: 'var(--primary-strong)',    notes: 'Initials colour.' },
-      { name: '--ds-avatar-radius',      value: 'var(--r-pill)',          notes: 'Pill / square.' },
+      { name: '--ds-avatar-radius',      value: 'var(--radius-pill)',          notes: 'Pill / square.' },
       { name: '--ds-avatar-ring-color',  value: 'var(--surface-default)', notes: 'Ring when stacked.' },
       { name: '--ds-avatar-ring-width',  value: 'var(--avatar-bw-group)', notes: 'Ring width when stacked.' },
     ],
@@ -360,7 +360,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     selector: ':host (ds-avatar-group)',
     description: 'Stack overlap + ring colour.',
     tokens: [
-      { name: '--ds-avatargroup-overlap', value: 'calc(-1 * var(--s-2))', notes: 'Negative gap between avatars.' },
+      { name: '--ds-avatargroup-overlap', value: 'calc(-1 * var(--space-2))', notes: 'Negative gap between avatars.' },
       { name: '--ds-avatargroup-ring',    value: 'var(--surface-default)', notes: 'Outline between stacked avatars.' },
     ],
   },
@@ -371,8 +371,8 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     tokens: [
       { name: '--ds-card-bg',           value: 'var(--surface-default)', notes: 'Card fill.' },
       { name: '--ds-card-border',       value: 'var(--border-divider)',  notes: 'Card border.' },
-      { name: '--ds-card-radius',       value: 'var(--r-lg)',            notes: 'Corner radius.' },
-      { name: '--ds-card-pad',          value: 'var(--s-6)',             notes: 'Inner padding.' },
+      { name: '--ds-card-radius',       value: 'var(--radius-lg)',            notes: 'Corner radius.' },
+      { name: '--ds-card-pad',          value: 'var(--space-6)',             notes: 'Inner padding.' },
       { name: '--ds-card-shadow',       value: 'none',                   notes: 'Default (flat).' },
       { name: '--ds-card-shadow-hover', value: 'var(--z100)',            notes: 'Hover lift shadow.' },
       { name: '--ds-card-focus-shadow', value: 'var(--focus-ring)',      notes: 'Focus halo on interactive cards.' },
@@ -386,8 +386,8 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     tokens: [
       { name: '--ds-stat-bg',          value: 'var(--surface-default)', notes: 'Tile fill.' },
       { name: '--ds-stat-border',      value: 'var(--border-divider)',  notes: 'Tile border.' },
-      { name: '--ds-stat-radius',      value: 'var(--r-lg)',            notes: 'Corner radius.' },
-      { name: '--ds-stat-pad',         value: 'var(--s-5)',             notes: 'Inner padding.' },
+      { name: '--ds-stat-radius',      value: 'var(--radius-lg)',            notes: 'Corner radius.' },
+      { name: '--ds-stat-pad',         value: 'var(--space-5)',             notes: 'Inner padding.' },
       { name: '--ds-stat-label-color', value: 'var(--text-tertiary)',   notes: 'Label colour.' },
       { name: '--ds-stat-value-color', value: 'var(--text-primary)',    notes: 'Value colour.' },
       { name: '--ds-stat-up-color',    value: 'var(--success-text)',    notes: 'Positive delta.' },
@@ -403,9 +403,9 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-tab-fg-hover',           value: 'var(--text-primary)',      notes: 'Hover label.' },
       { name: '--ds-tab-fg-active',          value: 'var(--primary)',             notes: 'Active label.' },
       { name: '--ds-tab-indicator-color',    value: 'var(--primary)',             notes: 'Underline colour.' },
-      { name: '--ds-tab-indicator-width',    value: 'var(--bw-strong)',         notes: 'Underline thickness.' },
-      { name: '--ds-tab-pad-x',              value: 'var(--s-4)',               notes: 'Horizontal padding.' },
-      { name: '--ds-tab-pad-y',              value: 'var(--s-3)',               notes: 'Vertical padding.' },
+      { name: '--ds-tab-indicator-width',    value: 'var(--border-width-strong)',         notes: 'Underline thickness.' },
+      { name: '--ds-tab-pad-x',              value: 'var(--space-4)',               notes: 'Horizontal padding.' },
+      { name: '--ds-tab-pad-y',              value: 'var(--space-3)',               notes: 'Vertical padding.' },
       { name: '--ds-tabs-divider',           value: 'var(--border-divider)',    notes: 'Bottom divider.' },
       { name: '--ds-tabs-pills-bg',          value: 'var(--surface-secondary)', notes: 'Pills track fill.' },
       { name: '--ds-tab-pill-bg-active',     value: 'var(--surface-default)',   notes: 'Active pill thumb.' },
@@ -422,7 +422,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-input-border-focus',   value: 'var(--primary)',            notes: 'Focus border.' },
       { name: '--ds-input-fg',             value: 'var(--text-primary)',     notes: 'Value text.' },
       { name: '--ds-input-placeholder',    value: 'var(--text-tertiary)',    notes: 'Placeholder text.' },
-      { name: '--ds-input-radius',         value: 'var(--r-md)',             notes: 'Corner radius.' },
+      { name: '--ds-input-radius',         value: 'var(--radius-md)',             notes: 'Corner radius.' },
       { name: '--ds-input-pad-x',          value: 'var(--field-pad-x)',      notes: 'Horizontal padding.' },
       { name: '--ds-input-pad-y',          value: 'var(--field-pad-y)',      notes: 'Vertical padding.' },
       { name: '--ds-input-focus-shadow',   value: 'var(--focus-field)',      notes: 'Focus halo.' },
@@ -442,7 +442,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-input-border-hover',   value: 'var(--border-strong)',    notes: 'Hover border.' },
       { name: '--ds-input-border-focus',   value: 'var(--primary)',            notes: 'Focus border.' },
       { name: '--ds-input-fg',             value: 'var(--text-primary)',     notes: 'Value text.' },
-      { name: '--ds-input-radius',         value: 'var(--r-md)',             notes: 'Corner radius.' },
+      { name: '--ds-input-radius',         value: 'var(--radius-md)',             notes: 'Corner radius.' },
       { name: '--ds-input-focus-shadow',   value: 'var(--focus-field)',      notes: 'Focus halo.' },
       { name: '--ds-input-border-error',   value: 'var(--error)',           notes: 'Error border.' },
       { name: '--ds-input-border-success', value: 'var(--success)',          notes: 'Success border.' },
@@ -462,7 +462,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-search-focus-shadow', value: 'var(--focus-field)',       notes: 'Focus halo.' },
       { name: '--ds-search-fg',           value: 'var(--text-primary)',      notes: 'Query text.' },
       { name: '--ds-search-placeholder',  value: 'var(--text-tertiary)',     notes: 'Placeholder.' },
-      { name: '--ds-search-radius',       value: 'var(--r-md)',              notes: 'Corner radius.' },
+      { name: '--ds-search-radius',       value: 'var(--radius-md)',              notes: 'Corner radius.' },
       { name: '--ds-search-height',       value: 'var(--search-h)',          notes: 'Control height.' },
     ],
   },
@@ -480,7 +480,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-table-sort-active-fg',  value: 'var(--primary)',             notes: 'Active sort caret.' },
       { name: '--ds-table-cell-pad-x',      value: 'var(--table-cell-pad-x)',  notes: 'Cell horizontal padding.' },
       { name: '--ds-table-cell-pad-y',      value: 'var(--table-cell-pad-y)',  notes: 'Cell vertical padding.' },
-      { name: '--ds-table-radius',          value: 'var(--r-xl)',              notes: 'Outer corner radius.' },
+      { name: '--ds-table-radius',          value: 'var(--radius-xl)',              notes: 'Outer corner radius.' },
     ],
   },
   {
@@ -495,7 +495,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-pagination-btn-border',   value: 'var(--border-default)',    notes: 'Button border.' },
       { name: '--ds-pagination-active-bg',    value: 'var(--primary)',             notes: 'Active page fill.' },
       { name: '--ds-pagination-active-fg',    value: 'var(--primary-on)',          notes: 'Active page label.' },
-      { name: '--ds-pagination-radius',       value: 'var(--r-md)',              notes: 'Button radius.' },
+      { name: '--ds-pagination-radius',       value: 'var(--radius-md)',              notes: 'Button radius.' },
     ],
   },
   {
@@ -543,7 +543,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-sidenav-item-bg-hover',   value: 'var(--surface-secondary)', notes: 'Item hover fill.' },
       { name: '--ds-sidenav-item-bg-active',  value: 'var(--primary-subtle)',      notes: 'Active item fill.' },
       { name: '--ds-sidenav-item-fg-active',  value: 'var(--primary-strong)',      notes: 'Active item label.' },
-      { name: '--ds-sidenav-item-radius',     value: 'var(--r-md)',              notes: 'Item radius.' },
+      { name: '--ds-sidenav-item-radius',     value: 'var(--radius-md)',              notes: 'Item radius.' },
       { name: '--ds-sidenav-alert-color',     value: 'var(--error)',            notes: 'Alert pip colour.' },
       { name: '--ds-sidenav-group-fg',        value: 'var(--text-tertiary)',     notes: 'Group label colour.' },
     ],
@@ -582,7 +582,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     description: 'Overlay dialog. Danger title fg is separate (--ds-modal-title-fg-error).',
     tokens: [
       { name: '--ds-modal-bg',              value: 'var(--surface-overlay)', notes: 'Dialog fill.' },
-      { name: '--ds-modal-radius',          value: 'var(--r-lg)',            notes: 'Corner radius.' },
+      { name: '--ds-modal-radius',          value: 'var(--radius-lg)',            notes: 'Corner radius.' },
       { name: '--ds-modal-shadow',          value: 'var(--shadow-modal)',    notes: 'Dialog shadow.' },
       { name: '--ds-modal-divider',         value: 'var(--border-divider)',  notes: 'Header/actions divider.' },
       { name: '--ds-modal-title-fg',        value: 'var(--text-primary)',    notes: 'Title colour.' },
@@ -604,7 +604,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-banner-title-fg',       value: 'var(--text-primary)',   notes: 'Title colour.' },
       { name: '--ds-banner-close-fg',       value: 'var(--icon-default)',   notes: 'Close icon.' },
       { name: '--ds-banner-close-fg-hover', value: 'var(--icon-strong)',    notes: 'Close icon hover.' },
-      { name: '--ds-banner-radius',         value: 'var(--r-md)',           notes: 'Corner radius.' },
+      { name: '--ds-banner-radius',         value: 'var(--radius-md)',           notes: 'Corner radius.' },
       { name: '--ds-banner-bar-width',      value: 'var(--banner-bar-w)',   notes: 'Left bar width.' },
     ],
   },
@@ -621,7 +621,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-dropzone-border-active', value: 'var(--primary)',           notes: 'Drag-active border.' },
       { name: '--ds-dropzone-fg',            value: 'var(--text-secondary)',  notes: 'Body text.' },
       { name: '--ds-dropzone-fg-active',     value: 'var(--primary-strong)',    notes: 'Drag-active text.' },
-      { name: '--ds-dropzone-radius',        value: 'var(--r-lg)',            notes: 'Corner radius.' },
+      { name: '--ds-dropzone-radius',        value: 'var(--radius-lg)',            notes: 'Corner radius.' },
       { name: '--ds-dropzone-file-progress', value: 'var(--primary)',           notes: 'Upload progress.' },
       { name: '--ds-dropzone-file-success',  value: 'var(--success)',         notes: 'Per-file success.' },
       { name: '--ds-dropzone-file-error',    value: 'var(--error)',          notes: 'Per-file error.' },
@@ -1179,14 +1179,14 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-10); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-10); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
     .cat-sub {
-      margin-top: var(--s-5);
-      margin-bottom: var(--s-2);
+      margin-top: var(--space-5);
+      margin-bottom: var(--space-2);
       color: var(--text-tertiary);
     }
 
@@ -1195,21 +1195,21 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       width: 100%;
       border-collapse: collapse;
       table-layout: fixed;
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
     }
     .ref-table thead th {
       text-align: left;
-      padding: var(--s-2) var(--s-3);
+      padding: var(--space-2) var(--space-3);
       background: var(--surface-secondary);
-      border-bottom: var(--bw-default) solid var(--border-divider);
-      font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
-      letter-spacing: var(--ls-wider);
+      border-bottom: var(--border-width-default) solid var(--border-divider);
+      font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--text-tertiary);
     }
     .ref-table tbody td {
-      padding: var(--s-2) var(--s-3);
-      border-bottom: var(--bw-default) solid var(--border-divider);
+      padding: var(--space-2) var(--space-3);
+      border-bottom: var(--border-width-default) solid var(--border-divider);
       vertical-align: middle;
       color: var(--text-secondary);
       word-break: break-word;
@@ -1222,59 +1222,59 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     /* ---------- Resolved-value renderers ---------- */
     .swatch-chip {
       display: inline-block;
-      width: var(--s-10);
-      height: var(--s-6);
-      border-radius: var(--r-sm);
-      border: var(--bw-default) solid var(--border-default);
+      width: var(--space-10);
+      height: var(--space-6);
+      border-radius: var(--radius-sm);
+      border: var(--border-width-default) solid var(--border-default);
       vertical-align: middle;
     }
     .swatch-chip.is-inverted { border-color: var(--border-strong); }
 
     .size-bar {
       display: inline-block;
-      height: var(--s-3);
+      height: var(--space-3);
       min-width: 1px;
       background: var(--primary);
-      border-radius: var(--r-sm);
+      border-radius: var(--radius-sm);
       vertical-align: middle;
     }
 
     .radius-sample {
       display: inline-block;
-      width: var(--s-10);
-      height: var(--s-10);
+      width: var(--space-10);
+      height: var(--space-10);
       background: var(--primary-subtle);
-      border: var(--bw-default) solid var(--primary-muted);
+      border: var(--border-width-default) solid var(--primary-muted);
       vertical-align: middle;
     }
 
     .shadow-sample {
       display: inline-block;
-      width: var(--s-10);
-      height: var(--s-10);
+      width: var(--space-10);
+      height: var(--space-10);
       background: var(--surface-default);
-      border-radius: var(--r-md);
+      border-radius: var(--radius-md);
       vertical-align: middle;
     }
 
     .hit-sample {
       display: inline-block;
       background: var(--primary-subtle);
-      border: var(--bw-default) solid var(--primary-muted);
-      border-radius: var(--r-sm);
+      border: var(--border-width-default) solid var(--primary-muted);
+      border-radius: var(--radius-sm);
       vertical-align: middle;
     }
 
     .icon-sample {
       display: inline-block;
       background: var(--icon-default);
-      border-radius: var(--r-sm);
+      border-radius: var(--radius-sm);
       vertical-align: middle;
     }
 
     .bw-sample {
       display: inline-block;
-      width: var(--s-16);
+      width: var(--space-16);
       height: 1px;
       border-top-style: solid;
       border-top-color: var(--text-primary);
@@ -1283,12 +1283,12 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
 
     .opacity-sample {
       display: inline-block;
-      padding: 0 var(--s-2);
-      font: var(--fw-bold) var(--fs-m)/var(--lh-flat) var(--font-sans);
+      padding: 0 var(--space-2);
+      font: var(--font-weight-bold) var(--font-size-m)/var(--line-height-flat) var(--font-sans);
       color: var(--text-primary);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-default);
-      border-radius: var(--r-sm);
+      border: var(--border-width-default) solid var(--border-default);
+      border-radius: var(--radius-sm);
     }
 
     .literal-value {
@@ -1297,10 +1297,10 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
 
     .focus-demo {
       display: inline-block;
-      width: var(--s-10);
-      height: var(--s-6);
+      width: var(--space-10);
+      height: var(--space-6);
       background: var(--surface-default);
-      border-radius: var(--r-md);
+      border-radius: var(--radius-md);
       vertical-align: middle;
     }
     .focus-demo--ring   { box-shadow: var(--focus-ring); }
@@ -1313,38 +1313,38 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     }
     .sample-fs {
       color: var(--text-primary);
-      line-height: var(--lh-flat);
+      line-height: var(--line-height-flat);
     }
     .sample-lh {
       display: inline-block;
       color: var(--text-primary);
       white-space: pre-line;
-      font: var(--fw-regular) var(--fs-s) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s) var(--font-sans);
     }
     .sample-ls {
       color: var(--text-primary);
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
     }
     .sample-fw {
       color: var(--text-primary);
       font-family: var(--font-sans);
-      font-size: var(--fs-s);
-      line-height: var(--lh-base);
+      font-size: var(--font-size-s);
+      line-height: var(--line-height-base);
     }
 
     /* ---------- Component tokens — collapsible group ---------- */
     .component-token-group {
-      margin-top: var(--s-4);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-md);
+      margin-top: var(--space-4);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-md);
       background: var(--surface-default);
       overflow: hidden;
     }
     .component-token-group > summary {
       display: flex;
       align-items: center;
-      gap: var(--s-3);
-      padding: var(--s-3) var(--s-4);
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
       cursor: pointer;
       list-style: none;
       background: var(--surface-secondary);
@@ -1353,7 +1353,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     .component-token-group > summary::before {
       content: '\\203A';
       color: var(--text-tertiary);
-      transition: transform var(--dur-base) var(--ease-standard);
+      transition: transform var(--duration-base) var(--ease-standard);
       display: inline-block;
     }
     .component-token-group[open] > summary::before {
@@ -1364,20 +1364,20 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     }
     .component-token-selector {
       color: var(--text-tertiary);
-      font-size: var(--fs-xs);
+      font-size: var(--font-size-xs);
     }
     .component-token-count {
       margin-left: auto;
       color: var(--text-tertiary);
-      font-size: var(--fs-xs);
+      font-size: var(--font-size-xs);
     }
     .component-token-desc {
-      padding: var(--s-3) var(--s-4) 0;
+      padding: var(--space-3) var(--space-4) 0;
       color: var(--text-secondary);
       margin: 0;
     }
     .component-token-group .ref-table {
-      margin: var(--s-3) 0 0;
+      margin: var(--space-3) 0 0;
     }
   `],
 })

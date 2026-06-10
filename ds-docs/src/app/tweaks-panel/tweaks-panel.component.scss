@@ -1,18 +1,18 @@
 .tweaks-panel {
   position: fixed;
-  bottom: var(--s-4);
-  right: var(--s-4);
+  bottom: var(--space-4);
+  right: var(--space-4);
   z-index: var(--layer-popover);
   background: var(--surface-overlay);
-  border-radius: var(--r-lg);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-popover);
-  font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+  font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
   color: var(--text-primary);
 
   .toggle {
     border: 0;
     background: transparent;
-    padding: var(--s-2) var(--s-3);
+    padding: var(--space-2) var(--space-3);
     cursor: pointer;
     font: inherit;
     color: var(--text-primary);
@@ -25,23 +25,23 @@
   }
 
   .body {
-    padding: 0 var(--s-3) var(--s-3);
+    padding: 0 var(--space-3) var(--space-3);
     display: grid;
-    gap: var(--s-3);
+    gap: var(--space-3);
   }
 
-  .row { display: grid; gap: var(--s-1); }
-  .label { font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans); color: var(--text-secondary); }
+  .row { display: grid; gap: var(--space-1); }
+  .label { font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
 
   .segmented {
     display: flex;
     gap: 0;
-    border: var(--bw-default) solid var(--border-default);
-    border-radius: var(--r-md);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--radius-md);
     overflow: hidden;
     button {
       flex: 1;
-      padding: var(--s-1-5) var(--s-2);
+      padding: var(--space-1-5) var(--space-2);
       border: 0;
       background: transparent;
       cursor: pointer;
@@ -61,10 +61,10 @@
   }
 
   .reset {
-    padding: var(--s-2) var(--s-3);
+    padding: var(--space-2) var(--space-3);
     background: var(--surface-secondary);
-    border: var(--bw-default) solid var(--border-default);
-    border-radius: var(--r-md);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--radius-md);
     cursor: pointer;
     font: inherit;
     color: var(--text-primary);

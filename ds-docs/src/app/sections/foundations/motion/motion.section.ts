@@ -44,28 +44,28 @@ const EASES: Ease[] = [
 const COMBINED: CombinedDemo[] = [
   {
     label: 'Toast appear',
-    tokens: '--dur-slow + --ease-decelerate',
+    tokens: '--duration-slow + --ease-decelerate',
     duration: '260ms',
     easing: 'cubic-bezier(0, 0, 0, 1)',
     kind: 'slide',
   },
   {
     label: 'Modal enter',
-    tokens: '--dur-slow + --ease-emphasized',
+    tokens: '--duration-slow + --ease-emphasized',
     duration: '260ms',
     easing: 'cubic-bezier(.3, 0, .1, 1.4)',
     kind: 'scale',
   },
   {
     label: 'Hover lift',
-    tokens: '--dur-fast + --ease-standard',
+    tokens: '--duration-fast + --ease-standard',
     duration: '120ms',
     easing: 'cubic-bezier(.2, 0, 0, 1)',
     kind: 'fade',
   },
   {
     label: 'Celebrate tick',
-    tokens: '--dur-base + --ease-spring',
+    tokens: '--duration-base + --ease-spring',
     duration: '180ms',
     easing: 'cubic-bezier(.5, 1.5, .5, 1)',
     kind: 'overshoot',
@@ -79,7 +79,7 @@ const TRUNC: TruncRow[] = [
   },
   {
     field: 'Transitions vs loops',
-    behaviour: '--dur-* drives state transitions. Indeterminate loops (spinners, skeletons) use --dur-loop-fast / --dur-loop-slow — separate scale for rhythm, not response.',
+    behaviour: '--duration-* drives state transitions. Indeterminate loops (spinners, skeletons) use --duration-loop-fast / --duration-loop-slow — separate scale for rhythm, not response.',
   },
   {
     field: 'Easing pairing',
@@ -110,7 +110,7 @@ const TRUNC: TruncRow[] = [
             <div class="loop-track">
               <div class="loop-puck loop-puck--dur" [style.transitionDuration]="d.value"></div>
             </div>
-            <code class="t-mono token-name">--dur-{{ d.name }}</code>
+            <code class="t-mono token-name">--duration-{{ d.name }}</code>
             <code class="t-mono token-value">{{ d.value }}</code>
             <div class="t-caption token-desc">{{ d.use }}</div>
           </div>
@@ -185,26 +185,26 @@ const TRUNC: TruncRow[] = [
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--s-1); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); }
 
     /* ---------- Duration & ease grid ---------- */
     .motion-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: var(--s-5);
-      margin-top: var(--s-4);
+      gap: var(--space-5);
+      margin-top: var(--space-4);
     }
     .motion-cell {
       display: grid;
-      gap: var(--s-2);
-      padding: var(--s-4);
+      gap: var(--space-2);
+      padding: var(--space-4);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-lg);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
     }
     .token-name { font-size: 12px; color: var(--text-primary); }
     .token-value { font-size: 11px; color: var(--text-tertiary); word-break: break-all; }
@@ -216,7 +216,7 @@ const TRUNC: TruncRow[] = [
       width: 100%;
       height: 28px;
       background: var(--surface-secondary);
-      border-radius: var(--r-pill);
+      border-radius: var(--radius-pill);
       overflow: hidden;
     }
     .loop-puck {
@@ -226,7 +226,7 @@ const TRUNC: TruncRow[] = [
       width: 24px;
       height: 24px;
       margin-top: -12px;
-      border-radius: var(--r-pill);
+      border-radius: var(--radius-pill);
       background: var(--primary);
     }
     /* Durations · shared easing, varying duration. Hover plays once.
@@ -234,7 +234,7 @@ const TRUNC: TruncRow[] = [
        element's own width (24px), so calc(100% - 24px) was always 0. */
     .loop-puck--dur {
       transition-property: left;
-      transition-duration: var(--dur-base);
+      transition-duration: var(--duration-base);
       transition-timing-function: var(--ease-standard);
     }
     .motion-cell:hover .loop-puck--dur {
@@ -254,16 +254,16 @@ const TRUNC: TruncRow[] = [
     .combined-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: var(--s-4);
-      margin-top: var(--s-4);
+      gap: var(--space-4);
+      margin-top: var(--space-4);
     }
     .combined-cell {
       display: grid;
-      gap: var(--s-2);
-      padding: var(--s-4);
+      gap: var(--space-2);
+      padding: var(--space-4);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-lg);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
     }
     .combined-stage {
       display: flex;
@@ -271,18 +271,18 @@ const TRUNC: TruncRow[] = [
       justify-content: center;
       height: 120px;
       background: var(--surface-canvas);
-      border-radius: var(--r-md);
+      border-radius: var(--radius-md);
       overflow: hidden;
     }
     .combined-label { color: var(--text-primary); }
 
     /* Fade / lift demo */
     .demo-card-lift {
-      padding: var(--s-3) var(--s-4);
+      padding: var(--space-3) var(--space-4);
       background: var(--surface-default);
-      border-radius: var(--r-md);
+      border-radius: var(--radius-md);
       box-shadow: var(--z100);
-      font: var(--fw-bold) var(--fs-s)/1 var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-s)/1 var(--font-sans);
       color: var(--text-primary);
       transition: transform var(--demo-dur) var(--demo-ease), box-shadow var(--demo-dur) var(--demo-ease);
     }
@@ -295,11 +295,11 @@ const TRUNC: TruncRow[] = [
     .demo-toast {
       display: flex;
       align-items: center;
-      gap: var(--s-2);
+      gap: var(--space-2);
       width: 80%;
-      padding: var(--s-2) var(--s-3);
+      padding: var(--space-2) var(--space-3);
       background: var(--surface-default);
-      border-radius: var(--r-md);
+      border-radius: var(--radius-md);
       box-shadow: var(--z200);
       transform: translateY(40px);
       opacity: 0;
@@ -309,10 +309,10 @@ const TRUNC: TruncRow[] = [
       width: 3px;
       align-self: stretch;
       background: var(--success);
-      border-radius: var(--r-sm);
+      border-radius: var(--radius-sm);
     }
     .demo-toast__title {
-      font: var(--fw-bold) var(--fs-s)/1 var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-s)/1 var(--font-sans);
       color: var(--text-primary);
     }
     .combined-cell--slide:hover .demo-toast {
@@ -322,11 +322,11 @@ const TRUNC: TruncRow[] = [
 
     /* Scale demo · modal */
     .demo-modal {
-      padding: var(--s-3) var(--s-4);
+      padding: var(--space-3) var(--space-4);
       background: var(--surface-default);
-      border-radius: var(--r-md);
+      border-radius: var(--radius-md);
       box-shadow: var(--z400);
-      font: var(--fw-bold) var(--fs-s)/1 var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-s)/1 var(--font-sans);
       color: var(--text-primary);
       transform: scale(0.85);
       opacity: 0;
@@ -344,7 +344,7 @@ const TRUNC: TruncRow[] = [
       justify-content: center;
       width: 44px;
       height: 44px;
-      border-radius: var(--r-pill);
+      border-radius: var(--radius-pill);
       background: var(--success);
       color: var(--neutral-0);
       transform: scale(0.6);
@@ -358,35 +358,35 @@ const TRUNC: TruncRow[] = [
 
     /* ---------- Truncation block ---------- */
     .trunc {
-      margin-top: var(--s-3);
-      padding: var(--s-4);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-secondary);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .trunc__title {
-      font: var(--fw-bold) var(--fs-2xs)/var(--lh-base) var(--font-sans);
-      letter-spacing: var(--ls-wider);
+      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--text-tertiary);
-      margin-bottom: var(--s-3);
+      margin-bottom: var(--space-3);
     }
     .trunc__list {
       list-style: none; margin: 0; padding: 0;
       display: flex; flex-direction: column;
-      gap: var(--s-2);
+      gap: var(--space-2);
     }
     .trunc__list li {
       display: grid;
       grid-template-columns: 220px 1fr;
-      gap: var(--s-4);
+      gap: var(--space-4);
       align-items: start;
     }
     .trunc__field {
-      font: var(--fw-bold) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-primary);
     }
     .trunc__behaviour {
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
 

@@ -77,96 +77,96 @@ interface TokenPair {
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
     .block-desc code.t-mono {
       background: var(--surface-subtle);
-      padding: 0 var(--s-1);
-      border-radius: var(--r-sm);
+      padding: 0 var(--space-1);
+      border-radius: var(--radius-sm);
       color: var(--text-primary);
     }
 
     .pairs {
-      margin-top: var(--s-3);
+      margin-top: var(--space-3);
       display: grid;
-      gap: var(--s-4);
+      gap: var(--space-4);
     }
     .pair {
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-lg);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
       overflow: hidden;
       display: grid;
       grid-template-columns: minmax(220px, 1fr) minmax(0, 2fr);
     }
     .pair__head {
-      padding: var(--s-4) var(--s-5);
-      border-right: var(--bw-default) solid var(--border-divider);
+      padding: var(--space-4) var(--space-5);
+      border-right: var(--border-width-default) solid var(--border-divider);
       background: var(--surface-secondary);
     }
     .pair__head .muted {
       color: var(--text-secondary);
-      margin-top: var(--s-1);
+      margin-top: var(--space-1);
     }
     .pair__body {
       display: grid;
       grid-template-columns: 1fr 1fr;
     }
     .tile {
-      padding: var(--s-3) var(--s-4);
+      padding: var(--space-3) var(--space-4);
       display: grid;
-      gap: var(--s-2);
+      gap: var(--space-2);
       min-width: 0;
     }
     .tile--good { background: var(--success-subtle, var(--surface-subtle)); }
     .tile--bad {
       background: var(--error-subtle, var(--surface-subtle));
-      border-left: var(--bw-default) solid var(--border-divider);
+      border-left: var(--border-width-default) solid var(--border-divider);
     }
     .tile__tag {
       display: inline-flex;
       align-items: center;
-      gap: var(--s-1);
+      gap: var(--space-1);
       align-self: flex-start;
       padding: 2px 8px;
-      border-radius: var(--r-pill);
-      font: var(--fw-bold) var(--fs-2xs)/1 var(--font-sans);
+      border-radius: var(--radius-pill);
+      font: var(--font-weight-bold) var(--font-size-2xs)/1 var(--font-sans);
       text-transform: uppercase;
-      letter-spacing: var(--ls-wider);
+      letter-spacing: var(--letter-spacing-wider);
     }
     .tile--good .tile__tag { background: var(--success, #1b8a4a); color: var(--text-on-primary, #fff); }
     .tile--bad .tile__tag { background: var(--error, #b3261e); color: var(--text-on-primary, #fff); }
     .tile__code {
       margin: 0;
-      padding: var(--s-2) var(--s-3);
+      padding: var(--space-2) var(--space-3);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-sm);
-      font-size: var(--fs-xs);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-xs);
       color: var(--text-primary);
       white-space: pre-wrap;
       word-break: break-word;
     }
 
     .rules {
-      margin-top: var(--s-3);
-      padding-left: var(--s-5);
+      margin-top: var(--space-3);
+      padding-left: var(--space-5);
       color: var(--text-secondary);
       display: grid;
-      gap: var(--s-2);
+      gap: var(--space-2);
       max-width: var(--col-cap-text);
     }
 
     @media (max-width: 820px) {
       .pair { grid-template-columns: 1fr; }
-      .pair__head { border-right: 0; border-bottom: var(--bw-default) solid var(--border-divider); }
+      .pair__head { border-right: 0; border-bottom: var(--border-width-default) solid var(--border-divider); }
     }
     @media (max-width: 560px) {
       .pair__body { grid-template-columns: 1fr; }
-      .tile--bad { border-left: 0; border-top: var(--bw-default) solid var(--border-divider); }
+      .tile--bad { border-left: 0; border-top: var(--border-width-default) solid var(--border-divider); }
     }
   `],
 })
@@ -178,7 +178,7 @@ export class TokenDisciplineSection {
     {
       title: 'Spacing',
       why: 'Density change or rebrand should propagate without code edits.',
-      good: 'padding: var(--s-2) var(--s-3);',
+      good: 'padding: var(--space-2) var(--space-3);',
       bad: 'padding: 8px 12px;',
     },
     {
@@ -190,25 +190,25 @@ export class TokenDisciplineSection {
     {
       title: 'Radii',
       why: 'Sharp-vs-soft rebrand requires every radius configurable from one place.',
-      good: 'border-radius: var(--r-md);',
+      good: 'border-radius: var(--radius-md);',
       bad: 'border-radius: 12px;',
     },
     {
       title: 'Borders',
       why: 'Width and colour both move through tokens — keeps the system coherent under hi-DPI.',
-      good: 'border: var(--bw-default) solid var(--border-default);',
+      good: 'border: var(--border-width-default) solid var(--border-default);',
       bad: 'border: 1px solid #ddd;',
     },
     {
       title: 'Typography',
       why: 'The type ramp is governed centrally — a one-line edit re-tunes every component.',
-      good: 'font: var(--fw-medium) var(--fs-m)/var(--lh-base) var(--font-sans);',
+      good: 'font: var(--font-weight-medium) var(--font-size-m)/var(--line-height-base) var(--font-sans);',
       bad: 'font: 500 16px/1.5 -apple-system, sans-serif;',
     },
     {
       title: 'Motion',
       why: 'Motion taste varies per client; one set of curves keeps the product feeling like one product.',
-      good: 'transition: opacity var(--dur-fast) var(--ease-standard);',
+      good: 'transition: opacity var(--duration-fast) var(--ease-standard);',
       bad: 'transition: opacity 200ms cubic-bezier(.4, 0, .2, 1);',
     },
   ];

@@ -20,7 +20,7 @@
 
 // Surface keyboard focus on the zone when its (visually-hidden) input is focused.
 .dropzone:focus-within {
-  outline: var(--bw-strong, 2px) solid var(--primary);
+  outline: var(--border-width-strong, 2px) solid var(--primary);
   outline-offset: 2px;
 }
 
@@ -37,7 +37,7 @@
   --ds-dropzone-border-active:    var(--primary);
   --ds-dropzone-fg:               var(--text-secondary);
   --ds-dropzone-fg-active:        var(--primary-strong);
-  --ds-dropzone-radius:           var(--r-lg);
+  --ds-dropzone-radius:           var(--radius-lg);
   --ds-dropzone-file-progress:    var(--primary);
   --ds-dropzone-file-success:     var(--success);
   --ds-dropzone-file-error:       var(--error);
@@ -47,10 +47,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--s-2);
-  border: var(--bw-strong) dashed var(--ds-dropzone-border);
+  gap: var(--space-2);
+  border: var(--border-width-strong) dashed var(--ds-dropzone-border);
   border-radius: var(--ds-dropzone-radius);
-  padding: var(--s-6);
+  padding: var(--space-6);
   text-align: center;
   background: var(--ds-dropzone-bg);
   cursor: pointer;
@@ -80,12 +80,12 @@
   }
 
   .title {
-    font: var(--fw-bold) var(--fs-m)/var(--lh-snug) var(--font-heading);
-    margin: 0 0 var(--s-1);
+    font: var(--font-weight-bold) var(--font-size-m)/var(--line-height-snug) var(--font-heading);
+    margin: 0 0 var(--space-1);
   }
 
   .hint {
-    font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+    font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
     color: var(--ds-dropzone-fg);
   }
 
@@ -94,38 +94,38 @@
   // don't have to fight the host "or click to browse" line. Subtle top border
   // visually separates the meta hint from the dropzone's main affordance.
   [hint] {
-    margin: var(--s-3) calc(var(--s-6) * -1) 0;
-    padding: var(--s-3) var(--s-6) 0;
-    border-top: var(--bw-default) solid var(--border-subtle);
+    margin: var(--space-3) calc(var(--space-6) * -1) 0;
+    padding: var(--space-3) var(--space-6) 0;
+    border-top: var(--border-width-default) solid var(--border-subtle);
     align-self: stretch;
     text-align: center;
-    font: var(--fw-regular) var(--fs-xs)/var(--lh-base) var(--font-sans);
+    font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
     color: var(--text-tertiary);
-    letter-spacing: var(--ls-wide);
+    letter-spacing: var(--letter-spacing-wide);
   }
 
   .file-list {
     width: 100%;
-    margin-top: var(--s-4);
+    margin-top: var(--space-4);
     display: grid;
-    gap: var(--s-2);
+    gap: var(--space-2);
   }
 
   .file {
     display: flex;
     align-items: center;
-    gap: var(--s-3);
-    padding: var(--s-3);
-    border: var(--bw-default) solid var(--border-default);
-    border-radius: var(--r-md);
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--radius-md);
     background: var(--surface-default);
 
     .icon { flex-shrink: 0; color: var(--icon-default); }
     .main { flex: 1; min-width: 0; }
-    .name { font: var(--fw-medium) var(--fs-s)/var(--lh-base) var(--font-sans); color: var(--text-primary); }
-    .meta { font: var(--fw-regular) var(--fs-xs)/var(--lh-base) var(--font-sans); color: var(--text-tertiary); }
-    .progress { height: var(--bw-strong); background: var(--surface-secondary); border-radius: var(--r-pill); margin-top: var(--s-1); }
-    .progress-fill { height: 100%; background: var(--ds-dropzone-file-progress); border-radius: var(--r-pill); transition: width var(--dur-base) var(--ease-standard); }
+    .name { font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-base) var(--font-sans); color: var(--text-primary); }
+    .meta { font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans); color: var(--text-tertiary); }
+    .progress { height: var(--border-width-strong); background: var(--surface-secondary); border-radius: var(--radius-pill); margin-top: var(--space-1); }
+    .progress-fill { height: 100%; background: var(--ds-dropzone-file-progress); border-radius: var(--radius-pill); transition: width var(--duration-base) var(--ease-standard); }
     .remove {
       background: none;
       border: 0;

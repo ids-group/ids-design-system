@@ -28,22 +28,22 @@ Loaded via `@use 'styles/tokens';` (when the consumer also `@use 'styles/ds';` t
 - Status pills: `--status-planning-bg/fg`, `--status-confirmed-bg/fg`, `--status-active-bg/fg`, `--status-completed-bg/fg`
 
 **Geometry:**
-- Spacing: `--s-0`, `--s-px`, `--s-0-5` (2px), `--s-1` (4px), `--s-1-5` (6px), `--s-2` (8px), `--s-2-5` (10px), `--s-3` (12px), `--s-4` (16px), `--s-5` (20px), `--s-6` (24px), `--s-8` (32px), `--s-10` (40px), `--s-12` (48px), `--s-14` (56px), `--s-16` (64px), `--s-20` (80px), `--s-24` (96px), `--s-32` (128px)
-- Radius: `--r-0`, `--r-sm` (4px), `--r-md` (8px), `--r-lg` (12px), `--r-2xl` (24px), `--r-pill` (999px), `--r-pill-value`, `--r-flat`
-- Border widths: `--bw-default` (1px), `--bw-strong` (2px)
+- Spacing: `--space-0`, `--space-px`, `--space-0-5` (2px), `--space-1` (4px), `--space-1-5` (6px), `--space-2` (8px), `--space-2-5` (10px), `--space-3` (12px), `--space-4` (16px), `--space-5` (20px), `--space-6` (24px), `--space-8` (32px), `--space-10` (40px), `--space-12` (48px), `--space-14` (56px), `--space-16` (64px), `--space-20` (80px), `--space-24` (96px), `--space-32` (128px)
+- Radius: `--radius-0`, `--radius-sm` (4px), `--radius-md` (8px), `--radius-lg` (12px), `--radius-2xl` (24px), `--radius-pill` (999px), `--radius-pill-value`, `--radius-flat`
+- Border widths: `--border-width-default` (1px), `--border-width-strong` (2px)
 - Hit targets: `--hit-xs` (24), `--hit-sm` (28), `--hit-md` (36), `--hit-min` (32), `--hit-cozy` (40), `--hit-comfy` (44), `--hit-touch` (48)
 - Icon sizes: `--icon-2xs` (10), `--icon-xs` (12), `--icon-sm` (14), `--icon-md` (16), `--icon-lg` (20)
 
 **Typography:**
 - Families: `--font-sans`, `--font-mono`, `--font-display`, `--font-heading`
-- Weights: `--fw-regular` 400, `--fw-medium` 500, `--fw-semibold` 600, `--fw-bold` 700, `--fw-extrabold` 800 (overridden to 700 in brand-mm)
-- Sizes: `--fs-display` 64, `--fs-h1` 48, `--fs-h2` 36, `--fs-h3` 28, `--fs-h4` 22, `--fs-h5` 18, `--fs-h5-strong` 20, `--fs-l` 18, `--fs-m` 16, `--fs-s` 14, `--fs-xs` 12, `--fs-2xs` 11, `--fs-3xs` 10, `--fs-4xs` 9, `--fs-mono` 13
-- Line heights: `--lh-tight` 1.1, `--lh-snug` 1.25, `--lh-base` 1.4, `--lh-loose` 1.6, `--lh-flat` 1
-- Letter spacing: `--ls-tight`, `--ls-snug`, `--ls-normal`, `--ls-wide`, `--ls-wider`
+- Weights: `--font-weight-regular` 400, `--font-weight-medium` 500, `--font-weight-semibold` 600, `--font-weight-bold` 700, `--font-weight-extrabold` 800 (overridden to 700 in brand-mm)
+- Sizes: `--font-size-display` 64, `--font-size-h1` 48, `--font-size-h2` 36, `--font-size-h3` 28, `--font-size-h4` 22, `--font-size-h5` 18, `--font-size-h5-strong` 20, `--font-size-l` 18, `--font-size-m` 16, `--font-size-s` 14, `--font-size-xs` 12, `--font-size-2xs` 11, `--font-size-3xs` 10, `--font-size-4xs` 9, `--font-size-mono` 13
+- Line heights: `--line-height-tight` 1.1, `--line-height-snug` 1.25, `--line-height-base` 1.4, `--line-height-loose` 1.6, `--line-height-flat` 1
+- Letter spacing: `--letter-spacing-tight`, `--letter-spacing-snug`, `--letter-spacing-normal`, `--letter-spacing-wide`, `--letter-spacing-wider`
 
 **Motion:**
-- Durations: `--dur-instant` 80ms, `--dur-fast` 120ms, `--dur-base` 180ms, `--dur-slow` 260ms, `--dur-slower` 400ms
-- Loop: `--dur-loop-fast` 700ms, `--dur-loop-slow` 1400ms
+- Durations: `--duration-instant` 80ms, `--duration-fast` 120ms, `--duration-base` 180ms, `--duration-slow` 260ms, `--duration-slower` 400ms
+- Loop: `--duration-loop-fast` 700ms, `--duration-loop-slow` 1400ms
 - Easing: `--ease-standard`, `--ease-emphasized`, `--ease-decelerate`, `--ease-accelerate`, `--ease-spring`
 
 **Elevation:**
@@ -63,10 +63,10 @@ Responsive 4-tier page grid loaded via `@use 'styles/ds'` (or directly via `@use
 
 | Tier         | Range         | Cols | Gutter        | Margin         | Container cap            |
 | ------------ | ------------- | ---- | ------------- | -------------- | ------------------------ |
-| Mobile       | ≤ 640px       | 4    | `--s-3` (12)  | `--s-4` (16)   | fluid                    |
-| Tablet       | 641 – 1024px  | 8    | `--s-4` (16)  | `--s-6` (24)   | fluid                    |
-| Desktop      | 1025 – 1440px | 12   | `--s-5` (20)  | `--s-8` (32)   | fluid                    |
-| Desktop wide | ≥ 1441px      | 12   | `--s-6` (24)  | `--s-10` (40)  | `--col-cap-content` 1280 |
+| Mobile       | ≤ 640px       | 4    | `--space-3` (12)  | `--space-4` (16)   | fluid                    |
+| Tablet       | 641 – 1024px  | 8    | `--space-4` (16)  | `--space-6` (24)   | fluid                    |
+| Desktop      | 1025 – 1440px | 12   | `--space-5` (20)  | `--space-8` (32)   | fluid                    |
+| Desktop wide | ≥ 1441px      | 12   | `--space-6` (24)  | `--space-10` (40)  | `--col-cap-content` 1280 |
 
 **Tokens:** `--bp-xs` 480, `--bp-sm` 640, `--bp-md` 768, `--bp-lg` 1024, `--bp-xl` 1441, `--bp-2xl` 1536. Per-tier gutters/margins live as `--page-gutter-{mobile|tablet|desktop|wide}` and `--page-margin-{mobile|tablet|desktop|wide}`; the active values resolve through `--page-gutter` / `--page-margin` on `.page-grid`. Content caps: `--col-cap-text` 720, `--col-cap-content` 1280.
 
@@ -98,7 +98,7 @@ The DS aggregate (`@use 'styles/ds'`) forwards the full stack: theme primitives 
 
 - `.link` — anchor styling, declared in `_link.scss`. Modifiers: `.quiet` `.inline` `.standalone` `.xs` `.sm` `.lg`. Hover→`color-mix(text-link, black 20%)`, active→`color-mix(text-link, black 35%)`, disabled via `[aria-disabled="true"]`. Loaded via `@use 'styles/link'` (included in the `@use 'styles/ds'` aggregate).
 - Typography utilities (`_typography.scss`): `.t-display`, `.t-h1`, `.t-h2`, `.t-h3`, `.t-h4`, `.t-h5`, `.t-l`, `.t-l-bold`, `.t-m`, `.t-m-bold`, `.t-s`, `.t-s-bold`, `.t-xs`, `.t-xs-bold`, `.t-overline`, `.t-caption`, `.t-mono`, `.t-mono-block`, `.sr-only`
-- Layout (`_layout-utils.scss`): `.grid-2`, `.grid-3`, `.grid-4`. Breakpoints: at ≤1100px `.grid-4` drops to 3 columns; at ≤820px both `.grid-3` and `.grid-4` drop to 2 columns. Gap is `--s-4`.
+- Layout (`_layout-utils.scss`): `.grid-2`, `.grid-3`, `.grid-4`. Breakpoints: at ≤1100px `.grid-4` drops to 3 columns; at ≤820px both `.grid-3` and `.grid-4` drop to 2 columns. Gap is `--space-4`.
 - Page grid (`_page-grid.scss`): `.page-grid` + `.col-span-1` … `.col-span-12`. 4-tier responsive grid (4 / 8 / 12 / 12 columns); see Foundations → Grid above for the full spec.
 - Skeleton shimmer (`_skeleton-shimmer.scss`): drives the global `--skeleton-shimmer-x` keyframe used by `<ds-skeleton>` and table skeleton rows.
 - Dropdown overlay (`_dropdown-overlay.scss`): styles the `.ds-dropdown-panel` class used by select/dropdown/combobox/date-picker CDK portals — these panels live outside the host's encapsulated tree, so the styles must be global.
@@ -145,7 +145,7 @@ Tokens: `--ds-input-bg`, `--ds-input-border`, `--ds-input-border-hover`, `--ds-i
 #### `<ds-textarea>` — `TextareaComponent`
 Multi-line counterpart to `<ds-input>` — same wrapper/states, reuses the `--ds-input-*` token family. No prefix/suffix slots.
 Inputs: `value: model<string>`, `size: 'sm' | 'md' | 'lg' = 'md'`, `label`, `hint`, `placeholder`, `disabled`, `invalid`, `required`, `optional: boolean = false`, `name`, `rows: number = 3`
-Tokens: same `--ds-input-*` family as `<ds-input>` (textarea overrides `--ds-input-pad-y` to `--s-3` for vertical breathing room).
+Tokens: same `--ds-input-*` family as `<ds-input>` (textarea overrides `--ds-input-pad-y` to `--space-3` for vertical breathing room).
 New: `autosize: boolean = false` (grows with content; forces `resize='none'`), `minRows`/`maxRows: number | null = null`, `resize: 'none' | 'vertical' | 'horizontal' | 'both' = 'vertical'`.
 
 #### `<ds-number-stepper>` — `NumberStepperComponent`
@@ -261,12 +261,12 @@ Tokens (on `:host`): `--ds-sidenav-item-fg`, `--ds-sidenav-item-fg-hover`, `--ds
 #### `<ds-topbar>` — `TopBarComponent`
 No inputs.
 Content slots: `[title]`, `[breadcrumbs]`, `[search]`, `[actions]`. Sits at `--topbar-h` height.
-Tokens (on `:host`): `--ds-topbar-margin-b` (default `--s-4` = 16px) — bottom gap to the next content block. The topbar owns this gap globally; pages MUST NOT add their own `padding-top` to compensate.
+Tokens (on `:host`): `--ds-topbar-margin-b` (default `--space-4` = 16px) — bottom gap to the next content block. The topbar owns this gap globally; pages MUST NOT add their own `padding-top` to compensate.
 
 #### `<ds-page-header>` — `PageHeaderComponent`
 Inputs: `eyebrow: string = ''`, `title: required string`, `subtitle: string = ''`, `compact: boolean = false`, `divider: boolean = false`, `metaDivider: boolean = false`
 Content slots: `[breadcrumbs]`, `[title-badge]` (sits next to the title text), `[actions]` (right edge of title row), `[meta]` (under the title row), `[tabs]` (under the meta row)
-Tokens: `--ds-pagehdr-eyebrow-fg`, `--ds-pagehdr-title-fg`, `--ds-pagehdr-sub-fg`, `--ds-pagehdr-meta-fg`, `--ds-pagehdr-meta-icon-fg`, `--ds-pagehdr-divider`, `--ds-pagehdr-title-fs` (default `--fs-h3`; `compact` flips to `--fs-h4`). The page-header does NOT own its bottom gap — the parent page `:host` owns spacing via `display: flex; flex-direction: column; gap: var(--s-4)`.
+Tokens: `--ds-pagehdr-eyebrow-fg`, `--ds-pagehdr-title-fg`, `--ds-pagehdr-sub-fg`, `--ds-pagehdr-meta-fg`, `--ds-pagehdr-meta-icon-fg`, `--ds-pagehdr-divider`, `--ds-pagehdr-title-fs` (default `--font-size-h3`; `compact` flips to `--font-size-h4`). The page-header does NOT own its bottom gap — the parent page `:host` owns spacing via `display: flex; flex-direction: column; gap: var(--space-4)`.
 
 #### `<ds-page-footer>` — `PageFooterComponent`
 Input: `variant: 'default' | 'compact' | 'save' = 'default'`
@@ -280,7 +280,7 @@ Output: `(navigate): BreadcrumbItem` — emits when an item with `href` is click
 Container holds `<ds-tab label="…">` children.
 Tabs inputs: `selectedIndex: model<number> = 0`, `variant: 'line' | 'pills' = 'line'`
 Tab inputs: `label: required string`, `icon: IconName | null = null`, `count: number | null = null`, `disabled: boolean = false`. The tab's projected content renders in the active panel.
-Tokens: `--ds-tab-fg`, `--ds-tab-fg-hover`, `--ds-tab-fg-active`, `--ds-tab-indicator-color`, `--ds-tab-indicator-width`, `--ds-tab-pad-x`, `--ds-tab-pad-y`, `--ds-tabs-divider`, `--ds-tabs-pills-bg`, `--ds-tab-pill-bg-hover` (inactive hover, defaults to `var(--primary-subtle)`), `--ds-tab-pill-bg-active` (defaults to `var(--surface-default)` — elevated card), `--ds-tab-pill-bg-active-hover` (defaults to `var(--primary-subtle)`), `--ds-tab-pill-fg-active` (defaults to `var(--primary-strong)`), `--ds-tab-pill-radius` (defaults to `var(--r-md)` — same as buttons/inputs; override per-instance to `var(--r-pill)` for fully round pills).
+Tokens: `--ds-tab-fg`, `--ds-tab-fg-hover`, `--ds-tab-fg-active`, `--ds-tab-indicator-color`, `--ds-tab-indicator-width`, `--ds-tab-pad-x`, `--ds-tab-pad-y`, `--ds-tabs-divider`, `--ds-tabs-pills-bg`, `--ds-tab-pill-bg-hover` (inactive hover, defaults to `var(--primary-subtle)`), `--ds-tab-pill-bg-active` (defaults to `var(--surface-default)` — elevated card), `--ds-tab-pill-bg-active-hover` (defaults to `var(--primary-subtle)`), `--ds-tab-pill-fg-active` (defaults to `var(--primary-strong)`), `--ds-tab-pill-radius` (defaults to `var(--radius-md)` — same as buttons/inputs; override per-instance to `var(--radius-pill)` for fully round pills).
 
 #### `<ds-stepper>` — `StepperComponent`
 Inputs: `steps: readonly string[] = []`, `current: number = 0`. Horizontal step indicator with done/active/upcoming nodes.
@@ -301,7 +301,7 @@ Content: label text (when `variant="label"`).
 Inputs: `elevation: 'flat' | 'raised' | 'hover' | 'interactive' = 'flat'`, `padding: 'none' | 'sm' | 'md' | 'lg' | null = null` (when `null`, no `padding-*` class is applied and the consumer controls padding via own CSS or `--ds-card-pad`)
 Output: `(pressed): MouseEvent` — fires only when `elevation="interactive"`
 Tokens: `--ds-card-bg`, `--ds-card-border`, `--ds-card-radius`, `--ds-card-pad`, `--ds-card-shadow`, `--ds-card-shadow-hover`, `--ds-card-focus-shadow`, `--ds-card-hover-lift`
-Convention tokens (consumer-side `.title` projected into the card slot — declared at `:root`, not on the host): `--card-title-fs` (default `var(--fs-h4)` = 22px; MM brand steps down to `var(--fs-h5)` = 18px). Consumer markup: `<h3 class="title">…</h3>`; local `.title` class reads the token via `font:` shorthand together with `--fw-bold` / `--lh-snug` / `--font-heading`.
+Convention tokens (consumer-side `.title` projected into the card slot — declared at `:root`, not on the host): `--card-title-fs` (default `var(--font-size-h4)` = 22px; MM brand steps down to `var(--font-size-h5)` = 18px). Consumer markup: `<h3 class="title">…</h3>`; local `.title` class reads the token via `font:` shorthand together with `--font-weight-bold` / `--line-height-snug` / `--font-heading`.
 
 #### `<ds-accordion>` + `<ds-accordion-item>` — `AccordionComponent`, `AccordionItemComponent`
 Accordion is a thin wrapper that rounds + borders its children. Item inputs: `title: string = ''`, `expanded: model<boolean> = false`. Content slots on item: default (body), `[badge]` (rendered next to the title in the header).
@@ -357,7 +357,7 @@ Column shape: `{ key: string, label: string, sortable?: boolean, align?: 'left' 
 Cell templates: `<ng-template dsCellTemplate="<colKey>" let-row>…</ng-template>` — `row` is typed `unknown`, narrow via a helper method on the host.
 Content slots: `[empty]` (rendered when `data.length === 0`), `[bulk-actions]` (rendered in the bulk action bar when `selectable && some selected`)
 Loading modes: `'skeleton'` replaces rows with shimmer placeholders driven by the global `--skeleton-shimmer-x` keyframe; `'overlay'` keeps existing rows visible behind a translucent layer with a centred spinner.
-Tokens (host-scoped, override per-instance): `--ds-table-border: var(--border-default)`, `--ds-table-radius: var(--r-md)`, `--ds-table-header-fg: var(--text-secondary)`, `--ds-table-header-bg: var(--surface-secondary)`, `--ds-table-header-fs: var(--fs-xs)`.
+Tokens (host-scoped, override per-instance): `--ds-table-border: var(--border-default)`, `--ds-table-radius: var(--radius-md)`, `--ds-table-header-fg: var(--text-secondary)`, `--ds-table-header-bg: var(--surface-secondary)`, `--ds-table-header-fs: var(--font-size-xs)`.
 
 ---
 

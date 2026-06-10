@@ -6,12 +6,12 @@
   width: var(--switch-track-w);
   height: var(--switch-track-h);
   background: var(--border-strong);
-  border-radius: var(--r-pill);
+  border-radius: var(--radius-pill);
   position: relative;
   cursor: pointer;
   flex-shrink: 0;
   margin: 0;
-  transition: background var(--dur-fast) var(--ease-standard);
+  transition: background var(--duration-fast) var(--ease-standard);
 
   &::after {
     content: "";
@@ -21,9 +21,9 @@
     width: var(--switch-thumb-size);
     height: var(--switch-thumb-size);
     background: var(--surface-default);
-    border-radius: var(--r-pill);
+    border-radius: var(--radius-pill);
     box-shadow: var(--z100);
-    transition: transform var(--dur-base) var(--ease-standard);
+    transition: transform var(--duration-base) var(--ease-standard);
   }
 
   &:checked         { background: var(--primary); }

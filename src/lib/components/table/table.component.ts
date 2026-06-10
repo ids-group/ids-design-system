@@ -32,7 +32,7 @@ export class TableComponent<T extends { id: string }> {
   /** Opt-in outer border + radius. Off by default so tables flush inside a
    *  `<ds-card padding="none">` (workspaces, programs-list) don't double-border.
    *  When `true`, the scroll-wrap gets a `var(--border-default)` outline and
-   *  `var(--r-md)` radius — useful when the table stands alone in a padded card. */
+   *  `var(--radius-md)` radius — useful when the table stands alone in a padded card. */
   readonly bordered = input<boolean>(false);
   /** false  — no loading state.
    *  'skeleton' — first-load placeholder; rows are replaced with shimmer

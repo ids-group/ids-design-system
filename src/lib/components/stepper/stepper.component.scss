@@ -17,13 +17,13 @@
   .node {
     width: var(--stepper-node-size);
     height: var(--stepper-node-size);
-    border-radius: var(--r-pill);
+    border-radius: var(--radius-pill);
     display: grid;
     place-items: center;
-    border: var(--bw-default) solid var(--border-strong);
+    border: var(--border-width-default) solid var(--border-strong);
     background: var(--surface-default);
     color: var(--text-tertiary);
-    font: var(--fw-bold) var(--fs-xs)/var(--lh-flat) var(--font-sans);
+    font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
 
     &.done {
       background: var(--primary-subtle);

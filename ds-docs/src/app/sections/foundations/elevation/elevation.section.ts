@@ -195,25 +195,25 @@ const TRUNC: TruncRow[] = [
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--s-1); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); }
 
     /* ---------- Shadow scale grid ---------- */
     .shadow-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: var(--s-6);
-      margin-top: var(--s-4);
-      padding: var(--s-8) var(--s-6);
+      gap: var(--space-6);
+      margin-top: var(--space-4);
+      padding: var(--space-8) var(--space-6);
       background: var(--surface-canvas);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .shadow-cell {
       display: grid;
-      gap: var(--s-2);
+      gap: var(--space-2);
       justify-items: start;
     }
     .shadow-card {
@@ -221,7 +221,7 @@ const TRUNC: TruncRow[] = [
       aspect-ratio: 1 / 1;
       max-width: 160px;
       background: var(--surface-default);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .token-name { font-size: 12px; color: var(--text-primary); }
     .token-desc { color: var(--text-secondary); line-height: 1.5; }
@@ -231,21 +231,21 @@ const TRUNC: TruncRow[] = [
     .applied-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: var(--s-6);
-      margin-top: var(--s-4);
+      gap: var(--space-6);
+      margin-top: var(--space-4);
     }
     .applied-cell {
       display: grid;
-      gap: var(--s-2);
+      gap: var(--space-2);
     }
     .applied-stage {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: var(--s-8) var(--s-4);
+      padding: var(--space-8) var(--space-4);
       min-height: 200px;
       background: var(--surface-canvas);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .applied-label { color: var(--text-primary); }
 
@@ -253,17 +253,17 @@ const TRUNC: TruncRow[] = [
     .demo-card {
       width: 100%;
       max-width: 220px;
-      padding: var(--s-4);
+      padding: var(--space-4);
       background: var(--surface-default);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .demo-card__title {
-      font: var(--fw-bold) var(--fs-m)/var(--lh-snug) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-m)/var(--line-height-snug) var(--font-sans);
       color: var(--text-primary);
     }
     .demo-card__meta {
-      margin-top: var(--s-1);
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      margin-top: var(--space-1);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
 
@@ -271,47 +271,47 @@ const TRUNC: TruncRow[] = [
     .demo-popover {
       width: 100%;
       max-width: 200px;
-      padding: var(--s-1);
+      padding: var(--space-1);
       background: var(--surface-overlay);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .demo-menu-item {
-      padding: var(--s-2) var(--s-3);
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      padding: var(--space-2) var(--space-3);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-primary);
-      border-radius: var(--r-md);
+      border-radius: var(--radius-md);
     }
     .demo-menu-item--error { color: var(--error-text); }
     .demo-menu-sep {
-      height: var(--bw-default);
-      margin: var(--s-1) var(--s-2);
+      height: var(--border-width-default);
+      margin: var(--space-1) var(--space-2);
       background: var(--border-divider);
     }
 
     /* ---------- Demo · toast ---------- */
     .demo-toast {
       display: flex;
-      gap: var(--s-3);
+      gap: var(--space-3);
       width: 100%;
       max-width: 280px;
-      padding: var(--s-3) var(--s-4);
+      padding: var(--space-3) var(--space-4);
       background: var(--surface-default);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
       overflow: hidden;
     }
     .demo-toast__bar {
       width: var(--toast-bar-w, 3px);
       align-self: stretch;
       background: var(--success);
-      border-radius: var(--r-sm);
+      border-radius: var(--radius-sm);
     }
     .demo-toast__title {
-      font: var(--fw-bold) var(--fs-s)/var(--lh-snug) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-snug) var(--font-sans);
       color: var(--text-primary);
     }
     .demo-toast__msg {
-      margin-top: var(--s-0-5);
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      margin-top: var(--space-0-5);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
 
@@ -321,40 +321,40 @@ const TRUNC: TruncRow[] = [
       align-items: center;
       justify-content: center;
       width: 100%;
-      padding: var(--s-4);
+      padding: var(--space-4);
       background: var(--surface-scrim);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .demo-modal {
       width: 100%;
       max-width: 240px;
-      padding: var(--s-4);
+      padding: var(--space-4);
       background: var(--surface-overlay);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .demo-modal__title {
-      font: var(--fw-bold) var(--fs-m)/var(--lh-snug) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-m)/var(--line-height-snug) var(--font-sans);
       color: var(--text-primary);
     }
     .demo-modal__body {
-      margin-top: var(--s-2);
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      margin-top: var(--space-2);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
     .demo-modal__actions {
       display: flex;
-      gap: var(--s-2);
+      gap: var(--space-2);
       justify-content: flex-end;
-      margin-top: var(--s-4);
+      margin-top: var(--space-4);
     }
     .demo-btn {
       height: 28px;
-      padding: 0 var(--s-3);
+      padding: 0 var(--space-3);
       background: var(--primary);
       color: var(--neutral-0);
       border: 0;
-      border-radius: var(--r-md);
-      font: var(--fw-bold) var(--fs-xs)/1 var(--font-sans);
+      border-radius: var(--radius-md);
+      font: var(--font-weight-bold) var(--font-size-xs)/1 var(--font-sans);
       cursor: pointer;
     }
     .demo-btn--ghost {
@@ -364,35 +364,35 @@ const TRUNC: TruncRow[] = [
 
     /* ---------- Truncation block ---------- */
     .trunc {
-      margin-top: var(--s-3);
-      padding: var(--s-4);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-secondary);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .trunc__title {
-      font: var(--fw-bold) var(--fs-2xs)/var(--lh-base) var(--font-sans);
-      letter-spacing: var(--ls-wider);
+      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--text-tertiary);
-      margin-bottom: var(--s-3);
+      margin-bottom: var(--space-3);
     }
     .trunc__list {
       list-style: none; margin: 0; padding: 0;
       display: flex; flex-direction: column;
-      gap: var(--s-2);
+      gap: var(--space-2);
     }
     .trunc__list li {
       display: grid;
       grid-template-columns: 220px 1fr;
-      gap: var(--s-4);
+      gap: var(--space-4);
       align-items: start;
     }
     .trunc__field {
-      font: var(--fw-bold) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-primary);
     }
     .trunc__behaviour {
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
   `],

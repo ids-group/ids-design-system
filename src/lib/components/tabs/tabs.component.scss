@@ -12,38 +12,38 @@
   --ds-tab-fg-hover: var(--text-primary);
   --ds-tab-fg-active: var(--primary);
   --ds-tab-indicator-color: var(--primary);
-  --ds-tab-indicator-width: var(--bw-strong);
-  --ds-tab-pad-x: var(--s-4);
-  --ds-tab-pad-y: var(--s-3);
+  --ds-tab-indicator-width: var(--border-width-strong);
+  --ds-tab-pad-x: var(--space-4);
+  --ds-tab-pad-y: var(--space-3);
   --ds-tabs-divider: var(--border-divider);
   --ds-tabs-pills-bg: var(--surface-secondary);
   --ds-tab-pill-bg-hover: var(--primary-subtle);
   --ds-tab-pill-bg-active: var(--surface-default);
   --ds-tab-pill-bg-active-hover: var(--primary-subtle);
   --ds-tab-pill-fg-active: var(--primary-strong);
-  --ds-tab-pill-radius: var(--r-md);
+  --ds-tab-pill-radius: var(--radius-md);
 }
 
 .tabs {
   display: flex;
-  gap: var(--s-2);
-  border-bottom: var(--bw-default) solid var(--ds-tabs-divider);
+  gap: var(--space-2);
+  border-bottom: var(--border-width-default) solid var(--ds-tabs-divider);
 
   .tab {
     display: inline-flex;
     align-items: center;
-    gap: var(--s-2);
+    gap: var(--space-2);
     padding: var(--ds-tab-pad-y) var(--ds-tab-pad-x);
     border: 0;
     background: transparent;
-    font: var(--fw-semibold) var(--fs-s) / var(--lh-flat) var(--font-sans);
+    font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     color: var(--ds-tab-fg);
     cursor: pointer;
     border-bottom: var(--ds-tab-indicator-width) solid transparent;
-    margin-bottom: calc(-1 * var(--bw-default));
+    margin-bottom: calc(-1 * var(--border-width-default));
     transition:
-      color var(--dur-fast) var(--ease-standard),
-      border-color var(--dur-fast) var(--ease-standard);
+      color var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard);
 
     &:hover {
       color: var(--ds-tab-fg-hover);
@@ -55,13 +55,13 @@
     }
 
     .badge {
-      margin-left: var(--s-1);
+      margin-left: var(--space-1);
     }
 
     &:focus-visible {
       outline: none;
       box-shadow: var(--focus-ring);
-      border-radius: var(--r-sm);
+      border-radius: var(--radius-sm);
     }
 
     &[disabled],
@@ -82,14 +82,14 @@
   /* Pills variant — segmented filter row, no underline */
   &.pills {
     border-bottom: 0;
-    gap: var(--s-1);
-    padding: var(--s-1);
+    gap: var(--space-1);
+    padding: var(--space-1);
     background: var(--ds-tabs-pills-bg);
     border-radius: var(--ds-tab-pill-radius);
     display: inline-flex;
 
     .tab {
-      padding: var(--s-2) var(--s-3);
+      padding: var(--space-2) var(--space-3);
       border-bottom: 0;
       margin-bottom: 0;
       border-radius: var(--ds-tab-pill-radius);
@@ -117,7 +117,7 @@
 }
 
 .panel {
-  padding-top: var(--s-3);
+  padding-top: var(--space-3);
 
   /* When tabs are used purely as a filter selector (content rendered outside
      the panel), the empty panel would still add its padding-top as a phantom

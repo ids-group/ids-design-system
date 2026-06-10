@@ -6,8 +6,8 @@
   display: flex;
   align-items: stretch;
   background: var(--surface-default);
-  border: var(--bw-default) solid var(--border-default);
-  border-radius: var(--r-md);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
   overflow: hidden;
 
   &:focus-within {
@@ -52,15 +52,15 @@
   border: 0;
   background: transparent;
   color: var(--text-primary);
-  font-size: var(--fs-l);
-  font-weight: var(--fw-bold);
+  font-size: var(--font-size-l);
+  font-weight: var(--font-weight-bold);
   line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  transition: background var(--dur-fast) var(--ease-standard);
+  transition: background var(--duration-fast) var(--ease-standard);
 
   &:hover:not(:disabled) {
     background: var(--surface-secondary);
@@ -76,11 +76,11 @@
   }
 
   &.minus {
-    border-right: var(--bw-default) solid var(--border-default);
+    border-right: var(--border-width-default) solid var(--border-default);
   }
 
   &.plus {
-    border-left: var(--bw-default) solid var(--border-default);
+    border-left: var(--border-width-default) solid var(--border-default);
   }
 }
 
@@ -90,7 +90,7 @@
   border: 0;
   background: transparent;
   text-align: center;
-  font: var(--fw-bold) var(--fs-s) / var(--lh-flat) var(--font-sans);
+  font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
   color: var(--text-primary);
   outline: 0;
   padding: 0;

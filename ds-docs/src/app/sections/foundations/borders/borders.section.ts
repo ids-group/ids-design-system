@@ -13,8 +13,8 @@ interface RoleRow {
 }
 
 const WIDTHS: readonly WidthRow[] = [
-  { token: '--bw-default', value: '1 px', use: 'Every border, divider, field outline' },
-  { token: '--bw-strong',  value: '2 px', use: 'Radio dot, slider thumb, tabs underline, focus ring inner band, dropzone dash' },
+  { token: '--border-width-default', value: '1 px', use: 'Every border, divider, field outline' },
+  { token: '--border-width-strong',  value: '2 px', use: 'Radio dot, slider thumb, tabs underline, focus ring inner band, dropzone dash' },
 ];
 
 const ROLES: readonly RoleRow[] = [
@@ -106,43 +106,43 @@ const ROLES: readonly RoleRow[] = [
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
 
     .widths {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: var(--s-4);
-      margin-top: var(--s-3);
+      gap: var(--space-4);
+      margin-top: var(--space-3);
     }
-    .width-cell { display: flex; flex-direction: column; gap: var(--s-1); }
+    .width-cell { display: flex; flex-direction: column; gap: var(--space-1); }
     .width-cell__stage {
       height: 60px;
-      border-radius: var(--r-md);
+      border-radius: var(--radius-md);
       background: var(--surface-default);
       border-style: solid;
       border-color: var(--text-primary);
     }
-    .width-cell__val { margin-top: var(--s-2); }
+    .width-cell__val { margin-top: var(--space-2); }
     .width-cell__tok { font-size: 11px; color: var(--text-secondary); }
-    .width-cell__use { color: var(--text-secondary); margin-top: var(--s-1); line-height: 1.5; }
+    .width-cell__use { color: var(--text-secondary); margin-top: var(--space-1); line-height: 1.5; }
 
     .roles {
       width: 100%;
-      margin-top: var(--s-3);
+      margin-top: var(--space-3);
       border-collapse: collapse;
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
     }
     .roles th, .roles td {
       text-align: left;
-      padding: var(--s-3) var(--s-4);
-      border-bottom: var(--bw-default) solid var(--border-divider);
+      padding: var(--space-3) var(--space-4);
+      border-bottom: var(--border-width-default) solid var(--border-divider);
     }
     .roles th {
-      font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
-      letter-spacing: var(--ls-wider);
+      font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--text-tertiary);
     }
@@ -151,30 +151,30 @@ const ROLES: readonly RoleRow[] = [
       width: 80px;
       height: 24px;
       background: var(--surface-default);
-      border: var(--bw-default) solid;
-      border-radius: var(--r-sm);
+      border: var(--border-width-default) solid;
+      border-radius: var(--radius-sm);
     }
 
     .divider-demo {
-      margin-top: var(--s-3);
-      padding: var(--s-4);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-lg);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
     }
-    .demo-label { color: var(--text-secondary); margin: var(--s-3) 0 var(--s-2); }
+    .demo-label { color: var(--text-secondary); margin: var(--space-3) 0 var(--space-2); }
     .demo-label:first-child { margin-top: 0; }
     .divider-vertical-row {
       display: flex;
       align-items: center;
-      margin-top: var(--s-2);
+      margin-top: var(--space-2);
     }
 
     code.t-mono {
-      font: var(--fw-regular) var(--fs-mono)/1 var(--font-mono);
+      font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
       background: var(--surface-secondary);
-      padding: 1px var(--s-1);
-      border-radius: var(--r-sm);
+      padding: 1px var(--space-1);
+      border-radius: var(--radius-sm);
       color: var(--text-primary);
     }
   `],

@@ -5,10 +5,10 @@
 /* Popover surface — mirrored from popover.component.scss. Selector: .popover. */
 .popover {
   background: var(--surface-overlay);
-  border: var(--bw-default) solid var(--border-default);
-  border-radius: var(--r-lg);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-popover);
-  padding: var(--s-3);
+  padding: var(--space-3);
   z-index: var(--layer-popover);
   max-width: var(--popover-maxw);
 }

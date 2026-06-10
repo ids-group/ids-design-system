@@ -11,10 +11,10 @@
     // child of the pane and shrinks to its own option content width.
     width: 100%;
     background: var(--surface-overlay);
-    border: var(--bw-default) solid var(--border-default);
-    border-radius: var(--r-md);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--radius-md);
     box-shadow: var(--shadow-popover);
-    padding: var(--s-1);
+    padding: var(--space-1);
     max-height: 320px;
     overflow-y: auto;
     z-index: var(--layer-popover);
@@ -38,15 +38,15 @@
 
   .optgroup-label {
     display: block;
-    padding: var(--s-2) var(--s-3) var(--s-1);
-    font: var(--fw-semibold) var(--fs-xs)/var(--lh-flat) var(--font-sans);
+    padding: var(--space-2) var(--space-3) var(--space-1);
+    font: var(--font-weight-semibold) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
     color: var(--text-tertiary);
     text-transform: uppercase;
-    letter-spacing: var(--ls-wide);
+    letter-spacing: var(--letter-spacing-wide);
 
     // First group sits flush against the panel padding — no extra top space.
     &.is-first {
-      padding-top: var(--s-1);
+      padding-top: var(--space-1);
     }
   }
 
@@ -62,15 +62,15 @@
   .option {
     display: flex;
     align-items: center;
-    gap: var(--s-2);
+    gap: var(--space-2);
     width: 100%;
-    padding: var(--s-2) var(--s-2-5);
+    padding: var(--space-2) var(--space-2-5);
     border: 0;
     background: transparent;
-    font: var(--fw-medium) var(--fs-s)/var(--lh-flat) var(--font-sans);
+    font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
     color: var(--text-primary);
     cursor: pointer;
-    border-radius: var(--r-sm);
+    border-radius: var(--radius-sm);
     text-align: left;
 
     .option-icon {

@@ -2,7 +2,7 @@
    CARD
    Ported verbatim from vendor/claude-design-ds/components.css (lines 603-614).
    Padding modifiers (padding-none/-sm/-md/-lg) are our addition; the
-   base .card already carries padding var(--s-6) which equals .padding-md.
+   base .card already carries padding var(--space-6) which equals .padding-md.
    ============================================================ */
 :host {
   display: block;
@@ -12,11 +12,11 @@
   display: block;
 
   // Public component variables — override via higher-specificity selector
-  // (e.g. `ds-card.kpi { --ds-card-pad: var(--s-3); }` or in theme files:
+  // (e.g. `ds-card.kpi { --ds-card-pad: var(--space-3); }` or in theme files:
   // `[data-brand="..."] ds-card { --ds-card-pad: ...; }`).
   --ds-card-bg:           var(--surface-default);
   --ds-card-border:       var(--border-divider);
-  --ds-card-radius:       var(--r-lg);
+  --ds-card-radius:       var(--radius-lg);
   --ds-card-pad:          var(--ds-container-pad);
   --ds-card-shadow:       none;
   --ds-card-shadow-hover: var(--z100);
@@ -26,11 +26,11 @@
 
 .card {
   background: var(--ds-card-bg);
-  border: var(--bw-default) solid var(--ds-card-border);
+  border: var(--border-width-default) solid var(--ds-card-border);
   border-radius: var(--ds-card-radius);
   padding: var(--ds-card-pad);
   box-shadow: var(--ds-card-shadow);
-  transition: box-shadow var(--dur-base) var(--ease-standard), transform var(--dur-base) var(--ease-standard);
+  transition: box-shadow var(--duration-base) var(--ease-standard), transform var(--duration-base) var(--ease-standard);
 
   &.flat { box-shadow: none; }
   &.raised { box-shadow: var(--ds-card-shadow-hover); border-color: transparent; }
@@ -43,7 +43,7 @@
 
   // Modifiers re-set the token on `.card` (higher specificity than `:host`).
   &.padding-none { --ds-card-pad: 0; }
-  &.padding-sm   { --ds-card-pad: var(--s-4); }
-  &.padding-md   { --ds-card-pad: var(--s-6); }
-  &.padding-lg   { --ds-card-pad: var(--s-8); }
+  &.padding-sm   { --ds-card-pad: var(--space-4); }
+  &.padding-md   { --ds-card-pad: var(--space-6); }
+  &.padding-lg   { --ds-card-pad: var(--space-8); }
 }

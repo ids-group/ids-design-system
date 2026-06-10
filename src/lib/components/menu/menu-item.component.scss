@@ -3,17 +3,17 @@
 .menu-item {
   display: flex;
   align-items: center;
-  gap: var(--s-2-5);
+  gap: var(--space-2-5);
   width: 100%;
-  padding: var(--s-2) var(--s-3);
+  padding: var(--space-2) var(--space-3);
   background: transparent;
   border: 0;
-  border-radius: var(--r-md);
-  font: var(--fw-medium) var(--fs-s)/var(--lh-base) var(--font-sans);
+  border-radius: var(--radius-md);
+  font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-base) var(--font-sans);
   color: var(--ds-menu-item-fg, var(--text-primary));
   cursor: pointer;
   text-align: left;
-  transition: background var(--dur-fast) var(--ease-standard);
+  transition: background var(--duration-fast) var(--ease-standard);
 }
 
 .menu-item:hover { background: var(--surface-secondary); }

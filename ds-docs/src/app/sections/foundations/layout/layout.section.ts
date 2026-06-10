@@ -30,10 +30,10 @@ const BREAKPOINTS: readonly Breakpoint[] = [
 ];
 
 const TIERS: readonly GridTier[] = [
-  { name: 'Desktop wide', range: '>= 1441 px',    cols: 12, gutter: '--s-6', margin: '--s-10', cap: '1280 px' },
-  { name: 'Desktop',      range: '1025-1440 px',  cols: 12, gutter: '--s-5', margin: '--s-8',  cap: 'fluid' },
-  { name: 'Tablet',       range: '641-1024 px',   cols: 8,  gutter: '--s-4', margin: '--s-6',  cap: 'fluid' },
-  { name: 'Mobile',       range: '<= 640 px',     cols: 4,  gutter: '--s-3', margin: '--s-4',  cap: 'fluid' },
+  { name: 'Desktop wide', range: '>= 1441 px',    cols: 12, gutter: '--space-6', margin: '--space-10', cap: '1280 px' },
+  { name: 'Desktop',      range: '1025-1440 px',  cols: 12, gutter: '--space-5', margin: '--space-8',  cap: 'fluid' },
+  { name: 'Tablet',       range: '641-1024 px',   cols: 8,  gutter: '--space-4', margin: '--space-6',  cap: 'fluid' },
+  { name: 'Mobile',       range: '<= 640 px',     cols: 4,  gutter: '--space-3', margin: '--space-4',  cap: 'fluid' },
 ];
 
 const COL_CAPS: readonly ColumnCap[] = [
@@ -146,30 +146,30 @@ const COL_CAPS: readonly ColumnCap[] = [
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
 
     /* ---------- Breakpoints list ---------- */
-    .bp-list { display: grid; gap: var(--s-2); margin-top: var(--s-3); }
+    .bp-list { display: grid; gap: var(--space-2); margin-top: var(--space-3); }
     .bp-row {
       display: grid;
       grid-template-columns: 120px 80px 1fr 1fr;
-      gap: var(--s-4);
+      gap: var(--space-4);
       align-items: center;
-      padding: var(--s-3) var(--s-4);
+      padding: var(--space-3) var(--space-4);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-sm);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-sm);
     }
     .bp-row__tok { color: var(--text-secondary); font-size: 12px; }
     .bp-row__desc { color: var(--text-secondary); }
     .bp-row__bar {
       height: 8px;
       background: var(--surface-secondary);
-      border-radius: var(--r-pill);
+      border-radius: var(--radius-pill);
       overflow: hidden;
     }
     .bp-row__fill { height: 100%; background: var(--primary); }
@@ -178,18 +178,18 @@ const COL_CAPS: readonly ColumnCap[] = [
     .grid-tiers {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: var(--s-4);
-      margin-top: var(--s-3);
+      gap: var(--space-4);
+      margin-top: var(--space-3);
     }
     .grid-tier {
       display: grid;
-      gap: var(--s-3);
-      padding: var(--s-4);
+      gap: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-md);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-md);
     }
-    .grid-tier__head { display: grid; gap: var(--s-0-5); }
+    .grid-tier__head { display: grid; gap: var(--space-0-5); }
     .grid-tier__range { color: var(--text-tertiary); }
     .grid-tier__viz {
       display: grid;
@@ -199,37 +199,37 @@ const COL_CAPS: readonly ColumnCap[] = [
     }
     .grid-tier__viz span {
       background: color-mix(in srgb, var(--primary) 16%, transparent);
-      border-radius: var(--r-sm);
+      border-radius: var(--radius-sm);
     }
     .grid-tier__meta {
       display: grid;
       grid-template-columns: auto 1fr;
-      gap: var(--s-1) var(--s-3);
+      gap: var(--space-1) var(--space-3);
       margin: 0;
     }
     .grid-tier__meta dt {
-      font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
       color: var(--text-tertiary);
       text-transform: uppercase;
-      letter-spacing: var(--ls-wider);
+      letter-spacing: var(--letter-spacing-wider);
     }
     .grid-tier__meta dd {
       margin: 0;
       color: var(--text-primary);
-      font-size: var(--fs-s);
+      font-size: var(--font-size-s);
     }
 
     /* ---------- Content caps ---------- */
-    .cap-list { display: grid; gap: var(--s-2); margin-top: var(--s-3); }
+    .cap-list { display: grid; gap: var(--space-2); margin-top: var(--space-3); }
     .cap-row {
       display: grid;
       grid-template-columns: 200px 80px 1fr;
-      gap: var(--s-4);
+      gap: var(--space-4);
       align-items: center;
-      padding: var(--s-3) var(--s-4);
+      padding: var(--space-3) var(--space-4);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-sm);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-sm);
     }
     .cap-row__tok { color: var(--text-secondary); font-size: 12px; }
     .cap-row__use { color: var(--text-secondary); }
@@ -237,47 +237,47 @@ const COL_CAPS: readonly ColumnCap[] = [
     /* ---------- Rules list ---------- */
     .rules-list {
       list-style: disc;
-      padding-left: var(--s-5);
+      padding-left: var(--space-5);
       line-height: 1.7;
       color: var(--text-secondary);
-      margin-top: var(--s-3);
+      margin-top: var(--space-3);
       max-width: var(--col-cap-text);
     }
-    .rules-list li + li { margin-top: var(--s-2); }
+    .rules-list li + li { margin-top: var(--space-2); }
     .rules-list strong { color: var(--text-primary); }
 
     /* ---------- Truncation block ---------- */
     .trunc {
-      margin-top: var(--s-3);
-      padding: var(--s-4);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-secondary);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .trunc__title {
-      display: inline-flex; align-items: center; gap: var(--s-2);
-      font: var(--fw-bold) var(--fs-2xs)/var(--lh-base) var(--font-sans);
-      letter-spacing: var(--ls-wider);
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--text-tertiary);
-      margin-bottom: var(--s-3);
+      margin-bottom: var(--space-3);
     }
     .trunc__list {
       list-style: none; margin: 0; padding: 0;
       display: flex; flex-direction: column;
-      gap: var(--s-2);
+      gap: var(--space-2);
     }
     .trunc__list li {
       display: grid;
       grid-template-columns: 200px 1fr;
-      gap: var(--s-4);
+      gap: var(--space-4);
       align-items: start;
     }
     .trunc__field {
-      font: var(--fw-bold) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-primary);
     }
     .trunc__behaviour {
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
 

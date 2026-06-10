@@ -76,27 +76,27 @@ const LITERALS: readonly AlphaRef[] = [
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
 
     .stops, .literals {
       width: 100%;
-      margin-top: var(--s-3);
+      margin-top: var(--space-3);
       border-collapse: collapse;
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
     }
     .stops th, .stops td,
     .literals th, .literals td {
       text-align: left;
-      padding: var(--s-3) var(--s-4);
-      border-bottom: var(--bw-default) solid var(--border-divider);
+      padding: var(--space-3) var(--space-4);
+      border-bottom: var(--border-width-default) solid var(--border-divider);
     }
     .stops th, .literals th {
-      font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
-      letter-spacing: var(--ls-wider);
+      font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--text-tertiary);
     }
@@ -105,13 +105,13 @@ const LITERALS: readonly AlphaRef[] = [
       width: 100px;
       height: 24px;
       background: var(--primary);
-      border-radius: var(--r-sm);
+      border-radius: var(--radius-sm);
     }
     code.t-mono {
-      font: var(--fw-regular) var(--fs-mono)/1 var(--font-mono);
+      font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
       background: var(--surface-secondary);
-      padding: 1px var(--s-1);
-      border-radius: var(--r-sm);
+      padding: 1px var(--space-1);
+      border-radius: var(--radius-sm);
       color: var(--text-primary);
     }
   `],

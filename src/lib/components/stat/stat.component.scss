@@ -9,18 +9,18 @@
 :host(.danger) .value { color: var(--error-text); }
 
 :host(.size-sm) .stat {
-  .label { font-size: var(--fs-2xs); letter-spacing: var(--ls-wide); }
-  .value { font-size: var(--fs-h4); }
+  .label { font-size: var(--font-size-2xs); letter-spacing: var(--letter-spacing-wide); }
+  .value { font-size: var(--font-size-h4); }
 }
 :host(.size-lg) .stat {
-  .label { font-size: var(--fs-s); }
-  .value { font-size: var(--fs-h1); }
+  .label { font-size: var(--font-size-s); }
+  .value { font-size: var(--font-size-h1); }
 }
 
 .stat {
   --ds-stat-bg:           var(--surface-default);
   --ds-stat-border:       var(--border-divider);
-  --ds-stat-radius:       var(--r-lg);
+  --ds-stat-radius:       var(--radius-lg);
   --ds-stat-pad:          var(--ds-container-pad);
   --ds-stat-label-color:  var(--text-tertiary);
   --ds-stat-value-color:  var(--text-primary);
@@ -28,21 +28,21 @@
   --ds-stat-down-color:   var(--error-text);
 
   background: var(--ds-stat-bg);
-  border: var(--bw-default) solid var(--ds-stat-border);
+  border: var(--border-width-default) solid var(--ds-stat-border);
   border-radius: var(--ds-stat-radius);
   padding: var(--ds-stat-pad);
 
   .label {
-    font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
-    letter-spacing: var(--ls-wider);
+    font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+    letter-spacing: var(--letter-spacing-wider);
     text-transform: uppercase;
     color: var(--ds-stat-label-color);
-    margin: 0 0 var(--s-2);
+    margin: 0 0 var(--space-2);
   }
 
   .value {
-    font: var(--fw-extrabold) var(--fs-h2)/var(--lh-flat) var(--font-sans);
-    letter-spacing: var(--ls-snug);
+    font: var(--font-weight-extrabold) var(--font-size-h2)/var(--line-height-flat) var(--font-sans);
+    letter-spacing: var(--letter-spacing-snug);
     color: var(--ds-stat-value-color);
     margin: 0;
     white-space: nowrap;
@@ -51,9 +51,9 @@
   .delta {
     display: inline-flex;
     align-items: center;
-    gap: var(--s-1);
-    font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
-    margin-top: var(--s-2);
+    gap: var(--space-1);
+    font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+    margin-top: var(--space-2);
 
     &.up        { color: var(--ds-stat-up-color); }
     &.down      { color: var(--ds-stat-down-color); }
@@ -62,8 +62,8 @@
   }
 
   .caption {
-    font: var(--fw-regular) var(--fs-xs)/var(--lh-base) var(--font-sans);
+    font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
     color: var(--text-tertiary);
-    margin-top: var(--s-2);
+    margin-top: var(--space-2);
   }
 }

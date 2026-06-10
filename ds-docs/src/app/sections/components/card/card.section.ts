@@ -106,26 +106,26 @@ import { CardComponent, type CardElevation, type CardPadding } from 'ds';
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--s-1); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); }
     .muted { color: var(--text-tertiary); }
 
     /* ---------- Elevations × paddings matrix ---------- */
     .matrix {
       display: grid;
       grid-template-columns: 120px repeat(3, 1fr);
-      gap: var(--s-4);
+      gap: var(--space-4);
       align-items: stretch;
-      margin-top: var(--s-3);
+      margin-top: var(--space-3);
     }
-    .matrix > .t-overline { align-self: end; padding-bottom: var(--s-1); }
+    .matrix > .t-overline { align-self: end; padding-bottom: var(--space-1); }
     .matrix__row-label { color: var(--text-tertiary); align-self: center; }
     .matrix__cell-eyebrow { color: var(--text-tertiary); }
-    .matrix__cell-title { margin: var(--s-2) 0 var(--s-1); }
-    .matrix__cell-body { color: var(--text-secondary); margin: 0 0 var(--s-3); }
+    .matrix__cell-title { margin: var(--space-2) 0 var(--space-1); }
+    .matrix__cell-body { color: var(--text-secondary); margin: 0 0 var(--space-3); }
     .matrix__cell-link { color: var(--text-link); text-decoration: underline; text-underline-offset: 3px; }
     .link { color: var(--text-link); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 
@@ -133,59 +133,59 @@ import { CardComponent, type CardElevation, type CardPadding } from 'ds';
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--s-4);
-      margin-top: var(--s-3);
+      gap: var(--space-4);
+      margin-top: var(--space-3);
     }
     .card-head {
       display: flex; align-items: baseline; justify-content: space-between;
-      gap: var(--s-3);
-      padding-bottom: var(--s-3);
-      border-bottom: var(--bw-default) solid var(--border-divider);
+      gap: var(--space-3);
+      padding-bottom: var(--space-3);
+      border-bottom: var(--border-width-default) solid var(--border-divider);
     }
     .card-head__meta { color: var(--text-tertiary); font-family: var(--font-mono); }
-    .card-body { padding: var(--s-3) 0; }
-    .card-body__title { margin: 0 0 var(--s-1); }
+    .card-body { padding: var(--space-3) 0; }
+    .card-body__title { margin: 0 0 var(--space-1); }
     .card-body__text { color: var(--text-secondary); margin: 0; }
     .card-foot {
       display: flex; align-items: center; justify-content: space-between;
-      gap: var(--s-3);
-      padding-top: var(--s-3);
-      border-top: var(--bw-default) solid var(--border-divider);
+      gap: var(--space-3);
+      padding-top: var(--space-3);
+      border-top: var(--border-width-default) solid var(--border-divider);
     }
     .card-foot a { color: var(--text-link); text-decoration: underline; text-underline-offset: 3px; }
 
     /* ---------- Truncation block ---------- */
     .trunc {
-      margin-top: var(--s-3);
-      padding: var(--s-4);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-secondary);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .trunc__title {
-      display: inline-flex; align-items: center; gap: var(--s-2);
-      font: var(--fw-bold) var(--fs-2xs)/var(--lh-base) var(--font-sans);
-      letter-spacing: var(--ls-wider);
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--text-tertiary);
-      margin-bottom: var(--s-3);
+      margin-bottom: var(--space-3);
     }
     .trunc__list {
       list-style: none; margin: 0; padding: 0;
       display: flex; flex-direction: column;
-      gap: var(--s-2);
+      gap: var(--space-2);
     }
     .trunc__list li {
       display: grid;
       grid-template-columns: 200px 1fr;
-      gap: var(--s-4);
+      gap: var(--space-4);
       align-items: start;
     }
     .trunc__field {
-      font: var(--fw-bold) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-primary);
     }
     .trunc__behaviour {
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
   `],

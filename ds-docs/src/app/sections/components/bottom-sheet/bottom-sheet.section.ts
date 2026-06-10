@@ -47,43 +47,43 @@ import { BottomSheetComponent, ButtonComponent } from 'ds';
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
 
     .demo {
-      margin-top: var(--s-3);
-      padding: var(--s-5);
+      margin-top: var(--space-3);
+      padding: var(--space-5);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-lg);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
     }
     .sheet-body { color: var(--text-secondary); margin: 0; }
 
     .rules {
-      margin-top: var(--s-3);
-      padding-left: var(--s-5);
+      margin-top: var(--space-3);
+      padding-left: var(--space-5);
       color: var(--text-secondary);
       display: grid;
-      gap: var(--s-2);
+      gap: var(--space-2);
       max-width: var(--col-cap-text);
     }
     code.t-mono {
-      font: var(--fw-regular) var(--fs-mono)/1 var(--font-mono);
+      font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
       background: var(--surface-secondary);
-      padding: 1px var(--s-1);
-      border-radius: var(--r-sm);
+      padding: 1px var(--space-1);
+      border-radius: var(--radius-sm);
       color: var(--text-primary);
     }
     kbd {
       display: inline-block;
       padding: 1px 6px;
-      font: var(--fw-medium) 11px/1 var(--font-mono);
+      font: var(--font-weight-medium) 11px/1 var(--font-mono);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-default);
-      border-radius: var(--r-sm);
+      border: var(--border-width-default) solid var(--border-default);
+      border-radius: var(--radius-sm);
       color: var(--text-secondary);
     }
   `],

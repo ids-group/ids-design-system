@@ -1,25 +1,25 @@
 // Type utility classes — ported from CLAUDE_DESIGN_DS/tokens.css §Type utilities.
 // These are GLOBAL by design — consumers apply them via class.
 
-.t-display    { font: var(--fw-extrabold) var(--fs-display)/var(--lh-tight) var(--font-display); letter-spacing: var(--ls-tight); }
-.t-h1         { font: var(--fw-extrabold) var(--fs-h1)/var(--lh-tight) var(--font-heading); letter-spacing: var(--ls-tight); }
-.t-h2         { font: var(--fw-extrabold) var(--fs-h2)/var(--lh-snug) var(--font-heading); letter-spacing: var(--ls-snug); }
-.t-h3         { font: var(--fw-extrabold) var(--fs-h3)/var(--lh-snug) var(--font-heading); letter-spacing: var(--ls-snug); }
-.t-h4         { font: var(--fw-bold) var(--fs-h4)/var(--lh-snug) var(--font-heading); }
-.t-h5         { font: var(--fw-bold) var(--fs-h5)/var(--lh-snug) var(--font-heading); }
-.t-card-title { font: var(--fw-bold) var(--card-title-fs)/var(--lh-snug) var(--font-heading); margin: 0; color: var(--text-primary); }
-.t-l          { font: var(--fw-regular) var(--fs-l)/var(--lh-base) var(--font-sans); }
-.t-l-bold     { font: var(--fw-bold) var(--fs-l)/var(--lh-base) var(--font-sans); }
-.t-m          { font: var(--fw-regular) var(--fs-m)/var(--lh-base) var(--font-sans); }
-.t-m-bold     { font: var(--fw-bold) var(--fs-m)/var(--lh-base) var(--font-sans); }
-.t-s          { font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans); }
-.t-s-bold     { font: var(--fw-bold) var(--fs-s)/var(--lh-base) var(--font-sans); }
-.t-xs         { font: var(--fw-regular) var(--fs-xs)/var(--lh-base) var(--font-sans); }
-.t-xs-bold    { font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans); }
-.t-overline   { font: var(--fw-bold) var(--fs-2xs)/var(--lh-base) var(--font-sans); letter-spacing: var(--ls-wider); text-transform: uppercase; color: var(--text-tertiary); }
-.t-caption    { font: var(--fw-regular) var(--fs-xs)/var(--lh-base) var(--font-sans); color: var(--text-tertiary); }
-.t-mono       { font: var(--fw-medium) var(--fs-mono)/var(--lh-base) var(--font-mono); }
-.t-mono-block { font: var(--fw-regular) var(--fs-mono)/var(--lh-loose) var(--font-mono); background: var(--surface-secondary); border: var(--bw-default) solid var(--border-divider); border-radius: var(--r-md); padding: var(--s-3) var(--s-4); }
+.t-display    { font: var(--font-weight-extrabold) var(--font-size-display)/var(--line-height-tight) var(--font-display); letter-spacing: var(--letter-spacing-tight); }
+.t-h1         { font: var(--font-weight-extrabold) var(--font-size-h1)/var(--line-height-tight) var(--font-heading); letter-spacing: var(--letter-spacing-tight); }
+.t-h2         { font: var(--font-weight-extrabold) var(--font-size-h2)/var(--line-height-snug) var(--font-heading); letter-spacing: var(--letter-spacing-snug); }
+.t-h3         { font: var(--font-weight-extrabold) var(--font-size-h3)/var(--line-height-snug) var(--font-heading); letter-spacing: var(--letter-spacing-snug); }
+.t-h4         { font: var(--font-weight-bold) var(--font-size-h4)/var(--line-height-snug) var(--font-heading); }
+.t-h5         { font: var(--font-weight-bold) var(--font-size-h5)/var(--line-height-snug) var(--font-heading); }
+.t-card-title { font: var(--font-weight-bold) var(--card-title-fs)/var(--line-height-snug) var(--font-heading); margin: 0; color: var(--text-primary); }
+.t-l          { font: var(--font-weight-regular) var(--font-size-l)/var(--line-height-base) var(--font-sans); }
+.t-l-bold     { font: var(--font-weight-bold) var(--font-size-l)/var(--line-height-base) var(--font-sans); }
+.t-m          { font: var(--font-weight-regular) var(--font-size-m)/var(--line-height-base) var(--font-sans); }
+.t-m-bold     { font: var(--font-weight-bold) var(--font-size-m)/var(--line-height-base) var(--font-sans); }
+.t-s          { font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans); }
+.t-s-bold     { font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans); }
+.t-xs         { font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans); }
+.t-xs-bold    { font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans); }
+.t-overline   { font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans); letter-spacing: var(--letter-spacing-wider); text-transform: uppercase; color: var(--text-tertiary); }
+.t-caption    { font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans); color: var(--text-tertiary); }
+.t-mono       { font: var(--font-weight-medium) var(--font-size-mono)/var(--line-height-base) var(--font-mono); }
+.t-mono-block { font: var(--font-weight-regular) var(--font-size-mono)/var(--line-height-loose) var(--font-mono); background: var(--surface-secondary); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); }
 
 .sr-only {
   position: absolute !important;

@@ -14,14 +14,14 @@
 
   display: flex;
   align-items: center;
-  gap: var(--s-4);
+  gap: var(--space-4);
   height: var(--ds-topbar-height);
-  padding: 0 var(--s-6);
+  padding: 0 var(--space-6);
   background: var(--ds-topbar-bg);
-  border-bottom: var(--bw-default) solid var(--ds-topbar-border);
+  border-bottom: var(--border-width-default) solid var(--ds-topbar-border);
 
   .title {
-    font: var(--fw-bold) var(--fs-h5)/var(--lh-snug) var(--font-sans);
+    font: var(--font-weight-bold) var(--font-size-h5)/var(--line-height-snug) var(--font-sans);
     color: var(--ds-topbar-title-fg);
   }
 
@@ -33,7 +33,7 @@
   .actions {
     display: flex;
     align-items: center;
-    gap: var(--s-2);
+    gap: var(--space-2);
     margin-left: auto;
   }
 
@@ -42,8 +42,8 @@
   .crumbs-trail {
     display: flex;
     align-items: center;
-    gap: var(--s-2);
-    font: var(--fw-regular) var(--fs-s)/var(--lh-flat) var(--font-sans);
+    gap: var(--space-2);
+    font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
     color: var(--text-tertiary);
     min-width: 0;
     max-width: 100%;
@@ -55,7 +55,7 @@
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: var(--s-1);
+    gap: var(--space-1);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -64,7 +64,7 @@
     &:hover { color: var(--primary); }
     &.crumb--current {
       color: var(--text-primary);
-      font-weight: var(--fw-bold);
+      font-weight: var(--font-weight-bold);
       max-width: 32ch;
     }
   }

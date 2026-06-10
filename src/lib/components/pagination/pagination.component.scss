@@ -11,26 +11,26 @@
   --ds-pagination-active-bg: var(--primary);
   --ds-pagination-active-bg-hover: var(--primary-hover);
   --ds-pagination-active-fg: var(--primary-on);
-  --ds-pagination-radius: var(--r-md);
+  --ds-pagination-radius: var(--radius-md);
 
   display: inline-flex;
-  gap: var(--s-1);
+  gap: var(--space-1);
   align-items: center;
   flex-wrap: wrap;
 
   .label {
-    font: var(--fw-regular) var(--fs-s)/var(--lh-flat) var(--font-sans);
+    font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
     color: var(--text-secondary);
-    margin-right: var(--s-2);
+    margin-right: var(--space-2);
   }
 
   .pagination-button {
     min-width: var(--hit-min);
     height: var(--hit-min);
-    padding: 0 var(--s-2);
-    border: var(--bw-default) solid var(--ds-pagination-btn-border);
+    padding: 0 var(--space-2);
+    border: var(--border-width-default) solid var(--ds-pagination-btn-border);
     background: var(--ds-pagination-btn-bg);
-    font: var(--fw-semibold) var(--fs-s)/var(--lh-flat) var(--font-sans);
+    font: var(--font-weight-semibold) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
     color: var(--ds-pagination-btn-fg);
     border-radius: var(--ds-pagination-radius);
     cursor: pointer;
@@ -65,12 +65,12 @@
   }
 
   .ellipsis {
-    padding: 0 var(--s-2);
+    padding: 0 var(--space-2);
     color: var(--text-tertiary);
   }
 
   .size {
-    margin-left: var(--s-2);
+    margin-left: var(--space-2);
     width: auto;
     flex: 0 0 auto;
   }

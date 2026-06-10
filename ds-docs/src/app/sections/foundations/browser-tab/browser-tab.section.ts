@@ -75,37 +75,37 @@ import { IconComponent } from 'ds';
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
 
     .tab-spec {
       display: flex;
       flex-direction: column;
       gap: 0;
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-lg);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
       background: var(--neutral-200);
       overflow: hidden;
-      margin-top: var(--s-3);
+      margin-top: var(--space-3);
 
       .row {
         display: flex;
-        gap: var(--s-1);
-        padding: var(--s-2) var(--s-2) 0;
+        gap: var(--space-1);
+        padding: var(--space-2) var(--space-2) 0;
       }
 
       .tab {
         display: flex;
         align-items: center;
-        gap: var(--s-2);
-        padding: var(--s-2) var(--s-3);
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-3);
         background: var(--neutral-150);
-        border: var(--bw-default) solid var(--border-divider);
+        border: var(--border-width-default) solid var(--border-divider);
         border-bottom: 0;
-        border-radius: var(--r-md) var(--r-md) 0 0;
-        font: var(--fw-medium) var(--fs-xs)/var(--lh-flat) var(--font-sans);
+        border-radius: var(--radius-md) var(--radius-md) 0 0;
+        font: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
         color: var(--text-secondary);
         min-width: 0;
         max-width: var(--tab-spec-maxw);
@@ -113,7 +113,7 @@ import { IconComponent } from 'ds';
         &.is-active {
           background: var(--surface-default);
           color: var(--text-primary);
-          font-weight: var(--fw-semibold);
+          font-weight: var(--font-weight-semibold);
         }
       }
 
@@ -122,10 +122,10 @@ import { IconComponent } from 'ds';
         height: var(--icon-md);
         background: var(--primary);
         color: var(--primary-on);
-        border-radius: var(--r-sm);
+        border-radius: var(--radius-sm);
         display: grid;
         place-items: center;
-        font: var(--fw-extrabold) var(--fs-2xs)/1 var(--font-display);
+        font: var(--font-weight-extrabold) var(--font-size-2xs)/1 var(--font-display);
         flex-shrink: 0;
         position: relative;
 
@@ -134,11 +134,11 @@ import { IconComponent } from 'ds';
           position: absolute;
           top: calc(var(--tab-spec-dot-offset) * -1);
           right: calc(var(--tab-spec-dot-offset) * -1);
-          width: var(--s-2);
-          height: var(--s-2);
+          width: var(--space-2);
+          height: var(--space-2);
           background: var(--error);
-          border-radius: var(--r-pill);
-          border: var(--bw-default) solid var(--surface-default);
+          border-radius: var(--radius-pill);
+          border: var(--border-width-default) solid var(--surface-default);
         }
       }
 
@@ -151,24 +151,24 @@ import { IconComponent } from 'ds';
       }
 
       .close {
-        font-size: var(--fs-s);
+        font-size: var(--font-size-s);
         color: var(--text-tertiary);
-        width: var(--s-4);
-        height: var(--s-4);
+        width: var(--space-4);
+        height: var(--space-4);
         display: grid;
         place-items: center;
-        border-radius: var(--r-sm);
+        border-radius: var(--radius-sm);
         flex-shrink: 0;
       }
 
       .url {
         display: flex;
         align-items: center;
-        gap: var(--s-2);
-        padding: var(--s-2) var(--s-4);
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-4);
         background: var(--surface-default);
-        border-top: var(--bw-default) solid var(--border-divider);
-        font: var(--fw-regular) var(--fs-xs)/var(--lh-flat) var(--font-mono);
+        border-top: var(--border-width-default) solid var(--border-divider);
+        font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-flat) var(--font-mono);
         color: var(--text-secondary);
       }
     }
@@ -176,27 +176,27 @@ import { IconComponent } from 'ds';
     .rules {
       display: grid;
       grid-template-columns: 200px 1fr;
-      gap: var(--s-3) var(--s-4);
-      margin-top: var(--s-3);
-      padding: var(--s-4);
+      gap: var(--space-3) var(--space-4);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-secondary);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .rules dt {
-      font: var(--fw-bold) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-primary);
       margin: 0;
     }
     .rules dd {
       margin: 0;
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
     code.t-mono {
-      font: var(--fw-regular) var(--fs-mono)/1 var(--font-mono);
+      font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
       background: var(--surface-default);
-      padding: 1px var(--s-1);
-      border-radius: var(--r-sm);
+      padding: 1px var(--space-1);
+      border-radius: var(--radius-sm);
       color: var(--text-primary);
     }
 

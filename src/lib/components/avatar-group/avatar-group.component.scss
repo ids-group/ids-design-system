@@ -10,7 +10,7 @@
    only target the `<ds-avatar>` host and would not match a plain span.
    ============================================================ */
 :host {
-  --ds-avatargroup-overlap: calc(-1 * var(--s-2));
+  --ds-avatargroup-overlap: calc(-1 * var(--space-2));
   --ds-avatargroup-ring:    var(--surface-default);
 
   display: inline-flex;
@@ -30,11 +30,11 @@
   place-items: center;
   width: var(--avatar-md);
   height: var(--avatar-md);
-  border-radius: var(--r-pill);
+  border-radius: var(--radius-pill);
   background: var(--primary-muted);
   color: var(--primary-strong);
-  font: var(--fw-bold) var(--fs-xs)/var(--lh-flat) var(--font-sans);
-  letter-spacing: var(--ls-wide);
+  font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
+  letter-spacing: var(--letter-spacing-wide);
   flex-shrink: 0;
   border: var(--avatar-bw-group) solid var(--ds-avatargroup-ring);
   margin-left: var(--ds-avatargroup-overlap);

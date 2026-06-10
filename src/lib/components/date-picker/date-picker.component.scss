@@ -8,46 +8,46 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--s-1-5);
+  gap: var(--space-1-5);
   width: 100%;
 
   .label {
-    font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
+    font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
     color: var(--text-secondary);
     display: flex;
     align-items: center;
-    gap: var(--s-1);
+    gap: var(--space-1);
 
     .req {
       color: var(--error);
-      font-weight: var(--fw-semibold);
+      font-weight: var(--font-weight-semibold);
     }
 
     .optional-marker {
       color: var(--text-tertiary);
-      font-weight: var(--fw-regular);
+      font-weight: var(--font-weight-regular);
     }
   }
 
   .hint {
-    font: var(--fw-regular) var(--fs-xs)/var(--lh-base) var(--font-sans);
+    font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
     color: var(--text-tertiary);
     display: flex;
     align-items: center;
-    gap: var(--s-1);
+    gap: var(--space-1);
   }
 }
 
 .trigger {
   display: inline-flex;
   align-items: center;
-  gap: var(--s-2);
+  gap: var(--space-2);
   background: var(--surface-default);
-  border: var(--bw-default) solid var(--border-default);
-  border-radius: var(--r-md);
-  padding: 0 var(--s-3);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-3);
   height: var(--hit-cozy);
-  font: var(--fw-medium) var(--fs-s)/var(--lh-flat) var(--font-sans);
+  font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
   color: var(--text-primary);
   cursor: pointer;
 
@@ -62,14 +62,14 @@
 
   &.sm {
     height: var(--hit-min);
-    padding: 0 var(--s-2);
-    font-size: var(--fs-xs);
+    padding: 0 var(--space-2);
+    font-size: var(--font-size-xs);
   }
 
   &.lg {
     height: var(--field-h-lg);
-    padding: 0 var(--s-4);
-    font-size: var(--fs-m);
+    padding: 0 var(--space-4);
+    font-size: var(--font-size-m);
   }
 }
 
@@ -88,26 +88,26 @@
   --ds-datepicker-width:                    var(--datepicker-w);
 
   background: var(--ds-datepicker-bg);
-  border: var(--bw-default) solid var(--ds-datepicker-border);
-  border-radius: var(--r-lg);
+  border: var(--border-width-default) solid var(--ds-datepicker-border);
+  border-radius: var(--radius-lg);
   box-shadow: var(--ds-datepicker-shadow);
-  padding: var(--s-3);
+  padding: var(--space-3);
   width: var(--ds-datepicker-width);
 
   .head {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--s-2);
+    margin-bottom: var(--space-2);
   }
 
   .title {
-    font: var(--fw-bold) var(--fs-s)/var(--lh-flat) var(--font-sans);
+    font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
   }
 
   .nav {
     display: flex;
-    gap: var(--s-1);
+    gap: var(--space-1);
 
     button {
       width: var(--datepicker-nav-size);
@@ -118,7 +118,7 @@
       place-items: center;
       color: var(--icon-default);
       cursor: pointer;
-      border-radius: var(--r-sm);
+      border-radius: var(--radius-sm);
 
       &:hover {
         background: var(--ds-datepicker-day-hover-bg);
@@ -133,21 +133,21 @@
   }
 
   .dow {
-    font: var(--fw-bold) var(--fs-2xs)/var(--lh-flat) var(--font-sans);
+    font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-flat) var(--font-sans);
     text-align: center;
-    padding: var(--s-1) 0;
+    padding: var(--space-1) 0;
     color: var(--text-tertiary);
     text-transform: uppercase;
-    letter-spacing: var(--ls-wider);
+    letter-spacing: var(--letter-spacing-wider);
   }
 
   .day {
-    width: var(--s-8);
-    height: var(--s-8);
+    width: var(--space-8);
+    height: var(--space-8);
     display: grid;
     place-items: center;
-    font: var(--fw-medium) var(--fs-xs)/var(--lh-flat) var(--font-sans);
-    border-radius: var(--r-sm);
+    font: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
+    border-radius: var(--radius-sm);
     cursor: pointer;
     border: 0;
     background: transparent;
@@ -162,7 +162,7 @@
     }
 
     &.today {
-      font-weight: var(--fw-bold);
+      font-weight: var(--font-weight-bold);
       color: var(--ds-datepicker-day-today-fg);
     }
 
@@ -178,19 +178,19 @@
     &.in-range {
       background: var(--ds-datepicker-day-range-bg);
       color: var(--ds-datepicker-day-range-fg);
-      border-radius: var(--r-flat);
+      border-radius: var(--radius-flat);
     }
 
     &.range-start {
-      border-top-left-radius: var(--r-sm);
-      border-bottom-left-radius: var(--r-sm);
+      border-top-left-radius: var(--radius-sm);
+      border-bottom-left-radius: var(--radius-sm);
       background: var(--ds-datepicker-day-selected-bg);
       color: var(--ds-datepicker-day-selected-fg);
     }
 
     &.range-end {
-      border-top-right-radius: var(--r-sm);
-      border-bottom-right-radius: var(--r-sm);
+      border-top-right-radius: var(--radius-sm);
+      border-bottom-right-radius: var(--radius-sm);
       background: var(--ds-datepicker-day-selected-bg);
       color: var(--ds-datepicker-day-selected-fg);
     }

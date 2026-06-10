@@ -20,19 +20,19 @@
   --ds-pagehdr-meta-fg: var(--text-secondary);
   --ds-pagehdr-meta-icon-fg: var(--icon-default);
   --ds-pagehdr-divider: var(--border-divider);
-  --ds-pagehdr-title-fs: var(--fs-h3);
-  --ds-pagehdr-title-gap: var(--s-1-5);
+  --ds-pagehdr-title-fs: var(--font-size-h3);
+  --ds-pagehdr-title-gap: var(--space-1-5);
 
   display: flex;
   flex-direction: column;
-  gap: var(--s-3);
+  gap: var(--space-3);
 
   /* Bottom divider is opt-in via the `divider` input. Default-on for the
      standard "header separated from content" composition; consumers turn
      it off when a tabs strip or other element supplies its own border. */
   &.with-divider {
-    padding-bottom: var(--s-4);
-    border-bottom: var(--bw-default) solid var(--ds-pagehdr-divider);
+    padding-bottom: var(--space-4);
+    border-bottom: var(--border-width-default) solid var(--ds-pagehdr-divider);
   }
 
   /* When tabs are projected, the strip supplies its own bottom border —
@@ -49,7 +49,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: var(--s-4);
+    gap: var(--space-4);
     flex-wrap: wrap;
   }
 
@@ -63,14 +63,14 @@
   }
 
   .eyebrow {
-    font: var(--fw-bold) var(--fs-2xs)/var(--lh-flat) var(--font-sans);
-    letter-spacing: var(--ls-wide);
+    font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-flat) var(--font-sans);
+    letter-spacing: var(--letter-spacing-wide);
     text-transform: uppercase;
     color: var(--ds-pagehdr-eyebrow-fg);
   }
 
   .title {
-    font: var(--fw-extrabold) var(--ds-pagehdr-title-fs)/var(--lh-tight) var(--font-display);
+    font: var(--font-weight-extrabold) var(--ds-pagehdr-title-fs)/var(--line-height-tight) var(--font-display);
     color: var(--ds-pagehdr-title-fg);
     margin: 0;
     letter-spacing: -0.02em;
@@ -79,7 +79,7 @@
   .title-line {
     display: flex;
     align-items: center;
-    gap: var(--s-3);
+    gap: var(--space-3);
     flex-wrap: wrap;
   }
 
@@ -87,20 +87,20 @@
   .crumbs-trail {
     display: flex;
     align-items: center;
-    gap: var(--s-2);
-    font: var(--fw-regular) var(--fs-s)/var(--lh-flat) var(--font-sans);
+    gap: var(--space-2);
+    font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
     color: var(--text-tertiary);
     min-width: 0;
     flex-wrap: nowrap;
     overflow: hidden;
-    padding-bottom: var(--s-1);
+    padding-bottom: var(--space-1);
   }
   .crumb {
     color: var(--text-tertiary);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: var(--s-1);
+    gap: var(--space-1);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -109,14 +109,14 @@
     &:hover { color: var(--primary); }
     &.crumb--current {
       color: var(--text-primary);
-      font-weight: var(--fw-bold);
+      font-weight: var(--font-weight-bold);
       max-width: 32ch;
     }
   }
   .crumb-sep { color: var(--icon-muted); display: inline-flex; align-items: center; }
 
   .subtitle {
-    font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+    font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
     color: var(--ds-pagehdr-subtitle-fg);
     margin: 0;
   }
@@ -124,7 +124,7 @@
   .actions {
     display: flex;
     align-items: flex-end;
-    gap: var(--s-2);
+    gap: var(--space-2);
     flex-shrink: 0;
     align-self: flex-start;
   }
@@ -133,25 +133,25 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--s-3);
+    gap: var(--space-3);
     // Combined with title-block's flex gap, this makes subtitle→meta spacing
-    // equal to meta→tabs spacing (both --s-3 = 12px) so the header stack reads
+    // equal to meta→tabs spacing (both --space-3 = 12px) so the header stack reads
     // evenly.
-    margin-top: var(--s-1-5);
+    margin-top: var(--space-1-5);
 
     &:not(:has(> *)) { display: none; }
   }
 
   &.with-meta-divider .meta {
-    padding-top: var(--s-2);
-    border-top: var(--bw-default) solid var(--ds-pagehdr-divider);
+    padding-top: var(--space-2);
+    border-top: var(--border-width-default) solid var(--ds-pagehdr-divider);
   }
 
   .meta-item {
     display: inline-flex;
     align-items: center;
-    gap: var(--s-1-5);
-    font: var(--fw-medium) var(--fs-xs)/var(--lh-flat) var(--font-sans);
+    gap: var(--space-1-5);
+    font: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
     color: var(--ds-pagehdr-meta-fg);
 
     .icon {
@@ -162,10 +162,10 @@
   }
 
   &.compact {
-    --ds-pagehdr-title-fs: var(--fs-h4);
+    --ds-pagehdr-title-fs: var(--font-size-h4);
 
-    gap: var(--s-2);
-    padding-bottom: var(--s-3);
+    gap: var(--space-2);
+    padding-bottom: var(--space-3);
   }
 }
 

@@ -57,43 +57,43 @@ import { StepperComponent } from 'ds';
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
 
     .demo, .states {
-      margin-top: var(--s-3);
-      padding: var(--s-4);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-lg);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
     }
     .states {
       display: flex;
       flex-direction: column;
-      gap: var(--s-4);
+      gap: var(--space-4);
     }
-    .state { display: flex; flex-direction: column; gap: var(--s-2); }
+    .state { display: flex; flex-direction: column; gap: var(--space-2); }
     .state__lbl { font-size: 11px; color: var(--text-secondary); }
 
     .single-nodes {
       display: flex;
-      gap: var(--s-6);
-      margin-top: var(--s-3);
-      padding: var(--s-4);
+      gap: var(--space-6);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-lg);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
     }
-    .single-cell { display: flex; flex-direction: column; gap: var(--s-2); align-items: center; }
+    .single-cell { display: flex; flex-direction: column; gap: var(--space-2); align-items: center; }
     .single-cell code { font-size: 11px; color: var(--text-secondary); }
 
     code.t-mono {
-      font: var(--fw-regular) var(--fs-mono)/1 var(--font-mono);
+      font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
       background: var(--surface-secondary);
-      padding: 1px var(--s-1);
-      border-radius: var(--r-sm);
+      padding: 1px var(--space-1);
+      border-radius: var(--radius-sm);
       color: var(--text-primary);
     }
   `],

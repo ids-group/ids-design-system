@@ -7,9 +7,9 @@
   position: relative;
   background: var(--surface-inverted);
   color: var(--text-inverted);
-  font: var(--fw-medium) var(--fs-xs)/var(--lh-base) var(--font-sans);
-  padding: var(--s-1-5) var(--s-2-5);
-  border-radius: var(--r-md);
+  font: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+  padding: var(--space-1-5) var(--space-2-5);
+  border-radius: var(--radius-md);
   max-width: var(--tooltip-maxw);
   z-index: var(--layer-tooltip);
   box-shadow: var(--z200);
@@ -17,8 +17,8 @@
   &::after {
     content: "";
     position: absolute;
-    width: var(--s-2);
-    height: var(--s-2);
+    width: var(--space-2);
+    height: var(--space-2);
     background: var(--surface-inverted);
     transform: rotate(45deg);
   }

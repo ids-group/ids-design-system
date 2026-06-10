@@ -17,13 +17,13 @@
   --ds-input-border-focus: var(--primary);
   --ds-input-fg: var(--text-primary);
   --ds-input-placeholder: var(--text-tertiary);
-  --ds-input-radius: var(--r-md);
+  --ds-input-radius: var(--radius-md);
   --ds-input-pad-x: var(--field-pad-x);
   /* Textarea-specific override: single-line <ds-input> has zero vertical
      padding (height set via --field-h). A multiline textarea needs real
      breathing room above/below the text-shape — matches Material outlined
      textarea (~12px) and IBM Carbon (~11px). */
-  --ds-input-pad-y: var(--s-3);
+  --ds-input-pad-y: var(--space-3);
   --ds-input-focus-shadow: var(--focus-field);
   --ds-input-border-error: var(--error);
   --ds-input-bg-error: var(--error-subtle);
@@ -32,40 +32,40 @@
 
   display: flex;
   flex-direction: column;
-  gap: var(--s-1-5);
+  gap: var(--space-1-5);
   width: 100%;
 
   .label {
-    font: var(--fw-bold) var(--fs-xs)/var(--lh-base) var(--font-sans);
+    font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
     color: var(--text-secondary);
     display: flex;
     align-items: center;
-    gap: var(--s-1);
+    gap: var(--space-1);
 
     .req {
       color: var(--error);
-      font-weight: var(--fw-semibold);
+      font-weight: var(--font-weight-semibold);
     }
 
     .optional-marker {
       color: var(--text-tertiary);
-      font-weight: var(--fw-regular);
+      font-weight: var(--font-weight-regular);
     }
   }
 
   .control {
     display: flex;
     align-items: stretch;
-    gap: var(--s-2);
+    gap: var(--space-2);
     background: var(--ds-input-bg);
-    border: var(--bw-default) solid var(--ds-input-border);
+    border: var(--border-width-default) solid var(--ds-input-border);
     border-radius: var(--ds-input-radius);
     padding: var(--ds-input-pad-y) var(--ds-input-pad-x);
     height: auto;
     transition:
-      border-color var(--dur-fast) var(--ease-standard),
-      box-shadow var(--dur-fast) var(--ease-standard),
-      background var(--dur-fast) var(--ease-standard);
+      border-color var(--duration-fast) var(--ease-standard),
+      box-shadow var(--duration-fast) var(--ease-standard),
+      background var(--duration-fast) var(--ease-standard);
 
     textarea {
       flex: 1;
@@ -75,7 +75,7 @@
       border: 0;
       outline: 0;
       background: transparent;
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--ds-input-fg);
       min-height: var(--field-textarea-rows-min, 60px);
 
@@ -95,11 +95,11 @@
   }
 
   .hint {
-    font: var(--fw-regular) var(--fs-xs)/var(--lh-base) var(--font-sans);
+    font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
     color: var(--text-tertiary);
     display: flex;
     align-items: center;
-    gap: var(--s-1);
+    gap: var(--space-1);
   }
 
   &.disabled {
@@ -138,10 +138,10 @@
   /* Sizes — only padding scales; height stays driven by rows + resize.
      Vertical pad scales with size; horizontal still uses the input-family. */
   &.sm .control {
-    padding: var(--s-2) var(--s-2);
+    padding: var(--space-2) var(--space-2);
   }
   &.lg .control {
-    padding: var(--s-4) var(--s-3);
+    padding: var(--space-4) var(--space-3);
   }
 
   &.autosize .control textarea {

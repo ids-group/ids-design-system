@@ -179,18 +179,18 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
       display: block;
       max-width: var(--col-cap-content);
       margin-inline: auto;
-      padding: var(--s-12) var(--s-16) var(--s-24);
+      padding: var(--space-12) var(--space-16) var(--space-24);
     }
     @media (max-width: 1100px) {
-      :host { padding: var(--s-10) var(--s-8) var(--s-16); }
+      :host { padding: var(--space-10) var(--space-8) var(--space-16); }
     }
     @media (max-width: 900px) {
-      :host { padding: var(--s-8) var(--s-6) var(--s-12); }
+      :host { padding: var(--space-8) var(--space-6) var(--space-12); }
     }
     .group-title {
-      margin-top: var(--s-16);
-      padding-bottom: var(--s-3);
-      border-bottom: var(--bw-default) solid var(--border-divider);
+      margin-top: var(--space-16);
+      padding-bottom: var(--space-3);
+      border-bottom: var(--border-width-default) solid var(--border-divider);
     }
     section-home,
     section-foundations-color, section-foundations-typography, section-foundations-spacing,
@@ -217,7 +217,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     practice-token-discipline, practice-do-dont,
     section-tokens-reference {
       display: block;
-      margin-top: var(--s-12);
+      margin-top: var(--space-12);
     }
     section-home { margin-top: 0; }
   `],

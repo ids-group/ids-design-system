@@ -19,10 +19,10 @@
   position: relative;
   overflow: hidden;
   background: var(--surface-secondary);
-  border-radius: var(--r-md);
+  border-radius: var(--radius-md);
 }
 
-:host(.circle) { border-radius: var(--r-pill); }
+:host(.circle) { border-radius: var(--radius-pill); }
 :host(.inline) { display: inline-block; vertical-align: middle; }
 
 :host::after {

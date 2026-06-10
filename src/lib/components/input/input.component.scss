@@ -14,7 +14,7 @@
   --ds-input-border-focus: var(--primary);
   --ds-input-fg: var(--text-primary);
   --ds-input-placeholder: var(--text-tertiary);
-  --ds-input-radius: var(--r-md);
+  --ds-input-radius: var(--radius-md);
   --ds-input-pad-x: var(--field-pad-x);
   --ds-input-pad-y: var(--field-pad-y);
   --ds-input-focus-shadow: var(--focus-field);
@@ -23,11 +23,11 @@
   --ds-input-border-success: var(--success);
   --ds-input-bg-disabled: var(--surface-disabled);
   --ds-input-label-color: var(--text-secondary);
-  --ds-input-label-fs: var(--fs-xs);
-  --ds-input-label-fw: var(--fw-bold);
+  --ds-input-label-fs: var(--font-size-xs);
+  --ds-input-label-fw: var(--font-weight-bold);
   --ds-input-hint-color: var(--text-tertiary);
-  --ds-input-hint-fs: var(--fs-xs);
-  --ds-input-fs: var(--fs-s);
+  --ds-input-hint-fs: var(--font-size-xs);
+  --ds-input-fs: var(--font-size-s);
 
   display: block;
 }
@@ -35,40 +35,40 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--s-1-5);
+  gap: var(--space-1-5);
   width: 100%;
 
   .label {
-    font: var(--ds-input-label-fw) var(--ds-input-label-fs)/var(--lh-base) var(--font-sans);
+    font: var(--ds-input-label-fw) var(--ds-input-label-fs)/var(--line-height-base) var(--font-sans);
     color: var(--ds-input-label-color);
     display: flex;
     align-items: center;
-    gap: var(--s-1);
+    gap: var(--space-1);
 
     .req {
       color: var(--error);
-      font-weight: var(--fw-semibold);
+      font-weight: var(--font-weight-semibold);
     }
 
     .optional-marker {
       color: var(--text-tertiary);
-      font-weight: var(--fw-regular);
+      font-weight: var(--font-weight-regular);
     }
   }
 
   .control {
     display: flex;
     align-items: center;
-    gap: var(--s-2);
+    gap: var(--space-2);
     background: var(--ds-input-bg);
-    border: var(--bw-default) solid var(--ds-input-border);
+    border: var(--border-width-default) solid var(--ds-input-border);
     border-radius: var(--ds-input-radius);
     padding: var(--ds-input-pad-y) var(--ds-input-pad-x);
     height: var(--hit-cozy);
     transition:
-      border-color var(--dur-fast) var(--ease-standard),
-      box-shadow var(--dur-fast) var(--ease-standard),
-      background var(--dur-fast) var(--ease-standard);
+      border-color var(--duration-fast) var(--ease-standard),
+      box-shadow var(--duration-fast) var(--ease-standard),
+      background var(--duration-fast) var(--ease-standard);
 
     input {
       flex: 1;
@@ -78,7 +78,7 @@
       border: 0;
       outline: 0;
       background: transparent;
-      font: var(--fw-regular) var(--ds-input-fs)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--ds-input-fs)/var(--line-height-base) var(--font-sans);
       color: var(--ds-input-fg);
 
       &::placeholder {
@@ -106,7 +106,7 @@
       background-color: var(--text-tertiary);
       cursor: pointer;
       flex-shrink: 0;
-      transition: background-color var(--dur-fast) var(--ease-standard);
+      transition: background-color var(--duration-fast) var(--ease-standard);
       -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'><path d='M18 6L6 18M6 6l12 12'/></svg>") center/contain no-repeat;
               mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'><path d='M18 6L6 18M6 6l12 12'/></svg>") center/contain no-repeat;
 
@@ -114,7 +114,7 @@
       &:focus-visible {
         outline: none;
         box-shadow: var(--focus-ring);
-        border-radius: var(--r-sm);
+        border-radius: var(--radius-sm);
       }
     }
 
@@ -128,13 +128,13 @@
       color: var(--text-tertiary);
       cursor: pointer;
       flex-shrink: 0;
-      transition: color var(--dur-fast) var(--ease-standard);
+      transition: color var(--duration-fast) var(--ease-standard);
 
       &:hover { color: var(--text-primary); }
       &:focus-visible {
         outline: none;
         box-shadow: var(--focus-ring);
-        border-radius: var(--r-sm);
+        border-radius: var(--radius-sm);
       }
     }
 
@@ -149,11 +149,11 @@
   }
 
   .hint {
-    font: var(--fw-regular) var(--ds-input-hint-fs)/var(--lh-base) var(--font-sans);
+    font: var(--font-weight-regular) var(--ds-input-hint-fs)/var(--line-height-base) var(--font-sans);
     color: var(--ds-input-hint-color);
     display: flex;
     align-items: center;
-    gap: var(--s-1);
+    gap: var(--space-1);
   }
 
   &.disabled {
@@ -192,7 +192,7 @@
   /* Sizes */
   &.sm .control {
     height: var(--hit-min);
-    padding: 0 var(--s-2);
+    padding: 0 var(--space-2);
   }
   &.lg .control {
     height: var(--field-h-lg);
@@ -212,17 +212,17 @@
   .addon {
     display: inline-flex;
     align-items: center;
-    padding: 0 var(--s-3);
+    padding: 0 var(--space-3);
     margin: calc(var(--field-affix-overlap) * -1);
     background: var(--surface-secondary);
     color: var(--text-secondary);
-    font: var(--fw-medium) var(--fs-s)/var(--lh-flat) var(--font-sans);
+    font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
     align-self: stretch;
-    border-right: var(--bw-default) solid var(--border-divider);
+    border-right: var(--border-width-default) solid var(--border-divider);
 
     &.right {
       border-right: 0;
-      border-left: var(--bw-default) solid var(--border-divider);
+      border-left: var(--border-width-default) solid var(--border-divider);
     }
   }
 

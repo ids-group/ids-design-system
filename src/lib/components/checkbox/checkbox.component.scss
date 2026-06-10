@@ -12,9 +12,9 @@
   place-items: center;
   flex-shrink: 0;
   margin: 0;
-  border-radius: var(--r-sm);
-  transition: background var(--dur-fast) var(--ease-standard),
-              border-color var(--dur-fast) var(--ease-standard);
+  border-radius: var(--radius-sm);
+  transition: background var(--duration-fast) var(--ease-standard),
+              border-color var(--duration-fast) var(--ease-standard);
 
   &:hover:not(:disabled) { border-color: var(--primary); }
   &:focus-visible        { outline: none; box-shadow: var(--focus-ring); }
@@ -43,7 +43,7 @@
       width: var(--check-indet-w);
       height: var(--check-indet-h);
       background: var(--icon-on-primary);
-      border-radius: var(--r-sm);
+      border-radius: var(--radius-sm);
     }
   }
 }

@@ -29,11 +29,11 @@ import { computeStatus, readBuildStamp, readSourceStamp, ShowcaseStatus } from '
   `,
   styles: [`
     .ds-stale {
-      padding: var(--s-3) var(--s-6);
-      font: var(--fw-medium) var(--fs-s)/1.5 var(--font-sans);
+      padding: var(--space-3) var(--space-6);
+      font: var(--font-weight-medium) var(--font-size-s)/1.5 var(--font-sans);
       background: var(--surface-secondary);
       color: var(--text-secondary);
-      border-bottom: var(--bw-default) solid var(--border-divider);
+      border-bottom: var(--border-width-default) solid var(--border-divider);
     }
     .ds-stale.is-stale {
       background: var(--error-subtle);

@@ -76,7 +76,7 @@ const TOKENS: readonly ScrollToken[] = [
         <dt>Thumb</dt>
         <dd><code class="t-mono">--neutral-300</code>; hover <code class="t-mono">--neutral-400</code>; active <code class="t-mono">--neutral-500</code></dd>
         <dt>Radius</dt>
-        <dd><code class="t-mono">--r-pill</code> on the thumb</dd>
+        <dd><code class="t-mono">--radius-pill</code> on the thumb</dd>
         <dt>Reveal</dt>
         <dd>Overlay where supported (macOS); fallback to inline 10 px gutter on Windows / Linux</dd>
         <dt>Dark mode</dt>
@@ -106,24 +106,24 @@ const TOKENS: readonly ScrollToken[] = [
   `,
   styles: [`
     :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--s-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--s-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--s-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--s-1); max-width: var(--col-cap-text); }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
 
     /* ---------- Demo panes ---------- */
     .demo-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: var(--s-4);
-      margin-top: var(--s-3);
+      gap: var(--space-4);
+      margin-top: var(--space-3);
     }
     .scroll-pane {
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-md);
-      padding: var(--s-3);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-md);
+      padding: var(--space-3);
     }
     .scroll-pane--vertical {
       max-height: 320px;
@@ -135,10 +135,10 @@ const TOKENS: readonly ScrollToken[] = [
     .scroll-pane__row {
       display: grid;
       grid-template-columns: 40px 1fr;
-      gap: var(--s-3);
-      padding: var(--s-2) 0;
-      border-bottom: var(--bw-default) solid var(--border-divider);
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      gap: var(--space-3);
+      padding: var(--space-2) 0;
+      border-bottom: var(--border-width-default) solid var(--border-divider);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
     }
     .scroll-pane__row:last-child { border-bottom: 0; }
     .scroll-pane__num { color: var(--text-tertiary); }
@@ -149,43 +149,43 @@ const TOKENS: readonly ScrollToken[] = [
     }
     .hwide {
       display: flex;
-      gap: var(--s-3);
+      gap: var(--space-3);
       width: max-content;
     }
     .hcol {
       width: 220px;
       display: grid;
-      gap: var(--s-1);
-      padding: var(--s-3);
+      gap: var(--space-1);
+      padding: var(--space-3);
       background: var(--surface-secondary);
-      border-radius: var(--r-sm);
+      border-radius: var(--radius-sm);
     }
 
     /* ---------- Tokens table ---------- */
     .tbl {
       width: 100%;
-      margin-top: var(--s-3);
+      margin-top: var(--space-3);
       border-collapse: separate;
       border-spacing: 0;
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-md);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-md);
       overflow: hidden;
       background: var(--surface-default);
     }
     .tbl th,
     .tbl td {
-      padding: var(--s-3) var(--s-4);
+      padding: var(--space-3) var(--space-4);
       text-align: left;
-      border-bottom: var(--bw-default) solid var(--border-divider);
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      border-bottom: var(--border-width-default) solid var(--border-divider);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
     }
     .tbl th {
       background: var(--surface-secondary);
-      font-weight: var(--fw-bold);
+      font-weight: var(--font-weight-bold);
       color: var(--text-secondary);
-      font-size: var(--fs-xs);
+      font-size: var(--font-size-xs);
       text-transform: uppercase;
-      letter-spacing: var(--ls-wider);
+      letter-spacing: var(--letter-spacing-wider);
     }
     .tbl tr:last-child td { border-bottom: 0; }
 
@@ -193,52 +193,52 @@ const TOKENS: readonly ScrollToken[] = [
     .spec {
       display: grid;
       grid-template-columns: 160px 1fr;
-      gap: var(--s-2) var(--s-4);
-      margin-top: var(--s-3);
+      gap: var(--space-2) var(--space-4);
+      margin-top: var(--space-3);
       max-width: var(--col-cap-text);
     }
     .spec dt {
-      font: var(--fw-bold) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
     .spec dd {
       margin: 0;
       color: var(--text-primary);
-      font-size: var(--fs-s);
+      font-size: var(--font-size-s);
     }
 
     /* ---------- Truncation block ---------- */
     .trunc {
-      margin-top: var(--s-3);
-      padding: var(--s-4);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
       background: var(--surface-secondary);
-      border-radius: var(--r-lg);
+      border-radius: var(--radius-lg);
     }
     .trunc__title {
-      display: inline-flex; align-items: center; gap: var(--s-2);
-      font: var(--fw-bold) var(--fs-2xs)/var(--lh-base) var(--font-sans);
-      letter-spacing: var(--ls-wider);
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--text-tertiary);
-      margin-bottom: var(--s-3);
+      margin-bottom: var(--space-3);
     }
     .trunc__list {
       list-style: none; margin: 0; padding: 0;
       display: flex; flex-direction: column;
-      gap: var(--s-2);
+      gap: var(--space-2);
     }
     .trunc__list li {
       display: grid;
       grid-template-columns: 200px 1fr;
-      gap: var(--s-4);
+      gap: var(--space-4);
       align-items: start;
     }
     .trunc__field {
-      font: var(--fw-bold) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-primary);
     }
     .trunc__behaviour {
-      font: var(--fw-regular) var(--fs-s)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
 

@@ -8,7 +8,7 @@
   --ds-sidenav-item-fg-active:        var(--text-on-primary);
   --ds-sidenav-item-bg-active-hover:  color-mix(in srgb, var(--ds-sidenav-item-bg-active) 88%, white);
   --ds-sidenav-item-rail:           var(--secondary);
-  --ds-sidenav-item-radius:           var(--r-md);
+  --ds-sidenav-item-radius:           var(--radius-md);
   --ds-sidenav-alert-color:           var(--error);
 
   display: block;
@@ -17,16 +17,16 @@
 .item {
   display: flex;
   align-items: center;
-  gap: var(--s-3);
-  padding: var(--s-2) var(--s-3);
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--ds-sidenav-item-radius);
   color: var(--ds-sidenav-item-fg);
   text-decoration: none;
-  font: var(--fw-semibold) var(--fs-s)/var(--lh-base) var(--font-sans);
+  font: var(--font-weight-semibold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
   cursor: pointer;
   transition:
-    background var(--dur-fast) var(--ease-standard),
-    color var(--dur-fast) var(--ease-standard);
+    background var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
   position: relative;
 
   &:hover {
@@ -69,14 +69,14 @@
   .count {
     min-width: var(--badge-count-size);
     height: var(--badge-count-size);
-    padding: 0 var(--s-1-5);
+    padding: 0 var(--space-1-5);
     display: inline-grid;
     place-items: center;
-    border-radius: var(--r-pill);
+    border-radius: var(--radius-pill);
     background: var(--surface-secondary);
     color: var(--text-secondary);
-    font: var(--fw-bold) var(--fs-2xs)/var(--lh-base) var(--font-sans);
-    letter-spacing: var(--ls-wide);
+    font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+    letter-spacing: var(--letter-spacing-wide);
     margin-left: auto;
   }
 
@@ -84,7 +84,7 @@
     width: var(--badge-dot-size);
     height: var(--badge-dot-size);
     background: var(--ds-sidenav-alert-color);
-    border-radius: var(--r-pill);
+    border-radius: var(--radius-pill);
     margin-left: auto;
   }
 
@@ -119,8 +119,8 @@
 
     .alert {
       position: absolute;
-      top: var(--s-1-5);
-      right: var(--s-1-5);
+      top: var(--space-1-5);
+      right: var(--space-1-5);
       margin: 0;
     }
   }

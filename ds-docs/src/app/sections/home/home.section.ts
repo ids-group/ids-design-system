@@ -143,39 +143,39 @@ import { Component, ViewEncapsulation } from '@angular/core';
   `,
   styles: [`
     :host { display: block; }
-    .section { scroll-margin-top: calc(var(--topbar-h) + var(--s-4)); }
+    .section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
 
     /* Page hero — top of docs landing */
     .page-hero {
-      padding-bottom: var(--s-12);
-      border-bottom: var(--bw-default) solid var(--border-divider);
-      margin-bottom: var(--s-12);
+      padding-bottom: var(--space-12);
+      border-bottom: var(--border-width-default) solid var(--border-divider);
+      margin-bottom: var(--space-12);
     }
     .page-hero .eyebrow { color: var(--primary); }
     .page-hero .display {
-      font: var(--fw-extrabold) 56px/1.05 var(--font-sans);
-      letter-spacing: var(--ls-tight);
-      margin: var(--s-3) 0 var(--s-4);
+      font: var(--font-weight-extrabold) 56px/1.05 var(--font-sans);
+      letter-spacing: var(--letter-spacing-tight);
+      margin: var(--space-3) 0 var(--space-4);
       color: var(--text-primary);
     }
     .page-hero .lede {
-      font: var(--fw-regular) var(--fs-l)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-l)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
       max-width: 640px;
       margin: 0;
     }
     .page-hero .badges {
       display: flex;
-      gap: var(--s-3);
-      margin-top: var(--s-6);
+      gap: var(--space-3);
+      margin-top: var(--space-6);
       flex-wrap: wrap;
     }
     .badge {
       display: inline-flex;
       align-items: center;
       padding: var(--badge-pad-y) var(--badge-pad-x);
-      border-radius: var(--r-pill);
-      font: var(--fw-semibold) var(--fs-xs)/1 var(--font-sans);
+      border-radius: var(--radius-pill);
+      font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-sans);
     }
     .badge.badge--solid {
       background: var(--primary);
@@ -184,32 +184,32 @@ import { Component, ViewEncapsulation } from '@angular/core';
     .badge.badge--neutral {
       background: var(--surface-secondary);
       color: var(--text-secondary);
-      border: var(--bw-default) solid var(--border-divider);
+      border: var(--border-width-default) solid var(--border-divider);
     }
 
     /* Start-here section */
     .start-section { display: block; }
     .eyebrow { color: var(--primary); }
     .title {
-      font: var(--fw-extrabold) var(--fs-h2)/var(--lh-tight) var(--font-display);
-      letter-spacing: var(--ls-tight);
-      margin: var(--s-3) 0 var(--s-4);
+      font: var(--font-weight-extrabold) var(--font-size-h2)/var(--line-height-tight) var(--font-display);
+      letter-spacing: var(--letter-spacing-tight);
+      margin: var(--space-3) 0 var(--space-4);
       color: var(--text-primary);
     }
     .lede-secondary {
-      font: var(--fw-regular) var(--fs-l)/var(--lh-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-l)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
       max-width: 720px;
       margin: 0;
     }
 
-    .block { margin-top: var(--s-10); display: block; }
-    .block-title { margin: 0 0 var(--s-4); }
+    .block { margin-top: var(--space-10); display: block; }
+    .block-title { margin: 0 0 var(--space-4); }
 
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--s-4);
+      gap: var(--space-4);
     }
     @media (max-width: 1100px) { .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 720px)  { .grid-3 { grid-template-columns: 1fr; } }
@@ -217,29 +217,29 @@ import { Component, ViewEncapsulation } from '@angular/core';
     /* How-to card */
     .howto-card {
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-lg);
-      padding: var(--s-5);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
     }
     .howto-num {
-      font: var(--fw-extrabold) var(--fs-xs)/1 var(--font-sans);
-      letter-spacing: var(--ls-wider);
+      font: var(--font-weight-extrabold) var(--font-size-xs)/1 var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--primary-strong);
-      margin-bottom: var(--s-3);
+      margin-bottom: var(--space-3);
     }
     .howto-title {
-      margin: 0 0 var(--s-3);
-      font: var(--fw-bold) var(--fs-h5)/var(--lh-snug) var(--font-sans);
+      margin: 0 0 var(--space-3);
+      font: var(--font-weight-bold) var(--font-size-h5)/var(--line-height-snug) var(--font-sans);
       color: var(--text-primary);
     }
     .howto-body {
-      margin: 0 0 var(--s-3);
-      font: var(--fw-regular) var(--fs-m)/1.6 var(--font-sans);
+      margin: 0 0 var(--space-3);
+      font: var(--font-weight-regular) var(--font-size-m)/1.6 var(--font-sans);
       color: var(--text-primary);
     }
     .howto-foot {
-      font: var(--fw-regular) var(--fs-s)/1.5 var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s)/1.5 var(--font-sans);
       color: var(--text-secondary);
     }
     .t-link { color: var(--text-link); text-decoration: none; }
@@ -249,7 +249,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     .start-links {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--s-3);
+      gap: var(--space-3);
     }
     @media (max-width: 1100px) { .start-links { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 640px)  { .start-links { grid-template-columns: 1fr; } }
@@ -257,17 +257,17 @@ import { Component, ViewEncapsulation } from '@angular/core';
     .start-link {
       display: grid;
       grid-template-columns: 40px 1fr auto;
-      gap: var(--s-3);
+      gap: var(--space-3);
       align-items: center;
-      padding: var(--s-4);
+      padding: var(--space-4);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-divider);
-      border-radius: var(--r-lg);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
       color: inherit;
       text-decoration: none;
-      transition: background var(--dur-fast) var(--ease-standard),
-                  border-color var(--dur-fast) var(--ease-standard),
-                  transform var(--dur-fast) var(--ease-standard);
+      transition: background var(--duration-fast) var(--ease-standard),
+                  border-color var(--duration-fast) var(--ease-standard),
+                  transform var(--duration-fast) var(--ease-standard);
     }
     .start-link:hover {
       background: var(--surface-secondary);
@@ -277,27 +277,27 @@ import { Component, ViewEncapsulation } from '@angular/core';
     .start-link__num {
       width: 40px;
       height: 40px;
-      border-radius: var(--r-md);
+      border-radius: var(--radius-md);
       background: var(--primary-subtle);
       color: var(--primary-strong);
       display: grid;
       place-items: center;
-      font: var(--fw-extrabold) var(--fs-m)/1 var(--font-sans);
+      font: var(--font-weight-extrabold) var(--font-size-m)/1 var(--font-sans);
     }
     .start-link__title {
-      font: var(--fw-bold) var(--fs-m)/1.35 var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-m)/1.35 var(--font-sans);
       color: var(--text-primary);
-      margin-bottom: var(--s-1);
+      margin-bottom: var(--space-1);
     }
     .start-link__desc {
-      font: var(--fw-regular) var(--fs-s)/1.5 var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s)/1.5 var(--font-sans);
       color: var(--text-secondary);
     }
     .start-link__arrow {
-      font: var(--fw-bold) 18px/1 var(--font-sans);
+      font: var(--font-weight-bold) 18px/1 var(--font-sans);
       color: var(--text-tertiary);
-      transition: transform var(--dur-fast) var(--ease-standard),
-                  color var(--dur-fast) var(--ease-standard);
+      transition: transform var(--duration-fast) var(--ease-standard),
+                  color var(--duration-fast) var(--ease-standard);
     }
     .start-link:hover .start-link__arrow {
       color: var(--primary);
@@ -318,19 +318,19 @@ import { Component, ViewEncapsulation } from '@angular/core';
     }
 
     code.t-mono {
-      font: var(--fw-regular) var(--fs-mono)/1 var(--font-mono);
+      font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
       background: var(--surface-secondary);
-      padding: 1px var(--s-1);
-      border-radius: var(--r-sm);
+      padding: 1px var(--space-1);
+      border-radius: var(--radius-sm);
       color: var(--text-primary);
     }
     kbd {
       display: inline-block;
       padding: var(--kbd-pad-y) var(--kbd-pad-x);
-      font: var(--fw-medium) 11px/1 var(--font-mono);
+      font: var(--font-weight-medium) 11px/1 var(--font-mono);
       background: var(--surface-default);
-      border: var(--bw-default) solid var(--border-default);
-      border-radius: var(--r-sm);
+      border: var(--border-width-default) solid var(--border-default);
+      border-radius: var(--radius-sm);
       color: var(--text-secondary);
     }
   `],
