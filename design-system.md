@@ -357,7 +357,7 @@ Column shape: `{ key: string, label: string, sortable?: boolean, align?: 'left' 
 Cell templates: `<ng-template dsCellTemplate="<colKey>" let-row>…</ng-template>` — `row` is typed `unknown`, narrow via a helper method on the host.
 Content slots: `[empty]` (rendered when `data.length === 0`), `[bulk-actions]` (rendered in the bulk action bar when `selectable && some selected`)
 Loading modes: `'skeleton'` replaces rows with shimmer placeholders driven by the global `--skeleton-shimmer-x` keyframe; `'overlay'` keeps existing rows visible behind a translucent layer with a centred spinner.
-Tokens (host-scoped, override per-instance): `--ds-table-border: var(--border-default)`, `--ds-table-radius: var(--radius-md)`, `--ds-table-header-fg: var(--text-secondary)`, `--ds-table-header-bg: var(--surface-secondary)`, `--ds-table-header-fs: var(--font-size-xs)`.
+Tokens (read with fallbacks — set on the host or any ancestor): `--ds-table-border: var(--border-default)`, `--ds-table-radius: var(--radius-md)`, `--ds-table-bg`, `--ds-table-head-fg: var(--text-secondary)`, `--ds-table-head-bg: var(--surface-secondary)`, `--ds-table-head-fs: var(--font-size-xs)`, `--ds-table-row-hover-bg`, `--ds-table-row-selected-bg`, `--ds-table-divider`, `--ds-table-sort-active-fg`, `--ds-table-cell-pad-x/y`. (Renamed 2026-06: `--ds-table-header-*` → `--ds-table-head-*`, matching the tokens reference.)
 
 ---
 

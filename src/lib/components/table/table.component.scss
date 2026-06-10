@@ -32,12 +32,13 @@
    defined edge. Tables flush inside `<ds-card padding="none">` stay clean
    without it. */
 :host(.bordered) .scroll-wrap {
-  border: var(--border-width-default) solid var(--border-default);
+  border: var(--border-width-default) solid var(--_table-border);
   border-radius: var(--_table-radius);
 }
 
 .scroll-wrap {
   /* Public --ds-table-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_table-border: var(--ds-table-border, var(--border-default));
   --_table-radius: var(--ds-table-radius, var(--radius-md));
   --_table-bg:     var(--ds-table-bg,     var(--surface-default));
 
