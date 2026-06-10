@@ -11,24 +11,7 @@
 }
 
 .field {
-  --ds-input-bg: var(--surface-default);
-  --ds-input-border: var(--border-default);
-  --ds-input-border-hover: var(--border-strong);
-  --ds-input-border-focus: var(--primary);
-  --ds-input-fg: var(--text-primary);
-  --ds-input-placeholder: var(--text-tertiary);
-  --ds-input-radius: var(--radius-md);
-  --ds-input-pad-x: var(--field-pad-x);
-  /* Textarea-specific override: single-line <ds-input> has zero vertical
-     padding (height set via --field-h). A multiline textarea needs real
-     breathing room above/below the text-shape — matches Material outlined
-     textarea (~12px) and IBM Carbon (~11px). */
-  --ds-input-pad-y: var(--space-3);
-  --ds-input-focus-shadow: var(--focus-field);
-  --ds-input-border-error: var(--error);
-  --ds-input-bg-error: var(--error-subtle);
-  --ds-input-border-success: var(--success);
-  --ds-input-bg-disabled: var(--surface-disabled);
+  /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
 
   display: flex;
   flex-direction: column;
@@ -57,10 +40,10 @@
     display: flex;
     align-items: stretch;
     gap: var(--space-2);
-    background: var(--ds-input-bg);
-    border: var(--border-width-default) solid var(--ds-input-border);
-    border-radius: var(--ds-input-radius);
-    padding: var(--ds-input-pad-y) var(--ds-input-pad-x);
+    background: var(--ds-input-bg, var(--surface-default));
+    border: var(--border-width-default) solid var(--ds-input-border, var(--border-default));
+    border-radius: var(--ds-input-radius, var(--radius-md));
+    padding: var(--ds-input-pad-y, var(--space-3)) var(--ds-input-pad-x, var(--field-pad-x));
     height: auto;
     transition:
       border-color var(--duration-fast) var(--ease-standard),
@@ -76,21 +59,21 @@
       outline: 0;
       background: transparent;
       font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
-      color: var(--ds-input-fg);
+      color: var(--ds-input-fg, var(--text-primary));
       min-height: var(--field-textarea-rows-min, 60px);
 
       &::placeholder {
-        color: var(--ds-input-placeholder);
+        color: var(--ds-input-placeholder, var(--text-tertiary));
       }
     }
 
     &:hover {
-      border-color: var(--ds-input-border-hover);
+      border-color: var(--ds-input-border-hover, var(--border-strong));
     }
 
     &:focus-within {
-      border-color: var(--ds-input-border-focus);
-      box-shadow: var(--ds-input-focus-shadow);
+      border-color: var(--ds-input-border-focus, var(--primary));
+      box-shadow: var(--ds-input-focus-shadow, var(--focus-field));
     }
   }
 
@@ -104,7 +87,7 @@
 
   &.disabled {
     .control {
-      background: var(--ds-input-bg-disabled);
+      background: var(--ds-input-bg-disabled, var(--surface-disabled));
       border-color: var(--border-disabled);
     }
     textarea {
@@ -114,8 +97,8 @@
 
   &.error {
     .control {
-      background: var(--ds-input-bg-error);
-      border-color: var(--ds-input-border-error);
+      background: var(--ds-input-bg-error, var(--error-subtle));
+      border-color: var(--ds-input-border-error, var(--error));
 
       &:focus-within {
         box-shadow: var(--focus-field-error);
@@ -128,7 +111,7 @@
 
   &.success {
     .control {
-      border-color: var(--ds-input-border-success);
+      border-color: var(--ds-input-border-success, var(--success));
     }
     .hint {
       color: var(--success-text);

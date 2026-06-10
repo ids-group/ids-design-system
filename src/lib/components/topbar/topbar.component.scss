@@ -3,26 +3,19 @@
 }
 
 .topbar {
-  --ds-topbar-bg: var(--surface-default);
-  --ds-topbar-border: var(--border-divider);
-  --ds-topbar-height: var(--topbar-h);
-  --ds-topbar-action-fg: var(--icon-default);
-  --ds-topbar-action-fg-hover: var(--icon-strong);
-  --ds-topbar-action-bg-hover: var(--surface-secondary);
-  --ds-topbar-title-fg: var(--text-primary);
-  --ds-topbar-ping-color: var(--error);
+  /* Public --ds-topbar-* are read with fallbacks, never declared — consumer overrides inherit in. */
 
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  height: var(--ds-topbar-height);
+  height: var(--ds-topbar-height, var(--topbar-h));
   padding: 0 var(--space-6);
-  background: var(--ds-topbar-bg);
-  border-bottom: var(--border-width-default) solid var(--ds-topbar-border);
+  background: var(--ds-topbar-bg, var(--surface-default));
+  border-bottom: var(--border-width-default) solid var(--ds-topbar-border, var(--border-divider));
 
   .title {
     font: var(--font-weight-bold) var(--font-size-h5)/var(--line-height-snug) var(--font-sans);
-    color: var(--ds-topbar-title-fg);
+    color: var(--ds-topbar-title-fg, var(--text-primary));
   }
 
   .spacer {

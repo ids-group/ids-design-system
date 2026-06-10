@@ -5,16 +5,13 @@
 }
 
 .breadcrumbs {
-  --ds-breadcrumbs-fg: var(--text-tertiary);
-  --ds-breadcrumbs-fg-hover: var(--primary);
-  --ds-breadcrumbs-current-fg: var(--text-primary);
-  --ds-breadcrumbs-separator-fg: var(--icon-muted);
+  /* Public --ds-breadcrumbs-* are read with fallbacks, never declared — consumer overrides inherit in. */
 
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
-  color: var(--ds-breadcrumbs-fg);
+  color: var(--ds-breadcrumbs-fg, var(--text-tertiary));
   min-width: 0;
   max-width: 100%;
   flex-wrap: nowrap;
@@ -27,13 +24,13 @@
   }
 
   a {
-    color: var(--ds-breadcrumbs-fg);
+    color: var(--ds-breadcrumbs-fg, var(--text-tertiary));
     text-decoration: none;
     cursor: pointer;
     transition: color var(--duration-fast) var(--ease-standard);
 
     &:hover {
-      color: var(--ds-breadcrumbs-fg-hover);
+      color: var(--ds-breadcrumbs-fg-hover, var(--primary));
       text-decoration: underline;
       text-underline-offset: 2px;
     }
@@ -51,13 +48,13 @@
   }
 
   .sep {
-    color: var(--ds-breadcrumbs-separator-fg);
+    color: var(--ds-breadcrumbs-separator-fg, var(--icon-muted));
     display: inline-flex;
     align-items: center;
   }
 
   .current {
-    color: var(--ds-breadcrumbs-current-fg);
+    color: var(--ds-breadcrumbs-current-fg, var(--text-primary));
     font-weight: var(--font-weight-bold);
   }
 
