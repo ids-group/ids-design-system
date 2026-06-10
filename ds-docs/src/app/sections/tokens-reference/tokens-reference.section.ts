@@ -321,6 +321,23 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ],
   },
   {
+    component: 'Icon button',
+    selector: '.icon-button',
+    description: 'Read with fallbacks, never declared by DS — override on the host or any ancestor. '
+      + 'filled/selected derive hover/active from --ds-icon-button-bg via color-mix (88% / 76% + black); '
+      + 'standard/tonal/outlined keep explicit ramp defaults.',
+    tokens: [
+      { name: '--ds-icon-button-bg',           value: 'transparent',                 notes: 'Surface fill — variants re-point the default (filled/selected → --primary).' },
+      { name: '--ds-icon-button-fg',           value: 'var(--text-secondary)',       notes: 'Icon colour.' },
+      { name: '--ds-icon-button-border',       value: 'transparent',                 notes: 'Border colour (outlined variant overrides).' },
+      { name: '--ds-icon-button-bg-hover',     value: 'var(--surface-muted)',        notes: 'Hover fill — filled/selected derive it from the resolved bg.' },
+      { name: '--ds-icon-button-bg-active',    value: 'var(--ds-icon-button-bg-hover)', notes: 'Pressed fill — follows hover unless set; filled/selected derive 76% mix.' },
+      { name: '--ds-icon-button-fg-hover',     value: 'var(--text-primary)',         notes: 'Hover icon colour.' },
+      { name: '--ds-icon-button-radius',       value: 'var(--radius-md)',            notes: 'Corner radius.' },
+      { name: '--ds-icon-button-focus-shadow', value: 'var(--focus-ring)',           notes: 'Focus halo.' },
+    ],
+  },
+  {
     component: 'Badge',
     selector: '.badge',
     description: 'Lifecycle/semantic modifiers override --ds-badge-bg and --ds-badge-fg.',
