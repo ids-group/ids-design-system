@@ -1,12 +1,12 @@
 import { Component, ViewEncapsulation, computed, signal } from '@angular/core';
-import { computeStatus, readBuilt, readCurrent, ShowcaseStatus } from './showcase-globals';
+import { computeStatus, readBuildStamp, readSourceStamp, ShowcaseStatus } from './showcase-globals';
 
 /**
  * Staleness banner for the self-contained showcase build. Compares the
- * build-time source hash (window.__DS_BUILT__, injected by the inliner)
- * with the current one (window.__DS_CURRENT__ from the sibling
- * ds-version.js, kept fresh by the pre-commit hook). Hidden in dev serve
- * and when the showcase is up to date.
+ * build-time source hash (window.__DS_BUILD_STAMP__ from build-stamp.js,
+ * injected by the inliner) with the current one (window.__DS_SOURCE_STAMP__
+ * from the sibling source-stamp.js, kept fresh by the pre-commit hook). Hidden
+ * in dev serve and when the showcase is up to date.
  */
 @Component({
   selector: 'app-showcase-status',
@@ -22,7 +22,7 @@ import { computeStatus, readBuilt, readCurrent, ShowcaseStatus } from './showcas
         } @else if (status() === 'current-diff-commit') {
           Built from a different commit (<code>{{ builtCommit() }}</code>), but DS/docs source is unchanged — up to date.
         } @else if (status() === 'unverifiable') {
-          Cannot verify actuality (no <code>ds-version.js</code> beside this file). Built {{ builtDate() }} from <code>{{ builtHash() }}</code>.
+          Cannot verify actuality (no <code>source-stamp.js</code> beside this file). Built {{ builtDate() }} from <code>{{ builtHash() }}</code>.
         }
       </div>
     }
@@ -46,17 +46,17 @@ import { computeStatus, readBuilt, readCurrent, ShowcaseStatus } from './showcas
   `],
 })
 export class ShowcaseStatusComponent {
-  private readonly built = readBuilt();
-  private readonly current = readCurrent();
-  protected readonly status = signal<ShowcaseStatus>(computeStatus(this.built, this.current));
+  private readonly buildStamp = readBuildStamp();
+  private readonly sourceStamp = readSourceStamp();
+  protected readonly status = signal<ShowcaseStatus>(computeStatus(this.buildStamp, this.sourceStamp));
 
   protected readonly visible = computed(() =>
     this.status() === 'stale' ||
     this.status() === 'current-diff-commit' ||
     this.status() === 'unverifiable');
 
-  protected readonly builtHash = () => (this.built?.hash ?? '').slice(0, 8);
-  protected readonly currentHash = () => (this.current?.hash ?? '').slice(0, 8);
-  protected readonly builtCommit = () => (this.built?.commit ?? '').slice(0, 8);
-  protected readonly builtDate = () => this.built?.date ?? '';
+  protected readonly builtHash = () => (this.buildStamp?.hash ?? '').slice(0, 8);
+  protected readonly currentHash = () => (this.sourceStamp?.hash ?? '').slice(0, 8);
+  protected readonly builtCommit = () => (this.buildStamp?.commit ?? '').slice(0, 8);
+  protected readonly builtDate = () => this.buildStamp?.date ?? '';
 }

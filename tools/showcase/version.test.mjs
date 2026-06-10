@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { renderVersionFile, renderBuiltFile } from './version.mjs';
+import { renderSourceStamp, renderBuildStamp } from './version.mjs';
 
-test('renderVersionFile emits a classic-script global assignment', () => {
-  const out = renderVersionFile({ hash: 'abc', commit: 'def', date: '2026-01-01T00:00:00.000Z' });
-  assert.ok(out.includes('window.__DS_CURRENT__'));
+test('renderSourceStamp emits a classic-script global assignment', () => {
+  const out = renderSourceStamp({ hash: 'abc', commit: 'def', date: '2026-01-01T00:00:00.000Z' });
+  assert.ok(out.includes('window.__DS_SOURCE_STAMP__'));
   // pretty-printed JSON (readable), keys spaced
   assert.ok(out.includes('"hash": "abc"'));
   assert.ok(out.includes('"commit": "def"'));
@@ -14,9 +14,9 @@ test('renderVersionFile emits a classic-script global assignment', () => {
   assert.ok(out.trim().endsWith(';'));
 });
 
-test('renderBuiltFile emits a classic-script __DS_BUILT__ assignment', () => {
-  const out = renderBuiltFile({ hash: 'abc', commit: 'def', date: '2026-01-01T00:00:00.000Z' });
-  assert.ok(out.includes('window.__DS_BUILT__'));
+test('renderBuildStamp emits a classic-script __DS_BUILD_STAMP__ assignment', () => {
+  const out = renderBuildStamp({ hash: 'abc', commit: 'def', date: '2026-01-01T00:00:00.000Z' });
+  assert.ok(out.includes('window.__DS_BUILD_STAMP__'));
   assert.ok(out.includes('"hash": "abc"'));
   assert.ok(!out.includes('export'));
   assert.ok(out.trim().endsWith(';'));

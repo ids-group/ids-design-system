@@ -2,11 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 // Mirror of computeStatus() from showcase-globals.ts (kept identical).
-function computeStatus(built, current) {
-  if (!built) return 'unknown';
-  if (!current) return 'unverifiable';
-  if (built.hash === current.hash) {
-    if (built.commit && current.commit && built.commit !== current.commit) {
+function computeStatus(buildStamp, sourceStamp) {
+  if (!buildStamp) return 'unknown';
+  if (!sourceStamp) return 'unverifiable';
+  if (buildStamp.hash === sourceStamp.hash) {
+    if (buildStamp.commit && sourceStamp.commit && buildStamp.commit !== sourceStamp.commit) {
       return 'current-diff-commit';
     }
     return 'current';

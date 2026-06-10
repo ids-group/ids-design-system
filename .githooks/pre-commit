@@ -1,5 +1,5 @@
 #!/bin/sh
-# Keep showcase/ds-version.js in sync with the current source hash so the
+# Keep showcase/source-stamp.js in sync with the current source hash so the
 # built showcase can honestly detect staleness. Hashing only — no rebuild.
 node tools/showcase/write-version.mjs || exit 1
-git add showcase/ds-version.js
+git add showcase/source-stamp.js

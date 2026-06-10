@@ -1,10 +1,10 @@
 // Reads the Angular build output and produces a single self-contained
-// showcase/index.html plus a fresh showcase/ds-version.js.
+// showcase/index.html plus fresh showcase/build-stamp.js + source-stamp.js.
 import { readdir, readFile, writeFile, mkdir } from 'node:fs/promises';
 import { readFileSync, existsSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { computeContentHash } from './source-hash.mjs';
-import { renderVersionFile, renderBuiltFile, readGitCommit } from './version.mjs';
+import { renderSourceStamp, renderBuildStamp, readGitCommit } from './version.mjs';
 import { transformHtml, inlineCssUrls, mimeFor } from './html-transform.mjs';
 
 const DIST = 'dist/ds-docs/browser';
@@ -57,6 +57,6 @@ const html = transformHtml(indexHtml, { assets, resolveBinary });
 
 await mkdir(OUT_DIR, { recursive: true });
 await writeFile(join(OUT_DIR, 'index.html'), html, 'utf8');
-await writeFile(join(OUT_DIR, 'ds-built.js'), renderBuiltFile(built), 'utf8');
-await writeFile(join(OUT_DIR, 'ds-version.js'), renderVersionFile(built), 'utf8');
+await writeFile(join(OUT_DIR, 'build-stamp.js'), renderBuildStamp(built), 'utf8');
+await writeFile(join(OUT_DIR, 'source-stamp.js'), renderSourceStamp(built), 'utf8');
 console.log(`showcase: built index.html (hash ${hash.slice(0, 8)}, ${html.length} bytes)`);
