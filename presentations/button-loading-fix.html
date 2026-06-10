@@ -41,7 +41,7 @@
   .button {
     --bg: var(--primary); --fg: var(--primary-on); --bd: transparent; --spin: var(--primary-on);
     display: inline-flex; align-items: center; justify-content: center;
-    font: 800 16px/1 inherit; letter-spacing: .32px;
+    font: 800 16px/1 'Mulish', system-ui, sans-serif; letter-spacing: .32px;
     color: var(--fg); background: var(--bg);
     border: 1px solid var(--bd); border-radius: 8px;
     padding: 0 20px; height: 40px; white-space: nowrap; position: relative;
@@ -54,12 +54,17 @@
   .warning   { --bg: var(--warning); --fg: var(--text-on-warning); }
   .text      { --bg: transparent; --fg: var(--text-link); padding: 0; height: auto; text-decoration: underline; text-underline-offset: 4px; }
 
+  /* Spinner — byte-for-byte the lib geometry: absolute WITHOUT offsets; the
+     static position of an abspos child of a centered flex container is the
+     center, exactly as button.component.scss relies on. */
   .loading { color: transparent !important; pointer-events: none; }
   .loading::after {
-    content: ""; position: absolute; width: 16px; height: 16px;
-    border: 2px solid var(--spin); border-right-color: transparent; border-radius: 999px;
-    animation: spin .7s linear infinite;
-    left: 50%; top: 50%; margin: -8px 0 0 -8px;
+    content: ""; position: absolute;
+    width: 16px; height: 16px;                       /* --spinner-md */
+    border: 2px solid var(--spin);                   /* --border-width-strong */
+    border-right-color: transparent;
+    border-radius: 999px;                            /* --radius-pill */
+    animation: spin .7s linear infinite;             /* --duration-loop-fast */
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -97,6 +102,21 @@
       <div class="cell"><button class="button secondary">Cancel</button><small>secondary</small></div>
       <div class="cell"><button class="button outline">More</button><small>outline</small></div>
       <div class="cell"><button class="button error">Delete</button><small>error</small></div>
+    </div>
+  </section>
+
+  <section class="mode-a old-docs">
+    <h2>Как было в старом ds-docs зеркале (raw-маркап)</h2>
+    <p class="note">Вариантный фон + спиннер --primary-on / --primary-strong — задуманный вид; raw-ячейка не знала про [disabled], поэтому серость не появлялась.</p>
+    <div class="row">
+      <div class="cell"><button class="button loading">Save</button><small>primary</small></div>
+      <div class="cell"><button class="button secondary loading">Cancel</button><small>secondary</small></div>
+      <div class="cell"><button class="button tertiary loading">Edit</button><small>tertiary</small></div>
+      <div class="cell"><button class="button outline loading">More</button><small>outline</small></div>
+      <div class="cell"><button class="button error loading">Delete</button><small>error</small></div>
+      <div class="cell"><button class="button success loading">Approve</button><small>success</small></div>
+      <div class="cell"><button class="button warning loading">Retry</button><small>warning</small></div>
+      <div class="cell"><button class="button text loading">View log</button><small>text</small></div>
     </div>
   </section>
 

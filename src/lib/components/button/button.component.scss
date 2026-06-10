@@ -132,22 +132,22 @@
   }
 
   &.loading {
-    color: transparent !important; pointer-events: none;
+    color: transparent !important;
+    pointer-events: none;
+    /* The [disabled] attr is set while loading — keep the variant fill, not
+       the disabled gray; the spinner takes the variant's label color. */
+    background: var(--_button-bg);
+    border-color: var(--_button-border);
 
     &::after {
       content: ""; position: absolute;
       width: var(--spinner-md); height: var(--spinner-md);
-      border: var(--border-width-strong) solid currentColor;
+      border: var(--border-width-strong) solid var(--_button-fg);
       border-right-color: transparent;
       border-radius: var(--radius-pill);
-      color: var(--primary-on);
       animation: spin var(--duration-loop-fast) linear infinite;
     }
   }
-
-  &.secondary.loading::after,
-  &.tertiary.loading::after,
-  &.outline.loading::after { color: var(--primary-strong); }
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
