@@ -1,5 +1,5 @@
 // Reads the Angular build output and produces a single self-contained
-// showcase/index.html plus fresh showcase/build-stamp.js + source-stamp.js.
+// showcase/index.html — JS/CSS/fonts/favicon and the build stamp all inlined.
 import { readdir, readFile, writeFile, mkdir } from 'node:fs/promises';
 import { readFileSync, existsSync } from 'node:fs';
 import { join, extname } from 'node:path';

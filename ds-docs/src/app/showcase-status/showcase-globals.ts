@@ -14,7 +14,7 @@ export type ShowcaseStatus = 'unknown' | 'idle' | 'checking' | 'current' | 'stal
 
 declare global {
   interface Window {
-    /** Source state the showcase was built from (from build-stamp.js). */
+    /** Source state the showcase was built from (inlined into index.html). */
     __DS_BUILD_STAMP__?: ShowcaseStamp;
   }
 }

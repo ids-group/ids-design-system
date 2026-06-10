@@ -5,7 +5,7 @@ import { computeContentHashFromFiles } from './source-hash.browser';
 /**
  * Freshness banner for the self-contained showcase build. Shows the build
  * provenance (age + commit + src hash) instantly from window.__DS_BUILD_STAMP__
- * (baked into build-stamp.js by the inliner). A `file://` page can't read the
+ * (inlined into index.html by the inliner). A `file://` page can't read the
  * repo on its own, so an exact staleness check is on demand: the user clicks
  * "Check freshness" and picks the repo root — the page then re-hashes
  * src/lib + ds-docs/src in-browser (WebCrypto, mirroring tools/showcase/

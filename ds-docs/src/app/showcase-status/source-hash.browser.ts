@@ -1,6 +1,6 @@
 // Browser mirror of tools/showcase/source-hash.mjs — MUST stay byte-identical
-// in algorithm so the in-page hash equals the build-time hash baked into
-// build-stamp.js. Runs entirely client-side (WebCrypto), no server/Node.
+// in algorithm so the in-page hash equals the build-time hash inlined into
+// index.html (window.__DS_BUILD_STAMP__). Client-side only (WebCrypto), no Node.
 //
 // Input: the FileList from an <input type="file" webkitdirectory> where the
 // user picked the repo ROOT. Each file's webkitRelativePath is
