@@ -4,7 +4,7 @@ import { readdir, readFile, writeFile, mkdir } from 'node:fs/promises';
 import { readFileSync, existsSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { computeContentHash } from './source-hash.mjs';
-import { renderVersionFile, readGitCommit } from './version.mjs';
+import { renderVersionFile, renderBuiltFile, readGitCommit } from './version.mjs';
 import { transformHtml, inlineCssUrls, mimeFor } from './html-transform.mjs';
 
 const DIST = 'dist/ds-docs/browser';
@@ -53,9 +53,10 @@ for (const asset of assets.values()) {
 const hash = await computeContentHash(HASH_ROOTS);
 const built = { hash, commit: readGitCommit(), date: new Date().toISOString() };
 
-const html = transformHtml(indexHtml, { assets, built, resolveBinary });
+const html = transformHtml(indexHtml, { assets, resolveBinary });
 
 await mkdir(OUT_DIR, { recursive: true });
 await writeFile(join(OUT_DIR, 'index.html'), html, 'utf8');
+await writeFile(join(OUT_DIR, 'ds-built.js'), renderBuiltFile(built), 'utf8');
 await writeFile(join(OUT_DIR, 'ds-version.js'), renderVersionFile(built), 'utf8');
 console.log(`showcase: built index.html (hash ${hash.slice(0, 8)}, ${html.length} bytes)`);

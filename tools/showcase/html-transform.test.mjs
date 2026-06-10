@@ -39,10 +39,9 @@ test('transformHtml inlines js + css + favicon, rewrites base, injects globals',
     ['polyfills-AB.js', { type: 'js', content: 'var p=1;' }],
     ['main-AB.js', { type: 'js', content: 'var m=1;' }],
   ]);
-  const built = { hash: 'h', commit: 'c', date: 'd' };
   const resolveBinary = (ref) =>
     ref === 'favicon.ico' ? { mime: 'image/x-icon', base64: 'SUNP' } : null;
-  const out = transformHtml(html, { assets, built, resolveBinary });
+  const out = transformHtml(html, { assets, resolveBinary });
 
   assert.ok(out.includes('<base href="./">'));
   assert.ok(!out.includes('modulepreload'));
@@ -51,8 +50,10 @@ test('transformHtml inlines js + css + favicon, rewrites base, injects globals',
   assert.ok(out.includes('<script type="module">var m=1;</script>'));
   assert.ok(out.includes('href="data:image/x-icon;base64,SUNP"'));
   assert.ok(!out.includes('href="favicon.ico"'));
-  assert.ok(out.includes('window.__DS_BUILT__={"hash":"h","commit":"c","date":"d"}'));
+  // build provenance + current source both load as external siblings (not inline)
+  assert.ok(out.includes('<script src="./ds-built.js"></script>'));
   assert.ok(out.includes('<script src="./ds-version.js"></script>'));
+  assert.ok(!out.includes('window.__DS_BUILT__'));
 });
 
 test('transformHtml leaves favicon untouched when resolver finds nothing', () => {

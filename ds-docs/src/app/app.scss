@@ -29,6 +29,12 @@
 }
 
 .main {
+  // position:relative makes .main the containing block for any absolutely-
+  // positioned descendant (e.g. `.visually-hidden` sr-only spans deep in the
+  // sections). Without it those abspos boxes resolve against the ICB and are
+  // placed at their static y deep down the document — escaping .main's overflow
+  // clip and inflating <html> scrollHeight into ~50k px of empty scroll.
+  position: relative;
   overflow-y: auto;
   min-height: 0;
 }

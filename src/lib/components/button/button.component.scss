@@ -3,6 +3,12 @@
    ============================================================ */
 :host {
   display: inline-flex;
+  /* Hug the label. A bare inline-flex host is still stretched to full width
+     when it's a flex/grid item (align-items / justify-items: stretch) — e.g.
+     dropped into a column flex or a grid cell. width: fit-content opts out of
+     that implicit stretch, so the button only grows when the consumer asks via
+     `fullWidth` (or an explicit width / flex-grow). */
+  width: fit-content;
 }
 
 /* Full-width — host stretches to its container; the inner .button is already

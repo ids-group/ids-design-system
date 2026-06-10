@@ -36,9 +36,10 @@ export function inlineCssUrls(css, resolve) {
 }
 
 // assets:        Map<filename, { type: 'js' | 'css', content: string }>
-// built:         { hash, commit, date }
 // resolveBinary: (ref) -> { mime, base64 } | null — for the favicon
-export function transformHtml(html, { assets, built, resolveBinary = () => null, versionScriptName = 'ds-version.js' }) {
+// Build provenance (__DS_BUILT__) and current source (__DS_CURRENT__) both load
+// as sibling classic scripts — nothing is inlined into <head>.
+export function transformHtml(html, { assets, resolveBinary = () => null, builtScriptName = 'ds-built.js', versionScriptName = 'ds-version.js' }) {
   let out = html;
 
   // 1. relative base for file://
@@ -71,9 +72,10 @@ export function transformHtml(html, { assets, built, resolveBinary = () => null,
       return `${before}data:${data.mime};base64,${data.base64}${after}`;
     });
 
-  // 6. inject build provenance + sibling current-version loader
+  // 6. inject sibling loaders: build provenance (__DS_BUILT__) + current
+  //    source (__DS_CURRENT__). Both external so neither is embedded inline.
   const inject =
-    `<script>window.__DS_BUILT__=${JSON.stringify(built)};</script>` +
+    `<script src="./${builtScriptName}"></script>` +
     `<script src="./${versionScriptName}"></script>`;
   out = out.replace(/<\/head>/i, `${inject}</head>`);
 
