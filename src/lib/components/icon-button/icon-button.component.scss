@@ -6,15 +6,16 @@
 }
 
 .icon-button {
-  /* Tokens (override per-instance: ds-icon-button { --ds-icon-button-…: … }) */
-  --ds-icon-button-bg:        transparent;
-  --ds-icon-button-fg:        var(--text-secondary);
-  --ds-icon-button-border:    transparent;
-  --ds-icon-button-bg-hover:  var(--surface-muted);
-  --ds-icon-button-bg-active: var(--ds-icon-button-bg-hover);
-  --ds-icon-button-fg-hover:  var(--text-primary);
-  --ds-icon-button-radius:    var(--r-md);
-  --ds-icon-button-focus-shadow: var(--focus-ring);
+  /* Public --ds-icon-button-* are read with fallbacks, never declared — consumer
+     overrides inherit in. filled/selected derive hover/active from the resolved
+     bg (theme hover/pressed recipe: 88%/76% + black) unless set individually. */
+  --_icon-button-bg:        var(--ds-icon-button-bg,        transparent);
+  --_icon-button-fg:        var(--ds-icon-button-fg,        var(--text-secondary));
+  --_icon-button-border:    var(--ds-icon-button-border,    transparent);
+  --_icon-button-bg-hover:  var(--ds-icon-button-bg-hover,  var(--surface-muted));
+  --_icon-button-bg-active: var(--ds-icon-button-bg-active, var(--_icon-button-bg-hover));
+  --_icon-button-fg-hover:  var(--ds-icon-button-fg-hover,  var(--text-primary));
+  --_icon-button-focus-shadow: var(--ds-icon-button-focus-shadow, var(--focus-ring));
 
   display: inline-flex;
   align-items: center;
@@ -23,10 +24,10 @@
   height: var(--hit-cozy);
   aspect-ratio: 1;
   padding: 0;
-  border: var(--bw-default) solid var(--ds-icon-button-border);
-  border-radius: var(--ds-icon-button-radius);
-  background: var(--ds-icon-button-bg);
-  color: var(--ds-icon-button-fg);
+  border: var(--bw-default) solid var(--_icon-button-border);
+  border-radius: var(--ds-icon-button-radius, var(--r-md));
+  background: var(--_icon-button-bg);
+  color: var(--_icon-button-fg);
   cursor: pointer;
   user-select: none;
   transition:
@@ -36,17 +37,16 @@
     box-shadow var(--dur-fast) var(--ease-standard);
 
   &:hover {
-    background: var(--ds-icon-button-bg-hover);
-    color: var(--ds-icon-button-fg-hover);
+    background: var(--_icon-button-bg-hover);
+    color: var(--_icon-button-fg-hover);
   }
-  /* Pressed — bg shift only; a square icon button takes no inset/translate on
-     press (no layout nudge, no halo), just a deeper fill. */
+  /* Pressed — bg shift only, no halo on a square icon button. */
   &:active {
-    background: var(--ds-icon-button-bg-active);
+    background: var(--_icon-button-bg-active);
   }
   &:focus-visible {
     outline: none;
-    box-shadow: var(--ds-icon-button-focus-shadow);
+    box-shadow: var(--_icon-button-focus-shadow);
   }
   &[disabled] {
     color: var(--text-disabled);
@@ -61,43 +61,38 @@
   &.md { width: var(--hit-cozy);    height: var(--hit-cozy); }
   &.lg { width: var(--field-h-lg);  height: var(--field-h-lg); }
 
-  /* Variants */
-  &.standard {
-    --ds-icon-button-bg:        transparent;
-    --ds-icon-button-fg:        var(--text-secondary);
-    --ds-icon-button-border:    transparent;
-    --ds-icon-button-bg-hover:  var(--surface-muted);
-  }
+  /* Variants re-bind the resolvers (consumer token still wins). `standard`
+     equals the base defaults — its old block duplicated them, dropped. */
   &.filled {
-    --ds-icon-button-bg:        var(--primary);
-    --ds-icon-button-fg:        var(--primary-on);
-    --ds-icon-button-bg-hover:  var(--primary-hover);
-    --ds-icon-button-bg-active: var(--primary-pressed);
-    --ds-icon-button-fg-hover:  var(--primary-on);
+    --_icon-button-bg:        var(--ds-icon-button-bg,        var(--primary));
+    --_icon-button-fg:        var(--ds-icon-button-fg,        var(--primary-on));
+    --_icon-button-bg-hover:  var(--ds-icon-button-bg-hover,  color-mix(in srgb, var(--_icon-button-bg) 88%, black));
+    --_icon-button-bg-active: var(--ds-icon-button-bg-active, color-mix(in srgb, var(--_icon-button-bg) 76%, black));
+    --_icon-button-fg-hover:  var(--ds-icon-button-fg-hover,  var(--_icon-button-fg));
   }
   &.tonal {
-    --ds-icon-button-bg:        var(--primary-muted);
-    --ds-icon-button-fg:        var(--primary-strong);
-    --ds-icon-button-bg-hover:  var(--primary-subtle);
-    --ds-icon-button-bg-active: var(--primary-muted-strong);
-    --ds-icon-button-fg-hover:  var(--primary-strong);
+    --_icon-button-bg:        var(--ds-icon-button-bg,        var(--primary-muted));
+    --_icon-button-fg:        var(--ds-icon-button-fg,        var(--primary-strong));
+    --_icon-button-bg-hover:  var(--ds-icon-button-bg-hover,  var(--primary-subtle));
+    --_icon-button-bg-active: var(--ds-icon-button-bg-active, var(--primary-muted-strong));
+    --_icon-button-fg-hover:  var(--ds-icon-button-fg-hover,  var(--primary-strong));
   }
   &.outlined {
-    --ds-icon-button-bg:        var(--surface-default);
-    --ds-icon-button-fg:        var(--text-primary);
-    --ds-icon-button-border:    var(--border-default);
-    --ds-icon-button-bg-hover:  var(--surface-secondary);
-    --ds-icon-button-bg-active: var(--surface-muted);
-    --ds-icon-button-fg-hover:  var(--text-primary);
+    --_icon-button-bg:        var(--ds-icon-button-bg,        var(--surface-default));
+    --_icon-button-fg:        var(--ds-icon-button-fg,        var(--text-primary));
+    --_icon-button-border:    var(--ds-icon-button-border,    var(--border-default));
+    --_icon-button-bg-hover:  var(--ds-icon-button-bg-hover,  var(--surface-secondary));
+    --_icon-button-bg-active: var(--ds-icon-button-bg-active, var(--surface-muted));
+    --_icon-button-fg-hover:  var(--ds-icon-button-fg-hover,  var(--text-primary));
   }
 
-  /* Toggle — pressed/active look. Wins over the resting variant fill. */
+  /* Toggle pressed look — stays last so it wins over the resting variant fill. */
   &.selected {
-    --ds-icon-button-bg:        var(--primary);
-    --ds-icon-button-fg:        var(--primary-on);
-    --ds-icon-button-border:    transparent;
-    --ds-icon-button-bg-hover:  var(--primary-hover);
-    --ds-icon-button-bg-active: var(--primary-pressed);
-    --ds-icon-button-fg-hover:  var(--primary-on);
+    --_icon-button-bg:        var(--ds-icon-button-bg,        var(--primary));
+    --_icon-button-fg:        var(--ds-icon-button-fg,        var(--primary-on));
+    --_icon-button-border:    var(--ds-icon-button-border,    transparent);
+    --_icon-button-bg-hover:  var(--ds-icon-button-bg-hover,  color-mix(in srgb, var(--_icon-button-bg) 88%, black));
+    --_icon-button-bg-active: var(--ds-icon-button-bg-active, color-mix(in srgb, var(--_icon-button-bg) 76%, black));
+    --_icon-button-fg-hover:  var(--ds-icon-button-fg-hover,  var(--_icon-button-fg));
   }
 }
