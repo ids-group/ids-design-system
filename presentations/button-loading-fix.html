@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>ds-button · loading fix — варианты</title>
+<style>
+  :root {
+    --primary: rgb(46, 84, 255);
+    --primary-on: #fff;
+    --primary-muted: rgb(225, 230, 254);
+    --primary-strong: rgb(29, 67, 237);
+    --surface-default: #fff;
+    --surface-secondary: rgb(241, 244, 249);
+    --surface-disabled: rgb(241, 244, 249);
+    --text-primary: rgb(22, 26, 40);
+    --text-disabled: rgb(155, 163, 180);
+    --text-link: rgb(29, 67, 237);
+    --border-default: rgb(220, 225, 234);
+    --error: rgb(219, 31, 31);
+    --success: rgb(34, 163, 58);
+    --warning: rgb(244, 212, 58);
+    --text-on-success: #fff;
+    --text-on-warning: rgb(22, 26, 40);
+  }
+  body {
+    font: 14px/1.5 'Mulish', system-ui, sans-serif;
+    color: var(--text-primary);
+    background: #f8fafc;
+    margin: 0; padding: 40px;
+  }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  .lede { color: #6b7388; max-width: 880px; margin: 0 0 28px; }
+  section { margin-bottom: 36px; }
+  h2 { font-size: 15px; margin: 0 0 4px; }
+  .note { color: #6b7388; font-size: 13px; margin: 0 0 12px; }
+  .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: center;
+         background: #fff; border: 1px solid var(--border-default); border-radius: 12px; padding: 20px; }
+  .cell { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+  .cell small { color: #9ba3b4; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+
+  .button {
+    --bg: var(--primary); --fg: var(--primary-on); --bd: transparent; --spin: var(--primary-on);
+    display: inline-flex; align-items: center; justify-content: center;
+    font: 800 16px/1 inherit; letter-spacing: .32px;
+    color: var(--fg); background: var(--bg);
+    border: 1px solid var(--bd); border-radius: 8px;
+    padding: 0 20px; height: 40px; white-space: nowrap; position: relative;
+  }
+  .secondary { --bg: var(--primary-muted); --fg: var(--primary-strong); }
+  .tertiary  { --bg: transparent; --fg: var(--primary-strong); }
+  .outline   { --bg: var(--surface-default); --fg: var(--text-primary); --bd: var(--border-default); }
+  .error     { --bg: var(--error); }
+  .success   { --bg: var(--success); --fg: var(--text-on-success); }
+  .warning   { --bg: var(--warning); --fg: var(--text-on-warning); }
+  .text      { --bg: transparent; --fg: var(--text-link); padding: 0; height: auto; text-decoration: underline; text-underline-offset: 4px; }
+
+  .loading { color: transparent !important; pointer-events: none; }
+  .loading::after {
+    content: ""; position: absolute; width: 16px; height: 16px;
+    border: 2px solid var(--spin); border-right-color: transparent; border-radius: 999px;
+    animation: spin .7s linear infinite;
+    left: 50%; top: 50%; margin: -8px 0 0 -8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Режим 0 — КАК СЕЙЧАС вживую: [disabled] красит фон в серый; спиннер
+     --primary-on (белый), у secondary/tertiary/outline оверрайд --primary-strong. */
+  .mode-current .button { background: var(--surface-disabled); border-color: transparent; }
+  .mode-current .button { --spin: var(--primary-on); }
+  .mode-current .secondary, .mode-current .tertiary, .mode-current .outline { --spin: var(--primary-strong); }
+
+  /* Режим A — вернуть вариантный фон, цвета спиннера старые
+     (--primary-on; secondary/tertiary/outline → --primary-strong). */
+  .mode-a .button { --spin: var(--primary-on); }
+  .mode-a .secondary, .mode-a .tertiary, .mode-a .outline { --spin: var(--primary-strong); }
+
+  /* Режим B — вариантный фон, спиннер = fg варианта (одно правило, без оверрайдов). */
+  .mode-b .button { --spin: var(--fg); }
+
+  .disabled-ref .button { background: var(--surface-disabled); color: var(--text-disabled); border-color: transparent; }
+  .disabled-ref .text { background: transparent; }
+</style>
+</head>
+<body>
+  <h1>ds-button · loading: что чиним и как</h1>
+  <p class="lede">Сейчас <code>[loading]</code> вешает нативный <code>disabled</code>, и его серый фон затирает
+  вариантный — белый спиннер на сером почти невидим, а loading-кнопка неотличима от disabled.
+  Ниже три режима по всем вариантам. Фикс — CSS-only: <code>.loading</code> возвращает
+  <code>background: var(--_button-bg)</code> поверх серого; режим B дополнительно ведёт спиннер
+  через <code>var(--_button-fg)</code> (и убирает три вариантных оверрайда).</p>
+
+  <section class="disabled-ref">
+    <h2>Для сравнения: настоящий disabled</h2>
+    <p class="note">Так выглядит выключенная кнопка — и так же сейчас выглядит загрузка.</p>
+    <div class="row">
+      <div class="cell"><button class="button">Save</button><small>primary</small></div>
+      <div class="cell"><button class="button secondary">Cancel</button><small>secondary</small></div>
+      <div class="cell"><button class="button outline">More</button><small>outline</small></div>
+      <div class="cell"><button class="button error">Delete</button><small>error</small></div>
+    </div>
+  </section>
+
+  <section class="mode-current">
+    <h2>0 · Как сейчас вживую</h2>
+    <p class="note">Серый disabled-фон у всех; спиннер белый (у secondary/tertiary/outline — синий по старому оверрайду).</p>
+    <div class="row">
+      <div class="cell"><button class="button loading">Save</button><small>primary</small></div>
+      <div class="cell"><button class="button secondary loading">Cancel</button><small>secondary</small></div>
+      <div class="cell"><button class="button tertiary loading">Edit</button><small>tertiary</small></div>
+      <div class="cell"><button class="button outline loading">More</button><small>outline</small></div>
+      <div class="cell"><button class="button error loading">Delete</button><small>error</small></div>
+      <div class="cell"><button class="button success loading">Approve</button><small>success</small></div>
+      <div class="cell"><button class="button warning loading">Retry</button><small>warning</small></div>
+      <div class="cell"><button class="button text loading">View log</button><small>text</small></div>
+    </div>
+  </section>
+
+  <section class="mode-a">
+    <h2>A · Вернуть вариантный фон, спиннер как был задуман</h2>
+    <p class="note">Спиннер --primary-on (белый); secondary/tertiary/outline — --primary-strong. На warning белый теряется.</p>
+    <div class="row">
+      <div class="cell"><button class="button loading">Save</button><small>primary</small></div>
+      <div class="cell"><button class="button secondary loading">Cancel</button><small>secondary</small></div>
+      <div class="cell"><button class="button tertiary loading">Edit</button><small>tertiary</small></div>
+      <div class="cell"><button class="button outline loading">More</button><small>outline</small></div>
+      <div class="cell"><button class="button error loading">Delete</button><small>error</small></div>
+      <div class="cell"><button class="button success loading">Approve</button><small>success</small></div>
+      <div class="cell"><button class="button warning loading">Retry</button><small>warning</small></div>
+      <div class="cell"><button class="button text loading">View log</button><small>text</small></div>
+    </div>
+  </section>
+
+  <section class="mode-b">
+    <h2>B · Вариантный фон + спиннер цветом лейбла (рекомендую)</h2>
+    <p class="note">Одно правило --_button-fg вместо трёх оверрайдов; авто-контраст: на warning спиннер тёмный, на outline — нейтральный тёмный (был бы синий).</p>
+    <div class="row">
+      <div class="cell"><button class="button loading">Save</button><small>primary</small></div>
+      <div class="cell"><button class="button secondary loading">Cancel</button><small>secondary</small></div>
+      <div class="cell"><button class="button tertiary loading">Edit</button><small>tertiary</small></div>
+      <div class="cell"><button class="button outline loading">More</button><small>outline</small></div>
+      <div class="cell"><button class="button error loading">Delete</button><small>error</small></div>
+      <div class="cell"><button class="button success loading">Approve</button><small>success</small></div>
+      <div class="cell"><button class="button warning loading">Retry</button><small>warning</small></div>
+      <div class="cell"><button class="button text loading">View log</button><small>text</small></div>
+    </div>
+  </section>
+</body>
+</html>
