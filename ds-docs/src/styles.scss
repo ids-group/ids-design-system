@@ -10,8 +10,10 @@
 @use 'themes/default/theme';
 @use 'styles/tokens';
 @use 'styles/tokens-charts';
+@use 'styles/fonts';
 @use 'styles/reset';
 @use 'styles/typography';
+@use 'styles/link';
 @use 'styles/layout-utils';
 @use 'styles/scrollbar';
 @use 'styles/icon-base';
