@@ -55,8 +55,8 @@ export class ShowcaseStatusComponent {
     this.status() === 'current-diff-commit' ||
     this.status() === 'unverifiable');
 
-  protected readonly builtHash = () => (this.buildStamp?.hash ?? '').slice(0, 8);
-  protected readonly currentHash = () => (this.sourceStamp?.hash ?? '').slice(0, 8);
+  protected readonly builtHash = () => (this.buildStamp?.srcHash ?? '').slice(0, 8);
+  protected readonly currentHash = () => (this.sourceStamp?.srcHash ?? '').slice(0, 8);
   protected readonly builtCommit = () => (this.buildStamp?.commit ?? '').slice(0, 8);
   protected readonly builtDate = () => this.buildStamp?.date ?? '';
 }

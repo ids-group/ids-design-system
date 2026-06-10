@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 function computeStatus(buildStamp, sourceStamp) {
   if (!buildStamp) return 'unknown';
   if (!sourceStamp) return 'unverifiable';
-  if (buildStamp.hash === sourceStamp.hash) {
+  if (buildStamp.srcHash === sourceStamp.srcHash) {
     if (buildStamp.commit && sourceStamp.commit && buildStamp.commit !== sourceStamp.commit) {
       return 'current-diff-commit';
     }
@@ -18,14 +18,14 @@ test('no build provenance -> unknown (dev serve)', () => {
   assert.equal(computeStatus(undefined, undefined), 'unknown');
 });
 test('no sibling -> unverifiable (file copied alone)', () => {
-  assert.equal(computeStatus({ hash: 'a', commit: 'c1' }, undefined), 'unverifiable');
+  assert.equal(computeStatus({ srcHash: 'a', commit: 'c1' }, undefined), 'unverifiable');
 });
 test('matching hash -> current', () => {
-  assert.equal(computeStatus({ hash: 'a', commit: 'c1' }, { hash: 'a', commit: 'c1' }), 'current');
+  assert.equal(computeStatus({ srcHash: 'a', commit: 'c1' }, { srcHash: 'a', commit: 'c1' }), 'current');
 });
 test('matching hash, different commit -> current-diff-commit', () => {
-  assert.equal(computeStatus({ hash: 'a', commit: 'c1' }, { hash: 'a', commit: 'c2' }), 'current-diff-commit');
+  assert.equal(computeStatus({ srcHash: 'a', commit: 'c1' }, { srcHash: 'a', commit: 'c2' }), 'current-diff-commit');
 });
 test('different hash -> stale', () => {
-  assert.equal(computeStatus({ hash: 'a', commit: 'c1' }, { hash: 'b', commit: 'c1' }), 'stale');
+  assert.equal(computeStatus({ srcHash: 'a', commit: 'c1' }, { srcHash: 'b', commit: 'c1' }), 'stale');
 });

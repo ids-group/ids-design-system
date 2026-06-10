@@ -1,5 +1,5 @@
 export interface ShowcaseStamp {
-  hash: string;
+  srcHash: string;
   commit: string;
   date: string;
 }
@@ -36,7 +36,7 @@ export function computeStatus(
 ): ShowcaseStatus {
   if (!buildStamp) return 'unknown';
   if (!sourceStamp) return 'unverifiable';
-  if (buildStamp.hash === sourceStamp.hash) {
+  if (buildStamp.srcHash === sourceStamp.srcHash) {
     if (buildStamp.commit && sourceStamp.commit && buildStamp.commit !== sourceStamp.commit) {
       return 'current-diff-commit';
     }

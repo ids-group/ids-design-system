@@ -50,8 +50,8 @@ for (const asset of assets.values()) {
   if (asset.type === 'css') asset.content = inlineCssUrls(asset.content, resolveBinary);
 }
 
-const hash = await computeContentHash(HASH_ROOTS);
-const built = { hash, commit: readGitCommit(), date: new Date().toISOString() };
+const srcHash = await computeContentHash(HASH_ROOTS);
+const built = { srcHash, commit: readGitCommit(), date: new Date().toISOString() };
 
 const html = transformHtml(indexHtml, { assets, resolveBinary });
 
@@ -59,4 +59,4 @@ await mkdir(OUT_DIR, { recursive: true });
 await writeFile(join(OUT_DIR, 'index.html'), html, 'utf8');
 await writeFile(join(OUT_DIR, 'build-stamp.js'), renderBuildStamp(built), 'utf8');
 await writeFile(join(OUT_DIR, 'source-stamp.js'), renderSourceStamp(built), 'utf8');
-console.log(`showcase: built index.html (hash ${hash.slice(0, 8)}, ${html.length} bytes)`);
+console.log(`showcase: built index.html (srcHash ${srcHash.slice(0, 8)}, ${html.length} bytes)`);
