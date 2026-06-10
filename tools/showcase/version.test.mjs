@@ -5,10 +5,11 @@ import { renderVersionFile, renderBuiltFile } from './version.mjs';
 test('renderVersionFile emits a classic-script global assignment', () => {
   const out = renderVersionFile({ hash: 'abc', commit: 'def', date: '2026-01-01T00:00:00.000Z' });
   assert.ok(out.includes('window.__DS_CURRENT__'));
-  assert.ok(out.includes('"hash":"abc"'));
-  assert.ok(out.includes('"commit":"def"'));
-  assert.ok(out.includes('"date":"2026-01-01T00:00:00.000Z"'));
-  // must be a single statement, no module syntax (loads on file:// as classic script)
+  // pretty-printed JSON (readable), keys spaced
+  assert.ok(out.includes('"hash": "abc"'));
+  assert.ok(out.includes('"commit": "def"'));
+  assert.ok(out.includes('"date": "2026-01-01T00:00:00.000Z"'));
+  // must be a classic-script statement, no module syntax (loads on file://)
   assert.ok(!out.includes('export'));
   assert.ok(out.trim().endsWith(';'));
 });
@@ -16,7 +17,7 @@ test('renderVersionFile emits a classic-script global assignment', () => {
 test('renderBuiltFile emits a classic-script __DS_BUILT__ assignment', () => {
   const out = renderBuiltFile({ hash: 'abc', commit: 'def', date: '2026-01-01T00:00:00.000Z' });
   assert.ok(out.includes('window.__DS_BUILT__'));
-  assert.ok(out.includes('"hash":"abc"'));
+  assert.ok(out.includes('"hash": "abc"'));
   assert.ok(!out.includes('export'));
   assert.ok(out.trim().endsWith(';'));
 });

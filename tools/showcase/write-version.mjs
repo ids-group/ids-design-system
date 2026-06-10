@@ -16,7 +16,7 @@ const hash = await computeContentHash(HASH_ROOTS);
 // commit (the timestamp would otherwise change each run).
 if (existsSync(OUT)) {
   const existing = await readFile(OUT, 'utf8');
-  if (existing.includes(`"hash":"${hash}"`)) {
+  if (existing.includes(`"hash": "${hash}"`)) {
     console.log(`showcase: ds-version.js already current (${hash.slice(0, 8)})`);
     process.exit(0);
   }
