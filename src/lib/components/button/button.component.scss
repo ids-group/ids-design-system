@@ -3,40 +3,26 @@
    ============================================================ */
 :host {
   display: inline-flex;
-  /* Hug the label. A bare inline-flex host is still stretched to full width
-     when it's a flex/grid item (align-items / justify-items: stretch) — e.g.
-     dropped into a column flex or a grid cell. width: fit-content opts out of
-     that implicit stretch, so the button only grows when the consumer asks via
-     `fullWidth` (or an explicit width / flex-grow). */
+  /* Opts out of the implicit stretch a flex/grid parent applies to its items —
+     without this the button fills the column even without `fullWidth`. */
   width: fit-content;
 }
 
-/* Full-width — host stretches to its container; the inner .button is already
-   width:100%, so it fills. Set via the `fullWidth` input. */
 :host(.full-width) {
   display: block;
   width: 100%;
 }
 
 .button {
-  /* Public --ds-button-* tokens are READ here (and re-bound per variant),
-     never declared — a consumer declaration anywhere up the tree (host
-     element included) wins over the variant defaults. Hover/active default
-     to a color-mix derivation from the resolved bg (the theme's
-     --primary-hover/-pressed recipe: 88% / 76% base + black), so overriding
-     ONE bg token retints hover, pressed and the pressed halo automatically;
-     any state token stays individually overridable. One-shot tokens
-     (radius, disabled colors) are read inline at their usage site. */
+  /* Public --ds-button-* are read with fallbacks, never declared — consumer
+     overrides inherit in. Hover/active/halo derive from the resolved bg
+     (theme hover/pressed recipe: 88%/76% + black) unless set individually. */
   --_button-bg:        var(--ds-button-bg,        var(--primary));
   --_button-bg-hover:  var(--ds-button-bg-hover,  color-mix(in srgb, var(--_button-bg) 88%, black));
   --_button-bg-active: var(--ds-button-bg-active, color-mix(in srgb, var(--_button-bg) 76%, black));
   --_button-fg:        var(--ds-button-fg,        var(--primary-on));
   --_button-border:    var(--ds-button-border,    transparent);
   --_button-focus-shadow: var(--ds-button-focus-shadow, var(--focus-ring));
-
-  /* Pressed halo — soft glow ring on :active (no layout shift). Derived from
-     the variant's own active background, so it auto-tints for error/success/
-     warning without per-variant overrides. */
   --_button-pressed-shadow: var(--ds-button-pressed-shadow,
                               0 0 0 3px color-mix(in srgb, var(--_button-bg-active) 35%, transparent));
 
@@ -88,8 +74,7 @@
     .icon { width: var(--icon-xs); height: var(--icon-xs); }
   }
 
-  /* Sizes — canonical sm/md/lg tier (aligned with input/select/dropdown/date-picker).
-     Prefer these for new code; legacy s/m/l stays for back-compat. */
+  /* Sizes — canonical sm/md/lg tier; prefer for new code. */
   &.lg { font-size: var(--fs-m); height: var(--field-h-lg); padding: 0 var(--s-5); }
   &.md { font-size: var(--fs-m); height: var(--hit-cozy);    padding: 0 var(--s-5); }
   &.sm {
@@ -97,10 +82,8 @@
     .icon { width: var(--icon-sm); height: var(--icon-sm); }
   }
 
-  /* Variants — re-bind the private resolvers; the consumer token still wins
-     over the variant default. Solid status variants (error/success/warning)
-     keep the derived hover/active; tonal/transparent/neutral variants pin
-     explicit ramp picks (a black mix into pastel tints desaturates). */
+  /* Variants re-bind the resolvers (consumer token still wins). Tonal/neutral
+     ones pin ramp picks — a black mix into pastel tints desaturates. */
   &.secondary {
     --_button-bg:        var(--ds-button-bg,        var(--primary-muted));
     --_button-fg:        var(--ds-button-fg,        var(--primary-strong));
@@ -113,8 +96,6 @@
     --_button-bg-hover:  var(--ds-button-bg-hover,  var(--primary-subtle));
     --_button-bg-active: var(--ds-button-bg-active, var(--primary-muted));
   }
-  /* Bordered neutral, low-emphasis. (Was also exposed as `ghost`; removed —
-     `ghost` implied chromeless, which this isn't. Icon-only lives in ds-icon-button.) */
   &.outline {
     --_button-bg:        var(--ds-button-bg,        var(--surface-default));
     --_button-fg:        var(--ds-button-fg,        var(--text-primary));
@@ -147,7 +128,6 @@
     &:hover { color: var(--primary-pressed); }
   }
 
-  /* Loading */
   &.loading {
     color: transparent !important; pointer-events: none;
 
