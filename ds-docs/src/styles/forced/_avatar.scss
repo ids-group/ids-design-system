@@ -1,0 +1,46 @@
+/* ============================================================
+   ---------- AVATAR ----------
+   Raw `.avatar` / `.avatar-group` markup is used in the docs Group
+   stage so individual chips can be tinted with inline `background` /
+   `color` (the DS Avatar API exposes no color input). Mirrors the
+   minimal surface from avatar.component.scss + avatar-group.component.scss.
+   ============================================================ */
+.avatar {
+  /* Public --ds-avatar-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_avatar-size:       var(--ds-avatar-size,       var(--avatar-md));
+  --_avatar-radius:     var(--ds-avatar-radius,     var(--radius-pill));
+  --_avatar-bg:         var(--ds-avatar-bg,         var(--primary-muted));
+  --_avatar-fg:         var(--ds-avatar-fg,         var(--primary-strong));
+  --_avatar-ring-width: var(--ds-avatar-ring-width, var(--avatar-bw-group));
+
+  display: inline-grid;
+  place-items: center;
+  width: var(--_avatar-size);
+  height: var(--_avatar-size);
+  border-radius: var(--_avatar-radius);
+  background: var(--_avatar-bg);
+  color: var(--_avatar-fg);
+  font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
+  letter-spacing: var(--letter-spacing-wide);
+  flex-shrink: 0;
+  overflow: hidden;
+
+  &.neutral {
+    --_avatar-bg: var(--ds-avatar-bg, var(--neutral-200));
+    --_avatar-fg: var(--ds-avatar-fg, var(--neutral-700));
+  }
+}
+
+.avatar-group {
+  /* Public --ds-avatargroup-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_avatargroup-ring:    var(--ds-avatargroup-ring,    var(--surface-default));
+  --_avatargroup-overlap: var(--ds-avatargroup-overlap, calc(-1 * var(--space-2)));
+
+  display: inline-flex;
+
+  .avatar {
+    border: var(--_avatar-ring-width) solid var(--_avatargroup-ring);
+    margin-left: var(--_avatargroup-overlap);
+  }
+  .avatar:first-child { margin-left: 0; }
+}

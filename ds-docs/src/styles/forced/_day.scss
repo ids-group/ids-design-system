@@ -1,0 +1,52 @@
+/* .calendar global mirror dropped — date-picker section consumes
+   <ds-date-picker> for live demos. Only the Day states force-state
+   showcase grid uses raw <button class="day …">, so just the `.day`
+   block below is retained. */
+
+.day {
+  --_datepicker-day-hover-bg:          var(--ds-datepicker-day-hover-bg,          var(--surface-secondary));
+  --_datepicker-day-today-fg:          var(--ds-datepicker-day-today-fg,          var(--primary));
+  --_datepicker-day-selected-bg:       var(--ds-datepicker-day-selected-bg,       var(--primary));
+  --_datepicker-day-selected-fg:       var(--ds-datepicker-day-selected-fg,       var(--primary-on));
+  --_datepicker-day-range-bg:          var(--ds-datepicker-day-range-bg,          var(--primary-subtle));
+  --_datepicker-day-range-fg:          var(--ds-datepicker-day-range-fg,          var(--primary-strong));
+  --_datepicker-day-selected-bg-hover: var(--ds-datepicker-day-selected-bg-hover, var(--primary-selected-hover));
+  --_datepicker-day-disabled-fg:       var(--ds-datepicker-day-disabled-fg,       var(--text-disabled));
+
+  width: var(--space-8);
+  height: var(--space-8);
+  display: grid;
+  place-items: center;
+  font: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+
+  &:hover:not(.disabled):not([disabled]) { background: var(--_datepicker-day-hover-bg); }
+
+  &.muted        { color: var(--text-muted); }
+  &.today        { font-weight: var(--font-weight-bold); color: var(--_datepicker-day-today-fg); }
+  &.selected     { background: var(--_datepicker-day-selected-bg); color: var(--_datepicker-day-selected-fg); }
+  &.in-range     { background: var(--_datepicker-day-range-bg); color: var(--_datepicker-day-range-fg); border-radius: var(--radius-flat); }
+  &.range-start  { border-top-left-radius: var(--radius-sm); border-bottom-left-radius: var(--radius-sm); background: var(--_datepicker-day-selected-bg); color: var(--_datepicker-day-selected-fg); }
+  &.range-end    { border-top-right-radius: var(--radius-sm); border-bottom-right-radius: var(--radius-sm); background: var(--_datepicker-day-selected-bg); color: var(--_datepicker-day-selected-fg); }
+  &.selected:hover:not(.disabled):not([disabled]),
+  &.range-start:hover:not(.disabled):not([disabled]),
+  &.range-end:hover:not(.disabled):not([disabled]) {
+    background: var(--_datepicker-day-selected-bg-hover);
+    color: var(--_datepicker-day-selected-fg);
+  }
+  &.disabled,
+  &[disabled]    { color: var(--_datepicker-day-disabled-fg); cursor: not-allowed; background: transparent; }
+
+  &.is-forced-hover { background: var(--_datepicker-day-hover-bg); }
+  &.selected.is-forced-hover,
+  &.range-start.is-forced-hover,
+  &.range-end.is-forced-hover {
+    background: var(--_datepicker-day-selected-bg-hover);
+    color: var(--_datepicker-day-selected-fg);
+  }
+  &.is-forced-focus { outline: none; box-shadow: var(--focus-ring); }
+}

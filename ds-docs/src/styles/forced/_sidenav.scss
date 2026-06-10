@@ -1,0 +1,51 @@
+/* ============================================================
+   ---------- NAV CHROME ----------
+   Raw markup used inside the Sidenav / TopBar / PageHeader
+   docs sections so `.is-forced-*` / `.active` hooks can pin a
+   visual without faking interaction. The `<ds-sidenav>` /
+   `<ds-topbar>` / `<ds-page-header>` components own the same
+   surface in their scoped CSS — these globals are docs-only.
+   Source: prototype/vendor/claude-design-ds/components.css
+   (.sidenav / .nav-item / .topbar / .page-hdr blocks).
+   Class names normalised (no BEM in new code): `.sidenav-item`,
+   `.sidenav-brand`, `.sidenav-mark`, `.sidenav-group-label`,
+   `.topbar-action`, `.page-hdr` (kept — already kebab-case).
+   ============================================================ */
+
+/* ---------- SIDENAV item — force-state hooks only ----------
+   <ds-sidenav> + <ds-sidenav-item> own the live surface. Section's State
+   showcase grid uses raw <nav class="sidenav"><a class="item is-forced-*">
+   to pin :hover / :focus-visible / disabled visuals statically — those
+   cells need just enough of the item styling to read identifiably. */
+.sidenav {
+  display: flex;
+  flex-direction: column;
+
+  .item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font: var(--font-weight-semibold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+    cursor: pointer;
+
+    .icon { width: var(--icon-lg); height: var(--icon-lg); flex-shrink: 0; }
+    .item-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    &.disabled       { color: var(--text-disabled); cursor: not-allowed; }
+    &.is-forced-hover { background: var(--surface-secondary); color: var(--text-primary); }
+    &.is-forced-focus { outline: none; box-shadow: var(--focus-ring); }
+  }
+}
+
+/* ---------- TOPBAR chrome ---------- */
+/* .topbar global mirror dropped — section consumes <ds-topbar> with named
+   slots (title, breadcrumbs, search, actions). Breadcrumb-trail surface
+   styling moved into topbar.component.scss; action icon-button styling
+   lives in the section (showcase-specific button composition). */
+
+/* .page-header global mirror dropped — section consumes <ds-page-header>
+   with [breadcrumbs]/[title-badge]/[actions]/[meta]/[tabs] slots. */

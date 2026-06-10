@@ -1,0 +1,173 @@
+/* ============================================================
+   ---------- TABLE ----------
+   Raw `<table class="table">` markup is used inside ds-docs section
+   showcases so `.sorted-asc` / `.sorted-desc` / `.is-forced-hover` /
+   `.selected` hooks can pin the visual without faking interaction.
+   Mirrors ds/src/lib/components/table/table.component.scss as a
+   global sheet. The `<ds-table>` component owns the same surface in
+   its own scoped CSS — these globals are docs-only.
+   ============================================================ */
+.scroll-wrap {
+  --_table-radius: var(--ds-table-radius, var(--radius-xl));
+  --_table-bg:     var(--ds-table-bg,     var(--surface-default));
+
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--_table-radius);
+  background: var(--_table-bg);
+}
+
+.table {
+  /* Per-component CSS tokens — defaults route through global semantic tokens.
+     Aligned with ds/src/lib/components/table/table.component.scss. */
+  --_table-bg:              var(--ds-table-bg,              var(--surface-default));
+  --_table-row-hover-bg:    var(--ds-table-row-hover-bg,    var(--surface-secondary));
+  --_table-row-selected-bg: var(--ds-table-row-selected-bg, var(--primary-subtle));
+  --_table-head-bg:         var(--ds-table-head-bg,         var(--surface-secondary));
+  --_table-head-fg:         var(--ds-table-head-fg,         var(--text-tertiary));
+  --_table-divider:         var(--ds-table-divider,         var(--border-divider));
+  --_table-sort-active-fg:  var(--ds-table-sort-active-fg,  var(--primary));
+  --_table-cell-pad-x:      var(--ds-table-cell-pad-x,      var(--table-cell-pad-x));
+  --_table-cell-pad-y:      var(--ds-table-cell-pad-y,      var(--table-cell-pad-y));
+  --_table-radius:          var(--ds-table-radius,          var(--radius-xl));
+
+  width: 100%;
+  border-collapse: collapse;
+  font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+  color: var(--text-primary);
+  background: var(--_table-bg);
+
+  thead th {
+    text-align: left;
+    padding: var(--table-head-pad-y) var(--_table-cell-pad-x);
+    font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+    letter-spacing: var(--letter-spacing-wider);
+    text-transform: uppercase;
+    color: var(--_table-head-fg);
+    background: var(--_table-head-bg);
+    border-bottom: var(--border-width-default) solid var(--_table-divider);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: var(--table-sticky-header-z);
+
+    &.sortable {
+      cursor: pointer;
+      user-select: none;
+
+      &:hover { color: var(--text-secondary); }
+    }
+
+    .sort-icon {
+      display: inline-block;
+      width: var(--sort-ic-size);
+      height: var(--sort-ic-size);
+      margin-left: var(--sort-ic-gap);
+      vertical-align: middle;
+      /* Nudge up by 1px: vertical-align:middle aligns to x-height centre,
+         but the header label is UPPERCASE — its visual centre sits at
+         cap-height/2, ~1px higher. Compensates the optical offset. */
+      transform: translateY(-1px);
+      color: var(--icon-default);
+      opacity: 0.4;
+
+      /* Inner <svg class="icon"> defaults to var(--icon-md) (16px) via the
+         global .icon rule — force it back to the host's sort-ic-size so the
+         glyph actually sits at the centre of the header label. */
+      .icon {
+        width: var(--sort-ic-size);
+        height: var(--sort-ic-size);
+        display: block;
+      }
+    }
+
+    /* Numeric sortable header — the icon is placed BEFORE the label in the
+       template so the label's right edge stays flush with the numeric body
+       cells. Swap the icon's margin so the gap sits to the RIGHT of it. */
+    &.sortable.numeric .sort-icon {
+      margin-left: 0;
+      margin-right: var(--sort-ic-gap);
+    }
+
+    &.sorted-asc .sort-icon,
+    &.sorted-desc .sort-icon { opacity: 1; color: var(--_table-sort-active-fg); }
+
+    &.numeric { text-align: right; }
+    &.select-col { width: var(--space-10); }
+  }
+
+  tbody {
+    td {
+      padding: var(--_table-cell-pad-y) var(--_table-cell-pad-x);
+      /* Inset shadow instead of border-bottom — keeps row height stable
+         across selected / hover / zebra backgrounds. */
+      box-shadow: inset 0 calc(-1 * var(--border-width-default)) 0 var(--_table-divider);
+      vertical-align: middle;
+
+      &.numeric { text-align: right; }
+      &.empty {
+        text-align: center;
+        color: var(--text-tertiary);
+        padding: var(--space-8) var(--space-4);
+      }
+    }
+
+    tr {
+      &:last-child td { box-shadow: none; }
+      &:hover td { background: var(--_table-row-hover-bg); }
+      &.selected td { background: var(--_table-row-selected-bg); }
+      &.clickable { cursor: pointer; }
+    }
+  }
+
+  &.compact {
+    tbody td,
+    thead th { padding: var(--space-2) var(--space-3); }
+  }
+
+  /* Zebra rows — odd-row tint for dense scans. */
+  &.zebra tbody tr:nth-child(odd) td { background: var(--_table-row-hover-bg); }
+  &.zebra tbody tr:hover td { background: var(--_table-row-selected-bg); }
+
+  &.skeleton-mode {
+    tbody tr:hover td { background: transparent; cursor: default; }
+    tbody tr.clickable { cursor: default; }
+  }
+
+  /* Forced-state hooks — pin a header / row to one state for static specimens. */
+  thead th.is-forced-hover { background: var(--_table-row-hover-bg); color: var(--text-secondary); }
+  thead th.is-forced-sorted-asc .sort-icon,
+  thead th.is-forced-sorted-desc .sort-icon { opacity: 1; color: var(--_table-sort-active-fg); }
+
+  tbody tr.is-forced-hover td { background: var(--_table-row-hover-bg); }
+  tbody tr.is-forced-selected td { background: var(--_table-row-selected-bg); }
+}
+
+/* Bulk action bar — sticky pill at the bottom of a selection table. */
+.bulk-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--neutral-900);
+  color: var(--neutral-0);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-toast);
+  margin: var(--space-4) auto 0;
+  width: fit-content;
+
+  .count { font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-flat) var(--font-sans); }
+  .divider {
+    width: var(--border-width-default);
+    height: var(--space-4);
+    background: var(--neutral-700);
+  }
+  .button {
+    background: transparent;
+    color: var(--neutral-0);
+
+    &:hover { background: var(--neutral-800); }
+  }
+}

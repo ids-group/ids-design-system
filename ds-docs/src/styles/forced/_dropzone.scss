@@ -1,0 +1,182 @@
+/* Empty-state cluster moved to a real component — see
+   ds/src/lib/components/empty-state/. ds-docs now renders
+   <ds-empty-state>, not raw .empty-state markup. */
+
+/* ============================================================
+   ---------- MODAL / BANNER ----------
+   Raw `.modal` / `.banner` markup is used in docs specimens so
+   sizes and severities can be shown side-by-side without firing
+   the live overlay. Mirrors the scoped CSS from
+   ds/src/lib/components/modal/modal.component.scss and
+   ds/src/lib/components/banner/banner.component.scss as a global
+   sheet, with two additions not covered by the typed APIs:
+   • `.banner.neutral` — neutral severity (the ds-banner variant
+     type only exposes info/success/warning/severe/error).
+   • `.banner.compact` — single-line variant (no body paragraph).
+   • `.banner.inline`  — borderless flush variant for use inside
+     a host panel.
+   ============================================================ */
+/* .modal global mirror dropped — modal section consumes <ds-modal [staticPreview]>
+   (existing component input) which renders the modal card without backdrop or
+   fixed positioning. Component scss is the source of truth. */
+
+/* .drawer global mirror dropped — drawer section consumes <ds-drawer [open]>
+   with section-side ::ng-deep overrides for static showcase positioning.
+   Component scss is the source of truth. */
+
+/* .banner global mirror dropped — banner section now consumes <ds-banner>
+   directly. Component scss is the source of truth. */
+
+/* ============================================================
+   ---------- DROPZONE ----------
+   Raw `.dropzone` markup is used inside ds-docs showcase cells so
+   the empty / active / has-files / disabled states can be pinned
+   without faking interaction. Mirrors the scoped surface from
+   prototype/ds/src/lib/components/dropzone/dropzone.component.scss
+   as a global sheet so unscoped specimens render identically. Also
+   adds the `.single` width modifier used by the single-file block.
+   ============================================================ */
+.dropzone {
+  /* Per-component CSS tokens — defaults route through global semantic tokens.
+     Aligned with ds/src/lib/components/dropzone/dropzone.component.scss. */
+  --_dropzone-bg:            var(--ds-dropzone-bg,            var(--surface-default));
+  --_dropzone-bg-hover:      var(--ds-dropzone-bg-hover,      var(--primary-subtle));
+  --_dropzone-bg-active:     var(--ds-dropzone-bg-active,     var(--primary-subtle));
+  --_dropzone-border:        var(--ds-dropzone-border,        var(--border-default));
+  --_dropzone-border-hover:  var(--ds-dropzone-border-hover,  var(--primary));
+  --_dropzone-border-active: var(--ds-dropzone-border-active, var(--primary));
+  --_dropzone-fg:            var(--ds-dropzone-fg,            var(--text-secondary));
+  --_dropzone-fg-active:     var(--ds-dropzone-fg-active,     var(--primary-strong));
+  --_dropzone-radius:        var(--ds-dropzone-radius,        var(--radius-lg));
+  --_dropzone-file-progress: var(--ds-dropzone-file-progress, var(--primary));
+  --_dropzone-file-success:  var(--ds-dropzone-file-success,  var(--success));
+  --_dropzone-file-error:    var(--ds-dropzone-file-error,    var(--error));
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border: var(--border-width-strong) dashed var(--_dropzone-border);
+  border-radius: var(--_dropzone-radius);
+  padding: var(--space-6);
+  text-align: center;
+  background: var(--_dropzone-bg);
+  cursor: pointer;
+  min-height: 160px;
+  color: var(--_dropzone-fg);
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    background var(--duration-fast) var(--ease-standard);
+
+  &:hover:not(.disabled):not([disabled]) {
+    border-color: var(--_dropzone-border-hover);
+    background: var(--_dropzone-bg-hover);
+    color: var(--_dropzone-fg-active);
+  }
+  &.active,
+  &.is-forced-active {
+    border-color: var(--_dropzone-border-active);
+    background: var(--_dropzone-bg-active);
+    color: var(--_dropzone-fg-active);
+  }
+  &.has-files {
+    align-items: stretch;
+    text-align: left;
+    min-height: 0;
+    cursor: default;
+    padding: var(--space-3);
+  }
+  &.disabled,
+  &[disabled] {
+    background: var(--surface-disabled);
+    border-color: var(--border-disabled);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  &.single { max-width: var(--col-cap-text); }
+
+  .title {
+    font: var(--font-weight-bold) var(--font-size-m)/var(--line-height-snug) var(--font-heading);
+    margin: 0 0 var(--space-1);
+    color: inherit;
+  }
+  .hint {
+    font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+    color: inherit;
+  }
+
+  .file-list {
+    width: 100%;
+    display: grid;
+    gap: var(--space-2);
+  }
+}
+
+/* File row — used inline inside `.dropzone.has-files` and also as a
+   standalone specimen in the "File row states" block. */
+.file {
+  --_dropzone-file-progress: var(--ds-dropzone-file-progress, var(--primary));
+  --_dropzone-file-success:  var(--ds-dropzone-file-success,  var(--success));
+  --_dropzone-file-error:    var(--ds-dropzone-file-error,    var(--error));
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--surface-default);
+
+  .icon { flex-shrink: 0; color: var(--icon-default); }
+  .main { flex: 1; min-width: 0; }
+  .name {
+    font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .meta {
+    font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+    color: var(--text-tertiary);
+  }
+  .progress {
+    height: var(--border-width-strong);
+    background: var(--surface-secondary);
+    border-radius: var(--radius-pill);
+    margin-top: var(--space-1);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--_dropzone-file-progress);
+    border-radius: var(--radius-pill);
+    transition: width var(--duration-base) var(--ease-standard);
+  }
+  .remove {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: var(--icon-default);
+    display: inline-grid;
+    place-items: center;
+    padding: 0;
+
+    &:hover { color: var(--icon-strong); }
+  }
+
+  &.uploading {
+    .icon { color: var(--_dropzone-file-progress); }
+  }
+  &.success {
+    border-color: var(--_dropzone-file-success);
+    .icon { color: var(--_dropzone-file-success); }
+  }
+  &.error {
+    border-color: var(--_dropzone-file-error);
+    .icon { color: var(--_dropzone-file-error); }
+    .meta { color: var(--error-text); }
+  }
+}

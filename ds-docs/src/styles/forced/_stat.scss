@@ -1,0 +1,44 @@
+/* ============================================================
+   ---------- CARD / STAT ----------
+   Raw `.stat` markup is used inside docs showcases so the delta
+   row can carry a directional arrow + free-form text (e.g.
+   "12 vs 2025") which the typed `<ds-stat>` API does not expose.
+   The host `<ds-card>` already paints the surface, so this block
+   declares typography only (no background/border/padding).
+   Source: prototype/vendor/claude-design-ds/components.css (~L1159–1169).
+   ============================================================ */
+.stat {
+  /* Typography roles only — the host card paints surface/border; `.value`
+     colour intentionally inherits. Public tokens read inline, never declared. */
+  --_stat-label-color: var(--ds-stat-label-color, var(--text-tertiary));
+  --_stat-up-color:    var(--ds-stat-up-color,    var(--success-text));
+  --_stat-down-color:  var(--ds-stat-down-color,  var(--error-text));
+
+  .label {
+    font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+    letter-spacing: var(--letter-spacing-wider);
+    text-transform: uppercase;
+    color: var(--_stat-label-color);
+    margin: 0 0 var(--space-2);
+  }
+
+  .value {
+    font: var(--font-weight-extrabold) var(--font-size-h2)/var(--line-height-flat) var(--font-sans);
+    letter-spacing: var(--letter-spacing-snug);
+    margin: 0;
+    white-space: nowrap;
+
+    &.danger { color: var(--_stat-down-color); }
+  }
+
+  .delta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+    margin-top: var(--space-2);
+
+    &.up   { color: var(--_stat-up-color); }
+    &.down { color: var(--_stat-down-color); }
+  }
+}

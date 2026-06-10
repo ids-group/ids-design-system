@@ -1,0 +1,97 @@
+/* ============================================================
+   ---------- DROPDOWN ----------
+   Raw `.dropdown` markup is used inside the Select section's State
+   showcase grid so `.is-forced-hover` / `.is-forced-focus` hooks can
+   pin the trigger visual statically, and inside the "Open · static
+   specimen" blocks so the panel can be rendered inline (the live
+   `<ds-dropdown>` panel is portaled by CDK Overlay and can't be
+   force-opened). Mirrors the minimum surface from
+   ds/src/lib/components/dropdown/dropdown.component.scss +
+   ds/src/lib/styles/_dropdown-overlay.scss as a global sheet.
+   ============================================================ */
+.dropdown {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  background: var(--surface-default);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--field-pad-y) var(--field-pad-x);
+  height: var(--hit-cozy);
+  font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+  color: var(--text-primary);
+
+  .trigger-text {
+    flex: 1; min-width: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+
+    &.is-placeholder { color: var(--text-tertiary); }
+  }
+  .chevron {
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--icon-default);
+    transition: transform var(--duration-fast) var(--ease-standard);
+  }
+
+  &.is-forced-hover { border-color: var(--border-strong); }
+  &.is-forced-focus {
+    border-color: var(--primary);
+    box-shadow: var(--focus-field);
+  }
+  &.open {
+    border-color: var(--primary);
+    box-shadow: var(--focus-field);
+
+    .chevron { transform: rotate(180deg); }
+  }
+}
+
+/* Static panel for "Open · static specimen" blocks — `.dropdown-panel`
+   class is shared with the live portaled panel; this rule renders it
+   inline as a sibling of the trigger. */
+.dropdown-panel {
+  background: var(--surface-overlay);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-popover);
+  padding: var(--space-1);
+  max-height: 320px;
+  overflow-y: auto;
+
+  .dropdown-list {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .option {
+    display: flex; align-items: center; gap: var(--space-2);
+    width: 100%;
+    padding: var(--space-2) var(--space-2-5);
+    border: 0; background: transparent;
+    font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
+    color: var(--text-primary);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    text-align: left;
+
+    .option-icon { color: var(--icon-default); flex: 0 0 auto; }
+    .option-label {
+      flex: 1; min-width: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .option-check { color: var(--primary); flex: 0 0 auto; }
+
+    &.is-active { background: var(--surface-secondary); }
+    &.is-selected {
+      background: var(--primary-subtle);
+      color: var(--primary-strong);
+
+      .option-icon { color: var(--primary-strong); }
+    }
+    &.is-disabled {
+      color: var(--text-disabled);
+      opacity: var(--opacity-muted);
+      cursor: not-allowed;
+    }
+  }
+}

@@ -1,0 +1,243 @@
+/* ============================================================
+   FIELD — global re-declaration for state-forced specimens.
+   Mirrors ds/src/lib/components/input/input.component.scss but as
+   a global sheet so raw <div class="field"> cells in docs render.
+   Adds variants not yet supported by ds-input (textarea inside
+   .field, floating label, prefix/suffix add-ons, success state,
+   standalone .textarea / .number stepper / .search bar / .tag).
+   ============================================================ */
+.field {
+  /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_input-bg:             var(--ds-input-bg,             var(--surface-default));
+  --_input-border:         var(--ds-input-border,         var(--border-default));
+  --_input-radius:         var(--ds-input-radius,         var(--radius-md));
+  --_input-pad-y:          var(--ds-input-pad-y,          var(--field-pad-y));
+  --_input-pad-x:          var(--ds-input-pad-x,          var(--field-pad-x));
+  --_input-fg:             var(--ds-input-fg,             var(--text-primary));
+  --_input-placeholder:    var(--ds-input-placeholder,    var(--text-tertiary));
+  --_input-border-hover:   var(--ds-input-border-hover,   var(--border-strong));
+  --_input-border-focus:   var(--ds-input-border-focus,   var(--primary));
+  --_input-focus-shadow:   var(--ds-input-focus-shadow,   var(--focus-field));
+  --_input-bg-disabled:    var(--ds-input-bg-disabled,    var(--surface-disabled));
+  --_input-bg-error:       var(--ds-input-bg-error,       var(--error-subtle));
+  --_input-border-error:   var(--ds-input-border-error,   var(--error));
+  --_input-border-success: var(--ds-input-border-success, var(--success));
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1-5);
+  width: 100%;
+
+  .label {
+    font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+    color: var(--text-secondary);
+    display: flex; align-items: center; gap: var(--space-1);
+  }
+  .label .req { color: var(--error-text); }
+
+  .control {
+    display: flex; align-items: center; gap: var(--space-2);
+    background: var(--_input-bg);
+    border: var(--border-width-default) solid var(--_input-border);
+    border-radius: var(--_input-radius);
+    padding: var(--_input-pad-y) var(--_input-pad-x);
+    height: var(--hit-cozy);
+    transition:
+      border-color var(--duration-fast) var(--ease-standard),
+      box-shadow var(--duration-fast) var(--ease-standard),
+      background var(--duration-fast) var(--ease-standard);
+
+    input,
+    textarea,
+    select {
+      flex: 1; min-width: 0;
+      appearance: none; -webkit-appearance: none;
+      border: 0; outline: 0; background: transparent;
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      color: var(--_input-fg);
+    }
+    input::placeholder,
+    textarea::placeholder { color: var(--_input-placeholder); }
+
+    .icon { width: var(--icon-md); height: var(--icon-md); color: var(--icon-default); flex-shrink: 0; }
+
+    &:hover { border-color: var(--_input-border-hover); }
+    &:focus-within {
+      border-color: var(--_input-border-focus);
+      box-shadow: var(--_input-focus-shadow);
+    }
+
+    /* Textarea inside .control — auto-grow vertically. */
+    &:has(textarea) {
+      height: auto; min-height: var(--field-h-md);
+      align-items: stretch;
+      padding-top: var(--space-2); padding-bottom: var(--space-2);
+
+      textarea {
+        resize: vertical;
+        min-height: var(--field-textarea-rows-min);
+        padding: 0;
+        font: inherit; color: inherit;
+        align-self: stretch;
+      }
+    }
+
+    /* Select chevron — appearance:none strips native arrow, so add one. */
+    &:has(select) { padding-right: var(--space-2); }
+    select {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 0 center;
+      padding-right: var(--field-select-pad-r);
+      cursor: pointer;
+    }
+
+    /* Forced-state hooks — pin the visual without interaction. */
+    &.is-forced-hover { border-color: var(--_input-border-hover); }
+    &.is-forced-focus {
+      border-color: var(--_input-border-focus);
+      box-shadow: var(--_input-focus-shadow);
+    }
+  }
+
+  .hint {
+    font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+    color: var(--text-tertiary);
+    display: flex; align-items: center; gap: var(--space-1);
+  }
+
+  /* States */
+  &.disabled .control {
+    background: var(--_input-bg-disabled);
+    border-color: var(--border-disabled);
+
+    input, textarea, select { color: var(--text-disabled); cursor: not-allowed; }
+  }
+  &.disabled .control select { opacity: var(--opacity-muted); }
+
+  &.error .control {
+    background: var(--_input-bg-error);
+    border-color: var(--_input-border-error);
+
+    &:focus-within { box-shadow: var(--focus-field-error); }
+    &.is-forced-focus { box-shadow: var(--focus-field-error); }
+  }
+  &.error .hint { color: var(--error-text); }
+
+  &.success .control { border-color: var(--_input-border-success); }
+  &.success .hint { color: var(--success-text); }
+
+  /* Sizes */
+  &.sm .control { height: var(--hit-min); padding: 0 var(--space-2); }
+  &.lg .control { height: var(--field-h-lg); }
+
+  /* Add-ons (prefix / suffix) */
+  .addon {
+    display: inline-flex; align-items: center;
+    padding: 0 var(--space-3);
+    margin: calc(var(--field-affix-overlap) * -1);
+    background: var(--surface-secondary);
+    color: var(--text-secondary);
+    font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
+    align-self: stretch;
+    border-right: var(--border-width-default) solid var(--border-divider);
+
+    &.right {
+      border-right: 0;
+      border-left: var(--border-width-default) solid var(--border-divider);
+    }
+  }
+  &.with-addon .control { padding-left: 0; }
+  &.with-addon-right .control { padding-right: 0; }
+  &.with-addon .addon:first-child {
+    border-top-left-radius: var(--radius-md);
+    border-bottom-left-radius: var(--radius-md);
+  }
+  &.with-addon-right .addon:last-child {
+    border-top-right-radius: var(--radius-md);
+    border-bottom-right-radius: var(--radius-md);
+  }
+
+  /* Floating label — label sits inside the control and moves on focus/filled. */
+  &.floating .control {
+    height: var(--field-h-floating);
+    padding-top: var(--field-floating-pad-t);
+    padding-bottom: var(--space-1-5);
+    position: relative;
+  }
+  &.floating .floating-label {
+    position: absolute;
+    top: var(--field-floating-label-top);
+    left: var(--space-3);
+    font: var(--font-weight-bold) var(--field-floating-label-fs)/var(--field-floating-label-lh) var(--font-sans);
+    color: var(--text-secondary);
+    letter-spacing: var(--letter-spacing-wide);
+    pointer-events: none;
+  }
+}
+
+/* Standalone textarea (not wrapped in .control) — same border treatment. */
+.textarea {
+  width: 100%;
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+  color: var(--text-primary);
+  background: var(--surface-default);
+  min-height: var(--field-textarea-min);
+  resize: vertical;
+  outline: 0;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+
+  &:hover { border-color: var(--border-strong); }
+  &:focus { border-color: var(--primary); box-shadow: var(--focus-field); }
+}
+
+/* Number input with stacked steppers. */
+.number {
+  display: flex; align-items: stretch;
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--surface-default);
+  height: var(--hit-cozy);
+  overflow: hidden;
+
+  &:focus-within { border-color: var(--primary); box-shadow: var(--focus-field); }
+
+  input {
+    flex: 1; border: 0; outline: 0; padding: 0 var(--space-3);
+    font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
+    text-align: right;
+    background: transparent; min-width: 0;
+    appearance: textfield; -webkit-appearance: textfield;
+  }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+  .steppers {
+    display: flex; flex-direction: column;
+    border-left: var(--border-width-default) solid var(--border-divider);
+  }
+  button {
+    width: var(--field-num-stepper-w);
+    flex: 1;
+    border: 0;
+    background: var(--surface-secondary);
+    color: var(--icon-default);
+    cursor: pointer;
+    display: grid; place-items: center;
+    padding: 0;
+
+    & + button { border-top: var(--border-width-default) solid var(--border-divider); }
+    &:hover { color: var(--icon-strong); }
+  }
+}
+
+/* ---------- SEARCH ---------- */
+/* Search bar (compact, pill-style). */
+/* .search global mirror dropped — section consumes <ds-search>. Component
+   scss is the source of truth; section's force-focus visual is pinned via
+   ::ng-deep override in the section's scoped styles. */

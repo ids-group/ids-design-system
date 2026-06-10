@@ -1,0 +1,192 @@
+/* ============================================================
+   ---------- SELECTION ----------
+   Checkbox · radio · switch · segmented · slider.
+   Global re-declaration so raw <input class="check"> specimens
+   in ds-docs render without depending on scoped component CSS.
+   Source: prototype/vendor/claude-design-ds/components.css (~L370–500).
+   .switch--success / .switch--error renamed to .switch.success /
+   .switch.error (no BEM in new code).
+   ============================================================ */
+.check,
+.radio {
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--check-size);
+  height: var(--check-size);
+  border: var(--check-bw) solid var(--border-strong);
+  background: var(--surface-default);
+  cursor: pointer;
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  margin: 0;
+  transition:
+    background var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+
+  &:hover:not(:disabled) { border-color: var(--primary); }
+  &:focus-visible        { outline: none; box-shadow: var(--focus-ring); }
+  &:disabled {
+    background: var(--surface-disabled);
+    border-color: var(--border-disabled);
+    cursor: not-allowed;
+  }
+
+  &.is-forced-hover { border-color: var(--primary); }
+  &.is-forced-focus { outline: none; box-shadow: var(--focus-ring); }
+}
+
+.check {
+  border-radius: var(--radius-sm);
+
+  &:checked {
+    background: var(--primary);
+    border-color: var(--primary);
+
+    &::after {
+      content: "";
+      width: var(--check-tick-size);
+      height: var(--check-tick-size);
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'><path d='M2 6.5l2.5 2.5L10 3.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
+    }
+  }
+
+  &:indeterminate {
+    background: var(--primary);
+    border-color: var(--primary);
+
+    &::after {
+      content: "";
+      width: var(--check-indet-w);
+      height: var(--check-indet-h);
+      background: var(--neutral-0);
+      border-radius: var(--radius-sm);
+    }
+  }
+}
+
+.radio {
+  border-radius: var(--radius-pill);
+
+  &:checked {
+    border-color: var(--primary);
+    border-width: var(--radio-bw-checked);
+
+    &::after {
+      content: "";
+      width: var(--radio-dot-size);
+      height: var(--radio-dot-size);
+      border-radius: var(--radius-pill);
+      background: var(--primary);
+    }
+  }
+}
+
+.switch {
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--switch-track-w);
+  height: var(--switch-track-h);
+  background: var(--neutral-300);
+  border-radius: var(--radius-pill);
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0;
+  transition: background var(--duration-fast) var(--ease-standard);
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: var(--switch-thumb-pad);
+    left: var(--switch-thumb-pad);
+    width: var(--switch-thumb-size);
+    height: var(--switch-thumb-size);
+    background: var(--neutral-0);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--z100);
+    transition: transform var(--duration-base) var(--ease-standard);
+  }
+
+  &:checked         { background: var(--primary); }
+  &:checked::after  { transform: translateX(var(--switch-thumb-travel)); }
+  &:focus-visible   { outline: none; box-shadow: var(--focus-ring); }
+  &:disabled        { opacity: var(--opacity-disabled); cursor: not-allowed; }
+
+  &.success:checked { background: var(--success); }
+  &.error:checked   { background: var(--error); }
+
+  &.is-forced-focus { outline: none; box-shadow: var(--focus-ring); }
+}
+
+.control-row {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.segmented {
+  display: inline-flex;
+  background: var(--surface-secondary);
+  border: var(--border-width-default) solid var(--border-divider);
+  border-radius: var(--radius-md);
+  padding: var(--segmented-pad);
+  gap: var(--segmented-pad);
+}
+
+.segmented-btn {
+  border: 0;
+  background: transparent;
+  font: var(--font-weight-semibold) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
+  color: var(--text-secondary);
+  height: var(--segmented-btn-h);
+  padding: 0 var(--space-3);
+  border-radius: var(--segmented-r-inner);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-standard);
+
+  &:hover { color: var(--text-primary); }
+  &[aria-pressed="true"] {
+    background: var(--surface-default);
+    color: var(--text-primary);
+    box-shadow: var(--z100);
+  }
+  &:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+  &.is-forced-hover { color: var(--text-primary); }
+  &.is-forced-focus { outline: none; box-shadow: var(--focus-ring); }
+}
+
+.slider {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: var(--slider-track-h);
+  background: var(--neutral-200);
+  border-radius: var(--radius-pill);
+  outline: 0;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: var(--slider-thumb-size);
+    height: var(--slider-thumb-size);
+    border-radius: var(--radius-pill);
+    background: var(--surface-default);
+    border: var(--slider-thumb-bw) solid var(--primary);
+    cursor: grab;
+    box-shadow: var(--z100);
+  }
+  &::-moz-range-thumb {
+    width: var(--slider-thumb-size);
+    height: var(--slider-thumb-size);
+    border-radius: var(--radius-pill);
+    background: var(--surface-default);
+    border: var(--slider-thumb-bw) solid var(--primary);
+    cursor: grab;
+    box-shadow: var(--z100);
+  }
+  &:focus-visible::-webkit-slider-thumb { box-shadow: var(--focus-ring); }
+}
