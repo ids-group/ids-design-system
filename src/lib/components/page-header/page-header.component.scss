@@ -10,18 +10,19 @@
 }
 
 :host(.eyebrow-secondary) {
-  --ds-pagehdr-eyebrow-fg: var(--secondary-strong);
+  --_pagehdr-eyebrow-fg: var(--ds-pagehdr-eyebrow-fg, var(--secondary-strong));
 }
 
 .page-header {
-  --ds-pagehdr-eyebrow-fg: var(--text-tertiary);
-  --ds-pagehdr-title-fg: var(--text-primary);
-  --ds-pagehdr-subtitle-fg: var(--text-secondary);
-  --ds-pagehdr-meta-fg: var(--text-secondary);
-  --ds-pagehdr-meta-icon-fg: var(--icon-default);
-  --ds-pagehdr-divider: var(--border-divider);
-  --ds-pagehdr-title-fs: var(--font-size-h3);
-  --ds-pagehdr-title-gap: var(--space-1-5);
+  /* Public --ds-pagehdr-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_pagehdr-eyebrow-fg:   var(--ds-pagehdr-eyebrow-fg,   var(--text-tertiary));
+  --_pagehdr-title-fg:     var(--ds-pagehdr-title-fg,     var(--text-primary));
+  --_pagehdr-subtitle-fg:  var(--ds-pagehdr-subtitle-fg,  var(--text-secondary));
+  --_pagehdr-meta-fg:      var(--ds-pagehdr-meta-fg,      var(--text-secondary));
+  --_pagehdr-meta-icon-fg: var(--ds-pagehdr-meta-icon-fg, var(--icon-default));
+  --_pagehdr-divider:      var(--ds-pagehdr-divider,      var(--border-divider));
+  --_pagehdr-title-fs:     var(--ds-pagehdr-title-fs,     var(--font-size-h3));
+  --_pagehdr-title-gap:    var(--ds-pagehdr-title-gap,    var(--space-1-5));
 
   display: flex;
   flex-direction: column;
@@ -32,7 +33,7 @@
      it off when a tabs strip or other element supplies its own border. */
   &.with-divider {
     padding-bottom: var(--space-4);
-    border-bottom: var(--border-width-default) solid var(--ds-pagehdr-divider);
+    border-bottom: var(--border-width-default) solid var(--_pagehdr-divider);
   }
 
   /* When tabs are projected, the strip supplies its own bottom border —
@@ -56,7 +57,7 @@
   .title-block {
     display: flex;
     flex-direction: column;
-    gap: var(--ds-pagehdr-title-gap);
+    gap: var(--_pagehdr-title-gap);
     min-width: 0;
     flex: 1 1 0;
     align-self: flex-start;
@@ -66,12 +67,12 @@
     font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-flat) var(--font-sans);
     letter-spacing: var(--letter-spacing-wide);
     text-transform: uppercase;
-    color: var(--ds-pagehdr-eyebrow-fg);
+    color: var(--_pagehdr-eyebrow-fg);
   }
 
   .title {
-    font: var(--font-weight-extrabold) var(--ds-pagehdr-title-fs)/var(--line-height-tight) var(--font-display);
-    color: var(--ds-pagehdr-title-fg);
+    font: var(--font-weight-extrabold) var(--_pagehdr-title-fs)/var(--line-height-tight) var(--font-display);
+    color: var(--_pagehdr-title-fg);
     margin: 0;
     letter-spacing: -0.02em;
   }
@@ -117,7 +118,7 @@
 
   .subtitle {
     font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
-    color: var(--ds-pagehdr-subtitle-fg);
+    color: var(--_pagehdr-subtitle-fg);
     margin: 0;
   }
 
@@ -144,7 +145,7 @@
 
   &.with-meta-divider .meta {
     padding-top: var(--space-2);
-    border-top: var(--border-width-default) solid var(--ds-pagehdr-divider);
+    border-top: var(--border-width-default) solid var(--_pagehdr-divider);
   }
 
   .meta-item {
@@ -152,17 +153,17 @@
     align-items: center;
     gap: var(--space-1-5);
     font: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
-    color: var(--ds-pagehdr-meta-fg);
+    color: var(--_pagehdr-meta-fg);
 
     .icon {
       width: var(--icon-sm);
       height: var(--icon-sm);
-      color: var(--ds-pagehdr-meta-icon-fg);
+      color: var(--_pagehdr-meta-icon-fg);
     }
   }
 
   &.compact {
-    --ds-pagehdr-title-fs: var(--font-size-h4);
+    --_pagehdr-title-fs: var(--ds-pagehdr-title-fs, var(--font-size-h4));
 
     gap: var(--space-2);
     padding-bottom: var(--space-3);

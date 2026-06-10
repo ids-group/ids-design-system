@@ -8,26 +8,27 @@
    Number components.
    ============================================================ */
 :host {
-  --ds-input-bg: var(--surface-default);
-  --ds-input-border: var(--border-default);
-  --ds-input-border-hover: var(--border-strong);
-  --ds-input-border-focus: var(--primary);
-  --ds-input-fg: var(--text-primary);
-  --ds-input-placeholder: var(--text-tertiary);
-  --ds-input-radius: var(--radius-md);
-  --ds-input-pad-x: var(--field-pad-x);
-  --ds-input-pad-y: var(--field-pad-y);
-  --ds-input-focus-shadow: var(--focus-field);
-  --ds-input-border-error: var(--error);
-  --ds-input-bg-error: var(--error-subtle);
-  --ds-input-border-success: var(--success);
-  --ds-input-bg-disabled: var(--surface-disabled);
-  --ds-input-label-color: var(--text-secondary);
-  --ds-input-label-fs: var(--font-size-xs);
-  --ds-input-label-fw: var(--font-weight-bold);
-  --ds-input-hint-color: var(--text-tertiary);
-  --ds-input-hint-fs: var(--font-size-xs);
-  --ds-input-fs: var(--font-size-s);
+  /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_input-bg:             var(--ds-input-bg,             var(--surface-default));
+  --_input-border:         var(--ds-input-border,         var(--border-default));
+  --_input-border-hover:   var(--ds-input-border-hover,   var(--border-strong));
+  --_input-border-focus:   var(--ds-input-border-focus,   var(--primary));
+  --_input-fg:             var(--ds-input-fg,             var(--text-primary));
+  --_input-placeholder:    var(--ds-input-placeholder,    var(--text-tertiary));
+  --_input-radius:         var(--ds-input-radius,         var(--radius-md));
+  --_input-pad-x:          var(--ds-input-pad-x,          var(--field-pad-x));
+  --_input-pad-y:          var(--ds-input-pad-y,          var(--field-pad-y));
+  --_input-focus-shadow:   var(--ds-input-focus-shadow,   var(--focus-field));
+  --_input-border-error:   var(--ds-input-border-error,   var(--error));
+  --_input-bg-error:       var(--ds-input-bg-error,       var(--error-subtle));
+  --_input-border-success: var(--ds-input-border-success, var(--success));
+  --_input-bg-disabled:    var(--ds-input-bg-disabled,    var(--surface-disabled));
+  --_input-label-color:    var(--ds-input-label-color,    var(--text-secondary));
+  --_input-label-fs:       var(--ds-input-label-fs,       var(--font-size-xs));
+  --_input-label-fw:       var(--ds-input-label-fw,       var(--font-weight-bold));
+  --_input-hint-color:     var(--ds-input-hint-color,     var(--text-tertiary));
+  --_input-hint-fs:        var(--ds-input-hint-fs,        var(--font-size-xs));
+  --_input-fs:             var(--ds-input-fs,             var(--font-size-s));
 
   display: block;
 }
@@ -39,8 +40,8 @@
   width: 100%;
 
   .label {
-    font: var(--ds-input-label-fw) var(--ds-input-label-fs)/var(--line-height-base) var(--font-sans);
-    color: var(--ds-input-label-color);
+    font: var(--_input-label-fw) var(--_input-label-fs)/var(--line-height-base) var(--font-sans);
+    color: var(--_input-label-color);
     display: flex;
     align-items: center;
     gap: var(--space-1);
@@ -60,10 +61,10 @@
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    background: var(--ds-input-bg);
-    border: var(--border-width-default) solid var(--ds-input-border);
-    border-radius: var(--ds-input-radius);
-    padding: var(--ds-input-pad-y) var(--ds-input-pad-x);
+    background: var(--_input-bg);
+    border: var(--border-width-default) solid var(--_input-border);
+    border-radius: var(--_input-radius);
+    padding: var(--_input-pad-y) var(--_input-pad-x);
     height: var(--hit-cozy);
     transition:
       border-color var(--duration-fast) var(--ease-standard),
@@ -78,11 +79,11 @@
       border: 0;
       outline: 0;
       background: transparent;
-      font: var(--font-weight-regular) var(--ds-input-fs)/var(--line-height-base) var(--font-sans);
-      color: var(--ds-input-fg);
+      font: var(--font-weight-regular) var(--_input-fs)/var(--line-height-base) var(--font-sans);
+      color: var(--_input-fg);
 
       &::placeholder {
-        color: var(--ds-input-placeholder);
+        color: var(--_input-placeholder);
       }
 
       // We render our own clear button (see .clear-btn below) — suppress
@@ -139,18 +140,18 @@
     }
 
     &:hover {
-      border-color: var(--ds-input-border-hover);
+      border-color: var(--_input-border-hover);
     }
 
     &:focus-within {
-      border-color: var(--ds-input-border-focus);
-      box-shadow: var(--ds-input-focus-shadow);
+      border-color: var(--_input-border-focus);
+      box-shadow: var(--_input-focus-shadow);
     }
   }
 
   .hint {
-    font: var(--font-weight-regular) var(--ds-input-hint-fs)/var(--line-height-base) var(--font-sans);
-    color: var(--ds-input-hint-color);
+    font: var(--font-weight-regular) var(--_input-hint-fs)/var(--line-height-base) var(--font-sans);
+    color: var(--_input-hint-color);
     display: flex;
     align-items: center;
     gap: var(--space-1);
@@ -158,7 +159,7 @@
 
   &.disabled {
     .control {
-      background: var(--ds-input-bg-disabled);
+      background: var(--_input-bg-disabled);
       border-color: var(--border-disabled);
     }
     input {
@@ -168,8 +169,8 @@
 
   &.error {
     .control {
-      background: var(--ds-input-bg-error);
-      border-color: var(--ds-input-border-error);
+      background: var(--_input-bg-error);
+      border-color: var(--_input-border-error);
 
       &:focus-within {
         box-shadow: var(--focus-field-error);
@@ -182,7 +183,7 @@
 
   &.success {
     .control {
-      border-color: var(--ds-input-border-success);
+      border-color: var(--_input-border-success);
     }
     .hint {
       color: var(--success-text);
@@ -233,11 +234,11 @@
     padding-right: 0;
   }
   &.with-addon .addon:first-child {
-    border-top-left-radius: var(--ds-input-radius);
-    border-bottom-left-radius: var(--ds-input-radius);
+    border-top-left-radius: var(--_input-radius);
+    border-bottom-left-radius: var(--_input-radius);
   }
   &.with-addon-right .addon:last-child {
-    border-top-right-radius: var(--ds-input-radius);
-    border-bottom-right-radius: var(--ds-input-radius);
+    border-top-right-radius: var(--_input-radius);
+    border-bottom-right-radius: var(--_input-radius);
   }
 }

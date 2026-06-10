@@ -3,15 +3,16 @@
 }
 
 .pagination {
-  --ds-pagination-btn-bg: var(--surface-default);
-  --ds-pagination-btn-bg-hover: var(--surface-secondary);
-  --ds-pagination-btn-fg: var(--text-secondary);
-  --ds-pagination-btn-fg-hover: var(--text-primary);
-  --ds-pagination-btn-border: var(--border-default);
-  --ds-pagination-active-bg: var(--primary);
-  --ds-pagination-active-bg-hover: var(--primary-hover);
-  --ds-pagination-active-fg: var(--primary-on);
-  --ds-pagination-radius: var(--radius-md);
+  /* Public --ds-pagination-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_pagination-btn-bg:       var(--ds-pagination-btn-bg,       var(--surface-default));
+  --_pagination-btn-bg-hover: var(--ds-pagination-btn-bg-hover, var(--surface-secondary));
+  --_pagination-btn-fg:       var(--ds-pagination-btn-fg,       var(--text-secondary));
+  --_pagination-btn-fg-hover: var(--ds-pagination-btn-fg-hover, var(--text-primary));
+  --_pagination-btn-border:   var(--ds-pagination-btn-border,   var(--border-default));
+  --_pagination-active-bg:    var(--ds-pagination-active-bg,    var(--primary));
+  --_pagination-active-bg-hover: var(--ds-pagination-active-bg-hover, var(--primary-hover));
+  --_pagination-active-fg:    var(--ds-pagination-active-fg,    var(--primary-on));
+  --_pagination-radius:       var(--ds-pagination-radius,       var(--radius-md));
 
   display: inline-flex;
   gap: var(--space-1);
@@ -28,29 +29,29 @@
     min-width: var(--hit-min);
     height: var(--hit-min);
     padding: 0 var(--space-2);
-    border: var(--border-width-default) solid var(--ds-pagination-btn-border);
-    background: var(--ds-pagination-btn-bg);
+    border: var(--border-width-default) solid var(--_pagination-btn-border);
+    background: var(--_pagination-btn-bg);
     font: var(--font-weight-semibold) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
-    color: var(--ds-pagination-btn-fg);
-    border-radius: var(--ds-pagination-radius);
+    color: var(--_pagination-btn-fg);
+    border-radius: var(--_pagination-radius);
     cursor: pointer;
     display: inline-grid;
     place-items: center;
 
     &:hover:not([disabled]):not(.active) {
-      background: var(--ds-pagination-btn-bg-hover);
-      color: var(--ds-pagination-btn-fg-hover);
+      background: var(--_pagination-btn-bg-hover);
+      color: var(--_pagination-btn-fg-hover);
     }
 
     &.active {
-      background: var(--ds-pagination-active-bg);
-      color: var(--ds-pagination-active-fg);
-      border-color: var(--ds-pagination-active-bg);
+      background: var(--_pagination-active-bg);
+      color: var(--_pagination-active-fg);
+      border-color: var(--_pagination-active-bg);
     }
 
     &.active:hover:not([disabled]) {
-      background: var(--ds-pagination-active-bg-hover);
-      border-color: var(--ds-pagination-active-bg-hover);
+      background: var(--_pagination-active-bg-hover);
+      border-color: var(--_pagination-active-bg-hover);
     }
 
     &[disabled] {

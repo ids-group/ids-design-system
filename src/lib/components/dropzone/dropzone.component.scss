@@ -29,41 +29,43 @@
   // same height as sibling cards. `min-height` below is the floor when there
   // is no parent flex stretch.
   flex: 1;
-  --ds-dropzone-bg:               var(--surface-default);
-  --ds-dropzone-bg-hover:         var(--primary-subtle);
-  --ds-dropzone-bg-active:        var(--primary-subtle);
-  --ds-dropzone-border:           var(--border-default);
-  --ds-dropzone-border-hover:     var(--primary);
-  --ds-dropzone-border-active:    var(--primary);
-  --ds-dropzone-fg:               var(--text-secondary);
-  --ds-dropzone-fg-active:        var(--primary-strong);
-  --ds-dropzone-radius:           var(--radius-lg);
-  --ds-dropzone-file-progress:    var(--primary);
-  --ds-dropzone-file-success:     var(--success);
-  --ds-dropzone-file-error:       var(--error);
-  --ds-dropzone-opacity-disabled: 0.5;
+
+  /* Public --ds-dropzone-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_dropzone-bg:               var(--ds-dropzone-bg,               var(--surface-default));
+  --_dropzone-bg-hover:         var(--ds-dropzone-bg-hover,         var(--primary-subtle));
+  --_dropzone-bg-active:        var(--ds-dropzone-bg-active,        var(--primary-subtle));
+  --_dropzone-border:           var(--ds-dropzone-border,           var(--border-default));
+  --_dropzone-border-hover:     var(--ds-dropzone-border-hover,     var(--primary));
+  --_dropzone-border-active:    var(--ds-dropzone-border-active,    var(--primary));
+  --_dropzone-fg:               var(--ds-dropzone-fg,               var(--text-secondary));
+  --_dropzone-fg-active:        var(--ds-dropzone-fg-active,        var(--primary-strong));
+  --_dropzone-radius:           var(--ds-dropzone-radius,           var(--radius-lg));
+  --_dropzone-file-progress:    var(--ds-dropzone-file-progress,    var(--primary));
+  --_dropzone-file-success:     var(--ds-dropzone-file-success,     var(--success));
+  --_dropzone-file-error:       var(--ds-dropzone-file-error,       var(--error));
+  --_dropzone-opacity-disabled: var(--ds-dropzone-opacity-disabled, 0.5);
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  border: var(--border-width-strong) dashed var(--ds-dropzone-border);
-  border-radius: var(--ds-dropzone-radius);
+  border: var(--border-width-strong) dashed var(--_dropzone-border);
+  border-radius: var(--_dropzone-radius);
   padding: var(--space-6);
   text-align: center;
-  background: var(--ds-dropzone-bg);
+  background: var(--_dropzone-bg);
   cursor: pointer;
   min-height: 160px;
 
   &:hover {
-    border-color: var(--ds-dropzone-border-hover);
-    background: var(--ds-dropzone-bg-hover);
+    border-color: var(--_dropzone-border-hover);
+    background: var(--_dropzone-bg-hover);
   }
 
   &.active {
-    border-color: var(--ds-dropzone-border-active);
-    background: var(--ds-dropzone-bg-active);
+    border-color: var(--_dropzone-border-active);
+    background: var(--_dropzone-bg-active);
   }
 
   &.has-files {
@@ -75,7 +77,7 @@
 
   &[disabled],
   &.disabled {
-    opacity: var(--ds-dropzone-opacity-disabled);
+    opacity: var(--_dropzone-opacity-disabled);
     cursor: not-allowed;
   }
 
@@ -86,7 +88,7 @@
 
   .hint {
     font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
-    color: var(--ds-dropzone-fg);
+    color: var(--_dropzone-fg);
   }
 
   // Consumer-provided secondary hint (e.g. "Max file size: 5GB | CSV | UTF-8").
@@ -125,7 +127,7 @@
     .name { font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-base) var(--font-sans); color: var(--text-primary); }
     .meta { font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans); color: var(--text-tertiary); }
     .progress { height: var(--border-width-strong); background: var(--surface-secondary); border-radius: var(--radius-pill); margin-top: var(--space-1); }
-    .progress-fill { height: 100%; background: var(--ds-dropzone-file-progress); border-radius: var(--radius-pill); transition: width var(--duration-base) var(--ease-standard); }
+    .progress-fill { height: 100%; background: var(--_dropzone-file-progress); border-radius: var(--radius-pill); transition: width var(--duration-base) var(--ease-standard); }
     .remove {
       background: none;
       border: 0;
@@ -134,8 +136,8 @@
       &:hover { color: var(--icon-strong); }
     }
 
-    &.uploading .icon { color: var(--ds-dropzone-file-progress); }
-    &.success { border-color: var(--ds-dropzone-file-success); .icon { color: var(--ds-dropzone-file-success); } }
-    &.error   { border-color: var(--ds-dropzone-file-error);  .icon { color: var(--ds-dropzone-file-error); } }
+    &.uploading .icon { color: var(--_dropzone-file-progress); }
+    &.success { border-color: var(--_dropzone-file-success); .icon { color: var(--_dropzone-file-success); } }
+    &.error   { border-color: var(--_dropzone-file-error);  .icon { color: var(--_dropzone-file-error); } }
   }
 }

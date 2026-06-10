@@ -3,19 +3,19 @@
 }
 
 .modal {
-  --ds-modal-bg:                var(--surface-overlay);
-  --ds-modal-radius:            var(--radius-lg);
-  --ds-modal-shadow:            var(--shadow-modal);
-  --ds-modal-divider:           var(--border-divider);
-  --ds-modal-title-fg:          var(--text-primary);
-  --ds-modal-title-fg-error:   var(--error-text);
-  --ds-modal-close-fg:          var(--icon-default);
-  --ds-modal-close-fg-hover:    var(--icon-strong);
-  --ds-modal-backdrop:          var(--surface-scrim);
+  /* Public --ds-modal-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_modal-bg:              var(--ds-modal-bg,              var(--surface-overlay));
+  --_modal-radius:          var(--ds-modal-radius,          var(--radius-lg));
+  --_modal-shadow:          var(--ds-modal-shadow,          var(--shadow-modal));
+  --_modal-divider:         var(--ds-modal-divider,         var(--border-divider));
+  --_modal-title-fg:        var(--ds-modal-title-fg,        var(--text-primary));
+  --_modal-title-fg-error:  var(--ds-modal-title-fg-error,  var(--error-text));
+  --_modal-close-fg:        var(--ds-modal-close-fg,        var(--icon-default));
+  --_modal-close-fg-hover:  var(--ds-modal-close-fg-hover,  var(--icon-strong));
 
-  background: var(--ds-modal-bg);
-  border-radius: var(--ds-modal-radius);
-  box-shadow: var(--ds-modal-shadow);
+  background: var(--_modal-bg);
+  border-radius: var(--_modal-radius);
+  box-shadow: var(--_modal-shadow);
   display: flex;
   flex-direction: column;
   max-height: 90vh;
@@ -30,26 +30,26 @@
     align-items: center;
     justify-content: space-between;
     padding: var(--space-4) var(--space-5);
-    border-bottom: var(--border-width-default) solid var(--ds-modal-divider);
+    border-bottom: var(--border-width-default) solid var(--_modal-divider);
   }
 
   .title {
     font: var(--font-weight-bold) var(--font-size-h5)/var(--line-height-snug) var(--font-heading);
     margin: 0;
-    color: var(--ds-modal-title-fg);
+    color: var(--_modal-title-fg);
   }
 
   .close {
     background: none;
     border: 0;
     cursor: pointer;
-    color: var(--ds-modal-close-fg);
+    color: var(--_modal-close-fg);
     width: var(--modal-close-size);
     height: var(--modal-close-size);
     display: grid;
     place-items: center;
 
-    &:hover { color: var(--ds-modal-close-fg-hover); }
+    &:hover { color: var(--_modal-close-fg-hover); }
   }
 
   .body {
@@ -62,11 +62,11 @@
     gap: var(--space-3);
     justify-content: flex-end;
     padding: var(--space-4) var(--space-5);
-    border-top: var(--border-width-default) solid var(--ds-modal-divider);
+    border-top: var(--border-width-default) solid var(--_modal-divider);
   }
 
   &.danger {
-    .title { color: var(--ds-modal-title-fg-error); }
+    .title { color: var(--_modal-title-fg-error); }
   }
 
   .impact {
@@ -83,11 +83,12 @@
 }
 
 .modal-backdrop {
-  --ds-modal-backdrop: var(--surface-scrim);
+  /* Public --ds-modal-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_modal-backdrop: var(--ds-modal-backdrop, var(--surface-scrim));
 
   position: fixed;
   inset: 0;
-  background: var(--ds-modal-backdrop);
+  background: var(--_modal-backdrop);
   z-index: var(--layer-modal);
   display: grid;
   place-items: center;
