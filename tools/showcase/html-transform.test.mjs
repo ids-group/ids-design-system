@@ -54,6 +54,9 @@ test('transformHtml inlines js + css + favicon, rewrites base, injects globals',
   assert.ok(out.includes('<script src="./ds-built.js"></script>'));
   assert.ok(out.includes('<script src="./ds-version.js"></script>'));
   assert.ok(!out.includes('window.__DS_BUILT__'));
+  // placed at the very top of <head> (before <base> and the stylesheet)
+  assert.ok(out.includes('<head><script src="./ds-built.js"></script><script src="./ds-version.js"></script>'));
+  assert.ok(out.indexOf('ds-built.js') < out.indexOf('data:image/x-icon'));
 });
 
 test('transformHtml leaves favicon untouched when resolver finds nothing', () => {

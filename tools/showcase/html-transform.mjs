@@ -73,11 +73,12 @@ export function transformHtml(html, { assets, resolveBinary = () => null, builtS
     });
 
   // 6. inject sibling loaders: build provenance (__DS_BUILT__) + current
-  //    source (__DS_CURRENT__). Both external so neither is embedded inline.
+  //    source (__DS_CURRENT__). Both external (no inline), placed at the very
+  //    top of <head> so the globals are set before anything else.
   const inject =
     `<script src="./${builtScriptName}"></script>` +
     `<script src="./${versionScriptName}"></script>`;
-  out = out.replace(/<\/head>/i, `${inject}</head>`);
+  out = out.replace(/<head\b[^>]*>/i, (head) => `${head}${inject}`);
 
   return out;
 }
