@@ -8,20 +8,20 @@
    encapsulation otherwise scopes both stylesheets independently.
    ============================================================ */
 :host {
-  --ds-avatar-size:        var(--avatar-md);
-  --ds-avatar-bg:          var(--primary-muted);
-  --ds-avatar-fg:          var(--primary-strong);
-  --ds-avatar-radius:      var(--radius-pill);
-  --ds-avatar-ring-color:  var(--surface-default);
-  --ds-avatar-ring-width:  var(--avatar-bw-group);
+  /* Public --ds-avatar-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_avatar-size:       var(--ds-avatar-size,       var(--avatar-md));
+  --_avatar-bg:         var(--ds-avatar-bg,         var(--primary-muted));
+  --_avatar-fg:         var(--ds-avatar-fg,         var(--primary-strong));
+  --_avatar-radius:     var(--ds-avatar-radius,     var(--radius-pill));
+  --_avatar-ring-width: var(--ds-avatar-ring-width, var(--avatar-bw-group));
 
   display: inline-grid;
   place-items: center;
-  width: var(--ds-avatar-size);
-  height: var(--ds-avatar-size);
-  border-radius: var(--ds-avatar-radius);
-  background: var(--ds-avatar-bg);
-  color: var(--ds-avatar-fg);
+  width: var(--_avatar-size);
+  height: var(--_avatar-size);
+  border-radius: var(--_avatar-radius);
+  background: var(--_avatar-bg);
+  color: var(--_avatar-fg);
   font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
   letter-spacing: var(--letter-spacing-wide);
   flex-shrink: 0;
@@ -40,6 +40,6 @@ img {
 
 /* Neutral tint — used by the +N overflow chip in avatar groups. */
 :host(.neutral) {
-  --ds-avatar-bg: var(--surface-secondary);
-  --ds-avatar-fg: var(--text-secondary);
+  --_avatar-bg: var(--ds-avatar-bg, var(--surface-secondary));
+  --_avatar-fg: var(--ds-avatar-fg, var(--text-secondary));
 }

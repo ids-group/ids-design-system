@@ -368,7 +368,6 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-avatar-bg',          value: 'var(--primary-muted)',     notes: 'Surface fill.' },
       { name: '--ds-avatar-fg',          value: 'var(--primary-strong)',    notes: 'Initials colour.' },
       { name: '--ds-avatar-radius',      value: 'var(--radius-pill)',          notes: 'Pill / square.' },
-      { name: '--ds-avatar-ring-color',  value: 'var(--surface-default)', notes: 'Ring when stacked.' },
       { name: '--ds-avatar-ring-width',  value: 'var(--avatar-bw-group)', notes: 'Ring width when stacked.' },
     ],
   },

@@ -6,44 +6,38 @@
    ============================================================ */
 :host {
   display: block;
-}
 
-:host {
-  display: block;
-
-  // Public component variables — override via higher-specificity selector
-  // (e.g. `ds-card.kpi { --ds-card-pad: var(--space-3); }` or in theme files:
-  // `[data-brand="..."] ds-card { --ds-card-pad: ...; }`).
-  --ds-card-bg:           var(--surface-default);
-  --ds-card-border:       var(--border-divider);
-  --ds-card-radius:       var(--radius-lg);
-  --ds-card-pad:          var(--ds-container-pad);
-  --ds-card-shadow:       none;
-  --ds-card-shadow-hover: var(--z100);
-  --ds-card-focus-shadow: var(--focus-ring);
-  --ds-card-hover-lift:   var(--card-hover-lift);
+  /* Public --ds-card-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_card-bg:           var(--ds-card-bg,           var(--surface-default));
+  --_card-border:       var(--ds-card-border,       var(--border-divider));
+  --_card-radius:       var(--ds-card-radius,       var(--radius-lg));
+  --_card-pad:          var(--ds-card-pad,          var(--ds-container-pad));
+  --_card-shadow:       var(--ds-card-shadow,       none);
+  --_card-shadow-hover: var(--ds-card-shadow-hover, var(--z100));
+  --_card-focus-shadow: var(--ds-card-focus-shadow, var(--focus-ring));
+  --_card-hover-lift:   var(--ds-card-hover-lift,   var(--card-hover-lift));
 }
 
 .card {
-  background: var(--ds-card-bg);
-  border: var(--border-width-default) solid var(--ds-card-border);
-  border-radius: var(--ds-card-radius);
-  padding: var(--ds-card-pad);
-  box-shadow: var(--ds-card-shadow);
+  background: var(--_card-bg);
+  border: var(--border-width-default) solid var(--_card-border);
+  border-radius: var(--_card-radius);
+  padding: var(--_card-pad);
+  box-shadow: var(--_card-shadow);
   transition: box-shadow var(--duration-base) var(--ease-standard), transform var(--duration-base) var(--ease-standard);
 
   &.flat { box-shadow: none; }
-  &.raised { box-shadow: var(--ds-card-shadow-hover); border-color: transparent; }
+  &.raised { box-shadow: var(--_card-shadow-hover); border-color: transparent; }
   &.hover:hover {
-    box-shadow: var(--ds-card-shadow-hover);
-    transform: translateY(calc(var(--ds-card-hover-lift) * -1));
+    box-shadow: var(--_card-shadow-hover);
+    transform: translateY(calc(var(--_card-hover-lift) * -1));
   }
   &.interactive { cursor: pointer; }
-  &.interactive:focus-visible { outline: none; box-shadow: var(--ds-card-focus-shadow); }
+  &.interactive:focus-visible { outline: none; box-shadow: var(--_card-focus-shadow); }
 
   // Modifiers re-set the token on `.card` (higher specificity than `:host`).
-  &.padding-none { --ds-card-pad: 0; }
-  &.padding-sm   { --ds-card-pad: var(--space-4); }
-  &.padding-md   { --ds-card-pad: var(--space-6); }
-  &.padding-lg   { --ds-card-pad: var(--space-8); }
+  &.padding-none { --_card-pad: 0; }
+  &.padding-sm   { --_card-pad: var(--space-4); }
+  &.padding-md   { --_card-pad: var(--space-6); }
+  &.padding-lg   { --_card-pad: var(--space-8); }
 }

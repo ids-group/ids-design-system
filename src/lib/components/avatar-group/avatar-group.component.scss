@@ -10,15 +10,16 @@
    only target the `<ds-avatar>` host and would not match a plain span.
    ============================================================ */
 :host {
-  --ds-avatargroup-overlap: calc(-1 * var(--space-2));
-  --ds-avatargroup-ring:    var(--surface-default);
+  /* Public --ds-avatargroup-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_avatargroup-overlap: var(--ds-avatargroup-overlap, calc(-1 * var(--space-2)));
+  --_avatargroup-ring:    var(--ds-avatargroup-ring,    var(--surface-default));
 
   display: inline-flex;
 }
 
 ::ng-deep ds-avatar {
-  border: var(--avatar-bw-group) solid var(--ds-avatargroup-ring);
-  margin-left: var(--ds-avatargroup-overlap);
+  border: var(--avatar-bw-group) solid var(--_avatargroup-ring);
+  margin-left: var(--_avatargroup-overlap);
 }
 
 ::ng-deep ds-avatar:first-child {
@@ -36,6 +37,6 @@
   font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
   letter-spacing: var(--letter-spacing-wide);
   flex-shrink: 0;
-  border: var(--avatar-bw-group) solid var(--ds-avatargroup-ring);
-  margin-left: var(--ds-avatargroup-overlap);
+  border: var(--avatar-bw-group) solid var(--_avatargroup-ring);
+  margin-left: var(--_avatargroup-overlap);
 }

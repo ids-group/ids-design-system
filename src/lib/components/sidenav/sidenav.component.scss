@@ -11,19 +11,20 @@
  */
 
 :host {
-  --ds-sidenav-bg:              var(--surface-default);
-  --ds-sidenav-border:          var(--border-divider);
-  --ds-sidenav-width:           var(--sidenav-w);
-  --ds-sidenav-width-collapsed: var(--sidenav-w-collapsed);
-  --ds-sidenav-mark-bg:         var(--primary);
-  --ds-sidenav-mark-fg:         var(--primary-on);
+  /* Public --ds-sidenav-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_sidenav-bg:              var(--ds-sidenav-bg,              var(--surface-default));
+  --_sidenav-border:          var(--ds-sidenav-border,          var(--border-divider));
+  --_sidenav-width:           var(--ds-sidenav-width,           var(--sidenav-w));
+  --_sidenav-width-collapsed: var(--ds-sidenav-width-collapsed, var(--sidenav-w-collapsed));
+  --_sidenav-mark-bg:         var(--ds-sidenav-mark-bg,         var(--primary));
+  --_sidenav-mark-fg:         var(--ds-sidenav-mark-fg,         var(--primary-on));
 
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-  width: var(--ds-sidenav-width);
-  background: var(--ds-sidenav-bg);
-  border-right: var(--border-width-default) solid var(--ds-sidenav-border);
+  width: var(--_sidenav-width);
+  background: var(--_sidenav-bg);
+  border-right: var(--border-width-default) solid var(--_sidenav-border);
   padding: var(--space-5);
 }
 
@@ -39,10 +40,10 @@
   width: var(--sidenav-logo-size);
   height: var(--sidenav-logo-size);
   border-radius: var(--radius-md);
-  background: var(--ds-sidenav-mark-bg);
+  background: var(--_sidenav-mark-bg);
   display: grid;
   place-items: center;
-  color: var(--ds-sidenav-mark-fg);
+  color: var(--_sidenav-mark-fg);
   font-size: var(--font-size-s);
   flex-shrink: 0;
 }
@@ -52,7 +53,7 @@
 }
 
 :host(.collapsed) {
-  width: var(--ds-sidenav-width-collapsed);
+  width: var(--_sidenav-width-collapsed);
   padding: var(--space-3);
   align-items: center;
 
