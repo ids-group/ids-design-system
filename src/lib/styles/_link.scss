@@ -3,13 +3,15 @@
    flow. Modifiers: .quiet, .inline, .standalone, .xs, .sm, .lg. */
 
 .link {
-  --ds-link-color:        var(--text-link);
-  --ds-link-color-hover:  color-mix(in srgb, var(--text-link) 80%, black);
-  --ds-link-color-active: color-mix(in srgb, var(--text-link) 65%, black);
+  /* Public --ds-link-* are read with fallbacks, never declared — consumer
+     overrides inherit in. Hover/active derive from the resolved color. */
+  --_link-color:        var(--ds-link-color,        var(--text-link));
+  --_link-color-hover:  var(--ds-link-color-hover,  color-mix(in srgb, var(--_link-color) 80%, black));
+  --_link-color-active: var(--ds-link-color-active, color-mix(in srgb, var(--_link-color) 65%, black));
 
-  color: var(--ds-link-color);
+  color: var(--_link-color);
   text-decoration: underline;
-  text-decoration-color: var(--ds-link-color);
+  text-decoration-color: var(--_link-color);
   text-underline-offset: 2px;
   text-decoration-thickness: 1px;
   font-weight: var(--font-weight-medium);
@@ -17,20 +19,20 @@
   transition: color var(--duration-fast) var(--ease-standard), text-decoration-color var(--duration-fast) var(--ease-standard);
 
   &:hover {
-    color: var(--ds-link-color-hover);
-    text-decoration-color: var(--ds-link-color-hover);
+    color: var(--_link-color-hover);
+    text-decoration-color: var(--_link-color-hover);
   }
 
   &:active {
-    color: var(--ds-link-color-active);
-    text-decoration-color: var(--ds-link-color-active);
+    color: var(--_link-color-active);
+    text-decoration-color: var(--_link-color-active);
   }
 
   &:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
     border-radius: var(--radius-sm);
-    text-decoration-color: var(--ds-link-color);
+    text-decoration-color: var(--_link-color);
   }
 
   &[aria-disabled="true"] {
@@ -48,8 +50,8 @@
   &.quiet {
     color: var(--text-secondary);
     /* Pull the underline down to match the muted text — the base rule sets
-       text-decoration-color to --ds-link-color (link blue), which would leave
-       a bright underline under grey text at rest. */
+       text-decoration-color to the link color, which would leave a bright
+       underline under grey text at rest. */
     text-decoration-color: var(--text-secondary);
     font-weight: var(--font-weight-medium);
 
