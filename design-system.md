@@ -266,7 +266,7 @@ Tokens (on `:host`): `--ds-topbar-margin-b` (default `--space-4` = 16px) — bot
 #### `<ds-page-header>` — `PageHeaderComponent`
 Inputs: `eyebrow: string = ''`, `title: required string`, `subtitle: string = ''`, `compact: boolean = false`, `divider: boolean = false`, `metaDivider: boolean = false`
 Content slots: `[breadcrumbs]`, `[title-badge]` (sits next to the title text), `[actions]` (right edge of title row), `[meta]` (under the title row), `[tabs]` (under the meta row)
-Tokens: `--ds-pagehdr-eyebrow-fg`, `--ds-pagehdr-title-fg`, `--ds-pagehdr-sub-fg`, `--ds-pagehdr-meta-fg`, `--ds-pagehdr-meta-icon-fg`, `--ds-pagehdr-divider`, `--ds-pagehdr-title-fs` (default `--font-size-h3`; `compact` flips to `--font-size-h4`). The page-header does NOT own its bottom gap — the parent page `:host` owns spacing via `display: flex; flex-direction: column; gap: var(--space-4)`.
+Tokens: `--ds-pagehdr-eyebrow-fg`, `--ds-pagehdr-title-fg`, `--ds-pagehdr-subtitle-fg`, `--ds-pagehdr-meta-fg`, `--ds-pagehdr-meta-icon-fg`, `--ds-pagehdr-divider`, `--ds-pagehdr-title-fs` (default `--font-size-h3`; `compact` flips to `--font-size-h4`). The page-header does NOT own its bottom gap — the parent page `:host` owns spacing via `display: flex; flex-direction: column; gap: var(--space-4)`.
 
 #### `<ds-page-footer>` — `PageFooterComponent`
 Input: `variant: 'default' | 'compact' | 'save' = 'default'`

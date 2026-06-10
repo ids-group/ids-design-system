@@ -583,7 +583,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     tokens: [
       { name: '--ds-pagehdr-eyebrow-fg',   value: 'var(--text-tertiary)', notes: 'Eyebrow label.' },
       { name: '--ds-pagehdr-title-fg',     value: 'var(--text-primary)',  notes: 'Title.' },
-      { name: '--ds-pagehdr-sub-fg',       value: 'var(--text-secondary)', notes: 'Subtitle.' },
+      { name: '--ds-pagehdr-subtitle-fg',  value: 'var(--text-secondary)', notes: 'Subtitle.' },
       { name: '--ds-pagehdr-meta-fg',      value: 'var(--text-secondary)', notes: 'Meta text.' },
       { name: '--ds-pagehdr-meta-icon-fg', value: 'var(--icon-default)',   notes: 'Meta icon.' },
       { name: '--ds-pagehdr-divider',      value: 'var(--border-divider)', notes: 'Divider below header.' },
