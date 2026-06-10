@@ -192,25 +192,8 @@
    standalone .textarea / .number stepper / .search bar / .tag).
    ============================================================ */
 .field {
-  /* Per-component CSS tokens — defaults route through global semantic tokens.
-     Aligned with ds/src/lib/components/input/input.component.scss so docs
-     consumers can override the same vars. Select inherits these vars via
-     the shared `.field` shell. */
-  --ds-input-bg:             var(--surface-default);
-  --ds-input-border:         var(--border-default);
-  --ds-input-border-hover:   var(--border-strong);
-  --ds-input-border-focus:   var(--primary);
-  --ds-input-fg:             var(--text-primary);
-  --ds-input-placeholder:    var(--text-tertiary);
-  --ds-input-radius:         var(--radius-md);
-  --ds-input-pad-x:          var(--field-pad-x);
-  --ds-input-pad-y:          var(--field-pad-y);
-  --ds-input-focus-shadow:   var(--focus-field);
-  --ds-input-border-error:   var(--error);
-  --ds-input-bg-error:       var(--error-subtle);
-  --ds-input-border-success: var(--success);
-  --ds-input-bg-disabled:    var(--surface-disabled);
-
+  /* Public --ds-input-* are read with fallbacks at each usage site — never
+     declared here, or the global .field rule would shadow component fallbacks. */
   display: flex;
   flex-direction: column;
   gap: var(--space-1-5);
@@ -731,14 +714,8 @@
    Source: prototype/vendor/claude-design-ds/components.css (~L1159–1169).
    ============================================================ */
 .stat {
-  /* Per-component CSS tokens — defaults route through global semantic tokens.
-     Aligned with ds/src/lib/components/stat/stat.component.scss. Only the
-     typography roles are routed here (the host card paints surface/border).
-     `.value` colour is intentionally left to inherit (original behaviour). */
-  --ds-stat-label-color: var(--text-tertiary);
-  --ds-stat-up-color:    var(--success-text);
-  --ds-stat-down-color:  var(--error-text);
-
+  /* Typography roles only — the host card paints surface/border; `.value`
+     colour intentionally inherits. Public tokens read inline, never declared. */
   .label {
     font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
     letter-spacing: var(--letter-spacing-wider);
@@ -779,19 +756,7 @@
    to `.tab` so it does not collide with the BADGE block.
    ============================================================ */
 .tabs {
-  /* Per-component CSS tokens — defaults route through global semantic tokens.
-     Aligned with ds/src/lib/components/tabs/tabs.component.scss. */
-  --ds-tab-fg:              var(--text-secondary);
-  --ds-tab-fg-hover:        var(--text-primary);
-  --ds-tab-fg-active:       var(--primary);
-  --ds-tab-indicator-color: var(--primary);
-  --ds-tab-indicator-width: var(--border-width-strong);
-  --ds-tab-pad-x:           var(--space-4);
-  --ds-tab-pad-y:           var(--space-3);
-  --ds-tabs-divider:        var(--border-divider);
-  --ds-tabs-pills-bg:       var(--surface-secondary);
-  --ds-tab-pill-bg-active:  var(--surface-default);
-
+  /* Public --ds-tab*-/-tabs-* are read with fallbacks at usage sites, never declared. */
   display: flex;
   gap: var(--space-2);
   border-bottom: var(--border-width-default) solid var(--ds-tabs-divider, var(--border-divider));
@@ -897,17 +862,7 @@
    Source: prototype/vendor/claude-design-ds/components.css (~L796–818).
    ============================================================ */
 .pagination-button {
-  /* Per-component CSS tokens — defaults route through global semantic tokens.
-     Aligned with ds/src/lib/components/pagination/pagination.component.scss. */
-  --ds-pagination-btn-bg:        var(--surface-default);
-  --ds-pagination-btn-bg-hover:  var(--surface-secondary);
-  --ds-pagination-btn-fg:        var(--text-secondary);
-  --ds-pagination-btn-fg-hover:  var(--text-primary);
-  --ds-pagination-btn-border:    var(--border-default);
-  --ds-pagination-active-bg:     var(--primary);
-  --ds-pagination-active-fg:     var(--primary-on);
-  --ds-pagination-radius:        var(--radius-md);
-
+  /* Public --ds-pagination-* are read with fallbacks at usage sites, never declared. */
   min-width: var(--hit-min);
   height: var(--hit-min);
   padding: 0 var(--space-2);
@@ -955,15 +910,7 @@
    minimal surface from avatar.component.scss + avatar-group.component.scss.
    ============================================================ */
 .avatar {
-  /* Per-component CSS tokens — defaults route through global semantic tokens.
-     Aligned with ds/src/lib/components/avatar/avatar.component.scss. */
-  --ds-avatar-size:       var(--avatar-md);
-  --ds-avatar-bg:         var(--primary-muted);
-  --ds-avatar-fg:         var(--primary-strong);
-  --ds-avatar-radius:     var(--radius-pill);
-  --ds-avatar-ring-color: var(--surface-default);
-  --ds-avatar-ring-width: var(--avatar-bw-group);
-
+  /* Public --ds-avatar-* are read with fallbacks at usage sites, never declared. */
   display: inline-grid;
   place-items: center;
   width: var(--ds-avatar-size, var(--avatar-md));
@@ -977,16 +924,12 @@
   overflow: hidden;
 
   &.neutral {
-    --ds-avatar-bg: var(--neutral-200);
-    --ds-avatar-fg: var(--neutral-700);
+    background: var(--ds-avatar-bg, var(--neutral-200));
+    color: var(--ds-avatar-fg, var(--neutral-700));
   }
 }
 
 .avatar-group {
-  /* Per-component CSS tokens — aligned with avatar-group.component.scss. */
-  --ds-avatargroup-overlap: calc(-1 * var(--space-2));
-  --ds-avatargroup-ring:    var(--surface-default);
-
   display: inline-flex;
 
   .avatar {

@@ -573,11 +573,7 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-topbar-bg',              value: 'var(--surface-default)',   notes: 'Bar fill.' },
       { name: '--ds-topbar-border',          value: 'var(--border-divider)',    notes: 'Bottom border.' },
       { name: '--ds-topbar-height',          value: 'var(--topbar-h)',          notes: 'Bar height.' },
-      { name: '--ds-topbar-action-fg',       value: 'var(--icon-default)',      notes: 'Action icon colour.' },
-      { name: '--ds-topbar-action-fg-hover', value: 'var(--icon-strong)',       notes: 'Action hover icon.' },
-      { name: '--ds-topbar-action-bg-hover', value: 'var(--surface-secondary)', notes: 'Action hover fill.' },
       { name: '--ds-topbar-title-fg',        value: 'var(--text-primary)',      notes: 'Title colour.' },
-      { name: '--ds-topbar-ping-color',      value: 'var(--error)',            notes: 'Notification ping.' },
     ],
   },
   {
