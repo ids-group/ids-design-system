@@ -617,7 +617,6 @@ const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-banner-bg',             value: 'var(--info-subtle)',    notes: 'Banner fill (default = info).' },
       { name: '--ds-banner-fg',             value: 'var(--info-text)',      notes: 'Body text.' },
       { name: '--ds-banner-bar',            value: 'var(--info)',           notes: 'Left bar colour.' },
-      { name: '--ds-banner-border',         value: 'var(--info-border)',    notes: 'Outer border.' },
       { name: '--ds-banner-title-fg',       value: 'var(--text-primary)',   notes: 'Title colour.' },
       { name: '--ds-banner-close-fg',       value: 'var(--icon-default)',   notes: 'Close icon.' },
       { name: '--ds-banner-close-fg-hover', value: 'var(--icon-strong)',    notes: 'Close icon hover.' },

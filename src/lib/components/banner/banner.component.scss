@@ -3,58 +3,49 @@
 }
 
 .banner {
-  --ds-banner-bg:             var(--info-subtle);
-  --ds-banner-fg:             var(--info-text);
-  --ds-banner-bar:            var(--info);
-  --ds-banner-border:         var(--info-border);
-  --ds-banner-title-fg:       var(--text-primary);
-  --ds-banner-close-fg:       var(--icon-default);
-  --ds-banner-close-fg-hover: var(--icon-strong);
-  --ds-banner-radius:         var(--radius-md);
-  --ds-banner-bar-width:      var(--banner-bar-w);
-  --ds-banner-pad-y:          var(--space-3);
-  --ds-banner-pad-x:          var(--space-4);
+  /* Public --ds-banner-* are read with fallbacks, never declared — consumer
+     overrides inherit in. One-shot tokens are read inline at the usage site. */
+  --_banner-bg:    var(--ds-banner-bg,    var(--info-subtle));
+  --_banner-fg:    var(--ds-banner-fg,    var(--info-text));
+  --_banner-bar:   var(--ds-banner-bar,   var(--info));
+  --_banner-pad-y: var(--ds-banner-pad-y, var(--space-3));
+  --_banner-pad-x: var(--ds-banner-pad-x, var(--space-4));
 
   display: flex;
   gap: var(--space-3);
-  padding: var(--ds-banner-pad-y) var(--ds-banner-pad-x);
-  border-radius: var(--ds-banner-radius);
-  background: var(--ds-banner-bg);
-  color: var(--ds-banner-fg);
+  padding: var(--_banner-pad-y) var(--_banner-pad-x);
+  border-radius: var(--ds-banner-radius, var(--radius-md));
+  background: var(--_banner-bg);
+  color: var(--_banner-fg);
 
   :host(:not(.no-rail)) & {
-    border-left: var(--ds-banner-bar-width) solid var(--ds-banner-bar);
+    border-left: var(--ds-banner-bar-width, var(--banner-bar-w)) solid var(--_banner-bar);
   }
 
   &.success {
-    --ds-banner-bar:    var(--success);
-    --ds-banner-bg:     var(--success-subtle);
-    --ds-banner-fg:     var(--success-text);
-    --ds-banner-border: var(--success-border);
+    --_banner-bar: var(--ds-banner-bar, var(--success));
+    --_banner-bg:  var(--ds-banner-bg,  var(--success-subtle));
+    --_banner-fg:  var(--ds-banner-fg,  var(--success-text));
   }
   &.warning {
-    --ds-banner-bar:    var(--warning);
-    --ds-banner-bg:     var(--warning-subtle);
-    --ds-banner-fg:     var(--warning-text);
-    --ds-banner-border: var(--warning-border);
+    --_banner-bar: var(--ds-banner-bar, var(--warning));
+    --_banner-bg:  var(--ds-banner-bg,  var(--warning-subtle));
+    --_banner-fg:  var(--ds-banner-fg,  var(--warning-text));
   }
-  &.severe  {
-    --ds-banner-bar:    var(--warning-hover);
-    --ds-banner-bg:     var(--warning-muted);
-    --ds-banner-fg:     var(--warning-text);
-    --ds-banner-border: var(--warning-border);
+  &.severe {
+    --_banner-bar: var(--ds-banner-bar, var(--warning-hover));
+    --_banner-bg:  var(--ds-banner-bg,  var(--warning-muted));
+    --_banner-fg:  var(--ds-banner-fg,  var(--warning-text));
   }
-  &.error   {
-    --ds-banner-bar:    var(--error);
-    --ds-banner-bg:     var(--error-subtle);
-    --ds-banner-fg:     var(--error-text);
-    --ds-banner-border: var(--error-border);
+  &.error {
+    --_banner-bar: var(--ds-banner-bar, var(--error));
+    --_banner-bg:  var(--ds-banner-bg,  var(--error-subtle));
+    --_banner-fg:  var(--ds-banner-fg,  var(--error-text));
   }
   &.neutral {
-    --ds-banner-bar:    var(--border-strong);
-    --ds-banner-bg:     var(--surface-secondary);
-    --ds-banner-fg:     var(--text-secondary);
-    --ds-banner-border: var(--border-default);
+    --_banner-bar: var(--ds-banner-bar, var(--border-strong));
+    --_banner-bg:  var(--ds-banner-bg,  var(--surface-secondary));
+    --_banner-fg:  var(--ds-banner-fg,  var(--text-secondary));
   }
 
   .icon {
@@ -70,7 +61,7 @@
 
   .title {
     font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
-    color: var(--ds-banner-title-fg);
+    color: var(--ds-banner-title-fg, var(--text-primary));
     margin: 0 0 var(--space-1);
   }
 
@@ -78,9 +69,9 @@
     background: none;
     border: 0;
     cursor: pointer;
-    color: var(--ds-banner-close-fg);
+    color: var(--ds-banner-close-fg, var(--icon-default));
 
-    &:hover { color: var(--ds-banner-close-fg-hover); }
+    &:hover { color: var(--ds-banner-close-fg-hover, var(--icon-strong)); }
   }
 
   .actions {
@@ -110,8 +101,8 @@
 
   &.compact {
     align-items: center;
-    --ds-banner-pad-y: var(--space-2);
-    --ds-banner-pad-x: var(--space-3);
+    --_banner-pad-y: var(--ds-banner-pad-y, var(--space-2));
+    --_banner-pad-x: var(--ds-banner-pad-x, var(--space-3));
 
     .icon { margin-top: 0; }
     .title { margin: 0; white-space: nowrap; }
