@@ -36,41 +36,41 @@ interface VariantSpec {
       <h3 class="block-title t-h4">States showcase</h3>
       <p class="block-desc t-s">Every state side-by-side. Static specimens — no interaction needed.</p>
       <div class="states states--cols-4">
-        <!-- Raw .button used for the forced-state cells so .is-forced-* hooks
-             can pin the visual without faking interaction. -->
+        <!-- Live ds-button; pin classes on the stage read the component's own
+             resolvers via ::ng-deep (see styles below). -->
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button">Save</button></div>
+          <div class="state-cell__stage"><ds-button>Save</ds-button></div>
           <div class="state-cell__label">Default</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button is-forced-hover">Save</button></div>
+          <div class="state-cell__stage pin-hover"><ds-button>Save</ds-button></div>
           <div class="state-cell__label">Hover</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button is-forced-focus">Save</button></div>
+          <div class="state-cell__stage pin-focus"><ds-button>Save</ds-button></div>
           <div class="state-cell__label">Focus-visible</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button is-forced-active">Save</button></div>
+          <div class="state-cell__stage pin-active"><ds-button>Save</ds-button></div>
           <div class="state-cell__label">Active / pressed</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button" disabled>Save</button></div>
+          <div class="state-cell__stage"><ds-button [disabled]="true">Save</ds-button></div>
           <div class="state-cell__label">Disabled</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button loading">Saving</button></div>
+          <div class="state-cell__stage"><ds-button [loading]="true">Saving</ds-button></div>
           <div class="state-cell__label">Loading</div>
         </div>
         <div class="state-cell">
           <div class="state-cell__stage">
-            <button class="button"><ds-icon name="plus" [size]="16" />New record</button>
+            <ds-button><ds-icon name="plus" [size]="16" />New record</ds-button>
           </div>
           <div class="state-cell__label">With icon</div>
         </div>
         <div class="state-cell">
           <div class="state-cell__stage">
-            <button class="button secondary">Filters <ds-icon name="chevronDown" [size]="14" /></button>
+            <ds-button variant="secondary">Filters <ds-icon name="chevronDown" [size]="14" /></ds-button>
           </div>
           <div class="state-cell__label">Trailing chevron</div>
         </div>
@@ -87,73 +87,73 @@ interface VariantSpec {
       <div class="states states--cols-4">
         <!-- Secondary row -->
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button secondary">Cancel</button></div>
+          <div class="state-cell__stage"><ds-button variant="secondary">Cancel</ds-button></div>
           <div class="state-cell__label">Secondary · default</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button secondary is-forced-hover">Cancel</button></div>
+          <div class="state-cell__stage pin-hover"><ds-button variant="secondary">Cancel</ds-button></div>
           <div class="state-cell__label">Secondary · hover</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button secondary is-forced-focus">Cancel</button></div>
+          <div class="state-cell__stage pin-focus"><ds-button variant="secondary">Cancel</ds-button></div>
           <div class="state-cell__label">Secondary · focus</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button secondary" disabled>Cancel</button></div>
+          <div class="state-cell__stage"><ds-button variant="secondary" [disabled]="true">Cancel</ds-button></div>
           <div class="state-cell__label">Secondary · disabled</div>
         </div>
 
         <!-- Outline row -->
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button outline">More</button></div>
+          <div class="state-cell__stage"><ds-button variant="outline">More</ds-button></div>
           <div class="state-cell__label">Outline · default</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button outline is-forced-hover">More</button></div>
+          <div class="state-cell__stage pin-hover"><ds-button variant="outline">More</ds-button></div>
           <div class="state-cell__label">Outline · hover</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button outline is-forced-focus">More</button></div>
+          <div class="state-cell__stage pin-focus"><ds-button variant="outline">More</ds-button></div>
           <div class="state-cell__label">Outline · focus</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button outline" disabled>More</button></div>
+          <div class="state-cell__stage"><ds-button variant="outline" [disabled]="true">More</ds-button></div>
           <div class="state-cell__label">Outline · disabled</div>
         </div>
 
         <!-- Error row -->
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button error">Delete</button></div>
+          <div class="state-cell__stage"><ds-button variant="error">Delete</ds-button></div>
           <div class="state-cell__label">Error · default</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button error is-forced-hover">Delete</button></div>
+          <div class="state-cell__stage pin-hover"><ds-button variant="error">Delete</ds-button></div>
           <div class="state-cell__label">Error · hover</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button error is-forced-focus">Delete</button></div>
+          <div class="state-cell__stage pin-focus"><ds-button variant="error">Delete</ds-button></div>
           <div class="state-cell__label">Error · focus</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button error" disabled>Delete</button></div>
+          <div class="state-cell__stage"><ds-button variant="error" [disabled]="true">Delete</ds-button></div>
           <div class="state-cell__label">Error · disabled</div>
         </div>
 
         <!-- Text row -->
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button text">View log</button></div>
+          <div class="state-cell__stage"><ds-button variant="text">View log</ds-button></div>
           <div class="state-cell__label">Text · default</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button text is-forced-hover">View log</button></div>
+          <div class="state-cell__stage pin-hover"><ds-button variant="text">View log</ds-button></div>
           <div class="state-cell__label">Text · hover</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button text is-forced-focus">View log</button></div>
+          <div class="state-cell__stage pin-focus"><ds-button variant="text">View log</ds-button></div>
           <div class="state-cell__label">Text · focus</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="button text" disabled>View log</button></div>
+          <div class="state-cell__stage"><ds-button variant="text" [disabled]="true">View log</ds-button></div>
           <div class="state-cell__label">Text · disabled</div>
         </div>
       </div>
@@ -312,6 +312,15 @@ interface VariantSpec {
       font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
+
+    /* State pins — force a visual state on live ds-buttons by reading the
+       component's own resolvers; values never duplicated here. */
+    :host ::ng-deep .pin-hover .button  { background: var(--_button-bg-hover); }
+    :host ::ng-deep .pin-active .button { background: var(--_button-bg-active); box-shadow: var(--_button-pressed-shadow); }
+    :host ::ng-deep .pin-focus .button  { outline: none; box-shadow: var(--_button-focus-shadow); z-index: var(--btn-focus-z); }
+    /* text variant: hover recolors instead of filling; focus keeps no fill */
+    :host ::ng-deep .pin-hover .button.text { background: transparent; color: var(--primary-pressed); }
+    :host ::ng-deep .pin-focus .button.text { background: transparent; }
   `],
 })
 export class ButtonSection {

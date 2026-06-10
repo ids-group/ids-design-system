@@ -63,18 +63,6 @@
     .icon { width: var(--icon-xs); height: var(--icon-xs); }
   }
 
-  &.secondary {
-    --_button-bg:        var(--ds-button-bg,        var(--primary-muted));
-    --_button-fg:        var(--ds-button-fg,        var(--primary-strong));
-    --_button-bg-hover:  var(--ds-button-bg-hover,  var(--primary-muted-strong));
-    --_button-bg-active: var(--ds-button-bg-active, var(--primary-muted-strong));
-  }
-  &.tertiary {
-    --_button-bg:        var(--ds-button-bg,        transparent);
-    --_button-fg:        var(--ds-button-fg,        var(--primary-strong));
-    --_button-bg-hover:  var(--ds-button-bg-hover,  var(--primary-subtle));
-    --_button-bg-active: var(--ds-button-bg-active, var(--primary-muted));
-  }
   &.outline {
     --_button-bg:        var(--ds-button-bg,        var(--surface-default));
     --_button-fg:        var(--ds-button-fg,        var(--text-primary));
@@ -86,37 +74,7 @@
     --_button-bg:           var(--ds-button-bg,           var(--error));
     --_button-focus-shadow: var(--ds-button-focus-shadow, var(--focus-ring-error));
   }
-  &.text {
-    --_button-bg:        var(--ds-button-bg,        transparent);
-    --_button-fg:        var(--ds-button-fg,        var(--text-link));
-    --_button-bg-hover:  var(--ds-button-bg-hover,  transparent);
-    --_button-bg-active: var(--ds-button-bg-active, transparent);
-    padding: 0; height: auto;
-    text-decoration: underline;
-    text-underline-offset: var(--btn-link-uloff);
-
-    &:hover { color: var(--primary-pressed); }
-  }
-
-  &.loading {
-    color: transparent !important; pointer-events: none;
-
-    &::after {
-      content: ""; position: absolute;
-      width: var(--spinner-md); height: var(--spinner-md);
-      border: var(--border-width-strong) solid currentColor;
-      border-right-color: transparent;
-      border-radius: var(--radius-pill);
-      color: var(--primary-on);
-      animation: ds-docs-spin var(--duration-loop-fast) linear infinite;
-    }
-  }
-  &.secondary.loading::after,
-  &.tertiary.loading::after,
-  &.outline.loading::after { color: var(--primary-strong); }
 }
-
-@keyframes ds-docs-spin { to { transform: rotate(360deg); } }
 
 .button-group {
   display: inline-flex;
@@ -163,16 +121,6 @@
   }
   &:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 }
-
-/* ============================================================
-   Forced-state hooks — visually pin a component to one state.
-   Ported from source `patterns.css`, adapted to our class names.
-   ============================================================ */
-.button.is-forced-hover  { background: var(--_button-bg-hover); }
-.button.is-forced-active { background: var(--_button-bg-active); box-shadow: var(--_button-pressed-shadow); }
-.button.is-forced-focus  { outline: none; box-shadow: var(--_button-focus-shadow); z-index: var(--btn-focus-z); }
-.button.text.is-forced-hover { background: transparent; text-decoration: underline; }
-.button.text.is-forced-focus { background: transparent; }
 
 .button-toggle.is-forced-hover { background: var(--surface-secondary); }
 .button-toggle.is-forced-focus { outline: none; box-shadow: var(--focus-ring); }
