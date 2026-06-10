@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DS — Интеракции по формуле: контракт ds-interactive</title>
+<link rel="stylesheet" href="ds.css">
+<style>
+  /* ----------------------------------------------------------------
+     Demo-only page (NOT part of the lib). Compares today's interaction
+     colours (ramp picks / surface swap) with the proposed global
+     formula contract. Real DS tokens from ds.css.
+     ---------------------------------------------------------------- */
+  body { margin: 0; background: var(--surface-canvas); color: var(--text-primary); font-family: var(--font-sans); }
+  .page { max-width: 1120px; margin: 0 auto; padding: var(--s-10) var(--s-6) var(--s-20); }
+
+  .masthead h1 { font: var(--fw-bold) 26px/1.25 var(--font-heading); margin: 0 0 var(--s-2); }
+  .masthead p { color: var(--text-secondary); max-width: 82ch; margin: var(--s-2) 0 0; font: var(--fw-regular) var(--fs-s)/1.6 var(--font-sans); }
+  code.tok { font: var(--fw-medium) var(--fs-2xs)/1 var(--font-mono); color: var(--primary-strong);
+             background: var(--primary-subtle); padding: 2px 6px; border-radius: var(--r-sm); }
+
+  .card { background: var(--surface-default); border: var(--bw-default) solid var(--border-divider);
+          border-radius: var(--r-lg); padding: var(--s-6); box-shadow: var(--z100);
+          margin-top: var(--s-6); display: flex; flex-direction: column; gap: var(--s-4); }
+  .card h2 { font: var(--fw-bold) var(--fs-h4)/1.2 var(--font-heading); margin: 0; }
+  .card > .note { color: var(--text-tertiary); font: var(--fw-regular) var(--fs-xs)/1.55 var(--font-sans); margin: 0; max-width: 92ch; }
+
+  .snippet { background: var(--surface-secondary); border: var(--bw-default) solid var(--border-divider);
+             border-radius: var(--r-sm); padding: var(--s-3) var(--s-4); margin: 0;
+             font: var(--fw-medium) var(--fs-xs)/1.7 var(--font-mono); color: var(--text-primary);
+             overflow-x: auto; white-space: pre; }
+  .snippet .cm { color: var(--text-tertiary); }
+  .snippet .hl { color: var(--primary-strong); font-weight: var(--fw-bold); }
+
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-5); }
+  @media (max-width: 880px) { .duo { grid-template-columns: 1fr; } }
+  .lane-title { font: var(--fw-semibold) var(--fs-xs)/1.3 var(--font-sans); color: var(--text-secondary); margin: 0 0 var(--s-2); }
+  .lane-title b { color: var(--text-primary); }
+
+  .zone { border: var(--bw-default) dashed var(--border-default); border-radius: var(--r-md);
+          padding: var(--s-4); display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap;
+          background: var(--surface-canvas); }
+  .zone.on-tint { background: var(--surface-tint); }
+  .zone.on-white { background: var(--surface-default); }
+  .row-label { width: 88px; flex: 0 0 auto; font: var(--fw-semibold) var(--fs-2xs)/1.3 var(--font-sans); color: var(--text-tertiary); }
+  .hint { color: var(--text-tertiary); font: var(--fw-regular) var(--fs-2xs)/1.4 var(--font-sans); margin: 0; }
+
+  /* ================================================================
+     THE CONTRACT (prototype of styles/_interaction.scss).
+     The formula text exists exactly ONCE. Everything below it only
+     sets --interactive-base / --state-into / step overrides.
+     ================================================================ */
+  :root {
+    --state-step-hover:   12%;
+    --state-step-pressed: 24%;  /* = 2 x hover */
+    --state-ink-hover:     5%;
+    --state-ink-pressed:  10%;
+    --state-into:         black;
+  }
+  .fx {
+    --interactive-hover:  color-mix(in srgb, var(--interactive-base) calc(100% - var(--state-step-hover)),   var(--state-into));
+    --interactive-active: color-mix(in srgb, var(--interactive-base) calc(100% - var(--state-step-pressed)), var(--state-into));
+  }
+  .fx-bg { background: var(--interactive-base); }
+  .fx-bg:hover  { background: var(--interactive-hover); }
+  .fx-bg:active { background: var(--interactive-active); }
+  .fx-text:hover  { color: var(--interactive-hover);  text-decoration-color: var(--interactive-hover); }
+  .fx-text:active { color: var(--interactive-active); text-decoration-color: var(--interactive-active); }
+  .ink { --state-step-hover: var(--state-ink-hover); --state-step-pressed: var(--state-ink-pressed); --state-into: var(--text-primary); }
+  .surface-fx { --interactive-base: transparent;
+                --state-step-hover: var(--state-ink-hover); --state-step-pressed: var(--state-ink-pressed);
+                --state-into: var(--text-primary); }
+  .into-light { --state-into: white; }
+
+  /* "Today" lane: element reproduces the exact tokens components use now */
+  .cur { background: var(--cb); }
+  .cur:hover  { background: var(--cbh); }
+  .cur:active { background: var(--cba); }
+  .cur-text:hover  { color: var(--cbh); text-decoration-color: var(--cbh); }
+  .cur-text:active { color: var(--cba); text-decoration-color: var(--cba); }
+
+  /* demo widgets */
+  .dbtn { display: inline-flex; align-items: center; justify-content: center;
+          height: var(--hit-cozy); padding: 0 var(--s-5); border-radius: var(--r-md);
+          border: var(--bw-default) solid var(--db, transparent); cursor: pointer; user-select: none;
+          color: var(--df, var(--text-on-primary)); font: var(--fw-semibold) var(--fs-s)/1 var(--font-sans);
+          transition: background .15s ease; }
+  .triad { display: inline-flex; gap: 4px; align-items: center; }
+  .triad i { width: 26px; height: 26px; border-radius: var(--r-sm); display: inline-block;
+             border: 1px solid var(--border-subtle); }
+  .triad .t-base   { background: var(--cb, var(--interactive-base)); }
+  .triad .t-hover  { background: var(--cbh, var(--interactive-hover)); }
+  .triad .t-active { background: var(--cba, var(--interactive-active)); }
+  .triad.txt i { display: inline-flex; align-items: center; justify-content: center; background: var(--surface-default);
+                 font: var(--fw-bold) var(--fs-xs)/1 var(--font-sans); border: 1px solid var(--border-subtle); }
+  .pair { display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap; }
+
+  .dmenu { width: 230px; background: var(--surface-overlay); border: var(--bw-default) solid var(--border-default);
+           border-radius: var(--r-md); padding: var(--s-1); box-shadow: var(--z200); }
+  .dmi { padding: var(--s-2) var(--s-3); border-radius: var(--r-sm); cursor: pointer;
+         font: var(--fw-regular) var(--fs-s)/1.4 var(--font-sans); transition: background .12s ease; }
+  .dmi.cur:hover { background: var(--surface-secondary); }      /* today: token swap */
+  .dmi.cur:active { background: var(--surface-secondary); }
+
+  .dnav { display: inline-flex; align-items: center; height: var(--hit-cozy); padding: 0 var(--s-4);
+          border-radius: var(--r-md); cursor: pointer; color: var(--text-on-primary);
+          font: var(--fw-semibold) var(--fs-s)/1 var(--font-sans); transition: background .12s ease; }
+  .invbar { background: var(--surface-inverted); border-radius: var(--r-md); padding: var(--s-3) var(--s-4);
+            display: inline-flex; gap: var(--s-3); align-items: center; }
+  .invbar .dbtn { --df: var(--text-inverted); border-color: var(--border-inverted); }
+
+  .dlink { font: var(--fw-medium) var(--fs-s)/1.4 var(--font-sans); color: var(--text-link);
+           text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+  /* ---- controls (live brand colour) ---- */
+  .controls { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap;
+              padding: var(--s-3) var(--s-4); background: var(--surface-secondary);
+              border-radius: var(--r-md); }
+  .controls .label { font: var(--fw-semibold) var(--fs-xs)/1 var(--font-sans); color: var(--text-secondary); }
+  .swatch { width: 28px; height: 28px; border-radius: var(--r-pill); cursor: pointer;
+            border: 2px solid transparent; padding: 0; }
+  .swatch.on { border-color: var(--text-primary); }
+  input[type="color"] { width: 44px; height: 28px; padding: 0; border: var(--bw-default) solid var(--border-default);
+                        border-radius: var(--r-sm); background: var(--surface-default); cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <h1>Интеракции по формуле: контракт <code class="tok">ds-interactive</code></h1>
+    <p>Слева — как цвета состояний заданы <b>сейчас</b> (ramp-пики и подмена токенов).
+       Справа — <b>формула</b>: компонент задаёт только базу (<code class="tok">--interactive-base</code>),
+       hover и pressed выводятся глобальным правилом. Наводи мышь и <b>зажимай</b> кнопку, чтобы увидеть pressed.
+       Рядом с каждым элементом — статичные триады <i>база / hover / pressed</i> для сравнения «в покое».</p>
+  </header>
+
+  <div class="card">
+    <h2>Формула (живёт глобально, ровно один раз)</h2>
+<pre class="snippet"><span class="cm">/* styles/_interaction.scss — единственное место с формулой */</span>
+.ds-interactive {
+  --interactive-hover:  color-mix(in srgb, var(--interactive-base) <span class="hl">calc(100% - var(--state-step-hover))</span>,   var(--state-into));
+  --interactive-active: color-mix(in srgb, var(--interactive-base) <span class="hl">calc(100% - var(--state-step-pressed))</span>, var(--state-into));
+}
+<span class="cm">/* константы: --state-step-hover: 12%; --state-step-pressed: 24% (= 2 × hover);
+   направление --state-into: black (тёмная база/тема → white);
+   нейтральные поверхности: прозрачная база + чернильные шаги 5% / 10% */</span></pre>
+    <div class="controls">
+      <span class="label">Брендовый --primary:</span>
+      <button class="swatch on" data-c="" style="background: var(--blue-600)" title="Синий (по умолчанию)"></button>
+      <button class="swatch" data-c="#0E9F6E" style="background:#0E9F6E" title="Зелёный"></button>
+      <button class="swatch" data-c="#7C3AED" style="background:#7C3AED" title="Фиолетовый"></button>
+      <button class="swatch" data-c="#D97706" style="background:#D97706" title="Оранжевый"></button>
+      <input type="color" id="brand" value="#2563EB" title="Свой цвет">
+      <span class="hint">Меняется ТОЛЬКО <code class="tok">--primary</code> — формульная сторона пересчитывает все состояния сама.</span>
+    </div>
+  </div>
+
+  <!-- ============ 1. Fills ============ -->
+  <div class="card">
+    <h2>1. Заливки</h2>
+    <p class="note">Primary и error уже формульные в теме — стороны совпадают (это подтверждение совместимости).
+       У success/warning сегодня <b>нет pressed</b> (active повторяет hover) — формула даёт его бесплатно.</p>
+    <div class="duo">
+      <div>
+        <p class="lane-title">Сейчас: <b>токены на каждое состояние</b></p>
+        <div class="zone" style="flex-direction: column; align-items: stretch;">
+          <div class="pair"><span class="row-label">primary</span>
+            <button class="dbtn cur" style="--cb: var(--primary); --cbh: var(--primary-hover); --cba: var(--primary-pressed)">Кнопка</button>
+            <span class="triad" style="--cb: var(--primary); --cbh: var(--primary-hover); --cba: var(--primary-pressed)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+          <div class="pair"><span class="row-label">error</span>
+            <button class="dbtn cur" style="--cb: var(--error); --cbh: var(--error-hover); --cba: var(--error-pressed)">Удалить</button>
+            <span class="triad" style="--cb: var(--error); --cbh: var(--error-hover); --cba: var(--error-pressed)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+          <div class="pair"><span class="row-label">success</span>
+            <button class="dbtn cur" style="--cb: var(--success); --cbh: var(--success-hover); --cba: var(--success-hover)">Готово</button>
+            <span class="triad" style="--cb: var(--success); --cbh: var(--success-hover); --cba: var(--success-hover)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+          <div class="pair"><span class="row-label">warning</span>
+            <button class="dbtn cur" style="--cb: var(--warning); --cbh: var(--warning-hover); --cba: var(--warning-hover); --df: var(--text-on-warning)">Внимание</button>
+            <span class="triad" style="--cb: var(--warning); --cbh: var(--warning-hover); --cba: var(--warning-hover)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+        </div>
+      </div>
+      <div>
+        <p class="lane-title">Формула: <b>только база</b></p>
+        <div class="zone" style="flex-direction: column; align-items: stretch;">
+          <div class="pair"><span class="row-label">primary</span>
+            <button class="dbtn fx fx-bg" style="--interactive-base: var(--primary)">Кнопка</button>
+            <span class="triad fx" style="--interactive-base: var(--primary)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+          <div class="pair"><span class="row-label">error</span>
+            <button class="dbtn fx fx-bg" style="--interactive-base: var(--error)">Удалить</button>
+            <span class="triad fx" style="--interactive-base: var(--error)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+          <div class="pair"><span class="row-label">success</span>
+            <button class="dbtn fx fx-bg" style="--interactive-base: var(--success)">Готово</button>
+            <span class="triad fx" style="--interactive-base: var(--success)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+          <div class="pair"><span class="row-label">warning</span>
+            <button class="dbtn fx fx-bg" style="--interactive-base: var(--warning); --df: var(--text-on-warning)">Внимание</button>
+            <span class="triad fx" style="--interactive-base: var(--warning)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 2. Tonal / outline ============ -->
+  <div class="card">
+    <h2>2. Тональные и контурные</h2>
+    <p class="note">Сейчас: hover — это <b>другой токен рампы</b> (muted → muted-strong, transparent → subtle → muted).
+       Формула: secondary темнеет от своей базы; tertiary — «чернильный» слой, где чернила = бренд
+       (<code class="tok">--state-into: var(--primary)</code>); outline — нейтральные чернила 5% / 10%.</p>
+    <div class="duo">
+      <div>
+        <p class="lane-title">Сейчас</p>
+        <div class="zone" style="flex-direction: column; align-items: stretch;">
+          <div class="pair"><span class="row-label">secondary</span>
+            <button class="dbtn cur" style="--cb: var(--primary-muted); --cbh: var(--primary-muted-strong); --cba: var(--primary-muted-strong); --df: var(--primary-strong)">Кнопка</button>
+            <span class="triad" style="--cb: var(--primary-muted); --cbh: var(--primary-muted-strong); --cba: var(--primary-muted-strong)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+          <div class="pair"><span class="row-label">tertiary</span>
+            <button class="dbtn cur" style="--cb: transparent; --cbh: var(--primary-subtle); --cba: var(--primary-muted); --df: var(--primary-strong)">Кнопка</button>
+            <span class="triad" style="--cb: transparent; --cbh: var(--primary-subtle); --cba: var(--primary-muted)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+          <div class="pair"><span class="row-label">outline</span>
+            <button class="dbtn cur" style="--cb: var(--surface-default); --cbh: var(--surface-secondary); --cba: var(--surface-secondary); --df: var(--text-primary); --db: var(--border-default)">Кнопка</button>
+            <span class="triad" style="--cb: var(--surface-default); --cbh: var(--surface-secondary); --cba: var(--surface-secondary)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+        </div>
+      </div>
+      <div>
+        <p class="lane-title">Формула</p>
+        <div class="zone" style="flex-direction: column; align-items: stretch;">
+          <div class="pair"><span class="row-label">secondary</span>
+            <button class="dbtn fx fx-bg" style="--interactive-base: var(--primary-muted); --df: var(--primary-strong)">Кнопка</button>
+            <span class="triad fx" style="--interactive-base: var(--primary-muted)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+          <div class="pair"><span class="row-label">tertiary</span>
+            <button class="dbtn fx fx-bg surface-fx" style="--state-into: var(--primary); --df: var(--primary-strong)">Кнопка</button>
+            <span class="triad fx surface-fx" style="--state-into: var(--primary)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+          <div class="pair"><span class="row-label">outline</span>
+            <button class="dbtn fx fx-bg ink" style="--interactive-base: var(--surface-default); --df: var(--text-primary); --db: var(--border-default)">Кнопка</button>
+            <span class="triad fx ink" style="--interactive-base: var(--surface-default)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 3. Neutral surfaces ============ -->
+  <div class="card">
+    <h2>3. Нейтральные поверхности (меню, строки)</h2>
+    <p class="note">Сейчас hover — подмена на <b>непрозрачный</b> <code class="tok">--surface-secondary</code>:
+       на белом ок, но на тонированном фоне «дырявит» подложку. Формульный чернильный слой
+       (прозрачная база + 5% / 10% чернил) работает поверх <b>любого</b> фона.</p>
+    <div class="duo">
+      <div>
+        <p class="lane-title">Сейчас: <b>подмена токена</b></p>
+        <div class="zone on-white">
+          <div class="dmenu">
+            <div class="dmi cur">Открыть</div>
+            <div class="dmi cur">Переименовать</div>
+            <div class="dmi cur">Дублировать</div>
+          </div>
+        </div>
+        <div class="zone on-tint" style="margin-top: var(--s-3);">
+          <div class="dmenu" style="background: transparent; border: 0; box-shadow: none;">
+            <div class="dmi cur">Пункт на тонированном фоне</div>
+            <div class="dmi cur">Ещё пункт</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="lane-title">Формула: <b>чернильный слой</b></p>
+        <div class="zone on-white">
+          <div class="dmenu">
+            <div class="dmi fx fx-bg surface-fx">Открыть</div>
+            <div class="dmi fx fx-bg surface-fx">Переименовать</div>
+            <div class="dmi fx fx-bg surface-fx">Дублировать</div>
+          </div>
+        </div>
+        <div class="zone on-tint" style="margin-top: var(--s-3);">
+          <div class="dmenu" style="background: transparent; border: 0; box-shadow: none;">
+            <div class="dmi fx fx-bg surface-fx">Пункт на тонированном фоне</div>
+            <div class="dmi fx fx-bg surface-fx">Ещё пункт</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 4. Dark bases ============ -->
+  <div class="card">
+    <h2>4. Тёмные базы — направление переключается токеном</h2>
+    <p class="note">Sidenav сегодня делает то же самое <b>локальной</b> формулой (mix 88% white) — справа она стала глобальной
+       (<code class="tok">--state-into: white</code>), результат идентичен. Инвертированная панель сегодня —
+       абсолютный пик <code class="tok">--neutral-800</code>; формула даёт почти тот же тон.</p>
+    <div class="duo">
+      <div>
+        <p class="lane-title">Сейчас</p>
+        <div class="zone" style="flex-direction: column; align-items: stretch;">
+          <div class="pair"><span class="row-label">sidenav active</span>
+            <span class="dnav cur" style="--cb: var(--primary); --cbh: color-mix(in srgb, var(--primary) 88%, white); --cba: color-mix(in srgb, var(--primary) 88%, white)">Объекты</span>
+            <span class="triad" style="--cb: var(--primary); --cbh: color-mix(in srgb, var(--primary) 88%, white); --cba: color-mix(in srgb, var(--primary) 88%, white)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+          <div class="pair"><span class="row-label">inverted</span>
+            <span class="invbar"><button class="dbtn cur" style="--cb: transparent; --cbh: var(--surface-inverted-hover); --cba: var(--surface-inverted-hover)">Снять выбор</button></span>
+            <span class="triad" style="--cb: var(--surface-inverted); --cbh: var(--surface-inverted-hover); --cba: var(--surface-inverted-hover)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+        </div>
+      </div>
+      <div>
+        <p class="lane-title">Формула + <code class="tok">--state-into: white</code></p>
+        <div class="zone" style="flex-direction: column; align-items: stretch;">
+          <div class="pair"><span class="row-label">sidenav active</span>
+            <span class="dnav fx fx-bg into-light" style="--interactive-base: var(--primary)">Объекты</span>
+            <span class="triad fx into-light" style="--interactive-base: var(--primary)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+          <div class="pair"><span class="row-label">inverted</span>
+            <span class="invbar"><button class="dbtn fx fx-bg into-light" style="--interactive-base: var(--surface-inverted)">Снять выбор</button></span>
+            <span class="triad fx into-light" style="--interactive-base: var(--surface-inverted)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 5. Links ============ -->
+  <div class="card">
+    <h2>5. Ссылки — единственный нарушитель пропорции</h2>
+    <p class="note">Сейчас: −20% hover / −35% active (и pressed ≠ 2 × hover). Формула: стандартные −12% / −24%.
+       Сравни, не слишком ли слабым станет hover.</p>
+    <div class="duo">
+      <div>
+        <p class="lane-title">Сейчас: 80% / 65%</p>
+        <div class="zone">
+          <a class="dlink cur-text" style="--cbh: color-mix(in srgb, var(--text-link) 80%, black); --cba: color-mix(in srgb, var(--text-link) 65%, black)">Открыть отчёт за май</a>
+          <span class="triad txt" style="--cbh: color-mix(in srgb, var(--text-link) 80%, black); --cba: color-mix(in srgb, var(--text-link) 65%, black)">
+            <i style="color: var(--text-link)">Aa</i><i style="color: var(--cbh)">Aa</i><i style="color: var(--cba)">Aa</i></span>
+        </div>
+      </div>
+      <div>
+        <p class="lane-title">Формула: 88% / 76%</p>
+        <div class="zone">
+          <a class="dlink fx fx-text" style="--interactive-base: var(--text-link)">Открыть отчёт за май</a>
+          <span class="triad txt fx" style="--interactive-base: var(--text-link)">
+            <i style="color: var(--interactive-base)">Aa</i><i style="color: var(--interactive-hover)">Aa</i><i style="color: var(--interactive-active)">Aa</i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Verdict ============ -->
+  <div class="card">
+    <h2>Что остаётся в компоненте</h2>
+<pre class="snippet"><span class="cm">/* button.component.scss — токен-блок наверху, только необходимое */</span>
+.button          { <span class="hl">--interactive-base: var(--primary);</span> }
+.button.error    { <span class="hl">--interactive-base: var(--error);</span> }
+.button.success  { <span class="hl">--interactive-base: var(--success);</span> }
+.menu-item       { <span class="cm">/* класс ds-interactive surface в шаблоне — и всё */</span> }
+
+<span class="cm">/* уходит из компонентов: --ds-*-bg-hover, --ds-*-bg-active на каждый вариант,
+   локальные color-mix (sidenav), ramp-пики состояний (secondary/tertiary/outline) */</span></pre>
+    <p class="note">Не охвачено контрактом (остаётся семантикой): focus-кольца (уже единые через
+      <code class="tok">--focus-ring</code>), смена бордеров <code class="tok">default → strong</code> и текста
+      <code class="tok">secondary → primary</code>.</p>
+  </div>
+
+</div>
+<script>
+  const root = document.documentElement;
+  const swatches = document.querySelectorAll('.swatch');
+  function setBrand(value) {
+    if (value) { root.style.setProperty('--primary', value); }
+    else { root.style.removeProperty('--primary'); }
+  }
+  swatches.forEach(function (button) {
+    button.addEventListener('click', function () {
+      swatches.forEach(function (other) { other.classList.remove('on'); });
+      button.classList.add('on');
+      setBrand(button.dataset.c);
+    });
+  });
+  document.getElementById('brand').addEventListener('input', function (event) {
+    swatches.forEach(function (other) { other.classList.remove('on'); });
+    setBrand(event.target.value);
+  });
+</script>
+</body>
+</html>
