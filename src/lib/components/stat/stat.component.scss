@@ -19,24 +19,32 @@
 
 .stat {
   /* Public --ds-stat-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_stat-bg:          var(--ds-stat-bg,          var(--surface-default));
+  --_stat-border:      var(--ds-stat-border,      var(--border-divider));
+  --_stat-radius:      var(--ds-stat-radius,      var(--radius-lg));
+  --_stat-pad:         var(--ds-stat-pad,         var(--ds-container-pad));
+  --_stat-label-color: var(--ds-stat-label-color, var(--text-tertiary));
+  --_stat-value-color: var(--ds-stat-value-color, var(--text-primary));
+  --_stat-up-color:    var(--ds-stat-up-color,    var(--success-text));
+  --_stat-down-color:  var(--ds-stat-down-color,  var(--error-text));
 
-  background: var(--ds-stat-bg, var(--surface-default));
-  border: var(--border-width-default) solid var(--ds-stat-border, var(--border-divider));
-  border-radius: var(--ds-stat-radius, var(--radius-lg));
-  padding: var(--ds-stat-pad, var(--ds-container-pad));
+  background: var(--_stat-bg);
+  border: var(--border-width-default) solid var(--_stat-border);
+  border-radius: var(--_stat-radius);
+  padding: var(--_stat-pad);
 
   .label {
     font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
     letter-spacing: var(--letter-spacing-wider);
     text-transform: uppercase;
-    color: var(--ds-stat-label-color, var(--text-tertiary));
+    color: var(--_stat-label-color);
     margin: 0 0 var(--space-2);
   }
 
   .value {
     font: var(--font-weight-extrabold) var(--font-size-h2)/var(--line-height-flat) var(--font-sans);
     letter-spacing: var(--letter-spacing-snug);
-    color: var(--ds-stat-value-color, var(--text-primary));
+    color: var(--_stat-value-color);
     margin: 0;
     white-space: nowrap;
   }
@@ -48,8 +56,8 @@
     font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
     margin-top: var(--space-2);
 
-    &.up        { color: var(--ds-stat-up-color, var(--success-text)); }
-    &.down      { color: var(--ds-stat-down-color, var(--error-text)); }
+    &.up        { color: var(--_stat-up-color); }
+    &.down      { color: var(--_stat-down-color); }
     &.neutral   { color: var(--text-tertiary); }
     &.secondary { color: var(--secondary-strong); }
   }

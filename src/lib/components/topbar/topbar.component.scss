@@ -4,18 +4,22 @@
 
 .topbar {
   /* Public --ds-topbar-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_topbar-height:   var(--ds-topbar-height,   var(--topbar-h));
+  --_topbar-bg:       var(--ds-topbar-bg,       var(--surface-default));
+  --_topbar-border:   var(--ds-topbar-border,   var(--border-divider));
+  --_topbar-title-fg: var(--ds-topbar-title-fg, var(--text-primary));
 
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  height: var(--ds-topbar-height, var(--topbar-h));
+  height: var(--_topbar-height);
   padding: 0 var(--space-6);
-  background: var(--ds-topbar-bg, var(--surface-default));
-  border-bottom: var(--border-width-default) solid var(--ds-topbar-border, var(--border-divider));
+  background: var(--_topbar-bg);
+  border-bottom: var(--border-width-default) solid var(--_topbar-border);
 
   .title {
     font: var(--font-weight-bold) var(--font-size-h5)/var(--line-height-snug) var(--font-sans);
-    color: var(--ds-topbar-title-fg, var(--text-primary));
+    color: var(--_topbar-title-fg);
   }
 
   .spacer {

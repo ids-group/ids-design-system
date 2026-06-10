@@ -21,6 +21,9 @@
   --_button-focus-shadow: var(--ds-button-focus-shadow, var(--focus-ring));
   --_button-pressed-shadow: var(--ds-button-pressed-shadow,
                               0 0 0 3px color-mix(in srgb, var(--_button-bg-active) 35%, transparent));
+  --_button-radius:    var(--ds-button-radius,    var(--radius-md));
+  --_button-bg-disabled: var(--ds-button-bg-disabled, var(--surface-disabled));
+  --_button-fg-disabled: var(--ds-button-fg-disabled, var(--text-disabled));
 
   display: inline-flex;
   align-items: center;
@@ -31,7 +34,7 @@
   color: var(--_button-fg);
   background: var(--_button-bg);
   border: var(--border-width-default) solid var(--_button-border);
-  border-radius: var(--ds-button-radius, var(--radius-md));
+  border-radius: var(--_button-radius);
   padding: 0 var(--space-5);
   height: var(--hit-cozy);
   cursor: pointer;
@@ -50,8 +53,8 @@
 
   &[disabled],
   &.is-disabled {
-    background: var(--ds-button-bg-disabled, var(--surface-disabled));
-    color: var(--ds-button-fg-disabled, var(--text-disabled));
+    background: var(--_button-bg-disabled);
+    color: var(--_button-fg-disabled);
     border-color: transparent;
     cursor: not-allowed;
     pointer-events: none;
@@ -192,8 +195,22 @@
    standalone .textarea / .number stepper / .search bar / .tag).
    ============================================================ */
 .field {
-  /* Public --ds-input-* are read with fallbacks at each usage site — never
-     declared here, or the global .field rule would shadow component fallbacks. */
+  /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_input-bg:             var(--ds-input-bg,             var(--surface-default));
+  --_input-border:         var(--ds-input-border,         var(--border-default));
+  --_input-radius:         var(--ds-input-radius,         var(--radius-md));
+  --_input-pad-y:          var(--ds-input-pad-y,          var(--field-pad-y));
+  --_input-pad-x:          var(--ds-input-pad-x,          var(--field-pad-x));
+  --_input-fg:             var(--ds-input-fg,             var(--text-primary));
+  --_input-placeholder:    var(--ds-input-placeholder,    var(--text-tertiary));
+  --_input-border-hover:   var(--ds-input-border-hover,   var(--border-strong));
+  --_input-border-focus:   var(--ds-input-border-focus,   var(--primary));
+  --_input-focus-shadow:   var(--ds-input-focus-shadow,   var(--focus-field));
+  --_input-bg-disabled:    var(--ds-input-bg-disabled,    var(--surface-disabled));
+  --_input-bg-error:       var(--ds-input-bg-error,       var(--error-subtle));
+  --_input-border-error:   var(--ds-input-border-error,   var(--error));
+  --_input-border-success: var(--ds-input-border-success, var(--success));
+
   display: flex;
   flex-direction: column;
   gap: var(--space-1-5);
@@ -208,10 +225,10 @@
 
   .control {
     display: flex; align-items: center; gap: var(--space-2);
-    background: var(--ds-input-bg, var(--surface-default));
-    border: var(--border-width-default) solid var(--ds-input-border, var(--border-default));
-    border-radius: var(--ds-input-radius, var(--radius-md));
-    padding: var(--ds-input-pad-y, var(--field-pad-y)) var(--ds-input-pad-x, var(--field-pad-x));
+    background: var(--_input-bg);
+    border: var(--border-width-default) solid var(--_input-border);
+    border-radius: var(--_input-radius);
+    padding: var(--_input-pad-y) var(--_input-pad-x);
     height: var(--hit-cozy);
     transition:
       border-color var(--duration-fast) var(--ease-standard),
@@ -225,17 +242,17 @@
       appearance: none; -webkit-appearance: none;
       border: 0; outline: 0; background: transparent;
       font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
-      color: var(--ds-input-fg, var(--text-primary));
+      color: var(--_input-fg);
     }
     input::placeholder,
-    textarea::placeholder { color: var(--ds-input-placeholder, var(--text-tertiary)); }
+    textarea::placeholder { color: var(--_input-placeholder); }
 
     .icon { width: var(--icon-md); height: var(--icon-md); color: var(--icon-default); flex-shrink: 0; }
 
-    &:hover { border-color: var(--ds-input-border-hover, var(--border-strong)); }
+    &:hover { border-color: var(--_input-border-hover); }
     &:focus-within {
-      border-color: var(--ds-input-border-focus, var(--primary));
-      box-shadow: var(--ds-input-focus-shadow, var(--focus-field));
+      border-color: var(--_input-border-focus);
+      box-shadow: var(--_input-focus-shadow);
     }
 
     /* Textarea inside .control — auto-grow vertically. */
@@ -264,10 +281,10 @@
     }
 
     /* Forced-state hooks — pin the visual without interaction. */
-    &.is-forced-hover { border-color: var(--ds-input-border-hover, var(--border-strong)); }
+    &.is-forced-hover { border-color: var(--_input-border-hover); }
     &.is-forced-focus {
-      border-color: var(--ds-input-border-focus, var(--primary));
-      box-shadow: var(--ds-input-focus-shadow, var(--focus-field));
+      border-color: var(--_input-border-focus);
+      box-shadow: var(--_input-focus-shadow);
     }
   }
 
@@ -279,7 +296,7 @@
 
   /* States */
   &.disabled .control {
-    background: var(--ds-input-bg-disabled, var(--surface-disabled));
+    background: var(--_input-bg-disabled);
     border-color: var(--border-disabled);
 
     input, textarea, select { color: var(--text-disabled); cursor: not-allowed; }
@@ -287,15 +304,15 @@
   &.disabled .control select { opacity: var(--opacity-muted); }
 
   &.error .control {
-    background: var(--ds-input-bg-error, var(--error-subtle));
-    border-color: var(--ds-input-border-error, var(--error));
+    background: var(--_input-bg-error);
+    border-color: var(--_input-border-error);
 
     &:focus-within { box-shadow: var(--focus-field-error); }
     &.is-forced-focus { box-shadow: var(--focus-field-error); }
   }
   &.error .hint { color: var(--error-text); }
 
-  &.success .control { border-color: var(--ds-input-border-success, var(--success)); }
+  &.success .control { border-color: var(--_input-border-success); }
   &.success .hint { color: var(--success-text); }
 
   /* Sizes */
@@ -716,11 +733,15 @@
 .stat {
   /* Typography roles only — the host card paints surface/border; `.value`
      colour intentionally inherits. Public tokens read inline, never declared. */
+  --_stat-label-color: var(--ds-stat-label-color, var(--text-tertiary));
+  --_stat-up-color:    var(--ds-stat-up-color,    var(--success-text));
+  --_stat-down-color:  var(--ds-stat-down-color,  var(--error-text));
+
   .label {
     font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
     letter-spacing: var(--letter-spacing-wider);
     text-transform: uppercase;
-    color: var(--ds-stat-label-color, var(--text-tertiary));
+    color: var(--_stat-label-color);
     margin: 0 0 var(--space-2);
   }
 
@@ -730,7 +751,7 @@
     margin: 0;
     white-space: nowrap;
 
-    &.danger { color: var(--ds-stat-down-color, var(--error-text)); }
+    &.danger { color: var(--_stat-down-color); }
   }
 
   .delta {
@@ -740,8 +761,8 @@
     font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
     margin-top: var(--space-2);
 
-    &.up   { color: var(--ds-stat-up-color, var(--success-text)); }
-    &.down { color: var(--ds-stat-down-color, var(--error-text)); }
+    &.up   { color: var(--_stat-up-color); }
+    &.down { color: var(--_stat-down-color); }
   }
 }
 
@@ -756,31 +777,42 @@
    to `.tab` so it does not collide with the BADGE block.
    ============================================================ */
 .tabs {
-  /* Public --ds-tab*-/-tabs-* are read with fallbacks at usage sites, never declared. */
+  /* Public --ds-tab*-/-tabs-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_tabs-divider:          var(--ds-tabs-divider,          var(--border-divider));
+  --_tab-pad-y:             var(--ds-tab-pad-y,             var(--space-3));
+  --_tab-pad-x:             var(--ds-tab-pad-x,             var(--space-4));
+  --_tab-fg:                var(--ds-tab-fg,                var(--text-secondary));
+  --_tab-indicator-width:   var(--ds-tab-indicator-width,   var(--border-width-strong));
+  --_tab-fg-hover:          var(--ds-tab-fg-hover,          var(--text-primary));
+  --_tab-fg-active:         var(--ds-tab-fg-active,         var(--primary));
+  --_tab-indicator-color:   var(--ds-tab-indicator-color,   var(--primary));
+  --_tabs-pills-bg:         var(--ds-tabs-pills-bg,         var(--surface-secondary));
+  --_tab-pill-bg-active:    var(--ds-tab-pill-bg-active,    var(--surface-default));
+
   display: flex;
   gap: var(--space-2);
-  border-bottom: var(--border-width-default) solid var(--ds-tabs-divider, var(--border-divider));
+  border-bottom: var(--border-width-default) solid var(--_tabs-divider);
 
   .tab {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    padding: var(--ds-tab-pad-y, var(--space-3)) var(--ds-tab-pad-x, var(--space-4));
+    padding: var(--_tab-pad-y) var(--_tab-pad-x);
     border: 0;
     background: transparent;
     font: var(--font-weight-semibold) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
-    color: var(--ds-tab-fg, var(--text-secondary));
+    color: var(--_tab-fg);
     cursor: pointer;
-    border-bottom: var(--ds-tab-indicator-width, var(--border-width-strong)) solid transparent;
+    border-bottom: var(--_tab-indicator-width) solid transparent;
     margin-bottom: calc(-1 * var(--border-width-default));
     transition:
       color var(--duration-fast) var(--ease-standard),
       border-color var(--duration-fast) var(--ease-standard);
 
-    &:hover { color: var(--ds-tab-fg-hover, var(--text-primary)); }
+    &:hover { color: var(--_tab-fg-hover); }
     &.active {
-      color: var(--ds-tab-fg-active, var(--primary));
-      border-bottom-color: var(--ds-tab-indicator-color, var(--primary));
+      color: var(--_tab-fg-active);
+      border-bottom-color: var(--_tab-indicator-color);
     }
     &:focus-visible {
       outline: none;
@@ -816,7 +848,7 @@
     border-bottom: 0;
     gap: var(--space-1);
     padding: var(--space-1);
-    background: var(--ds-tabs-pills-bg, var(--surface-secondary));
+    background: var(--_tabs-pills-bg);
     border-radius: var(--radius-pill);
     display: inline-flex;
 
@@ -825,15 +857,15 @@
       border-bottom: 0;
       margin-bottom: 0;
       border-radius: var(--radius-pill);
-      color: var(--ds-tab-fg, var(--text-secondary));
+      color: var(--_tab-fg);
 
       &:hover {
-        background: var(--ds-tab-pill-bg-active, var(--surface-default));
-        color: var(--ds-tab-fg-hover, var(--text-primary));
+        background: var(--_tab-pill-bg-active);
+        color: var(--_tab-fg-hover);
       }
       &.active {
-        background: var(--ds-tab-pill-bg-active, var(--surface-default));
-        color: var(--ds-tab-fg-hover, var(--text-primary));
+        background: var(--_tab-pill-bg-active);
+        color: var(--_tab-fg-hover);
         border-bottom: 0;
         box-shadow: var(--z100);
       }
@@ -841,15 +873,15 @@
   }
 }
 
-.tab.is-forced-hover { color: var(--ds-tab-fg-hover, var(--text-primary)); }
+.tab.is-forced-hover { color: var(--_tab-fg-hover); }
 .tab.is-forced-focus {
   outline: none;
   box-shadow: var(--focus-ring);
   border-radius: var(--radius-sm);
 }
 .tabs.pills .tab.is-forced-hover {
-  background: var(--ds-tab-pill-bg-active, var(--surface-default));
-  color: var(--ds-tab-fg-hover, var(--text-primary));
+  background: var(--_tab-pill-bg-active);
+  color: var(--_tab-fg-hover);
 }
 
 /* ============================================================
@@ -862,27 +894,36 @@
    Source: prototype/vendor/claude-design-ds/components.css (~L796–818).
    ============================================================ */
 .pagination-button {
-  /* Public --ds-pagination-* are read with fallbacks at usage sites, never declared. */
+  /* Public --ds-pagination-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_pagination-btn-border:   var(--ds-pagination-btn-border,   var(--border-default));
+  --_pagination-btn-bg:       var(--ds-pagination-btn-bg,       var(--surface-default));
+  --_pagination-btn-fg:       var(--ds-pagination-btn-fg,       var(--text-secondary));
+  --_pagination-radius:       var(--ds-pagination-radius,       var(--radius-md));
+  --_pagination-btn-bg-hover: var(--ds-pagination-btn-bg-hover, var(--surface-secondary));
+  --_pagination-btn-fg-hover: var(--ds-pagination-btn-fg-hover, var(--text-primary));
+  --_pagination-active-bg:    var(--ds-pagination-active-bg,    var(--primary));
+  --_pagination-active-fg:    var(--ds-pagination-active-fg,    var(--primary-on));
+
   min-width: var(--hit-min);
   height: var(--hit-min);
   padding: 0 var(--space-2);
-  border: var(--border-width-default) solid var(--ds-pagination-btn-border, var(--border-default));
-  background: var(--ds-pagination-btn-bg, var(--surface-default));
+  border: var(--border-width-default) solid var(--_pagination-btn-border);
+  background: var(--_pagination-btn-bg);
   font: var(--font-weight-semibold) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
-  color: var(--ds-pagination-btn-fg, var(--text-secondary));
-  border-radius: var(--ds-pagination-radius, var(--radius-md));
+  color: var(--_pagination-btn-fg);
+  border-radius: var(--_pagination-radius);
   cursor: pointer;
   display: inline-grid;
   place-items: center;
 
   &:hover:not([disabled]) {
-    background: var(--ds-pagination-btn-bg-hover, var(--surface-secondary));
-    color: var(--ds-pagination-btn-fg-hover, var(--text-primary));
+    background: var(--_pagination-btn-bg-hover);
+    color: var(--_pagination-btn-fg-hover);
   }
   &.is-active {
-    background: var(--ds-pagination-active-bg, var(--primary));
-    color: var(--ds-pagination-active-fg, var(--primary-on));
-    border-color: var(--ds-pagination-active-bg, var(--primary));
+    background: var(--_pagination-active-bg);
+    color: var(--_pagination-active-fg);
+    border-color: var(--_pagination-active-bg);
   }
   &[disabled] {
     color: var(--text-disabled);
@@ -891,8 +932,8 @@
   &:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 
   &.is-forced-hover {
-    background: var(--ds-pagination-btn-bg-hover, var(--surface-secondary));
-    color: var(--ds-pagination-btn-fg-hover, var(--text-primary));
+    background: var(--_pagination-btn-bg-hover);
+    color: var(--_pagination-btn-fg-hover);
   }
   &.is-forced-focus { outline: none; box-shadow: var(--focus-ring); }
 }
@@ -910,31 +951,41 @@
    minimal surface from avatar.component.scss + avatar-group.component.scss.
    ============================================================ */
 .avatar {
-  /* Public --ds-avatar-* are read with fallbacks at usage sites, never declared. */
+  /* Public --ds-avatar-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_avatar-size:       var(--ds-avatar-size,       var(--avatar-md));
+  --_avatar-radius:     var(--ds-avatar-radius,     var(--radius-pill));
+  --_avatar-bg:         var(--ds-avatar-bg,         var(--primary-muted));
+  --_avatar-fg:         var(--ds-avatar-fg,         var(--primary-strong));
+  --_avatar-ring-width: var(--ds-avatar-ring-width, var(--avatar-bw-group));
+
   display: inline-grid;
   place-items: center;
-  width: var(--ds-avatar-size, var(--avatar-md));
-  height: var(--ds-avatar-size, var(--avatar-md));
-  border-radius: var(--ds-avatar-radius, var(--radius-pill));
-  background: var(--ds-avatar-bg, var(--primary-muted));
-  color: var(--ds-avatar-fg, var(--primary-strong));
+  width: var(--_avatar-size);
+  height: var(--_avatar-size);
+  border-radius: var(--_avatar-radius);
+  background: var(--_avatar-bg);
+  color: var(--_avatar-fg);
   font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
   letter-spacing: var(--letter-spacing-wide);
   flex-shrink: 0;
   overflow: hidden;
 
   &.neutral {
-    background: var(--ds-avatar-bg, var(--neutral-200));
-    color: var(--ds-avatar-fg, var(--neutral-700));
+    --_avatar-bg: var(--ds-avatar-bg, var(--neutral-200));
+    --_avatar-fg: var(--ds-avatar-fg, var(--neutral-700));
   }
 }
 
 .avatar-group {
+  /* Public --ds-avatargroup-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_avatargroup-ring:    var(--ds-avatargroup-ring,    var(--surface-default));
+  --_avatargroup-overlap: var(--ds-avatargroup-overlap, calc(-1 * var(--space-2)));
+
   display: inline-flex;
 
   .avatar {
-    border: var(--ds-avatar-ring-width, var(--avatar-bw-group)) solid var(--ds-avatargroup-ring, var(--surface-default));
-    margin-left: var(--ds-avatargroup-overlap, calc(-1 * var(--space-2)));
+    border: var(--_avatar-ring-width) solid var(--_avatargroup-ring);
+    margin-left: var(--_avatargroup-overlap);
   }
   .avatar:first-child { margin-left: 0; }
 }
@@ -945,6 +996,15 @@
    block below is retained. */
 
 .day {
+  --_datepicker-day-hover-bg:          var(--ds-datepicker-day-hover-bg,          var(--surface-secondary));
+  --_datepicker-day-today-fg:          var(--ds-datepicker-day-today-fg,          var(--primary));
+  --_datepicker-day-selected-bg:       var(--ds-datepicker-day-selected-bg,       var(--primary));
+  --_datepicker-day-selected-fg:       var(--ds-datepicker-day-selected-fg,       var(--primary-on));
+  --_datepicker-day-range-bg:          var(--ds-datepicker-day-range-bg,          var(--primary-subtle));
+  --_datepicker-day-range-fg:          var(--ds-datepicker-day-range-fg,          var(--primary-strong));
+  --_datepicker-day-selected-bg-hover: var(--ds-datepicker-day-selected-bg-hover, var(--primary-selected-hover));
+  --_datepicker-day-disabled-fg:       var(--ds-datepicker-day-disabled-fg,       var(--text-disabled));
+
   width: var(--space-8);
   height: var(--space-8);
   display: grid;
@@ -956,29 +1016,29 @@
   background: transparent;
   color: var(--text-primary);
 
-  &:hover:not(.disabled):not([disabled]) { background: var(--ds-datepicker-day-hover-bg, var(--surface-secondary)); }
+  &:hover:not(.disabled):not([disabled]) { background: var(--_datepicker-day-hover-bg); }
 
   &.muted        { color: var(--text-muted); }
-  &.today        { font-weight: var(--font-weight-bold); color: var(--ds-datepicker-day-today-fg, var(--primary)); }
-  &.selected     { background: var(--ds-datepicker-day-selected-bg, var(--primary)); color: var(--ds-datepicker-day-selected-fg, var(--primary-on)); }
-  &.in-range     { background: var(--ds-datepicker-day-range-bg, var(--primary-subtle)); color: var(--ds-datepicker-day-range-fg, var(--primary-strong)); border-radius: var(--radius-flat); }
-  &.range-start  { border-top-left-radius: var(--radius-sm); border-bottom-left-radius: var(--radius-sm); background: var(--ds-datepicker-day-selected-bg, var(--primary)); color: var(--ds-datepicker-day-selected-fg, var(--primary-on)); }
-  &.range-end    { border-top-right-radius: var(--radius-sm); border-bottom-right-radius: var(--radius-sm); background: var(--ds-datepicker-day-selected-bg, var(--primary)); color: var(--ds-datepicker-day-selected-fg, var(--primary-on)); }
+  &.today        { font-weight: var(--font-weight-bold); color: var(--_datepicker-day-today-fg); }
+  &.selected     { background: var(--_datepicker-day-selected-bg); color: var(--_datepicker-day-selected-fg); }
+  &.in-range     { background: var(--_datepicker-day-range-bg); color: var(--_datepicker-day-range-fg); border-radius: var(--radius-flat); }
+  &.range-start  { border-top-left-radius: var(--radius-sm); border-bottom-left-radius: var(--radius-sm); background: var(--_datepicker-day-selected-bg); color: var(--_datepicker-day-selected-fg); }
+  &.range-end    { border-top-right-radius: var(--radius-sm); border-bottom-right-radius: var(--radius-sm); background: var(--_datepicker-day-selected-bg); color: var(--_datepicker-day-selected-fg); }
   &.selected:hover:not(.disabled):not([disabled]),
   &.range-start:hover:not(.disabled):not([disabled]),
   &.range-end:hover:not(.disabled):not([disabled]) {
-    background: var(--ds-datepicker-day-selected-bg-hover, var(--primary-selected-hover));
-    color: var(--ds-datepicker-day-selected-fg, var(--primary-on));
+    background: var(--_datepicker-day-selected-bg-hover);
+    color: var(--_datepicker-day-selected-fg);
   }
   &.disabled,
-  &[disabled]    { color: var(--ds-datepicker-day-disabled-fg, var(--text-disabled)); cursor: not-allowed; background: transparent; }
+  &[disabled]    { color: var(--_datepicker-day-disabled-fg); cursor: not-allowed; background: transparent; }
 
-  &.is-forced-hover { background: var(--ds-datepicker-day-hover-bg, var(--surface-secondary)); }
+  &.is-forced-hover { background: var(--_datepicker-day-hover-bg); }
   &.selected.is-forced-hover,
   &.range-start.is-forced-hover,
   &.range-end.is-forced-hover {
-    background: var(--ds-datepicker-day-selected-bg-hover, var(--primary-selected-hover));
-    color: var(--ds-datepicker-day-selected-fg, var(--primary-on));
+    background: var(--_datepicker-day-selected-bg-hover);
+    color: var(--_datepicker-day-selected-fg);
   }
   &.is-forced-focus { outline: none; box-shadow: var(--focus-ring); }
 }
@@ -993,43 +1053,46 @@
    its own scoped CSS — these globals are docs-only.
    ============================================================ */
 .scroll-wrap {
+  --_table-radius: var(--ds-table-radius, var(--radius-xl));
+  --_table-bg:     var(--ds-table-bg,     var(--surface-default));
+
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  border-radius: var(--ds-table-radius, var(--radius-xl));
-  background: var(--ds-table-bg, var(--surface-default));
+  border-radius: var(--_table-radius);
+  background: var(--_table-bg);
 }
 
 .table {
   /* Per-component CSS tokens — defaults route through global semantic tokens.
      Aligned with ds/src/lib/components/table/table.component.scss. */
-  --ds-table-bg:              var(--surface-default);
-  --ds-table-row-hover-bg:    var(--surface-secondary);
-  --ds-table-row-selected-bg: var(--primary-subtle);
-  --ds-table-head-bg:         var(--surface-secondary);
-  --ds-table-head-fg:         var(--text-tertiary);
-  --ds-table-divider:         var(--border-divider);
-  --ds-table-sort-active-fg:  var(--primary);
-  --ds-table-cell-pad-x:      var(--table-cell-pad-x);
-  --ds-table-cell-pad-y:      var(--table-cell-pad-y);
-  --ds-table-radius:          var(--radius-xl);
+  --_table-bg:              var(--ds-table-bg,              var(--surface-default));
+  --_table-row-hover-bg:    var(--ds-table-row-hover-bg,    var(--surface-secondary));
+  --_table-row-selected-bg: var(--ds-table-row-selected-bg, var(--primary-subtle));
+  --_table-head-bg:         var(--ds-table-head-bg,         var(--surface-secondary));
+  --_table-head-fg:         var(--ds-table-head-fg,         var(--text-tertiary));
+  --_table-divider:         var(--ds-table-divider,         var(--border-divider));
+  --_table-sort-active-fg:  var(--ds-table-sort-active-fg,  var(--primary));
+  --_table-cell-pad-x:      var(--ds-table-cell-pad-x,      var(--table-cell-pad-x));
+  --_table-cell-pad-y:      var(--ds-table-cell-pad-y,      var(--table-cell-pad-y));
+  --_table-radius:          var(--ds-table-radius,          var(--radius-xl));
 
   width: 100%;
   border-collapse: collapse;
   font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
   color: var(--text-primary);
-  background: var(--ds-table-bg, var(--surface-default));
+  background: var(--_table-bg);
 
   thead th {
     text-align: left;
-    padding: var(--table-head-pad-y) var(--ds-table-cell-pad-x, var(--table-cell-pad-x));
+    padding: var(--table-head-pad-y) var(--_table-cell-pad-x);
     font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
     letter-spacing: var(--letter-spacing-wider);
     text-transform: uppercase;
-    color: var(--ds-table-head-fg, var(--text-tertiary));
-    background: var(--ds-table-head-bg, var(--surface-secondary));
-    border-bottom: var(--border-width-default) solid var(--ds-table-divider, var(--border-divider));
+    color: var(--_table-head-fg);
+    background: var(--_table-head-bg);
+    border-bottom: var(--border-width-default) solid var(--_table-divider);
     white-space: nowrap;
     position: sticky;
     top: 0;
@@ -1074,7 +1137,7 @@
     }
 
     &.sorted-asc .sort-icon,
-    &.sorted-desc .sort-icon { opacity: 1; color: var(--ds-table-sort-active-fg, var(--primary)); }
+    &.sorted-desc .sort-icon { opacity: 1; color: var(--_table-sort-active-fg); }
 
     &.numeric { text-align: right; }
     &.select-col { width: var(--space-10); }
@@ -1082,10 +1145,10 @@
 
   tbody {
     td {
-      padding: var(--ds-table-cell-pad-y, var(--table-cell-pad-y)) var(--ds-table-cell-pad-x, var(--table-cell-pad-x));
+      padding: var(--_table-cell-pad-y) var(--_table-cell-pad-x);
       /* Inset shadow instead of border-bottom — keeps row height stable
          across selected / hover / zebra backgrounds. */
-      box-shadow: inset 0 calc(-1 * var(--border-width-default)) 0 var(--ds-table-divider, var(--border-divider));
+      box-shadow: inset 0 calc(-1 * var(--border-width-default)) 0 var(--_table-divider);
       vertical-align: middle;
 
       &.numeric { text-align: right; }
@@ -1098,8 +1161,8 @@
 
     tr {
       &:last-child td { box-shadow: none; }
-      &:hover td { background: var(--ds-table-row-hover-bg, var(--surface-secondary)); }
-      &.selected td { background: var(--ds-table-row-selected-bg, var(--primary-subtle)); }
+      &:hover td { background: var(--_table-row-hover-bg); }
+      &.selected td { background: var(--_table-row-selected-bg); }
       &.clickable { cursor: pointer; }
     }
   }
@@ -1110,8 +1173,8 @@
   }
 
   /* Zebra rows — odd-row tint for dense scans. */
-  &.zebra tbody tr:nth-child(odd) td { background: var(--ds-table-row-hover-bg, var(--surface-secondary)); }
-  &.zebra tbody tr:hover td { background: var(--ds-table-row-selected-bg, var(--primary-subtle)); }
+  &.zebra tbody tr:nth-child(odd) td { background: var(--_table-row-hover-bg); }
+  &.zebra tbody tr:hover td { background: var(--_table-row-selected-bg); }
 
   &.skeleton-mode {
     tbody tr:hover td { background: transparent; cursor: default; }
@@ -1119,12 +1182,12 @@
   }
 
   /* Forced-state hooks — pin a header / row to one state for static specimens. */
-  thead th.is-forced-hover { background: var(--ds-table-row-hover-bg, var(--surface-secondary)); color: var(--text-secondary); }
+  thead th.is-forced-hover { background: var(--_table-row-hover-bg); color: var(--text-secondary); }
   thead th.is-forced-sorted-asc .sort-icon,
-  thead th.is-forced-sorted-desc .sort-icon { opacity: 1; color: var(--ds-table-sort-active-fg, var(--primary)); }
+  thead th.is-forced-sorted-desc .sort-icon { opacity: 1; color: var(--_table-sort-active-fg); }
 
-  tbody tr.is-forced-hover td { background: var(--ds-table-row-hover-bg, var(--surface-secondary)); }
-  tbody tr.is-forced-selected td { background: var(--ds-table-row-selected-bg, var(--primary-subtle)); }
+  tbody tr.is-forced-hover td { background: var(--_table-row-hover-bg); }
+  tbody tr.is-forced-selected td { background: var(--_table-row-selected-bg); }
 }
 
 /* Bulk action bar — sticky pill at the bottom of a selection table. */
@@ -1196,46 +1259,46 @@
 .dropzone {
   /* Per-component CSS tokens — defaults route through global semantic tokens.
      Aligned with ds/src/lib/components/dropzone/dropzone.component.scss. */
-  --ds-dropzone-bg:            var(--surface-default);
-  --ds-dropzone-bg-hover:      var(--primary-subtle);
-  --ds-dropzone-bg-active:     var(--primary-subtle);
-  --ds-dropzone-border:        var(--border-default);
-  --ds-dropzone-border-hover:  var(--primary);
-  --ds-dropzone-border-active: var(--primary);
-  --ds-dropzone-fg:            var(--text-secondary);
-  --ds-dropzone-fg-active:     var(--primary-strong);
-  --ds-dropzone-radius:        var(--radius-lg);
-  --ds-dropzone-file-progress: var(--primary);
-  --ds-dropzone-file-success:  var(--success);
-  --ds-dropzone-file-error:    var(--error);
+  --_dropzone-bg:            var(--ds-dropzone-bg,            var(--surface-default));
+  --_dropzone-bg-hover:      var(--ds-dropzone-bg-hover,      var(--primary-subtle));
+  --_dropzone-bg-active:     var(--ds-dropzone-bg-active,     var(--primary-subtle));
+  --_dropzone-border:        var(--ds-dropzone-border,        var(--border-default));
+  --_dropzone-border-hover:  var(--ds-dropzone-border-hover,  var(--primary));
+  --_dropzone-border-active: var(--ds-dropzone-border-active, var(--primary));
+  --_dropzone-fg:            var(--ds-dropzone-fg,            var(--text-secondary));
+  --_dropzone-fg-active:     var(--ds-dropzone-fg-active,     var(--primary-strong));
+  --_dropzone-radius:        var(--ds-dropzone-radius,        var(--radius-lg));
+  --_dropzone-file-progress: var(--ds-dropzone-file-progress, var(--primary));
+  --_dropzone-file-success:  var(--ds-dropzone-file-success,  var(--success));
+  --_dropzone-file-error:    var(--ds-dropzone-file-error,    var(--error));
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  border: var(--border-width-strong) dashed var(--ds-dropzone-border, var(--border-default));
-  border-radius: var(--ds-dropzone-radius, var(--radius-lg));
+  border: var(--border-width-strong) dashed var(--_dropzone-border);
+  border-radius: var(--_dropzone-radius);
   padding: var(--space-6);
   text-align: center;
-  background: var(--ds-dropzone-bg, var(--surface-default));
+  background: var(--_dropzone-bg);
   cursor: pointer;
   min-height: 160px;
-  color: var(--ds-dropzone-fg, var(--text-secondary));
+  color: var(--_dropzone-fg);
   transition:
     border-color var(--duration-fast) var(--ease-standard),
     background var(--duration-fast) var(--ease-standard);
 
   &:hover:not(.disabled):not([disabled]) {
-    border-color: var(--ds-dropzone-border-hover, var(--primary));
-    background: var(--ds-dropzone-bg-hover, var(--primary-subtle));
-    color: var(--ds-dropzone-fg-active, var(--primary-strong));
+    border-color: var(--_dropzone-border-hover);
+    background: var(--_dropzone-bg-hover);
+    color: var(--_dropzone-fg-active);
   }
   &.active,
   &.is-forced-active {
-    border-color: var(--ds-dropzone-border-active, var(--primary));
-    background: var(--ds-dropzone-bg-active, var(--primary-subtle));
-    color: var(--ds-dropzone-fg-active, var(--primary-strong));
+    border-color: var(--_dropzone-border-active);
+    background: var(--_dropzone-bg-active);
+    color: var(--_dropzone-fg-active);
   }
   &.has-files {
     align-items: stretch;
@@ -1274,6 +1337,10 @@
 /* File row — used inline inside `.dropzone.has-files` and also as a
    standalone specimen in the "File row states" block. */
 .file {
+  --_dropzone-file-progress: var(--ds-dropzone-file-progress, var(--primary));
+  --_dropzone-file-success:  var(--ds-dropzone-file-success,  var(--success));
+  --_dropzone-file-error:    var(--ds-dropzone-file-error,    var(--error));
+
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -1304,7 +1371,7 @@
   }
   .progress-fill {
     height: 100%;
-    background: var(--ds-dropzone-file-progress, var(--primary));
+    background: var(--_dropzone-file-progress);
     border-radius: var(--radius-pill);
     transition: width var(--duration-base) var(--ease-standard);
   }
@@ -1321,15 +1388,15 @@
   }
 
   &.uploading {
-    .icon { color: var(--ds-dropzone-file-progress, var(--primary)); }
+    .icon { color: var(--_dropzone-file-progress); }
   }
   &.success {
-    border-color: var(--ds-dropzone-file-success, var(--success));
-    .icon { color: var(--ds-dropzone-file-success, var(--success)); }
+    border-color: var(--_dropzone-file-success);
+    .icon { color: var(--_dropzone-file-success); }
   }
   &.error {
-    border-color: var(--ds-dropzone-file-error, var(--error));
-    .icon { color: var(--ds-dropzone-file-error, var(--error)); }
+    border-color: var(--_dropzone-file-error);
+    .icon { color: var(--_dropzone-file-error); }
     .meta { color: var(--error-text); }
   }
 }

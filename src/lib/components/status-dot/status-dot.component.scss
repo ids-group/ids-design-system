@@ -13,10 +13,11 @@
 .status-dot {
   /* Public --ds-statusdot-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_statusdot-color: var(--ds-statusdot-color, var(--icon-muted));
+  --_statusdot-size:  var(--ds-statusdot-size,  var(--status-dot-size));
 
   display: block;
-  width: var(--ds-statusdot-size, var(--status-dot-size));
-  height: var(--ds-statusdot-size, var(--status-dot-size));
+  width: var(--_statusdot-size);
+  height: var(--_statusdot-size);
   border-radius: var(--radius-pill);
   flex-shrink: 0;
   background: var(--_statusdot-color);

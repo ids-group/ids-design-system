@@ -6,12 +6,16 @@
 
 .breadcrumbs {
   /* Public --ds-breadcrumbs-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_breadcrumbs-fg:           var(--ds-breadcrumbs-fg,           var(--text-tertiary));
+  --_breadcrumbs-fg-hover:     var(--ds-breadcrumbs-fg-hover,     var(--primary));
+  --_breadcrumbs-separator-fg: var(--ds-breadcrumbs-separator-fg, var(--icon-muted));
+  --_breadcrumbs-current-fg:   var(--ds-breadcrumbs-current-fg,   var(--text-primary));
 
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
-  color: var(--ds-breadcrumbs-fg, var(--text-tertiary));
+  color: var(--_breadcrumbs-fg);
   min-width: 0;
   max-width: 100%;
   flex-wrap: nowrap;
@@ -24,13 +28,13 @@
   }
 
   a {
-    color: var(--ds-breadcrumbs-fg, var(--text-tertiary));
+    color: var(--_breadcrumbs-fg);
     text-decoration: none;
     cursor: pointer;
     transition: color var(--duration-fast) var(--ease-standard);
 
     &:hover {
-      color: var(--ds-breadcrumbs-fg-hover, var(--primary));
+      color: var(--_breadcrumbs-fg-hover);
       text-decoration: underline;
       text-underline-offset: 2px;
     }
@@ -48,13 +52,13 @@
   }
 
   .sep {
-    color: var(--ds-breadcrumbs-separator-fg, var(--icon-muted));
+    color: var(--_breadcrumbs-separator-fg);
     display: inline-flex;
     align-items: center;
   }
 
   .current {
-    color: var(--ds-breadcrumbs-current-fg, var(--text-primary));
+    color: var(--_breadcrumbs-current-fg);
     font-weight: var(--font-weight-bold);
   }
 

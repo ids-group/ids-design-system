@@ -25,6 +25,9 @@
   --_button-focus-shadow: var(--ds-button-focus-shadow, var(--focus-ring));
   --_button-pressed-shadow: var(--ds-button-pressed-shadow,
                               0 0 0 3px color-mix(in srgb, var(--_button-bg-active) 35%, transparent));
+  --_button-radius:    var(--ds-button-radius,    var(--radius-md));
+  --_button-bg-disabled: var(--ds-button-bg-disabled, var(--surface-disabled));
+  --_button-fg-disabled: var(--ds-button-fg-disabled, var(--text-disabled));
 
   display: inline-flex;
   align-items: center;
@@ -35,7 +38,7 @@
   color: var(--_button-fg);
   background: var(--_button-bg);
   border: var(--border-width-default) solid var(--_button-border);
-  border-radius: var(--ds-button-radius, var(--radius-md));
+  border-radius: var(--_button-radius);
   padding: 0 var(--space-5);
   height: var(--hit-cozy);
   width: 100%;
@@ -54,8 +57,8 @@
   &:focus-visible { outline: none; box-shadow: var(--_button-focus-shadow); z-index: var(--btn-focus-z); }
 
   &[disabled] {
-    background: var(--ds-button-bg-disabled, var(--surface-disabled));
-    color: var(--ds-button-fg-disabled, var(--text-disabled));
+    background: var(--_button-bg-disabled);
+    color: var(--_button-fg-disabled);
     border-color: transparent;
     cursor: not-allowed;
     pointer-events: none;

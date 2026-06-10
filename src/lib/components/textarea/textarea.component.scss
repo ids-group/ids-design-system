@@ -12,6 +12,20 @@
 
 .field {
   /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_input-bg:             var(--ds-input-bg,             var(--surface-default));
+  --_input-border:         var(--ds-input-border,         var(--border-default));
+  --_input-radius:         var(--ds-input-radius,         var(--radius-md));
+  --_input-pad-y:          var(--ds-input-pad-y,          var(--space-3));
+  --_input-pad-x:          var(--ds-input-pad-x,          var(--field-pad-x));
+  --_input-fg:             var(--ds-input-fg,             var(--text-primary));
+  --_input-placeholder:    var(--ds-input-placeholder,    var(--text-tertiary));
+  --_input-border-hover:   var(--ds-input-border-hover,   var(--border-strong));
+  --_input-border-focus:   var(--ds-input-border-focus,   var(--primary));
+  --_input-focus-shadow:   var(--ds-input-focus-shadow,   var(--focus-field));
+  --_input-bg-disabled:    var(--ds-input-bg-disabled,    var(--surface-disabled));
+  --_input-bg-error:       var(--ds-input-bg-error,       var(--error-subtle));
+  --_input-border-error:   var(--ds-input-border-error,   var(--error));
+  --_input-border-success: var(--ds-input-border-success, var(--success));
 
   display: flex;
   flex-direction: column;
@@ -40,10 +54,10 @@
     display: flex;
     align-items: stretch;
     gap: var(--space-2);
-    background: var(--ds-input-bg, var(--surface-default));
-    border: var(--border-width-default) solid var(--ds-input-border, var(--border-default));
-    border-radius: var(--ds-input-radius, var(--radius-md));
-    padding: var(--ds-input-pad-y, var(--space-3)) var(--ds-input-pad-x, var(--field-pad-x));
+    background: var(--_input-bg);
+    border: var(--border-width-default) solid var(--_input-border);
+    border-radius: var(--_input-radius);
+    padding: var(--_input-pad-y) var(--_input-pad-x);
     height: auto;
     transition:
       border-color var(--duration-fast) var(--ease-standard),
@@ -59,21 +73,21 @@
       outline: 0;
       background: transparent;
       font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
-      color: var(--ds-input-fg, var(--text-primary));
+      color: var(--_input-fg);
       min-height: var(--field-textarea-rows-min, 60px);
 
       &::placeholder {
-        color: var(--ds-input-placeholder, var(--text-tertiary));
+        color: var(--_input-placeholder);
       }
     }
 
     &:hover {
-      border-color: var(--ds-input-border-hover, var(--border-strong));
+      border-color: var(--_input-border-hover);
     }
 
     &:focus-within {
-      border-color: var(--ds-input-border-focus, var(--primary));
-      box-shadow: var(--ds-input-focus-shadow, var(--focus-field));
+      border-color: var(--_input-border-focus);
+      box-shadow: var(--_input-focus-shadow);
     }
   }
 
@@ -87,7 +101,7 @@
 
   &.disabled {
     .control {
-      background: var(--ds-input-bg-disabled, var(--surface-disabled));
+      background: var(--_input-bg-disabled);
       border-color: var(--border-disabled);
     }
     textarea {
@@ -97,8 +111,8 @@
 
   &.error {
     .control {
-      background: var(--ds-input-bg-error, var(--error-subtle));
-      border-color: var(--ds-input-border-error, var(--error));
+      background: var(--_input-bg-error);
+      border-color: var(--_input-border-error);
 
       &:focus-within {
         box-shadow: var(--focus-field-error);
@@ -111,7 +125,7 @@
 
   &.success {
     .control {
-      border-color: var(--ds-input-border-success, var(--success));
+      border-color: var(--_input-border-success);
     }
     .hint {
       color: var(--success-text);
