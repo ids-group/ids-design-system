@@ -212,6 +212,79 @@
           background: var(--surface-canvas); }
 
   @media (max-width: 980px) { .matrix { grid-template-columns: 120px repeat(4, 1fr); } .cell { padding: var(--s-3) var(--s-2); } }
+
+  /* ================================================================
+     ACCENT-СКОУП — эскиз `.ds-accent-*`. Обёртка переназначает ВСЁ
+     primary-семейство на другую брендовую роль; любой компонент
+     внутри, потребляющий primary-токены, перекрашивается сам.
+     Ремап поимённый (ramp-пики не следуют за каналами), а
+     :root-композиты (--focus-ring) переобъявлены явно.
+     ================================================================ */
+  .ds-accent-secondary {
+    --primary:              var(--secondary);
+    --primary-hover:        var(--secondary-hover);
+    --primary-pressed:      var(--secondary-pressed);
+    --primary-strong:       var(--secondary-strong);
+    --primary-subtle:       var(--secondary-subtle);
+    --primary-muted:        var(--secondary-muted);
+    --primary-muted-strong: hsl(var(--secondary-h), 90%, 89%);
+    --primary-on:           var(--secondary-on);
+    --focus-ring: 0 0 0 2px var(--focus-ring-inner),
+                  0 0 0 4px hsl(var(--secondary-h), var(--secondary-s), var(--secondary-l));
+  }
+  .ds-accent-tertiary {
+    --primary:              var(--tertiary);
+    --primary-hover:        var(--tertiary-hover);
+    --primary-pressed:      var(--tertiary-pressed);
+    --primary-strong:       var(--tertiary-strong);
+    --primary-subtle:       var(--tertiary-subtle);
+    --primary-muted:        var(--tertiary-muted);
+    --primary-muted-strong: hsl(var(--tertiary-h), 90%, 89%);
+    --primary-on:           var(--tertiary-on);
+    --focus-ring: 0 0 0 2px var(--focus-ring-inner),
+                  0 0 0 4px hsl(var(--tertiary-h), var(--tertiary-s), var(--tertiary-l));
+  }
+
+  /* мини-реплики компонентов — потребляют РОВНО те же primary-токены,
+     что и настоящие (checked-заливка, индикатор, фокус) */
+  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-4); }
+  @media (max-width: 980px) { .trio { grid-template-columns: 1fr; } }
+  .demo-panel { border: var(--bw-default) dashed var(--border-default); border-radius: var(--r-md);
+                background: var(--surface-canvas); padding: var(--s-4); }
+  .panel-cap { font: var(--fw-medium) var(--fs-3xs)/1.3 var(--font-mono); color: var(--text-tertiary); margin-bottom: var(--s-4); }
+  .panel-body { display: flex; flex-direction: column; gap: var(--s-4); }
+  .mrow { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+
+  .dswitch { width: 40px; height: 24px; border-radius: var(--r-pill); border: none; cursor: pointer;
+             background: var(--border-default); position: relative; padding: 0;
+             transition: background var(--dur-fast) var(--ease-standard); }
+  .dswitch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px;
+                    border-radius: var(--r-pill); background: #fff; transition: transform var(--dur-fast) var(--ease-standard); }
+  .dswitch[aria-checked="true"] { background: var(--primary); }
+  .dswitch[aria-checked="true"]::after { transform: translateX(16px); }
+
+  .dcheck { width: 20px; height: 20px; border: var(--bw-default) solid var(--border-default);
+            border-radius: var(--r-sm); background: var(--surface-default); cursor: pointer; padding: 0;
+            display: inline-flex; align-items: center; justify-content: center;
+            font: var(--fw-bold) 13px/1 var(--font-sans); color: transparent; }
+  .dcheck.on { background: var(--primary); border-color: var(--primary); color: var(--primary-on); }
+
+  .dfield { height: var(--hit-min); width: 150px; padding: 0 var(--s-3);
+            border: var(--bw-default) solid var(--border-default); border-radius: var(--r-md);
+            font: var(--fw-regular) var(--fs-s)/1 var(--font-sans); color: var(--text-primary);
+            background: var(--surface-default); }
+  .dfield:focus { outline: none; border-color: var(--primary); box-shadow: var(--focus-ring); }
+
+  .dtabs { display: flex; gap: var(--s-4); border-bottom: var(--bw-default) solid var(--border-divider); }
+  .dtab { padding: var(--s-2) 2px; border: none; background: none; cursor: pointer;
+          font: var(--fw-semibold) var(--fs-s)/1 var(--font-sans); color: var(--text-secondary);
+          border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .dtab.on { color: var(--primary-strong); border-bottom-color: var(--primary); }
+
+  .dpage { width: 28px; height: 28px; border: none; border-radius: var(--r-sm); background: transparent;
+           color: var(--text-secondary); cursor: pointer; font: var(--fw-semibold) var(--fs-s)/1 var(--font-sans); }
+  .dpage:hover { background: var(--primary-subtle); }
+  .dpage.on { background: var(--primary); color: var(--primary-on); }
 </style>
 </head>
 <body>
@@ -291,6 +364,36 @@ variant="text"       →  <span class="hl">&lt;button class="link"&gt;</span>   
   </section>
 
   <section class="card">
+    <div class="card-head"><span class="step">Accent-скоуп</span><h2>А остальные 36 компонентов? Перекраска без нового API</h2></div>
+    <p class="note">Инпут <code>color</code> получают только button/icon-button. Остальные компоненты (checkbox, switch, tabs,
+       pagination, поля, степперы…) красят свой акцент токенами <b>primary-семейства</b> — checked-заливку, активную вкладку,
+       focus-кольцо. Значит, им не нужен новый API: достаточно обёртки, которая <b>внутри себя</b> переназначает primary-семейство
+       на другую брендовую роль. Всё внутри перекрашивается само — hover, тональные оттенки, фокус.</p>
+<pre class="snippet"><span class="cm">&lt;!-- ни один компонент не менялся — перекрашен КОНТЕЙНЕР --&gt;</span>
+&lt;div <span class="hl">class="ds-accent-secondary"</span>&gt;
+  &lt;ds-switch /&gt;  &lt;ds-checkbox /&gt;  &lt;ds-tabs /&gt;  &lt;ds-pagination /&gt; …
+&lt;/div&gt;</pre>
+    <div class="trio">
+      <div class="demo-panel">
+        <div class="panel-cap">без обёртки — primary (как сейчас)</div>
+        <div class="panel-body"></div>
+      </div>
+      <div class="demo-panel ds-accent-secondary">
+        <div class="panel-cap">&lt;div class="ds-accent-secondary"&gt;</div>
+        <div class="panel-body"></div>
+      </div>
+      <div class="demo-panel ds-accent-tertiary">
+        <div class="panel-cap">&lt;div class="ds-accent-tertiary"&gt;</div>
+        <div class="panel-body"></div>
+      </div>
+    </div>
+    <p class="note">Контролы в трёх панелях — <b>один и тот же HTML</b>, реплики наших компонентов на тех же токенах; отличается
+       только класс контейнера. Всё живое: щёлкайте свитчи/чекбоксы/табы/страницы, Tab в поле — focus-кольцо тоже цвета роли
+       (его пришлось переобъявить в скоупе: <code>--focus-ring</code> композится на <code>:root</code> и сам за ремапом не следует —
+       детали в исходнике). Свотчи в карточке «Бренд» наверху перекрашивают и эти панели.</p>
+  </section>
+
+  <section class="card">
     <div class="card-head"><span class="step">text vs link</span><h2>Зачем кнопке variant="text", если есть <code>.link</code>?</h2></div>
     <p class="note">Незачем — это дубль. Текущий <code>variant="text"</code> рисует то же, что глобальный класс
        <code>.link</code> (подчёркнутый <code>--text-link</code>); класс вешается и на <code>&lt;button&gt;</code>, не только на
@@ -328,6 +431,8 @@ variant="text"       →  <span class="hl">&lt;button class="link"&gt;</span>   
       <li><b>Формулы vs ручные пики:</b> primary-семейство в теме — ручные пики рамп (blue-50/100/200/700), secondary/tertiary —
           формулы от каналов. По нашему правилу hand-tuned &gt; формулы — при легализации secondary/tertiary-кнопок
           откалибровать формульные шаги глазами (или дать брендам переопределять пики).</li>
+      <li><b>Accent-скоуп:</b> класс <code>.ds-accent-secondary</code> vs атрибут <code>[ds-accent="secondary"]</code>;
+          и нужны ли статусные скоупы (<code>.ds-accent-error</code> для «опасной зоны» формы)?</li>
     </ol>
   </section>
 
@@ -449,6 +554,38 @@ variant="text"       →  <span class="hl">&lt;button class="link"&gt;</span>   
   // стартовое состояние: secondary = оранжевый, tertiary = фиолетовый (иначе колонки = primary)
   setRole('secondary', document.querySelector('.ctl-row[data-role="secondary"] .swatch'));
   setRole('tertiary',  document.querySelector('.ctl-row[data-role="tertiary"] .swatch'));
+
+  /* ---- accent-скоуп: один и тот же HTML в три панели ---- */
+  const PANEL_HTML = `
+    <div class="mrow">
+      <button class="pbtn f-solid">Сохранить</button>
+      <button class="pbtn f-tonal">Изменить</button>
+    </div>
+    <div class="mrow">
+      <button class="dswitch" aria-checked="true" role="switch" title="switch"></button>
+      <button class="dswitch" aria-checked="false" role="switch" title="switch"></button>
+      <button class="dcheck on">✓</button>
+      <button class="dcheck">✓</button>
+      <input class="dfield" placeholder="фокус → кольцо">
+    </div>
+    <div class="dtabs">
+      <button class="dtab on">Профиль</button><button class="dtab">Заказы</button><button class="dtab">Бонусы</button>
+    </div>
+    <div class="mrow">
+      <button class="dpage">1</button><button class="dpage on">2</button><button class="dpage">3</button>
+    </div>`;
+  document.querySelectorAll('.demo-panel .panel-body').forEach(el => el.innerHTML = PANEL_HTML);
+
+  document.addEventListener('click', e => {
+    const sw = e.target.closest('.dswitch');
+    if (sw) sw.setAttribute('aria-checked', sw.getAttribute('aria-checked') === 'true' ? 'false' : 'true');
+    const ck = e.target.closest('.dcheck');
+    if (ck) ck.classList.toggle('on');
+    const tb = e.target.closest('.dtab');
+    if (tb) { tb.parentElement.querySelectorAll('.dtab').forEach(t => t.classList.remove('on')); tb.classList.add('on'); }
+    const pg = e.target.closest('.dpage');
+    if (pg) { pg.parentElement.querySelectorAll('.dpage').forEach(p => p.classList.remove('on')); pg.classList.add('on'); }
+  });
 </script>
 </body>
 </html>
