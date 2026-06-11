@@ -214,13 +214,17 @@
   @media (max-width: 980px) { .matrix { grid-template-columns: 120px repeat(4, 1fr); } .cell { padding: var(--s-3) var(--s-2); } }
 
   /* ================================================================
-     ACCENT-СКОУП — эскиз `.ds-accent-*`. Обёртка переназначает ВСЁ
-     primary-семейство на другую брендовую роль; любой компонент
-     внутри, потребляющий primary-токены, перекрашивается сам.
-     Ремап поимённый (ramp-пики не следуют за каналами), а
-     :root-композиты (--focus-ring) переобъявлены явно.
+     DS-COLOR — эскиз атрибута `ds-color`. Переназначает ВСЁ
+     primary-семейство на другую брендовую роль; любой компонент,
+     потребляющий primary-токены, перекрашивается сам. Работает на
+     контейнере (зона), на хосте компонента (инстанс) и тем же телом
+     правила — в конфиге приложения для всех инстансов типа
+     (`ds-switch { @include ds.color(secondary) }` — здесь это
+     симулирует `.cfg-demo .dswitch`). Ремап поимённый (ramp-пики не
+     следуют за каналами), :root-композиты (--focus-ring) переобъявлены.
      ================================================================ */
-  .ds-accent-secondary {
+  [ds-color="secondary"],
+  .cfg-demo .dswitch {
     --primary:              var(--secondary);
     --primary-hover:        var(--secondary-hover);
     --primary-pressed:      var(--secondary-pressed);
@@ -232,7 +236,7 @@
     --focus-ring: 0 0 0 2px var(--focus-ring-inner),
                   0 0 0 4px hsl(var(--secondary-h), var(--secondary-s), var(--secondary-l));
   }
-  .ds-accent-tertiary {
+  [ds-color="tertiary"] {
     --primary:              var(--tertiary);
     --primary-hover:        var(--tertiary-hover);
     --primary-pressed:      var(--tertiary-pressed);
@@ -285,6 +289,8 @@
            color: var(--text-secondary); cursor: pointer; font: var(--fw-semibold) var(--fs-s)/1 var(--font-sans); }
   .dpage:hover { background: var(--primary-subtle); }
   .dpage.on { background: var(--primary); color: var(--primary-on); }
+
+  .lbl { font: var(--fw-regular) var(--fs-2xs)/1.3 var(--font-sans); color: var(--text-tertiary); }
 </style>
 </head>
 <body>
@@ -364,33 +370,66 @@ variant="text"       →  <span class="hl">&lt;button class="link"&gt;</span>   
   </section>
 
   <section class="card">
-    <div class="card-head"><span class="step">Accent-скоуп</span><h2>А остальные 36 компонентов? Перекраска без нового API</h2></div>
-    <p class="note">Инпут <code>color</code> получают только button/icon-button. Остальные компоненты (checkbox, switch, tabs,
-       pagination, поля, степперы…) красят свой акцент токенами <b>primary-семейства</b> — checked-заливку, активную вкладку,
-       focus-кольцо. Значит, им не нужен новый API: достаточно обёртки, которая <b>внутри себя</b> переназначает primary-семейство
-       на другую брендовую роль. Всё внутри перекрашивается само — hover, тональные оттенки, фокус.</p>
-<pre class="snippet"><span class="cm">&lt;!-- ни один компонент не менялся — перекрашен КОНТЕЙНЕР --&gt;</span>
-&lt;div <span class="hl">class="ds-accent-secondary"</span>&gt;
-  &lt;ds-switch /&gt;  &lt;ds-checkbox /&gt;  &lt;ds-tabs /&gt;  &lt;ds-pagination /&gt; …
-&lt;/div&gt;</pre>
+    <div class="card-head"><span class="step">ds-color</span><h2>А остальные 36 компонентов? Одна ось — четыре уровня применения</h2></div>
+    <p class="note">Инпут <code>color</code> получают только button/icon-button (там цвет участвует в логике: комбинации с fill,
+       статусные рампы). Остальные компоненты красят свой акцент токенами <b>primary-семейства</b> — checked-заливку, активную
+       вкладку, focus-кольцо. Поэтому им не нужен новый API: атрибут <code>ds-color</code> (одно CSS-правило на всю библиотеку)
+       переназначает семейство — на контейнере, на одном инстансе, или в конфиге приложения для всех инстансов типа сразу.</p>
+<pre class="snippet"><span class="cm">&lt;!-- одна ось color — четыре уровня --&gt;</span>
+
+<span class="cm">1 · конфиг приложения (styles.scss) — ВСЕ инстансы типа:</span>
+ds-switch { <span class="hl">@include ds.color(secondary)</span>; }      <span class="cm">// каждый switch приложения — secondary</span>
+
+<span class="cm">2 · зоной — контейнер:</span>
+&lt;div <span class="hl">ds-color="secondary"</span>&gt; &lt;ds-switch/&gt; &lt;ds-checkbox/&gt; &lt;ds-tabs/&gt; … &lt;/div&gt;
+
+<span class="cm">3 · точечно — один инстанс:</span>
+&lt;ds-switch <span class="hl">ds-color="secondary"</span> /&gt;
+
+<span class="cm">4 · инпут — только button/icon-button:</span>
+&lt;ds-button <span class="hl">color="secondary"</span>&gt;В корзину&lt;/ds-button&gt;</pre>
     <div class="trio">
       <div class="demo-panel">
-        <div class="panel-cap">без обёртки — primary (как сейчас)</div>
+        <div class="panel-cap">без атрибута — primary (как сейчас)</div>
         <div class="panel-body"></div>
       </div>
-      <div class="demo-panel ds-accent-secondary">
-        <div class="panel-cap">&lt;div class="ds-accent-secondary"&gt;</div>
+      <div class="demo-panel" ds-color="secondary">
+        <div class="panel-cap">&lt;div ds-color="secondary"&gt; — зона</div>
         <div class="panel-body"></div>
       </div>
-      <div class="demo-panel ds-accent-tertiary">
-        <div class="panel-cap">&lt;div class="ds-accent-tertiary"&gt;</div>
+      <div class="demo-panel" ds-color="tertiary">
+        <div class="panel-cap">&lt;div ds-color="tertiary"&gt; — зона</div>
         <div class="panel-body"></div>
       </div>
     </div>
+    <div class="duo">
+      <div class="lane">
+        <div class="lane-title">точечно: атрибут на одном инстансе — <b>&lt;ds-switch ds-color="secondary"&gt;</b></div>
+        <div class="zone">
+          <button class="dswitch" aria-checked="true"></button>
+          <button class="dswitch" aria-checked="true" ds-color="secondary"></button>
+          <button class="dswitch" aria-checked="true" ds-color="tertiary"></button>
+          <button class="dcheck on">✓</button>
+          <button class="dcheck on" ds-color="secondary">✓</button>
+          <span class="lbl">соседи не тронуты</span>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-title">конфиг приложения: все свитчи → secondary, остальные компоненты — нет</div>
+        <div class="zone cfg-demo">
+          <button class="dswitch" aria-checked="true"></button>
+          <button class="dswitch" aria-checked="false"></button>
+          <button class="dcheck on">✓</button>
+          <button class="dpage on">1</button>
+          <span class="lbl">свитчи перекрасил конфиг типа, чекбокс/пагинация — primary</span>
+        </div>
+      </div>
+    </div>
     <p class="note">Контролы в трёх панелях — <b>один и тот же HTML</b>, реплики наших компонентов на тех же токенах; отличается
-       только класс контейнера. Всё живое: щёлкайте свитчи/чекбоксы/табы/страницы, Tab в поле — focus-кольцо тоже цвета роли
+       только атрибут контейнера. Всё живое: щёлкайте свитчи/чекбоксы/табы/страницы, Tab в поле — focus-кольцо тоже цвета роли
        (его пришлось переобъявить в скоупе: <code>--focus-ring</code> композится на <code>:root</code> и сам за ремапом не следует —
-       детали в исходнике). Свотчи в карточке «Бренд» наверху перекрашивают и эти панели.</p>
+       детали в исходнике). Уровни 1–3 — одно и то же тело правила: атрибут-селектор и SCSS-миксин для конфига делят список
+       ремапа. Свотчи в карточке «Бренд» наверху перекрашивают и эти панели.</p>
   </section>
 
   <section class="card">
@@ -431,8 +470,9 @@ variant="text"       →  <span class="hl">&lt;button class="link"&gt;</span>   
       <li><b>Формулы vs ручные пики:</b> primary-семейство в теме — ручные пики рамп (blue-50/100/200/700), secondary/tertiary —
           формулы от каналов. По нашему правилу hand-tuned &gt; формулы — при легализации secondary/tertiary-кнопок
           откалибровать формульные шаги глазами (или дать брендам переопределять пики).</li>
-      <li><b>Accent-скоуп:</b> класс <code>.ds-accent-secondary</code> vs атрибут <code>[ds-accent="secondary"]</code>;
-          и нужны ли статусные скоупы (<code>.ds-accent-error</code> для «опасной зоны» формы)?</li>
+      <li><b>ds-color:</b> остановились на атрибуте <code>ds-color="…"</code> — одно слово с инпутом кнопки, работает зоной,
+          инстансом и конфигом типа (миксин <code>ds.color()</code>). Открыто: статусные значения
+          (<code>ds-color="error"</code> — «опасная зона» формы) — легализуем?</li>
     </ol>
   </section>
 
