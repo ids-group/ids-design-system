@@ -92,12 +92,6 @@
       cursor: pointer;
     }
 
-    /* Forced-state hooks — pin the visual without interaction. */
-    &.is-forced-hover { border-color: var(--_input-border-hover); }
-    &.is-forced-focus {
-      border-color: var(--_input-border-focus);
-      box-shadow: var(--_input-focus-shadow);
-    }
   }
 
   .hint {
@@ -120,7 +114,6 @@
     border-color: var(--_input-border-error);
 
     &:focus-within { box-shadow: var(--focus-field-error); }
-    &.is-forced-focus { box-shadow: var(--focus-field-error); }
   }
   &.error .hint { color: var(--error-text); }
 

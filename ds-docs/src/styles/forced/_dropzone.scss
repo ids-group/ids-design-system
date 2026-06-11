@@ -29,12 +29,9 @@
 
 /* ============================================================
    ---------- DROPZONE ----------
-   Raw `.dropzone` markup is used inside ds-docs showcase cells so
-   the empty / active / has-files / disabled states can be pinned
-   without faking interaction. Mirrors the scoped surface from
-   prototype/ds/src/lib/components/dropzone/dropzone.component.scss
-   as a global sheet so unscoped specimens render identically. Also
-   adds the `.single` width modifier used by the single-file block.
+   Raw `.dropzone` markup is used for the has-files, disabled, and
+   single-file specimens whose states the <ds-dropzone> API cannot
+   express statically. Mirrors the scoped surface as a global sheet.
    ============================================================ */
 .dropzone {
   /* Per-component CSS tokens — defaults route through global semantic tokens.
@@ -74,8 +71,7 @@
     background: var(--_dropzone-bg-hover);
     color: var(--_dropzone-fg-active);
   }
-  &.active,
-  &.is-forced-active {
+  &.active {
     border-color: var(--_dropzone-border-active);
     background: var(--_dropzone-bg-active);
     color: var(--_dropzone-fg-active);

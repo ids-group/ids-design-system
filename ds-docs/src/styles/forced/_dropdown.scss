@@ -1,13 +1,10 @@
 /* ============================================================
    ---------- DROPDOWN ----------
-   Raw `.dropdown` markup is used inside the Select section's State
-   showcase grid so `.is-forced-hover` / `.is-forced-focus` hooks can
-   pin the trigger visual statically, and inside the "Open · static
-   specimen" blocks so the panel can be rendered inline (the live
-   `<ds-dropdown>` panel is portaled by CDK Overlay and can't be
-   force-opened). Mirrors the minimum surface from
-   ds/src/lib/components/dropdown/dropdown.component.scss +
-   ds/src/lib/styles/_dropdown-overlay.scss as a global sheet.
+   Raw `.dropdown` markup is used inside the "Open · static specimen"
+   blocks so the panel can be rendered inline (the live `<ds-dropdown>`
+   panel is portaled by CDK Overlay and can't be force-opened). Mirrors
+   the minimum surface from dropdown.component.scss +
+   _dropdown-overlay.scss as a global sheet.
    ============================================================ */
 .dropdown {
   display: flex;
@@ -34,11 +31,6 @@
     transition: transform var(--duration-fast) var(--ease-standard);
   }
 
-  &.is-forced-hover { border-color: var(--border-strong); }
-  &.is-forced-focus {
-    border-color: var(--primary);
-    box-shadow: var(--focus-field);
-  }
   &.open {
     border-color: var(--primary);
     box-shadow: var(--focus-field);

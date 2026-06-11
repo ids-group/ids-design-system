@@ -1,10 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { IconComponent } from 'ds';
+import { DropzoneComponent, IconComponent } from 'ds';
 
 @Component({
   selector: 'section-components-dropzone',
   standalone: true,
-  imports: [IconComponent],
+  imports: [DropzoneComponent, IconComponent],
   encapsulation: ViewEncapsulation.Emulated,
   template: `
     <section id="section-dropzone" data-anchor="dropzone" class="section">
@@ -15,31 +15,23 @@ import { IconComponent } from 'ds';
       </p>
 
       <!-- ============================================================ States showcase -->
-      <!-- Raw .dropzone markup is used here (not <ds-dropzone>) so each cell
-           can be pinned to one state — idle, drag-active, populated with mixed
-           per-row states, disabled — without faking pointer events. The global
-           .dropzone / .file rules live in styles/_forced-states.scss. -->
+      <!-- Idle and active cells use live <ds-dropzone>; pin-active on the stage
+           reads the component's own resolvers via ::ng-deep. has-files and
+           disabled stay raw (no API for static file list or disabled input). -->
       <h3 class="block-title t-h4">States showcase</h3>
       <p class="block-desc t-s">Every dropzone surface state stacked vertically — one per row. Static specimens, no interaction needed.</p>
       <div class="states states--cols-1">
         <div class="state-cell">
           <div class="state-cell__stage">
-            <div class="dropzone">
-              <ds-icon name="upload" [size]="24" />
-              <div class="title">Drop files here or click to upload</div>
-              <div class="hint">PDF · DOCX · max 10 MB</div>
-            </div>
+            <ds-dropzone />
           </div>
           <div class="state-cell__label">Idle</div>
         </div>
 
         <div class="state-cell">
-          <div class="state-cell__stage">
-            <div class="dropzone is-forced-active">
-              <ds-icon name="upload" [size]="24" />
-              <div class="title">Drop to upload</div>
-              <div class="hint">Release to add 3 files</div>
-            </div>
+          <!-- pin-active on the stage reads the component's own --_dropzone-* resolvers. -->
+          <div class="state-cell__stage pin-active">
+            <ds-dropzone />
           </div>
           <div class="state-cell__label">Active · drag-over</div>
         </div>
@@ -194,6 +186,13 @@ import { IconComponent } from 'ds';
     .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
     .block-title { margin-top: var(--space-8); }
     .block-desc { color: var(--text-secondary); margin-top: var(--space-1); }
+
+    /* State pin — force drag-over visual on live ds-dropzone by reading its own resolvers. */
+    :host ::ng-deep .pin-active .dropzone {
+      border-color: var(--_dropzone-border-active);
+      background: var(--_dropzone-bg-active);
+      color: var(--_dropzone-fg-active);
+    }
 
     /* ---------- Single-file wrap ---------- */
     .single-wrap {

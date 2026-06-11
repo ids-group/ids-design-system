@@ -1,14 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DropdownComponent, IconComponent, type DropdownOption } from 'ds';
 
-/**
- * Select section — renders DS components directly. The States showcase grid
- * keeps minimal raw `<div class="dropdown is-forced-*">` cells so hover /
- * focus visuals can be pinned statically. The "Open · static specimen"
- * blocks also use raw `.dropdown.open + .dropdown-panel` markup because the
- * live `<ds-dropdown>` panel is portaled by CDK Overlay and can't be pinned
- * inline. Force-state surface lives in styles/_forced-states.scss.
- */
 @Component({
   selector: 'section-components-select',
   standalone: true,
@@ -39,14 +31,10 @@ import { DropdownComponent, IconComponent, type DropdownOption } from 'ds';
           <div class="state-cell__label">Empty default</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage">
-            <div class="field-stack">
-              <span class="field-label">Owner</span>
-              <div class="dropdown is-forced-focus">
-                <span class="trigger-text is-placeholder">Pick an owner…</span>
-                <span class="chevron"><ds-icon name="chevronDown" [size]="14" /></span>
-              </div>
-            </div>
+          <!-- Live ds-dropdown; pin-focus on the stage reads bare tokens from
+               the component's own .dropdown rules via ::ng-deep. -->
+          <div class="state-cell__stage pin-focus">
+            <ds-dropdown label="Owner" [options]="ownerOptions" placeholder="Pick an owner…" />
           </div>
           <div class="state-cell__label">Empty · focus</div>
         </div>
@@ -57,14 +45,8 @@ import { DropdownComponent, IconComponent, type DropdownOption } from 'ds';
           <div class="state-cell__label">With value</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage">
-            <div class="field-stack">
-              <span class="field-label">Owner</span>
-              <div class="dropdown is-forced-hover">
-                <span class="trigger-text is-placeholder">Pick an owner…</span>
-                <span class="chevron"><ds-icon name="chevronDown" [size]="14" /></span>
-              </div>
-            </div>
+          <div class="state-cell__stage pin-hover">
+            <ds-dropdown label="Owner" [options]="ownerOptions" placeholder="Pick an owner…" />
           </div>
           <div class="state-cell__label">Hover</div>
         </div>
@@ -238,20 +220,16 @@ import { DropdownComponent, IconComponent, type DropdownOption } from 'ds';
           <div class="state-cell__label">Empty default</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage">
-            <div class="dropdown is-forced-hover">
-              <span class="trigger-text is-placeholder">Pick a product…</span>
-              <span class="chevron"><ds-icon name="chevronDown" [size]="14" /></span>
-            </div>
+          <!-- Live ds-dropdown; pin classes on the stage reach the .dropdown
+               button via ::ng-deep; hover/focus use bare tokens (no --_* resolvers). -->
+          <div class="state-cell__stage pin-hover">
+            <ds-dropdown [options]="productOptions" placeholder="Pick a product…" />
           </div>
           <div class="state-cell__label">Hover</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage">
-            <div class="dropdown is-forced-focus">
-              <span class="trigger-text">Hospital Indemnity</span>
-              <span class="chevron"><ds-icon name="chevronDown" [size]="14" /></span>
-            </div>
+          <div class="state-cell__stage pin-focus">
+            <ds-dropdown [options]="productOptions" value="hi" />
           </div>
           <div class="state-cell__label">Focus</div>
         </div>
@@ -334,8 +312,7 @@ import { DropdownComponent, IconComponent, type DropdownOption } from 'ds';
       color: var(--text-tertiary);
     }
 
-    /* Wrapper for raw .dropdown cells that need an external label / hint
-       (the .is-forced-* hover/focus state grids and the error/success cells). */
+    /* Wrapper for raw .dropdown cells that need an external label / hint. */
     .field-stack {
       display: flex; flex-direction: column;
       gap: var(--space-1-5);
@@ -402,6 +379,12 @@ import { DropdownComponent, IconComponent, type DropdownOption } from 'ds';
       text-transform: uppercase;
       font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
     }
+
+    /* State pins — ds-dropdown has no --_* resolvers; restate the bare role
+       tokens the component's own rules use (hover: --border-strong;
+       focus: --primary + --focus-field). */
+    :host ::ng-deep .pin-hover .dropdown:not(:disabled):not(.disabled):not(.open) { border-color: var(--border-strong); }
+    :host ::ng-deep .pin-focus .dropdown:not(.disabled) { outline: none; border-color: var(--primary); box-shadow: var(--focus-field); }
 
     /* "Open · static specimen" — pins panel visible inline. */
     .open-stage {
