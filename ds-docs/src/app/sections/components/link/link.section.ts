@@ -17,12 +17,14 @@ import { Component, ViewEncapsulation } from '@angular/core';
       </p>
 
       <h3 class="block-title t-h4">States</h3>
+      <!-- Pin classes go directly on the element; no ::ng-deep needed for
+           global .link rules as section scope attr covers these elements. -->
       <div class="row">
         <a class="link" href="javascript:void(0)">Default</a>
-        <a class="link is-forced-hover" href="javascript:void(0)">Hover (forced)</a>
-        <a class="link is-forced-active" href="javascript:void(0)">Active (forced)</a>
-        <a class="link is-forced-focus" href="javascript:void(0)">Focus (forced)</a>
-        <a class="link is-disabled" aria-disabled="true">Disabled</a>
+        <a class="link pin-hover" href="javascript:void(0)">Hover (forced)</a>
+        <a class="link pin-active" href="javascript:void(0)">Active (forced)</a>
+        <a class="link pin-focus" href="javascript:void(0)">Focus (forced)</a>
+        <a class="link pin-disabled" aria-disabled="true">Disabled</a>
       </div>
 
       <h3 class="block-title t-h4">Variants</h3>
@@ -69,6 +71,15 @@ import { Component, ViewEncapsulation } from '@angular/core';
       border-radius: var(--radius-sm);
       color: var(--text-primary);
     }
+
+    /* State pins — read the link's own resolvers; fixes drift from old hooks
+       that incorrectly pinned --primary / --primary-strong directly. */
+    .link.pin-hover  { color: var(--_link-color-hover); text-decoration-color: var(--_link-color-hover); }
+    .link.pin-active { color: var(--_link-color-active); text-decoration-color: var(--_link-color-active); }
+    /* focus: --focus-ring and --radius-sm are bare tokens (no --_* resolver) */
+    .link.pin-focus  { outline: none; box-shadow: var(--focus-ring); border-radius: var(--radius-sm); text-decoration-color: var(--_link-color); }
+    /* disabled: aria-disabled="true" already triggers the real state in _link.scss; pin-disabled mirrors it for docs clarity */
+    .link.pin-disabled { color: var(--text-disabled); text-decoration-color: var(--text-disabled); pointer-events: none; cursor: default; }
   `],
 })
 export class LinkSection {}

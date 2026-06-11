@@ -105,13 +105,3 @@
   }
 }
 
-.tab.is-forced-hover { color: var(--_tab-fg-hover); }
-.tab.is-forced-focus {
-  outline: none;
-  box-shadow: var(--focus-ring);
-  border-radius: var(--radius-sm);
-}
-.tabs.pills .tab.is-forced-hover {
-  background: var(--_tab-pill-bg-active);
-  color: var(--_tab-fg-hover);
-}

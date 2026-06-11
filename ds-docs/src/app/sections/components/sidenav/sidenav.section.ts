@@ -1,14 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { IconComponent, SidenavComponent, SidenavGroupComponent, SidenavItemComponent } from 'ds';
 
-/**
- * Sidenav showcase — renders DS components directly. The Item states grid
- * keeps minimal raw `<a class="item …">` markup so `.is-forced-hover` etc.
- * can pin a state statically; the `.item` visual styling comes from the
- * scoped <ds-sidenav-item> CSS (via the encapsulation matching on rendered
- * <ds-sidenav-item> instances) — when raw markup is used it inherits from
- * the global force-state hooks block in _forced-states.scss.
- */
 @Component({
   selector: 'section-components-sidenav',
   standalone: true,
@@ -88,12 +80,22 @@ import { IconComponent, SidenavComponent, SidenavGroupComponent, SidenavItemComp
           </div>
           <div class="state-cell__label">Default</div>
         </div>
+        <!-- Live ds-sidenav; pin classes on the stage read the component's own
+             resolvers via ::ng-deep (see styles below). -->
         <div class="state-cell">
-          <div class="state-cell__stage"><nav class="sidenav"><a class="item is-forced-hover"><ds-icon name="calendar" [size]="20" /><span class="item-label">Records</span></a></nav></div>
+          <div class="state-cell__stage pin-hover">
+            <ds-sidenav>
+              <ds-sidenav-item icon="calendar" label="Records" />
+            </ds-sidenav>
+          </div>
           <div class="state-cell__label">Hover</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><nav class="sidenav"><a class="item is-forced-focus"><ds-icon name="calendar" [size]="20" /><span class="item-label">Records</span></a></nav></div>
+          <div class="state-cell__stage pin-focus">
+            <ds-sidenav>
+              <ds-sidenav-item icon="calendar" label="Records" />
+            </ds-sidenav>
+          </div>
           <div class="state-cell__label">Focus-visible</div>
         </div>
         <div class="state-cell">
@@ -256,6 +258,11 @@ import { IconComponent, SidenavComponent, SidenavGroupComponent, SidenavItemComp
       font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
+
+    /* State pins — force a visual state on live ds-sidenav-item by reading
+       the component's own resolvers; --focus-ring is a bare token (no --_* resolver). */
+    :host ::ng-deep .pin-hover .item { background: var(--_sidenav-item-bg-hover); color: var(--_sidenav-item-fg-hover); }
+    :host ::ng-deep .pin-focus .item { outline: none; box-shadow: var(--focus-ring); }
   `],
 })
 export class SidenavSection {}

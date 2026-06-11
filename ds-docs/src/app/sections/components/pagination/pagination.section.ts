@@ -26,25 +26,31 @@ import { PaginationComponent, IconComponent } from 'ds';
 
       <!-- ============================================================ States showcase -->
       <h3 class="block-title t-h4">States showcase</h3>
-      <p class="block-desc t-s">Page-button states side-by-side. Raw <code>.pagination-button</code> markup so forced-state hooks pin the visual without interaction.</p>
+      <p class="block-desc t-s">Page-button states side-by-side. Live <code>ds-pagination</code> — pin classes target non-active buttons via ::ng-deep (see styles below).</p>
       <div class="states states--cols-4">
+        <!-- Live ds-pagination; currentPage=1 keeps most buttons non-active. -->
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="pagination-button">4</button></div>
+          <div class="state-cell__stage">
+            <ds-pagination [total]="40" [pageSize]="10" [currentPage]="1" [showLabel]="false" />
+          </div>
           <div class="state-cell__label">Default</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="pagination-button is-forced-hover">4</button></div>
+          <div class="state-cell__stage pin-hover">
+            <ds-pagination [total]="40" [pageSize]="10" [currentPage]="1" [showLabel]="false" />
+          </div>
           <div class="state-cell__label">Hover</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><button class="pagination-button is-active">4</button></div>
+          <div class="state-cell__stage">
+            <ds-pagination [total]="40" [pageSize]="10" [currentPage]="4" [showLabel]="false" />
+          </div>
           <div class="state-cell__label">Active · current page</div>
         </div>
         <div class="state-cell">
+          <!-- currentPage=1 disables the prev button via [disabled] on the component -->
           <div class="state-cell__stage">
-            <button class="pagination-button" disabled aria-label="Previous">
-              <ds-icon name="chevronLeft" [size]="14" />
-            </button>
+            <ds-pagination [total]="40" [pageSize]="10" [currentPage]="1" [showLabel]="false" />
           </div>
           <div class="state-cell__label">Prev · disabled (page 1)</div>
         </div>
@@ -214,6 +220,13 @@ import { PaginationComponent, IconComponent } from 'ds';
     .trunc__behaviour {
       font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
+    }
+
+    /* State pins — hover on non-active, non-disabled buttons reads the
+       component's own resolvers; --focus-ring is a bare token (no --_* resolver). */
+    :host ::ng-deep .pin-hover .pagination-button:not(.active):not([disabled]) {
+      background: var(--_pagination-btn-bg-hover);
+      color: var(--_pagination-btn-fg-hover);
     }
   `],
 })

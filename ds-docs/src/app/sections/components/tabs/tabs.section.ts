@@ -75,33 +75,36 @@ import { TabsComponent, TabComponent, IconComponent } from 'ds';
       <h3 class="block-title t-h4">States showcase</h3>
       <p class="block-desc t-s">Every line-tab state side-by-side. Static specimens — no interaction needed.</p>
       <div class="states states--cols-4">
+        <!-- Live ds-tabs; pin classes on the stage read the component's own
+             resolvers via ::ng-deep (see styles below). selectedIndex=1 keeps
+             the first tab non-active so hover/focus/default can be shown. -->
         <div class="state-cell">
           <div class="state-cell__stage">
-            <div class="tabs"><button type="button" class="tab">Overview</button></div>
+            <ds-tabs [selectedIndex]="1"><ds-tab label="Overview" /><ds-tab label="." /></ds-tabs>
           </div>
           <div class="state-cell__label">Default</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage">
-            <div class="tabs"><button type="button" class="tab is-forced-hover">Overview</button></div>
+          <div class="state-cell__stage pin-hover">
+            <ds-tabs [selectedIndex]="1"><ds-tab label="Overview" /><ds-tab label="." /></ds-tabs>
           </div>
           <div class="state-cell__label">Hover</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage">
-            <div class="tabs"><button type="button" class="tab is-forced-focus">Overview</button></div>
+          <div class="state-cell__stage pin-focus">
+            <ds-tabs [selectedIndex]="1"><ds-tab label="Overview" /><ds-tab label="." /></ds-tabs>
           </div>
           <div class="state-cell__label">Focus-visible</div>
         </div>
         <div class="state-cell">
           <div class="state-cell__stage">
-            <div class="tabs"><button type="button" class="tab active">Overview</button></div>
+            <ds-tabs [selectedIndex]="0"><ds-tab label="Overview" /></ds-tabs>
           </div>
           <div class="state-cell__label">Active</div>
         </div>
         <div class="state-cell">
           <div class="state-cell__stage">
-            <div class="tabs"><button type="button" class="tab" disabled>Overview</button></div>
+            <ds-tabs [selectedIndex]="0"><ds-tab label="Overview" [disabled]="true" /></ds-tabs>
           </div>
           <div class="state-cell__label">Disabled</div>
         </div>
@@ -113,31 +116,31 @@ import { TabsComponent, TabComponent, IconComponent } from 'ds';
       <div class="states states--cols-4">
         <div class="state-cell">
           <div class="state-cell__stage">
-            <div class="tabs pills"><button type="button" class="tab">All</button></div>
+            <ds-tabs variant="pills" [selectedIndex]="1"><ds-tab label="All" /><ds-tab label="." /></ds-tabs>
           </div>
           <div class="state-cell__label">Default</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage">
-            <div class="tabs pills"><button type="button" class="tab is-forced-hover">All</button></div>
+          <div class="state-cell__stage pin-hover">
+            <ds-tabs variant="pills" [selectedIndex]="1"><ds-tab label="All" /><ds-tab label="." /></ds-tabs>
           </div>
           <div class="state-cell__label">Hover</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage">
-            <div class="tabs pills"><button type="button" class="tab is-forced-focus">All</button></div>
+          <div class="state-cell__stage pin-focus">
+            <ds-tabs variant="pills" [selectedIndex]="1"><ds-tab label="All" /><ds-tab label="." /></ds-tabs>
           </div>
           <div class="state-cell__label">Focus-visible</div>
         </div>
         <div class="state-cell">
           <div class="state-cell__stage">
-            <div class="tabs pills"><button type="button" class="tab active">All</button></div>
+            <ds-tabs variant="pills" [selectedIndex]="0"><ds-tab label="All" /></ds-tabs>
           </div>
           <div class="state-cell__label">Active</div>
         </div>
         <div class="state-cell">
           <div class="state-cell__stage">
-            <div class="tabs pills"><button type="button" class="tab" disabled>All</button></div>
+            <ds-tabs variant="pills" [selectedIndex]="0"><ds-tab label="All" [disabled]="true" /></ds-tabs>
           </div>
           <div class="state-cell__label">Disabled</div>
         </div>
@@ -250,6 +253,16 @@ import { TabsComponent, TabComponent, IconComponent } from 'ds';
       font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
+
+    /* State pins — force a visual state on live ds-tabs by reading the
+       component's own resolvers; tokens without resolvers noted below. */
+    /* line: hover recolors the non-active tab */
+    :host ::ng-deep .pin-hover .tab:not(.active) { color: var(--_tab-fg-hover); }
+    /* focus: --focus-ring and --radius-sm are bare tokens (no --_* resolver) */
+    :host ::ng-deep .pin-focus .tab:not(.active) { outline: none; box-shadow: var(--focus-ring); border-radius: var(--radius-sm); }
+    /* pills: hover fills with brand-subtle tint */
+    :host ::ng-deep .pin-hover .tabs.pills .tab:not(.active) { background: var(--_tab-pill-bg-hover); color: var(--_tab-fg-hover); }
+    :host ::ng-deep .pin-focus .tabs.pills .tab:not(.active) { outline: none; box-shadow: var(--focus-ring); border-radius: var(--radius-sm); }
   `],
 })
 export class TabsSection {}
