@@ -38,32 +38,28 @@ import { CheckboxComponent, RadioComponent, SwitchComponent } from 'ds';
       </div>
 
       <!-- ============================================================ Checkbox states showcase -->
-      <!--
-        State-showcase grids use RAW <input class="check"> markup so the
-        .is-forced-hover / .is-forced-focus hooks can pin a transient state
-        statically for the screenshot. The :hover/:focus-visible behaviour
-        of <ds-checkbox> itself is live in interactive specimens above.
-      -->
+      <!-- Live ds-checkbox; pin classes on the stage read bare role tokens via
+           ::ng-deep (see styles below). API-expressible states use real inputs. -->
       <h3 class="block-title t-h4">Checkbox states showcase</h3>
       <div class="states states--cols-4">
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="checkbox" class="check" /></div>
+          <div class="state-cell__stage"><ds-checkbox /></div>
           <div class="state-cell__label">Default</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="checkbox" class="check is-forced-hover" /></div>
+          <div class="state-cell__stage pin-hover"><ds-checkbox /></div>
           <div class="state-cell__label">Hover</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="checkbox" class="check is-forced-focus" /></div>
+          <div class="state-cell__stage pin-focus"><ds-checkbox /></div>
           <div class="state-cell__label">Focus</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="checkbox" class="check" checked /></div>
+          <div class="state-cell__stage"><ds-checkbox [checked]="true" /></div>
           <div class="state-cell__label">Checked</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="checkbox" class="check is-forced-focus" checked /></div>
+          <div class="state-cell__stage pin-focus"><ds-checkbox [checked]="true" /></div>
           <div class="state-cell__label">Checked · focus</div>
         </div>
         <div class="state-cell">
@@ -71,81 +67,84 @@ import { CheckboxComponent, RadioComponent, SwitchComponent } from 'ds';
           <div class="state-cell__label">Indeterminate</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="checkbox" class="check" disabled /></div>
+          <div class="state-cell__stage"><ds-checkbox [disabled]="true" /></div>
           <div class="state-cell__label">Disabled</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="checkbox" class="check" disabled checked /></div>
+          <div class="state-cell__stage"><ds-checkbox [disabled]="true" [checked]="true" /></div>
           <div class="state-cell__label">Disabled · checked</div>
         </div>
       </div>
 
       <!-- ============================================================ Radio states showcase -->
+      <!-- Live ds-radio; pin classes on the stage read bare role tokens via ::ng-deep. -->
       <h3 class="block-title t-h4">Radio states showcase</h3>
       <div class="states states--cols-4">
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="radio" class="radio" /></div>
+          <div class="state-cell__stage"><ds-radio /></div>
           <div class="state-cell__label">Default</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="radio" class="radio is-forced-hover" /></div>
+          <div class="state-cell__stage pin-hover"><ds-radio /></div>
           <div class="state-cell__label">Hover</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="radio" class="radio is-forced-focus" /></div>
+          <div class="state-cell__stage pin-focus"><ds-radio /></div>
           <div class="state-cell__label">Focus</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="radio" class="radio" checked /></div>
+          <div class="state-cell__stage"><ds-radio [checked]="true" /></div>
           <div class="state-cell__label">Selected</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="radio" class="radio is-forced-focus" checked /></div>
+          <div class="state-cell__stage pin-focus"><ds-radio [checked]="true" /></div>
           <div class="state-cell__label">Selected · focus</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="radio" class="radio" disabled /></div>
+          <div class="state-cell__stage"><ds-radio [disabled]="true" /></div>
           <div class="state-cell__label">Disabled</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="radio" class="radio" disabled checked /></div>
+          <div class="state-cell__stage"><ds-radio [disabled]="true" [checked]="true" /></div>
           <div class="state-cell__label">Disabled · selected</div>
         </div>
       </div>
 
       <!-- ============================================================ Switch states showcase -->
+      <!-- Live ds-switch; pin-focus on the stage reads bare role token via ::ng-deep.
+           success/error/disabled use real variant/disabled inputs. -->
       <h3 class="block-title t-h4">Switch states showcase</h3>
       <div class="states states--cols-4">
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="checkbox" class="switch" /></div>
+          <div class="state-cell__stage"><ds-switch /></div>
           <div class="state-cell__label">Off</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="checkbox" class="switch is-forced-focus" /></div>
+          <div class="state-cell__stage pin-focus"><ds-switch /></div>
           <div class="state-cell__label">Off · focus</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="checkbox" class="switch" checked /></div>
+          <div class="state-cell__stage"><ds-switch [checked]="true" /></div>
           <div class="state-cell__label">On</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="checkbox" class="switch is-forced-focus" checked /></div>
+          <div class="state-cell__stage pin-focus"><ds-switch [checked]="true" /></div>
           <div class="state-cell__label">On · focus</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="checkbox" class="switch success" checked /></div>
+          <div class="state-cell__stage"><ds-switch variant="success" [checked]="true" /></div>
           <div class="state-cell__label">Success · on</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="checkbox" class="switch error" checked /></div>
+          <div class="state-cell__stage"><ds-switch variant="error" [checked]="true" /></div>
           <div class="state-cell__label">Error · on</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="checkbox" class="switch" disabled /></div>
+          <div class="state-cell__stage"><ds-switch [disabled]="true" /></div>
           <div class="state-cell__label">Disabled · off</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><input type="checkbox" class="switch" disabled checked /></div>
+          <div class="state-cell__stage"><ds-switch [disabled]="true" [checked]="true" /></div>
           <div class="state-cell__label">Disabled · on</div>
         </div>
       </div>
@@ -269,6 +268,16 @@ import { CheckboxComponent, RadioComponent, SwitchComponent } from 'ds';
       font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
+
+    /* State pins — ds-checkbox/radio/switch have no --_* resolvers; restate the
+       bare role tokens their own rules use directly.
+       hover: --primary (border-color)
+       focus: --focus-ring (box-shadow) */
+    :host ::ng-deep .pin-hover .check:not(:disabled),
+    :host ::ng-deep .pin-hover .radio:not(:disabled) { border-color: var(--primary); }
+    :host ::ng-deep .pin-focus .check,
+    :host ::ng-deep .pin-focus .radio,
+    :host ::ng-deep .pin-focus .switch { outline: none; box-shadow: var(--focus-ring); }
   `],
 })
 export class SelectionSection {}

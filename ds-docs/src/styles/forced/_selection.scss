@@ -1,11 +1,9 @@
 /* ============================================================
    ---------- SELECTION ----------
-   Checkbox · radio · switch · segmented · slider.
-   Global re-declaration so raw <input class="check"> specimens
-   in ds-docs render without depending on scoped component CSS.
-   Source: prototype/vendor/claude-design-ds/components.css (~L370–500).
-   .switch--success / .switch--error renamed to .switch.success /
-   .switch.error (no BEM in new code).
+   Segmented · slider — global re-declaration; no component exists.
+   .check / .radio / .switch base blocks kept so the global .control-row
+   layout renders correctly when raw specimens are used outside the
+   selection section (none currently, but the block is harmless).
    ============================================================ */
 .check,
 .radio {
@@ -31,9 +29,6 @@
     border-color: var(--border-disabled);
     cursor: not-allowed;
   }
-
-  &.is-forced-hover { border-color: var(--primary); }
-  &.is-forced-focus { outline: none; box-shadow: var(--focus-ring); }
 }
 
 .check {
@@ -115,8 +110,6 @@
 
   &.success:checked { background: var(--success); }
   &.error:checked   { background: var(--error); }
-
-  &.is-forced-focus { outline: none; box-shadow: var(--focus-ring); }
 }
 
 .control-row {

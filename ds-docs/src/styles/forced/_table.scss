@@ -1,11 +1,9 @@
 /* ============================================================
    ---------- TABLE ----------
    Raw `<table class="table">` markup is used inside ds-docs section
-   showcases so `.sorted-asc` / `.sorted-desc` / `.is-forced-hover` /
-   `.selected` hooks can pin the visual without faking interaction.
-   Mirrors ds/src/lib/components/table/table.component.scss as a
-   global sheet. The `<ds-table>` component owns the same surface in
-   its own scoped CSS — these globals are docs-only.
+   showcases. Mirrors ds/src/lib/components/table/table.component.scss
+   as a global sheet so unscoped specimens render identically.
+   The `<ds-table>` component owns the same surface in its scoped CSS.
    ============================================================ */
 .scroll-wrap {
   --_table-radius: var(--ds-table-radius, var(--radius-xl));
@@ -136,13 +134,6 @@
     tbody tr.clickable { cursor: default; }
   }
 
-  /* Forced-state hooks — pin a header / row to one state for static specimens. */
-  thead th.is-forced-hover { background: var(--_table-row-hover-bg); color: var(--text-secondary); }
-  thead th.is-forced-sorted-asc .sort-icon,
-  thead th.is-forced-sorted-desc .sort-icon { opacity: 1; color: var(--_table-sort-active-fg); }
-
-  tbody tr.is-forced-hover td { background: var(--_table-row-hover-bg); }
-  tbody tr.is-forced-selected td { background: var(--_table-row-selected-bg); }
 }
 
 /* Bulk action bar — sticky pill at the bottom of a selection table. */

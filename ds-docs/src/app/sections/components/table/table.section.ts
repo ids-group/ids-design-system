@@ -103,27 +103,30 @@ interface EventRow {
           <div class="state-cell__label">Sortable · idle</div>
         </div>
         <div class="state-cell">
+          <!-- sorted-asc already triggers the real .sorted-asc .sort-icon rule -->
           <div class="state-cell__stage state-cell__stage--tbl">
             <table class="table">
-              <thead><tr><th class="sortable sorted-asc is-forced-sorted-asc">Record <ds-icon class="sort-icon" name="sortAsc" [size]="12" /></th></tr></thead>
+              <thead><tr><th class="sortable sorted-asc">Record <ds-icon class="sort-icon" name="sortAsc" [size]="12" /></th></tr></thead>
               <tbody><tr><td>Project Alpha</td></tr></tbody>
             </table>
           </div>
           <div class="state-cell__label">Sorted · ascending</div>
         </div>
         <div class="state-cell">
+          <!-- sorted-desc already triggers the real .sorted-desc .sort-icon rule -->
           <div class="state-cell__stage state-cell__stage--tbl">
             <table class="table">
-              <thead><tr><th class="sortable sorted-desc is-forced-sorted-desc">Record <ds-icon class="sort-icon" name="sortDesc" [size]="12" /></th></tr></thead>
+              <thead><tr><th class="sortable sorted-desc">Record <ds-icon class="sort-icon" name="sortDesc" [size]="12" /></th></tr></thead>
               <tbody><tr><td>Project Alpha</td></tr></tbody>
             </table>
           </div>
           <div class="state-cell__label">Sorted · descending</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage state-cell__stage--tbl">
+          <!-- pin-hover on stage targets the th via ::ng-deep (see styles below) -->
+          <div class="state-cell__stage state-cell__stage--tbl pin-hover-th">
             <table class="table">
-              <thead><tr><th class="sortable is-forced-hover">Record <ds-icon class="sort-icon" name="sort" [size]="12" /></th></tr></thead>
+              <thead><tr><th class="sortable">Record <ds-icon class="sort-icon" name="sort" [size]="12" /></th></tr></thead>
               <tbody><tr><td>Project Alpha</td></tr></tbody>
             </table>
           </div>
@@ -509,6 +512,10 @@ interface EventRow {
       font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
+
+    /* State pin — hover on a sortable header reads the component's own resolvers;
+       --text-secondary is a bare token (no --_* resolver for header hover fg). */
+    :host ::ng-deep .pin-hover-th .table thead th { background: var(--_table-row-hover-bg); color: var(--text-secondary); }
   `],
 })
 export class TableSection {
