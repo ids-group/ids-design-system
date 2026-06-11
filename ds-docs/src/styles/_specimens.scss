@@ -1,0 +1,18 @@
+// Surfaces for RAW showcase specimens — loaded ONLY by ds-docs. Component CSS
+// is encapsulated, so raw markup (`<button class="button">`) can't inherit it;
+// these globals re-declare the minimum surface for the raw specimens that
+// remain BY DESIGN (no component / API gap — see todo.md inventory).
+// Rule: every partial here is tied to an API debt — close the debt, delete
+// the file. State forcing lives in section styles via ::ng-deep pins now.
+
+@use 'specimens/button';
+@use 'specimens/field';
+@use 'specimens/dropdown';
+@use 'specimens/selection';
+@use 'specimens/stat';
+@use 'specimens/tabs';
+@use 'specimens/avatar';
+@use 'specimens/day';
+@use 'specimens/table';
+@use 'specimens/dropzone';
+@use 'specimens/sidenav';

@@ -74,7 +74,7 @@ import {
           <div class="state-cell__label">Disabled</div>
         </div>
         <div class="state-cell">
-          <!-- Read-only: ds-input has no [readonly] input. Raw markup pinned via _forced-states.scss. -->
+          <!-- Read-only: ds-input has no [readonly] input. Raw markup styled via _specimens.scss. -->
           <div class="state-cell__stage">
             <div class="field">
               <span class="label">Project ID</span>
