@@ -4,6 +4,7 @@ import {
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
+  booleanAttribute,
   computed,
   effect,
   inject,
@@ -14,6 +15,7 @@ import {
 } from '@angular/core';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
 import {
   isSelectOptionGroup,
@@ -28,7 +30,7 @@ let nextId = 0;
 @Component({
   selector: 'ds-select',
   standalone: true,
-  imports: [IconComponent],
+  imports: [IconComponent, NgTemplateOutlet],
   templateUrl: './select.component.html',
   styleUrl: './select.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -49,6 +51,9 @@ export class SelectComponent {
   readonly name = input<string | null>(null);
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
+  /** Showcase-only: renders the open panel inline in normal flow instead of the
+   *  CDK overlay (for static docs specimens). Not part of the production contract. */
+  readonly staticPreview = input(false, { transform: booleanAttribute });
 
   protected readonly uid = `ds-select-${++nextId}`;
   protected readonly labelId = `${this.uid}-label`;
@@ -67,6 +72,7 @@ export class SelectComponent {
 
   protected readonly trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
   protected readonly panelTpl = viewChild.required<TemplateRef<unknown>>('panel');
+  protected readonly panelContentTpl = viewChild.required<TemplateRef<unknown>>('panelContent');
   protected readonly open = signal<boolean>(false);
   protected readonly activeIndex = signal<number>(-1);
 
@@ -108,7 +114,7 @@ export class SelectComponent {
     if (this.size() === 'lg') parts.push('lg');
     if (this.disabled()) parts.push('disabled');
     if (this.invalid()) parts.push('error');
-    if (this.open()) parts.push('open');
+    if (this.open() || this.staticPreview()) parts.push('open');
     return parts.join(' ');
   });
 
@@ -131,7 +137,7 @@ export class SelectComponent {
   }
 
   protected toggle(): void {
-    if (this.disabled()) return;
+    if (this.disabled() || this.staticPreview()) return;
     if (this.open()) {
       this.close();
     } else {
@@ -190,7 +196,7 @@ export class SelectComponent {
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
-    if (this.disabled()) return;
+    if (this.disabled() || this.staticPreview()) return;
     const key = event.key;
     if (!this.open()) {
       if (key === 'ArrowDown' || key === 'ArrowUp' || key === 'Enter' || key === ' ') {

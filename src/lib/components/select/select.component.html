@@ -16,7 +16,7 @@
   aria-haspopup="listbox"
   [class]="triggerClasses()"
   [attr.name]="name()"
-  [attr.aria-expanded]="open()"
+  [attr.aria-expanded]="open() || staticPreview()"
   [attr.aria-controls]="listboxId"
   [attr.aria-activedescendant]="activeDescendant()"
   [attr.aria-labelledby]="label() ? labelId : null"
@@ -31,7 +31,17 @@
   <span class="chevron"><ds-icon name="chevronDown" [size]="14" /></span>
 </button>
 
+@if (staticPreview()) {
+  <div class="ds-dropdown-panel">
+    <ng-container [ngTemplateOutlet]="panelContentTpl()" />
+  </div>
+}
+
 <ng-template #panel>
+  <ng-container [ngTemplateOutlet]="panelContentTpl()" />
+</ng-template>
+
+<ng-template #panelContent>
   <div class="dropdown-panel">
     <ul class="dropdown-list" role="listbox" [id]="listboxId" [attr.aria-labelledby]="label() ? labelId : null">
       @for (item of options(); track item.label; let groupIdx = $index) {

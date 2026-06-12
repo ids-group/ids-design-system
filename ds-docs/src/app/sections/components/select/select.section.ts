@@ -1,10 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { DropdownComponent, IconComponent, type DropdownOption } from 'ds';
+import { DropdownComponent, type DropdownOption } from 'ds';
 
 @Component({
   selector: 'section-components-select',
   standalone: true,
-  imports: [DropdownComponent, IconComponent],
+  imports: [DropdownComponent],
   encapsulation: ViewEncapsulation.Emulated,
   template: `
     <section id="section-select" data-anchor="select" class="section">
@@ -130,85 +130,14 @@ import { DropdownComponent, IconComponent, type DropdownOption } from 'ds';
       </div>
 
       <h4 class="sub-title t-overline">Open · static specimen</h4>
-      <p class="block-desc t-s">Panel rendered as static HTML to show all option states at once. Live panel is portaled by CDK Overlay — this raw markup pins the open visual inline.</p>
-      <div class="open-stage">
-        <div class="open-trigger dropdown open">
-          <span class="trigger-text">Hospital Indemnity</span>
-          <span class="chevron"><ds-icon name="chevronDown" [size]="14" /></span>
-        </div>
-        <div class="static-panel dropdown-panel">
-          <ul class="dropdown-list">
-            <li>
-              <button type="button" class="option">
-                <span class="option-label">All Products</span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="option is-selected">
-                <span class="option-label">Hospital Indemnity</span>
-                <ds-icon class="option-check" name="check" [size]="14" />
-              </button>
-            </li>
-            <li>
-              <button type="button" class="option is-active">
-                <span class="option-label">Critical Illness</span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="option">
-                <span class="option-label">Accident</span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="option is-disabled" disabled>
-                <span class="option-label">Life Insurance (coming soon)</span>
-              </button>
-            </li>
-          </ul>
-        </div>
+      <p class="block-desc t-s">Live component with <code>staticPreview</code> — panel rendered inline in normal flow, all option states visible at once.</p>
+      <div class="preview-wrap open-specimen">
+        <ds-dropdown [staticPreview]="true" value="hi" [options]="openSpecimenOptions" />
       </div>
 
       <h4 class="sub-title t-overline">Open · with leading icons</h4>
-      <div class="open-stage">
-        <div class="open-trigger dropdown open">
-          <span class="trigger-text">Hospital Indemnity</span>
-          <span class="chevron"><ds-icon name="chevronDown" [size]="14" /></span>
-        </div>
-        <div class="static-panel dropdown-panel">
-          <ul class="dropdown-list">
-            <li>
-              <button type="button" class="option">
-                <ds-icon class="option-icon" name="list" [size]="16" />
-                <span class="option-label">All Products</span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="option is-selected">
-                <ds-icon class="option-icon" name="home" [size]="16" />
-                <span class="option-label">Hospital Indemnity</span>
-                <ds-icon class="option-check" name="check" [size]="14" />
-              </button>
-            </li>
-            <li>
-              <button type="button" class="option">
-                <ds-icon class="option-icon" name="error" [size]="16" />
-                <span class="option-label">Critical Illness</span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="option">
-                <ds-icon class="option-icon" name="truck" [size]="16" />
-                <span class="option-label">Accident</span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="option">
-                <ds-icon class="option-icon" name="star" [size]="16" />
-                <span class="option-label">Life Insurance</span>
-              </button>
-            </li>
-          </ul>
-        </div>
+      <div class="preview-wrap">
+        <ds-dropdown [staticPreview]="true" value="hi" [options]="iconOptions" />
       </div>
 
       <h4 class="sub-title t-overline">Trigger states</h4>
@@ -234,11 +163,8 @@ import { DropdownComponent, IconComponent, type DropdownOption } from 'ds';
           <div class="state-cell__label">Focus</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage">
-            <div class="dropdown open">
-              <span class="trigger-text">Hospital Indemnity</span>
-              <span class="chevron"><ds-icon name="chevronDown" [size]="14" /></span>
-            </div>
+          <div class="state-cell__stage state-cell__stage--overflow">
+            <ds-dropdown [staticPreview]="true" value="hi" [options]="productOptions" />
           </div>
           <div class="state-cell__label">Open</div>
         </div>
@@ -386,14 +312,19 @@ import { DropdownComponent, IconComponent, type DropdownOption } from 'ds';
     :host ::ng-deep .pin-hover .dropdown:not(:disabled):not(.disabled):not(.open) { border-color: var(--border-strong); }
     :host ::ng-deep .pin-focus .dropdown:not(.disabled) { outline: none; border-color: var(--primary); box-shadow: var(--focus-field); }
 
-    /* "Open · static specimen" — pins panel visible inline. */
-    .open-stage {
-      display: inline-flex; flex-direction: column;
-      gap: var(--space-1);
-      margin-top: var(--space-3);
+    /* staticPreview open specimen wrappers */
+    .preview-wrap {
       width: 280px;
+      margin-top: var(--space-3);
     }
-    .open-trigger { pointer-events: none; }
+
+    /* Pin "Critical Illness" (3rd option) as keyboard-active in the open specimen.
+       Restates is-active token from _dropdown-overlay.scss:
+       &.is-active:not(.is-disabled) { background: var(--surface-secondary) } */
+    :host ::ng-deep .open-specimen .dropdown-list li:nth-child(3) .option { background: var(--surface-secondary); }
+
+    /* The "Open" trigger-state cell panel overflows its min-height stage box. */
+    .state-cell__stage--overflow { overflow: visible; align-items: flex-start; }
   `],
 })
 export class SelectSection {
@@ -416,6 +347,22 @@ export class SelectSection {
     { label: 'Critical Illness', value: 'ci' },
     { label: 'Accident', value: 'acc' },
     { label: 'Life Insurance', value: 'life' },
+  ];
+
+  protected readonly openSpecimenOptions: DropdownOption[] = [
+    { label: 'All Products', value: 'all' },
+    { label: 'Hospital Indemnity', value: 'hi' },
+    { label: 'Critical Illness', value: 'ci' },
+    { label: 'Accident', value: 'acc' },
+    { label: 'Life Insurance (coming soon)', value: 'life', disabled: true },
+  ];
+
+  protected readonly iconOptions: DropdownOption[] = [
+    { label: 'All Products', value: 'all', icon: 'list' },
+    { label: 'Hospital Indemnity', value: 'hi', icon: 'home' },
+    { label: 'Critical Illness', value: 'ci', icon: 'error' },
+    { label: 'Accident', value: 'acc', icon: 'truck' },
+    { label: 'Life Insurance', value: 'life', icon: 'star' },
   ];
 
   protected readonly regionOptions: DropdownOption[] = [

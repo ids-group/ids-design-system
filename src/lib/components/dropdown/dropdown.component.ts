@@ -4,6 +4,7 @@ import {
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
+  booleanAttribute,
   computed,
   effect,
   inject,
@@ -14,6 +15,7 @@ import {
 } from '@angular/core';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
 import type { DropdownOption, DropdownSize } from './dropdown.types';
 
@@ -22,7 +24,7 @@ let nextId = 0;
 @Component({
   selector: 'ds-dropdown',
   standalone: true,
-  imports: [IconComponent],
+  imports: [IconComponent, NgTemplateOutlet],
   templateUrl: './dropdown.component.html',
   styleUrl: './dropdown.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -42,6 +44,9 @@ export class DropdownComponent {
   readonly name = input<string | null>(null);
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
+  /** Showcase-only: renders the open panel inline in normal flow instead of the
+   *  CDK overlay (for static docs specimens). Not part of the production contract. */
+  readonly staticPreview = input(false, { transform: booleanAttribute });
 
   protected readonly uid = `ds-dropdown-${++nextId}`;
   protected readonly labelId = `${this.uid}-label`;
@@ -55,6 +60,7 @@ export class DropdownComponent {
 
   protected readonly trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
   protected readonly panelTpl = viewChild.required<TemplateRef<unknown>>('panel');
+  protected readonly panelContentTpl = viewChild.required<TemplateRef<unknown>>('panelContent');
   protected readonly open = signal<boolean>(false);
   protected readonly activeIndex = signal<number>(-1);
 
@@ -84,7 +90,7 @@ export class DropdownComponent {
     if (this.disabled()) parts.push('disabled');
     if (this.readOnly()) parts.push('readonly');
     if (this.error()) parts.push('error');
-    if (this.open()) parts.push('open');
+    if (this.open() || this.staticPreview()) parts.push('open');
     return parts.join(' ');
   });
 
@@ -97,7 +103,7 @@ export class DropdownComponent {
   }
 
   protected toggle(): void {
-    if (this.disabled() || this.readOnly()) return;
+    if (this.disabled() || this.readOnly() || this.staticPreview()) return;
     if (this.open()) {
       this.close();
     } else {
@@ -151,7 +157,7 @@ export class DropdownComponent {
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
-    if (this.disabled() || this.readOnly()) return;
+    if (this.disabled() || this.readOnly() || this.staticPreview()) return;
     const key = event.key;
     if (!this.open()) {
       if (key === 'ArrowDown' || key === 'ArrowUp' || key === 'Enter' || key === ' ') {
