@@ -1,11 +1,21 @@
-<ng-template #panel>
+@if (preview.staticPreview()) {
   <div
     class="popover"
     [attr.role]="panelRole()"
     [attr.aria-label]="panelLabel()"
-    [cdkTrapFocus]="!!panelRole()"
-    [cdkTrapFocusAutoCapture]="!!panelRole()"
   >
     <ng-content></ng-content>
   </div>
-</ng-template>
+} @else {
+  <ng-template #panel>
+    <div
+      class="popover"
+      [attr.role]="panelRole()"
+      [attr.aria-label]="panelLabel()"
+      [cdkTrapFocus]="!!panelRole()"
+      [cdkTrapFocusAutoCapture]="!!panelRole()"
+    >
+      <ng-content></ng-content>
+    </div>
+  </ng-template>
+}

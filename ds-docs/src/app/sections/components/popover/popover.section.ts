@@ -18,13 +18,13 @@ import { ButtonComponent, PopoverComponent } from 'ds';
 
       <h3 class="block-title t-h4">Static specimen</h3>
       <div class="specimen-stage">
-        <div class="popover">
+        <ds-popover [staticPreview]="true">
           <h4 class="t-s-bold" style="margin: 0 0 4px;">Recompute summary</h4>
           <p class="t-s" style="color: var(--text-secondary); margin: 0 0 12px;">
             3 Logistics plans · 12 Resource allocations · 2 Sub-records affected.
           </p>
           <ds-button variant="primary" size="m" style="width: 100%;">View details</ds-button>
-        </div>
+        </ds-popover>
       </div>
 
       <h3 class="block-title t-h4">Live demo</h3>
@@ -83,10 +83,9 @@ import { ButtonComponent, PopoverComponent } from 'ds';
       display: flex;
       justify-content: flex-start;
     }
-    /* .popover visual styling comes from the auto-generated
-       _showcase-mirrors.scss (sync'd from popover.component.scss). This
-       section only adds the showcase positioning. */
-    .specimen-stage .popover { width: 260px; position: static; }
+    /* Pin width for the static specimen panel — ::ng-deep reaches into the
+       component-scoped .popover rendered by [staticPreview]. */
+    .specimen-stage ::ng-deep .popover { width: 260px; }
 
     .demo {
       margin-top: var(--space-3);

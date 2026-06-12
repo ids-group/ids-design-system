@@ -1,5 +1,6 @@
 <label
   [class]="classes()"
+  [attr.aria-disabled]="disabled() ? 'true' : null"
   (dragover)="onDragOver($event)"
   (dragleave)="onDragLeave()"
   (drop)="onDrop($event)"
@@ -9,7 +10,8 @@
     class="dz-input"
     aria-label="Upload files"
     [attr.accept]="accept() || null"
-    [multiple]="multiple()"
+    [multiple]="single() ? false : multiple()"
+    [disabled]="disabled()"
     (change)="onPickerChange($event)"
   />
   @if (files().length === 0) {

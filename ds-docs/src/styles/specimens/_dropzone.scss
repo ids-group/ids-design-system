@@ -83,16 +83,6 @@
     cursor: default;
     padding: var(--space-3);
   }
-  &.disabled,
-  &[disabled] {
-    background: var(--surface-disabled);
-    border-color: var(--border-disabled);
-    color: var(--text-disabled);
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-  &.single { max-width: var(--col-cap-text); }
-
   .title {
     font: var(--font-weight-bold) var(--font-size-m)/var(--line-height-snug) var(--font-heading);
     margin: 0 0 var(--space-1);

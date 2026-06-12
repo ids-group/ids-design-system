@@ -73,11 +73,7 @@ import { DropzoneComponent, IconComponent } from 'ds';
 
         <div class="state-cell">
           <div class="state-cell__stage">
-            <div class="dropzone disabled">
-              <ds-icon name="upload" [size]="24" />
-              <div class="title">Upload locked</div>
-              <div class="hint">Submission window closed</div>
-            </div>
+            <ds-dropzone [disabled]="true" />
           </div>
           <div class="state-cell__label">Disabled</div>
         </div>
@@ -87,11 +83,9 @@ import { DropzoneComponent, IconComponent } from 'ds';
       <h3 class="block-title t-h4">Single-file mode</h3>
       <p class="block-desc t-s">Narrower variant accepting one file at a time. Replaces the existing file rather than appending.</p>
       <div class="single-wrap">
-        <div class="dropzone single">
-          <ds-icon name="upload" [size]="24" />
-          <div class="title">Drop one file here or click to upload</div>
-          <div class="hint">PNG · JPG · max 5 MB · one image only</div>
-        </div>
+        <ds-dropzone [single]="true">
+          <p hint>PNG · JPG · max 5 MB · one image only</p>
+        </ds-dropzone>
       </div>
 
       <!-- ============================================================ File row states -->
@@ -195,10 +189,7 @@ import { DropzoneComponent, IconComponent } from 'ds';
     }
 
     /* ---------- Single-file wrap ---------- */
-    .single-wrap {
-      margin-top: var(--space-3);
-      max-width: var(--col-cap-text);
-    }
+    .single-wrap { margin-top: var(--space-3); }
 
     /* ---------- States showcase ---------- */
     .states {

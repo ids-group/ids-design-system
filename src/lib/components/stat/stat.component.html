@@ -6,7 +6,7 @@
       @if (deltaIcon(); as icon) {
         <ds-icon [name]="icon" [size]="12"></ds-icon>
       }
-      <span>{{ deltaText() }}</span>
+      <ng-content select="[delta]">{{ deltaText() }}</ng-content>
     </div>
   } @else if (caption()) {
     <div class="caption">{{ caption() }}</div>
