@@ -49,25 +49,18 @@ import { TabsComponent, TabComponent, IconComponent } from 'ds';
       <p class="block-desc t-s">A trailing count chip, a leading glyph, and a disabled tab — composed on the line variant.</p>
       <div class="variant-row">
         <div class="variant-row__stage">
-          <div class="tabs">
-            <button type="button" class="tab active">
-              <ds-icon name="inbox" [size]="14" />
-              <span>Inbox</span>
-              <span class="badge neutral count">12</span>
-            </button>
-            <button type="button" class="tab">
-              <ds-icon name="flag" [size]="14" />
-              <span>Flagged</span>
-            </button>
-            <button type="button" class="tab">
-              <span>Drafts</span>
-              <span class="badge neutral count">3</span>
-            </button>
-            <button type="button" class="tab" disabled>
-              <ds-icon name="archive" [size]="14" />
-              <span>Archive</span>
-            </button>
-          </div>
+          <ds-tabs [selectedIndex]="0">
+            <ds-tab label="Inbox" icon="inbox" [count]="12">
+              <p class="t-s muted pad">Inbox items.</p>
+            </ds-tab>
+            <ds-tab label="Flagged" icon="flag">
+              <p class="t-s muted pad">Flagged items.</p>
+            </ds-tab>
+            <ds-tab label="Drafts" [count]="3">
+              <p class="t-s muted pad">Draft items.</p>
+            </ds-tab>
+            <ds-tab label="Archive" icon="archive" [disabled]="true" />
+          </ds-tabs>
         </div>
       </div>
 

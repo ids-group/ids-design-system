@@ -1,10 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { BannerComponent, DropdownComponent, type DropdownOption, IconComponent, ModalCardComponent } from 'ds';
+import { BannerComponent, ButtonComponent, DropdownComponent, type DropdownOption, IconComponent, ModalCardComponent } from 'ds';
 
 @Component({
   selector: 'section-components-modal',
   standalone: true,
-  imports: [BannerComponent, DropdownComponent, IconComponent, ModalCardComponent],
+  imports: [BannerComponent, ButtonComponent, DropdownComponent, IconComponent, ModalCardComponent],
   encapsulation: ViewEncapsulation.Emulated,
   template: `
     <section id="section-modal" data-anchor="modal" class="section">
@@ -25,8 +25,8 @@ import { BannerComponent, DropdownComponent, type DropdownOption, IconComponent,
             <ds-modal-card title="Quick confirm" size="sm" [showClose]="false">
               <span body>Tight modal for binary confirmations and short messages.</span>
               <ng-container actions>
-                <button class="button outline">Cancel</button>
-                <button class="button">Confirm</button>
+                <ds-button variant="outline">Cancel</ds-button>
+                <ds-button>Confirm</ds-button>
               </ng-container>
             </ds-modal-card>
           </div>
@@ -37,8 +37,8 @@ import { BannerComponent, DropdownComponent, type DropdownOption, IconComponent,
             <ds-modal-card title="Edit Project Alpha" size="md" [showClose]="false">
               <span body>Default size. Most edits, detail dialogs, and confirmations with a paragraph of context.</span>
               <ng-container actions>
-                <button class="button outline">Cancel</button>
-                <button class="button">Save</button>
+                <ds-button variant="outline">Cancel</ds-button>
+                <ds-button>Save</ds-button>
               </ng-container>
             </ds-modal-card>
           </div>
@@ -49,8 +49,8 @@ import { BannerComponent, DropdownComponent, type DropdownOption, IconComponent,
             <ds-modal-card title="Run report" size="lg" [showClose]="false">
               <span body>Wider canvas for forms, multi-column previews, and bulk-edit dialogs.</span>
               <ng-container actions>
-                <button class="button outline">Cancel</button>
-                <button class="button">Run</button>
+                <ds-button variant="outline">Cancel</ds-button>
+                <ds-button>Run</ds-button>
               </ng-container>
             </ds-modal-card>
           </div>
@@ -67,8 +67,8 @@ import { BannerComponent, DropdownComponent, type DropdownOption, IconComponent,
             <ds-modal-card title="Save changes?" size="sm" [showClose]="false">
               <span body>Apply schedule changes to all 24 records?</span>
               <ng-container actions>
-                <button class="button outline">Cancel</button>
-                <button class="button">Apply</button>
+                <ds-button variant="outline">Cancel</ds-button>
+                <ds-button>Apply</ds-button>
               </ng-container>
             </ds-modal-card>
           </div>
@@ -79,8 +79,8 @@ import { BannerComponent, DropdownComponent, type DropdownOption, IconComponent,
             <ds-modal-card title="Delete record?" size="sm" [danger]="true" [showClose]="false">
               <span body>This cannot be undone. 12 resource allocations will be released.</span>
               <ng-container actions>
-                <button class="button outline">Cancel</button>
-                <button class="button error">Delete</button>
+                <ds-button variant="outline">Cancel</ds-button>
+                <ds-button variant="error">Delete</ds-button>
               </ng-container>
             </ds-modal-card>
           </div>
@@ -98,8 +98,8 @@ import { BannerComponent, DropdownComponent, type DropdownOption, IconComponent,
                 </ul>
               </ds-banner>
               <ng-container actions>
-                <button class="button outline">Cancel</button>
-                <button class="button">Recompute &amp; save</button>
+                <ds-button variant="outline">Cancel</ds-button>
+                <ds-button>Recompute &amp; save</ds-button>
               </ng-container>
             </ds-modal-card>
           </div>
@@ -129,8 +129,8 @@ import { BannerComponent, DropdownComponent, type DropdownOption, IconComponent,
                 </div>
               </div>
               <ng-container actions>
-                <button class="button outline">Cancel</button>
-                <button class="button">Save changes</button>
+                <ds-button variant="outline">Cancel</ds-button>
+                <ds-button>Save changes</ds-button>
               </ng-container>
             </ds-modal-card>
           </div>

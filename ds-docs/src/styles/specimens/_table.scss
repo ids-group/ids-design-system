@@ -155,10 +155,11 @@
     height: var(--space-4);
     background: var(--neutral-700);
   }
-  .button {
-    background: transparent;
-    color: var(--neutral-0);
-
-    &:hover { background: var(--neutral-800); }
+  ds-button {
+    --ds-button-bg: transparent;
+    --ds-button-fg: var(--neutral-0);
+    --ds-button-bg-hover: var(--neutral-800);
+    --ds-button-bg-active: var(--neutral-800);
+    --ds-button-border: transparent;
   }
 }

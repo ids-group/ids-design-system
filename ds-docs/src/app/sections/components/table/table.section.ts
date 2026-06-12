@@ -184,10 +184,10 @@ interface EventRow {
         <div class="bulk-bar">
           <span class="count">3 selected</span>
           <span class="divider"></span>
-          <button class="button outline"><ds-icon name="archive" [size]="14" /> Archive</button>
-          <button class="button outline"><ds-icon name="download" [size]="14" /> Export</button>
+          <ds-button variant="outline"><ds-icon name="archive" [size]="14" /> Archive</ds-button>
+          <ds-button variant="outline"><ds-icon name="download" [size]="14" /> Export</ds-button>
           <span class="divider"></span>
-          <button class="button outline">Clear</button>
+          <ds-button variant="outline">Clear</ds-button>
         </div>
       </div>
 
@@ -440,13 +440,6 @@ interface EventRow {
       border-radius: var(--radius-lg);
     }
     .bulk-bar-wrap .bulk-bar { margin: 0; }
-    /* Smaller ghost buttons inside the dark bar. */
-    .bulk-bar .button {
-      height: var(--hit-min);
-      padding: 0 var(--space-3);
-      font: var(--font-weight-semibold) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
-      border-color: transparent;
-    }
 
     /* ---------- States showcase (header sort cells) ---------- */
     .states {

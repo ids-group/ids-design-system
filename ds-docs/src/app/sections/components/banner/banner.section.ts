@@ -1,10 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { BannerComponent, IconComponent } from 'ds';
+import { BannerComponent, ButtonComponent, IconComponent } from 'ds';
 
 @Component({
   selector: 'section-components-banner',
   standalone: true,
-  imports: [BannerComponent, IconComponent],
+  imports: [BannerComponent, ButtonComponent, IconComponent],
   encapsulation: ViewEncapsulation.Emulated,
   template: `
     <section id="section-banner" data-anchor="banner" class="section">
@@ -70,8 +70,8 @@ import { BannerComponent, IconComponent } from 'ds';
             <ds-banner variant="severe" title="Recompute required">
               Changing the build start will recompute 3 Logistics plans and 12 Resource allocations across Alpha, Beta and Gamma.
               <ng-container actions>
-                <button class="button m">Preview impact</button>
-                <button class="button outline m">Cancel</button>
+                <ds-button size="m">Preview impact</ds-button>
+                <ds-button variant="outline" size="m">Cancel</ds-button>
               </ng-container>
             </ds-banner>
           </div>
@@ -109,7 +109,7 @@ import { BannerComponent, IconComponent } from 'ds';
             <ds-banner variant="info" title="Schedule updated" layout="row">
               Changes go live in 5 minutes.
               <ng-container actions>
-                <button class="button m">Preview</button>
+                <ds-button size="m">Preview</ds-button>
               </ng-container>
             </ds-banner>
           </div>
@@ -120,8 +120,8 @@ import { BannerComponent, IconComponent } from 'ds';
             <ds-banner variant="warning" title="Approaching capacity limit" layout="stacked">
               Lane 04 is at 92% of the 95% volume cap. Re-balance allocations or raise the cap before scheduling new pickups.
               <ng-container actions>
-                <button class="button m">Re-balance</button>
-                <button class="button outline m">Raise cap</button>
+                <ds-button size="m">Re-balance</ds-button>
+                <ds-button variant="outline" size="m">Raise cap</ds-button>
               </ng-container>
             </ds-banner>
           </div>
