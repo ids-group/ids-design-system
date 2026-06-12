@@ -3,5 +3,9 @@
   "dest": "./dist/ds",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "assets": [
+    { "glob": "**/*", "input": "src/lib/styles", "output": "styles" },
+    { "glob": "**/*", "input": "src/lib/themes", "output": "themes" }
+  ]
 }

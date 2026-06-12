@@ -1,6 +1,12 @@
 {
-  "name": "ds",
-  "version": "0.0.1",
+  "name": "@ids-group-ltd/ds",
+  "version": "0.1.0",
+  "description": "IDS Group Angular design system: components, tokens, themes",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/itband/ids-design-system.git"
+  },
   "scripts": {
     "ng": "ng",
     "build": "ng build ds",
