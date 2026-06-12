@@ -4,7 +4,6 @@ import {
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
-  booleanAttribute,
   computed,
   effect,
   inject,
@@ -17,6 +16,7 @@ import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
+import { DsStaticPreview } from '../static-preview.directive';
 import type { DropdownOption, DropdownSize } from './dropdown.types';
 
 let nextId = 0;
@@ -28,10 +28,12 @@ let nextId = 0;
   templateUrl: './dropdown.component.html',
   styleUrl: './dropdown.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  hostDirectives: [{ directive: DsStaticPreview, inputs: ['staticPreview'] }],
 })
 export class DropdownComponent {
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
+  protected readonly preview = inject(DsStaticPreview);
 
   readonly value = model<string>('');
   readonly options = input<DropdownOption[]>([]);
@@ -44,9 +46,6 @@ export class DropdownComponent {
   readonly name = input<string | null>(null);
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
-  /** Showcase-only: renders the open panel inline in normal flow instead of the
-   *  CDK overlay (for static docs specimens). Not part of the production contract. */
-  readonly staticPreview = input(false, { transform: booleanAttribute });
 
   protected readonly uid = `ds-dropdown-${++nextId}`;
   protected readonly labelId = `${this.uid}-label`;
@@ -90,7 +89,7 @@ export class DropdownComponent {
     if (this.disabled()) parts.push('disabled');
     if (this.readOnly()) parts.push('readonly');
     if (this.error()) parts.push('error');
-    if (this.open() || this.staticPreview()) parts.push('open');
+    if (this.open() || this.preview.staticPreview()) parts.push('open');
     return parts.join(' ');
   });
 
@@ -103,7 +102,7 @@ export class DropdownComponent {
   }
 
   protected toggle(): void {
-    if (this.disabled() || this.readOnly() || this.staticPreview()) return;
+    if (this.disabled() || this.readOnly() || this.preview.staticPreview()) return;
     if (this.open()) {
       this.close();
     } else {
@@ -157,7 +156,7 @@ export class DropdownComponent {
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
-    if (this.disabled() || this.readOnly() || this.staticPreview()) return;
+    if (this.disabled() || this.readOnly() || this.preview.staticPreview()) return;
     const key = event.key;
     if (!this.open()) {
       if (key === 'ArrowDown' || key === 'ArrowUp' || key === 'Enter' || key === ' ') {

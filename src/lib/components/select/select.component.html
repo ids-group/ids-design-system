@@ -16,7 +16,7 @@
   aria-haspopup="listbox"
   [class]="triggerClasses()"
   [attr.name]="name()"
-  [attr.aria-expanded]="open() || staticPreview()"
+  [attr.aria-expanded]="open() || preview.staticPreview()"
   [attr.aria-controls]="listboxId"
   [attr.aria-activedescendant]="activeDescendant()"
   [attr.aria-labelledby]="label() ? labelId : null"
@@ -31,7 +31,7 @@
   <span class="chevron"><ds-icon name="chevronDown" [size]="14" /></span>
 </button>
 
-@if (staticPreview()) {
+@if (preview.staticPreview()) {
   <div class="ds-dropdown-panel">
     <ng-container [ngTemplateOutlet]="panelContentTpl()" />
   </div>

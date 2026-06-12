@@ -4,7 +4,6 @@ import {
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
-  booleanAttribute,
   computed,
   effect,
   inject,
@@ -17,6 +16,7 @@ import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
+import { DsStaticPreview } from '../static-preview.directive';
 import {
   isSelectOptionGroup,
   type SelectItem,
@@ -34,10 +34,12 @@ let nextId = 0;
   templateUrl: './select.component.html',
   styleUrl: './select.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  hostDirectives: [{ directive: DsStaticPreview, inputs: ['staticPreview'] }],
 })
 export class SelectComponent {
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
+  protected readonly preview = inject(DsStaticPreview);
 
   readonly value = model<string>('');
   readonly options = input<SelectItem[]>([]);
@@ -51,9 +53,6 @@ export class SelectComponent {
   readonly name = input<string | null>(null);
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
-  /** Showcase-only: renders the open panel inline in normal flow instead of the
-   *  CDK overlay (for static docs specimens). Not part of the production contract. */
-  readonly staticPreview = input(false, { transform: booleanAttribute });
 
   protected readonly uid = `ds-select-${++nextId}`;
   protected readonly labelId = `${this.uid}-label`;
@@ -114,7 +113,7 @@ export class SelectComponent {
     if (this.size() === 'lg') parts.push('lg');
     if (this.disabled()) parts.push('disabled');
     if (this.invalid()) parts.push('error');
-    if (this.open() || this.staticPreview()) parts.push('open');
+    if (this.open() || this.preview.staticPreview()) parts.push('open');
     return parts.join(' ');
   });
 
@@ -137,7 +136,7 @@ export class SelectComponent {
   }
 
   protected toggle(): void {
-    if (this.disabled() || this.staticPreview()) return;
+    if (this.disabled() || this.preview.staticPreview()) return;
     if (this.open()) {
       this.close();
     } else {
@@ -196,7 +195,7 @@ export class SelectComponent {
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
-    if (this.disabled() || this.staticPreview()) return;
+    if (this.disabled() || this.preview.staticPreview()) return;
     const key = event.key;
     if (!this.open()) {
       if (key === 'ArrowDown' || key === 'ArrowUp' || key === 'Enter' || key === ' ') {

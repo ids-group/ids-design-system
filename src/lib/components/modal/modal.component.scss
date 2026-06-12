@@ -82,6 +82,11 @@
   }
 }
 
+/* Static-preview wrapper — transparent: the card renders inline, unwrapped. */
+.modal-static {
+  display: contents;
+}
+
 .modal-backdrop {
   /* Public --ds-modal-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_modal-backdrop: var(--ds-modal-backdrop, var(--surface-scrim));
