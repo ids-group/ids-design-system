@@ -1,0 +1,52 @@
+
+    <section id="section-icon" data-anchor="icon" class="section">
+      <div class="eyebrow t-overline">Components</div>
+      <h2 class="t-h2">Icon</h2>
+      <p class="lede t-m">
+        Inline SVG icons rendered through <code class="t-mono">&lt;ds-icon&gt;</code>. 2-px stroke, rounded caps,
+        <code class="t-mono">currentColor</code> fills. Driven by the <code class="t-mono">name</code> input and a fixed size scale.
+      </p>
+
+      <!-- ============================================================ Sizes -->
+      <h3 class="block-title t-h4">Sizes</h3>
+      <p class="block-desc t-s">Five canonical sizes. Every glyph renders inside a 24-unit viewBox at <code class="t-mono">stroke-width: 1.75</code>.</p>
+      <div class="size-row">
+        @for (size of sizes; track size.px) {
+          <div class="size-cell">
+            <div class="size-cell__stage" [style.height.px]="32">
+              <ds-icon name="calendar" [size]="size.px" />
+            </div>
+            <code class="t-mono size-cell__tok">{{ size.token }}</code>
+            <div class="t-caption">{{ size.px }}px · {{ size.use }}</div>
+          </div>
+        }
+      </div>
+
+      <!-- ============================================================ Sample names -->
+      <h3 class="block-title t-h4">Sample names</h3>
+      <p class="block-desc t-s">The library is broader; these are the most common app glyphs. See <a class="link" href="#section-icons">Foundations · Icons</a> for the full library.</p>
+      <div class="sample-grid">
+        @for (name of samples; track name) {
+          <div class="sample-cell">
+            <ds-icon [name]="name" [size]="20" />
+            <code class="t-mono sample-cell__name">{{ name }}</code>
+          </div>
+        }
+      </div>
+
+      <!-- ============================================================ Truncation -->
+      <h3 class="block-title t-h4">Truncation</h3>
+      <div class="trunc">
+        <div class="trunc__title">Truncation</div>
+        <ul class="trunc__list">
+          <li>
+            <span class="trunc__field">Glyph</span>
+            <span class="trunc__behaviour">Never clipped — the SVG sits in a square frame at one of the fixed sizes.</span>
+          </li>
+          <li>
+            <span class="trunc__field">Icon + text pair</span>
+            <span class="trunc__behaviour">Glyph fixed; text label takes the remaining width and clips with ellipsis.</span>
+          </li>
+        </ul>
+      </div>
+    </section>

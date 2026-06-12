@@ -1,0 +1,73 @@
+
+    :host { display: block; }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
+    .link { color: var(--text-link); text-decoration: none; }
+    .link:hover { text-decoration: underline; }
+
+    .variants-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: var(--space-3);
+      margin-top: var(--space-3);
+    }
+    .variant-card {
+      background: var(--surface-default);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .states-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+      margin-top: var(--space-3);
+    }
+    .state-card {
+      background: var(--surface-default);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .trunc {
+      margin-top: var(--space-3);
+      padding: var(--space-4);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-lg);
+    }
+    .trunc__title {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-3);
+    }
+    .trunc__list {
+      list-style: none; margin: 0; padding: 0;
+      display: flex; flex-direction: column;
+      gap: var(--space-2);
+    }
+    .trunc__list li {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: var(--space-4);
+      align-items: start;
+    }
+    .trunc__field {
+      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      color: var(--text-primary);
+    }
+    .trunc__behaviour {
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 720px) {
+      .trunc__list li { grid-template-columns: 1fr; }
+    }
