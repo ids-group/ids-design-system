@@ -55,7 +55,20 @@
       border-bottom-color: var(--_tab-indicator-color);
     }
 
+    /* Count chip is rendered by the tab template itself — the component owns
+       its styling (the badge component's CSS is encapsulated, unreachable). */
     .badge {
+      min-width: var(--badge-count-size);
+      height: var(--badge-count-size);
+      padding: 0 var(--space-1-5);
+      display: inline-grid;
+      place-items: center;
+      border-radius: var(--radius-pill);
+      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wide);
+      white-space: nowrap;
+      background: var(--surface-secondary);
+      color: var(--text-secondary);
       margin-left: var(--space-1);
     }
 

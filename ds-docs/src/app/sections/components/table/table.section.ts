@@ -184,10 +184,10 @@ interface EventRow {
         <div class="bulk-bar">
           <span class="count">3 selected</span>
           <span class="divider"></span>
-          <ds-button variant="outline"><ds-icon name="archive" [size]="14" /> Archive</ds-button>
-          <ds-button variant="outline"><ds-icon name="download" [size]="14" /> Export</ds-button>
+          <ds-button variant="outline" size="m"><ds-icon name="archive" [size]="14" /> Archive</ds-button>
+          <ds-button variant="outline" size="m"><ds-icon name="download" [size]="14" /> Export</ds-button>
           <span class="divider"></span>
-          <ds-button variant="outline">Clear</ds-button>
+          <ds-button variant="outline" size="m">Clear</ds-button>
         </div>
       </div>
 
