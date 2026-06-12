@@ -17,12 +17,14 @@
   display: inline-flex;
 }
 
-::ng-deep ds-avatar {
+/* Anchored pierce — unanchored ::ng-deep compiles to a GLOBAL rule and would
+   hit every ds-avatar on the page (masked only by the undefined group vars). */
+:host ::ng-deep ds-avatar {
   border: var(--avatar-bw-group) solid var(--_avatargroup-ring);
   margin-left: var(--_avatargroup-overlap);
 }
 
-::ng-deep ds-avatar:first-child {
+:host ::ng-deep ds-avatar:first-child {
   margin-left: 0;
 }
 
