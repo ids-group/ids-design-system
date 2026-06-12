@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Field · компактные варианты подсказки у "Mark Truck as Completed"</title>
+<style>
+  :root {
+    --brand: #ea4989;
+    --brand-strong: #bc4663;
+    --brand-muted: #ffbfd9;
+    --brand-on: #fff;
+    --surface-default: #fdfdfd;
+    --surface-canvas: #eeeef1;
+    --surface-disabled: #f1f4f9;
+    --text-primary: #023146;
+    --text-secondary: #718aa3;
+    --text-muted: #969ba0;
+    --text-disabled: #9ba3b4;
+    --border-default: #ebebeb;
+    --neutral-200: #dce1ea;
+    --info: #3b82f6;
+    --info-subtle: #eff6ff;
+    --info-text: #1d4ed8;
+  }
+  body {
+    font: 14px/1.5 'Poppins', system-ui, sans-serif;
+    color: var(--text-primary);
+    background: #f8fafc;
+    margin: 0; padding: 40px;
+  }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  .lede { color: #6b7388; max-width: 920px; margin: 0 0 28px; }
+  section { margin-bottom: 40px; }
+  h2 { font-size: 15px; margin: 0 0 4px; }
+  .note { color: #6b7388; font-size: 13px; margin: 0 0 14px; max-width: 880px; }
+  .row { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  .cell { display: flex; flex-direction: column; gap: 8px; }
+  .cell small { color: #9ba3b4; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; text-align: center; }
+
+  .phone {
+    width: 360px;
+    border: 1px solid var(--neutral-200);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--surface-canvas);
+    box-shadow: 0 4px 16px rgb(2 49 70 / 8%);
+    position: relative;
+  }
+  .content { padding: 16px 16px 12px; display: flex; flex-direction: column; gap: 10px; }
+  .kit-card {
+    background: var(--surface-default);
+    border: 1px solid var(--border-default);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .kit-stripe { width: 4px; height: 36px; border-radius: 2px; background: #7c5cff; flex-shrink: 0; }
+  .kit-meta { flex: 1; min-width: 0; }
+  .kit-name { font-weight: 600; font-size: 13px; }
+  .kit-sku { color: var(--text-muted); font-size: 11px; }
+  .chip { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+  .chip.ready { background: #e6f6e9; color: #1d7a2c; }
+  .chip.transit { background: #fffbea; color: #8a7400; }
+
+  .bottom-bar {
+    background: var(--surface-default);
+    border-top: 1px solid var(--neutral-200);
+    padding: 12px 16px 16px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .button {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font: 600 15px/1 'Poppins', system-ui, sans-serif;
+    border: 1px solid transparent; border-radius: 8px;
+    height: 48px; width: 100%;
+  }
+  .primary { background: var(--brand); color: var(--brand-on); }
+  .disabled { background: var(--surface-disabled); color: var(--text-disabled); }
+
+  /* D/G · ряд: кнопка + 48px icon-кнопка (ghost) */
+  .btn-row { display: flex; gap: 8px; }
+  .btn-row .button { flex: 1; }
+  .info-btn {
+    width: 48px; height: 48px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface-default);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+    color: var(--info);
+  }
+
+  /* G · popover-bubble над иконкой */
+  .bubble {
+    position: absolute; right: 12px; bottom: 130px;
+    max-width: 250px;
+    background: var(--text-primary); color: #fff;
+    border-radius: 10px; padding: 10px 12px;
+    font-size: 12px; line-height: 1.45;
+    box-shadow: 0 6px 20px rgb(2 49 70 / 25%);
+  }
+  .bubble::after {
+    content: ""; position: absolute; right: 18px; bottom: -6px;
+    width: 12px; height: 12px; background: var(--text-primary);
+    transform: rotate(45deg);
+  }
+
+  /* D · bottom sheet */
+  .sheet-veil { position: absolute; inset: 0; background: rgb(2 49 70 / 35%); }
+  .sheet {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    background: var(--surface-default);
+    border-radius: 16px 16px 0 0;
+    padding: 16px 16px 20px;
+    box-shadow: 0 -8px 28px rgb(2 49 70 / 20%);
+  }
+  .sheet h3 { margin: 0 0 8px; font-size: 14px; }
+  .sheet p { margin: 0; font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; }
+  .grabber { width: 36px; height: 4px; border-radius: 2px; background: var(--neutral-200); margin: 0 auto 12px; }
+
+  /* E · текст второй строкой внутри кнопки */
+  .button.two-line { height: 60px; flex-direction: column; gap: 3px; }
+  .button.two-line .sub { font-size: 10.5px; font-weight: 500; line-height: 1.2; }
+
+  /* F · прогресс в лейбле */
+  .count-chip {
+    font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px;
+    background: #fff; color: var(--text-secondary); border: 1px solid var(--neutral-200);
+  }
+</style>
+</head>
+<body>
+  <h1>Field · компактные варианты подсказки (не растим bottom bar)</h1>
+  <p class="lede">Варианты A-C занимали отдельную строку. Здесь - идея с иконкой
+  <strong>(i)</strong> справа от кнопки и ещё три способа уложить причину блокировки
+  без дополнительной высоты. UX-ограничение тача: иконка не может быть маленьким значком -
+  минимум 44x44px и зазор от кнопки 8px, поэтому это полноценная icon-кнопка в ряд с основной.</p>
+
+  <section>
+    <h2>D · (i) справа от кнопки → bottom sheet</h2>
+    <p class="note">Ряд: disabled-кнопка + 48px ghost icon-кнопка с info. Иконка живая (не disabled),
+    тап открывает <code>ds-bottom-sheet</code> с полным текстом спеки - паттерн шита в приложении уже
+    есть ("Remove the mark?"). Иконка рендерится только пока кнопка заблокирована. Высота бара не меняется.</p>
+    <div class="row">
+      <div class="cell">
+        <div class="phone">
+          <div class="content">
+            <div class="kit-card"><span class="kit-stripe"></span><span class="kit-meta"><span class="kit-name">Stage Rig A</span><br><span class="kit-sku">KIT-0231</span></span><span class="chip transit">In Transit</span></div>
+            <div class="kit-card"><span class="kit-stripe" style="background:#1d9bf0"></span><span class="kit-meta"><span class="kit-name">Lighting Set 4</span><br><span class="kit-sku">KIT-0418</span></span><span class="chip ready">Ready to Use</span></div>
+          </div>
+          <div class="bottom-bar">
+            <div class="btn-row">
+              <button class="button disabled">Mark Truck as Completed</button>
+              <button class="info-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8h.01M12 11v5"/></svg></button>
+            </div>
+            <button class="button primary"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM21 21h-3M21 14v3"/></svg> Scan QR Code</button>
+          </div>
+        </div>
+        <small>покой: иконка рядом</small>
+      </div>
+      <div class="cell">
+        <div class="phone">
+          <div class="content">
+            <div class="kit-card"><span class="kit-stripe"></span><span class="kit-meta"><span class="kit-name">Stage Rig A</span><br><span class="kit-sku">KIT-0231</span></span><span class="chip transit">In Transit</span></div>
+            <div class="kit-card"><span class="kit-stripe" style="background:#1d9bf0"></span><span class="kit-meta"><span class="kit-name">Lighting Set 4</span><br><span class="kit-sku">KIT-0418</span></span><span class="chip ready">Ready to Use</span></div>
+          </div>
+          <div class="bottom-bar">
+            <div class="btn-row">
+              <button class="button disabled">Mark Truck as Completed</button>
+              <button class="info-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8h.01M12 11v5"/></svg></button>
+            </div>
+            <button class="button primary"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM21 21h-3M21 14v3"/></svg> Scan QR Code</button>
+          </div>
+          <div class="sheet-veil"></div>
+          <div class="sheet">
+            <div class="grabber"></div>
+            <h3>Why can't I complete this truck?</h3>
+            <p>All kits must be Ready to Use before marking the truck as Completed. 1 of 2 kits is still In Transit.</p>
+          </div>
+        </div>
+        <small>тап по (i): bottom sheet</small>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>G · (i) справа от кнопки → popover-bubble (рекомендую)</h2>
+    <p class="note">Та же иконка, но вместо шита - лёгкий tooltip-bubble над иконкой, исчезает сам
+    через ~4 секунды или по тапу мимо. Легче шита: нет veil, нет жеста закрытия. Минус обоих
+    icon-вариантов: текст не виден постоянно, как формально требует спека - пользователь должен тапнуть.</p>
+    <div class="row">
+      <div class="cell">
+        <div class="phone">
+          <div class="content">
+            <div class="kit-card"><span class="kit-stripe"></span><span class="kit-meta"><span class="kit-name">Stage Rig A</span><br><span class="kit-sku">KIT-0231</span></span><span class="chip transit">In Transit</span></div>
+            <div class="kit-card"><span class="kit-stripe" style="background:#1d9bf0"></span><span class="kit-meta"><span class="kit-name">Lighting Set 4</span><br><span class="kit-sku">KIT-0418</span></span><span class="chip ready">Ready to Use</span></div>
+          </div>
+          <div class="bubble">All kits must be Ready to Use before marking the truck as Completed</div>
+          <div class="bottom-bar">
+            <div class="btn-row">
+              <button class="button disabled">Mark Truck as Completed</button>
+              <button class="info-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8h.01M12 11v5"/></svg></button>
+            </div>
+            <button class="button primary"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM21 21h-3M21 14v3"/></svg> Scan QR Code</button>
+          </div>
+        </div>
+        <small>тап по (i): bubble</small>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>E · Подсказка второй строкой внутри самой кнопки</h2>
+    <p class="note">Ноль новых элементов: пока кнопка disabled, под лейблом мелкая вторая строка.
+    Кнопка подрастает с 48 до ~60px - на 12px против ~44px у баннера. Текст постоянно видим,
+    как требует спека. Минус: текст наследует серый disabled-цвет - читаемость на грани,
+    цвет второй строки придётся принудительно ставить темнее.</p>
+    <div class="row">
+      <div class="cell">
+        <div class="phone">
+          <div class="content">
+            <div class="kit-card"><span class="kit-stripe"></span><span class="kit-meta"><span class="kit-name">Stage Rig A</span><br><span class="kit-sku">KIT-0231</span></span><span class="chip transit">In Transit</span></div>
+            <div class="kit-card"><span class="kit-stripe" style="background:#1d9bf0"></span><span class="kit-meta"><span class="kit-name">Lighting Set 4</span><br><span class="kit-sku">KIT-0418</span></span><span class="chip ready">Ready to Use</span></div>
+          </div>
+          <div class="bottom-bar">
+            <button class="button disabled two-line">
+              <span>Mark Truck as Completed</span>
+              <span class="sub">All kits must be Ready to Use first</span>
+            </button>
+            <button class="button primary"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM21 21h-3M21 14v3"/></svg> Scan QR Code</button>
+            </div>
+        </div>
+        <small>подпись внутри кнопки</small>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>F · Прогресс-чип на кнопке</h2>
+    <p class="note">Вместо текста причины - счётчик готовности прямо в кнопке: "3/8 Ready".
+    Ноль лишней высоты, виден и прогресс, и почему заблокировано. Минус: формулировку спеки
+    не показывает - это намёк, а не объяснение; новичку может быть непонятно.</p>
+    <div class="row">
+      <div class="cell">
+        <div class="phone">
+          <div class="content">
+            <div class="kit-card"><span class="kit-stripe"></span><span class="kit-meta"><span class="kit-name">Stage Rig A</span><br><span class="kit-sku">KIT-0231</span></span><span class="chip transit">In Transit</span></div>
+            <div class="kit-card"><span class="kit-stripe" style="background:#1d9bf0"></span><span class="kit-meta"><span class="kit-name">Lighting Set 4</span><br><span class="kit-sku">KIT-0418</span></span><span class="chip ready">Ready to Use</span></div>
+          </div>
+          <div class="bottom-bar">
+            <button class="button disabled">Mark Truck as Completed <span class="count-chip">1/2 Ready</span></button>
+            <button class="button primary"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM21 21h-3M21 14v3"/></svg> Scan QR Code</button>
+          </div>
+        </div>
+        <small>счётчик готовности</small>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Итого</h2>
+    <p class="note"><strong>Если место важнее буквы спеки - G:</strong> иконка (i) + bubble. Высота бара
+    не растёт, аффордансность явная (живая синяя иконка рядом с серой кнопкой сама приглашает тапнуть),
+    реализация легче шита. <strong>D</strong> - то же с готовым ds-bottom-sheet, чуть тяжелее по жестам.
+    <strong>E</strong> - единственный компактный вариант, где текст постоянно видим (буква спеки),
+    ценой 12px и кастомной двухстрочной кнопки. <strong>F</strong> можно комбинировать с D/G:
+    чип показывает прогресс, иконка - полный текст.</p>
+  </section>
+</body>
+</html>

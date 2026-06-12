@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>ds-button subtext · все варианты реализации</title>
+<style>
+  :root {
+    --text-primary: #023146;
+    --text-secondary: #6b7388;
+    --border-default: #dce1ea;
+    --good: #1d7a2c;
+    --bad: #db1f1f;
+    --info: #1d4ed8;
+  }
+  body {
+    font: 14px/1.5 'Poppins', system-ui, sans-serif;
+    color: var(--text-primary);
+    background: #f8fafc;
+    margin: 0; padding: 40px;
+  }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  .lede { color: var(--text-secondary); max-width: 940px; margin: 0 0 28px; }
+  section {
+    margin-bottom: 28px; background: #fff;
+    border: 1px solid var(--border-default); border-radius: 12px; padding: 20px 24px;
+  }
+  h2 { font-size: 15px; margin: 0 0 2px; display: flex; align-items: center; gap: 10px; }
+  .verdict { font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 999px; letter-spacing: .03em; text-transform: uppercase; }
+  .v-rejected { background: #fdecec; color: var(--bad); }
+  .v-committed { background: #eff6ff; color: var(--info); }
+  .v-recommended { background: #e6f6e9; color: var(--good); }
+  .v-possible { background: #f1f4f9; color: #5b667a; }
+  .note { color: var(--text-secondary); font-size: 13px; margin: 4px 0 14px; max-width: 900px; }
+  .cols { display: flex; gap: 16px; flex-wrap: wrap; align-items: stretch; }
+  .col { flex: 1 1 380px; min-width: 340px; }
+  .col h4 { font-size: 11px; margin: 0 0 6px; color: #9ba3b4; letter-spacing: .05em; text-transform: uppercase; }
+  pre {
+    margin: 0; padding: 12px 14px; border-radius: 8px;
+    background: #0f1a24; color: #d7e3ee;
+    font: 12px/1.55 'Cascadia Code', Consolas, monospace;
+    overflow-x: auto; white-space: pre;
+  }
+  pre em { color: #7fd1a7; font-style: normal; }   /* selector/marker */
+  pre i  { color: #8ab8e8; font-style: normal; }   /* comment */
+  ul.pm { margin: 12px 0 0; padding: 0; list-style: none; font-size: 13px; }
+  ul.pm li { padding-left: 20px; position: relative; margin-bottom: 3px; }
+  ul.pm li.p::before { content: "+"; position: absolute; left: 4px; color: var(--good); font-weight: 700; }
+  ul.pm li.m::before { content: "-"; position: absolute; left: 4px; color: var(--bad); font-weight: 700; }
+  table { border-collapse: collapse; font-size: 12.5px; width: 100%; }
+  th, td { border: 1px solid var(--border-default); padding: 7px 10px; text-align: left; }
+  th { background: #f1f4f9; font-weight: 600; }
+  td.y { color: var(--good); font-weight: 600; }
+  td.n { color: var(--bad); font-weight: 600; }
+  .axes { background: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 12px 16px; font-size: 13px; max-width: 900px; margin-bottom: 28px; }
+</style>
+</head>
+<body>
+  <h1>ds-button subtext · все варианты реализации</h1>
+  <p class="lede">Фича одна и та же визуально: у заблокированной "Mark Truck as Completed" появляется
+  вторая строка с причиной. Ниже - все способы это устроить внутри DS, которые мы перебрали, и их цена.</p>
+
+  <div class="axes">
+    <strong>Две независимые задачи, которые решает каждый вариант:</strong><br>
+    1) <strong>Детекция</strong> - как кнопка узнаёт, что subtext есть, и переключается в колонку
+    (input / contentChild / :has() / ручной класс).<br>
+    2) <strong>Стилизация спана</strong> - спроецированный элемент несёт скоуп-атрибут потребителя,
+    стили кнопки его не видят. Достать можно только через ::ng-deep, глобальный стиль или отдать потребителю.
+  </div>
+
+  <section>
+    <h2>1 · Input-строка <span class="verdict v-committed">было закоммичено (babd8db1)</span></h2>
+    <p class="note">Спан рендерит сам компонент - никакой проекции, никакого скоуп-вопроса.</p>
+    <div class="cols">
+      <div class="col"><h4>Потребитель</h4>
+<pre>&lt;ds-button
+  [disabled]="locked()"
+  <em>[subtext]="locked() ? 'All kits must be…' : ''"</em>
+&gt;
+  Mark Truck as Completed
+&lt;/ds-button&gt;</pre></div>
+      <div class="col"><h4>Внутри DS</h4>
+<pre>readonly subtext = input&lt;string&gt;('');
+<i>// classes: subtext() ? 'has-subtext' : ''</i>
+
+&lt;ng-content/&gt;
+@if (subtext()) {
+  &lt;span class="subtext"&gt;{{ subtext() }}&lt;/span&gt;
+}</pre></div>
+    </div>
+    <ul class="pm">
+      <li class="p">Проще всех: ни проекции, ни ng-deep, ни :has - спан свой, стили обычные</li>
+      <li class="p">Детекция тривиальна (строка пустая/нет)</li>
+      <li class="m">Только плоская строка: ни иконку, ни ссылку, ни разметку в subtext не вставить</li>
+      <li class="m">Длинный текст с тернарником в атрибуте - шумно в шаблоне потребителя</li>
+      <li class="m">Не "ангулярный" способ для контента - контент принято проецировать</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>2 · Директива-маркер + contentChild <span class="verdict v-rejected">отвергнут (не хотим директиву)</span></h2>
+    <p class="note">Слот + детекция через query. Жил в дереве минут десять.</p>
+    <div class="cols">
+      <div class="col"><h4>Потребитель</h4>
+<pre>imports: [ButtonComponent, <em>ButtonSubtextDirective</em>]
+
+&lt;ds-button [disabled]="locked()"&gt;
+  Mark Truck as Completed
+  @if (locked()) {
+    &lt;span <em>dsButtonSubtext</em>&gt;All kits must be…&lt;/span&gt;
+  }
+&lt;/ds-button&gt;</pre></div>
+      <div class="col"><h4>Внутри DS</h4>
+<pre>@Directive({ selector: '[dsButtonSubtext]' })
+export class ButtonSubtextDirective {}
+
+private readonly subtext =
+  <em>contentChild(ButtonSubtextDirective)</em>;
+<i>// classes: subtext() ? 'has-subtext' : ''</i>
+<i>// scss: ::ng-deep [dsButtonSubtext] для спана</i></pre></div>
+    </div>
+    <ul class="pm">
+      <li class="p">Детекция надёжная, отслеживает @if автоматически</li>
+      <li class="p">Маркер типизирован - опечатка в атрибуте = ошибка компиляции</li>
+      <li class="m">Потребитель обязан импортировать директиву в каждый компонент</li>
+      <li class="m">Целый публичный класс в API ради пустого маркера</li>
+      <li class="m">::ng-deep для стилизации спана всё равно остаётся</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>3 · Слот + :has(::ng-deep) в стилях компонента <span class="verdict v-committed">закоммичено (f667950, текущий HEAD)</span></h2>
+    <p class="note">Ноль TypeScript: select-слот проецирует, :has() детектит, ::ng-deep пробивает скоуп.</p>
+    <div class="cols">
+      <div class="col"><h4>Потребитель</h4>
+<pre>&lt;ds-button [disabled]="locked()"&gt;
+  Mark Truck as Completed
+  @if (locked()) {
+    &lt;span <em>dsButtonSubtext</em>&gt;All kits must be…&lt;/span&gt;
+  }
+&lt;/ds-button&gt;</pre></div>
+      <div class="col"><h4>Внутри DS (button.component.scss)</h4>
+<pre>&lt;ng-content/&gt;
+&lt;ng-content select="[dsButtonSubtext]"/&gt;
+
+&:has(<em>::ng-deep</em> [dsButtonSubtext]) {
+  flex-direction: column; height: auto; …
+  <em>::ng-deep</em> [dsButtonSubtext] { font: …; }
+  &[disabled] <em>::ng-deep</em> [dsButtonSubtext] { color: …; }
+}</pre></div>
+    </div>
+    <ul class="pm">
+      <li class="p">Ноль TS, ноль импортов у потребителя, условие в одном месте</li>
+      <li class="p">Стили кнопки и subtext живут в одном файле</li>
+      <li class="m">::ng-deep на каждом селекторе, включая аргумент :has() - выглядит страшно</li>
+      <li class="m">::ng-deep "deprecated since forever" - каждое использование надо оправдывать</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>4 · Слот + глобальный партиал DS <span class="verdict v-recommended">рекомендую (в рабочем дереве)</span></h2>
+    <p class="note">Те же селекторы, но в styles/_button-subtext.scss - там нет инкапсуляции, ::ng-deep не нужен.
+    Прецедент в DS уже есть: _dropdown-overlay.scss и _toast-overlay.scss глобальные ровно по той же причине.</p>
+    <div class="cols">
+      <div class="col"><h4>Потребитель (идентично 3)</h4>
+<pre>&lt;ds-button [disabled]="locked()"&gt;
+  Mark Truck as Completed
+  @if (locked()) {
+    &lt;span <em>dsButtonSubtext</em>&gt;All kits must be…&lt;/span&gt;
+  }
+&lt;/ds-button&gt;</pre></div>
+      <div class="col"><h4>Внутри DS (styles/_button-subtext.scss)</h4>
+<pre><i>// глобальный, как _dropdown-overlay.scss</i>
+<em>ds-button .button:has([dsButtonSubtext])</em> {
+  flex-direction: column; height: auto;
+  min-height: var(--hit-cozy); …
+  [dsButtonSubtext] { font: …; }
+  &[disabled] [dsButtonSubtext] { color: …; }
+}
+<i>// ds.scss: @forward 'button-subtext';</i></pre></div>
+    </div>
+    <ul class="pm">
+      <li class="p">Всё из варианта 3, но селекторы чистые - ни одного ::ng-deep</li>
+      <li class="p">Прецедентный паттерн DS, приложения получают через существующий @use 'styles/ds'</li>
+      <li class="m">Стили кнопки разъезжаются по двум файлам (смягчено комментарием-указателем)</li>
+      <li class="m">Глобальный селектор обходит инкапсуляцию - дисциплина только через неймспейс ds-button</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>5 · Класс на host + ручная синхронизация <span class="verdict v-possible">возможен, не делали</span></h2>
+    <p class="note">Детекция руками: потребитель сам говорит кнопке "ты двухстрочная".</p>
+    <div class="cols">
+      <div class="col"><h4>Потребитель</h4>
+<pre>&lt;ds-button
+  [disabled]="locked()"
+  <em>[class.with-subtext]="locked()"</em>  <i>// условие #1</i>
+&gt;
+  Mark Truck as Completed
+  @if (<em>locked()</em>) {                <i>// условие #2</i>
+    &lt;span dsButtonSubtext&gt;All kits must be…&lt;/span&gt;
+  }
+&lt;/ds-button&gt;</pre></div>
+      <div class="col"><h4>Внутри DS</h4>
+<pre>:host(<em>.with-subtext</em>) .button {
+  flex-direction: column; height: auto; …
+}
+<i>// детекция без :has, НО спан всё равно чужой:</i>
+<i>// его стили - опять ::ng-deep или глобальный</i>
+<i>// партиал. От главной проблемы не спасает.</i></pre></div>
+    </div>
+    <ul class="pm">
+      <li class="p">Детекция без :has() - работает даже в старых браузерах</li>
+      <li class="m">Одно условие в двух местах: забыл класс - кнопка с текстом но без layout, забыл @if - пустая раздутая кнопка</li>
+      <li class="m">::ng-deep / глобальный партиал для стилей спана всё равно нужен</li>
+      <li class="m">Класс на host - это контракт "потребитель знает про внутренний режим кнопки"</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>5b · Автокласс через template ref <span class="verdict v-possible">возможен, хрупкий</span></h2>
+    <p class="note">Автоматическая детекция без директивы: contentChild умеет искать по имени template
+    reference (строка = имя ref, не CSS-селектор - голый атрибут для query API невидим). Потребитель
+    помечает спан рефом, кнопка сама ставит класс.</p>
+    <div class="cols">
+      <div class="col"><h4>Потребитель</h4>
+<pre>&lt;ds-button [disabled]="locked()"&gt;
+  Mark Truck as Completed
+  @if (locked()) {
+    &lt;span <em>#dsButtonSubtext</em>&gt;All kits must be…&lt;/span&gt;
+  }
+&lt;/ds-button&gt;
+<i>// импортов нет - ref работает сам</i></pre></div>
+      <div class="col"><h4>Внутри DS</h4>
+<pre>private readonly subtext =
+  <em>contentChild('dsButtonSubtext')</em>;
+<i>// classes: subtext() ? 'has-subtext' : ''</i>
+
+<i>// ПРОБЛЕМА: #ref не оставляет следа в DOM.</i>
+<i>// Спан анонимен для CSS - стилить его можно</i>
+<i>// только по .has-subtext &gt; :last-child (хрупко)</i>
+<i>// или держать ВТОРОЙ маркер-атрибут для стилей.</i></pre></div>
+    </div>
+    <ul class="pm">
+      <li class="p">Автокласс без директивы и без импортов, отслеживает @if</li>
+      <li class="p">Детекция без :has() - не зависит от поддержки браузера</li>
+      <li class="m">Ref невидим для CSS: либо хрупкий :last-child, либо два маркера на одном спане (ref + атрибут)</li>
+      <li class="m">ng-content select по ref тоже не умеет - именной слот теряется</li>
+      <li class="m">Стили спана: всё равно ::ng-deep или глобальный партиал</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>5c · Автокласс через querySelector <span class="verdict v-rejected">отвергнут по конвенциям</span></h2>
+    <p class="note">В afterContentInit спросить у DOM, есть ли внутри [dsButtonSubtext], и поставить класс.</p>
+    <div class="cols">
+      <div class="col"><h4>Внутри DS</h4>
+<pre>ngAfterContentInit() {
+  this.hasSubtext.set(
+    !!this.host.nativeElement
+      .<em>querySelector('[dsButtonSubtext]')</em>,
+  );
+}</pre></div>
+      <div class="col"><h4>Почему нет</h4>
+<pre><i>// 1. Проектная конвенция: no querySelector,</i>
+<i>//    только ViewChild/template refs.</i>
+<i>// 2. Снимок один раз: @if потребителя меняет</i>
+<i>//    DOM позже - класс не обновится. Лечится</i>
+<i>//    только MutationObserver'ом - несоразмерно</i>
+<i>//    задаче.</i></pre></div>
+    </div>
+    <ul class="pm">
+      <li class="p">Без директивы, без :has(), маркер - тот же атрибут</li>
+      <li class="m">Нарушает правило "no querySelector"</li>
+      <li class="m">Не отслеживает @if - нужен MutationObserver, что хуже самой проблемы</li>
+      <li class="m">Стили спана: всё равно ::ng-deep или глобальный партиал</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>6 · Subtext красит сам потребитель <span class="verdict v-rejected">отвергнут концептуально</span></h2>
+    <p class="note">DS отвечает только за layout (через любую детекцию), а шрифт/цвет спана - стили страницы:
+    спан создан в её шаблоне, её scoped-стили его видят без ::ng-deep.</p>
+    <div class="cols">
+      <div class="col"><h4>Потребитель (event-kits.page.scss)</h4>
+<pre>[dsButtonSubtext] {
+  font: 500 12px/1.4 var(--font-sans);
+  color: var(--text-secondary);
+}
+<i>// …и так на каждой странице, где есть subtext</i></pre></div>
+      <div class="col"><h4>Почему нет</h4>
+<pre><i>// Каждая страница изобретает вид subtext
+// заново. DS перестаёт гарантировать
+// консистентность - ровно то, ради чего
+// DS существует.</i></pre></div>
+    </div>
+    <ul class="pm">
+      <li class="p">Технически ноль проблем со скоупом - страница красит свой элемент</li>
+      <li class="m">Вид subtext не централизован: дрейф шрифтов/цветов между страницами неизбежен</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Сводка</h2>
+    <table>
+      <tr><th></th><th>1 input</th><th>2 директива</th><th>3 :has(::ng-deep)</th><th>4 глоб. партиал</th><th>5 host-класс</th><th>5b template ref</th><th>5c querySelector</th><th>6 потребитель</th></tr>
+      <tr><td>Разметка в subtext (иконки и т.п.)</td><td class="n">нет</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="y">да</td></tr>
+      <tr><td>Ноль TS в DS</td><td class="n">нет</td><td class="n">нет</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="n">нет</td><td class="n">нет</td><td class="y">да</td></tr>
+      <tr><td>Ноль импортов у потребителя</td><td class="y">да</td><td class="n">нет</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="y">да</td></tr>
+      <tr><td>Условие в одном месте</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="n">нет</td><td class="y">да</td><td class="y">да</td><td class="y">да</td></tr>
+      <tr><td>Реагирует на @if</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="y">да*</td><td class="y">да</td><td class="n">нет</td><td class="y">да</td></tr>
+      <tr><td>Без ::ng-deep</td><td class="y">да</td><td class="n">нет</td><td class="n">нет</td><td class="y">да</td><td class="n">нет</td><td class="n">нет</td><td class="n">нет</td><td class="y">да</td></tr>
+      <tr><td>Надёжный CSS-хук на спане</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="n">нет</td><td class="y">да</td><td class="y">да</td></tr>
+      <tr><td>Вид subtext централизован в DS</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="n">нет</td></tr>
+      <tr><td>Стили кнопки в одном файле</td><td class="y">да</td><td class="y">да</td><td class="y">да</td><td class="n">нет</td><td class="n">нет</td><td class="n">нет</td><td class="n">нет</td><td class="n">нет</td></tr>
+    </table>
+    <p class="note" style="margin-top:8px">* в 5 оба условия пишет потребитель руками - реагирует, пока он не забыл одно из двух.</p>
+    <p class="note" style="margin-top:14px"><strong>Вывод:</strong> вариант 4 - единственный, где одновременно:
+    разметка в subtext возможна, TS не тронут, условие одно, ::ng-deep нет. Платим одним честным минусом -
+    стили в двух файлах, по прецеденту dropdown/toast-оверлеев.</p>
+  </section>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Field · helper-текст у заблокированной "Mark Truck as Completed"</title>
+<style>
+  :root {
+    /* pinkmoon field theme */
+    --brand: #ea4989;
+    --brand-strong: #bc4663;
+    --brand-muted: #ffbfd9;
+    --brand-on: #fff;
+    --surface-default: #fdfdfd;
+    --surface-canvas: #eeeef1;
+    --surface-disabled: #f1f4f9;
+    --text-primary: #023146;
+    --text-secondary: #718aa3;
+    --text-muted: #969ba0;
+    --text-disabled: #9ba3b4;
+    --border-default: #ebebeb;
+    --neutral-200: #dce1ea;
+    /* ds info / warning */
+    --info: #3b82f6;
+    --info-subtle: #eff6ff;
+    --info-text: #1d4ed8;
+    --warning: #f4d43a;
+    --warning-subtle: #fffbea;
+    --warning-text: #8a7400;
+  }
+  body {
+    font: 14px/1.5 'Poppins', system-ui, sans-serif;
+    color: var(--text-primary);
+    background: #f8fafc;
+    margin: 0; padding: 40px;
+  }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  .lede { color: #6b7388; max-width: 920px; margin: 0 0 28px; }
+  section { margin-bottom: 40px; }
+  h2 { font-size: 15px; margin: 0 0 4px; }
+  .note { color: #6b7388; font-size: 13px; margin: 0 0 14px; max-width: 880px; }
+  .row { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  .cell { display: flex; flex-direction: column; gap: 8px; }
+  .cell small { color: #9ba3b4; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; text-align: center; }
+
+  /* phone frame: только низ экрана event-kits */
+  .phone {
+    width: 360px;
+    border: 1px solid var(--neutral-200);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--surface-canvas);
+    box-shadow: 0 4px 16px rgb(2 49 70 / 8%);
+    position: relative;
+  }
+  .content { padding: 16px 16px 12px; display: flex; flex-direction: column; gap: 10px; }
+  .kit-card {
+    background: var(--surface-default);
+    border: 1px solid var(--border-default);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .kit-stripe { width: 4px; height: 36px; border-radius: 2px; background: #7c5cff; flex-shrink: 0; }
+  .kit-meta { flex: 1; min-width: 0; }
+  .kit-name { font-weight: 600; font-size: 13px; }
+  .kit-sku { color: var(--text-muted); font-size: 11px; }
+  .chip {
+    font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 999px; white-space: nowrap;
+  }
+  .chip.ready { background: #e6f6e9; color: #1d7a2c; }
+  .chip.transit { background: var(--warning-subtle); color: var(--warning-text); }
+
+  .bottom-bar {
+    background: var(--surface-default);
+    border-top: 1px solid var(--neutral-200);
+    padding: 12px 16px 16px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .button {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font: 600 15px/1 'Poppins', system-ui, sans-serif;
+    border: 1px solid transparent; border-radius: 8px;
+    height: 48px; width: 100%;
+  }
+  .primary { background: var(--brand); color: var(--brand-on); }
+  .secondary { background: var(--brand-muted); color: var(--brand-strong); }
+  .disabled { background: var(--surface-disabled); color: var(--text-disabled); }
+
+  /* A · ds-banner variant="info" compact (паттерн notes-card) */
+  .banner {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--info-subtle); color: var(--info-text);
+    border-left: 4px solid var(--info);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12.5px; line-height: 1.45;
+  }
+  .banner svg { flex-shrink: 0; }
+
+  /* B · плейн-текст подпись */
+  .caption {
+    color: var(--text-secondary);
+    font-size: 12px; line-height: 1.45;
+    text-align: center;
+    margin: 0;
+  }
+
+  /* C · toast по тапу */
+  .toast {
+    position: absolute; left: 16px; right: 16px; bottom: 132px;
+    background: var(--warning-subtle); color: var(--warning-text);
+    border: 1px solid #fcefa1; border-left: 4px solid var(--warning);
+    border-radius: 10px; padding: 10px 14px;
+    font-size: 12.5px; line-height: 1.45;
+    box-shadow: 0 6px 20px rgb(2 49 70 / 14%);
+    display: flex; gap: 8px; align-items: center;
+  }
+
+  .qr-ic { width: 18px; height: 18px; }
+</style>
+</head>
+<body>
+  <h1>Field · подсказка у заблокированной "Mark Truck as Completed"</h1>
+  <p class="lede">Спека 6.4 / 7.2: в disabled-состоянии кнопка должна объяснять причину -
+  <em>"All kits must be Ready to Use before marking the truck as Completed"</em>.
+  Сейчас кнопка просто серая без объяснения. На мобильном hover-tooltip невозможен,
+  поэтому текст должен быть либо постоянно видим рядом с кнопкой, либо появляться по тапу.
+  Ниже низ экрана Truck Plan (Drop Off) во всех вариантах.</p>
+
+  <section>
+    <h2>0 · Как сейчас</h2>
+    <p class="note">Кнопка заблокирована, причина нигде не объясняется.</p>
+    <div class="row">
+      <div class="cell">
+        <div class="phone">
+          <div class="content">
+            <div class="kit-card"><span class="kit-stripe"></span><span class="kit-meta"><span class="kit-name">Stage Rig A</span><br><span class="kit-sku">KIT-0231</span></span><span class="chip transit">In Transit</span></div>
+            <div class="kit-card"><span class="kit-stripe" style="background:#1d9bf0"></span><span class="kit-meta"><span class="kit-name">Lighting Set 4</span><br><span class="kit-sku">KIT-0418</span></span><span class="chip ready">Ready to Use</span></div>
+          </div>
+          <div class="bottom-bar">
+            <button class="button disabled">Mark Truck as Completed</button>
+            <button class="button primary"><svg class="qr-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM21 21h-3M21 14v3"/></svg> Scan QR Code</button>
+          </div>
+        </div>
+        <small>не понятно, почему нельзя</small>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>A · Compact info-banner над кнопкой (рекомендую)</h2>
+    <p class="note">Тот же <code>ds-banner compact</code>, которым notes-card показывает "Admin will be notified" -
+    паттерн уже знаком пользователю. Баннер рендерится только пока кнопка disabled из-за статусов китов;
+    как только все киты Ready to Use - баннер исчезает, кнопка активируется. Bottom bar сам пересчитает
+    высоту (ResizeObserver уже есть).</p>
+    <div class="row">
+      <div class="cell">
+        <div class="phone">
+          <div class="content">
+            <div class="kit-card"><span class="kit-stripe"></span><span class="kit-meta"><span class="kit-name">Stage Rig A</span><br><span class="kit-sku">KIT-0231</span></span><span class="chip transit">In Transit</span></div>
+            <div class="kit-card"><span class="kit-stripe" style="background:#1d9bf0"></span><span class="kit-meta"><span class="kit-name">Lighting Set 4</span><br><span class="kit-sku">KIT-0418</span></span><span class="chip ready">Ready to Use</span></div>
+          </div>
+          <div class="bottom-bar">
+            <div class="banner">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8h.01M12 11v5"/></svg>
+              All kits must be Ready to Use before marking the truck as Completed
+            </div>
+            <button class="button disabled">Mark Truck as Completed</button>
+            <button class="button primary"><svg class="qr-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM21 21h-3M21 14v3"/></svg> Scan QR Code</button>
+          </div>
+        </div>
+        <small>disabled + баннер</small>
+      </div>
+      <div class="cell">
+        <div class="phone">
+          <div class="content">
+            <div class="kit-card"><span class="kit-stripe"></span><span class="kit-meta"><span class="kit-name">Stage Rig A</span><br><span class="kit-sku">KIT-0231</span></span><span class="chip ready">Ready to Use</span></div>
+            <div class="kit-card"><span class="kit-stripe" style="background:#1d9bf0"></span><span class="kit-meta"><span class="kit-name">Lighting Set 4</span><br><span class="kit-sku">KIT-0418</span></span><span class="chip ready">Ready to Use</span></div>
+          </div>
+          <div class="bottom-bar">
+            <button class="button secondary">Mark Truck as Completed</button>
+            <button class="button primary"><svg class="qr-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM21 21h-3M21 14v3"/></svg> Scan QR Code</button>
+          </div>
+        </div>
+        <small>все киты готовы - баннер ушёл</small>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>B · Плейн-текст подпись над кнопкой</h2>
+    <p class="note">Маленькая muted-строка без иконки и фона. Минимум визуального шума и высоты,
+    но легко не заметить - текст конкурирует с серым цветом самой disabled-кнопки.</p>
+    <div class="row">
+      <div class="cell">
+        <div class="phone">
+          <div class="content">
+            <div class="kit-card"><span class="kit-stripe"></span><span class="kit-meta"><span class="kit-name">Stage Rig A</span><br><span class="kit-sku">KIT-0231</span></span><span class="chip transit">In Transit</span></div>
+            <div class="kit-card"><span class="kit-stripe" style="background:#1d9bf0"></span><span class="kit-meta"><span class="kit-name">Lighting Set 4</span><br><span class="kit-sku">KIT-0418</span></span><span class="chip ready">Ready to Use</span></div>
+          </div>
+          <div class="bottom-bar">
+            <p class="caption">All kits must be Ready to Use before marking the truck as Completed</p>
+            <button class="button disabled">Mark Truck as Completed</button>
+            <button class="button primary"><svg class="qr-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM21 21h-3M21 14v3"/></svg> Scan QR Code</button>
+          </div>
+        </div>
+        <small>disabled + подпись</small>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>C · Toast по тапу на заблокированную кнопку</h2>
+    <p class="note">Bottom bar не растёт - причина показывается toast'ом, когда пользователь тапает
+    по disabled-кнопке (нужна обёртка, ловящая тап, т.к. disabled не эмитит клики). Минус: скрытая
+    аффордансность - пользователь должен догадаться тапнуть по неактивной кнопке; спека же требует
+    показывать текст в disabled-состоянии, а не по действию.</p>
+    <div class="row">
+      <div class="cell">
+        <div class="phone">
+          <div class="content">
+            <div class="kit-card"><span class="kit-stripe"></span><span class="kit-meta"><span class="kit-name">Stage Rig A</span><br><span class="kit-sku">KIT-0231</span></span><span class="chip transit">In Transit</span></div>
+            <div class="kit-card"><span class="kit-stripe" style="background:#1d9bf0"></span><span class="kit-meta"><span class="kit-name">Lighting Set 4</span><br><span class="kit-sku">KIT-0418</span></span><span class="chip ready">Ready to Use</span></div>
+          </div>
+          <div class="toast">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2.5 20h19zM12 9v5M12 17.5h.01"/></svg>
+            All kits must be Ready to Use before marking the truck as Completed
+          </div>
+          <div class="bottom-bar">
+            <button class="button disabled">Mark Truck as Completed</button>
+            <button class="button primary"><svg class="qr-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM21 21h-3M21 14v3"/></svg> Scan QR Code</button>
+          </div>
+        </div>
+        <small>toast после тапа</small>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Итого</h2>
+    <p class="note"><strong>Рекомендация - A:</strong> текст постоянно видим рядом с кнопкой (как требует спека),
+    переиспользует существующий <code>ds-banner compact</code> без нового кода в DS, исчезает сам, когда
+    условие выполнено. B - запасной, если баннер покажется тяжёлым. C противоречит формулировке спеки.</p>
+  </section>
+</body>
+</html>
