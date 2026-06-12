@@ -1,63 +1,90 @@
-# Ds
+# IDS Design System
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.0.
+Angular component library, design tokens and themes for IDS Group products.
 
-## Code scaffolding
+- 45+ standalone components (buttons, forms, overlays, navigation, data display)
+- Three-tier token architecture: palette → semantic theme → geometry/typography/motion tokens
+- Bundled fonts (Mulish, JetBrains Mono) — no external font CDN required
+- Built for Angular 21, zoneless-compatible, `sideEffects: false`
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Installation
 
 ```bash
-ng generate --help
+npm install @ids-group-ltd/ds
 ```
 
-## Building
+Requires Angular `^21.2.0` (`@angular/core`, `common`, `forms`, `router`, `platform-browser`) and `@angular/cdk` as peer dependencies.
 
-To build the library, run:
+## Setup
+
+### 1. Global styles
+
+Add the package to your Sass include paths in `angular.json`:
+
+```json
+"architect": {
+  "build": {
+    "options": {
+      "stylePreprocessorOptions": {
+        "includePaths": ["node_modules/@ids-group-ltd/ds"]
+      }
+    }
+  }
+}
+```
+
+Then import the design system once at the top of your root `styles.scss`:
+
+```scss
+@use 'styles/ds';
+```
+
+This brings in the default palette, semantic theme, design tokens, fonts, reset and base typography.
+
+Advanced consumers can swap the palette/theme and keep the token layer — global side-effects (fonts, link styles, etc.) become opt-in:
+
+```scss
+@use 'themes/default/palette';
+@use 'themes/default/theme';
+@use 'styles/tokens';
+@use 'styles/fonts';
+```
+
+### 2. Components
+
+All components are standalone — import them directly:
+
+```ts
+import { Component } from '@angular/core';
+import { ButtonComponent } from '@ids-group-ltd/ds';
+
+@Component({
+  selector: 'app-example',
+  imports: [ButtonComponent],
+  template: `<ds-button variant="outline" icon="download">Export</ds-button>`,
+})
+export class ExampleComponent {}
+```
+
+## Development
+
+This repo contains the library (`src/`) and a documentation app (`ds-docs/`).
 
 ```bash
-ng build ds
+npm run build        # build the library into dist/ds
+npm start            # serve the docs app
+npm run build:docs   # build the docs app
 ```
 
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
+## Publishing
 
-### Publishing the Library
-
-Once the project is built, you can publish your library by following these steps:
-
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/ds
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Build first, then publish the `dist/ds` artifact (never the repo root):
 
 ```bash
-ng test
+npm run build
+npm publish dist/ds
 ```
 
-## Running end-to-end tests
+## License
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+UNLICENSED — proprietary to IDS Group Ltd.

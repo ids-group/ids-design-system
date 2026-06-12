@@ -7,8 +7,23 @@
     "type": "git",
     "url": "https://bitbucket.org/itband/ids-design-system.git"
   },
+  "keywords": [
+    "angular",
+    "design-system",
+    "components",
+    "ui",
+    "ids-group"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    "./styles/*": "./styles/*",
+    "./themes/*": "./themes/*"
+  },
   "scripts": {
     "ng": "ng",
+    "prepublishOnly": "node -e \"console.error('Publish from dist/ds (npm publish dist/ds), not the repo root.'); process.exit(1)\"",
     "build": "ng build ds",
     "build:dev": "ng build ds --configuration development",
     "watch": "ng build ds --watch --configuration development",
