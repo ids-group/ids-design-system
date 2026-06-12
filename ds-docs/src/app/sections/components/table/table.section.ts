@@ -184,8 +184,8 @@ interface EventRow {
         <div class="bulk-bar">
           <span class="count">3 selected</span>
           <span class="divider"></span>
-          <ds-button variant="outline" size="m"><ds-icon name="archive" [size]="14" /> Archive</ds-button>
-          <ds-button variant="outline" size="m"><ds-icon name="download" [size]="14" /> Export</ds-button>
+          <ds-button variant="outline" size="m" icon="archive">Archive</ds-button>
+          <ds-button variant="outline" size="m" icon="download">Export</ds-button>
           <span class="divider"></span>
           <ds-button variant="outline" size="m">Clear</ds-button>
         </div>
@@ -283,9 +283,7 @@ interface EventRow {
                   icon="inbox"
                   title="No records yet"
                   body="Create your first record to start tracking schedules, venues and capacity.">
-                  <ds-button actions variant="secondary" size="m">
-                    <ds-icon name="plus" [size]="14" /> New record
-                  </ds-button>
+                  <ds-button actions variant="secondary" size="m" icon="plus">New record</ds-button>
                 </ds-empty-state>
               </td>
             </tr>
@@ -344,9 +342,7 @@ interface EventRow {
                   variant="error"
                   title="Couldn't load records"
                   body="Network error — the request timed out after 30 seconds.">
-                  <ds-button actions variant="secondary" size="m">
-                    <ds-icon name="refresh" [size]="14" /> Retry
-                  </ds-button>
+                  <ds-button actions variant="secondary" size="m" icon="refresh">Retry</ds-button>
                 </ds-empty-state>
               </td>
             </tr>

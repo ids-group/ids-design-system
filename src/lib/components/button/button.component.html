@@ -6,5 +6,7 @@
   [disabled]="disabled() || loading()"
   (click)="onClick($event)"
 >
+  @if (icon(); as name) { <ds-icon [name]="name" /> }
   <ng-content></ng-content>
+  @if (trailingIcon(); as name) { <ds-icon [name]="name" /> }
 </button>

@@ -6,7 +6,6 @@ import {
   BadgeComponent,
   TabsComponent,
   TabComponent,
-  IconComponent,
   type BreadcrumbItem,
 } from 'ds';
 
@@ -20,7 +19,6 @@ import {
     BadgeComponent,
     TabsComponent,
     TabComponent,
-    IconComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   template: `
@@ -46,12 +44,8 @@ import {
             <ds-badge variant="active" [withDot]="true">Active</ds-badge>
           </div>
           <div actions>
-            <ds-button variant="outline">
-              <ds-icon name="download" [size]="14" /> Export
-            </ds-button>
-            <ds-button>
-              <ds-icon name="edit" [size]="14" /> Edit
-            </ds-button>
+            <ds-button variant="outline" icon="download">Export</ds-button>
+            <ds-button icon="edit">Edit</ds-button>
           </div>
           <div tabs>
             <ds-tabs>

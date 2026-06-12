@@ -1,9 +1,12 @@
 import { Component, ViewEncapsulation, booleanAttribute, computed, input, output } from '@angular/core';
+import { IconComponent } from '../../icons/icon.component';
+import type { IconName } from '../../icons/icons.data';
 import type { ButtonSize, ButtonType, ButtonVariant } from './button.types';
 
 @Component({
   selector: 'ds-button',
   standalone: true,
+  imports: [IconComponent],
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -22,6 +25,8 @@ export class ButtonComponent {
   /** Accessible name — forwarded to the inner <button> as aria-label. Use when
       the visible label is absent or non-descriptive. */
   readonly ariaLabel = input<string | null>(null);
+  readonly icon = input<IconName | null>(null);
+  readonly trailingIcon = input<IconName | null>(null);
   readonly pressed = output<MouseEvent>();
 
   protected readonly classes = computed(() => {

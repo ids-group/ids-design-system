@@ -20,9 +20,9 @@ import { BadgeComponent, BreadcrumbsComponent, ButtonComponent, IconComponent, P
       <div class="stage">
         <ds-page-header title="Project Alpha" subtitle="30 Apr – 3 May · North Site · 4 sub-records">
           <ng-container actions>
-            <ds-button variant="outline"><ds-icon name="archive" [size]="14" /> Archive</ds-button>
-            <ds-button variant="outline"><ds-icon name="download" [size]="14" /> Export</ds-button>
-            <ds-button><ds-icon name="plus" [size]="14" /> Add sub-record</ds-button>
+            <ds-button variant="outline" icon="archive">Archive</ds-button>
+            <ds-button variant="outline" icon="download">Export</ds-button>
+            <ds-button icon="plus">Add sub-record</ds-button>
           </ng-container>
           <ds-tabs tabs>
             <ds-tab label="Overview"><span></span></ds-tab>
@@ -41,8 +41,8 @@ import { BadgeComponent, BreadcrumbsComponent, ButtonComponent, IconComponent, P
       <div class="stage">
         <ds-page-header title="Records" [compact]="true">
           <ng-container actions>
-            <ds-button variant="outline"><ds-icon name="filter" [size]="14" /> Filters</ds-button>
-            <ds-button><ds-icon name="plus" [size]="14" /> New record</ds-button>
+            <ds-button variant="outline" icon="filter">Filters</ds-button>
+            <ds-button icon="plus">New record</ds-button>
           </ng-container>
         </ds-page-header>
         <div class="content-placeholder" aria-hidden="true">Page content area</div>
@@ -55,7 +55,7 @@ import { BadgeComponent, BreadcrumbsComponent, ButtonComponent, IconComponent, P
         <ds-page-header eyebrow="Record · 2026 Cycle" title="Project Alpha" subtitle="30 Apr – 3 May · North Site · 4 sub-records">
           <ds-breadcrumbs breadcrumbs [items]="trail" />
           <ng-container actions>
-            <ds-button><ds-icon name="plus" [size]="14" /> Add sub-record</ds-button>
+            <ds-button icon="plus">Add sub-record</ds-button>
           </ng-container>
         </ds-page-header>
         <div class="content-placeholder" aria-hidden="true">Page content area</div>
@@ -68,7 +68,7 @@ import { BadgeComponent, BreadcrumbsComponent, ButtonComponent, IconComponent, P
         <ds-page-header title="Project Alpha" subtitle="30 Apr – 3 May · North Site">
           <ds-badge title-badge variant="confirmed" [withDot]="true">Confirmed</ds-badge>
           <ng-container actions>
-            <ds-button><ds-icon name="edit" [size]="14" /> Edit</ds-button>
+            <ds-button icon="edit">Edit</ds-button>
           </ng-container>
         </ds-page-header>
         <div class="content-placeholder" aria-hidden="true">Page content area</div>
@@ -82,7 +82,7 @@ import { BadgeComponent, BreadcrumbsComponent, ButtonComponent, IconComponent, P
       <div class="stage">
         <ds-page-header title="Project Alpha" subtitle="30 Apr – 3 May · North Site" [divider]="true">
           <ng-container actions>
-            <ds-button><ds-icon name="edit" [size]="14" /> Edit</ds-button>
+            <ds-button icon="edit">Edit</ds-button>
           </ng-container>
         </ds-page-header>
         <div class="content-placeholder" aria-hidden="true">Page content area</div>

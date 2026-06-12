@@ -64,13 +64,13 @@ interface VariantSpec {
         </div>
         <div class="state-cell">
           <div class="state-cell__stage">
-            <ds-button><ds-icon name="plus" [size]="16" />New record</ds-button>
+            <ds-button icon="plus">New record</ds-button>
           </div>
           <div class="state-cell__label">With icon</div>
         </div>
         <div class="state-cell">
           <div class="state-cell__stage">
-            <ds-button variant="secondary">Filters <ds-icon name="chevronDown" [size]="14" /></ds-button>
+            <ds-button variant="secondary" trailingIcon="chevronDown">Filters</ds-button>
           </div>
           <div class="state-cell__label">Trailing chevron</div>
         </div>
@@ -162,15 +162,9 @@ interface VariantSpec {
       <h3 class="block-title t-h4">With icon</h3>
       <p class="block-desc t-s">Leading or trailing icon alongside a label. For icon-only actions use <code class="t-mono">&lt;ds-icon-button&gt;</code> (see the Icon button section).</p>
       <div class="row">
-        <ds-button>
-          <ds-icon name="plus" [size]="16" /> New record
-        </ds-button>
-        <ds-button variant="secondary">
-          Filters <ds-icon name="chevronDown" [size]="14" />
-        </ds-button>
-        <ds-button variant="outline">
-          <ds-icon name="download" [size]="16" /> Export CSV
-        </ds-button>
+        <ds-button icon="plus">New record</ds-button>
+        <ds-button variant="secondary" trailingIcon="chevronDown">Filters</ds-button>
+        <ds-button variant="outline" icon="download">Export CSV</ds-button>
       </div>
 
       <!-- ============================================================ Full width -->
