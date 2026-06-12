@@ -24,7 +24,7 @@ import { AvatarComponent, BreadcrumbsComponent, IconComponent, SearchComponent, 
           <ng-container actions>
             <button class="action" aria-label="Help"><ds-icon name="help" [size]="18" /></button>
             <button class="action" aria-label="Notifications"><ds-icon name="bell" [size]="18" /><span class="ping"></span></button>
-            <ds-avatar initials="AB" />
+            <ds-avatar initials="AB" size="sm" />
           </ng-container>
         </ds-topbar>
       </div>
@@ -37,7 +37,7 @@ import { AvatarComponent, BreadcrumbsComponent, IconComponent, SearchComponent, 
           <span title>Atlas</span>
           <ng-container actions>
             <button class="action" aria-label="Notifications"><ds-icon name="bell" [size]="18" /></button>
-            <ds-avatar initials="AB" />
+            <ds-avatar initials="AB" size="sm" />
           </ng-container>
         </ds-topbar>
       </div>
@@ -51,7 +51,7 @@ import { AvatarComponent, BreadcrumbsComponent, IconComponent, SearchComponent, 
           <ds-breadcrumbs breadcrumbs [items]="trail" />
           <ng-container actions>
             <button class="action" aria-label="Notifications"><ds-icon name="bell" [size]="18" /></button>
-            <ds-avatar initials="AB" />
+            <ds-avatar initials="AB" size="sm" />
           </ng-container>
         </ds-topbar>
       </div>
