@@ -15,6 +15,7 @@ export class TweaksPanelComponent {
   protected readonly open = signal(false);
   protected readonly density = signal<'compact' | 'cozy' | 'comfy'>('cozy');
   protected readonly brand = signal<BrandPreview>('default');
+  protected readonly neutrals = signal<'cool-gray' | 'brand'>('cool-gray');
   protected readonly primaryH = signal(218);
   protected readonly primaryS = signal(88);
   protected readonly primaryL = signal(48);
@@ -36,6 +37,14 @@ export class TweaksPanelComponent {
   protected setDensity(d: 'compact' | 'cozy' | 'comfy'): void {
     this.density.set(d);
     document.documentElement.setAttribute('data-density', d);
+  }
+  protected setNeutrals(family: 'cool-gray' | 'brand'): void {
+    this.neutrals.set(family);
+    if (family === 'brand') {
+      document.documentElement.setAttribute('data-neutrals', 'brand');
+    } else {
+      document.documentElement.removeAttribute('data-neutrals');
+    }
   }
   protected setBrand(b: BrandPreview): void {
     this.applyBrand(b);
@@ -90,6 +99,7 @@ export class TweaksPanelComponent {
     );
     document.documentElement.removeAttribute('data-density');
     this.setBrand('default');
+    this.setNeutrals('cool-gray');
     this.density.set('cozy');
     this.primaryH.set(218);
     this.primaryS.set(88);

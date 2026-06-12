@@ -20,6 +20,13 @@
         </div>
       </div>
       <div class="row">
+        <label class="label">Neutrals</label>
+        <div class="segmented">
+          <button type="button" [class.active]="neutrals() === 'cool-gray'" (click)="setNeutrals('cool-gray')">Cool gray</button>
+          <button type="button" [class.active]="neutrals() === 'brand'" (click)="setNeutrals('brand')">From brand</button>
+        </div>
+      </div>
+      <div class="row">
         <label class="label">Primary H ({{ primaryH() }}°)</label>
         <input type="range" min="0" max="360" [value]="primaryH()" (input)="setPrimaryH($any($event.target).value)" />
       </div>

@@ -13,6 +13,25 @@
 // =========================================================================
 
 :root {
+  /* Neutral family slot — semantic pointer at the active gray ramp from the
+     palette. Default: hand-drawn cool-gray. <html data-neutrals="brand">
+     (ds-docs tweaks panel) repoints it at the brand-derived brand-gray ramp,
+     where --primary-h re-tints every gray. Roles below consume --neutral-*
+     so the family switch never touches them. */
+  --neutral-0:   var(--cool-gray-0);
+  --neutral-50:  var(--cool-gray-50);
+  --neutral-100: var(--cool-gray-100);
+  --neutral-150: var(--cool-gray-150);
+  --neutral-200: var(--cool-gray-200);
+  --neutral-300: var(--cool-gray-300);
+  --neutral-400: var(--cool-gray-400);
+  --neutral-500: var(--cool-gray-500);
+  --neutral-600: var(--cool-gray-600);
+  --neutral-700: var(--cool-gray-700);
+  --neutral-800: var(--cool-gray-800);
+  --neutral-900: var(--cool-gray-900);
+  --neutral-950: var(--cool-gray-950);
+
   /* Surfaces — six-stop scale.
      · canvas    : page background
      · default   : cards, sheets, toolbars (the “paper”)
@@ -234,4 +253,22 @@
     0 0 0 3px hsla(var(--primary-h), var(--primary-s), var(--primary-l), var(--focus-field-alpha));
   --focus-field-error:
     0 0 0 3px hsla(var(--error-h), var(--error-s), var(--error-l), var(--focus-field-alpha));
+}
+
+/* Brand-derived neutrals — opt-in family switch (ds-docs tweaks panel sets
+   the attribute). Repoints the --neutral-* slot at the brand-gray ramp. */
+:root[data-neutrals='brand'] {
+  --neutral-0:   var(--brand-gray-0);
+  --neutral-50:  var(--brand-gray-50);
+  --neutral-100: var(--brand-gray-100);
+  --neutral-150: var(--brand-gray-150);
+  --neutral-200: var(--brand-gray-200);
+  --neutral-300: var(--brand-gray-300);
+  --neutral-400: var(--brand-gray-400);
+  --neutral-500: var(--brand-gray-500);
+  --neutral-600: var(--brand-gray-600);
+  --neutral-700: var(--brand-gray-700);
+  --neutral-800: var(--brand-gray-800);
+  --neutral-900: var(--brand-gray-900);
+  --neutral-950: var(--brand-gray-950);
 }

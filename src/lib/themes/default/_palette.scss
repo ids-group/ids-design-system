@@ -1,10 +1,12 @@
 // =========================================================================
 // Default palette — Tier 1 concrete colour primitives.
 //
-// This file DEFINES the colours: raw ramps (--neutral-*, --blue-*, --red-*,
-// --green-*, --yellow-*, --sky-*, --orange-*) + the HSL channels (--blue-h/s/l,
-// --red-h/s/l, --shadow-tint-h/s/l) they compose from. Tokens are named by the
-// COLOUR itself — the palette does not know what a colour is "for".
+// This file DEFINES the colours: raw ramps (--cool-gray-*, --brand-gray-*,
+// --blue-*, --red-*, --green-*, --yellow-*, --sky-*, --orange-*) + the HSL
+// channels (--blue-h/s/l, --red-h/s/l, --shadow-tint-h/s/l) they compose from.
+// Tokens are named by the COLOUR itself — the palette does not know what a
+// colour is "for". The --neutral-* FAMILY SLOT (which gray ramp is active)
+// is semantic, so it lives in the theme (_theme.scss), not here.
 //
 // The companion theme (themes/default/_theme.scss) SETS these onto semantic
 // roles (--primary → --blue-600, --error → --red-500, …). Components consume
@@ -16,21 +18,45 @@
 
 :root {
   // -----------------------------------------------------------------------
-  // Neutral ramp (13 stops)
+  // Cool gray ramp (13 stops) — hand-drawn slate-family gray. The hue drifts
+  // 210 → 227 toward the brand hue (229) as it darkens; chroma follows a
+  // designed U-curve (S 40% → 12% → 37%). Appearance name, Carbon-style.
   // -----------------------------------------------------------------------
-  --neutral-0:   #FFFFFF;
-  --neutral-50:  #F8FAFC;
-  --neutral-100: #F1F4F9;
-  --neutral-150: #E8ECF2;
-  --neutral-200: #DCE1EA;
-  --neutral-300: #C2C9D6;
-  --neutral-400: #9BA3B4;
-  --neutral-500: #6B7388;
-  --neutral-600: #4D5468;
-  --neutral-700: #353B4D;
-  --neutral-800: #232838;
-  --neutral-900: #161A28;
-  --neutral-950: #0B0E18;
+  --cool-gray-0:   #FFFFFF;
+  --cool-gray-50:  #F8FAFC;
+  --cool-gray-100: #F1F4F9;
+  --cool-gray-150: #E8ECF2;
+  --cool-gray-200: #DCE1EA;
+  --cool-gray-300: #C2C9D6;
+  --cool-gray-400: #9BA3B4;
+  --cool-gray-500: #6B7388;
+  --cool-gray-600: #4D5468;
+  --cool-gray-700: #353B4D;
+  --cool-gray-800: #232838;
+  --cool-gray-900: #161A28;
+  --cool-gray-950: #0B0E18;
+
+  // -----------------------------------------------------------------------
+  // Brand gray ramp (13 stops) — derived, M3-style: the cool-gray S/L curve
+  // and hue drift are kept, but the hue source is --neutral-h (defaults to
+  // the brand hue). Re-skinning --primary-h re-tints these grays to match
+  // the brand automatically. With the default blue brand this ramp matches
+  // cool-gray to within rounding.
+  // -----------------------------------------------------------------------
+  --neutral-h: var(--primary-h, var(--blue-h));
+  --brand-gray-0:   #FFFFFF;
+  --brand-gray-50:  hsl(calc(var(--neutral-h) - 19), 40.0%, 98.0%);
+  --brand-gray-100: hsl(calc(var(--neutral-h) - 12), 40.0%, 96.1%);
+  --brand-gray-150: hsl(calc(var(--neutral-h) - 13), 27.8%, 92.9%);
+  --brand-gray-200: hsl(calc(var(--neutral-h) - 10), 25.0%, 89.0%);
+  --brand-gray-300: hsl(calc(var(--neutral-h) - 10), 19.6%, 80.0%);
+  --brand-gray-400: hsl(calc(var(--neutral-h) - 8),  14.3%, 65.7%);
+  --brand-gray-500: hsl(calc(var(--neutral-h) - 6),  11.9%, 47.6%);
+  --brand-gray-600: hsl(calc(var(--neutral-h) - 5),  14.9%, 35.5%);
+  --brand-gray-700: hsl(calc(var(--neutral-h) - 4),  18.5%, 25.5%);
+  --brand-gray-800: hsl(calc(var(--neutral-h) - 3),  23.1%, 17.8%);
+  --brand-gray-900: hsl(calc(var(--neutral-h) - 2),  29.0%, 12.2%);
+  --brand-gray-950: hsl(calc(var(--neutral-h) - 3),  37.1%, 6.9%);
 
   // -----------------------------------------------------------------------
   // Blue — defined as HSL channels so we can compose hsla() halos and tints

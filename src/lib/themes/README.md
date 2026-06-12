@@ -6,8 +6,8 @@ Colour lives in two files here: a **palette** (defines the concrete colours) and
 
 | Tier | Lives in | Examples | Consumers |
 |---|---|---|---|
-| **Tier 1 — Palette** (defines colours) | `themes/<name>/_palette.scss` | `--blue-600`, `--neutral-0`, `--red-500`, `--blue-h/s/l`, `--shadow-tint-h/s/l` | Only the theme file |
-| **Tier 2 — Theme** (sets roles) | `themes/<name>/_theme.scss` | `--primary: var(--blue-600)`, `--text-primary`, `--surface-default`, `--success`, `--focus-ring`, `--primary-h: var(--blue-h)`, font families | Components |
+| **Tier 1 — Palette** (defines colours) | `themes/<name>/_palette.scss` | `--blue-600`, `--cool-gray-0`, `--brand-gray-500`, `--red-500`, `--blue-h/s/l`, `--shadow-tint-h/s/l` | Only the theme file |
+| **Tier 2 — Theme** (sets roles) | `themes/<name>/_theme.scss` | `--primary: var(--blue-600)`, `--text-primary`, `--surface-default`, `--success`, `--focus-ring`, `--primary-h: var(--blue-h)`, font families; the `--neutral-*` family slot (cool-gray by default, brand-gray via `[data-neutrals="brand"]`) | Components |
 | **Tier 3 — Component / scale** | `styles/_tokens.scss` and inside `*.component.scss` | `--space-*`, `--radius-*`, `--ds-button-bg`, `--duration-fast`, `--layer-modal` | Components (their own) |
 
 **Hard rule:** components NEVER consume Tier 1 palette directly. If you write `var(--blue-600)` inside `button.component.scss`, that's a bug — introduce or reuse a Tier 2 role.
