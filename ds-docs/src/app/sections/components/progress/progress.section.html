@@ -1,0 +1,52 @@
+
+    <section id="section-progress" data-anchor="progress" class="section">
+      <div class="eyebrow t-overline">Components</div>
+      <h2 class="t-h2">Progress</h2>
+      <p class="lede t-m">
+        Horizontal progress bar. Value 0..100 for determinate. Four status variants
+        match the global colour roles, plus an indeterminate sweep for unknown duration.
+      </p>
+
+      <h3 class="block-title t-h4">Variants</h3>
+      <div class="states">
+        <div class="state">
+          <code class="t-mono state__lbl">default · 30%</code>
+          <ds-progress [value]="30" />
+        </div>
+        <div class="state">
+          <code class="t-mono state__lbl">default · 70%</code>
+          <ds-progress [value]="70" />
+        </div>
+        <div class="state">
+          <code class="t-mono state__lbl">success · 70%</code>
+          <ds-progress [value]="70" variant="success" />
+        </div>
+        <div class="state">
+          <code class="t-mono state__lbl">warn · 92%</code>
+          <ds-progress [value]="92" variant="warn" />
+        </div>
+        <div class="state">
+          <code class="t-mono state__lbl">error · 100%</code>
+          <ds-progress [value]="100" variant="error" />
+        </div>
+        <div class="state">
+          <code class="t-mono state__lbl">indeterminate</code>
+          <ds-progress variant="indeterminate" />
+        </div>
+      </div>
+
+      <h3 class="block-title t-h4">Truncation</h3>
+      <div class="trunc">
+        <div class="trunc__title">Truncation</div>
+        <ul class="trunc__list">
+          <li>
+            <span class="trunc__field">Value</span>
+            <span class="trunc__behaviour">Clamped to 0..100 in the wrapper. Pass percentages, not absolute counts.</span>
+          </li>
+          <li>
+            <span class="trunc__field">Indeterminate</span>
+            <span class="trunc__behaviour">Width input is ignored. Animation runs at --duration-loop-slow.</span>
+          </li>
+        </ul>
+      </div>
+    </section>

@@ -1,0 +1,91 @@
+:host { display: block; }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
+
+    /* ---------- Stage frame ---------- */
+    .stage {
+      margin-top: var(--space-3);
+      padding: var(--space-4);
+      background: var(--surface-canvas);
+      border-radius: var(--radius-lg);
+    }
+    .stage--frame {
+      border: var(--border-width-default) solid var(--border-divider);
+      overflow: hidden;
+      padding: 0;
+      display: inline-block;
+    }
+
+    /* ---------- States showcase ---------- */
+    .states {
+      display: grid;
+      gap: var(--space-3);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-lg);
+    }
+    .states--cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .state-cell {
+      display: flex; flex-direction: column;
+      gap: var(--space-2);
+    }
+    .state-cell__stage {
+      display: flex; align-items: stretch; justify-content: stretch;
+      padding: var(--space-3);
+      min-height: 64px;
+      background: var(--surface-default);
+      border: var(--border-width-default) solid var(--border-default);
+      border-radius: var(--radius-md);
+    }
+    .state-cell__stage > * { flex: 1; min-width: 0; }
+    .state-cell__label {
+      text-align: center;
+      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    /* ---------- Truncation block ---------- */
+    .trunc {
+      margin-top: var(--space-3);
+      padding: var(--space-4);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-lg);
+    }
+    .trunc__title {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-3);
+    }
+    .trunc__list {
+      list-style: none; margin: 0; padding: 0;
+      display: flex; flex-direction: column;
+      gap: var(--space-2);
+    }
+    .trunc__list li {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: var(--space-4);
+      align-items: start;
+    }
+    .trunc__field {
+      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      color: var(--text-primary);
+    }
+    .trunc__behaviour {
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      color: var(--text-secondary);
+    }
+
+    /* State pins — force a visual state on live ds-sidenav-item by reading
+       the component's own resolvers; --focus-ring is a bare token (no --_* resolver). */
+    :host ::ng-deep .pin-hover .item { background: var(--_sidenav-item-bg-hover); color: var(--_sidenav-item-fg-hover); }
+    :host ::ng-deep .pin-focus .item { outline: none; box-shadow: var(--focus-ring); }

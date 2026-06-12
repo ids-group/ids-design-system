@@ -1,0 +1,44 @@
+:host { display: block; }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
+
+    .specimen-stage {
+      margin-top: var(--space-3);
+      padding: var(--space-6);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-lg);
+      display: flex;
+      justify-content: flex-start;
+    }
+    /* Pin width for the static specimen panel — ::ng-deep reaches into the
+       component-scoped .popover rendered by [staticPreview]. */
+    .specimen-stage ::ng-deep .popover { width: 260px; }
+
+    .demo {
+      margin-top: var(--space-3);
+      padding: var(--space-4);
+      background: var(--surface-default);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
+    }
+    .trigger-btn {
+      padding: var(--space-2) var(--space-3);
+      background: var(--surface-default);
+      border: var(--border-width-default) solid var(--border-default);
+      border-radius: var(--radius-md);
+      font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
+      color: var(--text-primary);
+      cursor: pointer;
+    }
+    .trigger-btn:hover { background: var(--surface-secondary); }
+
+    .demo--row {
+      display: flex;
+      gap: var(--space-4);
+      justify-content: space-between;
+    }
+    .demo__col { display: flex; flex-direction: column; }
+    .demo__col--end { align-items: flex-end; }

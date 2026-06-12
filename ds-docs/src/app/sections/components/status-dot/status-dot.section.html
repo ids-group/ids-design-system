@@ -1,0 +1,29 @@
+
+    <section id="section-status-dot" data-anchor="status-dot" class="section">
+      <div class="eyebrow t-overline">Components</div>
+      <h2 class="t-h2">Status dots</h2>
+      <p class="lede t-m">Tiny coloured atom paired with a label. Same palette as lifecycle badges — use when a full pill is too heavy.</p>
+
+      <h3 class="block-title t-h4">Variants</h3>
+      <div class="row">
+        <span class="status-line"><ds-status-dot status="active" /> Active</span>
+        <span class="status-line"><ds-status-dot status="warning" /> Pending</span>
+        <span class="status-line"><ds-status-dot status="error" /> Conflict</span>
+        <span class="status-line"><ds-status-dot status="planning" /> Planning</span>
+        <span class="status-line"><ds-status-dot status="confirmed" /> Confirmed</span>
+        <span class="status-line"><ds-status-dot status="completed" /> Completed</span>
+      </div>
+
+      <h3 class="block-title t-h4">Truncation</h3>
+      <div class="trunc">
+        <div class="trunc__title">
+          <ds-icon name="filter" [size]="14" /> Truncation
+        </div>
+        <ul class="trunc__list">
+          <li>
+            <span class="trunc__field">Status pill</span>
+            <span class="trunc__behaviour">No clip — lifecycle labels are fixed and short (Planning, Active, etc.).</span>
+          </li>
+        </ul>
+      </div>
+    </section>

@@ -1,0 +1,73 @@
+
+    <section id="section-search" data-anchor="search" class="section">
+      <div class="eyebrow t-overline">Components</div>
+      <h2 class="t-h2">Search</h2>
+      <p class="lede t-m">
+        Top-bar search affordance — leading magnifier icon, mid-content control, optional ⌘K keyboard hint.
+      </p>
+
+      <!-- ============================================================ Default + filled + focus states -->
+      <h3 class="block-title t-h4">Default · filled · focus</h3>
+      <p class="block-desc t-s">Three static specimens — the empty bar, a typed query, and a forced-focus visual.</p>
+      <div class="states states--cols-3">
+        <div class="state-cell">
+          <div class="state-cell__stage">
+            <ds-search placeholder="Search projects, resources, people…" />
+          </div>
+          <div class="state-cell__label">Default</div>
+        </div>
+        <div class="state-cell">
+          <div class="state-cell__stage">
+            <ds-search value="Project Alpha" />
+          </div>
+          <div class="state-cell__label">Filled</div>
+        </div>
+        <div class="state-cell">
+          <div class="state-cell__stage force-focus">
+            <ds-search placeholder="Search projects, resources, people…" />
+          </div>
+          <div class="state-cell__label">Focus</div>
+        </div>
+      </div>
+
+      <!-- ============================================================ With keyboard hint -->
+      <h3 class="block-title t-h4">With keyboard hint</h3>
+      <p class="block-desc t-s">Trailing <code>kbd</code> chip advertises the global open shortcut.</p>
+      <div class="row">
+        <ds-search class="wide" placeholder="Search projects, resources, people…" shortcut="⌘ K" />
+      </div>
+
+      <!-- ============================================================ Without leading icon -->
+      <h3 class="block-title t-h4">Without leading icon</h3>
+      <p class="block-desc t-s">Icon may be omitted when the bar is inside a section labelled "Search".</p>
+      <div class="row">
+        <ds-search class="wide" placeholder="Search projects, resources, people…" shortcut="⌘ K" [showIcon]="false" />
+      </div>
+
+      <!-- ============================================================ Compact -->
+      <h3 class="block-title t-h4">Compact</h3>
+      <p class="block-desc t-s">Narrower container for sidebar / inline placements — no kbd hint.</p>
+      <div class="row">
+        <div class="compact-shell">
+          <ds-search placeholder="Search…" />
+        </div>
+      </div>
+
+      <!-- ============================================================ Truncation -->
+      <h3 class="block-title t-h4">Truncation</h3>
+      <div class="trunc">
+        <div class="trunc__title">
+          <ds-icon name="filter" [size]="14" /> Truncation
+        </div>
+        <ul class="trunc__list">
+          <li>
+            <span class="trunc__field">Query</span>
+            <span class="trunc__behaviour">Single line, no clip while focused. Ellipsis when blurred + overflowing.</span>
+          </li>
+          <li>
+            <span class="trunc__field">Hint kbd</span>
+            <span class="trunc__behaviour">No clip — fixed glyph length.</span>
+          </li>
+        </ul>
+      </div>
+    </section>

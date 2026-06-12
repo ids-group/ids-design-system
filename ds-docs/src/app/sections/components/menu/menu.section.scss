@@ -1,0 +1,25 @@
+:host { display: block; }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); }
+
+    .stage {
+      margin-top: var(--space-3);
+      padding: var(--space-4);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-lg);
+      display: flex;
+      justify-content: center;
+    }
+    /* Width is showcase-positioning; surface styling lives in
+       <ds-menu>'s scoped CSS (component owns its surface). */
+    .stage ds-menu { width: 280px; }
+
+    code {
+      font: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-base) var(--font-mono);
+      padding: 0 var(--space-1);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-sm);
+    }
