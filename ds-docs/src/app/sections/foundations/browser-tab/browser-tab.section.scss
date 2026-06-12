@@ -1,0 +1,129 @@
+:host { display: block; }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+
+    .tab-spec {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
+      background: var(--neutral-200);
+      overflow: hidden;
+      margin-top: var(--space-3);
+
+      .row {
+        display: flex;
+        gap: var(--space-1);
+        padding: var(--space-2) var(--space-2) 0;
+      }
+
+      .tab {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-3);
+        background: var(--neutral-150);
+        border: var(--border-width-default) solid var(--border-divider);
+        border-bottom: 0;
+        border-radius: var(--radius-md) var(--radius-md) 0 0;
+        font: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
+        color: var(--text-secondary);
+        min-width: 0;
+        max-width: var(--tab-spec-maxw);
+
+        &.is-active {
+          background: var(--surface-default);
+          color: var(--text-primary);
+          font-weight: var(--font-weight-semibold);
+        }
+      }
+
+      .fav {
+        width: var(--icon-md);
+        height: var(--icon-md);
+        background: var(--primary);
+        color: var(--primary-on);
+        border-radius: var(--radius-sm);
+        display: grid;
+        place-items: center;
+        font: var(--font-weight-extrabold) var(--font-size-2xs)/1 var(--font-display);
+        flex-shrink: 0;
+        position: relative;
+
+        &.alert::after {
+          content: "";
+          position: absolute;
+          top: calc(var(--tab-spec-dot-offset) * -1);
+          right: calc(var(--tab-spec-dot-offset) * -1);
+          width: var(--space-2);
+          height: var(--space-2);
+          background: var(--error);
+          border-radius: var(--radius-pill);
+          border: var(--border-width-default) solid var(--surface-default);
+        }
+      }
+
+      .title {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+      }
+
+      .close {
+        font-size: var(--font-size-s);
+        color: var(--text-tertiary);
+        width: var(--space-4);
+        height: var(--space-4);
+        display: grid;
+        place-items: center;
+        border-radius: var(--radius-sm);
+        flex-shrink: 0;
+      }
+
+      .url {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-4);
+        background: var(--surface-default);
+        border-top: var(--border-width-default) solid var(--border-divider);
+        font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-flat) var(--font-mono);
+        color: var(--text-secondary);
+      }
+    }
+
+    .rules {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: var(--space-3) var(--space-4);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-lg);
+    }
+    .rules dt {
+      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .rules dd {
+      margin: 0;
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      color: var(--text-secondary);
+    }
+    code.t-mono {
+      font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
+      background: var(--surface-default);
+      padding: 1px var(--space-1);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+    }
+
+    @media (max-width: 720px) {
+      .rules { grid-template-columns: 1fr; }
+    }

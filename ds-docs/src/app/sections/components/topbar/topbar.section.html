@@ -1,0 +1,76 @@
+
+    <section id="section-topbar" data-anchor="topbar" class="section">
+      <div class="eyebrow t-overline">Components</div>
+      <h2 class="t-h2">Top bar</h2>
+      <p class="lede t-m">
+        Application chrome at the top of every page. Brand left, optional search or breadcrumb centre, action cluster right.
+      </p>
+
+      <!-- ============================================================ Default -->
+      <h3 class="block-title t-h4">Default</h3>
+      <p class="block-desc t-s">Full composition — brand title, centred search, action cluster with avatar.</p>
+      <div class="stage stage--frame">
+        <ds-topbar>
+          <span title>Atlas</span>
+          <ds-search search placeholder="Search records, items, people…" shortcut="⌘ K" />
+          <ng-container actions>
+            <button class="action" aria-label="Help"><ds-icon name="help" [size]="18" /></button>
+            <button class="action" aria-label="Notifications"><ds-icon name="bell" [size]="18" /><span class="ping"></span></button>
+            <ds-avatar initials="AB" size="sm" />
+          </ng-container>
+        </ds-topbar>
+      </div>
+
+      <!-- ============================================================ Minimal -->
+      <h3 class="block-title t-h4">Minimal</h3>
+      <p class="block-desc t-s">Brand + actions only. No search, no breadcrumb. Useful inside dialogs or app shells with a dedicated search route.</p>
+      <div class="stage stage--frame">
+        <ds-topbar>
+          <span title>Atlas</span>
+          <ng-container actions>
+            <button class="action" aria-label="Notifications"><ds-icon name="bell" [size]="18" /></button>
+            <ds-avatar initials="AB" size="sm" />
+          </ng-container>
+        </ds-topbar>
+      </div>
+
+      <!-- ============================================================ With breadcrumb -->
+      <h3 class="block-title t-h4">With breadcrumb</h3>
+      <p class="block-desc t-s">Breadcrumb trail anchored left next to the brand — common on deep record pages where context outweighs lookup.</p>
+      <div class="stage stage--frame">
+        <ds-topbar>
+          <span title>Atlas</span>
+          <ds-breadcrumbs breadcrumbs [items]="trail" />
+          <ng-container actions>
+            <button class="action" aria-label="Notifications"><ds-icon name="bell" [size]="18" /></button>
+            <ds-avatar initials="AB" size="sm" />
+          </ng-container>
+        </ds-topbar>
+      </div>
+
+      <!-- ============================================================ Truncation -->
+      <h3 class="block-title t-h4">Truncation</h3>
+      <div class="trunc">
+        <div class="trunc__title">
+          <ds-icon name="filter" [size]="14" /> Truncation
+        </div>
+        <ul class="trunc__list">
+          <li>
+            <span class="trunc__field">App / account label</span>
+            <span class="trunc__behaviour">Single line, ellipsis at ~20 ch. Tooltip on hover when clipped.</span>
+          </li>
+          <li>
+            <span class="trunc__field">Search input</span>
+            <span class="trunc__behaviour">Single line, no clip while focused. Placeholder ellipses if the bar shrinks.</span>
+          </li>
+          <li>
+            <span class="trunc__field">Breadcrumb segments</span>
+            <span class="trunc__behaviour">Middle segments collapse to … before the leaf clips. Leaf truncates last with a tooltip.</span>
+          </li>
+          <li>
+            <span class="trunc__field">Action icons</span>
+            <span class="trunc__behaviour">No visible label — full label lives in aria-label and tooltip-on-hover.</span>
+          </li>
+        </ul>
+      </div>
+    </section>

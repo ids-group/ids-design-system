@@ -1,0 +1,216 @@
+
+    <section id="section-charts" data-anchor="charts" class="section">
+      <div class="eyebrow t-overline">Foundations</div>
+      <h2 class="t-h2">Charts &amp; dataviz</h2>
+      <p class="lede t-m">
+        Categorical, sequential and divergent palettes. Axis / grid / legend tokens.
+        Five reference chart types with empty + loading states.
+      </p>
+
+      <h3 class="block-title t-h4">Categorical palette (8)</h3>
+      <p class="block-desc t-s">Hand-tuned for perceptual distance, not ramp position. First six pass AA against light AND dark surface-default.</p>
+      <div class="palette palette--8">
+        @for (n of cats; track n) {
+          <div class="swatch">
+            <div class="swatch__chip" [style.background]="'var(--chart-cat-' + n + ')'"></div>
+            <code class="t-mono">--chart-cat-{{ n }}</code>
+          </div>
+        }
+      </div>
+
+      <h3 class="block-title t-h4">Sequential ramp</h3>
+      <p class="block-desc t-s">Single-hue, light → dark. Use for ordinal magnitudes (e.g. utilisation %, days-until-deadline).</p>
+      <div class="palette palette--6">
+        @for (n of seqs; track n) {
+          <div class="swatch">
+            <div class="swatch__chip" [style.background]="'var(--chart-seq-' + n + ')'"></div>
+            <code class="t-mono">--chart-seq-{{ n }}</code>
+          </div>
+        }
+      </div>
+
+      <h3 class="block-title t-h4">Divergent ramp</h3>
+      <p class="block-desc t-s">Red ← neutral → green for signed values where 0 is neutral.</p>
+      <div class="palette palette--7">
+        @for (n of divs; track n) {
+          <div class="swatch">
+            <div class="swatch__chip" [style.background]="divToken(n)"></div>
+            <code class="t-mono">{{ n > 0 ? '+' + n : n }}</code>
+          </div>
+        }
+      </div>
+
+      <h3 class="block-title t-h4">Axis · grid · legend tokens</h3>
+      <table class="tbl">
+        <thead><tr><th>Token</th><th>Role</th><th>Default</th></tr></thead>
+        <tbody>
+          @for (t of axisTokens; track t.token) {
+            <tr>
+              <td><code class="t-mono">{{ t.token }}</code></td>
+              <td>{{ t.role }}</td>
+              <td>{{ t.value }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <h3 class="block-title t-h4">Reference charts</h3>
+
+      <!-- LINE -->
+      <div class="chart">
+        <div class="head">
+          <h4 class="title">Resource allocations / week</h4>
+          <span class="sub">Q3 2026</span>
+        </div>
+        <svg class="svg" [attr.viewBox]="'0 0 ' + w + ' ' + h">
+          <g class="grid">
+            @for (t of gridYs; track $index) {
+              <line [attr.x1]="padL" [attr.x2]="w - padR" [attr.y1]="t" [attr.y2]="t" />
+            }
+          </g>
+          <g class="axis">
+            <line [attr.x1]="padL" [attr.x2]="padL" [attr.y1]="padT" [attr.y2]="padT + innerH" />
+            <line [attr.x1]="padL" [attr.x2]="w - padR" [attr.y1]="padT + innerH" [attr.y2]="padT + innerH" />
+            @for (yt of yTicksLine; track yt.v) {
+              <text [attr.x]="padL - 8" [attr.y]="yt.y + 4" text-anchor="end">{{ yt.v }}</text>
+            }
+            @for (xt of xTicksLine; track xt.label) {
+              <text [attr.x]="xt.x" [attr.y]="h - 8" text-anchor="middle">{{ xt.label }}</text>
+            }
+          </g>
+          <path [attr.d]="linePath()" fill="none" stroke="var(--chart-cat-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          @for (p of linePoints(); track $index) {
+            <circle [attr.cx]="p.x" [attr.cy]="p.y" r="3" fill="var(--chart-cat-1)" />
+          }
+        </svg>
+        <div class="legend">
+          <span class="item">
+            <span class="dot" style="background: var(--chart-cat-1)"></span>
+            Allocations
+          </span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- BAR -->
+        <div class="chart">
+          <div class="head">
+            <h4 class="title">Kit out, by event</h4>
+            <span class="sub">Aug 2026</span>
+          </div>
+          <svg class="svg" [attr.viewBox]="'0 0 ' + w + ' ' + h">
+            <g class="grid">
+              @for (t of gridYs; track $index) {
+                <line [attr.x1]="padL" [attr.x2]="w - padR" [attr.y1]="t" [attr.y2]="t" />
+              }
+            </g>
+            <g class="axis">
+              <line [attr.x1]="padL" [attr.x2]="w - padR" [attr.y1]="padT + innerH" [attr.y2]="padT + innerH" />
+              @for (yt of yTicksBar; track yt.v) {
+                <text [attr.x]="padL - 8" [attr.y]="yt.y + 4" text-anchor="end">{{ yt.v }}</text>
+              }
+              @for (b of barRects(); track b.label) {
+                <text [attr.x]="b.cx" [attr.y]="h - 8" text-anchor="middle">{{ b.label }}</text>
+              }
+            </g>
+            @for (b of barRects(); track b.label) {
+              <rect [attr.x]="b.x" [attr.y]="b.y" [attr.width]="barW" [attr.height]="b.h" fill="var(--chart-cat-1)" rx="2" />
+            }
+          </svg>
+        </div>
+
+        <!-- DONUT -->
+        <div class="chart">
+          <div class="head">
+            <h4 class="title">Kit register status</h4>
+            <span class="sub">412 items</span>
+          </div>
+          <div class="donut-row">
+            <svg width="200" height="200" viewBox="0 0 200 200">
+              @for (a of donutArcs(); track a.label) {
+                <path [attr.d]="a.d" [attr.stroke]="a.c" stroke-width="22" fill="none" />
+              }
+              <text x="100" y="96" text-anchor="middle" font-size="11" fill="var(--text-tertiary)" font-family="var(--font-sans)">Total</text>
+              <text x="100" y="118" text-anchor="middle" font-size="22" font-weight="800" fill="var(--text-primary)" font-family="var(--font-sans)">412</text>
+            </svg>
+            <div class="legend donut-legend">
+              @for (s of donut; track s.label) {
+                <span class="item">
+                  <span class="dot" [style.background]="s.c"></span>
+                  {{ s.label }} <span class="donut-pct">{{ s.v }}%</span>
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STACKED -->
+      <div class="chart">
+        <div class="head">
+          <h4 class="title">Kit type mix / week</h4>
+        </div>
+        <svg class="svg" [attr.viewBox]="'0 0 ' + w + ' ' + h">
+          <g class="axis">
+            <line [attr.x1]="padL" [attr.x2]="w - padR" [attr.y1]="padT + innerH" [attr.y2]="padT + innerH" />
+            @for (s of stackBars(); track s.label) {
+              <text [attr.x]="s.cx" [attr.y]="h - 8" text-anchor="middle">{{ s.label }}</text>
+            }
+          </g>
+          @for (s of stackBars(); track s.label) {
+            <rect [attr.x]="s.x" [attr.y]="s.yA" [attr.width]="stackW" [attr.height]="s.hA" fill="var(--chart-cat-1)" />
+            <rect [attr.x]="s.x" [attr.y]="s.yB" [attr.width]="stackW" [attr.height]="s.hB" fill="var(--chart-cat-2)" />
+            <rect [attr.x]="s.x" [attr.y]="s.yC" [attr.width]="stackW" [attr.height]="s.hC" fill="var(--chart-cat-3)" />
+          }
+        </svg>
+        <div class="legend">
+          <span class="item"><span class="dot" style="background: var(--chart-cat-1)"></span>Audio</span>
+          <span class="item"><span class="dot" style="background: var(--chart-cat-2)"></span>Lighting</span>
+          <span class="item"><span class="dot" style="background: var(--chart-cat-3)"></span>Video</span>
+        </div>
+      </div>
+
+      <!-- HEATMAP -->
+      <div class="chart">
+        <div class="head">
+          <h4 class="title">Kit excess / shortage by week (divergent)</h4>
+          <span class="sub">Negative = shortage · Positive = excess</span>
+        </div>
+        <div class="heat">
+          <span></span>
+          @for (w of heatWeeks; track w) {
+            <span class="t-overline heat__col-h">{{ w }}</span>
+          }
+          @for (row of heatRows; track row; let r = $index) {
+            <span class="t-s-bold heat__row-h">{{ row }}</span>
+            @for (v of heat[r]; track $index) {
+              <div class="heat__cell"
+                   [style.background]="divToken(v)"
+                   [style.color]="v <= -2 || v >= 2 ? 'var(--neutral-0)' : 'var(--text-primary)'">
+                {{ v > 0 ? '+' + v : v }}
+              </div>
+            }
+          }
+        </div>
+      </div>
+
+      <h3 class="block-title t-h4">Empty &amp; loading states</h3>
+      <div class="grid-2">
+        <div class="chart empty">
+          <div class="head"><h4 class="title">Allocations / week</h4></div>
+          <div class="body">
+            <div>
+              <ds-icon name="chart" [size]="32" />
+              <p class="empty__msg">No data for this period.<br /><span class="t-xs">Pick a different week range.</span></p>
+            </div>
+          </div>
+        </div>
+        <div class="chart">
+          <div class="head">
+            <h4 class="title">Allocations / week</h4>
+            <span class="sub">Loading…</span>
+          </div>
+          <div class="skeleton"></div>
+        </div>
+      </div>
+    </section>

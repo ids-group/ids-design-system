@@ -1,0 +1,113 @@
+
+    <section id="section-density" data-anchor="density" class="section">
+      <div class="eyebrow t-overline">Foundations</div>
+      <h2 class="t-h2">Density</h2>
+      <p class="lede t-m">
+        Three density tiers, applied via <code class="t-mono">[data-density]</code> on a route container. They rewrite
+        hit-target and component-scoped tokens — components consume the same role tokens, so no component CSS changes.
+      </p>
+
+      <!-- ============================================================ The three tiers -->
+      <h3 class="block-title t-h4">The three tiers</h3>
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Tier</th>
+            <th>--hit-cozy</th>
+            <th>Use case</th>
+            <th>Touch / WCAG</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (t of tiers; track t.key) {
+            <tr>
+              <td><strong>{{ t.label }}</strong></td>
+              <td><code class="t-mono">{{ t.hit }}</code></td>
+              <td>{{ t.use }}</td>
+              <td>{{ t.wcag }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- ============================================================ Live comparison -->
+      <h3 class="block-title t-h4">Live comparison</h3>
+      <p class="block-desc t-s">
+        Each sandbox wraps content in a <code class="t-mono">[data-density]</code> container. The same UI renders at
+        three tiers — only the hit-target token changes.
+      </p>
+      <div class="dens-grid">
+        @for (t of tiers; track t.key) {
+          <div class="dens-sandbox" [attr.data-density]="t.key">
+            <div class="dens-sandbox__head">
+              <div class="t-overline">{{ t.label }}</div>
+              <code class="t-mono dens-sandbox__attr">data-density="{{ t.key }}"</code>
+            </div>
+            <div class="dens-sandbox__body">
+              <button type="button" class="dens-btn">Save changes</button>
+              <input class="dens-input" type="text" placeholder="Search resources…" />
+              <div class="dens-chips">
+                <span class="dens-chip">Active</span>
+                <span class="dens-chip">Pending</span>
+                <span class="dens-chip">Failed</span>
+              </div>
+              <ul class="dens-list">
+                <li>
+                  <span class="dens-list__dot"></span>
+                  <span class="dens-list__label">Project Alpha</span>
+                  <span class="t-mono dens-list__meta">42</span>
+                </li>
+                <li>
+                  <span class="dens-list__dot"></span>
+                  <span class="dens-list__label">Project Beta</span>
+                  <span class="t-mono dens-list__meta">18</span>
+                </li>
+                <li>
+                  <span class="dens-list__dot"></span>
+                  <span class="dens-list__label">Project Gamma</span>
+                  <span class="t-mono dens-list__meta">7</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- ============================================================ What density rewrites -->
+      <h3 class="block-title t-h4">What density rewrites</h3>
+      <ul class="dens-rewrites">
+        <li>Hit targets — <code class="t-mono">--hit-cozy</code></li>
+        <li>Checkbox / radio size, switch geometry</li>
+        <li>Avatar default size, badge dot size, status dot size</li>
+        <li>Sidenav width</li>
+        <li>Segmented control button height</li>
+      </ul>
+
+      <!-- ============================================================ Choosing density -->
+      <h3 class="block-title t-h4">Choosing density per screen</h3>
+      <p class="block-desc t-s">
+        Density is a <strong>screen-level decision</strong>, not user-global. The Tweaks panel exposes it for
+        prototyping — in the product, set <code class="t-mono">[data-density]</code> on the route container, not
+        on <code class="t-mono">&lt;html&gt;</code>.
+      </p>
+
+      <!-- ============================================================ Truncation -->
+      <h3 class="block-title t-h4">Truncation</h3>
+      <div class="trunc">
+        <div class="trunc__title">Truncation</div>
+        <ul class="trunc__list">
+          <li>
+            <span class="trunc__field">Sandbox label</span>
+            <span class="trunc__behaviour">Single line, ellipsis. Tier names are short by design — no wrap needed.</span>
+          </li>
+          <li>
+            <span class="trunc__field">Demo button label</span>
+            <span class="trunc__behaviour">Inherits Button truncation — single line, ellipsis on overflow.</span>
+          </li>
+          <li>
+            <span class="trunc__field">Demo list row</span>
+            <span class="trunc__behaviour">Label single line with ellipsis; trailing meta never clips.</span>
+          </li>
+        </ul>
+      </div>
+    </section>

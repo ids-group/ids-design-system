@@ -1,0 +1,79 @@
+:host { display: block; }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
+
+    /* ---------- Stage frame ---------- */
+    .stage { margin-top: var(--space-3); }
+    .stage--frame {
+      background: var(--surface-default);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    /* ---------- Inline action icon-buttons inside topbar actions slot ---------- */
+    .action {
+      position: relative;
+      width: var(--hit-min);
+      height: var(--hit-min);
+      display: grid;
+      place-items: center;
+      border: 0;
+      background: transparent;
+      border-radius: var(--radius-md);
+      color: var(--icon-default);
+      cursor: pointer;
+      transition: background var(--duration-fast) var(--ease-standard);
+
+      &:hover { background: var(--surface-secondary); color: var(--icon-strong); }
+      &:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+      .ping {
+        position: absolute;
+        top: var(--space-1-5);
+        right: var(--space-1-5);
+        width: var(--status-dot-size);
+        height: var(--status-dot-size);
+        background: var(--error);
+        border: var(--border-width-strong) solid var(--surface-default);
+        border-radius: var(--radius-pill);
+      }
+    }
+
+    /* ---------- Truncation block ---------- */
+    .trunc {
+      margin-top: var(--space-3);
+      padding: var(--space-4);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-lg);
+    }
+    .trunc__title {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-3);
+    }
+    .trunc__list {
+      list-style: none; margin: 0; padding: 0;
+      display: flex; flex-direction: column;
+      gap: var(--space-2);
+    }
+    .trunc__list li {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: var(--space-4);
+      align-items: start;
+    }
+    .trunc__field {
+      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      color: var(--text-primary);
+    }
+    .trunc__behaviour {
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      color: var(--text-secondary);
+    }
