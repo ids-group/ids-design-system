@@ -205,10 +205,12 @@
     height: var(--field-h-lg);
   }
 
-  /* Addon slots */
+  /* Addon slots. Slotted pills/icons carry the CONSUMER's scope attribute —
+     ::ng-deep is required to style them from here. */
   .addon-slot {
     display: inline-flex;
     align-items: center;
+    align-self: stretch;
     color: var(--text-tertiary);
     flex-shrink: 0;
 
@@ -216,7 +218,7 @@
   }
 
   /* Label-pill addons (e.g. "https://" url prefix) — bare icons use .addon-slot instead. */
-  .addon {
+  ::ng-deep .addon {
     display: inline-flex;
     align-items: center;
     padding: 0 var(--space-3);
@@ -239,11 +241,11 @@
   &.with-addon-right .control {
     padding-right: 0;
   }
-  &.with-addon .addon:first-child {
+  &.with-addon ::ng-deep .addon {
     border-top-left-radius: var(--_input-radius);
     border-bottom-left-radius: var(--_input-radius);
   }
-  &.with-addon-right .addon:last-child {
+  &.with-addon-right ::ng-deep .addon.right {
     border-top-right-radius: var(--_input-radius);
     border-bottom-right-radius: var(--_input-radius);
   }
