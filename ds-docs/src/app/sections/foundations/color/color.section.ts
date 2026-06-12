@@ -4,6 +4,7 @@ import {
   PageHeaderComponent,
   SidenavComponent,
   SidenavItemComponent,
+  StatComponent,
   StatusDotComponent,
   TabComponent,
   TabsComponent,
@@ -36,6 +37,7 @@ interface RampSpec {
     PageHeaderComponent,
     SidenavComponent,
     SidenavItemComponent,
+    StatComponent,
     StatusDotComponent,
     TabComponent,
     TabsComponent,
@@ -134,15 +136,11 @@ interface RampSpec {
           <code class="t-mono">&lt;ds-page-header class="eyebrow-secondary"&gt;</code>
         </div>
         <div class="demo">
-          <div class="t-overline">stat .delta.secondary</div>
-          <div class="stat-demo">
-            <div class="stat">
-              <div class="label">Forecast</div>
-              <div class="value">12.4k</div>
-              <div class="delta secondary">+8% projected</div>
-            </div>
-          </div>
-          <code class="t-mono">&lt;div class="delta secondary"&gt;</code>
+          <div class="t-overline">ds-stat deltaTone="secondary"</div>
+          <ds-stat label="Forecast" value="12.4k" [delta]="0" deltaTone="secondary">
+            <span delta>+8% projected</span>
+          </ds-stat>
+          <code class="t-mono">&lt;ds-stat deltaTone="secondary"&gt; → .delta.secondary</code>
         </div>
         <div class="demo">
           <div class="t-overline">ds-card — CSS override</div>
@@ -336,13 +334,6 @@ interface RampSpec {
     .secondary-demos .demo ds-sidenav,
     .secondary-demos .demo ds-page-header { width: 100%; }
 
-    /* Hand-rolled stat replica so we can showcase .delta.secondary
-       without adding a new typed input to ds-stat. */
-    .stat-demo .stat { background: var(--surface-default); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-lg); padding: var(--space-5); }
-    .stat-demo .label { font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans); letter-spacing: var(--letter-spacing-wider); text-transform: uppercase; color: var(--text-tertiary); margin: 0 0 var(--space-2); }
-    .stat-demo .value { font: var(--font-weight-extrabold) var(--font-size-h2)/var(--line-height-flat) var(--font-sans); letter-spacing: var(--letter-spacing-snug); color: var(--text-primary); margin: 0; white-space: nowrap; }
-    .stat-demo .delta { display: inline-flex; align-items: center; gap: var(--space-1); font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans); margin-top: var(--space-2); }
-    .stat-demo .delta.secondary { color: var(--secondary-strong); }
   `],
 })
 export class ColorSection {

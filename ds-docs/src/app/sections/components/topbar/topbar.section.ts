@@ -1,10 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { BreadcrumbsComponent, IconComponent, SearchComponent, TopBarComponent, type BreadcrumbItem } from 'ds';
+import { AvatarComponent, BreadcrumbsComponent, IconComponent, SearchComponent, TopBarComponent, type BreadcrumbItem } from 'ds';
 
 @Component({
   selector: 'section-components-topbar',
   standalone: true,
-  imports: [BreadcrumbsComponent, IconComponent, SearchComponent, TopBarComponent],
+  imports: [AvatarComponent, BreadcrumbsComponent, IconComponent, SearchComponent, TopBarComponent],
   encapsulation: ViewEncapsulation.Emulated,
   template: `
     <section id="section-topbar" data-anchor="topbar" class="section">
@@ -24,7 +24,7 @@ import { BreadcrumbsComponent, IconComponent, SearchComponent, TopBarComponent, 
           <ng-container actions>
             <button class="action" aria-label="Help"><ds-icon name="help" [size]="18" /></button>
             <button class="action" aria-label="Notifications"><ds-icon name="bell" [size]="18" /><span class="ping"></span></button>
-            <span class="avatar">AB</span>
+            <ds-avatar initials="AB" />
           </ng-container>
         </ds-topbar>
       </div>
@@ -37,7 +37,7 @@ import { BreadcrumbsComponent, IconComponent, SearchComponent, TopBarComponent, 
           <span title>Atlas</span>
           <ng-container actions>
             <button class="action" aria-label="Notifications"><ds-icon name="bell" [size]="18" /></button>
-            <span class="avatar">AB</span>
+            <ds-avatar initials="AB" />
           </ng-container>
         </ds-topbar>
       </div>
@@ -51,7 +51,7 @@ import { BreadcrumbsComponent, IconComponent, SearchComponent, TopBarComponent, 
           <ds-breadcrumbs breadcrumbs [items]="trail" />
           <ng-container actions>
             <button class="action" aria-label="Notifications"><ds-icon name="bell" [size]="18" /></button>
-            <span class="avatar">AB</span>
+            <ds-avatar initials="AB" />
           </ng-container>
         </ds-topbar>
       </div>
@@ -127,20 +127,6 @@ import { BreadcrumbsComponent, IconComponent, SearchComponent, TopBarComponent, 
         border: var(--border-width-strong) solid var(--surface-default);
         border-radius: var(--radius-pill);
       }
-    }
-
-    /* ---------- Inline avatar specimen ---------- */
-    .avatar {
-      width: var(--avatar-sm);
-      height: var(--avatar-sm);
-      border-radius: var(--radius-pill);
-      background: var(--primary-muted);
-      color: var(--primary-strong);
-      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-flat) var(--font-sans);
-      display: inline-grid;
-      place-items: center;
-      flex-shrink: 0;
-      letter-spacing: var(--letter-spacing-wide);
     }
 
     /* ---------- Truncation block ---------- */

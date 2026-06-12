@@ -19,6 +19,7 @@ export class StatComponent {
   readonly value = input.required<string | number>();
   readonly delta = input<number | null>(null);
   readonly deltaLabel = input<string>('');
+  readonly deltaTone = input<'neutral' | 'secondary' | null>(null);
   readonly caption = input<string>('');
   readonly unit = input<string>('');
   readonly variant = input<'default' | 'danger'>('default');
@@ -27,6 +28,8 @@ export class StatComponent {
   protected readonly deltaClasses = computed(() => {
     const delta = this.delta();
     if (delta === null) return '';
+    const tone = this.deltaTone();
+    if (tone) return `delta ${tone}`;
     if (delta > 0) return 'delta up';
     if (delta < 0) return 'delta down';
     return 'delta';
