@@ -23,7 +23,11 @@ export class InputComponent {
   readonly hint = input<string>('');
   readonly placeholder = input<string>('');
   readonly disabled = input<boolean>(false);
+  readonly readOnly = input(false, { transform: booleanAttribute });
   readonly invalid = input<boolean>(false);
+  readonly success = input(false, { transform: booleanAttribute });
+  readonly withAddon = input(false, { transform: booleanAttribute });
+  readonly withAddonRight = input(false, { transform: booleanAttribute });
   readonly required = input<boolean>(false);
   readonly optional = input<boolean>(false);
   readonly name = input<string | null>(null);
@@ -86,7 +90,11 @@ export class InputComponent {
     if (this.size() === 'sm') parts.push('sm');
     if (this.size() === 'lg') parts.push('lg');
     if (this.invalid()) parts.push('error');
+    else if (this.success()) parts.push('success');
     if (this.disabled()) parts.push('disabled');
+    if (this.readOnly()) parts.push('read-only');
+    if (this.withAddon()) parts.push('with-addon');
+    if (this.withAddonRight()) parts.push('with-addon-right');
     return parts.join(' ');
   });
 

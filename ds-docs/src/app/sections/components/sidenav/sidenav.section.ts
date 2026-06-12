@@ -107,7 +107,11 @@ import { IconComponent, SidenavComponent, SidenavGroupComponent, SidenavItemComp
           <div class="state-cell__label">Active / selected</div>
         </div>
         <div class="state-cell">
-          <div class="state-cell__stage"><nav class="sidenav"><a class="item disabled"><ds-icon name="calendar" [size]="20" /><span class="item-label">Records</span></a></nav></div>
+          <div class="state-cell__stage">
+            <ds-sidenav>
+              <ds-sidenav-item icon="calendar" label="Records" [disabled]="true" />
+            </ds-sidenav>
+          </div>
           <div class="state-cell__label">Disabled</div>
         </div>
         <div class="state-cell">

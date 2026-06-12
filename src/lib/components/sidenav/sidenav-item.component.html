@@ -5,12 +5,14 @@
      #content template so the inner markup isn't duplicated. -->
 @if (routerLink()) {
   <a
-    [routerLink]="routerLink()"
+    [routerLink]="disabled() ? null : routerLink()"
     routerLinkActive="active"
     #rla="routerLinkActive"
     [class]="linkClasses()"
     [attr.aria-label]="label()"
     [attr.aria-current]="rla.isActive ? 'page' : null"
+    [attr.aria-disabled]="disabled() ? 'true' : null"
+    [attr.tabindex]="disabled() ? -1 : null"
   >
     <ng-container [ngTemplateOutlet]="content" />
   </a>
@@ -20,6 +22,8 @@
     [class]="linkClasses()"
     [attr.aria-label]="label()"
     [attr.aria-current]="active() ? 'page' : null"
+    [attr.aria-disabled]="disabled() ? 'true' : null"
+    [attr.tabindex]="disabled() ? -1 : null"
   >
     <ng-container [ngTemplateOutlet]="content" />
   </a>

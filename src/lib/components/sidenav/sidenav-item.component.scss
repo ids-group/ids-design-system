@@ -98,6 +98,13 @@
   }
 
   &.active .trailing { color: currentColor; }
+
+  &.disabled {
+    color: var(--text-disabled);
+    cursor: not-allowed;
+
+    &:hover { background: unset; color: var(--text-disabled); }
+  }
 }
 
 :host-context(.sidenav.collapsed) {

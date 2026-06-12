@@ -167,6 +167,12 @@
     }
   }
 
+  &.read-only .control {
+    background: var(--surface-secondary);
+
+    input { cursor: default; }
+  }
+
   &.error {
     .control {
       background: var(--_input-bg-error);

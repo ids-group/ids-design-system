@@ -1,10 +1,9 @@
 /* ============================================================
    FIELD — global re-declaration for raw specimens.
-   Mirrors ds/src/lib/components/input/input.component.scss but as
-   a global sheet so raw <div class="field"> cells in docs render.
-   Adds variants not yet supported by ds-input (textarea inside
-   .field, floating label, prefix/suffix add-ons, success state,
-   standalone .textarea / .number stepper / .search bar / .tag).
+   Remaining raw consumers: loading spinner, dropdown/number wrapper
+   labels (modal + input section), and floating-label variant (no API).
+   Success, addon, with-addon, .textarea, .number removed — last raw
+   consumers converted to live ds-input.
    ============================================================ */
 .field {
   /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
@@ -21,7 +20,6 @@
   --_input-bg-disabled:    var(--ds-input-bg-disabled,    var(--surface-disabled));
   --_input-bg-error:       var(--ds-input-bg-error,       var(--error-subtle));
   --_input-border-error:   var(--ds-input-border-error,   var(--error));
-  --_input-border-success: var(--ds-input-border-success, var(--success));
 
   display: flex;
   flex-direction: column;
@@ -117,39 +115,9 @@
   }
   &.error .hint { color: var(--error-text); }
 
-  &.success .control { border-color: var(--_input-border-success); }
-  &.success .hint { color: var(--success-text); }
-
   /* Sizes */
   &.sm .control { height: var(--hit-min); padding: 0 var(--space-2); }
   &.lg .control { height: var(--field-h-lg); }
-
-  /* Add-ons (prefix / suffix) */
-  .addon {
-    display: inline-flex; align-items: center;
-    padding: 0 var(--space-3);
-    margin: calc(var(--field-affix-overlap) * -1);
-    background: var(--surface-secondary);
-    color: var(--text-secondary);
-    font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
-    align-self: stretch;
-    border-right: var(--border-width-default) solid var(--border-divider);
-
-    &.right {
-      border-right: 0;
-      border-left: var(--border-width-default) solid var(--border-divider);
-    }
-  }
-  &.with-addon .control { padding-left: 0; }
-  &.with-addon-right .control { padding-right: 0; }
-  &.with-addon .addon:first-child {
-    border-top-left-radius: var(--radius-md);
-    border-bottom-left-radius: var(--radius-md);
-  }
-  &.with-addon-right .addon:last-child {
-    border-top-right-radius: var(--radius-md);
-    border-bottom-right-radius: var(--radius-md);
-  }
 
   /* Floating label — label sits inside the control and moves on focus/filled. */
   &.floating .control {
@@ -166,66 +134,6 @@
     color: var(--text-secondary);
     letter-spacing: var(--letter-spacing-wide);
     pointer-events: none;
-  }
-}
-
-/* Standalone textarea (not wrapped in .control) — same border treatment. */
-.textarea {
-  width: 100%;
-  border: var(--border-width-default) solid var(--border-default);
-  border-radius: var(--radius-md);
-  padding: var(--space-3);
-  font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
-  color: var(--text-primary);
-  background: var(--surface-default);
-  min-height: var(--field-textarea-min);
-  resize: vertical;
-  outline: 0;
-  transition:
-    border-color var(--duration-fast) var(--ease-standard),
-    box-shadow var(--duration-fast) var(--ease-standard);
-
-  &:hover { border-color: var(--border-strong); }
-  &:focus { border-color: var(--primary); box-shadow: var(--focus-field); }
-}
-
-/* Number input with stacked steppers. */
-.number {
-  display: flex; align-items: stretch;
-  border: var(--border-width-default) solid var(--border-default);
-  border-radius: var(--radius-md);
-  background: var(--surface-default);
-  height: var(--hit-cozy);
-  overflow: hidden;
-
-  &:focus-within { border-color: var(--primary); box-shadow: var(--focus-field); }
-
-  input {
-    flex: 1; border: 0; outline: 0; padding: 0 var(--space-3);
-    font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
-    text-align: right;
-    background: transparent; min-width: 0;
-    appearance: textfield; -webkit-appearance: textfield;
-  }
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-
-  .steppers {
-    display: flex; flex-direction: column;
-    border-left: var(--border-width-default) solid var(--border-divider);
-  }
-  button {
-    width: var(--field-num-stepper-w);
-    flex: 1;
-    border: 0;
-    background: var(--surface-secondary);
-    color: var(--icon-default);
-    cursor: pointer;
-    display: grid; place-items: center;
-    padding: 0;
-
-    & + button { border-top: var(--border-width-default) solid var(--border-divider); }
-    &:hover { color: var(--icon-strong); }
   }
 }
 

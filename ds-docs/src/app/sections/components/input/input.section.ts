@@ -74,12 +74,8 @@ import {
           <div class="state-cell__label">Disabled</div>
         </div>
         <div class="state-cell">
-          <!-- Read-only: ds-input has no [readonly] input. Raw markup styled via _specimens.scss. -->
           <div class="state-cell__stage">
-            <div class="field">
-              <span class="label">Project ID</span>
-              <div class="control"><input value="ORD-2026-0142" readonly /></div>
-            </div>
+            <ds-input label="Project ID" value="ORD-2026-0142" [readOnly]="true" />
           </div>
           <div class="state-cell__label">Read-only</div>
         </div>
@@ -90,13 +86,8 @@ import {
           <div class="state-cell__label">Error</div>
         </div>
         <div class="state-cell">
-          <!-- Success: ds-input exposes no [success] input. Raw markup needed. -->
           <div class="state-cell__stage">
-            <div class="field success">
-              <span class="label">Slug</span>
-              <div class="control"><input value="project-alpha-2026" /></div>
-              <span class="hint">Available</span>
-            </div>
+            <ds-input label="Slug" value="project-alpha-2026" hint="Available" [success]="true" />
           </div>
           <div class="state-cell__label">Success</div>
         </div>
@@ -162,28 +153,18 @@ import {
           <div class="state-cell__label">Select · with value</div>
         </div>
         <div class="state-cell">
-          <!-- Prefix add-on: ds-input has no [with-addon] wrapper modifier. Raw markup needed. -->
           <div class="state-cell__stage">
-            <div class="field with-addon">
-              <span class="label">Site URL</span>
-              <div class="control">
-                <span class="addon">https://</span>
-                <input value="member.example.com" />
-              </div>
-            </div>
+            <ds-input label="Site URL" value="member.example.com" [withAddon]="true">
+              <span dsInputPrefix class="addon">https://</span>
+            </ds-input>
           </div>
           <div class="state-cell__label">Prefix</div>
         </div>
         <div class="state-cell">
-          <!-- Suffix add-on: ds-input has no [with-addon-right] wrapper modifier. Raw markup needed. -->
           <div class="state-cell__stage">
-            <div class="field with-addon-right">
-              <span class="label">Capacity</span>
-              <div class="control">
-                <input type="number" value="250" />
-                <span class="addon right">people</span>
-              </div>
-            </div>
+            <ds-input label="Capacity" value="250" type="number" [withAddonRight]="true">
+              <span dsInputSuffix class="addon right">people</span>
+            </ds-input>
           </div>
           <div class="state-cell__label">Suffix</div>
         </div>
@@ -215,35 +196,19 @@ import {
       <!-- ============================================================ With icon · prefix · suffix · floating -->
       <h3 class="block-title t-h4">With icon · prefix · suffix · floating</h3>
       <div class="grid-3">
-        <!-- Leading icon: ds-input has no icon slot. Raw markup needed. -->
-        <div class="field">
-          <span class="label">Search</span>
-          <div class="control">
-            <ds-icon name="search" [size]="16" />
-            <input placeholder="Search projects…" />
-          </div>
-        </div>
-        <div class="field with-addon-right">
-          <span class="label">Cap length</span>
-          <div class="control">
-            <input type="number" value="13.55" />
-            <span class="addon right">m</span>
-          </div>
-        </div>
-        <div class="field with-addon">
-          <span class="label">Site URL</span>
-          <div class="control">
-            <span class="addon">https://</span>
-            <input value="member.example.com" />
-          </div>
-        </div>
-        <div class="field with-addon-right">
-          <span class="label">Capacity</span>
-          <div class="control">
-            <input type="number" value="250" />
-            <span class="addon right">people</span>
-          </div>
-        </div>
+        <ds-input label="Search" placeholder="Search projects…">
+          <ds-icon dsInputPrefix name="search" [size]="16" />
+        </ds-input>
+        <ds-input label="Cap length" value="13.55" type="number" [withAddonRight]="true">
+          <span dsInputSuffix class="addon right">m</span>
+        </ds-input>
+        <ds-input label="Site URL" value="member.example.com" [withAddon]="true">
+          <span dsInputPrefix class="addon">https://</span>
+        </ds-input>
+        <ds-input label="Capacity" value="250" type="number" [withAddonRight]="true">
+          <span dsInputSuffix class="addon right">people</span>
+        </ds-input>
+        <!-- Floating label: ds-input has no [floating] variant. Raw markup needed. -->
         <div class="field floating">
           <div class="control">
             <span class="floating-label">Project name</span>
