@@ -76,14 +76,23 @@ npm start            # serve the docs app
 npm run build:docs   # build the docs app
 ```
 
-## Publishing
+## Releasing
 
-Build first, then publish the `dist/ds` artifact (never the repo root):
+Releases follow [SemVer](https://semver.org): `fix` → patch, new backwards-compatible
+features → minor, breaking changes (API or visual) → major. A new Angular major
+always means a new package major. See `CHANGELOG.md` for history.
+
+With a clean working tree, run one of:
 
 ```bash
-npm run build
-npm publish dist/ds
+npm run release:patch   # 0.1.0 -> 0.1.1  bugfixes
+npm run release:minor   # 0.1.0 -> 0.2.0  new components/inputs/tokens
+npm run release:major   # 0.x   -> 1.0.0  breaking changes
 ```
+
+Each bumps the version (commit + `vX.Y.Z` git tag), builds, publishes `dist/ds`
+to npm and pushes with tags. Add a `CHANGELOG.md` entry before releasing.
+Pre-releases: `npm version prerelease --preid=beta`, then `npm publish dist/ds --tag next`.
 
 ## License
 

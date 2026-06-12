@@ -24,6 +24,10 @@
   "scripts": {
     "ng": "ng",
     "prepublishOnly": "node -e \"console.error('Publish from dist/ds (npm publish dist/ds), not the repo root.'); process.exit(1)\"",
+    "release:patch": "npm version patch && npm run release:publish",
+    "release:minor": "npm version minor && npm run release:publish",
+    "release:major": "npm version major && npm run release:publish",
+    "release:publish": "npm run build && npm publish dist/ds && git push --follow-tags",
     "build": "ng build ds",
     "build:dev": "ng build ds --configuration development",
     "watch": "ng build ds --watch --configuration development",
