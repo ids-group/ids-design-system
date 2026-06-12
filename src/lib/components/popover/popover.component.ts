@@ -13,6 +13,7 @@ import {
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
+import { NgTemplateOutlet } from '@angular/common';
 import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
 import { DsStaticPreview } from '../static-preview.directive';
 
@@ -21,7 +22,7 @@ export type PopoverAlign = 'start' | 'end';
 @Component({
   selector: 'ds-popover',
   standalone: true,
-  imports: [CdkTrapFocus],
+  imports: [CdkTrapFocus, NgTemplateOutlet],
   templateUrl: './popover.component.html',
   styleUrl: './popover.component.scss',
   encapsulation: ViewEncapsulation.Emulated,

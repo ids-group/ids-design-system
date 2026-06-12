@@ -1,21 +1,25 @@
+<!-- Projected content is captured ONCE here and stamped into whichever render
+     site is active — duplicating ng-content across branches breaks projection. -->
+<ng-template #content><ng-content /></ng-template>
+
 @if (preview.staticPreview()) {
   <div
     class="popover"
     [attr.role]="panelRole()"
     [attr.aria-label]="panelLabel()"
   >
-    <ng-content></ng-content>
+    <ng-container [ngTemplateOutlet]="content" />
   </div>
-} @else {
-  <ng-template #panel>
-    <div
-      class="popover"
-      [attr.role]="panelRole()"
-      [attr.aria-label]="panelLabel()"
-      [cdkTrapFocus]="!!panelRole()"
-      [cdkTrapFocusAutoCapture]="!!panelRole()"
-    >
-      <ng-content></ng-content>
-    </div>
-  </ng-template>
 }
+
+<ng-template #panel>
+  <div
+    class="popover"
+    [attr.role]="panelRole()"
+    [attr.aria-label]="panelLabel()"
+    [cdkTrapFocus]="!!panelRole()"
+    [cdkTrapFocusAutoCapture]="!!panelRole()"
+  >
+    <ng-container [ngTemplateOutlet]="content" />
+  </div>
+</ng-template>
