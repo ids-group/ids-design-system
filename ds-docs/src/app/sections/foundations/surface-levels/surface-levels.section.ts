@@ -22,57 +22,8 @@ const SURFACES: readonly SurfaceRow[] = [
   standalone: true,
   imports: [],
   encapsulation: ViewEncapsulation.Emulated,
-  template: `
-    <section id="section-surface-levels" data-anchor="surface-levels" class="section">
-      <div class="eyebrow t-overline">Foundations</div>
-      <h2 class="t-h2">Surface levels</h2>
-      <p class="lede t-m">
-        Eight surface roles. They're not strict elevation tiers — they're contextual lanes that
-        compose. A card on the canvas can have a subtle hover lane and a muted code block inside it.
-      </p>
-
-      <div class="grid">
-        @for (s of surfaces; track s.token) {
-          <div class="cell">
-            <div class="swatch" [style.background]="'var(' + s.token + ')'"></div>
-            <div class="t-s-bold cell__name">{{ s.name }}</div>
-            <code class="t-mono cell__tok">{{ s.token }}</code>
-            <div class="t-xs cell__desc">{{ s.desc }}</div>
-          </div>
-        }
-      </div>
-    </section>
-  `,
-  styles: [`
-    :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: var(--space-4);
-      margin-top: var(--space-6);
-    }
-    .cell { display: flex; flex-direction: column; gap: var(--space-1); }
-    .swatch {
-      height: 80px;
-      border-radius: var(--radius-lg);
-      border: var(--border-width-default) solid var(--border-divider);
-      margin-bottom: var(--space-2);
-    }
-    .cell__name { color: var(--text-primary); }
-    .cell__tok { font-size: 10px; color: var(--text-tertiary); }
-    .cell__desc { color: var(--text-secondary); margin-top: var(--space-1); line-height: 1.5; }
-
-    code.t-mono {
-      font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
-      background: var(--surface-secondary);
-      padding: 1px var(--space-1);
-      border-radius: var(--radius-sm);
-    }
-  `],
+  templateUrl: './surface-levels.section.html',
+  styleUrl: './surface-levels.section.scss',
 })
 export class SurfaceLevelsSection {
   protected readonly surfaces = SURFACES;

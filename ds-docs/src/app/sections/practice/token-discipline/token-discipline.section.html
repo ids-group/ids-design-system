@@ -1,0 +1,61 @@
+
+    <section id="section-practice-token-discipline" data-anchor="practice-token-discipline" class="section">
+      <div class="eyebrow t-overline">Practice</div>
+      <h2 class="t-h2">Token discipline</h2>
+      <p class="lede t-m">{{ lede }}</p>
+
+      <h3 class="block-title t-h4">The rule</h3>
+      <p class="block-desc t-s">
+        Every value that has a design role — colour, spacing, radius, border width, motion —
+        consumes a <code class="t-mono">var(--token)</code>. Literals
+        (<code class="t-mono">#ccc</code>, <code class="t-mono">12px</code>,
+        <code class="t-mono">200ms</code>) inside component CSS are a token gap to fix, never a
+        shortcut to take. Dark mode, density and rebrand all rely on this contract.
+      </p>
+
+      <h3 class="block-title t-h4">Comparison tiles</h3>
+      <p class="block-desc t-s">
+        The six recurring cases. Each pair shows the value a component should write next to the
+        value it should never write.
+      </p>
+      <div class="pairs">
+        @for (pair of pairs; track pair.title) {
+          <div class="pair">
+            <div class="pair__head">
+              <h4 class="t-h5">{{ pair.title }}</h4>
+              <p class="t-s muted">{{ pair.why }}</p>
+            </div>
+            <div class="pair__body">
+              <div class="tile tile--good">
+                <div class="tile__tag">
+                  <ds-icon name="check" [size]="12" /> Good
+                </div>
+                <pre class="tile__code t-mono">{{ pair.good }}</pre>
+              </div>
+              <div class="tile tile--bad">
+                <div class="tile__tag">
+                  <ds-icon name="x" [size]="12" /> Bad
+                </div>
+                <pre class="tile__code t-mono">{{ pair.bad }}</pre>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <h3 class="block-title t-h4">When a literal is justified</h3>
+      <ul class="rules">
+        <li>
+          The value has no design role — e.g. an SVG viewBox dimension or a fixed glyph size
+          owned by the asset itself.
+        </li>
+        <li>
+          A token <em>should</em> exist but doesn't yet. Promote the literal to a new semantic
+          token before merging.
+        </li>
+        <li>
+          Never: as a shortcut to skip thinking about what role the value plays. If you can't
+          name the role, the value doesn't belong in the component.
+        </li>
+      </ul>
+    </section>

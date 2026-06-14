@@ -1,0 +1,20 @@
+
+    <section id="section-surface-levels" data-anchor="surface-levels" class="section">
+      <div class="eyebrow t-overline">Foundations</div>
+      <h2 class="t-h2">Surface levels</h2>
+      <p class="lede t-m">
+        Eight surface roles. They're not strict elevation tiers — they're contextual lanes that
+        compose. A card on the canvas can have a subtle hover lane and a muted code block inside it.
+      </p>
+
+      <div class="grid">
+        @for (s of surfaces; track s.token) {
+          <div class="cell">
+            <div class="swatch" [style.background]="'var(' + s.token + ')'"></div>
+            <div class="t-s-bold cell__name">{{ s.name }}</div>
+            <code class="t-mono cell__tok">{{ s.token }}</code>
+            <div class="t-xs cell__desc">{{ s.desc }}</div>
+          </div>
+        }
+      </div>
+    </section>

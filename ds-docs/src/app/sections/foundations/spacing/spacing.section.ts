@@ -31,68 +31,8 @@ const STOPS: readonly SpacingStop[] = [
   selector: 'section-foundations-spacing',
   standalone: true,
   encapsulation: ViewEncapsulation.Emulated,
-  template: `
-    <section id="section-spacing" data-anchor="spacing" class="section">
-      <div class="eyebrow t-overline">Foundations</div>
-      <h2 class="t-h2">Spacing</h2>
-      <p class="lede t-m">
-        4-pixel base. Component padding lives at s-2 / s-3 / s-4. Page gutters at s-5 / s-6. Section breaks at s-10+.
-      </p>
-
-      <!-- ============================================================ Scale visualisation -->
-      <h3 class="block-title t-h4">Scale</h3>
-      <p class="block-desc t-s">Every <code class="t-mono">--space-*</code> token as a bar. Token name, computed pixel value, then the bar at true scale.</p>
-      <div class="scale-list">
-        @for (stop of stops; track stop.name) {
-          <div class="scale-row">
-            <code class="t-mono token-name">--space-{{ stop.name }}</code>
-            <code class="t-mono token-px">{{ stop.px }}</code>
-            <div class="bar-track">
-              <div class="bar" [style.width]="'var(--space-' + stop.name + ')'"></div>
-            </div>
-          </div>
-        }
-      </div>
-    </section>
-  `,
-  styles: [`
-    :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--space-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
-
-    .scale-list {
-      display: grid;
-      gap: var(--space-2);
-      margin-top: var(--space-4);
-    }
-    .scale-row {
-      display: grid;
-      grid-template-columns: 96px 64px 1fr;
-      gap: var(--space-4);
-      align-items: center;
-      padding: var(--space-2) var(--space-3);
-      background: var(--surface-default);
-      border: var(--border-width-default) solid var(--border-divider);
-      border-radius: var(--radius-sm);
-    }
-    .token-name { color: var(--text-secondary); }
-    .token-px { color: var(--text-tertiary); }
-    .bar-track {
-      height: 16px;
-      background: var(--surface-secondary);
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-    }
-    .bar {
-      height: 100%;
-      min-width: 1px;
-      background: var(--primary);
-      border-radius: var(--radius-sm);
-    }
-  `],
+  templateUrl: './spacing.section.html',
+  styleUrl: './spacing.section.scss',
 })
 export class SpacingSection {
   protected readonly stops = STOPS;

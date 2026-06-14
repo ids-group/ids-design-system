@@ -1,0 +1,134 @@
+
+    :host { display: block; }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
+
+    /* ---------- Scale tiles ---------- */
+    .radius-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+    }
+    .radius-tile {
+      display: grid;
+      gap: var(--space-1);
+      padding: var(--space-5);
+      min-height: 140px;
+      background: var(--surface-tint);
+      border: var(--border-width-default) solid var(--border-default);
+      color: var(--text-primary);
+    }
+    .token-name { font-size: 11px; color: var(--text-secondary); }
+    .token-px { margin-top: var(--space-1); }
+    .token-desc { color: var(--text-secondary); line-height: 1.5; }
+
+    /* ---------- Applied examples grid ---------- */
+    .applied-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--space-3);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-lg);
+    }
+    .applied-cell {
+      display: flex; flex-direction: column;
+      gap: var(--space-2);
+    }
+    .applied-cell__stage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-4);
+      min-height: 96px;
+      background: var(--surface-default);
+      border: var(--border-width-default) solid var(--border-default);
+      border-radius: var(--radius-md);
+    }
+    .applied-cell__label {
+      text-align: center;
+      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-mono);
+      color: var(--text-tertiary);
+    }
+
+    /* ---------- Demo: button-group with squared middle ---------- */
+    .demo-group { display: inline-flex; }
+    .demo-group__btn {
+      height: 32px; padding: 0 var(--space-3);
+      font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
+      background: var(--surface-default);
+      color: var(--text-primary);
+      border: var(--border-width-default) solid var(--border-default);
+      cursor: default;
+    }
+    .demo-group__btn + .demo-group__btn { margin-left: calc(var(--border-width-default) * -1); }
+    .demo-group__btn--start { border-top-left-radius: var(--radius-md); border-bottom-left-radius: var(--radius-md); }
+    .demo-group__btn--mid   { border-radius: var(--radius-0); }
+    .demo-group__btn--end   { border-top-right-radius: var(--radius-md); border-bottom-right-radius: var(--radius-md); }
+
+    /* ---------- Demo: kbd ---------- */
+    .demo-kbd {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 22px;
+      padding: var(--kbd-pad-y) var(--kbd-pad-x);
+      font: var(--font-weight-medium) var(--font-size-xs)/var(--line-height-flat) var(--font-mono);
+      color: var(--text-secondary);
+      background: var(--surface-default);
+      border: var(--border-width-default) solid var(--border-default);
+      border-bottom-width: 2px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ---------- Demo: button ---------- */
+    .demo-btn {
+      height: 40px; padding: 0 var(--space-4);
+      font: var(--font-weight-semibold) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
+      color: var(--text-on-primary);
+      background: var(--primary);
+      border: 0;
+      border-radius: var(--radius-md);
+      cursor: default;
+    }
+
+    /* ---------- Demo: card ---------- */
+    .demo-card {
+      width: 160px;
+      display: grid; gap: var(--space-1);
+      padding: var(--space-4);
+      background: var(--surface-default);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+    }
+    .demo-card__head { color: var(--text-secondary); }
+
+    /* ---------- Demo: heroic surface (r-2xl) ---------- */
+    .demo-hero {
+      width: 100%;
+      display: grid; gap: var(--space-1);
+      padding: var(--space-5) var(--space-5);
+      background: var(--primary);
+      border-radius: var(--radius-2xl);
+    }
+
+    /* ---------- Demo: pill / status chip ---------- */
+    .demo-pill {
+      display: inline-flex; align-items: center;
+      padding: var(--space-1) var(--space-3);
+      font: var(--font-weight-semibold) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
+      border-radius: var(--radius-pill);
+    }
+    .demo-pill--active {
+      background: var(--status-active-bg);
+      color: var(--status-active-fg);
+    }
+    .demo-pill--planning {
+      background: var(--status-planning-bg);
+      color: var(--status-planning-fg);
+    }

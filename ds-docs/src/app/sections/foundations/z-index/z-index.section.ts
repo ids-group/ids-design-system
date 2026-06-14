@@ -24,59 +24,8 @@ const LAYERS: readonly LayerRow[] = [
   standalone: true,
   imports: [],
   encapsulation: ViewEncapsulation.Emulated,
-  template: `
-    <section id="section-z-index" data-anchor="z-index" class="section">
-      <div class="eyebrow t-overline">Foundations</div>
-      <h2 class="t-h2">Z-index</h2>
-      <p class="lede t-m">
-        One stacking contract. Components consume by name, never by raw number.
-      </p>
-
-      <table class="tbl">
-        <thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead>
-        <tbody>
-          @for (l of layers; track l.token) {
-            <tr>
-              <td><code class="t-mono">{{ l.token }}</code></td>
-              <td><code class="t-mono">{{ l.value }}</code></td>
-              <td>{{ l.use }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </section>
-  `,
-  styles: [`
-    :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
-
-    .tbl {
-      width: 100%;
-      margin-top: var(--space-6);
-      border-collapse: collapse;
-      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
-    }
-    .tbl th, .tbl td {
-      text-align: left;
-      padding: var(--space-3) var(--space-4);
-      border-bottom: var(--border-width-default) solid var(--border-divider);
-    }
-    .tbl th {
-      font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
-      letter-spacing: var(--letter-spacing-wider);
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-    }
-    code.t-mono {
-      font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
-      background: var(--surface-secondary);
-      padding: 1px var(--space-1);
-      border-radius: var(--radius-sm);
-      color: var(--text-primary);
-    }
-  `],
+  templateUrl: './z-index.section.html',
+  styleUrl: './z-index.section.scss',
 })
 export class ZIndexSection {
   protected readonly layers = LAYERS;

@@ -1,0 +1,23 @@
+
+    <section id="section-spacing" data-anchor="spacing" class="section">
+      <div class="eyebrow t-overline">Foundations</div>
+      <h2 class="t-h2">Spacing</h2>
+      <p class="lede t-m">
+        4-pixel base. Component padding lives at s-2 / s-3 / s-4. Page gutters at s-5 / s-6. Section breaks at s-10+.
+      </p>
+
+      <!-- ============================================================ Scale visualisation -->
+      <h3 class="block-title t-h4">Scale</h3>
+      <p class="block-desc t-s">Every <code class="t-mono">--space-*</code> token as a bar. Token name, computed pixel value, then the bar at true scale.</p>
+      <div class="scale-list">
+        @for (stop of stops; track stop.name) {
+          <div class="scale-row">
+            <code class="t-mono token-name">--space-{{ stop.name }}</code>
+            <code class="t-mono token-px">{{ stop.px }}</code>
+            <div class="bar-track">
+              <div class="bar" [style.width]="'var(--space-' + stop.name + ')'"></div>
+            </div>
+          </div>
+        }
+      </div>
+    </section>

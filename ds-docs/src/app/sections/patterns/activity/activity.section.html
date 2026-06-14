@@ -1,0 +1,64 @@
+
+    <section id="section-pattern-activity" data-anchor="pattern-activity" class="section">
+      <div class="eyebrow t-overline">Patterns</div>
+      <h2 class="t-h2">Activity</h2>
+      <p class="lede t-m">{{ lede }}</p>
+
+      <h3 class="block-title t-h4">Activity stream</h3>
+      <p class="block-desc t-s">
+        Vertical list of attributed events on a record. Each row: avatar, bold subject (actor +
+        verb + object), one-line body, optional inline status badge, and a relative timestamp
+        on the trailing edge.
+      </p>
+      <div class="stage">
+        <ul class="activity-list">
+          @for (entry of entries; track entry.actor + entry.time) {
+            <li class="activity">
+              <ds-avatar size="sm" [initials]="entry.initials" />
+              <div class="activity__body">
+                <p class="t-s subject">
+                  <strong>{{ entry.actor }}</strong> {{ entry.verb }}
+                  <strong>{{ entry.object }}</strong>
+                  @if (entry.badge) {
+                    <ds-badge [variant]="entry.badge.variant">{{ entry.badge.label }}</ds-badge>
+                  }
+                </p>
+                @if (entry.detail) {
+                  <p class="t-s detail">{{ entry.detail }}</p>
+                }
+              </div>
+              <span class="t-s time">{{ entry.time }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <h3 class="block-title t-h4">Empty state</h3>
+      <p class="block-desc t-s">
+        Newly created records have nothing in the log. Show a calm placeholder with a single
+        next step instead of an apologetic message.
+      </p>
+      <div class="stage">
+        <div class="empty">
+          <div class="empty__icon">
+            <ds-icon name="clock" [size]="24" />
+          </div>
+          <p class="t-m empty__title">No recent activity</p>
+          <p class="t-s empty__body">
+            Edits, status changes and allocations will appear here. Make the first change to
+            kick off the log.
+          </p>
+          <ds-button variant="outline" size="m">
+            <ds-icon name="edit" [size]="14" /> Edit record
+          </ds-button>
+        </div>
+      </div>
+
+      <h3 class="block-title t-h4">Usage</h3>
+      <ul class="rules">
+        <li>Reverse chronological — newest at the top. Don't reverse by status or actor.</li>
+        <li>One sentence per row. Multi-line detail belongs in an expandable child or a separate timeline view.</li>
+        <li>Inline badge only when the event produced an outcome (Conflict, Impact pending, Confirmed). Skip otherwise.</li>
+        <li>Empty state offers the next concrete step, not an apology.</li>
+      </ul>
+    </section>

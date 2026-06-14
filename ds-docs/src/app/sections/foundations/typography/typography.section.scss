@@ -1,0 +1,114 @@
+
+    :host { display: block; }
+    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
+    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
+    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
+    .block-title { margin-top: var(--space-8); }
+    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
+    .row { display: flex; gap: var(--space-4); align-items: stretch; flex-wrap: wrap; margin-top: var(--space-3); }
+
+    /* ---------- Type ramp ---------- */
+    .ramp {
+      margin-top: var(--space-3);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
+      background: var(--surface-default);
+      overflow: hidden;
+    }
+    .ramp__head,
+    .ramp__row {
+      display: grid;
+      grid-template-columns: 200px minmax(0, 1fr) 56px 56px 88px 140px;
+      gap: var(--space-4);
+      align-items: baseline;
+      padding: var(--space-3) var(--space-4);
+    }
+    .ramp__head {
+      color: var(--text-tertiary);
+      background: var(--surface-secondary);
+      border-bottom: var(--border-width-default) solid var(--border-divider);
+      align-items: center;
+    }
+    .ramp__row + .ramp__row { border-top: var(--border-width-default) solid var(--border-divider); }
+    .ramp__label { display: grid; gap: var(--space-0-5); min-width: 0; }
+    .ramp__cls { color: var(--text-primary); font-size: 12px; }
+    .ramp__token { color: var(--text-tertiary); font-size: 11px; }
+    .ramp__sample { color: var(--text-primary); min-width: 0; overflow-wrap: anywhere; }
+    .ramp__meta { color: var(--text-secondary); font-size: 12px; }
+
+    /* ---------- Mono family ---------- */
+    .mono-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+      margin-top: var(--space-3);
+    }
+    .mono-card {
+      display: grid;
+      gap: var(--space-2);
+      padding: var(--space-4);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-md);
+      background: var(--surface-default);
+    }
+    .mono-card__sample { color: var(--text-primary); overflow-wrap: anywhere; }
+    .mono-card__block { margin: 0; white-space: pre; overflow-x: auto; }
+
+    /* ---------- Family cards ---------- */
+    .family-card {
+      flex: 1 1 280px;
+      display: grid;
+      gap: var(--space-1);
+      padding: var(--space-5);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-md);
+      background: var(--surface-default);
+    }
+    .family-card__name { color: var(--text-primary); }
+    .family-card__tok { color: var(--text-tertiary); }
+
+    /* ---------- Truncation block ---------- */
+    .trunc {
+      margin-top: var(--space-3);
+      padding: var(--space-4);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-lg);
+    }
+    .trunc__title {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-3);
+    }
+    .trunc__list {
+      list-style: none; margin: 0; padding: 0;
+      display: flex; flex-direction: column;
+      gap: var(--space-2);
+    }
+    .trunc__list li {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: var(--space-4);
+      align-items: start;
+    }
+    .trunc__field {
+      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      color: var(--text-primary);
+    }
+    .trunc__behaviour {
+      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 960px) {
+      .ramp__head { display: none; }
+      .ramp__row {
+        grid-template-columns: 1fr;
+        gap: var(--space-2);
+        padding: var(--space-4);
+      }
+      .ramp__row + .ramp__row { border-top: var(--border-width-default) solid var(--border-divider); }
+      .mono-grid { grid-template-columns: 1fr; }
+    }
