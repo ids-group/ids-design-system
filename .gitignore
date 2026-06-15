@@ -11,6 +11,9 @@ tmp/
 coverage/
 *.tsbuildinfo
 
+# npm auth (token written at CI runtime, never committed)
+.npmrc
+
 # Angular build cache
 .angular/
 

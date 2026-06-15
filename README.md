@@ -82,17 +82,32 @@ Releases follow [SemVer](https://semver.org): `fix` → patch, new backwards-com
 features → minor, breaking changes (API or visual) → major. A new Angular major
 always means a new package major. See `CHANGELOG.md` for history.
 
-With a clean working tree, run one of:
+Publishing runs in CI (Bitbucket Pipelines): pushing a `vX.Y.Z` tag builds the
+library and publishes it to npm. To cut a release, with a clean working tree:
 
 ```bash
 npm run release:patch   # 0.1.0 -> 0.1.1  bugfixes
 npm run release:minor   # 0.1.0 -> 0.2.0  new components/inputs/tokens
 npm run release:major   # 0.x   -> 1.0.0  breaking changes
+
+git push origin main --follow-tags   # the tag push triggers CI publish
 ```
 
-Each bumps the version (commit + `vX.Y.Z` git tag), builds, publishes `dist/ds`
-to npm and pushes with tags. Add a `CHANGELOG.md` entry before releasing.
-Pre-releases: `npm version prerelease --preid=beta`, then `npm publish dist/ds --tag next`.
+Each `release:*` bumps the version and creates a `release: x.y.z` commit plus a
+`vX.Y.Z` git tag locally — it does **not** publish. The tag push to Bitbucket
+runs `bitbucket-pipelines.yml`, which builds and publishes `dist/ds`. Add a
+`CHANGELOG.md` entry before releasing.
+
+CI auth uses a Secured repository variable `NPM_TOKEN` (npm granular access
+token, read+write on `@ids-group-ltd`, "Bypass 2FA" enabled).
+
+Manual publish (fallback, requires an authenticated npm session):
+
+```bash
+npm run publish:manual
+```
+
+Pre-releases: `npm version prerelease --preid=beta`, then `npm publish ./dist/ds --tag next`.
 
 ## License
 

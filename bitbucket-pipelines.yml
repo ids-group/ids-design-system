@@ -1,0 +1,25 @@
+# Publishes @ids-group-ltd/ds to npm when a vX.Y.Z git tag is pushed.
+#
+# Requires a Secured repository variable NPM_TOKEN — an npm granular access
+# token with read+write on the @ids-group-ltd scope and "Bypass 2FA" enabled.
+# Set it under: Repository settings -> Repository variables.
+#
+# Release flow:
+#   npm run release:minor          # bumps version, commits, creates vX.Y.Z tag
+#   git push origin main --follow-tags
+#   -> this tag push triggers the pipeline below, which builds and publishes.
+
+image: node:22
+
+pipelines:
+  tags:
+    'v*':
+      - step:
+          name: Build & publish to npm
+          caches:
+            - node
+          script:
+            - npm ci
+            - npm run build
+            - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+            - npm publish ./dist/ds
