@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ButtonComponent, IconComponent } from 'ds';
+import { DocsAwaitComponent } from '../../../shared/docs-await.component';
 
 interface VariantSpec {
   readonly label: string;
@@ -9,7 +10,7 @@ interface VariantSpec {
 @Component({
   selector: 'section-components-button',
   standalone: true,
-  imports: [ButtonComponent, IconComponent],
+  imports: [ButtonComponent, DocsAwaitComponent, IconComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './button.section.html',
   styleUrl: './button.section.scss',

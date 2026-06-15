@@ -10,11 +10,13 @@ import {
   TextareaComponent,
   type DropdownOption,
 } from 'ds';
+import { DocsAwaitComponent } from '../../../shared/docs-await.component';
 
 @Component({
   selector: 'section-components-input',
   standalone: true,
   imports: [
+    DocsAwaitComponent,
     DropdownComponent,
     IconComponent,
     InputComponent,
