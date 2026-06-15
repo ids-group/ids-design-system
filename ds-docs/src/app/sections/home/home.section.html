@@ -10,10 +10,11 @@
           <code class="t-mono">_brand-&lt;client&gt;.scss</code> file (see <code class="t-mono">mm-broker/src/app/styles/_brand-manage-my.scss</code>).
         </p>
         <div class="badges">
-          <ds-badge variant="solid">v0.3</ds-badge>
-          <ds-badge variant="neutral">160+ tokens</ds-badge>
-          <ds-badge variant="neutral">36 components</ds-badge>
-          <ds-badge variant="neutral">5 patterns</ds-badge>
+          <ds-badge variant="solid">v{{ version }}</ds-badge>
+          <ds-badge variant="neutral">{{ tokenCount() ?? '…' }} tokens</ds-badge>
+          <ds-badge variant="neutral">{{ componentCount }} components</ds-badge>
+          <ds-badge variant="neutral">{{ foundationCount }} foundations</ds-badge>
+          <ds-badge variant="neutral">{{ patternCount }} patterns</ds-badge>
           <ds-badge variant="neutral">Light only</ds-badge>
         </div>
       </header>
@@ -86,7 +87,7 @@
               <div class="start-link__num">A</div>
               <div class="start-link__body">
                 <div class="start-link__title">Components</div>
-                <div class="start-link__desc">Buttons, fields, tables, banners, navigation — 36 in total.</div>
+                <div class="start-link__desc">Buttons, fields, tables, banners, navigation — {{ componentCount }} in total.</div>
               </div>
               <div class="start-link__arrow">→</div>
             </a>
