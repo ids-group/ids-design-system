@@ -9,12 +9,13 @@
   --_es-title-fg:  var(--ds-empty-state-title-fg, var(--text-primary));
   --_es-body-fg:   var(--ds-empty-state-body-fg,  var(--text-secondary));
   --_es-body-maxw: var(--ds-empty-state-body-maxw, var(--empty-body-maxw));
+  --_es-pad:       var(--ds-empty-state-pad,       var(--space-12) var(--space-6));
 
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: var(--space-12) var(--space-6);
+  padding: var(--_es-pad);
   gap: var(--space-3);
   position: relative;
 
