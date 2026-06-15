@@ -55,6 +55,45 @@
       min-width: 0;
     }
 
+    /* ---------- Stroke weight compare ---------- */
+    .stroke-compare {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      margin-top: var(--space-3);
+    }
+    .stroke-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-6);
+      padding: var(--space-3) var(--space-4);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-md);
+      background: var(--surface-default);
+      color: var(--icon-strong);
+    }
+    .stroke-row.is-default {
+      border-color: var(--primary);
+      background: var(--primary-subtle);
+    }
+    .stroke-row__label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      min-width: 120px;
+      color: var(--text-secondary);
+    }
+    .stroke-row__group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .stroke-row__group .t-caption {
+      color: var(--text-tertiary);
+      margin-left: var(--space-1);
+    }
+
     /* ---------- Truncation block ---------- */
     .trunc {
       margin-top: var(--space-3);

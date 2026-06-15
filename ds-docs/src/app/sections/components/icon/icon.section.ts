@@ -34,4 +34,7 @@ const SAMPLES: readonly IconName[] = [
 export class IconSection {
   protected readonly sizes = SIZES;
   protected readonly samples = SAMPLES;
+  protected readonly strokes = [1.5, 1.75, 2] as const;
+  protected readonly compareSizes = [16, 20, 24] as const;
+  protected readonly compareSamples: readonly IconName[] = ['search', 'settings', 'bell', 'chart', 'edit', 'truck'];
 }

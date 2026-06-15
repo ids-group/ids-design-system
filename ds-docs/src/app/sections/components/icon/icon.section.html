@@ -22,6 +22,33 @@
         }
       </div>
 
+      <!-- ============================================================ Stroke weight -->
+      <h3 class="block-title t-h4">Stroke weight</h3>
+      <p class="block-desc t-s">
+        Same glyphs at <code class="t-mono">stroke</code> 1.5 / 1.75 / 2, each across 16 / 20 / 24px.
+        Default is <code class="t-mono">1.75</code>. Pick the weight that reads best against text at small sizes.
+      </p>
+      <div class="stroke-compare">
+        @for (s of strokes; track s) {
+          <div class="stroke-row" [class.is-default]="s === 1.75">
+            <div class="stroke-row__label">
+              <code class="t-mono">stroke {{ s }}</code>
+              @if (s === 1.75) {
+                <span class="t-caption">default</span>
+              }
+            </div>
+            @for (px of compareSizes; track px) {
+              <div class="stroke-row__group">
+                @for (name of compareSamples; track name) {
+                  <ds-icon [name]="name" [size]="px" [stroke]="s" />
+                }
+                <span class="t-caption">{{ px }}px</span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
       <!-- ============================================================ Sample names -->
       <h3 class="block-title t-h4">Sample names</h3>
       <p class="block-desc t-s">The library is broader; these are the most common app glyphs. See <a class="link" href="#section-icons">Foundations · Icons</a> for the full library.</p>
