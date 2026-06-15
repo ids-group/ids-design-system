@@ -50,17 +50,6 @@ definitions:
       path: dist/ds
 
   steps:
-    # report-only while the repo carries pre-existing lint debt; the build step
-    # is the hard gate. Flip to blocking (drop the arg) once the codebase is clean.
-    - step: &lint
-        name: Lint (format + stylelint + eslint, report-only)
-        caches:
-          - npm
-          - bun-bin
-          - bun-cache
-        script:
-          - sh infrastructure/scripts/lint.sh report-only
-
     - step: &build
         name: Build library + docs
         caches:
@@ -73,12 +62,6 @@ definitions:
           - sh infrastructure/scripts/build-docs.sh
 
 pipelines:
-  pull-requests:
-    '**':
-      - parallel:
-          - step: *lint
-          - step: *build
-
   tags:
     'v*':
       - step:
@@ -95,6 +78,22 @@ pipelines:
             - npm publish ./dist/ds
 
   custom:
+    # PR validation, run on demand (Bitbucket UI "Run pipeline" or API) rather
+    # than automatically on every PR — one container builds (hard gate) and lints
+    # (report-only) in parallel. To make it automatic again, add a top-level
+    # `pull-requests:` section pointing a step at infrastructure/scripts/ci-pr.sh.
+    validate:
+      - step:
+          name: Validate (build + lint)
+          caches:
+            - npm
+            - bun-bin
+            - bun-cache
+            - angular
+            - dist-ds
+          script:
+            - sh infrastructure/scripts/ci-pr.sh
+
     # Manual deploy of the ds-docs showcase to the IDS prototypes CDN, mirroring
     # the pinkmoon prototype deploy: shared bucket ids-prototypes + CloudFront
     # E1P3IR95745IWV in eu-west-2, served under /ids-ds/ alongside /pm-admin and
