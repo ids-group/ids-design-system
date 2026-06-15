@@ -154,6 +154,15 @@
         <ds-button variant="outline" icon="download">Export CSV</ds-button>
       </div>
 
+      <!-- ============================================================ With subtext -->
+      <h3 class="block-title t-h4">With subtext</h3>
+      <p class="block-desc t-s">Project a short helper line into the <code class="t-mono">[dsButtonSubtext]</code> slot — e.g. why an action is locked. Purely structural: the button stacks into a column only when the slot has content, and the subtext inherits the button's colour (including the disabled grey).</p>
+      <div class="row">
+        <ds-button variant="primary">Mark completed<span dsButtonSubtext>Locked until truck scan</span></ds-button>
+        <ds-button variant="outline" size="lg">Continue<span dsButtonSubtext>3 items remaining</span></ds-button>
+        <ds-button [disabled]="true">Submit<span dsButtonSubtext>Resolve conflicts first</span></ds-button>
+      </div>
+
       <!-- ============================================================ Full width -->
       <h3 class="block-title t-h4">Full width</h3>
       <p class="block-desc t-s">Set <code class="t-mono">fullWidth</code> to stretch the button to its container — for mobile primary CTAs and full-bleed form submits. The host becomes block-level at 100% width.</p>
