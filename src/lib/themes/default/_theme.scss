@@ -69,7 +69,7 @@
   /* Borders */
   --border-default:    var(--neutral-200);
   --border-strong:     var(--neutral-300);
-  --border-subtle:     var(--neutral-150);
+  --border-subtitle:     var(--neutral-150);
   --border-divider:    var(--neutral-150);
   --border-inverted:   var(--neutral-700);
   --border-disabled:   var(--neutral-150);
@@ -131,7 +131,7 @@
   --primary-hover:           color-mix(in srgb, var(--primary) 88%, black);
   --primary-pressed:         color-mix(in srgb, var(--primary) 76%, black);
   --primary-selected-hover:  color-mix(in srgb, var(--primary) 88%, black);
-  --primary-subtle:          var(--blue-50);
+  --primary-subtitle:          var(--blue-50);
   --primary-muted:           var(--blue-100);
   --primary-muted-strong:    var(--blue-200);
   --primary-strong:          var(--blue-700);
@@ -150,7 +150,7 @@
   --secondary-hover:   color-mix(in srgb, var(--secondary) 88%, black);
   --secondary-pressed: color-mix(in srgb, var(--secondary) 76%, black);
   --secondary-strong:  hsl(var(--secondary-h), var(--secondary-s), calc(var(--secondary-l) - 11%));
-  --secondary-subtle:  hsl(var(--secondary-h), 100%, 97%);
+  --secondary-subtitle:  hsl(var(--secondary-h), 100%, 97%);
   --secondary-muted:   hsl(var(--secondary-h), 95%, 94%);
   --secondary-on:      var(--primary-on);
 
@@ -169,7 +169,7 @@
   --tertiary-hover:   color-mix(in srgb, var(--tertiary) 88%, black);
   --tertiary-pressed: color-mix(in srgb, var(--tertiary) 76%, black);
   --tertiary-strong:  hsl(var(--tertiary-h), var(--tertiary-s), calc(var(--tertiary-l) - 11%));
-  --tertiary-subtle:  hsl(var(--tertiary-h), 100%, 97%);
+  --tertiary-subtitle:  hsl(var(--tertiary-h), 100%, 97%);
   --tertiary-muted:   hsl(var(--tertiary-h), 95%, 94%);
   --tertiary-on:      var(--primary-on);
 
@@ -180,14 +180,14 @@
      contrast targets are tuned, not procedural. */
   --success:           var(--green-500);
   --success-hover:     color-mix(in srgb, var(--success) 88%, black);
-  --success-subtle:    var(--green-50);
+  --success-subtitle:    var(--green-50);
   --success-muted:     var(--green-100);
   --success-border:    var(--green-200);
   --success-text:      var(--green-700);
 
   --warning:           var(--yellow-400);
   --warning-hover:     color-mix(in srgb, var(--warning) 88%, black);
-  --warning-subtle:    var(--yellow-50);
+  --warning-subtitle:    var(--yellow-50);
   --warning-muted:     var(--yellow-100);
   --warning-border:    var(--yellow-200);
   --warning-text:      var(--yellow-700);
@@ -195,14 +195,14 @@
   --error:            var(--red-500);
   --error-hover:      color-mix(in srgb, var(--error) 88%, black);
   --error-pressed:    color-mix(in srgb, var(--error) 76%, black);
-  --error-subtle:     var(--red-50);
+  --error-subtitle:     var(--red-50);
   --error-muted:      var(--red-100);
   --error-border:     var(--red-200);
   --error-text:       var(--red-600);
 
   --info:              var(--sky-500);
   --info-hover:        color-mix(in srgb, var(--info) 88%, black);
-  --info-subtle:       var(--sky-50);
+  --info-subtitle:       var(--sky-50);
   --info-muted:        var(--sky-100);
   --info-border:       var(--sky-200);
   --info-text:         var(--sky-700);
@@ -217,7 +217,7 @@
      pills are unified in the Badge component to consume these tokens. */
   --status-planning-bg:   var(--neutral-150);
   --status-planning-fg:   var(--neutral-700);
-  --status-confirmed-bg:  var(--primary-subtle);
+  --status-confirmed-bg:  var(--primary-subtitle);
   --status-confirmed-fg:  var(--primary-strong);
   --status-active-bg:     var(--green-50);
   --status-active-fg:     var(--green-700);

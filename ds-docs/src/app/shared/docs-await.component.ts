@@ -19,7 +19,7 @@ import { IconComponent } from 'ds';
       padding: var(--space-1) var(--space-2-5);
       border: 1px dashed var(--warning);
       border-radius: var(--radius-pill);
-      background: var(--warning-subtle);
+      background: var(--warning-subtitle);
       color: var(--warning-text);
       font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
       letter-spacing: var(--letter-spacing-wide);

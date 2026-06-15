@@ -79,7 +79,7 @@ Components don't need any change — they consume semantic roles which automatic
 2. Open with `[data-brand="X"] { ... }`.
 3. Override:
    - **Palette HSL channels** (`--blue-h/s/l`) — for focus rings and halos that compose hsla() from channels (the theme bridges `--primary-h: var(--blue-h)`).
-   - **Blue ramp** (`--blue-50..900`) — the simplest re-skin lever. All brand-derived roles (`--primary`, `--primary-strong`, `--primary-subtle`, `--primary-muted-strong`, `--text-link`, `--surface-tint`) retint automatically from it. For a fully calibrated brand you MAY also set the `--primary-*` roles directly to hand-picked hex (when ramp derivation doesn't hit the exact stop) — see `_brand-manage-my.scss`. Leave `--primary-hover`/`--primary-pressed` to the DS `color-mix()` derivation.
+   - **Blue ramp** (`--blue-50..900`) — the simplest re-skin lever. All brand-derived roles (`--primary`, `--primary-strong`, `--primary-subtitle`, `--primary-muted-strong`, `--text-link`, `--surface-tint`) retint automatically from it. For a fully calibrated brand you MAY also set the `--primary-*` roles directly to hand-picked hex (when ramp derivation doesn't hit the exact stop) — see `_brand-manage-my.scss`. Leave `--primary-hover`/`--primary-pressed` to the DS `color-mix()` derivation.
    - Other roles you want to retint independently (surfaces, borders, text, success/danger ramps, secondary, etc.).
 4. Apply via `<html data-brand="X">` on the host app.
 

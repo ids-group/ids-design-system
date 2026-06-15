@@ -5,7 +5,7 @@ export const SEMANTIC_PRIMARY: readonly ColourRow[] = [
   { name: '--primary-hover',          value: 'color-mix(--primary 88%, black)',           notes: 'Hover state on brand fill.' },
   { name: '--primary-pressed',        value: 'color-mix(--primary 76%, black)',           notes: 'Active / pressed state on brand fill.' },
   { name: '--primary-selected-hover', value: 'color-mix(--primary 88%, black)',           notes: 'Hover on already-selected brand surfaces (e.g. active sidenav item hover).' },
-  { name: '--primary-subtle',         value: 'var(--blue-50)',                        notes: 'Light brand tint (active table row, date range fill).' },
+  { name: '--primary-subtitle',         value: 'var(--blue-50)',                        notes: 'Light brand tint (active table row, date range fill).' },
   { name: '--primary-muted',          value: 'var(--blue-100)',                       notes: 'Slightly stronger tint than subtle.' },
   { name: '--primary-muted-strong',   value: 'var(--blue-200)',                       notes: 'Strongest tint in the brand-muted family.' },
   { name: '--primary-strong',         value: 'var(--blue-700)',                       notes: 'Darker brand for text on brand tints.' },
@@ -17,7 +17,7 @@ export const SEMANTIC_TERTIARY: readonly ColourRow[] = [
   { name: '--tertiary-hover',   value: 'color-mix(--tertiary 88%, black)',           notes: 'Hover on tertiary fill.' },
   { name: '--tertiary-pressed', value: 'color-mix(--tertiary 76%, black)',           notes: 'Pressed tertiary fill.' },
   { name: '--tertiary-strong',  value: 'hsl(--tertiary-h, --tertiary-s, --tertiary-l - 11%)', notes: 'Darker tertiary for text on tertiary tints.' },
-  { name: '--tertiary-subtle',  value: 'hsl(--tertiary-h, 100%, 97%)',               notes: 'Light tertiary tint surface.' },
+  { name: '--tertiary-subtitle',  value: 'hsl(--tertiary-h, 100%, 97%)',               notes: 'Light tertiary tint surface.' },
   { name: '--tertiary-muted',   value: 'hsl(--tertiary-h, 95%, 94%)',                notes: 'Slightly stronger tint than subtle.' },
   { name: '--tertiary-on',      value: 'var(--primary-on)',                          notes: 'Text/icon colour ON tertiary fill.', inverted: true },
 ];
@@ -26,7 +26,7 @@ export const SEMANTIC_ERROR: readonly ColourRow[] = [
   { name: '--error',         value: 'var(--red-500)', notes: 'Destructive action fill, error border.' },
   { name: '--error-hover',   value: 'var(--red-600)', notes: 'Hover on danger fill.' },
   { name: '--error-pressed', value: 'var(--red-700)', notes: 'Pressed danger fill.' },
-  { name: '--error-subtle',  value: 'var(--red-50)',  notes: 'Inline error banner background.' },
+  { name: '--error-subtitle',  value: 'var(--red-50)',  notes: 'Inline error banner background.' },
   { name: '--error-muted',   value: 'var(--red-100)', notes: 'Slightly stronger tint than subtle.' },
   { name: '--error-border',  value: 'var(--red-200)', notes: 'Border on subtle danger surfaces.' },
   { name: '--error-text',    value: 'var(--red-600)', notes: 'Body text on danger surfaces.' },
@@ -35,7 +35,7 @@ export const SEMANTIC_ERROR: readonly ColourRow[] = [
 export const SEMANTIC_SUCCESS: readonly ColourRow[] = [
   { name: '--success',        value: 'var(--green-500)', notes: 'Success fill, confirmation dot.' },
   { name: '--success-hover',  value: 'var(--green-600)', notes: 'Hover on success fill.' },
-  { name: '--success-subtle', value: 'var(--green-50)',  notes: 'Success banner background.' },
+  { name: '--success-subtitle', value: 'var(--green-50)',  notes: 'Success banner background.' },
   { name: '--success-muted',  value: 'var(--green-100)', notes: 'Slightly stronger tint than subtle.' },
   { name: '--success-border', value: 'var(--green-200)', notes: 'Border on subtle success surfaces.' },
   { name: '--success-text',   value: 'var(--green-700)', notes: 'Body text on success surfaces.' },
@@ -44,7 +44,7 @@ export const SEMANTIC_SUCCESS: readonly ColourRow[] = [
 export const SEMANTIC_WARNING: readonly ColourRow[] = [
   { name: '--warning',        value: 'var(--yellow-400)', notes: 'Warning fill / attention badge.' },
   { name: '--warning-hover',  value: 'var(--yellow-500)', notes: 'Hover on warning fill.' },
-  { name: '--warning-subtle', value: 'var(--yellow-50)',  notes: 'Warning banner background.' },
+  { name: '--warning-subtitle', value: 'var(--yellow-50)',  notes: 'Warning banner background.' },
   { name: '--warning-muted',  value: 'var(--yellow-100)', notes: 'Slightly stronger tint than subtle.' },
   { name: '--warning-border', value: 'var(--yellow-200)', notes: 'Border on subtle warning surfaces.' },
   { name: '--warning-text',   value: 'var(--yellow-700)', notes: 'Body text on warning surfaces.' },
@@ -53,7 +53,7 @@ export const SEMANTIC_WARNING: readonly ColourRow[] = [
 export const SEMANTIC_INFO: readonly ColourRow[] = [
   { name: '--info',        value: 'var(--sky-500)', notes: 'Informational fill / icon.' },
   { name: '--info-hover',  value: 'var(--sky-600)', notes: 'Hover on info fill.' },
-  { name: '--info-subtle', value: 'var(--sky-50)',  notes: 'Info banner background.' },
+  { name: '--info-subtitle', value: 'var(--sky-50)',  notes: 'Info banner background.' },
   { name: '--info-muted',  value: 'var(--sky-100)', notes: 'Slightly stronger tint than subtle.' },
   { name: '--info-border', value: 'var(--sky-200)', notes: 'Border on subtle info surfaces.' },
   { name: '--info-text',   value: 'var(--sky-700)', notes: 'Body text on info surfaces.' },
@@ -88,7 +88,7 @@ export const SEMANTIC_SURFACE: readonly ColourRow[] = [
 export const SEMANTIC_BORDER: readonly ColourRow[] = [
   { name: '--border-default',  value: 'var(--neutral-200)', notes: 'Default field / card border.' },
   { name: '--border-strong',   value: 'var(--neutral-300)', notes: 'Hover / emphasised border.' },
-  { name: '--border-subtle',   value: 'var(--neutral-150)', notes: 'Faint border, light dividers.' },
+  { name: '--border-subtitle',   value: 'var(--neutral-150)', notes: 'Faint border, light dividers.' },
   { name: '--border-divider',  value: 'var(--neutral-150)', notes: 'Section dividers, table rows.' },
   { name: '--border-inverted', value: 'var(--neutral-700)', notes: 'Border on dark surfaces.', inverted: true },
   { name: '--border-disabled', value: 'var(--neutral-150)', notes: 'Disabled control border.' },

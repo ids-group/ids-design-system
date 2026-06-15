@@ -63,7 +63,7 @@ section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
   display: inline-block;
   width: var(--space-10);
   height: var(--space-10);
-  background: var(--primary-subtle);
+  background: var(--primary-subtitle);
   border: var(--border-width-default) solid var(--primary-muted);
   vertical-align: middle;
 }
@@ -79,7 +79,7 @@ section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
 
 .hit-sample {
   display: inline-block;
-  background: var(--primary-subtle);
+  background: var(--primary-subtitle);
   border: var(--border-width-default) solid var(--primary-muted);
   border-radius: var(--radius-sm);
   vertical-align: middle;

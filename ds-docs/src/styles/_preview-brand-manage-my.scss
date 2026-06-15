@@ -49,7 +49,7 @@
   // automatically.
   --primary:         #00414B;
   --primary-strong:  #002B32;
-  --primary-subtle:  #DAEAF0;    // Ice Gray
+  --primary-subtitle:  #DAEAF0;    // Ice Gray
   --primary-muted:   #B8D2DA;
   --primary-on:      #FFFFFF;
 
@@ -63,7 +63,7 @@
   // Borders
   --border-default: #DEDDDC;
   --border-strong:  #C9C8C7;
-  --border-subtle:  #E7E5E3;
+  --border-subtitle:  #E7E5E3;
   --border-divider: #E7E5E3;
 
   // Text — Midnight Teal as primary so body text has a brand-aligned tone.
@@ -107,7 +107,7 @@
   --secondary:        #FF6156;     // Coral
   --secondary-hover:  #E84A40;     // Darker Coral for hover state
   --secondary-strong: #C2362C;     // Strong Coral for text/accents
-  --secondary-subtle: #FFE6E3;     // Light Coral tint
+  --secondary-subtitle: #FFE6E3;     // Light Coral tint
   --secondary-muted:  #F9E2D3;     // Pale Apricot
   --secondary-on:     #FFFFFF;     // White text/icon on Coral fills
 

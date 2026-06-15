@@ -120,7 +120,7 @@
   &.tertiary {
     --_button-bg:        var(--ds-button-bg,        transparent);
     --_button-fg:        var(--ds-button-fg,        var(--primary-strong));
-    --_button-bg-hover:  var(--ds-button-bg-hover,  var(--primary-subtle));
+    --_button-bg-hover:  var(--ds-button-bg-hover,  var(--primary-subtitle));
     --_button-bg-active: var(--ds-button-bg-active, var(--primary-muted));
   }
   &.outline {
@@ -220,7 +220,7 @@
 
   &:hover { background: var(--surface-secondary); color: var(--text-primary); }
   &[aria-pressed="true"] {
-    background: var(--primary-subtle);
+    background: var(--primary-subtitle);
     border-color: var(--primary);
     color: var(--primary-strong);
   }

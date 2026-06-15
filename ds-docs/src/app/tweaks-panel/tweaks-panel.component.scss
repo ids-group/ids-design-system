@@ -49,7 +49,7 @@
       color: var(--text-secondary);
       &:hover { background: var(--surface-secondary); }
       &.active {
-        background: var(--primary-subtle);
+        background: var(--primary-subtitle);
         color: var(--primary-strong);
       }
     }

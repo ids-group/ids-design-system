@@ -76,7 +76,7 @@
     }
   }
   &.error {
-    --_es-tile-bg: var(--ds-empty-state-tile-bg, var(--error-subtle));
+    --_es-tile-bg: var(--ds-empty-state-tile-bg, var(--error-subtitle));
     --_es-tile-fg: var(--ds-empty-state-tile-fg, var(--error-text));
   }
 
@@ -86,7 +86,7 @@
   }
 
   &.success {
-    --_es-tile-bg: var(--ds-empty-state-tile-bg, var(--success-subtle));
+    --_es-tile-bg: var(--ds-empty-state-tile-bg, var(--success-subtitle));
     --_es-tile-fg: var(--ds-empty-state-tile-fg, var(--success-text));
   }
 }

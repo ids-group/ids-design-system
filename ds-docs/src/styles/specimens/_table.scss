@@ -22,7 +22,7 @@
      Aligned with ds/src/lib/components/table/table.component.scss. */
   --_table-bg:              var(--ds-table-bg,              var(--surface-default));
   --_table-row-hover-bg:    var(--ds-table-row-hover-bg,    var(--surface-secondary));
-  --_table-row-selected-bg: var(--ds-table-row-selected-bg, var(--primary-subtle));
+  --_table-row-selected-bg: var(--ds-table-row-selected-bg, var(--primary-subtitle));
   --_table-head-bg:         var(--ds-table-head-bg,         var(--surface-secondary));
   --_table-head-fg:         var(--ds-table-head-fg,         var(--text-tertiary));
   --_table-divider:         var(--ds-table-divider,         var(--border-divider));

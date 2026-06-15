@@ -155,7 +155,7 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
     }
     .link:hover { background: var(--surface-secondary); color: var(--text-primary); }
     .link.is-active {
-      background: var(--primary-subtle);
+      background: var(--primary-subtitle);
       color: var(--primary-strong);
       font-weight: var(--font-weight-bold);
     }

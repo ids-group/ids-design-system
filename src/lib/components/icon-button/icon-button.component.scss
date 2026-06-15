@@ -74,7 +74,7 @@
   &.tonal {
     --_icon-button-bg:        var(--ds-icon-button-bg,        var(--primary-muted));
     --_icon-button-fg:        var(--ds-icon-button-fg,        var(--primary-strong));
-    --_icon-button-bg-hover:  var(--ds-icon-button-bg-hover,  var(--primary-subtle));
+    --_icon-button-bg-hover:  var(--ds-icon-button-bg-hover,  var(--primary-subtitle));
     --_icon-button-bg-active: var(--ds-icon-button-bg-active, var(--primary-muted-strong));
     --_icon-button-fg-hover:  var(--ds-icon-button-fg-hover,  var(--primary-strong));
   }

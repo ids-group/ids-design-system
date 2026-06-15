@@ -20,7 +20,7 @@ const WIDTHS: readonly WidthRow[] = [
 const ROLES: readonly RoleRow[] = [
   { token: '--border-default',  use: 'Default field / card / table cell' },
   { token: '--border-strong',   use: 'Hover field, emphasised separation' },
-  { token: '--border-subtle',   use: 'Faint section separation inside cards' },
+  { token: '--border-subtitle',   use: 'Faint section separation inside cards' },
   { token: '--border-divider',  use: 'Horizontal rules, list-row separators' },
   { token: '--border-inverted',  use: 'Borders on dark surfaces' },
   { token: '--border-disabled',  use: 'Disabled field / card outlines' },

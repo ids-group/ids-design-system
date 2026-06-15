@@ -101,7 +101,7 @@
 
   &:hover { background: var(--surface-secondary); color: var(--text-primary); }
   &[aria-pressed="true"] {
-    background: var(--primary-subtle);
+    background: var(--primary-subtitle);
     border-color: var(--primary);
     color: var(--primary-strong);
   }

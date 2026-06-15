@@ -61,7 +61,7 @@ export class TweaksPanelComponent {
     }
   }
   // Primary re-skin drives the blue ramp (the DS source of truth): --primary,
-  // --primary-subtle/strong all resolve from --blue-*, and --primary-h follows
+  // --primary-subtitle/strong all resolve from --blue-*, and --primary-h follows
   // --blue-h, so fills and focus rings re-tint together. Setting --primary-*
   // directly would NOT move --primary (it maps to --blue-600).
   protected setPrimaryH(value: string): void {

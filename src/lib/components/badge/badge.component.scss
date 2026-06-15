@@ -36,12 +36,12 @@
   &.confirmed { --_badge-bg: var(--ds-badge-bg, var(--status-confirmed-bg)); --_badge-fg: var(--ds-badge-fg, var(--status-confirmed-fg)); }
   &.active    { --_badge-bg: var(--ds-badge-bg, var(--status-active-bg));    --_badge-fg: var(--ds-badge-fg, var(--status-active-fg)); }
   &.completed { --_badge-bg: var(--ds-badge-bg, var(--status-completed-bg)); --_badge-fg: var(--ds-badge-fg, var(--status-completed-fg)); }
-  &.info      { --_badge-bg: var(--ds-badge-bg, var(--info-subtle));    --_badge-fg: var(--ds-badge-fg, var(--info-text)); }
-  &.success   { --_badge-bg: var(--ds-badge-bg, var(--success-subtle)); --_badge-fg: var(--ds-badge-fg, var(--success-text)); }
-  &.warning   { --_badge-bg: var(--ds-badge-bg, var(--warning-subtle)); --_badge-fg: var(--ds-badge-fg, var(--warning-text)); }
-  &.error     { --_badge-bg: var(--ds-badge-bg, var(--error-subtle));  --_badge-fg: var(--ds-badge-fg, var(--error-text)); }
+  &.info      { --_badge-bg: var(--ds-badge-bg, var(--info-subtitle));    --_badge-fg: var(--ds-badge-fg, var(--info-text)); }
+  &.success   { --_badge-bg: var(--ds-badge-bg, var(--success-subtitle)); --_badge-fg: var(--ds-badge-fg, var(--success-text)); }
+  &.warning   { --_badge-bg: var(--ds-badge-bg, var(--warning-subtitle)); --_badge-fg: var(--ds-badge-fg, var(--warning-text)); }
+  &.error     { --_badge-bg: var(--ds-badge-bg, var(--error-subtitle));  --_badge-fg: var(--ds-badge-fg, var(--error-text)); }
   &.neutral   { --_badge-bg: var(--ds-badge-bg, var(--surface-secondary)); --_badge-fg: var(--ds-badge-fg, var(--text-secondary)); }
-  &.secondary { --_badge-bg: var(--ds-badge-bg, var(--secondary-subtle)); --_badge-fg: var(--ds-badge-fg, var(--secondary-strong)); }
+  &.secondary { --_badge-bg: var(--ds-badge-bg, var(--secondary-subtitle)); --_badge-fg: var(--ds-badge-fg, var(--secondary-strong)); }
   &.solid     { --_badge-bg: var(--ds-badge-bg, var(--primary));    --_badge-fg: var(--ds-badge-fg, var(--primary-on)); }
   &.count {
     min-width: var(--badge-count-size); height: var(--badge-count-size); padding: 0 var(--space-1-5);

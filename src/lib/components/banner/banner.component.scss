@@ -5,7 +5,7 @@
 .banner {
   /* Public --ds-banner-* are read with fallbacks, never declared — consumer
      overrides inherit in. One-shot tokens are read inline at the usage site. */
-  --_banner-bg:        var(--ds-banner-bg,        var(--info-subtle));
+  --_banner-bg:        var(--ds-banner-bg,        var(--info-subtitle));
   --_banner-fg:        var(--ds-banner-fg,        var(--info-text));
   --_banner-bar:       var(--ds-banner-bar,       var(--info));
   --_banner-pad-y:     var(--ds-banner-pad-y,     var(--space-3));
@@ -29,12 +29,12 @@
 
   &.success {
     --_banner-bar: var(--ds-banner-bar, var(--success));
-    --_banner-bg:  var(--ds-banner-bg,  var(--success-subtle));
+    --_banner-bg:  var(--ds-banner-bg,  var(--success-subtitle));
     --_banner-fg:  var(--ds-banner-fg,  var(--success-text));
   }
   &.warning {
     --_banner-bar: var(--ds-banner-bar, var(--warning));
-    --_banner-bg:  var(--ds-banner-bg,  var(--warning-subtle));
+    --_banner-bg:  var(--ds-banner-bg,  var(--warning-subtitle));
     --_banner-fg:  var(--ds-banner-fg,  var(--warning-text));
   }
   &.severe {
@@ -44,7 +44,7 @@
   }
   &.error {
     --_banner-bar: var(--ds-banner-bar, var(--error));
-    --_banner-bg:  var(--ds-banner-bg,  var(--error-subtle));
+    --_banner-bg:  var(--ds-banner-bg,  var(--error-subtitle));
     --_banner-fg:  var(--ds-banner-fg,  var(--error-text));
   }
   &.neutral {

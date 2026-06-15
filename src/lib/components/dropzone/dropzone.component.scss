@@ -32,8 +32,8 @@
 
   /* Public --ds-dropzone-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_dropzone-bg:               var(--ds-dropzone-bg,               var(--surface-default));
-  --_dropzone-bg-hover:         var(--ds-dropzone-bg-hover,         var(--primary-subtle));
-  --_dropzone-bg-active:        var(--ds-dropzone-bg-active,        var(--primary-subtle));
+  --_dropzone-bg-hover:         var(--ds-dropzone-bg-hover,         var(--primary-subtitle));
+  --_dropzone-bg-active:        var(--ds-dropzone-bg-active,        var(--primary-subtitle));
   --_dropzone-border:           var(--ds-dropzone-border,           var(--border-default));
   --_dropzone-border-hover:     var(--ds-dropzone-border-hover,     var(--primary));
   --_dropzone-border-active:    var(--ds-dropzone-border-active,    var(--primary));
@@ -100,7 +100,7 @@
   [hint] {
     margin: var(--space-3) calc(var(--space-6) * -1) 0;
     padding: var(--space-3) var(--space-6) 0;
-    border-top: var(--border-width-default) solid var(--border-subtle);
+    border-top: var(--border-width-default) solid var(--border-subtitle);
     align-self: stretch;
     text-align: center;
     font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans);

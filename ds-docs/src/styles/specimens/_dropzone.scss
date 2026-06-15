@@ -37,8 +37,8 @@
   /* Per-component CSS tokens — defaults route through global semantic tokens.
      Aligned with ds/src/lib/components/dropzone/dropzone.component.scss. */
   --_dropzone-bg:            var(--ds-dropzone-bg,            var(--surface-default));
-  --_dropzone-bg-hover:      var(--ds-dropzone-bg-hover,      var(--primary-subtle));
-  --_dropzone-bg-active:     var(--ds-dropzone-bg-active,     var(--primary-subtle));
+  --_dropzone-bg-hover:      var(--ds-dropzone-bg-hover,      var(--primary-subtitle));
+  --_dropzone-bg-active:     var(--ds-dropzone-bg-active,     var(--primary-subtitle));
   --_dropzone-border:        var(--ds-dropzone-border,        var(--border-default));
   --_dropzone-border-hover:  var(--ds-dropzone-border-hover,  var(--primary));
   --_dropzone-border-active: var(--ds-dropzone-border-active, var(--primary));
