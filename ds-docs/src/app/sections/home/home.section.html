@@ -6,8 +6,9 @@
         <p class="lede">
           A reusable starting point for any admin product — tokens, components and patterns.
           Built tokens-first so a client theme propagates without touching components.
-          Domain-specific status taxonomies, copy and brand live in the consumer app's
-          <code class="t-mono">_brand-&lt;client&gt;.scss</code> file (see <code class="t-mono">mm-broker/src/app/styles/_brand-manage-my.scss</code>).
+          Brand tokens — palette and fonts — live in the consumer app's
+          <code class="t-mono">_brand-&lt;client&gt;.scss</code> file (see <code class="t-mono">prototype/mm-broker/src/app/styles/_brand-manage-my.scss</code>);
+          domain-specific copy and status taxonomies stay in the app itself.
         </p>
         <div class="badges">
           <ds-badge variant="solid">v{{ version }}</ds-badge>
@@ -40,13 +41,15 @@
               <p class="howto-body">
                 Create <code class="t-mono">_brand-&lt;client&gt;.scss</code> in the consumer app's
                 styles folder. Inside <code class="t-mono">[data-brand="&lt;client&gt;"]</code>,
-                override the palette ramp (<code class="t-mono">--blue-50…900</code>),
-                brand HSL channels (<code class="t-mono">--primary-h/s/l</code>) and font stack.
+                override the brand tokens — palette ramp (<code class="t-mono">--blue-50…900</code>),
+                brand HSL channels (<code class="t-mono">--primary-h/s/l</code>), the
+                <code class="t-mono">--primary*</code> roles and other semantic tokens
+                (surfaces, text, <code class="t-mono">--secondary*</code>), and the font stack.
                 Activate with <code class="t-mono">&lt;html data-brand="&lt;client&gt;"&gt;</code>.
                 Components stay untouched.
               </p>
               <div class="howto-foot">
-                Reference: <code class="t-mono">mm-broker/src/app/styles/_brand-manage-my.scss</code>
+                Reference: <code class="t-mono">prototype/mm-broker/src/app/styles/_brand-manage-my.scss</code>
               </div>
             </article>
 
@@ -74,7 +77,7 @@
                 density and font size live.
               </p>
               <div class="howto-foot">
-                Press <kbd>⌘</kbd>+<kbd>.</kbd> to open Tweaks
+                Open it with the <span class="t-mono">⚙ Tweaks</span> button, bottom-right
               </div>
             </article>
           </div>
