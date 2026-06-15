@@ -6,6 +6,10 @@ Versioning follows [SemVer](https://semver.org). Mapping from commit types:
 `fix` → patch, `feat` → minor, breaking change (API or visual) → major.
 While the package is on `0.x`, minor releases may contain breaking changes.
 
+## Unreleased
+
+- Relicensed from proprietary (UNLICENSED) to MIT.
+
 ## 0.1.0 — 2026-06-12
 
 Initial public release.

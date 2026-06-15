@@ -111,4 +111,4 @@ Pre-releases: `npm version prerelease --preid=beta`, then `npm publish ./dist/ds
 
 ## License
 
-UNLICENSED — proprietary to IDS Group Ltd.
+[MIT](LICENSE) © IDS Group Ltd
