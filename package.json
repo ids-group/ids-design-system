@@ -36,7 +36,14 @@
     "build:docs": "ng build ds-docs",
     "build:docs:dev": "ng build ds-docs --configuration development",
     "build:showcase": "ng build ds-docs --configuration showcase && node tools/showcase/inline.mjs",
-    "test:showcase": "node --test \"tools/showcase/*.test.mjs\""
+    "test:showcase": "node --test \"tools/showcase/*.test.mjs\"",
+    "lint": "eslint \"{src,ds-docs/src}/**/*.{ts,html}\"",
+    "lint:fix": "eslint \"{src,ds-docs/src}/**/*.{ts,html}\" --fix",
+    "lint:styles": "stylelint \"{src,ds-docs/src}/**/*.{scss,css}\"",
+    "lint:styles:fix": "stylelint \"{src,ds-docs/src}/**/*.{scss,css}\" --fix",
+    "format": "prettier --check \"{src,ds-docs/src,tools}/**/*.{ts,html,scss,css,json,md}\"",
+    "format:fix": "prettier --write \"{src,ds-docs/src,tools}/**/*.{ts,html,scss,css,json,md}\"",
+    "lint:all": "npm run format && npm run lint:styles && npm run lint"
   },
   "peerDependencies": {
     "@angular/cdk": "^21.2.0",
@@ -63,7 +70,16 @@
     "ng-packagr": "^21.2.0",
     "rxjs": "~7.8.0",
     "typescript": "~5.9.2",
-    "zone.js": "~0.15.0"
+    "zone.js": "~0.15.0",
+    "@eslint/js": "^9.39.2",
+    "angular-eslint": "^21.2.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-unicorn": "^63.0.0",
+    "prettier": "^3.8.1",
+    "stylelint": "^17.2.0",
+    "stylelint-config-standard-scss": "^17.0.0",
+    "typescript-eslint": "^8.56.0"
   },
   "sideEffects": false
 }
