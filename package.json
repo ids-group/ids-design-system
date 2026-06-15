@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/itband/ids-design-system.git"
+    "url": "git+https://bitbucket.org/itband/ids-design-system.git"
   },
   "keywords": [
     "angular",
