@@ -16,7 +16,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Start',
     items: [
-      { label: 'Welcome',              anchor: 'home' },
+      { label: 'Start here',           anchor: 'home' },
     ],
   },
   {

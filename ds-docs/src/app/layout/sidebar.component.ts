@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { IconComponent } from 'ds';
 import { NAV } from './nav.config';
+import { DS_VERSION } from '../shared/docs-stats';
 
 const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
 
@@ -27,7 +28,7 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
         @if (!collapsed()) {
           <div class="brand-text">
             <span class="brand-name">Design System</span>
-            <small>Boilerplate v0.2</small>
+            <small>Boilerplate v{{ version }}</small>
           </div>
         }
         <button class="collapse-toggle"
@@ -43,7 +44,7 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
             @for (item of group.items; track item.anchor) {
               <a class="link start-link"
                  [class.is-active]="isActive(item.anchor)"
-                 (click)="scrollTo($event, item.anchor)">{{ item.label === 'Welcome' ? 'Start here' : item.label }}</a>
+                 (click)="scrollTo($event, item.anchor)">{{ item.label }}</a>
             }
           } @else {
             <div class="group">{{ group.title }}</div>
@@ -171,6 +172,7 @@ export class SidebarComponent {
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly nav = NAV;
+  protected readonly version = DS_VERSION;
   protected readonly activeAnchor = signal<string>('');
   protected readonly collapsed = signal<boolean>(this.readCollapsed());
 

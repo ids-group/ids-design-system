@@ -5,7 +5,7 @@ export const SEMANTIC_PRIMARY: readonly ColourRow[] = [
   { name: '--primary-hover',          value: 'color-mix(--primary 88%, black)',           notes: 'Hover state on brand fill.' },
   { name: '--primary-pressed',        value: 'color-mix(--primary 76%, black)',           notes: 'Active / pressed state on brand fill.' },
   { name: '--primary-selected-hover', value: 'color-mix(--primary 88%, black)',           notes: 'Hover on already-selected brand surfaces (e.g. active sidenav item hover).' },
-  { name: '--primary-subtle',         value: 'var(--blue-50)',                        notes: 'Light brand tint (active row, sidenav active item).' },
+  { name: '--primary-subtle',         value: 'var(--blue-50)',                        notes: 'Light brand tint (active table row, date range fill).' },
   { name: '--primary-muted',          value: 'var(--blue-100)',                       notes: 'Slightly stronger tint than subtle.' },
   { name: '--primary-muted-strong',   value: 'var(--blue-200)',                       notes: 'Strongest tint in the brand-muted family.' },
   { name: '--primary-strong',         value: 'var(--blue-700)',                       notes: 'Darker brand for text on brand tints.' },
