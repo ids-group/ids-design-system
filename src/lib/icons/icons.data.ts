@@ -84,6 +84,9 @@ export const ICONS = {
   'check-circle': '<circle cx="12" cy="12" r="9" /><path d="m8 12 3 3 5-6" />',
   // Drag handle: 6 dots in 2 cols × 3 rows. Use 1.6 radius to read at 12-16px.
   drag: '<circle cx="9" cy="6" r="1.6" /><circle cx="15" cy="6" r="1.6" /><circle cx="9" cy="12" r="1.6" /><circle cx="15" cy="12" r="1.6" /><circle cx="9" cy="18" r="1.6" /><circle cx="15" cy="18" r="1.6" />',
+  scan: '<path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3" />',
+  wifi: '<path d="M2 9.5a15 15 0 0 1 20 0" /><path d="M5 13a10 10 0 0 1 14 0" /><path d="M8.5 16.5a5 5 0 0 1 7 0" /><path d="M12 20h.01" />',
+  'wifi-off': '<path d="m3 3 18 18" /><path d="M12 20h.01" /><path d="M8.5 16.5a5 5 0 0 1 7 0" /><path d="M5 13a10 10 0 0 1 3.5-2.3" /><path d="M11 8.6A10 10 0 0 1 19 13" /><path d="M2 9.5a15 15 0 0 1 5.7-3.2" /><path d="M11.6 5.6A15 15 0 0 1 22 9.5" />',
 } as const;
 
 /** Built-in DS icon names. Consumers can extend the runtime set via `provideDsIcons({...})` —
