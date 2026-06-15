@@ -24,6 +24,13 @@ definitions:
         files:
           - package-lock.json
       path: ~/.npm
+    bun-bin:
+      path: ~/.bun/bin
+    bun-cache:
+      key:
+        files:
+          - package-lock.json
+      path: ~/.bun/install/cache
 
 pipelines:
   tags:
@@ -32,9 +39,17 @@ pipelines:
           name: Build & publish to npm
           caches:
             - npm
+            - bun-bin
+            - bun-cache
           script:
-            - npm install --no-audit --no-fund --legacy-peer-deps
-            - npm run build
+            # bun for fast, peer-dep-tolerant installs (npm ci chokes on the
+            # @emnapi optional peer-deps under alpine/musl). Binary is cached in
+            # ~/.bun/bin so the npm bootstrap only runs on a cold cache.
+            - export BUN_INSTALL="$HOME/.bun"
+            - export PATH="$BUN_INSTALL/bin:$PATH"
+            - if ! command -v bun > /dev/null; then npm i -g bun && mkdir -p "$BUN_INSTALL/bin" && cp "$(which bun)" "$BUN_INSTALL/bin/bun"; fi
+            - bun install --no-save --no-progress
+            - bun run build
             - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc
             - npm publish ./dist/ds
 
@@ -49,9 +64,14 @@ pipelines:
           name: Build ds-docs showcase
           caches:
             - npm
+            - bun-bin
+            - bun-cache
           script:
-            - npm install --no-audit --no-fund --legacy-peer-deps
-            - npm run build:docs
+            - export BUN_INSTALL="$HOME/.bun"
+            - export PATH="$BUN_INSTALL/bin:$PATH"
+            - if ! command -v bun > /dev/null; then npm i -g bun && mkdir -p "$BUN_INSTALL/bin" && cp "$(which bun)" "$BUN_INSTALL/bin/bun"; fi
+            - bun install --no-save --no-progress
+            - bun run build:docs
           artifacts:
             - dist/ds-docs/**
       - step:
