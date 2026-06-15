@@ -66,6 +66,29 @@
 
   .icon { width: var(--icon-md); height: var(--icon-md); flex-shrink: 0; }
 
+  /* Optional secondary line projected via [dsButtonSubtext]. Wrapper is
+     display:contents when absent, so iconless/subtext-free buttons are
+     unchanged; presence flips the button to a stacked label+subtext column. */
+  .button-main { display: contents; }
+  .subtext-slot:empty { display: none; }
+  .subtext-slot {
+    font: var(--font-weight-medium) var(--font-size-2xs)/var(--line-height-tight) var(--font-sans);
+    letter-spacing: normal;
+    text-align: center;
+  }
+
+  &:has(.subtext-slot:not(:empty)) {
+    flex-direction: column;
+    gap: var(--space-1);
+    height: auto;
+    min-height: var(--hit-cozy);
+    padding-block: var(--space-2);
+    white-space: normal;
+
+    .button-main { display: inline-flex; align-items: center; gap: var(--space-2); }
+    &.l, &.lg { height: auto; min-height: var(--field-h-lg); }
+  }
+
   /* Sizes — legacy s/m/l tier (kept for back-compat with existing callers) */
   &.l { font-size: var(--font-size-m); height: var(--hit-cozy); padding: 0 var(--space-5); }
   &.m {
