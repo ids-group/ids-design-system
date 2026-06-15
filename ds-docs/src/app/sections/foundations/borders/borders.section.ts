@@ -22,7 +22,8 @@ const ROLES: readonly RoleRow[] = [
   { token: '--border-strong',   use: 'Hover field, emphasised separation' },
   { token: '--border-subtle',   use: 'Faint section separation inside cards' },
   { token: '--border-divider',  use: 'Horizontal rules, list-row separators' },
-  { token: '--border-inverted', use: 'Borders on dark surfaces' },
+  { token: '--border-inverted',  use: 'Borders on dark surfaces' },
+  { token: '--border-disabled',  use: 'Disabled field / card outlines' },
 ];
 
 @Component({

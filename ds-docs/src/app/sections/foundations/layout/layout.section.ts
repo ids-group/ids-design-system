@@ -26,6 +26,7 @@ const BREAKPOINTS: readonly Breakpoint[] = [
   { token: '--bp-sm',  px: 640,  desc: 'Phone landscape, small tablets' },
   { token: '--bp-md',  px: 768,  desc: 'Tablet portrait — Field-ops dashboard' },
   { token: '--bp-lg',  px: 1024, desc: 'Laptop / tablet landscape — minimum producer dashboard' },
+  { token: '--bp-xl',  px: 1441, desc: 'Wide desktop — page-grid wide tier (12 cols, 1280 px content cap)' },
   { token: '--bp-2xl', px: 1536, desc: 'Wide desktop — Bulk inventory matrix benefits from this' },
 ];
 

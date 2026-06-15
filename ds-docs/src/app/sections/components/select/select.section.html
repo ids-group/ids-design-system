@@ -2,7 +2,7 @@
     <section id="section-select" data-anchor="select" class="section">
       <div class="eyebrow t-overline">Components</div>
       <h2 class="t-h2">Select</h2>
-      <p class="lede t-m">Native single-select dropdown with custom chevron. Sizes, states, with-value, disabled, error.</p>
+      <p class="lede t-m">Custom dropdown built on CDK Overlay, with a custom chevron. Sizes, states, with-value, disabled, error.</p>
 
       <!-- ============================================================ Sizes -->
       <h3 class="block-title t-h4">Sizes</h3>
@@ -88,7 +88,7 @@
         <ul class="trunc__list">
           <li>
             <span class="trunc__field">Option label</span>
-            <span class="trunc__behaviour">Single line, ellipsis at control width. Native dropdown handles overflow.</span>
+            <span class="trunc__behaviour">Single line, ellipsis at control width. Panel scrolls internally past its 320px max-height.</span>
           </li>
           <li>
             <span class="trunc__field">Selected value</span>
@@ -101,8 +101,7 @@
       <h3 class="block-title t-h4">Custom dropdown — &lt;ds-dropdown&gt;</h3>
       <p class="block-desc t-s">
         Alternative trigger that opens a fully styled popover via CDK Overlay. Use when the showcase or product needs
-        branded options, leading icons, or a consistent panel across browsers. Native &lt;ds-select&gt; remains the
-        default for forms that benefit from native a11y.
+        branded options, leading icons, or a consistent panel across browsers. &lt;ds-select&gt; is the form-field variant of the same CDK Overlay engine — use it inside Angular forms where you need a label, required/optional markers, and grouped options.
       </p>
 
       <h4 class="sub-title t-overline">Closed trigger · sizes</h4>

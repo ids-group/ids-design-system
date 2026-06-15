@@ -11,11 +11,11 @@ interface IconSize {
 }
 
 const SIZES: readonly IconSize[] = [
+  { token: '--icon-2xs', px: 10, use: 'Tight inline, badge close' },
   { token: '--icon-xs', px: 12, use: 'Inline meta, tag close' },
   { token: '--icon-sm', px: 14, use: 'Compact buttons, dense tables' },
   { token: '--icon-md', px: 16, use: 'UI default' },
   { token: '--icon-lg', px: 20, use: 'Sidenav, larger buttons' },
-  { token: '--icon-xl', px: 24, use: 'Hero, banner icons' },
 ];
 
 const SAMPLES: readonly IconName[] = [

@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
 interface Tier {
-  readonly key: 'compact' | 'regular' | 'comfy';
+  readonly key: 'ultra-compact' | 'compact' | 'cozy' | 'comfy';
   readonly label: string;
   readonly hit: string;
   readonly use: string;
@@ -10,6 +10,13 @@ interface Tier {
 
 const TIERS: readonly Tier[] = [
   {
+    key: 'ultra-compact',
+    label: 'Ultra-compact',
+    hit: '24 px',
+    use: 'Financial dashboards, log viewers, dense data grids — keyboard/mouse only, never touch',
+    wcag: 'Below WCAG 2.5.8 — opt-in only',
+  },
+  {
     key: 'compact',
     label: 'Compact',
     hit: '32 px',
@@ -17,8 +24,8 @@ const TIERS: readonly Tier[] = [
     wcag: 'Below WCAG 2.5.5 — desktop-only',
   },
   {
-    key: 'regular',
-    label: 'Regular (default)',
+    key: 'cozy',
+    label: 'Cozy (default)',
     hit: '40 px',
     use: 'The default. All non-matrix screens.',
     wcag: 'Meets WCAG 2.5.8 (24×24 minimum) with margin',
