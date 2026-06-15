@@ -1,10 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { ButtonComponent, EmptyStateComponent, IconComponent } from 'ds';
+import { ButtonComponent, CardComponent, EmptyStateComponent, IconComponent } from 'ds';
 
 @Component({
   selector: 'pattern-empty-state',
   standalone: true,
-  imports: [ButtonComponent, EmptyStateComponent, IconComponent],
+  imports: [ButtonComponent, CardComponent, EmptyStateComponent, IconComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './empty-state.section.html',
   styleUrl: './empty-state.section.scss',

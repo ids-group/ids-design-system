@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { ButtonComponent, CheckboxComponent, EmptyStateComponent, IconComponent, TableComponent, type TableColumn } from 'ds';
+import { BadgeComponent, ButtonComponent, CheckboxComponent, EmptyStateComponent, IconComponent, TableComponent, type TableColumn } from 'ds';
 
 interface EventRow {
   readonly id: string;
@@ -14,7 +14,7 @@ interface EventRow {
 @Component({
   selector: 'section-components-table',
   standalone: true,
-  imports: [ButtonComponent, CheckboxComponent, EmptyStateComponent, IconComponent, TableComponent],
+  imports: [BadgeComponent, ButtonComponent, CheckboxComponent, EmptyStateComponent, IconComponent, TableComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './table.section.html',
   styleUrl: './table.section.scss',

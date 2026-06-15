@@ -109,25 +109,8 @@
         font: var(--font-weight-medium) var(--font-size-s)/1.4 var(--font-sans);
         text-align: center;
       }
-
-      .skeleton {
-        height: var(--chart-skeleton-h);
-        border-radius: var(--radius-md);
-        background: linear-gradient(
-          90deg,
-          var(--surface-secondary) 0%,
-          var(--neutral-150) 50%,
-          var(--surface-secondary) 100%
-        );
-        background-size: 200% 100%;
-        animation: chart-shimmer var(--duration-loop-slow) linear infinite;
-      }
     }
 
-    @keyframes chart-shimmer {
-      from { background-position: 200% 0; }
-      to   { background-position: -200% 0; }
-    }
     .grid-2 {
       display: grid;
       grid-template-columns: repeat(2, 1fr);

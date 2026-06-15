@@ -29,7 +29,7 @@
                 <td><span class="mono muted">{{ row.id }}</span></td>
                 <td>{{ row.date }}</td>
                 <td>{{ row.venue }}</td>
-                <td><span class="badge {{ row.status }}"><span class="dot"></span> {{ row.statusLabel }}</span></td>
+                <td><ds-badge [variant]="row.status" [withDot]="true">{{ row.statusLabel }}</ds-badge></td>
                 <td class="numeric">{{ row.capacity }}</td>
               </tr>
             }
@@ -136,28 +136,28 @@
               <td><span class="t-s-bold">Project Alpha</span></td>
               <td>30 Apr – 3 May 2026</td>
               <td>North Site</td>
-              <td><span class="badge active"><span class="dot"></span> Active</span></td>
+              <td><ds-badge variant="active" [withDot]="true">Active</ds-badge></td>
             </tr>
             <tr class="selected">
               <td><ds-checkbox [checked]="true" /></td>
               <td><span class="t-s-bold">Project Beta</span></td>
               <td>22 – 25 May 2026</td>
               <td>East Campus</td>
-              <td><span class="badge confirmed"><span class="dot"></span> Confirmed</span></td>
+              <td><ds-badge variant="confirmed" [withDot]="true">Confirmed</ds-badge></td>
             </tr>
             <tr class="selected">
               <td><ds-checkbox [checked]="true" /></td>
               <td><span class="t-s-bold">Q3 Initiative</span></td>
               <td>22 – 25 Aug 2026</td>
               <td>South Hub</td>
-              <td><span class="badge confirmed"><span class="dot"></span> Confirmed</span></td>
+              <td><ds-badge variant="confirmed" [withDot]="true">Confirmed</ds-badge></td>
             </tr>
             <tr>
               <td><ds-checkbox /></td>
               <td><span class="t-s-bold">Annual Summit</span></td>
               <td>5 – 9 Sep 2026</td>
               <td>HQ Auditorium</td>
-              <td><span class="badge planning"><span class="dot"></span> Planning</span></td>
+              <td><ds-badge variant="planning" [withDot]="true">Planning</ds-badge></td>
             </tr>
           </tbody>
         </table>
@@ -192,7 +192,7 @@
                 <td><span class="t-s-bold">{{ row.project }}</span></td>
                 <td>{{ row.date }}</td>
                 <td>{{ row.venue }}</td>
-                <td><span class="badge {{ row.status }}"><span class="dot"></span> {{ row.statusLabel }}</span></td>
+                <td><ds-badge [variant]="row.status" [withDot]="true">{{ row.statusLabel }}</ds-badge></td>
               </tr>
             }
           </tbody>
@@ -354,7 +354,7 @@
                 <td><span class="mono muted">{{ row.id }}</span></td>
                 <td>{{ row.date }}</td>
                 <td>{{ row.venue }}</td>
-                <td><span class="badge {{ row.status }}"><span class="dot"></span> {{ row.statusLabel }}</span></td>
+                <td><ds-badge [variant]="row.status" [withDot]="true">{{ row.statusLabel }}</ds-badge></td>
                 <td class="numeric">{{ row.capacity }}</td>
               </tr>
             }

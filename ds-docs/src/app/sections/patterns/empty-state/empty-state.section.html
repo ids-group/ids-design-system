@@ -11,7 +11,7 @@
           <p class="block-desc t-s">
             The default — section is empty because nothing exists yet.
           </p>
-          <div class="card">
+          <ds-card padding="none">
             <ds-empty-state
               variant="none"
               title="No asset allocated yet"
@@ -20,7 +20,7 @@
                 <ds-icon name="plus" [size]="14" /> Allocate resources
               </ds-button>
             </ds-empty-state>
-          </div>
+          </ds-card>
         </div>
 
         <!-- 2 · Loading overlay — data exists but is being refetched. -->
@@ -30,13 +30,13 @@
             Data exists but is being refetched. The previous content stays visible behind a
             dimming layer.
           </p>
-          <div class="card">
+          <ds-card padding="none">
             <ds-empty-state
               variant="loading"
               title="12 asset lines"
               body="LED walls · Sub bass stacks · …">
             </ds-empty-state>
-          </div>
+          </ds-card>
         </div>
 
         <!-- 3 · Error with retry — network/server failure; retry is the only primary action. -->
@@ -45,7 +45,7 @@
           <p class="block-desc t-s">
             Network or server failure. Retry is the only sensible primary action.
           </p>
-          <div class="card">
+          <ds-card padding="none">
             <ds-empty-state
               variant="error"
               title="Couldn't load resource allocations"
@@ -55,7 +55,7 @@
               </ds-button>
               <ds-button actions variant="outline" size="m">Report issue</ds-button>
             </ds-empty-state>
-          </div>
+          </ds-card>
         </div>
 
         <!-- 4 · Permission denied — authenticated but role doesn't grant access. -->
@@ -65,7 +65,7 @@
             The user is authenticated but their role doesn't grant access to this resource.
             Don't suggest "log in again" — give them an escape route.
           </p>
-          <div class="card">
+          <ds-card padding="none">
             <ds-empty-state
               variant="locked"
               title="You don't have access to this Logistics plan"
@@ -73,7 +73,7 @@
               <ds-button actions variant="outline" size="m">Back to dashboard</ds-button>
               <ds-button actions variant="outline" size="m">Request access</ds-button>
             </ds-empty-state>
-          </div>
+          </ds-card>
         </div>
       </div>
 
