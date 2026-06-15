@@ -16,12 +16,14 @@ export class TweaksPanelComponent {
   protected readonly density = signal<'compact' | 'cozy' | 'comfy'>('cozy');
   protected readonly brand = signal<BrandPreview>('default');
   protected readonly neutrals = signal<'cool-gray' | 'brand'>('cool-gray');
-  protected readonly primaryH = signal(218);
-  protected readonly primaryS = signal(88);
-  protected readonly primaryL = signal(48);
-  protected readonly secondaryH = signal(218);
-  protected readonly secondaryS = signal(88);
-  protected readonly secondaryL = signal(48);
+  // Defaults mirror the live system: the blue ramp is hsl(229, 100%, 59%)
+  // (themes/default/_palette.scss), and --secondary defaults off the same channels.
+  protected readonly primaryH = signal(229);
+  protected readonly primaryS = signal(100);
+  protected readonly primaryL = signal(59);
+  protected readonly secondaryH = signal(229);
+  protected readonly secondaryS = signal(100);
+  protected readonly secondaryL = signal(59);
   protected readonly rootFs = signal(16);
 
   constructor() {
@@ -58,20 +60,24 @@ export class TweaksPanelComponent {
       // SSR / privacy-mode — silently ignore; signal state still applies.
     }
   }
+  // Primary re-skin drives the blue ramp (the DS source of truth): --primary,
+  // --primary-subtle/strong all resolve from --blue-*, and --primary-h follows
+  // --blue-h, so fills and focus rings re-tint together. Setting --primary-*
+  // directly would NOT move --primary (it maps to --blue-600).
   protected setPrimaryH(value: string): void {
     const v = Number(value);
     this.primaryH.set(v);
-    document.documentElement.style.setProperty('--primary-h', `${v}`);
+    document.documentElement.style.setProperty('--blue-h', `${v}`);
   }
   protected setPrimaryS(value: string): void {
     const v = Number(value);
     this.primaryS.set(v);
-    document.documentElement.style.setProperty('--primary-s', `${v}%`);
+    document.documentElement.style.setProperty('--blue-s', `${v}%`);
   }
   protected setPrimaryL(value: string): void {
     const v = Number(value);
     this.primaryL.set(v);
-    document.documentElement.style.setProperty('--primary-l', `${v}%`);
+    document.documentElement.style.setProperty('--blue-l', `${v}%`);
   }
   protected setSecondaryH(value: string): void {
     const v = Number(value);
@@ -94,19 +100,19 @@ export class TweaksPanelComponent {
     document.documentElement.style.setProperty('font-size', `${v}px`);
   }
   protected reset(): void {
-    ['--primary-h', '--primary-s', '--primary-l', '--secondary-h', '--secondary-s', '--secondary-l', 'font-size'].forEach((p) =>
+    ['--blue-h', '--blue-s', '--blue-l', '--secondary-h', '--secondary-s', '--secondary-l', 'font-size'].forEach((p) =>
       document.documentElement.style.removeProperty(p),
     );
     document.documentElement.removeAttribute('data-density');
     this.setBrand('default');
     this.setNeutrals('cool-gray');
     this.density.set('cozy');
-    this.primaryH.set(218);
-    this.primaryS.set(88);
-    this.primaryL.set(48);
-    this.secondaryH.set(218);
-    this.secondaryS.set(88);
-    this.secondaryL.set(48);
+    this.primaryH.set(229);
+    this.primaryS.set(100);
+    this.primaryL.set(59);
+    this.secondaryH.set(229);
+    this.secondaryS.set(100);
+    this.secondaryL.set(59);
     this.rootFs.set(16);
   }
 
