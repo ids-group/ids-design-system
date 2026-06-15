@@ -144,6 +144,10 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-tabs-divider',           value: 'var(--border-divider)',    notes: 'Bottom divider.' },
       { name: '--ds-tabs-pills-bg',          value: 'var(--surface-secondary)', notes: 'Pills track fill.' },
       { name: '--ds-tab-pill-bg-active',     value: 'var(--surface-default)',   notes: 'Active pill thumb.' },
+      { name: '--ds-tab-pill-bg-hover',        value: 'var(--primary-subtle)', notes: 'Pill hover fill.' },
+      { name: '--ds-tab-pill-bg-active-hover', value: 'var(--primary-subtle)', notes: 'Active pill hover fill.' },
+      { name: '--ds-tab-pill-fg-active',       value: 'var(--primary-strong)', notes: 'Active pill label.' },
+      { name: '--ds-tab-pill-radius',          value: 'var(--radius-md)',      notes: 'Pill radius.' },
     ],
   },
   {
@@ -165,6 +169,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-input-bg-error',       value: 'var(--error-subtle)',    notes: 'Error fill tint.' },
       { name: '--ds-input-border-success', value: 'var(--success)',          notes: 'Success border.' },
       { name: '--ds-input-bg-disabled',    value: 'var(--surface-disabled)', notes: 'Disabled fill.' },
+      { name: '--ds-input-fs',             value: 'var(--font-size-s)',      notes: 'Value text size.' },
+      { name: '--ds-input-label-color',    value: 'var(--text-secondary)',   notes: 'Label colour.' },
+      { name: '--ds-input-label-fs',       value: 'var(--font-size-xs)',     notes: 'Label size.' },
+      { name: '--ds-input-label-fw',       value: 'var(--font-weight-bold)', notes: 'Label weight.' },
+      { name: '--ds-input-hint-color',     value: 'var(--text-tertiary)',    notes: 'Hint colour.' },
+      { name: '--ds-input-hint-fs',        value: 'var(--font-size-xs)',     notes: 'Hint size.' },
     ],
   },
   {
@@ -216,6 +226,9 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-table-cell-pad-x',      value: 'var(--table-cell-pad-x)',  notes: 'Cell horizontal padding.' },
       { name: '--ds-table-cell-pad-y',      value: 'var(--table-cell-pad-y)',  notes: 'Cell vertical padding.' },
       { name: '--ds-table-radius',          value: 'var(--radius-xl)',              notes: 'Outer corner radius.' },
+      { name: '--ds-table-border',          value: 'var(--border-default)',    notes: 'Outer border.' },
+      { name: '--ds-table-head-fs',         value: 'var(--font-size-xs)',      notes: 'Head label size.' },
+      { name: '--ds-table-head-h',          value: '40px',                     notes: 'Sticky head height.' },
     ],
   },
   {
@@ -231,6 +244,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-pagination-active-bg',    value: 'var(--primary)',             notes: 'Active page fill.' },
       { name: '--ds-pagination-active-fg',    value: 'var(--primary-on)',          notes: 'Active page label.' },
       { name: '--ds-pagination-radius',       value: 'var(--radius-md)',              notes: 'Button radius.' },
+      { name: '--ds-pagination-active-bg-hover', value: 'var(--primary-hover)',       notes: 'Active page hover fill.' },
     ],
   },
   {
@@ -249,6 +263,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-datepicker-day-range-fg',    value: 'var(--primary-strong)',      notes: 'Range label.' },
       { name: '--ds-datepicker-day-disabled-fg', value: 'var(--text-disabled)',     notes: 'Disabled day label.' },
       { name: '--ds-datepicker-width',           value: 'var(--datepicker-w)',      notes: 'Calendar width.' },
+      { name: '--ds-datepicker-day-selected-bg-hover', value: 'var(--primary-selected-hover)', notes: 'Selected day hover fill.' },
     ],
   },
   {
@@ -281,6 +296,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-sidenav-item-radius',     value: 'var(--radius-md)',              notes: 'Item radius.' },
       { name: '--ds-sidenav-alert-color',     value: 'var(--error)',            notes: 'Alert pip colour.' },
       { name: '--ds-sidenav-group-fg',        value: 'var(--text-tertiary)',     notes: 'Group label colour.' },
+      { name: '--ds-sidenav-group-open-bg',        value: 'var(--surface-secondary)',     notes: 'Open group fill.' },
+      { name: '--ds-sidenav-group-child-indent',   value: 'var(--space-3)',               notes: 'Child item indent.' },
+      { name: '--ds-sidenav-group-radius',         value: 'var(--radius-md)',             notes: 'Group radius.' },
+      { name: '--ds-sidenav-item-bg-active-hover', value: 'color-mix(item-bg-active 88%, white)', notes: 'Active item hover fill.' },
+      { name: '--ds-sidenav-item-rail',            value: 'var(--secondary)',             notes: 'Active item rail accent.' },
     ],
   },
   {
@@ -305,6 +325,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-pagehdr-meta-fg',      value: 'var(--text-secondary)', notes: 'Meta text.' },
       { name: '--ds-pagehdr-meta-icon-fg', value: 'var(--icon-default)',   notes: 'Meta icon.' },
       { name: '--ds-pagehdr-divider',      value: 'var(--border-divider)', notes: 'Divider below header.' },
+      { name: '--ds-pagehdr-title-fs',     value: 'var(--font-size-h3)',   notes: 'Title size.' },
+      { name: '--ds-pagehdr-title-gap',    value: 'var(--space-1-5)',      notes: 'Gap below title.' },
     ],
   },
   {
@@ -336,6 +358,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-banner-close-fg-hover', value: 'var(--icon-strong)',    notes: 'Close icon hover.' },
       { name: '--ds-banner-radius',         value: 'var(--radius-md)',           notes: 'Corner radius.' },
       { name: '--ds-banner-bar-width',      value: 'var(--banner-bar-w)',   notes: 'Left bar width.' },
+      { name: '--ds-banner-pad-x',          value: 'var(--space-4)',        notes: 'Horizontal padding.' },
+      { name: '--ds-banner-pad-y',          value: 'var(--space-3)',        notes: 'Vertical padding.' },
     ],
   },
   {
@@ -386,6 +410,33 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-dropzone-file-progress', value: 'var(--primary)',           notes: 'Upload progress.' },
       { name: '--ds-dropzone-file-success',  value: 'var(--success)',         notes: 'Per-file success.' },
       { name: '--ds-dropzone-file-error',    value: 'var(--error)',          notes: 'Per-file error.' },
+    ],
+  },
+  {
+    component: 'Bottom sheet',
+    selector: '.bottom-sheet',
+    description: 'Mobile-anchored sheet. Prefer ds-modal / ds-drawer on larger viewports.',
+    tokens: [
+      { name: '--ds-bottom-sheet-maxw',   value: '480px',            notes: 'Max width — centred above this.' },
+      { name: '--ds-bottom-sheet-maxh',   value: '80%',              notes: 'Max height of the sheet.' },
+      { name: '--ds-bottom-sheet-radius', value: 'var(--radius-lg)', notes: 'Top corner radius.' },
+    ],
+  },
+  {
+    component: 'Menu',
+    selector: '.menu-item',
+    description: 'Dropdown / context menu item.',
+    tokens: [
+      { name: '--ds-menu-item-fg', value: 'var(--text-primary)', notes: 'Item label colour.' },
+    ],
+  },
+  {
+    component: 'Container (shared)',
+    selector: ':root / any ancestor',
+    description: 'Shared inner padding for surface containers — card and stat default their own --ds-*-pad to this, '
+      + 'so one override retunes them together.',
+    tokens: [
+      { name: '--ds-container-pad', value: 'var(--space-6)', notes: 'Default inner padding for card / stat.' },
     ],
   },
 ];
