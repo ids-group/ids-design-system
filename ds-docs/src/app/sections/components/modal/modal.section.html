@@ -107,14 +107,8 @@
           <div class="state-cell__stage">
             <ds-modal-card title="Edit sub-record" size="md" [showClose]="false">
               <div body class="form-stack">
-                <div class="field">
-                  <span class="label">Sub-record name</span>
-                  <div class="control"><input value="Project Alpha · Phase 1" /></div>
-                </div>
-                <div class="field">
-                  <span class="label">Capacity</span>
-                  <div class="control"><input type="number" value="60" /></div>
-                </div>
+                <ds-input label="Sub-record name" value="Project Alpha · Phase 1" />
+                <ds-input label="Capacity" type="number" value="60" />
                 <div class="field">
                   <span class="label">Owner</span>
                   <ds-dropdown [options]="ownerOptions" value="brooks" />

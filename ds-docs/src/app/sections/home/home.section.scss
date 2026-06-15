@@ -27,23 +27,6 @@
       margin-top: var(--space-6);
       flex-wrap: wrap;
     }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: var(--badge-pad-y) var(--badge-pad-x);
-      border-radius: var(--radius-pill);
-      font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-sans);
-    }
-    .badge.badge--solid {
-      background: var(--primary);
-      color: var(--primary-on);
-    }
-    .badge.badge--neutral {
-      background: var(--surface-secondary);
-      color: var(--text-secondary);
-      border: var(--border-width-default) solid var(--border-divider);
-    }
-
     /* Start-here section */
     .start-section { display: block; }
     .eyebrow { color: var(--primary); }

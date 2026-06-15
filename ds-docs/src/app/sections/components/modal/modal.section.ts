@@ -1,10 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { BannerComponent, ButtonComponent, DropdownComponent, type DropdownOption, IconComponent, ModalCardComponent } from 'ds';
+import { BannerComponent, ButtonComponent, DropdownComponent, type DropdownOption, IconComponent, InputComponent, ModalCardComponent } from 'ds';
 
 @Component({
   selector: 'section-components-modal',
   standalone: true,
-  imports: [BannerComponent, ButtonComponent, DropdownComponent, IconComponent, ModalCardComponent],
+  imports: [BannerComponent, ButtonComponent, DropdownComponent, IconComponent, InputComponent, ModalCardComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './modal.section.html',
   styleUrl: './modal.section.scss',
