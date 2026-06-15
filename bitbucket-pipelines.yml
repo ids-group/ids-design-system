@@ -37,3 +37,42 @@ pipelines:
             - npm run build
             - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc
             - npm publish ./dist/ds
+
+  custom:
+    # Manual deploy of the ds-docs showcase to ids-ds.proto.ids-group.co.uk.
+    # Mirrors the pinkmoon prototype deploy (S3 + CloudFront, eu-west-2).
+    # Required Secured repository variables:
+    #   IDS_DOCKER_AWS_ACCESS_KEY_ID, IDS_DOCKER_AWS_SECRET_ACCESS_KEY  (AWS creds)
+    #   DS_DOCS_S3_BUCKET            e.g. ids-ds-proto  (S3 bucket behind the subdomain)
+    #   DS_DOCS_CF_DISTRIBUTION_ID   CloudFront distribution aliased to the subdomain
+    deploy-docs:
+      - step:
+          name: Build ds-docs showcase
+          caches:
+            - npm
+          script:
+            - npm ci
+            - npm run build:docs
+          artifacts:
+            - dist/ds-docs/**
+      - step:
+          name: Deploy ds-docs to ids-ds.proto.ids-group.co.uk
+          image: amazon/aws-cli
+          script:
+            - export AWS_ACCESS_KEY_ID=$IDS_DOCKER_AWS_ACCESS_KEY_ID
+            - export AWS_SECRET_ACCESS_KEY=$IDS_DOCKER_AWS_SECRET_ACCESS_KEY
+            - export AWS_DEFAULT_REGION=eu-west-2
+            # Hashed assets: long immutable cache. index.html must always revalidate.
+            - >
+              aws s3 sync dist/ds-docs/browser/ s3://$DS_DOCS_S3_BUCKET/
+              --delete
+              --cache-control "public, max-age=31536000, immutable"
+              --exclude "index.html"
+            - >
+              aws s3 cp dist/ds-docs/browser/index.html s3://$DS_DOCS_S3_BUCKET/index.html
+              --cache-control "public, max-age=0, must-revalidate"
+              --content-type "text/html"
+            - >
+              aws cloudfront create-invalidation
+              --distribution-id $DS_DOCS_CF_DISTRIBUTION_ID
+              --paths "/index.html"
