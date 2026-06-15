@@ -51,6 +51,25 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ],
   },
   {
+    component: 'Tag',
+    selector: ':host (ds-tag)',
+    description: 'Pill label. Interactive / filter-chip modes add hover + selected (active) tokens; '
+      + 'the selected state re-points bg / fg / border.',
+    tokens: [
+      { name: '--ds-tag-bg',            value: 'var(--primary)',          notes: 'Surface fill — interactive/ghost re-point to --surface-secondary.' },
+      { name: '--ds-tag-radius',        value: 'var(--radius-md)',        notes: 'Corner radius.' },
+      { name: '--ds-tag-pad-x',         value: 'var(--tag-pad-x)',        notes: 'Horizontal padding.' },
+      { name: '--ds-tag-pad-y',         value: 'var(--tag-pad-y)',        notes: 'Vertical padding.' },
+      { name: '--ds-tag-fw',            value: 'var(--font-weight-bold)', notes: 'Label weight.' },
+      { name: '--ds-tag-fs',            value: 'var(--font-size-xs)',     notes: 'Label size.' },
+      { name: '--ds-tag-lh',            value: 'var(--line-height-base)', notes: 'Label line-height.' },
+      { name: '--ds-tag-hover-bg',      value: 'var(--surface-muted)',    notes: 'Hover fill (interactive mode).' },
+      { name: '--ds-tag-active-bg',     value: 'var(--primary-muted)',    notes: 'Selected fill.' },
+      { name: '--ds-tag-active-fg',     value: 'var(--primary-strong)',   notes: 'Selected label.' },
+      { name: '--ds-tag-active-border', value: 'var(--primary)',          notes: 'Selected border.' },
+    ],
+  },
+  {
     component: 'Status dot',
     selector: '.status-dot',
     description: 'Severity classes only override --ds-statusdot-color.',
@@ -317,6 +336,37 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-banner-close-fg-hover', value: 'var(--icon-strong)',    notes: 'Close icon hover.' },
       { name: '--ds-banner-radius',         value: 'var(--radius-md)',           notes: 'Corner radius.' },
       { name: '--ds-banner-bar-width',      value: 'var(--banner-bar-w)',   notes: 'Left bar width.' },
+    ],
+  },
+  {
+    component: 'Toast',
+    selector: '.toast',
+    description: 'Notification pill. Per-severity tints fall back to the base --ds-toast-bg / --ds-toast-border '
+      + 'when their var is unset.',
+    tokens: [
+      { name: '--ds-toast-bg',             value: 'var(--surface-overlay)', notes: 'Base surface fill.' },
+      { name: '--ds-toast-border',         value: 'var(--border-default)',  notes: 'Base border.' },
+      { name: '--ds-toast-bg-info',        value: 'var(--ds-toast-bg)',     notes: 'Info tint fill.' },
+      { name: '--ds-toast-bg-success',     value: 'var(--ds-toast-bg)',     notes: 'Success tint fill.' },
+      { name: '--ds-toast-bg-warning',     value: 'var(--ds-toast-bg)',     notes: 'Warning tint fill.' },
+      { name: '--ds-toast-bg-error',       value: 'var(--ds-toast-bg)',     notes: 'Error tint fill.' },
+      { name: '--ds-toast-border-info',    value: 'var(--ds-toast-border)', notes: 'Info tint border.' },
+      { name: '--ds-toast-border-success', value: 'var(--ds-toast-border)', notes: 'Success tint border.' },
+      { name: '--ds-toast-border-warning', value: 'var(--ds-toast-border)', notes: 'Warning tint border.' },
+      { name: '--ds-toast-border-error',   value: 'var(--ds-toast-border)', notes: 'Error tint border.' },
+    ],
+  },
+  {
+    component: 'Empty state',
+    selector: '.empty-state',
+    description: 'Zero-data / error / locked / success placeholder. Severity classes re-point the icon-tile colours.',
+    tokens: [
+      { name: '--ds-empty-state-tile-bg',   value: 'var(--surface-tint)',            notes: 'Icon-tile fill — severity classes re-point.' },
+      { name: '--ds-empty-state-tile-fg',   value: 'var(--text-secondary)',          notes: 'Icon-tile colour.' },
+      { name: '--ds-empty-state-title-fg',  value: 'var(--text-primary)',            notes: 'Title colour.' },
+      { name: '--ds-empty-state-body-fg',   value: 'var(--text-secondary)',          notes: 'Body colour.' },
+      { name: '--ds-empty-state-body-maxw', value: 'var(--empty-body-maxw)',         notes: 'Body max width.' },
+      { name: '--ds-empty-state-pad',       value: 'var(--space-12) var(--space-6)', notes: 'Inner padding.' },
     ],
   },
   {
