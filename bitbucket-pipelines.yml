@@ -1,19 +1,23 @@
-# Publishes @ids-group-ltd/ids-design-system to npm when a vX.Y.Z git tag is pushed.
+# CI/CD for @ids-group-ltd/ids-design-system.
 #
-# Auth: a Secured repository variable NPM_TOKEN — an npm granular access token
-# with read+write on the @ids-group-ltd scope and "Bypass 2FA" enabled.
-# Set it under: Repository settings -> Repository variables.
+# Build/lint logic lives in infrastructure/scripts/*.sh (see its README); this
+# file only wires images, caches, and triggers.
 #
-# NOTE: write-enabled granular tokens expire in 90 days max (npm policy since
-# Oct 2025), so NPM_TOKEN must be rotated quarterly. Bitbucket is not yet an
-# npm trusted publisher (no OIDC), so a token is currently the only option.
+#   pull-requests  -> lint || build quality gate
+#   tags v*        -> build the library and publish to npm
+#   custom         -> deploy the ds-docs showcase to the IDS prototypes CDN
 #
-# The .npmrc below stores the literal string ${NPM_TOKEN}; npm substitutes the
-# env var at runtime, so the token value is never written to disk (npm docs).
+# Publish auth: a Secured repository variable NPM_TOKEN — an npm granular access
+# token with read+write on the @ids-group-ltd scope and "Bypass 2FA" enabled.
+# Write-enabled granular tokens expire in 90 days max (npm policy since Oct 2025),
+# so NPM_TOKEN must be rotated quarterly. Bitbucket is not yet an npm trusted
+# publisher (no OIDC), so a token is currently the only option. The .npmrc below
+# stores the literal string ${NPM_TOKEN}; npm substitutes the env var at runtime,
+# so the token value is never written to disk.
 #
 # Release flow:
 #   npm run release:minor                 # bumps version, commits, creates vX.Y.Z tag
-#   git push origin main --follow-tags    # the tag push triggers this pipeline
+#   git push origin main --follow-tags    # the tag push triggers the publish pipeline
 
 image: node:22-alpine
 
@@ -31,8 +35,50 @@ definitions:
         files:
           - package-lock.json
       path: ~/.bun/install/cache
+    angular:
+      key:
+        files:
+          - package-lock.json
+          - angular.json
+      path: .angular/cache
+    dist-ds:
+      key:
+        files:
+          - package-lock.json
+          - tsconfig.lib.prod.json
+          - src/**
+      path: dist/ds
+
+  steps:
+    # report-only while the repo carries pre-existing lint debt; the build step
+    # is the hard gate. Flip to blocking (drop the arg) once the codebase is clean.
+    - step: &lint
+        name: Lint (format + stylelint + eslint, report-only)
+        caches:
+          - npm
+          - bun-bin
+          - bun-cache
+        script:
+          - sh infrastructure/scripts/lint.sh report-only
+
+    - step: &build
+        name: Build library + docs
+        caches:
+          - npm
+          - bun-bin
+          - bun-cache
+          - angular
+          - dist-ds
+        script:
+          - sh infrastructure/scripts/build-docs.sh
 
 pipelines:
+  pull-requests:
+    '**':
+      - parallel:
+          - step: *lint
+          - step: *build
+
   tags:
     'v*':
       - step:
@@ -41,15 +87,10 @@ pipelines:
             - npm
             - bun-bin
             - bun-cache
+            - angular
+            - dist-ds
           script:
-            # bun for fast, peer-dep-tolerant installs (npm ci chokes on the
-            # @emnapi optional peer-deps under alpine/musl). Binary is cached in
-            # ~/.bun/bin so the npm bootstrap only runs on a cold cache.
-            - export BUN_INSTALL="$HOME/.bun"
-            - export PATH="$BUN_INSTALL/bin:$PATH"
-            - if ! command -v bun > /dev/null; then npm i -g bun && mkdir -p "$BUN_INSTALL/bin" && cp "$(which bun)" "$BUN_INSTALL/bin/bun"; fi
-            - bun install --no-save --no-progress
-            - bun run build
+            - sh infrastructure/scripts/build-lib.sh
             - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc
             - npm publish ./dist/ds
 
@@ -57,21 +98,12 @@ pipelines:
     # Manual deploy of the ds-docs showcase to the IDS prototypes CDN, mirroring
     # the pinkmoon prototype deploy: shared bucket ids-prototypes + CloudFront
     # E1P3IR95745IWV in eu-west-2, served under /ids-ds/ alongside /pm-admin and
-    # /pm-field. No dedicated infra needed. Requires the same Secured repository
-    # variables pinkmoon uses: IDS_DOCKER_AWS_ACCESS_KEY_ID, IDS_DOCKER_AWS_SECRET_ACCESS_KEY.
+    # /pm-field. Requires the same Secured repository variables pinkmoon uses:
+    # IDS_DOCKER_AWS_ACCESS_KEY_ID, IDS_DOCKER_AWS_SECRET_ACCESS_KEY.
     deploy-docs:
       - step:
+          <<: *build
           name: Build ds-docs showcase
-          caches:
-            - npm
-            - bun-bin
-            - bun-cache
-          script:
-            - export BUN_INSTALL="$HOME/.bun"
-            - export PATH="$BUN_INSTALL/bin:$PATH"
-            - if ! command -v bun > /dev/null; then npm i -g bun && mkdir -p "$BUN_INSTALL/bin" && cp "$(which bun)" "$BUN_INSTALL/bin/bun"; fi
-            - bun install --no-save --no-progress
-            - bun run build:docs
           artifacts:
             - dist/ds-docs/**
       - step:
