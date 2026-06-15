@@ -3,9 +3,9 @@
 # Build/lint logic lives in infrastructure/scripts/*.sh (see its README); this
 # file only wires images, caches, and triggers.
 #
-#   pull-requests  -> lint || build quality gate
-#   tags v*        -> build the library and publish to npm
-#   custom         -> deploy the ds-docs showcase to the IDS prototypes CDN
+#   tags v*           -> build the library and publish to npm
+#   custom validate   -> on-demand build (gate) + lint (report-only)
+#   custom deploy-docs -> deploy the ds-docs showcase to the IDS prototypes CDN
 #
 # Publish auth: a Secured repository variable NPM_TOKEN — an npm granular access
 # token with read+write on the @ids-group-ltd scope and "Bypass 2FA" enabled.
