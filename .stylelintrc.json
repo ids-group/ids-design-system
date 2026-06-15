@@ -25,6 +25,8 @@
     "selector-class-pattern": null,
     "custom-property-pattern": null,
     "no-empty-source": null,
-    "custom-property-empty-line-before": null
+    "custom-property-empty-line-before": null,
+    "declaration-block-single-line-max-declarations": null,
+    "rule-empty-line-before": null
   }
 }

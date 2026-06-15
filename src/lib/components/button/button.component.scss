@@ -3,6 +3,7 @@
    ============================================================ */
 :host {
   display: inline-flex;
+
   /* Opts out of the implicit stretch a flex/grid parent applies to its items —
      without this the button fills the column even without `fullWidth`. */
   width: fit-content;
@@ -33,7 +34,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  font: var(--font-weight-extrabold) var(--font-size-m)/var(--line-height-flat) var(--font-sans);
+  font: var(--font-weight-extrabold) var(--font-size-m) / var(--line-height-flat) var(--font-sans);
   letter-spacing: var(--letter-spacing-wide);
   color: var(--_button-fg);
   background: var(--_button-bg);
@@ -72,7 +73,7 @@
   .button-main { display: contents; }
   .subtext-slot:empty { display: none; }
   .subtext-slot {
-    font: var(--font-weight-medium) var(--font-size-2xs)/var(--line-height-tight) var(--font-sans);
+    font: var(--font-weight-medium) var(--font-size-2xs) / var(--line-height-tight) var(--font-sans);
     letter-spacing: normal;
     text-align: center;
   }
@@ -147,6 +148,7 @@
     --_button-fg:        var(--ds-button-fg,        var(--text-link));
     --_button-bg-hover:  var(--ds-button-bg-hover,  transparent);
     --_button-bg-active: var(--ds-button-bg-active, transparent);
+
     padding: 0; height: auto; width: auto;
     text-decoration: underline;
     text-underline-offset: var(--btn-link-uloff);
@@ -157,6 +159,7 @@
   &.loading {
     color: transparent !important;
     pointer-events: none;
+
     /* The [disabled] attr is set while loading — keep the variant fill, not
        the disabled gray; the spinner takes the variant's label color. */
     background: var(--_button-bg);
@@ -212,7 +215,7 @@
   border-radius: var(--radius-md);
   background: var(--surface-default);
   color: var(--text-secondary);
-  font: var(--font-weight-semibold) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
+  font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
   cursor: pointer;
 
   &:hover { background: var(--surface-secondary); color: var(--text-primary); }

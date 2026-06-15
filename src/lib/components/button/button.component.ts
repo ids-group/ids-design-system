@@ -1,4 +1,11 @@
-import { Component, ViewEncapsulation, booleanAttribute, computed, input, output } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  computed,
+  input,
+  output,
+} from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
 import type { ButtonSize, ButtonType, ButtonVariant } from './button.types';
@@ -37,11 +44,14 @@ export class ButtonComponent {
       this.size(),
       this.loading() ? 'loading' : '',
     ];
+
     return parts.filter(Boolean).join(' ');
   });
 
   protected onClick(event: MouseEvent): void {
-    if (this.disabled() || this.loading()) return;
+    if (this.disabled() || this.loading()) {
+      return;
+    }
     this.pressed.emit(event);
   }
 }

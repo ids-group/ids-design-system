@@ -4,6 +4,12 @@ node_modules
 coverage
 showcase
 package-lock.json
+
+# SCSS keeps its hand-aligned, compact house style — stylelint owns its
+# formatting; prettier would reflow/expand it. (printWidth unchanged.)
+*.scss
+*.css
+
 *.ico
 *.png
 *.jpg
