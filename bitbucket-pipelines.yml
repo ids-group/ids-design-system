@@ -1,15 +1,29 @@
 # Publishes @ids-group-ltd/ds to npm when a vX.Y.Z git tag is pushed.
 #
-# Requires a Secured repository variable NPM_TOKEN — an npm granular access
-# token with read+write on the @ids-group-ltd scope and "Bypass 2FA" enabled.
+# Auth: a Secured repository variable NPM_TOKEN — an npm granular access token
+# with read+write on the @ids-group-ltd scope and "Bypass 2FA" enabled.
 # Set it under: Repository settings -> Repository variables.
 #
+# NOTE: write-enabled granular tokens expire in 90 days max (npm policy since
+# Oct 2025), so NPM_TOKEN must be rotated quarterly. Bitbucket is not yet an
+# npm trusted publisher (no OIDC), so a token is currently the only option.
+#
+# The .npmrc below stores the literal string ${NPM_TOKEN}; npm substitutes the
+# env var at runtime, so the token value is never written to disk (npm docs).
+#
 # Release flow:
-#   npm run release:minor          # bumps version, commits, creates vX.Y.Z tag
-#   git push origin main --follow-tags
-#   -> this tag push triggers the pipeline below, which builds and publishes.
+#   npm run release:minor                 # bumps version, commits, creates vX.Y.Z tag
+#   git push origin main --follow-tags    # the tag push triggers this pipeline
 
 image: node:22
+
+definitions:
+  caches:
+    npm:
+      key:
+        files:
+          - package-lock.json
+      path: ~/.npm
 
 pipelines:
   tags:
@@ -17,9 +31,9 @@ pipelines:
       - step:
           name: Build & publish to npm
           caches:
-            - node
+            - npm
           script:
             - npm ci
             - npm run build
-            - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+            - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc
             - npm publish ./dist/ds
