@@ -22,3 +22,6 @@ fi
 
 echo "Building ds-docs..."
 bun run build:docs
+
+# Fail loud if the deployable artifact didn't land where the deploy step expects.
+[ -f dist/ds-docs/browser/index.html ] || { echo "Expected artifact missing: dist/ds-docs/browser/index.html"; exit 1; }

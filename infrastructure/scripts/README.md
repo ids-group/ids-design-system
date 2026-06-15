@@ -9,7 +9,7 @@ adapted to a design-system repo (library `ds` + showcase `ds-docs`).
 
 | Script         | Purpose                                                                 |
 |----------------|-------------------------------------------------------------------------|
-| `_setup.sh`    | **Sourced** helper: `setup_bun` (bootstrap + cache bun) and `install_deps` (`bun install`). |
+| `_setup.sh`    | **Sourced** helper: `setup_bun` (bootstrap + cache bun) and `install_deps` (`bun install --frozen-lockfile`). |
 | `build-lib.sh` | Build the `ds` library → `dist/ds` (the npm artifact).                  |
 | `build-docs.sh`| Ensure `dist/ds` exists (cache hit or build), then build `ds-docs` → `dist/ds-docs`. |
 | `lint.sh`      | Run prettier + stylelint + eslint in parallel. `lint.sh report-only` prints results but never fails. Standalone — handy locally. |
@@ -24,6 +24,11 @@ Windows checkouts cannot set reliably).
 `@napi-rs/wasm-runtime` ("Missing from lock file"). bun resolves optional peers
 tolerantly and installs faster. The bun binary is cached in `~/.bun/bin`, so the
 one-time `npm i -g bun` bootstrap only runs on a cold cache.
+
+Installs use the committed **`bun.lock`** with `--frozen-lockfile` for
+reproducible builds (it pins cross-platform, incl. the linux/musl optionals).
+Regenerate it with `bun install` whenever dependencies change. `package-lock.json`
+is kept for npm/Dependabot consumers — bun prefers `bun.lock`.
 
 `_setup.sh` is **sourced**, not executed: a child process cannot export `bun`
 onto the calling shell's `PATH`.

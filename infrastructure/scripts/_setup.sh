@@ -19,5 +19,8 @@ setup_bun() {
 }
 
 install_deps() {
-  bun install --no-save --no-progress
+  # --frozen-lockfile: install exactly what the committed bun.lock pins, and fail
+  # if package.json and bun.lock disagree — reproducible builds, especially for
+  # the npm publish. Regenerate the lock with `bun install` when deps change.
+  bun install --frozen-lockfile --no-progress
 }
