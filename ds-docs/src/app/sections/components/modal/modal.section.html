@@ -109,10 +109,7 @@
               <div body class="form-stack">
                 <ds-input label="Sub-record name" value="Project Alpha · Phase 1" />
                 <ds-input label="Capacity" type="number" value="60" />
-                <div class="field">
-                  <span class="label">Owner</span>
-                  <ds-dropdown [options]="ownerOptions" value="brooks" />
-                </div>
+                <ds-dropdown label="Owner" [options]="ownerOptions" value="brooks" />
               </div>
               <ng-container actions>
                 <ds-button variant="outline">Cancel</ds-button>
