@@ -15,7 +15,7 @@
 #   npm run release:minor                 # bumps version, commits, creates vX.Y.Z tag
 #   git push origin main --follow-tags    # the tag push triggers this pipeline
 
-image: node:22
+image: node:22-alpine
 
 definitions:
   caches:
