@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `@ids-group-ltd/ds` are documented here.
+All notable changes to `@ids-group-ltd/ids-design-system` are documented here.
 
 Versioning follows [SemVer](https://semver.org). Mapping from commit types:
 `fix` → patch, `feat` → minor, breaking change (API or visual) → major.

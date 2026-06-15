@@ -10,7 +10,7 @@ Angular component library, design tokens and themes for IDS Group products.
 ## Installation
 
 ```bash
-npm install @ids-group-ltd/ds
+npm install @ids-group-ltd/ids-design-system
 ```
 
 Requires Angular `^21.2.0` (`@angular/core`, `common`, `forms`, `router`, `platform-browser`) and `@angular/cdk` as peer dependencies.
@@ -26,7 +26,7 @@ Add the package to your Sass include paths in `angular.json`:
   "build": {
     "options": {
       "stylePreprocessorOptions": {
-        "includePaths": ["node_modules/@ids-group-ltd/ds"]
+        "includePaths": ["node_modules/@ids-group-ltd/ids-design-system"]
       }
     }
   }
@@ -56,7 +56,7 @@ All components are standalone — import them directly:
 
 ```ts
 import { Component } from '@angular/core';
-import { ButtonComponent } from '@ids-group-ltd/ds';
+import { ButtonComponent } from '@ids-group-ltd/ids-design-system';
 
 @Component({
   selector: 'app-example',

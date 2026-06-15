@@ -1,4 +1,4 @@
-# Publishes @ids-group-ltd/ds to npm when a vX.Y.Z git tag is pushed.
+# Publishes @ids-group-ltd/ids-design-system to npm when a vX.Y.Z git tag is pushed.
 #
 # Auth: a Secured repository variable NPM_TOKEN — an npm granular access token
 # with read+write on the @ids-group-ltd scope and "Bypass 2FA" enabled.
