@@ -33,7 +33,7 @@ pipelines:
           caches:
             - npm
           script:
-            - npm ci
+            - npm install --no-audit --no-fund --legacy-peer-deps
             - npm run build
             - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc
             - npm publish ./dist/ds
@@ -50,7 +50,7 @@ pipelines:
           caches:
             - npm
           script:
-            - npm ci
+            - npm install --no-audit --no-fund --legacy-peer-deps
             - npm run build:docs
           artifacts:
             - dist/ds-docs/**
