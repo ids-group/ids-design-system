@@ -119,7 +119,7 @@
         background: var(--_tab-pill-bg-active);
         color: var(--_tab-pill-fg-active);
         border-bottom: 0;
-        box-shadow: var(--z100);
+        box-shadow: var(--shadow-1);
 
         /* Active hover — wash the elevated card with a brand tint */
         &:hover {

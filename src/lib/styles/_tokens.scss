@@ -87,18 +87,18 @@
   /* --shadow-tint-h/s/l live in themes/default/_palette.scss — palette-level
      so dark palettes can override --shadow-tint-l → ~95% for soft light glows. */
 
-  --z100: 0 1px 2px  hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .06),
-          0 1px 3px  hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .08);
-  --z200: 0 4px 8px  hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .06),
-          0 4px 16px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .10);
-  --z300: 0 8px 16px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .08),
-          0 16px 32px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .14);
-  --z400: 0 16px 32px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .12),
-          0 24px 48px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .18);
-  --shadow-popover: var(--z200);
-  --shadow-modal:   var(--z400);
-  --shadow-toast:   var(--z300);
-  --shadow-card:    var(--z100);
+  --shadow-1: 0 1px 2px  hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .06),
+              0 1px 3px  hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .08);
+  --shadow-2: 0 4px 8px  hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .06),
+              0 4px 16px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .10);
+  --shadow-3: 0 8px 16px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .08),
+              0 16px 32px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .14);
+  --shadow-4: 0 16px 32px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .12),
+              0 24px 48px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .18);
+  --shadow-popover: var(--shadow-2);
+  --shadow-modal:   var(--shadow-4);
+  --shadow-toast:   var(--shadow-3);
+  --shadow-card:    var(--shadow-1);
 
   /* Backdrop blur */
   --blur-sm: 4px;

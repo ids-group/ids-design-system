@@ -20,32 +20,32 @@ interface TruncRow {
 
 const PRIMITIVE_TIERS: ShadowTier[] = [
   {
-    name: 'z100',
+    name: 'shadow-1',
     value: '0 1px 2px / 0 1px 3px',
     desc: 'Subtle lift — cards at rest, raised rows',
   },
   {
-    name: 'z200',
+    name: 'shadow-2',
     value: '0 4px 8px / 0 4px 16px',
     desc: 'Popovers, dropdowns, command palette',
   },
   {
-    name: 'z300',
+    name: 'shadow-3',
     value: '0 8px 16px / 0 16px 32px',
     desc: 'Toasts, larger floating surfaces',
   },
   {
-    name: 'z400',
+    name: 'shadow-4',
     value: '0 16px 32px / 0 24px 48px',
     desc: 'Modals, drawers, max-elevation chrome',
   },
 ];
 
 const SEMANTIC_TIERS: ShadowTier[] = [
-  { name: 'shadow-card',    value: 'alias → --z100', desc: 'Card at rest' },
-  { name: 'shadow-popover', value: 'alias → --z200', desc: 'Popovers, dropdowns, combobox' },
-  { name: 'shadow-toast',   value: 'alias → --z300', desc: 'Toasts, floating notifications' },
-  { name: 'shadow-modal',   value: 'alias → --z400', desc: 'Modals, drawers' },
+  { name: 'shadow-card',    value: 'alias → --shadow-1', desc: 'Card at rest' },
+  { name: 'shadow-popover', value: 'alias → --shadow-2', desc: 'Popovers, dropdowns, combobox' },
+  { name: 'shadow-toast',   value: 'alias → --shadow-3', desc: 'Toasts, floating notifications' },
+  { name: 'shadow-modal',   value: 'alias → --shadow-4', desc: 'Modals, drawers' },
 ];
 
 const APPLIED: AppliedDemo[] = [
@@ -78,7 +78,7 @@ const APPLIED: AppliedDemo[] = [
 const TRUNC: TruncRow[] = [
   {
     field: 'Primitive vs semantic',
-    behaviour: 'Components consume semantic tokens (--shadow-popover, --shadow-modal). Never reach for --z200 / --z400 directly.',
+    behaviour: 'Components consume semantic tokens (--shadow-popover, --shadow-modal). Never reach for --shadow-2 / --shadow-4 directly.',
   },
   {
     field: 'Theme tinting',

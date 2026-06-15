@@ -96,14 +96,14 @@
       padding: var(--space-3) var(--space-4);
       background: var(--surface-default);
       border-radius: var(--radius-md);
-      box-shadow: var(--z100);
+      box-shadow: var(--shadow-1);
       font: var(--font-weight-bold) var(--font-size-s)/1 var(--font-sans);
       color: var(--text-primary);
       transition: transform var(--demo-dur) var(--demo-ease), box-shadow var(--demo-dur) var(--demo-ease);
     }
     .combined-cell--fade:hover .demo-card-lift {
       transform: translateY(-4px);
-      box-shadow: var(--z300);
+      box-shadow: var(--shadow-3);
     }
 
     /* Slide demo · toast */
@@ -115,7 +115,7 @@
       padding: var(--space-2) var(--space-3);
       background: var(--surface-default);
       border-radius: var(--radius-md);
-      box-shadow: var(--z200);
+      box-shadow: var(--shadow-2);
       transform: translateY(40px);
       opacity: 0;
       transition: transform var(--demo-dur) var(--demo-ease), opacity var(--demo-dur) var(--demo-ease);
@@ -140,7 +140,7 @@
       padding: var(--space-3) var(--space-4);
       background: var(--surface-default);
       border-radius: var(--radius-md);
-      box-shadow: var(--z400);
+      box-shadow: var(--shadow-4);
       font: var(--font-weight-bold) var(--font-size-s)/1 var(--font-sans);
       color: var(--text-primary);
       transform: scale(0.85);

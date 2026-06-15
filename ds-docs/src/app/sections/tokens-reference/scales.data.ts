@@ -36,17 +36,18 @@ export const RADIUS: readonly RadiusRow[] = [
 ];
 
 export const SHADOWS: readonly ShadowRow[] = [
-  { name: '--z100',           alias: '',                notes: 'Lowest elevation — cards.' },
-  { name: '--z200',           alias: '',                notes: 'Popovers, dropdowns.' },
-  { name: '--z300',           alias: '',                notes: 'Toasts.' },
-  { name: '--z400',           alias: '',                notes: 'Modals, highest elevation.' },
-  { name: '--shadow-card',    alias: 'var(--z100)',     notes: 'Alias — applied to .card.' },
-  { name: '--shadow-popover', alias: 'var(--z200)',     notes: 'Alias — popovers, dropdowns.' },
-  { name: '--shadow-toast',   alias: 'var(--z300)',     notes: 'Alias — toasts.' },
-  { name: '--shadow-modal',   alias: 'var(--z400)',     notes: 'Alias — modals.' },
-  { name: '--shadow-tint-h',  alias: '225',             notes: 'Shadow hue channel — themable.' },
-  { name: '--shadow-tint-s',  alias: '39%',             notes: 'Shadow saturation channel.' },
-  { name: '--shadow-tint-l',  alias: '7%',              notes: 'Shadow lightness — flip in dark mode.' },
+  { name: '--shadow-1',       alias: '',                    notes: 'Lowest elevation — cards.' },
+  { name: '--shadow-2',       alias: '',                    notes: 'Popovers, dropdowns.' },
+  { name: '--shadow-3',       alias: '',                    notes: 'Toasts.' },
+  { name: '--shadow-4',       alias: '',                    notes: 'Modals, highest elevation.' },
+  { name: '--shadow-card',    alias: 'var(--shadow-1)',     notes: 'Alias — applied to .card.' },
+  { name: '--shadow-popover', alias: 'var(--shadow-2)',     notes: 'Alias — popovers, dropdowns.' },
+  { name: '--shadow-toast',   alias: 'var(--shadow-3)',     notes: 'Alias — toasts.' },
+  { name: '--shadow-modal',   alias: 'var(--shadow-4)',     notes: 'Alias — modals.' },
+  { name: '--text-on-media-shadow', alias: '',              notes: 'Text-legibility drop shadow — pair with --text-on-media over photos / camera feeds.' },
+  { name: '--shadow-tint-h',  alias: '225',                 notes: 'Shadow hue channel — themable.' },
+  { name: '--shadow-tint-s',  alias: '39%',                 notes: 'Shadow saturation channel.' },
+  { name: '--shadow-tint-l',  alias: '7%',                  notes: 'Shadow lightness — flip in dark mode.' },
 ];
 
 export const MOTION_DUR: readonly MotionRow[] = [

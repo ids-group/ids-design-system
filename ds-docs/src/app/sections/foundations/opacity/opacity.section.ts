@@ -21,7 +21,7 @@ const STOPS: readonly OpacityStop[] = [
 ];
 
 const LITERALS: readonly AlphaRef[] = [
-  { alpha: '--shadow-tint-h/s/l',  where: 'Channel-split substrate for --z100..--z400. Light: 225 / 39% / 7%. Re-skin propagates through HSL channels.' },
+  { alpha: '--shadow-tint-h/s/l',  where: 'Channel-split substrate for --shadow-1..--shadow-4. Light: 225 / 39% / 7%. Re-skin propagates through HSL channels.' },
   { alpha: '--focus-tint-rgb',     where: 'Focus halo RGB channel. Used inside --focus-field and --focus-overlay tokens.' },
   { alpha: '--surface-scrim',      where: 'Modal / drawer backdrop. Consumes --opacity-scrim (0.55) over neutral substrate.' },
 ];

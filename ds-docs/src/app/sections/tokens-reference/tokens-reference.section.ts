@@ -44,7 +44,7 @@ export class TokensReferenceSection {
   protected readonly componentTokens = COMPONENT_TOKENS;
 
   protected hasShadowSample(name: string): boolean {
-    return name === '--z100' || name === '--z200' || name === '--z300' || name === '--z400'
+    return name === '--shadow-1' || name === '--shadow-2' || name === '--shadow-3' || name === '--shadow-4'
       || name === '--shadow-card' || name === '--shadow-popover' || name === '--shadow-toast' || name === '--shadow-modal';
   }
 

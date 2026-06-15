@@ -22,7 +22,7 @@
     height: var(--switch-thumb-size);
     background: var(--surface-default);
     border-radius: var(--radius-pill);
-    box-shadow: var(--z100);
+    box-shadow: var(--shadow-1);
     transition: transform var(--duration-base) var(--ease-standard);
   }
 

@@ -90,7 +90,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       { name: '--ds-card-radius',       value: 'var(--radius-lg)',            notes: 'Corner radius.' },
       { name: '--ds-card-pad',          value: 'var(--space-6)',             notes: 'Inner padding.' },
       { name: '--ds-card-shadow',       value: 'none',                   notes: 'Default (flat).' },
-      { name: '--ds-card-shadow-hover', value: 'var(--z100)',            notes: 'Hover lift shadow.' },
+      { name: '--ds-card-shadow-hover', value: 'var(--shadow-1)',        notes: 'Hover lift shadow.' },
       { name: '--ds-card-focus-shadow', value: 'var(--focus-ring)',      notes: 'Focus halo on interactive cards.' },
       { name: '--ds-card-hover-lift',   value: 'var(--card-hover-lift)', notes: 'Translate-Y on hover.' },
     ],

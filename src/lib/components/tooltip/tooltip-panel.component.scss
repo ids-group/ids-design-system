@@ -12,7 +12,7 @@
   border-radius: var(--radius-md);
   max-width: var(--tooltip-maxw);
   z-index: var(--layer-tooltip);
-  box-shadow: var(--z200);
+  box-shadow: var(--shadow-2);
 
   &::after {
     content: "";
