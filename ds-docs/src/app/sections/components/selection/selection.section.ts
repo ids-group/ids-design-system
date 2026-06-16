@@ -1,12 +1,13 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { CheckboxComponent, RadioComponent, SwitchComponent } from 'ds';
 import { DocsAwaitComponent } from '../../../shared/docs-await.component';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-selection',
   standalone: true,
-  imports: [CheckboxComponent, DocsAwaitComponent, DocsTruncationComponent, RadioComponent, SwitchComponent],
+  imports: [CheckboxComponent, DocsAwaitComponent, DocsSectionComponent, DocsTruncationComponent, RadioComponent, SwitchComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './selection.section.html',
   styleUrl: './selection.section.scss',

@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ProgressComponent } from 'ds';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
   selector: 'section-components-progress',
   standalone: true,
-  imports: [ProgressComponent, DocsTruncationComponent],
+  imports: [ProgressComponent, DocsTruncationComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './progress.section.html',
   styleUrl: './progress.section.scss',

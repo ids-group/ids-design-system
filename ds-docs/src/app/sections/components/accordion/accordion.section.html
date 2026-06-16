@@ -1,12 +1,11 @@
 
-    <section id="section-accordion" data-anchor="accordion" class="section">
-      <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Accordion<docs-truncation [rules]="truncationRules" /></h2>
-      <p class="lede t-m">
+    <docs-section anchor="accordion" eyebrow="Components" title="Accordion">
+      <docs-truncation [rules]="truncationRules" />
+      <span lede>
         Collapsible disclosure panel. Each item exposes a head trigger and a body that
         shows when expanded. Multiple items can be open simultaneously by default — pair
         with parent-coordinated state if you need single-open semantics.
-      </p>
+      </span>
 
       <h3 class="block-title t-h4">Default</h3>
       <ds-accordion>
@@ -36,4 +35,4 @@
         </div>
       </div>
 
-    </section>
+    </docs-section>

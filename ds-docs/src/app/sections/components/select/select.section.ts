@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DropdownComponent, type DropdownOption } from 'ds';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-select',
   standalone: true,
-  imports: [DropdownComponent, DocsTruncationComponent],
+  imports: [DropdownComponent, DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './select.section.html',
   styleUrl: './select.section.scss',

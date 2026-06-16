@@ -1,10 +1,11 @@
 import { Component, ViewEncapsulation, inject } from '@angular/core';
 import { ButtonComponent, ToastComponent, ToastService } from 'ds';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
   selector: 'section-components-toast',
   standalone: true,
-  imports: [ButtonComponent, ToastComponent],
+  imports: [ButtonComponent, DocsSectionComponent, ToastComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './toast.section.html',
   styleUrl: './toast.section.scss',

@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ButtonComponent, IconComponent } from 'ds';
 import { DocsAwaitComponent } from '../../../shared/docs-await.component';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 interface VariantSpec {
@@ -11,7 +12,7 @@ interface VariantSpec {
 @Component({
   selector: 'section-components-button',
   standalone: true,
-  imports: [ButtonComponent, DocsAwaitComponent, DocsTruncationComponent, IconComponent],
+  imports: [ButtonComponent, DocsAwaitComponent, DocsSectionComponent, DocsTruncationComponent, IconComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './button.section.html',
   styleUrl: './button.section.scss',

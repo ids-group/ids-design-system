@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DividerComponent } from 'ds';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface WidthRow {
   readonly token: string;
@@ -29,7 +30,7 @@ const ROLES: readonly RoleRow[] = [
 @Component({
   selector: 'section-foundations-borders',
   standalone: true,
-  imports: [DividerComponent],
+  imports: [DividerComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './borders.section.html',
   styleUrl: './borders.section.scss',

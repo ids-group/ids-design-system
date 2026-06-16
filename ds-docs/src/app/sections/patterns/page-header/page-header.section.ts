@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   BreadcrumbsComponent,
   PageHeaderComponent,
@@ -14,6 +15,7 @@ import {
   standalone: true,
   imports: [
     BreadcrumbsComponent,
+    DocsSectionComponent,
     PageHeaderComponent,
     ButtonComponent,
     BadgeComponent,

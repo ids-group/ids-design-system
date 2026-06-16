@@ -1,10 +1,7 @@
 
-    <section id="section-search" data-anchor="search" class="section">
-      <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Search<docs-truncation [rules]="truncationRules" /></h2>
-      <p class="lede t-m">
-        Top-bar search affordance — leading magnifier icon, mid-content control, optional ⌘K keyboard hint.
-      </p>
+    <docs-section anchor="search" eyebrow="Components" title="Search">
+      <docs-truncation [rules]="truncationRules" />
+      <span lede>Top-bar search affordance — leading magnifier icon, mid-content control, optional ⌘K keyboard hint.</span>
 
       <!-- ============================================================ Default + filled + focus states -->
       <h3 class="block-title t-h4">Default · filled · focus</h3>
@@ -52,4 +49,4 @@
           <ds-search placeholder="Search…" />
         </div>
       </div>
-    </section>
+    </docs-section>

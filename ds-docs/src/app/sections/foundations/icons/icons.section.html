@@ -1,12 +1,11 @@
 
-    <section id="section-icons" data-anchor="icons" class="section">
-      <div class="eyebrow t-overline">Foundations</div>
-      <h2 class="t-h2">Iconography<docs-truncation [rules]="truncationRules" /></h2>
-      <p class="lede t-m">
+    <docs-section anchor="icons" eyebrow="Foundations" title="Iconography">
+      <docs-truncation [rules]="truncationRules" />
+      <span lede>
         1.75-px stroke, rounded caps, <code class="t-mono">currentColor</code> fills. Sizes derive from a fixed scale.
         Rendered via the <code class="t-mono">&lt;ds-icon&gt;</code> component which inlines SVG paths from
         <code class="t-mono">ICONS</code>.
-      </p>
+      </span>
 
       <!-- ============================================================ Size scale -->
       <h3 class="block-title t-h4">Size scale</h3>
@@ -56,4 +55,4 @@
           <code class="t-mono role-cell__tok">--icon-on-primary</code>
         </div>
       </div>
-    </section>
+    </docs-section>

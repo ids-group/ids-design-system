@@ -1,12 +1,9 @@
 
-    <section id="section-tag" data-anchor="tag" class="section">
-      <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Tag<docs-truncation [rules]="truncationRules" /></h2>
-      <p class="lede t-m">
-        Pill-shaped chip for short labels. Solid (brand-fill) for selected tokens in
+    <docs-section anchor="tag" eyebrow="Components" title="Tag">
+      <docs-truncation [rules]="truncationRules" />
+      <span lede>Pill-shaped chip for short labels. Solid (brand-fill) for selected tokens in
         multi-select inputs; neutral (grey, bordered) for filter chips and metadata. Add
-        <code class="t-mono">[closable]</code> to render a close affordance.
-      </p>
+        <code class="t-mono">[closable]</code> to render a close affordance.</span>
 
       <h3 class="block-title t-h4">Variants</h3>
       <div class="row">
@@ -30,4 +27,4 @@
         <ds-tag variant="neutral" [interactive]="true" [selected]="false" (toggled)="toggle('east')">Site East</ds-tag>
       </div>
 
-    </section>
+    </docs-section>

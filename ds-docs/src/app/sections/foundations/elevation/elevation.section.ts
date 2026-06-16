@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 interface ShadowTier {
@@ -74,7 +75,7 @@ const APPLIED: AppliedDemo[] = [
 @Component({
   selector: 'section-foundations-elevation',
   standalone: true,
-  imports: [DocsTruncationComponent],
+  imports: [DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './elevation.section.html',
   styleUrl: './elevation.section.scss',

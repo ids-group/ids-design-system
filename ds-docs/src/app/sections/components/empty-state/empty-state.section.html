@@ -1,13 +1,10 @@
 
-    <section id="section-empty-state" data-anchor="empty-state" class="section">
-      <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Empty state<docs-truncation [rules]="truncationRules" /></h2>
-      <p class="lede t-m">
-        The base component for any "nothing-to-show" state. One icon, a title that names what
+    <docs-section anchor="empty-state" eyebrow="Components" title="Empty state">
+      <docs-truncation [rules]="truncationRules" />
+      <span lede>The base component for any "nothing-to-show" state. One icon, a title that names what
         is missing, one sentence of body, and at most two actions. For richer scenarios
         (loading overlay, error retry, permission denied) see
-        <a class="link" href="#section-pattern-empty-state">Patterns &rsaquo; Empty-state variants</a>.
-      </p>
+        <a class="link" href="#section-pattern-empty-state">Patterns &rsaquo; Empty-state variants</a>.</span>
 
       <h3 class="block-title t-h4">Variants</h3>
       <p class="block-desc t-s">Five canonical variants. Each ships a distinct icon-tile tint.</p>
@@ -50,4 +47,4 @@
           </ds-empty-state>
         </div>
       </div>
-    </section>
+    </docs-section>

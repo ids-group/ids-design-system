@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { BadgeComponent, StatusDotComponent, TagComponent } from 'ds';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
   selector: 'section-components-badge',
   standalone: true,
-  imports: [BadgeComponent, StatusDotComponent, TagComponent, DocsTruncationComponent],
+  imports: [BadgeComponent, StatusDotComponent, TagComponent, DocsTruncationComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './badge.section.html',
   styleUrl: './badge.section.scss',

@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { AvatarComponent, BadgeComponent, ButtonComponent, IconComponent, type BadgeVariant } from 'ds';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface ActivityEntry {
   readonly initials: string;
@@ -14,7 +15,7 @@ interface ActivityEntry {
 @Component({
   selector: 'pattern-activity',
   standalone: true,
-  imports: [AvatarComponent, BadgeComponent, ButtonComponent, IconComponent],
+  imports: [AvatarComponent, BadgeComponent, ButtonComponent, DocsSectionComponent, IconComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './activity.section.html',
   styleUrl: './activity.section.scss',

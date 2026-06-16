@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, computed, signal } from '@angular/core';
 import { IconComponent, SkeletonComponent } from 'ds';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface AxisToken {
   readonly token: string;
@@ -83,7 +84,7 @@ function stackBarH(v: number): number { return (v / STACK_MAX) * innerH; }
 @Component({
   selector: 'section-foundations-charts',
   standalone: true,
-  imports: [IconComponent, SkeletonComponent],
+  imports: [IconComponent, SkeletonComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './charts.section.html',
   styleUrl: './charts.section.scss',

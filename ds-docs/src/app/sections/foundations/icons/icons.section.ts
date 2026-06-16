@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ICONS, IconComponent, type IconName } from 'ds';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 interface SizeRow {
@@ -20,7 +21,7 @@ const SIZES: readonly SizeRow[] = [
 @Component({
   selector: 'section-foundations-icons',
   standalone: true,
-  imports: [DocsTruncationComponent, IconComponent],
+  imports: [DocsSectionComponent, DocsTruncationComponent, IconComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './icons.section.html',
   styleUrl: './icons.section.scss',

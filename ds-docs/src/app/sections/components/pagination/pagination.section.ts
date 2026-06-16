@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { PaginationComponent } from 'ds';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
   selector: 'section-components-pagination',
   standalone: true,
-  imports: [PaginationComponent, DocsTruncationComponent],
+  imports: [PaginationComponent, DocsTruncationComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './pagination.section.html',
   styleUrl: './pagination.section.scss',

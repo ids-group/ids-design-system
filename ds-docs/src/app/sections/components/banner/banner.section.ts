@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { BannerComponent, ButtonComponent } from 'ds';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
   selector: 'section-components-banner',
   standalone: true,
-  imports: [BannerComponent, ButtonComponent, DocsTruncationComponent],
+  imports: [BannerComponent, ButtonComponent, DocsTruncationComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './banner.section.html',
   styleUrl: './banner.section.scss',

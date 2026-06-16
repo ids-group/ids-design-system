@@ -1,12 +1,13 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DatePickerComponent } from 'ds';
 import { DocsAwaitComponent } from '../../../shared/docs-await.component';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-date-picker',
   standalone: true,
-  imports: [DatePickerComponent, DocsAwaitComponent, DocsTruncationComponent],
+  imports: [DatePickerComponent, DocsAwaitComponent, DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './date-picker.section.html',
   styleUrl: './date-picker.section.scss',

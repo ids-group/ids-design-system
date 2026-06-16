@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { TagComponent } from 'ds';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-tag',
   standalone: true,
-  imports: [DocsTruncationComponent, TagComponent],
+  imports: [DocsSectionComponent, DocsTruncationComponent, TagComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './tag.section.html',
   styleUrl: './tag.section.scss',

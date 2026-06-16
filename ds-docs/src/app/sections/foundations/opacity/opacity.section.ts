@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface OpacityStop {
   readonly token: string;
@@ -29,7 +30,7 @@ const LITERALS: readonly AlphaRef[] = [
 @Component({
   selector: 'section-foundations-opacity',
   standalone: true,
-  imports: [],
+  imports: [DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './opacity.section.html',
   styleUrl: './opacity.section.scss',

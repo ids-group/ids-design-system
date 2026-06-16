@@ -1,9 +1,4 @@
 
-    :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
-
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));

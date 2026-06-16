@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { StatComponent } from 'ds';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-stat',
   standalone: true,
-  imports: [StatComponent, DocsTruncationComponent],
+  imports: [StatComponent, DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './stat.section.html',
   styleUrl: './stat.section.scss',

@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { BadgeComponent, BreadcrumbsComponent, ButtonComponent, PageHeaderComponent, TabsComponent, TabComponent, type BreadcrumbItem } from 'ds';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
   selector: 'section-components-page-header',
   standalone: true,
-  imports: [BadgeComponent, BreadcrumbsComponent, ButtonComponent, PageHeaderComponent, TabsComponent, TabComponent, DocsTruncationComponent],
+  imports: [BadgeComponent, BreadcrumbsComponent, ButtonComponent, PageHeaderComponent, TabsComponent, TabComponent, DocsTruncationComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './page-header.section.html',
   styleUrl: './page-header.section.scss',

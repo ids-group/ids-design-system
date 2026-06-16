@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { IconComponent } from 'ds';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface TokenPair {
   readonly title: string;
@@ -11,7 +12,7 @@ interface TokenPair {
 @Component({
   selector: 'practice-token-discipline',
   standalone: true,
-  imports: [IconComponent],
+  imports: [DocsSectionComponent, IconComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './token-discipline.section.html',
   styleUrl: './token-discipline.section.scss',

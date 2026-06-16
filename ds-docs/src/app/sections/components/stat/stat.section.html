@@ -1,8 +1,7 @@
 
-    <section id="section-stat" data-anchor="stat" class="section">
-      <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Stats<docs-truncation [rules]="truncationRules" /></h2>
-      <p class="lede t-m">Headline metric with an optional delta. Up/down arrows for movement vs a baseline.</p>
+    <docs-section anchor="stat" eyebrow="Components" title="Stats">
+      <docs-truncation [rules]="truncationRules" />
+      <span lede>Headline metric with an optional delta. Up/down arrows for movement vs a baseline.</span>
 
       <!-- ============================================================ Stat tiles -->
       <h3 class="block-title t-h4">Stat tiles</h3>
@@ -24,4 +23,4 @@
         <ds-stat label="Default" value="147" [delta]="12" />
         <ds-stat size="lg" label="Hero KPI" value="147" [delta]="12" />
       </div>
-    </section>
+    </docs-section>

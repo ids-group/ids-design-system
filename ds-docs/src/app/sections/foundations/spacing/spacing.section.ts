@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface SpacingStop {
   readonly name: string;
@@ -30,6 +31,7 @@ const STOPS: readonly SpacingStop[] = [
 @Component({
   selector: 'section-foundations-spacing',
   standalone: true,
+  imports: [DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './spacing.section.html',
   styleUrl: './spacing.section.scss',

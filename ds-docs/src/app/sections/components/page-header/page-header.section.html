@@ -1,10 +1,7 @@
 
-    <section id="section-page-header" data-anchor="page-header" class="section">
-      <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Page header<docs-truncation [rules]="truncationRules" /></h2>
-      <p class="lede t-m">
-        Top of every page: title, optional lede, primary action area, optional bottom tabs. Distinct from the Page header pattern, which documents the full page composition around this block.
-      </p>
+    <docs-section anchor="page-header" eyebrow="Components" title="Page header">
+      <docs-truncation [rules]="truncationRules" />
+      <span lede>Top of every page: title, optional lede, primary action area, optional bottom tabs. Distinct from the Page header pattern, which documents the full page composition around this block.</span>
 
       <!-- ============================================================ Default -->
       <h3 class="block-title t-h4">Default</h3>
@@ -79,4 +76,4 @@
         </ds-page-header>
         <div class="content-placeholder" aria-hidden="true">Page content area</div>
       </div>
-    </section>
+    </docs-section>

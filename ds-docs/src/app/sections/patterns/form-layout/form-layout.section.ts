@@ -1,10 +1,11 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { InputComponent, SelectComponent, ButtonComponent, IconComponent, type SelectOption } from 'ds';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
   selector: 'pattern-form-layout',
   standalone: true,
-  imports: [InputComponent, SelectComponent, ButtonComponent, IconComponent],
+  imports: [DocsSectionComponent, InputComponent, SelectComponent, ButtonComponent, IconComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './form-layout.section.html',
   styleUrl: './form-layout.section.scss',

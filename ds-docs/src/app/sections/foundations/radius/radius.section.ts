@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface RadiusStop {
   readonly name: string;
@@ -18,6 +19,7 @@ const RADII: readonly RadiusStop[] = [
 @Component({
   selector: 'section-foundations-radius',
   standalone: true,
+  imports: [DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './radius.section.html',
   styleUrl: './radius.section.scss',

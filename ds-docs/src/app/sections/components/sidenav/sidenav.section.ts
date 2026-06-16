@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { SidenavComponent, SidenavGroupComponent, SidenavItemComponent } from 'ds';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-sidenav',
   standalone: true,
-  imports: [SidenavComponent, SidenavGroupComponent, SidenavItemComponent, DocsTruncationComponent],
+  imports: [SidenavComponent, SidenavGroupComponent, SidenavItemComponent, DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './sidenav.section.html',
   styleUrl: './sidenav.section.scss',

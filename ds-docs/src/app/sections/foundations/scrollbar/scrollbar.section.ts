@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 interface ScrollToken {
@@ -16,7 +17,7 @@ const TOKENS: readonly ScrollToken[] = [
 @Component({
   selector: 'section-foundations-scrollbar',
   standalone: true,
-  imports: [DocsTruncationComponent],
+  imports: [DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './scrollbar.section.html',
   styleUrl: './scrollbar.section.scss',

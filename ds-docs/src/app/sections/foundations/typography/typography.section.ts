@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 interface TypeRampRow {
@@ -30,7 +31,7 @@ const RAMP: readonly TypeRampRow[] = [
 @Component({
   selector: 'section-foundations-typography',
   standalone: true,
-  imports: [DocsTruncationComponent],
+  imports: [DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './typography.section.html',
   styleUrl: './typography.section.scss',

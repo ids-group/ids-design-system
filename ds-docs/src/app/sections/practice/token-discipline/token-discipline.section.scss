@@ -1,17 +1,4 @@
 
-    :host { display: block; }
-    section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
-    .block-title { margin-top: var(--space-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
-    .block-desc code.t-mono {
-      background: var(--surface-subtitle);
-      padding: 0 var(--space-1);
-      border-radius: var(--radius-sm);
-      color: var(--text-primary);
-    }
-
     .pairs {
       margin-top: var(--space-3);
       display: grid;

@@ -1,13 +1,12 @@
 
-    <section id="section-combobox" data-anchor="combobox" class="section">
-      <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Combobox &middot; multi-select<docs-truncation [rules]="truncationRules" /></h2>
-      <p class="lede t-m">
+    <docs-section anchor="combobox" eyebrow="Components" title="Combobox &middot; multi-select">
+      <docs-truncation [rules]="truncationRules" />
+      <span lede>
         Text input that filters a token-tagged list. Single-select for picking a record
         (a Member, a venue); multi-select for picking a set (allowed products, audience tags).
         Distinct from <code class="t-mono">&lt;ds-select&gt;</code> (fixed-list dropdown) and
         Command palette (global search).
-      </p>
+      </span>
 
       <h3 class="block-title t-h4">Single</h3>
       <div class="field-stack">
@@ -26,4 +25,4 @@
                      placeholder="Add product…" />
       </div>
 
-    </section>
+    </docs-section>

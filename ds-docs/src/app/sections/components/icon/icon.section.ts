@@ -3,6 +3,7 @@ import {
   IconComponent,
   type IconName,
 } from 'ds';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 interface IconSize {
@@ -27,7 +28,7 @@ const SAMPLES: readonly IconName[] = [
 @Component({
   selector: 'section-components-icon',
   standalone: true,
-  imports: [IconComponent, DocsTruncationComponent],
+  imports: [DocsSectionComponent, DocsTruncationComponent, IconComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './icon.section.html',
   styleUrl: './icon.section.scss',

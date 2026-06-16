@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { ComboboxComponent, type ComboboxOption } from 'ds';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 const MEMBERS: readonly ComboboxOption<string>[] = [
   { value: 'acme',       label: 'Acme Holdings' },
@@ -20,7 +21,7 @@ const PRODUCTS: readonly ComboboxOption<string>[] = [
 @Component({
   selector: 'section-components-combobox',
   standalone: true,
-  imports: [ComboboxComponent, DocsTruncationComponent],
+  imports: [ComboboxComponent, DocsTruncationComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './combobox.section.html',
   styleUrl: './combobox.section.scss',

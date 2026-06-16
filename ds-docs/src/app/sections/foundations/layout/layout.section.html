@@ -1,11 +1,10 @@
 
-    <section id="section-layout" data-anchor="layout" class="section">
-      <div class="eyebrow t-overline">Foundations</div>
-      <h2 class="t-h2">Layout<docs-truncation [rules]="truncationRules" /></h2>
-      <p class="lede t-m">
+    <docs-section anchor="layout" eyebrow="Foundations" title="Layout">
+      <docs-truncation [rules]="truncationRules" />
+      <span lede>
         Six min-width breakpoint tokens, one column-count per tier, content caps for prose and page width.
         Page gutters scale with the viewport; content caps at 1280 px on the widest tier, fluid below.
-      </p>
+      </span>
 
       <!-- ============================================================ Breakpoints -->
       <h3 class="block-title t-h4">Breakpoints</h3>
@@ -76,4 +75,4 @@
         <li><strong>Asymmetric layouts.</strong> 8 + 4 is canonical for record-detail pages (main + meta sidebar). 9 + 3 reserved for kit / track-plan picker rails.</li>
       </ul>
 
-    </section>
+    </docs-section>

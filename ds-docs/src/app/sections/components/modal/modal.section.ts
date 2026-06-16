@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { BannerComponent, ButtonComponent, DropdownComponent, type DropdownOption, InputComponent, ModalCardComponent } from 'ds';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
   selector: 'section-components-modal',
   standalone: true,
-  imports: [BannerComponent, ButtonComponent, DocsTruncationComponent, DropdownComponent, InputComponent, ModalCardComponent],
+  imports: [BannerComponent, ButtonComponent, DocsTruncationComponent, DropdownComponent, InputComponent, ModalCardComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './modal.section.html',
   styleUrl: './modal.section.scss',

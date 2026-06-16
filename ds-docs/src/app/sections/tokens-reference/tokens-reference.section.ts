@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { DocsSectionComponent } from '../../shared/docs-section.component';
 import { SEMANTIC_PRIMARY, SEMANTIC_TERTIARY, SEMANTIC_ERROR, SEMANTIC_SUCCESS, SEMANTIC_WARNING, SEMANTIC_INFO, SEMANTIC_TEXT, SEMANTIC_SURFACE, SEMANTIC_BORDER, SEMANTIC_FOCUS, RAMPS } from './colours.data';
 import { TYPOGRAPHY_FONT, TYPOGRAPHY_SIZE, TYPOGRAPHY_LH, TYPOGRAPHY_LS, TYPOGRAPHY_FW } from './typography.data';
 import { SPACING, RADIUS, SHADOWS, MOTION_DUR, MOTION_EASE, DENSITY_HIT, DENSITY_TIERS, LAYOUT_BP, LAYOUT_COL, ICONS, MISC_BW, MISC_OPACITY, MISC_BLUR } from './scales.data';
@@ -7,6 +8,7 @@ import { COMPONENT_TOKENS } from './component-tokens.data';
 @Component({
   selector: 'section-tokens-reference',
   standalone: true,
+  imports: [DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './tokens-reference.section.html',
   styleUrl: './tokens-reference.section.scss',

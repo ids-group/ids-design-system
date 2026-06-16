@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { BadgeComponent, ButtonComponent, CheckboxComponent, EmptyStateComponent, IconComponent, TableComponent, type TableColumn } from 'ds';
 import { DocsAwaitComponent } from '../../../shared/docs-await.component';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 interface EventRow {
@@ -16,7 +17,7 @@ interface EventRow {
 @Component({
   selector: 'section-components-table',
   standalone: true,
-  imports: [BadgeComponent, ButtonComponent, CheckboxComponent, DocsAwaitComponent, DocsTruncationComponent, EmptyStateComponent, IconComponent, TableComponent],
+  imports: [BadgeComponent, ButtonComponent, CheckboxComponent, DocsAwaitComponent, DocsSectionComponent, DocsTruncationComponent, EmptyStateComponent, IconComponent, TableComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './table.section.html',
   styleUrl: './table.section.scss',

@@ -1,8 +1,7 @@
 
-    <section id="section-pattern-empty-state" data-anchor="pattern-empty-state" class="section">
-      <div class="eyebrow t-overline">Patterns</div>
-      <h2 class="t-h2">Empty-state variants<docs-truncation [rules]="truncationRules" /></h2>
-      <p class="lede t-m">{{ lede }}</p>
+    <docs-section anchor="pattern-empty-state" eyebrow="Patterns" title="Empty-state variants">
+      <docs-truncation [rules]="truncationRules" />
+      <span lede>{{ lede }}</span>
 
       <div class="blocks">
         <!-- 1 · No data — default; nothing exists yet; one primary CTA. -->
@@ -85,4 +84,4 @@
         <li>Permission denied never suggests "log in again" — the user is already authenticated; give them a real escape route.</li>
       </ul>
 
-    </section>
+    </docs-section>

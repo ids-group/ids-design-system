@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 interface Tier {
@@ -43,7 +44,7 @@ const TIERS: readonly Tier[] = [
 @Component({
   selector: 'section-foundations-density',
   standalone: true,
-  imports: [DocsTruncationComponent],
+  imports: [DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './density.section.html',
   styleUrl: './density.section.scss',

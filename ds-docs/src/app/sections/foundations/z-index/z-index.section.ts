@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface LayerRow {
   readonly token: string;
@@ -22,7 +23,7 @@ const LAYERS: readonly LayerRow[] = [
 @Component({
   selector: 'section-foundations-z-index',
   standalone: true,
-  imports: [],
+  imports: [DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './z-index.section.html',
   styleUrl: './z-index.section.scss',

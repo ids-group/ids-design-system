@@ -1,10 +1,11 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { NumberStepperComponent } from 'ds';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
   selector: 'section-components-number-stepper',
   standalone: true,
-  imports: [NumberStepperComponent],
+  imports: [NumberStepperComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './number-stepper.section.html',
   styleUrl: './number-stepper.section.scss',

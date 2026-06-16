@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { TabsComponent, TabComponent } from 'ds';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-tabs',
   standalone: true,
-  imports: [TabsComponent, TabComponent, DocsTruncationComponent],
+  imports: [DocsSectionComponent, DocsTruncationComponent, TabsComponent, TabComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './tabs.section.html',
   styleUrl: './tabs.section.scss',

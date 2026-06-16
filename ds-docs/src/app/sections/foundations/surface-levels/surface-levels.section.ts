@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface SurfaceRow {
   readonly token: string;
@@ -20,7 +21,7 @@ const SURFACES: readonly SurfaceRow[] = [
 @Component({
   selector: 'section-foundations-surface-levels',
   standalone: true,
-  imports: [],
+  imports: [DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './surface-levels.section.html',
   styleUrl: './surface-levels.section.scss',

@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 interface Duration {
@@ -71,7 +72,7 @@ const COMBINED: CombinedDemo[] = [
 @Component({
   selector: 'section-foundations-motion',
   standalone: true,
-  imports: [DocsTruncationComponent],
+  imports: [DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './motion.section.html',
   styleUrl: './motion.section.scss',

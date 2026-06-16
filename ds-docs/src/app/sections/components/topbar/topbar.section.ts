@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { AvatarComponent, BreadcrumbsComponent, IconComponent, SearchComponent, TopBarComponent, type BreadcrumbItem } from 'ds';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-topbar',
   standalone: true,
-  imports: [AvatarComponent, BreadcrumbsComponent, DocsTruncationComponent, IconComponent, SearchComponent, TopBarComponent],
+  imports: [AvatarComponent, BreadcrumbsComponent, DocsSectionComponent, DocsTruncationComponent, IconComponent, SearchComponent, TopBarComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './topbar.section.html',
   styleUrl: './topbar.section.scss',

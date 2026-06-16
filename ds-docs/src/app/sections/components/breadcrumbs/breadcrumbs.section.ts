@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { BreadcrumbsComponent, type BreadcrumbItem } from 'ds';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
   selector: 'section-components-breadcrumbs',
   standalone: true,
-  imports: [BreadcrumbsComponent, DocsTruncationComponent],
+  imports: [BreadcrumbsComponent, DocsTruncationComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './breadcrumbs.section.html',
   styleUrl: './breadcrumbs.section.scss',

@@ -1,12 +1,9 @@
 
-    <section id="section-scrollbar" data-anchor="scrollbar" class="section">
-      <div class="eyebrow t-overline">Foundations</div>
-      <h2 class="t-h2">Scrollbar<docs-truncation [rules]="truncationRules" /></h2>
-      <p class="lede t-m">
-        System chrome the user touches every minute — has to feel like part of the product, not the OS. The global
+    <docs-section anchor="scrollbar" eyebrow="Foundations" title="Scrollbar">
+      <docs-truncation [rules]="truncationRules" />
+      <span lede>System chrome the user touches every minute — has to feel like part of the product, not the OS. The global
         scrollbar styling is auto-applied (forwarded into <code class="t-mono">ds.scss</code>); no per-component opt-in is
-        needed.
-      </p>
+        needed.</span>
 
       <!-- ============================================================ Live demo -->
       <h3 class="block-title t-h4">Live demo</h3>
@@ -65,4 +62,4 @@
         <dd>Track <code class="t-mono">--neutral-800</code>; thumb <code class="t-mono">--neutral-600</code></dd>
       </dl>
 
-    </section>
+    </docs-section>

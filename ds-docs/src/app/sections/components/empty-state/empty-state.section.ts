@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ButtonComponent, EmptyStateComponent, IconComponent } from 'ds';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-empty-state',
   standalone: true,
-  imports: [ButtonComponent, DocsTruncationComponent, EmptyStateComponent, IconComponent],
+  imports: [ButtonComponent, DocsSectionComponent, DocsTruncationComponent, EmptyStateComponent, IconComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './empty-state.section.html',
   styleUrl: './empty-state.section.scss',

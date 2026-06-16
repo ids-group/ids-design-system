@@ -1,11 +1,10 @@
 
-    <section id="section-density" data-anchor="density" class="section">
-      <div class="eyebrow t-overline">Foundations</div>
-      <h2 class="t-h2">Density<docs-truncation [rules]="truncationRules" /></h2>
-      <p class="lede t-m">
+    <docs-section anchor="density" eyebrow="Foundations" title="Density">
+      <docs-truncation [rules]="truncationRules" />
+      <span lede>
         Four density tiers, applied via <code class="t-mono">[data-density]</code> on a route container. They rewrite
         hit-target and component-scoped tokens — components consume the same role tokens, so no component CSS changes.
-      </p>
+      </span>
 
       <!-- ============================================================ The three tiers -->
       <h3 class="block-title t-h4">The three tiers</h3>
@@ -91,4 +90,4 @@
         on <code class="t-mono">&lt;html&gt;</code>.
       </p>
 
-    </section>
+    </docs-section>

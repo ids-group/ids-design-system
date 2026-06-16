@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { CardComponent, type CardElevation, type CardPadding } from 'ds';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
   selector: 'section-components-card',
   standalone: true,
-  imports: [CardComponent, DocsTruncationComponent],
+  imports: [CardComponent, DocsTruncationComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './card.section.html',
   styleUrl: './card.section.scss',

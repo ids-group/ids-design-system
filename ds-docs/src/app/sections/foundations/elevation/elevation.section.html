@@ -1,12 +1,11 @@
 
-    <section id="section-elevation" data-anchor="elevation" class="section">
-      <div class="eyebrow t-overline">Foundations</div>
-      <h2 class="t-h2">Elevation<docs-truncation [rules]="truncationRules" /></h2>
-      <p class="lede t-m">
+    <docs-section anchor="elevation" eyebrow="Foundations" title="Elevation">
+      <docs-truncation [rules]="truncationRules" />
+      <span lede>
         Four primitive tiers plus four semantic aliases for popover, modal, toast, card. Shadows are
         channel-split through <code class="t-mono">--shadow-tint-h/s/l</code> so a re-skin can re-tint
         them and dark themes can render the same alphas as soft glows.
-      </p>
+      </span>
 
       <!-- ============================================================ Shadow scale -->
       <h3 class="block-title t-h4">Shadow scale · primitive tiers</h3>
@@ -82,4 +81,4 @@
         }
       </div>
 
-    </section>
+    </docs-section>

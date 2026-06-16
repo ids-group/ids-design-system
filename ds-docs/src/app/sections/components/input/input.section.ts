@@ -11,6 +11,7 @@ import {
   type DropdownOption,
 } from 'ds';
 import { DocsAwaitComponent } from '../../../shared/docs-await.component';
+import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 @Component({
@@ -18,6 +19,7 @@ import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-tr
   standalone: true,
   imports: [
     DocsAwaitComponent,
+    DocsSectionComponent,
     DocsTruncationComponent,
     DropdownComponent,
     IconComponent,
