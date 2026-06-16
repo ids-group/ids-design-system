@@ -2,6 +2,8 @@
 
 Angular component library, design tokens and themes for IDS Group products.
 
+📖 **Live docs & component showcase:** https://ids-ds.proto.ids-group.co.uk/
+
 - 45+ standalone components (buttons, forms, overlays, navigation, data display)
 - Three-tier token architecture: palette → semantic theme → geometry/typography/motion tokens
 - Bundled fonts (Mulish, JetBrains Mono) — no external font CDN required
