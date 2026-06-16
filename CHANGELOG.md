@@ -8,6 +8,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+- Added a `homepage` field linking the live docs/showcase, so the npm package page
+  points to it.
+
 ## 0.2.0 — 2026-06-16
 
 - Relicensed from proprietary (UNLICENSED) to MIT.
