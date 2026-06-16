@@ -12,7 +12,9 @@ if (!version) {
 }
 
 const path = 'CHANGELOG.md';
-const changelog = readFileSync(path, 'utf8');
+// Normalize CRLF→LF so the regexes work regardless of the contributor's
+// core.autocrlf (CHANGELOG.md is not pinned to LF in .gitattributes).
+const changelog = readFileSync(path, 'utf8').replace(/\r\n/g, '\n');
 
 if (!/^## Unreleased$/m.test(changelog)) {
   console.error("changelog: no '## Unreleased' heading found — aborting.");

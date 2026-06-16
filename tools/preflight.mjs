@@ -28,7 +28,7 @@ if (git('rev-parse main') !== git('rev-parse origin/main')) {
   fail("local 'main' is out of sync with 'origin/main' — pull/push first.");
 }
 
-const changelog = readFileSync('CHANGELOG.md', 'utf8');
+const changelog = readFileSync('CHANGELOG.md', 'utf8').replace(/\r\n/g, '\n');
 const unreleased = changelog.match(/^## Unreleased$\n([\s\S]*?)(?=^## )/m);
 if (!unreleased) fail("no '## Unreleased' section in CHANGELOG.md.");
 const hasEntry = unreleased[1].split('\n').some((line) => line.trim().startsWith('-'));
