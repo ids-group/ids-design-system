@@ -35,7 +35,7 @@
     "build:lib:dev": "ng build ds --configuration development",
     "build:docs": "ng build ds-docs",
     "build:docs:dev": "ng build ds-docs --configuration development",
-    "build:deck-css": "sass presentations/_ds-source.scss presentations/ds.css --no-source-map --style=expanded",
+    "build:deck-css": "sass src/lib/styles/ds.scss presentations/ds.css --no-source-map --style=expanded",
 
     "format": "prettier --check \"{src,ds-docs/src,tools}/**/*.{ts,html,scss,css,json,md}\"",
     "format:fix": "prettier --write \"{src,ds-docs/src,tools}/**/*.{ts,html,scss,css,json,md}\"",
