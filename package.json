@@ -40,6 +40,7 @@
     "serve:docs": "ng serve ds-docs",
     "build:docs": "ng build ds-docs",
     "build:docs:dev": "ng build ds-docs --configuration development",
+    "build:deck-css": "sass presentations/_ds-source.scss presentations/ds.css --no-source-map --style=expanded",
     "lint": "eslint \"{src,ds-docs/src}/**/*.{ts,html}\"",
     "lint:fix": "eslint \"{src,ds-docs/src}/**/*.{ts,html}\" --fix",
     "lint:styles": "stylelint \"{src,ds-docs/src}/**/*.{scss,css}\"",
