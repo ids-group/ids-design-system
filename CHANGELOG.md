@@ -14,10 +14,6 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 ## 0.2.0 — 2026-06-16
 
 - Relicensed from proprietary (UNLICENSED) to MIT.
-- Release tooling: preflight checks, automatic CHANGELOG stamping, and CI publish
-  guards (tag↔version, double-publish protection); added a `beta` pre-release channel.
-- One-click release pipelines (`release-patch|minor|major|beta`) that bump, tag,
-  push, and publish from Bitbucket CI; local `npm run release:*` kept as a fallback.
 
 ## 0.1.0 — 2026-06-12
 
