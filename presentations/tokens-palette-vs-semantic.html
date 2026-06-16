@@ -33,7 +33,7 @@
   .tier.t1 { background: var(--surface-secondary); }
   .tier.t1 .lvl { color: var(--text-tertiary); }
   .tier.t1 .use { color: var(--text-tertiary); }
-  .tier.t2 { background: var(--primary-subtle); border-color: var(--primary-muted); }
+  .tier.t2 { background: var(--primary-subtitle); border-color: var(--primary-muted); }
   .tier.t2 .lvl { color: var(--primary-strong); }
   .tier.t2 .use { color: var(--success-text); }
   .tier.t3 { background: var(--surface-default); }
@@ -47,8 +47,8 @@
            overflow: hidden; box-shadow: var(--shadow-1); }
   .panel .hd { padding: var(--space-3) var(--space-4); font: var(--font-weight-bold) var(--font-size-xs)/1 var(--font-sans);
                text-transform: uppercase; letter-spacing: var(--letter-spacing-wide); }
-  .panel.good .hd { background: var(--success-subtle); color: var(--success-text); }
-  .panel.bad .hd { background: var(--error-subtle); color: var(--error-text); }
+  .panel.good .hd { background: var(--success-subtitle); color: var(--success-text); }
+  .panel.bad .hd { background: var(--error-subtitle); color: var(--error-text); }
   .panel .bd { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-4); align-items: center; background: var(--surface-default); }
   .panel code { font-family: var(--font-mono); font-size: var(--font-size-xs); color: var(--text-secondary); }
   .demo-btn { width: 100%; text-align: center; padding: var(--space-3); border-radius: var(--radius-md); color: #fff;
@@ -68,9 +68,9 @@
   td { color: var(--text-secondary); } td code, .keyfact code { font-family: var(--font-mono); font-size: 0.9em; }
   tr:last-child td { border-bottom: none; }
   .cnt { display:inline-block; min-width: 20px; text-align:center; padding: 2px 7px; border-radius: var(--radius-pill);
-         background: var(--warning-subtle); color: var(--warning-text); font-weight: var(--font-weight-bold); font-size: var(--font-size-2xs); }
+         background: var(--warning-subtitle); color: var(--warning-text); font-weight: var(--font-weight-bold); font-size: var(--font-size-2xs); }
 
-  .keyfact { padding: var(--space-5) var(--space-6); border-radius: var(--radius-lg); background: var(--success-subtle);
+  .keyfact { padding: var(--space-5) var(--space-6); border-radius: var(--radius-lg); background: var(--success-subtitle);
              border: var(--border-width-default) solid var(--success-border); }
   .keyfact .big { font: var(--font-weight-bold) var(--font-size-h4)/1.15 var(--font-heading); color: var(--success-text); }
   .keyfact p { margin: var(--space-2) 0 0; color: var(--text-secondary); line-height: 1.55; }
@@ -156,7 +156,7 @@
 
   <div class="keyfact">
     <div class="big">Значения токенов идентичны — переименовали только имена.</div>
-    <p><span class="eq">--s-5 = --space-5 = 20px</span> &nbsp;·&nbsp; <span class="eq">--r-md = --radius-md = 8px</span>. Отступы и радиусы по дизайну остались те же, пиксель-в-пиксель.</p>
+    <p><span class="eq">--space-5 = --space-5 = 20px</span> &nbsp;·&nbsp; <span class="eq">--radius-md = --radius-md = 8px</span>. Отступы и радиусы по дизайну остались те же, пиксель-в-пиксель.</p>
   </div>
 
   <h2 class="section-title">Что реально видно на этом экране</h2>
@@ -167,7 +167,7 @@
     <div class="change"><span class="mk">↩︎</span><span class="t">Если «было так» = сломанное промежуточное состояние (после переименования импортов, до фикса токенов), тогда всё было схлопнуто (нулевые отступы) → теперь восстановлено. Отсюда «может даже лучше».</span></div>
   </div>
 
-  <div class="keyfact" style="margin-top: var(--space-5); background: var(--primary-subtle); border-color: var(--primary-muted);">
+  <div class="keyfact" style="margin-top: var(--space-5); background: var(--primary-subtitle); border-color: var(--primary-muted);">
     <div class="big" style="color: var(--primary-strong);">Это не регрессия.</div>
     <p>Корректная, задуманная раскладка на актуальных токенах DS. Допилов в DS не требуется.</p>
   </div>

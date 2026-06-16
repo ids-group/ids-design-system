@@ -1095,6 +1095,14 @@ h1, h2, h3, h4, h5, h6 {
   font: var(--font-weight-medium) var(--font-size-mono)/var(--line-height-base) var(--font-mono);
 }
 
+.t-mono-inline {
+  font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
+  background: var(--surface-secondary);
+  color: var(--text-primary);
+  padding: 1px var(--space-1);
+  border-radius: var(--radius-sm);
+}
+
 .t-mono-block {
   font: var(--font-weight-regular) var(--font-size-mono)/var(--line-height-loose) var(--font-mono);
   background: var(--surface-secondary);
@@ -1455,64 +1463,4 @@ html {
   :root {
     animation: none;
   }
-}
-/* ── deck compat layer (not part of the design system) ───────────────────── */
-:root {
-  /* spacing */
-  --s-1: var(--space-1);
-  --s-2: var(--space-2);
-  --s-3: var(--space-3);
-  --s-4: var(--space-4);
-  --s-5: var(--space-5);
-  --s-6: var(--space-6);
-  --s-8: var(--space-8);
-  --s-9: var(--space-8);
-  --s-10: var(--space-10);
-  --s-12: var(--space-12);
-  --s-14: var(--space-14);
-  --s-16: var(--space-16);
-  --s-20: var(--space-20);
-  --s-24: var(--space-24);
-  /* radius */
-  --r-sm: var(--radius-sm);
-  --r-md: var(--radius-md);
-  --r-lg: var(--radius-lg);
-  --r-xl: var(--radius-xl);
-  --r-pill: var(--radius-pill);
-  /* font size */
-  --fs-4xs: var(--font-size-4xs);
-  --fs-3xs: var(--font-size-3xs);
-  --fs-2xs: var(--font-size-2xs);
-  --fs-xs: var(--font-size-xs);
-  --fs-s: var(--font-size-s);
-  --fs-m: var(--font-size-m);
-  --fs-l: var(--font-size-l);
-  --fs-h5: var(--font-size-h5);
-  --fs-h4: var(--font-size-h4);
-  --fs-h3: var(--font-size-h3);
-  --fs-h2: var(--font-size-h2);
-  --fs-h1: var(--font-size-h1);
-  /* font weight */
-  --fw-regular: var(--font-weight-regular);
-  --fw-medium: var(--font-weight-medium);
-  --fw-semibold: var(--font-weight-semibold);
-  --fw-bold: var(--font-weight-bold);
-  --fw-extrabold: var(--font-weight-extrabold);
-  /* letter spacing */
-  --ls-tight: var(--letter-spacing-tight);
-  --ls-snug: var(--letter-spacing-snug);
-  --ls-wide: var(--letter-spacing-wide);
-  --ls-wider: var(--letter-spacing-wider);
-  /* border width */
-  --bw-default: var(--border-width-default);
-  --bw-strong: var(--border-width-strong);
-  /* subtle → subtitle back-compat (tokens renamed in the library) */
-  --border-subtle: var(--border-subtitle);
-  --primary-subtle: var(--primary-subtitle);
-  --secondary-subtle: var(--secondary-subtitle);
-  --tertiary-subtle: var(--tertiary-subtitle);
-  --success-subtle: var(--success-subtitle);
-  --warning-subtle: var(--warning-subtitle);
-  --error-subtle: var(--error-subtitle);
-  --info-subtle: var(--info-subtitle);
 }

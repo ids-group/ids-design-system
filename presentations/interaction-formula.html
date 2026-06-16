@@ -13,39 +13,39 @@
      ramp stops almost exactly. Real DS tokens from ds.css.
      ---------------------------------------------------------------- */
   body { margin: 0; background: var(--surface-canvas); color: var(--text-primary); font-family: var(--font-sans); }
-  .page { max-width: 1120px; margin: 0 auto; padding: var(--s-10) var(--s-6) var(--s-20); }
+  .page { max-width: 1120px; margin: 0 auto; padding: var(--space-10) var(--space-6) var(--space-20); }
 
-  .masthead h1 { font: var(--fw-bold) 26px/1.25 var(--font-heading); margin: 0 0 var(--s-2); }
-  .masthead p { color: var(--text-secondary); max-width: 82ch; margin: var(--s-2) 0 0; font: var(--fw-regular) var(--fs-s)/1.6 var(--font-sans); }
-  code.tok { font: var(--fw-medium) var(--fs-2xs)/1 var(--font-mono); color: var(--primary-strong);
-             background: var(--primary-subtle); padding: 2px 6px; border-radius: var(--r-sm); }
+  .masthead h1 { font: var(--font-weight-bold) 26px/1.25 var(--font-heading); margin: 0 0 var(--space-2); }
+  .masthead p { color: var(--text-secondary); max-width: 82ch; margin: var(--space-2) 0 0; font: var(--font-weight-regular) var(--font-size-s)/1.6 var(--font-sans); }
+  code.tok { font: var(--font-weight-medium) var(--font-size-2xs)/1 var(--font-mono); color: var(--primary-strong);
+             background: var(--primary-subtitle); padding: 2px 6px; border-radius: var(--radius-sm); }
 
-  .card { background: var(--surface-default); border: var(--bw-default) solid var(--border-divider);
-          border-radius: var(--r-lg); padding: var(--s-6); box-shadow: var(--z100);
-          margin-top: var(--s-6); display: flex; flex-direction: column; gap: var(--s-4); }
-  .card h2 { font: var(--fw-bold) var(--fs-h4)/1.2 var(--font-heading); margin: 0; }
-  .card > .note { color: var(--text-tertiary); font: var(--fw-regular) var(--fs-xs)/1.55 var(--font-sans); margin: 0; max-width: 92ch; }
+  .card { background: var(--surface-default); border: var(--border-width-default) solid var(--border-divider);
+          border-radius: var(--radius-lg); padding: var(--space-6); box-shadow: var(--z100);
+          margin-top: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); }
+  .card h2 { font: var(--font-weight-bold) var(--font-size-h4)/1.2 var(--font-heading); margin: 0; }
+  .card > .note { color: var(--text-tertiary); font: var(--font-weight-regular) var(--font-size-xs)/1.55 var(--font-sans); margin: 0; max-width: 92ch; }
   .card > .note b { color: var(--text-secondary); }
 
-  .snippet { background: var(--surface-secondary); border: var(--bw-default) solid var(--border-divider);
-             border-radius: var(--r-sm); padding: var(--s-3) var(--s-4); margin: 0;
-             font: var(--fw-medium) var(--fs-xs)/1.7 var(--font-mono); color: var(--text-primary);
+  .snippet { background: var(--surface-secondary); border: var(--border-width-default) solid var(--border-divider);
+             border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); margin: 0;
+             font: var(--font-weight-medium) var(--font-size-xs)/1.7 var(--font-mono); color: var(--text-primary);
              overflow-x: auto; white-space: pre; }
   .snippet .cm { color: var(--text-tertiary); }
-  .snippet .hl { color: var(--primary-strong); font-weight: var(--fw-bold); }
+  .snippet .hl { color: var(--primary-strong); font-weight: var(--font-weight-bold); }
 
-  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-5); }
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
   @media (max-width: 880px) { .duo { grid-template-columns: 1fr; } }
-  .lane-title { font: var(--fw-semibold) var(--fs-xs)/1.3 var(--font-sans); color: var(--text-secondary); margin: 0 0 var(--s-2); }
+  .lane-title { font: var(--font-weight-semibold) var(--font-size-xs)/1.3 var(--font-sans); color: var(--text-secondary); margin: 0 0 var(--space-2); }
   .lane-title b { color: var(--text-primary); }
 
-  .zone { border: var(--bw-default) dashed var(--border-default); border-radius: var(--r-md);
-          padding: var(--s-4); display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap;
+  .zone { border: var(--border-width-default) dashed var(--border-default); border-radius: var(--radius-md);
+          padding: var(--space-4); display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap;
           background: var(--surface-canvas); }
   .zone.on-tint { background: var(--surface-tint); }
   .zone.on-white { background: var(--surface-default); }
-  .row-label { width: 88px; flex: 0 0 auto; font: var(--fw-semibold) var(--fs-2xs)/1.3 var(--font-sans); color: var(--text-tertiary); }
-  .hint { color: var(--text-tertiary); font: var(--fw-regular) var(--fs-2xs)/1.4 var(--font-sans); margin: 0; }
+  .row-label { width: 88px; flex: 0 0 auto; font: var(--font-weight-semibold) var(--font-size-2xs)/1.3 var(--font-sans); color: var(--text-tertiary); }
+  .hint { color: var(--text-tertiary); font: var(--font-weight-regular) var(--font-size-2xs)/1.4 var(--font-sans); margin: 0; }
 
   /* ================================================================
      THE CONTRACT v2 (prototype of styles/_interaction.scss).
@@ -109,47 +109,47 @@
 
   /* demo widgets */
   .dbtn { display: inline-flex; align-items: center; justify-content: center;
-          height: var(--hit-cozy); padding: 0 var(--s-5); border-radius: var(--r-md);
-          border: var(--bw-default) solid var(--db, transparent); cursor: pointer; user-select: none;
-          color: var(--df, var(--text-on-primary)); font: var(--fw-semibold) var(--fs-s)/1 var(--font-sans);
+          height: var(--hit-cozy); padding: 0 var(--space-5); border-radius: var(--radius-md);
+          border: var(--border-width-default) solid var(--db, transparent); cursor: pointer; user-select: none;
+          color: var(--df, var(--text-on-primary)); font: var(--font-weight-semibold) var(--font-size-s)/1 var(--font-sans);
           transition: background .15s ease; }
   .triad { display: inline-flex; gap: 4px; align-items: center; }
-  .triad i { width: 26px; height: 26px; border-radius: var(--r-sm); display: inline-block;
-             border: 1px solid var(--border-subtle); }
+  .triad i { width: 26px; height: 26px; border-radius: var(--radius-sm); display: inline-block;
+             border: 1px solid var(--border-subtitle); }
   .triad .t-base   { background: var(--cb, var(--interactive-base)); }
   .triad .t-hover  { background: var(--cbh, var(--interactive-hover)); }
   .triad .t-active { background: var(--cba, var(--interactive-active)); }
   .triad.txt i { display: inline-flex; align-items: center; justify-content: center; background: var(--surface-default);
-                 font: var(--fw-bold) var(--fs-xs)/1 var(--font-sans); border: 1px solid var(--border-subtle); }
-  .pair { display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap; }
+                 font: var(--font-weight-bold) var(--font-size-xs)/1 var(--font-sans); border: 1px solid var(--border-subtitle); }
+  .pair { display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
 
-  .dmenu { width: 230px; background: var(--surface-overlay); border: var(--bw-default) solid var(--border-default);
-           border-radius: var(--r-md); padding: var(--s-1); box-shadow: var(--z200); }
-  .dmi { padding: var(--s-2) var(--s-3); border-radius: var(--r-sm); cursor: pointer;
-         font: var(--fw-regular) var(--fs-s)/1.4 var(--font-sans); transition: background .12s ease; }
+  .dmenu { width: 230px; background: var(--surface-overlay); border: var(--border-width-default) solid var(--border-default);
+           border-radius: var(--radius-md); padding: var(--space-1); box-shadow: var(--z200); }
+  .dmi { padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); cursor: pointer;
+         font: var(--font-weight-regular) var(--font-size-s)/1.4 var(--font-sans); transition: background .12s ease; }
   .dmi.cur:hover  { background: var(--cbh, var(--surface-secondary)); }
   .dmi.cur:active { background: var(--cba, var(--surface-secondary)); }  /* today: no pressed distinction */
 
-  .dnav { display: inline-flex; align-items: center; height: var(--hit-cozy); padding: 0 var(--s-4);
-          border-radius: var(--r-md); cursor: pointer; color: var(--text-on-primary);
-          font: var(--fw-semibold) var(--fs-s)/1 var(--font-sans); transition: background .12s ease; }
-  .invbar { background: var(--surface-inverted); border-radius: var(--r-md); padding: var(--s-3) var(--s-4);
-            display: inline-flex; gap: var(--s-3); align-items: center; }
+  .dnav { display: inline-flex; align-items: center; height: var(--hit-cozy); padding: 0 var(--space-4);
+          border-radius: var(--radius-md); cursor: pointer; color: var(--text-on-primary);
+          font: var(--font-weight-semibold) var(--font-size-s)/1 var(--font-sans); transition: background .12s ease; }
+  .invbar { background: var(--surface-inverted); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4);
+            display: inline-flex; gap: var(--space-3); align-items: center; }
   .invbar .dbtn { --df: var(--text-inverted); border-color: var(--border-inverted); }
 
-  .dlink { font: var(--fw-medium) var(--fs-s)/1.4 var(--font-sans); color: var(--text-link);
+  .dlink { font: var(--font-weight-medium) var(--font-size-s)/1.4 var(--font-sans); color: var(--text-link);
            text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 
   /* ---- controls (live brand colour) ---- */
-  .controls { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap;
-              padding: var(--s-3) var(--s-4); background: var(--surface-secondary);
-              border-radius: var(--r-md); }
-  .controls .label { font: var(--fw-semibold) var(--fs-xs)/1 var(--font-sans); color: var(--text-secondary); }
-  .swatch { width: 28px; height: 28px; border-radius: var(--r-pill); cursor: pointer;
+  .controls { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap;
+              padding: var(--space-3) var(--space-4); background: var(--surface-secondary);
+              border-radius: var(--radius-md); }
+  .controls .label { font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-sans); color: var(--text-secondary); }
+  .swatch { width: 28px; height: 28px; border-radius: var(--radius-pill); cursor: pointer;
             border: 2px solid transparent; padding: 0; }
   .swatch.on { border-color: var(--text-primary); }
-  input[type="color"] { width: 44px; height: 28px; padding: 0; border: var(--bw-default) solid var(--border-default);
-                        border-radius: var(--r-sm); background: var(--surface-default); cursor: pointer; }
+  input[type="color"] { width: 44px; height: 28px; padding: 0; border: var(--border-width-default) solid var(--border-default);
+                        border-radius: var(--radius-sm); background: var(--surface-default); cursor: pointer; }
 </style>
 </head>
 <body>
@@ -194,47 +194,47 @@
 
   <!-- ============ Industry context ============ -->
   <div class="card">
-    <h2>Как делают лучшие <span class="hint" style="font-weight: var(--fw-regular);">(проверено по первоисточникам, полный отчёт — docs/interaction-states-research.md)</span></h2>
+    <h2>Как делают лучшие <span class="hint" style="font-weight: var(--font-weight-regular);">(проверено по первоисточникам, полный отчёт — docs/interaction-states-research.md)</span></h2>
     <div style="overflow-x: auto;">
-      <table style="border-collapse: collapse; width: 100%; font: var(--fw-regular) var(--fs-xs)/1.5 var(--font-sans);">
+      <table style="border-collapse: collapse; width: 100%; font: var(--font-weight-regular) var(--font-size-xs)/1.5 var(--font-sans);">
         <thead>
           <tr style="text-align: left; color: var(--text-secondary);">
-            <th style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-default);">Система</th>
-            <th style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-default);">Механизм состояний</th>
-            <th style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-default);">pressed vs hover</th>
-            <th style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-default);">Против «грязных» цветов</th>
+            <th style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-default);">Система</th>
+            <th style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-default);">Механизм состояний</th>
+            <th style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-default);">pressed vs hover</th>
+            <th style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-default);">Против «грязных» цветов</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);"><b>Material 3</b></td>
-            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">формула в рантайме: state layer с фикс. opacity</td>
-            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">≈ 1.25–1.5×</td>
-            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">слой цветом <b>on-color</b> (родственный hue), не чёрным</td>
+            <td style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle);"><b>Material 3</b></td>
+            <td style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle);">формула в рантайме: state layer с фикс. opacity</td>
+            <td style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle);">≈ 1.25–1.5×</td>
+            <td style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle);">слой цветом <b>on-color</b> (родственный hue), не чёрным</td>
           </tr>
           <tr>
-            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);"><b>Fluent 2</b></td>
-            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">ручные ступени рамп (alias-токены)</td>
-            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">немонотонно: в dark hover светлее, pressed темнее</td>
-            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">направление к контрасту с фоном</td>
+            <td style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle);"><b>Fluent 2</b></td>
+            <td style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle);">ручные ступени рамп (alias-токены)</td>
+            <td style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle);">немонотонно: в dark hover светлее, pressed темнее</td>
+            <td style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle);">направление к контрасту с фоном</td>
           </tr>
           <tr>
-            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);"><b>Carbon</b></td>
-            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">ступени рамп + рукописные half-steps для hover</td>
-            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">active ≈ 4× hover</td>
-            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">переворот направления на середине шкалы (Gray 70/60)</td>
+            <td style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle);"><b>Carbon</b></td>
+            <td style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle);">ступени рамп + рукописные half-steps для hover</td>
+            <td style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle);">active ≈ 4× hover</td>
+            <td style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle);">переворот направления на середине шкалы (Gray 70/60)</td>
           </tr>
           <tr>
-            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);"><b>Radix</b></td>
-            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">фикс. индексы 12-шаговой рампы (3/4/5, 9/10)</td>
-            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">2× (дискретно)</td>
-            <td style="padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle);">кураторская chroma шага 9</td>
+            <td style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle);"><b>Radix</b></td>
+            <td style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle);">фикс. индексы 12-шаговой рампы (3/4/5, 9/10)</td>
+            <td style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle);">2× (дискретно)</td>
+            <td style="padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle);">кураторская chroma шага 9</td>
           </tr>
           <tr>
-            <td style="padding: var(--s-2) var(--s-3);"><b>Spectrum</b></td>
-            <td style="padding: var(--s-2) var(--s-3);">генерация на сборке (Leonardo, contrast ratios) + ручная курация</td>
-            <td style="padding: var(--s-2) var(--s-3);">равные шаги (+1 / +1)</td>
-            <td style="padding: var(--s-2) var(--s-3);">CIECAM02-UCS + ручная кривая lightness</td>
+            <td style="padding: var(--space-2) var(--space-3);"><b>Spectrum</b></td>
+            <td style="padding: var(--space-2) var(--space-3);">генерация на сборке (Leonardo, contrast ratios) + ручная курация</td>
+            <td style="padding: var(--space-2) var(--space-3);">равные шаги (+1 / +1)</td>
+            <td style="padding: var(--space-2) var(--space-3);">CIECAM02-UCS + ручная кривая lightness</td>
           </tr>
         </tbody>
       </table>
@@ -296,8 +296,8 @@
             <button class="dbtn cur" style="--cb: var(--primary-muted); --cbh: var(--primary-muted-strong); --cba: var(--primary-muted-strong); --df: var(--primary-strong)">Кнопка</button>
             <span class="triad" style="--cb: var(--primary-muted); --cbh: var(--primary-muted-strong); --cba: var(--primary-muted-strong)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
           <div class="pair"><span class="row-label">tertiary</span>
-            <button class="dbtn cur" style="--cb: transparent; --cbh: var(--primary-subtle); --cba: var(--primary-muted); --df: var(--primary-strong)">Кнопка</button>
-            <span class="triad" style="--cb: transparent; --cbh: var(--primary-subtle); --cba: var(--primary-muted)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
+            <button class="dbtn cur" style="--cb: transparent; --cbh: var(--primary-subtitle); --cba: var(--primary-muted); --df: var(--primary-strong)">Кнопка</button>
+            <span class="triad" style="--cb: transparent; --cbh: var(--primary-subtitle); --cba: var(--primary-muted)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
           <div class="pair"><span class="row-label">outline</span>
             <button class="dbtn cur" style="--cb: var(--surface-default); --cbh: var(--surface-secondary); --cba: var(--surface-secondary); --df: var(--text-primary); --db: var(--border-default)">Кнопка</button>
             <span class="triad" style="--cb: var(--surface-default); --cbh: var(--surface-secondary); --cba: var(--surface-secondary)"><i class="t-base"></i><i class="t-hover"></i><i class="t-active"></i></span></div>
@@ -336,7 +336,7 @@
             <div class="dmi cur">Дублировать</div>
           </div>
         </div>
-        <div class="zone on-tint" style="margin-top: var(--s-3);">
+        <div class="zone on-tint" style="margin-top: var(--space-3);">
           <div class="dmenu" style="background: transparent; border: 0; box-shadow: none;">
             <div class="dmi cur">Пункт на тонированном фоне</div>
             <div class="dmi cur">Ещё пункт</div>
@@ -352,7 +352,7 @@
             <div class="dmi fx fx-bg surface-fx">Дублировать</div>
           </div>
         </div>
-        <div class="zone on-tint" style="margin-top: var(--s-3);">
+        <div class="zone on-tint" style="margin-top: var(--space-3);">
           <div class="dmenu" style="background: transparent; border: 0; box-shadow: none;">
             <div class="dmi fx fx-bg surface-fx">Пункт на тонированном фоне</div>
             <div class="dmi fx fx-bg surface-fx">Ещё пункт</div>
@@ -446,10 +446,10 @@
     </div>
 
     <div>
-      <p class="lane-title"><b>В3. Кейс danger-пункта меню:</b> сейчас hover — рукописный <code class="tok">--error-subtle</code>; формула — те же бренд-чернила, но с акцентом error. Должны совпасть почти точно — проверь.</p>
+      <p class="lane-title"><b>В3. Кейс danger-пункта меню:</b> сейчас hover — рукописный <code class="tok">--error-subtitle</code>; формула — те же бренд-чернила, но с акцентом error. Должны совпасть почти точно — проверь.</p>
       <div class="zone">
         <div class="pair"><span class="row-label">А: сейчас</span>
-          <div class="dmenu"><div class="dmi cur" style="--cbh: var(--error-subtle); --cba: var(--error-subtle); color: var(--error-text)">Удалить объект</div></div></div>
+          <div class="dmenu"><div class="dmi cur" style="--cbh: var(--error-subtitle); --cba: var(--error-subtitle); color: var(--error-text)">Удалить объект</div></div></div>
         <div class="pair"><span class="row-label">Б: формула</span>
           <div class="dmenu"><div class="dmi fx fx-bg accent-ink" style="--interactive-accent: var(--error); color: var(--error-text)">Удалить объект</div></div></div>
       </div>

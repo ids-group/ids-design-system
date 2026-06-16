@@ -107,7 +107,7 @@
       <div class="card you"><span class="chip ch-you">парный с #1</span><div class="t">ds-color — scoped accent</div><p class="d">Перекраска акцента через `--accent-*` indirection, 4 уровня. Ждёт решения по color×fill.</p></div>
       <div class="card you"><span class="chip ch-you">research готов</span><div class="t">Аудит: компонент vs CSS-класс</div><p class="d">8 кандидатов; таблица собрана. Per-component вердикт за тобой.</p></div>
       <div class="card you"><span class="chip ch-you">решить позже</span><div class="t">Recipe vs hand-tuned цвета</div><p class="d">Если калибровка заменит формулу hover/pressed ручными пиками — дефолты кнопок разойдутся с темой.</p></div>
-      <div class="card you"><span class="chip ch-you">прототип готов</span><div class="t">Interaction formula v2 — вердикты B1–B5</div><p class="d">Единая `color-mix` формула состояний по нарисованной рампе. Решить: tint-pressed 28% vs 34% · pressed для нейтральных поверхностей (меню/строки) · danger menu-item hover формула vs `--error-subtle` · override-слот `--interactive-*-set` · pressed для success/warning кнопок.</p><div class="meta">interaction-formula.html</div></div>
+      <div class="card you"><span class="chip ch-you">прототип готов</span><div class="t">Interaction formula v2 — вердикты B1–B5</div><p class="d">Единая `color-mix` формула состояний по нарисованной рампе. Решить: tint-pressed 28% vs 34% · pressed для нейтральных поверхностей (меню/строки) · danger menu-item hover формула vs `--error-subtitle` · override-слот `--interactive-*-set` · pressed для success/warning кнопок.</p><div class="meta">interaction-formula.html</div></div>
     </div>
   </div>
 
@@ -186,7 +186,7 @@
     <div class="lane-head"><h2>🔧 Доработки из field overrides</h2><span class="count c-track">4</span><span class="why">Всплыли из `_ds-overrides.scss` field-приложения.</span></div>
     <div class="cards">
       <div class="card track"><div class="t">Tabs · pills overflow</div><p class="d">`pills` переполняет узкие вьюпорты при 4+ табах. Скролл по горизонтали в границах (или opt-in `scrollable`). Field обходит `overflow-x:auto`.</p></div>
-      <div class="card track"><div class="t">Banner · compact density</div><p class="d">Field ужимает compact (`--ds-banner-pad-y`, `--fs-xs`). Ревью дефолта / экспонировать body font-size токен.</p></div>
+      <div class="card track"><div class="t">Banner · compact density</div><p class="d">Field ужимает compact (`--ds-banner-pad-y`, `--font-size-xs`). Ревью дефолта / экспонировать body font-size токен.</p></div>
       <div class="card track"><div class="t">Search · max-width</div><p class="d">`.search` упирается в `--search-maxw` (токенизировано, но field не нашёл токен). Задокументировать; рассмотреть дефолт `none`.</p></div>
       <div class="card track"><div class="t">Input · label-токены</div><p class="d">Field использует `--ds-input-label-fs/fw/color`. Подтвердить в каталоге + tokens-reference.</p></div>
     </div>

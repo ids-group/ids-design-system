@@ -13,46 +13,46 @@
      Radix vocabulary). Research: docs/palette-naming-research.md
      ---------------------------------------------------------------- */
   body { margin: 0; background: var(--surface-canvas); color: var(--text-primary); font-family: var(--font-sans); }
-  .page { max-width: 1120px; margin: 0 auto; padding: var(--s-10) var(--s-6) var(--s-20); }
+  .page { max-width: 1120px; margin: 0 auto; padding: var(--space-10) var(--space-6) var(--space-20); }
 
-  .masthead h1 { font: var(--fw-bold) 26px/1.25 var(--font-heading); margin: 0 0 var(--s-2); }
-  .masthead p { color: var(--text-secondary); max-width: 82ch; margin: var(--s-2) 0 0; font: var(--fw-regular) var(--fs-s)/1.6 var(--font-sans); }
-  code.tok { font: var(--fw-medium) var(--fs-2xs)/1 var(--font-mono); color: var(--primary-strong);
-             background: var(--primary-subtle); padding: 2px 6px; border-radius: var(--r-sm); }
+  .masthead h1 { font: var(--font-weight-bold) 26px/1.25 var(--font-heading); margin: 0 0 var(--space-2); }
+  .masthead p { color: var(--text-secondary); max-width: 82ch; margin: var(--space-2) 0 0; font: var(--font-weight-regular) var(--font-size-s)/1.6 var(--font-sans); }
+  code.tok { font: var(--font-weight-medium) var(--font-size-2xs)/1 var(--font-mono); color: var(--primary-strong);
+             background: var(--primary-subtitle); padding: 2px 6px; border-radius: var(--radius-sm); }
 
-  .card { background: var(--surface-default); border: var(--bw-default) solid var(--border-divider);
-          border-radius: var(--r-lg); padding: var(--s-6); box-shadow: var(--z100);
-          margin-top: var(--s-6); display: flex; flex-direction: column; gap: var(--s-4); }
-  .card h2 { font: var(--fw-bold) var(--fs-h4)/1.2 var(--font-heading); margin: 0; }
-  .card > .note { color: var(--text-tertiary); font: var(--fw-regular) var(--fs-xs)/1.55 var(--font-sans); margin: 0; max-width: 92ch; }
+  .card { background: var(--surface-default); border: var(--border-width-default) solid var(--border-divider);
+          border-radius: var(--radius-lg); padding: var(--space-6); box-shadow: var(--z100);
+          margin-top: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); }
+  .card h2 { font: var(--font-weight-bold) var(--font-size-h4)/1.2 var(--font-heading); margin: 0; }
+  .card > .note { color: var(--text-tertiary); font: var(--font-weight-regular) var(--font-size-xs)/1.55 var(--font-sans); margin: 0; max-width: 92ch; }
   .card > .note b { color: var(--text-secondary); }
-  .lane-title { font: var(--fw-semibold) var(--fs-xs)/1.3 var(--font-sans); color: var(--text-secondary); margin: 0 0 var(--s-2); }
+  .lane-title { font: var(--font-weight-semibold) var(--font-size-xs)/1.3 var(--font-sans); color: var(--text-secondary); margin: 0 0 var(--space-2); }
   .lane-title b { color: var(--text-primary); }
-  .hint { color: var(--text-tertiary); font: var(--fw-regular) var(--fs-2xs)/1.4 var(--font-sans); margin: 0; }
+  .hint { color: var(--text-tertiary); font: var(--font-weight-regular) var(--font-size-2xs)/1.4 var(--font-sans); margin: 0; }
 
   /* ramp strips */
-  .ramp { display: flex; border-radius: var(--r-sm); overflow: hidden; border: 1px solid var(--border-subtle); }
+  .ramp { display: flex; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border-subtitle); }
   .ramp i { flex: 1; height: 44px; display: block; }
   .ramp-labels { display: flex; margin-top: 4px; }
-  .ramp-labels span { flex: 1; text-align: center; font: var(--fw-medium) 9px/1.3 var(--font-mono); color: var(--text-tertiary); }
+  .ramp-labels span { flex: 1; text-align: center; font: var(--font-weight-medium) 9px/1.3 var(--font-mono); color: var(--text-tertiary); }
   .strip-row { display: flex; flex-direction: column; gap: 2px; }
-  .strip-name { width: 150px; flex: 0 0 auto; font: var(--fw-semibold) var(--fs-2xs)/1.3 var(--font-sans); color: var(--text-secondary); align-self: center; }
-  .strip-flex { display: flex; gap: var(--s-3); align-items: center; }
+  .strip-name { width: 150px; flex: 0 0 auto; font: var(--font-weight-semibold) var(--font-size-2xs)/1.3 var(--font-sans); color: var(--text-secondary); align-self: center; }
+  .strip-flex { display: flex; gap: var(--space-3); align-items: center; }
   .strip-flex .ramp { flex: 1; }
 
   /* tailwind-500 comparison chips */
-  .chips { display: flex; gap: var(--s-3); flex-wrap: wrap; }
+  .chips { display: flex; gap: var(--space-3); flex-wrap: wrap; }
   .chip { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-  .chip i { width: 72px; height: 48px; border-radius: var(--r-sm); border: 1px solid var(--border-subtle); }
-  .chip span { font: var(--fw-medium) 10px/1.3 var(--font-mono); color: var(--text-tertiary); }
-  .chip.ours span { color: var(--primary-strong); font-weight: var(--fw-bold); }
+  .chip i { width: 72px; height: 48px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtitle); }
+  .chip span { font: var(--font-weight-medium) 10px/1.3 var(--font-mono); color: var(--text-tertiary); }
+  .chip.ours span { color: var(--primary-strong); font-weight: var(--font-weight-bold); }
   .chip.ours i { outline: 2px solid var(--primary); outline-offset: 2px; }
 
-  table.sys { border-collapse: collapse; width: 100%; font: var(--fw-regular) var(--fs-xs)/1.5 var(--font-sans); }
-  table.sys th { text-align: left; color: var(--text-secondary); padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-default); }
-  table.sys td { padding: var(--s-2) var(--s-3); border-bottom: var(--bw-default) solid var(--border-subtle); vertical-align: top; }
+  table.sys { border-collapse: collapse; width: 100%; font: var(--font-weight-regular) var(--font-size-xs)/1.5 var(--font-sans); }
+  table.sys th { text-align: left; color: var(--text-secondary); padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-default); }
+  table.sys td { padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-subtitle); vertical-align: top; }
 
-  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-5); }
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
   @media (max-width: 880px) { .duo { grid-template-columns: 1fr; } }
 
   /* ============ derived ramp (variant Б) ============
@@ -75,13 +75,13 @@
   }
 
   /* mini UI sample */
-  .mini { border-radius: var(--r-md); padding: var(--s-4); border: 1px solid; }
-  .mini .m-card { border-radius: var(--r-sm); padding: var(--s-3) var(--s-4); border: 1px solid; margin-top: var(--s-2); }
-  .mini h4 { margin: 0 0 2px; font: var(--fw-bold) var(--fs-s)/1.3 var(--font-sans); }
-  .mini p { margin: 0; font: var(--fw-regular) var(--fs-xs)/1.5 var(--font-sans); }
-  .mini .m-row { margin-top: var(--s-2); padding: var(--s-2) var(--s-3); border-radius: var(--r-sm); font: var(--fw-regular) var(--fs-xs)/1.4 var(--font-sans); }
-  .mini .m-btn { display: inline-flex; margin-top: var(--s-3); padding: 6px 14px; border-radius: var(--r-md); border: 0;
-                 color: #fff; font: var(--fw-semibold) var(--fs-xs)/1 var(--font-sans); cursor: pointer; }
+  .mini { border-radius: var(--radius-md); padding: var(--space-4); border: 1px solid; }
+  .mini .m-card { border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); border: 1px solid; margin-top: var(--space-2); }
+  .mini h4 { margin: 0 0 2px; font: var(--font-weight-bold) var(--font-size-s)/1.3 var(--font-sans); }
+  .mini p { margin: 0; font: var(--font-weight-regular) var(--font-size-xs)/1.5 var(--font-sans); }
+  .mini .m-row { margin-top: var(--space-2); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font: var(--font-weight-regular) var(--font-size-xs)/1.4 var(--font-sans); }
+  .mini .m-btn { display: inline-flex; margin-top: var(--space-3); padding: 6px 14px; border-radius: var(--radius-md); border: 0;
+                 color: #fff; font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-sans); cursor: pointer; }
 
   /* fixed variant uses real tokens */
   .mini.fixed { background: var(--neutral-50); border-color: var(--neutral-200); }
@@ -99,20 +99,20 @@
   .m-btn { background: var(--demo-brand); }
 
   /* ---- controls ---- */
-  .controls { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap;
-              padding: var(--s-3) var(--s-4); background: var(--surface-secondary);
-              border-radius: var(--r-md); }
-  .controls .label { font: var(--fw-semibold) var(--fs-xs)/1 var(--font-sans); color: var(--text-secondary); }
-  .swatch { width: 28px; height: 28px; border-radius: var(--r-pill); cursor: pointer;
+  .controls { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap;
+              padding: var(--space-3) var(--space-4); background: var(--surface-secondary);
+              border-radius: var(--radius-md); }
+  .controls .label { font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-sans); color: var(--text-secondary); }
+  .swatch { width: 28px; height: 28px; border-radius: var(--radius-pill); cursor: pointer;
             border: 2px solid transparent; padding: 0; }
   .swatch.on { border-color: var(--text-primary); }
 
-  .snippet { background: var(--surface-secondary); border: var(--bw-default) solid var(--border-divider);
-             border-radius: var(--r-sm); padding: var(--s-3) var(--s-4); margin: 0;
-             font: var(--fw-medium) var(--fs-xs)/1.7 var(--font-mono); color: var(--text-primary);
+  .snippet { background: var(--surface-secondary); border: var(--border-width-default) solid var(--border-divider);
+             border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); margin: 0;
+             font: var(--font-weight-medium) var(--font-size-xs)/1.7 var(--font-mono); color: var(--text-primary);
              overflow-x: auto; white-space: pre; }
   .snippet .cm { color: var(--text-tertiary); }
-  .snippet .hl { color: var(--primary-strong); font-weight: var(--fw-bold); }
+  .snippet .hl { color: var(--primary-strong); font-weight: var(--font-weight-bold); }
 </style>
 </head>
 <body>
@@ -217,7 +217,7 @@
           <div class="m-row">Пункт меню в hover-фоне</div>
           <button class="m-btn">Брендовая кнопка</button>
         </div>
-        <div class="strip-row" style="margin-top: var(--s-3);">
+        <div class="strip-row" style="margin-top: var(--space-3);">
           <div class="ramp derived" style="height: 24px;">
             <i style="background:var(--d-0)"></i><i style="background:var(--d-50)"></i><i style="background:var(--d-100)"></i><i style="background:var(--d-150)"></i><i style="background:var(--d-200)"></i><i style="background:var(--d-300)"></i><i style="background:var(--d-400)"></i><i style="background:var(--d-500)"></i><i style="background:var(--d-600)"></i><i style="background:var(--d-700)"></i><i style="background:var(--d-800)"></i><i style="background:var(--d-900)"></i><i style="background:var(--d-950)"></i>
           </div>

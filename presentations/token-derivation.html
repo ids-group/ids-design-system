@@ -11,57 +11,57 @@
      strategies for ds-button / ds-icon-button using real DS tokens.
      ---------------------------------------------------------------- */
   body { margin: 0; background: var(--surface-canvas); color: var(--text-primary); font-family: var(--font-sans); }
-  .page { max-width: 1080px; margin: 0 auto; padding: var(--s-10) var(--s-6) var(--s-20); }
+  .page { max-width: 1080px; margin: 0 auto; padding: var(--space-10) var(--space-6) var(--space-20); }
 
-  .masthead h1 { font: var(--fw-bold) 26px/1.25 var(--font-heading); margin: 0 0 var(--s-2); }
-  .masthead p { color: var(--text-secondary); max-width: 78ch; margin: var(--s-2) 0 0; font: var(--fw-regular) var(--fs-s)/1.6 var(--font-sans); }
+  .masthead h1 { font: var(--font-weight-bold) 26px/1.25 var(--font-heading); margin: 0 0 var(--space-2); }
+  .masthead p { color: var(--text-secondary); max-width: 78ch; margin: var(--space-2) 0 0; font: var(--font-weight-regular) var(--font-size-s)/1.6 var(--font-sans); }
   .masthead code, .lane p code, .verdict-card code {
-    font: var(--fw-medium) var(--fs-2xs)/1 var(--font-mono); color: var(--primary-strong);
-    background: var(--primary-subtle); padding: 2px 6px; border-radius: var(--r-sm); }
+    font: var(--font-weight-medium) var(--font-size-2xs)/1 var(--font-mono); color: var(--primary-strong);
+    background: var(--primary-subtitle); padding: 2px 6px; border-radius: var(--radius-sm); }
 
-  .card { background: var(--surface-default); border: var(--bw-default) solid var(--border-divider);
-          border-radius: var(--r-lg); padding: var(--s-6); box-shadow: var(--z100);
-          margin-top: var(--s-6); display: flex; flex-direction: column; gap: var(--s-4); }
-  .card-head { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
-  .card-head h2 { font: var(--fw-bold) var(--fs-h4)/1.2 var(--font-heading); margin: 0; }
-  .step { font: var(--fw-bold) var(--fs-3xs)/1 var(--font-sans); text-transform: uppercase; letter-spacing: var(--ls-wider);
-          padding: 5px 9px; border-radius: var(--r-pill); background: var(--primary-subtle); color: var(--primary-strong); white-space: nowrap; }
-  .card > .note { color: var(--text-tertiary); font: var(--fw-regular) var(--fs-xs)/1.55 var(--font-sans); margin: 0; }
+  .card { background: var(--surface-default); border: var(--border-width-default) solid var(--border-divider);
+          border-radius: var(--radius-lg); padding: var(--space-6); box-shadow: var(--z100);
+          margin-top: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); }
+  .card-head { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+  .card-head h2 { font: var(--font-weight-bold) var(--font-size-h4)/1.2 var(--font-heading); margin: 0; }
+  .step { font: var(--font-weight-bold) var(--font-size-3xs)/1 var(--font-sans); text-transform: uppercase; letter-spacing: var(--letter-spacing-wider);
+          padding: 5px 9px; border-radius: var(--radius-pill); background: var(--primary-subtitle); color: var(--primary-strong); white-space: nowrap; }
+  .card > .note { color: var(--text-tertiary); font: var(--font-weight-regular) var(--font-size-xs)/1.55 var(--font-sans); margin: 0; }
 
-  .snippet { background: var(--surface-secondary); border: var(--bw-default) solid var(--border-divider);
-             border-radius: var(--r-sm); padding: var(--s-3) var(--s-4); margin: 0;
-             font: var(--fw-medium) var(--fs-xs)/1.7 var(--font-mono); color: var(--text-primary);
+  .snippet { background: var(--surface-secondary); border: var(--border-width-default) solid var(--border-divider);
+             border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); margin: 0;
+             font: var(--font-weight-medium) var(--font-size-xs)/1.7 var(--font-mono); color: var(--text-primary);
              overflow-x: auto; white-space: pre; }
   .snippet .cm { color: var(--text-tertiary); }
-  .snippet .hl { color: var(--primary-strong); font-weight: var(--fw-bold); }
+  .snippet .hl { color: var(--primary-strong); font-weight: var(--font-weight-bold); }
 
-  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-5); }
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
   @media (max-width: 880px) { .duo { grid-template-columns: 1fr; } }
 
-  .lane { display: flex; flex-direction: column; gap: var(--s-3); }
-  .lane-title { font: var(--fw-semibold) var(--fs-xs)/1.3 var(--font-sans); color: var(--text-secondary); }
+  .lane { display: flex; flex-direction: column; gap: var(--space-3); }
+  .lane-title { font: var(--font-weight-semibold) var(--font-size-xs)/1.3 var(--font-sans); color: var(--text-secondary); }
   .lane-title b { color: var(--text-primary); }
 
-  .zone { border: var(--bw-default) dashed var(--border-default); border-radius: var(--r-md);
-          padding: var(--s-5); display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap;
+  .zone { border: var(--border-width-default) dashed var(--border-default); border-radius: var(--radius-md);
+          padding: var(--space-5); display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap;
           background: var(--surface-canvas); }
 
-  .res { font: var(--fw-regular) var(--fs-xs)/1.55 var(--font-sans); margin: 0; }
+  .res { font: var(--font-weight-regular) var(--font-size-xs)/1.55 var(--font-sans); margin: 0; }
   .res.bad  { color: var(--error-text); }
   .res.good { color: var(--success-text); }
 
-  .hint { color: var(--text-tertiary); font: var(--fw-regular) var(--fs-2xs)/1.4 var(--font-sans); }
+  .hint { color: var(--text-tertiary); font: var(--font-weight-regular) var(--font-size-2xs)/1.4 var(--font-sans); }
 
   /* ---- controls (live brand color) ---- */
-  .controls { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap;
-              padding: var(--s-3) var(--s-4); background: var(--surface-secondary);
-              border-radius: var(--r-md); }
-  .controls .label { font: var(--fw-semibold) var(--fs-xs)/1 var(--font-sans); color: var(--text-secondary); }
-  .swatch { width: 28px; height: 28px; border-radius: var(--r-pill); cursor: pointer;
+  .controls { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap;
+              padding: var(--space-3) var(--space-4); background: var(--surface-secondary);
+              border-radius: var(--radius-md); }
+  .controls .label { font: var(--font-weight-semibold) var(--font-size-xs)/1 var(--font-sans); color: var(--text-secondary); }
+  .swatch { width: 28px; height: 28px; border-radius: var(--radius-pill); cursor: pointer;
             border: 2px solid transparent; padding: 0; }
   .swatch.on { border-color: var(--text-primary); }
-  input[type="color"] { width: 44px; height: 28px; padding: 0; border: var(--bw-default) solid var(--border-default);
-                        border-radius: var(--r-sm); background: var(--surface-default); cursor: pointer; }
+  input[type="color"] { width: 44px; height: 28px; padding: 0; border: var(--border-width-default) solid var(--border-default);
+                        border-radius: var(--radius-sm); background: var(--surface-default); cursor: pointer; }
 
   /* ================================================================
      ПОДХОД A — «как сейчас в button»: компонент ОБЪЯВЛЯЕТ публичные
@@ -70,10 +70,10 @@
      Angular-овский [_ngcontent-*]: даёт ту же специфичность (0,2,0),
      что у скомпилированного .button[_ngcontent].
      ================================================================ */
-  .dbtn { display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
-          height: var(--hit-cozy); padding: 0 var(--s-5); border-radius: var(--r-md);
-          border: var(--bw-default) solid transparent; cursor: pointer; user-select: none;
-          color: var(--text-on-primary); font: var(--fw-semibold) var(--fs-s)/1 var(--font-sans);
+  .dbtn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+          height: var(--hit-cozy); padding: 0 var(--space-5); border-radius: var(--radius-md);
+          border: var(--border-width-default) solid transparent; cursor: pointer; user-select: none;
+          color: var(--text-on-primary); font: var(--font-weight-semibold) var(--font-size-s)/1 var(--font-sans);
           transition: background .15s ease, box-shadow .15s ease; }
 
   /* Консьюмерский ХАК для сценария 1b — селектор внутрь компонента. Стоит ДО
@@ -112,7 +112,7 @@
   /* ---- то же для icon-button (filled) ---- */
   .dibtn { display: inline-flex; align-items: center; justify-content: center;
            width: var(--hit-cozy); height: var(--hit-cozy); aspect-ratio: 1; padding: 0;
-           border: var(--bw-default) solid transparent; border-radius: var(--r-md);
+           border: var(--border-width-default) solid transparent; border-radius: var(--radius-md);
            color: var(--text-on-primary); cursor: pointer; user-select: none;
            transition: background .15s ease; }
   .ic { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.75;
@@ -138,8 +138,8 @@
 
   /* ---- verdict ---- */
   .verdict-card { border-color: var(--success-text); }
-  .verdict-card ul { margin: 0; padding-left: var(--s-5); display: flex; flex-direction: column; gap: var(--s-2);
-                     color: var(--text-secondary); font: var(--fw-regular) var(--fs-s)/1.55 var(--font-sans); }
+  .verdict-card ul { margin: 0; padding-left: var(--space-5); display: flex; flex-direction: column; gap: var(--space-2);
+                     color: var(--text-secondary); font: var(--font-weight-regular) var(--font-size-s)/1.55 var(--font-sans); }
   .verdict-card b { color: var(--text-primary); }
 </style>
 </head>
