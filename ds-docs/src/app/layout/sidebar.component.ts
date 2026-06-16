@@ -3,6 +3,7 @@ import {
   Component,
   DestroyRef,
   ViewEncapsulation,
+  computed,
   effect,
   inject,
   signal,
@@ -39,7 +40,9 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
       </div>
 
       @if (!collapsed()) {
-        @for (group of nav; track group.title) {
+        <input class="nav-search" type="search" placeholder="Search…" [value]="query()"
+               (input)="query.set($any($event.target).value)" aria-label="Filter sections" />
+        @for (group of filteredNav(); track group.title) {
           @if (group.title === 'Start') {
             @for (item of group.items; track item.anchor) {
               <a class="link start-link"
@@ -54,6 +57,9 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
                  (click)="scrollTo($event, item.anchor)">{{ item.label }}</a>
             }
           }
+        }
+        @if (filteredNav().length === 0) {
+          <div class="nav-empty">Nothing found</div>
         }
       }
     </nav>
@@ -165,14 +171,43 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
       color: var(--text-primary);
       margin-bottom: var(--space-1);
     }
+
+    .nav-search {
+      width: 100%;
+      padding: 7px var(--space-3);
+      margin-bottom: var(--space-2);
+      border: var(--border-width-default) solid var(--border-default);
+      border-radius: var(--radius-md);
+      background: var(--surface-default);
+      color: var(--text-primary);
+      font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
+    }
+    .nav-search::placeholder { color: var(--text-tertiary); }
+    .nav-search:focus-visible {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: var(--focus-field, 0 0 0 3px var(--primary-subtitle));
+    }
+    .nav-empty {
+      padding: var(--space-3) var(--space-2);
+      color: var(--text-tertiary);
+      font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
+    }
   `],
 })
 export class SidebarComponent {
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly nav = NAV;
   protected readonly version = DS_VERSION;
+  protected readonly query = signal('');
+  protected readonly filteredNav = computed(() => {
+    const q = this.query().trim().toLowerCase();
+    if (!q) return NAV;
+    return NAV
+      .map(group => ({ ...group, items: group.items.filter(item => item.label.toLowerCase().includes(q)) }))
+      .filter(group => group.items.length > 0);
+  });
   protected readonly activeAnchor = signal<string>('');
   protected readonly collapsed = signal<boolean>(this.readCollapsed());
 

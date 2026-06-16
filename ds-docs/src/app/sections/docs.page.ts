@@ -100,76 +100,76 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     <section-home />
 
     <h1 class="group-title t-h2">Components</h1>
+    <section-components-accordion />
+    <section-components-avatar />
+    <section-components-badge />
+    <section-components-banner />
+    <section-components-bottom-sheet />
+    <section-components-breadcrumbs />
     <section-components-button />
-    <section-components-icon-button />
-    <section-components-icon />
+    <section-components-card />
+    <section-components-combobox />
+    <section-components-date-picker />
+    <section-components-drawer />
+    <section-components-dropzone />
+    <section-components-empty-state />
     <section-components-input />
+    <section-components-icon />
+    <section-components-icon-button />
+    <section-components-link />
+    <section-components-menu />
+    <section-components-modal />
     <section-components-number-stepper />
+    <section-components-page-footer />
+    <section-components-page-header />
+    <section-components-pagination />
+    <section-components-popover />
+    <section-components-progress />
     <section-components-search />
     <section-components-select />
     <section-components-selection />
-    <section-components-date-picker />
-    <section-components-badge />
-    <section-components-status-dot />
-    <section-components-avatar />
-    <section-components-card />
-    <section-components-stat />
-    <section-components-table />
-    <section-components-pagination />
-    <section-components-tabs />
     <section-components-sidenav />
-    <section-components-topbar />
-    <section-components-page-header />
-    <section-components-page-footer />
-    <section-components-breadcrumbs />
-    <section-components-modal />
-    <section-components-menu />
-    <section-components-banner />
-    <section-components-dropzone />
-    <section-components-empty-state />
-    <section-components-progress />
-    <section-components-spinner />
     <section-components-skeleton />
-    <section-components-accordion />
+    <section-components-spinner />
+    <section-components-stat />
+    <section-components-status-dot />
     <section-components-stepper />
-    <section-components-tooltip />
-    <section-components-popover />
-    <section-components-toast />
-    <section-components-drawer />
-    <section-components-bottom-sheet />
+    <section-components-table />
+    <section-components-tabs />
     <section-components-tag />
+    <section-components-toast />
+    <section-components-tooltip />
+    <section-components-topbar />
     <section-components-w3w />
-    <section-components-link />
-    <section-components-combobox />
 
     <h1 class="group-title t-h2">Foundations</h1>
-    <section-foundations-color />
-    <section-foundations-typography />
-    <section-foundations-spacing />
-    <section-foundations-radius />
-    <section-foundations-elevation />
-    <section-foundations-motion />
-    <section-foundations-density />
-    <section-foundations-icons />
-    <section-foundations-layout />
-    <section-foundations-scrollbar />
     <section-foundations-borders />
-    <section-foundations-opacity />
-    <section-foundations-surface-levels />
-    <section-foundations-z-index />
     <section-foundations-browser-tab />
     <section-foundations-charts />
+    <section-foundations-color />
+    <section-foundations-density />
+    <section-foundations-elevation />
+    <section-foundations-icons />
+    <section-foundations-layout />
+    <section-foundations-motion />
+    <section-foundations-opacity />
+    <section-foundations-radius />
+    <section-foundations-scrollbar />
+    <section-foundations-spacing />
+    <section-foundations-surface-levels />
+    <section-foundations-typography />
+    <section-foundations-z-index />
 
     <h1 class="group-title t-h2">Patterns</h1>
-    <pattern-page-header />
-    <pattern-filter-bar />
-    <pattern-form-layout />
     <pattern-activity />
     <pattern-empty-state />
+    <pattern-filter-bar />
+    <pattern-form-layout />
+    <pattern-page-header />
 
     <h1 class="group-title t-h2">Practice</h1>
-    <practice-token-discipline />
     <practice-do-dont />
+    <practice-token-discipline />
 
     <h1 class="group-title t-h2">Tokens reference</h1>
     <section-tokens-reference />
