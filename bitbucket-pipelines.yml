@@ -93,6 +93,42 @@ pipelines:
           script:
             - sh infrastructure/scripts/ci-pr.sh
 
+    # One-click releases, run on demand from the Bitbucket UI (Run pipeline ->
+    # branch main -> pick the level). ci-release.sh bumps the version, stamps the
+    # CHANGELOG, commits, tags, pushes main, builds, and publishes to npm. Requires
+    # Secured variables RELEASE_TOKEN (repository:write, to push main) and NPM_TOKEN.
+    # Fill the `## Unreleased` CHANGELOG section before running — preflight enforces it.
+    # The release commit/tag carries `[skip ci]` so the tag pipeline doesn't double-fire.
+    release-patch:
+      - step:
+          name: Release (patch)
+          caches: &release-caches
+            - npm
+            - bun-bin
+            - bun-cache
+            - angular
+            - dist-ds
+          script:
+            - sh infrastructure/scripts/ci-release.sh patch
+    release-minor:
+      - step:
+          name: Release (minor)
+          caches: *release-caches
+          script:
+            - sh infrastructure/scripts/ci-release.sh minor
+    release-major:
+      - step:
+          name: Release (major)
+          caches: *release-caches
+          script:
+            - sh infrastructure/scripts/ci-release.sh major
+    release-beta:
+      - step:
+          name: Release (beta prerelease)
+          caches: *release-caches
+          script:
+            - sh infrastructure/scripts/ci-release.sh beta
+
     # Manual deploy of the ds-docs showcase to the IDS prototypes CDN, mirroring
     # the pinkmoon prototype deploy: shared bucket ids-prototypes + CloudFront
     # E1P3IR95745IWV in eu-west-2, served under /ids-ds/ alongside /pm-admin and
