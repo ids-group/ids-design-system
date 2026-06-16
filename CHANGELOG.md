@@ -13,6 +13,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## 0.2.0 — 2026-06-16
 
+- **Breaking:** renamed the subtle semantic color tokens `--*-subtle` → `--*-subtitle`
+  (border, primary, secondary, tertiary, success, warning, error, info). Consumers
+  referencing these tokens must rename.
 - Relicensed from proprietary (UNLICENSED) to MIT.
 
 ## 0.1.0 — 2026-06-12
