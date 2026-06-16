@@ -1,12 +1,17 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { IconComponent, StatusDotComponent } from 'ds';
+import { StatusDotComponent } from 'ds';
+import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-status-dot',
   standalone: true,
-  imports: [IconComponent, StatusDotComponent],
+  imports: [StatusDotComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './status-dot.section.html',
   styleUrl: './status-dot.section.scss',
 })
-export class StatusDotSection {}
+export class StatusDotSection {
+  protected readonly truncationRules: TruncationRule[] = [
+    { field: 'Status pill', behaviour: 'No clip — lifecycle labels are fixed and short (Planning, Active, etc.).' },
+  ];
+}

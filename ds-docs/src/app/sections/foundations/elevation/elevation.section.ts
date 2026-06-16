@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 interface ShadowTier {
   readonly name: string;
@@ -11,11 +12,6 @@ interface AppliedDemo {
   readonly label: string;
   readonly desc: string;
   readonly stage: 'card' | 'popover' | 'toast' | 'modal';
-}
-
-interface TruncRow {
-  readonly field: string;
-  readonly behaviour: string;
 }
 
 const PRIMITIVE_TIERS: ShadowTier[] = [
@@ -75,24 +71,10 @@ const APPLIED: AppliedDemo[] = [
   },
 ];
 
-const TRUNC: TruncRow[] = [
-  {
-    field: 'Primitive vs semantic',
-    behaviour: 'Components consume semantic tokens (--shadow-popover, --shadow-modal). Never reach for --shadow-2 / --shadow-4 directly.',
-  },
-  {
-    field: 'Theme tinting',
-    behaviour: 'Shadows are channel-split through --shadow-tint-h/s/l. Dark themes override --shadow-tint-l to render the same alphas as soft light glows.',
-  },
-  {
-    field: 'Stacking',
-    behaviour: 'Elevation communicates depth visually. Use --layer-* tokens for actual z-index stacking — never compose your own.',
-  },
-];
-
 @Component({
   selector: 'section-foundations-elevation',
   standalone: true,
+  imports: [DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './elevation.section.html',
   styleUrl: './elevation.section.scss',
@@ -101,5 +83,9 @@ export class ElevationSection {
   protected readonly primitive = PRIMITIVE_TIERS;
   protected readonly semantic = SEMANTIC_TIERS;
   protected readonly applied = APPLIED;
-  protected readonly trunc = TRUNC;
+  protected readonly truncationRules: TruncationRule[] = [
+    { field: 'Primitive vs semantic', behaviour: 'Components consume semantic tokens (--shadow-popover, --shadow-modal). Never reach for --shadow-2 / --shadow-4 directly.' },
+    { field: 'Theme tinting', behaviour: 'Shadows are channel-split through --shadow-tint-h/s/l. Dark themes override --shadow-tint-l to render the same alphas as soft light glows.' },
+    { field: 'Stacking', behaviour: 'Elevation communicates depth visually. Use --layer-* tokens for actual z-index stacking — never compose your own.' },
+  ];
 }

@@ -1,7 +1,7 @@
 
     <section id="section-table" data-anchor="table" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Table</h2>
+      <h2 class="t-h2">Table<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Tabular data with sort, row-selection, sticky header, skeleton loading, empty state, and a bulk-action bar.
         Built for dense admin lists — records, schedules, rosters.
@@ -364,25 +364,4 @@
         </table>
       </div>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">
-          <ds-icon name="filter" [size]="14" /> Truncation
-        </div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Cell text</span>
-            <span class="trunc__behaviour">Single line, ellipsis at column width. Tooltip on hover when clipped.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Header label</span>
-            <span class="trunc__behaviour">Single line, no clip.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Action column</span>
-            <span class="trunc__behaviour">No clip — icon-only buttons.</span>
-          </li>
-        </ul>
-      </div>
     </section>

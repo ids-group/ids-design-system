@@ -1,7 +1,7 @@
 
     <section id="section-elevation" data-anchor="elevation" class="section">
       <div class="eyebrow t-overline">Foundations</div>
-      <h2 class="t-h2">Elevation</h2>
+      <h2 class="t-h2">Elevation<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Four primitive tiers plus four semantic aliases for popover, modal, toast, card. Shadows are
         channel-split through <code class="t-mono">--shadow-tint-h/s/l</code> so a re-skin can re-tint
@@ -82,17 +82,4 @@
         }
       </div>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">Elevation rules</div>
-        <ul class="trunc__list">
-          @for (row of trunc; track row.field) {
-            <li>
-              <span class="trunc__field">{{ row.field }}</span>
-              <span class="trunc__behaviour">{{ row.behaviour }}</span>
-            </li>
-          }
-        </ul>
-      </div>
     </section>

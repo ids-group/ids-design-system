@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { ComboboxComponent, type ComboboxOption } from 'ds';
+import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 const MEMBERS: readonly ComboboxOption<string>[] = [
   { value: 'acme',       label: 'Acme Holdings' },
@@ -19,7 +20,7 @@ const PRODUCTS: readonly ComboboxOption<string>[] = [
 @Component({
   selector: 'section-components-combobox',
   standalone: true,
-  imports: [ComboboxComponent],
+  imports: [ComboboxComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './combobox.section.html',
   styleUrl: './combobox.section.scss',
@@ -29,4 +30,9 @@ export class ComboboxSection {
   protected readonly products = PRODUCTS;
   protected readonly memberValue = signal<string | null>('festi');
   protected readonly productsValue = signal<readonly string[]>(['beer', 'cider', 'spirits']);
+  protected readonly truncationRules: TruncationRule[] = [
+    { field: 'Token chip in the input', behaviour: 'Single line, ellipsis at ~16 ch. Tooltip on hover when clipped.' },
+    { field: 'Option label in dropdown', behaviour: 'Single line, ellipsis. Tooltip on hover always (the popover is narrow).' },
+    { field: 'Secondary metadata', behaviour: 'Single line, ellipsis. Drop before the primary label clips.' },
+  ];
 }

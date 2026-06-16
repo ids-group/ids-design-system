@@ -1,7 +1,7 @@
 
     <section id="section-tag" data-anchor="tag" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Tag</h2>
+      <h2 class="t-h2">Tag<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Pill-shaped chip for short labels. Solid (brand-fill) for selected tokens in
         multi-select inputs; neutral (grey, bordered) for filter chips and metadata. Add
@@ -30,14 +30,4 @@
         <ds-tag variant="neutral" [interactive]="true" [selected]="false" (toggled)="toggle('east')">Site East</ds-tag>
       </div>
 
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">Truncation</div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Label</span>
-            <span class="trunc__behaviour">Single line, ellipsis at ~16 ch. Tooltip on hover when clipped.</span>
-          </li>
-        </ul>
-      </div>
     </section>

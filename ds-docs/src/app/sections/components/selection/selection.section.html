@@ -1,7 +1,7 @@
 
     <section id="section-selection" data-anchor="selection" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Selection</h2>
+      <h2 class="t-h2">Selection<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Checkbox, radio, switch, segmented, slider — every interactive primitive that toggles state.
       </p>
@@ -152,25 +152,5 @@
           <button class="segmented-btn">2027</button>
         </div>
         <input class="slider" type="range" value="80" />
-      </div>
-
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">Truncation</div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Label</span>
-            <span class="trunc__behaviour">Single line, ellipsis. Tooltip on hover when clipped — the label IS the affordance.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Segmented option</span>
-            <span class="trunc__behaviour">Single line, no clip. If the set won't fit, switch to a Select.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Slider value readout</span>
-            <span class="trunc__behaviour">Numeric only — no clip; widen the field instead.</span>
-          </li>
-        </ul>
       </div>
     </section>

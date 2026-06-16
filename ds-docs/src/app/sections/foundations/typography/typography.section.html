@@ -1,7 +1,7 @@
 
     <section id="section-typography" data-anchor="typography" class="section">
       <div class="eyebrow t-overline">Foundations</div>
-      <h2 class="t-h2">Typography</h2>
+      <h2 class="t-h2">Typography<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">Mulish for UI and prose, JetBrains Mono for IDs, dates and any monospace data. Weights: 400 / 500 / 600 / 700 / 800.</p>
 
       <!-- ============================================================ Type ramp -->
@@ -65,23 +65,4 @@ WHERE  project_id = 'alpha'
         </div>
       </div>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">Truncation</div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Heading</span>
-            <span class="trunc__behaviour">Single line, ellipsis at title width.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Body</span>
-            <span class="trunc__behaviour">Wrap freely.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Mono code</span>
-            <span class="trunc__behaviour">Pre-wrap; horizontal scroll inside the block; no clip.</span>
-          </li>
-        </ul>
-      </div>
     </section>

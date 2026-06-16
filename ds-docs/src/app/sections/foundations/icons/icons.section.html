@@ -1,7 +1,7 @@
 
     <section id="section-icons" data-anchor="icons" class="section">
       <div class="eyebrow t-overline">Foundations</div>
-      <h2 class="t-h2">Iconography</h2>
+      <h2 class="t-h2">Iconography<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         1.75-px stroke, rounded caps, <code class="t-mono">currentColor</code> fills. Sizes derive from a fixed scale.
         Rendered via the <code class="t-mono">&lt;ds-icon&gt;</code> component which inlines SVG paths from
@@ -55,25 +55,5 @@
           <ds-icon name="settings" [size]="20" />
           <code class="t-mono role-cell__tok">--icon-on-primary</code>
         </div>
-      </div>
-
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">Truncation</div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Glyph</span>
-            <span class="trunc__behaviour">Never clipped — the SVG sits in a square frame at one of the fixed sizes.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Name label</span>
-            <span class="trunc__behaviour">Single line, ellipsis. Names are short identifiers — never wrap.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Icon + text pair</span>
-            <span class="trunc__behaviour">Glyph fixed; text label takes the remaining width and clips with ellipsis.</span>
-          </li>
-        </ul>
       </div>
     </section>

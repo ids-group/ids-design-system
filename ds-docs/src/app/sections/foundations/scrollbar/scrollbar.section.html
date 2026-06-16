@@ -1,7 +1,7 @@
 
     <section id="section-scrollbar" data-anchor="scrollbar" class="section">
       <div class="eyebrow t-overline">Foundations</div>
-      <h2 class="t-h2">Scrollbar</h2>
+      <h2 class="t-h2">Scrollbar<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         System chrome the user touches every minute — has to feel like part of the product, not the OS. The global
         scrollbar styling is auto-applied (forwarded into <code class="t-mono">ds.scss</code>); no per-component opt-in is
@@ -65,23 +65,4 @@
         <dd>Track <code class="t-mono">--neutral-800</code>; thumb <code class="t-mono">--neutral-600</code></dd>
       </dl>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">Truncation</div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Scroll-pane content</span>
-            <span class="trunc__behaviour">Never clipped horizontally — the pane scrolls instead. Rows wrap inside the pane.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Row label</span>
-            <span class="trunc__behaviour">Single line, ellipsis. Long labels truncate before causing horizontal scroll inside a vertical pane.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Horizontal column</span>
-            <span class="trunc__behaviour">Fixed width; pane scrolls horizontally to reveal more columns.</span>
-          </li>
-        </ul>
-      </div>
     </section>

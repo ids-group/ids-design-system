@@ -1,7 +1,7 @@
 
     <section id="section-motion" data-anchor="motion" class="section">
       <div class="eyebrow t-overline">Foundations</div>
-      <h2 class="t-h2">Motion</h2>
+      <h2 class="t-h2">Motion<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Five durations, five eases. All motion respects <code class="t-mono">prefers-reduced-motion</code> —
         durations collapse to 0 so components don't need to opt in. Pair durations with the right easing
@@ -75,17 +75,4 @@
         }
       </div>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">Motion rules</div>
-        <ul class="trunc__list">
-          @for (row of trunc; track row.field) {
-            <li>
-              <span class="trunc__field">{{ row.field }}</span>
-              <span class="trunc__behaviour">{{ row.behaviour }}</span>
-            </li>
-          }
-        </ul>
-      </div>
     </section>

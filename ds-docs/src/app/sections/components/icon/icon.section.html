@@ -1,7 +1,7 @@
 
     <section id="section-icon" data-anchor="icon" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Icon</h2>
+      <h2 class="t-h2">Icon<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Inline SVG icons rendered through <code class="t-mono">&lt;ds-icon&gt;</code>. 1.75-px stroke, rounded caps,
         <code class="t-mono">currentColor</code> fills. Driven by the <code class="t-mono">name</code> input and a fixed size scale.
@@ -61,19 +61,4 @@
         }
       </div>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">Truncation</div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Glyph</span>
-            <span class="trunc__behaviour">Never clipped — the SVG sits in a square frame at one of the fixed sizes.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Icon + text pair</span>
-            <span class="trunc__behaviour">Glyph fixed; text label takes the remaining width and clips with ellipsis.</span>
-          </li>
-        </ul>
-      </div>
     </section>

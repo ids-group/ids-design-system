@@ -1,7 +1,7 @@
 
     <section id="section-dropzone" data-anchor="dropzone" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Dropzone</h2>
+      <h2 class="t-h2">Dropzone<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Drag-and-drop file upload with progress, success / error states, and a queued file list.
       </p>
@@ -142,27 +142,5 @@
           </div>
           <div class="state-cell__label">Error</div>
         </div>
-      </div>
-
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">
-          <ds-icon name="filter" [size]="14" /> Truncation
-        </div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">File name</span>
-            <span class="trunc__behaviour">Single line, ellipsis. Tooltip on hover with full name.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Progress percentage</span>
-            <span class="trunc__behaviour">Numeric — no clip.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Error message</span>
-            <span class="trunc__behaviour">Wrap, no clip — must remain visible.</span>
-          </li>
-        </ul>
       </div>
     </section>

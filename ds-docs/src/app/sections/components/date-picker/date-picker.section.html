@@ -1,7 +1,7 @@
 
     <section id="section-date-picker" data-anchor="date-picker" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Date picker</h2>
+      <h2 class="t-h2">Date picker<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Calendar popover anchored to a date field. Single-day or range selection. Range is the canonical use for
         Build / Access / Strike scheduling.
@@ -80,27 +80,5 @@
           <div class="state-cell__stage"><button type="button" class="day disabled" disabled>12</button></div>
           <div class="state-cell__label">Disabled</div>
         </div>
-      </div>
-
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">
-          <ds-icon name="filter" [size]="14" /> Truncation
-        </div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Selected-date label</span>
-            <span class="trunc__behaviour">Numeric date only — no clip.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Range label</span>
-            <span class="trunc__behaviour">"Start – End" format — no clip; abbreviates year if same.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Calendar day</span>
-            <span class="trunc__behaviour">Single digit/two digits — no clip ever.</span>
-          </li>
-        </ul>
       </div>
     </section>

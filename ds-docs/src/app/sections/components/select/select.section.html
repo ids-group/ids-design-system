@@ -1,7 +1,7 @@
 
     <section id="section-select" data-anchor="select" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Select</h2>
+      <h2 class="t-h2">Select<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">Custom dropdown built on CDK Overlay, with a custom chevron. Sizes, states, with-value, disabled, error.</p>
 
       <!-- ============================================================ Sizes -->
@@ -79,22 +79,6 @@
       <p class="block-desc t-s">15 options demonstrate the styled popover — the panel caps at 320px and scrolls internally, with width matched to the trigger.</p>
       <div class="grid-3">
         <ds-dropdown label="Region" [options]="regionOptions" placeholder="Pick a region…" />
-      </div>
-
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">Truncation</div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Option label</span>
-            <span class="trunc__behaviour">Single line, ellipsis at control width. Panel scrolls internally past its 320px max-height.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Selected value</span>
-            <span class="trunc__behaviour">Single line, ellipsis when overflowing the control.</span>
-          </li>
-        </ul>
       </div>
 
       <!-- ============================================================ Custom dropdown variant -->

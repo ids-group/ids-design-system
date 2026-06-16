@@ -1,7 +1,7 @@
 
     <section id="section-density" data-anchor="density" class="section">
       <div class="eyebrow t-overline">Foundations</div>
-      <h2 class="t-h2">Density</h2>
+      <h2 class="t-h2">Density<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Four density tiers, applied via <code class="t-mono">[data-density]</code> on a route container. They rewrite
         hit-target and component-scoped tokens — components consume the same role tokens, so no component CSS changes.
@@ -91,23 +91,4 @@
         on <code class="t-mono">&lt;html&gt;</code>.
       </p>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">Truncation</div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Sandbox label</span>
-            <span class="trunc__behaviour">Single line, ellipsis. Tier names are short by design — no wrap needed.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Demo button label</span>
-            <span class="trunc__behaviour">Inherits Button truncation — single line, ellipsis on overflow.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Demo list row</span>
-            <span class="trunc__behaviour">Label single line with ellipsis; trailing meta never clips.</span>
-          </li>
-        </ul>
-      </div>
     </section>

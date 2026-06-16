@@ -1,7 +1,7 @@
 
     <section id="section-page-header" data-anchor="page-header" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Page header</h2>
+      <h2 class="t-h2">Page header<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Top of every page: title, optional lede, primary action area, optional bottom tabs. Distinct from the Page header pattern, which documents the full page composition around this block.
       </p>
@@ -78,39 +78,5 @@
           </ng-container>
         </ds-page-header>
         <div class="content-placeholder" aria-hidden="true">Page content area</div>
-      </div>
-
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">
-          <ds-icon name="filter" [size]="14" /> Truncation
-        </div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Title</span>
-            <span class="trunc__behaviour">Single line, ellipsis. Tooltip on hover when clipped — the title carries identity.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Subtitle / lede</span>
-            <span class="trunc__behaviour">Single line, ellipsis. Tooltip on hover when clipped.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Eyebrow</span>
-            <span class="trunc__behaviour">Single line, no clip — keep eyebrow short by spec. Wraps if forced.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Breadcrumb segment</span>
-            <span class="trunc__behaviour">Single line, ellipsis at ~24 ch per segment. Middle segments collapse to … before the leaf clips.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Status badge</span>
-            <span class="trunc__behaviour">Single line, no clip — status labels are short by spec. Max one badge per header.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Action buttons</span>
-            <span class="trunc__behaviour">Single line, no clip. Beyond two ghost + one primary actions, collapse the rest into an overflow menu.</span>
-          </li>
-        </ul>
       </div>
     </section>

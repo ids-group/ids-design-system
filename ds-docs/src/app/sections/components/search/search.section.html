@@ -1,7 +1,7 @@
 
     <section id="section-search" data-anchor="search" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Search</h2>
+      <h2 class="t-h2">Search<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Top-bar search affordance — leading magnifier icon, mid-content control, optional ⌘K keyboard hint.
       </p>
@@ -51,23 +51,5 @@
         <div class="compact-shell">
           <ds-search placeholder="Search…" />
         </div>
-      </div>
-
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">
-          <ds-icon name="filter" [size]="14" /> Truncation
-        </div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Query</span>
-            <span class="trunc__behaviour">Single line, no clip while focused. Ellipsis when blurred + overflowing.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Hint kbd</span>
-            <span class="trunc__behaviour">No clip — fixed glyph length.</span>
-          </li>
-        </ul>
       </div>
     </section>

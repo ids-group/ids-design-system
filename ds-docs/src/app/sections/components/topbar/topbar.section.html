@@ -1,7 +1,7 @@
 
     <section id="section-topbar" data-anchor="topbar" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Top bar</h2>
+      <h2 class="t-h2">Top bar<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Application chrome at the top of every page. Brand left, optional search or breadcrumb centre, action cluster right.
       </p>
@@ -48,29 +48,4 @@
         </ds-topbar>
       </div>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">
-          <ds-icon name="filter" [size]="14" /> Truncation
-        </div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">App / account label</span>
-            <span class="trunc__behaviour">Single line, ellipsis at ~20 ch. Tooltip on hover when clipped.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Search input</span>
-            <span class="trunc__behaviour">Single line, no clip while focused. Placeholder ellipses if the bar shrinks.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Breadcrumb segments</span>
-            <span class="trunc__behaviour">Middle segments collapse to … before the leaf clips. Leaf truncates last with a tooltip.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Action icons</span>
-            <span class="trunc__behaviour">No visible label — full label lives in aria-label and tooltip-on-hover.</span>
-          </li>
-        </ul>
-      </div>
     </section>

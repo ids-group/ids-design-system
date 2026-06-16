@@ -1,7 +1,7 @@
 
     <section id="section-layout" data-anchor="layout" class="section">
       <div class="eyebrow t-overline">Foundations</div>
-      <h2 class="t-h2">Layout</h2>
+      <h2 class="t-h2">Layout<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Six min-width breakpoint tokens, one column-count per tier, content caps for prose and page width.
         Page gutters scale with the viewport; content caps at 1280 px on the widest tier, fluid below.
@@ -76,23 +76,4 @@
         <li><strong>Asymmetric layouts.</strong> 8 + 4 is canonical for record-detail pages (main + meta sidebar). 9 + 3 reserved for kit / track-plan picker rails.</li>
       </ul>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">Truncation</div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Breakpoint label</span>
-            <span class="trunc__behaviour">Single line, ellipsis. Token names are short — never wrap.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Grid tier description</span>
-            <span class="trunc__behaviour">Wraps to two lines max. Never clipped — the card grows vertically.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Cap row use</span>
-            <span class="trunc__behaviour">Wraps freely; the row grows vertically to fit.</span>
-          </li>
-        </ul>
-      </div>
     </section>

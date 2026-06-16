@@ -1,7 +1,7 @@
 
     <section id="section-pagination" data-anchor="pagination" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Pagination</h2>
+      <h2 class="t-h2">Pagination<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">Page navigation for tabular data — ellipsis when ranges exceed 7 visible items.</p>
 
       <!-- ============================================================ Default -->
@@ -82,25 +82,4 @@
         />
       </div>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">
-          <ds-icon name="filter" [size]="14" /> Truncation
-        </div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Page number</span>
-            <span class="trunc__behaviour">Single digit / short numeral — no clip ever.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Ellipsis</span>
-            <span class="trunc__behaviour">Three dots only — no clip.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Total count</span>
-            <span class="trunc__behaviour">Plain text — wraps in narrow viewports.</span>
-          </li>
-        </ul>
-      </div>
     </section>

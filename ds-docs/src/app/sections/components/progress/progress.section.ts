@@ -1,12 +1,18 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ProgressComponent } from 'ds';
+import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-progress',
   standalone: true,
-  imports: [ProgressComponent],
+  imports: [ProgressComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './progress.section.html',
   styleUrl: './progress.section.scss',
 })
-export class ProgressSection {}
+export class ProgressSection {
+  protected readonly truncationRules: TruncationRule[] = [
+    { field: 'Value', behaviour: 'Clamped to 0..100 in the wrapper. Pass percentages, not absolute counts.' },
+    { field: 'Indeterminate', behaviour: 'Width input is ignored. Animation runs at --duration-loop-slow.' },
+  ];
+}

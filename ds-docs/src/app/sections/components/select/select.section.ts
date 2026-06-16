@@ -1,10 +1,11 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DropdownComponent, type DropdownOption } from 'ds';
+import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-select',
   standalone: true,
-  imports: [DropdownComponent],
+  imports: [DropdownComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './select.section.html',
   styleUrl: './select.section.scss',
@@ -63,5 +64,10 @@ export class SelectSection {
     { label: 'Asia — East', value: 'as-e' },
     { label: 'Oceania', value: 'oc' },
     { label: 'Antarctica (research only)', value: 'ant' },
+  ];
+
+  protected readonly truncationRules: TruncationRule[] = [
+    { field: 'Option label', behaviour: 'Single line, ellipsis at control width. Panel scrolls internally past its 320px max-height.' },
+    { field: 'Selected value', behaviour: 'Single line, ellipsis when overflowing the control.' },
   ];
 }

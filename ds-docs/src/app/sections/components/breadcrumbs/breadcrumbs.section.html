@@ -1,7 +1,7 @@
 
     <section id="section-breadcrumbs" data-anchor="breadcrumbs" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Breadcrumbs</h2>
+      <h2 class="t-h2">Breadcrumbs<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">Trail to root. The last item is the current page (no href). Middle segments collapse to <code class="t-mono">…</code> before the leaf clips.</p>
 
       <!-- ============================================================ Default -->
@@ -63,25 +63,4 @@ this.crumbs.set([
 {{ '// template — items input omitted, reads from service' }}
 &lt;ds-breadcrumbs /&gt;</code></pre>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">
-          <ds-icon name="filter" [size]="14" /> Truncation
-        </div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Item label</span>
-            <span class="trunc__behaviour">Single line, ellipsis at long labels. Tooltip on hover when clipped.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Separator</span>
-            <span class="trunc__behaviour">Single glyph (slash or chevron) — no clip.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Current item</span>
-            <span class="trunc__behaviour">Bold; truncates last if overflows total width.</span>
-          </li>
-        </ul>
-      </div>
     </section>

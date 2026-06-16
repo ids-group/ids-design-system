@@ -1,7 +1,7 @@
 
     <section id="section-accordion" data-anchor="accordion" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Accordion</h2>
+      <h2 class="t-h2">Accordion<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Collapsible disclosure panel. Each item exposes a head trigger and a body that
         shows when expanded. Multiple items can be open simultaneously by default — pair
@@ -36,18 +36,4 @@
         </div>
       </div>
 
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">Truncation</div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Head label</span>
-            <span class="trunc__behaviour">Single line, ellipsis. Tooltip on hover when clipped.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Body</span>
-            <span class="trunc__behaviour">Wraps, no clip — the panel exists to give body text room.</span>
-          </li>
-        </ul>
-      </div>
     </section>

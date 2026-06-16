@@ -1,7 +1,7 @@
 
     <section id="section-badge" data-anchor="badge" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Badges, tags &amp; status</h2>
+      <h2 class="t-h2">Badges, tags &amp; status<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">Stable status language across the product: Planning · Confirmed · Active · Completed.</p>
 
       <!-- ============================================================ Lifecycle states showcase -->
@@ -130,25 +130,4 @@
         </div>
       </div>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">
-          <ds-icon name="filter" [size]="14" /> Truncation
-        </div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Badge / tag label</span>
-            <span class="trunc__behaviour">Single line, ellipsis at ~22 ch. Tooltip on hover when clipped.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Status pill</span>
-            <span class="trunc__behaviour">No clip — lifecycle labels are fixed and short (Planning, Active, etc.).</span>
-          </li>
-          <li>
-            <span class="trunc__field">w3w</span>
-            <span class="trunc__behaviour">No clip — the three-word address is a fixed length.</span>
-          </li>
-        </ul>
-      </div>
     </section>

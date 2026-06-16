@@ -1,7 +1,7 @@
 
     <section id="section-banner" data-anchor="banner" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Banner</h2>
+      <h2 class="t-h2">Banner<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Inline page-level message. Six severities — info, success, warning, severe, error, neutral —
         each with a default icon, optional title, and optional dismiss control.
@@ -155,29 +155,4 @@
         </div>
       </div>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">
-          <ds-icon name="filter" [size]="14" /> Truncation
-        </div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Title</span>
-            <span class="trunc__behaviour">Single line, ellipsis at row width. Tooltip on hover when clipped.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Body</span>
-            <span class="trunc__behaviour">Wrap, no clip. No clamp — banners are page-level and must stay fully readable.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Inline link in body</span>
-            <span class="trunc__behaviour">Wraps with the body text. Underlined; never clipped.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Dismiss icon</span>
-            <span class="trunc__behaviour">Always visible. Never overlapped by title or body — body min-width: 0 keeps wrap correct.</span>
-          </li>
-        </ul>
-      </div>
     </section>

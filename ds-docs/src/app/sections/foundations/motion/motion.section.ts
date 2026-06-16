@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 interface Duration {
   readonly name: string;
@@ -18,11 +19,6 @@ interface CombinedDemo {
   readonly duration: string;
   readonly easing: string;
   readonly kind: 'fade' | 'slide' | 'scale' | 'overshoot';
-}
-
-interface TruncRow {
-  readonly field: string;
-  readonly behaviour: string;
 }
 
 const DURATIONS: Duration[] = [
@@ -72,24 +68,10 @@ const COMBINED: CombinedDemo[] = [
   },
 ];
 
-const TRUNC: TruncRow[] = [
-  {
-    field: 'Reduced motion',
-    behaviour: 'All durations collapse to 0ms under prefers-reduced-motion. Component CSS does not need to opt in — the token cascade handles it.',
-  },
-  {
-    field: 'Transitions vs loops',
-    behaviour: '--duration-* drives state transitions. Indeterminate loops (spinners, skeletons) use --duration-loop-fast / --duration-loop-slow — separate scale for rhythm, not response.',
-  },
-  {
-    field: 'Easing pairing',
-    behaviour: 'decelerate for enter, accelerate for exit, standard for state changes, emphasized for overlays. Reserve spring for small celebratory feedback.',
-  },
-];
-
 @Component({
   selector: 'section-foundations-motion',
   standalone: true,
+  imports: [DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './motion.section.html',
   styleUrl: './motion.section.scss',
@@ -98,5 +80,9 @@ export class MotionSection {
   protected readonly durations = DURATIONS;
   protected readonly eases = EASES;
   protected readonly combined = COMBINED;
-  protected readonly trunc = TRUNC;
+  protected readonly truncationRules: TruncationRule[] = [
+    { field: 'Reduced motion', behaviour: 'All durations collapse to 0ms under prefers-reduced-motion. Component CSS does not need to opt in — the token cascade handles it.' },
+    { field: 'Transitions vs loops', behaviour: '--duration-* drives state transitions. Indeterminate loops (spinners, skeletons) use --duration-loop-fast / --duration-loop-slow — separate scale for rhythm, not response.' },
+    { field: 'Easing pairing', behaviour: 'decelerate for enter, accelerate for exit, standard for state changes, emphasized for overlays. Reserve spring for small celebratory feedback.' },
+  ];
 }

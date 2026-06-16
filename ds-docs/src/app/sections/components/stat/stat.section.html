@@ -1,7 +1,7 @@
 
     <section id="section-stat" data-anchor="stat" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Stats</h2>
+      <h2 class="t-h2">Stats<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">Headline metric with an optional delta. Up/down arrows for movement vs a baseline.</p>
 
       <!-- ============================================================ Stat tiles -->
@@ -23,21 +23,5 @@
         <ds-stat size="sm" label="Compact" value="147" [delta]="12" />
         <ds-stat label="Default" value="147" [delta]="12" />
         <ds-stat size="lg" label="Hero KPI" value="147" [delta]="12" />
-      </div>
-
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">Truncation</div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Stat label</span>
-            <span class="trunc__behaviour">Single line, ellipsis. Tooltip on hover when clipped.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Stat value</span>
-            <span class="trunc__behaviour">No clip. Use compact notation (₤ 1.2k) before letting numbers wrap.</span>
-          </li>
-        </ul>
       </div>
     </section>

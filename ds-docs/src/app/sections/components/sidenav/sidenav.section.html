@@ -1,7 +1,7 @@
 
     <section id="section-sidenav" data-anchor="sidenav" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Sidenav</h2>
+      <h2 class="t-h2">Sidenav<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         App-level vertical navigation. Items carry an icon, a label, an optional count badge or alert dot. Collapsed mode keeps the icon and pushes the label into a tooltip.
       </p>
@@ -130,39 +130,5 @@
           </div>
           <div class="state-cell__label">Collapsed · default</div>
         </div>
-      </div>
-
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">
-          <ds-icon name="filter" [size]="14" /> Truncation
-        </div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Item label (expanded)</span>
-            <span class="trunc__behaviour">Single line, ellipsis at panel width. Tooltip on hover when clipped.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Item label (collapsed)</span>
-            <span class="trunc__behaviour">Hidden — the full label moves to a tooltip on hover or keyboard focus.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Count badge</span>
-            <span class="trunc__behaviour">No clip — numeric, fixed surface area. Caps at 99+ if needed.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Group label</span>
-            <span class="trunc__behaviour">Uppercase, single line, no clip. Wraps if forced (unlikely at panel widths).</span>
-          </li>
-          <li>
-            <span class="trunc__field">Brand name</span>
-            <span class="trunc__behaviour">Single line, ellipsis at panel width. Tooltip on hover. Hidden entirely when collapsed.</span>
-          </li>
-          <li>
-            <span class="trunc__field">User name (footer)</span>
-            <span class="trunc__behaviour">Single line, ellipsis. Tooltip on hover. Role row truncates the same way.</span>
-          </li>
-        </ul>
       </div>
     </section>

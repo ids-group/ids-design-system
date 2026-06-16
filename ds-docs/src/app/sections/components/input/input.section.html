@@ -1,7 +1,7 @@
 
     <section id="section-input" data-anchor="input" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Fields</h2>
+      <h2 class="t-h2">Fields<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Single-line text, textarea, dropdown, number, prefix/suffix add-ons, floating label, six states.
       </p>
@@ -265,31 +265,5 @@
           <ds-tag [closable]="true">Q3 Initiative</ds-tag>
           <input placeholder="Add project…" />
         </div>
-      </div>
-
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">
-          <ds-icon name="filter" [size]="14" /> Truncation
-        </div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Label</span>
-            <span class="trunc__behaviour">Single line, no clip — labels are short by spec. Wraps if forced.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Input value</span>
-            <span class="trunc__behaviour">No clip while focused (caret needs reach). Single-line ellipsis when blurred and overflowing; full value in title attr.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Hint</span>
-            <span class="trunc__behaviour">Wrap to 2 lines, then ellipsis. No tooltip — hint is itself the tooltip.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Error message</span>
-            <span class="trunc__behaviour">Wrap, no clip. Always fully visible — error must never hide.</span>
-          </li>
-        </ul>
       </div>
     </section>

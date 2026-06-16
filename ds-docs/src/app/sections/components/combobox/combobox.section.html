@@ -1,7 +1,7 @@
 
     <section id="section-combobox" data-anchor="combobox" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Combobox &middot; multi-select</h2>
+      <h2 class="t-h2">Combobox &middot; multi-select<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Text input that filters a token-tagged list. Single-select for picking a record
         (a Member, a venue); multi-select for picking a set (allowed products, audience tags).
@@ -26,22 +26,4 @@
                      placeholder="Add product…" />
       </div>
 
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">Truncation</div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Token chip in the input</span>
-            <span class="trunc__behaviour">Single line, ellipsis at ~16 ch. Tooltip on hover when clipped.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Option label in dropdown</span>
-            <span class="trunc__behaviour">Single line, ellipsis. Tooltip on hover always (the popover is narrow).</span>
-          </li>
-          <li>
-            <span class="trunc__field">Secondary metadata</span>
-            <span class="trunc__behaviour">Single line, ellipsis. Drop before the primary label clips.</span>
-          </li>
-        </ul>
-      </div>
     </section>

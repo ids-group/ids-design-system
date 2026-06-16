@@ -3,6 +3,7 @@ import {
   IconComponent,
   type IconName,
 } from 'ds';
+import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
 
 interface IconSize {
   readonly token: string;
@@ -26,7 +27,7 @@ const SAMPLES: readonly IconName[] = [
 @Component({
   selector: 'section-components-icon',
   standalone: true,
-  imports: [IconComponent],
+  imports: [IconComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './icon.section.html',
   styleUrl: './icon.section.scss',
@@ -37,4 +38,9 @@ export class IconSection {
   protected readonly strokes = [1.5, 1.75, 2] as const;
   protected readonly compareSizes = [16, 20, 24] as const;
   protected readonly compareSamples: readonly IconName[] = ['search', 'settings', 'bell', 'chart', 'edit', 'truck'];
+
+  protected readonly truncationRules: TruncationRule[] = [
+    { field: 'Glyph', behaviour: 'Never clipped — the SVG sits in a square frame at one of the fixed sizes.' },
+    { field: 'Icon + text pair', behaviour: 'Glyph fixed; text label takes the remaining width and clips with ellipsis.' },
+  ];
 }

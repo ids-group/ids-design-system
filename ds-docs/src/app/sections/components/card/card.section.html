@@ -1,7 +1,7 @@
 
     <section id="section-card" data-anchor="card" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Cards</h2>
+      <h2 class="t-h2">Cards<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">Surface container for compositions — header, body, footer slots. Three paddings, three elevations.</p>
 
       <!-- ============================================================ Elevations × paddings -->
@@ -75,23 +75,4 @@
         </ds-card>
       </div>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">Truncation</div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Header title</span>
-            <span class="trunc__behaviour">Single line, ellipsis at ~32 ch. Tooltip on hover when clipped.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Body copy</span>
-            <span class="trunc__behaviour">Wrap freely. No line clamp by default; consumer applies clamp if needed.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Footer actions</span>
-            <span class="trunc__behaviour">Stay below; collapse to icon-only on narrow widths.</span>
-          </li>
-        </ul>
-      </div>
     </section>

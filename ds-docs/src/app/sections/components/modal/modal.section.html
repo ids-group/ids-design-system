@@ -1,7 +1,7 @@
 
     <section id="section-modal" data-anchor="modal" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Modal</h2>
+      <h2 class="t-h2">Modal<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">
         Centered dialog over a scrim. Three sizes plus a danger variant for destructive
         confirmations. Inline specimens render the modal card without the backdrop so all
@@ -119,31 +119,5 @@
           </div>
           <div class="state-cell__label">Form modal · md</div>
         </div>
-      </div>
-
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">
-          <ds-icon name="filter" [size]="14" /> Truncation
-        </div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Title</span>
-            <span class="trunc__behaviour">Single line, ellipsis on overflow. Tooltip on hover when clipped. Keep the close button visible.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Body</span>
-            <span class="trunc__behaviour">Wrap, no clip. Scrolls inside the body when content exceeds the modal height.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Actions</span>
-            <span class="trunc__behaviour">Single line per label. If the row overflows, stack vertically full-width.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Form fields inside body</span>
-            <span class="trunc__behaviour">Inherit field truncation rules. Hints wrap to 2 lines; errors never clip.</span>
-          </li>
-        </ul>
       </div>
     </section>

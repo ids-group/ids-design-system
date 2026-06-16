@@ -1,7 +1,7 @@
 
     <section id="section-pattern-empty-state" data-anchor="pattern-empty-state" class="section">
       <div class="eyebrow t-overline">Patterns</div>
-      <h2 class="t-h2">Empty-state variants</h2>
+      <h2 class="t-h2">Empty-state variants<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">{{ lede }}</p>
 
       <div class="blocks">
@@ -85,29 +85,4 @@
         <li>Permission denied never suggests "log in again" — the user is already authenticated; give them a real escape route.</li>
       </ul>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">
-          <ds-icon name="filter" [size]="14" /> Truncation
-        </div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Title</span>
-            <span class="trunc__behaviour">Wraps to a second line if needed. Never clip — the user needs the full sentence to understand the state.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Body</span>
-            <span class="trunc__behaviour">Wraps, no clip. Capped at ~360px via max-width so a long sentence doesn't span the full card width.</span>
-          </li>
-          <li>
-            <span class="trunc__field">CTA label</span>
-            <span class="trunc__behaviour">Short verb phrases only (Retry, Allocate resources). If the action needs a sentence, the empty state copy is wrong.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Icon</span>
-            <span class="trunc__behaviour">Fixed 28px inside a 64px rounded tile. Doesn't scale with title length — always centred above the title.</span>
-          </li>
-        </ul>
-      </div>
     </section>

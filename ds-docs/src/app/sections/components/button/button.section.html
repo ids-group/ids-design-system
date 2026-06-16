@@ -1,7 +1,7 @@
 
     <section id="section-button" data-anchor="button" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Buttons</h2>
+      <h2 class="t-h2">Buttons<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">Text-label actions across variants, sizes and states. Plus leading icon · button-group · split · toggle. For icon-only actions see the Icon button component.</p>
 
       <!-- ============================================================ Variants × sizes -->
@@ -189,25 +189,4 @@
         <ds-button variant="text">View activity log</ds-button>
       </div>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">
-          <ds-icon name="filter" [size]="14" /> Truncation
-        </div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Label</span>
-            <span class="trunc__behaviour">Single line, ellipsis on overflow. Buttons must fit — rephrase if you need multi-line. No tooltip.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Icon-only</span>
-            <span class="trunc__behaviour">No visible label; full label MUST live in aria-label and tooltip-on-hover.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Split-button menu items</span>
-            <span class="trunc__behaviour">Single line, ellipsis. Tooltip on hover when clipped.</span>
-          </li>
-        </ul>
-      </div>
     </section>

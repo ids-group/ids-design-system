@@ -1,7 +1,7 @@
 
     <section id="section-avatar" data-anchor="avatar" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Avatars</h2>
+      <h2 class="t-h2">Avatars<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">Initials and image avatars in four sizes, plus stacked groups with overflow.</p>
 
       <!-- ============================================================ Sizes -->
@@ -23,23 +23,4 @@
         </ds-avatar-group>
       </div>
 
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">Truncation</div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Initials fallback</span>
-            <span class="trunc__behaviour">2 chars max — no clip. Generated from first + last name.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Adjacent name label</span>
-            <span class="trunc__behaviour">Single line, ellipsis. Tooltip on hover with full name.</span>
-          </li>
-          <li>
-            <span class="trunc__field">+N overflow</span>
-            <span class="trunc__behaviour">Numeric only — no clip. Hidden member names are not surfaced by the component.</span>
-          </li>
-        </ul>
-      </div>
     </section>

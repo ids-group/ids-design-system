@@ -1,7 +1,7 @@
 
     <section id="section-tabs" data-anchor="tabs" class="section">
       <div class="eyebrow t-overline">Components</div>
-      <h2 class="t-h2">Tabs</h2>
+      <h2 class="t-h2">Tabs<docs-truncation [rules]="truncationRules" /></h2>
       <p class="lede t-m">Switch among peer panels. Two visual variants — line for primary navigation, pills for compact filters. Optional icon and count chip per tab.</p>
 
       <!-- ============================================================ Variants -->
@@ -129,23 +129,5 @@
           </div>
           <div class="state-cell__label">Disabled</div>
         </div>
-      </div>
-
-      <!-- ============================================================ Truncation -->
-      <h3 class="block-title t-h4">Truncation</h3>
-      <div class="trunc">
-        <div class="trunc__title">
-          <ds-icon name="filter" [size]="14" /> Truncation
-        </div>
-        <ul class="trunc__list">
-          <li>
-            <span class="trunc__field">Tab label</span>
-            <span class="trunc__behaviour">Single line, no clip — labels are short. Tooltip on hover if forced clip.</span>
-          </li>
-          <li>
-            <span class="trunc__field">Badge count</span>
-            <span class="trunc__behaviour">Numeric only — no clip.</span>
-          </li>
-        </ul>
       </div>
     </section>
