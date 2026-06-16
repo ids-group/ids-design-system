@@ -8,7 +8,7 @@ set -e
 
 cd "$(dirname "$0")/../.."
 
-[ -f dist/ds/package.json ] || { echo "publish: dist/ds/package.json missing — run build-lib.sh first."; exit 1; }
+[ -f dist/ds/package.json ] || { echo "publish: dist/ds/package.json missing — run build-lib.sh (bun run build:lib) first."; exit 1; }
 [ -n "$NPM_TOKEN" ] || { echo "publish: NPM_TOKEN is not set."; exit 1; }
 [ -n "$BITBUCKET_TAG" ] || { echo "publish: BITBUCKET_TAG is not set — this runs from the tag pipeline."; exit 1; }
 
