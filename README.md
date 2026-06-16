@@ -89,9 +89,10 @@ on `main`. Then release one of two ways.
 
 In the Bitbucket UI: **Pipelines → Run pipeline → branch `main` →** pick
 `release-patch`, `release-minor`, `release-major`, or `release-beta`. CI bumps the
-version, stamps the CHANGELOG, commits, tags, pushes `main`, builds `dist/ds`, and
-publishes to npm — no local tooling needed. `## Unreleased` must be filled first;
-preflight fails the pipeline early otherwise.
+version, stamps the CHANGELOG, commits, and pushes `main` + a `vX.Y.Z` tag — no
+local tooling needed. That tag push then triggers the `Publish to npm` pipeline,
+which builds and publishes (so you'll see two runs: the release, then the publish).
+`## Unreleased` must be filled first; preflight fails the pipeline early otherwise.
 
 ### Option B — locally
 

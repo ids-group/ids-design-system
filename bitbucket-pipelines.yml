@@ -65,7 +65,7 @@ pipelines:
   tags:
     'v*':
       - step:
-          name: Build & publish to npm
+          name: Publish to npm
           caches:
             - npm
             - bun-bin
@@ -94,40 +94,33 @@ pipelines:
             - sh infrastructure/scripts/ci-pr.sh
 
     # One-click releases, run on demand from the Bitbucket UI (Run pipeline ->
-    # branch main -> pick the level). ci-release.sh bumps the version, stamps the
-    # CHANGELOG, commits, tags, pushes main, builds, and publishes to npm. Requires
-    # Secured variables RELEASE_TOKEN (repository:write, to push main) and NPM_TOKEN.
-    # Fill the `## Unreleased` CHANGELOG section before running — preflight enforces it.
-    # The release commit/tag carries `[skip ci]` so the tag pipeline doesn't double-fire.
+    # branch main -> pick the level). cut-release.sh bumps the version, stamps the
+    # CHANGELOG, commits, tags, and pushes main + the vX.Y.Z tag. It does NOT publish:
+    # the pushed tag triggers the `tags: v*` pipeline above, which is the single
+    # publisher. So a one-click release shows two runs — this one, then `Publish to
+    # npm`. Requires Secured variable RELEASE_TOKEN (repository:write, to push main);
+    # NPM_TOKEN is used by the v* publish step. Fill `## Unreleased` first —
+    # preflight enforces it. No caches: cut-release runs no install/build.
     release-patch:
       - step:
           name: Release (patch)
-          caches: &release-caches
-            - npm
-            - bun-bin
-            - bun-cache
-            - angular
-            - dist-ds
           script:
-            - sh infrastructure/scripts/ci-release.sh patch
+            - sh infrastructure/scripts/cut-release.sh patch
     release-minor:
       - step:
           name: Release (minor)
-          caches: *release-caches
           script:
-            - sh infrastructure/scripts/ci-release.sh minor
+            - sh infrastructure/scripts/cut-release.sh minor
     release-major:
       - step:
           name: Release (major)
-          caches: *release-caches
           script:
-            - sh infrastructure/scripts/ci-release.sh major
+            - sh infrastructure/scripts/cut-release.sh major
     release-beta:
       - step:
           name: Release (beta prerelease)
-          caches: *release-caches
           script:
-            - sh infrastructure/scripts/ci-release.sh beta
+            - sh infrastructure/scripts/cut-release.sh beta
 
     # Manual deploy of the ds-docs showcase to the IDS prototypes CDN, mirroring
     # the pinkmoon prototype deploy: shared bucket ids-prototypes + CloudFront
