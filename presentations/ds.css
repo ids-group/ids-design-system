@@ -141,7 +141,7 @@
   /* Borders */
   --border-default: var(--neutral-200);
   --border-strong: var(--neutral-300);
-  --border-subtle: var(--neutral-150);
+  --border-subtitle: var(--neutral-150);
   --border-divider: var(--neutral-150);
   --border-inverted: var(--neutral-700);
   --border-disabled: var(--neutral-150);
@@ -198,7 +198,7 @@
   --primary-hover: color-mix(in srgb, var(--primary) 88%, black);
   --primary-pressed: color-mix(in srgb, var(--primary) 76%, black);
   --primary-selected-hover: color-mix(in srgb, var(--primary) 88%, black);
-  --primary-subtle: var(--blue-50);
+  --primary-subtitle: var(--blue-50);
   --primary-muted: var(--blue-100);
   --primary-muted-strong: var(--blue-200);
   --primary-strong: var(--blue-700);
@@ -215,7 +215,7 @@
   --secondary-hover: color-mix(in srgb, var(--secondary) 88%, black);
   --secondary-pressed: color-mix(in srgb, var(--secondary) 76%, black);
   --secondary-strong: hsl(var(--secondary-h), var(--secondary-s), calc(var(--secondary-l) - 11%));
-  --secondary-subtle: hsl(var(--secondary-h), 100%, 97%);
+  --secondary-subtitle: hsl(var(--secondary-h), 100%, 97%);
   --secondary-muted: hsl(var(--secondary-h), 95%, 94%);
   --secondary-on: var(--primary-on);
   /* Tertiary — third brand hue. Used by the tertiary button variant and
@@ -232,7 +232,7 @@
   --tertiary-hover: color-mix(in srgb, var(--tertiary) 88%, black);
   --tertiary-pressed: color-mix(in srgb, var(--tertiary) 76%, black);
   --tertiary-strong: hsl(var(--tertiary-h), var(--tertiary-s), calc(var(--tertiary-l) - 11%));
-  --tertiary-subtle: hsl(var(--tertiary-h), 100%, 97%);
+  --tertiary-subtitle: hsl(var(--tertiary-h), 100%, 97%);
   --tertiary-muted: hsl(var(--tertiary-h), 95%, 94%);
   --tertiary-on: var(--primary-on);
   /* Status roles.
@@ -242,26 +242,26 @@
      contrast targets are tuned, not procedural. */
   --success: var(--green-500);
   --success-hover: color-mix(in srgb, var(--success) 88%, black);
-  --success-subtle: var(--green-50);
+  --success-subtitle: var(--green-50);
   --success-muted: var(--green-100);
   --success-border: var(--green-200);
   --success-text: var(--green-700);
   --warning: var(--yellow-400);
   --warning-hover: color-mix(in srgb, var(--warning) 88%, black);
-  --warning-subtle: var(--yellow-50);
+  --warning-subtitle: var(--yellow-50);
   --warning-muted: var(--yellow-100);
   --warning-border: var(--yellow-200);
   --warning-text: var(--yellow-700);
   --error: var(--red-500);
   --error-hover: color-mix(in srgb, var(--error) 88%, black);
   --error-pressed: color-mix(in srgb, var(--error) 76%, black);
-  --error-subtle: var(--red-50);
+  --error-subtitle: var(--red-50);
   --error-muted: var(--red-100);
   --error-border: var(--red-200);
   --error-text: var(--red-600);
   --info: var(--sky-500);
   --info-hover: color-mix(in srgb, var(--info) 88%, black);
-  --info-subtle: var(--sky-50);
+  --info-subtitle: var(--sky-50);
   --info-muted: var(--sky-100);
   --info-border: var(--sky-200);
   --info-text: var(--sky-700);
@@ -275,7 +275,7 @@
      pills are unified in the Badge component to consume these tokens. */
   --status-planning-bg: var(--neutral-150);
   --status-planning-fg: var(--neutral-700);
-  --status-confirmed-bg: var(--primary-subtle);
+  --status-confirmed-bg: var(--primary-subtitle);
   --status-confirmed-fg: var(--primary-strong);
   --status-active-bg: var(--green-50);
   --status-active-fg: var(--green-700);
@@ -410,18 +410,18 @@
      ============================================================ */
   /* --shadow-tint-h/s/l live in themes/default/_palette.scss — palette-level
      so dark palettes can override --shadow-tint-l → ~95% for soft light glows. */
-  --z100: 0 1px 2px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .06),
-          0 1px 3px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .08);
-  --z200: 0 4px 8px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .06),
-          0 4px 16px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .10);
-  --z300: 0 8px 16px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .08),
-          0 16px 32px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .14);
-  --z400: 0 16px 32px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .12),
-          0 24px 48px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .18);
-  --shadow-popover: var(--z200);
-  --shadow-modal: var(--z400);
-  --shadow-toast: var(--z300);
-  --shadow-card: var(--z100);
+  --shadow-1: 0 1px 2px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .06),
+              0 1px 3px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .08);
+  --shadow-2: 0 4px 8px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .06),
+              0 4px 16px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .10);
+  --shadow-3: 0 8px 16px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .08),
+              0 16px 32px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .14);
+  --shadow-4: 0 16px 32px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .12),
+              0 24px 48px hsla(var(--shadow-tint-h), var(--shadow-tint-s), var(--shadow-tint-l), .18);
+  --shadow-popover: var(--shadow-2);
+  --shadow-modal: var(--shadow-4);
+  --shadow-toast: var(--shadow-3);
+  --shadow-card: var(--shadow-1);
   /* Backdrop blur */
   --blur-sm: 4px;
   --blur-md: 8px;
@@ -1418,7 +1418,7 @@ html {
   box-shadow: var(--focus-ring);
 }
 .ds-dropdown-panel .option.is-selected {
-  background: var(--primary-subtle);
+  background: var(--primary-subtitle);
   color: var(--primary-strong);
 }
 .ds-dropdown-panel .option.is-selected .option-icon {
@@ -1456,34 +1456,63 @@ html {
     animation: none;
   }
 }
-
-/* ── Short-name aliases for presentation decks ──────────────────────────────
-   The decks in presentations/ were authored with short token names
-   (--s-*, --r-*, --fs-*, --fw-*, --bw-*, --ls-*); the canonical tokens above use
-   long names (--space-*, --radius-*, …). Map them here so every deck renders with
-   correct spacing and borders. Literal fallbacks keep decks usable even if a token
-   is renamed or this file fails to load partially. */
+/* ── deck compat layer (not part of the design system) ───────────────────── */
 :root {
-  --s-1: var(--space-1, 4px);    --s-2: var(--space-2, 8px);    --s-3: var(--space-3, 12px);
-  --s-4: var(--space-4, 16px);   --s-5: var(--space-5, 20px);   --s-6: var(--space-6, 24px);
-  --s-8: var(--space-8, 32px);   --s-9: var(--space-8, 32px);   --s-10: var(--space-10, 40px);
-  --s-12: var(--space-12, 48px); --s-14: var(--space-14, 64px); --s-16: var(--space-16, 72px);
-  --s-20: var(--space-20, 80px); --s-24: var(--space-24, 96px);
-
-  --r-sm: var(--radius-sm, 4px);  --r-md: var(--radius-md, 8px);  --r-lg: var(--radius-lg, 12px);
-  --r-xl: var(--radius-xl, 16px); --r-pill: var(--radius-pill, 999px);
-
-  --fs-4xs: var(--font-size-4xs, 9px);  --fs-3xs: var(--font-size-3xs, 10px); --fs-2xs: var(--font-size-2xs, 11px);
-  --fs-xs: var(--font-size-xs, 12px);   --fs-s: var(--font-size-s, 14px);     --fs-m: var(--font-size-m, 16px);
-  --fs-l: var(--font-size-l, 18px);     --fs-h5: var(--font-size-h5, 18px);   --fs-h4: var(--font-size-h4, 22px);
-  --fs-h3: var(--font-size-h3, 28px);   --fs-h2: var(--font-size-h2, 36px);   --fs-h1: var(--font-size-h1, 44px);
-
-  --fw-regular: var(--font-weight-regular, 400);   --fw-medium: var(--font-weight-medium, 500);
-  --fw-semibold: var(--font-weight-semibold, 600); --fw-bold: var(--font-weight-bold, 700);
-  --fw-extrabold: var(--font-weight-extrabold, 800);
-
-  --ls-tight: var(--letter-spacing-tight, -.02em); --ls-snug: var(--letter-spacing-snug, -.01em);
-  --ls-wide: var(--letter-spacing-wide, .02em);    --ls-wider: var(--letter-spacing-wider, .08em);
-
-  --bw-default: var(--border-width-default, 1px);  --bw-strong: var(--border-width-strong, 2px);
+  /* spacing */
+  --s-1: var(--space-1);
+  --s-2: var(--space-2);
+  --s-3: var(--space-3);
+  --s-4: var(--space-4);
+  --s-5: var(--space-5);
+  --s-6: var(--space-6);
+  --s-8: var(--space-8);
+  --s-9: var(--space-8);
+  --s-10: var(--space-10);
+  --s-12: var(--space-12);
+  --s-14: var(--space-14);
+  --s-16: var(--space-16);
+  --s-20: var(--space-20);
+  --s-24: var(--space-24);
+  /* radius */
+  --r-sm: var(--radius-sm);
+  --r-md: var(--radius-md);
+  --r-lg: var(--radius-lg);
+  --r-xl: var(--radius-xl);
+  --r-pill: var(--radius-pill);
+  /* font size */
+  --fs-4xs: var(--font-size-4xs);
+  --fs-3xs: var(--font-size-3xs);
+  --fs-2xs: var(--font-size-2xs);
+  --fs-xs: var(--font-size-xs);
+  --fs-s: var(--font-size-s);
+  --fs-m: var(--font-size-m);
+  --fs-l: var(--font-size-l);
+  --fs-h5: var(--font-size-h5);
+  --fs-h4: var(--font-size-h4);
+  --fs-h3: var(--font-size-h3);
+  --fs-h2: var(--font-size-h2);
+  --fs-h1: var(--font-size-h1);
+  /* font weight */
+  --fw-regular: var(--font-weight-regular);
+  --fw-medium: var(--font-weight-medium);
+  --fw-semibold: var(--font-weight-semibold);
+  --fw-bold: var(--font-weight-bold);
+  --fw-extrabold: var(--font-weight-extrabold);
+  /* letter spacing */
+  --ls-tight: var(--letter-spacing-tight);
+  --ls-snug: var(--letter-spacing-snug);
+  --ls-wide: var(--letter-spacing-wide);
+  --ls-wider: var(--letter-spacing-wider);
+  /* border width */
+  --bw-default: var(--border-width-default);
+  --bw-strong: var(--border-width-strong);
+  /* subtle → subtitle back-compat (tokens renamed in the library) */
+  --border-subtle: var(--border-subtitle);
+  --primary-subtle: var(--primary-subtitle);
+  --secondary-subtle: var(--secondary-subtitle);
+  --tertiary-subtle: var(--tertiary-subtitle);
+  --success-subtle: var(--success-subtitle);
+  --warning-subtle: var(--warning-subtitle);
+  --error-subtle: var(--error-subtitle);
+  --info-subtle: var(--info-subtitle);
 }
