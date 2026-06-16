@@ -70,7 +70,8 @@ export class ExampleComponent {}
 
 ## Development
 
-This repo contains the library (`src/`) and a documentation app (`ds-docs/`).
+This repo contains the library (`src/`) and a documentation app (`ds-docs/`). The
+docs app is published live at https://ids-ds.proto.ids-group.co.uk/.
 
 ```bash
 npm run build        # build the library into dist/ds
