@@ -14,7 +14,8 @@ adapted to a design-system repo (library `ds` + showcase `ds-docs`).
 | `build-docs.sh`| Ensure `dist/ds` exists (cache hit or build), then build `ds-docs` → `dist/ds-docs`. |
 | `lint.sh`      | Run prettier + stylelint + eslint in parallel. `lint.sh report-only` prints results but never fails. Standalone — handy locally. |
 | `ci-pr.sh`     | PR validation in one container: build (hard gate) ∥ lint (report-only) after a single install. Used by the `validate` pipeline. |
-| `publish.sh`   | Publish `dist/ds` to npm with guards: tag↔version match, refuse double-publish, prereleases → `next` dist-tag. Called by the tag pipeline after `build-lib.sh`. |
+| `publish.sh`   | Publish `dist/ds` to npm with guards: version match (from `BITBUCKET_TAG` or `RELEASE_VERSION`), refuse double-publish, prereleases → `next` dist-tag. Called by the tag pipeline and by `ci-release.sh` after `build-lib.sh`. |
+| `ci-release.sh`| One-click release `<patch\|minor\|major\|beta>`: bump + stamp CHANGELOG + commit + tag + push `main` + build + publish. Run by the `release-*` custom pipelines. Needs `RELEASE_TOKEN` (push) and `NPM_TOKEN` (publish). |
 
 Invoke as `sh infrastructure/scripts/<name>.sh` (no executable bit needed, which
 Windows checkouts cannot set reliably).
@@ -56,6 +57,12 @@ worth auto-firing on our cadence.
 - **Tags** (`v*`): build the library (`build-lib.sh`) and publish it
   (`publish.sh`, which guards tag↔version and refuses to republish an existing
   version).
+- **Custom `release-{patch,minor,major,beta}`**: one-click release from the UI.
+  `ci-release.sh` bumps the version, stamps the CHANGELOG, commits, tags, pushes
+  `main`, builds, and publishes — all server-side. Needs Secured `RELEASE_TOKEN`
+  (repository:write) and `NPM_TOKEN`. The release commit/tag carries `[skip ci]`
+  so the tag pipeline doesn't double-fire. Local `npm run release:*` stays as a
+  fallback.
 - **Custom `deploy-docs`**: build and deploy the showcase to the IDS prototypes
   CDN.
 

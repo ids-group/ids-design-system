@@ -82,8 +82,20 @@ Releases follow [SemVer](https://semver.org): `fix` → patch, new backwards-com
 features → minor, breaking changes (API or visual) → major. A new Angular major
 always means a new package major. See `CHANGELOG.md` for history.
 
-Publishing runs in CI (Bitbucket Pipelines): pushing a `vX.Y.Z` tag builds the
-library and publishes it to npm. To cut a release, with a clean working tree:
+Before releasing, add your notes to the `## Unreleased` section of `CHANGELOG.md`
+on `main`. Then release one of two ways.
+
+### Option A — one-click in Bitbucket (recommended)
+
+In the Bitbucket UI: **Pipelines → Run pipeline → branch `main` →** pick
+`release-patch`, `release-minor`, `release-major`, or `release-beta`. CI bumps the
+version, stamps the CHANGELOG, commits, tags, pushes `main`, builds `dist/ds`, and
+publishes to npm — no local tooling needed. `## Unreleased` must be filled first;
+preflight fails the pipeline early otherwise.
+
+### Option B — locally
+
+With a clean, in-sync `main`:
 
 ```bash
 npm run release:patch   # 0.1.0 -> 0.1.1  bugfixes
@@ -105,8 +117,10 @@ already on npm.
 
 Bypass preflight in emergencies with `SKIP_PREFLIGHT=1 npm run release:patch`.
 
-CI auth uses a Secured repository variable `NPM_TOKEN` (npm granular access
-token, read+write on `@ids-group-ltd`, "Bypass 2FA" enabled).
+CI auth uses two Secured repository variables: `NPM_TOKEN` (npm granular access
+token, read+write on `@ids-group-ltd`, "Bypass 2FA" enabled) for publishing, and —
+for the one-click pipelines only — `RELEASE_TOKEN`, a Bitbucket Repository Access
+Token with `repository:write` used to push the bump commit and tag back to `main`.
 
 Manual publish (fallback, requires an authenticated npm session):
 
