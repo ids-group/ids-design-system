@@ -74,8 +74,7 @@ pipelines:
             - dist-ds
           script:
             - sh infrastructure/scripts/build-lib.sh
-            - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc
-            - npm publish ./dist/ds
+            - sh infrastructure/scripts/publish.sh
 
   custom:
     # PR validation, run on demand (Bitbucket UI "Run pipeline" or API) rather
