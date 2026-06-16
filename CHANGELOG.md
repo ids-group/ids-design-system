@@ -10,6 +10,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - Added a `homepage` field linking the live docs/showcase, so the npm package page
   points to it.
+- Release flow: the `v*` tag pipeline is now the single npm publisher. The one-click
+  `release-*` pipelines (script renamed `ci-release.sh` → `cut-release.sh`) only bump,
+  stamp the CHANGELOG, tag, and push `main`; the pushed tag triggers the publish.
+  No library code changed since 0.2.0.
 
 ## 0.2.0 — 2026-06-16
 
