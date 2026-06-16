@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.2.0 — 2026-06-16
+
 - Relicensed from proprietary (UNLICENSED) to MIT.
 - Release tooling: preflight checks, automatic CHANGELOG stamping, and CI publish
   guards (tag↔version, double-publish protection); added a `beta` pre-release channel.
