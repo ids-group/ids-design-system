@@ -30,6 +30,10 @@ cd "$(dirname "$0")/../.."
 setup_bun
 install_deps
 
+# The node:22-alpine image ships without git; this script (and the preversion
+# preflight) need it to commit, tag, and push.
+command -v git > /dev/null || apk add --no-cache git > /dev/null
+
 # Bitbucket checks out a detached HEAD at the triggering commit; move onto main so
 # the bump commit and tag land on the branch and can be pushed.
 git config user.name "${RELEASE_GIT_NAME:-IDS Release Bot}"
