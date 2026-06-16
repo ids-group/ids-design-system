@@ -21,7 +21,7 @@ log_dir="$(mktemp -d)"
 echo "Building (lib -> docs) and linting in parallel..."
 # ds-docs needs the built dist/ds, so build is ordered inside its own subshell;
 # the artifact checks fail loud if a build silently produced nothing.
-( bun run build && [ -f dist/ds/package.json ] && bun run build:docs && [ -f dist/ds-docs/browser/index.html ] ) > "$log_dir/build.log" 2>&1 &  pid_build=$!
+( bun run build:lib && [ -f dist/ds/package.json ] && bun run build:docs && [ -f dist/ds-docs/browser/index.html ] ) > "$log_dir/build.log" 2>&1 &  pid_build=$!
 bun run format                          > "$log_dir/format.log"    2>&1 &  pid_format=$!
 bun run lint:styles                     > "$log_dir/stylelint.log" 2>&1 &  pid_styles=$!
 bun run lint                            > "$log_dir/eslint.log"    2>&1 &  pid_eslint=$!

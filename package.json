@@ -26,15 +26,16 @@
     "ng": "ng",
 
     "start": "run-p --race watch dev:docs",
-    "dev:docs": "wait-on dist/ds/package.json && ng serve ds-docs",
-    "serve:docs": "ng serve ds-docs",
+    "dev": "npm run start",
+    "dev:docs": "wait-on dist/ds/package.json && ng serve ds-docs --port 4300",
+    "serve:docs": "ng serve ds-docs --port 4300",
     "watch": "ng build ds --watch --configuration development",
 
-    "build": "ng build ds",
-    "build:dev": "ng build ds --configuration development",
+    "build:lib": "ng build ds",
+    "build:lib:dev": "ng build ds --configuration development",
     "build:docs": "ng build ds-docs",
     "build:docs:dev": "ng build ds-docs --configuration development",
-    "build:deck-css": "sass src/lib/styles/ds.scss presentations/ds.css --no-source-map --style=expanded",
+    "build:deck-css": "sass presentations/_ds-source.scss presentations/ds.css --no-source-map --style=expanded",
 
     "format": "prettier --check \"{src,ds-docs/src,tools}/**/*.{ts,html,scss,css,json,md}\"",
     "format:fix": "prettier --write \"{src,ds-docs/src,tools}/**/*.{ts,html,scss,css,json,md}\"",
@@ -43,6 +44,7 @@
     "lint:styles": "stylelint \"{src,ds-docs/src}/**/*.{scss,css}\"",
     "lint:styles:fix": "stylelint \"{src,ds-docs/src}/**/*.{scss,css}\" --fix",
     "lint:all": "npm run format && npm run lint:styles && npm run lint",
+    "fix:all": "npm run format:fix && npm run lint:styles:fix && npm run lint:fix",
 
     "preversion": "node tools/preflight.mjs",
     "version": "node tools/changelog-release.mjs",
@@ -51,7 +53,7 @@
     "release:major": "npm version major -m \"release: %s\"",
     "release:beta": "npm version prerelease --preid=beta -m \"release: %s\"",
     "prepublishOnly": "node -e \"console.error('Publish from dist/ds (npm publish ./dist/ds), not the repo root.'); process.exit(1)\"",
-    "publish:manual": "npm run build && npm publish ./dist/ds"
+    "publish:manual": "npm run build:lib && npm publish ./dist/ds"
   },
   "peerDependencies": {
     "@angular/cdk": "^21.2.0",

@@ -17,7 +17,7 @@ if [ -f dist/ds/package.json ]; then
   echo "ds library cache hit - skipping rebuild"
 else
   echo "Building ds library..."
-  bun run build
+  bun run build:lib
 fi
 
 echo "Building ds-docs..."
