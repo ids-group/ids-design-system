@@ -1,0 +1,52 @@
+# Presentation decks
+
+Standalone, single-file HTML decks (design decisions, comparisons, status pages).
+Open any `*.html` directly in a browser — they link the shared `ds.css`.
+
+## ds.css is generated from the design system
+
+`ds.css` is **not hand-written** — it is a direct compile of the library's token
+stylesheet, so the decks render with the exact same tokens as the app:
+
+```bash
+npm run build:deck-css     # sass src/lib/styles/ds.scss → presentations/ds.css
+```
+
+Run it after changing any design-system token (palette, theme, geometry, type,
+motion). The decks are **honest consumers of the DS** — they reference real token
+names (`--space-*`, `--radius-*`, `--font-size-*`, `--font-weight-*`,
+`--border-width-*`, `--letter-spacing-*`, `--shadow-*`, semantic colours, …). There
+is no alias/compat layer.
+
+## Trade-off (by design)
+
+Because there is no compat shim, a **token rename in the DS** (e.g. the past
+`--*-subtle → --*-subtitle` and `--z100 → --shadow-card`) requires a find/replace
+across the decks, then a regenerate — instead of editing one alias line. For
+one-off decks that are rarely re-rendered, this is cheap and keeps `ds.css` pure.
+
+Rename workflow:
+
+```bash
+# 1. update the deck references (example)
+perl -pi -e 's/--old-token\b/--new-token/g' presentations/*.html
+# 2. regenerate ds.css from the (renamed) source
+npm run build:deck-css
+```
+
+## Verify every token resolves
+
+After edits, confirm no deck references a token that is missing from `ds.css` and
+not defined locally:
+
+```bash
+for f in presentations/*.html; do
+  grep -ohE 'var\(--[a-z0-9-]+' "$f" | sed -E 's/var\(//' | sort -u | while read t; do
+    grep -q -- "$t:" presentations/ds.css || grep -q -- "$t:" "$f" || echo "$(basename $f): $t"
+  done
+done
+```
+
+Expected output: empty. Known intentional exceptions are illustrative example
+tokens (e.g. `--old-name` in a migration deck) and deck-local slots (e.g.
+`--c-subtle`, `--ds-*` component overrides) that are defined inside the deck.
