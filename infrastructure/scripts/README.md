@@ -14,6 +14,7 @@ adapted to a design-system repo (library `ds` + showcase `ds-docs`).
 | `build-docs.sh`| Ensure `dist/ds` exists (cache hit or build), then build `ds-docs` → `dist/ds-docs`. |
 | `lint.sh`      | Run prettier + stylelint + eslint in parallel. `lint.sh report-only` prints results but never fails. Standalone — handy locally. |
 | `ci-pr.sh`     | PR validation in one container: build (hard gate) ∥ lint (report-only) after a single install. Used by the `validate` pipeline. |
+| `publish.sh`   | Publish `dist/ds` to npm with guards: tag↔version match, refuse double-publish, prereleases → `next` dist-tag. Called by the tag pipeline after `build-lib.sh`. |
 
 Invoke as `sh infrastructure/scripts/<name>.sh` (no executable bit needed, which
 Windows checkouts cannot set reliably).
@@ -52,7 +53,9 @@ worth auto-firing on our cadence.
   were added recently and not yet applied repo-wide); make it blocking once the
   codebase is clean. To run it automatically on PRs again, add a top-level
   `pull-requests:` section pointing at `ci-pr.sh`.
-- **Tags** (`v*`): build the library and publish to npm.
+- **Tags** (`v*`): build the library (`build-lib.sh`) and publish it
+  (`publish.sh`, which guards tag↔version and refuses to republish an existing
+  version).
 - **Custom `deploy-docs`**: build and deploy the showcase to the IDS prototypes
   CDN.
 

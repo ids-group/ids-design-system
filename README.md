@@ -89,14 +89,21 @@ library and publishes it to npm. To cut a release, with a clean working tree:
 npm run release:patch   # 0.1.0 -> 0.1.1  bugfixes
 npm run release:minor   # 0.1.0 -> 0.2.0  new components/inputs/tokens
 npm run release:major   # 0.x   -> 1.0.0  breaking changes
+npm run release:beta    # 0.2.0 -> 0.2.1-beta.0  pre-release
 
 git push origin main --follow-tags   # the tag push triggers CI publish
 ```
 
-Each `release:*` bumps the version and creates a `release: x.y.z` commit plus a
-`vX.Y.Z` git tag locally — it does **not** publish. The tag push to Bitbucket
-runs `bitbucket-pipelines.yml`, which builds and publishes `dist/ds`. Add a
-`CHANGELOG.md` entry before releasing.
+Each `release:*` runs preflight checks first (must be on a clean, in-sync `main`
+with a non-empty `## Unreleased` CHANGELOG section), bumps the version, stamps the
+CHANGELOG (`## Unreleased` → `## x.y.z — date`, opening a fresh Unreleased), and
+creates a `release: x.y.z` commit plus a `vX.Y.Z` git tag locally — it does **not**
+publish. The tag push to Bitbucket runs `bitbucket-pipelines.yml`, which builds
+`dist/ds` and publishes it through `infrastructure/scripts/publish.sh`. That script
+refuses to publish if the tag does not match the built version or if the version is
+already on npm.
+
+Bypass preflight in emergencies with `SKIP_PREFLIGHT=1 npm run release:patch`.
 
 CI auth uses a Secured repository variable `NPM_TOKEN` (npm granular access
 token, read+write on `@ids-group-ltd`, "Bypass 2FA" enabled).
@@ -107,7 +114,8 @@ Manual publish (fallback, requires an authenticated npm session):
 npm run publish:manual
 ```
 
-Pre-releases: `npm version prerelease --preid=beta`, then `npm publish ./dist/ds --tag next`.
+Pre-releases: `npm run release:beta` bumps to `x.y.z-beta.N`; the matching tag
+publishes under the `next` dist-tag (never `latest`).
 
 ## License
 
