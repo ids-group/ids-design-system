@@ -16,9 +16,3 @@
     .cell__tok { font-size: 10px; color: var(--text-tertiary); }
     .cell__desc { color: var(--text-secondary); margin-top: var(--space-1); line-height: 1.5; }
 
-    code.t-mono {
-      font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
-      background: var(--surface-secondary);
-      padding: 1px var(--space-1);
-      border-radius: var(--radius-sm);
-    }

@@ -1,7 +1,4 @@
-.block-title { margin-top: var(--space-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
-
-    .states {
+.states {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: var(--space-4);
@@ -24,12 +21,4 @@
       background: var(--surface-default);
       border: var(--border-width-default) solid var(--border-divider);
       border-radius: var(--radius-lg);
-    }
-
-    code.t-mono {
-      font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
-      background: var(--surface-secondary);
-      padding: 1px var(--space-1);
-      border-radius: var(--radius-sm);
-      color: var(--text-primary);
     }

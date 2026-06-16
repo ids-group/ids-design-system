@@ -12,10 +12,3 @@
     .state { display: flex; flex-direction: column; gap: var(--space-1); }
     .state__lbl { font-size: 11px; color: var(--text-secondary); }
 
-    code.t-mono {
-      font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
-      background: var(--surface-secondary);
-      padding: 1px var(--space-1);
-      border-radius: var(--radius-sm);
-      color: var(--text-primary);
-    }

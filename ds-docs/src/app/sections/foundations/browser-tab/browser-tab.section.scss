@@ -110,13 +110,6 @@
       font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
-    code.t-mono {
-      font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
-      background: var(--surface-default);
-      padding: 1px var(--space-1);
-      border-radius: var(--radius-sm);
-      color: var(--text-primary);
-    }
 
     @media (max-width: 720px) {
       .rules { grid-template-columns: 1fr; }

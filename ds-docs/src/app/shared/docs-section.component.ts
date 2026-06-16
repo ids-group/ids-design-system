@@ -31,6 +31,14 @@ import { Component, ViewEncapsulation, input } from '@angular/core';
     /* Body scaffolding (projected content) — shared block heading/description. */
     :host ::ng-deep .block-title { margin-top: var(--space-8); }
     :host ::ng-deep .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
+    /* Inline code chip — was duplicated verbatim in ~23 sections. */
+    :host ::ng-deep code.t-mono {
+      font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
+      background: var(--surface-secondary);
+      color: var(--text-primary);
+      padding: 1px var(--space-1);
+      border-radius: var(--radius-sm);
+    }
   `],
 })
 export class DocsSectionComponent {

@@ -10,14 +10,6 @@
       border-radius: var(--radius-lg);
       align-items: baseline;
     }
-    code.t-mono {
-      font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
-      background: var(--surface-secondary);
-      padding: 1px var(--space-1);
-      border-radius: var(--radius-sm);
-      color: var(--text-primary);
-    }
-
     /* State pins — read the link's own resolvers; fixes drift from old hooks
        that incorrectly pinned --primary / --primary-strong directly. */
     .link.pin-hover  { color: var(--_link-color-hover); text-decoration-color: var(--_link-color-hover); }

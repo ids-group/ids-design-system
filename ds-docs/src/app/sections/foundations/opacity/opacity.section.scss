@@ -1,7 +1,4 @@
 
-    .block-title { margin-top: var(--space-8); }
-    .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
-
     .stops, .literals {
       width: 100%;
       margin-top: var(--space-3);
@@ -26,11 +23,4 @@
       height: 24px;
       background: var(--primary);
       border-radius: var(--radius-sm);
-    }
-    code.t-mono {
-      font: var(--font-weight-regular) var(--font-size-mono)/1 var(--font-mono);
-      background: var(--surface-secondary);
-      padding: 1px var(--space-1);
-      border-radius: var(--radius-sm);
-      color: var(--text-primary);
     }
