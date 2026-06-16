@@ -1,6 +1,6 @@
 
     <docs-section anchor="radius" eyebrow="Foundations" title="Radius">
-      <span lede>Five-stop scale (0 / sm / md / lg / 2xl) plus pill. The xl stop (16px) is reserved for large containers — viewport and scanner frames. Cards, modals, drawers, toasts and empty-state icons all use <code class="t-mono">--radius-lg</code>. <code class="t-mono">--radius-pill</code> is themable via <code class="t-mono">--radius-pill-value</code>.</span>
+      <span lede>Five-stop scale (0 / sm / md / lg / 2xl) plus pill. The xl stop (16px) is reserved for large containers — viewport and scanner frames. Cards, modals, drawers, toasts and empty-state icons all use <code class="t-mono-inline">--radius-lg</code>. <code class="t-mono-inline">--radius-pill</code> is themable via <code class="t-mono-inline">--radius-pill-value</code>.</span>
 
       <!-- ============================================================ Radius scale -->
       <h3 class="block-title t-h4">Scale</h3>
@@ -8,7 +8,7 @@
       <div class="radius-grid">
         @for (r of radii; track r.name) {
           <div class="radius-tile" [style.borderRadius]="'var(--radius-' + r.name + ')'">
-            <code class="t-mono token-name">--radius-{{ r.name }}</code>
+            <code class="t-mono-inline token-name">--radius-{{ r.name }}</code>
             <div class="t-h5 token-px">{{ r.value }}</div>
             <div class="t-caption token-desc">{{ r.desc }}</div>
           </div>

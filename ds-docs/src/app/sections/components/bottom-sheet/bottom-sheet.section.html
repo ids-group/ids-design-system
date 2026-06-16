@@ -9,7 +9,7 @@
       <!-- ============================================================ Live demo -->
       <h3 class="block-title t-h4">Live demo</h3>
       <p class="block-desc t-s">
-        Two-way <code class="t-mono">[(open)]</code> drives visibility; the <code class="t-mono">[actions]</code> slot holds footer buttons.
+        Two-way <code class="t-mono-inline">[(open)]</code> drives visibility; the <code class="t-mono-inline">[actions]</code> slot holds footer buttons.
       </p>
       <div class="demo">
         <ds-button (pressed)="open.set(true)">Open bottom sheet</ds-button>
@@ -28,9 +28,9 @@
       <h3 class="block-title t-h4">Anatomy</h3>
       <ul class="rules">
         <li><strong>Grab strip</strong> — draggable handle at the top; drag down past threshold to dismiss.</li>
-        <li><strong>Title</strong> — optional, via <code class="t-mono">[title]</code>.</li>
-        <li><strong>Body</strong> — default <code class="t-mono">&lt;ng-content&gt;</code>; scrolls if taller than the sheet.</li>
-        <li><strong>Actions</strong> — <code class="t-mono">[actions]</code> slot, pinned footer.</li>
-        <li><strong>Dismiss</strong> — scrim tap, <kbd>Esc</kbd>, drag-down, or setting <code class="t-mono">open=false</code>; each emits <code class="t-mono">(closed)</code>.</li>
+        <li><strong>Title</strong> — optional, via <code class="t-mono-inline">[title]</code>.</li>
+        <li><strong>Body</strong> — default <code class="t-mono-inline">&lt;ng-content&gt;</code>; scrolls if taller than the sheet.</li>
+        <li><strong>Actions</strong> — <code class="t-mono-inline">[actions]</code> slot, pinned footer.</li>
+        <li><strong>Dismiss</strong> — scrim tap, <kbd>Esc</kbd>, drag-down, or setting <code class="t-mono-inline">open=false</code>; each emits <code class="t-mono-inline">(closed)</code>.</li>
       </ul>
     </docs-section>

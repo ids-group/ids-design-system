@@ -10,8 +10,8 @@
         <tbody>
           @for (s of stops; track s.token) {
             <tr>
-              <td><code class="t-mono">{{ s.token }}</code></td>
-              <td><code class="t-mono">{{ s.value }}</code></td>
+              <td><code class="t-mono-inline">{{ s.token }}</code></td>
+              <td><code class="t-mono-inline">{{ s.value }}</code></td>
               <td>{{ s.use }}</td>
               <td><span class="swatch" [style.opacity]="s.value"></span></td>
             </tr>
@@ -22,14 +22,14 @@
       <h3 class="block-title t-h4">Literal alphas in tokens (reference)</h3>
       <p class="block-desc t-s">
         Non-tokenised alphas used inside other tokens. Don't reach for these directly — consume
-        the parent token (<code class="t-mono">--shadow-modal</code>, <code class="t-mono">--focus-field</code>, <code class="t-mono">--surface-scrim</code>).
+        the parent token (<code class="t-mono-inline">--shadow-modal</code>, <code class="t-mono-inline">--focus-field</code>, <code class="t-mono-inline">--surface-scrim</code>).
       </p>
       <table class="literals">
         <thead><tr><th>Alpha</th><th>Where it appears</th></tr></thead>
         <tbody>
           @for (lit of literals; track lit.alpha) {
             <tr>
-              <td><code class="t-mono">{{ lit.alpha }}</code></td>
+              <td><code class="t-mono-inline">{{ lit.alpha }}</code></td>
               <td>{{ lit.where }}</td>
             </tr>
           }

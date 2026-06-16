@@ -214,7 +214,7 @@
       <!-- ============================================================ Textarea autosize -->
       <h3 class="block-title t-h4">Textarea · autosize</h3>
       <p class="block-desc t-s">
-        <code class="t-mono">[autosize]="true"</code> grows the textarea with its content (forces <code class="t-mono">resize="none"</code>). Bound by <code class="t-mono">[minRows]</code> / <code class="t-mono">[maxRows]</code>.
+        <code class="t-mono-inline">[autosize]="true"</code> grows the textarea with its content (forces <code class="t-mono-inline">resize="none"</code>). Bound by <code class="t-mono-inline">[minRows]</code> / <code class="t-mono-inline">[maxRows]</code>.
       </p>
       <div class="grid-2">
         <ds-textarea label="Auto-growing note" [autosize]="true" [minRows]="2" [maxRows]="8"
@@ -224,8 +224,8 @@
       <!-- ============================================================ Clearable -->
       <h3 class="block-title t-h4">Clearable</h3>
       <p class="block-desc t-s">
-        <code class="t-mono">[clearable]</code> shows an inline × button when the field has a non-empty value.
-        Defaults to <code class="t-mono">true</code> for <code class="t-mono">type="search"</code> and <code class="t-mono">false</code> otherwise — pass an explicit boolean to override.
+        <code class="t-mono-inline">[clearable]</code> shows an inline × button when the field has a non-empty value.
+        Defaults to <code class="t-mono-inline">true</code> for <code class="t-mono-inline">type="search"</code> and <code class="t-mono-inline">false</code> otherwise — pass an explicit boolean to override.
       </p>
       <div class="grid-2">
         <ds-input type="search" label="Search (auto-clearable)" [value]="'Project Alpha'" placeholder="Search projects…" />
@@ -235,7 +235,7 @@
       <!-- ============================================================ Password toggle -->
       <h3 class="block-title t-h4">Password toggle</h3>
       <p class="block-desc t-s">
-        On <code class="t-mono">type="password"</code>, <code class="t-mono">[passwordToggle]="true"</code> adds an eye button that flips the field between masked and plain text. Two-way <code class="t-mono">[(passwordVisible)]</code> exposes the state.
+        On <code class="t-mono-inline">type="password"</code>, <code class="t-mono-inline">[passwordToggle]="true"</code> adds an eye button that flips the field between masked and plain text. Two-way <code class="t-mono-inline">[(passwordVisible)]</code> exposes the state.
       </p>
       <div class="grid-2">
         <ds-input type="password" label="Password" [passwordToggle]="true" [value]="'hunter2'" placeholder="Enter password" />
@@ -244,8 +244,8 @@
       <!-- ============================================================ Required vs optional -->
       <h3 class="block-title t-h4">Required vs optional</h3>
       <p class="block-desc t-s">
-        <code class="t-mono">[required]="true"</code> appends a red asterisk to the label;
-        <code class="t-mono">[optional]="true"</code> appends the muted "(optional)" suffix. They are mutually exclusive — pick one.
+        <code class="t-mono-inline">[required]="true"</code> appends a red asterisk to the label;
+        <code class="t-mono-inline">[optional]="true"</code> appends the muted "(optional)" suffix. They are mutually exclusive — pick one.
       </p>
       <div class="grid-2">
         <ds-input label="Project name" [required]="true" placeholder="e.g. Project Alpha" />

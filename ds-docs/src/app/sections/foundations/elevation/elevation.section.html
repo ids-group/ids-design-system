@@ -3,7 +3,7 @@
       <docs-truncation [rules]="truncationRules" />
       <span lede>
         Four primitive tiers plus four semantic aliases for popover, modal, toast, card. Shadows are
-        channel-split through <code class="t-mono">--shadow-tint-h/s/l</code> so a re-skin can re-tint
+        channel-split through <code class="t-mono-inline">--shadow-tint-h/s/l</code> so a re-skin can re-tint
         them and dark themes can render the same alphas as soft glows.
       </span>
 
@@ -13,9 +13,9 @@
         @for (tier of primitive; track tier.name) {
           <div class="shadow-cell">
             <div class="shadow-card" [style.boxShadow]="'var(--' + tier.name + ')'"></div>
-            <code class="t-mono token-name">--{{ tier.name }}</code>
+            <code class="t-mono-inline token-name">--{{ tier.name }}</code>
             <div class="t-caption token-desc">{{ tier.desc }}</div>
-            <code class="t-mono token-value">{{ tier.value }}</code>
+            <code class="t-mono-inline token-value">{{ tier.value }}</code>
           </div>
         }
       </div>
@@ -25,9 +25,9 @@
         @for (tier of semantic; track tier.name) {
           <div class="shadow-cell">
             <div class="shadow-card" [style.boxShadow]="'var(--' + tier.name + ')'"></div>
-            <code class="t-mono token-name">--{{ tier.name }}</code>
+            <code class="t-mono-inline token-name">--{{ tier.name }}</code>
             <div class="t-caption token-desc">{{ tier.desc }}</div>
-            <code class="t-mono token-value">{{ tier.value }}</code>
+            <code class="t-mono-inline token-value">{{ tier.value }}</code>
           </div>
         }
       </div>

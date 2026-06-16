@@ -7,7 +7,7 @@
           A reusable starting point for any admin product — tokens, components and patterns.
           Built tokens-first so a client theme propagates without touching components.
           Brand tokens — palette and fonts — live in the consumer app's
-          <code class="t-mono">_brand-&lt;client&gt;.scss</code> file (see <code class="t-mono">prototype/mm-broker/src/app/styles/_brand-manage-my.scss</code>);
+          <code class="t-mono-inline">_brand-&lt;client&gt;.scss</code> file (see <code class="t-mono-inline">prototype/mm-broker/src/app/styles/_brand-manage-my.scss</code>);
           domain-specific copy and status taxonomies stay in the app itself.
         </p>
         <div class="badges">
@@ -25,8 +25,8 @@
         <h2 class="t-h2 title">Start here</h2>
         <p class="lede-secondary">
           A white-label boilerplate design system. Re-skin per consumer app via a
-          <code class="t-mono">_brand-&lt;client&gt;.scss</code> partial that overrides
-          DS palette + font tokens under a <code class="t-mono">[data-brand="&lt;client&gt;"]</code>
+          <code class="t-mono-inline">_brand-&lt;client&gt;.scss</code> partial that overrides
+          DS palette + font tokens under a <code class="t-mono-inline">[data-brand="&lt;client&gt;"]</code>
           attribute selector. Default contents are generic admin-tool components —
           tables, forms, banners, sidenav, page headers. Re-theme without touching
           components by overriding tokens.
@@ -39,17 +39,17 @@
               <div class="howto-num">01</div>
               <h4 class="howto-title">Add a new client theme</h4>
               <p class="howto-body">
-                Create <code class="t-mono">_brand-&lt;client&gt;.scss</code> in the consumer app's
-                styles folder. Inside <code class="t-mono">[data-brand="&lt;client&gt;"]</code>,
-                override the brand tokens — palette ramp (<code class="t-mono">--blue-50…900</code>),
-                brand HSL channels (<code class="t-mono">--primary-h/s/l</code>), the
-                <code class="t-mono">--primary*</code> roles and other semantic tokens
-                (surfaces, text, <code class="t-mono">--secondary*</code>), and the font stack.
-                Activate with <code class="t-mono">&lt;html data-brand="&lt;client&gt;"&gt;</code>.
+                Create <code class="t-mono-inline">_brand-&lt;client&gt;.scss</code> in the consumer app's
+                styles folder. Inside <code class="t-mono-inline">[data-brand="&lt;client&gt;"]</code>,
+                override the brand tokens — palette ramp (<code class="t-mono-inline">--blue-50…900</code>),
+                brand HSL channels (<code class="t-mono-inline">--primary-h/s/l</code>), the
+                <code class="t-mono-inline">--primary*</code> roles and other semantic tokens
+                (surfaces, text, <code class="t-mono-inline">--secondary*</code>), and the font stack.
+                Activate with <code class="t-mono-inline">&lt;html data-brand="&lt;client&gt;"&gt;</code>.
                 Components stay untouched.
               </p>
               <div class="howto-foot">
-                Reference: <code class="t-mono">prototype/mm-broker/src/app/styles/_brand-manage-my.scss</code>
+                Reference: <code class="t-mono-inline">prototype/mm-broker/src/app/styles/_brand-manage-my.scss</code>
               </div>
             </article>
 
@@ -58,7 +58,7 @@
               <h4 class="howto-title">Extend with a new component</h4>
               <p class="howto-body">
                 Author against tokens — never raw values. Use idiomatic class names
-                with <code class="t-mono">&amp;.modifier</code> nesting. Pair tokens correctly
+                with <code class="t-mono-inline">&amp;.modifier</code> nesting. Pair tokens correctly
                 (background + matching foreground). Add a per-component section to
                 this docs site.
               </p>

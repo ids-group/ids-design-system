@@ -12,8 +12,8 @@
         <tbody>
           @for (row of primarySemantic; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="swatch-chip" [class.is-inverted]="row.inverted" [style.background]="'var(' + row.name + ')'"></span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -23,15 +23,15 @@
 
       <div class="cat-sub t-overline">Tertiary (third brand hue)</div>
       <p class="block-desc t-s">
-        Third brand hue — tertiary button fill, tonal chips, hierarchy tones, indicators. Channels default to <code class="t-mono">--primary</code> HSL so single-hue themes render identical to primary; multi-hue brands override <code class="t-mono">--tertiary-h/s/l</code>.
+        Third brand hue — tertiary button fill, tonal chips, hierarchy tones, indicators. Channels default to <code class="t-mono-inline">--primary</code> HSL so single-hue themes render identical to primary; multi-hue brands override <code class="t-mono-inline">--tertiary-h/s/l</code>.
       </p>
       <table class="ref-table">
         <thead><tr><th class="col-name">Token</th><th class="col-value">Value</th><th class="col-resolved">Resolved</th><th class="col-notes">Notes</th></tr></thead>
         <tbody>
           @for (row of tertiarySemantic; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="swatch-chip" [class.is-inverted]="row.inverted" [style.background]="'var(' + row.name + ')'"></span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -45,8 +45,8 @@
         <tbody>
           @for (row of errorSemantic; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="swatch-chip" [style.background]="'var(' + row.name + ')'"></span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -60,8 +60,8 @@
         <tbody>
           @for (row of successSemantic; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="swatch-chip" [style.background]="'var(' + row.name + ')'"></span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -75,8 +75,8 @@
         <tbody>
           @for (row of warningSemantic; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="swatch-chip" [style.background]="'var(' + row.name + ')'"></span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -90,8 +90,8 @@
         <tbody>
           @for (row of infoSemantic; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="swatch-chip" [style.background]="'var(' + row.name + ')'"></span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -105,8 +105,8 @@
         <tbody>
           @for (row of textSemantic; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="swatch-chip" [class.is-inverted]="row.inverted" [style.background]="'var(' + row.name + ')'"></span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -120,8 +120,8 @@
         <tbody>
           @for (row of surfaceSemantic; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="swatch-chip" [class.is-inverted]="row.inverted" [style.background]="'var(' + row.name + ')'"></span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -135,8 +135,8 @@
         <tbody>
           @for (row of borderSemantic; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="swatch-chip" [class.is-inverted]="row.inverted" [style.background]="'var(' + row.name + ')'"></span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -150,27 +150,27 @@
         <tbody>
           @for (row of focusSemantic; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="literal-value t-mono">channel</span></td>
               <td>{{ row.notes }}</td>
             </tr>
           }
           <tr>
-            <td><code class="t-mono">--focus-ring</code></td>
-            <td><code class="t-mono">composed shadow</code></td>
+            <td><code class="t-mono-inline">--focus-ring</code></td>
+            <td><code class="t-mono-inline">composed shadow</code></td>
             <td><span class="focus-demo focus-demo--ring"></span></td>
             <td>2px canvas inner band + 4px brand outer halo.</td>
           </tr>
           <tr>
-            <td><code class="t-mono">--focus-field</code></td>
-            <td><code class="t-mono">composed shadow</code></td>
+            <td><code class="t-mono-inline">--focus-field</code></td>
+            <td><code class="t-mono-inline">composed shadow</code></td>
             <td><span class="focus-demo focus-demo--field"></span></td>
             <td>3px brand &alpha; 0.22 — single coloured halo.</td>
           </tr>
           <tr>
-            <td><code class="t-mono">--focus-ring-error</code></td>
-            <td><code class="t-mono">composed shadow</code></td>
+            <td><code class="t-mono-inline">--focus-ring-error</code></td>
+            <td><code class="t-mono-inline">composed shadow</code></td>
             <td><span class="focus-demo focus-demo--error"></span></td>
             <td>Same shape as ring, danger hue.</td>
           </tr>
@@ -179,7 +179,7 @@
 
       <!-- ============================================================ Colour ramps -->
       <h3 class="block-title t-h4">Colour &mdash; ramps</h3>
-      <p class="block-desc t-s">Raw primitive ramps. Stop names map 1:1 to CSS custom properties (e.g. <code class="t-mono">--blue-600</code>).</p>
+      <p class="block-desc t-s">Raw primitive ramps. Stop names map 1:1 to CSS custom properties (e.g. <code class="t-mono-inline">--blue-600</code>).</p>
       @for (ramp of ramps; track ramp.prefix) {
         <div class="cat-sub t-overline">{{ ramp.label }} &mdash; {{ ramp.notes }}</div>
         <table class="ref-table">
@@ -187,8 +187,8 @@
           <tbody>
             @for (stop of ramp.stops; track stop) {
               <tr>
-                <td><code class="t-mono">--{{ ramp.prefix }}-{{ stop }}</code></td>
-                <td><code class="t-mono">{{ stop }}</code></td>
+                <td><code class="t-mono-inline">--{{ ramp.prefix }}-{{ stop }}</code></td>
+                <td><code class="t-mono-inline">{{ stop }}</code></td>
                 <td><span class="swatch-chip" [style.background]="'var(--' + ramp.prefix + '-' + stop + ')'"></span></td>
                 <td>{{ ramp.label }} ramp · stop {{ stop }}</td>
               </tr>
@@ -207,8 +207,8 @@
         <tbody>
           @for (row of typeFont; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="sample-font" [style.font-family]="'var(' + row.name + ')'">{{ row.sample }}</span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -222,8 +222,8 @@
         <tbody>
           @for (row of typeSize; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="sample-fs" [style.font-size]="'var(' + row.name + ')'">{{ row.sample }}</span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -237,8 +237,8 @@
         <tbody>
           @for (row of typeLh; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="sample-lh" [style.line-height]="'var(' + row.name + ')'">{{ row.sample }}</span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -252,8 +252,8 @@
         <tbody>
           @for (row of typeLs; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="sample-ls" [style.letter-spacing]="'var(' + row.name + ')'">{{ row.sample }}</span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -267,8 +267,8 @@
         <tbody>
           @for (row of typeFw; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="sample-fw" [style.font-weight]="'var(' + row.name + ')'">{{ row.sample }}</span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -284,8 +284,8 @@
         <tbody>
           @for (row of spacing; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="size-bar" [style.width]="'var(' + row.name + ')'"></span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -301,8 +301,8 @@
         <tbody>
           @for (row of radius; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="radius-sample" [style.border-radius]="'var(' + row.name + ')'"></span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -318,8 +318,8 @@
         <tbody>
           @for (row of shadows; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.alias || 'composed' }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.alias || 'composed' }}</code></td>
               <td>
                 @if (hasShadowSample(row.name)) {
                   <span class="shadow-sample" [style.box-shadow]="'var(' + row.name + ')'"></span>
@@ -343,8 +343,8 @@
         <tbody>
           @for (row of motionDur; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="literal-value t-mono">{{ row.value }}</span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -358,8 +358,8 @@
         <tbody>
           @for (row of motionEase; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="literal-value t-mono">curve</span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -369,7 +369,7 @@
 
       <!-- ============================================================ Density -->
       <h3 class="block-title t-h4">Density &mdash; hit targets</h3>
-      <p class="block-desc t-s">Canonical size scale for interactive height. Density tiers rewrite these at <code class="t-mono">:root</code> via <code class="t-mono">[data-density]</code>.</p>
+      <p class="block-desc t-s">Canonical size scale for interactive height. Density tiers rewrite these at <code class="t-mono-inline">:root</code> via <code class="t-mono-inline">[data-density]</code>.</p>
 
       <div class="cat-sub t-overline">Hit-target scale</div>
       <table class="ref-table">
@@ -377,8 +377,8 @@
         <tbody>
           @for (row of densityHit; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="hit-sample" [style.width]="'var(' + row.name + ')'" [style.height]="'var(' + row.name + ')'"></span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -392,8 +392,8 @@
         <tbody>
           @for (row of densityTiers; track row.name) {
             <tr>
-              <td><code class="t-mono">[data-density=&quot;{{ row.name }}&quot;]</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">[data-density=&quot;{{ row.name }}&quot;]</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="literal-value t-mono">override block</span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -411,8 +411,8 @@
         <tbody>
           @for (row of layoutBp; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="literal-value t-mono">{{ row.value }}</span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -426,8 +426,8 @@
         <tbody>
           @for (row of layoutCol; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="literal-value t-mono">{{ row.value }}</span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -443,8 +443,8 @@
         <tbody>
           @for (row of icons; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="icon-sample" [style.width]="'var(' + row.name + ')'" [style.height]="'var(' + row.name + ')'"></span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -462,8 +462,8 @@
         <tbody>
           @for (row of miscBw; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="bw-sample" [style.border-top-width]="'var(' + row.name + ')'"></span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -477,8 +477,8 @@
         <tbody>
           @for (row of miscOpacity; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="opacity-sample" [style.opacity]="'var(' + row.name + ')'">Aa</span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -492,8 +492,8 @@
         <tbody>
           @for (row of miscBlur; track row.name) {
             <tr>
-              <td><code class="t-mono">{{ row.name }}</code></td>
-              <td><code class="t-mono">{{ row.value }}</code></td>
+              <td><code class="t-mono-inline">{{ row.name }}</code></td>
+              <td><code class="t-mono-inline">{{ row.value }}</code></td>
               <td><span class="literal-value t-mono">{{ row.value }}</span></td>
               <td>{{ row.notes }}</td>
             </tr>
@@ -504,8 +504,8 @@
       <!-- ============================================================ Component tokens -->
       <h3 class="block-title t-h4">Component tokens</h3>
       <p class="block-desc t-s">
-        Per-component <code class="t-mono">--ds-&lt;component&gt;-*</code> custom properties. Each defaults to a global semantic token (see above).
-        Override at <code class="t-mono">:root</code>, on a scoped ancestor, or inline on the host to re-skin a component without forking its class internals.
+        Per-component <code class="t-mono-inline">--ds-&lt;component&gt;-*</code> custom properties. Each defaults to a global semantic token (see above).
+        Override at <code class="t-mono-inline">:root</code>, on a scoped ancestor, or inline on the host to re-skin a component without forking its class internals.
       </p>
       @for (group of componentTokens; track group.component) {
         <details class="component-token-group">
@@ -520,8 +520,8 @@
             <tbody>
               @for (row of group.tokens; track row.name) {
                 <tr>
-                  <td><code class="t-mono">{{ row.name }}</code></td>
-                  <td><code class="t-mono">{{ row.value }}</code></td>
+                  <td><code class="t-mono-inline">{{ row.name }}</code></td>
+                  <td><code class="t-mono-inline">{{ row.value }}</code></td>
                   <td>
                     @if (isColorValue(row.value)) {
                       <span class="swatch-chip" [style.background]="row.value"></span>

@@ -201,19 +201,19 @@
       <!-- ============================================================ Bordered -->
       <h3 class="block-title t-h4">Bordered</h3>
       <p class="block-desc t-s">
-        <code class="t-mono">[bordered]="true"</code> wraps the table in an outer border + radius.
-        Off by default so tables nested inside <code class="t-mono">&lt;ds-card padding="none"&gt;</code> don't double-border.
+        <code class="t-mono-inline">[bordered]="true"</code> wraps the table in an outer border + radius.
+        Off by default so tables nested inside <code class="t-mono-inline">&lt;ds-card padding="none"&gt;</code> don't double-border.
       </p>
       <ds-table [data]="events" [columns]="loadingColumns" [bordered]="true" [stickyHeader]="false" />
 
       <!-- ============================================================ Loading skeleton -->
       <h3 class="block-title t-h4">Loading · skeleton</h3>
-      <p class="block-desc t-s">First-load placeholder — rows are replaced with shimmer skeletons that lock-step with every other <code class="t-mono">&lt;ds-skeleton&gt;</code> on the page. Use <code class="t-mono">[loading]="'skeleton'"</code> when you have no rows to show yet.</p>
+      <p class="block-desc t-s">First-load placeholder — rows are replaced with shimmer skeletons that lock-step with every other <code class="t-mono-inline">&lt;ds-skeleton&gt;</code> on the page. Use <code class="t-mono-inline">[loading]="'skeleton'"</code> when you have no rows to show yet.</p>
       <ds-table [data]="events" [columns]="loadingColumns" [loading]="'skeleton'" [stickyHeader]="false" />
 
       <!-- ============================================================ Loading overlay -->
       <h3 class="block-title t-h4">Loading · overlay</h3>
-      <p class="block-desc t-s">Re-fetch indicator — existing rows stay visible behind a translucent overlay with a centred spinner. Use <code class="t-mono">[loading]="'overlay'"</code> for refresh / re-sort / filter-change.</p>
+      <p class="block-desc t-s">Re-fetch indicator — existing rows stay visible behind a translucent overlay with a centred spinner. Use <code class="t-mono-inline">[loading]="'overlay'"</code> for refresh / re-sort / filter-change.</p>
       <ds-table [data]="events" [columns]="loadingColumns" [loading]="'overlay'" [stickyHeader]="false" />
 
       <!-- ============================================================ Empty states -->

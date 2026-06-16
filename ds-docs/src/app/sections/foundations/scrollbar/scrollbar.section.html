@@ -2,7 +2,7 @@
     <docs-section anchor="scrollbar" eyebrow="Foundations" title="Scrollbar">
       <docs-truncation [rules]="truncationRules" />
       <span lede>System chrome the user touches every minute — has to feel like part of the product, not the OS. The global
-        scrollbar styling is auto-applied (forwarded into <code class="t-mono">ds.scss</code>); no per-component opt-in is
+        scrollbar styling is auto-applied (forwarded into <code class="t-mono-inline">ds.scss</code>); no per-component opt-in is
         needed.</span>
 
       <!-- ============================================================ Live demo -->
@@ -12,7 +12,7 @@
         <div class="scroll-pane scroll-pane--vertical">
           @for (row of rows; track row) {
             <div class="scroll-pane__row">
-              <code class="t-mono scroll-pane__num">{{ pad(row) }}</code>
+              <code class="t-mono-inline scroll-pane__num">{{ pad(row) }}</code>
               <span class="scroll-pane__txt">Scrollable content row — drag the thumb to test feel.</span>
             </div>
           }
@@ -38,7 +38,7 @@
         <tbody>
           @for (t of tokens; track t.token) {
             <tr>
-              <td><code class="t-mono">{{ t.token }}</code></td>
+              <td><code class="t-mono-inline">{{ t.token }}</code></td>
               <td>{{ t.use }}</td>
             </tr>
           }
@@ -49,17 +49,17 @@
       <h3 class="block-title t-h4">Specification</h3>
       <dl class="spec">
         <dt>Width</dt>
-        <dd>10 px (<code class="t-mono">--scrollbar-w</code>)</dd>
+        <dd>10 px (<code class="t-mono-inline">--scrollbar-w</code>)</dd>
         <dt>Track</dt>
         <dd>Transparent at rest; a faint neutral fill on hover</dd>
         <dt>Thumb</dt>
-        <dd><code class="t-mono">--neutral-300</code>; hover <code class="t-mono">--neutral-400</code>; active <code class="t-mono">--neutral-500</code></dd>
+        <dd><code class="t-mono-inline">--neutral-300</code>; hover <code class="t-mono-inline">--neutral-400</code>; active <code class="t-mono-inline">--neutral-500</code></dd>
         <dt>Radius</dt>
-        <dd><code class="t-mono">--radius-pill</code> on the thumb</dd>
+        <dd><code class="t-mono-inline">--radius-pill</code> on the thumb</dd>
         <dt>Reveal</dt>
         <dd>Overlay where supported (macOS); fallback to inline 10 px gutter on Windows / Linux</dd>
         <dt>Dark mode</dt>
-        <dd>Track <code class="t-mono">--neutral-800</code>; thumb <code class="t-mono">--neutral-600</code></dd>
+        <dd>Track <code class="t-mono-inline">--neutral-800</code>; thumb <code class="t-mono-inline">--neutral-600</code></dd>
       </dl>
 
     </docs-section>

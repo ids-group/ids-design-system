@@ -33,26 +33,26 @@
       <dl class="rules">
         <dt>Title format</dt>
         <dd>
-          <code class="t-mono">{{ '{Record} · {Section} · Acme' }}</code> — leaf first, brand last so multi-tab triage works.
-          Index pages: <code class="t-mono">{{ '{Section} · Acme' }}</code>. Login: <code class="t-mono">Acme</code> only.
+          <code class="t-mono-inline">{{ '{Record} · {Section} · Acme' }}</code> — leaf first, brand last so multi-tab triage works.
+          Index pages: <code class="t-mono-inline">{{ '{Section} · Acme' }}</code>. Login: <code class="t-mono-inline">Acme</code> only.
         </dd>
         <dt>Title state</dt>
         <dd>
-          Prefix with <code class="t-mono">●</code> for unsaved
-          (<code class="t-mono">● Project Alpha · Projects · Acme</code>); prefix with
-          <code class="t-mono">(N)</code> for unread alerts
-          (<code class="t-mono">(3) Logistics plan · Acme</code>).
+          Prefix with <code class="t-mono-inline">●</code> for unsaved
+          (<code class="t-mono-inline">● Project Alpha · Projects · Acme</code>); prefix with
+          <code class="t-mono-inline">(N)</code> for unread alerts
+          (<code class="t-mono-inline">(3) Logistics plan · Acme</code>).
         </dd>
         <dt>Favicon</dt>
         <dd>
-          Brand letter on brand surface; alert dot via <code class="t-mono">.fav.alert</code> nested under <code class="t-mono">.tab-spec</code> for
-          unread count or attention state. Size matches <code class="t-mono">--icon-md</code> so it reads
+          Brand letter on brand surface; alert dot via <code class="t-mono-inline">.fav.alert</code> nested under <code class="t-mono-inline">.tab-spec</code> for
+          unread count or attention state. Size matches <code class="t-mono-inline">--icon-md</code> so it reads
           legibly at retina + sub-retina densities.
         </dd>
         <dt>Theme-color</dt>
         <dd>
-          <code class="t-mono">&lt;meta name="theme-color"&gt;</code> matches <code class="t-mono">--primary</code>
-          for branded chrome; reset to <code class="t-mono">--surface-default</code> on logout to avoid
+          <code class="t-mono-inline">&lt;meta name="theme-color"&gt;</code> matches <code class="t-mono-inline">--primary</code>
+          for branded chrome; reset to <code class="t-mono-inline">--surface-default</code> on logout to avoid
           carry-over branding.
         </dd>
         <dt>Tab grouping</dt>

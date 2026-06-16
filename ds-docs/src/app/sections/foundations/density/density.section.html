@@ -2,7 +2,7 @@
     <docs-section anchor="density" eyebrow="Foundations" title="Density">
       <docs-truncation [rules]="truncationRules" />
       <span lede>
-        Four density tiers, applied via <code class="t-mono">[data-density]</code> on a route container. They rewrite
+        Four density tiers, applied via <code class="t-mono-inline">[data-density]</code> on a route container. They rewrite
         hit-target and component-scoped tokens — components consume the same role tokens, so no component CSS changes.
       </span>
 
@@ -21,7 +21,7 @@
           @for (t of tiers; track t.key) {
             <tr>
               <td><strong>{{ t.label }}</strong></td>
-              <td><code class="t-mono">{{ t.hit }}</code></td>
+              <td><code class="t-mono-inline">{{ t.hit }}</code></td>
               <td>{{ t.use }}</td>
               <td>{{ t.wcag }}</td>
             </tr>
@@ -32,7 +32,7 @@
       <!-- ============================================================ Live comparison -->
       <h3 class="block-title t-h4">Live comparison</h3>
       <p class="block-desc t-s">
-        Each sandbox wraps content in a <code class="t-mono">[data-density]</code> container. The same UI renders at
+        Each sandbox wraps content in a <code class="t-mono-inline">[data-density]</code> container. The same UI renders at
         three tiers — only the hit-target token changes.
       </p>
       <div class="dens-grid">
@@ -40,7 +40,7 @@
           <div class="dens-sandbox" [attr.data-density]="t.key">
             <div class="dens-sandbox__head">
               <div class="t-overline">{{ t.label }}</div>
-              <code class="t-mono dens-sandbox__attr">data-density="{{ t.key }}"</code>
+              <code class="t-mono-inline dens-sandbox__attr">data-density="{{ t.key }}"</code>
             </div>
             <div class="dens-sandbox__body">
               <button type="button" class="dens-btn">Save changes</button>
@@ -75,7 +75,7 @@
       <!-- ============================================================ What density rewrites -->
       <h3 class="block-title t-h4">What density rewrites</h3>
       <ul class="dens-rewrites">
-        <li>Hit targets — <code class="t-mono">--hit-cozy</code></li>
+        <li>Hit targets — <code class="t-mono-inline">--hit-cozy</code></li>
         <li>Checkbox / radio size, switch geometry</li>
         <li>Avatar default size, badge dot size, status dot size</li>
         <li>Sidenav width</li>
@@ -86,8 +86,8 @@
       <h3 class="block-title t-h4">Choosing density per screen</h3>
       <p class="block-desc t-s">
         Density is a <strong>screen-level decision</strong>, not user-global. The Tweaks panel exposes it for
-        prototyping — in the product, set <code class="t-mono">[data-density]</code> on the route container, not
-        on <code class="t-mono">&lt;html&gt;</code>.
+        prototyping — in the product, set <code class="t-mono-inline">[data-density]</code> on the route container, not
+        on <code class="t-mono-inline">&lt;html&gt;</code>.
       </p>
 
     </docs-section>

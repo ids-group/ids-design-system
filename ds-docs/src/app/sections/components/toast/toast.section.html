@@ -1,7 +1,7 @@
 
     <docs-section anchor="toast" eyebrow="Components" title="Toast">
       <span lede>Auto-dismissing notification anchored to top-right of the viewport. Stacks vertically.
-        Trigger imperatively via <code class="t-mono">ToastService.show()</code> — one variant
+        Trigger imperatively via <code class="t-mono-inline">ToastService.show()</code> — one variant
         per system event severity.</span>
 
       <h3 class="block-title t-h4">States showcase (static specimens)</h3>
@@ -23,7 +23,7 @@
 
       <h3 class="block-title t-h4">With action</h3>
       <p class="block-desc t-s">
-        Pass <code class="t-mono">action: {{ '{' }} label, handler {{ '}' }}</code> to <code class="t-mono">ToastService.show()</code> to render a trailing action button (e.g. Undo).
+        Pass <code class="t-mono-inline">action: {{ '{' }} label, handler {{ '}' }}</code> to <code class="t-mono-inline">ToastService.show()</code> to render a trailing action button (e.g. Undo).
       </p>
       <div class="demo">
         <ds-button variant="outline" size="m" (click)="fireWithAction()">Delete with Undo</ds-button>

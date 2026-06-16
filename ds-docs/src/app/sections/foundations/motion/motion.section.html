@@ -1,7 +1,7 @@
 
     <docs-section anchor="motion" eyebrow="Foundations" title="Motion">
       <docs-truncation [rules]="truncationRules" />
-      <span lede>Five durations, five eases. All motion respects <code class="t-mono">prefers-reduced-motion</code> —
+      <span lede>Five durations, five eases. All motion respects <code class="t-mono-inline">prefers-reduced-motion</code> —
         durations collapse to 0 so components don't need to opt in. Pair durations with the right easing
         per direction: <em>decelerate</em> for enter, <em>accelerate</em> for exit.</span>
 
@@ -14,8 +14,8 @@
             <div class="loop-track">
               <div class="loop-puck loop-puck--dur" [style.transitionDuration]="d.value"></div>
             </div>
-            <code class="t-mono token-name">--duration-{{ d.name }}</code>
-            <code class="t-mono token-value">{{ d.value }}</code>
+            <code class="t-mono-inline token-name">--duration-{{ d.name }}</code>
+            <code class="t-mono-inline token-value">{{ d.value }}</code>
             <div class="t-caption token-desc">{{ d.use }}</div>
           </div>
         }
@@ -30,8 +30,8 @@
             <div class="loop-track">
               <div class="loop-puck loop-puck--ease" [style.transitionTimingFunction]="e.curve"></div>
             </div>
-            <code class="t-mono token-name">--ease-{{ e.name }}</code>
-            <code class="t-mono token-value">{{ e.curve }}</code>
+            <code class="t-mono-inline token-name">--ease-{{ e.name }}</code>
+            <code class="t-mono-inline token-value">{{ e.curve }}</code>
             <div class="t-caption token-desc">{{ e.use }}</div>
           </div>
         }
@@ -67,7 +67,7 @@
               }
             </div>
             <div class="combined-label t-s-bold">{{ c.label }}</div>
-            <code class="t-mono token-value">{{ c.tokens }}</code>
+            <code class="t-mono-inline token-value">{{ c.tokens }}</code>
           </div>
         }
       </div>

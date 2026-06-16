@@ -5,7 +5,7 @@
 
       <!-- ============================================================ Type ramp -->
       <h3 class="block-title t-h4">Type ramp</h3>
-      <p class="block-desc t-s">Every utility class side-by-side. Headings are reserved for marketing surfaces and large section titles. Default UI runs on <code class="t-mono">.t-s</code> (14).</p>
+      <p class="block-desc t-s">Every utility class side-by-side. Headings are reserved for marketing surfaces and large section titles. Default UI runs on <code class="t-mono-inline">.t-s</code> (14).</p>
       <div class="ramp">
         <div class="ramp__head t-overline">
           <div>Class · token</div>
@@ -18,8 +18,8 @@
         @for (row of ramp; track row.cls) {
           <div class="ramp__row">
             <div class="ramp__label">
-              <code class="t-mono ramp__cls">.{{ row.cls }}</code>
-              <code class="t-mono ramp__token">{{ row.sizeToken }}</code>
+              <code class="t-mono-inline ramp__cls">.{{ row.cls }}</code>
+              <code class="t-mono-inline ramp__token">{{ row.sizeToken }}</code>
             </div>
             <div [class]="row.cls + ' ramp__sample'">{{ row.sample }}</div>
             <div class="t-mono ramp__meta">{{ row.size }}</div>
@@ -32,7 +32,7 @@
 
       <!-- ============================================================ Mono family -->
       <h3 class="block-title t-h4">Mono family</h3>
-      <p class="block-desc t-s">JetBrains Mono for any literal value the operator might paste, search or read aloud. <code class="t-mono">.t-mono</code> for inline tokens; <code class="t-mono">.t-mono-block</code> wraps a code-snippet style frame.</p>
+      <p class="block-desc t-s">JetBrains Mono for any literal value the operator might paste, search or read aloud. <code class="t-mono-inline">.t-mono</code> for inline tokens; <code class="t-mono-inline">.t-mono-block</code> wraps a code-snippet style frame.</p>
       <div class="mono-grid">
         <div class="mono-card">
           <div class="t-overline">Inline · .t-mono</div>
@@ -55,12 +55,12 @@ WHERE  project_id = 'alpha'
         <div class="family-card">
           <div class="t-overline">Sans</div>
           <div class="t-h3 family-card__name" style="font-family: var(--font-sans)">Mulish</div>
-          <code class="t-mono family-card__tok">--font-sans</code>
+          <code class="t-mono-inline family-card__tok">--font-sans</code>
         </div>
         <div class="family-card">
           <div class="t-overline">Mono</div>
           <div class="t-h3 family-card__name" style="font-family: var(--font-mono)">JetBrains Mono</div>
-          <code class="t-mono family-card__tok">--font-mono</code>
+          <code class="t-mono-inline family-card__tok">--font-mono</code>
         </div>
       </div>
 

@@ -1,7 +1,7 @@
 
     <docs-section anchor="drawer" eyebrow="Components" title="Drawer">
       <span lede>Slide-in right-side panel for inline edit flows. Renders as fixed-position when
-        <code class="t-mono">[open]</code> is true. Two sizes (md = 480 px, lg = 640 px).
+        <code class="t-mono-inline">[open]</code> is true. Two sizes (md = 480 px, lg = 640 px).
         Use a drawer over a modal when the form needs more vertical room or runs alongside
         the underlying page state.</span>
 
@@ -14,8 +14,8 @@
       <ds-drawer [(open)]="open" title="Edit Sub-record" size="md">
         <ng-container drawer-body>
           <p class="t-s" style="color: var(--text-secondary); margin: 0 0 12px;">
-            This is a live drawer rendered via <code class="t-mono">&lt;ds-drawer&gt;</code>.
-            Two-way <code class="t-mono">[(open)]</code> model controls the visibility.
+            This is a live drawer rendered via <code class="t-mono-inline">&lt;ds-drawer&gt;</code>.
+            Two-way <code class="t-mono-inline">[(open)]</code> model controls the visibility.
           </p>
         </ng-container>
         <ng-container drawer-footer>

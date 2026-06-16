@@ -11,7 +11,7 @@
         @for (n of cats; track n) {
           <div class="swatch">
             <div class="swatch__chip" [style.background]="'var(--chart-cat-' + n + ')'"></div>
-            <code class="t-mono">--chart-cat-{{ n }}</code>
+            <code class="t-mono-inline">--chart-cat-{{ n }}</code>
           </div>
         }
       </div>
@@ -22,7 +22,7 @@
         @for (n of seqs; track n) {
           <div class="swatch">
             <div class="swatch__chip" [style.background]="'var(--chart-seq-' + n + ')'"></div>
-            <code class="t-mono">--chart-seq-{{ n }}</code>
+            <code class="t-mono-inline">--chart-seq-{{ n }}</code>
           </div>
         }
       </div>
@@ -33,7 +33,7 @@
         @for (n of divs; track n) {
           <div class="swatch">
             <div class="swatch__chip" [style.background]="divToken(n)"></div>
-            <code class="t-mono">{{ n > 0 ? '+' + n : n }}</code>
+            <code class="t-mono-inline">{{ n > 0 ? '+' + n : n }}</code>
           </div>
         }
       </div>
@@ -44,7 +44,7 @@
         <tbody>
           @for (t of axisTokens; track t.token) {
             <tr>
-              <td><code class="t-mono">{{ t.token }}</code></td>
+              <td><code class="t-mono-inline">{{ t.token }}</code></td>
               <td>{{ t.role }}</td>
               <td>{{ t.value }}</td>
             </tr>

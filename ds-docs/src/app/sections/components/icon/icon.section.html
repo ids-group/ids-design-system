@@ -1,19 +1,19 @@
 
     <docs-section anchor="icon" eyebrow="Components" title="Icon">
       <docs-truncation [rules]="truncationRules" />
-      <span lede>Inline SVG icons rendered through <code class="t-mono">&lt;ds-icon&gt;</code>. 1.75-px stroke, rounded caps,
-        <code class="t-mono">currentColor</code> fills. Driven by the <code class="t-mono">name</code> input and a fixed size scale.</span>
+      <span lede>Inline SVG icons rendered through <code class="t-mono-inline">&lt;ds-icon&gt;</code>. 1.75-px stroke, rounded caps,
+        <code class="t-mono-inline">currentColor</code> fills. Driven by the <code class="t-mono-inline">name</code> input and a fixed size scale.</span>
 
       <!-- ============================================================ Sizes -->
       <h3 class="block-title t-h4">Sizes</h3>
-      <p class="block-desc t-s">Five canonical sizes. Every glyph renders inside a 24-unit viewBox at <code class="t-mono">stroke-width: 1.75</code>.</p>
+      <p class="block-desc t-s">Five canonical sizes. Every glyph renders inside a 24-unit viewBox at <code class="t-mono-inline">stroke-width: 1.75</code>.</p>
       <div class="size-row">
         @for (size of sizes; track size.px) {
           <div class="size-cell">
             <div class="size-cell__stage" [style.height.px]="32">
               <ds-icon name="calendar" [size]="size.px" />
             </div>
-            <code class="t-mono size-cell__tok">{{ size.token }}</code>
+            <code class="t-mono-inline size-cell__tok">{{ size.token }}</code>
             <div class="t-caption">{{ size.px }}px · {{ size.use }}</div>
           </div>
         }
@@ -22,14 +22,14 @@
       <!-- ============================================================ Stroke weight -->
       <h3 class="block-title t-h4">Stroke weight</h3>
       <p class="block-desc t-s">
-        Same glyphs at <code class="t-mono">stroke</code> 1.5 / 1.75 / 2, each across 16 / 20 / 24px.
-        Default is <code class="t-mono">1.75</code>. Pick the weight that reads best against text at small sizes.
+        Same glyphs at <code class="t-mono-inline">stroke</code> 1.5 / 1.75 / 2, each across 16 / 20 / 24px.
+        Default is <code class="t-mono-inline">1.75</code>. Pick the weight that reads best against text at small sizes.
       </p>
       <div class="stroke-compare">
         @for (s of strokes; track s) {
           <div class="stroke-row" [class.is-default]="s === 1.75">
             <div class="stroke-row__label">
-              <code class="t-mono">stroke {{ s }}</code>
+              <code class="t-mono-inline">stroke {{ s }}</code>
               @if (s === 1.75) {
                 <span class="t-caption">default</span>
               }
@@ -53,7 +53,7 @@
         @for (name of samples; track name) {
           <div class="sample-cell">
             <ds-icon [name]="name" [size]="20" />
-            <code class="t-mono sample-cell__name">{{ name }}</code>
+            <code class="t-mono-inline sample-cell__name">{{ name }}</code>
           </div>
         }
       </div>

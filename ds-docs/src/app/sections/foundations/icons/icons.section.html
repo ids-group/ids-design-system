@@ -2,21 +2,21 @@
     <docs-section anchor="icons" eyebrow="Foundations" title="Iconography">
       <docs-truncation [rules]="truncationRules" />
       <span lede>
-        1.75-px stroke, rounded caps, <code class="t-mono">currentColor</code> fills. Sizes derive from a fixed scale.
-        Rendered via the <code class="t-mono">&lt;ds-icon&gt;</code> component which inlines SVG paths from
-        <code class="t-mono">ICONS</code>.
+        1.75-px stroke, rounded caps, <code class="t-mono-inline">currentColor</code> fills. Sizes derive from a fixed scale.
+        Rendered via the <code class="t-mono-inline">&lt;ds-icon&gt;</code> component which inlines SVG paths from
+        <code class="t-mono-inline">ICONS</code>.
       </span>
 
       <!-- ============================================================ Size scale -->
       <h3 class="block-title t-h4">Size scale</h3>
-      <p class="block-desc t-s">Five canonical sizes. Every glyph renders inside a 24-unit viewBox at <code class="t-mono">stroke-width: 1.75</code>.</p>
+      <p class="block-desc t-s">Five canonical sizes. Every glyph renders inside a 24-unit viewBox at <code class="t-mono-inline">stroke-width: 1.75</code>.</p>
       <div class="size-row">
         @for (s of sizes; track s.name) {
           <div class="size-cell">
             <div class="size-cell__stage" [style.height.px]="32">
               <ds-icon name="calendar" [size]="s.px" />
             </div>
-            <code class="t-mono size-cell__tok">{{ s.token }}</code>
+            <code class="t-mono-inline size-cell__tok">{{ s.token }}</code>
             <div class="t-caption">{{ s.px }}px · {{ s.use }}</div>
           </div>
         }
@@ -24,35 +24,35 @@
 
       <!-- ============================================================ Full gallery -->
       <h3 class="block-title t-h4">Library ({{ names.length }})</h3>
-      <p class="block-desc t-s">Every name in the <code class="t-mono">ICONS</code> registry. Pass as a string to <code class="t-mono">&lt;ds-icon name="…"&gt;</code>.</p>
+      <p class="block-desc t-s">Every name in the <code class="t-mono-inline">ICONS</code> registry. Pass as a string to <code class="t-mono-inline">&lt;ds-icon name="…"&gt;</code>.</p>
       <div class="icon-grid">
         @for (name of names; track name) {
           <div class="icon-cell">
             <ds-icon [name]="name" [size]="20" />
-            <code class="t-mono icon-cell__name">{{ name }}</code>
+            <code class="t-mono-inline icon-cell__name">{{ name }}</code>
           </div>
         }
       </div>
 
       <!-- ============================================================ Colour roles -->
       <h3 class="block-title t-h4">Colour roles</h3>
-      <p class="block-desc t-s">Icons inherit <code class="t-mono">currentColor</code>. The role tokens below set the parent <code class="t-mono">color</code>.</p>
+      <p class="block-desc t-s">Icons inherit <code class="t-mono-inline">currentColor</code>. The role tokens below set the parent <code class="t-mono-inline">color</code>.</p>
       <div class="role-row">
         <div class="role-cell" style="color: var(--icon-strong)">
           <ds-icon name="settings" [size]="20" />
-          <code class="t-mono role-cell__tok">--icon-strong</code>
+          <code class="t-mono-inline role-cell__tok">--icon-strong</code>
         </div>
         <div class="role-cell" style="color: var(--icon-default)">
           <ds-icon name="settings" [size]="20" />
-          <code class="t-mono role-cell__tok">--icon-default</code>
+          <code class="t-mono-inline role-cell__tok">--icon-default</code>
         </div>
         <div class="role-cell" style="color: var(--icon-muted)">
           <ds-icon name="settings" [size]="20" />
-          <code class="t-mono role-cell__tok">--icon-muted</code>
+          <code class="t-mono-inline role-cell__tok">--icon-muted</code>
         </div>
         <div class="role-cell role-cell--on-brand" style="color: var(--icon-on-primary)">
           <ds-icon name="settings" [size]="20" />
-          <code class="t-mono role-cell__tok">--icon-on-primary</code>
+          <code class="t-mono-inline role-cell__tok">--icon-on-primary</code>
         </div>
       </div>
     </docs-section>

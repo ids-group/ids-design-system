@@ -1,7 +1,7 @@
 
     <docs-section anchor="breadcrumbs" eyebrow="Components" title="Breadcrumbs">
       <docs-truncation [rules]="truncationRules" />
-      <span lede>Trail to root. The last item is the current page (no href). Middle segments collapse to <code class="t-mono">…</code> before the leaf clips.</span>
+      <span lede>Trail to root. The last item is the current page (no href). Middle segments collapse to <code class="t-mono-inline">…</code> before the leaf clips.</span>
 
       <!-- ============================================================ Default -->
       <h3 class="block-title t-h4">Default</h3>
@@ -30,7 +30,7 @@
       <!-- ============================================================ Custom separator -->
       <h3 class="block-title t-h4">Custom separator</h3>
       <p class="block-desc t-s">
-        Default separator is <code class="t-mono">chevronRight</code>. Override via the <code class="t-mono">[separator]</code> input or globally via <code class="t-mono">provideDsConfig({{ '{' }} breadcrumbs: {{ '{' }} separator: 'arrowRight' {{ '}' }} {{ '}' }})</code>.
+        Default separator is <code class="t-mono-inline">chevronRight</code>. Override via the <code class="t-mono-inline">[separator]</code> input or globally via <code class="t-mono-inline">provideDsConfig({{ '{' }} breadcrumbs: {{ '{' }} separator: 'arrowRight' {{ '}' }} {{ '}' }})</code>.
       </p>
       <div class="stage">
         <ds-breadcrumbs [items]="defaultTrail" separator="arrowRight" />
@@ -39,7 +39,7 @@
       <!-- ============================================================ Non-clickable -->
       <h3 class="block-title t-h4">Non-clickable</h3>
       <p class="block-desc t-s">
-        <code class="t-mono">[clickable]="false"</code> disables item activation — useful for read-only trails (audit logs, archived snapshots) where you want the path visible but not navigable.
+        <code class="t-mono-inline">[clickable]="false"</code> disables item activation — useful for read-only trails (audit logs, archived snapshots) where you want the path visible but not navigable.
       </p>
       <div class="stage">
         <ds-breadcrumbs [items]="defaultTrail" [clickable]="false" />
@@ -48,7 +48,7 @@
       <!-- ============================================================ Service-driven -->
       <h3 class="block-title t-h4">Service-driven (route-aware apps)</h3>
       <p class="block-desc t-s">
-        Omit <code class="t-mono">[items]</code> and the component reads from <code class="t-mono">BreadcrumbsService.items</code> — apps push crumbs from route data or an effect when the page model resolves.
+        Omit <code class="t-mono-inline">[items]</code> and the component reads from <code class="t-mono-inline">BreadcrumbsService.items</code> — apps push crumbs from route data or an effect when the page model resolves.
       </p>
       <pre class="snippet t-mono"><code>{{ '// in a page component or route effect' }}
 import {{ '{' }} BreadcrumbsService {{ '}' }} from 'ds';

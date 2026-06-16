@@ -4,12 +4,12 @@
 
       <!-- ============================================================ Scale visualisation -->
       <h3 class="block-title t-h4">Scale</h3>
-      <p class="block-desc t-s">Every <code class="t-mono">--space-*</code> token as a bar. Token name, computed pixel value, then the bar at true scale.</p>
+      <p class="block-desc t-s">Every <code class="t-mono-inline">--space-*</code> token as a bar. Token name, computed pixel value, then the bar at true scale.</p>
       <div class="scale-list">
         @for (stop of stops; track stop.name) {
           <div class="scale-row">
-            <code class="t-mono token-name">--space-{{ stop.name }}</code>
-            <code class="t-mono token-px">{{ stop.px }}</code>
+            <code class="t-mono-inline token-name">--space-{{ stop.name }}</code>
+            <code class="t-mono-inline token-px">{{ stop.px }}</code>
             <div class="bar-track">
               <div class="bar" [style.width]="'var(--space-' + stop.name + ')'"></div>
             </div>
