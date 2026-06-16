@@ -26,7 +26,7 @@
     background: var(--primary-subtitle); padding: 2px 6px; border-radius: var(--radius-sm); }
 
   .card { background: var(--surface-default); border: var(--border-width-default) solid var(--border-divider);
-          border-radius: var(--radius-lg); padding: var(--space-6); box-shadow: var(--z100);
+          border-radius: var(--radius-lg); padding: var(--space-6); box-shadow: var(--shadow-card);
           margin-top: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); }
   .card-head { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
   .card-head h2 { font: var(--font-weight-bold) var(--font-size-h4)/1.2 var(--font-heading); margin: 0; }
@@ -58,17 +58,17 @@
     --c-ring:         var(--focus-ring);
 
     display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
-    font: var(--font-weight-extrabold) var(--font-size-m)/var(--lh-flat) var(--font-sans);
+    font: var(--font-weight-extrabold) var(--font-size-m)/var(--line-height-flat) var(--font-sans);
     letter-spacing: var(--letter-spacing-wide);
     border: var(--border-width-default) solid var(--_border, transparent);
     border-radius: var(--radius-md);
     padding: 0 var(--space-5); height: var(--hit-cozy);
     cursor: pointer; white-space: nowrap; user-select: none;
     color: var(--_fg); background: var(--_bg);
-    transition: background var(--dur-fast) var(--ease-standard),
-                border-color var(--dur-fast) var(--ease-standard),
-                box-shadow var(--dur-fast) var(--ease-standard),
-                color var(--dur-fast) var(--ease-standard);
+    transition: background var(--duration-fast) var(--ease-standard),
+                border-color var(--duration-fast) var(--ease-standard),
+                box-shadow var(--duration-fast) var(--ease-standard),
+                color var(--duration-fast) var(--ease-standard);
   }
   .pbtn:hover  { background: var(--_bg-h); }
   .pbtn:active { background: var(--_bg-a);
@@ -261,9 +261,9 @@
 
   .dswitch { width: 40px; height: 24px; border-radius: var(--radius-pill); border: none; cursor: pointer;
              background: var(--border-default); position: relative; padding: 0;
-             transition: background var(--dur-fast) var(--ease-standard); }
+             transition: background var(--duration-fast) var(--ease-standard); }
   .dswitch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px;
-                    border-radius: var(--radius-pill); background: #fff; transition: transform var(--dur-fast) var(--ease-standard); }
+                    border-radius: var(--radius-pill); background: #fff; transition: transform var(--duration-fast) var(--ease-standard); }
   .dswitch[aria-checked="true"] { background: var(--primary); }
   .dswitch[aria-checked="true"]::after { transform: translateX(16px); }
 
