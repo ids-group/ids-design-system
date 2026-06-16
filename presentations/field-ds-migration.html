@@ -211,14 +211,14 @@
   </div>
 
   <!-- semantic rule + stragglers -->
-  <h2 class="section-title"><span class="n">6.</span> The rule, and where field still breaks it <small>answer to "palette or semantic?"</small></h2>
+  <h2 class="section-title"><span class="n">6.</span> Use semantic, not palette — now clean <small>answer to "palette or semantic?"</small></h2>
   <div class="rule" style="margin-bottom:var(--space-4);">
     <b>Components should use semantic + scale tokens, never palette primitives directly.</b>
     Direct palette use is what makes a colour escape theming / rebrand.
   </div>
-  <p class="lead">Field is mostly compliant after the migration. A handful of components still reach into the palette — minor, worth a cleanup pass:</p>
+  <p class="lead">Field is now fully compliant — the few components that reached into the palette were refactored to semantic roles:</p>
   <table>
-    <tr><th>Used directly (Tier 1)</th><th>Should be (Tier 2)</th><th>Spots</th></tr>
+    <tr><th>Was (Tier 1 palette)</th><th>Now uses (Tier 2 semantic)</th><th>Spots</th></tr>
     <tr><td><code>--yellow-400</code></td><td><code>--warning</code></td><td>2</td></tr>
     <tr><td><code>--pm-color-brand</code></td><td><code>--brand</code> / <code>--primary</code></td><td>2</td></tr>
     <tr><td><code>--green-300</code></td><td><code>--success-border</code></td><td>1</td></tr>
