@@ -6,9 +6,37 @@
         Inline list of actions. Used inside modals, popovers, or any container that already
         provides its own surface. Each item is a full-width button with an optional leading
         icon. <code>danger</code> turns the item red for destructive actions (Sign out, Delete);
-        <code>disabled</code> dims it and blocks clicks. A floating-overlay variant
-        triggered from a button is a follow-up.
+        <code>disabled</code> dims it and blocks clicks. To float it from a trigger, host it in a
+        <code>ds-popover</code> — see the first demo.
       </p>
+
+      <!-- ============================================================ Trigger-opened -->
+      <h3 class="block-title t-h4">Trigger-opened (overlay)</h3>
+      <p class="block-desc t-s">
+        The real usage — a button opens the menu in a <code>ds-popover</code>. Selecting an item
+        closes the overlay automatically (the item finds it via DI, no wiring needed). Click outside
+        or press <code>Esc</code> to dismiss.
+      </p>
+      <div class="demo">
+        <button
+          #acctTrigger
+          type="button"
+          class="trigger-btn"
+          aria-haspopup="menu"
+          [attr.aria-expanded]="acct.opened()"
+          (click)="acct.toggle(acctTrigger)"
+        >
+          Account ▾
+        </button>
+        <ds-popover #acct align="start">
+          <ds-menu>
+            <ds-menu-item icon="users">Profile settings</ds-menu-item>
+            <ds-menu-item icon="settings">Preferences</ds-menu-item>
+            <ds-menu-item icon="bell">Notifications</ds-menu-item>
+            <ds-menu-item icon="x" [danger]="true">Sign out</ds-menu-item>
+          </ds-menu>
+        </ds-popover>
+      </div>
 
       <!-- ============================================================ Default -->
       <h3 class="block-title t-h4">Default</h3>
