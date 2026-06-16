@@ -24,197 +24,248 @@
     padding: 32px clamp(16px, 4vw, 56px) 80px;
   }
   h1 { font-size: 30px; font-weight: 800; letter-spacing: -.5px; margin: 0 0 4px; }
-  .sub { color: var(--ink-3); margin: 0 0 28px; font-size: 15px; }
+  .sub { color: var(--ink-3); margin: 0 0 28px; font-size: 15px; max-width: 880px; }
 
-  /* progress strip */
-  .summary {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 12px;
-    margin-bottom: 36px;
-  }
-  .stat {
-    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
-    padding: 16px 18px; box-shadow: var(--shadow);
-  }
+  .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 12px; margin-bottom: 36px; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow); }
   .stat .n { font-size: 30px; font-weight: 800; line-height: 1; letter-spacing: -1px; }
   .stat .l { font-size: 12.5px; color: var(--ink-3); margin-top: 6px; text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
-  .stat.done .n { color: var(--green); }
   .stat.you .n { color: var(--violet); }
-  .stat.frozen .n { color: var(--blue); }
+  .stat.a11y .n { color: var(--rose-ink); }
   .stat.untouched .n { color: var(--grey-ink); }
+  .stat.raw .n { color: var(--teal); }
+  .stat.done { background: #fbfcfe; } .stat.done .n { color: var(--green); }
 
-  /* lanes */
   .lane { margin-bottom: 30px; }
-  .lane-head {
-    display: flex; align-items: center; gap: 12px; margin: 0 0 14px;
-  }
+  .lane-head { display: flex; align-items: center; gap: 12px; margin: 0 0 14px; }
   .lane-head h2 { font-size: 18px; font-weight: 800; margin: 0; letter-spacing: -.2px; }
-  .lane-head .count {
-    font-size: 12px; font-weight: 800; padding: 2px 9px; border-radius: 999px;
-  }
+  .lane-head .count { font-size: 12px; font-weight: 800; padding: 2px 9px; border-radius: 999px; }
   .lane-head .why { color: var(--ink-3); font-size: 13.5px; margin-left: auto; text-align: right; }
 
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 12px; }
-  .card {
-    background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--c, var(--line));
-    border-radius: 10px; padding: 13px 15px; box-shadow: var(--shadow);
-  }
+  .done-panel { margin-bottom: 16px; border: 1px solid var(--line); border-radius: var(--radius); background: #fbfcfe; box-shadow: var(--shadow); padding: 4px 18px; }
+  summary.lane-head { cursor: pointer; list-style: none; outline: none; padding: 12px 0; margin: 0; }
+  summary.lane-head::-webkit-details-marker { display: none; }
+  .toggle { font-size: 11px; font-weight: 800; padding: 2px 9px; border-radius: 999px; background: var(--green-soft); color: var(--green-ink); }
+  .done-panel:not([open]) .toggle::before { content: '▸ показать'; }
+  .done-panel[open] .toggle::before { content: '▾ скрыть'; }
+  .done-panel .cards { padding-bottom: 16px; }
+  .done-panel .card { opacity: .92; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 12px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--c, var(--line)); border-radius: 10px; padding: 13px 15px; box-shadow: var(--shadow); }
   .card .t { font-weight: 800; font-size: 14.5px; margin: 0 0 5px; letter-spacing: -.1px; }
   .card .d { color: var(--ink-2); font-size: 13px; margin: 0; }
   .card .meta { color: var(--ink-3); font-size: 12px; margin-top: 8px; font-family: 'JetBrains Mono', ui-monospace, monospace; }
-  .chip { display: inline-block; font-size: 11px; font-weight: 800; padding: 1px 8px; border-radius: 999px; margin-bottom: 7px; letter-spacing: .02em; }
+  .chip { display: inline-block; font-size: 10.5px; font-weight: 800; padding: 1px 8px; border-radius: 999px; margin-bottom: 7px; letter-spacing: .02em; }
 
-  /* status palettes */
-  .done   { --c: var(--green); }   .ch-done   { background: var(--green-soft);  color: var(--green-ink); }
-  .you    { --c: var(--violet); }  .ch-you    { background: var(--violet-soft); color: var(--violet-ink); }
-  .frozen { --c: var(--blue); }    .ch-frozen { background: var(--blue-soft);   color: var(--blue-d); }
-  .oos    { --c: var(--grey); }    .ch-oos    { background: var(--grey-soft);   color: var(--grey-ink); }
-  .minor  { --c: var(--amber); }   .ch-minor  { background: var(--amber-soft);  color: var(--amber-ink); }
-  .raw    { --c: var(--teal); }    .ch-raw    { background: var(--teal-soft);   color: var(--teal-ink); }
-  .track  { --c: var(--grey); }    .ch-track  { background: var(--grey-soft);   color: var(--grey-ink); }
-  .ch-big { background: var(--rose-soft); color: var(--rose-ink); }
-  .count.c-done{background:var(--green-soft);color:var(--green-ink);}
+  .done   { --c: var(--green); }
+  .you    { --c: var(--violet); }
+  .frozen { --c: var(--blue); }
+  .minor  { --c: var(--amber); }
+  .raw    { --c: var(--teal); }
+  .track  { --c: var(--grey); }
+  .a11y   { --c: var(--rose); }
+  .ch-you  { background: var(--violet-soft); color: var(--violet-ink); }
+  .ch-frozen { background: var(--blue-soft); color: var(--blue-d); }
+  .ch-raw  { background: var(--teal-soft); color: var(--teal-ink); }
+  .ch-oos  { background: var(--grey-soft); color: var(--grey-ink); }
+  .ch-p0   { background: var(--rose-soft); color: var(--rose-ink); }
+  .ch-p1   { background: var(--amber-soft); color: var(--amber-ink); }
+  .ch-p2   { background: var(--grey-soft); color: var(--grey-ink); }
+  .ch-big  { background: var(--rose-soft); color: var(--rose-ink); }
   .count.c-you{background:var(--violet-soft);color:var(--violet-ink);}
+  .count.c-a11y{background:var(--rose-soft);color:var(--rose-ink);}
   .count.c-frozen{background:var(--blue-soft);color:var(--blue-d);}
-  .count.c-oos{background:var(--grey-soft);color:var(--grey-ink);}
   .count.c-minor{background:var(--amber-soft);color:var(--amber-ink);}
   .count.c-raw{background:var(--teal-soft);color:var(--teal-ink);}
   .count.c-track{background:var(--grey-soft);color:var(--grey-ink);}
+  .count.c-done{background:var(--green-soft);color:var(--green-ink);}
 
-  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 0 0 34px; font-size: 13px; color: var(--ink-2); }
-  .legend span { display: inline-flex; align-items: center; gap: 6px; }
-  .legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
   .foot { margin-top: 50px; color: var(--ink-3); font-size: 12.5px; border-top: 1px solid var(--line); padding-top: 16px; }
   .tag { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11.5px; background: var(--grey-soft); padding: 1px 5px; border-radius: 4px; color: var(--ink-2); }
 </style>
 </head>
 <body>
   <h1>DS — карта бэклога</h1>
-  <p class="sub">Состояние трека «Architecture / tokens» + что осталось вокруг. Сгенерировано 2026-06-15. Цвет = кто/что блокирует.</p>
+  <p class="sub">Что <b>осталось закрыть</b> — по одному пункту на карточку (источник: <span class="tag">docs/todo.md</span>). Открытое вверху и развёрнуто; сделанное свёрнуто внизу. Обновлено 2026-06-16.</p>
 
   <div class="summary">
-    <div class="stat done"><div class="n">16</div><div class="l">Закрыто за сессию</div></div>
-    <div class="stat you"><div class="n">5</div><div class="l">Ждёт твоего решения</div></div>
-    <div class="stat frozen"><div class="n">2</div><div class="l">Заморожено тобой</div></div>
-    <div class="stat untouched"><div class="n">8</div><div class="l">Не тронутых треков</div></div>
-  </div>
-
-  <div class="legend">
-    <span><i style="background:var(--green)"></i> Готово</span>
-    <span><i style="background:var(--violet)"></i> Нужно твоё решение</span>
-    <span><i style="background:var(--blue)"></i> Заморожено тобой</span>
-    <span><i style="background:var(--grey)"></i> Вне скоупа / не начато</span>
-    <span><i style="background:var(--amber)"></i> Мелочь отложена</span>
-    <span><i style="background:var(--teal)"></i> Raw по дизайну (ждёт API)</span>
-  </div>
-
-  <!-- ============ DONE ============ -->
-  <div class="lane">
-    <div class="lane-head">
-      <h2>✅ Закрыто за сессию</h2><span class="count c-done">16</span>
-      <span class="why">Весь блок Architecture/tokens + чистка showcase. Под snapshot-гейтом (последний — 13773 элемента).</span>
-    </div>
-    <div class="cards">
-      <div class="card done"><div class="t">Токен-фолбэк + деривация состояний</div><p class="d">button/icon-button: публичные <span class="tag">--ds-*</span> читаются с фолбэком в приватные резолверы; hover/active из color-mix.</p><div class="meta">4b9e0c2…ca452c7 · 57/57</div></div>
-      <div class="card done"><div class="t">Раскат паттерна на ВСЮ либу</div><p class="d">22 компонента + badge/tag/toast/empty-state + menu-item + глобальные .link/.icon. Один стиль токенов везде.</p><div class="meta">427dcb3…6ebba55</div></div>
-      <div class="card done"><div class="t">Ренейм токенов в полные слова</div><p class="d">--fw→--font-weight, --s→--space и т.д. 138 файлов / 3895 замен скриптом.</p><div class="meta">ae89955</div></div>
-      <div class="card done"><div class="t">Вынос fonts/link из _tokens</div><p class="d">_tokens.scss = чистые токены; ds.scss владеет глобальной композицией.</p><div class="meta">5626fbe</div></div>
-      <div class="card done"><div class="t">Снос raw-дубликатов из showcase</div><p class="d">Витрина на живых компонентах: DsStaticPreview host-директива (dropdown/select/modal/popover), пины состояний через ::ng-deep.</p><div class="meta">b202a5f…c418cee</div></div>
-      <div class="card done"><div class="t">6 новых публичных API</div><p class="d">button icon/trailingIcon · sidenav-item [disabled] · input readOnly/success/withAddon · dropzone disabled/single · stat [delta].</p><div class="meta">+ dogfood в доках</div></div>
-      <div class="card done"><div class="t">Сплит 66 секций → ts/html/scss</div><p class="d">+ декомпозиция tokens-reference (1441 стр → компонент + 5 data-файлов). Верифицировано реконструкцией.</p><div class="meta">0f044a5…9ca7c043</div></div>
-      <div class="card done"><div class="t">8 багов компонентов поймано</div><p class="d">loading-фон, pills-радиус, tab count-chip, addon pierce, popover пустая панель, table-border + 2 битые raw-копии (badge/spinner рендерились мёртвыми).</p><div class="meta">+ ~5 ошибок субагентов</div></div>
-      <div class="card done"><div class="t">Финальный аудит копий → ноль</div><p class="d">Греп+live-проба. Последние копии на живые компоненты: table badge, input spinner, empty-state card, charts skeleton, home-hero badges, modal-форма. `.badge/.spinner/.card/.skeleton` = 0.</p><div class="meta">454a06a · f5863d5 · 85be650</div></div>
-      <div class="card done"><div class="t">Маркер «ожидает API» в showcase</div><p class="d">Чип `&lt;docs-await&gt;` на by-design specimens: видно прямо в доках, что блок ждёт компонент/API.</p><div class="meta">93570ee</div></div>
-    </div>
+    <div class="stat you"><div class="n">6</div><div class="l">Ждёт твоего решения</div></div>
+    <div class="stat a11y"><div class="n">15</div><div class="l">A11y (P0–P2)</div></div>
+    <div class="stat untouched"><div class="n">14</div><div class="l">Компоненты + foundations</div></div>
+    <div class="stat untouched"><div class="n">12</div><div class="l">DS-docs / аним / field / API</div></div>
+    <div class="stat raw"><div class="n">8</div><div class="l">Raw / frozen / мелочь</div></div>
+    <div class="stat done"><div class="n">25</div><div class="l">Сделано (свёрнуто)</div></div>
   </div>
 
   <!-- ============ NEEDS YOU ============ -->
   <div class="lane">
-    <div class="lane-head">
-      <h2>⏳ Ждёт твоего решения</h2><span class="count c-you">5</span>
-      <span class="why">Не начинал — это твой вход.</span>
-    </div>
+    <div class="lane-head"><h2>⏳ Ждёт твоего решения</h2><span class="count c-you">6</span><span class="why">Не начато — это твой вход.</span></div>
     <div class="cards">
-      <div class="card you"><span class="chip ch-you">NEXT</span><div class="t">Button: variant → color × fill</div><p class="d">Спроектировано. Прототип с перекраской и 28 комбо. <b>Ты ставишь вердикты по комбо → я пишу спек.</b></p><div class="meta">presentations/button-variant-tone.html</div></div>
-      <div class="card you"><span class="chip ch-you">с color×fill</span><div class="t">Button: схлопнуть дубль размеров</div><p class="d">Два яруса в одном enum: `s/m/l` (24/32/40) ≡ `sm/md/lg` (32/40/48), дефолт всё ещё legacy `l`. `m≡sm`, `l≡md` — байт-в-байт дубли. → один ярус `sm/md/lg`, дефолт `md`. Кнопка — единственная с двумя; icon-button/input/select уже чистые. Делать в том же заходе (та же разметка `size=`).</p></div>
-      <div class="card you"><span class="chip ch-you">парный с #1</span><div class="t">ds-color — scoped accent</div><p class="d">Глобальная перекраска акцента через --accent-* indirection, 4 уровня. Спека ждёт решения по #1.</p></div>
-      <div class="card you"><span class="chip ch-you">research готов</span><div class="t">Аудит: компонент vs CSS-класс</div><p class="d">8 кандидатов (checkbox/radio/switch/divider/badge…). Таблица собрана, per-component решения ты сказал «пропусти».</p></div>
-      <div class="card you"><span class="chip ch-you">решить позже</span><div class="t">Recipe vs hand-tuned цвета</div><p class="d">Если калибровка заменит формулу hover/pressed на ручные пики — дефолты кнопок разойдутся с темой.</p></div>
+      <div class="card you"><span class="chip ch-you">NEXT</span><div class="t">Button: variant → color × fill</div><p class="d">Прототип с перекраской и 28 комбо готов. Ты ставишь вердикты по комбо → я пишу спек.</p><div class="meta">button-variant-tone.html</div></div>
+      <div class="card you"><span class="chip ch-you">с color×fill</span><div class="t">Button: схлопнуть дубль размеров</div><p class="d">`s/m/l` (24/32/40) ≡ `sm/md/lg` (32/40/48), дефолт legacy `l`. → один ярус `sm/md/lg`, дефолт `md`. В том же заходе.</p></div>
+      <div class="card you"><span class="chip ch-you">парный с #1</span><div class="t">ds-color — scoped accent</div><p class="d">Перекраска акцента через `--accent-*` indirection, 4 уровня. Ждёт решения по color×fill.</p></div>
+      <div class="card you"><span class="chip ch-you">research готов</span><div class="t">Аудит: компонент vs CSS-класс</div><p class="d">8 кандидатов; таблица собрана. Per-component вердикт за тобой.</p></div>
+      <div class="card you"><span class="chip ch-you">решить позже</span><div class="t">Recipe vs hand-tuned цвета</div><p class="d">Если калибровка заменит формулу hover/pressed ручными пиками — дефолты кнопок разойдутся с темой.</p></div>
+      <div class="card you"><span class="chip ch-you">прототип готов</span><div class="t">Interaction formula v2 — вердикты B1–B5</div><p class="d">Единая `color-mix` формула состояний по нарисованной рампе. Решить: tint-pressed 28% vs 34% · pressed для нейтральных поверхностей (меню/строки) · danger menu-item hover формула vs `--error-subtle` · override-слот `--interactive-*-set` · pressed для success/warning кнопок.</p><div class="meta">interaction-formula.html</div></div>
     </div>
   </div>
 
-  <!-- ============ FROZEN ============ -->
+  <!-- ============ A11Y ============ -->
   <div class="lane">
-    <div class="lane-head">
-      <h2>❄️ Заморожено тобой</h2><span class="count c-frozen">2</span>
-      <span class="why">Снимешь стоп — доделаю.</span>
-    </div>
+    <div class="lane-head"><h2>♿ A11y — по компонентам и findings</h2><span class="count c-a11y">15</span><span class="why">a11y-ветка покрыла ~29 компонентов; ниже — непокрытое + открытые находки ревью.</span></div>
     <div class="cards">
-      <div class="card frozen"><span class="chip ch-frozen">«щас не трогай»</span><div class="t">design-system.md</div><p class="d">Док-долг: icon/trailingIcon, readOnly/success/withAddon, staticPreview, sidenav disabled, ренейм table-head, глобальная заметка о токен-контракте.</p></div>
-      <div class="card frozen"><span class="chip ch-frozen">рефрешишь сам</span><div class="t">showcase/index.html артефакт</div><p class="d">Отстаёт от HEAD на десятки коммитов (последний рефреш 5fcd7d8). Staleness-баннер это покрывает.</p></div>
+      <div class="card a11y"><span class="chip ch-p0">P0</span><div class="t">switch — role=switch</div><p class="d">Сейчас `type=checkbox` → читается как чекбокс. Добавить `role="switch"` + `aria-checked` + `label`/`ariaLabel`.</p></div>
+      <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">checkbox — label + ARIA</div><p class="d">Голый `<input>`: нет label-ассоциации/`aria-label`/`aria-invalid`/`required`. Зеркалить `input.component.ts` + `booleanAttribute`.</p></div>
+      <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">radio + RadioGroup</div><p class="d">Голый radio без label; нет группового координатора. Построить `ds-radio-group` (`role=radiogroup`, roving) + per-radio labelling.</p></div>
+      <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">bottom-sheet — dialog-семантика</div><p class="d">Поведение есть; нет `role=dialog` + `aria-modal` + `aria-labelledby` + `cdkTrapFocus`. Зеркалить `modal.component.html`.</p></div>
+      <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">number-stepper — aria-label</div><p class="d">Кнопки `−/+` без `aria-label` (Decrease/Increase); `<input number>` без label.</p></div>
+      <div class="card a11y"><span class="chip ch-p0">P0</span><div class="t">table — клавиатурная сортировка</div><p class="d">Сортируемые `<th (click)>` не с клавиатуры: нет button/`tabindex`+Enter/Space, нет `aria-sort`.</p></div>
+      <div class="card a11y"><span class="chip ch-p2">MED</span><div class="t">a11y-мелочь (кластер)</div><p class="d">spinner `role=status`; divider `role=separator`; skeleton `aria-busy`; badge count `aria-label`; avatar-group hidden-count; topbar `role=banner`.</p></div>
+      <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">combobox trigger open-only</div><p class="d">Клик по триггеру/шеврону не закрывает открытую панель (`togglePanel` есть, триггер только открывает).</p></div>
+      <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">listbox не закрывается на Tab</div><p class="d">combobox/select/dropdown: оверлей висит, фокус уходит за него. Escape обработан, Tab — нет.</p></div>
+      <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">scroll-lock без ref-count</div><p class="d">modal/drawer: при двух оверлеях закрытие первого возвращает скролл под вторым (оба сбрасывают `body.overflow`).</p></div>
+      <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">accordion aria-controls висит</div><p class="d">`role=region` внутри `@if(expanded())` → заголовок ссылается на несуществующий id когда свёрнут.</p></div>
+      <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">listbox options в tab-order</div><p class="d">select/dropdown: option-кнопкам нужен `tabindex="-1"` под roving/active-descendant.</p></div>
+      <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">combobox «No matches» selectable</div><p class="d">«Нет совпадений» — это `role=option`; должно быть `role=status`/презентационным.</p></div>
+      <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">date-picker grid-семантика + focus-баг</div><p class="d">Нет `role=grid` (используется `aria-pressed`); `setTimeout`-фокус может стрелять по уже снятому оверлею.</p></div>
+      <div class="card a11y"><span class="chip ch-p2">проверить</span><div class="t">Unverified findings (кластер)</div><p class="d">tooltip затирает host `aria-describedby`; error-hint флипает `role=alert` на существующем узле; sidenav-item `aria-label` дублирует видимый текст; overlay `backdropClick` без unsubscribe. Сверить с кодом до фикса.</p></div>
     </div>
   </div>
 
-  <!-- ============ OOS ============ -->
+  <!-- ============ COMPONENTS + FEATURE GAPS ============ -->
   <div class="lane">
-    <div class="lane-head">
-      <h2>🚫 Вне скоупа</h2><span class="count c-oos">1</span>
-      <span class="why">Ты исключил.</span>
-    </div>
+    <div class="lane-head"><h2>🧩 Компоненты и фичи-гэпы</h2><span class="count c-track">5</span><span class="why">Из gap-analysis.</span></div>
     <div class="cards">
-      <div class="card oos"><span class="chip ch-oos">«только наша»</span><div class="t">Миграция pinkmoon</div><p class="d">~420 использований старых имён токенов в соседнем репо. Breaking-ренейм остаётся, другие репо сами.</p></div>
+      <div class="card track"><span class="chip ch-big">HIGH</span><div class="t">Missing components — HIGH</div><p class="d">multi-select · time-picker (HH:MM) · button-group/segmented · command palette (Cmd+K) · timeline/activity · key-value/description list · list-item · data-grid · confirmation dialog · inline alert · layout primitives (stack/inline/container).</p></div>
+      <div class="card track"><span class="chip ch-oos">MED</span><div class="t">Missing components — MED</div><p class="d">color picker · slider/range · OTP input · tree-view · chart wrapper · kanban · calendar · image/lightbox · loading overlay · split button · splitter.</p></div>
+      <div class="card track"><div class="t">Feature gaps — Forms</div><p class="d">input/textarea `errorMessage`+counter+`readonly` · select clearable/multi/per-option icons · dropdown option-groups+clearable · combobox `disabled`/`invalid`+groups+create · checkbox/radio/switch `label`/`size`/`required`/`invalid` · date min/max/disabled-dates/presets/time-mode/`invalid`.</p></div>
+      <div class="card track"><div class="t">Feature gaps — Data/overlay</div><p class="d">table expandable rows+empty-slot+pagination · modal closeOnBackdrop/xl/fullscreen/`persistent` · drawer placement+`sm` · bottom-sheet snap-points+footer · toast position/promise/`maxVisible` · menu keyboard/dividers/submenus · popover open-signal/arrow/placement.</p></div>
+      <div class="card track"><div class="t">Feature gaps — Display</div><p class="d">tabs lazy/scrollable/closable/vertical · accordion single-open coordinator+item `disabled` · stepper clickable/error/vertical · sidenav collapsed-tooltip · badge `value` (count) · avatar status-dot+fallback icon.</p></div>
     </div>
   </div>
 
-  <!-- ============ MINOR DEFERRED ============ -->
+  <!-- ============ FOUNDATIONS / TOKENS ============ -->
   <div class="lane">
-    <div class="lane-head">
-      <h2>🔧 Мелочь отложена</h2><span class="count c-minor">4</span>
-      <span class="why">Решений не требует, руки не дошли. Можно забрать пачкой.</span>
-    </div>
+    <div class="lane-head"><h2>🏗 Foundations / токены</h2><span class="count c-track">9</span><span class="why">Из gap-analysis + презентаций.</span></div>
     <div class="cards">
-      <div class="card minor"><div class="t">--z###/--layer-* ревью</div><p class="d">Намеренно вынес из rename-свипа.</p></div>
-      <div class="card minor"><div class="t">_forced-states sm/md/lg</div><p class="d">BUTTON-блок без канонического яруса (только legacy l/m/s). Pre-existing.</p></div>
-      <div class="card minor"><div class="t">--text-on-media-shadow</div><p class="d">Токен есть, строки в tokens-reference нет.</p></div>
-      <div class="card minor"><div class="t">19 компонентов без токен-API</div><p class="d">accordion, combobox, drawer, dropdown, menu, select, tooltip… — решить, нужен ли им CSS-API (связано с аудитом).</p></div>
+      <div class="card track"><span class="chip ch-big">BIGGEST GAP</span><div class="t">Dark theme</div><p class="d">`themes/dark/{_palette,_theme}.scss`. Архитектура готова, ничего не отгружено.</p></div>
+      <div class="card track"><div class="t">Chart-токены light-only</div><p class="d">axis/grid/tooltip обернуть в flippable семантические роли для тёмной темы.</p></div>
+      <div class="card track"><div class="t">Semantic spacing aliases</div><p class="d">`--space-inset/stack/inline` поверх сырых `--space-*`.</p></div>
+      <div class="card track"><div class="t">Primary-CTA token layer</div><p class="d">Opt-in `--primary-cta`/`-hover`/`-active`/`-on` (дефолт = `--primary*`); `.primary`-кнопка читает их — AA-safe при ребренде на светлый `--primary`.</p></div>
+      <div class="card track"><div class="t">Breakpoints в @media</div><p class="d">`--bp-*` — CSS-переменные (не работают в media-queries); добавить SCSS `$bp-*`.</p></div>
+      <div class="card track"><span class="chip ch-big">BUG</span><div class="t">prefers-reduced-motion</div><p class="d">Зануляет loop-длительности → спиннеры/скелетоны невидимы. Замедлять, не останавливать.</p></div>
+      <div class="card track"><span class="chip ch-oos">MED</span><div class="t">Foundations MED (кластер)</div><p class="d">high-contrast/forced-colors тема · density (шрифты/иконки/pad) · fluid type (`clamp()`) · motion-пресеты · RTL/logical-properties.</p></div>
+      <div class="card track"><div class="t">.ds-interactive — контракт состояний</div><p class="d">Реализовать `styles/_interaction.scss`: класс `.ds-interactive` + пресеты `.tint/.accent-ink/.inked/.surface-fx/.into-light` + `--state-step-*` токены; убрать per-component `--ds-*-bg-hover/-active` и локальный color-mix; миграция интерактивных. Зависит от вердиктов B1–B5.</p><div class="meta">interaction-formula.html</div></div>
+      <div class="card track"><div class="t">Палитра — остаточная чистка</div><p class="d">Завести `--static-white` (on-роли переживут тёмную тему); убрать прямые чтения `--neutral-*` из 3-го слоя (scrollbar читает `--neutral-300/400` напрямую). Гибридный нейминг cool-gray/brand-gray/neutral-slot уже внедрён.</p><div class="meta">palette-naming.html</div></div>
+    </div>
+  </div>
+
+  <!-- ============ DS-DOCS FEATURES ============ -->
+  <div class="lane">
+    <div class="lane-head"><h2>📖 DS-docs фичи</h2><span class="count c-track">4</span><span class="why">Витрина документации.</span></div>
+    <div class="cards">
+      <div class="card track"><div class="t">Menu — интерактивный demo</div><p class="d">Сейчас только статичные always-open списки. Кнопка открывает меню в месте (`ds-popover` host `ds-menu`, закрытие `DsOverlayCloseRef`). Обновить lede.</p><div class="meta">menu.section.ts</div></div>
+      <div class="card track"><div class="t">Sidenav — сортировка A→Z + поиск</div><p class="d">Сортировать пункты в каждой nav-группе (`nav.config.ts`) И переупорядочить секции рендера в тон; + поиск/фильтр по именам секций.</p><div class="meta">nav.config.ts · docs.page.ts</div></div>
+      <div class="card track"><div class="t">Inspect-mode (Figma-style)</div><p class="d">Тоггл в заголовке секции → overlay со спекой: paddings/gaps/sizes + какой токен/класс за что отвечает (`--space-4 = 16px`). Пилот — на spacing одной секции.</p></div>
+      <div class="card track"><div class="t">Truncation-блоки — collapse</div><p class="d">~35 секций кончаются `.trunc`-карточкой. Свернуть в тоггл / `?`-поповер. Вынести общий `&lt;docs-truncation&gt;`.</p></div>
+    </div>
+  </div>
+
+  <!-- ============ ANIMATIONS ============ -->
+  <div class="lane">
+    <div class="lane-head"><h2>🎬 Анимации</h2><span class="count c-track">2</span><span class="why">Honor prefers-reduced-motion.</span></div>
+    <div class="cards">
+      <div class="card track"><div class="t">Accordion open/close</div><p class="d">Анимировать expand/collapse (height/opacity). Toggleable (`[animated]` default-on / respect reduced-motion). Сейчас снап.</p></div>
+      <div class="card track"><div class="t">Bottom-sheet close</div><p class="d">Анимировать slide-down + scrim fade на закрытии (open уже анимируется; close резкий).</p></div>
+    </div>
+  </div>
+
+  <!-- ============ FIELD OVERRIDES ============ -->
+  <div class="lane">
+    <div class="lane-head"><h2>🔧 Доработки из field overrides</h2><span class="count c-track">4</span><span class="why">Всплыли из `_ds-overrides.scss` field-приложения.</span></div>
+    <div class="cards">
+      <div class="card track"><div class="t">Tabs · pills overflow</div><p class="d">`pills` переполняет узкие вьюпорты при 4+ табах. Скролл по горизонтали в границах (или opt-in `scrollable`). Field обходит `overflow-x:auto`.</p></div>
+      <div class="card track"><div class="t">Banner · compact density</div><p class="d">Field ужимает compact (`--ds-banner-pad-y`, `--fs-xs`). Ревью дефолта / экспонировать body font-size токен.</p></div>
+      <div class="card track"><div class="t">Search · max-width</div><p class="d">`.search` упирается в `--search-maxw` (токенизировано, но field не нашёл токен). Задокументировать; рассмотреть дефолт `none`.</p></div>
+      <div class="card track"><div class="t">Input · label-токены</div><p class="d">Field использует `--ds-input-label-fs/fw/color`. Подтвердить в каталоге + tokens-reference.</p></div>
+    </div>
+  </div>
+
+  <!-- ============ API / OTHER ============ -->
+  <div class="lane">
+    <div class="lane-head"><h2>🛠 API-консистентность + прочее</h2><span class="count c-track">2</span><span class="why">P2.</span></div>
+    <div class="cards">
+      <div class="card track"><span class="chip ch-oos">P2</span><div class="t">API consistency</div><p class="d">`booleanAttribute` на boolean-инпуты · `danger→error`/`warn→warning` · dropdown `error→invalid` · `radio.name` тип · экспорт `DividerSpacing`/`PopoverAlign` · унификация output-имён · pagination model/output дедуп · `title` requiredness · вынести badge `count` и progress `indeterminate` из color-enum.</p></div>
+      <div class="card track"><span class="chip ch-oos">if-needed</span><div class="t">CDK Menu adoption (option B)</div><p class="d">Только если понадобятся вложенные сабменю / menubar / context-menu. План — `docs/superpowers/cdk-menu-adoption.md`.</p></div>
     </div>
   </div>
 
   <!-- ============ RAW BY DESIGN ============ -->
   <div class="lane">
-    <div class="lane-head">
-      <h2>🎨 Raw в showcase — по дизайну (помечены чипом)</h2><span class="count c-raw">6</span>
-      <span class="why">Копий-зеркал НОЛЬ. Остались только specimens, которые держит отсутствие компонента/API — каждый виден в доках чипом «Ожидает …».</span>
-    </div>
+    <div class="lane-head"><h2>🎨 Raw в showcase — держит отсутствие API/компонента</h2><span class="count c-raw">6</span><span class="why">Копий-зеркал НОЛЬ; каждый помечен в доках чипом «Ожидает …».</span></div>
     <div class="cards">
-      <div class="card raw"><span class="chip ch-raw">⏳ ожидает компонент</span><div class="t">selection · button</div><p class="d">segmented, slider, button-group/split/toggle, bulk-bar — нужны новые компоненты (gap-analysis).</p></div>
-      <div class="card raw"><span class="chip ch-raw">⏳ ожидает API</span><div class="t">table</div><p class="d">Кастомные ячейки витрины — нужны column-templates у ds-table.</p></div>
-      <div class="card raw"><span class="chip ch-raw">⏳ ожидает API</span><div class="t">field · dropzone</div><p class="d">input floating/loading, dropzone has-files/.file-ряды.</p></div>
-      <div class="card raw"><span class="chip ch-raw">внутренности</span><div class="t">day</div><p class="d">Сетка дней календаря — внутренний part, отдельного компонента нет.</p></div>
-      <div class="card raw"><span class="chip ch-oos">осознанно raw</span><div class="t">2 не-копии</div><p class="d">toolbar .divider (ds-divider vertical форсит 12px margin vs 4px) · do-dont .tooltip (hover-оверлей, тут статичная иллюстрация анти-паттерна).</p></div>
+      <div class="card raw"><span class="chip ch-raw">⏳ компонент</span><div class="t">segmented / slider</div><p class="d">Нужны новые компоненты (gap-analysis).</p></div>
+      <div class="card raw"><span class="chip ch-raw">⏳ компонент</span><div class="t">button-group/split/toggle · bulk-bar</div><p class="d">Группы кнопок и bulk-bar — нет компонентов.</p></div>
+      <div class="card raw"><span class="chip ch-raw">⏳ API</span><div class="t">table — column-templates</div><p class="d">Кастомные ячейки витрины — нужны column-templates у `ds-table`.</p></div>
+      <div class="card raw"><span class="chip ch-raw">⏳ API</span><div class="t">field · dropzone</div><p class="d">input floating/loading; dropzone has-files / `.file`-ряды.</p></div>
+      <div class="card raw"><span class="chip ch-raw">внутренности</span><div class="t">day (календарь)</div><p class="d">Сетка дней — внутренний part, отдельного компонента нет.</p></div>
+      <div class="card raw"><span class="chip ch-oos">осознанно raw</span><div class="t">toolbar .divider · do-dont .tooltip</div><p class="d">divider vertical форсит 12px margin vs 4px; tooltip — статичная иллюстрация анти-паттерна (компонент hover-only).</p></div>
     </div>
   </div>
 
-  <!-- ============ UNTOUCHED TRACKS ============ -->
+  <!-- ============ FROZEN ============ -->
   <div class="lane">
-    <div class="lane-head">
-      <h2>📋 Треки, которых я не касался</h2><span class="count c-track">8</span>
-      <span class="why">Большой бэклог за пределами токен-работы.</span>
-    </div>
+    <div class="lane-head"><h2>❄️ Заморожено тобой</h2><span class="count c-frozen">1</span><span class="why">Снимешь стоп — доделаю.</span></div>
     <div class="cards">
-      <div class="card track"><span class="chip ch-big">BIGGEST GAP</span><div class="t">Dark theme</div><p class="d">themes/dark/{_palette,_theme}. Архитектура готова, ничего не отгружено.</p></div>
-      <div class="card track"><span class="chip ch-big">P0/P1</span><div class="t">A11y трек</div><p class="d">switch role, checkbox/radio лейблы, RadioGroup, bottom-sheet semantics, table keyboard-sort + ~10 open-findings.</p></div>
-      <div class="card track"><div class="t">Missing components</div><p class="d">HIGH: multi-select, time-picker, segmented, command palette, confirmation dialog, layout primitives…</p></div>
-      <div class="card track"><div class="t">Feature gaps</div><p class="d">forms / data+overlay / display — десятки пунктов из gap-analysis.</p></div>
-      <div class="card track"><div class="t">Foundations</div><p class="d">semantic spacing aliases, primary-CTA layer, $bp-* для @media, fluid type, RTL.</p></div>
-      <div class="card track"><span class="chip ch-big">BUG</span><div class="t">prefers-reduced-motion</div><p class="d">Гасит loop-длительности → спиннеры/скелетоны невидимы. Замедлять, не останавливать.</p></div>
-      <div class="card track"><div class="t">Анимации</div><p class="d">accordion expand/collapse, bottom-sheet close.</p></div>
-      <div class="card track"><div class="t">DS-docs фичи</div><p class="d">menu interactive demo, sidenav sort+search, inspect-mode, truncation-collapse.</p></div>
+      <div class="card frozen"><span class="chip ch-frozen">«щас не трогай»</span><div class="t">design-system.md</div><p class="d">Док-долг: icon/trailingIcon, readOnly/success/withAddon, staticPreview, sidenav disabled, ренейм table-head, глобальная заметка о токен-контракте.</p></div>
     </div>
   </div>
+
+  <!-- ============ MINOR ============ -->
+  <div class="lane">
+    <div class="lane-head"><h2>🔩 Мелочь отложена</h2><span class="count c-minor">1</span><span class="why">Решений не требует.</span></div>
+    <div class="cards">
+      <div class="card minor"><div class="t">19 компонентов без токен-API</div><p class="d">accordion, combobox, drawer, dropdown, menu, select, tooltip, checkbox, radio, switch, skeleton, spinner… — решить, нужен ли им CSS-API (связано с аудитом компонент-vs-класс).</p></div>
+    </div>
+  </div>
+
+  <!-- ============ DONE (collapsed) ============ -->
+  <details class="done-panel">
+    <summary class="lane-head"><h2>✅ Сделано · tokens / showcase</h2><span class="count c-done">19</span><span class="toggle"></span><span class="why">Свёрнуто. Под snapshot-гейтом.</span></summary>
+    <div class="cards">
+      <div class="card done"><div class="t">Токен-фолбэк + деривация состояний</div><p class="d">button/icon-button: публичные `--ds-*` с фолбэком в приватные резолверы; hover/active из color-mix.</p><div class="meta">4b9e0c2…ca452c7</div></div>
+      <div class="card done"><div class="t">Раскат паттерна на ВСЮ либу</div><p class="d">22 компонента + badge/tag/toast/empty-state + menu-item + .link/.icon.</p><div class="meta">427dcb3…6ebba55</div></div>
+      <div class="card done"><div class="t">Ренейм токенов в полные слова</div><p class="d">--fw→--font-weight и т.д. 138 файлов / 3895 замен.</p><div class="meta">ae89955</div></div>
+      <div class="card done"><div class="t">Вынос fonts/link из _tokens</div><p class="d">_tokens.scss = чистые токены; ds.scss — глобальная композиция.</p><div class="meta">5626fbe</div></div>
+      <div class="card done"><div class="t">Снос raw-дубликатов из showcase</div><p class="d">DsStaticPreview host-директива (dropdown/select/modal/popover), пины через ::ng-deep.</p><div class="meta">b202a5f…c418cee</div></div>
+      <div class="card done"><div class="t">6 новых публичных API</div><p class="d">button icon/trailingIcon · sidenav-item [disabled] · input readOnly/success/withAddon · dropzone disabled/single · stat [delta].</p></div>
+      <div class="card done"><div class="t">Сплит 66 секций → ts/html/scss</div><p class="d">+ декомпозиция tokens-reference (1441 стр → компонент + 5 data).</p><div class="meta">0f044a5…9ca7c043</div></div>
+      <div class="card done"><div class="t">8 багов компонентов поймано</div><p class="d">loading-фон, pills-радиус, tab count-chip, addon pierce, popover пустая панель, table-border + 2 битые raw-копии.</p></div>
+      <div class="card done"><div class="t">Финальный аудит копий → ноль</div><p class="d">`.badge/.spinner/.card/.skeleton` копий = 0.</p><div class="meta">454a06a · f5863d5 · 85be650</div></div>
+      <div class="card done"><div class="t">Маркер «ожидает API»</div><p class="d">Чип `&lt;docs-await&gt;` на by-design specimens.</p><div class="meta">93570ee</div></div>
+      <div class="card done"><div class="t">Финальная токен-чистка</div><p class="d">`--z100..z400`→`--shadow-1..4`; `--text-on-media-shadow` в tokens-reference; `_forced-states sm/md/lg` moot.</p><div class="meta">0f0bfd7</div></div>
+      <div class="card done"><div class="t">DS-HANDOFF — 7/7 портировано</div><p class="d">badge/empty-state резолверы + `success`; input `--ds-input-fs`/`enterKeyHint`/`inputMode`/`(blurred)`; `--text-on-media[-shadow]`; icon-button `outline`; `ds-bottom-sheet`.</p><div class="meta">сверено с src/lib</div></div>
+      <div class="card done"><div class="t">DS-docs single-file + staleness</div><p class="d">Артефакт-трек отработал; `_showcase-mirrors.scss` снесён.</p><div class="meta">317ee54</div></div>
+    </div>
+  </details>
+
+  <details class="done-panel">
+    <summary class="lane-head"><h2>✅ Сделано · релиз / инфра / доки</h2><span class="count c-done">6</span><span class="toggle"></span><span class="why">Свёрнуто. Пакет вышел в свет (v0.2.0).</span></summary>
+    <div class="cards">
+      <div class="card done"><div class="t">Релиценз UNLICENSED → MIT</div><p class="d">LICENSE + поля, README. dist/ds под MIT.</p><div class="meta">v0.2.0</div></div>
+      <div class="card done"><div class="t">Release-тулинг + гарды</div><p class="d">preflight, авто-стамп, защита tag↔version и от двойной публикации; beta-канал.</p><div class="meta">tools/preflight.mjs · changelog-release.mjs</div></div>
+      <div class="card done"><div class="t">One-click release pipelines</div><p class="d">release-patch|minor|major|beta; тег `v*` — единственный публикатор.</p><div class="meta">cut-release.sh · publish.sh</div></div>
+      <div class="card done"><div class="t">CI/CD best-practices</div><p class="d">`infrastructure/scripts/*.sh`, bun frozen-lock, PR-валидация (lint report-only).</p><div class="meta">ci-pr.sh</div></div>
+      <div class="card done"><div class="t">homepage + live-доки</div><p class="d">package.homepage + README ссылка.</p><div class="meta">ids-ds.proto.ids-group.co.uk</div></div>
+      <div class="card done"><div class="t">Favicon + тайтл ds-docs</div><p class="d">Bento favicon (svg/.ico/apple-touch) на светлом; `<title>` → «IDS Design System».</p><div class="meta">9d33039</div></div>
+    </div>
+  </details>
 
   <p class="foot">
-    Источник: <span class="tag">docs/todo.md</span> + история коммитов <span class="tag">4b9e0c2…fb24a24</span>.
-    Полные детали и обоснования — в каждом пункте todo.md. Эта доска — навигация, не замена.
+    Источники: <span class="tag">docs/todo.md</span> · <span class="tag">DS-HANDOFF.md</span> (7/7 портировано) · история <span class="tag">4b9e0c2…19ef859</span>.
+    Снято как сделанное: pinkmoon token-миграция, showcase/index.html артефакт (директории нет), MIT-релиценз.
+    Доска — навигация; полные обоснования — в todo.md.
   </p>
 </body>
 </html>
