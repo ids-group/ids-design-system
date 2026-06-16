@@ -74,7 +74,7 @@ This repo contains the library (`src/`) and a documentation app (`ds-docs/`). Th
 docs app is published live at https://ids-ds.proto.ids-group.co.uk/.
 
 ```bash
-npm run build        # build the library into dist/ds
+npm run build:lib    # build the library into dist/ds
 npm start            # serve the docs app
 npm run build:docs   # build the docs app
 ```
