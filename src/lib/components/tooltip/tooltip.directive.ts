@@ -32,8 +32,8 @@ export class TooltipDirective implements OnDestroy {
   @HostListener('mouseenter')
   @HostListener('focus')
   protected onOpen(): void {
-    if (!this.dsTooltip()) return;
-    if (this.timer !== null) clearTimeout(this.timer);
+    if (!this.dsTooltip()) {return;}
+    if (this.timer !== null) {clearTimeout(this.timer);}
     this.timer = window.setTimeout(() => this.show(), this.dsTooltipDelay());
   }
 
@@ -51,18 +51,19 @@ export class TooltipDirective implements OnDestroy {
       .split(' ')
       .filter((id: string) => id && id !== this.tipId)
       .join(' ');
-    if (remaining) host.setAttribute('aria-describedby', remaining);
-    else host.removeAttribute('aria-describedby');
+    if (remaining) {host.setAttribute('aria-describedby', remaining);}
+    else {host.removeAttribute('aria-describedby');}
   }
 
   @HostListener('keydown.escape')
   protected onEscape(): void {
-    if (this.ref) this.onClose();
+    if (this.ref) {this.onClose();}
   }
 
   private show(): void {
     const placement = this.dsTooltipPlacement();
-    const positionStrategy = this.overlay.position()
+    const positionStrategy = this.overlay
+      .position()
       .flexibleConnectedTo(this.host)
       .withPositions([this.positionFor(placement)]);
 
@@ -77,19 +78,46 @@ export class TooltipDirective implements OnDestroy {
     cmpRef.setInput('panelId', this.tipId);
     const host = this.host.nativeElement;
     const existing = host.getAttribute('aria-describedby');
-    host.setAttribute('aria-describedby', existing ? `${existing} ${this.tipId}` : this.tipId);
+    host.setAttribute(
+      'aria-describedby',
+      existing ? `${existing} ${this.tipId}` : this.tipId,
+    );
   }
 
   private positionFor(p: TooltipPlacement) {
     switch (p) {
       case 'top':
-        return { originX: 'center' as const, originY: 'top' as const, overlayX: 'center' as const, overlayY: 'bottom' as const, offsetY: -8 };
+        return {
+          originX: 'center' as const,
+          originY: 'top' as const,
+          overlayX: 'center' as const,
+          overlayY: 'bottom' as const,
+          offsetY: -8,
+        };
       case 'bottom':
-        return { originX: 'center' as const, originY: 'bottom' as const, overlayX: 'center' as const, overlayY: 'top' as const, offsetY: 8 };
+        return {
+          originX: 'center' as const,
+          originY: 'bottom' as const,
+          overlayX: 'center' as const,
+          overlayY: 'top' as const,
+          offsetY: 8,
+        };
       case 'left':
-        return { originX: 'start' as const, originY: 'center' as const, overlayX: 'end' as const, overlayY: 'center' as const, offsetX: -8 };
+        return {
+          originX: 'start' as const,
+          originY: 'center' as const,
+          overlayX: 'end' as const,
+          overlayY: 'center' as const,
+          offsetX: -8,
+        };
       case 'right':
-        return { originX: 'end' as const, originY: 'center' as const, overlayX: 'start' as const, overlayY: 'center' as const, offsetX: 8 };
+        return {
+          originX: 'end' as const,
+          originY: 'center' as const,
+          overlayX: 'start' as const,
+          overlayY: 'center' as const,
+          offsetX: 8,
+        };
     }
   }
 
