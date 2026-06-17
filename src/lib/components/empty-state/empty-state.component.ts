@@ -20,17 +20,19 @@ export class EmptyStateComponent {
 
   protected readonly classes = computed(() => {
     const variant = this.variant();
+
     return variant === 'none' ? 'empty-state' : `empty-state ${variant}`;
   });
 
   protected readonly resolvedIcon = computed<IconName>(() => {
     const explicit = this.icon();
-    if (explicit) return explicit;
+    if (explicit) {return explicit;}
     const variant = this.variant();
-    if (variant === 'error') return 'warn';
-    if (variant === 'locked') return 'lock';
-    if (variant === 'success') return 'success';
-    if (variant === 'loading') return 'package';
+    if (variant === 'error') {return 'warn';}
+    if (variant === 'locked') {return 'lock';}
+    if (variant === 'success') {return 'success';}
+    if (variant === 'loading') {return 'package';}
+
     return 'package';
   });
 }
