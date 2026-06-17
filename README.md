@@ -137,4 +137,4 @@ publishes under the `next` dist-tag (never `latest`).
 
 ## License
 
-[MIT](LICENSE) © IDS Group Ltd
+[MIT](https://bitbucket.org/itband/ids-design-system/src/main/LICENSE) © IDS Group Ltd
