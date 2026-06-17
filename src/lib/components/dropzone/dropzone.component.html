@@ -14,25 +14,67 @@
     [disabled]="disabled()"
     (change)="onPickerChange($event)"
   />
+
   @if (files().length === 0) {
-    <ds-icon name="upload" [size]="24"></ds-icon>
-    <div class="title">Drop files here</div>
-    <div class="hint">or click to browse</div>
+    <ds-icon
+      name="upload"
+      [size]="24"
+    >
+    </ds-icon>
+
+    <div class="title">
+      Drop files here
+    </div>
+
+    <div class="hint">
+      or click to browse
+    </div>
+
     <ng-content select="[hint]"></ng-content>
   } @else {
     <div class="file-list">
       @for (file of files(); track file.id) {
         <div [class]="'file ' + file.state">
-          <ds-icon class="icon" [name]="fileIcon(file.state)" [size]="20"></ds-icon>
+          <ds-icon
+            class="icon"
+            [name]="fileIcon(file.state)"
+            [size]="20"
+          >
+          </ds-icon>
+
           <div class="main">
-            <div class="name">{{ file.name }}</div>
-            <div class="meta">{{ formatSize(file.size) }} · {{ file.state }}</div>
+            <div class="name">
+              {{ file.name }}
+            </div>
+
+            <div class="meta">
+              {{ formatSize(file.size) }} · {{ file.state }}
+            </div>
+
             @if (file.state === 'uploading') {
-              <div class="progress"><div class="progress-fill" [style.width.%]="file.progress"></div></div>
+              <div class="progress">
+                <div
+                  class="progress-fill"
+                  [style.width.%]="file.progress"
+                >
+                </div>
+              </div>
             }
           </div>
-          <button class="remove" type="button" [attr.aria-label]="'Remove ' + file.name" (click)="onRemove(file); $event.preventDefault(); $event.stopPropagation()">
-            <ds-icon name="x" [size]="14"></ds-icon>
+
+          <button
+            class="remove"
+            type="button"
+            [attr.aria-label]="'Remove ' + file.name"
+            (click)="
+              onRemove(file); $event.preventDefault(); $event.stopPropagation()
+            "
+          >
+            <ds-icon
+              name="x"
+              [size]="14"
+            >
+            </ds-icon>
           </button>
         </div>
       }

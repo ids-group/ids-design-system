@@ -43,6 +43,7 @@
   --_dropzone-file-progress:    var(--ds-dropzone-file-progress,    var(--primary));
   --_dropzone-file-success:     var(--ds-dropzone-file-success,     var(--success));
   --_dropzone-file-error:       var(--ds-dropzone-file-error,       var(--error));
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -84,12 +85,12 @@
   &.single { max-width: var(--col-cap-text); }
 
   .title {
-    font: var(--font-weight-bold) var(--font-size-m)/var(--line-height-snug) var(--font-heading);
+    font: var(--font-weight-bold) var(--font-size-m) / var(--line-height-snug) var(--font-heading);
     margin: 0 0 var(--space-1);
   }
 
   .hint {
-    font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
     color: var(--_dropzone-fg);
   }
 
@@ -103,7 +104,7 @@
     border-top: var(--border-width-default) solid var(--border-subtitle);
     align-self: stretch;
     text-align: center;
-    font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+    font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
     color: var(--text-tertiary);
     letter-spacing: var(--letter-spacing-wide);
   }
@@ -126,8 +127,8 @@
 
     .icon { flex-shrink: 0; color: var(--icon-default); }
     .main { flex: 1; min-width: 0; }
-    .name { font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-base) var(--font-sans); color: var(--text-primary); }
-    .meta { font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans); color: var(--text-tertiary); }
+    .name { font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-primary); }
+    .meta { font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans); color: var(--text-tertiary); }
     .progress { height: var(--border-width-strong); background: var(--surface-secondary); border-radius: var(--radius-pill); margin-top: var(--space-1); }
     .progress-fill { height: 100%; background: var(--_dropzone-file-progress); border-radius: var(--radius-pill); transition: width var(--duration-base) var(--ease-standard); }
     .remove {
