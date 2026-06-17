@@ -1,41 +1,100 @@
-<div #trigger class="combo-trigger" [class.open]="isOpen()" (click)="onTriggerClick()">
+<div
+  #trigger
+  class="combo-trigger"
+  [class.open]="isOpen()"
+  (click)="onTriggerClick()"
+>
   @if (multiple()) {
     @for (selectedOption of selectedTags(); track selectedOption.value) {
-      <ds-tag [closable]="true" [closeLabel]="'Remove ' + selectedOption.label" (closed)="remove(selectedOption.value)">{{ selectedOption.label }}</ds-tag>
+      <ds-tag
+        [closable]="true"
+        [closeLabel]="'Remove ' + selectedOption.label"
+        (closed)="remove(selectedOption.value)"
+        >
+        {{ selectedOption.label }}
+      </ds-tag
+      >
     }
   } @else if (displayLabel()) {
-    <span class="combo-value">{{ displayLabel() }}</span>
+    <span class="combo-value">
+      {{ displayLabel() }}
+    </span>
   }
-  <input #filter type="text" class="combo-input"
-         role="combobox"
-         aria-autocomplete="list"
-         [attr.aria-expanded]="isOpen()"
-         [attr.aria-controls]="listboxId"
-         [attr.aria-activedescendant]="activeDescendant()"
-         [attr.aria-label]="ariaLabel() || placeholder()"
-         [value]="query()" (input)="onFilter($event)" (focus)="openPanel()" (keydown)="onKeydown($event)"
-         [placeholder]="placeholderText()" />
-  <ds-icon name="chevronDown" [size]="16" class="combo-chevron" (click)="togglePanel($event)" />
+
+  <input
+    #filter
+    type="text"
+    class="combo-input"
+    role="combobox"
+    aria-autocomplete="list"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-controls]="listboxId"
+    [attr.aria-activedescendant]="activeDescendant()"
+    [attr.aria-label]="ariaLabel() || placeholder()"
+    [value]="query()"
+    [placeholder]="placeholderText()"
+    (input)="onFilter($event)"
+    (focus)="openPanel()"
+    (keydown)="onKeydown($event)"
+  />
+
+  <ds-icon
+    name="chevronDown"
+    class="combo-chevron"
+    [size]="16"
+    (click)="togglePanel($event)"
+  />
 </div>
 
 <ng-template #panel>
-  <ul class="combo-list" role="listbox" [id]="listboxId" [attr.aria-multiselectable]="multiple() ? 'true' : null">
+  <ul
+    class="combo-list"
+    role="listbox"
+    [id]="listboxId"
+    [attr.aria-multiselectable]="multiple() ? 'true' : null"
+  >
     @for (option of filteredOptions(); track option.value; let i = $index) {
-      <li [class]="optionClass(option)" role="option" [id]="optionId(i)"
-          [class.is-active]="i === activeIndex()"
-          [attr.aria-selected]="isSelected(option)"
-          (click)="onPick(option)" (mouseenter)="activeIndex.set(i)">
+      <li
+        role="option"
+        [class]="optionClass(option)"
+        [id]="optionId(i)"
+        [class.is-active]="i === activeIndex()"
+        [attr.aria-selected]="isSelected(option)"
+        (click)="onPick(option)"
+        (mouseenter)="activeIndex.set(i)"
+      >
         @if (multiple()) {
-          <input type="checkbox" class="check" tabindex="-1" aria-hidden="true" [checked]="isSelected(option)" />
+          <input
+            type="checkbox"
+            class="check"
+            tabindex="-1"
+            aria-hidden="true"
+            [checked]="isSelected(option)"
+          />
         }
-        <span>{{ option.label }}</span>
+
+        <span>
+          {{ option.label }}
+        </span>
+
         @if (!multiple() && isSelected(option)) {
-          <ds-icon name="check" class="icon" [size]="14" />
+          <ds-icon
+            name="check"
+            class="icon"
+            [size]="14"
+          />
         }
       </li>
     }
+
     @if (filteredOptions().length === 0) {
-      <li class="empty t-s" role="option" [attr.aria-disabled]="true">No matches</li>
+      <li
+        class="empty t-s"
+        role="option"
+        [attr.aria-disabled]="true"
+      >
+        No matches
+      </li>
     }
   </ul>
 </ng-template>
