@@ -1,10 +1,18 @@
-import { Component, TemplateRef, ViewEncapsulation, input, viewChild } from '@angular/core';
+import {
+  Component,
+  TemplateRef,
+  ViewEncapsulation,
+  input,
+  viewChild,
+} from '@angular/core';
 import type { IconName } from '../../icons/icons.data';
 
 @Component({
   selector: 'ds-tab',
   standalone: true,
-  template: `<ng-template #content><ng-content></ng-content></ng-template>`,
+  template: `<ng-template #content>
+  <ng-content></ng-content>
+</ng-template>`,
   styles: [':host { display: none; }'],
   encapsulation: ViewEncapsulation.Emulated,
 })

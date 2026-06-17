@@ -1,4 +1,7 @@
-<div [class]="tabsClasses()" role="tablist">
+<div
+  role="tablist"
+  [class]="tabsClasses()"
+>
   @for (tab of tabs(); track $index) {
     <button
       type="button"
@@ -13,21 +16,32 @@
       (keydown)="onKeydown($event, $index)"
     >
       @if (tab.icon()) {
-        <ds-icon [name]="tab.icon()!" [size]="14"></ds-icon>
+        <ds-icon
+          [name]="tab.icon()!"
+          [size]="14"
+        >
+        </ds-icon>
       }
-      <span>{{ tab.label() }}</span>
+
+      <span>
+        {{ tab.label() }}
+      </span>
+
       @if (tab.count() !== null) {
-        <span class="badge neutral count">{{ tab.count() }}</span>
+        <span class="badge neutral count">
+          {{ tab.count() }}
+        </span>
       }
     </button>
   }
 </div>
+
 <div
   class="panel"
   role="tabpanel"
+  tabindex="0"
   [id]="panelId(selectedIndex())"
   [attr.aria-labelledby]="tabId(selectedIndex())"
-  tabindex="0"
 >
   @if (selectedTemplate(); as tpl) {
     <ng-container *ngTemplateOutlet="tpl"></ng-container>
