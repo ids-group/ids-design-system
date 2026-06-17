@@ -1,4 +1,10 @@
-import { Component, ViewEncapsulation, contentChildren, effect, signal } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  contentChildren,
+  effect,
+  signal,
+} from '@angular/core';
 import { MenuItemComponent } from './menu-item.component';
 
 @Component({
@@ -20,7 +26,7 @@ export class MenuComponent {
     // Roving tabindex: exactly one enabled item is tabbable (0), the rest -1.
     effect(() => {
       const items = this.items();
-      if (!items.length) return;
+      if (!items.length) {return;}
       let index = this.activeIndex();
       if (index >= items.length || items[index].disabled()) {
         index = items.findIndex((item) => !item.disabled());
@@ -31,9 +37,11 @@ export class MenuComponent {
 
   protected onKeydown(event: KeyboardEvent): void {
     const items = this.items();
-    if (!items.length) return;
+    if (!items.length) {return;}
     const count = items.length;
-    const focused = items.findIndex((item) => item.contains(event.target as Node | null));
+    const focused = items.findIndex((item) =>
+      item.contains(event.target as Node | null),
+    );
     const from = focused >= 0 ? focused : this.activeIndex();
 
     // Single-character type-ahead: jump to the next enabled item whose label
@@ -47,16 +55,26 @@ export class MenuComponent {
     ) {
       this.typeAhead(event.key, from, items);
       event.preventDefault();
+
       return;
     }
 
     let next: number;
     switch (event.key) {
-      case 'ArrowDown': next = (from + 1) % count; break;
-      case 'ArrowUp':   next = (from - 1 + count) % count; break;
-      case 'Home':      next = 0; break;
-      case 'End':       next = count - 1; break;
-      default: return;
+      case 'ArrowDown':
+        next = (from + 1) % count;
+        break;
+      case 'ArrowUp':
+        next = (from - 1 + count) % count;
+        break;
+      case 'Home':
+        next = 0;
+        break;
+      case 'End':
+        next = count - 1;
+        break;
+      default:
+        return;
     }
     event.preventDefault();
     // Skip disabled items in the travel direction (guard against all-disabled).
@@ -66,11 +84,15 @@ export class MenuComponent {
       next = (next + step + count) % count;
       guard++;
     }
-    if (!items[next] || items[next].disabled()) return;
+    if (!items[next] || items[next].disabled()) {return;}
     this.focusItem(next);
   }
 
-  private typeAhead(char: string, from: number, items: readonly MenuItemComponent[]): void {
+  private typeAhead(
+    char: string,
+    from: number,
+    items: readonly MenuItemComponent[],
+  ): void {
     const needle = char.toLowerCase();
     const count = items.length;
     for (let offset = 1; offset <= count; offset++) {
@@ -78,6 +100,7 @@ export class MenuComponent {
       const item = items[i];
       if (!item.disabled() && item.label().toLowerCase().startsWith(needle)) {
         this.focusItem(i);
+
         return;
       }
     }

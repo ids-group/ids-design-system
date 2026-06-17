@@ -12,25 +12,27 @@
   background: transparent;
   border: 0;
   border-radius: var(--radius-md);
-  font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+  font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--_menu-item-fg);
   cursor: pointer;
   text-align: left;
   transition: background var(--duration-fast) var(--ease-standard);
+
+  &:hover { background: var(--surface-secondary); }
+
+  &:focus-visible { outline: none; box-shadow: inset var(--focus-ring); }
+
+  &[disabled] {
+    color: var(--text-disabled);
+    cursor: not-allowed;
+    opacity: var(--opacity-muted);
+
+    &:hover { background: transparent; }
+  }
+
+  &.danger {
+    color: var(--error-text);
+
+    &:hover { background: var(--error-subtitle); }
+  }
 }
-
-.menu-item:hover { background: var(--surface-secondary); }
-
-.menu-item:focus-visible { outline: none; box-shadow: inset var(--focus-ring); }
-
-.menu-item[disabled] {
-  color: var(--text-disabled);
-  cursor: not-allowed;
-  opacity: var(--opacity-muted);
-}
-
-.menu-item[disabled]:hover { background: transparent; }
-
-.menu-item.danger { color: var(--error-text); }
-
-.menu-item.danger:hover { background: var(--error-subtitle); }

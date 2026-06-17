@@ -9,9 +9,20 @@
   (click)="onClick($event)"
 >
   @if (icon()) {
-    <ds-icon [name]="icon()!" [size]="16"></ds-icon>
+    <ds-icon
+      [name]="icon()!"
+      [size]="16"
+    >
+    </ds-icon>
   } @else {
-    <span class="menu-item-icon"><ng-content select="[icon]"></ng-content></span>
+    <span class="menu-item-icon"
+      >
+      <ng-content select="[icon]"></ng-content
+    >
+    </span>
   }
-  <span><ng-content></ng-content></span>
+
+  <span>
+    <ng-content></ng-content>
+  </span>
 </button>

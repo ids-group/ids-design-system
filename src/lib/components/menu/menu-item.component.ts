@@ -1,4 +1,13 @@
-import { Component, ElementRef, ViewEncapsulation, inject, input, output, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewEncapsulation,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
 import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
@@ -18,7 +27,8 @@ export class MenuItemComponent {
   // The containing overlay (e.g. popover), if any — selecting an item closes it.
   // Optional, so menu-items also work standalone.
   private readonly closeRef = inject(DsOverlayCloseRef, { optional: true });
-  private readonly button = viewChild.required<ElementRef<HTMLButtonElement>>('button');
+  private readonly button =
+    viewChild.required<ElementRef<HTMLButtonElement>>('button');
 
   readonly icon = input<IconName | null>(null);
   readonly disabled = input<boolean>(false);
@@ -47,7 +57,7 @@ export class MenuItemComponent {
   }
 
   protected onClick(event: MouseEvent): void {
-    if (this.disabled()) return;
+    if (this.disabled()) {return;}
     this.pressed.emit(event);
     this.closeRef?.close();
   }
