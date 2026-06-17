@@ -22,6 +22,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **Breaking:** renamed the subtle semantic color tokens `--*-subtle` → `--*-subtitle`
   (border, primary, secondary, tertiary, success, warning, error, info). Consumers
   referencing these tokens must rename.
+- Clarified theme re-skin guidance in the shipped `themes/README`: brand roles
+  retint automatically from the `--blue` ramp, but a fully calibrated brand may
+  set the `--primary-*` roles directly to hand-picked hex.
 - Relicensed from proprietary (UNLICENSED) to MIT.
 
 ## 0.1.0 — 2026-06-12
