@@ -1,3 +1,20 @@
-<ds-icon name="map" [size]="14" />
-<span><span class="mark">{{ prefix() }}</span>{{ address() }}</span>
-@if (copyable()) { <ds-icon name="copy" [size]="12" /> }
+<ds-icon
+  name="map"
+  [size]="14"
+/>
+
+<span
+  >
+  <span class="mark">
+    {{ prefix() }}
+  </span
+  >{{ address() }}
+</span
+>
+
+@if (copyable()) {
+  <ds-icon
+    name="copy"
+    [size]="12"
+  />
+}

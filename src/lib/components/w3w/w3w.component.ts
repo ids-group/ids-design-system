@@ -11,7 +11,8 @@ import { IconComponent } from '../../icons/icon.component';
   host: {
     '[attr.role]': "copyable() ? 'button' : null",
     '[attr.tabindex]': 'copyable() ? 0 : null',
-    '[attr.aria-label]': "copyable() ? ('Copy what3words address ' + prefix() + address()) : null",
+    '[attr.aria-label]':
+      "copyable() ? ('Copy what3words address ' + prefix() + address()) : null",
     '(click)': 'onCopy()',
     '(keydown.enter)': 'onCopy()',
     '(keydown.space)': 'onKeyActivate($event)',
@@ -29,7 +30,7 @@ export class W3wComponent {
   }
 
   protected onCopy(): void {
-    if (!this.copyable()) return;
+    if (!this.copyable()) {return;}
     const text = `${this.prefix()}${this.address()}`;
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
       void navigator.clipboard.writeText(text);
