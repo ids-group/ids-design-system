@@ -1,4 +1,10 @@
-import { Component, ViewEncapsulation, computed, input, model } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  computed,
+  input,
+  model,
+} from '@angular/core';
 
 @Component({
   selector: 'ds-switch',
@@ -16,6 +22,7 @@ export class SwitchComponent {
 
   protected readonly classes = computed(() => {
     const variant = this.variant();
+
     return variant === 'default' ? 'switch' : `switch ${variant}`;
   });
 
