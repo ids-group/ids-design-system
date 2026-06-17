@@ -14,7 +14,8 @@ export class AvatarGroupComponent {
   protected readonly overflow = computed<number | null>(() => {
     const total = this.total();
     const max = this.max();
-    if (total === null) return null;
+    if (total === null) {return null;}
+
     return total > max ? total - max : null;
   });
 }
