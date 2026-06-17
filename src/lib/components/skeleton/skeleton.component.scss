@@ -38,18 +38,9 @@
     #000 50%,
     transparent 70%
   );
-  mask-image: linear-gradient(
-    90deg,
-    transparent 30%,
-    #000 50%,
-    transparent 70%
-  );
   mask-size: 200vw 100%;
-  mask-size: 200vw 100%;
-  mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-attachment: fixed;
   mask-attachment: fixed;
-  mask-position: var(--skeleton-shimmer-x, 100vw) 0;
   mask-position: var(--skeleton-shimmer-x, 100vw) 0;
 }
