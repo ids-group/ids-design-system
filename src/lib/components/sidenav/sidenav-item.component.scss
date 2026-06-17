@@ -23,7 +23,7 @@
   border-radius: var(--_sidenav-item-radius);
   color: var(--_sidenav-item-fg);
   text-decoration: none;
-  font: var(--font-weight-semibold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+  font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   cursor: pointer;
   transition:
     background var(--duration-fast) var(--ease-standard),
@@ -55,7 +55,7 @@
   .icon {
     width: var(--icon-lg);
     height: var(--icon-lg);
-    color: currentColor;
+    color: currentcolor;
     flex-shrink: 0;
   }
 
@@ -76,7 +76,7 @@
     border-radius: var(--radius-pill);
     background: var(--surface-secondary);
     color: var(--text-secondary);
-    font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+    font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
     letter-spacing: var(--letter-spacing-wide);
     margin-left: auto;
   }
@@ -97,7 +97,7 @@
     flex-shrink: 0;
   }
 
-  &.active .trailing { color: currentColor; }
+  &.active .trailing { color: currentcolor; }
 
   &.disabled {
     color: var(--text-disabled);

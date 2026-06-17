@@ -20,7 +20,7 @@
   --_sidenav-group-fg: var(--ds-sidenav-group-fg, var(--text-tertiary));
 
   display: block;
-  font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+  font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
   color: var(--_sidenav-group-fg);
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-wider);
@@ -37,7 +37,7 @@
   background: transparent;
   border-radius: var(--radius-md);
   color: var(--text-primary);
-  font: var(--font-weight-semibold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+  font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   text-align: left;
   cursor: pointer;
   transition:

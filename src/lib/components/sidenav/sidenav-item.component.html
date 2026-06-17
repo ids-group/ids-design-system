@@ -5,9 +5,9 @@
      #content template so the inner markup isn't duplicated. -->
 @if (routerLink()) {
   <a
-    [routerLink]="disabled() ? null : routerLink()"
-    routerLinkActive="active"
     #rla="routerLinkActive"
+    routerLinkActive="active"
+    [routerLink]="disabled() ? null : routerLink()"
     [class]="linkClasses()"
     [attr.aria-label]="label()"
     [attr.aria-current]="rla.isActive ? 'page' : null"
@@ -31,17 +31,34 @@
 
 <ng-template #content>
   @if (icon()) {
-    <ds-icon class="icon" [name]="icon()!" [size]="20"></ds-icon>
+    <ds-icon
+      class="icon"
+      [name]="icon()!"
+      [size]="20"
+    >
+    </ds-icon>
   } @else {
-    <span class="icon"><ng-content select="[icon]"></ng-content></span>
+    <span class="icon">
+      <ng-content select="[icon]"></ng-content>
+    </span>
   }
+
   @if (label()) {
-    <span class="item-label">{{ label() }}</span>
+    <span class="item-label">
+      {{ label() }}
+    </span>
   }
-  <span class="trailing"><ng-content select="[trailing]"></ng-content></span>
+
+  <span class="trailing">
+    <ng-content select="[trailing]"></ng-content>
+  </span>
+
   @if (badge() !== null) {
-    <span class="count">{{ badge() }}</span>
+    <span class="count">
+      {{ badge() }}
+    </span>
   }
+
   @if (hasAlert()) {
     <span class="alert"></span>
   }

@@ -6,10 +6,19 @@
   [attr.aria-controls]="bodyId"
   (click)="toggle()"
 >
-  <span>{{ title() }}</span>
+  <span>
+    {{ title() }}
+  </span>
+
   <ng-content select="[badge]"></ng-content>
-  <ds-icon name="chevronRight" class="chev" [size]="16" />
+
+  <ds-icon
+    name="chevronRight"
+    class="chev"
+    [size]="16"
+  />
 </button>
+
 <div
   class="body"
   role="region"
@@ -18,5 +27,7 @@
   [class.is-open]="expanded()"
   [attr.inert]="expanded() ? null : ''"
 >
-  <div class="body-inner"><ng-content></ng-content></div>
+  <div class="body-inner">
+    <ng-content></ng-content>
+  </div>
 </div>

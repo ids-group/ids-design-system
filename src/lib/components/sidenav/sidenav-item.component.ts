@@ -1,5 +1,11 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, ViewEncapsulation, booleanAttribute, computed, input } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  computed,
+  input,
+} from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
@@ -29,8 +35,9 @@ export class SidenavItemComponent {
 
   protected readonly linkClasses = computed(() => {
     const parts = ['item'];
-    if (this.active()) parts.push('active');
-    if (this.disabled()) parts.push('disabled');
+    if (this.active()) {parts.push('active');}
+    if (this.disabled()) {parts.push('disabled');}
+
     return parts.join(' ');
   });
 }

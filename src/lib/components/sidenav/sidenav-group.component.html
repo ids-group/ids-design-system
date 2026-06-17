@@ -5,30 +5,47 @@
   <button
     type="button"
     class="group-header"
-    (click)="toggle()"
     [attr.aria-expanded]="expanded()"
+    (click)="toggle()"
   >
     @if (icon()) {
-      <ds-icon class="group-icon" [name]="icon()!" [size]="18"></ds-icon>
+      <ds-icon
+        class="group-icon"
+        [name]="icon()!"
+        [size]="18"
+      >
+      </ds-icon>
     } @else {
       <!-- `[ds-group-icon]` is selector-distinct from `[icon]` slots used on
            sidenav-item children, so projected icons don't get swallowed when
            a consumer puts items inside the group. -->
-      <span class="group-icon"><ng-content select="[ds-group-icon]"></ng-content></span>
+      <span class="group-icon"
+        >
+        <ng-content select="[ds-group-icon]"></ng-content
+      >
+      </span>
     }
+
     @if (label()) {
-      <span class="group-title">{{ label() }}</span>
+      <span class="group-title">
+        {{ label() }}
+      </span>
     }
+
     <ds-icon
       class="group-caret"
-      [class.open]="expanded()"
       name="chevronDown"
+      [class.open]="expanded()"
       [size]="14"
-    ></ds-icon>
+    >
+    </ds-icon>
   </button>
 } @else if (label()) {
-  <span class="group-label">{{ label() }}</span>
+  <span class="group-label">
+    {{ label() }}
+  </span>
 }
+
 <div
   class="group-body"
   [class.hidden]="expandable() && !expanded()"
