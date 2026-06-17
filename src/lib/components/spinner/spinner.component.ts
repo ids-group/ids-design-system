@@ -7,7 +7,7 @@ import type { SpinnerSize } from './spinner.types';
   template: '',
   styleUrl: './spinner.component.scss',
   host: {
-    'role': 'status',
+    role: 'status',
     'aria-label': 'Loading',
     '[class.sm]': "size() === 'sm'",
     '[class.lg]': "size() === 'lg'",
