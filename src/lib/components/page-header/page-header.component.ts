@@ -17,9 +17,10 @@ export class PageHeaderComponent {
 
   protected readonly classes = computed(() => {
     const parts = ['page-header'];
-    if (this.compact()) parts.push('compact');
-    if (this.divider()) parts.push('with-divider');
-    if (this.metaDivider()) parts.push('with-meta-divider');
+    if (this.compact()) {parts.push('compact');}
+    if (this.divider()) {parts.push('with-divider');}
+    if (this.metaDivider()) {parts.push('with-meta-divider');}
+
     return parts.join(' ');
   });
 }
