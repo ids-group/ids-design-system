@@ -40,6 +40,7 @@
   );
   mask-size: 200vw 100%;
   mask-repeat: no-repeat;
+
   /* Intent: anchor the mask to the viewport so every skeleton shares one
      page-wide sweep. NB: mask-attachment was dropped from the spec and is a
      no-op in all current browsers — kept as documented intent only; the

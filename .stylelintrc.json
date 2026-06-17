@@ -7,7 +7,19 @@
     ],
     "selector-type-no-unknown": [
       true,
-      { "ignoreTypes": ["router-outlet", "/^ds-/", "/^app-/"] }
+      {
+        "ignoreTypes": [
+          "router-outlet",
+          "/^ds-/",
+          "/^app-/",
+          "/^docs-/",
+          "/^page-/",
+          "/^section-/",
+          "/^pattern-/",
+          "/^tweaks-/",
+          "/^practice-/"
+        ]
+      }
     ],
     "at-rule-no-unknown": null,
     "scss/at-rule-no-unknown": [
