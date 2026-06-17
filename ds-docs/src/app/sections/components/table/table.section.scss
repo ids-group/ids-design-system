@@ -57,4 +57,4 @@
 
     /* State pin — hover on a sortable header reads the component's own resolvers;
        --text-secondary is a bare token (no --_* resolver for header hover fg). */
-    :host ::ng-deep .pin-hover-th .table thead th { background: var(--_table-row-hover-bg); color: var(--text-secondary); }
+    :host ::ng-deep .pin-hover-th .table thead th { background-color: var(--_table-row-hover-bg-color); color: var(--text-secondary); }

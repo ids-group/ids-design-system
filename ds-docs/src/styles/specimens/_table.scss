@@ -7,23 +7,23 @@
    ============================================================ */
 .scroll-wrap {
   --_table-radius: var(--ds-table-radius, var(--radius-xl));
-  --_table-bg:     var(--ds-table-bg,     var(--surface-default));
+  --_table-bg-color:     var(--ds-table-bg-color,     var(--surface-default));
 
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   border-radius: var(--_table-radius);
-  background: var(--_table-bg);
+  background-color: var(--_table-bg-color);
 }
 
 .table {
   /* Per-component CSS tokens — defaults route through global semantic tokens.
      Aligned with ds/src/lib/components/table/table.component.scss. */
-  --_table-bg:              var(--ds-table-bg,              var(--surface-default));
-  --_table-row-hover-bg:    var(--ds-table-row-hover-bg,    var(--surface-secondary));
-  --_table-row-selected-bg: var(--ds-table-row-selected-bg, var(--primary-subtitle));
-  --_table-head-bg:         var(--ds-table-head-bg,         var(--surface-secondary));
+  --_table-bg-color:              var(--ds-table-bg-color,              var(--surface-default));
+  --_table-row-hover-bg-color:    var(--ds-table-row-hover-bg-color,    var(--surface-secondary));
+  --_table-row-selected-bg-color: var(--ds-table-row-selected-bg-color, var(--primary-subtitle));
+  --_table-head-bg-color:         var(--ds-table-head-bg-color,         var(--surface-secondary));
   --_table-head-fg:         var(--ds-table-head-fg,         var(--text-tertiary));
   --_table-divider:         var(--ds-table-divider,         var(--border-divider));
   --_table-sort-active-fg:  var(--ds-table-sort-active-fg,  var(--primary));
@@ -35,7 +35,7 @@
   border-collapse: collapse;
   font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
   color: var(--text-primary);
-  background: var(--_table-bg);
+  background-color: var(--_table-bg-color);
 
   thead th {
     text-align: left;
@@ -44,7 +44,7 @@
     letter-spacing: var(--letter-spacing-wider);
     text-transform: uppercase;
     color: var(--_table-head-fg);
-    background: var(--_table-head-bg);
+    background-color: var(--_table-head-bg-color);
     border-bottom: var(--border-width-default) solid var(--_table-divider);
     white-space: nowrap;
     position: sticky;
@@ -114,8 +114,8 @@
 
     tr {
       &:last-child td { box-shadow: none; }
-      &:hover td { background: var(--_table-row-hover-bg); }
-      &.selected td { background: var(--_table-row-selected-bg); }
+      &:hover td { background-color: var(--_table-row-hover-bg-color); }
+      &.selected td { background-color: var(--_table-row-selected-bg-color); }
       &.clickable { cursor: pointer; }
     }
   }
@@ -126,8 +126,8 @@
   }
 
   /* Zebra rows — odd-row tint for dense scans. */
-  &.zebra tbody tr:nth-child(odd) td { background: var(--_table-row-hover-bg); }
-  &.zebra tbody tr:hover td { background: var(--_table-row-selected-bg); }
+  &.zebra tbody tr:nth-child(odd) td { background-color: var(--_table-row-hover-bg-color); }
+  &.zebra tbody tr:hover td { background-color: var(--_table-row-selected-bg-color); }
 
   &.skeleton-mode {
     tbody tr:hover td { background: transparent; cursor: default; }
@@ -156,10 +156,10 @@
     background: var(--neutral-700);
   }
   ds-button {
-    --ds-button-bg: transparent;
+    --ds-button-bg-color: transparent;
     --ds-button-fg: var(--neutral-0);
-    --ds-button-bg-hover: var(--neutral-800);
-    --ds-button-bg-active: var(--neutral-800);
+    --ds-button-bg-color-hover: var(--neutral-800);
+    --ds-button-bg-color-active: var(--neutral-800);
     --ds-button-border: transparent;
   }
 }

@@ -5,7 +5,7 @@
 .banner {
   /* Public --ds-banner-* are read with fallbacks, never declared — consumer
      overrides inherit in. One-shot tokens are read inline at the usage site. */
-  --_banner-bg:        var(--ds-banner-bg,        var(--info-subtitle));
+  --_banner-bg-color:        var(--ds-banner-bg-color,        var(--info-subtitle));
   --_banner-fg:        var(--ds-banner-fg,        var(--info-text));
   --_banner-bar:       var(--ds-banner-bar,       var(--info));
   --_banner-pad-y:     var(--ds-banner-pad-y,     var(--space-3));
@@ -20,7 +20,7 @@
   gap: var(--space-3);
   padding: var(--_banner-pad-y) var(--_banner-pad-x);
   border-radius: var(--_banner-radius);
-  background: var(--_banner-bg);
+  background-color: var(--_banner-bg-color);
   color: var(--_banner-fg);
 
   :host(:not(.no-rail)) & {
@@ -29,27 +29,27 @@
 
   &.success {
     --_banner-bar: var(--ds-banner-bar, var(--success));
-    --_banner-bg:  var(--ds-banner-bg,  var(--success-subtitle));
+    --_banner-bg-color:  var(--ds-banner-bg-color,  var(--success-subtitle));
     --_banner-fg:  var(--ds-banner-fg,  var(--success-text));
   }
   &.warning {
     --_banner-bar: var(--ds-banner-bar, var(--warning));
-    --_banner-bg:  var(--ds-banner-bg,  var(--warning-subtitle));
+    --_banner-bg-color:  var(--ds-banner-bg-color,  var(--warning-subtitle));
     --_banner-fg:  var(--ds-banner-fg,  var(--warning-text));
   }
   &.severe {
     --_banner-bar: var(--ds-banner-bar, var(--warning-hover));
-    --_banner-bg:  var(--ds-banner-bg,  var(--warning-muted));
+    --_banner-bg-color:  var(--ds-banner-bg-color,  var(--warning-muted));
     --_banner-fg:  var(--ds-banner-fg,  var(--warning-text));
   }
   &.error {
     --_banner-bar: var(--ds-banner-bar, var(--error));
-    --_banner-bg:  var(--ds-banner-bg,  var(--error-subtitle));
+    --_banner-bg-color:  var(--ds-banner-bg-color,  var(--error-subtitle));
     --_banner-fg:  var(--ds-banner-fg,  var(--error-text));
   }
   &.neutral {
     --_banner-bar: var(--ds-banner-bar, var(--border-strong));
-    --_banner-bg:  var(--ds-banner-bg,  var(--surface-secondary));
+    --_banner-bg-color:  var(--ds-banner-bg-color,  var(--surface-secondary));
     --_banner-fg:  var(--ds-banner-fg,  var(--text-secondary));
   }
 

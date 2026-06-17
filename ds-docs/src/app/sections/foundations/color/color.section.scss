@@ -36,7 +36,7 @@
     .surface-cell__label { font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans); letter-spacing: var(--letter-spacing-wider); text-transform: uppercase; color: var(--text-tertiary); }
     .surface-cell--select { background: var(--surface-default); }
     .surface-cell__sample { color: var(--text-secondary); margin: 0; }
-    .surface-cell__selected { background: var(--select-bg); color: var(--text-primary); padding: 0 var(--space-0-5); }
+    .surface-cell__selected { background-color: var(--select-bg-color); color: var(--text-primary); padding: 0 var(--space-0-5); }
     .surface-cell--inverted { border-color: var(--border-inverted); }
     .surface-cell--inverted .surface-cell__label { color: var(--neutral-300); }
     .surface-cell--inverted code { color: var(--neutral-400); }

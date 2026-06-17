@@ -52,5 +52,5 @@
     /* focus: --focus-ring and --radius-sm are bare tokens (no --_* resolver) */
     :host ::ng-deep .pin-focus .tab:not(.active) { outline: none; box-shadow: var(--focus-ring); border-radius: var(--radius-sm); }
     /* pills: hover fills with brand-subtle tint */
-    :host ::ng-deep .pin-hover .tabs.pills .tab:not(.active) { background: var(--_tab-pill-bg-hover); color: var(--_tab-fg-hover); }
+    :host ::ng-deep .pin-hover .tabs.pills .tab:not(.active) { background-color: var(--_tab-pill-bg-color-hover); color: var(--_tab-fg-hover); }
     :host ::ng-deep .pin-focus .tabs.pills .tab:not(.active) { outline: none; box-shadow: var(--focus-ring); border-radius: var(--radius-sm); }

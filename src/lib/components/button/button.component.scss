@@ -18,16 +18,16 @@
   /* Public --ds-button-* are read with fallbacks, never declared — consumer
      overrides inherit in. Hover/active/halo derive from the resolved bg
      (theme hover/pressed recipe: 88%/76% + black) unless set individually. */
-  --_button-bg:        var(--ds-button-bg,        var(--primary));
-  --_button-bg-hover:  var(--ds-button-bg-hover,  color-mix(in srgb, var(--_button-bg) 88%, black));
-  --_button-bg-active: var(--ds-button-bg-active, color-mix(in srgb, var(--_button-bg) 76%, black));
+  --_button-bg-color:        var(--ds-button-bg-color,        var(--primary));
+  --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  color-mix(in srgb, var(--_button-bg-color) 88%, black));
+  --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--_button-bg-color) 76%, black));
   --_button-fg:        var(--ds-button-fg,        var(--primary-on));
   --_button-border:    var(--ds-button-border,    transparent);
   --_button-focus-shadow: var(--ds-button-focus-shadow, var(--focus-ring));
   --_button-pressed-shadow: var(--ds-button-pressed-shadow,
-                              0 0 0 3px color-mix(in srgb, var(--_button-bg-active) 35%, transparent));
+                              0 0 0 3px color-mix(in srgb, var(--_button-bg-color-active) 35%, transparent));
   --_button-radius:    var(--ds-button-radius,    var(--radius-md));
-  --_button-bg-disabled: var(--ds-button-bg-disabled, var(--surface-disabled));
+  --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, var(--surface-disabled));
   --_button-fg-disabled: var(--ds-button-fg-disabled, var(--text-disabled));
 
   display: inline-flex;
@@ -37,7 +37,7 @@
   font: var(--font-weight-extrabold) var(--font-size-m) / var(--line-height-flat) var(--font-sans);
   letter-spacing: var(--letter-spacing-wide);
   color: var(--_button-fg);
-  background: var(--_button-bg);
+  background-color: var(--_button-bg-color);
   border: var(--border-width-default) solid var(--_button-border);
   border-radius: var(--_button-radius);
   padding: 0 var(--space-5);
@@ -53,12 +53,12 @@
     box-shadow var(--duration-fast) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard);
 
-  &:hover  { background: var(--_button-bg-hover); }
-  &:active { background: var(--_button-bg-active); box-shadow: var(--_button-pressed-shadow); }
+  &:hover  { background-color: var(--_button-bg-color-hover); }
+  &:active { background-color: var(--_button-bg-color-active); box-shadow: var(--_button-pressed-shadow); }
   &:focus-visible { outline: none; box-shadow: var(--_button-focus-shadow); z-index: var(--btn-focus-z); }
 
   &[disabled] {
-    background: var(--_button-bg-disabled);
+    background-color: var(--_button-bg-color-disabled);
     color: var(--_button-fg-disabled);
     border-color: transparent;
     cursor: not-allowed;
@@ -112,42 +112,42 @@
   /* Variants re-bind the resolvers (consumer token still wins). Tonal/neutral
      ones pin ramp picks — a black mix into pastel tints desaturates. */
   &.secondary {
-    --_button-bg:        var(--ds-button-bg,        var(--primary-muted));
+    --_button-bg-color:        var(--ds-button-bg-color,        var(--primary-muted));
     --_button-fg:        var(--ds-button-fg,        var(--primary-strong));
-    --_button-bg-hover:  var(--ds-button-bg-hover,  var(--primary-muted-strong));
-    --_button-bg-active: var(--ds-button-bg-active, var(--primary-muted-strong));
+    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--primary-muted-strong));
+    --_button-bg-color-active: var(--ds-button-bg-color-active, var(--primary-muted-strong));
   }
   &.tertiary {
-    --_button-bg:        var(--ds-button-bg,        transparent);
+    --_button-bg-color:        var(--ds-button-bg-color,        transparent);
     --_button-fg:        var(--ds-button-fg,        var(--primary-strong));
-    --_button-bg-hover:  var(--ds-button-bg-hover,  var(--primary-subtitle));
-    --_button-bg-active: var(--ds-button-bg-active, var(--primary-muted));
+    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--primary-subtitle));
+    --_button-bg-color-active: var(--ds-button-bg-color-active, var(--primary-muted));
   }
   &.outline {
-    --_button-bg:        var(--ds-button-bg,        var(--surface-default));
+    --_button-bg-color:        var(--ds-button-bg-color,        var(--surface-default));
     --_button-fg:        var(--ds-button-fg,        var(--text-primary));
     --_button-border:    var(--ds-button-border,    var(--border-default));
-    --_button-bg-hover:  var(--ds-button-bg-hover,  var(--surface-secondary));
-    --_button-bg-active: var(--ds-button-bg-active, var(--surface-secondary));
+    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--surface-secondary));
+    --_button-bg-color-active: var(--ds-button-bg-color-active, var(--surface-secondary));
   }
   &.error {
-    --_button-bg:           var(--ds-button-bg,           var(--error));
+    --_button-bg-color:           var(--ds-button-bg-color,           var(--error));
     --_button-focus-shadow: var(--ds-button-focus-shadow, var(--focus-ring-error));
   }
   &.success {
-    --_button-bg: var(--ds-button-bg, var(--success));
+    --_button-bg-color: var(--ds-button-bg-color, var(--success));
     --_button-fg: var(--ds-button-fg, var(--text-on-success));
   }
   &.warning {
-    --_button-bg: var(--ds-button-bg, var(--warning));
+    --_button-bg-color: var(--ds-button-bg-color, var(--warning));
     --_button-fg: var(--ds-button-fg, var(--text-on-warning));
   }
 
   &.text {
-    --_button-bg:        var(--ds-button-bg,        transparent);
+    --_button-bg-color:        var(--ds-button-bg-color,        transparent);
     --_button-fg:        var(--ds-button-fg,        var(--text-link));
-    --_button-bg-hover:  var(--ds-button-bg-hover,  transparent);
-    --_button-bg-active: var(--ds-button-bg-active, transparent);
+    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  transparent);
+    --_button-bg-color-active: var(--ds-button-bg-color-active, transparent);
 
     padding: 0; height: auto; width: auto;
     text-decoration: underline;
@@ -162,7 +162,7 @@
 
     /* The [disabled] attr is set while loading — keep the variant fill, not
        the disabled gray; the spinner takes the variant's label color. */
-    background: var(--_button-bg);
+    background-color: var(--_button-bg-color);
     border-color: var(--_button-border);
 
     &::after {

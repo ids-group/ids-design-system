@@ -36,9 +36,9 @@
 .dropzone {
   /* Per-component CSS tokens — defaults route through global semantic tokens.
      Aligned with ds/src/lib/components/dropzone/dropzone.component.scss. */
-  --_dropzone-bg:            var(--ds-dropzone-bg,            var(--surface-default));
-  --_dropzone-bg-hover:      var(--ds-dropzone-bg-hover,      var(--primary-subtitle));
-  --_dropzone-bg-active:     var(--ds-dropzone-bg-active,     var(--primary-subtitle));
+  --_dropzone-bg-color:            var(--ds-dropzone-bg-color,            var(--surface-default));
+  --_dropzone-bg-color-hover:      var(--ds-dropzone-bg-color-hover,      var(--primary-subtitle));
+  --_dropzone-bg-color-active:     var(--ds-dropzone-bg-color-active,     var(--primary-subtitle));
   --_dropzone-border:        var(--ds-dropzone-border,        var(--border-default));
   --_dropzone-border-hover:  var(--ds-dropzone-border-hover,  var(--primary));
   --_dropzone-border-active: var(--ds-dropzone-border-active, var(--primary));
@@ -58,7 +58,7 @@
   border-radius: var(--_dropzone-radius);
   padding: var(--space-6);
   text-align: center;
-  background: var(--_dropzone-bg);
+  background-color: var(--_dropzone-bg-color);
   cursor: pointer;
   min-height: 160px;
   color: var(--_dropzone-fg);
@@ -68,12 +68,12 @@
 
   &:hover:not(.disabled):not([disabled]) {
     border-color: var(--_dropzone-border-hover);
-    background: var(--_dropzone-bg-hover);
+    background-color: var(--_dropzone-bg-color-hover);
     color: var(--_dropzone-fg-active);
   }
   &.active {
     border-color: var(--_dropzone-border-active);
-    background: var(--_dropzone-bg-active);
+    background-color: var(--_dropzone-bg-color-active);
     color: var(--_dropzone-fg-active);
   }
   &.has-files {

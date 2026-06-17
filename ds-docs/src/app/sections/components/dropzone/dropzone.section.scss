@@ -2,7 +2,7 @@
     /* State pin — force drag-over visual on live ds-dropzone by reading its own resolvers. */
     :host ::ng-deep .pin-active .dropzone {
       border-color: var(--_dropzone-border-active);
-      background: var(--_dropzone-bg-active);
+      background-color: var(--_dropzone-bg-color-active);
       color: var(--_dropzone-fg-active);
     }
 

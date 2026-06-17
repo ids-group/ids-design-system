@@ -8,7 +8,7 @@
   display: block;
 
   /* Public --ds-card-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_card-bg:           var(--ds-card-bg,           var(--surface-default));
+  --_card-bg-color:           var(--ds-card-bg-color,           var(--surface-default));
   --_card-border:       var(--ds-card-border,       var(--border-divider));
   --_card-radius:       var(--ds-card-radius,       var(--radius-lg));
   --_card-pad:          var(--ds-card-pad,          var(--ds-container-pad));
@@ -19,7 +19,7 @@
 }
 
 .card {
-  background: var(--_card-bg);
+  background-color: var(--_card-bg-color);
   border: var(--border-width-default) solid var(--_card-border);
   border-radius: var(--_card-radius);
   padding: var(--_card-pad);

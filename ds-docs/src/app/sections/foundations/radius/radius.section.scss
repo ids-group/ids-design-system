@@ -118,10 +118,10 @@
       border-radius: var(--radius-pill);
     }
     .demo-pill--active {
-      background: var(--status-active-bg);
+      background-color: var(--status-active-bg-color);
       color: var(--status-active-fg);
     }
     .demo-pill--planning {
-      background: var(--status-planning-bg);
+      background-color: var(--status-planning-bg-color);
       color: var(--status-planning-fg);
     }

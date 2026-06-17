@@ -1,8 +1,9 @@
 :host {
   /* Public --ds-sidenav-group-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_sidenav-group-open-bg:      var(--ds-sidenav-group-open-bg,      var(--surface-secondary));
+  --_sidenav-group-open-bg-color:      var(--ds-sidenav-group-open-bg-color,      var(--surface-secondary));
   --_sidenav-group-child-indent: var(--ds-sidenav-group-child-indent, var(--space-3));
   --_sidenav-group-radius:       var(--ds-sidenav-group-radius,       var(--radius-md));
+  --_sidenav-group-label-color:  var(--ds-sidenav-group-label-color,  var(--text-tertiary));
 
   display: flex;
   flex-direction: column;
@@ -12,16 +13,13 @@
 }
 
 :host(:has(.group-header[aria-expanded="true"])) {
-  background: var(--_sidenav-group-open-bg);
+  background-color: var(--_sidenav-group-open-bg-color);
 }
 
 .group-label {
-  /* Public --ds-sidenav-group-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_sidenav-group-fg: var(--ds-sidenav-group-fg, var(--text-tertiary));
-
   display: block;
   font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
-  color: var(--_sidenav-group-fg);
+  color: var(--_sidenav-group-label-color);
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-wider);
   padding: var(--space-4) var(--space-3) var(--sidenav-section-pad-b);

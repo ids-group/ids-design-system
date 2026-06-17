@@ -1,5 +1,9 @@
 /* Status dot atom — ported verbatim from vendor/claude-design-ds/components.css */
 :host {
+  /* Public --ds-statusdot-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_statusdot-color: var(--ds-statusdot-color, var(--icon-muted));
+  --_statusdot-size:  var(--ds-statusdot-size,  var(--status-dot-size));
+
   // inline-flex with explicit 1em height so the dot is vertically centered
   // against the surrounding text line regardless of the parent layout mode
   // (inline, flex row, grid cell). Width shrinks to dot intrinsic.
@@ -11,10 +15,6 @@
 }
 
 .status-dot {
-  /* Public --ds-statusdot-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_statusdot-color: var(--ds-statusdot-color, var(--icon-muted));
-  --_statusdot-size:  var(--ds-statusdot-size,  var(--status-dot-size));
-
   display: block;
   width: var(--_statusdot-size);
   height: var(--_statusdot-size);

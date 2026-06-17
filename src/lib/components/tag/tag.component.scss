@@ -4,13 +4,13 @@
   --_tag-pad-y:        var(--ds-tag-pad-y, var(--tag-pad-y));
   --_tag-pad-x:        var(--ds-tag-pad-x, var(--tag-pad-x));
   --_tag-radius:       var(--ds-tag-radius, var(--radius-md));
-  --_tag-bg:           var(--ds-tag-bg, var(--primary));
+  --_tag-bg-color:           var(--ds-tag-bg-color, var(--primary));
   --_tag-fw:            var(--ds-tag-fw, var(--font-weight-bold));
   --_tag-fs:            var(--ds-tag-fs, var(--font-size-xs));
   --_tag-lh:            var(--ds-tag-lh, var(--line-height-base));
-  --_tag-hover-bg:      var(--ds-tag-hover-bg,      var(--surface-muted));
+  --_tag-hover-bg-color:      var(--ds-tag-hover-bg-color,      var(--surface-muted));
   --_tag-hover-fg:      var(--ds-tag-hover-fg,      var(--text-primary));
-  --_tag-active-bg:     var(--ds-tag-active-bg,     var(--primary-muted));
+  --_tag-active-bg-color:     var(--ds-tag-active-bg-color,     var(--primary-muted));
   --_tag-active-fg:     var(--ds-tag-active-fg,     var(--primary-strong));
   --_tag-active-border: var(--ds-tag-active-border, var(--primary));
 
@@ -19,7 +19,7 @@
   gap: var(--tag-gap);
   padding: var(--_tag-pad-y) var(--_tag-pad-x);
   border-radius: var(--_tag-radius);
-  background: var(--_tag-bg);
+  background-color: var(--_tag-bg-color);
   color: var(--primary-on);
   font: var(--_tag-fw) var(--_tag-fs) / var(--_tag-lh) var(--font-sans);
 }
@@ -29,9 +29,9 @@
 }
 
 :host(.neutral) {
-  --_tag-bg: var(--ds-tag-bg, var(--surface-secondary));
+  --_tag-bg-color: var(--ds-tag-bg-color, var(--surface-secondary));
 
-  background: var(--_tag-bg);
+  background-color: var(--_tag-bg-color);
   color: var(--text-primary);
   border: var(--border-width-default) solid var(--border-divider);
   padding: calc(var(--_tag-pad-y) - var(--border-width-default)) calc(var(--_tag-pad-x) - var(--border-width-default));
@@ -51,12 +51,12 @@
 }
 
 :host(.interactive:hover):not(.is-active) {
-  background: var(--_tag-hover-bg);
+  background-color: var(--_tag-hover-bg-color);
   color: var(--_tag-hover-fg);
 }
 
 :host(.interactive.is-active) {
-  background: var(--_tag-active-bg);
+  background-color: var(--_tag-active-bg-color);
   color: var(--_tag-active-fg);
   box-shadow: inset 0 0 0 var(--border-width-default) var(--_tag-active-border);
 }

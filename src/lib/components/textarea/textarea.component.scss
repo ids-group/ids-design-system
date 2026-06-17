@@ -12,7 +12,7 @@
 
 .field {
   /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_input-bg:             var(--ds-input-bg,             var(--surface-default));
+  --_input-bg-color:             var(--ds-input-bg-color,             var(--surface-default));
   --_input-border:         var(--ds-input-border,         var(--border-default));
   --_input-radius:         var(--ds-input-radius,         var(--radius-md));
   --_input-pad-y:          var(--ds-input-pad-y,          var(--space-3));
@@ -22,8 +22,8 @@
   --_input-border-hover:   var(--ds-input-border-hover,   var(--border-strong));
   --_input-border-focus:   var(--ds-input-border-focus,   var(--primary));
   --_input-focus-shadow:   var(--ds-input-focus-shadow,   var(--focus-field));
-  --_input-bg-disabled:    var(--ds-input-bg-disabled,    var(--surface-disabled));
-  --_input-bg-error:       var(--ds-input-bg-error,       var(--error-subtitle));
+  --_input-bg-color-disabled:    var(--ds-input-bg-color-disabled,    var(--surface-disabled));
+  --_input-bg-color-error:       var(--ds-input-bg-color-error,       var(--error-subtitle));
   --_input-border-error:   var(--ds-input-border-error,   var(--error));
   --_input-border-success: var(--ds-input-border-success, var(--success));
 
@@ -54,7 +54,7 @@
     display: flex;
     align-items: stretch;
     gap: var(--space-2);
-    background: var(--_input-bg);
+    background-color: var(--_input-bg-color);
     border: var(--border-width-default) solid var(--_input-border);
     border-radius: var(--_input-radius);
     padding: var(--_input-pad-y) var(--_input-pad-x);
@@ -100,7 +100,7 @@
 
   &.disabled {
     .control {
-      background: var(--_input-bg-disabled);
+      background-color: var(--_input-bg-color-disabled);
       border-color: var(--border-disabled);
     }
     textarea {
@@ -110,7 +110,7 @@
 
   &.error {
     .control {
-      background: var(--_input-bg-error);
+      background-color: var(--_input-bg-color-error);
       border-color: var(--_input-border-error);
 
       &:focus-within {

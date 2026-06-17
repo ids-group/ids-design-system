@@ -215,13 +215,13 @@
   /* Status pills — canonical (single system).
      Legacy classes `.badge--active` (single) and ad-hoc semantic
      pills are unified in the Badge component to consume these tokens. */
-  --status-planning-bg:   var(--neutral-150);
+  --status-planning-bg-color:   var(--neutral-150);
   --status-planning-fg:   var(--neutral-700);
-  --status-confirmed-bg:  var(--primary-subtitle);
+  --status-confirmed-bg-color:  var(--primary-subtitle);
   --status-confirmed-fg:  var(--primary-strong);
-  --status-active-bg:     var(--green-50);
+  --status-active-bg-color:     var(--green-50);
   --status-active-fg:     var(--green-700);
-  --status-completed-bg:  var(--neutral-900);
+  --status-completed-bg-color:  var(--neutral-900);
   --status-completed-fg:  var(--neutral-0);
 
   /* Focus rings.

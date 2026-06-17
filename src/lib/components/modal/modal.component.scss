@@ -4,7 +4,7 @@
 
 .modal {
   /* Public --ds-modal-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_modal-bg:              var(--ds-modal-bg,              var(--surface-overlay));
+  --_modal-bg-color:              var(--ds-modal-bg-color,              var(--surface-overlay));
   --_modal-radius:          var(--ds-modal-radius,          var(--radius-lg));
   --_modal-shadow:          var(--ds-modal-shadow,          var(--shadow-modal));
   --_modal-divider:         var(--ds-modal-divider,         var(--border-divider));
@@ -13,7 +13,7 @@
   --_modal-close-fg:        var(--ds-modal-close-fg,        var(--icon-default));
   --_modal-close-fg-hover:  var(--ds-modal-close-fg-hover,  var(--icon-strong));
 
-  background: var(--_modal-bg);
+  background-color: var(--_modal-bg-color);
   border-radius: var(--_modal-radius);
   box-shadow: var(--_modal-shadow);
   display: flex;

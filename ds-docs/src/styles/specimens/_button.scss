@@ -4,16 +4,16 @@
 .button {
   /* Mirrors button.component.scss — public tokens read with fallbacks,
      hover/active/halo derive from the resolved bg (88%/76% + black). */
-  --_button-bg:        var(--ds-button-bg,        var(--primary));
-  --_button-bg-hover:  var(--ds-button-bg-hover,  color-mix(in srgb, var(--_button-bg) 88%, black));
-  --_button-bg-active: var(--ds-button-bg-active, color-mix(in srgb, var(--_button-bg) 76%, black));
+  --_button-bg-color:        var(--ds-button-bg-color,        var(--primary));
+  --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  color-mix(in srgb, var(--_button-bg-color) 88%, black));
+  --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--_button-bg-color) 76%, black));
   --_button-fg:        var(--ds-button-fg,        var(--primary-on));
   --_button-border:    var(--ds-button-border,    transparent);
   --_button-focus-shadow: var(--ds-button-focus-shadow, var(--focus-ring));
   --_button-pressed-shadow: var(--ds-button-pressed-shadow,
-                              0 0 0 3px color-mix(in srgb, var(--_button-bg-active) 35%, transparent));
+                              0 0 0 3px color-mix(in srgb, var(--_button-bg-color-active) 35%, transparent));
   --_button-radius:    var(--ds-button-radius,    var(--radius-md));
-  --_button-bg-disabled: var(--ds-button-bg-disabled, var(--surface-disabled));
+  --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, var(--surface-disabled));
   --_button-fg-disabled: var(--ds-button-fg-disabled, var(--text-disabled));
 
   display: inline-flex;
@@ -23,7 +23,7 @@
   font: var(--font-weight-extrabold) var(--font-size-m)/var(--line-height-flat) var(--font-sans);
   letter-spacing: var(--letter-spacing-wide);
   color: var(--_button-fg);
-  background: var(--_button-bg);
+  background-color: var(--_button-bg-color);
   border: var(--border-width-default) solid var(--_button-border);
   border-radius: var(--_button-radius);
   padding: 0 var(--space-5);
@@ -38,13 +38,13 @@
     box-shadow var(--duration-fast) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard);
 
-  &:hover  { background: var(--_button-bg-hover); }
-  &:active { background: var(--_button-bg-active); box-shadow: var(--_button-pressed-shadow); }
+  &:hover  { background-color: var(--_button-bg-color-hover); }
+  &:active { background-color: var(--_button-bg-color-active); box-shadow: var(--_button-pressed-shadow); }
   &:focus-visible { outline: none; box-shadow: var(--_button-focus-shadow); z-index: var(--btn-focus-z); }
 
   &[disabled],
   &.is-disabled {
-    background: var(--_button-bg-disabled);
+    background-color: var(--_button-bg-color-disabled);
     color: var(--_button-fg-disabled);
     border-color: transparent;
     cursor: not-allowed;
@@ -54,11 +54,11 @@
   .icon { width: var(--icon-md); height: var(--icon-md); flex-shrink: 0; }
 
   &.outline {
-    --_button-bg:        var(--ds-button-bg,        var(--surface-default));
+    --_button-bg-color:        var(--ds-button-bg-color,        var(--surface-default));
     --_button-fg:        var(--ds-button-fg,        var(--text-primary));
     --_button-border:    var(--ds-button-border,    var(--border-default));
-    --_button-bg-hover:  var(--ds-button-bg-hover,  var(--surface-secondary));
-    --_button-bg-active: var(--ds-button-bg-active, var(--surface-secondary));
+    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--surface-secondary));
+    --_button-bg-color-active: var(--ds-button-bg-color-active, var(--surface-secondary));
   }
 }
 

@@ -75,20 +75,20 @@
 
 .calendar {
   /* Public --ds-datepicker-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_datepicker-bg:                       var(--ds-datepicker-bg,                       var(--surface-overlay));
+  --_datepicker-bg-color:                       var(--ds-datepicker-bg-color,                       var(--surface-overlay));
   --_datepicker-border:                   var(--ds-datepicker-border,                   var(--border-default));
   --_datepicker-shadow:                   var(--ds-datepicker-shadow,                   var(--shadow-popover));
-  --_datepicker-day-hover-bg:             var(--ds-datepicker-day-hover-bg,             var(--surface-secondary));
+  --_datepicker-day-hover-bg-color:             var(--ds-datepicker-day-hover-bg-color,             var(--surface-secondary));
   --_datepicker-day-today-fg:             var(--ds-datepicker-day-today-fg,             var(--primary));
-  --_datepicker-day-selected-bg:          var(--ds-datepicker-day-selected-bg,          var(--primary));
-  --_datepicker-day-selected-bg-hover:    var(--ds-datepicker-day-selected-bg-hover,    var(--primary-selected-hover));
+  --_datepicker-day-selected-bg-color:          var(--ds-datepicker-day-selected-bg-color,          var(--primary));
+  --_datepicker-day-selected-bg-color-hover:    var(--ds-datepicker-day-selected-bg-color-hover,    var(--primary-selected-hover));
   --_datepicker-day-selected-fg:          var(--ds-datepicker-day-selected-fg,          var(--primary-on));
-  --_datepicker-day-range-bg:             var(--ds-datepicker-day-range-bg,             var(--primary-subtitle));
+  --_datepicker-day-range-bg-color:             var(--ds-datepicker-day-range-bg-color,             var(--primary-subtitle));
   --_datepicker-day-range-fg:             var(--ds-datepicker-day-range-fg,             var(--primary-strong));
   --_datepicker-day-disabled-fg:          var(--ds-datepicker-day-disabled-fg,          var(--text-disabled));
   --_datepicker-width:                    var(--ds-datepicker-width,                    var(--datepicker-w));
 
-  background: var(--_datepicker-bg);
+  background-color: var(--_datepicker-bg-color);
   border: var(--border-width-default) solid var(--_datepicker-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--_datepicker-shadow);
@@ -122,7 +122,7 @@
       border-radius: var(--radius-sm);
 
       &:hover {
-        background: var(--_datepicker-day-hover-bg);
+        background-color: var(--_datepicker-day-hover-bg-color);
       }
     }
   }
@@ -155,7 +155,7 @@
     color: var(--text-primary);
 
     &:hover {
-      background: var(--_datepicker-day-hover-bg);
+      background-color: var(--_datepicker-day-hover-bg-color);
     }
 
     &.muted {
@@ -168,16 +168,16 @@
     }
 
     &.selected {
-      background: var(--_datepicker-day-selected-bg);
+      background-color: var(--_datepicker-day-selected-bg-color);
       color: var(--_datepicker-day-selected-fg);
     }
 
     &.selected:hover {
-      background: var(--_datepicker-day-selected-bg-hover);
+      background-color: var(--_datepicker-day-selected-bg-color-hover);
     }
 
     &.in-range {
-      background: var(--_datepicker-day-range-bg);
+      background-color: var(--_datepicker-day-range-bg-color);
       color: var(--_datepicker-day-range-fg);
       border-radius: var(--radius-flat);
     }
@@ -185,20 +185,20 @@
     &.range-start {
       border-top-left-radius: var(--radius-sm);
       border-bottom-left-radius: var(--radius-sm);
-      background: var(--_datepicker-day-selected-bg);
+      background-color: var(--_datepicker-day-selected-bg-color);
       color: var(--_datepicker-day-selected-fg);
     }
 
     &.range-end {
       border-top-right-radius: var(--radius-sm);
       border-bottom-right-radius: var(--radius-sm);
-      background: var(--_datepicker-day-selected-bg);
+      background-color: var(--_datepicker-day-selected-bg-color);
       color: var(--_datepicker-day-selected-fg);
     }
 
     &.range-start:hover,
     &.range-end:hover {
-      background: var(--_datepicker-day-selected-bg-hover);
+      background-color: var(--_datepicker-day-selected-bg-color-hover);
     }
 
     &.disabled {

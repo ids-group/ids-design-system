@@ -4,10 +4,10 @@
   /* Public --ds-sidenav-item-* / --ds-sidenav-alert-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_sidenav-item-fg:              var(--ds-sidenav-item-fg,              var(--text-secondary));
   --_sidenav-item-fg-hover:        var(--ds-sidenav-item-fg-hover,        var(--text-primary));
-  --_sidenav-item-bg-hover:        var(--ds-sidenav-item-bg-hover,        var(--surface-secondary));
-  --_sidenav-item-bg-active:       var(--ds-sidenav-item-bg-active,       var(--primary));
+  --_sidenav-item-bg-color-hover:        var(--ds-sidenav-item-bg-color-hover,        var(--surface-secondary));
+  --_sidenav-item-bg-color-active:       var(--ds-sidenav-item-bg-color-active,       var(--primary));
   --_sidenav-item-fg-active:       var(--ds-sidenav-item-fg-active,       var(--text-on-primary));
-  --_sidenav-item-bg-active-hover: var(--ds-sidenav-item-bg-active-hover, color-mix(in srgb, var(--_sidenav-item-bg-active) 88%, white));
+  --_sidenav-item-bg-color-active-hover: var(--ds-sidenav-item-bg-color-active-hover, color-mix(in srgb, var(--_sidenav-item-bg-color-active) 88%, white));
   --_sidenav-item-rail:            var(--ds-sidenav-item-rail,            var(--secondary));
   --_sidenav-item-radius:          var(--ds-sidenav-item-radius,          var(--radius-md));
   --_sidenav-alert-color:          var(--ds-sidenav-alert-color,          var(--error));
@@ -31,7 +31,7 @@
   position: relative;
 
   &:hover {
-    background: var(--_sidenav-item-bg-hover);
+    background-color: var(--_sidenav-item-bg-color-hover);
     color: var(--_sidenav-item-fg-hover);
   }
 
@@ -41,7 +41,7 @@
   }
 
   &.active {
-    background: var(--_sidenav-item-bg-active);
+    background-color: var(--_sidenav-item-bg-color-active);
     color: var(--_sidenav-item-fg-active);
 
     /* inset box-shadow follows the item's rounded corners */
@@ -49,7 +49,7 @@
   }
 
   &.active:hover {
-    background: var(--_sidenav-item-bg-active-hover);
+    background-color: var(--_sidenav-item-bg-color-active-hover);
   }
 
   .icon {

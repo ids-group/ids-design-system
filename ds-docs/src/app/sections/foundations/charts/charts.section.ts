@@ -13,7 +13,7 @@ const AXIS_TOKENS: readonly AxisToken[] = [
   { token: '--chart-axis-label',  role: 'Tick labels',                 value: 'text-tertiary' },
   { token: '--chart-grid-line',   role: 'Horizontal grid lines',       value: 'neutral-150' },
   { token: '--chart-cursor-line', role: 'Hover cursor / crosshair',    value: 'neutral-400' },
-  { token: '--chart-tooltip-bg / fg', role: 'Tooltip surface',         value: 'neutral-900 → neutral-0 (inverted)' },
+  { token: '--chart-tooltip-bg-color / fg', role: 'Tooltip surface',         value: 'neutral-900 → neutral-0 (inverted)' },
   { token: '--chart-line-w',      role: 'Line stroke width',           value: '2 px (3 px bold)' },
   { token: '--chart-dot-r',       role: 'Data-point radius',           value: '4 px (6 px active)' },
 ];

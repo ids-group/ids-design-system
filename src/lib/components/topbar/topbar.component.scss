@@ -5,7 +5,7 @@
 .topbar {
   /* Public --ds-topbar-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_topbar-height:   var(--ds-topbar-height,   var(--topbar-h));
-  --_topbar-bg:       var(--ds-topbar-bg,       var(--surface-default));
+  --_topbar-bg-color:       var(--ds-topbar-bg-color,       var(--surface-default));
   --_topbar-border:   var(--ds-topbar-border,   var(--border-divider));
   --_topbar-title-fg: var(--ds-topbar-title-fg, var(--text-primary));
 
@@ -14,7 +14,7 @@
   gap: var(--space-4);
   height: var(--_topbar-height);
   padding: 0 var(--space-6);
-  background: var(--_topbar-bg);
+  background-color: var(--_topbar-bg-color);
   border-bottom: var(--border-width-default) solid var(--_topbar-border);
 
   .title {

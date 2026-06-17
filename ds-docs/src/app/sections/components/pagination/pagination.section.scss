@@ -70,6 +70,6 @@
     /* State pins — hover on non-active, non-disabled buttons reads the
        component's own resolvers; --focus-ring is a bare token (no --_* resolver). */
     :host ::ng-deep .pin-hover .pagination-button:not(.active):not([disabled]) {
-      background: var(--_pagination-btn-bg-hover);
+      background-color: var(--_pagination-btn-bg-color-hover);
       color: var(--_pagination-btn-fg-hover);
     }

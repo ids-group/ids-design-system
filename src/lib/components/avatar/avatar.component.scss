@@ -10,7 +10,7 @@
 :host {
   /* Public --ds-avatar-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_avatar-size:       var(--ds-avatar-size,       var(--avatar-md));
-  --_avatar-bg:         var(--ds-avatar-bg,         var(--primary-muted));
+  --_avatar-bg-color:         var(--ds-avatar-bg-color,         var(--primary-muted));
   --_avatar-fg:         var(--ds-avatar-fg,         var(--primary-strong));
   --_avatar-radius:     var(--ds-avatar-radius,     var(--radius-pill));
   --_avatar-ring-width: var(--ds-avatar-ring-width, var(--avatar-bw-group));
@@ -20,7 +20,7 @@
   width: var(--_avatar-size);
   height: var(--_avatar-size);
   border-radius: var(--_avatar-radius);
-  background: var(--_avatar-bg);
+  background-color: var(--_avatar-bg-color);
   color: var(--_avatar-fg);
   font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
   letter-spacing: var(--letter-spacing-wide);
@@ -40,6 +40,6 @@ img {
 
 /* Neutral tint — used by the +N overflow chip in avatar groups. */
 :host(.neutral) {
-  --_avatar-bg: var(--ds-avatar-bg, var(--surface-secondary));
+  --_avatar-bg-color: var(--ds-avatar-bg-color, var(--surface-secondary));
   --_avatar-fg: var(--ds-avatar-fg, var(--text-secondary));
 }

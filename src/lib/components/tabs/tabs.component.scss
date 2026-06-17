@@ -19,10 +19,10 @@
   --_tab-fg-active:         var(--ds-tab-fg-active,         var(--primary));
   --_tab-indicator-color:   var(--ds-tab-indicator-color,   var(--primary));
   --_tab-indicator-width:   var(--ds-tab-indicator-width,   var(--border-width-strong));
-  --_tabs-pills-bg:         var(--ds-tabs-pills-bg,         var(--surface-secondary));
-  --_tab-pill-bg-hover:     var(--ds-tab-pill-bg-hover,     var(--primary-subtitle));
-  --_tab-pill-bg-active:    var(--ds-tab-pill-bg-active,    var(--surface-default));
-  --_tab-pill-bg-active-hover: var(--ds-tab-pill-bg-active-hover, var(--primary-subtitle));
+  --_tabs-pills-bg-color:         var(--ds-tabs-pills-bg-color,         var(--surface-secondary));
+  --_tab-pill-bg-color-hover:     var(--ds-tab-pill-bg-color-hover,     var(--primary-subtitle));
+  --_tab-pill-bg-color-active:    var(--ds-tab-pill-bg-color-active,    var(--surface-default));
+  --_tab-pill-bg-color-active-hover: var(--ds-tab-pill-bg-color-active-hover, var(--primary-subtitle));
   --_tab-pill-fg-active:    var(--ds-tab-pill-fg-active,    var(--primary-strong));
   --_tab-pill-radius:       var(--ds-tab-pill-radius,       var(--radius-md));
 
@@ -98,7 +98,7 @@
     border-bottom: 0;
     gap: var(--space-1);
     padding: var(--space-1);
-    background: var(--_tabs-pills-bg);
+    background-color: var(--_tabs-pills-bg-color);
     border-radius: var(--_tab-pill-radius);
     display: inline-flex;
 
@@ -111,19 +111,19 @@
 
       /* Inactive hover — subtle brand tint, distinct from active surface */
       &:hover {
-        background: var(--_tab-pill-bg-hover);
+        background-color: var(--_tab-pill-bg-color-hover);
         color: var(--_tab-fg-hover);
       }
 
       &.active {
-        background: var(--_tab-pill-bg-active);
+        background-color: var(--_tab-pill-bg-color-active);
         color: var(--_tab-pill-fg-active);
         border-bottom: 0;
         box-shadow: var(--shadow-1);
 
         /* Active hover — wash the elevated card with a brand tint */
         &:hover {
-          background: var(--_tab-pill-bg-active-hover);
+          background-color: var(--_tab-pill-bg-color-active-hover);
         }
       }
     }
