@@ -311,6 +311,7 @@ export class SelectComponent {
       return;
     }
     let next = this.activeIndex();
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of -- bounded counter for a circular scan, not array iteration
     for (let attempts = 0; attempts < opts.length; attempts++) {
       next = (next + delta + opts.length) % opts.length;
       const candidate = opts[next];
