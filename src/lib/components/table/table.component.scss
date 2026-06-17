@@ -43,8 +43,7 @@
   --_table-bg:     var(--ds-table-bg,     var(--surface-default));
 
   width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: auto hidden;
   -webkit-overflow-scrolling: touch;
   background: var(--surface-default);
   box-sizing: border-box;
@@ -63,7 +62,7 @@
     z-index: var(--layer-popover, 30);
     display: grid;
     place-items: center;
-    background: hsla(0, 0%, 100%, 0.6);
+    background: hsl(0deg 0% 100% / 60%);
     backdrop-filter: blur(1px);
     pointer-events: all;
   }
@@ -119,6 +118,7 @@
       display: inline-flex;
       align-items: center;
       vertical-align: middle;
+
       // Button reset so the sortable <button> matches the plain header label.
       appearance: none;
       background: none;
@@ -153,6 +153,7 @@
       height: var(--sort-ic-size);
       margin-left: var(--sort-ic-gap);
       vertical-align: middle;
+
       /* Nudge up by 1px: vertical-align:middle aligns to x-height centre,
          but the header label is UPPERCASE — its visual centre sits at
          cap-height/2, ~1px higher. Compensates the optical offset. */
@@ -189,6 +190,7 @@
     td {
       padding: var(--_table-cell-pad-y) var(--_table-cell-pad-x);
       line-height: var(--line-height-flat);
+
       /* Inset shadow instead of border-bottom so the divider paints inside
          the cell — row height stays identical regardless of selected/hover
          background and is not affected by border-collapse quirks. */

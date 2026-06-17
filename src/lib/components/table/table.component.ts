@@ -70,45 +70,62 @@ export class TableComponent<T extends { id: string }> {
    *  again for wrappers that can't rely on slot re-projection. */
   readonly emptyTemplate = input<TemplateRef<unknown> | null>(null);
 
-  protected readonly cellTemplateDirectives = contentChildren(CellTemplateDirective);
+  protected readonly cellTemplateDirectives = contentChildren(
+    CellTemplateDirective,
+  );
 
   protected readonly cellTemplates = computed<
     Record<string, TemplateRef<{ $implicit: unknown; row: unknown }>>
   >(() => {
-    const map: Record<string, TemplateRef<{ $implicit: unknown; row: unknown }>> = {};
+    const map: Record<
+      string,
+      TemplateRef<{ $implicit: unknown; row: unknown }>
+    > = {};
     for (const dir of this.cellTemplateDirectives()) {
       map[dir.dsCellTemplate()] = dir.template;
     }
+
     return { ...map, ...this.cellTemplateMap() };
   });
 
-  protected cellTemplate(col: TableColumn<T>): TemplateRef<{ $implicit: unknown; row: unknown }> | null {
+  protected cellTemplate(
+    col: TableColumn<T>,
+  ): TemplateRef<{ $implicit: unknown; row: unknown }> | null {
     return this.cellTemplates()[col.key] ?? null;
   }
 
   protected readonly tableClasses = computed(() => {
     const parts = ['table'];
-    if (this.loading() === 'skeleton') parts.push('skeleton-mode');
+    if (this.loading() === 'skeleton') {parts.push('skeleton-mode');}
+
     return parts.join(' ');
   });
 
-  protected readonly isSkeletonLoading = computed(() => this.loading() === 'skeleton');
-  protected readonly isOverlayLoading = computed(() => this.loading() === 'overlay');
+  protected readonly isSkeletonLoading = computed(
+    () => this.loading() === 'skeleton',
+  );
+  protected readonly isOverlayLoading = computed(
+    () => this.loading() === 'overlay',
+  );
 
   protected readonly allSelected = computed(() => {
     const data = this.data();
-    if (data.length === 0) return false;
+    if (data.length === 0) {return false;}
     const sel = this.selectedIds();
+
     return data.every((row) => sel.has(row.id));
   });
 
   protected readonly someSelected = computed(() => {
     const data = this.data();
     const sel = this.selectedIds();
+
     return data.some((row) => sel.has(row.id)) && !this.allSelected();
   });
 
-  protected readonly skeletonArray = computed(() => Array(this.skeletonRows()).fill(0));
+  protected readonly skeletonArray = computed(() =>
+    Array(this.skeletonRows()).fill(0),
+  );
 
   protected isSelected(row: T): boolean {
     return this.selectedIds().has(row.id);
@@ -138,12 +155,12 @@ export class TableComponent<T extends { id: string }> {
   }
 
   protected onRowClick(row: T, event: Event): void {
-    if ((event.target as HTMLElement).closest('input')) return;
+    if ((event.target as HTMLElement).closest('input')) {return;}
     this.rowClick.emit(row);
   }
 
   protected onRowKey(row: T, event: Event): void {
-    if (!this.rowInteractive()) return;
+    if (!this.rowInteractive()) {return;}
     event.preventDefault();
     this.rowClick.emit(row);
   }
@@ -151,20 +168,24 @@ export class TableComponent<T extends { id: string }> {
   /** Accessible name for an interactive row, taken from the first column. */
   protected rowAriaLabel(row: T): string {
     const first = this.columns()[0];
+
     return first ? this.cellValue(row, first) : '';
   }
 
   /** `aria-sort` value for a header: only meaningful on sortable columns. */
-  protected ariaSort(col: TableColumn<T>): 'ascending' | 'descending' | 'none' | null {
-    if (!col.sortable) return null;
+  protected ariaSort(
+    col: TableColumn<T>,
+  ): 'ascending' | 'descending' | 'none' | null {
+    if (!col.sortable) {return null;}
     if (this.sortKey() === col.key && this.sortDir()) {
       return this.sortDir() === 'asc' ? 'ascending' : 'descending';
     }
+
     return 'none';
   }
 
   protected onSort(col: TableColumn<T>): void {
-    if (!col.sortable) return;
+    if (!col.sortable) {return;}
     const currentKey = this.sortKey();
     const currentDir = this.sortDir();
     let dir: SortDir;
@@ -184,20 +205,23 @@ export class TableComponent<T extends { id: string }> {
 
   protected headerClasses(col: TableColumn<T>): string {
     const parts: string[] = [];
-    if (col.sortable) parts.push('sortable');
+    if (col.sortable) {parts.push('sortable');}
     if (this.sortKey() === col.key && this.sortDir()) {
       parts.push(`sorted-${this.sortDir()}`);
     }
+
     return parts.join(' ');
   }
 
   protected sortIcon(col: TableColumn<T>): 'sortAsc' | 'sortDesc' | 'sort' {
-    if (this.sortKey() !== col.key || !this.sortDir()) return 'sort';
+    if (this.sortKey() !== col.key || !this.sortDir()) {return 'sort';}
+
     return this.sortDir() === 'asc' ? 'sortAsc' : 'sortDesc';
   }
 
   protected cellValue(row: T, col: TableColumn<T>): string {
-    if (col.cell) return col.cell(row);
+    if (col.cell) {return col.cell(row);}
+
     return String((row as Record<string, unknown>)[col.key] ?? '');
   }
 
@@ -210,6 +234,7 @@ export class TableComponent<T extends { id: string }> {
       hash = (hash + seed.charCodeAt(charIndex)) | 0;
     }
     const widths = ['45%', '55%', '65%', '75%', '85%'];
+
     return widths[Math.abs(hash) % widths.length] ?? '70%';
   }
 }

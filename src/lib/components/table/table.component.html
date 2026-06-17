@@ -1,20 +1,46 @@
-<div class="scroll-wrap" [class.loading-overlay]="isOverlayLoading()">
+<div
+  class="scroll-wrap"
+  [class.loading-overlay]="isOverlayLoading()"
+>
   @if (isOverlayLoading()) {
-    <div class="overlay" aria-hidden="true">
+    <div
+      class="overlay"
+      aria-hidden="true"
+    >
       <span class="spinner"></span>
     </div>
   }
-  <div class="visually-hidden" role="status" aria-live="polite">
-    @if (loading() !== false) { Loading… }
-  </div>
-  <table [class]="tableClasses()" [attr.role]="rowInteractive() ? 'grid' : null" [attr.aria-busy]="loading() !== false ? 'true' : null">
-    @if (caption()) {
-      <caption class="visually-hidden">{{ caption() }}</caption>
+
+  <div
+    class="visually-hidden"
+    role="status"
+    aria-live="polite"
+  >
+    @if (loading() !== false) {
+      Loading…
     }
+  </div>
+
+  <table
+    [class]="tableClasses()"
+    [attr.role]="rowInteractive() ? 'grid' : null"
+    [attr.aria-busy]="loading() !== false ? 'true' : null"
+  >
+    @if (caption()) {
+      <caption class="visually-hidden">
+        {{
+          caption()
+        }}
+      </caption>
+    }
+
     <thead>
       <tr>
         @if (selectable()) {
-          <th scope="col" class="select-col">
+          <th
+            scope="col"
+            class="select-col"
+          >
             <input
               type="checkbox"
               class="check"
@@ -25,6 +51,7 @@
             />
           </th>
         }
+
         @for (col of columns(); track col.key) {
           <th
             scope="col"
@@ -33,27 +60,50 @@
             [attr.aria-sort]="ariaSort(col)"
           >
             @if (col.sortable) {
-              <button type="button" class="th-label" (click)="onSort(col)">
+              <button
+                type="button"
+                class="th-label"
+                (click)="onSort(col)"
+              >
                 {{ col.label }}
-                <ds-icon class="sort-icon" [name]="sortIcon(col)" [size]="12"></ds-icon>
+                <ds-icon
+                  class="sort-icon"
+                  [name]="sortIcon(col)"
+                  [size]="12"
+                >
+                </ds-icon>
               </button>
             } @else {
-              <span class="th-label">{{ col.label }}</span>
+              <span class="th-label">
+                {{ col.label }}
+              </span>
             }
           </th>
         }
       </tr>
     </thead>
+
     <tbody>
       @if (isSkeletonLoading()) {
         @for (_ of skeletonArray(); track $index; let rowIndex = $index) {
           <tr>
             @if (selectable()) {
-              <td><ds-skeleton width="14px" height="14px" [inline]="true" /></td>
+              <td>
+                <ds-skeleton
+                  width="14px"
+                  height="14px"
+                  [inline]="true"
+                />
+              </td>
             }
+
             @for (col of columns(); track col.key) {
               <td [class.numeric]="col.align === 'right'">
-                <ds-skeleton [width]="skeletonWidth(col, rowIndex)" height="14px" [inline]="true" />
+                <ds-skeleton
+                  height="14px"
+                  [width]="skeletonWidth(col, rowIndex)"
+                  [inline]="true"
+                />
               </td>
             }
           </tr>
@@ -61,11 +111,14 @@
       } @else if (!data().length) {
         <tr>
           <td
-            [attr.colspan]="columns().length + (selectable() ? 1 : 0)"
             class="empty"
+            [attr.colspan]="columns().length + (selectable() ? 1 : 0)"
           >
             @if (emptyTemplate()) {
-              <ng-container [ngTemplateOutlet]="emptyTemplate()!"></ng-container>
+              <ng-container
+                [ngTemplateOutlet]="emptyTemplate()!"
+              >
+              </ng-container>
             } @else {
               <ng-content select="[empty]"></ng-content>
             }
@@ -94,13 +147,15 @@
                 />
               </td>
             }
+
             @for (col of columns(); track col.key) {
               <td [class.numeric]="col.align === 'right'">
                 @if (cellTemplate(col); as tpl) {
                   <ng-container
                     [ngTemplateOutlet]="tpl"
                     [ngTemplateOutletContext]="{ $implicit: row, row: row }"
-                  ></ng-container>
+                  >
+                  </ng-container>
                 } @else {
                   {{ cellValue(row, col) }}
                 }
@@ -112,10 +167,15 @@
     </tbody>
   </table>
 </div>
+
 @if (selectable() && someSelected()) {
   <div class="bulk-bar">
-    <span class="count">{{ selectedIds().size }} selected</span>
+    <span class="count">
+      {{ selectedIds().size }} selected
+    </span>
+
     <span class="sep"></span>
+
     <ng-content select="[bulk-actions]"></ng-content>
   </div>
 }
