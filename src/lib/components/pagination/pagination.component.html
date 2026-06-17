@@ -1,13 +1,36 @@
-<nav class="pagination" aria-label="Pagination">
+<nav
+  class="pagination"
+  aria-label="Pagination"
+>
   @if (showLabel()) {
-    <span class="label">{{ rangeLabel() }}</span>
+    <span class="label">
+      {{ rangeLabel() }}
+    </span>
   }
-  <button class="pagination-button" type="button" aria-label="Previous page" [disabled]="currentPage() === 1" (click)="goTo(currentPage() - 1)">
-    <ds-icon name="chevronLeft" [size]="14"></ds-icon>
+
+  <button
+    class="pagination-button"
+    type="button"
+    aria-label="Previous page"
+    [disabled]="currentPage() === 1"
+    (click)="goTo(currentPage() - 1)"
+  >
+    <ds-icon
+      name="chevronLeft"
+      [size]="14"
+    >
+    </ds-icon>
   </button>
+
   @for (item of pageItems(); track $index) {
     @if (item === 'ellipsis') {
-      <span class="ellipsis" aria-hidden="true">…</span>
+      <span
+        class="ellipsis"
+        aria-hidden="true"
+        >
+        …
+      </span
+      >
     } @else {
       <button
         class="pagination-button"
@@ -16,18 +39,33 @@
         [attr.aria-label]="'Page ' + item"
         [attr.aria-current]="item === currentPage() ? 'page' : null"
         (click)="goTo(item)"
-      >{{ item }}</button>
+      >
+        {{ item }}
+      </button>
     }
   }
-  <button class="pagination-button" type="button" aria-label="Next page" [disabled]="currentPage() === totalPages()" (click)="goTo(currentPage() + 1)">
-    <ds-icon name="chevronRight" [size]="14"></ds-icon>
+
+  <button
+    class="pagination-button"
+    type="button"
+    aria-label="Next page"
+    [disabled]="currentPage() === totalPages()"
+    (click)="goTo(currentPage() + 1)"
+  >
+    <ds-icon
+      name="chevronRight"
+      [size]="14"
+    >
+    </ds-icon>
   </button>
+
   <ds-select
     class="size"
     ariaLabel="Rows per page"
+    size="sm"
     [options]="sizeOptions()"
     [value]="pageSizeStr()"
     (valueChange)="onSizeChange($event)"
-    size="sm"
-  ></ds-select>
+  >
+  </ds-select>
 </nav>

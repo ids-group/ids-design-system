@@ -1,4 +1,11 @@
-import { Component, ViewEncapsulation, computed, input, model, output } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  computed,
+  input,
+  model,
+  output,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
 import { SelectComponent } from '../select/select.component';
@@ -20,7 +27,9 @@ export class PaginationComponent {
   readonly pageChange = output<number>();
   readonly pageSizeChange = output<number>();
 
-  protected readonly totalPages = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
+  protected readonly totalPages = computed(() =>
+    Math.max(1, Math.ceil(this.total() / this.pageSize())),
+  );
 
   protected readonly pageItems = computed<(number | 'ellipsis')[]>(() => {
     const total = this.totalPages();
@@ -29,32 +38,38 @@ export class PaginationComponent {
       return Array.from({ length: total }, (_, i) => i + 1);
     }
     const items: (number | 'ellipsis')[] = [1];
-    if (current > 3) items.push('ellipsis');
+    if (current > 3) {items.push('ellipsis');}
     const start = Math.max(2, current - 1);
     const end = Math.min(total - 1, current + 1);
-    for (let i = start; i <= end; i++) items.push(i);
-    if (current < total - 2) items.push('ellipsis');
+    for (let i = start; i <= end; i++) {items.push(i);}
+    if (current < total - 2) {items.push('ellipsis');}
     items.push(total);
+
     return items;
   });
 
   protected readonly rangeLabel = computed(() => {
     const start = (this.currentPage() - 1) * this.pageSize() + 1;
     const end = Math.min(this.currentPage() * this.pageSize(), this.total());
+
     return `Showing ${start}–${end} of ${this.total()}`;
   });
 
   protected readonly sizeOptions = computed(() => {
     const presets = this.pageSizeOptions();
     const current = this.pageSize();
-    const merged = presets.includes(current) ? presets : [current, ...presets].sort((a, b) => a - b);
+    const merged = presets.includes(current)
+      ? presets
+      : [current, ...presets].sort((a, b) => a - b);
+
     return merged.map((n) => ({ label: `${n} per page`, value: String(n) }));
   });
 
   protected readonly pageSizeStr = computed(() => String(this.pageSize()));
 
   protected goTo(page: number): void {
-    if (page < 1 || page > this.totalPages() || page === this.currentPage()) return;
+    if (page < 1 || page > this.totalPages() || page === this.currentPage())
+      {return;}
     this.currentPage.set(page);
     this.pageChange.emit(page);
   }
