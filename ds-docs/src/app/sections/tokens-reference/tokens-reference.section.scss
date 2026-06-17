@@ -26,7 +26,7 @@
   border-bottom: var(--border-width-default) solid var(--border-divider);
   vertical-align: middle;
   color: var(--text-secondary);
-  word-break: break-word;
+  overflow-wrap: break-word;
 }
 .ref-table .col-name     { width: 26%; }
 .ref-table .col-value    { width: 22%; }

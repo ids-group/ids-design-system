@@ -8,7 +8,6 @@
 .check,
 .radio {
   appearance: none;
-  appearance: none;
   width: var(--check-size);
   height: var(--check-size);
   border: var(--check-bw) solid var(--border-strong);
@@ -78,7 +77,6 @@
 }
 
 .switch {
-  appearance: none;
   appearance: none;
   width: var(--switch-track-w);
   height: var(--switch-track-h);
@@ -154,7 +152,6 @@
 }
 
 .slider {
-  appearance: none;
   appearance: none;
   width: 100%;
   height: var(--slider-track-h);

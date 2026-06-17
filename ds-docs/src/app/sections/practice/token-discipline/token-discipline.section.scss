@@ -58,7 +58,7 @@
       font-size: var(--font-size-xs);
       color: var(--text-primary);
       white-space: pre-wrap;
-      word-break: break-word;
+      overflow-wrap: break-word;
     }
 
     .rules {

@@ -1,10 +1,8 @@
 // Global skeleton shimmer driver.
-//
 // All <ds-skeleton> instances on the page reveal the same moving slice by
 // reading a shared, viewport-anchored offset (--skeleton-shimmer-x). The
 // offset is animated ONCE on :root so every skeleton stays in lock-step with
 // every other — no per-element animation timers drifting against each other.
-//
 // @property registration is required so the browser can interpolate the
 // custom property continuously instead of treating it as a discrete switch
 // at 0%/100%. Chrome 85+, Edge 85+, Firefox 128+, Safari 16.4+.

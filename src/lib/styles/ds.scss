@@ -1,6 +1,5 @@
 // Public DS stylesheet entry. Consumers import once at the top of their styles.scss:
 //   @use 'styles/ds';
-//
 // Bundles the default palette + theme for out-of-the-box rendering. Layers:
 //   default/palette — Tier 1 concrete colours (ramps + HSL channels)
 //   default/theme   — Tier 2 semantic role → palette assignments + font families

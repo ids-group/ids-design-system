@@ -2,7 +2,6 @@
 // Mono per tokens.css). We import the individual DS partials directly to
 // avoid pulling in brand-specific overrides — those live in mm-broker (or
 // any other host app that opts in via `<html data-brand="…">`).
-//
 // Theme contract: palette primitives (--blue-*, --neutral-*, ramps + HSL
 // channels) live in palette-default; semantic role assignments in theme-default.
 // Load palette → theme → tokens so role aliases (var(--blue-600) etc.) resolve.
