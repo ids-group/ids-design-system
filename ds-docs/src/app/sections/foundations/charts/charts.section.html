@@ -8,7 +8,9 @@
     Five reference chart types with empty + loading states.
   </span>
 
-  <h3 class="block-title t-h4">Categorical palette (8)</h3>
+  <h3 class="block-title t-h4">
+    Categorical palette (8)
+  </h3>
 
   <p class="block-desc t-s">
     Hand-tuned for perceptual distance, not ramp position. First six pass AA
@@ -21,14 +23,19 @@
         <div
           class="swatch__chip"
           [style.background]="'var(--chart-cat-' + n + ')'"
-        ></div>
+        >
+        </div>
 
-        <code class="t-mono-inline"> --chart-cat-{{ n }} </code>
+        <code class="t-mono-inline">
+          --chart-cat-{{ n }}
+        </code>
       </div>
     }
   </div>
 
-  <h3 class="block-title t-h4">Sequential ramp</h3>
+  <h3 class="block-title t-h4">
+    Sequential ramp
+  </h3>
 
   <p class="block-desc t-s">
     Single-hue, light → dark. Use for ordinal magnitudes (e.g. utilisation %,
@@ -41,14 +48,19 @@
         <div
           class="swatch__chip"
           [style.background]="'var(--chart-seq-' + n + ')'"
-        ></div>
+        >
+        </div>
 
-        <code class="t-mono-inline"> --chart-seq-{{ n }} </code>
+        <code class="t-mono-inline">
+          --chart-seq-{{ n }}
+        </code>
       </div>
     }
   </div>
 
-  <h3 class="block-title t-h4">Divergent ramp</h3>
+  <h3 class="block-title t-h4">
+    Divergent ramp
+  </h3>
 
   <p class="block-desc t-s">
     Red ← neutral → green for signed values where 0 is neutral.
@@ -60,7 +72,8 @@
         <div
           class="swatch__chip"
           [style.background]="divToken(n)"
-        ></div>
+        >
+        </div>
 
         <code class="t-mono-inline">
           {{ n > 0 ? '+' + n : n }}
@@ -69,16 +82,24 @@
     }
   </div>
 
-  <h3 class="block-title t-h4">Axis · grid · legend tokens</h3>
+  <h3 class="block-title t-h4">
+    Axis · grid · legend tokens
+  </h3>
 
   <table class="tbl">
     <thead>
       <tr>
-        <th>Token</th>
+        <th>
+          Token
+        </th>
 
-        <th>Role</th>
+        <th>
+          Role
+        </th>
 
-        <th>Default</th>
+        <th>
+          Default
+        </th>
       </tr>
     </thead>
 
@@ -103,14 +124,20 @@
     </tbody>
   </table>
 
-  <h3 class="block-title t-h4">Reference charts</h3>
+  <h3 class="block-title t-h4">
+    Reference charts
+  </h3>
 
   <!-- LINE -->
   <div class="chart">
     <div class="head">
-      <h4 class="title">Resource allocations / week</h4>
+      <h4 class="title">
+        Resource allocations / week
+      </h4>
 
-      <span class="sub"> Q3 2026 </span>
+      <span class="sub">
+        Q3 2026
+      </span>
     </div>
 
     <svg
@@ -199,9 +226,13 @@
     <!-- BAR -->
     <div class="chart">
       <div class="head">
-        <h4 class="title">Kit out, by event</h4>
+        <h4 class="title">
+          Kit out, by event
+        </h4>
 
-        <span class="sub"> Aug 2026 </span>
+        <span class="sub">
+          Aug 2026
+        </span>
       </div>
 
       <svg
@@ -264,9 +295,13 @@
     <!-- DONUT -->
     <div class="chart">
       <div class="head">
-        <h4 class="title">Kit register status</h4>
+        <h4 class="title">
+          Kit register status
+        </h4>
 
-        <span class="sub"> 412 items </span>
+        <span class="sub">
+          412 items
+        </span>
       </div>
 
       <div class="donut-row">
@@ -327,7 +362,9 @@
   <!-- STACKED -->
   <div class="chart">
     <div class="head">
-      <h4 class="title">Kit type mix / week</h4>
+      <h4 class="title">
+        Kit type mix / week
+      </h4>
     </div>
 
     <svg
@@ -413,9 +450,13 @@
   <!-- HEATMAP -->
   <div class="chart">
     <div class="head">
-      <h4 class="title">Kit excess / shortage by week (divergent)</h4>
+      <h4 class="title">
+        Kit excess / shortage by week (divergent)
+      </h4>
 
-      <span class="sub"> Negative = shortage · Positive = excess </span>
+      <span class="sub">
+        Negative = shortage · Positive = excess
+      </span>
     </div>
 
     <div class="heat">
@@ -447,12 +488,16 @@
     </div>
   </div>
 
-  <h3 class="block-title t-h4">Empty &amp; loading states</h3>
+  <h3 class="block-title t-h4">
+    Empty &amp; loading states
+  </h3>
 
   <div class="grid-2">
     <div class="chart empty">
       <div class="head">
-        <h4 class="title">Allocations / week</h4>
+        <h4 class="title">
+          Allocations / week
+        </h4>
       </div>
 
       <div class="body">
@@ -465,7 +510,9 @@
           <p class="empty__msg">
             No data for this period.<br />
 
-            <span class="t-xs"> Pick a different week range. </span>
+            <span class="t-xs">
+              Pick a different week range.
+            </span>
           </p>
         </div>
       </div>
@@ -473,9 +520,13 @@
 
     <div class="chart">
       <div class="head">
-        <h4 class="title">Allocations / week</h4>
+        <h4 class="title">
+          Allocations / week
+        </h4>
 
-        <span class="sub"> Loading… </span>
+        <span class="sub">
+          Loading…
+        </span>
       </div>
 
       <ds-skeleton height="var(--chart-skeleton-h)" />

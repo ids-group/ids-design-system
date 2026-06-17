@@ -44,7 +44,8 @@ import { ICONS, type IconName } from './icons.data';
       [attr.aria-label]="ariaLabel()"
       [attr.aria-hidden]="ariaLabel() ? null : 'true'"
       [innerHTML]="paths()"
-    ></svg>
+    >
+    </svg>
   `,
 })
 export class IconComponent {

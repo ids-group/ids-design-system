@@ -7,24 +7,36 @@
 
   <span lede>
     Four density tiers, applied via
-    <code class="t-mono-inline"> [data-density] </code> on a route container.
+    <code class="t-mono-inline">
+      [data-density]
+    </code> on a route container.
     They rewrite hit-target and component-scoped tokens — components consume the
     same role tokens, so no component CSS changes.
   </span>
 
   <!-- ============================================================ The three tiers -->
-  <h3 class="block-title t-h4">The three tiers</h3>
+  <h3 class="block-title t-h4">
+    The three tiers
+  </h3>
 
   <table class="tbl">
     <thead>
       <tr>
-        <th>Tier</th>
+        <th>
+          Tier
+        </th>
 
-        <th>--hit-cozy</th>
+        <th>
+          --hit-cozy
+        </th>
 
-        <th>Use case</th>
+        <th>
+          Use case
+        </th>
 
-        <th>Touch / WCAG</th>
+        <th>
+          Touch / WCAG
+        </th>
       </tr>
     </thead>
 
@@ -56,11 +68,15 @@
   </table>
 
   <!-- ============================================================ Live comparison -->
-  <h3 class="block-title t-h4">Live comparison</h3>
+  <h3 class="block-title t-h4">
+    Live comparison
+  </h3>
 
   <p class="block-desc t-s">
     Each sandbox wraps content in a
-    <code class="t-mono-inline"> [data-density] </code> container. The same UI
+    <code class="t-mono-inline">
+      [data-density]
+    </code> container. The same UI
     renders at three tiers — only the hit-target token changes.
   </p>
 
@@ -95,36 +111,54 @@
           />
 
           <div class="dens-chips">
-            <span class="dens-chip"> Active </span>
+            <span class="dens-chip">
+              Active
+            </span>
 
-            <span class="dens-chip"> Pending </span>
+            <span class="dens-chip">
+              Pending
+            </span>
 
-            <span class="dens-chip"> Failed </span>
+            <span class="dens-chip">
+              Failed
+            </span>
           </div>
 
           <ul class="dens-list">
             <li>
               <span class="dens-list__dot"></span>
 
-              <span class="dens-list__label"> Project Alpha </span>
+              <span class="dens-list__label">
+                Project Alpha
+              </span>
 
-              <span class="t-mono dens-list__meta"> 42 </span>
+              <span class="t-mono dens-list__meta">
+                42
+              </span>
             </li>
 
             <li>
               <span class="dens-list__dot"></span>
 
-              <span class="dens-list__label"> Project Beta </span>
+              <span class="dens-list__label">
+                Project Beta
+              </span>
 
-              <span class="t-mono dens-list__meta"> 18 </span>
+              <span class="t-mono dens-list__meta">
+                18
+              </span>
             </li>
 
             <li>
               <span class="dens-list__dot"></span>
 
-              <span class="dens-list__label"> Project Gamma </span>
+              <span class="dens-list__label">
+                Project Gamma
+              </span>
 
-              <span class="t-mono dens-list__meta"> 7 </span>
+              <span class="t-mono dens-list__meta">
+                7
+              </span>
             </li>
           </ul>
         </div>
@@ -133,27 +167,43 @@
   </div>
 
   <!-- ============================================================ What density rewrites -->
-  <h3 class="block-title t-h4">What density rewrites</h3>
+  <h3 class="block-title t-h4">
+    What density rewrites
+  </h3>
 
   <ul class="dens-rewrites">
-    <li>Hit targets — <code class="t-mono-inline">--hit-cozy</code></li>
+    <li>
+      Hit targets — <code class="t-mono-inline">--hit-cozy</code>
+    </li>
 
-    <li>Checkbox / radio size, switch geometry</li>
+    <li>
+      Checkbox / radio size, switch geometry
+    </li>
 
-    <li>Avatar default size, badge dot size, status dot size</li>
+    <li>
+      Avatar default size, badge dot size, status dot size
+    </li>
 
-    <li>Sidenav width</li>
+    <li>
+      Sidenav width
+    </li>
 
-    <li>Segmented control button height</li>
+    <li>
+      Segmented control button height
+    </li>
   </ul>
 
   <!-- ============================================================ Choosing density -->
-  <h3 class="block-title t-h4">Choosing density per screen</h3>
+  <h3 class="block-title t-h4">
+    Choosing density per screen
+  </h3>
 
   <p class="block-desc t-s">
     Density is a <strong>screen-level decision</strong>, not user-global. The
     Tweaks panel exposes it for prototyping — in the product, set
-    <code class="t-mono-inline"> [data-density] </code> on the route container,
+    <code class="t-mono-inline">
+      [data-density]
+    </code> on the route container,
     not on <code class="t-mono-inline">&lt;html&gt;</code>.
   </p>
 </docs-section>

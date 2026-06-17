@@ -12,7 +12,9 @@
   </span>
 
   <!-- ============================================================ Breakpoints -->
-  <h3 class="block-title t-h4">Breakpoints</h3>
+  <h3 class="block-title t-h4">
+    Breakpoints
+  </h3>
 
   <p class="block-desc t-s">
     Use them in <code class="t-mono-inline">&#64;media</code> queries via
@@ -27,7 +29,9 @@
           {{ bp.token }}
         </code>
 
-        <div class="t-s-bold bp-row__px">{{ bp.px }} px</div>
+        <div class="t-s-bold bp-row__px">
+          {{ bp.px }} px
+        </div>
 
         <div class="t-s bp-row__desc">
           {{ bp.desc }}
@@ -37,14 +41,17 @@
           <div
             class="bp-row__fill"
             [style.width.%]="(bp.px / 1536) * 100"
-          ></div>
+          >
+          </div>
         </div>
       </div>
     }
   </div>
 
   <!-- ============================================================ Grid -->
-  <h3 class="block-title t-h4">Layout grid</h3>
+  <h3 class="block-title t-h4">
+    Layout grid
+  </h3>
 
   <p class="block-desc t-s">
     One column-count per breakpoint. Page gutters and margins scale with the
@@ -60,7 +67,9 @@
             {{ t.name }}
           </div>
 
-          <div class="t-h5">{{ t.cols }} columns</div>
+          <div class="t-h5">
+            {{ t.cols }} columns
+          </div>
 
           <div class="t-xs grid-tier__range">
             {{ t.range }}
@@ -77,19 +86,29 @@
         </div>
 
         <dl class="grid-tier__meta">
-          <dt>Gutter</dt>
+          <dt>
+            Gutter
+          </dt>
 
           <dd>
-            <code class="t-mono-inline"> var({{ t.gutter }}) </code>
+            <code class="t-mono-inline">
+              var({{ t.gutter }})
+            </code>
           </dd>
 
-          <dt>Margin</dt>
+          <dt>
+            Margin
+          </dt>
 
           <dd>
-            <code class="t-mono-inline"> var({{ t.margin }}) </code>
+            <code class="t-mono-inline">
+              var({{ t.margin }})
+            </code>
           </dd>
 
-          <dt>Container</dt>
+          <dt>
+            Container
+          </dt>
 
           <dd>
             <code class="t-mono-inline">
@@ -102,7 +121,9 @@
   </div>
 
   <!-- ============================================================ Content caps -->
-  <h3 class="block-title t-h4">Content caps</h3>
+  <h3 class="block-title t-h4">
+    Content caps
+  </h3>
 
   <div class="cap-list">
     @for (c of colCaps; track c.token) {
@@ -123,33 +144,47 @@
   </div>
 
   <!-- ============================================================ Composition rules -->
-  <h3 class="block-title t-h4">Composition rules</h3>
+  <h3 class="block-title t-h4">
+    Composition rules
+  </h3>
 
   <ul class="rules-list">
     <li>
-      <strong> One grid per page. </strong> Sub-regions align to the same column
+      <strong>
+        One grid per page.
+      </strong> Sub-regions align to the same column
       track they inherit — never invent a local grid.
     </li>
 
     <li>
-      <strong> Snap to columns, not to pixels. </strong> Two-column splits at
+      <strong>
+        Snap to columns, not to pixels.
+      </strong> Two-column splits at
       desktop are 8 + 4 or 6 + 6 — never 7 + 5.
     </li>
 
     <li>
-      <strong> Sidenav lives outside the grid. </strong> Reserve a fixed rail
+      <strong>
+        Sidenav lives outside the grid.
+      </strong> Reserve a fixed rail
       (collapsed 64 px / open 240 px), then start the grid in the remaining
       width.
     </li>
 
     <li>
-      <strong> Content cap. </strong> Body text never exceeds 720 px width
+      <strong>
+        Content cap.
+      </strong> Body text never exceeds 720 px width
       regardless of grid — use
-      <code class="t-mono-inline"> --col-cap-text </code>.
+      <code class="t-mono-inline">
+        --col-cap-text
+      </code>.
     </li>
 
     <li>
-      <strong> Asymmetric layouts. </strong> 8 + 4 is canonical for
+      <strong>
+        Asymmetric layouts.
+      </strong> 8 + 4 is canonical for
       record-detail pages (main + meta sidebar). 9 + 3 reserved for kit /
       track-plan picker rails.
     </li>

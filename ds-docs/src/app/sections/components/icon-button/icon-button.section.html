@@ -5,21 +5,37 @@
 >
   <span lede>
     Icon-only action with its own variant taxonomy — distinct from
-    <code class="t-mono-inline"> &lt;ds-button&gt; </code>. Use for toolbars,
+    <code class="t-mono-inline">
+      &lt;ds-button&gt;
+    </code>. Use for toolbars,
     table-row actions, close / back / overflow affordances.
-    <code class="t-mono-inline"> [ariaLabel] </code> is required (an icon has no
+    <code class="t-mono-inline">
+      [ariaLabel]
+    </code> is required (an icon has no
     text label). This replaces the former
-    <code class="t-mono-inline"> ds-button iconOnly </code> flag.
+    <code class="t-mono-inline">
+      ds-button iconOnly
+    </code> flag.
   </span>
 
   <!-- ============================================================ Variants -->
-  <h3 class="block-title t-h4">Variants</h3>
+  <h3 class="block-title t-h4">
+    Variants
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> standard </code> (chromeless, default) ·
-    <code class="t-mono-inline"> filled </code> (high emphasis) ·
-    <code class="t-mono-inline"> tonal </code> (medium) ·
-    <code class="t-mono-inline"> outlined </code> (bordered).
+    <code class="t-mono-inline">
+      standard
+    </code> (chromeless, default) ·
+    <code class="t-mono-inline">
+      filled
+    </code> (high emphasis) ·
+    <code class="t-mono-inline">
+      tonal
+    </code> (medium) ·
+    <code class="t-mono-inline">
+      outlined
+    </code> (bordered).
   </p>
 
   <div class="row">
@@ -30,7 +46,9 @@
         variant="standard"
       />
 
-      <code class="t-mono-inline"> standard </code>
+      <code class="t-mono-inline">
+        standard
+      </code>
     </div>
 
     <div class="cell">
@@ -40,7 +58,9 @@
         variant="filled"
       />
 
-      <code class="t-mono-inline"> filled </code>
+      <code class="t-mono-inline">
+        filled
+      </code>
     </div>
 
     <div class="cell">
@@ -50,7 +70,9 @@
         variant="tonal"
       />
 
-      <code class="t-mono-inline"> tonal </code>
+      <code class="t-mono-inline">
+        tonal
+      </code>
     </div>
 
     <div class="cell">
@@ -60,12 +82,16 @@
         variant="outlined"
       />
 
-      <code class="t-mono-inline"> outlined </code>
+      <code class="t-mono-inline">
+        outlined
+      </code>
     </div>
   </div>
 
   <!-- ============================================================ Sizes -->
-  <h3 class="block-title t-h4">Sizes</h3>
+  <h3 class="block-title t-h4">
+    Sizes
+  </h3>
 
   <p class="block-desc t-s">
     sm 32 · md 40 (default) · lg 48 — aligned with the field / button scale.
@@ -80,7 +106,9 @@
         size="sm"
       />
 
-      <code class="t-mono-inline"> size="sm" </code>
+      <code class="t-mono-inline">
+        size="sm"
+      </code>
     </div>
 
     <div class="cell">
@@ -90,7 +118,9 @@
         variant="outlined"
       />
 
-      <code class="t-mono-inline"> size="md" </code>
+      <code class="t-mono-inline">
+        size="md"
+      </code>
     </div>
 
     <div class="cell">
@@ -101,15 +131,21 @@
         size="lg"
       />
 
-      <code class="t-mono-inline"> size="lg" </code>
+      <code class="t-mono-inline">
+        size="lg"
+      </code>
     </div>
   </div>
 
   <!-- ============================================================ Toggle -->
-  <h3 class="block-title t-h4">Toggle</h3>
+  <h3 class="block-title t-h4">
+    Toggle
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> [selected] </code> renders the pressed state
+    <code class="t-mono-inline">
+      [selected]
+    </code> renders the pressed state
     and sets <code class="t-mono-inline">aria-pressed</code>. Click to flip.
   </p>
 
@@ -122,12 +158,16 @@
         (pressed)="bookmarked.set(!bookmarked())"
       />
 
-      <code class="t-mono-inline"> selected = {{ bookmarked() }} </code>
+      <code class="t-mono-inline">
+        selected = {{ bookmarked() }}
+      </code>
     </div>
   </div>
 
   <!-- ============================================================ Disabled -->
-  <h3 class="block-title t-h4">Disabled</h3>
+  <h3 class="block-title t-h4">
+    Disabled
+  </h3>
 
   <div class="row">
     <div class="cell">
@@ -138,7 +178,9 @@
         [disabled]="true"
       />
 
-      <code class="t-mono-inline"> [disabled]="true" </code>
+      <code class="t-mono-inline">
+        [disabled]="true"
+      </code>
     </div>
   </div>
 </docs-section>

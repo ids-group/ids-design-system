@@ -25,13 +25,19 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
   template: `
     <nav class="toc" [class.is-collapsed]="collapsed()">
       <div class="brand">
-        <span class="mark"> D </span>
+        <span class="mark">
+          D
+        </span>
 
         @if (!collapsed()) {
           <div class="brand-text">
-            <span class="brand-name"> Design System </span>
+            <span class="brand-name">
+              Design System
+            </span>
 
-            <small> Boilerplate v{{ version }} </small>
+            <small>
+              Boilerplate v{{ version }}
+            </small>
           </div>
         }
 
@@ -86,7 +92,9 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
         }
 
         @if (filteredNav().length === 0) {
-          <div class="nav-empty">Nothing found</div>
+          <div class="nav-empty">
+            Nothing found
+          </div>
         }
       }
     </nav>

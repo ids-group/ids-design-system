@@ -147,7 +147,9 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
   template: `
     <section-home />
 
-    <h1 class="group-title t-h2">Components</h1>
+    <h1 class="group-title t-h2">
+      Components
+    </h1>
 
     <section-components-accordion />
 
@@ -231,7 +233,9 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-components-w3w />
 
-    <h1 class="group-title t-h2">Foundations</h1>
+    <h1 class="group-title t-h2">
+      Foundations
+    </h1>
 
     <section-foundations-borders />
 
@@ -265,7 +269,9 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-foundations-z-index />
 
-    <h1 class="group-title t-h2">Patterns</h1>
+    <h1 class="group-title t-h2">
+      Patterns
+    </h1>
 
     <pattern-activity />
 
@@ -277,13 +283,17 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <pattern-page-header />
 
-    <h1 class="group-title t-h2">Practice</h1>
+    <h1 class="group-title t-h2">
+      Practice
+    </h1>
 
     <practice-do-dont />
 
     <practice-token-discipline />
 
-    <h1 class="group-title t-h2">Tokens reference</h1>
+    <h1 class="group-title t-h2">
+      Tokens reference
+    </h1>
 
     <section-tokens-reference />
   `,

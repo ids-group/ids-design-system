@@ -80,6 +80,7 @@ export default defineConfig(
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/prefer-for-of': 'warn',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
@@ -96,11 +97,8 @@ export default defineConfig(
       ds: dsPlugin,
     },
     rules: {
-      // Disabled: both conflict with Prettier's Angular-template formatting
-      // (Prettier collapses short element content and owns attribute layout via
-      // singleAttributePerLine). Prettier is the single source of template format.
-      'ds/template/sibling-blank-line': 'off',
-      'ds/template/element-content-newline': 'off',
+      'ds/template/sibling-blank-line': 'warn',
+      'ds/template/element-content-newline': 'warn',
       '@angular-eslint/template/attributes-order': 'warn',
       '@angular-eslint/template/click-events-have-key-events': 'warn',
       '@angular-eslint/template/interactive-supports-focus': 'warn',

@@ -33,7 +33,9 @@
         <ds-dropzone />
       </div>
 
-      <div class="state-cell__label">Idle</div>
+      <div class="state-cell__label">
+        Idle
+      </div>
     </div>
 
     <div class="state-cell">
@@ -42,7 +44,9 @@
         <ds-dropzone />
       </div>
 
-      <div class="state-cell__label">Active · drag-over</div>
+      <div class="state-cell__label">
+        Active · drag-over
+      </div>
     </div>
 
     <div class="state-cell">
@@ -57,15 +61,20 @@
               />
 
               <div class="main">
-                <div class="name">project-alpha-brief-v3.pdf</div>
+                <div class="name">
+                  project-alpha-brief-v3.pdf
+                </div>
 
-                <div class="meta">2.4 MB · uploading 65%</div>
+                <div class="meta">
+                  2.4 MB · uploading 65%
+                </div>
 
                 <div class="progress">
                   <div
                     class="progress-fill"
                     style="width: 65%"
-                  ></div>
+                  >
+                  </div>
                 </div>
               </div>
 
@@ -88,9 +97,13 @@
               />
 
               <div class="main">
-                <div class="name">site-map.dwg</div>
+                <div class="name">
+                  site-map.dwg
+                </div>
 
-                <div class="meta">8.1 MB · uploaded</div>
+                <div class="meta">
+                  8.1 MB · uploaded
+                </div>
               </div>
 
               <button
@@ -112,9 +125,13 @@
               />
 
               <div class="main">
-                <div class="name">vendor-list-FINAL.xlsx</div>
+                <div class="name">
+                  vendor-list-FINAL.xlsx
+                </div>
 
-                <div class="meta">12.4 MB · exceeds 10 MB limit</div>
+                <div class="meta">
+                  12.4 MB · exceeds 10 MB limit
+                </div>
               </div>
 
               <button
@@ -131,7 +148,9 @@
         </div>
       </div>
 
-      <div class="state-cell__label">With files</div>
+      <div class="state-cell__label">
+        With files
+      </div>
     </div>
 
     <div class="state-cell">
@@ -139,12 +158,16 @@
         <ds-dropzone [disabled]="true" />
       </div>
 
-      <div class="state-cell__label">Disabled</div>
+      <div class="state-cell__label">
+        Disabled
+      </div>
     </div>
   </div>
 
   <!-- ============================================================ Single-file mode -->
-  <h3 class="block-title t-h4">Single-file mode</h3>
+  <h3 class="block-title t-h4">
+    Single-file mode
+  </h3>
 
   <p class="block-desc t-s">
     Narrower variant accepting one file at a time. Replaces the existing file
@@ -153,7 +176,9 @@
 
   <div class="single-wrap">
     <ds-dropzone [single]="true">
-      <p hint>PNG · JPG · max 5 MB · one image only</p>
+      <p hint>
+        PNG · JPG · max 5 MB · one image only
+      </p>
     </ds-dropzone>
   </div>
 
@@ -181,45 +206,12 @@
           />
 
           <div class="main">
-            <div class="name">project-brief.pdf</div>
+            <div class="name">
+              project-brief.pdf
+            </div>
 
-            <div class="meta">2.4 MB</div>
-          </div>
-
-          <button
-            class="remove"
-            type="button"
-          >
-            <ds-icon
-              name="x"
-              [size]="14"
-            />
-          </button>
-        </div>
-      </div>
-
-      <div class="state-cell__label">Default</div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <div class="file uploading">
-          <ds-icon
-            class="icon"
-            name="file"
-            [size]="20"
-          />
-
-          <div class="main">
-            <div class="name">site-survey.dwg</div>
-
-            <div class="meta">8.1 MB · 42%</div>
-
-            <div class="progress">
-              <div
-                class="progress-fill"
-                style="width: 42%"
-              ></div>
+            <div class="meta">
+              2.4 MB
             </div>
           </div>
 
@@ -235,7 +227,53 @@
         </div>
       </div>
 
-      <div class="state-cell__label">Uploading</div>
+      <div class="state-cell__label">
+        Default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <div class="file uploading">
+          <ds-icon
+            class="icon"
+            name="file"
+            [size]="20"
+          />
+
+          <div class="main">
+            <div class="name">
+              site-survey.dwg
+            </div>
+
+            <div class="meta">
+              8.1 MB · 42%
+            </div>
+
+            <div class="progress">
+              <div
+                class="progress-fill"
+                style="width: 42%"
+              >
+              </div>
+            </div>
+          </div>
+
+          <button
+            class="remove"
+            type="button"
+          >
+            <ds-icon
+              name="x"
+              [size]="14"
+            />
+          </button>
+        </div>
+      </div>
+
+      <div class="state-cell__label">
+        Uploading
+      </div>
     </div>
 
     <div class="state-cell">
@@ -248,9 +286,13 @@
           />
 
           <div class="main">
-            <div class="name">risk-assessment.docx</div>
+            <div class="name">
+              risk-assessment.docx
+            </div>
 
-            <div class="meta">1.2 MB · uploaded</div>
+            <div class="meta">
+              1.2 MB · uploaded
+            </div>
           </div>
 
           <button
@@ -265,7 +307,9 @@
         </div>
       </div>
 
-      <div class="state-cell__label">Success</div>
+      <div class="state-cell__label">
+        Success
+      </div>
     </div>
 
     <div class="state-cell">
@@ -278,9 +322,13 @@
           />
 
           <div class="main">
-            <div class="name">vendor-list-FINAL.xlsx</div>
+            <div class="name">
+              vendor-list-FINAL.xlsx
+            </div>
 
-            <div class="meta">Upload failed — exceeds 10 MB limit</div>
+            <div class="meta">
+              Upload failed — exceeds 10 MB limit
+            </div>
           </div>
 
           <button
@@ -295,7 +343,9 @@
         </div>
       </div>
 
-      <div class="state-cell__label">Error</div>
+      <div class="state-cell__label">
+        Error
+      </div>
     </div>
   </div>
 </docs-section>
