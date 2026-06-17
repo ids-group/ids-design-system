@@ -37,7 +37,7 @@ export class ModalComponent {
   constructor() {
     // Lock background scroll while the dialog is open (skipped in preview mode).
     effect(() => {
-      if (this.preview.staticPreview()) return;
+      if (this.preview.staticPreview()) {return;}
       this.doc.body.style.overflow = this.open() ? 'hidden' : '';
     });
     inject(DestroyRef).onDestroy(() => {
@@ -46,12 +46,12 @@ export class ModalComponent {
   }
 
   protected onClose(): void {
-    if (this.preview.staticPreview()) return;
+    if (this.preview.staticPreview()) {return;}
     this.open.set(false);
     this.closed.emit();
   }
 
   protected onBackdrop(event: MouseEvent): void {
-    if (event.target === event.currentTarget) this.onClose();
+    if (event.target === event.currentTarget) {this.onClose();}
   }
 }

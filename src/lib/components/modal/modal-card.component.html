@@ -1,20 +1,42 @@
 <div
-  [class]="classes()"
   role="dialog"
   aria-modal="true"
+  [class]="classes()"
   [attr.aria-labelledby]="titleId"
 >
   <div class="header">
-    <h2 class="title" [id]="titleId">{{ title() }}</h2>
+    <h2
+      class="title"
+      [id]="titleId"
+    >
+      {{ title() }}
+    </h2>
+
     @if (showClose()) {
-      <button class="close" type="button" aria-label="Close dialog" (click)="onClose()">
-        <ds-icon name="x" [size]="16"></ds-icon>
+      <button
+        class="close"
+        type="button"
+        aria-label="Close dialog"
+        (click)="onClose()"
+      >
+        <ds-icon
+          name="x"
+          [size]="16"
+        >
+        </ds-icon>
       </button>
     }
   </div>
+
   <div class="body">
     <ng-content select="[body]"></ng-content>
-    <div class="impact"><ng-content select="[impact]"></ng-content></div>
+
+    <div class="impact">
+      <ng-content select="[impact]"></ng-content>
+    </div>
   </div>
-  <div class="actions"><ng-content select="[actions]"></ng-content></div>
+
+  <div class="actions">
+    <ng-content select="[actions]"></ng-content>
+  </div>
 </div>

@@ -12,9 +12,23 @@
       [title]="title()"
       (closed)="onClose()"
     >
-      <ng-container body><ng-content select="[body]"></ng-content></ng-container>
-      <ng-container impact><ng-content select="[impact]"></ng-content></ng-container>
-      <ng-container actions><ng-content select="[actions]"></ng-content></ng-container>
+      <ng-container body
+        >
+        <ng-content select="[body]"></ng-content
+      >
+      </ng-container>
+
+      <ng-container impact
+        >
+        <ng-content select="[impact]"></ng-content
+      >
+      </ng-container>
+
+      <ng-container actions
+        >
+        <ng-content select="[actions]"></ng-content
+      >
+      </ng-container>
     </ds-modal-card>
   </div>
 }

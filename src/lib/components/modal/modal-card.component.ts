@@ -1,4 +1,10 @@
-import { Component, ViewEncapsulation, computed, input, output } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  computed,
+  input,
+  output,
+} from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { ModalSize } from './modal.types';
 
@@ -23,7 +29,8 @@ export class ModalCardComponent {
 
   protected readonly classes = computed(() => {
     const parts = ['modal', this.size()];
-    if (this.danger()) parts.push('danger');
+    if (this.danger()) {parts.push('danger');}
+
     return parts.join(' ');
   });
 
