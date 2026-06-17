@@ -1,5 +1,11 @@
 @if (label()) {
-  <span class="dropdown-label" [id]="labelId">{{ label() }}</span>
+  <span
+    class="dropdown-label"
+    [id]="labelId"
+    >
+    {{ label() }}
+  </span
+  >
 }
 
 <button
@@ -19,8 +25,21 @@
   (click)="toggle()"
   (keydown)="onTriggerKeydown($event)"
 >
-  <span class="trigger-text" [class.is-placeholder]="!hasValue()">{{ displayLabel() }}</span>
-  <span class="chevron"><ds-icon name="chevronDown" [size]="14" /></span>
+  <span
+    class="trigger-text"
+    [class.is-placeholder]="!hasValue()"
+    >
+    {{ displayLabel() }}
+  </span
+  >
+
+  <span class="chevron"
+    >
+    <ds-icon
+      name="chevronDown"
+      [size]="14"
+  />
+  </span>
 </button>
 
 @if (preview.staticPreview()) {
@@ -35,7 +54,12 @@
 
 <ng-template #panelContent>
   <div class="dropdown-panel">
-    <ul class="dropdown-list" role="listbox" [id]="listboxId" [attr.aria-labelledby]="label() ? labelId : null">
+    <ul
+      class="dropdown-list"
+      role="listbox"
+      [id]="listboxId"
+      [attr.aria-labelledby]="label() ? labelId : null"
+    >
       @for (opt of options(); track opt.value; let i = $index) {
         <li role="presentation">
           <button
@@ -53,11 +77,23 @@
             (mouseenter)="activeIndex.set(i)"
           >
             @if (opt.icon) {
-              <ds-icon class="option-icon" [name]="opt.icon" [size]="16" />
+              <ds-icon
+                class="option-icon"
+                [name]="opt.icon"
+                [size]="16"
+              />
             }
-            <span class="option-label">{{ opt.label }}</span>
+
+            <span class="option-label">
+              {{ opt.label }}
+            </span>
+
             @if (isSelected(opt)) {
-              <ds-icon class="option-check" name="check" [size]="14" />
+              <ds-icon
+                class="option-check"
+                name="check"
+                [size]="14"
+              />
             }
           </button>
         </li>

@@ -57,9 +57,12 @@ export class DropdownComponent {
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,
   );
 
-  protected readonly trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
-  protected readonly panelTpl = viewChild.required<TemplateRef<unknown>>('panel');
-  protected readonly panelContentTpl = viewChild.required<TemplateRef<unknown>>('panelContent');
+  protected readonly trigger =
+    viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
+  protected readonly panelTpl =
+    viewChild.required<TemplateRef<unknown>>('panel');
+  protected readonly panelContentTpl =
+    viewChild.required<TemplateRef<unknown>>('panelContent');
   protected readonly open = signal<boolean>(false);
   protected readonly activeIndex = signal<number>(-1);
 
@@ -68,6 +71,7 @@ export class DropdownComponent {
   protected readonly selectedOption = computed<DropdownOption | null>(() => {
     const current = this.value();
     const found = this.options().find((o) => o.value === current);
+
     return found ?? null;
   });
 
@@ -75,34 +79,39 @@ export class DropdownComponent {
     return this.selectedOption()?.label ?? this.placeholder();
   });
 
-  protected readonly hasValue = computed<boolean>(() => !!this.selectedOption());
+  protected readonly hasValue = computed<boolean>(
+    () => !!this.selectedOption(),
+  );
 
   protected readonly activeDescendant = computed(() => {
-    const idx = this.activeIndex();
-    return this.open() && idx >= 0 ? this.optionId(idx) : null;
+    const index = this.activeIndex();
+
+    return this.open() && index >= 0 ? this.optionId(index) : null;
   });
 
   protected readonly wrapperClasses = computed<string>(() => {
     const parts = ['dropdown'];
-    if (this.size() === 'sm') parts.push('sm');
-    if (this.size() === 'lg') parts.push('lg');
-    if (this.disabled()) parts.push('disabled');
-    if (this.readOnly()) parts.push('readonly');
-    if (this.error()) parts.push('error');
-    if (this.open() || this.preview.staticPreview()) parts.push('open');
+    if (this.size() === 'sm') {parts.push('sm');}
+    if (this.size() === 'lg') {parts.push('lg');}
+    if (this.disabled()) {parts.push('disabled');}
+    if (this.readOnly()) {parts.push('readonly');}
+    if (this.error()) {parts.push('error');}
+    if (this.open() || this.preview.staticPreview()) {parts.push('open');}
+
     return parts.join(' ');
   });
 
   constructor() {
     effect(() => {
-      if (!this.open()) return;
-      const idx = this.options().findIndex((o) => o.value === this.value());
-      this.activeIndex.set(idx >= 0 ? idx : this.firstEnabledIndex());
+      if (!this.open()) {return;}
+      const index = this.options().findIndex((o) => o.value === this.value());
+      this.activeIndex.set(index >= 0 ? index : this.firstEnabledIndex());
     });
   }
 
   protected toggle(): void {
-    if (this.disabled() || this.readOnly() || this.preview.staticPreview()) return;
+    if (this.disabled() || this.readOnly() || this.preview.staticPreview())
+      {return;}
     if (this.open()) {
       this.close();
     } else {
@@ -111,14 +120,27 @@ export class DropdownComponent {
   }
 
   protected openPanel(): void {
-    if (this.overlayRef) return;
-    const triggerEl = this.trigger().nativeElement;
-    const width = triggerEl.getBoundingClientRect().width;
-    const positionStrategy = this.overlay.position()
-      .flexibleConnectedTo(triggerEl)
+    if (this.overlayRef) {return;}
+    const triggerElement = this.trigger().nativeElement;
+    const width = triggerElement.getBoundingClientRect().width;
+    const positionStrategy = this.overlay
+      .position()
+      .flexibleConnectedTo(triggerElement)
       .withPositions([
-        { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 4 },
-        { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -4 },
+        {
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top',
+          offsetY: 4,
+        },
+        {
+          originX: 'start',
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'bottom',
+          offsetY: -4,
+        },
       ]);
     const cfg: OverlayConfig = {
       positionStrategy,
@@ -145,7 +167,7 @@ export class DropdownComponent {
   }
 
   protected pick(option: DropdownOption): void {
-    if (option.disabled) return;
+    if (option.disabled) {return;}
     this.value.set(option.value);
     this.close();
     this.trigger().nativeElement.focus();
@@ -156,40 +178,52 @@ export class DropdownComponent {
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
-    if (this.disabled() || this.readOnly() || this.preview.staticPreview()) return;
+    if (this.disabled() || this.readOnly() || this.preview.staticPreview())
+      {return;}
     const key = event.key;
     if (!this.open()) {
-      if (key === 'ArrowDown' || key === 'ArrowUp' || key === 'Enter' || key === ' ') {
+      if (
+        key === 'ArrowDown' ||
+        key === 'ArrowUp' ||
+        key === 'Enter' ||
+        key === ' '
+      ) {
         event.preventDefault();
         this.openPanel();
       }
+
       return;
     }
     if (key === 'Escape') {
       event.preventDefault();
       this.close();
+
       return;
     }
     if (key === 'ArrowDown') {
       event.preventDefault();
       this.moveActive(1);
+
       return;
     }
     if (key === 'ArrowUp') {
       event.preventDefault();
       this.moveActive(-1);
+
       return;
     }
     if (key === 'Enter' || key === ' ') {
       event.preventDefault();
-      const idx = this.activeIndex();
-      const opt = this.options()[idx];
-      if (opt) this.pick(opt);
+      const index = this.activeIndex();
+      const opt = this.options()[index];
+      if (opt) {this.pick(opt);}
+
       return;
     }
     if (key === 'Home') {
       event.preventDefault();
       this.activeIndex.set(this.firstEnabledIndex());
+
       return;
     }
     if (key === 'End') {
@@ -204,13 +238,14 @@ export class DropdownComponent {
 
   private moveActive(delta: number): void {
     const opts = this.options();
-    if (opts.length === 0) return;
+    if (opts.length === 0) {return;}
     let next = this.activeIndex();
     for (let attempts = 0; attempts < opts.length; attempts++) {
       next = (next + delta + opts.length) % opts.length;
       const candidate = opts[next];
       if (candidate && !candidate.disabled) {
         this.activeIndex.set(next);
+
         return;
       }
     }
@@ -220,8 +255,9 @@ export class DropdownComponent {
     const opts = this.options();
     for (let i = 0; i < opts.length; i++) {
       const candidate = opts[i];
-      if (candidate && !candidate.disabled) return i;
+      if (candidate && !candidate.disabled) {return i;}
     }
+
     return -1;
   }
 
@@ -229,8 +265,9 @@ export class DropdownComponent {
     const opts = this.options();
     for (let i = opts.length - 1; i >= 0; i--) {
       const candidate = opts[i];
-      if (candidate && !candidate.disabled) return i;
+      if (candidate && !candidate.disabled) {return i;}
     }
+
     return -1;
   }
 }
