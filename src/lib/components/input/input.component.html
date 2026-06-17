@@ -1,26 +1,46 @@
 <div [class]="wrapperClasses()">
   @if (label()) {
-    <label class="label" [attr.for]="uid">
+    <label
+      class="label"
+      [attr.for]="uid"
+    >
       {{ label() }}
       @if (required()) {
-        <span class="req" aria-hidden="true">*</span>
+        <span
+          class="req"
+          aria-hidden="true"
+          >
+          *
+        </span
+        >
       } @else if (optional()) {
-        <span class="optional-marker" aria-hidden="true">(optional)</span>
+        <span
+          class="optional-marker"
+          aria-hidden="true"
+          >
+          (optional)
+        </span
+        >
       }
     </label>
   }
+
   <div class="control">
-    <span class="addon-slot prefix"><ng-content select="[dsInputPrefix]"></ng-content></span>
+    <span class="addon-slot prefix"
+      >
+      <ng-content select="[dsInputPrefix]"></ng-content
+    >
+    </span>
+
     <input
       [id]="uid"
       [type]="effectiveType()"
-      [(ngModel)]="value"
       [attr.name]="name()"
       [attr.min]="min()"
       [attr.max]="max()"
       [attr.step]="step()"
       [attr.autocomplete]="autocomplete()"
-      [attr.autofocus]="autofocus() ? '' : null"
+     
       [attr.placeholder]="placeholder() || null"
       [attr.aria-label]="resolvedAriaLabel()"
       [attr.aria-invalid]="invalid() ? 'true' : null"
@@ -31,25 +51,52 @@
       [disabled]="disabled()"
       [readOnly]="readOnly()"
       [required]="required()"
+      [(ngModel)]="value"
       (blur)="blurred.emit()"
     />
+
     @if (canClear() && value() && !disabled()) {
-      <button type="button" class="clear-btn" (click)="clear()" aria-label="Clear input"></button>
+      <button
+        type="button"
+        class="clear-btn"
+        aria-label="Clear input"
+        (click)="clear()"
+      >
+      </button>
     }
+
     @if (showPasswordToggle()) {
       <button
         type="button"
         class="password-toggle"
         tabindex="-1"
-        [attr.aria-label]="passwordVisible() ? 'Hide password' : 'Show password'"
+        [attr.aria-label]="
+          passwordVisible() ? 'Hide password' : 'Show password'
+        "
         (click)="togglePassword()"
       >
-        <ds-icon [name]="passwordVisible() ? 'eye-off' : 'eye'" [size]="16" />
+        <ds-icon
+          [name]="passwordVisible() ? 'eye-off' : 'eye'"
+          [size]="16"
+        />
       </button>
     }
-    <span class="addon-slot suffix"><ng-content select="[dsInputSuffix]"></ng-content></span>
+
+    <span class="addon-slot suffix"
+      >
+      <ng-content select="[dsInputSuffix]"></ng-content
+    >
+    </span>
   </div>
+
   @if (hint()) {
-    <span class="hint" [id]="hintId()" [attr.role]="invalid() ? 'alert' : null">{{ hint() }}</span>
+    <span
+      class="hint"
+      [id]="hintId()"
+      [attr.role]="invalid() ? 'alert' : null"
+      >
+      {{ hint() }}
+    </span
+    >
   }
 </div>

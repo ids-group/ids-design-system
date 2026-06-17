@@ -1,4 +1,12 @@
-import { Component, ViewEncapsulation, booleanAttribute, computed, input, model, output } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  computed,
+  input,
+  model,
+  output,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
 import type { InputSize, InputType } from './input.types';
@@ -42,8 +50,20 @@ export class InputComponent {
    *  placeholder so the control is never unnamed). */
   readonly ariaLabel = input<string | null>(null);
   /** Mobile keyboard hints — forwarded to the native input as attributes. */
-  readonly enterKeyHint = input<'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send' | null>(null);
-  readonly inputMode = input<'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url' | null>(null);
+  readonly enterKeyHint = input<
+    'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send' | null
+  >(null);
+  readonly inputMode = input<
+    | 'none'
+    | 'text'
+    | 'decimal'
+    | 'numeric'
+    | 'tel'
+    | 'search'
+    | 'email'
+    | 'url'
+    | null
+  >(null);
   /** Emits when the native input loses focus. */
   readonly blurred = output<void>();
   /**
@@ -60,23 +80,29 @@ export class InputComponent {
 
   protected readonly canClear = computed<boolean>(() => {
     const explicit = this.clearable();
-    if (explicit !== null) return explicit;
+    if (explicit !== null) {return explicit;}
+
     return this.type() === 'search';
   });
 
   protected readonly uid = `ds-input-${++nextId}`;
-  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly hintId = computed(() =>
+    this.hint() ? `${this.uid}-hint` : null,
+  );
   /** Only name via aria-label when there's no visible `<label for>`. */
   protected readonly resolvedAriaLabel = computed(() =>
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,
   );
 
   protected readonly showPasswordToggle = computed<boolean>(
-    () => this.passwordToggle() && this.type() === 'password' && !this.disabled(),
+    () =>
+      this.passwordToggle() && this.type() === 'password' && !this.disabled(),
   );
 
   protected readonly effectiveType = computed<InputType>(() =>
-    this.passwordToggle() && this.type() === 'password' && this.passwordVisible()
+    this.passwordToggle() &&
+    this.type() === 'password' &&
+    this.passwordVisible()
       ? 'text'
       : this.type(),
   );
@@ -87,14 +113,15 @@ export class InputComponent {
 
   protected readonly wrapperClasses = computed(() => {
     const parts = ['field'];
-    if (this.size() === 'sm') parts.push('sm');
-    if (this.size() === 'lg') parts.push('lg');
-    if (this.invalid()) parts.push('error');
-    else if (this.success()) parts.push('success');
-    if (this.disabled()) parts.push('disabled');
-    if (this.readOnly()) parts.push('read-only');
-    if (this.withAddon()) parts.push('with-addon');
-    if (this.withAddonRight()) parts.push('with-addon-right');
+    if (this.size() === 'sm') {parts.push('sm');}
+    if (this.size() === 'lg') {parts.push('lg');}
+    if (this.invalid()) {parts.push('error');}
+    else if (this.success()) {parts.push('success');}
+    if (this.disabled()) {parts.push('disabled');}
+    if (this.readOnly()) {parts.push('read-only');}
+    if (this.withAddon()) {parts.push('with-addon');}
+    if (this.withAddonRight()) {parts.push('with-addon-right');}
+
     return parts.join(' ');
   });
 
