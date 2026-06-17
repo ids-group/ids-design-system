@@ -34,7 +34,7 @@
   padding: var(--_stat-pad);
 
   .label {
-    font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+    font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
     letter-spacing: var(--letter-spacing-wider);
     text-transform: uppercase;
     color: var(--_stat-label-color);
@@ -42,7 +42,7 @@
   }
 
   .value {
-    font: var(--font-weight-extrabold) var(--font-size-h2)/var(--line-height-flat) var(--font-sans);
+    font: var(--font-weight-extrabold) var(--font-size-h2) / var(--line-height-flat) var(--font-sans);
     letter-spacing: var(--letter-spacing-snug);
     color: var(--_stat-value-color);
     margin: 0;
@@ -53,7 +53,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
-    font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+    font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
     margin-top: var(--space-2);
 
     &.up        { color: var(--_stat-up-color); }
@@ -63,7 +63,7 @@
   }
 
   .caption {
-    font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+    font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
     color: var(--text-tertiary);
     margin-top: var(--space-2);
   }
