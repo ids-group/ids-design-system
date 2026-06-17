@@ -7,7 +7,7 @@ import { Component, ViewEncapsulation, input } from '@angular/core';
   styleUrl: './skeleton.component.scss',
   host: {
     'aria-hidden': 'true',
-    '[style.width]':  'width()',
+    '[style.width]': 'width()',
     '[style.height]': 'height()',
     '[class.circle]': 'circle()',
     '[class.inline]': 'inline()',
