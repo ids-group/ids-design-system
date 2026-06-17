@@ -102,6 +102,10 @@ export default defineConfig(
       '@angular-eslint/template/click-events-have-key-events': 'warn',
       '@angular-eslint/template/interactive-supports-focus': 'warn',
       '@angular-eslint/template/label-has-associated-control': 'off',
+      // ds-input exposes `autofocus` as a deliberate opt-in API; the consumer
+      // owns the a11y decision. Off (not warn) — eslint --fix removes autofocus
+      // even at warn level, which silently broke the binding once already.
+      '@angular-eslint/template/no-autofocus': 'off',
     },
   },
   prettier,
