@@ -14,6 +14,10 @@ export interface SelectOptionGroup {
 
 export type SelectItem = SelectOption | SelectOptionGroup;
 
-export function isSelectOptionGroup(item: SelectItem): item is SelectOptionGroup {
-  return 'options' in item && Array.isArray((item as SelectOptionGroup).options);
+export function isSelectOptionGroup(
+  item: SelectItem,
+): item is SelectOptionGroup {
+  return (
+    'options' in item && Array.isArray((item as SelectOptionGroup).options)
+  );
 }
