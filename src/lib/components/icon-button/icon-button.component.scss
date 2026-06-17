@@ -41,6 +41,7 @@
     background: var(--_icon-button-bg-hover);
     color: var(--_icon-button-fg-hover);
   }
+
   /* Pressed — bg shift only, no halo on a square icon button. */
   &:active {
     background: var(--_icon-button-bg-active);

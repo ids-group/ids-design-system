@@ -1,7 +1,18 @@
-import { Component, ViewEncapsulation, booleanAttribute, computed, input, output } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  computed,
+  input,
+  output,
+} from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
-import type { IconButtonSize, IconButtonType, IconButtonVariant } from './icon-button.types';
+import type {
+  IconButtonSize,
+  IconButtonType,
+  IconButtonVariant,
+} from './icon-button.types';
 
 /**
  * Icon-only action button with its own variant taxonomy (standard / filled /
@@ -30,19 +41,21 @@ export class IconButtonComponent {
 
   protected readonly classes = computed(() => {
     const parts = ['icon-button', this.variant(), this.size()];
-    if (this.selected()) parts.push('selected');
+    if (this.selected()) {parts.push('selected');}
+
     return parts.join(' ');
   });
 
   protected readonly iconSize = computed(() => {
     const size = this.size();
-    if (size === 'sm') return 16;
-    if (size === 'lg') return 24;
+    if (size === 'sm') {return 16;}
+    if (size === 'lg') {return 24;}
+
     return 20;
   });
 
   protected onClick(event: MouseEvent): void {
-    if (this.disabled()) return;
+    if (this.disabled()) {return;}
     this.pressed.emit(event);
   }
 }
