@@ -1,65 +1,164 @@
+<docs-section
+  anchor="scrollbar"
+  eyebrow="Foundations"
+  title="Scrollbar"
+>
+  <docs-truncation [rules]="truncationRules" />
 
-    <docs-section anchor="scrollbar" eyebrow="Foundations" title="Scrollbar">
-      <docs-truncation [rules]="truncationRules" />
-      <span lede>System chrome the user touches every minute — has to feel like part of the product, not the OS. The global
-        scrollbar styling is auto-applied (forwarded into <code class="t-mono-inline">ds.scss</code>); no per-component opt-in is
-        needed.</span>
+  <span lede
+    >
+    System chrome the user touches every minute — has to feel like part of the
+    product, not the OS. The global scrollbar styling is auto-applied (forwarded
+    into <code class="t-mono-inline">ds.scss</code>); no per-component opt-in is
+    needed.
+  </span
+  >
 
-      <!-- ============================================================ Live demo -->
-      <h3 class="block-title t-h4">Live demo</h3>
-      <p class="block-desc t-s">Drag the thumb in either pane below. Vertical scroll on the left, horizontal on the right.</p>
-      <div class="demo-grid">
-        <div class="scroll-pane scroll-pane--vertical">
-          @for (row of rows; track row) {
-            <div class="scroll-pane__row">
-              <code class="t-mono-inline scroll-pane__num">{{ pad(row) }}</code>
-              <span class="scroll-pane__txt">Scrollable content row — drag the thumb to test feel.</span>
+  <!-- ============================================================ Live demo -->
+  <h3 class="block-title t-h4">
+    Live demo
+  </h3>
+
+  <p class="block-desc t-s">
+    Drag the thumb in either pane below. Vertical scroll on the left, horizontal
+    on the right.
+  </p>
+
+  <div class="demo-grid">
+    <div class="scroll-pane scroll-pane--vertical">
+      @for (row of rows; track row) {
+        <div class="scroll-pane__row">
+          <code class="t-mono-inline scroll-pane__num">
+            {{ pad(row) }}
+          </code>
+
+          <span class="scroll-pane__txt"
+            >
+            Scrollable content row — drag the thumb to test feel.
+          </span
+          >
+        </div>
+      }
+    </div>
+
+    <div class="scroll-pane scroll-pane--horizontal">
+      <div class="hwide">
+        @for (col of cols; track col) {
+          <div class="hcol">
+            <div class="t-overline">
+              Col {{ col }}
             </div>
-          }
-        </div>
-        <div class="scroll-pane scroll-pane--horizontal">
-          <div class="hwide">
-            @for (col of cols; track col) {
-              <div class="hcol">
-                <div class="t-overline">Col {{ col }}</div>
-                <div class="t-s">Wide content keeps the horizontal scrollbar visible. Drag to test.</div>
-              </div>
-            }
+
+            <div class="t-s">
+              Wide content keeps the horizontal scrollbar visible. Drag to test.
+            </div>
           </div>
-        </div>
+        }
       </div>
+    </div>
+  </div>
 
-      <!-- ============================================================ Tokens -->
-      <h3 class="block-title t-h4">Tokens</h3>
-      <table class="tbl">
-        <thead>
-          <tr><th>Token</th><th>Use</th></tr>
-        </thead>
-        <tbody>
-          @for (t of tokens; track t.token) {
-            <tr>
-              <td><code class="t-mono-inline">{{ t.token }}</code></td>
-              <td>{{ t.use }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
+  <!-- ============================================================ Tokens -->
+  <h3 class="block-title t-h4">
+    Tokens
+  </h3>
 
-      <!-- ============================================================ Specification -->
-      <h3 class="block-title t-h4">Specification</h3>
-      <dl class="spec">
-        <dt>Width</dt>
-        <dd>10 px (<code class="t-mono-inline">--scrollbar-w</code>)</dd>
-        <dt>Track</dt>
-        <dd>Transparent at rest; a faint neutral fill on hover</dd>
-        <dt>Thumb</dt>
-        <dd><code class="t-mono-inline">--neutral-300</code>; hover <code class="t-mono-inline">--neutral-400</code>; active <code class="t-mono-inline">--neutral-500</code></dd>
-        <dt>Radius</dt>
-        <dd><code class="t-mono-inline">--radius-pill</code> on the thumb</dd>
-        <dt>Reveal</dt>
-        <dd>Overlay where supported (macOS); fallback to inline 10 px gutter on Windows / Linux</dd>
-        <dt>Dark mode</dt>
-        <dd>Track <code class="t-mono-inline">--neutral-800</code>; thumb <code class="t-mono-inline">--neutral-600</code></dd>
-      </dl>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Token
+        </th>
 
-    </docs-section>
+        <th>
+          Use
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (t of tokens; track t.token) {
+        <tr>
+          <td>
+            <code class="t-mono-inline">
+              {{ t.token }}
+            </code>
+          </td>
+
+          <td>
+            {{ t.use }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <!-- ============================================================ Specification -->
+  <h3 class="block-title t-h4">
+    Specification
+  </h3>
+
+  <dl class="spec">
+    <dt>
+      Width
+    </dt>
+
+    <dd>
+      10 px (<code class="t-mono-inline">--scrollbar-w</code>)
+    </dd>
+
+    <dt>
+      Track
+    </dt>
+
+    <dd>
+      Transparent at rest; a faint neutral fill on hover
+    </dd>
+
+    <dt>
+      Thumb
+    </dt>
+
+    <dd>
+      <code class="t-mono-inline">
+        --neutral-300
+      </code>; hover
+      <code class="t-mono-inline">
+        --neutral-400
+      </code>; active
+      <code class="t-mono-inline">
+        --neutral-500
+      </code>
+    </dd>
+
+    <dt>
+      Radius
+    </dt>
+
+    <dd>
+      <code class="t-mono-inline">
+        --radius-pill
+      </code> on the thumb
+    </dd>
+
+    <dt>
+      Reveal
+    </dt>
+
+    <dd>
+      Overlay where supported (macOS); fallback to inline 10 px gutter on
+      Windows / Linux
+    </dd>
+
+    <dt>
+      Dark mode
+    </dt>
+
+    <dd>
+      Track <code class="t-mono-inline">--neutral-800</code>; thumb
+      <code class="t-mono-inline">
+        --neutral-600
+      </code>
+    </dd>
+  </dl>
+</docs-section>

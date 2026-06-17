@@ -2,10 +2,9 @@
   <span
     class="dropdown-label"
     [id]="labelId"
-    >
-    {{ label() }}
-  </span
   >
+    {{ label() }}
+  </span>
 }
 
 <button
@@ -28,17 +27,15 @@
   <span
     class="trigger-text"
     [class.is-placeholder]="!hasValue()"
-    >
-    {{ displayLabel() }}
-  </span
   >
+    {{ displayLabel() }}
+  </span>
 
-  <span class="chevron"
-    >
+  <span class="chevron">
     <ds-icon
       name="chevronDown"
       [size]="14"
-  />
+    />
   </span>
 </button>
 

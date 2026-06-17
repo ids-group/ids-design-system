@@ -7,6 +7,7 @@
       display: flex;
       justify-content: flex-start;
     }
+
     /* Pin width for the static specimen panel — ::ng-deep reaches into the
        component-scoped .popover rendered by [staticPreview]. */
     .specimen-stage ::ng-deep .popover { width: 260px; }

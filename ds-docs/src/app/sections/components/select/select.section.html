@@ -1,167 +1,392 @@
+<docs-section
+  anchor="select"
+  eyebrow="Components"
+  title="Select"
+>
+  <docs-truncation [rules]="truncationRules" />
 
-    <docs-section anchor="select" eyebrow="Components" title="Select">
-      <docs-truncation [rules]="truncationRules" />
-      <span lede>Custom dropdown built on CDK Overlay, with a custom chevron. Sizes, states, with-value, disabled, error.</span>
+  <span lede
+    >
+    Custom dropdown built on CDK Overlay, with a custom chevron. Sizes, states,
+    with-value, disabled, error.
+  </span
+  >
 
-      <!-- ============================================================ Sizes -->
-      <h3 class="block-title t-h4">Sizes</h3>
-      <div class="grid-3">
-        <ds-dropdown size="sm" label="Owner · sm" [options]="ownerOptions" placeholder="Pick an owner…" />
-        <ds-dropdown label="Owner · md" [options]="ownerOptions" placeholder="Pick an owner…" />
-        <ds-dropdown size="lg" label="Owner · lg" [options]="ownerOptions" placeholder="Pick an owner…" />
+  <!-- ============================================================ Sizes -->
+  <h3 class="block-title t-h4">
+    Sizes
+  </h3>
+
+  <div class="grid-3">
+    <ds-dropdown
+      size="sm"
+      label="Owner · sm"
+      placeholder="Pick an owner…"
+      [options]="ownerOptions"
+    />
+
+    <ds-dropdown
+      label="Owner · md"
+      placeholder="Pick an owner…"
+      [options]="ownerOptions"
+    />
+
+    <ds-dropdown
+      size="lg"
+      label="Owner · lg"
+      placeholder="Pick an owner…"
+      [options]="ownerOptions"
+    />
+  </div>
+
+  <!-- ============================================================ States showcase -->
+  <h3 class="block-title t-h4">
+    States showcase
+  </h3>
+
+  <p class="block-desc t-s">
+    Every select state side-by-side. Static specimens — no interaction needed.
+  </p>
+
+  <div class="states states--cols-3">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-dropdown
+          label="Owner"
+          placeholder="Pick an owner…"
+          [options]="ownerOptions"
+        />
       </div>
 
-      <!-- ============================================================ States showcase -->
-      <h3 class="block-title t-h4">States showcase</h3>
-      <p class="block-desc t-s">Every select state side-by-side. Static specimens — no interaction needed.</p>
-      <div class="states states--cols-3">
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-dropdown label="Owner" [options]="ownerOptions" placeholder="Pick an owner…" />
-          </div>
-          <div class="state-cell__label">Empty default</div>
-        </div>
-        <div class="state-cell">
-          <!-- Live ds-dropdown; pin-focus on the stage reads bare tokens from
+      <div class="state-cell__label">
+        Empty default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <!-- Live ds-dropdown; pin-focus on the stage reads bare tokens from
                the component's own .dropdown rules via ::ng-deep. -->
-          <div class="state-cell__stage pin-focus">
-            <ds-dropdown label="Owner" [options]="ownerOptions" placeholder="Pick an owner…" />
-          </div>
-          <div class="state-cell__label">Empty · focus</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-dropdown label="Owner" [options]="ownerOptions" value="brooks" />
-          </div>
-          <div class="state-cell__label">With value</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage pin-hover">
-            <ds-dropdown label="Owner" [options]="ownerOptions" placeholder="Pick an owner…" />
-          </div>
-          <div class="state-cell__label">Hover</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-dropdown label="Owner" [options]="ownerOptions" value="brooks" [disabled]="true" />
-          </div>
-          <div class="state-cell__label">Disabled</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-dropdown label="Owner" [options]="ownerOptions" value="brooks" [readOnly]="true" />
-          </div>
-          <div class="state-cell__label">Read-only</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <div class="field-stack">
-              <ds-dropdown label="Tier" [options]="tierOptions" placeholder="Choose tier…" [error]="true" />
-              <span class="field-hint error">Pick one</span>
-            </div>
-          </div>
-          <div class="state-cell__label">Error</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <div class="field-stack">
-              <ds-dropdown label="Tier" [options]="tierOptions" value="t2" />
-              <span class="field-hint">OK</span>
-            </div>
-          </div>
-          <div class="state-cell__label">Success</div>
+      <div class="state-cell__stage pin-focus">
+        <ds-dropdown
+          label="Owner"
+          placeholder="Pick an owner…"
+          [options]="ownerOptions"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Empty · focus
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-dropdown
+          label="Owner"
+          value="brooks"
+          [options]="ownerOptions"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        With value
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage pin-hover">
+        <ds-dropdown
+          label="Owner"
+          placeholder="Pick an owner…"
+          [options]="ownerOptions"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Hover
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-dropdown
+          label="Owner"
+          value="brooks"
+          [options]="ownerOptions"
+          [disabled]="true"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Disabled
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-dropdown
+          label="Owner"
+          value="brooks"
+          [options]="ownerOptions"
+          [readOnly]="true"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Read-only
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <div class="field-stack">
+          <ds-dropdown
+            label="Tier"
+            placeholder="Choose tier…"
+            [options]="tierOptions"
+            [error]="true"
+          />
+
+          <span class="field-hint error">
+            Pick one
+          </span>
         </div>
       </div>
 
-      <!-- ============================================================ Long option list -->
-      <h3 class="block-title t-h4">Long option list</h3>
-      <p class="block-desc t-s">15 options demonstrate the styled popover — the panel caps at 320px and scrolls internally, with width matched to the trigger.</p>
-      <div class="grid-3">
-        <ds-dropdown label="Region" [options]="regionOptions" placeholder="Pick a region…" />
+      <div class="state-cell__label">
+        Error
       </div>
+    </div>
 
-      <!-- ============================================================ Custom dropdown variant -->
-      <h3 class="block-title t-h4">Custom dropdown — &lt;ds-dropdown&gt;</h3>
-      <p class="block-desc t-s">
-        Alternative trigger that opens a fully styled popover via CDK Overlay. Use when the showcase or product needs
-        branded options, leading icons, or a consistent panel across browsers. &lt;ds-select&gt; is the form-field variant of the same CDK Overlay engine — use it inside Angular forms where you need a label, required/optional markers, and grouped options.
-      </p>
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <div class="field-stack">
+          <ds-dropdown
+            label="Tier"
+            value="t2"
+            [options]="tierOptions"
+          />
 
-      <h4 class="sub-title t-overline">Closed trigger · sizes</h4>
-      <div class="grid-3">
-        <div class="cell-wrap">
-          <ds-dropdown size="sm" [options]="productOptions" placeholder="Pick a product · sm" />
-          <div class="caption t-overline">sm</div>
-        </div>
-        <div class="cell-wrap">
-          <ds-dropdown [options]="productOptions" placeholder="Pick a product · md" />
-          <div class="caption t-overline">md</div>
-        </div>
-        <div class="cell-wrap">
-          <ds-dropdown size="lg" [options]="productOptions" placeholder="Pick a product · lg" />
-          <div class="caption t-overline">lg</div>
+          <span class="field-hint">
+            OK
+          </span>
         </div>
       </div>
 
-      <h4 class="sub-title t-overline">Open · static specimen</h4>
-      <p class="block-desc t-s">Live component with <code>staticPreview</code> — panel rendered inline in normal flow, all option states visible at once.</p>
-      <div class="preview-wrap open-specimen">
-        <ds-dropdown [staticPreview]="true" value="hi" [options]="openSpecimenOptions" />
+      <div class="state-cell__label">
+        Success
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ Long option list -->
+  <h3 class="block-title t-h4">
+    Long option list
+  </h3>
+
+  <p class="block-desc t-s">
+    15 options demonstrate the styled popover — the panel caps at 320px and
+    scrolls internally, with width matched to the trigger.
+  </p>
+
+  <div class="grid-3">
+    <ds-dropdown
+      label="Region"
+      placeholder="Pick a region…"
+      [options]="regionOptions"
+    />
+  </div>
+
+  <!-- ============================================================ Custom dropdown variant -->
+  <h3 class="block-title t-h4">
+    Custom dropdown — &lt;ds-dropdown&gt;
+  </h3>
+
+  <p class="block-desc t-s">
+    Alternative trigger that opens a fully styled popover via CDK Overlay. Use
+    when the showcase or product needs branded options, leading icons, or a
+    consistent panel across browsers. &lt;ds-select&gt; is the form-field
+    variant of the same CDK Overlay engine — use it inside Angular forms where
+    you need a label, required/optional markers, and grouped options.
+  </p>
+
+  <h4 class="sub-title t-overline">
+    Closed trigger · sizes
+  </h4>
+
+  <div class="grid-3">
+    <div class="cell-wrap">
+      <ds-dropdown
+        size="sm"
+        placeholder="Pick a product · sm"
+        [options]="productOptions"
+      />
+
+      <div class="caption t-overline">
+        sm
+      </div>
+    </div>
+
+    <div class="cell-wrap">
+      <ds-dropdown
+        placeholder="Pick a product · md"
+        [options]="productOptions"
+      />
+
+      <div class="caption t-overline">
+        md
+      </div>
+    </div>
+
+    <div class="cell-wrap">
+      <ds-dropdown
+        size="lg"
+        placeholder="Pick a product · lg"
+        [options]="productOptions"
+      />
+
+      <div class="caption t-overline">
+        lg
+      </div>
+    </div>
+  </div>
+
+  <h4 class="sub-title t-overline">
+    Open · static specimen
+  </h4>
+
+  <p class="block-desc t-s">
+    Live component with <code>staticPreview</code> — panel rendered inline in
+    normal flow, all option states visible at once.
+  </p>
+
+  <div class="preview-wrap open-specimen">
+    <ds-dropdown
+      value="hi"
+      [staticPreview]="true"
+      [options]="openSpecimenOptions"
+    />
+  </div>
+
+  <h4 class="sub-title t-overline">
+    Open · with leading icons
+  </h4>
+
+  <div class="preview-wrap">
+    <ds-dropdown
+      value="hi"
+      [staticPreview]="true"
+      [options]="iconOptions"
+    />
+  </div>
+
+  <h4 class="sub-title t-overline">
+    Trigger states
+  </h4>
+
+  <div class="states states--cols-4">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-dropdown
+          placeholder="Pick a product…"
+          [options]="productOptions"
+        />
       </div>
 
-      <h4 class="sub-title t-overline">Open · with leading icons</h4>
-      <div class="preview-wrap">
-        <ds-dropdown [staticPreview]="true" value="hi" [options]="iconOptions" />
+      <div class="state-cell__label">
+        Empty default
       </div>
+    </div>
 
-      <h4 class="sub-title t-overline">Trigger states</h4>
-      <div class="states states--cols-4">
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-dropdown [options]="productOptions" placeholder="Pick a product…" />
-          </div>
-          <div class="state-cell__label">Empty default</div>
-        </div>
-        <div class="state-cell">
-          <!-- Live ds-dropdown; pin classes on the stage reach the .dropdown
+    <div class="state-cell">
+      <!-- Live ds-dropdown; pin classes on the stage reach the .dropdown
                button via ::ng-deep; hover/focus use bare tokens (no --_* resolvers). -->
-          <div class="state-cell__stage pin-hover">
-            <ds-dropdown [options]="productOptions" placeholder="Pick a product…" />
-          </div>
-          <div class="state-cell__label">Hover</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage pin-focus">
-            <ds-dropdown [options]="productOptions" value="hi" />
-          </div>
-          <div class="state-cell__label">Focus</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage state-cell__stage--overflow">
-            <ds-dropdown [staticPreview]="true" value="hi" [options]="productOptions" />
-          </div>
-          <div class="state-cell__label">Open</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-dropdown [options]="productOptions" placeholder="Pick a product…" [error]="true" />
-          </div>
-          <div class="state-cell__label">Error</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-dropdown [options]="productOptions" value="hi" [disabled]="true" />
-          </div>
-          <div class="state-cell__label">Disabled</div>
-        </div>
+      <div class="state-cell__stage pin-hover">
+        <ds-dropdown
+          placeholder="Pick a product…"
+          [options]="productOptions"
+        />
       </div>
 
-      <h4 class="sub-title t-overline">Long list · live</h4>
-      <p class="block-desc t-s">Open the trigger — the panel caps at 320px and scrolls internally.</p>
-      <div class="grid-3">
-        <div class="cell-wrap">
-          <ds-dropdown [options]="regionOptions" placeholder="Pick a region…" />
-          <div class="caption t-overline">15 options · scrolls</div>
-        </div>
+      <div class="state-cell__label">
+        Hover
       </div>
-    </docs-section>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage pin-focus">
+        <ds-dropdown
+          value="hi"
+          [options]="productOptions"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Focus
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage state-cell__stage--overflow">
+        <ds-dropdown
+          value="hi"
+          [staticPreview]="true"
+          [options]="productOptions"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Open
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-dropdown
+          placeholder="Pick a product…"
+          [options]="productOptions"
+          [error]="true"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Error
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-dropdown
+          value="hi"
+          [options]="productOptions"
+          [disabled]="true"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Disabled
+      </div>
+    </div>
+  </div>
+
+  <h4 class="sub-title t-overline">
+    Long list · live
+  </h4>
+
+  <p class="block-desc t-s">
+    Open the trigger — the panel caps at 320px and scrolls internally.
+  </p>
+
+  <div class="grid-3">
+    <div class="cell-wrap">
+      <ds-dropdown
+        placeholder="Pick a region…"
+        [options]="regionOptions"
+      />
+
+      <div class="caption t-overline">
+        15 options · scrolls
+      </div>
+    </div>
+  </div>
+</docs-section>

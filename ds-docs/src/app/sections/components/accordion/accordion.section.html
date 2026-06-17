@@ -1,38 +1,63 @@
+<docs-section
+  anchor="accordion"
+  eyebrow="Components"
+  title="Accordion"
+>
+  <docs-truncation [rules]="truncationRules" />
 
-    <docs-section anchor="accordion" eyebrow="Components" title="Accordion">
-      <docs-truncation [rules]="truncationRules" />
-      <span lede>
-        Collapsible disclosure panel. Each item exposes a head trigger and a body that
-        shows when expanded. Multiple items can be open simultaneously by default — pair
-        with parent-coordinated state if you need single-open semantics.
-      </span>
+  <span lede>
+    Collapsible disclosure panel. Each item exposes a head trigger and a body
+    that shows when expanded. Multiple items can be open simultaneously by
+    default — pair with parent-coordinated state if you need single-open
+    semantics.
+  </span>
 
-      <h3 class="block-title t-h4">Default</h3>
+  <h3 class="block-title t-h4">
+    Default
+  </h3>
+
+  <ds-accordion>
+    <ds-accordion-item
+      title="Build dates"
+      [expanded]="true"
+    >
+      Build start: 27 Jul 06:00 · Build complete: 30 Jul 12:00. Crew arrives 27
+      Jul — overlaps Beta load-out by 4 hours.
+    </ds-accordion-item>
+
+    <ds-accordion-item title="Access dates"></ds-accordion-item>
+
+    <ds-accordion-item title="Strike dates"></ds-accordion-item>
+  </ds-accordion>
+
+  <h3 class="block-title t-h4">
+    States showcase
+  </h3>
+
+  <div class="states">
+    <div class="state">
+      <code class="t-mono-inline state__lbl">
+        Collapsed
+      </code>
+
       <ds-accordion>
-        <ds-accordion-item title="Build dates" [expanded]="true">
-          Build start: 27 Jul 06:00 · Build complete: 30 Jul 12:00.
-          Crew arrives 27 Jul — overlaps Beta load-out by 4 hours.
-        </ds-accordion-item>
-        <ds-accordion-item title="Access dates"></ds-accordion-item>
-        <ds-accordion-item title="Strike dates"></ds-accordion-item>
+        <ds-accordion-item title="Build dates"></ds-accordion-item>
       </ds-accordion>
+    </div>
 
-      <h3 class="block-title t-h4">States showcase</h3>
-      <div class="states">
-        <div class="state">
-          <code class="t-mono-inline state__lbl">Collapsed</code>
-          <ds-accordion>
-            <ds-accordion-item title="Build dates"></ds-accordion-item>
-          </ds-accordion>
-        </div>
-        <div class="state">
-          <code class="t-mono-inline state__lbl">Expanded</code>
-          <ds-accordion>
-            <ds-accordion-item title="Build dates" [expanded]="true">
-              Build start: 27 Jul 06:00 — overlaps Beta load-out.
-            </ds-accordion-item>
-          </ds-accordion>
-        </div>
-      </div>
+    <div class="state">
+      <code class="t-mono-inline state__lbl">
+        Expanded
+      </code>
 
-    </docs-section>
+      <ds-accordion>
+        <ds-accordion-item
+          title="Build dates"
+          [expanded]="true"
+        >
+          Build start: 27 Jul 06:00 — overlaps Beta load-out.
+        </ds-accordion-item>
+      </ds-accordion>
+    </div>
+  </div>
+</docs-section>

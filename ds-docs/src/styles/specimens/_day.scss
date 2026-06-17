@@ -24,7 +24,7 @@
   background: transparent;
   color: var(--text-primary);
 
-  &:hover:not(.disabled):not([disabled]) { background-color: var(--_datepicker-day-hover-bg-color); }
+  &:hover:not(.disabled, [disabled]) { background-color: var(--_datepicker-day-hover-bg-color); }
 
   &.muted        { color: var(--text-muted); }
   &.today        { font-weight: var(--font-weight-bold); color: var(--_datepicker-day-today-label-color); }
@@ -32,9 +32,9 @@
   &.in-range     { background-color: var(--_datepicker-day-range-bg-color); color: var(--_datepicker-day-range-label-color); border-radius: var(--radius-flat); }
   &.range-start  { border-top-left-radius: var(--radius-sm); border-bottom-left-radius: var(--radius-sm); background-color: var(--_datepicker-day-selected-bg-color); color: var(--_datepicker-day-selected-label-color); }
   &.range-end    { border-top-right-radius: var(--radius-sm); border-bottom-right-radius: var(--radius-sm); background-color: var(--_datepicker-day-selected-bg-color); color: var(--_datepicker-day-selected-label-color); }
-  &.selected:hover:not(.disabled):not([disabled]),
-  &.range-start:hover:not(.disabled):not([disabled]),
-  &.range-end:hover:not(.disabled):not([disabled]) {
+  &.selected:hover:not(.disabled, [disabled]),
+  &.range-start:hover:not(.disabled, [disabled]),
+  &.range-end:hover:not(.disabled, [disabled]) {
     background-color: var(--_datepicker-day-selected-bg-color-hover);
     color: var(--_datepicker-day-selected-label-color);
   }

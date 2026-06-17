@@ -1,6 +1,9 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ProgressComponent } from 'ds';
-import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import {
+  DocsTruncationComponent,
+  TruncationRule,
+} from '../../../shared/docs-truncation.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
@@ -13,7 +16,15 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
 })
 export class ProgressSection {
   protected readonly truncationRules: TruncationRule[] = [
-    { field: 'Value', behaviour: 'Clamped to 0..100 in the wrapper. Pass percentages, not absolute counts.' },
-    { field: 'Indeterminate', behaviour: 'Width input is ignored. Animation runs at --duration-loop-slow.' },
+    {
+      field: 'Value',
+      behaviour:
+        'Clamped to 0..100 in the wrapper. Pass percentages, not absolute counts.',
+    },
+    {
+      field: 'Indeterminate',
+      behaviour:
+        'Width input is ignored. Animation runs at --duration-loop-slow.',
+    },
   ];
 }

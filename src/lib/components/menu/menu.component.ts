@@ -26,7 +26,9 @@ export class MenuComponent {
     // Roving tabindex: exactly one enabled item is tabbable (0), the rest -1.
     effect(() => {
       const items = this.items();
-      if (!items.length) {return;}
+      if (!items.length) {
+        return;
+      }
       let index = this.activeIndex();
       if (index >= items.length || items[index].disabled()) {
         index = items.findIndex((item) => !item.disabled());
@@ -37,7 +39,9 @@ export class MenuComponent {
 
   protected onKeydown(event: KeyboardEvent): void {
     const items = this.items();
-    if (!items.length) {return;}
+    if (!items.length) {
+      return;
+    }
     const count = items.length;
     const focused = items.findIndex((item) =>
       item.contains(event.target as Node | null),
@@ -84,7 +88,9 @@ export class MenuComponent {
       next = (next + step + count) % count;
       guard++;
     }
-    if (!items[next] || items[next].disabled()) {return;}
+    if (!items[next] || items[next].disabled()) {
+      return;
+    }
     this.focusItem(next);
   }
 

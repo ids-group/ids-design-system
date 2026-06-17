@@ -1,64 +1,158 @@
+<docs-section
+  anchor="browser-tab"
+  eyebrow="Foundations"
+  title="Browser tab &amp; document"
+>
+  <span lede>
+    Title, favicon, theme-color and tab grouping — the off-canvas surface the
+    user sees in their tab bar. Long URLs and breadcrumb paths clip with
+    ellipsis; full path is exposed via title attribute or copy-to-clipboard.
+  </span>
 
-    <docs-section anchor="browser-tab" eyebrow="Foundations" title="Browser tab &amp; document">
-      <span lede>
-        Title, favicon, theme-color and tab grouping — the off-canvas surface the user sees in
-        their tab bar. Long URLs and breadcrumb paths clip with ellipsis; full path is exposed via
-        title attribute or copy-to-clipboard.
-      </span>
+  <h3 class="block-title t-h4">
+    Tab specimen
+  </h3>
 
-      <h3 class="block-title t-h4">Tab specimen</h3>
-      <div class="tab-spec">
-        <div class="row">
-          <div class="tab is-active">
-            <span class="fav" aria-hidden="true">A</span>
-            <span class="title">Project Alpha · Projects · Acme</span>
-            <span class="close" aria-hidden="true">×</span>
-          </div>
-          <div class="tab">
-            <span class="fav alert" aria-hidden="true">A</span>
-            <span class="title">Schedule · 3 conflicts · Acme</span>
-          </div>
-          <div class="tab">
-            <span class="fav" aria-hidden="true">A</span>
-            <span class="title">Resource allocation · Acme</span>
-          </div>
-        </div>
-        <div class="url">
-          <ds-icon name="search" [size]="12" />
-          <span class="t-mono">app.acme.com / projects / project-alpha / schedule</span>
-        </div>
+  <div class="tab-spec">
+    <div class="row">
+      <div class="tab is-active">
+        <span
+          class="fav"
+          aria-hidden="true"
+          >
+          A
+        </span
+        >
+
+        <span class="title">
+          Project Alpha · Projects · Acme
+        </span>
+
+        <span
+          class="close"
+          aria-hidden="true"
+          >
+          ×
+        </span
+        >
       </div>
 
-      <h3 class="block-title t-h4">Rules</h3>
-      <dl class="rules">
-        <dt>Title format</dt>
-        <dd>
-          <code class="t-mono-inline">{{ '{Record} · {Section} · Acme' }}</code> — leaf first, brand last so multi-tab triage works.
-          Index pages: <code class="t-mono-inline">{{ '{Section} · Acme' }}</code>. Login: <code class="t-mono-inline">Acme</code> only.
-        </dd>
-        <dt>Title state</dt>
-        <dd>
-          Prefix with <code class="t-mono-inline">●</code> for unsaved
-          (<code class="t-mono-inline">● Project Alpha · Projects · Acme</code>); prefix with
-          <code class="t-mono-inline">(N)</code> for unread alerts
-          (<code class="t-mono-inline">(3) Logistics plan · Acme</code>).
-        </dd>
-        <dt>Favicon</dt>
-        <dd>
-          Brand letter on brand surface; alert dot via <code class="t-mono-inline">.fav.alert</code> nested under <code class="t-mono-inline">.tab-spec</code> for
-          unread count or attention state. Size matches <code class="t-mono-inline">--icon-md</code> so it reads
-          legibly at retina + sub-retina densities.
-        </dd>
-        <dt>Theme-color</dt>
-        <dd>
-          <code class="t-mono-inline">&lt;meta name="theme-color"&gt;</code> matches <code class="t-mono-inline">--primary</code>
-          for branded chrome; reset to <code class="t-mono-inline">--surface-default</code> on logout to avoid
-          carry-over branding.
-        </dd>
-        <dt>Tab grouping</dt>
-        <dd>
-          Cap at 7 tabs per group; suggest the browser's native tab-grouping when the user opens more.
-          Tabs in the same group share the favicon brand colour.
-        </dd>
-      </dl>
-    </docs-section>
+      <div class="tab">
+        <span
+          class="fav alert"
+          aria-hidden="true"
+          >
+          A
+        </span
+        >
+
+        <span class="title">
+          Schedule · 3 conflicts · Acme
+        </span>
+      </div>
+
+      <div class="tab">
+        <span
+          class="fav"
+          aria-hidden="true"
+          >
+          A
+        </span
+        >
+
+        <span class="title">
+          Resource allocation · Acme
+        </span>
+      </div>
+    </div>
+
+    <div class="url">
+      <ds-icon
+        name="search"
+        [size]="12"
+      />
+
+      <span class="t-mono"
+        >
+        app.acme.com / projects / project-alpha / schedule
+      </span
+      >
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Rules
+  </h3>
+
+  <dl class="rules">
+    <dt>
+      Title format
+    </dt>
+
+    <dd>
+      <code class="t-mono-inline">
+        {{ '{Record} · {Section} · Acme' }}
+      </code> —
+      leaf first, brand last so multi-tab triage works. Index pages:
+      <code class="t-mono-inline">
+        {{ '{Section} · Acme' }}
+      </code
+      >. Login: <code class="t-mono-inline">Acme</code> only.
+    </dd>
+
+    <dt>
+      Title state
+    </dt>
+
+    <dd>
+      Prefix with <code class="t-mono-inline">●</code> for unsaved (<code
+        class="t-mono-inline"
+        >● Project Alpha · Projects · Acme</code
+      >); prefix with <code class="t-mono-inline">(N)</code> for unread alerts
+      (<code class="t-mono-inline">(3) Logistics plan · Acme</code>).
+    </dd>
+
+    <dt>
+      Favicon
+    </dt>
+
+    <dd>
+      Brand letter on brand surface; alert dot via
+      <code class="t-mono-inline">
+        .fav.alert
+      </code> nested under
+      <code class="t-mono-inline">
+        .tab-spec
+      </code> for unread count or attention
+      state. Size matches <code class="t-mono-inline">--icon-md</code> so it
+      reads legibly at retina + sub-retina densities.
+    </dd>
+
+    <dt>
+      Theme-color
+    </dt>
+
+    <dd>
+      <code class="t-mono-inline">
+        &lt;meta name="theme-color"&gt;
+      </code> matches
+      <code class="t-mono-inline">
+        --primary
+      </code> for branded chrome; reset to
+      <code class="t-mono-inline">
+        --surface-default
+      </code> on logout to avoid
+      carry-over branding.
+    </dd>
+
+    <dt>
+      Tab grouping
+    </dt>
+
+    <dd>
+      Cap at 7 tabs per group; suggest the browser's native tab-grouping when
+      the user opens more. Tabs in the same group share the favicon brand
+      colour.
+    </dd>
+  </dl>
+</docs-section>

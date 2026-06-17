@@ -75,7 +75,7 @@
     /* State pins — ds-dropdown has no --_* resolvers; restate the bare role
        tokens the component's own rules use (hover: --border-strong;
        focus: --primary + --focus-field). */
-    :host ::ng-deep .pin-hover .dropdown:not(:disabled):not(.disabled):not(.open) { border-color: var(--border-strong); }
+    :host ::ng-deep .pin-hover .dropdown:not(:disabled, .disabled, .open) { border-color: var(--border-strong); }
     :host ::ng-deep .pin-focus .dropdown:not(.disabled) { outline: none; border-color: var(--primary); box-shadow: var(--focus-field); }
 
     /* staticPreview open specimen wrappers */

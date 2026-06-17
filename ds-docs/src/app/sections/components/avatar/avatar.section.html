@@ -1,25 +1,65 @@
+<docs-section
+  anchor="avatar"
+  eyebrow="Components"
+  title="Avatars"
+>
+  <docs-truncation [rules]="truncationRules" />
 
-    <docs-section anchor="avatar" eyebrow="Components" title="Avatars">
-      <docs-truncation [rules]="truncationRules" />
-      <span lede>Initials and image avatars in four sizes, plus stacked groups with overflow.</span>
+  <span lede
+    >
+    Initials and image avatars in four sizes, plus stacked groups with
+    overflow.
+  </span
+  >
 
-      <!-- ============================================================ Sizes -->
-      <h3 class="block-title t-h4">Sizes</h3>
-      <div class="row">
-        <ds-avatar size="xs" initials="AB" />
-        <ds-avatar size="sm" initials="AB" />
-        <ds-avatar size="md" initials="AB" />
-        <ds-avatar size="lg" initials="AB" />
-      </div>
+  <!-- ============================================================ Sizes -->
+  <h3 class="block-title t-h4">
+    Sizes
+  </h3>
 
-      <!-- ============================================================ Group -->
-      <h3 class="block-title t-h4">Group</h3>
-      <div class="row">
-        <ds-avatar-group [max]="3" [total]="7">
-          <ds-avatar initials="AB" />
-          <ds-avatar initials="JR" [tint]="{ bg: 'var(--orange-100)', fg: 'var(--orange-700)' }" />
-          <ds-avatar initials="SK" [tint]="{ bg: 'var(--green-100)', fg: 'var(--green-700)' }" />
-        </ds-avatar-group>
-      </div>
+  <div class="row">
+    <ds-avatar
+      size="xs"
+      initials="AB"
+    />
 
-    </docs-section>
+    <ds-avatar
+      size="sm"
+      initials="AB"
+    />
+
+    <ds-avatar
+      size="md"
+      initials="AB"
+    />
+
+    <ds-avatar
+      size="lg"
+      initials="AB"
+    />
+  </div>
+
+  <!-- ============================================================ Group -->
+  <h3 class="block-title t-h4">
+    Group
+  </h3>
+
+  <div class="row">
+    <ds-avatar-group
+      [max]="3"
+      [total]="7"
+    >
+      <ds-avatar initials="AB" />
+
+      <ds-avatar
+        initials="JR"
+        [tint]="{ bg: 'var(--orange-100)', fg: 'var(--orange-700)' }"
+      />
+
+      <ds-avatar
+        initials="SK"
+        [tint]="{ bg: 'var(--green-100)', fg: 'var(--green-700)' }"
+      />
+    </ds-avatar-group>
+  </div>
+</docs-section>

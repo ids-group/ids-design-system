@@ -141,7 +141,9 @@ export class DatePickerComponent {
 
   private focusGridDay(): void {
     const f = this.gridFocus();
-    if (!f || !this.overlayRef) {return;}
+    if (!f || !this.overlayRef) {
+      return;
+    }
     const element = this.overlayRef.overlayElement.querySelector(
       `[data-day="${this.dayKey(f)}"]`,
     ) as HTMLElement | null;
@@ -181,8 +183,12 @@ export class DatePickerComponent {
     const r = (value as RangeValue | null) ?? [null, null];
     const a = r[0];
     const b = r[1];
-    if (a && b) {return `${a.toLocaleDateString()} – ${b.toLocaleDateString()}`;}
-    if (a) {return `${a.toLocaleDateString()} – …`;}
+    if (a && b) {
+      return `${a.toLocaleDateString()} – ${b.toLocaleDateString()}`;
+    }
+    if (a) {
+      return `${a.toLocaleDateString()} – …`;
+    }
 
     return this.placeholder();
   });
@@ -244,20 +250,22 @@ export class DatePickerComponent {
     const r = (value as RangeValue | null) ?? [null, null];
     const a = r[0];
     const b = r[1];
-    if (!a)
-      {return {
+    if (!a) {
+      return {
         inRange: false,
         isStart: false,
         isEnd: false,
         isSelected: false,
-      };}
-    if (!b)
-      {return {
+      };
+    }
+    if (!b) {
+      return {
         inRange: false,
         isStart: a.toDateString() === d.toDateString(),
         isEnd: false,
         isSelected: false,
-      };}
+      };
+    }
     const t = d.getTime();
     const aT = a.getTime();
     const bT = b.getTime();
@@ -271,7 +279,9 @@ export class DatePickerComponent {
   }
 
   protected open(): void {
-    if (this.overlayRef) {return;}
+    if (this.overlayRef) {
+      return;
+    }
     const positionStrategy = this.overlay
       .position()
       .flexibleConnectedTo(this.trigger().nativeElement)
@@ -357,12 +367,24 @@ export class DatePickerComponent {
 
   protected cellClasses(cell: DayCell): string {
     const parts = ['day'];
-    if (!cell.inMonth) {parts.push('muted');}
-    if (cell.isToday) {parts.push('today');}
-    if (cell.inRange) {parts.push('in-range');}
-    if (cell.isRangeStart) {parts.push('range-start');}
-    if (cell.isRangeEnd) {parts.push('range-end');}
-    if (cell.isSelected) {parts.push('selected');}
+    if (!cell.inMonth) {
+      parts.push('muted');
+    }
+    if (cell.isToday) {
+      parts.push('today');
+    }
+    if (cell.inRange) {
+      parts.push('in-range');
+    }
+    if (cell.isRangeStart) {
+      parts.push('range-start');
+    }
+    if (cell.isRangeEnd) {
+      parts.push('range-end');
+    }
+    if (cell.isSelected) {
+      parts.push('selected');
+    }
 
     return parts.join(' ');
   }

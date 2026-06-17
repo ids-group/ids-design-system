@@ -1,6 +1,9 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import {
+  DocsTruncationComponent,
+  TruncationRule,
+} from '../../../shared/docs-truncation.component';
 
 interface Breakpoint {
   readonly token: string;
@@ -24,24 +27,72 @@ interface ColumnCap {
 }
 
 const BREAKPOINTS: readonly Breakpoint[] = [
-  { token: '--bp-xs',  px: 480,  desc: 'Phone portrait — Team app on the go' },
-  { token: '--bp-sm',  px: 640,  desc: 'Phone landscape, small tablets' },
-  { token: '--bp-md',  px: 768,  desc: 'Tablet portrait — Field-ops dashboard' },
-  { token: '--bp-lg',  px: 1024, desc: 'Laptop / tablet landscape — minimum producer dashboard' },
-  { token: '--bp-xl',  px: 1441, desc: 'Wide desktop — page-grid wide tier (12 cols, 1280 px content cap)' },
-  { token: '--bp-2xl', px: 1536, desc: 'Wide desktop — Bulk inventory matrix benefits from this' },
+  { token: '--bp-xs', px: 480, desc: 'Phone portrait — Team app on the go' },
+  { token: '--bp-sm', px: 640, desc: 'Phone landscape, small tablets' },
+  { token: '--bp-md', px: 768, desc: 'Tablet portrait — Field-ops dashboard' },
+  {
+    token: '--bp-lg',
+    px: 1024,
+    desc: 'Laptop / tablet landscape — minimum producer dashboard',
+  },
+  {
+    token: '--bp-xl',
+    px: 1441,
+    desc: 'Wide desktop — page-grid wide tier (12 cols, 1280 px content cap)',
+  },
+  {
+    token: '--bp-2xl',
+    px: 1536,
+    desc: 'Wide desktop — Bulk inventory matrix benefits from this',
+  },
 ];
 
 const TIERS: readonly GridTier[] = [
-  { name: 'Desktop wide', range: '>= 1441 px',    cols: 12, gutter: '--space-6', margin: '--space-10', cap: '1280 px' },
-  { name: 'Desktop',      range: '1025-1440 px',  cols: 12, gutter: '--space-5', margin: '--space-8',  cap: 'fluid' },
-  { name: 'Tablet',       range: '641-1024 px',   cols: 8,  gutter: '--space-4', margin: '--space-6',  cap: 'fluid' },
-  { name: 'Mobile',       range: '<= 640 px',     cols: 4,  gutter: '--space-3', margin: '--space-4',  cap: 'fluid' },
+  {
+    name: 'Desktop wide',
+    range: '>= 1441 px',
+    cols: 12,
+    gutter: '--space-6',
+    margin: '--space-10',
+    cap: '1280 px',
+  },
+  {
+    name: 'Desktop',
+    range: '1025-1440 px',
+    cols: 12,
+    gutter: '--space-5',
+    margin: '--space-8',
+    cap: 'fluid',
+  },
+  {
+    name: 'Tablet',
+    range: '641-1024 px',
+    cols: 8,
+    gutter: '--space-4',
+    margin: '--space-6',
+    cap: 'fluid',
+  },
+  {
+    name: 'Mobile',
+    range: '<= 640 px',
+    cols: 4,
+    gutter: '--space-3',
+    margin: '--space-4',
+    cap: 'fluid',
+  },
 ];
 
 const COL_CAPS: readonly ColumnCap[] = [
-  { token: '--col-cap-text',    value: '720px',  use: 'Body text never exceeds this — long-form prose, descriptions' },
-  { token: '--col-cap-content', value: '1280px', use: 'Page content cap at the widest tier' },
+  {
+    token: '--col-cap-text',
+    value: '720px',
+    use: 'Body text never exceeds this — long-form prose, descriptions',
+  },
+  {
+    token: '--col-cap-content',
+    value: '1280px',
+    use: 'Page content cap at the widest tier',
+  },
 ];
 
 @Component({
@@ -58,9 +109,19 @@ export class LayoutSection {
   protected readonly colCaps = COL_CAPS;
 
   protected readonly truncationRules: TruncationRule[] = [
-    { field: 'Breakpoint label', behaviour: 'Single line, ellipsis. Token names are short — never wrap.' },
-    { field: 'Grid tier description', behaviour: 'Wraps to two lines max. Never clipped — the card grows vertically.' },
-    { field: 'Cap row use', behaviour: 'Wraps freely; the row grows vertically to fit.' },
+    {
+      field: 'Breakpoint label',
+      behaviour: 'Single line, ellipsis. Token names are short — never wrap.',
+    },
+    {
+      field: 'Grid tier description',
+      behaviour:
+        'Wraps to two lines max. Never clipped — the card grows vertically.',
+    },
+    {
+      field: 'Cap row use',
+      behaviour: 'Wraps freely; the row grows vertically to fit.',
+    },
   ];
 
   protected cols(n: number): readonly null[] {

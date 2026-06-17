@@ -63,7 +63,9 @@ export class ComboboxComponent<T = unknown> {
   protected readonly filteredOptions = computed(() => {
     const trimmedQuery = this.query().toLowerCase().trim();
     const allOptions = this.options();
-    if (!trimmedQuery) {return allOptions;}
+    if (!trimmedQuery) {
+      return allOptions;
+    }
 
     return allOptions.filter((option) =>
       option.label.toLowerCase().includes(trimmedQuery),
@@ -71,7 +73,9 @@ export class ComboboxComponent<T = unknown> {
   });
 
   protected readonly selectedTags = computed(() => {
-    if (!this.multiple()) {return [];}
+    if (!this.multiple()) {
+      return [];
+    }
     const selectedValues = (this.value() as readonly T[] | null) ?? [];
     const selectedSet = new Set(selectedValues);
 
@@ -79,9 +83,13 @@ export class ComboboxComponent<T = unknown> {
   });
 
   protected readonly displayLabel = computed(() => {
-    if (this.multiple()) {return '';}
+    if (this.multiple()) {
+      return '';
+    }
     const currentValue = this.value() as T | null;
-    if (currentValue === null) {return '';}
+    if (currentValue === null) {
+      return '';
+    }
 
     return (
       this.options().find((option) => option.value === currentValue)?.label ??
@@ -90,8 +98,12 @@ export class ComboboxComponent<T = unknown> {
   });
 
   protected readonly placeholderText = computed(() => {
-    if (this.multiple()) {return '';}
-    if (this.displayLabel()) {return '';}
+    if (this.multiple()) {
+      return '';
+    }
+    if (this.displayLabel()) {
+      return '';
+    }
 
     return this.placeholder();
   });
@@ -108,7 +120,9 @@ export class ComboboxComponent<T = unknown> {
 
   protected optionClass(option: ComboboxOption<T>): string {
     const parts = ['option'];
-    if (this.multiple()) {parts.push('check');}
+    if (this.multiple()) {
+      parts.push('check');
+    }
     void option;
 
     return parts.join(' ');
@@ -116,7 +130,9 @@ export class ComboboxComponent<T = unknown> {
 
   protected onTriggerClick(): void {
     this.filterInput().nativeElement.focus();
-    if (!this.overlayRef) {this.openPanel();}
+    if (!this.overlayRef) {
+      this.openPanel();
+    }
   }
 
   protected togglePanel(event: MouseEvent): void {
@@ -174,14 +190,18 @@ export class ComboboxComponent<T = unknown> {
         if (this.multiple() && !this.query()) {
           const tags = this.selectedTags();
           const last = tags[tags.length - 1];
-          if (last) {this.remove(last.value);}
+          if (last) {
+            this.remove(last.value);
+          }
         }
         break;
     }
   }
 
   protected openPanel(): void {
-    if (this.overlayRef) {return;}
+    if (this.overlayRef) {
+      return;
+    }
     const triggerElement = this.trigger().nativeElement;
     const positionStrategy = this.overlay
       .position()
@@ -241,7 +261,9 @@ export class ComboboxComponent<T = unknown> {
   }
 
   protected remove(target: T): void {
-    if (!this.multiple()) {return;}
+    if (!this.multiple()) {
+      return;
+    }
     const current = (this.value() as readonly T[] | null) ?? [];
     this.value.set(current.filter((existing) => existing !== target));
   }

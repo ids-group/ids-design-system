@@ -1,6 +1,9 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import {
+  DocsTruncationComponent,
+  TruncationRule,
+} from '../../../shared/docs-truncation.component';
 
 interface Duration {
   readonly name: string;
@@ -23,19 +26,39 @@ interface CombinedDemo {
 }
 
 const DURATIONS: Duration[] = [
-  { name: 'instant', value: '80ms',  use: 'Hover / instant feedback' },
-  { name: 'fast',    value: '120ms', use: 'Toggles, micro-state' },
-  { name: 'base',    value: '180ms', use: 'Default UI transitions' },
-  { name: 'slow',    value: '260ms', use: 'Drawer, dialog enter' },
-  { name: 'slower',  value: '400ms', use: 'Page transitions, large reveals' },
+  { name: 'instant', value: '80ms', use: 'Hover / instant feedback' },
+  { name: 'fast', value: '120ms', use: 'Toggles, micro-state' },
+  { name: 'base', value: '180ms', use: 'Default UI transitions' },
+  { name: 'slow', value: '260ms', use: 'Drawer, dialog enter' },
+  { name: 'slower', value: '400ms', use: 'Page transitions, large reveals' },
 ];
 
 const EASES: Ease[] = [
-  { name: 'standard',   curve: 'cubic-bezier(.2, 0, 0, 1)',     use: 'Default; decelerates into rest' },
-  { name: 'emphasized', curve: 'cubic-bezier(.3, 0, .1, 1.4)',  use: 'Pick-up-and-put-down for overlays' },
-  { name: 'decelerate', curve: 'cubic-bezier(0, 0, 0, 1)',      use: 'Incoming only — toast / popover open' },
-  { name: 'accelerate', curve: 'cubic-bezier(.3, 0, 1, 1)',     use: 'Outgoing only — dismiss / close' },
-  { name: 'spring',     curve: 'cubic-bezier(.5, 1.5, .5, 1)',  use: 'Playful overshoot — celebratory feedback' },
+  {
+    name: 'standard',
+    curve: 'cubic-bezier(.2, 0, 0, 1)',
+    use: 'Default; decelerates into rest',
+  },
+  {
+    name: 'emphasized',
+    curve: 'cubic-bezier(.3, 0, .1, 1.4)',
+    use: 'Pick-up-and-put-down for overlays',
+  },
+  {
+    name: 'decelerate',
+    curve: 'cubic-bezier(0, 0, 0, 1)',
+    use: 'Incoming only — toast / popover open',
+  },
+  {
+    name: 'accelerate',
+    curve: 'cubic-bezier(.3, 0, 1, 1)',
+    use: 'Outgoing only — dismiss / close',
+  },
+  {
+    name: 'spring',
+    curve: 'cubic-bezier(.5, 1.5, .5, 1)',
+    use: 'Playful overshoot — celebratory feedback',
+  },
 ];
 
 const COMBINED: CombinedDemo[] = [
@@ -82,8 +105,20 @@ export class MotionSection {
   protected readonly eases = EASES;
   protected readonly combined = COMBINED;
   protected readonly truncationRules: TruncationRule[] = [
-    { field: 'Reduced motion', behaviour: 'All durations collapse to 0ms under prefers-reduced-motion. Component CSS does not need to opt in — the token cascade handles it.' },
-    { field: 'Transitions vs loops', behaviour: '--duration-* drives state transitions. Indeterminate loops (spinners, skeletons) use --duration-loop-fast / --duration-loop-slow — separate scale for rhythm, not response.' },
-    { field: 'Easing pairing', behaviour: 'decelerate for enter, accelerate for exit, standard for state changes, emphasized for overlays. Reserve spring for small celebratory feedback.' },
+    {
+      field: 'Reduced motion',
+      behaviour:
+        'All durations collapse to 0ms under prefers-reduced-motion. Component CSS does not need to opt in — the token cascade handles it.',
+    },
+    {
+      field: 'Transitions vs loops',
+      behaviour:
+        '--duration-* drives state transitions. Indeterminate loops (spinners, skeletons) use --duration-loop-fast / --duration-loop-slow — separate scale for rhythm, not response.',
+    },
+    {
+      field: 'Easing pairing',
+      behaviour:
+        'decelerate for enter, accelerate for exit, standard for state changes, emphasized for overlays. Reserve spring for small celebratory feedback.',
+    },
   ];
 }

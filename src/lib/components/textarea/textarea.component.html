@@ -9,18 +9,16 @@
         <span
           class="req"
           aria-hidden="true"
-          >
-          *
-        </span
         >
+          *
+        </span>
       } @else if (optional()) {
         <span
           class="optional-marker"
           aria-hidden="true"
-          >
-          (optional)
-        </span
         >
+          (optional)
+        </span>
       }
     </label>
   }
@@ -51,9 +49,8 @@
       class="hint"
       [id]="hintId()"
       [attr.role]="invalid() ? 'alert' : null"
-      >
-      {{ hint() }}
-    </span
     >
+      {{ hint() }}
+    </span>
   }
 </div>

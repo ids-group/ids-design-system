@@ -5,7 +5,12 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
 @Component({
   selector: 'practice-do-dont',
   standalone: true,
-  imports: [BadgeComponent, ButtonComponent, DocsSectionComponent, IconComponent],
+  imports: [
+    BadgeComponent,
+    ButtonComponent,
+    DocsSectionComponent,
+    IconComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './do-dont.section.html',
   styleUrl: './do-dont.section.scss',

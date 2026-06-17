@@ -1,37 +1,82 @@
+<docs-section
+  anchor="skeleton"
+  eyebrow="Components"
+  title="Skeleton"
+>
+  <span lede
+    >
+    Shimmer placeholder while data is loading. Render via
+    <code class="t-mono-inline">
+      &lt;ds-skeleton width="…" height="…"&gt;
+    </code>;
+    the <code class="t-mono-inline">[circle]</code> input applies full
+    border-radius for circular shapes (avatars, dot placeholders).
+  </span
+  >
 
-    <docs-section anchor="skeleton" eyebrow="Components" title="Skeleton">
-      <span lede>Shimmer placeholder while data is loading. Render via
-        <code class="t-mono-inline">&lt;ds-skeleton width="…" height="…"&gt;</code>;
-        the <code class="t-mono-inline">[circle]</code> input applies full border-radius for circular shapes
-        (avatars, dot placeholders).</span>
+  <h3 class="block-title t-h4">
+    Common patterns
+  </h3>
 
-      <h3 class="block-title t-h4">Common patterns</h3>
-      <div class="patterns">
-        <div class="pattern">
-          <div class="pattern__lbl t-caption">Single line</div>
-          <ds-skeleton width="280px" height="14px" />
-        </div>
-
-        <div class="pattern">
-          <div class="pattern__lbl t-caption">Paragraph (3 lines)</div>
-          <ds-skeleton width="100%" height="14px" />
-          <ds-skeleton width="100%" height="14px" />
-          <ds-skeleton width="60%" height="14px" />
-        </div>
-
-        <div class="pattern">
-          <div class="pattern__lbl t-caption">Avatar</div>
-          <ds-skeleton [circle]="true" width="40px" height="40px" />
-        </div>
-
-        <div class="pattern">
-          <div class="pattern__lbl t-caption">Table row (in cells)</div>
-          <div class="table-row">
-            <ds-skeleton height="14px" />
-            <ds-skeleton height="14px" />
-            <ds-skeleton height="14px" />
-            <ds-skeleton height="14px" />
-          </div>
-        </div>
+  <div class="patterns">
+    <div class="pattern">
+      <div class="pattern__lbl t-caption">
+        Single line
       </div>
-    </docs-section>
+
+      <ds-skeleton
+        width="280px"
+        height="14px"
+      />
+    </div>
+
+    <div class="pattern">
+      <div class="pattern__lbl t-caption">
+        Paragraph (3 lines)
+      </div>
+
+      <ds-skeleton
+        width="100%"
+        height="14px"
+      />
+
+      <ds-skeleton
+        width="100%"
+        height="14px"
+      />
+
+      <ds-skeleton
+        width="60%"
+        height="14px"
+      />
+    </div>
+
+    <div class="pattern">
+      <div class="pattern__lbl t-caption">
+        Avatar
+      </div>
+
+      <ds-skeleton
+        width="40px"
+        height="40px"
+        [circle]="true"
+      />
+    </div>
+
+    <div class="pattern">
+      <div class="pattern__lbl t-caption">
+        Table row (in cells)
+      </div>
+
+      <div class="table-row">
+        <ds-skeleton height="14px" />
+
+        <ds-skeleton height="14px" />
+
+        <ds-skeleton height="14px" />
+
+        <ds-skeleton height="14px" />
+      </div>
+    </div>
+  </div>
+</docs-section>

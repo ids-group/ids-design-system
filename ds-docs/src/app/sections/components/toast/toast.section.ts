@@ -15,10 +15,19 @@ export class ToastSection {
 
   fire(variant: 'info' | 'success' | 'warning' | 'error'): void {
     const messages = {
-      info:    { title: 'Recompute queued',     body: '3 logistics plans will update in a moment.' },
-      success: { title: 'Alpha saved',          body: '12 resource allocations updated.' },
+      info: {
+        title: 'Recompute queued',
+        body: '3 logistics plans will update in a moment.',
+      },
+      success: {
+        title: 'Alpha saved',
+        body: '12 resource allocations updated.',
+      },
       warning: { title: 'Volume nearing limit', body: '92% / 95% on Lane 04.' },
-      error:   { title: 'Inventory sync failed',body: 'Connection timed out — retrying in 30s.' },
+      error: {
+        title: 'Inventory sync failed',
+        body: 'Connection timed out — retrying in 30s.',
+      },
     };
     const message = messages[variant];
     this.toast.show({ title: message.title, body: message.body, variant });

@@ -91,27 +91,42 @@ export class DropdownComponent {
 
   protected readonly wrapperClasses = computed<string>(() => {
     const parts = ['dropdown'];
-    if (this.size() === 'sm') {parts.push('sm');}
-    if (this.size() === 'lg') {parts.push('lg');}
-    if (this.disabled()) {parts.push('disabled');}
-    if (this.readOnly()) {parts.push('readonly');}
-    if (this.error()) {parts.push('error');}
-    if (this.open() || this.preview.staticPreview()) {parts.push('open');}
+    if (this.size() === 'sm') {
+      parts.push('sm');
+    }
+    if (this.size() === 'lg') {
+      parts.push('lg');
+    }
+    if (this.disabled()) {
+      parts.push('disabled');
+    }
+    if (this.readOnly()) {
+      parts.push('readonly');
+    }
+    if (this.error()) {
+      parts.push('error');
+    }
+    if (this.open() || this.preview.staticPreview()) {
+      parts.push('open');
+    }
 
     return parts.join(' ');
   });
 
   constructor() {
     effect(() => {
-      if (!this.open()) {return;}
+      if (!this.open()) {
+        return;
+      }
       const index = this.options().findIndex((o) => o.value === this.value());
       this.activeIndex.set(index >= 0 ? index : this.firstEnabledIndex());
     });
   }
 
   protected toggle(): void {
-    if (this.disabled() || this.readOnly() || this.preview.staticPreview())
-      {return;}
+    if (this.disabled() || this.readOnly() || this.preview.staticPreview()) {
+      return;
+    }
     if (this.open()) {
       this.close();
     } else {
@@ -120,7 +135,9 @@ export class DropdownComponent {
   }
 
   protected openPanel(): void {
-    if (this.overlayRef) {return;}
+    if (this.overlayRef) {
+      return;
+    }
     const triggerElement = this.trigger().nativeElement;
     const width = triggerElement.getBoundingClientRect().width;
     const positionStrategy = this.overlay
@@ -167,7 +184,9 @@ export class DropdownComponent {
   }
 
   protected pick(option: DropdownOption): void {
-    if (option.disabled) {return;}
+    if (option.disabled) {
+      return;
+    }
     this.value.set(option.value);
     this.close();
     this.trigger().nativeElement.focus();
@@ -178,8 +197,9 @@ export class DropdownComponent {
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
-    if (this.disabled() || this.readOnly() || this.preview.staticPreview())
-      {return;}
+    if (this.disabled() || this.readOnly() || this.preview.staticPreview()) {
+      return;
+    }
     const key = event.key;
     if (!this.open()) {
       if (
@@ -216,7 +236,9 @@ export class DropdownComponent {
       event.preventDefault();
       const index = this.activeIndex();
       const opt = this.options()[index];
-      if (opt) {this.pick(opt);}
+      if (opt) {
+        this.pick(opt);
+      }
 
       return;
     }
@@ -238,7 +260,9 @@ export class DropdownComponent {
 
   private moveActive(delta: number): void {
     const opts = this.options();
-    if (opts.length === 0) {return;}
+    if (opts.length === 0) {
+      return;
+    }
     let next = this.activeIndex();
     for (let attempts = 0; attempts < opts.length; attempts++) {
       next = (next + delta + opts.length) % opts.length;
@@ -255,7 +279,9 @@ export class DropdownComponent {
     const opts = this.options();
     for (let i = 0; i < opts.length; i++) {
       const candidate = opts[i];
-      if (candidate && !candidate.disabled) {return i;}
+      if (candidate && !candidate.disabled) {
+        return i;
+      }
     }
 
     return -1;
@@ -265,7 +291,9 @@ export class DropdownComponent {
     const opts = this.options();
     for (let i = opts.length - 1; i >= 0; i--) {
       const candidate = opts[i];
-      if (candidate && !candidate.disabled) {return i;}
+      if (candidate && !candidate.disabled) {
+        return i;
+      }
     }
 
     return -1;

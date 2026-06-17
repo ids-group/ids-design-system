@@ -92,7 +92,7 @@
     .rules-list li + li { margin-top: var(--space-2); }
     .rules-list strong { color: var(--text-primary); }
 
-    @media (max-width: 720px) {
+    @media (width <= 720px) {
       .bp-row { grid-template-columns: 1fr; }
       .cap-row { grid-template-columns: 1fr; }
     }

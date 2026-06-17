@@ -1,62 +1,154 @@
+<docs-section
+  anchor="pattern-page-header"
+  eyebrow="Patterns"
+  title="Page header"
+>
+  <span lede>
+    {{ lede }}
+  </span>
 
-    <docs-section anchor="pattern-page-header" eyebrow="Patterns" title="Page header">
-      <span lede>{{ lede }}</span>
+  <h3 class="block-title t-h4">
+    Full record header
+  </h3>
 
-      <h3 class="block-title t-h4">Full record header</h3>
-      <p class="block-desc t-s">
-        Breadcrumb above the title row, one status badge inline with the title, a sub-line of
-        identifiers, primary action on the right with a ghost secondary, and tabs anchored
-        immediately below the title row.
-      </p>
-      <div class="stage">
-        <ds-breadcrumbs [items]="crumbs" />
-        <ds-page-header
-          eyebrow="Project"
-          title="Project Alpha"
-          subtitle="30 Jul – 3 Aug 2026 · North Site, Suffolk · EVT-2026-0142"
+  <p class="block-desc t-s">
+    Breadcrumb above the title row, one status badge inline with the title, a
+    sub-line of identifiers, primary action on the right with a ghost secondary,
+    and tabs anchored immediately below the title row.
+  </p>
+
+  <div class="stage">
+    <ds-breadcrumbs [items]="crumbs" />
+
+    <ds-page-header
+      eyebrow="Project"
+      title="Project Alpha"
+      subtitle="30 Jul – 3 Aug 2026 · North Site, Suffolk · EVT-2026-0142"
+    >
+      <div meta>
+        <ds-badge
+          variant="active"
+          [withDot]="true"
+          >
+          Active
+        </ds-badge
         >
-          <div meta>
-            <ds-badge variant="active" [withDot]="true">Active</ds-badge>
-          </div>
-          <div actions>
-            <ds-button variant="outline" icon="download">Export</ds-button>
-            <ds-button icon="edit">Edit</ds-button>
-          </div>
-          <div tabs>
-            <ds-tabs>
-              <ds-tab label="Overview"><div class="pad t-s">Overview content.</div></ds-tab>
-              <ds-tab label="Sub-records" [count]="4"><div class="pad t-s">Sub-records.</div></ds-tab>
-              <ds-tab label="Resource allocation"><div class="pad t-s">Allocation.</div></ds-tab>
-              <ds-tab label="Logistics plan" [count]="2"><div class="pad t-s">Logistics.</div></ds-tab>
-              <ds-tab label="Activity"><div class="pad t-s">Activity feed.</div></ds-tab>
-            </ds-tabs>
-          </div>
-        </ds-page-header>
       </div>
 
-      <h3 class="block-title t-h4">Compact variant</h3>
-      <p class="block-desc t-s">
-        No breadcrumb, no tabs — just title + sub-line + action row. For embedded views (drawers,
-        secondary pages) where the chrome already establishes location.
-      </p>
-      <div class="stage">
-        <ds-page-header
-          [compact]="true"
-          title="Edit allocation"
-          subtitle="3 lanes affected · auto-recompute on save"
+      <div actions>
+        <ds-button
+          variant="outline"
+          icon="download"
+          >
+          Export
+        </ds-button
         >
-          <div actions>
-            <ds-button variant="outline">Discard</ds-button>
-            <ds-button>Save</ds-button>
-          </div>
-        </ds-page-header>
+
+        <ds-button icon="edit">
+          Edit
+        </ds-button>
       </div>
 
-      <h3 class="block-title t-h4">Usage</h3>
-      <ul class="rules">
-        <li>One status badge maximum in the title row. Promote any second status to a banner or stat tile.</li>
-        <li>Primary action sits on the right; secondary actions go in a ghost button or overflow menu.</li>
-        <li>Tabs sit immediately below the title row — never above the breadcrumb.</li>
-        <li>The Page header component is documented under Components &gt; Page header. This pattern covers composition.</li>
-      </ul>
-    </docs-section>
+      <div tabs>
+        <ds-tabs>
+          <ds-tab label="Overview"
+            >
+            <div class="pad t-s">
+              Overview content.
+            </div>
+          </ds-tab
+          >
+
+          <ds-tab
+            label="Sub-records"
+            [count]="4"
+            >
+            <div class="pad t-s">
+              Sub-records.
+            </div>
+          </ds-tab
+          >
+
+          <ds-tab label="Resource allocation"
+            >
+            <div class="pad t-s">
+              Allocation.
+            </div>
+          </ds-tab
+          >
+
+          <ds-tab
+            label="Logistics plan"
+            [count]="2"
+            >
+            <div class="pad t-s">
+              Logistics.
+            </div>
+          </ds-tab
+          >
+
+          <ds-tab label="Activity"
+            >
+            <div class="pad t-s">
+              Activity feed.
+            </div>
+          </ds-tab
+          >
+        </ds-tabs>
+      </div>
+    </ds-page-header>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Compact variant
+  </h3>
+
+  <p class="block-desc t-s">
+    No breadcrumb, no tabs — just title + sub-line + action row. For embedded
+    views (drawers, secondary pages) where the chrome already establishes
+    location.
+  </p>
+
+  <div class="stage">
+    <ds-page-header
+      title="Edit allocation"
+      subtitle="3 lanes affected · auto-recompute on save"
+      [compact]="true"
+    >
+      <div actions>
+        <ds-button variant="outline">
+          Discard
+        </ds-button>
+
+        <ds-button>
+          Save
+        </ds-button>
+      </div>
+    </ds-page-header>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Usage
+  </h3>
+
+  <ul class="rules">
+    <li>
+      One status badge maximum in the title row. Promote any second status to a
+      banner or stat tile.
+    </li>
+
+    <li>
+      Primary action sits on the right; secondary actions go in a ghost button
+      or overflow menu.
+    </li>
+
+    <li>
+      Tabs sit immediately below the title row — never above the breadcrumb.
+    </li>
+
+    <li>
+      The Page header component is documented under Components &gt; Page header.
+      This pattern covers composition.
+    </li>
+  </ul>
+</docs-section>

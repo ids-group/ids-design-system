@@ -57,7 +57,9 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
   readonly opened = signal(false);
 
   toggle(trigger: HTMLElement): void {
-    if (this.preview.staticPreview()) {return;}
+    if (this.preview.staticPreview()) {
+      return;
+    }
     if (this.ref) {
       this.close();
 

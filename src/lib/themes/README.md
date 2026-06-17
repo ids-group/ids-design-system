@@ -4,15 +4,15 @@ Colour lives in two files here: a **palette** (defines the concrete colours) and
 
 ## Architecture: three tiers
 
-| Tier | Lives in | Examples | Consumers |
-|---|---|---|---|
-| **Tier 1 — Palette** (defines colours) | `themes/<name>/_palette.scss` | `--blue-600`, `--cool-gray-0`, `--brand-gray-500`, `--red-500`, `--blue-h/s/l`, `--shadow-tint-h/s/l` | Only the theme file |
-| **Tier 2 — Theme** (sets roles) | `themes/<name>/_theme.scss` | `--primary: var(--blue-600)`, `--text-primary`, `--surface-default`, `--success`, `--focus-ring`, `--primary-h: var(--blue-h)`, font families; the `--neutral-*` family slot (cool-gray by default, brand-gray via `[data-neutrals="brand"]`) | Components |
-| **Tier 3 — Component / scale** | `styles/_tokens.scss` and inside `*.component.scss` | `--space-*`, `--radius-*`, `--ds-button-bg-color`, `--duration-fast`, `--layer-modal` | Components (their own) |
+| Tier                                   | Lives in                                            | Examples                                                                                                                                                                                                                                      | Consumers              |
+| -------------------------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| **Tier 1 — Palette** (defines colours) | `themes/<name>/_palette.scss`                       | `--blue-600`, `--cool-gray-0`, `--brand-gray-500`, `--red-500`, `--blue-h/s/l`, `--shadow-tint-h/s/l`                                                                                                                                         | Only the theme file    |
+| **Tier 2 — Theme** (sets roles)        | `themes/<name>/_theme.scss`                         | `--primary: var(--blue-600)`, `--text-primary`, `--surface-default`, `--success`, `--focus-ring`, `--primary-h: var(--blue-h)`, font families; the `--neutral-*` family slot (cool-gray by default, brand-gray via `[data-neutrals="brand"]`) | Components             |
+| **Tier 3 — Component / scale**         | `styles/_tokens.scss` and inside `*.component.scss` | `--space-*`, `--radius-*`, `--ds-button-bg-color`, `--duration-fast`, `--layer-modal`                                                                                                                                                         | Components (their own) |
 
 **Hard rule:** components NEVER consume Tier 1 palette directly. If you write `var(--blue-600)` inside `button.component.scss`, that's a bug — introduce or reuse a Tier 2 role.
 
-**Why split palette from theme:** the palette says *what colours exist*; the theme says *what each role is*. A dark theme ships a different palette (different ramp values) + a theme map that re-points roles. Swapping either re-skins the system without touching components.
+**Why split palette from theme:** the palette says _what colours exist_; the theme says _what each role is_. A dark theme ships a different palette (different ramp values) + a theme map that re-points roles. Swapping either re-skins the system without touching components.
 
 ## Available palette + theme
 
@@ -20,6 +20,7 @@ Colour lives in two files here: a **palette** (defines the concrete colours) and
 - **`default/_theme.scss`** — Light role map onto the default palette. Both are bundled into `styles/ds.scss` (palette → theme → tokens) so `@use 'styles/ds';` works out of the box.
 
 Future (each a `themes/<name>/` folder with `_palette.scss` + `_theme.scss`):
+
 - `themes/dark/` — Dark-mode flip (`--shadow-tint-l` → ~95%, neutrals inverted, etc.).
 - `themes/high-contrast/` — A11y boost.
 
@@ -29,15 +30,15 @@ Future (each a `themes/<name>/` folder with `_palette.scss` + `_theme.scss`):
 
 ```scss
 // Consumer styles.scss
-@use 'styles/ds';   // bundles default palette + theme + tokens + reset + ...
+@use 'styles/ds'; // bundles default palette + theme + tokens + reset + ...
 ```
 
 ### Option B — explicit theme choice
 
 ```scss
 // Consumer styles.scss
-@use 'themes/dark/palette';      // pick a non-default theme: palette …
-@use 'themes/dark/theme';        // … then its role map
+@use 'themes/dark/palette'; // pick a non-default theme: palette …
+@use 'themes/dark/theme'; // … then its role map
 @use 'styles/tokens';
 @use 'styles/reset';
 @use 'styles/typography';
@@ -52,8 +53,8 @@ Palette + theme must come BEFORE `tokens` so role aliases resolve.
 
 ```scss
 // Consumer styles.scss
-@use 'styles/ds';                        // default theme + DS
-@use './app/styles/brand-manage-my';     // overrides palette/roles via [data-brand]
+@use 'styles/ds'; // default theme + DS
+@use './app/styles/brand-manage-my'; // overrides palette/roles via [data-brand]
 ```
 
 This is the mm-broker pattern: load DS (default theme included), then overlay a brand at a more-specific selector (`[data-brand="manage-my"]`).

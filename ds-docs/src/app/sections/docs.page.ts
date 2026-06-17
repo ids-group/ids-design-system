@@ -77,149 +77,322 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
   standalone: true,
   imports: [
     HomeSection,
-    ColorSection, TypographySection, SpacingSection, RadiusSection, ElevationSection,
-    MotionSection, DensitySection, IconsSection, LayoutSection, ScrollbarSection,
-    BordersSection, OpacitySection,
-    SurfaceLevelsSection, ZIndexSection, BrowserTabSection, ChartsSection,
-    IconSection, ButtonSection, IconButtonSection, BadgeSection, StatusDotSection, AvatarSection, CardSection,
-    StatSection, TabsSection, InputSection, NumberStepperSection, SearchSection, SelectSection, SelectionSection, TableSection,
-    PaginationSection, DatePickerSection, BreadcrumbsSection, SidenavSection, TopbarSection,
-    ComponentsPageHeaderSection, ModalSection, MenuSection, BannerSection, DropzoneSection,
+    ColorSection,
+    TypographySection,
+    SpacingSection,
+    RadiusSection,
+    ElevationSection,
+    MotionSection,
+    DensitySection,
+    IconsSection,
+    LayoutSection,
+    ScrollbarSection,
+    BordersSection,
+    OpacitySection,
+    SurfaceLevelsSection,
+    ZIndexSection,
+    BrowserTabSection,
+    ChartsSection,
+    IconSection,
+    ButtonSection,
+    IconButtonSection,
+    BadgeSection,
+    StatusDotSection,
+    AvatarSection,
+    CardSection,
+    StatSection,
+    TabsSection,
+    InputSection,
+    NumberStepperSection,
+    SearchSection,
+    SelectSection,
+    SelectionSection,
+    TableSection,
+    PaginationSection,
+    DatePickerSection,
+    BreadcrumbsSection,
+    SidenavSection,
+    TopbarSection,
+    ComponentsPageHeaderSection,
+    ModalSection,
+    MenuSection,
+    BannerSection,
+    DropzoneSection,
     EmptyStateComponentSection,
-    ProgressSection, SpinnerSection, SkeletonSection,
-    AccordionSection, StepperSection,
-    TooltipSection, PopoverSection, ToastSection, DrawerSection, BottomSheetSection,
-    TagSection, W3wSection, LinkSection, PageFooterSection,
+    ProgressSection,
+    SpinnerSection,
+    SkeletonSection,
+    AccordionSection,
+    StepperSection,
+    TooltipSection,
+    PopoverSection,
+    ToastSection,
+    DrawerSection,
+    BottomSheetSection,
+    TagSection,
+    W3wSection,
+    LinkSection,
+    PageFooterSection,
     ComboboxSection,
-    PatternsPageHeaderSection, FilterBarSection, FormLayoutSection, ActivitySection, EmptyStateSection,
-    TokenDisciplineSection, DoDontSection,
+    PatternsPageHeaderSection,
+    FilterBarSection,
+    FormLayoutSection,
+    ActivitySection,
+    EmptyStateSection,
+    TokenDisciplineSection,
+    DoDontSection,
     TokensReferenceSection,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   template: `
     <section-home />
 
-    <h1 class="group-title t-h2">Components</h1>
+    <h1 class="group-title t-h2">
+      Components
+    </h1>
+
     <section-components-accordion />
+
     <section-components-avatar />
+
     <section-components-badge />
+
     <section-components-banner />
+
     <section-components-bottom-sheet />
+
     <section-components-breadcrumbs />
+
     <section-components-button />
+
     <section-components-card />
+
     <section-components-combobox />
+
     <section-components-date-picker />
+
     <section-components-drawer />
+
     <section-components-dropzone />
+
     <section-components-empty-state />
+
     <section-components-input />
+
     <section-components-icon />
+
     <section-components-icon-button />
+
     <section-components-link />
+
     <section-components-menu />
+
     <section-components-modal />
+
     <section-components-number-stepper />
+
     <section-components-page-footer />
+
     <section-components-page-header />
+
     <section-components-pagination />
+
     <section-components-popover />
+
     <section-components-progress />
+
     <section-components-search />
+
     <section-components-select />
+
     <section-components-selection />
+
     <section-components-sidenav />
+
     <section-components-skeleton />
+
     <section-components-spinner />
+
     <section-components-stat />
+
     <section-components-status-dot />
+
     <section-components-stepper />
+
     <section-components-table />
+
     <section-components-tabs />
+
     <section-components-tag />
+
     <section-components-toast />
+
     <section-components-tooltip />
+
     <section-components-topbar />
+
     <section-components-w3w />
 
-    <h1 class="group-title t-h2">Foundations</h1>
+    <h1 class="group-title t-h2">
+      Foundations
+    </h1>
+
     <section-foundations-borders />
+
     <section-foundations-browser-tab />
+
     <section-foundations-charts />
+
     <section-foundations-color />
+
     <section-foundations-density />
+
     <section-foundations-elevation />
+
     <section-foundations-icons />
+
     <section-foundations-layout />
+
     <section-foundations-motion />
+
     <section-foundations-opacity />
+
     <section-foundations-radius />
+
     <section-foundations-scrollbar />
+
     <section-foundations-spacing />
+
     <section-foundations-surface-levels />
+
     <section-foundations-typography />
+
     <section-foundations-z-index />
 
-    <h1 class="group-title t-h2">Patterns</h1>
+    <h1 class="group-title t-h2">
+      Patterns
+    </h1>
+
     <pattern-activity />
+
     <pattern-empty-state />
+
     <pattern-filter-bar />
+
     <pattern-form-layout />
+
     <pattern-page-header />
 
-    <h1 class="group-title t-h2">Practice</h1>
+    <h1 class="group-title t-h2">
+      Practice
+    </h1>
+
     <practice-do-dont />
+
     <practice-token-discipline />
 
-    <h1 class="group-title t-h2">Tokens reference</h1>
+    <h1 class="group-title t-h2">
+      Tokens reference
+    </h1>
+
     <section-tokens-reference />
   `,
-  styles: [`
-    :host {
-      display: block;
-      max-width: var(--col-cap-content);
-      margin-inline: auto;
-      padding: var(--space-12) var(--space-16) var(--space-24);
-    }
-    @media (max-width: 1100px) {
-      :host { padding: var(--space-10) var(--space-8) var(--space-16); }
-    }
-    @media (max-width: 900px) {
-      :host { padding: var(--space-8) var(--space-6) var(--space-12); }
-    }
-    .group-title {
-      margin-top: var(--space-16);
-      padding-bottom: var(--space-3);
-      border-bottom: var(--border-width-default) solid var(--border-divider);
-    }
-    section-home,
-    section-foundations-color, section-foundations-typography, section-foundations-spacing,
-    section-foundations-radius, section-foundations-elevation, section-foundations-motion,
-    section-foundations-density, section-foundations-icons, section-foundations-layout,
-    section-foundations-scrollbar, section-foundations-borders, section-foundations-opacity,
-    section-foundations-surface-levels, section-foundations-z-index, section-foundations-browser-tab, section-foundations-charts,
-    section-components-icon, section-components-button, section-components-icon-button, section-components-badge,
-    section-components-status-dot, section-components-avatar, section-components-card,
-    section-components-stat, section-components-tabs, section-components-input,
-    section-components-number-stepper,
-    section-components-search, section-components-select, section-components-selection, section-components-table,
-    section-components-pagination, section-components-date-picker, section-components-breadcrumbs,
-    section-components-sidenav, section-components-topbar, section-components-page-header,
-    section-components-modal, section-components-menu, section-components-banner, section-components-dropzone,
-    section-components-empty-state,
-    section-components-progress, section-components-spinner, section-components-skeleton,
-    section-components-accordion, section-components-stepper,
-    section-components-tooltip, section-components-popover, section-components-toast, section-components-drawer,
-    section-components-bottom-sheet,
-    section-components-tag, section-components-w3w, section-components-link, section-components-page-footer,
-    section-components-combobox,
-    pattern-page-header, pattern-filter-bar, pattern-form-layout, pattern-activity, pattern-empty-state,
-    practice-token-discipline, practice-do-dont,
-    section-tokens-reference {
-      display: block;
-      margin-top: var(--space-12);
-    }
-    section-home { margin-top: 0; }
-  `],
+  styles: [
+    `
+      :host {
+        display: block;
+        max-width: var(--col-cap-content);
+        margin-inline: auto;
+        padding: var(--space-12) var(--space-16) var(--space-24);
+      }
+      @media (max-width: 1100px) {
+        :host {
+          padding: var(--space-10) var(--space-8) var(--space-16);
+        }
+      }
+      @media (max-width: 900px) {
+        :host {
+          padding: var(--space-8) var(--space-6) var(--space-12);
+        }
+      }
+      .group-title {
+        margin-top: var(--space-16);
+        padding-bottom: var(--space-3);
+        border-bottom: var(--border-width-default) solid var(--border-divider);
+      }
+      section-home,
+      section-foundations-color,
+      section-foundations-typography,
+      section-foundations-spacing,
+      section-foundations-radius,
+      section-foundations-elevation,
+      section-foundations-motion,
+      section-foundations-density,
+      section-foundations-icons,
+      section-foundations-layout,
+      section-foundations-scrollbar,
+      section-foundations-borders,
+      section-foundations-opacity,
+      section-foundations-surface-levels,
+      section-foundations-z-index,
+      section-foundations-browser-tab,
+      section-foundations-charts,
+      section-components-icon,
+      section-components-button,
+      section-components-icon-button,
+      section-components-badge,
+      section-components-status-dot,
+      section-components-avatar,
+      section-components-card,
+      section-components-stat,
+      section-components-tabs,
+      section-components-input,
+      section-components-number-stepper,
+      section-components-search,
+      section-components-select,
+      section-components-selection,
+      section-components-table,
+      section-components-pagination,
+      section-components-date-picker,
+      section-components-breadcrumbs,
+      section-components-sidenav,
+      section-components-topbar,
+      section-components-page-header,
+      section-components-modal,
+      section-components-menu,
+      section-components-banner,
+      section-components-dropzone,
+      section-components-empty-state,
+      section-components-progress,
+      section-components-spinner,
+      section-components-skeleton,
+      section-components-accordion,
+      section-components-stepper,
+      section-components-tooltip,
+      section-components-popover,
+      section-components-toast,
+      section-components-drawer,
+      section-components-bottom-sheet,
+      section-components-tag,
+      section-components-w3w,
+      section-components-link,
+      section-components-page-footer,
+      section-components-combobox,
+      pattern-page-header,
+      pattern-filter-bar,
+      pattern-form-layout,
+      pattern-activity,
+      pattern-empty-state,
+      practice-token-discipline,
+      practice-do-dont,
+      section-tokens-reference {
+        display: block;
+        margin-top: var(--space-12);
+      }
+      section-home {
+        margin-top: 0;
+      }
+    `,
+  ],
 })
 export class DocsPage {}

@@ -80,7 +80,9 @@ export class InputComponent {
 
   protected readonly canClear = computed<boolean>(() => {
     const explicit = this.clearable();
-    if (explicit !== null) {return explicit;}
+    if (explicit !== null) {
+      return explicit;
+    }
 
     return this.type() === 'search';
   });
@@ -113,14 +115,29 @@ export class InputComponent {
 
   protected readonly wrapperClasses = computed(() => {
     const parts = ['field'];
-    if (this.size() === 'sm') {parts.push('sm');}
-    if (this.size() === 'lg') {parts.push('lg');}
-    if (this.invalid()) {parts.push('error');}
-    else if (this.success()) {parts.push('success');}
-    if (this.disabled()) {parts.push('disabled');}
-    if (this.readOnly()) {parts.push('read-only');}
-    if (this.withAddon()) {parts.push('with-addon');}
-    if (this.withAddonRight()) {parts.push('with-addon-right');}
+    if (this.size() === 'sm') {
+      parts.push('sm');
+    }
+    if (this.size() === 'lg') {
+      parts.push('lg');
+    }
+    if (this.invalid()) {
+      parts.push('error');
+    } else if (this.success()) {
+      parts.push('success');
+    }
+    if (this.disabled()) {
+      parts.push('disabled');
+    }
+    if (this.readOnly()) {
+      parts.push('read-only');
+    }
+    if (this.withAddon()) {
+      parts.push('with-addon');
+    }
+    if (this.withAddonRight()) {
+      parts.push('with-addon-right');
+    }
 
     return parts.join(' ');
   });

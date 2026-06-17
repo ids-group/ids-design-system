@@ -1,31 +1,120 @@
+<docs-section
+  anchor="toast"
+  eyebrow="Components"
+  title="Toast"
+>
+  <span lede
+    >
+    Auto-dismissing notification anchored to top-right of the viewport. Stacks
+    vertically. Trigger imperatively via
+    <code class="t-mono-inline">
+      ToastService.show()
+    </code> — one variant per
+    system event severity.
+  </span
+  >
 
-    <docs-section anchor="toast" eyebrow="Components" title="Toast">
-      <span lede>Auto-dismissing notification anchored to top-right of the viewport. Stacks vertically.
-        Trigger imperatively via <code class="t-mono-inline">ToastService.show()</code> — one variant
-        per system event severity.</span>
+  <h3 class="block-title t-h4">
+    States showcase (static specimens)
+  </h3>
 
-      <h3 class="block-title t-h4">States showcase (static specimens)</h3>
-      <div class="states">
-        <ds-toast variant="info" title="Recompute queued" message="3 logistics plans will update in a moment." [dismissible]="true" />
-        <ds-toast variant="success" title="Alpha saved" message="12 resource allocations updated." [dismissible]="true" />
-        <ds-toast variant="warning" title="Volume nearing limit" message="92% / 95% on Lane 04." />
-        <ds-toast variant="error" title="Inventory sync failed" message="Connection timed out — retrying in 30s." />
-      </div>
+  <div class="states">
+    <ds-toast
+      variant="info"
+      title="Recompute queued"
+      message="3 logistics plans will update in a moment."
+      [dismissible]="true"
+    />
 
-      <h3 class="block-title t-h4">Live demo</h3>
-      <p class="block-desc t-s">Click a button to trigger a toast (auto-dismisses after 5 s).</p>
-      <div class="demo">
-        <ds-button variant="outline" size="m" (click)="fire('info')">Info</ds-button>
-        <ds-button variant="outline" size="m" (click)="fire('success')">Success</ds-button>
-        <ds-button variant="outline" size="m" (click)="fire('warning')">Warning</ds-button>
-        <ds-button variant="outline" size="m" (click)="fire('error')">Error</ds-button>
-      </div>
+    <ds-toast
+      variant="success"
+      title="Alpha saved"
+      message="12 resource allocations updated."
+      [dismissible]="true"
+    />
 
-      <h3 class="block-title t-h4">With action</h3>
-      <p class="block-desc t-s">
-        Pass <code class="t-mono-inline">action: {{ '{' }} label, handler {{ '}' }}</code> to <code class="t-mono-inline">ToastService.show()</code> to render a trailing action button (e.g. Undo).
-      </p>
-      <div class="demo">
-        <ds-button variant="outline" size="m" (click)="fireWithAction()">Delete with Undo</ds-button>
-      </div>
-    </docs-section>
+    <ds-toast
+      variant="warning"
+      title="Volume nearing limit"
+      message="92% / 95% on Lane 04."
+    />
+
+    <ds-toast
+      variant="error"
+      title="Inventory sync failed"
+      message="Connection timed out — retrying in 30s."
+    />
+  </div>
+
+  <h3 class="block-title t-h4">
+    Live demo
+  </h3>
+
+  <p class="block-desc t-s">
+    Click a button to trigger a toast (auto-dismisses after 5 s).
+  </p>
+
+  <div class="demo">
+    <ds-button
+      variant="outline"
+      size="m"
+      (click)="fire('info')"
+      >
+      Info
+    </ds-button
+    >
+
+    <ds-button
+      variant="outline"
+      size="m"
+      (click)="fire('success')"
+      >
+      Success
+    </ds-button
+    >
+
+    <ds-button
+      variant="outline"
+      size="m"
+      (click)="fire('warning')"
+      >
+      Warning
+    </ds-button
+    >
+
+    <ds-button
+      variant="outline"
+      size="m"
+      (click)="fire('error')"
+      >
+      Error
+    </ds-button
+    >
+  </div>
+
+  <h3 class="block-title t-h4">
+    With action
+  </h3>
+
+  <p class="block-desc t-s">
+    Pass
+    <code class="t-mono-inline"
+      >
+      action: {{ '{' }} label, handler {{ '}' }}
+    </code
+    >
+    to <code class="t-mono-inline">ToastService.show()</code> to render a
+    trailing action button (e.g. Undo).
+  </p>
+
+  <div class="demo">
+    <ds-button
+      variant="outline"
+      size="m"
+      (click)="fireWithAction()"
+      >
+      Delete with Undo
+    </ds-button
+    >
+  </div>
+</docs-section>

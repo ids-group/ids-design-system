@@ -115,9 +115,7 @@
             [attr.colspan]="columns().length + (selectable() ? 1 : 0)"
           >
             @if (emptyTemplate()) {
-              <ng-container
-                [ngTemplateOutlet]="emptyTemplate()!"
-              >
+              <ng-container [ngTemplateOutlet]="emptyTemplate()!">
               </ng-container>
             } @else {
               <ng-content select="[empty]"></ng-content>

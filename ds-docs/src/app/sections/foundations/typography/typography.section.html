@@ -1,67 +1,178 @@
+<docs-section
+  anchor="typography"
+  eyebrow="Foundations"
+  title="Typography"
+>
+  <docs-truncation [rules]="truncationRules" />
 
-    <docs-section anchor="typography" eyebrow="Foundations" title="Typography">
-      <docs-truncation [rules]="truncationRules" />
-      <span lede>Mulish for UI and prose, JetBrains Mono for IDs, dates and any monospace data. Weights: 400 / 500 / 600 / 700 / 800.</span>
+  <span lede
+    >
+    Mulish for UI and prose, JetBrains Mono for IDs, dates and any monospace
+    data. Weights: 400 / 500 / 600 / 700 / 800.
+  </span
+  >
 
-      <!-- ============================================================ Type ramp -->
-      <h3 class="block-title t-h4">Type ramp</h3>
-      <p class="block-desc t-s">Every utility class side-by-side. Headings are reserved for marketing surfaces and large section titles. Default UI runs on <code class="t-mono-inline">.t-s</code> (14).</p>
-      <div class="ramp">
-        <div class="ramp__head t-overline">
-          <div>Class · token</div>
-          <div>Sample</div>
-          <div>Size</div>
-          <div>LH</div>
-          <div>Weight</div>
-          <div>Tracking</div>
-        </div>
-        @for (row of ramp; track row.cls) {
-          <div class="ramp__row">
-            <div class="ramp__label">
-              <code class="t-mono-inline ramp__cls">.{{ row.cls }}</code>
-              <code class="t-mono-inline ramp__token">{{ row.sizeToken }}</code>
-            </div>
-            <div [class]="row.cls + ' ramp__sample'">{{ row.sample }}</div>
-            <div class="t-mono ramp__meta">{{ row.size }}</div>
-            <div class="t-mono ramp__meta">{{ row.lineHeight }}</div>
-            <div class="t-mono ramp__meta">{{ row.weight }}</div>
-            <div class="t-mono ramp__meta">{{ row.tracking }}</div>
-          </div>
-        }
+  <!-- ============================================================ Type ramp -->
+  <h3 class="block-title t-h4">
+    Type ramp
+  </h3>
+
+  <p class="block-desc t-s">
+    Every utility class side-by-side. Headings are reserved for marketing
+    surfaces and large section titles. Default UI runs on
+    <code class="t-mono-inline">
+      .t-s
+    </code> (14).
+  </p>
+
+  <div class="ramp">
+    <div class="ramp__head t-overline">
+      <div>
+        Class · token
       </div>
 
-      <!-- ============================================================ Mono family -->
-      <h3 class="block-title t-h4">Mono family</h3>
-      <p class="block-desc t-s">JetBrains Mono for any literal value the operator might paste, search or read aloud. <code class="t-mono-inline">.t-mono</code> for inline tokens; <code class="t-mono-inline">.t-mono-block</code> wraps a code-snippet style frame.</p>
-      <div class="mono-grid">
-        <div class="mono-card">
-          <div class="t-overline">Inline · .t-mono</div>
-          <div class="t-mono mono-card__sample">ORD-2026-0142  ·  12 Main St, City  ·  06:00–22:00</div>
-          <div class="t-caption">13 / 1.4 / medium · JetBrains Mono</div>
+      <div>
+        Sample
+      </div>
+
+      <div>
+        Size
+      </div>
+
+      <div>
+        LH
+      </div>
+
+      <div>
+        Weight
+      </div>
+
+      <div>
+        Tracking
+      </div>
+    </div>
+
+    @for (row of ramp; track row.cls) {
+      <div class="ramp__row">
+        <div class="ramp__label">
+          <code class="t-mono-inline ramp__cls">
+            .{{ row.cls }}
+          </code>
+
+          <code class="t-mono-inline ramp__token">
+            {{ row.sizeToken }}
+          </code>
         </div>
-        <div class="mono-card">
-          <div class="t-overline">Block · .t-mono-block</div>
-          <pre class="t-mono-block mono-card__block">SELECT id, status, recomputed_at
+
+        <div [class]="row.cls + ' ramp__sample'">
+          {{ row.sample }}
+        </div>
+
+        <div class="t-mono ramp__meta">
+          {{ row.size }}
+        </div>
+
+        <div class="t-mono ramp__meta">
+          {{ row.lineHeight }}
+        </div>
+
+        <div class="t-mono ramp__meta">
+          {{ row.weight }}
+        </div>
+
+        <div class="t-mono ramp__meta">
+          {{ row.tracking }}
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- ============================================================ Mono family -->
+  <h3 class="block-title t-h4">
+    Mono family
+  </h3>
+
+  <p class="block-desc t-s">
+    JetBrains Mono for any literal value the operator might paste, search or
+    read aloud. <code class="t-mono-inline">.t-mono</code> for inline tokens;
+    <code class="t-mono-inline">
+      .t-mono-block
+    </code> wraps a code-snippet style
+    frame.
+  </p>
+
+  <div class="mono-grid">
+    <div class="mono-card">
+      <div class="t-overline">
+        Inline · .t-mono
+      </div>
+
+      <div class="t-mono mono-card__sample">
+        ORD-2026-0142 · 12 Main St, City · 06:00–22:00
+      </div>
+
+      <div class="t-caption">
+        13 / 1.4 / medium · JetBrains Mono
+      </div>
+    </div>
+
+    <div class="mono-card">
+      <div class="t-overline">
+        Block · .t-mono-block
+      </div>
+
+      <pre class="t-mono-block mono-card__block">
+SELECT id, status, recomputed_at
 FROM   schedule
 WHERE  project_id = 'alpha'
-  AND  status &lt;&gt; 'closed';</pre>
-          <div class="t-caption">13 / 1.6 / regular · pre-wrap, no clip</div>
-        </div>
+  AND  status &lt;&gt; 'closed';
+      </pre
+      >
+
+      <div class="t-caption">
+        13 / 1.6 / regular · pre-wrap, no clip
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ Font families -->
+  <h3 class="block-title t-h4">
+    Families
+  </h3>
+
+  <div class="row">
+    <div class="family-card">
+      <div class="t-overline">
+        Sans
       </div>
 
-      <!-- ============================================================ Font families -->
-      <h3 class="block-title t-h4">Families</h3>
-      <div class="row">
-        <div class="family-card">
-          <div class="t-overline">Sans</div>
-          <div class="t-h3 family-card__name" style="font-family: var(--font-sans)">Mulish</div>
-          <code class="t-mono-inline family-card__tok">--font-sans</code>
-        </div>
-        <div class="family-card">
-          <div class="t-overline">Mono</div>
-          <div class="t-h3 family-card__name" style="font-family: var(--font-mono)">JetBrains Mono</div>
-          <code class="t-mono-inline family-card__tok">--font-mono</code>
-        </div>
+      <div
+        class="t-h3 family-card__name"
+        style="font-family: var(--font-sans)"
+      >
+        Mulish
       </div>
 
-    </docs-section>
+      <code class="t-mono-inline family-card__tok">
+        --font-sans
+      </code>
+    </div>
+
+    <div class="family-card">
+      <div class="t-overline">
+        Mono
+      </div>
+
+      <div
+        class="t-h3 family-card__name"
+        style="font-family: var(--font-mono)"
+      >
+        JetBrains Mono
+      </div>
+
+      <code class="t-mono-inline family-card__tok">
+        --font-mono
+      </code>
+    </div>
+  </div>
+</docs-section>

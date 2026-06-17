@@ -1,80 +1,217 @@
+<docs-section
+  anchor="date-picker"
+  eyebrow="Components"
+  title="Date picker"
+>
+  <docs-truncation [rules]="truncationRules" />
 
-    <docs-section anchor="date-picker" eyebrow="Components" title="Date picker">
-      <docs-truncation [rules]="truncationRules" />
-      <span lede>Calendar popover anchored to a date field. Single-day or range selection. Range is the canonical use for
-        Build / Access / Strike scheduling.</span>
+  <span lede
+    >
+    Calendar popover anchored to a date field. Single-day or range selection.
+    Range is the canonical use for Build / Access / Strike scheduling.
+  </span
+  >
 
-      <!-- ============================================================ Single date -->
-      <h3 class="block-title t-h4">Single date</h3>
-      <p class="block-desc t-s">Trigger shows the selected date or placeholder; click opens a one-month panel.</p>
-      <div class="row">
-        <ds-date-picker mode="single" placeholder="Pick a date" />
+  <!-- ============================================================ Single date -->
+  <h3 class="block-title t-h4">
+    Single date
+  </h3>
+
+  <p class="block-desc t-s">
+    Trigger shows the selected date or placeholder; click opens a one-month
+    panel.
+  </p>
+
+  <div class="row">
+    <ds-date-picker
+      mode="single"
+      placeholder="Pick a date"
+    />
+  </div>
+
+  <!-- ============================================================ Date range -->
+  <h3 class="block-title t-h4">
+    Date range
+  </h3>
+
+  <p class="block-desc t-s">
+    Two clicks set start + end; cells between them are tinted in-range.
+  </p>
+
+  <div class="row">
+    <ds-date-picker
+      mode="range"
+      placeholder="Pick a range"
+    />
+  </div>
+
+  <!-- ============================================================ With label + hint -->
+  <h3 class="block-title t-h4">
+    Label · hint · required
+  </h3>
+
+  <p class="block-desc t-s">
+    New <code class="t-mono-inline">[label]</code> /
+    <code class="t-mono-inline">
+      [hint]
+    </code> inputs render the field-label
+    above and a hint line below the trigger, matching the input/select field
+    shape. <code class="t-mono-inline">[required]="true"</code> appends the
+    asterisk; <code class="t-mono-inline">[optional]="true"</code> appends the
+    muted suffix.
+  </p>
+
+  <div class="grid-2">
+    <ds-date-picker
+      mode="single"
+      label="Build start"
+      hint="The day crews begin set-up on site."
+      placeholder="Pick a date"
+      [required]="true"
+    />
+
+    <ds-date-picker
+      mode="range"
+      label="Show window"
+      hint="Public open days."
+      placeholder="Pick a range"
+      [optional]="true"
+    />
+  </div>
+
+  <!-- ============================================================ Day states showcase -->
+  <h3 class="block-title t-h4">
+    Day states <docs-await name="calendar day part" />
+  </h3>
+
+  <p class="block-desc t-s">
+    Every individual cell state side-by-side. Static specimens — raw
+    <code>
+      .day
+    </code> markup with <code>.is-forced-*</code> hooks pins each
+    transient state for screenshot.
+  </p>
+
+  <div class="states states--cols-4">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <button
+          type="button"
+          class="day"
+        >
+          12
+        </button>
       </div>
 
-      <!-- ============================================================ Date range -->
-      <h3 class="block-title t-h4">Date range</h3>
-      <p class="block-desc t-s">Two clicks set start + end; cells between them are tinted in-range.</p>
-      <div class="row">
-        <ds-date-picker mode="range" placeholder="Pick a range" />
+      <div class="state-cell__label">
+        Default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <button
+          type="button"
+          class="day is-forced-hover"
+        >
+          12
+        </button>
       </div>
 
-      <!-- ============================================================ With label + hint -->
-      <h3 class="block-title t-h4">Label · hint · required</h3>
-      <p class="block-desc t-s">
-        New <code class="t-mono-inline">[label]</code> / <code class="t-mono-inline">[hint]</code> inputs render the field-label above and a hint line below the trigger, matching the input/select field shape. <code class="t-mono-inline">[required]="true"</code> appends the asterisk; <code class="t-mono-inline">[optional]="true"</code> appends the muted suffix.
-      </p>
-      <div class="grid-2">
-        <ds-date-picker
-          mode="single"
-          label="Build start"
-          hint="The day crews begin set-up on site."
-          [required]="true"
-          placeholder="Pick a date"
-        />
-        <ds-date-picker
-          mode="range"
-          label="Show window"
-          hint="Public open days."
-          [optional]="true"
-          placeholder="Pick a range"
-        />
+      <div class="state-cell__label">
+        Hover
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <button
+          type="button"
+          class="day is-forced-focus"
+        >
+          12
+        </button>
       </div>
 
-      <!-- ============================================================ Day states showcase -->
-      <h3 class="block-title t-h4">Day states <docs-await name="calendar day part" /></h3>
-      <p class="block-desc t-s">Every individual cell state side-by-side. Static specimens — raw <code>.day</code> markup with <code>.is-forced-*</code> hooks pins each transient state for screenshot.</p>
-      <div class="states states--cols-4">
-        <div class="state-cell">
-          <div class="state-cell__stage"><button type="button" class="day">12</button></div>
-          <div class="state-cell__label">Default</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage"><button type="button" class="day is-forced-hover">12</button></div>
-          <div class="state-cell__label">Hover</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage"><button type="button" class="day is-forced-focus">12</button></div>
-          <div class="state-cell__label">Focus</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage"><button type="button" class="day selected">12</button></div>
-          <div class="state-cell__label">Selected</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage"><button type="button" class="day selected is-forced-hover">12</button></div>
-          <div class="state-cell__label">Selected · hover</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage"><button type="button" class="day in-range">12</button></div>
-          <div class="state-cell__label">In-range</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage"><button type="button" class="day today">17</button></div>
-          <div class="state-cell__label">Today</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage"><button type="button" class="day disabled" disabled>12</button></div>
-          <div class="state-cell__label">Disabled</div>
-        </div>
+      <div class="state-cell__label">
+        Focus
       </div>
-    </docs-section>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <button
+          type="button"
+          class="day selected"
+        >
+          12
+        </button>
+      </div>
+
+      <div class="state-cell__label">
+        Selected
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <button
+          type="button"
+          class="day selected is-forced-hover"
+        >
+          12
+        </button>
+      </div>
+
+      <div class="state-cell__label">
+        Selected · hover
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <button
+          type="button"
+          class="day in-range"
+        >
+          12
+        </button>
+      </div>
+
+      <div class="state-cell__label">
+        In-range
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <button
+          type="button"
+          class="day today"
+        >
+          17
+        </button>
+      </div>
+
+      <div class="state-cell__label">
+        Today
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <button
+          type="button"
+          class="day disabled"
+          disabled
+        >
+          12
+        </button>
+      </div>
+
+      <div class="state-cell__label">
+        Disabled
+      </div>
+    </div>
+  </div>
+</docs-section>

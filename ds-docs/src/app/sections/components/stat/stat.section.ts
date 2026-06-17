@@ -1,7 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { StatComponent } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import {
+  DocsTruncationComponent,
+  TruncationRule,
+} from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-stat',
@@ -13,7 +16,14 @@ import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-tr
 })
 export class StatSection {
   protected readonly truncationRules: TruncationRule[] = [
-    { field: 'Stat label', behaviour: 'Single line, ellipsis. Tooltip on hover when clipped.' },
-    { field: 'Stat value', behaviour: 'No clip. Use compact notation (₤ 1.2k) before letting numbers wrap.' },
+    {
+      field: 'Stat label',
+      behaviour: 'Single line, ellipsis. Tooltip on hover when clipped.',
+    },
+    {
+      field: 'Stat value',
+      behaviour:
+        'No clip. Use compact notation (₤ 1.2k) before letting numbers wrap.',
+    },
   ];
 }

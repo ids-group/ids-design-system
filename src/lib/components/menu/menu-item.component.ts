@@ -57,7 +57,9 @@ export class MenuItemComponent {
   }
 
   protected onClick(event: MouseEvent): void {
-    if (this.disabled()) {return;}
+    if (this.disabled()) {
+      return;
+    }
     this.pressed.emit(event);
     this.closeRef?.close();
   }

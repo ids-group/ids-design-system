@@ -1,132 +1,340 @@
+<docs-section
+  anchor="badge"
+  eyebrow="Components"
+  title="Badges, tags &amp; status"
+>
+  <docs-truncation [rules]="truncationRules" />
 
-    <docs-section anchor="badge" eyebrow="Components" title="Badges, tags &amp; status">
-      <docs-truncation [rules]="truncationRules" />
-      <span lede>Stable status language across the product: Planning · Confirmed · Active · Completed.</span>
+  <span lede
+    >
+    Stable status language across the product: Planning · Confirmed · Active ·
+    Completed.
+  </span
+  >
 
-      <!-- ============================================================ Lifecycle states showcase -->
-      <h3 class="block-title t-h4">Lifecycle states showcase</h3>
-      <p class="block-desc t-s">Every event-status badge as a specimen.</p>
-      <div class="states states--cols-4">
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-badge variant="planning" [withDot]="true">Planning</ds-badge>
-          </div>
-          <div class="state-cell__label">Planning</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-badge variant="confirmed" [withDot]="true">Confirmed</ds-badge>
-          </div>
-          <div class="state-cell__label">Confirmed</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-badge variant="active" [withDot]="true">Active</ds-badge>
-          </div>
-          <div class="state-cell__label">Active</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-badge variant="completed" [withDot]="true">Completed</ds-badge>
-          </div>
-          <div class="state-cell__label">Completed</div>
-        </div>
+  <!-- ============================================================ Lifecycle states showcase -->
+  <h3 class="block-title t-h4">
+    Lifecycle states showcase
+  </h3>
+
+  <p class="block-desc t-s">
+    Every event-status badge as a specimen.
+  </p>
+
+  <div class="states states--cols-4">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge
+          variant="planning"
+          [withDot]="true"
+          >
+          Planning
+        </ds-badge
+        >
       </div>
 
-      <!-- ============================================================ Semantic states showcase -->
-      <h3 class="block-title t-h4">Semantic states showcase</h3>
-      <div class="states states--cols-4">
-        <div class="state-cell">
-          <div class="state-cell__stage"><ds-badge variant="info">Info</ds-badge></div>
-          <div class="state-cell__label">Info</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage"><ds-badge variant="success">Allocated</ds-badge></div>
-          <div class="state-cell__label">Success</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage"><ds-badge variant="warning">Pending</ds-badge></div>
-          <div class="state-cell__label">Warning</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage"><ds-badge variant="error">Conflict</ds-badge></div>
-          <div class="state-cell__label">Error</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage"><ds-badge variant="neutral">Draft</ds-badge></div>
-          <div class="state-cell__label">Neutral</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage"><ds-badge variant="neutral" [solid]="true">New</ds-badge></div>
-          <div class="state-cell__label">Solid</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage"><ds-badge variant="neutral" [solid]="true">12</ds-badge></div>
-          <div class="state-cell__label">Count · solid</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage"><ds-badge variant="neutral">3</ds-badge></div>
-          <div class="state-cell__label">Count · neutral</div>
-        </div>
+      <div class="state-cell__label">
+        Planning
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge
+          variant="confirmed"
+          [withDot]="true"
+          >
+          Confirmed
+        </ds-badge
+        >
       </div>
 
-      <!-- ============================================================ Per-instance tone -->
-      <h3 class="block-title t-h4">Per-instance tone</h3>
-      <p class="block-desc t-s">Override <code>--ds-badge-bg-color</code> / <code>--ds-badge-label-color</code> inline for off-token tones (carrier brands etc). Prefer semantic variants for design-system tones.</p>
-      <div class="states states--cols-4">
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-badge [style.--ds-badge-bg-color]="'#E1EFFF'" [style.--ds-badge-label-color]="'#0A6DB3'">Aflac</ds-badge>
-          </div>
-          <div class="state-cell__label">Carrier · Aflac</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-badge [style.--ds-badge-bg-color]="'#D8F1EA'" [style.--ds-badge-label-color]="'#15805A'">Guardian</ds-badge>
-          </div>
-          <div class="state-cell__label">Carrier · Guardian</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-badge [style.--ds-badge-bg-color]="'#FFF1D7'" [style.--ds-badge-label-color]="'#A86B1A'">Assurity</ds-badge>
-          </div>
-          <div class="state-cell__label">Carrier · Assurity</div>
-        </div>
+      <div class="state-cell__label">
+        Confirmed
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge
+          variant="active"
+          [withDot]="true"
+          >
+          Active
+        </ds-badge
+        >
       </div>
 
-      <!-- ============================================================ Tags · status dots showcase -->
-      <h3 class="block-title t-h4">Tags · status dots showcase</h3>
-      <div class="states states--cols-4">
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-tag [closable]="true">Project Alpha</ds-tag>
-          </div>
-          <div class="state-cell__label">Tag · default</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-tag variant="neutral" [closable]="true">Project Beta</ds-tag>
-          </div>
-          <div class="state-cell__label">Tag · neutral</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <span class="status-line"><ds-status-dot status="active" /> Active</span>
-          </div>
-          <div class="state-cell__label">Status dot · active</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <span class="status-line"><ds-status-dot status="warning" /> Pending</span>
-          </div>
-          <div class="state-cell__label">Status dot · pending</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <span class="status-line"><ds-status-dot status="error" /> Conflict</span>
-          </div>
-          <div class="state-cell__label">Status dot · conflict</div>
-        </div>
+      <div class="state-cell__label">
+        Active
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge
+          variant="completed"
+          [withDot]="true"
+          >
+          Completed
+        </ds-badge
+        >
       </div>
 
-    </docs-section>
+      <div class="state-cell__label">
+        Completed
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ Semantic states showcase -->
+  <h3 class="block-title t-h4">
+    Semantic states showcase
+  </h3>
+
+  <div class="states states--cols-4">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge variant="info">
+          Info
+        </ds-badge>
+      </div>
+
+      <div class="state-cell__label">
+        Info
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge variant="success">
+          Allocated
+        </ds-badge>
+      </div>
+
+      <div class="state-cell__label">
+        Success
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge variant="warning">
+          Pending
+        </ds-badge>
+      </div>
+
+      <div class="state-cell__label">
+        Warning
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge variant="error">
+          Conflict
+        </ds-badge>
+      </div>
+
+      <div class="state-cell__label">
+        Error
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge variant="neutral">
+          Draft
+        </ds-badge>
+      </div>
+
+      <div class="state-cell__label">
+        Neutral
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge
+          variant="neutral"
+          [solid]="true"
+          >
+          New
+        </ds-badge
+        >
+      </div>
+
+      <div class="state-cell__label">
+        Solid
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge
+          variant="neutral"
+          [solid]="true"
+          >
+          12
+        </ds-badge
+        >
+      </div>
+
+      <div class="state-cell__label">
+        Count · solid
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge variant="neutral">
+          3
+        </ds-badge>
+      </div>
+
+      <div class="state-cell__label">
+        Count · neutral
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ Per-instance tone -->
+  <h3 class="block-title t-h4">
+    Per-instance tone
+  </h3>
+
+  <p class="block-desc t-s">
+    Override <code>--ds-badge-bg-color</code> /
+    <code>
+      --ds-badge-label-color
+    </code> inline for off-token tones (carrier
+    brands etc). Prefer semantic variants for design-system tones.
+  </p>
+
+  <div class="states states--cols-4">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge
+          [style.--ds-badge-bg-color]="'#E1EFFF'"
+          [style.--ds-badge-label-color]="'#0A6DB3'"
+          >
+          Aflac
+        </ds-badge
+        >
+      </div>
+
+      <div class="state-cell__label">
+        Carrier · Aflac
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge
+          [style.--ds-badge-bg-color]="'#D8F1EA'"
+          [style.--ds-badge-label-color]="'#15805A'"
+          >
+          Guardian
+        </ds-badge
+        >
+      </div>
+
+      <div class="state-cell__label">
+        Carrier · Guardian
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge
+          [style.--ds-badge-bg-color]="'#FFF1D7'"
+          [style.--ds-badge-label-color]="'#A86B1A'"
+          >
+          Assurity
+        </ds-badge
+        >
+      </div>
+
+      <div class="state-cell__label">
+        Carrier · Assurity
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ Tags · status dots showcase -->
+  <h3 class="block-title t-h4">
+    Tags · status dots showcase
+  </h3>
+
+  <div class="states states--cols-4">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-tag [closable]="true">
+          Project Alpha
+        </ds-tag>
+      </div>
+
+      <div class="state-cell__label">
+        Tag · default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-tag
+          variant="neutral"
+          [closable]="true"
+          >
+          Project Beta
+        </ds-tag
+        >
+      </div>
+
+      <div class="state-cell__label">
+        Tag · neutral
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <span class="status-line"
+          >
+          <ds-status-dot status="active" /> Active
+        </span
+        >
+      </div>
+
+      <div class="state-cell__label">
+        Status dot · active
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <span class="status-line"
+          >
+          <ds-status-dot status="warning" /> Pending
+        </span
+        >
+      </div>
+
+      <div class="state-cell__label">
+        Status dot · pending
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <span class="status-line"
+          >
+          <ds-status-dot status="error" /> Conflict
+        </span
+        >
+      </div>
+
+      <div class="state-cell__label">
+        Status dot · conflict
+      </div>
+    </div>
+  </div>
+</docs-section>

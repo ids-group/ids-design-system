@@ -1,50 +1,118 @@
+<docs-section
+  anchor="empty-state"
+  eyebrow="Components"
+  title="Empty state"
+>
+  <docs-truncation [rules]="truncationRules" />
 
-    <docs-section anchor="empty-state" eyebrow="Components" title="Empty state">
-      <docs-truncation [rules]="truncationRules" />
-      <span lede>The base component for any "nothing-to-show" state. One icon, a title that names what
-        is missing, one sentence of body, and at most two actions. For richer scenarios
-        (loading overlay, error retry, permission denied) see
-        <a class="link" href="#section-pattern-empty-state">Patterns &rsaquo; Empty-state variants</a>.</span>
+  <span lede
+    >
+    The base component for any "nothing-to-show" state. One icon, a title that
+    names what is missing, one sentence of body, and at most two actions. For
+    richer scenarios (loading overlay, error retry, permission denied) see
+    <a
+      class="link"
+      href="#section-pattern-empty-state"
+      >
+      Patterns &rsaquo; Empty-state variants
+    </a
+    >.
+  </span
+  >
 
-      <h3 class="block-title t-h4">Variants</h3>
-      <p class="block-desc t-s">Five canonical variants. Each ships a distinct icon-tile tint.</p>
-      <div class="variants-grid">
-        <div class="variant-card">
-          <ds-empty-state variant="none" title="No data" body="The default — section is empty."></ds-empty-state>
-        </div>
-        <div class="variant-card">
-          <ds-empty-state variant="loading" title="Loading" body="Data refetching."></ds-empty-state>
-        </div>
-        <div class="variant-card">
-          <ds-empty-state variant="error" title="Error" body="Something went wrong."></ds-empty-state>
-        </div>
-        <div class="variant-card">
-          <ds-empty-state variant="locked" title="No access" body="Permission denied."></ds-empty-state>
-        </div>
-      </div>
+  <h3 class="block-title t-h4">
+    Variants
+  </h3>
 
-      <h3 class="block-title t-h4">States showcase</h3>
-      <p class="block-desc t-s">Full demo of each variant with title, body and one primary action.</p>
-      <div class="states-grid">
-        <div class="state-card">
-          <ds-empty-state
-            variant="none"
-            title="No asset allocated yet"
-            body="Pick from the asset register to start building this Sub-record.">
-            <ds-button actions variant="primary" size="m">
-              <ds-icon name="plus" [size]="14" /> Allocate resources
-            </ds-button>
-          </ds-empty-state>
-        </div>
-        <div class="state-card">
-          <ds-empty-state
-            variant="error"
-            title="Couldn't load resource allocations"
-            body="Network error — the request timed out after 30 seconds.">
-            <ds-button actions variant="primary" size="m">
-              <ds-icon name="rotate" [size]="14" /> Retry
-            </ds-button>
-          </ds-empty-state>
-        </div>
-      </div>
-    </docs-section>
+  <p class="block-desc t-s">
+    Five canonical variants. Each ships a distinct icon-tile tint.
+  </p>
+
+  <div class="variants-grid">
+    <div class="variant-card">
+      <ds-empty-state
+        variant="none"
+        title="No data"
+        body="The default — section is empty."
+      >
+      </ds-empty-state>
+    </div>
+
+    <div class="variant-card">
+      <ds-empty-state
+        variant="loading"
+        title="Loading"
+        body="Data refetching."
+      >
+      </ds-empty-state>
+    </div>
+
+    <div class="variant-card">
+      <ds-empty-state
+        variant="error"
+        title="Error"
+        body="Something went wrong."
+      >
+      </ds-empty-state>
+    </div>
+
+    <div class="variant-card">
+      <ds-empty-state
+        variant="locked"
+        title="No access"
+        body="Permission denied."
+      >
+      </ds-empty-state>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    States showcase
+  </h3>
+
+  <p class="block-desc t-s">
+    Full demo of each variant with title, body and one primary action.
+  </p>
+
+  <div class="states-grid">
+    <div class="state-card">
+      <ds-empty-state
+        variant="none"
+        title="No asset allocated yet"
+        body="Pick from the asset register to start building this Sub-record."
+      >
+        <ds-button
+          actions
+          variant="primary"
+          size="m"
+        >
+          <ds-icon
+            name="plus"
+            [size]="14"
+          />
+          Allocate resources
+        </ds-button>
+      </ds-empty-state>
+    </div>
+
+    <div class="state-card">
+      <ds-empty-state
+        variant="error"
+        title="Couldn't load resource allocations"
+        body="Network error — the request timed out after 30 seconds."
+      >
+        <ds-button
+          actions
+          variant="primary"
+          size="m"
+        >
+          <ds-icon
+            name="rotate"
+            [size]="14"
+          />
+          Retry
+        </ds-button>
+      </ds-empty-state>
+    </div>
+  </div>
+</docs-section>

@@ -23,7 +23,9 @@ export class SidenavGroupComponent {
   readonly expanded = model<boolean>(true);
 
   protected toggle(): void {
-    if (!this.expandable()) {return;}
+    if (!this.expandable()) {
+      return;
+    }
     this.expanded.update((value) => !value);
   }
 }

@@ -11,8 +11,8 @@ import type { IconName } from '../../icons/icons.data';
   selector: 'ds-tab',
   standalone: true,
   template: `<ng-template #content>
-  <ng-content></ng-content>
-</ng-template>`,
+    <ng-content></ng-content>
+  </ng-template>`,
   styles: [':host { display: none; }'],
   encapsulation: ViewEncapsulation.Emulated,
 })

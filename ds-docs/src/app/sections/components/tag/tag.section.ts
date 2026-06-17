@@ -1,7 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { TagComponent } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import {
+  DocsTruncationComponent,
+  TruncationRule,
+} from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-tag',
@@ -13,7 +16,11 @@ import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-tr
 })
 export class TagSection {
   protected readonly truncationRules: TruncationRule[] = [
-    { field: 'Label', behaviour: 'Single line, ellipsis at ~16 ch. Tooltip on hover when clipped.' },
+    {
+      field: 'Label',
+      behaviour:
+        'Single line, ellipsis at ~16 ch. Tooltip on hover when clipped.',
+    },
   ];
 
   protected toggle(_site: string): void {

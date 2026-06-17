@@ -1,6 +1,9 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import {
+  DocsTruncationComponent,
+  TruncationRule,
+} from '../../../shared/docs-truncation.component';
 
 interface ShadowTier {
   readonly name: string;
@@ -39,10 +42,22 @@ const PRIMITIVE_TIERS: ShadowTier[] = [
 ];
 
 const SEMANTIC_TIERS: ShadowTier[] = [
-  { name: 'shadow-card',    value: 'alias → --shadow-1', desc: 'Card at rest' },
-  { name: 'shadow-popover', value: 'alias → --shadow-2', desc: 'Popovers, dropdowns, combobox' },
-  { name: 'shadow-toast',   value: 'alias → --shadow-3', desc: 'Toasts, floating notifications' },
-  { name: 'shadow-modal',   value: 'alias → --shadow-4', desc: 'Modals, drawers' },
+  { name: 'shadow-card', value: 'alias → --shadow-1', desc: 'Card at rest' },
+  {
+    name: 'shadow-popover',
+    value: 'alias → --shadow-2',
+    desc: 'Popovers, dropdowns, combobox',
+  },
+  {
+    name: 'shadow-toast',
+    value: 'alias → --shadow-3',
+    desc: 'Toasts, floating notifications',
+  },
+  {
+    name: 'shadow-modal',
+    value: 'alias → --shadow-4',
+    desc: 'Modals, drawers',
+  },
 ];
 
 const APPLIED: AppliedDemo[] = [
@@ -85,8 +100,20 @@ export class ElevationSection {
   protected readonly semantic = SEMANTIC_TIERS;
   protected readonly applied = APPLIED;
   protected readonly truncationRules: TruncationRule[] = [
-    { field: 'Primitive vs semantic', behaviour: 'Components consume semantic tokens (--shadow-popover, --shadow-modal). Never reach for --shadow-2 / --shadow-4 directly.' },
-    { field: 'Theme tinting', behaviour: 'Shadows are channel-split through --shadow-tint-h/s/l. Dark themes override --shadow-tint-l to render the same alphas as soft light glows.' },
-    { field: 'Stacking', behaviour: 'Elevation communicates depth visually. Use --layer-* tokens for actual z-index stacking — never compose your own.' },
+    {
+      field: 'Primitive vs semantic',
+      behaviour:
+        'Components consume semantic tokens (--shadow-popover, --shadow-modal). Never reach for --shadow-2 / --shadow-4 directly.',
+    },
+    {
+      field: 'Theme tinting',
+      behaviour:
+        'Shadows are channel-split through --shadow-tint-h/s/l. Dark themes override --shadow-tint-l to render the same alphas as soft light glows.',
+    },
+    {
+      field: 'Stacking',
+      behaviour:
+        'Elevation communicates depth visually. Use --layer-* tokens for actual z-index stacking — never compose your own.',
+    },
   ];
 }

@@ -1,10 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import {
-  IconComponent,
-  type IconName,
-} from 'ds';
+import { IconComponent, type IconName } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import {
+  DocsTruncationComponent,
+  TruncationRule,
+} from '../../../shared/docs-truncation.component';
 
 interface IconSize {
   readonly token: string;
@@ -21,8 +21,18 @@ const SIZES: readonly IconSize[] = [
 ];
 
 const SAMPLES: readonly IconName[] = [
-  'search', 'calendar', 'truck', 'box', 'users', 'map',
-  'activity', 'settings', 'bell', 'chart', 'filter', 'edit',
+  'search',
+  'calendar',
+  'truck',
+  'box',
+  'users',
+  'map',
+  'activity',
+  'settings',
+  'bell',
+  'chart',
+  'filter',
+  'edit',
 ];
 
 @Component({
@@ -38,10 +48,25 @@ export class IconSection {
   protected readonly samples = SAMPLES;
   protected readonly strokes = [1.5, 1.75, 2] as const;
   protected readonly compareSizes = [16, 20, 24] as const;
-  protected readonly compareSamples: readonly IconName[] = ['search', 'settings', 'bell', 'chart', 'edit', 'truck'];
+  protected readonly compareSamples: readonly IconName[] = [
+    'search',
+    'settings',
+    'bell',
+    'chart',
+    'edit',
+    'truck',
+  ];
 
   protected readonly truncationRules: TruncationRule[] = [
-    { field: 'Glyph', behaviour: 'Never clipped — the SVG sits in a square frame at one of the fixed sizes.' },
-    { field: 'Icon + text pair', behaviour: 'Glyph fixed; text label takes the remaining width and clips with ellipsis.' },
+    {
+      field: 'Glyph',
+      behaviour:
+        'Never clipped — the SVG sits in a square frame at one of the fixed sizes.',
+    },
+    {
+      field: 'Icon + text pair',
+      behaviour:
+        'Glyph fixed; text label takes the remaining width and clips with ellipsis.',
+    },
   ];
 }

@@ -8,7 +8,7 @@
 .check,
 .radio {
   appearance: none;
-  -webkit-appearance: none;
+  appearance: none;
   width: var(--check-size);
   height: var(--check-size);
   border: var(--check-bw) solid var(--border-strong);
@@ -79,7 +79,7 @@
 
 .switch {
   appearance: none;
-  -webkit-appearance: none;
+  appearance: none;
   width: var(--switch-track-w);
   height: var(--switch-track-h);
   background: var(--neutral-300);
@@ -155,7 +155,7 @@
 
 .slider {
   appearance: none;
-  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
   height: var(--slider-track-h);
   background: var(--neutral-200);
@@ -163,7 +163,7 @@
   outline: 0;
 
   &::-webkit-slider-thumb {
-    -webkit-appearance: none;
+    appearance: none;
     width: var(--slider-thumb-size);
     height: var(--slider-thumb-size);
     border-radius: var(--radius-pill);

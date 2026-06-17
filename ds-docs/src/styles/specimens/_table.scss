@@ -10,8 +10,7 @@
   --_table-bg-color:     var(--ds-table-bg-color,     var(--surface-default));
 
   width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: auto hidden;
   -webkit-overflow-scrolling: touch;
   border-radius: var(--_table-radius);
   background-color: var(--_table-bg-color);
@@ -64,6 +63,7 @@
       height: var(--sort-ic-size);
       margin-left: var(--sort-ic-gap);
       vertical-align: middle;
+
       /* Nudge up by 1px: vertical-align:middle aligns to x-height centre,
          but the header label is UPPERCASE — its visual centre sits at
          cap-height/2, ~1px higher. Compensates the optical offset. */
@@ -99,6 +99,7 @@
   tbody {
     td {
       padding: var(--_table-cell-pad-y) var(--_table-cell-pad-x);
+
       /* Inset shadow instead of border-bottom — keeps row height stable
          across selected / hover / zebra backgrounds. */
       box-shadow: inset 0 calc(-1 * var(--border-width-default)) 0 var(--_table-divider);

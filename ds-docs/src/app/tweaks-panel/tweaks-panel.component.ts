@@ -35,7 +35,9 @@ export class TweaksPanelComponent {
     }
   }
 
-  protected toggle(): void { this.open.update((v) => !v); }
+  protected toggle(): void {
+    this.open.update((value) => !value);
+  }
   protected setDensity(d: 'compact' | 'cozy' | 'comfy'): void {
     this.density.set(d);
     document.documentElement.setAttribute('data-density', d);
@@ -65,44 +67,50 @@ export class TweaksPanelComponent {
   // --blue-h, so fills and focus rings re-tint together. Setting --primary-*
   // directly would NOT move --primary (it maps to --blue-600).
   protected setPrimaryH(value: string): void {
-    const v = Number(value);
-    this.primaryH.set(v);
-    document.documentElement.style.setProperty('--blue-h', `${v}`);
+    const value_ = Number(value);
+    this.primaryH.set(value_);
+    document.documentElement.style.setProperty('--blue-h', `${value_}`);
   }
   protected setPrimaryS(value: string): void {
-    const v = Number(value);
-    this.primaryS.set(v);
-    document.documentElement.style.setProperty('--blue-s', `${v}%`);
+    const value_ = Number(value);
+    this.primaryS.set(value_);
+    document.documentElement.style.setProperty('--blue-s', `${value_}%`);
   }
   protected setPrimaryL(value: string): void {
-    const v = Number(value);
-    this.primaryL.set(v);
-    document.documentElement.style.setProperty('--blue-l', `${v}%`);
+    const value_ = Number(value);
+    this.primaryL.set(value_);
+    document.documentElement.style.setProperty('--blue-l', `${value_}%`);
   }
   protected setSecondaryH(value: string): void {
-    const v = Number(value);
-    this.secondaryH.set(v);
-    document.documentElement.style.setProperty('--secondary-h', `${v}`);
+    const value_ = Number(value);
+    this.secondaryH.set(value_);
+    document.documentElement.style.setProperty('--secondary-h', `${value_}`);
   }
   protected setSecondaryS(value: string): void {
-    const v = Number(value);
-    this.secondaryS.set(v);
-    document.documentElement.style.setProperty('--secondary-s', `${v}%`);
+    const value_ = Number(value);
+    this.secondaryS.set(value_);
+    document.documentElement.style.setProperty('--secondary-s', `${value_}%`);
   }
   protected setSecondaryL(value: string): void {
-    const v = Number(value);
-    this.secondaryL.set(v);
-    document.documentElement.style.setProperty('--secondary-l', `${v}%`);
+    const value_ = Number(value);
+    this.secondaryL.set(value_);
+    document.documentElement.style.setProperty('--secondary-l', `${value_}%`);
   }
   protected setFs(value: string): void {
-    const v = Number(value);
-    this.rootFs.set(v);
-    document.documentElement.style.setProperty('font-size', `${v}px`);
+    const value_ = Number(value);
+    this.rootFs.set(value_);
+    document.documentElement.style.setProperty('font-size', `${value_}px`);
   }
   protected reset(): void {
-    ['--blue-h', '--blue-s', '--blue-l', '--secondary-h', '--secondary-s', '--secondary-l', 'font-size'].forEach((p) =>
-      document.documentElement.style.removeProperty(p),
-    );
+    [
+      '--blue-h',
+      '--blue-s',
+      '--blue-l',
+      '--secondary-h',
+      '--secondary-s',
+      '--secondary-l',
+      'font-size',
+    ].forEach((p) => document.documentElement.style.removeProperty(p));
     document.documentElement.removeAttribute('data-density');
     this.setBrand('default');
     this.setNeutrals('cool-gray');
@@ -128,6 +136,7 @@ export class TweaksPanelComponent {
   private readStoredBrand(): BrandPreview | null {
     try {
       const raw = localStorage.getItem(BRAND_STORAGE_KEY);
+
       return raw === 'manage-my' ? 'manage-my' : null;
     } catch {
       return null;

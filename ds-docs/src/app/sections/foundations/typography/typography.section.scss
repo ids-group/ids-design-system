@@ -61,7 +61,7 @@
     .family-card__name { color: var(--text-primary); }
     .family-card__tok { color: var(--text-tertiary); }
 
-    @media (max-width: 960px) {
+    @media (width <= 960px) {
       .ramp__head { display: none; }
       .ramp__row {
         grid-template-columns: 1fr;

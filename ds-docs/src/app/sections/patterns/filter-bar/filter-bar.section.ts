@@ -1,11 +1,25 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { SearchComponent, ButtonComponent, IconComponent, SelectComponent, TagComponent, type SelectOption } from 'ds';
+import {
+  SearchComponent,
+  ButtonComponent,
+  IconComponent,
+  SelectComponent,
+  TagComponent,
+  type SelectOption,
+} from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
   selector: 'pattern-filter-bar',
   standalone: true,
-  imports: [DocsSectionComponent, SearchComponent, ButtonComponent, IconComponent, SelectComponent, TagComponent],
+  imports: [
+    DocsSectionComponent,
+    SearchComponent,
+    ButtonComponent,
+    IconComponent,
+    SelectComponent,
+    TagComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './filter-bar.section.html',
   styleUrl: './filter-bar.section.scss',

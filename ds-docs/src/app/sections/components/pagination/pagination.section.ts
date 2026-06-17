@@ -1,6 +1,9 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { PaginationComponent } from 'ds';
-import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import {
+  DocsTruncationComponent,
+  TruncationRule,
+} from '../../../shared/docs-truncation.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
@@ -17,8 +20,14 @@ export class PaginationSection {
   protected readonly pageSizeWith = signal(20);
 
   protected readonly truncationRules: TruncationRule[] = [
-    { field: 'Page number', behaviour: 'Single digit / short numeral — no clip ever.' },
+    {
+      field: 'Page number',
+      behaviour: 'Single digit / short numeral — no clip ever.',
+    },
     { field: 'Ellipsis', behaviour: 'Three dots only — no clip.' },
-    { field: 'Total count', behaviour: 'Plain text — wraps in narrow viewports.' },
+    {
+      field: 'Total count',
+      behaviour: 'Plain text — wraps in narrow viewports.',
+    },
   ];
 }

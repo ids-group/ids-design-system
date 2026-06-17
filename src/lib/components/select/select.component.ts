@@ -121,18 +121,30 @@ export class SelectComponent {
 
   protected readonly triggerClasses = computed<string>(() => {
     const parts = ['dropdown'];
-    if (this.size() === 'sm') {parts.push('sm');}
-    if (this.size() === 'lg') {parts.push('lg');}
-    if (this.disabled()) {parts.push('disabled');}
-    if (this.invalid()) {parts.push('error');}
-    if (this.open() || this.preview.staticPreview()) {parts.push('open');}
+    if (this.size() === 'sm') {
+      parts.push('sm');
+    }
+    if (this.size() === 'lg') {
+      parts.push('lg');
+    }
+    if (this.disabled()) {
+      parts.push('disabled');
+    }
+    if (this.invalid()) {
+      parts.push('error');
+    }
+    if (this.open() || this.preview.staticPreview()) {
+      parts.push('open');
+    }
 
     return parts.join(' ');
   });
 
   constructor() {
     effect(() => {
-      if (!this.open()) {return;}
+      if (!this.open()) {
+        return;
+      }
       const index = this.flatOptions().findIndex(
         ({ option }) => option.value === this.value(),
       );
@@ -151,7 +163,9 @@ export class SelectComponent {
   }
 
   protected toggle(): void {
-    if (this.disabled() || this.preview.staticPreview()) {return;}
+    if (this.disabled() || this.preview.staticPreview()) {
+      return;
+    }
     if (this.open()) {
       this.close();
     } else {
@@ -160,7 +174,9 @@ export class SelectComponent {
   }
 
   protected openPanel(): void {
-    if (this.overlayRef) {return;}
+    if (this.overlayRef) {
+      return;
+    }
     const triggerElement = this.trigger().nativeElement;
     const width = triggerElement.getBoundingClientRect().width;
     const positionStrategy = this.overlay
@@ -208,7 +224,9 @@ export class SelectComponent {
   }
 
   protected pick(option: SelectOption, groupDisabled = false): void {
-    if (option.disabled || groupDisabled) {return;}
+    if (option.disabled || groupDisabled) {
+      return;
+    }
     this.value.set(option.value);
     this.close();
     this.trigger().nativeElement.focus();
@@ -226,7 +244,9 @@ export class SelectComponent {
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
-    if (this.disabled() || this.preview.staticPreview()) {return;}
+    if (this.disabled() || this.preview.staticPreview()) {
+      return;
+    }
     const key = event.key;
     if (!this.open()) {
       if (
@@ -263,7 +283,9 @@ export class SelectComponent {
       event.preventDefault();
       const index = this.activeIndex();
       const entry = this.flatOptions()[index];
-      if (entry) {this.pick(entry.option, entry.groupDisabled);}
+      if (entry) {
+        this.pick(entry.option, entry.groupDisabled);
+      }
 
       return;
     }
@@ -285,7 +307,9 @@ export class SelectComponent {
 
   private moveActive(delta: number): void {
     const opts = this.flatOptions();
-    if (opts.length === 0) {return;}
+    if (opts.length === 0) {
+      return;
+    }
     let next = this.activeIndex();
     for (let attempts = 0; attempts < opts.length; attempts++) {
       next = (next + delta + opts.length) % opts.length;
@@ -302,8 +326,9 @@ export class SelectComponent {
     const opts = this.flatOptions();
     for (let i = 0; i < opts.length; i++) {
       const candidate = opts[i];
-      if (candidate && !candidate.option.disabled && !candidate.groupDisabled)
-        {return i;}
+      if (candidate && !candidate.option.disabled && !candidate.groupDisabled) {
+        return i;
+      }
     }
 
     return -1;
@@ -313,8 +338,9 @@ export class SelectComponent {
     const opts = this.flatOptions();
     for (let i = opts.length - 1; i >= 0; i--) {
       const candidate = opts[i];
-      if (candidate && !candidate.option.disabled && !candidate.groupDisabled)
-        {return i;}
+      if (candidate && !candidate.option.disabled && !candidate.groupDisabled) {
+        return i;
+      }
     }
 
     return -1;

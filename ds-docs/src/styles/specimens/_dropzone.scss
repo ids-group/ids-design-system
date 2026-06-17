@@ -16,6 +16,7 @@
    • `.banner.inline`  — borderless flush variant for use inside
      a host panel.
    ============================================================ */
+
 /* .modal global mirror dropped — modal section consumes <ds-modal [staticPreview]>
    (existing component input) which renders the modal card without backdrop or
    fixed positioning. Component scss is the source of truth. */
@@ -66,7 +67,7 @@
     border-color var(--duration-fast) var(--ease-standard),
     background var(--duration-fast) var(--ease-standard);
 
-  &:hover:not(.disabled):not([disabled]) {
+  &:hover:not(.disabled, [disabled]) {
     border-color: var(--_dropzone-border-hover);
     background-color: var(--_dropzone-bg-color-hover);
     color: var(--_dropzone-text-color-active);

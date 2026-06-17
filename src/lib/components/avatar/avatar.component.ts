@@ -33,7 +33,9 @@ export class AvatarComponent {
 
   protected readonly tintStyle = computed(() => {
     const value = this.tint();
-    if (value && value !== 'neutral') {return { bg: value.bg, fg: value.fg };}
+    if (value && value !== 'neutral') {
+      return { bg: value.bg, fg: value.fg };
+    }
 
     return { bg: null as string | null, fg: null as string | null };
   });

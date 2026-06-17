@@ -1,4 +1,10 @@
-import { Component, ViewEncapsulation, computed, inject, input } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { DS_ICON_REGISTRY } from './icon-registry';
 import { ICONS, type IconName } from './icons.data';
@@ -8,27 +14,38 @@ import { ICONS, type IconName } from './icons.data';
   standalone: true,
   encapsulation: ViewEncapsulation.None,
   // Host inline-flex + svg block prevents baseline-gap when icon sits next to text.
-  styles: [`
-    ds-icon { display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; line-height: 0; }
-    ds-icon > svg.icon { display: block; }
-  `],
+  styles: [
+    `
+      ds-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        vertical-align: middle;
+        line-height: 0;
+      }
+      ds-icon > svg.icon {
+        display: block;
+      }
+    `,
+  ],
   template: `
     <svg
       class="icon"
-      [style.--ds-icon-size]="size() + 'px'"
-      [attr.width]="size()"
-      [attr.height]="size()"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      [attr.stroke-width]="stroke()"
       stroke-linecap="round"
       stroke-linejoin="round"
+      [style.--ds-icon-size]="size() + 'px'"
+      [attr.width]="size()"
+      [attr.height]="size()"
+      [attr.stroke-width]="stroke()"
       [attr.role]="ariaLabel() ? 'img' : null"
       [attr.aria-label]="ariaLabel()"
       [attr.aria-hidden]="ariaLabel() ? null : 'true'"
       [innerHTML]="paths()"
-    ></svg>
+    >
+    </svg>
   `,
 })
 export class IconComponent {
@@ -44,7 +61,9 @@ export class IconComponent {
   protected readonly paths = computed<SafeHtml>(() => {
     const key = this.name();
     // Built-in DS set wins over consumer registry — see provideDsIcons() docs.
-    const body = (ICONS as Record<string, string>)[key] ?? this.registry[key] ?? '';
+    const body =
+      (ICONS as Record<string, string>)[key] ?? this.registry[key] ?? '';
+
     return this.sanitizer.bypassSecurityTrustHtml(body);
   });
 }

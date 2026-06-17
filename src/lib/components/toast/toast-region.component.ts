@@ -26,7 +26,9 @@ export class ToastRegionComponent {
   }
 
   remove(id: number): void {
-    if (this.leaving().has(id)) {return;}
+    if (this.leaving().has(id)) {
+      return;
+    }
     this.leaving.update((set) => new Set(set).add(id));
     setTimeout(() => {
       this.entries.update((existing) =>

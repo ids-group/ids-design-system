@@ -29,7 +29,9 @@ export class ModalCardComponent {
 
   protected readonly classes = computed(() => {
     const parts = ['modal', this.size()];
-    if (this.danger()) {parts.push('danger');}
+    if (this.danger()) {
+      parts.push('danger');
+    }
 
     return parts.join(' ');
   });

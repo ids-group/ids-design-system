@@ -32,8 +32,12 @@ export class TooltipDirective implements OnDestroy {
   @HostListener('mouseenter')
   @HostListener('focus')
   protected onOpen(): void {
-    if (!this.dsTooltip()) {return;}
-    if (this.timer !== null) {clearTimeout(this.timer);}
+    if (!this.dsTooltip()) {
+      return;
+    }
+    if (this.timer !== null) {
+      clearTimeout(this.timer);
+    }
     this.timer = window.setTimeout(() => this.show(), this.dsTooltipDelay());
   }
 
@@ -51,13 +55,18 @@ export class TooltipDirective implements OnDestroy {
       .split(' ')
       .filter((id: string) => id && id !== this.tipId)
       .join(' ');
-    if (remaining) {host.setAttribute('aria-describedby', remaining);}
-    else {host.removeAttribute('aria-describedby');}
+    if (remaining) {
+      host.setAttribute('aria-describedby', remaining);
+    } else {
+      host.removeAttribute('aria-describedby');
+    }
   }
 
   @HostListener('keydown.escape')
   protected onEscape(): void {
-    if (this.ref) {this.onClose();}
+    if (this.ref) {
+      this.onClose();
+    }
   }
 
   private show(): void {

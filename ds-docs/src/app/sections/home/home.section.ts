@@ -1,4 +1,9 @@
-import { Component, ViewEncapsulation, afterNextRender, signal } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  afterNextRender,
+  signal,
+} from '@angular/core';
 import { BadgeComponent } from 'ds';
 import {
   COMPONENT_COUNT,

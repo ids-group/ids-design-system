@@ -6,6 +6,7 @@
 .layout {
   display: grid;
   grid-template-columns: 280px 1fr;
+
   /* Constrain the single row to the viewport so the .main grid item scrolls
      internally (overflow-y: auto). Without an explicit row track the implicit
      row is `auto` and grows to content height, pushing the scroll onto <html>. */
@@ -38,14 +39,16 @@
   overflow-y: auto;
   min-height: 0;
 }
+
 // Note: content-width cap + horizontal centering lives on each routed
 // page's :host (e.g. <page-docs>), not here — view-encapsulation blocks
 // `.main > *` from styling the routed component.
 
-@media (max-width: 1100px) {
+@media (width <= 1100px) {
   .layout { grid-template-columns: 220px 1fr; }
 }
-@media (max-width: 900px) {
+
+@media (width <= 900px) {
   .layout { grid-template-columns: 1fr; }
   .side { display: none; }
 }

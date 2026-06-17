@@ -27,24 +27,27 @@
   // Mobile (default, <= 640px) — 4 columns
   --page-gutter: var(--page-gutter-mobile);
   --page-margin: var(--page-margin-mobile);
+
   grid-template-columns: repeat(4, minmax(0, 1fr));
 
   // Tablet (641-1024px) — 8 columns
-  @media (min-width: 641px) {
+  @media (width >= 641px) {
     --page-gutter: var(--page-gutter-tablet);
     --page-margin: var(--page-margin-tablet);
+
     grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 
   // Desktop (1025-1440px) — 12 columns, fluid width
-  @media (min-width: 1025px) {
+  @media (width >= 1025px) {
     --page-gutter: var(--page-gutter-desktop);
     --page-margin: var(--page-margin-desktop);
+
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
   // Desktop wide (>= 1441px) — 12 columns, container capped at --col-cap-content
-  @media (min-width: 1441px) {
+  @media (width >= 1441px) {
     --page-gutter: var(--page-gutter-wide);
     --page-margin: var(--page-margin-wide);
   }

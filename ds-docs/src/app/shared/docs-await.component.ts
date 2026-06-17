@@ -13,26 +13,56 @@ import { IconComponent } from 'ds';
     <button type="button" class="mark" [attr.aria-label]="text()">
       <ds-icon name="info" [size]="18" />
     </button>
-    <span class="pop" role="tooltip">{{ text() }}</span>
+
+    <span class="pop" role="tooltip">
+      {{ text() }}
+    </span>
   `,
-  styles: [`
-    :host { position: relative; display: inline-flex; vertical-align: middle; margin-left: var(--space-2); }
-    .mark {
-      display: inline-flex; padding: 0; border: 0; background: none;
-      color: var(--warning-text); cursor: help; border-radius: var(--radius-pill);
-    }
-    .mark:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
-    .pop {
-      position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
-      z-index: var(--layer-tooltip, 100); white-space: nowrap;
-      background: var(--warning-text); color: var(--surface-default, #fff);
-      padding: var(--space-1) var(--space-2-5); border-radius: var(--radius-md);
-      font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
-      letter-spacing: var(--letter-spacing-wide);
-      opacity: 0; pointer-events: none; transition: opacity 120ms;
-    }
-    :host:hover .pop, .mark:focus-visible + .pop { opacity: 1; }
-  `],
+  styles: [
+    `
+      :host {
+        position: relative;
+        display: inline-flex;
+        vertical-align: middle;
+        margin-left: var(--space-2);
+      }
+      .mark {
+        display: inline-flex;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--warning-text);
+        cursor: help;
+        border-radius: var(--radius-pill);
+      }
+      .mark:focus-visible {
+        outline: var(--focus-ring);
+        outline-offset: 2px;
+      }
+      .pop {
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: var(--layer-tooltip, 100);
+        white-space: nowrap;
+        background: var(--warning-text);
+        color: var(--surface-default, #fff);
+        padding: var(--space-1) var(--space-2-5);
+        border-radius: var(--radius-md);
+        font: var(--font-weight-bold)
+          var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
+        letter-spacing: var(--letter-spacing-wide);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 120ms;
+      }
+      :host:hover .pop,
+      .mark:focus-visible + .pop {
+        opacity: 1;
+      }
+    `,
+  ],
 })
 export class DocsAwaitComponent {
   readonly kind = input<'component' | 'api'>('component');

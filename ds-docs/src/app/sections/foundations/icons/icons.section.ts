@@ -1,7 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ICONS, IconComponent, type IconName } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import { DocsTruncationComponent, TruncationRule } from '../../../shared/docs-truncation.component';
+import {
+  DocsTruncationComponent,
+  TruncationRule,
+} from '../../../shared/docs-truncation.component';
 
 interface SizeRow {
   readonly name: string;
@@ -12,7 +15,12 @@ interface SizeRow {
 
 const SIZES: readonly SizeRow[] = [
   { name: 'xs', token: '--icon-xs', px: 12, use: 'Inline meta, tag close' },
-  { name: 'sm', token: '--icon-sm', px: 14, use: 'Compact buttons, dense tables' },
+  {
+    name: 'sm',
+    token: '--icon-sm',
+    px: 14,
+    use: 'Compact buttons, dense tables',
+  },
   { name: 'md', token: '--icon-md', px: 16, use: 'UI default' },
   { name: 'lg', token: '--icon-lg', px: 20, use: 'Sidenav, larger buttons' },
   { name: 'xl', token: '--icon-xl', px: 24, use: 'Hero, banner icons' },
@@ -30,8 +38,20 @@ export class IconsSection {
   protected readonly names = Object.keys(ICONS) as IconName[];
   protected readonly sizes = SIZES;
   protected readonly truncationRules: TruncationRule[] = [
-    { field: 'Glyph', behaviour: 'Never clipped — the SVG sits in a square frame at one of the fixed sizes.' },
-    { field: 'Name label', behaviour: 'Single line, ellipsis. Names are short identifiers — never wrap.' },
-    { field: 'Icon + text pair', behaviour: 'Glyph fixed; text label takes the remaining width and clips with ellipsis.' },
+    {
+      field: 'Glyph',
+      behaviour:
+        'Never clipped — the SVG sits in a square frame at one of the fixed sizes.',
+    },
+    {
+      field: 'Name label',
+      behaviour:
+        'Single line, ellipsis. Names are short identifiers — never wrap.',
+    },
+    {
+      field: 'Icon + text pair',
+      behaviour:
+        'Glyph fixed; text label takes the remaining width and clips with ellipsis.',
+    },
   ];
 }

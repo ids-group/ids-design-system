@@ -16,22 +16,54 @@ import { Component, ViewEncapsulation, input } from '@angular/core';
   standalone: true,
   encapsulation: ViewEncapsulation.Emulated,
   template: `
-    <section [id]="'section-' + anchor()" [attr.data-anchor]="anchor()" class="section">
-      <div class="eyebrow t-overline">{{ eyebrow() }}</div>
-      <h2 class="t-h2">{{ title() }}<ng-content select="docs-truncation" /></h2>
-      <p class="lede t-m"><ng-content select="[lede]" /></p>
+    <section
+      class="section"
+      [id]="'section-' + anchor()"
+      [attr.data-anchor]="anchor()"
+    >
+      <div class="eyebrow t-overline">
+        {{ eyebrow() }}
+      </div>
+
+      <h2 class="t-h2">
+        {{ title() }}<ng-content select="docs-truncation" />
+      </h2>
+
+      <p class="lede t-m">
+        <ng-content select="[lede]" />
+      </p>
+
       <ng-content />
     </section>
   `,
-  styles: [`
-    :host { display: block; }
-    .section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
-    .eyebrow { color: var(--primary); margin-bottom: var(--space-2); }
-    .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
-    /* Body scaffolding (projected content) — shared block heading/description. */
-    :host ::ng-deep .block-title { margin-top: var(--space-8); }
-    :host ::ng-deep .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
-  `],
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+      .section {
+        scroll-margin-top: calc(var(--topbar-h) + var(--space-4));
+      }
+      .eyebrow {
+        color: var(--primary);
+        margin-bottom: var(--space-2);
+      }
+      .lede {
+        color: var(--text-secondary);
+        margin-top: var(--space-2);
+        max-width: var(--col-cap-text);
+      }
+      /* Body scaffolding (projected content) — shared block heading/description. */
+      :host ::ng-deep .block-title {
+        margin-top: var(--space-8);
+      }
+      :host ::ng-deep .block-desc {
+        color: var(--text-secondary);
+        margin-top: var(--space-1);
+        max-width: var(--col-cap-text);
+      }
+    `,
+  ],
 })
 export class DocsSectionComponent {
   readonly anchor = input.required<string>();

@@ -1,264 +1,633 @@
+<docs-section
+  anchor="input"
+  eyebrow="Components"
+  title="Fields"
+>
+  <docs-truncation [rules]="truncationRules" />
 
-    <docs-section anchor="input" eyebrow="Components" title="Fields">
-      <docs-truncation [rules]="truncationRules" />
-      <span lede>Single-line text, textarea, dropdown, number, prefix/suffix add-ons, floating label, six states.</span>
+  <span lede
+    >
+    Single-line text, textarea, dropdown, number, prefix/suffix add-ons,
+    floating label, six states.
+  </span
+  >
 
-      <!-- ============================================================ States showcase -->
-      <h3 class="block-title t-h4">States showcase <docs-await kind="api" name="ds-input loading state" /></h3>
-      <p class="block-desc t-s">Every field state side-by-side. Static specimens — no interaction needed.</p>
-      <div class="states states--cols-3">
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-input label="Project name" placeholder="Project Alpha" />
+  <!-- ============================================================ States showcase -->
+  <h3 class="block-title t-h4">
+    States showcase
+    <docs-await
+      kind="api"
+      name="ds-input loading state"
+    />
+  </h3>
+
+  <p class="block-desc t-s">
+    Every field state side-by-side. Static specimens — no interaction needed.
+  </p>
+
+  <div class="states states--cols-3">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-input
+          label="Project name"
+          placeholder="Project Alpha"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Empty default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <!-- Force-focus pinned via ::ng-deep — ds-input has no static focus input. -->
+      <div class="state-cell__stage force-focus">
+        <ds-input
+          label="Project name"
+          placeholder="Project Alpha"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Empty · focus
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-input
+          label="Project name"
+          value="Project Alpha 2026"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        With value
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage force-focus">
+        <ds-input
+          label="Project name"
+          value="Project Alpha 2026"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        With value · focus
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <!-- Force-hover pinned via ::ng-deep — ds-input has no static hover input. -->
+      <div class="state-cell__stage force-hover">
+        <ds-input
+          label="Project name"
+          placeholder="Project Alpha"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Hover
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-input
+          label="Project ID"
+          value="ORD-2026-0142"
+          [disabled]="true"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Disabled
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-input
+          label="Project ID"
+          value="ORD-2026-0142"
+          [readOnly]="true"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Read-only
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-input
+          label="Start date"
+          value="2026-04-30"
+          hint="Must be before end date"
+          [invalid]="true"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Error
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-input
+          label="Slug"
+          value="project-alpha-2026"
+          hint="Available"
+          [success]="true"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Success
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <!-- Loading: ds-input has no spinner slot. Raw markup needed. -->
+      <div class="state-cell__stage">
+        <div class="field">
+          <span class="label">
+            Slug
+          </span>
+
+          <div class="control">
+            <input value="project-alpha-2026" />
+
+            <ds-spinner size="sm" />
           </div>
-          <div class="state-cell__label">Empty default</div>
-        </div>
-        <div class="state-cell">
-          <!-- Force-focus pinned via ::ng-deep — ds-input has no static focus input. -->
-          <div class="state-cell__stage force-focus">
-            <ds-input label="Project name" placeholder="Project Alpha" />
-          </div>
-          <div class="state-cell__label">Empty · focus</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-input label="Project name" value="Project Alpha 2026" />
-          </div>
-          <div class="state-cell__label">With value</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage force-focus">
-            <ds-input label="Project name" value="Project Alpha 2026" />
-          </div>
-          <div class="state-cell__label">With value · focus</div>
-        </div>
-        <div class="state-cell">
-          <!-- Force-hover pinned via ::ng-deep — ds-input has no static hover input. -->
-          <div class="state-cell__stage force-hover">
-            <ds-input label="Project name" placeholder="Project Alpha" />
-          </div>
-          <div class="state-cell__label">Hover</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-input label="Project ID" value="ORD-2026-0142" [disabled]="true" />
-          </div>
-          <div class="state-cell__label">Disabled</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-input label="Project ID" value="ORD-2026-0142" [readOnly]="true" />
-          </div>
-          <div class="state-cell__label">Read-only</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-input label="Start date" value="2026-04-30" hint="Must be before end date" [invalid]="true" />
-          </div>
-          <div class="state-cell__label">Error</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-input label="Slug" value="project-alpha-2026" hint="Available" [success]="true" />
-          </div>
-          <div class="state-cell__label">Success</div>
-        </div>
-        <div class="state-cell">
-          <!-- Loading: ds-input has no spinner slot. Raw markup needed. -->
-          <div class="state-cell__stage">
-            <div class="field">
-              <span class="label">Slug</span>
-              <div class="control">
-                <input value="project-alpha-2026" />
-                <ds-spinner size="sm" />
-              </div>
-              <span class="hint">Checking availability…</span>
-            </div>
-          </div>
-          <div class="state-cell__label">Loading</div>
+
+          <span class="hint">
+            Checking availability…
+          </span>
         </div>
       </div>
 
-      <!-- ============================================================ Variant states -->
-      <h3 class="block-title t-h4">Variant states — textarea · select · prefix · suffix · floating <docs-await kind="api" name="ds-input floating label" /></h3>
-      <div class="states states--cols-2">
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-textarea label="Description" placeholder="Describe the event…" [rows]="3" />
-          </div>
-          <div class="state-cell__label">Textarea · default</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-textarea label="Description" [rows]="3" value="Multi-phase initiative for the north quadrant of the site." />
-          </div>
-          <div class="state-cell__label">Textarea · with value</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-textarea label="Brief" hint="Required" [rows]="3" [invalid]="true" />
-          </div>
-          <div class="state-cell__label">Textarea · error</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-textarea label="Brief" [rows]="3" [disabled]="true" value="Auto-generated from event template." />
-          </div>
-          <div class="state-cell__label">Textarea · disabled</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <div class="field">
-              <span class="label">Owner</span>
-              <ds-dropdown [options]="ownerOptions" placeholder="Pick an owner…" />
-            </div>
-          </div>
-          <div class="state-cell__label">Select · default</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <div class="field">
-              <span class="label">Owner</span>
-              <ds-dropdown [options]="ownerOptions" value="brooks" />
-            </div>
-          </div>
-          <div class="state-cell__label">Select · with value</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-input label="Site URL" value="member.example.com" [withAddon]="true">
-              <span dsInputPrefix class="addon">https://</span>
-            </ds-input>
-          </div>
-          <div class="state-cell__label">Prefix</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <ds-input label="Capacity" value="250" type="number" [withAddonRight]="true">
-              <span dsInputSuffix class="addon right">people</span>
-            </ds-input>
-          </div>
-          <div class="state-cell__label">Suffix</div>
-        </div>
-        <div class="state-cell">
-          <!-- Floating label: ds-input has no [floating] variant. Raw markup needed. -->
-          <div class="state-cell__stage">
-            <div class="field floating">
-              <div class="control">
-                <span class="floating-label">Record name</span>
-                <input />
-              </div>
-            </div>
-          </div>
-          <div class="state-cell__label">Floating · empty</div>
-        </div>
-        <div class="state-cell">
-          <div class="state-cell__stage">
-            <div class="field floating">
-              <div class="control">
-                <span class="floating-label">Project name</span>
-                <input value="Project Alpha 2026" />
-              </div>
-            </div>
-          </div>
-          <div class="state-cell__label">Floating · filled</div>
+      <div class="state-cell__label">
+        Loading
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ Variant states -->
+  <h3 class="block-title t-h4">
+    Variant states — textarea · select · prefix · suffix · floating
+    <docs-await
+      kind="api"
+      name="ds-input floating label"
+    />
+  </h3>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-textarea
+          label="Description"
+          placeholder="Describe the event…"
+          [rows]="3"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Textarea · default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-textarea
+          label="Description"
+          value="Multi-phase initiative for the north quadrant of the site."
+          [rows]="3"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Textarea · with value
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-textarea
+          label="Brief"
+          hint="Required"
+          [rows]="3"
+          [invalid]="true"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Textarea · error
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-textarea
+          label="Brief"
+          value="Auto-generated from event template."
+          [rows]="3"
+          [disabled]="true"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Textarea · disabled
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <div class="field">
+          <span class="label">
+            Owner
+          </span>
+
+          <ds-dropdown
+            placeholder="Pick an owner…"
+            [options]="ownerOptions"
+          />
         </div>
       </div>
 
-      <!-- ============================================================ With icon · prefix · suffix · floating -->
-      <h3 class="block-title t-h4">With icon · prefix · suffix · floating</h3>
-      <div class="grid-3">
-        <ds-input label="Search" placeholder="Search projects…">
-          <ds-icon dsInputPrefix name="search" [size]="16" />
+      <div class="state-cell__label">
+        Select · default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <div class="field">
+          <span class="label">
+            Owner
+          </span>
+
+          <ds-dropdown
+            value="brooks"
+            [options]="ownerOptions"
+          />
+        </div>
+      </div>
+
+      <div class="state-cell__label">
+        Select · with value
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-input
+          label="Site URL"
+          value="member.example.com"
+          [withAddon]="true"
+        >
+          <span
+            dsInputPrefix
+            class="addon"
+            >
+            https://
+          </span
+          >
         </ds-input>
-        <ds-input label="Cap length" value="13.55" type="number" [withAddonRight]="true">
-          <span dsInputSuffix class="addon right">m</span>
+      </div>
+
+      <div class="state-cell__label">
+        Prefix
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-input
+          label="Capacity"
+          value="250"
+          type="number"
+          [withAddonRight]="true"
+        >
+          <span
+            dsInputSuffix
+            class="addon right"
+            >
+            people
+          </span
+          >
         </ds-input>
-        <ds-input label="Site URL" value="member.example.com" [withAddon]="true">
-          <span dsInputPrefix class="addon">https://</span>
-        </ds-input>
-        <ds-input label="Capacity" value="250" type="number" [withAddonRight]="true">
-          <span dsInputSuffix class="addon right">people</span>
-        </ds-input>
-        <!-- Floating label: ds-input has no [floating] variant. Raw markup needed. -->
+      </div>
+
+      <div class="state-cell__label">
+        Suffix
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <!-- Floating label: ds-input has no [floating] variant. Raw markup needed. -->
+      <div class="state-cell__stage">
         <div class="field floating">
           <div class="control">
-            <span class="floating-label">Project name</span>
+            <span class="floating-label">
+              Record name
+            </span>
+
+            <input />
+          </div>
+        </div>
+      </div>
+
+      <div class="state-cell__label">
+        Floating · empty
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <div class="field floating">
+          <div class="control">
+            <span class="floating-label">
+              Project name
+            </span>
+
             <input value="Project Alpha 2026" />
           </div>
         </div>
-        <div class="field floating">
-          <div class="control">
-            <span class="floating-label">Project ID</span>
-            <input class="t-mono" value="EVT-2026-0142" />
-          </div>
-        </div>
       </div>
 
-      <!-- ============================================================ Textarea · dropdown · number -->
-      <h3 class="block-title t-h4">Textarea · dropdown · number</h3>
-      <div class="grid-3">
-        <ds-textarea label="Notes" [rows]="3" value="Site map TBC — confirmed via Sam Carter 2 May." />
-        <div class="field">
-          <span class="label">Member</span>
-          <ds-dropdown [options]="memberOptions" value="acme" />
-        </div>
-        <div class="field">
-          <span class="label">Team size</span>
-          <ds-number-stepper [value]="42" [min]="0" />
-        </div>
+      <div class="state-cell__label">
+        Floating · filled
       </div>
+    </div>
+  </div>
 
-      <!-- ============================================================ Textarea autosize -->
-      <h3 class="block-title t-h4">Textarea · autosize</h3>
-      <p class="block-desc t-s">
-        <code class="t-mono-inline">[autosize]="true"</code> grows the textarea with its content (forces <code class="t-mono-inline">resize="none"</code>). Bound by <code class="t-mono-inline">[minRows]</code> / <code class="t-mono-inline">[maxRows]</code>.
-      </p>
-      <div class="grid-2">
-        <ds-textarea label="Auto-growing note" [autosize]="true" [minRows]="2" [maxRows]="8"
-          value="Type more lines and the field grows up to 8 rows, then scrolls." />
-      </div>
+  <!-- ============================================================ With icon · prefix · suffix · floating -->
+  <h3 class="block-title t-h4">
+    With icon · prefix · suffix · floating
+  </h3>
 
-      <!-- ============================================================ Clearable -->
-      <h3 class="block-title t-h4">Clearable</h3>
-      <p class="block-desc t-s">
-        <code class="t-mono-inline">[clearable]</code> shows an inline × button when the field has a non-empty value.
-        Defaults to <code class="t-mono-inline">true</code> for <code class="t-mono-inline">type="search"</code> and <code class="t-mono-inline">false</code> otherwise — pass an explicit boolean to override.
-      </p>
-      <div class="grid-2">
-        <ds-input type="search" label="Search (auto-clearable)" [value]="'Project Alpha'" placeholder="Search projects…" />
-        <ds-input label="Email (explicitly clearable)" [value]="'user@example.com'" [clearable]="true" placeholder="you@company.com" />
-      </div>
+  <div class="grid-3">
+    <ds-input
+      label="Search"
+      placeholder="Search projects…"
+    >
+      <ds-icon
+        dsInputPrefix
+        name="search"
+        [size]="16"
+      />
+    </ds-input>
 
-      <!-- ============================================================ Password toggle -->
-      <h3 class="block-title t-h4">Password toggle</h3>
-      <p class="block-desc t-s">
-        On <code class="t-mono-inline">type="password"</code>, <code class="t-mono-inline">[passwordToggle]="true"</code> adds an eye button that flips the field between masked and plain text. Two-way <code class="t-mono-inline">[(passwordVisible)]</code> exposes the state.
-      </p>
-      <div class="grid-2">
-        <ds-input type="password" label="Password" [passwordToggle]="true" [value]="'hunter2'" placeholder="Enter password" />
-      </div>
+    <ds-input
+      label="Cap length"
+      value="13.55"
+      type="number"
+      [withAddonRight]="true"
+    >
+      <span
+        dsInputSuffix
+        class="addon right"
+        >
+        m
+      </span
+      >
+    </ds-input>
 
-      <!-- ============================================================ Required vs optional -->
-      <h3 class="block-title t-h4">Required vs optional</h3>
-      <p class="block-desc t-s">
-        <code class="t-mono-inline">[required]="true"</code> appends a red asterisk to the label;
-        <code class="t-mono-inline">[optional]="true"</code> appends the muted "(optional)" suffix. They are mutually exclusive — pick one.
-      </p>
-      <div class="grid-2">
-        <ds-input label="Project name" [required]="true" placeholder="e.g. Project Alpha" />
-        <ds-input label="Description" [optional]="true" placeholder="Internal notes…" />
-      </div>
+    <ds-input
+      label="Site URL"
+      value="member.example.com"
+      [withAddon]="true"
+    >
+      <span
+        dsInputPrefix
+        class="addon"
+        >
+        https://
+      </span
+      >
+    </ds-input>
 
-      <!-- ============================================================ Search · tag input -->
-      <h3 class="block-title t-h4">Search · tag input</h3>
-      <div class="grid-2">
-        <ds-search placeholder="Search projects, resources, people…" shortcut="⌘ K" />
-        <div class="tag-input">
-          <ds-tag [closable]="true">Project Alpha</ds-tag>
-          <ds-tag [closable]="true">Project Beta</ds-tag>
-          <ds-tag [closable]="true">Q3 Initiative</ds-tag>
-          <input placeholder="Add project…" />
-        </div>
+    <ds-input
+      label="Capacity"
+      value="250"
+      type="number"
+      [withAddonRight]="true"
+    >
+      <span
+        dsInputSuffix
+        class="addon right"
+        >
+        people
+      </span
+      >
+    </ds-input>
+    <!-- Floating label: ds-input has no [floating] variant. Raw markup needed. -->
+    <div class="field floating">
+      <div class="control">
+        <span class="floating-label">
+          Project name
+        </span>
+
+        <input value="Project Alpha 2026" />
       </div>
-    </docs-section>
+    </div>
+
+    <div class="field floating">
+      <div class="control">
+        <span class="floating-label">
+          Project ID
+        </span>
+
+        <input
+          class="t-mono"
+          value="EVT-2026-0142"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ Textarea · dropdown · number -->
+  <h3 class="block-title t-h4">
+    Textarea · dropdown · number
+  </h3>
+
+  <div class="grid-3">
+    <ds-textarea
+      label="Notes"
+      value="Site map TBC — confirmed via Sam Carter 2 May."
+      [rows]="3"
+    />
+
+    <div class="field">
+      <span class="label">
+        Member
+      </span>
+
+      <ds-dropdown
+        value="acme"
+        [options]="memberOptions"
+      />
+    </div>
+
+    <div class="field">
+      <span class="label">
+        Team size
+      </span>
+
+      <ds-number-stepper
+        [value]="42"
+        [min]="0"
+      />
+    </div>
+  </div>
+
+  <!-- ============================================================ Textarea autosize -->
+  <h3 class="block-title t-h4">
+    Textarea · autosize
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [autosize]="true"
+    </code> grows the textarea with
+    its content (forces <code class="t-mono-inline">resize="none"</code>). Bound
+    by <code class="t-mono-inline">[minRows]</code> /
+    <code class="t-mono-inline">
+      [maxRows]
+    </code>.
+  </p>
+
+  <div class="grid-2">
+    <ds-textarea
+      label="Auto-growing note"
+      value="Type more lines and the field grows up to 8 rows, then scrolls."
+      [autosize]="true"
+      [minRows]="2"
+      [maxRows]="8"
+    />
+  </div>
+
+  <!-- ============================================================ Clearable -->
+  <h3 class="block-title t-h4">
+    Clearable
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [clearable]
+    </code> shows an inline × button when
+    the field has a non-empty value. Defaults to
+    <code class="t-mono-inline">
+      true
+    </code> for
+    <code class="t-mono-inline">
+      type="search"
+    </code> and
+    <code class="t-mono-inline">
+      false
+    </code> otherwise — pass an explicit
+    boolean to override.
+  </p>
+
+  <div class="grid-2">
+    <ds-input
+      type="search"
+      label="Search (auto-clearable)"
+      placeholder="Search projects…"
+      [value]="'Project Alpha'"
+    />
+
+    <ds-input
+      label="Email (explicitly clearable)"
+      placeholder="you@company.com"
+      [value]="'user@example.com'"
+      [clearable]="true"
+    />
+  </div>
+
+  <!-- ============================================================ Password toggle -->
+  <h3 class="block-title t-h4">
+    Password toggle
+  </h3>
+
+  <p class="block-desc t-s">
+    On <code class="t-mono-inline">type="password"</code>,
+    <code class="t-mono-inline">
+      [passwordToggle]="true"
+    </code> adds an eye
+    button that flips the field between masked and plain text. Two-way
+    <code class="t-mono-inline">
+      [(passwordVisible)]
+    </code> exposes the state.
+  </p>
+
+  <div class="grid-2">
+    <ds-input
+      type="password"
+      label="Password"
+      placeholder="Enter password"
+      [passwordToggle]="true"
+      [value]="'hunter2'"
+    />
+  </div>
+
+  <!-- ============================================================ Required vs optional -->
+  <h3 class="block-title t-h4">
+    Required vs optional
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [required]="true"
+    </code> appends a red asterisk
+    to the label; <code class="t-mono-inline">[optional]="true"</code> appends
+    the muted "(optional)" suffix. They are mutually exclusive — pick one.
+  </p>
+
+  <div class="grid-2">
+    <ds-input
+      label="Project name"
+      placeholder="e.g. Project Alpha"
+      [required]="true"
+    />
+
+    <ds-input
+      label="Description"
+      placeholder="Internal notes…"
+      [optional]="true"
+    />
+  </div>
+
+  <!-- ============================================================ Search · tag input -->
+  <h3 class="block-title t-h4">
+    Search · tag input
+  </h3>
+
+  <div class="grid-2">
+    <ds-search
+      placeholder="Search projects, resources, people…"
+      shortcut="⌘ K"
+    />
+
+    <div class="tag-input">
+      <ds-tag [closable]="true">
+        Project Alpha
+      </ds-tag>
+
+      <ds-tag [closable]="true">
+        Project Beta
+      </ds-tag>
+
+      <ds-tag [closable]="true">
+        Q3 Initiative
+      </ds-tag>
+
+      <input placeholder="Add project…" />
+    </div>
+  </div>
+</docs-section>

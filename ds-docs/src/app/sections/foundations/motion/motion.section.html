@@ -1,75 +1,164 @@
+<docs-section
+  anchor="motion"
+  eyebrow="Foundations"
+  title="Motion"
+>
+  <docs-truncation [rules]="truncationRules" />
 
-    <docs-section anchor="motion" eyebrow="Foundations" title="Motion">
-      <docs-truncation [rules]="truncationRules" />
-      <span lede>Five durations, five eases. All motion respects <code class="t-mono-inline">prefers-reduced-motion</code> —
-        durations collapse to 0 so components don't need to opt in. Pair durations with the right easing
-        per direction: <em>decelerate</em> for enter, <em>accelerate</em> for exit.</span>
+  <span lede
+    >
+    Five durations, five eases. All motion respects
+    <code class="t-mono-inline">
+      prefers-reduced-motion
+    </code> — durations
+    collapse to 0 so components don't need to opt in. Pair durations with the
+    right easing per direction: <em>decelerate</em> for enter,
+    <em>
+      accelerate
+    </em> for exit.
+  </span
+  >
 
-      <!-- ============================================================ Durations -->
-      <h3 class="block-title t-h4">Durations</h3>
-      <p class="block-desc t-s">Hover over each card to play the animation. Each puck travels the same distance over its duration with a shared easing.</p>
-      <div class="motion-grid">
-        @for (d of durations; track d.name) {
-          <div class="motion-cell">
-            <div class="loop-track">
-              <div class="loop-puck loop-puck--dur" [style.transitionDuration]="d.value"></div>
-            </div>
-            <code class="t-mono-inline token-name">--duration-{{ d.name }}</code>
-            <code class="t-mono-inline token-value">{{ d.value }}</code>
-            <div class="t-caption token-desc">{{ d.use }}</div>
+  <!-- ============================================================ Durations -->
+  <h3 class="block-title t-h4">
+    Durations
+  </h3>
+
+  <p class="block-desc t-s">
+    Hover over each card to play the animation. Each puck travels the same
+    distance over its duration with a shared easing.
+  </p>
+
+  <div class="motion-grid">
+    @for (d of durations; track d.name) {
+      <div class="motion-cell">
+        <div class="loop-track">
+          <div
+            class="loop-puck loop-puck--dur"
+            [style.transitionDuration]="d.value"
+          >
           </div>
-        }
-      </div>
+        </div>
 
-      <!-- ============================================================ Easings -->
-      <h3 class="block-title t-h4">Easings</h3>
-      <p class="block-desc t-s">Hover over each card to play the animation. Same duration, same distance — easing alone changes the feel.</p>
-      <div class="motion-grid">
-        @for (e of eases; track e.name) {
-          <div class="motion-cell">
-            <div class="loop-track">
-              <div class="loop-puck loop-puck--ease" [style.transitionTimingFunction]="e.curve"></div>
-            </div>
-            <code class="t-mono-inline token-name">--ease-{{ e.name }}</code>
-            <code class="t-mono-inline token-value">{{ e.curve }}</code>
-            <div class="t-caption token-desc">{{ e.use }}</div>
+        <code class="t-mono-inline token-name">
+          --duration-{{ d.name }}
+        </code>
+
+        <code class="t-mono-inline token-value">
+          {{ d.value }}
+        </code>
+
+        <div class="t-caption token-desc">
+          {{ d.use }}
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- ============================================================ Easings -->
+  <h3 class="block-title t-h4">
+    Easings
+  </h3>
+
+  <p class="block-desc t-s">
+    Hover over each card to play the animation. Same duration, same distance —
+    easing alone changes the feel.
+  </p>
+
+  <div class="motion-grid">
+    @for (e of eases; track e.name) {
+      <div class="motion-cell">
+        <div class="loop-track">
+          <div
+            class="loop-puck loop-puck--ease"
+            [style.transitionTimingFunction]="e.curve"
+          >
           </div>
-        }
-      </div>
+        </div>
 
-      <!-- ============================================================ Combined -->
-      <h3 class="block-title t-h4">Combined · how the DS uses motion in practice</h3>
-      <p class="block-desc t-s">Hover any tile to replay the transition.</p>
-      <div class="combined-grid">
-        @for (c of combined; track c.label) {
-          <div class="combined-cell" [class]="'combined-cell--' + c.kind"
-               [style.--demo-dur]="c.duration"
-               [style.--demo-ease]="c.easing">
-            <div class="combined-stage">
-              @if (c.kind === 'fade') {
-                <div class="demo-card-lift">Hover row</div>
-              }
-              @if (c.kind === 'slide') {
-                <div class="demo-toast">
-                  <div class="demo-toast__bar"></div>
-                  <div class="demo-toast__title">Manifest saved</div>
-                </div>
-              }
-              @if (c.kind === 'scale') {
-                <div class="demo-modal">Confirm dispatch</div>
-              }
-              @if (c.kind === 'overshoot') {
-                <div class="demo-tick">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </div>
-              }
+        <code class="t-mono-inline token-name">
+          --ease-{{ e.name }}
+        </code>
+
+        <code class="t-mono-inline token-value">
+          {{ e.curve }}
+        </code>
+
+        <div class="t-caption token-desc">
+          {{ e.use }}
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- ============================================================ Combined -->
+  <h3 class="block-title t-h4">
+    Combined · how the DS uses motion in practice
+  </h3>
+
+  <p class="block-desc t-s">
+    Hover any tile to replay the transition.
+  </p>
+
+  <div class="combined-grid">
+    @for (c of combined; track c.label) {
+      <div
+        class="combined-cell"
+        [class]="'combined-cell--' + c.kind"
+        [style.--demo-dur]="c.duration"
+        [style.--demo-ease]="c.easing"
+      >
+        <div class="combined-stage">
+          @if (c.kind === 'fade') {
+            <div class="demo-card-lift">
+              Hover row
             </div>
-            <div class="combined-label t-s-bold">{{ c.label }}</div>
-            <code class="t-mono-inline token-value">{{ c.tokens }}</code>
-          </div>
-        }
-      </div>
+          }
 
-    </docs-section>
+          @if (c.kind === 'slide') {
+            <div class="demo-toast">
+              <div class="demo-toast__bar"></div>
+
+              <div class="demo-toast__title">
+                Manifest saved
+              </div>
+            </div>
+          }
+
+          @if (c.kind === 'scale') {
+            <div class="demo-modal">
+              Confirm dispatch
+            </div>
+          }
+
+          @if (c.kind === 'overshoot') {
+            <div class="demo-tick">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M5 12.5l4.5 4.5L19 7.5"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+          }
+        </div>
+
+        <div class="combined-label t-s-bold">
+          {{ c.label }}
+        </div>
+
+        <code class="t-mono-inline token-value">
+          {{ c.tokens }}
+        </code>
+      </div>
+    }
+  </div>
+</docs-section>

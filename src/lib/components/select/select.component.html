@@ -8,18 +8,16 @@
       <span
         class="req"
         aria-hidden="true"
-        >
-        *
-      </span
       >
+        *
+      </span>
     } @else if (optional()) {
       <span
         class="optional-marker"
         aria-hidden="true"
-        >
-        (optional)
-      </span
       >
+        (optional)
+      </span>
     }
   </span>
 }
@@ -45,17 +43,15 @@
   <span
     class="trigger-text"
     [class.is-placeholder]="!hasValue()"
-    >
-    {{ displayLabel() }}
-  </span
   >
+    {{ displayLabel() }}
+  </span>
 
-  <span class="chevron"
-    >
+  <span class="chevron">
     <ds-icon
       name="chevronDown"
       [size]="14"
-  />
+    />
   </span>
 </button>
 
@@ -87,10 +83,9 @@
             <span
               class="optgroup-label"
               [class.is-first]="groupIdx === 0"
-              >
-              {{ item.label }}
-            </span
             >
+              {{ item.label }}
+            </span>
 
             <ul
               class="optgroup-list"

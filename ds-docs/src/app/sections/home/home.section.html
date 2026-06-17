@@ -1,139 +1,325 @@
+<section
+  id="section-home"
+  data-anchor="home"
+  class="section"
+>
+  <header class="page-hero">
+    <div class="t-overline eyebrow">
+      Boilerplate &middot; Design system
+    </div>
 
-    <section id="section-home" data-anchor="home" class="section">
-      <header class="page-hero">
-        <div class="t-overline eyebrow">Boilerplate &middot; Design system</div>
-        <h1 class="display">An admin design system, in primitives.</h1>
-        <p class="lede">
-          A reusable starting point for any admin product — tokens, components and patterns.
-          Built tokens-first so a client theme propagates without touching components.
-          Brand tokens — palette and fonts — live in the consumer app's
-          <code class="t-mono-inline">_brand-&lt;client&gt;.scss</code> file (see <code class="t-mono-inline">prototype/mm-broker/src/app/styles/_brand-manage-my.scss</code>);
-          domain-specific copy and status taxonomies stay in the app itself.
-        </p>
-        <div class="badges">
-          <ds-badge variant="solid">v{{ version }}</ds-badge>
-          <ds-badge variant="neutral">{{ tokenCount() ?? '…' }} tokens</ds-badge>
-          <ds-badge variant="neutral">{{ componentCount }} components</ds-badge>
-          <ds-badge variant="neutral">{{ foundationCount }} foundations</ds-badge>
-          <ds-badge variant="neutral">{{ patternCount }} patterns</ds-badge>
-          <ds-badge variant="neutral">Light only</ds-badge>
-        </div>
-      </header>
+    <h1 class="display">
+      An admin design system, in primitives.
+    </h1>
 
-      <section class="start-section">
-        <div class="t-overline eyebrow">Welcome</div>
-        <h2 class="t-h2 title">Start here</h2>
-        <p class="lede-secondary">
-          A white-label boilerplate design system. Re-skin per consumer app via a
-          <code class="t-mono-inline">_brand-&lt;client&gt;.scss</code> partial that overrides
-          DS palette + font tokens under a <code class="t-mono-inline">[data-brand="&lt;client&gt;"]</code>
-          attribute selector. Default contents are generic admin-tool components —
-          tables, forms, banners, sidenav, page headers. Re-theme without touching
-          components by overriding tokens.
-        </p>
+    <p class="lede">
+      A reusable starting point for any admin product — tokens, components and
+      patterns. Built tokens-first so a client theme propagates without touching
+      components. Brand tokens — palette and fonts — live in the consumer app's
+      <code class="t-mono-inline">
+        _brand-&lt;client&gt;.scss
+      </code> file (see
+      <code class="t-mono-inline"
+        >
+        prototype/mm-broker/src/app/styles/_brand-manage-my.scss
+      </code
+      >); domain-specific copy and status taxonomies stay in the app itself.
+    </p>
 
-        <div class="block">
-          <h3 class="t-h4 block-title">How to</h3>
-          <div class="grid-3">
-            <article class="howto-card">
-              <div class="howto-num">01</div>
-              <h4 class="howto-title">Add a new client theme</h4>
-              <p class="howto-body">
-                Create <code class="t-mono-inline">_brand-&lt;client&gt;.scss</code> in the consumer app's
-                styles folder. Inside <code class="t-mono-inline">[data-brand="&lt;client&gt;"]</code>,
-                override the brand tokens — palette ramp (<code class="t-mono-inline">--blue-50…900</code>),
-                brand HSL channels (<code class="t-mono-inline">--primary-h/s/l</code>), the
-                <code class="t-mono-inline">--primary*</code> roles and other semantic tokens
-                (surfaces, text, <code class="t-mono-inline">--secondary*</code>), and the font stack.
-                Activate with <code class="t-mono-inline">&lt;html data-brand="&lt;client&gt;"&gt;</code>.
-                Components stay untouched.
-              </p>
-              <div class="howto-foot">
-                Reference: <code class="t-mono-inline">prototype/mm-broker/src/app/styles/_brand-manage-my.scss</code>
-              </div>
-            </article>
+    <div class="badges">
+      <ds-badge variant="solid">
+        v{{ version }}
+      </ds-badge>
 
-            <article class="howto-card">
-              <div class="howto-num">02</div>
-              <h4 class="howto-title">Extend with a new component</h4>
-              <p class="howto-body">
-                Author against tokens — never raw values. Use idiomatic class names
-                with <code class="t-mono-inline">&amp;.modifier</code> nesting. Pair tokens correctly
-                (background + matching foreground). Add a per-component section to
-                this docs site.
-              </p>
-              <div class="howto-foot">
-                See <a href="#section-practice-do-dont" class="t-link">Practice &rsaquo; Do / Don't</a>
-              </div>
-            </article>
+      <ds-badge variant="neutral">
+        {{ tokenCount() ?? '…' }} tokens
+      </ds-badge>
 
-            <article class="howto-card">
-              <div class="howto-num">03</div>
-              <h4 class="howto-title">Read this documentation</h4>
-              <p class="howto-body">
-                Linear top-to-bottom: Components → Foundations → Patterns → Practice →
-                Reference. Each component block reads as a self-contained unit. Use the
-                left TOC for jumps. The Tweaks panel (bottom-right) flips brand,
-                density and font size live.
-              </p>
-              <div class="howto-foot">
-                Open it with the <span class="t-mono">⚙ Tweaks</span> button, bottom-right
-              </div>
-            </article>
+      <ds-badge variant="neutral">
+        {{ componentCount }} components
+      </ds-badge>
+
+      <ds-badge variant="neutral">
+        {{ foundationCount }} foundations
+      </ds-badge>
+
+      <ds-badge variant="neutral">
+        {{ patternCount }} patterns
+      </ds-badge>
+
+      <ds-badge variant="neutral">
+        Light only
+      </ds-badge>
+    </div>
+  </header>
+
+  <section class="start-section">
+    <div class="t-overline eyebrow">
+      Welcome
+    </div>
+
+    <h2 class="t-h2 title">
+      Start here
+    </h2>
+
+    <p class="lede-secondary">
+      A white-label boilerplate design system. Re-skin per consumer app via a
+      <code class="t-mono-inline">
+        _brand-&lt;client&gt;.scss
+      </code> partial that
+      overrides DS palette + font tokens under a
+      <code class="t-mono-inline">
+        [data-brand="&lt;client&gt;"]
+      </code>
+      attribute selector. Default contents are generic admin-tool components —
+      tables, forms, banners, sidenav, page headers. Re-theme without touching
+      components by overriding tokens.
+    </p>
+
+    <div class="block">
+      <h3 class="t-h4 block-title">
+        How to
+      </h3>
+
+      <div class="grid-3">
+        <article class="howto-card">
+          <div class="howto-num">
+            01
           </div>
-        </div>
 
-        <div class="block">
-          <h3 class="t-h4 block-title">Quick links</h3>
-          <div class="start-links">
-            <a href="#section-button" class="start-link">
-              <div class="start-link__num">A</div>
-              <div class="start-link__body">
-                <div class="start-link__title">Components</div>
-                <div class="start-link__desc">Buttons, fields, tables, banners, navigation — {{ componentCount }} in total.</div>
-              </div>
-              <div class="start-link__arrow">→</div>
-            </a>
-            <a href="#section-color" class="start-link">
-              <div class="start-link__num">B</div>
-              <div class="start-link__body">
-                <div class="start-link__title">Foundations</div>
-                <div class="start-link__desc">Colour, type, spacing, radius, surfaces, motion, icons.</div>
-              </div>
-              <div class="start-link__arrow">→</div>
-            </a>
-            <a href="#section-pattern-page-header" class="start-link">
-              <div class="start-link__num">C</div>
-              <div class="start-link__body">
-                <div class="start-link__title">Patterns</div>
-                <div class="start-link__desc">Page headers, filter bars, form layouts, activity.</div>
-              </div>
-              <div class="start-link__arrow">→</div>
-            </a>
-            <a href="#section-practice-token-discipline" class="start-link">
-              <div class="start-link__num">D</div>
-              <div class="start-link__body">
-                <div class="start-link__title">Practice</div>
-                <div class="start-link__desc">Token discipline, do/don't catalogue.</div>
-              </div>
-              <div class="start-link__arrow">→</div>
-            </a>
-            <a href="#section-tokens-reference" class="start-link">
-              <div class="start-link__num">E</div>
-              <div class="start-link__body">
-                <div class="start-link__title">Reference</div>
-                <div class="start-link__desc">Token catalogue — names, values, intended use.</div>
-              </div>
-              <div class="start-link__arrow">→</div>
-            </a>
-            <div class="start-link start-link--note">
-              <div class="start-link__num">⌘</div>
-              <div class="start-link__body">
-                <div class="start-link__title">Live tweaking</div>
-                <div class="start-link__desc">Brand, density and font size sit in the Tweaks panel, bottom-right. Try brand swap — components reflow without code changes.</div>
-              </div>
+          <h4 class="howto-title">
+            Add a new client theme
+          </h4>
+
+          <p class="howto-body">
+            Create
+            <code class="t-mono-inline">
+              _brand-&lt;client&gt;.scss
+            </code> in the
+            consumer app's styles folder. Inside
+            <code class="t-mono-inline">
+              [data-brand="&lt;client&gt;"]
+            </code>,
+            override the brand tokens — palette ramp (<code
+              class="t-mono-inline"
+              >--blue-50…900</code
+            >), brand HSL channels (<code class="t-mono-inline"
+              >--primary-h/s/l</code
+            >), the <code class="t-mono-inline">--primary*</code> roles and
+            other semantic tokens (surfaces, text,
+            <code class="t-mono-inline">
+              --secondary*
+            </code>), and the font
+            stack. Activate with
+            <code class="t-mono-inline"
+              >
+              &lt;html data-brand="&lt;client&gt;"&gt;
+            </code
+            >. Components stay untouched.
+          </p>
+
+          <div class="howto-foot">
+            Reference:
+            <code class="t-mono-inline"
+              >
+              prototype/mm-broker/src/app/styles/_brand-manage-my.scss
+            </code
+            >
+          </div>
+        </article>
+
+        <article class="howto-card">
+          <div class="howto-num">
+            02
+          </div>
+
+          <h4 class="howto-title">
+            Extend with a new component
+          </h4>
+
+          <p class="howto-body">
+            Author against tokens — never raw values. Use idiomatic class names
+            with <code class="t-mono-inline">&amp;.modifier</code> nesting. Pair
+            tokens correctly (background + matching foreground). Add a
+            per-component section to this docs site.
+          </p>
+
+          <div class="howto-foot">
+            See
+            <a
+              href="#section-practice-do-dont"
+              class="t-link"
+              >
+              Practice &rsaquo; Do / Don't
+            </a
+            >
+          </div>
+        </article>
+
+        <article class="howto-card">
+          <div class="howto-num">
+            03
+          </div>
+
+          <h4 class="howto-title">
+            Read this documentation
+          </h4>
+
+          <p class="howto-body">
+            Linear top-to-bottom: Components → Foundations → Patterns → Practice
+            → Reference. Each component block reads as a self-contained unit.
+            Use the left TOC for jumps. The Tweaks panel (bottom-right) flips
+            brand, density and font size live.
+          </p>
+
+          <div class="howto-foot">
+            Open it with the <span class="t-mono">⚙ Tweaks</span> button,
+            bottom-right
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3 class="t-h4 block-title">
+        Quick links
+      </h3>
+
+      <div class="start-links">
+        <a
+          href="#section-button"
+          class="start-link"
+        >
+          <div class="start-link__num">
+            A
+          </div>
+
+          <div class="start-link__body">
+            <div class="start-link__title">
+              Components
+            </div>
+
+            <div class="start-link__desc">
+              Buttons, fields, tables, banners, navigation —
+              {{ componentCount }} in total.
+            </div>
+          </div>
+
+          <div class="start-link__arrow">
+            →
+          </div>
+        </a>
+
+        <a
+          href="#section-color"
+          class="start-link"
+        >
+          <div class="start-link__num">
+            B
+          </div>
+
+          <div class="start-link__body">
+            <div class="start-link__title">
+              Foundations
+            </div>
+
+            <div class="start-link__desc">
+              Colour, type, spacing, radius, surfaces, motion, icons.
+            </div>
+          </div>
+
+          <div class="start-link__arrow">
+            →
+          </div>
+        </a>
+
+        <a
+          href="#section-pattern-page-header"
+          class="start-link"
+        >
+          <div class="start-link__num">
+            C
+          </div>
+
+          <div class="start-link__body">
+            <div class="start-link__title">
+              Patterns
+            </div>
+
+            <div class="start-link__desc">
+              Page headers, filter bars, form layouts, activity.
+            </div>
+          </div>
+
+          <div class="start-link__arrow">
+            →
+          </div>
+        </a>
+
+        <a
+          href="#section-practice-token-discipline"
+          class="start-link"
+        >
+          <div class="start-link__num">
+            D
+          </div>
+
+          <div class="start-link__body">
+            <div class="start-link__title">
+              Practice
+            </div>
+
+            <div class="start-link__desc">
+              Token discipline, do/don't catalogue.
+            </div>
+          </div>
+
+          <div class="start-link__arrow">
+            →
+          </div>
+        </a>
+
+        <a
+          href="#section-tokens-reference"
+          class="start-link"
+        >
+          <div class="start-link__num">
+            E
+          </div>
+
+          <div class="start-link__body">
+            <div class="start-link__title">
+              Reference
+            </div>
+
+            <div class="start-link__desc">
+              Token catalogue — names, values, intended use.
+            </div>
+          </div>
+
+          <div class="start-link__arrow">
+            →
+          </div>
+        </a>
+
+        <div class="start-link start-link--note">
+          <div class="start-link__num">
+            ⌘
+          </div>
+
+          <div class="start-link__body">
+            <div class="start-link__title">
+              Live tweaking
+            </div>
+
+            <div class="start-link__desc">
+              Brand, density and font size sit in the Tweaks panel,
+              bottom-right. Try brand swap — components reflow without code
+              changes.
             </div>
           </div>
         </div>
-      </section>
-    </section>
+      </div>
+    </div>
+  </section>
+</section>

@@ -52,29 +52,43 @@ export class TabsComponent {
 
   protected tabClasses(index: number, disabled: boolean): string {
     const parts = ['tab'];
-    if (index === this.selectedIndex()) {parts.push('active');}
-    if (disabled) {parts.push('disabled');}
+    if (index === this.selectedIndex()) {
+      parts.push('active');
+    }
+    if (disabled) {
+      parts.push('disabled');
+    }
 
     return parts.join(' ');
   }
 
   protected select(index: number, disabled: boolean): void {
-    if (disabled) {return;}
+    if (disabled) {
+      return;
+    }
     this.selectedIndex.set(index);
   }
 
   /** Roving keyboard navigation across the tablist (APG automatic activation). */
   protected onKeydown(event: KeyboardEvent, index: number): void {
     const count = this.tabs().length;
-    if (!count) {return;}
+    if (!count) {
+      return;
+    }
     const forward = event.key === 'ArrowRight' || event.key === 'ArrowDown';
     const backward = event.key === 'ArrowLeft' || event.key === 'ArrowUp';
     let next: number;
-    if (forward) {next = (index + 1) % count;}
-    else if (backward) {next = (index - 1 + count) % count;}
-    else if (event.key === 'Home') {next = 0;}
-    else if (event.key === 'End') {next = count - 1;}
-    else {return;}
+    if (forward) {
+      next = (index + 1) % count;
+    } else if (backward) {
+      next = (index - 1 + count) % count;
+    } else if (event.key === 'Home') {
+      next = 0;
+    } else if (event.key === 'End') {
+      next = count - 1;
+    } else {
+      return;
+    }
     event.preventDefault();
     // Skip disabled tabs in the travel direction.
     const step = backward || event.key === 'End' ? -1 : 1;

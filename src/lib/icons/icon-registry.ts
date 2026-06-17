@@ -14,9 +14,12 @@ import { InjectionToken, Provider } from '@angular/core';
  */
 export type DsIconRegistry = Readonly<Record<string, string>>;
 
-export const DS_ICON_REGISTRY = new InjectionToken<DsIconRegistry>('DS_ICON_REGISTRY', {
-  factory: () => ({}),
-});
+export const DS_ICON_REGISTRY = new InjectionToken<DsIconRegistry>(
+  'DS_ICON_REGISTRY',
+  {
+    factory: () => ({}),
+  },
+);
 
 /** Register additional icons available to `<ds-icon [name]="...">` alongside the built-in DS set.
  *

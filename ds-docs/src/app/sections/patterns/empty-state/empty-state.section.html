@@ -1,87 +1,169 @@
+<docs-section
+  anchor="pattern-empty-state"
+  eyebrow="Patterns"
+  title="Empty-state variants"
+>
+  <docs-truncation [rules]="truncationRules" />
 
-    <docs-section anchor="pattern-empty-state" eyebrow="Patterns" title="Empty-state variants">
-      <docs-truncation [rules]="truncationRules" />
-      <span lede>{{ lede }}</span>
+  <span lede>
+    {{ lede }}
+  </span>
 
-      <div class="blocks">
-        <!-- 1 · No data — default; nothing exists yet; one primary CTA. -->
-        <div class="block">
-          <h3 class="block-title t-h4">No data</h3>
-          <p class="block-desc t-s">
-            The default — section is empty because nothing exists yet.
-          </p>
-          <ds-card padding="none">
-            <ds-empty-state
-              variant="none"
-              title="No asset allocated yet"
-              body="Pick from the asset register to start building this Sub-record.">
-              <ds-button actions variant="primary" size="m">
-                <ds-icon name="plus" [size]="14" /> Allocate resources
-              </ds-button>
-            </ds-empty-state>
-          </ds-card>
-        </div>
+  <div class="blocks">
+    <!-- 1 · No data — default; nothing exists yet; one primary CTA. -->
+    <div class="block">
+      <h3 class="block-title t-h4">
+        No data
+      </h3>
 
-        <!-- 2 · Loading overlay — data exists but is being refetched. -->
-        <div class="block">
-          <h3 class="block-title t-h4">Loading overlay</h3>
-          <p class="block-desc t-s">
-            Data exists but is being refetched. The previous content stays visible behind a
-            dimming layer.
-          </p>
-          <ds-card padding="none">
-            <ds-empty-state
-              variant="loading"
-              title="12 asset lines"
-              body="LED walls · Sub bass stacks · …">
-            </ds-empty-state>
-          </ds-card>
-        </div>
+      <p class="block-desc t-s">
+        The default — section is empty because nothing exists yet.
+      </p>
 
-        <!-- 3 · Error with retry — network/server failure; retry is the only primary action. -->
-        <div class="block">
-          <h3 class="block-title t-h4">Error with retry</h3>
-          <p class="block-desc t-s">
-            Network or server failure. Retry is the only sensible primary action.
-          </p>
-          <ds-card padding="none">
-            <ds-empty-state
-              variant="error"
-              title="Couldn't load resource allocations"
-              body="Network error — the request timed out after 30 seconds.">
-              <ds-button actions variant="primary" size="m">
-                <ds-icon name="rotate" [size]="14" /> Retry
-              </ds-button>
-              <ds-button actions variant="outline" size="m">Report issue</ds-button>
-            </ds-empty-state>
-          </ds-card>
-        </div>
+      <ds-card padding="none">
+        <ds-empty-state
+          variant="none"
+          title="No asset allocated yet"
+          body="Pick from the asset register to start building this Sub-record."
+        >
+          <ds-button
+            actions
+            variant="primary"
+            size="m"
+          >
+            <ds-icon
+              name="plus"
+              [size]="14"
+            />
+            Allocate resources
+          </ds-button>
+        </ds-empty-state>
+      </ds-card>
+    </div>
 
-        <!-- 4 · Permission denied — authenticated but role doesn't grant access. -->
-        <div class="block">
-          <h3 class="block-title t-h4">Permission denied</h3>
-          <p class="block-desc t-s">
-            The user is authenticated but their role doesn't grant access to this resource.
-            Don't suggest "log in again" — give them an escape route.
-          </p>
-          <ds-card padding="none">
-            <ds-empty-state
-              variant="locked"
-              title="You don't have access to this Logistics plan"
-              body="Logistics plans are restricted to Logistics and Producer roles. Ask Alex Park or your team lead.">
-              <ds-button actions variant="outline" size="m">Back to dashboard</ds-button>
-              <ds-button actions variant="outline" size="m">Request access</ds-button>
-            </ds-empty-state>
-          </ds-card>
-        </div>
-      </div>
+    <!-- 2 · Loading overlay — data exists but is being refetched. -->
+    <div class="block">
+      <h3 class="block-title t-h4">
+        Loading overlay
+      </h3>
 
-      <h3 class="block-title t-h4">Usage</h3>
-      <ul class="rules">
-        <li>One primary action per empty state — never more. Pair with a ghost secondary only when retry needs an escape hatch.</li>
-        <li>Concrete subject ("asset"), concrete next step ("pick from the asset register"). Skip generic copy and cheer.</li>
-        <li>Loading overlay reuses the previous content silhouette behind a dim scrim — don't drop to a full skeleton when data was previously visible.</li>
-        <li>Permission denied never suggests "log in again" — the user is already authenticated; give them a real escape route.</li>
-      </ul>
+      <p class="block-desc t-s">
+        Data exists but is being refetched. The previous content stays visible
+        behind a dimming layer.
+      </p>
 
-    </docs-section>
+      <ds-card padding="none">
+        <ds-empty-state
+          variant="loading"
+          title="12 asset lines"
+          body="LED walls · Sub bass stacks · …"
+        >
+        </ds-empty-state>
+      </ds-card>
+    </div>
+
+    <!-- 3 · Error with retry — network/server failure; retry is the only primary action. -->
+    <div class="block">
+      <h3 class="block-title t-h4">
+        Error with retry
+      </h3>
+
+      <p class="block-desc t-s">
+        Network or server failure. Retry is the only sensible primary action.
+      </p>
+
+      <ds-card padding="none">
+        <ds-empty-state
+          variant="error"
+          title="Couldn't load resource allocations"
+          body="Network error — the request timed out after 30 seconds."
+        >
+          <ds-button
+            actions
+            variant="primary"
+            size="m"
+          >
+            <ds-icon
+              name="rotate"
+              [size]="14"
+            />
+            Retry
+          </ds-button>
+
+          <ds-button
+            actions
+            variant="outline"
+            size="m"
+            >
+            Report issue
+          </ds-button
+          >
+        </ds-empty-state>
+      </ds-card>
+    </div>
+
+    <!-- 4 · Permission denied — authenticated but role doesn't grant access. -->
+    <div class="block">
+      <h3 class="block-title t-h4">
+        Permission denied
+      </h3>
+
+      <p class="block-desc t-s">
+        The user is authenticated but their role doesn't grant access to this
+        resource. Don't suggest "log in again" — give them an escape route.
+      </p>
+
+      <ds-card padding="none">
+        <ds-empty-state
+          variant="locked"
+          title="You don't have access to this Logistics plan"
+          body="Logistics plans are restricted to Logistics and Producer roles. Ask Alex Park or your team lead."
+        >
+          <ds-button
+            actions
+            variant="outline"
+            size="m"
+            >
+            Back to dashboard
+          </ds-button
+          >
+
+          <ds-button
+            actions
+            variant="outline"
+            size="m"
+            >
+            Request access
+          </ds-button
+          >
+        </ds-empty-state>
+      </ds-card>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Usage
+  </h3>
+
+  <ul class="rules">
+    <li>
+      One primary action per empty state — never more. Pair with a ghost
+      secondary only when retry needs an escape hatch.
+    </li>
+
+    <li>
+      Concrete subject ("asset"), concrete next step ("pick from the asset
+      register"). Skip generic copy and cheer.
+    </li>
+
+    <li>
+      Loading overlay reuses the previous content silhouette behind a dim scrim
+      — don't drop to a full skeleton when data was previously visible.
+    </li>
+
+    <li>
+      Permission denied never suggests "log in again" — the user is already
+      authenticated; give them a real escape route.
+    </li>
+  </ul>
+</docs-section>

@@ -111,6 +111,6 @@
       color: var(--text-secondary);
     }
 
-    @media (max-width: 720px) {
+    @media (width <= 720px) {
       .rules { grid-template-columns: 1fr; }
     }

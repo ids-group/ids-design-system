@@ -1,49 +1,124 @@
+<docs-section
+  anchor="number-stepper"
+  eyebrow="Components"
+  title="Number stepper"
+>
+  <span lede
+    >
+    Spinbox for small bounded quantities — increment / decrement buttons around
+    a numeric value. Respects <code class="t-mono-inline">min</code> /
+    <code class="t-mono-inline">
+      max
+    </code> /
+    <code class="t-mono-inline">
+      step
+    </code>. Render via
+    <code class="t-mono-inline">
+      &lt;ds-number-stepper [(value)]="qty"&gt;
+    </code
+    >.
+  </span
+  >
 
-    <docs-section anchor="number-stepper" eyebrow="Components" title="Number stepper">
-      <span lede>Spinbox for small bounded quantities — increment / decrement buttons around a numeric value.
-        Respects <code class="t-mono-inline">min</code> / <code class="t-mono-inline">max</code> / <code class="t-mono-inline">step</code>.
-        Render via <code class="t-mono-inline">&lt;ds-number-stepper [(value)]="qty"&gt;</code>.</span>
+  <!-- ============================================================ Sizes -->
+  <h3 class="block-title t-h4">
+    Sizes
+  </h3>
 
-      <!-- ============================================================ Sizes -->
-      <h3 class="block-title t-h4">Sizes</h3>
-      <p class="block-desc t-s">Three sizes aligned with input / select field heights.</p>
-      <div class="row">
-        <div class="cell">
-          <ds-number-stepper size="sm" [(value)]="qtySm" />
-          <code class="t-mono-inline">size="sm"</code>
-        </div>
-        <div class="cell">
-          <ds-number-stepper [(value)]="qtyMd" />
-          <code class="t-mono-inline">size="md" · default</code>
-        </div>
-        <div class="cell">
-          <ds-number-stepper size="lg" [(value)]="qtyLg" />
-          <code class="t-mono-inline">size="lg"</code>
-        </div>
-      </div>
+  <p class="block-desc t-s">
+    Three sizes aligned with input / select field heights.
+  </p>
 
-      <!-- ============================================================ Bounds + step -->
-      <h3 class="block-title t-h4">Bounds & step</h3>
-      <p class="block-desc t-s">
-        <code class="t-mono-inline">[min]</code> / <code class="t-mono-inline">[max]</code> clamp the value; the buttons disable at the bounds. <code class="t-mono-inline">[step]</code> sets the increment.
-      </p>
-      <div class="row">
-        <div class="cell">
-          <ds-number-stepper [(value)]="bounded" [min]="0" [max]="10" />
-          <code class="t-mono-inline">min=0 max=10 · value {{ bounded() }}</code>
-        </div>
-        <div class="cell">
-          <ds-number-stepper [(value)]="stepped" [step]="5" [min]="0" [max]="100" />
-          <code class="t-mono-inline">step=5 · value {{ stepped() }}</code>
-        </div>
-      </div>
+  <div class="row">
+    <div class="cell">
+      <ds-number-stepper
+        size="sm"
+        [(value)]="qtySm"
+      />
 
-      <!-- ============================================================ Disabled -->
-      <h3 class="block-title t-h4">Disabled</h3>
-      <div class="row">
-        <div class="cell">
-          <ds-number-stepper [value]="3" [disabled]="true" />
-          <code class="t-mono-inline">[disabled]="true"</code>
-        </div>
-      </div>
-    </docs-section>
+      <code class="t-mono-inline">
+        size="sm"
+      </code>
+    </div>
+
+    <div class="cell">
+      <ds-number-stepper [(value)]="qtyMd" />
+
+      <code class="t-mono-inline">
+        size="md" · default
+      </code>
+    </div>
+
+    <div class="cell">
+      <ds-number-stepper
+        size="lg"
+        [(value)]="qtyLg"
+      />
+
+      <code class="t-mono-inline">
+        size="lg"
+      </code>
+    </div>
+  </div>
+
+  <!-- ============================================================ Bounds + step -->
+  <h3 class="block-title t-h4">
+    Bounds & step
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [min]
+    </code> /
+    <code class="t-mono-inline">
+      [max]
+    </code> clamp the value; the buttons
+    disable at the bounds. <code class="t-mono-inline">[step]</code> sets the
+    increment.
+  </p>
+
+  <div class="row">
+    <div class="cell">
+      <ds-number-stepper
+        [min]="0"
+        [max]="10"
+        [(value)]="bounded"
+      />
+
+      <code class="t-mono-inline">
+        min=0 max=10 · value {{ bounded() }}
+      </code>
+    </div>
+
+    <div class="cell">
+      <ds-number-stepper
+        [step]="5"
+        [min]="0"
+        [max]="100"
+        [(value)]="stepped"
+      />
+
+      <code class="t-mono-inline">
+        step=5 · value {{ stepped() }}
+      </code>
+    </div>
+  </div>
+
+  <!-- ============================================================ Disabled -->
+  <h3 class="block-title t-h4">
+    Disabled
+  </h3>
+
+  <div class="row">
+    <div class="cell">
+      <ds-number-stepper
+        [value]="3"
+        [disabled]="true"
+      />
+
+      <code class="t-mono-inline">
+        [disabled]="true"
+      </code>
+    </div>
+  </div>
+</docs-section>

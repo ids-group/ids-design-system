@@ -1,49 +1,117 @@
+<docs-section
+  anchor="tooltip"
+  eyebrow="Components"
+  title="Tooltip"
+>
+  <span lede
+    >
+    Small dark popup that appears on hover or focus. Use sparingly — for
+    truncated text, keyboard hints, and short clarifications. Apply via the
+    <code class="t-mono-inline">
+      [dsTooltip]
+    </code> directive.
+  </span
+  >
 
-    <docs-section anchor="tooltip" eyebrow="Components" title="Tooltip">
-      <span lede>Small dark popup that appears on hover or focus. Use sparingly — for truncated text,
-        keyboard hints, and short clarifications. Apply via the
-        <code class="t-mono-inline">[dsTooltip]</code> directive.</span>
+  <h3 class="block-title t-h4">
+    States showcase (static specimens)
+  </h3>
 
-      <h3 class="block-title t-h4">States showcase (static specimens)</h3>
-      <div class="states">
-        <div class="state">
-          <code class="t-mono-inline state__lbl">placement="top"</code>
-          <div class="state__stage">
-            <span class="anchor t-xs">Anchor</span>
-            <ds-tooltip-panel text="Recompute pending — 3 affected" placement="top" />
-          </div>
-        </div>
-        <div class="state">
-          <code class="t-mono-inline state__lbl">placement="bottom"</code>
-          <div class="state__stage">
-            <ds-tooltip-panel text="Last synced 14m ago" placement="bottom" />
-            <span class="anchor t-xs">Anchor</span>
-          </div>
-        </div>
-        <div class="state">
-          <code class="t-mono-inline state__lbl">placement="left"</code>
-          <div class="state__stage state__stage--horiz">
-            <ds-tooltip-panel text="Locked" placement="left" />
-            <span class="anchor t-xs">Anchor</span>
-          </div>
-        </div>
-        <div class="state">
-          <code class="t-mono-inline state__lbl">placement="right"</code>
-          <div class="state__stage state__stage--horiz">
-            <span class="anchor t-xs">Anchor</span>
-            <ds-tooltip-panel text="3 affected" placement="right" />
-          </div>
-        </div>
+  <div class="states">
+    <div class="state">
+      <code class="t-mono-inline state__lbl">
+        placement="top"
+      </code>
+
+      <div class="state__stage">
+        <span class="anchor t-xs">
+          Anchor
+        </span>
+
+        <ds-tooltip-panel
+          text="Recompute pending — 3 affected"
+          placement="top"
+        />
       </div>
+    </div>
 
-      <h3 class="block-title t-h4">Live demo</h3>
-      <p class="block-desc t-s">Hover or tab into the button to trigger the directive.</p>
-      <div class="demo">
-        <ds-button [dsTooltip]="'Recompute pending — 3 affected'" dsTooltipPlacement="top" variant="outline" size="m">
-          Hover me · top
-        </ds-button>
-        <ds-button [dsTooltip]="'Last synced 14m ago'" dsTooltipPlacement="bottom" variant="outline" size="m">
-          Hover me · bottom
-        </ds-button>
+    <div class="state">
+      <code class="t-mono-inline state__lbl">
+        placement="bottom"
+      </code>
+
+      <div class="state__stage">
+        <ds-tooltip-panel
+          text="Last synced 14m ago"
+          placement="bottom"
+        />
+
+        <span class="anchor t-xs">
+          Anchor
+        </span>
       </div>
-    </docs-section>
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state__lbl">
+        placement="left"
+      </code>
+
+      <div class="state__stage state__stage--horiz">
+        <ds-tooltip-panel
+          text="Locked"
+          placement="left"
+        />
+
+        <span class="anchor t-xs">
+          Anchor
+        </span>
+      </div>
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state__lbl">
+        placement="right"
+      </code>
+
+      <div class="state__stage state__stage--horiz">
+        <span class="anchor t-xs">
+          Anchor
+        </span>
+
+        <ds-tooltip-panel
+          text="3 affected"
+          placement="right"
+        />
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Live demo
+  </h3>
+
+  <p class="block-desc t-s">
+    Hover or tab into the button to trigger the directive.
+  </p>
+
+  <div class="demo">
+    <ds-button
+      dsTooltipPlacement="top"
+      variant="outline"
+      size="m"
+      [dsTooltip]="'Recompute pending — 3 affected'"
+    >
+      Hover me · top
+    </ds-button>
+
+    <ds-button
+      dsTooltipPlacement="bottom"
+      variant="outline"
+      size="m"
+      [dsTooltip]="'Last synced 14m ago'"
+    >
+      Hover me · bottom
+    </ds-button>
+  </div>
+</docs-section>

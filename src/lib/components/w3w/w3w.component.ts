@@ -30,7 +30,9 @@ export class W3wComponent {
   }
 
   protected onCopy(): void {
-    if (!this.copyable()) {return;}
+    if (!this.copyable()) {
+      return;
+    }
     const text = `${this.prefix()}${this.address()}`;
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
       void navigator.clipboard.writeText(text);

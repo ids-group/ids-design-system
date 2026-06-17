@@ -98,7 +98,7 @@
       max-width: var(--col-cap-text);
     }
 
-    @media (max-width: 720px) {
+    @media (width <= 720px) {
       .form-section { grid-template-columns: 1fr; gap: var(--space-3); }
       .row--2, .row--3, .row--6-12 { grid-template-columns: 1fr; }
       .inline-edit { grid-template-columns: 1fr; }

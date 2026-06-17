@@ -10,10 +10,9 @@
         [closable]="true"
         [closeLabel]="'Remove ' + selectedOption.label"
         (closed)="remove(selectedOption.value)"
-        >
-        {{ selectedOption.label }}
-      </ds-tag
       >
+        {{ selectedOption.label }}
+      </ds-tag>
     }
   } @else if (displayLabel()) {
     <span class="combo-value">

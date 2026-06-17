@@ -1,15 +1,50 @@
+<docs-section
+  anchor="status-dot"
+  eyebrow="Components"
+  title="Status dots"
+>
+  <docs-truncation [rules]="truncationRules" />
 
-    <docs-section anchor="status-dot" eyebrow="Components" title="Status dots">
-      <docs-truncation [rules]="truncationRules" />
-      <span lede>Tiny coloured atom paired with a label. Same palette as lifecycle badges — use when a full pill is too heavy.</span>
+  <span lede
+    >
+    Tiny coloured atom paired with a label. Same palette as lifecycle badges —
+    use when a full pill is too heavy.
+  </span
+  >
 
-      <h3 class="block-title t-h4">Variants</h3>
-      <div class="row">
-        <span class="status-line"><ds-status-dot status="active" /> Active</span>
-        <span class="status-line"><ds-status-dot status="warning" /> Pending</span>
-        <span class="status-line"><ds-status-dot status="error" /> Conflict</span>
-        <span class="status-line"><ds-status-dot status="planning" /> Planning</span>
-        <span class="status-line"><ds-status-dot status="confirmed" /> Confirmed</span>
-        <span class="status-line"><ds-status-dot status="completed" /> Completed</span>
-      </div>
-    </docs-section>
+  <h3 class="block-title t-h4">
+    Variants
+  </h3>
+
+  <div class="row">
+    <span class="status-line">
+      <ds-status-dot status="active" /> Active
+    </span>
+
+    <span class="status-line">
+      <ds-status-dot status="warning" /> Pending
+    </span>
+
+    <span class="status-line">
+      <ds-status-dot status="error" /> Conflict
+    </span>
+
+    <span class="status-line"
+      >
+      <ds-status-dot status="planning" /> Planning
+    </span
+    >
+
+    <span class="status-line"
+      >
+      <ds-status-dot status="confirmed" /> Confirmed
+    </span
+    >
+
+    <span class="status-line"
+      >
+      <ds-status-dot status="completed" /> Completed
+    </span
+    >
+  </div>
+</docs-section>

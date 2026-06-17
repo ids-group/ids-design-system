@@ -1,69 +1,161 @@
+<docs-section
+  anchor="pattern-filter-bar"
+  eyebrow="Patterns"
+  title="Filter bar"
+>
+  <span lede>
+    {{ lede }}
+  </span>
 
-    <docs-section anchor="pattern-filter-bar" eyebrow="Patterns" title="Filter bar">
-      <span lede>{{ lede }}</span>
+  <h3 class="block-title t-h4">
+    Inline row
+  </h3>
 
-      <h3 class="block-title t-h4">Inline row</h3>
-      <p class="block-desc t-s">
-        Search on the left, dropdown facets, applied-filter tags, and a clear-all link — all
-        sitting on one row above the list. Sits above the list it filters, never below.
-      </p>
-      <div class="stage">
-        <div class="filterbar">
-          <div class="search-slot">
-            <ds-search placeholder="Search events…" />
-          </div>
+  <p class="block-desc t-s">
+    Search on the left, dropdown facets, applied-filter tags, and a clear-all
+    link — all sitting on one row above the list. Sits above the list it
+    filters, never below.
+  </p>
 
-          <ds-select [options]="statusOptions" placeholder="Status" size="sm" />
-          <ds-select [options]="memberOptions" placeholder="Member" size="sm" />
+  <div class="stage">
+    <div class="filterbar">
+      <div class="search-slot">
+        <ds-search placeholder="Search events…" />
+      </div>
 
-          <ds-button variant="outline" size="m">
-            <ds-icon name="filter" [size]="14" /> More filters
-          </ds-button>
+      <ds-select
+        placeholder="Status"
+        size="sm"
+        [options]="statusOptions"
+      />
 
-          <span class="divider"></span>
+      <ds-select
+        placeholder="Member"
+        size="sm"
+        [options]="memberOptions"
+      />
 
-          <span class="t-s applied-label">Applied:</span>
-          <div class="applied">
-            <ds-tag [closable]="true">Status: Confirmed</ds-tag>
-            <ds-tag [closable]="true">Member: Acme Holdings</ds-tag>
-          </div>
+      <ds-button
+        variant="outline"
+        size="m"
+      >
+        <ds-icon
+          name="filter"
+          [size]="14"
+        />
+        More filters
+      </ds-button>
 
-          <ds-button variant="text" size="m">Clear filters</ds-button>
+      <span class="divider"></span>
+
+      <span class="t-s applied-label">
+        Applied:
+      </span>
+
+      <div class="applied">
+        <ds-tag [closable]="true">
+          Status: Confirmed
+        </ds-tag>
+
+        <ds-tag [closable]="true">
+          Member: Acme Holdings
+        </ds-tag>
+      </div>
+
+      <ds-button
+        variant="text"
+        size="m"
+        >
+        Clear filters
+      </ds-button
+      >
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Stacked variant
+  </h3>
+
+  <p class="block-desc t-s">
+    On narrow viewports the bar wraps to two rows: search on top, facets and
+    applied tags below. Same composition, vertical reflow.
+  </p>
+
+  <div class="stage stage--narrow">
+    <div class="filterbar filterbar--stacked">
+      <div class="row row--top">
+        <div class="search-slot search-slot--full">
+          <ds-search placeholder="Search events…" />
         </div>
       </div>
 
-      <h3 class="block-title t-h4">Stacked variant</h3>
-      <p class="block-desc t-s">
-        On narrow viewports the bar wraps to two rows: search on top, facets and applied tags
-        below. Same composition, vertical reflow.
-      </p>
-      <div class="stage stage--narrow">
-        <div class="filterbar filterbar--stacked">
-          <div class="row row--top">
-            <div class="search-slot search-slot--full">
-              <ds-search placeholder="Search events…" />
-            </div>
-          </div>
-          <div class="row row--bottom">
-            <ds-select [options]="statusOptions" placeholder="Status" size="sm" />
-            <ds-select [options]="memberOptions" placeholder="Member" size="sm" />
-            <ds-button variant="outline" size="s">
-              <ds-icon name="filter" [size]="14" /> More
-            </ds-button>
-            <span class="applied applied--stacked">
-              <ds-tag [closable]="true">Confirmed</ds-tag>
-              <ds-tag [closable]="true">Acme Holdings</ds-tag>
-            </span>
-            <ds-button variant="text" size="s">Clear</ds-button>
-          </div>
-        </div>
-      </div>
+      <div class="row row--bottom">
+        <ds-select
+          placeholder="Status"
+          size="sm"
+          [options]="statusOptions"
+        />
 
-      <h3 class="block-title t-h4">Usage</h3>
-      <ul class="rules">
-        <li>Sits above the list it filters, never below — search is read top-down.</li>
-        <li>Don't mix free-text search with non-text facets inside the same input. Expose facets as siblings.</li>
-        <li>Each applied tag is individually removable; the right-side link is the escape hatch for everything at once.</li>
-        <li>On narrow widths, drop facet labels to icons before wrapping a single facet to a second line.</li>
-      </ul>
-    </docs-section>
+        <ds-select
+          placeholder="Member"
+          size="sm"
+          [options]="memberOptions"
+        />
+
+        <ds-button
+          variant="outline"
+          size="s"
+        >
+          <ds-icon
+            name="filter"
+            [size]="14"
+          />
+          More
+        </ds-button>
+
+        <span class="applied applied--stacked">
+          <ds-tag [closable]="true">
+            Confirmed
+          </ds-tag>
+
+          <ds-tag [closable]="true">
+            Acme Holdings
+          </ds-tag>
+        </span>
+
+        <ds-button
+          variant="text"
+          size="s"
+          >
+          Clear
+        </ds-button
+        >
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Usage
+  </h3>
+
+  <ul class="rules">
+    <li>
+      Sits above the list it filters, never below — search is read top-down.
+    </li>
+
+    <li>
+      Don't mix free-text search with non-text facets inside the same input.
+      Expose facets as siblings.
+    </li>
+
+    <li>
+      Each applied tag is individually removable; the right-side link is the
+      escape hatch for everything at once.
+    </li>
+
+    <li>
+      On narrow widths, drop facet labels to icons before wrapping a single
+      facet to a second line.
+    </li>
+  </ul>
+</docs-section>

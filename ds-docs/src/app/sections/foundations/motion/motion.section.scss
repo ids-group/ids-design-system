@@ -37,6 +37,7 @@
       border-radius: var(--radius-pill);
       background: var(--primary);
     }
+
     /* Durations · shared easing, varying duration. Hover plays once.
        Animate 'left' (not translateX) — % inside translate references the
        element's own width (24px), so calc(100% - 24px) was always 0. */
@@ -48,6 +49,7 @@
     .motion-cell:hover .loop-puck--dur {
       left: calc(100% - 24px);
     }
+
     /* Eases · shared duration (long enough to read the curve), varying easing. */
     .loop-puck--ease {
       transition-property: left;

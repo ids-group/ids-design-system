@@ -16,16 +16,24 @@ export class StepperComponent {
 
   protected stepState(i: number): 'completed' | 'current' | 'upcoming' {
     const c = this.current();
-    if (i < c) {return 'completed';}
-    if (i === c) {return 'current';}
+    if (i < c) {
+      return 'completed';
+    }
+    if (i === c) {
+      return 'current';
+    }
 
     return 'upcoming';
   }
 
   protected nodeClass(i: number): string {
     const c = this.current();
-    if (i < c) {return 'node done';}
-    if (i === c) {return 'node active';}
+    if (i < c) {
+      return 'node done';
+    }
+    if (i === c) {
+      return 'node active';
+    }
 
     return 'node';
   }

@@ -48,7 +48,9 @@ export class ToastService {
   }
 
   private ensureRegion(): void {
-    if (this.overlayRef) {return;}
+    if (this.overlayRef) {
+      return;
+    }
     this.overlayRef = this.overlay.create({
       hasBackdrop: false,
       panelClass: 'ds-toast-panel',
@@ -62,12 +64,18 @@ export class ToastService {
   private buildPositionStrategy(): GlobalPositionStrategy {
     const config = this.position ?? DS_TOAST_POSITION_DEFAULT;
     const strategy = this.overlay.position().global();
-    if (config.verticalPosition === 'top') {strategy.top(config.offset);}
-    else {strategy.bottom(config.offset);}
-    if (config.horizontalPosition === 'left') {strategy.left(config.offset);}
-    else if (config.horizontalPosition === 'right')
-      {strategy.right(config.offset);}
-    else {strategy.centerHorizontally();}
+    if (config.verticalPosition === 'top') {
+      strategy.top(config.offset);
+    } else {
+      strategy.bottom(config.offset);
+    }
+    if (config.horizontalPosition === 'left') {
+      strategy.left(config.offset);
+    } else if (config.horizontalPosition === 'right') {
+      strategy.right(config.offset);
+    } else {
+      strategy.centerHorizontally();
+    }
 
     return strategy;
   }

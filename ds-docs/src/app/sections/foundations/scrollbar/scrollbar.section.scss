@@ -94,7 +94,7 @@
       font-size: var(--font-size-s);
     }
 
-    @media (max-width: 720px) {
+    @media (width <= 720px) {
       .demo-grid { grid-template-columns: 1fr; }
       .spec { grid-template-columns: 1fr; }
     }

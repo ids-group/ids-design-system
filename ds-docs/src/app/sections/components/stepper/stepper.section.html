@@ -1,44 +1,103 @@
+<docs-section
+  anchor="stepper"
+  eyebrow="Components"
+  title="Stepper"
+>
+  <span lede
+    >
+    Visual indicator of multi-step progress. Pass an array of step labels and a
+    zero-indexed <code class="t-mono-inline">current</code>. Nodes before
+    current render as done (with check icon); the current node fills with brand;
+    later nodes stay as outlined numerals.
+  </span
+  >
 
-    <docs-section anchor="stepper" eyebrow="Components" title="Stepper">
-      <span lede>Visual indicator of multi-step progress. Pass an array of step labels and a
-        zero-indexed <code class="t-mono-inline">current</code>. Nodes before current render
-        as done (with check icon); the current node fills with brand; later nodes stay
-        as outlined numerals.</span>
+  <h3 class="block-title t-h4">
+    Default
+  </h3>
 
-      <h3 class="block-title t-h4">Default</h3>
-      <div class="demo">
-        <ds-stepper [steps]="brief" [current]="2" />
-      </div>
+  <div class="demo">
+    <ds-stepper
+      [steps]="brief"
+      [current]="2"
+    />
+  </div>
 
-      <h3 class="block-title t-h4">States showcase</h3>
-      <div class="states">
-        <div class="state">
-          <code class="t-mono-inline state__lbl">current = 0 (just started)</code>
-          <ds-stepper [steps]="brief" [current]="0" />
-        </div>
-        <div class="state">
-          <code class="t-mono-inline state__lbl">current = 2 (mid-flow)</code>
-          <ds-stepper [steps]="brief" [current]="2" />
-        </div>
-        <div class="state">
-          <code class="t-mono-inline state__lbl">current = 5 (all done)</code>
-          <ds-stepper [steps]="brief" [current]="5" />
-        </div>
-      </div>
+  <h3 class="block-title t-h4">
+    States showcase
+  </h3>
 
-      <h3 class="block-title t-h4">Single node states</h3>
-      <div class="single-nodes">
-        <div class="single-cell">
-          <ds-stepper [steps]="['Step']" [current]="-1" />
-          <code class="t-mono-inline">.node · pending</code>
-        </div>
-        <div class="single-cell">
-          <ds-stepper [steps]="['Step']" [current]="0" />
-          <code class="t-mono-inline">.node.active</code>
-        </div>
-        <div class="single-cell">
-          <ds-stepper [steps]="['Step']" [current]="1" />
-          <code class="t-mono-inline">.node.done</code>
-        </div>
-      </div>
-    </docs-section>
+  <div class="states">
+    <div class="state">
+      <code class="t-mono-inline state__lbl">
+        current = 0 (just started)
+      </code>
+
+      <ds-stepper
+        [steps]="brief"
+        [current]="0"
+      />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state__lbl">
+        current = 2 (mid-flow)
+      </code>
+
+      <ds-stepper
+        [steps]="brief"
+        [current]="2"
+      />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state__lbl">
+        current = 5 (all done)
+      </code>
+
+      <ds-stepper
+        [steps]="brief"
+        [current]="5"
+      />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Single node states
+  </h3>
+
+  <div class="single-nodes">
+    <div class="single-cell">
+      <ds-stepper
+        [steps]="['Step']"
+        [current]="-1"
+      />
+
+      <code class="t-mono-inline">
+        .node · pending
+      </code>
+    </div>
+
+    <div class="single-cell">
+      <ds-stepper
+        [steps]="['Step']"
+        [current]="0"
+      />
+
+      <code class="t-mono-inline">
+        .node.active
+      </code>
+    </div>
+
+    <div class="single-cell">
+      <ds-stepper
+        [steps]="['Step']"
+        [current]="1"
+      />
+
+      <code class="t-mono-inline">
+        .node.done
+      </code>
+    </div>
+  </div>
+</docs-section>

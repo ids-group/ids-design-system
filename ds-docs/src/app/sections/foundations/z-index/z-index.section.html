@@ -1,17 +1,52 @@
+<docs-section
+  anchor="z-index"
+  eyebrow="Foundations"
+  title="Z-index"
+>
+  <span lede
+    >
+    One stacking contract. Components consume by name, never by raw
+    number.
+  </span
+  >
 
-    <docs-section anchor="z-index" eyebrow="Foundations" title="Z-index">
-      <span lede>One stacking contract. Components consume by name, never by raw number.</span>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>
+          Token
+        </th>
 
-      <table class="tbl">
-        <thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead>
-        <tbody>
-          @for (l of layers; track l.token) {
-            <tr>
-              <td><code class="t-mono-inline">{{ l.token }}</code></td>
-              <td><code class="t-mono-inline">{{ l.value }}</code></td>
-              <td>{{ l.use }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </docs-section>
+        <th>
+          Value
+        </th>
+
+        <th>
+          Use
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (l of layers; track l.token) {
+        <tr>
+          <td>
+            <code class="t-mono-inline">
+              {{ l.token }}
+            </code>
+          </td>
+
+          <td>
+            <code class="t-mono-inline">
+              {{ l.value }}
+            </code>
+          </td>
+
+          <td>
+            {{ l.use }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</docs-section>

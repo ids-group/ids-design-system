@@ -7,6 +7,7 @@
       display: flex;
       justify-content: center;
     }
+
     /* Width is showcase-positioning; surface styling lives in
        <ds-menu>'s scoped CSS (component owns its surface). */
     .stage ds-menu { width: 280px; }

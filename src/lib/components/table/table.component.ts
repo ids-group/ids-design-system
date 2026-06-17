@@ -96,7 +96,9 @@ export class TableComponent<T extends { id: string }> {
 
   protected readonly tableClasses = computed(() => {
     const parts = ['table'];
-    if (this.loading() === 'skeleton') {parts.push('skeleton-mode');}
+    if (this.loading() === 'skeleton') {
+      parts.push('skeleton-mode');
+    }
 
     return parts.join(' ');
   });
@@ -110,7 +112,9 @@ export class TableComponent<T extends { id: string }> {
 
   protected readonly allSelected = computed(() => {
     const data = this.data();
-    if (data.length === 0) {return false;}
+    if (data.length === 0) {
+      return false;
+    }
     const sel = this.selectedIds();
 
     return data.every((row) => sel.has(row.id));
@@ -155,12 +159,16 @@ export class TableComponent<T extends { id: string }> {
   }
 
   protected onRowClick(row: T, event: Event): void {
-    if ((event.target as HTMLElement).closest('input')) {return;}
+    if ((event.target as HTMLElement).closest('input')) {
+      return;
+    }
     this.rowClick.emit(row);
   }
 
   protected onRowKey(row: T, event: Event): void {
-    if (!this.rowInteractive()) {return;}
+    if (!this.rowInteractive()) {
+      return;
+    }
     event.preventDefault();
     this.rowClick.emit(row);
   }
@@ -176,7 +184,9 @@ export class TableComponent<T extends { id: string }> {
   protected ariaSort(
     col: TableColumn<T>,
   ): 'ascending' | 'descending' | 'none' | null {
-    if (!col.sortable) {return null;}
+    if (!col.sortable) {
+      return null;
+    }
     if (this.sortKey() === col.key && this.sortDir()) {
       return this.sortDir() === 'asc' ? 'ascending' : 'descending';
     }
@@ -185,7 +195,9 @@ export class TableComponent<T extends { id: string }> {
   }
 
   protected onSort(col: TableColumn<T>): void {
-    if (!col.sortable) {return;}
+    if (!col.sortable) {
+      return;
+    }
     const currentKey = this.sortKey();
     const currentDir = this.sortDir();
     let dir: SortDir;
@@ -205,7 +217,9 @@ export class TableComponent<T extends { id: string }> {
 
   protected headerClasses(col: TableColumn<T>): string {
     const parts: string[] = [];
-    if (col.sortable) {parts.push('sortable');}
+    if (col.sortable) {
+      parts.push('sortable');
+    }
     if (this.sortKey() === col.key && this.sortDir()) {
       parts.push(`sorted-${this.sortDir()}`);
     }
@@ -214,13 +228,17 @@ export class TableComponent<T extends { id: string }> {
   }
 
   protected sortIcon(col: TableColumn<T>): 'sortAsc' | 'sortDesc' | 'sort' {
-    if (this.sortKey() !== col.key || !this.sortDir()) {return 'sort';}
+    if (this.sortKey() !== col.key || !this.sortDir()) {
+      return 'sort';
+    }
 
     return this.sortDir() === 'asc' ? 'sortAsc' : 'sortDesc';
   }
 
   protected cellValue(row: T, col: TableColumn<T>): string {
-    if (col.cell) {return col.cell(row);}
+    if (col.cell) {
+      return col.cell(row);
+    }
 
     return String((row as Record<string, unknown>)[col.key] ?? '');
   }

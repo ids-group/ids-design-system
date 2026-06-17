@@ -52,16 +52,24 @@ export class BannerComponent {
 
   protected readonly classes = computed(() => {
     const parts = ['banner', this.variant(), `layout-${this.layout()}`];
-    if (this.compact()) {parts.push('compact');}
+    if (this.compact()) {
+      parts.push('compact');
+    }
 
     return parts.join(' ');
   });
 
   protected readonly defaultIcon = computed<IconName>(() => {
     const variant = this.variant();
-    if (variant === 'success') {return 'success';}
-    if (variant === 'warning' || variant === 'severe') {return 'warn';}
-    if (variant === 'error') {return 'error';}
+    if (variant === 'success') {
+      return 'success';
+    }
+    if (variant === 'warning' || variant === 'severe') {
+      return 'warn';
+    }
+    if (variant === 'error') {
+      return 'error';
+    }
 
     return 'info';
   });

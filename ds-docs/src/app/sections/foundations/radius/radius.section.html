@@ -1,82 +1,179 @@
+<docs-section
+  anchor="radius"
+  eyebrow="Foundations"
+  title="Radius"
+>
+  <span lede
+    >
+    Five-stop scale (0 / sm / md / lg / 2xl) plus pill. The xl stop (16px) is
+    reserved for large containers — viewport and scanner frames. Cards, modals,
+    drawers, toasts and empty-state icons all use
+    <code class="t-mono-inline">
+      --radius-lg
+    </code>.
+    <code class="t-mono-inline">
+      --radius-pill
+    </code> is themable via
+    <code class="t-mono-inline">
+      --radius-pill-value
+    </code>.
+  </span
+  >
 
-    <docs-section anchor="radius" eyebrow="Foundations" title="Radius">
-      <span lede>Five-stop scale (0 / sm / md / lg / 2xl) plus pill. The xl stop (16px) is reserved for large containers — viewport and scanner frames. Cards, modals, drawers, toasts and empty-state icons all use <code class="t-mono-inline">--radius-lg</code>. <code class="t-mono-inline">--radius-pill</code> is themable via <code class="t-mono-inline">--radius-pill-value</code>.</span>
+  <!-- ============================================================ Radius scale -->
+  <h3 class="block-title t-h4">
+    Scale
+  </h3>
 
-      <!-- ============================================================ Radius scale -->
-      <h3 class="block-title t-h4">Scale</h3>
-      <p class="block-desc t-s">One tile per stop. Top-left corner is the truthful one — tiles share the same dimensions so adjacent steps stay comparable.</p>
-      <div class="radius-grid">
-        @for (r of radii; track r.name) {
-          <div class="radius-tile" [style.borderRadius]="'var(--radius-' + r.name + ')'">
-            <code class="t-mono-inline token-name">--radius-{{ r.name }}</code>
-            <div class="t-h5 token-px">{{ r.value }}</div>
-            <div class="t-caption token-desc">{{ r.desc }}</div>
-          </div>
-        }
-      </div>
+  <p class="block-desc t-s">
+    One tile per stop. Top-left corner is the truthful one — tiles share the
+    same dimensions so adjacent steps stay comparable.
+  </p>
 
-      <!-- ============================================================ Applied examples -->
-      <h3 class="block-title t-h4">Applied</h3>
-      <p class="block-desc t-s">Each radius on the surface it actually shapes. Real components — no painted tiles.</p>
-      <div class="applied-grid">
-        <!-- r-0 — squared group middle -->
-        <div class="applied-cell">
-          <div class="applied-cell__stage">
-            <div class="demo-group">
-              <button class="demo-group__btn demo-group__btn--start">First</button>
-              <button class="demo-group__btn demo-group__btn--mid">Mid</button>
-              <button class="demo-group__btn demo-group__btn--end">Last</button>
-            </div>
-          </div>
-          <div class="applied-cell__label">--radius-0 · group middle</div>
+  <div class="radius-grid">
+    @for (r of radii; track r.name) {
+      <div
+        class="radius-tile"
+        [style.borderRadius]="'var(--radius-' + r.name + ')'"
+      >
+        <code class="t-mono-inline token-name">
+          --radius-{{ r.name }}
+        </code>
+
+        <div class="t-h5 token-px">
+          {{ r.value }}
         </div>
 
-        <!-- r-sm — kbd badge -->
-        <div class="applied-cell">
-          <div class="applied-cell__stage">
-            <kbd class="demo-kbd">⌘</kbd>
-            <kbd class="demo-kbd">K</kbd>
-          </div>
-          <div class="applied-cell__label">--radius-sm · kbd</div>
-        </div>
-
-        <!-- r-md — button -->
-        <div class="applied-cell">
-          <div class="applied-cell__stage">
-            <button class="demo-btn">Save changes</button>
-          </div>
-          <div class="applied-cell__label">--radius-md · button</div>
-        </div>
-
-        <!-- r-lg — card -->
-        <div class="applied-cell">
-          <div class="applied-cell__stage">
-            <div class="demo-card">
-              <div class="demo-card__head t-s-bold">Capacity</div>
-              <div class="demo-card__value t-h3">84%</div>
-            </div>
-          </div>
-          <div class="applied-cell__label">--radius-lg · card</div>
-        </div>
-
-        <!-- r-2xl — heroic surface -->
-        <div class="applied-cell">
-          <div class="applied-cell__stage">
-            <div class="demo-hero">
-              <div class="t-overline" style="color:var(--text-on-primary); opacity:.7">Q3 summary</div>
-              <div class="t-h4" style="color:var(--text-on-primary)">All systems green</div>
-            </div>
-          </div>
-          <div class="applied-cell__label">--radius-2xl · hero</div>
-        </div>
-
-        <!-- pill — status chip -->
-        <div class="applied-cell">
-          <div class="applied-cell__stage">
-            <span class="demo-pill demo-pill--active">Active</span>
-            <span class="demo-pill demo-pill--planning">Planning</span>
-          </div>
-          <div class="applied-cell__label">--radius-pill · status chip</div>
+        <div class="t-caption token-desc">
+          {{ r.desc }}
         </div>
       </div>
-    </docs-section>
+    }
+  </div>
+
+  <!-- ============================================================ Applied examples -->
+  <h3 class="block-title t-h4">
+    Applied
+  </h3>
+
+  <p class="block-desc t-s">
+    Each radius on the surface it actually shapes. Real components — no painted
+    tiles.
+  </p>
+
+  <div class="applied-grid">
+    <!-- r-0 — squared group middle -->
+    <div class="applied-cell">
+      <div class="applied-cell__stage">
+        <div class="demo-group">
+          <button class="demo-group__btn demo-group__btn--start">
+            First
+          </button>
+
+          <button class="demo-group__btn demo-group__btn--mid">
+            Mid
+          </button>
+
+          <button class="demo-group__btn demo-group__btn--end">
+            Last
+          </button>
+        </div>
+      </div>
+
+      <div class="applied-cell__label">
+        --radius-0 · group middle
+      </div>
+    </div>
+
+    <!-- r-sm — kbd badge -->
+    <div class="applied-cell">
+      <div class="applied-cell__stage">
+        <kbd class="demo-kbd">
+          ⌘
+        </kbd>
+
+        <kbd class="demo-kbd">
+          K
+        </kbd>
+      </div>
+
+      <div class="applied-cell__label">
+        --radius-sm · kbd
+      </div>
+    </div>
+
+    <!-- r-md — button -->
+    <div class="applied-cell">
+      <div class="applied-cell__stage">
+        <button class="demo-btn">
+          Save changes
+        </button>
+      </div>
+
+      <div class="applied-cell__label">
+        --radius-md · button
+      </div>
+    </div>
+
+    <!-- r-lg — card -->
+    <div class="applied-cell">
+      <div class="applied-cell__stage">
+        <div class="demo-card">
+          <div class="demo-card__head t-s-bold">
+            Capacity
+          </div>
+
+          <div class="demo-card__value t-h3">
+            84%
+          </div>
+        </div>
+      </div>
+
+      <div class="applied-cell__label">
+        --radius-lg · card
+      </div>
+    </div>
+
+    <!-- r-2xl — heroic surface -->
+    <div class="applied-cell">
+      <div class="applied-cell__stage">
+        <div class="demo-hero">
+          <div
+            class="t-overline"
+            style="color: var(--text-on-primary); opacity: 0.7"
+          >
+            Q3 summary
+          </div>
+
+          <div
+            class="t-h4"
+            style="color: var(--text-on-primary)"
+          >
+            All systems green
+          </div>
+        </div>
+      </div>
+
+      <div class="applied-cell__label">
+        --radius-2xl · hero
+      </div>
+    </div>
+
+    <!-- pill — status chip -->
+    <div class="applied-cell">
+      <div class="applied-cell__stage">
+        <span class="demo-pill demo-pill--active">
+          Active
+        </span>
+
+        <span class="demo-pill demo-pill--planning">
+          Planning
+        </span>
+      </div>
+
+      <div class="applied-cell__label">
+        --radius-pill · status chip
+      </div>
+    </div>
+  </div>
+</docs-section>

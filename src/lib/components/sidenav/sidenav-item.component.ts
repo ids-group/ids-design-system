@@ -35,8 +35,12 @@ export class SidenavItemComponent {
 
   protected readonly linkClasses = computed(() => {
     const parts = ['item'];
-    if (this.active()) {parts.push('active');}
-    if (this.disabled()) {parts.push('disabled');}
+    if (this.active()) {
+      parts.push('active');
+    }
+    if (this.disabled()) {
+      parts.push('disabled');
+    }
 
     return parts.join(' ');
   });

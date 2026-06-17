@@ -1,26 +1,89 @@
+<docs-section
+  anchor="stat"
+  eyebrow="Components"
+  title="Stats"
+>
+  <docs-truncation [rules]="truncationRules" />
 
-    <docs-section anchor="stat" eyebrow="Components" title="Stats">
-      <docs-truncation [rules]="truncationRules" />
-      <span lede>Headline metric with an optional delta. Up/down arrows for movement vs a baseline.</span>
+  <span lede
+    >
+    Headline metric with an optional delta. Up/down arrows for movement vs a
+    baseline.
+  </span
+  >
 
-      <!-- ============================================================ Stat tiles -->
-      <h3 class="block-title t-h4">Stat tiles</h3>
-      <p class="block-desc t-s">Label · value · optional delta with directional arrow.</p>
-      <div class="grid-4">
-        <ds-stat label="Records this cycle" value="147" [delta]="12" deltaLabel="vs 2025" />
-        <ds-stat label="Capacity used" value="12.9 m" caption="of 13.45 m available" />
-        <ds-stat label="Resource conflicts" value="3" variant="danger" [delta]="-5" deltaLabel="vs last week" />
-        <ds-stat label="Pending recomputes" value="12" caption="Last sync 4m ago" />
-      </div>
+  <!-- ============================================================ Stat tiles -->
+  <h3 class="block-title t-h4">
+    Stat tiles
+  </h3>
 
-      <!-- ============================================================ Sizes -->
-      <h3 class="block-title t-h4">Sizes</h3>
-      <p class="block-desc t-s">
-        <code class="t-mono-inline">[size]</code> scales the value typography for dense dashboards (<code class="t-mono-inline">sm</code>) or hero KPIs (<code class="t-mono-inline">lg</code>). Default is <code class="t-mono-inline">md</code>.
-      </p>
-      <div class="grid-4">
-        <ds-stat size="sm" label="Compact" value="147" [delta]="12" />
-        <ds-stat label="Default" value="147" [delta]="12" />
-        <ds-stat size="lg" label="Hero KPI" value="147" [delta]="12" />
-      </div>
-    </docs-section>
+  <p class="block-desc t-s">
+    Label · value · optional delta with directional arrow.
+  </p>
+
+  <div class="grid-4">
+    <ds-stat
+      label="Records this cycle"
+      value="147"
+      deltaLabel="vs 2025"
+      [delta]="12"
+    />
+
+    <ds-stat
+      label="Capacity used"
+      value="12.9 m"
+      caption="of 13.45 m available"
+    />
+
+    <ds-stat
+      label="Resource conflicts"
+      value="3"
+      variant="danger"
+      deltaLabel="vs last week"
+      [delta]="-5"
+    />
+
+    <ds-stat
+      label="Pending recomputes"
+      value="12"
+      caption="Last sync 4m ago"
+    />
+  </div>
+
+  <!-- ============================================================ Sizes -->
+  <h3 class="block-title t-h4">
+    Sizes
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [size]
+    </code> scales the value typography for
+    dense dashboards (<code class="t-mono-inline">sm</code>) or hero KPIs (<code
+      class="t-mono-inline"
+      >lg</code
+    >). Default is <code class="t-mono-inline">md</code>.
+  </p>
+
+  <div class="grid-4">
+    <ds-stat
+      size="sm"
+      label="Compact"
+      value="147"
+      [delta]="12"
+    />
+
+    <ds-stat
+      label="Default"
+      value="147"
+      [delta]="12"
+    />
+
+    <ds-stat
+      size="lg"
+      label="Hero KPI"
+      value="147"
+      [delta]="12"
+    />
+  </div>
+</docs-section>

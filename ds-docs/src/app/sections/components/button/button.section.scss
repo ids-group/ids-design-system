@@ -54,6 +54,7 @@
     :host ::ng-deep .pin-hover .button  { background-color: var(--_button-bg-color-hover); }
     :host ::ng-deep .pin-active .button { background-color: var(--_button-bg-color-active); box-shadow: var(--_button-pressed-shadow); }
     :host ::ng-deep .pin-focus .button  { outline: none; box-shadow: var(--_button-focus-shadow); z-index: var(--btn-focus-z); }
+
     /* text variant: hover recolors instead of filling; focus keeps no fill */
     :host ::ng-deep .pin-hover .button.text { background: transparent; color: var(--primary-pressed); }
     :host ::ng-deep .pin-focus .button.text { background: transparent; }

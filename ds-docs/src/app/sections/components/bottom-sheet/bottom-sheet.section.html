@@ -1,26 +1,57 @@
+<docs-section
+  anchor="bottom-sheet"
+  eyebrow="Components"
+  title="Bottom sheet"
+>
+  <span lede>
+    Mobile-first panel anchored to the bottom edge — the touch equivalent of a
+    drawer / modal. Drag the grab strip down or tap the scrim to dismiss;
+    <kbd>
+      Esc
+    </kbd> also closes. Body scroll locks while open. On wider viewports
+    it caps its width and centres.
+  </span>
 
-    <docs-section anchor="bottom-sheet" eyebrow="Components" title="Bottom sheet">
-      <span lede>
-        Mobile-first panel anchored to the bottom edge — the touch equivalent of a drawer / modal.
-        Drag the grab strip down or tap the scrim to dismiss; <kbd>Esc</kbd> also closes. Body scroll
-        locks while open. On wider viewports it caps its width and centres.
-      </span>
+  <!-- ============================================================ Live demo -->
+  <h3 class="block-title t-h4">
+    Live demo
+  </h3>
 
-      <!-- ============================================================ Live demo -->
-      <h3 class="block-title t-h4">Live demo</h3>
-      <p class="block-desc t-s">
-        Two-way <code class="t-mono-inline">[(open)]</code> drives visibility; the <code class="t-mono-inline">[actions]</code> slot holds footer buttons.
+  <p class="block-desc t-s">
+    Two-way <code class="t-mono-inline">[(open)]</code> drives visibility; the
+    <code class="t-mono-inline">
+      [actions]
+    </code> slot holds footer buttons.
+  </p>
+
+  <div class="demo">
+    <ds-button (pressed)="open.set(true)">
+      Open bottom sheet
+    </ds-button>
+
+    <ds-bottom-sheet
+      title="Edit registration"
+      [(open)]="open"
+      (closed)="open.set(false)"
+    >
+      <p class="t-s sheet-body">
+        Update the vehicle registration. Changes apply to the current event
+        only.
       </p>
-      <div class="demo">
-        <ds-button (pressed)="open.set(true)">Open bottom sheet</ds-button>
-        <ds-bottom-sheet [(open)]="open" title="Edit registration" (closed)="open.set(false)">
-          <p class="t-s sheet-body">
-            Update the vehicle registration. Changes apply to the current event only.
-          </p>
-          <div actions>
-            <ds-button variant="outline" (pressed)="open.set(false)">Cancel</ds-button>
-            <ds-button (pressed)="open.set(false)">Save</ds-button>
-          </div>
-        </ds-bottom-sheet>
+
+      <div actions>
+        <ds-button
+          variant="outline"
+          (pressed)="open.set(false)"
+          >
+          Cancel
+        </ds-button
+        >
+
+        <ds-button (pressed)="open.set(false)">
+          Save
+        </ds-button>
       </div>
-    </docs-section>
+    </ds-bottom-sheet>
+  </div>
+</docs-section>

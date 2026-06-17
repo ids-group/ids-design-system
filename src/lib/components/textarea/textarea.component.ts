@@ -48,11 +48,21 @@ export class TextareaComponent {
 
   protected readonly wrapperClasses = computed(() => {
     const parts = ['field'];
-    if (this.size() === 'sm') {parts.push('sm');}
-    if (this.size() === 'lg') {parts.push('lg');}
-    if (this.invalid()) {parts.push('error');}
-    if (this.disabled()) {parts.push('disabled');}
-    if (this.autosize()) {parts.push('autosize');}
+    if (this.size() === 'sm') {
+      parts.push('sm');
+    }
+    if (this.size() === 'lg') {
+      parts.push('lg');
+    }
+    if (this.invalid()) {
+      parts.push('error');
+    }
+    if (this.disabled()) {
+      parts.push('disabled');
+    }
+    if (this.autosize()) {
+      parts.push('autosize');
+    }
 
     return parts.join(' ');
   });

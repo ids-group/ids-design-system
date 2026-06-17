@@ -27,11 +27,19 @@ export class StatComponent {
 
   protected readonly deltaClasses = computed(() => {
     const delta = this.delta();
-    if (delta === null) {return '';}
+    if (delta === null) {
+      return '';
+    }
     const tone = this.deltaTone();
-    if (tone) {return `delta ${tone}`;}
-    if (delta > 0) {return 'delta up';}
-    if (delta < 0) {return 'delta down';}
+    if (tone) {
+      return `delta ${tone}`;
+    }
+    if (delta > 0) {
+      return 'delta up';
+    }
+    if (delta < 0) {
+      return 'delta down';
+    }
 
     return 'delta';
   });
@@ -39,7 +47,9 @@ export class StatComponent {
   protected readonly deltaIcon = computed<'arrowUp' | 'arrowDown' | null>(
     () => {
       const delta = this.delta();
-      if (delta === null || delta === 0) {return null;}
+      if (delta === null || delta === 0) {
+        return null;
+      }
 
       return delta > 0 ? 'arrowUp' : 'arrowDown';
     },
@@ -47,7 +57,9 @@ export class StatComponent {
 
   protected readonly deltaText = computed(() => {
     const delta = this.delta();
-    if (delta === null) {return '';}
+    if (delta === null) {
+      return '';
+    }
     const magnitude = Math.abs(delta);
     const suffix = this.deltaLabel() ? ` ${this.deltaLabel()}` : '';
 
