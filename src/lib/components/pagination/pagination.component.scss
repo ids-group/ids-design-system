@@ -1,8 +1,4 @@
 :host {
-  display: inline-flex;
-}
-
-.pagination {
   /* Public --ds-pagination-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_pagination-btn-bg-color:       var(--ds-pagination-btn-bg-color,       var(--surface-default));
   --_pagination-btn-bg-color-hover: var(--ds-pagination-btn-bg-color-hover, var(--surface-secondary));
@@ -14,6 +10,10 @@
   --_pagination-active-fg:    var(--ds-pagination-active-fg,    var(--primary-on));
   --_pagination-radius:       var(--ds-pagination-radius,       var(--radius-md));
 
+  display: inline-flex;
+}
+
+.pagination {
   display: inline-flex;
   gap: var(--space-1);
   align-items: center;

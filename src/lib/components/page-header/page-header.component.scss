@@ -6,14 +6,6 @@
    duplicate — not sourced from here.
    ============================================================ */
 :host {
-  display: block;
-}
-
-:host(.eyebrow-secondary) {
-  --_pagehdr-eyebrow-fg: var(--ds-pagehdr-eyebrow-fg, var(--secondary-strong));
-}
-
-.page-header {
   /* Public --ds-pagehdr-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_pagehdr-eyebrow-fg:   var(--ds-pagehdr-eyebrow-fg,   var(--text-tertiary));
   --_pagehdr-title-fg:     var(--ds-pagehdr-title-fg,     var(--text-primary));
@@ -24,6 +16,14 @@
   --_pagehdr-title-fs:     var(--ds-pagehdr-title-fs,     var(--font-size-h3));
   --_pagehdr-title-gap:    var(--ds-pagehdr-title-gap,    var(--space-1-5));
 
+  display: block;
+}
+
+:host(.eyebrow-secondary) {
+  --_pagehdr-eyebrow-fg: var(--ds-pagehdr-eyebrow-fg, var(--secondary-strong));
+}
+
+.page-header {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);

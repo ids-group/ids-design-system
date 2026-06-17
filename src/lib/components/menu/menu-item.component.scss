@@ -1,9 +1,11 @@
-:host { display: block; }
-
-.menu-item {
+:host {
   /* Public --ds-menu-item-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_menu-item-fg: var(--ds-menu-item-fg, var(--text-primary));
 
+  display: block;
+}
+
+.menu-item {
   display: flex;
   align-items: center;
   gap: var(--space-2-5);

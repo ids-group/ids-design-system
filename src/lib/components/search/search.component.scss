@@ -4,10 +4,6 @@
 // so styling targets are explicit and decoupled from raw tag selectors.
 
 :host {
-  display: block;
-}
-
-.search {
   /* Public --ds-search-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_search-height:       var(--ds-search-height,       var(--search-h));
   --_search-bg-color:           var(--ds-search-bg-color,           var(--surface-default));
@@ -20,6 +16,10 @@
   --_search-fg:           var(--ds-search-fg,           var(--text-primary));
   --_search-placeholder:  var(--ds-search-placeholder,  var(--text-tertiary));
 
+  display: block;
+}
+
+.search {
   display: flex;
   align-items: center;
   gap: var(--space-2);

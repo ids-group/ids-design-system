@@ -6,10 +6,6 @@
    ============================================================ */
 
 :host {
-  display: block;
-}
-
-.tabs {
   /* Public --ds-tab*-/-tabs-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_tabs-divider:          var(--ds-tabs-divider,          var(--border-divider));
   --_tab-pad-x:             var(--ds-tab-pad-x,             var(--space-4));
@@ -26,6 +22,10 @@
   --_tab-pill-fg-active:    var(--ds-tab-pill-fg-active,    var(--primary-strong));
   --_tab-pill-radius:       var(--ds-tab-pill-radius,       var(--radius-md));
 
+  display: block;
+}
+
+.tabs {
   display: flex;
   gap: var(--space-2);
   border-bottom: var(--border-width-default) solid var(--_tabs-divider);

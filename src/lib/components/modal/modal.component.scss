@@ -1,8 +1,4 @@
 :host {
-  display: contents;
-}
-
-.modal {
   /* Public --ds-modal-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_modal-bg-color:              var(--ds-modal-bg-color,              var(--surface-overlay));
   --_modal-radius:          var(--ds-modal-radius,          var(--radius-lg));
@@ -13,6 +9,10 @@
   --_modal-close-fg:        var(--ds-modal-close-fg,        var(--icon-default));
   --_modal-close-fg-hover:  var(--ds-modal-close-fg-hover,  var(--icon-strong));
 
+  display: contents;
+}
+
+.modal {
   background-color: var(--_modal-bg-color);
   border-radius: var(--_modal-radius);
   box-shadow: var(--_modal-shadow);

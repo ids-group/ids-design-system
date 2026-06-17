@@ -1,14 +1,14 @@
 :host {
-  display: block;
-}
-
-.topbar {
   /* Public --ds-topbar-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_topbar-height:   var(--ds-topbar-height,   var(--topbar-h));
   --_topbar-bg-color:       var(--ds-topbar-bg-color,       var(--surface-default));
   --_topbar-border:   var(--ds-topbar-border,   var(--border-divider));
   --_topbar-title-fg: var(--ds-topbar-title-fg, var(--text-primary));
 
+  display: block;
+}
+
+.topbar {
   display: flex;
   align-items: center;
   gap: var(--space-4);

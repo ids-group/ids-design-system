@@ -1,16 +1,16 @@
 :host {
-  display: inline-flex;
-  min-width: 0;
-  max-width: 100%;
-}
-
-.breadcrumbs {
   /* Public --ds-breadcrumbs-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_breadcrumbs-fg:           var(--ds-breadcrumbs-fg,           var(--text-tertiary));
   --_breadcrumbs-fg-hover:     var(--ds-breadcrumbs-fg-hover,     var(--primary));
   --_breadcrumbs-separator-fg: var(--ds-breadcrumbs-separator-fg, var(--icon-muted));
   --_breadcrumbs-current-fg:   var(--ds-breadcrumbs-current-fg,   var(--text-primary));
 
+  display: inline-flex;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.breadcrumbs {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);

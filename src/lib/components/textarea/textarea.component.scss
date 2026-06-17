@@ -7,10 +7,6 @@
    stretched .control box (height: auto) so it grows with rows.
    ============================================================ */
 :host {
-  display: block;
-}
-
-.field {
   /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_input-bg-color:             var(--ds-input-bg-color,             var(--surface-default));
   --_input-border:         var(--ds-input-border,         var(--border-default));
@@ -27,6 +23,10 @@
   --_input-border-error:   var(--ds-input-border-error,   var(--error));
   --_input-border-success: var(--ds-input-border-success, var(--success));
 
+  display: block;
+}
+
+.field {
   display: flex;
   flex-direction: column;
   gap: var(--space-1-5);

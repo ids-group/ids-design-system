@@ -1,8 +1,4 @@
 :host {
-  display: block;
-}
-
-.empty-state {
   /* Public --ds-empty-state-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_es-tile-bg-color:   var(--ds-empty-state-tile-bg-color,  var(--surface-tint));
   --_es-tile-fg:   var(--ds-empty-state-tile-fg,  var(--text-secondary));
@@ -11,6 +7,10 @@
   --_es-body-maxw: var(--ds-empty-state-body-maxw, var(--empty-body-maxw));
   --_es-pad:       var(--ds-empty-state-pad,       var(--space-12) var(--space-6));
 
+  display: block;
+}
+
+.empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
