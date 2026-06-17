@@ -29,7 +29,8 @@ export class SearchComponent {
   readonly ariaLabel = input<string>('');
   readonly submitted = output<string>();
 
-  private readonly inputEl = viewChild<ElementRef<HTMLInputElement>>('searchInput');
+  private readonly inputEl =
+    viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
   protected onSubmit(): void {
     this.submitted.emit(this.value());
