@@ -11,6 +11,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - Added `.t-mono-inline` typography utility — an inline code chip (mono font on a
   subtle surface with padding/radius), completing the mono family alongside
   `.t-mono` (font only) and `.t-mono-block` (block).
+- Removed the repository link from the npm package: dropped the `repository` field
+  from `package.json` and moved the maintainer Development/Releasing docs out of the
+  published README into a repo-only `CONTRIBUTING.md`. The README License entry is
+  now plain text (no repo link), fixing the npm 404.
 
 ## 0.2.1 — 2026-06-16
 
