@@ -1,5 +1,8 @@
 @if (imageUrl()) {
-  <img [src]="imageUrl()" alt="" />
+  <img
+    alt=""
+    [src]="imageUrl()"
+  />
 } @else {
   {{ initials() }}
 }
