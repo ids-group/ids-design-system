@@ -4,7 +4,7 @@ import type { StatusValue } from './status-dot.types';
 @Component({
   selector: 'ds-status-dot',
   standalone: true,
-  template: `<span [class]="classes()" aria-hidden="true"></span>`,
+  template: `<span aria-hidden="true" [class]="classes()"></span>`,
   styleUrl: './status-dot.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   host: {
