@@ -30,6 +30,10 @@ import { Component, ViewEncapsulation, input } from '@angular/core';
     .lede { color: var(--text-secondary); margin-top: var(--space-2); max-width: var(--col-cap-text); }
     /* Body scaffolding (projected content) — shared block heading/description. */
     :host ::ng-deep .block-title { margin-top: var(--space-8); }
+    /* Heading paired with an inline marker (docs-await) — keep the "i" on the
+       title line instead of wrapping below. Margin moves to the wrapper. */
+    :host ::ng-deep .block-head { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-8); }
+    :host ::ng-deep .block-head .block-title { margin-top: 0; }
     :host ::ng-deep .block-desc { color: var(--text-secondary); margin-top: var(--space-1); max-width: var(--col-cap-text); }
   `],
 })
