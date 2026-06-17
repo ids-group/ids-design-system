@@ -17,7 +17,7 @@
   --_sidenav-width:           var(--ds-sidenav-width,           var(--sidenav-w));
   --_sidenav-width-collapsed: var(--ds-sidenav-width-collapsed, var(--sidenav-w-collapsed));
   --_sidenav-mark-bg-color:         var(--ds-sidenav-mark-bg-color,         var(--primary));
-  --_sidenav-mark-fg:         var(--ds-sidenav-mark-fg,         var(--primary-on));
+  --_sidenav-mark-label-color:         var(--ds-sidenav-mark-label-color,         var(--primary-on));
 
   display: flex;
   flex-direction: column;
@@ -43,7 +43,7 @@
   background-color: var(--_sidenav-mark-bg-color);
   display: grid;
   place-items: center;
-  color: var(--_sidenav-mark-fg);
+  color: var(--_sidenav-mark-label-color);
   font-size: var(--font-size-s);
   flex-shrink: 0;
 }

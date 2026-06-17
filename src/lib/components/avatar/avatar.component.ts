@@ -13,7 +13,7 @@ import type { AvatarSize } from './avatar.types';
     '[class.lg]': "size() === 'lg'",
     '[class.neutral]': "tint() === 'neutral'",
     '[style.--ds-avatar-bg-color]': 'tintStyle().bg',
-    '[style.--ds-avatar-fg]': 'tintStyle().fg',
+    '[style.--ds-avatar-label-color]': 'tintStyle().fg',
     '[attr.role]': "ariaLabel() ? 'img' : null",
     '[attr.aria-label]': 'ariaLabel()',
     '[attr.aria-hidden]': 'ariaLabel() ? null : true',

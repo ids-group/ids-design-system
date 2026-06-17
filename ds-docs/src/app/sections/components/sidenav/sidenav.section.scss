@@ -46,5 +46,5 @@
 
     /* State pins — force a visual state on live ds-sidenav-item by reading
        the component's own resolvers; --focus-ring is a bare token (no --_* resolver). */
-    :host ::ng-deep .pin-hover .item { background-color: var(--_sidenav-item-bg-color-hover); color: var(--_sidenav-item-fg-hover); }
+    :host ::ng-deep .pin-hover .item { background-color: var(--_sidenav-item-bg-color-hover); color: var(--_sidenav-item-label-color-hover); }
     :host ::ng-deep .pin-focus .item { outline: none; box-shadow: var(--focus-ring); }

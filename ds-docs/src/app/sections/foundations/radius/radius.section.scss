@@ -119,9 +119,9 @@
     }
     .demo-pill--active {
       background-color: var(--status-active-bg-color);
-      color: var(--status-active-fg);
+      color: var(--status-active-text-color);
     }
     .demo-pill--planning {
       background-color: var(--status-planning-bg-color);
-      color: var(--status-planning-fg);
+      color: var(--status-planning-text-color);
     }

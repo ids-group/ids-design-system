@@ -42,8 +42,8 @@
   --_dropzone-border:        var(--ds-dropzone-border,        var(--border-default));
   --_dropzone-border-hover:  var(--ds-dropzone-border-hover,  var(--primary));
   --_dropzone-border-active: var(--ds-dropzone-border-active, var(--primary));
-  --_dropzone-fg:            var(--ds-dropzone-fg,            var(--text-secondary));
-  --_dropzone-fg-active:     var(--ds-dropzone-fg-active,     var(--primary-strong));
+  --_dropzone-text-color:            var(--ds-dropzone-text-color,            var(--text-secondary));
+  --_dropzone-text-color-active:     var(--ds-dropzone-text-color-active,     var(--primary-strong));
   --_dropzone-radius:        var(--ds-dropzone-radius,        var(--radius-lg));
   --_dropzone-file-progress: var(--ds-dropzone-file-progress, var(--primary));
   --_dropzone-file-success:  var(--ds-dropzone-file-success,  var(--success));
@@ -61,7 +61,7 @@
   background-color: var(--_dropzone-bg-color);
   cursor: pointer;
   min-height: 160px;
-  color: var(--_dropzone-fg);
+  color: var(--_dropzone-text-color);
   transition:
     border-color var(--duration-fast) var(--ease-standard),
     background var(--duration-fast) var(--ease-standard);
@@ -69,12 +69,12 @@
   &:hover:not(.disabled):not([disabled]) {
     border-color: var(--_dropzone-border-hover);
     background-color: var(--_dropzone-bg-color-hover);
-    color: var(--_dropzone-fg-active);
+    color: var(--_dropzone-text-color-active);
   }
   &.active {
     border-color: var(--_dropzone-border-active);
     background-color: var(--_dropzone-bg-color-active);
-    color: var(--_dropzone-fg-active);
+    color: var(--_dropzone-text-color-active);
   }
   &.has-files {
     align-items: stretch;

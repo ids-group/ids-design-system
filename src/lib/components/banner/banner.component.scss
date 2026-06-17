@@ -6,22 +6,22 @@
   /* Public --ds-banner-* are read with fallbacks, never declared — consumer
      overrides inherit in. One-shot tokens are read inline at the usage site. */
   --_banner-bg-color:        var(--ds-banner-bg-color,        var(--info-subtitle));
-  --_banner-fg:        var(--ds-banner-fg,        var(--info-text));
+  --_banner-text-color:        var(--ds-banner-text-color,        var(--info-text));
   --_banner-bar:       var(--ds-banner-bar,       var(--info));
   --_banner-pad-y:     var(--ds-banner-pad-y,     var(--space-3));
   --_banner-pad-x:     var(--ds-banner-pad-x,     var(--space-4));
   --_banner-radius:    var(--ds-banner-radius,    var(--radius-md));
   --_banner-bar-width: var(--ds-banner-bar-width, var(--banner-bar-w));
-  --_banner-title-fg:  var(--ds-banner-title-fg,  var(--text-primary));
-  --_banner-close-fg:  var(--ds-banner-close-fg,  var(--icon-default));
-  --_banner-close-fg-hover: var(--ds-banner-close-fg-hover, var(--icon-strong));
+  --_banner-title-text-color:  var(--ds-banner-title-text-color,  var(--text-primary));
+  --_banner-close-icon-color:  var(--ds-banner-close-icon-color,  var(--icon-default));
+  --_banner-close-icon-color-hover: var(--ds-banner-close-icon-color-hover, var(--icon-strong));
 
   display: flex;
   gap: var(--space-3);
   padding: var(--_banner-pad-y) var(--_banner-pad-x);
   border-radius: var(--_banner-radius);
   background-color: var(--_banner-bg-color);
-  color: var(--_banner-fg);
+  color: var(--_banner-text-color);
 
   :host(:not(.no-rail)) & {
     border-left: var(--_banner-bar-width) solid var(--_banner-bar);
@@ -30,27 +30,27 @@
   &.success {
     --_banner-bar: var(--ds-banner-bar, var(--success));
     --_banner-bg-color:  var(--ds-banner-bg-color,  var(--success-subtitle));
-    --_banner-fg:  var(--ds-banner-fg,  var(--success-text));
+    --_banner-text-color:  var(--ds-banner-text-color,  var(--success-text));
   }
   &.warning {
     --_banner-bar: var(--ds-banner-bar, var(--warning));
     --_banner-bg-color:  var(--ds-banner-bg-color,  var(--warning-subtitle));
-    --_banner-fg:  var(--ds-banner-fg,  var(--warning-text));
+    --_banner-text-color:  var(--ds-banner-text-color,  var(--warning-text));
   }
   &.severe {
     --_banner-bar: var(--ds-banner-bar, var(--warning-hover));
     --_banner-bg-color:  var(--ds-banner-bg-color,  var(--warning-muted));
-    --_banner-fg:  var(--ds-banner-fg,  var(--warning-text));
+    --_banner-text-color:  var(--ds-banner-text-color,  var(--warning-text));
   }
   &.error {
     --_banner-bar: var(--ds-banner-bar, var(--error));
     --_banner-bg-color:  var(--ds-banner-bg-color,  var(--error-subtitle));
-    --_banner-fg:  var(--ds-banner-fg,  var(--error-text));
+    --_banner-text-color:  var(--ds-banner-text-color,  var(--error-text));
   }
   &.neutral {
     --_banner-bar: var(--ds-banner-bar, var(--border-strong));
     --_banner-bg-color:  var(--ds-banner-bg-color,  var(--surface-secondary));
-    --_banner-fg:  var(--ds-banner-fg,  var(--text-secondary));
+    --_banner-text-color:  var(--ds-banner-text-color,  var(--text-secondary));
   }
 
   .icon {
@@ -66,7 +66,7 @@
 
   .title {
     font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-    color: var(--_banner-title-fg);
+    color: var(--_banner-title-text-color);
     margin: 0 0 var(--space-1);
   }
 
@@ -74,9 +74,9 @@
     background: none;
     border: 0;
     cursor: pointer;
-    color: var(--_banner-close-fg);
+    color: var(--_banner-close-icon-color);
 
-    &:hover { color: var(--_banner-close-fg-hover); }
+    &:hover { color: var(--_banner-close-icon-color-hover); }
   }
 
   .actions {

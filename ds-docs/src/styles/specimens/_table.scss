@@ -24,9 +24,9 @@
   --_table-row-hover-bg-color:    var(--ds-table-row-hover-bg-color,    var(--surface-secondary));
   --_table-row-selected-bg-color: var(--ds-table-row-selected-bg-color, var(--primary-subtitle));
   --_table-head-bg-color:         var(--ds-table-head-bg-color,         var(--surface-secondary));
-  --_table-head-fg:         var(--ds-table-head-fg,         var(--text-tertiary));
+  --_table-head-text-color:         var(--ds-table-head-text-color,         var(--text-tertiary));
   --_table-divider:         var(--ds-table-divider,         var(--border-divider));
-  --_table-sort-active-fg:  var(--ds-table-sort-active-fg,  var(--primary));
+  --_table-sort-active-icon-color:  var(--ds-table-sort-active-icon-color,  var(--primary));
   --_table-cell-pad-x:      var(--ds-table-cell-pad-x,      var(--table-cell-pad-x));
   --_table-cell-pad-y:      var(--ds-table-cell-pad-y,      var(--table-cell-pad-y));
   --_table-radius:          var(--ds-table-radius,          var(--radius-xl));
@@ -43,7 +43,7 @@
     font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
     letter-spacing: var(--letter-spacing-wider);
     text-transform: uppercase;
-    color: var(--_table-head-fg);
+    color: var(--_table-head-text-color);
     background-color: var(--_table-head-bg-color);
     border-bottom: var(--border-width-default) solid var(--_table-divider);
     white-space: nowrap;
@@ -90,7 +90,7 @@
     }
 
     &.sorted-asc .sort-icon,
-    &.sorted-desc .sort-icon { opacity: 1; color: var(--_table-sort-active-fg); }
+    &.sorted-desc .sort-icon { opacity: 1; color: var(--_table-sort-active-icon-color); }
 
     &.numeric { text-align: right; }
     &.select-col { width: var(--space-10); }
@@ -157,7 +157,7 @@
   }
   ds-button {
     --ds-button-bg-color: transparent;
-    --ds-button-fg: var(--neutral-0);
+    --ds-button-label-color: var(--neutral-0);
     --ds-button-bg-color-hover: var(--neutral-800);
     --ds-button-bg-color-active: var(--neutral-800);
     --ds-button-border: transparent;

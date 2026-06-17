@@ -71,5 +71,5 @@
        component's own resolvers; --focus-ring is a bare token (no --_* resolver). */
     :host ::ng-deep .pin-hover .pagination-button:not(.active):not([disabled]) {
       background-color: var(--_pagination-btn-bg-color-hover);
-      color: var(--_pagination-btn-fg-hover);
+      color: var(--_pagination-btn-label-color-hover);
     }

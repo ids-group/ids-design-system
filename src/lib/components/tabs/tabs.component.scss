@@ -10,16 +10,16 @@
   --_tabs-divider:          var(--ds-tabs-divider,          var(--border-divider));
   --_tab-pad-x:             var(--ds-tab-pad-x,             var(--space-4));
   --_tab-pad-y:             var(--ds-tab-pad-y,             var(--space-3));
-  --_tab-fg:                var(--ds-tab-fg,                var(--text-secondary));
-  --_tab-fg-hover:          var(--ds-tab-fg-hover,          var(--text-primary));
-  --_tab-fg-active:         var(--ds-tab-fg-active,         var(--primary));
+  --_tab-label-color:                var(--ds-tab-label-color,                var(--text-secondary));
+  --_tab-label-color-hover:          var(--ds-tab-label-color-hover,          var(--text-primary));
+  --_tab-label-color-active:         var(--ds-tab-label-color-active,         var(--primary));
   --_tab-indicator-color:   var(--ds-tab-indicator-color,   var(--primary));
   --_tab-indicator-width:   var(--ds-tab-indicator-width,   var(--border-width-strong));
   --_tabs-pills-bg-color:         var(--ds-tabs-pills-bg-color,         var(--surface-secondary));
   --_tab-pill-bg-color-hover:     var(--ds-tab-pill-bg-color-hover,     var(--primary-subtitle));
   --_tab-pill-bg-color-active:    var(--ds-tab-pill-bg-color-active,    var(--surface-default));
   --_tab-pill-bg-color-active-hover: var(--ds-tab-pill-bg-color-active-hover, var(--primary-subtitle));
-  --_tab-pill-fg-active:    var(--ds-tab-pill-fg-active,    var(--primary-strong));
+  --_tab-pill-label-color-active:    var(--ds-tab-pill-label-color-active,    var(--primary-strong));
   --_tab-pill-radius:       var(--ds-tab-pill-radius,       var(--radius-md));
 
   display: block;
@@ -38,7 +38,7 @@
     border: 0;
     background: transparent;
     font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-    color: var(--_tab-fg);
+    color: var(--_tab-label-color);
     cursor: pointer;
     border-bottom: var(--_tab-indicator-width) solid transparent;
     margin-bottom: calc(-1 * var(--border-width-default));
@@ -47,11 +47,11 @@
       border-color var(--duration-fast) var(--ease-standard);
 
     &:hover {
-      color: var(--_tab-fg-hover);
+      color: var(--_tab-label-color-hover);
     }
 
     &.active {
-      color: var(--_tab-fg-active);
+      color: var(--_tab-label-color-active);
       border-bottom-color: var(--_tab-indicator-color);
     }
 
@@ -89,7 +89,7 @@
      Aliases to brand under the default theme; becomes a true secondary hue
      when --secondary is overridden by a brand. */
   &.secondary .tab.active {
-    --_tab-fg-active: var(--ds-tab-fg-active, var(--secondary-strong));
+    --_tab-label-color-active: var(--ds-tab-label-color-active, var(--secondary-strong));
     --_tab-indicator-color: var(--ds-tab-indicator-color, var(--secondary));
   }
 
@@ -107,17 +107,17 @@
       border-bottom: 0;
       margin-bottom: 0;
       border-radius: var(--_tab-pill-radius);
-      color: var(--_tab-fg);
+      color: var(--_tab-label-color);
 
       /* Inactive hover — subtle brand tint, distinct from active surface */
       &:hover {
         background-color: var(--_tab-pill-bg-color-hover);
-        color: var(--_tab-fg-hover);
+        color: var(--_tab-label-color-hover);
       }
 
       &.active {
         background-color: var(--_tab-pill-bg-color-active);
-        color: var(--_tab-pill-fg-active);
+        color: var(--_tab-pill-label-color-active);
         border-bottom: 0;
         box-shadow: var(--shadow-1);
 

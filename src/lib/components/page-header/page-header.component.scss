@@ -7,11 +7,11 @@
    ============================================================ */
 :host {
   /* Public --ds-pagehdr-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_pagehdr-eyebrow-fg:   var(--ds-pagehdr-eyebrow-fg,   var(--text-tertiary));
-  --_pagehdr-title-fg:     var(--ds-pagehdr-title-fg,     var(--text-primary));
-  --_pagehdr-subtitle-fg:  var(--ds-pagehdr-subtitle-fg,  var(--text-secondary));
-  --_pagehdr-meta-fg:      var(--ds-pagehdr-meta-fg,      var(--text-secondary));
-  --_pagehdr-meta-icon-fg: var(--ds-pagehdr-meta-icon-fg, var(--icon-default));
+  --_pagehdr-eyebrow-text-color:   var(--ds-pagehdr-eyebrow-text-color,   var(--text-tertiary));
+  --_pagehdr-title-text-color:     var(--ds-pagehdr-title-text-color,     var(--text-primary));
+  --_pagehdr-subtitle-text-color:  var(--ds-pagehdr-subtitle-text-color,  var(--text-secondary));
+  --_pagehdr-meta-text-color:      var(--ds-pagehdr-meta-text-color,      var(--text-secondary));
+  --_pagehdr-meta-icon-color: var(--ds-pagehdr-meta-icon-color, var(--icon-default));
   --_pagehdr-divider:      var(--ds-pagehdr-divider,      var(--border-divider));
   --_pagehdr-title-fs:     var(--ds-pagehdr-title-fs,     var(--font-size-h3));
   --_pagehdr-title-gap:    var(--ds-pagehdr-title-gap,    var(--space-1-5));
@@ -20,7 +20,7 @@
 }
 
 :host(.eyebrow-secondary) {
-  --_pagehdr-eyebrow-fg: var(--ds-pagehdr-eyebrow-fg, var(--secondary-strong));
+  --_pagehdr-eyebrow-text-color: var(--ds-pagehdr-eyebrow-text-color, var(--secondary-strong));
 }
 
 .page-header {
@@ -67,12 +67,12 @@
     font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-flat) var(--font-sans);
     letter-spacing: var(--letter-spacing-wide);
     text-transform: uppercase;
-    color: var(--_pagehdr-eyebrow-fg);
+    color: var(--_pagehdr-eyebrow-text-color);
   }
 
   .title {
     font: var(--font-weight-extrabold) var(--_pagehdr-title-fs) / var(--line-height-tight) var(--font-display);
-    color: var(--_pagehdr-title-fg);
+    color: var(--_pagehdr-title-text-color);
     margin: 0;
     letter-spacing: -0.02em;
   }
@@ -118,7 +118,7 @@
 
   .subtitle {
     font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-    color: var(--_pagehdr-subtitle-fg);
+    color: var(--_pagehdr-subtitle-text-color);
     margin: 0;
   }
 
@@ -154,12 +154,12 @@
     align-items: center;
     gap: var(--space-1-5);
     font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
-    color: var(--_pagehdr-meta-fg);
+    color: var(--_pagehdr-meta-text-color);
 
     .icon {
       width: var(--icon-sm);
       height: var(--icon-sm);
-      color: var(--_pagehdr-meta-icon-fg);
+      color: var(--_pagehdr-meta-icon-color);
     }
   }
 

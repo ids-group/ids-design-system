@@ -1,6 +1,6 @@
 :host {
   /* Public --ds-menu-item-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_menu-item-fg: var(--ds-menu-item-fg, var(--text-primary));
+  --_menu-item-label-color: var(--ds-menu-item-label-color, var(--text-primary));
 
   display: block;
 }
@@ -15,7 +15,7 @@
   border: 0;
   border-radius: var(--radius-md);
   font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-  color: var(--_menu-item-fg);
+  color: var(--_menu-item-label-color);
   cursor: pointer;
   text-align: left;
   transition: background var(--duration-fast) var(--ease-standard);

@@ -6,8 +6,8 @@
   --_dropzone-border:           var(--ds-dropzone-border,           var(--border-default));
   --_dropzone-border-hover:     var(--ds-dropzone-border-hover,     var(--primary));
   --_dropzone-border-active:    var(--ds-dropzone-border-active,    var(--primary));
-  --_dropzone-fg:               var(--ds-dropzone-fg,               var(--text-secondary));
-  --_dropzone-fg-active:        var(--ds-dropzone-fg-active,        var(--primary-strong));
+  --_dropzone-text-color:               var(--ds-dropzone-text-color,               var(--text-secondary));
+  --_dropzone-text-color-active:        var(--ds-dropzone-text-color-active,        var(--primary-strong));
   --_dropzone-radius:           var(--ds-dropzone-radius,           var(--radius-lg));
   --_dropzone-file-progress:    var(--ds-dropzone-file-progress,    var(--primary));
   --_dropzone-file-success:     var(--ds-dropzone-file-success,     var(--success));
@@ -90,7 +90,7 @@
 
   .hint {
     font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-    color: var(--_dropzone-fg);
+    color: var(--_dropzone-text-color);
   }
 
   // Consumer-provided secondary hint (e.g. "Max file size: 5GB | CSV | UTF-8").

@@ -21,14 +21,14 @@
   --_button-bg-color:        var(--ds-button-bg-color,        var(--primary));
   --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  color-mix(in srgb, var(--_button-bg-color) 88%, black));
   --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--_button-bg-color) 76%, black));
-  --_button-fg:        var(--ds-button-fg,        var(--primary-on));
+  --_button-label-color:        var(--ds-button-label-color,        var(--primary-on));
   --_button-border:    var(--ds-button-border,    transparent);
   --_button-focus-shadow: var(--ds-button-focus-shadow, var(--focus-ring));
   --_button-pressed-shadow: var(--ds-button-pressed-shadow,
                               0 0 0 3px color-mix(in srgb, var(--_button-bg-color-active) 35%, transparent));
   --_button-radius:    var(--ds-button-radius,    var(--radius-md));
   --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, var(--surface-disabled));
-  --_button-fg-disabled: var(--ds-button-fg-disabled, var(--text-disabled));
+  --_button-label-color-disabled: var(--ds-button-label-color-disabled, var(--text-disabled));
 
   display: inline-flex;
   align-items: center;
@@ -36,7 +36,7 @@
   gap: var(--space-2);
   font: var(--font-weight-extrabold) var(--font-size-m) / var(--line-height-flat) var(--font-sans);
   letter-spacing: var(--letter-spacing-wide);
-  color: var(--_button-fg);
+  color: var(--_button-label-color);
   background-color: var(--_button-bg-color);
   border: var(--border-width-default) solid var(--_button-border);
   border-radius: var(--_button-radius);
@@ -59,7 +59,7 @@
 
   &[disabled] {
     background-color: var(--_button-bg-color-disabled);
-    color: var(--_button-fg-disabled);
+    color: var(--_button-label-color-disabled);
     border-color: transparent;
     cursor: not-allowed;
     pointer-events: none;
@@ -113,19 +113,19 @@
      ones pin ramp picks — a black mix into pastel tints desaturates. */
   &.secondary {
     --_button-bg-color:        var(--ds-button-bg-color,        var(--primary-muted));
-    --_button-fg:        var(--ds-button-fg,        var(--primary-strong));
+    --_button-label-color:        var(--ds-button-label-color,        var(--primary-strong));
     --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--primary-muted-strong));
     --_button-bg-color-active: var(--ds-button-bg-color-active, var(--primary-muted-strong));
   }
   &.tertiary {
     --_button-bg-color:        var(--ds-button-bg-color,        transparent);
-    --_button-fg:        var(--ds-button-fg,        var(--primary-strong));
+    --_button-label-color:        var(--ds-button-label-color,        var(--primary-strong));
     --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--primary-subtitle));
     --_button-bg-color-active: var(--ds-button-bg-color-active, var(--primary-muted));
   }
   &.outline {
     --_button-bg-color:        var(--ds-button-bg-color,        var(--surface-default));
-    --_button-fg:        var(--ds-button-fg,        var(--text-primary));
+    --_button-label-color:        var(--ds-button-label-color,        var(--text-primary));
     --_button-border:    var(--ds-button-border,    var(--border-default));
     --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--surface-secondary));
     --_button-bg-color-active: var(--ds-button-bg-color-active, var(--surface-secondary));
@@ -136,16 +136,16 @@
   }
   &.success {
     --_button-bg-color: var(--ds-button-bg-color, var(--success));
-    --_button-fg: var(--ds-button-fg, var(--text-on-success));
+    --_button-label-color: var(--ds-button-label-color, var(--text-on-success));
   }
   &.warning {
     --_button-bg-color: var(--ds-button-bg-color, var(--warning));
-    --_button-fg: var(--ds-button-fg, var(--text-on-warning));
+    --_button-label-color: var(--ds-button-label-color, var(--text-on-warning));
   }
 
   &.text {
     --_button-bg-color:        var(--ds-button-bg-color,        transparent);
-    --_button-fg:        var(--ds-button-fg,        var(--text-link));
+    --_button-label-color:        var(--ds-button-label-color,        var(--text-link));
     --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  transparent);
     --_button-bg-color-active: var(--ds-button-bg-color-active, transparent);
 
@@ -168,7 +168,7 @@
     &::after {
       content: ""; position: absolute;
       width: var(--spinner-md); height: var(--spinner-md);
-      border: var(--border-width-strong) solid var(--_button-fg);
+      border: var(--border-width-strong) solid var(--_button-label-color);
       border-right-color: transparent;
       border-radius: var(--radius-pill);
       animation: spin var(--duration-loop-fast) linear infinite;

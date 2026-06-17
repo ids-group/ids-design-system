@@ -11,7 +11,7 @@
   /* Public --ds-avatar-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_avatar-size:       var(--ds-avatar-size,       var(--avatar-md));
   --_avatar-bg-color:         var(--ds-avatar-bg-color,         var(--primary-muted));
-  --_avatar-fg:         var(--ds-avatar-fg,         var(--primary-strong));
+  --_avatar-label-color:         var(--ds-avatar-label-color,         var(--primary-strong));
   --_avatar-radius:     var(--ds-avatar-radius,     var(--radius-pill));
   --_avatar-ring-width: var(--ds-avatar-ring-width, var(--avatar-bw-group));
 
@@ -21,7 +21,7 @@
   height: var(--_avatar-size);
   border-radius: var(--_avatar-radius);
   background-color: var(--_avatar-bg-color);
-  color: var(--_avatar-fg);
+  color: var(--_avatar-label-color);
   font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
   letter-spacing: var(--letter-spacing-wide);
   flex-shrink: 0;
@@ -41,5 +41,5 @@ img {
 /* Neutral tint — used by the +N overflow chip in avatar groups. */
 :host(.neutral) {
   --_avatar-bg-color: var(--ds-avatar-bg-color, var(--surface-secondary));
-  --_avatar-fg: var(--ds-avatar-fg, var(--text-secondary));
+  --_avatar-label-color: var(--ds-avatar-label-color, var(--text-secondary));
 }

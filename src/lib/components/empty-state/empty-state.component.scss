@@ -1,9 +1,9 @@
 :host {
   /* Public --ds-empty-state-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_es-tile-bg-color:   var(--ds-empty-state-tile-bg-color,  var(--surface-tint));
-  --_es-tile-fg:   var(--ds-empty-state-tile-fg,  var(--text-secondary));
-  --_es-title-fg:  var(--ds-empty-state-title-fg, var(--text-primary));
-  --_es-body-fg:   var(--ds-empty-state-body-fg,  var(--text-secondary));
+  --_es-tile-icon-color:   var(--ds-empty-state-tile-icon-color,  var(--text-secondary));
+  --_es-title-text-color:  var(--ds-empty-state-title-text-color, var(--text-primary));
+  --_es-body-text-color:   var(--ds-empty-state-body-text-color,  var(--text-secondary));
   --_es-body-maxw: var(--ds-empty-state-body-maxw, var(--empty-body-maxw));
   --_es-pad:       var(--ds-empty-state-pad,       var(--space-12) var(--space-6));
 
@@ -24,19 +24,19 @@
     height: var(--empty-icon-size);
     border-radius: var(--radius-lg);
     background-color: var(--_es-tile-bg-color);
-    color: var(--_es-tile-fg);
+    color: var(--_es-tile-icon-color);
     display: grid;
     place-items: center;
     margin-bottom: var(--space-2);
   }
   .title {
     font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans);
-    color: var(--_es-title-fg);
+    color: var(--_es-title-text-color);
     margin: 0;
   }
   .body {
     font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-    color: var(--_es-body-fg);
+    color: var(--_es-body-text-color);
     max-width: var(--_es-body-maxw);
     margin: 0;
   }
@@ -77,16 +77,16 @@
   }
   &.error {
     --_es-tile-bg-color: var(--ds-empty-state-tile-bg-color, var(--error-subtitle));
-    --_es-tile-fg: var(--ds-empty-state-tile-fg, var(--error-text));
+    --_es-tile-icon-color: var(--ds-empty-state-tile-icon-color, var(--error-text));
   }
 
   &.locked {
     --_es-tile-bg-color: var(--ds-empty-state-tile-bg-color, var(--surface-muted));
-    --_es-tile-fg: var(--ds-empty-state-tile-fg, var(--text-tertiary));
+    --_es-tile-icon-color: var(--ds-empty-state-tile-icon-color, var(--text-tertiary));
   }
 
   &.success {
     --_es-tile-bg-color: var(--ds-empty-state-tile-bg-color, var(--success-subtitle));
-    --_es-tile-fg: var(--ds-empty-state-tile-fg, var(--success-text));
+    --_es-tile-icon-color: var(--ds-empty-state-tile-icon-color, var(--success-text));
   }
 }

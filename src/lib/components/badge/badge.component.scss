@@ -2,7 +2,7 @@
    BADGE / TAG
    Ported verbatim from vendor/claude-design-ds/components.css (lines 504–528).
    Defect 5: source contained a single `.badge--active` declaration that
-   consumes `--status-active-bg-color/-fg` tokens — no legacy duplicate found,
+   consumes `--status-active-{bg,text}-color` tokens — no legacy duplicate found,
    so nothing was removed. Lifecycle and semantic variants now coexist
    under one unified `.badge` family.
    ============================================================ */
@@ -13,7 +13,7 @@
 .badge {
   /* Public --ds-badge-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_badge-bg-color:          var(--ds-badge-bg-color,          var(--surface-secondary));
-  --_badge-fg:          var(--ds-badge-fg,          var(--text-secondary));
+  --_badge-label-color:          var(--ds-badge-label-color,          var(--text-secondary));
   --_badge-radius:      var(--ds-badge-radius,      var(--radius-pill));
   --_badge-pad-x:       var(--ds-badge-pad-x,       var(--badge-pad-x));
   --_badge-pad-y:       var(--ds-badge-pad-y,       var(--badge-pad-y));
@@ -28,21 +28,21 @@
   letter-spacing: var(--letter-spacing-wide);
   white-space: nowrap;
   background-color: var(--_badge-bg-color);
-  color: var(--_badge-fg);
+  color: var(--_badge-label-color);
 
   .dot { width: var(--badge-dot-size); height: var(--badge-dot-size); border-radius: var(--radius-pill); background: currentcolor; }
 
-  &.planning  { --_badge-bg-color: var(--ds-badge-bg-color, var(--status-planning-bg-color));  --_badge-fg: var(--ds-badge-fg, var(--status-planning-fg)); }
-  &.confirmed { --_badge-bg-color: var(--ds-badge-bg-color, var(--status-confirmed-bg-color)); --_badge-fg: var(--ds-badge-fg, var(--status-confirmed-fg)); }
-  &.active    { --_badge-bg-color: var(--ds-badge-bg-color, var(--status-active-bg-color));    --_badge-fg: var(--ds-badge-fg, var(--status-active-fg)); }
-  &.completed { --_badge-bg-color: var(--ds-badge-bg-color, var(--status-completed-bg-color)); --_badge-fg: var(--ds-badge-fg, var(--status-completed-fg)); }
-  &.info      { --_badge-bg-color: var(--ds-badge-bg-color, var(--info-subtitle));    --_badge-fg: var(--ds-badge-fg, var(--info-text)); }
-  &.success   { --_badge-bg-color: var(--ds-badge-bg-color, var(--success-subtitle)); --_badge-fg: var(--ds-badge-fg, var(--success-text)); }
-  &.warning   { --_badge-bg-color: var(--ds-badge-bg-color, var(--warning-subtitle)); --_badge-fg: var(--ds-badge-fg, var(--warning-text)); }
-  &.error     { --_badge-bg-color: var(--ds-badge-bg-color, var(--error-subtitle));  --_badge-fg: var(--ds-badge-fg, var(--error-text)); }
-  &.neutral   { --_badge-bg-color: var(--ds-badge-bg-color, var(--surface-secondary)); --_badge-fg: var(--ds-badge-fg, var(--text-secondary)); }
-  &.secondary { --_badge-bg-color: var(--ds-badge-bg-color, var(--secondary-subtitle)); --_badge-fg: var(--ds-badge-fg, var(--secondary-strong)); }
-  &.solid     { --_badge-bg-color: var(--ds-badge-bg-color, var(--primary));    --_badge-fg: var(--ds-badge-fg, var(--primary-on)); }
+  &.planning  { --_badge-bg-color: var(--ds-badge-bg-color, var(--status-planning-bg-color));  --_badge-label-color: var(--ds-badge-label-color, var(--status-planning-text-color)); }
+  &.confirmed { --_badge-bg-color: var(--ds-badge-bg-color, var(--status-confirmed-bg-color)); --_badge-label-color: var(--ds-badge-label-color, var(--status-confirmed-text-color)); }
+  &.active    { --_badge-bg-color: var(--ds-badge-bg-color, var(--status-active-bg-color));    --_badge-label-color: var(--ds-badge-label-color, var(--status-active-text-color)); }
+  &.completed { --_badge-bg-color: var(--ds-badge-bg-color, var(--status-completed-bg-color)); --_badge-label-color: var(--ds-badge-label-color, var(--status-completed-text-color)); }
+  &.info      { --_badge-bg-color: var(--ds-badge-bg-color, var(--info-subtitle));    --_badge-label-color: var(--ds-badge-label-color, var(--info-text)); }
+  &.success   { --_badge-bg-color: var(--ds-badge-bg-color, var(--success-subtitle)); --_badge-label-color: var(--ds-badge-label-color, var(--success-text)); }
+  &.warning   { --_badge-bg-color: var(--ds-badge-bg-color, var(--warning-subtitle)); --_badge-label-color: var(--ds-badge-label-color, var(--warning-text)); }
+  &.error     { --_badge-bg-color: var(--ds-badge-bg-color, var(--error-subtitle));  --_badge-label-color: var(--ds-badge-label-color, var(--error-text)); }
+  &.neutral   { --_badge-bg-color: var(--ds-badge-bg-color, var(--surface-secondary)); --_badge-label-color: var(--ds-badge-label-color, var(--text-secondary)); }
+  &.secondary { --_badge-bg-color: var(--ds-badge-bg-color, var(--secondary-subtitle)); --_badge-label-color: var(--ds-badge-label-color, var(--secondary-strong)); }
+  &.solid     { --_badge-bg-color: var(--ds-badge-bg-color, var(--primary));    --_badge-label-color: var(--ds-badge-label-color, var(--primary-on)); }
   &.count {
     min-width: var(--badge-count-size); height: var(--badge-count-size); padding: 0 var(--space-1-5);
     display: inline-grid; place-items: center;

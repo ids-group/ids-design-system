@@ -13,7 +13,7 @@
   --_input-radius:         var(--ds-input-radius,         var(--radius-md));
   --_input-pad-y:          var(--ds-input-pad-y,          var(--space-3));
   --_input-pad-x:          var(--ds-input-pad-x,          var(--field-pad-x));
-  --_input-fg:             var(--ds-input-fg,             var(--text-primary));
+  --_input-text-color:             var(--ds-input-text-color,             var(--text-primary));
   --_input-placeholder:    var(--ds-input-placeholder,    var(--text-tertiary));
   --_input-border-hover:   var(--ds-input-border-hover,   var(--border-strong));
   --_input-border-focus:   var(--ds-input-border-focus,   var(--primary));
@@ -72,7 +72,7 @@
       outline: 0;
       background: transparent;
       font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-      color: var(--_input-fg);
+      color: var(--_input-text-color);
       min-height: var(--field-textarea-rows-min, 60px);
 
       &::placeholder {

@@ -2,11 +2,11 @@
 // against the inner .item rule's specificity.
 :host {
   /* Public --ds-sidenav-item-* / --ds-sidenav-alert-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_sidenav-item-fg:              var(--ds-sidenav-item-fg,              var(--text-secondary));
-  --_sidenav-item-fg-hover:        var(--ds-sidenav-item-fg-hover,        var(--text-primary));
+  --_sidenav-item-label-color:              var(--ds-sidenav-item-label-color,              var(--text-secondary));
+  --_sidenav-item-label-color-hover:        var(--ds-sidenav-item-label-color-hover,        var(--text-primary));
   --_sidenav-item-bg-color-hover:        var(--ds-sidenav-item-bg-color-hover,        var(--surface-secondary));
   --_sidenav-item-bg-color-active:       var(--ds-sidenav-item-bg-color-active,       var(--primary));
-  --_sidenav-item-fg-active:       var(--ds-sidenav-item-fg-active,       var(--text-on-primary));
+  --_sidenav-item-label-color-active:       var(--ds-sidenav-item-label-color-active,       var(--text-on-primary));
   --_sidenav-item-bg-color-active-hover: var(--ds-sidenav-item-bg-color-active-hover, color-mix(in srgb, var(--_sidenav-item-bg-color-active) 88%, white));
   --_sidenav-item-rail:            var(--ds-sidenav-item-rail,            var(--secondary));
   --_sidenav-item-radius:          var(--ds-sidenav-item-radius,          var(--radius-md));
@@ -21,7 +21,7 @@
   gap: var(--space-3);
   padding: var(--space-2) var(--space-3);
   border-radius: var(--_sidenav-item-radius);
-  color: var(--_sidenav-item-fg);
+  color: var(--_sidenav-item-label-color);
   text-decoration: none;
   font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   cursor: pointer;
@@ -32,7 +32,7 @@
 
   &:hover {
     background-color: var(--_sidenav-item-bg-color-hover);
-    color: var(--_sidenav-item-fg-hover);
+    color: var(--_sidenav-item-label-color-hover);
   }
 
   &:focus-visible {
@@ -42,7 +42,7 @@
 
   &.active {
     background-color: var(--_sidenav-item-bg-color-active);
-    color: var(--_sidenav-item-fg-active);
+    color: var(--_sidenav-item-label-color-active);
 
     /* inset box-shadow follows the item's rounded corners */
     box-shadow: inset 3px 0 0 var(--_sidenav-item-rail);

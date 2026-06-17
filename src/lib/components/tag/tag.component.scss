@@ -9,9 +9,9 @@
   --_tag-fs:            var(--ds-tag-fs, var(--font-size-xs));
   --_tag-lh:            var(--ds-tag-lh, var(--line-height-base));
   --_tag-hover-bg-color:      var(--ds-tag-hover-bg-color,      var(--surface-muted));
-  --_tag-hover-fg:      var(--ds-tag-hover-fg,      var(--text-primary));
+  --_tag-hover-label-color:      var(--ds-tag-hover-label-color,      var(--text-primary));
   --_tag-active-bg-color:     var(--ds-tag-active-bg-color,     var(--primary-muted));
-  --_tag-active-fg:     var(--ds-tag-active-fg,     var(--primary-strong));
+  --_tag-active-label-color:     var(--ds-tag-active-label-color,     var(--primary-strong));
   --_tag-active-border: var(--ds-tag-active-border, var(--primary));
 
   display: inline-flex;
@@ -52,12 +52,12 @@
 
 :host(.interactive:hover):not(.is-active) {
   background-color: var(--_tag-hover-bg-color);
-  color: var(--_tag-hover-fg);
+  color: var(--_tag-hover-label-color);
 }
 
 :host(.interactive.is-active) {
   background-color: var(--_tag-active-bg-color);
-  color: var(--_tag-active-fg);
+  color: var(--_tag-active-label-color);
   box-shadow: inset 0 0 0 var(--border-width-default) var(--_tag-active-border);
 }
 

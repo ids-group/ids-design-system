@@ -4,10 +4,10 @@
   --_modal-radius:          var(--ds-modal-radius,          var(--radius-lg));
   --_modal-shadow:          var(--ds-modal-shadow,          var(--shadow-modal));
   --_modal-divider:         var(--ds-modal-divider,         var(--border-divider));
-  --_modal-title-fg:        var(--ds-modal-title-fg,        var(--text-primary));
-  --_modal-title-fg-error:  var(--ds-modal-title-fg-error,  var(--error-text));
-  --_modal-close-fg:        var(--ds-modal-close-fg,        var(--icon-default));
-  --_modal-close-fg-hover:  var(--ds-modal-close-fg-hover,  var(--icon-strong));
+  --_modal-title-text-color:        var(--ds-modal-title-text-color,        var(--text-primary));
+  --_modal-title-text-color-error:  var(--ds-modal-title-text-color-error,  var(--error-text));
+  --_modal-close-icon-color:        var(--ds-modal-close-icon-color,        var(--icon-default));
+  --_modal-close-icon-color-hover:  var(--ds-modal-close-icon-color-hover,  var(--icon-strong));
 
   display: contents;
 }
@@ -36,20 +36,20 @@
   .title {
     font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-heading);
     margin: 0;
-    color: var(--_modal-title-fg);
+    color: var(--_modal-title-text-color);
   }
 
   .close {
     background: none;
     border: 0;
     cursor: pointer;
-    color: var(--_modal-close-fg);
+    color: var(--_modal-close-icon-color);
     width: var(--modal-close-size);
     height: var(--modal-close-size);
     display: grid;
     place-items: center;
 
-    &:hover { color: var(--_modal-close-fg-hover); }
+    &:hover { color: var(--_modal-close-icon-color-hover); }
   }
 
   .body {
@@ -66,7 +66,7 @@
   }
 
   &.danger {
-    .title { color: var(--_modal-title-fg-error); }
+    .title { color: var(--_modal-title-text-color-error); }
   }
 
   .impact {

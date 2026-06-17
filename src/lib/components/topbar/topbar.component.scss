@@ -3,7 +3,7 @@
   --_topbar-height:   var(--ds-topbar-height,   var(--topbar-h));
   --_topbar-bg-color:       var(--ds-topbar-bg-color,       var(--surface-default));
   --_topbar-border:   var(--ds-topbar-border,   var(--border-divider));
-  --_topbar-title-fg: var(--ds-topbar-title-fg, var(--text-primary));
+  --_topbar-title-text-color: var(--ds-topbar-title-text-color, var(--text-primary));
 
   display: block;
 }
@@ -19,7 +19,7 @@
 
   .title {
     font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans);
-    color: var(--_topbar-title-fg);
+    color: var(--_topbar-title-text-color);
   }
 
   .spacer {

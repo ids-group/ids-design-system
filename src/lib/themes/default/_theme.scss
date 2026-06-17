@@ -216,13 +216,13 @@
      Legacy classes `.badge--active` (single) and ad-hoc semantic
      pills are unified in the Badge component to consume these tokens. */
   --status-planning-bg-color:   var(--neutral-150);
-  --status-planning-fg:   var(--neutral-700);
+  --status-planning-text-color:   var(--neutral-700);
   --status-confirmed-bg-color:  var(--primary-subtitle);
-  --status-confirmed-fg:  var(--primary-strong);
+  --status-confirmed-text-color:  var(--primary-strong);
   --status-active-bg-color:     var(--green-50);
-  --status-active-fg:     var(--green-700);
+  --status-active-text-color:     var(--green-700);
   --status-completed-bg-color:  var(--neutral-900);
-  --status-completed-fg:  var(--neutral-0);
+  --status-completed-text-color:  var(--neutral-0);
 
   /* Focus rings.
      Outer halos use hsla() composed from brand/danger HSL channels
