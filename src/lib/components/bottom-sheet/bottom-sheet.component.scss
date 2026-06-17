@@ -52,7 +52,7 @@
 }
 
 .sheet-title {
-  font: var(--font-weight-semibold) var(--font-size-l)/var(--line-height-snug) var(--font-sans);
+  font: var(--font-weight-semibold) var(--font-size-l) / var(--line-height-snug) var(--font-sans);
   color: var(--text-primary);
   margin: 0 0 var(--space-3);
 }
@@ -63,6 +63,7 @@
   gap: var(--space-2);
   overflow-y: auto;
   min-height: 0;
+
   // Scroll containers clip at the padding box - reserve room so focus halos
   // on edge-to-edge children survive, compensated to keep the layout width.
   padding: var(--space-1);

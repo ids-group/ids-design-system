@@ -46,7 +46,7 @@ export class BottomSheetComponent {
 
   constructor() {
     effect((onCleanup) => {
-      if (!this.open()) return;
+      if (!this.open()) {return;}
       this.previousBodyOverflow = this.doc.body.style.overflow;
       this.doc.body.style.overflow = 'hidden';
       onCleanup(() => {
@@ -63,7 +63,7 @@ export class BottomSheetComponent {
   }
 
   protected onEscape(): void {
-    if (this.open()) this.close();
+    if (this.open()) {this.close();}
   }
 
   protected stop(event: Event): void {
@@ -80,7 +80,7 @@ export class BottomSheetComponent {
   }
 
   protected onGrabMove(event: PointerEvent): void {
-    if (this.dragOffset() === null) return;
+    if (this.dragOffset() === null) {return;}
     const deltaTime = event.timeStamp - this.lastMoveTime;
     if (deltaTime > 0) {
       this.velocity = (event.clientY - this.lastMoveY) / deltaTime;
@@ -92,7 +92,7 @@ export class BottomSheetComponent {
 
   protected onGrabEnd(): void {
     const offset = this.dragOffset();
-    if (offset === null) return;
+    if (offset === null) {return;}
     const sheetHeight = this.sheetRef()?.nativeElement.offsetHeight ?? 0;
     const pastThreshold = sheetHeight > 0 && offset > sheetHeight * 0.3;
     const flicked = this.velocity > 0.5;

@@ -1,10 +1,15 @@
 @if (open()) {
-  <div class="sheet-overlay" (click)="close()">
+  <div
+    class="sheet-overlay"
+    (click)="close()"
+  >
     <div
       #sheet
       class="sheet"
       [class.dragging]="dragOffset() !== null"
-      [style.transform]="dragOffset() ? 'translateY(' + dragOffset() + 'px)' : null"
+      [style.transform]="
+        dragOffset() ? 'translateY(' + dragOffset() + 'px)' : null
+      "
       (click)="stop($event)"
     >
       <div
@@ -16,12 +21,17 @@
       >
         <div class="sheet-handle"></div>
       </div>
+
       @if (title()) {
-        <h3 class="sheet-title">{{ title() }}</h3>
+        <h3 class="sheet-title">
+          {{ title() }}
+        </h3>
       }
+
       <div class="sheet-body">
         <ng-content />
       </div>
+
       <div class="sheet-actions">
         <ng-content select="[actions]" />
       </div>
