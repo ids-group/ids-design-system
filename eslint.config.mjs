@@ -96,8 +96,11 @@ export default defineConfig(
       ds: dsPlugin,
     },
     rules: {
-      'ds/template/sibling-blank-line': 'warn',
-      'ds/template/element-content-newline': 'warn',
+      // Disabled: both conflict with Prettier's Angular-template formatting
+      // (Prettier collapses short element content and owns attribute layout via
+      // singleAttributePerLine). Prettier is the single source of template format.
+      'ds/template/sibling-blank-line': 'off',
+      'ds/template/element-content-newline': 'off',
       '@angular-eslint/template/attributes-order': 'warn',
       '@angular-eslint/template/click-events-have-key-events': 'warn',
       '@angular-eslint/template/interactive-supports-focus': 'warn',
