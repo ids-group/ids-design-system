@@ -51,7 +51,7 @@
 
     .state-cell__label {
       text-align: center;
-      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
       letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--text-tertiary);
@@ -71,7 +71,7 @@
       input {
         flex: 1; min-width: 80px;
         border: 0; outline: 0; background: transparent;
-        font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
+        font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
         color: var(--text-primary);
       }
       input::placeholder { color: var(--text-tertiary); }

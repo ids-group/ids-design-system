@@ -37,7 +37,7 @@
     }
     .fieldset > legend {
       padding: 0 var(--space-2);
-      font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
       letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--text-tertiary);
@@ -79,7 +79,7 @@
       border: var(--border-width-default) solid var(--border-divider);
       background: var(--surface-default);
       color: var(--text-primary);
-      font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
       cursor: pointer;
     }
     .pill--ghost { background: transparent; color: var(--text-secondary); }

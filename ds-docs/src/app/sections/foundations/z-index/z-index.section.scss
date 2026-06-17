@@ -3,7 +3,7 @@
       width: 100%;
       margin-top: var(--space-6);
       border-collapse: collapse;
-      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
     }
     .tbl th, .tbl td {
       text-align: left;
@@ -11,7 +11,7 @@
       border-bottom: var(--border-width-default) solid var(--border-divider);
     }
     .tbl th {
-      font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
       letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--text-tertiary);

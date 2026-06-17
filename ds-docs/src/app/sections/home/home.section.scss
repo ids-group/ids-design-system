@@ -10,13 +10,13 @@
     }
     .page-hero .eyebrow { color: var(--primary); }
     .page-hero .display {
-      font: var(--font-weight-extrabold) 56px/1.05 var(--font-sans);
+      font: var(--font-weight-extrabold) 56px / 1.05 var(--font-sans);
       letter-spacing: var(--letter-spacing-tight);
       margin: var(--space-3) 0 var(--space-4);
       color: var(--text-primary);
     }
     .page-hero .lede {
-      font: var(--font-weight-regular) var(--font-size-l)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-l) / var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
       max-width: 640px;
       margin: 0;
@@ -32,13 +32,13 @@
     .start-section { display: block; }
     .eyebrow { color: var(--primary); }
     .title {
-      font: var(--font-weight-extrabold) var(--font-size-h2)/var(--line-height-tight) var(--font-display);
+      font: var(--font-weight-extrabold) var(--font-size-h2) / var(--line-height-tight) var(--font-display);
       letter-spacing: var(--letter-spacing-tight);
       margin: var(--space-3) 0 var(--space-4);
       color: var(--text-primary);
     }
     .lede-secondary {
-      font: var(--font-weight-regular) var(--font-size-l)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-l) / var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
       max-width: 720px;
       margin: 0;
@@ -65,7 +65,7 @@
       padding: var(--space-5);
     }
     .howto-num {
-      font: var(--font-weight-extrabold) var(--font-size-xs)/1 var(--font-sans);
+      font: var(--font-weight-extrabold) var(--font-size-xs) / 1 var(--font-sans);
       letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--primary-strong);
@@ -73,16 +73,16 @@
     }
     .howto-title {
       margin: 0 0 var(--space-3);
-      font: var(--font-weight-bold) var(--font-size-h5)/var(--line-height-snug) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans);
       color: var(--text-primary);
     }
     .howto-body {
       margin: 0 0 var(--space-3);
-      font: var(--font-weight-regular) var(--font-size-m)/1.6 var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-m) / 1.6 var(--font-sans);
       color: var(--text-primary);
     }
     .howto-foot {
-      font: var(--font-weight-regular) var(--font-size-s)/1.5 var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s) / 1.5 var(--font-sans);
       color: var(--text-secondary);
     }
     .t-link { color: var(--text-link); text-decoration: none; }
@@ -127,19 +127,19 @@
       color: var(--primary-strong);
       display: grid;
       place-items: center;
-      font: var(--font-weight-extrabold) var(--font-size-m)/1 var(--font-sans);
+      font: var(--font-weight-extrabold) var(--font-size-m) / 1 var(--font-sans);
     }
     .start-link__title {
-      font: var(--font-weight-bold) var(--font-size-m)/1.35 var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-m) / 1.35 var(--font-sans);
       color: var(--text-primary);
       margin-bottom: var(--space-1);
     }
     .start-link__desc {
-      font: var(--font-weight-regular) var(--font-size-s)/1.5 var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s) / 1.5 var(--font-sans);
       color: var(--text-secondary);
     }
     .start-link__arrow {
-      font: var(--font-weight-bold) 18px/1 var(--font-sans);
+      font: var(--font-weight-bold) 18px / 1 var(--font-sans);
       color: var(--text-tertiary);
       transition: transform var(--duration-fast) var(--ease-standard),
                   color var(--duration-fast) var(--ease-standard);
@@ -165,7 +165,7 @@
     kbd {
       display: inline-block;
       padding: var(--kbd-pad-y) var(--kbd-pad-x);
-      font: var(--font-weight-medium) 11px/1 var(--font-mono);
+      font: var(--font-weight-medium) 11px / 1 var(--font-mono);
       background: var(--surface-default);
       border: var(--border-width-default) solid var(--border-default);
       border-radius: var(--radius-sm);

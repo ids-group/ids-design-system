@@ -24,7 +24,7 @@
     .state-cell__stage > * { flex: 1; }
     .state-cell__label {
       text-align: center;
-      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
       letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--text-tertiary);

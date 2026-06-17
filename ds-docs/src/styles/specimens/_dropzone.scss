@@ -85,12 +85,12 @@
     padding: var(--space-3);
   }
   .title {
-    font: var(--font-weight-bold) var(--font-size-m)/var(--line-height-snug) var(--font-heading);
+    font: var(--font-weight-bold) var(--font-size-m) / var(--line-height-snug) var(--font-heading);
     margin: 0 0 var(--space-1);
     color: inherit;
   }
   .hint {
-    font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
     color: inherit;
   }
 
@@ -119,14 +119,14 @@
   .icon { flex-shrink: 0; color: var(--icon-default); }
   .main { flex: 1; min-width: 0; }
   .name {
-    font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+    font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-base) var(--font-sans);
     color: var(--text-primary);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
   .meta {
-    font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+    font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
     color: var(--text-tertiary);
   }
   .progress {

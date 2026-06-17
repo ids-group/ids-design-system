@@ -55,12 +55,12 @@
       border-radius: var(--radius-lg);
     }
     .demo-card__title {
-      font: var(--font-weight-bold) var(--font-size-m)/var(--line-height-snug) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-m) / var(--line-height-snug) var(--font-sans);
       color: var(--text-primary);
     }
     .demo-card__meta {
       margin-top: var(--space-1);
-      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
 
@@ -74,7 +74,7 @@
     }
     .demo-menu-item {
       padding: var(--space-2) var(--space-3);
-      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
       color: var(--text-primary);
       border-radius: var(--radius-md);
     }
@@ -103,12 +103,12 @@
       border-radius: var(--radius-sm);
     }
     .demo-toast__title {
-      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-snug) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-snug) var(--font-sans);
       color: var(--text-primary);
     }
     .demo-toast__msg {
       margin-top: var(--space-0-5);
-      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
 
@@ -130,12 +130,12 @@
       border-radius: var(--radius-lg);
     }
     .demo-modal__title {
-      font: var(--font-weight-bold) var(--font-size-m)/var(--line-height-snug) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-m) / var(--line-height-snug) var(--font-sans);
       color: var(--text-primary);
     }
     .demo-modal__body {
       margin-top: var(--space-2);
-      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
     .demo-modal__actions {
@@ -151,7 +151,7 @@
       color: var(--neutral-0);
       border: 0;
       border-radius: var(--radius-md);
-      font: var(--font-weight-bold) var(--font-size-xs)/1 var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-xs) / 1 var(--font-sans);
       cursor: pointer;
     }
     .demo-btn--ghost {

@@ -31,7 +31,7 @@
     .state-cell__stage > * { flex: 1; }
     .state-cell__label {
       text-align: center;
-      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
       letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
       color: var(--text-tertiary);
@@ -44,11 +44,11 @@
       width: 100%;
     }
     .field-label {
-      font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
     .field-hint {
-      font: var(--font-weight-regular) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
       color: var(--text-tertiary);
 
       &.error { color: var(--error-text); }
@@ -59,7 +59,7 @@
       color: var(--text-tertiary);
       letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
-      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
     }
     .cell-wrap {
       display: flex; flex-direction: column;
@@ -69,7 +69,7 @@
       color: var(--text-tertiary);
       letter-spacing: var(--letter-spacing-wider);
       text-transform: uppercase;
-      font: var(--font-weight-bold) var(--font-size-2xs)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
     }
 
     /* State pins — ds-dropdown has no --_* resolvers; restate the bare role

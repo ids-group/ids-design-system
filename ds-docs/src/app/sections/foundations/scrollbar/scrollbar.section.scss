@@ -25,7 +25,7 @@
       gap: var(--space-3);
       padding: var(--space-2) 0;
       border-bottom: var(--border-width-default) solid var(--border-divider);
-      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
     }
     .scroll-pane__row:last-child { border-bottom: 0; }
     .scroll-pane__num { color: var(--text-tertiary); }
@@ -64,7 +64,7 @@
       padding: var(--space-3) var(--space-4);
       text-align: left;
       border-bottom: var(--border-width-default) solid var(--border-divider);
-      font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
     }
     .tbl th {
       background: var(--surface-secondary);
@@ -85,7 +85,7 @@
       max-width: var(--col-cap-text);
     }
     .spec dt {
-      font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+      font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
     .spec dd {

@@ -32,14 +32,14 @@
 
   width: 100%;
   border-collapse: collapse;
-  font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--text-primary);
   background-color: var(--_table-bg-color);
 
   thead th {
     text-align: left;
     padding: var(--table-head-pad-y) var(--_table-cell-pad-x);
-    font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+    font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
     letter-spacing: var(--letter-spacing-wider);
     text-transform: uppercase;
     color: var(--_table-head-text-color);
@@ -150,7 +150,7 @@
   margin: var(--space-4) auto 0;
   width: fit-content;
 
-  .count { font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-flat) var(--font-sans); }
+  .count { font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-flat) var(--font-sans); }
   .divider {
     width: var(--border-width-default);
     height: var(--space-4);

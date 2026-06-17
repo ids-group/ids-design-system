@@ -6,7 +6,7 @@
   background: var(--surface-overlay);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-popover);
-  font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);
+  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--text-primary);
 
   .toggle {
@@ -31,7 +31,7 @@
   }
 
   .row { display: grid; gap: var(--space-1); }
-  .label { font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
+  .label { font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
 
   .segmented {
     display: flex;
