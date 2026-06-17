@@ -6,7 +6,7 @@
 .drawer-scrim {
   position: fixed;
   inset: 0;
-  background: var(--scrim, hsla(220, 20%, 12%, 0.45));
+  background: var(--scrim, hsl(220deg 20% 12% / 45%));
   z-index: var(--layer-modal);
   animation: drawer-scrim-in var(--duration-fast, 120ms) var(--ease-decelerate, ease-out);
 }
@@ -41,7 +41,7 @@
   }
 
   .title {
-    font: var(--font-weight-bold) var(--font-size-h5)/var(--line-height-snug) var(--font-sans);
+    font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans);
     margin: 0;
     flex: 1;
   }

@@ -35,7 +35,7 @@ export class DrawerComponent {
   protected readonly titleId = `ds-drawer-title-${++nextId}`;
 
   protected readonly classes = computed(() =>
-    this.size() === 'lg' ? 'drawer lg' : 'drawer'
+    this.size() === 'lg' ? 'drawer lg' : 'drawer',
   );
 
   constructor() {
