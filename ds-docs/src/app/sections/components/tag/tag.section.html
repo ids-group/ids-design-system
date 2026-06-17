@@ -5,60 +5,41 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede
-    >
-    Pill-shaped chip for short labels. Solid (brand-fill) for selected tokens
-    in multi-select inputs; neutral (grey, bordered) for filter chips and
-    metadata. Add <code class="t-mono-inline">[closable]</code> to render a
-    close affordance.
-  </span
-  >
+  <span lede>
+    Pill-shaped chip for short labels. Solid (brand-fill) for selected tokens in
+    multi-select inputs; neutral (grey, bordered) for filter chips and metadata.
+    Add <code class="t-mono-inline">[closable]</code> to render a close
+    affordance.
+  </span>
 
-  <h3 class="block-title t-h4">
-    Variants
-  </h3>
+  <h3 class="block-title t-h4">Variants</h3>
 
   <div class="row">
-    <ds-tag>
-      Solid · default
-    </ds-tag>
+    <ds-tag> Solid · default </ds-tag>
 
-    <ds-tag variant="neutral">
-      Ghost
-    </ds-tag>
+    <ds-tag variant="neutral"> Ghost </ds-tag>
   </div>
 
-  <h3 class="block-title t-h4">
-    Closable
-  </h3>
+  <h3 class="block-title t-h4">Closable</h3>
 
   <div class="row">
-    <ds-tag [closable]="true">
-      Project Alpha
-    </ds-tag>
+    <ds-tag [closable]="true"> Project Alpha </ds-tag>
 
     <ds-tag
       variant="neutral"
       [closable]="true"
-      >
-      Filter · Site North
-    </ds-tag
     >
+      Filter · Site North
+    </ds-tag>
   </div>
 
-  <h3 class="block-title t-h4">
-    Interactive · selectable
-  </h3>
+  <h3 class="block-title t-h4">Interactive · selectable</h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [interactive]
-    </code> makes the tag a toggle
+    <code class="t-mono-inline"> [interactive] </code> makes the tag a toggle
     button that emits <code class="t-mono-inline">(toggled)</code> on click;
-    <code class="t-mono-inline">
-      [selected]
-    </code> renders the active state. Use
-    for filter-chip rows.
+    <code class="t-mono-inline"> [selected] </code> renders the active state.
+    Use for filter-chip rows.
   </p>
 
   <div class="row">
@@ -67,29 +48,26 @@
       [interactive]="true"
       [selected]="true"
       (toggled)="toggle('north')"
-      >
-      Site North
-    </ds-tag
     >
+      Site North
+    </ds-tag>
 
     <ds-tag
       variant="neutral"
       [interactive]="true"
       [selected]="false"
       (toggled)="toggle('south')"
-      >
-      Site South
-    </ds-tag
     >
+      Site South
+    </ds-tag>
 
     <ds-tag
       variant="neutral"
       [interactive]="true"
       [selected]="false"
       (toggled)="toggle('east')"
-      >
-      Site East
-    </ds-tag
     >
+      Site East
+    </ds-tag>
   </div>
 </docs-section>

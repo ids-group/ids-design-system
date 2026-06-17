@@ -34,6 +34,8 @@ export class TagComponent {
   readonly toggled = output<void>();
 
   protected onClick(): void {
-    if (this.interactive()) {this.toggled.emit();}
+    if (this.interactive()) {
+      this.toggled.emit();
+    }
   }
 }

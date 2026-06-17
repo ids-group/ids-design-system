@@ -5,33 +5,23 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede
-    >
+  <span lede>
     Text-label actions across variants, sizes and states. Plus leading icon ·
     button-group · split · toggle. For icon-only actions see the Icon button
     component.
-  </span
-  >
+  </span>
 
   <!-- ============================================================ Variants × sizes -->
-  <h3 class="block-title t-h4">
-    Variants × sizes
-  </h3>
+  <h3 class="block-title t-h4">Variants × sizes</h3>
 
   <div class="matrix">
     <div></div>
 
-    <div class="t-overline">
-      L · default
-    </div>
+    <div class="t-overline">L · default</div>
 
-    <div class="t-overline">
-      M
-    </div>
+    <div class="t-overline">M</div>
 
-    <div class="t-overline">
-      S
-    </div>
+    <div class="t-overline">S</div>
 
     @for (variant of variants; track variant.key) {
       <div class="t-overline matrix__row-label">
@@ -41,33 +31,28 @@
       <ds-button
         size="l"
         [variant]="variant.key"
-        >
-        {{ variant.label }}
-      </ds-button
       >
+        {{ variant.label }}
+      </ds-button>
 
       <ds-button
         size="m"
         [variant]="variant.key"
-        >
-        {{ variant.label }}
-      </ds-button
       >
+        {{ variant.label }}
+      </ds-button>
 
       <ds-button
         size="s"
         [variant]="variant.key"
-        >
-        {{ variant.label }}
-      </ds-button
       >
+        {{ variant.label }}
+      </ds-button>
     }
   </div>
 
   <!-- ============================================================ States showcase -->
-  <h3 class="block-title t-h4">
-    States showcase
-  </h3>
+  <h3 class="block-title t-h4">States showcase</h3>
 
   <p class="block-desc t-s">
     Every state side-by-side. Static specimens — no interaction needed.
@@ -78,86 +63,58 @@
              resolvers via ::ng-deep (see styles below). -->
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-button>
-          Save
-        </ds-button>
+        <ds-button> Save </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Default
-      </div>
+      <div class="state-cell__label">Default</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell__stage pin-hover">
-        <ds-button>
-          Save
-        </ds-button>
+        <ds-button> Save </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Hover
-      </div>
+      <div class="state-cell__label">Hover</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell__stage pin-focus">
-        <ds-button>
-          Save
-        </ds-button>
+        <ds-button> Save </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Focus-visible
-      </div>
+      <div class="state-cell__label">Focus-visible</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell__stage pin-active">
-        <ds-button>
-          Save
-        </ds-button>
+        <ds-button> Save </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Active / pressed
-      </div>
+      <div class="state-cell__label">Active / pressed</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-button [disabled]="true">
-          Save
-        </ds-button>
+        <ds-button [disabled]="true"> Save </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Disabled
-      </div>
+      <div class="state-cell__label">Disabled</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-button [loading]="true">
-          Saving
-        </ds-button>
+        <ds-button [loading]="true"> Saving </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Loading
-      </div>
+      <div class="state-cell__label">Loading</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-button icon="plus">
-          New record
-        </ds-button>
+        <ds-button icon="plus"> New record </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        With icon
-      </div>
+      <div class="state-cell__label">With icon</div>
     </div>
 
     <div class="state-cell">
@@ -165,15 +122,12 @@
         <ds-button
           variant="secondary"
           trailingIcon="chevronDown"
-          >
-          Filters
-        </ds-button
         >
+          Filters
+        </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Trailing chevron
-      </div>
+      <div class="state-cell__label">Trailing chevron</div>
     </div>
 
     <div class="state-cell">
@@ -190,9 +144,7 @@
         </button>
       </div>
 
-      <div class="state-cell__label">
-        Toggle · pressed
-      </div>
+      <div class="state-cell__label">Toggle · pressed</div>
     </div>
   </div>
 
@@ -205,38 +157,26 @@
     <!-- Secondary row -->
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-button variant="secondary">
-          Cancel
-        </ds-button>
+        <ds-button variant="secondary"> Cancel </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Secondary · default
-      </div>
+      <div class="state-cell__label">Secondary · default</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell__stage pin-hover">
-        <ds-button variant="secondary">
-          Cancel
-        </ds-button>
+        <ds-button variant="secondary"> Cancel </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Secondary · hover
-      </div>
+      <div class="state-cell__label">Secondary · hover</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell__stage pin-focus">
-        <ds-button variant="secondary">
-          Cancel
-        </ds-button>
+        <ds-button variant="secondary"> Cancel </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Secondary · focus
-      </div>
+      <div class="state-cell__label">Secondary · focus</div>
     </div>
 
     <div class="state-cell">
@@ -244,52 +184,37 @@
         <ds-button
           variant="secondary"
           [disabled]="true"
-          >
-          Cancel
-        </ds-button
         >
+          Cancel
+        </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Secondary · disabled
-      </div>
+      <div class="state-cell__label">Secondary · disabled</div>
     </div>
 
     <!-- Outline row -->
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-button variant="outline">
-          More
-        </ds-button>
+        <ds-button variant="outline"> More </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Outline · default
-      </div>
+      <div class="state-cell__label">Outline · default</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell__stage pin-hover">
-        <ds-button variant="outline">
-          More
-        </ds-button>
+        <ds-button variant="outline"> More </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Outline · hover
-      </div>
+      <div class="state-cell__label">Outline · hover</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell__stage pin-focus">
-        <ds-button variant="outline">
-          More
-        </ds-button>
+        <ds-button variant="outline"> More </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Outline · focus
-      </div>
+      <div class="state-cell__label">Outline · focus</div>
     </div>
 
     <div class="state-cell">
@@ -297,52 +222,37 @@
         <ds-button
           variant="outline"
           [disabled]="true"
-          >
-          More
-        </ds-button
         >
+          More
+        </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Outline · disabled
-      </div>
+      <div class="state-cell__label">Outline · disabled</div>
     </div>
 
     <!-- Error row -->
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-button variant="error">
-          Delete
-        </ds-button>
+        <ds-button variant="error"> Delete </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Error · default
-      </div>
+      <div class="state-cell__label">Error · default</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell__stage pin-hover">
-        <ds-button variant="error">
-          Delete
-        </ds-button>
+        <ds-button variant="error"> Delete </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Error · hover
-      </div>
+      <div class="state-cell__label">Error · hover</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell__stage pin-focus">
-        <ds-button variant="error">
-          Delete
-        </ds-button>
+        <ds-button variant="error"> Delete </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Error · focus
-      </div>
+      <div class="state-cell__label">Error · focus</div>
     </div>
 
     <div class="state-cell">
@@ -350,52 +260,37 @@
         <ds-button
           variant="error"
           [disabled]="true"
-          >
-          Delete
-        </ds-button
         >
+          Delete
+        </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Error · disabled
-      </div>
+      <div class="state-cell__label">Error · disabled</div>
     </div>
 
     <!-- Text row -->
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-button variant="text">
-          View log
-        </ds-button>
+        <ds-button variant="text"> View log </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Text · default
-      </div>
+      <div class="state-cell__label">Text · default</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell__stage pin-hover">
-        <ds-button variant="text">
-          View log
-        </ds-button>
+        <ds-button variant="text"> View log </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Text · hover
-      </div>
+      <div class="state-cell__label">Text · hover</div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell__stage pin-focus">
-        <ds-button variant="text">
-          View log
-        </ds-button>
+        <ds-button variant="text"> View log </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Text · focus
-      </div>
+      <div class="state-cell__label">Text · focus</div>
     </div>
 
     <div class="state-cell">
@@ -403,96 +298,72 @@
         <ds-button
           variant="text"
           [disabled]="true"
-          >
-          View log
-        </ds-button
         >
+          View log
+        </ds-button>
       </div>
 
-      <div class="state-cell__label">
-        Text · disabled
-      </div>
+      <div class="state-cell__label">Text · disabled</div>
     </div>
   </div>
 
   <!-- ============================================================ With icon -->
-  <h3 class="block-title t-h4">
-    With icon
-  </h3>
+  <h3 class="block-title t-h4">With icon</h3>
 
   <p class="block-desc t-s">
     Leading or trailing icon alongside a label. For icon-only actions use
-    <code class="t-mono-inline">
-      &lt;ds-icon-button&gt;
-    </code> (see the Icon
+    <code class="t-mono-inline"> &lt;ds-icon-button&gt; </code> (see the Icon
     button section).
   </p>
 
   <div class="row">
-    <ds-button icon="plus">
-      New record
-    </ds-button>
+    <ds-button icon="plus"> New record </ds-button>
 
     <ds-button
       variant="secondary"
       trailingIcon="chevronDown"
-      >
-      Filters
-    </ds-button
     >
+      Filters
+    </ds-button>
 
     <ds-button
       variant="outline"
       icon="download"
-      >
-      Export CSV
-    </ds-button
     >
+      Export CSV
+    </ds-button>
   </div>
 
   <!-- ============================================================ With subtext -->
-  <h3 class="block-title t-h4">
-    With subtext
-  </h3>
+  <h3 class="block-title t-h4">With subtext</h3>
 
   <p class="block-desc t-s">
     Project a short helper line into the
-    <code class="t-mono-inline">
-      [dsButtonSubtext]
-    </code> slot — e.g. why an
+    <code class="t-mono-inline"> [dsButtonSubtext] </code> slot — e.g. why an
     action is locked. Purely structural: the button stacks into a column only
     when the slot has content, and the subtext inherits the button's colour
     (including the disabled grey).
   </p>
 
   <div class="row">
-    <ds-button variant="primary"
-      >
-      Mark completed<span dsButtonSubtext
-        >Locked until truck scan</span
-      >
-    </ds-button
-    >
+    <ds-button variant="primary">
+      Mark completed<span dsButtonSubtext>Locked until truck scan</span>
+    </ds-button>
 
     <ds-button
       variant="outline"
       size="lg"
-      >
+    >
       Continue<span dsButtonSubtext>3 items remaining</span>
-    </ds-button
-    >
+    </ds-button>
 
-    <ds-button [disabled]="true"
-      >
+    <ds-button [disabled]="true">
       Submit<span dsButtonSubtext>Resolve conflicts first</span>
-    </ds-button
-    >
+    </ds-button>
   </div>
 
   <!-- ============================================================ Full width -->
-  <h3 class="block-title t-h4">
-    Full width
-  </h3>
+  <h3 class="block-title t-h4">Full width</h3>
 
   <p class="block-desc t-s">
     Set <code class="t-mono-inline">fullWidth</code> to stretch the button to
@@ -501,17 +372,14 @@
   </p>
 
   <div class="fullwidth-demo">
-    <ds-button fullWidth>
-      Continue
-    </ds-button>
+    <ds-button fullWidth> Continue </ds-button>
 
     <ds-button
       variant="outline"
       fullWidth
-      >
-      Cancel
-    </ds-button
     >
+      Cancel
+    </ds-button>
   </div>
 
   <!-- ============================================================ Group · split · toggle · text -->
@@ -545,9 +413,7 @@
     </div>
 
     <div class="button-split">
-      <button class="button">
-        Save
-      </button>
+      <button class="button">Save</button>
 
       <button
         class="button"
@@ -582,8 +448,6 @@
       Confirmed
     </button>
 
-    <ds-button variant="text">
-      View activity log
-    </ds-button>
+    <ds-button variant="text"> View activity log </ds-button>
   </div>
 </docs-section>

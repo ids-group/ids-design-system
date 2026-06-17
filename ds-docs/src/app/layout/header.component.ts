@@ -9,13 +9,9 @@ import { RouterLink } from '@angular/router';
   template: `
     <header class="docs-header">
       <a routerLink="/" class="brand">
-        <strong>
-          ManageMy DS
-        </strong>
+        <strong> ManageMy DS </strong>
 
-        <span class="t-xs eyebrow">
-          Reference
-        </span>
+        <span class="t-xs eyebrow"> Reference </span>
       </a>
     </header>
   `,

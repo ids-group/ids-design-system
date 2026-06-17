@@ -5,18 +5,14 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede
-    >
+  <span lede>
     Top of every page: title, optional lede, primary action area, optional
     bottom tabs. Distinct from the Page header pattern, which documents the full
     page composition around this block.
-  </span
-  >
+  </span>
 
   <!-- ============================================================ Default -->
-  <h3 class="block-title t-h4">
-    Default
-  </h3>
+  <h3 class="block-title t-h4">Default</h3>
 
   <p class="block-desc t-s">
     Title, lede, actions row, bottom tabs — the full composition.
@@ -31,22 +27,18 @@
         <ds-button
           variant="outline"
           icon="archive"
-          >
-          Archive
-        </ds-button
         >
+          Archive
+        </ds-button>
 
         <ds-button
           variant="outline"
           icon="download"
-          >
-          Export
-        </ds-button
         >
-
-        <ds-button icon="plus">
-          Add sub-record
+          Export
         </ds-button>
+
+        <ds-button icon="plus"> Add sub-record </ds-button>
       </ng-container>
 
       <ds-tabs tabs>
@@ -81,9 +73,7 @@
   </div>
 
   <!-- ============================================================ Compact -->
-  <h3 class="block-title t-h4">
-    Compact
-  </h3>
+  <h3 class="block-title t-h4">Compact</h3>
 
   <p class="block-desc t-s">
     No lede, single-line title with actions inline. Used on index pages and
@@ -99,14 +89,11 @@
         <ds-button
           variant="outline"
           icon="filter"
-          >
-          Filters
-        </ds-button
         >
-
-        <ds-button icon="plus">
-          New record
+          Filters
         </ds-button>
+
+        <ds-button icon="plus"> New record </ds-button>
       </ng-container>
     </ds-page-header>
 
@@ -119,9 +106,7 @@
   </div>
 
   <!-- ============================================================ With breadcrumb above title -->
-  <h3 class="block-title t-h4">
-    With breadcrumb above title
-  </h3>
+  <h3 class="block-title t-h4">With breadcrumb above title</h3>
 
   <p class="block-desc t-s">
     Full hierarchy demo — breadcrumb trail, eyebrow, title, lede, primary
@@ -140,9 +125,7 @@
       />
 
       <ng-container actions>
-        <ds-button icon="plus">
-          Add sub-record
-        </ds-button>
+        <ds-button icon="plus"> Add sub-record </ds-button>
       </ng-container>
     </ds-page-header>
 
@@ -155,9 +138,7 @@
   </div>
 
   <!-- ============================================================ With status badge inline with title -->
-  <h3 class="block-title t-h4">
-    With status badge inline with title
-  </h3>
+  <h3 class="block-title t-h4">With status badge inline with title</h3>
 
   <p class="block-desc t-s">
     Lifecycle pill sits next to the title. Max one status badge per header.
@@ -172,15 +153,12 @@
         title-badge
         variant="confirmed"
         [withDot]="true"
-        >
-        Confirmed
-      </ds-badge
       >
+        Confirmed
+      </ds-badge>
 
       <ng-container actions>
-        <ds-button icon="edit">
-          Edit
-        </ds-button>
+        <ds-button icon="edit"> Edit </ds-button>
       </ng-container>
     </ds-page-header>
 
@@ -193,14 +171,10 @@
   </div>
 
   <!-- ============================================================ With divider -->
-  <h3 class="block-title t-h4">
-    With divider
-  </h3>
+  <h3 class="block-title t-h4">With divider</h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [divider]="true"
-    </code> draws a hairline rule
+    <code class="t-mono-inline"> [divider]="true" </code> draws a hairline rule
     beneath the meta row, separating the header from the page content. Default
     is flush (no divider) — opt in when the content below doesn't supply its own
     framing.
@@ -213,9 +187,7 @@
       [divider]="true"
     >
       <ng-container actions>
-        <ds-button icon="edit">
-          Edit
-        </ds-button>
+        <ds-button icon="edit"> Edit </ds-button>
       </ng-container>
     </ds-page-header>
 

@@ -25,19 +25,13 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
   template: `
     <nav class="toc" [class.is-collapsed]="collapsed()">
       <div class="brand">
-        <span class="mark">
-          D
-        </span>
+        <span class="mark"> D </span>
 
         @if (!collapsed()) {
           <div class="brand-text">
-            <span class="brand-name">
-              Design System
-            </span>
+            <span class="brand-name"> Design System </span>
 
-            <small>
-              Boilerplate v{{ version }}
-            </small>
+            <small> Boilerplate v{{ version }} </small>
           </div>
         }
 
@@ -70,10 +64,9 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
                 class="link start-link"
                 [class.is-active]="isActive(item.anchor)"
                 (click)="scrollTo($event, item.anchor)"
-                >
-                {{ item.label }}
-              </a
               >
+                {{ item.label }}
+              </a>
             }
           } @else {
             <div class="group">
@@ -85,18 +78,15 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
                 class="link"
                 [class.is-active]="isActive(item.anchor)"
                 (click)="scrollTo($event, item.anchor)"
-                >
-                {{ item.label }}
-              </a
               >
+                {{ item.label }}
+              </a>
             }
           }
         }
 
         @if (filteredNav().length === 0) {
-          <div class="nav-empty">
-            Nothing found
-          </div>
+          <div class="nav-empty">Nothing found</div>
         }
       }
     </nav>
@@ -261,7 +251,9 @@ export class SidebarComponent {
   protected readonly query = signal('');
   protected readonly filteredNav = computed(() => {
     const q = this.query().trim().toLowerCase();
-    if (!q) {return NAV;}
+    if (!q) {
+      return NAV;
+    }
 
     return NAV.map((group) => ({
       ...group,
@@ -309,11 +301,17 @@ export class SidebarComponent {
     // so the browser history isn't polluted with every intermediate section.
     effect(() => {
       const anchor = this.activeAnchor();
-      if (!anchor) {return;}
+      if (!anchor) {
+        return;
+      }
       const win = this.document.defaultView;
-      if (!win) {return;}
+      if (!win) {
+        return;
+      }
       const targetHash = '#' + anchor;
-      if (win.location.hash === targetHash) {return;}
+      if (win.location.hash === targetHash) {
+        return;
+      }
       try {
         win.history.replaceState(null, '', targetHash);
       } catch {
@@ -347,13 +345,17 @@ export class SidebarComponent {
     const win = this.document.defaultView;
     const rawHash = win?.location.hash ?? '';
     const anchor = rawHash.startsWith('#') ? rawHash.slice(1) : '';
-    if (!anchor) {return;}
+    if (!anchor) {
+      return;
+    }
     const section =
       this.anchorToSection.get(anchor) ??
       (this.document.querySelector(
         `[data-anchor="${anchor}"]`,
       ) as HTMLElement | null);
-    if (!section) {return;}
+    if (!section) {
+      return;
+    }
 
     this.activeAnchor.set(anchor);
 
@@ -399,7 +401,9 @@ export class SidebarComponent {
       (this.document.querySelector(
         `[data-anchor="${anchor}"]`,
       ) as HTMLElement | null);
-    if (!section) {return;}
+    if (!section) {
+      return;
+    }
 
     this.activeAnchor.set(anchor);
     this.beginProgrammaticScroll();
@@ -440,7 +444,9 @@ export class SidebarComponent {
   private watchScrollEnd(main: HTMLElement, anchor: string): void {
     let settleTimer: number | null = null;
     const onScroll = (): void => {
-      if (settleTimer !== null) {clearTimeout(settleTimer);}
+      if (settleTimer !== null) {
+        clearTimeout(settleTimer);
+      }
       settleTimer = window.setTimeout(() => {
         main.removeEventListener('scroll', onScroll);
         this.programmaticScrollUntil = 0;
@@ -471,11 +477,15 @@ export class SidebarComponent {
 
     for (const section of sections) {
       const anchor = section.dataset['anchor'];
-      if (anchor) {this.anchorToSection.set(anchor, section);}
+      if (anchor) {
+        this.anchorToSection.set(anchor, section);
+      }
     }
 
     const firstAnchor = sections[0]?.dataset['anchor'] ?? '';
-    if (firstAnchor && !this.activeAnchor()) {this.activeAnchor.set(firstAnchor);}
+    if (firstAnchor && !this.activeAnchor()) {
+      this.activeAnchor.set(firstAnchor);
+    }
 
     // rootMargin: shrink the top by the topbar height so a section only
     // counts as active once its top has crossed the topbar. The -60%
@@ -487,7 +497,9 @@ export class SidebarComponent {
       (entries) => {
         for (const entry of entries) {
           const anchor = (entry.target as HTMLElement).dataset['anchor'];
-          if (!anchor) {continue;}
+          if (!anchor) {
+            continue;
+          }
           if (entry.isIntersecting) {
             this.intersecting.add(anchor);
           } else {
@@ -497,7 +509,9 @@ export class SidebarComponent {
 
         // Suppress spy-driven updates while a click-triggered smooth scroll
         // is animating — intermediate sections would otherwise flash active.
-        if (Date.now() < this.programmaticScrollUntil) {return;}
+        if (Date.now() < this.programmaticScrollUntil) {
+          return;
+        }
 
         // Pick THE topmost intersecting section: smallest non-negative
         // top relative to the topbar line wins. If none qualify (all
@@ -510,7 +524,9 @@ export class SidebarComponent {
         let fallbackTop = Number.NEGATIVE_INFINITY;
         for (const anchor of this.intersecting) {
           const section = this.anchorToSection.get(anchor);
-          if (!section) {continue;}
+          if (!section) {
+            continue;
+          }
           const top = section.getBoundingClientRect().top - topbarH;
           if (top >= 0 && top < bestNonNeg) {
             bestNonNeg = top;
@@ -521,7 +537,9 @@ export class SidebarComponent {
           }
         }
         const next = bestAnchor ?? fallbackAnchor;
-        if (next) {this.activeAnchor.set(next);}
+        if (next) {
+          this.activeAnchor.set(next);
+        }
       },
       {
         root: main,
@@ -530,7 +548,9 @@ export class SidebarComponent {
       },
     );
 
-    for (const section of sections) {this.observer.observe(section);}
+    for (const section of sections) {
+      this.observer.observe(section);
+    }
   }
 
   private computeTopbarHeight(): number {
@@ -538,7 +558,9 @@ export class SidebarComponent {
     const raw = styles.getPropertyValue('--topbar-h').trim();
     if (raw.endsWith('px')) {
       const n = parseFloat(raw);
-      if (!Number.isNaN(n)) {return n;}
+      if (!Number.isNaN(n)) {
+        return n;
+      }
     }
     const header = this.document.querySelector(
       '.docs-header',

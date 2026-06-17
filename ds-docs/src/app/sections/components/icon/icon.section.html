@@ -5,29 +5,20 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede
-    >
+  <span lede>
     Inline SVG icons rendered through
-    <code class="t-mono-inline">
-      &lt;ds-icon&gt;
-    </code>. 1.75-px stroke, rounded
-    caps, <code class="t-mono-inline">currentColor</code> fills. Driven by the
-    <code class="t-mono-inline">
-      name
-    </code> input and a fixed size scale.
-  </span
-  >
+    <code class="t-mono-inline"> &lt;ds-icon&gt; </code>. 1.75-px stroke,
+    rounded caps, <code class="t-mono-inline">currentColor</code> fills. Driven
+    by the <code class="t-mono-inline"> name </code> input and a fixed size
+    scale.
+  </span>
 
   <!-- ============================================================ Sizes -->
-  <h3 class="block-title t-h4">
-    Sizes
-  </h3>
+  <h3 class="block-title t-h4">Sizes</h3>
 
   <p class="block-desc t-s">
     Five canonical sizes. Every glyph renders inside a 24-unit viewBox at
-    <code class="t-mono-inline">
-      stroke-width: 1.75
-    </code>.
+    <code class="t-mono-inline"> stroke-width: 1.75 </code>.
   </p>
 
   <div class="size-row">
@@ -47,24 +38,18 @@
           {{ size.token }}
         </code>
 
-        <div class="t-caption">
-          {{ size.px }}px · {{ size.use }}
-        </div>
+        <div class="t-caption">{{ size.px }}px · {{ size.use }}</div>
       </div>
     }
   </div>
 
   <!-- ============================================================ Stroke weight -->
-  <h3 class="block-title t-h4">
-    Stroke weight
-  </h3>
+  <h3 class="block-title t-h4">Stroke weight</h3>
 
   <p class="block-desc t-s">
     Same glyphs at <code class="t-mono-inline">stroke</code> 1.5 / 1.75 / 2,
     each across 16 / 20 / 24px. Default is
-    <code class="t-mono-inline">
-      1.75
-    </code>. Pick the weight that reads best
+    <code class="t-mono-inline"> 1.75 </code>. Pick the weight that reads best
     against text at small sizes.
   </p>
 
@@ -75,14 +60,10 @@
         [class.is-default]="s === 1.75"
       >
         <div class="stroke-row__label">
-          <code class="t-mono-inline">
-            stroke {{ s }}
-          </code>
+          <code class="t-mono-inline"> stroke {{ s }} </code>
 
           @if (s === 1.75) {
-            <span class="t-caption">
-              default
-            </span>
+            <span class="t-caption"> default </span>
           }
         </div>
 
@@ -96,9 +77,7 @@
               />
             }
 
-            <span class="t-caption">
-              {{ px }}px
-            </span>
+            <span class="t-caption"> {{ px }}px </span>
           </div>
         }
       </div>
@@ -106,19 +85,16 @@
   </div>
 
   <!-- ============================================================ Sample names -->
-  <h3 class="block-title t-h4">
-    Sample names
-  </h3>
+  <h3 class="block-title t-h4">Sample names</h3>
 
   <p class="block-desc t-s">
     The library is broader; these are the most common app glyphs. See
     <a
       class="link"
       href="#section-icons"
-      >
-      Foundations · Icons
-    </a
     >
+      Foundations · Icons
+    </a>
     for the full library.
   </p>
 

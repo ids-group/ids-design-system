@@ -30,8 +30,7 @@ export interface TruncationRule {
           <li>
             <span class="field">
               {{ rule.field }}
-            </span
-            >
+            </span>
 
             <span class="behaviour">
               {{ rule.behaviour }}

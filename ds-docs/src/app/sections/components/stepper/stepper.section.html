@@ -3,18 +3,14 @@
   eyebrow="Components"
   title="Stepper"
 >
-  <span lede
-    >
+  <span lede>
     Visual indicator of multi-step progress. Pass an array of step labels and a
     zero-indexed <code class="t-mono-inline">current</code>. Nodes before
     current render as done (with check icon); the current node fills with brand;
     later nodes stay as outlined numerals.
-  </span
-  >
+  </span>
 
-  <h3 class="block-title t-h4">
-    Default
-  </h3>
+  <h3 class="block-title t-h4">Default</h3>
 
   <div class="demo">
     <ds-stepper
@@ -23,15 +19,11 @@
     />
   </div>
 
-  <h3 class="block-title t-h4">
-    States showcase
-  </h3>
+  <h3 class="block-title t-h4">States showcase</h3>
 
   <div class="states">
     <div class="state">
-      <code class="t-mono-inline state__lbl">
-        current = 0 (just started)
-      </code>
+      <code class="t-mono-inline state__lbl"> current = 0 (just started) </code>
 
       <ds-stepper
         [steps]="brief"
@@ -40,9 +32,7 @@
     </div>
 
     <div class="state">
-      <code class="t-mono-inline state__lbl">
-        current = 2 (mid-flow)
-      </code>
+      <code class="t-mono-inline state__lbl"> current = 2 (mid-flow) </code>
 
       <ds-stepper
         [steps]="brief"
@@ -51,9 +41,7 @@
     </div>
 
     <div class="state">
-      <code class="t-mono-inline state__lbl">
-        current = 5 (all done)
-      </code>
+      <code class="t-mono-inline state__lbl"> current = 5 (all done) </code>
 
       <ds-stepper
         [steps]="brief"
@@ -62,9 +50,7 @@
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
-    Single node states
-  </h3>
+  <h3 class="block-title t-h4">Single node states</h3>
 
   <div class="single-nodes">
     <div class="single-cell">
@@ -73,9 +59,7 @@
         [current]="-1"
       />
 
-      <code class="t-mono-inline">
-        .node · pending
-      </code>
+      <code class="t-mono-inline"> .node · pending </code>
     </div>
 
     <div class="single-cell">
@@ -84,9 +68,7 @@
         [current]="0"
       />
 
-      <code class="t-mono-inline">
-        .node.active
-      </code>
+      <code class="t-mono-inline"> .node.active </code>
     </div>
 
     <div class="single-cell">
@@ -95,9 +77,7 @@
         [current]="1"
       />
 
-      <code class="t-mono-inline">
-        .node.done
-      </code>
+      <code class="t-mono-inline"> .node.done </code>
     </div>
   </div>
 </docs-section>

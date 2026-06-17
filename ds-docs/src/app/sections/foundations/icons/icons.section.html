@@ -7,26 +7,18 @@
 
   <span lede>
     1.75-px stroke, rounded caps,
-    <code class="t-mono-inline">
-      currentColor
-    </code> fills. Sizes derive from a
+    <code class="t-mono-inline"> currentColor </code> fills. Sizes derive from a
     fixed scale. Rendered via the
-    <code class="t-mono-inline">
-      &lt;ds-icon&gt;
-    </code> component which inlines
+    <code class="t-mono-inline"> &lt;ds-icon&gt; </code> component which inlines
     SVG paths from <code class="t-mono-inline">ICONS</code>.
   </span>
 
   <!-- ============================================================ Size scale -->
-  <h3 class="block-title t-h4">
-    Size scale
-  </h3>
+  <h3 class="block-title t-h4">Size scale</h3>
 
   <p class="block-desc t-s">
     Five canonical sizes. Every glyph renders inside a 24-unit viewBox at
-    <code class="t-mono-inline">
-      stroke-width: 1.75
-    </code>.
+    <code class="t-mono-inline"> stroke-width: 1.75 </code>.
   </p>
 
   <div class="size-row">
@@ -46,17 +38,13 @@
           {{ s.token }}
         </code>
 
-        <div class="t-caption">
-          {{ s.px }}px · {{ s.use }}
-        </div>
+        <div class="t-caption">{{ s.px }}px · {{ s.use }}</div>
       </div>
     }
   </div>
 
   <!-- ============================================================ Full gallery -->
-  <h3 class="block-title t-h4">
-    Library ({{ names.length }})
-  </h3>
+  <h3 class="block-title t-h4">Library ({{ names.length }})</h3>
 
   <p class="block-desc t-s">
     Every name in the <code class="t-mono-inline">ICONS</code> registry. Pass as
@@ -79,9 +67,7 @@
   </div>
 
   <!-- ============================================================ Colour roles -->
-  <h3 class="block-title t-h4">
-    Colour roles
-  </h3>
+  <h3 class="block-title t-h4">Colour roles</h3>
 
   <p class="block-desc t-s">
     Icons inherit <code class="t-mono-inline">currentColor</code>. The role
@@ -98,9 +84,7 @@
         [size]="20"
       />
 
-      <code class="t-mono-inline role-cell__tok">
-        --icon-strong
-      </code>
+      <code class="t-mono-inline role-cell__tok"> --icon-strong </code>
     </div>
 
     <div
@@ -112,9 +96,7 @@
         [size]="20"
       />
 
-      <code class="t-mono-inline role-cell__tok">
-        --icon-default
-      </code>
+      <code class="t-mono-inline role-cell__tok"> --icon-default </code>
     </div>
 
     <div
@@ -126,9 +108,7 @@
         [size]="20"
       />
 
-      <code class="t-mono-inline role-cell__tok">
-        --icon-muted
-      </code>
+      <code class="t-mono-inline role-cell__tok"> --icon-muted </code>
     </div>
 
     <div
@@ -140,9 +120,7 @@
         [size]="20"
       />
 
-      <code class="t-mono-inline role-cell__tok">
-        --icon-on-primary
-      </code>
+      <code class="t-mono-inline role-cell__tok"> --icon-on-primary </code>
     </div>
   </div>
 </docs-section>

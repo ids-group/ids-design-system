@@ -3,20 +3,14 @@
   eyebrow="Components"
   title="Toast"
 >
-  <span lede
-    >
+  <span lede>
     Auto-dismissing notification anchored to top-right of the viewport. Stacks
     vertically. Trigger imperatively via
-    <code class="t-mono-inline">
-      ToastService.show()
-    </code> — one variant per
+    <code class="t-mono-inline"> ToastService.show() </code> — one variant per
     system event severity.
-  </span
-  >
+  </span>
 
-  <h3 class="block-title t-h4">
-    States showcase (static specimens)
-  </h3>
+  <h3 class="block-title t-h4">States showcase (static specimens)</h3>
 
   <div class="states">
     <ds-toast
@@ -46,9 +40,7 @@
     />
   </div>
 
-  <h3 class="block-title t-h4">
-    Live demo
-  </h3>
+  <h3 class="block-title t-h4">Live demo</h3>
 
   <p class="block-desc t-s">
     Click a button to trigger a toast (auto-dismisses after 5 s).
@@ -59,50 +51,42 @@
       variant="outline"
       size="m"
       (click)="fire('info')"
-      >
-      Info
-    </ds-button
     >
+      Info
+    </ds-button>
 
     <ds-button
       variant="outline"
       size="m"
       (click)="fire('success')"
-      >
-      Success
-    </ds-button
     >
+      Success
+    </ds-button>
 
     <ds-button
       variant="outline"
       size="m"
       (click)="fire('warning')"
-      >
-      Warning
-    </ds-button
     >
+      Warning
+    </ds-button>
 
     <ds-button
       variant="outline"
       size="m"
       (click)="fire('error')"
-      >
-      Error
-    </ds-button
     >
+      Error
+    </ds-button>
   </div>
 
-  <h3 class="block-title t-h4">
-    With action
-  </h3>
+  <h3 class="block-title t-h4">With action</h3>
 
   <p class="block-desc t-s">
     Pass
-    <code class="t-mono-inline"
-      >
+    <code class="t-mono-inline">
       action: {{ '{' }} label, handler {{ '}' }}
-    </code
-    >
+    </code>
     to <code class="t-mono-inline">ToastService.show()</code> to render a
     trailing action button (e.g. Undo).
   </p>
@@ -112,9 +96,8 @@
       variant="outline"
       size="m"
       (click)="fireWithAction()"
-      >
-      Delete with Undo
-    </ds-button
     >
+      Delete with Undo
+    </ds-button>
   </div>
 </docs-section>

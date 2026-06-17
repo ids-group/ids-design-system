@@ -5,39 +5,29 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede
-    >
+  <span lede>
     Horizontal progress bar. Value 0..100 for determinate. Four status variants
     match the global colour roles, plus an indeterminate sweep for unknown
     duration.
-  </span
-  >
+  </span>
 
-  <h3 class="block-title t-h4">
-    Variants
-  </h3>
+  <h3 class="block-title t-h4">Variants</h3>
 
   <div class="states">
     <div class="state">
-      <code class="t-mono-inline state__lbl">
-        default · 30%
-      </code>
+      <code class="t-mono-inline state__lbl"> default · 30% </code>
 
       <ds-progress [value]="30" />
     </div>
 
     <div class="state">
-      <code class="t-mono-inline state__lbl">
-        default · 70%
-      </code>
+      <code class="t-mono-inline state__lbl"> default · 70% </code>
 
       <ds-progress [value]="70" />
     </div>
 
     <div class="state">
-      <code class="t-mono-inline state__lbl">
-        success · 70%
-      </code>
+      <code class="t-mono-inline state__lbl"> success · 70% </code>
 
       <ds-progress
         variant="success"
@@ -46,9 +36,7 @@
     </div>
 
     <div class="state">
-      <code class="t-mono-inline state__lbl">
-        warn · 92%
-      </code>
+      <code class="t-mono-inline state__lbl"> warn · 92% </code>
 
       <ds-progress
         variant="warn"
@@ -57,9 +45,7 @@
     </div>
 
     <div class="state">
-      <code class="t-mono-inline state__lbl">
-        error · 100%
-      </code>
+      <code class="t-mono-inline state__lbl"> error · 100% </code>
 
       <ds-progress
         variant="error"
@@ -68,9 +54,7 @@
     </div>
 
     <div class="state">
-      <code class="t-mono-inline state__lbl">
-        indeterminate
-      </code>
+      <code class="t-mono-inline state__lbl"> indeterminate </code>
 
       <ds-progress variant="indeterminate" />
     </div>

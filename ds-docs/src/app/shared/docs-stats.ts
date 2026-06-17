@@ -30,19 +30,23 @@ export function countDesignTokens(): number {
     }
 
     for (const rule of Array.from(rules)) {
-      if (!(rule instanceof CSSStyleRule)) {continue;}
+      if (!(rule instanceof CSSStyleRule)) {
+        continue;
+      }
       if (
         !rule.selectorText
           .split(',')
           .some((selector) => selector.trim() === ':root')
-      )
-        {continue;}
+      ) {
+        continue;
+      }
 
       const { style } = rule;
       for (let index = 0; index < style.length; index++) {
         const property = style.item(index);
-        if (property.startsWith('--') && !property.startsWith('--_'))
-          {names.add(property);}
+        if (property.startsWith('--') && !property.startsWith('--_')) {
+          names.add(property);
+        }
       }
     }
   }

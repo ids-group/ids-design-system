@@ -7,9 +7,7 @@
     {{ lede }}
   </span>
 
-  <h3 class="block-title t-h4">
-    Activity stream
-  </h3>
+  <h3 class="block-title t-h4">Activity stream</h3>
 
   <p class="block-desc t-s">
     Vertical list of attributed events on a record. Each row: avatar, bold
@@ -30,16 +28,15 @@
             <p class="t-s subject">
               <strong>
                 {{ entry.actor }}
-              </strong> {{ entry.verb }}
+              </strong>
+              {{ entry.verb }}
               <strong>
                 {{ entry.object }}
               </strong>
 
               @if (entry.badge) {
                 <ds-badge [variant]="entry.badge.variant">
-                  {{
-                  entry.badge.label
-                }}
+                  {{ entry.badge.label }}
                 </ds-badge>
               }
             </p>
@@ -59,9 +56,7 @@
     </ul>
   </div>
 
-  <h3 class="block-title t-h4">
-    Empty state
-  </h3>
+  <h3 class="block-title t-h4">Empty state</h3>
 
   <p class="block-desc t-s">
     Newly created records have nothing in the log. Show a calm placeholder with
@@ -77,9 +72,7 @@
         />
       </div>
 
-      <p class="t-m empty__title">
-        No recent activity
-      </p>
+      <p class="t-m empty__title">No recent activity</p>
 
       <p class="t-s empty__body">
         Edits, status changes and allocations will appear here. Make the first
@@ -99,9 +92,7 @@
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
-    Usage
-  </h3>
+  <h3 class="block-title t-h4">Usage</h3>
 
   <ul class="rules">
     <li>
@@ -119,8 +110,6 @@
       pending, Confirmed). Skip otherwise.
     </li>
 
-    <li>
-      Empty state offers the next concrete step, not an apology.
-    </li>
+    <li>Empty state offers the next concrete step, not an apology.</li>
   </ul>
 </docs-section>

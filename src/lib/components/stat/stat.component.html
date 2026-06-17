@@ -3,9 +3,7 @@
     {{ label() }}
   </div>
 
-  <div class="value">
-    {{ value() }}{{ unit() }}
-  </div>
+  <div class="value">{{ value() }}{{ unit() }}</div>
 
   @if (delta() !== null) {
     <div [class]="deltaClasses()">

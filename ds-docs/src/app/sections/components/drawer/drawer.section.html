@@ -3,18 +3,14 @@
   eyebrow="Components"
   title="Drawer"
 >
-  <span lede
-    >
+  <span lede>
     Slide-in right-side panel for inline edit flows. Renders as fixed-position
     when <code class="t-mono-inline">[open]</code> is true. Two sizes (md = 480
     px, lg = 640 px). Use a drawer over a modal when the form needs more
     vertical room or runs alongside the underlying page state.
-  </span
-  >
+  </span>
 
-  <h3 class="block-title t-h4">
-    Live demo
-  </h3>
+  <h3 class="block-title t-h4">Live demo</h3>
 
   <p class="block-desc t-s">
     Click to open the drawer at viewport-right. Click the X to close.
@@ -25,10 +21,9 @@
       variant="primary"
       size="m"
       (click)="open.set(true)"
-      >
-      Open drawer
-    </ds-button
     >
+      Open drawer
+    </ds-button>
   </div>
 
   <ds-drawer
@@ -42,12 +37,8 @@
         style="color: var(--text-secondary); margin: 0 0 12px"
       >
         This is a live drawer rendered via
-        <code class="t-mono-inline">
-          &lt;ds-drawer&gt;
-        </code>. Two-way
-        <code class="t-mono-inline">
-          [(open)]
-        </code> model controls the
+        <code class="t-mono-inline"> &lt;ds-drawer&gt; </code>. Two-way
+        <code class="t-mono-inline"> [(open)] </code> model controls the
         visibility.
       </p>
     </ng-container>
@@ -56,14 +47,11 @@
       <ds-button
         variant="outline"
         (click)="open.set(false)"
-        >
-        Cancel
-      </ds-button
       >
-
-      <ds-button variant="primary">
-        Save
+        Cancel
       </ds-button>
+
+      <ds-button variant="primary"> Save </ds-button>
     </ng-container>
   </ds-drawer>
 </docs-section>

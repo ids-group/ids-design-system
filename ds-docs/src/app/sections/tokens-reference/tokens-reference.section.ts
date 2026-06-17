@@ -104,7 +104,9 @@ export class TokensReferenceSection {
       'border-',
       'neutral-',
     ];
-    if (value === 'transparent' || value === 'none') {return false;}
+    if (value === 'transparent' || value === 'none') {
+      return false;
+    }
 
     return colourTokens.some((prefix) => value.includes(prefix));
   }

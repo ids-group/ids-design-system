@@ -5,13 +5,11 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede
-    >
+  <span lede>
     Tabular data with sort, row-selection, sticky header, skeleton loading,
     empty state, and a bulk-action bar. Built for dense admin lists — records,
     schedules, rosters.
-  </span
-  >
+  </span>
 
   <!-- ============================================================ Default -->
   <h3 class="block-title t-h4">
@@ -30,29 +28,17 @@
     <table class="table">
       <thead>
         <tr>
-          <th>
-            Record
-          </th>
+          <th>Record</th>
 
-          <th>
-            ID
-          </th>
+          <th>ID</th>
 
-          <th>
-            Dates
-          </th>
+          <th>Dates</th>
 
-          <th>
-            Venue
-          </th>
+          <th>Venue</th>
 
-          <th>
-            Status
-          </th>
+          <th>Status</th>
 
-          <th class="numeric">
-            Capacity
-          </th>
+          <th class="numeric">Capacity</th>
         </tr>
       </thead>
 
@@ -83,10 +69,9 @@
               <ds-badge
                 [variant]="row.status"
                 [withDot]="true"
-                >
-                {{ row.statusLabel }}
-              </ds-badge
               >
+                {{ row.statusLabel }}
+              </ds-badge>
             </td>
 
             <td class="numeric">
@@ -99,9 +84,7 @@
   </div>
 
   <!-- ============================================================ Sortable columns -->
-  <h3 class="block-title t-h4">
-    Sortable columns
-  </h3>
+  <h3 class="block-title t-h4">Sortable columns</h3>
 
   <p class="block-desc t-s">
     Click a header to cycle asc → desc → none. Active column shows a coloured
@@ -177,9 +160,7 @@
   </div>
 
   <!-- ============================================================ Header sort states -->
-  <h3 class="block-title t-h4">
-    Header sort states
-  </h3>
+  <h3 class="block-title t-h4">Header sort states</h3>
 
   <p class="block-desc t-s">
     Every sort affordance — none, ascending, descending, hover.
@@ -204,17 +185,13 @@
 
           <tbody>
             <tr>
-              <td>
-                Project Alpha
-              </td>
+              <td>Project Alpha</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="state-cell__label">
-        Sortable · idle
-      </div>
+      <div class="state-cell__label">Sortable · idle</div>
     </div>
 
     <div class="state-cell">
@@ -236,17 +213,13 @@
 
           <tbody>
             <tr>
-              <td>
-                Project Alpha
-              </td>
+              <td>Project Alpha</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="state-cell__label">
-        Sorted · ascending
-      </div>
+      <div class="state-cell__label">Sorted · ascending</div>
     </div>
 
     <div class="state-cell">
@@ -268,17 +241,13 @@
 
           <tbody>
             <tr>
-              <td>
-                Project Alpha
-              </td>
+              <td>Project Alpha</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="state-cell__label">
-        Sorted · descending
-      </div>
+      <div class="state-cell__label">Sorted · descending</div>
     </div>
 
     <div class="state-cell">
@@ -300,17 +269,13 @@
 
           <tbody>
             <tr>
-              <td>
-                Project Alpha
-              </td>
+              <td>Project Alpha</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="state-cell__label">
-        Hover
-      </div>
+      <div class="state-cell__label">Hover</div>
     </div>
   </div>
 
@@ -332,21 +297,13 @@
             <ds-checkbox />
           </th>
 
-          <th>
-            Record
-          </th>
+          <th>Record</th>
 
-          <th>
-            Dates
-          </th>
+          <th>Dates</th>
 
-          <th>
-            Venue
-          </th>
+          <th>Venue</th>
 
-          <th>
-            Status
-          </th>
+          <th>Status</th>
         </tr>
       </thead>
 
@@ -357,27 +314,20 @@
           </td>
 
           <td>
-            <span class="t-s-bold">
-              Project Alpha
-            </span>
+            <span class="t-s-bold"> Project Alpha </span>
           </td>
 
-          <td>
-            30 Apr – 3 May 2026
-          </td>
+          <td>30 Apr – 3 May 2026</td>
 
-          <td>
-            North Site
-          </td>
+          <td>North Site</td>
 
           <td>
             <ds-badge
               variant="active"
               [withDot]="true"
-              >
+            >
               Active
-            </ds-badge
-            >
+            </ds-badge>
           </td>
         </tr>
 
@@ -387,27 +337,20 @@
           </td>
 
           <td>
-            <span class="t-s-bold">
-              Project Beta
-            </span>
+            <span class="t-s-bold"> Project Beta </span>
           </td>
 
-          <td>
-            22 – 25 May 2026
-          </td>
+          <td>22 – 25 May 2026</td>
 
-          <td>
-            East Campus
-          </td>
+          <td>East Campus</td>
 
           <td>
             <ds-badge
               variant="confirmed"
               [withDot]="true"
-              >
-              Confirmed
-            </ds-badge
             >
+              Confirmed
+            </ds-badge>
           </td>
         </tr>
 
@@ -417,27 +360,20 @@
           </td>
 
           <td>
-            <span class="t-s-bold">
-              Q3 Initiative
-            </span>
+            <span class="t-s-bold"> Q3 Initiative </span>
           </td>
 
-          <td>
-            22 – 25 Aug 2026
-          </td>
+          <td>22 – 25 Aug 2026</td>
 
-          <td>
-            South Hub
-          </td>
+          <td>South Hub</td>
 
           <td>
             <ds-badge
               variant="confirmed"
               [withDot]="true"
-              >
-              Confirmed
-            </ds-badge
             >
+              Confirmed
+            </ds-badge>
           </td>
         </tr>
 
@@ -447,27 +383,20 @@
           </td>
 
           <td>
-            <span class="t-s-bold">
-              Annual Summit
-            </span>
+            <span class="t-s-bold"> Annual Summit </span>
           </td>
 
-          <td>
-            5 – 9 Sep 2026
-          </td>
+          <td>5 – 9 Sep 2026</td>
 
-          <td>
-            HQ Auditorium
-          </td>
+          <td>HQ Auditorium</td>
 
           <td>
             <ds-badge
               variant="planning"
               [withDot]="true"
-              >
-              Planning
-            </ds-badge
             >
+              Planning
+            </ds-badge>
           </td>
         </tr>
       </tbody>
@@ -476,9 +405,7 @@
 
   <div class="bulk-bar-wrap">
     <div class="bulk-bar">
-      <span class="count">
-        3 selected
-      </span>
+      <span class="count"> 3 selected </span>
 
       <span class="divider"></span>
 
@@ -486,36 +413,31 @@
         variant="outline"
         size="m"
         icon="archive"
-        >
-        Archive
-      </ds-button
       >
+        Archive
+      </ds-button>
 
       <ds-button
         variant="outline"
         size="m"
         icon="download"
-        >
-        Export
-      </ds-button
       >
+        Export
+      </ds-button>
 
       <span class="divider"></span>
 
       <ds-button
         variant="outline"
         size="m"
-        >
-        Clear
-      </ds-button
       >
+        Clear
+      </ds-button>
     </div>
   </div>
 
   <!-- ============================================================ Sticky header -->
-  <h3 class="block-title t-h4">
-    Sticky header
-  </h3>
+  <h3 class="block-title t-h4">Sticky header</h3>
 
   <p class="block-desc t-s">
     Header stays pinned while the body scrolls. Capped at ~220 px to force the
@@ -526,21 +448,13 @@
     <table class="table">
       <thead>
         <tr>
-          <th>
-            Record
-          </th>
+          <th>Record</th>
 
-          <th>
-            Dates
-          </th>
+          <th>Dates</th>
 
-          <th>
-            Venue
-          </th>
+          <th>Venue</th>
 
-          <th>
-            Status
-          </th>
+          <th>Status</th>
         </tr>
       </thead>
 
@@ -565,10 +479,9 @@
               <ds-badge
                 [variant]="row.status"
                 [withDot]="true"
-                >
-                {{ row.statusLabel }}
-              </ds-badge
               >
+                {{ row.statusLabel }}
+              </ds-badge>
             </td>
           </tr>
         }
@@ -577,18 +490,12 @@
   </div>
 
   <!-- ============================================================ Bordered -->
-  <h3 class="block-title t-h4">
-    Bordered
-  </h3>
+  <h3 class="block-title t-h4">Bordered</h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [bordered]="true"
-    </code> wraps the table in an
+    <code class="t-mono-inline"> [bordered]="true" </code> wraps the table in an
     outer border + radius. Off by default so tables nested inside
-    <code class="t-mono-inline">
-      &lt;ds-card padding="none"&gt;
-    </code> don't
+    <code class="t-mono-inline"> &lt;ds-card padding="none"&gt; </code> don't
     double-border.
   </p>
 
@@ -600,19 +507,13 @@
   />
 
   <!-- ============================================================ Loading skeleton -->
-  <h3 class="block-title t-h4">
-    Loading · skeleton
-  </h3>
+  <h3 class="block-title t-h4">Loading · skeleton</h3>
 
   <p class="block-desc t-s">
     First-load placeholder — rows are replaced with shimmer skeletons that
     lock-step with every other
-    <code class="t-mono-inline">
-      &lt;ds-skeleton&gt;
-    </code> on the page. Use
-    <code class="t-mono-inline">
-      [loading]="'skeleton'"
-    </code> when you have no
+    <code class="t-mono-inline"> &lt;ds-skeleton&gt; </code> on the page. Use
+    <code class="t-mono-inline"> [loading]="'skeleton'" </code> when you have no
     rows to show yet.
   </p>
 
@@ -624,16 +525,12 @@
   />
 
   <!-- ============================================================ Loading overlay -->
-  <h3 class="block-title t-h4">
-    Loading · overlay
-  </h3>
+  <h3 class="block-title t-h4">Loading · overlay</h3>
 
   <p class="block-desc t-s">
     Re-fetch indicator — existing rows stay visible behind a translucent overlay
     with a centred spinner. Use
-    <code class="t-mono-inline">
-      [loading]="'overlay'"
-    </code> for refresh /
+    <code class="t-mono-inline"> [loading]="'overlay'" </code> for refresh /
     re-sort / filter-change.
   </p>
 
@@ -645,9 +542,7 @@
   />
 
   <!-- ============================================================ Empty states -->
-  <h3 class="block-title t-h4">
-    Empty states
-  </h3>
+  <h3 class="block-title t-h4">Empty states</h3>
 
   <p class="block-desc t-s">
     Four canonical row-empty variants. Headers always stay so the schema is
@@ -655,9 +550,7 @@
   </p>
 
   <!-- (a) Plain — minimal centered message, no icon / no CTA. -->
-  <div class="block-sub t-overline">
-    a · Plain row
-  </div>
+  <div class="block-sub t-overline">a · Plain row</div>
 
   <p class="block-desc t-s">
     Mirrors source — single tertiary line in a colspan cell. Use when the empty
@@ -668,25 +561,15 @@
     <table class="table">
       <thead>
         <tr>
-          <th>
-            Record
-          </th>
+          <th>Record</th>
 
-          <th>
-            Dates
-          </th>
+          <th>Dates</th>
 
-          <th>
-            Venue
-          </th>
+          <th>Venue</th>
 
-          <th>
-            Status
-          </th>
+          <th>Status</th>
 
-          <th class="numeric">
-            Capacity
-          </th>
+          <th class="numeric">Capacity</th>
         </tr>
       </thead>
 
@@ -704,9 +587,7 @@
   </div>
 
   <!-- (b) No data — first-run / nothing exists yet. Icon + title + body + primary CTA. -->
-  <div class="block-sub t-overline">
-    b · No data · primary CTA
-  </div>
+  <div class="block-sub t-overline">b · No data · primary CTA</div>
 
   <p class="block-desc t-s">
     First-run variant — nothing exists yet, so the CTA invites creation.
@@ -716,25 +597,15 @@
     <table class="table">
       <thead>
         <tr>
-          <th>
-            Record
-          </th>
+          <th>Record</th>
 
-          <th>
-            Dates
-          </th>
+          <th>Dates</th>
 
-          <th>
-            Venue
-          </th>
+          <th>Venue</th>
 
-          <th>
-            Status
-          </th>
+          <th>Status</th>
 
-          <th class="numeric">
-            Capacity
-          </th>
+          <th class="numeric">Capacity</th>
         </tr>
       </thead>
 
@@ -755,10 +626,9 @@
                 variant="secondary"
                 size="m"
                 icon="plus"
-                >
-                New record
-              </ds-button
               >
+                New record
+              </ds-button>
             </ds-empty-state>
           </td>
         </tr>
@@ -767,9 +637,7 @@
   </div>
 
   <!-- (c) Filtered — query returned nothing. Secondary "clear filters" action. -->
-  <div class="block-sub t-overline">
-    c · Filtered · clear-filters CTA
-  </div>
+  <div class="block-sub t-overline">c · Filtered · clear-filters CTA</div>
 
   <p class="block-desc t-s">
     Data exists but the current filter or search excluded every row.
@@ -779,25 +647,15 @@
     <table class="table">
       <thead>
         <tr>
-          <th>
-            Record
-          </th>
+          <th>Record</th>
 
-          <th>
-            Dates
-          </th>
+          <th>Dates</th>
 
-          <th>
-            Venue
-          </th>
+          <th>Venue</th>
 
-          <th>
-            Status
-          </th>
+          <th>Status</th>
 
-          <th class="numeric">
-            Capacity
-          </th>
+          <th class="numeric">Capacity</th>
         </tr>
       </thead>
 
@@ -817,10 +675,9 @@
                 actions
                 variant="outline"
                 size="m"
-                >
-                Clear filters
-              </ds-button
               >
+                Clear filters
+              </ds-button>
             </ds-empty-state>
           </td>
         </tr>
@@ -829,9 +686,7 @@
   </div>
 
   <!-- (d) Error — request failed. Retry is the primary action. -->
-  <div class="block-sub t-overline">
-    d · Failed to load · retry CTA
-  </div>
+  <div class="block-sub t-overline">d · Failed to load · retry CTA</div>
 
   <p class="block-desc t-s">
     Network or server failure. Icon tints danger; retry is the only sensible
@@ -842,25 +697,15 @@
     <table class="table">
       <thead>
         <tr>
-          <th>
-            Record
-          </th>
+          <th>Record</th>
 
-          <th>
-            Dates
-          </th>
+          <th>Dates</th>
 
-          <th>
-            Venue
-          </th>
+          <th>Venue</th>
 
-          <th>
-            Status
-          </th>
+          <th>Status</th>
 
-          <th class="numeric">
-            Capacity
-          </th>
+          <th class="numeric">Capacity</th>
         </tr>
       </thead>
 
@@ -880,10 +725,9 @@
                 variant="secondary"
                 size="m"
                 icon="refresh"
-                >
-                Retry
-              </ds-button
               >
+                Retry
+              </ds-button>
             </ds-empty-state>
           </td>
         </tr>
@@ -892,9 +736,7 @@
   </div>
 
   <!-- ============================================================ Dense · zebra -->
-  <h3 class="block-title t-h4">
-    Dense · zebra
-  </h3>
+  <h3 class="block-title t-h4">Dense · zebra</h3>
 
   <p class="block-desc t-s">
     Compact padding plus odd-row tint for spreadsheet-style scanning.
@@ -904,29 +746,17 @@
     <table class="table compact zebra">
       <thead>
         <tr>
-          <th>
-            Record
-          </th>
+          <th>Record</th>
 
-          <th>
-            ID
-          </th>
+          <th>ID</th>
 
-          <th>
-            Dates
-          </th>
+          <th>Dates</th>
 
-          <th>
-            Venue
-          </th>
+          <th>Venue</th>
 
-          <th>
-            Status
-          </th>
+          <th>Status</th>
 
-          <th class="numeric">
-            Capacity
-          </th>
+          <th class="numeric">Capacity</th>
         </tr>
       </thead>
 
@@ -957,10 +787,9 @@
               <ds-badge
                 [variant]="row.status"
                 [withDot]="true"
-                >
-                {{ row.statusLabel }}
-              </ds-badge
               >
+                {{ row.statusLabel }}
+              </ds-badge>
             </td>
 
             <td class="numeric">

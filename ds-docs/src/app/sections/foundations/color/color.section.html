@@ -10,64 +10,39 @@
   </span>
 
   <!-- ============================================================ Secondary role -->
-  <h3 class="block-title t-h4">
-    Secondary role
-  </h3>
+  <h3 class="block-title t-h4">Secondary role</h3>
 
   <p class="block-desc t-s">
     The <code class="t-mono-inline">--secondary</code> family is the DS's
     secondary colour role &mdash; a complementary tone for non-interactive
     emphasis (active rails, decorative indicators, accent pills). Defaults at
-    <code class="t-mono-inline">
-      :root
-    </code> alias
-    <code class="t-mono-inline">
-      --secondary
-    </code> to
-    <code class="t-mono-inline">
-      --primary
-    </code> so unbranded apps render
+    <code class="t-mono-inline"> :root </code> alias
+    <code class="t-mono-inline"> --secondary </code> to
+    <code class="t-mono-inline"> --primary </code> so unbranded apps render
     unchanged; per-brand overrides introduce a true secondary hue. Secondary is
-    <em>
-      not
-    </em> a second CTA &mdash; primary action stays on
-    <code class="t-mono-inline">
-      --primary
-    </code>. Opt-in adoptions:
-    <code class="t-mono-inline">
-      &lt;ds-tabs class="secondary"&gt;
-    </code>,
-    <code class="t-mono-inline">
-      &lt;ds-badge variant="secondary"&gt;
-    </code>,
+    <em> not </em> a second CTA &mdash; primary action stays on
+    <code class="t-mono-inline"> --primary </code>. Opt-in adoptions:
+    <code class="t-mono-inline"> &lt;ds-tabs class="secondary"&gt; </code>,
+    <code class="t-mono-inline"> &lt;ds-badge variant="secondary"&gt; </code>,
     sidenav active rail, stat delta neutral.
   </p>
 
   <div class="role-grid">
     <div class="role-group">
-      <div class="t-overline">
-        Secondary
-      </div>
+      <div class="t-overline">Secondary</div>
 
       <div class="swatch">
         <div
           class="swatch__chip"
           [style.background]="'var(--secondary)'"
-        >
-        </div>
+        ></div>
 
         <div class="swatch__meta">
-          <div class="t-s-bold">
-            secondary
-          </div>
+          <div class="t-s-bold">secondary</div>
 
-          <code class="swatch__token t-mono-inline">
-            --secondary
-          </code>
+          <code class="swatch__token t-mono-inline"> --secondary </code>
 
-          <code class="swatch__value t-mono-inline">
-            var(--secondary)
-          </code>
+          <code class="swatch__value t-mono-inline"> var(--secondary) </code>
         </div>
       </div>
 
@@ -75,23 +50,16 @@
         <div
           class="swatch__chip"
           [style.background]="'var(--secondary-strong)'"
-        >
-        </div>
+        ></div>
 
         <div class="swatch__meta">
-          <div class="t-s-bold">
-            secondary-strong
-          </div>
+          <div class="t-s-bold">secondary-strong</div>
 
-          <code class="swatch__token t-mono-inline">
-            --secondary-strong
-          </code>
+          <code class="swatch__token t-mono-inline"> --secondary-strong </code>
 
-          <code class="swatch__value t-mono-inline"
-            >
+          <code class="swatch__value t-mono-inline">
             var(--secondary-strong)
-          </code
-          >
+          </code>
         </div>
       </div>
 
@@ -99,23 +67,18 @@
         <div
           class="swatch__chip"
           [style.background]="'var(--secondary-subtitle)'"
-        >
-        </div>
+        ></div>
 
         <div class="swatch__meta">
-          <div class="t-s-bold">
-            secondary-subtitle
-          </div>
+          <div class="t-s-bold">secondary-subtitle</div>
 
           <code class="swatch__token t-mono-inline">
             --secondary-subtitle
           </code>
 
-          <code class="swatch__value t-mono-inline"
-            >
+          <code class="swatch__value t-mono-inline">
             var(--secondary-subtitle)
-          </code
-          >
+          </code>
         </div>
       </div>
 
@@ -123,62 +86,41 @@
         <div
           class="swatch__chip"
           [style.background]="'var(--secondary-on)'"
-        >
-        </div>
+        ></div>
 
         <div class="swatch__meta">
-          <div class="t-s-bold">
-            secondary-on
-          </div>
+          <div class="t-s-bold">secondary-on</div>
 
-          <code class="swatch__token t-mono-inline">
-            --secondary-on
-          </code>
+          <code class="swatch__token t-mono-inline"> --secondary-on </code>
 
-          <code class="swatch__value t-mono-inline">
-            var(--secondary-on)
-          </code>
+          <code class="swatch__value t-mono-inline"> var(--secondary-on) </code>
         </div>
       </div>
     </div>
   </div>
 
   <!-- ============================================================ Secondary in use -->
-  <h3 class="block-title t-h4">
-    Secondary in use
-  </h3>
+  <h3 class="block-title t-h4">Secondary in use</h3>
 
   <p class="block-desc t-s">
     Live opt-in adoptions of <code class="t-mono-inline">--secondary</code>.
     Default theme renders these identically to
-    <code class="t-mono-inline">
-      --primary
-    </code>; override via
-    <code class="t-mono-inline">
-      [data-brand="..."]
-    </code> to see the secondary
+    <code class="t-mono-inline"> --primary </code>; override via
+    <code class="t-mono-inline"> [data-brand="..."] </code> to see the secondary
     hue.
   </p>
 
   <div class="secondary-demos">
     <div class="demo">
-      <div class="t-overline">
-        ds-badge
-      </div>
+      <div class="t-overline">ds-badge</div>
 
-      <ds-badge [variant]="secondaryVariant">
-        Override 15%
-      </ds-badge>
+      <ds-badge [variant]="secondaryVariant"> Override 15% </ds-badge>
 
-      <code class="t-mono-inline">
-        &lt;ds-badge variant="secondary"&gt;
-      </code>
+      <code class="t-mono-inline"> &lt;ds-badge variant="secondary"&gt; </code>
     </div>
 
     <div class="demo">
-      <div class="t-overline">
-        ds-tabs.secondary
-      </div>
+      <div class="t-overline">ds-tabs.secondary</div>
 
       <ds-tabs class="secondary">
         <ds-tab label="Overview" />
@@ -188,15 +130,11 @@
         <ds-tab label="History" />
       </ds-tabs>
 
-      <code class="t-mono-inline">
-        &lt;ds-tabs class="secondary"&gt;
-      </code>
+      <code class="t-mono-inline"> &lt;ds-tabs class="secondary"&gt; </code>
     </div>
 
     <div class="demo">
-      <div class="t-overline">
-        ds-sidenav-item (active rail)
-      </div>
+      <div class="t-overline">ds-sidenav-item (active rail)</div>
 
       <ds-sidenav>
         <ds-sidenav-item
@@ -222,25 +160,19 @@
     </div>
 
     <div class="demo">
-      <div class="t-overline">
-        ds-status-dot status="secondary"
-      </div>
+      <div class="t-overline">ds-status-dot status="secondary"</div>
 
       <div style="display: inline-flex; align-items: center; gap: 8px">
         <ds-status-dot status="secondary" /> Custom state
       </div>
 
-      <code class="t-mono-inline"
-        >
+      <code class="t-mono-inline">
         &lt;ds-status-dot status="secondary"&gt;
-      </code
-      >
+      </code>
     </div>
 
     <div class="demo">
-      <div class="t-overline">
-        ds-page-header.eyebrow-secondary
-      </div>
+      <div class="t-overline">ds-page-header.eyebrow-secondary</div>
 
       <ds-page-header
         class="eyebrow-secondary"
@@ -249,17 +181,13 @@
         subtitle="Secondary-toned eyebrow"
       />
 
-      <code class="t-mono-inline"
-        >
+      <code class="t-mono-inline">
         &lt;ds-page-header class="eyebrow-secondary"&gt;
-      </code
-      >
+      </code>
     </div>
 
     <div class="demo">
-      <div class="t-overline">
-        ds-stat deltaTone="secondary"
-      </div>
+      <div class="t-overline">ds-stat deltaTone="secondary"</div>
 
       <ds-stat
         label="Forecast"
@@ -267,56 +195,40 @@
         deltaTone="secondary"
         [delta]="0"
       >
-        <span delta>
-          +8% projected
-        </span>
+        <span delta> +8% projected </span>
       </ds-stat>
 
-      <code class="t-mono-inline"
-        >
+      <code class="t-mono-inline">
         &lt;ds-stat deltaTone="secondary"&gt; → .delta.secondary
-      </code
-      >
+      </code>
     </div>
 
     <div class="demo">
-      <div class="t-overline">
-        ds-card — CSS override
-      </div>
+      <div class="t-overline">ds-card — CSS override</div>
 
       <p class="t-s">
         No dedicated variant. If a consumer needs an accent stripe, style it
         inline — single-rule override, no new API surface:
       </p>
 
-      <code class="t-mono-inline"
-        >
+      <code class="t-mono-inline">
         &lt;ds-card style="border-top: 3px solid var(--secondary)"&gt;
-      </code
-      >
+      </code>
     </div>
   </div>
 
   <p class="block-desc t-s">
     All adoptions are opt-in (use a class or variant input). Default theme
     aliases <code class="t-mono-inline">--secondary</code> to
-    <code class="t-mono-inline">
-      --primary
-    </code> so unbranded apps see no visual
-    difference. Under
-    <code class="t-mono-inline">
-      [data-brand="manage-my"]
-    </code>,
-    <code class="t-mono-inline">
-      --secondary
-    </code> is Coral (#FF6156) &mdash;
+    <code class="t-mono-inline"> --primary </code> so unbranded apps see no
+    visual difference. Under
+    <code class="t-mono-inline"> [data-brand="manage-my"] </code>,
+    <code class="t-mono-inline"> --secondary </code> is Coral (#FF6156) &mdash;
     these examples then render in the brand accent.
   </p>
 
   <!-- ============================================================ Semantic groups -->
-  <h3 class="block-title t-h4">
-    Semantic roles
-  </h3>
+  <h3 class="block-title t-h4">Semantic roles</h3>
 
   <p class="block-desc t-s">
     What components actually consume. Re-skinning means remapping these to a
@@ -335,8 +247,7 @@
             <div
               class="swatch__chip"
               [style.background]="'var(' + swatch.token + ')'"
-            >
-            </div>
+            ></div>
 
             <div class="swatch__meta">
               <div
@@ -351,16 +262,12 @@
               </div>
 
               <code class="swatch__token t-mono-inline">
-                {{
-                swatch.token
-              }}
+                {{ swatch.token }}
               </code>
 
-              <code class="swatch__value t-mono-inline"
-                >
+              <code class="swatch__value t-mono-inline">
                 var({{ swatch.token }})
-              </code
-              >
+              </code>
             </div>
           </div>
         }
@@ -369,15 +276,11 @@
   </div>
 
   <!-- ============================================================ Primitive ramps -->
-  <h3 class="block-title t-h4">
-    Primitive ramps
-  </h3>
+  <h3 class="block-title t-h4">Primitive ramps</h3>
 
   <p class="block-desc t-s">
     Raw colour ramps. Stop names map 1:1 to CSS custom properties (e.g.
-    <code class="t-mono-inline">
-      --blue-600
-    </code>).
+    <code class="t-mono-inline"> --blue-600 </code>).
   </p>
 
   @for (ramp of ramps; track ramp.prefix) {
@@ -404,11 +307,9 @@
               </span>
             </div>
 
-            <code class="ramp__var t-mono-inline"
-              >
+            <code class="ramp__var t-mono-inline">
               --{{ ramp.prefix }}-{{ stop }}
-            </code
-            >
+            </code>
           </div>
         }
       </div>
@@ -416,19 +317,13 @@
   }
 
   <!-- ============================================================ Halo proof -->
-  <h3 class="block-title t-h4">
-    Focus halo proof
-  </h3>
+  <h3 class="block-title t-h4">Focus halo proof</h3>
 
   <p class="block-desc t-s">
     Outer halo is composed from brand HSL channels &mdash; a re-skin of
-    <code class="t-mono-inline">
-      --primary-h
-    </code> propagates straight into
+    <code class="t-mono-inline"> --primary-h </code> propagates straight into
     focus state. Inner ring reads
-    <code class="t-mono-inline">
-      --surface-canvas
-    </code> so it stays visible
+    <code class="t-mono-inline"> --surface-canvas </code> so it stays visible
     across themes.
   </p>
 
@@ -444,13 +339,9 @@
       </div>
 
       <div class="halo-cell__label">
-        <div class="halo-cell__title">
-          --focus-ring
-        </div>
+        <div class="halo-cell__title">--focus-ring</div>
 
-        <code class="t-mono-inline">
-          2px canvas + 4px brand
-        </code>
+        <code class="t-mono-inline"> 2px canvas + 4px brand </code>
       </div>
     </div>
 
@@ -465,13 +356,9 @@
       </div>
 
       <div class="halo-cell__label">
-        <div class="halo-cell__title">
-          --focus-field
-        </div>
+        <div class="halo-cell__title">--focus-field</div>
 
-        <code class="t-mono-inline">
-          3px brand &alpha; 0.22
-        </code>
+        <code class="t-mono-inline"> 3px brand &alpha; 0.22 </code>
       </div>
     </div>
 
@@ -486,13 +373,9 @@
       </div>
 
       <div class="halo-cell__label">
-        <div class="halo-cell__title">
-          --focus-ring-error
-        </div>
+        <div class="halo-cell__title">--focus-ring-error</div>
 
-        <code class="t-mono-inline">
-          2px canvas + 4px danger
-        </code>
+        <code class="t-mono-inline"> 2px canvas + 4px danger </code>
       </div>
     </div>
 
@@ -507,30 +390,20 @@
       </div>
 
       <div class="halo-cell__label">
-        <div class="halo-cell__title">
-          --focus-ring-inverted
-        </div>
+        <div class="halo-cell__title">--focus-ring-inverted</div>
 
-        <code class="t-mono-inline">
-          on dark surface
-        </code>
+        <code class="t-mono-inline"> on dark surface </code>
       </div>
     </div>
   </div>
 
   <!-- ============================================================ Surface contrast -->
-  <h3 class="block-title t-h4">
-    Surface contrast
-  </h3>
+  <h3 class="block-title t-h4">Surface contrast</h3>
 
   <p class="block-desc t-s">
     The "paper" surfaces.
-    <code class="t-mono-inline">
-      --surface-default
-    </code> is the card;
-    <code class="t-mono-inline">
-      --surface-secondary
-    </code> is the hover lane /
+    <code class="t-mono-inline"> --surface-default </code> is the card;
+    <code class="t-mono-inline"> --surface-secondary </code> is the hover lane /
     table head; <code class="t-mono-inline">--select-bg-color</code> is the
     text-selection tint derived from brand.
   </p>
@@ -540,68 +413,46 @@
       class="surface-cell"
       style="background: var(--surface-canvas)"
     >
-      <div class="surface-cell__label">
-        canvas
-      </div>
+      <div class="surface-cell__label">canvas</div>
 
-      <code class="t-mono-inline">
-        --surface-canvas
-      </code>
+      <code class="t-mono-inline"> --surface-canvas </code>
     </div>
 
     <div
       class="surface-cell"
       style="background: var(--surface-default)"
     >
-      <div class="surface-cell__label">
-        default
-      </div>
+      <div class="surface-cell__label">default</div>
 
-      <code class="t-mono-inline">
-        --surface-default
-      </code>
+      <code class="t-mono-inline"> --surface-default </code>
     </div>
 
     <div
       class="surface-cell"
       style="background: var(--surface-secondary)"
     >
-      <div class="surface-cell__label">
-        secondary
-      </div>
+      <div class="surface-cell__label">secondary</div>
 
-      <code class="t-mono-inline">
-        --surface-secondary
-      </code>
+      <code class="t-mono-inline"> --surface-secondary </code>
     </div>
 
     <div
       class="surface-cell"
       style="background: var(--surface-tint)"
     >
-      <div class="surface-cell__label">
-        tint
-      </div>
+      <div class="surface-cell__label">tint</div>
 
-      <code class="t-mono-inline">
-        --surface-tint
-      </code>
+      <code class="t-mono-inline"> --surface-tint </code>
     </div>
 
     <div class="surface-cell surface-cell--select">
-      <div class="surface-cell__label">
-        selection
-      </div>
+      <div class="surface-cell__label">selection</div>
 
-      <code class="t-mono-inline">
-        --select-bg-color
-      </code>
+      <code class="t-mono-inline"> --select-bg-color </code>
 
       <p class="surface-cell__sample t-s">
         The quick brown fox
-        <span class="surface-cell__selected">
-          jumps over
-        </span> the lazy dog.
+        <span class="surface-cell__selected"> jumps over </span> the lazy dog.
       </p>
     </div>
 
@@ -609,13 +460,9 @@
       class="surface-cell surface-cell--inverted"
       style="background: var(--surface-inverted)"
     >
-      <div class="surface-cell__label">
-        inverted
-      </div>
+      <div class="surface-cell__label">inverted</div>
 
-      <code class="t-mono-inline">
-        --surface-inverted
-      </code>
+      <code class="t-mono-inline"> --surface-inverted </code>
     </div>
   </div>
 </docs-section>

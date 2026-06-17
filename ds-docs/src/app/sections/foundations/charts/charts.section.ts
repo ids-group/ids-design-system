@@ -178,18 +178,27 @@ export class ChartsSection {
     (t) => PAD.t + t * innerH,
   );
 
-  protected readonly yTicksLine = [0, 25, 50].map((value) => ({ v: value, y: lineY(value) }));
+  protected readonly yTicksLine = [0, 25, 50].map((value) => ({
+    v: value,
+    y: lineY(value),
+  }));
   protected readonly xTicksLine = LINE_LABELS.slice(0, 6).map((label, i) => ({
     label,
     x: PAD.l + (i / 5) * innerW,
   }));
-  protected readonly yTicksBar = [0, 100, 200].map((value) => ({ v: value, y: barY(value) }));
+  protected readonly yTicksBar = [0, 100, 200].map((value) => ({
+    v: value,
+    y: barY(value),
+  }));
 
   protected readonly barW = (innerW / BAR_DATA.length) * 0.6;
   protected readonly stackW = (innerW / STACK.length) * 0.5;
 
   protected readonly linePoints = computed(() =>
-    LINE_DATA.map((value, i) => ({ x: lineX(i, LINE_DATA.length), y: lineY(value) })),
+    LINE_DATA.map((value, i) => ({
+      x: lineX(i, LINE_DATA.length),
+      y: lineY(value),
+    })),
   );
   protected readonly linePath = computed(() =>
     this.linePoints()
@@ -255,7 +264,9 @@ export class ChartsSection {
   });
 
   protected divToken(value: number): string {
-    if (value < 0) {return `var(--chart-div--${Math.abs(value)})`;}
+    if (value < 0) {
+      return `var(--chart-div--${Math.abs(value)})`;
+    }
 
     return `var(--chart-div-${value})`;
   }

@@ -5,22 +5,16 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede
-    >
+  <span lede>
     Centered dialog over a scrim. Three sizes plus a danger variant for
     destructive confirmations. Inline specimens render the modal card without
     the backdrop so all sizes can be compared side by side.
-  </span
-  >
+  </span>
 
   <!-- ============================================================ Sizes -->
-  <h3 class="block-title t-h4">
-    Sizes
-  </h3>
+  <h3 class="block-title t-h4">Sizes</h3>
 
-  <p class="block-desc t-s">
-    sm · md · lg specimens rendered as static cards.
-  </p>
+  <p class="block-desc t-s">sm · md · lg specimens rendered as static cards.</p>
 
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
@@ -30,27 +24,19 @@
           size="sm"
           [showClose]="false"
         >
-          <span body
-            >
+          <span body>
             Tight modal for binary confirmations and short messages.
-          </span
-          >
+          </span>
 
           <ng-container actions>
-            <ds-button variant="outline">
-              Cancel
-            </ds-button>
+            <ds-button variant="outline"> Cancel </ds-button>
 
-            <ds-button>
-              Confirm
-            </ds-button>
+            <ds-button> Confirm </ds-button>
           </ng-container>
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
-        sm · 480 px
-      </div>
+      <div class="state-cell__label">sm · 480 px</div>
     </div>
 
     <div class="state-cell">
@@ -60,28 +46,20 @@
           size="md"
           [showClose]="false"
         >
-          <span body
-            >
+          <span body>
             Default size. Most edits, detail dialogs, and confirmations with a
             paragraph of context.
-          </span
-          >
+          </span>
 
           <ng-container actions>
-            <ds-button variant="outline">
-              Cancel
-            </ds-button>
+            <ds-button variant="outline"> Cancel </ds-button>
 
-            <ds-button>
-              Save
-            </ds-button>
+            <ds-button> Save </ds-button>
           </ng-container>
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
-        md · 640 px
-      </div>
+      <div class="state-cell__label">md · 640 px</div>
     </div>
 
     <div class="state-cell">
@@ -91,35 +69,25 @@
           size="lg"
           [showClose]="false"
         >
-          <span body
-            >
+          <span body>
             Wider canvas for forms, multi-column previews, and bulk-edit
             dialogs.
-          </span
-          >
+          </span>
 
           <ng-container actions>
-            <ds-button variant="outline">
-              Cancel
-            </ds-button>
+            <ds-button variant="outline"> Cancel </ds-button>
 
-            <ds-button>
-              Run
-            </ds-button>
+            <ds-button> Run </ds-button>
           </ng-container>
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
-        lg · 800 px
-      </div>
+      <div class="state-cell__label">lg · 800 px</div>
     </div>
   </div>
 
   <!-- ============================================================ Variants -->
-  <h3 class="block-title t-h4">
-    Variants
-  </h3>
+  <h3 class="block-title t-h4">Variants</h3>
 
   <p class="block-desc t-s">
     Default · danger confirm · impact warning with affected records.
@@ -133,25 +101,17 @@
           size="sm"
           [showClose]="false"
         >
-          <span body>
-            Apply schedule changes to all 24 records?
-          </span>
+          <span body> Apply schedule changes to all 24 records? </span>
 
           <ng-container actions>
-            <ds-button variant="outline">
-              Cancel
-            </ds-button>
+            <ds-button variant="outline"> Cancel </ds-button>
 
-            <ds-button>
-              Apply
-            </ds-button>
+            <ds-button> Apply </ds-button>
           </ng-container>
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
-        Default
-      </div>
+      <div class="state-cell__label">Default</div>
     </div>
 
     <div class="state-cell">
@@ -162,28 +122,19 @@
           [danger]="true"
           [showClose]="false"
         >
-          <span body
-            >
-            This cannot be undone. 12 resource allocations will be
-            released.
-          </span
-          >
+          <span body>
+            This cannot be undone. 12 resource allocations will be released.
+          </span>
 
           <ng-container actions>
-            <ds-button variant="outline">
-              Cancel
-            </ds-button>
+            <ds-button variant="outline"> Cancel </ds-button>
 
-            <ds-button variant="error">
-              Delete
-            </ds-button>
+            <ds-button variant="error"> Delete </ds-button>
           </ng-container>
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
-        Danger confirm
-      </div>
+      <div class="state-cell__label">Danger confirm</div>
     </div>
 
     <div class="state-cell">
@@ -193,12 +144,10 @@
           size="md"
           [showClose]="false"
         >
-          <span body
-            >
+          <span body>
             Saving these dates will recompute downstream allocations across
             three projects.
-          </span
-          >
+          </span>
 
           <ds-banner
             impact
@@ -206,42 +155,28 @@
             title="Affected records"
           >
             <ul class="list">
-              <li>
-                Project Alpha · 3 Logistics plans
-              </li>
+              <li>Project Alpha · 3 Logistics plans</li>
 
-              <li>
-                Project Beta · 8 Resource allocations
-              </li>
+              <li>Project Beta · 8 Resource allocations</li>
 
-              <li>
-                Project Gamma · 1 Sub-record
-              </li>
+              <li>Project Gamma · 1 Sub-record</li>
             </ul>
           </ds-banner>
 
           <ng-container actions>
-            <ds-button variant="outline">
-              Cancel
-            </ds-button>
+            <ds-button variant="outline"> Cancel </ds-button>
 
-            <ds-button>
-              Recompute &amp; save
-            </ds-button>
+            <ds-button> Recompute &amp; save </ds-button>
           </ng-container>
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
-        Impact warning
-      </div>
+      <div class="state-cell__label">Impact warning</div>
     </div>
   </div>
 
   <!-- ============================================================ With form -->
-  <h3 class="block-title t-h4">
-    With form
-  </h3>
+  <h3 class="block-title t-h4">With form</h3>
 
   <p class="block-desc t-s">
     Modal hosting a small form — label, input, select.
@@ -278,20 +213,14 @@
           </div>
 
           <ng-container actions>
-            <ds-button variant="outline">
-              Cancel
-            </ds-button>
+            <ds-button variant="outline"> Cancel </ds-button>
 
-            <ds-button>
-              Save changes
-            </ds-button>
+            <ds-button> Save changes </ds-button>
           </ng-container>
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
-        Form modal · md
-      </div>
+      <div class="state-cell__label">Form modal · md</div>
     </div>
   </div>
 </docs-section>

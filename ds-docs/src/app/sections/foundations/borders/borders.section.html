@@ -9,9 +9,7 @@
     thumb, focus rings).
   </span>
 
-  <h3 class="block-title t-h4">
-    Widths
-  </h3>
+  <h3 class="block-title t-h4">Widths</h3>
 
   <div class="widths">
     @for (width of widths; track width.token) {
@@ -19,8 +17,7 @@
         <div
           class="width-cell__stage"
           [style.border-width]="'var(' + width.token + ')'"
-        >
-        </div>
+        ></div>
 
         <div class="width-cell__val t-s-bold">
           {{ width.value }}
@@ -37,24 +34,16 @@
     }
   </div>
 
-  <h3 class="block-title t-h4">
-    Border colour roles
-  </h3>
+  <h3 class="block-title t-h4">Border colour roles</h3>
 
   <table class="roles">
     <thead>
       <tr>
-        <th>
-          Token
-        </th>
+        <th>Token</th>
 
-        <th>
-          Use
-        </th>
+        <th>Use</th>
 
-        <th>
-          Sample
-        </th>
+        <th>Sample</th>
       </tr>
     </thead>
 
@@ -83,107 +72,68 @@
     </tbody>
   </table>
 
-  <h3 class="block-title t-h4">
-    Divider component
-  </h3>
+  <h3 class="block-title t-h4">Divider component</h3>
 
   <div class="divider-demo">
-    <p class="t-s demo-label">
-      Plain divider
-    </p>
+    <p class="t-s demo-label">Plain divider</p>
 
     <ds-divider />
 
-    <p class="t-s demo-label">
-      Strong divider
-    </p>
+    <p class="t-s demo-label">Strong divider</p>
 
     <ds-divider variant="strong" />
 
-    <p class="t-s demo-label">
-      Labelled divider
-    </p>
+    <p class="t-s demo-label">Labelled divider</p>
 
-    <ds-divider variant="label">
-      Recently viewed
-    </ds-divider>
+    <ds-divider variant="label"> Recently viewed </ds-divider>
 
-    <p class="t-s demo-label">
-      Vertical divider
-    </p>
+    <p class="t-s demo-label">Vertical divider</p>
 
     <div class="divider-vertical-row">
-      <span class="t-s">
-        Item one
-      </span>
+      <span class="t-s"> Item one </span>
 
       <ds-divider variant="vertical" />
 
-      <span class="t-s">
-        Item two
-      </span>
+      <span class="t-s"> Item two </span>
 
       <ds-divider variant="vertical" />
 
-      <span class="t-s">
-        Item three
-      </span>
+      <span class="t-s"> Item three </span>
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
-    Divider spacing
-  </h3>
+  <h3 class="block-title t-h4">Divider spacing</h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [spacing]
-    </code> controls the vertical gap above
-    and below the rule. Defaults to <code class="t-mono-inline">"md"</code> —
-    pick <code class="t-mono-inline">"none"</code> when the parent owns spacing.
+    <code class="t-mono-inline"> [spacing] </code> controls the vertical gap
+    above and below the rule. Defaults to
+    <code class="t-mono-inline">"md"</code> — pick
+    <code class="t-mono-inline">"none"</code> when the parent owns spacing.
   </p>
 
   <div class="divider-demo">
-    <p class="t-s demo-label">
-      spacing="none"
-    </p>
+    <p class="t-s demo-label">spacing="none"</p>
 
-    <span class="t-s">
-      Before
-    </span>
+    <span class="t-s"> Before </span>
 
     <ds-divider spacing="none" />
 
-    <span class="t-s">
-      After
-    </span>
+    <span class="t-s"> After </span>
 
-    <p class="t-s demo-label">
-      spacing="sm"
-    </p>
+    <p class="t-s demo-label">spacing="sm"</p>
 
-    <span class="t-s">
-      Before
-    </span>
+    <span class="t-s"> Before </span>
 
     <ds-divider spacing="sm" />
 
-    <span class="t-s">
-      After
-    </span>
+    <span class="t-s"> After </span>
 
-    <p class="t-s demo-label">
-      spacing="lg"
-    </p>
+    <p class="t-s demo-label">spacing="lg"</p>
 
-    <span class="t-s">
-      Before
-    </span>
+    <span class="t-s"> Before </span>
 
     <ds-divider spacing="lg" />
 
-    <span class="t-s">
-      After
-    </span>
+    <span class="t-s"> After </span>
   </div>
 </docs-section>

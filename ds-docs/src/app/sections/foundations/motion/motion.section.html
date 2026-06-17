@@ -5,24 +5,16 @@
 >
   <docs-truncation [rules]="truncationRules" />
 
-  <span lede
-    >
+  <span lede>
     Five durations, five eases. All motion respects
-    <code class="t-mono-inline">
-      prefers-reduced-motion
-    </code> — durations
+    <code class="t-mono-inline"> prefers-reduced-motion </code> — durations
     collapse to 0 so components don't need to opt in. Pair durations with the
     right easing per direction: <em>decelerate</em> for enter,
-    <em>
-      accelerate
-    </em> for exit.
-  </span
-  >
+    <em> accelerate </em> for exit.
+  </span>
 
   <!-- ============================================================ Durations -->
-  <h3 class="block-title t-h4">
-    Durations
-  </h3>
+  <h3 class="block-title t-h4">Durations</h3>
 
   <p class="block-desc t-s">
     Hover over each card to play the animation. Each puck travels the same
@@ -36,13 +28,10 @@
           <div
             class="loop-puck loop-puck--dur"
             [style.transitionDuration]="d.value"
-          >
-          </div>
+          ></div>
         </div>
 
-        <code class="t-mono-inline token-name">
-          --duration-{{ d.name }}
-        </code>
+        <code class="t-mono-inline token-name"> --duration-{{ d.name }} </code>
 
         <code class="t-mono-inline token-value">
           {{ d.value }}
@@ -56,9 +45,7 @@
   </div>
 
   <!-- ============================================================ Easings -->
-  <h3 class="block-title t-h4">
-    Easings
-  </h3>
+  <h3 class="block-title t-h4">Easings</h3>
 
   <p class="block-desc t-s">
     Hover over each card to play the animation. Same duration, same distance —
@@ -72,13 +59,10 @@
           <div
             class="loop-puck loop-puck--ease"
             [style.transitionTimingFunction]="e.curve"
-          >
-          </div>
+          ></div>
         </div>
 
-        <code class="t-mono-inline token-name">
-          --ease-{{ e.name }}
-        </code>
+        <code class="t-mono-inline token-name"> --ease-{{ e.name }} </code>
 
         <code class="t-mono-inline token-value">
           {{ e.curve }}
@@ -96,9 +80,7 @@
     Combined · how the DS uses motion in practice
   </h3>
 
-  <p class="block-desc t-s">
-    Hover any tile to replay the transition.
-  </p>
+  <p class="block-desc t-s">Hover any tile to replay the transition.</p>
 
   <div class="combined-grid">
     @for (c of combined; track c.label) {
@@ -110,25 +92,19 @@
       >
         <div class="combined-stage">
           @if (c.kind === 'fade') {
-            <div class="demo-card-lift">
-              Hover row
-            </div>
+            <div class="demo-card-lift">Hover row</div>
           }
 
           @if (c.kind === 'slide') {
             <div class="demo-toast">
               <div class="demo-toast__bar"></div>
 
-              <div class="demo-toast__title">
-                Manifest saved
-              </div>
+              <div class="demo-toast__title">Manifest saved</div>
             </div>
           }
 
           @if (c.kind === 'scale') {
-            <div class="demo-modal">
-              Confirm dispatch
-            </div>
+            <div class="demo-modal">Confirm dispatch</div>
           }
 
           @if (c.kind === 'overshoot') {
