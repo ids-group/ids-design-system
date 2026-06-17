@@ -1,19 +1,34 @@
 <div [class]="wrapperClasses()">
   @if (label()) {
-    <label class="label" [attr.for]="uid">
+    <label
+      class="label"
+      [attr.for]="uid"
+    >
       {{ label() }}
       @if (required()) {
-        <span class="req" aria-hidden="true">*</span>
+        <span
+          class="req"
+          aria-hidden="true"
+          >
+          *
+        </span
+        >
       } @else if (optional()) {
-        <span class="optional-marker" aria-hidden="true">(optional)</span>
+        <span
+          class="optional-marker"
+          aria-hidden="true"
+          >
+          (optional)
+        </span
+        >
       }
     </label>
   }
+
   <div class="control">
     <textarea
       [id]="uid"
       [rows]="rows()"
-      [(ngModel)]="value"
       [attr.name]="name()"
       [attr.placeholder]="placeholder() || null"
       [attr.aria-label]="resolvedAriaLabel()"
@@ -26,9 +41,19 @@
       [style.min-height]="autosizeMinHeight()"
       [style.max-height]="autosizeMaxHeight()"
       [style.overflow-y]="autosize() && maxRows() ? 'auto' : null"
-    ></textarea>
+      [(ngModel)]="value"
+    >
+    </textarea>
   </div>
+
   @if (hint()) {
-    <span class="hint" [id]="hintId()" [attr.role]="invalid() ? 'alert' : null">{{ hint() }}</span>
+    <span
+      class="hint"
+      [id]="hintId()"
+      [attr.role]="invalid() ? 'alert' : null"
+      >
+      {{ hint() }}
+    </span
+    >
   }
 </div>

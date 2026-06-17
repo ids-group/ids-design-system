@@ -1,4 +1,11 @@
-import { Component, ViewEncapsulation, booleanAttribute, computed, input, model } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  computed,
+  input,
+  model,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import type { TextareaSize, TextareaResize } from './textarea.types';
 
@@ -32,18 +39,21 @@ export class TextareaComponent {
   readonly ariaLabel = input<string | null>(null);
 
   protected readonly uid = `ds-textarea-${++nextId}`;
-  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly hintId = computed(() =>
+    this.hint() ? `${this.uid}-hint` : null,
+  );
   protected readonly resolvedAriaLabel = computed(() =>
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,
   );
 
   protected readonly wrapperClasses = computed(() => {
     const parts = ['field'];
-    if (this.size() === 'sm') parts.push('sm');
-    if (this.size() === 'lg') parts.push('lg');
-    if (this.invalid()) parts.push('error');
-    if (this.disabled()) parts.push('disabled');
-    if (this.autosize()) parts.push('autosize');
+    if (this.size() === 'sm') {parts.push('sm');}
+    if (this.size() === 'lg') {parts.push('lg');}
+    if (this.invalid()) {parts.push('error');}
+    if (this.disabled()) {parts.push('disabled');}
+    if (this.autosize()) {parts.push('autosize');}
+
     return parts.join(' ');
   });
 
