@@ -1,4 +1,10 @@
-import { Component, ViewEncapsulation, computed, input, output } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  computed,
+  input,
+  output,
+} from '@angular/core';
 import type { CardElevation, CardPadding } from './card.types';
 
 @Component({
@@ -15,6 +21,7 @@ export class CardComponent {
 
   protected readonly classes = computed(() => {
     const pad = this.padding();
+
     return `card ${this.elevation()}${pad ? ' padding-' + pad : ''}`;
   });
 
