@@ -1,4 +1,10 @@
-import { Component, ViewEncapsulation, booleanAttribute, input, output } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  input,
+  output,
+} from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { TagVariant } from './tag.types';
 

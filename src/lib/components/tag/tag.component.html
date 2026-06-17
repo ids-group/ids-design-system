@@ -1,6 +1,14 @@
 <ng-content></ng-content>
 @if (closable()) {
-  <button type="button" class="close" [attr.aria-label]="closeLabel()" (click)="$event.stopPropagation(); closed.emit()">
-    <ds-icon name="x" [size]="12" />
+  <button
+    type="button"
+    class="close"
+    [attr.aria-label]="closeLabel()"
+    (click)="$event.stopPropagation(); closed.emit()"
+  >
+    <ds-icon
+      name="x"
+      [size]="12"
+    />
   </button>
 }

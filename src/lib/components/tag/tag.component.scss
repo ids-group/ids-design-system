@@ -5,9 +5,14 @@
   --_tag-pad-x:        var(--ds-tag-pad-x, var(--tag-pad-x));
   --_tag-radius:       var(--ds-tag-radius, var(--radius-md));
   --_tag-bg:           var(--ds-tag-bg, var(--primary));
-  --_tag-fw:           var(--ds-tag-fw, var(--font-weight-bold));
-  --_tag-fs:           var(--ds-tag-fs, var(--font-size-xs));
-  --_tag-lh:           var(--ds-tag-lh, var(--line-height-base));
+  --_tag-fw:            var(--ds-tag-fw, var(--font-weight-bold));
+  --_tag-fs:            var(--ds-tag-fs, var(--font-size-xs));
+  --_tag-lh:            var(--ds-tag-lh, var(--line-height-base));
+  --_tag-hover-bg:      var(--ds-tag-hover-bg,      var(--surface-muted));
+  --_tag-hover-fg:      var(--ds-tag-hover-fg,      var(--text-primary));
+  --_tag-active-bg:     var(--ds-tag-active-bg,     var(--primary-muted));
+  --_tag-active-fg:     var(--ds-tag-active-fg,     var(--primary-strong));
+  --_tag-active-border: var(--ds-tag-active-border, var(--primary));
 
   display: inline-flex;
   align-items: center;
@@ -16,7 +21,7 @@
   border-radius: var(--_tag-radius);
   background: var(--_tag-bg);
   color: var(--primary-on);
-  font: var(--_tag-fw) var(--_tag-fs)/var(--_tag-lh) var(--font-sans);
+  font: var(--_tag-fw) var(--_tag-fs) / var(--_tag-lh) var(--font-sans);
 }
 
 :host(.closable) {
@@ -46,17 +51,11 @@
 }
 
 :host(.interactive:hover):not(.is-active) {
-  --_tag-hover-bg: var(--ds-tag-hover-bg, var(--surface-muted));
-
   background: var(--_tag-hover-bg);
-  color: var(--text-primary);
+  color: var(--_tag-hover-fg);
 }
 
 :host(.interactive.is-active) {
-  --_tag-active-bg:     var(--ds-tag-active-bg,     var(--primary-muted));
-  --_tag-active-fg:     var(--ds-tag-active-fg,     var(--primary-strong));
-  --_tag-active-border: var(--ds-tag-active-border, var(--primary));
-
   background: var(--_tag-active-bg);
   color: var(--_tag-active-fg);
   box-shadow: inset 0 0 0 var(--border-width-default) var(--_tag-active-border);
@@ -73,15 +72,15 @@
   border-radius: var(--radius-sm);
   padding: var(--tag-close-pad);
   margin-left: var(--tag-close-pad);
-  background: color-mix(in oklab, currentColor calc(var(--opacity-state-hover) * 100%), transparent);
+  background: color-mix(in oklab, currentcolor calc(var(--opacity-state-hover) * 100%), transparent);
   transition: background var(--duration-fast) var(--ease-standard);
 
   &:hover {
-    background: color-mix(in oklab, currentColor calc(var(--opacity-state-pressed) * 100%), transparent);
+    background: color-mix(in oklab, currentcolor calc(var(--opacity-state-pressed) * 100%), transparent);
   }
 
   &:active {
-    background: color-mix(in oklab, currentColor calc(var(--opacity-state-active) * 100%), transparent);
+    background: color-mix(in oklab, currentcolor calc(var(--opacity-state-active) * 100%), transparent);
   }
 
   &:focus-visible {
