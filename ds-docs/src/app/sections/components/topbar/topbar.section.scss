@@ -19,7 +19,7 @@
       border-radius: var(--radius-md);
       color: var(--icon-default);
       cursor: pointer;
-      transition: background var(--duration-fast) var(--ease-standard);
+      transition: background-color var(--duration-fast) var(--ease-standard);
 
       &:hover { background: var(--surface-secondary); color: var(--icon-strong); }
       &:focus-visible { outline: none; box-shadow: var(--focus-ring); }

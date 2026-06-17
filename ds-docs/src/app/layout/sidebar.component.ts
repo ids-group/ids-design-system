@@ -156,7 +156,7 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
       text-decoration: none;
       cursor: pointer;
       user-select: none;
-      transition: background var(--duration-fast) var(--ease-standard),
+      transition: background-color var(--duration-fast) var(--ease-standard),
                   color var(--duration-fast) var(--ease-standard);
     }
     .link:hover { background: var(--surface-secondary); color: var(--text-primary); }

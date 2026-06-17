@@ -12,7 +12,7 @@
   font-family: var(--font-mono);
   font-size: var(--font-size-mono);
   cursor: pointer;
-  transition: background var(--duration-fast) var(--ease-standard);
+  transition: background-color var(--duration-fast) var(--ease-standard);
 
   &:hover { background: var(--primary-muted); }
 

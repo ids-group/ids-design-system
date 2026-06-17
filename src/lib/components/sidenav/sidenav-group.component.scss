@@ -9,7 +9,7 @@
   flex-direction: column;
   gap: var(--space-1);
   border-radius: var(--_sidenav-group-radius);
-  transition: background var(--duration-fast) var(--ease-standard);
+  transition: background-color var(--duration-fast) var(--ease-standard);
 }
 
 :host(:has(.group-header[aria-expanded="true"])) {

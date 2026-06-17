@@ -73,7 +73,7 @@
   padding: var(--tag-close-pad);
   margin-left: var(--tag-close-pad);
   background: color-mix(in oklab, currentcolor calc(var(--opacity-state-hover) * 100%), transparent);
-  transition: background var(--duration-fast) var(--ease-standard);
+  transition: background-color var(--duration-fast) var(--ease-standard);
 
   &:hover {
     background: color-mix(in oklab, currentcolor calc(var(--opacity-state-pressed) * 100%), transparent);
