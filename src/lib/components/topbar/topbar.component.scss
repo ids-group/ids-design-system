@@ -18,7 +18,7 @@
   border-bottom: var(--border-width-default) solid var(--_topbar-border);
 
   .title {
-    font: var(--font-weight-bold) var(--font-size-h5)/var(--line-height-snug) var(--font-sans);
+    font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans);
     color: var(--_topbar-title-fg);
   }
 
@@ -40,7 +40,7 @@
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
+    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     color: var(--text-tertiary);
     min-width: 0;
     max-width: 100%;
