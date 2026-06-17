@@ -1,11 +1,13 @@
 // =========================================================================
 // Default theme — Tier 2 semantic role ASSIGNMENTS (light).
+//
 // The palette (themes/default/_palette.scss) DEFINES the concrete colours
 // (--blue-*, --red-*, --neutral-*, … + HSL channels). THIS file SETS them
 // onto semantic roles (--primary → --blue-600, --surface-canvas → --neutral-50,
 // --error → --red-500, …). Components consume only these roles, never the
 // palette directly — so swapping the palette, or re-mapping here, re-skins the
 // whole system. A sibling theme (e.g. dark) ships its own palette + this map.
+//
 // Tier 3 (component-scoped tokens, geometry, typography, motion) lives in
 // styles/_tokens.scss and is theme-independent.
 // =========================================================================

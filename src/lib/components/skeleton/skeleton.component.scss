@@ -40,5 +40,8 @@
   );
   mask-size: 200vw 100%;
   mask-repeat: no-repeat;
+  -webkit-mask-attachment: fixed;
+  /* stylelint-disable-next-line property-no-unknown */
+  mask-attachment: fixed;
   mask-position: var(--skeleton-shimmer-x, 100vw) 0;
 }

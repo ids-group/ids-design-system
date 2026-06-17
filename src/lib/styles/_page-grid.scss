@@ -1,15 +1,18 @@
 // Page grid — four-tier responsive layout grid.
+//
 // One column-count per breakpoint (4 / 8 / 12 / 12), gutters and margins
 // scale with the viewport, content caps at --col-cap-content on the widest
 // tier and stays fluid below. Sub-regions inherit the page grid — never
 // invent a local grid. Sidenav lives OUTSIDE this grid (reserve its rail
 // first, start `.page-grid` in the remaining width).
+//
 //   Tier         | Range          | Cols | Gutter        | Margin        | Cap
 //   ------------ | -------------- | ---- | ------------- | ------------- | ----------------
 //   Mobile       | <= 640px       | 4    | --space-3 (12px)  | --space-4 (16px)  | fluid
 //   Tablet       | 641-1024px     | 8    | --space-4 (16px)  | --space-6 (24px)  | fluid
 //   Desktop      | 1025-1440px    | 12   | --space-5 (20px)  | --space-8 (32px)  | fluid
 //   Desktop wide | >= 1441px      | 12   | --space-6 (24px)  | --space-10 (40px) | --col-cap-content (1280px)
+//
 // Snap to columns, not pixels: 8+4 / 6+6 / 9+3 are canonical splits;
 // 7+5 is forbidden. Prose blocks cap at --col-cap-text (720px) regardless
 // of grid width.
