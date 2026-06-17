@@ -1,4 +1,11 @@
-import { Component, HostBinding, ViewEncapsulation, computed, input, output } from '@angular/core';
+import {
+  Component,
+  HostBinding,
+  ViewEncapsulation,
+  computed,
+  input,
+  output,
+} from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
 import type { BannerVariant } from './banner.types';
@@ -31,8 +38,11 @@ export class BannerComponent {
   // present at first paint, so a `status` region won't be re-read needlessly.
   @HostBinding('attr.role')
   protected get ariaRole(): 'alert' | 'status' {
-    const v = this.variant();
-    return v === 'error' || v === 'warning' || v === 'severe' ? 'alert' : 'status';
+    const value = this.variant();
+
+    return value === 'error' || value === 'warning' || value === 'severe'
+      ? 'alert'
+      : 'status';
   }
 
   @HostBinding('attr.aria-live')
@@ -42,15 +52,17 @@ export class BannerComponent {
 
   protected readonly classes = computed(() => {
     const parts = ['banner', this.variant(), `layout-${this.layout()}`];
-    if (this.compact()) parts.push('compact');
+    if (this.compact()) {parts.push('compact');}
+
     return parts.join(' ');
   });
 
   protected readonly defaultIcon = computed<IconName>(() => {
     const variant = this.variant();
-    if (variant === 'success') return 'success';
-    if (variant === 'warning' || variant === 'severe') return 'warn';
-    if (variant === 'error') return 'error';
+    if (variant === 'success') {return 'success';}
+    if (variant === 'warning' || variant === 'severe') {return 'warn';}
+    if (variant === 'error') {return 'error';}
+
     return 'info';
   });
 

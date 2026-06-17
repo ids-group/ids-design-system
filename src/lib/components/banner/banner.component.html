@@ -1,15 +1,36 @@
 <div [class]="classes()">
-  <ds-icon class="icon" [name]="icon() ?? defaultIcon()" [size]="20"></ds-icon>
+  <ds-icon
+    class="icon"
+    [name]="icon() ?? defaultIcon()"
+    [size]="20"
+  >
+  </ds-icon>
+
   <div class="body">
-    @if (title()) { <div class="title">{{ title() }}</div> }
+    @if (title()) {
+      <div class="title">
+        {{ title() }}
+      </div>
+    }
+
     <ng-content></ng-content>
   </div>
+
   <div class="actions">
     <ng-content select="[actions]"></ng-content>
   </div>
+
   @if (dismissible()) {
-    <button class="close" type="button" (click)="onDismiss()">
-      <ds-icon name="x" [size]="16"></ds-icon>
+    <button
+      class="close"
+      type="button"
+      (click)="onDismiss()"
+    >
+      <ds-icon
+        name="x"
+        [size]="16"
+      >
+      </ds-icon>
     </button>
   }
 </div>

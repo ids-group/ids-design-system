@@ -1,1 +1,7 @@
-export type BannerVariant = 'info' | 'success' | 'warning' | 'severe' | 'error' | 'neutral';
+export type BannerVariant =
+  | 'info'
+  | 'success'
+  | 'warning'
+  | 'severe'
+  | 'error'
+  | 'neutral';
