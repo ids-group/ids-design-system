@@ -169,6 +169,7 @@
   --opacity-scrim:           0.55;  /* modal/drawer backdrop overlay (light theme) */
   --opacity-state-hover:     0.08;  /* hover layer over surface (overlay vs surface swap) */
   --opacity-state-pressed:   0.16;  /* active/pressed layer */
+  --opacity-state-active:    0.24;  /* deepest pressed layer (e.g. tag close on :active) */
 
   /* ============================================================
      Breakpoints

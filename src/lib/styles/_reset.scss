@@ -1,6 +1,11 @@
 // Reset — ported from CLAUDE_DESIGN_DS/tokens.css §Base.
 
 *, *::before, *::after { box-sizing: border-box; }
+
+/* Opt into animating to/from intrinsic sizes (height: auto, max-content).
+   Inherited, so components can transition height:0 ↔ auto natively
+   (accordion, sidenav group) without max-height magic numbers. */
+:root { interpolate-size: allow-keywords; }
 html, body {
   margin: 0;
   font-family: var(--font-sans);

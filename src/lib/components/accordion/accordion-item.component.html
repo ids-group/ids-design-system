@@ -10,8 +10,13 @@
   <ng-content select="[badge]"></ng-content>
   <ds-icon name="chevronRight" class="chev" [size]="16" />
 </button>
-@if (expanded()) {
-  <div class="body" role="region" [id]="bodyId" [attr.aria-labelledby]="headId">
-    <ng-content></ng-content>
-  </div>
-}
+<div
+  class="body"
+  role="region"
+  [id]="bodyId"
+  [attr.aria-labelledby]="headId"
+  [class.is-open]="expanded()"
+  [attr.inert]="expanded() ? null : ''"
+>
+  <div class="body-inner"><ng-content></ng-content></div>
+</div>

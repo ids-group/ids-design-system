@@ -8,6 +8,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+- Tag: added an `:active` (pressed) state to the close/dismiss button, with a new
+  `--opacity-state-active` (0.24) overlay token. Previously only hover was styled.
+- Accordion & sidenav group now animate open/close (`height: 0 ↔ auto`) via a new
+  `interpolate-size: allow-keywords` opt-in on `:root`. The accordion body is always
+  rendered (collapsed content is `inert`), replacing the instant `@if` show/hide.
+
 ## 0.2.2 — 2026-06-17
 
 - Added `.t-mono-inline` typography utility — an inline code chip (mono font on a

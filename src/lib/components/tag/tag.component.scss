@@ -80,6 +80,10 @@
     background: color-mix(in oklab, currentColor calc(var(--opacity-state-pressed) * 100%), transparent);
   }
 
+  &:active {
+    background: color-mix(in oklab, currentColor calc(var(--opacity-state-active) * 100%), transparent);
+  }
+
   &:focus-visible {
     outline: var(--border-width-strong, 2px) solid var(--focus-ring-color, currentColor);
     outline-offset: 1px;

@@ -37,6 +37,16 @@
   }
 
   .body {
+    height: 0;
+    overflow: hidden;
+    transition: height var(--duration-base) var(--ease-standard);
+
+    &.is-open { height: auto; }
+
+    @media (prefers-reduced-motion: reduce) { transition: none; }
+  }
+
+  .body-inner {
     padding: 0 var(--space-4) var(--space-4);
     color: var(--text-secondary);
     font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans);

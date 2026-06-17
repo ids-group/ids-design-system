@@ -29,6 +29,10 @@
 } @else if (label()) {
   <span class="group-label">{{ label() }}</span>
 }
-<div class="group-body" [class.hidden]="expandable() && !expanded()">
+<div
+  class="group-body"
+  [class.hidden]="expandable() && !expanded()"
+  [attr.inert]="expandable() && !expanded() ? '' : null"
+>
   <ng-content></ng-content>
 </div>
