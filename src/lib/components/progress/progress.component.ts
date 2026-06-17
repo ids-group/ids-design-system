@@ -15,8 +15,8 @@ import type { ProgressVariant } from './progress.types';
     '[attr.aria-valuenow]': 'isIndet() ? null : clampedValue()',
     '[attr.aria-label]': 'ariaLabel()',
     '[class.success]': "variant() === 'success'",
-    '[class.warn]':    "variant() === 'warn'",
-    '[class.error]':   "variant() === 'error'",
+    '[class.warn]': "variant() === 'warn'",
+    '[class.error]': "variant() === 'error'",
     '[class.indeterminate]': 'isIndet()',
   },
 })
@@ -27,9 +27,12 @@ export class ProgressComponent {
   readonly ariaLabel = input<string | null>(null);
 
   protected readonly clampedValue = computed(() => {
-    const v = this.value();
-    return Math.max(0, Math.min(100, v));
+    const value = this.value();
+
+    return Math.max(0, Math.min(100, value));
   });
 
-  protected readonly isIndet = computed(() => this.variant() === 'indeterminate');
+  protected readonly isIndet = computed(
+    () => this.variant() === 'indeterminate',
+  );
 }

@@ -1,1 +1,6 @@
-export type ProgressVariant = 'default' | 'success' | 'warn' | 'error' | 'indeterminate';
+export type ProgressVariant =
+  | 'default'
+  | 'success'
+  | 'warn'
+  | 'error'
+  | 'indeterminate';
