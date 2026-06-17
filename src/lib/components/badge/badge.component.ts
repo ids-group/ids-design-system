@@ -14,11 +14,8 @@ export class BadgeComponent {
   readonly solid = input<boolean>(false);
 
   protected readonly classes = computed(() => {
-    const parts = [
-      'badge',
-      this.variant(),
-      this.solid() ? 'solid' : '',
-    ];
+    const parts = ['badge', this.variant(), this.solid() ? 'solid' : ''];
+
     return parts.filter(Boolean).join(' ');
   });
 }

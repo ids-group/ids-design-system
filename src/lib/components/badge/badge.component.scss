@@ -24,13 +24,13 @@
   gap: var(--badge-gap);
   padding: var(--_badge-pad-y) var(--_badge-pad-x);
   border-radius: var(--_badge-radius);
-  font: var(--_badge-font-weight) var(--font-size-xs)/var(--line-height-base) var(--font-sans);
+  font: var(--_badge-font-weight) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
   letter-spacing: var(--letter-spacing-wide);
   white-space: nowrap;
   background: var(--_badge-bg);
   color: var(--_badge-fg);
 
-  .dot { width: var(--badge-dot-size); height: var(--badge-dot-size); border-radius: var(--radius-pill); background: currentColor; }
+  .dot { width: var(--badge-dot-size); height: var(--badge-dot-size); border-radius: var(--radius-pill); background: currentcolor; }
 
   &.planning  { --_badge-bg: var(--ds-badge-bg, var(--status-planning-bg));  --_badge-fg: var(--ds-badge-fg, var(--status-planning-fg)); }
   &.confirmed { --_badge-bg: var(--ds-badge-bg, var(--status-confirmed-bg)); --_badge-fg: var(--ds-badge-fg, var(--status-confirmed-fg)); }

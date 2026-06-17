@@ -1,2 +1,6 @@
 export { BadgeComponent } from './badge.component';
-export type { BadgeVariant, BadgeLifecycle, BadgeSemantic } from './badge.types';
+export type {
+  BadgeVariant,
+  BadgeLifecycle,
+  BadgeSemantic,
+} from './badge.types';
