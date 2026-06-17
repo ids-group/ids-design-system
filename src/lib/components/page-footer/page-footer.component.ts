@@ -10,7 +10,7 @@ import type { PageFooterVariant } from './page-footer.types';
   encapsulation: ViewEncapsulation.Emulated,
   host: {
     '[class.compact]': "variant() === 'compact'",
-    '[class.save]':    "variant() === 'save'",
+    '[class.save]': "variant() === 'save'",
   },
 })
 export class PageFooterComponent {
