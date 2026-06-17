@@ -1,14 +1,30 @@
 <div class="field">
   @if (label()) {
-    <span class="label" [id]="labelId">
+    <span
+      class="label"
+      [id]="labelId"
+    >
       {{ label() }}
       @if (required()) {
-        <span class="req" aria-hidden="true">*</span>
+        <span
+          class="req"
+          aria-hidden="true"
+          >
+          *
+        </span
+        >
       } @else if (optional()) {
-        <span class="optional-marker" aria-hidden="true">(optional)</span>
+        <span
+          class="optional-marker"
+          aria-hidden="true"
+          >
+          (optional)
+        </span
+        >
       }
     </span>
   }
+
   <button
     #trigger
     type="button"
@@ -20,35 +36,85 @@
     [attr.aria-required]="required() ? 'true' : null"
     (click)="open()"
   >
-    <ds-icon name="calendar" [size]="14"></ds-icon>
-    <span>{{ displayLabel() }}</span>
+    <ds-icon
+      name="calendar"
+      [size]="14"
+    >
+    </ds-icon>
+
+    <span>
+      {{ displayLabel() }}
+    </span>
   </button>
+
   @if (hint()) {
-    <small class="hint">{{ hint() }}</small>
+    <small class="hint">
+      {{ hint() }}
+    </small>
   }
 </div>
 
 <ng-template #panel>
   <div class="calendar">
     <div class="head">
-      <span class="title">{{ monthLabel() }}</span>
+      <span class="title">
+        {{ monthLabel() }}
+      </span>
+
       <span class="nav">
-        <button type="button" (click)="prevMonth()">
-          <ds-icon name="chevronLeft" [size]="14"></ds-icon>
+        <button
+          type="button"
+          (click)="prevMonth()"
+        >
+          <ds-icon
+            name="chevronLeft"
+            [size]="14"
+          >
+          </ds-icon>
         </button>
-        <button type="button" (click)="nextMonth()">
-          <ds-icon name="chevronRight" [size]="14"></ds-icon>
+
+        <button
+          type="button"
+          (click)="nextMonth()"
+        >
+          <ds-icon
+            name="chevronRight"
+            [size]="14"
+          >
+          </ds-icon>
         </button>
       </span>
     </div>
+
     <div class="grid">
-      <span class="dow">Mo</span>
-      <span class="dow">Tu</span>
-      <span class="dow">We</span>
-      <span class="dow">Th</span>
-      <span class="dow">Fr</span>
-      <span class="dow">Sa</span>
-      <span class="dow">Su</span>
+      <span class="dow">
+        Mo
+      </span>
+
+      <span class="dow">
+        Tu
+      </span>
+
+      <span class="dow">
+        We
+      </span>
+
+      <span class="dow">
+        Th
+      </span>
+
+      <span class="dow">
+        Fr
+      </span>
+
+      <span class="dow">
+        Sa
+      </span>
+
+      <span class="dow">
+        Su
+      </span>
+
       @for (cell of daysGrid(); track $index) {
         <button
           type="button"

@@ -14,7 +14,11 @@ import {
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { IconComponent } from '../../icons/icon.component';
-import type { DatePickerMode, DatePickerSize, RangeValue } from './date-picker.types';
+import type {
+  DatePickerMode,
+  DatePickerSize,
+  RangeValue,
+} from './date-picker.types';
 
 let nextId = 0;
 
@@ -67,6 +71,7 @@ export class DatePickerComponent {
 
   protected isFocusDay(cell: DayCell): boolean {
     const f = this.gridFocus();
+
     return !!f && this.dayKey(f) === this.dayKey(cell.date);
   }
 
@@ -75,23 +80,41 @@ export class DatePickerComponent {
     const f = this.gridFocus() ?? cell.date;
     let next: Date | null = null;
     switch (event.key) {
-      case 'ArrowLeft': next = this.addDays(f, -1); break;
-      case 'ArrowRight': next = this.addDays(f, 1); break;
-      case 'ArrowUp': next = this.addDays(f, -7); break;
-      case 'ArrowDown': next = this.addDays(f, 7); break;
-      case 'Home': next = this.addDays(f, -((f.getDay() + 6) % 7)); break;
-      case 'End': next = this.addDays(f, 6 - ((f.getDay() + 6) % 7)); break;
-      case 'PageUp': next = this.addMonths(f, -1); break;
-      case 'PageDown': next = this.addMonths(f, 1); break;
+      case 'ArrowLeft':
+        next = this.addDays(f, -1);
+        break;
+      case 'ArrowRight':
+        next = this.addDays(f, 1);
+        break;
+      case 'ArrowUp':
+        next = this.addDays(f, -7);
+        break;
+      case 'ArrowDown':
+        next = this.addDays(f, 7);
+        break;
+      case 'Home':
+        next = this.addDays(f, -((f.getDay() + 6) % 7));
+        break;
+      case 'End':
+        next = this.addDays(f, 6 - ((f.getDay() + 6) % 7));
+        break;
+      case 'PageUp':
+        next = this.addMonths(f, -1);
+        break;
+      case 'PageDown':
+        next = this.addMonths(f, 1);
+        break;
       case 'Enter':
       case ' ':
         event.preventDefault();
         this.selectDay(cell);
+
         return;
       case 'Escape':
         event.preventDefault();
         this.close();
         this.trigger().nativeElement.focus();
+
         return;
       default:
         return;
@@ -105,22 +128,24 @@ export class DatePickerComponent {
   private addDays(date: Date, n: number): Date {
     const d = new Date(date);
     d.setDate(d.getDate() + n);
+
     return d;
   }
 
   private addMonths(date: Date, n: number): Date {
     const d = new Date(date);
     d.setMonth(d.getMonth() + n);
+
     return d;
   }
 
   private focusGridDay(): void {
     const f = this.gridFocus();
-    if (!f || !this.overlayRef) return;
-    const el = this.overlayRef.overlayElement.querySelector(
+    if (!f || !this.overlayRef) {return;}
+    const element = this.overlayRef.overlayElement.querySelector(
       `[data-day="${this.dayKey(f)}"]`,
     ) as HTMLElement | null;
-    el?.focus();
+    element?.focus();
   }
 
   /** Full, unambiguous date for a day cell's accessible name. */
@@ -135,30 +160,36 @@ export class DatePickerComponent {
 
   protected readonly triggerClasses = computed(() => {
     const size = this.size();
+
     return size === 'md' ? 'trigger' : `trigger ${size}`;
   });
 
   protected readonly viewMonth = signal<Date>(new Date());
-  protected readonly trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
-  protected readonly panelTpl = viewChild.required<TemplateRef<unknown>>('panel');
+  protected readonly trigger =
+    viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
+  protected readonly panelTpl =
+    viewChild.required<TemplateRef<unknown>>('panel');
   private overlayRef: OverlayRef | null = null;
 
   protected readonly displayLabel = computed(() => {
-    const v = this.value();
+    const value = this.value();
     if (this.mode() === 'single') {
-      const d = v as Date | null;
+      const d = value as Date | null;
+
       return d ? d.toLocaleDateString() : this.placeholder();
     }
-    const r = (v as RangeValue | null) ?? [null, null];
+    const r = (value as RangeValue | null) ?? [null, null];
     const a = r[0];
     const b = r[1];
-    if (a && b) return `${a.toLocaleDateString()} – ${b.toLocaleDateString()}`;
-    if (a) return `${a.toLocaleDateString()} – …`;
+    if (a && b) {return `${a.toLocaleDateString()} – ${b.toLocaleDateString()}`;}
+    if (a) {return `${a.toLocaleDateString()} – …`;}
+
     return this.placeholder();
   });
 
   protected readonly monthLabel = computed(() => {
     const m = this.viewMonth();
+
     return m.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
   });
 
@@ -189,23 +220,48 @@ export class DatePickerComponent {
         isSelected: range.isSelected,
       });
     }
+
     return cells;
   });
 
-  private getRangeContext(d: Date): { inRange: boolean; isStart: boolean; isEnd: boolean; isSelected: boolean } {
-    const v = this.value();
+  private getRangeContext(d: Date): {
+    inRange: boolean;
+    isStart: boolean;
+    isEnd: boolean;
+    isSelected: boolean;
+  } {
+    const value = this.value();
     if (this.mode() === 'single') {
-      const sel = v as Date | null;
-      return { inRange: false, isStart: false, isEnd: false, isSelected: !!sel && sel.toDateString() === d.toDateString() };
+      const sel = value as Date | null;
+
+      return {
+        inRange: false,
+        isStart: false,
+        isEnd: false,
+        isSelected: !!sel && sel.toDateString() === d.toDateString(),
+      };
     }
-    const r = (v as RangeValue | null) ?? [null, null];
+    const r = (value as RangeValue | null) ?? [null, null];
     const a = r[0];
     const b = r[1];
-    if (!a) return { inRange: false, isStart: false, isEnd: false, isSelected: false };
-    if (!b) return { inRange: false, isStart: a.toDateString() === d.toDateString(), isEnd: false, isSelected: false };
+    if (!a)
+      {return {
+        inRange: false,
+        isStart: false,
+        isEnd: false,
+        isSelected: false,
+      };}
+    if (!b)
+      {return {
+        inRange: false,
+        isStart: a.toDateString() === d.toDateString(),
+        isEnd: false,
+        isSelected: false,
+      };}
     const t = d.getTime();
     const aT = a.getTime();
     const bT = b.getTime();
+
     return {
       inRange: t > Math.min(aT, bT) && t < Math.max(aT, bT),
       isStart: t === Math.min(aT, bT),
@@ -215,12 +271,25 @@ export class DatePickerComponent {
   }
 
   protected open(): void {
-    if (this.overlayRef) return;
-    const positionStrategy = this.overlay.position()
+    if (this.overlayRef) {return;}
+    const positionStrategy = this.overlay
+      .position()
       .flexibleConnectedTo(this.trigger().nativeElement)
       .withPositions([
-        { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 4 },
-        { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -4 },
+        {
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top',
+          offsetY: 4,
+        },
+        {
+          originX: 'start',
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'bottom',
+          offsetY: -4,
+        },
       ]);
     const cfg: OverlayConfig = {
       positionStrategy,
@@ -267,6 +336,7 @@ export class DatePickerComponent {
       this.value.set(new Date(cell.date));
       this.close();
       this.trigger().nativeElement.focus();
+
       return;
     }
     const r = (this.value() as RangeValue | null) ?? [null, null];
@@ -277,7 +347,8 @@ export class DatePickerComponent {
       this.gridFocus.set(new Date(cell.date));
     } else {
       const picked = new Date(cell.date);
-      const range: RangeValue = a.getTime() <= picked.getTime() ? [a, picked] : [picked, a];
+      const range: RangeValue =
+        a.getTime() <= picked.getTime() ? [a, picked] : [picked, a];
       this.value.set(range);
       this.close();
       this.trigger().nativeElement.focus();
@@ -286,12 +357,13 @@ export class DatePickerComponent {
 
   protected cellClasses(cell: DayCell): string {
     const parts = ['day'];
-    if (!cell.inMonth) parts.push('muted');
-    if (cell.isToday) parts.push('today');
-    if (cell.inRange) parts.push('in-range');
-    if (cell.isRangeStart) parts.push('range-start');
-    if (cell.isRangeEnd) parts.push('range-end');
-    if (cell.isSelected) parts.push('selected');
+    if (!cell.inMonth) {parts.push('muted');}
+    if (cell.isToday) {parts.push('today');}
+    if (cell.inRange) {parts.push('in-range');}
+    if (cell.isRangeStart) {parts.push('range-start');}
+    if (cell.isRangeEnd) {parts.push('range-end');}
+    if (cell.isSelected) {parts.push('selected');}
+
     return parts.join(' ');
   }
 }
