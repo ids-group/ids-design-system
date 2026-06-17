@@ -24,7 +24,9 @@ export class BreadcrumbsService {
   }
 
   replaceLast(item: BreadcrumbItem): void {
-    this._items.update((arr) => (arr.length ? [...arr.slice(0, -1), item] : [item]));
+    this._items.update((arr) =>
+      arr.length ? [...arr.slice(0, -1), item] : [item],
+    );
   }
 
   clear(): void {

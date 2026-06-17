@@ -1,4 +1,11 @@
-import { Component, ViewEncapsulation, computed, inject, input, output } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  computed,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import { DS_CONFIG } from '../../config/ds-config';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
@@ -39,6 +46,7 @@ export class BreadcrumbsComponent {
   protected onNav(event: Event, item: BreadcrumbItem): void {
     if (!item.href || !this.effectiveClickable()) {
       event.preventDefault();
+
       return;
     }
     event.preventDefault();
