@@ -128,6 +128,14 @@
       <div class="states states--cols-1">
         <div class="state-cell">
           <div class="state-cell__stage">
+            <ds-banner variant="success" title="All checks passed" [accentRail]="true">
+              12 resource allocations validated against the 95% capacity rule.
+            </ds-banner>
+          </div>
+          <div class="state-cell__label">accentRail="true" (default)</div>
+        </div>
+        <div class="state-cell">
+          <div class="state-cell__stage">
             <ds-banner variant="success" title="All checks passed" [accentRail]="false">
               12 resource allocations validated against the 95% capacity rule.
             </ds-banner>

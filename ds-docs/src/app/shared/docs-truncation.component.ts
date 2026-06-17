@@ -17,7 +17,7 @@ export interface TruncationRule {
   encapsulation: ViewEncapsulation.Emulated,
   template: `
     <button type="button" class="i" aria-label="Truncation rules">
-      <ds-icon name="info" [size]="16" />
+      <ds-icon name="info" [size]="18" />
     </button>
     <div class="panel" role="tooltip">
       <div class="panel__title"><ds-icon name="filter" [size]="13" /> Truncation</div>
@@ -32,7 +32,7 @@ export interface TruncationRule {
     :host { position: relative; display: inline-flex; vertical-align: middle; margin-left: var(--space-2); }
     .i {
       display: inline-flex; padding: 0; border: 0; background: none;
-      color: var(--text-tertiary); cursor: help; border-radius: var(--radius-pill);
+      color: var(--text-secondary); cursor: help; border-radius: var(--radius-pill);
     }
     .i:hover { color: var(--primary); }
     .i:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
@@ -40,7 +40,7 @@ export interface TruncationRule {
       position: absolute; top: calc(100% + 8px); left: 0;
       z-index: var(--layer-tooltip, 100);
       width: max-content; min-width: 320px; max-width: 460px;
-      padding: var(--space-4); border-radius: var(--radius-lg);
+      padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg);
       background: var(--surface-default);
       border: var(--border-width-default) solid var(--border-default);
       box-shadow: var(--shadow-3, 0 8px 24px rgba(11, 14, 25, .16));

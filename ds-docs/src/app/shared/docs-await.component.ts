@@ -11,12 +11,12 @@ import { IconComponent } from 'ds';
   encapsulation: ViewEncapsulation.Emulated,
   template: `
     <button type="button" class="mark" [attr.aria-label]="text()">
-      <ds-icon name="info" [size]="15" />
+      <ds-icon name="info" [size]="18" />
     </button>
     <span class="pop" role="tooltip">{{ text() }}</span>
   `,
   styles: [`
-    :host { position: relative; display: inline-flex; vertical-align: middle; }
+    :host { position: relative; display: inline-flex; vertical-align: middle; margin-left: var(--space-2); }
     .mark {
       display: inline-flex; padding: 0; border: 0; background: none;
       color: var(--warning-text); cursor: help; border-radius: var(--radius-pill);
