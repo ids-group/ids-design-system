@@ -1,19 +1,32 @@
 @for (label of steps(); track $index; let i = $index, last = $last) {
   <span
-    [class]="nodeClass(i)"
     role="listitem"
+    [class]="nodeClass(i)"
     [attr.aria-current]="i === current() ? 'step' : null"
   >
     <span aria-hidden="true">
       @if (i < current()) {
-        <ds-icon name="check" [size]="14" />
+        <ds-icon
+          name="check"
+          [size]="14"
+        />
       } @else {
         {{ i + 1 }}
       }
     </span>
-    <span class="visually-hidden">Step {{ i + 1 }}: {{ label }} ({{ stepState(i) }})</span>
+
+    <span class="visually-hidden"
+      >
+      Step {{ i + 1 }}: {{ label }} ({{ stepState(i) }})
+    </span
+    >
   </span>
+
   @if (!last) {
-    <span [class]="barClass(i)" aria-hidden="true"></span>
+    <span
+      aria-hidden="true"
+      [class]="barClass(i)"
+    >
+    </span>
   }
 }

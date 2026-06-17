@@ -23,7 +23,7 @@
     border: var(--border-width-default) solid var(--border-strong);
     background: var(--surface-default);
     color: var(--text-tertiary);
-    font: var(--font-weight-bold) var(--font-size-xs)/var(--line-height-flat) var(--font-sans);
+    font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
 
     &.done {
       background: var(--primary-subtitle);
