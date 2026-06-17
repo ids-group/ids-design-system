@@ -68,7 +68,10 @@ export class PaginationComponent {
       ? presets
       : [current, ...presets].sort((a, b) => a - b);
 
-    return merged.map((n) => ({ label: `${n} per page`, value: String(n) }));
+    return merged.map((size) => ({
+      label: `${size} per page`,
+      value: String(size),
+    }));
   });
 
   protected readonly pageSizeStr = computed(() => String(this.pageSize()));

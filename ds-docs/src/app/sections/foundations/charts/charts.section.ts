@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, computed, signal } from '@angular/core';
+import { Component, ViewEncapsulation, computed } from '@angular/core';
 import { IconComponent, SkeletonComponent } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
@@ -127,14 +127,14 @@ const LINE_MAX = 50;
 const BAR_MAX = 250;
 const STACK_MAX = 44;
 
-function lineX(i: number, n: number): number {
-  return PAD.l + (i / (n - 1)) * innerW;
+function lineX(i: number, pointCount: number): number {
+  return PAD.l + (i / (pointCount - 1)) * innerW;
 }
 function lineY(value: number): number {
   return PAD.t + innerH - (value / LINE_MAX) * innerH;
 }
-function barX(i: number, n: number, barW: number): number {
-  return PAD.l + ((i + 0.5) / n) * innerW - barW / 2;
+function barX(i: number, pointCount: number, barW: number): number {
+  return PAD.l + ((i + 0.5) / pointCount) * innerW - barW / 2;
 }
 function barY(value: number): number {
   return PAD.t + innerH - (value / BAR_MAX) * innerH;
@@ -142,8 +142,8 @@ function barY(value: number): number {
 function barH(value: number): number {
   return (value / BAR_MAX) * innerH;
 }
-function stackX(i: number, n: number, barW: number): number {
-  return PAD.l + ((i + 0.5) / n) * innerW - barW / 2;
+function stackX(i: number, pointCount: number, barW: number): number {
+  return PAD.l + ((i + 0.5) / pointCount) * innerW - barW / 2;
 }
 function stackBarH(value: number): number {
   return (value / STACK_MAX) * innerH;
@@ -202,7 +202,9 @@ export class ChartsSection {
   );
   protected readonly linePath = computed(() =>
     this.linePoints()
-      .map((p, i) => (i === 0 ? `M${p.x} ${p.y}` : `L${p.x} ${p.y}`))
+      .map((point, i) =>
+        i === 0 ? `M${point.x} ${point.y}` : `L${point.x} ${point.y}`,
+      )
       .join(' '),
   );
 
@@ -245,9 +247,9 @@ export class ChartsSection {
       r = 80;
     let acc = -Math.PI / 2;
 
-    return DONUT.map((s) => {
+    return DONUT.map((segment) => {
       const start = acc;
-      const end = acc + (s.v / 100) * 2 * Math.PI;
+      const end = acc + (segment.v / 100) * 2 * Math.PI;
       acc = end;
       const x1 = cx + Math.cos(start) * r;
       const y1 = cy + Math.sin(start) * r;
@@ -256,8 +258,8 @@ export class ChartsSection {
       const large = end - start > Math.PI ? 1 : 0;
 
       return {
-        label: s.label,
-        c: s.c,
+        label: segment.label,
+        c: segment.c,
         d: `M${x1} ${y1} A${r} ${r} 0 ${large} 1 ${x2} ${y2}`,
       };
     });

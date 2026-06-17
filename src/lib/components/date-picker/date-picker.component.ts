@@ -125,16 +125,16 @@ export class DatePickerComponent {
     setTimeout(() => this.focusGridDay());
   }
 
-  private addDays(date: Date, n: number): Date {
+  private addDays(date: Date, days: number): Date {
     const d = new Date(date);
-    d.setDate(d.getDate() + n);
+    d.setDate(d.getDate() + days);
 
     return d;
   }
 
-  private addMonths(date: Date, n: number): Date {
+  private addMonths(date: Date, months: number): Date {
     const d = new Date(date);
-    d.setMonth(d.getMonth() + n);
+    d.setMonth(d.getMonth() + months);
 
     return d;
   }

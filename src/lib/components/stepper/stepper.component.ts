@@ -15,11 +15,11 @@ export class StepperComponent {
   readonly current = input<number>(0);
 
   protected stepState(i: number): 'completed' | 'current' | 'upcoming' {
-    const c = this.current();
-    if (i < c) {
+    const currentStep = this.current();
+    if (i < currentStep) {
       return 'completed';
     }
-    if (i === c) {
+    if (i === currentStep) {
       return 'current';
     }
 
@@ -27,11 +27,11 @@ export class StepperComponent {
   }
 
   protected nodeClass(i: number): string {
-    const c = this.current();
-    if (i < c) {
+    const currentStep = this.current();
+    if (i < currentStep) {
       return 'node done';
     }
-    if (i === c) {
+    if (i === currentStep) {
       return 'node active';
     }
 

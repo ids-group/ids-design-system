@@ -557,9 +557,9 @@ export class SidebarComponent {
     const styles = getComputedStyle(this.document.documentElement);
     const raw = styles.getPropertyValue('--topbar-h').trim();
     if (raw.endsWith('px')) {
-      const n = parseFloat(raw);
-      if (!Number.isNaN(n)) {
-        return n;
+      const pixels = parseFloat(raw);
+      if (!Number.isNaN(pixels)) {
+        return pixels;
       }
     }
     const header = this.document.querySelector(

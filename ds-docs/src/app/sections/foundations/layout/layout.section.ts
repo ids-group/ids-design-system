@@ -124,7 +124,7 @@ export class LayoutSection {
     },
   ];
 
-  protected cols(n: number): readonly null[] {
-    return Array.from({ length: n }, () => null);
+  protected cols(count: number): readonly null[] {
+    return Array.from({ length: count }, () => null);
   }
 }

@@ -110,7 +110,7 @@ export class TweaksPanelComponent {
       '--secondary-s',
       '--secondary-l',
       'font-size',
-    ].forEach((p) => document.documentElement.style.removeProperty(p));
+    ].forEach((prop) => document.documentElement.style.removeProperty(prop));
     document.documentElement.removeAttribute('data-density');
     this.setBrand('default');
     this.setNeutrals('cool-gray');

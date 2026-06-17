@@ -54,7 +54,7 @@ export class ScrollbarSection {
     },
   ];
 
-  protected pad(n: number): string {
-    return String(n).padStart(2, '0');
+  protected pad(num: number): string {
+    return String(num).padStart(2, '0');
   }
 }

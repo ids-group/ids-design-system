@@ -93,8 +93,8 @@ export class TooltipDirective implements OnDestroy {
     );
   }
 
-  private positionFor(p: TooltipPlacement) {
-    switch (p) {
+  private positionFor(placement: TooltipPlacement) {
+    switch (placement) {
       case 'top':
         return {
           originX: 'center' as const,
