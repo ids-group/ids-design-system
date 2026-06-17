@@ -23,6 +23,9 @@ let nextId = 0;
   templateUrl: './drawer.component.html',
   styleUrl: './drawer.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  host: {
+    '(document:keydown.escape)': 'onEscape()',
+  },
 })
 export class DrawerComponent {
   private readonly doc = inject(DOCUMENT);
@@ -50,5 +53,11 @@ export class DrawerComponent {
   protected onClose(): void {
     this.open.set(false);
     this.closed.emit();
+  }
+
+  protected onEscape(): void {
+    if (this.open()) {
+      this.onClose();
+    }
   }
 }
