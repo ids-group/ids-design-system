@@ -2,9 +2,12 @@
   <button
     type="button"
     class="step minus"
-    (click)="dec()"
     [disabled]="atMin() || disabled()"
-  >−</button>
+    (click)="dec()"
+  >
+    −
+  </button>
+
   <input
     type="number"
     class="qty"
@@ -14,10 +17,13 @@
     [disabled]="disabled()"
     (input)="setRaw($any($event.target).value)"
   />
+
   <button
     type="button"
     class="step plus"
-    (click)="inc()"
     [disabled]="atMax() || disabled()"
-  >+</button>
+    (click)="inc()"
+  >
+    +
+  </button>
 </div>

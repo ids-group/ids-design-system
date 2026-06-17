@@ -28,22 +28,24 @@ export class NumberStepperComponent {
   protected readonly atMin = computed(() => this.value() <= this.min());
   protected readonly atMax = computed(() => {
     const max = this.max();
+
     return max != null && this.value() >= max;
   });
 
   protected readonly stepperClass = computed(() => {
     const parts = ['stepper', `size-${this.size()}`];
-    if (this.disabled()) parts.push('disabled');
+    if (this.disabled()) {parts.push('disabled');}
+
     return parts.join(' ');
   });
 
   inc(): void {
-    if (this.atMax() || this.disabled()) return;
+    if (this.atMax() || this.disabled()) {return;}
     this.value.set(this.value() + this.step());
   }
 
   dec(): void {
-    if (this.atMin() || this.disabled()) return;
+    if (this.atMin() || this.disabled()) {return;}
     this.value.set(this.value() - this.step());
   }
 
@@ -52,7 +54,7 @@ export class NumberStepperComponent {
     const number = Number.isNaN(parsed) ? 0 : parsed;
     let clamped = Math.max(this.min(), number);
     const max = this.max();
-    if (max != null) clamped = Math.min(max, clamped);
+    if (max != null) {clamped = Math.min(max, clamped);}
     this.value.set(clamped);
   }
 }
