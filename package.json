@@ -1,6 +1,6 @@
 {
   "name": "@ids-group-ltd/ids-design-system",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "IDS Group Angular design system: components, tokens, themes",
   "license": "MIT",
   "homepage": "https://ids-ds.proto.ids-group.co.uk/",
@@ -20,19 +20,16 @@
   },
   "scripts": {
     "ng": "ng",
-
     "start": "run-p --race watch dev:docs",
     "dev": "npm run start",
     "dev:docs": "wait-on dist/ds/package.json && ng serve ds-docs --port 4300",
     "serve:docs": "ng serve ds-docs --port 4300",
     "watch": "ng build ds --watch --configuration development",
-
     "build:lib": "ng build ds",
     "build:lib:dev": "ng build ds --configuration development",
     "build:docs": "ng build ds-docs",
     "build:docs:dev": "ng build ds-docs --configuration development",
     "build:deck-css": "sass src/lib/styles/ds.scss presentations/ds.css --no-source-map --style=expanded",
-
     "format": "prettier --check \"{src,ds-docs/src,tools}/**/*.{ts,html,scss,css,json,md}\"",
     "format:fix": "prettier --write \"{src,ds-docs/src,tools}/**/*.{ts,html,scss,css,json,md}\"",
     "lint": "eslint \"{src,ds-docs/src}/**/*.{ts,html}\"",
@@ -41,7 +38,6 @@
     "lint:styles:fix": "stylelint \"{src,ds-docs/src}/**/*.{scss,css}\" --fix",
     "lint:all": "npm run format && npm run lint:styles && npm run lint",
     "fix:all": "npm run format:fix && npm run lint:styles:fix && npm run lint:fix",
-
     "preversion": "node tools/preflight.mjs",
     "version": "node tools/changelog-release.mjs",
     "release:patch": "npm version patch -m \"release: %s\"",

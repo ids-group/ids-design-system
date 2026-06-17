@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.2.2 — 2026-06-17
+
 - Added `.t-mono-inline` typography utility — an inline code chip (mono font on a
   subtle surface with padding/radius), completing the mono family alongside
   `.t-mono` (font only) and `.t-mono-block` (block).
