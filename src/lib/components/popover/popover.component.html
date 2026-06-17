@@ -1,6 +1,8 @@
 <!-- Projected content is captured ONCE here and stamped into whichever render
      site is active — duplicating ng-content across branches breaks projection. -->
-<ng-template #content><ng-content /></ng-template>
+<ng-template #content>
+  <ng-content />
+</ng-template>
 
 @if (preview.staticPreview()) {
   <div

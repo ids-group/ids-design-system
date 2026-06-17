@@ -29,7 +29,12 @@ export type PopoverAlign = 'start' | 'end';
   hostDirectives: [{ directive: DsStaticPreview, inputs: ['staticPreview'] }],
   // Expose this popover as a DsOverlayCloseRef so projected content (e.g.
   // ds-menu-item) can close it via DI — the popover never references a child.
-  providers: [{ provide: DsOverlayCloseRef, useExisting: forwardRef(() => PopoverComponent) }],
+  providers: [
+    {
+      provide: DsOverlayCloseRef,
+      useExisting: forwardRef(() => PopoverComponent),
+    },
+  ],
 })
 export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
   private readonly overlay = inject(Overlay);
@@ -52,17 +57,31 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
   readonly opened = signal(false);
 
   toggle(trigger: HTMLElement): void {
-    if (this.preview.staticPreview()) return;
+    if (this.preview.staticPreview()) {return;}
     if (this.ref) {
       this.close();
+
       return;
     }
     const align = this.align();
-    const positionStrategy = this.overlay.position()
+    const positionStrategy = this.overlay
+      .position()
       .flexibleConnectedTo(trigger)
       .withPositions([
-        { originX: align, originY: 'bottom', overlayX: align, overlayY: 'top', offsetY: 4 },
-        { originX: align, originY: 'top',    overlayX: align, overlayY: 'bottom', offsetY: -4 },
+        {
+          originX: align,
+          originY: 'bottom',
+          overlayX: align,
+          overlayY: 'top',
+          offsetY: 4,
+        },
+        {
+          originX: align,
+          originY: 'top',
+          overlayX: align,
+          overlayY: 'bottom',
+          offsetY: -4,
+        },
       ]);
     const cfg: OverlayConfig = {
       positionStrategy,
