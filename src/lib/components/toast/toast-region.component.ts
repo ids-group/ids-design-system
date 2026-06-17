@@ -26,13 +26,16 @@ export class ToastRegionComponent {
   }
 
   remove(id: number): void {
-    if (this.leaving().has(id)) return;
+    if (this.leaving().has(id)) {return;}
     this.leaving.update((set) => new Set(set).add(id));
     setTimeout(() => {
-      this.entries.update((existing) => existing.filter((entry) => entry.id !== id));
+      this.entries.update((existing) =>
+        existing.filter((entry) => entry.id !== id),
+      );
       this.leaving.update((set) => {
         const next = new Set(set);
         next.delete(id);
+
         return next;
       });
     }, LEAVE_DURATION_MS);

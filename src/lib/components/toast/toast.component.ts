@@ -1,4 +1,10 @@
-import { Component, ViewEncapsulation, computed, input, output } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  computed,
+  input,
+  output,
+} from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
 import type { ToastAction, ToastVariant } from './toast.types';
@@ -33,15 +39,21 @@ export class ToastComponent {
 
   /** Errors/warnings interrupt (assertive); info/success wait their turn. */
   protected readonly role = computed<'alert' | 'status'>(() =>
-    this.variant() === 'error' || this.variant() === 'warning' ? 'alert' : 'status',
+    this.variant() === 'error' || this.variant() === 'warning'
+      ? 'alert'
+      : 'status',
   );
 
   protected readonly defaultIcon = computed<IconName>(() => {
     switch (this.variant()) {
-      case 'success': return 'success';
-      case 'warning': return 'warn';
-      case 'error':   return 'error';
-      default:        return 'info';
+      case 'success':
+        return 'success';
+      case 'warning':
+        return 'warn';
+      case 'error':
+        return 'error';
+      default:
+        return 'info';
     }
   });
 

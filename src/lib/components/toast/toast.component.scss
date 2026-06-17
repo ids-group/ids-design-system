@@ -33,7 +33,7 @@
   animation: ds-toast-in var(--duration-slow) var(--ease-decelerate);
 
   .icon  { color: var(--primary); flex-shrink: 0; margin-top: var(--space-0-5); }
-  .body  { flex: 1; font: var(--font-weight-regular) var(--font-size-s)/var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
+  .body  { flex: 1; font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
   .title { font-weight: var(--font-weight-bold); color: var(--text-primary); margin-bottom: var(--space-0-5); }
   .close { border: 0; background: transparent; color: var(--icon-default); cursor: pointer; padding: var(--space-0-5); }
 
@@ -43,7 +43,7 @@
     border: 0;
     background: transparent;
     color: var(--primary-strong);
-    font: var(--font-weight-bold) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
+    font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     cursor: pointer;
     padding: var(--space-1) var(--space-2);
     border-radius: var(--radius-sm);
@@ -64,23 +64,27 @@
   &.info {
     --_toast-bg:     var(--ds-toast-bg-info,     var(--ds-toast-bg,     var(--surface-overlay)));
     --_toast-border: var(--ds-toast-border-info,  var(--ds-toast-border, var(--border-default)));
+
     border-left-color: var(--primary);
   }
   &.success {
     --_toast-bg:     var(--ds-toast-bg-success,     var(--ds-toast-bg,     var(--surface-overlay)));
     --_toast-border: var(--ds-toast-border-success,  var(--ds-toast-border, var(--border-default)));
+
     border-left-color: var(--success);
     .icon { color: var(--success); }
   }
   &.warning {
     --_toast-bg:     var(--ds-toast-bg-warning,     var(--ds-toast-bg,     var(--surface-overlay)));
     --_toast-border: var(--ds-toast-border-warning,  var(--ds-toast-border, var(--border-default)));
+
     border-left-color: var(--warning-hover);
     .icon { color: var(--warning-hover); }
   }
   &.error {
     --_toast-bg:     var(--ds-toast-bg-error,     var(--ds-toast-bg,     var(--surface-overlay)));
     --_toast-border: var(--ds-toast-border-error,  var(--ds-toast-border, var(--border-default)));
+
     border-left-color: var(--error);
     .icon { color: var(--error); }
   }

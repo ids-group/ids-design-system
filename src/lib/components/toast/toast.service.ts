@@ -1,5 +1,9 @@
 import { ComponentRef, Injectable, inject } from '@angular/core';
-import { Overlay, OverlayRef, GlobalPositionStrategy } from '@angular/cdk/overlay';
+import {
+  Overlay,
+  OverlayRef,
+  GlobalPositionStrategy,
+} from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ToastRegionComponent } from './toast-region.component';
 import { DS_TOAST_POSITION, DS_TOAST_POSITION_DEFAULT } from './toast.config';
@@ -35,6 +39,7 @@ export class ToastService {
     if (duration > 0) {
       window.setTimeout(() => ref.dismiss(), duration);
     }
+
     return ref;
   }
 
@@ -43,23 +48,27 @@ export class ToastService {
   }
 
   private ensureRegion(): void {
-    if (this.overlayRef) return;
+    if (this.overlayRef) {return;}
     this.overlayRef = this.overlay.create({
       hasBackdrop: false,
       panelClass: 'ds-toast-panel',
       positionStrategy: this.buildPositionStrategy(),
     });
-    this.regionRef = this.overlayRef.attach(new ComponentPortal(ToastRegionComponent));
+    this.regionRef = this.overlayRef.attach(
+      new ComponentPortal(ToastRegionComponent),
+    );
   }
 
   private buildPositionStrategy(): GlobalPositionStrategy {
     const config = this.position ?? DS_TOAST_POSITION_DEFAULT;
     const strategy = this.overlay.position().global();
-    if (config.verticalPosition === 'top') strategy.top(config.offset);
-    else strategy.bottom(config.offset);
-    if (config.horizontalPosition === 'left') strategy.left(config.offset);
-    else if (config.horizontalPosition === 'right') strategy.right(config.offset);
-    else strategy.centerHorizontally();
+    if (config.verticalPosition === 'top') {strategy.top(config.offset);}
+    else {strategy.bottom(config.offset);}
+    if (config.horizontalPosition === 'left') {strategy.left(config.offset);}
+    else if (config.horizontalPosition === 'right')
+      {strategy.right(config.offset);}
+    else {strategy.centerHorizontally();}
+
     return strategy;
   }
 }
