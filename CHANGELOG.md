@@ -8,11 +8,54 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
-- Tag: added an `:active` (pressed) state to the close/dismiss button, with a new
-  `--opacity-state-active` (0.24) overlay token. Previously only hover was styled.
-- Accordion & sidenav group now animate open/close (`height: 0 ↔ auto`) via a new
-  `interpolate-size: allow-keywords` opt-in on `:root`. The accordion body is always
-  rendered (collapsed content is `inert`), replacing the instant `@if` show/hide.
+### Breaking
+
+- **Renamed `--*-bg` tokens → `--*-bg-color`.** Every background token held only a colour
+  and fed the `background` shorthand; they were renamed and switched to `background-color`.
+  Affects all public `--ds-*-bg` tokens (modal, pagination, search, sidenav, stat,
+  status-dot, table, tabs, tag, textarea, toast, topbar, …) plus private/global tokens.
+  Consumers overriding e.g. `--ds-toast-bg` must rename to `--ds-toast-bg-color`.
+- **Renamed `--*-fg` tokens → semantic `-text-color` / `-label-color` / `-icon-color`.**
+  The unclear `fg` abbreviation is gone: text/titles/inputs → `-text-color`, control & nav
+  labels → `-label-color`, icons/glyphs → `-icon-color`. Affects all public `--ds-*-fg`
+  tokens across date-picker, dropzone, empty-state, icon-button, input, menu, modal,
+  page-header, pagination, search, sidenav, table, tabs, tag, textarea, topbar, plus the
+  `status-*` and chart-tooltip globals. Examples: `--ds-sidenav-group-fg` →
+  `--ds-sidenav-group-label-color`, `--ds-tag-hover-fg` → `--ds-tag-hover-label-color`.
+
+### Added
+
+- **`ds-combobox` `size` input** (`sm | md | lg`, default `md`), mirroring `ds-select`;
+  sets the trigger min-height (32 / 40 / 48 px). New exported `ComboboxSize` type.
+- **Overridable focus rings.** New shared group tokens `--ds-field-focus-shadow` /
+  `--ds-control-focus-shadow` (+ `-error` variants), defaulting to the semantic
+  `--focus-field` / `--focus-ring`. Every focusable component now reads its focus shadow
+  through a per-component public hook `--ds-<comp>-focus-shadow` that falls back to the
+  group token — so a consumer can retune focus for one component, a whole group (all
+  fields or all controls), or rely on the theme default. Default appearance unchanged.
+- **`ds-tag` hover tokens** `--ds-tag-hover-bg-color` / `--ds-tag-hover-label-color`
+  (private tokens hoisted to `:host` for consumer override).
+- **`--opacity-state-active`** (0.24) overlay token, backing the new tag pressed state.
+
+### Changed
+
+- **Tag:** added an `:active` (pressed) state to the close/dismiss button (previously only
+  hover was styled), using the new `--opacity-state-active` overlay.
+- **Accordion & sidenav group** now animate open/close (`height: 0 ↔ auto`) via an opt-in
+  `interpolate-size: allow-keywords` on `:root`. The accordion body is always rendered
+  (collapsed content is `inert`), replacing the instant `@if` show/hide.
+- **`ds-combobox` focus** now uses the soft field halo (`--focus-field`) instead of the
+  hard ring (`--focus-ring`), matching `ds-input` / `ds-select` / `ds-search`. Minor visual
+  change to the combobox focus state.
+- Backgrounds and several control transitions switched from the `background` shorthand to
+  `background-color` for precision (no intended visual change).
+
+### Fixed
+
+- **`ds-drawer`** now closes on the Escape key (keyboard dismiss was missing; matches
+  `ds-bottom-sheet`).
+- **`ds-combobox`** "No matches" empty option is no longer exposed as selectable
+  (`aria-selected="false"`).
 
 ## 0.2.2 — 2026-06-17
 
