@@ -15,7 +15,7 @@ import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { IconComponent } from '../../icons/icon.component';
 import { TagComponent } from '../tag/tag.component';
-import type { ComboboxOption } from './combobox.types';
+import type { ComboboxOption, ComboboxSize } from './combobox.types';
 
 let nextId = 0;
 
@@ -34,6 +34,7 @@ export class ComboboxComponent<T = unknown> {
   readonly options = input<readonly ComboboxOption<T>[]>([]);
   readonly value = model<T | readonly T[] | null>(null);
   readonly multiple = input<boolean>(false);
+  readonly size = input<ComboboxSize>('md');
   readonly placeholder = input<string>('Select…');
   /** Accessible name for the combobox input. */
   readonly ariaLabel = input<string | null>(null);

@@ -2,6 +2,8 @@
   #trigger
   class="combo-trigger"
   [class.open]="isOpen()"
+  [class.sm]="size() === 'sm'"
+  [class.lg]="size() === 'lg'"
   (click)="onTriggerClick()"
 >
   @if (multiple()) {

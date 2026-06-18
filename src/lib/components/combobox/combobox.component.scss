@@ -28,6 +28,11 @@
     box-shadow: var(--focus-ring);
     outline: 0;
   }
+
+  /* Density — mirror ds-select (sm 32 / md 40 / lg 48). Multi chips wrap, so
+     size sets min-height; the default (md) lives on the base rule above. */
+  &.sm { min-height: var(--hit-min); }
+  &.lg { min-height: var(--field-h-lg); }
 }
 
 .combo-value {
