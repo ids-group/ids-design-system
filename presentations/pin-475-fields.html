@@ -274,17 +274,28 @@
   .layers .lyr small { display: block; font-weight: 400; font-size: 9.5px; opacity: .92; margin-top: 3px; }
   .baseline > h3 { font-size: 14px; margin: 0 0 4px; }
   .baseline .ds-combo.is-focused, .baseline .ds-select.is-focused, .baseline .ds-search.is-focused { margin-top: 4px; }
+
+  /* collapsed (done) sections */
+  details.folded { margin: 40px 0; border: 1px solid #cfe8d4; border-radius: 14px; background: #f6fbf7; padding: 0 22px; }
+  details.folded > summary { cursor: pointer; padding: 18px 0; list-style: none; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  details.folded > summary::-webkit-details-marker { display: none; }
+  details.folded > summary h2 { margin: 0; }
+  details.folded[open] > summary { border-bottom: 1px solid #cfe8d4; margin-bottom: 18px; }
+  details.folded .done-badge { font-size: 11px; font-weight: 800; color: #fff; background: #1f8f3a; padding: 3px 9px; border-radius: 999px; letter-spacing: .02em; }
+  details.folded .done-what { font-size: 12.5px; color: #2b6b3a; font-weight: 600; }
+  details.folded > summary::after { content: '▸ развернуть'; margin-left: auto; font-size: 12px; color: var(--text-tertiary); font-weight: 600; }
+  details.folded[open] > summary::after { content: '▾ свернуть'; }
 </style>
 </head>
 <body>
   <h1>PIN-475 · combobox / select / search — варианты решений</h1>
   <p class="lede">Четыре гэпа из Kit Movement. Контролы воссозданы 1:1 по lib-scss. Фокус показан
-  статически (класс <code>.is-focused</code>), чтобы сравнивать кольца без кликов. Отметь предпочтение в
-  каждой секции — сводка справа внизу. Выбранное я внедрю в библиотеку.</p>
+  статически (класс <code>.is-focused</code>), чтобы сравнивать кольца без кликов. <b>Выполненные пункты (1 · фокус,
+  4 · size) свёрнуты ✅</b> — раскрой по клику. Открытые (2 · ширина, 3 · single-select) ждут решения; сводка справа внизу.</p>
 
   <!-- ============================== FOCUS RING ============================== -->
-  <section>
-    <h2>1 · Один контур фокуса <span class="tag">search · select · combobox</span></h2>
+  <details class="folded">
+    <summary><span class="done-badge">✅ ГОТОВО</span><h2>1 · Один контур фокуса <span class="tag">search · select · combobox</span></h2><span class="done-what">A — combobox → <code>--focus-field</code> (внедрено в либу)</span></summary>
     <p class="note">Сейчас на фокусе видно ДВА концентрических кольца: 1px-бордер контрола + отдельное
     кольцо <code>box-shadow</code>. Хуже всего у combobox — он на <code>--focus-ring</code> (2px canvas-зазор +
     сплошной primary = явный двойной контур); select/search на мягком <code>--focus-field</code>. Ниже —
@@ -381,7 +392,7 @@
         <h3>A — единое мягкое гало <span class="rec-badge">РЕКОМЕНДУЮ</span></h3>
         <div class="desc">Все три на <code>--focus-field</code>: бордер→primary + одно мягкое гало 3px, без белого зазора. Минимальный риск, ровно совпадает с input.</div>
         <div class="demo fx-a"></div>
-        <label class="pick"><input type="radio" name="focus" value="A — единое мягкое гало (--focus-field)"> выбрать A</label>
+        <label class="pick"><input type="radio" name="focus" value="A — единое мягкое гало (--focus-field) ✅ внедрено" checked> выбрать A</label>
       </div>
       <div class="opt" data-fx="fx-b">
         <h3>B — чёткий offset-outline</h3>
@@ -405,7 +416,7 @@
       <div class="dk fx-b"><span class="dk-cap">B · outline</span></div>
       <div class="dk fx-c"><span class="dk-cap">C · кант</span></div>
     </div>
-  </section>
+  </details>
 
   <!-- ============================== WIDTH ============================== -->
   <section>
@@ -627,8 +638,8 @@
   </section>
 
   <!-- ============================== SIZE ============================== -->
-  <section>
-    <h2>4 · Плотность combobox: size=sm|md|lg <span class="tag">combobox</span></h2>
+  <details class="folded">
+    <summary><span class="done-badge">✅ ГОТОВО</span><h2>4 · Плотность combobox: size=sm|md|lg <span class="tag">combobox</span></h2><span class="done-what">size=sm|md|lg, дефолт md (внедрено в либу)</span></summary>
     <p class="note">У <code>ds-select</code> размеры есть (sm 32 / md 40 / lg 48), у <code>ds-combobox</code> — нет.
     Фильтр-бары хотят плотнее дефолта. Добавлю инпут <code>size</code> зеркально select (дефолт <code>md</code>).
     Ниже — паритет. Подтверди токены/дефолт.</p>
@@ -647,7 +658,7 @@
       </div>
     </div>
     <label class="pick"><input type="radio" name="size" value="Добавить size=sm|md|lg (дефолт md), зеркально select" checked> ок, зеркалю select (дефолт md)</label>
-  </section>
+  </details>
 
   <!-- ============================== SUMMARY ============================== -->
   <div class="summary">
