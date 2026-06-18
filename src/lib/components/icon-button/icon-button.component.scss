@@ -15,7 +15,7 @@
   --_icon-button-bg-color-hover:  var(--ds-icon-button-bg-color-hover,  var(--surface-muted));
   --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, var(--_icon-button-bg-color-hover));
   --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--text-primary));
-  --_icon-button-focus-shadow: var(--ds-icon-button-focus-shadow, var(--focus-ring));
+  --_icon-button-focus-shadow: var(--ds-icon-button-focus-shadow, var(--ds-control-focus-shadow));
   --_icon-button-radius: var(--ds-icon-button-radius, var(--radius-md));
 
   display: inline-flex;

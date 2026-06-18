@@ -4,6 +4,9 @@
    vendor/claude-design-ds menu / popover rules.
    ============================================================ */
 :host {
+  --_dropdown-focus-shadow:       var(--ds-dropdown-focus-shadow,       var(--ds-field-focus-shadow));
+  --_dropdown-focus-shadow-error: var(--ds-dropdown-focus-shadow-error, var(--ds-field-focus-shadow-error));
+
   display: block;
   width: 100%;
 }
@@ -63,12 +66,12 @@
   &:focus-visible {
     outline: none;
     border-color: var(--primary);
-    box-shadow: var(--focus-field);
+    box-shadow: var(--_dropdown-focus-shadow);
   }
 
   &.open {
     border-color: var(--primary);
-    box-shadow: var(--focus-field);
+    box-shadow: var(--_dropdown-focus-shadow);
 
     .chevron {
       transform: rotate(180deg);
@@ -80,7 +83,7 @@
     border-color: var(--error);
 
     &:focus-visible {
-      box-shadow: var(--focus-field-error);
+      box-shadow: var(--_dropdown-focus-shadow-error);
     }
   }
 

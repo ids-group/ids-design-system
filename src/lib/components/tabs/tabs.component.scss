@@ -21,6 +21,7 @@
   --_tab-pill-bg-color-active-hover: var(--ds-tab-pill-bg-color-active-hover, var(--primary-subtitle));
   --_tab-pill-label-color-active:    var(--ds-tab-pill-label-color-active,    var(--primary-strong));
   --_tab-pill-radius:       var(--ds-tab-pill-radius,       var(--radius-md));
+  --_tabs-focus-shadow:     var(--ds-tabs-focus-shadow,     var(--ds-control-focus-shadow));
 
   display: block;
 }
@@ -74,7 +75,7 @@
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--focus-ring);
+      box-shadow: var(--_tabs-focus-shadow);
       border-radius: var(--radius-sm);
     }
 

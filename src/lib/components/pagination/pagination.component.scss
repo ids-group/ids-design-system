@@ -8,7 +8,8 @@
   --_pagination-active-bg-color:    var(--ds-pagination-active-bg-color,    var(--primary));
   --_pagination-active-bg-color-hover: var(--ds-pagination-active-bg-color-hover, var(--primary-hover));
   --_pagination-active-label-color:    var(--ds-pagination-active-label-color,    var(--primary-on));
-  --_pagination-radius:       var(--ds-pagination-radius,       var(--radius-md));
+  --_pagination-radius:        var(--ds-pagination-radius,        var(--radius-md));
+  --_pagination-focus-shadow:  var(--ds-pagination-focus-shadow,  var(--ds-control-focus-shadow));
 
   display: inline-flex;
 }
@@ -61,7 +62,7 @@
 
     &:focus-visible {
       outline: none;
-      box-shadow: var(--focus-ring);
+      box-shadow: var(--_pagination-focus-shadow);
     }
   }
 

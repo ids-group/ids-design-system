@@ -4,6 +4,7 @@
   --_sidenav-group-child-indent: var(--ds-sidenav-group-child-indent, var(--space-3));
   --_sidenav-group-radius:       var(--ds-sidenav-group-radius,       var(--radius-md));
   --_sidenav-group-label-color:  var(--ds-sidenav-group-label-color,  var(--text-tertiary));
+  --_sidenav-group-focus-shadow: var(--ds-sidenav-group-focus-shadow, var(--ds-control-focus-shadow));
 
   display: flex;
   flex-direction: column;
@@ -46,7 +47,7 @@
 
   &:focus-visible {
     outline: none;
-    box-shadow: var(--focus-ring);
+    box-shadow: var(--_sidenav-group-focus-shadow);
   }
 }
 

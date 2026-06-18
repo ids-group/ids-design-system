@@ -14,7 +14,7 @@
   --_card-pad:          var(--ds-card-pad,          var(--ds-container-pad));
   --_card-shadow:       var(--ds-card-shadow,       none);
   --_card-shadow-hover: var(--ds-card-shadow-hover, var(--shadow-1));
-  --_card-focus-shadow: var(--ds-card-focus-shadow, var(--focus-ring));
+  --_card-focus-shadow: var(--ds-card-focus-shadow, var(--ds-control-focus-shadow));
   --_card-hover-lift:   var(--ds-card-hover-lift,   var(--card-hover-lift));
 }
 

@@ -18,7 +18,8 @@
   --_input-radius:         var(--ds-input-radius,         var(--radius-md));
   --_input-pad-x:          var(--ds-input-pad-x,          var(--field-pad-x));
   --_input-pad-y:          var(--ds-input-pad-y,          var(--field-pad-y));
-  --_input-focus-shadow:   var(--ds-input-focus-shadow,   var(--focus-field));
+  --_input-focus-shadow:       var(--ds-input-focus-shadow,       var(--ds-field-focus-shadow));
+  --_input-focus-shadow-error: var(--ds-input-focus-shadow-error, var(--ds-field-focus-shadow-error));
   --_input-border-error:   var(--ds-input-border-error,   var(--error));
   --_input-bg-color-error:       var(--ds-input-bg-color-error,       var(--error-subtitle));
   --_input-border-success: var(--ds-input-border-success, var(--success));
@@ -112,7 +113,7 @@
       &:hover { background-color: var(--text-primary); }
       &:focus-visible {
         outline: none;
-        box-shadow: var(--focus-ring);
+        box-shadow: var(--ds-control-focus-shadow);
         border-radius: var(--radius-sm);
       }
     }
@@ -132,7 +133,7 @@
       &:hover { color: var(--text-primary); }
       &:focus-visible {
         outline: none;
-        box-shadow: var(--focus-ring);
+        box-shadow: var(--ds-control-focus-shadow);
         border-radius: var(--radius-sm);
       }
     }
@@ -177,7 +178,7 @@
       border-color: var(--_input-border-error);
 
       &:focus-within {
-        box-shadow: var(--focus-field-error);
+        box-shadow: var(--_input-focus-shadow-error);
       }
     }
     .hint {

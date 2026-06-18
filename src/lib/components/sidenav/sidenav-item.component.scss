@@ -11,6 +11,7 @@
   --_sidenav-item-rail:            var(--ds-sidenav-item-rail,            var(--secondary));
   --_sidenav-item-radius:          var(--ds-sidenav-item-radius,          var(--radius-md));
   --_sidenav-alert-color:          var(--ds-sidenav-alert-color,          var(--error));
+  --_sidenav-item-focus-shadow:    var(--ds-sidenav-item-focus-shadow,    var(--ds-control-focus-shadow));
 
   display: block;
 }
@@ -37,7 +38,7 @@
 
   &:focus-visible {
     outline: none;
-    box-shadow: var(--focus-ring);
+    box-shadow: var(--_sidenav-item-focus-shadow);
   }
 
   &.active {

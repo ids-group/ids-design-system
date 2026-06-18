@@ -284,6 +284,15 @@
      default their own --ds-*-pad to this, so a consumer retunes all at once. */
   --ds-container-pad:  var(--space-6);
 
+  /* Shared focus indicators — components default their own --ds-*-focus-shadow
+     to these, so a consumer retunes focus per-group at once (field vs control)
+     or per-component. Two families: fields get the soft halo, interactive
+     controls/nav get the crisp ring (see themes/default/_theme.scss). */
+  --ds-field-focus-shadow:         var(--focus-field);
+  --ds-field-focus-shadow-error:   var(--focus-field-error);
+  --ds-control-focus-shadow:       var(--focus-ring);
+  --ds-control-focus-shadow-error: var(--focus-ring-error);
+
   /* Table cell padding — density-aware, consumed by .tbl td/th. */
   --table-cell-pad-x:  var(--space-4);
   --table-cell-pad-y:  var(--space-3);

@@ -1,4 +1,4 @@
-:host { display: inline-flex; align-items: center; }
+:host { --_checkbox-focus-shadow: var(--ds-checkbox-focus-shadow, var(--ds-control-focus-shadow)); display: inline-flex; align-items: center; }
 
 .check {
   appearance: none;
@@ -16,7 +16,7 @@
               border-color var(--duration-fast) var(--ease-standard);
 
   &:hover:not(:disabled) { border-color: var(--primary); }
-  &:focus-visible        { outline: none; box-shadow: var(--focus-ring); }
+  &:focus-visible        { outline: none; box-shadow: var(--_checkbox-focus-shadow); }
   &:disabled {
     background: var(--surface-disabled);
     border-color: var(--border-disabled);

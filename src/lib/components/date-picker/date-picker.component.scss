@@ -2,6 +2,8 @@
    DATE PICKER (ported from claude-design-ds/components.css)
    ============================================================ */
 :host {
+  --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
+
   display: block;
 }
 
@@ -57,7 +59,7 @@
 
   &:focus-visible {
     outline: none;
-    box-shadow: var(--focus-ring);
+    box-shadow: var(--_date-picker-focus-shadow);
   }
 
   &.sm {

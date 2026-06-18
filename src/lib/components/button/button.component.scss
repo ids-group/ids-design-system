@@ -23,7 +23,7 @@
   --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--_button-bg-color) 76%, black));
   --_button-label-color:        var(--ds-button-label-color,        var(--primary-on));
   --_button-border:    var(--ds-button-border,    transparent);
-  --_button-focus-shadow: var(--ds-button-focus-shadow, var(--focus-ring));
+  --_button-focus-shadow: var(--ds-button-focus-shadow, var(--ds-control-focus-shadow));
   --_button-pressed-shadow: var(--ds-button-pressed-shadow,
                               0 0 0 3px color-mix(in srgb, var(--_button-bg-color-active) 35%, transparent));
   --_button-radius:    var(--ds-button-radius,    var(--radius-md));
@@ -132,7 +132,7 @@
   }
   &.error {
     --_button-bg-color:           var(--ds-button-bg-color,           var(--error));
-    --_button-focus-shadow: var(--ds-button-focus-shadow, var(--focus-ring-error));
+    --_button-focus-shadow: var(--ds-button-focus-shadow, var(--ds-control-focus-shadow-error));
   }
   &.success {
     --_button-bg-color: var(--ds-button-bg-color, var(--success));
@@ -224,5 +224,5 @@
     border-color: var(--primary);
     color: var(--primary-strong);
   }
-  &:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+  &:focus-visible { outline: none; box-shadow: var(--_button-focus-shadow); }
 }

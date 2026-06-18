@@ -1,4 +1,4 @@
-:host { display: inline-flex; align-items: center; }
+:host { --_switch-focus-shadow: var(--ds-switch-focus-shadow, var(--ds-control-focus-shadow)); display: inline-flex; align-items: center; }
 
 .switch {
   appearance: none;
@@ -27,7 +27,7 @@
 
   &:checked         { background: var(--primary); }
   &:checked::after  { transform: translateX(var(--switch-thumb-travel)); }
-  &:focus-visible   { outline: none; box-shadow: var(--focus-ring); }
+  &:focus-visible   { outline: none; box-shadow: var(--_switch-focus-shadow); }
   &:disabled        { opacity: var(--opacity-disabled); cursor: not-allowed; }
 
   &.success:checked { background: var(--success); }
