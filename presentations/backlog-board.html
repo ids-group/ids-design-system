@@ -195,12 +195,12 @@
 
   <!-- ============ PIN-475 / KIT MOVEMENT ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🔎 Из PIN-475 — фильтр-тулбары</h2><span class="count c-track">4</span><span class="why">Гэпы combobox/select/search (Kit Movement, 2026-06-17).</span></div>
+    <div class="lane-head"><h2>🔎 Из PIN-475 — фильтр-тулбары</h2><span class="count c-track">3</span><span class="why">Гэпы combobox/select/search (Kit Movement, 2026-06-17). focus-баг — корень в pinkmoon, починен там.</span></div>
     <div class="cards">
       <div class="card track"><div class="t">combobox — нет content/compact ширины</div><p class="d">Multi-select всегда тянется на ширину хоста → один короткий чип оставляет пустой триггер справа. Нужен `fit-content`/`max-content`-режим (триггер обнимает чипы + min поле ввода). Сейчас консьюмер хардкодит ширину.</p></div>
       <div class="card track"><div class="t">combobox single — читается как free-text</div><p class="d">В single-режиме триггер сохраняет поле ввода + шеврон после выбора — выглядит как multi/typeahead и как `ds-select`. Нужен filled-select display-режим или гайд select vs combobox.</p></div>
       <div class="card track"><div class="t">double focus-ring на инпутах</div><p class="d">search/combobox/select рисуют `box-shadow: --focus-ring` ПОВЕРХ 1px-бордера → два концентрических контура (скриншот 2026-06-17). Нужен single-ring (outline-offset / схлопнуть бордер в ринг).</p></div>
-      <div class="card track"><div class="t">combobox/select — нет `size="sm"`</div><p class="d">Фильтр-бары хотят плотнее дефолтного `md`; у `ds-select` размеры есть, у `ds-combobox` — нет.</p></div>
+      <div class="card done"><div class="t">✅ combobox — size=sm|md|lg</div><p class="d">Добавлен инпут `size` в `ds-combobox` (дефолт `md`), зеркально `ds-select`; `min-height` 32/40/48. Билд зелёный.</p><div class="meta">2026-06-18</div></div>
     </div>
   </div>
 
