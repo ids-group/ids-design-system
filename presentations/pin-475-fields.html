@@ -267,6 +267,13 @@
   .verdict { display: flex; gap: 10px; font-size: 12px; margin: 14px 0 0; }
   .verdict .pro { color: #1f8f3a; } .verdict .con { color: #c0392b; }
   .verdict b { display: block; }
+
+  /* section 1 — baseline: token-layer anatomy */
+  .layers { display: flex; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-default); margin-top: 8px; }
+  .layers .lyr { flex: 1; padding: 11px 6px; text-align: center; font: 700 11px/1.3 var(--font-sans); }
+  .layers .lyr small { display: block; font-weight: 400; font-size: 9.5px; opacity: .92; margin-top: 3px; }
+  .baseline > h3 { font-size: 14px; margin: 0 0 4px; }
+  .baseline .ds-combo.is-focused, .baseline .ds-select.is-focused, .baseline .ds-search.is-focused { margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -282,6 +289,87 @@
     кольцо <code>box-shadow</code>. Хуже всего у combobox — он на <code>--focus-ring</code> (2px canvas-зазор +
     сплошной primary = явный двойной контур); select/search на мягком <code>--focus-field</code>. Ниже —
     как свести к одному контуру. Затрагивает также input / dropdown / link (выбранное распространю на них).</p>
+
+    <!-- ===== BASELINE: как реализовано сейчас ===== -->
+    <div class="baseline">
+      <h3>Как реализовано сейчас (baseline)</h3>
+      <p class="note" style="margin-bottom:14px">Три поля рисуют фокус <b>тремя разными способами</b> — отсюда разнобой.
+      Все перекрашивают бордер в <code>--primary</code>, но кольцо берут из <b>разных токенов</b>: combobox — жёсткий
+      <code>--focus-ring</code> (с зазором), select/search — мягкий <code>--focus-field</code>. Поля сфокусированы статически
+      (класс <code>.is-focused</code>), код — дословно из lib-scss.</p>
+
+      <div class="grid fx-current">
+        <div class="opt">
+          <h3>ds-combobox → <code>--focus-ring</code></h3>
+          <div class="desc">Жёсткое 2px-кольцо primary + зазор цветом фона (<code>--surface-canvas</code>) между ним и бордером → читается как двойной/тройной контур.</div>
+          <div class="ds-combo is-focused"><span class="chip">Active<button>×</button></span><input class="combo-input" placeholder=""></div>
+          <div class="impl"><pre><span class="cm">// combobox.component.scss</span>
+.combo-trigger<span class="kw">:focus-within</span> {
+  border-color: <span class="fn">var(--primary)</span>;
+  box-shadow: <span class="fn">var(--focus-ring)</span>;
+  outline: 0;
+}</pre></div>
+        </div>
+
+        <div class="opt">
+          <h3>ds-select → <code>--focus-field</code></h3>
+          <div class="desc">Мягкое полупрозрачное гало 3px (primary 22%) + бордер primary. Без зазора. То же и на <code>.open</code>.</div>
+          <div class="ds-select is-focused"><span class="txt">Warehouse A</span><span class="chev"></span></div>
+          <div class="impl"><pre><span class="cm">// select.component.scss</span>
+.dropdown<span class="kw">:focus-visible</span>,
+.dropdown.open {
+  border-color: <span class="fn">var(--primary)</span>;
+  box-shadow: <span class="fn">var(--focus-field)</span>;
+}</pre></div>
+        </div>
+
+        <div class="opt">
+          <h3>ds-search → <code>--focus-field</code></h3>
+          <div class="desc">Так же мягкое гало, но через приватные резолверы (read-with-fallback паттерн DS) — переопределяемо консьюмером.</div>
+          <div class="ds-search is-focused"><span class="icon">🔍</span><input placeholder="Search" tabindex="-1"></div>
+          <div class="impl"><pre><span class="cm">// search.component.scss — :host резолверы</span>
+--_search-border-focus: <span class="fn">var(--ds-search-border-focus, var(--primary))</span>;
+--_search-focus-shadow: <span class="fn">var(--ds-search-focus-shadow, var(--focus-field))</span>;
+
+.search<span class="kw">:focus-within</span> {
+  border-color: <span class="fn">var(--_search-border-focus)</span>;
+  box-shadow: <span class="fn">var(--_search-focus-shadow)</span>;
+}</pre></div>
+        </div>
+      </div>
+
+      <!-- anatomy of the two tokens -->
+      <div class="opt" style="flex-basis:100%; margin-top:18px">
+        <h3>Анатомия токенов — почему combobox выбивается</h3>
+        <div class="desc">Из чего собрано кольцо (схема слоёв, не в масштабе — реальные толщины подписаны). Значения дословно из <code>themes/default/_theme.scss</code>.</div>
+        <div class="states">
+          <div class="state">
+            <div class="scap">--focus-ring · combobox</div>
+            <div class="layers">
+              <span class="lyr" style="background:var(--primary);color:#fff">бордер 1px<small>--primary</small></span>
+              <span class="lyr" style="background:var(--surface-canvas);color:#3a4252">зазор 2px<small>--surface-canvas</small></span>
+              <span class="lyr" style="background:var(--primary);color:#fff">кольцо 2px<small>--primary</small></span>
+            </div>
+            <div class="impl"><pre>--focus-ring:
+  0 0 0 2px <span class="fn">var(--surface-canvas)</span>,   <span class="cm">/* зазор */</span>
+  0 0 0 4px <span class="fn">hsl(primary)</span>;        <span class="cm">/* кольцо */</span></pre></div>
+            <div class="verdict"><div class="con"><b>−</b> зазор цветом фона светится белым на тёмной подложке (см. строку ниже)</div></div>
+          </div>
+          <div class="state">
+            <div class="scap">--focus-field · select / search</div>
+            <div class="layers">
+              <span class="lyr" style="background:var(--primary);color:#fff">бордер 1px<small>--primary</small></span>
+              <span class="lyr" style="background:rgb(46 84 255 / .22);color:#3a4252">гало 3px<small>primary · 22%</small></span>
+            </div>
+            <div class="impl"><pre>--focus-field:
+  0 0 0 3px <span class="fn">hsl(primary / 22%)</span>;  <span class="cm">/* мягкое гало */</span></pre></div>
+            <div class="verdict"><div class="pro"><b>+</b> без зазора, мягко; но бордер + гало всё равно две линии</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size:14px; margin:30px 0 4px">Варианты «один контур» (A / B / C)</h3>
     <div class="grid fx-host">
       <div class="opt" data-fx="fx-current">
         <h3>Сейчас</h3>
