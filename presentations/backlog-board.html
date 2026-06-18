@@ -87,15 +87,15 @@
 </head>
 <body>
   <h1>DS — карта бэклога</h1>
-  <p class="sub">Что <b>осталось закрыть</b> — по одному пункту на карточку (источник: <span class="tag">docs/todo.md</span>). Открытое вверху и развёрнуто; сделанное свёрнуто внизу. Обновлено 2026-06-16.</p>
+  <p class="sub">Что <b>осталось закрыть</b> — по одному пункту на карточку (источник: <span class="tag">docs/todo.md</span>). Открытое вверху и развёрнуто; сделанное свёрнуто внизу. Обновлено 2026-06-18.</p>
 
   <div class="summary">
     <div class="stat you"><div class="n">6</div><div class="l">Ждёт твоего решения</div></div>
     <div class="stat a11y"><div class="n">15</div><div class="l">A11y (P0–P2)</div></div>
     <div class="stat untouched"><div class="n">14</div><div class="l">Компоненты + foundations</div></div>
-    <div class="stat untouched"><div class="n">12</div><div class="l">DS-docs / аним / field / API</div></div>
-    <div class="stat raw"><div class="n">8</div><div class="l">Raw / frozen / мелочь</div></div>
-    <div class="stat done"><div class="n">25</div><div class="l">Сделано (свёрнуто)</div></div>
+    <div class="stat untouched"><div class="n">17</div><div class="l">DS-docs / аним / field / PIN-475</div></div>
+    <div class="stat raw"><div class="n">11</div><div class="l">Raw / frozen / мелочь / lint</div></div>
+    <div class="stat done"><div class="n">26</div><div class="l">Сделано (свёрнуто)</div></div>
   </div>
 
   <!-- ============ NEEDS YOU ============ -->
@@ -174,10 +174,11 @@
 
   <!-- ============ ANIMATIONS ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🎬 Анимации</h2><span class="count c-track">2</span><span class="why">Honor prefers-reduced-motion.</span></div>
+    <div class="lane-head"><h2>🎬 Анимации</h2><span class="count c-track">3</span><span class="why">Honor prefers-reduced-motion.</span></div>
     <div class="cards">
       <div class="card track"><div class="t">Accordion open/close</div><p class="d">Анимировать expand/collapse (height/opacity). Toggleable (`[animated]` default-on / respect reduced-motion). Сейчас снап.</p></div>
       <div class="card track"><div class="t">Bottom-sheet close</div><p class="d">Анимировать slide-down + scrim fade на закрытии (open уже анимируется; close резкий).</p></div>
+      <div class="card track"><div class="t">Skeleton — page-wide shimmer sync</div><p class="d">Все `ds-skeleton` должны делить один свип по странице. Замысел был `mask-attachment: fixed`, но свойство мёртвое (no-op во всех браузерах) → найти реальное вьюпорт-якорение. Сейчас держится на общем `--skeleton-shimmer-x`.</p><div class="meta">skeleton.component.scss</div></div>
     </div>
   </div>
 
@@ -189,6 +190,17 @@
       <div class="card track"><div class="t">Banner · compact density</div><p class="d">Field ужимает compact (`--ds-banner-pad-y`, `--font-size-xs`). Ревью дефолта / экспонировать body font-size токен.</p></div>
       <div class="card track"><div class="t">Search · max-width</div><p class="d">`.search` упирается в `--search-maxw` (токенизировано, но field не нашёл токен). Задокументировать; рассмотреть дефолт `none`.</p></div>
       <div class="card track"><div class="t">Input · label-токены</div><p class="d">Field использует `--ds-input-label-fs/fw/color`. Подтвердить в каталоге + tokens-reference.</p></div>
+    </div>
+  </div>
+
+  <!-- ============ PIN-475 / KIT MOVEMENT ============ -->
+  <div class="lane">
+    <div class="lane-head"><h2>🔎 Из PIN-475 — фильтр-тулбары</h2><span class="count c-track">4</span><span class="why">Гэпы combobox/select/search (Kit Movement, 2026-06-17).</span></div>
+    <div class="cards">
+      <div class="card track"><div class="t">combobox — нет content/compact ширины</div><p class="d">Multi-select всегда тянется на ширину хоста → один короткий чип оставляет пустой триггер справа. Нужен `fit-content`/`max-content`-режим (триггер обнимает чипы + min поле ввода). Сейчас консьюмер хардкодит ширину.</p></div>
+      <div class="card track"><div class="t">combobox single — читается как free-text</div><p class="d">В single-режиме триггер сохраняет поле ввода + шеврон после выбора — выглядит как multi/typeahead и как `ds-select`. Нужен filled-select display-режим или гайд select vs combobox.</p></div>
+      <div class="card track"><div class="t">double focus-ring на инпутах</div><p class="d">search/combobox/select рисуют `box-shadow: --focus-ring` ПОВЕРХ 1px-бордера → два концентрических контура (скриншот 2026-06-17). Нужен single-ring (outline-offset / схлопнуть бордер в ринг).</p></div>
+      <div class="card track"><div class="t">combobox/select — нет `size="sm"`</div><p class="d">Фильтр-бары хотят плотнее дефолтного `md`; у `ds-select` размеры есть, у `ds-combobox` — нет.</p></div>
     </div>
   </div>
 
@@ -230,10 +242,21 @@
     </div>
   </div>
 
+  <!-- ============ LINT DEBT ============ -->
+  <div class="lane">
+    <div class="lane-head"><h2>🧹 Lint debt</h2><span class="count c-track">3</span><span class="why">Остаток после rollout 2026-06-17 (prettier 0 · stylelint 0 · eslint 0 err / 22 warn). Lint авторитетен над prettier.</span></div>
+    <div class="cards">
+      <div class="card track"><span class="chip ch-p2">warn ×2</span><div class="t">prefer-for-of (dropdown/select)</div><p class="d">Индексные циклы с модульной арифметикой — механический рефактор сломал бы логику. Понижено до warn, per-line дисейблы сняты. Переписать руками.</p></div>
+      <div class="card a11y"><span class="chip ch-p2">warn ×17</span><div class="t">template a11y (click/focus)</div><p class="d">bottom-sheet/modal/combobox — в основном false-positive (клавиатура на host/document-уровне). <b>card</b> — реальный пробел: `pressed` только при `elevation=interactive`, без клавиатуры/фокуса. drawer Esc уже починен.</p></div>
+      <div class="card track"><span class="chip ch-p2">warn ×3</span><div class="t">sibling-blank-line не-автофиксимые</div><p class="d">Между сиблингами коммент — фиксер не может вставить пустую строку. Добавить вручную.</p></div>
+    </div>
+  </div>
+
   <!-- ============ DONE (collapsed) ============ -->
   <details class="done-panel">
-    <summary class="lane-head"><h2>✅ Сделано · tokens / showcase</h2><span class="count c-done">19</span><span class="toggle"></span><span class="why">Свёрнуто. Под snapshot-гейтом.</span></summary>
+    <summary class="lane-head"><h2>✅ Сделано · tokens / showcase</h2><span class="count c-done">20</span><span class="toggle"></span><span class="why">Свёрнуто. Под snapshot-гейтом.</span></summary>
     <div class="cards">
+      <div class="card done"><div class="t">Lint/format rollout + токен-ренеймы (2026-06-17/18)</div><p class="d">prettier+stylelint+eslint по всему репо (font-слеши, clip→clip-path, mask-attachment, selector-type ignore, empty-comments). + ренейм токенов `-bg`→`-bg-color` (+`background-color:`) и `-fg`→`-text/label/icon-color`, вынос приватных токенов на `:host` (13 комп.), drawer Esc. prettier 0 · stylelint 0 · eslint 0 err. ⚠ нужен major-бамп.</p><div class="meta">bc8e560…f46bd51</div></div>
       <div class="card done"><div class="t">Токен-фолбэк + деривация состояний</div><p class="d">button/icon-button: публичные `--ds-*` с фолбэком в приватные резолверы; hover/active из color-mix.</p><div class="meta">4b9e0c2…ca452c7</div></div>
       <div class="card done"><div class="t">Раскат паттерна на ВСЮ либу</div><p class="d">22 компонента + badge/tag/toast/empty-state + menu-item + .link/.icon.</p><div class="meta">427dcb3…6ebba55</div></div>
       <div class="card done"><div class="t">Ренейм токенов в полные слова</div><p class="d">--fw→--font-weight и т.д. 138 файлов / 3895 замен.</p><div class="meta">ae89955</div></div>
