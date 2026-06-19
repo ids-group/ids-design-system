@@ -1,1 +1,25 @@
-/* You can add global styles to this file, and also import other style files */
+// IDS design system: palette + theme + tokens + global styles, one import.
+//
+// Option A (default, zero-config) — scoped package path:
+@use '@ids-group-ltd/ids-design-system/styles/ds';
+//
+// Option B (shorter bare import) — add the package dir to Sass includePaths in
+// angular.json, then use `@use 'styles/ds';` instead of the line above:
+//   "stylePreprocessorOptions": {
+//     "includePaths": [
+//       "projects/common/styles",
+//       "node_modules/@ids-group-ltd/ids-design-system"
+//     ]
+//   }
+
+// App-level global overrides go below (or in app/src/styles/ partials).
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  color: var(--text-primary);
+  background: var(--surface-canvas);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

@@ -1,0 +1,32 @@
+<div class="main-layout">
+  <ds-topbar>
+    <span title>{{ user()?.fullName || 'App' }}</span>
+
+    <div actions>
+      <ds-button
+        variant="outline"
+        size="sm"
+        (click)="logout()"
+      >
+        Logout
+      </ds-button>
+    </div>
+  </ds-topbar>
+
+  <div class="main-layout__body">
+    <ds-sidenav brand="App">
+      <ds-sidenav-item
+        label="Dashboard"
+        routerLink="/dashboard"
+      />
+      <ds-sidenav-item
+        label="Items"
+        routerLink="/items"
+      />
+    </ds-sidenav>
+
+    <main class="main-layout__content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

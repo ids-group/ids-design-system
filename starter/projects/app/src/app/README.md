@@ -14,8 +14,16 @@ Cross-cutting **infra** — `HttpService`, interceptors, guards, `GlobalErrorHan
 abstract `NotificationService` / `ErrorReporter` — lives in **`@app/common`** (`projects/common/src/lib/`),
 so it's ready to share if a second app is added. Envs → `@app/common/config`; dev panel → `@app/common/dev`.
 
-**Styles:** app globals + the DS import + brand overrides go in `src/styles.scss`
-(`@use '@ids-group-ltd/ids-design-system/styles/ds';` then `[data-brand]` overrides).
-Shared SCSS partials (mixins/vars) → `projects/common/styles/` (wired via `angular.json` `includePaths`).
+**Styles:** app globals + the DS import + brand overrides go in `src/styles.scss`.
+Two equivalent ways to pull in the DS (palette + theme + tokens + globals):
+
+- **A — scoped package path (default, zero-config):**
+  `@use '@ids-group-ltd/ids-design-system/styles/ds';`
+- **B — bare import (shorter):** add the package dir to Sass `includePaths` in
+  `angular.json` (`stylePreprocessorOptions.includePaths: ["projects/common/styles",
+  "node_modules/@ids-group-ltd/ids-design-system"]`), then `@use 'styles/ds';`.
+
+Then add `[data-brand]` overrides. Shared SCSS partials (mixins/vars) →
+`projects/common/styles/` (already on `includePaths`).
 
 Module boundaries between these layers are enforced by **Sheriff** (public API via `index.ts`).

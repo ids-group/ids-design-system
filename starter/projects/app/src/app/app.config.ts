@@ -4,10 +4,21 @@ import {
   inject,
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
+  provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {
+  PreloadAllModules,
+  provideRouter,
+  TitleStrategy,
+  withComponentInputBinding,
+  withNavigationErrorHandler,
+  withPreloading,
+  withRouterConfig,
+  withViewTransitions,
+} from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import {
+  AppTitleStrategy,
   AuthProvider,
   AuthStore,
   BASE_URL,
@@ -19,6 +30,8 @@ import {
   NoopErrorReporter,
   NotificationService,
   WindowConfirmService,
+  createViewTransitionSkip,
+  initTransitionToggle,
 } from '@app/common';
 import { environment } from '@app/common/config';
 
@@ -27,8 +40,21 @@ import { ToastNotificationService } from './core/notifications/toast-notificatio
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideZonelessChangeDetection(),
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
+    provideRouter(
+      routes,
+      withComponentInputBinding(),
+      withViewTransitions({
+        onViewTransitionCreated: createViewTransitionSkip(routes),
+      }),
+      withPreloading(PreloadAllModules),
+      withRouterConfig({ onSameUrlNavigation: 'reload' }),
+      withNavigationErrorHandler((error) => {
+        inject(ErrorHandler).handleError(error.error);
+      }),
+    ),
+    { provide: TitleStrategy, useClass: AppTitleStrategy },
     provideHttpClient(),
     { provide: BASE_URL, useValue: environment.baseUrl },
     { provide: ENVIRONMENT_NAME, useValue: environment.name },
@@ -39,7 +65,8 @@ export const appConfig: ApplicationConfig = {
     // Auth: MockAuthProvider runs with no backend — swap for HttpAuthProvider.
     { provide: AuthProvider, useClass: MockAuthProvider },
     { provide: ConfirmService, useClass: WindowConfirmService },
-    // Resolve auth state before first render.
+    // Resolve auth state before first render, then wire transition-flash guard.
     provideAppInitializer(() => inject(AuthStore).initialize()),
+    provideAppInitializer(() => initTransitionToggle()),
   ],
 };
