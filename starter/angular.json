@@ -148,16 +148,7 @@
       "root": "projects/common",
       "sourceRoot": "projects/common/src",
       "prefix": "app",
-      "architect": {
-        "build": {
-          "builder": "@angular/build:ng-packagr",
-          "configurations": {
-            "production": { "tsConfig": "projects/common/tsconfig.lib.prod.json" },
-            "development": { "tsConfig": "projects/common/tsconfig.lib.json" }
-          },
-          "defaultConfiguration": "production"
-        }
-      }
+      "architect": {}
     }
   }
 }

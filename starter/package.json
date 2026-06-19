@@ -7,7 +7,6 @@
     "ng": "ng",
     "start": "ng serve app",
     "build": "ng build app",
-    "build:common": "ng build common",
     "watch": "ng build app --watch --configuration development",
     "lint": "eslint \"projects/**/*.{ts,html}\"",
     "lint:fix": "eslint \"projects/**/*.{ts,html}\" --fix",
@@ -25,6 +24,7 @@
     "@angular/forms": "^21.1.0",
     "@angular/platform-browser": "^21.1.0",
     "@angular/router": "^21.1.0",
+    "@ids-group-ltd/ids-design-system": "file:../dist/ds",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
