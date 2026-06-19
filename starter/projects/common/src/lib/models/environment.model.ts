@@ -9,7 +9,6 @@ export type EnvironmentName =
 export interface Environment {
   name: EnvironmentName;
   baseUrl: string;
-  sentryDsn: string;
   features: {
     enableProfiler: boolean;
   };

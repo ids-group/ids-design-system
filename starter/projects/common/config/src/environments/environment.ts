@@ -5,7 +5,6 @@ import { Environment } from '@app/common';
 export const environment: Environment = {
   name: 'development',
   baseUrl: 'http://localhost:3000',
-  sentryDsn: '',
   features: {
     enableProfiler: true,
   },
