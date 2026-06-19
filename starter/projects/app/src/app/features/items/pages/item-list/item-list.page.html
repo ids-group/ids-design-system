@@ -1,0 +1,51 @@
+<header class="items__head">
+  <h1>Items</h1>
+  <ds-button
+    routerLink="new"
+    size="sm"
+  >
+    Add item
+  </ds-button>
+</header>
+
+@if (loading()) {
+  <p>Loading…</p>
+} @else if (items().length === 0) {
+  <p>No items yet.</p>
+} @else {
+  <table class="items__table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Qty</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of items(); track item.id) {
+        <tr>
+          <td>{{ item.name }}</td>
+          <td>{{ item.category }}</td>
+          <td>{{ item.quantity }}</td>
+          <td class="items__actions">
+            <ds-button
+              variant="tertiary"
+              size="sm"
+              [routerLink]="[item.id, 'edit']"
+            >
+              Edit
+            </ds-button>
+            <ds-button
+              variant="tertiary"
+              size="sm"
+              (click)="remove(item)"
+            >
+              Delete
+            </ds-button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

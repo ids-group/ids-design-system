@@ -1,0 +1,11 @@
+.item-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 420px;
+}
+
+.item-form__actions {
+  display: flex;
+  gap: var(--space-2);
+}

@@ -31,7 +31,12 @@ export const routes: Routes = [
             (m) => m.DashboardPage,
           ),
       },
-      // 'items' demo CRUD feature is added in the next task.
+      {
+        path: 'items',
+        data: { breadcrumb: 'Items' },
+        loadChildren: () =>
+          import('./features/items/items.routes').then((m) => m.itemsRoutes),
+      },
     ],
   },
   { path: '**', redirectTo: 'auth/login' },

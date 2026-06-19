@@ -1,0 +1,36 @@
+<form
+  class="item-form"
+  (submit)="save($event)"
+>
+  <h1>{{ isEdit() ? 'Edit item' : 'New item' }}</h1>
+
+  <ds-input
+    label="Name"
+    [(value)]="name"
+  />
+  <ds-input
+    label="Category"
+    [(value)]="category"
+  />
+  <ds-input
+    label="Quantity"
+    type="number"
+    [(value)]="quantity"
+  />
+
+  <div class="item-form__actions">
+    <ds-button
+      type="submit"
+      [loading]="saving()"
+    >
+      Save
+    </ds-button>
+    <ds-button
+      type="button"
+      variant="outline"
+      (click)="cancel()"
+    >
+      Cancel
+    </ds-button>
+  </div>
+</form>
