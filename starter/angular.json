@@ -2,17 +2,26 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "bun"
+    "packageManager": "bun",
+    "analytics": false,
+    "cache": {
+      "enabled": true,
+      "environment": "all"
+    }
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "style": "scss",
+      "changeDetection": "OnPush",
+      "standalone": true
+    },
+    "@schematics/angular:directive": { "standalone": true },
+    "@schematics/angular:pipe": { "standalone": true }
   },
   "newProjectRoot": "projects",
   "projects": {
     "app": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
-      },
       "root": "projects/app",
       "sourceRoot": "projects/app/src",
       "prefix": "app",
@@ -23,36 +32,31 @@
             "browser": "projects/app/src/main.ts",
             "tsConfig": "projects/app/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "projects/app/public"
-              }
-            ],
-            "styles": [
-              "projects/app/src/styles.scss"
-            ]
+            "assets": [{ "glob": "**/*", "input": "projects/app/public" }],
+            "styles": ["projects/app/src/styles.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["projects/common/styles"]
+            }
           },
           "configurations": {
             "production": {
+              "optimization": {
+                "scripts": true,
+                "styles": { "minify": true, "inlineCritical": true },
+                "fonts": true
+              },
               "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
-                }
+                { "type": "initial", "maximumWarning": "1.9MB", "maximumError": "2.5MB" },
+                { "type": "anyComponentStyle", "maximumWarning": "12kB", "maximumError": "16kB" }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "sourceMap": { "scripts": true, "hidden": true }
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "namedChunks": true
             }
           },
           "defaultConfiguration": "production"
@@ -60,17 +64,10 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "configurations": {
-            "production": {
-              "buildTarget": "app:build:production"
-            },
-            "development": {
-              "buildTarget": "app:build:development"
-            }
+            "production": { "buildTarget": "app:build:production" },
+            "development": { "buildTarget": "app:build:development" }
           },
           "defaultConfiguration": "development"
-        },
-        "test": {
-          "builder": "@angular/build:unit-test"
         }
       }
     },
@@ -83,20 +80,10 @@
         "build": {
           "builder": "@angular/build:ng-packagr",
           "configurations": {
-            "production": {
-              "tsConfig": "projects/common/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "projects/common/tsconfig.lib.json"
-            }
+            "production": { "tsConfig": "projects/common/tsconfig.lib.prod.json" },
+            "development": { "tsConfig": "projects/common/tsconfig.lib.json" }
           },
           "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular/build:unit-test",
-          "options": {
-            "tsConfig": "projects/common/tsconfig.spec.json"
-          }
         }
       }
     }

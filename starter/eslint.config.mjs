@@ -1,0 +1,81 @@
+import { defineConfig } from 'eslint/config';
+import eslint from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import angular from 'angular-eslint';
+import prettier from 'eslint-config-prettier';
+import unicorn from 'eslint-plugin-unicorn';
+
+// Module boundaries (app ↔ common, core/shared/features) are enforced by
+// Sheriff (see sheriff.config.ts) — added in the boundaries task.
+export default defineConfig(
+  {
+    ignores: ['**/*.yml', '**/*.yaml', '**/index.html', 'dist/**', '.angular/**'],
+  },
+  {
+    files: ['**/*.ts'],
+    extends: [
+      eslint.configs.recommended,
+      ...tseslint.configs.recommended,
+      ...tseslint.configs.stylistic,
+      ...angular.configs.tsRecommended,
+    ],
+    processor: angular.processInlineTemplates,
+    plugins: { unicorn },
+    rules: {
+      'unicorn/prevent-abbreviations': [
+        'warn',
+        {
+          extendDefaultReplacements: false,
+          replacements: {
+            ctrl: { control: true },
+            e: { event: true, error: true },
+            el: { element: true },
+            els: { elements: true },
+            idx: { index: true },
+            qty: { quantity: true },
+            params: { parameters: false },
+          },
+        },
+      ],
+      '@angular-eslint/directive-selector': [
+        'error',
+        { type: 'attribute', prefix: ['app', 'dev'], style: 'camelCase' },
+      ],
+      '@angular-eslint/component-selector': [
+        'error',
+        { type: 'element', prefix: ['app', 'dev'], style: 'kebab-case' },
+      ],
+      'padding-line-between-statements': [
+        'warn',
+        { blankLine: 'always', prev: '*', next: 'return' },
+      ],
+      '@typescript-eslint/no-empty-object-type': 'off',
+      '@typescript-eslint/no-empty-function': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+    },
+  },
+  {
+    files: ['**/*.html'],
+    extends: [
+      ...angular.configs.templateRecommended,
+      ...angular.configs.templateAccessibility,
+    ],
+    rules: {
+      '@angular-eslint/template/attributes-order': 'warn',
+      '@angular-eslint/template/click-events-have-key-events': 'warn',
+      '@angular-eslint/template/interactive-supports-focus': 'warn',
+      '@angular-eslint/template/label-has-associated-control': 'off',
+    },
+  },
+  prettier,
+  {
+    files: ['**/*.ts'],
+    rules: {
+      curly: 'error',
+    },
+  },
+);
