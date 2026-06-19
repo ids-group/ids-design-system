@@ -12,6 +12,7 @@
         "@angular/platform-browser": "^21.1.0",
         "@angular/router": "^21.1.0",
         "@ids-group-ltd/ids-design-system": "file:../dist/ds",
+        "@ngrx/signals": "^21.1.1",
         "rxjs": "~7.8.0",
         "tslib": "^2.3.0",
       },
@@ -383,6 +384,8 @@
     "@napi-rs/nice-win32-x64-msvc": ["@napi-rs/nice-win32-x64-msvc@1.1.1", "", { "os": "win32", "cpu": "x64" }, "sha512-vB+4G/jBQCAh0jelMTY3+kgFy00Hlx2f2/1zjMoH821IbplbWZOkLiTYXQkygNTzQJTq5cvwBDgn2ppHD+bglQ=="],
 
     "@napi-rs/wasm-runtime": ["@napi-rs/wasm-runtime@1.1.5", "", { "dependencies": { "@tybys/wasm-util": "^0.10.2" }, "peerDependencies": { "@emnapi/core": "^1.7.1", "@emnapi/runtime": "^1.7.1" } }, "sha512-AWPoBRJ9tsnVhor4sjO7rkni+7p+2IAEFj6cx06UgP10jkQHqay/36uRV/bFkgrh18D9vb4cr8Q0Pthskgzy+Q=="],
+
+    "@ngrx/signals": ["@ngrx/signals@21.1.1", "", { "dependencies": { "tslib": "^2.3.0" }, "peerDependencies": { "@angular/core": "^21.0.0", "rxjs": "^6.5.3 || ^7.4.0" }, "optionalPeers": ["rxjs"] }, "sha512-AXxsvO39cJ4gu2GMvLyUHwx+3qHi35Bn7OUqyIfJW0fffi/Af7ML6h0MPMWDHVROo55FBgxzJrYRswwzdew9VA=="],
 
     "@nodelib/fs.scandir": ["@nodelib/fs.scandir@2.1.5", "", { "dependencies": { "@nodelib/fs.stat": "2.0.5", "run-parallel": "^1.1.9" } }, "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g=="],
 
