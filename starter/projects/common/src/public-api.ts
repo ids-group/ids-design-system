@@ -1,5 +1,5 @@
 /*
- * Public API Surface of common
+ * Public API Surface of @app/common
  */
-
-export * from './lib/common';
+export * from './lib/models/environment.model';
+export * from './lib/tokens';

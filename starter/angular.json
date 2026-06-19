@@ -50,7 +50,75 @@
                 { "type": "anyComponentStyle", "maximumWarning": "12kB", "maximumError": "16kB" }
               ],
               "outputHashing": "all",
-              "sourceMap": { "scripts": true, "hidden": true }
+              "sourceMap": { "scripts": true, "hidden": true },
+              "fileReplacements": [
+                {
+                  "replace": "projects/common/config/src/environments/environment.ts",
+                  "with": "projects/common/config/src/environments/environment.prod.ts"
+                }
+              ]
+            },
+            "staging": {
+              "optimization": {
+                "scripts": true,
+                "styles": { "minify": true, "inlineCritical": true },
+                "fonts": true
+              },
+              "budgets": [
+                { "type": "initial", "maximumWarning": "1.9MB", "maximumError": "2.5MB" },
+                { "type": "anyComponentStyle", "maximumWarning": "12kB", "maximumError": "16kB" }
+              ],
+              "outputHashing": "all",
+              "sourceMap": { "scripts": true, "hidden": true },
+              "fileReplacements": [
+                {
+                  "replace": "projects/common/config/src/environments/environment.ts",
+                  "with": "projects/common/config/src/environments/environment.staging.ts"
+                }
+              ]
+            },
+            "uat": {
+              "budgets": [
+                { "type": "initial", "maximumWarning": "1.9MB", "maximumError": "2.5MB" },
+                { "type": "anyComponentStyle", "maximumWarning": "12kB", "maximumError": "16kB" }
+              ],
+              "outputHashing": "all",
+              "sourceMap": { "scripts": true, "hidden": true },
+              "fileReplacements": [
+                {
+                  "replace": "projects/common/config/src/environments/environment.ts",
+                  "with": "projects/common/config/src/environments/environment.uat.ts"
+                }
+              ]
+            },
+            "test": {
+              "budgets": [
+                { "type": "initial", "maximumWarning": "1.9MB", "maximumError": "2.5MB" },
+                { "type": "anyComponentStyle", "maximumWarning": "12kB", "maximumError": "16kB" }
+              ],
+              "outputHashing": "all",
+              "namedChunks": true,
+              "sourceMap": { "scripts": true, "hidden": true },
+              "fileReplacements": [
+                {
+                  "replace": "projects/common/config/src/environments/environment.ts",
+                  "with": "projects/common/config/src/environments/environment.test.ts"
+                }
+              ]
+            },
+            "prototype": {
+              "budgets": [
+                { "type": "initial", "maximumWarning": "1.9MB", "maximumError": "2.5MB" },
+                { "type": "anyComponentStyle", "maximumWarning": "12kB", "maximumError": "16kB" }
+              ],
+              "outputHashing": "all",
+              "sourceMap": { "scripts": true, "hidden": true },
+              "fileReplacements": [
+                {
+                  "replace": "projects/common/config/src/environments/environment.ts",
+                  "with": "projects/common/config/src/environments/environment.prototype.ts"
+                }
+              ]
             },
             "development": {
               "optimization": false,
@@ -65,6 +133,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": { "buildTarget": "app:build:production" },
+            "staging": { "buildTarget": "app:build:staging" },
+            "uat": { "buildTarget": "app:build:uat" },
+            "test": { "buildTarget": "app:build:test" },
+            "prototype": { "buildTarget": "app:build:prototype" },
             "development": { "buildTarget": "app:build:development" }
           },
           "defaultConfiguration": "development"
