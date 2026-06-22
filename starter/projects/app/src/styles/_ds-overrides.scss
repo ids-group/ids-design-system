@@ -1,0 +1,11 @@
+// Per-component DS token tweaks — override the design system's PUBLIC `--ds-*`
+// tokens (and a few component vars) here, scoped to the brand. This is the
+// sanctioned way to retune DS components app-wide without forking the library.
+// Keep it small: each override is a deliberate, documented deviation.
+[data-brand='app'] {
+  // Example: tighten the shared container padding for this app's density.
+  // --ds-container-pad: var(--space-4);
+
+  // Example: tint info toasts toward the brand.
+  // --ds-toast-bg-color-info: color-mix(in srgb, var(--primary) 10%, var(--surface-default));
+}

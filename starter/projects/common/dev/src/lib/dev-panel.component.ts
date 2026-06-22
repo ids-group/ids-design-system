@@ -15,11 +15,7 @@ import { DevSettings } from './dev-settings.service';
 @Component({
   selector: 'dev-panel',
   template: `
-    <button
-      type="button"
-      class="dev-fab"
-      (click)="open.set(!open())"
-    >
+    <button type="button" class="dev-fab" (click)="open.set(!open())">
       DEV
     </button>
 
@@ -86,11 +82,26 @@ import { DevSettings } from './dev-settings.service';
       font: 12px/1.5 monospace;
       box-shadow: 0 8px 28px rgb(0 0 0 / 0.4);
     }
-    h2 { margin: 0 0 8px; font-size: 13px; }
-    h3 { margin: 12px 0 4px; font-size: 11px; color: #8fb3bb; }
-    dl { margin: 0; }
-    dd { margin: 0 0 4px; word-break: break-all; }
-    button[type='button'].active { background: #2e54ff; color: #fff; }
+    h2 {
+      margin: 0 0 8px;
+      font-size: 13px;
+    }
+    h3 {
+      margin: 12px 0 4px;
+      font-size: 11px;
+      color: #8fb3bb;
+    }
+    dl {
+      margin: 0;
+    }
+    dd {
+      margin: 0 0 4px;
+      word-break: break-all;
+    }
+    button[type='button'].active {
+      background: #2e54ff;
+      color: #fff;
+    }
     section button {
       margin: 0 4px 4px 0;
       border: 0;
@@ -100,8 +111,13 @@ import { DevSettings } from './dev-settings.service';
       color: inherit;
       cursor: pointer;
     }
-    ul { margin: 0; padding-left: 16px; }
-    .muted { color: #6b7aa3; }
+    ul {
+      margin: 0;
+      padding-left: 16px;
+    }
+    .muted {
+      color: #6b7aa3;
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,0 +1,11 @@
+// App-level layout/feature tokens — `--app-*`, built FROM the DS scale tokens
+// (--space-*, --font-size-*, --radius-*) so they stay on-scale and density-aware.
+// Use these in app component styles instead of hard-coded values.
+[data-brand='app'] {
+  --app-page-pad-x: var(--space-6);
+  --app-page-pad-y: var(--space-6);
+  --app-page-gap: var(--space-4);
+  --app-content-maxw: 1200px;
+
+  --app-fs-meta: var(--font-size-xs);
+}

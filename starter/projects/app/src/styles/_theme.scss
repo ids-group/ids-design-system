@@ -1,0 +1,35 @@
+// App theme — binds the `_palette.scss` `--app-*` primitives onto the design
+// system's Tier-2 semantic roles. Applied via `<html data-brand="app">`. Values
+// point at `--app-*` tokens (no raw hex), so a palette swap propagates here.
+// The published DS drives the brand through the `--primary*` family (it has no
+// `--brand*` tokens); mapping the brand onto `--primary*` re-skins buttons,
+// links, focus halos, and the auto-derived secondary/tertiary hues.
+[data-brand='app'] {
+  // Channels — the DS composes focus rings / halos / hover-pressed from these.
+  --primary-h: var(--app-brand-h);
+  --primary-s: var(--app-brand-s);
+  --primary-l: var(--app-brand-l);
+
+  // Primary role family.
+  --primary: var(--app-color-primary);
+  --primary-strong: var(--app-color-primary-strong);
+  --primary-muted: var(--app-color-primary-muted);
+  --primary-muted-strong: var(--app-color-primary-muted-strong);
+  --primary-subtitle: var(--app-color-primary-subtle);
+  --primary-on: var(--app-color-primary-on);
+
+  // Surfaces.
+  --surface-canvas: var(--app-color-canvas);
+  --surface-default: var(--app-color-surface);
+  --surface-secondary: var(--app-color-surface-secondary);
+  --surface-overlay: var(--app-color-surface);
+
+  // Borders + text.
+  --border-default: var(--app-color-border);
+  --text-primary: var(--app-color-text);
+  --text-secondary: var(--app-color-text-secondary);
+  --text-tertiary: var(--app-color-text-muted);
+
+  // Font family role.
+  --font-sans: var(--app-font-family);
+}

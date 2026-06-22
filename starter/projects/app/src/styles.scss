@@ -1,11 +1,20 @@
-// IDS design system: palette + theme + tokens + global styles, one import.
-// Option A (default, zero-config): the scoped package path used below.
-// Option B (shorter `@use 'styles/ds'`): add the package dir to Sass includePaths
-// in angular.json — stylePreprocessorOptions.includePaths:
-//   ["projects/common/styles", "node_modules/@ids-group-ltd/ids-design-system"]
+// Global styles — composed in layers (order matters):
+//   1. design system  — palette + theme + tokens + global resets/typography
+//   2. palette         — app brand PRIMITIVES (--app-*)            [data-brand]
+//   3. theme           — binds palette onto DS semantic roles      [data-brand]
+//   4. app-vars        — app layout/feature tokens (from DS scale) [data-brand]
+//   5. ds-overrides    — per-component DS --ds-* token tweaks      [data-brand]
+// The brand layer (2–5) activates via <html data-brand="app"> (see index.html).
+// Delete it to ride the DS default theme as-is.
+// DS import — Option A (default, zero-config): scoped package path below.
+// Option B (`@use 'styles/ds'`): add the package dir to Sass includePaths in
+// angular.json — ["projects/common/styles", "node_modules/@ids-group-ltd/ids-design-system"].
 @use '@ids-group-ltd/ids-design-system/styles/ds';
+@use './styles/palette';
+@use './styles/theme';
+@use './styles/app-vars';
+@use './styles/ds-overrides';
 
-// App-level global overrides go below (or in app/src/styles/ partials).
 html,
 body {
   margin: 0;
