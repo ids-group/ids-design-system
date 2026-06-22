@@ -1,59 +1,38 @@
-# App
+# IDS App Starter
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.2.
+A reproducible, enforced front-end architecture for IDS apps — an Angular
+workspace (`app` + `common`) wired to the IDS design system, running on a mock
+backend with **no real services**. Copy it to start a new app.
 
-## Development server
+**What's inside:** standalone + zoneless Angular · NgRx Signal Store + helpers ·
+`ApiResult<T>` data layer · pluggable Notification / ErrorReporter / AuthProvider
+(mock) · full auth (refresh / silent-renew / tab-sync) · IDS design system UI ·
+Sheriff-enforced module boundaries · 6 typed environments · CI gate + lefthook ·
+a demo `items` CRUD feature dogfooding every pattern.
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Quick start
 
 ```bash
-ng generate component component-name
+cd starter
+bun install            # Windows DS-link note: docs/architecture/README.md
+bun start              # mock auth — any credentials sign you in
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Docs
+
+- **Architecture guide** → [`docs/architecture/README.md`](docs/architecture/README.md)
+  (layers, stack, quick start, new-app rename guide, known DS gaps)
+- **Decision records (the why)** → [`docs/decisions/README.md`](docs/decisions/README.md)
+- **App layer map** → [`projects/app/src/app/README.md`](projects/app/src/app/README.md)
+- **Feature shape contract** → [`projects/app/src/app/features/example/README.md`](projects/app/src/app/features/example/README.md)
+
+## Commands
 
 ```bash
-ng generate --help
+bun start          # dev server
+bun run build      # production build
+bun run lint       # eslint + Sheriff module boundaries
+bun run lint:styles
+bun run format     # prettier check (format:fix to write)
+bash infrastructure/scripts/ci-validate.sh   # full CI gate
 ```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
