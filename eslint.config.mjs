@@ -4,6 +4,7 @@ import tseslint from 'typescript-eslint';
 import angular from 'angular-eslint';
 import prettier from 'eslint-config-prettier';
 import unicorn from 'eslint-plugin-unicorn';
+import sheriff from '@softarc/eslint-plugin-sheriff';
 import dsPlugin from './eslint-rules/index.mjs';
 
 export default defineConfig(
@@ -114,6 +115,16 @@ export default defineConfig(
     files: ['**/*.ts'],
     rules: {
       curly: 'error',
+    },
+  },
+  // Sheriff module boundaries — scoped to the ds-docs showcase only (NOT src/lib).
+  // Sections can't import each other; see sheriff.config.ts. Encapsulation relaxed
+  // so existing deep relative imports into shared/layout keep working.
+  {
+    files: ['ds-docs/src/**/*.ts'],
+    extends: [sheriff.configs.all],
+    rules: {
+      '@softarc/sheriff/encapsulation': 'off',
     },
   },
 );
