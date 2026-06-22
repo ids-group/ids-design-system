@@ -1,16 +1,9 @@
 // IDS design system: palette + theme + tokens + global styles, one import.
-//
-// Option A (default, zero-config) — scoped package path:
+// Option A (default, zero-config): the scoped package path used below.
+// Option B (shorter `@use 'styles/ds'`): add the package dir to Sass includePaths
+// in angular.json — stylePreprocessorOptions.includePaths:
+//   ["projects/common/styles", "node_modules/@ids-group-ltd/ids-design-system"]
 @use '@ids-group-ltd/ids-design-system/styles/ds';
-//
-// Option B (shorter bare import) — add the package dir to Sass includePaths in
-// angular.json, then use `@use 'styles/ds';` instead of the line above:
-//   "stylePreprocessorOptions": {
-//     "includePaths": [
-//       "projects/common/styles",
-//       "node_modules/@ids-group-ltd/ids-design-system"
-//     ]
-//   }
 
 // App-level global overrides go below (or in app/src/styles/ partials).
 html,

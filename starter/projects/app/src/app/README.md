@@ -3,12 +3,12 @@
 **Feature-first colocation + four stable layers.** Cross-app code lives in `@app/common`.
 Design tokens / themes / global classes come from `@ids-group-ltd/ids-design-system` — **compose, don't redefine.**
 
-| Layer | What goes here |
-|---|---|
-| `core/` | App-wide **singletons**: `api/` (`*.api.ts`), `store/` (signal stores + `helpers/`), `notifications/` (`ToastNotificationService` → `ds-toast`), `transitions/`, `config/`. One instance, not feature-specific. |
-| `features/<name>/` | Everything for **one feature**, colocated — see `features/example/README.md`. |
-| `layouts/` | Route-mounted **shells** (`auth-layout`, `main-layout`) built on `ds-sidenav` / `ds-topbar`. |
-| `shared/` | Cross-feature **reusable, no business logic**: `components/ directives/ pipes/ utils/ models/ constants/`. |
+| Layer              | What goes here                                                                                                                                                                                                  |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `core/`            | App-wide **singletons**: `api/` (`*.api.ts`), `store/` (signal stores + `helpers/`), `notifications/` (`ToastNotificationService` → `ds-toast`), `transitions/`, `config/`. One instance, not feature-specific. |
+| `features/<name>/` | Everything for **one feature**, colocated — see `features/example/README.md`.                                                                                                                                   |
+| `layouts/`         | Route-mounted **shells** (`auth-layout`, `main-layout`) built on `ds-sidenav` / `ds-topbar`.                                                                                                                    |
+| `shared/`          | Cross-feature **reusable, no business logic**: `components/ directives/ pipes/ utils/ models/ constants/`.                                                                                                      |
 
 Cross-cutting **infra** — `HttpService`, interceptors, guards, `GlobalErrorHandler`, auth store,
 abstract `NotificationService` / `ErrorReporter` — lives in **`@app/common`** (`projects/common/src/lib/`),
@@ -21,7 +21,7 @@ Two equivalent ways to pull in the DS (palette + theme + tokens + globals):
   `@use '@ids-group-ltd/ids-design-system/styles/ds';`
 - **B — bare import (shorter):** add the package dir to Sass `includePaths` in
   `angular.json` (`stylePreprocessorOptions.includePaths: ["projects/common/styles",
-  "node_modules/@ids-group-ltd/ids-design-system"]`), then `@use 'styles/ds';`.
+"node_modules/@ids-group-ltd/ids-design-system"]`), then `@use 'styles/ds';`.
 
 Then add `[data-brand]` overrides. Shared SCSS partials (mixins/vars) →
 `projects/common/styles/` (already on `includePaths`).

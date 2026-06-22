@@ -4,9 +4,8 @@ import tseslint from 'typescript-eslint';
 import angular from 'angular-eslint';
 import prettier from 'eslint-config-prettier';
 import unicorn from 'eslint-plugin-unicorn';
+import sheriff from '@softarc/eslint-plugin-sheriff';
 
-// Module boundaries (app ↔ common, core/shared/features) are enforced by
-// Sheriff (see sheriff.config.ts) — added in the boundaries task.
 export default defineConfig(
   {
     ignores: ['**/*.yml', '**/*.yaml', '**/index.html', 'dist/**', '.angular/**'],
@@ -77,5 +76,10 @@ export default defineConfig(
     rules: {
       curly: 'error',
     },
+  },
+  // Sheriff — module boundaries (deep-import / dependency-rule / encapsulation).
+  {
+    files: ['projects/**/*.ts'],
+    extends: [sheriff.configs.all],
   },
 );

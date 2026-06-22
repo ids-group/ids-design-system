@@ -21,6 +21,7 @@ features/<name>/
 ```
 
 **Conventions**
+
 - File suffixes: `*.component.ts` · `*.page.ts` · `*.store.ts` · `*.api.ts` · `*-actions.service.ts`
 - Types: `XxxDto` / `XxxFormModel` / `XxxListItem`; consts `SCREAMING_SNAKE`
 - Every sub-folder exports through an `index.ts` **barrel** (Sheriff public API)

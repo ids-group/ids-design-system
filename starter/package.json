@@ -33,6 +33,8 @@
     "@angular/build": "^21.1.2",
     "@angular/cli": "^21.1.2",
     "@angular/compiler-cli": "^21.1.0",
+    "@softarc/eslint-plugin-sheriff": "^0.19.6",
+    "@softarc/sheriff-core": "^0.19.6",
     "angular-eslint": "^21.2.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",

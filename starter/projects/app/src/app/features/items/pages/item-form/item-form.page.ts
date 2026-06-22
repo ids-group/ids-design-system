@@ -9,7 +9,10 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { ButtonComponent, InputComponent } from '@ids-group-ltd/ids-design-system';
+import {
+  ButtonComponent,
+  InputComponent,
+} from '@ids-group-ltd/ids-design-system';
 import { HasUnsavedChanges } from '@app/common';
 import { ItemStore } from '../../../../core/store/item.store';
 import { EMPTY_ITEM_FORM, ItemFormModel } from '../../models';

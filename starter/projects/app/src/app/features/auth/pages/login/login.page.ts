@@ -1,7 +1,15 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { ButtonComponent, InputComponent } from '@ids-group-ltd/ids-design-system';
+import {
+  ButtonComponent,
+  InputComponent,
+} from '@ids-group-ltd/ids-design-system';
 import { AuthStore } from '@app/common';
 
 @Component({

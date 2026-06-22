@@ -28,7 +28,12 @@ export const EMPTY_ITEM_FORM: ItemFormModel = {
 };
 
 export function dtoToListItem(dto: ItemDto): ItemListItem {
-  return { id: dto.id, name: dto.name, category: dto.category, quantity: dto.quantity };
+  return {
+    id: dto.id,
+    name: dto.name,
+    category: dto.category,
+    quantity: dto.quantity,
+  };
 }
 
 export function dtoToFormModel(dto: ItemDto): ItemFormModel {

@@ -20,6 +20,8 @@
         "@angular/build": "^21.1.2",
         "@angular/cli": "^21.1.2",
         "@angular/compiler-cli": "^21.1.0",
+        "@softarc/eslint-plugin-sheriff": "^0.19.6",
+        "@softarc/sheriff-core": "^0.19.6",
         "angular-eslint": "^21.2.0",
         "eslint": "^9.39.2",
         "eslint-config-prettier": "^10.1.8",
@@ -540,6 +542,10 @@
     "@sigstore/verify": ["@sigstore/verify@3.1.1", "", { "dependencies": { "@sigstore/bundle": "^4.0.0", "@sigstore/core": "^3.2.1", "@sigstore/protobuf-specs": "^0.5.0" } }, "sha512-qv7+G3J2cc6wwFj3yKvXOamzqhMwSk1ogPGmhpS8iXllcPrJaIIBA+4HbttlHVu1pqWTdmaCH/WE7UOC51kdoA=="],
 
     "@sindresorhus/merge-streams": ["@sindresorhus/merge-streams@4.0.0", "", {}, "sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ=="],
+
+    "@softarc/eslint-plugin-sheriff": ["@softarc/eslint-plugin-sheriff@0.19.6", "", { "peerDependencies": { "@softarc/sheriff-core": "0.19.6", "@typescript-eslint/utils": "^5.48.2 || ^6.0.0 || ^7.0.0 || ^8.0.0-alpha.20", "eslint": "^8.0.0 || ^9.0.0" } }, "sha512-PPP4TKSFLOvFhfckS0M7L2PMqK6qw7Q8LiYGd3H64V/jHc7cVLfogMS4mjc/I2+7wbAr374qJg0A+uJ5VkXbCQ=="],
+
+    "@softarc/sheriff-core": ["@softarc/sheriff-core@0.19.6", "", { "peerDependencies": { "typescript": ">=4.8" }, "bin": { "sheriff": "src/bin/main.js" } }, "sha512-KACxHG9sS7kNWgnnBODzdr14kMLMrJVlQKc+tViUP03p2fRwNhESOA49bz51Yn7dro1mbtMmmFjICLmZSJDZZA=="],
 
     "@standard-schema/spec": ["@standard-schema/spec@1.1.0", "", {}, "sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w=="],
 

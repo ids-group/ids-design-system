@@ -11,21 +11,27 @@ export const itemsRoutes: Routes = [
         path: '',
         title: 'Items',
         loadComponent: () =>
-          import('./pages/item-list/item-list.page').then((m) => m.ItemListPage),
+          import('./pages/item-list/item-list.page').then(
+            (m) => m.ItemListPage,
+          ),
       },
       {
         path: 'new',
         title: 'New Item',
         canDeactivate: [unsavedChangesGuard],
         loadComponent: () =>
-          import('./pages/item-form/item-form.page').then((m) => m.ItemFormPage),
+          import('./pages/item-form/item-form.page').then(
+            (m) => m.ItemFormPage,
+          ),
       },
       {
         path: ':id/edit',
         title: 'Edit Item',
         canDeactivate: [unsavedChangesGuard],
         loadComponent: () =>
-          import('./pages/item-form/item-form.page').then((m) => m.ItemFormPage),
+          import('./pages/item-form/item-form.page').then(
+            (m) => m.ItemFormPage,
+          ),
       },
     ],
   },
