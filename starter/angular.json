@@ -55,6 +55,10 @@
                 {
                   "replace": "projects/common/config/src/environments/environment.ts",
                   "with": "projects/common/config/src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "projects/common/dev/src/public-api.ts",
+                  "with": "projects/common/dev/src/public-api.prod.ts"
                 }
               ]
             },
@@ -74,6 +78,10 @@
                 {
                   "replace": "projects/common/config/src/environments/environment.ts",
                   "with": "projects/common/config/src/environments/environment.staging.ts"
+                },
+                {
+                  "replace": "projects/common/dev/src/public-api.ts",
+                  "with": "projects/common/dev/src/public-api.prod.ts"
                 }
               ]
             },

@@ -16,7 +16,8 @@ import {
   withRouterConfig,
   withViewTransitions,
 } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { devInterceptors } from '@app/common/dev';
 import {
   AppTitleStrategy,
   AuthProvider,
@@ -55,7 +56,7 @@ export const appConfig: ApplicationConfig = {
       }),
     ),
     { provide: TitleStrategy, useClass: AppTitleStrategy },
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([...devInterceptors])),
     { provide: BASE_URL, useValue: environment.baseUrl },
     { provide: ENVIRONMENT_NAME, useValue: environment.name },
     { provide: NotificationService, useClass: ToastNotificationService },

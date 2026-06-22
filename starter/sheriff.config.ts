@@ -18,6 +18,7 @@ export const config: SheriffConfig = {
   modules: {
     'projects/common/src': 'common',
     'projects/common/config/src': 'common',
+    'projects/common/dev/src': 'common',
   },
   depRules: {
     // App (root) + entry/composition files may import anything.

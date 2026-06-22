@@ -20,7 +20,8 @@
     // TODO: enable "exactOptionalPropertyTypes" and "noUncheckedIndexedAccess"
     "paths": {
       "@app/common": ["./projects/common/src/public-api.ts"],
-      "@app/common/config": ["./projects/common/config/src/public-api.ts"]
+      "@app/common/config": ["./projects/common/config/src/public-api.ts"],
+      "@app/common/dev": ["./projects/common/dev/src/public-api.ts"]
     },
     "importHelpers": true,
     "target": "ES2022",
