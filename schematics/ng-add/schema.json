@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "IdsNgAdd",
+  "title": "IDS ng-add Options",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Project to wire the design system into (defaults to the workspace default / first application)."
+    }
+  },
+  "required": []
+}

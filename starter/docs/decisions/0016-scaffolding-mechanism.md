@@ -1,7 +1,7 @@
 # 0016 — Scaffolding mechanism: template + schematics (Nx rejected)
 
-- **Status:** Proposed
-- **Date:** 2026-06-19
+- **Status:** Accepted
+- **Date:** 2026-06-19 (schematics implemented 2026-06-22)
 
 ## Context
 
@@ -30,5 +30,10 @@ provides Nx-level boundary enforcement without Nx.
 
 - **+** Fast start (template) + drift-resistant recurring scaffolds (schematics) +
   enforced boundaries (Sheriff), no monorepo migration.
-- **−** The schematics library is additional code to build/maintain (Phase 2).
-- **Status Proposed** until the schematics library is built and validated.
+- **−** The schematics collection is additional code to build/maintain.
+- **Implemented (2026-06-22):** collection in the DS repo's `schematics/`, compiled
+  into `dist/ds/schematics` by `tools/build-schematics.mjs` (now part of `build:lib`,
+  so it ships). Generators: `ng-add` (wire DS styles), `feature`, `store`,
+  `data-access`, `page`, `ui` — all verified to emit eslint+Sheriff+prettier-clean
+  code. **Note:** when the starter is extracted to its own repo, revisit whether the
+  schematics live with the starter or stay in the DS package.

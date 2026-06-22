@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "IdsStore",
+  "title": "IDS Signal Store Options",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Store name (e.g. kit).",
+      "$default": { "$source": "argv", "index": 0 },
+      "x-prompt": "What is the store name?"
+    },
+    "path": {
+      "type": "string",
+      "description": "Target folder.",
+      "default": "projects/app/src/app/core/store"
+    }
+  },
+  "required": ["name"]
+}

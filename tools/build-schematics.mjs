@@ -1,11 +1,7 @@
 #!/usr/bin/env node
 // Compiles the schematics collection into dist/ds/schematics and registers it in
-// the published package.json. Run AFTER `ng build ds` (which regenerates dist/ds).
-//
-//   bun run build:lib && node tools/build-schematics.mjs
-//
-// Kept separate from build:lib for now so the collection only ships when this is
-// run deliberately (wiring it into build:lib is the step that publishes it).
+// the published package.json. Runs as the second half of `build:lib` (after
+// `ng build ds` regenerates dist/ds), so the collection ships with the package.
 import { execSync } from 'node:child_process';
 import { cpSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 
@@ -22,12 +18,13 @@ const distSchematics = 'dist/ds/schematics';
 console.log('▶ Compiling schematics (tsc)…');
 execSync('npx tsc -p schematics/tsconfig.json', { stdio: 'inherit' });
 
-console.log('▶ Copying collection.json, schema.json, and templates…');
+console.log('▶ Copying collection.json, schemas, and templates…');
 cpSync('schematics/collection.json', `${distSchematics}/collection.json`);
-cpSync(
-  'schematics/feature/schema.json',
-  `${distSchematics}/feature/schema.json`,
-);
+// Copy every generator's schema.json (tsc only emits .js, not .json).
+for (const gen of ['ng-add', 'feature', 'store', 'data-access', 'page', 'ui']) {
+  cpSync(`schematics/${gen}/schema.json`, `${distSchematics}/${gen}/schema.json`);
+}
+// Copy file-based templates (feature generator).
 cpSync('schematics/feature/files', `${distSchematics}/feature/files`, {
   recursive: true,
 });

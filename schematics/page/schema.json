@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "IdsPage",
+  "title": "IDS Page Options",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Page name (e.g. kit-list).",
+      "$default": { "$source": "argv", "index": 0 },
+      "x-prompt": "What is the page name?"
+    },
+    "path": {
+      "type": "string",
+      "description": "Target folder (e.g. a feature's pages/ folder).",
+      "default": "projects/app/src/app/features"
+    }
+  },
+  "required": ["name"]
+}
