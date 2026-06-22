@@ -1,0 +1,3 @@
+// <%= classify(name) %> models — define <%= classify(name) %>Dto / <%= classify(name) %>FormModel /
+// <%= classify(name) %>ListItem + mapper functions here, then export them.
+export {};

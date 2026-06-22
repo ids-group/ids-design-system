@@ -1,0 +1,11 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "feature": {
+      "description": "Scaffold a feature folder (routes, config, page, barrels) in the IDS app architecture.",
+      "factory": "./feature/index#feature",
+      "schema": "./feature/schema.json",
+      "aliases": ["f"]
+    }
+  }
+}

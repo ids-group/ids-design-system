@@ -27,6 +27,7 @@
     "watch": "ng build ds --watch --configuration development",
     "build:lib": "ng build ds",
     "build:lib:dev": "ng build ds --configuration development",
+    "build:schematics": "node tools/build-schematics.mjs",
     "build:docs": "ng build ds-docs",
     "build:docs:dev": "ng build ds-docs --configuration development",
     "build:deck-css": "sass src/lib/styles/ds.scss presentations/ds.css --no-source-map --style=expanded",

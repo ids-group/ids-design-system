@@ -1,0 +1,8 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+@Component({
+  selector: 'app-<%= name %>-list-page',
+  template: `<h1><%= classify(name) %></h1>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class <%= classify(name) %>ListPage {}
