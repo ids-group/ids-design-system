@@ -76,8 +76,8 @@ A scaffold generator (`ng add` / `ng g`) is planned (ADR-0016). Until then, copy
 4. **Environments** (`projects/common/config/src/environments/*`): real `baseUrl`s.
 5. **DS dependency:** point at the published package + configure `.npmrc` / `NPM_TOKEN`.
 6. **Auth:** swap `MockAuthProvider` → `HttpAuthProvider` (or your own) in `app.config.ts`.
-7. **Remove the demo:** delete `features/items/`, its route in `app.routes.ts`,
-   `core/api/item.api.ts`, `core/store/item.store.ts`, and the nav item.
+7. **Remove the demo:** follow [`remove-demo.md`](remove-demo.md) (deletes the
+   `items`/`admin` features, their api/store, routes, and nav links).
 
 ## Known DS gaps this starter surfaced
 
