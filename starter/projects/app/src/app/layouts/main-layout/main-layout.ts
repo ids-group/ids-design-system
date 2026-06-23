@@ -8,6 +8,7 @@ import {
   TopBarComponent,
 } from '@ids-group-ltd/ids-design-system';
 import { AuthStore } from '@app/common';
+import { BreadcrumbService } from '../../core/breadcrumb/breadcrumb.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -27,6 +28,7 @@ export class MainLayout {
   private readonly router = inject(Router);
 
   protected readonly user = this.authStore.currentUser;
+  protected readonly breadcrumbs = inject(BreadcrumbService).breadcrumbs;
 
   async logout(): Promise<void> {
     await firstValueFrom(this.authStore.logout());

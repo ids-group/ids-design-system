@@ -26,6 +26,7 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         title: 'Dashboard',
+        data: { breadcrumb: 'Dashboard' },
         loadComponent: () =>
           import('./features/dashboard/dashboard.page').then(
             (m) => m.DashboardPage,

@@ -2,6 +2,21 @@
   <ds-topbar>
     <span title>{{ user()?.fullName || 'App' }}</span>
 
+    @if (breadcrumbs().length) {
+      <nav
+        breadcrumbs
+        class="main-layout__crumbs"
+        aria-label="Breadcrumb"
+      >
+        @for (crumb of breadcrumbs(); track $index) {
+          @if (!$first) {
+            <span aria-hidden="true">/</span>
+          }
+          <span>{{ crumb.label }}</span>
+        }
+      </nav>
+    }
+
     <div actions>
       <ds-button
         variant="outline"

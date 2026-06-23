@@ -18,6 +18,7 @@ export const itemsRoutes: Routes = [
       {
         path: 'new',
         title: 'New Item',
+        data: { breadcrumb: 'New' },
         canDeactivate: [unsavedChangesGuard],
         loadComponent: () =>
           import('./pages/item-form/item-form.page').then(
@@ -27,6 +28,7 @@ export const itemsRoutes: Routes = [
       {
         path: ':id/edit',
         title: 'Edit Item',
+        data: { breadcrumb: 'Edit' },
         canDeactivate: [unsavedChangesGuard],
         loadComponent: () =>
           import('./pages/item-form/item-form.page').then(
