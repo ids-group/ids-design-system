@@ -47,11 +47,6 @@
   cursor: pointer;
 }
 
-.items__qty--low {
-  color: var(--warning-text, var(--warning));
-  font-weight: var(--font-weight-bold);
-}
-
 .items__actions {
   display: flex;
   gap: var(--space-1);

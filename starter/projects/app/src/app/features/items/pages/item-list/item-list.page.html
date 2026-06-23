@@ -77,8 +77,8 @@
         <tr>
           <td>{{ item.name }}</td>
           <td>{{ item.category }}</td>
-          <td [class.items__qty--low]="isLowStock(item.quantity)">
-            {{ item.quantity }}
+          <td>
+            <app-quantity-cell [quantity]="item.quantity" />
           </td>
           <td class="items__actions">
             <ds-button

@@ -14,11 +14,11 @@ import { debouncedLoading } from '@app/common';
 import { ItemStore } from '../../../../core/store/item.store';
 import { ItemActionsService } from '../../services/item-actions.service';
 import { ItemListItem } from '../../models';
-import { isLowStock } from '../../items.utils';
+import { QuantityCellComponent } from '../../components';
 
 @Component({
   selector: 'app-item-list-page',
-  imports: [RouterLink, ButtonComponent, InputComponent],
+  imports: [RouterLink, ButtonComponent, InputComponent, QuantityCellComponent],
   templateUrl: './item-list.page.html',
   styleUrl: './item-list.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +34,6 @@ export class ItemListPage {
   protected readonly loading = debouncedLoading(this.store.listLoading);
   protected readonly params = this.store.params;
   protected readonly searchTerm = signal('');
-  protected readonly isLowStock = isLowStock;
 
   constructor() {
     // URL is the source of truth — react to query-param changes (incl. initial load).
