@@ -8,17 +8,67 @@
   </ds-button>
 </header>
 
+<form
+  class="items__search"
+  (submit)="$event.preventDefault(); applySearch()"
+>
+  <ds-input
+    placeholder="Search name or category…"
+    [(value)]="searchTerm"
+  />
+  <ds-button
+    type="submit"
+    variant="outline"
+    size="sm"
+  >
+    Search
+  </ds-button>
+</form>
+
 @if (loading()) {
   <p>Loading…</p>
 } @else if (items().length === 0) {
-  <p>No items yet.</p>
+  <p>No items match.</p>
 } @else {
   <table class="items__table">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Qty</th>
+        <th>
+          <button
+            type="button"
+            class="items__sort"
+            (click)="sortBy('name')"
+          >
+            Name
+            @if (params().sortField === 'name') {
+              <span>{{ params().sortOrder === 'Asc' ? '▲' : '▼' }}</span>
+            }
+          </button>
+        </th>
+        <th>
+          <button
+            type="button"
+            class="items__sort"
+            (click)="sortBy('category')"
+          >
+            Category
+            @if (params().sortField === 'category') {
+              <span>{{ params().sortOrder === 'Asc' ? '▲' : '▼' }}</span>
+            }
+          </button>
+        </th>
+        <th>
+          <button
+            type="button"
+            class="items__sort"
+            (click)="sortBy('quantity')"
+          >
+            Qty
+            @if (params().sortField === 'quantity') {
+              <span>{{ params().sortOrder === 'Asc' ? '▲' : '▼' }}</span>
+            }
+          </button>
+        </th>
         <th></th>
       </tr>
     </thead>

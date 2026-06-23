@@ -28,7 +28,10 @@ export class ItemApi {
   ];
   private seq = 4;
 
-  list(params: BaseListParams): Observable<ApiResult<ItemListResult>> {
+  list(
+    params: BaseListParams,
+    sort?: { path: string; order: 'Asc' | 'Desc' },
+  ): Observable<ApiResult<ItemListResult>> {
     let rows = this.items.map(dtoToListItem);
 
     const search = params.search.toLowerCase();
@@ -40,18 +43,21 @@ export class ItemApi {
       );
     }
 
-    const dir = params.sortOrder === 'Asc' ? 1 : -1;
-    const key = params.sortField as keyof ItemListItem;
-    rows = [...rows].sort((a, b) => {
-      if (a[key] > b[key]) {
-        return dir;
-      }
-      if (a[key] < b[key]) {
-        return -dir;
-      }
+    // Sort only when the caller passed an explicit (non-default) sort param.
+    if (sort) {
+      const dir = sort.order === 'Asc' ? 1 : -1;
+      const key = sort.path as keyof ItemListItem;
+      rows = [...rows].sort((a, b) => {
+        if (a[key] > b[key]) {
+          return dir;
+        }
+        if (a[key] < b[key]) {
+          return -dir;
+        }
 
-      return 0;
-    });
+        return 0;
+      });
+    }
 
     // 600ms (> debouncedLoading's 300ms show-delay) so the list's loading state
     // is actually exercised in the demo. A real API replaces this with HttpService.

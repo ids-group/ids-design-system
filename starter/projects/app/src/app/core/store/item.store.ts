@@ -11,8 +11,11 @@ import { ApiResult } from '@app/common';
 import { ItemApi, ItemListResult } from '../api/item.api';
 import {
   BaseListParams,
+  buildBaseQueryParams,
+  buildSortingParam,
   createEditDataLoader,
   createListLoader,
+  parseBaseQueryParams,
   withListLoading,
 } from './helpers';
 import {
@@ -68,6 +71,11 @@ export const ItemStore = signalStore(
     listLoading: computed(() => store.list().loading),
     editLoading: computed(() => store.edit().loading),
     formData: computed(() => store.edit().formData),
+    params: computed(() => store.list().params),
+    // URL-serialisable form of the current list params (omits defaults).
+    queryParams: computed(() =>
+      buildBaseQueryParams(store.list().params, ITEMS_CONFIG),
+    ),
   })),
 
   withMethods((store) => {
@@ -78,10 +86,14 @@ export const ItemStore = signalStore(
     const patchEdit = (changes: Record<string, unknown>): void =>
       patchState(store, { edit: { ...store.edit(), ...changes } });
 
+    const VALID_SORT_FIELDS = ['name', 'category', 'quantity'];
+
     const loader = createListLoader<ApiResult<ItemListResult>>({
       getParams: () => store.list().params,
       patchList,
-      apiFn: (params) => api.list(params),
+      // Send an explicit sort only when it differs from the default (buildSortingParam).
+      apiFn: (params) =>
+        api.list(params, buildSortingParam(params, ITEMS_CONFIG)),
       onSuccess: (result) => {
         if (result.isSuccess && result.data) {
           patchList({ items: result.data.items, total: result.data.total });
@@ -100,8 +112,15 @@ export const ItemStore = signalStore(
       loadList(): void {
         loader.loadList();
       },
-      setSearch(search: string): void {
-        patchList({ params: { ...store.list().params, search } });
+      // URL is the source of truth: parse query params into list state, then load.
+      applyQueryParams(queryParams: Record<string, string>): void {
+        patchList({
+          params: parseBaseQueryParams(
+            queryParams,
+            ITEMS_CONFIG,
+            VALID_SORT_FIELDS,
+          ),
+        });
         loader.loadList();
       },
       loadForEdit(id: string): Observable<ApiResult<ItemFormModel>> {
