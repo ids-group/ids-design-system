@@ -12,16 +12,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **Renamed `--*-bg` tokens → `--*-bg-color`.** Every background token held only a colour
   and fed the `background` shorthand; they were renamed and switched to `background-color`.
-  Affects all public `--ds-*-bg` tokens (modal, pagination, search, sidenav, stat,
-  status-dot, table, tabs, tag, textarea, toast, topbar, …) plus private/global tokens.
-  Consumers overriding e.g. `--ds-toast-bg` must rename to `--ds-toast-bg-color`.
+  Affects all public `--ds-*-bg` hooks — avatar, badge, banner, button, card, date-picker,
+  dropzone, empty-state, icon-button, input, modal, pagination, search, sidenav, stat,
+  table, tabs, tag, toast and topbar — plus global tokens (`--select-bg`, `--chart-hover-bg`,
+  `--chart-tooltip-bg`, the `--status-*-bg` set) and private `--_*` tokens. Consumers
+  overriding e.g. `--ds-toast-bg` must rename to `--ds-toast-bg-color`.
 - **Renamed `--*-fg` tokens → semantic `-text-color` / `-label-color` / `-icon-color`.**
   The unclear `fg` abbreviation is gone: text/titles/inputs → `-text-color`, control & nav
   labels → `-label-color`, icons/glyphs → `-icon-color`. Affects all public `--ds-*-fg`
-  tokens across date-picker, dropzone, empty-state, icon-button, input, menu, modal,
-  page-header, pagination, search, sidenav, table, tabs, tag, textarea, topbar, plus the
-  `status-*` and chart-tooltip globals. Examples: `--ds-sidenav-group-fg` →
-  `--ds-sidenav-group-label-color`, `--ds-tag-hover-fg` → `--ds-tag-hover-label-color`.
+  hooks — avatar, badge, banner, breadcrumbs, button, date-picker, dropzone, empty-state,
+  icon-button, input, menu, modal, page-header, pagination, search, sidenav, table, tabs,
+  tag and topbar — plus the `--status-*` and chart-tooltip globals. Examples:
+  `--ds-modal-title-fg` → `--ds-modal-title-text-color`, `--ds-sidenav-group-fg` →
+  `--ds-sidenav-group-label-color`, `--ds-icon-button-fg` → `--ds-icon-button-icon-color`.
 
 ### Added
 
