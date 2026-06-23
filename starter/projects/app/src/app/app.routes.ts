@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, guestGuard } from '@app/common';
+import { adminGuard, authGuard, guestGuard } from '@app/common';
 
 export const routes: Routes = [
   {
@@ -37,6 +37,14 @@ export const routes: Routes = [
         data: { breadcrumb: 'Items' },
         loadChildren: () =>
           import('./features/items/items.routes').then((m) => m.itemsRoutes),
+      },
+      {
+        path: 'admin',
+        title: 'Admin',
+        data: { breadcrumb: 'Admin' },
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('./features/admin/admin.page').then((m) => m.AdminPage),
       },
       {
         path: 'not-found',
