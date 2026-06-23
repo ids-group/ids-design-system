@@ -1,6 +1,10 @@
 :host {
-  display: inline-flex;
-  align-items: center;
+  display: flex;
+  align-items: flex-start;
+
+  --_stepper-label-color: var(--ds-stepper-label-color, var(--text-tertiary));
+  --_stepper-label-color-current: var(--ds-stepper-label-color-current, var(--text-primary));
+  --_stepper-label-font-size: var(--ds-stepper-label-font-size, var(--font-size-xs));
 
   .visually-hidden {
     position: absolute;
@@ -14,7 +18,19 @@
     border: 0;
   }
 
+  .step {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
   .node {
+    position: relative;
+    z-index: 1;
     width: var(--stepper-node-size);
     height: var(--stepper-node-size);
     border-radius: var(--radius-pill);
@@ -38,11 +54,35 @@
     }
   }
 
-  .bar {
+  // Connector runs from this step's centre to the next step's centre, pinned at
+  // node-centre height; the circles (z-index 1, opaque fill) cover its ends so it
+  // reads as a line between circles regardless of label width.
+  .connector {
+    position: absolute;
+    z-index: 0;
+    top: calc((var(--stepper-node-size) - var(--stepper-bar-h)) / 2);
+    left: 50%;
+    width: 100%;
     height: var(--stepper-bar-h);
-    width: var(--stepper-bar-w);
     background: var(--border-divider);
 
-    &.done { background: var(--primary); }
+    &.done {
+      background: var(--primary);
+    }
+  }
+
+  .step-label {
+    max-width: 14ch;
+    margin-top: var(--space-2);
+    font-size: var(--_stepper-label-font-size);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-snug);
+    color: var(--_stepper-label-color);
+    overflow-wrap: anywhere;
+  }
+
+  .step.is-current .step-label {
+    font-weight: var(--font-weight-bold);
+    color: var(--_stepper-label-color-current);
   }
 }

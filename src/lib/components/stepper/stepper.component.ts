@@ -38,7 +38,7 @@ export class StepperComponent {
     return 'node';
   }
 
-  protected barClass(i: number): string {
-    return i < this.current() ? 'bar done' : 'bar';
+  protected connectorClass(i: number): string {
+    return i < this.current() ? 'connector done' : 'connector';
   }
 }
