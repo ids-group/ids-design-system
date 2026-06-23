@@ -1,2 +1,0 @@
-// <%= classify(name) %> services barrel — export route-scoped action services here.
-export {};

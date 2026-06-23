@@ -1,2 +1,0 @@
-// <%= classify(name) %> components barrel — export this feature's components here.
-export {};

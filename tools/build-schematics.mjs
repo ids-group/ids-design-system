@@ -21,13 +21,11 @@ execSync('npx tsc -p schematics/tsconfig.json', { stdio: 'inherit' });
 console.log('▶ Copying collection.json, schemas, and templates…');
 cpSync('schematics/collection.json', `${distSchematics}/collection.json`);
 // Copy every generator's schema.json (tsc only emits .js, not .json).
-for (const gen of ['ng-add', 'feature', 'store', 'data-access', 'page', 'ui']) {
+// Architecture generators (feature/store/data-access/page/ui) now live in the
+// app starter repo; the DS package ships only `ng-add` (DS style wiring).
+for (const gen of ['ng-add']) {
   cpSync(`schematics/${gen}/schema.json`, `${distSchematics}/${gen}/schema.json`);
 }
-// Copy file-based templates (feature generator).
-cpSync('schematics/feature/files', `${distSchematics}/feature/files`, {
-  recursive: true,
-});
 
 // The DS package is `"type": "module"`, but schematics are CommonJS. Scope a
 // commonjs override to the schematics subtree so the compiled .js loads.
