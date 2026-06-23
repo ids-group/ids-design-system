@@ -72,5 +72,5 @@ Thumbs.db
 # Visual studio
 .vs/
 Anton_local
-# Local docs scratchpad (not tracked).
-/docs/
+# Docs are tracked; only the superpowers working scratchpad (plans/specs/research) stays local.
+/docs/superpowers/
