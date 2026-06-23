@@ -37,7 +37,23 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/items/items.routes').then((m) => m.itemsRoutes),
       },
+      {
+        path: 'not-found',
+        title: 'Not found',
+        loadComponent: () =>
+          import('./features/not-found/not-found.page').then(
+            (m) => m.NotFoundPage,
+          ),
+      },
+      // Unknown path under the authed shell → 404 (unauthenticated users are
+      // bounced to /auth/login by authGuard before reaching here).
+      {
+        path: '**',
+        loadComponent: () =>
+          import('./features/not-found/not-found.page').then(
+            (m) => m.NotFoundPage,
+          ),
+      },
     ],
   },
-  { path: '**', redirectTo: 'auth/login' },
 ];
