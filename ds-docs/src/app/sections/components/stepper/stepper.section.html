@@ -8,7 +8,11 @@
     zero-indexed <code class="t-mono-inline">current</code>. Nodes before
     current render as done (with check icon); the current node fills with brand;
     later nodes stay as outlined numerals. Each label shows beneath its node,
-    with the current step emphasised.
+    with the current step emphasised — or set
+    <code class="t-mono-inline">
+      labelPosition="inline"
+    </code> for a compact row
+    with the caption beside each node (e.g. a header progress bar).
   </span>
 
   <h3 class="block-title t-h4">
@@ -17,6 +21,18 @@
 
   <div class="demo">
     <ds-stepper
+      [steps]="brief"
+      [current]="2"
+    />
+  </div>
+
+  <h3 class="block-title t-h4">
+    Inline labels
+  </h3>
+
+  <div class="demo">
+    <ds-stepper
+      labelPosition="inline"
       [steps]="brief"
       [current]="2"
     />

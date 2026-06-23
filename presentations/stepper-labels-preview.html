@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ds-stepper — видимые лейблы (превью)</title>
+<style>
+  /* Faithful reproduction of stepper.component.scss with the real token values
+     (node 28px, bar-h 2px, primary #2E54FF, primary-subtle #E1E6FE, …). */
+  :root {
+    --primary: #2E54FF; --primary-subtle: #E1E6FE; --primary-on: #fff;
+    --border-strong: #B6BECC; --border-divider: #DCE1EA;
+    --surface-default: #fff; --text-tertiary: #6B7388; --text-primary: #161A28;
+    --stepper-node-size: 28px; --stepper-bar-h: 2px;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #F6F8FB; color: #161A28;
+    font: 400 15px/1.5 system-ui, -apple-system, Segoe UI, sans-serif; padding: 36px clamp(16px,5vw,64px) 80px; }
+  h1 { font-size: 26px; font-weight: 800; margin: 0 0 4px; letter-spacing: -.4px; }
+  .sub { color: #6B7388; margin: 0 0 32px; }
+  .demo { background: #fff; border: 1px solid #DCE1EA; border-radius: 12px; padding: 28px 32px; margin-bottom: 18px; box-shadow: 0 1px 2px rgba(11,14,25,.06); }
+  .demo .cap { font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #6B7388; margin-bottom: 18px; }
+  .demo.narrow { max-width: 360px; }
+
+  /* ===== component styles (verbatim from stepper.component.scss) ===== */
+  .stepper { display: flex; align-items: flex-start; }
+  .stepper .step {
+    position: relative; flex: 1 1 0; min-width: 0;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+  .stepper .node {
+    position: relative; z-index: 1;
+    width: var(--stepper-node-size); height: var(--stepper-node-size);
+    border-radius: 999px; display: grid; place-items: center;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-default); color: var(--text-tertiary);
+    font: 700 12px/1 system-ui, sans-serif;
+  }
+  .stepper .node.done { background: var(--primary-subtle); border-color: var(--primary); color: var(--primary); }
+  .stepper .node.active { background: var(--primary); border-color: var(--primary); color: var(--primary-on); }
+  .stepper .connector {
+    position: absolute; z-index: 0;
+    top: calc((var(--stepper-node-size) - var(--stepper-bar-h)) / 2);
+    left: 50%; width: 100%; height: var(--stepper-bar-h);
+    background: var(--border-divider);
+  }
+  .stepper .connector.done { background: var(--primary); }
+  .stepper .step-label {
+    max-width: 14ch; margin-top: 8px; font-size: 12px; font-weight: 500;
+    line-height: 1.3; color: var(--text-tertiary); overflow-wrap: anywhere;
+  }
+  .stepper .step.is-current .step-label { font-weight: 700; color: var(--text-primary); }
+  .node .check { width: 14px; height: 14px; }
+
+  /* inline variant — mirrors :host(.labels-inline) */
+  .stepper.inline { display: inline-flex; align-items: center; gap: 8px; }
+  .stepper.inline .step { flex: 0 0 auto; flex-direction: row; gap: 8px; }
+  .stepper.inline .step-label { max-width: none; margin-top: 0; white-space: nowrap; }
+  .stepper.inline .connector { position: static; flex: 0 0 auto; width: 56px; }
+</style>
+</head>
+<body>
+  <h1>ds-stepper — видимые лейблы</h1>
+  <p class="sub">Два варианта расположения подписей (точный превью: та же DOM + scss с реальными токенами).</p>
+
+  <h1 style="font-size:21px;margin:8px 0 4px;">Вариант 1 — bottom (по умолчанию, подпись под кружком)</h1>
+  <p class="sub">Full-width, равные сегменты. Коннектор по центру кружков и не торчит из-под них; длинные подписи переносятся не ломая выравнивание.</p>
+
+  <div class="demo">
+    <div class="cap">current = 2 (основной демо)</div>
+    <div class="stepper" data-steps='["Brief","Plan","Build","Review","Ship"]' data-current="2"></div>
+  </div>
+
+  <div class="demo">
+    <div class="cap">current = 0 (старт)</div>
+    <div class="stepper" data-steps='["Brief","Plan","Build","Review","Ship"]' data-current="0"></div>
+  </div>
+
+  <div class="demo">
+    <div class="cap">current = 5 (всё пройдено)</div>
+    <div class="stepper" data-steps='["Brief","Plan","Build","Review","Ship"]' data-current="5"></div>
+  </div>
+
+  <div class="demo">
+    <div class="cap">kit-update wizard — длинные подписи (current = 2)</div>
+    <div class="stepper" data-steps='["QR Scan","Status","Inventory","Note","Confirm"]' data-current="2"></div>
+  </div>
+
+  <div class="demo narrow">
+    <div class="cap">узкий контейнер — перенос подписей (current = 1)</div>
+    <div class="stepper" data-steps='["Загрузка","Проверка данных","Подтверждение"]' data-current="1"></div>
+  </div>
+
+  <h1 style="font-size:21px;margin:40px 0 4px;">Вариант 2 — inline (подпись справа)</h1>
+  <p class="sub"><code style="font-family:ui-monospace,monospace">labelPosition="inline"</code> — компактный ряд, обнимает контент (для шапок/тулбаров). Подпись справа от кружка, коннектор-линия между шагами, текущий акцентирован.</p>
+
+  <div class="demo">
+    <div class="cap">ManageMy-стиль: Recommendation / Coverage / Riders / Review (current = 3)</div>
+    <div class="stepper" data-inline data-steps='["Recommendation","Coverage","Riders","Review"]' data-current="3"></div>
+  </div>
+
+  <div class="demo">
+    <div class="cap">Brief / Plan / Build / Review / Ship (current = 2)</div>
+    <div class="stepper" data-inline data-steps='["Brief","Plan","Build","Review","Ship"]' data-current="2"></div>
+  </div>
+
+  <script>
+    // Mirrors the component: nodeClass / connectorClass / is-current.
+    const CHECK = '<svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    for (const el of document.querySelectorAll('.stepper')) {
+      const steps = JSON.parse(el.dataset.steps);
+      const current = Number(el.dataset.current);
+      if (el.dataset.inline !== undefined) el.classList.add('inline');
+      el.innerHTML = steps.map((label, i) => {
+        const last = i === steps.length - 1;
+        const nodeCls = i < current ? 'node done' : i === current ? 'node active' : 'node';
+        const conn = last ? '' : `<span class="connector${i < current ? ' done' : ''}"></span>`;
+        const inner = i < current ? CHECK : (i + 1);
+        const stepCls = i === current ? 'step is-current' : 'step';
+        return `<span class="${stepCls}"><span class="${nodeCls}">${inner}</span><span class="step-label">${label}</span>${conn}</span>`;
+      }).join('');
+    }
+  </script>
+</body>
+</html>

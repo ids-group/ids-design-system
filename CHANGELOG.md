@@ -56,10 +56,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 ### Changed
 
 - **`ds-stepper` now shows step labels.** The captions passed via `[steps]` render as
-  visible labels under each node (previously screen-reader-only — only numbers showed),
-  with the current step emphasised. The stepper is now a full-width flex row with equal
-  segments; new `--ds-stepper-label-color` / `--ds-stepper-label-color-current` /
-  `--ds-stepper-label-font-size` hooks. Visual change for existing usages.
+  visible labels (previously screen-reader-only — only numbers showed), with the current
+  step emphasised. A new `labelPosition` input (`bottom` | `inline`) chooses the layout:
+  `bottom` (default) stacks the caption beneath each node in a full-width row with equal
+  segments; `inline` puts it beside the node in a compact row that hugs its content (a
+  header progress bar). New `--ds-stepper-label-color` / `--ds-stepper-label-color-current`
+  / `--ds-stepper-label-font-size` hooks. Visual change for existing usages.
 - **Tag:** added an `:active` (pressed) state to the close/dismiss button (previously only
   hover was styled), using the new `--opacity-state-active` overlay.
 - **Accordion & sidenav group** now animate open/close (`height: 0 ↔ auto`) via an opt-in

@@ -5,14 +5,6 @@
     [class.is-current]="i === current()"
     [attr.aria-current]="i === current() ? 'step' : null"
   >
-    @if (!last) {
-      <span
-        aria-hidden="true"
-        [class]="connectorClass(i)"
-      >
-      </span>
-    }
-
     <span
       aria-hidden="true"
       [class]="nodeClass(i)"
@@ -30,10 +22,17 @@
     <span
       aria-hidden="true"
       class="step-label"
-      >
-      {{ label }}
-    </span
     >
+      {{ label }}
+    </span>
+
+    @if (!last) {
+      <span
+        aria-hidden="true"
+        [class]="connectorClass(i)"
+      >
+      </span>
+    }
 
     <span class="visually-hidden">
       Step {{ i + 1 }}: {{ label }} ({{ stepState(i) }})
