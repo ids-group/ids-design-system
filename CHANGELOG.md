@@ -25,6 +25,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ng add` support.** `ng add @ids-group-ltd/ids-design-system` wires the design
+  system's global styles (`@use '@ids-group-ltd/ids-design-system/styles/ds';`) into the
+  target project's global styles entry, idempotently. It targets the default/first
+  application project or an explicit `--project`; if no styles file is found it logs the
+  one-line import to add manually. Components stay standalone — import them directly.
 - **`ds-combobox` `size` input** (`sm | md | lg`, default `md`), mirroring `ds-select`;
   sets the trigger min-height (32 / 40 / 48 px). New exported `ComboboxSize` type.
 - **Overridable focus rings.** New shared group tokens `--ds-field-focus-shadow` /
