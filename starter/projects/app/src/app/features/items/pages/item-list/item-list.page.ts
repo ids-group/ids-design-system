@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonComponent } from '@ids-group-ltd/ids-design-system';
+import { debouncedLoading } from '@app/common';
 import { ItemStore } from '../../../../core/store/item.store';
 import { ItemActionsService } from '../../services/item-actions.service';
 import { ItemListItem } from '../../models';
@@ -22,7 +23,8 @@ export class ItemListPage implements OnInit {
   private readonly actions = inject(ItemActionsService);
 
   protected readonly items = this.store.items;
-  protected readonly loading = this.store.listLoading;
+  // Anti-flicker: only shows after 300ms, then stays ≥500ms (no flash on fast loads).
+  protected readonly loading = debouncedLoading(this.store.listLoading);
 
   ngOnInit(): void {
     this.store.loadList();

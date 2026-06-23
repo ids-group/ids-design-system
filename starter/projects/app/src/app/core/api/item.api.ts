@@ -53,10 +53,12 @@ export class ItemApi {
       return 0;
     });
 
+    // 600ms (> debouncedLoading's 300ms show-delay) so the list's loading state
+    // is actually exercised in the demo. A real API replaces this with HttpService.
     return of<ApiResult<ItemListResult>>({
       isSuccess: true,
       data: { items: rows, total: rows.length },
-    }).pipe(delay(200));
+    }).pipe(delay(600));
   }
 
   get(id: string): Observable<ApiResult<ItemDto>> {
