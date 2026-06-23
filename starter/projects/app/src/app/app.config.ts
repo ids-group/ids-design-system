@@ -40,6 +40,7 @@ import { environment } from '@app/common/config';
 
 import { routes } from './app.routes';
 import { ToastNotificationService } from './core/notifications/toast-notification.service';
+import { ScrollbarService } from './core/scrollbar/scrollbar.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -73,5 +74,8 @@ export const appConfig: ApplicationConfig = {
     // Resolve auth state before first render, then wire transition-flash guard.
     provideAppInitializer(() => inject(AuthStore).initialize()),
     provideAppInitializer(() => initTransitionToggle()),
+    provideAppInitializer(() => {
+      inject(ScrollbarService);
+    }),
   ],
 };
