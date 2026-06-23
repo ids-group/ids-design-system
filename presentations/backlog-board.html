@@ -87,12 +87,12 @@
 </head>
 <body>
   <h1>DS — карта бэклога</h1>
-  <p class="sub">Что <b>осталось закрыть</b> — по одному пункту на карточку (источник: <span class="tag">docs/todo.md</span>). Открытое вверху и развёрнуто; сделанное свёрнуто внизу. Обновлено 2026-06-23.</p>
+  <p class="sub">Что <b>осталось закрыть</b> — по одному пункту на карточку (источник: <span class="tag">docs/todo.md</span>). Открытое вверху и развёрнуто; сделанное свёрнуто внизу. Обновлено 2026-06-24.</p>
 
   <div class="summary">
     <div class="stat you"><div class="n">6</div><div class="l">Ждёт твоего решения</div></div>
     <div class="stat a11y"><div class="n">15</div><div class="l">A11y (P0–P2)</div></div>
-    <div class="stat untouched"><div class="n">16</div><div class="l">Компоненты + foundations</div></div>
+    <div class="stat untouched"><div class="n">17</div><div class="l">Компоненты + foundations</div></div>
     <div class="stat untouched"><div class="n">17</div><div class="l">DS-docs / аним / field / PIN-475</div></div>
     <div class="stat raw"><div class="n">11</div><div class="l">Raw / frozen / мелочь / lint</div></div>
     <div class="stat done"><div class="n">26</div><div class="l">Сделано (свёрнуто)</div></div>
@@ -148,7 +148,7 @@
 
   <!-- ============ FOUNDATIONS / TOKENS ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🏗 Foundations / токены</h2><span class="count c-track">10</span><span class="why">Из gap-analysis + презентаций.</span></div>
+    <div class="lane-head"><h2>🏗 Foundations / токены</h2><span class="count c-track">11</span><span class="why">Из gap-analysis + презентаций.</span></div>
     <div class="cards">
       <div class="card track"><span class="chip ch-big">BIGGEST GAP</span><div class="t">Dark theme</div><p class="d">`themes/dark/{_palette,_theme}.scss`. Архитектура готова, ничего не отгружено.</p></div>
       <div class="card track"><div class="t">Chart-токены light-only</div><p class="d">axis/grid/tooltip обернуть в flippable семантические роли для тёмной темы.</p></div>
@@ -158,7 +158,9 @@
       <div class="card track"><span class="chip ch-big">BUG</span><div class="t">prefers-reduced-motion</div><p class="d">Зануляет loop-длительности → спиннеры/скелетоны невидимы. Замедлять, не останавливать.</p></div>
       <div class="card track"><span class="chip ch-oos">MED</span><div class="t">Foundations MED (кластер)</div><p class="d">high-contrast/forced-colors тема · density (шрифты/иконки/pad) · fluid type (`clamp()`) · motion-пресеты · RTL/logical-properties.</p></div>
       <div class="card track"><div class="t">.ds-interactive — контракт состояний</div><p class="d">Реализовать `styles/_interaction.scss`: класс `.ds-interactive` + пресеты `.tint/.accent-ink/.inked/.surface-fx/.into-light` + `--state-step-*` токены; убрать per-component `--ds-*-bg-hover/-active` и локальный color-mix; миграция интерактивных. Зависит от вердиктов B1–B5.</p><div class="meta">interaction-formula.html</div></div>
-      <div class="card track"><div class="t">Палитра — остаточная чистка</div><p class="d">Завести `--static-white` (on-роли переживут тёмную тему); убрать прямые чтения `--neutral-*` из 3-го слоя (scrollbar читает `--neutral-300/400` напрямую). Гибридный нейминг cool-gray/brand-gray/neutral-slot уже внедрён.</p><div class="meta">palette-naming.html</div></div>      <div class="card track"><div class="t">Global `focus type` — тема-вайд переключатель</div><p class="d">Сейчас 2 фикс-семейства: `--focus-field` (мягкое 3px halo — поля) и `--focus-ring` (чёткий 2px ring — действия/нав). Дать бренду/приложению выбрать СТИЛЬ фокуса в одном месте (токен / `[data-focus]` на `:root`) из 4: field · ring · B offset-outline (выживает в forced-colors) · C contiguous primary edge. Откр.: outline-режимы нельзя выразить как `box-shadow`-токен → нужен outline-путь / shared mixin. Парный с forced-colors-темой.</p><div class="meta">pin-475-fields.html</div></div>
+      <div class="card track"><div class="t">Палитра — остаточная чистка</div><p class="d">Завести `--static-white` (on-роли переживут тёмную тему); убрать прямые чтения `--neutral-*` из 3-го слоя (scrollbar читает `--neutral-300/400` напрямую). Гибридный нейминг cool-gray/brand-gray/neutral-slot уже внедрён.</p><div class="meta">palette-naming.html</div></div>
+      <div class="card track"><div class="t">Цвет-движок: один источник</div><p class="d">Схлопнуть `--primary` + `--primary-h/s/l` в ОДИН токен; оттенки/halo выводить через `color-mix()` + relative color (`hsl(from …)`), сохраняя ручную калибровку рампы. Убирает дубль (из-за него consumer-override `--primary-h/s/l` красит только halo, не заливку) и разблокирует `--accent` indirection.</p><div class="meta">color-engine-relative.html</div></div>
+      <div class="card track"><div class="t">Global `focus type` — тема-вайд переключатель</div><p class="d">Сейчас 2 фикс-семейства: `--focus-field` (мягкое 3px halo — поля) и `--focus-ring` (чёткий 2px ring — действия/нав). Дать бренду/приложению выбрать СТИЛЬ фокуса в одном месте (токен / `[data-focus]` на `:root`) из 4: field · ring · B offset-outline (выживает в forced-colors) · C contiguous primary edge. Откр.: outline-режимы нельзя выразить как `box-shadow`-токен → нужен outline-путь / shared mixin. Парный с forced-colors-темой.</p><div class="meta">pin-475-fields.html</div></div>
     </div>
   </div>
 
