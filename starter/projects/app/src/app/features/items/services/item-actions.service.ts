@@ -19,12 +19,11 @@ export class ItemActionsService {
       return;
     }
 
-    const result = await firstValueFrom(this.store.remove(id));
-
-    if (result.isSuccess) {
-      this.notifications.success('Item deleted.');
-    } else {
-      this.notifications.error(result.failure);
-    }
+    // notifyOnSuccess: success toast on isSuccess, error toast (from failure) otherwise.
+    await firstValueFrom(
+      this.store
+        .remove(id)
+        .pipe(this.notifications.notifyOnSuccess('Item deleted.')),
+    );
   }
 }
