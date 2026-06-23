@@ -38,9 +38,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **Overridable focus rings.** New shared group tokens `--ds-field-focus-shadow` /
   `--ds-control-focus-shadow` (+ `-error` variants), defaulting to the semantic
   `--focus-field` / `--focus-ring`. Every focusable component now reads its focus shadow
-  through a per-component public hook `--ds-<comp>-focus-shadow` that falls back to the
-  group token — so a consumer can retune focus for one component, a whole group (all
-  fields or all controls), or rely on the theme default. Default appearance unchanged.
+  through a per-component public hook `--ds-<comp>-focus-shadow` (fields also expose a
+  matching `-error` hook) that falls back to the group token; the global `.link` utility
+  and the shared dropdown/select overlay panel read the group token directly. A consumer
+  can retune focus for one component, a whole group (all fields or all controls), or rely
+  on the theme default. Default appearance unchanged.
 - **`ds-tag` hover tokens** `--ds-tag-hover-bg-color` / `--ds-tag-hover-label-color`
   (private tokens hoisted to `:host` for consumer override).
 - **`--opacity-state-active`** (0.24) overlay token, backing the new tag pressed state.
@@ -56,7 +58,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   hard ring (`--focus-ring`), matching `ds-input` / `ds-select` / `ds-search`. Minor visual
   change to the combobox focus state.
 - Backgrounds and several control transitions switched from the `background` shorthand to
-  `background-color` for precision (no intended visual change).
+  `background-color` for precision. Alongside it, a repo-wide, value-preserving CSS-syntax
+  modernization: legacy `hsl()/hsla()` comma syntax → modern space/slash form, `clip:
+  rect(…)` → `clip-path: inset(50%)` on visually-hidden helpers, and `min-/max-width`
+  media queries → range syntax (`width >= …`). No intended visual change.
 
 ### Fixed
 
