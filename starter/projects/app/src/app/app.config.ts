@@ -31,7 +31,9 @@ import {
   NoopErrorReporter,
   NotificationService,
   WindowConfirmService,
+  authInterceptor,
   createViewTransitionSkip,
+  errorInterceptor,
   initTransitionToggle,
 } from '@app/common';
 import { environment } from '@app/common/config';
@@ -56,7 +58,9 @@ export const appConfig: ApplicationConfig = {
       }),
     ),
     { provide: TitleStrategy, useClass: AppTitleStrategy },
-    provideHttpClient(withInterceptors([...devInterceptors])),
+    provideHttpClient(
+      withInterceptors([authInterceptor, errorInterceptor, ...devInterceptors]),
+    ),
     { provide: BASE_URL, useValue: environment.baseUrl },
     { provide: ENVIRONMENT_NAME, useValue: environment.name },
     { provide: NotificationService, useClass: ToastNotificationService },

@@ -9,6 +9,7 @@ export * from './lib/models/auth.model';
 export * from './lib/models/user.model';
 export * from './lib/api/http.service';
 export * from './lib/tokens';
+export * from './lib/interceptors';
 export * from './lib/utils';
 export * from './lib/services';
 export * from './lib/notifications';
