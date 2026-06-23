@@ -3,12 +3,12 @@
 **Feature-first colocation + four stable layers.** Cross-app code lives in `@app/common`.
 Design tokens / themes / global classes come from `@ids-group-ltd/ids-design-system` — **compose, don't redefine.**
 
-| Layer              | What goes here                                                                                                                                                                                                  |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `core/`            | App-wide **singletons**: `api/` (`*.api.ts`), `store/` (signal stores + `helpers/`), `notifications/` (`ToastNotificationService` → `ds-toast`), `transitions/`, `config/`. One instance, not feature-specific. |
-| `features/<name>/` | Everything for **one feature**, colocated — see `features/example/README.md`.                                                                                                                                   |
-| `layouts/`         | Route-mounted **shells** (`auth-layout`, `main-layout`) built on `ds-sidenav` / `ds-topbar`.                                                                                                                    |
-| `shared/`          | Cross-feature **reusable, no business logic**: `components/ directives/ pipes/ utils/ models/ constants/`.                                                                                                      |
+| Layer              | What goes here                                                                                                                                                                                                                                                              |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `core/`            | App-wide **singletons**: `api/` (`*.api.ts`), `store/` (signal stores + `helpers/`), `notifications/` (`ToastNotificationService` → `ds-toast`), `breadcrumb/`, `scrollbar/`. One instance, not feature-specific. (Routing transition helpers live in `@app/common/utils`.) |
+| `features/<name>/` | Everything for **one feature**, colocated — see `features/example/README.md`.                                                                                                                                                                                               |
+| `layouts/`         | Route-mounted **shells** (`auth-layout`, `main-layout`) built on `ds-sidenav` / `ds-topbar`.                                                                                                                                                                                |
+| `shared/`          | Cross-feature **reusable, no business logic**: `components/ directives/ pipes/ utils/ models/ constants/`.                                                                                                                                                                  |
 
 Cross-cutting **infra** — `HttpService`, interceptors, guards, `GlobalErrorHandler`, auth store,
 abstract `NotificationService` / `ErrorReporter` — lives in **`@app/common`** (`projects/common/src/lib/`),
