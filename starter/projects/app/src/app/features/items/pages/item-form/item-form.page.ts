@@ -15,7 +15,7 @@ import {
 } from '@ids-group-ltd/ids-design-system';
 import { HasUnsavedChanges } from '@app/common';
 import { ItemStore } from '../../../../core/store/item.store';
-import { EMPTY_ITEM_FORM, ItemFormModel } from '../../models';
+import { EMPTY_ITEM_FORM, ItemFormModel, ItemListItem } from '../../models';
 
 interface FormSnapshot {
   name: string;
@@ -36,6 +36,8 @@ export class ItemFormPage implements OnInit, HasUnsavedChanges {
 
   /** Route param `:id` (bound via withComponentInputBinding); empty for "new". */
   readonly id = input<string>('');
+  /** Resolved prefill from the list cache (itemEditPrefillResolver); may be undefined. */
+  readonly prefill = input<ItemListItem | undefined>();
 
   protected readonly name = signal('');
   protected readonly category = signal('');
@@ -53,6 +55,16 @@ export class ItemFormPage implements OnInit, HasUnsavedChanges {
   ngOnInit(): void {
     if (!this.id()) {
       return;
+    }
+
+    // Instant prefill from the list cache (if present), then refresh from the API.
+    const cached = this.prefill();
+    if (cached) {
+      this.setForm({
+        name: cached.name,
+        category: cached.category,
+        quantity: cached.quantity,
+      });
     }
 
     void firstValueFrom(this.store.loadForEdit(this.id())).then((result) => {

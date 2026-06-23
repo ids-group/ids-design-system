@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { unsavedChangesGuard } from '@app/common';
 import { ItemActionsService } from './services/item-actions.service';
+import { itemEditPrefillResolver } from './items.resolvers';
 
 export const itemsRoutes: Routes = [
   {
@@ -30,6 +31,7 @@ export const itemsRoutes: Routes = [
         title: 'Edit Item',
         data: { breadcrumb: 'Edit' },
         canDeactivate: [unsavedChangesGuard],
+        resolve: { prefill: itemEditPrefillResolver },
         loadComponent: () =>
           import('./pages/item-form/item-form.page').then(
             (m) => m.ItemFormPage,

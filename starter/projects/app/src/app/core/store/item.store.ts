@@ -123,6 +123,10 @@ export const ItemStore = signalStore(
         });
         loader.loadList();
       },
+      /** Fast prefill from the already-loaded list cache (used by the edit resolver). */
+      getItemFromList(id: string): ItemListItem | undefined {
+        return store.list().items.find((item) => item.id === id);
+      },
       loadForEdit(id: string): Observable<ApiResult<ItemFormModel>> {
         return loadEdit(id);
       },
