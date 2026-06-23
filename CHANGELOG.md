@@ -57,7 +57,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **`ds-stepper` now shows step labels.** The captions passed via `[steps]` render as
   visible labels (previously screen-reader-only — only numbers showed), with the current
-  step emphasised. A new `labelPosition` input (`bottom` | `inline`) chooses the layout:
+  step emphasised. A new `labelPosition` input (`bottom` | `inline`, new exported
+  `StepperLabelPosition` type) chooses the layout:
   `bottom` (default) stacks the caption beneath each node in a full-width row with equal
   segments; `inline` puts it beside the node in a compact row that hugs its content (a
   header progress bar). New `--ds-stepper-label-color` / `--ds-stepper-label-color-current`
