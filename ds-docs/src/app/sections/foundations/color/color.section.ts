@@ -59,7 +59,7 @@ export class ColorSection {
         { name: 'primary', token: '--primary' },
         { name: 'primary-hover', token: '--primary-hover' },
         { name: 'primary-pressed', token: '--primary-pressed' },
-        { name: 'primary-subtle', token: '--primary-subtitle' },
+        { name: 'primary-subtitle', token: '--primary-subtitle' },
         { name: 'primary-muted', token: '--primary-muted' },
       ],
     },
@@ -68,7 +68,7 @@ export class ColorSection {
       swatches: [
         { name: 'error', token: '--error' },
         { name: 'error-hover', token: '--error-hover' },
-        { name: 'error-subtle', token: '--error-subtitle' },
+        { name: 'error-subtitle', token: '--error-subtitle' },
         { name: 'error-muted', token: '--error-muted' },
         { name: 'error-border', token: '--error-border' },
       ],
@@ -78,7 +78,7 @@ export class ColorSection {
       swatches: [
         { name: 'success', token: '--success' },
         { name: 'success-hover', token: '--success-hover' },
-        { name: 'success-subtle', token: '--success-subtitle' },
+        { name: 'success-subtitle', token: '--success-subtitle' },
         { name: 'success-muted', token: '--success-muted' },
         { name: 'success-border', token: '--success-border' },
       ],
@@ -88,7 +88,7 @@ export class ColorSection {
       swatches: [
         { name: 'warning', token: '--warning' },
         { name: 'warning-hover', token: '--warning-hover' },
-        { name: 'warning-subtle', token: '--warning-subtitle' },
+        { name: 'warning-subtitle', token: '--warning-subtitle' },
         { name: 'warning-muted', token: '--warning-muted' },
         { name: 'warning-border', token: '--warning-border' },
       ],
@@ -98,7 +98,7 @@ export class ColorSection {
       swatches: [
         { name: 'info', token: '--info' },
         { name: 'info-hover', token: '--info-hover' },
-        { name: 'info-subtle', token: '--info-subtitle' },
+        { name: 'info-subtitle', token: '--info-subtitle' },
         { name: 'info-muted', token: '--info-muted' },
         { name: 'info-border', token: '--info-border' },
       ],
@@ -118,7 +118,7 @@ export class ColorSection {
       swatches: [
         { name: 'default', token: '--border-default' },
         { name: 'strong', token: '--border-strong' },
-        { name: 'subtle', token: '--border-subtitle' },
+        { name: 'subtitle', token: '--border-subtitle' },
         { name: 'divider', token: '--border-divider' },
       ],
     },

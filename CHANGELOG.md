@@ -28,6 +28,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **Reactive-forms support on `ds-input`, `ds-textarea`, `ds-select`.** They now
+  implement `ControlValueAccessor`, so `formControlName` / `[formControl]` and template
+  `[(ngModel)]` bind to them out of the box, and `FormControl.disable()` is honoured. The
+  existing `[(value)]` signal API is unchanged — both work. Shared via an internal
+  `DsControlValueAccessor` base. Checkbox/switch/combobox/date-picker/radio are not yet
+  wired (tracked).
 - **`ng add` support.** `ng add @ids-group-ltd/ids-design-system` wires the design
   system's global styles (`@use '@ids-group-ltd/ids-design-system/styles/ds';`) into the
   target project's global styles entry, idempotently. It targets the default/first
@@ -49,6 +55,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **`ds-stepper` now shows step labels.** The captions passed via `[steps]` render as
+  visible labels under each node (previously screen-reader-only — only numbers showed),
+  with the current step emphasised. The stepper is now a full-width flex row with equal
+  segments; new `--ds-stepper-label-color` / `--ds-stepper-label-color-current` /
+  `--ds-stepper-label-font-size` hooks. Visual change for existing usages.
 - **Tag:** added an `:active` (pressed) state to the close/dismiss button (previously only
   hover was styled), using the new `--opacity-state-active` overlay.
 - **Accordion & sidenav group** now animate open/close (`height: 0 ↔ auto`) via an opt-in
