@@ -96,6 +96,10 @@
                 {
                   "replace": "projects/common/config/src/environments/environment.ts",
                   "with": "projects/common/config/src/environments/environment.uat.ts"
+                },
+                {
+                  "replace": "projects/common/dev/src/public-api.ts",
+                  "with": "projects/common/dev/src/public-api.prod.ts"
                 }
               ]
             },
