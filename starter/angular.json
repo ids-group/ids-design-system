@@ -50,7 +50,6 @@
                 { "type": "anyComponentStyle", "maximumWarning": "12kB", "maximumError": "16kB" }
               ],
               "outputHashing": "all",
-              "sourceMap": { "scripts": true, "hidden": true },
               "fileReplacements": [
                 {
                   "replace": "projects/common/config/src/environments/environment.ts",
