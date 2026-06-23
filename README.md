@@ -68,16 +68,6 @@ import { ButtonComponent } from '@ids-group-ltd/ids-design-system';
 export class ExampleComponent {}
 ```
 
-## App architecture starter
-
-Building a new app on this design system? [`starter/`](starter/) is a reproducible,
-enforced front-end architecture — a multi-project Angular workspace (`app` +
-`common`) wired to this DS, with NgRx Signal Store, an `ApiResult<T>` data layer,
-pluggable auth/notifications, Sheriff-enforced module boundaries, 6 typed
-environments, a CI gate, and a demo CRUD feature — running on a mock backend with
-no real services. See [`starter/docs/architecture/README.md`](starter/docs/architecture/README.md)
-for the guide and [`starter/docs/decisions/`](starter/docs/decisions/README.md) for the rationale (ADRs).
-
 ## License
 
 MIT © IDS Group Ltd
