@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.3.0 — 2026-06-23
+
 ### Breaking
 
 - **Renamed `--*-bg` tokens → `--*-bg-color`.** Every background token held only a colour
