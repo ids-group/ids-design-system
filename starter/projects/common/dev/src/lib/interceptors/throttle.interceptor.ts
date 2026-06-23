@@ -4,8 +4,8 @@ import { delay } from 'rxjs';
 import { DevSettings } from '../dev-settings.service';
 
 /** Dev-only: adds the configured artificial latency to every response. */
-export const throttleInterceptor: HttpInterceptorFn = (request, next) => {
+export const throttleInterceptor: HttpInterceptorFn = (req, next) => {
   const ms = inject(DevSettings).throttleMs();
 
-  return ms > 0 ? next(request).pipe(delay(ms)) : next(request);
+  return ms > 0 ? next(req).pipe(delay(ms)) : next(req);
 };

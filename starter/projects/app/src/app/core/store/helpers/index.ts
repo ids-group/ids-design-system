@@ -1,7 +1,7 @@
 export type { BaseListParams, FeatureConfig } from './list.helpers';
 export {
   buildBaseQueryParams,
-  buildSortingParameter,
+  buildSortingParam,
   createEditDataLoader,
   withListLoading,
   createListLoader,

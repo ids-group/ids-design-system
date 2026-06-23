@@ -29,23 +29,22 @@ export default defineConfig(
           // file-naming conventions (the latter is also wired into angular.json).
           checkFilenames: false,
           replacements: {
+            // Banned → suggested full form.
             qp: { queryParams: true },
-            qty: { quantity: true },
             ctrl: { control: true },
+            // Allowed domain / idiomatic words (kept short on purpose).
+            param: false,
+            params: false,
+            req: false,
+            fn: false,
+            qty: false,
+            env: false,
+            ref: false,
+            dev: false,
           },
-          // Idiomatic Angular / domain terms that read clearly as-is.
           allowList: {
-            params: true,
-            Params: true,
-            env: true,
-            Env: true,
-            ref: true,
-            Ref: true,
             props: true,
-            Props: true,
             args: true,
-            dev: true,
-            Dev: true,
           },
         },
       ],

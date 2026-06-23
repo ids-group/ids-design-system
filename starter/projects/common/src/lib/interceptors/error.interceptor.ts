@@ -69,15 +69,15 @@ function handleHttpError(
  * + retry via AuthStore, applies opt-in retries (HTTP_RETRY_COUNT), and respects
  * the MANUAL_ERROR_HANDLING opt-out. No raw HttpErrorResponse escapes.
  */
-export const errorInterceptor: HttpInterceptorFn = (request, next) => {
+export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const authStore = inject(AuthStore);
   const notifications = inject(NotificationService);
   const reporter = inject(ErrorReporter);
   const envName = inject(ENVIRONMENT_NAME);
-  const retryCount = request.context.get(HTTP_RETRY_COUNT);
-  const isManualHandling = request.context.get(MANUAL_ERROR_HANDLING);
+  const retryCount = req.context.get(HTTP_RETRY_COUNT);
+  const isManualHandling = req.context.get(MANUAL_ERROR_HANDLING);
 
-  let source$ = next(request);
+  let source$ = next(req);
 
   if (retryCount > 0) {
     source$ = source$.pipe(
@@ -90,7 +90,7 @@ export const errorInterceptor: HttpInterceptorFn = (request, next) => {
 
   return source$.pipe(
     catchError((error: HttpErrorResponse) => {
-      const pathname = getPathname(request.url);
+      const pathname = getPathname(req.url);
       const isRefreshPath = matchesApiPath(pathname, REFRESH_TOKEN_PATH);
       const isNoRefreshPath = matchesAny(pathname, NO_REFRESH_PATHS);
       const isSilentPath = matchesAny(pathname, SILENT_PATHS);
@@ -106,7 +106,7 @@ export const errorInterceptor: HttpInterceptorFn = (request, next) => {
             return EMPTY;
           }),
           switchMap((token) =>
-            next(addAuthorizationHeader(request, token)).pipe(
+            next(addAuthorizationHeader(req, token)).pipe(
               catchError((retryError: HttpErrorResponse) =>
                 handleHttpError(
                   reporter,
