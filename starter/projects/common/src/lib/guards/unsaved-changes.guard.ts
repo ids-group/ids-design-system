@@ -14,8 +14,8 @@ export const unsavedChangesGuard: CanDeactivateFn<HasUnsavedChanges> = (
     return true;
   }
 
-  return inject(ConfirmService).confirm(
-    'You have unsaved changes. Are you sure you want to leave this page?',
-    'Unsaved Changes',
-  );
+  return inject(ConfirmService).confirm({
+    message: 'You have unsaved changes. Are you sure you want to leave this page?',
+    title: 'Unsaved Changes',
+  });
 };

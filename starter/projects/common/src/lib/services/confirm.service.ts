@@ -1,9 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
+/** Shape of a confirm-dialog request — the canonical contract for ConfirmService. */
+export interface ConfirmConfig {
+  message: string;
+  title?: string;
+}
+
 /** Abstract confirm dialog — returns the user's choice as an Observable<boolean>. */
 export abstract class ConfirmService {
-  abstract confirm(message: string, title?: string): Observable<boolean>;
+  abstract confirm(config: ConfirmConfig): Observable<boolean>;
 }
 
 /**
@@ -13,7 +19,7 @@ export abstract class ConfirmService {
  */
 @Injectable()
 export class WindowConfirmService extends ConfirmService {
-  confirm(message: string): Observable<boolean> {
-    return of(window.confirm(message));
+  confirm(config: ConfirmConfig): Observable<boolean> {
+    return of(window.confirm(config.message));
   }
 }

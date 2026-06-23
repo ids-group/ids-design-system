@@ -13,9 +13,7 @@ export class ItemActionsService {
 
   async deleteItem(id: string, name: string): Promise<void> {
     const dialog = deleteItemConfirm(name);
-    const confirmed = await firstValueFrom(
-      this.confirm.confirm(dialog.message, dialog.title),
-    );
+    const confirmed = await firstValueFrom(this.confirm.confirm(dialog));
 
     if (!confirmed) {
       return;
