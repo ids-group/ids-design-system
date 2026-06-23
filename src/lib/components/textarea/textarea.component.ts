@@ -3,10 +3,12 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  forwardRef,
   input,
   model,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { DsControlValueAccessor } from '../control-value-accessor';
 import type { TextareaSize, TextareaResize } from './textarea.types';
 
 let nextId = 0;
@@ -18,8 +20,15 @@ let nextId = 0;
   templateUrl: './textarea.component.html',
   styleUrl: './textarea.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => TextareaComponent),
+      multi: true,
+    },
+  ],
 })
-export class TextareaComponent {
+export class TextareaComponent extends DsControlValueAccessor<string> {
   readonly value = model<string>('');
   readonly size = input<TextareaSize>('md');
   readonly label = input<string>('');
@@ -46,6 +55,11 @@ export class TextareaComponent {
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,
   );
 
+  /** Effective disabled — own `disabled` input OR the reactive-forms state. */
+  protected readonly isDisabled = computed(
+    () => this.disabled() || this.formDisabled(),
+  );
+
   protected readonly wrapperClasses = computed(() => {
     const parts = ['field'];
     if (this.size() === 'sm') {
@@ -57,7 +71,7 @@ export class TextareaComponent {
     if (this.invalid()) {
       parts.push('error');
     }
-    if (this.disabled()) {
+    if (this.isDisabled()) {
       parts.push('disabled');
     }
     if (this.autosize()) {

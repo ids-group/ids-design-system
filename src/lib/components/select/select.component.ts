@@ -6,16 +6,19 @@ import {
   ViewEncapsulation,
   computed,
   effect,
+  forwardRef,
   inject,
   input,
   model,
   signal,
   viewChild,
 } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
+import { DsControlValueAccessor } from '../control-value-accessor';
 import { DsStaticPreview } from '../static-preview.directive';
 import {
   isSelectOptionGroup,
@@ -35,8 +38,15 @@ let nextId = 0;
   styleUrl: './select.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   hostDirectives: [{ directive: DsStaticPreview, inputs: ['staticPreview'] }],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => SelectComponent),
+      multi: true,
+    },
+  ],
 })
-export class SelectComponent {
+export class SelectComponent extends DsControlValueAccessor<string> {
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   protected readonly preview = inject(DsStaticPreview);
@@ -68,6 +78,11 @@ export class SelectComponent {
   });
   protected readonly resolvedAriaLabel = computed(() =>
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,
+  );
+
+  /** Effective disabled — own `disabled` input OR the reactive-forms state. */
+  protected readonly isDisabled = computed(
+    () => this.disabled() || this.formDisabled(),
   );
 
   protected readonly trigger =
@@ -127,7 +142,7 @@ export class SelectComponent {
     if (this.size() === 'lg') {
       parts.push('lg');
     }
-    if (this.disabled()) {
+    if (this.isDisabled()) {
       parts.push('disabled');
     }
     if (this.invalid()) {
@@ -141,6 +156,7 @@ export class SelectComponent {
   });
 
   constructor() {
+    super();
     effect(() => {
       if (!this.open()) {
         return;
@@ -163,7 +179,7 @@ export class SelectComponent {
   }
 
   protected toggle(): void {
-    if (this.disabled() || this.preview.staticPreview()) {
+    if (this.isDisabled() || this.preview.staticPreview()) {
       return;
     }
     if (this.open()) {
@@ -221,6 +237,7 @@ export class SelectComponent {
     this.overlayRef = null;
     this.open.set(false);
     this.activeIndex.set(-1);
+    this.markTouched();
   }
 
   protected pick(option: SelectOption, groupDisabled = false): void {
@@ -244,7 +261,7 @@ export class SelectComponent {
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
-    if (this.disabled() || this.preview.staticPreview()) {
+    if (this.isDisabled() || this.preview.staticPreview()) {
       return;
     }
     const key = event.key;

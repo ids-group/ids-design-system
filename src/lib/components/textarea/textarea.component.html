@@ -33,13 +33,14 @@
       [attr.aria-invalid]="invalid() ? 'true' : null"
       [attr.aria-describedby]="hintId()"
       [attr.aria-required]="required() ? 'true' : null"
-      [disabled]="disabled()"
+      [disabled]="isDisabled()"
       [required]="required()"
       [style.resize]="effectiveResize()"
       [style.min-height]="autosizeMinHeight()"
       [style.max-height]="autosizeMaxHeight()"
       [style.overflow-y]="autosize() && maxRows() ? 'auto' : null"
       [(ngModel)]="value"
+      (blur)="markTouched()"
     >
     </textarea>
   </div>

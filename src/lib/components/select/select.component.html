@@ -36,7 +36,7 @@
   [attr.aria-label]="resolvedAriaLabel()"
   [attr.aria-invalid]="invalid() ? 'true' : null"
   [attr.aria-required]="required() ? 'true' : null"
-  [disabled]="disabled()"
+  [disabled]="isDisabled()"
   (click)="toggle()"
   (keydown)="onTriggerKeydown($event)"
 >

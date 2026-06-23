@@ -3,12 +3,14 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  forwardRef,
   input,
   model,
   output,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
+import { DsControlValueAccessor } from '../control-value-accessor';
 import type { InputSize, InputType } from './input.types';
 
 /** Process-wide counter so each control gets a stable, unique id for
@@ -22,8 +24,15 @@ let nextId = 0;
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => InputComponent),
+      multi: true,
+    },
+  ],
 })
-export class InputComponent {
+export class InputComponent extends DsControlValueAccessor<string> {
   readonly value = model<string>('');
   readonly type = input<InputType>('text');
   readonly size = input<InputSize>('md');
@@ -96,9 +105,14 @@ export class InputComponent {
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,
   );
 
+  /** Effective disabled — own `disabled` input OR the reactive-forms state. */
+  protected readonly isDisabled = computed(
+    () => this.disabled() || this.formDisabled(),
+  );
+
   protected readonly showPasswordToggle = computed<boolean>(
     () =>
-      this.passwordToggle() && this.type() === 'password' && !this.disabled(),
+      this.passwordToggle() && this.type() === 'password' && !this.isDisabled(),
   );
 
   protected readonly effectiveType = computed<InputType>(() =>
@@ -126,7 +140,7 @@ export class InputComponent {
     } else if (this.success()) {
       parts.push('success');
     }
-    if (this.disabled()) {
+    if (this.isDisabled()) {
       parts.push('disabled');
     }
     if (this.readOnly()) {

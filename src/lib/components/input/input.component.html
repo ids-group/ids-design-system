@@ -44,14 +44,14 @@
       [attr.aria-required]="required() ? 'true' : null"
       [attr.enterkeyhint]="enterKeyHint()"
       [attr.inputmode]="inputMode()"
-      [disabled]="disabled()"
+      [disabled]="isDisabled()"
       [readOnly]="readOnly()"
       [required]="required()"
       [(ngModel)]="value"
-      (blur)="blurred.emit()"
+      (blur)="blurred.emit(); markTouched()"
     />
 
-    @if (canClear() && value() && !disabled()) {
+    @if (canClear() && value() && !isDisabled()) {
       <button
         type="button"
         class="clear-btn"
