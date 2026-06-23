@@ -37,10 +37,12 @@ export class ItemListPage {
 
   constructor() {
     // URL is the source of truth — react to query-param changes (incl. initial load).
-    this.route.queryParams.pipe(takeUntilDestroyed()).subscribe((qp) => {
-      this.searchTerm.set((qp['search'] as string) ?? '');
-      this.store.applyQueryParams(qp as Record<string, string>);
-    });
+    this.route.queryParams
+      .pipe(takeUntilDestroyed())
+      .subscribe((queryParams) => {
+        this.searchTerm.set((queryParams['search'] as string) ?? '');
+        this.store.applyQueryParams(queryParams as Record<string, string>);
+      });
   }
 
   protected applySearch(): void {

@@ -4,9 +4,9 @@ import { firstValueFrom } from 'rxjs';
 import { AuthStore } from '../store/auth.store';
 import { NotificationService } from '../notifications/notification.service';
 
-/** Builds a CanActivateFn that allows access only when `checkFn` passes. */
+/** Builds a CanActivateFn that allows access only when `checkFunction` passes. */
 export function roleGuard(
-  checkFn: (store: InstanceType<typeof AuthStore>) => boolean,
+  checkFunction: (store: InstanceType<typeof AuthStore>) => boolean,
 ): CanActivateFn {
   return async () => {
     const authStore = inject(AuthStore);
@@ -16,7 +16,7 @@ export function roleGuard(
       return router.createUrlTree(['/auth/login']);
     }
 
-    if (checkFn(authStore)) {
+    if (checkFunction(authStore)) {
       return true;
     }
 

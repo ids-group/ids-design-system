@@ -41,15 +41,17 @@ export class DashboardPage {
 
   constructor() {
     // Active tab lives in the URL (?tab=…); parse it on every navigation.
-    this.route.queryParams.pipe(takeUntilDestroyed()).subscribe((qp) => {
-      this.activeTab.set(
-        parseTabFromQueryParams(
-          qp as Record<string, string>,
-          DASHBOARD_TABS,
-          'overview',
-        ),
-      );
-    });
+    this.route.queryParams
+      .pipe(takeUntilDestroyed())
+      .subscribe((queryParams) => {
+        this.activeTab.set(
+          parseTabFromQueryParams(
+            queryParams as Record<string, string>,
+            DASHBOARD_TABS,
+            'overview',
+          ),
+        );
+      });
     // Reset to the default tab when navigating away from /dashboard.
     setupTabResetOnNavigation(
       () => this.activeTab.set('overview'),

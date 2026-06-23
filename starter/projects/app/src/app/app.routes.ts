@@ -6,13 +6,17 @@ export const routes: Routes = [
     path: 'auth',
     canActivate: [guestGuard],
     loadComponent: () =>
-      import('./layouts/auth-layout/auth-layout').then((m) => m.AuthLayout),
+      import('./layouts/auth-layout/auth-layout').then(
+        ({ AuthLayout }) => AuthLayout,
+      ),
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       {
         path: '',
         loadChildren: () =>
-          import('./features/auth/auth.routes').then((m) => m.authRoutes),
+          import('./features/auth/auth.routes').then(
+            ({ authRoutes }) => authRoutes,
+          ),
       },
     ],
   },
@@ -20,7 +24,9 @@ export const routes: Routes = [
     path: '',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./layouts/main-layout/main-layout').then((m) => m.MainLayout),
+      import('./layouts/main-layout/main-layout').then(
+        ({ MainLayout }) => MainLayout,
+      ),
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
@@ -29,14 +35,16 @@ export const routes: Routes = [
         data: { breadcrumb: 'Dashboard' },
         loadComponent: () =>
           import('./features/dashboard/dashboard.page').then(
-            (m) => m.DashboardPage,
+            ({ DashboardPage }) => DashboardPage,
           ),
       },
       {
         path: 'items',
         data: { breadcrumb: 'Items' },
         loadChildren: () =>
-          import('./features/items/items.routes').then((m) => m.itemsRoutes),
+          import('./features/items/items.routes').then(
+            ({ itemsRoutes }) => itemsRoutes,
+          ),
       },
       {
         path: 'admin',
@@ -44,14 +52,16 @@ export const routes: Routes = [
         data: { breadcrumb: 'Admin' },
         canActivate: [adminGuard],
         loadComponent: () =>
-          import('./features/admin/admin.page').then((m) => m.AdminPage),
+          import('./features/admin/admin.page').then(
+            ({ AdminPage }) => AdminPage,
+          ),
       },
       {
         path: 'not-found',
         title: 'Not found',
         loadComponent: () =>
           import('./features/not-found/not-found.page').then(
-            (m) => m.NotFoundPage,
+            ({ NotFoundPage }) => NotFoundPage,
           ),
       },
       // Unknown path under the authed shell → 404 (unauthenticated users are
@@ -60,7 +70,7 @@ export const routes: Routes = [
         path: '**',
         loadComponent: () =>
           import('./features/not-found/not-found.page').then(
-            (m) => m.NotFoundPage,
+            ({ NotFoundPage }) => NotFoundPage,
           ),
       },
     ],

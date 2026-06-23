@@ -12,7 +12,7 @@ import { ItemApi, ItemListResult } from '../api/item.api';
 import {
   BaseListParams,
   buildBaseQueryParams,
-  buildSortingParam,
+  buildSortingParameter,
   createEditDataLoader,
   createListLoader,
   parseBaseQueryParams,
@@ -91,9 +91,9 @@ export const ItemStore = signalStore(
     const loader = createListLoader<ApiResult<ItemListResult>>({
       getParams: () => store.list().params,
       patchList,
-      // Send an explicit sort only when it differs from the default (buildSortingParam).
+      // Send an explicit sort only when it differs from the default (buildSortingParameter).
       apiFn: (params) =>
-        api.list(params, buildSortingParam(params, ITEMS_CONFIG)),
+        api.list(params, buildSortingParameter(params, ITEMS_CONFIG)),
       onSuccess: (result) => {
         if (result.isSuccess && result.data) {
           patchList({ items: result.data.items, total: result.data.total });

@@ -127,7 +127,7 @@ export function withListLoading<TResult extends { isSuccess: boolean }>(
 }
 
 /** Sorting param for API requests, or undefined when defaults apply. */
-export function buildSortingParam(
+export function buildSortingParameter(
   params: BaseListParams,
   config: FeatureConfig,
 ): { path: string; order: 'Asc' | 'Desc' } | undefined {
@@ -168,17 +168,17 @@ export function parseBaseQueryParams(
 ): BaseListParams {
   const search = queryParams['search'] || '';
 
-  const pageNum = Number(queryParams['page']);
-  const page = Number.isInteger(pageNum) && pageNum > 0 ? pageNum : 0;
+  const pageNumber = Number(queryParams['page']);
+  const page = Number.isInteger(pageNumber) && pageNumber > 0 ? pageNumber : 0;
 
   const size = Number(queryParams['pageSize']);
   const pageSize = config.rowsPerPageOptions.includes(size)
     ? size
     : config.defaultPageSize;
 
-  const sortParam = queryParams['sort'] || '';
-  const sortField = validSortFields.includes(sortParam)
-    ? sortParam
+  const sortParameter = queryParams['sort'] || '';
+  const sortField = validSortFields.includes(sortParameter)
+    ? sortParameter
     : config.defaultSortField;
   const sortOrder =
     queryParams['order'] === 'Asc' || queryParams['order'] === 'Desc'

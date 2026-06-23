@@ -21,20 +21,38 @@ export default defineConfig(
     processor: angular.processInlineTemplates,
     plugins: { unicorn },
     rules: {
+      // Ban abbreviations: full unicorn default set + project-specific ones.
       'unicorn/prevent-abbreviations': [
-        'warn',
+        'error',
         {
-          extendDefaultReplacements: false,
+          // Enforce on identifiers, not on the established *.utils.ts / *.prod.ts
+          // file-naming conventions (the latter is also wired into angular.json).
+          checkFilenames: false,
           replacements: {
-            ctrl: { control: true },
-            e: { event: true, error: true },
-            el: { element: true },
-            els: { elements: true },
-            idx: { index: true },
+            qp: { queryParams: true },
             qty: { quantity: true },
-            params: { parameters: false },
+            ctrl: { control: true },
+          },
+          // Idiomatic Angular / domain terms that read clearly as-is.
+          allowList: {
+            params: true,
+            Params: true,
+            env: true,
+            Env: true,
+            ref: true,
+            Ref: true,
+            props: true,
+            Props: true,
+            args: true,
+            dev: true,
+            Dev: true,
           },
         },
+      ],
+      // Ban single-letter identifiers (p, e, r, x, …); use full words.
+      'id-length': [
+        'error',
+        { min: 2, properties: 'never', exceptions: ['_'] },
       ],
       '@angular-eslint/directive-selector': [
         'error',

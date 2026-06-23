@@ -1,4 +1,4 @@
-<header class="items__head">
+<header class="head">
   <h1>Items</h1>
   <ds-button
     routerLink="new"
@@ -9,7 +9,7 @@
 </header>
 
 <form
-  class="items__search"
+  class="search"
   (submit)="$event.preventDefault(); applySearch()"
 >
   <ds-input
@@ -30,13 +30,13 @@
 } @else if (items().length === 0) {
   <p>No items match.</p>
 } @else {
-  <table class="items__table">
+  <table class="table">
     <thead>
       <tr>
         <th>
           <button
             type="button"
-            class="items__sort"
+            class="sort"
             (click)="sortBy('name')"
           >
             Name
@@ -48,7 +48,7 @@
         <th>
           <button
             type="button"
-            class="items__sort"
+            class="sort"
             (click)="sortBy('category')"
           >
             Category
@@ -60,7 +60,7 @@
         <th>
           <button
             type="button"
-            class="items__sort"
+            class="sort"
             (click)="sortBy('quantity')"
           >
             Qty
@@ -80,7 +80,7 @@
           <td>
             <app-quantity-cell [quantity]="item.quantity" />
           </td>
-          <td class="items__actions">
+          <td class="actions">
             <ds-button
               variant="tertiary"
               size="sm"

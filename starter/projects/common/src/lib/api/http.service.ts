@@ -67,8 +67,8 @@ export class HttpService {
     }
 
     if (executionOptions.params) {
-      for (const param of Object.keys(executionOptions.params)) {
-        params = params.append(param, executionOptions.params[param]);
+      for (const parameter of Object.keys(executionOptions.params)) {
+        params = params.append(parameter, executionOptions.params[parameter]);
       }
     }
 

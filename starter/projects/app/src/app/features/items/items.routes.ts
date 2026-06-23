@@ -13,7 +13,7 @@ export const itemsRoutes: Routes = [
         title: 'Items',
         loadComponent: () =>
           import('./pages/item-list/item-list.page').then(
-            (m) => m.ItemListPage,
+            ({ ItemListPage }) => ItemListPage,
           ),
       },
       {
@@ -23,7 +23,7 @@ export const itemsRoutes: Routes = [
         canDeactivate: [unsavedChangesGuard],
         loadComponent: () =>
           import('./pages/item-form/item-form.page').then(
-            (m) => m.ItemFormPage,
+            ({ ItemFormPage }) => ItemFormPage,
           ),
       },
       {
@@ -34,7 +34,7 @@ export const itemsRoutes: Routes = [
         resolve: { prefill: itemEditPrefillResolver },
         loadComponent: () =>
           import('./pages/item-form/item-form.page').then(
-            (m) => m.ItemFormPage,
+            ({ ItemFormPage }) => ItemFormPage,
           ),
       },
     ],

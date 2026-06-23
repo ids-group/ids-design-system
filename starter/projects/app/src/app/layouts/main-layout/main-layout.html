@@ -5,7 +5,7 @@
     @if (breadcrumbs().length) {
       <nav
         breadcrumbs
-        class="main-layout__crumbs"
+        class="crumbs"
         aria-label="Breadcrumb"
       >
         @for (crumb of breadcrumbs(); track $index) {
@@ -28,7 +28,7 @@
     </div>
   </ds-topbar>
 
-  <div class="main-layout__body">
+  <div class="body">
     <ds-sidenav brand="App">
       <ds-sidenav-item
         label="Dashboard"
@@ -44,7 +44,7 @@
       />
     </ds-sidenav>
 
-    <main class="main-layout__content">
+    <main class="content">
       <router-outlet />
     </main>
   </div>

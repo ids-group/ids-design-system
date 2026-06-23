@@ -37,22 +37,22 @@ export class ItemApi {
     const search = params.search.toLowerCase();
     if (search) {
       rows = rows.filter(
-        (r) =>
-          r.name.toLowerCase().includes(search) ||
-          r.category.toLowerCase().includes(search),
+        (item) =>
+          item.name.toLowerCase().includes(search) ||
+          item.category.toLowerCase().includes(search),
       );
     }
 
     // Sort only when the caller passed an explicit (non-default) sort param.
     if (sort) {
-      const dir = sort.order === 'Asc' ? 1 : -1;
+      const direction = sort.order === 'Asc' ? 1 : -1;
       const key = sort.path as keyof ItemListItem;
-      rows = [...rows].sort((a, b) => {
-        if (a[key] > b[key]) {
-          return dir;
+      rows = [...rows].sort((first, second) => {
+        if (first[key] > second[key]) {
+          return direction;
         }
-        if (a[key] < b[key]) {
-          return -dir;
+        if (first[key] < second[key]) {
+          return -direction;
         }
 
         return 0;
@@ -68,7 +68,7 @@ export class ItemApi {
   }
 
   get(id: string): Observable<ApiResult<ItemDto>> {
-    const found = this.items.find((i) => i.id === id);
+    const found = this.items.find((item) => item.id === id);
 
     return of<ApiResult<ItemDto>>(
       found
@@ -87,8 +87,10 @@ export class ItemApi {
   }
 
   update(id: string, form: ItemFormModel): Observable<ApiResult<ItemDto>> {
-    this.items = this.items.map((i) => (i.id === id ? { ...i, ...form } : i));
-    const updated = this.items.find((i) => i.id === id);
+    this.items = this.items.map((item) =>
+      item.id === id ? { ...item, ...form } : item,
+    );
+    const updated = this.items.find((item) => item.id === id);
 
     return of<ApiResult<ItemDto>>(
       updated
@@ -98,7 +100,7 @@ export class ItemApi {
   }
 
   delete(id: string): Observable<ApiResult> {
-    this.items = this.items.filter((i) => i.id !== id);
+    this.items = this.items.filter((item) => item.id !== id);
 
     return of<ApiResult>({ isSuccess: true }).pipe(delay(150));
   }

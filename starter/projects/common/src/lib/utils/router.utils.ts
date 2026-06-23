@@ -47,7 +47,7 @@ export function createViewTransitionSkip(
 
 function extractSiblingNavRoutes(routes: Routes): Set<string> {
   const mainRoute = routes.find(
-    (r) => r.path === '' && (r.children?.length ?? 0) > 0,
+    (route) => route.path === '' && (route.children?.length ?? 0) > 0,
   );
 
   if (!mainRoute?.children) {
@@ -56,7 +56,7 @@ function extractSiblingNavRoutes(routes: Routes): Set<string> {
 
   return new Set(
     mainRoute.children
-      .map((r) => r.path)
+      .map((route) => route.path)
       .filter((path): path is string => !!path && path !== '**'),
   );
 }
