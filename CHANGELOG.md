@@ -52,8 +52,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **Tag:** added an `:active` (pressed) state to the close/dismiss button (previously only
   hover was styled), using the new `--opacity-state-active` overlay.
 - **Accordion & sidenav group** now animate open/close (`height: 0 ↔ auto`) via an opt-in
-  `interpolate-size: allow-keywords` on `:root`. The accordion body is always rendered
-  (collapsed content is `inert`), replacing the instant `@if` show/hide.
+  `interpolate-size: allow-keywords` on `:root`. Collapsed content now stays in the DOM and
+  is marked `inert` instead of being removed — replacing the accordion's `@if` show/hide and
+  the sidenav group's `display: none`. The accordion body carries an `.is-open` class when
+  expanded.
 - **`ds-combobox` focus** now uses the soft field halo (`--focus-field`) instead of the
   hard ring (`--focus-ring`), matching `ds-input` / `ds-select` / `ds-search`. Minor visual
   change to the combobox focus state.
@@ -65,8 +67,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
-- **`ds-drawer`** now closes on the Escape key (keyboard dismiss was missing; matches
-  `ds-bottom-sheet`).
+- **`ds-drawer`** now closes on Escape even when focus has left the panel — a
+  `document`-level Escape handler was added alongside the existing panel-level one
+  (previously Escape dismissed the drawer only while focus stayed inside it).
 - **`ds-combobox`** "No matches" empty option is no longer exposed as selectable
   (`aria-selected="false"`).
 
