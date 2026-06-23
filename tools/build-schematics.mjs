@@ -18,7 +18,7 @@ const distSchematics = 'dist/ds/schematics';
 console.log('▶ Compiling schematics (tsc)…');
 execSync('npx tsc -p schematics/tsconfig.json', { stdio: 'inherit' });
 
-console.log('▶ Copying collection.json, schemas, and templates…');
+console.log('▶ Copying collection.json and schemas…');
 cpSync('schematics/collection.json', `${distSchematics}/collection.json`);
 // Copy every generator's schema.json (tsc only emits .js, not .json).
 // Architecture generators (feature/store/data-access/page/ui) now live in the
