@@ -82,8 +82,10 @@
   /* Режим B — вариантный фон, спиннер = fg варианта (одно правило, без оверрайдов). */
   .mode-b .button { --spin: var(--fg); }
 
-  .disabled-ref .button { background: var(--surface-disabled); color: var(--text-disabled); border-color: transparent; }
-  .disabled-ref .text { background: transparent; }
+  /* Real lib [disabled] is variant-agnostic: same gray fill/text/transparent border
+     for every variant (incl. text — its bg-box stays gray). Faithful, not masked. */
+  .disabled-ref .button,
+  .button.off { background: var(--surface-disabled); color: var(--text-disabled); border-color: transparent; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -91,17 +93,24 @@
   <p class="lede">Сейчас <code>[loading]</code> вешает нативный <code>disabled</code>, и его серый фон затирает
   вариантный — белый спиннер на сером почти невидим, а loading-кнопка неотличима от disabled.
   Ниже три режима по всем вариантам. Фикс — CSS-only: <code>.loading</code> возвращает
-  <code>background: var(--_button-bg)</code> поверх серого; режим B дополнительно ведёт спиннер
-  через <code>var(--_button-fg)</code> (и убирает три вариантных оверрайда).</p>
+  <code>background: var(--_button-bg-color)</code> поверх серого; режим B дополнительно ведёт спиннер
+  через <code>var(--_button-label-color)</code> (и убирает три вариантных оверрайда).</p>
 
   <section class="disabled-ref">
-    <h2>Для сравнения: настоящий disabled</h2>
-    <p class="note">Так выглядит выключенная кнопка — и так же сейчас выглядит загрузка.</p>
+    <h2>Настоящий disabled — по каждому варианту</h2>
+    <p class="note">Ключевой момент: <code>[disabled]</code> в либе <strong>не зависит от варианта</strong> — все 8
+    красятся одинаково (<code>--surface-disabled</code> фон, <code>--text-disabled</code> текст, прозрачная рамка),
+    вариантный цвет полностью стирается. Именно поэтому loading с тем же серым был неотличим от выключенной кнопки.
+    <code>text</code> дополнительно сохраняет подчёркивание (а фон-бокс всё равно серый — мелкий побочный артефакт варианта <code>text</code>).</p>
     <div class="row">
       <div class="cell"><button class="button">Save</button><small>primary</small></div>
       <div class="cell"><button class="button secondary">Cancel</button><small>secondary</small></div>
+      <div class="cell"><button class="button tertiary">Edit</button><small>tertiary</small></div>
       <div class="cell"><button class="button outline">More</button><small>outline</small></div>
       <div class="cell"><button class="button error">Delete</button><small>error</small></div>
+      <div class="cell"><button class="button success">Approve</button><small>success</small></div>
+      <div class="cell"><button class="button warning">Retry</button><small>warning</small></div>
+      <div class="cell"><button class="button text">View log</button><small>text</small></div>
     </div>
   </section>
 
@@ -152,16 +161,17 @@
 
   <section class="mode-b">
     <h2>B · Вариантный фон + спиннер цветом лейбла (рекомендую)</h2>
-    <p class="note">Одно правило --_button-fg вместо трёх оверрайдов; авто-контраст: на warning спиннер тёмный, на outline — нейтральный тёмный (был бы синий).</p>
+    <p class="note">Одно правило --_button-label-color вместо трёх оверрайдов; авто-контраст: на warning спиннер тёмный, на outline — нейтральный тёмный (был бы синий).
+    Проверка фикса: в каждой ячейке <strong>сверху loading (B), снизу — настоящий disabled</strong>. Они явно различимы (вариантный фон+спиннер vs серый) — значит фикс применён и состояния больше не путаются.</p>
     <div class="row">
-      <div class="cell"><button class="button loading">Save</button><small>primary</small></div>
-      <div class="cell"><button class="button secondary loading">Cancel</button><small>secondary</small></div>
-      <div class="cell"><button class="button tertiary loading">Edit</button><small>tertiary</small></div>
-      <div class="cell"><button class="button outline loading">More</button><small>outline</small></div>
-      <div class="cell"><button class="button error loading">Delete</button><small>error</small></div>
-      <div class="cell"><button class="button success loading">Approve</button><small>success</small></div>
-      <div class="cell"><button class="button warning loading">Retry</button><small>warning</small></div>
-      <div class="cell"><button class="button text loading">View log</button><small>text</small></div>
+      <div class="cell"><button class="button loading">Save</button><button class="button off">Save</button><small>primary</small></div>
+      <div class="cell"><button class="button secondary loading">Cancel</button><button class="button secondary off">Cancel</button><small>secondary</small></div>
+      <div class="cell"><button class="button tertiary loading">Edit</button><button class="button tertiary off">Edit</button><small>tertiary</small></div>
+      <div class="cell"><button class="button outline loading">More</button><button class="button outline off">More</button><small>outline</small></div>
+      <div class="cell"><button class="button error loading">Delete</button><button class="button error off">Delete</button><small>error</small></div>
+      <div class="cell"><button class="button success loading">Approve</button><button class="button success off">Approve</button><small>success</small></div>
+      <div class="cell"><button class="button warning loading">Retry</button><button class="button warning off">Retry</button><small>warning</small></div>
+      <div class="cell"><button class="button text loading">View log</button><button class="button text off">View log</button><small>text</small></div>
     </div>
   </section>
 </body>
