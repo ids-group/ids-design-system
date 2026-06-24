@@ -169,6 +169,17 @@
     Disabled
   </h3>
 
+  <p class="block-desc t-s">
+    Disabled is a muted tint of the variant's own colour (derived via
+    <code class="t-mono-inline">
+      oklch()
+    </code>), not a flat grey. Chromeless
+    <code class="t-mono-inline">
+      standard
+    </code> stays boxless — muted icon
+    only.
+  </p>
+
   <div class="row">
     <div class="cell">
       <ds-icon-button
@@ -179,7 +190,46 @@
       />
 
       <code class="t-mono-inline">
+        standard
+      </code>
+    </div>
+
+    <div class="cell">
+      <ds-icon-button
+        icon="trash"
+        ariaLabel="Delete"
+        variant="filled"
         [disabled]="true"
+      />
+
+      <code class="t-mono-inline">
+        filled
+      </code>
+    </div>
+
+    <div class="cell">
+      <ds-icon-button
+        icon="trash"
+        ariaLabel="Delete"
+        variant="tonal"
+        [disabled]="true"
+      />
+
+      <code class="t-mono-inline">
+        tonal
+      </code>
+    </div>
+
+    <div class="cell">
+      <ds-icon-button
+        icon="trash"
+        ariaLabel="Delete"
+        variant="outlined"
+        [disabled]="true"
+      />
+
+      <code class="t-mono-inline">
+        outlined
       </code>
     </div>
   </div>
