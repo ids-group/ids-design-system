@@ -106,6 +106,8 @@
     --spin: var(--_off-fg);
     pointer-events: none; cursor: not-allowed;
   }
+  /* text/link has no fill → no disabled box (it was cramped: padding:0), just muted text. */
+  .text.off-tint { background: transparent; border-color: transparent; }
 </style>
 </head>
 <body>
