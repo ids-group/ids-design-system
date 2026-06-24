@@ -19,34 +19,19 @@
     }
     .matrix__row-label { color: var(--text-tertiary); }
 
-    /* ---------- States showcase ---------- */
-    .states {
-      display: grid;
-      gap: var(--space-3);
-      margin-top: var(--space-3);
+    /* ---------- Variants × states matrix ---------- */
+    .matrix-scroll { overflow-x: auto; margin-top: var(--space-3); }
+    .matrix--states {
+      grid-template-columns: 92px repeat(6, minmax(84px, 1fr));
+      margin-top: 0;
       padding: var(--space-4);
       background: var(--surface-secondary);
       border-radius: var(--radius-lg);
     }
-    .states--cols-4 { grid-template-columns: repeat(4, 1fr); }
-    .state-cell {
-      display: flex; flex-direction: column;
-      gap: var(--space-2);
-    }
-    .state-cell__stage {
+    .matrix--states .t-overline { text-align: center; }
+    .matrix__cell {
       display: flex; align-items: center; justify-content: center;
-      padding: var(--space-4);
-      min-height: 72px;
-      background: var(--surface-default);
-      border: var(--border-width-default) solid var(--border-default);
-      border-radius: var(--radius-md);
-    }
-    .state-cell__label {
-      text-align: center;
-      font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
-      letter-spacing: var(--letter-spacing-wider);
-      text-transform: uppercase;
-      color: var(--text-tertiary);
+      min-height: 56px;
     }
 
     /* State pins — force a visual state on live ds-buttons by reading the

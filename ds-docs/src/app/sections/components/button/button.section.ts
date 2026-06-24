@@ -9,7 +9,7 @@ import {
 
 interface VariantSpec {
   readonly label: string;
-  readonly key: 'primary' | 'secondary' | 'tertiary' | 'outline' | 'error';
+  readonly key: ButtonVariant;
 }
 
 @Component({
@@ -27,18 +27,8 @@ interface VariantSpec {
   styleUrl: './button.section.scss',
 })
 export class ButtonSection {
+  /** All variants, vertical axis of both the size and the state matrix. */
   protected readonly variants: readonly VariantSpec[] = [
-    { label: 'Primary', key: 'primary' },
-    { label: 'Secondary', key: 'secondary' },
-    { label: 'Tertiary', key: 'tertiary' },
-    { label: 'Outline', key: 'outline' },
-    { label: 'Error', key: 'error' },
-  ];
-
-  protected readonly loadingVariants: readonly {
-    readonly label: string;
-    readonly key: ButtonVariant;
-  }[] = [
     { label: 'Primary', key: 'primary' },
     { label: 'Secondary', key: 'secondary' },
     { label: 'Tertiary', key: 'tertiary' },
@@ -48,6 +38,16 @@ export class ButtonSection {
     { label: 'Warning', key: 'warning' },
     { label: 'Text', key: 'text' },
   ];
+
+  /** Horizontal axis of the state matrix. hover/focus/active are pinned for display. */
+  protected readonly states = [
+    'Default',
+    'Hover',
+    'Focus',
+    'Active',
+    'Disabled',
+    'Loading',
+  ] as const;
 
   protected readonly truncationRules: TruncationRule[] = [
     {
