@@ -20,15 +20,15 @@
     <div></div>
 
     <div class="t-overline">
-      L · default
+      SM · 32
     </div>
 
     <div class="t-overline">
-      M
+      MD · 40 · default
     </div>
 
     <div class="t-overline">
-      S
+      LG · 48
     </div>
 
     @for (variant of variants; track variant.key) {
@@ -37,21 +37,21 @@
       </div>
 
       <ds-button
-        size="l"
+        size="sm"
         [variant]="variant.key"
       >
         {{ variant.label }}
       </ds-button>
 
       <ds-button
-        size="m"
+        size="md"
         [variant]="variant.key"
       >
         {{ variant.label }}
       </ds-button>
 
       <ds-button
-        size="s"
+        size="lg"
         [variant]="variant.key"
       >
         {{ variant.label }}
@@ -113,20 +113,18 @@
           <ds-button
             [variant]="variant.key"
             [disabled]="true"
-            >
-            {{ variant.label }}
-          </ds-button
           >
+            {{ variant.label }}
+          </ds-button>
         </div>
 
         <div class="matrix__cell">
           <ds-button
             [variant]="variant.key"
             [loading]="true"
-            >
-            {{ variant.label }}
-          </ds-button
           >
+            {{ variant.label }}
+          </ds-button>
         </div>
       }
     </div>

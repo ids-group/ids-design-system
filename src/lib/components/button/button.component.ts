@@ -21,7 +21,7 @@ import type { ButtonSize, ButtonType, ButtonVariant } from './button.types';
 })
 export class ButtonComponent {
   readonly variant = input<ButtonVariant>('primary');
-  readonly size = input<ButtonSize>('l');
+  readonly size = input<ButtonSize>('md');
   readonly type = input<ButtonType>('button');
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly loading = input(false, { transform: booleanAttribute });

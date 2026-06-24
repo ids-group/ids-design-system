@@ -8,6 +8,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Breaking
+
+- **`ButtonSize` collapsed to `sm | md | lg`** (32 / 40 / 48 px), dropping the duplicate
+  legacy `s | m | l` tier. Default is now `md` (was `l` — same 40 px). Migration:
+  `m` → `sm` (both 32), `l` → `md` (both 40); the 24 px `s` is removed — its callers move to
+  `sm` (32 px). Aligns button with input / select / date-picker / icon-button.
+
 ### Changed
 
 - **Button & icon-button `[disabled]` is now a per-variant muted tint, not one flat grey.**
