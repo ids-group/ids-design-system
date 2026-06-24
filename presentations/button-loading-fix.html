@@ -123,12 +123,11 @@
 </style>
 </head>
 <body>
-  <h1>ds-button · loading: что чиним и как</h1>
-  <p class="lede">Сейчас <code>[loading]</code> вешает нативный <code>disabled</code>, и его серый фон затирает
-  вариантный — белый спиннер на сером почти невидим, а loading-кнопка неотличима от disabled.
-  Ниже три режима по всем вариантам. Фикс — CSS-only: <code>.loading</code> возвращает
-  <code>background: var(--_button-bg-color)</code> поверх серого; режим B дополнительно ведёт спиннер
-  через <code>var(--_button-label-color)</code> (и убирает три вариантных оверрайда).
+  <h1>ds-button · loading + disabled: что починили и как (в либе)</h1>
+  <p class="lede"><strong>Было:</strong> <code>[loading]</code> вешал нативный <code>disabled</code>, и его серый фон затирал
+  вариантный — белый спиннер на сером почти невидим, loading-кнопка неотличима от disabled.
+  <strong>Фикс (в либе, B):</strong> <code>.loading</code> возвращает <code>background: var(--_button-bg-color)</code> поверх серого +
+  спиннер цветом лейбла (<code>var(--_button-label-color)</code>, без трёх вариантных оверрайдов). Ниже — режимы по всем вариантам (0 = как было, A/B = варианты деривации спиннера, в либе B).
   <br><strong>Плюс disabled-цвет</strong> (первые две секции): <strong>было</strong> — плоский серый у всех; <strong>стало (в либе)</strong> — приглушённый тон самой кнопки, рецепт выбран по варианту: solid+text — плоский pale (A), tonal/ghost/outline — <code>color-mix</code> от фона (B). Везде максимально лёгкий.</p>
 
   <section class="disabled-ref">
@@ -179,8 +178,8 @@
   </section>
 
   <section class="mode-current">
-    <h2>0 · Как сейчас вживую</h2>
-    <p class="note">Серый disabled-фон у всех; спиннер белый (у secondary/tertiary/outline — синий по старому оверрайду).</p>
+    <h2>0 · Как было до фикса (баг)</h2>
+    <p class="note">Серый disabled-фон у всех; спиннер белый (у secondary/tertiary/outline — синий по старому оверрайду). Это <strong>не</strong> текущее состояние — так было до фикса B.</p>
     <div class="row">
       <div class="cell"><button class="button loading">Save</button><small>primary</small></div>
       <div class="cell"><button class="button secondary loading">Cancel</button><small>secondary</small></div>
