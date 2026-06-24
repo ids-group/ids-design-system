@@ -560,13 +560,20 @@
     --duration-base:    0ms;
     --duration-slow:    0ms;
     --duration-slower:  0ms;
-    --duration-loop-fast: 0ms;
-    --duration-loop-slow: 0ms;
+
+    /* Looping status indicators (spinners, indeterminate progress) stay
+       visible but calmer — slowed, never frozen: a stopped spinner reads as
+       "hung", not "loading". The one large motion we DO halt is the page-wide
+       skeleton sweep, which stops itself in _skeleton-shimmer.scss. */
+    --duration-loop-fast: 1400ms;
+    --duration-loop-slow: 2800ms;
   }
+
+  /* Kill one-shot motion only. Every entrance/transition animation is
+     token-driven, so zeroing the one-shot durations above already makes them
+     instant — loops must NOT be blanket-zeroed here or they freeze. */
   *, *::before, *::after {
     transition-duration: 0ms !important;
-    animation-duration:  0ms !important;
-    animation-iteration-count: 1 !important;
   }
 }
 
