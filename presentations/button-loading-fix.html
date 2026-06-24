@@ -108,6 +108,18 @@
   }
   /* text/link has no fill → no disabled box (it was cramped: padding:0), just muted text. */
   .text.off-tint { background: transparent; border-color: transparent; }
+
+  /* B — emphasis-preserving: mix the variant's ENABLED fill toward the disabled
+     surface, so solid primary stays deeper than tonal secondary / ghost tertiary
+     (carries the enabled intensity through; hue-only A flattens it). */
+  .button.off-emph {
+    background: color-mix(in srgb, var(--bg) 40%, var(--surface-disabled));
+    color: oklch(from var(--accent) 0.5 0.045 h);
+    border-color: color-mix(in srgb, var(--bd) 60%, var(--surface-disabled));
+    --spin: oklch(from var(--accent) 0.5 0.045 h);
+    pointer-events: none; cursor: not-allowed;
+  }
+  .text.off-emph { background: transparent; border-color: transparent; }
 </style>
 </head>
 <body>
@@ -132,6 +144,22 @@
       <div class="cell"><button class="button success off">Approve</button><button class="button success off-tint">Approve</button><small>success</small></div>
       <div class="cell"><button class="button warning off">Retry</button><button class="button warning off-tint">Retry</button><small>warning</small></div>
       <div class="cell"><button class="button text off">View log</button><button class="button text off-tint">View log</button><small>text</small></div>
+    </div>
+  </section>
+
+  <section class="disabled-cmp">
+    <h2>Деривация disabled: A — фикс L/C (текущее) vs B — от enabled-фона (эмфаза)</h2>
+    <p class="note"><strong>Верх (A)</strong> — текущее: фикс <code>L .92 / C .03</code>, различает только hue → primary/secondary/tertiary (один синий род) сходятся.
+    <strong>Низ (B)</strong> — <code>color-mix(enabled-фон 40%, surface-disabled)</code>: сохраняет лестницу эмфазы — solid primary глубже, tonal secondary бледнее, ghost tertiary едва-едва, outline светло-серый. Какой вид disabled берём за канон?</p>
+    <div class="row">
+      <div class="cell"><button class="button off-tint">Save</button><button class="button off-emph">Save</button><small>primary</small></div>
+      <div class="cell"><button class="button secondary off-tint">Cancel</button><button class="button secondary off-emph">Cancel</button><small>secondary</small></div>
+      <div class="cell"><button class="button tertiary off-tint">Edit</button><button class="button tertiary off-emph">Edit</button><small>tertiary</small></div>
+      <div class="cell"><button class="button outline off-tint">More</button><button class="button outline off-emph">More</button><small>outline</small></div>
+      <div class="cell"><button class="button error off-tint">Delete</button><button class="button error off-emph">Delete</button><small>error</small></div>
+      <div class="cell"><button class="button success off-tint">Approve</button><button class="button success off-emph">Approve</button><small>success</small></div>
+      <div class="cell"><button class="button warning off-tint">Retry</button><button class="button warning off-emph">Retry</button><small>warning</small></div>
+      <div class="cell"><button class="button text off-tint">View log</button><button class="button text off-emph">View log</button><small>text</small></div>
     </div>
   </section>
 
