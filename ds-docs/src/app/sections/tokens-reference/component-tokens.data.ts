@@ -36,13 +36,19 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         name: '--ds-button-bg-color-disabled',
-        value: 'var(--surface-disabled)',
-        notes: 'Disabled fill.',
+        value: 'oklch(accent .92 .03)',
+        notes:
+          'Disabled fill — per-variant muted tint: A (flat pale) for solid + text; secondary/tertiary/outline use B = color-mix(fill 28%, surface-disabled).',
       },
       {
         name: '--ds-button-label-color-disabled',
-        value: 'var(--text-disabled)',
-        notes: 'Disabled label.',
+        value: 'oklch(accent .58 .035)',
+        notes: 'Disabled label — low-chroma tint of the accent hue.',
+      },
+      {
+        name: '--ds-button-border-disabled',
+        value: 'oklch(accent .86 .04)',
+        notes: 'Disabled border (B variants: color-mix(border 55%)).',
       },
       {
         name: '--ds-button-radius',
@@ -100,6 +106,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         name: '--ds-icon-button-icon-color-hover',
         value: 'var(--text-primary)',
         notes: 'Hover icon colour.',
+      },
+      {
+        name: '--ds-icon-button-bg-color-disabled',
+        value: 'transparent · filled/selected: oklch(accent .92 .03)',
+        notes:
+          'Disabled fill — boxless for standard; tonal/outlined use color-mix(fill 28%, surface-disabled).',
+      },
+      {
+        name: '--ds-icon-button-icon-color-disabled',
+        value: 'oklch(accent .58 .035)',
+        notes: 'Disabled icon — low-chroma tint of the accent hue.',
+      },
+      {
+        name: '--ds-icon-button-border-disabled',
+        value: 'transparent · outlined: color-mix(border 55%)',
+        notes: 'Disabled border.',
       },
       {
         name: '--ds-icon-button-radius',

@@ -8,6 +8,24 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Changed
+
+- **Button & icon-button `[disabled]` is now a per-variant muted tint, not one flat grey.**
+  The disabled look derives from each variant's own colour: solid fills (primary/error/
+  success/warning) and the chrome-less `text` button use a flat pale tint (`oklch` from the
+  accent, pinned lightness/chroma); the tonal/ghost/outlined variants (button
+  secondary/tertiary/outline, icon-button tonal/outlined) use `color-mix(fill 28%,
+  --surface-disabled)`, preserving the enabled emphasis ladder. `text` / icon-button
+  `standard` stay chrome-less (no box). Visual change to the default disabled appearance —
+  override the `--ds-*-disabled` tokens to restore a flat grey.
+
+### Added
+
+- **`--ds-button-border-disabled`** and **`--ds-icon-button-bg-color-disabled` /
+  `-icon-color-disabled` / `-border-disabled`** override tokens — the disabled
+  fill/label/border are now individually themeable (previously only button had
+  `bg-color`/`label-color-disabled`; icon-button had none).
+
 ## 0.3.0 — 2026-06-23
 
 ### Breaking
