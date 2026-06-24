@@ -81,17 +81,17 @@
      после глобальных), поэтому дубль класса обязателен: .btn-declared.btn-declared
      в связке с .zone-hack даёт (0,3,0) и перебивает компонентные (0,2,0);
      без дубля была бы ничья, и компонент победил бы порядком. */
-  .zone-hack .btn-declared.btn-declared { --ds-button-bg: #0d9488; }
+  .zone-hack .btn-declared.btn-declared { --ds-button-bg-color: #0d9488; }
 
   .btn-declared[data-ng] {
-    --ds-button-bg:        var(--primary);          /* объявлен НА элементе — глушит внешнее значение */
-    --ds-button-bg-hover:  var(--primary-hover);
-    --ds-button-bg-active: var(--primary-pressed);
-    background: var(--ds-button-bg);
+    --ds-button-bg-color:        var(--primary);          /* объявлен НА элементе — глушит внешнее значение */
+    --ds-button-bg-color-hover:  var(--primary-hover);
+    --ds-button-bg-color-active: var(--primary-pressed);
+    background: var(--ds-button-bg-color);
   }
-  .btn-declared[data-ng]:hover  { background: var(--ds-button-bg-hover); }
-  .btn-declared[data-ng]:active { background: var(--ds-button-bg-active);
-                                  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ds-button-bg-active) 35%, transparent); }
+  .btn-declared[data-ng]:hover  { background: var(--ds-button-bg-color-hover); }
+  .btn-declared[data-ng]:active { background: var(--ds-button-bg-color-active);
+                                  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ds-button-bg-color-active) 35%, transparent); }
 
   /* ================================================================
      ПОДХОД B — «как в badge»: публичные токены НЕ объявляются, а
@@ -100,9 +100,9 @@
      и --primary-pressed в теме).
      ================================================================ */
   .btn-fallback {
-    --_bg:        var(--ds-button-bg,        var(--primary));
-    --_bg-hover:  var(--ds-button-bg-hover,  color-mix(in srgb, var(--_bg) 88%, black));
-    --_bg-active: var(--ds-button-bg-active, color-mix(in srgb, var(--_bg) 76%, black));
+    --_bg:        var(--ds-button-bg-color,        var(--primary));
+    --_bg-hover:  var(--ds-button-bg-color-hover,  color-mix(in srgb, var(--_bg) 88%, black));
+    --_bg-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--_bg) 76%, black));
     background: var(--_bg);
   }
   .btn-fallback:hover  { background: var(--_bg-hover); }
@@ -119,18 +119,18 @@
         stroke-linecap: round; stroke-linejoin: round; }
 
   .ibtn-declared {
-    --ds-icon-button-bg:        var(--primary);
-    --ds-icon-button-bg-hover:  var(--primary-hover);
-    --ds-icon-button-bg-active: var(--primary-pressed);
-    background: var(--ds-icon-button-bg);
+    --ds-icon-button-bg-color:        var(--primary);
+    --ds-icon-button-bg-color-hover:  var(--primary-hover);
+    --ds-icon-button-bg-color-active: var(--primary-pressed);
+    background: var(--ds-icon-button-bg-color);
   }
-  .ibtn-declared:hover  { background: var(--ds-icon-button-bg-hover); }
-  .ibtn-declared:active { background: var(--ds-icon-button-bg-active); }
+  .ibtn-declared:hover  { background: var(--ds-icon-button-bg-color-hover); }
+  .ibtn-declared:active { background: var(--ds-icon-button-bg-color-active); }
 
   .ibtn-fallback {
-    --_bg:        var(--ds-icon-button-bg,        var(--primary));
-    --_bg-hover:  var(--ds-icon-button-bg-hover,  color-mix(in srgb, var(--_bg) 88%, black));
-    --_bg-active: var(--ds-icon-button-bg-active, color-mix(in srgb, var(--_bg) 76%, black));
+    --_bg:        var(--ds-icon-button-bg-color,        var(--primary));
+    --_bg-hover:  var(--ds-icon-button-bg-color-hover,  color-mix(in srgb, var(--_bg) 88%, black));
+    --_bg-active: var(--ds-icon-button-bg-color-active, color-mix(in srgb, var(--_bg) 76%, black));
     background: var(--_bg);
   }
   .ibtn-fallback:hover  { background: var(--_bg-hover); }
@@ -175,7 +175,7 @@
   <!-- ============ сценарий 1 ============ -->
   <section class="card">
     <div class="card-head"><span class="step">Сценарий 1</span><h2>Потребитель задаёт ОДИН токен</h2></div>
-    <pre class="snippet">.toolbar ds-button { <span class="hl">--ds-button-bg: <b class="hex-now">#0d9488</b>;</span> }   <span class="cm">/* и больше НИЧЕГО */</span></pre>
+    <pre class="snippet">.toolbar ds-button { <span class="hl">--ds-button-bg-color: <b class="hex-now">#0d9488</b>;</span> }   <span class="cm">/* и больше НИЧЕГО */</span></pre>
     <div class="controls">
       <span class="label">Цвет бренда:</span>
       <button class="swatch" data-color="#0d9488" style="background:#0d9488" title="teal"></button>
@@ -205,7 +205,7 @@
     <pre class="snippet"><span class="cm">/* так сегодня выживает field (_ds-overrides.scss, кейсы ds-banner / ds-tabs):
    селектор лезет в ПРИВАТНЫЙ .button, а дубль класса перебивает
    специфичность encapsulation-атрибута: .button.button (0,2,1) > .button[_ngcontent] (0,2,0) */</span>
-.toolbar ds-button <span class="hl">.button.button</span> { --ds-button-bg: #0d9488; }</pre>
+.toolbar ds-button <span class="hl">.button.button</span> { --ds-button-bg-color: #0d9488; }</pre>
     <div class="duo">
       <div class="lane">
         <div class="lane-title"><b>A</b> — объявление + хак <span class="hint">(наведи и зажми!)</span></div>
@@ -224,19 +224,19 @@
   <section class="card">
     <div class="card-head"><span class="step">Сценарий 2</span><h2>…но если захочу — точечно перепишу и active</h2></div>
     <pre class="snippet">.toolbar ds-button {
-  <span class="hl">--ds-button-bg: <b class="hex-now">#0d9488</b>;</span>
-  <span class="hl">--ds-button-bg-active: #4c1d95;</span>   <span class="cm">/* своё значение вместо деривации */</span>
+  <span class="hl">--ds-button-bg-color: <b class="hex-now">#0d9488</b>;</span>
+  <span class="hl">--ds-button-bg-color-active: #4c1d95;</span>   <span class="cm">/* своё значение вместо деривации */</span>
 }</pre>
     <div class="duo">
       <div class="lane">
         <div class="lane-title"><b>A</b> — объявление (как сейчас)</div>
-        <div class="zone" data-consumer style="--ds-button-bg-active:#4c1d95"><button class="dbtn btn-declared" data-ng>Удерживай меня</button></div>
+        <div class="zone" data-consumer style="--ds-button-bg-color-active:#4c1d95"><button class="dbtn btn-declared" data-ng>Удерживай меня</button></div>
         <p class="res bad">✗ Всё ещё игнор.</p>
       </div>
       <div class="lane">
         <div class="lane-title"><b>B</b> — чтение с fallback (как в badge)</div>
-        <div class="zone" data-consumer style="--ds-button-bg-active:#4c1d95"><button class="dbtn btn-fallback">Удерживай меня</button></div>
-        <p class="res good">✓ Hover по-прежнему деривируется от bg, а pressed — фиолетовый, заданный руками. Точечное значение всегда побеждает деривацию: <code>var(--ds-button-bg-active, …дефолт)</code> сначала смотрит на ваше.</p>
+        <div class="zone" data-consumer style="--ds-button-bg-color-active:#4c1d95"><button class="dbtn btn-fallback">Удерживай меня</button></div>
+        <p class="res good">✓ Hover по-прежнему деривируется от bg, а pressed — фиолетовый, заданный руками. Точечное значение всегда побеждает деривацию: <code>var(--ds-button-bg-color-active, …дефолт)</code> сначала смотрит на ваше.</p>
       </div>
     </div>
   </section>
@@ -259,7 +259,7 @@
           <button class="dibtn ibtn-fallback" title="edit"><svg class="ic" viewBox="0 0 24 24"><path d="M4 20h4L18 10l-4-4L4 16zM14 6l4 4"/></svg></button>
           <button class="dibtn ibtn-fallback" title="star"><svg class="ic" viewBox="0 0 24 24"><path d="m12 4 2.4 5 5.6.8-4 3.9 1 5.6-5-2.7-5 2.7 1-5.6-4-3.9 5.6-.8z"/></svg></button>
         </div>
-        <p class="res good">✓ Один <code>--ds-icon-button-bg</code> — hover/pressed сами.</p>
+        <p class="res good">✓ Один <code>--ds-icon-button-bg-color</code> — hover/pressed сами.</p>
       </div>
     </div>
   </section>
@@ -271,20 +271,20 @@
       <div class="lane">
         <div class="lane-title"><b>A</b> — сейчас: каждый полутон задаётся отдельно</div>
         <pre class="snippet">&.error {
-  --ds-button-bg:        var(--error);
-  --ds-button-bg-hover:  var(--error-hover);
-  --ds-button-bg-active: var(--error-pressed);
+  --ds-button-bg-color:        var(--error);
+  --ds-button-bg-color-hover:  var(--error-hover);
+  --ds-button-bg-color-active: var(--error-pressed);
 }</pre>
       </div>
       <div class="lane">
         <div class="lane-title"><b>B</b> — станет: один цвет, полутона сами</div>
         <pre class="snippet">&.error {
-  --_button-bg: var(--ds-button-bg, var(--error));
+  --_button-bg-color: var(--ds-button-bg-color, var(--error));
   <span class="cm">/* hover / active / halo — деривация от bg */</span>
 }</pre>
       </div>
     </div>
-    <p class="note">Приватный <code>--_button-bg</code> — внутренняя деталь («разрешённое значение»), снаружи не виден и не является API.
+    <p class="note">Приватный <code>--_button-bg-color</code> — внутренняя деталь («разрешённое значение»), снаружи не виден и не является API.
        Где деривация не к месту (secondary / tertiary / outline — пастельные и прозрачные фоны, чёрная подмесь даёт грязный тон),
        дефолты остаются явными ramp-значениями — но и там потребительский токен теперь будет работать.</p>
   </section>
@@ -309,8 +309,8 @@
 
   function setBrand(hex) {
     zones.forEach(zone => {
-      zone.style.setProperty('--ds-button-bg', hex);
-      zone.style.setProperty('--ds-icon-button-bg', hex);
+      zone.style.setProperty('--ds-button-bg-color', hex);
+      zone.style.setProperty('--ds-icon-button-bg-color', hex);
     });
     hexLabels.forEach(label => label.textContent = hex);
     swatches.forEach(swatch => swatch.classList.toggle('on', swatch.dataset.color === hex));
