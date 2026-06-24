@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { ButtonComponent, IconComponent } from 'ds';
+import { ButtonComponent, IconComponent, type ButtonVariant } from 'ds';
 import { DocsAwaitComponent } from '../../../shared/docs-await.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
@@ -33,6 +33,20 @@ export class ButtonSection {
     { label: 'Tertiary', key: 'tertiary' },
     { label: 'Outline', key: 'outline' },
     { label: 'Error', key: 'error' },
+  ];
+
+  protected readonly loadingVariants: readonly {
+    readonly label: string;
+    readonly key: ButtonVariant;
+  }[] = [
+    { label: 'Primary', key: 'primary' },
+    { label: 'Secondary', key: 'secondary' },
+    { label: 'Tertiary', key: 'tertiary' },
+    { label: 'Outline', key: 'outline' },
+    { label: 'Error', key: 'error' },
+    { label: 'Success', key: 'success' },
+    { label: 'Warning', key: 'warning' },
+    { label: 'Text', key: 'text' },
   ];
 
   protected readonly truncationRules: TruncationRule[] = [

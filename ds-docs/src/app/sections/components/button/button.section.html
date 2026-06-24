@@ -405,6 +405,40 @@
     </div>
   </div>
 
+  <!-- ============================================================ Loading — all variants -->
+  <h3 class="block-title t-h4">
+    Loading — all variants
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      loading
+    </code> keeps the variant fill (not the
+    disabled grey) and tints the spinner with the variant's own label colour, so
+    a loading button stays distinct from a disabled one. Note the auto-contrast:
+    the spinner is dark on warning and neutral-dark on outline, white on the
+    solid fills.
+  </p>
+
+  <div class="states states--cols-4">
+    @for (variant of loadingVariants; track variant.key) {
+      <div class="state-cell">
+        <div class="state-cell__stage">
+          <ds-button
+            [variant]="variant.key"
+            [loading]="true"
+          >
+            {{ variant.label }}
+          </ds-button>
+        </div>
+
+        <div class="state-cell__label">
+          {{ variant.label }}
+        </div>
+      </div>
+    }
+  </div>
+
   <!-- ============================================================ With icon -->
   <h3 class="block-title t-h4">
     With icon
