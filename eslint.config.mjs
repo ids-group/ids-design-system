@@ -14,7 +14,6 @@ export default defineConfig(
       '**/*.yaml',
       '**/index.html',
       'dist/**',
-      'showcase/**',
       '.angular/**',
     ],
   },
