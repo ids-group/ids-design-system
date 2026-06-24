@@ -17,12 +17,13 @@
   --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--text-primary));
   --_icon-button-focus-shadow: var(--ds-icon-button-focus-shadow, var(--ds-control-focus-shadow));
   --_icon-button-radius: var(--ds-icon-button-radius, var(--radius-md));
-  /* Disabled = a muted tint of the variant's OWN accent (icon hue for ghost/tonal/
-     outlined, fill for filled/selected). Pinned L/C via oklch → uniform inertness,
-     only the tone shifts. Base/standard stays boxless (transparent fill). */
+
+  /* Disabled = the variant's own enabled fill muted toward the disabled surface
+     (filled/tonal/outlined/selected, below), keeping the emphasis ladder; the icon
+     is a low-chroma tint of the accent hue. Base/standard stays boxless. */
   --_icon-button-accent: var(--_icon-button-icon-color);
   --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, transparent);
-  --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, oklch(from var(--_icon-button-accent) 0.58 0.035 h));
+  --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, oklch(from var(--_icon-button-accent) 52% 0.04 h));
   --_icon-button-border-disabled: var(--ds-icon-button-border-disabled, transparent);
 
   display: inline-flex;
@@ -79,7 +80,7 @@
     --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, color-mix(in srgb, var(--_icon-button-bg-color) 76%, black));
     --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--_icon-button-icon-color));
     --_icon-button-accent: var(--_icon-button-bg-color);
-    --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, oklch(from var(--_icon-button-accent) 0.92 0.03 h));
+    --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, color-mix(in srgb, var(--_icon-button-bg-color) 28%, var(--surface-disabled)));
   }
   &.tonal {
     --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--primary-muted));
@@ -87,7 +88,7 @@
     --_icon-button-bg-color-hover:  var(--ds-icon-button-bg-color-hover,  var(--primary-subtitle));
     --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, var(--primary-muted-strong));
     --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--primary-strong));
-    --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, oklch(from var(--_icon-button-accent) 0.92 0.03 h));
+    --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, color-mix(in srgb, var(--_icon-button-bg-color) 28%, var(--surface-disabled)));
   }
   &.outlined {
     --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--surface-default));
@@ -96,8 +97,8 @@
     --_icon-button-bg-color-hover:  var(--ds-icon-button-bg-color-hover,  var(--surface-secondary));
     --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, var(--surface-muted));
     --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--text-primary));
-    --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, oklch(from var(--_icon-button-accent) 0.92 0.03 h));
-    --_icon-button-border-disabled: var(--ds-icon-button-border-disabled, oklch(from var(--_icon-button-accent) 0.86 0.04 h));
+    --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, color-mix(in srgb, var(--_icon-button-bg-color) 28%, var(--surface-disabled)));
+    --_icon-button-border-disabled: var(--ds-icon-button-border-disabled, color-mix(in srgb, var(--_icon-button-border) 55%, var(--surface-disabled)));
   }
 
   /* Toggle pressed look — stays last so it wins over the resting variant fill. */
@@ -109,6 +110,6 @@
     --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, color-mix(in srgb, var(--_icon-button-bg-color) 76%, black));
     --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--_icon-button-icon-color));
     --_icon-button-accent: var(--_icon-button-bg-color);
-    --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, oklch(from var(--_icon-button-accent) 0.92 0.03 h));
+    --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, color-mix(in srgb, var(--_icon-button-bg-color) 28%, var(--surface-disabled)));
   }
 }

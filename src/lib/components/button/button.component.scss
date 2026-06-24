@@ -22,7 +22,8 @@
   --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  color-mix(in srgb, var(--_button-bg-color) 88%, black));
   --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--_button-bg-color) 76%, black));
   --_button-label-color:        var(--ds-button-label-color,        var(--primary-on));
-  /* Identity hue the disabled tone derives from — the fill for solids, the label
+
+  /* Hue source for the muted disabled label — the fill for solids, the label
      accent for tonal/ghost/text (overridden per variant below). */
   --_button-accent: var(--_button-bg-color);
   --_button-border:    var(--ds-button-border,    transparent);
@@ -30,12 +31,14 @@
   --_button-pressed-shadow: var(--ds-button-pressed-shadow,
                               0 0 0 3px color-mix(in srgb, var(--_button-bg-color-active) 35%, transparent));
   --_button-radius:    var(--ds-button-radius,    var(--radius-md));
-  /* Disabled = a heavily-muted tint of the variant's OWN accent, not one flat
-     gray: hue from --_button-accent, lightness/chroma pinned (identical inertness
-     across variants, only the tone shifts). oklch relative-colour, Baseline 2024. */
-  --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, oklch(from var(--_button-accent) 0.92 0.03 h));
-  --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 0.58 0.035 h));
-  --_button-border-disabled: var(--ds-button-border-disabled, oklch(from var(--_button-accent) 0.86 0.04 h));
+
+  /* Disabled = the variant's OWN enabled fill muted toward the disabled surface
+     (color-mix keeps the emphasis ladder — solid primary stays deeper than tonal
+     secondary / ghost tertiary), with a low-chroma label from the accent hue.
+     Not one flat gray. Transparent fills (tertiary) land on a faint gray. */
+  --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, color-mix(in srgb, var(--_button-bg-color) 28%, var(--surface-disabled)));
+  --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 52% 0.04 h));
+  --_button-border-disabled: var(--ds-button-border-disabled, color-mix(in srgb, var(--_button-border) 55%, var(--surface-disabled)));
 
   display: inline-flex;
   align-items: center;
@@ -159,6 +162,7 @@
     --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  transparent);
     --_button-bg-color-active: var(--ds-button-bg-color-active, transparent);
     --_button-accent: var(--_button-label-color);
+
     /* No fill → no disabled tint box; just muted text (it's a chrome-less link). */
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
     --_button-border-disabled: var(--ds-button-border-disabled, transparent);
