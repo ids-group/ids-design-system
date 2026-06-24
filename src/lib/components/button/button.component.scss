@@ -32,13 +32,14 @@
                               0 0 0 3px color-mix(in srgb, var(--_button-bg-color-active) 35%, transparent));
   --_button-radius:    var(--ds-button-radius,    var(--radius-md));
 
-  /* Disabled = the variant's OWN enabled fill muted toward the disabled surface
-     (color-mix keeps the emphasis ladder — solid primary stays deeper than tonal
-     secondary / ghost tertiary), with a low-chroma label from the accent hue.
-     Not one flat gray. Transparent fills (tertiary) land on a faint gray. */
-  --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, color-mix(in srgb, var(--_button-bg-color) 28%, var(--surface-disabled)));
-  --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 52% 0.04 h));
-  --_button-border-disabled: var(--ds-button-border-disabled, color-mix(in srgb, var(--_button-border) 55%, var(--surface-disabled)));
+  /* Disabled tone — hand-picked per variant from two recipes (chosen visually).
+     A (this default): a flat pale tint, hue from accent, pinned L/C — used for the
+     solid fills (primary + error/success/warning) and chrome-less text; keeps them
+     light and clean. B (color-mix of the enabled fill toward the disabled surface)
+     is set on secondary/tertiary/outline below, fading them by their low emphasis. */
+  --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, oklch(from var(--_button-accent) 92% 0.03 h));
+  --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 58% 0.035 h));
+  --_button-border-disabled: var(--ds-button-border-disabled, oklch(from var(--_button-accent) 86% 0.04 h));
 
   display: inline-flex;
   align-items: center;
@@ -121,6 +122,16 @@
 
   /* Variants re-bind the resolvers (consumer token still wins). Tonal/neutral
      ones pin ramp picks — a black mix into pastel tints desaturates. */
+
+  /* B recipe shared by the tonal/ghost/outlined trio — fade the enabled fill. */
+  &.secondary,
+  &.tertiary,
+  &.outline {
+    --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, color-mix(in srgb, var(--_button-bg-color) 28%, var(--surface-disabled)));
+    --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 52% 0.04 h));
+    --_button-border-disabled: var(--ds-button-border-disabled, color-mix(in srgb, var(--_button-border) 55%, var(--surface-disabled)));
+  }
+
   &.secondary {
     --_button-bg-color:        var(--ds-button-bg-color,        var(--primary-muted));
     --_button-label-color:        var(--ds-button-label-color,        var(--primary-strong));

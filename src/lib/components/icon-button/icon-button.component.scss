@@ -18,12 +18,13 @@
   --_icon-button-focus-shadow: var(--ds-icon-button-focus-shadow, var(--ds-control-focus-shadow));
   --_icon-button-radius: var(--ds-icon-button-radius, var(--radius-md));
 
-  /* Disabled = the variant's own enabled fill muted toward the disabled surface
-     (filled/tonal/outlined/selected, below), keeping the emphasis ladder; the icon
-     is a low-chroma tint of the accent hue. Base/standard stays boxless. */
+  /* Disabled tone — hand-picked per variant (mirrors ds-button): solid fills
+     (filled/selected) + chrome-less standard use recipe A (flat pale tint / boxless);
+     tonal + outlined use recipe B (color-mix of their fill). Icon = low-chroma
+     accent tint throughout. Base/standard stays boxless. */
   --_icon-button-accent: var(--_icon-button-icon-color);
   --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, transparent);
-  --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, oklch(from var(--_icon-button-accent) 52% 0.04 h));
+  --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, oklch(from var(--_icon-button-accent) 58% 0.035 h));
   --_icon-button-border-disabled: var(--ds-icon-button-border-disabled, transparent);
 
   display: inline-flex;
@@ -80,7 +81,7 @@
     --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, color-mix(in srgb, var(--_icon-button-bg-color) 76%, black));
     --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--_icon-button-icon-color));
     --_icon-button-accent: var(--_icon-button-bg-color);
-    --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, color-mix(in srgb, var(--_icon-button-bg-color) 28%, var(--surface-disabled)));
+    --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, oklch(from var(--_icon-button-accent) 92% 0.03 h));
   }
   &.tonal {
     --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--primary-muted));
@@ -110,6 +111,6 @@
     --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, color-mix(in srgb, var(--_icon-button-bg-color) 76%, black));
     --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--_icon-button-icon-color));
     --_icon-button-accent: var(--_icon-button-bg-color);
-    --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, color-mix(in srgb, var(--_icon-button-bg-color) 28%, var(--surface-disabled)));
+    --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, oklch(from var(--_icon-button-accent) 92% 0.03 h));
   }
 }
