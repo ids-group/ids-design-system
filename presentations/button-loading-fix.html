@@ -82,10 +82,30 @@
   /* Режим B — вариантный фон, спиннер = fg варианта (одно правило, без оверрайдов). */
   .mode-b .button { --spin: var(--fg); }
 
-  /* Real lib [disabled] is variant-agnostic: same gray fill/text/transparent border
-     for every variant (incl. text — its bg-box stays gray). Faithful, not masked. */
-  .disabled-ref .button,
-  .button.off { background: var(--surface-disabled); color: var(--text-disabled); border-color: transparent; pointer-events: none; }
+  /* Identity hue per variant — the colour the muted-disabled tint derives from.
+     Solids point at their fill; tonal/ghost/text point at their accent text. */
+  .button { --accent: var(--primary); }
+  .secondary, .tertiary, .text { --accent: var(--primary-strong); }
+  .outline { --accent: var(--text-primary); }
+  .error { --accent: var(--error); }
+  .success { --accent: var(--success); }
+  .warning { --accent: var(--warning); }
+
+  /* CURRENT lib disabled — one flat gray for every variant (the "before"). */
+  .button.off { background: var(--surface-disabled); color: var(--text-disabled); border-color: transparent; pointer-events: none; cursor: not-allowed; }
+
+  /* PROPOSED disabled — a heavily-muted tint of the variant's OWN accent.
+     Pure functions: hue comes from --accent, lightness/chroma are pinned, so the
+     "disabled-ness" is identical across variants and only the tone shifts. No
+     per-variant hand-picking. oklch relative-colour is Baseline 2024. */
+  .button.off-tint {
+    --_off-bg:   oklch(from var(--accent) 0.92 0.03 h);
+    --_off-fg:   oklch(from var(--accent) 0.58 0.035 h);
+    --_off-bd:   oklch(from var(--accent) 0.86 0.04 h);
+    background: var(--_off-bg); color: var(--_off-fg); border-color: var(--_off-bd);
+    --spin: var(--_off-fg);
+    pointer-events: none; cursor: not-allowed;
+  }
 </style>
 </head>
 <body>
@@ -94,23 +114,22 @@
   вариантный — белый спиннер на сером почти невидим, а loading-кнопка неотличима от disabled.
   Ниже три режима по всем вариантам. Фикс — CSS-only: <code>.loading</code> возвращает
   <code>background: var(--_button-bg-color)</code> поверх серого; режим B дополнительно ведёт спиннер
-  через <code>var(--_button-label-color)</code> (и убирает три вариантных оверрайда).</p>
+  через <code>var(--_button-label-color)</code> (и убирает три вариантных оверрайда).
+  <br><strong>Плюс разведка disabled-цвета</strong> (первые две секции): сейчас disabled у всех один плоский серый — предложение красить его в приглушённый тон самого варианта, выведенный функциями.</p>
 
   <section class="disabled-ref">
-    <h2>Настоящий disabled — по каждому варианту</h2>
-    <p class="note">Ключевой момент: <code>[disabled]</code> в либе <strong>не зависит от варианта</strong> — все 8
-    красятся одинаково (<code>--surface-disabled</code> фон, <code>--text-disabled</code> текст, прозрачная рамка),
-    вариантный цвет полностью стирается. Именно поэтому loading с тем же серым был неотличим от выключенной кнопки.
-    <code>text</code> дополнительно сохраняет подчёркивание (а фон-бокс всё равно серый — мелкий побочный артефакт варианта <code>text</code>).</p>
+    <h2>Disabled: плоский серый (сейчас) → тон варианта (предложение)</h2>
+    <p class="note">Сейчас <code>[disabled]</code> у всех вариантов один <code>--surface-disabled</code> (<strong>верх</strong> ячейки) — вариант не угадать. Предложение (<strong>низ</strong>): disabled = сильно приглушённый тон самой кнопки. Через функции, без ручного подбора по вариантам — тон берётся из <code>--accent</code> варианта, светлота/насыщенность зафиксированы, так что «выключенность» одинаковая, меняется только оттенок:
+    <br><code>bg: oklch(from var(--accent) .92 .03 h)</code> · <code>text: …58 .035 h</code> · <code>border: …86 .04 h</code> — relative-colour (Baseline 2024).</p>
     <div class="row">
-      <div class="cell"><button class="button">Save</button><small>primary</small></div>
-      <div class="cell"><button class="button secondary">Cancel</button><small>secondary</small></div>
-      <div class="cell"><button class="button tertiary">Edit</button><small>tertiary</small></div>
-      <div class="cell"><button class="button outline">More</button><small>outline</small></div>
-      <div class="cell"><button class="button error">Delete</button><small>error</small></div>
-      <div class="cell"><button class="button success">Approve</button><small>success</small></div>
-      <div class="cell"><button class="button warning">Retry</button><small>warning</small></div>
-      <div class="cell"><button class="button text">View log</button><small>text</small></div>
+      <div class="cell"><button class="button off">Save</button><button class="button off-tint">Save</button><small>primary</small></div>
+      <div class="cell"><button class="button secondary off">Cancel</button><button class="button secondary off-tint">Cancel</button><small>secondary</small></div>
+      <div class="cell"><button class="button tertiary off">Edit</button><button class="button tertiary off-tint">Edit</button><small>tertiary</small></div>
+      <div class="cell"><button class="button outline off">More</button><button class="button outline off-tint">More</button><small>outline</small></div>
+      <div class="cell"><button class="button error off">Delete</button><button class="button error off-tint">Delete</button><small>error</small></div>
+      <div class="cell"><button class="button success off">Approve</button><button class="button success off-tint">Approve</button><small>success</small></div>
+      <div class="cell"><button class="button warning off">Retry</button><button class="button warning off-tint">Retry</button><small>warning</small></div>
+      <div class="cell"><button class="button text off">View log</button><button class="button text off-tint">View log</button><small>text</small></div>
     </div>
   </section>
 
@@ -160,18 +179,18 @@
   </section>
 
   <section class="mode-b">
-    <h2>B · Вариантный фон + спиннер цветом лейбла (рекомендую)</h2>
-    <p class="note">Одно правило --_button-label-color вместо трёх оверрайдов; авто-контраст: на warning спиннер тёмный, на outline — нейтральный тёмный (был бы синий).
-    Проверка фикса: в каждой ячейке <strong>сверху loading (B), снизу — настоящий disabled</strong>. Они явно различимы (вариантный фон+спиннер vs серый) — значит фикс применён и состояния больше не путаются.</p>
+    <h2>Все состояния вместе: loading · disabled · loading+disabled</h2>
+    <p class="note">Почему раньше не было «disabled+loading»: <code>[loading]</code> сам ставит <code>disabled</code>, а фикс (B) возвращает вариантный фон — поэтому loading всегда выглядел как заливка, отдельного «выключенного loading» не получалось. Теперь по каждому варианту три состояния:
+    <strong>loading</strong> (вариантный фон + спиннер цветом лейбла, B) · <strong>disabled</strong> (приглушённый тон) · <strong>loading на disabled</strong> (приглушённый тон + спиннер в тон — для кнопки, которая и неактивна, и грузится). Все три явно различимы.</p>
     <div class="row">
-      <div class="cell"><button class="button loading">Save</button><button class="button off">Save</button><small>primary</small></div>
-      <div class="cell"><button class="button secondary loading">Cancel</button><button class="button secondary off">Cancel</button><small>secondary</small></div>
-      <div class="cell"><button class="button tertiary loading">Edit</button><button class="button tertiary off">Edit</button><small>tertiary</small></div>
-      <div class="cell"><button class="button outline loading">More</button><button class="button outline off">More</button><small>outline</small></div>
-      <div class="cell"><button class="button error loading">Delete</button><button class="button error off">Delete</button><small>error</small></div>
-      <div class="cell"><button class="button success loading">Approve</button><button class="button success off">Approve</button><small>success</small></div>
-      <div class="cell"><button class="button warning loading">Retry</button><button class="button warning off">Retry</button><small>warning</small></div>
-      <div class="cell"><button class="button text loading">View log</button><button class="button text off">View log</button><small>text</small></div>
+      <div class="cell"><button class="button loading">Save</button><button class="button off-tint">Save</button><button class="button off-tint loading">Save</button><small>primary</small></div>
+      <div class="cell"><button class="button secondary loading">Cancel</button><button class="button secondary off-tint">Cancel</button><button class="button secondary off-tint loading">Cancel</button><small>secondary</small></div>
+      <div class="cell"><button class="button tertiary loading">Edit</button><button class="button tertiary off-tint">Edit</button><button class="button tertiary off-tint loading">Edit</button><small>tertiary</small></div>
+      <div class="cell"><button class="button outline loading">More</button><button class="button outline off-tint">More</button><button class="button outline off-tint loading">More</button><small>outline</small></div>
+      <div class="cell"><button class="button error loading">Delete</button><button class="button error off-tint">Delete</button><button class="button error off-tint loading">Delete</button><small>error</small></div>
+      <div class="cell"><button class="button success loading">Approve</button><button class="button success off-tint">Approve</button><button class="button success off-tint loading">Approve</button><small>success</small></div>
+      <div class="cell"><button class="button warning loading">Retry</button><button class="button warning off-tint">Retry</button><button class="button warning off-tint loading">Retry</button><small>warning</small></div>
+      <div class="cell"><button class="button text loading">View log</button><button class="button text off-tint">View log</button><button class="button text off-tint loading">View log</button><small>text</small></div>
     </div>
   </section>
 </body>
