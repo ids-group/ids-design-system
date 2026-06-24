@@ -16,6 +16,10 @@
   flex-direction: column;
   justify-content: flex-end;
   animation: ds-sheet-fade-in var(--duration-fast) var(--ease-decelerate);
+
+  &.closing {
+    animation: ds-sheet-fade-out var(--duration-fast) var(--ease-accelerate) forwards;
+  }
 }
 
 .sheet {
@@ -33,6 +37,10 @@
 
   &.dragging {
     transition: none;
+  }
+
+  &.closing {
+    animation: ds-sheet-down var(--duration-base) var(--ease-accelerate) forwards;
   }
 }
 
@@ -88,4 +96,12 @@
 @keyframes ds-sheet-up {
   from { transform: translateY(100%); }
   to { transform: none; }
+}
+
+@keyframes ds-sheet-fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes ds-sheet-down {
+  to { transform: translateY(100%); }
 }

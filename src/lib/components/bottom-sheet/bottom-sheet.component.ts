@@ -37,16 +37,37 @@ export class BottomSheetComponent {
   private readonly sheetRef = viewChild<ElementRef<HTMLElement>>('sheet');
 
   protected readonly dragOffset = signal<number | null>(null);
+  /** Sheet is in the DOM (kept true through the leave animation). */
+  protected readonly rendered = signal(false);
+  /** Playing the slide-down + scrim-fade leave animation. */
+  protected readonly closing = signal(false);
 
   private dragStartY = 0;
   private lastMoveY = 0;
   private lastMoveTime = 0;
   private velocity = 0;
   private previousBodyOverflow: string | null = null;
+  private wasOpen = false;
 
   constructor() {
+    // open → DOM lifecycle. Opening renders immediately; closing keeps the
+    // sheet mounted and flips `closing` so the leave animation can play —
+    // teardown happens in onLeaveEnd() once animationend fires.
+    effect(() => {
+      const isOpen = this.open();
+      if (isOpen) {
+        this.closing.set(false);
+        this.rendered.set(true);
+      } else if (this.wasOpen) {
+        this.closing.set(true);
+      }
+      this.wasOpen = isOpen;
+    });
+
+    // Lock body scroll while the sheet occupies the screen — keyed on
+    // `rendered` so the lock survives the leave animation.
     effect((onCleanup) => {
-      if (!this.open()) {
+      if (!this.rendered()) {
         return;
       }
       this.previousBodyOverflow = this.doc.body.style.overflow;
@@ -61,6 +82,14 @@ export class BottomSheetComponent {
   protected close(): void {
     this.dragOffset.set(null);
     this.open.set(false);
+  }
+
+  protected onLeaveEnd(event: AnimationEvent): void {
+    if (event.animationName !== 'ds-sheet-down' || !this.closing()) {
+      return;
+    }
+    this.closing.set(false);
+    this.rendered.set(false);
     this.closed.emit();
   }
 

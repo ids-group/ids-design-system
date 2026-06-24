@@ -1,16 +1,19 @@
-@if (open()) {
+@if (rendered()) {
   <div
     class="sheet-overlay"
+    [class.closing]="closing()"
     (click)="close()"
   >
     <div
       #sheet
       class="sheet"
       [class.dragging]="dragOffset() !== null"
+      [class.closing]="closing()"
       [style.transform]="
         dragOffset() ? 'translateY(' + dragOffset() + 'px)' : null
       "
       (click)="stop($event)"
+      (animationend)="onLeaveEnd($event)"
     >
       <div
         class="grab"
