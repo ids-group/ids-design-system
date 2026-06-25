@@ -16,7 +16,7 @@
 
 .button {
   /* Public --ds-button-* are read with fallbacks, never declared — consumer
-     overrides inherit in. Hover/active/halo derive from the resolved bg
+     overrides inherit in. Hover/active derive from the resolved bg
      (theme hover/pressed recipe: 88%/76% + black) unless set individually. */
   --_button-bg-color:        var(--ds-button-bg-color,        var(--primary));
   --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  color-mix(in srgb, var(--_button-bg-color) 88%, black));
@@ -28,8 +28,11 @@
   --_button-accent: var(--_button-bg-color);
   --_button-border:    var(--ds-button-border,    transparent);
   --_button-focus-shadow: var(--ds-button-focus-shadow, var(--ds-control-focus-shadow));
-  --_button-pressed-shadow: var(--ds-button-pressed-shadow,
-                              0 0 0 3px color-mix(in srgb, var(--_button-bg-color-active) 35%, transparent));
+
+  /* Press = darken (--_button-bg-color-active) + a micro scale-down. The old
+     pressed halo is opt-in now (default none) — set --ds-button-pressed-shadow. */
+  --_button-press-scale: var(--ds-button-press-scale, 0.98);
+  --_button-pressed-shadow: var(--ds-button-pressed-shadow, none);
   --_button-radius:    var(--ds-button-radius,    var(--radius-md));
 
   /* Disabled tone — hand-picked per variant from two recipes (chosen visually).
@@ -62,10 +65,11 @@
     background var(--duration-fast) var(--ease-standard),
     border-color var(--duration-fast) var(--ease-standard),
     box-shadow var(--duration-fast) var(--ease-standard),
+    transform var(--duration-instant) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard);
 
   &:hover  { background-color: var(--_button-bg-color-hover); }
-  &:active { background-color: var(--_button-bg-color-active); box-shadow: var(--_button-pressed-shadow); }
+  &:active { background-color: var(--_button-bg-color-active); box-shadow: var(--_button-pressed-shadow); transform: scale(var(--_button-press-scale)); }
   &:focus-visible { outline: none; box-shadow: var(--_button-focus-shadow); z-index: var(--btn-focus-z); }
 
   &[disabled] {

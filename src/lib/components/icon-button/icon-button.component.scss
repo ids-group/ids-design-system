@@ -17,6 +17,7 @@
   --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--text-primary));
   --_icon-button-focus-shadow: var(--ds-icon-button-focus-shadow, var(--ds-control-focus-shadow));
   --_icon-button-radius: var(--ds-icon-button-radius, var(--radius-md));
+  --_icon-button-press-scale: var(--ds-icon-button-press-scale, 0.96);
 
   /* Disabled tone — hand-picked per variant (mirrors ds-button): solid fills
      (filled/selected) + chrome-less standard use recipe A (flat pale tint / boxless);
@@ -44,6 +45,7 @@
     background var(--duration-fast) var(--ease-standard),
     border-color var(--duration-fast) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-instant) var(--ease-standard),
     box-shadow var(--duration-fast) var(--ease-standard);
 
   &:hover {
@@ -51,9 +53,10 @@
     color: var(--_icon-button-icon-color-hover);
   }
 
-  /* Pressed — bg shift only, no halo on a square icon button. */
+  /* Pressed — bg darken + a micro scale-down (no halo on a square icon button). */
   &:active {
     background-color: var(--_icon-button-bg-color-active);
+    transform: scale(var(--_icon-button-press-scale));
   }
   &:focus-visible {
     outline: none;
