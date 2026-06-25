@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ds-button · press animation — текущая и альтернативы</title>
+<link rel="stylesheet" href="ds.css">
+<style>
+  body {
+    font: var(--font-weight-regular) var(--font-size-m) / var(--line-height-base) var(--font-sans);
+    color: var(--text-primary);
+    background: var(--surface-secondary);
+    margin: 0; padding: 40px;
+  }
+  h1 { font-size: var(--font-size-h2); margin: 0 0 6px; letter-spacing: var(--letter-spacing-tight); }
+  .lede { color: var(--text-secondary); max-width: 760px; margin: 0 0 28px; }
+  .lede code, code.inl { background: var(--surface-muted); padding: 1px 6px; border-radius: var(--radius-sm); font: var(--font-size-s) var(--font-mono); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+  .card {
+    background: var(--surface-default);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .card.current { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+  .card h2 { font-size: var(--font-size-m); margin: 0; display: flex; align-items: center; gap: 8px; }
+  .tag { font: var(--font-weight-bold) var(--font-size-2xs) / 1 var(--font-sans); text-transform: uppercase; letter-spacing: .06em;
+         padding: 3px 7px; border-radius: var(--radius-pill); background: var(--primary-subtitle); color: var(--primary-strong); }
+  .desc { color: var(--text-secondary); font-size: var(--font-size-s); margin: 0; min-height: 40px; }
+  .stage { display: flex; justify-content: center; padding: 18px 0; }
+  pre { margin: 0; background: var(--surface-muted); border-radius: var(--radius-md); padding: 12px;
+        font: var(--font-size-2xs) / 1.5 var(--font-mono); color: var(--text-secondary); overflow-x: auto; white-space: pre; }
+  .hint { color: var(--text-tertiary); font-size: var(--font-size-2xs); }
+
+  /* ---------- base button (real tokens; component .button styles aren't in ds.css, so hand-rolled) ---------- */
+  .btn {
+    font: var(--font-weight-extrabold) var(--font-size-m) / var(--line-height-flat) var(--font-sans);
+    letter-spacing: var(--letter-spacing-wide);
+    color: var(--primary-on); background: var(--primary);
+    border: 0; border-radius: var(--radius-md);
+    padding: 0 var(--space-6); height: var(--hit-cozy);
+    cursor: pointer; user-select: none; position: relative;
+    transition:
+      background var(--duration-fast) var(--ease-standard),
+      box-shadow var(--duration-fast) var(--ease-standard),
+      transform var(--duration-fast) var(--ease-standard);
+  }
+  .btn:hover { background: var(--primary-hover); }
+  .btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+  /* 0 — CURRENT (live in lib): darken fill + faint halo, NO transform */
+  .v-current:active {
+    background: var(--primary-pressed);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-pressed) 35%, transparent);
+  }
+
+  /* A — SCALE: tactile compress (the canonical active:scale-95) */
+  .v-scale { transition: background var(--duration-fast) var(--ease-standard), transform var(--duration-instant) var(--ease-standard); }
+  .v-scale:active { transform: scale(0.96); background: var(--primary-pressed); }
+
+  /* B — PUSH: skeuomorphic key-press — button drops onto a solid 3D edge */
+  .v-push { box-shadow: 0 3px 0 var(--primary-strong); transition: background var(--duration-fast) var(--ease-standard), transform var(--duration-instant) var(--ease-standard), box-shadow var(--duration-instant) var(--ease-standard); }
+  .v-push:active { transform: translateY(3px); box-shadow: 0 0 0 var(--primary-strong); background: var(--primary-pressed); }
+
+  /* C — ELEVATION SINK: raised shadow → flat, button settles (Material-ish) */
+  .v-depth { box-shadow: var(--shadow-2); }
+  .v-depth:active { box-shadow: var(--shadow-1); transform: translateY(1px); background: var(--primary-pressed); }
+
+  /* D — SQUISH: rubbery squash, springy release */
+  .v-squish { transition: background var(--duration-fast) var(--ease-standard), transform var(--duration-base) var(--ease-spring); }
+  .v-squish:active { transform: scale(1.05, 0.88); background: var(--primary-pressed); }
+
+  /* E — SPRING: deep compress, overshoot bounce-back on release */
+  .v-spring { transition: background var(--duration-fast) var(--ease-standard), transform var(--duration-base) var(--ease-spring); }
+  .v-spring:active { transform: scale(0.9); background: var(--primary-pressed); }
+
+  /* F — RIPPLE: Material ink ripple from the click point (JS-spawned) */
+  .v-ripple { overflow: hidden; }
+  .v-ripple:active { background: var(--primary-pressed); }
+  .ripple {
+    position: absolute; border-radius: 50%; pointer-events: none;
+    background: color-mix(in srgb, var(--primary-on) 45%, transparent);
+    transform: scale(0); animation: ripple var(--duration-slow) var(--ease-decelerate);
+  }
+  @keyframes ripple { to { transform: scale(2.4); opacity: 0; } }
+
+  /* Accessibility: kill movement for reduced-motion — fall back to the colour/halo press. */
+  @media (prefers-reduced-motion: reduce) {
+    .btn { transition-duration: 0ms; }
+    .v-scale:active, .v-push:active, .v-depth:active, .v-squish:active, .v-spring:active { transform: none; }
+    .ripple { display: none; }
+  }
+</style>
+</head>
+<body>
+  <h1>ds-button · press animation — текущая и альтернативы</h1>
+  <p class="lede"><strong>Сейчас в либе</strong> (карточка «0»): нажатие = только затемнение фона (<code>--primary-pressed</code>, color-mix 76% black) + слабое halo-кольцо, переход <code>120ms</code> <code>--ease-standard</code>. <strong>Движения нет</strong> — никакого тактильного «вдавливания». Ниже — 6 альтернатив на тех же токенах (<code class="inl">transform</code>/<code class="inl">box-shadow</code> — дёшево по перфу). <strong>Зажми и подержи</strong> кнопку, чтобы почувствовать. Все варианты гасят движение под <code class="inl">prefers-reduced-motion</code> и падают обратно к цвету+halo.</p>
+
+  <div class="grid">
+    <div class="card current">
+      <h2>0 · Текущая <span class="tag">в либе</span></h2>
+      <p class="desc">Фон темнеет + faint halo-кольцо. Без движения — спокойно, но «плоско», нажатие почти не ощущается.</p>
+      <div class="stage"><button class="btn v-current">Press me</button></div>
+      <pre>&amp;:active {
+  background: var(--primary-pressed);
+  box-shadow: 0 0 0 3px
+    color-mix(--primary-pressed 35%);
+}</pre>
+    </div>
+
+    <div class="card">
+      <h2>A · Scale-down</h2>
+      <p class="desc">Кнопка сжимается до <code class="inl">.96</code> — каноничный тактильный «клик». 80ms ease-out. Самый дешёвый способ дать ощущение нажатия.</p>
+      <div class="stage"><button class="btn v-scale">Press me</button></div>
+      <pre>&amp;:active {
+  transform: scale(0.96);
+  background: var(--primary-pressed);
+}</pre>
+    </div>
+
+    <div class="card">
+      <h2>B · Push (3D key)</h2>
+      <p class="desc">Скевоморфная клавиша: под кнопкой сплошная «грань», на нажатии кнопка опускается на неё (<code class="inl">translateY(3px)</code>). Очень «физично».</p>
+      <div class="stage"><button class="btn v-push">Press me</button></div>
+      <pre>box-shadow: 0 3px 0 var(--primary-strong);
+&amp;:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 var(--primary-strong);
+}</pre>
+    </div>
+
+    <div class="card">
+      <h2>C · Elevation sink</h2>
+      <p class="desc">Material-логика: в покое приподнята (<code class="inl">--shadow-2</code>), на нажатии «оседает» — тень уплощается + 1px вниз.</p>
+      <div class="stage"><button class="btn v-depth">Press me</button></div>
+      <pre>box-shadow: var(--shadow-2);
+&amp;:active {
+  box-shadow: var(--shadow-1);
+  transform: translateY(1px);
+}</pre>
+    </div>
+
+    <div class="card">
+      <h2>D · Squish</h2>
+      <p class="desc">Резиновое сжатие — шире и ниже (<code class="inl">scale(1.05, .88)</code>), пружинный возврат (<code class="inl">--ease-spring</code>). Игривый, для брендов с характером.</p>
+      <div class="stage"><button class="btn v-squish">Press me</button></div>
+      <pre>transition: transform 180ms
+  var(--ease-spring);
+&amp;:active { transform: scale(1.05, 0.88); }</pre>
+    </div>
+
+    <div class="card">
+      <h2>E · Spring</h2>
+      <p class="desc">Глубокое сжатие до <code class="inl">.9</code> и пружинный overshoot-возврат на отпускании. Заметнее scale, чуть «живее».</p>
+      <div class="stage"><button class="btn v-spring">Press me</button></div>
+      <pre>transition: transform 180ms
+  var(--ease-spring);
+&amp;:active { transform: scale(0.9); }</pre>
+    </div>
+
+    <div class="card">
+      <h2>F · Ripple <span class="tag">+JS</span></h2>
+      <p class="desc">Material ink-ripple из точки клика. Канон для тач-интерфейсов, но требует JS-спавна спана (не чистый CSS).</p>
+      <div class="stage"><button class="btn v-ripple">Press me</button></div>
+      <pre>// mousedown → spawn .ripple span
+// at click point, animate scale+fade</pre>
+    </div>
+  </div>
+
+  <p class="lede" style="margin-top:28px">
+    <strong>Гайдлайны</strong> (ui-ux-pro-max + web): press-фидбек — <code class="inl">80–120ms</code> ease-out (быстрее hover); анимировать только <code class="inl">transform</code>/<code class="inl">opacity</code> (не размеры); <code class="inl">prefers-reduced-motion</code> обязателен; не перегружать (1 движение на нажатие).
+    <br><strong>Рекомендация:</strong> <strong>A (scale .96)</strong> или <strong>C (elevation sink)</strong> — дёшево, универсально, читается как «нажал». B/D/E — характернее, под игривый бренд. Ripple — если нужен тач-канон. Все можно положить на токены: <code class="inl">--ds-button-press-*</code> (новый слой) или включать через тему.
+  </p>
+
+  <script>
+    for (const btn of document.querySelectorAll('.v-ripple')) {
+      btn.addEventListener('pointerdown', (e) => {
+        const r = btn.getBoundingClientRect();
+        const d = Math.max(r.width, r.height);
+        const span = document.createElement('span');
+        span.className = 'ripple';
+        span.style.width = span.style.height = d + 'px';
+        span.style.left = (e.clientX - r.left - d / 2) + 'px';
+        span.style.top = (e.clientY - r.top - d / 2) + 'px';
+        btn.appendChild(span);
+        span.addEventListener('animationend', () => span.remove());
+      });
+    }
+  </script>
+</body>
+</html>
