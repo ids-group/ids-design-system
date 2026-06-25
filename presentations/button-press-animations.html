@@ -67,8 +67,15 @@
   .v-bright { transition: filter var(--duration-fast) var(--ease-standard); }
   .v-bright:active { filter: brightness(0.88); }
 
-  /* C — INSET: concave "pressed-in" — inner shadow, no translate */
-  .v-inset:active { background: var(--primary-pressed); box-shadow: inset 0 2px 6px color-mix(in srgb, black 32%, transparent); }
+  /* C — INSET: concave "pressed-in" well — strong dark top inset + a light bottom
+     lip. The dark-top / light-bottom pair is what reads as "recessed" (a single
+     top shadow just looks "darker at the top"). */
+  .v-inset:active {
+    background: var(--primary-pressed);
+    box-shadow:
+      inset 0 4px 6px -1px color-mix(in srgb, black 60%, transparent),
+      inset 0 -3px 5px -2px color-mix(in srgb, var(--primary-on) 35%, transparent);
+  }
 
   /* D — SQUISH: rubbery squash, springy release */
   .v-squish { transition: background var(--duration-fast) var(--ease-standard), transform var(--duration-base) var(--ease-spring); }
@@ -139,12 +146,13 @@
 
     <div class="card">
       <h2>C · Inset (вдавленная)</h2>
-      <p class="desc">Внутренняя тень — кнопка выглядит «вдавленной» внутрь. Тактильно, но без сдвига позиции (не ломает раскладку).</p>
+      <p class="desc">Две внутренние тени — тёмная сверху + светлый блик снизу — кнопка читается как утопленная «лунка», а не просто темнее. Без сдвига позиции (раскладка не прыгает).</p>
       <div class="stage"><button class="btn v-inset">Press me</button></div>
       <pre>&amp;:active {
   background: var(--primary-pressed);
-  box-shadow: inset 0 2px 6px
-    color-mix(black 32%);
+  box-shadow:
+    inset 0 4px 6px -1px color-mix(black 60%),
+    inset 0 -3px 5px -2px color-mix(white 35%);
 }</pre>
     </div>
 
