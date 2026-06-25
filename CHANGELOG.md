@@ -17,6 +17,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **Button & icon-button press is now darken + a micro scale-down; the pressed halo is off by default.**
+  `:active` darkens the fill (unchanged) and adds `transform: scale(0.98)` (button) / `0.96` (icon-button)
+  for tactile feedback. The old faint pressed halo (`--ds-button-pressed-shadow`) now defaults to `none`
+  — still settable to re-enable it. Honors `prefers-reduced-motion` (scale dropped, colour stays).
 - **Button & icon-button `[disabled]` is now a per-variant muted tint, not one flat grey.**
   The disabled look derives from each variant's own colour: solid fills (primary/error/
   success/warning) and the chrome-less `text` button use a flat pale tint (`oklch` from the
@@ -32,6 +36,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `-icon-color-disabled` / `-border-disabled`** override tokens — the disabled
   fill/label/border are now individually themeable (previously only button had
   `bg-color`/`label-color-disabled`; icon-button had none).
+- **`--ds-button-press-scale`** (default `0.98`) and **`--ds-icon-button-press-scale`**
+  (default `0.96`) — tune the press scale-down (set `1` to disable).
 
 ## 0.3.0 — 2026-06-23
 

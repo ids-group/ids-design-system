@@ -102,12 +102,12 @@
 </head>
 <body>
   <h1>ds-button · press animation — текущая и альтернативы</h1>
-  <p class="lede"><strong>Сейчас в либе</strong> (карточка «0»): нажатие = только затемнение фона (<code>--primary-pressed</code>, color-mix 76% black) + слабое halo-кольцо, переход <code>120ms</code> <code>--ease-standard</code>. <strong>Движения нет</strong> — никакого тактильного «вдавливания». Ниже — варианты на тех же токенах (<code class="inl">transform</code> / <code class="inl">filter</code> / <code class="inl">box-shadow</code> / <code class="inl">opacity</code> — дёшево по перфу, без скевоморфизма и JS). <strong>Зажми и подержи</strong> кнопку, чтобы почувствовать. Под <code class="inl">prefers-reduced-motion</code> движение гаснет (цвет/яркость/прозрачность остаются — это не движение).</p>
+  <p class="lede"><strong>Было</strong> (карточка «0»): нажатие = затемнение фона (<code>--primary-pressed</code>) + слабое halo-кольцо, без движения. <strong>Сейчас в либе — F</strong>: затемнение + микро-scale (<code>.98</code>), halo выключен по умолчанию (опц. через <code>--ds-button-pressed-shadow</code>). Ниже — варианты на тех же токенах (<code class="inl">transform</code> / <code class="inl">filter</code> / <code class="inl">box-shadow</code> / <code class="inl">opacity</code> — дёшево по перфу, без скевоморфизма и JS). <strong>Зажми и подержи</strong> кнопку, чтобы почувствовать. Под <code class="inl">prefers-reduced-motion</code> движение гаснет (цвет/яркость/прозрачность остаются — это не движение).</p>
 
   <div class="grid">
-    <div class="card current">
-      <h2>0 · Текущая <span class="tag">в либе</span></h2>
-      <p class="desc">Фон темнеет + faint halo-кольцо. Без движения — спокойно, но «плоско», нажатие почти не ощущается.</p>
+    <div class="card">
+      <h2>0 · Было (до F)</h2>
+      <p class="desc">Фон темнеет + faint halo-кольцо. Без движения — спокойно, но «плоско», нажатие почти не ощущается. Так было в либе до перехода на F.</p>
       <div class="stage"><button class="btn v-current">Press me</button></div>
       <pre>&amp;:active {
   background: var(--primary-pressed);
@@ -174,9 +174,9 @@
 &amp;:active { transform: scale(0.9); }</pre>
     </div>
 
-    <div class="card">
-      <h2>F · Затемнение + микро-scale</h2>
-      <p class="desc">Минимальное затемнение + едва заметное сжатие до <code class="inl">.98</code>. «0b с щепоткой тактильности» — спокойно, но нажатие ощущается.</p>
+    <div class="card current">
+      <h2>F · Затемнение + микро-scale <span class="tag">в либе</span></h2>
+      <p class="desc">Минимальное затемнение + едва заметное сжатие до <code class="inl">.98</code>. «0b с щепоткой тактильности» — спокойно, но нажатие ощущается. <strong>Выбрано и в либе</strong> (icon-button — scale .96).</p>
       <div class="stage"><button class="btn v-darkscale">Press me</button></div>
       <pre>&amp;:active {
   background: var(--primary-pressed);

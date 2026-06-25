@@ -6,8 +6,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     selector: '.button',
     description:
       'Read with fallbacks, never declared by DS — override on the host or any ancestor. ' +
-      'For solid variants (primary/error/success/warning) hover/active/halo derive from --ds-button-bg-color ' +
-      'via color-mix (88% / 76% + black); tonal variants keep explicit ramp defaults.',
+      'For solid variants (primary/error/success/warning) hover/active derive from --ds-button-bg-color ' +
+      'via color-mix (88% / 76% + black); tonal variants keep explicit ramp defaults. Press = darken + micro scale-down.',
     tokens: [
       {
         name: '--ds-button-bg-color',
@@ -61,9 +61,15 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         notes: 'Focus halo.',
       },
       {
+        name: '--ds-button-press-scale',
+        value: '0.98',
+        notes: 'Press scale-down on :active (set 1 to disable).',
+      },
+      {
         name: '--ds-button-pressed-shadow',
-        value: '0 0 0 3px color-mix(bg-active 35%, transparent)',
-        notes: 'Pressed halo — follows the active fill.',
+        value: 'none',
+        notes:
+          'Opt-in pressed halo (default off) — set to re-enable a ring on press.',
       },
     ],
   },
@@ -132,6 +138,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         name: '--ds-icon-button-focus-shadow',
         value: 'var(--focus-ring)',
         notes: 'Focus halo.',
+      },
+      {
+        name: '--ds-icon-button-press-scale',
+        value: '0.96',
+        notes: 'Press scale-down on :active (set 1 to disable).',
       },
     ],
   },
