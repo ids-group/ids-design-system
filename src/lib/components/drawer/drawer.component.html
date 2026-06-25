@@ -1,6 +1,7 @@
-@if (open()) {
+@if (rendered()) {
   <div
     class="drawer-scrim"
+    [class.closing]="closing()"
     (click)="onClose()"
   >
   </div>
@@ -11,8 +12,10 @@
     cdkTrapFocus
     cdkTrapFocusAutoCapture
     [class]="classes()"
+    [class.closing]="closing()"
     [attr.aria-labelledby]="title() ? titleId : null"
     (keydown.escape)="onClose()"
+    (animationend)="onLeaveEnd($event)"
   >
     <header class="header">
       <h4

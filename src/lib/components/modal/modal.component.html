@@ -1,8 +1,10 @@
-@if (open() || preview.staticPreview()) {
+@if (rendered() || preview.staticPreview()) {
   <div
     [class]="preview.staticPreview() ? 'modal-static' : 'modal-backdrop'"
+    [class.closing]="closing()"
     (click)="onBackdrop($event)"
     (keydown.escape)="onClose()"
+    (animationend)="onLeaveEnd($event)"
   >
     <ds-modal-card
       [cdkTrapFocus]="!preview.staticPreview()"

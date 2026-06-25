@@ -9,6 +9,8 @@
   background: var(--scrim, hsl(220deg 20% 12% / 45%));
   z-index: var(--layer-modal);
   animation: drawer-scrim-in var(--duration-fast, 120ms) var(--ease-decelerate, ease-out);
+
+  &.closing { animation: drawer-scrim-out var(--duration-fast) var(--ease-accelerate) forwards; }
 }
 
 @keyframes drawer-scrim-in {
@@ -31,6 +33,8 @@
   animation: drawer-in var(--duration-slow) var(--ease-decelerate);
 
   &.lg { width: var(--drawer-w-lg); }
+
+  &.closing { animation: drawer-out var(--duration-base) var(--ease-accelerate) forwards; }
 
   .header {
     display: flex;
@@ -76,4 +80,12 @@
 @keyframes drawer-in {
   from { transform: translateX(100%); }
   to   { transform: none; }
+}
+
+@keyframes drawer-scrim-out {
+  to { opacity: 0; }
+}
+
+@keyframes drawer-out {
+  to { transform: translateX(100%); }
 }

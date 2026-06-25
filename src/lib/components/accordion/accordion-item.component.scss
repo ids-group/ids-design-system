@@ -37,16 +37,19 @@
   }
 
   .body {
-    height: 0;
-    overflow: hidden;
-    transition: height var(--duration-base) var(--ease-standard);
+    // grid-template-rows 0fr↔1fr animates smoothly (unlike height:0↔auto, which can't interpolate).
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--duration-base) var(--ease-standard);
 
-    &.is-open { height: auto; }
+    &.is-open { grid-template-rows: 1fr; }
 
     @media (prefers-reduced-motion: reduce) { transition: none; }
   }
 
   .body-inner {
+    overflow: hidden;
+    min-height: 0;
     padding: 0 var(--space-4) var(--space-4);
     color: var(--text-secondary);
     font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
