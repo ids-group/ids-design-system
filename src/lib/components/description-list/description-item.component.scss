@@ -1,0 +1,71 @@
+/* The item host is one row. In horizontal mode it is a two-column grid whose
+   label column width inherits --_dl-label-w from the parent ds-description-list
+   (falls back to the global token when used standalone). */
+
+:host {
+  display: grid;
+  grid-template-columns: var(--_dl-label-w, var(--dl-spec-label-w)) 1fr;
+  column-gap: var(--_dl-col-gap, var(--space-5));
+  align-items: baseline;
+}
+
+:host(.stacked) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+}
+
+.term {
+  color: var(--text-tertiary);
+  font:
+    var(--font-weight-regular) var(--font-size-s) / var(--line-height-base)
+    var(--font-sans);
+}
+
+.details {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  color: var(--text-primary);
+  font:
+    var(--font-weight-regular) var(--font-size-s) / var(--line-height-base)
+    var(--font-sans);
+}
+
+.value {
+  min-width: 0;
+}
+
+.copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  padding: var(--space-0-5);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    background: var(--surface-secondary);
+    color: var(--text-primary);
+  }
+
+  &:focus-visible {
+    opacity: 1;
+    outline: var(--border-width-strong) solid var(--focus-ring-color, currentColor);
+    outline-offset: 1px;
+  }
+}
+
+:host(:hover) .copy {
+  opacity: 1;
+}

@@ -1,0 +1,23 @@
+<span class="term">
+  {{ term() }}
+</span>
+
+<div class="details">
+  <span class="value">
+    <ng-content></ng-content>
+  </span>
+
+  @if (copyValue()) {
+    <button
+      type="button"
+      class="copy"
+      [attr.aria-label]="copied() ? 'Copied' : 'Copy value'"
+      (click)="copy()"
+    >
+      <ds-icon
+        [name]="copied() ? 'check' : 'copy'"
+        [size]="14"
+      />
+    </button>
+  }
+</div>

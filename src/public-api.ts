@@ -44,6 +44,7 @@ export * from './lib/components/w3w';
 export * from './lib/components/page-footer';
 export * from './lib/components/combobox';
 export * from './lib/components/divider';
+export * from './lib/components/description-list';
 export * from './lib/components/skeleton';
 export * from './lib/components/spinner';
 export * from './lib/components/checkbox';
