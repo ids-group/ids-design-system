@@ -29,15 +29,34 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   --surface-disabled)`, preserving the enabled emphasis ladder. `text` / icon-button
   `standard` stay chrome-less (no box). Visual change to the default disabled appearance —
   override the `--ds-*-disabled` tokens to restore a flat grey.
+- **`ds-bottom-sheet` now animates its close** — slide-down + scrim fade on dismiss (scrim
+  tap / Escape / downward drag / programmatic `open = false`), mirroring the open animation
+  instead of vanishing instantly. Honors `prefers-reduced-motion` (closes instantly). The
+  `closed` output now emits at the end of the leave animation rather than on the click.
 
 ### Added
 
+- **`$bp-*` breakpoint Sass aliases + `up()` / `down()` mixins** (`styles/breakpoints`).
+  CSS custom properties can't be used in `@media` conditions, so the `--bp-*` scale was
+  unusable there. A new partial is now the single source for both representations: it emits
+  `--bp-*` (values unchanged) and exposes compile-time `$bp-xs … $bp-2xl` plus the mixins
+  `bp.up(md)` (`width >= 768px`) / `bp.down(sm)` (`width < 640px`), via
+  `@use 'breakpoints' as bp;`. Heads-up: advanced consumers importing `styles/tokens` à la
+  carte now also need `styles/breakpoints` for `--bp-*`; the `styles/ds` entry forwards both.
 - **`--ds-button-border-disabled`** and **`--ds-icon-button-bg-color-disabled` /
   `-icon-color-disabled` / `-border-disabled`** override tokens — the disabled
   fill/label/border are now individually themeable (previously only button had
   `bg-color`/`label-color-disabled`; icon-button had none).
 - **`--ds-button-press-scale`** (default `0.98`) and **`--ds-icon-button-press-scale`**
   (default `0.96`) — tune the press scale-down (set `1` to disable).
+
+### Fixed
+
+- **`prefers-reduced-motion` no longer freezes looping indicators.** A blanket
+  `animation-duration: 0 !important` was stopping spinners and the indeterminate progress
+  bar (a frozen spinner reads as "hung", not "loading"). Looping status indicators are now
+  slowed instead of zeroed; one-shot entrance/transition motion stays instant. The page-wide
+  skeleton sweep still halts (large-area motion, the one reduced-motion should remove).
 
 ## 0.3.0 — 2026-06-23
 

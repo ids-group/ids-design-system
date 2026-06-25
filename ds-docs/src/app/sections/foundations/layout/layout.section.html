@@ -17,9 +17,24 @@
   </h3>
 
   <p class="block-desc t-s">
-    Use them in <code class="t-mono-inline">&#64;media</code> queries via
-    custom-property reference (PostCSS) or copy the values into hand-written
-    queries.
+    A custom property can't be read inside an <code class="t-mono-inline">&#64;media</code>
+    condition, so for media queries use the compile-time Sass aliases instead: after
+    <code class="t-mono-inline">
+      &#64;use 'breakpoints' as bp
+    </code> write
+    <code class="t-mono-inline">
+      &#64;include bp.up(md)
+    </code> or
+    <code class="t-mono-inline">
+      bp.down(sm)
+    </code>, or read
+    <code class="t-mono-inline">
+      bp.$bp-md
+    </code> directly. The
+    <code class="t-mono-inline">
+      --bp-*
+    </code> custom properties below stay for regular
+    rules and JS.
   </p>
 
   <div class="bp-list">
