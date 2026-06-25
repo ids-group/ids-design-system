@@ -244,6 +244,7 @@ export const LAYOUT_BP: readonly LayoutRow[] = [
   { name: '--bp-sm', value: '640px', notes: 'Small tablet.' },
   { name: '--bp-md', value: '768px', notes: 'Tablet.' },
   { name: '--bp-lg', value: '1024px', notes: 'Small desktop.' },
+  { name: '--bp-xl', value: '1441px', notes: 'Large desktop.' },
   { name: '--bp-2xl', value: '1536px', notes: 'Wide desktop.' },
 ];
 
