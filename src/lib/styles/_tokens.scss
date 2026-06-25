@@ -43,6 +43,12 @@
   --space-24:  96px;
   --space-32: 128px;
 
+  /* Semantic spacing aliases — default rhythm for the layout primitives
+     (ds-stack / ds-inline). Components default their gap to these so the
+     vertical/horizontal rhythm retunes in one place. */
+  --space-stack:  var(--space-4);   /* 16px — vertical rhythm between stacked blocks */
+  --space-inline: var(--space-2);   /*  8px — horizontal cluster gap */
+
   /* ============================================================
      Radius — six-stop scale.
      Each step is functionally distinct; adjacent steps are

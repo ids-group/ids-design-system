@@ -1,0 +1,28 @@
+:host {
+  --_container-max: var(--ds-container-max, var(--col-cap-content));
+  --_container-pad-x: var(
+    --ds-container-pad-x,
+    clamp(var(--space-4), 4vw, var(--space-6))
+  );
+
+  display: block;
+  max-width: var(--_container-max);
+  margin-inline: auto;
+  padding-inline: var(--_container-pad-x);
+}
+
+:host([data-size='sm']) {
+  --_container-max: 640px;
+}
+:host([data-size='md']) {
+  --_container-max: 768px;
+}
+:host([data-size='lg']) {
+  --_container-max: 1024px;
+}
+:host([data-size='xl']) {
+  --_container-max: var(--col-cap-content);
+}
+:host([data-size='full']) {
+  --_container-max: none;
+}
