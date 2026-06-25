@@ -56,6 +56,9 @@
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-pressed) 35%, transparent);
   }
 
+  /* 0b — DARKEN ONLY: just the fill, no halo, no movement (the minimal press) */
+  .v-darken:active { background: var(--primary-pressed); }
+
   /* A — SCALE: tactile compress (the canonical active:scale-95) */
   .v-scale { transition: background var(--duration-fast) var(--ease-standard), transform var(--duration-instant) var(--ease-standard); }
   .v-scale:active { transform: scale(0.96); background: var(--primary-pressed); }
@@ -107,6 +110,15 @@
   background: var(--primary-pressed);
   box-shadow: 0 0 0 3px
     color-mix(--primary-pressed 35%);
+}</pre>
+    </div>
+
+    <div class="card">
+      <h2>0b · Только затемнение</h2>
+      <p class="desc">Минимум: только фон темнеет, <strong>без halo и без движения</strong>. Чисто и спокойно — частый дефолт DS. Отличие от «0» — убрано halo-кольцо.</p>
+      <div class="stage"><button class="btn v-darken">Press me</button></div>
+      <pre>&amp;:active {
+  background: var(--primary-pressed);
 }</pre>
     </div>
 
@@ -171,7 +183,7 @@
 
   <p class="lede" style="margin-top:28px">
     <strong>Гайдлайны</strong> (ui-ux-pro-max + web): press-фидбек — <code class="inl">80–120ms</code> ease-out (быстрее hover); анимировать только <code class="inl">transform</code>/<code class="inl">opacity</code> (не размеры); <code class="inl">prefers-reduced-motion</code> обязателен; не перегружать (1 движение на нажатие).
-    <br><strong>Рекомендация:</strong> <strong>A (scale .96)</strong> или <strong>C (elevation sink)</strong> — дёшево, универсально, читается как «нажал». B/D/E — характернее, под игривый бренд. Ripple — если нужен тач-канон. Все можно положить на токены: <code class="inl">--ds-button-press-*</code> (новый слой) или включать через тему.
+    <br><strong>Рекомендация:</strong> хочешь спокойно и минимально — <strong>0b (только затемнение, без halo)</strong>. Нужна тактильность «нажал» — <strong>A (scale .96)</strong> или <strong>C (elevation sink)</strong>, дёшево и универсально. B/D/E — характернее, под игривый бренд. Ripple — если нужен тач-канон. Всё можно положить на токены: <code class="inl">--ds-button-press-*</code> (новый слой) или включать через тему.
   </p>
 
   <script>
