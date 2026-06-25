@@ -13,7 +13,8 @@
   margin: 0;
   border-radius: var(--radius-pill);
   transition: background-color var(--duration-fast) var(--ease-standard),
-              border-color var(--duration-fast) var(--ease-standard);
+              border-color var(--duration-fast) var(--ease-standard),
+              border-width var(--duration-fast) var(--ease-standard);
 
   &:hover:not(:disabled) { border-color: var(--primary); }
   &:focus-visible        { outline: none; box-shadow: var(--_radio-focus-shadow); }
@@ -21,6 +22,17 @@
     background: var(--surface-disabled);
     border-color: var(--border-disabled);
     cursor: not-allowed;
+  }
+
+  // Persistent pseudo (content always set) so the dot scales + fades in/out —
+  // a checked-only ::after would just pop in.
+  &::after {
+    content: "";
+    transform: scale(0);
+    opacity: 0;
+    transform-origin: center;
+    transition: transform var(--duration-fast) var(--ease-standard),
+                opacity var(--duration-fast) var(--ease-standard);
   }
 
   &:checked {
@@ -32,6 +44,8 @@
       height: var(--radio-dot-size);
       border-radius: var(--radius-pill);
       background: var(--primary);
+      transform: scale(1);
+      opacity: 1;
     }
   }
 }

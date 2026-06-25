@@ -10,7 +10,7 @@
   cursor: pointer;
   flex-shrink: 0;
   margin: 0;
-  transition: background-color var(--duration-fast) var(--ease-standard);
+  transition: background-color var(--duration-base) var(--ease-standard);
 
   &::after {
     content: "";
@@ -22,7 +22,8 @@
     background: var(--surface-default);
     border-radius: var(--radius-pill);
     box-shadow: var(--shadow-1);
-    transition: transform var(--duration-base) var(--ease-standard);
+    transition: transform var(--duration-base) var(--ease-standard),
+                box-shadow var(--duration-base) var(--ease-standard);
   }
 
   &:checked         { background: var(--primary); }

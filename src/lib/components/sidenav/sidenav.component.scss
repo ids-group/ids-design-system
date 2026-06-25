@@ -26,6 +26,7 @@
   background-color: var(--_sidenav-bg-color);
   border-right: var(--border-width-default) solid var(--_sidenav-border);
   padding: var(--space-5);
+  transition: width var(--duration-base) var(--ease-standard);
 }
 
 .brand {

@@ -72,6 +72,7 @@
     cursor: pointer;
     border-radius: var(--radius-sm);
     text-align: left;
+    transition: background-color var(--duration-fast) var(--ease-standard);
 
     .option-icon {
       color: var(--icon-default);

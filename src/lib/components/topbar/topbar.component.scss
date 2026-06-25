@@ -57,6 +57,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 24ch;
+    transition: color var(--duration-fast) var(--ease-standard);
 
     &:hover { color: var(--primary); }
     &.crumb--current {

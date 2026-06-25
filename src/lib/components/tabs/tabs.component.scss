@@ -44,6 +44,7 @@
     border-bottom: var(--_tab-indicator-width) solid transparent;
     margin-bottom: calc(-1 * var(--border-width-default));
     transition:
+      background-color var(--duration-fast) var(--ease-standard),
       color var(--duration-fast) var(--ease-standard),
       border-color var(--duration-fast) var(--ease-standard);
 

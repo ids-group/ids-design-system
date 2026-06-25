@@ -9,6 +9,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) transparen
   border-radius: var(--radius-pill);
   border: var(--space-0-5) solid transparent;
   background-clip: padding-box;
+  transition: background-color var(--duration-fast) var(--ease-standard);
 }
 *::-webkit-scrollbar-thumb:hover  { background: var(--scrollbar-thumb-hover); background-clip: padding-box; }
 *::-webkit-scrollbar-thumb:active { background: var(--scrollbar-thumb-active); background-clip: padding-box; }

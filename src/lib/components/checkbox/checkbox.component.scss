@@ -23,6 +23,17 @@
     cursor: not-allowed;
   }
 
+  // Persistent pseudo (content always set) so the check/indeterminate mark
+  // scales + fades in/out — a checked-only ::after would just pop in.
+  &::after {
+    content: "";
+    transform: scale(0.6);
+    opacity: 0;
+    transform-origin: center;
+    transition: transform var(--duration-fast) var(--ease-standard),
+                opacity var(--duration-fast) var(--ease-standard);
+  }
+
   &:checked {
     background: var(--primary);
     border-color: var(--primary);
@@ -31,6 +42,8 @@
       width: var(--check-tick-size);
       height: var(--check-tick-size);
       background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'><path d='M2 6.5l2.5 2.5L10 3.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
+      transform: scale(1);
+      opacity: 1;
     }
   }
 
@@ -43,6 +56,8 @@
       height: var(--check-indet-h);
       background: var(--icon-on-primary);
       border-radius: var(--radius-sm);
+      transform: scale(1);
+      opacity: 1;
     }
   }
 }

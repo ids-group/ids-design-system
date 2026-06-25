@@ -23,6 +23,7 @@
   cursor: text;
   text-align: left;
   flex-wrap: wrap;
+  transition: border-color var(--duration-fast) var(--ease-standard);
 
   &:hover { border-color: var(--border-strong); }
   &:focus-within {
@@ -80,6 +81,7 @@
     padding: var(--space-2) var(--space-3);
     font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-base) var(--font-sans);
     cursor: pointer;
+    transition: background-color var(--duration-fast) var(--ease-standard);
 
     &:hover,
     &.is-active,

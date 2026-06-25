@@ -135,6 +135,7 @@
     button.th-label {
       cursor: pointer;
       user-select: none;
+      transition: color var(--duration-fast) var(--ease-standard);
 
       &:hover {
         color: var(--text-secondary);
@@ -160,6 +161,7 @@
       transform: translateY(-1px);
       color: var(--icon-default);
       opacity: 0.4;
+      transition: opacity var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
 
       /* Inner <svg class="icon"> defaults to var(--icon-md) (16px) via the
          global .icon rule — force it back to the host's sort-ic-size so the
@@ -190,6 +192,7 @@
     td {
       padding: var(--_table-cell-pad-y) var(--_table-cell-pad-x);
       line-height: var(--line-height-flat);
+      transition: background-color var(--duration-fast) var(--ease-standard);
 
       /* Inset shadow instead of border-bottom so the divider paints inside
          the cell — row height stays identical regardless of selected/hover

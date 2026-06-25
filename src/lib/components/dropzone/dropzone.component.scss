@@ -55,6 +55,7 @@
   background-color: var(--_dropzone-bg-color);
   cursor: pointer;
   min-height: 160px;
+  transition: border-color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard);
 
   &:hover {
     border-color: var(--_dropzone-border-hover);
@@ -135,6 +136,7 @@
       border: 0;
       cursor: pointer;
       color: var(--icon-default);
+      transition: color var(--duration-fast) var(--ease-standard);
       &:hover { color: var(--icon-strong); }
     }
 
