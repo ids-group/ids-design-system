@@ -1,0 +1,50 @@
+// Breakpoint scale — SINGLE source for both representations:
+//   --bp-*  runtime custom properties (regular rules, JS via getComputedStyle)
+//   $bp-*   compile-time Sass aliases, usable inside @media
+//
+// Why $bp-* exist: a custom property CANNOT be used in a @media condition
+// (`@media (width >= var(--bp-md))` is ignored — the condition is evaluated
+// before custom-property resolution). Sass variables resolve at build time, so
+// they can. Use this partial wherever a media query needs the scale:
+//   @use 'breakpoints' as bp;          // same dir; relative path elsewhere
+//   @include bp.up(md) { … }           // width >= 768px
+//   @include bp.down(sm) { … }         // width <  640px
+//   @media (width >= #{bp.$bp-lg}) { } // or read an alias directly
+
+@use 'sass:map';
+
+$breakpoints: (
+  'xs':  480px,
+  'sm':  640px,
+  'md':  768px,
+  'lg':  1024px,
+  'xl':  1441px, // page-grid wide-tier threshold (12 cols, caps at --col-cap-content)
+  '2xl': 1536px,
+);
+$bp-xs: map.get($breakpoints, 'xs');
+$bp-sm: map.get($breakpoints, 'sm');
+$bp-md: map.get($breakpoints, 'md');
+$bp-lg: map.get($breakpoints, 'lg');
+$bp-xl: map.get($breakpoints, 'xl');
+$bp-2xl: map.get($breakpoints, '2xl');
+
+// width >= breakpoint — mobile-first / min-width semantics.
+@mixin up($name) {
+  @media (width >= #{map.get($breakpoints, $name)}) {
+    @content;
+  }
+}
+
+// width < breakpoint — max-width semantics, exclusive of the breakpoint itself.
+@mixin down($name) {
+  @media (width < #{map.get($breakpoints, $name)}) {
+    @content;
+  }
+}
+
+// Runtime mirror — emitted from the same map so the two never drift.
+:root {
+  @each $name, $value in $breakpoints {
+    --bp-#{$name}: #{$value};
+  }
+}
