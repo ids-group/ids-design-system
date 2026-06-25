@@ -487,14 +487,10 @@
   --opacity-state-pressed: 0.16; /* active/pressed layer */
   --opacity-state-active: 0.24; /* deepest pressed layer (e.g. tag close on :active) */
   /* ============================================================
-     Breakpoints
+     Breakpoints — moved to _breakpoints.scss, the single source for both
+     the --bp-* custom properties (still emitted, now from that partial)
+     AND the $bp-* Sass aliases usable inside @media.
      ============================================================ */
-  --bp-xs: 480px;
-  --bp-sm: 640px;
-  --bp-md: 768px;
-  --bp-lg: 1024px;
-  --bp-xl: 1441px; /* Page-grid wide-tier threshold (12 cols, container caps at --col-cap-content). */
-  --bp-2xl:1536px;
   /* ============================================================
      Page grid — tier-specific gutters + margins.
      Consumed by `.page-grid` in _page-grid.scss; one column-count
@@ -810,13 +806,18 @@
     --duration-base: 0ms;
     --duration-slow: 0ms;
     --duration-slower: 0ms;
-    --duration-loop-fast: 0ms;
-    --duration-loop-slow: 0ms;
+    /* Looping status indicators (spinners, indeterminate progress) stay
+       visible but calmer — slowed, never frozen: a stopped spinner reads as
+       "hung", not "loading". The one large motion we DO halt is the page-wide
+       skeleton sweep, which stops itself in _skeleton-shimmer.scss. */
+    --duration-loop-fast: 1400ms;
+    --duration-loop-slow: 2800ms;
   }
+  /* Kill one-shot motion only. Every entrance/transition animation is
+     token-driven, so zeroing the one-shot durations above already makes them
+     instant — loops must NOT be blanket-zeroed here or they freeze. */
   *, *::before, *::after {
     transition-duration: 0ms !important;
-    animation-duration: 0ms !important;
-    animation-iteration-count: 1 !important;
   }
 }
 /* ============================================================
@@ -874,6 +875,15 @@
   --status-dot-size: 10px;
   --sidenav-w: 264px;
   --segmented-btn-h: 32px;
+}
+
+:root {
+  --bp-xs: 480px;
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1441px;
+  --bp-2xl: 1536px;
 }
 
 /* ============================================================
