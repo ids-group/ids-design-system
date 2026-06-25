@@ -33,6 +33,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   tap / Escape / downward drag / programmatic `open = false`), mirroring the open animation
   instead of vanishing instantly. Honors `prefers-reduced-motion` (closes instantly). The
   `closed` output now emits at the end of the leave animation rather than on the click.
+- **Smooth motion across components.** Interactive state changes that used to snap now ease,
+  all on the existing `--duration-*` / `--ease-*` tokens (`prefers-reduced-motion` zeroes
+  them). Selection fills animate (checkbox check / radio dot scale + fade, switch unified to
+  one duration); hover/active/selected eases on pagination, tabs pills, sidenav (incl. the
+  collapse width), table rows + sort icon, dropzone drag-over, stepper, combobox / date-picker
+  / dropdown options, breadcrumb crumbs and more. `ds-modal` and `ds-drawer` now animate their
+  close (animate-then-remove, like `ds-bottom-sheet`) — the modal card enters with scale + fade
+  (no slide). `ds-accordion` expand/collapse actually animates now (grid-rows, not height:auto).
 
 ### Added
 
