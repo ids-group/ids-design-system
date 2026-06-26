@@ -1,0 +1,47 @@
+/* Public --ds-otp-* are read with fallbacks, never declared. */
+
+:host {
+  --_otp-cell-w: var(--ds-otp-cell-w, var(--otp-cell-w));
+  --_otp-cell-h: var(--ds-otp-cell-h, var(--otp-cell-h));
+  --_otp-gap: var(--ds-otp-gap, var(--otp-gap));
+
+  display: inline-flex;
+  gap: var(--_otp-gap);
+}
+
+.cell {
+  width: var(--_otp-cell-w);
+  height: var(--_otp-cell-h);
+  padding: 0;
+  text-align: center;
+  font:
+    var(--font-weight-bold) var(--font-size-h4) / var(--line-height-flat)
+    var(--font-sans);
+  color: var(--text-primary);
+  background-color: var(--surface-default);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
+  caret-color: var(--primary);
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+
+  &:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: var(--focus-field);
+  }
+
+  &:disabled {
+    background-color: var(--surface-muted);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+:host(.invalid) .cell {
+  border-color: var(--error);
+}
+:host(.invalid) .cell:focus {
+  box-shadow: var(--focus-field-error);
+}

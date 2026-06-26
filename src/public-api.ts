@@ -51,6 +51,7 @@ export * from './lib/components/button-group';
 export * from './lib/components/list';
 export * from './lib/components/split-button';
 export * from './lib/components/timeline';
+export * from './lib/components/otp-input';
 export * from './lib/components/skeleton';
 export * from './lib/components/spinner';
 export * from './lib/components/checkbox';
