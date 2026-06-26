@@ -1,0 +1,81 @@
+<button
+  #trigger
+  type="button"
+  class="trigger"
+  aria-haspopup="dialog"
+  [attr.aria-expanded]="open()"
+  [attr.aria-label]="ariaLabel()"
+  [disabled]="isDisabled()"
+  (click)="toggle()"
+>
+  <span
+    class="swatch"
+    [style.background-color]="value()"
+  >
+  </span>
+
+  <span class="hex">
+    {{ value() }}
+  </span>
+
+  <ds-icon
+    class="chevron"
+    name="chevronDown"
+    [size]="16"
+  />
+</button>
+
+<ng-template #panel>
+  <div
+    class="panel"
+    role="dialog"
+    [attr.aria-label]="ariaLabel()"
+  >
+    <div class="preview-row">
+      <label class="native">
+        <span
+          class="preview"
+          [style.background-color]="sixDigitHex()"
+        >
+        </span>
+
+        <input
+          type="color"
+          class="native-input"
+          aria-label="Pick a colour"
+          [value]="sixDigitHex()"
+          (input)="onNativeInput($event)"
+        />
+      </label>
+
+      <input
+        type="text"
+        class="hex-input"
+        spellcheck="false"
+        autocomplete="off"
+        aria-label="Hex colour value"
+        [value]="value()"
+        (input)="onHexInput($event)"
+      />
+    </div>
+
+    <div
+      class="presets"
+      role="group"
+      aria-label="Preset colours"
+    >
+      @for (preset of presets(); track preset) {
+        <button
+          type="button"
+          class="preset"
+          [class.selected]="isSelected(preset)"
+          [style.background-color]="preset"
+          [attr.aria-label]="preset"
+          [attr.aria-pressed]="isSelected(preset)"
+          (click)="selectPreset(preset)"
+        >
+        </button>
+      }
+    </div>
+  </div>
+</ng-template>
