@@ -1,0 +1,111 @@
+<div class="scroll-wrap">
+  <table class="grid">
+    @if (caption()) {
+      <caption class="visually-hidden">
+        {{
+          caption()
+        }}
+      </caption>
+    }
+
+    <thead>
+      <tr>
+        @if (selectable()) {
+          <th
+            scope="col"
+            class="cell-select pin-select"
+          >
+            <input
+              type="checkbox"
+              class="check"
+              aria-label="Select all rows on this page"
+              [checked]="allSelected()"
+              [indeterminate]="someSelected()"
+              (change)="onToggleAll($event)"
+            />
+          </th>
+        }
+
+        @for (col of columns(); track col.key; let first = $first) {
+          <th
+            scope="col"
+            [class]="headerClasses(col)"
+            [class.numeric]="col.align === 'right'"
+            [class.pin-first]="first && stickyFirstColumn()"
+            [attr.aria-sort]="ariaSort(col)"
+          >
+            @if (col.sortable) {
+              <button
+                type="button"
+                class="th-label"
+                (click)="onSort(col)"
+              >
+                {{ col.label }}
+                <ds-icon
+                  class="sort-icon"
+                  [name]="sortIcon(col)"
+                  [size]="12"
+                />
+              </button>
+            } @else {
+              <span class="th-label">
+                {{ col.label }}
+              </span>
+            }
+          </th>
+        }
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (row of pagedData(); track row.id) {
+        <tr [class.selected]="isSelected(row)">
+          @if (selectable()) {
+            <td class="cell-select pin-select">
+              <input
+                type="checkbox"
+                class="check"
+                [attr.aria-label]="'Select ' + rowAriaLabel(row)"
+                [checked]="isSelected(row)"
+                (change)="onToggleRow(row, $event)"
+              />
+            </td>
+          }
+
+          @for (col of columns(); track col.key; let first = $first) {
+            <td
+              [class.numeric]="col.align === 'right'"
+              [class.pin-first]="first && stickyFirstColumn()"
+            >
+              {{ cellValue(row, col) }}
+            </td>
+          }
+        </tr>
+      } @empty {
+        <tr>
+          <td
+            class="empty"
+            [attr.colspan]="colspan()"
+          >
+            No data
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<div class="footer">
+  <span class="summary">
+    @if (selectable()) {
+      {{ selectedIds().size }} selected ·
+    }
+    {{ data().length }} rows
+  </span>
+
+  <ds-pagination
+    [total]="data().length"
+    [(currentPage)]="page"
+    [(pageSize)]="pageSize"
+  />
+</div>

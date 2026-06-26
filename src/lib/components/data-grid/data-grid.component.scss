@@ -1,0 +1,148 @@
+/* Public --ds-data-grid-* are read with fallbacks, never declared. */
+
+:host {
+  --_data-grid-max-h: var(--ds-data-grid-max-height, none);
+  --_data-grid-select-w: var(
+    --ds-data-grid-select-col-w,
+    var(--data-grid-select-col-w)
+  );
+
+  display: block;
+}
+
+.scroll-wrap {
+  overflow: auto;
+  max-height: var(--_data-grid-max-h);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+
+.grid {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font:
+    var(--font-weight-regular) var(--font-size-s) / var(--line-height-base)
+    var(--font-sans);
+}
+
+th,
+td {
+  padding: var(--table-cell-pad-y) var(--table-cell-pad-x);
+  text-align: left;
+  white-space: nowrap;
+
+  /* Opaque background so pinned cells hide the rows scrolling beneath them. */
+  background-color: var(--surface-default);
+  border-bottom: var(--border-width-default) solid var(--border-divider);
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  z-index: var(--table-sticky-header-z);
+  padding-top: var(--table-head-pad-y);
+  padding-bottom: var(--table-head-pad-y);
+  background-color: var(--surface-secondary);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-semibold);
+  vertical-align: middle;
+}
+
+.th-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sort-ic-gap);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+button.th-label {
+  cursor: pointer;
+}
+
+.sortable button.th-label:hover {
+  color: var(--text-primary);
+}
+
+.sort-icon {
+  color: var(--text-tertiary);
+}
+
+.sortable.sorted-asc .sort-icon,
+.sortable.sorted-desc .sort-icon {
+  color: var(--primary);
+}
+
+.numeric {
+  text-align: right;
+}
+
+.numeric .th-label {
+  flex-direction: row-reverse;
+}
+
+.cell-select {
+  width: var(--_data-grid-select-w);
+  text-align: center;
+  padding-inline: var(--space-3);
+}
+
+.check {
+  width: var(--space-4);
+  height: var(--space-4);
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+/* Pinned columns — opaque background + raised z so they survive sideways scroll. */
+.pin-select {
+  position: sticky;
+  left: 0;
+  z-index: var(--table-sticky-col-z);
+}
+
+.pin-first {
+  position: sticky;
+  left: 0;
+  z-index: var(--table-sticky-col-z);
+}
+
+:host(.selectable) .pin-first {
+  left: var(--_data-grid-select-w);
+}
+
+thead th.pin-select,
+thead th.pin-first {
+  z-index: var(--table-sticky-corner-z);
+}
+
+tbody tr.selected td {
+  background-color: var(--surface-tint);
+}
+
+.empty {
+  padding: var(--space-8);
+  color: var(--text-tertiary);
+  text-align: center;
+  white-space: normal;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-1);
+}
+
+.summary {
+  color: var(--text-tertiary);
+  font:
+    var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base)
+    var(--font-sans);
+}
