@@ -1,0 +1,118 @@
+<div
+  #trigger
+  class="field"
+  role="combobox"
+  aria-haspopup="listbox"
+  [class.open]="open()"
+  [class.invalid]="invalid()"
+  [class.disabled]="isDisabled()"
+  [attr.aria-expanded]="open()"
+  [attr.aria-controls]="listboxId"
+  [attr.aria-label]="resolvedAriaLabel()"
+  [attr.tabindex]="isDisabled() ? -1 : 0"
+  (click)="openPanel()"
+  (keydown)="onTriggerKeydown($event)"
+>
+  @if (selectedOptions().length === 0) {
+    <span class="placeholder">
+      {{ placeholder() }}
+    </span>
+  } @else {
+    @for (option of visibleChips(); track option.value) {
+      <ds-tag
+        variant="neutral"
+        closable
+        [closeLabel]="'Remove ' + option.label"
+        (closed)="removeValue(option.value)"
+      >
+        {{ option.label }}
+      </ds-tag>
+    }
+
+    @if (overflowCount() > 0) {
+      <span class="overflow">
+        +{{ overflowCount() }} more
+      </span>
+    }
+  }
+
+  <ds-icon
+    class="chevron"
+    name="chevronDown"
+    [size]="18"
+  />
+</div>
+
+<ng-template #panel>
+  <div class="panel">
+    <div class="search-row">
+      <ds-icon
+        class="search-icon"
+        name="search"
+        [size]="16"
+      />
+
+      <input
+        #search
+        type="text"
+        class="search-input"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-expanded="true"
+        autocomplete="off"
+        spellcheck="false"
+        [placeholder]="searchPlaceholder()"
+        [value]="filter()"
+        [attr.aria-controls]="listboxId"
+        [attr.aria-activedescendant]="activeDescendant()"
+        (input)="onFilter($event)"
+        (keydown)="onSearchKeydown($event)"
+      />
+    </div>
+
+    <ul
+      class="options"
+      role="listbox"
+      aria-multiselectable="true"
+      [id]="listboxId"
+    >
+      @for (option of filteredOptions(); track option.value; let i = $index) {
+        <li role="presentation">
+          <button
+            type="button"
+            role="option"
+            class="option"
+            [id]="optionId(i)"
+            [class.is-active]="activeIndex() === i"
+            [attr.aria-selected]="isSelected(option.value)"
+            [disabled]="option.disabled"
+            (click)="toggleValue(option)"
+            (mouseenter)="activeIndex.set(i)"
+          >
+            <span
+              class="checkbox"
+              [class.checked]="isSelected(option.value)"
+            >
+              @if (isSelected(option.value)) {
+                <ds-icon
+                  name="check"
+                  [size]="13"
+                />
+              }
+            </span>
+
+            <span class="option-label">
+              {{ option.label }}
+            </span>
+          </button>
+        </li>
+      }
+
+      @if (filteredOptions().length === 0) {
+        <li class="empty">
+          No matches
+        </li>
+      }
+    </ul>
+  </div>
+</ng-template>

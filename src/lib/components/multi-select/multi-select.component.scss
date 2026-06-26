@@ -1,0 +1,167 @@
+:host {
+  display: block;
+}
+
+.field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1-5);
+  min-height: var(--hit-cozy);
+  padding: var(--space-1-5) var(--field-pad-x);
+  background-color: var(--surface-default);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font:
+    var(--font-weight-regular) var(--font-size-s) / var(--line-height-base)
+    var(--font-sans);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+
+  &:hover:not(.disabled) {
+    border-color: var(--border-strong);
+  }
+
+  &.open,
+  &:focus-visible {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: var(--focus-field);
+  }
+
+  &.invalid {
+    border-color: var(--error);
+  }
+
+  &.disabled {
+    background-color: var(--surface-muted);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.placeholder {
+  color: var(--text-tertiary);
+}
+
+.overflow {
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xs);
+}
+
+.chevron {
+  margin-left: auto;
+  color: var(--text-tertiary);
+}
+
+/* Portaled panel — plain selectors reach it via the emulated _ngcontent attr. */
+.panel {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--surface-overlay);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-popover);
+  overflow: hidden;
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: var(--border-width-default) solid var(--border-divider);
+}
+
+.search-icon {
+  color: var(--text-tertiary);
+  flex: none;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font:
+    var(--font-weight-regular) var(--font-size-s) / var(--line-height-base)
+    var(--font-sans);
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.options {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-px);
+  max-height: var(--combobox-maxh);
+  overflow-y: auto;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-2) var(--space-2-5);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-primary);
+  font:
+    var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat)
+    var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+
+  &.is-active:not(:disabled) {
+    background-color: var(--surface-secondary);
+  }
+
+  &:disabled {
+    color: var(--text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--check-size);
+  height: var(--check-size);
+  border-radius: var(--radius-sm);
+  border: var(--border-width-strong) solid var(--border-strong);
+  color: var(--text-on-primary);
+
+  &.checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+  }
+}
+
+.option-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty {
+  padding: var(--space-3) var(--space-3);
+  color: var(--text-tertiary);
+  font: var(--font-weight-regular) var(--font-size-s) / 1.4 var(--font-sans);
+  text-align: center;
+}

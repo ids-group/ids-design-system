@@ -56,6 +56,7 @@ export * from './lib/components/slider';
 export * from './lib/components/loading-overlay';
 export * from './lib/components/tree';
 export * from './lib/components/color-picker';
+export * from './lib/components/multi-select';
 export * from './lib/components/skeleton';
 export * from './lib/components/spinner';
 export * from './lib/components/checkbox';
