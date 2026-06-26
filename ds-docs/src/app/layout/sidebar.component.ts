@@ -85,7 +85,15 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
                 [class.is-active]="isActive(item.anchor)"
                 (click)="scrollTo($event, item.anchor)"
               >
-                {{ item.label }}
+                <span class="link-label">
+                  {{ item.label }}
+                </span>
+
+                @if (item.new) {
+                  <span class="nav-new">
+                    new
+                  </span>
+                }
               </a>
             }
           }
@@ -197,7 +205,10 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
       }
 
       .link {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-2);
         padding: 7px var(--space-2-5);
         color: var(--text-secondary);
         font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
@@ -208,6 +219,19 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
         transition:
           background-color var(--duration-fast) var(--ease-standard),
           color var(--duration-fast) var(--ease-standard);
+      }
+      .link-label {
+        min-width: 0;
+      }
+      .nav-new {
+        flex: none;
+        padding: 2px 6px;
+        border-radius: var(--radius-pill);
+        background: var(--primary);
+        color: var(--primary-on);
+        font: var(--font-weight-bold) 9px/1 var(--font-sans);
+        letter-spacing: var(--letter-spacing-wider);
+        text-transform: uppercase;
       }
       .link:hover {
         background: var(--surface-secondary);

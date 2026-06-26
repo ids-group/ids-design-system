@@ -196,9 +196,17 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-components-card />
 
+    <section-components-color-picker />
+
     <section-components-combobox />
 
+    <section-components-confirm-dialog />
+
+    <section-components-data-grid />
+
     <section-components-date-picker />
+
+    <section-components-description-list />
 
     <section-components-drawer />
 
@@ -212,13 +220,23 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-components-icon-button />
 
+    <section-components-layout-primitives />
+
     <section-components-link />
+
+    <section-components-list />
+
+    <section-components-loading-overlay />
 
     <section-components-menu />
 
     <section-components-modal />
 
+    <section-components-multi-select />
+
     <section-components-number-stepper />
+
+    <section-components-otp-input />
 
     <section-components-page-footer />
 
@@ -232,6 +250,8 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-components-search />
 
+    <section-components-segmented />
+
     <section-components-select />
 
     <section-components-selection />
@@ -240,7 +260,11 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-components-skeleton />
 
+    <section-components-slider />
+
     <section-components-spinner />
+
+    <section-components-split-button />
 
     <section-components-stat />
 
@@ -254,45 +278,17 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-components-tag />
 
+    <section-components-timeline />
+
     <section-components-toast />
 
     <section-components-tooltip />
 
     <section-components-topbar />
 
-    <section-components-w3w />
-
-    <h1 class="group-title t-h2">
-      New components
-    </h1>
-
-    <section-components-description-list />
-
-    <section-components-layout-primitives />
-
-    <section-components-segmented />
-
-    <section-components-list />
-
-    <section-components-split-button />
-
-    <section-components-timeline />
-
-    <section-components-otp-input />
-
-    <section-components-slider />
-
-    <section-components-loading-overlay />
-
     <section-components-tree />
 
-    <section-components-color-picker />
-
-    <section-components-multi-select />
-
-    <section-components-confirm-dialog />
-
-    <section-components-data-grid />
+    <section-components-w3w />
 
     <h1 class="group-title t-h2">
       Foundations
