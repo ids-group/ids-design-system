@@ -1,0 +1,70 @@
+/* Public --ds-tree-* are read with fallbacks, never declared. */
+
+:host {
+  --_tree-indent: var(--ds-tree-indent, var(--tree-indent));
+  --_tree-row-pad-y: var(--ds-tree-row-pad-y, var(--tree-row-pad-y));
+  --_tree-row-pad-x: var(--ds-tree-row-pad-x, var(--tree-row-pad-x));
+
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--_tree-row-pad-y) var(--_tree-row-pad-x) var(--_tree-row-pad-y)
+    calc(var(--_tree-row-pad-x) + var(--_level, 0) * var(--_tree-indent));
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font:
+    var(--font-weight-regular) var(--font-size-s) / var(--line-height-base)
+    var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    background-color: var(--surface-secondary);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-strong) solid var(--focus-ring-color, currentColor);
+    outline-offset: calc(-1 * var(--border-width-strong));
+  }
+
+  &:disabled {
+    color: var(--text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.row.selected {
+  background-color: var(--surface-tint);
+  color: var(--primary-strong);
+  font-weight: var(--font-weight-semibold);
+}
+
+.caret {
+  flex: none;
+  color: var(--text-tertiary);
+}
+
+.caret-spacer {
+  flex: none;
+  width: var(--space-4);
+}
+
+.node-icon {
+  flex: none;
+  color: var(--icon-default, var(--text-secondary));
+}
+
+.label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

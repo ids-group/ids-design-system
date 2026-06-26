@@ -1,0 +1,38 @@
+@for (entry of visibleNodes(); track entry.node.id) {
+  <button
+    type="button"
+    class="row"
+    role="treeitem"
+    [attr.data-node-id]="entry.node.id"
+    [attr.aria-level]="entry.level + 1"
+    [attr.aria-expanded]="entry.hasChildren ? entry.expanded : null"
+    [attr.aria-selected]="isSelected(entry.node.id)"
+    [attr.tabindex]="isActive(entry.node.id) ? 0 : -1"
+    [class.selected]="isSelected(entry.node.id)"
+    [disabled]="entry.node.disabled"
+    [style.--_level]="entry.level"
+    (click)="onRowClick(entry)"
+  >
+    @if (entry.hasChildren) {
+      <ds-icon
+        class="caret"
+        [name]="entry.expanded ? 'chevronDown' : 'chevronRight'"
+        [size]="16"
+      />
+    } @else {
+      <span class="caret-spacer"></span>
+    }
+
+    @if (entry.node.icon; as icon) {
+      <ds-icon
+        class="node-icon"
+        [name]="icon"
+        [size]="16"
+      />
+    }
+
+    <span class="label">
+      {{ entry.node.label }}
+    </span>
+  </button>
+}

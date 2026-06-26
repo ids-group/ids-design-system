@@ -530,6 +530,11 @@
   --timeline-spine-w:        var(--border-width-strong); /* 2px connector spine */
   --timeline-gap:            var(--space-5);             /* vertical gap between events */
 
+  /* Tree-view */
+  --tree-indent:             var(--space-5);             /* 20px per nesting level */
+  --tree-row-pad-y:          var(--space-1-5);           /* 6px */
+  --tree-row-pad-x:          var(--space-3);             /* 12px base inset */
+
   /* Bin pack visualisation */
   --binpack-bay-h:           var(--hit-touch);       /* 48px */
 
