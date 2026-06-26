@@ -22,6 +22,7 @@
   border-radius: var(--_banner-radius);
   background-color: var(--_banner-bg-color);
   color: var(--_banner-text-color);
+  animation: ds-banner-in var(--duration-base) var(--ease-decelerate);
 
   :host(:not(.no-rail)) & {
     border-left: var(--_banner-bar-width) solid var(--_banner-bar);
@@ -111,5 +112,12 @@
 
     .icon { margin-top: 0; }
     .title { margin: 0; white-space: nowrap; }
+  }
+}
+
+@keyframes ds-banner-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
   }
 }
