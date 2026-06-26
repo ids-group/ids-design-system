@@ -78,6 +78,7 @@ export class TooltipDirective implements OnDestroy {
 
     this.ref = this.overlay.create({
       positionStrategy,
+      panelClass: 'ds-overlay-pane',
       scrollStrategy: this.overlay.scrollStrategies.close(),
     });
 

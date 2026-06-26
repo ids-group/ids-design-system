@@ -16,6 +16,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { disposeWithLeave } from '../overlay-motion';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
@@ -221,7 +222,7 @@ export class SelectComponent extends DsControlValueAccessor<string> {
       // Reuse the global panel skin defined in styles/_dropdown-overlay.scss
       // so the portaled panel actually renders styled — `:host ::ng-deep`
       // selectors can't reach a node outside the host's DOM tree.
-      panelClass: 'ds-dropdown-panel',
+      panelClass: ['ds-dropdown-panel', 'ds-overlay-pane'],
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
       width,
     };
@@ -233,7 +234,7 @@ export class SelectComponent extends DsControlValueAccessor<string> {
   }
 
   protected close(): void {
-    this.overlayRef?.dispose();
+    disposeWithLeave(this.overlayRef);
     this.overlayRef = null;
     this.open.set(false);
     this.activeIndex.set(-1);

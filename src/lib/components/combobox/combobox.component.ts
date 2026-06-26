@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { disposeWithLeave } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { TagComponent } from '../tag/tag.component';
 import type { ComboboxOption, ComboboxSize } from './combobox.types';
@@ -227,6 +228,7 @@ export class ComboboxComponent<T = unknown> {
       positionStrategy,
       hasBackdrop: true,
       backdropClass: 'cdk-overlay-transparent-backdrop',
+      panelClass: 'ds-overlay-pane',
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
       width: triggerElement.getBoundingClientRect().width,
     };
@@ -238,7 +240,7 @@ export class ComboboxComponent<T = unknown> {
   }
 
   protected close(): void {
-    this.overlayRef?.dispose();
+    disposeWithLeave(this.overlayRef);
     this.overlayRef = null;
     this.isOpen.set(false);
     this.activeIndex.set(-1);

@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { disposeWithLeave } from '../overlay-motion';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
 import { DsStaticPreview } from '../static-preview.directive';
@@ -165,7 +166,7 @@ export class DropdownComponent {
       backdropClass: 'cdk-overlay-transparent-backdrop',
       // Global panel class — the portaled pane lives outside :host, so
       // styles live in styles/_dropdown-overlay.scss keyed off this class.
-      panelClass: 'ds-dropdown-panel',
+      panelClass: ['ds-dropdown-panel', 'ds-overlay-pane'],
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
       width,
     };
@@ -177,7 +178,7 @@ export class DropdownComponent {
   }
 
   protected close(): void {
-    this.overlayRef?.dispose();
+    disposeWithLeave(this.overlayRef);
     this.overlayRef = null;
     this.open.set(false);
     this.activeIndex.set(-1);

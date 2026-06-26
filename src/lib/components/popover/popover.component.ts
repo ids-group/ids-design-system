@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { disposeWithLeave } from '../overlay-motion';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { NgTemplateOutlet } from '@angular/common';
 import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
@@ -89,6 +90,7 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
       positionStrategy,
       hasBackdrop: true,
       backdropClass: 'cdk-overlay-transparent-backdrop',
+      panelClass: 'ds-overlay-pane',
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
     this.ref = this.overlay.create(cfg);
@@ -105,12 +107,13 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
   }
 
   close(): void {
-    this.ref?.dispose();
+    disposeWithLeave(this.ref);
     this.ref = null;
     this.opened.set(false);
   }
 
   ngOnDestroy(): void {
-    this.close();
+    this.ref?.dispose();
+    this.ref = null;
   }
 }

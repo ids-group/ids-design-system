@@ -1,0 +1,29 @@
+// Enter/leave motion for CDK-overlay panels that carry the `ds-overlay-pane`
+// panelClass (select, dropdown, combobox, date-picker, popover, tooltip).
+// Animates the panel's ROOT CHILD, not the pane itself, so CDK's positioning
+// transforms on `.cdk-overlay-pane` are left untouched. The leave variant is
+// driven by `ds-leaving`, added by disposeWithLeave() (components/overlay-motion.ts).
+// prefers-reduced-motion zeroes --duration-fast → instant (animationend still
+// fires, so disposeWithLeave still tears down).
+
+.cdk-overlay-pane.ds-overlay-pane > * {
+  animation: ds-overlay-in var(--duration-fast) var(--ease-decelerate);
+}
+
+.cdk-overlay-pane.ds-overlay-pane.ds-leaving > * {
+  animation: ds-overlay-out var(--duration-fast) var(--ease-accelerate) forwards;
+}
+
+@keyframes ds-overlay-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes ds-overlay-out {
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}

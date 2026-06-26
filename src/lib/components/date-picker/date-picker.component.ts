@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { disposeWithLeave } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import type {
   DatePickerMode,
@@ -305,6 +306,7 @@ export class DatePickerComponent {
       positionStrategy,
       hasBackdrop: true,
       backdropClass: 'cdk-overlay-transparent-backdrop',
+      panelClass: 'ds-overlay-pane',
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
     this.overlayRef = this.overlay.create(cfg);
@@ -324,7 +326,7 @@ export class DatePickerComponent {
   }
 
   protected close(): void {
-    this.overlayRef?.dispose();
+    disposeWithLeave(this.overlayRef);
     this.overlayRef = null;
     this.isOpen.set(false);
   }
