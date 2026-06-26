@@ -48,6 +48,7 @@ export * from './lib/components/description-list';
 export * from './lib/components/layout';
 export * from './lib/components/segmented';
 export * from './lib/components/button-group';
+export * from './lib/components/list';
 export * from './lib/components/skeleton';
 export * from './lib/components/spinner';
 export * from './lib/components/checkbox';

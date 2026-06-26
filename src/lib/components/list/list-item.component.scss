@@ -1,0 +1,90 @@
+/* Public --ds-list-item-* are read with fallbacks, never declared. */
+
+:host {
+  --_list-item-pad-y: var(--ds-list-item-pad-y, var(--list-item-pad-y));
+  --_list-item-pad-x: var(--ds-list-item-pad-x, var(--list-item-pad-x));
+  --_list-item-gap: var(--ds-list-item-gap, var(--list-item-gap));
+
+  display: block;
+}
+
+.activator {
+  display: flex;
+  align-items: center;
+  gap: var(--_list-item-gap);
+  width: 100%;
+  padding: var(--_list-item-pad-y) var(--_list-item-pad-x);
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  text-align: left;
+}
+
+button.activator {
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    background-color: var(--surface-secondary);
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-strong) solid var(--focus-ring-color, currentColor);
+    outline-offset: calc(-1 * var(--border-width-strong));
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.leading,
+.trailing {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.trailing {
+  color: var(--text-tertiary);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-px);
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  color: var(--text-primary);
+  font:
+    var(--font-weight-semibold) var(--font-size-s) / var(--line-height-base)
+    var(--font-sans);
+}
+
+.subtitle {
+  color: var(--text-tertiary);
+  font:
+    var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base)
+    var(--font-sans);
+}
+
+:host(.selected) .activator {
+  background-color: var(--surface-tint);
+}
+:host(.selected) .title {
+  color: var(--primary-strong);
+}
+
+:host(.disabled) .title,
+:host(.disabled) .subtitle,
+:host(.disabled) .trailing {
+  color: var(--text-disabled);
+}

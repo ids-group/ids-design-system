@@ -446,6 +446,11 @@
   --menu-minw:               200px;                  /* dropdown menu min width */
   --menu-sep-h:              var(--border-width-default);
 
+  /* List / list-item — density-aware row padding + leading/trailing gap. */
+  --list-item-pad-y:         var(--space-3);             /* 12px */
+  --list-item-pad-x:         var(--space-4);             /* 16px */
+  --list-item-gap:           var(--space-3);             /* 12px leading↔body↔trailing */
+
   /* Tooltip */
   --tooltip-maxw:            240px;
   --tooltip-arrow:           var(--space-2);             /* 8px — caret edge length, halved for offset */
