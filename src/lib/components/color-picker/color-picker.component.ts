@@ -21,6 +21,12 @@ import { IconComponent } from '../../icons/icon.component';
 import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { disposeWithLeave } from '../overlay-motion';
+import {
+  type Hsv,
+  hexToHsv,
+  hsvToHex,
+  normalizeHex,
+} from './color-picker.utils';
 
 const DEFAULT_PRESETS: readonly string[] = [
   '#2F54FF',
@@ -78,7 +84,15 @@ export class ColorPickerComponent
     viewChild.required<TemplateRef<unknown>>('panel');
   protected readonly open = signal(false);
 
+  // Working HSV state while the panel is open — the saturation/value plane and
+  // the hue slider both manipulate this; the hex `value` is derived from it.
+  protected readonly hsv = signal<Hsv>(
+    hexToHsv('#2F54FF') ?? { h: 0, s: 0, v: 0 },
+  );
+
   private overlayRef: OverlayRef | null = null;
+  private svDragging = false;
+  private hueDragging = false;
 
   constructor() {
     super();
@@ -92,10 +106,23 @@ export class ColorPickerComponent
     () => this.disabled() || this.formDisabled(),
   );
 
-  // Six-digit hex for the native <input type="color">, which rejects shorthand.
-  protected readonly sixDigitHex = computed(() =>
-    this.toSixDigit(this.value()),
+  // Normalised hex for the trigger swatch + hex field.
+  protected readonly displayHex = computed(
+    () => normalizeHex(this.value()) ?? '#000000',
   );
+
+  // Pure-hue fill behind the saturation/value plane.
+  protected readonly hueColor = computed(() =>
+    hsvToHex({ h: this.hsv().h, s: 100, v: 100 }),
+  );
+
+  protected readonly svThumb = computed(() => {
+    const { s: saturation, v: value } = this.hsv();
+
+    return { left: saturation, top: 100 - value };
+  });
+
+  protected readonly huePercent = computed(() => (this.hsv().h / 360) * 100);
 
   protected toggle(): void {
     if (this.isDisabled()) {
@@ -109,29 +136,126 @@ export class ColorPickerComponent
   }
 
   protected selectPreset(hex: string): void {
-    this.value.set(hex);
+    this.commitHex(hex);
     this.close();
   }
 
   protected isSelected(hex: string): boolean {
-    return hex.toLowerCase() === this.value().toLowerCase();
+    return normalizeHex(hex) === this.displayHex();
   }
 
   protected onHexInput(event: Event): void {
-    const raw = (event.target as HTMLInputElement).value.trim();
-    const normalized = raw.startsWith('#') ? raw : `#${raw}`;
-    if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(normalized)) {
-      this.value.set(normalized);
+    const parsed = hexToHsv((event.target as HTMLInputElement).value);
+    if (parsed) {
+      this.hsv.set(parsed);
+      this.value.set(hsvToHex(parsed));
     }
   }
 
-  protected onNativeInput(event: Event): void {
-    this.value.set((event.target as HTMLInputElement).value);
+  // --- Saturation / value plane ---
+  protected onSvPointerDown(event: PointerEvent): void {
+    const plane = event.currentTarget as HTMLElement;
+    plane.setPointerCapture(event.pointerId);
+    this.svDragging = true;
+    this.updateSv(event, plane);
+  }
+
+  protected onSvPointerMove(event: PointerEvent): void {
+    if (this.svDragging) {
+      this.updateSv(event, event.currentTarget as HTMLElement);
+    }
+  }
+
+  protected onSvPointerUp(event: PointerEvent): void {
+    if (!this.svDragging) {
+      return;
+    }
+    const plane = event.currentTarget as HTMLElement;
+    if (plane.hasPointerCapture(event.pointerId)) {
+      plane.releasePointerCapture(event.pointerId);
+    }
+    this.svDragging = false;
+  }
+
+  protected onSvKeydown(event: KeyboardEvent): void {
+    const { s: saturation, v: value } = this.hsv();
+    const step = event.shiftKey ? 10 : 1;
+    let nextSaturation = saturation;
+    let nextValue = value;
+    switch (event.key) {
+      case 'ArrowRight':
+        nextSaturation = saturation + step;
+        break;
+      case 'ArrowLeft':
+        nextSaturation = saturation - step;
+        break;
+      case 'ArrowUp':
+        nextValue = value + step;
+        break;
+      case 'ArrowDown':
+        nextValue = value - step;
+        break;
+      default:
+        return;
+    }
+    event.preventDefault();
+    this.setHsv({
+      s: this.clampPct(nextSaturation),
+      v: this.clampPct(nextValue),
+    });
+  }
+
+  // --- Hue slider ---
+  protected onHuePointerDown(event: PointerEvent): void {
+    const track = event.currentTarget as HTMLElement;
+    track.setPointerCapture(event.pointerId);
+    this.hueDragging = true;
+    this.updateHue(event, track);
+  }
+
+  protected onHuePointerMove(event: PointerEvent): void {
+    if (this.hueDragging) {
+      this.updateHue(event, event.currentTarget as HTMLElement);
+    }
+  }
+
+  protected onHuePointerUp(event: PointerEvent): void {
+    if (!this.hueDragging) {
+      return;
+    }
+    const track = event.currentTarget as HTMLElement;
+    if (track.hasPointerCapture(event.pointerId)) {
+      track.releasePointerCapture(event.pointerId);
+    }
+    this.hueDragging = false;
+  }
+
+  protected onHueKeydown(event: KeyboardEvent): void {
+    const step = event.shiftKey ? 10 : 1;
+    let next = this.hsv().h;
+    switch (event.key) {
+      case 'ArrowRight':
+      case 'ArrowUp':
+        next += step;
+        break;
+      case 'ArrowLeft':
+      case 'ArrowDown':
+        next -= step;
+        break;
+      default:
+        return;
+    }
+    event.preventDefault();
+    this.setHsv({ h: (next + 360) % 360 });
   }
 
   private openPanel(): void {
     if (this.overlayRef) {
       return;
+    }
+    const parsed = hexToHsv(this.value());
+    if (parsed) {
+      this.hsv.set(parsed);
     }
     const positionStrategy = this.overlay
       .position()
@@ -182,16 +306,47 @@ export class ColorPickerComponent
     this.trigger().nativeElement.focus();
   }
 
-  private toSixDigit(hex: string): string {
-    const match = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(hex.trim());
-    if (!match) {
-      return '#000000';
-    }
-    const body = match[1];
-    if (body.length === 3) {
-      return `#${body[0]}${body[0]}${body[1]}${body[1]}${body[2]}${body[2]}`;
-    }
+  private setHsv(partial: Partial<Hsv>): void {
+    const next = { ...this.hsv(), ...partial };
+    this.hsv.set(next);
+    this.value.set(hsvToHex(next));
+  }
 
-    return `#${body}`;
+  private commitHex(hex: string): void {
+    const parsed = hexToHsv(hex);
+    if (parsed) {
+      this.hsv.set(parsed);
+      this.value.set(hsvToHex(parsed));
+    }
+  }
+
+  private updateSv(event: PointerEvent, plane: HTMLElement): void {
+    const rect = plane.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) {
+      return;
+    }
+    const saturation = this.clampPct(
+      ((event.clientX - rect.left) / rect.width) * 100,
+    );
+    const value = this.clampPct(
+      100 - ((event.clientY - rect.top) / rect.height) * 100,
+    );
+    this.setHsv({ s: Math.round(saturation), v: Math.round(value) });
+  }
+
+  private updateHue(event: PointerEvent, track: HTMLElement): void {
+    const rect = track.getBoundingClientRect();
+    if (rect.width === 0) {
+      return;
+    }
+    const ratio = Math.min(
+      1,
+      Math.max(0, (event.clientX - rect.left) / rect.width),
+    );
+    this.setHsv({ h: Math.round(ratio * 360) });
+  }
+
+  private clampPct(value: number): number {
+    return Math.min(100, Math.max(0, value));
   }
 }

@@ -10,12 +10,12 @@
 >
   <span
     class="swatch"
-    [style.background-color]="value()"
+    [style.background-color]="displayHex()"
   >
   </span>
 
   <span class="hex">
-    {{ value() }}
+    {{ displayHex() }}
   </span>
 
   <ds-icon
@@ -31,22 +31,52 @@
     role="dialog"
     [attr.aria-label]="ariaLabel()"
   >
-    <div class="preview-row">
-      <label class="native">
-        <span
-          class="preview"
-          [style.background-color]="sixDigitHex()"
-        >
-        </span>
+    <div
+      class="sv-plane"
+      tabindex="0"
+      aria-label="Saturation and brightness — use arrow keys to adjust"
+      [style.background-color]="hueColor()"
+      (pointerdown)="onSvPointerDown($event)"
+      (pointermove)="onSvPointerMove($event)"
+      (pointerup)="onSvPointerUp($event)"
+      (pointercancel)="onSvPointerUp($event)"
+      (keydown)="onSvKeydown($event)"
+    >
+      <span
+        class="sv-thumb"
+        [style.left.%]="svThumb().left"
+        [style.top.%]="svThumb().top"
+      >
+      </span>
+    </div>
 
-        <input
-          type="color"
-          class="native-input"
-          aria-label="Pick a colour"
-          [value]="sixDigitHex()"
-          (input)="onNativeInput($event)"
-        />
-      </label>
+    <div
+      class="hue-track"
+      role="slider"
+      tabindex="0"
+      aria-label="Hue"
+      [attr.aria-valuemin]="0"
+      [attr.aria-valuemax]="360"
+      [attr.aria-valuenow]="hsv().h"
+      (pointerdown)="onHuePointerDown($event)"
+      (pointermove)="onHuePointerMove($event)"
+      (pointerup)="onHuePointerUp($event)"
+      (pointercancel)="onHuePointerUp($event)"
+      (keydown)="onHueKeydown($event)"
+    >
+      <span
+        class="hue-thumb"
+        [style.left.%]="huePercent()"
+      >
+      </span>
+    </div>
+
+    <div class="fields">
+      <span
+        class="preview"
+        [style.background-color]="displayHex()"
+      >
+      </span>
 
       <input
         type="text"
@@ -54,7 +84,7 @@
         spellcheck="false"
         autocomplete="off"
         aria-label="Hex colour value"
-        [value]="value()"
+        [value]="displayHex()"
         (input)="onHexInput($event)"
       />
     </div>

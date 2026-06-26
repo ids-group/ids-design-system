@@ -4,8 +4,9 @@
   title="Color picker"
 >
   <span lede>
-    Inline colour swatch picker with optional preset palette for brand and label
-    colour selection.
+    Swatch trigger that opens a full picker overlay — a saturation/brightness
+    plane, a hue slider, a hex field and an optional preset palette. Backed by a
+    hex value; drag, type a hex, or pick a preset.
   </span>
 
   <!-- ============================================================ Default presets -->
@@ -14,8 +15,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    Omit <code>[presets]</code> to use the built-in palette. The selected hex
-    value is reflected below.
+    Click the swatch to open the picker: drag on the plane to set
+    saturation/brightness, drag the hue bar, or type a hex. Omit
+    <code>
+      [presets]
+    </code> to use the built-in palette. The selected hex value
+    is reflected below.
   </p>
 
   <div class="demo-panel">

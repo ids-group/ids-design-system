@@ -3,11 +3,12 @@
    the emulated _ngcontent attribute travels with the template content. */
 
 :host {
-  --_color-picker-swatch: var(--ds-color-picker-swatch, var(--color-picker-swatch));
-  --_color-picker-preview: var(
-    --ds-color-picker-preview,
-    var(--color-picker-preview)
-  );
+  --_cp-swatch: var(--ds-color-picker-swatch, var(--color-picker-swatch));
+  --_cp-preview: var(--ds-color-picker-preview, var(--color-picker-preview));
+  --_cp-panel-w: var(--ds-color-picker-panel-w, var(--color-picker-panel-w));
+  --_cp-sv-h: var(--ds-color-picker-sv-h, var(--color-picker-sv-h));
+  --_cp-hue-h: var(--ds-color-picker-hue-h, var(--color-picker-hue-h));
+  --_cp-thumb: var(--ds-color-picker-thumb, var(--color-picker-thumb));
 
   display: inline-block;
 }
@@ -45,8 +46,8 @@
 }
 
 .trigger .swatch {
-  width: var(--_color-picker-swatch);
-  height: var(--_color-picker-swatch);
+  width: var(--_cp-swatch);
+  height: var(--_cp-swatch);
   border-radius: var(--radius-sm);
   border: var(--border-width-default) solid var(--border-default);
   flex: none;
@@ -73,8 +74,8 @@
 .panel {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  width: 240px;
+  gap: var(--space-3);
+  width: var(--_cp-panel-w);
   padding: var(--space-4);
   background-color: var(--surface-overlay);
   border: var(--border-width-default) solid var(--border-default);
@@ -82,35 +83,103 @@
   box-shadow: var(--shadow-popover);
 }
 
-.preview-row {
+/* Saturation (x) × brightness (y) plane. The element fill is the pure hue;
+   the two overlays add the white→clear (saturation) and clear→black (value)
+   gradients — the canonical HSV square. */
+.sv-plane {
+  position: relative;
+  width: 100%;
+  height: var(--_cp-sv-h);
+  border-radius: var(--radius-md);
+  cursor: crosshair;
+  touch-action: none;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, #fff, rgb(255 255 255 / 0%));
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, #000, rgb(0 0 0 / 0%));
+  }
+
+  &:focus-visible {
+    outline: var(--border-width-strong) solid var(--focus-ring-color, currentColor);
+    outline-offset: 2px;
+  }
+}
+
+.sv-thumb {
+  position: absolute;
+  z-index: 1;
+  width: var(--_cp-thumb);
+  height: var(--_cp-thumb);
+  transform: translate(-50%, -50%);
+  border-radius: var(--radius-pill);
+  border: var(--border-width-strong) solid #fff;
+  box-shadow:
+    0 0 0 var(--border-width-default) rgb(0 0 0 / 35%),
+    var(--shadow-card);
+  pointer-events: none;
+}
+
+.hue-track {
+  position: relative;
+  width: 100%;
+  height: var(--_cp-hue-h);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  touch-action: none;
+  background: linear-gradient(
+    to right,
+    #f00 0%,
+    #ff0 17%,
+    #0f0 33%,
+    #0ff 50%,
+    #00f 67%,
+    #f0f 83%,
+    #f00 100%
+  );
+
+  &:focus-visible {
+    outline: var(--border-width-strong) solid var(--focus-ring-color, currentColor);
+    outline-offset: 2px;
+  }
+}
+
+.hue-thumb {
+  position: absolute;
+  top: 50%;
+  width: var(--_cp-thumb);
+  height: var(--_cp-thumb);
+  transform: translate(-50%, -50%);
+  border-radius: var(--radius-pill);
+  background-color: var(--surface-default);
+  border: var(--border-width-strong) solid #fff;
+  box-shadow:
+    0 0 0 var(--border-width-default) rgb(0 0 0 / 35%),
+    var(--shadow-card);
+  pointer-events: none;
+}
+
+.fields {
   display: flex;
   align-items: center;
   gap: var(--space-3);
 }
 
-.native {
-  position: relative;
-  flex: none;
-  width: var(--_color-picker-preview);
-  height: var(--_color-picker-preview);
-  cursor: pointer;
-}
-
 .preview {
-  display: block;
-  width: 100%;
-  height: 100%;
+  flex: none;
+  width: var(--_cp-preview);
+  height: var(--_cp-preview);
   border-radius: var(--radius-md);
   border: var(--border-width-default) solid var(--border-default);
-}
-
-.native-input {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
 }
 
 .hex-input {
@@ -141,8 +210,8 @@
 }
 
 .preset {
-  width: var(--_color-picker-swatch);
-  height: var(--_color-picker-swatch);
+  width: var(--_cp-swatch);
+  height: var(--_cp-swatch);
   padding: 0;
   border-radius: var(--radius-sm);
   border: var(--border-width-default) solid var(--border-default);

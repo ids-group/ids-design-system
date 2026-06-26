@@ -404,6 +404,10 @@
   /* Color picker */
   --color-picker-swatch:  var(--space-6);    /* 24px preset swatch */
   --color-picker-preview: var(--space-10);   /* 40px panel preview */
+  --color-picker-panel-w: 240px;             /* picker overlay width */
+  --color-picker-sv-h:    160px;             /* saturation/value plane height */
+  --color-picker-hue-h:   var(--space-3);    /* 12px hue slider height */
+  --color-picker-thumb:   14px;              /* draggable thumb diameter */
 
   /* ============================================================
      3b · COMPONENT-SCOPED dimensions (Phase 4 additions)
