@@ -1,0 +1,103 @@
+:host {
+  display: block;
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: var(--modal-w-sm);
+  max-width: calc(100vw - var(--space-8));
+  padding: var(--space-6);
+  background-color: var(--surface-overlay);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-modal);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.icon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--space-10);
+  height: var(--space-10);
+  border-radius: var(--radius-pill);
+  background-color: var(--primary-subtitle);
+  color: var(--primary);
+
+  &.danger {
+    background-color: var(--error-subtitle);
+    color: var(--error);
+  }
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  color: var(--text-primary);
+  font:
+    var(--font-weight-bold) var(--font-size-h5) / var(--line-height-tight)
+    var(--font-heading);
+}
+
+.message {
+  margin: 0;
+  color: var(--text-secondary);
+  font:
+    var(--font-weight-regular) var(--font-size-s) / var(--line-height-base)
+    var(--font-sans);
+}
+
+.confirm-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1-5);
+}
+
+.confirm-hint {
+  color: var(--text-secondary);
+  font:
+    var(--font-weight-regular) var(--font-size-s) / var(--line-height-base)
+    var(--font-sans);
+
+  b {
+    color: var(--text-primary);
+    font-weight: var(--font-weight-semibold);
+  }
+}
+
+.confirm-input {
+  height: var(--hit-cozy);
+  padding: 0 var(--field-pad-x);
+  background-color: var(--surface-default);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font:
+    var(--font-weight-regular) var(--font-size-s) / var(--line-height-base)
+    var(--font-sans);
+
+  &:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: var(--focus-field);
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}

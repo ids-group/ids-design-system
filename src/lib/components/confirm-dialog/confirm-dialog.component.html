@@ -1,0 +1,75 @@
+<div
+  class="dialog"
+  role="alertdialog"
+  aria-modal="true"
+  cdkTrapFocus
+  [cdkTrapFocusAutoCapture]="true"
+  [attr.aria-labelledby]="titleId"
+  [attr.aria-describedby]="options.message ? messageId : null"
+>
+  <div class="head">
+    @if (options.icon; as icon) {
+      <span
+        class="icon-badge"
+        [class.danger]="tone === 'danger'"
+      >
+        <ds-icon
+          [name]="icon"
+          [size]="20"
+        />
+      </span>
+    }
+
+    <div class="text">
+      <h2
+        class="title"
+        [id]="titleId"
+      >
+        {{ options.title }}
+      </h2>
+
+      @if (options.message) {
+        <p
+          class="message"
+          [id]="messageId"
+        >
+          {{ options.message }}
+        </p>
+      }
+    </div>
+  </div>
+
+  @if (options.typeToConfirm; as phrase) {
+    <label class="confirm-field">
+      <span class="confirm-hint">
+        Type <b>{{ phrase }}</b> to confirm
+      </span>
+
+      <input
+        type="text"
+        class="confirm-input"
+        autocomplete="off"
+        spellcheck="false"
+        [value]="typed()"
+        (input)="onType($event)"
+      />
+    </label>
+  }
+
+  <div class="actions">
+    <ds-button
+      variant="outline"
+      (pressed)="cancel()"
+    >
+      {{ options.cancelLabel ?? 'Cancel' }}
+    </ds-button>
+
+    <ds-button
+      [variant]="confirmVariant"
+      [disabled]="confirmDisabled()"
+      (pressed)="confirm()"
+    >
+      {{ options.confirmLabel ?? 'Confirm' }}
+    </ds-button>
+  </div>
+</div>
