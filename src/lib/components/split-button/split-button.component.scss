@@ -1,0 +1,82 @@
+:host {
+  display: inline-flex;
+}
+
+.main,
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--hit-cozy);
+  border: var(--border-width-default) solid transparent;
+  background: transparent;
+  font:
+    var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat)
+    var(--font-sans);
+  cursor: pointer;
+  position: relative;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    z-index: var(--btn-group-focus-z);
+  }
+
+  &:disabled {
+    background: var(--surface-muted);
+    border-color: var(--border-divider);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.main {
+  padding: 0 var(--space-4);
+  border-top-left-radius: var(--radius-md);
+  border-bottom-left-radius: var(--radius-md);
+}
+
+.toggle {
+  padding: 0 var(--space-2);
+  margin-left: var(--btn-group-overlap);
+  border-top-right-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
+}
+
+.chevron {
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+:host(.open) .chevron {
+  transform: rotate(180deg);
+}
+
+/* Primary (filled) variant */
+:host(.primary) .main:not(:disabled),
+:host(.primary) .toggle:not(:disabled) {
+  background: var(--primary);
+  color: var(--text-on-primary);
+}
+:host(.primary) .main:not(:disabled):hover,
+:host(.primary) .toggle:not(:disabled):hover {
+  background: var(--primary-strong);
+}
+:host(.primary) .toggle:not(:disabled) {
+  border-left: var(--border-width-default) solid var(--btn-split-divider);
+}
+
+/* Outline variant — the -1px overlap collapses adjacent borders into one divider */
+:host(.outline) .main:not(:disabled),
+:host(.outline) .toggle:not(:disabled) {
+  background: var(--surface-default);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+:host(.outline) .main:not(:disabled):hover,
+:host(.outline) .toggle:not(:disabled):hover {
+  background: var(--surface-secondary);
+}
