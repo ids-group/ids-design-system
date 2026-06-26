@@ -87,23 +87,22 @@
 </head>
 <body>
   <h1>DS — карта бэклога</h1>
-  <p class="sub">Что <b>осталось закрыть</b> — по одному пункту на карточку (источник: <span class="tag">docs/todo.md</span>). Открытое вверху и развёрнуто; сделанное свёрнуто внизу. Обновлено 2026-06-24.</p>
+  <p class="sub">Что <b>осталось закрыть</b> — по одному пункту на карточку (источник: <span class="tag">docs/todo.md</span>). Открытое вверху и развёрнуто; сделанное свёрнуто внизу. Обновлено 2026-06-26.</p>
 
   <div class="summary">
-    <div class="stat you"><div class="n">6</div><div class="l">Ждёт твоего решения</div></div>
-    <div class="stat a11y"><div class="n">15</div><div class="l">A11y (P0–P2)</div></div>
-    <div class="stat untouched"><div class="n">17</div><div class="l">Компоненты + foundations</div></div>
-    <div class="stat untouched"><div class="n">17</div><div class="l">DS-docs / аним / field / PIN-475</div></div>
+    <div class="stat you"><div class="n">5</div><div class="l">Ждёт твоего решения</div></div>
+    <div class="stat a11y"><div class="n">14</div><div class="l">A11y (P0–P2)</div></div>
+    <div class="stat untouched"><div class="n">16</div><div class="l">Компоненты + foundations</div></div>
+    <div class="stat untouched"><div class="n">24</div><div class="l">Motion / DS-docs / field / PIN-475</div></div>
     <div class="stat raw"><div class="n">11</div><div class="l">Raw / frozen / мелочь / lint</div></div>
-    <div class="stat done"><div class="n">26</div><div class="l">Сделано (свёрнуто)</div></div>
+    <div class="stat done"><div class="n">31</div><div class="l">Сделано (свёрнуто)</div></div>
   </div>
 
   <!-- ============ NEEDS YOU ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>⏳ Ждёт твоего решения</h2><span class="count c-you">6</span><span class="why">Не начато — это твой вход.</span></div>
+    <div class="lane-head"><h2>⏳ Ждёт твоего решения</h2><span class="count c-you">5</span><span class="why">Не начато — это твой вход.</span></div>
     <div class="cards">
-      <div class="card you"><span class="chip ch-you">NEXT</span><div class="t">Button: variant → color × fill</div><p class="d">Прототип с перекраской и 28 комбо готов. Ты ставишь вердикты по комбо → я пишу спек.</p><div class="meta">button-variant-tone.html</div></div>
-      <div class="card you"><span class="chip ch-you">с color×fill</span><div class="t">Button: схлопнуть дубль размеров</div><p class="d">`s/m/l` (24/32/40) ≡ `sm/md/lg` (32/40/48), дефолт legacy `l`. → один ярус `sm/md/lg`, дефолт `md`. В том же заходе.</p></div>
+      <div class="card you"><span class="chip ch-you">NEXT</span><div class="t">Button: variant → color × fill</div><p class="d">Прототип с перекраской и 28 комбо готов. Ты ставишь вердикты по комбо → я пишу спек. (Размеры `sm/md/lg` уже схлопнуты отдельно — done.)</p><div class="meta">button-variant-tone.html</div></div>
       <div class="card you"><span class="chip ch-you">парный с #1</span><div class="t">ds-color — scoped accent</div><p class="d">Перекраска акцента через `--accent-*` indirection, 4 уровня. Ждёт решения по color×fill.</p></div>
       <div class="card you"><span class="chip ch-you">research готов</span><div class="t">Аудит: компонент vs CSS-класс</div><p class="d">8 кандидатов; таблица собрана. Per-component вердикт за тобой.</p></div>
       <div class="card you"><span class="chip ch-you">решить позже</span><div class="t">Recipe vs hand-tuned цвета</div><p class="d">Если калибровка заменит формулу hover/pressed ручными пиками — дефолты кнопок разойдутся с темой.</p></div>
@@ -113,7 +112,7 @@
 
   <!-- ============ A11Y ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>♿ A11y — по компонентам и findings</h2><span class="count c-a11y">15</span><span class="why">a11y-ветка покрыла ~29 компонентов; ниже — непокрытое + открытые находки ревью.</span></div>
+    <div class="lane-head"><h2>♿ A11y — по компонентам и findings</h2><span class="count c-a11y">14</span><span class="why">a11y-ветка покрыла ~29 компонентов; ниже — непокрытое + открытые находки ревью.</span></div>
     <div class="cards">
       <div class="card a11y"><span class="chip ch-p0">P0</span><div class="t">switch — role=switch</div><p class="d">Сейчас `type=checkbox` → читается как чекбокс. Добавить `role="switch"` + `aria-checked` + `label`/`ariaLabel`.</p></div>
       <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">checkbox — label + ARIA</div><p class="d">Голый `<input>`: нет label-ассоциации/`aria-label`/`aria-invalid`/`required`. Зеркалить `input.component.ts` + `booleanAttribute`.</p></div>
@@ -125,7 +124,6 @@
       <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">combobox trigger open-only</div><p class="d">Клик по триггеру/шеврону не закрывает открытую панель (`togglePanel` есть, триггер только открывает).</p></div>
       <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">listbox не закрывается на Tab</div><p class="d">combobox/select/dropdown: оверлей висит, фокус уходит за него. Escape обработан, Tab — нет.</p></div>
       <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">scroll-lock без ref-count</div><p class="d">modal/drawer: при двух оверлеях закрытие первого возвращает скролл под вторым (оба сбрасывают `body.overflow`).</p></div>
-      <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">accordion aria-controls висит</div><p class="d">`role=region` внутри `@if(expanded())` → заголовок ссылается на несуществующий id когда свёрнут.</p></div>
       <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">listbox options в tab-order</div><p class="d">select/dropdown: option-кнопкам нужен `tabindex="-1"` под roving/active-descendant.</p></div>
       <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">combobox «No matches» selectable</div><p class="d">«Нет совпадений» — это `role=option`; должно быть `role=status`/презентационным.</p></div>
       <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">date-picker grid-семантика + focus-баг</div><p class="d">Нет `role=grid` (используется `aria-pressed`); `setTimeout`-фокус может стрелять по уже снятому оверлею.</p></div>
@@ -148,17 +146,16 @@
 
   <!-- ============ FOUNDATIONS / TOKENS ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🏗 Foundations / токены</h2><span class="count c-track">11</span><span class="why">Из gap-analysis + презентаций.</span></div>
+    <div class="lane-head"><h2>🏗 Foundations / токены</h2><span class="count c-track">10</span><span class="why">Из gap-analysis + презентаций.</span></div>
     <div class="cards">
       <div class="card track"><span class="chip ch-big">BIGGEST GAP</span><div class="t">Dark theme</div><p class="d">`themes/dark/{_palette,_theme}.scss`. Архитектура готова, ничего не отгружено.</p></div>
       <div class="card track"><div class="t">Chart-токены light-only</div><p class="d">axis/grid/tooltip обернуть в flippable семантические роли для тёмной темы.</p></div>
       <div class="card track"><div class="t">Semantic spacing aliases</div><p class="d">`--space-inset/stack/inline` поверх сырых `--space-*`.</p></div>
       <div class="card track"><div class="t">Primary-CTA token layer</div><p class="d">Opt-in `--primary-cta`/`-hover`/`-active`/`-on` (дефолт = `--primary*`); `.primary`-кнопка читает их — AA-safe при ребренде на светлый `--primary`.</p></div>
-      <div class="card track"><div class="t">Breakpoints в @media</div><p class="d">`--bp-*` — CSS-переменные (не работают в media-queries); добавить SCSS `$bp-*`.</p></div>
-      <div class="card track"><span class="chip ch-big">BUG</span><div class="t">prefers-reduced-motion</div><p class="d">Зануляет loop-длительности → спиннеры/скелетоны невидимы. Замедлять, не останавливать.</p></div>
+      <div class="card track"><span class="chip ch-oos">ждёт вердикта</span><div class="t">Breakpoints @media — миграция</div><p class="d">Модуль `_breakpoints.scss` (`$bp-*` + `up()/down()`) ✅ отгружен (06-25). Осталось мигрировать 6 хардкод-`@media` на алиасы — но `page-grid` `641/1025` («+1») vs токен `640/1024` (сдвиг 1px), а `page-header 720` / `layout-utils 1100/820` off-scale. Оставлены нетронутыми (non-breaking).</p><div class="meta">bp-aliases.html</div></div>
       <div class="card track"><span class="chip ch-oos">MED</span><div class="t">Foundations MED (кластер)</div><p class="d">high-contrast/forced-colors тема · density (шрифты/иконки/pad) · fluid type (`clamp()`) · motion-пресеты · RTL/logical-properties.</p></div>
       <div class="card track"><div class="t">.ds-interactive — контракт состояний</div><p class="d">Реализовать `styles/_interaction.scss`: класс `.ds-interactive` + пресеты `.tint/.accent-ink/.inked/.surface-fx/.into-light` + `--state-step-*` токены; убрать per-component `--ds-*-bg-hover/-active` и локальный color-mix; миграция интерактивных. Зависит от вердиктов B1–B5.</p><div class="meta">interaction-formula.html</div></div>
-      <div class="card track"><div class="t">Палитра — остаточная чистка</div><p class="d">Завести `--static-white` (on-роли переживут тёмную тему); убрать прямые чтения `--neutral-*` из 3-го слоя (scrollbar читает `--neutral-300/400` напрямую). Гибридный нейминг cool-gray/brand-gray/neutral-slot уже внедрён.</p><div class="meta">palette-naming.html</div></div>
+      <div class="card track"><div class="t">Палитра — остаточная чистка</div><p class="d">Завести `--static-white` (on-роли переживут тёмную тему) — ещё нет. Гибридный нейминг cool-gray/brand-gray/neutral-slot уже внедрён. Прямые чтения `--neutral-*` в scrollbar ✅ убраны (теперь `--scrollbar-thumb*`).</p><div class="meta">palette-naming.html</div></div>
       <div class="card track"><div class="t">Цвет-движок: один источник</div><p class="d">Схлопнуть `--primary` + `--primary-h/s/l` в ОДИН токен; оттенки/halo выводить через `color-mix()` + relative color (`hsl(from …)`), сохраняя ручную калибровку рампы. Убирает дубль (из-за него consumer-override `--primary-h/s/l` красит только halo, не заливку) и разблокирует `--accent` indirection.</p><div class="meta">color-engine-relative.html</div></div>
       <div class="card track"><div class="t">Global `focus type` — тема-вайд переключатель</div><p class="d">Сейчас 2 фикс-семейства: `--focus-field` (мягкое 3px halo — поля) и `--focus-ring` (чёткий 2px ring — действия/нав). Дать бренду/приложению выбрать СТИЛЬ фокуса в одном месте (токен / `[data-focus]` на `:root`) из 4: field · ring · B offset-outline (выживает в forced-colors) · C contiguous primary edge. Откр.: outline-режимы нельзя выразить как `box-shadow`-токен → нужен outline-путь / shared mixin. Парный с forced-colors-темой.</p><div class="meta">pin-475-fields.html</div></div>
     </div>
@@ -175,12 +172,19 @@
     </div>
   </div>
 
-  <!-- ============ ANIMATIONS ============ -->
+  <!-- ============ MOTION SYSTEM ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🎬 Анимации</h2><span class="count c-track">3</span><span class="why">Honor prefers-reduced-motion.</span></div>
+    <div class="lane-head"><h2>🎬 Motion system</h2><span class="count c-track">10</span><span class="why">Аудит 2026-06-26 (4 агента vs код). Фундамент здоров: 0 хардкод-длительностей/изингов, reduced-motion занулён глобально. Проблема — широта, не хаос: многие состояния снапают. Reference-паттерн уже есть (toast, bottom-sheet close).</span></div>
     <div class="cards">
-      <div class="card track"><div class="t">Accordion open/close</div><p class="d">Анимировать expand/collapse (height/opacity). Toggleable (`[animated]` default-on / respect reduced-motion). Сейчас снап.</p></div>
-      <div class="card track"><div class="t">Bottom-sheet close</div><p class="d">Анимировать slide-down + scrim fade на закрытии (open уже анимируется; close резкий).</p></div>
+      <div class="card track"><span class="chip ch-p1">HIGH</span><div class="t">Accordion open/close</div><p class="d">Анимировать expand/collapse. ⚠ `.body` УЖЕ имеет `transition: height` с `0↔auto`, но `auto` не интерполируется → всё равно снап. Нужен трюк `grid-template-rows: 0fr→1fr` (или JS-замер). Toggleable / respect reduced-motion. Не однострочник.</p><div class="meta">accordion-item.component.scss</div></div>
+      <div class="card track"><span class="chip ch-p1">A · HIGH</span><div class="t">Overlay LEAVE — enter есть, close снап</div><p class="d">Паттерн animate-then-remove (`.closing` + leave-keyframes + `animationend`). modal (scrim fade-in есть, карточка без enter, DOM убирается мгновенно), drawer (slide-in есть, close снап), popover (нет enter/leave вообще) — HIGH. tooltip-panel, banner — MED. Вынести общий `DsOverlayLeave`.</p><div class="meta">modal/drawer/popover/tooltip/banner</div></div>
+      <div class="card track"><span class="chip ch-p1">B · HIGH</span><div class="t">Floating-панели open/close снап</div><p class="d">CDK-overlay порталы появляются/исчезают мгновенно. Enter (fade+slide, `--ease-decelerate`) / leave (`--ease-accelerate`): select · dropdown · combobox · date-picker (календарь). Шеврон уже крутится.</p></div>
+      <div class="card track"><span class="chip ch-p1">D · HIGH</span><div class="t">Заливки selection-состояний снап</div><p class="d">Самые частые микровзаимодействия. checkbox (галка `::after` мгновенно → scale 0.8→1 + opacity), radio (точка снап + `border-width` дёргается → inset box-shadow), switch (thumb `--duration-base` vs bg `--duration-fast` рассинхрон), tabs-pills (bg снап + индикатор-подчёркивание прыгает — нужен sliding indicator), pagination (нет transitions вообще).</p></div>
+      <div class="card track"><span class="chip ch-p1">E · HIGH</span><div class="t">Expand/collapse & размеры контейнеров</div><p class="d">sidenav — ширина collapse/expand снап (`:host.collapsed` без transition) → `transition: width`. sidenav-group header hover bg, sidenav-item rail-accent box-shadow — MED. accordion — см. отдельную карточку.</p><div class="meta">sidenav*.component.scss</div></div>
+      <div class="card track"><span class="chip ch-p1">F · HIGH</span><div class="t">Поверхности без hover/state-transition</div><p class="d">dropzone (drag-over border/bg + remove-btn), table (row hover, sort-icon, header-button, loading-overlay), date-picker (trigger/day/nav, смена месяца) — HIGH. empty-state loading-overlay — MED-HIGH. stepper, number-stepper, input/textarea/search clear-кнопки, badge/stat/topbar — MED/LOW.</p></div>
+      <div class="card track"><span class="chip ch-p2">C · MED</span><div class="t">Подсветка опции listbox снап</div><p class="d">`.option:hover`/`.is-active` bg без transition (общий `_dropdown-overlay.scss` для select/dropdown/combobox + combobox-панель). Добавить bg `transition` — один общий партиал чинит три компонента.</p><div class="meta">_dropdown-overlay.scss</div></div>
+      <div class="card track"><span class="chip ch-you">подтвердить</span><div class="t">Решения — НЕ «чинить» автоматом</div><p class="d">button/icon-button press `scale` на `--duration-instant` (80ms) — снапи ПО ДИЗАЙНУ (отгружено 06-25); аудит флагнул «слишком быстро», но это намеренно — подтвердить до правок. button-toggle `aria-pressed` bg/color снап — реальный гэп, если тоггл используется.</p></div>
+      <div class="card track"><span class="chip ch-oos">решить</span><div class="t">Предложенная система рецептов</div><p class="d">(1) стандарт state-change `transition: <props> --duration-fast --ease-standard`; (2) overlay enter `--ease-decelerate` / leave `--ease-accelerate` через общий `DsOverlayLeave`; (3) expand/collapse grid-rows `0fr↔1fr` на `--duration-base`; (4) токен-driven (reduced-motion уже глобально). + общий SCSS-миксин `ds.transition(<props>)`. Дек собран.</p><div class="meta">motion-system.html</div></div>
       <div class="card track"><div class="t">Skeleton — page-wide shimmer sync</div><p class="d">Все `ds-skeleton` должны делить один свип по странице. Замысел был `mask-attachment: fixed`, но свойство мёртвое (no-op во всех браузерах) → найти реальное вьюпорт-якорение. Сейчас держится на общем `--skeleton-shimmer-x`.</p><div class="meta">skeleton.component.scss</div></div>
     </div>
   </div>
@@ -297,10 +301,22 @@
     </div>
   </details>
 
+  <details class="done-panel">
+    <summary class="lane-head"><h2>✅ Сделано · motion / foundations (06-25/26)</h2><span class="count c-done">5</span><span class="toggle"></span><span class="why">Свёрнуто. Из последнего захода.</span></summary>
+    <div class="cards">
+      <div class="card done"><div class="t">Button: размеры → sm/md/lg</div><p class="d">Схлопнут дубль-ярус: `s/m/l` ≡ `sm/md/lg` → один `sm|md|lg` (32/40/48), дефолт `md`; legacy `s/m/l` снесены (48 usages, 13 файлов). strictTemplates чист, CHANGELOG breaking. Сделано ОТДЕЛЬНО, не в color×fill заходе.</p><div class="meta">b801f2f · 2026-06-25</div></div>
+      <div class="card done"><div class="t">Bottom-sheet close animation</div><p class="d">`rendered`/`closing` сигналы + `ds-sheet-down`/`fade-out` (`--ease-accelerate`), teardown на `animationend`. Анимирует на любой `open→false`. reduced-motion бесплатно. Первый animate-then-remove паттерн в либе (reference для Motion-аудита).</p><div class="meta">69c9707 · 2026-06-25</div></div>
+      <div class="card done"><div class="t">Breakpoints — `_breakpoints.scss` модуль</div><p class="d">`$breakpoints` map → `--bp-*` в `:root` + compile-time `$bp-*` алиасы и `up()/down()` миксины для `@media`. Дубль `--bp-*` из `_tokens` убран. Первый Sass-модуль в стилях либы. (Миграция 6 хардкод-`@media` — открыта, ждёт вердикта.)</p><div class="meta">902c4b1 · 2026-06-25</div></div>
+      <div class="card done"><div class="t">BUG: prefers-reduced-motion</div><p class="d">Универсальный `*{animation-duration:0!important}` занулял loop-токены → спиннеры/прогресс замерзали. Снят blanket-kill, оставлен только `transition-duration:0!important`; loop-токены замедлены (1400/2800ms), не остановлены.</p><div class="meta">eb385bf · 2026-06-25</div></div>
+      <div class="card done"><div class="t">Button press animation</div><p class="d">press `transform: scale` на `--duration-instant` (80ms) — снапи по дизайну. (Motion-аудит флагнул «слишком быстро» — это намеренно, см. карточку «подтвердить».)</p><div class="meta">7d6e8f0 · 2026-06-25</div></div>
+    </div>
+  </details>
+
   <p class="foot">
     Источники: <span class="tag">docs/todo.md</span> · <span class="tag">DS-HANDOFF.md</span> (7/7 портировано) · история <span class="tag">4b9e0c2…19ef859</span>.
     Снято как сделанное: pinkmoon token-миграция, MIT-релиценз.
     starter вынесен в <span class="tag">ai-sdlc-prototype</span> (2026-06-23) — на доске остались только DS-гэпы, что он вскрыл (CVA / data-grid / confirm).
+    Новое 2026-06-26: <b>Motion-system аудит</b> (findings A–G + рецепты, дек <span class="tag">motion-system.html</span>). Закрыто 06-25/26: размеры кнопок, bottom-sheet close, breakpoints-модуль, reduced-motion.
     Доска — навигация; полные обоснования — в todo.md.
   </p>
 </body>
