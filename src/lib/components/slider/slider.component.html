@@ -1,0 +1,31 @@
+<div
+  #track
+  class="track"
+  (pointerdown)="onTrackPointerDown($event)"
+  (pointermove)="onTrackPointerMove($event)"
+  (pointerup)="onTrackPointerUp($event)"
+>
+  <span
+    class="fill"
+    [style.left.%]="fill().left"
+    [style.width.%]="fill().width"
+  >
+  </span>
+
+  @for (thumbValue of thumbValues(); track $index; let i = $index) {
+    <span
+      class="thumb"
+      role="slider"
+      [attr.tabindex]="isDisabled() ? -1 : 0"
+      [style.left.%]="percent(thumbValue)"
+      [attr.aria-valuemin]="thumbMin(i)"
+      [attr.aria-valuemax]="thumbMax(i)"
+      [attr.aria-valuenow]="thumbValue"
+      [attr.aria-orientation]="'horizontal'"
+      [attr.aria-label]="ariaLabel()"
+      [attr.aria-disabled]="isDisabled() ? 'true' : null"
+      (keydown)="onThumbKeydown($event, i)"
+    >
+    </span>
+  }
+</div>

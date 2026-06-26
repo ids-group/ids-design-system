@@ -1,0 +1,63 @@
+/* Public --ds-slider-* are read with fallbacks, never declared. */
+
+:host {
+  --_slider-track-h: var(--ds-slider-track-h, var(--slider-track-h));
+  --_slider-thumb-size: var(--ds-slider-thumb-size, var(--slider-thumb-size));
+  --_slider-thumb-bw: var(--ds-slider-thumb-bw, var(--slider-thumb-bw));
+
+  display: block;
+
+  /* Vertical room so the thumb (taller than the track) is not clipped. */
+  padding-block: calc((var(--_slider-thumb-size) - var(--_slider-track-h)) / 2);
+}
+
+.track {
+  position: relative;
+  height: var(--_slider-track-h);
+  background-color: var(--surface-muted);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  touch-action: none;
+}
+
+.fill {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background-color: var(--primary);
+  border-radius: var(--radius-pill);
+}
+
+.thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--_slider-thumb-size);
+  height: var(--_slider-thumb-size);
+  border-radius: var(--radius-pill);
+  background-color: var(--surface-default);
+  border: var(--_slider-thumb-bw) solid var(--primary);
+  box-shadow: var(--shadow-card);
+  cursor: grab;
+  touch-action: none;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+:host(.disabled) .track {
+  cursor: not-allowed;
+}
+:host(.disabled) .fill {
+  background-color: var(--border-strong);
+}
+:host(.disabled) .thumb {
+  border-color: var(--border-strong);
+  cursor: not-allowed;
+}
