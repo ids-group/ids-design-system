@@ -1,0 +1,16 @@
+<ng-content></ng-content>
+
+@if (loading()) {
+  <div
+    class="scrim"
+    [class.blur]="blur()"
+  >
+    <ds-spinner [size]="spinnerSize()" />
+
+    @if (label()) {
+      <span class="label">
+        {{ label() }}
+      </span>
+    }
+  </div>
+}

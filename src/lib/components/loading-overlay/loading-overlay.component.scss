@@ -1,0 +1,41 @@
+:host {
+  display: block;
+  position: relative;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: var(--layer-raised);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  background-color: color-mix(
+    in srgb,
+    var(--surface-canvas) calc(var(--opacity-scrim) * 100%),
+    transparent
+  );
+  animation: ds-loading-overlay-in var(--duration-fast) var(--ease-standard);
+}
+
+.scrim.blur {
+  backdrop-filter: blur(var(--blur-sm));
+}
+
+.label {
+  color: var(--text-secondary);
+  font:
+    var(--font-weight-medium) var(--font-size-s) / var(--line-height-base)
+    var(--font-sans);
+}
+
+@keyframes ds-loading-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
