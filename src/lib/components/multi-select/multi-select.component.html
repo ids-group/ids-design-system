@@ -1,8 +1,8 @@
 <div
   #trigger
   class="field"
-  role="combobox"
   aria-haspopup="listbox"
+  [attr.role]="open() ? 'group' : 'combobox'"
   [class.open]="open()"
   [class.invalid]="invalid()"
   [class.disabled]="isDisabled()"

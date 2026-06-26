@@ -1,5 +1,6 @@
 import {
   Component,
+  DestroyRef,
   ElementRef,
   TemplateRef,
   ViewContainerRef,
@@ -64,6 +65,15 @@ export class SplitButtonComponent implements DsOverlayCloseRef {
   protected readonly open = signal(false);
 
   private overlayRef: OverlayRef | null = null;
+  private focusTimer: ReturnType<typeof setTimeout> | null = null;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => {
+      clearTimeout(this.focusTimer ?? undefined);
+      this.overlayRef?.dispose();
+      this.overlayRef = null;
+    });
+  }
 
   protected toggle(): void {
     if (this.disabled()) {
@@ -145,6 +155,8 @@ export class SplitButtonComponent implements DsOverlayCloseRef {
     if (!this.overlayRef) {
       return;
     }
+    clearTimeout(this.focusTimer ?? undefined);
+    this.focusTimer = null;
     disposeWithLeave(this.overlayRef);
     this.overlayRef = null;
     this.open.set(false);
@@ -153,7 +165,8 @@ export class SplitButtonComponent implements DsOverlayCloseRef {
 
   private focusFirstItem(): void {
     const pane = this.overlayRef?.overlayElement;
-    setTimeout(() => {
+    this.focusTimer = setTimeout(() => {
+      this.focusTimer = null;
       pane?.querySelector<HTMLButtonElement>('[role="menuitem"]')?.focus();
     });
   }

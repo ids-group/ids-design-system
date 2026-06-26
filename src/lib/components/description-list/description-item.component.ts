@@ -17,6 +17,7 @@ import { DescriptionListComponent } from './description-list.component';
   styleUrl: './description-item.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   host: {
+    role: 'group',
     '[class.stacked]': 'stacked()',
   },
 })

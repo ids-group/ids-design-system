@@ -105,13 +105,31 @@ export class SliderComponent extends DsControlValueAccessor<SliderValue> {
     this.updateFromClientX(event.clientX);
   }
 
+  // Bound to both pointerup and pointercancel — touch interventions (scroll
+  // takeover, stylus lift) fire pointercancel, and without it the drag state
+  // would leak and keep moving the thumb with no pointer down.
   protected onTrackPointerUp(event: PointerEvent): void {
     if (this.dragging < 0) {
       return;
     }
-    this.track().nativeElement.releasePointerCapture(event.pointerId);
+    const track = this.track().nativeElement;
+    if (track.hasPointerCapture(event.pointerId)) {
+      track.releasePointerCapture(event.pointerId);
+    }
     this.dragging = -1;
     this.markTouched();
+  }
+
+  protected thumbAriaLabel(index: number): string | null {
+    const base = this.ariaLabel();
+    if (!this.range()) {
+      return base;
+    }
+    if (index === 0) {
+      return base ? `${base} minimum` : 'Minimum';
+    }
+
+    return base ? `${base} maximum` : 'Maximum';
   }
 
   protected onThumbKeydown(event: KeyboardEvent, index: number): void {

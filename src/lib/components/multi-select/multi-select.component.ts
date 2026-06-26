@@ -1,5 +1,6 @@
 import {
   Component,
+  DestroyRef,
   ElementRef,
   TemplateRef,
   ViewContainerRef,
@@ -74,6 +75,16 @@ export class MultiSelectComponent extends DsControlValueAccessor<string[]> {
   protected readonly activeIndex = signal(-1);
 
   private overlayRef: OverlayRef | null = null;
+  private focusTimer: ReturnType<typeof setTimeout> | null = null;
+
+  constructor() {
+    super();
+    inject(DestroyRef).onDestroy(() => {
+      clearTimeout(this.focusTimer ?? undefined);
+      this.overlayRef?.dispose();
+      this.overlayRef = null;
+    });
+  }
 
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),
@@ -228,16 +239,27 @@ export class MultiSelectComponent extends DsControlValueAccessor<string[]> {
     };
     this.overlayRef = this.overlay.create(cfg);
     this.overlayRef.backdropClick().subscribe(() => this.close());
+    this.overlayRef.keydownEvents().subscribe((event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        this.close();
+      }
+    });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
     this.open.set(true);
     this.activeIndex.set(this.filteredOptions().length ? 0 : -1);
-    setTimeout(() => this.searchInput()?.nativeElement.focus());
+    this.focusTimer = setTimeout(() => {
+      this.focusTimer = null;
+      this.searchInput()?.nativeElement.focus();
+    });
   }
 
   protected close(): void {
     if (!this.overlayRef) {
       return;
     }
+    clearTimeout(this.focusTimer ?? undefined);
+    this.focusTimer = null;
     disposeWithLeave(this.overlayRef);
     this.overlayRef = null;
     this.open.set(false);

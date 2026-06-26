@@ -5,14 +5,14 @@
     [type]="mask() ? 'password' : 'text'"
     [attr.inputmode]="mode() === 'numeric' ? 'numeric' : 'text'"
     [attr.autocomplete]="i === 0 ? 'one-time-code' : 'off'"
-    [attr.aria-label]="'Digit ' + (i + 1)"
+    [attr.aria-label]="cellLabel(i)"
     [attr.aria-invalid]="invalid() ? 'true' : null"
     [value]="cell"
     [disabled]="isDisabled()"
     (input)="onInput($event, i)"
     (keydown)="onKeydown($event, i)"
     (paste)="onPaste($event, i)"
-    (focus)="onFocus($event)"
+    (focus)="onFocus($event, i)"
     (blur)="onBlur()"
   />
 }

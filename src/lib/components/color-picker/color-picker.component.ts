@@ -1,5 +1,6 @@
 import {
   Component,
+  DestroyRef,
   ElementRef,
   TemplateRef,
   ViewContainerRef,
@@ -78,6 +79,14 @@ export class ColorPickerComponent
   protected readonly open = signal(false);
 
   private overlayRef: OverlayRef | null = null;
+
+  constructor() {
+    super();
+    inject(DestroyRef).onDestroy(() => {
+      this.overlayRef?.dispose();
+      this.overlayRef = null;
+    });
+  }
 
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),

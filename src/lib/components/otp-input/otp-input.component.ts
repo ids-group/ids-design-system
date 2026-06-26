@@ -45,6 +45,7 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
   readonly completed = output<string>();
 
   private readonly boxes = viewChildren<ElementRef<HTMLInputElement>>('box');
+  private wasComplete = false;
 
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),
@@ -107,8 +108,20 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
     this.distribute(cleaned, index);
   }
 
-  protected onFocus(event: FocusEvent): void {
+  protected onFocus(event: FocusEvent, index: number): void {
     (event.target as HTMLInputElement).select();
+    // Keep entry left-packed: redirect focus to the first empty cell so the user
+    // can't type into a gap (the flat value string can't represent middle gaps).
+    const firstEmpty = this.firstEmptyIndex();
+    if (firstEmpty >= 0 && index > firstEmpty) {
+      this.focusBox(firstEmpty);
+    }
+  }
+
+  protected cellLabel(index: number): string {
+    const noun = this.mode() === 'numeric' ? 'Digit' : 'Character';
+
+    return `${noun} ${index + 1}`;
   }
 
   protected onBlur(): void {
@@ -141,9 +154,17 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
   private commit(cells: string[]): void {
     const value = cells.join('').slice(0, this.length());
     this.value.set(value);
-    if (value.length === this.length()) {
+    // Fire `completed` only on the partial → full transition, not on every
+    // edit of an already-complete code (which would re-trigger consumers).
+    const complete = value.length === this.length();
+    if (complete && !this.wasComplete) {
       this.completed.emit(value);
     }
+    this.wasComplete = complete;
+  }
+
+  private firstEmptyIndex(): number {
+    return this.cells().findIndex((cell) => cell === '');
   }
 
   private focusBox(index: number): void {
