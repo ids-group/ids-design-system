@@ -25,11 +25,12 @@
   type="button"
   class="toggle"
   aria-haspopup="menu"
-  [attr.aria-expanded]="open()"
+  [class.open]="pop.opened()"
+  [attr.aria-expanded]="pop.opened()"
   [attr.aria-label]="menuLabel()"
   [disabled]="disabled()"
-  (click)="toggle()"
-  (keydown)="onTriggerKeydown($event)"
+  (click)="pop.toggle(trigger)"
+  (keydown)="onTriggerKeydown($event, pop, trigger)"
 >
   <ds-icon
     class="chevron"
@@ -38,7 +39,11 @@
   />
 </button>
 
-<ng-template #panel>
+<ds-popover
+  #pop
+  align="end"
+  panelRole="presentation"
+>
   <ds-menu>
     @for (item of menuItems(); track item) {
       <ds-menu-item
@@ -51,4 +56,4 @@
       </ds-menu-item>
     }
   </ds-menu>
-</ng-template>
+</ds-popover>

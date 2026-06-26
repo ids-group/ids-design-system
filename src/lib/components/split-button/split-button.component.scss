@@ -51,7 +51,7 @@
   transition: transform var(--duration-fast) var(--ease-standard);
 }
 
-:host(.open) .chevron {
+.toggle.open .chevron {
   transform: rotate(180deg);
 }
 
