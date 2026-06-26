@@ -41,6 +41,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   / dropdown options, breadcrumb crumbs and more. `ds-modal` and `ds-drawer` now animate their
   close (animate-then-remove, like `ds-bottom-sheet`) — the modal card enters with scale + fade
   (no slide). `ds-accordion` expand/collapse actually animates now (grid-rows, not height:auto).
+  Floating panels (`ds-select` / `ds-dropdown` / `ds-combobox` / `ds-date-picker` / `ds-popover`,
+  plus `ds-tooltip` on open) fade + slide in on open and out on close via a shared overlay-motion
+  helper; `ds-banner` fades in on mount; the toggle button's pressed/hover state eases too.
 
 ### Added
 
