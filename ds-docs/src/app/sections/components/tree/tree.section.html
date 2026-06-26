@@ -1,0 +1,33 @@
+<docs-section
+  anchor="tree"
+  eyebrow="Components"
+  title="Tree view"
+>
+  <span lede>
+    Hierarchical node tree for navigating nested structures such as file
+    systems, category trees, and organisation charts.
+  </span>
+
+  <!-- ============================================================ Interactive tree -->
+  <h3 class="block-title t-h4">
+    Interactive tree
+  </h3>
+
+  <p class="block-desc t-s">
+    Nodes with children are collapsible. Expanded and selected state are two-way
+    bound so the host can read or set them programmatically.
+  </p>
+
+  <div class="demo-panel">
+    <ds-tree
+      [nodes]="nodes"
+      [(expandedIds)]="expanded"
+      [(selectedId)]="selected"
+      (nodeSelect)="onSelect($event)"
+    />
+
+    <p class="block-desc t-s">
+      Selected: {{ selected() }}
+    </p>
+  </div>
+</docs-section>

@@ -1,0 +1,57 @@
+<docs-section
+  anchor="multi-select"
+  eyebrow="Components"
+  title="Multi-select"
+>
+  <span lede>
+    Chip-based multi-value selector with search filtering, keyboard navigation,
+    and optional overflow collapse.
+  </span>
+
+  <!-- ============================================================ Basic usage -->
+  <h3 class="block-title t-h4">
+    Basic usage
+  </h3>
+
+  <p class="block-desc t-s">
+    Chips expand horizontally; all selected values are always visible.
+  </p>
+
+  <div class="demo-panel">
+    <ds-multi-select
+      placeholder="Add tags…"
+      ariaLabel="Tags"
+      [options]="tagOptions"
+      [maxVisibleChips]="null"
+      [(value)]="tags"
+    />
+
+    <p style="margin-top: var(--space-3); font-size: var(--font-size-s)">
+      Selected: {{ tags().join(', ') }}
+    </p>
+  </div>
+
+  <!-- ============================================================ Overflow collapse -->
+  <h3 class="block-title t-h4">
+    Overflow collapse
+  </h3>
+
+  <p class="block-desc t-s">
+    Set <code>[maxVisibleChips]</code> to a positive number to collapse extra
+    chips into a "+N more" pill.
+  </p>
+
+  <div class="demo-panel">
+    <ds-multi-select
+      placeholder="Add tags…"
+      ariaLabel="Tags with overflow"
+      [options]="tagOptions"
+      [maxVisibleChips]="2"
+      [(value)]="overflow"
+    />
+
+    <p style="margin-top: var(--space-3); font-size: var(--font-size-s)">
+      Selected: {{ overflow().join(', ') }}
+    </p>
+  </div>
+</docs-section>

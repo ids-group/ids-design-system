@@ -1,0 +1,130 @@
+<docs-section
+  anchor="list"
+  eyebrow="Components"
+  title="List"
+>
+  <span lede>
+    A vertically stacked set of content rows — supports leading/trailing slots,
+    optional dividers, clickable items, and selected state.
+  </span>
+
+  <!-- ============================================================ Basic list with icons -->
+  <h3 class="block-title t-h4">
+    List with leading and trailing icons
+  </h3>
+
+  <p class="block-desc t-s">
+    Use the <code>[leading]</code> and <code>[trailing]</code> slots for icons
+    or avatars. Set <code>[dividers]="true"</code> for a separator between
+    items.
+  </p>
+
+  <div class="demo-panel">
+    <ds-list [dividers]="true">
+      <ds-list-item
+        title="Account settings"
+        subtitle="Manage profile and security"
+        [clickable]="true"
+      >
+        <ds-icon
+          leading
+          name="user"
+          [size]="18"
+        />
+
+        <ds-icon
+          trailing
+          name="chevronRight"
+          [size]="18"
+        />
+      </ds-list-item>
+
+      <ds-list-item
+        title="Notifications"
+        subtitle="Email and push preferences"
+      >
+        <ds-icon
+          leading
+          name="bell"
+          [size]="18"
+        />
+
+        <ds-icon
+          trailing
+          name="chevronRight"
+          [size]="18"
+        />
+      </ds-list-item>
+
+      <ds-list-item
+        title="Documents"
+        subtitle="Uploaded files and exports"
+      >
+        <ds-icon
+          leading
+          name="folder"
+          [size]="18"
+        />
+
+        <ds-icon
+          trailing
+          name="chevronRight"
+          [size]="18"
+        />
+      </ds-list-item>
+    </ds-list>
+  </div>
+
+  <!-- ============================================================ Selected state -->
+  <h3 class="block-title t-h4">
+    Selected state
+  </h3>
+
+  <p class="block-desc t-s">
+    Pass <code>[selected]="true"</code> to highlight the active row — useful in
+    navigation lists and option pickers.
+  </p>
+
+  <div class="demo-panel">
+    <ds-list [dividers]="true">
+      <ds-list-item
+        title="Notifications"
+        subtitle="Email and push preferences"
+        [selected]="selectedItem() === 'notifications'"
+        [clickable]="true"
+      >
+        <ds-icon
+          leading
+          name="bell"
+          [size]="18"
+        />
+      </ds-list-item>
+
+      <ds-list-item
+        title="Documents"
+        subtitle="Uploaded files and exports"
+        [selected]="selectedItem() === 'documents'"
+        [clickable]="true"
+      >
+        <ds-icon
+          leading
+          name="folder"
+          [size]="18"
+        />
+      </ds-list-item>
+
+      <ds-list-item
+        title="Starred"
+        subtitle="Items you have bookmarked"
+        [selected]="selectedItem() === 'starred'"
+        [clickable]="true"
+      >
+        <ds-icon
+          leading
+          name="star"
+          [size]="18"
+        />
+      </ds-list-item>
+    </ds-list>
+  </div>
+</docs-section>

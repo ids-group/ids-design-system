@@ -1,0 +1,58 @@
+<docs-section
+  anchor="segmented"
+  eyebrow="Components"
+  title="Segmented &amp; button group"
+>
+  <span lede>
+    Segmented control for switching between mutually exclusive views; button
+    group for toggling related inline actions.
+  </span>
+
+  <!-- ============================================================ Segmented control -->
+  <h3 class="block-title t-h4">
+    Segmented control
+  </h3>
+
+  <p class="block-desc t-s">
+    Binds to a signal; the selected value is reflected below the control.
+  </p>
+
+  <div class="demo-panel">
+    <div class="demo-stack">
+      <ds-segmented
+        ariaLabel="View mode"
+        [options]="viewOptions"
+        [(value)]="view"
+      />
+
+      <p class="t-s">
+        Selected: {{ view() }}
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================================================ Button group -->
+  <h3 class="block-title t-h4">
+    Button group
+  </h3>
+
+  <p class="block-desc t-s">
+    Groups related outline buttons into a single fused control.
+  </p>
+
+  <div class="demo-panel">
+    <ds-button-group>
+      <ds-button variant="outline">
+        Bold
+      </ds-button>
+
+      <ds-button variant="outline">
+        Italic
+      </ds-button>
+
+      <ds-button variant="outline">
+        Underline
+      </ds-button>
+    </ds-button-group>
+  </div>
+</docs-section>

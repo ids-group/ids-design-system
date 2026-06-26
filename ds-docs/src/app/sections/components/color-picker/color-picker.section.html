@@ -1,0 +1,88 @@
+<docs-section
+  anchor="color-picker"
+  eyebrow="Components"
+  title="Color picker"
+>
+  <span lede>
+    Inline colour swatch picker with optional preset palette for brand and label
+    colour selection.
+  </span>
+
+  <!-- ============================================================ Default presets -->
+  <h3 class="block-title t-h4">
+    Default presets
+  </h3>
+
+  <p class="block-desc t-s">
+    Omit <code>[presets]</code> to use the built-in palette. The selected hex
+    value is reflected below.
+  </p>
+
+  <div class="demo-panel">
+    <ds-color-picker
+      ariaLabel="Brand colour"
+      [(value)]="brand"
+    />
+
+    <p style="margin-top: var(--space-3); font-size: var(--font-size-s)">
+      Selected:
+      <span
+        style="
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          border-radius: 4px;
+          border: 1px solid var(--border-default);
+          vertical-align: middle;
+        "
+        [style.background-color]="brand()"
+      >
+      </span>
+      {{ brand() }}
+    </p>
+  </div>
+
+  <!-- ============================================================ Custom presets -->
+  <h3 class="block-title t-h4">
+    Custom presets
+  </h3>
+
+  <p class="block-desc t-s">
+    Pass a <code>[presets]</code> array to restrict the palette to a curated set
+    — useful for label-colour pickers.
+  </p>
+
+  <div class="demo-panel">
+    <ds-color-picker
+      ariaLabel="Label colour"
+      [presets]="[
+        '#16A34A',
+        '#2F54FF',
+        '#DC2626',
+        '#D97706',
+        '#7C3AED',
+        '#0891B2',
+        '#DB2777',
+        '#65A30D',
+      ]"
+      [(value)]="label"
+    />
+
+    <p style="margin-top: var(--space-3); font-size: var(--font-size-s)">
+      Selected:
+      <span
+        style="
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          border-radius: 4px;
+          border: 1px solid var(--border-default);
+          vertical-align: middle;
+        "
+        [style.background-color]="label()"
+      >
+      </span>
+      {{ label() }}
+    </p>
+  </div>
+</docs-section>

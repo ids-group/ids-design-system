@@ -1,0 +1,58 @@
+<docs-section
+  anchor="otp-input"
+  eyebrow="Components"
+  title="OTP input"
+>
+  <span lede>
+    One-time password and PIN entry fields with configurable length, mode, and
+    optional masking.
+  </span>
+
+  <!-- ============================================================ Numeric OTP -->
+  <h3 class="block-title t-h4">
+    6-digit numeric OTP
+  </h3>
+
+  <p class="block-desc t-s">
+    Use <code>mode="numeric"</code> with <code>[length]="6"</code> for
+    verification codes. The <code>(completed)</code> event fires when all digits
+    are filled.
+  </p>
+
+  <div class="demo-panel">
+    <div class="demo-stack">
+      <ds-otp-input
+        [length]="6"
+        [mode]="'numeric'"
+        [(value)]="code"
+        (completed)="onComplete($event)"
+      />
+
+      <p class="t-s">
+        Entered: {{ code() }}
+      </p>
+
+      <p class="t-s">
+        Completed: {{ lastCode() }}
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================================================ Masked PIN -->
+  <h3 class="block-title t-h4">
+    4-digit masked PIN
+  </h3>
+
+  <p class="block-desc t-s">
+    Set <code>[mask]="true"</code> to obscure digits as they are typed, suitable
+    for PIN entry.
+  </p>
+
+  <div class="demo-panel">
+    <ds-otp-input
+      [length]="4"
+      [mask]="true"
+      [(value)]="pin"
+    />
+  </div>
+</docs-section>

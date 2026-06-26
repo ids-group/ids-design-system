@@ -1,0 +1,69 @@
+<docs-section
+  anchor="slider"
+  eyebrow="Components"
+  title="Slider"
+>
+  <span lede>
+    Single-value and range sliders for selecting a numeric value or interval
+    within a bounded scale.
+  </span>
+
+  <!-- ============================================================ Single slider -->
+  <h3 class="block-title t-h4">
+    Single slider
+  </h3>
+
+  <p class="block-desc t-s">
+    Bind to a number signal; the current value updates as the thumb moves.
+  </p>
+
+  <div class="demo-panel">
+    <div class="demo-stack">
+      <p class="t-s">
+        Brightness
+      </p>
+
+      <ds-slider
+        ariaLabel="Brightness"
+        [min]="0"
+        [max]="100"
+        [step]="1"
+        [(value)]="brightness"
+      />
+
+      <p class="t-s">
+        {{ brightness() }}%
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================================================ Range slider -->
+  <h3 class="block-title t-h4">
+    Range slider
+  </h3>
+
+  <p class="block-desc t-s">
+    Set <code>[range]="true"</code> and bind a <code>[number, number]</code>
+    tuple to select a low–high interval.
+  </p>
+
+  <div class="demo-panel">
+    <div class="demo-stack">
+      <p class="t-s">
+        Price range
+      </p>
+
+      <ds-slider
+        ariaLabel="Price range"
+        [range]="true"
+        [min]="0"
+        [max]="100"
+        [(value)]="price"
+      />
+
+      <p class="t-s">
+        £{{ price()[0] }} – £{{ price()[1] }}
+      </p>
+    </div>
+  </div>
+</docs-section>

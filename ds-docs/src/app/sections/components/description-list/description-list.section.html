@@ -1,0 +1,105 @@
+<docs-section
+  anchor="description-list"
+  eyebrow="Components"
+  title="Description list"
+>
+  <span lede>
+    Pairs of labels and values for displaying structured metadata — account
+    details, record summaries, and settings panels.
+  </span>
+
+  <!-- ============================================================ Horizontal layout -->
+  <h3 class="block-title t-h4">
+    Horizontal layout
+  </h3>
+
+  <p class="block-desc t-s">
+    Terms and values sit side-by-side. Best for dense record details where
+    vertical space is limited.
+  </p>
+
+  <div class="demo-panel">
+    <ds-description-list [orientation]="'horizontal'">
+      <ds-description-item term="Status">
+        <ds-badge variant="success">
+          Active
+        </ds-badge>
+      </ds-description-item>
+
+      <ds-description-item term="Owner">
+        Mara Whitfield
+      </ds-description-item>
+
+      <ds-description-item term="Plan">
+        Business · 24 seats
+      </ds-description-item>
+
+      <ds-description-item term="Renewal">
+        8 Jun 2026
+      </ds-description-item>
+
+      <ds-description-item term="Region">
+        EU-West (Dublin)
+      </ds-description-item>
+    </ds-description-list>
+  </div>
+
+  <!-- ============================================================ Stacked layout -->
+  <h3 class="block-title t-h4">
+    Stacked layout
+  </h3>
+
+  <p class="block-desc t-s">
+    Term above, value below. Suits narrow containers or when values are long.
+  </p>
+
+  <div class="demo-panel">
+    <ds-description-list [orientation]="'stacked'">
+      <ds-description-item term="Status">
+        <ds-badge variant="success">
+          Active
+        </ds-badge>
+      </ds-description-item>
+
+      <ds-description-item term="Owner">
+        Mara Whitfield
+      </ds-description-item>
+
+      <ds-description-item term="Plan">
+        Business · 24 seats
+      </ds-description-item>
+
+      <ds-description-item term="Region">
+        EU-West (Dublin)
+      </ds-description-item>
+    </ds-description-list>
+  </div>
+
+  <!-- ============================================================ Copy-to-clipboard -->
+  <h3 class="block-title t-h4">
+    Copy-to-clipboard value
+  </h3>
+
+  <p class="block-desc t-s">
+    Pass <code>[copyValue]</code> to render an inline copy button next to the
+    value — useful for API keys, IDs, and tokens.
+  </p>
+
+  <div class="demo-panel">
+    <ds-description-list [orientation]="'horizontal'">
+      <ds-description-item
+        term="API key"
+        [copyValue]="'sk-live-4xT9mZqR2wPcK8nYdL3jHvBuA7eF1oGs'"
+      >
+        sk-live-4xT9mZ···1oGs
+      </ds-description-item>
+
+      <ds-description-item
+        term="Account ID"
+        [copyValue]="'acc_01J8KQPVXZ3R5TNMW4BGHF6YDE'"
+      >
+        acc_01J8KQPVXZ3R5TNMW4BGHF6YDE
+      </ds-description-item>
+    </ds-description-list>
+  </div>
+</docs-section>

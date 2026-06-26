@@ -1,0 +1,48 @@
+<docs-section
+  anchor="data-grid"
+  eyebrow="Components"
+  title="Data grid"
+>
+  <span lede>
+    Paginated, sortable, and selectable data grid for dense tabular data with
+    sticky first column and bulk-selection support.
+  </span>
+
+  <!-- ============================================================ Full-featured grid -->
+  <h3 class="block-title t-h4">
+    Full-featured grid
+  </h3>
+
+  <p class="block-desc t-s">
+    12 rows across three pages (page size 5). Project and Budget columns are
+    sortable. First column is sticky on horizontal scroll. Row selection is
+    enabled — tick rows to update the count below.
+  </p>
+
+  <div class="demo-panel">
+    <ds-data-grid
+      caption="Projects"
+      [data]="rows"
+      [columns]="columns"
+      [selectable]="true"
+      [stickyFirstColumn]="true"
+      [pageSize]="5"
+      [(selectedIds)]="selected"
+    />
+
+    <p class="block-desc t-s">
+      Selected: {{ selected().size }}
+    </p>
+  </div>
+
+  <!-- ============================================================ Deferred features -->
+  <h3 class="block-title t-h4">
+    Planned enhancements
+  </h3>
+
+  <p class="block-desc t-s">
+    Column resize and reorder, virtual scroll for very large datasets, row
+    grouping, and inline cell editing are scoped as follow-up iterations and are
+    not yet part of the component API.
+  </p>
+</docs-section>

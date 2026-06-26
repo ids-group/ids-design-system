@@ -1,0 +1,58 @@
+<docs-section
+  anchor="split-button"
+  eyebrow="Components"
+  title="Split button"
+>
+  <span lede>
+    Combines a primary action button with a dropdown of secondary actions in a
+    single cohesive control.
+  </span>
+
+  <!-- ============================================================ Primary variant -->
+  <h3 class="block-title t-h4">
+    Primary variant
+  </h3>
+
+  <p class="block-desc t-s">
+    The main action fires immediately; the chevron reveals alternative actions.
+    Last triggered action is shown below.
+  </p>
+
+  <div class="demo-panel">
+    <div class="demo-stack">
+      <ds-split-button
+        label="Save"
+        menuLabel="More save options"
+        [variant]="'primary'"
+        [menuItems]="saveActions"
+        (pressed)="onSave()"
+        (itemSelect)="onPick($event)"
+      />
+
+      <p class="t-s">
+        Last action: {{ lastAction() }}
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================================================ Outline variant -->
+  <h3 class="block-title t-h4">
+    Outline variant
+  </h3>
+
+  <p class="block-desc t-s">
+    Use the outline variant when the split button sits alongside a primary
+    action.
+  </p>
+
+  <div class="demo-panel">
+    <ds-split-button
+      label="Export"
+      menuLabel="Export format"
+      [variant]="'outline'"
+      [menuItems]="exportActions"
+      (pressed)="onSave()"
+      (itemSelect)="onPick($event)"
+    />
+  </div>
+</docs-section>

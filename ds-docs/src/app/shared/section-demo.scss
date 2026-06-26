@@ -1,0 +1,82 @@
+/* Shared demo-stage styling for the "proposed new components" doc sections.
+   Mirrors the per-section .states grid used elsewhere, factored out so the new
+   sections don't each duplicate it. Compiled per component (emulated). */
+
+.states {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface-secondary);
+  border-radius: var(--radius-lg);
+}
+.states--cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.states--cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.states--cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.state-cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.state-cell__stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  min-height: 72px;
+  background: var(--surface-default);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+.state-cell__label {
+  text-align: center;
+  font:
+    var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base)
+    var(--font-sans);
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* A single bordered demo surface for a live component. */
+.demo-panel {
+  margin-top: var(--space-3);
+  padding: var(--space-5);
+  background: var(--surface-default);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-lg);
+}
+
+/* Horizontal cluster of demo controls. */
+.demo-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-3);
+}
+
+/* Vertical stack of demo blocks. */
+.demo-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-3);
+}
+
+.status-line {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font:
+    var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat)
+    var(--font-sans);
+  color: var(--text-primary);
+}

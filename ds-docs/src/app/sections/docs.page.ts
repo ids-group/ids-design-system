@@ -61,6 +61,21 @@ import { LinkSection } from './components/link/link.section';
 import { PageFooterSection } from './components/page-footer/page-footer.section';
 import { ComboboxSection } from './components/combobox/combobox.section';
 
+import { DescriptionListSection } from './components/description-list/description-list.section';
+import { LayoutPrimitivesSection } from './components/layout-primitives/layout-primitives.section';
+import { SegmentedSection } from './components/segmented/segmented.section';
+import { ListSection } from './components/list/list.section';
+import { SplitButtonSection } from './components/split-button/split-button.section';
+import { TimelineSection } from './components/timeline/timeline.section';
+import { OtpInputSection } from './components/otp-input/otp-input.section';
+import { SliderSection } from './components/slider/slider.section';
+import { LoadingOverlaySection } from './components/loading-overlay/loading-overlay.section';
+import { TreeSection } from './components/tree/tree.section';
+import { ColorPickerSection } from './components/color-picker/color-picker.section';
+import { MultiSelectSection } from './components/multi-select/multi-select.section';
+import { ConfirmDialogSection } from './components/confirm-dialog/confirm-dialog.section';
+import { DataGridSection } from './components/data-grid/data-grid.section';
+
 import { PageHeaderSection as PatternsPageHeaderSection } from './patterns/page-header/page-header.section';
 import { FilterBarSection } from './patterns/filter-bar/filter-bar.section';
 import { FormLayoutSection } from './patterns/form-layout/form-layout.section';
@@ -134,6 +149,20 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     LinkSection,
     PageFooterSection,
     ComboboxSection,
+    DescriptionListSection,
+    LayoutPrimitivesSection,
+    SegmentedSection,
+    ListSection,
+    SplitButtonSection,
+    TimelineSection,
+    OtpInputSection,
+    SliderSection,
+    LoadingOverlaySection,
+    TreeSection,
+    ColorPickerSection,
+    MultiSelectSection,
+    ConfirmDialogSection,
+    DataGridSection,
     PatternsPageHeaderSection,
     FilterBarSection,
     FormLayoutSection,
@@ -232,6 +261,38 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     <section-components-topbar />
 
     <section-components-w3w />
+
+    <h1 class="group-title t-h2">
+      New components
+    </h1>
+
+    <section-components-description-list />
+
+    <section-components-layout-primitives />
+
+    <section-components-segmented />
+
+    <section-components-list />
+
+    <section-components-split-button />
+
+    <section-components-timeline />
+
+    <section-components-otp-input />
+
+    <section-components-slider />
+
+    <section-components-loading-overlay />
+
+    <section-components-tree />
+
+    <section-components-color-picker />
+
+    <section-components-multi-select />
+
+    <section-components-confirm-dialog />
+
+    <section-components-data-grid />
 
     <h1 class="group-title t-h2">
       Foundations
@@ -378,6 +439,20 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
       section-components-link,
       section-components-page-footer,
       section-components-combobox,
+      section-components-description-list,
+      section-components-layout-primitives,
+      section-components-segmented,
+      section-components-list,
+      section-components-split-button,
+      section-components-timeline,
+      section-components-otp-input,
+      section-components-slider,
+      section-components-loading-overlay,
+      section-components-tree,
+      section-components-color-picker,
+      section-components-multi-select,
+      section-components-confirm-dialog,
+      section-components-data-grid,
       pattern-page-header,
       pattern-filter-bar,
       pattern-form-layout,

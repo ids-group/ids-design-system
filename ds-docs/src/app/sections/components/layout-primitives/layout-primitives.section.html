@@ -1,0 +1,159 @@
+<docs-section
+  anchor="layout-primitives"
+  eyebrow="Components"
+  title="Layout primitives"
+>
+  <span lede>
+    Composable layout building blocks — Stack, Inline, and Container — that
+    replace one-off flexbox utilities with semantic, token-aware wrappers.
+  </span>
+
+  <!-- ============================================================ Stack -->
+  <h3 class="block-title t-h4">
+    Stack
+  </h3>
+
+  <p class="block-desc t-s">
+    Arranges children in a vertical column with consistent gap. Use
+    <code>
+      gap
+    </code> to control spacing and <code>align</code> for cross-axis
+    alignment.
+  </p>
+
+  <div class="demo-panel">
+    <ds-stack gap="sm">
+      <div
+        style="
+          background: var(--primary-muted);
+          height: 18px;
+          border-radius: var(--radius-sm);
+        "
+      >
+      </div>
+
+      <div
+        style="
+          background: var(--primary-muted);
+          height: 18px;
+          border-radius: var(--radius-sm);
+        "
+      >
+      </div>
+
+      <div
+        style="
+          background: var(--primary-muted);
+          height: 18px;
+          border-radius: var(--radius-sm);
+        "
+      >
+      </div>
+    </ds-stack>
+  </div>
+
+  <!-- ============================================================ Inline -->
+  <h3 class="block-title t-h4">
+    Inline
+  </h3>
+
+  <p class="block-desc t-s">
+    Lays children out in a horizontal row with wrapping and gap control. Ideal
+    for tag clouds, button groups, and filter chips.
+  </p>
+
+  <div class="demo-panel">
+    <ds-inline
+      gap="xs"
+      [wrap]="true"
+    >
+      <span
+        style="
+          background: var(--primary-muted);
+          padding: 4px 10px;
+          border-radius: var(--radius-full);
+          font-size: var(--text-sm);
+        "
+        >
+        Angular
+      </span
+      >
+
+      <span
+        style="
+          background: var(--primary-muted);
+          padding: 4px 10px;
+          border-radius: var(--radius-full);
+          font-size: var(--text-sm);
+        "
+        >
+        TypeScript
+      </span
+      >
+
+      <span
+        style="
+          background: var(--primary-muted);
+          padding: 4px 10px;
+          border-radius: var(--radius-full);
+          font-size: var(--text-sm);
+        "
+        >
+        SCSS
+      </span
+      >
+
+      <span
+        style="
+          background: var(--primary-muted);
+          padding: 4px 10px;
+          border-radius: var(--radius-full);
+          font-size: var(--text-sm);
+        "
+        >
+        Design tokens
+      </span
+      >
+
+      <span
+        style="
+          background: var(--primary-muted);
+          padding: 4px 10px;
+          border-radius: var(--radius-full);
+          font-size: var(--text-sm);
+        "
+        >
+        Accessibility
+      </span
+      >
+    </ds-inline>
+  </div>
+
+  <!-- ============================================================ Container -->
+  <h3 class="block-title t-h4">
+    Container
+  </h3>
+
+  <p class="block-desc t-s">
+    Centers content with a max-width constraint. Choose from <code>sm</code> ·
+    <code>
+      md
+    </code> · <code>lg</code> · <code>xl</code> · <code>full</code>.
+  </p>
+
+  <div class="demo-panel">
+    <ds-container size="md">
+      <p
+        class="t-s"
+        style="
+          text-align: center;
+          color: var(--text-subtitle);
+          padding: var(--space-md) 0;
+        "
+      >
+        This paragraph is constrained to the <strong>md</strong> container width
+        and centred within the panel.
+      </p>
+    </ds-container>
+  </div>
+</docs-section>

@@ -66,6 +66,25 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
+    title: 'New components',
+    items: [
+      { label: 'Description list', anchor: 'description-list' },
+      { label: 'Layout primitives', anchor: 'layout-primitives' },
+      { label: 'Segmented & button group', anchor: 'segmented' },
+      { label: 'List', anchor: 'list' },
+      { label: 'Split button', anchor: 'split-button' },
+      { label: 'Timeline', anchor: 'timeline' },
+      { label: 'OTP input', anchor: 'otp-input' },
+      { label: 'Slider', anchor: 'slider' },
+      { label: 'Loading overlay', anchor: 'loading-overlay' },
+      { label: 'Tree view', anchor: 'tree' },
+      { label: 'Color picker', anchor: 'color-picker' },
+      { label: 'Multi-select', anchor: 'multi-select' },
+      { label: 'Confirmation dialog', anchor: 'confirm-dialog' },
+      { label: 'Data grid', anchor: 'data-grid' },
+    ],
+  },
+  {
     title: 'Foundations',
     items: [
       { label: 'Borders', anchor: 'borders' },

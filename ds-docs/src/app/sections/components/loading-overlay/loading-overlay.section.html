@@ -1,0 +1,71 @@
+<docs-section
+  anchor="loading-overlay"
+  eyebrow="Components"
+  title="Loading overlay"
+>
+  <span lede>
+    Covers a content region with a spinner and optional label while an async
+    operation is in progress.
+  </span>
+
+  <!-- ============================================================ Interactive demo -->
+  <h3 class="block-title t-h4">
+    Interactive demo
+  </h3>
+
+  <p class="block-desc t-s">
+    The overlay is positioned relative to its host element; toggle it without
+    unmounting the content underneath.
+  </p>
+
+  <div class="demo-panel">
+    <ds-loading-overlay
+      label="Saving…"
+      [loading]="busy()"
+      [blur]="true"
+      [spinnerSize]="'md'"
+    >
+      <div
+        style="
+          height: 14px;
+          background: var(--surface-muted);
+          border-radius: var(--radius-sm);
+          width: 70%;
+          margin-bottom: var(--space-3);
+        "
+      >
+      </div>
+
+      <div
+        style="
+          height: 14px;
+          background: var(--surface-muted);
+          border-radius: var(--radius-sm);
+          width: 90%;
+          margin-bottom: var(--space-3);
+        "
+      >
+      </div>
+
+      <div
+        style="
+          height: 14px;
+          background: var(--surface-muted);
+          border-radius: var(--radius-sm);
+          width: 50%;
+          margin-bottom: var(--space-3);
+        "
+      >
+      </div>
+    </ds-loading-overlay>
+
+    <div style="margin-top: var(--space-4)">
+      <ds-button
+        variant="outline"
+        (pressed)="toggle()"
+      >
+        Toggle loading
+      </ds-button>
+    </div>
+  </div>
+</docs-section>

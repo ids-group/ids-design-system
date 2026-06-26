@@ -1,0 +1,176 @@
+<docs-section
+  anchor="timeline"
+  eyebrow="Components"
+  title="Timeline"
+>
+  <span lede>
+    A vertical activity feed that sequences events with headings, timestamps,
+    icons, and semantic tone colours.
+  </span>
+
+  <!-- ============================================================ Activity feed -->
+  <h3 class="block-title t-h4">
+    Activity feed
+  </h3>
+
+  <p class="block-desc t-s">
+    Each step carries a <code>heading</code>, <code>time</code>, an optional
+    <code>
+      icon
+    </code>, and a <code>tone</code> that maps to semantic colour
+    tokens.
+  </p>
+
+  <div class="demo-panel">
+    <ds-timeline>
+      <ds-timeline-item
+        heading="Order confirmed"
+        time="Today · 09:41"
+        icon="check"
+        tone="primary"
+      />
+
+      <ds-timeline-item
+        heading="Packed &amp; ready"
+        time="Today · 11:20"
+        icon="folder"
+        tone="success"
+      >
+        3 items · Warehouse B
+      </ds-timeline-item>
+
+      <ds-timeline-item
+        heading="Out for delivery"
+        time="Pending"
+        icon="clock"
+        tone="muted"
+      />
+
+      <ds-timeline-item
+        heading="Delivered"
+        time="Estimated: Tomorrow"
+        icon="flag"
+        tone="default"
+      />
+    </ds-timeline>
+  </div>
+
+  <!-- ============================================================ Tone variants -->
+  <h3 class="block-title t-h4">
+    Tone variants
+  </h3>
+
+  <p class="block-desc t-s">
+    Available tones: <code>primary</code> · <code>success</code> ·
+    <code>
+      warning
+    </code> · <code>error</code> · <code>muted</code> ·
+    <code>
+      default
+    </code>.
+  </p>
+
+  <div class="states states--cols-3">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-timeline>
+          <ds-timeline-item
+            heading="Confirmed"
+            time="09:41"
+            icon="check"
+            tone="primary"
+          />
+        </ds-timeline>
+      </div>
+
+      <div class="state-cell__label">
+        primary
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-timeline>
+          <ds-timeline-item
+            heading="Complete"
+            time="11:20"
+            icon="check"
+            tone="success"
+          />
+        </ds-timeline>
+      </div>
+
+      <div class="state-cell__label">
+        success
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-timeline>
+          <ds-timeline-item
+            heading="Delayed"
+            time="14:05"
+            icon="bell"
+            tone="warning"
+          />
+        </ds-timeline>
+      </div>
+
+      <div class="state-cell__label">
+        warning
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-timeline>
+          <ds-timeline-item
+            heading="Failed"
+            time="15:30"
+            icon="flag"
+            tone="error"
+          />
+        </ds-timeline>
+      </div>
+
+      <div class="state-cell__label">
+        error
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-timeline>
+          <ds-timeline-item
+            heading="Pending"
+            time="—"
+            icon="clock"
+            tone="muted"
+          />
+        </ds-timeline>
+      </div>
+
+      <div class="state-cell__label">
+        muted
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-timeline>
+          <ds-timeline-item
+            heading="Scheduled"
+            time="Tomorrow"
+            icon="flag"
+            tone="default"
+          />
+        </ds-timeline>
+      </div>
+
+      <div class="state-cell__label">
+        default
+      </div>
+    </div>
+  </div>
+</docs-section>
