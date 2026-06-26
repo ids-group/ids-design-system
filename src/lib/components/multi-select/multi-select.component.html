@@ -70,6 +70,41 @@
       />
     </div>
 
+    @if (selectAll() && filteredOptions().length) {
+      <button
+        type="button"
+        class="select-all"
+        role="checkbox"
+        [attr.aria-checked]="
+          allFilteredSelected()
+            ? 'true'
+            : someFilteredSelected()
+              ? 'mixed'
+              : 'false'
+        "
+        (click)="toggleSelectAll()"
+      >
+        <span
+          class="checkbox"
+          [class.checked]="allFilteredSelected()"
+          [class.indeterminate]="someFilteredSelected()"
+        >
+          @if (allFilteredSelected()) {
+            <ds-icon
+              name="check"
+              [size]="13"
+            />
+          } @else if (someFilteredSelected()) {
+            <span class="dash"></span>
+          }
+        </span>
+
+        <span class="select-all-label">
+          Select all
+        </span>
+      </button>
+    }
+
     <ul
       class="options"
       role="listbox"

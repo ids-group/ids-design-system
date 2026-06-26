@@ -56,6 +56,8 @@ export class MultiSelectComponent extends DsControlValueAccessor<string[]> {
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly ariaLabel = input<string | null>(null);
+  // Show a "Select all" row that toggles every (filter-matching, enabled) option.
+  readonly selectAll = input(false, { transform: booleanAttribute });
 
   protected readonly uid = `ds-multi-select-${++nextId}`;
   protected readonly listboxId = `${this.uid}-listbox`;
@@ -130,6 +132,42 @@ export class MultiSelectComponent extends DsControlValueAccessor<string[]> {
   protected readonly resolvedAriaLabel = computed(
     () => this.ariaLabel() || this.placeholder(),
   );
+
+  // Select-all reflects the currently filter-matching, enabled options.
+  private enabledFiltered(): MultiSelectOption[] {
+    return this.filteredOptions().filter((option) => !option.disabled);
+  }
+
+  protected readonly allFilteredSelected = computed<boolean>(() => {
+    const enabled = this.enabledFiltered();
+    const selected = this.value();
+
+    return (
+      enabled.length > 0 && enabled.every((o) => selected.includes(o.value))
+    );
+  });
+
+  protected readonly someFilteredSelected = computed<boolean>(() => {
+    const selected = this.value();
+
+    return (
+      this.enabledFiltered().some((o) => selected.includes(o.value)) &&
+      !this.allFilteredSelected()
+    );
+  });
+
+  protected toggleSelectAll(): void {
+    const enabledValues = this.enabledFiltered().map((o) => o.value);
+    if (this.allFilteredSelected()) {
+      const remove = new Set(enabledValues);
+
+      this.value.set(this.value().filter((value) => !remove.has(value)));
+    } else {
+      const next = new Set(this.value());
+      enabledValues.forEach((value) => next.add(value));
+      this.value.set([...next]);
+    }
+  }
 
   protected isSelected(value: string): boolean {
     return this.value().includes(value);

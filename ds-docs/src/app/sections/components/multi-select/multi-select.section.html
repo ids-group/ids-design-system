@@ -15,6 +15,10 @@
 
   <p class="block-desc t-s">
     Chips expand horizontally; all selected values are always visible.
+    <code>
+      [selectAll]
+    </code> adds a row that toggles every filter-matching
+    option at once (shows an indeterminate state on a partial selection).
   </p>
 
   <div class="demo-panel">
@@ -23,6 +27,7 @@
       ariaLabel="Tags"
       [options]="tagOptions"
       [maxVisibleChips]="null"
+      [selectAll]="true"
       [(value)]="tags"
     />
 
