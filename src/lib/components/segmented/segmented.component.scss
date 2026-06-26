@@ -1,0 +1,60 @@
+/* Public --ds-segmented-* are read with fallbacks, never declared. */
+
+:host {
+  --_segmented-bg-color: var(--ds-segmented-bg-color, var(--surface-secondary));
+  --_segmented-pad: var(--ds-segmented-pad, var(--segmented-pad));
+  --_segmented-btn-h: var(--ds-segmented-btn-h, var(--segmented-btn-h));
+  --_segmented-r-inner: var(--ds-segmented-r-inner, var(--segmented-r-inner));
+  --_segmented-radius: var(
+    --ds-segmented-radius,
+    calc(var(--_segmented-r-inner) + var(--_segmented-pad))
+  );
+
+  display: inline-flex;
+  gap: var(--_segmented-pad);
+  padding: var(--_segmented-pad);
+  background-color: var(--_segmented-bg-color);
+  border-radius: var(--_segmented-radius);
+}
+
+.segment {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1-5);
+  height: var(--_segmented-btn-h);
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--_segmented-r-inner);
+  background: transparent;
+  color: var(--text-secondary);
+  font:
+    var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat)
+    var(--font-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+
+  &:hover:not(.selected, :disabled) {
+    color: var(--text-primary);
+  }
+
+  &.selected {
+    background: var(--surface-default);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-card);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  &:disabled {
+    color: var(--text-disabled);
+    cursor: not-allowed;
+  }
+}
