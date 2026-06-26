@@ -520,6 +520,11 @@
   --calendar-bar-h:          var(--space-8);             /* 32px */
   --calendar-bar-inset-y:    var(--space-2);             /* 8px from top of cell */
 
+  /* Timeline / activity feed */
+  --timeline-node-size:      var(--hit-sm);              /* 28px event node */
+  --timeline-spine-w:        var(--border-width-strong); /* 2px connector spine */
+  --timeline-gap:            var(--space-5);             /* vertical gap between events */
+
   /* Bin pack visualisation */
   --binpack-bay-h:           var(--hit-touch);       /* 48px */
 

@@ -1,0 +1,98 @@
+/* Public --ds-timeline-* are read with fallbacks, never declared. */
+
+:host {
+  --_timeline-node-size: var(--ds-timeline-node-size, var(--timeline-node-size));
+  --_timeline-spine-w: var(--ds-timeline-spine-w, var(--timeline-spine-w));
+  --_timeline-gap: var(--ds-timeline-gap, var(--timeline-gap));
+
+  /* Default (pending) node — bordered neutral surface. Tones override below. */
+  --_timeline-node-bg-color: var(--surface-secondary);
+  --_timeline-node-color: var(--text-tertiary);
+  --_timeline-node-border: var(--border-strong);
+
+  display: grid;
+  grid-template-columns: var(--_timeline-node-size) 1fr;
+  column-gap: var(--space-4);
+}
+
+.node-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.node {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--_timeline-node-size);
+  height: var(--_timeline-node-size);
+  border-radius: var(--radius-pill);
+  background-color: var(--_timeline-node-bg-color);
+  color: var(--_timeline-node-color);
+  border: var(--border-width-strong) solid var(--_timeline-node-border);
+}
+
+.spine {
+  flex: 1;
+  width: var(--_timeline-spine-w);
+  margin-top: var(--space-1);
+  background-color: var(--border-divider);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-0-5);
+  padding-bottom: var(--_timeline-gap);
+  min-width: 0;
+}
+
+:host(:last-child) .spine {
+  display: none;
+}
+:host(:last-child) .content {
+  padding-bottom: 0;
+}
+
+.heading {
+  color: var(--text-primary);
+  font:
+    var(--font-weight-semibold) var(--font-size-s) / var(--line-height-base)
+    var(--font-sans);
+}
+
+.time {
+  color: var(--text-tertiary);
+  font:
+    var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base)
+    var(--font-sans);
+}
+
+/* Tones — filled nodes carry a white glyph; default/muted stay bordered. */
+:host([data-tone='primary']) {
+  --_timeline-node-bg-color: var(--primary);
+  --_timeline-node-color: var(--text-on-primary);
+  --_timeline-node-border: var(--primary);
+}
+:host([data-tone='success']) {
+  --_timeline-node-bg-color: var(--success);
+  --_timeline-node-color: var(--text-on-success);
+  --_timeline-node-border: var(--success);
+}
+:host([data-tone='warning']) {
+  --_timeline-node-bg-color: var(--warning);
+  --_timeline-node-color: var(--text-on-warning);
+  --_timeline-node-border: var(--warning);
+}
+:host([data-tone='error']) {
+  --_timeline-node-bg-color: var(--error);
+  --_timeline-node-color: var(--text-on-error);
+  --_timeline-node-border: var(--error);
+}
+:host([data-tone='muted']) {
+  --_timeline-node-bg-color: var(--surface-secondary);
+  --_timeline-node-color: var(--text-tertiary);
+  --_timeline-node-border: var(--border-strong);
+}

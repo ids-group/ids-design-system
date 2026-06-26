@@ -1,0 +1,28 @@
+<div class="node-col">
+  <span class="node">
+    @if (icon(); as name) {
+      <ds-icon
+        [name]="name"
+        [size]="15"
+      />
+    }
+  </span>
+
+  <span class="spine"></span>
+</div>
+
+<div class="content">
+  @if (heading()) {
+    <span class="heading">
+      {{ heading() }}
+    </span>
+  }
+
+  <ng-content></ng-content>
+
+  @if (time()) {
+    <span class="time">
+      {{ time() }}
+    </span>
+  }
+</div>
