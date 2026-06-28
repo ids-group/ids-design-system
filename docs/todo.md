@@ -83,10 +83,18 @@ Goal: a coherent, **smooth** motion system. **Foundation is healthy** — motion
 - [ ] **Data/overlay:** table expandable rows + empty-slot + pagination integration · modal `closeOnBackdrop` + xl/fullscreen sizes + `persistent` (scroll-lock ✅ landed via a11y branch; ref-counting tracked under a11y findings) · drawer placement (left/top/bottom) + `sm` size · bottom-sheet snap-points + footer slot · toast wire `DsToastPosition` to region + loading/promise toast + `maxVisible` · menu keyboard nav + dividers/submenus · popover open-state signal + arrow + placement options.
 - [ ] **Display:** tabs lazy panels + scrollable + closable + vertical · accordion single-open coordinator + item `disabled` · stepper **visible step labels** (today `[steps]` shows only numbers — labels render `visually-hidden`-only; see Field kit-update notes) + clickable steps + error state + vertical · sidenav collapsed tooltip fallback · badge `value` input (count) · avatar status-dot + fallback icon.
 
-## Missing components (from gap analysis)
+## Missing components (from gap analysis — reviewed 2026-06-26)
 
-- [ ] **HIGH:** multi-select · time picker (HH:MM) · button-group/segmented · command palette (Cmd+K) · timeline/activity feed · key-value/description list · list-item · advanced data-grid · confirmation dialog · inline alert · layout primitives (stack/inline/container).
-- [ ] **MED:** color picker · slider/range · OTP input · tree-view · chart wrapper · kanban · calendar · image/lightbox · loading overlay · split button · splitter.
+Most of the original gap list has SHIPPED (live in `src/lib/components/`): multi-select · button-group · segmented · timeline · description-list · list · data-grid · confirm-dialog · layout (stack/inline/container) · color-picker · slider · otp-input · tree · loading-overlay · split-button. Remaining:
+
+- [ ] **Time picker (HH:MM)** — **building next** (Stas 2026-06-26). 24h `HH:MM`; UX shape TBD (masked input / dropdown list / +/− steppers). Pairs with the date-picker `time/date-time mode` gap (Component feature gaps → Forms).
+- [ ] **Inline alert** — compare vs the existing `ds-banner` FIRST (deck: `presentations/inline-alert-vs-banner.html`), then decide whether a separate compact in-flow alert is warranted or `banner` already covers it.
+- [ ] **Chart wrapper** — thin wrapper over a charting lib; `--chart-*` tokens exist, no component.
+- [ ] **Image / lightbox.**
+- [ ] **Calendar (standalone)** — month / agenda view for display & scheduling (distinct from date-picker's pick-a-date popup, which already has an internal month grid). **PENDING decision** on scope/need.
+- [ ] **Splitter** — resizable split panes (drag a divider to resize adjacent regions). **PENDING decision** on need.
+- ~~**Command palette (⌘K)**~~ — **WON'T DO** (Stas 2026-06-26: ни разу не пригодилась).
+- ~~**Kanban**~~ — **WON'T DO** (Stas 2026-06-26: не нужен).
 
 ## Missing tokens / foundations (from gap analysis)
 
