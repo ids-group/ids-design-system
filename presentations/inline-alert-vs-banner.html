@@ -154,11 +154,11 @@
   </div>
 
   <p class="lede" style="margin-top:24px">
-    <strong>Вывод:</strong> семантически это разные роли — banner у нас закрывает страничный/системный уровень, а контекстных in-flow сообщений компонента НЕТ (сейчас их верстают вручную). <code class="inl">ds-banner [layout="compact"]</code> частично перекрывает, но он тяжелее (accent-bar, title, actions, dismiss) и читается как «шапка», а не как заметка у поля.
+    <strong>Вывод (проверено в либе и ds-docs):</strong> отдельного inline-alert <em>компонента</em> нет, но <code class="inl">ds-banner</code> уже близок — у него есть <code class="inl">[compact]</code> (узкие паддинги, одна строка), <code class="inl">layout="row"</code> (иконка + текст + actions в строку), <code class="inl">[accentRail]="false"</code> (без левой рейки) и 6 статусов (вкл. <code class="inl">neutral</code>) + dismissible + проекция actions. В самих доках банера уже есть подсекция <strong>«Inline»</strong> — банер без карточной обводки внутри панели — но она сделана <strong>docs-only через <code class="inl">::ng-deep</code></strong>, и в комментарии секции прямо стоит: «DS itself has no inline mode». Итого: строительные блоки есть, первоклассного inline-режима в либе — нет.
     <br><strong>Варианты решения:</strong>
-    <strong>(A)</strong> добавить лёгкий <code class="inl">ds-alert</code> (иконка + текст, без title/actions/dismiss по умолчанию, по ширине контента) — чистое разделение ролей;
-    <strong>(B)</strong> расширить <code class="inl">ds-banner</code> ещё более лёгким <code class="inl">layout="inline"</code> — без нового компонента, но banner начнёт тащить две роли;
-    <strong>(C)</strong> ничего не добавлять — banner-compact «и так сойдёт».
+    <strong>(A, реком.)</strong> поднять docs-рецепт до первоклассного режима <code class="inl">ds-banner</code> — флаг <code class="inl">[inline]</code> (убирает фон/обводку/паддинги → лёгкая in-flow заметка); снимает <code class="inl">::ng-deep</code>-хак, без нового компонента;
+    <strong>(B)</strong> отдельный лёгкий <code class="inl">ds-alert</code> (иконка + текст, по ширине контента, без title/actions/dismiss по умолчанию) — чистое разделение ролей, но дублирует banner;
+    <strong>(C)</strong> ничего не добавлять — задокументировать <code class="inl">compact + layout="row" + [accentRail]="false"</code> как официальный inline-паттерн.
   </p>
 
   <p class="note">Sources: Carbon (notification pattern) · Atlassian (messages) · BC gov (inline alert) · PatternFly (alert) · CFPB (banner).</p>
