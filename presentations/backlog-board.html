@@ -87,7 +87,7 @@
 </head>
 <body>
   <h1>DS — карта бэклога</h1>
-  <p class="sub">Что <b>осталось закрыть</b> — по одному пункту на карточку (источник: <span class="tag">docs/todo.md</span>). Открытое вверху и развёрнуто; сделанное свёрнуто внизу. Обновлено 2026-06-26.</p>
+  <p class="sub">Что <b>осталось закрыть</b> — по одному пункту на карточку (источник: <span class="tag">docs/todo.md</span>). Открытое вверху и развёрнуто; сделанное свёрнуто внизу. Обновлено 2026-06-29.</p>
 
   <div class="summary">
     <div class="stat you"><div class="n">5</div><div class="l">Ждёт твоего решения</div></div>
@@ -239,6 +239,15 @@
       <div class="card raw"><span class="chip ch-raw">⏳ API</span><div class="t">field · dropzone</div><p class="d">input floating/loading; dropzone has-files / `.file`-ряды.</p></div>
       <div class="card raw"><span class="chip ch-raw">внутренности</span><div class="t">day (календарь)</div><p class="d">Сетка дней — внутренний part, отдельного компонента нет.</p></div>
       <div class="card raw"><span class="chip ch-oos">осознанно raw</span><div class="t">toolbar .divider · do-dont .tooltip</div><p class="d">divider vertical форсит 12px margin vs 4px; tooltip — статичная иллюстрация анти-паттерна (компонент hover-only).</p></div>
+    </div>
+  </div>
+
+  <!-- ============ WON'T DO ============ -->
+  <div class="lane">
+    <div class="lane-head"><h2>🚫 Не делаем</h2><span class="count c-track">2</span><span class="why">Решено не добавлять. Передумаешь — вернём в бэклог.</span></div>
+    <div class="cards">
+      <div class="card track"><span class="chip ch-oos">won't do · 2026-06-29</span><div class="t">Command palette (⌘K)</div><p class="d">Глобальный fuzzy-поиск команд/навигации по ⌘K. Ни разу не пригодилось — паттерн для power-user IDE/SaaS, не для наших форм-flow. Появится спрос — search + dropdown закрывают 80%.</p></div>
+      <div class="card track"><span class="chip ch-oos">won't do · 2026-06-29</span><div class="t">Kanban board</div><p class="d">Колонки + drag-n-drop карточек. Тяжёлый узкоспециализированный виджет (DnD, виртуализация, persistence) — не уровень базовой DS-либы. Собирается из card + drag-utils на стороне приложения.</p></div>
     </div>
   </div>
 

@@ -93,8 +93,6 @@ Most of the original gap list has SHIPPED (live in `src/lib/components/`): multi
 - [ ] **Image / lightbox.**
 - [ ] **Calendar (standalone)** — month / agenda view for display & scheduling (distinct from date-picker's pick-a-date popup, which already has an internal month grid). **PENDING decision** on scope/need.
 - [ ] **Splitter** — resizable split panes (drag a divider to resize adjacent regions). **PENDING decision** on need.
-- ~~**Command palette (⌘K)**~~ — **WON'T DO** (Stas 2026-06-26: ни разу не пригодилась).
-- ~~**Kanban**~~ — **WON'T DO** (Stas 2026-06-26: не нужен).
 
 ## Missing tokens / foundations (from gap analysis)
 
