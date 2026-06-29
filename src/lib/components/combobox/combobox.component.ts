@@ -123,7 +123,7 @@ export class ComboboxComponent<T = unknown> {
   protected optionClass(option: ComboboxOption<T>): string {
     const parts = ['option'];
     if (this.multiple()) {
-      parts.push('check');
+      parts.push('multi');
     }
     void option;
 

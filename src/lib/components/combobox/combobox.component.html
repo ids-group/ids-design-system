@@ -65,16 +65,20 @@
         (mouseenter)="activeIndex.set(i)"
       >
         @if (multiple()) {
-          <input
-            type="checkbox"
-            class="check"
-            tabindex="-1"
-            aria-hidden="true"
-            [checked]="isSelected(option)"
-          />
+          <span
+            class="check-box"
+            [class.checked]="isSelected(option)"
+          >
+            @if (isSelected(option)) {
+              <ds-icon
+                name="check"
+                [size]="13"
+              />
+            }
+          </span>
         }
 
-        <span>
+        <span class="option-label">
           {{ option.label }}
         </span>
 

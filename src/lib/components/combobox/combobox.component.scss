@@ -95,13 +95,12 @@
       margin-left: auto;
     }
 
-    &.check {
+    &.multi {
       padding-left: var(--space-2);
     }
 
-    /* Label fills the row and truncates rather than wrapping into the next
-       option; the checkbox keeps its size so a narrow panel can't squash it. */
-    > span {
+    /* Label fills the row and truncates instead of wrapping into the next row. */
+    .option-label {
       flex: 1;
       min-width: 0;
       overflow: hidden;
@@ -109,8 +108,23 @@
       white-space: nowrap;
     }
 
-    > input.check {
+    /* Self-styled multi checkbox (mirrors ds-multi-select). A unique class so
+       the global `.check` specimen can't leak its border/box onto the option. */
+    .check-box {
       flex: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--check-size);
+      height: var(--check-size);
+      border: var(--border-width-strong) solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      color: var(--text-on-primary);
+
+      &.checked {
+        background-color: var(--primary);
+        border-color: var(--primary);
+      }
     }
   }
 
