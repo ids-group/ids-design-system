@@ -1,0 +1,21 @@
+:host {
+  display: block;
+}
+
+.theming-list {
+  margin: var(--space-3) 0;
+  padding-left: var(--space-5);
+
+  li {
+    margin-bottom: var(--space-1);
+  }
+}
+
+pre.t-mono-block {
+  margin: var(--space-3) 0;
+}
+
+.theming-note {
+  color: var(--text-tertiary);
+  margin-top: var(--space-2);
+}

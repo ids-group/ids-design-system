@@ -15,6 +15,7 @@ import { ScrollbarSection } from './foundations/scrollbar/scrollbar.section';
 import { BordersSection } from './foundations/borders/borders.section';
 import { OpacitySection } from './foundations/opacity/opacity.section';
 import { SurfaceLevelsSection } from './foundations/surface-levels/surface-levels.section';
+import { ThemingSection } from './foundations/theming/theming.section';
 import { ZIndexSection } from './foundations/z-index/z-index.section';
 import { BrowserTabSection } from './foundations/browser-tab/browser-tab.section';
 import { ChartsSection } from './foundations/charts/charts.section';
@@ -105,6 +106,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     BordersSection,
     OpacitySection,
     SurfaceLevelsSection,
+    ThemingSection,
     ZIndexSection,
     BrowserTabSection,
     ChartsSection,
@@ -322,6 +324,8 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-foundations-surface-levels />
 
+    <section-foundations-theming />
+
     <section-foundations-typography />
 
     <section-foundations-z-index />
@@ -391,6 +395,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
       section-foundations-borders,
       section-foundations-opacity,
       section-foundations-surface-levels,
+      section-foundations-theming,
       section-foundations-z-index,
       section-foundations-browser-tab,
       section-foundations-charts,

@@ -98,6 +98,7 @@ export const NAV: NavGroup[] = [
       { label: 'Scrollbar', anchor: 'scrollbar' },
       { label: 'Spacing', anchor: 'spacing' },
       { label: 'Surface levels', anchor: 'surface-levels' },
+      { label: 'Theming', anchor: 'theming' },
       { label: 'Typography', anchor: 'typography' },
       { label: 'Z-index', anchor: 'z-index' },
     ],
