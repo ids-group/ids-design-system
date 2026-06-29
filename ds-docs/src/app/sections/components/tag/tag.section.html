@@ -62,7 +62,7 @@
     <ds-tag
       variant="neutral"
       [interactive]="true"
-      [selected]="true"
+      [selected]="isSelected('north')"
       (toggled)="toggle('north')"
     >
       Site North
@@ -71,7 +71,7 @@
     <ds-tag
       variant="neutral"
       [interactive]="true"
-      [selected]="false"
+      [selected]="isSelected('south')"
       (toggled)="toggle('south')"
     >
       Site South
@@ -80,7 +80,7 @@
     <ds-tag
       variant="neutral"
       [interactive]="true"
-      [selected]="false"
+      [selected]="isSelected('east')"
       (toggled)="toggle('east')"
     >
       Site East

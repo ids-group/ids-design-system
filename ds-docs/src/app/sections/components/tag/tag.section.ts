@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { TagComponent } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
@@ -23,7 +23,19 @@ export class TagSection {
     },
   ];
 
-  protected toggle(_site: string): void {
-    // demo-only: real consumers flip their own selected state
+  protected readonly selectedSites = signal<Set<string>>(new Set(['north']));
+
+  protected isSelected(site: string): boolean {
+    return this.selectedSites().has(site);
+  }
+
+  protected toggle(site: string): void {
+    const current = new Set(this.selectedSites());
+    if (current.has(site)) {
+      current.delete(site);
+    } else {
+      current.add(site);
+    }
+    this.selectedSites.set(current);
   }
 }
