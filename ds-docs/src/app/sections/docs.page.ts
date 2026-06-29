@@ -196,6 +196,10 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-components-button />
 
+    <section-components-segmented />
+
+    <section-components-split-button />
+
     <section-components-card />
 
     <section-components-color-picker />
@@ -221,8 +225,6 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     <section-components-icon />
 
     <section-components-icon-button />
-
-    <section-components-layout-primitives />
 
     <section-components-link />
 
@@ -252,8 +254,6 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-components-search />
 
-    <section-components-segmented />
-
     <section-components-select />
 
     <section-components-selection />
@@ -265,8 +265,6 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     <section-components-slider />
 
     <section-components-spinner />
-
-    <section-components-split-button />
 
     <section-components-stat />
 
@@ -311,6 +309,8 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     <section-foundations-icons />
 
     <section-foundations-layout />
+
+    <section-components-layout-primitives />
 
     <section-foundations-motion />
 
