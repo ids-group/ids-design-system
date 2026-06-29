@@ -64,6 +64,7 @@
 .panel {
   display: flex;
   flex-direction: column;
+  width: 100%;
   background-color: var(--surface-overlay);
   border: var(--border-width-default) solid var(--border-default);
   border-radius: var(--radius-md);

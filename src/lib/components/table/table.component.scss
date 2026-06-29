@@ -282,6 +282,12 @@
   left: var(--_table-select-w);
 }
 
+/* Pagination footer — separates the paginator from the last table row. */
+.pagination-footer {
+  padding-top: var(--space-3);
+  border-top: var(--border-width-default) solid var(--ds-table-divider, var(--border-divider));
+}
+
 /* Bulk action bar */
 .bulk-bar {
   position: sticky;
