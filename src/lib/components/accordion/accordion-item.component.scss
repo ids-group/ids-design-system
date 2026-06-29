@@ -48,8 +48,14 @@
   }
 
   .body-inner {
+    // overflow:hidden + min-height:0 let the 0fr grid row crush this to zero.
+    // Padding lives on .body-content so it's clipped too — padding on this box
+    // isn't crushed by its own overflow, so it would otherwise leak a sliver.
     overflow: hidden;
     min-height: 0;
+  }
+
+  .body-content {
     padding: 0 var(--space-4) var(--space-4);
     color: var(--text-secondary);
     font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
