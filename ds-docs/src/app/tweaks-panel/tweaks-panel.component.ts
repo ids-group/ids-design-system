@@ -3,6 +3,7 @@ import { Component, ViewEncapsulation, signal } from '@angular/core';
 type BrandPreview = 'default' | 'manage-my';
 
 const BRAND_STORAGE_KEY = 'ds-docs-brand-preview';
+const THEME_STORAGE_KEY = 'ds-docs-theme';
 
 @Component({
   selector: 'tweaks-panel',
@@ -15,6 +16,7 @@ export class TweaksPanelComponent {
   protected readonly open = signal(false);
   protected readonly density = signal<'compact' | 'cozy' | 'comfy'>('cozy');
   protected readonly brand = signal<BrandPreview>('default');
+  protected readonly theme = signal<'auto' | 'light' | 'dark'>('auto');
   protected readonly neutrals = signal<'cool-gray' | 'brand'>('cool-gray');
   // Defaults mirror the live system: the blue ramp is hsl(229, 100%, 59%)
   // (themes/default/_palette.scss), and --secondary defaults off the same channels.
@@ -33,6 +35,10 @@ export class TweaksPanelComponent {
     if (stored) {
       this.applyBrand(stored);
     }
+    const storedTheme = this.readStoredTheme();
+    if (storedTheme) {
+      this.setTheme(storedTheme);
+    }
   }
 
   protected toggle(): void {
@@ -41,6 +47,23 @@ export class TweaksPanelComponent {
   protected setDensity(d: 'compact' | 'cozy' | 'comfy'): void {
     this.density.set(d);
     document.documentElement.setAttribute('data-density', d);
+  }
+  protected setTheme(t: 'auto' | 'light' | 'dark'): void {
+    this.theme.set(t);
+    if (t === 'auto') {
+      document.documentElement.removeAttribute('data-theme');
+    } else {
+      document.documentElement.setAttribute('data-theme', t);
+    }
+    try {
+      if (t === 'auto') {
+        localStorage.removeItem(THEME_STORAGE_KEY);
+      } else {
+        localStorage.setItem(THEME_STORAGE_KEY, t);
+      }
+    } catch {
+      // SSR / privacy-mode — signal state still applies.
+    }
   }
   protected setNeutrals(family: 'cool-gray' | 'brand'): void {
     this.neutrals.set(family);
@@ -102,6 +125,7 @@ export class TweaksPanelComponent {
     document.documentElement.style.setProperty('font-size', `${value_}px`);
   }
   protected reset(): void {
+    this.setTheme('auto');
     [
       '--blue-h',
       '--blue-s',
@@ -138,6 +162,16 @@ export class TweaksPanelComponent {
       const raw = localStorage.getItem(BRAND_STORAGE_KEY);
 
       return raw === 'manage-my' ? 'manage-my' : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private readStoredTheme(): 'light' | 'dark' | null {
+    try {
+      const raw = localStorage.getItem(THEME_STORAGE_KEY);
+
+      return raw === 'light' || raw === 'dark' ? raw : null;
     } catch {
       return null;
     }
