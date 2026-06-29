@@ -137,3 +137,10 @@
     overflow: hidden;
   }
 }
+
+/* The unencapsulated _field.scss docs specimen (shared .field/.control classes)
+   reaches this component and zeroes the textarea's vertical padding. Pin it with
+   :host specificity + a concrete token so the text isn't glued to the top edge. */
+:host .field .control textarea {
+  padding-block: var(--ds-input-pad-y, var(--space-3));
+}
