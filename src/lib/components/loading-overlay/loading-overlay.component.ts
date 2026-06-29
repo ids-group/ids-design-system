@@ -25,4 +25,6 @@ export class LoadingOverlayComponent {
   readonly label = input<string>('');
   readonly blur = input(true, { transform: booleanAttribute });
   readonly spinnerSize = input<SpinnerSize>('md');
+  // Offset the scrim top edge — useful when a sticky header should stay uncovered.
+  readonly insetTop = input<string>('0');
 }

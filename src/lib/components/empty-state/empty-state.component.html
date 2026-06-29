@@ -1,31 +1,31 @@
-<span [class]="classes()">
-  <span class="icon-tile">
-    <ds-icon
-      [name]="resolvedIcon()"
-      [size]="28"
-    >
-    </ds-icon>
+<ds-loading-overlay
+  [loading]="variant() === 'loading'"
+  [blur]="true"
+  spinnerSize="lg"
+>
+  <span [class]="classes()">
+    <span class="icon-tile">
+      <ds-icon
+        [name]="resolvedIcon()"
+        [size]="28"
+      >
+      </ds-icon>
+    </span>
+
+    @if (title()) {
+      <span class="title">
+        {{ title() }}
+      </span>
+    }
+
+    @if (body()) {
+      <span class="body">
+        {{ body() }}
+      </span>
+    }
+
+    <span class="cta">
+      <ng-content select="[actions]"></ng-content>
+    </span>
   </span>
-
-  @if (title()) {
-    <span class="title">
-      {{ title() }}
-    </span>
-  }
-
-  @if (body()) {
-    <span class="body">
-      {{ body() }}
-    </span>
-  }
-
-  <span class="cta">
-    <ng-content select="[actions]"></ng-content>
-  </span>
-
-  @if (variant() === 'loading') {
-    <span class="overlay-spin">
-      <ds-spinner size="lg" />
-    </span>
-  }
-</span>
+</ds-loading-overlay>

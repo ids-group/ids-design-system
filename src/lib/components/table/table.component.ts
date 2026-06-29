@@ -12,6 +12,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { PaginationComponent } from '../pagination/pagination.component';
+import { LoadingOverlayComponent } from '../loading-overlay/loading-overlay.component';
 import { CellTemplateDirective } from './cell-template.directive';
 import type { SortChangeEvent, SortDir, TableColumn } from './table.types';
 
@@ -25,6 +26,7 @@ const NUMERIC = /^-?\d+(\.\d+)?$/;
     NgTemplateOutlet,
     SkeletonComponent,
     PaginationComponent,
+    LoadingOverlayComponent,
   ],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',

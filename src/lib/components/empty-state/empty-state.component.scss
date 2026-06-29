@@ -10,10 +10,6 @@
   display: block;
 }
 
-@keyframes es-overlay-fadein {
-  from { opacity: 0; }
-}
-
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -55,31 +51,6 @@
     &:empty { display: none; margin-top: 0; }
   }
 
-  .overlay-spin {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    z-index: 1;
-    animation: es-overlay-fadein var(--duration-base) var(--ease-decelerate);
-
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: hsl(0deg 0% 100% / 50%);
-      backdrop-filter: blur(var(--blur-sm));
-      border-radius: inherit;
-    }
-
-    /* Lift the global .spinner above the scrim ::before. The global
-       _spinner.scss has no positioning; ::before is absolute-inset so
-       without a stacking context the spinner gets covered. */
-    .spinner {
-      position: relative;
-      z-index: 1;
-    }
-  }
   &.error {
     --_es-tile-bg-color: var(--ds-empty-state-tile-bg-color, var(--error-subtitle));
     --_es-tile-icon-color: var(--ds-empty-state-tile-icon-color, var(--error-text));

@@ -48,37 +48,6 @@
   background: var(--surface-default);
   box-sizing: border-box;
 
-  /* Overlay-loading positions the spinner over the existing rows so
-     the user keeps their context during refresh / re-sort / re-filter.
-     The overlay covers ONLY the tbody area — thead stays interactive so
-     users can re-sort even while data refreshes. */
-  &.loading-overlay {
-    position: relative;
-  }
-
-  .overlay {
-    position: absolute;
-    inset: var(--ds-table-head-h, 40px) 0 0 0;
-    z-index: var(--layer-popover, 30);
-    display: grid;
-    place-items: center;
-    background: hsl(0deg 0% 100% / 60%);
-    backdrop-filter: blur(1px);
-    pointer-events: all;
-  }
-
-  .spinner {
-    width: var(--spinner-md, 24px);
-    height: var(--spinner-md, 24px);
-    border: var(--border-width-strong, 2px) solid var(--border-default);
-    border-top-color: var(--primary);
-    border-radius: var(--radius-pill);
-    animation: ds-table-overlay-spin var(--duration-loop-fast, 700ms) linear infinite;
-  }
-}
-
-@keyframes ds-table-overlay-spin {
-  to { transform: rotate(360deg); }
 }
 
 .table {

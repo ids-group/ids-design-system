@@ -1,13 +1,13 @@
 import { Component, ViewEncapsulation, computed, input } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
-import { SpinnerComponent } from '../spinner/spinner.component';
+import { LoadingOverlayComponent } from '../loading-overlay/loading-overlay.component';
 import type { IconName } from '../../icons/icons.data';
 import type { EmptyStateVariant } from './empty-state.types';
 
 @Component({
   selector: 'ds-empty-state',
   standalone: true,
-  imports: [IconComponent, SpinnerComponent],
+  imports: [IconComponent, LoadingOverlayComponent],
   templateUrl: './empty-state.component.html',
   styleUrl: './empty-state.component.scss',
   encapsulation: ViewEncapsulation.Emulated,

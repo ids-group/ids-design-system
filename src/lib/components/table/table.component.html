@@ -1,16 +1,4 @@
-<div
-  class="scroll-wrap"
-  [class.loading-overlay]="isOverlayLoading()"
->
-  @if (isOverlayLoading()) {
-    <div
-      class="overlay"
-      aria-hidden="true"
-    >
-      <span class="spinner"></span>
-    </div>
-  }
-
+<div class="scroll-wrap">
   <div
     class="visually-hidden"
     role="status"
@@ -21,6 +9,11 @@
     }
   </div>
 
+  <ds-loading-overlay
+    [loading]="isOverlayLoading()"
+    [blur]="true"
+    [insetTop]="'var(--ds-table-head-h, 40px)'"
+  >
   <table
     [class]="tableClasses()"
     [attr.role]="rowInteractive() ? 'grid' : null"
@@ -171,6 +164,7 @@
       }
     </tbody>
   </table>
+  </ds-loading-overlay>
 </div>
 
 @if (pageSize(); as size) {
