@@ -1,4 +1,6 @@
-:host { --_checkbox-focus-shadow: var(--ds-checkbox-focus-shadow, var(--ds-control-focus-shadow)); display: inline-flex; align-items: center; }
+:host { --_checkbox-focus-shadow: var(--ds-checkbox-focus-shadow, var(--ds-control-focus-shadow)); display: inline-flex; }
+
+.checkbox-field { display: inline-flex; flex-direction: column; align-items: flex-start; }
 
 .check {
   appearance: none;

@@ -1,10 +1,16 @@
-<input
-  type="checkbox"
-  class="check"
-  [checked]="checked()"
-  [indeterminate]="indeterminate()"
-  [disabled]="disabled()"
-  [attr.name]="name()"
-  [attr.id]="inputId()"
-  (change)="onChange($event)"
-/>
+<div class="checkbox-field">
+  <input
+    type="checkbox"
+    class="check"
+    [checked]="checked()"
+    [indeterminate]="indeterminate()"
+    [disabled]="isDisabled()"
+    [attr.name]="name()"
+    [attr.id]="inputId()"
+    [attr.aria-invalid]="invalid() ? 'true' : null"
+    [attr.aria-describedby]="hintId()"
+    (change)="onCheckedChange($event)"
+    (blur)="markTouched()"
+  />
+  <ds-field-message [text]="hint()" [state]="messageState()" [messageId]="hintId()" />
+</div>
