@@ -3,8 +3,9 @@
 //
 // Composes the dark palette (neutral ramp + shadow-l 95%) with the shared
 // role structure, then overrides only the roles whose VALUES differ from
-// the light defaults. Activation selectors ([:root[data-theme='dark'],
-// @media prefers-color-scheme:dark) live in styles/_theme-activation.scss.
+// the light defaults. The activation selector (:root[data-theme='dark'])
+// lives in styles/_theme-activation.scss. Dark is opt-in — light is the
+// default; there is no automatic prefers-color-scheme switch.
 //
 // Most roles follow the inverted --neutral-* ramp automatically (custom
 // props resolve at use-time). This file overrides ONLY roles that can't
@@ -15,11 +16,11 @@
 // =========================================================================
 
 @use 'palette';
-@use '../roles';
+@use '../semantic';
 
 @mixin theme {
   @include palette.palette;
-  @include roles.roles;
+  @include semantic.roles;
 
   // Interaction states: on dark, hover/pressed must LIGHTEN. The default theme
   // derives them as color-mix toward black (darkens) — wrong direction here.

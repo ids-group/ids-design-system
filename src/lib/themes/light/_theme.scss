@@ -7,9 +7,9 @@
 // =========================================================================
 
 @use 'palette';
-@use '../roles';
+@use '../semantic';
 
 @mixin theme {
   @include palette.palette;
-  @include roles.roles;
+  @include semantic.roles;
 }

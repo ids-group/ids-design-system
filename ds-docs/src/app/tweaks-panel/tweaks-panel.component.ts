@@ -16,7 +16,7 @@ export class TweaksPanelComponent {
   protected readonly open = signal(false);
   protected readonly density = signal<'compact' | 'cozy' | 'comfy'>('cozy');
   protected readonly brand = signal<BrandPreview>('default');
-  protected readonly theme = signal<'auto' | 'light' | 'dark'>('auto');
+  protected readonly theme = signal<'light' | 'dark'>('light');
   protected readonly neutrals = signal<'cool-gray' | 'brand'>('cool-gray');
   // Defaults mirror the live system: the blue ramp is hsl(229, 100%, 59%)
   // (themes/light/_palette.scss), and --secondary defaults off the same channels.
@@ -48,18 +48,19 @@ export class TweaksPanelComponent {
     this.density.set(d);
     document.documentElement.setAttribute('data-density', d);
   }
-  protected setTheme(t: 'auto' | 'light' | 'dark'): void {
+  protected setTheme(t: 'light' | 'dark'): void {
     this.theme.set(t);
-    if (t === 'auto') {
-      document.documentElement.removeAttribute('data-theme');
+    // Light is the default (no attribute needed); only dark sets/persists the attribute.
+    if (t === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
     } else {
-      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.removeAttribute('data-theme');
     }
     try {
-      if (t === 'auto') {
-        localStorage.removeItem(THEME_STORAGE_KEY);
+      if (t === 'dark') {
+        localStorage.setItem(THEME_STORAGE_KEY, 'dark');
       } else {
-        localStorage.setItem(THEME_STORAGE_KEY, t);
+        localStorage.removeItem(THEME_STORAGE_KEY);
       }
     } catch {
       // SSR / privacy-mode — signal state still applies.
@@ -125,7 +126,7 @@ export class TweaksPanelComponent {
     document.documentElement.style.setProperty('font-size', `${value_}px`);
   }
   protected reset(): void {
-    this.setTheme('auto');
+    this.setTheme('light');
     [
       '--blue-h',
       '--blue-s',
@@ -167,11 +168,9 @@ export class TweaksPanelComponent {
     }
   }
 
-  private readStoredTheme(): 'light' | 'dark' | null {
+  private readStoredTheme(): 'dark' | null {
     try {
-      const raw = localStorage.getItem(THEME_STORAGE_KEY);
-
-      return raw === 'light' || raw === 'dark' ? raw : null;
+      return localStorage.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : null;
     } catch {
       return null;
     }

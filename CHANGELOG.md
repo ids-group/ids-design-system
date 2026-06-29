@@ -11,13 +11,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 ### Added
 
 - **Dark theme** (`themes/dark/`) — ships with the default bundle (`@use 'styles/ds'`).
-  Activated by `<html data-theme="dark">` (forced dark) / `data-theme="light"` (forced light),
-  or automatically via `@media (prefers-color-scheme: dark)` when the attribute is unset.
-  Adds theme-stable `--static-white` / `--static-ink` tokens so on-fill text keeps correct
-  contrast across themes. Non-breaking — additive, and light output is unchanged. Light and dark
-  are **sibling themes** — a shared base palette (`themes/_base-palette`) + a shared role map
-  (`themes/_roles`), each theme applied under a mutually-exclusive `:root` selector so neither
-  patches the other. `data-neutrals="brand"` and brand overlays are light-scoped.
+  **Light is the default** (no attribute); dark is opt-in via `<html data-theme="dark">`. There is
+  no automatic `prefers-color-scheme` switch — to follow the OS, set `data-theme` from `matchMedia`
+  in your app bootstrap. Adds theme-stable `--static-white` / `--static-ink` tokens so on-fill text
+  keeps correct contrast across themes. Non-breaking — additive, and light output is unchanged.
+  Light and dark are **sibling themes** — a shared base palette (`themes/_base-palette`) + a shared
+  role map (`themes/_semantic`); light applies at `:root`, dark at `:root[data-theme='dark']` (the
+  dark block declares the complete token set, so it fully replaces light, not patches it).
+  `data-neutrals="brand"` is a light-context switch; brand overlays are authored on light.
 
 ### Breaking
 
