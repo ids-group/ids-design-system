@@ -194,6 +194,8 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-components-segmented />
 
+    <section-components-icon-button />
+
     <section-components-split-button />
 
     <section-components-card />
@@ -215,8 +217,6 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     <section-components-input />
 
     <section-components-icon />
-
-    <section-components-icon-button />
 
     <section-components-link />
 
