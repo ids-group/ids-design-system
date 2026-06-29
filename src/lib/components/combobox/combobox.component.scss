@@ -97,6 +97,20 @@
     &.check {
       padding-left: var(--space-2);
     }
+
+    /* Label fills the row and truncates rather than wrapping into the next
+       option; the checkbox keeps its size so a narrow panel can't squash it. */
+    > span {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    > input.check {
+      flex: none;
+    }
   }
 
   .empty {
