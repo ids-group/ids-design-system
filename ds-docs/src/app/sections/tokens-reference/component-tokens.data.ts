@@ -580,15 +580,23 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         value: 'var(--font-weight-bold)',
         notes: 'Label weight.',
       },
+    ],
+  },
+  {
+    component: 'Field message',
+    selector: '.field-message',
+    description:
+      'Shared helper / error line rendered by every form field (input, textarea, select, multi-select, otp-input, slider, color-picker). The error state uses --error-text and success uses --success-text; these two hooks tune the neutral helper text.',
+    tokens: [
       {
-        name: '--ds-input-hint-color',
+        name: '--ds-field-message-color',
         value: 'var(--text-tertiary)',
-        notes: 'Hint colour.',
+        notes: 'Default (neutral) helper-text colour.',
       },
       {
-        name: '--ds-input-hint-fs',
+        name: '--ds-field-message-font-size',
         value: 'var(--font-size-xs)',
-        notes: 'Hint size.',
+        notes: 'Helper-text size.',
       },
     ],
   },

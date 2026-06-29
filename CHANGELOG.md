@@ -26,6 +26,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   legacy `s | m | l` tier. Default is now `md` (was `l` — same 40 px). Migration:
   `m` → `sm` (both 32), `l` → `md` (both 40); the 24 px `s` is removed — its callers move to
   `sm` (32 px). Aligns button with input / select / date-picker / icon-button.
+- **Removed `--ds-input-hint-color` / `--ds-input-hint-fs`.** Field helper/error text is now
+  rendered by the shared `ds-field-message`; tune its neutral colour and size via the new
+  `--ds-field-message-color` / `--ds-field-message-font-size` hooks (these apply to every field's
+  helper/error line, not just input).
 
 ### Changed
 
@@ -76,7 +80,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `ds-otp-input`, `ds-slider`, `ds-color-picker`.** These fields can now render an associated
   helper/error line (wired via `aria-describedby` + `role="alert"` on error) through a new shared
   internal `ds-field-message`. `ds-input` / `ds-textarea` now render their hint via the same shared
-  message (no public change; `--ds-input-hint-*` overrides preserved).
+  message (the `--ds-input-hint-*` tokens are replaced by `--ds-field-message-*` — see Breaking).
 
 ### Fixed
 

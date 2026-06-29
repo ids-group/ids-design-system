@@ -38,10 +38,6 @@
   gap: var(--space-1-5);
   width: 100%;
 
-  /* Back-compat: existing public hint hooks feed the shared field-message. */
-  --ds-field-message-color:     var(--ds-input-hint-color, var(--text-tertiary));
-  --ds-field-message-font-size: var(--ds-input-hint-fs,    var(--font-size-xs));
-
   .label {
     font: var(--_input-label-fw) var(--_input-label-fs) / var(--line-height-base) var(--font-sans);
     color: var(--_input-label-color);
