@@ -62,5 +62,6 @@ export * from './lib/components/skeleton';
 export * from './lib/components/spinner';
 export * from './lib/components/checkbox';
 export * from './lib/components/radio';
+export * from './lib/components/radio-group';
 export * from './lib/components/switch';
 export * from './lib/components/static-preview.directive';

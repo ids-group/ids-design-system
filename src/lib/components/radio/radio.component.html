@@ -1,10 +1,12 @@
 <input
+  #inputRef
   type="radio"
   class="radio"
-  [checked]="checked()"
-  [disabled]="disabled()"
-  [attr.name]="name() || null"
-  [attr.value]="value() || null"
+  [checked]="isChecked()"
+  [disabled]="effectiveDisabled()"
+  [attr.name]="effectiveName() || null"
+  [attr.value]="value() ?? null"
   [attr.id]="inputId()"
-  (change)="onChange($event)"
+  [attr.tabindex]="tabIndexAttr"
+  (change)="onSelect()"
 />
