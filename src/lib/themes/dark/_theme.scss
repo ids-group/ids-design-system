@@ -1,0 +1,75 @@
+// =========================================================================
+// Dark theme — Tier 2 role overrides + activation. Most roles follow the
+// inverted --neutral-* ramp automatically (custom props resolve at use-time).
+// This file overrides ONLY roles that can't follow the flip: tint/subtle
+// surfaces (near-white *-50 picks → dark hue tints), on-tint text (*-text /
+// *-strong → lighter stops), scrim (must stay dark), focus halo alpha.
+// On-fill text already points at theme-stable --static-white/--static-ink.
+// =========================================================================
+
+@use 'palette';
+
+@mixin roles {
+  // Brand tint surfaces + on-tint text (channel-derived → track rebrand).
+  --surface-tint:         hsl(var(--primary-h) 45% 16%);
+  --primary-subtitle:     hsl(var(--primary-h) 45% 18%);
+  --primary-muted:        hsl(var(--primary-h) 40% 26%);
+  --primary-muted-strong: hsl(var(--primary-h) 42% 32%);
+  --primary-strong:       hsl(var(--primary-h) 90% 72%);
+
+  --secondary-subtitle:   hsl(var(--secondary-h) 45% 18%);
+  --secondary-muted:      hsl(var(--secondary-h) 40% 26%);
+  --secondary-strong:     hsl(var(--secondary-h) 90% 72%);
+
+  --tertiary-subtitle:    hsl(var(--tertiary-h) 45% 18%);
+  --tertiary-muted:       hsl(var(--tertiary-h) 40% 26%);
+  --tertiary-strong:      hsl(var(--tertiary-h) 90% 72%);
+
+  --text-link:            hsl(var(--primary-h) 90% 74%);
+  --link-visited:         hsl(var(--primary-h) 50% 70%);
+
+  // Status families: dark tint bg + border, lighter text.
+  --success-subtitle:     hsl(132deg 38% 14%);
+  --success-muted:        hsl(132deg 34% 20%);
+  --success-border:       hsl(132deg 30% 28%);
+  --success-text:         hsl(132deg 55% 62%);
+
+  --warning-subtitle:     hsl(45deg 42% 14%);
+  --warning-muted:        hsl(45deg 38% 22%);
+  --warning-border:       hsl(45deg 35% 30%);
+  --warning-text:         hsl(45deg 90% 62%);
+
+  --error-subtitle:       hsl(0deg 45% 16%);
+  --error-muted:          hsl(0deg 40% 24%);
+  --error-border:         hsl(0deg 38% 32%);
+  --error-text:           hsl(0deg 85% 74%);
+
+  --info-subtitle:        hsl(217deg 45% 16%);
+  --info-muted:           hsl(217deg 40% 24%);
+  --info-border:          hsl(217deg 38% 32%);
+  --info-text:            hsl(217deg 90% 74%);
+
+  // Status pills that referenced palette stops directly (green-50/700) — repoint
+  // to the dark status roles so the lifecycle pill reads on dark. (planning →
+  // neutral, confirmed → primary-*, completed → neutral all follow flips.)
+  --status-active-bg-color:   var(--success-subtitle);
+  --status-active-text-color: var(--success-text);
+
+  // Scrim stays dark — must NOT follow --shadow-tint-l: 95%.
+  --surface-scrim: hsl(225deg 39% 4% / 70%);
+
+  // Field focus halo — boost alpha for legibility on dark.
+  --focus-field-alpha: .35;
+}
+
+:root[data-theme='dark'] {
+  @include palette.ramps;
+  @include roles;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include palette.ramps;
+    @include roles;
+  }
+}

@@ -1,0 +1,26 @@
+// =========================================================================
+// Dark palette — Tier 1 overrides. Exposes a `ramps` mixin applied under the
+// dark activation selectors (themes/dark/_theme.scss). Hand-tuned dark neutrals
+// (NOT a linear inverse): note --neutral-0 is an ELEVATED card surface, LIGHTER
+// than the --neutral-50 canvas — the opposite of light, where 0 (#FFF) is the
+// brightest stop. Brand/status ramps are left to the role layer.
+// =========================================================================
+
+@mixin ramps {
+  --neutral-0:   #171B24; // surface-default / overlay (cards) — elevated
+  --neutral-50:  #0F131A; // surface-canvas — darkest (page bg)
+  --neutral-100: #1E2330; // surface-secondary / disabled
+  --neutral-150: #242A38; // surface-muted, border-subtitle/divider/disabled
+  --neutral-200: #2A3040; // border-default
+  --neutral-300: #3A4252; // border-strong
+  --neutral-400: #6B7388; // text-muted/disabled, icon-muted
+  --neutral-500: #8A93A6; // text-tertiary, icon-default
+  --neutral-600: #9BA3B4;
+  --neutral-700: #B7BFD0; // text-secondary, icon-strong, border-inverted
+  --neutral-800: #CDD3E0;
+  --neutral-900: #E7EAF2; // text-primary, surface-inverted
+  --neutral-950: #F4F6FA;
+
+  // Shadow substrate flips light so the same alphas read as soft glows on dark.
+  --shadow-tint-l: 95%;
+}

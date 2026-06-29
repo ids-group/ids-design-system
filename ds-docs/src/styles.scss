@@ -8,6 +8,7 @@
 // Load palette → theme → tokens so role aliases (var(--blue-600) etc.) resolve.
 @use 'themes/default/palette';
 @use 'themes/default/theme';
+@use 'themes/dark/theme' as dark-theme;
 @use 'styles/tokens';
 @use 'styles/tokens-charts';
 @use 'styles/fonts';
