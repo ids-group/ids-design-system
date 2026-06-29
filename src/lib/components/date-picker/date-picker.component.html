@@ -28,10 +28,13 @@
     type="button"
     aria-haspopup="dialog"
     [class]="triggerClasses()"
+    [disabled]="isDisabled()"
     [attr.aria-expanded]="isOpen()"
     [attr.aria-labelledby]="label() ? labelId : null"
     [attr.aria-label]="resolvedAriaLabel()"
     [attr.aria-required]="required() ? 'true' : null"
+    [attr.aria-invalid]="invalid() ? 'true' : null"
+    [attr.aria-describedby]="hintId()"
     (click)="open()"
   >
     <ds-icon
@@ -45,11 +48,11 @@
     </span>
   </button>
 
-  @if (hint()) {
-    <small class="hint">
-      {{ hint() }}
-    </small>
-  }
+  <ds-field-message
+    [text]="hint()"
+    [state]="messageState()"
+    [messageId]="hintId()"
+  />
 </div>
 
 <ng-template #panel>
