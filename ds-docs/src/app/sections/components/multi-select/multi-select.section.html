@@ -59,4 +59,34 @@
       Selected: {{ overflow().join(', ') }}
     </p>
   </div>
+
+  <!-- ============================================================ Helper / error text -->
+  <h3 class="block-title t-h4">
+    Helper / error text
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">hint</code> renders a helper line below the
+    control. Paired with <code class="t-mono-inline">[invalid]="true"</code> it
+    switches to an error style with <code>role="alert"</code>.
+  </p>
+
+  <div class="demo-panel">
+    <ds-multi-select
+      placeholder="Add tags…"
+      ariaLabel="Tags — with hint"
+      hint="Choose all categories that apply to this record."
+      [options]="tagOptions"
+    />
+  </div>
+
+  <div class="demo-panel">
+    <ds-multi-select
+      placeholder="Add tags…"
+      ariaLabel="Tags — error"
+      hint="At least one tag is required."
+      [invalid]="true"
+      [options]="tagOptions"
+    />
+  </div>
 </docs-section>

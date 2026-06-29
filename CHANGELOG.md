@@ -60,6 +60,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `bg-color`/`label-color-disabled`; icon-button had none).
 - **`--ds-button-press-scale`** (default `0.98`) and **`--ds-icon-button-press-scale`**
   (default `0.96`) — tune the press scale-down (set `1` to disable).
+- **`hint` inputs (and `invalid` where missing) on `ds-select`, `ds-multi-select`,
+  `ds-otp-input`, `ds-slider`, `ds-color-picker`.** These fields can now render an associated
+  helper/error line (wired via `aria-describedby` + `role="alert"` on error) through a new shared
+  internal `ds-field-message`. `ds-input` / `ds-textarea` now render their hint via the same shared
+  message (no public change; `--ds-input-hint-*` overrides preserved).
 
 ### Fixed
 
