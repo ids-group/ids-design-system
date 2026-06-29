@@ -2,7 +2,9 @@
   display: block;
 }
 
-.field {
+/* Unique class — a bare `.field` collides with consumer/docs form styles that
+   set flex-direction:column and silently turn the chip row into a column. */
+.field-trigger {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
