@@ -1,0 +1,36 @@
+// =========================================================================
+// Theme activation — mutually-exclusive theme selectors.
+//
+// :root:not([data-theme='dark']) and :root[data-theme='dark'] are mutually
+// exclusive, so exactly one theme block matches at runtime. Each @include
+// emits the complete token set (palette + roles + per-theme overrides) — no
+// cross-theme dependency at runtime. The @media block adds OS-dark only when
+// the theme is not pinned to light.
+// =========================================================================
+
+@use '../themes/light/theme' as light;
+@use '../themes/dark/theme' as dark;
+
+:root:not([data-theme='dark'])      { @include light.theme; }
+:root[data-theme='dark']            { @include dark.theme; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light'])   { @include dark.theme; }
+}
+
+// data-neutrals="brand" is a LIGHT-theme feature (brand-gray hue-derived). Scope to light.
+:root:not([data-theme='dark'])[data-neutrals='brand'] {
+  --neutral-0:   var(--brand-gray-0);
+  --neutral-50:  var(--brand-gray-50);
+  --neutral-100: var(--brand-gray-100);
+  --neutral-150: var(--brand-gray-150);
+  --neutral-200: var(--brand-gray-200);
+  --neutral-300: var(--brand-gray-300);
+  --neutral-400: var(--brand-gray-400);
+  --neutral-500: var(--brand-gray-500);
+  --neutral-600: var(--brand-gray-600);
+  --neutral-700: var(--brand-gray-700);
+  --neutral-800: var(--brand-gray-800);
+  --neutral-900: var(--brand-gray-900);
+  --neutral-950: var(--brand-gray-950);
+}

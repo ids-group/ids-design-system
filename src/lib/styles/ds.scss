@@ -1,19 +1,20 @@
 // Public DS stylesheet entry. Consumers import once at the top of their styles.scss:
 //   @use 'styles/ds';
 //
-// Bundles the light palette + theme (the default skin) + the dark overlay. Layers:
-//   light/palette — Tier 1 concrete colours (ramps + HSL channels)
-//   light/theme   — Tier 2 semantic role → palette assignments + font families
-//   dark/theme    — dark overlay (scoped via [data-theme] + prefers-color-scheme)
-//   tokens          — Tier 3 geometry / typography scale / motion / component tokens
-// Advanced consumers can swap the palette/theme and keep tokens — global
-// side-effects (fonts, link) are then opt-in:
-//   @use 'themes/X/palette'; @use 'themes/X/theme'; @use 'styles/tokens';
+// Bundles the base palette (theme-independent ramps + channels + statics + fonts)
+// and the theme activation (light + dark, sibling themes + OS-default media rule).
+// Layers:
+//   base-palette      — Tier 1a theme-independent primitives (ramps, channels,
+//                       statics, shadow h/s, font families) emitted at :root
+//   theme-activation  — Tier 1b + Tier 2: per-theme palette + role assignments,
+//                       scoped to mutually-exclusive :root selectors
+//   tokens            — Tier 3 geometry / typography scale / motion / component tokens
+// Advanced consumers can compose themes individually instead of using ds:
+//   @use 'themes/base-palette'; @use 'styles/theme-activation'; @use 'styles/tokens';
 //   @use 'styles/fonts'; @use 'styles/link'; …
 
-@forward '../themes/light/palette';
-@forward '../themes/light/theme';
-@forward '../themes/dark/theme';
+@forward '../themes/base-palette';
+@forward 'theme-activation';
 @forward 'tokens';
 @forward 'breakpoints';
 @forward 'tokens-charts';

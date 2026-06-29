@@ -1,159 +1,34 @@
 // =========================================================================
-// Default palette — Tier 1 concrete colour primitives.
+// Light palette — Tier 1b per-theme primitives.
 //
-// This file DEFINES the colours: raw ramps (--cool-gray-*, --brand-gray-*,
-// --blue-*, --red-*, --green-*, --yellow-*, --sky-*, --orange-*) + the HSL
-// channels (--blue-h/s/l, --red-h/s/l, --shadow-tint-h/s/l) they compose from.
-// Tokens are named by the COLOUR itself — the palette does not know what a
-// colour is "for". The --neutral-* FAMILY SLOT (which gray ramp is active)
-// is semantic, so it lives in the theme (_theme.scss), not here.
+// Exposes @mixin palette with ONLY the light-specific primitives:
+//   · --neutral-* slot pointed at the cool-gray ramp
+//   · --shadow-tint-l: 7%  (light shadow substrate lightness)
 //
-// The companion theme (themes/light/_theme.scss) SETS these onto semantic
-// roles (--primary → --blue-600, --error → --red-500, …). Components consume
-// only those roles, never this palette directly.
-//
-// A sibling palette (e.g. _palette-dark.scss) ships different ramp values; pair
-// it with a matching theme file. Default = "Blue + Slate baseline".
+// Theme-independent ramps (--cool-gray-*, --brand-gray-*, --blue-*, etc.)
+// and HSL channels live in themes/_base-palette.scss and emit at :root.
 // =========================================================================
 
-:root {
-  // -----------------------------------------------------------------------
-  // Cool gray ramp (13 stops) — hand-drawn slate-family gray. The hue drifts
-  // 210 → 227 toward the brand hue (229) as it darkens; chroma follows a
-  // designed U-curve (S 40% → 12% → 37%). Appearance name, Carbon-style.
-  // -----------------------------------------------------------------------
-  --cool-gray-0:   #FFF;
-  --cool-gray-50:  #F8FAFC;
-  --cool-gray-100: #F1F4F9;
-  --cool-gray-150: #E8ECF2;
-  --cool-gray-200: #DCE1EA;
-  --cool-gray-300: #C2C9D6;
-  --cool-gray-400: #9BA3B4;
-  --cool-gray-500: #6B7388;
-  --cool-gray-600: #4D5468;
-  --cool-gray-700: #353B4D;
-  --cool-gray-800: #232838;
-  --cool-gray-900: #161A28;
-  --cool-gray-950: #0B0E18;
+@mixin palette {
+  /* Neutral family slot — semantic pointer at the active gray ramp from the
+     palette. Default: hand-drawn cool-gray. <html data-neutrals="brand">
+     (ds-docs tweaks panel) repoints it at the brand-derived brand-gray ramp,
+     where --primary-h re-tints every gray. Roles below consume --neutral-*
+     so the family switch never touches them. */
+  --neutral-0:   var(--cool-gray-0);
+  --neutral-50:  var(--cool-gray-50);
+  --neutral-100: var(--cool-gray-100);
+  --neutral-150: var(--cool-gray-150);
+  --neutral-200: var(--cool-gray-200);
+  --neutral-300: var(--cool-gray-300);
+  --neutral-400: var(--cool-gray-400);
+  --neutral-500: var(--cool-gray-500);
+  --neutral-600: var(--cool-gray-600);
+  --neutral-700: var(--cool-gray-700);
+  --neutral-800: var(--cool-gray-800);
+  --neutral-900: var(--cool-gray-900);
+  --neutral-950: var(--cool-gray-950);
 
-  // -----------------------------------------------------------------------
-  // Brand gray ramp (13 stops) — derived, M3-style: the cool-gray S/L curve
-  // and hue drift are kept, but the hue source is --neutral-h (defaults to
-  // the brand hue). Re-skinning --primary-h re-tints these grays to match
-  // the brand automatically. With the default blue brand this ramp matches
-  // cool-gray to within rounding.
-  // -----------------------------------------------------------------------
-  --neutral-h: var(--primary-h, var(--blue-h));
-  --brand-gray-0:   #FFF;
-  --brand-gray-50:  hsl(calc(var(--neutral-h) - 19) 40.0% 98.0%);
-  --brand-gray-100: hsl(calc(var(--neutral-h) - 12) 40.0% 96.1%);
-  --brand-gray-150: hsl(calc(var(--neutral-h) - 13) 27.8% 92.9%);
-  --brand-gray-200: hsl(calc(var(--neutral-h) - 10) 25.0% 89.0%);
-  --brand-gray-300: hsl(calc(var(--neutral-h) - 10) 19.6% 80.0%);
-  --brand-gray-400: hsl(calc(var(--neutral-h) - 8)  14.3% 65.7%);
-  --brand-gray-500: hsl(calc(var(--neutral-h) - 6)  11.9% 47.6%);
-  --brand-gray-600: hsl(calc(var(--neutral-h) - 5)  14.9% 35.5%);
-  --brand-gray-700: hsl(calc(var(--neutral-h) - 4)  18.5% 25.5%);
-  --brand-gray-800: hsl(calc(var(--neutral-h) - 3)  23.1% 17.8%);
-  --brand-gray-900: hsl(calc(var(--neutral-h) - 2)  29.0% 12.2%);
-  --brand-gray-950: hsl(calc(var(--neutral-h) - 3)  37.1% 6.9%);
-
-  // -----------------------------------------------------------------------
-  // Blue — defined as HSL channels so we can compose hsla() halos and tints
-  // from the same source. #2F54FF ≈ hsl(229, 100%, 59%). This is the ramp the
-  // default theme maps --primary onto (see styles/_tokens.scss). Naming is
-  // concrete (the colour) — the semantic --primary mapping lives in the lib.
-  // -----------------------------------------------------------------------
-  --blue-h: 229;
-  --blue-s: 100%;
-  --blue-l: 59%;
-
-  --blue-50:  hsl(var(--blue-h) 100% 97%);
-  --blue-100: hsl(var(--blue-h)  95% 94%);
-  --blue-200: hsl(var(--blue-h)  95% 89%);
-  --blue-300: hsl(var(--blue-h)  98% 82%);
-  --blue-400: hsl(var(--blue-h) 100% 75%);
-  --blue-500: hsl(var(--blue-h) 100% 66%);
-  --blue-600: hsl(var(--blue-h) var(--blue-s) var(--blue-l));
-  --blue-700: hsl(var(--blue-h)  85% 52%);
-  --blue-800: hsl(var(--blue-h)  79% 40%);
-  --blue-900: hsl(var(--blue-h)  77% 30%);
-
-  // -----------------------------------------------------------------------
-  // Orange — focus / secondary signal
-  // -----------------------------------------------------------------------
-  --orange-50:  #FFF7F0;
-  --orange-100: #FFEEDF;
-  --orange-200: #FFD9B8;
-  --orange-300: #FFC59C;
-  --orange-400: #FF9755;
-  --orange-500: #FF7A2E;
-  --orange-600: #E8631A;
-  --orange-700: #B84812;
-  --orange-800: #8A340A;
-
-  // -----------------------------------------------------------------------
-  // Green — success
-  // -----------------------------------------------------------------------
-  --green-50:  #ECFAEE;
-  --green-100: #D6F3DB;
-  --green-200: #BBE8C2;
-  --green-300: #8EDA9A;
-  --green-400: #4FC368;
-  --green-500: #22A33A;
-  --green-600: #1B8A2E;
-  --green-700: #156822;
-
-  // -----------------------------------------------------------------------
-  // Yellow — attention / warning
-  // -----------------------------------------------------------------------
-  --yellow-50:  #FFFBEA;
-  --yellow-100: #FEF8DC;
-  --yellow-200: #FCEFA1;
-  --yellow-300: #F9E25F;
-  --yellow-400: #F4D43A;
-  --yellow-500: #E0BE00;
-  --yellow-600: #B89B00;
-  --yellow-700: #8A7400;
-
-  // -----------------------------------------------------------------------
-  // Red — HSL-channel-split for halo derivation. #D81F1F ≈ hsl(0, 75%, 49%).
-  // The default theme maps --error onto this ramp (see styles/_tokens.scss).
-  // -----------------------------------------------------------------------
-  --red-h: 0;
-  --red-s: 75%;
-  --red-l: 49%;
-
-  --red-50:  hsl(var(--red-h) 86% 97%);
-  --red-100: hsl(var(--red-h) 86% 95%);
-  --red-200: hsl(var(--red-h) 86% 88%);
-  --red-300: hsl(var(--red-h) 84% 76%);
-  --red-400: hsl(var(--red-h) 87% 57%);
-  --red-500: hsl(var(--red-h) var(--red-s) var(--red-l));
-  --red-600: hsl(var(--red-h) 78% 41%);
-  --red-700: hsl(var(--red-h) 78% 31%);
-
-  // -----------------------------------------------------------------------
-  // Sky — info role ramp. A brighter, cooler blue (#3B82F6) kept distinct
-  // from the primary --blue ramp (#2F54FF) so "informational" reads apart
-  // from "primary action".
-  // -----------------------------------------------------------------------
-  --sky-50:  #EFF6FF;
-  --sky-100: #DBEAFE;
-  --sky-200: #BFDBFE;
-  --sky-300: #93C5FD;
-  --sky-400: #60A5FA;
-  --sky-500: #3B82F6;
-  --sky-600: #2563EB;
-  --sky-700: #1D4ED8;
-
-  // -----------------------------------------------------------------------
-  // Shadow tint — channel-split substrate. Light theme uses a cool
-  // near-black slate (225 / 39% / 7%). A dark theme would override
-  // --shadow-tint-l to ~95% so the same alphas render as soft light
-  // glows over dark surfaces.
-  // -----------------------------------------------------------------------
-  --shadow-tint-h: 225;
-  --shadow-tint-s: 39%;
+  // Shadow substrate lightness for light theme.
   --shadow-tint-l: 7%;
 }

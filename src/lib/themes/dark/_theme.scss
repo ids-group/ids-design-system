@@ -1,15 +1,26 @@
 // =========================================================================
-// Dark theme — Tier 2 role overrides + activation. Most roles follow the
-// inverted --neutral-* ramp automatically (custom props resolve at use-time).
-// This file overrides ONLY roles that can't follow the flip: tint/subtle
-// surfaces (near-white *-50 picks → dark hue tints), on-tint text (*-text /
-// *-strong → lighter stops), scrim (must stay dark), focus halo alpha.
+// Dark theme — Tier 2 role overrides.
+//
+// Composes the dark palette (neutral ramp + shadow-l 95%) with the shared
+// role structure, then overrides only the roles whose VALUES differ from
+// the light defaults. Activation selectors ([:root[data-theme='dark'],
+// @media prefers-color-scheme:dark) live in styles/_theme-activation.scss.
+//
+// Most roles follow the inverted --neutral-* ramp automatically (custom
+// props resolve at use-time). This file overrides ONLY roles that can't
+// follow the flip: tint/subtle surfaces (near-white *-50 picks → dark hue
+// tints), on-tint text (*-text / *-strong → lighter stops), hover/pressed
+// direction, scrim (must stay dark), focus halo alpha, and charts.
 // On-fill text already points at theme-stable --static-white/--static-ink.
 // =========================================================================
 
 @use 'palette';
+@use '../roles';
 
-@mixin roles {
+@mixin theme {
+  @include palette.palette;
+  @include roles.roles;
+
   // Interaction states: on dark, hover/pressed must LIGHTEN. The default theme
   // derives them as color-mix toward black (darkens) — wrong direction here.
   // Mirror the light recipe's 88% / 76% steps, mixed toward white instead.
@@ -76,11 +87,9 @@
 
   // Field focus halo — boost alpha for legibility on dark.
   --focus-field-alpha: .35;
-}
 
-// Chart / dataviz overrides. Axis/grid/label/title/cursor already flip via the
-// --neutral-* / --text-* roles; only the light-bg-tuned bits move here.
-@mixin charts {
+  // Chart / dataviz overrides. Axis/grid/label/title/cursor already flip via the
+  // --neutral-* / --text-* roles; only the light-bg-tuned bits move here.
   --chart-hover-bg-color:     hsl(0deg 0% 100% / 6%); // light wash (default dark wash is invisible on dark)
   --chart-tooltip-bg-color:   var(--surface-overlay);  // native dark tooltip, not an inverted light box
   --chart-tooltip-text-color: var(--text-primary);
@@ -102,18 +111,4 @@
   --chart-div-1:  hsl(140deg 40% 32%);
   --chart-div-2:  hsl(140deg 48% 46%);
   --chart-div-3:  hsl(140deg 55% 60%);
-}
-
-:root[data-theme='dark'] {
-  @include palette.ramps;
-  @include roles;
-  @include charts;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    @include palette.ramps;
-    @include roles;
-    @include charts;
-  }
 }

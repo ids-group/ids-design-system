@@ -3,12 +3,11 @@
 // avoid pulling in brand-specific overrides — those live in mm-broker (or
 // any other host app that opts in via `<html data-brand="…">`).
 //
-// Theme contract: palette primitives (--blue-*, --neutral-*, ramps + HSL
-// channels) live in palette-default; semantic role assignments in theme-default.
-// Load palette → theme → tokens so role aliases (var(--blue-600) etc.) resolve.
-@use 'themes/light/palette';
-@use 'themes/light/theme';
-@use 'themes/dark/theme' as dark-theme;
+// Theme contract: base-palette emits theme-independent primitives at :root;
+// theme-activation scopes light + dark under mutually-exclusive selectors.
+// Load base-palette → theme-activation → tokens so role aliases resolve.
+@use 'themes/base-palette';
+@use 'styles/theme-activation';
 @use 'styles/tokens';
 @use 'styles/tokens-charts';
 @use 'styles/fonts';
