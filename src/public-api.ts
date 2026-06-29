@@ -29,6 +29,7 @@ export * from './lib/components/topbar';
 export * from './lib/components/page-header';
 export * from './lib/components/modal';
 export * from './lib/components/banner';
+export * from './lib/components/alert';
 export * from './lib/components/dropzone';
 export * from './lib/components/menu';
 export * from './lib/components/empty-state';

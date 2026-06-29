@@ -1,0 +1,27 @@
+<div [class]="classes()">
+  <ds-icon
+    class="a-icon"
+    [name]="resolvedIcon()"
+    [size]="16"
+  >
+  </ds-icon>
+
+  <div class="a-body">
+    @if (title()) {
+      <div class="a-title">{{ title() }}</div>
+    }
+    <div class="a-msg"><ng-content /></div>
+    <div class="a-actions"><ng-content select="[actions]" /></div>
+  </div>
+
+  @if (dismissible()) {
+    <button
+      class="a-close"
+      type="button"
+      (click)="onDismiss()"
+      aria-label="Dismiss"
+    >
+      <ds-icon name="x" [size]="14"></ds-icon>
+    </button>
+  }
+</div>
