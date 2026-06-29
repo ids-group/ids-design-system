@@ -78,14 +78,42 @@
   --focus-field-alpha: .35;
 }
 
+// Chart / dataviz overrides. Axis/grid/label/title/cursor already flip via the
+// --neutral-* / --text-* roles; only the light-bg-tuned bits move here.
+@mixin charts {
+  --chart-hover-bg-color:     hsl(0deg 0% 100% / 6%); // light wash (default dark wash is invisible on dark)
+  --chart-tooltip-bg-color:   var(--surface-overlay);  // native dark tooltip, not an inverted light box
+  --chart-tooltip-text-color: var(--text-primary);
+  --chart-tooltip-border:     var(--border-strong);
+
+  // Sequential — flip so low → high reads dark → bright on a dark canvas.
+  --chart-seq-1: var(--blue-800);
+  --chart-seq-2: var(--blue-700);
+  --chart-seq-3: var(--blue-600);
+  --chart-seq-4: var(--blue-500);
+  --chart-seq-5: var(--blue-400);
+  --chart-seq-6: var(--blue-300);
+
+  // Divergent — bright red ← dark-neutral zero → bright green (|value| → brightness).
+  --chart-div--3: hsl(0deg 70% 62%);
+  --chart-div--2: hsl(0deg 55% 46%);
+  --chart-div--1: hsl(0deg 45% 32%);
+  --chart-div-0:  var(--neutral-150);
+  --chart-div-1:  hsl(140deg 40% 32%);
+  --chart-div-2:  hsl(140deg 48% 46%);
+  --chart-div-3:  hsl(140deg 55% 60%);
+}
+
 :root[data-theme='dark'] {
   @include palette.ramps;
   @include roles;
+  @include charts;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     @include palette.ramps;
     @include roles;
+    @include charts;
   }
 }

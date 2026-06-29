@@ -4,6 +4,13 @@
 // (NOT a linear inverse): note --neutral-0 is an ELEVATED card surface, LIGHTER
 // than the --neutral-50 canvas — the opposite of light, where 0 (#FFF) is the
 // brightest stop. Brand/status ramps are left to the role layer.
+//
+// KNOWN LIMITATION — data-neutrals="brand" + dark: this ramp overrides
+// --neutral-* directly, so when both `[data-neutrals='brand']` and
+// `[data-theme='dark']` are set (equal specificity) dark wins by source order —
+// the brand-gray hue-tint is dropped and these fixed dark neutrals apply. Benign
+// (renders correctly dark, just not brand-hue-tinted); a dark brand-gray ramp is
+// a future follow-up, not v1.
 // =========================================================================
 
 @mixin ramps {

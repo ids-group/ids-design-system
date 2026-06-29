@@ -34,6 +34,8 @@ Future (each a `themes/<name>/` folder with `_palette.scss` + `_theme.scss`):
 
 Dark overrides the `--neutral-*` ramp (so neutral-derived roles recompute through the cascade) plus a small set of role exceptions (tint surfaces, on-tint text, scrim, focus-halo alpha). On-fill text uses theme-stable `--static-white` / `--static-ink` so it doesn't flip with the neutrals. `dark/_palette.scss` and `dark/_theme.scss` expose **mixins** applied under the activation selectors — they are NOT standalone `:root` swaps, so don't `@use` them on their own.
 
+**Known limitation:** `data-neutrals="brand"` + dark — dark overrides `--neutral-*` directly and wins (equal specificity, later in source), so the brand-gray hue-tint is dropped in dark mode (renders correctly, just not brand-tinted). A dark brand-gray ramp is a future follow-up.
+
 ## How a consumer picks a theme
 
 ### Option A — out-of-the-box default
