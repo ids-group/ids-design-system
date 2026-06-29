@@ -36,7 +36,6 @@ export const NAV: NavGroup[] = [
       { label: 'Cards', anchor: 'card' },
       { label: 'Color picker', anchor: 'color-picker', new: true },
       { label: 'Combobox', anchor: 'combobox' },
-      { label: 'Data grid', anchor: 'data-grid', new: true },
       { label: 'Date picker', anchor: 'date-picker' },
       { label: 'Description list', anchor: 'description-list', new: true },
       { label: 'Drawer', anchor: 'drawer' },

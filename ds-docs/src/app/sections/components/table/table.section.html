@@ -956,4 +956,36 @@
       </tbody>
     </table>
   </div>
+
+  <!-- ============================================================ Pagination · sticky column -->
+  <h3 class="block-title t-h4">
+    Pagination · sticky column
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [pageSize]
+    </code> turns on client-side pagination (select-all then scopes to the
+    current page); <code class="t-mono-inline">
+      [stickyFirstColumn]
+    </code> pins the first column on horizontal scroll;
+    <code class="t-mono-inline">
+      [clientSort]
+    </code> lets the table sort its own rows. 12 rows across three pages.
+  </p>
+
+  <ds-table
+    caption="Projects"
+    [data]="projectRows"
+    [columns]="projectColumns"
+    [selectable]="true"
+    [clientSort]="true"
+    [stickyFirstColumn]="true"
+    [pageSize]="5"
+    [(selectedIds)]="projectSelected"
+  />
+
+  <p class="block-desc t-s">
+    Selected: {{ projectSelected().size }}
+  </p>
 </docs-section>

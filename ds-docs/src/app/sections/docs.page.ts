@@ -74,7 +74,6 @@ import { LoadingOverlaySection } from './components/loading-overlay/loading-over
 import { TreeSection } from './components/tree/tree.section';
 import { ColorPickerSection } from './components/color-picker/color-picker.section';
 import { MultiSelectSection } from './components/multi-select/multi-select.section';
-import { DataGridSection } from './components/data-grid/data-grid.section';
 
 import { PageHeaderSection as PatternsPageHeaderSection } from './patterns/page-header/page-header.section';
 import { FilterBarSection } from './patterns/filter-bar/filter-bar.section';
@@ -162,7 +161,6 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     TreeSection,
     ColorPickerSection,
     MultiSelectSection,
-    DataGridSection,
     PatternsPageHeaderSection,
     FilterBarSection,
     FormLayoutSection,
@@ -203,8 +201,6 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     <section-components-color-picker />
 
     <section-components-combobox />
-
-    <section-components-data-grid />
 
     <section-components-date-picker />
 
@@ -448,7 +444,6 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
       section-components-tree,
       section-components-color-picker,
       section-components-multi-select,
-      section-components-data-grid,
       pattern-page-header,
       pattern-filter-bar,
       pattern-form-layout,
