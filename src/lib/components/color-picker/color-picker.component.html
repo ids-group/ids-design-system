@@ -5,6 +5,8 @@
   aria-haspopup="dialog"
   [attr.aria-expanded]="open()"
   [attr.aria-label]="ariaLabel()"
+  [attr.aria-invalid]="invalid() ? 'true' : null"
+  [attr.aria-describedby]="hintId()"
   [disabled]="isDisabled()"
   (click)="toggle()"
 >
@@ -24,6 +26,12 @@
     [size]="16"
   />
 </button>
+
+<ds-field-message
+  [text]="hint()"
+  [state]="messageState()"
+  [messageId]="hintId()"
+/>
 
 <ng-template #panel>
   <div

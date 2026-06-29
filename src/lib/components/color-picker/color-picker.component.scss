@@ -70,6 +70,10 @@
   transform: rotate(180deg);
 }
 
+:host(.invalid) .trigger {
+  border-color: var(--error);
+}
+
 /* Portaled panel */
 .panel {
   display: flex;
