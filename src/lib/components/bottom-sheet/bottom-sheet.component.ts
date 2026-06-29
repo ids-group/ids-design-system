@@ -85,7 +85,10 @@ export class BottomSheetComponent {
   }
 
   protected onLeaveEnd(event: AnimationEvent): void {
-    if (event.animationName !== 'ds-sheet-down' || !this.closing()) {
+    // Angular scopes @keyframes names under emulated encapsulation, so
+    // event.animationName arrives as `_ngcontent-…_ds-sheet-down`, not the bare
+    // name — match the suffix or teardown never fires and the lock leaks.
+    if (!event.animationName.endsWith('ds-sheet-down') || !this.closing()) {
       return;
     }
     this.closing.set(false);

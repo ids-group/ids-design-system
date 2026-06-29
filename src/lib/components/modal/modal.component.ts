@@ -80,7 +80,10 @@ export class ModalComponent {
   }
 
   protected onLeaveEnd(event: AnimationEvent): void {
-    if (event.animationName !== 'modal-out' || !this.closing()) {
+    // Angular scopes @keyframes names under emulated encapsulation, so
+    // event.animationName arrives as `_ngcontent-…_modal-out`, not the bare
+    // name — match the suffix or teardown never fires and the lock leaks.
+    if (!event.animationName.endsWith('modal-out') || !this.closing()) {
       return;
     }
     this.closing.set(false);
