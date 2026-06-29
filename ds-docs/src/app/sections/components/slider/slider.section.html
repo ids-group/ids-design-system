@@ -66,4 +66,48 @@
       </p>
     </div>
   </div>
+
+  <!-- ============================================================ Helper / error text -->
+  <h3 class="block-title t-h4">
+    Helper / error text
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">hint</code> renders a helper line below the
+    track. Paired with <code class="t-mono-inline">[invalid]="true"</code> it
+    switches to an error style with <code>role="alert"</code>.
+  </p>
+
+  <div class="demo-panel">
+    <div class="demo-stack">
+      <p class="t-s">
+        Volume
+      </p>
+
+      <ds-slider
+        ariaLabel="Volume"
+        [min]="0"
+        [max]="100"
+        [step]="1"
+        hint="Drag to adjust the output volume."
+      />
+    </div>
+  </div>
+
+  <div class="demo-panel">
+    <div class="demo-stack">
+      <p class="t-s">
+        Volume
+      </p>
+
+      <ds-slider
+        ariaLabel="Volume — error"
+        [min]="0"
+        [max]="100"
+        [step]="1"
+        hint="Value is outside the allowed range."
+        [invalid]="true"
+      />
+    </div>
+  </div>
 </docs-section>

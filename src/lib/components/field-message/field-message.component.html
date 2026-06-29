@@ -1,0 +1,15 @@
+@if (text()) {
+  <span
+    class="field-message {{ state() }}"
+    [id]="messageId()"
+    [attr.role]="state() === 'error' ? 'alert' : null"
+  >
+    @if (icon()) {
+      <ds-icon
+        [name]="icon()!"
+        [size]="14"
+      />
+    }
+    {{ text() }}
+  </span>
+}

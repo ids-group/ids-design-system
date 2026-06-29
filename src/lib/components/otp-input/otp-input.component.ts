@@ -12,12 +12,15 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
+import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
+import { nextControlId } from '../field-ids';
 
 export type OtpMode = 'numeric' | 'alphanumeric';
 
 @Component({
   selector: 'ds-otp-input',
   standalone: true,
+  imports: [FieldMessageComponent],
   templateUrl: './otp-input.component.html',
   styleUrl: './otp-input.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -32,6 +35,7 @@ export type OtpMode = 'numeric' | 'alphanumeric';
     role: 'group',
     '[attr.aria-label]': 'ariaLabel()',
     '[class.invalid]': 'invalid()',
+    '[attr.aria-describedby]': 'hintId()',
   },
 })
 export class OtpInputComponent extends DsControlValueAccessor<string> {
@@ -41,11 +45,18 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
   readonly mask = input(false, { transform: booleanAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
+  readonly hint = input<string>('');
   readonly ariaLabel = input<string>('Verification code');
   readonly completed = output<string>();
 
   private readonly boxes = viewChildren<ElementRef<HTMLInputElement>>('box');
   private wasComplete = false;
+
+  protected readonly uid = nextControlId('ds-otp-input');
+  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly messageState = computed<FieldMessageState>(() =>
+    this.invalid() ? 'error' : 'default',
+  );
 
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),

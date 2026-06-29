@@ -22,14 +22,14 @@ import { IconComponent } from '../../icons/icon.component';
 import { TagComponent } from '../tag/tag.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { disposeWithLeave } from '../overlay-motion';
+import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
+import { nextControlId } from '../field-ids';
 import type { MultiSelectOption } from './multi-select.types';
-
-let nextId = 0;
 
 @Component({
   selector: 'ds-multi-select',
   standalone: true,
-  imports: [IconComponent, TagComponent],
+  imports: [IconComponent, TagComponent, FieldMessageComponent],
   templateUrl: './multi-select.component.html',
   styleUrl: './multi-select.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -55,11 +55,12 @@ export class MultiSelectComponent extends DsControlValueAccessor<string[]> {
   });
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
+  readonly hint = input<string>('');
   readonly ariaLabel = input<string | null>(null);
   // Show a "Select all" row that toggles every (filter-matching, enabled) option.
   readonly selectAll = input(false, { transform: booleanAttribute });
 
-  protected readonly uid = `ds-multi-select-${++nextId}`;
+  protected readonly uid = nextControlId('ds-multi-select');
   protected readonly listboxId = `${this.uid}-listbox`;
   protected optionId(index: number): string {
     return `${this.uid}-opt-${index}`;
@@ -131,6 +132,11 @@ export class MultiSelectComponent extends DsControlValueAccessor<string[]> {
 
   protected readonly resolvedAriaLabel = computed(
     () => this.ariaLabel() || this.placeholder(),
+  );
+
+  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly messageState = computed<FieldMessageState>(() =>
+    this.invalid() ? 'error' : 'default',
   );
 
   // Select-all reflects the currently filter-matching, enabled options.

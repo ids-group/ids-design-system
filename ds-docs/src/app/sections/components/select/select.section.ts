@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { DropdownComponent, type DropdownOption } from 'ds';
+import { DropdownComponent, type DropdownOption, SelectComponent, type SelectOption } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,
@@ -9,7 +9,7 @@ import {
 @Component({
   selector: 'section-components-select',
   standalone: true,
-  imports: [DropdownComponent, DocsSectionComponent, DocsTruncationComponent],
+  imports: [DropdownComponent, SelectComponent, DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './select.section.html',
   styleUrl: './select.section.scss',
@@ -68,6 +68,12 @@ export class SelectSection {
     { label: 'Asia — East', value: 'as-e' },
     { label: 'Oceania', value: 'oc' },
     { label: 'Antarctica (research only)', value: 'ant' },
+  ];
+
+  protected readonly roleOptions: SelectOption[] = [
+    { label: 'Viewer', value: 'viewer' },
+    { label: 'Editor', value: 'editor' },
+    { label: 'Admin', value: 'admin' },
   ];
 
   protected readonly truncationRules: TruncationRule[] = [

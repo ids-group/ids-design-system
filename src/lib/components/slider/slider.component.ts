@@ -12,12 +12,15 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
+import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
+import { nextControlId } from '../field-ids';
 
 type SliderValue = number | readonly [number, number];
 
 @Component({
   selector: 'ds-slider',
   standalone: true,
+  imports: [FieldMessageComponent],
   templateUrl: './slider.component.html',
   styleUrl: './slider.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -31,6 +34,7 @@ type SliderValue = number | readonly [number, number];
   host: {
     '[class.range]': 'range()',
     '[class.disabled]': 'isDisabled()',
+    '[class.invalid]': 'invalid()',
   },
 })
 export class SliderComponent extends DsControlValueAccessor<SliderValue> {
@@ -41,9 +45,17 @@ export class SliderComponent extends DsControlValueAccessor<SliderValue> {
   readonly range = input(false, { transform: booleanAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly ariaLabel = input<string | null>(null);
+  readonly invalid = input<boolean>(false);
+  readonly hint = input<string>('');
 
   private readonly track = viewChild.required<ElementRef<HTMLElement>>('track');
   private dragging = -1;
+
+  protected readonly uid = nextControlId('ds-slider');
+  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly messageState = computed<FieldMessageState>(() =>
+    this.invalid() ? 'error' : 'default',
+  );
 
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),

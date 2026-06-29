@@ -91,14 +91,6 @@
     }
   }
 
-  .hint {
-    font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
-    color: var(--text-tertiary);
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
-  }
-
   &.disabled {
     .control {
       background-color: var(--_input-bg-color-disabled);
@@ -118,17 +110,11 @@
         box-shadow: var(--_input-focus-shadow-error);
       }
     }
-    .hint {
-      color: var(--error-text);
-    }
   }
 
   &.success {
     .control {
       border-color: var(--_input-border-success);
-    }
-    .hint {
-      color: var(--success-text);
     }
   }
 

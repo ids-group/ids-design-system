@@ -20,6 +20,8 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { IconComponent } from '../../icons/icon.component';
 import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
 import { DsControlValueAccessor } from '../control-value-accessor';
+import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
+import { nextControlId } from '../field-ids';
 import { disposeWithLeave } from '../overlay-motion';
 import {
   type Hsv,
@@ -45,7 +47,7 @@ const DEFAULT_PRESETS: readonly string[] = [
 @Component({
   selector: 'ds-color-picker',
   standalone: true,
-  imports: [IconComponent],
+  imports: [IconComponent, FieldMessageComponent],
   templateUrl: './color-picker.component.html',
   styleUrl: './color-picker.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -63,6 +65,7 @@ const DEFAULT_PRESETS: readonly string[] = [
   host: {
     '[class.open]': 'open()',
     '[class.disabled]': 'isDisabled()',
+    '[class.invalid]': 'invalid()',
   },
 })
 export class ColorPickerComponent
@@ -77,6 +80,8 @@ export class ColorPickerComponent
   readonly presets = input<readonly string[]>(DEFAULT_PRESETS);
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly ariaLabel = input<string>('Choose colour');
+  readonly invalid = input<boolean>(false);
+  readonly hint = input<string>('');
 
   protected readonly trigger =
     viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
@@ -101,6 +106,12 @@ export class ColorPickerComponent
       this.overlayRef = null;
     });
   }
+
+  protected readonly uid = nextControlId('ds-color-picker');
+  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly messageState = computed<FieldMessageState>(() =>
+    this.invalid() ? 'error' : 'default',
+  );
 
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),

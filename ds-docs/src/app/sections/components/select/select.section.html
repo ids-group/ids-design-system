@@ -387,4 +387,32 @@
       </div>
     </div>
   </div>
+
+  <!-- ============================================================ Helper / error text -->
+  <h3 class="block-title t-h4">
+    Helper / error text
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">hint</code> renders a helper line below the
+    control. Paired with <code class="t-mono-inline">[invalid]="true"</code> it
+    switches to an error style with <code>role="alert"</code>.
+  </p>
+
+  <div class="grid-3">
+    <ds-select
+      label="Role"
+      placeholder="Choose a role…"
+      hint="Determines what actions the user can perform."
+      [options]="roleOptions"
+    />
+
+    <ds-select
+      label="Role"
+      placeholder="Choose a role…"
+      hint="A role is required to save this member."
+      [invalid]="true"
+      [options]="roleOptions"
+    />
+  </div>
 </docs-section>

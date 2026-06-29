@@ -1,0 +1,19 @@
+/* display:contents so an empty message (no text) adds no layout box / flex gap,
+   and the rendered span sits directly in the field's flow. */
+:host {
+  display: contents;
+}
+
+.field-message {
+  --_field-message-color:     var(--ds-field-message-color,     var(--text-tertiary));
+  --_field-message-font-size: var(--ds-field-message-font-size, var(--font-size-xs));
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font: var(--font-weight-regular) var(--_field-message-font-size) / var(--line-height-base) var(--font-sans);
+  color: var(--_field-message-color);
+
+  &.error   { color: var(--error-text); }
+  &.success { color: var(--success-text); }
+}
