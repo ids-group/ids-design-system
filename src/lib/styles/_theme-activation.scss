@@ -8,11 +8,8 @@
 // a delta-patch.
 //
 // There is no automatic prefers-color-scheme switch. To follow the OS, a
-// consumer opts in from its bootstrap (e.g. main.ts):
-//   const mq = matchMedia('(prefers-color-scheme: dark)');
-//   const apply = () =>
-//     document.documentElement.setAttribute('data-theme', mq.matches ? 'dark' : 'light');
-//   apply(); mq.addEventListener('change', apply);
+// consumer opts in at the app root: provideDsTheme({ followSystem: true })
+// (exported from the package; see themes/README.md).
 //
 // Order matters: the dark block comes LAST so it wins over the light-context
 // overrides (brand-gray neutrals) at equal specificity.

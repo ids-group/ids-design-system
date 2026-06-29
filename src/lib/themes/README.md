@@ -37,15 +37,18 @@ Colour is layered in three concerns: a **base palette** (theme-independent primi
 :root[data-theme='dark'] { @include dark.theme; }     // opt-in (complete set → fully wins)
 ```
 
-There is **no automatic `prefers-color-scheme` switch** — light is deterministic by default. To follow the OS, opt in from the app bootstrap (e.g. `main.ts`):
+There is **no automatic `prefers-color-scheme` switch** — light is deterministic by default. To follow the OS, opt in at the app root with `provideDsTheme`:
 
 ```ts
-const mq = matchMedia('(prefers-color-scheme: dark)');
-const apply = () =>
-  document.documentElement.setAttribute('data-theme', mq.matches ? 'dark' : 'light');
-apply();
-mq.addEventListener('change', apply);
+// app.config.ts
+import { provideDsTheme } from '@ids-group-ltd/ids-design-system';
+
+export const appConfig: ApplicationConfig = {
+  providers: [provideDsTheme({ followSystem: true })],
+};
 ```
+
+It sets `data-theme` from `prefers-color-scheme` at startup and keeps it in sync as the OS changes; a manual `data-theme="dark"` still wins.
 
 On-fill text uses theme-stable `--static-white` / `--static-ink` so it doesn't flip with the neutrals.
 

@@ -12,9 +12,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **Dark theme** (`themes/dark/`) — ships with the default bundle (`@use 'styles/ds'`).
   **Light is the default** (no attribute); dark is opt-in via `<html data-theme="dark">`. There is
-  no automatic `prefers-color-scheme` switch — to follow the OS, set `data-theme` from `matchMedia`
-  in your app bootstrap. Adds theme-stable `--static-white` / `--static-ink` tokens so on-fill text
-  keeps correct contrast across themes. Non-breaking — additive, and light output is unchanged.
+  no automatic `prefers-color-scheme` switch — to follow the OS, opt in at the app root with the new
+  **`provideDsTheme({ followSystem: true })`** provider. Each theme declares `color-scheme` so native
+  UI (scrollbars, form controls) matches. Adds theme-stable `--static-white` / `--static-ink` tokens
+  so on-fill text keeps correct contrast across themes. Non-breaking — additive, light output unchanged.
   Light and dark are **sibling themes** — a shared base palette (`themes/_base-palette`) + a shared
   role map (`themes/_semantic`); light applies at `:root`, dark at `:root[data-theme='dark']` (the
   dark block declares the complete token set, so it fully replaces light, not patches it).
