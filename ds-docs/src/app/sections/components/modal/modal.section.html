@@ -281,4 +281,43 @@
       </div>
     </div>
   </div>
+
+  <!-- ============================================================ Confirmation -->
+  <h3 class="block-title t-h4">
+    Confirmation
+  </h3>
+
+  <p class="block-desc t-s">
+    Inject <code>ModalService</code> and call <code>modal.confirm()</code> for a
+    destructive or irreversible action — it resolves <code>true</code> on
+    confirm, <code>false</code> on cancel or dismiss.
+    <code>typeToConfirm</code> requires the user to type a phrase before the
+    confirm button enables.
+  </p>
+
+  <div class="modal-grid modal-grid--1">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <div style="display: flex; gap: var(--space-3); flex-wrap: wrap">
+          <ds-button
+            variant="outline"
+            (pressed)="askDelete()"
+          >
+            Delete project
+          </ds-button>
+
+          <ds-button
+            variant="outline"
+            (pressed)="askTypeToConfirm()"
+          >
+            Delete with type-to-confirm
+          </ds-button>
+        </div>
+      </div>
+
+      <div class="state-cell__label">
+        Result: {{ confirmResult() }}
+      </div>
+    </div>
+  </div>
 </docs-section>

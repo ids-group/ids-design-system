@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import {
   BannerComponent,
   ButtonComponent,
@@ -6,6 +6,7 @@ import {
   type DropdownOption,
   InputComponent,
   ModalCardComponent,
+  ModalService,
 } from 'ds';
 import {
   DocsTruncationComponent,
@@ -59,4 +60,31 @@ export class ModalSection {
     { label: 'Jamie Lin', value: 'lin' },
     { label: 'Morgan Reyes', value: 'reyes' },
   ];
+
+  private readonly modal = inject(ModalService);
+  protected readonly confirmResult = signal('—');
+
+  protected async askDelete(): Promise<void> {
+    const ok = await this.modal.confirm({
+      title: 'Delete "Q3 Roadmap"?',
+      message:
+        "This project and its 14 tasks will be permanently removed. This can't be undone.",
+      confirmLabel: 'Delete project',
+      tone: 'danger',
+      icon: 'trash',
+    });
+    this.confirmResult.set(ok ? 'Confirmed delete' : 'Cancelled');
+  }
+
+  protected async askTypeToConfirm(): Promise<void> {
+    const ok = await this.modal.confirm({
+      title: 'Delete database?',
+      message: 'Type the database name to confirm.',
+      confirmLabel: 'Delete',
+      tone: 'danger',
+      icon: 'trash',
+      typeToConfirm: 'production-db',
+    });
+    this.confirmResult.set(ok ? 'Confirmed' : 'Cancelled');
+  }
 }
