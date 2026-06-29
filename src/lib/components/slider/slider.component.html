@@ -25,8 +25,15 @@
       [attr.aria-orientation]="'horizontal'"
       [attr.aria-label]="thumbAriaLabel(i)"
       [attr.aria-disabled]="isDisabled() ? 'true' : null"
+      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-describedby]="hintId()"
       (keydown)="onThumbKeydown($event, i)"
     >
     </span>
   }
 </div>
+<ds-field-message
+  [text]="hint()"
+  [state]="messageState()"
+  [messageId]="hintId()"
+/>

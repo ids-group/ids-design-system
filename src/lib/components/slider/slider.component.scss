@@ -61,3 +61,9 @@
   border-color: var(--border-strong);
   cursor: not-allowed;
 }
+:host(.invalid) .fill {
+  background-color: var(--error);
+}
+:host(.invalid) .thumb {
+  border-color: var(--error);
+}
