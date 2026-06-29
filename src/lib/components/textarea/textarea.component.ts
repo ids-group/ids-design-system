@@ -10,13 +10,13 @@ import {
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import type { TextareaSize, TextareaResize } from './textarea.types';
-
-let nextId = 0;
+import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
+import { nextControlId } from '../field-ids';
 
 @Component({
   selector: 'ds-textarea',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, FieldMessageComponent],
   templateUrl: './textarea.component.html',
   styleUrl: './textarea.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -47,9 +47,12 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
 
-  protected readonly uid = `ds-textarea-${++nextId}`;
+  protected readonly uid = nextControlId('ds-textarea');
   protected readonly hintId = computed(() =>
     this.hint() ? `${this.uid}-hint` : null,
+  );
+  protected readonly messageState = computed<FieldMessageState>(() =>
+    this.invalid() ? 'error' : 'default',
   );
   protected readonly resolvedAriaLabel = computed(() =>
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,

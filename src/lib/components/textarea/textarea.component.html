@@ -45,13 +45,9 @@
     </textarea>
   </div>
 
-  @if (hint()) {
-    <span
-      class="hint"
-      [id]="hintId()"
-      [attr.role]="invalid() ? 'alert' : null"
-    >
-      {{ hint() }}
-    </span>
-  }
+  <ds-field-message
+    [text]="hint()"
+    [state]="messageState()"
+    [messageId]="hintId()"
+  />
 </div>
