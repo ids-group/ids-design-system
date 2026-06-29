@@ -11,16 +11,14 @@ import {
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
+import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
+import { nextControlId } from '../field-ids';
 import type { InputSize, InputType } from './input.types';
-
-/** Process-wide counter so each control gets a stable, unique id for
- *  label/hint association (no DOM dependency, SSR-safe). */
-let nextId = 0;
 
 @Component({
   selector: 'ds-input',
   standalone: true,
-  imports: [FormsModule, IconComponent],
+  imports: [FormsModule, IconComponent, FieldMessageComponent],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -96,9 +94,12 @@ export class InputComponent extends DsControlValueAccessor<string> {
     return this.type() === 'search';
   });
 
-  protected readonly uid = `ds-input-${++nextId}`;
+  protected readonly uid = nextControlId('ds-input');
   protected readonly hintId = computed(() =>
     this.hint() ? `${this.uid}-hint` : null,
+  );
+  protected readonly messageState = computed<FieldMessageState>(() =>
+    this.invalid() ? 'error' : this.success() ? 'success' : 'default',
   );
   /** Only name via aria-label when there's no visible `<label for>`. */
   protected readonly resolvedAriaLabel = computed(() =>

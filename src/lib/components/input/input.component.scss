@@ -27,8 +27,6 @@
   --_input-label-color:    var(--ds-input-label-color,    var(--text-secondary));
   --_input-label-fs:       var(--ds-input-label-fs,       var(--font-size-xs));
   --_input-label-fw:       var(--ds-input-label-fw,       var(--font-weight-bold));
-  --_input-hint-color:     var(--ds-input-hint-color,     var(--text-tertiary));
-  --_input-hint-fs:        var(--ds-input-hint-fs,        var(--font-size-xs));
   --_input-fs:             var(--ds-input-fs,             var(--font-size-s));
 
   display: block;
@@ -39,6 +37,9 @@
   flex-direction: column;
   gap: var(--space-1-5);
   width: 100%;
+  /* Back-compat: existing public hint hooks feed the shared field-message. */
+  --ds-field-message-color:     var(--ds-input-hint-color, var(--text-tertiary));
+  --ds-field-message-font-size: var(--ds-input-hint-fs,    var(--font-size-xs));
 
   .label {
     font: var(--_input-label-fw) var(--_input-label-fs) / var(--line-height-base) var(--font-sans);
@@ -150,14 +151,6 @@
     }
   }
 
-  .hint {
-    font: var(--font-weight-regular) var(--_input-hint-fs) / var(--line-height-base) var(--font-sans);
-    color: var(--_input-hint-color);
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
-  }
-
   &.disabled {
     .control {
       background-color: var(--_input-bg-color-disabled);
@@ -183,17 +176,11 @@
         box-shadow: var(--_input-focus-shadow-error);
       }
     }
-    .hint {
-      color: var(--error-text);
-    }
   }
 
   &.success {
     .control {
       border-color: var(--_input-border-success);
-    }
-    .hint {
-      color: var(--success-text);
     }
   }
 
