@@ -31,8 +31,6 @@ import {
 import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
 
-let nextId = 0;
-
 @Component({
   selector: 'ds-select',
   standalone: true,
@@ -68,7 +66,7 @@ export class SelectComponent extends DsControlValueAccessor<string> {
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
 
-  protected readonly uid = `ds-select-${++nextId}`;
+  protected readonly uid = nextControlId('ds-select');
   protected readonly labelId = `${this.uid}-label`;
   protected readonly listboxId = `${this.uid}-listbox`;
   protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
