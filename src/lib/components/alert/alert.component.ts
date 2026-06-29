@@ -42,9 +42,15 @@ export class AlertComponent {
 
   protected readonly defaultIcon = computed<IconName>(() => {
     const variant = this.variant();
-    if (variant === 'success') return 'success';
-    if (variant === 'warning') return 'warn';
-    if (variant === 'error') return 'error';
+    if (variant === 'success') {
+      return 'success';
+    }
+    if (variant === 'warning') {
+      return 'warn';
+    }
+    if (variant === 'error') {
+      return 'error';
+    }
 
     return 'info';
   });
