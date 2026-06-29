@@ -32,6 +32,12 @@
   --neutral-900: var(--cool-gray-900);
   --neutral-950: var(--cool-gray-950);
 
+  /* Theme-stable contrast anchors — never flip with the theme. On-fill text/icon
+     roles point here so a dark theme keeps white-on-coloured-fill (and dark-on-yellow)
+     correct. In light these equal the neutral-0 / neutral-900 they replace → no visual change. */
+  --static-white: #FFF;
+  --static-ink:   #161A28;
+
   /* Surfaces — six-stop scale.
      · canvas    : page background
      · default   : cards, sheets, toolbars (the “paper”)
@@ -84,22 +90,22 @@
 
   /* Text overlaid on arbitrary imagery (camera feeds, photos) — pairs a
      guaranteed-light colour with a contrast shadow. */
-  --text-on-media:        var(--neutral-0);
+  --text-on-media:        var(--static-white);
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
   --text-link:         var(--blue-700);
-  --text-on-primary:     var(--neutral-0);
-  --text-on-success:   var(--neutral-0);
+  --text-on-primary:     var(--static-white);
+  --text-on-success:   var(--static-white);
 
   /* Warning fill is yellow (--yellow-400 #F4D43A) — white text on it is only
      ~1.5:1 (fails WCAG). On-warning text is the darkest neutral (~10:1). */
-  --text-on-warning:   var(--neutral-900);
-  --text-on-error:     var(--neutral-0);
+  --text-on-warning:   var(--static-ink);
+  --text-on-error:     var(--static-white);
 
   /* Icons */
   --icon-default:      var(--neutral-500);
   --icon-strong:       var(--neutral-700);
   --icon-muted:        var(--neutral-400);
-  --icon-on-primary:     var(--neutral-0);
+  --icon-on-primary:     var(--static-white);
 
   /* Font families — a theme/brand choice (the size/weight/leading SCALE is
      theme-independent and lives in styles/_tokens.scss). Display + heading
@@ -137,7 +143,7 @@
   --primary-muted:           var(--blue-100);
   --primary-muted-strong:    var(--blue-200);
   --primary-strong:          var(--blue-700);
-  --primary-on:              var(--neutral-0);
+  --primary-on:              var(--static-white);
 
   /* Accent / secondary role — composed from --secondary-h/s/l channels.
      Channels default to brand values so unbranded apps render identical to
