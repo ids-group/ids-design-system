@@ -101,6 +101,9 @@
   &.layout-row {
     align-items: center;
 
+    /* Icon pins to the title line (matching layout-stacked), not the block
+       centre — the actions stay vertically centred via align-items. */
+    .icon { align-self: flex-start; }
     .body { flex: 1; min-width: 0; }
     .actions { flex-shrink: 0; }
   }
