@@ -10,6 +10,22 @@
 @use 'palette';
 
 @mixin roles {
+  // Interaction states: on dark, hover/pressed must LIGHTEN. The default theme
+  // derives them as color-mix toward black (darkens) — wrong direction here.
+  // Mirror the light recipe's 88% / 76% steps, mixed toward white instead.
+  --primary-hover:          color-mix(in srgb, var(--primary) 88%, white);
+  --primary-pressed:        color-mix(in srgb, var(--primary) 76%, white);
+  --primary-selected-hover: color-mix(in srgb, var(--primary) 88%, white);
+  --secondary-hover:        color-mix(in srgb, var(--secondary) 88%, white);
+  --secondary-pressed:      color-mix(in srgb, var(--secondary) 76%, white);
+  --tertiary-hover:         color-mix(in srgb, var(--tertiary) 88%, white);
+  --tertiary-pressed:       color-mix(in srgb, var(--tertiary) 76%, white);
+  --success-hover:          color-mix(in srgb, var(--success) 88%, white);
+  --warning-hover:          color-mix(in srgb, var(--warning) 88%, white);
+  --error-hover:            color-mix(in srgb, var(--error) 88%, white);
+  --error-pressed:          color-mix(in srgb, var(--error) 76%, white);
+  --info-hover:             color-mix(in srgb, var(--info) 88%, white);
+
   // Brand tint surfaces + on-tint text (channel-derived → track rebrand).
   --surface-tint:         hsl(var(--primary-h) 45% 16%);
   --primary-subtitle:     hsl(var(--primary-h) 45% 18%);
