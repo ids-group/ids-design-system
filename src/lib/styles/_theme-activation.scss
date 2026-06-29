@@ -22,6 +22,8 @@
 @use '../themes/dark/theme' as dark;
 
 :root {
+  color-scheme: light; // native UI (scrollbars, form controls) match; opts out of UA force-dark
+
   @include light.theme;
 }
 
@@ -44,5 +46,7 @@
 }
 
 :root[data-theme='dark'] {
+  color-scheme: dark; // native UI (scrollbars, form controls) render dark to match
+
   @include dark.theme;
 }
