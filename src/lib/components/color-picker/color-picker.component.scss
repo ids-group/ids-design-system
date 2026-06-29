@@ -14,7 +14,10 @@
 }
 
 :host {
-  display: inline-block;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1-5);
 }
 
 .trigger {

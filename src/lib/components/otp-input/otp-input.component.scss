@@ -6,6 +6,12 @@
   --_otp-gap: var(--ds-otp-gap, var(--otp-gap));
 
   display: inline-flex;
+  flex-direction: column;
+  gap: var(--space-1-5);
+}
+
+.cells {
+  display: flex;
   gap: var(--_otp-gap);
 }
 

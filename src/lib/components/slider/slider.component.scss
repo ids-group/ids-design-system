@@ -5,10 +5,16 @@
   --_slider-thumb-size: var(--ds-slider-thumb-size, var(--slider-thumb-size));
   --_slider-thumb-bw: var(--ds-slider-thumb-bw, var(--slider-thumb-bw));
 
-  display: block;
+  display: flex;
+  flex-direction: column;
 
   /* Vertical room so the thumb (taller than the track) is not clipped. */
   padding-block: calc((var(--_slider-thumb-size) - var(--_slider-track-h)) / 2);
+
+  /* Clear the thumb's overhang below the track before the hint line. */
+  gap: calc(
+    (var(--_slider-thumb-size) - var(--_slider-track-h)) / 2 + var(--space-1-5)
+  );
 }
 
 .track {
