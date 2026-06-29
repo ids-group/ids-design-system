@@ -16,8 +16,8 @@ Colour lives in two files here: a **palette** (defines the concrete colours) and
 
 ## Available palette + theme
 
-- **`default/_palette.scss`** — Blue + slate ramps (the concrete colours).
-- **`default/_theme.scss`** — Light role map onto the default palette. Both are bundled into `styles/ds.scss` (palette → theme → tokens) so `@use 'styles/ds';` works out of the box.
+- **`light/_palette.scss`** — Blue + slate ramps (the concrete colours).
+- **`light/_theme.scss`** — Light role map onto the default palette. Both are bundled into `styles/ds.scss` (palette → theme → tokens) so `@use 'styles/ds';` works out of the box.
 - **`dark/_palette.scss` + `dark/_theme.scss`** — Dark skin, also bundled into `styles/ds.scss`. Unlike a standalone swap, dark emits **scoped overrides** layered on the default `:root` and activates at runtime — see **Dark theme** below.
 
 Future (each a `themes/<name>/` folder with `_palette.scss` + `_theme.scss`):
@@ -78,7 +78,7 @@ Same mechanism (CSS custom properties + cascade), different scope.
 
 ## Adding a new theme
 
-1. Create a `themes/<name>/` folder with `_palette.scss` (ramps + HSL channels) and `_theme.scss` (role map), mirroring `themes/default/`.
+1. Create a `themes/<name>/` folder with `_palette.scss` (ramps + HSL channels) and `_theme.scss` (role map), mirroring `themes/light/`.
 2. Optionally add it to `styles/ds.scss` if it should be a default-bundled option.
 3. Or let consumers `@use 'themes/<name>/palette'; @use 'themes/<name>/theme';` directly.
 

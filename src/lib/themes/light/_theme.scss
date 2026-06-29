@@ -1,7 +1,7 @@
 // =========================================================================
 // Default theme — Tier 2 semantic role ASSIGNMENTS (light).
 //
-// The palette (themes/default/_palette.scss) DEFINES the concrete colours
+// The palette (themes/light/_palette.scss) DEFINES the concrete colours
 // (--blue-*, --red-*, --neutral-*, … + HSL channels). THIS file SETS them
 // onto semantic roles (--primary → --blue-600, --surface-canvas → --neutral-50,
 // --error → --red-500, …). Components consume only these roles, never the
@@ -117,7 +117,7 @@
   --font-heading: var(--font-sans);
 
   /* Semantic → palette bridge. The lib knows colours by PURPOSE; the theme
-     (themes/default/_theme.scss) ships the concrete ramps + HSL channels. This
+     (themes/light/_theme.scss) ships the concrete ramps + HSL channels. This
      is the one place that maps semantic roles onto a concrete palette. A brand
      re-skins by overriding either the palette (--blue-*, --red-*) or these
      role tokens directly.

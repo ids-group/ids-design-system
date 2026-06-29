@@ -8,7 +8,7 @@
 // colour is "for". The --neutral-* FAMILY SLOT (which gray ramp is active)
 // is semantic, so it lives in the theme (_theme.scss), not here.
 //
-// The companion theme (themes/default/_theme.scss) SETS these onto semantic
+// The companion theme (themes/light/_theme.scss) SETS these onto semantic
 // roles (--primary → --blue-600, --error → --red-500, …). Components consume
 // only those roles, never this palette directly.
 //

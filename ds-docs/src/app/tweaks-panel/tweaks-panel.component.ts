@@ -19,7 +19,7 @@ export class TweaksPanelComponent {
   protected readonly theme = signal<'auto' | 'light' | 'dark'>('auto');
   protected readonly neutrals = signal<'cool-gray' | 'brand'>('cool-gray');
   // Defaults mirror the live system: the blue ramp is hsl(229, 100%, 59%)
-  // (themes/default/_palette.scss), and --secondary defaults off the same channels.
+  // (themes/light/_palette.scss), and --secondary defaults off the same channels.
   protected readonly primaryH = signal(229);
   protected readonly primaryS = signal(100);
   protected readonly primaryL = signal(59);

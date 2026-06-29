@@ -46,8 +46,8 @@ This brings in the default palette, semantic theme, design tokens, fonts, reset 
 Advanced consumers can swap the palette/theme and keep the token layer — global side-effects (fonts, link styles, etc.) become opt-in:
 
 ```scss
-@use 'themes/default/palette';
-@use 'themes/default/theme';
+@use 'themes/light/palette';
+@use 'themes/light/theme';
 @use 'styles/tokens';
 @use 'styles/fonts';
 ```
