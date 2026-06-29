@@ -30,7 +30,9 @@
   <div class="states states--cols-1">
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-dropzone />
+        <div class="dz-demo">
+          <ds-dropzone />
+        </div>
       </div>
 
       <div class="state-cell__label">
@@ -41,7 +43,9 @@
     <div class="state-cell">
       <!-- pin-active on the stage reads the component's own --_dropzone-* resolvers. -->
       <div class="state-cell__stage pin-active">
-        <ds-dropzone />
+        <div class="dz-demo">
+          <ds-dropzone />
+        </div>
       </div>
 
       <div class="state-cell__label">
@@ -51,6 +55,7 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
+        <div class="dz-demo">
         <div class="dropzone has-files">
           <div class="file-list">
             <div class="file uploading">
@@ -146,6 +151,7 @@
             </div>
           </div>
         </div>
+        </div>
       </div>
 
       <div class="state-cell__label">
@@ -155,7 +161,9 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-dropzone [disabled]="true" />
+        <div class="dz-demo">
+          <ds-dropzone [disabled]="true" />
+        </div>
       </div>
 
       <div class="state-cell__label">
@@ -175,11 +183,13 @@
   </p>
 
   <div class="single-wrap">
-    <ds-dropzone [single]="true">
-      <p hint>
-        PNG · JPG · max 5 MB · one image only
-      </p>
-    </ds-dropzone>
+    <div class="dz-demo">
+      <ds-dropzone [single]="true">
+        <p hint>
+          PNG · JPG · max 5 MB · one image only
+        </p>
+      </ds-dropzone>
+    </div>
   </div>
 
   <!-- ============================================================ File row states -->
@@ -198,32 +208,34 @@
   <div class="states states--cols-1 states--file-rows">
     <div class="state-cell">
       <div class="state-cell__stage">
-        <div class="file">
-          <ds-icon
-            class="icon"
-            name="file"
-            [size]="20"
-          />
-
-          <div class="main">
-            <div class="name">
-              project-brief.pdf
-            </div>
-
-            <div class="meta">
-              2.4 MB
-            </div>
-          </div>
-
-          <button
-            class="remove"
-            type="button"
-          >
+        <div class="dz-demo">
+          <div class="file">
             <ds-icon
-              name="x"
-              [size]="14"
+              class="icon"
+              name="file"
+              [size]="20"
             />
-          </button>
+
+            <div class="main">
+              <div class="name">
+                project-brief.pdf
+              </div>
+
+              <div class="meta">
+                2.4 MB
+              </div>
+            </div>
+
+            <button
+              class="remove"
+              type="button"
+            >
+              <ds-icon
+                name="x"
+                [size]="14"
+              />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -234,40 +246,42 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <div class="file uploading">
-          <ds-icon
-            class="icon"
-            name="file"
-            [size]="20"
-          />
+        <div class="dz-demo">
+          <div class="file uploading">
+            <ds-icon
+              class="icon"
+              name="file"
+              [size]="20"
+            />
 
-          <div class="main">
-            <div class="name">
-              site-survey.dwg
-            </div>
+            <div class="main">
+              <div class="name">
+                site-survey.dwg
+              </div>
 
-            <div class="meta">
-              8.1 MB · 42%
-            </div>
+              <div class="meta">
+                8.1 MB · 42%
+              </div>
 
-            <div class="progress">
-              <div
-                class="progress-fill"
-                style="width: 42%"
-              >
+              <div class="progress">
+                <div
+                  class="progress-fill"
+                  style="width: 42%"
+                >
+                </div>
               </div>
             </div>
-          </div>
 
-          <button
-            class="remove"
-            type="button"
-          >
-            <ds-icon
-              name="x"
-              [size]="14"
-            />
-          </button>
+            <button
+              class="remove"
+              type="button"
+            >
+              <ds-icon
+                name="x"
+                [size]="14"
+              />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -278,32 +292,34 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <div class="file success">
-          <ds-icon
-            class="icon"
-            name="check"
-            [size]="20"
-          />
-
-          <div class="main">
-            <div class="name">
-              risk-assessment.docx
-            </div>
-
-            <div class="meta">
-              1.2 MB · uploaded
-            </div>
-          </div>
-
-          <button
-            class="remove"
-            type="button"
-          >
+        <div class="dz-demo">
+          <div class="file success">
             <ds-icon
-              name="x"
-              [size]="14"
+              class="icon"
+              name="check"
+              [size]="20"
             />
-          </button>
+
+            <div class="main">
+              <div class="name">
+                risk-assessment.docx
+              </div>
+
+              <div class="meta">
+                1.2 MB · uploaded
+              </div>
+            </div>
+
+            <button
+              class="remove"
+              type="button"
+            >
+              <ds-icon
+                name="x"
+                [size]="14"
+              />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -314,32 +330,34 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <div class="file error">
-          <ds-icon
-            class="icon"
-            name="error"
-            [size]="20"
-          />
-
-          <div class="main">
-            <div class="name">
-              vendor-list-FINAL.xlsx
-            </div>
-
-            <div class="meta">
-              Upload failed — exceeds 10 MB limit
-            </div>
-          </div>
-
-          <button
-            class="remove"
-            type="button"
-          >
+        <div class="dz-demo">
+          <div class="file error">
             <ds-icon
-              name="x"
-              [size]="14"
+              class="icon"
+              name="error"
+              [size]="20"
             />
-          </button>
+
+            <div class="main">
+              <div class="name">
+                vendor-list-FINAL.xlsx
+              </div>
+
+              <div class="meta">
+                Upload failed — exceeds 10 MB limit
+              </div>
+            </div>
+
+            <button
+              class="remove"
+              type="button"
+            >
+              <ds-icon
+                name="x"
+                [size]="14"
+              />
+            </button>
+          </div>
         </div>
       </div>
 

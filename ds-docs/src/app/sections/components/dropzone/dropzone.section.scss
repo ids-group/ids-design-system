@@ -6,8 +6,19 @@
       color: var(--_dropzone-text-color-active);
     }
 
+    /* Constrain all dropzone demo content to a readable width. */
+    .dz-demo {
+      max-width: 480px;
+      margin-inline: auto;
+    }
+
     /* ---------- Single-file wrap ---------- */
-    .single-wrap { margin-top: var(--space-3); }
+    .single-wrap {
+      margin-top: var(--space-3);
+      padding: var(--space-4);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-lg);
+    }
 
     /* ---------- States showcase ---------- */
     .states {

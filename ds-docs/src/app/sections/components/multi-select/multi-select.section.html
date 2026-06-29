@@ -22,14 +22,16 @@
   </p>
 
   <div class="demo-panel">
-    <ds-multi-select
-      placeholder="Add tags…"
-      ariaLabel="Tags"
-      [options]="tagOptions"
-      [maxVisibleChips]="null"
-      [selectAll]="true"
-      [(value)]="tags"
-    />
+    <div class="ms-demo">
+      <ds-multi-select
+        placeholder="Add tags…"
+        ariaLabel="Tags"
+        [options]="tagOptions"
+        [maxVisibleChips]="null"
+        [selectAll]="true"
+        [(value)]="tags"
+      />
+    </div>
 
     <p style="margin-top: var(--space-3); font-size: var(--font-size-s)">
       Selected: {{ tags().join(', ') }}
@@ -47,13 +49,15 @@
   </p>
 
   <div class="demo-panel">
-    <ds-multi-select
-      placeholder="Add tags…"
-      ariaLabel="Tags with overflow"
-      [options]="tagOptions"
-      [maxVisibleChips]="2"
-      [(value)]="overflow"
-    />
+    <div class="ms-demo">
+      <ds-multi-select
+        placeholder="Add tags…"
+        ariaLabel="Tags with overflow"
+        [options]="tagOptions"
+        [maxVisibleChips]="2"
+        [(value)]="overflow"
+      />
+    </div>
 
     <p style="margin-top: var(--space-3); font-size: var(--font-size-s)">
       Selected: {{ overflow().join(', ') }}
@@ -72,21 +76,25 @@
   </p>
 
   <div class="demo-panel">
-    <ds-multi-select
-      placeholder="Add tags…"
-      ariaLabel="Tags — with hint"
-      hint="Choose all categories that apply to this record."
-      [options]="tagOptions"
-    />
+    <div class="ms-demo">
+      <ds-multi-select
+        placeholder="Add tags…"
+        ariaLabel="Tags — with hint"
+        hint="Choose all categories that apply to this record."
+        [options]="tagOptions"
+      />
+    </div>
   </div>
 
   <div class="demo-panel">
-    <ds-multi-select
-      placeholder="Add tags…"
-      ariaLabel="Tags — error"
-      hint="At least one tag is required."
-      [invalid]="true"
-      [options]="tagOptions"
-    />
+    <div class="ms-demo">
+      <ds-multi-select
+        placeholder="Add tags…"
+        ariaLabel="Tags — error"
+        hint="At least one tag is required."
+        [invalid]="true"
+        [options]="tagOptions"
+      />
+    </div>
   </div>
 </docs-section>

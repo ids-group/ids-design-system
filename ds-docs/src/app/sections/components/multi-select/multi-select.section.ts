@@ -8,7 +8,10 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [MultiSelectComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './multi-select.section.html',
-  styleUrl: '../../../shared/section-demo.scss',
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    './multi-select.section.scss',
+  ],
 })
 export class MultiSelectSection {
   protected readonly tags = signal<string[]>(['design', 'frontend']);

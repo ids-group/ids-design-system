@@ -1,4 +1,22 @@
 
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-5);
+      margin-top: var(--space-5);
+
+      @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .showcase-cell {
+      display: flex;
+      flex-direction: column;
+
+      .block-title { margin-top: 0; }
+    }
+
     .stage {
       margin-top: var(--space-3);
       padding: var(--space-4);
