@@ -1,19 +1,5 @@
 
-    /* ---------- Grids ---------- */
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-6);
-      margin-top: var(--space-3);
-    }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-6);
-      align-items: center;
-      margin-top: var(--space-3);
-    }
-    .stack { display: flex; flex-direction: column; gap: var(--space-3); }
+    .stack { display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-3); }
 
     /* ---------- States showcase ---------- */
     .states {
@@ -45,12 +31,9 @@
       color: var(--text-tertiary);
     }
 
-    /* State pins — ds-checkbox/radio/switch have no --_* resolvers; restate the
-       bare role tokens their own rules use directly.
+    /* State pins — ds-radio has no --_* resolvers; restate the bare role tokens
+       its own rules use directly.
        hover: --primary (border-color)
        focus: --focus-ring (box-shadow) */
-    :host ::ng-deep .pin-hover .check:not(:disabled),
     :host ::ng-deep .pin-hover .radio:not(:disabled) { border-color: var(--primary); }
-    :host ::ng-deep .pin-focus .check,
-    :host ::ng-deep .pin-focus .radio,
-    :host ::ng-deep .pin-focus .switch { outline: none; box-shadow: var(--focus-ring); }
+    :host ::ng-deep .pin-focus .radio { outline: none; box-shadow: var(--focus-ring); }

@@ -1,0 +1,115 @@
+<docs-section
+  anchor="checkbox"
+  eyebrow="Components"
+  title="Checkbox"
+>
+  <div class="stack">
+    <label class="control-row">
+      <ds-checkbox /> Default
+    </label>
+
+    <label class="control-row">
+      <ds-checkbox [checked]="true" /> Checked
+    </label>
+
+    <label class="control-row">
+      <ds-checkbox [indeterminate]="true" /> Indeterminate
+    </label>
+
+    <label class="control-row">
+      <ds-checkbox [disabled]="true" /> Disabled
+    </label>
+  </div>
+
+  <!-- ============================================================ Checkbox states showcase -->
+  <!-- Live ds-checkbox; pin classes on the stage read bare role tokens via
+       ::ng-deep (see styles). API-expressible states use real inputs. -->
+  <h3 class="block-title t-h4">
+    Checkbox states showcase
+  </h3>
+
+  <div class="states states--cols-4">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-checkbox />
+      </div>
+
+      <div class="state-cell__label">
+        Default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage pin-hover">
+        <ds-checkbox />
+      </div>
+
+      <div class="state-cell__label">
+        Hover
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage pin-focus">
+        <ds-checkbox />
+      </div>
+
+      <div class="state-cell__label">
+        Focus
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-checkbox [checked]="true" />
+      </div>
+
+      <div class="state-cell__label">
+        Checked
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage pin-focus">
+        <ds-checkbox [checked]="true" />
+      </div>
+
+      <div class="state-cell__label">
+        Checked · focus
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-checkbox [indeterminate]="true" />
+      </div>
+
+      <div class="state-cell__label">
+        Indeterminate
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-checkbox [disabled]="true" />
+      </div>
+
+      <div class="state-cell__label">
+        Disabled
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-checkbox
+          [disabled]="true"
+          [checked]="true"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Disabled · checked
+      </div>
+    </div>
+  </div>
+</docs-section>

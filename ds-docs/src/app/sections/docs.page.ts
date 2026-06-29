@@ -33,7 +33,9 @@ import { InputSection } from './components/input/input.section';
 import { NumberStepperSection } from './components/number-stepper/number-stepper.section';
 import { SearchSection } from './components/search/search.section';
 import { SelectSection } from './components/select/select.section';
-import { SelectionSection } from './components/selection/selection.section';
+import { CheckboxSection } from './components/checkbox/checkbox.section';
+import { RadioSection } from './components/radio/radio.section';
+import { SwitchSection } from './components/switch/switch.section';
 import { TableSection } from './components/table/table.section';
 import { PaginationSection } from './components/pagination/pagination.section';
 import { DatePickerSection } from './components/date-picker/date-picker.section';
@@ -119,9 +121,11 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     TabsSection,
     InputSection,
     NumberStepperSection,
+    CheckboxSection,
+    RadioSection,
     SearchSection,
     SelectSection,
-    SelectionSection,
+    SwitchSection,
     TableSection,
     PaginationSection,
     DatePickerSection,
@@ -200,6 +204,8 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-components-card />
 
+    <section-components-checkbox />
+
     <section-components-color-picker />
 
     <section-components-combobox />
@@ -244,11 +250,11 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-components-progress />
 
+    <section-components-radio />
+
     <section-components-search />
 
     <section-components-select />
-
-    <section-components-selection />
 
     <section-components-sidenav />
 
@@ -263,6 +269,8 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     <section-components-status-dot />
 
     <section-components-stepper />
+
+    <section-components-switch />
 
     <section-components-table />
 
@@ -402,9 +410,11 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
       section-components-tabs,
       section-components-input,
       section-components-number-stepper,
+      section-components-checkbox,
+      section-components-radio,
       section-components-search,
       section-components-select,
-      section-components-selection,
+      section-components-switch,
       section-components-table,
       section-components-pagination,
       section-components-date-picker,

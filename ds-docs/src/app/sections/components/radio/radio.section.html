@@ -1,0 +1,117 @@
+<docs-section
+  anchor="radio"
+  eyebrow="Components"
+  title="Radio"
+>
+  <div class="stack">
+    <label class="control-row">
+      <ds-radio
+        name="r"
+        value="single"
+      />
+      Single date
+    </label>
+
+    <label class="control-row">
+      <ds-radio
+        name="r"
+        value="range"
+        [checked]="true"
+      />
+      Date range
+    </label>
+
+    <label class="control-row">
+      <ds-radio
+        name="r"
+        value="recurring"
+      />
+      Recurring
+    </label>
+
+    <label class="control-row">
+      <ds-radio [disabled]="true" /> Disabled
+    </label>
+  </div>
+
+  <!-- ============================================================ Radio states showcase -->
+  <!-- Live ds-radio; pin classes on the stage read bare role tokens via ::ng-deep. -->
+  <h3 class="block-title t-h4">
+    Radio states showcase
+  </h3>
+
+  <div class="states states--cols-4">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-radio />
+      </div>
+
+      <div class="state-cell__label">
+        Default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage pin-hover">
+        <ds-radio />
+      </div>
+
+      <div class="state-cell__label">
+        Hover
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage pin-focus">
+        <ds-radio />
+      </div>
+
+      <div class="state-cell__label">
+        Focus
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-radio [checked]="true" />
+      </div>
+
+      <div class="state-cell__label">
+        Selected
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage pin-focus">
+        <ds-radio [checked]="true" />
+      </div>
+
+      <div class="state-cell__label">
+        Selected · focus
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-radio [disabled]="true" />
+      </div>
+
+      <div class="state-cell__label">
+        Disabled
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-radio
+          [disabled]="true"
+          [checked]="true"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Disabled · selected
+      </div>
+    </div>
+  </div>
+</docs-section>
