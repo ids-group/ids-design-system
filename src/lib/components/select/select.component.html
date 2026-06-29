@@ -35,6 +35,7 @@
   [attr.aria-labelledby]="label() ? labelId : null"
   [attr.aria-label]="resolvedAriaLabel()"
   [attr.aria-invalid]="invalid() ? 'true' : null"
+  [attr.aria-describedby]="hintId()"
   [attr.aria-required]="required() ? 'true' : null"
   [disabled]="isDisabled()"
   (click)="toggle()"
@@ -54,6 +55,12 @@
     />
   </span>
 </button>
+
+<ds-field-message
+  [text]="hint()"
+  [state]="messageState()"
+  [messageId]="hintId()"
+/>
 
 @if (preview.staticPreview()) {
   <div class="ds-dropdown-panel">

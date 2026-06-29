@@ -28,13 +28,15 @@ import {
   type SelectOptionGroup,
   type SelectSize,
 } from './select.types';
+import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
+import { nextControlId } from '../field-ids';
 
 let nextId = 0;
 
 @Component({
   selector: 'ds-select',
   standalone: true,
-  imports: [IconComponent, NgTemplateOutlet],
+  imports: [IconComponent, NgTemplateOutlet, FieldMessageComponent],
   templateUrl: './select.component.html',
   styleUrl: './select.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -59,6 +61,7 @@ export class SelectComponent extends DsControlValueAccessor<string> {
   readonly label = input<string>('');
   readonly disabled = input<boolean>(false);
   readonly invalid = input<boolean>(false);
+  readonly hint = input<string>('');
   readonly required = input<boolean>(false);
   readonly optional = input<boolean>(false);
   readonly name = input<string | null>(null);
@@ -68,6 +71,10 @@ export class SelectComponent extends DsControlValueAccessor<string> {
   protected readonly uid = `ds-select-${++nextId}`;
   protected readonly labelId = `${this.uid}-label`;
   protected readonly listboxId = `${this.uid}-listbox`;
+  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly messageState = computed<FieldMessageState>(() =>
+    this.invalid() ? 'error' : 'default',
+  );
   protected optionId(flatIndex: number): string {
     return `${this.uid}-opt-${flatIndex}`;
   }
