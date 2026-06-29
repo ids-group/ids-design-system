@@ -8,7 +8,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [DocsSectionComponent, TreeComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './tree.section.html',
-  styleUrl: '../../../shared/section-demo.scss',
+  styleUrls: ['../../../shared/section-demo.scss', './tree.section.scss'],
 })
 export class TreeSection {
   protected readonly nodes: TreeNode[] = [
@@ -39,6 +39,14 @@ export class TreeSection {
 
   protected readonly expanded = signal(new Set(['src', 'components']));
   protected readonly selected = signal<string | null>('tokens');
+
+  protected readonly singleNode: TreeNode[] = [
+    { id: 'node', label: 'Node label', icon: 'file' },
+  ];
+
+  protected readonly singleNodeDisabled: TreeNode[] = [
+    { id: 'node', label: 'Node label', icon: 'file', disabled: true },
+  ];
 
   onSelect(node: TreeNode): void {
     this.selected.set(node.id);

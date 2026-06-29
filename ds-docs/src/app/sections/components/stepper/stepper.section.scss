@@ -5,6 +5,10 @@
       border: var(--border-width-default) solid var(--border-divider);
       border-radius: var(--radius-lg);
     }
+    .demo--centered {
+      display: flex;
+      justify-content: center;
+    }
     .states {
       display: flex;
       flex-direction: column;
