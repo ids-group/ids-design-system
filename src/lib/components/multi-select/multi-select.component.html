@@ -6,6 +6,8 @@
   [class.open]="open()"
   [class.invalid]="invalid()"
   [class.disabled]="isDisabled()"
+  [attr.aria-invalid]="invalid() ? 'true' : null"
+  [attr.aria-describedby]="hintId()"
   [attr.aria-expanded]="open()"
   [attr.aria-controls]="listboxId"
   [attr.aria-label]="resolvedAriaLabel()"
@@ -42,6 +44,12 @@
     [size]="18"
   />
 </div>
+
+<ds-field-message
+  [text]="hint()"
+  [state]="messageState()"
+  [messageId]="hintId()"
+/>
 
 <ng-template #panel>
   <div class="panel">
