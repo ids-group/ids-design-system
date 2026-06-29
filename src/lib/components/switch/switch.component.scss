@@ -1,4 +1,6 @@
-:host { --_switch-focus-shadow: var(--ds-switch-focus-shadow, var(--ds-control-focus-shadow)); display: inline-flex; align-items: center; }
+:host { --_switch-focus-shadow: var(--ds-switch-focus-shadow, var(--ds-control-focus-shadow)); display: inline-flex; }
+
+.switch-field { display: inline-flex; flex-direction: column; align-items: flex-start; }
 
 .switch {
   appearance: none;
