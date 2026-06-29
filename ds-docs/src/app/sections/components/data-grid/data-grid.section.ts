@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { DataGridComponent, type TableColumn } from 'ds';
+import { TableComponent, type TableColumn } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 interface ProjectRow {
@@ -13,7 +13,7 @@ interface ProjectRow {
 @Component({
   selector: 'section-components-data-grid',
   standalone: true,
-  imports: [DocsSectionComponent, DataGridComponent],
+  imports: [DocsSectionComponent, TableComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './data-grid.section.html',
   styleUrl: '../../../shared/section-demo.scss',

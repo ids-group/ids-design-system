@@ -39,12 +39,12 @@
         @if (selectable()) {
           <th
             scope="col"
-            class="select-col"
+            class="select-col pin-select"
           >
             <input
               type="checkbox"
               class="check"
-              aria-label="Select all rows"
+              [attr.aria-label]="selectAllLabel()"
               [checked]="allSelected()"
               [indeterminate]="someSelected()"
               (change)="onToggleAll($event)"
@@ -52,11 +52,12 @@
           </th>
         }
 
-        @for (col of columns(); track col.key) {
+        @for (col of columns(); track col.key; let first = $first) {
           <th
             scope="col"
             [class]="headerClasses(col)"
             [class.numeric]="col.align === 'right'"
+            [class.pin-first]="first && stickyFirstColumn()"
             [attr.aria-sort]="ariaSort(col)"
           >
             @if (col.sortable) {
@@ -88,7 +89,7 @@
         @for (_ of skeletonArray(); track $index; let rowIndex = $index) {
           <tr>
             @if (selectable()) {
-              <td>
+              <td class="select-col pin-select">
                 <ds-skeleton
                   width="14px"
                   height="14px"
@@ -97,8 +98,11 @@
               </td>
             }
 
-            @for (col of columns(); track col.key) {
-              <td [class.numeric]="col.align === 'right'">
+            @for (col of columns(); track col.key; let first = $first) {
+              <td
+                [class.numeric]="col.align === 'right'"
+                [class.pin-first]="first && stickyFirstColumn()"
+              >
                 <ds-skeleton
                   height="14px"
                   [width]="skeletonWidth(col, rowIndex)"
@@ -123,7 +127,7 @@
           </td>
         </tr>
       } @else {
-        @for (row of data(); track row.id) {
+        @for (row of displayData(); track row.id) {
           <tr
             [class.selected]="isSelected(row)"
             [class.clickable]="rowInteractive()"
@@ -134,7 +138,7 @@
             (keydown.space)="onRowKey(row, $event)"
           >
             @if (selectable()) {
-              <td>
+              <td class="select-col pin-select">
                 <input
                   type="checkbox"
                   class="check"
@@ -146,8 +150,11 @@
               </td>
             }
 
-            @for (col of columns(); track col.key) {
-              <td [class.numeric]="col.align === 'right'">
+            @for (col of columns(); track col.key; let first = $first) {
+              <td
+                [class.numeric]="col.align === 'right'"
+                [class.pin-first]="first && stickyFirstColumn()"
+              >
                 @if (cellTemplate(col); as tpl) {
                   <ng-container
                     [ngTemplateOutlet]="tpl"
@@ -165,6 +172,18 @@
     </tbody>
   </table>
 </div>
+
+@if (pageSize(); as size) {
+  <div class="pagination-footer">
+    <ds-pagination
+      [total]="data().length"
+      [(currentPage)]="page"
+      [pageSize]="size"
+      [pageSizeOptions]="pageSizeOptions()"
+      (pageSizeChange)="pageSize.set($event)"
+    />
+  </div>
+}
 
 @if (selectable() && someSelected()) {
   <div class="bulk-bar">

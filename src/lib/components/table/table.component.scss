@@ -110,9 +110,6 @@
     background-color: var(--_table-head-bg-color);
     border-bottom: var(--border-width-default) solid var(--_table-divider);
     white-space: nowrap;
-    position: sticky;
-    top: 0;
-    z-index: var(--table-sticky-header-z);
 
     .th-label {
       display: inline-flex;
@@ -188,6 +185,13 @@
     }
   }
 
+  /* Sticky header — gated on the `stickyHeader()` input (default on). */
+  &.sticky-header thead th {
+    position: sticky;
+    top: 0;
+    z-index: var(--table-sticky-header-z);
+  }
+
   tbody {
     td {
       padding: var(--_table-cell-pad-y) var(--_table-cell-pad-x);
@@ -254,19 +258,59 @@
     }
   }
 
-  /* Sticky first column */
-  &.sticky-col {
-    tbody td:first-child,
-    thead th:first-child {
-      position: sticky;
-      left: 0;
-      background: inherit;
-      z-index: var(--table-sticky-col-z);
+}
+
+/* Sticky first column — opt-in via `stickyFirstColumn()`. Pinned cells need
+   an opaque background and a raised z so they survive sideways scroll. Sticky
+   positioning is unreliable with `border-collapse: collapse`, so under this
+   flag ONLY the table switches to separated borders with explicit per-cell
+   `border-bottom` (replacing the default inset-shadow divider). */
+:host(.pinned) {
+  --_table-select-w: var(--ds-table-select-col-w, var(--space-10));
+
+  .table {
+    border-collapse: separate;
+    border-spacing: 0;
+
+    tbody td {
+      box-shadow: none;
+      border-bottom: var(--border-width-default) solid var(--_table-divider);
     }
-    thead th:first-child {
-      z-index: var(--table-sticky-corner-z);
+
+    tbody tr:last-child td {
+      border-bottom: 0;
     }
   }
+
+  .pin-select,
+  .pin-first {
+    position: sticky;
+    left: 0;
+    z-index: var(--table-sticky-col-z);
+    /* Opaque so rows scrolling underneath don't bleed through. */
+    background-color: var(--_table-bg-color);
+  }
+
+  thead .pin-select,
+  thead .pin-first {
+    z-index: var(--table-sticky-corner-z);
+    background-color: var(--_table-head-bg-color);
+  }
+
+  tbody tr:hover .pin-first,
+  tbody tr:hover .pin-select {
+    background-color: var(--_table-row-hover-bg-color);
+  }
+
+  tbody tr.selected .pin-first,
+  tbody tr.selected .pin-select {
+    background-color: var(--_table-row-selected-bg-color);
+  }
+}
+
+/* When the select column is also present, offset the first data column past it. */
+:host(.pinned.selectable) .pin-first {
+  left: var(--_table-select-w);
 }
 
 /* Bulk action bar */

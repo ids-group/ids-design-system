@@ -11,18 +11,28 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
+import { PaginationComponent } from '../pagination/pagination.component';
 import { CellTemplateDirective } from './cell-template.directive';
 import type { SortChangeEvent, SortDir, TableColumn } from './table.types';
+
+const NUMERIC = /^-?\d+(\.\d+)?$/;
 
 @Component({
   selector: 'ds-table',
   standalone: true,
-  imports: [IconComponent, NgTemplateOutlet, SkeletonComponent],
+  imports: [
+    IconComponent,
+    NgTemplateOutlet,
+    SkeletonComponent,
+    PaginationComponent,
+  ],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   host: {
     '[class.bordered]': 'bordered()',
+    '[class.selectable]': 'selectable()',
+    '[class.pinned]': 'stickyFirstColumn()',
   },
 })
 export class TableComponent<T extends { id: string }> {
@@ -53,6 +63,17 @@ export class TableComponent<T extends { id: string }> {
    *  column. Off by default so non-navigating tables don't advertise a false
    *  click affordance. */
   readonly rowInteractive = input<boolean>(false);
+
+  /** Rows per page. `null` (default) disables pagination — all rows render. */
+  readonly pageSize = model<number | null>(null);
+  /** Current 1-based page. Only meaningful when `pageSize()` is set. */
+  readonly page = model<number>(1);
+  readonly pageSizeOptions = input<number[]>([10, 25, 50, 100]);
+  /** When true, the table sorts `data()` itself; otherwise it only emits
+   *  `sortChange` and leaves ordering to the consumer (default). */
+  readonly clientSort = input<boolean>(false);
+  /** Pin the first data column (and the select column) on horizontal scroll. */
+  readonly stickyFirstColumn = input<boolean>(false);
 
   readonly rowClick = output<T>();
   readonly sortChange = output<SortChangeEvent>();
@@ -99,6 +120,9 @@ export class TableComponent<T extends { id: string }> {
     if (this.loading() === 'skeleton') {
       parts.push('skeleton-mode');
     }
+    if (this.stickyHeader()) {
+      parts.push('sticky-header');
+    }
 
     return parts.join(' ');
   });
@@ -110,8 +134,52 @@ export class TableComponent<T extends { id: string }> {
     () => this.loading() === 'overlay',
   );
 
+  /** Client-side sort over the full data set — only when `clientSort()`. */
+  protected readonly sortedData = computed<readonly T[]>(() => {
+    const rows = this.data();
+    if (!this.clientSort()) {
+      return rows;
+    }
+    const key = this.sortKey();
+    const dir = this.sortDir();
+    if (!key || !dir) {
+      return rows;
+    }
+    const column = this.columns().find((col) => col.key === key);
+    if (!column) {
+      return rows;
+    }
+
+    return rows.slice().sort((a, b) => {
+      const aValue = this.cellValue(a, column);
+      const bValue = this.cellValue(b, column);
+      const comparison =
+        NUMERIC.test(aValue) && NUMERIC.test(bValue)
+          ? Number(aValue) - Number(bValue)
+          : aValue.localeCompare(bValue);
+
+      return dir === 'asc' ? comparison : -comparison;
+    });
+  });
+
+  /** Current page's slice of the sorted rows, when paginating. */
+  protected readonly pagedData = computed<readonly T[]>(() => {
+    const size = this.pageSize();
+    if (size === null) {
+      return this.sortedData();
+    }
+    const start = (this.page() - 1) * size;
+
+    return this.sortedData().slice(start, start + size);
+  });
+
+  /** Rows actually rendered: paged when paginating, else sorted/raw data. */
+  protected readonly displayData = computed<readonly T[]>(() =>
+    this.pageSize() !== null ? this.pagedData() : this.sortedData(),
+  );
+
   protected readonly allSelected = computed(() => {
-    const data = this.data();
+    const data = this.displayData();
     if (data.length === 0) {
       return false;
     }
@@ -121,11 +189,16 @@ export class TableComponent<T extends { id: string }> {
   });
 
   protected readonly someSelected = computed(() => {
-    const data = this.data();
+    const data = this.displayData();
     const sel = this.selectedIds();
 
     return data.some((row) => sel.has(row.id)) && !this.allSelected();
   });
+
+  /** Select-all is page-scoped only when paginating. */
+  protected readonly selectAllLabel = computed(() =>
+    this.pageSize() !== null ? 'Select all rows on this page' : 'Select all rows',
+  );
 
   protected readonly skeletonArray = computed(() =>
     Array(this.skeletonRows()).fill(0),
@@ -139,9 +212,9 @@ export class TableComponent<T extends { id: string }> {
     const checked = (event.target as HTMLInputElement).checked;
     const next = new Set<string>(this.selectedIds());
     if (checked) {
-      this.data().forEach((row) => next.add(row.id));
+      this.displayData().forEach((row) => next.add(row.id));
     } else {
-      this.data().forEach((row) => next.delete(row.id));
+      this.displayData().forEach((row) => next.delete(row.id));
     }
     this.selectedIds.set(next);
   }

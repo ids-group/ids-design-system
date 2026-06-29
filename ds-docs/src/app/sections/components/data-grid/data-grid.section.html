@@ -20,11 +20,12 @@
   </p>
 
   <div class="demo-panel">
-    <ds-data-grid
+    <ds-table
       caption="Projects"
       [data]="rows"
       [columns]="columns"
       [selectable]="true"
+      [clientSort]="true"
       [stickyFirstColumn]="true"
       [pageSize]="5"
       [(selectedIds)]="selected"
