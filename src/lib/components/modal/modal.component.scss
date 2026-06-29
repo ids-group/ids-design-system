@@ -29,14 +29,34 @@
   .header {
     display: flex;
     align-items: center;
+    gap: var(--space-3);
     justify-content: space-between;
     padding: var(--space-4) var(--space-5);
     border-bottom: var(--border-width-default) solid var(--_modal-divider);
   }
 
+  .icon-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: var(--space-10);
+    height: var(--space-10);
+    border-radius: var(--radius-pill);
+    background-color: var(--primary-subtitle);
+    color: var(--primary);
+
+    &.danger {
+      background-color: var(--error-subtitle);
+      color: var(--error);
+    }
+  }
+
   .title {
     font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-heading);
     margin: 0;
+    flex: 1;
+    min-width: 0;
     color: var(--_modal-title-text-color);
   }
 

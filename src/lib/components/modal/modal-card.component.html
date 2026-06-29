@@ -1,10 +1,22 @@
 <div
-  role="dialog"
+  [attr.role]="dialogRole()"
   aria-modal="true"
   [class]="classes()"
   [attr.aria-labelledby]="titleId"
 >
   <div class="header">
+    @if (icon(); as iconName) {
+      <span
+        class="icon-badge"
+        [class.danger]="danger()"
+      >
+        <ds-icon
+          [name]="iconName"
+          [size]="20"
+        />
+      </span>
+    }
+
     <h2
       class="title"
       [id]="titleId"

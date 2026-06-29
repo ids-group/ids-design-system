@@ -7,29 +7,28 @@ import {
 } from '@angular/core';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { ButtonComponent } from '../button/button.component';
-import { IconComponent } from '../../icons/icon.component';
-import { CONFIRM_DATA } from './confirm.types';
+import { ModalCardComponent } from './modal-card.component';
+import { MODAL_CONFIRM_DATA } from './modal-confirm.types';
 
 let nextId = 0;
 
 @Component({
-  selector: 'ds-confirm-dialog',
+  selector: 'ds-modal-confirm',
   standalone: true,
-  imports: [CdkTrapFocus, ButtonComponent, IconComponent],
-  templateUrl: './confirm-dialog.component.html',
-  styleUrl: './confirm-dialog.component.scss',
+  imports: [CdkTrapFocus, ButtonComponent, ModalCardComponent],
+  templateUrl: './modal-confirm.component.html',
+  styleUrl: './modal-confirm.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
 })
-export class ConfirmDialogComponent {
-  private readonly context = inject(CONFIRM_DATA);
+export class ModalConfirmComponent {
+  private readonly context = inject(MODAL_CONFIRM_DATA);
 
   protected readonly options = this.context.options;
   protected readonly tone = this.options.tone ?? 'default';
   protected readonly confirmVariant =
     this.tone === 'danger' ? 'error' : 'primary';
 
-  protected readonly uid = `ds-confirm-${++nextId}`;
-  protected readonly titleId = `${this.uid}-title`;
+  protected readonly uid = `ds-modal-confirm-${++nextId}`;
   protected readonly messageId = `${this.uid}-message`;
 
   protected readonly typed = signal('');

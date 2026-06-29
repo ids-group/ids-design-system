@@ -1,0 +1,55 @@
+<ds-modal-card
+  [title]="options.title"
+  [danger]="tone === 'danger'"
+  [icon]="options.icon ?? null"
+  [showClose]="false"
+  dialogRole="alertdialog"
+  cdkTrapFocus
+  [cdkTrapFocusAutoCapture]="true"
+  [attr.aria-describedby]="options.message ? messageId : null"
+>
+  <ng-container body>
+    @if (options.message) {
+      <p
+        class="message"
+        [id]="messageId"
+      >
+        {{ options.message }}
+      </p>
+    }
+
+    @if (options.typeToConfirm; as phrase) {
+      <label class="confirm-field">
+        <span class="confirm-hint">
+          Type <b>{{ phrase }}</b> to confirm
+        </span>
+
+        <input
+          type="text"
+          class="confirm-input"
+          autocomplete="off"
+          spellcheck="false"
+          [value]="typed()"
+          (input)="onType($event)"
+        />
+      </label>
+    }
+  </ng-container>
+
+  <ng-container actions>
+    <ds-button
+      variant="outline"
+      (pressed)="cancel()"
+    >
+      {{ options.cancelLabel ?? 'Cancel' }}
+    </ds-button>
+
+    <ds-button
+      [variant]="confirmVariant"
+      [disabled]="confirmDisabled()"
+      (pressed)="confirm()"
+    >
+      {{ options.confirmLabel ?? 'Confirm' }}
+    </ds-button>
+  </ng-container>
+</ds-modal-card>

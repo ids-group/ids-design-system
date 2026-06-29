@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, signal, inject } from '@angular/core';
-import { ConfirmService, ButtonComponent } from 'ds';
+import { ModalService, ButtonComponent } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
@@ -11,11 +11,11 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   styleUrl: '../../../shared/section-demo.scss',
 })
 export class ConfirmDialogSection {
-  private readonly confirm = inject(ConfirmService);
+  private readonly confirm = inject(ModalService);
   protected readonly result = signal('—');
 
   async askDelete(): Promise<void> {
-    const ok = await this.confirm.open({
+    const ok = await this.confirm.confirm({
       title: 'Delete "Q3 Roadmap"?',
       message:
         "This project and its 14 tasks will be permanently removed. This can't be undone.",
@@ -27,7 +27,7 @@ export class ConfirmDialogSection {
   }
 
   async askTypeToConfirm(): Promise<void> {
-    const ok = await this.confirm.open({
+    const ok = await this.confirm.confirm({
       title: 'Delete database?',
       message: 'Type the database name to confirm.',
       confirmLabel: 'Delete',

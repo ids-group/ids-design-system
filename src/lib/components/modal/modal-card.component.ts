@@ -6,6 +6,7 @@ import {
   output,
 } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
+import type { IconName } from '../../icons/icons.data';
 import type { ModalSize } from './modal.types';
 
 let nextId = 0;
@@ -23,6 +24,8 @@ export class ModalCardComponent {
   readonly danger = input<boolean>(false);
   readonly title = input.required<string>();
   readonly showClose = input<boolean>(true);
+  readonly icon = input<IconName | null>(null);
+  readonly dialogRole = input<'dialog' | 'alertdialog'>('dialog');
   readonly closed = output<void>();
 
   protected readonly titleId = `ds-modal-title-${++nextId}`;

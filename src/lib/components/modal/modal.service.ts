@@ -1,22 +1,22 @@
 import { Injectable, Injector, inject } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { ConfirmDialogComponent } from './confirm-dialog.component';
+import { ModalConfirmComponent } from './modal-confirm.component';
 import { disposeWithLeave } from '../overlay-motion';
 import {
-  CONFIRM_DATA,
-  type ConfirmContext,
-  type ConfirmOptions,
-} from './confirm.types';
+  MODAL_CONFIRM_DATA,
+  type ModalConfirmContext,
+  type ModalConfirmOptions,
+} from './modal-confirm.types';
 
 @Injectable({ providedIn: 'root' })
-export class ConfirmService {
+export class ModalService {
   private readonly overlay = inject(Overlay);
   private readonly injector = inject(Injector);
 
   /** Open a confirmation dialog. Resolves true on confirm, false on cancel,
    *  backdrop click or Escape. */
-  open(options: ConfirmOptions): Promise<boolean> {
+  confirm(options: ModalConfirmOptions): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
       const overlayRef = this.overlay.create({
         positionStrategy: this.overlay
@@ -40,10 +40,10 @@ export class ConfirmService {
         resolve(result);
       };
 
-      const context: ConfirmContext = { options, resolve: finish };
+      const context: ModalConfirmContext = { options, resolve: finish };
       const injector = Injector.create({
         parent: this.injector,
-        providers: [{ provide: CONFIRM_DATA, useValue: context }],
+        providers: [{ provide: MODAL_CONFIRM_DATA, useValue: context }],
       });
 
       overlayRef.backdropClick().subscribe(() => finish(false));
@@ -54,7 +54,7 @@ export class ConfirmService {
         }
       });
       overlayRef.attach(
-        new ComponentPortal(ConfirmDialogComponent, null, injector),
+        new ComponentPortal(ModalConfirmComponent, null, injector),
       );
 
       // Paint the scrim via the DS token rather than relying on CDK's prebuilt
