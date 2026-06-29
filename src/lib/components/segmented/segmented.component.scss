@@ -11,6 +11,9 @@
   );
 
   display: inline-flex;
+  /* Own our width — an outer flex/grid (e.g. a stretch column) must not be able
+     to stretch the track full-bleed; segments size to their content. */
+  width: fit-content;
   gap: var(--_segmented-pad);
   padding: var(--_segmented-pad);
   background-color: var(--_segmented-bg-color);
