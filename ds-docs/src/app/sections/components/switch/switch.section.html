@@ -126,4 +126,29 @@
       </div>
     </div>
   </div>
+
+  <!-- ============================================================ Validation states -->
+  <h3 class="block-title t-h4">
+    Validation states
+  </h3>
+
+  <p class="block-desc t-s">
+    Use <code class="t-mono-inline">hint</code> for helper text and
+    <code class="t-mono-inline">[invalid]="true"</code> to surface an error.
+  </p>
+
+  <div class="stack">
+    <label class="control-row">
+      <ds-switch hint="Notifications are sent to your registered email." />
+      Email notifications
+    </label>
+
+    <label class="control-row">
+      <ds-switch
+        hint="At least one notification channel must remain active."
+        [invalid]="true"
+      />
+      Email notifications
+    </label>
+  </div>
 </docs-section>

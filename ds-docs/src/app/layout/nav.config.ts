@@ -25,6 +25,7 @@ export const NAV: NavGroup[] = [
     title: 'Components',
     items: [
       { label: 'Accordion', anchor: 'accordion' },
+      { label: 'Alert', anchor: 'alert', new: true },
       { label: 'Avatars', anchor: 'avatar' },
       { label: 'Badges, tags & status', anchor: 'badge' },
       { label: 'Banner', anchor: 'banner' },
