@@ -1,109 +1,100 @@
-# Themes — palette + role assignments
+# Themes — base palette · sibling themes · brands
 
-Colour lives in two files here: a **palette** (defines the concrete colours) and a **theme** (assigns them to semantic roles). The geometry/component layer is separate (`../styles/_tokens.scss`).
+Colour is layered in three concerns: a **base palette** (theme-independent primitives), **themes** (light / dark — sibling, mutually-exclusive role maps), and **brands** (optional overlays bound to a theme). The geometry/component layer is separate (`../styles/_tokens.scss`).
 
-## Architecture: three tiers
+## Architecture: three layers
 
-| Tier                                   | Lives in                                            | Examples                                                                                                                                                                                                                                      | Consumers              |
-| -------------------------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| **Tier 1 — Palette** (defines colours) | `themes/<name>/_palette.scss`                       | `--blue-600`, `--cool-gray-0`, `--brand-gray-500`, `--red-500`, `--blue-h/s/l`, `--shadow-tint-h/s/l`                                                                                                                                         | Only the theme file    |
-| **Tier 2 — Theme** (sets roles)        | `themes/<name>/_theme.scss`                         | `--primary: var(--blue-600)`, `--text-primary`, `--surface-default`, `--success`, `--focus-ring`, `--primary-h: var(--blue-h)`, font families; the `--neutral-*` family slot (cool-gray by default, brand-gray via `[data-neutrals="brand"]`) | Components             |
-| **Tier 3 — Component / scale**         | `styles/_tokens.scss` and inside `*.component.scss` | `--space-*`, `--radius-*`, `--ds-button-bg-color`, `--duration-fast`, `--layer-modal`                                                                                                                                                         | Components (their own) |
+| Layer                          | Lives in                                   | Examples                                                                                              | Applied at                                  |
+| ------------------------------ | ------------------------------------------ | ----------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| **Base palette** (primitives)  | `themes/_base-palette.scss`                | `--blue-600`, `--cool-gray-*`, `--brand-gray-*`, `--red-h/s/l`, `--static-white`, fonts, `--shadow-tint-h/s` | `:root` (theme-independent)                 |
+| **Theme** (role map)           | `themes/_roles.scss` + `themes/<t>/_*.scss`| `--primary`, `--surface-canvas`, `--text-primary`, the `--neutral-*` slot, `--focus-ring`              | mutually-exclusive `:root` theme selectors  |
+| **Component / scale**          | `styles/_tokens.scss`, `*.component.scss`  | `--space-*`, `--radius-*`, `--ds-button-bg-color`, `--duration-fast`                                   | `:root` (theme-independent)                 |
 
-**Hard rule:** components NEVER consume Tier 1 palette directly. If you write `var(--blue-600)` inside `button.component.scss`, that's a bug — introduce or reuse a Tier 2 role.
+**Hard rule:** components NEVER consume base-palette primitives directly. `var(--blue-600)` inside `button.component.scss` is a bug — use a Tier-2 role (`--primary`, `--text-secondary`) or a component token.
 
-**Why split palette from theme:** the palette says _what colours exist_; the theme says _what each role is_. A dark theme ships a different palette (different ramp values) + a theme map that re-points roles. Swapping either re-skins the system without touching components.
+## Files
 
-## Available palette + theme
+- **`_base-palette.scss`** — theme-independent primitives at `:root`: hue ramps (`--blue/red/green/yellow/sky/orange-*`) + HSL channels, `--cool-gray-*` / `--brand-gray-*` ramps, `--static-white` / `--static-ink` (never flip), `--shadow-tint-h/s`, font families. Shared by every theme.
+- **`_roles.scss`** — `@mixin roles`: the semantic role map (surfaces, text, icons, borders, primary/secondary/tertiary families, status, status-pills, focus). Structure is identical across themes; the values resolve through each theme's own `--neutral-*` ramp. Holds the **light-default** values.
+- **`light/_palette.scss` + `light/_theme.scss`** — `@mixin palette` (the `--neutral-*` slot = cool-gray + `--shadow-tint-l: 7%`) and `@mixin theme` (`palette` + `roles`). Light is the default skin and needs no extra overrides.
+- **`dark/_palette.scss` + `dark/_theme.scss`** — `@mixin palette` (dark neutral ramp + `--shadow-tint-l: 95%`) and `@mixin theme` (`palette` + `roles` + the value overrides that genuinely differ on dark: tint surfaces, on-tint text, hover/pressed mixed toward white, scrim, focus-halo alpha, chart tokens).
+- **`../styles/_theme-activation.scss`** — applies the theme mixins under mutually-exclusive selectors + the OS-default media rule + the light-scoped `data-neutrals='brand'` switch.
 
-- **`light/_palette.scss`** — Blue + slate ramps (the concrete colours).
-- **`light/_theme.scss`** — Light role map onto the default palette. Both are bundled into `styles/ds.scss` (palette → theme → tokens) so `@use 'styles/ds';` works out of the box.
-- **`dark/_palette.scss` + `dark/_theme.scss`** — Dark skin, also bundled into `styles/ds.scss`. Unlike a standalone swap, dark emits **scoped overrides** layered on the default `:root` and activates at runtime — see **Dark theme** below.
+`styles/ds.scss` forwards `_base-palette` then `theme-activation` (before `tokens`), so `@use 'styles/ds';` renders light out of the box.
 
-Future (each a `themes/<name>/` folder with `_palette.scss` + `_theme.scss`):
-
-- `themes/high-contrast/` — A11y boost.
+**Why sibling themes (not a dark "patch"):** the two theme selectors `:root:not([data-theme='dark'])` and `:root[data-theme='dark']` are mutually exclusive, so exactly one theme block matches at runtime and emits the COMPLETE token set (palette + roles + its own overrides). Neither theme patches the other; the shared `roles` mixin is an authoring-DRY device, not a runtime dependency.
 
 ## Dark theme
 
-`themes/dark/` ships in the default bundle (`@use 'styles/ds'`). Activation:
+Ships in the default bundle. Activation:
 
 - `<html data-theme="dark">` — forced dark
 - `<html data-theme="light">` — forced light
 - attribute unset — follows the OS via `@media (prefers-color-scheme: dark)`
 
-Dark overrides the `--neutral-*` ramp (so neutral-derived roles recompute through the cascade) plus a small set of role exceptions (tint surfaces, on-tint text, scrim, focus-halo alpha). On-fill text uses theme-stable `--static-white` / `--static-ink` so it doesn't flip with the neutrals. `dark/_palette.scss` and `dark/_theme.scss` expose **mixins** applied under the activation selectors — they are NOT standalone `:root` swaps, so don't `@use` them on their own.
+```scss
+:root:not([data-theme='dark'])      { @include light.theme; }   // default + forced light
+:root[data-theme='dark']            { @include dark.theme; }    // forced dark
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light'])   { @include dark.theme; }     // OS default
+}
+```
 
-**Known limitation:** `data-neutrals="brand"` + dark — dark overrides `--neutral-*` directly and wins (equal specificity, later in source), so the brand-gray hue-tint is dropped in dark mode (renders correctly, just not brand-tinted). A dark brand-gray ramp is a future follow-up.
+On-fill text uses theme-stable `--static-white` / `--static-ink` so it doesn't flip with the neutrals.
+
+**Known limitation — `data-neutrals="brand"` + dark:** the brand-gray (hue-derived) neutral switch is a **light-theme feature**, scoped to `:root:not([data-theme='dark'])`. In dark mode the dark neutral ramp always applies; brand-tinted neutrals are not (yet) built for dark.
 
 ## How a consumer picks a theme
 
-### Option A — out-of-the-box default
+### Option A — out of the box
 
 ```scss
-// Consumer styles.scss
-@use 'styles/ds'; // bundles default palette + theme + tokens + reset + ...
+@use 'styles/ds'; // base palette + light/dark activation + tokens + reset + …
 ```
 
-### Option B — explicit theme choice
+### Option B — à la carte (advanced, opt-in global side-effects)
 
 ```scss
-// Consumer styles.scss
-@use 'themes/<name>/palette'; // pick a non-default STANDALONE theme: palette …
-@use 'themes/<name>/theme'; // … then its role map (NOTE: dark is a scoped overlay, not this)
+@use 'themes/base-palette';
+@use 'styles/theme-activation'; // light + dark, [data-theme] / prefers-color-scheme
 @use 'styles/tokens';
+@use 'styles/fonts';
 @use 'styles/reset';
-@use 'styles/typography';
-@use 'styles/scrollbar';
-@use 'styles/icon-base';
-@use 'styles/dropdown-overlay';
+// …
 ```
 
-Palette + theme must come BEFORE `tokens` so role aliases resolve.
+`base-palette` + `theme-activation` must come BEFORE `tokens` so role aliases resolve. The theme `_palette` / `_theme` files expose **mixins** — don't `@use` them directly; `theme-activation` applies them.
 
-### Option C — brand layer on top of default theme
+### Option C — brand layer on top
 
 ```scss
-// Consumer styles.scss
-@use 'styles/ds'; // default theme + DS
-@use './app/styles/brand-manage-my'; // overrides palette/roles via [data-brand]
+@use 'styles/ds';
+@use './app/styles/brand-manage-my'; // [data-brand="manage-my"] overrides, light-scoped
 ```
 
-This is the mm-broker pattern: load DS (default theme included), then overlay a brand at a more-specific selector (`[data-brand="manage-my"]`).
+## Brand vs theme
 
-## Brand vs theme — what's the difference?
-
-- **Theme** swaps the entire Tier 1 palette. Affects EVERY semantic role downstream.
-- **Brand** is a thin overlay scoped via attribute selector (`[data-brand="X"]`). Usually overrides a smaller subset (key palette stops + maybe a few roles).
-
-Same mechanism (CSS custom properties + cascade), different scope.
+- **Theme** swaps the whole role map (light ↔ dark). Mutually exclusive; the active theme decides everything.
+- **Brand** is a thin overlay scoped via attribute (`[data-brand="X"]`), and is **bound to a theme**. `manage-my` is authored on light, so it is scoped `:root:not([data-theme='dark'])[data-brand="manage-my"]` — on dark it doesn't apply (the page degrades to unbranded dark, never light-brand-on-dark). A brand that wants dark adds a separate `[data-theme='dark'][data-brand="X"]` layer.
+- Branded apps should **pin their theme** (`<html data-theme="light" data-brand="…">`) so OS auto-dark doesn't mismatch the brand.
 
 ## Adding a new theme
 
-1. Create a `themes/<name>/` folder with `_palette.scss` (ramps + HSL channels) and `_theme.scss` (role map), mirroring `themes/light/`.
-2. Optionally add it to `styles/ds.scss` if it should be a default-bundled option.
-3. Or let consumers `@use 'themes/<name>/palette'; @use 'themes/<name>/theme';` directly.
+1. Create `themes/<name>/_palette.scss` (`@mixin palette` — its `--neutral-*` ramp + `--shadow-tint-l`) and `themes/<name>/_theme.scss` (`@mixin theme` — `@include palette` + `@include roles` + only the role values that differ for this theme).
+2. Add a selector block in `styles/_theme-activation.scss` (`:root[data-theme='<name>'] { @include <name>.theme; }`).
 
-Components don't need any change — they consume semantic roles which automatically pick up the new palette.
+Components never change — they consume semantic roles, which the active theme block defines.
 
 ## Adding a new brand override
 
 1. Create `<consumer-app>/src/app/styles/_brand-X.scss`.
-2. Open with `[data-brand="X"] { ... }`.
-3. Override:
-   - **Palette HSL channels** (`--blue-h/s/l`) — for focus rings and halos that compose hsla() from channels (the theme bridges `--primary-h: var(--blue-h)`).
-   - **Blue ramp** (`--blue-50..900`) — the simplest re-skin lever. All brand-derived roles (`--primary`, `--primary-strong`, `--primary-subtitle`, `--primary-muted-strong`, `--text-link`, `--surface-tint`) retint automatically from it. For a fully calibrated brand you MAY also set the `--primary-*` roles directly to hand-picked hex (when ramp derivation doesn't hit the exact stop) — see `_brand-manage-my.scss`. Leave `--primary-hover`/`--primary-pressed` to the DS `color-mix()` derivation.
-   - Other roles you want to retint independently (surfaces, borders, text, success/danger ramps, secondary, etc.).
-4. Apply via `<html data-brand="X">` on the host app.
+2. Scope to its theme: `:root:not([data-theme='dark'])[data-brand="X"] { … }` (light brand) — or `[data-theme='dark'][data-brand="X"]` for a dark brand.
+3. Override the brand hue (`--blue-*` ramp and/or `--primary` + channels), and any roles you want to retint (surfaces, text, secondary, status). Leave `--primary-hover`/`--primary-pressed` to the DS `color-mix()` derivation.
+4. Apply via `<html data-theme="light" data-brand="X">`.
 
 ## Rules summary
 
-- Components NEVER reference `var(--blue-600)` / `var(--neutral-200)` / `var(--red-500)` directly. Use a Tier 2 role (`--primary`, `--text-secondary`) or a Tier 3 component token.
-- Themes own palette. Brands overlay on top via `[data-brand]`.
-- Theme switching = swap one `@use 'themes/X'`. No component changes.
-- `--primary-hover`, `--primary-pressed` are auto-derived via `color-mix()`. Don't override unless brand needs non-derived hover.
-- Audit guard (suggested pre-commit hook):
-  ```bash
-  grep -nE 'var\(--(violet|neutral|red|green|yellow|blue|orange|cyan|magenta)-[0-9]+\)' \
-    prototype/ds/src/lib/components/**/*.scss && exit 1
-  ```
+- Components never reference base-palette primitives (`--blue-600`, `--neutral-200`) directly — use a Tier-2 role.
+- Themes are sibling, mutually-exclusive, and self-contained; the shared `roles` mixin holds the light-default values, dark overrides the deltas.
+- Brands are theme-bound overlays. A light brand never bleeds onto dark.
+- `--primary-hover`/`--primary-pressed` are auto-derived via `color-mix()` (toward black in light, toward white in dark).

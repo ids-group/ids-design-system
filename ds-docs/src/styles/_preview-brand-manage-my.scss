@@ -16,7 +16,12 @@
 //   Ice Gray     #DAEAF0  — tinted brand surface
 //
 // Type: Manrope (loaded by the host app via Google Fonts).
-[data-brand="manage-my"] {
+//
+// LIGHT-THEME ONLY: this brand is authored on the light palette, so it is scoped
+// to :not([data-theme='dark']). On a dark-OS preview it does NOT apply — the page
+// shows unbranded dark rather than light-brand-on-dark (brand × theme is bound).
+// A dark ManageMy skin would be a separate [data-theme='dark'][data-brand=…] layer.
+:root:not([data-theme="dark"])[data-brand="manage-my"] {
   // Brand colour channels (Deep Teal · #00414B ≈ hsl(189, 100%, 15%)).
   // Channel-split lets focus rings + halos retint with the brand.
   --primary-h: 189;
