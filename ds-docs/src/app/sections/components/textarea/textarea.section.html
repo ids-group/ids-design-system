@@ -1,0 +1,113 @@
+<docs-section
+  anchor="textarea"
+  eyebrow="Components"
+  title="Textarea"
+>
+  <span lede>
+    Multi-line text input with state variants and content-driven autosize.
+  </span>
+
+  <!-- ============================================================ Variant states -->
+  <h3 class="block-title t-h4">
+    Variant states — default · value · error · disabled
+  </h3>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-textarea
+          label="Description"
+          placeholder="Describe the event…"
+          [rows]="3"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Textarea · default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-textarea
+          label="Description"
+          value="Multi-phase initiative for the north quadrant of the site."
+          [rows]="3"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Textarea · with value
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-textarea
+          label="Brief"
+          hint="Required"
+          [rows]="3"
+          [invalid]="true"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Textarea · error
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-textarea
+          label="Brief"
+          value="Auto-generated from event template."
+          [rows]="3"
+          [disabled]="true"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Textarea · disabled
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ With value -->
+  <h3 class="block-title t-h4">
+    With value
+  </h3>
+
+  <div class="grid-2">
+    <ds-textarea
+      label="Notes"
+      value="Site map TBC — confirmed via Sam Carter 2 May."
+      [rows]="3"
+    />
+  </div>
+
+  <!-- ============================================================ Textarea autosize -->
+  <h3 class="block-title t-h4">
+    Autosize
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [autosize]="true"
+    </code> grows the textarea
+    with its content (forces <code class="t-mono-inline">resize="none"</code>).
+    Bound by <code class="t-mono-inline">[minRows]</code> /
+    <code class="t-mono-inline">
+      [maxRows]
+    </code>.
+  </p>
+
+  <div class="grid-2">
+    <ds-textarea
+      label="Auto-growing note"
+      value="Type more lines and the field grows up to 8 rows, then scrolls."
+      [autosize]="true"
+      [minRows]="2"
+      [maxRows]="8"
+    />
+  </div>
+</docs-section>

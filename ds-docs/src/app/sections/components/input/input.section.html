@@ -1,13 +1,12 @@
 <docs-section
   anchor="input"
   eyebrow="Components"
-  title="Fields"
+  title="Input"
 >
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
-    Single-line text, textarea, dropdown, number, prefix/suffix add-ons,
-    floating label, six states.
+    Single-line text, prefix/suffix add-ons, floating label, six states.
   </span>
 
   <!-- ============================================================ States showcase -->
@@ -177,7 +176,7 @@
 
   <!-- ============================================================ Variant states -->
   <h3 class="block-title t-h4">
-    Variant states — textarea · select · prefix · suffix · floating
+    Variant states — prefix · suffix · floating
     <docs-await
       kind="api"
       name="ds-input floating label"
@@ -185,102 +184,6 @@
   </h3>
 
   <div class="states states--cols-2">
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <ds-textarea
-          label="Description"
-          placeholder="Describe the event…"
-          [rows]="3"
-        />
-      </div>
-
-      <div class="state-cell__label">
-        Textarea · default
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <ds-textarea
-          label="Description"
-          value="Multi-phase initiative for the north quadrant of the site."
-          [rows]="3"
-        />
-      </div>
-
-      <div class="state-cell__label">
-        Textarea · with value
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <ds-textarea
-          label="Brief"
-          hint="Required"
-          [rows]="3"
-          [invalid]="true"
-        />
-      </div>
-
-      <div class="state-cell__label">
-        Textarea · error
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <ds-textarea
-          label="Brief"
-          value="Auto-generated from event template."
-          [rows]="3"
-          [disabled]="true"
-        />
-      </div>
-
-      <div class="state-cell__label">
-        Textarea · disabled
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <div class="field">
-          <span class="label">
-            Owner
-          </span>
-
-          <ds-dropdown
-            placeholder="Pick an owner…"
-            [options]="ownerOptions"
-          />
-        </div>
-      </div>
-
-      <div class="state-cell__label">
-        Select · default
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <div class="field">
-          <span class="label">
-            Owner
-          </span>
-
-          <ds-dropdown
-            value="brooks"
-            [options]="ownerOptions"
-          />
-        </div>
-      </div>
-
-      <div class="state-cell__label">
-        Select · with value
-      </div>
-    </div>
-
     <div class="state-cell">
       <div class="state-cell__stage">
         <ds-input
@@ -444,67 +347,6 @@
     </div>
   </div>
 
-  <!-- ============================================================ Textarea · dropdown · number -->
-  <h3 class="block-title t-h4">
-    Textarea · dropdown · number
-  </h3>
-
-  <div class="grid-3">
-    <ds-textarea
-      label="Notes"
-      value="Site map TBC — confirmed via Sam Carter 2 May."
-      [rows]="3"
-    />
-
-    <div class="field">
-      <span class="label">
-        Member
-      </span>
-
-      <ds-dropdown
-        value="acme"
-        [options]="memberOptions"
-      />
-    </div>
-
-    <div class="field">
-      <span class="label">
-        Team size
-      </span>
-
-      <ds-number-stepper
-        [value]="42"
-        [min]="0"
-      />
-    </div>
-  </div>
-
-  <!-- ============================================================ Textarea autosize -->
-  <h3 class="block-title t-h4">
-    Textarea · autosize
-  </h3>
-
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [autosize]="true"
-    </code> grows the textarea
-    with its content (forces <code class="t-mono-inline">resize="none"</code>).
-    Bound by <code class="t-mono-inline">[minRows]</code> /
-    <code class="t-mono-inline">
-      [maxRows]
-    </code>.
-  </p>
-
-  <div class="grid-2">
-    <ds-textarea
-      label="Auto-growing note"
-      value="Type more lines and the field grows up to 8 rows, then scrolls."
-      [autosize]="true"
-      [minRows]="2"
-      [maxRows]="8"
-    />
-  </div>
-
   <!-- ============================================================ Clearable -->
   <h3 class="block-title t-h4">
     Clearable
@@ -597,33 +439,5 @@
       placeholder="Internal notes…"
       [optional]="true"
     />
-  </div>
-
-  <!-- ============================================================ Search · tag input -->
-  <h3 class="block-title t-h4">
-    Search · tag input
-  </h3>
-
-  <div class="grid-2">
-    <ds-search
-      placeholder="Search projects, resources, people…"
-      shortcut="⌘ K"
-    />
-
-    <div class="tag-input">
-      <ds-tag [closable]="true">
-        Project Alpha
-      </ds-tag>
-
-      <ds-tag [closable]="true">
-        Project Beta
-      </ds-tag>
-
-      <ds-tag [closable]="true">
-        Q3 Initiative
-      </ds-tag>
-
-      <input placeholder="Add project…" />
-    </div>
   </div>
 </docs-section>

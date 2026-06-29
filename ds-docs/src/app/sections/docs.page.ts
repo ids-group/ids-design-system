@@ -30,6 +30,8 @@ import { CardSection } from './components/card/card.section';
 import { StatSection } from './components/stat/stat.section';
 import { TabsSection } from './components/tabs/tabs.section';
 import { InputSection } from './components/input/input.section';
+import { TextareaSection } from './components/textarea/textarea.section';
+import { DropdownSection } from './components/dropdown/dropdown.section';
 import { NumberStepperSection } from './components/number-stepper/number-stepper.section';
 import { SearchSection } from './components/search/search.section';
 import { SelectSection } from './components/select/select.section';
@@ -120,6 +122,8 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     StatSection,
     TabsSection,
     InputSection,
+    TextareaSection,
+    DropdownSection,
     NumberStepperSection,
     CheckboxSection,
     RadioSection,
@@ -216,13 +220,15 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-components-drawer />
 
+    <section-components-dropdown />
+
     <section-components-dropzone />
 
     <section-components-empty-state />
 
-    <section-components-input />
-
     <section-components-icon />
+
+    <section-components-input />
 
     <section-components-link />
 
@@ -277,6 +283,8 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     <section-components-tabs />
 
     <section-components-tag />
+
+    <section-components-textarea />
 
     <section-components-timeline />
 
@@ -409,6 +417,8 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
       section-components-stat,
       section-components-tabs,
       section-components-input,
+      section-components-textarea,
+      section-components-dropdown,
       section-components-number-stepper,
       section-components-checkbox,
       section-components-radio,

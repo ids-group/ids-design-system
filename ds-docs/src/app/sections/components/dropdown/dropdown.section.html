@@ -1,0 +1,72 @@
+<docs-section
+  anchor="dropdown"
+  eyebrow="Components"
+  title="Dropdown"
+>
+  <span lede>
+    Single-select dropdown bound to an options list, inside a labelled field.
+  </span>
+
+  <!-- ============================================================ Variant states -->
+  <h3 class="block-title t-h4">
+    Variant states — default · value
+  </h3>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <div class="field">
+          <span class="label">
+            Owner
+          </span>
+
+          <ds-dropdown
+            placeholder="Pick an owner…"
+            [options]="ownerOptions"
+          />
+        </div>
+      </div>
+
+      <div class="state-cell__label">
+        Select · default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <div class="field">
+          <span class="label">
+            Owner
+          </span>
+
+          <ds-dropdown
+            value="brooks"
+            [options]="ownerOptions"
+          />
+        </div>
+      </div>
+
+      <div class="state-cell__label">
+        Select · with value
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ With value -->
+  <h3 class="block-title t-h4">
+    With value
+  </h3>
+
+  <div class="grid-2">
+    <div class="field">
+      <span class="label">
+        Member
+      </span>
+
+      <ds-dropdown
+        value="acme"
+        [options]="memberOptions"
+      />
+    </div>
+  </div>
+</docs-section>

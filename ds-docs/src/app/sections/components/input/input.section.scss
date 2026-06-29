@@ -56,23 +56,3 @@
       text-transform: uppercase;
       color: var(--text-tertiary);
     }
-
-    /* ---------- Tag input wrapper ---------- */
-    .tag-input {
-      display: flex; flex-wrap: wrap; align-items: center;
-      gap: 6px;
-      min-height: 44px;
-      height: auto;
-      padding: 6px;
-      background: var(--surface-default);
-      border: var(--border-width-default) solid var(--border-default);
-      border-radius: var(--radius-md);
-
-      input {
-        flex: 1; min-width: 80px;
-        border: 0; outline: 0; background: transparent;
-        font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-        color: var(--text-primary);
-      }
-      input::placeholder { color: var(--text-tertiary); }
-    }
