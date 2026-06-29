@@ -8,6 +8,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **Dark theme** (`themes/dark/`) — ships with the default bundle (`@use 'styles/ds'`).
+  Activated by `<html data-theme="dark">` (forced dark) / `data-theme="light"` (forced light),
+  or automatically via `@media (prefers-color-scheme: dark)` when the attribute is unset.
+  Adds theme-stable `--static-white` / `--static-ink` tokens so on-fill text keeps correct
+  contrast across themes. Non-breaking — additive, and light output is unchanged. Dark overrides
+  the `--neutral-*` ramp (neutral-derived roles recompute) plus a small set of role exceptions
+  (tint surfaces, on-tint text, scrim, focus-halo alpha).
+
 ### Breaking
 
 - **`ButtonSize` collapsed to `sm | md | lg`** (32 / 40 / 48 px), dropping the duplicate

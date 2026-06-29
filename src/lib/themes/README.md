@@ -18,11 +18,21 @@ Colour lives in two files here: a **palette** (defines the concrete colours) and
 
 - **`default/_palette.scss`** — Blue + slate ramps (the concrete colours).
 - **`default/_theme.scss`** — Light role map onto the default palette. Both are bundled into `styles/ds.scss` (palette → theme → tokens) so `@use 'styles/ds';` works out of the box.
+- **`dark/_palette.scss` + `dark/_theme.scss`** — Dark skin, also bundled into `styles/ds.scss`. Unlike a standalone swap, dark emits **scoped overrides** layered on the default `:root` and activates at runtime — see **Dark theme** below.
 
 Future (each a `themes/<name>/` folder with `_palette.scss` + `_theme.scss`):
 
-- `themes/dark/` — Dark-mode flip (`--shadow-tint-l` → ~95%, neutrals inverted, etc.).
 - `themes/high-contrast/` — A11y boost.
+
+## Dark theme
+
+`themes/dark/` ships in the default bundle (`@use 'styles/ds'`). Activation:
+
+- `<html data-theme="dark">` — forced dark
+- `<html data-theme="light">` — forced light
+- attribute unset — follows the OS via `@media (prefers-color-scheme: dark)`
+
+Dark overrides the `--neutral-*` ramp (so neutral-derived roles recompute through the cascade) plus a small set of role exceptions (tint surfaces, on-tint text, scrim, focus-halo alpha). On-fill text uses theme-stable `--static-white` / `--static-ink` so it doesn't flip with the neutrals. `dark/_palette.scss` and `dark/_theme.scss` expose **mixins** applied under the activation selectors — they are NOT standalone `:root` swaps, so don't `@use` them on their own.
 
 ## How a consumer picks a theme
 
@@ -37,8 +47,8 @@ Future (each a `themes/<name>/` folder with `_palette.scss` + `_theme.scss`):
 
 ```scss
 // Consumer styles.scss
-@use 'themes/dark/palette'; // pick a non-default theme: palette …
-@use 'themes/dark/theme'; // … then its role map
+@use 'themes/<name>/palette'; // pick a non-default STANDALONE theme: palette …
+@use 'themes/<name>/theme'; // … then its role map (NOTE: dark is a scoped overlay, not this)
 @use 'styles/tokens';
 @use 'styles/reset';
 @use 'styles/typography';
