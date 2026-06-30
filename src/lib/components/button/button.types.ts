@@ -9,11 +9,12 @@
 //             loading, fullWidth, color, typed (pressed) — on a link look).
 // Defaults: color="primary" variant="solid". Icon-only actions → ds-icon-button.
 //
-// All color × variant pairs RENDER. A few are UX-discouraged (they work, but
+// All color × variant pairs RENDER. Some are UX-discouraged (they work, but
 // read poorly) — flagged with a dev-mode console.warn:
 //   neutral + solid          → a solid grey button reads as disabled
 //   success + ghost/outline  → low-emphasis success rarely warrants an action
 //   warning + ghost/outline  → yellow at low emphasis is too low-contrast
+//   text (any colour)        → prefer the global `.link` class
 // Prefer solid/tonal for success & warning, and tonal/ghost/outline for neutral.
 export type ButtonColor =
   | 'primary'

@@ -29,16 +29,42 @@
     <code class="t-mono-inline">
       color="primary" variant="solid"
     </code>. Cells
-    marked ⚠ are UX-discouraged (grey solid reads as disabled; quiet
-    success/warning is too low-contrast) — they work but emit a dev-mode
-    warning; prefer solid/tonal there.
+    marked ⚠ are UX-discouraged: they work (and emit a dev-mode warning), but
+    read poorly — grey <em>solid</em> looks disabled; quiet
+    <em>
+      success/warning
+    </em> (ghost/outline) is too low-contrast — prefer
+    solid/tonal there.
+  </p>
+
+  <p class="block-desc t-s">
+    The whole <strong>text</strong> column is marked ⚠ on purpose:
     <code class="t-mono-inline">
       variant="text"
     </code> is a no-chrome,
-    link-styled button — it coexists with the global
+    underlined, link-styled button, which is exactly what the global
     <code class="t-mono-inline">
       .link
-    </code> class (last column).
+    </code> class already gives any
+    <code class="t-mono-inline">
+      &lt;a&gt;
+    </code>/<code class="t-mono-inline"
+      >&lt;button&gt;</code
+    >. For a link-styled action
+    <strong>
+      prefer <code class="t-mono-inline">.link</code>
+    </strong> (lighter,
+    no component) — reach for
+    <code class="t-mono-inline">
+      variant="text"
+    </code> only when you genuinely
+    need the ds-button API on a link look (<code class="t-mono-inline"
+      >loading</code
+    >, <code class="t-mono-inline">fullWidth</code>, the typed
+    <code class="t-mono-inline">
+      (pressed)
+    </code> output, leading/trailing
+    icons). It's kept, not removed — just not the default choice.
   </p>
 
   <p class="block-desc t-s">

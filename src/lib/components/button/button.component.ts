@@ -58,8 +58,10 @@ export class ButtonComponent {
   /** Brand/status hue family. */
   readonly color = input<ButtonColor>('primary');
   /** Fill pattern: solid | tonal | ghost | outline | text. All color×variant
-      pairs render; a few are UX-discouraged (see DISCOURAGED_COMBOS / the docs)
-      and emit a dev-mode warning — they work, but read poorly. */
+      pairs render; some are UX-discouraged (see DISCOURAGED_COMBOS / the docs)
+      and emit a dev-mode warning — they work, but read poorly. `text` is
+      discouraged for ALL colours — prefer the global `.link` class; it stays for
+      cases needing the ds-button API (loading/fullWidth/typed pressed). */
   readonly variant = input<ButtonVariant>('solid');
   readonly size = input<ButtonSize>('md');
   readonly type = input<ButtonType>('button');
@@ -106,12 +108,18 @@ export class ButtonComponent {
   constructor() {
     if (isDevMode()) {
       effect(() => {
-        const reason = DISCOURAGED_COMBOS.get(
-          `${this.color()}|${this.variant()}`,
-        );
+        const variant = this.variant();
+        if (variant === 'text') {
+          console.warn(
+            '[ds-button] variant="text" is discouraged — prefer the global `.link` class for link-styled actions. It renders, but `.link` is the canonical link affordance.',
+          );
+
+          return;
+        }
+        const reason = DISCOURAGED_COMBOS.get(`${this.color()}|${variant}`);
         if (reason) {
           console.warn(
-            `[ds-button] color="${this.color()}" variant="${this.variant()}" is a UX-discouraged combination — it renders, but ${reason}.`,
+            `[ds-button] color="${this.color()}" variant="${variant}" is a UX-discouraged combination — it renders, but ${reason}.`,
           );
         }
       });

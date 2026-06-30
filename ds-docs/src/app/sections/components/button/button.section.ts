@@ -40,42 +40,57 @@ export class ButtonSection {
   ];
 
   /** Rows of the color × variant matrix (key = the colour). Every combination
-      renders; `discouraged` flags the UX-weak ones (marked ⚠, see the API). */
+      renders; `discouraged` flags the UX-weak ones (marked ⚠, see the API).
+      `text` is discouraged for every colour — prefer the global `.link` class. */
   protected readonly combos: readonly DocsMatrixRow[] = [
-    { key: 'primary', label: 'Primary', note: 'brand', dot: 'var(--primary)' },
+    {
+      key: 'primary',
+      label: 'Primary',
+      note: 'brand',
+      dot: 'var(--primary)',
+      discouraged: ['text'],
+    },
     {
       key: 'secondary',
       label: 'Secondary',
       note: 'brand',
       dot: 'var(--secondary)',
+      discouraged: ['text'],
     },
     {
       key: 'tertiary',
       label: 'Tertiary',
       note: 'brand',
       dot: 'var(--tertiary)',
+      discouraged: ['text'],
     },
     {
       key: 'neutral',
       label: 'Neutral',
       note: 'neutral',
       dot: 'var(--text-secondary)',
-      discouraged: ['solid'],
+      discouraged: ['solid', 'text'],
     },
-    { key: 'error', label: 'Error', note: 'status', dot: 'var(--error)' },
+    {
+      key: 'error',
+      label: 'Error',
+      note: 'status',
+      dot: 'var(--error)',
+      discouraged: ['text'],
+    },
     {
       key: 'success',
       label: 'Success',
       note: 'status',
       dot: 'var(--success)',
-      discouraged: ['ghost', 'outline'],
+      discouraged: ['ghost', 'outline', 'text'],
     },
     {
       key: 'warning',
       label: 'Warning',
       note: 'status',
       dot: 'var(--warning)',
-      discouraged: ['ghost', 'outline'],
+      discouraged: ['ghost', 'outline', 'text'],
     },
   ];
 
