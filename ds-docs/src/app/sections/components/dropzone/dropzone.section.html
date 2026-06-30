@@ -11,15 +11,11 @@
   </span>
 
   <!-- ============================================================ States showcase -->
-  <!-- Idle and active cells use live <ds-dropzone>; pin-active on the stage
-           reads the component's own resolvers via ::ng-deep. has-files and
-           disabled stay raw (no API for static file list or disabled input). -->
+  <!-- Every cell is a live <ds-dropzone>; pin-active on the stage reads the
+       component's own resolvers via ::ng-deep, with-files passes a static
+       [files] list, disabled uses [disabled]. -->
   <h3 class="block-title t-h4">
     States showcase
-    <docs-await
-      kind="api"
-      name="ds-dropzone static file list"
-    />
   </h3>
 
   <p class="block-desc t-s">
@@ -56,101 +52,7 @@
     <div class="state-cell">
       <div class="state-cell__stage">
         <div class="dz-demo">
-        <div class="dropzone has-files">
-          <div class="file-list">
-            <div class="file uploading">
-              <ds-icon
-                class="icon"
-                name="file"
-                [size]="20"
-              />
-
-              <div class="main">
-                <div class="name">
-                  project-alpha-brief-v3.pdf
-                </div>
-
-                <div class="meta">
-                  2.4 MB · uploading 65%
-                </div>
-
-                <div class="progress">
-                  <div
-                    class="progress-fill"
-                    style="width: 65%"
-                  >
-                  </div>
-                </div>
-              </div>
-
-              <button
-                class="remove"
-                type="button"
-              >
-                <ds-icon
-                  name="x"
-                  [size]="14"
-                />
-              </button>
-            </div>
-
-            <div class="file success">
-              <ds-icon
-                class="icon"
-                name="check"
-                [size]="20"
-              />
-
-              <div class="main">
-                <div class="name">
-                  site-map.dwg
-                </div>
-
-                <div class="meta">
-                  8.1 MB · uploaded
-                </div>
-              </div>
-
-              <button
-                class="remove"
-                type="button"
-              >
-                <ds-icon
-                  name="x"
-                  [size]="14"
-                />
-              </button>
-            </div>
-
-            <div class="file error">
-              <ds-icon
-                class="icon"
-                name="error"
-                [size]="20"
-              />
-
-              <div class="main">
-                <div class="name">
-                  vendor-list-FINAL.xlsx
-                </div>
-
-                <div class="meta">
-                  12.4 MB · exceeds 10 MB limit
-                </div>
-              </div>
-
-              <button
-                class="remove"
-                type="button"
-              >
-                <ds-icon
-                  name="x"
-                  [size]="14"
-                />
-              </button>
-            </div>
-          </div>
-        </div>
+          <ds-dropzone [files]="withFilesDemo" />
         </div>
       </div>
 
@@ -195,10 +97,6 @@
   <!-- ============================================================ File row states -->
   <h3 class="block-title t-h4">
     File row states
-    <docs-await
-      kind="api"
-      name="ds-dropzone static file list"
-    />
   </h3>
 
   <p class="block-desc t-s">
@@ -209,79 +107,19 @@
     <div class="state-cell">
       <div class="state-cell__stage">
         <div class="dz-demo">
-          <div class="file">
-            <ds-icon
-              class="icon"
-              name="file"
-              [size]="20"
-            />
-
-            <div class="main">
-              <div class="name">
-                project-brief.pdf
-              </div>
-
-              <div class="meta">
-                2.4 MB
-              </div>
-            </div>
-
-            <button
-              class="remove"
-              type="button"
-            >
-              <ds-icon
-                name="x"
-                [size]="14"
-              />
-            </button>
-          </div>
+          <ds-dropzone [files]="rowQueued" />
         </div>
       </div>
 
       <div class="state-cell__label">
-        Default
+        Queued
       </div>
     </div>
 
     <div class="state-cell">
       <div class="state-cell__stage">
         <div class="dz-demo">
-          <div class="file uploading">
-            <ds-icon
-              class="icon"
-              name="file"
-              [size]="20"
-            />
-
-            <div class="main">
-              <div class="name">
-                site-survey.dwg
-              </div>
-
-              <div class="meta">
-                8.1 MB · 42%
-              </div>
-
-              <div class="progress">
-                <div
-                  class="progress-fill"
-                  style="width: 42%"
-                >
-                </div>
-              </div>
-            </div>
-
-            <button
-              class="remove"
-              type="button"
-            >
-              <ds-icon
-                name="x"
-                [size]="14"
-              />
-            </button>
-          </div>
+          <ds-dropzone [files]="rowUploading" />
         </div>
       </div>
 
@@ -293,33 +131,7 @@
     <div class="state-cell">
       <div class="state-cell__stage">
         <div class="dz-demo">
-          <div class="file success">
-            <ds-icon
-              class="icon"
-              name="check"
-              [size]="20"
-            />
-
-            <div class="main">
-              <div class="name">
-                risk-assessment.docx
-              </div>
-
-              <div class="meta">
-                1.2 MB · uploaded
-              </div>
-            </div>
-
-            <button
-              class="remove"
-              type="button"
-            >
-              <ds-icon
-                name="x"
-                [size]="14"
-              />
-            </button>
-          </div>
+          <ds-dropzone [files]="rowSuccess" />
         </div>
       </div>
 
@@ -331,33 +143,7 @@
     <div class="state-cell">
       <div class="state-cell__stage">
         <div class="dz-demo">
-          <div class="file error">
-            <ds-icon
-              class="icon"
-              name="error"
-              [size]="20"
-            />
-
-            <div class="main">
-              <div class="name">
-                vendor-list-FINAL.xlsx
-              </div>
-
-              <div class="meta">
-                Upload failed — exceeds 10 MB limit
-              </div>
-            </div>
-
-            <button
-              class="remove"
-              type="button"
-            >
-              <ds-icon
-                name="x"
-                [size]="14"
-              />
-            </button>
-          </div>
+          <ds-dropzone [files]="rowError" />
         </div>
       </div>
 

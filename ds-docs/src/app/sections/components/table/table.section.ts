@@ -2,13 +2,12 @@ import { Component, ViewEncapsulation, signal } from '@angular/core';
 import {
   BadgeComponent,
   ButtonComponent,
-  CheckboxComponent,
+  CellTemplateDirective,
   EmptyStateComponent,
   IconComponent,
   TableComponent,
   type TableColumn,
 } from 'ds';
-import { DocsAwaitComponent } from '../../../shared/docs-await.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,
@@ -39,8 +38,7 @@ interface ProjectRow {
   imports: [
     BadgeComponent,
     ButtonComponent,
-    CheckboxComponent,
-    DocsAwaitComponent,
+    CellTemplateDirective,
     DocsSectionComponent,
     DocsTruncationComponent,
     EmptyStateComponent,
@@ -67,6 +65,23 @@ export class TableSection {
     { key: 'venue', label: 'Venue' },
     { key: 'statusLabel', label: 'Status' },
     { key: 'capacity', label: 'Capacity', align: 'right' },
+  ];
+
+  // project / id / status carry custom cell templates (bold, mono, badge).
+  protected readonly defaultColumns: TableColumn<EventRow>[] = [
+    { key: 'project', label: 'Record' },
+    { key: 'id', label: 'ID' },
+    { key: 'date', label: 'Dates' },
+    { key: 'venue', label: 'Venue' },
+    { key: 'status', label: 'Status' },
+    { key: 'capacity', label: 'Capacity', align: 'right' },
+  ];
+
+  protected readonly selectionColumns: TableColumn<EventRow>[] = [
+    { key: 'project', label: 'Record' },
+    { key: 'date', label: 'Dates' },
+    { key: 'venue', label: 'Venue' },
+    { key: 'status', label: 'Status' },
   ];
 
   protected readonly events: readonly EventRow[] = [
@@ -166,6 +181,11 @@ export class TableSection {
     },
   ];
 
+  protected readonly selectionRows: readonly EventRow[] = this.events.slice(0, 4);
+  protected readonly bulkSelected = signal(
+    new Set(this.events.slice(0, 3).map((row) => row.id)),
+  );
+
   protected readonly projectColumns: TableColumn<ProjectRow>[] = [
     { key: 'project', label: 'Project', sortable: true },
     { key: 'owner', label: 'Owner' },
@@ -195,4 +215,9 @@ export class TableSection {
   ];
 
   protected readonly projectSelected = signal(new Set<string>());
+
+  /** Narrows the `unknown` row a projected `dsCellTemplate` receives back to EventRow. */
+  protected asEvent(row: unknown): EventRow {
+    return row as EventRow;
+  }
 }
