@@ -1,115 +1,14 @@
 /* ============================================================
-   ---------- SELECTION ----------
-   Segmented · slider — global re-declaration; no component exists.
-   .check / .radio / .switch base blocks kept so the global .control-row
-   layout renders correctly when raw specimens are used outside the
-   selection section (none currently, but the block is harmless).
+   ---------- SELECTION specimens ----------
+   Only segmented · slider · control-row remain here:
+   • .segmented / .segmented-btn / .slider — no live component yet.
+   • .control-row — docs-only layout helper (the label wrapper around
+     live <ds-checkbox|radio|switch>); collides with nothing.
+
+   .check / .radio / .switch base blocks were REMOVED — they had no raw
+   consumers (sections render the live components) and only leaked onto
+   those components' identically-named root classes.
    ============================================================ */
-.check,
-.radio {
-  appearance: none;
-  width: var(--check-size);
-  height: var(--check-size);
-  border: var(--check-bw) solid var(--border-strong);
-  background: var(--surface-default);
-  cursor: pointer;
-  display: inline-grid;
-  place-items: center;
-  flex-shrink: 0;
-  margin: 0;
-  transition:
-    background var(--duration-fast) var(--ease-standard),
-    border-color var(--duration-fast) var(--ease-standard);
-
-  &:hover:not(:disabled) { border-color: var(--primary); }
-  &:focus-visible        { outline: none; box-shadow: var(--focus-ring); }
-  &:disabled {
-    background: var(--surface-disabled);
-    border-color: var(--border-disabled);
-    cursor: not-allowed;
-  }
-}
-
-.check {
-  border-radius: var(--radius-sm);
-
-  &:checked {
-    background: var(--primary);
-    border-color: var(--primary);
-
-    &::after {
-      content: "";
-      width: var(--check-tick-size);
-      height: var(--check-tick-size);
-      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'><path d='M2 6.5l2.5 2.5L10 3.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
-    }
-  }
-
-  &:indeterminate {
-    background: var(--primary);
-    border-color: var(--primary);
-
-    &::after {
-      content: "";
-      width: var(--check-indet-w);
-      height: var(--check-indet-h);
-      background: var(--neutral-0);
-      border-radius: var(--radius-sm);
-    }
-  }
-}
-
-.radio {
-  border-radius: var(--radius-pill);
-
-  &:checked {
-    border-color: var(--primary);
-    border-width: var(--radio-bw-checked);
-
-    &::after {
-      content: "";
-      width: var(--radio-dot-size);
-      height: var(--radio-dot-size);
-      border-radius: var(--radius-pill);
-      background: var(--primary);
-    }
-  }
-}
-
-.switch {
-  appearance: none;
-  width: var(--switch-track-w);
-  height: var(--switch-track-h);
-  background: var(--neutral-300);
-  border-radius: var(--radius-pill);
-  position: relative;
-  cursor: pointer;
-  flex-shrink: 0;
-  margin: 0;
-  transition: background-color var(--duration-fast) var(--ease-standard);
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: var(--switch-thumb-pad);
-    left: var(--switch-thumb-pad);
-    width: var(--switch-thumb-size);
-    height: var(--switch-thumb-size);
-    background: var(--neutral-0);
-    border-radius: var(--radius-pill);
-    box-shadow: var(--shadow-1);
-    transition: transform var(--duration-base) var(--ease-standard);
-  }
-
-  &:checked         { background: var(--primary); }
-  &:checked::after  { transform: translateX(var(--switch-thumb-travel)); }
-  &:focus-visible   { outline: none; box-shadow: var(--focus-ring); }
-  &:disabled        { opacity: var(--opacity-disabled); cursor: not-allowed; }
-
-  &.success:checked { background: var(--success); }
-  &.error:checked   { background: var(--error); }
-}
-
 .control-row {
   display: inline-flex;
   align-items: center;
