@@ -1,16 +1,19 @@
-// Material 3 canonical naming. `outline` is the bordered neutral low-emphasis
-// button (replaced the old `ghost`). `error`/`success`/`warning` are status
-// fills (error was `danger`). `text` is the no-chrome text button (was `link`).
-// Icon-only actions live in the dedicated ds-icon-button.
-export type ButtonVariant =
+// Button has two orthogonal axes:
+//   color — which brand/status hue family (the theme holds full --secondary/
+//           --tertiary channel families; statuses are error/success/warning).
+//   fill  — the fill pattern (solid / tonal / ghost / outline).
+// Defaults: color="primary" fill="solid". The old single `variant` enum (which
+// conflated the two) is removed; the no-chrome `text` button is now the global
+// `.link` class on <button>. Icon-only actions live in ds-icon-button.
+export type ButtonColor =
   | 'primary'
   | 'secondary'
   | 'tertiary'
-  | 'outline'
+  | 'neutral'
   | 'error'
   | 'success'
-  | 'warning'
-  | 'text';
+  | 'warning';
+export type ButtonFill = 'solid' | 'tonal' | 'ghost' | 'outline';
 // sm/md/lg = 32/40/48, aligned with input, select, dropdown, date-picker and icon-button.
 export type ButtonSize = 'sm' | 'md' | 'lg';
 export type ButtonType = 'button' | 'submit' | 'reset';

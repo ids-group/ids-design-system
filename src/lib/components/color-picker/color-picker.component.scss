@@ -41,8 +41,8 @@
 
   &:focus-visible {
     outline: none;
-    border-color: var(--primary);
-    box-shadow: var(--focus-field);
+    border-color: var(--accent);
+    box-shadow: var(--accent-focus-field);
   }
 
   &:disabled {
@@ -209,8 +209,8 @@
 
   &:focus {
     outline: none;
-    border-color: var(--primary);
-    box-shadow: var(--focus-field);
+    border-color: var(--accent);
+    box-shadow: var(--accent-focus-field);
   }
 }
 
@@ -231,7 +231,7 @@
   &.selected {
     box-shadow:
       0 0 0 var(--border-width-default) var(--surface-overlay),
-      0 0 0 var(--border-width-strong) var(--primary);
+      0 0 0 var(--border-width-strong) var(--accent);
   }
 
   &:focus-visible {

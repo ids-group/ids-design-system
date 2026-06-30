@@ -43,7 +43,7 @@
                 box-shadow var(--duration-base) var(--ease-standard);
   }
 
-  &:checked         { background: var(--primary); }
+  &:checked         { background: var(--accent); }
   &:checked::after  { transform: translateX(var(--switch-thumb-travel)); }
   &:focus-visible   { outline: none; box-shadow: var(--_switch-focus-shadow); }
   &:disabled        { opacity: var(--opacity-disabled); cursor: not-allowed; }

@@ -27,8 +27,8 @@
     [stickyHeader]="false"
   >
     <ng-template
-      dsCellTemplate="project"
       let-row
+      dsCellTemplate="project"
     >
       <span class="t-s-bold">
         {{ asEvent(row).project }}
@@ -36,8 +36,8 @@
     </ng-template>
 
     <ng-template
-      dsCellTemplate="id"
       let-row
+      dsCellTemplate="id"
     >
       <span class="mono muted">
         {{ asEvent(row).id }}
@@ -45,8 +45,8 @@
     </ng-template>
 
     <ng-template
-      dsCellTemplate="status"
       let-row
+      dsCellTemplate="status"
     >
       <ds-badge
         [variant]="asEvent(row).status"
@@ -292,8 +292,8 @@
     [(selectedIds)]="bulkSelected"
   >
     <ng-template
-      dsCellTemplate="project"
       let-row
+      dsCellTemplate="project"
     >
       <span class="t-s-bold">
         {{ asEvent(row).project }}
@@ -301,8 +301,8 @@
     </ng-template>
 
     <ng-template
-      dsCellTemplate="status"
       let-row
+      dsCellTemplate="status"
     >
       <ds-badge
         [variant]="asEvent(row).status"
@@ -314,7 +314,8 @@
 
     <ds-button
       bulk-actions
-      variant="outline"
+      color="neutral"
+      fill="outline"
       size="sm"
       icon="archive"
     >
@@ -323,7 +324,8 @@
 
     <ds-button
       bulk-actions
-      variant="outline"
+      color="neutral"
+      fill="outline"
       size="sm"
       icon="download"
     >
@@ -332,7 +334,8 @@
 
     <ds-button
       bulk-actions
-      variant="outline"
+      color="neutral"
+      fill="outline"
       size="sm"
     >
       Clear
@@ -578,7 +581,7 @@
             >
               <ds-button
                 actions
-                variant="secondary"
+                fill="tonal"
                 size="sm"
                 icon="plus"
               >
@@ -640,7 +643,8 @@
             >
               <ds-button
                 actions
-                variant="outline"
+                color="neutral"
+                fill="outline"
                 size="sm"
               >
                 Clear filters
@@ -701,7 +705,7 @@
             >
               <ds-button
                 actions
-                variant="secondary"
+                fill="tonal"
                 size="sm"
                 icon="refresh"
               >
@@ -802,13 +806,16 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [pageSize]
-    </code> turns on client-side pagination (select-all then scopes to the
-    current page); <code class="t-mono-inline">
+    </code> turns on client-side
+    pagination (select-all then scopes to the current page);
+    <code class="t-mono-inline">
       [stickyFirstColumn]
-    </code> pins the first column on horizontal scroll;
+    </code> pins the first
+    column on horizontal scroll;
     <code class="t-mono-inline">
       [clientSort]
-    </code> lets the table sort its own rows. 12 rows across three pages.
+    </code> lets the table sort its
+    own rows. 12 rows across three pages.
   </p>
 
   <ds-table

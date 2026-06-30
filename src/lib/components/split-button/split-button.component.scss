@@ -22,7 +22,7 @@
 
   &:focus-visible {
     outline: none;
-    box-shadow: var(--focus-ring);
+    box-shadow: var(--accent-focus-ring);
     z-index: var(--btn-group-focus-z);
   }
 
@@ -58,12 +58,12 @@
 /* Primary (filled) variant */
 :host(.primary) .main:not(:disabled),
 :host(.primary) .toggle:not(:disabled) {
-  background: var(--primary);
-  color: var(--text-on-primary);
+  background: var(--accent);
+  color: var(--accent-on);
 }
 :host(.primary) .main:not(:disabled):hover,
 :host(.primary) .toggle:not(:disabled):hover {
-  background: var(--primary-strong);
+  background: var(--accent-strong);
 }
 :host(.primary) .toggle:not(:disabled) {
   border-left: var(--border-width-default) solid var(--btn-split-divider);

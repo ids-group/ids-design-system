@@ -5,9 +5,9 @@
   --_pagination-btn-label-color:       var(--ds-pagination-btn-label-color,       var(--text-secondary));
   --_pagination-btn-label-color-hover: var(--ds-pagination-btn-label-color-hover, var(--text-primary));
   --_pagination-btn-border:   var(--ds-pagination-btn-border,   var(--border-default));
-  --_pagination-active-bg-color:    var(--ds-pagination-active-bg-color,    var(--primary));
-  --_pagination-active-bg-color-hover: var(--ds-pagination-active-bg-color-hover, var(--primary-hover));
-  --_pagination-active-label-color:    var(--ds-pagination-active-label-color,    var(--primary-on));
+  --_pagination-active-bg-color:    var(--ds-pagination-active-bg-color,    var(--accent));
+  --_pagination-active-bg-color-hover: var(--ds-pagination-active-bg-color-hover, var(--accent-hover));
+  --_pagination-active-label-color:    var(--ds-pagination-active-label-color,    var(--accent-on));
   --_pagination-radius:        var(--ds-pagination-radius,        var(--radius-md));
   --_pagination-focus-shadow:  var(--ds-pagination-focus-shadow,  var(--ds-control-focus-shadow));
 

@@ -30,7 +30,7 @@
   position: absolute;
   top: 0;
   height: 100%;
-  background-color: var(--primary);
+  background-color: var(--accent);
   border-radius: var(--radius-pill);
 }
 
@@ -42,14 +42,14 @@
   height: var(--_slider-thumb-size);
   border-radius: var(--radius-pill);
   background-color: var(--surface-default);
-  border: var(--_slider-thumb-bw) solid var(--primary);
+  border: var(--_slider-thumb-bw) solid var(--accent);
   box-shadow: var(--shadow-card);
   cursor: grab;
   touch-action: none;
 
   &:focus-visible {
     outline: none;
-    box-shadow: var(--focus-ring);
+    box-shadow: var(--accent-focus-ring);
   }
 
   &:active {

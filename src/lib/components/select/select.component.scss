@@ -75,12 +75,12 @@
 
   &:focus-visible {
     outline: none;
-    border-color: var(--primary);
+    border-color: var(--accent);
     box-shadow: var(--_select-focus-shadow);
   }
 
   &.open {
-    border-color: var(--primary);
+    border-color: var(--accent);
     box-shadow: var(--_select-focus-shadow);
 
     .chevron {

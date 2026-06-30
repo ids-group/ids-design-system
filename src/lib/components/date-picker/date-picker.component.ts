@@ -27,6 +27,7 @@ import type {
 } from './date-picker.types';
 
 let nextId = 0;
+const YEAR_PAGE_SIZE = 12;
 
 interface DayCell {
   date: Date;
@@ -74,6 +75,9 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
+  /** Bounds for the year dropdown in the calendar header. */
+  readonly minYear = input<number>(new Date().getFullYear() - 100);
+  readonly maxYear = input<number>(new Date().getFullYear() + 10);
 
   protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
   protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
@@ -231,11 +235,93 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
     return this.placeholder();
   });
 
-  protected readonly monthLabel = computed(() => {
-    const m = this.viewMonth();
+  // ---- Month / year grid pickers in the calendar header ----
+  protected readonly monthMenuOpen = signal(false);
+  protected readonly yearMenuOpen = signal(false);
+  protected readonly monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+  ];
+  protected readonly viewMonthIndex = computed(() => this.viewMonth().getMonth());
+  protected readonly viewYear = computed(() => this.viewMonth().getFullYear());
 
-    return m.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+  /** First year shown in the year grid; paged by YEAR_PAGE_SIZE within [minYear, maxYear]. */
+  protected readonly yearPageStart = signal<number>(0);
+
+  protected readonly yearsOnPage = computed<number[]>(() => {
+    const start = this.yearPageStart();
+    const max = this.maxYear();
+    const list: number[] = [];
+    for (let year = start; year < start + YEAR_PAGE_SIZE && year <= max; year++) {
+      list.push(year);
+    }
+
+    return list;
   });
+
+  protected readonly yearRangeLabel = computed(() => {
+    const page = this.yearsOnPage();
+
+    return page.length ? `${page[0]} – ${page[page.length - 1]}` : '';
+  });
+
+  protected readonly canPrevYearPage = computed(
+    () => this.yearPageStart() > this.minYear(),
+  );
+  protected readonly canNextYearPage = computed(
+    () => this.yearPageStart() + YEAR_PAGE_SIZE <= this.maxYear(),
+  );
+
+  /** Aligns the page so `year` lands on a stable grid boundary measured from minYear. */
+  private yearPageStartFor(year: number): number {
+    const min = this.minYear();
+
+    return min + Math.floor((year - min) / YEAR_PAGE_SIZE) * YEAR_PAGE_SIZE;
+  }
+
+  protected toggleMonthMenu(event: Event): void {
+    event.stopPropagation();
+    this.yearMenuOpen.set(false);
+    this.monthMenuOpen.update((open) => !open);
+  }
+
+  protected toggleYearMenu(event: Event): void {
+    event.stopPropagation();
+    this.monthMenuOpen.set(false);
+    this.yearMenuOpen.update((open) => !open);
+    if (this.yearMenuOpen()) {
+      this.yearPageStart.set(this.yearPageStartFor(this.viewYear()));
+    }
+  }
+
+  protected prevYearPage(event: Event): void {
+    event.stopPropagation();
+    this.yearPageStart.update((start) =>
+      Math.max(this.minYear(), start - YEAR_PAGE_SIZE),
+    );
+  }
+
+  protected nextYearPage(event: Event): void {
+    event.stopPropagation();
+    this.yearPageStart.update((start) => start + YEAR_PAGE_SIZE);
+  }
+
+  protected closeMenus(): void {
+    this.monthMenuOpen.set(false);
+    this.yearMenuOpen.set(false);
+  }
+
+  protected selectMonth(index: number, event: Event): void {
+    event.stopPropagation();
+    this.viewMonth.set(new Date(this.viewYear(), index, 1));
+    this.monthMenuOpen.set(false);
+  }
+
+  protected selectYear(year: number, event: Event): void {
+    event.stopPropagation();
+    this.viewMonth.set(new Date(year, this.viewMonthIndex(), 1));
+    this.yearMenuOpen.set(false);
+  }
 
   protected readonly daysGrid = computed<DayCell[]>(() => {
     const view = this.viewMonth();
@@ -366,6 +452,7 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
     disposeWithLeave(this.overlayRef);
     this.overlayRef = null;
     this.isOpen.set(false);
+    this.closeMenus();
     this.markTouched();
   }
 

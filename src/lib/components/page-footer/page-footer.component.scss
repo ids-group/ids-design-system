@@ -20,7 +20,7 @@
 :host(.save) {
   position: relative;
   padding: var(--space-3) var(--space-4);
-  background: var(--primary-subtitle);
-  border: var(--border-width-default) solid var(--primary);
+  background: var(--accent-subtitle);
+  border: var(--border-width-default) solid var(--accent);
   border-radius: var(--radius-lg);
 }

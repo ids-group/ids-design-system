@@ -27,15 +27,15 @@
   background-color: var(--surface-default);
   border: var(--border-width-default) solid var(--border-default);
   border-radius: var(--radius-md);
-  caret-color: var(--primary);
+  caret-color: var(--accent);
   transition:
     border-color var(--duration-fast) var(--ease-standard),
     box-shadow var(--duration-fast) var(--ease-standard);
 
   &:focus {
     outline: none;
-    border-color: var(--primary);
-    box-shadow: var(--focus-field);
+    border-color: var(--accent);
+    box-shadow: var(--accent-focus-field);
   }
 
   &:disabled {

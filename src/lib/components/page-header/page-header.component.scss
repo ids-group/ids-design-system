@@ -108,7 +108,7 @@
     max-width: 24ch;
     transition: color var(--duration-fast) var(--ease-standard);
 
-    &:hover { color: var(--primary); }
+    &:hover { color: var(--accent); }
     &.crumb--current {
       color: var(--text-primary);
       font-weight: var(--font-weight-bold);

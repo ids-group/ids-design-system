@@ -25,14 +25,14 @@
   }
 
   &[aria-pressed='true'] {
-    background: var(--primary-subtitle);
-    border-color: var(--primary);
-    color: var(--primary-strong);
+    background: var(--accent-subtitle);
+    border-color: var(--accent);
+    color: var(--accent-strong);
   }
 
   &:focus-visible {
     outline: none;
-    box-shadow: var(--focus-ring);
+    box-shadow: var(--accent-focus-ring);
   }
 
   &:disabled {

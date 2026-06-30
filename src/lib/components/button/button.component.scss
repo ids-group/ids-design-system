@@ -15,19 +15,33 @@
 }
 
 .button {
+  /* Colour-family slots — default to the --accent-* pointer (= primary unless a
+     ds-color zone/attr flips it), so a button WITHOUT an explicit color follows
+     the zone. An explicit `color` class (.c-*) overrides these on the element,
+     winning over the inherited accent. Fill classes (.f-*) map slots into the
+     --_button-* resolvers below. */
+  --c-base:           var(--accent);
+  --c-on:             var(--accent-on);
+  --c-strong:         var(--accent-strong);
+  --c-subtitle:       var(--accent-subtitle);
+  --c-muted:          var(--accent-muted);
+  --c-muted-strong:   var(--accent-muted-strong);
+  --c-outline-border: var(--c-muted-strong);
+  --c-ring:           var(--ds-control-focus-shadow);
+
   /* Public --ds-button-* are read with fallbacks, never declared — consumer
-     overrides inherit in. Hover/active derive from the resolved bg
-     (theme hover/pressed recipe: 88%/76% + black) unless set individually. */
-  --_button-bg-color:        var(--ds-button-bg-color,        var(--primary));
+     overrides inherit in. Default fill = solid: bg = base, hover/active darken
+     the resolved bg (theme 88%/76% + black recipe) unless set individually. */
+  --_button-bg-color:        var(--ds-button-bg-color,        var(--c-base));
+  --_button-label-color:     var(--ds-button-label-color,     var(--c-on));
   --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  color-mix(in srgb, var(--_button-bg-color) 88%, black));
   --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--_button-bg-color) 76%, black));
-  --_button-label-color:        var(--ds-button-label-color,        var(--primary-on));
 
-  /* Hue source for the muted disabled label — the fill for solids, the label
-     accent for tonal/ghost/text (overridden per variant below). */
+  /* Hue source for the muted disabled tone — the fill for solid, the label
+     accent for tonal/ghost/outline (set on those fill classes). */
   --_button-accent: var(--_button-bg-color);
   --_button-border:    var(--ds-button-border,    transparent);
-  --_button-focus-shadow: var(--ds-button-focus-shadow, var(--ds-control-focus-shadow));
+  --_button-focus-shadow: var(--ds-button-focus-shadow, var(--c-ring));
 
   /* Press = darken (--_button-bg-color-active) + a micro scale-down. The old
      pressed halo is opt-in now (default none) — set --ds-button-pressed-shadow. */
@@ -35,11 +49,9 @@
   --_button-pressed-shadow: var(--ds-button-pressed-shadow, none);
   --_button-radius:    var(--ds-button-radius,    var(--radius-md));
 
-  /* Disabled tone — hand-picked per variant from two recipes (chosen visually).
-     A (this default): a flat pale tint, hue from accent, pinned L/C — used for the
-     solid fills (primary + error/success/warning) and chrome-less text; keeps them
-     light and clean. B (color-mix of the enabled fill toward the disabled surface)
-     is set on secondary/tertiary/outline below, fading them by their low emphasis. */
+  /* Disabled tone — two recipes (chosen visually). A (this default, for solid):
+     a flat pale tint, hue from accent, pinned L/C. B (color-mix of the enabled
+     fill toward the disabled surface) is set on the tonal/ghost/outline classes. */
   --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, oklch(from var(--_button-accent) 92% 0.03 h));
   --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 58% 0.035 h));
   --_button-border-disabled: var(--ds-button-border-disabled, oklch(from var(--_button-accent) 86% 0.04 h));
@@ -113,69 +125,65 @@
     .icon { width: var(--icon-sm); height: var(--icon-sm); }
   }
 
-  /* Variants re-bind the resolvers (consumer token still wins). Tonal/neutral
-     ones pin ramp picks — a black mix into pastel tints desaturates. */
+  /* Colour classes — rebind slots only (the base resolvers + fill mappers keep
+     consumer --ds-button-* winning). */
+  &.c-secondary {
+    --c-base: var(--secondary); --c-on: var(--secondary-on); --c-strong: var(--secondary-strong);
+    --c-subtitle: var(--secondary-subtitle); --c-muted: var(--secondary-muted); --c-muted-strong: var(--secondary-muted-strong);
+  }
+  &.c-tertiary {
+    --c-base: var(--tertiary); --c-on: var(--tertiary-on); --c-strong: var(--tertiary-strong);
+    --c-subtitle: var(--tertiary-subtitle); --c-muted: var(--tertiary-muted); --c-muted-strong: var(--tertiary-muted-strong);
+  }
+  &.c-neutral {
+    --c-base: var(--text-secondary); --c-on: var(--surface-default); --c-strong: var(--text-primary);
+    --c-subtitle: var(--surface-secondary); --c-muted: var(--surface-secondary); --c-muted-strong: var(--border-default);
+    --c-outline-border: var(--border-default);
+  }
+  &.c-error {
+    --c-base: var(--error); --c-on: var(--text-on-error); --c-strong: var(--error-text);
+    --c-subtitle: var(--error-subtitle); --c-muted: var(--error-muted); --c-muted-strong: var(--error-muted-strong);
+    --c-ring: var(--ds-control-focus-shadow-error);
+  }
+  &.c-success {
+    --c-base: var(--success); --c-on: var(--text-on-success); --c-strong: var(--success-text);
+    --c-subtitle: var(--success-subtitle); --c-muted: var(--success-muted); --c-muted-strong: var(--success-muted-strong);
+  }
+  &.c-warning {
+    --c-base: var(--warning); --c-on: var(--text-on-warning); --c-strong: var(--warning-text);
+    --c-subtitle: var(--warning-subtitle); --c-muted: var(--warning-muted); --c-muted-strong: var(--warning-muted-strong);
+  }
 
-  /* B recipe shared by the tonal/ghost/outlined trio — fade the enabled fill. */
-  &.secondary,
-  &.tertiary,
-  &.outline {
+  /* Fill classes — map slots into resolvers (consumer override preserved). Solid
+     is the base default (no class). Tonal/ghost/outline also set disabled recipe B. */
+  &.f-tonal {
+    --_button-bg-color:        var(--ds-button-bg-color,        var(--c-muted));
+    --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));
+    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--c-muted-strong));
+    --_button-bg-color-active: var(--ds-button-bg-color-active, var(--c-muted-strong));
+    --_button-accent: var(--_button-label-color);
+    --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, color-mix(in srgb, var(--_button-bg-color) 28%, var(--surface-disabled)));
+    --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 52% 0.04 h));
+  }
+  &.f-ghost {
+    --_button-bg-color:        var(--ds-button-bg-color,        transparent);
+    --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));
+    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--c-subtitle));
+    --_button-bg-color-active: var(--ds-button-bg-color-active, var(--c-muted));
+    --_button-accent: var(--_button-label-color);
+    --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
+    --_button-border-disabled: var(--ds-button-border-disabled, transparent);
+  }
+  &.f-outline {
+    --_button-bg-color:        var(--ds-button-bg-color,        var(--surface-default));
+    --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));
+    --_button-border:          var(--ds-button-border,          var(--c-outline-border));
+    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--c-subtitle));
+    --_button-bg-color-active: var(--ds-button-bg-color-active, var(--c-muted));
+    --_button-accent: var(--_button-label-color);
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, color-mix(in srgb, var(--_button-bg-color) 28%, var(--surface-disabled)));
     --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 52% 0.04 h));
     --_button-border-disabled: var(--ds-button-border-disabled, color-mix(in srgb, var(--_button-border) 55%, var(--surface-disabled)));
-  }
-
-  &.secondary {
-    --_button-bg-color:        var(--ds-button-bg-color,        var(--primary-muted));
-    --_button-label-color:        var(--ds-button-label-color,        var(--primary-strong));
-    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--primary-muted-strong));
-    --_button-bg-color-active: var(--ds-button-bg-color-active, var(--primary-muted-strong));
-    --_button-accent: var(--_button-label-color);
-  }
-  &.tertiary {
-    --_button-bg-color:        var(--ds-button-bg-color,        transparent);
-    --_button-label-color:        var(--ds-button-label-color,        var(--primary-strong));
-    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--primary-subtitle));
-    --_button-bg-color-active: var(--ds-button-bg-color-active, var(--primary-muted));
-    --_button-accent: var(--_button-label-color);
-  }
-  &.outline {
-    --_button-bg-color:        var(--ds-button-bg-color,        var(--surface-default));
-    --_button-label-color:        var(--ds-button-label-color,        var(--text-primary));
-    --_button-border:    var(--ds-button-border,    var(--border-default));
-    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--surface-secondary));
-    --_button-bg-color-active: var(--ds-button-bg-color-active, var(--surface-secondary));
-    --_button-accent: var(--_button-label-color);
-  }
-  &.error {
-    --_button-bg-color:           var(--ds-button-bg-color,           var(--error));
-    --_button-focus-shadow: var(--ds-button-focus-shadow, var(--ds-control-focus-shadow-error));
-  }
-  &.success {
-    --_button-bg-color: var(--ds-button-bg-color, var(--success));
-    --_button-label-color: var(--ds-button-label-color, var(--text-on-success));
-  }
-  &.warning {
-    --_button-bg-color: var(--ds-button-bg-color, var(--warning));
-    --_button-label-color: var(--ds-button-label-color, var(--text-on-warning));
-  }
-
-  &.text {
-    --_button-bg-color:        var(--ds-button-bg-color,        transparent);
-    --_button-label-color:        var(--ds-button-label-color,        var(--text-link));
-    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  transparent);
-    --_button-bg-color-active: var(--ds-button-bg-color-active, transparent);
-    --_button-accent: var(--_button-label-color);
-
-    /* No fill → no disabled tint box; just muted text (it's a chrome-less link). */
-    --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
-    --_button-border-disabled: var(--ds-button-border-disabled, transparent);
-
-    padding: 0; height: auto; width: auto;
-    text-decoration: underline;
-    text-underline-offset: var(--btn-link-uloff);
-
-    &:hover { color: var(--primary-pressed); }
   }
 
   &.loading {
@@ -199,55 +207,3 @@
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
-
-/* Button group */
-.button-group {
-  display: inline-flex;
-
-  .button { border-radius: var(--radius-flat); }
-  .button:first-child { border-top-left-radius: var(--radius-md); border-bottom-left-radius: var(--radius-md); }
-  .button:last-child  { border-top-right-radius: var(--radius-md); border-bottom-right-radius: var(--radius-md); }
-  .button + .button { margin-left: var(--btn-group-overlap); }
-  .button:focus-visible { z-index: var(--btn-group-focus-z); }
-}
-
-/* Split button */
-.button-split {
-  display: inline-flex;
-
-  > .button:first-child {
-    border-top-right-radius: 0; border-bottom-right-radius: 0;
-    padding-right: var(--space-4);
-  }
-  > .button:last-child {
-    border-top-left-radius: var(--radius-flat); border-bottom-left-radius: var(--radius-flat);
-    border-left: var(--border-width-default) solid var(--btn-split-divider);
-    padding: 0 var(--space-3);
-    width: auto;
-  }
-}
-
-/* Toggle button */
-.button-toggle {
-  display: inline-flex;
-  align-items: center; gap: var(--space-2);
-  height: var(--hit-min);
-  padding: 0 var(--space-3);
-  border: var(--border-width-default) solid var(--border-default);
-  border-radius: var(--radius-md);
-  background: var(--surface-default);
-  color: var(--text-secondary);
-  font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-  cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-standard),
-              border-color var(--duration-fast) var(--ease-standard),
-              color var(--duration-fast) var(--ease-standard);
-
-  &:hover { background: var(--surface-secondary); color: var(--text-primary); }
-  &[aria-pressed="true"] {
-    background: var(--primary-subtitle);
-    border-color: var(--primary);
-    color: var(--primary-strong);
-  }
-  &:focus-visible { outline: none; box-shadow: var(--_button-focus-shadow); }
-}

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>Color engine — деривация: hue-only vs oklch</title>
+<style>
+  :root {
+    color-scheme: only light;
+    --ink: #161A28; --ink-2: #353B4D; --ink-3: #6B7388;
+    --line: #DCE1EA; --bg: #F6F8FB; --card: #FFFFFF;
+    --blue: #2E54FF; --blue-d: #1D43ED;
+    --green-ink: #156822; --green-soft: #E4F7E8;
+    --rose-ink: #BA1717; --rose-soft: #FEF1F1;
+    --amber-ink: #8A6D00; --amber-soft: #FBF0D2;
+    --radius: 14px; --shadow: 0 1px 2px rgba(11,14,25,.06), 0 1px 3px rgba(11,14,25,.08);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0 auto; max-width: 1180px; background: var(--bg); color: var(--ink);
+    font: 400 15.5px/1.55 'Mulish', system-ui, -apple-system, Segoe UI, sans-serif;
+    padding: 36px clamp(16px,5vw,64px) 96px; }
+  h1 { font-size: 31px; font-weight: 800; letter-spacing: -.6px; margin: 0 0 6px; }
+  .lede { color: var(--ink-3); margin: 0 0 28px; font-size: 16px; max-width: 880px; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px clamp(18px,3vw,30px); margin-bottom: 20px; }
+  h2 { font-size: 20px; font-weight: 800; letter-spacing: -.3px; margin: 0 0 6px; }
+  h3 { margin: 0 0 10px; font-size: 14px; font-weight: 800; letter-spacing: .02em; text-transform: uppercase; }
+  .tag { display: inline-block; font-size: 11.5px; font-weight: 800; padding: 3px 10px; border-radius: 999px; letter-spacing: .03em; text-transform: uppercase; margin-bottom: 12px; }
+  .tag.a { background: #EAF0FE; color: var(--blue-d); }
+  .tag.b { background: #F0EAFE; color: #6B3AD6; }
+  .tag.ref { background: #EEF1F6; color: var(--ink-3); }
+  p.note { color: var(--ink-2); font-size: 14px; margin: 0 0 12px; max-width: 880px; }
+  code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12.5px; background: #EEF1F6; padding: 1px 6px; border-radius: 4px; color: var(--ink-2); }
+
+  /* one brand knob feeds everything */
+  .knobs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; position: sticky; top: 0; background: var(--bg); padding: 14px 0; z-index: 5; }
+  .knobs button { border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 6px 12px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
+  .knobs button:hover { border-color: #B9CBFF; }
+  .knobs .dot { width: 13px; height: 13px; border-radius: 999px; }
+  .knobs input[type=color] { width: 40px; height: 32px; border: 1px solid var(--line); border-radius: 8px; background: #fff; cursor: pointer; padding: 2px; }
+  .knobs label { font-size: 13px; color: var(--ink-3); font-weight: 700; margin-left: 4px; }
+
+  .unsupported { display: none; background: var(--amber-soft); color: var(--amber-ink); padding: 10px 14px; border-radius: 10px; font-size: 13.5px; font-weight: 700; margin-bottom: 14px; }
+  @supports not (color: oklch(from red l c h)) { .unsupported { display: block; } }
+
+  /* ramp strip */
+  .ramp { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  @media (width < 720px) { .ramp { grid-template-columns: repeat(4, 1fr); } }
+  .sw { border: 1px solid var(--line); border-radius: 9px; overflow: hidden; background: #fff; }
+  .sw .chip { height: 46px; }
+  .sw .l { padding: 5px 7px; font-size: 10px; line-height: 1.3; }
+  .sw .l b { display: block; font-weight: 800; font-size: 11px; }
+  .sw .l code { background: none; padding: 0; font-size: 9.5px; color: var(--ink-3); }
+
+  /* three lanes: A / B / today */
+  .lanes { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  .lane { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .lane.a { background: #FAFBFF; border-color: #D9E2FB; }
+  .lane.b { background: #FBFAFF; border-color: #E3D9FB; }
+  .lane.ref { background: #FAFAFB; border-color: var(--line); }
+  .lane-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
+  .lane-head .sub { color: var(--ink-3); font-size: 12.5px; font-weight: 600; }
+
+  /* mini ui kit rendered per derivation */
+  .kit { display: flex; flex-wrap: wrap; gap: 18px 22px; align-items: center; margin-top: 14px; padding: 14px; border: 1px dashed var(--line); border-radius: 10px; background: #fff; }
+  .kbtn { border: 1px solid transparent; border-radius: 10px; padding: 9px 16px; font: inherit; font-weight: 800; font-size: 13px; cursor: pointer; transition: background .12s, color .12s, border-color .12s; }
+  /* Color fills use background-IMAGE gradients (not background-color) so they
+     survive Chrome force-dark, which only rewrites background-color/text/border.
+     Keeps every judged colour faithful regardless of the viewer's dark setting. */
+  .kbtn.solid   { background-image: linear-gradient(var(--x-base), var(--x-base)); color: var(--x-on); }
+  .kbtn.solid:hover { background-image: linear-gradient(var(--x-hover), var(--x-hover)); }
+  .kbtn.solid:active { background-image: linear-gradient(var(--x-pressed), var(--x-pressed)); }
+  .kbtn.tonal   { background-image: linear-gradient(var(--x-muted), var(--x-muted)); color: var(--x-strong); }
+  .kbtn.tonal:hover { background-image: linear-gradient(var(--x-muted-strong), var(--x-muted-strong)); }
+  .kbtn.ghost   { background: transparent; color: var(--x-strong); }
+  .kbtn.ghost:hover { background-image: linear-gradient(var(--x-subtitle), var(--x-subtitle)); }
+  .kbtn.outline { background-image: linear-gradient(#fff, #fff); color: var(--x-strong); border-color: var(--x-muted-strong); }
+  .kbtn.outline:hover { background-image: linear-gradient(var(--x-subtitle), var(--x-subtitle)); }
+  .kchk { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; }
+  .kchk .box { width: 22px; height: 22px; border-radius: 6px; background-image: linear-gradient(var(--x-base), var(--x-base)); border: 2px solid var(--x-base);
+    box-shadow: 0 0 0 3px var(--x-halo); display: grid; place-items: center; }
+  .kchk .box svg { width: 13px; height: 13px; }
+  .kbadge { background-image: linear-gradient(var(--x-subtitle), var(--x-subtitle)); color: var(--x-strong); font-weight: 800; font-size: 12px; padding: 4px 10px; border-radius: 999px; }
+  .ktab { color: var(--x-strong); border-bottom: 2px solid var(--x-base); padding: 4px 2px; font-weight: 800; font-size: 13px; }
+
+  .families { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  .fam { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .fam > .name { font-weight: 800; font-size: 14px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .fam .warn { font-size: 11px; font-weight: 700; color: var(--amber-ink); background: var(--amber-soft); padding: 2px 8px; border-radius: 999px; }
+  .fam .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+  @media (width < 760px) { .fam .duo { grid-template-columns: 1fr; } }
+  .fam .duo .mini { border: 1px solid var(--line); border-radius: 9px; padding: 10px; }
+  .fam .duo .mini .cap { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .03em; color: var(--ink-3); margin-bottom: 8px; }
+
+  .verdict { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (width < 760px) { .verdict { grid-template-columns: 1fr; } }
+  .vcard { border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+  .vcard.a { background: #FAFBFF; border-color: #D9E2FB; } .vcard.b { background: #FBFAFF; border-color: #E3D9FB; }
+  .vcard h4 { margin: 0 0 10px; font-size: 15px; font-weight: 800; }
+  .vcard ul { margin: 0; padding-left: 18px; font-size: 13.5px; color: var(--ink-2); line-height: 1.7; }
+  .vcard .plus { color: var(--green-ink); font-weight: 800; }
+  .vcard .minus { color: var(--rose-ink); font-weight: 800; }
+  .foot { margin-top: 30px; color: var(--ink-3); font-size: 13px; border-top: 1px solid var(--line); padding-top: 16px; }
+</style>
+</head>
+<body>
+  <h1>Цвет-движок: какой способ деривации?</h1>
+  <p class="lede">Решение из <code>docs/todo.md</code> → «Single-source colour engine»: из <b>одного</b> токена на роль (<code>--primary</code>, <code>--error</code>…) вывести всё семейство (subtitle/muted/muted-strong/strong/hover/pressed/halo). Два способа — выбери глазами. Обе колонки живут от <b>одной ручки</b> бренда ниже; третья — сегодняшние ручные пики как эталон. Все семейства выводятся <b>единообразно</b> (твой выбор).</p>
+
+  <div class="unsupported">⚠ Браузер не поддерживает <code>oklch(from …)</code> — колонка B не пересчитается. Открой в свежем Chrome/Edge/Safari/Firefox.</div>
+
+  <div class="knobs" id="knobs">
+    <strong style="font-size:13px">бренд →</strong>
+    <button data-c="#2E54FF"><span class="dot" style="background:#2E54FF"></span>IDS blue (эталон)</button>
+    <button data-c="#FF6B2E"><span class="dot" style="background:#FF6B2E"></span>Orange</button>
+    <button data-c="#0EA371"><span class="dot" style="background:#0EA371"></span>Emerald</button>
+    <button data-c="#7C3AED"><span class="dot" style="background:#7C3AED"></span>Violet</button>
+    <button data-c="#E11D74"><span class="dot" style="background:#E11D74"></span>Magenta</button>
+    <label for="pick">свой:</label>
+    <input type="color" id="pick" value="#2e54ff">
+  </div>
+
+  <!-- ============ PRIMARY: A vs B vs today ============ -->
+  <section id="scope">
+    <h2>Primary (brand) — рампа и UI-кит в трёх вариантах</h2>
+    <p class="note">A воспроизводит сегодняшний blue <b>пиксель-в-пиксель</b> при бренде = IDS blue (S/L шагов скопированы с рампы <code>--blue-*</code>). При другом бренде A держит «нарисованную кривую» (S/L фиксированы, тянется только hue) — смотри, не разъезжается ли. B — единая перцептивная формула в oklch (плавнее, но от эталона отступает).</p>
+
+    <div class="lanes">
+      <div class="lane a">
+        <div class="lane-head"><span class="tag a" style="margin:0">A · hue-only</span><span class="sub"><code>hsl(from --brand h &lt;ручной S&gt; &lt;ручной L&gt;)</code> + color-mix для hover/pressed/halo</span></div>
+        <div class="ramp" data-lane="a"></div>
+        <div class="kit" data-lane="a"></div>
+      </div>
+      <div class="lane b">
+        <div class="lane-head"><span class="tag b" style="margin:0">B · oklch</span><span class="sub"><code>oklch(from --brand &lt;calc L&gt; &lt;calc C&gt; h)</code> — одна перцептивная формула на все шаги</span></div>
+        <div class="ramp" data-lane="b"></div>
+        <div class="kit" data-lane="b"></div>
+      </div>
+      <div class="lane ref">
+        <div class="lane-head"><span class="tag ref" style="margin:0">сегодня</span><span class="sub">ручные пики <code>--blue-50/100/200/600/700</code> — НЕ следуют за ручкой (для сверки с A при бренде = blue)</span></div>
+        <div class="ramp" data-lane="ref"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATUS FAMILIES — the hard test ============ -->
+  <section>
+    <h2>Статусные семейства — честный стресс-тест</h2>
+    <p class="note">Сегодня <b>green/yellow рампы — hex-пики без HSL-каналов</b>, а <code>--warning-on</code> — тёмный ink (жёлтый проваливает контраст с белым). Если движок выводит ВСЕ семейства единообразно из одного токена, именно здесь видно, держит ли формула: warning — самый сложный (жёлтый при затемнении уходит в зелёный/грязь), success — средний. Для каждого: A слева, B справа, от их <b>собственного</b> базового токена (бренд-ручка их не трогает).</p>
+    <div class="families" id="families"></div>
+  </section>
+
+  <!-- ============ VERDICT ============ -->
+  <section>
+    <h2>Сводка для решения</h2>
+    <div class="verdict">
+      <div class="vcard a">
+        <h4>A · hue-only (hsl from + ручные S/L)</h4>
+        <ul>
+          <li><span class="plus">+</span> при дефолтном бренде воспроизводит нарисованную рампу точно — лук не меняется</li>
+          <li><span class="plus">+</span> совпадает с правилом «hand-tuned &gt; формулы»: тянем только hue, S/L рукотворные</li>
+          <li><span class="plus">+</span> srgb-mix для hover/pressed — ровно как сейчас в теме</li>
+          <li><span class="minus">−</span> S/L каждого шага надо прописать руками (8 ролей × 7 семейств)</li>
+          <li><span class="minus">−</span> при «чужом» бренде (тёмном/блёклом) фикс-S/L шагов могут разъехаться с базой — нужна сверка глазами</li>
+          <li><span class="minus">−</span> hsl-затемнение жёлтого сдвигает hue (warning) — может потребовать пер-семейного твика</li>
+        </ul>
+      </div>
+      <div class="vcard b">
+        <h4>B · oklch perceptual (одна формула)</h4>
+        <ul>
+          <li><span class="plus">+</span> одна формула на всё — минимум ручного кода, любой бренд «просто работает»</li>
+          <li><span class="plus">+</span> перцептивно равномерно: затемнение не мутит и не сдвигает hue (жёлтый остаётся жёлтым)</li>
+          <li><span class="plus">+</span> base-L бренда участвует в выводе — светлый/тёмный бренд авто-адаптируется</li>
+          <li><span class="minus">−</span> отступает от сегодняшних пиков — нужен ребейзлайн всего лука + проверка AA</li>
+          <li><span class="minus">−</span> противоречит «hand-tuned &gt; формулы», если не оставить пер-шаговые override</li>
+          <li><span class="minus">−</span> oklch C для очень насыщенных брендов может выйти за gamut (клампится)</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note" style="margin-top:14px">Можно и <b>гибрид</b>: hue-only (A) как дефолт для brand-семейств (точный лук), а формула — только для hover/pressed/halo (срабатывает там, где сегодня уже color-mix). Скажи, какой берём (A / B / гибрид), и я зашиваю это в спеку фазы 1.</p>
+  </section>
+
+  <p class="foot">Прототип деривации для решения по «Single-source colour engine». Парный с <code>presentations/color-engine-relative.html</code> (зачем вообще единый источник) и <code>button-variant-tone.html</code> (color×fill + ds-color, которые движок разблокирует).</p>
+
+<script>
+  // Targets reproduced from the real theme ramps (src/lib/themes/_base-palette.scss).
+  const STEPS = [
+    { key: 'subtitle',     label: 'subtitle',     t: 'роль' },
+    { key: 'muted',        label: 'muted',        t: 'роль' },
+    { key: 'muted-strong', label: 'muted-strong', t: 'роль (дыра в теме)' },
+    { key: 'base',         label: 'base',         t: 'источник' },
+    { key: 'hover',        label: 'hover',        t: 'color-mix 88%' },
+    { key: 'pressed',      label: 'pressed',      t: 'color-mix 76%' },
+    { key: 'strong',       label: 'strong',       t: 'текст на тинте' },
+  ];
+
+  // A — hue-only: hue pulled from base, S/L hand-tuned to the blue ramp curve.
+  function rampA(base) {
+    return {
+      subtitle:       `hsl(from ${base} h 100% 97%)`,
+      muted:          `hsl(from ${base} h 95% 94%)`,
+      'muted-strong': `hsl(from ${base} h 95% 89%)`,
+      base:           base,
+      hover:          `color-mix(in srgb, ${base} 88%, black)`,
+      pressed:        `color-mix(in srgb, ${base} 76%, black)`,
+      strong:         `hsl(from ${base} h 85% 52%)`,
+    };
+  }
+  // B — oklch perceptual: one formula family. L/C adjusted in perceptual space.
+  function rampB(base) {
+    return {
+      subtitle:       `oklch(from ${base} 0.975 calc(c * 0.40) h)`,
+      muted:          `oklch(from ${base} 0.95 calc(c * 0.55) h)`,
+      'muted-strong': `oklch(from ${base} 0.90 calc(c * 0.70) h)`,
+      base:           base,
+      hover:          `oklch(from ${base} calc(l - 0.05) c h)`,
+      pressed:        `oklch(from ${base} calc(l - 0.11) c h)`,
+      strong:         `oklch(from ${base} calc(l - 0.12) calc(c * 1.05) h)`,
+    };
+  }
+  // Today — hardcoded picks (only correct when brand = IDS blue).
+  const TODAY_BLUE = {
+    subtitle: 'hsl(229 100% 97%)', muted: 'hsl(229 95% 94%)', 'muted-strong': 'hsl(229 95% 89%)',
+    base: 'hsl(229 100% 59%)', hover: 'color-mix(in srgb, hsl(229 100% 59%) 88%, black)',
+    pressed: 'color-mix(in srgb, hsl(229 100% 59%) 76%, black)', strong: 'hsl(229 85% 52%)',
+  };
+
+  function paintRamp(el, ramp) {
+    el.innerHTML = '';
+    for (const s of STEPS) {
+      const sw = document.createElement('div'); sw.className = 'sw';
+      sw.innerHTML = `<div class="chip" style="background-image:linear-gradient(${ramp[s.key]},${ramp[s.key]})"></div>
+        <div class="l"><b>${s.label}</b><code>${s.t}</code></div>`;
+      el.appendChild(sw);
+    }
+  }
+  function applyKit(el, ramp) {
+    el.style.setProperty('--x-base', ramp.base);
+    el.style.setProperty('--x-on', '#fff');
+    el.style.setProperty('--x-hover', ramp.hover);
+    el.style.setProperty('--x-pressed', ramp.pressed);
+    el.style.setProperty('--x-strong', ramp.strong);
+    el.style.setProperty('--x-muted', ramp.muted);
+    el.style.setProperty('--x-muted-strong', ramp['muted-strong']);
+    el.style.setProperty('--x-subtitle', ramp.subtitle);
+    el.style.setProperty('--x-halo', `color-mix(in srgb, ${ramp.base} 22%, transparent)`);
+  }
+  const KIT_HTML = `
+    <button class="kbtn solid">Solid</button>
+    <button class="kbtn tonal">Tonal</button>
+    <button class="kbtn ghost">Ghost</button>
+    <button class="kbtn outline">Outline</button>
+    <span class="kchk"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>checkbox</span>
+    <span class="kbadge">badge</span>
+    <span class="ktab">tab</span>`;
+
+  const families = [
+    { name: 'error', base: 'hsl(0 75% 49%)', note: 'channel-split (как blue)' },
+    { name: 'success', base: '#22A33A', note: 'hex-пики, нет каналов' },
+    { name: 'warning', base: '#F4D43A', warn: 'жёлтый: тёмный on-text + hue-сдвиг при затемнении', note: 'hex-пики, нет каналов' },
+  ];
+  function buildFamilies() {
+    const host = document.getElementById('families');
+    host.innerHTML = '';
+    for (const f of families) {
+      const wrap = document.createElement('div'); wrap.className = 'fam';
+      wrap.innerHTML = `<div class="name">${f.name} <code style="font-size:11px">${f.base}</code> <span style="color:var(--ink-3);font-weight:600;font-size:12px">${f.note}</span> ${f.warn ? `<span class="warn">⚠ ${f.warn}</span>` : ''}</div>
+        <div class="duo">
+          <div class="mini"><div class="cap">A · hue-only</div><div class="ramp ramp-a"></div><div class="kit kit-a"></div></div>
+          <div class="mini"><div class="cap">B · oklch</div><div class="ramp ramp-b"></div><div class="kit kit-b"></div></div>
+        </div>`;
+      host.appendChild(wrap);
+      const a = rampA(f.base), b = rampB(f.base);
+      paintRamp(wrap.querySelector('.ramp-a'), a);
+      paintRamp(wrap.querySelector('.ramp-b'), b);
+      const ka = wrap.querySelector('.kit-a'), kb = wrap.querySelector('.kit-b');
+      ka.innerHTML = KIT_HTML; kb.innerHTML = KIT_HTML;
+      applyKit(ka, a); applyKit(kb, b);
+      // warning on-fill text is dark ink, not white — reflect it on solid btn
+      if (f.name === 'warning') { ka.style.setProperty('--x-on', '#161A28'); kb.style.setProperty('--x-on', '#161A28'); }
+    }
+  }
+
+  function render(brand) {
+    const a = rampA(brand), b = rampB(brand);
+    paintRamp(document.querySelector('.ramp[data-lane="a"]'), a);
+    paintRamp(document.querySelector('.ramp[data-lane="b"]'), b);
+    paintRamp(document.querySelector('.ramp[data-lane="ref"]'), TODAY_BLUE);
+    const ka = document.querySelector('.kit[data-lane="a"]'), kb = document.querySelector('.kit[data-lane="b"]');
+    ka.innerHTML = KIT_HTML; kb.innerHTML = KIT_HTML;
+    applyKit(ka, a); applyKit(kb, b);
+  }
+
+  const pick = document.getElementById('pick');
+  function setBrand(hex) { render(hex); pick.value = hex; }
+  for (const btn of document.querySelectorAll('#knobs button')) btn.addEventListener('click', () => setBrand(btn.dataset.c));
+  pick.addEventListener('input', () => render(pick.value));
+
+  render('#2E54FF');
+  buildFamilies();
+</script>
+</body>
+</html>

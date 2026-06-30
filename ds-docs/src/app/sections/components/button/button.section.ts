@@ -1,14 +1,26 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { ButtonComponent, ToggleButtonComponent, type ButtonVariant } from 'ds';
+import {
+  ButtonComponent,
+  ToggleButtonComponent,
+  type ButtonColor,
+  type ButtonFill,
+} from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,
   TruncationRule,
 } from '../../../shared/docs-truncation.component';
 
-interface VariantSpec {
+interface ComboRow {
   readonly label: string;
-  readonly key: ButtonVariant;
+  readonly color: ButtonColor;
+  /** The fills legal for this colour (see the color × fill matrix). */
+  readonly fills: readonly ButtonFill[];
+}
+
+interface FillSpec {
+  readonly label: string;
+  readonly fill: ButtonFill;
 }
 
 @Component({
@@ -25,19 +37,55 @@ interface VariantSpec {
   styleUrl: './button.section.scss',
 })
 export class ButtonSection {
-  /** All variants, vertical axis of both the size and the state matrix. */
-  protected readonly variants: readonly VariantSpec[] = [
-    { label: 'Primary', key: 'primary' },
-    { label: 'Secondary', key: 'secondary' },
-    { label: 'Tertiary', key: 'tertiary' },
-    { label: 'Outline', key: 'outline' },
-    { label: 'Error', key: 'error' },
-    { label: 'Success', key: 'success' },
-    { label: 'Warning', key: 'warning' },
-    { label: 'Text', key: 'text' },
+  /** Columns of the color × fill matrix. */
+  protected readonly fills: readonly ButtonFill[] = [
+    'solid',
+    'tonal',
+    'ghost',
+    'outline',
   ];
 
-  /** Horizontal axis of the state matrix. hover/focus/active are pinned for display. */
+  /** Rows of the color × fill matrix — each colour lists its legal fills.
+      Cells outside a colour's legal fills render as "—" (unsupported). */
+  protected readonly combos: readonly ComboRow[] = [
+    {
+      label: 'Primary',
+      color: 'primary',
+      fills: ['solid', 'tonal', 'ghost', 'outline'],
+    },
+    {
+      label: 'Secondary',
+      color: 'secondary',
+      fills: ['solid', 'tonal', 'ghost', 'outline'],
+    },
+    {
+      label: 'Tertiary',
+      color: 'tertiary',
+      fills: ['solid', 'tonal', 'ghost', 'outline'],
+    },
+    {
+      label: 'Neutral',
+      color: 'neutral',
+      fills: ['tonal', 'ghost', 'outline'],
+    },
+    {
+      label: 'Error',
+      color: 'error',
+      fills: ['solid', 'tonal', 'ghost', 'outline'],
+    },
+    { label: 'Success', color: 'success', fills: ['solid', 'tonal'] },
+    { label: 'Warning', color: 'warning', fills: ['solid', 'tonal'] },
+  ];
+
+  /** Rows of the states matrix — primary colour in each fill. */
+  protected readonly stateFills: readonly FillSpec[] = [
+    { label: 'Solid', fill: 'solid' },
+    { label: 'Tonal', fill: 'tonal' },
+    { label: 'Ghost', fill: 'ghost' },
+    { label: 'Outline', fill: 'outline' },
+  ];
+
+  /** Horizontal axis of the states matrix. hover/focus/active are pinned for display. */
   protected readonly states = [
     'Default',
     'Hover',

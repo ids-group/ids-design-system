@@ -1,7 +1,7 @@
 :host {
   /* Public --ds-breadcrumbs-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_breadcrumbs-label-color:           var(--ds-breadcrumbs-label-color,           var(--text-tertiary));
-  --_breadcrumbs-label-color-hover:     var(--ds-breadcrumbs-label-color-hover,     var(--primary));
+  --_breadcrumbs-label-color-hover:     var(--ds-breadcrumbs-label-color-hover,     var(--accent));
   --_breadcrumbs-separator-icon-color: var(--ds-breadcrumbs-separator-icon-color, var(--icon-muted));
   --_breadcrumbs-current-label-color:   var(--ds-breadcrumbs-current-label-color,   var(--text-primary));
   --_breadcrumbs-focus-shadow:          var(--ds-breadcrumbs-focus-shadow,          var(--ds-control-focus-shadow));

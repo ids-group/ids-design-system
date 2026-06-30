@@ -6,6 +6,17 @@
 }
 
 .icon-button {
+  /* Colour-family slots — default to the --accent-* pointer (= primary unless a
+     ds-color zone/attr flips it), so an icon-button without an explicit color
+     follows the zone. `color` classes (.c-*) override these on the element. The
+     filled/tonal/selected fills consume them (standard/outlined are neutral). */
+  --c-base:         var(--accent);
+  --c-on:           var(--accent-on);
+  --c-strong:       var(--accent-strong);
+  --c-subtitle:     var(--accent-subtitle);
+  --c-muted:        var(--accent-muted);
+  --c-muted-strong: var(--accent-muted-strong);
+
   /* Public --ds-icon-button-* are read with fallbacks, never declared — consumer
      overrides inherit in. filled/selected derive hover/active from the resolved
      bg (theme hover/pressed recipe: 88%/76% + black) unless set individually. */
@@ -78,8 +89,8 @@
   /* Variants re-bind the resolvers (consumer token still wins). `standard`
      equals the base defaults (no block needed). */
   &.filled {
-    --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--primary));
-    --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--primary-on));
+    --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--c-base));
+    --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--c-on));
     --_icon-button-bg-color-hover:  var(--ds-icon-button-bg-color-hover,  color-mix(in srgb, var(--_icon-button-bg-color) 88%, black));
     --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, color-mix(in srgb, var(--_icon-button-bg-color) 76%, black));
     --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--_icon-button-icon-color));
@@ -87,11 +98,11 @@
     --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, oklch(from var(--_icon-button-accent) 92% 0.03 h));
   }
   &.tonal {
-    --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--primary-muted));
-    --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--primary-strong));
-    --_icon-button-bg-color-hover:  var(--ds-icon-button-bg-color-hover,  var(--primary-subtitle));
-    --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, var(--primary-muted-strong));
-    --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--primary-strong));
+    --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--c-muted));
+    --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--c-strong));
+    --_icon-button-bg-color-hover:  var(--ds-icon-button-bg-color-hover,  var(--c-subtitle));
+    --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, var(--c-muted-strong));
+    --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--c-strong));
     --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, color-mix(in srgb, var(--_icon-button-bg-color) 28%, var(--surface-disabled)));
   }
   &.outlined {
@@ -105,10 +116,36 @@
     --_icon-button-border-disabled: var(--ds-icon-button-border-disabled, color-mix(in srgb, var(--_icon-button-border) 55%, var(--surface-disabled)));
   }
 
+  /* Colour classes — rebind slots only (the fill variants above consume them). */
+  &.c-secondary {
+    --c-base: var(--secondary); --c-on: var(--secondary-on); --c-strong: var(--secondary-strong);
+    --c-subtitle: var(--secondary-subtitle); --c-muted: var(--secondary-muted); --c-muted-strong: var(--secondary-muted-strong);
+  }
+  &.c-tertiary {
+    --c-base: var(--tertiary); --c-on: var(--tertiary-on); --c-strong: var(--tertiary-strong);
+    --c-subtitle: var(--tertiary-subtitle); --c-muted: var(--tertiary-muted); --c-muted-strong: var(--tertiary-muted-strong);
+  }
+  &.c-neutral {
+    --c-base: var(--text-secondary); --c-on: var(--surface-default); --c-strong: var(--text-primary);
+    --c-subtitle: var(--surface-secondary); --c-muted: var(--surface-secondary); --c-muted-strong: var(--border-default);
+  }
+  &.c-error {
+    --c-base: var(--error); --c-on: var(--text-on-error); --c-strong: var(--error-text);
+    --c-subtitle: var(--error-subtitle); --c-muted: var(--error-muted); --c-muted-strong: var(--error-muted-strong);
+  }
+  &.c-success {
+    --c-base: var(--success); --c-on: var(--text-on-success); --c-strong: var(--success-text);
+    --c-subtitle: var(--success-subtitle); --c-muted: var(--success-muted); --c-muted-strong: var(--success-muted-strong);
+  }
+  &.c-warning {
+    --c-base: var(--warning); --c-on: var(--text-on-warning); --c-strong: var(--warning-text);
+    --c-subtitle: var(--warning-subtitle); --c-muted: var(--warning-muted); --c-muted-strong: var(--warning-muted-strong);
+  }
+
   /* Toggle pressed look — stays last so it wins over the resting variant fill. */
   &.selected {
-    --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--primary));
-    --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--primary-on));
+    --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--c-base));
+    --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--c-on));
     --_icon-button-border:    var(--ds-icon-button-border,    transparent);
     --_icon-button-bg-color-hover:  var(--ds-icon-button-bg-color-hover,  color-mix(in srgb, var(--_icon-button-bg-color) 88%, black));
     --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, color-mix(in srgb, var(--_icon-button-bg-color) 76%, black));

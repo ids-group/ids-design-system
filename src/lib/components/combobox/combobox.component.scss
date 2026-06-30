@@ -27,7 +27,7 @@
 
   &:hover:not(.disabled) { border-color: var(--border-strong); }
   &:focus-within:not(.disabled) {
-    border-color: var(--primary);
+    border-color: var(--accent);
     box-shadow: var(--_combobox-focus-shadow);
     outline: 0;
   }
@@ -104,7 +104,7 @@
     }
 
     .icon {
-      color: var(--primary);
+      color: var(--accent);
       margin-left: auto;
     }
 
@@ -135,8 +135,8 @@
       color: var(--text-on-primary);
 
       &.checked {
-        background-color: var(--primary);
-        border-color: var(--primary);
+        background-color: var(--accent);
+        border-color: var(--accent);
       }
     }
   }

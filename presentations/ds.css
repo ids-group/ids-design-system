@@ -49,6 +49,9 @@
   --orange-600: #E8631A;
   --orange-700: #B84812;
   --orange-800: #8A340A;
+  --green-h: 132;
+  --green-s: 66%;
+  --green-l: 39%;
   --green-50: #ECFAEE;
   --green-100: #D6F3DB;
   --green-200: #BBE8C2;
@@ -57,6 +60,9 @@
   --green-500: #22A33A;
   --green-600: #1B8A2E;
   --green-700: #156822;
+  --yellow-h: 47;
+  --yellow-s: 89%;
+  --yellow-l: 59%;
   --yellow-50: #FFFBEA;
   --yellow-100: #FEF8DC;
   --yellow-200: #FCEFA1;
@@ -86,10 +92,16 @@
   --sky-700: #1D4ED8;
   --shadow-tint-h: 225;
   --shadow-tint-s: 39%;
-  --shadow-tint-l: 7%;
+  --static-white: #FFF;
+  --static-ink: #161A28;
+  --font-sans: "Mulish", -apple-system, blinkmacsystemfont, "Segoe UI", roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, sfmono-regular, menlo, monospace;
+  --font-display: var(--font-sans);
+  --font-heading: var(--font-sans);
 }
 
 :root {
+  color-scheme: light;
   /* Neutral family slot — semantic pointer at the active gray ramp from the
      palette. Default: hand-drawn cool-gray. <html data-neutrals="brand">
      (ds-docs tweaks panel) repoints it at the brand-derived brand-gray ramp,
@@ -108,9 +120,10 @@
   --neutral-800: var(--cool-gray-800);
   --neutral-900: var(--cool-gray-900);
   --neutral-950: var(--cool-gray-950);
+  --shadow-tint-l: 7%;
   /* Surfaces — six-stop scale.
      · canvas    : page background
-     · default   : cards, sheets, toolbars (the “paper”)
+     · default   : cards, sheets, toolbars (the "paper")
      · secondary : hover lanes, table heads, addons, code blocks
      · overlay   : modals, drawers, popovers (paired with scrim)
      · tint      : brand-tinted (active rows, sidenav active item)
@@ -154,30 +167,22 @@
   --text-inverted: var(--neutral-0);
   /* Text overlaid on arbitrary imagery (camera feeds, photos) — pairs a
      guaranteed-light colour with a contrast shadow. */
-  --text-on-media: var(--neutral-0);
+  --text-on-media: var(--static-white);
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
   --text-link: var(--blue-700);
-  --text-on-primary: var(--neutral-0);
-  --text-on-success: var(--neutral-0);
+  --text-on-primary: var(--static-white);
+  --text-on-success: var(--static-white);
   /* Warning fill is yellow (--yellow-400 #F4D43A) — white text on it is only
      ~1.5:1 (fails WCAG). On-warning text is the darkest neutral (~10:1). */
-  --text-on-warning: var(--neutral-900);
-  --text-on-error: var(--neutral-0);
+  --text-on-warning: var(--static-ink);
+  --text-on-error: var(--static-white);
   /* Icons */
   --icon-default: var(--neutral-500);
   --icon-strong: var(--neutral-700);
   --icon-muted: var(--neutral-400);
-  --icon-on-primary: var(--neutral-0);
-  /* Font families — a theme/brand choice (the size/weight/leading SCALE is
-     theme-independent and lives in styles/_tokens.scss). Display + heading
-     default to body sans; a brand can mix a serif/display family here without
-     touching component code. */
-  --font-sans: "Mulish", -apple-system, blinkmacsystemfont, "Segoe UI", roboto, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, sfmono-regular, menlo, monospace;
-  --font-display: var(--font-sans);
-  --font-heading: var(--font-sans);
+  --icon-on-primary: var(--static-white);
   /* Semantic → palette bridge. The lib knows colours by PURPOSE; the theme
-     (themes/default/_theme.scss) ships the concrete ramps + HSL channels. This
+     (themes/light/_theme.scss) ships the concrete ramps + HSL channels. This
      is the one place that maps semantic roles onto a concrete palette. A brand
      re-skins by overriding either the palette (--blue-*, --red-*) or these
      role tokens directly.
@@ -188,6 +193,12 @@
   --error-h: var(--red-h);
   --error-s: var(--red-s);
   --error-l: var(--red-l);
+  --success-h: var(--green-h);
+  --success-s: var(--green-s);
+  --success-l: var(--green-l);
+  --warning-h: var(--yellow-h);
+  --warning-s: var(--yellow-s);
+  --warning-l: var(--yellow-l);
   /* Primary roles.
      Hover / pressed / selected-hover are DERIVED from --primary at runtime via
      color-mix() so a brand swap (overriding only --primary) propagates to every
@@ -202,7 +213,7 @@
   --primary-muted: var(--blue-100);
   --primary-muted-strong: var(--blue-200);
   --primary-strong: var(--blue-700);
-  --primary-on: var(--neutral-0);
+  --primary-on: var(--static-white);
   /* Accent / secondary role — composed from --secondary-h/s/l channels.
      Channels default to brand values so unbranded apps render identical to
      --primary. Override --secondary-h/s/l per-brand (or via the tweaks panel)
@@ -217,6 +228,7 @@
   --secondary-strong: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 11%));
   --secondary-subtitle: hsl(var(--secondary-h) 100% 97%);
   --secondary-muted: hsl(var(--secondary-h) 95% 94%);
+  --secondary-muted-strong: hsl(var(--secondary-h) 95% 89%);
   --secondary-on: var(--primary-on);
   /* Tertiary — third brand hue. Used by the tertiary button variant and
      tonal accents (decorative chips, hierarchy tones, indicators). Mirrors
@@ -234,6 +246,7 @@
   --tertiary-strong: hsl(var(--tertiary-h) var(--tertiary-s) calc(var(--tertiary-l) - 11%));
   --tertiary-subtitle: hsl(var(--tertiary-h) 100% 97%);
   --tertiary-muted: hsl(var(--tertiary-h) 95% 94%);
+  --tertiary-muted-strong: hsl(var(--tertiary-h) 95% 89%);
   --tertiary-on: var(--primary-on);
   /* Status roles.
      -hover / -pressed are derived from the base role via the same color-mix()
@@ -244,12 +257,14 @@
   --success-hover: color-mix(in srgb, var(--success) 88%, black);
   --success-subtitle: var(--green-50);
   --success-muted: var(--green-100);
+  --success-muted-strong: var(--green-200);
   --success-border: var(--green-200);
   --success-text: var(--green-700);
   --warning: var(--yellow-400);
   --warning-hover: color-mix(in srgb, var(--warning) 88%, black);
   --warning-subtitle: var(--yellow-50);
   --warning-muted: var(--yellow-100);
+  --warning-muted-strong: var(--yellow-200);
   --warning-border: var(--yellow-200);
   --warning-text: var(--yellow-700);
   --error: var(--red-500);
@@ -257,8 +272,16 @@
   --error-pressed: color-mix(in srgb, var(--error) 76%, black);
   --error-subtitle: var(--red-50);
   --error-muted: var(--red-100);
+  --error-muted-strong: var(--red-200);
   --error-border: var(--red-200);
   --error-text: var(--red-600);
+  /* -pressed (success/warning) + -on aliases — added for the --accent-* pointer
+     family so every ds-color family resolves --accent-pressed / --accent-on. */
+  --success-pressed: color-mix(in srgb, var(--success) 76%, black);
+  --warning-pressed: color-mix(in srgb, var(--warning) 76%, black);
+  --error-on: var(--text-on-error);
+  --success-on: var(--text-on-success);
+  --warning-on: var(--text-on-warning);
   --info: var(--sky-500);
   --info-hover: color-mix(in srgb, var(--info) 88%, black);
   --info-subtitle: var(--sky-50);
@@ -308,10 +331,46 @@
     0 0 0 3px hsl(var(--primary-h) var(--primary-s) var(--primary-l) / var(--focus-field-alpha));
   --focus-field-error:
     0 0 0 3px hsl(var(--error-h) var(--error-s) var(--error-l) / var(--focus-field-alpha));
+  /* Per-family focus rings/fields — pre-composed once from each family's
+     channels so ds-color flips a single --accent-focus-* pointer (no :root
+     composite re-declaration in the scope). --focus-ring-error exists above. */
+  --focus-ring-secondary:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l) / 100%);
+  --focus-ring-tertiary:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsl(var(--tertiary-h) var(--tertiary-s) var(--tertiary-l) / 100%);
+  --focus-ring-success:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsl(var(--success-h) var(--success-s) var(--success-l) / 100%);
+  --focus-ring-warning:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsl(var(--warning-h) var(--warning-s) var(--warning-l) / 100%);
+  --focus-field-secondary:
+    0 0 0 3px hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l) / var(--focus-field-alpha));
+  --focus-field-tertiary:
+    0 0 0 3px hsl(var(--tertiary-h) var(--tertiary-s) var(--tertiary-l) / var(--focus-field-alpha));
+  --focus-field-success:
+    0 0 0 3px hsl(var(--success-h) var(--success-s) var(--success-l) / var(--focus-field-alpha));
+  --focus-field-warning:
+    0 0 0 3px hsl(var(--warning-h) var(--warning-s) var(--warning-l) / var(--focus-field-alpha));
+  /* Accent pointer layer — the single indirection ds-color flips. Defaults to
+     the primary family (+ existing focus/tint tokens) so the unbranded theme is
+     pixel-identical. Components read these for their accent instead of
+     --primary* / --focus-* / --surface-tint. */
+  --accent: var(--primary);
+  --accent-hover: var(--primary-hover);
+  --accent-pressed: var(--primary-pressed);
+  --accent-strong: var(--primary-strong);
+  --accent-subtitle: var(--primary-subtitle);
+  --accent-muted: var(--primary-muted);
+  --accent-muted-strong: var(--primary-muted-strong);
+  --accent-on: var(--primary-on);
+  --accent-focus-ring: var(--focus-ring);
+  --accent-focus-field: var(--focus-field);
+  --accent-surface-tint: var(--surface-tint);
 }
 
-/* Brand-derived neutrals — opt-in family switch (ds-docs tweaks panel sets
-   the attribute). Repoints the --neutral-* slot at the brand-gray ramp. */
 :root[data-neutrals=brand] {
   --neutral-0: var(--brand-gray-0);
   --neutral-50: var(--brand-gray-50);
@@ -328,13 +387,348 @@
   --neutral-950: var(--brand-gray-950);
 }
 
+:root[data-theme=dark] {
+  color-scheme: dark;
+  --neutral-0: #171B24;
+  --neutral-50: #0F131A;
+  --neutral-100: #1E2330;
+  --neutral-150: #242A38;
+  --neutral-200: #2A3040;
+  --neutral-300: #3A4252;
+  --neutral-400: #6B7388;
+  --neutral-500: #8A93A6;
+  --neutral-600: #9BA3B4;
+  --neutral-700: #B7BFD0;
+  --neutral-800: #CDD3E0;
+  --neutral-900: #E7EAF2;
+  --neutral-950: #F4F6FA;
+  --shadow-tint-l: 95%;
+  /* Surfaces — six-stop scale.
+     · canvas    : page background
+     · default   : cards, sheets, toolbars (the "paper")
+     · secondary : hover lanes, table heads, addons, code blocks
+     · overlay   : modals, drawers, popovers (paired with scrim)
+     · tint      : brand-tinted (active rows, sidenav active item)
+     · inverted  : dark-on-light callouts, toasts
+     Conceptual elevation is communicated by SHADOW tokens,
+     not by surface tokens. Hover/pressed states use
+     --opacity-state-* overlays on top of the underlying surface. */
+  --surface-canvas: var(--neutral-50);
+  --surface-default: var(--neutral-0);
+  --surface-secondary: var(--neutral-100);
+  --surface-overlay: var(--neutral-0);
+  --surface-inverted: var(--neutral-900);
+  --surface-inverted-hover: var(--neutral-800);
+  --surface-tint: var(--blue-50);
+  --surface-disabled: var(--neutral-100);
+  --surface-muted: var(--neutral-150);
+  /* Scrim — modal/drawer backdrop. Derived from inverted surface
+     so dark-mode override flips automatically. */
+  --surface-scrim: hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%);
+  /* Visible-on-coloured-fill divider. The split-button right-hand chevron
+     sits ON the brand fill, so a transparent white hairline reads correctly
+     across any brand hue. Override per theme if the brand is too light. */
+  --btn-split-divider: hsl(0deg 0% 100% / 25%);
+  /* Visited link — derives from --primary-muted by default so it sympathetically
+     shifts with the brand hue. Override (e.g. for financial dashboards that
+     want neutral-grey visited links) by setting this token directly. */
+  --link-visited: hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%);
+  /* Borders */
+  --border-default: var(--neutral-200);
+  --border-strong: var(--neutral-300);
+  --border-subtitle: var(--neutral-150);
+  --border-divider: var(--neutral-150);
+  --border-inverted: var(--neutral-700);
+  --border-disabled: var(--neutral-150);
+  /* Text */
+  --text-primary: var(--neutral-900);
+  --text-secondary: var(--neutral-700);
+  --text-tertiary: var(--neutral-500);
+  --text-muted: var(--neutral-400);
+  --text-disabled: var(--neutral-400);
+  --text-inverted: var(--neutral-0);
+  /* Text overlaid on arbitrary imagery (camera feeds, photos) — pairs a
+     guaranteed-light colour with a contrast shadow. */
+  --text-on-media: var(--static-white);
+  --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
+  --text-link: var(--blue-700);
+  --text-on-primary: var(--static-white);
+  --text-on-success: var(--static-white);
+  /* Warning fill is yellow (--yellow-400 #F4D43A) — white text on it is only
+     ~1.5:1 (fails WCAG). On-warning text is the darkest neutral (~10:1). */
+  --text-on-warning: var(--static-ink);
+  --text-on-error: var(--static-white);
+  /* Icons */
+  --icon-default: var(--neutral-500);
+  --icon-strong: var(--neutral-700);
+  --icon-muted: var(--neutral-400);
+  --icon-on-primary: var(--static-white);
+  /* Semantic → palette bridge. The lib knows colours by PURPOSE; the theme
+     (themes/light/_theme.scss) ships the concrete ramps + HSL channels. This
+     is the one place that maps semantic roles onto a concrete palette. A brand
+     re-skins by overriding either the palette (--blue-*, --red-*) or these
+     role tokens directly.
+     Channel mappings let hsla() halos/tints compose from the same hue source. */
+  --primary-h: var(--blue-h);
+  --primary-s: var(--blue-s);
+  --primary-l: var(--blue-l);
+  --error-h: var(--red-h);
+  --error-s: var(--red-s);
+  --error-l: var(--red-l);
+  --success-h: var(--green-h);
+  --success-s: var(--green-s);
+  --success-l: var(--green-l);
+  --warning-h: var(--yellow-h);
+  --warning-s: var(--yellow-s);
+  --warning-l: var(--yellow-l);
+  /* Primary roles.
+     Hover / pressed / selected-hover are DERIVED from --primary at runtime via
+     color-mix() so a brand swap (overriding only --primary) propagates to every
+     interaction state automatically. A brand that wants a non-derived hover
+     hue can still override these tokens directly.
+     Step sizes (12% / 24% darker) mirror the blue 600→700→800 ramp. */
+  --primary: var(--blue-600);
+  --primary-hover: color-mix(in srgb, var(--primary) 88%, black);
+  --primary-pressed: color-mix(in srgb, var(--primary) 76%, black);
+  --primary-selected-hover: color-mix(in srgb, var(--primary) 88%, black);
+  --primary-subtitle: var(--blue-50);
+  --primary-muted: var(--blue-100);
+  --primary-muted-strong: var(--blue-200);
+  --primary-strong: var(--blue-700);
+  --primary-on: var(--static-white);
+  /* Accent / secondary role — composed from --secondary-h/s/l channels.
+     Channels default to brand values so unbranded apps render identical to
+     --primary. Override --secondary-h/s/l per-brand (or via the tweaks panel)
+     to introduce a true secondary hue — --secondary recomposes automatically.
+     Hover/pressed derive from --secondary so any hue change propagates. */
+  --secondary-h: var(--primary-h);
+  --secondary-s: var(--primary-s);
+  --secondary-l: var(--primary-l);
+  --secondary: hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l));
+  --secondary-hover: color-mix(in srgb, var(--secondary) 88%, black);
+  --secondary-pressed: color-mix(in srgb, var(--secondary) 76%, black);
+  --secondary-strong: hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 11%));
+  --secondary-subtitle: hsl(var(--secondary-h) 100% 97%);
+  --secondary-muted: hsl(var(--secondary-h) 95% 94%);
+  --secondary-muted-strong: hsl(var(--secondary-h) 95% 89%);
+  --secondary-on: var(--primary-on);
+  /* Tertiary — third brand hue. Used by the tertiary button variant and
+     tonal accents (decorative chips, hierarchy tones, indicators). Mirrors
+     the --primary / --secondary token-family shape: HSL channels for halo
+     composition, hover/pressed via color-mix, subtle/muted ramps for tonal
+     surfaces. Defaults to --primary channels so single-hue themes render
+     identical to primary. Multi-hue brands override --tertiary-h/s/l (or
+     --tertiary directly for non-HSL values). */
+  --tertiary-h: var(--primary-h);
+  --tertiary-s: var(--primary-s);
+  --tertiary-l: var(--primary-l);
+  --tertiary: hsl(var(--tertiary-h) var(--tertiary-s) var(--tertiary-l));
+  --tertiary-hover: color-mix(in srgb, var(--tertiary) 88%, black);
+  --tertiary-pressed: color-mix(in srgb, var(--tertiary) 76%, black);
+  --tertiary-strong: hsl(var(--tertiary-h) var(--tertiary-s) calc(var(--tertiary-l) - 11%));
+  --tertiary-subtitle: hsl(var(--tertiary-h) 100% 97%);
+  --tertiary-muted: hsl(var(--tertiary-h) 95% 94%);
+  --tertiary-muted-strong: hsl(var(--tertiary-h) 95% 89%);
+  --tertiary-on: var(--primary-on);
+  /* Status roles.
+     -hover / -pressed are derived from the base role via the same color-mix()
+     rule as --primary-hover. Override per role if a brand needs a non-derived
+     hue. -text / -border / -subtle / -muted stay as ramp picks because their
+     contrast targets are tuned, not procedural. */
+  --success: var(--green-500);
+  --success-hover: color-mix(in srgb, var(--success) 88%, black);
+  --success-subtitle: var(--green-50);
+  --success-muted: var(--green-100);
+  --success-muted-strong: var(--green-200);
+  --success-border: var(--green-200);
+  --success-text: var(--green-700);
+  --warning: var(--yellow-400);
+  --warning-hover: color-mix(in srgb, var(--warning) 88%, black);
+  --warning-subtitle: var(--yellow-50);
+  --warning-muted: var(--yellow-100);
+  --warning-muted-strong: var(--yellow-200);
+  --warning-border: var(--yellow-200);
+  --warning-text: var(--yellow-700);
+  --error: var(--red-500);
+  --error-hover: color-mix(in srgb, var(--error) 88%, black);
+  --error-pressed: color-mix(in srgb, var(--error) 76%, black);
+  --error-subtitle: var(--red-50);
+  --error-muted: var(--red-100);
+  --error-muted-strong: var(--red-200);
+  --error-border: var(--red-200);
+  --error-text: var(--red-600);
+  /* -pressed (success/warning) + -on aliases — added for the --accent-* pointer
+     family so every ds-color family resolves --accent-pressed / --accent-on. */
+  --success-pressed: color-mix(in srgb, var(--success) 76%, black);
+  --warning-pressed: color-mix(in srgb, var(--warning) 76%, black);
+  --error-on: var(--text-on-error);
+  --success-on: var(--text-on-success);
+  --warning-on: var(--text-on-warning);
+  --info: var(--sky-500);
+  --info-hover: color-mix(in srgb, var(--info) 88%, black);
+  --info-subtitle: var(--sky-50);
+  --info-muted: var(--sky-100);
+  --info-border: var(--sky-200);
+  --info-text: var(--sky-700);
+  /* Status pills (event lifecycle).
+     DECISION: --status-confirmed-* chains through --primary-* so a
+     brand re-skin moves Confirmed with it. The other lifecycle
+     stages are deliberately neutral/green/dark to keep semantic
+     distance from brand. */
+  /* Status pills — canonical (single system).
+     Legacy classes `.badge--active` (single) and ad-hoc semantic
+     pills are unified in the Badge component to consume these tokens. */
+  --status-planning-bg-color: var(--neutral-150);
+  --status-planning-text-color: var(--neutral-700);
+  --status-confirmed-bg-color: var(--primary-subtitle);
+  --status-confirmed-text-color: var(--primary-strong);
+  --status-active-bg-color: var(--green-50);
+  --status-active-text-color: var(--green-700);
+  --status-completed-bg-color: var(--neutral-900);
+  --status-completed-text-color: var(--neutral-0);
+  /* Focus rings.
+     Outer halos use hsla() composed from brand/danger HSL channels
+     so re-skinning --primary-h propagates into focus state.
+     The inner halo reads --surface-canvas so the ring stays visible
+     in both light and dark themes (canvas flips, ring adapts). */
+  --focus-ring-inner: var(--surface-canvas);
+  --focus-ring-outer-h: var(--primary-h);
+  --focus-ring-outer-s: var(--primary-s);
+  --focus-ring-outer-l: var(--primary-l);
+  --focus-ring-outer-alpha: 1;
+  --focus-ring:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha));
+  --focus-ring-inverted:
+    0 0 0 2px var(--neutral-900),
+    0 0 0 4px var(--blue-300);
+  --focus-ring-error:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
+  /* Field focus — coloured halo only (no double-ring). Derived from
+     brand HSL so it tracks rebrand. Alpha is a token so dark themes
+     can boost it for legibility. */
+  --focus-field-alpha: .22;
+  --focus-field:
+    0 0 0 3px hsl(var(--primary-h) var(--primary-s) var(--primary-l) / var(--focus-field-alpha));
+  --focus-field-error:
+    0 0 0 3px hsl(var(--error-h) var(--error-s) var(--error-l) / var(--focus-field-alpha));
+  /* Per-family focus rings/fields — pre-composed once from each family's
+     channels so ds-color flips a single --accent-focus-* pointer (no :root
+     composite re-declaration in the scope). --focus-ring-error exists above. */
+  --focus-ring-secondary:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l) / 100%);
+  --focus-ring-tertiary:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsl(var(--tertiary-h) var(--tertiary-s) var(--tertiary-l) / 100%);
+  --focus-ring-success:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsl(var(--success-h) var(--success-s) var(--success-l) / 100%);
+  --focus-ring-warning:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsl(var(--warning-h) var(--warning-s) var(--warning-l) / 100%);
+  --focus-field-secondary:
+    0 0 0 3px hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l) / var(--focus-field-alpha));
+  --focus-field-tertiary:
+    0 0 0 3px hsl(var(--tertiary-h) var(--tertiary-s) var(--tertiary-l) / var(--focus-field-alpha));
+  --focus-field-success:
+    0 0 0 3px hsl(var(--success-h) var(--success-s) var(--success-l) / var(--focus-field-alpha));
+  --focus-field-warning:
+    0 0 0 3px hsl(var(--warning-h) var(--warning-s) var(--warning-l) / var(--focus-field-alpha));
+  /* Accent pointer layer — the single indirection ds-color flips. Defaults to
+     the primary family (+ existing focus/tint tokens) so the unbranded theme is
+     pixel-identical. Components read these for their accent instead of
+     --primary* / --focus-* / --surface-tint. */
+  --accent: var(--primary);
+  --accent-hover: var(--primary-hover);
+  --accent-pressed: var(--primary-pressed);
+  --accent-strong: var(--primary-strong);
+  --accent-subtitle: var(--primary-subtitle);
+  --accent-muted: var(--primary-muted);
+  --accent-muted-strong: var(--primary-muted-strong);
+  --accent-on: var(--primary-on);
+  --accent-focus-ring: var(--focus-ring);
+  --accent-focus-field: var(--focus-field);
+  --accent-surface-tint: var(--surface-tint);
+  --primary-hover: color-mix(in srgb, var(--primary) 88%, white);
+  --primary-pressed: color-mix(in srgb, var(--primary) 76%, white);
+  --primary-selected-hover: color-mix(in srgb, var(--primary) 88%, white);
+  --secondary-hover: color-mix(in srgb, var(--secondary) 88%, white);
+  --secondary-pressed: color-mix(in srgb, var(--secondary) 76%, white);
+  --tertiary-hover: color-mix(in srgb, var(--tertiary) 88%, white);
+  --tertiary-pressed: color-mix(in srgb, var(--tertiary) 76%, white);
+  --success-hover: color-mix(in srgb, var(--success) 88%, white);
+  --warning-hover: color-mix(in srgb, var(--warning) 88%, white);
+  --error-hover: color-mix(in srgb, var(--error) 88%, white);
+  --error-pressed: color-mix(in srgb, var(--error) 76%, white);
+  --success-pressed: color-mix(in srgb, var(--success) 76%, white);
+  --warning-pressed: color-mix(in srgb, var(--warning) 76%, white);
+  --info-hover: color-mix(in srgb, var(--info) 88%, white);
+  --surface-tint: hsl(var(--primary-h) 45% 16%);
+  --primary-subtitle: hsl(var(--primary-h) 45% 18%);
+  --primary-muted: hsl(var(--primary-h) 40% 26%);
+  --primary-muted-strong: hsl(var(--primary-h) 42% 32%);
+  --primary-strong: hsl(var(--primary-h) 90% 72%);
+  --secondary-subtitle: hsl(var(--secondary-h) 45% 18%);
+  --secondary-muted: hsl(var(--secondary-h) 40% 26%);
+  --secondary-muted-strong: hsl(var(--secondary-h) 42% 32%);
+  --secondary-strong: hsl(var(--secondary-h) 90% 72%);
+  --tertiary-subtitle: hsl(var(--tertiary-h) 45% 18%);
+  --tertiary-muted: hsl(var(--tertiary-h) 40% 26%);
+  --tertiary-muted-strong: hsl(var(--tertiary-h) 42% 32%);
+  --tertiary-strong: hsl(var(--tertiary-h) 90% 72%);
+  --text-link: hsl(var(--primary-h) 90% 74%);
+  --link-visited: hsl(var(--primary-h) 50% 70%);
+  --success-subtitle: hsl(132deg 38% 14%);
+  --success-muted: hsl(132deg 34% 20%);
+  --success-muted-strong: hsl(132deg 30% 28%);
+  --success-border: hsl(132deg 30% 28%);
+  --success-text: hsl(132deg 55% 62%);
+  --warning-subtitle: hsl(45deg 42% 14%);
+  --warning-muted: hsl(45deg 38% 22%);
+  --warning-muted-strong: hsl(45deg 35% 30%);
+  --warning-border: hsl(45deg 35% 30%);
+  --warning-text: hsl(45deg 90% 62%);
+  --error-subtitle: hsl(0deg 45% 16%);
+  --error-muted: hsl(0deg 40% 24%);
+  --error-muted-strong: hsl(0deg 38% 32%);
+  --error-border: hsl(0deg 38% 32%);
+  --error-text: hsl(0deg 85% 74%);
+  --info-subtitle: hsl(217deg 45% 16%);
+  --info-muted: hsl(217deg 40% 24%);
+  --info-border: hsl(217deg 38% 32%);
+  --info-text: hsl(217deg 90% 74%);
+  --status-active-bg-color: var(--success-subtitle);
+  --status-active-text-color: var(--success-text);
+  --surface-scrim: hsl(225deg 39% 4% / 70%);
+  --focus-field-alpha: .35;
+  --chart-hover-bg-color: hsl(0deg 0% 100% / 6%);
+  --chart-tooltip-bg-color: var(--surface-overlay);
+  --chart-tooltip-text-color: var(--text-primary);
+  --chart-tooltip-border: var(--border-strong);
+  --chart-seq-1: var(--blue-800);
+  --chart-seq-2: var(--blue-700);
+  --chart-seq-3: var(--blue-600);
+  --chart-seq-4: var(--blue-500);
+  --chart-seq-5: var(--blue-400);
+  --chart-seq-6: var(--blue-300);
+  --chart-div--3: hsl(0deg 70% 62%);
+  --chart-div--2: hsl(0deg 55% 46%);
+  --chart-div--1: hsl(0deg 45% 32%);
+  --chart-div-0: var(--neutral-150);
+  --chart-div-1: hsl(140deg 40% 32%);
+  --chart-div-2: hsl(140deg 48% 46%);
+  --chart-div-3: hsl(140deg 55% 60%);
+}
+
 /* ============================================================
    Design Tokens — Tier 3 component + scale layer.
 
    Tier 1 colour primitives (ramps + HSL channels) live in
-   ../themes/default/_palette.scss. Tier 2 semantic role assignments
+   ../themes/light/_palette.scss. Tier 2 semantic role assignments
    (surface, border, text, primary/secondary/tertiary, status, focus)
-   live in ../themes/default/_theme.scss.
+   live in ../themes/light/_theme.scss.
 
    THIS file owns the theme-INDEPENDENT layer:
      · scales      — spacing, radius, sizes, hit targets, breakpoints
@@ -371,6 +765,11 @@
   --space-20: 80px;
   --space-24: 96px;
   --space-32: 128px;
+  /* Semantic spacing aliases — default rhythm for the layout primitives
+     (ds-stack / ds-inline). Components default their gap to these so the
+     vertical/horizontal rhythm retunes in one place. */
+  --space-stack: var(--space-4); /* 16px — vertical rhythm between stacked blocks */
+  --space-inline: var(--space-2); /*  8px — horizontal cluster gap */
   /* ============================================================
      Radius — six-stop scale.
      Each step is functionally distinct; adjacent steps are
@@ -408,7 +807,7 @@
      The alpha values stay constant across themes — only the
      hue/saturation/lightness become configurable.
      ============================================================ */
-  /* --shadow-tint-h/s/l live in themes/default/_palette.scss — palette-level
+  /* --shadow-tint-h/s/l live in themes/light/_palette.scss — palette-level
      so dark palettes can override --shadow-tint-l → ~95% for soft light glows. */
   --shadow-1: 0 1px 2px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
               0 1px 3px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 8%);
@@ -517,7 +916,7 @@
   --col-cap-content: 1280px;
   /* ============================================================
      Typography scale (theme-independent). Font FAMILIES are a theme
-     choice and live in themes/default/_theme.scss (--font-sans/mono/
+     choice and live in themes/light/_theme.scss (--font-sans/mono/
      display/heading); the size/weight/leading/tracking scale below is
      constant across themes.
      ============================================================ */
@@ -585,7 +984,7 @@
   /* Shared focus indicators — components default their own --ds-*-focus-shadow
      to these, so a consumer retunes focus per-group at once (field vs control)
      or per-component. Two families: fields get the soft halo, interactive
-     controls/nav get the crisp ring (see themes/default/_theme.scss). */
+     controls/nav get the crisp ring (see themes/light/_theme.scss). */
   --ds-field-focus-shadow: var(--focus-field);
   --ds-field-focus-shadow-error: var(--focus-field-error);
   --ds-control-focus-shadow: var(--focus-ring);
@@ -674,6 +1073,17 @@
   /* Search */
   --search-h: var(--hit-md);
   --search-maxw: 320px;
+  /* OTP / PIN input — one box per digit. */
+  --otp-cell-w: var(--space-12); /* 48px */
+  --otp-cell-h: var(--space-14); /* 56px */
+  --otp-gap: var(--space-2); /*  8px between cells */
+  /* Color picker */
+  --color-picker-swatch: var(--space-6); /* 24px preset swatch */
+  --color-picker-preview: var(--space-10); /* 40px panel preview */
+  --color-picker-panel-w: 240px; /* picker overlay width */
+  --color-picker-sv-h: 160px; /* saturation/value plane height */
+  --color-picker-hue-h: var(--space-3); /* 12px hue slider height */
+  --color-picker-thumb: 14px; /* draggable thumb diameter */
   /* ============================================================
      3b · COMPONENT-SCOPED dimensions (Phase 4 additions)
      Tokens for atom geometries that previously lived as literals
@@ -712,6 +1122,10 @@
   /* Menu */
   --menu-minw: 200px; /* dropdown menu min width */
   --menu-sep-h: var(--border-width-default);
+  /* List / list-item — density-aware row padding + leading/trailing gap. */
+  --list-item-pad-y: var(--space-3); /* 12px */
+  --list-item-pad-x: var(--space-4); /* 16px */
+  --list-item-gap: var(--space-3); /* 12px leading↔body↔trailing */
   /* Tooltip */
   --tooltip-maxw: 240px;
   --tooltip-arrow: var(--space-2); /* 8px — caret edge length, halved for offset */
@@ -766,6 +1180,14 @@
   --calendar-cell-pad: var(--space-1); /* 4px inner padding */
   --calendar-bar-h: var(--space-8); /* 32px */
   --calendar-bar-inset-y: var(--space-2); /* 8px from top of cell */
+  /* Timeline / activity feed */
+  --timeline-node-size: var(--hit-sm); /* 28px event node */
+  --timeline-spine-w: var(--border-width-strong); /* 2px connector spine */
+  --timeline-gap: var(--space-5); /* vertical gap between events */
+  /* Tree-view */
+  --tree-indent: var(--space-5); /* 20px per nesting level */
+  --tree-row-pad-y: var(--space-1-5); /* 6px */
+  --tree-row-pad-x: var(--space-3); /* 12px base inset */
   /* Bin pack visualisation */
   --binpack-bay-h: var(--hit-touch); /* 48px */
   /* Map placeholder chip */
@@ -1221,6 +1643,76 @@ h1, h2, h3, h4, h5, h6 {
   font-size: var(--font-size-l);
 }
 
+[ds-color=secondary] {
+  --accent: var(--secondary);
+  --accent-hover: var(--secondary-hover);
+  --accent-pressed: var(--secondary-pressed);
+  --accent-strong: var(--secondary-strong);
+  --accent-subtitle: var(--secondary-subtitle);
+  --accent-muted: var(--secondary-muted);
+  --accent-muted-strong: var(--secondary-muted-strong);
+  --accent-on: var(--secondary-on);
+  --accent-focus-ring: var(--focus-ring-secondary);
+  --accent-focus-field: var(--focus-field-secondary);
+  --accent-surface-tint: var(--secondary-subtitle);
+}
+
+[ds-color=tertiary] {
+  --accent: var(--tertiary);
+  --accent-hover: var(--tertiary-hover);
+  --accent-pressed: var(--tertiary-pressed);
+  --accent-strong: var(--tertiary-strong);
+  --accent-subtitle: var(--tertiary-subtitle);
+  --accent-muted: var(--tertiary-muted);
+  --accent-muted-strong: var(--tertiary-muted-strong);
+  --accent-on: var(--tertiary-on);
+  --accent-focus-ring: var(--focus-ring-tertiary);
+  --accent-focus-field: var(--focus-field-tertiary);
+  --accent-surface-tint: var(--tertiary-subtitle);
+}
+
+[ds-color=error] {
+  --accent: var(--error);
+  --accent-hover: var(--error-hover);
+  --accent-pressed: var(--error-pressed);
+  --accent-strong: var(--error-strong);
+  --accent-subtitle: var(--error-subtitle);
+  --accent-muted: var(--error-muted);
+  --accent-muted-strong: var(--error-muted-strong);
+  --accent-on: var(--error-on);
+  --accent-focus-ring: var(--focus-ring-error);
+  --accent-focus-field: var(--focus-field-error);
+  --accent-surface-tint: var(--error-subtitle);
+}
+
+[ds-color=success] {
+  --accent: var(--success);
+  --accent-hover: var(--success-hover);
+  --accent-pressed: var(--success-pressed);
+  --accent-strong: var(--success-strong);
+  --accent-subtitle: var(--success-subtitle);
+  --accent-muted: var(--success-muted);
+  --accent-muted-strong: var(--success-muted-strong);
+  --accent-on: var(--success-on);
+  --accent-focus-ring: var(--focus-ring-success);
+  --accent-focus-field: var(--focus-field-success);
+  --accent-surface-tint: var(--success-subtitle);
+}
+
+[ds-color=warning] {
+  --accent: var(--warning);
+  --accent-hover: var(--warning-hover);
+  --accent-pressed: var(--warning-pressed);
+  --accent-strong: var(--warning-strong);
+  --accent-subtitle: var(--warning-subtitle);
+  --accent-muted: var(--warning-muted);
+  --accent-muted-strong: var(--warning-muted-strong);
+  --accent-on: var(--warning-on);
+  --accent-focus-ring: var(--focus-ring-warning);
+  --accent-focus-field: var(--focus-field-warning);
+  --accent-surface-tint: var(--warning-subtitle);
+}
+
 .grid-2 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1347,6 +1839,7 @@ html {
   border-radius: var(--radius-pill);
   border: var(--space-0-5) solid transparent;
   background-clip: padding-box;
+  transition: background-color var(--duration-fast) var(--ease-standard);
 }
 
 *::-webkit-scrollbar-thumb:hover {
@@ -1428,6 +1921,7 @@ html {
   cursor: pointer;
   border-radius: var(--radius-sm);
   text-align: left;
+  transition: background-color var(--duration-fast) var(--ease-standard);
 }
 .ds-dropdown-panel .option .option-icon {
   color: var(--icon-default);
@@ -1468,6 +1962,16 @@ html {
   z-index: var(--layer-toast);
 }
 
+.cdk-overlay-pane.ds-overlay-pane > * {
+  animation: ds-overlay-in var(--duration-fast) var(--ease-decelerate);
+}
+
+@keyframes ds-overlay-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
 @property --skeleton-shimmer-x {
   syntax: "<length>";
   inherits: true;

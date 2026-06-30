@@ -54,12 +54,12 @@
   /* Public --ds-table-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_table-bg-color:              var(--ds-table-bg-color,              var(--surface-default));
   --_table-row-hover-bg-color:    var(--ds-table-row-hover-bg-color,    var(--surface-secondary));
-  --_table-row-selected-bg-color: var(--ds-table-row-selected-bg-color, var(--primary-subtitle));
+  --_table-row-selected-bg-color: var(--ds-table-row-selected-bg-color, var(--accent-subtitle));
   --_table-head-text-color:         var(--ds-table-head-text-color,         var(--text-secondary));
   --_table-head-bg-color:         var(--ds-table-head-bg-color,         var(--surface-secondary));
   --_table-head-fs:         var(--ds-table-head-fs,         var(--font-size-xs));
   --_table-divider:         var(--ds-table-divider,         var(--border-divider));
-  --_table-sort-active-icon-color:  var(--ds-table-sort-active-icon-color,  var(--primary));
+  --_table-sort-active-icon-color:  var(--ds-table-sort-active-icon-color,  var(--accent));
   --_table-cell-pad-x:      var(--ds-table-cell-pad-x,      var(--table-cell-pad-x));
   --_table-cell-pad-y:      var(--ds-table-cell-pad-y,      var(--table-cell-pad-y));
 
@@ -108,7 +108,7 @@
       }
 
       &:focus-visible {
-        outline: var(--border-width-strong, 2px) solid var(--primary);
+        outline: var(--border-width-strong, 2px) solid var(--accent);
         outline-offset: 2px;
         border-radius: var(--radius-sm);
       }
@@ -202,7 +202,7 @@
       }
 
       &.clickable:focus-visible {
-        outline: var(--border-width-strong, 2px) solid var(--primary);
+        outline: var(--border-width-strong, 2px) solid var(--accent);
         outline-offset: -2px;
       }
     }

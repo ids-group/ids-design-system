@@ -4,15 +4,15 @@
   --_tag-pad-y:        var(--ds-tag-pad-y, var(--tag-pad-y));
   --_tag-pad-x:        var(--ds-tag-pad-x, var(--tag-pad-x));
   --_tag-radius:       var(--ds-tag-radius, var(--radius-md));
-  --_tag-bg-color:           var(--ds-tag-bg-color, var(--primary));
+  --_tag-bg-color:           var(--ds-tag-bg-color, var(--accent));
   --_tag-fw:            var(--ds-tag-fw, var(--font-weight-bold));
   --_tag-fs:            var(--ds-tag-fs, var(--font-size-xs));
   --_tag-lh:            var(--ds-tag-lh, var(--line-height-base));
   --_tag-hover-bg-color:      var(--ds-tag-hover-bg-color,      var(--surface-muted));
   --_tag-hover-label-color:      var(--ds-tag-hover-label-color,      var(--text-primary));
-  --_tag-active-bg-color:     var(--ds-tag-active-bg-color,     var(--primary-muted));
-  --_tag-active-label-color:     var(--ds-tag-active-label-color,     var(--primary-strong));
-  --_tag-active-border: var(--ds-tag-active-border, var(--primary));
+  --_tag-active-bg-color:     var(--ds-tag-active-bg-color,     var(--accent-muted));
+  --_tag-active-label-color:     var(--ds-tag-active-label-color,     var(--accent-strong));
+  --_tag-active-border: var(--ds-tag-active-border, var(--accent));
 
   display: inline-flex;
   align-items: center;
@@ -20,7 +20,7 @@
   padding: var(--_tag-pad-y) var(--_tag-pad-x);
   border-radius: var(--_tag-radius);
   background-color: var(--_tag-bg-color);
-  color: var(--primary-on);
+  color: var(--accent-on);
   font: var(--_tag-fw) var(--_tag-fs) / var(--_tag-lh) var(--font-sans);
 }
 

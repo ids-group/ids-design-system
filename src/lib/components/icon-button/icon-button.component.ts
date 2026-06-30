@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
+import type { ButtonColor } from '../button/button.types';
 import type {
   IconButtonSize,
   IconButtonType,
@@ -32,6 +33,9 @@ export class IconButtonComponent {
   readonly icon = input.required<IconName>();
   readonly ariaLabel = input.required<string>();
   readonly variant = input<IconButtonVariant>('standard');
+  /** Brand/status hue family (shared with ds-button). `variant` is the fill
+      axis; `color` recolours the accent the fill consumes. Default primary. */
+  readonly color = input<ButtonColor>('primary');
   readonly size = input<IconButtonSize>('md');
   readonly type = input<IconButtonType>('button');
   readonly disabled = input(false, { transform: booleanAttribute });
@@ -41,6 +45,9 @@ export class IconButtonComponent {
 
   protected readonly classes = computed(() => {
     const parts = ['icon-button', this.variant(), this.size()];
+    if (this.color() !== 'primary') {
+      parts.push(`c-${this.color()}`);
+    }
     if (this.selected()) {
       parts.push('selected');
     }

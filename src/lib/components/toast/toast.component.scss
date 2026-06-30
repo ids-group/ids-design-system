@@ -25,7 +25,7 @@
   gap: var(--space-3);
   background-color: var(--_toast-bg-color);
   border: var(--border-width-default) solid var(--_toast-border);
-  border-left: var(--toast-bar-w) solid var(--primary);
+  border-left: var(--toast-bar-w) solid var(--accent);
   border-radius: var(--radius-lg);
   padding: var(--space-3) var(--space-4);
   box-shadow: var(--shadow-toast);
@@ -33,7 +33,7 @@
   max-width: var(--toast-maxw);
   animation: ds-toast-in var(--duration-slow) var(--ease-decelerate);
 
-  .icon  { color: var(--primary); flex-shrink: 0; margin-top: var(--space-0-5); }
+  .icon  { color: var(--accent); flex-shrink: 0; margin-top: var(--space-0-5); }
   .body  { flex: 1; font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
   .title { font-weight: var(--font-weight-bold); color: var(--text-primary); margin-bottom: var(--space-0-5); }
   .close { border: 0; background: transparent; color: var(--icon-default); cursor: pointer; padding: var(--space-0-5); }
@@ -43,7 +43,7 @@
     align-self: center;
     border: 0;
     background: transparent;
-    color: var(--primary-strong);
+    color: var(--accent-strong);
     font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     cursor: pointer;
     padding: var(--space-1) var(--space-2);
@@ -66,7 +66,7 @@
     --_toast-bg-color:     var(--ds-toast-bg-color-info,     var(--ds-toast-bg-color,     var(--surface-overlay)));
     --_toast-border: var(--ds-toast-border-info,  var(--ds-toast-border, var(--border-default)));
 
-    border-left-color: var(--primary);
+    border-left-color: var(--accent);
   }
   &.success {
     --_toast-bg-color:     var(--ds-toast-bg-color-success,     var(--ds-toast-bg-color,     var(--surface-overlay)));

@@ -30,7 +30,6 @@
       </p>
 
       <ds-button
-        variant="primary"
         size="sm"
         style="width: 100%"
       >
@@ -50,7 +49,8 @@
   <div class="demo">
     <ds-button
       #trigger
-      variant="outline"
+      color="neutral"
+      fill="outline"
       [ariaExpanded]="pop.opened()"
       (pressed)="pop.toggle(trigger.buttonRef().nativeElement)"
     >
@@ -73,7 +73,6 @@
       </p>
 
       <ds-button
-        variant="primary"
         size="sm"
         style="width: 100%"
       >
@@ -104,7 +103,8 @@
     <div class="demo__col">
       <ds-button
         #startTrigger
-        variant="outline"
+        color="neutral"
+        fill="outline"
         [ariaExpanded]="popStart.opened()"
         (pressed)="popStart.toggle(startTrigger.buttonRef().nativeElement)"
       >
@@ -127,7 +127,8 @@
     <div class="demo__col demo__col--end">
       <ds-button
         #endTrigger
-        variant="outline"
+        color="neutral"
+        fill="outline"
         [ariaExpanded]="popEnd.opened()"
         (pressed)="popEnd.toggle(endTrigger.buttonRef().nativeElement)"
       >

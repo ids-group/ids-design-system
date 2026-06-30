@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { ButtonComponent } from '../button/button.component';
+import type { ButtonColor } from '../button/button.types';
 import { ModalCardComponent } from './modal-card.component';
 import { MODAL_CONFIRM_DATA } from './modal-confirm.types';
 
@@ -25,7 +26,7 @@ export class ModalConfirmComponent {
 
   protected readonly options = this.context.options;
   protected readonly tone = this.options.tone ?? 'default';
-  protected readonly confirmVariant =
+  protected readonly confirmColor: ButtonColor =
     this.tone === 'danger' ? 'error' : 'primary';
 
   protected readonly uid = `ds-modal-confirm-${++nextId}`;
