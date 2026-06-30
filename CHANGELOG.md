@@ -10,6 +10,21 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **Reactive-forms (`ControlValueAccessor`) on `ds-checkbox`, `ds-switch`, `ds-combobox`, and
+  `ds-date-picker`.** Each control now works with `[(ngModel)]` and `formControl` / `formControlName`
+  out of the box. New `invalid` / `hint` inputs render an associated `ds-field-message` below the
+  control. `ds-combobox` and `ds-date-picker` also gain a new `disabled` input for template-driven
+  disable (previously only the forms layer could disable them). `ds-switch` gains `role="switch"`.
+- **New `ds-radio-group` component.** A CVA-capable `<ds-radio-group [(value)] name invalid hint label>`
+  wrapper that projects `<ds-radio value="…">` children. Manages roving-tabindex keyboard navigation
+  and implements `ControlValueAccessor` for reactive-forms use. Standalone `<ds-radio [(checked)]>` is
+  unaffected and still works for non-group usage.
+- **New `ds-alert` component.** Lightweight inline status message with five variants (`info`, `success`,
+  `warning`, `error`, `neutral`), an optional `title`, an optional dismiss button (`[dismissible]`),
+  a named `[actions]` slot for follow-up CTAs, a custom `icon` override, and a `(dismissed)` output.
+  Smaller and less prominent than `ds-banner` — intended for contextual form/page feedback rather than
+  page-level announcements.
+
 - **Dark theme** (`themes/dark/`) — ships with the default bundle (`@use 'styles/ds'`).
   **Light is the default** (no attribute); dark is opt-in via `<html data-theme="dark">`. There is
   no automatic `prefers-color-scheme` switch — to follow the OS, opt in at the app root with the new
@@ -22,6 +37,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `data-neutrals="brand"` is a light-context switch; brand overlays are authored on light.
 
 ### Breaking
+
+- **Reactive-forms radio now uses `<ds-radio-group>` as the group container and form control.**
+  Standalone `<ds-radio [(checked)]>` continues to work for non-group usage, but a group of
+  radios that participates in a reactive form should now be wrapped in `<ds-radio-group>`.
 
 - **`ButtonSize` collapsed to `sm | md | lg`** (32 / 40 / 48 px), dropping the duplicate
   legacy `s | m | l` tier. Default is now `md` (was `l` — same 40 px). Migration:

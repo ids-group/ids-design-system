@@ -31,13 +31,6 @@
     }
   }
 
-  .hint {
-    font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
-    color: var(--text-tertiary);
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
-  }
 }
 
 .trigger {
@@ -73,6 +66,20 @@
     height: var(--field-h-lg);
     padding: 0 var(--space-4);
     font-size: var(--font-size-m);
+  }
+
+  &.error {
+    background: var(--error-subtitle);
+    border-color: var(--error);
+  }
+
+  &.disabled,
+  &:disabled {
+    background: var(--surface-disabled);
+    border-color: var(--border-disabled);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+    opacity: var(--opacity-muted);
   }
 }
 

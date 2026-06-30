@@ -114,4 +114,56 @@
       </div>
     </div>
   </div>
+
+  <!-- ============================================================ Radio group (forms usage) -->
+  <h3 class="block-title t-h4">
+    Radio group
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">&lt;ds-radio-group&gt;</code> is the primary
+    form-control container. It manages roving focus, name propagation, and
+    implements <code class="t-mono-inline">ControlValueAccessor</code> for
+    reactive-forms integration. Project <code class="t-mono-inline">&lt;ds-radio&gt;</code>
+    children directly inside.
+  </p>
+
+  <div class="stack">
+    <ds-radio-group
+      label="Schedule type"
+      hint="Select how the event repeats."
+      [(value)]="scheduleValue"
+    >
+      <label class="control-row">
+        <ds-radio value="single" /> Single date
+      </label>
+
+      <label class="control-row">
+        <ds-radio value="range" /> Date range
+      </label>
+
+      <label class="control-row">
+        <ds-radio value="recurring" /> Recurring
+      </label>
+    </ds-radio-group>
+
+    <ds-radio-group
+      label="Schedule type"
+      hint="A selection is required."
+      [invalid]="true"
+      [(value)]="invalidGroupValue"
+    >
+      <label class="control-row">
+        <ds-radio value="single" /> Single date
+      </label>
+
+      <label class="control-row">
+        <ds-radio value="range" /> Date range
+      </label>
+
+      <label class="control-row">
+        <ds-radio value="recurring" /> Recurring
+      </label>
+    </ds-radio-group>
+  </div>
 </docs-section>

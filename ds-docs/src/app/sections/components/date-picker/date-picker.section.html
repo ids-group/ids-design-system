@@ -77,6 +77,35 @@
     />
   </div>
 
+  <!-- ============================================================ Validation + disabled -->
+  <h3 class="block-title t-h4">
+    Validation states
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">[invalid]="true"</code> switches the hint to
+    an error message; <code class="t-mono-inline">[disabled]="true"</code>
+    makes the picker inert.
+  </p>
+
+  <div class="grid-2">
+    <ds-date-picker
+      mode="single"
+      label="Build start"
+      hint="A start date is required."
+      placeholder="Pick a date"
+      [invalid]="true"
+    />
+
+    <ds-date-picker
+      mode="range"
+      label="Show window"
+      hint="Locked for this event."
+      placeholder="Pick a range"
+      [disabled]="true"
+    />
+  </div>
+
   <!-- ============================================================ Day states showcase -->
   <h3 class="block-title t-h4">
     Day states <docs-await name="calendar day part" />

@@ -112,4 +112,30 @@
       </div>
     </div>
   </div>
+
+  <!-- ============================================================ Validation states -->
+  <h3 class="block-title t-h4">
+    Validation states
+  </h3>
+
+  <p class="block-desc t-s">
+    Use <code class="t-mono-inline">hint</code> to add helper text below the
+    checkbox, and <code class="t-mono-inline">[invalid]="true"</code> to switch
+    it to an error message.
+  </p>
+
+  <div class="stack">
+    <label class="control-row">
+      <ds-checkbox hint="Required for contract sign-off." />
+      Acknowledge terms
+    </label>
+
+    <label class="control-row">
+      <ds-checkbox
+        hint="You must accept the terms to continue."
+        [invalid]="true"
+      />
+      Acknowledge terms
+    </label>
+  </div>
 </docs-section>

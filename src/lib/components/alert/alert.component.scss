@@ -1,0 +1,87 @@
+:host {
+  display: inline-flex;
+}
+
+.alert {
+  /* Public --ds-alert-* hooks with fallbacks; never declared here. */
+  --_alert-bg-color:           var(--ds-alert-bg-color,           var(--info-subtitle));
+  --_alert-text-color:         var(--ds-alert-text-color,         var(--info-text));
+  --_alert-title-text-color:   var(--ds-alert-title-text-color,   var(--text-primary));
+  --_alert-close-icon-color:   var(--ds-alert-close-icon-color,   var(--icon-default));
+  --_alert-close-icon-color-hover: var(--ds-alert-close-icon-color-hover, var(--icon-strong));
+  --_alert-pad-y:              var(--ds-alert-pad-y,              var(--space-2));
+  --_alert-pad-x:              var(--ds-alert-pad-x,              var(--space-3));
+  --_alert-radius:             var(--ds-alert-radius,             var(--radius-md));
+
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--_alert-pad-y) var(--_alert-pad-x);
+  border-radius: var(--_alert-radius);
+  background-color: var(--_alert-bg-color);
+  color: var(--_alert-text-color);
+  animation: ds-alert-in var(--duration-base) var(--ease-decelerate);
+
+  &.success {
+    --_alert-bg-color:   var(--ds-alert-bg-color,   var(--success-subtitle));
+    --_alert-text-color: var(--ds-alert-text-color, var(--success-text));
+  }
+
+  &.warning {
+    --_alert-bg-color:   var(--ds-alert-bg-color,   var(--warning-subtitle));
+    --_alert-text-color: var(--ds-alert-text-color, var(--warning-text));
+  }
+
+  &.error {
+    --_alert-bg-color:   var(--ds-alert-bg-color,   var(--error-subtitle));
+    --_alert-text-color: var(--ds-alert-text-color, var(--error-text));
+  }
+
+  &.neutral {
+    --_alert-bg-color:   var(--ds-alert-bg-color,   var(--surface-secondary));
+    --_alert-text-color: var(--ds-alert-text-color, var(--text-secondary));
+  }
+
+  .a-icon {
+    flex-shrink: 0;
+    color: inherit;
+    margin-top: 1px;
+  }
+
+  .a-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .a-title {
+    font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+    color: var(--_alert-title-text-color);
+    margin: 0 0 var(--space-1);
+  }
+
+  .a-actions {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+
+    &:empty { display: none; }
+  }
+
+  .a-close {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    padding: 0;
+    color: var(--_alert-close-icon-color);
+    flex-shrink: 0;
+
+    &:hover { color: var(--_alert-close-icon-color-hover); }
+  }
+}
+
+@keyframes ds-alert-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}

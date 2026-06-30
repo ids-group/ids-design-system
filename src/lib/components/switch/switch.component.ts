@@ -1,24 +1,44 @@
 import {
   Component,
   ViewEncapsulation,
+  booleanAttribute,
   computed,
+  forwardRef,
   input,
   model,
 } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { DsBooleanControlValueAccessor } from '../control-value-accessor';
+import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
+import { nextControlId } from '../field-ids';
 
 @Component({
   selector: 'ds-switch',
   standalone: true,
+  imports: [FieldMessageComponent],
   templateUrl: './switch.component.html',
   styleUrl: './switch.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  providers: [
+    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SwitchComponent), multi: true },
+  ],
 })
-export class SwitchComponent {
+export class SwitchComponent extends DsBooleanControlValueAccessor {
   readonly checked = model<boolean>(false);
   readonly disabled = input<boolean>(false);
   readonly name = input<string | null>(null);
   readonly variant = input<'default' | 'success' | 'error'>('default');
   readonly inputId = input<string | null>(null);
+  readonly invalid = input(false, { transform: booleanAttribute });
+  readonly hint = input<string>('');
+
+  protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
+
+  protected readonly uid = nextControlId('ds-switch');
+  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly messageState = computed<FieldMessageState>(() =>
+    this.invalid() ? 'error' : 'default',
+  );
 
   protected readonly classes = computed(() => {
     const variant = this.variant();
@@ -26,7 +46,7 @@ export class SwitchComponent {
     return variant === 'default' ? 'switch' : `switch ${variant}`;
   });
 
-  protected onChange(event: Event): void {
+  protected onCheckedChange(event: Event): void {
     this.checked.set((event.target as HTMLInputElement).checked);
   }
 }

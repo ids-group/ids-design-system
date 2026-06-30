@@ -47,4 +47,54 @@
       [(value)]="productsValue"
     />
   </div>
+
+  <!-- ============================================================ Validation states -->
+  <h3 class="block-title t-h4">
+    Validation states
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">hint</code> renders a helper line below the
+    field; <code class="t-mono-inline">[invalid]="true"</code> switches it to
+    an error; <code class="t-mono-inline">[disabled]="true"</code> makes the
+    control inert.
+  </p>
+
+  <div class="field-stack">
+    <label class="field-label t-s">
+      Member (with hint)
+    </label>
+
+    <ds-combobox
+      placeholder="Pick a member…"
+      hint="Start typing to filter the member list."
+      [options]="members"
+      [(value)]="memberValue"
+    />
+  </div>
+
+  <div class="field-stack">
+    <label class="field-label t-s">
+      Member (invalid)
+    </label>
+
+    <ds-combobox
+      placeholder="Pick a member…"
+      hint="A member is required."
+      [invalid]="true"
+      [options]="members"
+    />
+  </div>
+
+  <div class="field-stack">
+    <label class="field-label t-s">
+      Member (disabled)
+    </label>
+
+    <ds-combobox
+      placeholder="Pick a member…"
+      [options]="members"
+      [disabled]="true"
+    />
+  </div>
 </docs-section>

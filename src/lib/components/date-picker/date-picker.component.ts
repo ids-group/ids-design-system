@@ -4,17 +4,22 @@ import {
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
+  booleanAttribute,
   computed,
+  forwardRef,
   inject,
   input,
   model,
   signal,
   viewChild,
 } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { disposeWithLeave } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
+import { DsControlValueAccessor } from '../control-value-accessor';
+import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
 import type {
   DatePickerMode,
   DatePickerSize,
@@ -37,12 +42,23 @@ interface DayCell {
 @Component({
   selector: 'ds-date-picker',
   standalone: true,
-  imports: [IconComponent],
+  imports: [IconComponent, FieldMessageComponent],
   templateUrl: './date-picker.component.html',
   styleUrl: './date-picker.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => DatePickerComponent),
+      multi: true,
+    },
+  ],
 })
-export class DatePickerComponent {
+export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValue | null> {
+  constructor() {
+    super();
+  }
+
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
 
@@ -54,8 +70,16 @@ export class DatePickerComponent {
   readonly hint = input<string>('');
   readonly required = input<boolean>(false);
   readonly optional = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly invalid = input(false, { transform: booleanAttribute });
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
+
+  protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
+  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly messageState = computed<FieldMessageState>(() =>
+    this.invalid() ? 'error' : 'default',
+  );
 
   protected readonly uid = `ds-datepicker-${++nextId}`;
   protected readonly labelId = `${this.uid}-label`;
@@ -78,6 +102,9 @@ export class DatePickerComponent {
 
   /** Arrow-key roving navigation across the calendar grid (APG date grid). */
   protected onGridKeydown(event: KeyboardEvent, cell: DayCell): void {
+    if (this.isDisabled()) {
+      return;
+    }
     const f = this.gridFocus() ?? cell.date;
     let next: Date | null = null;
     switch (event.key) {
@@ -162,9 +189,19 @@ export class DatePickerComponent {
   }
 
   protected readonly triggerClasses = computed(() => {
+    const parts = ['trigger'];
     const size = this.size();
+    if (size !== 'md') {
+      parts.push(size);
+    }
+    if (this.isDisabled()) {
+      parts.push('disabled');
+    }
+    if (this.invalid()) {
+      parts.push('error');
+    }
 
-    return size === 'md' ? 'trigger' : `trigger ${size}`;
+    return parts.join(' ');
   });
 
   protected readonly viewMonth = signal<Date>(new Date());
@@ -280,7 +317,7 @@ export class DatePickerComponent {
   }
 
   protected open(): void {
-    if (this.overlayRef) {
+    if (this.isDisabled() || this.overlayRef) {
       return;
     }
     const positionStrategy = this.overlay
@@ -329,6 +366,7 @@ export class DatePickerComponent {
     disposeWithLeave(this.overlayRef);
     this.overlayRef = null;
     this.isOpen.set(false);
+    this.markTouched();
   }
 
   protected prevMonth(): void {

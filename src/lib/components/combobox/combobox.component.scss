@@ -25,11 +25,24 @@
   flex-wrap: wrap;
   transition: border-color var(--duration-fast) var(--ease-standard);
 
-  &:hover { border-color: var(--border-strong); }
-  &:focus-within {
+  &:hover:not(.disabled) { border-color: var(--border-strong); }
+  &:focus-within:not(.disabled) {
     border-color: var(--primary);
     box-shadow: var(--_combobox-focus-shadow);
     outline: 0;
+  }
+
+  &.error { border-color: var(--border-error); }
+
+  &.disabled {
+    background: var(--surface-disabled);
+    border-color: var(--border-disabled);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+
+    .combo-input { cursor: not-allowed; color: var(--text-disabled); }
+    .combo-value { color: var(--text-disabled); }
+    .combo-chevron { color: var(--text-disabled); }
   }
 
   /* Density — mirror ds-select (sm 32 / md 40 / lg 48). Multi chips wrap, so

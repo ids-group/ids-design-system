@@ -71,3 +71,65 @@ export abstract class DsControlValueAccessor<
     this.formDisabled.set(isDisabled);
   }
 }
+
+/**
+ * Shared `ControlValueAccessor` for DS boolean controls (checkbox, switch)
+ * whose state lives in a `checked` model signal rather than `value`. Bridges
+ * with Angular forms in both directions without affecting the `[(checked)]`
+ * signal API. Subclasses must OR `formDisabled()` into their effective disabled
+ * state and call `markTouched()` from a blur handler.
+ */
+@Directive()
+export abstract class DsBooleanControlValueAccessor implements ControlValueAccessor {
+  /** The component's two-way checked model. */
+  abstract readonly checked: ModelSignal<boolean>;
+
+  /** Driven by the forms API via `setDisabledState`. */
+  protected readonly formDisabled = signal(false);
+
+  private onChange: (value: boolean) => void = () => {};
+  private onTouched: () => void = () => {};
+
+  private synced: boolean | undefined;
+  private hasSynced = false;
+
+  constructor() {
+    effect(() => {
+      const next = this.checked();
+      if (!this.hasSynced) {
+        this.hasSynced = true;
+        this.synced = next;
+
+        return;
+      }
+      if (Object.is(next, this.synced)) {
+        return;
+      }
+      this.synced = next;
+      this.onChange(next);
+    });
+  }
+
+  /** Call from a blur handler so the control reports `ng-touched`. */
+  protected markTouched(): void {
+    this.onTouched();
+  }
+
+  writeValue(value: boolean): void {
+    this.hasSynced = true;
+    this.synced = value;
+    this.checked.set(value);
+  }
+
+  registerOnChange(fn: (value: boolean) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.formDisabled.set(isDisabled);
+  }
+}

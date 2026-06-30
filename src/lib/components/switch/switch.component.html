@@ -1,9 +1,17 @@
-<input
-  type="checkbox"
-  [class]="classes()"
-  [checked]="checked()"
-  [disabled]="disabled()"
-  [attr.name]="name()"
-  [attr.id]="inputId()"
-  (change)="onChange($event)"
-/>
+<div class="switch-field">
+  <input
+    type="checkbox"
+    role="switch"
+    [class]="classes()"
+    [checked]="checked()"
+    [attr.aria-checked]="checked()"
+    [disabled]="isDisabled()"
+    [attr.name]="name()"
+    [attr.id]="inputId()"
+    [attr.aria-invalid]="invalid() ? 'true' : null"
+    [attr.aria-describedby]="hintId()"
+    (change)="onCheckedChange($event)"
+    (blur)="markTouched()"
+  />
+  <ds-field-message [text]="hint()" [state]="messageState()" [messageId]="hintId()" />
+</div>

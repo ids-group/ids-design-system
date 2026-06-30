@@ -4,18 +4,23 @@ import {
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
+  booleanAttribute,
   computed,
+  forwardRef,
   inject,
   input,
   model,
   signal,
   viewChild,
 } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { disposeWithLeave } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { TagComponent } from '../tag/tag.component';
+import { DsControlValueAccessor } from '../control-value-accessor';
+import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
 import type { ComboboxOption, ComboboxSize } from './combobox.types';
 
 let nextId = 0;
@@ -23,12 +28,19 @@ let nextId = 0;
 @Component({
   selector: 'ds-combobox',
   standalone: true,
-  imports: [IconComponent, TagComponent],
+  imports: [IconComponent, TagComponent, FieldMessageComponent],
   templateUrl: './combobox.component.html',
   styleUrl: './combobox.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => ComboboxComponent),
+      multi: true,
+    },
+  ],
 })
-export class ComboboxComponent<T = unknown> {
+export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<T | readonly T[] | null> {
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
 
@@ -37,8 +49,17 @@ export class ComboboxComponent<T = unknown> {
   readonly multiple = input<boolean>(false);
   readonly size = input<ComboboxSize>('md');
   readonly placeholder = input<string>('Select…');
+  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly invalid = input(false, { transform: booleanAttribute });
+  readonly hint = input<string>('');
   /** Accessible name for the combobox input. */
   readonly ariaLabel = input<string | null>(null);
+
+  protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
+  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly messageState = computed<FieldMessageState>(() =>
+    this.invalid() ? 'error' : 'default',
+  );
 
   protected readonly query = signal('');
   protected readonly isOpen = signal(false);
@@ -131,6 +152,9 @@ export class ComboboxComponent<T = unknown> {
   }
 
   protected onTriggerClick(): void {
+    if (this.isDisabled()) {
+      return;
+    }
     this.filterInput().nativeElement.focus();
     if (!this.overlayRef) {
       this.openPanel();
@@ -138,6 +162,9 @@ export class ComboboxComponent<T = unknown> {
   }
 
   protected togglePanel(event: MouseEvent): void {
+    if (this.isDisabled()) {
+      return;
+    }
     event.stopPropagation();
     if (this.overlayRef) {
       this.close();
@@ -148,6 +175,9 @@ export class ComboboxComponent<T = unknown> {
   }
 
   protected onKeydown(event: KeyboardEvent): void {
+    if (this.isDisabled()) {
+      return;
+    }
     const opts = this.filteredOptions();
     switch (event.key) {
       case 'ArrowDown':
@@ -244,6 +274,7 @@ export class ComboboxComponent<T = unknown> {
     this.overlayRef = null;
     this.isOpen.set(false);
     this.activeIndex.set(-1);
+    this.markTouched();
   }
 
   protected onFilter(event: Event): void {

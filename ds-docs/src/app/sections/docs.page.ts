@@ -54,6 +54,7 @@ import { ProgressSection } from './components/progress/progress.section';
 import { SpinnerSection } from './components/spinner/spinner.section';
 import { SkeletonSection } from './components/skeleton/skeleton.section';
 import { AccordionSection } from './components/accordion/accordion.section';
+import { AlertSection } from './components/alert/alert.section';
 import { StepperSection } from './components/stepper/stepper.section';
 import { TooltipSection } from './components/tooltip/tooltip.section';
 import { PopoverSection } from './components/popover/popover.section';
@@ -146,6 +147,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     SpinnerSection,
     SkeletonSection,
     AccordionSection,
+    AlertSection,
     StepperSection,
     TooltipSection,
     PopoverSection,
@@ -187,6 +189,8 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     </h1>
 
     <section-components-accordion />
+
+    <section-components-alert />
 
     <section-components-avatar />
 
@@ -441,6 +445,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
       section-components-spinner,
       section-components-skeleton,
       section-components-accordion,
+      section-components-alert,
       section-components-stepper,
       section-components-tooltip,
       section-components-popover,
