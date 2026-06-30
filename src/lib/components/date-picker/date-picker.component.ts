@@ -1,9 +1,11 @@
 import {
   Component,
   ElementRef,
+  Injector,
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
+  afterNextRender,
   booleanAttribute,
   computed,
   forwardRef,
@@ -18,6 +20,7 @@ import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { disposeWithLeave } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
+import { CalendarDayComponent } from '../calendar-day/calendar-day.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
 import type {
@@ -43,7 +46,7 @@ interface DayCell {
 @Component({
   selector: 'ds-date-picker',
   standalone: true,
-  imports: [IconComponent, FieldMessageComponent],
+  imports: [IconComponent, CalendarDayComponent, FieldMessageComponent],
   templateUrl: './date-picker.component.html',
   styleUrl: './date-picker.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -62,6 +65,7 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
 
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
+  private readonly injector = inject(Injector);
 
   readonly mode = input<DatePickerMode>('single');
   readonly size = input<DatePickerSize>('md');
@@ -154,7 +158,7 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
     event.preventDefault();
     this.gridFocus.set(next);
     this.viewMonth.set(new Date(next.getFullYear(), next.getMonth(), 1));
-    setTimeout(() => this.focusGridDay());
+    afterNextRender(() => this.focusGridDay(), { injector: this.injector });
   }
 
   private addDays(date: Date, days: number): Date {
@@ -445,7 +449,7 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
     const focus = selected ?? new Date();
     this.gridFocus.set(focus);
     this.viewMonth.set(new Date(focus.getFullYear(), focus.getMonth(), 1));
-    setTimeout(() => this.focusGridDay());
+    afterNextRender(() => this.focusGridDay(), { injector: this.injector });
   }
 
   protected close(): void {
@@ -490,29 +494,5 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
       this.close();
       this.trigger().nativeElement.focus();
     }
-  }
-
-  protected cellClasses(cell: DayCell): string {
-    const parts = ['day'];
-    if (!cell.inMonth) {
-      parts.push('muted');
-    }
-    if (cell.isToday) {
-      parts.push('today');
-    }
-    if (cell.inRange) {
-      parts.push('in-range');
-    }
-    if (cell.isRangeStart) {
-      parts.push('range-start');
-    }
-    if (cell.isRangeEnd) {
-      parts.push('range-end');
-    }
-    if (cell.isSelected) {
-      parts.push('selected');
-    }
-
-    return parts.join(' ');
   }
 }

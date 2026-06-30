@@ -1,0 +1,14 @@
+<button
+  type="button"
+  [class]="classes()"
+  [attr.data-day]="dataDay()"
+  [attr.tabindex]="tabIndex()"
+  [attr.aria-label]="ariaLabel()"
+  [attr.aria-pressed]="selected() ? 'true' : null"
+  [attr.aria-current]="today() ? 'date' : null"
+  [disabled]="disabled()"
+  (click)="daySelect.emit($event)"
+  (keydown)="dayKeydown.emit($event)"
+>
+  <ng-content></ng-content>
+</button>

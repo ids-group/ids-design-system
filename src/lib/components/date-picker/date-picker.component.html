@@ -234,19 +234,21 @@
       </span>
 
       @for (cell of daysGrid(); track $index) {
-        <button
-          type="button"
-          [class]="cellClasses(cell)"
-          [attr.data-day]="dayKey(cell.date)"
-          [attr.tabindex]="isFocusDay(cell) ? 0 : -1"
-          [attr.aria-label]="dayLabel(cell)"
-          [attr.aria-pressed]="cell.isSelected"
-          [attr.aria-current]="cell.isToday ? 'date' : null"
-          (click)="selectDay(cell)"
-          (keydown)="onGridKeydown($event, cell)"
+        <ds-calendar-day
+          [muted]="!cell.inMonth"
+          [today]="cell.isToday"
+          [selected]="cell.isSelected"
+          [inRange]="cell.inRange"
+          [rangeStart]="cell.isRangeStart"
+          [rangeEnd]="cell.isRangeEnd"
+          [dataDay]="dayKey(cell.date)"
+          [tabIndex]="isFocusDay(cell) ? 0 : -1"
+          [ariaLabel]="dayLabel(cell)"
+          (daySelect)="selectDay(cell)"
+          (dayKeydown)="onGridKeydown($event, cell)"
         >
           {{ cell.day }}
-        </button>
+        </ds-calendar-day>
       }
     </div>
   </div>
