@@ -1,5 +1,8 @@
 <div class="checkbox-field">
-  <span class="control-line" [class.is-disabled]="isDisabled()">
+  <span
+    class="control-line"
+    [class.is-disabled]="isDisabled()"
+  >
     <input
       type="checkbox"
       class="check"
@@ -14,8 +17,16 @@
       (blur)="markTouched()"
     />
     @if (label()) {
-      <label class="control-text" [attr.for]="controlId()">{{ label() }}</label>
+      <label
+        class="control-text"
+        [attr.for]="controlId()"
+        >{{ label() }}</label
+      >
     }
   </span>
-  <ds-field-message [text]="hint()" [state]="messageState()" [messageId]="hintId()" />
+  <ds-field-message
+    [text]="hint()"
+    [state]="messageState()"
+    [messageId]="hintId()"
+  />
 </div>

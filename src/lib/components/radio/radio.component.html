@@ -1,4 +1,7 @@
-<span class="control-line" [class.is-disabled]="effectiveDisabled()">
+<span
+  class="control-line"
+  [class.is-disabled]="effectiveDisabled()"
+>
   <input
     #inputRef
     type="radio"
@@ -12,6 +15,10 @@
     (change)="onSelect()"
   />
   @if (label()) {
-    <label class="control-text" [attr.for]="controlId()">{{ label() }}</label>
+    <label
+      class="control-text"
+      [attr.for]="controlId()"
+      >{{ label() }}</label
+    >
   }
 </span>
