@@ -1,5 +1,5 @@
 <div [class]="wrapperClasses()">
-  @if (label()) {
+  @if (label() && !floating()) {
     <label
       class="label"
       [attr.for]="uid"
@@ -24,6 +24,15 @@
   }
 
   <div class="control">
+    @if (floating() && label()) {
+      <label
+        class="floating-label"
+        [attr.for]="uid"
+      >
+        {{ label() }}
+      </label>
+    }
+
     <span class="addon-slot prefix">
       <ng-content select="[dsInputPrefix]"></ng-content>
     </span>
@@ -76,6 +85,10 @@
           [size]="16"
         />
       </button>
+    }
+
+    @if (loading()) {
+      <ds-spinner size="sm" />
     }
 
     <span class="addon-slot suffix">

@@ -236,4 +236,26 @@
     border-top-right-radius: var(--_input-radius);
     border-bottom-right-radius: var(--_input-radius);
   }
+
+  /* Trailing spinner (loading) — keep it from shrinking in the control flex. */
+  .control ds-spinner {
+    flex-shrink: 0;
+  }
+
+  /* Floating label — label sits inside a taller control instead of stacked above. */
+  &.floating .control {
+    height: var(--field-h-floating);
+    padding-top: var(--field-floating-pad-t);
+    padding-bottom: var(--space-1-5);
+    position: relative;
+  }
+  &.floating .floating-label {
+    position: absolute;
+    top: var(--field-floating-label-top);
+    left: var(--_input-pad-x);
+    font: var(--font-weight-bold) var(--field-floating-label-fs) / var(--field-floating-label-lh) var(--font-sans);
+    color: var(--_input-label-color);
+    letter-spacing: var(--letter-spacing-wide);
+    pointer-events: none;
+  }
 }

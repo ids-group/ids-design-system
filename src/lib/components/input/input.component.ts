@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
+import { SpinnerComponent } from '../spinner/spinner.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
@@ -18,7 +19,7 @@ import type { InputSize, InputType } from './input.types';
 @Component({
   selector: 'ds-input',
   standalone: true,
-  imports: [FormsModule, IconComponent, FieldMessageComponent],
+  imports: [FormsModule, IconComponent, SpinnerComponent, FieldMessageComponent],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -41,6 +42,12 @@ export class InputComponent extends DsControlValueAccessor<string> {
   readonly readOnly = input(false, { transform: booleanAttribute });
   readonly invalid = input<boolean>(false);
   readonly success = input(false, { transform: booleanAttribute });
+  /** Shows a trailing spinner — e.g. async validation in flight. The input
+   *  stays editable; pair with a `hint` like "Checking availability…". */
+  readonly loading = input(false, { transform: booleanAttribute });
+  /** Floating-label variant — the label sits inside a taller control instead
+   *  of stacked above it. */
+  readonly floating = input(false, { transform: booleanAttribute });
   readonly withAddon = input(false, { transform: booleanAttribute });
   readonly withAddonRight = input(false, { transform: booleanAttribute });
   readonly required = input<boolean>(false);
@@ -152,6 +159,12 @@ export class InputComponent extends DsControlValueAccessor<string> {
     }
     if (this.withAddonRight()) {
       parts.push('with-addon-right');
+    }
+    if (this.loading()) {
+      parts.push('loading');
+    }
+    if (this.floating()) {
+      parts.push('floating');
     }
 
     return parts.join(' ');
