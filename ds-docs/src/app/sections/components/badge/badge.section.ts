@@ -5,6 +5,7 @@ import {
   TruncationRule,
 } from '../../../shared/docs-truncation.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+import { DocsSpecimensComponent } from '../../../shared/docs-specimens.component';
 
 @Component({
   selector: 'section-components-badge',
@@ -15,12 +16,20 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
     TagComponent,
     DocsTruncationComponent,
     DocsSectionComponent,
+    DocsSpecimensComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './badge.section.html',
   styleUrl: './badge.section.scss',
 })
 export class BadgeSection {
+  protected readonly lifecycleVariants: readonly string[] = [
+    'planning',
+    'confirmed',
+    'active',
+    'completed',
+  ];
+
   protected readonly truncationRules: TruncationRule[] = [
     {
       field: 'Badge / tag label',

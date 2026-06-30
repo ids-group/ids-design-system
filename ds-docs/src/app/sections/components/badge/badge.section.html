@@ -19,67 +19,16 @@
     Every event-status badge as a specimen.
   </p>
 
-  <div class="states states--cols-4">
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <ds-badge
-          variant="planning"
-          [withDot]="true"
-        >
-          Planning
-        </ds-badge>
-      </div>
-
-      <div class="state-cell__label">
-        Planning
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <ds-badge
-          variant="confirmed"
-          [withDot]="true"
-        >
-          Confirmed
-        </ds-badge>
-      </div>
-
-      <div class="state-cell__label">
-        Confirmed
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <ds-badge
-          variant="active"
-          [withDot]="true"
-        >
-          Active
-        </ds-badge>
-      </div>
-
-      <div class="state-cell__label">
-        Active
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <ds-badge
-          variant="completed"
-          [withDot]="true"
-        >
-          Completed
-        </ds-badge>
-      </div>
-
-      <div class="state-cell__label">
-        Completed
-      </div>
-    </div>
-  </div>
+  <docs-specimens [items]="lifecycleVariants">
+    <ng-template let-v>
+      <ds-badge
+        [variant]="$any(v)"
+        [withDot]="true"
+      >
+        {{ v }}
+      </ds-badge>
+    </ng-template>
+  </docs-specimens>
 
   <!-- ============================================================ Semantic states showcase -->
   <h3 class="block-title t-h4">
