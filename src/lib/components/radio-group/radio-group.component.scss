@@ -1,9 +1,8 @@
-:host { display: flex; flex-direction: column; gap: var(--space-2, 8px); }
+:host { display: flex; flex-direction: column; gap: var(--space-1-5); }
 
 .group-label {
   font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
   color: var(--text-secondary);
-  margin-bottom: var(--space-1);
 }
 
 .radios { display: flex; flex-direction: column; gap: var(--space-2, 8px); }
