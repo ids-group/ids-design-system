@@ -15,14 +15,17 @@
 }
 
 .button {
-  /* Colour-family slots — default = primary. Colour classes (.c-*) rebind ONLY
-     these; fill classes (.f-*) map them into the --_button-* resolvers below. */
-  --c-base:           var(--primary);
-  --c-on:             var(--primary-on);
-  --c-strong:         var(--primary-strong);
-  --c-subtitle:       var(--primary-subtitle);
-  --c-muted:          var(--primary-muted);
-  --c-muted-strong:   var(--primary-muted-strong);
+  /* Colour-family slots — default to the --accent-* pointer (= primary unless a
+     ds-color zone/attr flips it), so a button WITHOUT an explicit color follows
+     the zone. An explicit `color` class (.c-*) overrides these on the element,
+     winning over the inherited accent. Fill classes (.f-*) map slots into the
+     --_button-* resolvers below. */
+  --c-base:           var(--accent);
+  --c-on:             var(--accent-on);
+  --c-strong:         var(--accent-strong);
+  --c-subtitle:       var(--accent-subtitle);
+  --c-muted:          var(--accent-muted);
+  --c-muted-strong:   var(--accent-muted-strong);
   --c-outline-border: var(--c-muted-strong);
   --c-ring:           var(--ds-control-focus-shadow);
 

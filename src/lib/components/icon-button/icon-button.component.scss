@@ -6,14 +6,16 @@
 }
 
 .icon-button {
-  /* Colour-family slots — default = primary. `color` classes (.c-*) rebind these;
-     the filled/tonal/selected fills consume them (standard/outlined are neutral). */
-  --c-base:         var(--primary);
-  --c-on:           var(--primary-on);
-  --c-strong:       var(--primary-strong);
-  --c-subtitle:     var(--primary-subtitle);
-  --c-muted:        var(--primary-muted);
-  --c-muted-strong: var(--primary-muted-strong);
+  /* Colour-family slots — default to the --accent-* pointer (= primary unless a
+     ds-color zone/attr flips it), so an icon-button without an explicit color
+     follows the zone. `color` classes (.c-*) override these on the element. The
+     filled/tonal/selected fills consume them (standard/outlined are neutral). */
+  --c-base:         var(--accent);
+  --c-on:           var(--accent-on);
+  --c-strong:       var(--accent-strong);
+  --c-subtitle:     var(--accent-subtitle);
+  --c-muted:        var(--accent-muted);
+  --c-muted-strong: var(--accent-muted-strong);
 
   /* Public --ds-icon-button-* are read with fallbacks, never declared — consumer
      overrides inherit in. filled/selected derive hover/active from the resolved
