@@ -94,6 +94,12 @@
   --error-h:    var(--red-h);
   --error-s:    var(--red-s);
   --error-l:    var(--red-l);
+  --success-h:  var(--green-h);
+  --success-s:  var(--green-s);
+  --success-l:  var(--green-l);
+  --warning-h:  var(--yellow-h);
+  --warning-s:  var(--yellow-s);
+  --warning-l:  var(--yellow-l);
 
   /* Primary roles.
      Hover / pressed / selected-hover are DERIVED from --primary at runtime via
@@ -179,6 +185,14 @@
   --error-border:     var(--red-200);
   --error-text:       var(--red-600);
 
+  /* -pressed (success/warning) + -on aliases — added for the --accent-* pointer
+     family so every ds-color family resolves --accent-pressed / --accent-on. */
+  --success-pressed:  color-mix(in srgb, var(--success) 76%, black);
+  --warning-pressed:  color-mix(in srgb, var(--warning) 76%, black);
+  --error-on:         var(--text-on-error);
+  --success-on:       var(--text-on-success);
+  --warning-on:       var(--text-on-warning);
+
   --info:              var(--sky-500);
   --info-hover:        color-mix(in srgb, var(--info) 88%, black);
   --info-subtitle:       var(--sky-50);
@@ -233,4 +247,44 @@
     0 0 0 3px hsl(var(--primary-h) var(--primary-s) var(--primary-l) / var(--focus-field-alpha));
   --focus-field-error:
     0 0 0 3px hsl(var(--error-h) var(--error-s) var(--error-l) / var(--focus-field-alpha));
+
+  /* Per-family focus rings/fields — pre-composed once from each family's
+     channels so ds-color flips a single --accent-focus-* pointer (no :root
+     composite re-declaration in the scope). --focus-ring-error exists above. */
+  --focus-ring-secondary:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l) / 100%);
+  --focus-ring-tertiary:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsl(var(--tertiary-h) var(--tertiary-s) var(--tertiary-l) / 100%);
+  --focus-ring-success:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsl(var(--success-h) var(--success-s) var(--success-l) / 100%);
+  --focus-ring-warning:
+    0 0 0 2px var(--focus-ring-inner),
+    0 0 0 4px hsl(var(--warning-h) var(--warning-s) var(--warning-l) / 100%);
+  --focus-field-secondary:
+    0 0 0 3px hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l) / var(--focus-field-alpha));
+  --focus-field-tertiary:
+    0 0 0 3px hsl(var(--tertiary-h) var(--tertiary-s) var(--tertiary-l) / var(--focus-field-alpha));
+  --focus-field-success:
+    0 0 0 3px hsl(var(--success-h) var(--success-s) var(--success-l) / var(--focus-field-alpha));
+  --focus-field-warning:
+    0 0 0 3px hsl(var(--warning-h) var(--warning-s) var(--warning-l) / var(--focus-field-alpha));
+
+  /* Accent pointer layer — the single indirection ds-color flips. Defaults to
+     the primary family (+ existing focus/tint tokens) so the unbranded theme is
+     pixel-identical. Components read these for their accent instead of
+     --primary* / --focus-* / --surface-tint. */
+  --accent:               var(--primary);
+  --accent-hover:         var(--primary-hover);
+  --accent-pressed:       var(--primary-pressed);
+  --accent-strong:        var(--primary-strong);
+  --accent-subtitle:      var(--primary-subtitle);
+  --accent-muted:         var(--primary-muted);
+  --accent-muted-strong:  var(--primary-muted-strong);
+  --accent-on:            var(--primary-on);
+  --accent-focus-ring:    var(--focus-ring);
+  --accent-focus-field:   var(--focus-field);
+  --accent-surface-tint:  var(--surface-tint);
 }

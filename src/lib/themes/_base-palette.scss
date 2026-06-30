@@ -90,6 +90,9 @@
   // -----------------------------------------------------------------------
   // Green — success
   // -----------------------------------------------------------------------
+  // HSL channels (additive — for focus-ring composition + ds-color). The ramp
+  // stops below stay hand-picked hex; these reproduce --green-500 ≈ #22A33A.
+  --green-h: 132; --green-s: 66%; --green-l: 39%;
   --green-50:  #ECFAEE;
   --green-100: #D6F3DB;
   --green-200: #BBE8C2;
@@ -102,6 +105,9 @@
   // -----------------------------------------------------------------------
   // Yellow — attention / warning
   // -----------------------------------------------------------------------
+  // HSL channels (additive — for focus-ring composition + ds-color). Reproduce
+  // --yellow-400 ≈ #F4D43A; ramp stops below stay hand-picked hex.
+  --yellow-h: 47; --yellow-s: 89%; --yellow-l: 59%;
   --yellow-50:  #FFFBEA;
   --yellow-100: #FEF8DC;
   --yellow-200: #FCEFA1;

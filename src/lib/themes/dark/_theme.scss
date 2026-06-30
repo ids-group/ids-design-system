@@ -36,6 +36,8 @@
   --warning-hover:          color-mix(in srgb, var(--warning) 88%, white);
   --error-hover:            color-mix(in srgb, var(--error) 88%, white);
   --error-pressed:          color-mix(in srgb, var(--error) 76%, white);
+  --success-pressed:        color-mix(in srgb, var(--success) 76%, white);
+  --warning-pressed:        color-mix(in srgb, var(--warning) 76%, white);
   --info-hover:             color-mix(in srgb, var(--info) 88%, white);
 
   // Brand tint surfaces + on-tint text (channel-derived → track rebrand).
