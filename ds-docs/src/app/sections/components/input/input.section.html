@@ -294,29 +294,17 @@
         people
       </span>
     </ds-input>
-    <!-- Floating label: ds-input has no [floating] variant. Raw markup needed. -->
-    <div class="field floating">
-      <div class="control">
-        <span class="floating-label">
-          Project name
-        </span>
+    <ds-input
+      label="Project name"
+      value="Project Alpha 2026"
+      [floating]="true"
+    />
 
-        <input value="Project Alpha 2026" />
-      </div>
-    </div>
-
-    <div class="field floating">
-      <div class="control">
-        <span class="floating-label">
-          Project ID
-        </span>
-
-        <input
-          class="t-mono"
-          value="EVT-2026-0142"
-        />
-      </div>
-    </div>
+    <ds-input
+      label="Project ID"
+      value="EVT-2026-0142"
+      [floating]="true"
+    />
   </div>
 
   <!-- ============================================================ Clearable -->
