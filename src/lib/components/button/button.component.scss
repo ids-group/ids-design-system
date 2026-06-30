@@ -137,7 +137,13 @@
   }
   &.c-neutral {
     --c-base: var(--text-secondary); --c-on: var(--surface-default); --c-strong: var(--text-primary);
-    --c-subtitle: var(--surface-secondary); --c-muted: var(--surface-secondary); --c-muted-strong: var(--border-default);
+    --c-subtitle: var(--surface-secondary);
+
+    /* Tonal neutral = a soft grey TINT of the ink over the surface (not the flat
+       --surface-secondary) — matches the prototype; mix toward --surface-default
+       so it flips correctly in dark theme. */
+    --c-muted: color-mix(in srgb, var(--text-secondary) 14%, var(--surface-default));
+    --c-muted-strong: color-mix(in srgb, var(--text-secondary) 22%, var(--surface-default));
     --c-outline-border: var(--border-default);
   }
   &.c-error {
@@ -185,6 +191,24 @@
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, color-mix(in srgb, var(--_button-bg-color) 28%, var(--surface-disabled)));
     --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 52% 0.04 h));
     --_button-border-disabled: var(--ds-button-border-disabled, color-mix(in srgb, var(--_button-border) 55%, var(--surface-disabled)));
+  }
+
+  /* text — no chrome, underlined (a link-styled button). Colour-aware: label
+     follows the colour's --c-strong. Coexists with the global .link class. */
+  &.v-text {
+    --_button-bg-color:        var(--ds-button-bg-color,        transparent);
+    --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));
+    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  transparent);
+    --_button-bg-color-active: var(--ds-button-bg-color-active, transparent);
+    --_button-accent: var(--_button-label-color);
+    --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
+    --_button-border-disabled: var(--ds-button-border-disabled, transparent);
+
+    padding: 0; height: auto; width: auto;
+    text-decoration: underline;
+    text-underline-offset: var(--btn-link-uloff);
+
+    &:hover { color: var(--c-base); }
   }
 
   &.loading {

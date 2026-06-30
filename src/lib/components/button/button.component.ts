@@ -12,17 +12,37 @@ import {
 } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
-import type { ButtonColor, ButtonVariant, ButtonSize, ButtonType } from './button.types';
+import type {
+  ButtonColor,
+  ButtonVariant,
+  ButtonSize,
+  ButtonType,
+} from './button.types';
 
-// color×variant pairs we don't support (rendered but dev-warned — two inputs
-// can't be narrowed against each other at compile time): grey solid reads as
-// disabled; quiet success/warning variants are too low-contrast.
-const BANNED_COMBOS = new Set([
-  'neutral|solid',
-  'success|ghost',
-  'success|outline',
-  'warning|ghost',
-  'warning|outline',
+// color×variant pairs that RENDER but read poorly — surfaced as a dev-mode
+// console.warn (two inputs can't be narrowed against each other at compile
+// time). They are discouraged, not blocked: a brand may still opt in.
+const DISCOURAGED_COMBOS = new Map<string, string>([
+  [
+    'neutral|solid',
+    'a solid grey button reads as disabled — prefer tonal/ghost/outline',
+  ],
+  [
+    'success|ghost',
+    'low-emphasis success rarely warrants an action affordance — prefer solid/tonal',
+  ],
+  [
+    'success|outline',
+    'low-emphasis success rarely warrants an action affordance — prefer solid/tonal',
+  ],
+  [
+    'warning|ghost',
+    'yellow at low emphasis is too low-contrast to read — prefer solid/tonal',
+  ],
+  [
+    'warning|outline',
+    'yellow at low emphasis is too low-contrast to read — prefer solid/tonal',
+  ],
 ]);
 
 @Component({
@@ -35,7 +55,11 @@ const BANNED_COMBOS = new Set([
   host: { '[class.full-width]': 'fullWidth()' },
 })
 export class ButtonComponent {
+  /** Brand/status hue family. */
   readonly color = input<ButtonColor>('primary');
+  /** Fill pattern: solid | tonal | ghost | outline | text. All color×variant
+      pairs render; a few are UX-discouraged (see DISCOURAGED_COMBOS / the docs)
+      and emit a dev-mode warning — they work, but read poorly. */
   readonly variant = input<ButtonVariant>('solid');
   readonly size = input<ButtonSize>('md');
   readonly type = input<ButtonType>('button');
@@ -82,10 +106,12 @@ export class ButtonComponent {
   constructor() {
     if (isDevMode()) {
       effect(() => {
-        const combo = `${this.color()}|${this.variant()}`;
-        if (BANNED_COMBOS.has(combo)) {
+        const reason = DISCOURAGED_COMBOS.get(
+          `${this.color()}|${this.variant()}`,
+        );
+        if (reason) {
           console.warn(
-            `[ds-button] color="${this.color()}" variant="${this.variant()}" is not a supported combination — see the button docs for the legal color×variant matrix.`,
+            `[ds-button] color="${this.color()}" variant="${this.variant()}" is a UX-discouraged combination — it renders, but ${reason}.`,
           );
         }
       });

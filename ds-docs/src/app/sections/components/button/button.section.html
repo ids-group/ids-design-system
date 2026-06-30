@@ -21,15 +21,24 @@
   </h3>
 
   <p class="block-desc t-s">
-    Every legal <code class="t-mono-inline">color</code> ×
+    Every <code class="t-mono-inline">color</code> ×
     <code class="t-mono-inline">
       variant
-    </code> combination. Defaults are
+    </code> combination — all of them render.
+    Defaults are
     <code class="t-mono-inline">
       color="primary" variant="solid"
     </code>. Cells
-    marked “—” are unsupported (e.g. grey solid, quiet success/warning) and emit
-    a dev-mode warning if used.
+    marked ⚠ are UX-discouraged (grey solid reads as disabled; quiet
+    success/warning is too low-contrast) — they work but emit a dev-mode
+    warning; prefer solid/tonal there.
+    <code class="t-mono-inline">
+      variant="text"
+    </code> is a no-chrome,
+    link-styled button — it coexists with the global
+    <code class="t-mono-inline">
+      .link
+    </code> class (last column).
   </p>
 
   <p class="block-desc t-s">
@@ -41,10 +50,13 @@
     </em>, not fixed colours — their channels default to
     <code class="t-mono-inline">
       --primary
-    </code>, so in the default (single-hue)
-    theme all three brand rows are blue. Below they're shown recoloured (orange
-    / violet) to illustrate that a multi-hue brand drives them apart by
-    overriding <code class="t-mono-inline">--secondary-h/s/l</code> /
+    </code>, so in the default
+    (single-hue) theme all three brand rows are blue. Below they're shown
+    recoloured (orange / violet) to illustrate that a multi-hue brand drives
+    them apart by overriding
+    <code class="t-mono-inline">
+      --secondary-h/s/l
+    </code> /
     <code class="t-mono-inline">
       --tertiary-h/s/l
     </code>.

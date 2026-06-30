@@ -36,59 +36,46 @@ export class ButtonSection {
     'tonal',
     'ghost',
     'outline',
+    'text',
   ];
 
-  /** Rows of the color × variant matrix (key = the colour). `legal` lists the
-      variants supported for that colour; other cells render "—". */
+  /** Rows of the color × variant matrix (key = the colour). Every combination
+      renders; `discouraged` flags the UX-weak ones (marked ⚠, see the API). */
   protected readonly combos: readonly DocsMatrixRow[] = [
-    {
-      key: 'primary',
-      label: 'Primary',
-      note: 'brand',
-      dot: 'var(--primary)',
-      legal: ['solid', 'tonal', 'ghost', 'outline'],
-    },
+    { key: 'primary', label: 'Primary', note: 'brand', dot: 'var(--primary)' },
     {
       key: 'secondary',
       label: 'Secondary',
       note: 'brand',
       dot: 'var(--secondary)',
-      legal: ['solid', 'tonal', 'ghost', 'outline'],
     },
     {
       key: 'tertiary',
       label: 'Tertiary',
       note: 'brand',
       dot: 'var(--tertiary)',
-      legal: ['solid', 'tonal', 'ghost', 'outline'],
     },
     {
       key: 'neutral',
       label: 'Neutral',
       note: 'neutral',
       dot: 'var(--text-secondary)',
-      legal: ['tonal', 'ghost', 'outline'],
+      discouraged: ['solid'],
     },
-    {
-      key: 'error',
-      label: 'Error',
-      note: 'status',
-      dot: 'var(--error)',
-      legal: ['solid', 'tonal', 'ghost', 'outline'],
-    },
+    { key: 'error', label: 'Error', note: 'status', dot: 'var(--error)' },
     {
       key: 'success',
       label: 'Success',
       note: 'status',
       dot: 'var(--success)',
-      legal: ['solid', 'tonal'],
+      discouraged: ['ghost', 'outline'],
     },
     {
       key: 'warning',
       label: 'Warning',
       note: 'status',
       dot: 'var(--warning)',
-      legal: ['solid', 'tonal'],
+      discouraged: ['ghost', 'outline'],
     },
   ];
 
