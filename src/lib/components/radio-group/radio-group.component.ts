@@ -145,9 +145,15 @@ export class RadioGroupComponent
       currentIndex = enabled.findIndex((radio) => radio.value() === currentValue);
     }
 
-    const nextIndex = forward
-      ? (currentIndex + 1) % enabled.length
-      : (currentIndex - 1 + enabled.length) % enabled.length;
+    let nextIndex: number;
+    if (currentIndex === -1) {
+      // Nothing focused/selected yet: forward → first, backward → last.
+      nextIndex = forward ? 0 : enabled.length - 1;
+    } else {
+      nextIndex = forward
+        ? (currentIndex + 1) % enabled.length
+        : (currentIndex - 1 + enabled.length) % enabled.length;
+    }
 
     const target = enabled[nextIndex];
     this.select(target.value());
