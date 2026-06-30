@@ -1,23 +1,10 @@
 /* ============================================================
    ---------- SELECTION specimens ----------
-   Only segmented · slider · control-row remain here:
-   • .segmented / .segmented-btn / .slider — no live component yet.
-   • .control-row — docs-only layout helper (the label wrapper around
-     live <ds-checkbox|radio|switch>); collides with nothing.
-
-   .check / .radio / .switch base blocks were REMOVED — they had no raw
-   consumers (sections render the live components) and only leaked onto
-   those components' identically-named root classes.
+   Only segmented · slider remain — neither has a live component yet.
+   The .check / .radio / .switch base blocks AND the .control-row label
+   wrapper were removed: checkbox/radio/switch now render live components
+   with a built-in `label` input, so no raw selection markup is left.
    ============================================================ */
-.control-row {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-  color: var(--text-primary);
-  cursor: pointer;
-}
-
 .segmented {
   display: inline-flex;
   background: var(--surface-secondary);

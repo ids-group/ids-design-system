@@ -4,29 +4,10 @@
   title="Switch"
 >
   <div class="stack">
-    <label class="control-row">
-      <ds-switch /> Sync with Inventory service
-    </label>
-
-    <label class="control-row">
-      <ds-switch [checked]="true" /> Auto-recompute
-    </label>
-
-    <label class="control-row">
-      <ds-switch
-        variant="success"
-        [checked]="true"
-      />
-      Live
-    </label>
-
-    <label class="control-row">
-      <ds-switch
-        variant="error"
-        [checked]="true"
-      />
-      Locked
-    </label>
+    <ds-switch label="Sync with Inventory service" />
+    <ds-switch [checked]="true" label="Auto-recompute" />
+    <ds-switch variant="success" [checked]="true" label="Live" />
+    <ds-switch variant="error" [checked]="true" label="Locked" />
   </div>
 
   <!-- ============================================================ Switch states showcase -->
@@ -138,17 +119,15 @@
   </p>
 
   <div class="stack">
-    <label class="control-row">
-      <ds-switch hint="Notifications are sent to your registered email." />
-      Email notifications
-    </label>
+    <ds-switch
+      label="Email notifications"
+      hint="Notifications are sent to your registered email."
+    />
 
-    <label class="control-row">
-      <ds-switch
-        hint="At least one notification channel must remain active."
-        [invalid]="true"
-      />
-      Email notifications
-    </label>
+    <ds-switch
+      label="Email notifications"
+      hint="At least one notification channel must remain active."
+      [invalid]="true"
+    />
   </div>
 </docs-section>
