@@ -1,0 +1,36 @@
+// Scoped accent recolour. A `ds-color="<family>"` attribute — on a zone
+// container, on a component host, or applied via the ds.color() mixin in
+// consumer config — flips the --accent-* pointer family to another brand/status
+// family for its subtree. Components read --accent-* for their accent (the
+// Phase 2 sweep), so the whole subtree recolours from this one rule. Pairs with
+// the button/icon-button `color` input (Phase 1), which flips the same pointers
+// per instance. With no attribute, --accent-* stays the primary family (see
+// themes/_semantic.scss), so the default theme is unchanged.
+
+@mixin family-vars($family) {
+  --accent: var(--#{$family});
+  --accent-hover: var(--#{$family}-hover);
+  --accent-pressed: var(--#{$family}-pressed);
+  --accent-strong: var(--#{$family}-strong);
+  --accent-subtitle: var(--#{$family}-subtitle);
+  --accent-muted: var(--#{$family}-muted);
+  --accent-muted-strong: var(--#{$family}-muted-strong);
+  --accent-on: var(--#{$family}-on);
+  --accent-focus-ring: var(--focus-ring-#{$family});
+  --accent-focus-field: var(--focus-field-#{$family});
+  --accent-surface-tint: var(--#{$family}-subtitle);
+}
+
+/// Recolour the DS accent for a type or scope from consumer SCSS, e.g.
+/// `ds-switch { @include ds.color(secondary); }`.
+@mixin color($family) {
+  @include family-vars($family);
+}
+
+$families: secondary, tertiary, error, success, warning;
+
+@each $family in $families {
+  [ds-color='#{$family}'] {
+    @include family-vars($family);
+  }
+}
