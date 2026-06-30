@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { IconComponent, InputComponent, SpinnerComponent } from 'ds';
-import { DocsAwaitComponent } from '../../../shared/docs-await.component';
+import { IconComponent, InputComponent } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,
@@ -11,12 +10,10 @@ import {
   selector: 'section-components-input',
   standalone: true,
   imports: [
-    DocsAwaitComponent,
     DocsSectionComponent,
     DocsTruncationComponent,
     IconComponent,
     InputComponent,
-    SpinnerComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './input.section.html',

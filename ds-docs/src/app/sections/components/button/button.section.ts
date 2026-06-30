@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { ButtonComponent, IconComponent, type ButtonVariant } from 'ds';
-import { DocsAwaitComponent } from '../../../shared/docs-await.component';
+import { ButtonComponent, ToggleButtonComponent, type ButtonVariant } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,
@@ -17,10 +16,9 @@ interface VariantSpec {
   standalone: true,
   imports: [
     ButtonComponent,
-    DocsAwaitComponent,
     DocsSectionComponent,
     DocsTruncationComponent,
-    IconComponent,
+    ToggleButtonComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './button.section.html',

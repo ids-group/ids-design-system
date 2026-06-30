@@ -1,9 +1,9 @@
 /* ============================================================
    FIELD — global re-declaration for raw specimens.
-   Remaining raw consumers: loading spinner, dropdown/number wrapper
-   labels (modal + input section), and floating-label variant (no API).
-   Success, addon, with-addon, .textarea, .number removed — last raw
-   consumers converted to live ds-input.
+   Remaining raw consumers: dropdown/number wrapper labels (modal +
+   input section). Loading + floating-label moved to ds-input
+   [loading]/[floating]; success, addon, with-addon, .textarea, .number
+   removed — last raw consumers converted to live ds-input.
    ============================================================ */
 .field {
   /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
@@ -118,23 +118,6 @@
   /* Sizes */
   &.sm .control { height: var(--hit-min); padding: 0 var(--space-2); }
   &.lg .control { height: var(--field-h-lg); }
-
-  /* Floating label — label sits inside the control and moves on focus/filled. */
-  &.floating .control {
-    height: var(--field-h-floating);
-    padding-top: var(--field-floating-pad-t);
-    padding-bottom: var(--space-1-5);
-    position: relative;
-  }
-  &.floating .floating-label {
-    position: absolute;
-    top: var(--field-floating-label-top);
-    left: var(--space-3);
-    font: var(--font-weight-bold) var(--field-floating-label-fs) / var(--field-floating-label-lh) var(--font-sans);
-    color: var(--text-secondary);
-    letter-spacing: var(--letter-spacing-wide);
-    pointer-events: none;
-  }
 }
 
 /* ---------- SEARCH ---------- */

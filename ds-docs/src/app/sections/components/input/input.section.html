@@ -12,10 +12,6 @@
   <!-- ============================================================ States showcase -->
   <h3 class="block-title t-h4">
     States showcase
-    <docs-await
-      kind="api"
-      name="ds-input loading state"
-    />
   </h3>
 
   <p class="block-desc t-s">
@@ -149,23 +145,13 @@
     </div>
 
     <div class="state-cell">
-      <!-- Loading: ds-input has no spinner slot. Raw markup needed. -->
       <div class="state-cell__stage">
-        <div class="field">
-          <span class="label">
-            Slug
-          </span>
-
-          <div class="control">
-            <input value="project-alpha-2026" />
-
-            <ds-spinner size="sm" />
-          </div>
-
-          <span class="hint">
-            Checking availability…
-          </span>
-        </div>
+        <ds-input
+          label="Slug"
+          value="project-alpha-2026"
+          hint="Checking availability…"
+          [loading]="true"
+        />
       </div>
 
       <div class="state-cell__label">
@@ -177,10 +163,6 @@
   <!-- ============================================================ Variant states -->
   <h3 class="block-title t-h4">
     Variant states — prefix · suffix · floating
-    <docs-await
-      kind="api"
-      name="ds-input floating label"
-    />
   </h3>
 
   <div class="states states--cols-2">
@@ -228,17 +210,11 @@
     </div>
 
     <div class="state-cell">
-      <!-- Floating label: ds-input has no [floating] variant. Raw markup needed. -->
       <div class="state-cell__stage">
-        <div class="field floating">
-          <div class="control">
-            <span class="floating-label">
-              Record name
-            </span>
-
-            <input />
-          </div>
-        </div>
+        <ds-input
+          label="Record name"
+          [floating]="true"
+        />
       </div>
 
       <div class="state-cell__label">
@@ -248,15 +224,11 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <div class="field floating">
-          <div class="control">
-            <span class="floating-label">
-              Project name
-            </span>
-
-            <input value="Project Alpha 2026" />
-          </div>
-        </div>
+        <ds-input
+          label="Project name"
+          value="Project Alpha 2026"
+          [floating]="true"
+        />
       </div>
 
       <div class="state-cell__label">

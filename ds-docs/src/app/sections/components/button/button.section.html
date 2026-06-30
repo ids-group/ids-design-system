@@ -222,31 +222,19 @@
   <!-- ============================================================ Group · split · toggle · text -->
   <h3 class="block-title t-h4">
     Toggle · text
-    <docs-await name="toggle" />
   </h3>
 
   <div class="row">
-    <button
-      class="button-toggle"
-      aria-pressed="false"
-    >
-      <ds-icon
-        name="filter"
-        [size]="14"
-      />
+    <ds-toggle-button icon="filter">
       Conflicts only
-    </button>
+    </ds-toggle-button>
 
-    <button
-      class="button-toggle"
-      aria-pressed="true"
+    <ds-toggle-button
+      icon="check"
+      [pressed]="true"
     >
-      <ds-icon
-        name="check"
-        [size]="14"
-      />
       Confirmed
-    </button>
+    </ds-toggle-button>
 
     <ds-button variant="text">
       View activity log
