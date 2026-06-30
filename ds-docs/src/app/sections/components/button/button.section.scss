@@ -9,6 +9,27 @@
       border-radius: var(--radius-lg);
     }
 
+    /* Demo-only: drive secondary/tertiary to distinct hues so the brand rows are
+       visibly independent (they default to --primary in the real theme). Must
+       override the ROLE TOKENS directly, not the --*-h/s/l channels: --secondary
+       is composed from its channels once at :root, so a channel override on a
+       descendant scope does NOT move it (same var()-substitution gotcha ds-color
+       solves with --accent-* pointers). The row dots read --secondary/--tertiary
+       and follow these overrides. */
+    .brand-demo {
+      --secondary: hsl(25 95% 53%); /* orange */
+      --secondary-strong: hsl(25 90% 42%);
+      --secondary-subtitle: hsl(25 100% 96%);
+      --secondary-muted: hsl(25 95% 91%);
+      --secondary-muted-strong: hsl(25 95% 86%);
+
+      --tertiary: hsl(262 70% 56%); /* violet */
+      --tertiary-strong: hsl(262 60% 46%);
+      --tertiary-subtitle: hsl(262 80% 97%);
+      --tertiary-muted: hsl(262 70% 93%);
+      --tertiary-muted-strong: hsl(262 65% 88%);
+    }
+
     /* ---------- states matrix (button-specific; color × variant uses docs-matrix) ---------- */
     .matrix-scroll { overflow-x: auto; margin-top: var(--space-3); }
     .matrix {

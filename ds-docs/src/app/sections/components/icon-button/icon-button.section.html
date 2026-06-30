@@ -35,25 +35,30 @@
     <code class="t-mono-inline">
       ds-button
     </code>). All combinations are valid.
+    secondary/tertiary default to <code class="t-mono-inline">--primary</code>;
+    shown recoloured (orange / violet) below so the brand rows read as
+    independent roles.
   </p>
 
-  <docs-matrix
-    cornerLabel="color \ variant"
-    [cols]="variants"
-    [rows]="colors"
-  >
-    <ng-template
-      let-variant
-      let-row="row"
+  <div class="brand-demo">
+    <docs-matrix
+      cornerLabel="color \ variant"
+      [cols]="variants"
+      [rows]="colors"
     >
-      <ds-icon-button
-        icon="edit"
-        [ariaLabel]="row.label + ' ' + variant"
-        [variant]="$any(variant)"
-        [color]="$any(row.key)"
-      />
-    </ng-template>
-  </docs-matrix>
+      <ng-template
+        let-variant
+        let-row="row"
+      >
+        <ds-icon-button
+          icon="edit"
+          [ariaLabel]="row.label + ' ' + variant"
+          [variant]="$any(variant)"
+          [color]="$any(row.key)"
+        />
+      </ng-template>
+    </docs-matrix>
+  </div>
 
   <!-- ============================================================ Sizes -->
   <h3 class="block-title t-h4">

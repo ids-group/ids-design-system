@@ -32,23 +32,43 @@
     a dev-mode warning if used.
   </p>
 
-  <docs-matrix
-    cornerLabel="color \ variant"
-    [cols]="variants"
-    [rows]="combos"
-  >
-    <ng-template
-      let-variant
-      let-row="row"
+  <p class="block-desc t-s">
+    <strong>
+      secondary
+    </strong> and <strong>tertiary</strong> are brand hue
+    <em>
+      roles
+    </em>, not fixed colours — their channels default to
+    <code class="t-mono-inline">
+      --primary
+    </code>, so in the default (single-hue)
+    theme all three brand rows are blue. Below they're shown recoloured (orange
+    / violet) to illustrate that a multi-hue brand drives them apart by
+    overriding <code class="t-mono-inline">--secondary-h/s/l</code> /
+    <code class="t-mono-inline">
+      --tertiary-h/s/l
+    </code>.
+  </p>
+
+  <div class="brand-demo">
+    <docs-matrix
+      cornerLabel="color \ variant"
+      [cols]="variants"
+      [rows]="combos"
     >
-      <ds-button
-        [color]="$any(row.key)"
-        [variant]="variant"
+      <ng-template
+        let-variant
+        let-row="row"
       >
-        {{ row.label }}
-      </ds-button>
-    </ng-template>
-  </docs-matrix>
+        <ds-button
+          [color]="$any(row.key)"
+          [variant]="variant"
+        >
+          {{ row.label }}
+        </ds-button>
+      </ng-template>
+    </docs-matrix>
+  </div>
 
   <!-- ============================================================ Sizes -->
   <h3 class="block-title t-h4">
