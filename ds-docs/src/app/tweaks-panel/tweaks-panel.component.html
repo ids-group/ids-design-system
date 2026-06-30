@@ -2,226 +2,150 @@
   class="tweaks-panel"
   [class.open]="open()"
 >
-  <button
-    class="toggle"
-    type="button"
-    (click)="toggle()"
+  <ds-button
+    variant="text"
+    (pressed)="toggle()"
   >
     {{ open() ? '✕' : '⚙' }} Tweaks
-  </button>
+  </ds-button>
 
   @if (open()) {
     <div class="body">
       <div class="row">
-        <label class="label">
-          Theme
-        </label>
+        <label class="label"> Theme </label>
 
-        <div class="segmented">
-          <button
-            type="button"
-            [class.active]="theme() === 'light'"
-            (click)="setTheme('light')"
-          >
-            Light
-          </button>
-
-          <button
-            type="button"
-            [class.active]="theme() === 'dark'"
-            (click)="setTheme('dark')"
-          >
-            Dark
-          </button>
-        </div>
+        <ds-segmented
+          [options]="themeOptions"
+          [value]="theme()"
+          (valueChange)="setTheme($any($event))"
+          ariaLabel="Theme"
+        />
       </div>
 
       <div class="row">
-        <label class="label">
-          Density
-        </label>
+        <label class="label"> Density </label>
 
-        <div class="segmented">
-          <button
-            type="button"
-            [class.active]="density() === 'compact'"
-            (click)="setDensity('compact')"
-          >
-            Compact
-          </button>
-
-          <button
-            type="button"
-            [class.active]="density() === 'cozy'"
-            (click)="setDensity('cozy')"
-          >
-            Cozy
-          </button>
-
-          <button
-            type="button"
-            [class.active]="density() === 'comfy'"
-            (click)="setDensity('comfy')"
-          >
-            Comfy
-          </button>
-        </div>
+        <ds-segmented
+          [options]="densityOptions"
+          [value]="density()"
+          (valueChange)="setDensity($any($event))"
+          ariaLabel="Density"
+        />
       </div>
 
       <div class="row">
-        <label class="label">
-          Brand preview
-        </label>
+        <label class="label"> Brand preview </label>
 
-        <div class="segmented">
-          <button
-            type="button"
-            [class.active]="brand() === 'default'"
-            (click)="setBrand('default')"
-          >
-            Default
-          </button>
-
-          <button
-            type="button"
-            [class.active]="brand() === 'manage-my'"
-            (click)="setBrand('manage-my')"
-          >
-            ManageMy
-          </button>
-        </div>
+        <ds-segmented
+          [options]="brandOptions"
+          [value]="brand()"
+          (valueChange)="setBrand($any($event))"
+          ariaLabel="Brand preview"
+        />
       </div>
 
       <div class="row">
-        <label class="label">
-          Neutrals
-        </label>
+        <label class="label"> Neutrals </label>
 
-        <div class="segmented">
-          <button
-            type="button"
-            [class.active]="neutrals() === 'cool-gray'"
-            (click)="setNeutrals('cool-gray')"
-          >
-            Cool gray
-          </button>
-
-          <button
-            type="button"
-            [class.active]="neutrals() === 'brand'"
-            (click)="setNeutrals('brand')"
-          >
-            From brand
-          </button>
-        </div>
+        <ds-segmented
+          [options]="neutralsOptions"
+          [value]="neutrals()"
+          (valueChange)="setNeutrals($any($event))"
+          ariaLabel="Neutrals"
+        />
       </div>
 
       <div class="row">
-        <label class="label">
-          Primary H ({{ primaryH() }}°)
-        </label>
+        <label class="label"> Primary H ({{ primaryH() }}°) </label>
 
-        <input
-          type="range"
-          min="0"
-          max="360"
+        <ds-slider
+          [min]="0"
+          [max]="360"
           [value]="primaryH()"
-          (input)="setPrimaryH($any($event.target).value)"
+          (valueChange)="setPrimaryH($any($event))"
+          ariaLabel="Primary hue"
         />
       </div>
 
       <div class="row">
-        <label class="label">
-          Primary S ({{ primaryS() }}%)
-        </label>
+        <label class="label"> Primary S ({{ primaryS() }}%) </label>
 
-        <input
-          type="range"
-          min="0"
-          max="100"
+        <ds-slider
+          [min]="0"
+          [max]="100"
           [value]="primaryS()"
-          (input)="setPrimaryS($any($event.target).value)"
+          (valueChange)="setPrimaryS($any($event))"
+          ariaLabel="Primary saturation"
         />
       </div>
 
       <div class="row">
-        <label class="label">
-          Primary L ({{ primaryL() }}%)
-        </label>
+        <label class="label"> Primary L ({{ primaryL() }}%) </label>
 
-        <input
-          type="range"
-          min="0"
-          max="100"
+        <ds-slider
+          [min]="0"
+          [max]="100"
           [value]="primaryL()"
-          (input)="setPrimaryL($any($event.target).value)"
+          (valueChange)="setPrimaryL($any($event))"
+          ariaLabel="Primary lightness"
         />
       </div>
 
       <div class="row">
-        <label class="label">
-          Secondary H ({{ secondaryH() }}°)
-        </label>
+        <label class="label"> Secondary H ({{ secondaryH() }}°) </label>
 
-        <input
-          type="range"
-          min="0"
-          max="360"
+        <ds-slider
+          [min]="0"
+          [max]="360"
           [value]="secondaryH()"
-          (input)="setSecondaryH($any($event.target).value)"
+          (valueChange)="setSecondaryH($any($event))"
+          ariaLabel="Secondary hue"
         />
       </div>
 
       <div class="row">
-        <label class="label">
-          Secondary S ({{ secondaryS() }}%)
-        </label>
+        <label class="label"> Secondary S ({{ secondaryS() }}%) </label>
 
-        <input
-          type="range"
-          min="0"
-          max="100"
+        <ds-slider
+          [min]="0"
+          [max]="100"
           [value]="secondaryS()"
-          (input)="setSecondaryS($any($event.target).value)"
+          (valueChange)="setSecondaryS($any($event))"
+          ariaLabel="Secondary saturation"
         />
       </div>
 
       <div class="row">
-        <label class="label">
-          Secondary L ({{ secondaryL() }}%)
-        </label>
+        <label class="label"> Secondary L ({{ secondaryL() }}%) </label>
 
-        <input
-          type="range"
-          min="0"
-          max="100"
+        <ds-slider
+          [min]="0"
+          [max]="100"
           [value]="secondaryL()"
-          (input)="setSecondaryL($any($event.target).value)"
+          (valueChange)="setSecondaryL($any($event))"
+          ariaLabel="Secondary lightness"
         />
       </div>
 
       <div class="row">
-        <label class="label">
-          Root font-size ({{ rootFs() }}px)
-        </label>
+        <label class="label"> Root font-size ({{ rootFs() }}px) </label>
 
-        <input
-          type="range"
-          min="12"
-          max="20"
+        <ds-slider
+          [min]="12"
+          [max]="20"
           [value]="rootFs()"
-          (input)="setFs($any($event.target).value)"
+          (valueChange)="setFs($any($event))"
+          ariaLabel="Root font size"
         />
       </div>
 
       <div class="row">
-        <button
-          type="button"
-          class="reset"
-          (click)="reset()"
+        <ds-button
+          variant="outline"
+          (pressed)="reset()"
         >
           Reset
-        </button>
+        </ds-button>
       </div>
     </div>
   }
