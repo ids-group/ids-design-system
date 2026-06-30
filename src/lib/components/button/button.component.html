@@ -1,7 +1,10 @@
 <button
+  #btn
   [class]="classes()"
   [type]="type()"
   [attr.aria-label]="ariaLabel()"
+  [attr.aria-haspopup]="ariaHasPopup()"
+  [attr.aria-expanded]="ariaExpanded()"
   [attr.aria-busy]="loading() ? 'true' : null"
   [disabled]="disabled() || loading()"
   (click)="onClick($event)"
