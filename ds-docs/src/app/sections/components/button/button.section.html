@@ -6,68 +6,108 @@
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
-    Text-label actions across variants, sizes and states. Plus leading icon ·
-    button-group · split · toggle. For icon-only actions see the Icon button
-    component.
+    Two axes: <code class="t-mono-inline">color</code> (brand/status hue family)
+    × <code class="t-mono-inline">fill</code> (solid · tonal · ghost · outline).
+    Loudness is the fill (solid &gt; tonal &gt; ghost/outline); colour is
+    orthogonal. Plus sizes, states, leading icon, subtext, full-width and
+    toggle. For icon-only actions see the Icon button component; for a
+    link-styled action use the global
+    <code class="t-mono-inline">
+      .link
+    </code> class on a button.
   </span>
 
-  <!-- ============================================================ Variants × sizes -->
+  <!-- ============================================================ Color × fill -->
   <h3 class="block-title t-h4">
-    Variants × sizes
-  </h3>
-
-  <div class="matrix">
-    <div></div>
-
-    <div class="t-overline">
-      SM · 32
-    </div>
-
-    <div class="t-overline">
-      MD · 40 · default
-    </div>
-
-    <div class="t-overline">
-      LG · 48
-    </div>
-
-    @for (variant of variants; track variant.key) {
-      <div class="t-overline matrix__row-label">
-        {{ variant.label }}
-      </div>
-
-      <ds-button
-        size="sm"
-        [variant]="variant.key"
-      >
-        {{ variant.label }}
-      </ds-button>
-
-      <ds-button
-        size="md"
-        [variant]="variant.key"
-      >
-        {{ variant.label }}
-      </ds-button>
-
-      <ds-button
-        size="lg"
-        [variant]="variant.key"
-      >
-        {{ variant.label }}
-      </ds-button>
-    }
-  </div>
-
-  <!-- ============================================================ Variants × states -->
-  <h3 class="block-title t-h4">
-    Variants × states
+    Color × fill
   </h3>
 
   <p class="block-desc t-s">
-    Every variant (rows) in every state (columns). Hover, focus and active are
-    pinned for display — the pins read the component's own resolvers, so no
-    values are duplicated here.
+    Every legal <code class="t-mono-inline">color</code> ×
+    <code class="t-mono-inline">
+      fill
+    </code> combination. Defaults are
+    <code class="t-mono-inline">
+      color="primary" fill="solid"
+    </code>. Cells
+    marked “—” are unsupported (e.g. grey solid, quiet success/warning) and emit
+    a dev-mode warning if used.
+  </p>
+
+  <div class="matrix matrix--combos">
+    <div></div>
+
+    @for (fill of fills; track fill) {
+      <div class="t-overline">
+        {{ fill }}
+      </div>
+    }
+
+    @for (combo of combos; track combo.color) {
+      <div class="t-overline matrix__row-label">
+        {{ combo.label }}
+      </div>
+
+      @for (fill of fills; track fill) {
+        <div class="matrix__cell">
+          @if (combo.fills.includes(fill)) {
+            <ds-button
+              [color]="combo.color"
+              [fill]="fill"
+            >
+              {{ combo.label }}
+            </ds-button>
+          } @else {
+            <span class="matrix__na">
+              —
+            </span>
+          }
+        </div>
+      }
+    }
+  </div>
+
+  <!-- ============================================================ Sizes -->
+  <h3 class="block-title t-h4">
+    Sizes
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      sm
+    </code> ·
+    <code class="t-mono-inline">
+      md
+    </code> (default) ·
+    <code class="t-mono-inline">
+      lg
+    </code> — 32 / 40 / 48, aligned with the field
+    controls.
+  </p>
+
+  <div class="row">
+    <ds-button size="sm">
+      Small
+    </ds-button>
+
+    <ds-button size="md">
+      Medium
+    </ds-button>
+
+    <ds-button size="lg">
+      Large
+    </ds-button>
+  </div>
+
+  <!-- ============================================================ States -->
+  <h3 class="block-title t-h4">
+    States
+  </h3>
+
+  <p class="block-desc t-s">
+    The primary colour in every fill (rows) across every state (columns). Hover,
+    focus and active are pinned for display — the pins read the component's own
+    resolvers, so no values are duplicated here.
   </p>
 
   <div class="matrix-scroll">
@@ -80,50 +120,50 @@
         </div>
       }
 
-      @for (variant of variants; track variant.key) {
+      @for (spec of stateFills; track spec.fill) {
         <div class="t-overline matrix__row-label">
-          {{ variant.label }}
+          {{ spec.label }}
         </div>
 
         <div class="matrix__cell">
-          <ds-button [variant]="variant.key">
-            {{ variant.label }}
+          <ds-button [fill]="spec.fill">
+            {{ spec.label }}
           </ds-button>
         </div>
 
         <div class="matrix__cell pin-hover">
-          <ds-button [variant]="variant.key">
-            {{ variant.label }}
+          <ds-button [fill]="spec.fill">
+            {{ spec.label }}
           </ds-button>
         </div>
 
         <div class="matrix__cell pin-focus">
-          <ds-button [variant]="variant.key">
-            {{ variant.label }}
+          <ds-button [fill]="spec.fill">
+            {{ spec.label }}
           </ds-button>
         </div>
 
         <div class="matrix__cell pin-active">
-          <ds-button [variant]="variant.key">
-            {{ variant.label }}
+          <ds-button [fill]="spec.fill">
+            {{ spec.label }}
           </ds-button>
         </div>
 
         <div class="matrix__cell">
           <ds-button
-            [variant]="variant.key"
+            [fill]="spec.fill"
             [disabled]="true"
           >
-            {{ variant.label }}
+            {{ spec.label }}
           </ds-button>
         </div>
 
         <div class="matrix__cell">
           <ds-button
-            [variant]="variant.key"
+            [fill]="spec.fill"
             [loading]="true"
           >
-            {{ variant.label }}
+            {{ spec.label }}
           </ds-button>
         </div>
       }
@@ -149,14 +189,15 @@
     </ds-button>
 
     <ds-button
-      variant="secondary"
+      fill="tonal"
       trailingIcon="chevronDown"
     >
       Filters
     </ds-button>
 
     <ds-button
-      variant="outline"
+      color="neutral"
+      fill="outline"
       icon="download"
     >
       Export CSV
@@ -179,12 +220,13 @@
   </p>
 
   <div class="row">
-    <ds-button variant="primary">
+    <ds-button>
       Mark completed<span dsButtonSubtext>Locked until truck scan</span>
     </ds-button>
 
     <ds-button
-      variant="outline"
+      color="neutral"
+      fill="outline"
       size="lg"
     >
       Continue<span dsButtonSubtext>3 items remaining</span>
@@ -212,17 +254,31 @@
     </ds-button>
 
     <ds-button
-      variant="outline"
+      color="neutral"
+      fill="outline"
       fullWidth
     >
       Cancel
     </ds-button>
   </div>
 
-  <!-- ============================================================ Group · split · toggle · text -->
+  <!-- ============================================================ Toggle · link -->
   <h3 class="block-title t-h4">
-    Toggle · text
+    Toggle · link
   </h3>
+
+  <p class="block-desc t-s">
+    A link-styled action is the global
+    <code class="t-mono-inline">
+      .link
+    </code> class on a
+    <code class="t-mono-inline">
+      &lt;button&gt;
+    </code> (replaces the old
+    <code class="t-mono-inline">
+      variant="text"
+    </code>).
+  </p>
 
   <div class="row">
     <ds-toggle-button icon="filter">
@@ -236,8 +292,11 @@
       Confirmed
     </ds-toggle-button>
 
-    <ds-button variant="text">
+    <button
+      class="link"
+      type="button"
+    >
       View activity log
-    </ds-button>
+    </button>
   </div>
 </docs-section>

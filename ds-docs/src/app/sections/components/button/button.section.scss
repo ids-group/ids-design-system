@@ -9,7 +9,7 @@
       border-radius: var(--radius-lg);
     }
 
-    /* ---------- Variants × sizes matrix ---------- */
+    /* ---------- color × fill matrix ---------- */
     .matrix {
       display: grid;
       grid-template-columns: 120px repeat(3, 1fr);
@@ -17,7 +17,9 @@
       align-items: center;
       margin-top: var(--space-3);
     }
+    .matrix--combos { grid-template-columns: 120px repeat(4, 1fr); }
     .matrix__row-label { color: var(--text-tertiary); }
+    .matrix__na { color: var(--text-tertiary); }
 
     /* ---------- Variants × states matrix ---------- */
     .matrix-scroll { overflow-x: auto; margin-top: var(--space-3); }
@@ -39,7 +41,3 @@
     :host ::ng-deep .pin-hover .button  { background-color: var(--_button-bg-color-hover); }
     :host ::ng-deep .pin-active .button { background-color: var(--_button-bg-color-active); box-shadow: var(--_button-pressed-shadow); }
     :host ::ng-deep .pin-focus .button  { outline: none; box-shadow: var(--_button-focus-shadow); z-index: var(--btn-focus-z); }
-
-    /* text variant: hover recolors instead of filling; focus keeps no fill */
-    :host ::ng-deep .pin-hover .button.text { background: transparent; color: var(--primary-pressed); }
-    :host ::ng-deep .pin-focus .button.text { background: transparent; }
