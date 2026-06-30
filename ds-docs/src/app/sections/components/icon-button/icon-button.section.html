@@ -18,73 +18,61 @@
     </code> flag.
   </span>
 
-  <!-- ============================================================ Variants -->
+  <!-- ============================================================ Color × variant -->
   <h3 class="block-title t-h4">
-    Variants
+    Color × variant
   </h3>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
-      standard
-    </code> (chromeless, default) ·
+      variant
+    </code> = fill taxonomy (standard
+    chromeless · filled · tonal · outlined);
     <code class="t-mono-inline">
-      filled
-    </code> (high emphasis) ·
+      color
+    </code>
+    = the shared brand/status hue family (same axis as
     <code class="t-mono-inline">
-      tonal
-    </code> (medium) ·
-    <code class="t-mono-inline">
-      outlined
-    </code> (bordered).
+      ds-button
+    </code>). All combinations are valid.
   </p>
 
-  <div class="row">
-    <div class="cell">
-      <ds-icon-button
-        icon="edit"
-        ariaLabel="Edit"
-        variant="standard"
-      />
+  <div class="matrix-scroll">
+    <div class="matrix matrix--combos">
+      <div class="t-overline matrix__corner">
+        color \ variant
+      </div>
 
-      <code class="t-mono-inline">
-        standard
-      </code>
-    </div>
+      @for (variant of variants; track variant) {
+        <div class="t-overline">
+          {{ variant }}
+        </div>
+      }
 
-    <div class="cell">
-      <ds-icon-button
-        icon="edit"
-        ariaLabel="Edit"
-        variant="filled"
-      />
+      @for (c of colors; track c.color) {
+        <div class="matrix__row-label">
+          <span
+            class="matrix__dot"
+            [style.background]="c.dot"
+          >
+          </span>
 
-      <code class="t-mono-inline">
-        filled
-      </code>
-    </div>
+          <span class="matrix__name">
+            {{ c.label }}
+          </span>
+        </div>
 
-    <div class="cell">
-      <ds-icon-button
-        icon="edit"
-        ariaLabel="Edit"
-        variant="tonal"
-      />
-
-      <code class="t-mono-inline">
-        tonal
-      </code>
-    </div>
-
-    <div class="cell">
-      <ds-icon-button
-        icon="edit"
-        ariaLabel="Edit"
-        variant="outlined"
-      />
-
-      <code class="t-mono-inline">
-        outlined
-      </code>
+        @for (variant of variants; track variant) {
+          <div class="matrix__cell">
+            <ds-icon-button
+              icon="edit"
+              [ariaLabel]="c.label + ' ' + variant"
+              [variant]="variant"
+              [color]="c.color"
+            />
+          </div>
+        }
+      }
     </div>
   </div>
 
