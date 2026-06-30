@@ -3,7 +3,8 @@
   [class.open]="open()"
 >
   <ds-button
-    variant="text"
+    color="neutral"
+    fill="ghost"
     (pressed)="toggle()"
   >
     {{ open() ? '✕' : '⚙' }} Tweaks
@@ -141,7 +142,8 @@
 
       <div class="row">
         <ds-button
-          variant="outline"
+          color="neutral"
+          fill="outline"
           (pressed)="reset()"
         >
           Reset
