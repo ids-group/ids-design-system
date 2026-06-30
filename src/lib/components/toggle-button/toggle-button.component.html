@@ -1,0 +1,16 @@
+<button
+  type="button"
+  class="button-toggle"
+  [attr.aria-pressed]="pressed()"
+  [disabled]="disabled()"
+  (click)="toggle()"
+>
+  @if (icon(); as name) {
+    <ds-icon
+      [name]="name"
+      [size]="14"
+    />
+  }
+
+  <ng-content></ng-content>
+</button>

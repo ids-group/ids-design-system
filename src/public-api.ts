@@ -6,6 +6,7 @@ export * from './lib/theme/provide-ds-theme';
 export * from './lib/overlay/ds-overlay-close-ref';
 export * from './lib/icons';
 export * from './lib/components/button';
+export * from './lib/components/toggle-button';
 export * from './lib/components/icon-button';
 export * from './lib/components/badge';
 export * from './lib/components/status-dot';
