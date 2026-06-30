@@ -48,7 +48,7 @@
             </div>
 
             <div class="meta">
-              {{ formatSize(file.size) }} · {{ file.state }}
+              {{ fileMeta(file) }}
             </div>
 
             @if (file.state === 'uploading') {

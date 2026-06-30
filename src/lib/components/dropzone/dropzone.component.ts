@@ -89,6 +89,18 @@ export class DropzoneComponent {
     this.fileRemoved.emit(file);
   }
 
+  protected fileMeta(file: DropzoneFile): string {
+    const size = this.formatSize(file.size);
+    if (file.message) {
+      return `${size} · ${file.message}`;
+    }
+    if (file.state === 'queued') {
+      return size;
+    }
+
+    return `${size} · ${file.state}`;
+  }
+
   protected formatSize(bytes: number): string {
     if (bytes < 1024) {
       return `${bytes} B`;
