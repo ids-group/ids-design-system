@@ -13,6 +13,15 @@ html, body {
   background: var(--surface-canvas);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizelegibility;
+
+  /* Suppress the native mobile tap-highlight. Android Chrome paints a flat
+     rectangular overlay on tap whose geometry is browser-controlled (ignores
+     border-radius, NOT clipped by overflow), so on pill/rounded controls it
+     pokes square corners out past the shape. We can only set its colour, not
+     reshape it — so we remove it and let each control's own rounded
+     :active/:focus-visible state provide press feedback. Inherited → covers all
+     descendants. */
+  -webkit-tap-highlight-color: transparent;
 }
 button, input, select, textarea { font-family: inherit; }
 
