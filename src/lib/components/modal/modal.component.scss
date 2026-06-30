@@ -43,8 +43,8 @@
     width: var(--space-10);
     height: var(--space-10);
     border-radius: var(--radius-pill);
-    background-color: var(--primary-subtitle);
-    color: var(--primary);
+    background-color: var(--accent-subtitle);
+    color: var(--accent);
 
     &.danger {
       background-color: var(--error-subtitle);

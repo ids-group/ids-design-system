@@ -30,8 +30,8 @@
   &.open,
   &:focus-visible {
     outline: none;
-    border-color: var(--primary);
-    box-shadow: var(--focus-field);
+    border-color: var(--accent);
+    box-shadow: var(--accent-focus-field);
   }
 
   &.invalid {
@@ -175,8 +175,8 @@
 
   &.checked,
   &.indeterminate {
-    background-color: var(--primary);
-    border-color: var(--primary);
+    background-color: var(--accent);
+    border-color: var(--accent);
   }
 }
 

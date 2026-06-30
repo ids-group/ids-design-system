@@ -42,7 +42,7 @@
 
   &:focus {
     outline: none;
-    border-color: var(--primary);
-    box-shadow: var(--focus-field);
+    border-color: var(--accent);
+    box-shadow: var(--accent-focus-field);
   }
 }
