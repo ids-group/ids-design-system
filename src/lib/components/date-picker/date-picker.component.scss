@@ -263,72 +263,7 @@
     letter-spacing: var(--letter-spacing-wider);
   }
 
-  .day {
-    width: var(--space-8);
-    height: var(--space-8);
-    /* Cap to the (possibly narrower) grid track so the cell never overflows the panel. */
-    max-width: 100%;
-    min-width: 0;
-    display: grid;
-    place-items: center;
-    font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    border: 0;
-    background: transparent;
-    color: var(--text-primary);
-    transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
-
-    &:hover {
-      background-color: var(--_datepicker-day-hover-bg-color);
-    }
-
-    &.muted {
-      color: var(--text-muted);
-    }
-
-    &.today {
-      font-weight: var(--font-weight-bold);
-      color: var(--_datepicker-day-today-label-color);
-    }
-
-    &.selected {
-      background-color: var(--_datepicker-day-selected-bg-color);
-      color: var(--_datepicker-day-selected-label-color);
-    }
-
-    &.selected:hover {
-      background-color: var(--_datepicker-day-selected-bg-color-hover);
-    }
-
-    &.in-range {
-      background-color: var(--_datepicker-day-range-bg-color);
-      color: var(--_datepicker-day-range-label-color);
-      border-radius: var(--radius-flat);
-    }
-
-    &.range-start {
-      border-top-left-radius: var(--radius-sm);
-      border-bottom-left-radius: var(--radius-sm);
-      background-color: var(--_datepicker-day-selected-bg-color);
-      color: var(--_datepicker-day-selected-label-color);
-    }
-
-    &.range-end {
-      border-top-right-radius: var(--radius-sm);
-      border-bottom-right-radius: var(--radius-sm);
-      background-color: var(--_datepicker-day-selected-bg-color);
-      color: var(--_datepicker-day-selected-label-color);
-    }
-
-    &.range-start:hover,
-    &.range-end:hover {
-      background-color: var(--_datepicker-day-selected-bg-color-hover);
-    }
-
-    &.disabled {
-      color: var(--_datepicker-day-disabled-label-color);
-      cursor: not-allowed;
-    }
-  }
+  /* Day-cell styles now live in calendar-day.component.scss (the grid renders
+     <ds-calendar-day>). The --_datepicker-day-* resolvers above stay — the
+     month/year picker cells and nav buttons read them. */
 }
