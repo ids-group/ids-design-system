@@ -3,7 +3,7 @@
   // --space-1-5 below the trigger, matching input/textarea/combobox/select.
   display: flex;
   flex-direction: column;
-  gap: var(--space-1-5);
+  gap: var(--field-label-gap);
 }
 
 /* Unique class — a bare `.field` collides with consumer/docs form styles that

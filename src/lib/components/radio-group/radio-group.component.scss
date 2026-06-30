@@ -1,4 +1,4 @@
-:host { display: flex; flex-direction: column; gap: var(--space-1-5); }
+:host { display: flex; flex-direction: column; gap: var(--field-label-gap); }
 
 .group-label {
   font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);

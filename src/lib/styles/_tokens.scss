@@ -380,7 +380,7 @@
   --popover-maxh: 360px;
 
   /* Field */
-  --field-gap-label:   var(--space-1-5);   /* label↔control */
+  --field-label-gap:   var(--space-1-5);   /* field vertical rhythm: label↔control & control↔hint */
   --field-gap-req:     var(--space-1);     /* label↔asterisk */
   --field-h-sm:        var(--hit-min);
   --field-h-md:        var(--hit-cozy);

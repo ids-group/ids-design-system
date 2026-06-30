@@ -35,7 +35,7 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1-5);
+  gap: var(--field-label-gap);
   width: 100%;
 
   .label {
