@@ -31,10 +31,14 @@ export class CheckboxComponent extends DsBooleanControlValueAccessor {
   readonly inputId = input<string | null>(null);
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly hint = input<string>('');
+  /** Inline label rendered beside the box and wired via for/id. Omit to
+   *  bring your own <label>. */
+  readonly label = input<string>('');
 
   protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
 
   protected readonly uid = nextControlId('ds-checkbox');
+  protected readonly controlId = computed(() => this.inputId() ?? this.uid);
   protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
   protected readonly messageState = computed<FieldMessageState>(() =>
     this.invalid() ? 'error' : 'default',

@@ -1,5 +1,20 @@
 :host { --_radio-focus-shadow: var(--ds-radio-focus-shadow, var(--ds-control-focus-shadow)); display: inline-flex; align-items: center; }
 
+.control-line {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+
+  .control-text {
+    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+    color: var(--text-primary);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  &.is-disabled .control-text { color: var(--text-disabled); cursor: not-allowed; }
+}
+
 .radio {
   appearance: none;
   width: var(--check-size);

@@ -8,6 +8,7 @@ import {
   model,
   viewChild,
 } from '@angular/core';
+import { nextControlId } from '../field-ids';
 import { RADIO_GROUP } from '../radio-group/radio-group.token';
 
 @Component({
@@ -25,6 +26,12 @@ export class RadioComponent {
   readonly name = input<string>('');
   readonly value = input<unknown>('');
   readonly inputId = input<string | null>(null);
+  /** Inline label rendered beside the dot and wired via for/id. Omit to bring
+   *  your own <label>. */
+  readonly label = input<string>('');
+
+  protected readonly uid = nextControlId('ds-radio');
+  protected readonly controlId = computed(() => this.inputId() ?? this.uid);
 
   /** Injected via token to avoid circular import with RadioGroupComponent. */
   protected readonly group = inject(RADIO_GROUP, { optional: true });

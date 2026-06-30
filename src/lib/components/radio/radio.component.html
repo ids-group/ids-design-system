@@ -1,12 +1,17 @@
-<input
-  #inputRef
-  type="radio"
-  class="radio"
-  [checked]="isChecked()"
-  [disabled]="effectiveDisabled()"
-  [attr.name]="effectiveName() || null"
-  [attr.value]="value() ?? null"
-  [attr.id]="inputId()"
-  [attr.tabindex]="tabIndexAttr"
-  (change)="onSelect()"
-/>
+<span class="control-line" [class.is-disabled]="effectiveDisabled()">
+  <input
+    #inputRef
+    type="radio"
+    class="radio"
+    [checked]="isChecked()"
+    [disabled]="effectiveDisabled()"
+    [attr.name]="effectiveName() || null"
+    [attr.value]="value() ?? null"
+    [attr.id]="controlId()"
+    [attr.tabindex]="tabIndexAttr"
+    (change)="onSelect()"
+  />
+  @if (label()) {
+    <label class="control-text" [attr.for]="controlId()">{{ label() }}</label>
+  }
+</span>

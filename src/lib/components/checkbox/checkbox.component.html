@@ -1,16 +1,21 @@
 <div class="checkbox-field">
-  <input
-    type="checkbox"
-    class="check"
-    [checked]="checked()"
-    [indeterminate]="indeterminate()"
-    [disabled]="isDisabled()"
-    [attr.name]="name()"
-    [attr.id]="inputId()"
-    [attr.aria-invalid]="invalid() ? 'true' : null"
-    [attr.aria-describedby]="hintId()"
-    (change)="onCheckedChange($event)"
-    (blur)="markTouched()"
-  />
+  <span class="control-line" [class.is-disabled]="isDisabled()">
+    <input
+      type="checkbox"
+      class="check"
+      [checked]="checked()"
+      [indeterminate]="indeterminate()"
+      [disabled]="isDisabled()"
+      [attr.name]="name()"
+      [attr.id]="controlId()"
+      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-describedby]="hintId()"
+      (change)="onCheckedChange($event)"
+      (blur)="markTouched()"
+    />
+    @if (label()) {
+      <label class="control-text" [attr.for]="controlId()">{{ label() }}</label>
+    }
+  </span>
   <ds-field-message [text]="hint()" [state]="messageState()" [messageId]="hintId()" />
 </div>
