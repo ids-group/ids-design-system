@@ -1,9 +1,11 @@
 import {
   Component,
   ElementRef,
+  Injector,
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
+  afterNextRender,
   booleanAttribute,
   computed,
   forwardRef,
@@ -61,6 +63,7 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
 
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
+  private readonly injector = inject(Injector);
 
   readonly mode = input<DatePickerMode>('single');
   readonly size = input<DatePickerSize>('md');
@@ -74,6 +77,9 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
+  /** Bounds for the year dropdown in the calendar header. */
+  readonly minYear = input<number>(new Date().getFullYear() - 100);
+  readonly maxYear = input<number>(new Date().getFullYear() + 10);
 
   protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
   protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
@@ -231,11 +237,63 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
     return this.placeholder();
   });
 
-  protected readonly monthLabel = computed(() => {
-    const m = this.viewMonth();
+  // ---- Month / year dropdowns in the calendar header ----
+  protected readonly monthMenuOpen = signal(false);
+  protected readonly yearMenuOpen = signal(false);
+  protected readonly monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+  ];
+  protected readonly viewMonthIndex = computed(() => this.viewMonth().getMonth());
+  protected readonly viewYear = computed(() => this.viewMonth().getFullYear());
+  protected readonly years = computed<number[]>(() => {
+    const list: number[] = [];
+    for (let year = this.minYear(); year <= this.maxYear(); year++) {
+      list.push(year);
+    }
 
-    return m.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+    return list;
   });
+
+  protected toggleMonthMenu(event: Event): void {
+    event.stopPropagation();
+    this.yearMenuOpen.set(false);
+    this.monthMenuOpen.update((open) => !open);
+  }
+
+  protected toggleYearMenu(event: Event): void {
+    event.stopPropagation();
+    this.monthMenuOpen.set(false);
+    this.yearMenuOpen.update((open) => !open);
+    if (this.yearMenuOpen()) {
+      afterNextRender(() => this.scrollSelectedYearIntoView(), {
+        injector: this.injector,
+      });
+    }
+  }
+
+  protected closeMenus(): void {
+    this.monthMenuOpen.set(false);
+    this.yearMenuOpen.set(false);
+  }
+
+  protected selectMonth(index: number, event: Event): void {
+    event.stopPropagation();
+    this.viewMonth.set(new Date(this.viewYear(), index, 1));
+    this.monthMenuOpen.set(false);
+  }
+
+  protected selectYear(year: number, event: Event): void {
+    event.stopPropagation();
+    this.viewMonth.set(new Date(year, this.viewMonthIndex(), 1));
+    this.yearMenuOpen.set(false);
+  }
+
+  private scrollSelectedYearIntoView(): void {
+    this.overlayRef?.overlayElement
+      .querySelector('.year-option.selected')
+      ?.scrollIntoView({ block: 'center' });
+  }
 
   protected readonly daysGrid = computed<DayCell[]>(() => {
     const view = this.viewMonth();
@@ -366,6 +424,7 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
     disposeWithLeave(this.overlayRef);
     this.overlayRef = null;
     this.isOpen.set(false);
+    this.closeMenus();
     this.markTouched();
   }
 

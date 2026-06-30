@@ -112,8 +112,81 @@
     margin-bottom: var(--space-2);
   }
 
-  .title {
+  .period {
+    display: flex;
+    gap: var(--space-1);
+  }
+
+  .period-item {
+    position: relative;
+  }
+
+  .period-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    border: 0;
+    background: transparent;
+    padding: var(--space-1) var(--space-1-5);
+    border-radius: var(--radius-sm);
     font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
+    color: var(--text-primary);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--_datepicker-day-hover-bg-color);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--_date-picker-focus-shadow);
+    }
+  }
+
+  .menu {
+    position: absolute;
+    top: calc(100% + var(--space-1));
+    left: 0;
+    z-index: 1;
+    margin: 0;
+    padding: var(--space-1);
+    list-style: none;
+    min-width: 100%;
+    background-color: var(--_datepicker-bg-color);
+    border: var(--border-width-default) solid var(--_datepicker-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--_datepicker-shadow);
+  }
+
+  .year-menu {
+    max-height: var(--datepicker-menu-max-h, 12rem);
+    overflow-y: auto;
+  }
+
+  .menu-option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    border: 0;
+    background: transparent;
+    padding: var(--space-1-5) var(--space-2);
+    border-radius: var(--radius-sm);
+    font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
+    color: var(--text-primary);
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--_datepicker-day-hover-bg-color);
+    }
+
+    &.selected {
+      background-color: var(--_datepicker-day-selected-bg-color);
+      color: var(--_datepicker-day-selected-label-color);
+      /* Weight is a --primary-independent cue so the current month/year still
+         reads where the portaled overlay sits outside the theme-token scope. */
+      font-weight: var(--font-weight-bold);
+    }
   }
 
   .nav {

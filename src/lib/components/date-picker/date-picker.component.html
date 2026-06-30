@@ -56,10 +56,93 @@
 </div>
 
 <ng-template #panel>
-  <div class="calendar">
+  <div
+    class="calendar"
+    (click)="closeMenus()"
+  >
     <div class="head">
-      <span class="title">
-        {{ monthLabel() }}
+      <span class="period">
+        <span class="period-item">
+          <button
+            type="button"
+            class="period-trigger"
+            aria-haspopup="listbox"
+            [attr.aria-expanded]="monthMenuOpen()"
+            (click)="toggleMonthMenu($event)"
+          >
+            {{ monthNames[viewMonthIndex()] }}
+            <ds-icon
+              name="chevronDown"
+              [size]="12"
+            />
+          </button>
+
+          @if (monthMenuOpen()) {
+            <ul
+              class="menu month-menu"
+              role="listbox"
+              (click)="$event.stopPropagation()"
+              (keydown.escape)="closeMenus()"
+            >
+              @for (name of monthNames; track $index) {
+                <li
+                  role="option"
+                  [attr.aria-selected]="$index === viewMonthIndex()"
+                >
+                  <button
+                    type="button"
+                    class="menu-option"
+                    [class.selected]="$index === viewMonthIndex()"
+                    (click)="selectMonth($index, $event)"
+                  >
+                    {{ name }}
+                  </button>
+                </li>
+              }
+            </ul>
+          }
+        </span>
+
+        <span class="period-item">
+          <button
+            type="button"
+            class="period-trigger"
+            aria-haspopup="listbox"
+            [attr.aria-expanded]="yearMenuOpen()"
+            (click)="toggleYearMenu($event)"
+          >
+            {{ viewYear() }}
+            <ds-icon
+              name="chevronDown"
+              [size]="12"
+            />
+          </button>
+
+          @if (yearMenuOpen()) {
+            <ul
+              class="menu year-menu"
+              role="listbox"
+              (click)="$event.stopPropagation()"
+              (keydown.escape)="closeMenus()"
+            >
+              @for (year of years(); track year) {
+                <li
+                  role="option"
+                  [attr.aria-selected]="year === viewYear()"
+                >
+                  <button
+                    type="button"
+                    class="menu-option year-option"
+                    [class.selected]="year === viewYear()"
+                    (click)="selectYear(year, $event)"
+                  >
+                    {{ year }}
+                  </button>
+                </li>
+              }
+            </ul>
+          }
+        </span>
       </span>
 
       <span class="nav">
