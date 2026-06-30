@@ -37,44 +37,23 @@
     </code>). All combinations are valid.
   </p>
 
-  <div class="matrix-scroll">
-    <div class="matrix matrix--combos">
-      <div class="t-overline matrix__corner">
-        color \ variant
-      </div>
-
-      @for (variant of variants; track variant) {
-        <div class="t-overline">
-          {{ variant }}
-        </div>
-      }
-
-      @for (c of colors; track c.color) {
-        <div class="matrix__row-label">
-          <span
-            class="matrix__dot"
-            [style.background]="c.dot"
-          >
-          </span>
-
-          <span class="matrix__name">
-            {{ c.label }}
-          </span>
-        </div>
-
-        @for (variant of variants; track variant) {
-          <div class="matrix__cell">
-            <ds-icon-button
-              icon="edit"
-              [ariaLabel]="c.label + ' ' + variant"
-              [variant]="variant"
-              [color]="c.color"
-            />
-          </div>
-        }
-      }
-    </div>
-  </div>
+  <docs-matrix
+    cornerLabel="color \ variant"
+    [cols]="variants"
+    [rows]="colors"
+  >
+    <ng-template
+      let-variant
+      let-row="row"
+    >
+      <ds-icon-button
+        icon="edit"
+        [ariaLabel]="row.label + ' ' + variant"
+        [variant]="$any(variant)"
+        [color]="$any(row.key)"
+      />
+    </ng-template>
+  </docs-matrix>
 
   <!-- ============================================================ Sizes -->
   <h3 class="block-title t-h4">

@@ -32,54 +32,23 @@
     a dev-mode warning if used.
   </p>
 
-  <div class="matrix-scroll">
-    <div class="matrix matrix--combos">
-      <div class="t-overline matrix__corner">
-        color \ variant
-      </div>
-
-      @for (variant of variants; track variant) {
-        <div class="t-overline">
-          {{ variant }}
-        </div>
-      }
-
-      @for (combo of combos; track combo.color) {
-        <div class="matrix__row-label">
-          <span
-            class="matrix__dot"
-            [style.background]="combo.dot"
-          >
-          </span>
-
-          <span class="matrix__name">
-            {{ combo.label }}
-          </span>
-
-          <span class="matrix__note t-mono-inline">
-            {{ combo.note }}
-          </span>
-        </div>
-
-        @for (variant of variants; track variant) {
-          <div class="matrix__cell">
-            @if (combo.variants.includes(variant)) {
-              <ds-button
-                [color]="combo.color"
-                [variant]="variant"
-              >
-                {{ combo.label }}
-              </ds-button>
-            } @else {
-              <span class="matrix__na">
-                —
-              </span>
-            }
-          </div>
-        }
-      }
-    </div>
-  </div>
+  <docs-matrix
+    cornerLabel="color \ variant"
+    [cols]="variants"
+    [rows]="combos"
+  >
+    <ng-template
+      let-variant
+      let-row="row"
+    >
+      <ds-button
+        [color]="$any(row.key)"
+        [variant]="variant"
+      >
+        {{ row.label }}
+      </ds-button>
+    </ng-template>
+  </docs-matrix>
 
   <!-- ============================================================ Sizes -->
   <h3 class="block-title t-h4">
@@ -95,8 +64,8 @@
     </code> (default) ·
     <code class="t-mono-inline">
       lg
-    </code> — 32 / 40 / 48, aligned with the field
-    controls.
+    </code> — 32 / 40 / 48, aligned with the
+    field controls.
   </p>
 
   <div class="row">

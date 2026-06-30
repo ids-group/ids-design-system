@@ -1,26 +1,14 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import {
-  ButtonComponent,
-  ToggleButtonComponent,
-  type ButtonColor,
-  type ButtonVariant,
-} from 'ds';
+import { ButtonComponent, ToggleButtonComponent, type ButtonVariant } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+import {
+  DocsMatrixComponent,
+  type DocsMatrixRow,
+} from '../../../shared/docs-matrix.component';
 import {
   DocsTruncationComponent,
   TruncationRule,
 } from '../../../shared/docs-truncation.component';
-
-interface ComboRow {
-  readonly label: string;
-  readonly color: ButtonColor;
-  /** brand / neutral / status — shown next to the row label. */
-  readonly note: string;
-  /** CSS colour for the row swatch dot. */
-  readonly dot: string;
-  /** The variants legal for this colour (others render "—"). */
-  readonly variants: readonly ButtonVariant[];
-}
 
 interface VariantSpec {
   readonly label: string;
@@ -33,6 +21,7 @@ interface VariantSpec {
   imports: [
     ButtonComponent,
     DocsSectionComponent,
+    DocsMatrixComponent,
     DocsTruncationComponent,
     ToggleButtonComponent,
   ],
@@ -49,57 +38,57 @@ export class ButtonSection {
     'outline',
   ];
 
-  /** Rows of the color × variant matrix — each colour lists its legal variants.
-      Cells outside a colour's legal variants render "—" (unsupported). */
-  protected readonly combos: readonly ComboRow[] = [
+  /** Rows of the color × variant matrix (key = the colour). `legal` lists the
+      variants supported for that colour; other cells render "—". */
+  protected readonly combos: readonly DocsMatrixRow[] = [
     {
+      key: 'primary',
       label: 'Primary',
-      color: 'primary',
       note: 'brand',
       dot: 'var(--primary)',
-      variants: ['solid', 'tonal', 'ghost', 'outline'],
+      legal: ['solid', 'tonal', 'ghost', 'outline'],
     },
     {
+      key: 'secondary',
       label: 'Secondary',
-      color: 'secondary',
       note: 'brand',
       dot: 'var(--secondary)',
-      variants: ['solid', 'tonal', 'ghost', 'outline'],
+      legal: ['solid', 'tonal', 'ghost', 'outline'],
     },
     {
+      key: 'tertiary',
       label: 'Tertiary',
-      color: 'tertiary',
       note: 'brand',
       dot: 'var(--tertiary)',
-      variants: ['solid', 'tonal', 'ghost', 'outline'],
+      legal: ['solid', 'tonal', 'ghost', 'outline'],
     },
     {
+      key: 'neutral',
       label: 'Neutral',
-      color: 'neutral',
       note: 'neutral',
       dot: 'var(--text-secondary)',
-      variants: ['tonal', 'ghost', 'outline'],
+      legal: ['tonal', 'ghost', 'outline'],
     },
     {
+      key: 'error',
       label: 'Error',
-      color: 'error',
       note: 'status',
       dot: 'var(--error)',
-      variants: ['solid', 'tonal', 'ghost', 'outline'],
+      legal: ['solid', 'tonal', 'ghost', 'outline'],
     },
     {
+      key: 'success',
       label: 'Success',
-      color: 'success',
       note: 'status',
       dot: 'var(--success)',
-      variants: ['solid', 'tonal'],
+      legal: ['solid', 'tonal'],
     },
     {
+      key: 'warning',
       label: 'Warning',
-      color: 'warning',
       note: 'status',
       dot: 'var(--warning)',
-      variants: ['solid', 'tonal'],
+      legal: ['solid', 'tonal'],
     },
   ];
 

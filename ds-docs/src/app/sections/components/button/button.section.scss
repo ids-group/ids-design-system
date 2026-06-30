@@ -9,37 +9,21 @@
       border-radius: var(--radius-lg);
     }
 
-    /* ---------- color × variant matrix ---------- */
+    /* ---------- states matrix (button-specific; color × variant uses docs-matrix) ---------- */
+    .matrix-scroll { overflow-x: auto; margin-top: var(--space-3); }
     .matrix {
       display: grid;
-      grid-template-columns: 120px repeat(3, 1fr);
       gap: var(--space-4) var(--space-6);
       align-items: center;
-      margin-top: var(--space-3);
     }
-    .matrix--combos {
-      grid-template-columns: 164px repeat(4, minmax(96px, 1fr));
-      padding: var(--space-4);
-      background: var(--surface-secondary);
-      border-radius: var(--radius-lg);
-    }
-    .matrix__corner { color: var(--text-tertiary); align-self: center; }
-    .matrix__row-label { display: flex; align-items: center; gap: var(--space-2); color: var(--text-secondary); }
-    .matrix__dot { width: 12px; height: 12px; border-radius: var(--radius-pill); flex-shrink: 0; }
-    .matrix__name { font-weight: var(--font-weight-semibold); color: var(--text-primary); }
-    .matrix__note { color: var(--text-tertiary); margin-left: auto; }
-    .matrix__na { color: var(--text-tertiary); text-align: center; }
-
-    /* ---------- Variants × states matrix ---------- */
-    .matrix-scroll { overflow-x: auto; margin-top: var(--space-3); }
     .matrix--states {
       grid-template-columns: 92px repeat(6, minmax(84px, 1fr));
-      margin-top: 0;
       padding: var(--space-4);
       background: var(--surface-secondary);
       border-radius: var(--radius-lg);
     }
     .matrix--states .t-overline { text-align: center; }
+    .matrix__row-label { color: var(--text-secondary); }
     .matrix__cell {
       display: flex; align-items: center; justify-content: center;
       min-height: 56px;

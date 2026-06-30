@@ -2,4 +2,6 @@
 export * from './docs-section.component';
 export * from './docs-await.component';
 export * from './docs-truncation.component';
+export * from './docs-matrix.component';
+export * from './docs-specimens.component';
 export * from './docs-stats';
