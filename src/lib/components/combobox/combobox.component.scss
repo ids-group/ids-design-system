@@ -5,7 +5,11 @@
 :host {
   --_combobox-focus-shadow: var(--ds-combobox-focus-shadow, var(--ds-field-focus-shadow));
 
-  display: inline-block;
+  // Flex column + gap so the hint/error (ds-field-message) sits the canonical
+  // --space-1-5 below the trigger, matching input/textarea/select/date-picker.
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1-5);
   width: 100%;
   position: relative;
 }
