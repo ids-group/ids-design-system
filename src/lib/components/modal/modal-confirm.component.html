@@ -38,14 +38,15 @@
 
   <ng-container actions>
     <ds-button
-      variant="outline"
+      color="neutral"
+      fill="outline"
       (pressed)="cancel()"
     >
       {{ options.cancelLabel ?? 'Cancel' }}
     </ds-button>
 
     <ds-button
-      [variant]="confirmVariant"
+      [color]="confirmColor"
       [disabled]="confirmDisabled()"
       (pressed)="confirm()"
     >

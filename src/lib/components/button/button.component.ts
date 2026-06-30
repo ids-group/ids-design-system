@@ -4,13 +4,26 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  effect,
   input,
+  isDevMode,
   output,
   viewChild,
 } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
-import type { ButtonSize, ButtonType, ButtonVariant } from './button.types';
+import type { ButtonColor, ButtonFill, ButtonSize, ButtonType } from './button.types';
+
+// color×fill pairs we don't support (rendered but dev-warned — two inputs can't
+// be narrowed against each other at compile time): grey solid reads as disabled;
+// quiet success/warning fills are too low-contrast.
+const BANNED_COMBOS = new Set([
+  'neutral|solid',
+  'success|ghost',
+  'success|outline',
+  'warning|ghost',
+  'warning|outline',
+]);
 
 @Component({
   selector: 'ds-button',
@@ -22,7 +35,8 @@ import type { ButtonSize, ButtonType, ButtonVariant } from './button.types';
   host: { '[class.full-width]': 'fullWidth()' },
 })
 export class ButtonComponent {
-  readonly variant = input<ButtonVariant>('primary');
+  readonly color = input<ButtonColor>('primary');
+  readonly fill = input<ButtonFill>('solid');
   readonly size = input<ButtonSize>('md');
   readonly type = input<ButtonType>('button');
   readonly disabled = input(false, { transform: booleanAttribute });
@@ -52,16 +66,31 @@ export class ButtonComponent {
   readonly buttonRef = viewChild.required<ElementRef<HTMLButtonElement>>('btn');
 
   protected readonly classes = computed(() => {
-    const variant = this.variant();
+    const color = this.color();
+    const fill = this.fill();
     const parts = [
       'button',
-      variant === 'primary' ? '' : variant,
+      color === 'primary' ? '' : `c-${color}`,
+      fill === 'solid' ? '' : `f-${fill}`,
       this.size(),
       this.loading() ? 'loading' : '',
     ];
 
     return parts.filter(Boolean).join(' ');
   });
+
+  constructor() {
+    if (isDevMode()) {
+      effect(() => {
+        const combo = `${this.color()}|${this.fill()}`;
+        if (BANNED_COMBOS.has(combo)) {
+          console.warn(
+            `[ds-button] color="${this.color()}" fill="${this.fill()}" is not a supported combination — see the button docs for the legal color×fill matrix.`,
+          );
+        }
+      });
+    }
+  }
 
   protected onClick(event: MouseEvent): void {
     if (this.disabled() || this.loading()) {
