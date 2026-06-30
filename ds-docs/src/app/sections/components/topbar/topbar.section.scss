@@ -7,22 +7,10 @@
       overflow: hidden;
     }
 
-    /* ---------- Inline action icon-buttons inside topbar actions slot ---------- */
-    .action {
+    /* ---------- Notification-dot badge wrapping a ds-icon-button ---------- */
+    .action-badge {
       position: relative;
-      width: var(--hit-min);
-      height: var(--hit-min);
-      display: grid;
-      place-items: center;
-      border: 0;
-      background: transparent;
-      border-radius: var(--radius-md);
-      color: var(--icon-default);
-      cursor: pointer;
-      transition: background-color var(--duration-fast) var(--ease-standard);
-
-      &:hover { background: var(--surface-secondary); color: var(--icon-strong); }
-      &:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+      display: inline-flex;
 
       .ping {
         position: absolute;
@@ -33,6 +21,7 @@
         background: var(--error);
         border: var(--border-width-strong) solid var(--surface-default);
         border-radius: var(--radius-pill);
+        pointer-events: none;
       }
     }
 

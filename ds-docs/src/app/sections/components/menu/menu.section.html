@@ -26,16 +26,15 @@
   </p>
 
   <div class="demo">
-    <button
+    <ds-button
       #acctTrigger
-      type="button"
-      class="trigger-btn"
-      aria-haspopup="menu"
-      [attr.aria-expanded]="acct.opened()"
-      (click)="acct.toggle(acctTrigger)"
+      variant="outline"
+      ariaHasPopup="menu"
+      [ariaExpanded]="acct.opened()"
+      (pressed)="acct.toggle(acctTrigger.buttonRef().nativeElement)"
     >
       Account ▾
-    </button>
+    </ds-button>
 
     <ds-popover
       #acct

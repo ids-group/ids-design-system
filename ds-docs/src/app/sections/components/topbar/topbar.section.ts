@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import {
   AvatarComponent,
   BreadcrumbsComponent,
-  IconComponent,
+  IconButtonComponent,
   SearchComponent,
   TopBarComponent,
   type BreadcrumbItem,
@@ -21,7 +21,7 @@ import {
     BreadcrumbsComponent,
     DocsSectionComponent,
     DocsTruncationComponent,
-    IconComponent,
+    IconButtonComponent,
     SearchComponent,
     TopBarComponent,
   ],

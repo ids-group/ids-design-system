@@ -1,11 +1,17 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { MenuComponent, MenuItemComponent, PopoverComponent } from 'ds';
+import {
+  ButtonComponent,
+  MenuComponent,
+  MenuItemComponent,
+  PopoverComponent,
+} from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
   selector: 'section-components-menu',
   standalone: true,
   imports: [
+    ButtonComponent,
     MenuComponent,
     MenuItemComponent,
     PopoverComponent,

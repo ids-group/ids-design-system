@@ -19,17 +19,6 @@
       border: var(--border-width-default) solid var(--border-divider);
       border-radius: var(--radius-lg);
     }
-    .trigger-btn {
-      padding: var(--space-2) var(--space-3);
-      background: var(--surface-default);
-      border: var(--border-width-default) solid var(--border-default);
-      border-radius: var(--radius-md);
-      font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-      color: var(--text-primary);
-      cursor: pointer;
-    }
-    .trigger-btn:hover { background: var(--surface-secondary); }
-
     .demo--row {
       display: flex;
       gap: var(--space-4);
