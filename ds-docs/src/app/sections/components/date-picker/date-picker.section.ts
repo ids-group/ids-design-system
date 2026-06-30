@@ -1,6 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DatePickerComponent } from 'ds';
-import { DocsAwaitComponent } from '../../../shared/docs-await.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,
@@ -12,7 +11,6 @@ import {
   standalone: true,
   imports: [
     DatePickerComponent,
-    DocsAwaitComponent,
     DocsSectionComponent,
     DocsTruncationComponent,
   ],

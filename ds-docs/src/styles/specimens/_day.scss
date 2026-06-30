@@ -1,17 +1,19 @@
-/* .calendar global mirror dropped — date-picker section consumes
-   <ds-date-picker> for live demos. Only the Day states force-state
-   showcase grid uses raw <button class="day …">, so just the `.day`
-   block below is retained. */
+/* Day-state showcase specimen — a raw mirror of the INTERNAL ds-calendar-day
+   cell (which <ds-date-picker> uses in its grid). The component is not part of
+   the public API, so the docs can't render it standalone; this `.day-specimen`
+   markup reproduces its states side-by-side. Class is scoped (NOT `.day`) so it
+   can't leak onto the live component's `.day` buttons. Keep the resolver
+   fallbacks in sync with calendar-day.component.scss. */
 
-.day {
+.day-specimen {
   --_datepicker-day-hover-bg-color:          var(--ds-datepicker-day-hover-bg-color,          var(--surface-secondary));
-  --_datepicker-day-today-label-color:          var(--ds-datepicker-day-today-label-color,          var(--primary));
-  --_datepicker-day-selected-bg-color:       var(--ds-datepicker-day-selected-bg-color,       var(--primary));
-  --_datepicker-day-selected-label-color:       var(--ds-datepicker-day-selected-label-color,       var(--primary-on));
-  --_datepicker-day-range-bg-color:          var(--ds-datepicker-day-range-bg-color,          var(--primary-subtitle));
-  --_datepicker-day-range-label-color:          var(--ds-datepicker-day-range-label-color,          var(--primary-strong));
-  --_datepicker-day-selected-bg-color-hover: var(--ds-datepicker-day-selected-bg-color-hover, var(--primary-selected-hover));
-  --_datepicker-day-disabled-label-color:       var(--ds-datepicker-day-disabled-label-color,       var(--text-disabled));
+  --_datepicker-day-today-label-color:       var(--ds-datepicker-day-today-label-color,       var(--accent));
+  --_datepicker-day-selected-bg-color:       var(--ds-datepicker-day-selected-bg-color,       var(--accent));
+  --_datepicker-day-selected-label-color:    var(--ds-datepicker-day-selected-label-color,    var(--accent-on));
+  --_datepicker-day-range-bg-color:          var(--ds-datepicker-day-range-bg-color,          var(--accent-subtitle));
+  --_datepicker-day-range-label-color:       var(--ds-datepicker-day-range-label-color,       var(--accent-strong));
+  --_datepicker-day-selected-bg-color-hover: var(--ds-datepicker-day-selected-bg-color-hover, var(--accent-hover));
+  --_datepicker-day-disabled-label-color:    var(--ds-datepicker-day-disabled-label-color,    var(--text-disabled));
 
   width: var(--space-8);
   height: var(--space-8);
@@ -48,5 +50,5 @@
     background-color: var(--_datepicker-day-selected-bg-color-hover);
     color: var(--_datepicker-day-selected-label-color);
   }
-  &.is-forced-focus { outline: none; box-shadow: var(--focus-ring); }
+  &.is-forced-focus { outline: none; box-shadow: var(--accent-focus-ring); }
 }

@@ -108,15 +108,14 @@
 
   <!-- ============================================================ Day states showcase -->
   <h3 class="block-title t-h4">
-    Day states <docs-await name="calendar day part" />
+    Day states
   </h3>
 
   <p class="block-desc t-s">
-    Every individual cell state side-by-side. Static specimens — raw
-    <code>
-      .day
-    </code> markup with <code>.is-forced-*</code> hooks pins each
-    transient state for screenshot.
+    Every individual cell state side-by-side. Static specimens mirroring the
+    internal <code>ds-calendar-day</code> cell (which the picker grid renders) —
+    scoped <code>.day-specimen</code> markup with <code>.is-forced-*</code>
+    hooks pin each transient state for screenshot.
   </p>
 
   <div class="states states--cols-4">
@@ -124,7 +123,7 @@
       <div class="state-cell__stage">
         <button
           type="button"
-          class="day"
+          class="day-specimen"
         >
           12
         </button>
@@ -139,7 +138,7 @@
       <div class="state-cell__stage">
         <button
           type="button"
-          class="day is-forced-hover"
+          class="day-specimen is-forced-hover"
         >
           12
         </button>
@@ -154,7 +153,7 @@
       <div class="state-cell__stage">
         <button
           type="button"
-          class="day is-forced-focus"
+          class="day-specimen is-forced-focus"
         >
           12
         </button>
@@ -169,7 +168,7 @@
       <div class="state-cell__stage">
         <button
           type="button"
-          class="day selected"
+          class="day-specimen selected"
         >
           12
         </button>
@@ -184,7 +183,7 @@
       <div class="state-cell__stage">
         <button
           type="button"
-          class="day selected is-forced-hover"
+          class="day-specimen selected is-forced-hover"
         >
           12
         </button>
@@ -199,7 +198,7 @@
       <div class="state-cell__stage">
         <button
           type="button"
-          class="day in-range"
+          class="day-specimen in-range"
         >
           12
         </button>
@@ -214,7 +213,7 @@
       <div class="state-cell__stage">
         <button
           type="button"
-          class="day today"
+          class="day-specimen today"
         >
           17
         </button>
@@ -229,7 +228,7 @@
       <div class="state-cell__stage">
         <button
           type="button"
-          class="day disabled"
+          class="day-specimen disabled"
           disabled
         >
           12
