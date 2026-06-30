@@ -78,28 +78,29 @@
           </button>
 
           @if (monthMenuOpen()) {
-            <ul
-              class="menu month-menu"
-              role="listbox"
+            <div
+              class="picker-menu"
               (click)="$event.stopPropagation()"
               (keydown.escape)="closeMenus()"
             >
-              @for (name of monthNames; track $index) {
-                <li
-                  role="option"
-                  [attr.aria-selected]="$index === viewMonthIndex()"
-                >
+              <div
+                class="picker-grid"
+                role="listbox"
+              >
+                @for (name of monthNames; track $index) {
                   <button
                     type="button"
-                    class="menu-option"
+                    role="option"
+                    class="picker-cell"
                     [class.selected]="$index === viewMonthIndex()"
+                    [attr.aria-selected]="$index === viewMonthIndex()"
                     (click)="selectMonth($index, $event)"
                   >
-                    {{ name }}
+                    {{ name.slice(0, 3) }}
                   </button>
-                </li>
-              }
-            </ul>
+                }
+              </div>
+            </div>
           }
         </span>
 
@@ -119,28 +120,61 @@
           </button>
 
           @if (yearMenuOpen()) {
-            <ul
-              class="menu year-menu"
-              role="listbox"
+            <div
+              class="picker-menu"
               (click)="$event.stopPropagation()"
               (keydown.escape)="closeMenus()"
             >
-              @for (year of years(); track year) {
-                <li
-                  role="option"
-                  [attr.aria-selected]="year === viewYear()"
+              <div class="picker-head">
+                <button
+                  type="button"
+                  class="picker-nav"
+                  aria-label="Previous years"
+                  [disabled]="!canPrevYearPage()"
+                  (click)="prevYearPage($event)"
                 >
+                  <ds-icon
+                    name="chevronLeft"
+                    [size]="14"
+                  />
+                </button>
+
+                <span class="picker-range">
+                  {{ yearRangeLabel() }}
+                </span>
+
+                <button
+                  type="button"
+                  class="picker-nav"
+                  aria-label="Next years"
+                  [disabled]="!canNextYearPage()"
+                  (click)="nextYearPage($event)"
+                >
+                  <ds-icon
+                    name="chevronRight"
+                    [size]="14"
+                  />
+                </button>
+              </div>
+
+              <div
+                class="picker-grid"
+                role="listbox"
+              >
+                @for (year of yearsOnPage(); track year) {
                   <button
                     type="button"
-                    class="menu-option year-option"
+                    role="option"
+                    class="picker-cell year-cell"
                     [class.selected]="year === viewYear()"
+                    [attr.aria-selected]="year === viewYear()"
                     (click)="selectYear(year, $event)"
                   >
                     {{ year }}
                   </button>
-                </li>
-              }
-            </ul>
+                }
+              </div>
+            </div>
           }
         </span>
       </span>

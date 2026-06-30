@@ -1,11 +1,9 @@
 import {
   Component,
   ElementRef,
-  Injector,
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
-  afterNextRender,
   booleanAttribute,
   computed,
   forwardRef,
@@ -29,6 +27,7 @@ import type {
 } from './date-picker.types';
 
 let nextId = 0;
+const YEAR_PAGE_SIZE = 12;
 
 interface DayCell {
   date: Date;
@@ -63,7 +62,6 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
 
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
-  private readonly injector = inject(Injector);
 
   readonly mode = input<DatePickerMode>('single');
   readonly size = input<DatePickerSize>('md');
@@ -237,7 +235,7 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
     return this.placeholder();
   });
 
-  // ---- Month / year dropdowns in the calendar header ----
+  // ---- Month / year grid pickers in the calendar header ----
   protected readonly monthMenuOpen = signal(false);
   protected readonly yearMenuOpen = signal(false);
   protected readonly monthNames = [
@@ -246,14 +244,40 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
   ];
   protected readonly viewMonthIndex = computed(() => this.viewMonth().getMonth());
   protected readonly viewYear = computed(() => this.viewMonth().getFullYear());
-  protected readonly years = computed<number[]>(() => {
+
+  /** First year shown in the year grid; paged by YEAR_PAGE_SIZE within [minYear, maxYear]. */
+  protected readonly yearPageStart = signal<number>(0);
+
+  protected readonly yearsOnPage = computed<number[]>(() => {
+    const start = this.yearPageStart();
+    const max = this.maxYear();
     const list: number[] = [];
-    for (let year = this.minYear(); year <= this.maxYear(); year++) {
+    for (let year = start; year < start + YEAR_PAGE_SIZE && year <= max; year++) {
       list.push(year);
     }
 
     return list;
   });
+
+  protected readonly yearRangeLabel = computed(() => {
+    const page = this.yearsOnPage();
+
+    return page.length ? `${page[0]} – ${page[page.length - 1]}` : '';
+  });
+
+  protected readonly canPrevYearPage = computed(
+    () => this.yearPageStart() > this.minYear(),
+  );
+  protected readonly canNextYearPage = computed(
+    () => this.yearPageStart() + YEAR_PAGE_SIZE <= this.maxYear(),
+  );
+
+  /** Aligns the page so `year` lands on a stable grid boundary measured from minYear. */
+  private yearPageStartFor(year: number): number {
+    const min = this.minYear();
+
+    return min + Math.floor((year - min) / YEAR_PAGE_SIZE) * YEAR_PAGE_SIZE;
+  }
 
   protected toggleMonthMenu(event: Event): void {
     event.stopPropagation();
@@ -266,10 +290,20 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
     this.monthMenuOpen.set(false);
     this.yearMenuOpen.update((open) => !open);
     if (this.yearMenuOpen()) {
-      afterNextRender(() => this.scrollSelectedYearIntoView(), {
-        injector: this.injector,
-      });
+      this.yearPageStart.set(this.yearPageStartFor(this.viewYear()));
     }
+  }
+
+  protected prevYearPage(event: Event): void {
+    event.stopPropagation();
+    this.yearPageStart.update((start) =>
+      Math.max(this.minYear(), start - YEAR_PAGE_SIZE),
+    );
+  }
+
+  protected nextYearPage(event: Event): void {
+    event.stopPropagation();
+    this.yearPageStart.update((start) => start + YEAR_PAGE_SIZE);
   }
 
   protected closeMenus(): void {
@@ -287,12 +321,6 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
     event.stopPropagation();
     this.viewMonth.set(new Date(year, this.viewMonthIndex(), 1));
     this.yearMenuOpen.set(false);
-  }
-
-  private scrollSelectedYearIntoView(): void {
-    this.overlayRef?.overlayElement
-      .querySelector('.year-option.selected')
-      ?.scrollIntoView({ block: 'center' });
   }
 
   protected readonly daysGrid = computed<DayCell[]>(() => {
