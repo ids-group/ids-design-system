@@ -39,19 +39,23 @@
         only.
       </p>
 
-      <div actions>
+      <ng-container actions>
         <ds-button
+          class="full-width"
+          (pressed)="open.set(false)"
+        >
+          Save
+        </ds-button>
+
+        <ds-button
+          class="full-width"
           color="neutral"
           variant="outline"
           (pressed)="open.set(false)"
         >
           Cancel
         </ds-button>
-
-        <ds-button (pressed)="open.set(false)">
-          Save
-        </ds-button>
-      </div>
+      </ng-container>
     </ds-bottom-sheet>
   </div>
 </docs-section>
