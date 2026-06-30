@@ -212,7 +212,10 @@
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    /* minmax(0, 1fr) lets tracks shrink below the cell's intrinsic width so a
+       narrow panel (e.g. a brand theme with wider tokens) can't push the
+       Sunday column outside the overlay. */
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: var(--datepicker-cell-gap);
   }
 
@@ -228,6 +231,9 @@
   .day {
     width: var(--space-8);
     height: var(--space-8);
+    /* Cap to the (possibly narrower) grid track so the cell never overflows the panel. */
+    max-width: 100%;
+    min-width: 0;
     display: grid;
     place-items: center;
     font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
