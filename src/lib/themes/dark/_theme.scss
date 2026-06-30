@@ -47,10 +47,12 @@
 
   --secondary-subtitle:   hsl(var(--secondary-h) 45% 18%);
   --secondary-muted:      hsl(var(--secondary-h) 40% 26%);
+  --secondary-muted-strong: hsl(var(--secondary-h) 42% 32%);
   --secondary-strong:     hsl(var(--secondary-h) 90% 72%);
 
   --tertiary-subtitle:    hsl(var(--tertiary-h) 45% 18%);
   --tertiary-muted:       hsl(var(--tertiary-h) 40% 26%);
+  --tertiary-muted-strong: hsl(var(--tertiary-h) 42% 32%);
   --tertiary-strong:      hsl(var(--tertiary-h) 90% 72%);
 
   --text-link:            hsl(var(--primary-h) 90% 74%);
@@ -59,16 +61,19 @@
   // Status families: dark tint bg + border, lighter text.
   --success-subtitle:     hsl(132deg 38% 14%);
   --success-muted:        hsl(132deg 34% 20%);
+  --success-muted-strong: hsl(132deg 30% 28%);
   --success-border:       hsl(132deg 30% 28%);
   --success-text:         hsl(132deg 55% 62%);
 
   --warning-subtitle:     hsl(45deg 42% 14%);
   --warning-muted:        hsl(45deg 38% 22%);
+  --warning-muted-strong: hsl(45deg 35% 30%);
   --warning-border:       hsl(45deg 35% 30%);
   --warning-text:         hsl(45deg 90% 62%);
 
   --error-subtitle:       hsl(0deg 45% 16%);
   --error-muted:          hsl(0deg 40% 24%);
+  --error-muted-strong:   hsl(0deg 38% 32%);
   --error-border:         hsl(0deg 38% 32%);
   --error-text:           hsl(0deg 85% 74%);
 

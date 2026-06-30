@@ -126,6 +126,7 @@
   --secondary-strong:  hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 11%));
   --secondary-subtitle:  hsl(var(--secondary-h) 100% 97%);
   --secondary-muted:   hsl(var(--secondary-h) 95% 94%);
+  --secondary-muted-strong: hsl(var(--secondary-h) 95% 89%);
   --secondary-on:      var(--primary-on);
 
   /* Tertiary — third brand hue. Used by the tertiary button variant and
@@ -145,6 +146,7 @@
   --tertiary-strong:  hsl(var(--tertiary-h) var(--tertiary-s) calc(var(--tertiary-l) - 11%));
   --tertiary-subtitle:  hsl(var(--tertiary-h) 100% 97%);
   --tertiary-muted:   hsl(var(--tertiary-h) 95% 94%);
+  --tertiary-muted-strong: hsl(var(--tertiary-h) 95% 89%);
   --tertiary-on:      var(--primary-on);
 
   /* Status roles.
@@ -156,6 +158,7 @@
   --success-hover:     color-mix(in srgb, var(--success) 88%, black);
   --success-subtitle:    var(--green-50);
   --success-muted:     var(--green-100);
+  --success-muted-strong: var(--green-200);
   --success-border:    var(--green-200);
   --success-text:      var(--green-700);
 
@@ -163,6 +166,7 @@
   --warning-hover:     color-mix(in srgb, var(--warning) 88%, black);
   --warning-subtitle:    var(--yellow-50);
   --warning-muted:     var(--yellow-100);
+  --warning-muted-strong: var(--yellow-200);
   --warning-border:    var(--yellow-200);
   --warning-text:      var(--yellow-700);
 
@@ -171,6 +175,7 @@
   --error-pressed:    color-mix(in srgb, var(--error) 76%, black);
   --error-subtitle:     var(--red-50);
   --error-muted:      var(--red-100);
+  --error-muted-strong: var(--red-200);
   --error-border:     var(--red-200);
   --error-text:       var(--red-600);
 
