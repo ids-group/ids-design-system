@@ -1,9 +1,11 @@
 /* ============================================================
    FIELD — global re-declaration for raw specimens.
-   Remaining raw consumers: dropdown/number wrapper labels (modal +
-   input section). Loading + floating-label moved to ds-input
-   [loading]/[floating]; success, addon, with-addon, .textarea, .number
-   removed — last raw consumers converted to live ds-input.
+   Last remaining raw consumer: the dropdown.section label wrappers
+   (`<div class="field"><span class="label"> + <ds-dropdown>`), kept
+   because ds-dropdown has no built-in label slot. Loading, floating
+   label, success, addon, with-addon, .textarea and .number were all
+   converted to live ds-input and removed. Close the dropdown label
+   gap → delete this file.
    ============================================================ */
 .field {
   /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */

@@ -17,14 +17,14 @@
     <ds-popover [staticPreview]="true">
       <h4
         class="t-s-bold"
-        style="margin: 0 0 4px"
+        style="margin: 0 0 var(--space-1)"
       >
         Recompute summary
       </h4>
 
       <p
         class="t-s"
-        style="color: var(--text-secondary); margin: 0 0 12px"
+        style="color: var(--text-secondary); margin: 0 0 var(--space-3)"
       >
         3 Logistics plans · 12 Resource allocations · 2 Sub-records affected.
       </p>
@@ -48,26 +48,26 @@
   </p>
 
   <div class="demo">
-    <button
+    <ds-button
       #trigger
-      type="button"
-      class="trigger-btn"
-      (click)="pop.toggle(trigger)"
+      variant="outline"
+      [ariaExpanded]="pop.opened()"
+      (pressed)="pop.toggle(trigger.buttonRef().nativeElement)"
     >
       Open summary
-    </button>
+    </ds-button>
 
     <ds-popover #pop>
       <h4
         class="t-s-bold"
-        style="margin: 0 0 4px"
+        style="margin: 0 0 var(--space-1)"
       >
         Recompute summary
       </h4>
 
       <p
         class="t-s"
-        style="color: var(--text-secondary); margin: 0 0 12px"
+        style="color: var(--text-secondary); margin: 0 0 var(--space-3)"
       >
         3 Logistics plans · 12 Resource allocations.
       </p>
@@ -102,14 +102,14 @@
 
   <div class="demo demo--row">
     <div class="demo__col">
-      <button
+      <ds-button
         #startTrigger
-        type="button"
-        class="trigger-btn"
-        (click)="popStart.toggle(startTrigger)"
+        variant="outline"
+        [ariaExpanded]="popStart.opened()"
+        (pressed)="popStart.toggle(startTrigger.buttonRef().nativeElement)"
       >
         Align start
-      </button>
+      </ds-button>
 
       <ds-popover
         #popStart
@@ -125,14 +125,14 @@
     </div>
 
     <div class="demo__col demo__col--end">
-      <button
+      <ds-button
         #endTrigger
-        type="button"
-        class="trigger-btn"
-        (click)="popEnd.toggle(endTrigger)"
+        variant="outline"
+        [ariaExpanded]="popEnd.opened()"
+        (pressed)="popEnd.toggle(endTrigger.buttonRef().nativeElement)"
       >
         Align end
-      </button>
+      </ds-button>
 
       <ds-popover
         #popEnd

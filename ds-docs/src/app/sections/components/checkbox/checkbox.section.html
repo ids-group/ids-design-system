@@ -4,21 +4,10 @@
   title="Checkbox"
 >
   <div class="stack">
-    <label class="control-row">
-      <ds-checkbox /> Default
-    </label>
-
-    <label class="control-row">
-      <ds-checkbox [checked]="true" /> Checked
-    </label>
-
-    <label class="control-row">
-      <ds-checkbox [indeterminate]="true" /> Indeterminate
-    </label>
-
-    <label class="control-row">
-      <ds-checkbox [disabled]="true" /> Disabled
-    </label>
+    <ds-checkbox label="Default" />
+    <ds-checkbox [checked]="true" label="Checked" />
+    <ds-checkbox [indeterminate]="true" label="Indeterminate" />
+    <ds-checkbox [disabled]="true" label="Disabled" />
   </div>
 
   <!-- ============================================================ Checkbox states showcase -->
@@ -125,17 +114,15 @@
   </p>
 
   <div class="stack">
-    <label class="control-row">
-      <ds-checkbox hint="Required for contract sign-off." />
-      Acknowledge terms
-    </label>
+    <ds-checkbox
+      label="Acknowledge terms"
+      hint="Required for contract sign-off."
+    />
 
-    <label class="control-row">
-      <ds-checkbox
-        hint="You must accept the terms to continue."
-        [invalid]="true"
-      />
-      Acknowledge terms
-    </label>
+    <ds-checkbox
+      label="Acknowledge terms"
+      hint="You must accept the terms to continue."
+      [invalid]="true"
+    />
   </div>
 </docs-section>

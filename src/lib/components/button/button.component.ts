@@ -1,10 +1,12 @@
 import {
   Component,
+  ElementRef,
   ViewEncapsulation,
   booleanAttribute,
   computed,
   input,
   output,
+  viewChild,
 } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
@@ -34,7 +36,20 @@ export class ButtonComponent {
   readonly ariaLabel = input<string | null>(null);
   readonly icon = input<IconName | null>(null);
   readonly trailingIcon = input<IconName | null>(null);
+  /** ARIA `aria-haspopup`, forwarded to the inner <button> — set when this
+   *  button triggers a menu/dialog/listbox overlay. */
+  readonly ariaHasPopup = input<
+    'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog' | null
+  >(null);
+  /** ARIA `aria-expanded`, forwarded to the inner <button> — bind to the
+   *  overlay's open state on a trigger button. */
+  readonly ariaExpanded = input<boolean | null>(null);
   readonly pressed = output<MouseEvent>();
+
+  /** The inner native <button>, exposed so overlay triggers can position
+   *  against and restore focus to the real focusable element — e.g.
+   *  `(pressed)="pop.toggle(trigger.buttonRef().nativeElement)"`. */
+  readonly buttonRef = viewChild.required<ElementRef<HTMLButtonElement>>('btn');
 
   protected readonly classes = computed(() => {
     const variant = this.variant();

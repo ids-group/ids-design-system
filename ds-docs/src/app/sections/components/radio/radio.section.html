@@ -4,34 +4,10 @@
   title="Radio"
 >
   <div class="stack">
-    <label class="control-row">
-      <ds-radio
-        name="r"
-        value="single"
-      />
-      Single date
-    </label>
-
-    <label class="control-row">
-      <ds-radio
-        name="r"
-        value="range"
-        [checked]="true"
-      />
-      Date range
-    </label>
-
-    <label class="control-row">
-      <ds-radio
-        name="r"
-        value="recurring"
-      />
-      Recurring
-    </label>
-
-    <label class="control-row">
-      <ds-radio [disabled]="true" /> Disabled
-    </label>
+    <ds-radio name="r" value="single" label="Single date" />
+    <ds-radio name="r" value="range" [checked]="true" label="Date range" />
+    <ds-radio name="r" value="recurring" label="Recurring" />
+    <ds-radio [disabled]="true" label="Disabled" />
   </div>
 
   <!-- ============================================================ Radio states showcase -->
@@ -134,17 +110,9 @@
       hint="Select how the event repeats."
       [(value)]="scheduleValue"
     >
-      <label class="control-row">
-        <ds-radio value="single" /> Single date
-      </label>
-
-      <label class="control-row">
-        <ds-radio value="range" /> Date range
-      </label>
-
-      <label class="control-row">
-        <ds-radio value="recurring" /> Recurring
-      </label>
+      <ds-radio value="single" label="Single date" />
+      <ds-radio value="range" label="Date range" />
+      <ds-radio value="recurring" label="Recurring" />
     </ds-radio-group>
 
     <ds-radio-group
@@ -153,17 +121,9 @@
       [invalid]="true"
       [(value)]="invalidGroupValue"
     >
-      <label class="control-row">
-        <ds-radio value="single" /> Single date
-      </label>
-
-      <label class="control-row">
-        <ds-radio value="range" /> Date range
-      </label>
-
-      <label class="control-row">
-        <ds-radio value="recurring" /> Recurring
-      </label>
+      <ds-radio value="single" label="Single date" />
+      <ds-radio value="range" label="Date range" />
+      <ds-radio value="recurring" label="Recurring" />
     </ds-radio-group>
   </div>
 </docs-section>
