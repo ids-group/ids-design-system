@@ -154,9 +154,10 @@
     --c-subtitle: var(--warning-subtitle); --c-muted: var(--warning-muted); --c-muted-strong: var(--warning-muted-strong);
   }
 
-  /* Fill classes — map slots into resolvers (consumer override preserved). Solid
-     is the base default (no class). Tonal/ghost/outline also set disabled recipe B. */
-  &.f-tonal {
+  /* Variant (fill) classes — map slots into resolvers (consumer override
+     preserved). Solid is the base default (no class). Tonal/ghost/outline also
+     set disabled recipe B. */
+  &.v-tonal {
     --_button-bg-color:        var(--ds-button-bg-color,        var(--c-muted));
     --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));
     --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--c-muted-strong));
@@ -165,7 +166,7 @@
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, color-mix(in srgb, var(--_button-bg-color) 28%, var(--surface-disabled)));
     --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 52% 0.04 h));
   }
-  &.f-ghost {
+  &.v-ghost {
     --_button-bg-color:        var(--ds-button-bg-color,        transparent);
     --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));
     --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--c-subtitle));
@@ -174,7 +175,7 @@
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
     --_button-border-disabled: var(--ds-button-border-disabled, transparent);
   }
-  &.f-outline {
+  &.v-outline {
     --_button-bg-color:        var(--ds-button-bg-color,        var(--surface-default));
     --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));
     --_button-border:          var(--ds-button-border,          var(--c-outline-border));

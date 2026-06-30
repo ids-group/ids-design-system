@@ -3,7 +3,7 @@ import {
   ButtonComponent,
   ToggleButtonComponent,
   type ButtonColor,
-  type ButtonFill,
+  type ButtonVariant,
 } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
@@ -14,13 +14,17 @@ import {
 interface ComboRow {
   readonly label: string;
   readonly color: ButtonColor;
-  /** The fills legal for this colour (see the color × fill matrix). */
-  readonly fills: readonly ButtonFill[];
+  /** brand / neutral / status — shown next to the row label. */
+  readonly note: string;
+  /** CSS colour for the row swatch dot. */
+  readonly dot: string;
+  /** The variants legal for this colour (others render "—"). */
+  readonly variants: readonly ButtonVariant[];
 }
 
-interface FillSpec {
+interface VariantSpec {
   readonly label: string;
-  readonly fill: ButtonFill;
+  readonly variant: ButtonVariant;
 }
 
 @Component({
@@ -37,52 +41,74 @@ interface FillSpec {
   styleUrl: './button.section.scss',
 })
 export class ButtonSection {
-  /** Columns of the color × fill matrix. */
-  protected readonly fills: readonly ButtonFill[] = [
+  /** Columns of the color × variant matrix. */
+  protected readonly variants: readonly ButtonVariant[] = [
     'solid',
     'tonal',
     'ghost',
     'outline',
   ];
 
-  /** Rows of the color × fill matrix — each colour lists its legal fills.
-      Cells outside a colour's legal fills render as "—" (unsupported). */
+  /** Rows of the color × variant matrix — each colour lists its legal variants.
+      Cells outside a colour's legal variants render "—" (unsupported). */
   protected readonly combos: readonly ComboRow[] = [
     {
       label: 'Primary',
       color: 'primary',
-      fills: ['solid', 'tonal', 'ghost', 'outline'],
+      note: 'brand',
+      dot: 'var(--primary)',
+      variants: ['solid', 'tonal', 'ghost', 'outline'],
     },
     {
       label: 'Secondary',
       color: 'secondary',
-      fills: ['solid', 'tonal', 'ghost', 'outline'],
+      note: 'brand',
+      dot: 'var(--secondary)',
+      variants: ['solid', 'tonal', 'ghost', 'outline'],
     },
     {
       label: 'Tertiary',
       color: 'tertiary',
-      fills: ['solid', 'tonal', 'ghost', 'outline'],
+      note: 'brand',
+      dot: 'var(--tertiary)',
+      variants: ['solid', 'tonal', 'ghost', 'outline'],
     },
     {
       label: 'Neutral',
       color: 'neutral',
-      fills: ['tonal', 'ghost', 'outline'],
+      note: 'neutral',
+      dot: 'var(--text-secondary)',
+      variants: ['tonal', 'ghost', 'outline'],
     },
     {
       label: 'Error',
       color: 'error',
-      fills: ['solid', 'tonal', 'ghost', 'outline'],
+      note: 'status',
+      dot: 'var(--error)',
+      variants: ['solid', 'tonal', 'ghost', 'outline'],
     },
-    { label: 'Success', color: 'success', fills: ['solid', 'tonal'] },
-    { label: 'Warning', color: 'warning', fills: ['solid', 'tonal'] },
+    {
+      label: 'Success',
+      color: 'success',
+      note: 'status',
+      dot: 'var(--success)',
+      variants: ['solid', 'tonal'],
+    },
+    {
+      label: 'Warning',
+      color: 'warning',
+      note: 'status',
+      dot: 'var(--warning)',
+      variants: ['solid', 'tonal'],
+    },
   ];
 
-  /** Rows of the states matrix — primary colour in each fill. */
-  protected readonly stateFills: readonly FillSpec[] = [
-    { label: 'Solid', fill: 'solid' },
-    { label: 'Tonal', fill: 'tonal' },
-    { label: 'Ghost', fill: 'ghost' },
-    { label: 'Outline', fill: 'outline' },
+  /** Rows of the states matrix — primary colour in each variant. */
+  protected readonly stateVariants: readonly VariantSpec[] = [
+    { label: 'Solid', variant: 'solid' },
+    { label: 'Tonal', variant: 'tonal' },
+    { label: 'Ghost', variant: 'ghost' },
+    { label: 'Outline', variant: 'outline' },
   ];
 
   /** Horizontal axis of the states matrix. hover/focus/active are pinned for display. */

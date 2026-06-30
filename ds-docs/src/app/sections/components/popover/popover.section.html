@@ -50,7 +50,7 @@
     <ds-button
       #trigger
       color="neutral"
-      fill="outline"
+      variant="outline"
       [ariaExpanded]="pop.opened()"
       (pressed)="pop.toggle(trigger.buttonRef().nativeElement)"
     >
@@ -104,7 +104,7 @@
       <ds-button
         #startTrigger
         color="neutral"
-        fill="outline"
+        variant="outline"
         [ariaExpanded]="popStart.opened()"
         (pressed)="popStart.toggle(startTrigger.buttonRef().nativeElement)"
       >
@@ -128,7 +128,7 @@
       <ds-button
         #endTrigger
         color="neutral"
-        fill="outline"
+        variant="outline"
         [ariaExpanded]="popEnd.opened()"
         (pressed)="popEnd.toggle(endTrigger.buttonRef().nativeElement)"
       >

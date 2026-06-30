@@ -12,11 +12,11 @@ import {
 } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
-import type { ButtonColor, ButtonFill, ButtonSize, ButtonType } from './button.types';
+import type { ButtonColor, ButtonVariant, ButtonSize, ButtonType } from './button.types';
 
-// color×fill pairs we don't support (rendered but dev-warned — two inputs can't
-// be narrowed against each other at compile time): grey solid reads as disabled;
-// quiet success/warning fills are too low-contrast.
+// color×variant pairs we don't support (rendered but dev-warned — two inputs
+// can't be narrowed against each other at compile time): grey solid reads as
+// disabled; quiet success/warning variants are too low-contrast.
 const BANNED_COMBOS = new Set([
   'neutral|solid',
   'success|ghost',
@@ -36,7 +36,7 @@ const BANNED_COMBOS = new Set([
 })
 export class ButtonComponent {
   readonly color = input<ButtonColor>('primary');
-  readonly fill = input<ButtonFill>('solid');
+  readonly variant = input<ButtonVariant>('solid');
   readonly size = input<ButtonSize>('md');
   readonly type = input<ButtonType>('button');
   readonly disabled = input(false, { transform: booleanAttribute });
@@ -67,11 +67,11 @@ export class ButtonComponent {
 
   protected readonly classes = computed(() => {
     const color = this.color();
-    const fill = this.fill();
+    const variant = this.variant();
     const parts = [
       'button',
       color === 'primary' ? '' : `c-${color}`,
-      fill === 'solid' ? '' : `f-${fill}`,
+      variant === 'solid' ? '' : `v-${variant}`,
       this.size(),
       this.loading() ? 'loading' : '',
     ];
@@ -82,10 +82,10 @@ export class ButtonComponent {
   constructor() {
     if (isDevMode()) {
       effect(() => {
-        const combo = `${this.color()}|${this.fill()}`;
+        const combo = `${this.color()}|${this.variant()}`;
         if (BANNED_COMBOS.has(combo)) {
           console.warn(
-            `[ds-button] color="${this.color()}" fill="${this.fill()}" is not a supported combination — see the button docs for the legal color×fill matrix.`,
+            `[ds-button] color="${this.color()}" variant="${this.variant()}" is not a supported combination — see the button docs for the legal color×variant matrix.`,
           );
         }
       });

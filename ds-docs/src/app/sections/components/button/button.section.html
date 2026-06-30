@@ -7,64 +7,78 @@
 
   <span lede>
     Two axes: <code class="t-mono-inline">color</code> (brand/status hue family)
-    × <code class="t-mono-inline">fill</code> (solid · tonal · ghost · outline).
-    Loudness is the fill (solid &gt; tonal &gt; ghost/outline); colour is
-    orthogonal. Plus sizes, states, leading icon, subtext, full-width and
-    toggle. For icon-only actions see the Icon button component; for a
-    link-styled action use the global
-    <code class="t-mono-inline">
-      .link
-    </code> class on a button.
+    × <code class="t-mono-inline">variant</code> (solid · tonal · ghost ·
+    outline). Loudness is the variant (solid &gt; tonal &gt; ghost/outline);
+    colour is orthogonal. Plus sizes, states, leading icon, subtext, full-width
+    and toggle. For icon-only actions see the Icon button component; for a
+    link-styled action use the global <code class="t-mono-inline">.link</code>
+    class on a button.
   </span>
 
-  <!-- ============================================================ Color × fill -->
+  <!-- ============================================================ Color × variant -->
   <h3 class="block-title t-h4">
-    Color × fill
+    Color × variant
   </h3>
 
   <p class="block-desc t-s">
     Every legal <code class="t-mono-inline">color</code> ×
     <code class="t-mono-inline">
-      fill
+      variant
     </code> combination. Defaults are
     <code class="t-mono-inline">
-      color="primary" fill="solid"
+      color="primary" variant="solid"
     </code>. Cells
     marked “—” are unsupported (e.g. grey solid, quiet success/warning) and emit
     a dev-mode warning if used.
   </p>
 
-  <div class="matrix matrix--combos">
-    <div></div>
-
-    @for (fill of fills; track fill) {
-      <div class="t-overline">
-        {{ fill }}
-      </div>
-    }
-
-    @for (combo of combos; track combo.color) {
-      <div class="t-overline matrix__row-label">
-        {{ combo.label }}
+  <div class="matrix-scroll">
+    <div class="matrix matrix--combos">
+      <div class="t-overline matrix__corner">
+        color \ variant
       </div>
 
-      @for (fill of fills; track fill) {
-        <div class="matrix__cell">
-          @if (combo.fills.includes(fill)) {
-            <ds-button
-              [color]="combo.color"
-              [fill]="fill"
-            >
-              {{ combo.label }}
-            </ds-button>
-          } @else {
-            <span class="matrix__na">
-              —
-            </span>
-          }
+      @for (variant of variants; track variant) {
+        <div class="t-overline">
+          {{ variant }}
         </div>
       }
-    }
+
+      @for (combo of combos; track combo.color) {
+        <div class="matrix__row-label">
+          <span
+            class="matrix__dot"
+            [style.background]="combo.dot"
+          >
+          </span>
+
+          <span class="matrix__name">
+            {{ combo.label }}
+          </span>
+
+          <span class="matrix__note t-mono-inline">
+            {{ combo.note }}
+          </span>
+        </div>
+
+        @for (variant of variants; track variant) {
+          <div class="matrix__cell">
+            @if (combo.variants.includes(variant)) {
+              <ds-button
+                [color]="combo.color"
+                [variant]="variant"
+              >
+                {{ combo.label }}
+              </ds-button>
+            } @else {
+              <span class="matrix__na">
+                —
+              </span>
+            }
+          </div>
+        }
+      }
+    </div>
   </div>
 
   <!-- ============================================================ Sizes -->
@@ -105,9 +119,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    The primary colour in every fill (rows) across every state (columns). Hover,
-    focus and active are pinned for display — the pins read the component's own
-    resolvers, so no values are duplicated here.
+    The primary colour in every variant (rows) across every state (columns).
+    Hover, focus and active are pinned for display — the pins read the
+    component's own resolvers, so no values are duplicated here.
   </p>
 
   <div class="matrix-scroll">
@@ -120,38 +134,38 @@
         </div>
       }
 
-      @for (spec of stateFills; track spec.fill) {
+      @for (spec of stateVariants; track spec.variant) {
         <div class="t-overline matrix__row-label">
           {{ spec.label }}
         </div>
 
         <div class="matrix__cell">
-          <ds-button [fill]="spec.fill">
+          <ds-button [variant]="spec.variant">
             {{ spec.label }}
           </ds-button>
         </div>
 
         <div class="matrix__cell pin-hover">
-          <ds-button [fill]="spec.fill">
+          <ds-button [variant]="spec.variant">
             {{ spec.label }}
           </ds-button>
         </div>
 
         <div class="matrix__cell pin-focus">
-          <ds-button [fill]="spec.fill">
+          <ds-button [variant]="spec.variant">
             {{ spec.label }}
           </ds-button>
         </div>
 
         <div class="matrix__cell pin-active">
-          <ds-button [fill]="spec.fill">
+          <ds-button [variant]="spec.variant">
             {{ spec.label }}
           </ds-button>
         </div>
 
         <div class="matrix__cell">
           <ds-button
-            [fill]="spec.fill"
+            [variant]="spec.variant"
             [disabled]="true"
           >
             {{ spec.label }}
@@ -160,7 +174,7 @@
 
         <div class="matrix__cell">
           <ds-button
-            [fill]="spec.fill"
+            [variant]="spec.variant"
             [loading]="true"
           >
             {{ spec.label }}
@@ -189,7 +203,7 @@
     </ds-button>
 
     <ds-button
-      fill="tonal"
+      variant="tonal"
       trailingIcon="chevronDown"
     >
       Filters
@@ -197,7 +211,7 @@
 
     <ds-button
       color="neutral"
-      fill="outline"
+      variant="outline"
       icon="download"
     >
       Export CSV
@@ -226,7 +240,7 @@
 
     <ds-button
       color="neutral"
-      fill="outline"
+      variant="outline"
       size="lg"
     >
       Continue<span dsButtonSubtext>3 items remaining</span>
@@ -255,7 +269,7 @@
 
     <ds-button
       color="neutral"
-      fill="outline"
+      variant="outline"
       fullWidth
     >
       Cancel
