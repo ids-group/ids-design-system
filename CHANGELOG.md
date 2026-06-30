@@ -10,11 +10,58 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
-- **Reactive-forms (`ControlValueAccessor`) on `ds-checkbox`, `ds-switch`, `ds-combobox`, and
-  `ds-date-picker`.** Each control now works with `[(ngModel)]` and `formControl` / `formControlName`
-  out of the box. New `invalid` / `hint` inputs render an associated `ds-field-message` below the
-  control. `ds-combobox` and `ds-date-picker` also gain a new `disabled` input for template-driven
-  disable (previously only the forms layer could disable them). `ds-switch` gains `role="switch"`.
+#### New components
+
+- **`ds-multi-select`** — multi-value dropdown that renders selections as chips, with an
+  in-panel text filter, a checkbox listbox (active-descendant keyboard nav), an opt-in
+  `selectAll` row with indeterminate state, and `maxVisibleChips` "+N more" collapsing.
+  Reactive-forms (`ControlValueAccessor`) + `[(value)]` (`string[]`), plus `invalid` /
+  `hint` / `disabled`. Exports `MultiSelectComponent`, `MultiSelectOption`.
+- **`ds-slider`** — single-thumb or two-thumb `range` slider with `min` / `max` / `step`,
+  pointer drag and full keyboard control (Arrow / PageUp-Down / Home / End). CVA +
+  `[(value)]` (`number` or `[number, number]`), plus `invalid` / `hint` / `disabled`.
+- **`ds-otp-input`** — one-time-code field with per-character cells, auto-advance, paste
+  distribution, configurable `length`, `numeric` / `alphanumeric` `mode`, optional `mask`,
+  and a `completed` output. CVA + `[(value)]` (`string`), plus `invalid` / `hint` /
+  `disabled`. Exports `OtpInputComponent`, `OtpMode`.
+- **`ds-color-picker`** — Photoshop-style picker (2D saturation/value plane + hue slider +
+  hex field + preset swatches), panel portaled via CDK Overlay. CVA + `[(value)]` (hex
+  `string`), plus `presets`, `invalid` / `hint` / `disabled`.
+- **`ds-tree`** — data-driven tree-view (`nodes: TreeNode[]` with recursive `children`),
+  roving-tabindex keyboard nav (Arrow / Home / End; Right expands, Left collapses),
+  `[(expandedIds)]` (`Set<string>`), `[(selectedId)]`, and a `nodeSelect` output. Exports
+  `TreeComponent`, `TreeNode`.
+- **`ds-segmented`** — single-select segmented control (`role="radiogroup"`, roving
+  tabindex), data-driven via `options: SegmentedOption[]` with `[(value)]`. A value toggle —
+  unlike `ds-tabs` it owns no panels. Exports `SegmentedComponent`, `SegmentedOption`.
+- **`ds-button-group`** — `role="group"` wrapper that visually joins projected
+  `<ds-button>` children into one segmented row.
+- **`ds-split-button`** — a primary action plus an attached dropdown of secondary actions
+  (`menuItems: SplitButtonItem[]`), built on `ds-popover` + `ds-menu`; emits `pressed`
+  (main) and `itemSelect`. Exports `SplitButtonComponent`, `SplitButtonItem`,
+  `SplitButtonVariant`.
+- **`ds-toggle-button`** — standalone on/off button with `[(pressed)]` (sets `aria-pressed`)
+  and an optional `icon`.
+- **`ds-list` / `ds-list-item`** — semantic list (`role="list"`) with optional `dividers`;
+  each item has `title` / `subtitle` text, `[leading]` / `[trailing]` slots, and optional
+  `clickable` (emits `activated`) with `selected` / `disabled` states.
+- **`ds-timeline` / `ds-timeline-item`** — vertical activity feed; each item has a
+  `heading`, `time`, an optional node `icon`, and a `tone`
+  (`default` | `primary` | `success` | `warning` | `error` | `muted`). Exports
+  `TimelineTone`.
+- **`ds-description-list` / `ds-description-item`** — term/definition pairs with
+  `horizontal` | `stacked` `orientation`; each item takes a `term` and optional `copyValue`
+  (renders a copy-to-clipboard button). Exports `DescriptionListOrientation`.
+- **`ds-stack` / `ds-inline` / `ds-container` layout primitives.** `ds-stack` (column) and
+  `ds-inline` (row, wraps by default) take a named `gap` (`none … xl`) + `align` /
+  `justify`; `ds-container` centres content at a named `size`
+  (`sm` | `md` | `lg` | `xl` | `full`). Adds semantic `--space-stack` / `--space-inline`
+  spacing aliases plus per-primitive `--ds-stack-gap` / `--ds-inline-gap` /
+  `--ds-container-max` / `--ds-container-pad-x` hooks. Exports `LayoutGap`, `LayoutAlign`,
+  `LayoutJustify`, `ContainerSize`.
+- **`ds-loading-overlay`** — region scrim with a centred spinner + optional `label`,
+  toggled by `loading`, with `blur`, `spinnerSize` and an `insetTop` offset (clears a
+  sticky header). `ds-table` and `ds-empty-state` now render their loading state through it.
 - **New `ds-radio-group` component.** A CVA-capable `<ds-radio-group [(value)] name invalid hint label>`
   wrapper that projects `<ds-radio value="…">` children. Manages roving-tabindex keyboard navigation
   and implements `ControlValueAccessor` for reactive-forms use. Standalone `<ds-radio [(checked)]>` is
@@ -25,6 +72,28 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   Smaller and less prominent than `ds-banner` — intended for contextual form/page feedback rather than
   page-level announcements.
 
+#### Theming & colour
+
+- **`ds-color` scoped-accent system.** A new `--accent-*` pointer layer lets any subtree be
+  recoloured to a different hue family without per-component overrides. Set it via the
+  `[ds-color="secondary | tertiary | error | success | warning"]` attribute on a zone
+  container or a component host, or from SCSS with the `ds.color(<family>)` mixin
+  (`@use '@ids-group-ltd/ids-design-system/styles/ds' as ds;`). Components route their accent
+  (fills, focus rings, surface tint) through `--accent` / `--accent-strong` / `--accent-muted`
+  / `--accent-muted-strong` / `--accent-on` / `--accent-pressed` / `--accent-focus-ring` /
+  `--accent-focus-field`; `ds-button` / `ds-icon-button` flip the same pointers per instance
+  via their `color` input. Ships in the default bundle (forwarded by `styles/ds`) — additive,
+  the default (primary) theme is unchanged pixel-for-pixel. Caveat: CDK-portaled overlays
+  (dropdown / select / combobox / date-picker / color-picker / popover / tooltip / toast /
+  modal panels) render outside the zone subtree, so set `ds-color` on the panel itself to
+  recolour them.
+- **`--*-muted-strong` semantic roles** for `secondary` / `tertiary` / `error` / `success` /
+  `warning` (a denser muted step between `-muted` and the strong tone), plus per-family focus
+  rings (`--focus-ring-*` / `--focus-field-*`) and `-pressed` / `-on` aliases so every
+  ds-color family can resolve the full accent pointer set.
+- **`ds-icon-button` colour axis.** Gains a `color` input (shared `ButtonColor` type, default
+  `primary`); `variant` stays the fill axis (`standard` | `filled` | `tonal` | `outlined`).
+  Additive — existing usage is unchanged.
 - **Dark theme** (`themes/dark/`) — ships with the default bundle (`@use 'styles/ds'`).
   **Light is the default** (no attribute); dark is opt-in via `<html data-theme="dark">`. There is
   no automatic `prefers-color-scheme` switch — to follow the OS, opt in at the app root with the new
@@ -34,14 +103,85 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   Light and dark are **sibling themes** — a shared base palette (`themes/_base-palette`) + a shared
   role map (`themes/_semantic`); light applies at `:root`, dark at `:root[data-theme='dark']` (the
   dark block declares the complete token set, so it fully replaces light, not patches it).
-  `data-neutrals="brand"` is a light-context switch; brand overlays are authored on light.
+  `data-neutrals="brand"` is a light-context switch; brand overlays are authored on light. Dark also
+  ships its own chart tokens (sequential / divergent ramps + hover/tooltip surfaces); combining
+  `data-neutrals="brand"` with dark is a documented no-op for the brand grey tint (dark neutrals win).
+
+#### Forms & fields
+
+- **Reactive-forms (`ControlValueAccessor`) on `ds-checkbox`, `ds-switch`, `ds-combobox`, and
+  `ds-date-picker`.** Each control now works with `[(ngModel)]` and `formControl` / `formControlName`
+  out of the box. New `invalid` / `hint` inputs render an associated `ds-field-message` below the
+  control. `ds-combobox` and `ds-date-picker` also gain a new `disabled` input for template-driven
+  disable (previously only the forms layer could disable them). `ds-switch` gains `role="switch"`.
+- **`hint` and `invalid` on `ds-select`.** The pre-existing dropdown can now render an
+  associated helper/error line (wired via `aria-describedby` + `role="alert"` on error)
+  through the shared internal `ds-field-message`; `ds-input` / `ds-textarea` render their hint
+  through the same component (the `--ds-input-hint-*` tokens are replaced by
+  `--ds-field-message-*` — see Breaking). The new field components above ship with `invalid` /
+  `hint` built in.
+- **Inline `[label]` on `ds-checkbox` / `ds-radio` / `ds-switch`** — render the control label
+  without hand-writing a `<label for>`; `ds-radio-group` accepts a group `label` too.
+- **`ds-input` `[loading]` and `[floating]`.** `loading` shows a trailing spinner while the
+  field stays editable (pair with a `hint` for async validation); `floating` switches to a
+  floating-label layout.
+- **`--field-label-gap` token** (single source for label↔control and control↔hint vertical
+  rhythm, defaults to `--space-1-5`); every field control now routes its spacing through it.
+
+#### Components — new capabilities
+
+- **`ds-button` overlay-trigger support.** New `ariaHasPopup` / `ariaExpanded` inputs
+  (forwarded to the native `<button>`) and an exported `buttonRef` for positioning a
+  popover/menu and returning focus.
+- **`ds-date-picker` month & year grid pickers** in the calendar header — click the
+  month/year labels to pick from a compact grid (years in a paged 12-cell grid) instead of
+  stepping month-by-month.
+- **`ds-table` pagination, client-side sort & sticky first column** (absorbed from the
+  prototype data-grid): new `pageSize` / `page` / `pageSizeOptions`, `clientSort`,
+  `stickyFirstColumn`, plus `cellTemplateMap` / `emptyTemplate` for wrapper components.
+- **`ModalService.confirm(options): Promise<boolean>`** — promise-based confirmation dialog
+  rendered as a modal card (`ModalConfirmOptions`: `title`, `message`, labels, `tone`, `icon`,
+  and `typeToConfirm` to gate destructive actions). Resolves `false` on cancel / backdrop /
+  Escape.
+- **`ds-dropzone` per-file `message` and `queued` state.** `DropzoneFile` gains an optional
+  `message` (shown in place of the bare state name) and a `'queued'` value in
+  `DropzoneFileState`.
+
+#### Tokens & build
+
+- **`$bp-*` breakpoint Sass aliases + `up()` / `down()` mixins** (`styles/breakpoints`).
+  CSS custom properties can't be used in `@media` conditions, so the `--bp-*` scale was
+  unusable there. A new partial is now the single source for both representations: it emits
+  `--bp-*` (values unchanged) and exposes compile-time `$bp-xs … $bp-2xl` plus the mixins
+  `bp.up(md)` (`width >= 768px`) / `bp.down(sm)` (`width < 640px`), via
+  `@use 'breakpoints' as bp;`. Heads-up: advanced consumers importing `styles/tokens` à la
+  carte now also need `styles/breakpoints` for `--bp-*`; the `styles/ds` entry forwards both.
+- **`--ds-button-border-disabled`** and **`--ds-icon-button-bg-color-disabled` /
+  `-icon-color-disabled` / `-border-disabled`** override tokens — the disabled
+  fill/label/border are now individually themeable (previously only button had
+  `bg-color`/`label-color-disabled`; icon-button had none).
+- **`--ds-button-press-scale`** (default `0.98`) and **`--ds-icon-button-press-scale`**
+  (default `0.96`) — tune the press scale-down (set `1` to disable).
 
 ### Breaking
 
+- **`ds-button` now takes two orthogonal axes — `color` × `variant` — replacing the single
+  conflated `variant` input.** `color` is the hue family
+  (`primary` | `secondary` | `tertiary` | `neutral` | `error` | `success` | `warning`,
+  default `primary`); `variant` is the fill style
+  (`solid` | `tonal` | `ghost` | `outline` | `text`, default `solid`). The old single axis
+  mixed hue and emphasis — migrate as: `primary` → default (drop the attr); `secondary` →
+  `variant="tonal"`; `tertiary` → `variant="ghost"`; `outline` →
+  `color="neutral" variant="outline"`; `error` / `success` / `warning` →
+  `color="error|success|warning"`; `text` → `variant="text"`. New exported `ButtonColor` /
+  `ButtonVariant` types. `text` still renders but is **discouraged** (dev-mode `console.warn`
+  — prefer the global `.link` class); a small set of low-contrast `color × variant` combos
+  (e.g. `neutral` solid, `success` / `warning` ghost/outline) render with a discouraged ⚠
+  marker rather than being banned. Each instance flips the internal `--c-*` accent slots,
+  which now default to the `--accent-*` pointer layer (see ds-color).
 - **Reactive-forms radio now uses `<ds-radio-group>` as the group container and form control.**
   Standalone `<ds-radio [(checked)]>` continues to work for non-group usage, but a group of
   radios that participates in a reactive form should now be wrapped in `<ds-radio-group>`.
-
 - **`ButtonSize` collapsed to `sm | md | lg`** (32 / 40 / 48 px), dropping the duplicate
   legacy `s | m | l` tier. Default is now `md` (was `l` — same 40 px). Migration:
   `m` → `sm` (both 32), `l` → `md` (both 40); the 24 px `s` is removed — its callers move to
@@ -60,11 +200,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **Button & icon-button `[disabled]` is now a per-variant muted tint, not one flat grey.**
   The disabled look derives from each variant's own colour: solid fills (primary/error/
   success/warning) and the chrome-less `text` button use a flat pale tint (`oklch` from the
-  accent, pinned lightness/chroma); the tonal/ghost/outlined variants (button
-  secondary/tertiary/outline, icon-button tonal/outlined) use `color-mix(fill 28%,
-  --surface-disabled)`, preserving the enabled emphasis ladder. `text` / icon-button
-  `standard` stay chrome-less (no box). Visual change to the default disabled appearance —
-  override the `--ds-*-disabled` tokens to restore a flat grey.
+  accent, pinned lightness/chroma); the `tonal` / `ghost` / `outline` button variants and
+  icon-button `tonal` / `outlined` use `color-mix(fill 28%, --surface-disabled)`, preserving
+  the enabled emphasis ladder. `text` / icon-button `standard` stay chrome-less (no box).
+  Visual change to the default disabled appearance — override the `--ds-*-disabled` tokens to
+  restore a flat grey.
 - **`ds-bottom-sheet` now animates its close** — slide-down + scrim fade on dismiss (scrim
   tap / Escape / downward drag / programmatic `open = false`), mirroring the open animation
   instead of vanishing instantly. Honors `prefers-reduced-motion` (closes instantly). The
@@ -80,27 +220,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   Floating panels (`ds-select` / `ds-dropdown` / `ds-combobox` / `ds-date-picker` / `ds-popover`,
   plus `ds-tooltip` on open) fade + slide in on open and out on close via a shared overlay-motion
   helper; `ds-banner` fades in on mount; the toggle button's pressed/hover state eases too.
-
-### Added
-
-- **`$bp-*` breakpoint Sass aliases + `up()` / `down()` mixins** (`styles/breakpoints`).
-  CSS custom properties can't be used in `@media` conditions, so the `--bp-*` scale was
-  unusable there. A new partial is now the single source for both representations: it emits
-  `--bp-*` (values unchanged) and exposes compile-time `$bp-xs … $bp-2xl` plus the mixins
-  `bp.up(md)` (`width >= 768px`) / `bp.down(sm)` (`width < 640px`), via
-  `@use 'breakpoints' as bp;`. Heads-up: advanced consumers importing `styles/tokens` à la
-  carte now also need `styles/breakpoints` for `--bp-*`; the `styles/ds` entry forwards both.
-- **`--ds-button-border-disabled`** and **`--ds-icon-button-bg-color-disabled` /
-  `-icon-color-disabled` / `-border-disabled`** override tokens — the disabled
-  fill/label/border are now individually themeable (previously only button had
-  `bg-color`/`label-color-disabled`; icon-button had none).
-- **`--ds-button-press-scale`** (default `0.98`) and **`--ds-icon-button-press-scale`**
-  (default `0.96`) — tune the press scale-down (set `1` to disable).
-- **`hint` inputs (and `invalid` where missing) on `ds-select`, `ds-multi-select`,
-  `ds-otp-input`, `ds-slider`, `ds-color-picker`.** These fields can now render an associated
-  helper/error line (wired via `aria-describedby` + `role="alert"` on error) through a new shared
-  internal `ds-field-message`. `ds-input` / `ds-textarea` now render their hint via the same shared
-  message (the `--ds-input-hint-*` tokens are replaced by `--ds-field-message-*` — see Breaking).
+  Action-driven dropdown / menu / picker panels close instantly (no leave-animation lag) when a
+  selection is made, while dismiss (scrim / Escape) keeps the fade.
 
 ### Fixed
 
@@ -109,6 +230,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   bar (a frozen spinner reads as "hung", not "loading"). Looping status indicators are now
   slowed instead of zeroed; one-shot entrance/transition motion stays instant. The page-wide
   skeleton sweep still halts (large-area motion, the one reduced-motion should remove).
+- **Overlay scroll-lock is now released on dismiss.** The scoped `@keyframes` name guard now
+  matches Angular's emulated-encapsulation suffix (`endsWith`, not `===`), so the page no
+  longer stays scroll-locked after an overlay closes.
+- **`ds-input` / `ds-search` clear button stays visible when the field is blurred** — its
+  contrast was bumped so it reads at rest, not only on focus.
+- **`ds-combobox`** truncates long option labels with an ellipsis instead of wrapping in
+  narrow panels, and its multi-select option row now fills the panel width (label no longer
+  clipped to zero).
+- **`ds-accordion`** collapses its body fully (padding moved off the clipped wrapper) and
+  restores body padding when expanded.
 
 ## 0.3.0 — 2026-06-23
 
