@@ -8,7 +8,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { IconComponent } from 'ds';
+import { IconButtonComponent, SearchComponent } from 'ds';
 import { NAV } from './nav.config';
 import { DS_VERSION } from '../shared/docs-stats';
 
@@ -17,7 +17,7 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [IconComponent],
+  imports: [IconButtonComponent, SearchComponent],
   encapsulation: ViewEncapsulation.Emulated,
   host: {
     '[class.is-collapsed]': 'collapsed()',
@@ -41,26 +41,23 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
           </div>
         }
 
-        <button
+        <ds-icon-button
           class="collapse-toggle"
-          type="button"
-          (click)="toggleCollapsed()"
-        >
-          <ds-icon
-            [name]="collapsed() ? 'chevronRight' : 'chevronLeft'"
-            [size]="14"
-          />
-        </button>
+          variant="outlined"
+          size="sm"
+          [icon]="collapsed() ? 'chevronRight' : 'chevronLeft'"
+          [ariaLabel]="collapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+          (pressed)="toggleCollapsed()"
+        />
       </div>
 
       @if (!collapsed()) {
-        <input
+        <ds-search
           class="nav-search"
-          type="search"
           placeholder="Search…"
-          aria-label="Filter sections"
-          [value]="query()"
-          (input)="query.set($any($event.target).value)"
+          ariaLabel="Filter sections"
+          [clearable]="true"
+          [(value)]="query"
         />
 
         @for (group of filteredNav(); track group.title) {
@@ -145,24 +142,6 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
 
       .collapse-toggle {
         margin-left: auto;
-        width: 28px;
-        height: 28px;
-        display: grid;
-        place-items: center;
-        border: var(--border-width-default) solid var(--border-divider);
-        border-radius: var(--radius-md);
-        background: var(--surface-default);
-        color: var(--icon-default);
-        cursor: pointer;
-        transition:
-          background var(--duration-fast) var(--ease-standard),
-          color var(--duration-fast) var(--ease-standard),
-          border-color var(--duration-fast) var(--ease-standard);
-      }
-      .collapse-toggle:hover {
-        background: var(--surface-secondary);
-        color: var(--icon-strong);
-        border-color: var(--border-default);
       }
       .toc.is-collapsed .collapse-toggle {
         margin-left: 0;
@@ -250,22 +229,8 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
       }
 
       .nav-search {
-        width: 100%;
-        padding: 7px var(--space-3);
+        display: block;
         margin-bottom: var(--space-2);
-        border: var(--border-width-default) solid var(--border-default);
-        border-radius: var(--radius-md);
-        background: var(--surface-default);
-        color: var(--text-primary);
-        font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
-      }
-      .nav-search::placeholder {
-        color: var(--text-tertiary);
-      }
-      .nav-search:focus-visible {
-        outline: none;
-        border-color: var(--primary);
-        box-shadow: var(--focus-field, 0 0 0 3px var(--primary-subtitle));
       }
       .nav-empty {
         padding: var(--space-3) var(--space-2);

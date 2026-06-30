@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
+import { ButtonComponent, SegmentedComponent, SliderComponent } from 'ds';
 
 type BrandPreview = 'default' | 'manage-my';
 
@@ -8,12 +9,32 @@ const THEME_STORAGE_KEY = 'ds-docs-theme';
 @Component({
   selector: 'tweaks-panel',
   standalone: true,
+  imports: [ButtonComponent, SegmentedComponent, SliderComponent],
   templateUrl: './tweaks-panel.component.html',
   styleUrl: './tweaks-panel.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class TweaksPanelComponent {
   protected readonly open = signal(false);
+
+  // Option lists for the ds-segmented controls below.
+  protected readonly themeOptions = [
+    { label: 'Light', value: 'light' },
+    { label: 'Dark', value: 'dark' },
+  ];
+  protected readonly densityOptions = [
+    { label: 'Compact', value: 'compact' },
+    { label: 'Cozy', value: 'cozy' },
+    { label: 'Comfy', value: 'comfy' },
+  ];
+  protected readonly brandOptions = [
+    { label: 'Default', value: 'default' },
+    { label: 'ManageMy', value: 'manage-my' },
+  ];
+  protected readonly neutralsOptions = [
+    { label: 'Cool gray', value: 'cool-gray' },
+    { label: 'From brand', value: 'brand' },
+  ];
   protected readonly density = signal<'compact' | 'cozy' | 'comfy'>('cozy');
   protected readonly brand = signal<BrandPreview>('default');
   protected readonly theme = signal<'light' | 'dark'>('light');
