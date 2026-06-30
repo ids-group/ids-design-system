@@ -72,9 +72,9 @@
 
 /* Tones — filled nodes carry a white glyph; default/muted stay bordered. */
 :host([data-tone='primary']) {
-  --_timeline-node-bg-color: var(--primary);
+  --_timeline-node-bg-color: var(--accent);
   --_timeline-node-color: var(--text-on-primary);
-  --_timeline-node-border: var(--primary);
+  --_timeline-node-border: var(--accent);
 }
 :host([data-tone='success']) {
   --_timeline-node-bg-color: var(--success);

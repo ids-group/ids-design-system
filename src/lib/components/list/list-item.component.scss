@@ -77,10 +77,10 @@ button.activator {
 }
 
 :host(.selected) .activator {
-  background-color: var(--surface-tint);
+  background-color: var(--accent-surface-tint);
 }
 :host(.selected) .title {
-  color: var(--primary-strong);
+  color: var(--accent-strong);
 }
 
 :host(.disabled) .title,

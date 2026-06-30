@@ -23,7 +23,7 @@
   background: var(--_statusdot-color);
 
   &.planning  { --_statusdot-color: var(--ds-statusdot-color, var(--icon-muted)); }
-  &.confirmed { --_statusdot-color: var(--ds-statusdot-color, var(--primary)); }
+  &.confirmed { --_statusdot-color: var(--ds-statusdot-color, var(--accent)); }
   &.active    { --_statusdot-color: var(--ds-statusdot-color, var(--success)); }
   &.completed { --_statusdot-color: var(--ds-statusdot-color, var(--icon-strong)); }
   &.warning   { --_statusdot-color: var(--ds-statusdot-color, var(--warning-hover)); }

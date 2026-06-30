@@ -1,15 +1,15 @@
 :host {
   /* Public --ds-dropzone-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_dropzone-bg-color:               var(--ds-dropzone-bg-color,               var(--surface-default));
-  --_dropzone-bg-color-hover:         var(--ds-dropzone-bg-color-hover,         var(--primary-subtitle));
-  --_dropzone-bg-color-active:        var(--ds-dropzone-bg-color-active,        var(--primary-subtitle));
+  --_dropzone-bg-color-hover:         var(--ds-dropzone-bg-color-hover,         var(--accent-subtitle));
+  --_dropzone-bg-color-active:        var(--ds-dropzone-bg-color-active,        var(--accent-subtitle));
   --_dropzone-border:           var(--ds-dropzone-border,           var(--border-default));
-  --_dropzone-border-hover:     var(--ds-dropzone-border-hover,     var(--primary));
-  --_dropzone-border-active:    var(--ds-dropzone-border-active,    var(--primary));
+  --_dropzone-border-hover:     var(--ds-dropzone-border-hover,     var(--accent));
+  --_dropzone-border-active:    var(--ds-dropzone-border-active,    var(--accent));
   --_dropzone-text-color:               var(--ds-dropzone-text-color,               var(--text-secondary));
-  --_dropzone-text-color-active:        var(--ds-dropzone-text-color-active,        var(--primary-strong));
+  --_dropzone-text-color-active:        var(--ds-dropzone-text-color-active,        var(--accent-strong));
   --_dropzone-radius:           var(--ds-dropzone-radius,           var(--radius-lg));
-  --_dropzone-file-progress:    var(--ds-dropzone-file-progress,    var(--primary));
+  --_dropzone-file-progress:    var(--ds-dropzone-file-progress,    var(--accent));
   --_dropzone-file-success:     var(--ds-dropzone-file-success,     var(--success));
   --_dropzone-file-error:       var(--ds-dropzone-file-error,       var(--error));
 
@@ -34,7 +34,7 @@
 
 // Surface keyboard focus on the zone when its (visually-hidden) input is focused.
 .dropzone:focus-within {
-  outline: var(--border-width-strong, 2px) solid var(--primary);
+  outline: var(--border-width-strong, 2px) solid var(--accent);
   outline-offset: 2px;
 }
 

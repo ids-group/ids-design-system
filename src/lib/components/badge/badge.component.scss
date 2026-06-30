@@ -42,7 +42,7 @@
   &.error     { --_badge-bg-color: var(--ds-badge-bg-color, var(--error-subtitle));  --_badge-label-color: var(--ds-badge-label-color, var(--error-text)); }
   &.neutral   { --_badge-bg-color: var(--ds-badge-bg-color, var(--surface-secondary)); --_badge-label-color: var(--ds-badge-label-color, var(--text-secondary)); }
   &.secondary { --_badge-bg-color: var(--ds-badge-bg-color, var(--secondary-subtitle)); --_badge-label-color: var(--ds-badge-label-color, var(--secondary-strong)); }
-  &.solid     { --_badge-bg-color: var(--ds-badge-bg-color, var(--primary));    --_badge-label-color: var(--ds-badge-label-color, var(--primary-on)); }
+  &.solid     { --_badge-bg-color: var(--ds-badge-bg-color, var(--accent));    --_badge-label-color: var(--ds-badge-label-color, var(--accent-on)); }
   &.count {
     min-width: var(--badge-count-size); height: var(--badge-count-size); padding: 0 var(--space-1-5);
     display: inline-grid; place-items: center;

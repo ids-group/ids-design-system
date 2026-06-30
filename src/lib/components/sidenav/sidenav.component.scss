@@ -16,8 +16,8 @@
   --_sidenav-border:          var(--ds-sidenav-border,          var(--border-divider));
   --_sidenav-width:           var(--ds-sidenav-width,           var(--sidenav-w));
   --_sidenav-width-collapsed: var(--ds-sidenav-width-collapsed, var(--sidenav-w-collapsed));
-  --_sidenav-mark-bg-color:         var(--ds-sidenav-mark-bg-color,         var(--primary));
-  --_sidenav-mark-label-color:         var(--ds-sidenav-mark-label-color,         var(--primary-on));
+  --_sidenav-mark-bg-color:         var(--ds-sidenav-mark-bg-color,         var(--accent));
+  --_sidenav-mark-label-color:         var(--ds-sidenav-mark-label-color,         var(--accent-on));
 
   display: flex;
   flex-direction: column;
