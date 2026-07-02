@@ -1,42 +1,101 @@
 <div class="field">
-  <div class="trigger-wrap">
-    <button
-      #trigger
-      type="button"
-      aria-haspopup="dialog"
-      [class]="triggerClasses()"
-      [disabled]="isDisabled()"
-      [attr.aria-expanded]="isOpen()"
-      [attr.aria-label]="resolvedAriaLabel()"
-      [attr.aria-invalid]="invalid() ? 'true' : null"
-      [attr.aria-describedby]="hintId()"
-      (click)="open()"
-    >
-      <ds-icon
-        name="clock"
-        [size]="14"
-      />
+  @if (mode() === 'range') {
+    <div class="range-wrap">
+      <div class="trigger-wrap">
+        <button
+          #startTrigger
+          type="button"
+          aria-haspopup="dialog"
+          [class]="triggerClasses()"
+          [disabled]="isDisabled()"
+          [attr.aria-expanded]="openSegment() === 'start'"
+          [attr.aria-label]="ariaLabelFor('start')"
+          [attr.aria-invalid]="invalid() ? 'true' : null"
+          [attr.aria-describedby]="hintId()"
+          (click)="open('start')"
+        >
+          <ds-icon
+            name="clock"
+            [size]="14"
+          />
 
-      <span class="time-value">
-        {{ displayValue() }}
+          <span class="time-value">
+            {{ formatFor(rangeValue()[0]) || placeholder() }}
+          </span>
+        </button>
+      </div>
+
+      <span
+        class="range-sep"
+        aria-hidden="true"
+      >
+        –
       </span>
-    </button>
 
-    @if (clearable() && hasValue()) {
+      <div class="trigger-wrap">
+        <button
+          #endTrigger
+          type="button"
+          aria-haspopup="dialog"
+          [class]="triggerClasses()"
+          [disabled]="isDisabled()"
+          [attr.aria-expanded]="openSegment() === 'end'"
+          [attr.aria-label]="ariaLabelFor('end')"
+          [attr.aria-invalid]="invalid() ? 'true' : null"
+          [attr.aria-describedby]="hintId()"
+          (click)="open('end')"
+        >
+          <ds-icon
+            name="clock"
+            [size]="14"
+          />
+
+          <span class="time-value">
+            {{ formatFor(rangeValue()[1]) || placeholder() }}
+          </span>
+        </button>
+      </div>
+    </div>
+  } @else {
+    <div class="trigger-wrap">
       <button
+        #singleTrigger
         type="button"
-        class="time-clear"
-        aria-label="Clear"
+        aria-haspopup="dialog"
+        [class]="triggerClasses()"
         [disabled]="isDisabled()"
-        (click)="clear($event)"
+        [attr.aria-expanded]="openSegment() === 'single'"
+        [attr.aria-label]="ariaLabelFor('single')"
+        [attr.aria-invalid]="invalid() ? 'true' : null"
+        [attr.aria-describedby]="hintId()"
+        (click)="open('single')"
       >
         <ds-icon
-          name="x"
+          name="clock"
           [size]="14"
         />
+
+        <span class="time-value">
+          {{ displayValue() }}
+        </span>
       </button>
-    }
-  </div>
+
+      @if (clearable() && hasValue()) {
+        <button
+          type="button"
+          class="time-clear"
+          aria-label="Clear"
+          [disabled]="isDisabled()"
+          (click)="clear($event)"
+        >
+          <ds-icon
+            name="x"
+            [size]="14"
+          />
+        </button>
+      }
+    </div>
+  }
 
   <ds-field-message
     [text]="hint()"
@@ -48,11 +107,11 @@
 <ng-template #panel>
   <div class="time-panel">
     <ds-time-columns
-      [value]="singleValue()"
+      [value]="panelValue()"
       [format]="resolvedFormat()"
       [minuteStep]="minuteStep()"
-      [minTime]="minTime()"
-      [maxTime]="maxTime()"
+      [minTime]="panelMinTime()"
+      [maxTime]="panelMaxTime()"
       [disabledTime]="disabledTime()"
       (timeChange)="onPick($event)"
     />

@@ -28,19 +28,16 @@ import {
 } from '../field-message/field-message.component';
 import { TimeColumnsComponent } from '../time-columns/time-columns.component';
 import { DS_CONFIG } from '../../config/ds-config';
-import {
-  clampToRange,
-  formatTime,
-  pad2,
-  snapToStep,
-} from './time.util';
+import { clampToRange, formatTime, pad2, snapToStep, toMinutes } from './time.util';
 import type {
   TimeConstraints,
   TimeFormat,
+  TimePickerMode,
   TimePickerSize,
   TimeRangeValue,
 } from './time-picker.types';
 
+type Segment = 'single' | 'start' | 'end';
 let nextId = 0;
 
 @Component({
@@ -71,6 +68,7 @@ export class TimePickerComponent extends DsControlValueAccessor<
   private readonly injector = inject(Injector);
 
   readonly value = model<string | TimeRangeValue | null>(null);
+  readonly mode = input<TimePickerMode>('single');
   readonly minuteStep = input(1, { transform: numberAttribute });
   readonly minTime = input<string | null>(null);
   readonly maxTime = input<string | null>(null);
@@ -86,11 +84,15 @@ export class TimePickerComponent extends DsControlValueAccessor<
   readonly format = input<TimeFormat | null>(null);
 
   protected readonly uid = `ds-timepicker-${++nextId}`;
-  protected readonly isOpen = signal(false);
+  protected readonly openSegment = signal<Segment | null>(null);
   private overlayRef: OverlayRef | null = null;
 
-  protected readonly trigger =
-    viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
+  protected readonly singleTrigger =
+    viewChild<ElementRef<HTMLButtonElement>>('singleTrigger');
+  protected readonly startTrigger =
+    viewChild<ElementRef<HTMLButtonElement>>('startTrigger');
+  protected readonly endTrigger =
+    viewChild<ElementRef<HTMLButtonElement>>('endTrigger');
   protected readonly panelTpl =
     viewChild.required<TemplateRef<unknown>>('panel');
   protected readonly columns = viewChild(TimeColumnsComponent);
@@ -107,21 +109,20 @@ export class TimePickerComponent extends DsControlValueAccessor<
   protected readonly resolvedFormat = computed<TimeFormat>(
     () => this.format() ?? this.config.timePicker?.format ?? '24h',
   );
-  protected readonly resolvedAriaLabel = computed(
-    () => this.ariaLabel() ?? 'Select time',
-  );
 
-  /** The value as a single "HH:MM" string (null in range mode / when unset). */
   protected readonly singleValue = computed(() => {
     const value = this.value();
 
     return typeof value === 'string' ? value : null;
   });
+  protected readonly rangeValue = computed<TimeRangeValue>(() => {
+    const value = this.value();
+
+    return Array.isArray(value) ? value : [null, null];
+  });
   protected readonly hasValue = computed(() => !!this.singleValue());
   protected readonly displayValue = computed(
-    () =>
-      formatTime(this.singleValue(), this.resolvedFormat()) ||
-      this.placeholder(),
+    () => this.formatFor(this.singleValue()) || this.placeholder(),
   );
 
   protected readonly triggerClasses = computed(() => {
@@ -136,26 +137,64 @@ export class TimePickerComponent extends DsControlValueAccessor<
     if (this.invalid()) {
       parts.push('error');
     }
-    if (this.clearable() && this.hasValue()) {
+    if (this.mode() === 'single' && this.clearable() && this.hasValue()) {
       parts.push('has-clear');
     }
 
     return parts.join(' ');
   });
 
-  private readonly constraints = computed<TimeConstraints>(() => ({
-    minTime: this.minTime(),
-    maxTime: this.maxTime(),
-    disabledTime: this.disabledTime(),
-  }));
+  /** Value the open column set edits (the active segment's value). */
+  protected readonly panelValue = computed(() => {
+    const segment = this.openSegment();
+    if (segment === 'start') {
+      return this.rangeValue()[0];
+    }
+    if (segment === 'end') {
+      return this.rangeValue()[1];
+    }
 
-  protected open(): void {
+    return this.singleValue();
+  });
+
+  /** The end segment cannot precede the chosen start. */
+  protected readonly panelMinTime = computed(() => {
+    if (this.openSegment() !== 'end') {
+      return this.minTime();
+    }
+
+    return this.laterOf(this.minTime(), this.rangeValue()[0]);
+  });
+
+  protected readonly panelMaxTime = computed(() => this.maxTime());
+
+  protected ariaLabelFor(segment: Segment): string {
+    const base = this.ariaLabel() ?? 'Select time';
+    if (segment === 'start') {
+      return `${base} (from)`;
+    }
+    if (segment === 'end') {
+      return `${base} (to)`;
+    }
+
+    return base;
+  }
+
+  protected formatFor(value: string | null): string {
+    return formatTime(value, this.resolvedFormat());
+  }
+
+  protected open(segment: Segment): void {
     if (this.isDisabled() || this.overlayRef) {
+      return;
+    }
+    const triggerRef = this.triggerFor(segment);
+    if (!triggerRef) {
       return;
     }
     const positionStrategy = this.overlay
       .position()
-      .flexibleConnectedTo(this.trigger().nativeElement)
+      .flexibleConnectedTo(triggerRef.nativeElement)
       .withPositions([
         {
           originX: 'start',
@@ -188,7 +227,7 @@ export class TimePickerComponent extends DsControlValueAccessor<
       }
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
-    this.isOpen.set(true);
+    this.openSegment.set(segment);
     afterNextRender(() => this.columns()?.focusSelected(), {
       injector: this.injector,
     });
@@ -197,27 +236,72 @@ export class TimePickerComponent extends DsControlValueAccessor<
   protected close(): void {
     disposeWithLeave(this.overlayRef);
     this.overlayRef = null;
-    this.isOpen.set(false);
+    this.openSegment.set(null);
     this.markTouched();
   }
 
   protected onEscape(): void {
+    const segment = this.openSegment();
     this.close();
-    this.trigger().nativeElement.focus();
+    (segment ? this.triggerFor(segment) : null)?.nativeElement.focus();
   }
 
   protected onPick(next: string): void {
+    const segment = this.openSegment();
+    if (segment === 'start') {
+      const end = this.rangeValue()[1];
+      const bumped = end && this.minutesOf(end) < this.minutesOf(next);
+      this.value.set([next, bumped ? next : end]);
+
+      return;
+    }
+    if (segment === 'end') {
+      this.value.set([this.rangeValue()[0], next]);
+
+      return;
+    }
     this.value.set(next);
   }
 
   protected setNow(): void {
     const now = new Date();
     const raw = `${pad2(now.getHours())}:${pad2(now.getMinutes())}`;
-    this.value.set(clampToRange(snapToStep(raw, this.minuteStep()), this.constraints()));
+    const constraints: TimeConstraints = {
+      minTime: this.panelMinTime(),
+      maxTime: this.panelMaxTime(),
+      disabledTime: this.disabledTime(),
+    };
+    this.onPick(clampToRange(snapToStep(raw, this.minuteStep()), constraints));
   }
 
   protected clear(event: Event): void {
     event.stopPropagation();
     this.value.set(null);
+  }
+
+  private triggerFor(segment: Segment): ElementRef<HTMLButtonElement> | undefined {
+    if (segment === 'start') {
+      return this.startTrigger();
+    }
+    if (segment === 'end') {
+      return this.endTrigger();
+    }
+
+    return this.singleTrigger();
+  }
+
+  private minutesOf(value: string): number {
+    return toMinutes(value) ?? 0;
+  }
+
+  private laterOf(a: string | null, b: string | null): string | null {
+    if (!a) {
+      return b;
+    }
+    if (!b) {
+      return a;
+    }
+
+    return this.minutesOf(a) >= this.minutesOf(b) ? a : b;
   }
 }
