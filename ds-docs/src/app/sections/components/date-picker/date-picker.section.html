@@ -83,8 +83,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">[invalid]="true"</code> switches the hint to
-    an error message; <code class="t-mono-inline">[disabled]="true"</code>
+    <code class="t-mono-inline">
+      [invalid]="true"
+    </code> switches the hint to an
+    error message; <code class="t-mono-inline">[disabled]="true"</code>
     makes the picker inert.
   </p>
 
@@ -103,6 +105,101 @@
       hint="Locked for this event."
       placeholder="Pick a range"
       [disabled]="true"
+    />
+  </div>
+
+  <!-- ============================================================ min/max bounds -->
+  <h3 class="block-title t-h4">
+    Min / max date bounds
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [minDate]
+    </code> and
+    <code class="t-mono-inline">
+      [maxDate]
+    </code> disable days outside the
+    allowed window. Days before <code class="t-mono-inline">minDate</code> or
+    after <code class="t-mono-inline">maxDate</code> are rendered as disabled
+    and cannot be selected. The example below restricts to today ± 30 days.
+  </p>
+
+  <div class="row">
+    <ds-date-picker
+      mode="single"
+      label="Build start (bounded)"
+      placeholder="Pick a date"
+      [minDate]="minDateToday"
+      [maxDate]="maxDateThirtyDays"
+    />
+  </div>
+
+  <!-- ============================================================ disabledDate -->
+  <h3 class="block-title t-h4">
+    Disabled-date predicate
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [disabledDate]
+    </code> accepts a
+    <code class="t-mono-inline">
+      (date: Date) =&gt; boolean
+    </code> predicate. The
+    example disables weekends — useful for booking working days only.
+  </p>
+
+  <div class="row">
+    <ds-date-picker
+      mode="single"
+      label="Working days only"
+      placeholder="Pick a weekday"
+      [disabledDate]="disableWeekends"
+    />
+
+    <ds-date-picker
+      mode="range"
+      label="Working day range"
+      placeholder="Pick a range"
+      [disabledDate]="disableWeekends"
+    />
+  </div>
+
+  <!-- ============================================================ Presets -->
+  <h3 class="block-title t-h4">
+    Presets
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [presets]
+    </code> renders a quick-pick button
+    column inside the calendar panel. Each preset carries a
+    <code class="t-mono-inline">
+      label
+    </code> and a
+    <code class="t-mono-inline">
+      value
+    </code> (<code class="t-mono-inline"
+      >Date</code
+    >
+    or <code class="t-mono-inline">RangeValue</code>). Disabled when its dates
+    fall outside <code class="t-mono-inline">minDate</code> /
+    <code class="t-mono-inline">
+      maxDate
+    </code> /
+    <code class="t-mono-inline">
+      disabledDate
+    </code>.
+  </p>
+
+  <div class="row">
+    <ds-date-picker
+      mode="range"
+      label="Show window"
+      placeholder="Pick a range"
+      [presets]="rangePresets"
     />
   </div>
 

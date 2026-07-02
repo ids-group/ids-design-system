@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { DatePickerComponent } from 'ds';
+import { DatePickerComponent, type DatePickerPreset } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,
@@ -9,11 +9,7 @@ import {
 @Component({
   selector: 'section-components-date-picker',
   standalone: true,
-  imports: [
-    DatePickerComponent,
-    DocsSectionComponent,
-    DocsTruncationComponent,
-  ],
+  imports: [DatePickerComponent, DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './date-picker.section.html',
   styleUrl: './date-picker.section.scss',
@@ -28,6 +24,60 @@ export class DatePickerSection {
     {
       field: 'Calendar day',
       behaviour: 'Single digit/two digits — no clip ever.',
+    },
+  ];
+
+  /** minDate example: today as lower bound */
+  protected readonly minDateToday = new Date();
+
+  /** maxDate example: 30 days from now */
+  protected readonly maxDateThirtyDays = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    new Date().getDate() + 30,
+  );
+
+  /** disabledDate example: disable weekends (Saturday=6, Sunday=0) */
+  protected readonly disableWeekends = (date: Date): boolean => {
+    const day = date.getDay();
+
+    return day === 0 || day === 6;
+  };
+
+  /** Preset shortcuts for a range picker */
+  protected readonly rangePresets: readonly DatePickerPreset[] = [
+    {
+      label: 'Today',
+      value: new Date(),
+    },
+    {
+      label: 'Yesterday',
+      value: (() => {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        return yesterday;
+      })(),
+    },
+    {
+      label: 'Last 7 days',
+      value: (() => {
+        const end = new Date();
+        const start = new Date();
+        start.setDate(start.getDate() - 6);
+
+        return [start, end] as [Date, Date];
+      })(),
+    },
+    {
+      label: 'Last 30 days',
+      value: (() => {
+        const end = new Date();
+        const start = new Date();
+        start.setDate(start.getDate() - 29);
+
+        return [start, end] as [Date, Date];
+      })(),
     },
   ];
 }

@@ -20,6 +20,7 @@
 .day {
   width: var(--space-8);
   height: var(--space-8);
+
   /* Cap to the (possibly narrower) grid track so the cell never overflows the panel. */
   max-width: 100%;
   min-width: 0;

@@ -22,9 +22,13 @@ import { disposeWithLeave } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { CalendarDayComponent } from '../calendar-day/calendar-day.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
-import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
+import {
+  FieldMessageComponent,
+  type FieldMessageState,
+} from '../field-message/field-message.component';
 import type {
   DatePickerMode,
+  DatePickerPreset,
   DatePickerSize,
   RangeValue,
 } from './date-picker.types';
@@ -41,6 +45,7 @@ interface DayCell {
   isRangeStart: boolean;
   isRangeEnd: boolean;
   isSelected: boolean;
+  isDisabled: boolean;
 }
 
 @Component({
@@ -58,7 +63,9 @@ interface DayCell {
     },
   ],
 })
-export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValue | null> {
+export class DatePickerComponent extends DsControlValueAccessor<
+  Date | RangeValue | null
+> {
   constructor() {
     super();
   }
@@ -82,9 +89,21 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
   /** Bounds for the year dropdown in the calendar header. */
   readonly minYear = input<number>(new Date().getFullYear() - 100);
   readonly maxYear = input<number>(new Date().getFullYear() + 10);
+  /** Earliest selectable date (inclusive). Days before this are disabled. */
+  readonly minDate = input<Date | null>(null);
+  /** Latest selectable date (inclusive). Days after this are disabled. */
+  readonly maxDate = input<Date | null>(null);
+  /** Predicate — return true to disable an individual day. */
+  readonly disabledDate = input<((date: Date) => boolean) | null>(null);
+  /** Quick-pick shortcuts shown as a button column inside the calendar panel. */
+  readonly presets = input<readonly DatePickerPreset[]>([]);
 
-  protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
-  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly isDisabled = computed(
+    () => this.disabled() || this.formDisabled(),
+  );
+  protected readonly hintId = computed(() =>
+    this.hint() ? `${this.uid}-hint` : null,
+  );
   protected readonly messageState = computed<FieldMessageState>(() =>
     this.invalid() ? 'error' : 'default',
   );
@@ -243,10 +262,22 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
   protected readonly monthMenuOpen = signal(false);
   protected readonly yearMenuOpen = signal(false);
   protected readonly monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
-  protected readonly viewMonthIndex = computed(() => this.viewMonth().getMonth());
+  protected readonly viewMonthIndex = computed(() =>
+    this.viewMonth().getMonth(),
+  );
   protected readonly viewYear = computed(() => this.viewMonth().getFullYear());
 
   /** First year shown in the year grid; paged by YEAR_PAGE_SIZE within [minYear, maxYear]. */
@@ -256,7 +287,11 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
     const start = this.yearPageStart();
     const max = this.maxYear();
     const list: number[] = [];
-    for (let year = start; year < start + YEAR_PAGE_SIZE && year <= max; year++) {
+    for (
+      let year = start;
+      year < start + YEAR_PAGE_SIZE && year <= max;
+      year++
+    ) {
       list.push(year);
     }
 
@@ -327,6 +362,41 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
     this.yearMenuOpen.set(false);
   }
 
+  protected isDayDisabled(date: Date): boolean {
+    const min = this.minDate();
+    const max = this.maxDate();
+    const predicate = this.disabledDate();
+    if (min) {
+      const minStart = new Date(
+        min.getFullYear(),
+        min.getMonth(),
+        min.getDate(),
+      );
+      if (date < minStart) {
+        return true;
+      }
+    }
+    if (max) {
+      const maxEnd = new Date(
+        max.getFullYear(),
+        max.getMonth(),
+        max.getDate(),
+        23,
+        59,
+        59,
+        999,
+      );
+      if (date > maxEnd) {
+        return true;
+      }
+    }
+    if (predicate) {
+      return predicate(date);
+    }
+
+    return false;
+  }
+
   protected readonly daysGrid = computed<DayCell[]>(() => {
     const view = this.viewMonth();
     const year = view.getFullYear();
@@ -352,6 +422,7 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
         isRangeStart: range.isStart,
         isRangeEnd: range.isEnd,
         isSelected: range.isSelected,
+        isDisabled: this.isDayDisabled(d),
       });
     }
 
@@ -473,6 +544,9 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
   }
 
   protected selectDay(cell: DayCell): void {
+    if (cell.isDisabled) {
+      return;
+    }
     if (this.mode() === 'single') {
       this.value.set(new Date(cell.date));
       this.close();
@@ -494,5 +568,41 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
       this.close();
       this.trigger().nativeElement.focus();
     }
+  }
+
+  protected isPresetDisabled(preset: DatePickerPreset): boolean {
+    const presetValue = preset.value;
+    if (presetValue instanceof Date) {
+      return this.isDayDisabled(presetValue);
+    }
+    const rangeValue = presetValue as RangeValue;
+    const start = rangeValue[0];
+    const end = rangeValue[1];
+    if (start && this.isDayDisabled(start)) {
+      return true;
+    }
+    if (end && this.isDayDisabled(end)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  protected applyPreset(preset: DatePickerPreset): void {
+    if (this.isPresetDisabled(preset)) {
+      return;
+    }
+    const presetValue = preset.value;
+    if (presetValue instanceof Date) {
+      this.value.set(new Date(presetValue));
+    } else {
+      const rangeValue = presetValue as RangeValue;
+      this.value.set([
+        rangeValue[0] ? new Date(rangeValue[0]) : null,
+        rangeValue[1] ? new Date(rangeValue[1]) : null,
+      ]);
+    }
+    this.close();
+    this.trigger().nativeElement.focus();
   }
 }

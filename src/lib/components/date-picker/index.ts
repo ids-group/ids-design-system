@@ -4,4 +4,5 @@ export type {
   DateValue,
   RangeValue,
   DatePickerValue,
+  DatePickerPreset,
 } from './date-picker.types';

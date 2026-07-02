@@ -268,4 +268,57 @@
   /* Day-cell styles now live in calendar-day.component.scss (the grid renders
      <ds-calendar-day>). The --_datepicker-day-* resolvers above stay — the
      month/year picker cells and nav buttons read them. */
+
+  &.has-presets {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-3);
+
+    .calendar-body {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+  }
+
+  .calendar-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .presets {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    border-left: var(--border-width-default) solid var(--_datepicker-border);
+    padding-left: var(--space-3);
+    min-width: max-content;
+  }
+
+  .preset-btn {
+    display: block;
+    width: 100%;
+    border: 0;
+    background: transparent;
+    padding: var(--space-1-5) var(--space-2);
+    border-radius: var(--radius-sm);
+    font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
+    color: var(--text-primary);
+    cursor: pointer;
+    text-align: left;
+    white-space: nowrap;
+
+    &:hover:not(:disabled) {
+      background-color: var(--_datepicker-day-hover-bg-color);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--_date-picker-focus-shadow);
+    }
+
+    &:disabled {
+      color: var(--_datepicker-day-disabled-label-color);
+      cursor: not-allowed;
+    }
+  }
 }
