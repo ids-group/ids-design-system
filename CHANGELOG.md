@@ -21,6 +21,22 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   support (roving arrows per column, Home/End, Escape). Exports `TimePickerComponent`,
   `TimePickerMode`, `TimePickerSize`, `TimeFormat`, `TimeValue`, `TimeRangeValue`,
   `TimePickerValue`; new `DsConfig.timePicker.format`; public `--ds-time-picker-*` hooks.
+- **Selection controls gain `size` + `required`.** `ds-checkbox` / `ds-radio` / `ds-switch`
+  take a `size` input (`sm` / `md` / `lg`; `md` unchanged and still density-responsive) and
+  a `required` input (adds `aria-required` + a `*` marker on the inline `[label]`). `ds-radio`
+  (standalone) also gains `invalid` + `hint` via `ds-field-message`, matching checkbox/switch.
+  New exported `CheckboxSize` / `RadioSize` / `SwitchSize`.
+- **`ds-input` / `ds-textarea` character counter.** New `[maxLength]` caps input and renders a
+  live `"n/max"` counter beside the hint. `ds-textarea` also gains `[readOnly]` (mirrors input).
+- **`ds-date-picker` day-level constraints + presets.** New `[minDate]` / `[maxDate]` (disable
+  out-of-range days, inclusive), `[disabledDate]` predicate (disable arbitrary days), and
+  `[presets]` (`DatePickerPreset[]` — quick-pick buttons in the calendar panel). Disabled days
+  aren't selectable by click or keyboard. New exported `DatePickerPreset`.
+- **Dropdown-family enhancements.** `ds-select` gains `clearable` + per-option `icon`
+  (`SelectOption.icon`); `ds-dropdown` gains `[optionGroups]` (grouped listbox) + `clearable`;
+  `ds-combobox` gains `[optionGroups]` + `[allowCreate]` with a "Create …" row and a `(create)`
+  output. New exported `DropdownOptionGroup` / `ComboboxOptionGroup`. (Native multi on `ds-select`
+  intentionally omitted — use `ds-multi-select`.)
 
 ## 0.4.0 — 2026-06-30
 
