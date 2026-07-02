@@ -24,6 +24,7 @@ export * from './lib/components/dropdown';
 export * from './lib/components/table';
 export * from './lib/components/pagination';
 export * from './lib/components/date-picker';
+export * from './lib/components/time-picker';
 export * from './lib/components/breadcrumbs';
 export * from './lib/components/sidenav';
 export * from './lib/components/topbar';

@@ -38,7 +38,11 @@ interface Cell<T> {
   templateUrl: './time-columns.component.html',
   styleUrl: './time-columns.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
-  host: { class: 'ds-time-columns', role: 'group', '[attr.aria-label]': "'Time'" },
+  host: {
+    class: 'ds-time-columns',
+    role: 'group',
+    '[attr.aria-label]': "'Time'",
+  },
 })
 export class TimeColumnsComponent {
   readonly value = input<string | null>(null);
@@ -57,57 +61,70 @@ export class TimeColumnsComponent {
     viewChildren<ElementRef<HTMLButtonElement>>('periodOpt');
 
   protected readonly is12h = computed(() => this.format() === '12h');
-  protected readonly periods: ReadonlyArray<'AM' | 'PM'> = ['AM', 'PM'];
+  protected readonly periods: readonly ('AM' | 'PM')[] = ['AM', 'PM'];
 
   private readonly constraints = computed<TimeConstraints>(() => ({
     minTime: this.minTime(),
     maxTime: this.maxTime(),
     disabledTime: this.disabledTime(),
   }));
-  private readonly sel = computed(() => parseTime(this.value()));
+  private readonly parsedValue = computed(() => parseTime(this.value()));
   private readonly hourNums = computed(() => genHours(this.format()));
   private readonly minuteNums = computed(() => genMinutes(this.minuteStep()));
 
   protected readonly currentPeriod = computed<'AM' | 'PM'>(() => {
-    const s = this.sel();
-    return s ? to12h(s.h).period : 'AM';
+    const parsed = this.parsedValue();
+
+    return parsed ? to12h(parsed.h).period : 'AM';
   });
 
   protected readonly hourCells = computed<Cell<number>[]>(() => {
-    const s = this.sel();
-    const selectedHour = s ? (this.is12h() ? to12h(s.h).h : s.h) : null;
-    return this.hourNums().map((h) => ({
-      value: h,
-      label: pad2(h),
-      disabled: this.allMinutesDisabled(this.toH24(h)),
-      selected: h === selectedHour,
+    const parsed = this.parsedValue();
+    const selectedHour = parsed
+      ? this.is12h()
+        ? to12h(parsed.h).h
+        : parsed.h
+      : null;
+
+    return this.hourNums().map((hours) => ({
+      value: hours,
+      label: pad2(hours),
+      disabled: this.allMinutesDisabled(this.toH24(hours)),
+      selected: hours === selectedHour,
     }));
   });
 
   protected readonly minuteCells = computed<Cell<number>[]>(() => {
-    const s = this.sel();
-    const h24 = this.baseHour();
-    return this.minuteNums().map((m) => ({
-      value: m,
-      label: pad2(m),
-      disabled: isTimeDisabled(`${pad2(h24)}:${pad2(m)}`, this.constraints()),
-      selected: s ? s.m === m : false,
+    const parsed = this.parsedValue();
+    const hour24 = this.baseHour();
+
+    return this.minuteNums().map((minute) => ({
+      value: minute,
+      label: pad2(minute),
+      disabled: isTimeDisabled(
+        `${pad2(hour24)}:${pad2(minute)}`,
+        this.constraints(),
+      ),
+      selected: parsed ? parsed.m === minute : false,
     }));
   });
 
   protected readonly periodCells = computed<Cell<'AM' | 'PM'>[]>(() => {
-    const s = this.sel();
-    return this.periods.map((p) => ({
-      value: p,
-      label: p,
-      disabled: this.hourNums().every((h) =>
-        this.allMinutesDisabled(from12h(h, p)),
+    const parsed = this.parsedValue();
+
+    return this.periods.map((period) => ({
+      value: period,
+      label: period,
+      disabled: this.hourNums().every((hours) =>
+        this.allMinutesDisabled(from12h(hours, period)),
       ),
-      selected: s ? to12h(s.h).period === p : false,
+      selected: parsed ? to12h(parsed.h).period === period : false,
     }));
   });
 
-  protected readonly hourEntry = computed(() => this.entryIndex(this.hourCells()));
+  protected readonly hourEntry = computed(() =>
+    this.entryIndex(this.hourCells()),
+  );
   protected readonly minuteEntry = computed(() =>
     this.entryIndex(this.minuteCells()),
   );
@@ -119,9 +136,9 @@ export class TimeColumnsComponent {
     if (cell.disabled) {
       return;
     }
-    const h24 = this.toH24(cell.value);
-    const s = this.sel();
-    this.emit(h24, s ? s.m : this.firstEnabledMinute(h24));
+    const hour24 = this.toH24(cell.value);
+    const parsed = this.parsedValue();
+    this.emit(hour24, parsed ? parsed.m : this.firstEnabledMinute(hour24));
   }
 
   protected selectMinute(cell: Cell<number>): void {
@@ -135,10 +152,12 @@ export class TimeColumnsComponent {
     if (cell.disabled) {
       return;
     }
-    const s = this.sel();
-    const h12 = s ? to12h(s.h).h : this.firstEnabledHour12(cell.value);
-    const h24 = from12h(h12, cell.value);
-    this.emit(h24, s ? s.m : this.firstEnabledMinute(h24));
+    const parsed = this.parsedValue();
+    const hour12 = parsed
+      ? to12h(parsed.h).h
+      : this.firstEnabledHour12(cell.value);
+    const hour24 = from12h(hour12, cell.value);
+    this.emit(hour24, parsed ? parsed.m : this.firstEnabledMinute(hour24));
   }
 
   protected onKey(event: KeyboardEvent, column: ColumnId, index: number): void {
@@ -160,10 +179,12 @@ export class TimeColumnsComponent {
       case 'ArrowRight':
         event.preventDefault();
         this.focusColumn(this.siblingColumn(column, 1));
+
         return;
       case 'ArrowLeft':
         event.preventDefault();
         this.focusColumn(this.siblingColumn(column, -1));
+
         return;
       default:
         return;
@@ -188,50 +209,59 @@ export class TimeColumnsComponent {
     this.scrollColumn(this.periodButtons(), this.periodEntry());
   }
 
-  private toH24(hCol: number): number {
-    return this.is12h() ? from12h(hCol, this.currentPeriod()) : hCol;
+  private toH24(hourCol: number): number {
+    return this.is12h() ? from12h(hourCol, this.currentPeriod()) : hourCol;
   }
 
-  private allMinutesDisabled(h24: number): boolean {
-    return this.minuteNums().every((m) =>
-      isTimeDisabled(`${pad2(h24)}:${pad2(m)}`, this.constraints()),
+  private allMinutesDisabled(hour24: number): boolean {
+    return this.minuteNums().every((minute) =>
+      isTimeDisabled(`${pad2(hour24)}:${pad2(minute)}`, this.constraints()),
     );
   }
 
   private baseHour(): number {
-    const s = this.sel();
-    if (s) {
-      return s.h;
+    const parsed = this.parsedValue();
+    if (parsed) {
+      return parsed.h;
     }
-    const first = this.hourCells().find((c) => !c.disabled);
+    const first = this.hourCells().find((cell) => !cell.disabled);
+
     return first ? this.toH24(first.value) : 0;
   }
 
-  private firstEnabledMinute(h24: number): number {
-    const m = this.minuteNums().find(
-      (mm) => !isTimeDisabled(`${pad2(h24)}:${pad2(mm)}`, this.constraints()),
+  private firstEnabledMinute(hour24: number): number {
+    const minute = this.minuteNums().find(
+      (candidate) =>
+        !isTimeDisabled(`${pad2(hour24)}:${pad2(candidate)}`, this.constraints()),
     );
-    return m ?? 0;
+
+    return minute ?? 0;
   }
 
   private firstEnabledHour12(period: 'AM' | 'PM'): number {
-    const h = this.hourNums().find(
-      (hh) => !this.allMinutesDisabled(from12h(hh, period)),
+    const hours = this.hourNums().find(
+      (candidate) => !this.allMinutesDisabled(from12h(candidate, period)),
     );
-    return h ?? 12;
+
+    return hours ?? 12;
   }
 
-  private emit(h24: number, m: number): void {
-    this.timeChange.emit(`${pad2(h24)}:${pad2(m)}`);
+  private emit(hour24: number, minute: number): void {
+    this.timeChange.emit(`${pad2(hour24)}:${pad2(minute)}`);
   }
 
-  private entryIndex(cells: ReadonlyArray<{ disabled: boolean; selected: boolean }>): number {
-    const selected = cells.findIndex((c) => c.selected && !c.disabled);
-    return selected >= 0 ? selected : cells.findIndex((c) => !c.disabled);
+  private entryIndex(
+    cells: readonly { disabled: boolean; selected: boolean }[],
+  ): number {
+    const selected = cells.findIndex((cell) => cell.selected && !cell.disabled);
+
+    return selected >= 0
+      ? selected
+      : cells.findIndex((cell) => !cell.disabled);
   }
 
   private nextEnabled(
-    cells: ReadonlyArray<{ disabled: boolean }>,
+    cells: readonly { disabled: boolean }[],
     from: number,
     step: number,
   ): number {
@@ -246,16 +276,18 @@ export class TimeColumnsComponent {
         return index;
       }
     }
+
     return -1;
   }
 
-  private cellsFor(column: ColumnId): ReadonlyArray<{ disabled: boolean }> {
+  private cellsFor(column: ColumnId): readonly { disabled: boolean }[] {
     if (column === 'hours') {
       return this.hourCells();
     }
     if (column === 'minutes') {
       return this.minuteCells();
     }
+
     return this.periodCells();
   }
 
@@ -266,6 +298,7 @@ export class TimeColumnsComponent {
     if (column === 'minutes') {
       return this.minuteButtons;
     }
+
     return this.periodButtons;
   }
 
@@ -284,6 +317,7 @@ export class TimeColumnsComponent {
       ? ['hours', 'minutes', 'period']
       : ['hours', 'minutes'];
     const next = order.indexOf(column) + step;
+
     return order[Math.min(Math.max(next, 0), order.length - 1)];
   }
 
@@ -298,7 +332,7 @@ export class TimeColumnsComponent {
   }
 
   private scrollColumn(
-    buttons: ReadonlyArray<ElementRef<HTMLButtonElement>>,
+    buttons: readonly ElementRef<HTMLButtonElement>[],
     index: number,
   ): void {
     buttons[Math.max(index, 0)]?.nativeElement.scrollIntoView({

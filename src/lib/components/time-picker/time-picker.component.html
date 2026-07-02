@@ -1,0 +1,78 @@
+<div class="field">
+  <div class="trigger-wrap">
+    <button
+      #trigger
+      type="button"
+      aria-haspopup="dialog"
+      [class]="triggerClasses()"
+      [disabled]="isDisabled()"
+      [attr.aria-expanded]="isOpen()"
+      [attr.aria-label]="resolvedAriaLabel()"
+      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-describedby]="hintId()"
+      (click)="open()"
+    >
+      <ds-icon
+        name="clock"
+        [size]="14"
+      />
+
+      <span class="time-value">
+        {{ displayValue() }}
+      </span>
+    </button>
+
+    @if (clearable() && hasValue()) {
+      <button
+        type="button"
+        class="time-clear"
+        aria-label="Clear"
+        [disabled]="isDisabled()"
+        (click)="clear($event)"
+      >
+        <ds-icon
+          name="x"
+          [size]="14"
+        />
+      </button>
+    }
+  </div>
+
+  <ds-field-message
+    [text]="hint()"
+    [state]="messageState()"
+    [messageId]="hintId()"
+  />
+</div>
+
+<ng-template #panel>
+  <div class="time-panel">
+    <ds-time-columns
+      [value]="singleValue()"
+      [format]="resolvedFormat()"
+      [minuteStep]="minuteStep()"
+      [minTime]="minTime()"
+      [maxTime]="maxTime()"
+      [disabledTime]="disabledTime()"
+      (timeChange)="onPick($event)"
+    />
+
+    <div class="time-footer">
+      <button
+        type="button"
+        class="time-action"
+        (click)="setNow()"
+      >
+        Now
+      </button>
+
+      <button
+        type="button"
+        class="time-action primary"
+        (click)="onEscape()"
+      >
+        Done
+      </button>
+    </div>
+  </div>
+</ng-template>
