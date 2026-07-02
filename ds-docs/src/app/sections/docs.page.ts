@@ -72,6 +72,7 @@ import { LayoutPrimitivesSection } from './components/layout-primitives/layout-p
 import { SegmentedSection } from './components/segmented/segmented.section';
 import { ListSection } from './components/list/list.section';
 import { SplitButtonSection } from './components/split-button/split-button.section';
+import { TimePickerSection } from './components/time-picker/time-picker.section';
 import { TimelineSection } from './components/timeline/timeline.section';
 import { OtpInputSection } from './components/otp-input/otp-input.section';
 import { SliderSection } from './components/slider/slider.section';
@@ -164,6 +165,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     SegmentedSection,
     ListSection,
     SplitButtonSection,
+    TimePickerSection,
     TimelineSection,
     OtpInputSection,
     SliderSection,
@@ -289,6 +291,8 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     <section-components-tag />
 
     <section-components-textarea />
+
+    <section-components-time-picker />
 
     <section-components-timeline />
 
@@ -462,6 +466,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
       section-components-segmented,
       section-components-list,
       section-components-split-button,
+      section-components-time-picker,
       section-components-timeline,
       section-components-otp-input,
       section-components-slider,

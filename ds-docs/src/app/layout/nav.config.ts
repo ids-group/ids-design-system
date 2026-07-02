@@ -75,6 +75,7 @@ export const NAV: NavGroup[] = [
       { label: 'Tabs', anchor: 'tabs' },
       { label: 'Tag', anchor: 'tag' },
       { label: 'Textarea', anchor: 'textarea' },
+      { label: 'Time picker', anchor: 'time-picker', new: true },
       { label: 'Timeline', anchor: 'timeline', new: true },
       { label: 'Toast', anchor: 'toast' },
       { label: 'Tooltip', anchor: 'tooltip' },

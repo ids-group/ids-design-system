@@ -1,0 +1,225 @@
+<docs-section
+  anchor="time-picker"
+  eyebrow="Components"
+  title="Time picker"
+>
+  <span lede>
+    A time field (HH:MM) that opens column wheels — Hours / Minutes (and AM·PM
+    in 12-hour mode). Value is a canonical 24-hour
+    <code class="t-mono-inline">
+      "HH:MM"
+    </code>
+    string; 24h vs 12h display is chosen app-wide via
+    <code class="t-mono-inline"
+      >
+      provideDsConfig({{ '{' }} timePicker: {{ '{' }} format {{ '}' }}
+      {{ '}' }})
+    </code
+    >.
+  </span>
+
+  <!-- ============================================================ Single -->
+  <h3 class="block-title t-h4">
+    Single
+  </h3>
+
+  <p class="block-desc t-s">
+    Click the trigger, pick an hour and a minute; the value updates live.
+  </p>
+
+  <div class="row">
+    <ds-time-picker [(value)]="single" />
+
+    <span class="value-tag t-mono-inline">
+      {{ single() ?? '—' }}
+    </span>
+  </div>
+
+  <!-- ============================================================ 12-hour -->
+  <h3 class="block-title t-h4">
+    12-hour (AM/PM)
+  </h3>
+
+  <p class="block-desc t-s">
+    Normally set globally via
+    <code class="t-mono-inline">
+      DsConfig.timePicker.format
+    </code>; the
+    per-instance <code class="t-mono-inline">[format]</code> input overrides it
+    here.
+  </p>
+
+  <div class="row">
+    <ds-time-picker
+      format="12h"
+      placeholder="--:-- --"
+    />
+  </div>
+
+  <!-- ============================================================ Minute step -->
+  <h3 class="block-title t-h4">
+    Minute step
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [minuteStep]="15"
+    </code> lists only quarter-hour
+    slots.
+  </p>
+
+  <div class="row">
+    <ds-time-picker
+      [minuteStep]="15"
+      [(value)]="stepped"
+    />
+
+    <span class="value-tag t-mono-inline">
+      {{ stepped() ?? '—' }}
+    </span>
+  </div>
+
+  <!-- ============================================================ Min / max / disabled -->
+  <h3 class="block-title t-h4">
+    Min · max · disabled slots
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [minTime]
+    </code> /
+    <code class="t-mono-inline">
+      [maxTime]
+    </code> bound the range;
+    <code class="t-mono-inline">
+      [disabledTime]
+    </code> is a predicate — here it
+    blocks the lunch hour (12:00–12:59).
+  </p>
+
+  <div class="row">
+    <ds-time-picker
+      minTime="09:00"
+      maxTime="18:00"
+      [minuteStep]="30"
+      [disabledTime]="noLunch"
+      [(value)]="bounded"
+    />
+
+    <span class="value-tag t-mono-inline">
+      {{ bounded() ?? '—' }}
+    </span>
+  </div>
+
+  <!-- ============================================================ Clearable + sizes -->
+  <h3 class="block-title t-h4">
+    Clearable · sizes
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [clearable]="true"
+    </code> shows a clear button
+    when a value is set. Heights follow the field scale (sm 32 / md 40 / lg 48).
+  </p>
+
+  <div class="row">
+    <ds-time-picker
+      size="sm"
+      clearable
+      [(value)]="single"
+    />
+
+    <ds-time-picker
+      size="md"
+      clearable
+      [(value)]="single"
+    />
+
+    <ds-time-picker
+      size="lg"
+      clearable
+      [(value)]="single"
+    />
+  </div>
+
+  <!-- ============================================================ Range -->
+  <h3 class="block-title t-h4">
+    Range
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      mode="range"
+    </code> renders a from–to pair; the
+    end cannot precede the chosen start.
+  </p>
+
+  <div class="row">
+    <ds-time-picker
+      mode="range"
+      [(value)]="range"
+    />
+
+    <span class="value-tag t-mono-inline">
+      {{ range() }}
+    </span>
+  </div>
+
+  <!-- ============================================================ Validation + forms -->
+  <h3 class="block-title t-h4">
+    Validation · reactive forms
+  </h3>
+
+  <p class="block-desc t-s">
+    Binds with <code class="t-mono-inline">[formControl]</code>;
+    <code class="t-mono-inline">
+      [invalid]
+    </code> switches the
+    <code class="t-mono-inline">
+      [hint]
+    </code> to an error line.
+  </p>
+
+  <div class="row">
+    <ds-time-picker
+      hint="A time is required."
+      [formControl]="timeControl"
+      [invalid]="true"
+    />
+
+    <span class="value-tag t-mono-inline">
+      {{ timeControl.value ?? '—' }}
+    </span>
+  </div>
+
+  <!-- ============================================================ Datetime (date-picker) -->
+  <h3 class="block-title t-h4">
+    Date + time (date picker)
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      ds-date-picker
+    </code> gains
+    <code class="t-mono-inline">
+      [showTime]
+    </code> — the calendar footer hosts
+    the same time columns, and the value becomes a single
+    <code class="t-mono-inline">
+      Date
+    </code>.
+  </p>
+
+  <div class="row">
+    <ds-date-picker
+      showTime
+      placeholder="Pick date + time"
+      [(value)]="datetime"
+    />
+
+    <span class="value-tag t-mono-inline">
+      {{ datetime() }}
+    </span>
+  </div>
+</docs-section>
