@@ -130,10 +130,10 @@
   <div class="summary">
     <div class="stat you"><div class="n">3</div><div class="l">Ждёт твоего решения</div></div>
     <div class="stat a11y"><div class="n">11</div><div class="l">A11y (P0–P2)</div></div>
-    <div class="stat untouched"><div class="n">13</div><div class="l">Компоненты + foundations</div></div>
+    <div class="stat untouched"><div class="n">12</div><div class="l">Компоненты + foundations</div></div>
     <div class="stat untouched"><div class="n">17</div><div class="l">Motion / DS-docs / field / PIN-475</div></div>
     <div class="stat raw"><div class="n">8</div><div class="l">Raw / frozen / мелочь / lint</div></div>
-    <div class="stat done"><div class="n">43</div><div class="l">Сделано (свёрнуто)</div></div>
+    <div class="stat done"><div class="n">44</div><div class="l">Сделано (свёрнуто)</div></div>
   </div>
 
   <!-- ============ NEEDS YOU ============ -->
@@ -166,14 +166,13 @@
 
   <!-- ============ COMPONENTS + FEATURE GAPS ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🧩 Компоненты и фичи-гэпы</h2><span class="count c-track">6</span><span class="why">Из gap-analysis + starter.</span></div>
+    <div class="lane-head"><h2>🧩 Компоненты и фичи-гэпы</h2><span class="count c-track">5</span><span class="why">Из gap-analysis + starter.</span></div>
     <div class="cards">
-      <div class="card track"><span class="chip ch-oos">почти готово</span><div class="t">Missing components — HIGH</div><p class="d">✅ Отгружено: multi-select · button-group/segmented · timeline · description/list · data-grid (→ ds-table) · confirmation (→ `ModalService.confirm`) · layout primitives. Остаток: только time-picker (next). inline-alert ✅ закрыт через `ds-alert`. Command palette → won't-do.</p></div>
-      <div class="card track"><span class="chip ch-oos">MED</span><div class="t">Missing components — MED</div><p class="d">✅ Отгружено: color picker · slider/range · OTP input · tree-view · loading overlay · split button. Остаток: chart wrapper · calendar · image/lightbox · splitter. kanban → won't-do.</p></div>
-      <div class="card track"><span class="chip ch-oos">частично ✅</span><div class="t">Feature gaps — Forms</div><p class="d">✅ input `errorMessage`(invalid+hint)+`readOnly` · textarea errorMessage · combobox `disabled`/`invalid` · checkbox/switch `label`/`invalid` · radio `label` · radio-group `invalid` · date-picker `invalid`. <b>Остаток:</b> input/textarea <b>counter</b> · textarea `readOnly` · select clearable/multi/per-option-icons · dropdown groups/clearable · combobox groups/«create» · checkbox/radio/switch <b>`size`/`required`</b> (+standalone radio `invalid`) · date-picker day-level `minDate`/`maxDate`/disabled-dates/presets/time-mode.</p></div>
-      <div class="card track"><span class="chip ch-oos">частично ✅</span><div class="t">Feature gaps — Data/overlay</div><p class="d">✅ table empty-slot+pagination · toast position · menu keyboard · popover open-signal. <b>Остаток:</b> table <b>expandable rows</b> · modal opt-out `closeOnBackdrop`/xl-fullscreen/`persistent` · drawer placement/`sm` · bottom-sheet snap-points (footer = `[actions]`) · toast promise-loading/`maxVisible` · menu dividers/submenus · popover arrow + полный `placement` (сейчас `align`+авто-флип).</p></div>
-      <div class="card track"><span class="chip ch-oos">почти всё открыто</span><div class="t">Feature gaps — Display</div><p class="d">Из этой карточки закрыт только stepper visible labels ✅. <b>Остаток:</b> tabs lazy/scrollable/closable/vertical · accordion single-open+item `disabled` · stepper clickable/error/vertical · sidenav collapsed-tooltip · badge числовой `count`-инпут (вариант `count` есть, значение — контентом) · avatar status-dot+fallback-icon.</p></div>
-      <div class="card done"><div class="t">✅ CVA на form controls — вся линейка</div><p class="d">✅ 2026-06-30: input/textarea/select (06-23) + checkbox/switch/combobox/date-picker + новый `ds-radio-group`. Reactive forms + ngModel биндятся везде; `[(value)]` цел. data-grid → ds-table, confirm → `ModalService.confirm`.</p><div class="meta">control-value-accessor.ts · 2026-06-30</div></div>
+      <div class="card track"><span class="chip ch-oos">почти готово</span><div class="t">Missing components — HIGH</div><p class="d">Осталось: time-picker (next). Command palette → won't-do.</p></div>
+      <div class="card track"><span class="chip ch-oos">MED</span><div class="t">Missing components — MED</div><p class="d">Осталось: chart wrapper · calendar (standalone) · image/lightbox · splitter. kanban → won't-do.</p></div>
+      <div class="card track"><div class="t">Feature gaps — Forms</div><p class="d">input/textarea <b>char counter</b> · textarea `readOnly` · select clearable/multi/per-option-icons · dropdown option-groups/clearable · combobox option-groups/«create new» · checkbox/radio/switch <b>`size`</b>+<b>`required`</b> (+standalone radio `invalid`) · date-picker day-level `minDate`/`maxDate`+disabled-dates+presets+time-mode.</p></div>
+      <div class="card track"><div class="t">Feature gaps — Data/overlay</div><p class="d">table <b>expandable rows</b> · modal opt-out `closeOnBackdrop`+xl/fullscreen+`persistent` · drawer placement+`sm` · bottom-sheet snap-points (footer = `[actions]`) · toast promise-loading+`maxVisible` · menu dividers+submenus · popover arrow + полный `placement` (сейчас только `align`+авто-флип).</p></div>
+      <div class="card track"><span class="chip ch-oos">почти всё открыто</span><div class="t">Feature gaps — Display</div><p class="d">tabs lazy/scrollable/closable/vertical · accordion single-open+item `disabled` · stepper clickable/error/vertical · sidenav collapsed-tooltip · badge числовой `count`-инпут (вариант `count` есть, значение — контентом) · avatar status-dot+fallback-icon.</p></div>
     </div>
   </div>
 
@@ -182,7 +181,7 @@
     <div class="lane-head"><h2>🏗 Foundations / токены</h2><span class="count c-track">7</span><span class="why">Из gap-analysis + презентаций. Dark theme · chart-токены · spacing-aliases ✅ отгружены 06-29/26.</span></div>
     <div class="cards">
       <div class="card track"><div class="t">Primary-CTA token layer</div><p class="d">Opt-in `--primary-cta`/`-hover`/`-active`/`-on` (дефолт = `--primary*`); `.primary`-кнопка читает их — AA-safe при ребренде на светлый `--primary`.</p></div>
-      <div class="card track"><span class="chip ch-oos">ждёт вердикта</span><div class="t">Breakpoints @media — миграция</div><p class="d">Модуль `_breakpoints.scss` (`$bp-*` + `up()/down()`) ✅ отгружен (06-25). Осталось мигрировать 6 хардкод-`@media` на алиасы — но `page-grid` `641/1025` («+1») vs токен `640/1024` (сдвиг 1px), а `page-header 720` / `layout-utils 1100/820` off-scale. Оставлены нетронутыми (non-breaking).</p><div class="meta">implemented/bp-aliases.html</div></div>
+      <div class="card track"><span class="chip ch-oos">ждёт вердикта</span><div class="t">Breakpoints @media — миграция</div><p class="d">Мигрировать 6 хардкод-`@media` на `$bp-*`/`up()/down()`-алиасы — но `page-grid` `641/1025` («+1») vs токен `640/1024` (сдвиг 1px), а `page-header 720` / `layout-utils 1100/820` off-scale. Пока нетронуты (non-breaking).</p><div class="meta">implemented/bp-aliases.html</div></div>
       <div class="card track"><span class="chip ch-oos">MED</span><div class="t">Foundations MED (кластер)</div><p class="d">high-contrast/forced-colors тема · density (шрифты/иконки/pad) · fluid type (`clamp()`) · motion-пресеты · RTL/logical-properties.</p></div>
       <div class="card track"><div class="t">.ds-interactive — контракт состояний</div><p class="d">Реализовать `styles/_interaction.scss`: класс `.ds-interactive` + пресеты `.tint/.accent-ink/.inked/.surface-fx/.into-light` + `--state-step-*` токены; убрать per-component `--ds-*-bg-hover/-active` и локальный color-mix; миграция интерактивных. Зависит от вердиктов B1–B5.</p><div class="meta">interaction-formula.html</div></div>
       <div class="card done"><div class="t">✅ Палитра — чистка завершена</div><p class="d">`--static-white`/`--static-ink` ✅ заведены (06-29, on-роли переживают тёмную тему). Гибридный нейминг cool-gray/brand-gray/neutral-slot внедрён; scrollbar читает `--scrollbar-thumb*`.</p><div class="meta">implemented/palette-naming.html · 2026-06-29</div></div>
@@ -229,7 +228,7 @@
     <div class="cards">
       <div class="card track"><div class="t">combobox — нет content/compact ширины</div><p class="d">Multi-select всегда тянется на ширину хоста → один короткий чип оставляет пустой триггер справа. Нужен `fit-content`/`max-content`-режим (триггер обнимает чипы + min поле ввода). Сейчас консьюмер хардкодит ширину.</p></div>
       <div class="card track"><div class="t">combobox single — читается как free-text</div><p class="d">В single-режиме триггер сохраняет поле ввода + шеврон после выбора — выглядит как multi/typeahead и как `ds-select`. Нужен filled-select display-режим или гайд select vs combobox.</p></div>
-      <div class="card track"><span class="chip ch-oos">root-cause найден</span><div class="t">focus-ring на инпутах — DS follow-up</div><p class="d">«Двойной ринг» оказался НЕ багом DS: глобальный `.input:focus` из pinkmoon `_forms.scss` протекал в `.input` внутри `ds-search` (emulated encaps. не щитит inner-элемент от глобального селектора). Починено в pinkmoon. Токен-нестыковка combobox `--focus-ring`→`--focus-field` ✅ исправлена (06-18). <b>Открыто в DS:</b> `ds-search` именует inner-инпут слишком общим `.input` — переименовать в scoped-класс, чтобы либа была иммунна к консьюмерским `.input`-ресетам.</p><div class="meta">pin-475-fields.html</div></div>
+      <div class="card track"><span class="chip ch-oos">root-cause найден</span><div class="t">focus-ring на инпутах — DS follow-up</div><p class="d">`ds-search` именует inner-инпут слишком общим `.input` — переименовать в scoped-класс, чтобы либа была иммунна к консьюмерским `.input`-ресетам (глобальный `.input:focus` консьюмера протекает в inner-элемент сквозь emulated encaps.).</p><div class="meta">pin-475-fields.html</div></div>
       <div class="card track"><span class="chip ch-oos">proposed</span><div class="t">«Склеенное поле» / input-group композер</div><p class="d">Один бордер + один focus-ring из leading-select + trailing-input/search/combobox (search-bar PIN-475: `[ «искать по» select ▾ | divider | input ]`). `ds-select` не годится в leading-addon (нет fit-content, нет API снять свой бордер). Предложение: `ds-field-group`/`ds-input-group` — рисует общий бордер+ring, внутр. divider, велит слотам рендериться «голыми» (`[grouped]`/context-токен), фикс/флекс ширины. Прецеденты: Chakra InputGroup, MUI adornments, Ant Space.Compact. Парный с combobox fit-content + single-display.</p><div class="meta">search-scope.component.ts · 2026-06-18</div></div>
       <div class="card done"><div class="t">✅ combobox — size=sm|md|lg</div><p class="d">Добавлен инпут `size` в `ds-combobox` (дефолт `md`), зеркально `ds-select`; `min-height` 32/40/48. Билд зелёный.</p><div class="meta">2026-06-18</div></div>
     </div>
@@ -342,7 +341,7 @@
   </details>
 
   <details class="done-panel" open>
-    <summary class="lane-head"><h2>✅ Сделано · 2026-06-29/30 (dark · ds-color · button color×variant · components · forms)</h2><span class="count c-done">12</span><span class="toggle"></span><span class="why">Большой заход 29–30 июня. Деки — в `implemented/`.</span></summary>
+    <summary class="lane-head"><h2>✅ Сделано · 2026-06-29/30 (dark · ds-color · button color×variant · components · forms)</h2><span class="count c-done">13</span><span class="toggle"></span><span class="why">Большой заход 29–30 июня. Деки — в `implemented/`.</span></summary>
     <div class="cards">
       <div class="card done"><div class="t">✅ Dark theme</div><p class="d">`themes/dark/`. Light — дефолт; dark opt-in через `<html data-theme="dark">`; авто-OS только через `provideDsTheme({ followSystem })`. Sibling-темы (общий base-palette + semantic-роли), `color-scheme` на тему, dark chart-токены. `themes/default`→`themes/light`.</p><div class="meta">c94f368… · 2026-06-29</div></div>
       <div class="card done"><div class="t">✅ ds-color — scoped accent</div><p class="d">`--accent-*` indirection (дефолт primary, pixel-identical без `ds-color`) + атрибут `[ds-color="…"]` и миксин `ds.color()`. Полный sweep компонентов (`--primary*`→`--accent*`); button/icon-button `--c-*` → `--accent-*`. Статус-каналы + per-family focus-rings.</p><div class="meta">b51b55e… · 2026-06-30</div></div>
@@ -356,6 +355,7 @@
       <div class="card done"><div class="t">✅ --static-white / --static-ink</div><p class="d">Тема-независимые on-fill якоря — white-on-coloured-fill переживает тёмную тему. Закрывает гэп «Палитра — `--static-white`».</p><div class="meta">3333855 · 2026-06-29</div></div>
       <div class="card done"><div class="t">✅ Semantic spacing aliases</div><p class="d">`--space-stack` / `--space-inline` (с layout-примитивами).</p><div class="meta">caa8d03 · 2026-06-26</div></div>
       <div class="card done"><div class="t">✅ A11y: switch / checkbox / radio-group</div><p class="d">switch `role="switch"`+aria-checked+label; checkbox label/`for`+ARIA+booleanAttribute; новый `ds-radio-group` (`role=radiogroup`+roving+group-label).</p><div class="meta">2026-06-30</div></div>
+      <div class="card done"><div class="t">✅ Overlay/table — точечные фичи-гэпы</div><p class="d">table empty-slot + pagination · toast position (`DsToastPosition` → region) · menu keyboard-nav · popover open-signal. (Feature-gaps по полям — см. карточки «CVA» и «Field-message».)</p><div class="meta">2026-06-30</div></div>
     </div>
   </details>
 
