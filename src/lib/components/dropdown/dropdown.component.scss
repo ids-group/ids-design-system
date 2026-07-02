@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 /* ============================================================
    DROPDOWN (custom-styled popover)
    Trigger styled like .field .control; panel ported from
@@ -68,6 +70,8 @@
     border-color: var(--accent);
     box-shadow: var(--_dropdown-focus-shadow);
   }
+
+  @include press.feedback;
 
   &.open {
     border-color: var(--accent);

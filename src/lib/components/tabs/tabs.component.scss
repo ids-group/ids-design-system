@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 /* ============================================================
    TABS
    Ported from CLAUDE_DESIGN_DS/components.css (TABS block).
@@ -79,6 +81,8 @@
       box-shadow: var(--_tabs-focus-shadow);
       border-radius: var(--radius-sm);
     }
+
+    @include press.feedback;
 
     &[disabled],
     &.disabled {

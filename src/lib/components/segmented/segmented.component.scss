@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 /* Public --ds-segmented-* are read with fallbacks, never declared. */
 
 :host {
@@ -55,6 +57,8 @@
     outline: none;
     box-shadow: var(--accent-focus-ring);
   }
+
+  @include press.feedback;
 
   &:disabled {
     color: var(--text-disabled);

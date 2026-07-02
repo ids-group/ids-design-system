@@ -1,0 +1,28 @@
+// Rounded press feedback — Recipe C (approved by Stas 2026-07-02).
+//
+// Complements the global tap-highlight reset (_reset.scss). The native mobile
+// tap overlay was a rectangle that ignored border-radius; we removed it, and
+// this gives each interactive control a press state that INHERITS its shape:
+// `filter` + `transform` apply to the rendered element, so any border-radius /
+// clip is followed automatically, and neither conflicts with the box-shadow
+// focus rings (different properties).
+//
+// Usage — @include INSIDE the clickable element's own selector, so `&:active`
+// resolves to that element:
+//   @use '../../styles/press' as press;   // relative path from the component
+//   .check { …; @include press.feedback; }
+//
+// Tunable per component (read-with-fallback, like the --ds-* layer):
+//   --ds-press-brightness  (default .9)   darken amount on press
+//   --ds-press-scale       (default .97)  micro press-scale
+//
+// Intentionally does NOT declare `transition` — that would clobber the host
+// element's existing transition. Press is immediate (crisp on tap); components
+// wanting an eased release add `filter`/`transform` to their own transition.
+
+@mixin feedback {
+  &:active:not(:disabled):not([disabled]):not(.is-disabled) {
+    filter: brightness(var(--ds-press-brightness, 0.9));
+    transform: scale(var(--ds-press-scale, 0.97));
+  }
+}

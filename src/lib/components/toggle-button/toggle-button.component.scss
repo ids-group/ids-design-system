@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 :host {
   display: inline-flex;
 }
@@ -34,6 +36,8 @@
     outline: none;
     box-shadow: var(--accent-focus-ring);
   }
+
+  @include press.feedback;
 
   &:disabled {
     cursor: not-allowed;

@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 :host {
   /* Public --ds-menu-item-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_menu-item-label-color:   var(--ds-menu-item-label-color,   var(--text-primary));
@@ -24,6 +26,8 @@
   &:hover { background: var(--surface-secondary); }
 
   &:focus-visible { outline: none; box-shadow: inset var(--_menu-item-focus-shadow); }
+
+  @include press.feedback;
 
   &[disabled] {
     color: var(--text-disabled);

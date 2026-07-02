@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 :host { --_radio-focus-shadow: var(--ds-radio-focus-shadow, var(--ds-control-focus-shadow)); display: inline-flex; align-items: center; }
 
 .control-line {
@@ -33,6 +35,7 @@
 
   &:hover:not(:disabled) { border-color: var(--accent); }
   &:focus-visible        { outline: none; box-shadow: var(--_radio-focus-shadow); }
+  @include press.feedback;
   &:disabled {
     background: var(--surface-disabled);
     border-color: var(--border-disabled);

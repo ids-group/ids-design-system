@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 /* Public --ds-list-item-* are read with fallbacks, never declared. */
 
 :host {
@@ -33,6 +35,8 @@ button.activator {
     outline: var(--border-width-strong) solid var(--focus-ring-color, currentColor);
     outline-offset: calc(-1 * var(--border-width-strong));
   }
+
+  @include press.feedback;
 
   &:disabled {
     cursor: not-allowed;

@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 /* Public --ds-tree-* are read with fallbacks, never declared. */
 
 :host {
@@ -34,6 +36,8 @@
     outline: var(--border-width-strong) solid var(--focus-ring-color, currentColor);
     outline-offset: calc(-1 * var(--border-width-strong));
   }
+
+  @include press.feedback;
 
   &:disabled {
     color: var(--text-disabled);

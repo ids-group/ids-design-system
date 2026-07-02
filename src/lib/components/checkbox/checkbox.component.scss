@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 :host { --_checkbox-focus-shadow: var(--ds-checkbox-focus-shadow, var(--ds-control-focus-shadow)); display: inline-flex; }
 
 .checkbox-field { display: inline-flex; flex-direction: column; align-items: flex-start; gap: var(--field-label-gap); }
@@ -34,6 +36,7 @@
 
   &:hover:not(:disabled) { border-color: var(--accent); }
   &:focus-visible        { outline: none; box-shadow: var(--_checkbox-focus-shadow); }
+  @include press.feedback;
   &:disabled {
     background: var(--surface-disabled);
     border-color: var(--border-disabled);

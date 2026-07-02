@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 /* Public --ds-color-picker-* are read with fallbacks, never declared. The panel
    is portaled via CDK Overlay OUTSIDE the host, so the private resolvers are
    declared on both :host (the trigger) and .panel — custom properties inherit
@@ -44,6 +46,8 @@
     border-color: var(--accent);
     box-shadow: var(--accent-focus-field);
   }
+
+  @include press.feedback;
 
   &:disabled {
     background-color: var(--surface-muted);

@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 /* Combobox — trigger lives on host; listbox panel is rendered via
    TemplatePortal so its DOM carries this component's encapsulation attrs.
    Both halves are styled here. */
@@ -35,6 +37,8 @@
     box-shadow: var(--_combobox-focus-shadow);
     outline: 0;
   }
+
+  @include press.feedback;
 
   &.error { border-color: var(--border-error); }
 

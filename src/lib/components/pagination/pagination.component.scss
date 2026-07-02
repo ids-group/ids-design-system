@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 :host {
   /* Public --ds-pagination-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_pagination-btn-bg-color:       var(--ds-pagination-btn-bg-color,       var(--surface-default));
@@ -68,6 +70,8 @@
       outline: none;
       box-shadow: var(--_pagination-focus-shadow);
     }
+
+    @include press.feedback;
   }
 
   .ellipsis {

@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 // Tokens on :host so consumer overrides (ds-sidenav-item { --ds-…: … }) win
 // against the inner .item rule's specificity.
 :host {
@@ -41,6 +43,8 @@
     outline: none;
     box-shadow: var(--_sidenav-item-focus-shadow);
   }
+
+  @include press.feedback;
 
   &.active {
     background-color: var(--_sidenav-item-bg-color-active);

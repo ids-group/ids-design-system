@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 :host {
   /* contents → the inner <button> is the grid item, so it sits in the
      date-picker's 7-col track and stays focusable by [data-day]. */
@@ -87,4 +89,6 @@
     outline: none;
     box-shadow: var(--accent-focus-ring);
   }
+
+  @include press.feedback;
 }
