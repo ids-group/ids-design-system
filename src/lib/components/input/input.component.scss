@@ -108,6 +108,7 @@
       transition: background-color var(--duration-fast) var(--ease-standard),
               opacity var(--duration-fast) var(--ease-standard);
               mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'><path d='M18 6L6 18M6 6l12 12'/></svg>") center/contain no-repeat;
+
       // visible regardless of focus — bumped from text-tertiary so the affordance
       // reads when the field is blurred (it only shows when there IS a value).
 
@@ -240,6 +241,22 @@
   /* Trailing spinner (loading) — keep it from shrinking in the control flex. */
   .control ds-spinner {
     flex-shrink: 0;
+  }
+
+  .field-footer {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .char-counter {
+    font-size: var(--font-size-xs);
+    color: var(--text-tertiary);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: auto;
   }
 
   /* Floating label — label sits inside a taller control instead of stacked above. */

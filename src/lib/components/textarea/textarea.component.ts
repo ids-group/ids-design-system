@@ -10,7 +10,10 @@ import {
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import type { TextareaSize, TextareaResize } from './textarea.types';
-import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
+import {
+  FieldMessageComponent,
+  type FieldMessageState,
+} from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
 
 @Component({
@@ -35,6 +38,7 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   readonly hint = input<string>('');
   readonly placeholder = input<string>('');
   readonly disabled = input<boolean>(false);
+  readonly readOnly = input(false, { transform: booleanAttribute });
   readonly invalid = input<boolean>(false);
   readonly required = input<boolean>(false);
   readonly optional = input<boolean>(false);
@@ -46,6 +50,9 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   readonly resize = input<TextareaResize>('vertical');
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
+  /** Hard character cap — applies the native maxlength attribute and shows a
+   *  live "{current}/{max}" counter below the field. */
+  readonly maxLength = input<number | null>(null);
 
   protected readonly uid = nextControlId('ds-textarea');
   protected readonly hintId = computed(() =>
@@ -63,6 +70,11 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     () => this.disabled() || this.formDisabled(),
   );
 
+  protected readonly currentLength = computed(() => this.value().length);
+  protected readonly counterId = computed(() =>
+    this.maxLength() !== null ? `${this.uid}-counter` : null,
+  );
+
   protected readonly wrapperClasses = computed(() => {
     const parts = ['field'];
     if (this.size() === 'sm') {
@@ -76,6 +88,9 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     }
     if (this.isDisabled()) {
       parts.push('disabled');
+    }
+    if (this.readOnly()) {
+      parts.push('read-only');
     }
     if (this.autosize()) {
       parts.push('autosize');

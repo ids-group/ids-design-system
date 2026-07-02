@@ -102,6 +102,12 @@
     }
   }
 
+  &.read-only .control {
+    background: var(--surface-secondary);
+
+    textarea { cursor: default; }
+  }
+
   &.error {
     .control {
       background-color: var(--_input-bg-color-error);
@@ -135,6 +141,22 @@
   &.autosize .control textarea {
     field-sizing: content;
     overflow: hidden;
+  }
+
+  .field-footer {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .char-counter {
+    font-size: var(--font-size-xs);
+    color: var(--text-tertiary);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: auto;
   }
 }
 

@@ -294,6 +294,7 @@
         people
       </span>
     </ds-input>
+
     <ds-input
       label="Project name"
       value="Project Alpha 2026"
@@ -368,6 +369,34 @@
       placeholder="Enter password"
       [passwordToggle]="true"
       [value]="'hunter2'"
+    />
+  </div>
+
+  <!-- ============================================================ Character counter -->
+  <h3 class="block-title t-h4">
+    Character counter
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [maxLength]
+    </code> caps input length natively
+    and shows a live <code class="t-mono-inline"> current/max </code> counter
+    below the field — right-aligned, aligned with the hint.
+  </p>
+
+  <div class="grid-2">
+    <ds-input
+      label="Short bio"
+      placeholder="Tell us about yourself…"
+      [maxLength]="80"
+    />
+
+    <ds-input
+      label="Project name"
+      hint="Must be unique within your workspace"
+      placeholder="e.g. Project Alpha"
+      [maxLength]="40"
     />
   </div>
 

@@ -12,14 +12,22 @@ import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
-import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
+import {
+  FieldMessageComponent,
+  type FieldMessageState,
+} from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
 import type { InputSize, InputType } from './input.types';
 
 @Component({
   selector: 'ds-input',
   standalone: true,
-  imports: [FormsModule, IconComponent, SpinnerComponent, FieldMessageComponent],
+  imports: [
+    FormsModule,
+    IconComponent,
+    SpinnerComponent,
+    FieldMessageComponent,
+  ],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -63,6 +71,9 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Accessible name when no visible `label` is provided (falls back to the
    *  placeholder so the control is never unnamed). */
   readonly ariaLabel = input<string | null>(null);
+  /** Hard character cap — applies the native maxlength attribute and shows a
+   *  live "{current}/{max}" counter below the field. */
+  readonly maxLength = input<number | null>(null);
   /** Mobile keyboard hints — forwarded to the native input as attributes. */
   readonly enterKeyHint = input<
     'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send' | null
@@ -116,6 +127,11 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Effective disabled — own `disabled` input OR the reactive-forms state. */
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),
+  );
+
+  protected readonly currentLength = computed(() => this.value().length);
+  protected readonly counterId = computed(() =>
+    this.maxLength() !== null ? `${this.uid}-counter` : null,
   );
 
   protected readonly showPasswordToggle = computed<boolean>(

@@ -53,6 +53,7 @@
       [attr.aria-required]="required() ? 'true' : null"
       [attr.enterkeyhint]="enterKeyHint()"
       [attr.inputmode]="inputMode()"
+      [attr.maxlength]="maxLength()"
       [disabled]="isDisabled()"
       [readOnly]="readOnly()"
       [required]="required()"
@@ -96,9 +97,24 @@
     </span>
   </div>
 
-  <ds-field-message
-    [text]="hint()"
-    [state]="messageState()"
-    [messageId]="hintId()"
-  />
+  @if (hint() || messageState() !== 'default' || maxLength() !== null) {
+    <div class="field-footer">
+      <ds-field-message
+        [text]="hint()"
+        [state]="messageState()"
+        [messageId]="hintId()"
+      />
+
+      @if (maxLength() !== null) {
+        <span
+          class="char-counter"
+          aria-live="polite"
+          aria-atomic="true"
+          [id]="counterId()"
+        >
+          {{ currentLength() }}/{{ maxLength() }}
+        </span>
+      }
+    </div>
+  }
 </div>

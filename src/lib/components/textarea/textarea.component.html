@@ -33,7 +33,9 @@
       [attr.aria-invalid]="invalid() ? 'true' : null"
       [attr.aria-describedby]="hintId()"
       [attr.aria-required]="required() ? 'true' : null"
+      [attr.maxlength]="maxLength()"
       [disabled]="isDisabled()"
+      [readOnly]="readOnly()"
       [required]="required()"
       [style.resize]="effectiveResize()"
       [style.min-height]="autosizeMinHeight()"
@@ -45,9 +47,24 @@
     </textarea>
   </div>
 
-  <ds-field-message
-    [text]="hint()"
-    [state]="messageState()"
-    [messageId]="hintId()"
-  />
+  @if (hint() || messageState() !== 'default' || maxLength() !== null) {
+    <div class="field-footer">
+      <ds-field-message
+        [text]="hint()"
+        [state]="messageState()"
+        [messageId]="hintId()"
+      />
+
+      @if (maxLength() !== null) {
+        <span
+          class="char-counter"
+          aria-live="polite"
+          aria-atomic="true"
+          [id]="counterId()"
+        >
+          {{ currentLength() }}/{{ maxLength() }}
+        </span>
+      }
+    </div>
+  }
 </div>
