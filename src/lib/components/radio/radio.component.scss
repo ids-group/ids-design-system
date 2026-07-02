@@ -1,6 +1,25 @@
 @use '../../styles/press' as press;
 
-:host { --_radio-focus-shadow: var(--ds-radio-focus-shadow, var(--ds-control-focus-shadow)); display: inline-flex; align-items: center; }
+:host {
+  --_radio-focus-shadow: var(--ds-radio-focus-shadow, var(--ds-control-focus-shadow));
+
+  // Local resolvers for size scaling; md references the global token so it stays
+  // density-responsive. sm/lg are explicit per-instance overrides.
+  --_radio-glyph: var(--check-size);
+  --_radio-label-fs: var(--font-size-s);
+
+  display: inline-flex;
+}
+
+.radio-field {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--field-label-gap);
+
+  &.size-sm { --_radio-glyph: 14px; --_radio-label-fs: var(--font-size-xs); }
+  &.size-lg { --_radio-glyph: 24px; --_radio-label-fs: var(--font-size-m); }
+}
 
 .control-line {
   display: inline-flex;
@@ -8,10 +27,16 @@
   gap: var(--space-2);
 
   .control-text {
-    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+    font: var(--font-weight-regular) var(--_radio-label-fs) / var(--line-height-base) var(--font-sans);
     color: var(--text-primary);
     cursor: pointer;
     user-select: none;
+
+    .req {
+      color: var(--error);
+      font-weight: var(--font-weight-semibold);
+      margin-inline-start: var(--space-1);
+    }
   }
 
   &.is-disabled .control-text { color: var(--text-disabled); cursor: not-allowed; }
@@ -19,8 +44,8 @@
 
 .radio {
   appearance: none;
-  width: var(--check-size);
-  height: var(--check-size);
+  width: var(--_radio-glyph);
+  height: var(--_radio-glyph);
   border: var(--check-bw) solid var(--border-strong);
   background: var(--surface-default);
   cursor: pointer;
@@ -35,6 +60,7 @@
 
   &:hover:not(:disabled) { border-color: var(--accent); }
   &:focus-visible        { outline: none; box-shadow: var(--_radio-focus-shadow); }
+
   @include press.feedback;
   &:disabled {
     background: var(--surface-disabled);

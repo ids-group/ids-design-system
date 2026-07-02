@@ -37,3 +37,11 @@
        focus: --focus-ring (box-shadow) */
     :host ::ng-deep .pin-hover .radio:not(:disabled) { border-color: var(--primary); }
     :host ::ng-deep .pin-focus .radio { outline: none; box-shadow: var(--focus-ring); }
+
+    /* ---------- Size row ---------- */
+    .radio-size-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+      margin-top: var(--space-3);
+    }

@@ -5,9 +5,21 @@
 >
   <div class="stack">
     <ds-checkbox label="Default" />
-    <ds-checkbox [checked]="true" label="Checked" />
-    <ds-checkbox [indeterminate]="true" label="Indeterminate" />
-    <ds-checkbox [disabled]="true" label="Disabled" />
+
+    <ds-checkbox
+      label="Checked"
+      [checked]="true"
+    />
+
+    <ds-checkbox
+      label="Indeterminate"
+      [indeterminate]="true"
+    />
+
+    <ds-checkbox
+      label="Disabled"
+      [disabled]="true"
+    />
   </div>
 
   <!-- ============================================================ Checkbox states showcase -->
@@ -100,6 +112,40 @@
         Disabled · checked
       </div>
     </div>
+  </div>
+
+  <!-- ============================================================ Sizes -->
+  <h3 class="block-title t-h4">
+    Sizes
+  </h3>
+
+  <div class="cb-size-row">
+    <ds-checkbox
+      size="sm"
+      label="Small"
+    />
+
+    <ds-checkbox
+      size="md"
+      label="Medium"
+    />
+
+    <ds-checkbox
+      size="lg"
+      label="Large"
+    />
+  </div>
+
+  <!-- ============================================================ Required -->
+  <h3 class="block-title t-h4">
+    Required
+  </h3>
+
+  <div class="stack">
+    <ds-checkbox
+      label="Acknowledge terms"
+      [required]="true"
+    />
   </div>
 
   <!-- ============================================================ Validation states -->

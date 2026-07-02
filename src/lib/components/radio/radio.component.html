@@ -1,24 +1,45 @@
-<span
-  class="control-line"
-  [class.is-disabled]="effectiveDisabled()"
->
-  <input
-    #inputRef
-    type="radio"
-    class="radio"
-    [checked]="isChecked()"
-    [disabled]="effectiveDisabled()"
-    [attr.name]="effectiveName() || null"
-    [attr.value]="value() ?? null"
-    [attr.id]="controlId()"
-    [attr.tabindex]="tabIndexAttr"
-    (change)="onSelect()"
+<div [class]="fieldClass()">
+  <span
+    class="control-line"
+    [class.is-disabled]="effectiveDisabled()"
+  >
+    <input
+      #inputRef
+      type="radio"
+      class="radio"
+      [checked]="isChecked()"
+      [disabled]="effectiveDisabled()"
+      [attr.name]="effectiveName() || null"
+      [attr.value]="value() ?? null"
+      [attr.id]="controlId()"
+      [attr.tabindex]="tabIndexAttr"
+      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-describedby]="hintId()"
+      [attr.aria-required]="required() ? 'true' : null"
+      (change)="onSelect()"
+    />
+
+    @if (label()) {
+      <label
+        class="control-text"
+        [attr.for]="controlId()"
+        >
+        {{ label() }}
+        @if (required()) {
+          <span
+            class="req"
+            aria-hidden="true"
+          >
+            *
+          </span>
+        }
+      </label>
+    }
+  </span>
+
+  <ds-field-message
+    [text]="hint()"
+    [state]="messageState()"
+    [messageId]="hintId()"
   />
-  @if (label()) {
-    <label
-      class="control-text"
-      [attr.for]="controlId()"
-      >{{ label() }}</label
-    >
-  }
-</span>
+</div>

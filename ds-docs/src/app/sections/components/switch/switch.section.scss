@@ -35,3 +35,11 @@
        its own rule uses directly.
        focus: --focus-ring (box-shadow) */
     :host ::ng-deep .pin-focus .switch { outline: none; box-shadow: var(--focus-ring); }
+
+    /* ---------- Size row ---------- */
+    .sw-size-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+      margin-top: var(--space-3);
+    }

@@ -9,8 +9,12 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsBooleanControlValueAccessor } from '../control-value-accessor';
-import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
+import {
+  FieldMessageComponent,
+  type FieldMessageState,
+} from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
+import type { CheckboxSize } from './checkbox.types';
 
 @Component({
   selector: 'ds-checkbox',
@@ -20,7 +24,11 @@ import { nextControlId } from '../field-ids';
   styleUrl: './checkbox.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   providers: [
-    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => CheckboxComponent), multi: true },
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => CheckboxComponent),
+      multi: true,
+    },
   ],
 })
 export class CheckboxComponent extends DsBooleanControlValueAccessor {
@@ -31,17 +39,27 @@ export class CheckboxComponent extends DsBooleanControlValueAccessor {
   readonly inputId = input<string | null>(null);
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly hint = input<string>('');
+  readonly size = input<CheckboxSize>('md');
+  readonly required = input(false, { transform: booleanAttribute });
   /** Inline label rendered beside the box and wired via for/id. Omit to
    *  bring your own <label>. */
   readonly label = input<string>('');
 
-  protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
+  protected readonly isDisabled = computed(
+    () => this.disabled() || this.formDisabled(),
+  );
 
   protected readonly uid = nextControlId('ds-checkbox');
   protected readonly controlId = computed(() => this.inputId() ?? this.uid);
-  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly hintId = computed(() =>
+    this.hint() ? `${this.uid}-hint` : null,
+  );
   protected readonly messageState = computed<FieldMessageState>(() =>
     this.invalid() ? 'error' : 'default',
+  );
+
+  protected readonly fieldClass = computed(
+    () => `checkbox-field size-${this.size()}`,
   );
 
   protected onCheckedChange(event: Event): void {

@@ -5,9 +5,23 @@
 >
   <div class="stack">
     <ds-switch label="Sync with Inventory service" />
-    <ds-switch [checked]="true" label="Auto-recompute" />
-    <ds-switch variant="success" [checked]="true" label="Live" />
-    <ds-switch variant="error" [checked]="true" label="Locked" />
+
+    <ds-switch
+      label="Auto-recompute"
+      [checked]="true"
+    />
+
+    <ds-switch
+      variant="success"
+      label="Live"
+      [checked]="true"
+    />
+
+    <ds-switch
+      variant="error"
+      label="Locked"
+      [checked]="true"
+    />
   </div>
 
   <!-- ============================================================ Switch states showcase -->
@@ -108,6 +122,40 @@
     </div>
   </div>
 
+  <!-- ============================================================ Sizes -->
+  <h3 class="block-title t-h4">
+    Sizes
+  </h3>
+
+  <div class="sw-size-row">
+    <ds-switch
+      size="sm"
+      label="Small"
+    />
+
+    <ds-switch
+      size="md"
+      label="Medium"
+    />
+
+    <ds-switch
+      size="lg"
+      label="Large"
+    />
+  </div>
+
+  <!-- ============================================================ Required -->
+  <h3 class="block-title t-h4">
+    Required
+  </h3>
+
+  <div class="stack">
+    <ds-switch
+      label="Accept usage data"
+      [required]="true"
+    />
+  </div>
+
   <!-- ============================================================ Validation states -->
   <h3 class="block-title t-h4">
     Validation states
@@ -115,7 +163,9 @@
 
   <p class="block-desc t-s">
     Use <code class="t-mono-inline">hint</code> for helper text and
-    <code class="t-mono-inline">[invalid]="true"</code> to surface an error.
+    <code class="t-mono-inline">
+      [invalid]="true"
+    </code> to surface an error.
   </p>
 
   <div class="stack">

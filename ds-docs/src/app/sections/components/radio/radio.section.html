@@ -4,10 +4,29 @@
   title="Radio"
 >
   <div class="stack">
-    <ds-radio name="r" value="single" label="Single date" />
-    <ds-radio name="r" value="range" [checked]="true" label="Date range" />
-    <ds-radio name="r" value="recurring" label="Recurring" />
-    <ds-radio [disabled]="true" label="Disabled" />
+    <ds-radio
+      name="r"
+      value="single"
+      label="Single date"
+    />
+
+    <ds-radio
+      name="r"
+      value="range"
+      label="Date range"
+      [checked]="true"
+    />
+
+    <ds-radio
+      name="r"
+      value="recurring"
+      label="Recurring"
+    />
+
+    <ds-radio
+      label="Disabled"
+      [disabled]="true"
+    />
   </div>
 
   <!-- ============================================================ Radio states showcase -->
@@ -91,16 +110,81 @@
     </div>
   </div>
 
+  <!-- ============================================================ Sizes -->
+  <h3 class="block-title t-h4">
+    Sizes
+  </h3>
+
+  <div class="radio-size-row">
+    <ds-radio
+      size="sm"
+      label="Small"
+    />
+
+    <ds-radio
+      size="md"
+      label="Medium"
+    />
+
+    <ds-radio
+      size="lg"
+      label="Large"
+    />
+  </div>
+
+  <!-- ============================================================ Required -->
+  <h3 class="block-title t-h4">
+    Required
+  </h3>
+
+  <div class="stack">
+    <ds-radio
+      label="Confirm selection"
+      [required]="true"
+    />
+  </div>
+
+  <!-- ============================================================ Validation (standalone) -->
+  <h3 class="block-title t-h4">
+    Validation (standalone)
+  </h3>
+
+  <p class="block-desc t-s">
+    Use <code class="t-mono-inline">hint</code> for helper text and
+    <code class="t-mono-inline">
+      [invalid]="true"
+    </code> to surface an error on a
+    standalone <code class="t-mono-inline">&lt;ds-radio&gt;</code>.
+  </p>
+
+  <div class="stack">
+    <ds-radio
+      label="Preferred contact"
+      hint="We will only use this for account alerts."
+    />
+
+    <ds-radio
+      label="Preferred contact"
+      hint="A selection is required to continue."
+      [invalid]="true"
+    />
+  </div>
+
   <!-- ============================================================ Radio group (forms usage) -->
   <h3 class="block-title t-h4">
     Radio group
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">&lt;ds-radio-group&gt;</code> is the primary
+    <code class="t-mono-inline">
+      &lt;ds-radio-group&gt;
+    </code> is the primary
     form-control container. It manages roving focus, name propagation, and
     implements <code class="t-mono-inline">ControlValueAccessor</code> for
-    reactive-forms integration. Project <code class="t-mono-inline">&lt;ds-radio&gt;</code>
+    reactive-forms integration. Project
+    <code class="t-mono-inline">
+      &lt;ds-radio&gt;
+    </code>
     children directly inside.
   </p>
 
@@ -110,9 +194,20 @@
       hint="Select how the event repeats."
       [(value)]="scheduleValue"
     >
-      <ds-radio value="single" label="Single date" />
-      <ds-radio value="range" label="Date range" />
-      <ds-radio value="recurring" label="Recurring" />
+      <ds-radio
+        value="single"
+        label="Single date"
+      />
+
+      <ds-radio
+        value="range"
+        label="Date range"
+      />
+
+      <ds-radio
+        value="recurring"
+        label="Recurring"
+      />
     </ds-radio-group>
 
     <ds-radio-group
@@ -121,9 +216,20 @@
       [invalid]="true"
       [(value)]="invalidGroupValue"
     >
-      <ds-radio value="single" label="Single date" />
-      <ds-radio value="range" label="Date range" />
-      <ds-radio value="recurring" label="Recurring" />
+      <ds-radio
+        value="single"
+        label="Single date"
+      />
+
+      <ds-radio
+        value="range"
+        label="Date range"
+      />
+
+      <ds-radio
+        value="recurring"
+        label="Recurring"
+      />
     </ds-radio-group>
   </div>
 </docs-section>

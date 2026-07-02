@@ -1,8 +1,42 @@
 @use '../../styles/press' as press;
 
-:host { --_switch-focus-shadow: var(--ds-switch-focus-shadow, var(--ds-control-focus-shadow)); display: inline-flex; }
+:host {
+  --_switch-focus-shadow: var(--ds-switch-focus-shadow, var(--ds-control-focus-shadow));
 
-.switch-field { display: inline-flex; flex-direction: column; align-items: flex-start; gap: var(--field-label-gap); }
+  // Local resolvers for size scaling; md references the global tokens so it stays
+  // density-responsive. sm/lg are explicit per-instance overrides. Thumb travel
+  // is derived via calc() from the track/thumb/pad so it's always correct.
+  --_switch-track-w: var(--switch-track-w);
+  --_switch-track-h: var(--switch-track-h);
+  --_switch-thumb-size: var(--switch-thumb-size);
+  --_switch-thumb-pad: var(--switch-thumb-pad);
+  --_switch-label-fs: var(--font-size-s);
+
+  display: inline-flex;
+}
+
+.switch-field {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--field-label-gap);
+
+  &.size-sm {
+    --_switch-track-w: 26px;
+    --_switch-track-h: 14px;
+    --_switch-thumb-size: 10px;
+    --_switch-thumb-pad: 2px;
+    --_switch-label-fs: var(--font-size-xs);
+  }
+
+  &.size-lg {
+    --_switch-track-w: 48px;
+    --_switch-track-h: 26px;
+    --_switch-thumb-size: 22px;
+    --_switch-thumb-pad: 2px;
+    --_switch-label-fs: var(--font-size-m);
+  }
+}
 
 .control-line {
   display: inline-flex;
@@ -10,10 +44,16 @@
   gap: var(--space-2);
 
   .control-text {
-    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+    font: var(--font-weight-regular) var(--_switch-label-fs) / var(--line-height-base) var(--font-sans);
     color: var(--text-primary);
     cursor: pointer;
     user-select: none;
+
+    .req {
+      color: var(--error);
+      font-weight: var(--font-weight-semibold);
+      margin-inline-start: var(--space-1);
+    }
   }
 
   &.is-disabled .control-text { color: var(--text-disabled); cursor: not-allowed; }
@@ -21,8 +61,8 @@
 
 .switch {
   appearance: none;
-  width: var(--switch-track-w);
-  height: var(--switch-track-h);
+  width: var(--_switch-track-w);
+  height: var(--_switch-track-h);
   background: var(--border-strong);
   border-radius: var(--radius-pill);
   position: relative;
@@ -34,10 +74,10 @@
   &::after {
     content: "";
     position: absolute;
-    top: var(--switch-thumb-pad);
-    left: var(--switch-thumb-pad);
-    width: var(--switch-thumb-size);
-    height: var(--switch-thumb-size);
+    top: var(--_switch-thumb-pad);
+    left: var(--_switch-thumb-pad);
+    width: var(--_switch-thumb-size);
+    height: var(--_switch-thumb-size);
     background: var(--surface-default);
     border-radius: var(--radius-pill);
     box-shadow: var(--shadow-1);
@@ -46,8 +86,9 @@
   }
 
   &:checked         { background: var(--accent); }
-  &:checked::after  { transform: translateX(var(--switch-thumb-travel)); }
+  &:checked::after  { transform: translateX(calc(var(--_switch-track-w) - var(--_switch-thumb-size) - 2 * var(--_switch-thumb-pad))); }
   &:focus-visible   { outline: none; box-shadow: var(--_switch-focus-shadow); }
+
   @include press.feedback;
   &:disabled        { opacity: var(--opacity-disabled); cursor: not-allowed; }
 

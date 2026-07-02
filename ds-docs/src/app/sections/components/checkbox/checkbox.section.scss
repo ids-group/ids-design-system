@@ -37,3 +37,11 @@
        focus: --focus-ring (box-shadow) */
     :host ::ng-deep .pin-hover .check:not(:disabled) { border-color: var(--primary); }
     :host ::ng-deep .pin-focus .check { outline: none; box-shadow: var(--focus-ring); }
+
+    /* ---------- Size row ---------- */
+    .cb-size-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+      margin-top: var(--space-3);
+    }
