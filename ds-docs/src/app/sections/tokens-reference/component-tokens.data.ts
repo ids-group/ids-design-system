@@ -910,6 +910,44 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ],
   },
   {
+    component: 'Time picker',
+    selector: '.time-panel',
+    description:
+      'Column-wheel pop-over (hours / minutes / AM-PM) anchored to a trigger field.',
+    tokens: [
+      {
+        name: '--ds-time-picker-bg-color',
+        value: 'var(--surface-overlay)',
+        notes: 'Panel fill.',
+      },
+      {
+        name: '--ds-time-picker-border',
+        value: 'var(--border-default)',
+        notes: 'Panel border.',
+      },
+      {
+        name: '--ds-time-picker-shadow',
+        value: 'var(--shadow-popover)',
+        notes: 'Panel shadow.',
+      },
+      {
+        name: '--ds-time-picker-column-width',
+        value: '3rem',
+        notes: 'Min width of each column.',
+      },
+      {
+        name: '--ds-time-picker-column-height',
+        value: '13.5rem',
+        notes: 'Max height of each scroll column.',
+      },
+      {
+        name: '--ds-time-picker-focus-shadow',
+        value: 'var(--ds-control-focus-shadow)',
+        notes: 'Focus ring (trigger + options).',
+      },
+    ],
+  },
+  {
     component: 'Breadcrumbs',
     selector: '.breadcrumbs',
     description: 'Inline link trail.',

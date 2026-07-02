@@ -8,6 +8,23 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **New `ds-time-picker` component.** A time field (HH:MM) that opens column wheels
+  (Hours / Minutes, plus AM·PM in 12-hour mode) in a CDK overlay. Value is a canonical
+  24-hour `"HH:MM"` string; **24h vs 12h display is chosen app-wide** via
+  `provideDsConfig({ timePicker: { format: '12h' } })` (per-instance `[format]` override
+  available). Supports `[minuteStep]`, `[minTime]` / `[maxTime]` + a `[disabledTime]`
+  predicate, `single` and `range` modes (`[(value)]` is a `"HH:MM"` string or a
+  `[start, end]` tuple), `clearable`, `size` (`sm` / `md` / `lg`), and reactive forms
+  (`ControlValueAccessor`) with `invalid` / `hint` via `ds-field-message`. Full keyboard
+  support (roving arrows per column, Home/End, Escape). Exports `TimePickerComponent`,
+  `TimePickerMode`, `TimePickerSize`, `TimeFormat`, `TimeValue`, `TimeRangeValue`,
+  `TimePickerValue`; new `DsConfig.timePicker.format`; public `--ds-time-picker-*` hooks.
+- **`ds-date-picker` `showTime` (date + time).** New `[showTime]` input (single mode)
+  renders the same time columns in the calendar footer, so the value carries the time on
+  its `Date`. Picking a day preserves the time; the trigger shows date + time.
+
 ## 0.4.0 — 2026-06-30
 
 ### Added
