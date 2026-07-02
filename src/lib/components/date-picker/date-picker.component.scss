@@ -7,6 +7,14 @@
   display: block;
 }
 
+.dp-time-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: var(--border-width-default) solid var(--border-subtitle);
+}
+
 .field {
   display: flex;
   flex-direction: column;
@@ -219,6 +227,7 @@
     &.selected {
       background-color: var(--_datepicker-day-selected-bg-color);
       color: var(--_datepicker-day-selected-label-color);
+
       /* --primary-independent cue: bold still reads if a brand theme leaves the selected bg unset. */
       font-weight: var(--font-weight-bold);
     }
@@ -247,6 +256,7 @@
 
   .grid {
     display: grid;
+
     /* minmax(0, 1fr) lets tracks shrink below the cell's intrinsic width so a
        narrow panel (e.g. a brand theme with wider tokens) can't push the
        Sunday column outside the overlay. */

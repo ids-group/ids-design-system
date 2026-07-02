@@ -251,5 +251,15 @@
         </ds-calendar-day>
       }
     </div>
+
+    @if (showTime() && mode() === 'single') {
+      <div class="dp-time-footer">
+        <ds-time-columns
+          [value]="timeOfSelected()"
+          [format]="resolvedTimeFormat()"
+          (timeChange)="applyTime($event)"
+        />
+      </div>
+    }
   </div>
 </ng-template>
