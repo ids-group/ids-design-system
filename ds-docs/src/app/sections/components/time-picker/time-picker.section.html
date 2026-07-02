@@ -192,34 +192,4 @@
       {{ timeControl.value ?? '—' }}
     </span>
   </div>
-
-  <!-- ============================================================ Datetime (date-picker) -->
-  <h3 class="block-title t-h4">
-    Date + time (date picker)
-  </h3>
-
-  <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      ds-date-picker
-    </code> gains
-    <code class="t-mono-inline">
-      [showTime]
-    </code> — the calendar footer hosts
-    the same time columns, and the value becomes a single
-    <code class="t-mono-inline">
-      Date
-    </code>.
-  </p>
-
-  <div class="row">
-    <ds-date-picker
-      showTime
-      placeholder="Pick date + time"
-      [(value)]="datetime"
-    />
-
-    <span class="value-tag t-mono-inline">
-      {{ datetime() }}
-    </span>
-  </div>
 </docs-section>

@@ -23,15 +23,11 @@ import { IconComponent } from '../../icons/icon.component';
 import { CalendarDayComponent } from '../calendar-day/calendar-day.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
-import { TimeColumnsComponent } from '../time-columns/time-columns.component';
-import { DS_CONFIG } from '../../config/ds-config';
-import { formatTime, pad2, parseTime } from '../time-picker/time.util';
 import type {
   DatePickerMode,
   DatePickerSize,
   RangeValue,
 } from './date-picker.types';
-import type { TimeFormat } from '../time-picker/time-picker.types';
 
 let nextId = 0;
 const YEAR_PAGE_SIZE = 12;
@@ -50,12 +46,7 @@ interface DayCell {
 @Component({
   selector: 'ds-date-picker',
   standalone: true,
-  imports: [
-    IconComponent,
-    CalendarDayComponent,
-    FieldMessageComponent,
-    TimeColumnsComponent,
-  ],
+  imports: [IconComponent, CalendarDayComponent, FieldMessageComponent],
   templateUrl: './date-picker.component.html',
   styleUrl: './date-picker.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -75,7 +66,6 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly injector = inject(Injector);
-  private readonly config = inject(DS_CONFIG);
 
   readonly mode = input<DatePickerMode>('single');
   readonly size = input<DatePickerSize>('md');
@@ -92,8 +82,6 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
   /** Bounds for the year dropdown in the calendar header. */
   readonly minYear = input<number>(new Date().getFullYear() - 100);
   readonly maxYear = input<number>(new Date().getFullYear() + 10);
-  /** Show a time picker in the footer (single mode) — value carries date + time. */
-  readonly showTime = input(false, { transform: booleanAttribute });
 
   protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
   protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
@@ -109,30 +97,6 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
   protected readonly resolvedAriaLabel = computed(() =>
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,
   );
-
-  protected readonly resolvedTimeFormat = computed<TimeFormat>(
-    () => this.config.timePicker?.format ?? '24h',
-  );
-
-  /** The selected Date's time as "HH:MM", for the footer columns. */
-  protected readonly timeOfSelected = computed(() => {
-    const selected = this.value();
-
-    return selected instanceof Date
-      ? `${pad2(selected.getHours())}:${pad2(selected.getMinutes())}`
-      : null;
-  });
-
-  protected applyTime(hhmm: string): void {
-    const parsed = parseTime(hhmm);
-    if (!parsed) {
-      return;
-    }
-    const current = this.value();
-    const next = current instanceof Date ? new Date(current) : new Date();
-    next.setHours(parsed.h, parsed.m, 0, 0);
-    this.value.set(next);
-  }
 
   protected dayKey(d: Date): string {
     return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
@@ -259,19 +223,8 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
     const value = this.value();
     if (this.mode() === 'single') {
       const d = value as Date | null;
-      if (!d) {
-        return this.placeholder();
-      }
-      if (this.showTime()) {
-        const time = formatTime(
-          `${pad2(d.getHours())}:${pad2(d.getMinutes())}`,
-          this.resolvedTimeFormat(),
-        );
 
-        return `${d.toLocaleDateString()} ${time}`;
-      }
-
-      return d.toLocaleDateString();
+      return d ? d.toLocaleDateString() : this.placeholder();
     }
     const r = (value as RangeValue | null) ?? [null, null];
     const a = r[0];
@@ -521,17 +474,9 @@ export class DatePickerComponent extends DsControlValueAccessor<Date | RangeValu
 
   protected selectDay(cell: DayCell): void {
     if (this.mode() === 'single') {
-      const picked = new Date(cell.date);
-      const current = this.value();
-      if (current instanceof Date) {
-        picked.setHours(current.getHours(), current.getMinutes(), 0, 0);
-      }
-      this.value.set(picked);
-      // Keep the panel open when time is being picked too.
-      if (!this.showTime()) {
-        this.close();
-        this.trigger().nativeElement.focus();
-      }
+      this.value.set(new Date(cell.date));
+      this.close();
+      this.trigger().nativeElement.focus();
 
       return;
     }

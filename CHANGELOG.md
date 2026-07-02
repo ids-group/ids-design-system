@@ -21,9 +21,6 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   support (roving arrows per column, Home/End, Escape). Exports `TimePickerComponent`,
   `TimePickerMode`, `TimePickerSize`, `TimeFormat`, `TimeValue`, `TimeRangeValue`,
   `TimePickerValue`; new `DsConfig.timePicker.format`; public `--ds-time-picker-*` hooks.
-- **`ds-date-picker` `showTime` (date + time).** New `[showTime]` input (single mode)
-  renders the same time columns in the calendar footer, so the value carries the time on
-  its `Date`. Picking a day preserves the time; the trigger shows date + time.
 
 ## 0.4.0 — 2026-06-30
 
