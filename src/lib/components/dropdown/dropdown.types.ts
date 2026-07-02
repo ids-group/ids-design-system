@@ -8,3 +8,8 @@ export interface DropdownOption {
   disabled?: boolean;
   icon?: IconName;
 }
+
+export interface DropdownOptionGroup {
+  label: string;
+  options: DropdownOption[];
+}

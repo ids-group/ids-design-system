@@ -7,6 +7,18 @@
       margin-top: var(--space-3);
     }
 
+    .dropdown-field {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1-5);
+      width: 100%;
+    }
+
+    .dd-label {
+      font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
+      color: var(--text-secondary);
+    }
+
     /* ---------- States showcase ---------- */
     .states {
       display: grid;

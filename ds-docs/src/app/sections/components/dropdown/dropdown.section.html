@@ -15,8 +15,8 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <div class="state-cell__stage">
-        <div class="field">
-          <span class="label">
+        <div class="dropdown-field">
+          <span class="dd-label">
             Owner
           </span>
 
@@ -34,8 +34,8 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <div class="field">
-          <span class="label">
+        <div class="dropdown-field">
+          <span class="dd-label">
             Owner
           </span>
 
@@ -58,14 +58,88 @@
   </h3>
 
   <div class="grid-2">
-    <div class="field">
-      <span class="label">
+    <div class="dropdown-field">
+      <span class="dd-label">
         Member
       </span>
 
       <ds-dropdown
         value="acme"
         [options]="memberOptions"
+      />
+    </div>
+  </div>
+
+  <!-- ============================================================ Clearable -->
+  <h3 class="block-title t-h4">
+    Clearable
+  </h3>
+
+  <p class="block-desc t-s">
+    Add <code class="t-mono-inline">clearable</code> to show an ✕ button when a
+    value is selected. Clicking it resets to empty without opening the panel.
+  </p>
+
+  <div class="grid-2">
+    <div class="dropdown-field">
+      <span class="dd-label">
+        Owner
+      </span>
+
+      <ds-dropdown
+        value="brooks"
+        [clearable]="true"
+        [options]="ownerOptions"
+      />
+    </div>
+
+    <div class="dropdown-field">
+      <span class="dd-label">
+        Owner (no value)
+      </span>
+
+      <ds-dropdown
+        placeholder="Pick an owner…"
+        [clearable]="true"
+        [options]="ownerOptions"
+      />
+    </div>
+  </div>
+
+  <!-- ============================================================ Option groups -->
+  <h3 class="block-title t-h4">
+    Option groups
+  </h3>
+
+  <p class="block-desc t-s">
+    Pass <code class="t-mono-inline">optionGroups</code> instead of
+    <code class="t-mono-inline">
+      options
+    </code> to render labelled sections in
+    the panel. Each group header is non-selectable.
+  </p>
+
+  <div class="grid-2">
+    <div class="dropdown-field">
+      <span class="dd-label">
+        Region
+      </span>
+
+      <ds-dropdown
+        placeholder="Pick a region…"
+        [optionGroups]="regionGroups"
+      />
+    </div>
+
+    <div class="dropdown-field">
+      <span class="dd-label">
+        Region (clearable)
+      </span>
+
+      <ds-dropdown
+        value="eu-w"
+        [clearable]="true"
+        [optionGroups]="regionGroups"
       />
     </div>
   </div>

@@ -41,12 +41,33 @@
   (click)="toggle()"
   (keydown)="onTriggerKeydown($event)"
 >
+  @if (selectedOption()?.icon) {
+    <ds-icon
+      class="trigger-icon"
+      [name]="selectedOption()!.icon!"
+      [size]="16"
+    />
+  }
+
   <span
     class="trigger-text"
     [class.is-placeholder]="!hasValue()"
   >
     {{ displayLabel() }}
   </span>
+
+  @if (clearable() && hasValue() && !isDisabled()) {
+    <span
+      class="clear-btn"
+      aria-hidden="true"
+      (click)="clearValue($event)"
+    >
+      <ds-icon
+        name="x"
+        [size]="14"
+      />
+    </span>
+  }
 
   <span class="chevron">
     <ds-icon
@@ -116,6 +137,14 @@
                     (click)="pick(opt, item.disabled)"
                     (mouseenter)="activeIndex.set(flatIndexOf(opt))"
                   >
+                    @if (opt.icon) {
+                      <ds-icon
+                        class="option-icon"
+                        [name]="opt.icon"
+                        [size]="16"
+                      />
+                    }
+
                     <span class="option-label">
                       {{ opt.label }}
                     </span>
@@ -148,6 +177,14 @@
               (click)="pick(item)"
               (mouseenter)="activeIndex.set(flatIndexOf(item))"
             >
+              @if (item.icon) {
+                <ds-icon
+                  class="option-icon"
+                  [name]="item.icon"
+                  [size]="16"
+                />
+              }
+
               <span class="option-label">
                 {{ item.label }}
               </span>

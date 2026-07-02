@@ -4,6 +4,7 @@ import {
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
+  booleanAttribute,
   computed,
   effect,
   forwardRef,
@@ -28,7 +29,10 @@ import {
   type SelectOptionGroup,
   type SelectSize,
 } from './select.types';
-import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
+import {
+  FieldMessageComponent,
+  type FieldMessageState,
+} from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
 
 @Component({
@@ -65,11 +69,14 @@ export class SelectComponent extends DsControlValueAccessor<string> {
   readonly name = input<string | null>(null);
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
+  readonly clearable = input(false, { transform: booleanAttribute });
 
   protected readonly uid = nextControlId('ds-select');
   protected readonly labelId = `${this.uid}-label`;
   protected readonly listboxId = `${this.uid}-listbox`;
-  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly hintId = computed(() =>
+    this.hint() ? `${this.uid}-hint` : null,
+  );
   protected readonly messageState = computed<FieldMessageState>(() =>
     this.invalid() ? 'error' : 'default',
   );
@@ -253,6 +260,12 @@ export class SelectComponent extends DsControlValueAccessor<string> {
     this.value.set(option.value);
     this.close();
     this.trigger().nativeElement.focus();
+  }
+
+  protected clearValue(event: MouseEvent): void {
+    event.stopPropagation();
+    this.value.set('');
+    this.markTouched();
   }
 
   protected isSelected(option: SelectOption): boolean {

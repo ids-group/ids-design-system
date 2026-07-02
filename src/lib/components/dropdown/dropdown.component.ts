@@ -4,6 +4,7 @@ import {
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
+  booleanAttribute,
   computed,
   effect,
   inject,
@@ -18,7 +19,11 @@ import { disposeWithLeave } from '../overlay-motion';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
 import { DsStaticPreview } from '../static-preview.directive';
-import type { DropdownOption, DropdownSize } from './dropdown.types';
+import type {
+  DropdownOption,
+  DropdownOptionGroup,
+  DropdownSize,
+} from './dropdown.types';
 
 let nextId = 0;
 
@@ -38,6 +43,7 @@ export class DropdownComponent {
 
   readonly value = model<string>('');
   readonly options = input<DropdownOption[]>([]);
+  readonly optionGroups = input<DropdownOptionGroup[]>([]);
   readonly placeholder = input<string>('Select…');
   readonly size = input<DropdownSize>('md');
   readonly label = input<string>('');
@@ -45,6 +51,7 @@ export class DropdownComponent {
   readonly readOnly = input<boolean>(false);
   readonly error = input<boolean>(false);
   readonly name = input<string | null>(null);
+  readonly clearable = input(false, { transform: booleanAttribute });
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
 
@@ -69,11 +76,22 @@ export class DropdownComponent {
 
   private overlayRef: OverlayRef | null = null;
 
+  /** Flat list of options derived from optionGroups when non-empty. */
+  protected readonly flatOptions = computed<DropdownOption[]>(() => {
+    const groups = this.optionGroups();
+    if (groups.length > 0) {
+      return groups.flatMap((group) => group.options);
+    }
+
+    return this.options();
+  });
+
   protected readonly selectedOption = computed<DropdownOption | null>(() => {
     const current = this.value();
-    const found = this.options().find((o) => o.value === current);
 
-    return found ?? null;
+    return (
+      this.flatOptions().find((option) => option.value === current) ?? null
+    );
   });
 
   protected readonly displayLabel = computed<string>(() => {
@@ -114,12 +132,19 @@ export class DropdownComponent {
     return parts.join(' ');
   });
 
+  /** Flat index for a given option within the flat options list. */
+  protected flatIndexOf(option: DropdownOption): number {
+    return this.flatOptions().findIndex((opt) => opt === option);
+  }
+
   constructor() {
     effect(() => {
       if (!this.open()) {
         return;
       }
-      const index = this.options().findIndex((o) => o.value === this.value());
+      const index = this.flatOptions().findIndex(
+        (option) => option.value === this.value(),
+      );
       this.activeIndex.set(index >= 0 ? index : this.firstEnabledIndex());
     });
   }
@@ -193,6 +218,11 @@ export class DropdownComponent {
     this.trigger().nativeElement.focus();
   }
 
+  protected clearValue(event: MouseEvent): void {
+    event.stopPropagation();
+    this.value.set('');
+  }
+
   protected isSelected(option: DropdownOption): boolean {
     return option.value === this.value();
   }
@@ -236,7 +266,7 @@ export class DropdownComponent {
     if (key === 'Enter' || key === ' ') {
       event.preventDefault();
       const index = this.activeIndex();
-      const opt = this.options()[index];
+      const opt = this.flatOptions()[index];
       if (opt) {
         this.pick(opt);
       }
@@ -260,7 +290,7 @@ export class DropdownComponent {
   }
 
   private moveActive(delta: number): void {
-    const opts = this.options();
+    const opts = this.flatOptions();
     if (opts.length === 0) {
       return;
     }
@@ -277,11 +307,11 @@ export class DropdownComponent {
   }
 
   private firstEnabledIndex(): number {
-    const opts = this.options();
-    for (let i = 0; i < opts.length; i++) {
-      const candidate = opts[i];
+    const opts = this.flatOptions();
+    for (let index = 0; index < opts.length; index++) {
+      const candidate = opts[index];
       if (candidate && !candidate.disabled) {
-        return i;
+        return index;
       }
     }
 
@@ -289,11 +319,11 @@ export class DropdownComponent {
   }
 
   private lastEnabledIndex(): number {
-    const opts = this.options();
-    for (let i = opts.length - 1; i >= 0; i--) {
-      const candidate = opts[i];
+    const opts = this.flatOptions();
+    for (let index = opts.length - 1; index >= 0; index--) {
+      const candidate = opts[index];
       if (candidate && !candidate.disabled) {
-        return i;
+        return index;
       }
     }
 

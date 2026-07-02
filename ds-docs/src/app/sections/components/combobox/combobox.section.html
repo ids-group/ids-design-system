@@ -19,8 +19,8 @@
     Single
   </h3>
 
-  <div class="field-stack">
-    <label class="field-label t-s">
+  <div class="combo-field-wrap">
+    <label class="combo-field-label t-s">
       Member
     </label>
 
@@ -35,8 +35,8 @@
     Multi
   </h3>
 
-  <div class="field-stack">
-    <label class="field-label t-s">
+  <div class="combo-field-wrap">
+    <label class="combo-field-label t-s">
       Allowed products
     </label>
 
@@ -54,14 +54,16 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">hint</code> renders a helper line below the
-    field; <code class="t-mono-inline">[invalid]="true"</code> switches it to
-    an error; <code class="t-mono-inline">[disabled]="true"</code> makes the
+    <code class="t-mono-inline">
+      hint
+    </code> renders a helper line below the
+    field; <code class="t-mono-inline">[invalid]="true"</code> switches it to an
+    error; <code class="t-mono-inline">[disabled]="true"</code> makes the
     control inert.
   </p>
 
-  <div class="field-stack">
-    <label class="field-label t-s">
+  <div class="combo-field-wrap">
+    <label class="combo-field-label t-s">
       Member (with hint)
     </label>
 
@@ -73,8 +75,8 @@
     />
   </div>
 
-  <div class="field-stack">
-    <label class="field-label t-s">
+  <div class="combo-field-wrap">
+    <label class="combo-field-label t-s">
       Member (invalid)
     </label>
 
@@ -86,8 +88,8 @@
     />
   </div>
 
-  <div class="field-stack">
-    <label class="field-label t-s">
+  <div class="combo-field-wrap">
+    <label class="combo-field-label t-s">
       Member (disabled)
     </label>
 
@@ -95,6 +97,61 @@
       placeholder="Pick a member…"
       [options]="members"
       [disabled]="true"
+    />
+  </div>
+
+  <!-- ============================================================ Option groups -->
+  <h3 class="block-title t-h4">
+    Option groups
+  </h3>
+
+  <p class="block-desc t-s">
+    Pass <code class="t-mono-inline">optionGroups</code> instead of
+    <code class="t-mono-inline">
+      options
+    </code> to render labelled sections in
+    the panel. Filtering hides entire groups whose options produce no matches.
+  </p>
+
+  <div class="combo-field-wrap">
+    <label class="combo-field-label t-s">
+      Venue
+    </label>
+
+    <ds-combobox
+      placeholder="Search venues…"
+      [optionGroups]="venueGroups"
+      [(value)]="venueValue"
+    />
+  </div>
+
+  <!-- ============================================================ Create new -->
+  <h3 class="block-title t-h4">
+    Create new
+  </h3>
+
+  <p class="block-desc t-s">
+    Add <code class="t-mono-inline">allowCreate</code> to show a
+    <em>
+      Create «text»
+    </em> row when the typed text has no exact match.
+    Selecting it emits a <code class="t-mono-inline">create</code> output — the
+    consumer decides how to add the item. In this demo the new tag is appended
+    to the list and auto-selected.
+  </p>
+
+  <div class="combo-field-wrap">
+    <label class="combo-field-label t-s">
+      Genre tags
+    </label>
+
+    <ds-combobox
+      placeholder="Add a genre…"
+      [options]="tagOptions()"
+      [multiple]="true"
+      [allowCreate]="true"
+      [(value)]="tagValue"
+      (create)="onCreateTag($event)"
     />
   </div>
 </docs-section>

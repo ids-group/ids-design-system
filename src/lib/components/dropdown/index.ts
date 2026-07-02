@@ -1,2 +1,6 @@
 export { DropdownComponent } from './dropdown.component';
-export type { DropdownOption, DropdownSize } from './dropdown.types';
+export type {
+  DropdownOption,
+  DropdownOptionGroup,
+  DropdownSize,
+} from './dropdown.types';

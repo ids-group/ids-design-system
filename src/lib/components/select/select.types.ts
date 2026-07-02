@@ -1,9 +1,12 @@
+import type { IconName } from '../../icons/icons.data';
+
 export type SelectSize = 'sm' | 'md' | 'lg';
 
 export interface SelectOption {
   label: string;
   value: string;
   disabled?: boolean;
+  icon?: IconName;
 }
 
 export interface SelectOptionGroup {

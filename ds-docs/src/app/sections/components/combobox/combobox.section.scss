@@ -1,13 +1,13 @@
 
-.field-stack {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-1-5);
-      margin-top: var(--space-3);
-      max-width: 480px;
-    }
-    .field-label {
-      font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-      color: var(--text-primary);
-    }
+.combo-field-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1-5);
+  margin-top: var(--space-3);
+  max-width: 480px;
+}
 
+.combo-field-label {
+  font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  color: var(--text-primary);
+}

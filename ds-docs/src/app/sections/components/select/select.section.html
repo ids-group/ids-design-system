@@ -394,7 +394,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">hint</code> renders a helper line below the
+    <code class="t-mono-inline">
+      hint
+    </code> renders a helper line below the
     control. Paired with <code class="t-mono-inline">[invalid]="true"</code> it
     switches to an error style with <code>role="alert"</code>.
   </p>
@@ -413,6 +415,64 @@
       hint="A role is required to save this member."
       [invalid]="true"
       [options]="roleOptions"
+    />
+  </div>
+
+  <!-- ============================================================ Clearable -->
+  <h3 class="block-title t-h4">
+    Clearable
+  </h3>
+
+  <p class="block-desc t-s">
+    Add <code class="t-mono-inline">clearable</code> to show an ✕ button inside
+    the trigger when a value is set. Clicking it resets the value without
+    opening the panel.
+  </p>
+
+  <div class="grid-3">
+    <ds-select
+      label="Role"
+      placeholder="Choose a role…"
+      value="editor"
+      [clearable]="true"
+      [options]="roleOptions"
+    />
+
+    <ds-select
+      label="Role (no value)"
+      placeholder="Choose a role…"
+      [clearable]="true"
+      [options]="roleOptions"
+    />
+  </div>
+
+  <!-- ============================================================ Per-option icons -->
+  <h3 class="block-title t-h4">
+    Per-option icons
+  </h3>
+
+  <p class="block-desc t-s">
+    Add an <code class="t-mono-inline">icon</code> property to each
+    <code class="t-mono-inline">
+      SelectOption
+    </code>. The icon appears in both
+    the option list and the trigger when that option is selected.
+  </p>
+
+  <div class="grid-3">
+    <ds-select
+      label="Role"
+      placeholder="Choose a role…"
+      value="editor"
+      [options]="roleIconOptions"
+    />
+
+    <ds-select
+      label="Role (clearable + icons)"
+      placeholder="Choose a role…"
+      value="admin"
+      [clearable]="true"
+      [options]="roleIconOptions"
     />
   </div>
 </docs-section>

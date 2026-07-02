@@ -1,2 +1,6 @@
 export { ComboboxComponent } from './combobox.component';
-export type { ComboboxOption, ComboboxSize } from './combobox.types';
+export type {
+  ComboboxOption,
+  ComboboxOptionGroup,
+  ComboboxSize,
+} from './combobox.types';

@@ -53,6 +53,24 @@
     }
   }
 
+  .trigger-icon {
+    color: var(--icon-default);
+    flex: 0 0 auto;
+  }
+
+  .clear-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--icon-default);
+    border-radius: var(--radius-sm);
+    padding: 2px;
+    cursor: pointer;
+    flex: 0 0 auto;
+
+    &:hover { color: var(--text-primary); background: var(--surface-secondary); }
+  }
+
   .chevron {
     display: inline-flex;
     align-items: center;

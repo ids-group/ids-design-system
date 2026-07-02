@@ -10,6 +10,7 @@ import {
   inject,
   input,
   model,
+  output,
   signal,
   viewChild,
 } from '@angular/core';
@@ -20,8 +21,15 @@ import { disposeWithLeave } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { TagComponent } from '../tag/tag.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
-import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
-import type { ComboboxOption, ComboboxSize } from './combobox.types';
+import {
+  FieldMessageComponent,
+  type FieldMessageState,
+} from '../field-message/field-message.component';
+import type {
+  ComboboxOption,
+  ComboboxOptionGroup,
+  ComboboxSize,
+} from './combobox.types';
 
 let nextId = 0;
 
@@ -40,11 +48,14 @@ let nextId = 0;
     },
   ],
 })
-export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<T | readonly T[] | null> {
+export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<
+  T | readonly T[] | null
+> {
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
 
   readonly options = input<readonly ComboboxOption<T>[]>([]);
+  readonly optionGroups = input<ComboboxOptionGroup<T>[]>([]);
   readonly value = model<T | readonly T[] | null>(null);
   readonly multiple = input<boolean>(false);
   readonly size = input<ComboboxSize>('md');
@@ -52,11 +63,18 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<T | r
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly hint = input<string>('');
+  readonly allowCreate = input(false, { transform: booleanAttribute });
   /** Accessible name for the combobox input. */
   readonly ariaLabel = input<string | null>(null);
 
-  protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
-  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  readonly create = output<string>();
+
+  protected readonly isDisabled = computed(
+    () => this.disabled() || this.formDisabled(),
+  );
+  protected readonly hintId = computed(() =>
+    this.hint() ? `${this.uid}-hint` : null,
+  );
   protected readonly messageState = computed<FieldMessageState>(() =>
     this.invalid() ? 'error' : 'default',
   );
@@ -83,17 +101,68 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<T | r
     return this.isOpen() && index >= 0 ? this.optionId(index) : null;
   });
 
-  protected readonly filteredOptions = computed(() => {
-    const trimmedQuery = this.query().toLowerCase().trim();
-    const allOptions = this.options();
-    if (!trimmedQuery) {
-      return allOptions;
+  /** All options flattened from either optionGroups or options. */
+  protected readonly allOptions = computed<readonly ComboboxOption<T>[]>(() => {
+    const groups = this.optionGroups();
+    if (groups.length > 0) {
+      return groups.flatMap((group) => group.options);
     }
 
-    return allOptions.filter((option) =>
+    return this.options();
+  });
+
+  protected readonly filteredOptions = computed(() => {
+    const trimmedQuery = this.query().toLowerCase().trim();
+    if (!trimmedQuery) {
+      return this.allOptions();
+    }
+
+    return this.allOptions().filter((option) =>
       option.label.toLowerCase().includes(trimmedQuery),
     );
   });
+
+  /** Filtered groups for grouped rendering — groups with no matching options are hidden. */
+  protected readonly filteredGroups = computed<ComboboxOptionGroup<T>[]>(() => {
+    const groups = this.optionGroups();
+    if (groups.length === 0) {
+      return [];
+    }
+    const trimmedQuery = this.query().toLowerCase().trim();
+    if (!trimmedQuery) {
+      return groups;
+    }
+
+    return groups
+      .map((group) => ({
+        ...group,
+        options: group.options.filter((option) =>
+          option.label.toLowerCase().includes(trimmedQuery),
+        ),
+      }))
+      .filter((group) => group.options.length > 0);
+  });
+
+  /** Whether to show the "Create «text»" row at the bottom of the panel. */
+  protected readonly showCreateRow = computed<boolean>(() => {
+    if (!this.allowCreate()) {
+      return false;
+    }
+    const text = this.query().trim();
+    if (!text) {
+      return false;
+    }
+    const lowerText = text.toLowerCase();
+
+    return !this.allOptions().some(
+      (option) => option.label.toLowerCase() === lowerText,
+    );
+  });
+
+  /** Flat list of visible options used for keyboard navigation index. */
+  protected readonly visibleOptions = computed<readonly ComboboxOption<T>[]>(
+    () => this.filteredOptions(),
+  );
 
   protected readonly selectedTags = computed(() => {
     if (!this.multiple()) {
@@ -102,7 +171,7 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<T | r
     const selectedValues = (this.value() as readonly T[] | null) ?? [];
     const selectedSet = new Set(selectedValues);
 
-    return this.options().filter((option) => selectedSet.has(option.value));
+    return this.allOptions().filter((option) => selectedSet.has(option.value));
   });
 
   protected readonly displayLabel = computed(() => {
@@ -115,8 +184,8 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<T | r
     }
 
     return (
-      this.options().find((option) => option.value === currentValue)?.label ??
-      ''
+      this.allOptions().find((option) => option.value === currentValue)
+        ?.label ?? ''
     );
   });
 
@@ -151,6 +220,11 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<T | r
     return parts.join(' ');
   }
 
+  /** Flat index of the given option within the visible (filtered) list. */
+  protected flatIndexOf(option: ComboboxOption<T>): number {
+    return this.visibleOptions().findIndex((opt) => opt === option);
+  }
+
   protected onTriggerClick(): void {
     if (this.isDisabled()) {
       return;
@@ -178,7 +252,9 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<T | r
     if (this.isDisabled()) {
       return;
     }
-    const opts = this.filteredOptions();
+    const visibleCount = this.visibleOptions().length;
+    // Create row adds one extra navigable slot at the end.
+    const totalSlots = visibleCount + (this.showCreateRow() ? 1 : 0);
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
@@ -188,7 +264,7 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<T | r
           return;
         }
         this.activeIndex.set(
-          opts.length ? (this.activeIndex() + 1) % opts.length : -1,
+          totalSlots ? (this.activeIndex() + 1) % totalSlots : -1,
         );
         break;
       case 'ArrowUp':
@@ -199,13 +275,17 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<T | r
           return;
         }
         this.activeIndex.set(
-          opts.length
-            ? (this.activeIndex() - 1 + opts.length) % opts.length
-            : -1,
+          totalSlots ? (this.activeIndex() - 1 + totalSlots) % totalSlots : -1,
         );
         break;
       case 'Enter': {
-        const opt = opts[this.activeIndex()];
+        const index = this.activeIndex();
+        if (this.showCreateRow() && index === visibleCount) {
+          event.preventDefault();
+          this.onCreateNew();
+          break;
+        }
+        const opt = this.visibleOptions()[index];
         if (opt) {
           event.preventDefault();
           this.onPick(opt);
@@ -266,7 +346,7 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<T | r
     this.overlayRef.backdropClick().subscribe(() => this.close());
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
     this.isOpen.set(true);
-    this.activeIndex.set(this.filteredOptions().length ? 0 : -1);
+    this.activeIndex.set(this.visibleOptions().length ? 0 : -1);
   }
 
   protected close(): void {
@@ -279,6 +359,7 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<T | r
 
   protected onFilter(event: Event): void {
     this.query.set((event.target as HTMLInputElement).value);
+    this.activeIndex.set(0);
   }
 
   protected onPick(option: ComboboxOption<T>): void {
@@ -292,6 +373,16 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<T | r
       this.value.set(option.value);
       this.close();
     }
+  }
+
+  protected onCreateNew(): void {
+    const text = this.query().trim();
+    if (!text) {
+      return;
+    }
+    this.create.emit(text);
+    this.query.set('');
+    this.close();
   }
 
   protected remove(target: T): void {

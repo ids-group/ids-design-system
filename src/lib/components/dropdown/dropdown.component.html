@@ -24,12 +24,33 @@
   (click)="toggle()"
   (keydown)="onTriggerKeydown($event)"
 >
+  @if (selectedOption()?.icon) {
+    <ds-icon
+      class="trigger-icon"
+      [name]="selectedOption()!.icon!"
+      [size]="16"
+    />
+  }
+
   <span
     class="trigger-text"
     [class.is-placeholder]="!hasValue()"
   >
     {{ displayLabel() }}
   </span>
+
+  @if (clearable() && hasValue() && !disabled() && !readOnly()) {
+    <span
+      class="clear-btn"
+      aria-hidden="true"
+      (click)="clearValue($event)"
+    >
+      <ds-icon
+        name="x"
+        [size]="14"
+      />
+    </span>
+  }
 
   <span class="chevron">
     <ds-icon
@@ -57,43 +78,108 @@
       [id]="listboxId"
       [attr.aria-labelledby]="label() ? labelId : null"
     >
-      @for (opt of options(); track opt.value; let i = $index) {
-        <li role="presentation">
-          <button
-            type="button"
-            role="option"
-            class="option"
-            [id]="optionId(i)"
-            [attr.aria-selected]="isSelected(opt)"
-            [attr.aria-disabled]="opt.disabled ? 'true' : null"
-            [class.is-selected]="isSelected(opt)"
-            [class.is-active]="isActive(i)"
-            [class.is-disabled]="opt.disabled"
-            [disabled]="opt.disabled"
-            (click)="pick(opt)"
-            (mouseenter)="activeIndex.set(i)"
+      @if (optionGroups().length > 0) {
+        @for (
+          group of optionGroups();
+          track group.label;
+          let groupIdx = $index
+        ) {
+          <li
+            class="optgroup"
+            role="group"
+            [attr.aria-label]="group.label"
           >
-            @if (opt.icon) {
-              <ds-icon
-                class="option-icon"
-                [name]="opt.icon"
-                [size]="16"
-              />
-            }
-
-            <span class="option-label">
-              {{ opt.label }}
+            <span
+              class="optgroup-label"
+              [class.is-first]="groupIdx === 0"
+            >
+              {{ group.label }}
             </span>
 
-            @if (isSelected(opt)) {
-              <ds-icon
-                class="option-check"
-                name="check"
-                [size]="14"
-              />
-            }
-          </button>
-        </li>
+            <ul
+              class="optgroup-list"
+              role="presentation"
+            >
+              @for (opt of group.options; track opt.value) {
+                <li role="presentation">
+                  <button
+                    type="button"
+                    role="option"
+                    class="option"
+                    [id]="optionId(flatIndexOf(opt))"
+                    [attr.aria-selected]="isSelected(opt)"
+                    [attr.aria-disabled]="opt.disabled ? 'true' : null"
+                    [class.is-selected]="isSelected(opt)"
+                    [class.is-active]="isActive(flatIndexOf(opt))"
+                    [class.is-disabled]="opt.disabled"
+                    [disabled]="opt.disabled"
+                    (click)="pick(opt)"
+                    (mouseenter)="activeIndex.set(flatIndexOf(opt))"
+                  >
+                    @if (opt.icon) {
+                      <ds-icon
+                        class="option-icon"
+                        [name]="opt.icon"
+                        [size]="16"
+                      />
+                    }
+
+                    <span class="option-label">
+                      {{ opt.label }}
+                    </span>
+
+                    @if (isSelected(opt)) {
+                      <ds-icon
+                        class="option-check"
+                        name="check"
+                        [size]="14"
+                      />
+                    }
+                  </button>
+                </li>
+              }
+            </ul>
+          </li>
+        }
+      } @else {
+        @for (opt of options(); track opt.value; let i = $index) {
+          <li role="presentation">
+            <button
+              type="button"
+              role="option"
+              class="option"
+              [id]="optionId(i)"
+              [attr.aria-selected]="isSelected(opt)"
+              [attr.aria-disabled]="opt.disabled ? 'true' : null"
+              [class.is-selected]="isSelected(opt)"
+              [class.is-active]="isActive(i)"
+              [class.is-disabled]="opt.disabled"
+              [disabled]="opt.disabled"
+              (click)="pick(opt)"
+              (mouseenter)="activeIndex.set(i)"
+            >
+              @if (opt.icon) {
+                <ds-icon
+                  class="option-icon"
+                  [name]="opt.icon"
+                  [size]="16"
+                />
+              }
+
+              <span class="option-label">
+                {{ opt.label }}
+              </span>
+
+              @if (isSelected(opt)) {
+                <ds-icon
+                  class="option-check"
+                  name="check"
+                  [size]="14"
+                />
+              }
+            </button>
+          </li>
+        }
       }
     </ul>
   </div>
