@@ -57,7 +57,7 @@ Goal: a coherent, **smooth** motion system. **Foundation is healthy** — motion
 
 ## DS-docs showcase
 
-- [ ] **Sidenav — sort alphabetically + add search.** Sort items inside each nav group A→Z (`ds-docs/src/app/layout/nav.config.ts`) AND re-order the rendered sections within each group to match — the nav order mirrors the page rendering order (`docs.page.ts`), so both must move together or anchor-scrolling stops reading top-to-bottom. Add a search/filter over section names; placement option: a sticky header on the main content area with the search field in it (vs. a filter input at the top of the sidenav) — decide which (or both).
+- [x] **Sidenav — sort A→Z + search ✅ DONE (verified 2026-07-02):** `nav.config.ts` sorted A→Z; a `ds-search` in the sidebar filters groups via `filteredNav()`. (Re-ordering the rendered sections to match — verify if still wanted.)
 - [ ] **Inspect mode — Figma-style spec overlay per section.** A button/toggle in the section heading that turns on a visual "inspect" overlay on the demo elements, like Figma's spec view: colour-coded lines and boxes drawing the structure — paddings, gaps, sizes/lengths with their values and units; plus WHICH token/class drives each value and what it's responsible for (e.g. a padding annotated `--s-4 = 16px`). Rendered as an overlay on top of the live demos. Implementation sketch: read computed styles + `getBoundingClientRect` off the real DOM and draw an absolutely-positioned annotation layer; map values back to tokens via the known `--s-*`/`--r-*`/`--fs-*` scales. Scope is open — could start with spacing only on one pilot section before generalising.
 - [ ] **Eliminate raw-markup mirrors from the showcase (raised 2026-06-11: "мы должны показывать витрину компонентов из ds, а не копировать их").** The `forced/` mirrors exist for 3 reasons, each with a clean fix — `!important`/`::ng-deep` overrides are NOT it (they'd re-copy the state VALUES into docs):
   1. **Forced states** (button, field, tabs, pagination, table, day, link hooks) → DECISION 2026-06-11 (re-confirmed after full comparison): option A — sections render live components and pin states via `:host ::ng-deep .pin-* .inner { background: var(--_x-bg-hover); … }`, reading the component's own `--_*` resolvers (no value copying; possible only after the resolver rollout; precedent: search force-focus). Accepted trade-offs: docs duplicates WHICH property each state touches + depends on private `--_*` names + ng-deep legacy status. REJECTED after comparison: `*.forced.scss` co-located in lib (+optional Sass-flag strip) — cleanest drift-wise but puts showcase concerns in the lib; co-selectors/forceState; `!important` value copies; codegen mirrors.
@@ -70,9 +70,9 @@ Goal: a coherent, **smooth** motion system. **Foundation is healthy** — motion
 ## Component improvements (surfaced by field app `_ds-overrides.scss`)
 
 - [ ] **Tabs · pills overflow** — `pills` variant overflows narrow viewports with 4+ tabs. Make the pill bar scroll horizontally within its bounds by default (or opt-in `scrollable`). Field works around with `overflow-x: auto`.
-- [ ] **Banner · compact density** — field tightens compact (`--ds-banner-pad-y: --s-1-5`, font `--fs-xs`). Review default or expose body font-size token.
+- [x] **Banner · compact density ✅ DONE (verified 2026-07-02):** `ds-banner [compact]` input tightens padding.
 - [ ] **Search · max-width** — `.search` caps at `--search-maxw` (tokenized, but field overrode `.search` directly — didn't find the token). Document it; consider defaulting to `none`.
-- [ ] **Input · label tokens** — field uses `--ds-input-label-fs/fw/color`. Confirm documented in catalogue + tokens-reference.
+- [x] **Input · label tokens ✅ DONE (verified 2026-07-02):** public `--ds-input-label-color/-fs/-fw` resolvers exist. (Catalogue/tokens-reference doc — optional.)
 
 ## Component feature gaps (from gap analysis — HIGH)
 
@@ -107,7 +107,7 @@ The `a11y` branch covered ~29 components (CDK focus-trap + scroll-lock + dialog 
 
 - [ ] **bottom-sheet** — behaviour already done (scroll-lock, Escape, scrim, drag). Missing the dialog SEMANTICS: add `role="dialog"` + `aria-modal="true"` + `aria-labelledby`(sheet-title id) + `cdkTrapFocus`/`cdkTrapFocusAutoCapture` (mirror `modal.component.html`).
 - [ ] **number-stepper** — `−`/`+` buttons have no `aria-label` (e.g. "Decrease"/"Increase"); the `<input type="number">` has no label/`aria-label`. Mirror the icon-only-button labelling pattern.
-- [ ] **table** — sortable `<th (click)>` not keyboard-operable: no button/`tabindex` + Enter/Space, no `aria-sort`. **(P0 in library-audit)**
+- [x] **table — sortable-`<th>` keyboard ✅ DONE (verified 2026-07-02):** renders a native `<button>` (Enter/Space) + `[attr.aria-sort]`. (was P0)
 - [ ] **MED/minor:** ~~spinner → `role="status"` + `aria-label`~~ ✅ ALREADY DONE (host has `role="status"` + `aria-label="Loading"`, verified 2026-06-25); ~~divider → `role="separator"`~~ ✅ ALREADY DONE (host binding); ~~skeleton → `aria-hidden`~~ ✅ ALREADY DONE (host `aria-hidden="true"`; `aria-busy` N/A for a static placeholder); **STILL OPEN** → badge `count`/value → `aria-label` for the number; avatar-group → `aria-label` for the hidden-count (`+N` is bare text); topbar → `role="banner"` landmark (renders bare `<header>`). (avatar already got `role="img"` from the a11y branch.) [Verified-vs-code 2026-06-25 — the three crossed-out were already shipped.]
 - Reference patterns (a11y branch): form fields = `input.component.ts`; overlays = `modal.component.html`; roving keyboard = `tabs.component.ts`.
 
@@ -115,7 +115,7 @@ The `a11y` branch covered ~29 components (CDK focus-trap + scroll-lock + dialog 
 
 Confirmed issues in the merged `a11y` pass, not covered above (source: `docs/superpowers/a11y-branch-review.md`; spot-re-verified vs code 2026-06-10):
 
-- [ ] **combobox trigger is open-only** — clicking the trigger/chevron never closes an open panel (`togglePanel()` exists but the trigger only focuses/opens). **(P1)**
+- [x] **combobox trigger close ✅ DONE (verified 2026-07-02):** the chevron calls `togglePanel()`, which closes an open panel. (was P1)
 - [ ] **open listbox doesn't close on Tab** (combobox/select/dropdown) — overlay stays up and focus escapes behind it; Escape is handled, Tab isn't. **(P1)**
 - [ ] **modal/drawer scroll-lock isn't ref-counted** — with two overlays stacked, closing the first restores body scroll under the second (both just reset `body.style.overflow`). **(P1)**
 - [x] ~~**accordion `aria-controls` dangles when collapsed**~~ — ❌ NOT A BUG (verified-vs-code 2026-06-25). The `<div role="region" [id]="bodyId">` is rendered UNCONDITIONALLY (`accordion-item.component.html:22`), toggled only via `[class.is-open]` + `[attr.inert]` — never inside an `@if`. So `aria-controls` always resolves. No fix needed; finding was stale/incorrect.

@@ -129,11 +129,11 @@
 
   <div class="summary">
     <div class="stat you"><div class="n">3</div><div class="l">Ждёт твоего решения</div></div>
-    <div class="stat a11y"><div class="n">11</div><div class="l">A11y (P0–P2)</div></div>
+    <div class="stat a11y"><div class="n">9</div><div class="l">A11y (P0–P2)</div></div>
     <div class="stat untouched"><div class="n">12</div><div class="l">Компоненты + foundations</div></div>
-    <div class="stat untouched"><div class="n">17</div><div class="l">Motion / DS-docs / field / PIN-475</div></div>
+    <div class="stat untouched"><div class="n">13</div><div class="l">Motion / DS-docs / field / PIN-475</div></div>
     <div class="stat raw"><div class="n">8</div><div class="l">Raw / frozen / мелочь / lint</div></div>
-    <div class="stat done"><div class="n">44</div><div class="l">Сделано (свёрнуто)</div></div>
+    <div class="stat done"><div class="n">47</div><div class="l">Сделано (свёрнуто)</div></div>
   </div>
 
   <!-- ============ NEEDS YOU ============ -->
@@ -148,19 +148,17 @@
 
   <!-- ============ A11Y ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>♿ A11y — по компонентам и findings</h2><span class="count c-a11y">11</span><span class="why">a11y-ветка покрыла ~29 компонентов; ниже — непокрытое + открытые находки ревью. switch/checkbox/radio+RadioGroup ✅ закрыты 06-30.</span></div>
+    <div class="lane-head"><h2>♿ A11y — по компонентам и findings</h2><span class="count c-a11y">9</span><span class="why">a11y-ветка покрыла ~29 компонентов. ✅ закрыто: switch/checkbox/radio+RadioGroup (06-30) · table sort keyboard · combobox trigger-close · spinner/divider/skeleton roles.</span></div>
     <div class="cards">
       <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">bottom-sheet — dialog-семантика</div><p class="d">Поведение есть; нет `role=dialog` + `aria-modal` + `aria-labelledby` + `cdkTrapFocus`. Зеркалить `modal.component.html`.</p></div>
       <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">number-stepper — aria-label</div><p class="d">Кнопки `−/+` без `aria-label` (Decrease/Increase); `<input number>` без label.</p></div>
-      <div class="card a11y"><span class="chip ch-p0">P0</span><div class="t">table — клавиатурная сортировка</div><p class="d">Сортируемые `<th (click)>` не с клавиатуры: нет button/`tabindex`+Enter/Space, нет `aria-sort`.</p></div>
-      <div class="card a11y"><span class="chip ch-p2">MED</span><div class="t">a11y-мелочь (кластер)</div><p class="d">spinner `role=status`; divider `role=separator`; skeleton `aria-busy`; badge count `aria-label`; avatar-group hidden-count; topbar `role=banner`.</p></div>
-      <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">combobox trigger open-only</div><p class="d">Клик по триггеру/шеврону не закрывает открытую панель (`togglePanel` есть, триггер только открывает).</p></div>
+      <div class="card a11y"><span class="chip ch-p2">MED</span><div class="t">a11y-мелочь (кластер)</div><p class="d">badge count `aria-label`; avatar-group hidden-count (`+N` без label); topbar явный `role=banner` (сейчас implicit `<header>`). spinner/divider/skeleton roles — уже сделаны.</p></div>
       <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">listbox не закрывается на Tab</div><p class="d">combobox/select/dropdown: оверлей висит, фокус уходит за него. Escape обработан, Tab — нет.</p></div>
       <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">scroll-lock без ref-count</div><p class="d">modal/drawer: при двух оверлеях закрытие первого возвращает скролл под вторым (оба сбрасывают `body.overflow`).</p></div>
       <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">listbox options в tab-order</div><p class="d">select/dropdown: option-кнопкам нужен `tabindex="-1"` под roving/active-descendant.</p></div>
       <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">combobox «No matches» selectable</div><p class="d">«Нет совпадений» — это `role=option`; должно быть `role=status`/презентационным.</p></div>
-      <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">date-picker grid-семантика + focus-баг</div><p class="d">Нет `role=grid` (используется `aria-pressed`); `setTimeout`-фокус может стрелять по уже снятому оверлею.</p></div>
-      <div class="card a11y"><span class="chip ch-p2">проверить</span><div class="t">Unverified findings (кластер)</div><p class="d">tooltip затирает host `aria-describedby`; error-hint флипает `role=alert` на существующем узле; sidenav-item `aria-label` дублирует видимый текст; overlay `backdropClick` без unsubscribe. Сверить с кодом до фикса.</p></div>
+      <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">date-picker grid-семантика</div><p class="d">Нет `role=grid`/`gridcell` (используется `aria-pressed`). focus-баг сверен — НЕ баг: `afterNextRender` + guard, disposed-overlay проблемы нет.</p></div>
+      <div class="card a11y"><span class="chip ch-p2">P2 · сверено</span><div class="t">field-message + sidenav-item aria</div><p class="d">`ds-field-message` флипает `role=alert` на существующем узле → live-region может не сработать (рендерить свежий узел); sidenav-item `aria-label` дублирует видимый текст. tooltip aria-describedby — OK (не клобберит); backdropClick — чистится через `dispose()`.</p></div>
     </div>
   </div>
 
@@ -192,10 +190,8 @@
 
   <!-- ============ DS-DOCS FEATURES ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>📖 DS-docs фичи</h2><span class="count c-track">4</span><span class="why">Витрина документации.</span></div>
+    <div class="lane-head"><h2>📖 DS-docs фичи</h2><span class="count c-track">2</span><span class="why">Витрина документации.</span></div>
     <div class="cards">
-      <div class="card track"><div class="t">Menu — интерактивный demo</div><p class="d">Сейчас только статичные always-open списки. Кнопка открывает меню в месте (`ds-popover` host `ds-menu`, закрытие `DsOverlayCloseRef`). Обновить lede.</p><div class="meta">menu.section.ts</div></div>
-      <div class="card track"><div class="t">Sidenav — сортировка A→Z + поиск</div><p class="d">Сортировать пункты в каждой nav-группе (`nav.config.ts`) И переупорядочить секции рендера в тон; + поиск/фильтр по именам секций.</p><div class="meta">nav.config.ts · docs.page.ts</div></div>
       <div class="card track"><div class="t">Inspect-mode (Figma-style)</div><p class="d">Тоггл в заголовке секции → overlay со спекой: paddings/gaps/sizes + какой токен/класс за что отвечает (`--space-4 = 16px`). Пилот — на spacing одной секции.</p></div>
       <div class="card track"><div class="t">Truncation-блоки — collapse</div><p class="d">~35 секций кончаются `.trunc`-карточкой. Свернуть в тоггл / `?`-поповер. Вынести общий `&lt;docs-truncation&gt;`.</p></div>
     </div>
@@ -207,18 +203,16 @@
     <div class="cards">
       <div class="card track"><span class="chip ch-you">подтвердить</span><div class="t">Решения — НЕ «чинить» автоматом</div><p class="d">button/icon-button press `scale` на `--duration-instant` (80ms) — снапи ПО ДИЗАЙНУ (отгружено 06-25); аудит флагнул «слишком быстро», но это намеренно — подтвердить до правок. button-toggle `aria-pressed` bg/color снап — реальный гэп, если тоггл используется.</p></div>
       <div class="card track"><span class="chip ch-oos">решить</span><div class="t">Предложенная система рецептов</div><p class="d">(1) стандарт state-change `transition: <props> --duration-fast --ease-standard`; (2) overlay enter `--ease-decelerate` / leave `--ease-accelerate` через общий `DsOverlayLeave`; (3) expand/collapse grid-rows `0fr↔1fr` на `--duration-base`; (4) токен-driven (reduced-motion уже глобально). + общий SCSS-миксин `ds.transition(<props>)`. Дек собран.</p><div class="meta">implemented/motion-system.html</div></div>
-      <div class="card track"><div class="t">Skeleton — page-wide shimmer sync</div><p class="d">Все `ds-skeleton` должны делить один свип по странице. Замысел был `mask-attachment: fixed`, но свойство мёртвое (no-op во всех браузерах) → найти реальное вьюпорт-якорение. Сейчас держится на общем `--skeleton-shimmer-x`.</p><div class="meta">skeleton.component.scss</div></div>
+      <div class="card track"><div class="t">Skeleton — shimmer sync (почти готово)</div><p class="d">Sync РАБОТАЕТ: `@property --skeleton-shimmer-x` + одна `:root`-анимация, все инстансы читают `mask-position`. Остаток тривиальный — убрать мёртвые строки `mask-attachment` (no-op, оставлены как коммент-intent).</p><div class="meta">skeleton.component.scss</div></div>
     </div>
   </div>
 
   <!-- ============ FIELD OVERRIDES ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🔧 Доработки из field overrides</h2><span class="count c-track">4</span><span class="why">Всплыли из `_ds-overrides.scss` field-приложения.</span></div>
+    <div class="lane-head"><h2>🔧 Доработки из field overrides</h2><span class="count c-track">2</span><span class="why">Всплыли из `_ds-overrides.scss` field-приложения.</span></div>
     <div class="cards">
       <div class="card track"><div class="t">Tabs · pills overflow</div><p class="d">`pills` переполняет узкие вьюпорты при 4+ табах. Скролл по горизонтали в границах (или opt-in `scrollable`). Field обходит `overflow-x:auto`.</p></div>
-      <div class="card track"><div class="t">Banner · compact density</div><p class="d">Field ужимает compact (`--ds-banner-pad-y`, `--font-size-xs`). Ревью дефолта / экспонировать body font-size токен.</p></div>
-      <div class="card track"><div class="t">Search · max-width</div><p class="d">`.search` упирается в `--search-maxw` (токенизировано, но field не нашёл токен). Задокументировать; рассмотреть дефолт `none`.</p></div>
-      <div class="card track"><div class="t">Input · label-токены</div><p class="d">Field использует `--ds-input-label-fs/fw/color`. Подтвердить в каталоге + tokens-reference.</p></div>
+      <div class="card track"><div class="t">Search · max-width</div><p class="d">`--search-maxw` (320px) — глобальный токен, не публичный `--ds-search-maxw`. Экспонировать per-component override / задокументировать / рассмотреть дефолт `none`.</p></div>
     </div>
   </div>
 
@@ -246,7 +240,7 @@
   <div class="lane">
     <div class="lane-head"><h2>🛠 API-консистентность + прочее</h2><span class="count c-track">2</span><span class="why">P2.</span></div>
     <div class="cards">
-      <div class="card track"><span class="chip ch-oos">P2</span><div class="t">API consistency</div><p class="d">`booleanAttribute` на boolean-инпуты · `danger→error`/`warn→warning` · dropdown `error→invalid` · `radio.name` тип · экспорт `DividerSpacing`/`PopoverAlign` · унификация output-имён · pagination model/output дедуп · `title` requiredness · вынести badge `count` и progress `indeterminate` из color-enum.</p></div>
+      <div class="card track"><span class="chip ch-oos">P2</span><div class="t">API consistency</div><p class="d">`booleanAttribute` на все boolean-инпуты (сейчас ~50%) · `danger→error`/`warn→warning` (modal/menu-item/split/stat/progress) · dropdown `error→invalid` · экспорт `DividerSpacing`/`PopoverAlign` · унификация output-имён · pagination model/output дедуп · `title` requiredness · вынести badge `count` и progress `indeterminate` из enum. (`radio.name` ✅ уже string.)</p></div>
       <div class="card track"><span class="chip ch-oos">if-needed</span><div class="t">CDK Menu adoption (option B)</div><p class="d">Только если понадобятся вложенные сабменю / menubar / context-menu. План — `docs/superpowers/cdk-menu-adoption.md`.</p></div>
     </div>
   </div>
@@ -359,6 +353,15 @@
     </div>
   </details>
 
+  <details class="done-panel">
+    <summary class="lane-head"><h2>✅ Сделано · сверка 2026-07-02</h2><span class="count c-done">3</span><span class="toggle"></span><span class="why">Выявлено сверкой доски с кодом — числилось открытым, оказалось готово.</span></summary>
+    <div class="cards">
+      <div class="card done"><div class="t">✅ A11y: table sort + combobox trigger-close</div><p class="d">table: сортируемый `<th>` = нативный `<button>` (Enter/Space) + `[aria-sort]`. combobox: chevron `togglePanel()` закрывает открытую панель. spinner/divider/skeleton roles — сделаны ранее.</p><div class="meta">2026-07-02 (сверка)</div></div>
+      <div class="card done"><div class="t">✅ DS-docs: Menu demo + sidenav sort/search</div><p class="d">Menu-секция: живой `ds-button`→`ds-popover`→`ds-menu`. Sidenav: nav отсортирован A→Z + встроенный `ds-search` с `filteredNav()`.</p><div class="meta">2026-07-02 (сверка)</div></div>
+      <div class="card done"><div class="t">✅ Field: banner compact + input label-токены</div><p class="d">`ds-banner [compact]` (сжатые pad). `ds-input` — публичные `--ds-input-label-color/-fs/-fw`.</p><div class="meta">2026-07-02 (сверка)</div></div>
+    </div>
+  </details>
+
   <p class="foot">
     Источники: <span class="tag">docs/todo.md</span> · <span class="tag">DS-HANDOFF.md</span> (7/7 портировано) · история <span class="tag">4b9e0c2…19ef859</span>.
     Снято как сделанное: pinkmoon token-миграция, MIT-релиценз.
@@ -428,7 +431,7 @@ Goal: a coherent, **smooth** motion system. **Foundation is healthy** — motion
 
 ## DS-docs showcase
 
-- [ ] **Sidenav — sort alphabetically + add search.** Sort items inside each nav group A→Z (`ds-docs/src/app/layout/nav.config.ts`) AND re-order the rendered sections within each group to match — the nav order mirrors the page rendering order (`docs.page.ts`), so both must move together or anchor-scrolling stops reading top-to-bottom. Add a search/filter over section names; placement option: a sticky header on the main content area with the search field in it (vs. a filter input at the top of the sidenav) — decide which (or both).
+- [x] **Sidenav — sort A→Z + search ✅ DONE (verified 2026-07-02):** `nav.config.ts` sorted A→Z; a `ds-search` in the sidebar filters groups via `filteredNav()`. (Re-ordering the rendered sections to match — verify if still wanted.)
 - [ ] **Inspect mode — Figma-style spec overlay per section.** A button/toggle in the section heading that turns on a visual "inspect" overlay on the demo elements, like Figma's spec view: colour-coded lines and boxes drawing the structure — paddings, gaps, sizes/lengths with their values and units; plus WHICH token/class drives each value and what it's responsible for (e.g. a padding annotated `--s-4 = 16px`). Rendered as an overlay on top of the live demos. Implementation sketch: read computed styles + `getBoundingClientRect` off the real DOM and draw an absolutely-positioned annotation layer; map values back to tokens via the known `--s-*`/`--r-*`/`--fs-*` scales. Scope is open — could start with spacing only on one pilot section before generalising.
 - [ ] **Eliminate raw-markup mirrors from the showcase (raised 2026-06-11: "мы должны показывать витрину компонентов из ds, а не копировать их").** The `forced/` mirrors exist for 3 reasons, each with a clean fix — `!important`/`::ng-deep` overrides are NOT it (they'd re-copy the state VALUES into docs):
   1. **Forced states** (button, field, tabs, pagination, table, day, link hooks) → DECISION 2026-06-11 (re-confirmed after full comparison): option A — sections render live components and pin states via `:host ::ng-deep .pin-* .inner { background: var(--_x-bg-hover); … }`, reading the component's own `--_*` resolvers (no value copying; possible only after the resolver rollout; precedent: search force-focus). Accepted trade-offs: docs duplicates WHICH property each state touches + depends on private `--_*` names + ng-deep legacy status. REJECTED after comparison: `*.forced.scss` co-located in lib (+optional Sass-flag strip) — cleanest drift-wise but puts showcase concerns in the lib; co-selectors/forceState; `!important` value copies; codegen mirrors.
@@ -441,9 +444,9 @@ Goal: a coherent, **smooth** motion system. **Foundation is healthy** — motion
 ## Component improvements (surfaced by field app `_ds-overrides.scss`)
 
 - [ ] **Tabs · pills overflow** — `pills` variant overflows narrow viewports with 4+ tabs. Make the pill bar scroll horizontally within its bounds by default (or opt-in `scrollable`). Field works around with `overflow-x: auto`.
-- [ ] **Banner · compact density** — field tightens compact (`--ds-banner-pad-y: --s-1-5`, font `--fs-xs`). Review default or expose body font-size token.
+- [x] **Banner · compact density ✅ DONE (verified 2026-07-02):** `ds-banner [compact]` input tightens padding.
 - [ ] **Search · max-width** — `.search` caps at `--search-maxw` (tokenized, but field overrode `.search` directly — didn't find the token). Document it; consider defaulting to `none`.
-- [ ] **Input · label tokens** — field uses `--ds-input-label-fs/fw/color`. Confirm documented in catalogue + tokens-reference.
+- [x] **Input · label tokens ✅ DONE (verified 2026-07-02):** public `--ds-input-label-color/-fs/-fw` resolvers exist. (Catalogue/tokens-reference doc — optional.)
 
 ## Component feature gaps (from gap analysis — HIGH)
 
@@ -478,7 +481,7 @@ The `a11y` branch covered ~29 components (CDK focus-trap + scroll-lock + dialog 
 
 - [ ] **bottom-sheet** — behaviour already done (scroll-lock, Escape, scrim, drag). Missing the dialog SEMANTICS: add `role="dialog"` + `aria-modal="true"` + `aria-labelledby`(sheet-title id) + `cdkTrapFocus`/`cdkTrapFocusAutoCapture` (mirror `modal.component.html`).
 - [ ] **number-stepper** — `−`/`+` buttons have no `aria-label` (e.g. "Decrease"/"Increase"); the `<input type="number">` has no label/`aria-label`. Mirror the icon-only-button labelling pattern.
-- [ ] **table** — sortable `<th (click)>` not keyboard-operable: no button/`tabindex` + Enter/Space, no `aria-sort`. **(P0 in library-audit)**
+- [x] **table — sortable-`<th>` keyboard ✅ DONE (verified 2026-07-02):** renders a native `<button>` (Enter/Space) + `[attr.aria-sort]`. (was P0)
 - [ ] **MED/minor:** ~~spinner → `role="status"` + `aria-label`~~ ✅ ALREADY DONE (host has `role="status"` + `aria-label="Loading"`, verified 2026-06-25); ~~divider → `role="separator"`~~ ✅ ALREADY DONE (host binding); ~~skeleton → `aria-hidden`~~ ✅ ALREADY DONE (host `aria-hidden="true"`; `aria-busy` N/A for a static placeholder); **STILL OPEN** → badge `count`/value → `aria-label` for the number; avatar-group → `aria-label` for the hidden-count (`+N` is bare text); topbar → `role="banner"` landmark (renders bare `<header>`). (avatar already got `role="img"` from the a11y branch.) [Verified-vs-code 2026-06-25 — the three crossed-out were already shipped.]
 - Reference patterns (a11y branch): form fields = `input.component.ts`; overlays = `modal.component.html`; roving keyboard = `tabs.component.ts`.
 
@@ -486,7 +489,7 @@ The `a11y` branch covered ~29 components (CDK focus-trap + scroll-lock + dialog 
 
 Confirmed issues in the merged `a11y` pass, not covered above (source: `docs/superpowers/a11y-branch-review.md`; spot-re-verified vs code 2026-06-10):
 
-- [ ] **combobox trigger is open-only** — clicking the trigger/chevron never closes an open panel (`togglePanel()` exists but the trigger only focuses/opens). **(P1)**
+- [x] **combobox trigger close ✅ DONE (verified 2026-07-02):** the chevron calls `togglePanel()`, which closes an open panel. (was P1)
 - [ ] **open listbox doesn't close on Tab** (combobox/select/dropdown) — overlay stays up and focus escapes behind it; Escape is handled, Tab isn't. **(P1)**
 - [ ] **modal/drawer scroll-lock isn't ref-counted** — with two overlays stacked, closing the first restores body scroll under the second (both just reset `body.style.overflow`). **(P1)**
 - [x] ~~**accordion `aria-controls` dangles when collapsed**~~ — ❌ NOT A BUG (verified-vs-code 2026-06-25). The `<div role="region" [id]="bodyId">` is rendered UNCONDITIONALLY (`accordion-item.component.html:22`), toggled only via `[class.is-open]` + `[attr.inert]` — never inside an `@if`. So `aria-controls` always resolves. No fix needed; finding was stale/incorrect.
