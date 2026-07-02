@@ -4,6 +4,47 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Shipped 2026-06-29 / 06-30 (dark theme · ds-color · button color×variant · components · forms)
+
+_Archived 2026-06-30 from `todo.md`._
+
+### Architecture / tokens
+- [x] **Button API: `variant` → `color` × `variant` axes — ✅ SHIPPED 2026-06-30** (main, `c698f64`…`fe49f1c`). `ButtonColor` (primary/secondary/tertiary/neutral/error/success/warning) × `ButtonVariant` (solid/tonal/ghost/outline/text), defaults `primary`/`solid`. `ds-icon-button` gained the `color` axis (keeps `variant` as its fill axis). Discouraged combos render with a ⚠ marker (dev-`console.warn`, not banned); `text` re-added but discouraged (prefer global `.link`). 5 new `--{secondary,tertiary,error,success,warning}-muted-strong` roles. Full ds-docs migration + button/icon-button showcases rebuilt as color×variant matrices (reusable `docs-matrix`/`docs-specimens`). `modal-confirm` migrated. Colour engine DROPPED (out of scope). Spec/plan `.claude/superpowers/{specs,plans}/2026-06-30-button-color-fill-*`. _(Old→new mapping: `secondary`→`variant="tonal"`, `tertiary`→`variant="ghost"`, `outline`→`color="neutral" variant="outline"`, `error|success|warning`→`color=…`.)_
+- [x] **`ds-color` scoped accent — ✅ SHIPPED 2026-06-30** (main, `b51b55e`…`76063c3`). `--accent-*` pointer layer (defaults to primary, pixel-identical with no `ds-color`) + `[ds-color="secondary|tertiary|error|success|warning"]` attribute & `ds.color()` mixin (`src/lib/styles/_ds-color.scss`, forwarded via `styles/ds`). Full component sweep routing accent reads `--primary*`→`--accent*` (batches A 19 + B 23 + C); button/icon-button `--c-*` slots default to `--accent-*`. Status channels (`--success/warning-h/s/l`, `-pressed`, `--{status}-on`) + per-family focus rings added. **Open follow-ups (in `todo.md`):** ds-docs demo section; portaled overlays escape the zone; button `--c-ring` not zone-following; à-la-carte consumers must `@use 'styles/ds-color'`.
+
+### Animations / motion
+- [x] **Smooth-motion rollout — ✅ SHIPPED 2026-06-26** (audit A–F, commits `303195f`/`3594b02`/`ec0719a`/`34ada2b`). Interactive state changes now ease on the existing `--duration-*`/`--ease-*` tokens (reduced-motion zeroes them): selection fills (checkbox/radio/switch), pagination, tabs pills, sidenav incl. collapse width, table rows + sort icon, dropzone drag-over, stepper, listbox options (shared `_dropdown-overlay`), combobox/date-picker/dropdown options, breadcrumbs. `ds-modal`/`ds-drawer`/`ds-accordion` animate close (grid-rows expand, modal scale-in). Floating panels (select/dropdown/combobox/date-picker/popover/tooltip) fade+slide open/close via a shared overlay-motion helper; banner fade-in; toggle eases. Action-driven dropdown/menu/picker panels close instantly (`d2e4712`, 06-29). **Still open (in `todo.md`):** overlay leave-on-dismiss-only policy; skeleton page-wide shimmer sync.
+- [x] **Accordion open/close animation — ✅ SHIPPED 2026-06-26** (grid-rows `0fr↔1fr`; `interpolate-size`/inert for collapsed content).
+- [x] **Overlay theme-token scoping — investigated 2026-06-30, NOT a bug.** `--primary` inherits into the portaled date-picker overlay; the "doesn't paint" reading was a Chrome-automation `getComputedStyle` artifact.
+
+### Foundations / tokens
+- [x] **Dark theme — ✅ SHIPPED 2026-06-29** (`themes/dark/`). Light is the default; dark opt-in via `<html data-theme="dark">`; no auto OS-switch (opt in via the new `provideDsTheme({ followSystem: true })`). Sibling-theme architecture (shared `themes/_base-palette` + `themes/_semantic` role map); `color-scheme` declared per theme; dark chart tokens (sequential/divergent ramps + hover/tooltip surfaces). Renamed `themes/default` → `themes/light`. `data-neutrals="brand"` + dark = documented no-op (dark neutrals win).
+- [x] **`--static-white` / `--static-ink` anchors — ✅ SHIPPED 2026-06-29** (theme-independent on-fill anchors so white-on-coloured-fill survives the theme flip; closes the "Палитра — `--static-white`" gap).
+- [x] **Chart tokens dark — ✅ SHIPPED 2026-06-29** (dark sequential/divergent ramps + hover/tooltip surfaces; the light-only-chart-tokens gap).
+- [x] **Semantic spacing aliases `--space-stack` / `--space-inline` — ✅ SHIPPED 2026-06-26** (with the layout primitives).
+
+### Components
+- [x] **Component gap list cleared (2026-06-26 → 06-30):** shipped `ds-multi-select`, `ds-slider`, `ds-otp-input`, `ds-color-picker`, `ds-tree`, `ds-segmented`, `ds-button-group`, `ds-split-button`, `ds-toggle-button`, `ds-list`/`ds-list-item`, `ds-timeline`/`ds-timeline-item`, `ds-description-list`/`ds-description-item`, layout primitives (`ds-stack`/`ds-inline`/`ds-container`), `ds-loading-overlay`. Internal `data-grid` folded into `ds-table` (`pageSize`/`page`/`pageSizeOptions`/`clientSort`/`stickyFirstColumn`/`cellTemplateMap`/`emptyTemplate`); confirm-dialog folded into `ModalService.confirm()`. **Still open (in `todo.md`):** time-picker, inline-alert (vs banner), chart-wrapper, image/lightbox, calendar, splitter.
+- [x] **`ds-alert` — ✅ SHIPPED 2026-06-30** (lightweight inline status: 5 variants, `title`, `[dismissible]`, `[actions]` slot, `icon`, `(dismissed)`).
+
+### Forms / CVA
+- [x] **CVA on the remaining form controls + `ds-radio-group` — ✅ SHIPPED 2026-06-30.** Boolean CVA base (`DsBooleanControlValueAccessor`) for checkbox/switch; combobox/date-picker gained a `disabled` input + CVA; `invalid`/`hint` field-message wired across fields. New `ds-radio-group` (CVA + roving focus). Completes the CVA track (input/textarea/select shipped 06-23).
+- [x] **`hint`/`invalid` field-message rollout — ✅ SHIPPED 2026-06-30** on `ds-select` + the new field components; shared internal `ds-field-message`; `--ds-input-hint-*` → `--ds-field-message-*` (breaking). New `--field-label-gap` token routes field vertical rhythm.
+- [x] **Inline `[label]` on checkbox/radio/switch — ✅ SHIPPED 2026-06-30.**
+- [x] **`ds-input` `[loading]` spinner + `[floating]` label — ✅ SHIPPED 2026-06-30.**
+
+### date-picker
+- [x] **Month/year grid pickers — ✅ SHIPPED 2026-06-30.** Calendar header month/year → compact grid pickers (year paged 12/page) replacing the long scroll list; bounds via `[minYear]`/`[maxYear]`. `ds-calendar-day` extracted (internal, not public).
+- [x] **Sunday column overflow — ✅ FIXED 2026-06-30.** `grid-template-columns: repeat(7, minmax(0,1fr))` + day `max-width:100%`/`min-width:0` so cells shrink to fit a brand-token-widened panel.
+
+### DS-docs
+- [x] **Menu — interactive trigger-opened demo — ✅ DONE.** button → `ds-popover` hosting `ds-menu`, closes via `DsOverlayCloseRef`.
+
+### A11y (shipped with the forms/CVA wave, 2026-06-30)
+- [x] **switch — `role="switch"` + `aria-checked` + `label`/`ariaLabel`.** (was P0)
+- [x] **checkbox — `label`/`for` + ARIA (`aria-invalid`/`required`, describedby) + `booleanAttribute`.**
+- [x] **radio + RadioGroup — new `ds-radio-group` (`role="radiogroup"` + roving tabindex + group label) + per-radio labelling.**
+
 ## Architecture / tokens
 - [x] **Button tokens: fallback pattern + state-color derivation (approved 2026-06-10).** ✅ Done 2026-06-10 on `main` (user waived the own-branch requirement; commits `4b9e0c2`…`ca452c7`; Playwright assert: 57/57, only intended delta = success/warning 76% pressed). `ds-button`/`ds-icon-button` declare their public `--ds-*` tokens on the inner element, so consumer overrides (`ds-button { --ds-button-bg: … }`) are silently ignored — an element's own declaration beats inherited values (the override comment in `icon-button.component.scss` documents a mechanism that doesn't work). Convert both to the badge/tag/toast/empty-state pattern: read public tokens via `var(--ds-…, default)` into private `--_button-*` resolvers, and default hover/active to `color-mix(in srgb, bg 88%/76%, black)` (same recipe as `--primary-hover/-pressed`) so overriding ONE bg token retints hover/pressed/halo automatically, while any state token stays individually overridable. Derive: button primary/error/success/warning, icon-button filled/selected; keep explicit ramp picks for tonal/transparent/outline variants. Visual delta: only success/warning gain a darker (76 %) pressed — today active == hover. Spec → **`docs/superpowers/specs/2026-06-10-button-token-fallback-derivation.md`** (live demo `presentations/token-derivation.html` removed 2026-06-26 — explainer of already-shipped work). Follow-up in spec: same bug in `sidenav-item` + audit remaining declaring components.
 - [x] **`@use './fonts'` + `@use './link'` location.** ✅ Done 2026-06-10, commit `5626fbe`. `_tokens.scss` is pure tokens; `ds.scss` forwards `fonts` (link already forwarded) and documents the opt-in advanced path; `ds-docs/src/styles.scss` (a cherry-pick consumer) now composes `styles/fonts` + `styles/link` explicitly; design-system.md lines 97/99 corrected (line 482 became accurate as a side effect). Verified: built docs CSS identical (8 `@font-face`, `.link` rules unchanged, same bundle size).
