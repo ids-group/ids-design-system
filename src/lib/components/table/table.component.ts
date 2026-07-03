@@ -2,6 +2,7 @@ import {
   Component,
   TemplateRef,
   ViewEncapsulation,
+  booleanAttribute,
   computed,
   contentChildren,
   input,
@@ -35,6 +36,7 @@ const NUMERIC = /^-?\d+(\.\d+)?$/;
     '[class.bordered]': 'bordered()',
     '[class.selectable]': 'selectable()',
     '[class.pinned]': 'stickyFirstColumn()',
+    '[class.expandable]': 'expandableRows()',
   },
 })
 export class TableComponent<T extends { id: string }> {
@@ -92,6 +94,20 @@ export class TableComponent<T extends { id: string }> {
   /** Empty-state template, as an alternative to the `[empty]` content slot —
    *  again for wrappers that can't rely on slot re-projection. */
   readonly emptyTemplate = input<TemplateRef<unknown> | null>(null);
+
+  /** When true, each row renders a leading chevron button that toggles an
+   *  inline expansion panel below it. */
+  readonly expandableRows = input(false, { transform: booleanAttribute });
+
+  /** Two-way set of currently expanded row ids. */
+  readonly expandedIds = model<Set<string>>(new Set<string>());
+
+  /** Template rendered inside an expanded row's panel.
+   *  Context: `$implicit` = row, `row` = row. */
+  readonly rowExpandTemplate = input<TemplateRef<{
+    $implicit: unknown;
+    row: unknown;
+  }> | null>(null);
 
   protected readonly cellTemplateDirectives = contentChildren(
     CellTemplateDirective,
@@ -199,12 +215,42 @@ export class TableComponent<T extends { id: string }> {
 
   /** Select-all is page-scoped only when paginating. */
   protected readonly selectAllLabel = computed(() =>
-    this.pageSize() !== null ? 'Select all rows on this page' : 'Select all rows',
+    this.pageSize() !== null
+      ? 'Select all rows on this page'
+      : 'Select all rows',
   );
 
   protected readonly skeletonArray = computed(() =>
     Array(this.skeletonRows()).fill(0),
   );
+
+  /** Total colspan for the expanded-row panel: data cols + optional select + expand col. */
+  protected readonly expandedColspan = computed(() => {
+    let count = this.columns().length;
+    if (this.selectable()) {
+      count += 1;
+    }
+    if (this.expandableRows()) {
+      count += 1;
+    }
+
+    return count;
+  });
+
+  protected isExpanded(row: T): boolean {
+    return this.expandedIds().has(row.id);
+  }
+
+  protected onToggleExpand(row: T, event: Event): void {
+    event.stopPropagation();
+    const next = new Set<string>(this.expandedIds());
+    if (next.has(row.id)) {
+      next.delete(row.id);
+    } else {
+      next.add(row.id);
+    }
+    this.expandedIds.set(next);
+  }
 
   protected isSelected(row: T): boolean {
     return this.selectedIds().has(row.id);

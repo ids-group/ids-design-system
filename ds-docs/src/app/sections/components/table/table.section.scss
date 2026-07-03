@@ -58,3 +58,23 @@
     /* State pin — hover on a sortable header reads the component's own resolvers;
        --text-secondary is a bare token (no --_* resolver for header hover fg). */
     :host ::ng-deep .pin-hover-th .table thead th { background-color: var(--_table-row-hover-bg-color); color: var(--text-secondary); }
+
+    /* Expandable rows — detail panel layout. */
+    .expand-detail {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: var(--space-1) var(--space-4);
+      font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+    }
+
+    .expand-detail__label {
+      color: var(--text-secondary);
+      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-xs);
+      letter-spacing: var(--letter-spacing-wider);
+      text-transform: uppercase;
+    }
+
+    .expand-detail__value {
+      color: var(--text-primary);
+    }

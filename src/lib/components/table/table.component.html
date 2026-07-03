@@ -14,156 +14,213 @@
     [blur]="true"
     [insetTop]="'var(--ds-table-head-h, 40px)'"
   >
-  <table
-    [class]="tableClasses()"
-    [attr.role]="rowInteractive() ? 'grid' : null"
-    [attr.aria-busy]="loading() !== false ? 'true' : null"
-  >
-    @if (caption()) {
-      <caption class="visually-hidden">
-        {{
-          caption()
-        }}
-      </caption>
-    }
+    <table
+      [class]="tableClasses()"
+      [attr.role]="rowInteractive() ? 'grid' : null"
+      [attr.aria-busy]="loading() !== false ? 'true' : null"
+    >
+      @if (caption()) {
+        <caption class="visually-hidden">
+          {{
+            caption()
+          }}
+        </caption>
+      }
 
-    <thead>
-      <tr>
-        @if (selectable()) {
-          <th
-            scope="col"
-            class="select-col pin-select"
-          >
-            <input
-              type="checkbox"
-              class="check"
-              [attr.aria-label]="selectAllLabel()"
-              [checked]="allSelected()"
-              [indeterminate]="someSelected()"
-              (change)="onToggleAll($event)"
-            />
-          </th>
-        }
-
-        @for (col of columns(); track col.key; let first = $first) {
-          <th
-            scope="col"
-            [class]="headerClasses(col)"
-            [class.numeric]="col.align === 'right'"
-            [class.pin-first]="first && stickyFirstColumn()"
-            [attr.aria-sort]="ariaSort(col)"
-          >
-            @if (col.sortable) {
-              <button
-                type="button"
-                class="th-label"
-                (click)="onSort(col)"
-              >
-                {{ col.label }}
-                <ds-icon
-                  class="sort-icon"
-                  [name]="sortIcon(col)"
-                  [size]="12"
-                >
-                </ds-icon>
-              </button>
-            } @else {
-              <span class="th-label">
-                {{ col.label }}
-              </span>
-            }
-          </th>
-        }
-      </tr>
-    </thead>
-
-    <tbody>
-      @if (isSkeletonLoading()) {
-        @for (_ of skeletonArray(); track $index; let rowIndex = $index) {
-          <tr>
-            @if (selectable()) {
-              <td class="select-col pin-select">
-                <ds-skeleton
-                  width="14px"
-                  height="14px"
-                  [inline]="true"
-                />
-              </td>
-            }
-
-            @for (col of columns(); track col.key; let first = $first) {
-              <td
-                [class.numeric]="col.align === 'right'"
-                [class.pin-first]="first && stickyFirstColumn()"
-              >
-                <ds-skeleton
-                  height="14px"
-                  [width]="skeletonWidth(col, rowIndex)"
-                  [inline]="true"
-                />
-              </td>
-            }
-          </tr>
-        }
-      } @else if (!data().length) {
+      <thead>
         <tr>
-          <td
-            class="empty"
-            [attr.colspan]="columns().length + (selectable() ? 1 : 0)"
-          >
-            @if (emptyTemplate()) {
-              <ng-container [ngTemplateOutlet]="emptyTemplate()!">
-              </ng-container>
-            } @else {
-              <ng-content select="[empty]"></ng-content>
-            }
-          </td>
-        </tr>
-      } @else {
-        @for (row of displayData(); track row.id) {
-          <tr
-            [class.selected]="isSelected(row)"
-            [class.clickable]="rowInteractive()"
-            [attr.tabindex]="rowInteractive() ? 0 : null"
-            [attr.aria-label]="rowInteractive() ? rowAriaLabel(row) : null"
-            (click)="onRowClick(row, $event)"
-            (keydown.enter)="onRowKey(row, $event)"
-            (keydown.space)="onRowKey(row, $event)"
-          >
-            @if (selectable()) {
-              <td class="select-col pin-select">
-                <input
-                  type="checkbox"
-                  class="check"
-                  [attr.aria-label]="'Select ' + rowAriaLabel(row)"
-                  [checked]="isSelected(row)"
-                  (change)="onToggleRow(row, $event)"
-                  (click)="$event.stopPropagation()"
-                />
-              </td>
-            }
+          @if (selectable()) {
+            <th
+              scope="col"
+              class="select-col pin-select"
+            >
+              <input
+                type="checkbox"
+                class="check"
+                [attr.aria-label]="selectAllLabel()"
+                [checked]="allSelected()"
+                [indeterminate]="someSelected()"
+                (change)="onToggleAll($event)"
+              />
+            </th>
+          }
 
-            @for (col of columns(); track col.key; let first = $first) {
-              <td
-                [class.numeric]="col.align === 'right'"
-                [class.pin-first]="first && stickyFirstColumn()"
-              >
-                @if (cellTemplate(col); as tpl) {
+          @if (expandableRows()) {
+            <th
+              scope="col"
+              class="expand-col"
+              [class.pin-expand]="stickyFirstColumn()"
+            >
+            </th>
+          }
+
+          @for (col of columns(); track col.key; let first = $first) {
+            <th
+              scope="col"
+              [class]="headerClasses(col)"
+              [class.numeric]="col.align === 'right'"
+              [class.pin-first]="first && stickyFirstColumn()"
+              [attr.aria-sort]="ariaSort(col)"
+            >
+              @if (col.sortable) {
+                <button
+                  type="button"
+                  class="th-label"
+                  (click)="onSort(col)"
+                >
+                  {{ col.label }}
+                  <ds-icon
+                    class="sort-icon"
+                    [name]="sortIcon(col)"
+                    [size]="12"
+                  >
+                  </ds-icon>
+                </button>
+              } @else {
+                <span class="th-label">
+                  {{ col.label }}
+                </span>
+              }
+            </th>
+          }
+        </tr>
+      </thead>
+
+      <tbody>
+        @if (isSkeletonLoading()) {
+          @for (_ of skeletonArray(); track $index; let rowIndex = $index) {
+            <tr>
+              @if (selectable()) {
+                <td class="select-col pin-select">
+                  <ds-skeleton
+                    width="14px"
+                    height="14px"
+                    [inline]="true"
+                  />
+                </td>
+              }
+
+              @if (expandableRows()) {
+                <td
+                  class="expand-col"
+                  [class.pin-expand]="stickyFirstColumn()"
+                >
+                </td>
+              }
+
+              @for (col of columns(); track col.key; let first = $first) {
+                <td
+                  [class.numeric]="col.align === 'right'"
+                  [class.pin-first]="first && stickyFirstColumn()"
+                >
+                  <ds-skeleton
+                    height="14px"
+                    [width]="skeletonWidth(col, rowIndex)"
+                    [inline]="true"
+                  />
+                </td>
+              }
+            </tr>
+          }
+        } @else if (!data().length) {
+          <tr>
+            <td
+              class="empty"
+              [attr.colspan]="expandedColspan()"
+            >
+              @if (emptyTemplate()) {
+                <ng-container [ngTemplateOutlet]="emptyTemplate()!">
+                </ng-container>
+              } @else {
+                <ng-content select="[empty]"></ng-content>
+              }
+            </td>
+          </tr>
+        } @else {
+          @for (row of displayData(); track row.id) {
+            <tr
+              [class.selected]="isSelected(row)"
+              [class.expanded]="isExpanded(row)"
+              [class.clickable]="rowInteractive()"
+              [attr.tabindex]="rowInteractive() ? 0 : null"
+              [attr.aria-label]="rowInteractive() ? rowAriaLabel(row) : null"
+              (click)="onRowClick(row, $event)"
+              (keydown.enter)="onRowKey(row, $event)"
+              (keydown.space)="onRowKey(row, $event)"
+            >
+              @if (selectable()) {
+                <td class="select-col pin-select">
+                  <input
+                    type="checkbox"
+                    class="check"
+                    [attr.aria-label]="'Select ' + rowAriaLabel(row)"
+                    [checked]="isSelected(row)"
+                    (change)="onToggleRow(row, $event)"
+                    (click)="$event.stopPropagation()"
+                  />
+                </td>
+              }
+
+              @if (expandableRows()) {
+                <td
+                  class="expand-col"
+                  [class.pin-expand]="stickyFirstColumn()"
+                >
+                  <button
+                    type="button"
+                    class="expand-btn"
+                    [attr.aria-expanded]="isExpanded(row)"
+                    [attr.aria-label]="
+                      isExpanded(row) ? 'Collapse row' : 'Expand row'
+                    "
+                    (click)="onToggleExpand(row, $event)"
+                  >
+                    <ds-icon
+                      class="expand-chev"
+                      name="chevronRight"
+                      [class.is-expanded]="isExpanded(row)"
+                      [size]="16"
+                    />
+                  </button>
+                </td>
+              }
+
+              @for (col of columns(); track col.key; let first = $first) {
+                <td
+                  [class.numeric]="col.align === 'right'"
+                  [class.pin-first]="first && stickyFirstColumn()"
+                >
+                  @if (cellTemplate(col); as tpl) {
+                    <ng-container
+                      [ngTemplateOutlet]="tpl"
+                      [ngTemplateOutletContext]="{ $implicit: row, row: row }"
+                    >
+                    </ng-container>
+                  } @else {
+                    {{ cellValue(row, col) }}
+                  }
+                </td>
+              }
+            </tr>
+
+            @if (expandableRows() && isExpanded(row) && rowExpandTemplate()) {
+              <tr class="expand-panel-row">
+                <td
+                  class="expand-panel-cell"
+                  [attr.colspan]="expandedColspan()"
+                >
                   <ng-container
-                    [ngTemplateOutlet]="tpl"
+                    [ngTemplateOutlet]="rowExpandTemplate()!"
                     [ngTemplateOutletContext]="{ $implicit: row, row: row }"
                   >
                   </ng-container>
-                } @else {
-                  {{ cellValue(row, col) }}
-                }
-              </td>
+                </td>
+              </tr>
             }
-          </tr>
+          }
         }
-      }
-    </tbody>
-  </table>
+      </tbody>
+    </table>
   </ds-loading-overlay>
 </div>
 
@@ -171,9 +228,9 @@
   <div class="pagination-footer">
     <ds-pagination
       [total]="data().length"
-      [(currentPage)]="page"
       [pageSize]="size"
       [pageSizeOptions]="pageSizeOptions()"
+      [(currentPage)]="page"
       (pageSizeChange)="pageSize.set($event)"
     />
   </div>

@@ -12,9 +12,7 @@
   </span>
 
   <!-- ============================================================ Default -->
-  <h3 class="block-title t-h4">
-    Default
-  </h3>
+  <h3 class="block-title t-h4">Default</h3>
 
   <p class="block-desc t-s">
     Standard table — header, six rows, status pill column, trailing actions.
@@ -58,9 +56,7 @@
   </ds-table>
 
   <!-- ============================================================ Sortable columns -->
-  <h3 class="block-title t-h4">
-    Sortable columns
-  </h3>
+  <h3 class="block-title t-h4">Sortable columns</h3>
 
   <p class="block-desc t-s">
     Click a header to cycle asc → desc → none. Active column shows a coloured
@@ -136,9 +132,7 @@
   </div>
 
   <!-- ============================================================ Header sort states -->
-  <h3 class="block-title t-h4">
-    Header sort states
-  </h3>
+  <h3 class="block-title t-h4">Header sort states</h3>
 
   <p class="block-desc t-s">
     Every sort affordance — none, ascending, descending, hover.
@@ -163,17 +157,13 @@
 
           <tbody>
             <tr>
-              <td>
-                Project Alpha
-              </td>
+              <td>Project Alpha</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="state-cell__label">
-        Sortable · idle
-      </div>
+      <div class="state-cell__label">Sortable · idle</div>
     </div>
 
     <div class="state-cell">
@@ -195,17 +185,13 @@
 
           <tbody>
             <tr>
-              <td>
-                Project Alpha
-              </td>
+              <td>Project Alpha</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="state-cell__label">
-        Sorted · ascending
-      </div>
+      <div class="state-cell__label">Sorted · ascending</div>
     </div>
 
     <div class="state-cell">
@@ -227,17 +213,13 @@
 
           <tbody>
             <tr>
-              <td>
-                Project Alpha
-              </td>
+              <td>Project Alpha</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="state-cell__label">
-        Sorted · descending
-      </div>
+      <div class="state-cell__label">Sorted · descending</div>
     </div>
 
     <div class="state-cell">
@@ -259,24 +241,18 @@
 
           <tbody>
             <tr>
-              <td>
-                Project Alpha
-              </td>
+              <td>Project Alpha</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="state-cell__label">
-        Hover
-      </div>
+      <div class="state-cell__label">Hover</div>
     </div>
   </div>
 
   <!-- ============================================================ Row selection + bulk bar -->
-  <h3 class="block-title t-h4">
-    Row selection · bulk-action bar
-  </h3>
+  <h3 class="block-title t-h4">Row selection · bulk-action bar</h3>
 
   <p class="block-desc t-s">
     Leading checkbox column. The bulk-action bar appears when one or more rows
@@ -343,9 +319,7 @@
   </ds-table>
 
   <!-- ============================================================ Sticky header -->
-  <h3 class="block-title t-h4">
-    Sticky header
-  </h3>
+  <h3 class="block-title t-h4">Sticky header</h3>
 
   <p class="block-desc t-s">
     Header stays pinned while the body scrolls. Capped at ~220 px to force the
@@ -356,21 +330,13 @@
     <table class="table">
       <thead>
         <tr>
-          <th>
-            Record
-          </th>
+          <th>Record</th>
 
-          <th>
-            Dates
-          </th>
+          <th>Dates</th>
 
-          <th>
-            Venue
-          </th>
+          <th>Venue</th>
 
-          <th>
-            Status
-          </th>
+          <th>Status</th>
         </tr>
       </thead>
 
@@ -406,18 +372,12 @@
   </div>
 
   <!-- ============================================================ Bordered -->
-  <h3 class="block-title t-h4">
-    Bordered
-  </h3>
+  <h3 class="block-title t-h4">Bordered</h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [bordered]="true"
-    </code> wraps the table in an
+    <code class="t-mono-inline"> [bordered]="true" </code> wraps the table in an
     outer border + radius. Off by default so tables nested inside
-    <code class="t-mono-inline">
-      &lt;ds-card padding="none"&gt;
-    </code> don't
+    <code class="t-mono-inline"> &lt;ds-card padding="none"&gt; </code> don't
     double-border.
   </p>
 
@@ -429,19 +389,13 @@
   />
 
   <!-- ============================================================ Loading skeleton -->
-  <h3 class="block-title t-h4">
-    Loading · skeleton
-  </h3>
+  <h3 class="block-title t-h4">Loading · skeleton</h3>
 
   <p class="block-desc t-s">
     First-load placeholder — rows are replaced with shimmer skeletons that
     lock-step with every other
-    <code class="t-mono-inline">
-      &lt;ds-skeleton&gt;
-    </code> on the page. Use
-    <code class="t-mono-inline">
-      [loading]="'skeleton'"
-    </code> when you have no
+    <code class="t-mono-inline"> &lt;ds-skeleton&gt; </code> on the page. Use
+    <code class="t-mono-inline"> [loading]="'skeleton'" </code> when you have no
     rows to show yet.
   </p>
 
@@ -453,16 +407,12 @@
   />
 
   <!-- ============================================================ Loading overlay -->
-  <h3 class="block-title t-h4">
-    Loading · overlay
-  </h3>
+  <h3 class="block-title t-h4">Loading · overlay</h3>
 
   <p class="block-desc t-s">
     Re-fetch indicator — existing rows stay visible behind a translucent overlay
     with a centred spinner. Use
-    <code class="t-mono-inline">
-      [loading]="'overlay'"
-    </code> for refresh /
+    <code class="t-mono-inline"> [loading]="'overlay'" </code> for refresh /
     re-sort / filter-change.
   </p>
 
@@ -474,9 +424,7 @@
   />
 
   <!-- ============================================================ Empty states -->
-  <h3 class="block-title t-h4">
-    Empty states
-  </h3>
+  <h3 class="block-title t-h4">Empty states</h3>
 
   <p class="block-desc t-s">
     Four canonical row-empty variants. Headers always stay so the schema is
@@ -484,9 +432,7 @@
   </p>
 
   <!-- (a) Plain — minimal centered message, no icon / no CTA. -->
-  <div class="block-sub t-overline">
-    a · Plain row
-  </div>
+  <div class="block-sub t-overline">a · Plain row</div>
 
   <p class="block-desc t-s">
     Mirrors source — single tertiary line in a colspan cell. Use when the empty
@@ -497,25 +443,15 @@
     <table class="table">
       <thead>
         <tr>
-          <th>
-            Record
-          </th>
+          <th>Record</th>
 
-          <th>
-            Dates
-          </th>
+          <th>Dates</th>
 
-          <th>
-            Venue
-          </th>
+          <th>Venue</th>
 
-          <th>
-            Status
-          </th>
+          <th>Status</th>
 
-          <th class="numeric">
-            Capacity
-          </th>
+          <th class="numeric">Capacity</th>
         </tr>
       </thead>
 
@@ -533,9 +469,7 @@
   </div>
 
   <!-- (b) No data — first-run / nothing exists yet. Icon + title + body + primary CTA. -->
-  <div class="block-sub t-overline">
-    b · No data · primary CTA
-  </div>
+  <div class="block-sub t-overline">b · No data · primary CTA</div>
 
   <p class="block-desc t-s">
     First-run variant — nothing exists yet, so the CTA invites creation.
@@ -545,25 +479,15 @@
     <table class="table">
       <thead>
         <tr>
-          <th>
-            Record
-          </th>
+          <th>Record</th>
 
-          <th>
-            Dates
-          </th>
+          <th>Dates</th>
 
-          <th>
-            Venue
-          </th>
+          <th>Venue</th>
 
-          <th>
-            Status
-          </th>
+          <th>Status</th>
 
-          <th class="numeric">
-            Capacity
-          </th>
+          <th class="numeric">Capacity</th>
         </tr>
       </thead>
 
@@ -595,9 +519,7 @@
   </div>
 
   <!-- (c) Filtered — query returned nothing. Secondary "clear filters" action. -->
-  <div class="block-sub t-overline">
-    c · Filtered · clear-filters CTA
-  </div>
+  <div class="block-sub t-overline">c · Filtered · clear-filters CTA</div>
 
   <p class="block-desc t-s">
     Data exists but the current filter or search excluded every row.
@@ -607,25 +529,15 @@
     <table class="table">
       <thead>
         <tr>
-          <th>
-            Record
-          </th>
+          <th>Record</th>
 
-          <th>
-            Dates
-          </th>
+          <th>Dates</th>
 
-          <th>
-            Venue
-          </th>
+          <th>Venue</th>
 
-          <th>
-            Status
-          </th>
+          <th>Status</th>
 
-          <th class="numeric">
-            Capacity
-          </th>
+          <th class="numeric">Capacity</th>
         </tr>
       </thead>
 
@@ -657,9 +569,7 @@
   </div>
 
   <!-- (d) Error — request failed. Retry is the primary action. -->
-  <div class="block-sub t-overline">
-    d · Failed to load · retry CTA
-  </div>
+  <div class="block-sub t-overline">d · Failed to load · retry CTA</div>
 
   <p class="block-desc t-s">
     Network or server failure. Icon tints danger; retry is the only sensible
@@ -670,25 +580,15 @@
     <table class="table">
       <thead>
         <tr>
-          <th>
-            Record
-          </th>
+          <th>Record</th>
 
-          <th>
-            Dates
-          </th>
+          <th>Dates</th>
 
-          <th>
-            Venue
-          </th>
+          <th>Venue</th>
 
-          <th>
-            Status
-          </th>
+          <th>Status</th>
 
-          <th class="numeric">
-            Capacity
-          </th>
+          <th class="numeric">Capacity</th>
         </tr>
       </thead>
 
@@ -719,9 +619,7 @@
   </div>
 
   <!-- ============================================================ Dense · zebra -->
-  <h3 class="block-title t-h4">
-    Dense · zebra
-  </h3>
+  <h3 class="block-title t-h4">Dense · zebra</h3>
 
   <p class="block-desc t-s">
     Compact padding plus odd-row tint for spreadsheet-style scanning.
@@ -731,29 +629,17 @@
     <table class="table compact zebra">
       <thead>
         <tr>
-          <th>
-            Record
-          </th>
+          <th>Record</th>
 
-          <th>
-            ID
-          </th>
+          <th>ID</th>
 
-          <th>
-            Dates
-          </th>
+          <th>Dates</th>
 
-          <th>
-            Venue
-          </th>
+          <th>Venue</th>
 
-          <th>
-            Status
-          </th>
+          <th>Status</th>
 
-          <th class="numeric">
-            Capacity
-          </th>
+          <th class="numeric">Capacity</th>
         </tr>
       </thead>
 
@@ -799,22 +685,14 @@
   </div>
 
   <!-- ============================================================ Pagination · sticky column -->
-  <h3 class="block-title t-h4">
-    Pagination · sticky column
-  </h3>
+  <h3 class="block-title t-h4">Pagination · sticky column</h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      [pageSize]
-    </code> turns on client-side
+    <code class="t-mono-inline"> [pageSize] </code> turns on client-side
     pagination (select-all then scopes to the current page);
-    <code class="t-mono-inline">
-      [stickyFirstColumn]
-    </code> pins the first
+    <code class="t-mono-inline"> [stickyFirstColumn] </code> pins the first
     column on horizontal scroll;
-    <code class="t-mono-inline">
-      [clientSort]
-    </code> lets the table sort its
+    <code class="t-mono-inline"> [clientSort] </code> lets the table sort its
     own rows. 12 rows across three pages.
   </p>
 
@@ -829,7 +707,53 @@
     [(selectedIds)]="projectSelected"
   />
 
+  <p class="block-desc t-s">Selected: {{ projectSelected().size }}</p>
+
+  <!-- ============================================================ Expandable rows -->
+  <h3 class="block-title t-h4">Expandable rows</h3>
+
   <p class="block-desc t-s">
-    Selected: {{ projectSelected().size }}
+    <code class="t-mono-inline"> [expandableRows]="true" </code> adds a leading
+    chevron column. Clicking it toggles an inline panel below the row. Pass a
+    template via <code class="t-mono-inline"> [rowExpandTemplate] </code> to
+    control the panel content. Expanded ids are two-way bindable via
+    <code class="t-mono-inline"> [(expandedIds)] </code>.
   </p>
+
+  <ds-table
+    caption="Events"
+    [data]="expandRows"
+    [columns]="expandColumns"
+    [expandableRows]="true"
+    [rowExpandTemplate]="rowExpand"
+    [stickyHeader]="false"
+  >
+    <ng-template
+      let-row
+      dsCellTemplate="project"
+    >
+      <span class="t-s-bold">
+        {{ asEvent(row).project }}
+      </span>
+    </ng-template>
+  </ds-table>
+
+  <ng-template
+    #rowExpand
+    let-row
+  >
+    <div class="expand-detail">
+      <span class="expand-detail__label"> Order ID </span>
+
+      <span class="expand-detail__value mono muted">
+        {{ asEvent(row).id }}
+      </span>
+
+      <span class="expand-detail__label"> Capacity </span>
+
+      <span class="expand-detail__value">
+        {{ asEvent(row).capacity }} attendees
+      </span>
+    </div>
+  </ng-template>
 </docs-section>

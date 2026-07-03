@@ -152,6 +152,10 @@
     &.select-col {
       width: var(--space-10);
     }
+
+    &.expand-col {
+      width: var(--space-10);
+    }
   }
 
   /* Sticky header — gated on the `stickyHeader()` input (default on). */
@@ -205,6 +209,58 @@
         outline: var(--border-width-strong, 2px) solid var(--accent);
         outline-offset: -2px;
       }
+
+      &.expand-panel-row {
+        // Suppress hover tint so the expansion panel doesn't flash on hover.
+        &:hover td {
+          background-color: var(--_table-bg-color);
+        }
+      }
+    }
+
+    .expand-col {
+      width: var(--space-10);
+    }
+
+    .expand-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--space-6);
+      height: var(--space-6);
+      padding: 0;
+      border: 0;
+      background: none;
+      cursor: pointer;
+      color: var(--icon-default);
+      border-radius: var(--radius-sm);
+      transition: color var(--duration-fast) var(--ease-standard);
+
+      &:hover {
+        color: var(--icon-strong);
+      }
+
+      &:focus-visible {
+        outline: var(--border-width-strong, 2px) solid var(--accent);
+        outline-offset: 2px;
+      }
+    }
+
+    .expand-chev {
+      display: block;
+      transition: transform var(--duration-base) var(--ease-standard);
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+
+      &.is-expanded {
+        transform: rotate(90deg);
+      }
+    }
+
+    .expand-panel-cell {
+      padding: var(--_table-cell-pad-y) var(--_table-cell-pad-x);
     }
   }
 
@@ -256,6 +312,7 @@
     position: sticky;
     left: 0;
     z-index: var(--table-sticky-col-z);
+
     /* Opaque so rows scrolling underneath don't bleed through. */
     background-color: var(--_table-bg-color);
   }
@@ -280,6 +337,47 @@
 /* When the select column is also present, offset the first data column past it. */
 :host(.pinned.selectable) .pin-first {
   left: var(--_table-select-w);
+}
+
+/* Stick the expand column when stickyFirstColumn is active. */
+:host(.pinned.expandable) {
+  --_table-expand-w: var(--ds-table-expand-col-w, var(--space-10));
+
+  .pin-expand {
+    position: sticky;
+    left: 0;
+    z-index: var(--table-sticky-col-z);
+    background-color: var(--_table-bg-color);
+  }
+
+  thead .pin-expand {
+    z-index: var(--table-sticky-corner-z);
+    background-color: var(--_table-head-bg-color);
+  }
+
+  tbody tr:hover .pin-expand {
+    background-color: var(--_table-row-hover-bg-color);
+  }
+
+  tbody tr.selected .pin-expand {
+    background-color: var(--_table-row-selected-bg-color);
+  }
+
+  /* pin-first must skip past the expand column. */
+  .pin-first {
+    left: var(--_table-expand-w);
+  }
+}
+
+/* select + expand both present: pin-first skips both columns. */
+:host(.pinned.selectable.expandable) {
+  .pin-expand {
+    left: var(--_table-select-w);
+  }
+
+  .pin-first {
+    left: calc(var(--_table-select-w) + var(--_table-expand-w));
+  }
 }
 
 /* Pagination footer — separates the paginator from the last table row. */
