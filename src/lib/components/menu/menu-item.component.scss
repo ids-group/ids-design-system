@@ -42,4 +42,10 @@
 
     &:hover { background: var(--error-subtitle); }
   }
+
+  .submenu-chevron {
+    margin-left: auto;
+    color: var(--icon-muted);
+    flex-shrink: 0;
+  }
 }

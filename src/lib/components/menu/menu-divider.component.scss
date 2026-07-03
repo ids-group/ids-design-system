@@ -1,0 +1,10 @@
+:host {
+  display: block;
+  padding: var(--space-1) 0;
+}
+
+.divider {
+  margin: 0;
+  border: 0;
+  border-top: var(--border-width-default) solid var(--border-divider);
+}

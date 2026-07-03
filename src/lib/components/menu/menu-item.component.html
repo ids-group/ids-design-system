@@ -6,7 +6,13 @@
   [attr.tabindex]="tabbable() ? 0 : -1"
   [disabled]="disabled()"
   [class.danger]="danger()"
+  [class.has-submenu]="hasSubmenu()"
+  [attr.aria-haspopup]="hasSubmenu() ? 'menu' : null"
+  [attr.aria-expanded]="hasSubmenu() ? submenuOpen() : null"
   (click)="onClick($event)"
+  (keydown)="onKeydown($event)"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave($event)"
 >
   @if (icon()) {
     <ds-icon
@@ -23,4 +29,12 @@
   <span>
     <ng-content></ng-content>
   </span>
+
+  @if (hasSubmenu()) {
+    <ds-icon
+      class="submenu-chevron"
+      name="chevronRight"
+      [size]="14"
+    />
+  }
 </button>

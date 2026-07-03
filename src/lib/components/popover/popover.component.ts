@@ -4,13 +4,20 @@ import {
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
+  booleanAttribute,
   forwardRef,
   inject,
   input,
   signal,
   viewChild,
 } from '@angular/core';
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import {
+  ConnectedPosition,
+  FlexibleConnectedPositionStrategy,
+  Overlay,
+  OverlayConfig,
+  OverlayRef,
+} from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { disposeWithLeave } from '../overlay-motion';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
@@ -19,6 +26,7 @@ import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
 import { DsStaticPreview } from '../static-preview.directive';
 
 export type PopoverAlign = 'start' | 'end';
+export type PopoverPlacement = 'top' | 'bottom' | 'left' | 'right';
 
 @Component({
   selector: 'ds-popover',
@@ -45,6 +53,10 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
   private ref: OverlayRef | null = null;
 
   readonly align = input<PopoverAlign>('start');
+  /** Which side of the trigger the panel prefers to appear on. */
+  readonly placement = input<PopoverPlacement>('bottom');
+  /** Render a small caret pointing at the trigger. */
+  readonly arrow = input(false, { transform: booleanAttribute });
 
   /** ARIA role for the panel (e.g. 'dialog' for interactive popovers). When set,
    *  the panel also traps focus, auto-captures it into the panel on open, and
@@ -56,6 +68,8 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
 
   /** Open/closed state — for callers binding `aria-expanded` on the trigger. */
   readonly opened = signal(false);
+  /** Resolved placement after the overlay positions — drives the arrow direction. */
+  readonly resolvedPlacement = signal<PopoverPlacement>('bottom');
 
   toggle(trigger: HTMLElement): void {
     if (this.preview.staticPreview()) {
@@ -66,26 +80,24 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
 
       return;
     }
-    const align = this.align();
-    const positionStrategy = this.overlay
+
+    const placement = this.placement();
+    const arrowOffset = this.arrow() ? 8 : 4;
+
+    const positionStrategy: FlexibleConnectedPositionStrategy = this.overlay
       .position()
       .flexibleConnectedTo(trigger)
-      .withPositions([
-        {
-          originX: align,
-          originY: 'bottom',
-          overlayX: align,
-          overlayY: 'top',
-          offsetY: 4,
-        },
-        {
-          originX: align,
-          originY: 'top',
-          overlayX: align,
-          overlayY: 'bottom',
-          offsetY: -4,
-        },
-      ]);
+      .withPositions(buildPositions(placement, this.align(), arrowOffset));
+
+    positionStrategy.positionChanges.subscribe((change) => {
+      this.resolvedPlacement.set(
+        connectionToPlacement(
+          change.connectionPair.overlayY,
+          change.connectionPair.overlayX,
+        ),
+      );
+    });
+
     const cfg: OverlayConfig = {
       positionStrategy,
       hasBackdrop: true,
@@ -103,6 +115,7 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
       }
     });
     this.ref.attach(new TemplatePortal(this.panelTpl()!, this.vcr));
+    this.resolvedPlacement.set(placement);
     this.opened.set(true);
   }
 
@@ -116,4 +129,115 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
     this.ref?.dispose();
     this.ref = null;
   }
+}
+
+function buildPositions(
+  placement: PopoverPlacement,
+  align: PopoverAlign,
+  offsetPx: number,
+): ConnectedPosition[] {
+  const crossStart = align === 'start' ? 'start' : 'end';
+  const crossEnd: 'start' | 'end' = align === 'start' ? 'end' : 'start';
+
+  switch (placement) {
+    case 'top':
+      return [
+        {
+          originX: crossStart,
+          originY: 'top',
+          overlayX: crossStart,
+          overlayY: 'bottom',
+          offsetY: -offsetPx,
+        },
+        {
+          originX: crossStart,
+          originY: 'bottom',
+          overlayX: crossStart,
+          overlayY: 'top',
+          offsetY: offsetPx,
+        },
+        {
+          originX: crossEnd,
+          originY: 'top',
+          overlayX: crossEnd,
+          overlayY: 'bottom',
+          offsetY: -offsetPx,
+        },
+      ];
+    case 'left':
+      return [
+        {
+          originX: 'start',
+          originY: 'top',
+          overlayX: 'end',
+          overlayY: 'top',
+          offsetX: -offsetPx,
+        },
+        {
+          originX: 'end',
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'top',
+          offsetX: offsetPx,
+        },
+      ];
+    case 'right':
+      return [
+        {
+          originX: 'end',
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'top',
+          offsetX: offsetPx,
+        },
+        {
+          originX: 'start',
+          originY: 'top',
+          overlayX: 'end',
+          overlayY: 'top',
+          offsetX: -offsetPx,
+        },
+      ];
+    default: // bottom
+      return [
+        {
+          originX: crossStart,
+          originY: 'bottom',
+          overlayX: crossStart,
+          overlayY: 'top',
+          offsetY: offsetPx,
+        },
+        {
+          originX: crossStart,
+          originY: 'top',
+          overlayX: crossStart,
+          overlayY: 'bottom',
+          offsetY: -offsetPx,
+        },
+        {
+          originX: crossEnd,
+          originY: 'bottom',
+          overlayX: crossEnd,
+          overlayY: 'top',
+          offsetY: offsetPx,
+        },
+      ];
+  }
+}
+
+function connectionToPlacement(
+  overlayY: string,
+  overlayX: string,
+): PopoverPlacement {
+  if (overlayY === 'top') {
+    return 'bottom';
+  }
+  if (overlayY === 'bottom') {
+    return 'top';
+  }
+  if (overlayX === 'start') {
+    return 'right';
+  }
+
+  return 'left';
 }

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, inject } from '@angular/core';
+import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { ButtonComponent, ToastComponent, ToastService } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
@@ -12,6 +12,8 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
 })
 export class ToastSection {
   private readonly toast = inject(ToastService);
+
+  readonly promiseRunning = signal(false);
 
   fire(variant: 'info' | 'success' | 'warning' | 'error'): void {
     const messages = {
@@ -40,5 +42,37 @@ export class ToastSection {
       variant: 'info',
       action: { label: 'Undo', handler: () => ref.dismiss() },
     });
+  }
+
+  firePromise(): void {
+    if (this.promiseRunning()) {
+      return;
+    }
+    this.promiseRunning.set(true);
+    const work = new Promise<string>((resolve, reject) => {
+      setTimeout(
+        () =>
+          Math.random() > 0.4 ? resolve('done') : reject(new Error('timeout')),
+        2500,
+      );
+    });
+    this.toast
+      .promise(work, {
+        loading: 'Saving report…',
+        success: 'Report saved successfully.',
+        error: 'Save failed — please try again.',
+      })
+      .then(() => this.promiseRunning.set(false))
+      .catch(() => this.promiseRunning.set(false));
+  }
+
+  fireMaxVisible(): void {
+    for (let i = 1; i <= 5; i++) {
+      this.toast.show({
+        body: `Queued notification #${i}`,
+        variant: 'info',
+        durationMs: 4000,
+      });
+    }
   }
 }

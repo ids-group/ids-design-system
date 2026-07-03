@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import {
   ButtonComponent,
   MenuComponent,
+  MenuDividerComponent,
   MenuItemComponent,
   PopoverComponent,
 } from 'ds';
@@ -13,6 +14,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [
     ButtonComponent,
     MenuComponent,
+    MenuDividerComponent,
     MenuItemComponent,
     PopoverComponent,
     DocsSectionComponent,

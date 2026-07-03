@@ -1,4 +1,4 @@
-export type ToastVariant = 'info' | 'success' | 'warning' | 'error';
+export type ToastVariant = 'info' | 'success' | 'warning' | 'error' | 'loading';
 
 export interface ToastAction {
   readonly label: string;
@@ -26,6 +26,12 @@ export interface ToastEntry {
   readonly variant: ToastVariant;
   readonly dismissible: boolean;
   readonly action?: ToastAction;
+}
+
+export interface ToastPromiseMessages {
+  readonly loading: string;
+  readonly success: string | ((value: unknown) => string);
+  readonly error: string | ((reason: unknown) => string);
 }
 
 export type DsToastHorizontalPosition = 'left' | 'center' | 'right';

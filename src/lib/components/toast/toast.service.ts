@@ -6,13 +6,23 @@ import {
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ToastRegionComponent } from './toast-region.component';
-import { DS_TOAST_POSITION, DS_TOAST_POSITION_DEFAULT } from './toast.config';
-import type { ToastOptions, ToastRef, ToastEntry } from './toast.types';
+import {
+  DS_TOAST_CONFIG,
+  DS_TOAST_POSITION,
+  DS_TOAST_POSITION_DEFAULT,
+} from './toast.config';
+import type {
+  ToastEntry,
+  ToastOptions,
+  ToastPromiseMessages,
+  ToastRef,
+} from './toast.types';
 
 @Injectable({ providedIn: 'root' })
 export class ToastService {
   private readonly overlay = inject(Overlay);
   private readonly position = inject(DS_TOAST_POSITION, { optional: true });
+  private readonly toastConfig = inject(DS_TOAST_CONFIG, { optional: true });
   private overlayRef: OverlayRef | null = null;
   private regionRef: ComponentRef<ToastRegionComponent> | null = null;
   private nextId = 1;
@@ -36,11 +46,52 @@ export class ToastService {
     };
 
     const duration = opts.durationMs ?? 5000;
-    if (duration > 0) {
+    // Loading toasts never auto-dismiss (duration 0 means indefinite).
+    if (duration > 0 && opts.variant !== 'loading') {
       window.setTimeout(() => ref.dismiss(), duration);
     }
 
     return ref;
+  }
+
+  /** Show a loading toast for the duration of `promise`. Resolves/rejects are
+   *  reflected in-place (same toast, no stack-up) as success/error variants. */
+  promise<T>(source: Promise<T>, messages: ToastPromiseMessages): Promise<T> {
+    const ref = this.show({
+      body: messages.loading,
+      variant: 'loading',
+      dismissible: false,
+      durationMs: 0,
+    });
+
+    source.then(
+      (value) => {
+        const successBody =
+          typeof messages.success === 'function'
+            ? messages.success(value)
+            : messages.success;
+        this.regionRef?.instance.update(ref.id, {
+          body: successBody,
+          variant: 'success',
+          dismissible: true,
+        });
+        window.setTimeout(() => ref.dismiss(), 4000);
+      },
+      (reason: unknown) => {
+        const errorBody =
+          typeof messages.error === 'function'
+            ? messages.error(reason)
+            : messages.error;
+        this.regionRef?.instance.update(ref.id, {
+          body: errorBody,
+          variant: 'error',
+          dismissible: true,
+        });
+        window.setTimeout(() => ref.dismiss(), 6000);
+      },
+    );
+
+    return source;
   }
 
   dismissAll(): void {
@@ -59,6 +110,10 @@ export class ToastService {
     this.regionRef = this.overlayRef.attach(
       new ComponentPortal(ToastRegionComponent),
     );
+    const maxVisible = this.toastConfig?.maxVisible;
+    if (maxVisible && maxVisible > 0) {
+      this.regionRef.setInput('maxVisible', maxVisible);
+    }
   }
 
   private buildPositionStrategy(): GlobalPositionStrategy {

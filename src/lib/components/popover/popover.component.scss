@@ -7,6 +7,7 @@
 :host { display: contents; }
 
 .popover {
+  position: relative;
   background: var(--surface-overlay);
   border: var(--border-width-default) solid var(--border-default);
   border-radius: var(--radius-lg);
@@ -19,5 +20,85 @@
   // would double-pad. Drop it when the popover hosts a menu.
   &:has(ds-menu) {
     padding: 0;
+  }
+}
+
+/* ---- Arrow caret ---- */
+
+.arrow {
+  --_arrow-size: 7px;
+
+  position: absolute;
+  width: calc(var(--_arrow-size) * 2);
+  height: calc(var(--_arrow-size) * 2);
+  overflow: hidden;
+  pointer-events: none;
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: var(--_arrow-size);
+    height: var(--_arrow-size);
+    background: var(--surface-overlay);
+    border: var(--border-width-default) solid var(--border-default);
+    transform: rotate(45deg);
+    transform-origin: center;
+  }
+}
+
+/* Placement-specific arrow positioning */
+[data-placement='bottom'] .arrow,
+[data-placement='bottom'] > .arrow {
+  top: calc(var(--_arrow-size) * -1);
+  left: var(--space-4);
+
+  &::before {
+    bottom: 0;
+    left: 50%;
+    translate: -50% 0;
+    border-right: none;
+    border-bottom: none;
+  }
+}
+
+[data-placement='top'] .arrow,
+[data-placement='top'] > .arrow {
+  bottom: calc(var(--_arrow-size) * -1);
+  left: var(--space-4);
+
+  &::before {
+    top: 0;
+    left: 50%;
+    translate: -50% 0;
+    border-left: none;
+    border-top: none;
+  }
+}
+
+[data-placement='right'] .arrow,
+[data-placement='right'] > .arrow {
+  left: calc(var(--_arrow-size) * -1);
+  top: var(--space-4);
+
+  &::before {
+    right: 0;
+    top: 50%;
+    translate: 0 -50%;
+    border-right: none;
+    border-top: none;
+  }
+}
+
+[data-placement='left'] .arrow,
+[data-placement='left'] > .arrow {
+  right: calc(var(--_arrow-size) * -1);
+  top: var(--space-4);
+
+  &::before {
+    left: 0;
+    top: 50%;
+    translate: 0 -50%;
+    border-left: none;
+    border-bottom: none;
   }
 }

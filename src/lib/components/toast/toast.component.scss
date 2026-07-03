@@ -89,6 +89,10 @@
     border-left-color: var(--error);
     .icon { color: var(--error); }
   }
+  &.loading {
+    border-left-color: var(--accent);
+    .icon { color: var(--accent); margin-top: var(--space-0-5); }
+  }
 }
 
 @keyframes ds-toast-in {

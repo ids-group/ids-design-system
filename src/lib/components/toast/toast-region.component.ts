@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import { Component, ViewEncapsulation, input, signal } from '@angular/core';
 import { ToastComponent } from './toast.component';
 import type { ToastEntry } from './toast.types';
 
@@ -18,11 +18,48 @@ const LEAVE_DURATION_MS = 180;
   },
 })
 export class ToastRegionComponent {
-  protected readonly entries = signal<readonly ToastEntry[]>([]);
+  /** Cap on concurrently visible toasts. Extras are queued and shown as
+   *  earlier ones dismiss. 0 = unlimited (default). */
+  readonly maxVisible = input<number>(0);
+
+  protected readonly visibleEntries = signal<readonly ToastEntry[]>([]);
   protected readonly leaving = signal<ReadonlySet<number>>(new Set());
 
+  private readonly pendingQueue: ToastEntry[] = [];
+
   add(entry: ToastEntry): void {
-    this.entries.update((existing) => [...existing, entry]);
+    const limit = this.maxVisible();
+    if (limit > 0 && this.visibleEntries().length >= limit) {
+      this.pendingQueue.push(entry);
+    } else {
+      this.visibleEntries.update((existing) => [...existing, entry]);
+    }
+  }
+
+  /** Replace fields of an already-visible or queued toast in place. */
+  update(
+    id: number,
+    patch: Partial<
+      Pick<ToastEntry, 'body' | 'title' | 'variant' | 'dismissible' | 'action'>
+    >,
+  ): void {
+    const inVisible = this.visibleEntries().some((entry) => entry.id === id);
+    if (inVisible) {
+      this.visibleEntries.update((entries) =>
+        entries.map((entry) =>
+          entry.id === id ? { ...entry, ...patch } : entry,
+        ),
+      );
+
+      return;
+    }
+    const queueIndex = this.pendingQueue.findIndex((entry) => entry.id === id);
+    if (queueIndex !== -1) {
+      this.pendingQueue[queueIndex] = {
+        ...this.pendingQueue[queueIndex],
+        ...patch,
+      };
+    }
   }
 
   remove(id: number): void {
@@ -31,7 +68,7 @@ export class ToastRegionComponent {
     }
     this.leaving.update((set) => new Set(set).add(id));
     setTimeout(() => {
-      this.entries.update((existing) =>
+      this.visibleEntries.update((existing) =>
         existing.filter((entry) => entry.id !== id),
       );
       this.leaving.update((set) => {
@@ -40,6 +77,7 @@ export class ToastRegionComponent {
 
         return next;
       });
+      this.promoteFromQueue();
     }, LEAVE_DURATION_MS);
   }
 
@@ -48,7 +86,20 @@ export class ToastRegionComponent {
   }
 
   clear(): void {
-    this.entries.set([]);
+    this.visibleEntries.set([]);
     this.leaving.set(new Set());
+    this.pendingQueue.length = 0;
+  }
+
+  private promoteFromQueue(): void {
+    if (!this.pendingQueue.length) {
+      return;
+    }
+    const limit = this.maxVisible();
+    if (limit > 0 && this.visibleEntries().length >= limit) {
+      return;
+    }
+    const next = this.pendingQueue.shift()!;
+    this.visibleEntries.update((existing) => [...existing, next]);
   }
 }

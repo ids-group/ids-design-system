@@ -9,7 +9,13 @@
     class="popover"
     [attr.role]="panelRole()"
     [attr.aria-label]="panelLabel()"
+    [class.has-arrow]="arrow()"
+    [attr.data-placement]="arrow() ? placement() : null"
   >
+    @if (arrow()) {
+      <span class="arrow"></span>
+    }
+
     <ng-container [ngTemplateOutlet]="content" />
   </div>
 }
@@ -19,9 +25,15 @@
     class="popover"
     [attr.role]="panelRole()"
     [attr.aria-label]="panelLabel()"
+    [class.has-arrow]="arrow()"
+    [attr.data-placement]="arrow() ? resolvedPlacement() : null"
     [cdkTrapFocus]="!!panelRole()"
     [cdkTrapFocusAutoCapture]="!!panelRole()"
   >
+    @if (arrow()) {
+      <span class="arrow"></span>
+    }
+
     <ng-container [ngTemplateOutlet]="content" />
   </div>
 </ng-template>

@@ -6,6 +6,7 @@ import {
   output,
 } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
+import { SpinnerComponent } from '../spinner/spinner.component';
 import type { IconName } from '../../icons/icons.data';
 import type { ToastAction, ToastVariant } from './toast.types';
 
@@ -16,7 +17,7 @@ import type { ToastAction, ToastVariant } from './toast.types';
 @Component({
   selector: 'ds-toast',
   standalone: true,
-  imports: [IconComponent],
+  imports: [IconComponent, SpinnerComponent],
   templateUrl: './toast.component.html',
   styleUrl: './toast.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -29,6 +30,8 @@ export class ToastComponent {
   readonly icon = input<IconName | null>(null);
   readonly action = input<ToastAction | null>(null);
   readonly dismissed = output<void>();
+
+  protected readonly isLoading = computed(() => this.variant() === 'loading');
 
   protected onAction(action: ToastAction): void {
     action.handler();

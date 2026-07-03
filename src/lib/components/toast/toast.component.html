@@ -4,11 +4,18 @@
   [attr.role]="role()"
   [attr.aria-live]="role() === 'alert' ? 'assertive' : 'polite'"
 >
-  <ds-icon
-    class="icon"
-    [name]="icon() ?? defaultIcon()"
-    [size]="16"
-  />
+  @if (isLoading()) {
+    <ds-spinner
+      class="icon"
+      size="sm"
+    />
+  } @else {
+    <ds-icon
+      class="icon"
+      [name]="icon() ?? defaultIcon()"
+      [size]="16"
+    />
+  }
 
   <div class="body">
     @if (title()) {
