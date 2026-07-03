@@ -37,6 +37,21 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `ds-combobox` gains `[optionGroups]` + `[allowCreate]` with a "Create …" row and a `(create)`
   output. New exported `DropdownOptionGroup` / `ComboboxOptionGroup`. (Native multi on `ds-select`
   intentionally omitted — use `ds-multi-select`.)
+- **`ds-table` expandable rows.** New `[expandableRows]`, `[(expandedIds)]` (`Set<string>`) and
+  `[rowExpandTemplate]` — a chevron toggle per row reveals a full-width detail row (works with
+  selection, sticky first column, and pagination).
+- **Overlay dialogs.** `ds-modal` gains `[closeOnBackdrop]` (opt-out) + `[persistent]` (neither
+  backdrop nor Escape dismisses) + `xl` / `fullscreen` sizes. `ds-drawer` gains `[placement]`
+  (`right` / `left` / `top` / `bottom`) + `sm` size (new `DrawerPlacement`). `ds-bottom-sheet`
+  gains `[snapPoints]` (fractions of viewport height; drag snaps to the nearest, below-lowest closes).
+- **`ds-toast` promise / loading / maxVisible.** New `'loading'` variant (spinner, no auto-dismiss)
+  and `ToastService.promise(p, { loading, success, error })` (updates the toast in place on settle);
+  `DsToastConfig.maxVisible` caps concurrent toasts and queues the rest.
+- **`ds-menu` dividers + submenus.** New `ds-menu-divider` (`role="separator"`) and nested submenus
+  via `ds-menu-item [submenu]` (opens on hover / ArrowRight, closes on ArrowLeft / Escape).
+- **`ds-popover` arrow + placement.** New `[arrow]` caret and `[placement]`
+  (`top` / `bottom` / `left` / `right`, new `PopoverPlacement`); the existing `align` stays the
+  cross-axis alignment.
 
 ## 0.4.0 — 2026-06-30
 
