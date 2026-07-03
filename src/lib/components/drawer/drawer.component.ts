@@ -13,7 +13,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { A11yModule } from '@angular/cdk/a11y';
 import { IconComponent } from '../../icons/icon.component';
-import type { DrawerSize } from './drawer.types';
+import type { DrawerPlacement, DrawerSize } from './drawer.types';
 
 let nextId = 0;
 
@@ -33,6 +33,7 @@ export class DrawerComponent {
 
   readonly open = model<boolean>(false);
   readonly size = input<DrawerSize>('md');
+  readonly placement = input<DrawerPlacement>('right');
   readonly title = input<string>('');
   readonly closed = output<void>();
 
@@ -43,9 +44,11 @@ export class DrawerComponent {
   protected readonly closing = signal(false);
   private wasOpen = false;
 
-  protected readonly classes = computed(() =>
-    this.size() === 'lg' ? 'drawer lg' : 'drawer',
-  );
+  protected readonly classes = computed(() => {
+    const parts = ['drawer', this.placement(), this.size()];
+
+    return parts.join(' ');
+  });
 
   constructor() {
     // open → DOM lifecycle: opening renders now; closing keeps the panel mounted
@@ -77,9 +80,12 @@ export class DrawerComponent {
 
   protected onLeaveEnd(event: AnimationEvent): void {
     // Angular scopes @keyframes names under emulated encapsulation, so
-    // event.animationName arrives as `_ngcontent-…_drawer-out`, not the bare
-    // name — match the suffix or teardown never fires and the lock leaks.
-    if (!event.animationName.endsWith('drawer-out') || !this.closing()) {
+    // event.animationName arrives as `_ngcontent-…_drawer-panel-close-right`,
+    // not the bare name — check the common infix or teardown never fires.
+    if (
+      !event.animationName.includes('drawer-panel-close') ||
+      !this.closing()
+    ) {
       return;
     }
     this.closing.set(false);

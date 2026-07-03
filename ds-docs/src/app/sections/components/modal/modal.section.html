@@ -12,12 +12,10 @@
   </span>
 
   <!-- ============================================================ Sizes -->
-  <h3 class="block-title t-h4">
-    Sizes
-  </h3>
+  <h3 class="block-title t-h4">Sizes</h3>
 
   <p class="block-desc t-s">
-    sm · md · lg specimens rendered as static cards.
+    sm · md · lg · xl · fullscreen specimens rendered as static cards.
   </p>
 
   <div class="modal-grid modal-grid--1">
@@ -40,16 +38,12 @@
               Cancel
             </ds-button>
 
-            <ds-button>
-              Confirm
-            </ds-button>
+            <ds-button> Confirm </ds-button>
           </ng-container>
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
-        sm · 480 px
-      </div>
+      <div class="state-cell__label">sm · 480 px</div>
     </div>
 
     <div class="state-cell">
@@ -72,16 +66,12 @@
               Cancel
             </ds-button>
 
-            <ds-button>
-              Save
-            </ds-button>
+            <ds-button> Save </ds-button>
           </ng-container>
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
-        md · 640 px
-      </div>
+      <div class="state-cell__label">md · 640 px</div>
     </div>
 
     <div class="state-cell">
@@ -104,23 +94,140 @@
               Cancel
             </ds-button>
 
-            <ds-button>
-              Run
-            </ds-button>
+            <ds-button> Run </ds-button>
           </ng-container>
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
-        lg · 800 px
+      <div class="state-cell__label">lg · 800 px</div>
+    </div>
+  </div>
+
+  <!-- xl and fullscreen as live demos (static cards would be too wide to diff meaningfully) -->
+  <div class="modal-grid modal-grid--1">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-button
+          size="sm"
+          (pressed)="xlOpen.set(true)"
+        >
+          Open xl modal
+        </ds-button>
+
+        <ds-modal
+          title="Wide report view"
+          size="xl"
+          [(open)]="xlOpen"
+        >
+          <span body>
+            xl size — 1024 px. Use for data-dense previews, multi-column forms,
+            or side-by-side comparisons.
+          </span>
+
+          <ng-container actions>
+            <ds-button
+              color="neutral"
+              variant="outline"
+              (pressed)="xlOpen.set(false)"
+            >
+              Close
+            </ds-button>
+          </ng-container>
+        </ds-modal>
       </div>
+
+      <div class="state-cell__label">xl · 1024 px</div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-button
+          size="sm"
+          (pressed)="fullscreenOpen.set(true)"
+        >
+          Open fullscreen modal
+        </ds-button>
+
+        <ds-modal
+          title="Fullscreen editor"
+          size="fullscreen"
+          [(open)]="fullscreenOpen"
+        >
+          <span body>
+            Fullscreen — near-viewport width and height. Use for immersive
+            editors, step-through wizards, or document previews.
+          </span>
+
+          <ng-container actions>
+            <ds-button
+              color="neutral"
+              variant="outline"
+              (pressed)="fullscreenOpen.set(false)"
+            >
+              Close
+            </ds-button>
+          </ng-container>
+        </ds-modal>
+      </div>
+
+      <div class="state-cell__label">fullscreen · near-viewport</div>
+    </div>
+  </div>
+
+  <!-- ============================================================ Persistent -->
+  <h3 class="block-title t-h4">Persistent</h3>
+
+  <p class="block-desc t-s">
+    <code> [persistent]="true" </code> disables both backdrop click and
+    <kbd> Esc </kbd> — only an explicit close button or programmatic
+    <code> open.set(false) </code> can dismiss the dialog. Use for multi-step
+    wizards or save-required flows where accidental dismissal causes data loss.
+    <code> [closeOnBackdrop]="false" </code> disables only the backdrop click
+    while keeping <kbd>Esc</kbd> active.
+  </p>
+
+  <div class="modal-grid modal-grid--1">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-button
+          size="sm"
+          (pressed)="persistentOpen.set(true)"
+        >
+          Open persistent modal
+        </ds-button>
+
+        <ds-modal
+          title="Step 1 of 3 — Project details"
+          size="md"
+          [persistent]="true"
+          [(open)]="persistentOpen"
+        >
+          <span body>
+            This modal is persistent: clicking the backdrop or pressing
+            <kbd> Esc </kbd> does nothing. Use the Close button below to
+            dismiss.
+          </span>
+
+          <ng-container actions>
+            <ds-button
+              color="neutral"
+              variant="outline"
+              (pressed)="persistentOpen.set(false)"
+            >
+              Close
+            </ds-button>
+
+            <ds-button (pressed)="persistentOpen.set(false)"> Next </ds-button>
+          </ng-container>
+        </ds-modal>
+      </div>
+
+      <div class="state-cell__label">persistent — backdrop + Esc disabled</div>
     </div>
   </div>
 
   <!-- ============================================================ Variants -->
-  <h3 class="block-title t-h4">
-    Variants
-  </h3>
+  <h3 class="block-title t-h4">Variants</h3>
 
   <p class="block-desc t-s">
     Default · danger confirm · impact warning with affected records.
@@ -134,9 +241,7 @@
           size="sm"
           [showClose]="false"
         >
-          <span body>
-            Apply schedule changes to all 24 records?
-          </span>
+          <span body> Apply schedule changes to all 24 records? </span>
 
           <ng-container actions>
             <ds-button
@@ -146,16 +251,12 @@
               Cancel
             </ds-button>
 
-            <ds-button>
-              Apply
-            </ds-button>
+            <ds-button> Apply </ds-button>
           </ng-container>
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
-        Default
-      </div>
+      <div class="state-cell__label">Default</div>
     </div>
 
     <div class="state-cell">
@@ -178,16 +279,12 @@
               Cancel
             </ds-button>
 
-            <ds-button color="error">
-              Delete
-            </ds-button>
+            <ds-button color="error"> Delete </ds-button>
           </ng-container>
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
-        Danger confirm
-      </div>
+      <div class="state-cell__label">Danger confirm</div>
     </div>
 
     <div class="state-cell">
@@ -208,17 +305,11 @@
             title="Affected records"
           >
             <ul class="list">
-              <li>
-                Project Alpha · 3 Logistics plans
-              </li>
+              <li>Project Alpha · 3 Logistics plans</li>
 
-              <li>
-                Project Beta · 8 Resource allocations
-              </li>
+              <li>Project Beta · 8 Resource allocations</li>
 
-              <li>
-                Project Gamma · 1 Sub-record
-              </li>
+              <li>Project Gamma · 1 Sub-record</li>
             </ul>
           </ds-banner>
 
@@ -230,23 +321,17 @@
               Cancel
             </ds-button>
 
-            <ds-button>
-              Recompute &amp; save
-            </ds-button>
+            <ds-button> Recompute &amp; save </ds-button>
           </ng-container>
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
-        Impact warning
-      </div>
+      <div class="state-cell__label">Impact warning</div>
     </div>
   </div>
 
   <!-- ============================================================ With form -->
-  <h3 class="block-title t-h4">
-    With form
-  </h3>
+  <h3 class="block-title t-h4">With form</h3>
 
   <p class="block-desc t-s">
     Modal hosting a small form — label, input, select.
@@ -290,31 +375,23 @@
               Cancel
             </ds-button>
 
-            <ds-button>
-              Save changes
-            </ds-button>
+            <ds-button> Save changes </ds-button>
           </ng-container>
         </ds-modal-card>
       </div>
 
-      <div class="state-cell__label">
-        Form modal · md
-      </div>
+      <div class="state-cell__label">Form modal · md</div>
     </div>
   </div>
 
   <!-- ============================================================ Confirmation -->
-  <h3 class="block-title t-h4">
-    Confirmation
-  </h3>
+  <h3 class="block-title t-h4">Confirmation</h3>
 
   <p class="block-desc t-s">
     Inject <code>ModalService</code> and call <code>modal.confirm()</code> for a
     destructive or irreversible action — it resolves <code>true</code> on
     confirm, <code>false</code> on cancel or dismiss.
-    <code>
-      typeToConfirm
-    </code> requires the user to type a phrase before the
+    <code> typeToConfirm </code> requires the user to type a phrase before the
     confirm button enables.
   </p>
 
@@ -340,9 +417,7 @@
         </div>
       </div>
 
-      <div class="state-cell__label">
-        Result: {{ confirmResult() }}
-      </div>
+      <div class="state-cell__label">Result: {{ confirmResult() }}</div>
     </div>
   </div>
 </docs-section>

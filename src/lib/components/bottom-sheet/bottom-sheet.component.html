@@ -9,9 +9,12 @@
       class="sheet"
       [class.dragging]="dragOffset() !== null"
       [class.closing]="closing()"
+      [class.snapping]="snapPoints().length > 0 && dragOffset() === null"
       [style.transform]="
         dragOffset() ? 'translateY(' + dragOffset() + 'px)' : null
       "
+      [style.height]="snapHeight()"
+      [style.maxHeight]="snapHeight() ? snapHeight() : null"
       (click)="stop($event)"
       (animationend)="onLeaveEnd($event)"
     >

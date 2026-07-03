@@ -39,6 +39,18 @@
     transition: none;
   }
 
+  /* When snap points are active, animate height changes between snap stops.
+     Reduced-motion collapses this to an instant switch. */
+  &.snapping {
+    transition:
+      transform var(--duration-base) var(--ease-decelerate),
+      height var(--duration-base) var(--ease-decelerate);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
   &.closing {
     animation: ds-sheet-down var(--duration-base) var(--ease-accelerate) forwards;
   }

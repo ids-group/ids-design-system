@@ -25,6 +25,11 @@
   &.sm { width: var(--modal-w-sm); }
   &.md { width: var(--modal-w-md); }
   &.lg { width: var(--modal-w-lg); }
+  &.xl { width: var(--modal-w-xl); }
+  &.fullscreen {
+    width: var(--modal-w-fullscreen);
+    max-height: var(--modal-h-fullscreen);
+  }
 
   .header {
     display: flex;

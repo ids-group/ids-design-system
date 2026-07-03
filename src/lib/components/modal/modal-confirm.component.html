@@ -1,10 +1,10 @@
 <ds-modal-card
+  dialogRole="alertdialog"
+  cdkTrapFocus
   [title]="options.title"
   [danger]="tone === 'danger'"
   [icon]="options.icon ?? null"
   [showClose]="false"
-  dialogRole="alertdialog"
-  cdkTrapFocus
   [cdkTrapFocusAutoCapture]="true"
   [attr.aria-describedby]="options.message ? messageId : null"
 >

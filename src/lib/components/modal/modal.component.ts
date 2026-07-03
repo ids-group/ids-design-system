@@ -2,6 +2,7 @@ import {
   Component,
   DestroyRef,
   ViewEncapsulation,
+  booleanAttribute,
   effect,
   inject,
   input,
@@ -34,6 +35,10 @@ export class ModalComponent {
   readonly title = input.required<string>();
   readonly closed = output<void>();
   readonly confirmed = output<void>();
+  /** When false, clicking the scrim does not close the modal. */
+  readonly closeOnBackdrop = input(true, { transform: booleanAttribute });
+  /** When true, neither backdrop click nor Escape closes the modal — only programmatic or explicit close button. */
+  readonly persistent = input(false, { transform: booleanAttribute });
 
   /** Dialog is in the DOM (kept true through the leave animation). */
   protected readonly rendered = signal(false);
@@ -92,8 +97,19 @@ export class ModalComponent {
   }
 
   protected onBackdrop(event: MouseEvent): void {
-    if (event.target === event.currentTarget) {
-      this.onClose();
+    if (event.target !== event.currentTarget) {
+      return;
     }
+    if (this.persistent() || !this.closeOnBackdrop()) {
+      return;
+    }
+    this.onClose();
+  }
+
+  protected onEscape(): void {
+    if (this.persistent()) {
+      return;
+    }
+    this.onClose();
   }
 }

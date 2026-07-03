@@ -1,5 +1,10 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { ButtonComponent, DrawerComponent } from 'ds';
+import {
+  ButtonComponent,
+  DrawerComponent,
+  type DrawerPlacement,
+  type DrawerSize,
+} from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
@@ -12,4 +17,15 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
 })
 export class DrawerSection {
   protected readonly open = signal(false);
+  protected readonly activePlacement = signal<DrawerPlacement>('right');
+  protected readonly activeSize = signal<DrawerSize>('md');
+
+  protected openWith(
+    placement: DrawerPlacement,
+    size: DrawerSize = 'md',
+  ): void {
+    this.activePlacement.set(placement);
+    this.activeSize.set(size);
+    this.open.set(true);
+  }
 }

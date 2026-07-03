@@ -6,6 +6,7 @@ import {
   type DropdownOption,
   InputComponent,
   ModalCardComponent,
+  ModalComponent,
   ModalService,
 } from 'ds';
 import {
@@ -24,6 +25,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
     DropdownComponent,
     InputComponent,
     ModalCardComponent,
+    ModalComponent,
     DocsSectionComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
@@ -63,6 +65,10 @@ export class ModalSection {
 
   private readonly modal = inject(ModalService);
   protected readonly confirmResult = signal('—');
+
+  protected readonly xlOpen = signal(false);
+  protected readonly fullscreenOpen = signal(false);
+  protected readonly persistentOpen = signal(false);
 
   protected async askDelete(): Promise<void> {
     const ok = await this.modal.confirm({

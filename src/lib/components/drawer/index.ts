@@ -1,2 +1,2 @@
 export { DrawerComponent } from './drawer.component';
-export type { DrawerSize } from './drawer.types';
+export type { DrawerSize, DrawerPlacement } from './drawer.types';

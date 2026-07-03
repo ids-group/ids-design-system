@@ -6,3 +6,10 @@
       border: var(--border-width-default) solid var(--border-divider);
       border-radius: var(--radius-lg);
     }
+
+    .placement-demo,
+    .size-demo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }

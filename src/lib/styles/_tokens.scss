@@ -371,8 +371,12 @@
   --modal-w-sm: 480px;
   --modal-w-md: 640px;
   --modal-w-lg: 800px;
+  --modal-w-xl: 1024px;
+  --modal-w-fullscreen: calc(100vw - var(--space-6));
+  --modal-h-fullscreen: calc(100vh - var(--space-6));
 
   /* Drawer */
+  --drawer-w-sm: 320px;
   --drawer-w-md: 480px;
   --drawer-w-lg: 640px;
 

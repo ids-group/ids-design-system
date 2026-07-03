@@ -12,4 +12,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
 })
 export class BottomSheetSection {
   protected readonly open = signal(false);
+  protected readonly snapOpen = signal(false);
+  protected readonly snapPoints = [0.35, 0.65, 0.9];
 }

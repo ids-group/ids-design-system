@@ -3,6 +3,7 @@ import {
   DOCUMENT,
   ElementRef,
   ViewEncapsulation,
+  computed,
   effect,
   inject,
   input,
@@ -32,6 +33,13 @@ export class BottomSheetComponent {
   readonly open = model<boolean>(false);
   readonly title = input<string>('');
   readonly closed = output<void>();
+  /**
+   * Snap-point heights as fractions of viewport height (0–1), ascending.
+   * e.g. [0.4, 0.9]. When provided the sheet opens at the first snap point;
+   * dragging snaps to the nearest point; dragging below the lowest closes.
+   * When empty (default) the original single-height behavior is preserved.
+   */
+  readonly snapPoints = input<readonly number[]>([]);
 
   private readonly doc = inject(DOCUMENT);
   private readonly sheetRef = viewChild<ElementRef<HTMLElement>>('sheet');
@@ -41,6 +49,19 @@ export class BottomSheetComponent {
   protected readonly rendered = signal(false);
   /** Playing the slide-down + scrim-fade leave animation. */
   protected readonly closing = signal(false);
+  /** Index of the currently active snap point (only used when snapPoints is non-empty). */
+  protected readonly activeSnapIndex = signal(0);
+
+  /** CSS height string derived from the active snap point, or null when snapPoints is empty. */
+  protected readonly snapHeight = computed(() => {
+    const points = this.snapPoints();
+    if (points.length === 0) {
+      return null;
+    }
+    const index = Math.min(this.activeSnapIndex(), points.length - 1);
+
+    return `${points[index] * 100}vh`;
+  });
 
   private dragStartY = 0;
   private lastMoveY = 0;
@@ -58,6 +79,10 @@ export class BottomSheetComponent {
       if (isOpen) {
         this.closing.set(false);
         this.rendered.set(true);
+        // Reset to first snap point when opening with snap points configured.
+        if (this.snapPoints().length > 0) {
+          this.activeSnapIndex.set(0);
+        }
       } else if (this.wasOpen) {
         this.closing.set(true);
       }
@@ -133,13 +158,53 @@ export class BottomSheetComponent {
     if (offset === null) {
       return;
     }
-    const sheetHeight = this.sheetRef()?.nativeElement.offsetHeight ?? 0;
-    const pastThreshold = sheetHeight > 0 && offset > sheetHeight * 0.3;
-    const flicked = this.velocity > 0.5;
-    if (pastThreshold || flicked) {
-      this.close();
-    } else {
-      this.dragOffset.set(null);
+
+    const points = this.snapPoints();
+
+    if (points.length === 0) {
+      // Original single-height behavior.
+      const sheetHeight = this.sheetRef()?.nativeElement.offsetHeight ?? 0;
+      const pastThreshold = sheetHeight > 0 && offset > sheetHeight * 0.3;
+      const flicked = this.velocity > 0.5;
+      if (pastThreshold || flicked) {
+        this.close();
+      } else {
+        this.dragOffset.set(null);
+      }
+
+      return;
     }
+
+    // Snap-point behavior: determine which snap point to land on.
+    const viewportHeight =
+      this.doc.defaultView?.innerHeight ?? window.innerHeight;
+    const currentIndex = this.activeSnapIndex();
+    const currentHeightPx = points[currentIndex] * viewportHeight;
+    // Positive offset = dragged downward.
+    const targetHeightPx = currentHeightPx - offset;
+    const flicked = this.velocity > 0.5;
+
+    if (flicked || targetHeightPx < points[0] * viewportHeight * 0.7) {
+      // Dragged below lowest snap point or flicked down → close.
+      this.close();
+
+      return;
+    }
+
+    // Find the nearest snap point to the dragged height.
+    let nearestIndex = 0;
+    let smallestDelta = Infinity;
+    for (let pointIndex = 0; pointIndex < points.length; pointIndex++) {
+      const delta = Math.abs(
+        points[pointIndex] * viewportHeight - targetHeightPx,
+      );
+      if (delta < smallestDelta) {
+        smallestDelta = delta;
+        nearestIndex = pointIndex;
+      }
+    }
+
+    this.dragOffset.set(null);
+    this.activeSnapIndex.set(nearestIndex);
   }
 }
