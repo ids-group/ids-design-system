@@ -52,6 +52,22 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-popover` arrow + placement.** New `[arrow]` caret and `[placement]`
   (`top` / `bottom` / `left` / `right`, new `PopoverPlacement`); the existing `align` stays the
   cross-axis alignment.
+- **`ds-tabs` lazy / scrollable / closable / vertical.** New `[lazy]` (defer panel content until
+  first shown), `[scrollable]` (horizontal-scroll strip), `[closable]` (per-tab close with a
+  `(tabClose)` output), and `[orientation]` (`horizontal` / `vertical`, new `TabsOrientation`;
+  roving arrows follow the axis).
+- **`ds-accordion` single-open + item `disabled`.** New `[multi]` (default `true`; `false` = only
+  one item open at a time via a parent coordinator) and `[disabled]` on `ds-accordion-item`.
+- **`ds-stepper` clickable / error / vertical.** New `[clickable]` + `(stepClick)`, `[errorSteps]`
+  (indices rendered in an error state), and `[orientation]` (`horizontal` / `vertical`, new
+  `StepperOrientation`).
+- **`ds-sidenav-item` collapsed tooltip.** When the sidenav is collapsed, hovering/focusing an item
+  shows its label as a tooltip.
+- **`ds-badge` numeric count.** New `[count]` + `[max]` (default 99) render a count with `"max+"`
+  overflow and an accessible label.
+- **`ds-avatar` status dot + fallback icon.** New `[status]` (`online` / `offline` / `away` /
+  `busy`, new `AvatarStatus`) shows a corner status dot, and `[fallbackIcon]` renders when there's
+  no image or initials.
 
 ## 0.4.0 — 2026-06-30
 
