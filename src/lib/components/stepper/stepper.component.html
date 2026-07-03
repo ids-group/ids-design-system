@@ -5,19 +5,47 @@
     [class.is-current]="i === current()"
     [attr.aria-current]="i === current() ? 'step' : null"
   >
-    <span
-      aria-hidden="true"
-      [class]="nodeClass(i)"
-    >
-      @if (i < current()) {
-        <ds-icon
-          name="check"
-          [size]="14"
-        />
-      } @else {
-        {{ i + 1 }}
-      }
-    </span>
+    @if (clickable()) {
+      <button
+        type="button"
+        aria-hidden="true"
+        [class]="nodeClass(i)"
+        (click)="onStepClick(i)"
+      >
+        @if (stepState(i) === 'completed') {
+          <ds-icon
+            name="check"
+            [size]="14"
+          />
+        } @else if (stepState(i) === 'error') {
+          <ds-icon
+            name="error"
+            [size]="14"
+          />
+        } @else {
+          {{ i + 1 }}
+        }
+      </button>
+    } @else {
+      <span
+        aria-hidden="true"
+        [class]="nodeClass(i)"
+      >
+        @if (stepState(i) === 'completed') {
+          <ds-icon
+            name="check"
+            [size]="14"
+          />
+        } @else if (stepState(i) === 'error') {
+          <ds-icon
+            name="error"
+            [size]="14"
+          />
+        } @else {
+          {{ i + 1 }}
+        }
+      </span>
+    }
 
     <span
       aria-hidden="true"

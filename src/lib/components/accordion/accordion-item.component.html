@@ -4,6 +4,8 @@
   [id]="headId"
   [attr.aria-expanded]="expanded()"
   [attr.aria-controls]="bodyId"
+  [disabled]="disabled() || null"
+  [attr.aria-disabled]="disabled() ? 'true' : null"
   (click)="toggle()"
 >
   <span>

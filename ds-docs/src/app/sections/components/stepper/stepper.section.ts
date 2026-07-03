@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { StepperComponent } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
@@ -12,4 +12,5 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
 })
 export class StepperSection {
   protected readonly brief = ['Brief', 'Plan', 'Build', 'Review', 'Ship'];
+  protected readonly clickableCurrent = signal(2);
 }

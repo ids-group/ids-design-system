@@ -11,8 +11,17 @@
     with the current step emphasised — or set
     <code class="t-mono-inline">
       labelPosition="inline"
-    </code> for a compact row
-    with the caption beside each node (e.g. a header progress bar).
+    </code> for a compact
+    row with the caption beside each node (e.g. a header progress bar). Set
+    <code class="t-mono-inline">
+      orientation="vertical"
+    </code> to stack steps
+    top-to-bottom, <code class="t-mono-inline">[clickable]="true"</code> to make
+    nodes interactive, and
+    <code class="t-mono-inline">
+      [errorSteps]="[...]"
+    </code> to mark steps in
+    error.
   </span>
 
   <h3 class="block-title t-h4">
@@ -33,6 +42,43 @@
   <div class="demo demo--centered">
     <ds-stepper
       labelPosition="inline"
+      [steps]="brief"
+      [current]="2"
+    />
+  </div>
+
+  <h3 class="block-title t-h4">
+    Clickable steps
+  </h3>
+
+  <div class="demo">
+    <ds-stepper
+      [steps]="brief"
+      [current]="clickableCurrent()"
+      [clickable]="true"
+      (stepClick)="clickableCurrent.set($event)"
+    />
+  </div>
+
+  <h3 class="block-title t-h4">
+    Error state
+  </h3>
+
+  <div class="demo">
+    <ds-stepper
+      [steps]="brief"
+      [current]="3"
+      [errorSteps]="[1, 2]"
+    />
+  </div>
+
+  <h3 class="block-title t-h4">
+    Vertical
+  </h3>
+
+  <div class="demo">
+    <ds-stepper
+      orientation="vertical"
       [steps]="brief"
       [current]="2"
     />
@@ -112,6 +158,18 @@
 
       <code class="t-mono-inline">
         .node.done
+      </code>
+    </div>
+
+    <div class="single-cell">
+      <ds-stepper
+        [steps]="['Step']"
+        [current]="0"
+        [errorSteps]="[0]"
+      />
+
+      <code class="t-mono-inline">
+        .node.error
       </code>
     </div>
   </div>

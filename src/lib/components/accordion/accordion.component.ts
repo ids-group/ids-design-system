@@ -1,4 +1,17 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  contentChildren,
+  forwardRef,
+  input,
+} from '@angular/core';
+import {
+  ACCORDION,
+  type AccordionContract,
+  type AccordionItemRef,
+} from './accordion.token';
+import { AccordionItemComponent } from './accordion-item.component';
 
 @Component({
   selector: 'ds-accordion',
@@ -16,5 +29,27 @@ import { Component, ViewEncapsulation } from '@angular/core';
     `,
   ],
   encapsulation: ViewEncapsulation.Emulated,
+  providers: [
+    {
+      provide: ACCORDION,
+      useExisting: forwardRef(() => AccordionComponent),
+    },
+  ],
 })
-export class AccordionComponent {}
+export class AccordionComponent implements AccordionContract {
+  /** When false, opening one item automatically closes all others. */
+  readonly multi = input(true, { transform: booleanAttribute });
+
+  private readonly items = contentChildren(AccordionItemComponent);
+
+  notifyOpen(opened: AccordionItemRef): void {
+    if (this.multi()) {
+      return;
+    }
+    for (const item of this.items() as unknown as AccordionItemRef[]) {
+      if (item !== opened) {
+        item.closeItem();
+      }
+    }
+  }
+}

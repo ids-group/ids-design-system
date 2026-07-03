@@ -20,7 +20,7 @@
     font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     color: var(--text-primary);
 
-    &:hover { background: var(--surface-secondary); }
+    &:hover:not(:disabled) { background: var(--surface-secondary); }
 
     &:focus-visible {
       outline: var(--border-width-strong, 2px) solid var(--accent);
@@ -37,6 +37,13 @@
 
     &[aria-expanded="true"] .chev {
       transform: rotate(90deg);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      color: var(--text-disabled);
+
+      .chev { color: var(--icon-disabled); }
     }
   }
 
