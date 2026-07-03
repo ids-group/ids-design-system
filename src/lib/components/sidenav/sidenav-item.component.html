@@ -7,23 +7,27 @@
   <a
     #rla="routerLinkActive"
     routerLinkActive="active"
+    dsTooltipPlacement="right"
     [routerLink]="disabled() ? null : routerLink()"
     [class]="linkClasses()"
     [attr.aria-label]="label()"
     [attr.aria-current]="rla.isActive ? 'page' : null"
     [attr.aria-disabled]="disabled() ? 'true' : null"
     [attr.tabindex]="disabled() ? -1 : null"
+    [dsTooltip]="collapsedTooltip()"
   >
     <ng-container [ngTemplateOutlet]="content" />
   </a>
 } @else {
   <a
+    dsTooltipPlacement="right"
     [href]="href() || '#'"
     [class]="linkClasses()"
     [attr.aria-label]="label()"
     [attr.aria-current]="active() ? 'page' : null"
     [attr.aria-disabled]="disabled() ? 'true' : null"
     [attr.tabindex]="disabled() ? -1 : null"
+    [dsTooltip]="collapsedTooltip()"
   >
     <ng-container [ngTemplateOutlet]="content" />
   </a>

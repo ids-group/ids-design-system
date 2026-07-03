@@ -1,9 +1,19 @@
 import { Component, ViewEncapsulation, computed, input } from '@angular/core';
-import type { AvatarSize } from './avatar.types';
+import { IconComponent } from '../../icons/icon.component';
+import type { IconName } from '../../icons/icons.data';
+import type { AvatarSize, AvatarStatus } from './avatar.types';
+
+const STATUS_ARIA_LABELS: Record<AvatarStatus, string> = {
+  online: 'Online',
+  offline: 'Offline',
+  away: 'Away',
+  busy: 'Busy',
+};
 
 @Component({
   selector: 'ds-avatar',
   standalone: true,
+  imports: [IconComponent],
   templateUrl: './avatar.component.html',
   styleUrl: './avatar.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -30,6 +40,10 @@ export class AvatarComponent {
    *  the literal `'neutral'` for the neutral overflow-chip treatment, or null
    *  for the default brand-subtle tones from avatar.scss. */
   readonly tint = input<{ bg: string; fg: string } | 'neutral' | null>(null);
+  /** Presence indicator shown as a colored dot in the bottom-right corner. */
+  readonly status = input<AvatarStatus | null>(null);
+  /** Icon rendered when there is no imageUrl and no initials. */
+  readonly fallbackIcon = input<IconName | null>(null);
 
   protected readonly tintStyle = computed(() => {
     const value = this.tint();
@@ -38,5 +52,11 @@ export class AvatarComponent {
     }
 
     return { bg: null as string | null, fg: null as string | null };
+  });
+
+  protected readonly statusAriaLabel = computed(() => {
+    const value = this.status();
+
+    return value ? STATUS_ARIA_LABELS[value] : null;
   });
 }

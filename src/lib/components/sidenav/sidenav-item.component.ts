@@ -4,16 +4,25 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  inject,
   input,
 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IconComponent } from '../../icons/icon.component';
+import { TooltipDirective } from '../tooltip/tooltip.directive';
 import type { IconName } from '../../icons/icons.data';
+import { SIDENAV } from './sidenav.token';
 
 @Component({
   selector: 'ds-sidenav-item',
   standalone: true,
-  imports: [IconComponent, RouterLink, RouterLinkActive, NgTemplateOutlet],
+  imports: [
+    IconComponent,
+    RouterLink,
+    RouterLinkActive,
+    NgTemplateOutlet,
+    TooltipDirective,
+  ],
   templateUrl: './sidenav-item.component.html',
   styleUrl: './sidenav-item.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -32,6 +41,13 @@ export class SidenavItemComponent {
   readonly badge = input<number | null>(null);
   readonly hasAlert = input<boolean>(false);
   readonly disabled = input(false, { transform: booleanAttribute });
+
+  private readonly sidenav = inject(SIDENAV, { optional: true });
+
+  /** Tooltip text shown when collapsed; empty string suppresses the tooltip when expanded. */
+  protected readonly collapsedTooltip = computed(() =>
+    this.sidenav?.collapsed() ? this.label() : '',
+  );
 
   protected readonly linkClasses = computed(() => {
     const parts = ['item'];

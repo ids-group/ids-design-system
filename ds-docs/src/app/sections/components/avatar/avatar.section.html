@@ -59,4 +59,75 @@
       />
     </ds-avatar-group>
   </div>
+
+  <!-- ============================================================ Status dots -->
+  <h3 class="block-title t-h4">
+    Status dots
+  </h3>
+
+  <p class="block-desc t-s">
+    Pass <code class="t-mono-inline">status</code> to show a presence indicator
+    in the bottom-right corner of the avatar.
+  </p>
+
+  <div class="row">
+    <ds-avatar
+      initials="AB"
+      status="online"
+      ariaLabel="Alice Brown, Online"
+    />
+
+    <ds-avatar
+      initials="JR"
+      status="away"
+      ariaLabel="James Reeves, Away"
+    />
+
+    <ds-avatar
+      initials="SK"
+      status="busy"
+      ariaLabel="Sara Kim, Busy"
+    />
+
+    <ds-avatar
+      initials="MO"
+      status="offline"
+      ariaLabel="Mike O'Brien, Offline"
+    />
+  </div>
+
+  <!-- ============================================================ Fallback icon -->
+  <h3 class="block-title t-h4">
+    Fallback icon
+  </h3>
+
+  <p class="block-desc t-s">
+    When neither <code class="t-mono-inline">imageUrl</code> nor
+    <code class="t-mono-inline">
+      initials
+    </code> are provided, the avatar renders
+    the <code class="t-mono-inline">fallbackIcon</code>.
+  </p>
+
+  <div class="row">
+    <ds-avatar
+      size="xs"
+      fallbackIcon="user"
+    />
+
+    <ds-avatar
+      size="sm"
+      fallbackIcon="user"
+    />
+
+    <ds-avatar
+      size="md"
+      fallbackIcon="user"
+    />
+
+    <ds-avatar
+      size="lg"
+      fallbackIcon="user"
+    />
+  </div>
 </docs-section>

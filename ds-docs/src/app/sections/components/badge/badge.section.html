@@ -199,6 +199,65 @@
     </div>
   </div>
 
+  <!-- ============================================================ Numeric count badge -->
+  <h3 class="block-title t-h4">
+    Numeric count badge
+  </h3>
+
+  <p class="block-desc t-s">
+    Pass <code class="t-mono-inline">count</code> to render a compact circular
+    count chip. Numbers above <code class="t-mono-inline">max</code> (default
+    99) display as <code class="t-mono-inline">99+</code>.
+  </p>
+
+  <div class="states states--cols-4">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge [count]="3" />
+      </div>
+
+      <div class="state-cell__label">
+        Count · 3
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge [count]="42" />
+      </div>
+
+      <div class="state-cell__label">
+        Count · 42
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge
+          [count]="150"
+          [max]="99"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Count · 99+
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-badge
+          [count]="5"
+          [solid]="true"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        Count · solid
+      </div>
+    </div>
+  </div>
+
   <!-- ============================================================ Tags · status dots showcase -->
   <h3 class="block-title t-h4">
     Tags · status dots showcase

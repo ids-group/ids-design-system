@@ -1,4 +1,10 @@
-import { Component, ViewEncapsulation, computed, input } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  computed,
+  input,
+  numberAttribute,
+} from '@angular/core';
 import type { BadgeVariant } from './badge.types';
 
 @Component({
@@ -12,10 +18,38 @@ export class BadgeComponent {
   readonly variant = input<BadgeVariant>('neutral');
   readonly withDot = input<boolean>(false);
   readonly solid = input<boolean>(false);
+  readonly count = input<number | null>(null);
+  readonly max = input(99, { transform: numberAttribute });
+
+  /** Display text for the count, capped at max+. */
+  protected readonly countDisplay = computed(() => {
+    const value = this.count();
+    if (value === null) {
+      return null;
+    }
+
+    return value > this.max() ? `${this.max()}+` : String(value);
+  });
 
   protected readonly classes = computed(() => {
-    const parts = ['badge', this.variant(), this.solid() ? 'solid' : ''];
+    const isCount = this.count() !== null;
+    const parts = [
+      'badge',
+      isCount ? 'count' : this.variant(),
+      this.solid() ? 'solid' : '',
+    ];
 
     return parts.filter(Boolean).join(' ');
+  });
+
+  protected readonly countAriaLabel = computed(() => {
+    const value = this.count();
+    if (value === null) {
+      return null;
+    }
+
+    return value > this.max()
+      ? `More than ${this.max()} notifications`
+      : `${value} notifications`;
   });
 }

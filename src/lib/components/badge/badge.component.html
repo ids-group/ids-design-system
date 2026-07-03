@@ -1,7 +1,14 @@
-<span [class]="classes()">
-  @if (withDot()) {
-    <span class="dot"></span>
-  }
+<span
+  [class]="classes()"
+  [attr.aria-label]="countAriaLabel()"
+>
+  @if (count() !== null) {
+    {{ countDisplay() }}
+  } @else {
+    @if (withDot()) {
+      <span class="dot"></span>
+    }
 
-  <ng-content></ng-content>
+    <ng-content></ng-content>
+  }
 </span>
