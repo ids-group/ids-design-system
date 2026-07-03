@@ -4,6 +4,31 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Shipped 2026-07-02 / 07-03 (ds-time-picker · feature-gaps: Forms · Data/overlay · Display)
+
+_Archived 2026-07-03 from `todo.md`. Whole 🧩 feature-gaps lane cleared except the deferred `ds-select` native `multi` (kept open in `todo.md`)._
+
+### New component
+- [x] **`ds-time-picker` — ✅ SHIPPED 2026-07-02.** New public component: trigger + CDK-overlay column wheels (`ds-time-columns` internal). 24h / 12h AM-PM via `DsConfig.timePicker.format`, `minuteStep`, `value` = `"HH:MM"` string, `min`/`max` + `disabledTime` predicate, single + range; CVA + `invalid`/`hint`/`size`. Spec/plan under `.claude/superpowers/{specs,plans}/2026-07-02-ds-time-picker-*`. Date-picker datetime footer was prototyped and **rejected visually** (Stas: "убирай это ужасно") — reverted (`f22e2cd`), that gap stays intentionally unfilled.
+
+### Forms feature-gaps
+- [x] **checkbox / radio / switch — `size` + `required`** (`17e23bc`). `size` axis (sm/md/lg; md reads the density glyph tokens so `[data-density]` overrides still apply — density-safe) + `required` (asterisk + `aria-required`). radio also gained `invalid` + `hint`. New `CheckboxSize`/`RadioSize`/`SwitchSize`.
+- [x] **input / textarea char counter + textarea `readOnly`** (`cf9b0ed`). `[maxLength]` + `.field-footer` char counter (`aria-live`); textarea `[readOnly]`.
+- [x] **date-picker constraints + presets** (`5a80191`). Day-level `minDate`/`maxDate` (inclusive), `disabledDate` predicate, `presets` (`DatePickerPreset`). `DayCell.isDisabled` + calendar-day `[disabled]`.
+- [x] **select / dropdown / combobox** (`1741cb9`). select `clearable` + per-option `icon`; dropdown/combobox `optionGroups` (`DropdownOptionGroup`/`ComboboxOptionGroup`); combobox `allowCreate` + `(create)` output. **Deferred:** `ds-select` native `multi` (kept open in `todo.md`).
+
+### Data / overlay feature-gaps
+- [x] **table expandable rows** (`638aac0`). `[expandableRows]` + `[(expandedIds)]` (`Set<string>`) + `[rowExpandTemplate]`; chevron toggle reveals a full-width detail row (works with selection, sticky-first-column, pagination).
+- [x] **modal / drawer / bottom-sheet** (`3af339c`). modal `[closeOnBackdrop]` + `[persistent]` + xl/fullscreen sizes; drawer `[placement]` (right/left/top/bottom) + `sm` (`DrawerPlacement`); bottom-sheet `[snapPoints]`. New width/height tokens (additive).
+- [x] **toast / menu / popover** (`80e0fc8`). toast `'loading'` variant + `ToastService.promise()` + `DsToastConfig.maxVisible` (queue); new `ds-menu-divider` + submenus via `ds-menu-item [submenu]`; popover `[arrow]` + `[placement]` (`PopoverPlacement`).
+
+### Display feature-gaps
+- [x] **tabs** (`6dd5685`). `[lazy]` panels + `[scrollable]` + `[closable]` (`(tabClose)`) + `[orientation]` (horizontal/vertical, `TabsOrientation`; roving follows the axis). tab `value` input.
+- [x] **accordion + stepper** (`e0262e9`). accordion `[multi]` (default true; false = single-open via parent coordinator, new `accordion.token.ts`) + item `[disabled]`; stepper `[clickable]` + `(stepClick)` + `[errorSteps]` (error state) + `[orientation]` (`StepperOrientation`).
+- [x] **sidenav / badge / avatar** (`6aeb068`). sidenav-item collapsed-tooltip (via `[dsTooltip]`, new `sidenav.token.ts`); badge numeric `[count]` + `[max]` (default 99, "max+" overflow); avatar `[status]` (`AvatarStatus` corner dot; `:host` overflow visible + img keeps its own clip) + `[fallbackIcon]`.
+
+---
+
 ## Shipped 2026-06-29 / 06-30 (dark theme · ds-color · button color×variant · components · forms)
 
 _Archived 2026-06-30 from `todo.md`._
