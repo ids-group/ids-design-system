@@ -2,9 +2,6 @@
 
 /* ============================================================
    TABS
-   Ported from CLAUDE_DESIGN_DS/components.css (TABS block).
-   [aria-selected="true"] selectors replaced with .active.
-   [disabled] attribute selectors kept (native attribute, not a11y).
    ============================================================ */
 
 :host {
@@ -33,6 +30,16 @@
   gap: var(--space-2);
   border-bottom: var(--border-width-default) solid var(--_tabs-divider);
 
+  &.scrollable {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
   .tab {
     display: inline-flex;
     align-items: center;
@@ -45,6 +52,8 @@
     cursor: pointer;
     border-bottom: var(--_tab-indicator-width) solid transparent;
     margin-bottom: calc(-1 * var(--border-width-default));
+    white-space: nowrap;
+    flex-shrink: 0;
     transition:
       background-color var(--duration-fast) var(--ease-standard),
       color var(--duration-fast) var(--ease-standard),
@@ -76,6 +85,25 @@
       margin-left: var(--space-1);
     }
 
+    .tab-close {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: var(--radius-sm);
+      color: var(--text-tertiary);
+      margin-left: var(--space-1);
+      cursor: pointer;
+      transition: background-color var(--duration-fast) var(--ease-standard),
+        color var(--duration-fast) var(--ease-standard);
+
+      &:hover {
+        background-color: var(--surface-secondary);
+        color: var(--text-primary);
+      }
+    }
+
     &:focus-visible {
       outline: none;
       box-shadow: var(--_tabs-focus-shadow);
@@ -91,9 +119,7 @@
     }
   }
 
-  /* Secondary variant — opt-in secondary-toned active indicator + label.
-     Aliases to brand under the default theme; becomes a true secondary hue
-     when --secondary is overridden by a brand. */
+  /* Secondary variant — opt-in secondary-toned active indicator + label. */
   &.secondary .tab.active {
     --_tab-label-color-active: var(--ds-tab-label-color-active, var(--secondary-strong));
     --_tab-indicator-color: var(--ds-tab-indicator-color, var(--secondary));
@@ -115,7 +141,6 @@
       border-radius: var(--_tab-pill-radius);
       color: var(--_tab-label-color);
 
-      /* Inactive hover — subtle brand tint, distinct from active surface */
       &:hover {
         background-color: var(--_tab-pill-bg-color-hover);
         color: var(--_tab-label-color-hover);
@@ -127,13 +152,49 @@
         border-bottom: 0;
         box-shadow: var(--shadow-1);
 
-        /* Active hover — wash the elevated card with a brand tint */
         &:hover {
           background-color: var(--_tab-pill-bg-color-active-hover);
         }
       }
     }
+
+    /* Pills + scrollable: remove the inline-flex constraint so scrollable can take over */
+    &.scrollable {
+      display: flex;
+      width: 100%;
+    }
   }
+
+  /* Vertical orientation — tab list becomes a column, indicator runs on the right edge */
+  &.vertical {
+    flex-direction: column;
+    border-bottom: 0;
+    border-right: var(--border-width-default) solid var(--_tabs-divider);
+    gap: var(--space-1);
+
+    .tab {
+      border-bottom: 0;
+      margin-bottom: 0;
+      border-right: var(--_tab-indicator-width) solid transparent;
+      margin-right: calc(-1 * var(--border-width-default));
+      text-align: left;
+      justify-content: flex-start;
+
+      &.active {
+        color: var(--_tab-label-color-active);
+        border-bottom-color: transparent;
+        border-right-color: var(--_tab-indicator-color);
+      }
+    }
+  }
+}
+
+/* Vertical host layout — tab list beside the panel */
+:host(.vertical-host) {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--space-4);
 }
 
 .panel {
@@ -145,4 +206,16 @@
   &:empty {
     display: none;
   }
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+/* Vertical-host adjustments — panel sits beside the tablist */
+:host(.vertical-host) .panel {
+  padding-top: 0;
+  padding-left: var(--space-4);
+  flex: 1;
+  min-width: 0;
 }

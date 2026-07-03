@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { TabsComponent, TabComponent } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
@@ -28,4 +28,17 @@ export class TabsSection {
     },
     { field: 'Badge count', behaviour: 'Numeric only — no clip.' },
   ];
+
+  protected readonly closableTabs = signal([
+    { label: 'Overview', value: 'overview' },
+    { label: 'Analytics', value: 'analytics' },
+    { label: 'Reports', value: 'reports' },
+    { label: 'Settings', value: 'settings' },
+  ]);
+
+  protected onTabClose(value: string): void {
+    this.closableTabs.update((tabs) =>
+      tabs.filter((tab) => tab.value !== value),
+    );
+  }
 }

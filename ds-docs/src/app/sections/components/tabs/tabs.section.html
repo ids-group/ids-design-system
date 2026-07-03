@@ -17,10 +17,14 @@
 
   <p class="block-desc t-s">
     Line — primary navigation. Pills — compact filter row. Pills look like a
-    <code class="t-mono-inline">ds-segmented</code> control but are real tabs
+    <code class="t-mono-inline">
+      ds-segmented
+    </code> control but are real tabs
     (they own content panels, with <code class="t-mono-inline">tablist</code>
     semantics); for a value/view toggle with no panels, use
-    <code class="t-mono-inline">ds-segmented</code> instead.
+    <code class="t-mono-inline">
+      ds-segmented
+    </code> instead.
   </p>
 
   <div class="variant-row">
@@ -136,6 +140,264 @@
           icon="archive"
           [disabled]="true"
         />
+      </ds-tabs>
+    </div>
+  </div>
+
+  <!-- ============================================================ Scrollable -->
+  <h3 class="block-title t-h4">
+    Scrollable
+  </h3>
+
+  <p class="block-desc t-s">
+    When <code class="t-mono-inline">scrollable</code> is set the tab strip
+    clips to its bounds and scrolls horizontally. The active tab is always
+    scrolled into view. Works for both variants.
+  </p>
+
+  <div class="variant-row">
+    <div class="variant-row__label t-overline">
+      Line
+    </div>
+
+    <ds-tabs
+      class="variant-row__stage scrollable-demo"
+      scrollable
+    >
+      <ds-tab label="Dashboard">
+        <p class="t-s muted pad">
+          Dashboard panel.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="Projects">
+        <p class="t-s muted pad">
+          Projects panel.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="Resource allocation">
+        <p class="t-s muted pad">
+          Resource allocation panel.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="Milestones">
+        <p class="t-s muted pad">
+          Milestones panel.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="Dependencies">
+        <p class="t-s muted pad">
+          Dependencies panel.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="Risks">
+        <p class="t-s muted pad">
+          Risks panel.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="Issues">
+        <p class="t-s muted pad">
+          Issues panel.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="Stakeholders">
+        <p class="t-s muted pad">
+          Stakeholders panel.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="Budget">
+        <p class="t-s muted pad">
+          Budget panel.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="Reports">
+        <p class="t-s muted pad">
+          Reports panel.
+        </p>
+      </ds-tab>
+    </ds-tabs>
+  </div>
+
+  <div class="variant-row">
+    <div class="variant-row__label t-overline">
+      Pills
+    </div>
+
+    <ds-tabs
+      class="variant-row__stage scrollable-demo"
+      variant="pills"
+      scrollable
+    >
+      <ds-tab label="All">
+        <p class="t-s muted pad">
+          All records.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="Active">
+        <p class="t-s muted pad">
+          Active records.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="Planning">
+        <p class="t-s muted pad">
+          Planning records.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="On hold">
+        <p class="t-s muted pad">
+          On hold records.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="In review">
+        <p class="t-s muted pad">
+          In review records.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="Completed">
+        <p class="t-s muted pad">
+          Completed records.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="Cancelled">
+        <p class="t-s muted pad">
+          Cancelled records.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="Archived">
+        <p class="t-s muted pad">
+          Archived records.
+        </p>
+      </ds-tab>
+    </ds-tabs>
+  </div>
+
+  <!-- ============================================================ Closable -->
+  <h3 class="block-title t-h4">
+    Closable
+  </h3>
+
+  <p class="block-desc t-s">
+    When <code class="t-mono-inline">closable</code> is set each tab shows a
+    close button. Clicking it emits
+    <code class="t-mono-inline">
+      tabClose
+    </code> with the tab's
+    <code class="t-mono-inline">
+      value
+    </code> (or label as fallback). The host
+    is responsible for removing the tab. Closing a tab does not change the
+    active index.
+  </p>
+
+  <div class="variant-row">
+    <div class="variant-row__stage">
+      <ds-tabs
+        closable
+        (tabClose)="onTabClose($event)"
+      >
+        @for (tab of closableTabs(); track tab.value) {
+          <ds-tab
+            [label]="tab.label"
+            [value]="tab.value"
+          >
+            <p class="t-s muted pad">
+              {{ tab.label }} panel.
+            </p>
+          </ds-tab>
+        }
+      </ds-tabs>
+    </div>
+  </div>
+
+  <!-- ============================================================ Vertical -->
+  <h3 class="block-title t-h4">
+    Vertical
+  </h3>
+
+  <p class="block-desc t-s">
+    Setting <code class="t-mono-inline">orientation="vertical"</code> places the
+    tab list in a column beside the panel. The active indicator runs along the
+    right edge. Arrow-key navigation follows the axis (Up / Down moves between
+    tabs).
+  </p>
+
+  <div class="variant-row">
+    <div class="variant-row__stage">
+      <ds-tabs orientation="vertical">
+        <ds-tab label="Overview">
+          <p class="t-s muted pad">
+            Project at a glance.
+          </p>
+        </ds-tab>
+
+        <ds-tab label="Sub-records">
+          <p class="t-s muted pad">
+            Linked sub-records.
+          </p>
+        </ds-tab>
+
+        <ds-tab label="Activity">
+          <p class="t-s muted pad">
+            Activity feed.
+          </p>
+        </ds-tab>
+
+        <ds-tab label="Settings">
+          <p class="t-s muted pad">
+            Configuration.
+          </p>
+        </ds-tab>
+      </ds-tabs>
+    </div>
+  </div>
+
+  <!-- ============================================================ Lazy -->
+  <h3 class="block-title t-h4">
+    Lazy
+  </h3>
+
+  <p class="block-desc t-s">
+    When <code class="t-mono-inline">lazy</code> is set, each tab's content is
+    instantiated only the first time that tab is activated, then kept alive (not
+    destroyed on switch). Without <code class="t-mono-inline">lazy</code>
+    only the active panel renders (default).
+  </p>
+
+  <div class="variant-row">
+    <div class="variant-row__stage">
+      <ds-tabs lazy>
+        <ds-tab label="First">
+          <p class="t-s muted pad">
+            Instantiated on first visit, kept alive thereafter.
+          </p>
+        </ds-tab>
+
+        <ds-tab label="Second">
+          <p class="t-s muted pad">
+            Not created until you switch here — then stays mounted.
+          </p>
+        </ds-tab>
+
+        <ds-tab label="Third">
+          <p class="t-s muted pad">
+            Deferred until first activation.
+          </p>
+        </ds-tab>
       </ds-tabs>
     </div>
   </div>

@@ -1,6 +1,7 @@
 <div
   role="tablist"
-  [class]="tabsClasses()"
+  [class]="tablistClasses()"
+  [attr.aria-orientation]="orientation()"
 >
   @for (tab of tabs(); track $index) {
     <button
@@ -32,18 +33,35 @@
           {{ tab.count() }}
         </span>
       }
+
+      @if (closable()) {
+        <span
+          class="tab-close"
+          [attr.aria-label]="'Close ' + tab.label()"
+          (click)="onCloseClick($event, $index)"
+        >
+          <ds-icon
+            name="x"
+            [size]="12"
+          >
+          </ds-icon>
+        </span>
+      }
     </button>
   }
 </div>
 
-<div
-  class="panel"
-  role="tabpanel"
-  tabindex="0"
-  [id]="panelId(selectedIndex())"
-  [attr.aria-labelledby]="tabId(selectedIndex())"
->
-  @if (selectedTemplate(); as tpl) {
-    <ng-container *ngTemplateOutlet="tpl"></ng-container>
+@for (tab of tabs(); track $index) {
+  @if (isPanelVisible($index)) {
+    <div
+      class="panel"
+      role="tabpanel"
+      tabindex="0"
+      [id]="panelId($index)"
+      [attr.aria-labelledby]="tabId($index)"
+      [hidden]="$index !== selectedIndex()"
+    >
+      <ng-container *ngTemplateOutlet="tab.content()"></ng-container>
+    </div>
   }
-</div>
+}

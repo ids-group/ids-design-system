@@ -1,3 +1,3 @@
 export { TabsComponent } from './tabs.component';
 export { TabComponent } from './tab.component';
-export type { TabsVariant } from './tabs.types';
+export type { TabsVariant, TabsOrientation } from './tabs.types';
