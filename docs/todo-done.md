@@ -48,12 +48,13 @@ _Archived 2026-07-03 from `todo.md`. Whole 🧩 feature-gaps lane cleared except
 
 ---
 
-## Verified already-done — board reconciliation (2026-07-02)
+## Verified already-done — board reconciliation (2026-07-02 · 07-06)
 
-_Archived 2026-07-06 from `todo.md`. Items found already-shipped when reconciling the backlog board against the code; each `###` mirrors its live-backlog origin section._
+_Archived 2026-07-06 from `todo.md`. Items found already-shipped when reconciling the backlog board against the code; each `###` mirrors its live-backlog origin section. (07-06: the Truncation-blocks item was found already shipped in `20c6c96`.)_
 
 ### DS-docs showcase
 - [x] **Sidenav — sort A→Z + search** — `nav.config.ts` sorted A→Z; a `ds-search` in the sidebar filters groups via `filteredNav()`. (Re-ordering the rendered sections to match — verify if still wanted.) Verified 2026-07-02.
+- [x] **Truncation blocks — collapsed into a per-section info popover** — extracted a shared `<docs-truncation [rules]>` component (`ds-docs/src/app/shared/docs-truncation.component.ts`): a neutral "i" button next to the section title reveals the rules panel on hover/focus (hidden by default), replacing the always-on `.trunc` card that ended every section. Adopted across all ~35 sections; **0** inline `.trunc` copies remain. Matches the todo item's "`?`/`i`-in-a-circle icon → popover with the rules" + "extract a shared `<docs-truncation>`" options. Shipped in `20c6c96`; verified vs code 2026-07-06.
 
 ### Component improvements (surfaced by field app `_ds-overrides.scss`)
 - [x] **Banner · compact density** — `ds-banner [compact]` input tightens padding. Verified 2026-07-02.
