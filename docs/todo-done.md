@@ -23,6 +23,16 @@ _Archived 2026-07-06 from `todo.md`. Implemented from the board's "A11y — по
 
 ---
 
+## Shipped 2026-07-06 (field-override review — Component improvements)
+
+_Archived 2026-07-06 from `todo.md`. Reviewed the "Component improvements (surfaced by field app `_ds-overrides.scss`)" items against the canonical `src/lib` (field consumes a vendored DS copy). The other field overrides were found already resolved in canon (tabs empty-panel `.panel:empty`, `.link.quiet` underline, heading-margin reset) or are brand config / consumer token-name staleness (badge `--ds-badge-bg/-fg` → renamed `--ds-badge-bg-color`/`--ds-badge-label-color`, a field/pinkmoon-sync task, not a DS gap)._
+
+### Component improvements (surfaced by field app `_ds-overrides.scss`)
+- [x] **Search · max-width — public override added** — `.search` `max-width` now reads a `--_search-maxw: var(--ds-search-maxw, var(--search-maxw))` resolver instead of the raw global `--search-maxw`, so consumers can override it via `ds-search { --ds-search-maxw: none }` (consistent with every other `--ds-search-*` property; default cap unchanged — "default to none" was rejected as layout-breaking). The field's `ds-search .search { max-width: none }` workaround can move to the token. Shipped 2026-07-06.
+- [x] **Tabs · pills overflow — verified already shipped** — closed by the `[scrollable]` input (pills + scrollable → the pill bar scrolls horizontally within its bounds; `tabs.component.scss` `&.pills.scrollable`), shipped in `6dd5685` (2026-07-03). The field's `overflow-x: auto` override can move to `[scrollable]`. The related empty-panel phantom gap is handled natively too (`.panel:empty { display: none }`). Verified vs code 2026-07-06.
+
+---
+
 ## Shipped 2026-07-02 / 07-03 (ds-time-picker · feature-gaps: Forms · Data/overlay · Display)
 
 _Archived 2026-07-03 from `todo.md`. Whole 🧩 feature-gaps lane cleared except the deferred `ds-select` native `multi` (kept open in `todo.md`)._

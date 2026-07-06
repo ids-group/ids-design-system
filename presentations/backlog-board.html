@@ -134,9 +134,9 @@
     <div class="stat you"><div class="n">3</div><div class="l">Ждёт твоего решения</div></div>
     <div class="stat a11y"><div class="n">3</div><div class="l">A11y (P0–P2)</div></div>
     <div class="stat untouched"><div class="n">11</div><div class="l">Компоненты + foundations</div></div>
-    <div class="stat untouched"><div class="n">12</div><div class="l">Motion / DS-docs / field / PIN-475</div></div>
+    <div class="stat untouched"><div class="n">10</div><div class="l">Motion / DS-docs / field / PIN-475</div></div>
     <div class="stat raw"><div class="n">7</div><div class="l">Raw / frozen / мелочь / lint</div></div>
-    <div class="stat done"><div class="n">58</div><div class="l">Сделано (свёрнуто)</div></div>
+    <div class="stat done"><div class="n">60</div><div class="l">Сделано (свёрнуто)</div></div>
   </div>
 
   <!-- ============ NEEDS YOU ============ -->
@@ -198,15 +198,6 @@
       <div class="card track"><div class="t">Skeleton — shimmer sync (почти готово)</div><p class="d">Sync РАБОТАЕТ: `@property --skeleton-shimmer-x` + одна `:root`-анимация, все инстансы читают `mask-position`. Остаток тривиальный — убрать мёртвые строки `mask-attachment` (no-op, оставлены как коммент-intent).</p><div class="meta">skeleton.component.scss</div></div>
       <div class="card track"><div class="t">Rounded `:active` touch-feedback</div><p class="d">После глобального сброса tap-highlight (`_reset.scss`, `d4c5811`) у контролов без явного `:active` пропала нативная press-подсветка на тач. Дать каждому <b>скруглённый</b> `:active` (`background`/`box-shadow` на элементе с `border-radius` — не квадратный оверлей). Без `:active`: checkbox/radio/switch/list-item/menu-item/select/dropdown/segmented/tabs/tag/pagination/sidenav-item/calendar-day/toggle/combobox/multi-select/color-picker. Не баг — enhancement; парный с `.ds-interactive`.</p><div class="meta">tap-feedback-test.html</div></div>
       <div class="card track"><span class="chip ch-oos">решить</span><div class="t">Overlay leave animation — политика</div><p class="d">Floating-панели (select/dropdown/combobox/multi-select/date-picker/popover/color-picker/menu/split-button + `ModalService.confirm`) закрываются мгновенно (leave-анимация снята в `d2e4712` — ~120ms fade читался как лаг на осознанном действии). Вернуть leave? Правильная форма — <b>instant на select</b>, быстрый ~100ms fade <b>только на ambient-dismiss</b> (backdrop/Escape); нужно различать select-close и dismiss-close. Stas undecided 2026-06-30.</p></div>
-    </div>
-  </div>
-
-  <!-- ============ FIELD OVERRIDES ============ -->
-  <div class="lane">
-    <div class="lane-head"><h2>🔧 Доработки из field overrides</h2><span class="count c-track">2</span><span class="why">Всплыли из `_ds-overrides.scss` field-приложения.</span></div>
-    <div class="cards">
-      <div class="card track"><div class="t">Tabs · pills overflow</div><p class="d">`pills` переполняет узкие вьюпорты при 4+ табах. Скролл по горизонтали в границах (или opt-in `scrollable`). Field обходит `overflow-x:auto`.</p></div>
-      <div class="card track"><div class="t">Search · max-width</div><p class="d">`--search-maxw` (320px) — глобальный токен, не публичный `--ds-search-maxw`. Экспонировать per-component override / задокументировать / рассмотреть дефолт `none`.</p></div>
     </div>
   </div>
 
@@ -333,12 +324,14 @@
   </details>
 
   <details class="done-panel">
-    <summary class="lane-head"><h2>✅ Сделано · сверка 2026-07-02 · 07-06</h2><span class="count c-done">4</span><span class="toggle"></span><span class="why">Выявлено сверкой доски с кодом — числилось открытым, оказалось готово.</span></summary>
+    <summary class="lane-head"><h2>✅ Сделано · сверка 2026-07-02 · 07-06</h2><span class="count c-done">6</span><span class="toggle"></span><span class="why">Выявлено сверкой доски с кодом — числилось открытым, оказалось готово (или закрыто мелким фиксом). + ревью field-overrides (07-06).</span></summary>
     <div class="cards">
       <div class="card done"><div class="t">✅ A11y: table sort + combobox trigger-close</div><p class="d">table: сортируемый `<th>` = нативный `<button>` (Enter/Space) + `[aria-sort]`. combobox: chevron `togglePanel()` закрывает открытую панель. spinner/divider/skeleton roles — сделаны ранее.</p><div class="meta">2026-07-02 (сверка)</div></div>
       <div class="card done"><div class="t">✅ DS-docs: Menu demo + sidenav sort/search</div><p class="d">Menu-секция: живой `ds-button`→`ds-popover`→`ds-menu`. Sidenav: nav отсортирован A→Z + встроенный `ds-search` с `filteredNav()`.</p><div class="meta">2026-07-02 (сверка)</div></div>
       <div class="card done"><div class="t">✅ Field: banner compact + input label-токены</div><p class="d">`ds-banner [compact]` (сжатые pad). `ds-input` — публичные `--ds-input-label-color/-fs/-fw`.</p><div class="meta">2026-07-02 (сверка)</div></div>
       <div class="card done"><div class="t">✅ DS-docs: Truncation-поповер</div><p class="d">Общий `&lt;docs-truncation [rules]&gt;`: «i»-кнопка у заголовка секции раскрывает правила по hover/focus (скрыто по умолчанию), вместо always-on `.trunc`-карточки в конце. Внедрён во все ~35 секций, inline-копий не осталось.</p><div class="meta">20c6c96 · 2026-07-06 (сверка)</div></div>
+      <div class="card done"><div class="t">✅ Search · max-width (--ds-search-maxw)</div><p class="d">`.search` `max-width` теперь через резолвер `--_search-maxw: var(--ds-search-maxw, var(--search-maxw))` — консистентно с прочими `--ds-search-*`; потребитель может `ds-search { --ds-search-maxw: none }` (дефолт-cap не меняли). Field-обход `.search{max-width:none}` можно снять.</p><div class="meta">2026-07-06 (ревью field-overrides)</div></div>
+      <div class="card done"><div class="t">✅ Tabs · pills overflow (verify)</div><p class="d">Оказался закрыт: input `[scrollable]` (pills+scrollable → скролл в границах) отгружен `6dd5685`; empty-panel gap убран нативно (`.panel:empty`). Field-обход `overflow-x:auto` можно заменить на `[scrollable]`.</p><div class="meta">6dd5685 · 2026-07-06 (сверка)</div></div>
     </div>
   </details>
 
@@ -448,10 +441,6 @@ Goal: a coherent, **smooth** motion system. **Foundation is healthy** — motion
   3. **Things that aren't components** (`.check/.radio/.switch`, `.day`) → resolved by the deferred component-vs-class audit.
   - **By-design raw specimens — VISIBLY MARKED** with a `<docs-await>` chip (`ds-docs/src/app/shared/docs-await.component.ts`, commit `93570ee`) showing "Ожидает компонент/API: …". REMAINING chips: calendar day-part only (skipped — extracting a day component risks the date-picker's APG roving-tabindex keyboard nav). MIGRATED to live (chips removed 2026-06-30): ds-table column-templates → `dsCellTemplate`; table bulk-bar → `<ds-table>` native `.bulk-bar` + `[bulk-actions]` slot; ds-dropzone file-list (both blocks) → `[files]` model — `DropzoneFile` gained `message?: string` + a `queued` state; ds-input loading → `[loading]` spinner; ds-input floating label → `[floating]` variant; button toggle → new `ds-toggle-button`. LEFT unmarked (not component specimens, not fully movable): toolbar `.divider` (ds-divider vertical forces 12px margin vs 4px), do-dont `.tooltip` (ds-tooltip is hover-only, this is a static "bad pattern" illustration).
   - _Completed sweeps (pilot button · sweeps 1–3 · rename→specimens · tail/A · staticPreview ×3 · quick API wins · final raw-copy audit · `[loading]` bg-bug fix) are archived in `todo-done.md`._
-## Component improvements (surfaced by field app `_ds-overrides.scss`)
-
-- [ ] **Tabs · pills overflow** — `pills` variant overflows narrow viewports with 4+ tabs. Make the pill bar scroll horizontally within its bounds by default (or opt-in `scrollable`). Field works around with `overflow-x: auto`.
-- [ ] **Search · max-width** — `.search` caps at `--search-maxw` (tokenized, but field overrode `.search` directly — didn't find the token). Document it; consider defaulting to `none`.
 
 ## Component feature gaps (from gap analysis — HIGH)
 
@@ -546,6 +535,16 @@ _Archived 2026-07-06 from `todo.md`. Implemented from the board's "A11y — по
 - [x] **field-message error announces reliably** (was "Unverified") — error variant rendered as a separate `@if` branch → fresh node with `role="alert"` set on insertion (reliably announced).
 - [x] **sidenav-item `aria-label` gated to collapsed** (was "Unverified") — `collapsedAriaLabel` sets the link name only when collapsed (icon-only); expanded, the visible label names it (an always-on `aria-label` would hide the badge/alert).
 - [x] **tooltip `aria-describedby` + overlay `backdropClick`** (was "Unverified") — ❌ both NOT bugs: tooltip appends/removes only its own id (CDK AriaDescriber); `overlayRef.dispose()` completes the backdrop-click subject.
+
+---
+
+## Shipped 2026-07-06 (field-override review — Component improvements)
+
+_Archived 2026-07-06 from `todo.md`. Reviewed the "Component improvements (surfaced by field app `_ds-overrides.scss`)" items against the canonical `src/lib` (field consumes a vendored DS copy). Other field overrides were found already resolved in canon (tabs empty-panel, `.link.quiet` underline, heading-margin reset) or are brand config / consumer token-name staleness (badge `--ds-badge-bg/-fg` → renamed `-bg-color`/`-label-color`)._
+
+### Component improvements (surfaced by field app `_ds-overrides.scss`)
+- [x] **Search · max-width — public override added** — `.search` `max-width` now reads `--_search-maxw: var(--ds-search-maxw, var(--search-maxw))` instead of the raw global token, so consumers can `ds-search { --ds-search-maxw: none }` (consistent with every other `--ds-search-*`; default cap unchanged — "default to none" rejected as layout-breaking). Shipped 2026-07-06.
+- [x] **Tabs · pills overflow — verified already shipped** — closed by the `[scrollable]` input (`&.pills.scrollable`), shipped `6dd5685` (2026-07-03); empty-panel phantom gap handled natively (`.panel:empty { display: none }`). Verified vs code 2026-07-06.
 
 ---
 

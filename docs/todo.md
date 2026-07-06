@@ -63,10 +63,6 @@ Goal: a coherent, **smooth** motion system. **Foundation is healthy** — motion
   3. **Things that aren't components** (`.check/.radio/.switch`, `.day`) → resolved by the deferred component-vs-class audit.
   - **By-design raw specimens — VISIBLY MARKED** with a `<docs-await>` chip (`ds-docs/src/app/shared/docs-await.component.ts`, commit `93570ee`) showing "Ожидает компонент/API: …". REMAINING chips: calendar day-part only (skipped — extracting a day component risks the date-picker's APG roving-tabindex keyboard nav). MIGRATED to live (chips removed 2026-06-30): ds-table column-templates → `dsCellTemplate`; table bulk-bar → `<ds-table>` native `.bulk-bar` + `[bulk-actions]` slot; ds-dropzone file-list (both blocks) → `[files]` model — `DropzoneFile` gained `message?: string` + a `queued` state; ds-input loading → `[loading]` spinner; ds-input floating label → `[floating]` variant; button toggle → new `ds-toggle-button`. LEFT unmarked (not component specimens, not fully movable): toolbar `.divider` (ds-divider vertical forces 12px margin vs 4px), do-dont `.tooltip` (ds-tooltip is hover-only, this is a static "bad pattern" illustration).
   - _Completed sweeps (pilot button · sweeps 1–3 · rename→specimens · tail/A · staticPreview ×3 · quick API wins · final raw-copy audit · `[loading]` bg-bug fix) are archived in `todo-done.md`._
-## Component improvements (surfaced by field app `_ds-overrides.scss`)
-
-- [ ] **Tabs · pills overflow** — `pills` variant overflows narrow viewports with 4+ tabs. Make the pill bar scroll horizontally within its bounds by default (or opt-in `scrollable`). Field works around with `overflow-x: auto`.
-- [ ] **Search · max-width** — `.search` caps at `--search-maxw` (tokenized, but field overrode `.search` directly — didn't find the token). Document it; consider defaulting to `none`.
 
 ## Component feature gaps (from gap analysis — HIGH)
 
