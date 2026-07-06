@@ -29,6 +29,23 @@ _Archived 2026-07-03 from `todo.md`. Whole 🧩 feature-gaps lane cleared except
 
 ---
 
+## Verified already-done — board reconciliation (2026-07-02)
+
+_Archived 2026-07-06 from `todo.md`. Items found already-shipped when reconciling the backlog board against the code; each `###` mirrors its live-backlog origin section._
+
+### DS-docs showcase
+- [x] **Sidenav — sort A→Z + search** — `nav.config.ts` sorted A→Z; a `ds-search` in the sidebar filters groups via `filteredNav()`. (Re-ordering the rendered sections to match — verify if still wanted.) Verified 2026-07-02.
+
+### Component improvements (surfaced by field app `_ds-overrides.scss`)
+- [x] **Banner · compact density** — `ds-banner [compact]` input tightens padding. Verified 2026-07-02.
+- [x] **Input · label tokens** — public `--ds-input-label-color/-fs/-fw` resolvers exist. (Catalogue/tokens-reference doc — optional.) Verified 2026-07-02.
+
+### A11y — extend the a11y-branch pass
+- [x] **table — sortable-`<th>` keyboard** (was P0) — renders a native `<button>` (Enter/Space) + `[attr.aria-sort]`. Verified 2026-07-02.
+- [x] **combobox trigger close** (was P1) — the chevron calls `togglePanel()`, which closes an open panel. Verified 2026-07-02.
+
+---
+
 ## Shipped 2026-06-29 / 06-30 (dark theme · ds-color · button color×variant · components · forms)
 
 _Archived 2026-06-30 from `todo.md`._
@@ -134,3 +151,9 @@ Gaps hit using `ds-stepper` for the kit-update multi-step flow (`prototype/proje
 
 ## Frontend architecture starter
 - [x] **Phase 1 — runnable `starter/` ✅ COMPLETE (12/12, 2026-06-22, on `main`).** Dev panel (Task 9) landed: lean `@app/common/dev` (DevPanel + throttle interceptor + DevSettings), gated + prod no-op stub via fileReplacements (verified absent from prod bundle). [history:] 11/12 note — Added since the 8/12 note: app shell (Task 7 — zoneless, ds-topbar/ds-sidenav layouts, mock login, dashboard, lazy routing + AppTitleStrategy + view-transition skip), demo items CRUD (Task 8), **Sheriff module boundaries** (Task 10 — `common ↛ app` lint-enforced via `barrelFileName: public-api.ts`; verified it fires) + CI gate (`infrastructure/scripts/ci-validate.sh` + bitbucket-pipelines, bun) + lefthook, and **docs** (Task 11/12 — architecture guide + 16 MADR ADRs under `starter/docs/`, host README pointer). Build + prettier + stylelint + eslint/Sheriff all green; **runtime-verified in headless Chrome (Playwright, 2026-06-22): `/`→guard-redirect→`/auth/login`→mock login→`/dashboard`→`/items` (seed rows render), zero console errors** — confirms zoneless bootstrap + app-initializer + guards + Signal Store + in-memory ItemApi all work. **Task 9 (dev panel) skipped per user — still open.** DS gaps logged below (ds-input CVA, confirm-dialog, data-grid). Earlier-note status: ✅ Done: workspace+tooling (A21, strict tsconfig, eslint/prettier/stylelint), 6 typed envs+DI tokens, `ApiResult` data layer (HttpService+opt-out tokens), abstractions (Notification→ds-toast / pluggable ErrorReporter — **NO Sentry**), store helpers (createListLoader/EditDataLoader/withListLoading + url-params + tab-reset + debouncedLoading), full auth (AuthStore refresh/silent-renew/tab-sync behind AuthProvider/mock + guards), app shell (zoneless, ds-topbar/ds-sidenav layouts, mock login, dashboard, lazy routing + title/transitions), demo items CRUD (ItemStore + in-memory ItemApi + list/form pages + unsaved-changes guard). ⏳ Remaining: dev panel, Sheriff+CI+lefthook, ADRs+guide, README pointer. App runs login→dashboard→items end-to-end; build+lint green throughout. Decisions made under constraint: `common` is **source-only** (not an ng-packagr lib) so the repo's own `ds` build doesn't scan it; DS consumed via `file:../dist/ds` (on Windows local dev it must be **copied** into node_modules, not junctioned, or `@angular/core` double-resolves → InputSignal brand mismatch); forms are signal-based (see ds-input CVA gap below).
+
+### DS gaps the starter surfaced (all shipped)
+_Archived 2026-07-06 from `todo.md`._
+- [x] **DS gap surfaced: advanced data-grid — ✅ ADDRESSED 2026-06-30 (features absorbed into `ds-table`: pageSize/page/clientSort/stickyFirstColumn).** PinkMoon leaned on PrimeNG tables; IDS `ds-table` has no advanced data-grid (sorting/virtual-scroll/column-resize/server-paging) equivalent. The IDS-only starter exposes this. Track as a HIGH DS feature gap (see also "Missing components → advanced data-grid"); ADR-0008 records the IDS-only decision + this gap.
+- [x] **Form controls `ControlValueAccessor` — ✅ DONE (full CVA track: input/textarea/select 06-23; checkbox/switch/combobox/date-picker + new `ds-radio-group` 06-30).** Form controls expose `value = model<…>()` but didn't implement CVA / `NG_VALUE_ACCESSOR`, so reactive forms (`formControlName` / `[formControl]`) and `[(ngModel)]` didn't bind. **DONE 2026-06-23:** shared abstract `DsControlValueAccessor<T>` base (`src/lib/components/control-value-accessor.ts`) — signal-`model()` ↔ forms bridge (effect with a `synced` guard against echoing form writes), `formDisabled` for `setDisabledState`, `markTouched()` for blur; the existing `[(value)]` API is untouched. Wired on **`ds-input`, `ds-textarea`, `ds-select`** (each: `NG_VALUE_ACCESSOR` provider + `extends` base + `isDisabled = disabled() || formDisabled()` in the disable gates + blur→`markTouched`). lib+docs build green, eslint 0 errors.
+- [x] **DS gap surfaced: programmatic confirm-dialog — ✅ SHIPPED 2026-06-30 (`ModalService.confirm()`).** There's no `ds-confirm`/confirm service (the "confirmation dialog" already under Missing components → HIGH). The starter added an app-side `ConfirmService` (default `window.confirm`) for its `unsavedChangesGuard`; a `ds-modal`-based confirm service shipped in the DS would let consumers drop that stopgap. Confirmed-needed 2026-06-19 by the starter.
