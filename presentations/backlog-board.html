@@ -19,6 +19,7 @@
     --radius: 12px; --shadow: 0 1px 2px rgba(0,0,0,.35), 0 2px 8px rgba(0,0,0,.30);
   }
   * { box-sizing: border-box; }
+  html { scrollbar-gutter: stable; }
   body {
     margin: 0; background: var(--bg); color: var(--ink);
     font: 400 15px/1.5 'Mulish', system-ui, -apple-system, Segoe UI, sans-serif;
@@ -98,25 +99,27 @@
   .mark .g { font-size: 11px; line-height: 1; }
   .mark.deck { background: var(--blue-soft); color: var(--blue-d); border-color: #2c3a6b; }
   .mark.deck:hover { background: #243161; }
-  .mark.todo { background: var(--grey-soft); color: var(--grey-ink); cursor: help; }
+  .mark.todo { background: var(--grey-soft); color: var(--grey-ink); cursor: pointer; }
   .mark.todo:hover { color: var(--ink); border-color: var(--line); }
   .mark.todo.st-done { background: var(--green-soft); color: var(--green-ink); }
   .mark.todo.st-wip { background: var(--violet-soft); color: var(--violet-ink); }
 
-  /* todo tooltip */
-  #tip { position: fixed; z-index: 9999; max-width: 460px; min-width: 240px; background: #0b0f16; color: var(--ink-2); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 34px rgba(0,0,0,.6); padding: 12px 14px; font-size: 12.5px; line-height: 1.55; display: none; }
+  /* todo popover + backdrop */
+  #tip-backdrop { position: fixed; inset: 0; z-index: 9998; background: rgba(6,9,14,.6); display: none; }
+  #tip-backdrop.show { display: block; }
+  #tip { position: fixed; z-index: 9999; max-width: min(560px, calc(100vw - 24px)); min-width: 280px; background: #0b0f16; color: var(--ink-2); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 14px 44px rgba(0,0,0,.65); padding: 14px 16px 16px; font-size: 13px; line-height: 1.6; display: none; }
   #tip.show { display: block; }
-  #tip .tip-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  #tip .tip-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
   #tip .tip-st { font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; padding: 2px 8px; border-radius: 999px; }
   #tip .tip-st.open { background: var(--amber-soft); color: var(--amber-ink); }
   #tip .tip-st.done { background: var(--green-soft); color: var(--green-ink); }
   #tip .tip-st.wip { background: var(--violet-soft); color: var(--violet-ink); }
-  #tip .tip-src { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; color: var(--ink-3); margin-left: auto; }
-  #tip .tip-body { max-height: 48vh; overflow: auto; overflow-wrap: anywhere; }
+  #tip .tip-src { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; color: var(--ink-3); }
+  #tip .tip-close { margin-left: auto; flex: none; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; background: none; border: 1px solid var(--line); color: var(--ink-2); border-radius: 7px; font-size: 14px; line-height: 1; cursor: pointer; }
+  #tip .tip-close:hover { border-color: var(--rose); color: var(--rose-ink); }
+  #tip .tip-body { max-height: 64vh; overflow: auto; overflow-wrap: anywhere; }
   #tip .tip-body code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; background: var(--grey-soft); padding: 1px 4px; border-radius: 4px; color: var(--ink); }
   #tip .tip-body b { color: var(--ink); }
-  #tip .tip-more { margin-top: 9px; background: none; border: 1px solid var(--line); color: var(--ink-2); font: inherit; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 6px; cursor: pointer; }
-  #tip .tip-more:hover { border-color: var(--blue); color: var(--blue-d); }
 </style>
 </head>
 <body>
@@ -124,7 +127,7 @@
   <p class="sub">Что <b>осталось закрыть</b> — по одному пункту на карточку (источник: <span class="tag">docs/todo.md</span>). Открытое вверху и развёрнуто; сделанное свёрнуто внизу. Обновлено 2026-06-29.</p>
   <p class="legend">
     <span class="mark deck"><span class="g">▶</span> дека</span> — карточка кликабельна, открывает презентацию в новой вкладке.
-    <span class="mark todo"><span class="g">ⓘ</span> todo</span> — наведи: формулировка из todo.md (клик в тултипе разворачивает полный текст).
+    <span class="mark todo"><span class="g">ⓘ</span> todo</span> — кликни: полная формулировка из todo.md в поповере (закрыть — крестик, backdrop или Esc).
   </p>
 
   <div class="summary">
@@ -386,7 +389,7 @@
     Доска — навигация; полные обоснования — в todo.md.
   </p>
 
-  <!-- raw docs/todo.md + docs/todo-done.md embedded verbatim (as of 2026-07-02) so tooltips work offline over file:// -->
+  <!-- raw docs/todo.md + docs/todo-done.md embedded verbatim (as of 2026-07-02) so the popover works offline over file:// -->
   <script type="text/plain" id="todo-md"># DS — improvements backlog
 
 Running list of design-system improvements. Add items here as they come up.
@@ -832,15 +835,6 @@ Gaps hit using `ds-stepper` for the kit-update multi-step flow (`prototype/proje
         return inline(t);
       }).join("<br>");
     }
-    function renderPreview(block) {
-      let full = block.join(" ").replace(/^\s*-\s+(\[[ x~\-]\]\s+)?/, "").replace(/[*`~]/g, "");
-      full = full.replace(/\s+/g, " ").trim();
-      const m = full.match(/^.*?[.!?](\s|$)/);
-      let p = m ? m[0] : full;
-      if (p.length > 230) p = p.slice(0, 227) + "…";
-      return esc(p.trim());
-    }
-
     const cards = document.querySelectorAll(".card");
     cards.forEach(card => {
       const tEl = card.querySelector(".t");
@@ -873,7 +867,6 @@ Gaps hit using `ds-stepper` for the kit-update multi-step flow (`prototype/proje
         todo.className = "mark todo st-" + st;
         todo.innerHTML = '<span class="g">ⓘ</span> todo';
         todo.dataset.full = renderFull(found.block);
-        todo.dataset.prev = renderPreview(found.block);
         todo.dataset.st = st;
         todo.dataset.src = found.src;
         marks.appendChild(todo);
@@ -882,11 +875,14 @@ Gaps hit using `ds-stepper` for the kit-update multi-step flow (`prototype/proje
       if (marks.childNodes.length) card.appendChild(marks);
     });
 
-    // ---- shared tooltip ----
+    // ---- shared todo popover ----
+    const backdrop = document.createElement("div");
+    backdrop.id = "tip-backdrop";
+    document.body.appendChild(backdrop);
     const tip = document.createElement("div");
     tip.id = "tip";
     document.body.appendChild(tip);
-    let hideTimer = null, current = null;
+    let current = null, savedScrollY = 0;
 
     function position(badge) {
       const r = badge.getBoundingClientRect();
@@ -899,46 +895,49 @@ Gaps hit using `ds-stepper` for the kit-update multi-step flow (`prototype/proje
       tip.style.left = left + "px";
       tip.style.top = top + "px";
     }
-    function show(badge) {
+    function lockScroll() {
+      savedScrollY = window.scrollY;
+      const b = document.body.style;
+      b.position = "fixed"; b.top = -savedScrollY + "px"; b.left = "0"; b.right = "0"; b.width = "100%"; b.overflow = "hidden";
+    }
+    function unlockScroll() {
+      const b = document.body.style;
+      b.position = ""; b.top = ""; b.left = ""; b.right = ""; b.width = ""; b.overflow = "";
+      window.scrollTo(0, savedScrollY);
+    }
+
+    function open(badge) {
       current = badge;
       const st = badge.dataset.st;
       const label = st === "done" ? "сделано" : st === "wip" ? "в работе" : "открыто";
       tip.innerHTML =
         '<div class="tip-head"><span class="tip-st ' + st + '">' + label + "</span>" +
-        '<span class="tip-src">' + badge.dataset.src + "</span></div>" +
-        '<div class="tip-body" data-mode="prev">' + badge.dataset.prev + "</div>" +
-        '<button class="tip-more">Развернуть ▾</button>';
+        '<span class="tip-src">' + badge.dataset.src + "</span>" +
+        '<button class="tip-close" aria-label="Закрыть">✕</button></div>' +
+        '<div class="tip-body">' + badge.dataset.full + "</div>";
+      backdrop.classList.add("show");
       tip.classList.add("show");
-      const more = tip.querySelector(".tip-more");
-      const body = tip.querySelector(".tip-body");
-      more.addEventListener("click", () => {
-        if (body.dataset.mode === "prev") {
-          body.innerHTML = badge.dataset.full; body.dataset.mode = "full"; more.textContent = "Свернуть ▴";
-        } else {
-          body.innerHTML = badge.dataset.prev; body.dataset.mode = "prev"; more.textContent = "Развернуть ▾";
-        }
-        position(badge);
-      });
+      lockScroll();
+      tip.querySelector(".tip-close").addEventListener("click", close);
       position(badge);
     }
-    function hide() { tip.classList.remove("show"); current = null; }
+    function close() {
+      tip.classList.remove("show");
+      backdrop.classList.remove("show");
+      unlockScroll();
+      current = null;
+    }
 
-    document.addEventListener("mouseover", e => {
-      const b = e.target.closest && e.target.closest(".mark.todo");
-      if (b) { clearTimeout(hideTimer); if (current !== b) show(b); }
-    });
-    document.addEventListener("mouseout", e => {
-      const b = e.target.closest && e.target.closest(".mark.todo");
-      if (b && !b.contains(e.relatedTarget) && !tip.contains(e.relatedTarget)) hideTimer = setTimeout(hide, 280);
-    });
-    tip.addEventListener("mouseenter", () => clearTimeout(hideTimer));
-    tip.addEventListener("mouseleave", () => { hideTimer = setTimeout(hide, 200); });
-    window.addEventListener("scroll", () => { if (current) position(current); }, true);
+    backdrop.addEventListener("click", close);
+    document.addEventListener("keydown", e => { if (e.key === "Escape" && current) close(); });
+    window.addEventListener("resize", () => { if (current) position(current); });
 
-    // ---- deck open on card click ----
+    // ---- click routing: todo popover · deck open ----
     document.addEventListener("click", e => {
       if (!e.target.closest) return;
-      if (e.target.closest(".mark.todo") || e.target.closest("#tip")) return;
+      const todoBadge = e.target.closest(".mark.todo");
+      if (todoBadge) { open(todoBadge); e.stopPropagation(); return; }
+      if (e.target.closest("#tip")) return;
       const deckBadge = e.target.closest(".mark.deck");
       if (deckBadge) { window.open(deckBadge.closest(".card").dataset.deck, "_blank"); e.stopPropagation(); return; }
       const card = e.target.closest(".card.has-deck");
