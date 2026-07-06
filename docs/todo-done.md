@@ -4,6 +4,25 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Shipped 2026-07-06 (A11y — component-wave findings from the backlog board)
+
+_Archived 2026-07-06 from `todo.md`. Implemented from the board's "A11y — по компонентам и findings" lane; each finding was validated vs code + APG/MDN before applying. Commit `08d1591`. Deferred (kept open in `todo.md`): date-picker grid semantics, modal/drawer scroll-lock ref-count, topbar `role="banner"` (validated redundant); plus two follow-ups surfaced during the work (badge count wording, bottom-sheet document-level Escape)._
+
+### A11y — extend the a11y-branch pass to uncovered components
+- [x] **bottom-sheet — dialog semantics** — `role="dialog"` + `aria-modal="true"` + `aria-labelledby`(gated `titleId` on the sheet `<h3>`) + `cdkTrapFocus`/`cdkTrapFocusAutoCapture` on `.sheet` (imports `A11yModule`). Mirrors `modal.component.html`; focus restored to the trigger on close via the `@if (rendered())` destroy. Behaviour (scroll-lock, Escape, scrim, drag) was already done.
+- [x] **number-stepper — aria-labels** — `−`/`+` buttons got static `aria-label` "Decrease"/"Increase"; a new `ariaLabel` input names the `<input type="number">` via `[attr.aria-label]`.
+- [x] **avatar-group hidden-count** — the `+N` `.avatar-overflow` span now carries `[attr.aria-label]="overflow() + ' more'"`. _(In the same MED/minor cluster: badge `count` `aria-label` was found ALREADY shipped — `countAriaLabel()`; its hardcoded-"notifications" wording follow-up + topbar `role="banner"` (validated redundant) stay open in `todo.md`.)_
+
+### A11y — open findings from the a11y-branch review
+- [x] **open listbox closes on Tab** (combobox/select/dropdown, was P1) — each keydown handler now closes the panel on `Tab` WITHOUT `preventDefault`, so focus moves naturally and the overlay + transparent backdrop no longer leak behind it. (Escape was already handled; Tab closes only, no auto-select.)
+- [x] **listbox options no longer sit in the tab order** (select/dropdown, was P2) — option `<button>`s got `tabindex="-1"` (single focus model under `aria-activedescendant`). combobox already used non-focusable `<div role="option">`.
+- [x] **combobox "No matches" no longer a selectable option** (was P2) — empty-state `<li>` `role="option"` → `role="status"` (polite live region, not part of the option set; dropped the stray boolean `aria-disabled`). APG/MDN: `status` over `presentation`.
+- [x] **field-message error announces reliably** (was "Unverified") — `ds-field-message` renders the error variant as a SEPARATE `@if (state()==='error')` branch, so it mounts as a FRESH node with `role="alert"` already set (SRs announce a live region on insertion, not when the role is toggled onto an existing node). Applies to every field using `ds-field-message`.
+- [x] **sidenav-item `aria-label` gated to collapsed** (was "Unverified") — a `collapsedAriaLabel` computed sets the link `aria-label` only when the sidenav is collapsed (icon-only, `.item-label` is `display:none`); expanded, the visible label names it and an always-on `aria-label` would suppress the badge/alert from the accessible name.
+- [x] **tooltip `aria-describedby` + overlay `backdropClick`** (was "Unverified") — ❌ both NOT bugs (verified 2026-07-06): tooltip appends/removes only its own id (CDK `AriaDescriber` pattern); `overlayRef.dispose()` completes the backdrop-click subject, so the subscription tears down with the overlay.
+
+---
+
 ## Shipped 2026-07-02 / 07-03 (ds-time-picker · feature-gaps: Forms · Data/overlay · Display)
 
 _Archived 2026-07-03 from `todo.md`. Whole 🧩 feature-gaps lane cleared except the deferred `ds-select` native `multi` (kept open in `todo.md`)._
