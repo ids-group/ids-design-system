@@ -15,7 +15,7 @@
   --_search-focus-shadow: var(--ds-search-focus-shadow, var(--ds-field-focus-shadow));
   --_search-text-color:           var(--ds-search-text-color,           var(--text-primary));
   --_search-placeholder:  var(--ds-search-placeholder,  var(--text-tertiary));
-  --_search-maxw:         var(--ds-search-maxw,         var(--search-maxw));
+  --_search-maxw:         var(--ds-search-maxw,         none);
 
   display: block;
 }
