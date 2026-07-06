@@ -134,7 +134,7 @@
     <div class="stat you"><div class="n">3</div><div class="l">Ждёт твоего решения</div></div>
     <div class="stat a11y"><div class="n">9</div><div class="l">A11y (P0–P2)</div></div>
     <div class="stat untouched"><div class="n">11</div><div class="l">Компоненты + foundations</div></div>
-    <div class="stat untouched"><div class="n">11</div><div class="l">Motion / DS-docs / field / PIN-475</div></div>
+    <div class="stat untouched"><div class="n">13</div><div class="l">Motion / DS-docs / field / PIN-475</div></div>
     <div class="stat raw"><div class="n">7</div><div class="l">Raw / frozen / мелочь / lint</div></div>
     <div class="stat done"><div class="n">51</div><div class="l">Сделано (свёрнуто)</div></div>
   </div>
@@ -198,11 +198,13 @@
 
   <!-- ============ MOTION SYSTEM ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🎬 Motion system</h2><span class="count c-track">3</span><span class="why">Аудит 2026-06-26 ✅ ОТГРУЖЕН (findings A–F — smooth-motion rollout: selection-fills, overlay/floating-panel/expand-collapse, listbox, поверхности). Остаток: подтвердить press-дизайн · общая система рецептов · skeleton shimmer-sync.</span></div>
+    <div class="lane-head"><h2>🎬 Motion system</h2><span class="count c-track">5</span><span class="why">Аудит 2026-06-26 ✅ ОТГРУЖЕН (findings A–F — smooth-motion rollout: selection-fills, overlay/floating-panel/expand-collapse, listbox, поверхности). Остаток: подтвердить press-дизайн · общая система рецептов · skeleton shimmer-sync.</span></div>
     <div class="cards">
       <div class="card track"><span class="chip ch-you">подтвердить</span><div class="t">Решения — НЕ «чинить» автоматом</div><p class="d">button/icon-button press `scale` на `--duration-instant` (80ms) — снапи ПО ДИЗАЙНУ (отгружено 06-25); аудит флагнул «слишком быстро», но это намеренно — подтвердить до правок. button-toggle `aria-pressed` bg/color снап — реальный гэп, если тоггл используется.</p></div>
       <div class="card track"><span class="chip ch-oos">решить</span><div class="t">Предложенная система рецептов</div><p class="d">(1) стандарт state-change `transition: <props> --duration-fast --ease-standard`; (2) overlay enter `--ease-decelerate` / leave `--ease-accelerate` через общий `DsOverlayLeave`; (3) expand/collapse grid-rows `0fr↔1fr` на `--duration-base`; (4) токен-driven (reduced-motion уже глобально). + общий SCSS-миксин `ds.transition(<props>)`. Дек собран.</p><div class="meta">implemented/motion-system.html</div></div>
       <div class="card track"><div class="t">Skeleton — shimmer sync (почти готово)</div><p class="d">Sync РАБОТАЕТ: `@property --skeleton-shimmer-x` + одна `:root`-анимация, все инстансы читают `mask-position`. Остаток тривиальный — убрать мёртвые строки `mask-attachment` (no-op, оставлены как коммент-intent).</p><div class="meta">skeleton.component.scss</div></div>
+      <div class="card track"><div class="t">Rounded `:active` touch-feedback</div><p class="d">После глобального сброса tap-highlight (`_reset.scss`, `d4c5811`) у контролов без явного `:active` пропала нативная press-подсветка на тач. Дать каждому <b>скруглённый</b> `:active` (`background`/`box-shadow` на элементе с `border-radius` — не квадратный оверлей). Без `:active`: checkbox/radio/switch/list-item/menu-item/select/dropdown/segmented/tabs/tag/pagination/sidenav-item/calendar-day/toggle/combobox/multi-select/color-picker. Не баг — enhancement; парный с `.ds-interactive`.</p><div class="meta">tap-feedback-test.html</div></div>
+      <div class="card track"><span class="chip ch-oos">решить</span><div class="t">Overlay leave animation — политика</div><p class="d">Floating-панели (select/dropdown/combobox/multi-select/date-picker/popover/color-picker/menu/split-button + `ModalService.confirm`) закрываются мгновенно (leave-анимация снята в `d2e4712` — ~120ms fade читался как лаг на осознанном действии). Вернуть leave? Правильная форма — <b>instant на select</b>, быстрый ~100ms fade <b>только на ambient-dismiss</b> (backdrop/Escape); нужно различать select-close и dismiss-close. Stas undecided 2026-06-30.</p></div>
     </div>
   </div>
 
@@ -414,8 +416,9 @@ Completed items are archived in `todo-done.md` (last review 2026-07-06).
 
 ### Follow-ups from the button-token rework (2026-06-10)
 
-- [ ] **Components with NO public tokens at all** (no `--ds-*` theming API; nothing was converted because nothing exists): accordion, checkbox, combobox, divider, drawer, dropdown, menu (container), number-stepper, page-footer, popover, progress, radio, select, skeleton, spinner, stepper, switch, tooltip, w3w. Decide per component whether to add a token API (couple with the component-vs-class audit + a11y track; overlay-based ones partly style via `_dropdown-overlay.scss`/`_toast-overlay.scss` globals). _(Parent "Unify remaining declaring components" ✅ done — archived in `todo-done.md`.)_
-- [ ] **design-system.md: one global note on the token contract** — state once that all `--ds-*` component tokens are read-with-fallback/consumer-first, then trim the per-component repetition added to the button line. DEFERRED by user 2026-06-10 ("design-system.md щас не трогай") — do not edit the file until asked.
+- [x] **Unify remaining declaring components on the read-with-fallback pattern.** ✅ Done 2026-06-10, commits `427dcb3`…`933b01f`. ALL 22 declaring components converted to the uniform private-resolver style (user mandate mid-rollout: EVERY public token gets a `--_*` resolver, rules reference only privates — no scattered inline fallbacks): banner (pilot), breadcrumbs/search/stat/status-dot/textarea/topbar (A), input/modal/dropzone/page-header/pagination (B), sidenav/sidenav-item/sidenav-group/avatar/avatar-group/card (C), tabs/table/date-picker/bottom-sheet (D). Docs mirror sheets (`_forced-states.scss`) converted too — global mirror declarations were LEAKING into converted components via shared classes (`.field` pad bug caught by snapshot). Verified: full-page computed-style snapshot pixel-identical (13 428 elements), 20/20 per-component override probes pass, button/banner interactive asserts green, zero `--ds-*:` declarations left in components+mirrors. Dead tokens removed along the way (with tokens-reference rows): `--ds-banner-border`, 4× `--ds-topbar-action/ping-*`, `--ds-modal-backdrop` dup, `--ds-avatar-ring-color`. Renames: `--ds-table-header-*` → `--ds-table-head-*` (now matches tokens-reference/mirror; design-system.md synced). Caught & fixed agent mistakes: card padding presets had dropped consumer-first re-binds; `--ds-table-border` wrongly deleted (was live, documented API) — restored. _(Done — also mirrored in `todo-done.md`; kept here as the parent of its still-open follow-ups below.)_
+  - [ ] **Components with NO public tokens at all** (no `--ds-*` theming API; nothing was converted because nothing exists): accordion, checkbox, combobox, divider, drawer, dropdown, menu (container), number-stepper, page-footer, popover, progress, radio, select, skeleton, spinner, stepper, switch, tooltip, w3w. Decide per component whether to add a token API (couple with the component-vs-class audit + a11y track; overlay-based ones partly style via `_dropdown-overlay.scss`/`_toast-overlay.scss` globals).
+  - [ ] **design-system.md: one global note on the token contract** — state once that all `--ds-*` component tokens are read-with-fallback/consumer-first, then trim the per-component repetition added to the button line. DEFERRED by user 2026-06-10 ("design-system.md щас не трогай") — do not edit the file until asked.
 - [ ] **Theme recipe vs hand-tuned picks — alignment decision.** Button/icon-button state derivation uses the theme's 88%/76% mix-to-black recipe. If the formula-calibration work replaces `--primary-hover/-pressed` with hand-tuned values, the button defaults (color-mix from resolved bg) will diverge from the theme roles — decide then: components read role tokens again, or theme keeps the formula. (See memory: hand-tuned beats formulas; formula is currently only the fallback default.)
 
 ## Animations
@@ -739,6 +742,8 @@ _Archived 2026-07-06 from `todo.md`._
       ["Решения — НЕ «чинить»",             "(G) Design-choices to CONFIRM",              ""],
       ["Предложенная система рецептов",     "Proposed system (settle before implementing)", "implemented/motion-system.html"],
       ["Skeleton — page-wide shimmer",      "Skeleton: page-wide shimmer sync",           ""],
+      ["Rounded `:active`",                 "Rounded `:active` touch-feedback",           "tap-feedback-test.html"],
+      ["Overlay leave animation",           "Overlay leave animation",                    ""],
 
       ["Tabs · pills overflow",             "Tabs · pills overflow",                      ""],
       ["Banner · compact density",          "Banner · compact density",                   ""],
