@@ -245,6 +245,13 @@ export class DropdownComponent {
 
       return;
     }
+    if (key === 'Tab') {
+      // Close the panel but let Tab move focus naturally (no preventDefault),
+      // else the overlay + transparent backdrop leak behind the moved focus.
+      this.close();
+
+      return;
+    }
     if (key === 'Escape') {
       event.preventDefault();
       this.close();

@@ -6,7 +6,12 @@
   >
     <div
       #sheet
+      cdkTrapFocus
+      cdkTrapFocusAutoCapture
       class="sheet"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="title() ? titleId : null"
       [class.dragging]="dragOffset() !== null"
       [class.closing]="closing()"
       [class.snapping]="snapPoints().length > 0 && dragOffset() === null"
@@ -29,7 +34,10 @@
       </div>
 
       @if (title()) {
-        <h3 class="sheet-title">
+        <h3
+          class="sheet-title"
+          [id]="titleId"
+        >
           {{ title() }}
         </h3>
       }

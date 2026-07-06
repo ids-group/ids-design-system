@@ -132,11 +132,11 @@
 
   <div class="summary">
     <div class="stat you"><div class="n">3</div><div class="l">Ждёт твоего решения</div></div>
-    <div class="stat a11y"><div class="n">9</div><div class="l">A11y (P0–P2)</div></div>
+    <div class="stat a11y"><div class="n">3</div><div class="l">A11y (P0–P2)</div></div>
     <div class="stat untouched"><div class="n">11</div><div class="l">Компоненты + foundations</div></div>
     <div class="stat untouched"><div class="n">13</div><div class="l">Motion / DS-docs / field / PIN-475</div></div>
     <div class="stat raw"><div class="n">7</div><div class="l">Raw / frozen / мелочь / lint</div></div>
-    <div class="stat done"><div class="n">51</div><div class="l">Сделано (свёрнуто)</div></div>
+    <div class="stat done"><div class="n">57</div><div class="l">Сделано (свёрнуто)</div></div>
   </div>
 
   <!-- ============ NEEDS YOU ============ -->
@@ -151,17 +151,11 @@
 
   <!-- ============ A11Y ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>♿ A11y — по компонентам и findings</h2><span class="count c-a11y">9</span><span class="why">a11y-ветка покрыла ~29 компонентов. ✅ закрыто: switch/checkbox/radio+RadioGroup (06-30) · table sort keyboard · combobox trigger-close · spinner/divider/skeleton roles.</span></div>
+    <div class="lane-head"><h2>♿ A11y — по компонентам и findings</h2><span class="count c-a11y">3</span><span class="why">Компонентная волна 2026-07-06 ✅ отгружена с валидацией каждого finding: bottom-sheet dialog · number-stepper · avatar-group (+ badge count — оказался уже готов) · listbox Tab-close · option tabindex · «No matches»=status · field-message alert · sidenav-item aria. Остаток — 3 отложенных/спорных ниже.</span></div>
     <div class="cards">
-      <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">bottom-sheet — dialog-семантика</div><p class="d">Поведение есть; нет `role=dialog` + `aria-modal` + `aria-labelledby` + `cdkTrapFocus`. Зеркалить `modal.component.html`.</p></div>
-      <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">number-stepper — aria-label</div><p class="d">Кнопки `−/+` без `aria-label` (Decrease/Increase); `<input number>` без label.</p></div>
-      <div class="card a11y"><span class="chip ch-p2">MED</span><div class="t">a11y-мелочь (кластер)</div><p class="d">badge count `aria-label`; avatar-group hidden-count (`+N` без label); topbar явный `role=banner` (сейчас implicit `<header>`). spinner/divider/skeleton roles — уже сделаны.</p></div>
-      <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">listbox не закрывается на Tab</div><p class="d">combobox/select/dropdown: оверлей висит, фокус уходит за него. Escape обработан, Tab — нет.</p></div>
-      <div class="card a11y"><span class="chip ch-p1">P1</span><div class="t">scroll-lock без ref-count</div><p class="d">modal/drawer: при двух оверлеях закрытие первого возвращает скролл под вторым (оба сбрасывают `body.overflow`).</p></div>
-      <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">listbox options в tab-order</div><p class="d">select/dropdown: option-кнопкам нужен `tabindex="-1"` под roving/active-descendant.</p></div>
-      <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">combobox «No matches» selectable</div><p class="d">«Нет совпадений» — это `role=option`; должно быть `role=status`/презентационным.</p></div>
-      <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">date-picker grid-семантика</div><p class="d">Нет `role=grid`/`gridcell` (используется `aria-pressed`). focus-баг сверен — НЕ баг: `afterNextRender` + guard, disposed-overlay проблемы нет.</p></div>
-      <div class="card a11y"><span class="chip ch-p2">P2 · сверено</span><div class="t">field-message + sidenav-item aria</div><p class="d">`ds-field-message` флипает `role=alert` на существующем узле → live-region может не сработать (рендерить свежий узел); sidenav-item `aria-label` дублирует видимый текст. tooltip aria-describedby — OK (не клобберит); backdropClick — чистится через `dispose()`.</p></div>
+      <div class="card a11y"><span class="chip ch-p1">P1 · отложено</span><div class="t">scroll-lock без ref-count</div><p class="d">modal/drawer: при двух оверлеях закрытие первого возвращает скролл под вторым (оба сбрасывают `body.overflow`). Нужен общий ref-counted lock — по одному компоненту не чинится. Отложено 2026-07-06; варианты (сервис / CDK / per-component) расписаны в todo.</p></div>
+      <div class="card a11y"><span class="chip ch-p2">P2 · отложено</span><div class="t">date-picker grid-семантика</div><p class="d">Нет `role=grid`/`gridcell` (используется `aria-pressed`) + нет `role=dialog`/имени на панели. Отложено 2026-07-06: `aria-selected` валиден только в grid-структуре, значит нужны строки-недели → риск для CSS-раскладки. focus-баг сверен — НЕ баг.</p></div>
+      <div class="card a11y"><span class="chip ch-p2">валидировано</span><div class="t">topbar role=banner</div><p class="d">Не делаем (Stas: «пропусти, не удаляй»): `<header>` уже даёт banner-landmark неявно (`<ds-topbar>` — generic, не sectioning); W3C-валидатор помечает явный `role=banner` на `<header>` как unnecessary, а при вложении в `<main>`/`<section>` он был бы вреден. Оставлено как decision-record.</p></div>
     </div>
   </div>
 
@@ -365,6 +359,18 @@
     </div>
   </details>
 
+  <details class="done-panel" open>
+    <summary class="lane-head"><h2>✅ Сделано · 2026-07-06 (A11y — компонентная волна)</h2><span class="count c-done">6</span><span class="toggle"></span><span class="why">Реализовано из A11y-лейна, каждый finding сверен с кодом + семантика проверена по APG/MDN. Осталось 3: scroll-lock (варианты) · date-picker grid (отложено) · topbar banner (валидировано-избыточно).</span></summary>
+    <div class="cards">
+      <div class="card done"><div class="t">✅ bottom-sheet dialog-семантика</div><p class="d">`role="dialog"` + `aria-modal="true"` + `aria-labelledby`(gated title-id) + `cdkTrapFocus`/`cdkTrapFocusAutoCapture` на `.sheet` (импорт A11yModule). Зеркалит modal; фокус восстанавливается на триггер при закрытии (`@if (rendered())` destroy).</p><div class="meta">2026-07-06</div></div>
+      <div class="card done"><div class="t">✅ number-stepper aria-label</div><p class="d">`−/+` → статичный `aria-label` Decrease/Increase; новый input `ariaLabel` именует `<input type=number>`.</p><div class="meta">2026-07-06</div></div>
+      <div class="card done"><div class="t">✅ avatar-group + badge count</div><p class="d">avatar-group `+N` → `aria-label="N more"`. badge count `aria-label` — оказался уже сделан (`countAriaLabel()`), сверено-vs-code.</p><div class="meta">2026-07-06</div></div>
+      <div class="card done"><div class="t">✅ listbox Tab-close + option tabindex</div><p class="d">combobox/select/dropdown закрывают панель на Tab (без preventDefault → фокус уходит естественно, оверлей+backdrop не висят). option-кнопки select/dropdown → `tabindex="-1"` (single-focus под activedescendant; combobox уже `div`).</p><div class="meta">2026-07-06</div></div>
+      <div class="card done"><div class="t">✅ combobox «No matches» = role=status</div><p class="d">Пустое состояние: `role="option"` → `role="status"` (live-region, не countable / не активируется стрелками; убран лишний boolean `aria-disabled`). APG/MDN: status vs presentation.</p><div class="meta">2026-07-06</div></div>
+      <div class="card done"><div class="t">✅ field-message alert + sidenav-item aria</div><p class="d">field-message: error рендерится СВЕЖИМ узлом (надёжный `role=alert` при вставке, а не флип на существующем). sidenav-item: `aria-label` только в collapsed (иначе перекрывает видимый текст + прячет badge/alert). tooltip describedby + backdropClick — сверено, НЕ баги.</p><div class="meta">2026-07-06</div></div>
+    </div>
+  </details>
+
   <p class="foot">
     Источники: <span class="tag">docs/todo.md</span> · <span class="tag">DS-HANDOFF.md</span> (7/7 портировано) · история <span class="tag">4b9e0c2…19ef859</span>.
     Снято как сделанное: pinkmoon token-миграция, MIT-релиценз.
@@ -372,10 +378,11 @@
     Motion-system (findings A–F + рецепты, дек <span class="tag">implemented/motion-system.html</span>) — ОТГРУЖЕН 06-26.
     <b>Актуализировано 2026-06-30:</b> dark theme · ds-color · button color×variant · 14 компонентов · forms/CVA · smooth-motion — отгружено; реализованные деки перенесены в <span class="tag">presentations/implemented/</span>.
     <b>Актуализировано 2026-07-03:</b> весь 🧩-лейн закрыт — ds-time-picker + все фичи-гэпы Forms / Data-overlay / Display отгружены (11 карточек в июльской done-панели); открыт только `ds-select` native multi (отложено) + MED-компоненты (chart/calendar/lightbox/splitter).
+    <b>Актуализировано 2026-07-06:</b> A11y-лейн 9→3 — компонентная волна отгружена (bottom-sheet dialog · number-stepper · avatar-group · listbox Tab-close · option tabindex · «No matches»=status · field-message alert · sidenav-item aria; badge count — оказался готов). Осталось: scroll-lock (варианты в todo) · date-picker grid (отложено) · topbar banner (валидировано-избыточно, оставлено как decision-record). Каждый finding сверен с кодом + APG/MDN.
     Доска — навигация; полные обоснования — в todo.md.
   </p>
 
-  <!-- raw docs/todo.md + docs/todo-done.md embedded verbatim (as of 2026-07-02) so the popover works offline over file:// -->
+  <!-- raw docs/todo.md + docs/todo-done.md embedded verbatim (as of 2026-07-06) so the popover works offline over file:// -->
   <script type="text/plain" id="todo-md"># DS — improvements backlog
 
 Running list of design-system improvements. Add items here as they come up.
@@ -478,22 +485,24 @@ Most of the original gap list has SHIPPED (live in `src/lib/components/`): multi
 
 The `a11y` branch covered ~29 components (CDK focus-trap + scroll-lock + dialog ARIA for modal/drawer; `listbox`/`menu`/`tab` roles + keyboard via `aria-activedescendant` & roving; form labelling for input/textarea/select; toast live-region; `aria-current`/`expanded`/`selected`; `:focus-visible`; `aria-label` on icon-only). These interactive components were NOT touched and need the same treatment (mirror the patterns noted):
 
-- [ ] **bottom-sheet** — behaviour already done (scroll-lock, Escape, scrim, drag). Missing the dialog SEMANTICS: add `role="dialog"` + `aria-modal="true"` + `aria-labelledby`(sheet-title id) + `cdkTrapFocus`/`cdkTrapFocusAutoCapture` (mirror `modal.component.html`).
-- [ ] **number-stepper** — `−`/`+` buttons have no `aria-label` (e.g. "Decrease"/"Increase"); the `<input type="number">` has no label/`aria-label`. Mirror the icon-only-button labelling pattern.
-- [ ] **MED/minor:** ~~spinner → `role="status"` + `aria-label`~~ ✅ ALREADY DONE (host has `role="status"` + `aria-label="Loading"`, verified 2026-06-25); ~~divider → `role="separator"`~~ ✅ ALREADY DONE (host binding); ~~skeleton → `aria-hidden`~~ ✅ ALREADY DONE (host `aria-hidden="true"`; `aria-busy` N/A for a static placeholder); **STILL OPEN** → badge `count`/value → `aria-label` for the number; avatar-group → `aria-label` for the hidden-count (`+N` is bare text); topbar → `role="banner"` landmark (renders bare `<header>`). (avatar already got `role="img"` from the a11y branch.) [Verified-vs-code 2026-06-25 — the three crossed-out were already shipped.]
+- [x] **bottom-sheet** — ✅ Done 2026-07-06. Added the dialog SEMANTICS the behaviour was missing: `role="dialog"` + `aria-modal="true"` + `aria-labelledby`(gated `titleId`) + `cdkTrapFocus`/`cdkTrapFocusAutoCapture` on `.sheet` (imports `A11yModule`). Mirrors `modal.component.html`; focus restored to trigger on close via `@if (rendered())` destroy. Behaviour (scroll-lock, Escape, scrim, drag) was already done.
+- [x] **number-stepper** — ✅ Done 2026-07-06. `−`/`+` got static `aria-label` "Decrease"/"Increase"; new `ariaLabel` input names the `<input type="number">` via `[attr.aria-label]`.
+- [ ] **MED/minor:** ~~spinner → `role="status"`~~ ✅ DONE; ~~divider → `role="separator"`~~ ✅ DONE; ~~skeleton → `aria-hidden`~~ ✅ DONE; ~~badge `count` → `aria-label`~~ ✅ ALREADY SHIPPED (verified 2026-07-06 — `countAriaLabel()` "N notifications"); ~~avatar-group hidden-count~~ ✅ Done 2026-07-06 (`+N` span `[attr.aria-label]="overflow() + ' more'"`). **STILL OPEN (deferred, not a bug):** topbar → `role="banner"` — ⚠️ VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06). The bare `<header>` inside the generic `<ds-topbar>` ALREADY maps to the `banner` landmark implicitly; the W3C validator flags an explicit `role="banner"` on `<header>` as "unnecessary" (ARIA rule 1), and it would be WRONG if a consumer nests `<ds-topbar>` inside `<main>`/`<section>`/`<article>`/`<aside>`/`<nav>`. Kept as a decision record.
 - Reference patterns (a11y branch): form fields = `input.component.ts`; overlays = `modal.component.html`; roving keyboard = `tabs.component.ts`.
 
 ### A11y — open findings from the a11y-branch review
 
 Confirmed issues in the merged `a11y` pass, not covered above (source: `docs/superpowers/a11y-branch-review.md`; spot-re-verified vs code 2026-06-10):
 
-- [ ] **open listbox doesn't close on Tab** (combobox/select/dropdown) — overlay stays up and focus escapes behind it; Escape is handled, Tab isn't. **(P1)**
-- [ ] **modal/drawer scroll-lock isn't ref-counted** — with two overlays stacked, closing the first restores body scroll under the second (both just reset `body.style.overflow`). **(P1)**
+- [x] **open listbox closes on Tab** (combobox/select/dropdown) — ✅ Done 2026-07-06 (P1). Each keydown handler now has a `Tab` case that closes the panel WITHOUT `preventDefault`, so focus moves on naturally and the overlay + transparent backdrop no longer leak behind it. (Escape was already handled. Tab closes only — does NOT auto-select the active option.)
+- [ ] **modal/drawer scroll-lock isn't ref-counted** — with two overlays stacked, closing the first restores body scroll under the second (both just reset `body.style.overflow`). **(P1)** — DEFERRED 2026-07-06 (Stas: "пропусти, распиши варианты"). Fix needs SHARED state (a counter) — a per-component tweak can't coordinate cross-component stacking. **Options:** (A) ref-counted lock service (recommended) — `lock()`/`unlock()` counter, saves/restores `body.style.overflow` on 0→1 / 1→0; modal/drawer/bottom-sheet call it from their `rendered` effect + `DestroyRef`; correct for any nesting (one new shared-service pattern). (B) CDK `BlockScrollStrategy` — but modal/drawer/bottom-sheet don't use CDK overlay (`@if` + `position:fixed`), so wiring it is artificial. (C) per-component save/restore only — cheapest, order-dependent, does NOT robustly fix mixed-type stacking; rejected as a real fix.
 - [x] ~~**accordion `aria-controls` dangles when collapsed**~~ — ❌ NOT A BUG (verified-vs-code 2026-06-25). The `<div role="region" [id]="bodyId">` is rendered UNCONDITIONALLY (`accordion-item.component.html:22`), toggled only via `[class.is-open]` + `[attr.inert]` — never inside an `@if`. So `aria-controls` always resolves. No fix needed; finding was stale/incorrect.
-- [ ] **listbox options sit in the tab order** (select/dropdown) — option buttons need `tabindex="-1"` under the roving/active-descendant model. **(P2)**
-- [ ] **combobox "No matches" is a selectable `role="option"`** — should be `role="status"`/presentational. **(P2)**
-- [ ] **date-picker grid semantics + focus bug** — no `role="grid"` model (uses `aria-pressed`); `setTimeout` focus can fire on a disposed overlay. **(P2)**
-- [ ] **Unverified — re-check vs code before fixing:** tooltip clobbers the host's existing `aria-describedby`; error hint flips `role="alert"` on an existing node (may not announce — render a fresh node); sidenav-item `aria-label` duplicates the visible link text (gate it); overlay `backdropClick().subscribe()` without explicit unsubscribe.
+- [x] **listbox options no longer sit in the tab order** (select/dropdown) — ✅ Done 2026-07-06 (P2). Option `<button>`s got `tabindex="-1"` so DOM focus never lands on them under the roving/active-descendant model. combobox already used non-focusable `<div role="option">`. Pairs with the Tab-close fix.
+- [x] **combobox "No matches" is no longer a selectable option** — ✅ Done 2026-07-06 (P2). Empty-state `<li>` `role="option"` → `role="status"` (polite live region, not part of the option set; dropped the stray boolean `aria-disabled`). APG/MDN: `status` over `presentation` (presentation would hide the message).
+- [ ] **date-picker grid semantics** — no `role="grid"`/`gridcell` (uses `aria-pressed`); popup has no `role="dialog"`/name. **(P2)** — DEFERRED 2026-07-06 (Stas: "отложить"). Per APG Date Picker Dialog the calendar should be a `role="grid"` (rows / `columnheader` / `gridcell`) with `aria-selected` on the selected cell + `role="dialog"`+name on the popup. **Why deferred:** COUPLED — `aria-selected` is only valid on a grid/listbox-role element, so `aria-pressed`→`aria-selected` REQUIRES building the grid structure (group `daysGrid()` into week rows, likely `display:contents` to keep the CSS layout) — non-trivial + layout risk for a P2. Roving-tabindex + arrow nav already present; the old `setTimeout`-on-disposed-overlay focus concern is already fixed (`afterNextRender` + guard — NOT a bug).
+- [x] **Unverified — re-checked vs code 2026-07-06:** error hint flipping `role="alert"` on an existing node → ✅ FIXED (`ds-field-message` renders the error variant as a separate `@if` branch → fresh node with `role="alert"` set on insertion, reliably announced); sidenav-item `aria-label` duplicating visible text → ✅ FIXED (gated to collapsed-only via `collapsedAriaLabel`); tooltip clobbering `aria-describedby` → ❌ NOT A BUG (appends/removes only its own id — CDK AriaDescriber pattern); overlay `backdropClick().subscribe()` → ❌ NOT A LEAK (`overlayRef.dispose()` completes the subject).
+- [ ] **badge `count` `aria-label` wording is hardcoded "notifications"** (minor — surfaced 2026-07-06 while verifying the count-label finding, which is itself DONE). `countAriaLabel()` returns `"${value} notifications"`, but `[count]` is used for ANY numeric count (cart, unread, results), so a cart badge announces "3 notifications" — misleading + not i18n-able. Fix: configurable noun (`countLabel`/`unit` input or `ariaLabel` override). Low priority.
+- [ ] **bottom-sheet Escape is a document-level `(document:keydown.escape)`** (from `a11y-branch-review.md`; re-confirmed 2026-07-06). modal/drawer scope Escape to the panel; bottom-sheet listens at document level, so with stacked overlays Escape could hit the wrong sheet. Low risk, align to panel-scoped when next touching it (dialog semantics + `cdkTrapFocus` added 2026-07-06).
 - [ ] **API consistency (P2)** — `booleanAttribute` on all boolean inputs; `danger`→`error` / `warn`→`warning`; dropdown `error`→`invalid`; `radio.name` type; export `DividerSpacing`/`PopoverAlign`; button size scale (FULL finding promoted to Architecture/tokens — dual `s/m/l`+`sm/md/lg` tiers, collapse with the color×fill rework); output-name unification; pagination model/output dedup; `title` requiredness unification (modal `required` vs drawer/bottom-sheet/banner optional). See `library-audit.md`. Axis-mix findings from the button color×fill survey (2026-06-11; only button+icon-button get the full two-axis split — status components have one fill, their `variant` IS the color, leave as is): **progress** — `indeterminate` is an animation MODE living in the color enum (same smell as button's `text`); extract to a boolean input when touching (`warn`→`warning` lands then too). **badge** — `BadgeVariant` mixes lifecycle statuses + semantic colors + `solid` (fill) + `count` (content mode); pull `count` out of the color enum on next badge work. Wholesale `variant`→`color` renames elsewhere rejected: cosmetic churn.
 - [ ] **CDK Menu adoption (option B)** — ONLY if/when nested submenus, a menubar, or context menus are needed. Full migration plan + verified CDK API → **`docs/superpowers/cdk-menu-adoption.md`**. Today `ds-menu` = native roving + `DsOverlayCloseRef` (= the high-level Material-component close pattern, correct for flat menus); B is _more capable_, not "more correct". Don't lose the doc. **Update 2026-06-26:** evaluated Angular's `@angular/aria` `ngMenu` (Dev Preview, v21) per the doc's "re-evaluate before committing" note — verdict in `cdk-menu-adoption.md`: stay on A now; when we move, prefer `ngMenu` (headless, pairs with our existing overlay) over CDK Menu, gated on a real submenu/menubar/context-menu need **or** `@angular/aria` going stable.
 
@@ -701,6 +710,7 @@ _Archived 2026-07-06 from `todo.md`._
       ["number-stepper — aria-label",       "number-stepper** —",                         ""],
       ["table — клавиатурная сортировка",   "table** — sortable",                         ""],
       ["a11y-мелочь",                       "avatar-group → `aria-label` for the hidden", ""],
+      ["topbar role=banner",                "topbar →",                                   ""],
       ["combobox trigger open-only",        "combobox trigger is open-only",              ""],
       ["listbox не закрывается на Tab",     "open listbox doesn't close on Tab",          ""],
       ["scroll-lock без ref-count",         "scroll-lock isn't ref-counted",              ""],

@@ -298,6 +298,13 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<
           this.close();
         }
         break;
+      case 'Tab':
+        // Close the panel but let Tab move focus naturally (no preventDefault),
+        // else the overlay + transparent backdrop leak behind the moved focus.
+        if (this.overlayRef) {
+          this.close();
+        }
+        break;
       case 'Backspace':
         if (this.multiple() && !this.query()) {
           const tags = this.selectedTags();

@@ -2,6 +2,7 @@
   <button
     type="button"
     class="step minus"
+    aria-label="Decrease"
     [disabled]="atMin() || disabled()"
     (click)="dec()"
   >
@@ -15,12 +16,14 @@
     [max]="max() ?? undefined"
     [value]="value()"
     [disabled]="disabled()"
+    [attr.aria-label]="ariaLabel()"
     (input)="setRaw($any($event.target).value)"
   />
 
   <button
     type="button"
     class="step plus"
+    aria-label="Increase"
     [disabled]="atMax() || disabled()"
     (click)="inc()"
   >

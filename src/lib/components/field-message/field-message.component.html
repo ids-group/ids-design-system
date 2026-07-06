@@ -1,15 +1,33 @@
+<!-- The error variant is a separate branch so it mounts as a FRESH node with
+     role="alert" already set — screen readers reliably announce a live region
+     on insertion, but not when role="alert" is toggled onto an existing node. -->
 @if (text()) {
-  <span
-    class="field-message {{ state() }}"
-    [id]="messageId()"
-    [attr.role]="state() === 'error' ? 'alert' : null"
-  >
-    @if (icon()) {
-      <ds-icon
-        [name]="icon()!"
-        [size]="14"
-      />
-    }
-    {{ text() }}
-  </span>
+  @if (state() === 'error') {
+    <span
+      class="field-message error"
+      role="alert"
+      [id]="messageId()"
+    >
+      @if (icon()) {
+        <ds-icon
+          [name]="icon()!"
+          [size]="14"
+        />
+      }
+      {{ text() }}
+    </span>
+  } @else {
+    <span
+      class="field-message {{ state() }}"
+      [id]="messageId()"
+    >
+      @if (icon()) {
+        <ds-icon
+          [name]="icon()!"
+          [size]="14"
+        />
+      }
+      {{ text() }}
+    </span>
+  }
 }

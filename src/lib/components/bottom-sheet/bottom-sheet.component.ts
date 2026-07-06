@@ -12,6 +12,9 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { A11yModule } from '@angular/cdk/a11y';
+
+let nextId = 0;
 
 /** Bottom-anchored sheet — the mobile sibling of ds-drawer. Closes on scrim
  * tap, Escape, or a downward drag on the grab strip. While open it locks
@@ -22,6 +25,7 @@ import {
 @Component({
   selector: 'ds-bottom-sheet',
   standalone: true,
+  imports: [A11yModule],
   templateUrl: './bottom-sheet.component.html',
   styleUrl: './bottom-sheet.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -33,6 +37,8 @@ export class BottomSheetComponent {
   readonly open = model<boolean>(false);
   readonly title = input<string>('');
   readonly closed = output<void>();
+
+  protected readonly titleId = `ds-bottom-sheet-title-${++nextId}`;
   /**
    * Snap-point heights as fractions of viewport height (0–1), ascending.
    * e.g. [0.4, 0.9]. When provided the sheet opens at the first snap point;

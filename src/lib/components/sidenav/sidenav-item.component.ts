@@ -49,6 +49,13 @@ export class SidenavItemComponent {
     this.sidenav?.collapsed() ? this.label() : '',
   );
 
+  // Only name the link via aria-label when collapsed (icon-only, the .item-label
+  // is display:none). Expanded, the visible label names it and any aria-label
+  // would override it — suppressing the badge count / alert dot from the name.
+  protected readonly collapsedAriaLabel = computed(() =>
+    this.sidenav?.collapsed() ? this.label() : null,
+  );
+
   protected readonly linkClasses = computed(() => {
     const parts = ['item'];
     if (this.active()) {

@@ -166,9 +166,7 @@
     @if (filteredOptions().length === 0 && !showCreateRow()) {
       <li
         class="empty t-s"
-        role="option"
-        [attr.aria-selected]="false"
-        [attr.aria-disabled]="true"
+        role="status"
       >
         No matches
       </li>

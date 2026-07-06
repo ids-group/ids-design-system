@@ -24,6 +24,8 @@ export class NumberStepperComponent {
   readonly step = input<number>(1);
   readonly size = input<NumberStepperSize>('md');
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Accessible name for the number input (the stepper has no visible label). */
+  readonly ariaLabel = input<string | null>(null);
 
   protected readonly atMin = computed(() => this.value() <= this.min());
   protected readonly atMax = computed(() => {
