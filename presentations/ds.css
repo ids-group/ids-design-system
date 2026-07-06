@@ -1053,13 +1053,17 @@
   --modal-w-sm: 480px;
   --modal-w-md: 640px;
   --modal-w-lg: 800px;
+  --modal-w-xl: 1024px;
+  --modal-w-fullscreen: calc(100vw - var(--space-6));
+  --modal-h-fullscreen: calc(100vh - var(--space-6));
   /* Drawer */
+  --drawer-w-sm: 320px;
   --drawer-w-md: 480px;
   --drawer-w-lg: 640px;
   /* Popover / cmdk */
   --popover-maxh: 360px;
   /* Field */
-  --field-gap-label: var(--space-1-5); /* label↔control */
+  --field-label-gap: var(--space-1-5); /* field vertical rhythm: label↔control & control↔hint */
   --field-gap-req: var(--space-1); /* label↔asterisk */
   --field-h-sm: var(--hit-min);
   --field-h-md: var(--hit-cozy);
@@ -1072,7 +1076,6 @@
   --field-num-stepper-w: var(--space-8);
   /* Search */
   --search-h: var(--hit-md);
-  --search-maxw: 320px;
   /* OTP / PIN input — one box per digit. */
   --otp-cell-w: var(--space-12); /* 48px */
   --otp-cell-h: var(--space-14); /* 56px */
@@ -1448,6 +1451,14 @@ html, body {
   background: var(--surface-canvas);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizelegibility;
+  /* Suppress the native mobile tap-highlight. Android Chrome paints a flat
+     rectangular overlay on tap whose geometry is browser-controlled (ignores
+     border-radius, NOT clipped by overflow), so on pill/rounded controls it
+     pokes square corners out past the shape. We can only set its colour, not
+     reshape it — so we remove it and let each control's own rounded
+     :active/:focus-visible state provide press feedback. Inherited → covers all
+     descendants. */
+  -webkit-tap-highlight-color: transparent;
 }
 
 button, input, select, textarea {
