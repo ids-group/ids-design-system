@@ -86,8 +86,14 @@ export class DatePickerComponent extends DsControlValueAccessor<
       if (this.editing) {
         return;
       }
-      const single = this.mode() === 'single' ? (value as Date | null) : null;
-      this.inputText.set(formatDate(single, spec));
+      if (this.mode() === 'single') {
+        this.inputText.set(formatDate(value as Date | null, spec));
+
+        return;
+      }
+      const range = (value as RangeValue | null) ?? [null, null];
+      this.startText.set(formatDate(range[0], spec));
+      this.endText.set(formatDate(range[1], spec));
     });
   }
 
@@ -137,7 +143,7 @@ export class DatePickerComponent extends DsControlValueAccessor<
     this.hint() ? `${this.uid}-hint` : null,
   );
   protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() || this.typedInvalid() ? 'error' : 'default',
+    this.invalid() || this.typedInvalid() || this.rangeInvalid() ? 'error' : 'default',
   );
 
   protected readonly resolvedLocale = computed(
@@ -164,6 +170,9 @@ export class DatePickerComponent extends DsControlValueAccessor<
   protected readonly gridFocus = signal<Date | null>(null);
   protected readonly inputText = signal<string>('');
   protected readonly typedInvalid = signal(false);
+  protected readonly startText = signal<string>('');
+  protected readonly endText = signal<string>('');
+  protected readonly rangeInvalid = signal(false);
   // Guards the value→text sync from clobbering the field mid-keystroke.
   private editing = false;
   protected readonly resolvedAriaLabel = computed(() =>
@@ -285,7 +294,7 @@ export class DatePickerComponent extends DsControlValueAccessor<
     if (this.isDisabled()) {
       parts.push('disabled');
     }
-    if (this.invalid()) {
+    if (this.invalid() || this.typedInvalid() || this.rangeInvalid()) {
       parts.push('error');
     }
 
@@ -628,6 +637,33 @@ export class DatePickerComponent extends DsControlValueAccessor<
       this.inputText.set(formatDate(parsed, spec));
     } else {
       this.typedInvalid.set(true);
+    }
+    this.markTouched();
+  }
+
+  protected onRangeInput(part: 'start' | 'end', event: Event): void {
+    this.editing = true;
+    const spec = this.formatSpec();
+    const masked = applyMask((event.target as HTMLInputElement).value, spec);
+    (part === 'start' ? this.startText : this.endText).set(masked);
+  }
+
+  protected onRangeBlur(): void {
+    this.editing = false;
+    const spec = this.formatSpec();
+    const start = parseDate(this.startText(), spec);
+    const end = parseDate(this.endText(), spec);
+    const startBad = !!this.startText() && (!start || this.isDayDisabled(start));
+    const endBad = !!this.endText() && (!end || this.isDayDisabled(end));
+    this.rangeInvalid.set(startBad || endBad);
+    if (start && end && !startBad && !endBad) {
+      const ordered: RangeValue =
+        start.getTime() <= end.getTime() ? [start, end] : [end, start];
+      this.value.set(ordered);
+      this.startText.set(formatDate(ordered[0], spec));
+      this.endText.set(formatDate(ordered[1], spec));
+    } else {
+      this.value.set([start ?? null, end ?? null]);
     }
     this.markTouched();
   }

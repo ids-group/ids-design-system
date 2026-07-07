@@ -117,6 +117,16 @@
   }
 }
 
+.date-range {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.range-dash {
+  color: var(--text-tertiary);
+}
+
 .calendar {
   /* Public --ds-datepicker-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_datepicker-bg-color:                       var(--ds-datepicker-bg-color,                       var(--surface-overlay));
