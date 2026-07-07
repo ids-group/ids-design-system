@@ -1,7 +1,8 @@
 // Ported from vendor/claude-design-ds/components.css ".search" block.
 // Source markup uses bare descendants (.search input, .search kbd).
-// Our port introduces explicit nested elements .input and .kbd
-// so styling targets are explicit and decoupled from raw tag selectors.
+// Our port introduces explicit nested elements .search-input and .kbd —
+// scoped naming keeps consumer global `.input` resets from leaking in
+// through emulated encapsulation (PIN-475 double-focus-ring root cause).
 
 :host {
   /* Public --ds-search-* are read with fallbacks, never declared — consumer overrides inherit in. */
@@ -51,7 +52,7 @@
     color: var(--icon-default);
   }
 
-  .input {
+  .search-input {
     flex: 1;
     min-width: 0;
     border: 0;
