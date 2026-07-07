@@ -26,20 +26,20 @@ import {
   type FieldMessageState,
 } from '../field-message/field-message.component';
 import type {
-  ComboboxOption,
-  ComboboxOptionGroup,
-  ComboboxSize,
-  ComboboxWidth,
-} from './combobox.types';
+  AutocompleteOption,
+  AutocompleteOptionGroup,
+  AutocompleteSize,
+  AutocompleteWidth,
+} from './autocomplete.types';
 
 let nextId = 0;
 
 @Component({
-  selector: 'ds-combobox',
+  selector: 'ds-autocomplete',
   standalone: true,
   imports: [IconComponent, TagComponent, FieldMessageComponent],
-  templateUrl: './combobox.component.html',
-  styleUrl: './combobox.component.scss',
+  templateUrl: './autocomplete.component.html',
+  styleUrl: './autocomplete.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   host: {
     '[class.content-width]': "width() === 'content'",
@@ -47,23 +47,23 @@ let nextId = 0;
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ComboboxComponent),
+      useExisting: forwardRef(() => AutocompleteComponent),
       multi: true,
     },
   ],
 })
-export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<
+export class AutocompleteComponent<T = unknown> extends DsControlValueAccessor<
   T | readonly T[] | null
 > {
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
 
-  readonly options = input<readonly ComboboxOption<T>[]>([]);
-  readonly optionGroups = input<ComboboxOptionGroup<T>[]>([]);
+  readonly options = input<readonly AutocompleteOption<T>[]>([]);
+  readonly optionGroups = input<AutocompleteOptionGroup<T>[]>([]);
   readonly value = model<T | readonly T[] | null>(null);
   readonly multiple = input<boolean>(false);
-  readonly size = input<ComboboxSize>('md');
-  readonly width = input<ComboboxWidth>('fill');
+  readonly size = input<AutocompleteSize>('md');
+  readonly width = input<AutocompleteWidth>('fill');
   readonly placeholder = input<string>('Select…');
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
@@ -95,7 +95,7 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<
     viewChild.required<TemplateRef<unknown>>('panel');
   private overlayRef: OverlayRef | null = null;
 
-  protected readonly uid = `ds-combobox-${++nextId}`;
+  protected readonly uid = `ds-autocomplete-${++nextId}`;
   protected readonly listboxId = `${this.uid}-listbox`;
   protected optionId(index: number): string {
     return `${this.uid}-opt-${index}`;
@@ -107,14 +107,16 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<
   });
 
   /** All options flattened from either optionGroups or options. */
-  protected readonly allOptions = computed<readonly ComboboxOption<T>[]>(() => {
-    const groups = this.optionGroups();
-    if (groups.length > 0) {
-      return groups.flatMap((group) => group.options);
-    }
+  protected readonly allOptions = computed<readonly AutocompleteOption<T>[]>(
+    () => {
+      const groups = this.optionGroups();
+      if (groups.length > 0) {
+        return groups.flatMap((group) => group.options);
+      }
 
-    return this.options();
-  });
+      return this.options();
+    },
+  );
 
   protected readonly filteredOptions = computed(() => {
     const trimmedQuery = this.query().toLowerCase().trim();
@@ -128,25 +130,27 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<
   });
 
   /** Filtered groups for grouped rendering — groups with no matching options are hidden. */
-  protected readonly filteredGroups = computed<ComboboxOptionGroup<T>[]>(() => {
-    const groups = this.optionGroups();
-    if (groups.length === 0) {
-      return [];
-    }
-    const trimmedQuery = this.query().toLowerCase().trim();
-    if (!trimmedQuery) {
-      return groups;
-    }
+  protected readonly filteredGroups = computed<AutocompleteOptionGroup<T>[]>(
+    () => {
+      const groups = this.optionGroups();
+      if (groups.length === 0) {
+        return [];
+      }
+      const trimmedQuery = this.query().toLowerCase().trim();
+      if (!trimmedQuery) {
+        return groups;
+      }
 
-    return groups
-      .map((group) => ({
-        ...group,
-        options: group.options.filter((option) =>
-          option.label.toLowerCase().includes(trimmedQuery),
-        ),
-      }))
-      .filter((group) => group.options.length > 0);
-  });
+      return groups
+        .map((group) => ({
+          ...group,
+          options: group.options.filter((option) =>
+            option.label.toLowerCase().includes(trimmedQuery),
+          ),
+        }))
+        .filter((group) => group.options.length > 0);
+    },
+  );
 
   /** Whether to show the "Create «text»" row at the bottom of the panel. */
   protected readonly showCreateRow = computed<boolean>(() => {
@@ -165,9 +169,9 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<
   });
 
   /** Flat list of visible options used for keyboard navigation index. */
-  protected readonly visibleOptions = computed<readonly ComboboxOption<T>[]>(
-    () => this.filteredOptions(),
-  );
+  protected readonly visibleOptions = computed<
+    readonly AutocompleteOption<T>[]
+  >(() => this.filteredOptions());
 
   protected readonly selectedTags = computed(() => {
     if (!this.multiple()) {
@@ -205,7 +209,7 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<
     return this.placeholder();
   });
 
-  protected isSelected(option: ComboboxOption<T>): boolean {
+  protected isSelected(option: AutocompleteOption<T>): boolean {
     if (this.multiple()) {
       const selectedValues = (this.value() as readonly T[] | null) ?? [];
 
@@ -215,7 +219,7 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<
     return this.value() === option.value;
   }
 
-  protected optionClass(option: ComboboxOption<T>): string {
+  protected optionClass(option: AutocompleteOption<T>): string {
     const parts = ['option'];
     if (this.multiple()) {
       parts.push('multi');
@@ -226,7 +230,7 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<
   }
 
   /** Flat index of the given option within the visible (filtered) list. */
-  protected flatIndexOf(option: ComboboxOption<T>): number {
+  protected flatIndexOf(option: AutocompleteOption<T>): number {
     return this.visibleOptions().findIndex((opt) => opt === option);
   }
 
@@ -381,7 +385,7 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<
     this.activeIndex.set(0);
   }
 
-  protected onPick(option: ComboboxOption<T>): void {
+  protected onPick(option: AutocompleteOption<T>): void {
     if (this.multiple()) {
       const current = (this.value() as readonly T[] | null) ?? [];
       const next = current.includes(option.value)

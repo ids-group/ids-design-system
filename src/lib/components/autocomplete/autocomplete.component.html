@@ -1,6 +1,6 @@
 <div
   #trigger
-  class="combo-trigger"
+  class="autocomplete-trigger"
   [class.open]="isOpen()"
   [class.sm]="size() === 'sm'"
   [class.lg]="size() === 'lg'"
@@ -19,7 +19,7 @@
       </ds-tag>
     }
   } @else if (displayLabel()) {
-    <span class="combo-value">
+    <span class="autocomplete-value">
       {{ displayLabel() }}
     </span>
   }
@@ -27,7 +27,7 @@
   <input
     #filter
     type="text"
-    class="combo-input"
+    class="autocomplete-input"
     role="combobox"
     aria-autocomplete="list"
     [attr.aria-expanded]="isOpen()"
@@ -47,7 +47,7 @@
 
   <ds-icon
     name="chevronDown"
-    class="combo-chevron"
+    class="autocomplete-chevron"
     [size]="16"
     (click)="togglePanel($event)"
   />
@@ -61,7 +61,7 @@
 
 <ng-template #panel>
   <ul
-    class="combo-list"
+    class="autocomplete-list"
     role="listbox"
     [id]="listboxId"
     [attr.aria-multiselectable]="multiple() ? 'true' : null"
@@ -73,12 +73,12 @@
         let groupIdx = $index
       ) {
         <li
-          class="combo-optgroup"
+          class="autocomplete-optgroup"
           role="group"
           [attr.aria-label]="group.label"
         >
           <span
-            class="combo-optgroup-label"
+            class="autocomplete-optgroup-label"
             [class.is-first]="groupIdx === 0"
           >
             {{ group.label }}

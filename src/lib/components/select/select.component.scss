@@ -10,7 +10,7 @@
   --_select-focus-shadow-error: var(--ds-select-focus-shadow-error, var(--ds-field-focus-shadow-error));
 
   // Flex column + gap so label→trigger→hint all sit the canonical --space-1-5
-  // apart, matching input/textarea/combobox/date-picker.
+  // apart, matching input/textarea/autocomplete/date-picker.
   display: flex;
   flex-direction: column;
   gap: var(--field-label-gap);

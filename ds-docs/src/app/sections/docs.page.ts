@@ -65,7 +65,7 @@ import { TagSection } from './components/tag/tag.section';
 import { W3wSection } from './components/w3w/w3w.section';
 import { LinkSection } from './components/link/link.section';
 import { PageFooterSection } from './components/page-footer/page-footer.section';
-import { ComboboxSection } from './components/combobox/combobox.section';
+import { AutocompleteSection } from './components/autocomplete/autocomplete.section';
 
 import { DescriptionListSection } from './components/description-list/description-list.section';
 import { LayoutPrimitivesSection } from './components/layout-primitives/layout-primitives.section';
@@ -159,7 +159,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     W3wSection,
     LinkSection,
     PageFooterSection,
-    ComboboxSection,
+    AutocompleteSection,
     DescriptionListSection,
     LayoutPrimitivesSection,
     SegmentedSection,
@@ -186,9 +186,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
   template: `
     <section-home />
 
-    <h1 class="group-title t-h2">
-      Components
-    </h1>
+    <h1 class="group-title t-h2">Components</h1>
 
     <section-components-accordion />
 
@@ -218,7 +216,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-components-color-picker />
 
-    <section-components-combobox />
+    <section-components-autocomplete />
 
     <section-components-date-picker />
 
@@ -306,9 +304,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-components-w3w />
 
-    <h1 class="group-title t-h2">
-      Foundations
-    </h1>
+    <h1 class="group-title t-h2">Foundations</h1>
 
     <section-foundations-borders />
 
@@ -346,9 +342,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <section-foundations-z-index />
 
-    <h1 class="group-title t-h2">
-      Patterns
-    </h1>
+    <h1 class="group-title t-h2">Patterns</h1>
 
     <pattern-activity />
 
@@ -360,17 +354,13 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
 
     <pattern-page-header />
 
-    <h1 class="group-title t-h2">
-      Practice
-    </h1>
+    <h1 class="group-title t-h2">Practice</h1>
 
     <practice-do-dont />
 
     <practice-token-discipline />
 
-    <h1 class="group-title t-h2">
-      Tokens reference
-    </h1>
+    <h1 class="group-title t-h2">Tokens reference</h1>
 
     <section-tokens-reference />
   `,
@@ -460,7 +450,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
       section-components-w3w,
       section-components-link,
       section-components-page-footer,
-      section-components-combobox,
+      section-components-autocomplete,
       section-components-description-list,
       section-components-layout-primitives,
       section-components-segmented,

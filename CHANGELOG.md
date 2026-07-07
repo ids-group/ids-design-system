@@ -8,6 +8,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Breaking
+
+- **`ds-combobox` renamed to `ds-autocomplete`.** The clearer industry name for the editable
+  type-to-pick control (MUI's term); "combobox" survives only as the ARIA role — which the
+  select-only `ds-select` trigger also carries. Renames: selector `ds-combobox` →
+  `ds-autocomplete`; `ComboboxComponent` → `AutocompleteComponent`; exported types
+  `ComboboxOption` / `ComboboxOptionGroup` / `ComboboxSize` / `ComboboxWidth` →
+  `AutocompleteOption` / `AutocompleteOptionGroup` / `AutocompleteSize` / `AutocompleteWidth`;
+  public tokens `--ds-combobox-focus-shadow` / `--ds-combobox-maxw` / `--ds-combobox-input-minw`
+  → `--ds-autocomplete-*`; docs anchor `#combobox` → `#autocomplete`. Behavior unchanged.
+
 ### Added
 
 - **New `ds-time-picker` component.** A time field (HH:MM) that opens column wheels
@@ -34,8 +45,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   aren't selectable by click or keyboard. New exported `DatePickerPreset`.
 - **Dropdown-family enhancements.** `ds-select` gains `clearable` + per-option `icon`
   (`SelectOption.icon`); `ds-dropdown` gains `[optionGroups]` (grouped listbox) + `clearable`;
-  `ds-combobox` gains `[optionGroups]` + `[allowCreate]` with a "Create …" row and a `(create)`
-  output. New exported `DropdownOptionGroup` / `ComboboxOptionGroup`. (Native multi on `ds-select`
+  `ds-autocomplete` gains `[optionGroups]` + `[allowCreate]` with a "Create …" row and a `(create)`
+  output. New exported `DropdownOptionGroup` / `AutocompleteOptionGroup`. (Native multi on `ds-select`
   intentionally omitted — use `ds-multi-select`.)
 - **`ds-table` expandable rows.** New `[expandableRows]`, `[(expandedIds)]` (`Set<string>`) and
   `[rowExpandTemplate]` — a chevron toggle per row reveals a full-width detail row (works with
@@ -68,12 +79,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-avatar` status dot + fallback icon.** New `[status]` (`online` / `offline` / `away` /
   `busy`, new `AvatarStatus`) shows a corner status dot, and `[fallbackIcon]` renders when there's
   no image or initials.
-- **`ds-combobox` content-width mode.** New `width` input (`fill` — default, stretches to the
+- **`ds-autocomplete` content-width mode.** New `width` input (`fill` — default, stretches to the
   container as before / `content` — the trigger hugs its chips/value plus a minimum typing area,
   for filter toolbars; the panel then sizes to its options with the trigger width as the floor).
-  New public hooks `--ds-combobox-input-minw` (typing-area minimum, default 80px) and
-  `--ds-combobox-maxw` (trigger cap, default none; in `content` mode defaults to 100% so chips
-  wrap at the parent edge). New exported `ComboboxWidth`.
+  New public hooks `--ds-autocomplete-input-minw` (typing-area minimum, default 80px) and
+  `--ds-autocomplete-maxw` (trigger cap, default none; in `content` mode defaults to 100% so chips
+  wrap at the parent edge). New exported `AutocompleteWidth`.
 
 ### Changed
 

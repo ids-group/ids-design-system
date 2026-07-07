@@ -42,7 +42,7 @@ const LAYERS: readonly LayerRow[] = [
   {
     token: '--layer-popover',
     value: '1400',
-    use: '<ds-popover> + <ds-combobox> dropdown.',
+    use: '<ds-popover> + <ds-autocomplete> dropdown.',
   },
   { token: '--layer-toast', value: '1500', use: '<ds-toast-region> portal.' },
   {

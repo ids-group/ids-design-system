@@ -1,8 +1,8 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import {
-  ComboboxComponent,
-  type ComboboxOption,
-  type ComboboxOptionGroup,
+  AutocompleteComponent,
+  type AutocompleteOption,
+  type AutocompleteOptionGroup,
 } from 'ds';
 import {
   DocsTruncationComponent,
@@ -10,14 +10,14 @@ import {
 } from '../../../shared/docs-truncation.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
-const MEMBERS: readonly ComboboxOption<string>[] = [
+const MEMBERS: readonly AutocompleteOption<string>[] = [
   { value: 'acme', label: 'Acme Holdings' },
   { value: 'festi', label: 'Festicket Ltd' },
   { value: 'livenation', label: 'Live Nation Festivals' },
   { value: 'sjm', label: 'SJM Concerts' },
 ];
 
-const PRODUCTS: readonly ComboboxOption<string>[] = [
+const PRODUCTS: readonly AutocompleteOption<string>[] = [
   { value: 'beer', label: 'Beer kegs' },
   { value: 'cider', label: 'Cider' },
   { value: 'spirits', label: 'Spirits' },
@@ -25,7 +25,7 @@ const PRODUCTS: readonly ComboboxOption<string>[] = [
   { value: 'mixers', label: 'Mixers' },
 ];
 
-const VENUE_GROUPS: ComboboxOptionGroup<string>[] = [
+const VENUE_GROUPS: AutocompleteOptionGroup<string>[] = [
   {
     label: 'Arenas',
     options: [
@@ -52,14 +52,18 @@ const VENUE_GROUPS: ComboboxOptionGroup<string>[] = [
 ];
 
 @Component({
-  selector: 'section-components-combobox',
+  selector: 'section-components-autocomplete',
   standalone: true,
-  imports: [ComboboxComponent, DocsTruncationComponent, DocsSectionComponent],
+  imports: [
+    AutocompleteComponent,
+    DocsTruncationComponent,
+    DocsSectionComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
-  templateUrl: './combobox.section.html',
-  styleUrl: './combobox.section.scss',
+  templateUrl: './autocomplete.section.html',
+  styleUrl: './autocomplete.section.scss',
 })
-export class ComboboxSection {
+export class AutocompleteSection {
   protected readonly members = MEMBERS;
   protected readonly products = PRODUCTS;
   protected readonly venueGroups = VENUE_GROUPS;
@@ -72,11 +76,13 @@ export class ComboboxSection {
   protected readonly venueValue = signal<string | null>(null);
   protected readonly toolbarProductsValue = signal<readonly string[]>(['beer']);
   protected readonly toolbarVenueValue = signal<string | null>(null);
-  protected readonly tagOptions = signal<readonly ComboboxOption<string>[]>([
-    { value: 'jazz', label: 'Jazz' },
-    { value: 'rock', label: 'Rock' },
-    { value: 'electronic', label: 'Electronic' },
-  ]);
+  protected readonly tagOptions = signal<readonly AutocompleteOption<string>[]>(
+    [
+      { value: 'jazz', label: 'Jazz' },
+      { value: 'rock', label: 'Rock' },
+      { value: 'electronic', label: 'Electronic' },
+    ],
+  );
   protected readonly tagValue = signal<readonly string[]>([]);
 
   protected readonly truncationRules: TruncationRule[] = [
@@ -97,7 +103,7 @@ export class ComboboxSection {
   ];
 
   protected onCreateTag(label: string): void {
-    const newOption: ComboboxOption<string> = {
+    const newOption: AutocompleteOption<string> = {
       value: label.toLowerCase().replace(/\s+/g, '-'),
       label,
     };

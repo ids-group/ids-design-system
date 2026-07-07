@@ -1,7 +1,7 @@
 <docs-section
-  anchor="combobox"
+  anchor="autocomplete"
   eyebrow="Components"
-  title="Combobox"
+  title="Autocomplete"
 >
   <docs-truncation [rules]="truncationRules" />
 
@@ -19,12 +19,12 @@
     Single
   </h3>
 
-  <div class="combo-field-wrap">
-    <label class="combo-field-label t-s">
+  <div class="autocomplete-field-wrap">
+    <label class="autocomplete-field-label t-s">
       Member
     </label>
 
-    <ds-combobox
+    <ds-autocomplete
       placeholder="Pick a member…"
       [options]="members"
       [(value)]="memberValue"
@@ -35,12 +35,12 @@
     Multi
   </h3>
 
-  <div class="combo-field-wrap">
-    <label class="combo-field-label t-s">
+  <div class="autocomplete-field-wrap">
+    <label class="autocomplete-field-label t-s">
       Allowed products
     </label>
 
-    <ds-combobox
+    <ds-autocomplete
       placeholder="Add product…"
       [options]="products"
       [multiple]="true"
@@ -59,14 +59,14 @@
     chips/value plus a minimum typing area — for filter toolbars where a
     full-width trigger looks broken next to one short chip.
     <code class="t-mono-inline">
-      --ds-combobox-input-minw
+      --ds-autocomplete-input-minw
     </code> tunes the typing
-    area (default 80px), <code class="t-mono-inline">--ds-combobox-maxw</code>
+    area (default 80px), <code class="t-mono-inline">--ds-autocomplete-maxw</code>
     caps the trigger in either mode.
   </p>
 
-  <div class="combo-toolbar-row">
-    <ds-combobox
+  <div class="autocomplete-toolbar-row">
+    <ds-autocomplete
       width="content"
       placeholder="Add product…"
       [options]="products"
@@ -74,7 +74,7 @@
       [(value)]="toolbarProductsValue"
     />
 
-    <ds-combobox
+    <ds-autocomplete
       width="content"
       placeholder="Venue…"
       [optionGroups]="venueGroups"
@@ -96,12 +96,12 @@
     control inert.
   </p>
 
-  <div class="combo-field-wrap">
-    <label class="combo-field-label t-s">
+  <div class="autocomplete-field-wrap">
+    <label class="autocomplete-field-label t-s">
       Member (with hint)
     </label>
 
-    <ds-combobox
+    <ds-autocomplete
       placeholder="Pick a member…"
       hint="Start typing to filter the member list."
       [options]="members"
@@ -109,12 +109,12 @@
     />
   </div>
 
-  <div class="combo-field-wrap">
-    <label class="combo-field-label t-s">
+  <div class="autocomplete-field-wrap">
+    <label class="autocomplete-field-label t-s">
       Member (invalid)
     </label>
 
-    <ds-combobox
+    <ds-autocomplete
       placeholder="Pick a member…"
       hint="A member is required."
       [invalid]="true"
@@ -122,12 +122,12 @@
     />
   </div>
 
-  <div class="combo-field-wrap">
-    <label class="combo-field-label t-s">
+  <div class="autocomplete-field-wrap">
+    <label class="autocomplete-field-label t-s">
       Member (disabled)
     </label>
 
-    <ds-combobox
+    <ds-autocomplete
       placeholder="Pick a member…"
       [options]="members"
       [disabled]="true"
@@ -147,12 +147,12 @@
     the panel. Filtering hides entire groups whose options produce no matches.
   </p>
 
-  <div class="combo-field-wrap">
-    <label class="combo-field-label t-s">
+  <div class="autocomplete-field-wrap">
+    <label class="autocomplete-field-label t-s">
       Venue
     </label>
 
-    <ds-combobox
+    <ds-autocomplete
       placeholder="Search venues…"
       [optionGroups]="venueGroups"
       [(value)]="venueValue"
@@ -174,12 +174,12 @@
     to the list and auto-selected.
   </p>
 
-  <div class="combo-field-wrap">
-    <label class="combo-field-label t-s">
+  <div class="autocomplete-field-wrap">
+    <label class="autocomplete-field-label t-s">
       Genre tags
     </label>
 
-    <ds-combobox
+    <ds-autocomplete
       placeholder="Add a genre…"
       [options]="tagOptions()"
       [multiple]="true"

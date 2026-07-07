@@ -38,7 +38,7 @@ export const NAV: NavGroup[] = [
       { label: 'Cards', anchor: 'card' },
       { label: 'Checkbox', anchor: 'checkbox' },
       { label: 'Color picker', anchor: 'color-picker', new: true },
-      { label: 'Combobox', anchor: 'combobox' },
+      { label: 'Autocomplete', anchor: 'autocomplete' },
       { label: 'Date picker', anchor: 'date-picker' },
       { label: 'Description list', anchor: 'description-list', new: true },
       { label: 'Drawer', anchor: 'drawer' },

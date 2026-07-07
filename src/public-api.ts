@@ -46,7 +46,7 @@ export * from './lib/components/bottom-sheet';
 export * from './lib/components/tag';
 export * from './lib/components/w3w';
 export * from './lib/components/page-footer';
-export * from './lib/components/combobox';
+export * from './lib/components/autocomplete';
 export * from './lib/components/divider';
 export * from './lib/components/description-list';
 export * from './lib/components/layout';

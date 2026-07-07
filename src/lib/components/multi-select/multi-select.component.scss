@@ -2,7 +2,7 @@
 
 :host {
   // Flex column + gap so the hint/error (ds-field-message) sits the canonical
-  // --space-1-5 below the trigger, matching input/textarea/combobox/select.
+  // --space-1-5 below the trigger, matching input/textarea/autocomplete/select.
   display: flex;
   flex-direction: column;
   gap: var(--field-label-gap);

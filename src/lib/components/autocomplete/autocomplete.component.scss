@@ -1,13 +1,13 @@
 @use '../../styles/press' as press;
 
-/* Combobox — trigger lives on host; listbox panel is rendered via
+/* Autocomplete — trigger lives on host; listbox panel is rendered via
    TemplatePortal so its DOM carries this component's encapsulation attrs.
    Both halves are styled here. */
 
 :host {
-  --_combobox-focus-shadow: var(--ds-combobox-focus-shadow, var(--ds-field-focus-shadow));
-  --_combobox-maxw:         var(--ds-combobox-maxw,         none);
-  --_combobox-input-minw:   var(--ds-combobox-input-minw,   80px);
+  --_autocomplete-focus-shadow: var(--ds-autocomplete-focus-shadow, var(--ds-field-focus-shadow));
+  --_autocomplete-maxw:         var(--ds-autocomplete-maxw,         none);
+  --_autocomplete-input-minw:   var(--ds-autocomplete-input-minw,   80px);
 
   // Flex column + gap so the hint/error (ds-field-message) sits the canonical
   // --space-1-5 below the trigger, matching input/textarea/select/date-picker.
@@ -15,20 +15,20 @@
   flex-direction: column;
   gap: var(--field-label-gap);
   width: 100%;
-  max-width: var(--_combobox-maxw);
+  max-width: var(--_autocomplete-maxw);
   position: relative;
 }
 
 /* width="content" — hug chips/value + the min typing area instead of filling
    the container. The maxw resolver re-defaults to 100% so chips wrap at the
-   parent edge; an explicit --ds-combobox-maxw still wins in both modes. */
+   parent edge; an explicit --ds-autocomplete-maxw still wins in both modes. */
 :host(.content-width) {
-  --_combobox-maxw: var(--ds-combobox-maxw, 100%);
+  --_autocomplete-maxw: var(--ds-autocomplete-maxw, 100%);
 
   width: fit-content;
 }
 
-.combo-trigger {
+.autocomplete-trigger {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -46,7 +46,7 @@
   &:hover:not(.disabled) { border-color: var(--border-strong); }
   &:focus-within:not(.disabled) {
     border-color: var(--accent);
-    box-shadow: var(--_combobox-focus-shadow);
+    box-shadow: var(--_autocomplete-focus-shadow);
     outline: 0;
   }
 
@@ -60,9 +60,9 @@
     color: var(--text-disabled);
     cursor: not-allowed;
 
-    .combo-input { cursor: not-allowed; color: var(--text-disabled); }
-    .combo-value { color: var(--text-disabled); }
-    .combo-chevron { color: var(--text-disabled); }
+    .autocomplete-input { cursor: not-allowed; color: var(--text-disabled); }
+    .autocomplete-value { color: var(--text-disabled); }
+    .autocomplete-chevron { color: var(--text-disabled); }
   }
 
   /* Density — mirror ds-select (sm 32 / md 40 / lg 48). Multi chips wrap, so
@@ -71,14 +71,14 @@
   &.lg { min-height: var(--field-h-lg); }
 }
 
-.combo-value {
+.autocomplete-value {
   font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
   color: var(--text-primary);
 }
 
-.combo-input {
+.autocomplete-input {
   flex: 1;
-  min-width: var(--_combobox-input-minw);
+  min-width: var(--_autocomplete-input-minw);
   border: 0;
   outline: 0;
   background: transparent;
@@ -86,14 +86,14 @@
   color: var(--text-primary);
 }
 
-.combo-chevron {
+.autocomplete-chevron {
   color: var(--icon-default);
   margin-left: auto;
 }
 
-.combo-list {
+.autocomplete-list {
   /* Fill the cdk-overlay-pane width (set from trigger.getBoundingClientRect()
-     in combobox.component.ts). Without `width: 100%` the panel shrinks
+     in autocomplete.component.ts). Without `width: 100%` the panel shrinks
      to its own option content width inside the absolutely-positioned pane. */
   width: 100%;
   list-style: none;
@@ -167,13 +167,13 @@
     text-align: center;
   }
 
-  .combo-optgroup {
+  .autocomplete-optgroup {
     list-style: none;
     display: flex;
     flex-direction: column;
   }
 
-  .combo-optgroup-label {
+  .autocomplete-optgroup-label {
     display: block;
     padding: var(--space-2) var(--space-3) var(--space-1);
     font: var(--font-weight-semibold) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);

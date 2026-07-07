@@ -46,7 +46,7 @@ const SEMANTIC_TIERS: ShadowTier[] = [
   {
     name: 'shadow-popover',
     value: 'alias → --shadow-2',
-    desc: 'Popovers, dropdowns, combobox',
+    desc: 'Popovers, dropdowns, autocomplete',
   },
   {
     name: 'shadow-toast',
