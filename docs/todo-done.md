@@ -4,6 +4,13 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Shipped 2026-07-07 (Picker portfolio: combobox→autocomplete rename + dropdown merge)
+
+_Archived 2026-07-07 from `todo.md`. Fallout of the PIN-475 review → combobox-definition research (ARIA APG + Carbon/Spectrum/MUI/FluentUI): the picker family was mapped, one component renamed, one duplicate removed. Same-day siblings still open in `todo.md`: autocomplete `multiple` vs multi-select (deck built, verdict pending), shared picker internals (recorded), select+multi-select pair kept (Stas: "оставляем пока")._
+
+- [x] **`ds-combobox` → `ds-autocomplete` rename — ✅ SHIPPED (`d7be085` + doc sync `33b5a09`).** Stas dislikes "combobox"; industry name (MUI) adopted. Selector, `AutocompleteComponent`, `Autocomplete*` types, `--ds-autocomplete-*` public tokens, internal `.autocomplete-*` classes, docs section/anchor/nav, CHANGELOG Breaking. Kept: ARIA `role="combobox"` attributes (it's the role — ds-select's trigger carries it too), shared `--combobox-offset/maxh` panel tokens (multi-select reads them; rename at the next token cleanup).
+- [x] **`ds-dropdown` vs `ds-select` duplication — ✅ MERGED 2026-07-07 (`3ffc3dc`), −1188 lines.** ds-dropdown removed; ds-select absorbed `readOnly` (ported filled look: `surface-secondary` + `border-divider`; gates toggle/keyboard/clear). Docs: Dropdown section deleted (nav/docs.page synced), Select section demos converted (`error`→`invalid`, `Dropdown*`→`Select*` types), modal demo swapped, and the `_field.scss` raw-specimen sheet RETIRED (its own header named dropdown.section's label wrappers as the last consumer — gone). CHANGELOG Breaking migration notes (`[optionGroups]` → inline groups in `[options]`). Lint-debt bonus: dropdown's `prefer-for-of` warning died with it (2→1).
+
 ## Shipped 2026-07-06 (A11y — component-wave findings from the backlog board)
 
 _Archived 2026-07-06 from `todo.md`. Implemented from the board's "A11y — по компонентам и findings" lane; each finding was validated vs code + APG/MDN before applying. Commit `08d1591`. Deferred (kept open in `todo.md`): date-picker grid semantics, modal/drawer scroll-lock ref-count, topbar `role="banner"` (validated redundant); plus two follow-ups surfaced during the work (badge count wording, bottom-sheet document-level Escape)._
