@@ -28,7 +28,7 @@
     font: 14px/1.5 var(--font-sans);
     color: var(--text-primary);
     background: var(--surface-canvas);
-    margin: 0; padding: 40px 40px 160px;
+    margin: 0; padding: 40px 40px 200px;
   }
   h1 { font-size: 22px; margin: 0 0 6px; }
   .lede { color: #6b7388; max-width: 940px; margin: 0 0 8px; }
@@ -48,7 +48,7 @@
   /* ---- shared field chrome (mirrors combobox/select trigger) ---- */
   .trigger {
     display: flex; align-items: center; gap: 8px;
-    width: 300px; min-height: var(--hit-cozy);
+    width: 100%; min-height: var(--hit-cozy);
     padding: 4px 10px; box-sizing: border-box;
     background: var(--surface-default);
     border: 1px solid var(--border-default);
@@ -74,6 +74,31 @@
   }
   .inp::placeholder { color: var(--text-tertiary); }
 
+  /* ---- floating panel, shared by every variant ---- */
+  .combo, .sel2 { position: relative; width: 300px; }
+  .panel {
+    display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--surface-default); border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow-popover);
+    padding: 8px; z-index: 5;
+  }
+  .combo:focus-within .panel { display: block; }
+  .sel2.open .panel { display: block; }
+  .pinp {
+    display: block; width: 100%; box-sizing: border-box;
+    border: 1px solid var(--border-default); border-radius: 6px;
+    padding: 7px 10px; margin-bottom: 6px;
+    font: 400 13px/1 var(--font-sans); outline: 0;
+  }
+  .pinp:focus { border-color: var(--primary); box-shadow: var(--focus-field); }
+  .panel ul { list-style: none; margin: 0; padding: 0; }
+  .panel li {
+    padding: 8px 10px; border-radius: 6px; cursor: pointer; font-size: 13.5px; font-weight: 600;
+  }
+  .panel li:hover { background: var(--surface-secondary); }
+  .panel li.is-sel { color: var(--primary); }
+  .panel li.is-sel::after { content: ' ✓'; }
+
   /* 0 · today */
   .today { cursor: text; }
 
@@ -96,29 +121,24 @@
   .opt-c .inp:focus { font-weight: 400; }
   .opt-c .inp::selection { background: var(--primary-muted); }
 
+  /* B+C · hybrid: closed look from B, editing model from C */
+  .opt-h { cursor: pointer; }
+  .opt-h .inp { flex: 0 1 0; width: 0; min-width: 0; }
+  .opt-h.editing { cursor: text; }
+  .opt-h.editing .value { display: none; }
+  .opt-h.editing .inp { flex: 1; width: auto; min-width: 80px; }
+  .opt-h .inp::selection { background: var(--primary-muted); }
+
   /* E · search lives in the PANEL (PrimeNG / Select2 / shadcn) */
-  .sel2 { position: relative; width: 300px; }
-  .sel2 .trigger { cursor: pointer; width: 100%; }
+  .sel2 .trigger { cursor: pointer; }
   .sel2.open .trigger { border-color: var(--primary); box-shadow: var(--focus-field); }
-  .panel {
-    display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
-    background: var(--surface-default); border: 1px solid var(--border-default);
-    border-radius: var(--radius-lg); box-shadow: var(--shadow-popover);
-    padding: 8px; z-index: 5;
-  }
-  .sel2.open .panel { display: block; }
-  .pinp {
-    display: block; width: 100%; box-sizing: border-box;
-    border: 1px solid var(--border-default); border-radius: 6px;
-    padding: 7px 10px; margin-bottom: 6px;
-    font: 400 13px/1 var(--font-sans); outline: 0;
-  }
-  .pinp:focus { border-color: var(--primary); box-shadow: var(--focus-field); }
-  .panel ul { list-style: none; margin: 0; padding: 0; }
-  .panel li {
-    padding: 8px 10px; border-radius: 6px; cursor: pointer; font-size: 13.5px; font-weight: 600;
-  }
-  .panel li:hover { background: var(--surface-secondary); }
+
+  /* hug row — width=content (P1-B): here the collapse is visible as geometry */
+  .combo.hug { width: fit-content; max-width: 100%; }
+  .hug .trigger { width: auto; }
+  .hug .panel { width: max-content; min-width: 240px; right: auto; }
+  .hug-row { display: flex; gap: 28px; flex-wrap: wrap; align-items: flex-start; }
+  .hug-row .cell { max-width: 300px; }
 
   /* comparison table */
   table { border-collapse: collapse; font-size: 13px; max-width: 1100px; background: #fff;
@@ -139,8 +159,9 @@
 <h1>V2 · single-combobox с выбранным значением — 5 вариантов, все живые</h1>
 <p class="lede">
   Вопрос: как должен выглядеть и вести себя single-<code>ds-combobox</code>, когда значение уже
-  выбрано. Кликайте и табайте в каждый — поведение настоящее (CSS/мини-JS, как будет в компоненте).
-  Панель со списком тут мокнута только в варианте E, в остальных представьте её открытие как сейчас.
+  выбрано. Всё настоящее: клик/Tab открывает панель с опциями, печать фильтрует, клик по опции
+  выбирает и закрывает, <kbd>Esc</kbd> отменяет. Погоняйте каждый вариант по кругу
+  «выбрано → поменять → выбрано».
 </p>
 
 <section>
@@ -149,31 +170,64 @@
 
     <div class="cell">
       <span class="cap">0 · Сегодня <span class="who">baseline</span></span>
-      <label class="trigger today"><span class="value">Festicket Ltd</span><input class="inp" placeholder=""><span class="chev"></span></label>
+      <div class="combo" data-variant="beside">
+        <label class="trigger today"><span class="value">Festicket Ltd</span><input class="inp" placeholder=""><span class="chev"></span></label>
+        <div class="panel"><ul>
+          <li>Acme Holdings</li><li>Festicket Ltd</li><li>Live Nation Festivals</li><li>SJM Concerts</li>
+        </ul></div>
+      </div>
       <span class="sub">Значение + <b>вечно развёрнутый пустой инпут</b> (cursor: text). Читается как поле
       свободного ввода — исходная жалоба PIN-475.</span>
     </div>
 
     <div class="cell">
       <span class="cap">A · Инпут схлопнут рядом</span>
-      <label class="trigger opt-a"><span class="value">Festicket Ltd</span><input class="inp" placeholder=""><span class="chev"></span></label>
+      <div class="combo" data-variant="beside">
+        <label class="trigger opt-a"><span class="value">Festicket Ltd</span><input class="inp" placeholder=""><span class="chev"></span></label>
+        <div class="panel"><ul>
+          <li>Acme Holdings</li><li>Festicket Ltd</li><li>Live Nation Festivals</li><li>SJM Concerts</li>
+        </ul></div>
+      </div>
       <span class="sub">Закрыт — как select. Клик/Tab → пустой инпут разворачивается <b>рядом со значением</b>:
       старое значение остаётся видно, пока печатаешь. Минус: два элемента, каретка «около» значения.</span>
     </div>
 
     <div class="cell">
       <span class="cap">B · Инпут ВМЕСТО значения <span class="who">идея Stas · Ant/react-select</span></span>
-      <label class="trigger opt-b"><span class="value">Festicket Ltd</span><input class="inp"><span class="chev"></span></label>
+      <div class="combo" data-variant="swap">
+        <label class="trigger opt-b"><span class="value">Festicket Ltd</span><input class="inp"><span class="chev"></span></label>
+        <div class="panel"><ul>
+          <li>Acme Holdings</li><li>Festicket Ltd</li><li>Live Nation Festivals</li><li>SJM Concerts</li>
+        </ul></div>
+      </div>
       <span class="sub">Закрыт — как select. Клик/Tab → значение <b>заменяется инпутом</b>, старое значение
       остаётся серым «призраком» (placeholder), пока не начнёшь печатать. Blur/<kbd>Esc</kbd> — значение возвращается.</span>
     </div>
 
     <div class="cell">
       <span class="cap">C · Значение живёт В инпуте <span class="who">MUI Autocomplete</span></span>
-      <label class="trigger opt-c"><input class="inp" value="Festicket Ltd"><span class="chev"></span></label>
+      <div class="combo" data-variant="in-input">
+        <label class="trigger opt-c"><input class="inp" value="Festicket Ltd" data-committed="Festicket Ltd"><span class="chev"></span></label>
+        <div class="panel"><ul>
+          <li>Acme Holdings</li><li>Festicket Ltd</li><li>Live Nation Festivals</li><li>SJM Concerts</li>
+        </ul></div>
+      </div>
       <span class="sub">Никакого отдельного «спана»: текст значения — это текст инпута. Клик →
-      <b>текст выделяется целиком</b>, печатаешь — заменился (фильтр с нуля). <kbd>Esc</kbd>/blur — значение
-      восстанавливается. Ноль layout shift; cursor: text (честное «можно печатать»).</span>
+      <b>текст выделяется целиком</b> (как адресная строка браузера), печатаешь — заменился и фильтрует.
+      <kbd>Esc</kbd>/blur — значение восстанавливается. Ноль layout shift; cursor: text.</span>
+    </div>
+
+    <div class="cell">
+      <span class="cap">B+C · Гибрид <span class="who">закрытый вид B · редактирование C</span></span>
+      <div class="combo" data-variant="hybrid">
+        <label class="trigger opt-h"><span class="value">Festicket Ltd</span><input class="inp"><span class="chev"></span></label>
+        <div class="panel"><ul>
+          <li>Acme Holdings</li><li>Festicket Ltd</li><li>Live Nation Festivals</li><li>SJM Concerts</li>
+        </ul></div>
+      </div>
+      <span class="sub">Закрыт — как select (pointer). Клик → значение оказывается <b>в инпуте, целиком
+      выделенное</b> (адресная строка): печатаешь — заменилось и фильтрует, <kbd>Esc</kbd> — вернулось.
+      Снаружи select, внутри MUI.</span>
     </div>
 
     <div class="cell">
@@ -183,15 +237,60 @@
         <div class="panel">
           <input class="pinp" placeholder="Найти…">
           <ul>
-            <li>Acme Holdings</li>
-            <li>Festicket Ltd</li>
-            <li>Live Nation Festivals</li>
-            <li>SJM Concerts</li>
+            <li>Acme Holdings</li><li>Festicket Ltd</li><li>Live Nation Festivals</li><li>SJM Concerts</li>
           </ul>
         </div>
       </div>
       <span class="sub">Триггер — <b>чистая кнопка-select всегда</b> (и пустой, и заполненный). Поле фильтра
       живёт сверху открытой панели. Значение в триггере видно всё время, пока ищешь замену.</span>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <h2>Почему в фикс-ширине A «не схлопывается» <span class="tag">width="content"</span></h2>
+  <p class="note">
+    Пустой инпут прозрачный и без рамки — в триггере фиксированной ширины его схлопывание
+    <b>невидимо</b>: и в «0», и в «A» покой выглядит как «значение · пустота · шеврон» (разница только
+    в курсоре и в том, куда падает каретка). Геометрией схлопывание видно, когда триггер обнимает
+    контент — режим <code>width="content"</code>, который уже в main. Сравните вживую:
+  </p>
+  <div class="hug-row">
+
+    <div class="cell">
+      <span class="cap">0 · сегодня + content</span>
+      <div class="combo hug" data-variant="beside">
+        <label class="trigger today"><span class="value">Festicket Ltd</span><input class="inp" placeholder=""><span class="chev"></span></label>
+        <div class="panel"><ul>
+          <li>Acme Holdings</li><li>Festicket Ltd</li><li>Live Nation Festivals</li><li>SJM Concerts</li>
+        </ul></div>
+      </div>
+      <span class="sub">Пустой инпут держит свои <b>80px пустоты</b> даже в «обнимающем» триггере.</span>
+    </div>
+
+    <div class="cell">
+      <span class="cap">A · схлопнут + content</span>
+      <div class="combo hug" data-variant="beside">
+        <label class="trigger opt-a"><span class="value">Festicket Ltd</span><input class="inp" placeholder=""><span class="chev"></span></label>
+        <div class="panel"><ul>
+          <li>Acme Holdings</li><li>Festicket Ltd</li><li>Live Nation Festivals</li><li>SJM Concerts</li>
+        </ul></div>
+      </div>
+      <span class="sub">Покой: компактный <b>«значение + ▾»</b>. Клик → инпут разворачивается на 80px
+      (виден рефлоу — честная цена варианта A).</span>
+    </div>
+
+    <div class="cell">
+      <span class="cap">B · вместо значения + content</span>
+      <div class="combo hug" data-variant="swap">
+        <label class="trigger opt-b"><span class="value">Festicket Ltd</span><input class="inp"><span class="chev"></span></label>
+        <div class="panel"><ul>
+          <li>Acme Holdings</li><li>Festicket Ltd</li><li>Live Nation Festivals</li><li>SJM Concerts</li>
+        </ul></div>
+      </div>
+      <span class="sub">Покой как у A; клик → инпут <b>на месте значения</b> (призрак в плейсхолдере),
+      ширины близки — рефлоу меньше.</span>
     </div>
 
   </div>
@@ -208,6 +307,11 @@
     <tr><td>Цена в нашем компоненте</td><td class="good">0</td><td class="good">~5 строк scss + класс</td><td class="good">scss + 3-5 строк ts</td><td class="mid">~20-25 строк ts (query↔label)</td><td class="bad">рефактор: инпут в панель, фокус/aria</td></tr>
     <tr><td>Пустое состояние (без значения)</td><td colspan="4">во всех A/B/C — как сегодня: развёрнутый инпут с плейсхолдером</td><td>кнопка с плейсхолдером</td></tr>
   </table>
+  <p class="note" style="margin-top:12px">
+    <b>Гибрид B+C:</b> закрытый вид от B (select: жирное значение, pointer), редактирование от C
+    (по клику значение оказывается в инпуте уже выделенным — печатаешь, заменилось). Снаружи select,
+    внутри адресная строка. Цена ≈ B + C, всё внутри триггера.
+  </p>
 </section>
 
 <section>
@@ -222,35 +326,79 @@
 </section>
 
 <script>
-  // B — input replaces value; old value becomes ghost placeholder
-  document.querySelectorAll('.opt-b').forEach(trigger => {
-    const inputElement = trigger.querySelector('.inp');
-    const valueElement = trigger.querySelector('.value');
+  // ---- variants 0 / A / B / C: panel opens on focus (CSS :focus-within shows it),
+  //      typing filters, option click commits + closes, Esc cancels ----
+  document.querySelectorAll('.combo').forEach(widget => {
+    const variant = widget.dataset.variant;
+    const trigger = widget.querySelector('.trigger');
+    const inputElement = widget.querySelector('.inp');
+    const valueElement = widget.querySelector('.value');
+    const optionElements = [...widget.querySelectorAll('.panel li')];
+
+    const committedLabel = () =>
+      variant === 'in-input' ? inputElement.dataset.committed : valueElement.textContent.trim();
+
+    const applyFilter = (query) => {
+      optionElements.forEach(option => {
+        option.style.display = option.textContent.toLowerCase().includes(query.toLowerCase()) ? '' : 'none';
+      });
+    };
+
+    const markSelected = () => {
+      optionElements.forEach(option => {
+        option.classList.toggle('is-sel', option.textContent.trim() === committedLabel());
+      });
+    };
+
     inputElement.addEventListener('focus', () => {
-      trigger.classList.add('editing');
-      inputElement.placeholder = valueElement.textContent.trim();
+      applyFilter('');
+      markSelected();
+      if (variant === 'swap') {
+        trigger.classList.add('editing');
+        inputElement.placeholder = committedLabel();
+      }
+      if (variant === 'hybrid') {
+        trigger.classList.add('editing');
+        inputElement.value = committedLabel();
+        inputElement.select();
+      }
+      if (variant === 'in-input') inputElement.select();
     });
+
     inputElement.addEventListener('blur', () => {
-      trigger.classList.remove('editing');
-      inputElement.value = '';
-      inputElement.placeholder = '';
+      if (variant === 'swap' || variant === 'hybrid') {
+        trigger.classList.remove('editing');
+        inputElement.placeholder = '';
+      }
+      if (variant === 'in-input') {
+        inputElement.value = inputElement.dataset.committed;
+      } else {
+        inputElement.value = '';
+      }
     });
+
+    inputElement.addEventListener('input', () => applyFilter(inputElement.value));
+
     inputElement.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') inputElement.blur();
     });
-  });
 
-  // C — value lives in the input; focus selects all, blur/Esc restores
-  document.querySelectorAll('.opt-c .inp').forEach(inputElement => {
-    const committed = inputElement.value;
-    inputElement.addEventListener('focus', () => inputElement.select());
-    inputElement.addEventListener('blur', () => { inputElement.value = committed; });
-    inputElement.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') inputElement.blur();
+    optionElements.forEach(option => {
+      // mousedown would steal focus and close the panel before click lands
+      option.addEventListener('mousedown', (event) => event.preventDefault());
+      option.addEventListener('click', () => {
+        const label = option.textContent.trim();
+        if (variant === 'in-input') {
+          inputElement.dataset.committed = label;
+        } else {
+          valueElement.textContent = label;
+        }
+        inputElement.blur();
+      });
     });
   });
 
-  // E — select-look trigger, filter input inside the panel
+  // ---- E: select-look trigger, filter input inside the panel ----
   document.querySelectorAll('.sel2').forEach(widget => {
     const triggerButton = widget.querySelector('.trigger');
     const panelInput = widget.querySelector('.pinp');
@@ -266,6 +414,9 @@
       if (widget.classList.contains('open')) {
         panelInput.value = '';
         applyFilter('');
+        optionElements.forEach(option => {
+          option.classList.toggle('is-sel', option.textContent.trim() === valueElement.textContent.trim());
+        });
         panelInput.focus();
       }
     });
