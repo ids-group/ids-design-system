@@ -94,6 +94,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   New public hooks `--ds-autocomplete-input-minw` (typing-area minimum, default 80px) and
   `--ds-autocomplete-maxw` (trigger cap, default none; in `content` mode defaults to 100% so chips
   wrap at the parent edge). New exported `AutocompleteWidth`.
+- **`ds-date-picker` localization + manual entry.** New `locale` (BCP-47) drives month names,
+  weekday headers and the value format together via `Intl` (no more OS-locale mixing); `dateFormat`
+  pins an explicit token order (e.g. `MM/DD/YYYY`); `firstDayOfWeek` (0–6, default Monday) shifts the
+  week; `defaultMonth` opens the panel near a realistic date when the value is empty (e.g. a Date Of
+  Birth). Manual masked entry is now available (`allowInput`, default `true`): the trigger is a text
+  field enforcing the locale mask, rejecting non-numeric input and flagging impossible/out-of-range
+  dates on blur; range mode exposes two masked inputs. New `DsConfig.datePicker`
+  ({ `locale`, `dateFormat`, `firstDayOfWeek` }).
 
 ### Changed
 
@@ -101,6 +109,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   consumer global `.input` styles/resets leak into the component through emulated encapsulation
   (root cause of the PIN-475 double-focus-ring). Only consumer styling that targeted the
   undocumented internal class is affected.
+- **`ds-date-picker` trigger is now a text input by default.** Manual masked entry is on
+  (`allowInput` defaults to `true`), so the trigger renders as an editable field with a calendar
+  button instead of a plain button. Pass `[allowInput]="false"` to restore the button-only,
+  calendar-only trigger. The selected-date display is now locale-pinned (was the ambient
+  `toLocaleDateString()`), and month/weekday names are localized together via the new `locale`.
 
 ## 0.4.0 — 2026-06-30
 
