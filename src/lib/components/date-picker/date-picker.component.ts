@@ -26,6 +26,15 @@ import {
   FieldMessageComponent,
   type FieldMessageState,
 } from '../field-message/field-message.component';
+import { DS_CONFIG } from '../../config/ds-config';
+import {
+  type DateFormatSpec,
+  formatDate,
+  fullDateLabel,
+  monthLabels,
+  resolveDateFormat,
+  weekdayLabels,
+} from './date.util';
 import type {
   DatePickerMode,
   DatePickerPreset,
@@ -73,6 +82,7 @@ export class DatePickerComponent extends DsControlValueAccessor<
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly injector = inject(Injector);
+  private readonly config = inject(DS_CONFIG);
 
   readonly mode = input<DatePickerMode>('single');
   readonly size = input<DatePickerSize>('md');
@@ -97,6 +107,14 @@ export class DatePickerComponent extends DsControlValueAccessor<
   readonly disabledDate = input<((date: Date) => boolean) | null>(null);
   /** Quick-pick shortcuts shown as a button column inside the calendar panel. */
   readonly presets = input<readonly DatePickerPreset[]>([]);
+  /** BCP-47 locale driving month/weekday names and the value format. */
+  readonly locale = input<string | null>(null);
+  /** Explicit token format e.g. `'MM/DD/YYYY'`; default derived from `locale`. */
+  readonly dateFormat = input<string | null>(null);
+  /** First weekday column: 0=Sunday … 6=Saturday. Default 1 (Monday). */
+  readonly firstDayOfWeek = input<number | null>(null);
+  /** Month the calendar opens on when the value is empty (e.g. a Date Of Birth). */
+  readonly defaultMonth = input<Date | null>(null);
 
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),
@@ -106,6 +124,23 @@ export class DatePickerComponent extends DsControlValueAccessor<
   );
   protected readonly messageState = computed<FieldMessageState>(() =>
     this.invalid() ? 'error' : 'default',
+  );
+
+  protected readonly resolvedLocale = computed(
+    () => this.locale() ?? this.config.datePicker?.locale ?? 'en-US',
+  );
+  protected readonly resolvedFirstDay = computed(
+    () => this.firstDayOfWeek() ?? this.config.datePicker?.firstDayOfWeek ?? 1,
+  );
+  protected readonly formatSpec = computed<DateFormatSpec>(() =>
+    resolveDateFormat(
+      this.resolvedLocale(),
+      this.dateFormat() ?? this.config.datePicker?.dateFormat,
+    ),
+  );
+  protected readonly monthNames = computed(() => monthLabels(this.resolvedLocale()));
+  protected readonly weekdays = computed(() =>
+    weekdayLabels(this.resolvedLocale(), this.resolvedFirstDay()),
   );
 
   protected readonly uid = `ds-datepicker-${++nextId}`;
@@ -148,10 +183,10 @@ export class DatePickerComponent extends DsControlValueAccessor<
         next = this.addDays(f, 7);
         break;
       case 'Home':
-        next = this.addDays(f, -((f.getDay() + 6) % 7));
+        next = this.addDays(f, -((f.getDay() - this.resolvedFirstDay() + 7) % 7));
         break;
       case 'End':
-        next = this.addDays(f, 6 - ((f.getDay() + 6) % 7));
+        next = this.addDays(f, 6 - ((f.getDay() - this.resolvedFirstDay() + 7) % 7));
         break;
       case 'PageUp':
         next = this.addMonths(f, -1);
@@ -207,12 +242,7 @@ export class DatePickerComponent extends DsControlValueAccessor<
 
   /** Full, unambiguous date for a day cell's accessible name. */
   protected dayLabel(cell: DayCell): string {
-    return cell.date.toLocaleDateString(undefined, {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    });
+    return fullDateLabel(cell.date, this.resolvedLocale());
   }
 
   protected readonly triggerClasses = computed(() => {
@@ -240,19 +270,19 @@ export class DatePickerComponent extends DsControlValueAccessor<
 
   protected readonly displayLabel = computed(() => {
     const value = this.value();
+    const spec = this.formatSpec();
     if (this.mode() === 'single') {
-      const d = value as Date | null;
+      const single = value as Date | null;
 
-      return d ? d.toLocaleDateString() : this.placeholder();
+      return single ? formatDate(single, spec) : this.placeholder();
     }
-    const r = (value as RangeValue | null) ?? [null, null];
-    const a = r[0];
-    const b = r[1];
-    if (a && b) {
-      return `${a.toLocaleDateString()} – ${b.toLocaleDateString()}`;
+    const range = (value as RangeValue | null) ?? [null, null];
+    const [start, end] = range;
+    if (start && end) {
+      return `${formatDate(start, spec)} – ${formatDate(end, spec)}`;
     }
-    if (a) {
-      return `${a.toLocaleDateString()} – …`;
+    if (start) {
+      return `${formatDate(start, spec)} – …`;
     }
 
     return this.placeholder();
@@ -261,20 +291,6 @@ export class DatePickerComponent extends DsControlValueAccessor<
   // ---- Month / year grid pickers in the calendar header ----
   protected readonly monthMenuOpen = signal(false);
   protected readonly yearMenuOpen = signal(false);
-  protected readonly monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
   protected readonly viewMonthIndex = computed(() =>
     this.viewMonth().getMonth(),
   );
@@ -403,7 +419,10 @@ export class DatePickerComponent extends DsControlValueAccessor<
     const month = view.getMonth();
     const firstOfMonth = new Date(year, month, 1);
     const gridStart = new Date(firstOfMonth);
-    gridStart.setDate(gridStart.getDate() - ((gridStart.getDay() + 6) % 7));
+    const firstDay = this.resolvedFirstDay();
+    gridStart.setDate(
+      gridStart.getDate() - ((gridStart.getDay() - firstDay + 7) % 7),
+    );
     const cells: DayCell[] = [];
     const today = new Date();
     const todayKey = today.toDateString();

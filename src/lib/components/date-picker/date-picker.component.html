@@ -72,7 +72,7 @@
               [attr.aria-expanded]="monthMenuOpen()"
               (click)="toggleMonthMenu($event)"
             >
-              {{ monthNames[viewMonthIndex()] }}
+              {{ monthNames()[viewMonthIndex()] }}
               <ds-icon
                 name="chevronDown"
                 [size]="12"
@@ -89,7 +89,7 @@
                   class="picker-grid"
                   role="listbox"
                 >
-                  @for (name of monthNames; track $index) {
+                  @for (name of monthNames(); track $index) {
                     <button
                       type="button"
                       role="option"
@@ -207,33 +207,11 @@
       </div>
 
       <div class="grid">
-        <span class="dow">
-          Mo
-        </span>
-
-        <span class="dow">
-          Tu
-        </span>
-
-        <span class="dow">
-          We
-        </span>
-
-        <span class="dow">
-          Th
-        </span>
-
-        <span class="dow">
-          Fr
-        </span>
-
-        <span class="dow">
-          Sa
-        </span>
-
-        <span class="dow">
-          Su
-        </span>
+        @for (dow of weekdays(); track $index) {
+          <span class="dow">
+            {{ dow }}
+          </span>
+        }
 
         @for (cell of daysGrid(); track $index) {
           <ds-calendar-day
