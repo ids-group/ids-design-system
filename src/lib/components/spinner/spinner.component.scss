@@ -1,11 +1,14 @@
 /* Spinner — stateless rotating loader. Sizes match the icon scale. */
 
 :host {
+  --_spinner-color:       var(--ds-spinner-color,       var(--accent));
+  --_spinner-track-color: var(--ds-spinner-track-color, var(--border-default));
+
   display: inline-block;
   width: var(--spinner-md);
   height: var(--spinner-md);
-  border: var(--spinner-bw) solid var(--border-default);
-  border-top-color: var(--accent);
+  border: var(--spinner-bw) solid var(--_spinner-track-color);
+  border-top-color: var(--_spinner-color);
   border-radius: var(--radius-pill);
   animation: spinner-rotate var(--duration-loop-fast) linear infinite;
 }

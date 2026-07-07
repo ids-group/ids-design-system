@@ -15,10 +15,13 @@
    Variants: .circle (avatars / dots), .inline (inline-block flow). */
 
 :host {
+  --_skeleton-bg-color:      var(--ds-skeleton-bg-color,      var(--surface-secondary));
+  --_skeleton-shimmer-color: var(--ds-skeleton-shimmer-color, var(--surface-muted));
+
   display: block;
   position: relative;
   overflow: hidden;
-  background: var(--surface-secondary);
+  background: var(--_skeleton-bg-color);
   border-radius: var(--radius-md);
 }
 
@@ -29,7 +32,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: var(--surface-muted);
+  background: var(--_skeleton-shimmer-color);
   pointer-events: none;
   will-change: mask-position;
   mask-image: linear-gradient(

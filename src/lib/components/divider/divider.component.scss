@@ -2,9 +2,12 @@
    Spacing: none | sm (4px) | md (8px, default) | lg (16px). */
 
 :host {
+  --_divider-color:       var(--ds-divider-color,       var(--border-divider));
+  --_divider-label-color: var(--ds-divider-label-color, var(--text-tertiary));
+
   display: block;
   height: var(--border-width-default);
-  background: var(--border-divider);
+  background: var(--_divider-color);
   margin: var(--space-2) 0;
   border: 0;
 }
@@ -34,13 +37,13 @@
   font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
   letter-spacing: var(--letter-spacing-wider);
   text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: var(--_divider-label-color);
 
   &::before,
   &::after {
     content: "";
     flex: 1;
     height: var(--border-width-default);
-    background: var(--border-divider);
+    background: var(--_divider-color);
   }
 }

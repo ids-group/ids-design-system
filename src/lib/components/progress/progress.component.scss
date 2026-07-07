@@ -1,15 +1,19 @@
 :host {
+  --_progress-height:      var(--ds-progress-height,      var(--progress-h));
+  --_progress-track-color: var(--ds-progress-track-color, var(--surface-muted));
+  --_progress-bar-color:   var(--ds-progress-bar-color,   var(--accent));
+
   display: block;
   width: 100%;
-  height: var(--progress-h);
-  background: var(--surface-muted);
+  height: var(--_progress-height);
+  background: var(--_progress-track-color);
   border-radius: var(--radius-pill);
   overflow: hidden;
 
   > span {
     display: block;
     height: 100%;
-    background: var(--accent);
+    background: var(--_progress-bar-color);
     border-radius: var(--radius-pill);
     transition: width var(--duration-base) var(--ease-standard);
   }
