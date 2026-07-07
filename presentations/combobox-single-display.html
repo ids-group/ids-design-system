@@ -157,12 +157,15 @@
     background: var(--surface-secondary); border-radius: 6px;
     padding: 3px 6px 3px 10px; font-weight: 700; font-size: 13px; white-space: nowrap;
   }
-  .chip button {
-    border: 0; background: transparent; cursor: pointer; padding: 0;
-    width: 16px; height: 16px; border-radius: 4px;
+  /* the chip ✕ is a span, NOT a <button>: the trigger is a <label>, and a label
+     forwards clicks to its FIRST labelable descendant — a button before the input
+     would swallow every trigger click and wipe the value */
+  .chip .chip-x {
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; width: 16px; height: 16px; border-radius: 4px;
     color: var(--icon-default); font-size: 12px; line-height: 1;
   }
-  .chip button:hover { background: rgb(0 0 0 / 8%); color: var(--text-primary); }
+  .chip .chip-x:hover { background: rgb(0 0 0 / 8%); color: var(--text-primary); }
 
   /* E · search lives in the PANEL (PrimeNG / Select2 / shadcn) */
   .sel2 .trigger { cursor: pointer; }
@@ -187,6 +190,14 @@
 
   kbd { background: #eef1f6; border: 1px solid var(--border-default); border-bottom-width: 2px;
         border-radius: 4px; padding: 0 5px; font: 600 11.5px/1.6 var(--font-sans); }
+
+  /* debug toggle — outline the (invisible) inner input so its collapse is literally visible */
+  .debug-toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700;
+                  color: rgb(190,50,50); cursor: pointer; margin: 0 0 16px; user-select: none; }
+  body.debug .combo .inp, body.debug .trigger.today .inp {
+    outline: 2px dashed rgb(220,60,60); outline-offset: 1px;
+    background: rgb(220 60 60 / 8%); min-height: 17px;
+  }
 </style>
 </head>
 <body>
@@ -201,6 +212,8 @@
 
 <section>
   <h2>Варианты</h2>
+  <label class="debug-toggle"><input type="checkbox" id="debugInputs"> подсветить внутренний инпут (debug) —
+  видно, ГДЕ он и какой ширины: в «0» — широкая красная зона, в «A» — красная чёрточка нулевой ширины</label>
   <div class="grid">
 
     <div class="cell">
@@ -223,8 +236,10 @@
           <li>Acme Holdings</li><li>Festicket Ltd</li><li>Live Nation Festivals</li><li>SJM Concerts</li>
         </ul></div>
       </div>
-      <span class="sub">Закрыт — как select. Клик/Tab → пустой инпут разворачивается <b>рядом со значением</b>:
-      старое значение остаётся видно, пока печатаешь. Минус: два элемента, каретка «около» значения.</span>
+      <span class="sub">Закрыт — как select: инпут имеет <b>ширину 0</b> (включите красный тумблер сверху —
+      пустота посередине это ширина самого триггера, у select так же). Клик/Tab → пустой инпут
+      разворачивается <b>рядом со значением</b>: старое значение остаётся видно, пока печатаешь.
+      Минус: два элемента, каретка «около» значения.</span>
     </div>
 
     <div class="cell">
@@ -281,7 +296,7 @@
     <div class="cell">
       <span class="cap">G · Значение — чип <span class="who">унификация с multi</span></span>
       <div class="combo" data-variant="chip">
-        <label class="trigger opt-g"><span class="chip"><span class="chip-label">Festicket Ltd</span><button type="button" aria-label="Убрать">✕</button></span><input class="inp"><span class="chev"></span></label>
+        <label class="trigger opt-g"><span class="chip"><span class="chip-label">Festicket Ltd</span><span class="chip-x" role="button" tabindex="0" aria-label="Убрать">✕</span></span><input class="inp"><span class="chev"></span></label>
         <div class="panel"><ul>
           <li>Acme Holdings</li><li>Festicket Ltd</li><li>Live Nation Festivals</li><li>SJM Concerts</li>
         </ul></div>
@@ -391,6 +406,10 @@
 </section>
 
 <script>
+  document.getElementById('debugInputs').addEventListener('change', (event) => {
+    document.body.classList.toggle('debug', event.target.checked);
+  });
+
   // ---- variants 0 / A / B / C: panel opens on focus (CSS :focus-within shows it),
   //      typing filters, option click commits + closes, Esc cancels ----
   document.querySelectorAll('.combo').forEach(widget => {
@@ -468,7 +487,7 @@
     });
 
     // F / G — the ✕ resets to the empty typeahead state and focuses it
-    const resetButton = widget.querySelector('.clear') || widget.querySelector('.chip button');
+    const resetButton = widget.querySelector('.clear') || widget.querySelector('.chip-x');
     if (resetButton) {
       resetButton.addEventListener('mousedown', (event) => event.preventDefault());
       resetButton.addEventListener('click', (event) => {
