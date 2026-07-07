@@ -124,7 +124,7 @@
     <div class="stat a11y"><div class="n">3</div><div class="l">A11y (P0–P2)</div></div>
     <div class="stat untouched"><div class="n">7</div><div class="l">Компоненты + foundations</div></div>
     <div class="stat untouched"><div class="n">14</div><div class="l">Motion / DS-docs / PIN-475 / API</div></div>
-    <div class="stat raw"><div class="n">7</div><div class="l">Raw / frozen / мелочь / lint</div></div>
+    <div class="stat raw"><div class="n">6</div><div class="l">Raw / frozen / lint</div></div>
   </div>
 
   <!-- ============ NEEDS YOU ============ -->
@@ -227,14 +227,6 @@
     </div>
   </div>
 
-  <!-- ============ MINOR ============ -->
-  <div class="lane">
-    <div class="lane-head"><h2>🔩 Мелочь отложена</h2><span class="count c-minor">1</span><span class="why">Решений не требует.</span></div>
-    <div class="cards">
-      <div class="card minor"><div class="t">19 компонентов без токен-API</div><p class="d">accordion, combobox, drawer, dropdown, menu, select, tooltip, checkbox, radio, switch, skeleton, spinner… — решить, нужен ли им CSS-API (связано с аудитом компонент-vs-класс).</p></div>
-    </div>
-  </div>
-
   <!-- ============ LINT DEBT ============ -->
   <div class="lane">
     <div class="lane-head"><h2>🧹 Lint debt</h2><span class="count c-track">3</span><span class="why">Остаток после rollout 2026-06-17. Lint авторитетен над prettier.</span></div>
@@ -255,7 +247,8 @@
   <p class="foot">
     Источник: <span class="tag">docs/todo.md</span> (полные формулировки — в поповерах ⓘ).
     Архив сделанного целиком — <span class="tag">docs/todo-done.md</span>; на доске выполненное не хранится.
-    Актуализировано 2026-07-07: picker-portfolio (rename → <span class="tag">ds-autocomplete</span> · merge dropdown→select · breakpoints-миграция) — детали в архиве.
+    Актуализировано 2026-07-08: публичный token-API раскатан на 11 бестокенных компонентов (лейн «Мелочь отложена» закрыт) — детали в архиве.
+    2026-07-07: picker-portfolio (rename → <span class="tag">ds-autocomplete</span> · merge dropdown→select · breakpoints-миграция).
   </p>
 
   <!-- raw docs/todo.md embedded verbatim (as of 2026-07-07; live backlog only — done lives in docs/todo-done.md) so the popover works offline over file:// -->
@@ -300,7 +293,6 @@ Completed items are archived in `todo-done.md` (last review 2026-07-06).
 ### Follow-ups from the button-token rework (2026-06-10)
 
 - [x] **Unify remaining declaring components on the read-with-fallback pattern.** ✅ Done 2026-06-10, commits `427dcb3`…`933b01f`. ALL 22 declaring components converted to the uniform private-resolver style (user mandate mid-rollout: EVERY public token gets a `--_*` resolver, rules reference only privates — no scattered inline fallbacks): banner (pilot), breadcrumbs/search/stat/status-dot/textarea/topbar (A), input/modal/dropzone/page-header/pagination (B), sidenav/sidenav-item/sidenav-group/avatar/avatar-group/card (C), tabs/table/date-picker/bottom-sheet (D). Docs mirror sheets (`_forced-states.scss`) converted too — global mirror declarations were LEAKING into converted components via shared classes (`.field` pad bug caught by snapshot). Verified: full-page computed-style snapshot pixel-identical (13 428 elements), 20/20 per-component override probes pass, button/banner interactive asserts green, zero `--ds-*:` declarations left in components+mirrors. Dead tokens removed along the way (with tokens-reference rows): `--ds-banner-border`, 4× `--ds-topbar-action/ping-*`, `--ds-modal-backdrop` dup, `--ds-avatar-ring-color`. Renames: `--ds-table-header-*` → `--ds-table-head-*` (now matches tokens-reference/mirror; design-system.md synced). Caught & fixed agent mistakes: card padding presets had dropped consumer-first re-binds; `--ds-table-border` wrongly deleted (was live, documented API) — restored. _(Done — also mirrored in `todo-done.md`; kept here as the parent of its still-open follow-ups below.)_
-  - [ ] **Components with NO public tokens at all** (no `--ds-*` theming API; nothing was converted because nothing exists): accordion, checkbox, combobox, divider, drawer, dropdown, menu (container), number-stepper, page-footer, popover, progress, radio, select, skeleton, spinner, stepper, switch, tooltip, w3w. Decide per component whether to add a token API (couple with the component-vs-class audit + a11y track; overlay-based ones partly style via `_dropdown-overlay.scss`/`_toast-overlay.scss` globals).
   - [ ] **design-system.md: one global note on the token contract** — state once that all `--ds-*` component tokens are read-with-fallback/consumer-first, then trim the per-component repetition added to the button line. DEFERRED by user 2026-06-10 ("design-system.md щас не трогай") — do not edit the file until asked.
 - [ ] **Theme recipe vs hand-tuned picks — alignment decision.** Button/icon-button state derivation uses the theme's 88%/76% mix-to-black recipe. If the formula-calibration work replaces `--primary-hover/-pressed` with hand-tuned values, the button defaults (color-mix from resolved bg) will diverge from the theme roles — decide then: components read role tokens again, or theme keeps the formula. (See memory: hand-tuned beats formulas; formula is currently only the fallback default.)
 
@@ -675,7 +667,6 @@ _Archived 2026-07-06 from `todo.md`._
       ["toolbar .divider",                  "By-design raw specimens — now VISIBLY MARKED", ""],
 
       ["design-system.md",                  "design-system.md: one global note",          ""],
-      ["19 компонентов без токен-API",      "Components with NO public tokens at all",     ""],
 
       ["prefer-for-of",                     "prefer-for-of",                              ""],
       ["template a11y (click/focus)",       "Template a11y warnings",                     ""],
