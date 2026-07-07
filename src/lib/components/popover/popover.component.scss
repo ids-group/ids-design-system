@@ -7,9 +7,12 @@
 :host { display: contents; }
 
 .popover {
+  --_popover-bg-color:     var(--ds-popover-bg-color,     var(--surface-overlay));
+  --_popover-border-color: var(--ds-popover-border-color, var(--border-default));
+
   position: relative;
-  background: var(--surface-overlay);
-  border: var(--border-width-default) solid var(--border-default);
+  background: var(--_popover-bg-color);
+  border: var(--border-width-default) solid var(--_popover-border-color);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-popover);
   padding: var(--space-3);
@@ -39,8 +42,8 @@
     position: absolute;
     width: var(--_arrow-size);
     height: var(--_arrow-size);
-    background: var(--surface-overlay);
-    border: var(--border-width-default) solid var(--border-default);
+    background: var(--_popover-bg-color);
+    border: var(--border-width-default) solid var(--_popover-border-color);
     transform: rotate(45deg);
     transform-origin: center;
   }

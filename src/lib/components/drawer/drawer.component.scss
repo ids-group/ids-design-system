@@ -1,12 +1,17 @@
 /* Drawer — slide-in panel. Host is display:contents so
    the conditionally-rendered .drawer is the visible layout root. */
 
-:host { display: contents; }
+:host {
+  --_drawer-bg-color:    var(--ds-drawer-bg-color,    var(--surface-overlay));
+  --_drawer-scrim-color: var(--ds-drawer-scrim-color, var(--scrim, hsl(220deg 20% 12% / 45%)));
+
+  display: contents;
+}
 
 .drawer-scrim {
   position: fixed;
   inset: 0;
-  background: var(--scrim, hsl(220deg 20% 12% / 45%));
+  background: var(--_drawer-scrim-color);
   z-index: var(--layer-modal);
   animation: drawer-scrim-in var(--duration-fast, 120ms) var(--ease-decelerate, ease-out);
 
@@ -24,7 +29,7 @@
 
 .drawer {
   position: fixed;
-  background: var(--surface-overlay);
+  background: var(--_drawer-bg-color);
   box-shadow: var(--shadow-modal);
   z-index: var(--layer-modal);
   display: flex;

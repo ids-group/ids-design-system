@@ -1,7 +1,10 @@
 :host {
+  --_menu-bg-color:     var(--ds-menu-bg-color,     var(--surface-default));
+  --_menu-border-color: var(--ds-menu-border-color, var(--border-divider));
+
   display: block;
-  background: var(--surface-default);
-  border: var(--border-width-default) solid var(--border-divider);
+  background: var(--_menu-bg-color);
+  border: var(--border-width-default) solid var(--_menu-border-color);
   border-radius: var(--radius-md);
   padding: var(--space-1);
 }
