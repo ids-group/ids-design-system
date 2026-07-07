@@ -62,6 +62,7 @@ export class SelectComponent extends DsControlValueAccessor<string> {
   readonly size = input<SelectSize>('md');
   readonly label = input<string>('');
   readonly disabled = input<boolean>(false);
+  readonly readOnly = input(false, { transform: booleanAttribute });
   readonly invalid = input<boolean>(false);
   readonly hint = input<string>('');
   readonly required = input<boolean>(false);
@@ -158,6 +159,9 @@ export class SelectComponent extends DsControlValueAccessor<string> {
     if (this.isDisabled()) {
       parts.push('disabled');
     }
+    if (this.readOnly()) {
+      parts.push('readonly');
+    }
     if (this.invalid()) {
       parts.push('error');
     }
@@ -192,7 +196,7 @@ export class SelectComponent extends DsControlValueAccessor<string> {
   }
 
   protected toggle(): void {
-    if (this.isDisabled() || this.preview.staticPreview()) {
+    if (this.isDisabled() || this.readOnly() || this.preview.staticPreview()) {
       return;
     }
     if (this.open()) {
@@ -280,7 +284,7 @@ export class SelectComponent extends DsControlValueAccessor<string> {
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
-    if (this.isDisabled() || this.preview.staticPreview()) {
+    if (this.isDisabled() || this.readOnly() || this.preview.staticPreview()) {
       return;
     }
     const key = event.key;

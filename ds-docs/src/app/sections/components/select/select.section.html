@@ -16,20 +16,20 @@
   </h3>
 
   <div class="grid-3">
-    <ds-dropdown
+    <ds-select
       size="sm"
       label="Owner · sm"
       placeholder="Pick an owner…"
       [options]="ownerOptions"
     />
 
-    <ds-dropdown
+    <ds-select
       label="Owner · md"
       placeholder="Pick an owner…"
       [options]="ownerOptions"
     />
 
-    <ds-dropdown
+    <ds-select
       size="lg"
       label="Owner · lg"
       placeholder="Pick an owner…"
@@ -49,7 +49,7 @@
   <div class="states states--cols-3">
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-dropdown
+        <ds-select
           label="Owner"
           placeholder="Pick an owner…"
           [options]="ownerOptions"
@@ -62,10 +62,10 @@
     </div>
 
     <div class="state-cell">
-      <!-- Live ds-dropdown; pin-focus on the stage reads bare tokens from
+      <!-- Live ds-select; pin-focus on the stage reads bare tokens from
                the component's own .dropdown rules via ::ng-deep. -->
       <div class="state-cell__stage pin-focus">
-        <ds-dropdown
+        <ds-select
           label="Owner"
           placeholder="Pick an owner…"
           [options]="ownerOptions"
@@ -79,7 +79,7 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-dropdown
+        <ds-select
           label="Owner"
           value="brooks"
           [options]="ownerOptions"
@@ -93,7 +93,7 @@
 
     <div class="state-cell">
       <div class="state-cell__stage pin-hover">
-        <ds-dropdown
+        <ds-select
           label="Owner"
           placeholder="Pick an owner…"
           [options]="ownerOptions"
@@ -107,7 +107,7 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-dropdown
+        <ds-select
           label="Owner"
           value="brooks"
           [options]="ownerOptions"
@@ -122,7 +122,7 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-dropdown
+        <ds-select
           label="Owner"
           value="brooks"
           [options]="ownerOptions"
@@ -138,11 +138,11 @@
     <div class="state-cell">
       <div class="state-cell__stage">
         <div class="field-stack">
-          <ds-dropdown
+          <ds-select
             label="Tier"
             placeholder="Choose tier…"
             [options]="tierOptions"
-            [error]="true"
+            [invalid]="true"
           />
 
           <span class="field-hint error">
@@ -159,7 +159,7 @@
     <div class="state-cell">
       <div class="state-cell__stage">
         <div class="field-stack">
-          <ds-dropdown
+          <ds-select
             label="Tier"
             value="t2"
             [options]="tierOptions"
@@ -188,7 +188,7 @@
   </p>
 
   <div class="grid-3">
-    <ds-dropdown
+    <ds-select
       label="Region"
       placeholder="Pick a region…"
       [options]="regionOptions"
@@ -197,7 +197,7 @@
 
   <!-- ============================================================ Custom dropdown variant -->
   <h3 class="block-title t-h4">
-    Custom dropdown — &lt;ds-dropdown&gt;
+    Custom dropdown — &lt;ds-select&gt;
   </h3>
 
   <p class="block-desc t-s">
@@ -214,7 +214,7 @@
 
   <div class="grid-3">
     <div class="cell-wrap">
-      <ds-dropdown
+      <ds-select
         size="sm"
         placeholder="Pick a product · sm"
         [options]="productOptions"
@@ -226,7 +226,7 @@
     </div>
 
     <div class="cell-wrap">
-      <ds-dropdown
+      <ds-select
         placeholder="Pick a product · md"
         [options]="productOptions"
       />
@@ -237,7 +237,7 @@
     </div>
 
     <div class="cell-wrap">
-      <ds-dropdown
+      <ds-select
         size="lg"
         placeholder="Pick a product · lg"
         [options]="productOptions"
@@ -259,7 +259,7 @@
   </p>
 
   <div class="preview-wrap open-specimen">
-    <ds-dropdown
+    <ds-select
       value="hi"
       [staticPreview]="true"
       [options]="openSpecimenOptions"
@@ -271,7 +271,7 @@
   </h4>
 
   <div class="preview-wrap">
-    <ds-dropdown
+    <ds-select
       value="hi"
       [staticPreview]="true"
       [options]="iconOptions"
@@ -285,7 +285,7 @@
   <div class="states states--cols-4">
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-dropdown
+        <ds-select
           placeholder="Pick a product…"
           [options]="productOptions"
         />
@@ -297,10 +297,10 @@
     </div>
 
     <div class="state-cell">
-      <!-- Live ds-dropdown; pin classes on the stage reach the .dropdown
+      <!-- Live ds-select; pin classes on the stage reach the .dropdown
                button via ::ng-deep; hover/focus use bare tokens (no --_* resolvers). -->
       <div class="state-cell__stage pin-hover">
-        <ds-dropdown
+        <ds-select
           placeholder="Pick a product…"
           [options]="productOptions"
         />
@@ -313,7 +313,7 @@
 
     <div class="state-cell">
       <div class="state-cell__stage pin-focus">
-        <ds-dropdown
+        <ds-select
           value="hi"
           [options]="productOptions"
         />
@@ -326,7 +326,7 @@
 
     <div class="state-cell">
       <div class="state-cell__stage state-cell__stage--overflow">
-        <ds-dropdown
+        <ds-select
           value="hi"
           [staticPreview]="true"
           [options]="productOptions"
@@ -340,10 +340,10 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-dropdown
+        <ds-select
           placeholder="Pick a product…"
           [options]="productOptions"
-          [error]="true"
+          [invalid]="true"
         />
       </div>
 
@@ -354,7 +354,7 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-dropdown
+        <ds-select
           value="hi"
           [options]="productOptions"
           [disabled]="true"
@@ -377,7 +377,7 @@
 
   <div class="grid-3">
     <div class="cell-wrap">
-      <ds-dropdown
+      <ds-select
         placeholder="Pick a region…"
         [options]="regionOptions"
       />

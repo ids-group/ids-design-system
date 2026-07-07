@@ -56,7 +56,7 @@
     {{ displayLabel() }}
   </span>
 
-  @if (clearable() && hasValue() && !isDisabled()) {
+  @if (clearable() && hasValue() && !isDisabled() && !readOnly()) {
     <span
       class="clear-btn"
       aria-hidden="true"

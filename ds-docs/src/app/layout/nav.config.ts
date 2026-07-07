@@ -42,7 +42,6 @@ export const NAV: NavGroup[] = [
       { label: 'Date picker', anchor: 'date-picker' },
       { label: 'Description list', anchor: 'description-list', new: true },
       { label: 'Drawer', anchor: 'drawer' },
-      { label: 'Dropdown', anchor: 'dropdown' },
       { label: 'Dropzone', anchor: 'dropzone' },
       { label: 'Empty state', anchor: 'empty-state' },
       { label: 'Icon', anchor: 'icon' },

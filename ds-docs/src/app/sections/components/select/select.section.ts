@@ -1,10 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import {
-  DropdownComponent,
-  type DropdownOption,
-  SelectComponent,
-  type SelectOption,
-} from 'ds';
+import { SelectComponent, type SelectOption } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,
@@ -14,31 +9,26 @@ import {
 @Component({
   selector: 'section-components-select',
   standalone: true,
-  imports: [
-    DropdownComponent,
-    SelectComponent,
-    DocsSectionComponent,
-    DocsTruncationComponent,
-  ],
+  imports: [SelectComponent, DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './select.section.html',
   styleUrl: './select.section.scss',
 })
 export class SelectSection {
-  protected readonly ownerOptions: DropdownOption[] = [
+  protected readonly ownerOptions: SelectOption[] = [
     { label: 'Avery Brooks', value: 'brooks' },
     { label: 'Sam Carter', value: 'carter' },
     { label: 'Jamie Lin', value: 'lin' },
     { label: 'Morgan Reyes', value: 'reyes' },
   ];
 
-  protected readonly tierOptions: DropdownOption[] = [
+  protected readonly tierOptions: SelectOption[] = [
     { label: 'Tier 1', value: 't1' },
     { label: 'Tier 2', value: 't2' },
     { label: 'Tier 3', value: 't3' },
   ];
 
-  protected readonly productOptions: DropdownOption[] = [
+  protected readonly productOptions: SelectOption[] = [
     { label: 'All Products', value: 'all' },
     { label: 'Hospital Indemnity', value: 'hi' },
     { label: 'Critical Illness', value: 'ci' },
@@ -46,7 +36,7 @@ export class SelectSection {
     { label: 'Life Insurance', value: 'life' },
   ];
 
-  protected readonly openSpecimenOptions: DropdownOption[] = [
+  protected readonly openSpecimenOptions: SelectOption[] = [
     { label: 'All Products', value: 'all' },
     { label: 'Hospital Indemnity', value: 'hi' },
     { label: 'Critical Illness', value: 'ci' },
@@ -54,7 +44,7 @@ export class SelectSection {
     { label: 'Life Insurance (coming soon)', value: 'life', disabled: true },
   ];
 
-  protected readonly iconOptions: DropdownOption[] = [
+  protected readonly iconOptions: SelectOption[] = [
     { label: 'All Products', value: 'all', icon: 'list' },
     { label: 'Hospital Indemnity', value: 'hi', icon: 'home' },
     { label: 'Critical Illness', value: 'ci', icon: 'error' },
@@ -62,7 +52,7 @@ export class SelectSection {
     { label: 'Life Insurance', value: 'life', icon: 'star' },
   ];
 
-  protected readonly regionOptions: DropdownOption[] = [
+  protected readonly regionOptions: SelectOption[] = [
     { label: 'North America — East', value: 'na-e' },
     { label: 'North America — West', value: 'na-w' },
     { label: 'South America — Andean', value: 'sa-a' },

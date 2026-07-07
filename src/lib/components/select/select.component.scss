@@ -3,7 +3,7 @@
 /* ============================================================
    SELECT — now backed by a custom-styled popover (CDK Overlay).
    Native <select> was replaced; the public API is preserved.
-   Trigger mirrors <ds-dropdown>; panel ported from the same source.
+   Absorbed the former <ds-dropdown> (removed as a duplicate) - trigger and panel share its source.
    ============================================================ */
 :host {
   --_select-focus-shadow:       var(--ds-select-focus-shadow,       var(--ds-field-focus-shadow));
@@ -120,6 +120,13 @@
     &:focus-visible {
       box-shadow: var(--_select-focus-shadow-error);
     }
+  }
+
+  &.readonly {
+    background: var(--surface-secondary);
+    border-color: var(--border-divider);
+    color: var(--text-secondary);
+    cursor: default;
   }
 
   &.disabled,

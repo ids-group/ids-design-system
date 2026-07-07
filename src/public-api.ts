@@ -20,7 +20,6 @@ export * from './lib/components/number-stepper';
 export * from './lib/components/textarea';
 export * from './lib/components/search';
 export * from './lib/components/select';
-export * from './lib/components/dropdown';
 export * from './lib/components/table';
 export * from './lib/components/pagination';
 export * from './lib/components/date-picker';

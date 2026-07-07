@@ -2,8 +2,8 @@ import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import {
   BannerComponent,
   ButtonComponent,
-  DropdownComponent,
-  type DropdownOption,
+  SelectComponent,
+  type SelectOption,
   InputComponent,
   ModalCardComponent,
   ModalComponent,
@@ -22,7 +22,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
     BannerComponent,
     ButtonComponent,
     DocsTruncationComponent,
-    DropdownComponent,
+    SelectComponent,
     InputComponent,
     ModalCardComponent,
     ModalComponent,
@@ -56,7 +56,7 @@ export class ModalSection {
     },
   ];
 
-  protected readonly ownerOptions: DropdownOption[] = [
+  protected readonly ownerOptions: SelectOption[] = [
     { label: 'Avery Brooks', value: 'brooks' },
     { label: 'Sam Carter', value: 'carter' },
     { label: 'Jamie Lin', value: 'lin' },

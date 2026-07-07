@@ -18,6 +18,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `AutocompleteOption` / `AutocompleteOptionGroup` / `AutocompleteSize` / `AutocompleteWidth`;
   public tokens `--ds-combobox-focus-shadow` / `--ds-combobox-maxw` / `--ds-combobox-input-minw`
   → `--ds-autocomplete-*`; docs anchor `#combobox` → `#autocomplete`. Behavior unchanged.
+- **`ds-dropdown` removed — use `ds-select`.** The two were near-identical select-only single
+  pickers (same trigger, same panel, same keyboard model); `ds-select` is the richer canonical
+  form field (`ControlValueAccessor`, `invalid` + `hint` via `ds-field-message`, `required` /
+  `optional`, per-option icons, group-level `disabled`). Migration: `<ds-dropdown>` →
+  `<ds-select>`; `[error]` → `[invalid]`; `[optionGroups]="groups"` → pass groups inline in
+  `[options]` (`SelectItem = SelectOption | SelectOptionGroup`); `DropdownOption` /
+  `DropdownOptionGroup` / `DropdownSize` → `SelectOption` / `SelectOptionGroup` / `SelectSize`.
+  `readOnly` moved to `ds-select` (see Added). Docs "Dropdown" section removed — the Select
+  section covers everything.
 
 ### Added
 
@@ -44,9 +53,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `[presets]` (`DatePickerPreset[]` — quick-pick buttons in the calendar panel). Disabled days
   aren't selectable by click or keyboard. New exported `DatePickerPreset`.
 - **Dropdown-family enhancements.** `ds-select` gains `clearable` + per-option `icon`
-  (`SelectOption.icon`); `ds-dropdown` gains `[optionGroups]` (grouped listbox) + `clearable`;
-  `ds-autocomplete` gains `[optionGroups]` + `[allowCreate]` with a "Create …" row and a `(create)`
-  output. New exported `DropdownOptionGroup` / `AutocompleteOptionGroup`. (Native multi on `ds-select`
+  (`SelectOption.icon`) + `readOnly` (non-interactive filled look, ported from the removed
+  `ds-dropdown`); `ds-autocomplete` gains `[optionGroups]` + `[allowCreate]` with a "Create …" row
+  and a `(create)` output. New exported `AutocompleteOptionGroup`. (Native multi on `ds-select`
   intentionally omitted — use `ds-multi-select`.)
 - **`ds-table` expandable rows.** New `[expandableRows]`, `[(expandedIds)]` (`Set<string>`) and
   `[rowExpandTemplate]` — a chevron toggle per row reveals a full-width detail row (works with

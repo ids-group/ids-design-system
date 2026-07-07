@@ -72,7 +72,7 @@
       font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
     }
 
-    /* State pins — ds-dropdown has no --_* resolvers; restate the bare role
+    /* State pins — ds-select trigger has no --_* resolvers; restate the bare role
        tokens the component's own rules use (hover: --border-strong;
        focus: --primary + --focus-field). */
     :host ::ng-deep .pin-hover .dropdown:not(:disabled, .disabled, .open) { border-color: var(--border-strong); }

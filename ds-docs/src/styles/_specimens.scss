@@ -5,7 +5,6 @@
 // Rule: every partial here is tied to an API debt — close the debt, delete
 // the file. State forcing lives in section styles via ::ng-deep pins now.
 
-@use 'specimens/field';
 @use 'specimens/day';
 @use 'specimens/table';
 @use 'specimens/dropzone';
