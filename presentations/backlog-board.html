@@ -203,7 +203,7 @@
 
   <!-- ============ PIN-475 / KIT MOVEMENT ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🔎 Из PIN-475 — фильтр-тулбары</h2><span class="count c-track">4</span><span class="why">Гэпы combobox/select/search (Kit Movement, 2026-06-17). focus-баг — корень в pinkmoon, починен там. Спека 2026-07-07 (все 4 сверены с кодом): `.claude/superpowers/specs/2026-07-07-pin475-filter-toolbar-gaps-design.md` — ждёт вердиктов V1–V4.</span></div>
+    <div class="lane-head"><h2>🔎 Из PIN-475 — фильтр-тулбары</h2><span class="count c-track">4</span><span class="why">Гэпы combobox/select/search (Kit Movement, 2026-06-17). focus-баг — корень в pinkmoon, починен там. Спека 2026-07-07 (все 4 сверены с кодом): `.claude/superpowers/specs/2026-07-07-pin475-filter-toolbar-gaps-design.md` — V1/V3/V4 ✅ приняты, V2 (вид single-режима) решается на прототипе.</span></div>
     <div class="cards">
       <div class="card track"><div class="t">combobox — нет content/compact ширины</div><p class="d">Multi-select всегда тянется на ширину хоста → один короткий чип оставляет пустой триггер справа. Нужен `fit-content`/`max-content`-режим (триггер обнимает чипы + min поле ввода). Сейчас консьюмер хардкодит ширину.</p></div>
       <div class="card track"><div class="t">combobox single — читается как free-text</div><p class="d">В single-режиме триггер сохраняет поле ввода + шеврон после выбора — выглядит как multi/typeahead и как `ds-select`. Нужен filled-select display-режим или гайд select vs combobox.</p></div>
@@ -489,7 +489,7 @@ Confirmed issues in the merged `a11y` pass, not covered above (source: `docs/sup
 
 ### From PIN-475 Kit Movement filters prototype (Stas, 2026-06-17)
 
-Gaps hit while building filter toolbars with `ds-combobox` / `ds-select` / `ds-search`. All 4 items re-verified vs code + design spec written 2026-07-07 → `.claude/superpowers/specs/2026-07-07-pin475-filter-toolbar-gaps-design.md` (phasing: rename → combobox width+single display → field-group; awaiting verdicts V1–V4):
+Gaps hit while building filter toolbars with `ds-combobox` / `ds-select` / `ds-search`. All 4 items re-verified vs code + design spec written 2026-07-07 → `.claude/superpowers/specs/2026-07-07-pin475-filter-toolbar-gaps-design.md` (phasing: rename → combobox width+single display → field-group; verdicts V1/V3/V4 ✅ approved as recommended 2026-07-07, V2 — single-display look — decided on the visual prototype):
 
 - [ ] **combobox: no content/compact width** — a multi-select `ds-combobox` always fills its host width, so a single short chip leaves a wide empty trigger to its right (looks broken in a toolbar). Want an intrinsic/`fit-content`-ish sizing mode, or at least a `max-content` cap, so the trigger hugs its chips + a min typing area. (Today the consumer has to hard-cap the host width as a workaround.)
 - [ ] **combobox single-select still reads as a free-text input** — in single mode the trigger keeps the typeable search-input affordance + chevron even after a value is picked, so a "pick exactly one" control looks identical to a multi/typeahead and to `ds-select`. Consider a single-select display mode that reads as a filled select (selected label, no lingering empty input), or guidance on when to use `ds-select` vs `ds-combobox`.

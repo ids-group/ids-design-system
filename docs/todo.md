@@ -114,7 +114,7 @@ Confirmed issues in the merged `a11y` pass, not covered above (source: `docs/sup
 
 ### From PIN-475 Kit Movement filters prototype (Stas, 2026-06-17)
 
-Gaps hit while building filter toolbars with `ds-combobox` / `ds-select` / `ds-search`. All 4 items re-verified vs code + design spec written 2026-07-07 → `.claude/superpowers/specs/2026-07-07-pin475-filter-toolbar-gaps-design.md` (phasing: rename → combobox width+single display → field-group; awaiting verdicts V1–V4):
+Gaps hit while building filter toolbars with `ds-combobox` / `ds-select` / `ds-search`. All 4 items re-verified vs code + design spec written 2026-07-07 → `.claude/superpowers/specs/2026-07-07-pin475-filter-toolbar-gaps-design.md` (phasing: rename → combobox width+single display → field-group; verdicts V1/V3/V4 ✅ approved as recommended 2026-07-07, V2 — single-display look — decided on the visual prototype):
 
 - [ ] **combobox: no content/compact width** — a multi-select `ds-combobox` always fills its host width, so a single short chip leaves a wide empty trigger to its right (looks broken in a toolbar). Want an intrinsic/`fit-content`-ish sizing mode, or at least a `max-content` cap, so the trigger hugs its chips + a min typing area. (Today the consumer has to hard-cap the host width as a workaround.)
 - [ ] **combobox single-select still reads as a free-text input** — in single mode the trigger keeps the typeable search-input affordance + chevron even after a value is picked, so a "pick exactly one" control looks identical to a multi/typeahead and to `ds-select`. Consider a single-select display mode that reads as a filled select (selected label, no lingering empty input), or guidance on when to use `ds-select` vs `ds-combobox`.
