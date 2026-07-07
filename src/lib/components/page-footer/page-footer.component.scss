@@ -1,6 +1,8 @@
 :host {
-  --_page-footer-bg-color:     var(--ds-page-footer-bg-color,     var(--surface-secondary));
-  --_page-footer-border-color: var(--ds-page-footer-border-color, var(--border-divider));
+  --_page-footer-bg-color:          var(--ds-page-footer-bg-color,          var(--surface-secondary));
+  --_page-footer-border-color:      var(--ds-page-footer-border-color,      var(--border-divider));
+  --_page-footer-save-bg-color:     var(--ds-page-footer-save-bg-color,     var(--accent-subtitle));
+  --_page-footer-save-border-color: var(--ds-page-footer-save-border-color, var(--accent));
 
   display: flex;
   align-items: center;
@@ -23,7 +25,7 @@
 :host(.save) {
   position: relative;
   padding: var(--space-3) var(--space-4);
-  background: var(--accent-subtitle);
-  border: var(--border-width-default) solid var(--accent);
+  background: var(--_page-footer-save-bg-color);
+  border: var(--border-width-default) solid var(--_page-footer-save-border-color);
   border-radius: var(--radius-lg);
 }

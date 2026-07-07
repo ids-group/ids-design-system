@@ -4,11 +4,14 @@
   --_accordion-header-bg-color:       var(--ds-accordion-header-bg-color,       var(--surface-default));
   --_accordion-header-text-color:     var(--ds-accordion-header-text-color,     var(--text-primary));
   --_accordion-header-hover-bg-color: var(--ds-accordion-header-hover-bg-color, var(--surface-secondary));
+  --_accordion-divider-color:         var(--ds-accordion-divider-color,         var(--border-divider));
+  --_accordion-chevron-color:         var(--ds-accordion-chevron-color,         var(--icon-default));
+  --_accordion-body-text-color:       var(--ds-accordion-body-text-color,       var(--text-secondary));
 
   display: block;
 
   & + & {
-    border-top: var(--border-width-default) solid var(--border-divider);
+    border-top: var(--border-width-default) solid var(--_accordion-divider-color);
   }
 
   .head {
@@ -36,7 +39,7 @@
     .chev {
       margin-left: auto;
       transition: transform var(--duration-base) var(--ease-standard);
-      color: var(--icon-default);
+      color: var(--_accordion-chevron-color);
     }
 
     &[aria-expanded="true"] .chev {
@@ -72,7 +75,7 @@
 
   .body-content {
     padding: var(--space-2) var(--space-4) var(--space-4);
-    color: var(--text-secondary);
+    color: var(--_accordion-body-text-color);
     font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   }
 }

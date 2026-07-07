@@ -5,6 +5,7 @@
   --_w3w-bg-color:       var(--ds-w3w-bg-color,       var(--accent-subtitle));
   --_w3w-text-color:     var(--ds-w3w-text-color,     var(--accent));
   --_w3w-hover-bg-color: var(--ds-w3w-hover-bg-color, var(--accent-muted));
+  --_w3w-mark-color:     var(--ds-w3w-mark-color,     var(--error));
 
   display: inline-flex;
   align-items: center;
@@ -21,7 +22,7 @@
   &:hover { background: var(--_w3w-hover-bg-color); }
 
   .mark {
-    color: var(--error);
+    color: var(--_w3w-mark-color);
     font-weight: var(--font-weight-bold);
   }
 }
