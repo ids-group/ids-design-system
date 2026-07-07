@@ -1,7 +1,15 @@
 @if (label()) {
-  <span class="group-label">{{ label() }}</span>
+  <span class="group-label">
+    {{ label() }}
+  </span>
 }
+
 <div class="radios">
   <ng-content />
 </div>
-<ds-field-message [text]="hint()" [state]="messageState()" [messageId]="hintId()" />
+
+<ds-field-message
+  [text]="hint()"
+  [state]="messageState()"
+  [messageId]="hintId()"
+/>
