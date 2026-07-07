@@ -358,6 +358,7 @@ export class SelectComponent extends DsControlValueAccessor<string> {
       return;
     }
     let next = this.activeIndex();
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of -- walks from activeIndex with modulo wraparound; `attempts` only bounds the walk, it isn't a sequential index
     for (let attempts = 0; attempts < opts.length; attempts++) {
       next = (next + delta + opts.length) % opts.length;
       const candidate = opts[next];
