@@ -5,17 +5,21 @@
 :host {
   --_tooltip-bg-color:   var(--ds-tooltip-bg-color,   var(--surface-inverted));
   --_tooltip-text-color: var(--ds-tooltip-text-color, var(--text-inverted));
+  --_tooltip-radius:     var(--ds-tooltip-radius,     var(--radius-md));
+  --_tooltip-shadow:     var(--ds-tooltip-shadow,     var(--shadow-2));
+  --_tooltip-max-width:  var(--ds-tooltip-max-width,  var(--tooltip-maxw));
+  --_tooltip-padding:    var(--ds-tooltip-padding,    var(--space-1-5) var(--space-2-5));
 
   display: block;
   position: relative;
   background: var(--_tooltip-bg-color);
   color: var(--_tooltip-text-color);
   font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
-  padding: var(--space-1-5) var(--space-2-5);
-  border-radius: var(--radius-md);
-  max-width: var(--tooltip-maxw);
+  padding: var(--_tooltip-padding);
+  border-radius: var(--_tooltip-radius);
+  max-width: var(--_tooltip-max-width);
   z-index: var(--layer-tooltip);
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--_tooltip-shadow);
 
   &::after {
     content: "";

@@ -9,15 +9,19 @@
 .popover {
   --_popover-bg-color:     var(--ds-popover-bg-color,     var(--surface-overlay));
   --_popover-border-color: var(--ds-popover-border-color, var(--border-default));
+  --_popover-radius:       var(--ds-popover-radius,       var(--radius-lg));
+  --_popover-shadow:       var(--ds-popover-shadow,       var(--shadow-popover));
+  --_popover-padding:      var(--ds-popover-padding,      var(--space-3));
+  --_popover-max-width:    var(--ds-popover-max-width,    var(--popover-maxw));
 
   position: relative;
   background: var(--_popover-bg-color);
   border: var(--border-width-default) solid var(--_popover-border-color);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-popover);
-  padding: var(--space-3);
+  border-radius: var(--_popover-radius);
+  box-shadow: var(--_popover-shadow);
+  padding: var(--_popover-padding);
   z-index: var(--layer-popover);
-  max-width: var(--popover-maxw);
+  max-width: var(--_popover-max-width);
 
   // ds-menu items already have their own per-item padding; outer padding here
   // would double-pad. Drop it when the popover hosts a menu.
@@ -29,7 +33,7 @@
 /* ---- Arrow caret ---- */
 
 .arrow {
-  --_arrow-size: 7px;
+  --_arrow-size: var(--ds-popover-arrow-size, 7px);
 
   position: absolute;
   width: calc(var(--_arrow-size) * 2);

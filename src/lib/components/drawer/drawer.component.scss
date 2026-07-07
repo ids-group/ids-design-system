@@ -2,8 +2,15 @@
    the conditionally-rendered .drawer is the visible layout root. */
 
 :host {
-  --_drawer-bg-color:    var(--ds-drawer-bg-color,    var(--surface-overlay));
-  --_drawer-scrim-color: var(--ds-drawer-scrim-color, var(--scrim, hsl(220deg 20% 12% / 45%)));
+  --_drawer-bg-color:               var(--ds-drawer-bg-color,               var(--surface-overlay));
+  --_drawer-scrim-color:            var(--ds-drawer-scrim-color,            var(--scrim, hsl(220deg 20% 12% / 45%)));
+  --_drawer-shadow:                 var(--ds-drawer-shadow,                 var(--shadow-modal));
+  --_drawer-divider:                var(--ds-drawer-divider,                var(--border-divider));
+  --_drawer-close-icon-color:       var(--ds-drawer-close-icon-color,       var(--icon-default));
+  --_drawer-close-icon-color-hover: var(--ds-drawer-close-icon-color-hover, var(--icon-strong));
+  --_drawer-width-sm:               var(--ds-drawer-width,                  var(--drawer-w-sm));
+  --_drawer-width-md:               var(--ds-drawer-width,                  var(--drawer-w-md));
+  --_drawer-width-lg:               var(--ds-drawer-width,                  var(--drawer-w-lg));
 
   display: contents;
 }
@@ -30,15 +37,15 @@
 .drawer {
   position: fixed;
   background: var(--_drawer-bg-color);
-  box-shadow: var(--shadow-modal);
+  box-shadow: var(--_drawer-shadow);
   z-index: var(--layer-modal);
   display: flex;
   flex-direction: column;
 
   /* Size variants (applied to right/left panels) */
-  &.sm { width: var(--drawer-w-sm); }
-  &.md { width: var(--drawer-w-md); }
-  &.lg { width: var(--drawer-w-lg); }
+  &.sm { width: var(--_drawer-width-sm); }
+  &.md { width: var(--_drawer-width-md); }
+  &.lg { width: var(--_drawer-width-lg); }
 
   /* ---- Placement: right (default) ---- */
   &.right {
@@ -91,7 +98,7 @@
     align-items: center;
     gap: var(--space-3);
     padding: var(--space-5) var(--space-6);
-    border-bottom: var(--border-width-default) solid var(--border-divider);
+    border-bottom: var(--border-width-default) solid var(--_drawer-divider);
   }
 
   .title {
@@ -105,11 +112,11 @@
     border: 0;
     width: var(--modal-close-size);
     height: var(--modal-close-size);
-    color: var(--icon-default);
+    color: var(--_drawer-close-icon-color);
     cursor: pointer;
     padding: 0;
 
-    &:hover { color: var(--icon-strong); }
+    &:hover { color: var(--_drawer-close-icon-color-hover); }
   }
 
   .body {
@@ -120,7 +127,7 @@
 
   .footer {
     padding: var(--space-4) var(--space-6);
-    border-top: var(--border-width-default) solid var(--border-divider);
+    border-top: var(--border-width-default) solid var(--_drawer-divider);
     display: flex;
     gap: var(--space-2);
     justify-content: flex-end;
