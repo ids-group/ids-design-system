@@ -51,7 +51,8 @@
     border-color: var(--border-strong);
   }
 
-  &:focus-visible {
+  &:focus-visible,
+  &:focus-within {
     outline: none;
     box-shadow: var(--_date-picker-focus-shadow);
   }
@@ -80,6 +81,39 @@
     color: var(--text-disabled);
     cursor: not-allowed;
     opacity: var(--opacity-muted);
+  }
+}
+
+.date-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: 0;
+  outline: none;
+
+  &::placeholder {
+    color: var(--text-tertiary);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.calendar-toggle {
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
   }
 }
 

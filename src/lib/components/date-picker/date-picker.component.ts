@@ -8,6 +8,7 @@ import {
   afterNextRender,
   booleanAttribute,
   computed,
+  effect,
   forwardRef,
   inject,
   input,
@@ -29,9 +30,11 @@ import {
 import { DS_CONFIG } from '../../config/ds-config';
 import {
   type DateFormatSpec,
+  applyMask,
   formatDate,
   fullDateLabel,
   monthLabels,
+  parseDate,
   resolveDateFormat,
   weekdayLabels,
 } from './date.util';
@@ -77,6 +80,15 @@ export class DatePickerComponent extends DsControlValueAccessor<
 > {
   constructor() {
     super();
+    effect(() => {
+      const spec = this.formatSpec();
+      const value = this.value();
+      if (this.editing) {
+        return;
+      }
+      const single = this.mode() === 'single' ? (value as Date | null) : null;
+      this.inputText.set(formatDate(single, spec));
+    });
   }
 
   private readonly overlay = inject(Overlay);
@@ -115,6 +127,8 @@ export class DatePickerComponent extends DsControlValueAccessor<
   readonly firstDayOfWeek = input<number | null>(null);
   /** Month the calendar opens on when the value is empty (e.g. a Date Of Birth). */
   readonly defaultMonth = input<Date | null>(null);
+  /** Allow masked manual typing. When false the trigger is a button (calendar-only). */
+  readonly allowInput = input(true, { transform: booleanAttribute });
 
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),
@@ -123,7 +137,7 @@ export class DatePickerComponent extends DsControlValueAccessor<
     this.hint() ? `${this.uid}-hint` : null,
   );
   protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() ? 'error' : 'default',
+    this.invalid() || this.typedInvalid() ? 'error' : 'default',
   );
 
   protected readonly resolvedLocale = computed(
@@ -148,6 +162,10 @@ export class DatePickerComponent extends DsControlValueAccessor<
   protected readonly isOpen = signal(false);
   /** The day that holds keyboard focus in the open grid (roving tabindex). */
   protected readonly gridFocus = signal<Date | null>(null);
+  protected readonly inputText = signal<string>('');
+  protected readonly typedInvalid = signal(false);
+  // Guards the value→text sync from clobbering the field mid-keystroke.
+  private editing = false;
   protected readonly resolvedAriaLabel = computed(() =>
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,
   );
@@ -203,7 +221,7 @@ export class DatePickerComponent extends DsControlValueAccessor<
       case 'Escape':
         event.preventDefault();
         this.close();
-        this.trigger().nativeElement.focus();
+        this.focusTrigger();
 
         return;
       default:
@@ -275,11 +293,18 @@ export class DatePickerComponent extends DsControlValueAccessor<
   });
 
   protected readonly viewMonth = signal<Date>(new Date());
-  protected readonly trigger =
-    viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
+  protected readonly anchor =
+    viewChild.required<ElementRef<HTMLElement>>('anchor');
+  protected readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
+  protected readonly inputEl = viewChild<ElementRef<HTMLInputElement>>('inputEl');
   protected readonly panelTpl =
     viewChild.required<TemplateRef<unknown>>('panel');
   private overlayRef: OverlayRef | null = null;
+
+  private focusTrigger(): void {
+    const target = this.inputEl()?.nativeElement ?? this.trigger()?.nativeElement;
+    target?.focus();
+  }
 
   protected readonly displayLabel = computed(() => {
     const value = this.value();
@@ -515,7 +540,7 @@ export class DatePickerComponent extends DsControlValueAccessor<
     }
     const positionStrategy = this.overlay
       .position()
-      .flexibleConnectedTo(this.trigger().nativeElement)
+      .flexibleConnectedTo(this.anchor().nativeElement)
       .withPositions([
         {
           originX: 'start',
@@ -563,6 +588,50 @@ export class DatePickerComponent extends DsControlValueAccessor<
     this.markTouched();
   }
 
+  protected onInput(event: Event): void {
+    this.editing = true;
+    const spec = this.formatSpec();
+    const masked = applyMask((event.target as HTMLInputElement).value, spec);
+    this.inputText.set(masked);
+    const parsed = parseDate(masked, spec);
+    if (!parsed) {
+      // Incomplete input is not an error yet; a full-but-bad value is caught on blur.
+      this.typedInvalid.set(false);
+
+      return;
+    }
+    if (this.isDayDisabled(parsed)) {
+      this.typedInvalid.set(true);
+
+      return;
+    }
+    this.typedInvalid.set(false);
+    this.value.set(parsed);
+    this.viewMonth.set(new Date(parsed.getFullYear(), parsed.getMonth(), 1));
+  }
+
+  protected onBlur(): void {
+    this.editing = false;
+    const spec = this.formatSpec();
+    const text = this.inputText();
+    if (!text) {
+      this.typedInvalid.set(false);
+      this.value.set(null);
+      this.markTouched();
+
+      return;
+    }
+    const parsed = parseDate(text, spec);
+    if (parsed && !this.isDayDisabled(parsed)) {
+      this.typedInvalid.set(false);
+      this.value.set(parsed);
+      this.inputText.set(formatDate(parsed, spec));
+    } else {
+      this.typedInvalid.set(true);
+    }
+    this.markTouched();
+  }
+
   protected prevMonth(): void {
     const m = new Date(this.viewMonth());
     m.setMonth(m.getMonth() - 1);
@@ -582,7 +651,7 @@ export class DatePickerComponent extends DsControlValueAccessor<
     if (this.mode() === 'single') {
       this.value.set(new Date(cell.date));
       this.close();
-      this.trigger().nativeElement.focus();
+      this.focusTrigger();
 
       return;
     }
@@ -598,7 +667,7 @@ export class DatePickerComponent extends DsControlValueAccessor<
         a.getTime() <= picked.getTime() ? [a, picked] : [picked, a];
       this.value.set(range);
       this.close();
-      this.trigger().nativeElement.focus();
+      this.focusTrigger();
     }
   }
 
@@ -635,6 +704,6 @@ export class DatePickerComponent extends DsControlValueAccessor<
       ]);
     }
     this.close();
-    this.trigger().nativeElement.focus();
+    this.focusTrigger();
   }
 }

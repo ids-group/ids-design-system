@@ -23,30 +23,69 @@
     </span>
   }
 
-  <button
-    #trigger
-    type="button"
-    aria-haspopup="dialog"
-    [class]="triggerClasses()"
-    [disabled]="isDisabled()"
-    [attr.aria-expanded]="isOpen()"
-    [attr.aria-labelledby]="label() ? labelId : null"
-    [attr.aria-label]="resolvedAriaLabel()"
-    [attr.aria-required]="required() ? 'true' : null"
-    [attr.aria-invalid]="invalid() ? 'true' : null"
-    [attr.aria-describedby]="hintId()"
-    (click)="open()"
-  >
-    <ds-icon
-      name="calendar"
-      [size]="14"
+  @if (allowInput()) {
+    <div
+      #anchor
+      [class]="triggerClasses()"
     >
-    </ds-icon>
+      <input
+        #inputEl
+        type="text"
+        class="date-input"
+        [value]="inputText()"
+        [attr.placeholder]="formatSpec().mask"
+        [disabled]="isDisabled()"
+        [attr.aria-labelledby]="label() ? labelId : null"
+        [attr.aria-label]="resolvedAriaLabel()"
+        [attr.aria-required]="required() ? 'true' : null"
+        [attr.aria-invalid]="invalid() || typedInvalid() ? 'true' : null"
+        [attr.aria-describedby]="hintId()"
+        (input)="onInput($event)"
+        (blur)="onBlur()"
+        (keydown.arrowdown)="open(); $event.preventDefault()"
+      />
 
-    <span>
-      {{ displayLabel() }}
-    </span>
-  </button>
+      <button
+        type="button"
+        class="calendar-toggle"
+        aria-haspopup="dialog"
+        aria-label="Open calendar"
+        [disabled]="isDisabled()"
+        [attr.aria-expanded]="isOpen()"
+        (click)="open()"
+      >
+        <ds-icon
+          name="calendar"
+          [size]="14"
+        />
+      </button>
+    </div>
+  } @else {
+    <button
+      #anchor
+      #trigger
+      type="button"
+      aria-haspopup="dialog"
+      [class]="triggerClasses()"
+      [disabled]="isDisabled()"
+      [attr.aria-expanded]="isOpen()"
+      [attr.aria-labelledby]="label() ? labelId : null"
+      [attr.aria-label]="resolvedAriaLabel()"
+      [attr.aria-required]="required() ? 'true' : null"
+      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-describedby]="hintId()"
+      (click)="open()"
+    >
+      <ds-icon
+        name="calendar"
+        [size]="14"
+      />
+
+      <span>
+        {{ displayLabel() }}
+      </span>
+    </button>
+  }
 
   <ds-field-message
     [text]="hint()"
