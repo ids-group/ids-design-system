@@ -7,6 +7,15 @@
   max-width: 480px;
 }
 
+/* Toolbar-like row — content-width comboboxes hug their chips inside it. */
+.combo-toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
 .combo-field-label {
   font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--text-primary);

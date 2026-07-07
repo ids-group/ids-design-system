@@ -48,6 +48,40 @@
     />
   </div>
 
+  <!-- ============================================================ Width -->
+  <h3 class="block-title t-h4">
+    Width
+  </h3>
+
+  <p class="block-desc t-s">
+    Default <code class="t-mono-inline">width="fill"</code> stretches to the
+    container. <code class="t-mono-inline">width="content"</code> hugs the
+    chips/value plus a minimum typing area — for filter toolbars where a
+    full-width trigger looks broken next to one short chip.
+    <code class="t-mono-inline">
+      --ds-combobox-input-minw
+    </code> tunes the typing
+    area (default 80px), <code class="t-mono-inline">--ds-combobox-maxw</code>
+    caps the trigger in either mode.
+  </p>
+
+  <div class="combo-toolbar-row">
+    <ds-combobox
+      width="content"
+      placeholder="Add product…"
+      [options]="products"
+      [multiple]="true"
+      [(value)]="toolbarProductsValue"
+    />
+
+    <ds-combobox
+      width="content"
+      placeholder="Venue…"
+      [optionGroups]="venueGroups"
+      [(value)]="toolbarVenueValue"
+    />
+  </div>
+
   <!-- ============================================================ Validation states -->
   <h3 class="block-title t-h4">
     Validation states

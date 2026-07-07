@@ -3,4 +3,5 @@ export type {
   ComboboxOption,
   ComboboxOptionGroup,
   ComboboxSize,
+  ComboboxWidth,
 } from './combobox.types';

@@ -70,6 +70,8 @@ export class ComboboxSection {
     'spirits',
   ]);
   protected readonly venueValue = signal<string | null>(null);
+  protected readonly toolbarProductsValue = signal<readonly string[]>(['beer']);
+  protected readonly toolbarVenueValue = signal<string | null>(null);
   protected readonly tagOptions = signal<readonly ComboboxOption<string>[]>([
     { value: 'jazz', label: 'Jazz' },
     { value: 'rock', label: 'Rock' },

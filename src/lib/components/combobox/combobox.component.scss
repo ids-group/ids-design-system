@@ -6,6 +6,8 @@
 
 :host {
   --_combobox-focus-shadow: var(--ds-combobox-focus-shadow, var(--ds-field-focus-shadow));
+  --_combobox-maxw:         var(--ds-combobox-maxw,         none);
+  --_combobox-input-minw:   var(--ds-combobox-input-minw,   80px);
 
   // Flex column + gap so the hint/error (ds-field-message) sits the canonical
   // --space-1-5 below the trigger, matching input/textarea/select/date-picker.
@@ -13,7 +15,17 @@
   flex-direction: column;
   gap: var(--field-label-gap);
   width: 100%;
+  max-width: var(--_combobox-maxw);
   position: relative;
+}
+
+/* width="content" — hug chips/value + the min typing area instead of filling
+   the container. The maxw resolver re-defaults to 100% so chips wrap at the
+   parent edge; an explicit --ds-combobox-maxw still wins in both modes. */
+:host(.content-width) {
+  --_combobox-maxw: var(--ds-combobox-maxw, 100%);
+
+  width: fit-content;
 }
 
 .combo-trigger {
@@ -66,7 +78,7 @@
 
 .combo-input {
   flex: 1;
-  min-width: 80px;
+  min-width: var(--_combobox-input-minw);
   border: 0;
   outline: 0;
   background: transparent;

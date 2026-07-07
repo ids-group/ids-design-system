@@ -29,6 +29,7 @@ import type {
   ComboboxOption,
   ComboboxOptionGroup,
   ComboboxSize,
+  ComboboxWidth,
 } from './combobox.types';
 
 let nextId = 0;
@@ -40,6 +41,9 @@ let nextId = 0;
   templateUrl: './combobox.component.html',
   styleUrl: './combobox.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  host: {
+    '[class.content-width]': "width() === 'content'",
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -59,6 +63,7 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<
   readonly value = model<T | readonly T[] | null>(null);
   readonly multiple = input<boolean>(false);
   readonly size = input<ComboboxSize>('md');
+  readonly width = input<ComboboxWidth>('fill');
   readonly placeholder = input<string>('Select…');
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
@@ -347,8 +352,15 @@ export class ComboboxComponent<T = unknown> extends DsControlValueAccessor<
       backdropClass: 'cdk-overlay-transparent-backdrop',
       panelClass: 'ds-overlay-pane',
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
-      width: triggerElement.getBoundingClientRect().width,
     };
+    // Content-width trigger can be narrow — let the panel size to its options
+    // with the trigger as the floor; fill mode keeps the exact trigger width.
+    const triggerWidth = triggerElement.getBoundingClientRect().width;
+    if (this.width() === 'content') {
+      overlayConfig.minWidth = triggerWidth;
+    } else {
+      overlayConfig.width = triggerWidth;
+    }
     this.overlayRef = this.overlay.create(overlayConfig);
     this.overlayRef.backdropClick().subscribe(() => this.close());
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));

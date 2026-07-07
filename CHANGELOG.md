@@ -68,6 +68,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-avatar` status dot + fallback icon.** New `[status]` (`online` / `offline` / `away` /
   `busy`, new `AvatarStatus`) shows a corner status dot, and `[fallbackIcon]` renders when there's
   no image or initials.
+- **`ds-combobox` content-width mode.** New `width` input (`fill` — default, stretches to the
+  container as before / `content` — the trigger hugs its chips/value plus a minimum typing area,
+  for filter toolbars; the panel then sizes to its options with the trigger width as the floor).
+  New public hooks `--ds-combobox-input-minw` (typing-area minimum, default 80px) and
+  `--ds-combobox-maxw` (trigger cap, default none; in `content` mode defaults to 100% so chips
+  wrap at the parent edge). New exported `ComboboxWidth`.
+
+### Changed
+
+- **`ds-search` inner input class renamed `.input` → `.search-input`.** The over-generic name let
+  consumer global `.input` styles/resets leak into the component through emulated encapsulation
+  (root cause of the PIN-475 double-focus-ring). Only consumer styling that targeted the
+  undocumented internal class is affected.
 
 ## 0.4.0 — 2026-06-30
 
@@ -374,7 +387,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - Backgrounds and several control transitions switched from the `background` shorthand to
   `background-color` for precision. Alongside it, a repo-wide, value-preserving CSS-syntax
   modernization: legacy `hsl()/hsla()` comma syntax → modern space/slash form, `clip:
-  rect(…)` → `clip-path: inset(50%)` on visually-hidden helpers, and `min-/max-width`
+rect(…)` → `clip-path: inset(50%)` on visually-hidden helpers, and `min-/max-width`
   media queries → range syntax (`width >= …`). No intended visual change.
 
 ### Fixed
