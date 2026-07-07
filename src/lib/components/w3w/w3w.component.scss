@@ -2,19 +2,23 @@
    Mono + brand-coloured body, danger-red .mark prefix. */
 
 :host {
+  --_w3w-bg-color:       var(--ds-w3w-bg-color,       var(--accent-subtitle));
+  --_w3w-text-color:     var(--ds-w3w-text-color,     var(--accent));
+  --_w3w-hover-bg-color: var(--ds-w3w-hover-bg-color, var(--accent-muted));
+
   display: inline-flex;
   align-items: center;
   gap: var(--space-1-5);
   padding: var(--space-1) var(--space-2);
-  background: var(--accent-subtitle);
-  color: var(--accent);
+  background: var(--_w3w-bg-color);
+  color: var(--_w3w-text-color);
   border-radius: var(--radius-md);
   font-family: var(--font-mono);
   font-size: var(--font-size-mono);
   cursor: pointer;
   transition: background-color var(--duration-fast) var(--ease-standard);
 
-  &:hover { background: var(--accent-muted); }
+  &:hover { background: var(--_w3w-hover-bg-color); }
 
   .mark {
     color: var(--error);

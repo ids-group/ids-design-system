@@ -3,10 +3,13 @@
    the consumer's job (CDK Overlay via [dsTooltip] directive). */
 
 :host {
+  --_tooltip-bg-color:   var(--ds-tooltip-bg-color,   var(--surface-inverted));
+  --_tooltip-text-color: var(--ds-tooltip-text-color, var(--text-inverted));
+
   display: block;
   position: relative;
-  background: var(--surface-inverted);
-  color: var(--text-inverted);
+  background: var(--_tooltip-bg-color);
+  color: var(--_tooltip-text-color);
   font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
   padding: var(--space-1-5) var(--space-2-5);
   border-radius: var(--radius-md);
@@ -19,7 +22,7 @@
     position: absolute;
     width: var(--space-2);
     height: var(--space-2);
-    background: var(--surface-inverted);
+    background: var(--_tooltip-bg-color);
     transform: rotate(45deg);
   }
 }

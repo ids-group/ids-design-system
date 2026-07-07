@@ -1,6 +1,10 @@
 @use '../../styles/press' as press;
 
 :host {
+  --_accordion-header-bg-color:       var(--ds-accordion-header-bg-color,       var(--surface-default));
+  --_accordion-header-text-color:     var(--ds-accordion-header-text-color,     var(--text-primary));
+  --_accordion-header-hover-bg-color: var(--ds-accordion-header-hover-bg-color, var(--surface-secondary));
+
   display: block;
 
   & + & {
@@ -14,13 +18,13 @@
     width: 100%;
     padding: var(--space-3) var(--space-4);
     border: 0;
-    background: var(--surface-default);
+    background: var(--_accordion-header-bg-color);
     text-align: left;
     cursor: pointer;
     font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-    color: var(--text-primary);
+    color: var(--_accordion-header-text-color);
 
-    &:hover:not(:disabled) { background: var(--surface-secondary); }
+    &:hover:not(:disabled) { background: var(--_accordion-header-hover-bg-color); }
 
     &:focus-visible {
       outline: var(--border-width-strong, 2px) solid var(--accent);
