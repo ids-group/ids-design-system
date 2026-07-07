@@ -83,6 +83,18 @@
   <h1>Брейкпоинты в <code>@media</code>: токены есть — а внутрь не пускают</h1>
   <p class="lede">DS определяет шкалу брейкпоинтов как CSS-переменные <code>--bp-*</code>. Но <b>custom property нельзя использовать в условии <code>@media</code></b> — поэтому каждый медиа-запрос в либе хардкодит пиксели вручную, и они уже <b>разъехались с токенами</b>. Решение — добавить compile-time Sass-алиасы <code>$bp-*</code> (резолвятся на сборке). Чисто additive, ничего не ломается.</p>
 
+  <!-- ===== STATUS (added 2026-07-07) ===== -->
+  <section style="border-color: var(--green-line);">
+    <span class="tag good">статус · реализовано 2026-07-07</span>
+    <h2>Что сделано, а что пропущено</h2>
+    <ul class="flat">
+      <li class="y"><b>Модуль <code>_breakpoints.scss</code></b> — <code>$breakpoints</code>-map (один источник) → <code>--bp-*</code> + <code>$bp-*</code> + <code>up()/down()</code>; дубль <code>--bp-*</code> из <code>_tokens</code> убран. Шипнуто <code>902c4b1</code>.</li>
+      <li class="y"><b>page-grid мигрирован</b> — <code>@use 'breakpoints' as bp</code> + <code>up(sm)/up(lg)/up(xl)</code>; <code>641/1025</code>→<code>640/1024</code> (снап, 1px ок), <code>1441</code>=xl. <code>260f800</code>.</li>
+      <li class="q"><b>off-scale <code>720 / 820 / 1100</code> — пропущено намеренно</b> (вердикт: оставить компонентными). Это content-fit пороги, не ступени шкалы → <code>up()/down()</code> их не выражают; <code>@use</code> в <code>page-header</code>/<code>layout-utils</code> не добавлен. <b>Итог: мигрировано 3 из 6 <code>@media</code>.</b></li>
+      <li class="q"><code>down()</code> есть как API, но потребителя пока нет (все max-width — те самые off-scale). Задел на будущее.</li>
+    </ul>
+  </section>
+
   <!-- ===== PROBLEM ===== -->
   <section>
     <span class="tag bad">проблема</span>
@@ -108,7 +120,7 @@
         <tr><td><code>_layout-utils.scss</code></td><td><code>width <= 1100 / 820</code></td><td><span class="pill off">вне шкалы</span></td></tr>
       </tbody>
     </table>
-    <p class="note" style="margin-top:14px">Токены говорят <b>640 / 768 / 1024</b>, а медиа-запросы используют <b>641 / 720 / 820 / 1025 / 1100 / 1441</b>. Единого источника нет ровно там, где он критичнее всего — отсюда «<code>+1</code>»-привычка и off-scale значения <code>720 / 820 / 1100</code>.</p>
+    <p class="note" style="margin-top:14px">Токены говорят <b>640 / 768 / 1024</b>, а медиа-запросы используют <b>641 / 720 / 820 / 1025 / 1100 / 1441</b>. Единого источника нет ровно там, где он критичнее всего — отсюда «<code>+1</code>»-привычка и off-scale значения <code>720 / 820 / 1100</code>. <b>Статус 2026-07-07:</b> page-grid ✅ пофикшено (на шкале, <code>640/1024</code>); off-scale <code>720/820/1100</code> оставлены компонентными (намеренно, не дрейф).</p>
   </section>
 
   <!-- ===== SOLUTION ===== -->
@@ -157,7 +169,7 @@
     <ul class="flat">
       <li class="y">Завести <code>_breakpoints.scss</code>: Sass-map <code>$breakpoints</code> как единственный источник → <code>@each</code> эмитит <code>--bp-*</code> в <code>:root</code> + экспорт <code>$bp-*</code> и миксинов <code>up()/down()</code>.</li>
       <li class="y"><code>@use</code> его в файлах с <code>@media</code>: <code>_page-grid.scss</code>, <code>page-header.scss</code>, <code>_layout-utils.scss</code>.</li>
-      <li class="q">Аудит off-scale значений <code>720 / 820 / 1100</code> — оставить как компонентные или подтянуть к шкале? <b>Нужен твой вердикт</b> (не механическая замена).</li>
+      <li class="q">Аудит off-scale значений <code>720 / 820 / 1100</code> — оставить как компонентные или подтянуть к шкале? <b>✅ Вердикт 2026-07-07: оставить компонентными</b> (не дрейф, а content-fit пороги).</li>
       <li class="y">Additive: <code>--bp-*</code> живут дальше, ничего не переименовано/удалено; <code>build:deck-css</code> и сборка не затронуты.</li>
     </ul>
     <p class="note" style="margin-top:14px"><b>Стоимость/риск:</b> низкий. Реальные решения — только три развилки выше; миграция 6 существующих <code>@media</code> — отдельный опциональный шаг с одним спорным местом (off-scale).</p>
