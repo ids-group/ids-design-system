@@ -36,7 +36,6 @@
   .stat.a11y .n { color: var(--rose-ink); }
   .stat.untouched .n { color: var(--grey-ink); }
   .stat.raw .n { color: var(--teal); }
-  .stat.done { background: #11161e; } .stat.done .n { color: var(--green); }
 
   .lane { margin-bottom: 30px; }
   .lane-head { display: flex; align-items: center; gap: 12px; margin: 0 0 14px; }
@@ -44,14 +43,6 @@
   .lane-head .count { font-size: 12px; font-weight: 800; padding: 2px 9px; border-radius: 999px; }
   .lane-head .why { color: var(--ink-3); font-size: 13.5px; margin-left: auto; text-align: right; }
 
-  .done-panel { margin-bottom: 16px; border: 1px solid var(--line); border-radius: var(--radius); background: #11161e; box-shadow: var(--shadow); padding: 4px 18px; }
-  summary.lane-head { cursor: pointer; list-style: none; outline: none; padding: 12px 0; margin: 0; }
-  summary.lane-head::-webkit-details-marker { display: none; }
-  .toggle { font-size: 11px; font-weight: 800; padding: 2px 9px; border-radius: 999px; background: var(--green-soft); color: var(--green-ink); }
-  .done-panel:not([open]) .toggle::before { content: '▸ показать'; }
-  .done-panel[open] .toggle::before { content: '▾ скрыть'; }
-  .done-panel .cards { padding-bottom: 16px; }
-  .done-panel .card { opacity: .92; }
 
   .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 12px; }
   .card { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--c, var(--line)); border-radius: 10px; padding: 13px 15px; box-shadow: var(--shadow); }
@@ -60,7 +51,6 @@
   .card .meta { color: var(--ink-3); font-size: 12px; margin-top: 8px; font-family: 'JetBrains Mono', ui-monospace, monospace; }
   .chip { display: inline-block; font-size: 10.5px; font-weight: 800; padding: 1px 8px; border-radius: 999px; margin-bottom: 7px; letter-spacing: .02em; }
 
-  .done   { --c: var(--green); }
   .you    { --c: var(--violet); }
   .frozen { --c: var(--blue); }
   .minor  { --c: var(--amber); }
@@ -81,7 +71,6 @@
   .count.c-minor{background:var(--amber-soft);color:var(--amber-ink);}
   .count.c-raw{background:var(--teal-soft);color:var(--teal-ink);}
   .count.c-track{background:var(--grey-soft);color:var(--grey-ink);}
-  .count.c-done{background:var(--green-soft);color:var(--green-ink);}
 
   .foot { margin-top: 50px; color: var(--ink-3); font-size: 12.5px; border-top: 1px solid var(--line); padding-top: 16px; }
   .tag { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11.5px; background: var(--grey-soft); padding: 1px 5px; border-radius: 4px; color: var(--ink-2); }
@@ -124,7 +113,7 @@
 </head>
 <body>
   <h1>DS — карта бэклога</h1>
-  <p class="sub">Что <b>осталось закрыть</b> — по одному пункту на карточку (источник: <span class="tag">docs/todo.md</span>). Открытое вверху и развёрнуто; сделанное свёрнуто внизу. Обновлено 2026-07-06.</p>
+  <p class="sub">Что <b>осталось закрыть</b> — по одному пункту на карточку (источник: <span class="tag">docs/todo.md</span>). Только открытое; архив сделанного — <span class="tag">docs/todo-done.md</span>. Обновлено 2026-07-07.</p>
   <p class="legend">
     <span class="mark deck"><span class="g">▶</span> дека</span> — карточка кликабельна, открывает презентацию в новой вкладке.
     <span class="mark todo"><span class="g">ⓘ</span> todo</span> — кликни: полная формулировка из todo.md в поповере (закрыть — крестик, backdrop или Esc).
@@ -133,10 +122,9 @@
   <div class="summary">
     <div class="stat you"><div class="n">3</div><div class="l">Ждёт твоего решения</div></div>
     <div class="stat a11y"><div class="n">3</div><div class="l">A11y (P0–P2)</div></div>
-    <div class="stat untouched"><div class="n">11</div><div class="l">Компоненты + foundations</div></div>
-    <div class="stat untouched"><div class="n">10</div><div class="l">Motion / DS-docs / field / PIN-475</div></div>
+    <div class="stat untouched"><div class="n">7</div><div class="l">Компоненты + foundations</div></div>
+    <div class="stat untouched"><div class="n">14</div><div class="l">Motion / DS-docs / PIN-475 / API</div></div>
     <div class="stat raw"><div class="n">7</div><div class="l">Raw / frozen / мелочь / lint</div></div>
-    <div class="stat done"><div class="n">60</div><div class="l">Сделано (свёрнуто)</div></div>
   </div>
 
   <!-- ============ NEEDS YOU ============ -->
@@ -151,7 +139,7 @@
 
   <!-- ============ A11Y ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>♿ A11y — по компонентам и findings</h2><span class="count c-a11y">3</span><span class="why">Компонентная волна 2026-07-06 ✅ отгружена с валидацией каждого finding: bottom-sheet dialog · number-stepper · avatar-group (+ badge count — оказался уже готов) · listbox Tab-close · option tabindex · «No matches»=status · field-message alert · sidenav-item aria. Остаток — 3 отложенных/спорных ниже.</span></div>
+    <div class="lane-head"><h2>♿ A11y — по компонентам и findings</h2><span class="count c-a11y">3</span><span class="why">Остаток — 3 отложенных/спорных; компонентная волна 07-06 — в архиве todo-done.</span></div>
     <div class="cards">
       <div class="card a11y"><span class="chip ch-p1">P1 · отложено</span><div class="t">scroll-lock без ref-count</div><p class="d">modal/drawer: при двух оверлеях закрытие первого возвращает скролл под вторым (оба сбрасывают `body.overflow`). Нужен общий ref-counted lock — по одному компоненту не чинится. Отложено 2026-07-06; варианты (сервис / CDK / per-component) расписаны в todo.</p></div>
       <div class="card a11y"><span class="chip ch-p2">P2 · отложено</span><div class="t">date-picker grid-семантика</div><p class="d">Нет `role=grid`/`gridcell` (используется `aria-pressed`) + нет `role=dialog`/имени на панели. Отложено 2026-07-06: `aria-selected` валиден только в grid-структуре, значит нужны строки-недели → риск для CSS-раскладки. focus-баг сверен — НЕ баг.</p></div>
@@ -161,7 +149,7 @@
 
   <!-- ============ COMPONENTS + FEATURE GAPS ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🧩 Компоненты и фичи-гэпы</h2><span class="count c-track">2</span><span class="why">Из gap-analysis + starter. Time-picker + все фичи-гэпы Forms/Data/Display ✅ отгружены 07-02/03 (см. done-панель).</span></div>
+    <div class="lane-head"><h2>🧩 Компоненты и фичи-гэпы</h2><span class="count c-track">2</span><span class="why">Из gap-analysis + starter; отгруженное по лейну — в архиве todo-done.</span></div>
     <div class="cards">
       <div class="card track"><span class="chip ch-oos">MED</span><div class="t">Missing components — MED</div><p class="d">Осталось: chart wrapper · calendar (standalone) · image/lightbox · splitter.</p></div>
       <div class="card track"><div class="t">Feature gaps — Forms · остаток</div><p class="d">Осталось только `ds-select` native <b>multi</b> (отложено — не реализуем сейчас, из бэклога не убираем). Всё остальное по Forms ✅ отгружено.</p></div>
@@ -170,7 +158,7 @@
 
   <!-- ============ FOUNDATIONS / TOKENS ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🏗 Foundations / токены</h2><span class="count c-track">5</span><span class="why">Из gap-analysis + презентаций. Dark theme · chart-токены · spacing-aliases ✅ отгружены 06-29/26.</span></div>
+    <div class="lane-head"><h2>🏗 Foundations / токены</h2><span class="count c-track">5</span><span class="why">Из gap-analysis + презентаций.</span></div>
     <div class="cards">
       <div class="card track"><div class="t">Primary-CTA token layer</div><p class="d">Opt-in `--primary-cta`/`-hover`/`-active`/`-on` (дефолт = `--primary*`); `.primary`-кнопка читает их — AA-safe при ребренде на светлый `--primary`.</p></div>
       <div class="card track"><span class="chip ch-oos">MED</span><div class="t">Foundations MED (кластер)</div><p class="d">density (шрифты/иконки/pad) · fluid type (`clamp()`) · motion-пресеты. (HC/forced-colors тема и RTL сняты — не нужны, 2026-07-07.)</p></div>
@@ -182,7 +170,7 @@
 
   <!-- ============ DS-DOCS FEATURES ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>📖 DS-docs фичи</h2><span class="count c-track">1</span><span class="why">Витрина документации. (Truncation-блоки — оказались готовы, `20c6c96`; перенесены в done.)</span></div>
+    <div class="lane-head"><h2>📖 DS-docs фичи</h2><span class="count c-track">1</span><span class="why">Витрина документации.</span></div>
     <div class="cards">
       <div class="card track"><div class="t">Inspect-mode (Figma-style)</div><p class="d">Тоггл в заголовке секции → overlay со спекой: paddings/gaps/sizes + какой токен/класс за что отвечает (`--space-4 = 16px`). Пилот — на spacing одной секции.</p></div>
     </div>
@@ -190,7 +178,7 @@
 
   <!-- ============ MOTION SYSTEM ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🎬 Motion system</h2><span class="count c-track">5</span><span class="why">Аудит 2026-06-26 ✅ ОТГРУЖЕН (findings A–F — smooth-motion rollout: selection-fills, overlay/floating-panel/expand-collapse, listbox, поверхности). Остаток: подтвердить press-дизайн · общая система рецептов · skeleton shimmer-sync.</span></div>
+    <div class="lane-head"><h2>🎬 Motion system</h2><span class="count c-track">5</span><span class="why">Остаток после smooth-motion rollout (в архиве): press-дизайн подтвердить · система рецептов · shimmer-sync · rounded :active · leave-политика.</span></div>
     <div class="cards">
       <div class="card track"><span class="chip ch-you">подтвердить</span><div class="t">Решения — НЕ «чинить» автоматом</div><p class="d">button/icon-button press `scale` на `--duration-instant` (80ms) — снапи ПО ДИЗАЙНУ (отгружено 06-25); аудит флагнул «слишком быстро», но это намеренно — подтвердить до правок. button-toggle `aria-pressed` bg/color снап — реальный гэп, если тоггл используется.</p></div>
       <div class="card track"><span class="chip ch-oos">решить</span><div class="t">Предложенная система рецептов</div><p class="d">(1) стандарт state-change `transition: <props> --duration-fast --ease-standard`; (2) overlay enter `--ease-decelerate` / leave `--ease-accelerate` через общий `DsOverlayLeave`; (3) expand/collapse grid-rows `0fr↔1fr` на `--duration-base`; (4) токен-driven (reduced-motion уже глобально). + общий SCSS-миксин `ds.transition(<props>)`. Дек собран.</p><div class="meta">implemented/motion-system.html</div></div>
@@ -224,7 +212,7 @@
 
   <!-- ============ RAW BY DESIGN ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🎨 Raw в showcase — держит отсутствие API/компонента</h2><span class="count c-raw">2</span><span class="why">Копий-зеркал НОЛЬ. Почти всё мигрировало на живые компоненты 06-30; остались day-part + 2 осознанно-raw.</span></div>
+    <div class="lane-head"><h2>🎨 Raw в showcase — держит отсутствие API/компонента</h2><span class="count c-raw">2</span><span class="why">Остались day-part + 2 осознанно-raw; копий-зеркал ноль.</span></div>
     <div class="cards">
       <div class="card raw"><span class="chip ch-raw">внутренности</span><div class="t">day (календарь)</div><p class="d">Сетка дней — внутренний part, отдельного компонента нет.</p></div>
       <div class="card raw"><span class="chip ch-oos">осознанно raw</span><div class="t">toolbar .divider · do-dont .tooltip</div><p class="d">divider vertical форсит 12px margin vs 4px; tooltip — статичная иллюстрация анти-паттерна (компонент hover-only).</p></div>
@@ -249,7 +237,7 @@
 
   <!-- ============ LINT DEBT ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🧹 Lint debt</h2><span class="count c-track">3</span><span class="why">Остаток после rollout 2026-06-17 (prettier 0 · stylelint 0 · eslint 0 err / 22 warn). Lint авторитетен над prettier.</span></div>
+    <div class="lane-head"><h2>🧹 Lint debt</h2><span class="count c-track">3</span><span class="why">Остаток после rollout 2026-06-17. Lint авторитетен над prettier.</span></div>
     <div class="cards">
       <div class="card track"><span class="chip ch-p2">warn ×1</span><div class="t">prefer-for-of (select)</div><p class="d">Индексный цикл с модульной арифметикой — механический рефактор сломал бы логику. Понижено до warn, per-line дисейблы сняты. Переписать руками. (Был ×2 — цикл dropdown умер вместе с компонентом 07-07.)</p></div>
       <div class="card a11y"><span class="chip ch-p2">warn ×17</span><div class="t">template a11y (click/focus)</div><p class="d">bottom-sheet/modal/combobox — в основном false-positive (клавиатура на host/document-уровне). <b>card</b> — реальный пробел: `pressed` только при `elevation=interactive`, без клавиатуры/фокуса. drawer Esc уже починен.</p></div>
@@ -257,127 +245,20 @@
     </div>
   </div>
 
-  <!-- ============ DONE (collapsed) ============ -->
-  <details class="done-panel">
-    <summary class="lane-head"><h2>✅ Сделано · tokens / showcase</h2><span class="count c-done">21</span><span class="toggle"></span><span class="why">Свёрнуто. Под snapshot-гейтом.</span></summary>
-    <div class="cards">
-      <div class="card done"><div class="t">Lint/format rollout + токен-ренеймы (2026-06-17/18)</div><p class="d">prettier+stylelint+eslint по всему репо (font-слеши, clip→clip-path, mask-attachment, selector-type ignore, empty-comments). + ренейм токенов `-bg`→`-bg-color` (+`background-color:`) и `-fg`→`-text/label/icon-color`, вынос приватных токенов на `:host` (13 комп.), drawer Esc. prettier 0 · stylelint 0 · eslint 0 err. ⚠ нужен major-бамп.</p><div class="meta">bc8e560…f46bd51</div></div>
-      <div class="card done"><div class="t">Токен-фолбэк + деривация состояний</div><p class="d">button/icon-button: публичные `--ds-*` с фолбэком в приватные резолверы; hover/active из color-mix.</p><div class="meta">4b9e0c2…ca452c7</div></div>
-      <div class="card done"><div class="t">Раскат паттерна на ВСЮ либу</div><p class="d">22 компонента + badge/tag/toast/empty-state + menu-item + .link/.icon.</p><div class="meta">427dcb3…6ebba55</div></div>
-      <div class="card done"><div class="t">Ренейм токенов в полные слова</div><p class="d">--fw→--font-weight и т.д. 138 файлов / 3895 замен.</p><div class="meta">ae89955</div></div>
-      <div class="card done"><div class="t">Вынос fonts/link из _tokens</div><p class="d">_tokens.scss = чистые токены; ds.scss — глобальная композиция.</p><div class="meta">5626fbe</div></div>
-      <div class="card done"><div class="t">Снос raw-дубликатов из showcase</div><p class="d">DsStaticPreview host-директива (dropdown/select/modal/popover), пины через ::ng-deep.</p><div class="meta">b202a5f…c418cee</div></div>
-      <div class="card done"><div class="t">6 новых публичных API</div><p class="d">button icon/trailingIcon · sidenav-item [disabled] · input readOnly/success/withAddon · dropzone disabled/single · stat [delta].</p></div>
-      <div class="card done"><div class="t">Сплит 66 секций → ts/html/scss</div><p class="d">+ декомпозиция tokens-reference (1441 стр → компонент + 5 data).</p><div class="meta">0f044a5…9ca7c043</div></div>
-      <div class="card done"><div class="t">8 багов компонентов поймано</div><p class="d">loading-фон, pills-радиус, tab count-chip, addon pierce, popover пустая панель, table-border + 2 битые raw-копии.</p></div>
-      <div class="card done"><div class="t">Финальный аудит копий → ноль</div><p class="d">`.badge/.spinner/.card/.skeleton` копий = 0.</p><div class="meta">454a06a · f5863d5 · 85be650</div></div>
-      <div class="card done"><div class="t">Маркер «ожидает API»</div><p class="d">Чип `&lt;docs-await&gt;` на by-design specimens.</p><div class="meta">93570ee</div></div>
-      <div class="card done"><div class="t">Финальная токен-чистка</div><p class="d">`--shadow-card..z400`→`--shadow-1..4`; `--text-on-media-shadow` в tokens-reference; `_forced-states sm/md/lg` moot.</p><div class="meta">0f0bfd7</div></div>
-      <div class="card done"><div class="t">DS-HANDOFF — 7/7 портировано</div><p class="d">badge/empty-state резолверы + `success`; input `--ds-input-fs`/`enterKeyHint`/`inputMode`/`(blurred)`; `--text-on-media[-shadow]`; icon-button `outline`; `ds-bottom-sheet`.</p><div class="meta">сверено с src/lib</div></div>
-      <div class="card done"><div class="t">DS-docs single-file + staleness</div><p class="d">Артефакт-трек отработал; `_showcase-mirrors.scss` снесён.</p><div class="meta">317ee54</div></div>
-      <div class="card done"><div class="t">✅ combobox — size=sm|md|lg</div><p class="d">Добавлен инпут `size` в `ds-combobox` (дефолт `md`), зеркально `ds-select`; `min-height` 32/40/48. Билд зелёный.</p><div class="meta">2026-06-18</div></div>
-    </div>
-  </details>
 
-  <details class="done-panel">
-    <summary class="lane-head"><h2>✅ Сделано · релиз / инфра / доки</h2><span class="count c-done">6</span><span class="toggle"></span><span class="why">Свёрнуто. Пакет вышел в свет (v0.2.0).</span></summary>
-    <div class="cards">
-      <div class="card done"><div class="t">Релиценз UNLICENSED → MIT</div><p class="d">LICENSE + поля, README. dist/ds под MIT.</p><div class="meta">v0.2.0</div></div>
-      <div class="card done"><div class="t">Release-тулинг + гарды</div><p class="d">preflight, авто-стамп, защита tag↔version и от двойной публикации; beta-канал.</p><div class="meta">tools/preflight.mjs · changelog-release.mjs</div></div>
-      <div class="card done"><div class="t">One-click release pipelines</div><p class="d">release-patch|minor|major|beta; тег `v*` — единственный публикатор.</p><div class="meta">cut-release.sh · publish.sh</div></div>
-      <div class="card done"><div class="t">CI/CD best-practices</div><p class="d">`infrastructure/scripts/*.sh`, bun frozen-lock, PR-валидация (lint report-only).</p><div class="meta">ci-pr.sh</div></div>
-      <div class="card done"><div class="t">homepage + live-доки</div><p class="d">package.homepage + README ссылка.</p><div class="meta">ids-ds.proto.ids-group.co.uk</div></div>
-      <div class="card done"><div class="t">Favicon + тайтл ds-docs</div><p class="d">Bento favicon (svg/.ico/apple-touch) на светлом; `&lt;title&gt;` → «IDS Design System».</p><div class="meta">9d33039</div></div>
-    </div>
-  </details>
 
-  <details class="done-panel">
-    <summary class="lane-head"><h2>✅ Сделано · motion / foundations (06-25/26)</h2><span class="count c-done">6</span><span class="toggle"></span><span class="why">Свёрнуто. Из последнего захода.</span></summary>
-    <div class="cards">
-      <div class="card done"><div class="t">Button: размеры → sm/md/lg</div><p class="d">Схлопнут дубль-ярус: `s/m/l` ≡ `sm/md/lg` → один `sm|md|lg` (32/40/48), дефолт `md`; legacy `s/m/l` снесены (48 usages, 13 файлов). strictTemplates чист, CHANGELOG breaking. Сделано ОТДЕЛЬНО, не в color×fill заходе.</p><div class="meta">b801f2f · 2026-06-25</div></div>
-      <div class="card done"><div class="t">Bottom-sheet close animation</div><p class="d">`rendered`/`closing` сигналы + `ds-sheet-down`/`fade-out` (`--ease-accelerate`), teardown на `animationend`. Анимирует на любой `open→false`. reduced-motion бесплатно. Первый animate-then-remove паттерн в либе (reference для Motion-аудита).</p><div class="meta">69c9707 · 2026-06-25</div></div>
-      <div class="card done"><div class="t">Breakpoints — `_breakpoints.scss` + миграция `@media`</div><p class="d">`$breakpoints` map → `--bp-*` в `:root` + compile-time `$bp-*` алиасы и `up()/down()` миксины для `@media`. Дубль `--bp-*` из `_tokens` убран. Первый Sass-модуль в стилях либы. <b>Миграция 07-07 (вердикт Stas):</b> page-grid → `up(sm/lg/xl)` (снап `641/1025`→`640/1024`, 1px-сдвиг ок); off-scale `page-header 720` / `layout-utils 1100/820` оставлены компонентными (content-fit, не device-брейкпоинты).</p><div class="meta">902c4b1 · 260f800 · 06-25 / 07-07</div></div>
-      <div class="card done"><div class="t">BUG: prefers-reduced-motion</div><p class="d">Универсальный `*{animation-duration:0!important}` занулял loop-токены → спиннеры/прогресс замерзали. Снят blanket-kill, оставлен только `transition-duration:0!important`; loop-токены замедлены (1400/2800ms), не остановлены.</p><div class="meta">eb385bf · 2026-06-25</div></div>
-      <div class="card done"><div class="t">Button press animation</div><p class="d">press `transform: scale` на `--duration-instant` (80ms) — снапи по дизайну. (Motion-аудит флагнул «слишком быстро» — это намеренно, см. карточку «подтвердить».)</p><div class="meta">7d6e8f0 · 2026-06-25</div></div>
-      <div class="card done"><div class="t">✅ stepper: видимые лейблы</div><p class="d">Подписи `[steps]` теперь видны под кружками (были только sr-текст → виделись лишь `① ② ③`), текущий шаг акцентирован. Full-width flex с равными сегментами, коннектор пин по центру кружка; новые токены `--ds-stepper-label-color/-color-current/-font-size`. Билд lib+docs зелёный, eslint 0.</p><div class="meta">stepper.component · 2026-06-23</div></div>
-    </div>
-  </details>
 
-  <details class="done-panel" open>
-    <summary class="lane-head"><h2>✅ Сделано · 2026-06-29/30 (dark · ds-color · button color×variant · components · forms)</h2><span class="count c-done">15</span><span class="toggle"></span><span class="why">Большой заход 29–30 июня. Деки — в `implemented/`.</span></summary>
-    <div class="cards">
-      <div class="card done"><div class="t">✅ Dark theme</div><p class="d">`themes/dark/`. Light — дефолт; dark opt-in через `<html data-theme="dark">`; авто-OS только через `provideDsTheme({ followSystem })`. Sibling-темы (общий base-palette + semantic-роли), `color-scheme` на тему, dark chart-токены. `themes/default`→`themes/light`.</p><div class="meta">c94f368… · 2026-06-29</div></div>
-      <div class="card done"><div class="t">✅ ds-color — scoped accent</div><p class="d">`--accent-*` indirection (дефолт primary, pixel-identical без `ds-color`) + атрибут `[ds-color="…"]` и миксин `ds.color()`. Полный sweep компонентов (`--primary*`→`--accent*`); button/icon-button `--c-*` → `--accent-*`. Статус-каналы + per-family focus-rings.</p><div class="meta">b51b55e… · 2026-06-30</div></div>
-      <div class="card done"><div class="t">✅ Button: color × variant</div><p class="d">`ButtonColor` (7) × `ButtonVariant` (solid/tonal/ghost/outline/text), дефолт primary/solid. icon-button получил ось `color`. Discouraged-комбо с ⚠ (dev-warn), `text` discouraged (→ `.link`). 5 ролей `--*-muted-strong`. Витрина = матрица color×variant.</p><div class="meta">c698f64…fe49f1c · 2026-06-30</div></div>
-      <div class="card done"><div class="t">✅ 14 новых компонентов</div><p class="d">multi-select · slider · otp-input · color-picker · tree · segmented · button-group · split-button · toggle-button · list · timeline · description-list · layout-примитивы (stack/inline/container) · loading-overlay. + data-grid → ds-table, confirm → `ModalService.confirm`.</p><div class="meta">implemented/new-components.html · 06-26→30</div></div>
-      <div class="card done"><div class="t">✅ ds-alert</div><p class="d">Лёгкий inline-статус: 5 вариантов, `title`, `[dismissible]`, `[actions]`-слот, `icon`, `(dismissed)`.</p><div class="meta">1323687 · 2026-06-30</div></div>
-      <div class="card done"><div class="t">✅ CVA — вся линейка + ds-radio-group</div><p class="d">Boolean-CVA база для checkbox/switch; combobox/date-picker + `disabled`; новый `ds-radio-group` (CVA + roving). Закрывает CVA-трек (input/textarea/select — 06-23).</p><div class="meta">f2afa10…a494445 · 2026-06-30</div></div>
-      <div class="card done"><div class="t">✅ Field-message / hint / label / input</div><p class="d">`hint`/`invalid` через общий `ds-field-message` на select + новые поля; `--ds-input-hint-*`→`--ds-field-message-*` (breaking). Inline `[label]` на checkbox/radio/switch. `ds-input` `[loading]`/`[floating]`. Токен `--field-label-gap`.</p><div class="meta">c4d09c7… · 2026-06-30</div></div>
-      <div class="card done"><div class="t">✅ date-picker — month/year grids</div><p class="d">Заголовок month/year → компактные grid-пикеры (год — paged 12/стр) вместо длинного скролла; bounds `[minYear]`/`[maxYear]`. Sunday-overflow фикс. `ds-calendar-day` вынесен (internal).</p><div class="meta">b9fc409…c2577e8 · 2026-06-30</div></div>
-      <div class="card done"><div class="t">✅ Smooth-motion rollout (A–F)</div><p class="d">Плавные переходы по всем компонентам: selection-fills, pagination, tabs, sidenav (вкл. collapse-width), table, dropzone, stepper, listbox-опции; modal/drawer/accordion анимируют close; floating-панели fade+slide; banner/toggle. Action-driven панели закрываются мгновенно.</p><div class="meta">implemented/motion-system.html · 2026-06-26</div></div>
-      <div class="card done"><div class="t">✅ --static-white / --static-ink</div><p class="d">Тема-независимые on-fill якоря — white-on-coloured-fill переживает тёмную тему. Закрывает гэп «Палитра — `--static-white`».</p><div class="meta">3333855 · 2026-06-29</div></div>
-      <div class="card done"><div class="t">✅ Semantic spacing aliases</div><p class="d">`--space-stack` / `--space-inline` (с layout-примитивами).</p><div class="meta">caa8d03 · 2026-06-26</div></div>
-      <div class="card done"><div class="t">✅ A11y: switch / checkbox / radio-group</div><p class="d">switch `role="switch"`+aria-checked+label; checkbox label/`for`+ARIA+booleanAttribute; новый `ds-radio-group` (`role=radiogroup`+roving+group-label).</p><div class="meta">2026-06-30</div></div>
-      <div class="card done"><div class="t">✅ Overlay/table — точечные фичи-гэпы</div><p class="d">table empty-slot + pagination · toast position (`DsToastPosition` → region) · menu keyboard-nav · popover open-signal. (Feature-gaps по полям — см. карточки «CVA» и «Field-message».)</p><div class="meta">2026-06-30</div></div>
-      <div class="card done"><div class="t">✅ Палитра — чистка завершена</div><p class="d">`--static-white`/`--static-ink` ✅ заведены (06-29, on-роли переживают тёмную тему). Гибридный нейминг cool-gray/brand-gray/neutral-slot внедрён; scrollbar читает `--scrollbar-thumb*`.</p><div class="meta">implemented/palette-naming.html · 2026-06-29</div></div>
-      <div class="card done"><div class="t">✅ Мигрировано на живые компоненты (06-30)</div><p class="d">segmented/slider · button-group/split/toggle + bulk-bar (`[bulk-actions]`) · table column-templates (`dsCellTemplate`) · input floating/loading · dropzone `[files]` — все raw-специмены заменены на живые компоненты/API, чипы «Ожидает …» сняты.</p><div class="meta">2026-06-30</div></div>
-    </div>
-  </details>
 
-  <details class="done-panel">
-    <summary class="lane-head"><h2>✅ Сделано · сверка 2026-07-02 · 07-06</h2><span class="count c-done">6</span><span class="toggle"></span><span class="why">Выявлено сверкой доски с кодом — числилось открытым, оказалось готово (или закрыто мелким фиксом). + ревью field-overrides (07-06).</span></summary>
-    <div class="cards">
-      <div class="card done"><div class="t">✅ A11y: table sort + combobox trigger-close</div><p class="d">table: сортируемый `<th>` = нативный `<button>` (Enter/Space) + `[aria-sort]`. combobox: chevron `togglePanel()` закрывает открытую панель. spinner/divider/skeleton roles — сделаны ранее.</p><div class="meta">2026-07-02 (сверка)</div></div>
-      <div class="card done"><div class="t">✅ DS-docs: Menu demo + sidenav sort/search</div><p class="d">Menu-секция: живой `ds-button`→`ds-popover`→`ds-menu`. Sidenav: nav отсортирован A→Z + встроенный `ds-search` с `filteredNav()`.</p><div class="meta">2026-07-02 (сверка)</div></div>
-      <div class="card done"><div class="t">✅ Field: banner compact + input label-токены</div><p class="d">`ds-banner [compact]` (сжатые pad). `ds-input` — публичные `--ds-input-label-color/-fs/-fw`.</p><div class="meta">2026-07-02 (сверка)</div></div>
-      <div class="card done"><div class="t">✅ DS-docs: Truncation-поповер</div><p class="d">Общий `&lt;docs-truncation [rules]&gt;`: «i»-кнопка у заголовка секции раскрывает правила по hover/focus (скрыто по умолчанию), вместо always-on `.trunc`-карточки в конце. Внедрён во все ~35 секций, inline-копий не осталось.</p><div class="meta">20c6c96 · 2026-07-06 (сверка)</div></div>
-      <div class="card done"><div class="t">✅ Search · max-width (--ds-search-maxw)</div><p class="d">search был единственным field-контролом с cap 320px; input/select/… заполняют контейнер. Выровнял с семейством: `max-width: var(--ds-search-maxw, none)` — по умолчанию тянется на всю ширину; мёртвый `--search-maxw` убран. Opt-in cap: `ds-search { --ds-search-maxw: 320px }`. Field-обход теперь = дефолт, снимается.</p><div class="meta">2026-07-06 (ревью field-overrides)</div></div>
-      <div class="card done"><div class="t">✅ Tabs · pills overflow (verify)</div><p class="d">Оказался закрыт: input `[scrollable]` (pills+scrollable → скролл в границах) отгружен `6dd5685`; empty-panel gap убран нативно (`.panel:empty`). Field-обход `overflow-x:auto` можно заменить на `[scrollable]`.</p><div class="meta">6dd5685 · 2026-07-06 (сверка)</div></div>
-    </div>
-  </details>
 
-  <details class="done-panel" open>
-    <summary class="lane-head"><h2>✅ Сделано · 2026-07-02/03 (time-picker · фичи-гэпы Forms · Data/overlay · Display)</h2><span class="count c-done">11</span><span class="toggle"></span><span class="why">Большой заход по 🧩-лейну. Осталось только `ds-select` native multi (отложено).</span></summary>
-    <div class="cards">
-      <div class="card done"><div class="t">✅ ds-time-picker</div><p class="d">Новый публичный компонент: триггер + CDK-overlay с колонками-вертушками. 24h / 12h AM-PM (`DsConfig.timePicker.format`), `minuteStep`, `value` = `"HH:MM"`, `min`/`max` + `disabledTime`, single + range. CVA + `invalid`/`hint`/`size`.</p><div class="meta">2026-07-02</div></div>
-      <div class="card done"><div class="t">✅ Forms: checkbox/radio/switch — size + required</div><p class="d">Ось `size` (sm/md/lg; md = плотностные токены — density-safe) + `required` (звёздочка + `aria-required`). radio получил `invalid`+`hint`. Новые `CheckboxSize`/`RadioSize`/`SwitchSize`.</p><div class="meta">17e23bc · 2026-07-02</div></div>
-      <div class="card done"><div class="t">✅ Forms: input/textarea char counter + textarea readOnly</div><p class="d">`[maxLength]` + `.field-footer` со счётчиком символов (aria-live). textarea `[readOnly]`.</p><div class="meta">cf9b0ed · 2026-07-02</div></div>
-      <div class="card done"><div class="t">✅ Forms: date-picker constraints + presets</div><p class="d">День-уровень `minDate`/`maxDate` (inclusive), предикат `disabledDate`, `presets` (`DatePickerPreset`). Datetime-режим отклонён визуально — не вошёл.</p><div class="meta">5a80191 · 2026-07-02</div></div>
-      <div class="card done"><div class="t">✅ Forms: select/dropdown/combobox</div><p class="d">select `clearable` + per-option `icon`; dropdown/combobox `optionGroups`; combobox `allowCreate` + `(create)`. (native multi — отложено.)</p><div class="meta">1741cb9 · 2026-07-02</div></div>
-      <div class="card done"><div class="t">✅ Data: table expandable rows</div><p class="d">`[expandableRows]` + `[(expandedIds)]` (`Set<string>`) + `[rowExpandTemplate]`; шеврон-тоггл раскрывает full-width detail-row (совместимо с selection / sticky-first / pagination).</p><div class="meta">638aac0 · 2026-07-02</div></div>
-      <div class="card done"><div class="t">✅ Overlay: modal / drawer / bottom-sheet</div><p class="d">modal `closeOnBackdrop`+`persistent`+xl/fullscreen; drawer `placement` (right/left/top/bottom)+sm; bottom-sheet `snapPoints`. Новые токены ширин/высот.</p><div class="meta">3af339c · 2026-07-02</div></div>
-      <div class="card done"><div class="t">✅ Overlay: toast / menu / popover</div><p class="d">toast `'loading'`-вариант + `ToastService.promise()` + `maxVisible` (очередь); новый `ds-menu-divider` + submenus (`[submenu]`); popover `arrow` + `placement`.</p><div class="meta">80e0fc8 · 2026-07-02</div></div>
-      <div class="card done"><div class="t">✅ Display: tabs</div><p class="d">`lazy` панели + `scrollable` + `closable` (`(tabClose)`) + `orientation` (horizontal/vertical, roving по оси).</p><div class="meta">6dd5685 · 2026-07-03</div></div>
-      <div class="card done"><div class="t">✅ Display: accordion + stepper</div><p class="d">accordion `multi=false` (single-open координатор) + item `disabled`; stepper `clickable`+`(stepClick)` + `errorSteps` (error-state) + `orientation`.</p><div class="meta">e0262e9 · 2026-07-03</div></div>
-      <div class="card done"><div class="t">✅ Display: sidenav / badge / avatar</div><p class="d">sidenav-item collapsed-tooltip; badge числовой `[count]`+`[max]` («max+»); avatar `[status]` (status-dot) + `[fallbackIcon]`.</p><div class="meta">6aeb068 · 2026-07-03</div></div>
-    </div>
-  </details>
 
-  <details class="done-panel" open>
-    <summary class="lane-head"><h2>✅ Сделано · 2026-07-06 (A11y — компонентная волна)</h2><span class="count c-done">6</span><span class="toggle"></span><span class="why">Реализовано из A11y-лейна, каждый finding сверен с кодом + семантика проверена по APG/MDN. Осталось 3: scroll-lock (варианты) · date-picker grid (отложено) · topbar banner (валидировано-избыточно).</span></summary>
-    <div class="cards">
-      <div class="card done"><div class="t">✅ bottom-sheet dialog-семантика</div><p class="d">`role="dialog"` + `aria-modal="true"` + `aria-labelledby`(gated title-id) + `cdkTrapFocus`/`cdkTrapFocusAutoCapture` на `.sheet` (импорт A11yModule). Зеркалит modal; фокус восстанавливается на триггер при закрытии (`@if (rendered())` destroy).</p><div class="meta">2026-07-06</div></div>
-      <div class="card done"><div class="t">✅ number-stepper aria-label</div><p class="d">`−/+` → статичный `aria-label` Decrease/Increase; новый input `ariaLabel` именует `<input type=number>`.</p><div class="meta">2026-07-06</div></div>
-      <div class="card done"><div class="t">✅ avatar-group + badge count</div><p class="d">avatar-group `+N` → `aria-label="N more"`. badge count `aria-label` — оказался уже сделан (`countAriaLabel()`), сверено-vs-code.</p><div class="meta">2026-07-06</div></div>
-      <div class="card done"><div class="t">✅ listbox Tab-close + option tabindex</div><p class="d">combobox/select/dropdown закрывают панель на Tab (без preventDefault → фокус уходит естественно, оверлей+backdrop не висят). option-кнопки select/dropdown → `tabindex="-1"` (single-focus под activedescendant; combobox уже `div`).</p><div class="meta">2026-07-06</div></div>
-      <div class="card done"><div class="t">✅ combobox «No matches» = role=status</div><p class="d">Пустое состояние: `role="option"` → `role="status"` (live-region, не countable / не активируется стрелками; убран лишний boolean `aria-disabled`). APG/MDN: status vs presentation.</p><div class="meta">2026-07-06</div></div>
-      <div class="card done"><div class="t">✅ field-message alert + sidenav-item aria</div><p class="d">field-message: error рендерится СВЕЖИМ узлом (надёжный `role=alert` при вставке, а не флип на существующем). sidenav-item: `aria-label` только в collapsed (иначе перекрывает видимый текст + прячет badge/alert). tooltip describedby + backdropClick — сверено, НЕ баги.</p><div class="meta">2026-07-06</div></div>
-    </div>
-  </details>
 
   <p class="foot">
-    Источники: <span class="tag">docs/todo.md</span> · <span class="tag">DS-HANDOFF.md</span> (7/7 портировано) · история <span class="tag">4b9e0c2…19ef859</span>.
-    Снято как сделанное: pinkmoon token-миграция, MIT-релиценз.
-    starter вынесен в <span class="tag">ai-sdlc-prototype</span> (2026-06-23) — на доске остались только DS-гэпы, что он вскрыл (CVA / data-grid / confirm).
-    Motion-system (findings A–F + рецепты, дек <span class="tag">implemented/motion-system.html</span>) — ОТГРУЖЕН 06-26.
-    <b>Актуализировано 2026-06-30:</b> dark theme · ds-color · button color×variant · 14 компонентов · forms/CVA · smooth-motion — отгружено; реализованные деки перенесены в <span class="tag">presentations/implemented/</span>.
-    <b>Актуализировано 2026-07-03:</b> весь 🧩-лейн закрыт — ds-time-picker + все фичи-гэпы Forms / Data-overlay / Display отгружены (11 карточек в июльской done-панели); открыт только `ds-select` native multi (отложено) + MED-компоненты (chart/calendar/lightbox/splitter).
-    <b>Актуализировано 2026-07-06:</b> A11y-лейн 9→3 — компонентная волна отгружена (bottom-sheet dialog · number-stepper · avatar-group · listbox Tab-close · option tabindex · «No matches»=status · field-message alert · sidenav-item aria; badge count — оказался готов). Осталось: scroll-lock (варианты в todo) · date-picker grid (отложено) · topbar banner (валидировано-избыточно, оставлено как decision-record). Каждый finding сверен с кодом + APG/MDN.
-    <b>Актуализировано 2026-07-07:</b> Foundations 6→5 — Breakpoints @media-миграция закрыта (вердикт Stas): page-grid снапнут на шкалу (up(sm/lg/xl), 641/1025→640/1024, 1px-сдвиг ок), off-scale 720/820/1100 оставлены компонентными; карточка ушла в done (<span class="tag">260f800</span>).
-    Доска — навигация; полные обоснования — в todo.md.
+    Источник: <span class="tag">docs/todo.md</span> (полные формулировки — в поповерах ⓘ).
+    Архив сделанного целиком — <span class="tag">docs/todo-done.md</span>; на доске выполненное не хранится.
+    Актуализировано 2026-07-07: picker-portfolio (rename → <span class="tag">ds-autocomplete</span> · merge dropdown→select · breakpoints-миграция) — детали в архиве.
   </p>
 
-  <!-- raw docs/todo.md + docs/todo-done.md embedded verbatim (as of 2026-07-06) so the popover works offline over file:// -->
+  <!-- raw docs/todo.md embedded verbatim (as of 2026-07-07; live backlog only — done lives in docs/todo-done.md) so the popover works offline over file:// -->
   <script type="text/plain" id="todo-md"># DS — improvements backlog
 
 Running list of design-system improvements. Add items here as they come up.
@@ -473,18 +354,21 @@ Most of the original gap list has SHIPPED (live in `src/lib/components/`): multi
 
 The `a11y` branch covered ~29 components (CDK focus-trap + scroll-lock + dialog ARIA for modal/drawer; `listbox`/`menu`/`tab` roles + keyboard via `aria-activedescendant` & roving; form labelling for input/textarea/select; toast live-region; `aria-current`/`expanded`/`selected`; `:focus-visible`; `aria-label` on icon-only). These interactive components were NOT touched and need the same treatment (mirror the patterns noted):
 
-- [ ] **MED/minor:** ~~spinner → `role="status"`~~ ✅ DONE; ~~divider → `role="separator"`~~ ✅ DONE; ~~skeleton → `aria-hidden`~~ ✅ DONE; ~~badge `count` → `aria-label`~~ ✅ ALREADY SHIPPED (verified 2026-07-06 — `countAriaLabel()` "N notifications"); ~~avatar-group hidden-count~~ ✅ Done 2026-07-06 (`+N` span `[attr.aria-label]="overflow() + ' more'"`). **STILL OPEN (deferred, not a bug):** topbar → `role="banner"` — ⚠️ VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06). The bare `<header>` inside the generic `<ds-topbar>` ALREADY maps to the `banner` landmark implicitly; the W3C validator flags an explicit `role="banner"` on `<header>` as "unnecessary" (ARIA rule 1), and it would be WRONG if a consumer nests `<ds-topbar>` inside `<main>`/`<section>`/`<article>`/`<aside>`/`<nav>`. Kept as a decision record.
+- [ ] **MED/minor:** ~~spinner → `role="status"` + `aria-label`~~ ✅ ALREADY DONE (host has `role="status"` + `aria-label="Loading"`, verified 2026-06-25); ~~divider → `role="separator"`~~ ✅ ALREADY DONE (host binding); ~~skeleton → `aria-hidden`~~ ✅ ALREADY DONE (host `aria-hidden="true"`; `aria-busy` N/A for a static placeholder); ~~badge `count`/value → `aria-label`~~ ✅ ALREADY SHIPPED (verified-vs-code 2026-07-06 — `badge.component.ts` `countAriaLabel()` computes "N notifications" / "More than N notifications", bound via `[attr.aria-label]`); ~~avatar-group → `aria-label` for the hidden-count~~ ✅ Done 2026-07-06 (the `+N` `.avatar-overflow` span now carries `[attr.aria-label]="overflow() + ' more'"`). **STILL OPEN (deferred, not a bug):** topbar → `role="banner"` — ⚠️ VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06: "пропусти, не удаляй"). The bare `<header>` inside the generic custom element `<ds-topbar>` ALREADY maps to the `banner` landmark implicitly (a custom element is `role=generic`, not sectioning content, so it doesn't strip the header's implicit role). The W3C Nu HTML validator flags an explicit `role="banner"` on `<header>` as "unnecessary" (ARIA rule 1), and it would be WRONG if a consumer nests `<ds-topbar>` inside `<main>`/`<section>`/`<article>`/`<aside>`/`<nav>` — there `<header>` is NOT a banner, and forcing the role would create a false/duplicate landmark. Kept on the board as a decision record; only add the explicit role if we adopt a deliberate defensive-robustness policy. (avatar already got `role="img"` from the a11y branch.) [Verified-vs-code 2026-06-25/2026-07-06.]
 - Reference patterns (a11y branch): form fields = `input.component.ts`; overlays = `modal.component.html`; roving keyboard = `tabs.component.ts`.
 
 ### A11y — open findings from the a11y-branch review
 
 Confirmed issues in the merged `a11y` pass, not covered above (source: `docs/superpowers/a11y-branch-review.md`; spot-re-verified vs code 2026-06-10):
 
-- [ ] **modal/drawer scroll-lock isn't ref-counted** — with two overlays stacked, closing the first restores body scroll under the second (both just reset `body.style.overflow`). **(P1)** — DEFERRED 2026-07-06 (Stas: "пропусти, распиши варианты"). Fix needs SHARED state (a counter) — a per-component tweak can't coordinate cross-component stacking. **Options:** (A) ref-counted lock service (recommended) — `lock()`/`unlock()` counter, saves/restores `body.style.overflow` on 0→1 / 1→0; modal/drawer/bottom-sheet call it from their `rendered` effect + `DestroyRef`; correct for any nesting (one new shared-service pattern). (B) CDK `BlockScrollStrategy` — but modal/drawer/bottom-sheet don't use CDK overlay (`@if` + `position:fixed`), so wiring it is artificial. (C) per-component save/restore only — cheapest, order-dependent, does NOT robustly fix mixed-type stacking; rejected as a real fix.
+- [ ] **modal/drawer scroll-lock isn't ref-counted** — with two overlays stacked, closing the first restores body scroll under the second (both just reset `body.style.overflow`). **(P1)** — DEFERRED 2026-07-06 (Stas: "пропусти, распиши варианты"). modal (`modal.component.ts` overflow effect) + drawer (`drawer.component.ts` overflow effect) write `body.style.overflow = ''` unconditionally on close; bottom-sheet uses save/restore (`previousBodyOverflow`) — better, but still per-instance, not shared. Stacked overlays of ANY mix (modal over drawer, bottom-sheet over modal, …) → closing the inner one unlocks body scroll while an outer one is still open. A real fix needs SHARED state (a counter); a per-component tweak can't coordinate across component types. **Options:**
+  - **(A) Ref-counted lock service (recommended).** A tiny injectable singleton (e.g. `src/lib/.../scroll-lock.service.ts`): `lock()` increments a counter and on 0→1 saves `body.style.overflow` then sets `hidden`; `unlock()` decrements and on 1→0 restores the saved value. modal/drawer/bottom-sheet call `lock()`/`unlock()` from their `rendered` effect + `DestroyRef`. Correct for any nesting/order. Cost: one new shared-service pattern (needs the "no new pattern without asking" sign-off — already flagged to Stas).
+  - **(B) CDK `BlockScrollStrategy`** (`overlay.scrollStrategies.block()`). Reuses CDK's own scroll-block. BUT modal/drawer/bottom-sheet do NOT use CDK overlay (they render via `@if` + `position: fixed`), so a CDK strategy has to be created + enabled/disabled artificially just for the body lock — awkward, and still needs per-instance coordination. Less natural here.
+  - **(C) Per-component save/restore only** — give modal + drawer the same `previousBodyOverflow` save/restore bottom-sheet has. Cheapest, but order-dependent and does NOT robustly fix stacking across different component types (each captures/restores independently). A partial patch, not a real fix — rejected.
 - [x] ~~**accordion `aria-controls` dangles when collapsed**~~ — ❌ NOT A BUG (verified-vs-code 2026-06-25). The `<div role="region" [id]="bodyId">` is rendered UNCONDITIONALLY (`accordion-item.component.html:22`), toggled only via `[class.is-open]` + `[attr.inert]` — never inside an `@if`. So `aria-controls` always resolves. No fix needed; finding was stale/incorrect.
-- [ ] **date-picker grid semantics** — no `role="grid"`/`gridcell` (uses `aria-pressed`); popup has no `role="dialog"`/name. **(P2)** — DEFERRED 2026-07-06 (Stas: "отложить"). Per APG Date Picker Dialog the calendar should be a `role="grid"` (rows / `columnheader` / `gridcell`) with `aria-selected` on the selected cell + `role="dialog"`+name on the popup. **Why deferred:** COUPLED — `aria-selected` is only valid on a grid/listbox-role element, so `aria-pressed`→`aria-selected` REQUIRES building the grid structure (group `daysGrid()` into week rows, likely `display:contents` to keep the CSS layout) — non-trivial + layout risk for a P2. Roving-tabindex + arrow nav already present; the old `setTimeout`-on-disposed-overlay focus concern is already fixed (`afterNextRender` + guard — NOT a bug).
-- [ ] **badge `count` `aria-label` wording is hardcoded "notifications"** (minor — surfaced 2026-07-06 while verifying the count-label finding, which is itself DONE). `countAriaLabel()` returns `"${value} notifications"`, but `[count]` is used for ANY numeric count (cart, unread, results), so a cart badge announces "3 notifications" — misleading + not i18n-able. Fix: configurable noun (`countLabel`/`unit` input or `ariaLabel` override). Low priority.
-- [ ] **bottom-sheet Escape is a document-level `(document:keydown.escape)`** (from `a11y-branch-review.md`; re-confirmed 2026-07-06). modal/drawer scope Escape to the panel; bottom-sheet listens at document level, so with stacked overlays Escape could hit the wrong sheet. Low risk, align to panel-scoped when next touching it (dialog semantics + `cdkTrapFocus` added 2026-07-06).
+- [ ] **date-picker grid semantics** — no `role="grid"`/`row`/`columnheader`/`gridcell` model (uses `aria-pressed`); popup has no `role="dialog"`/name. **(P2)** — DEFERRED 2026-07-06 (Stas: "отложить"). The day grid is a flat CSS `grid` of `.dow` spans + `<ds-calendar-day>` buttons; selection uses `aria-pressed` (toggle-button) instead of `aria-selected` (grid-cell). Per the APG **Date Picker Dialog** example the calendar should be a `role="grid"` (rows / `columnheader` day names / `gridcell` days) with `aria-selected` on the one selected cell, plus `role="dialog"` + accessible name on the popup (the trigger already advertises `aria-haspopup="dialog"`). **Why deferred:** the pieces are COUPLED — `aria-selected` is only valid on an element with a grid/listbox role, so switching `aria-pressed`→`aria-selected` REQUIRES first building the grid role structure (group `daysGrid()` into week rows, wrap in `role="row"` — likely `display:contents` to keep the CSS grid layout intact). Non-trivial + real layout risk for a P2. Roving-tabindex + arrow-key nav are ALREADY present (`isFocusDay` + `onGridKeydown`); the old `setTimeout`-on-disposed-overlay focus concern is already fixed (`afterNextRender` + guard — re-verified NOT a bug 2026-07-06). Source: APG Date Picker Dialog (`w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog`).
+- [ ] **badge `count` `aria-label` wording is hardcoded "notifications"** (minor — surfaced 2026-07-06 while verifying the count-label finding, which is itself DONE). `badge.component.ts` `countAriaLabel()` returns `"${value} notifications"` / `"More than ${max} notifications"`, but `ds-badge [count]` is used for ANY numeric count (cart items, unread, search results), so a cart badge announces "3 notifications" — misleading and not i18n-able. The `aria-label` IS present (original finding satisfied); this is a follow-up. Fix: make the noun configurable — a `countLabel`/`unit` input or an `ariaLabel` override, defaulting to the current wording. Low priority.
+- [ ] **bottom-sheet Escape is a document-level `(document:keydown.escape)`** (from `a11y-branch-review.md`, not previously on the board; re-confirmed 2026-07-06). modal/drawer scope their Escape to the panel; bottom-sheet listens at document level (`host: { '(document:keydown.escape)': 'onEscape()' }`), so with stacked overlays Escape could be consumed by the wrong sheet. Low risk (bottom-sheet is rarely stacked), align to a panel-scoped binding for consistency when next touching it. (Dialog semantics + `cdkTrapFocus` were added 2026-07-06; this scoping is the remaining polish.)
 - [ ] **API consistency (P2)** — `booleanAttribute` on all boolean inputs; `danger`→`error` / `warn`→`warning`; dropdown `error`→`invalid`; `radio.name` type; export `DividerSpacing`/`PopoverAlign`; button size scale (FULL finding promoted to Architecture/tokens — dual `s/m/l`+`sm/md/lg` tiers, collapse with the color×fill rework); output-name unification; pagination model/output dedup; `title` requiredness unification (modal `required` vs drawer/bottom-sheet/banner optional). See `library-audit.md`. Axis-mix findings from the button color×fill survey (2026-06-11; only button+icon-button get the full two-axis split — status components have one fill, their `variant` IS the color, leave as is): **progress** — `indeterminate` is an animation MODE living in the color enum (same smell as button's `text`); extract to a boolean input when touching (`warn`→`warning` lands then too). **badge** — `BadgeVariant` mixes lifecycle statuses + semantic colors + `solid` (fill) + `count` (content mode); pull `count` out of the color enum on next badge work. Wholesale `variant`→`color` renames elsewhere rejected: cosmetic churn.
 - [ ] **Combobox `multiple` vs `ds-multi-select` — portfolio overlap (surfaced 2026-07-07 during the combobox-definition research for V2).** Industry canon (Carbon / Spectrum / MUI / FluentUI): ComboBox is single-select-first; multi-selection lives in a SEPARATE MultiSelect component. Our DS has BOTH `ds-combobox [multiple]` (chips in the trigger, Backspace-removes) and `ds-multi-select` (chips + in-panel checkbox listbox + selectAll + maxVisibleChips) — two multi implementations with different UX. Decide long-term: (a) deprecate combobox `multiple` in favor of ds-multi-select, or (b) keep both with a documented boundary (combobox-multi = typeahead-driven tagging incl. `allowCreate`; multi-select = checkbox-set picking from a known list). **Live comparison deck (2026-07-07, after Stas: "не логика ли: печатаю → получаю опции → мульти-селектаю?"):** `presentations/multi-pick-comparison.html` — verdict from building it: same scenario, two ergonomics (type-to-collect: hands stay on the keyboard, allowCreate; vs checkbox-set: full-list overview, selectAll, +N chips); they'd only become a true dupe if multi-select gained trigger-typing. Decision still open — pick (a) or (b) on the deck.
 - [ ] **Shared picker internals — extract the common listbox/overlay plumbing (Stas asked "можно?" 2026-07-07 — yes; recorded, needs explicit go).** select / autocomplete / multi-select re-implement the same PRIVATE machinery: CDK overlay config (flexibleConnectedTo + transparent backdrop + `ds-overlay-pane` + width-from-trigger), active-descendant arrow/Home/End/Enter nav with disabled-skip, option filtering. Extract INTERNAL helpers (overlay-config util + nav helper — precedent: `DsControlValueAccessor` base, `disposeWithLeave`) and migrate the three pickers; public APIs untouched. "Share the plumbing, keep the contracts" — the agreed reason select/multi-select stay separate components. New shared pattern → sign-off before building.
