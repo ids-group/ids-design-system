@@ -21,7 +21,9 @@
     --focus-field: 0 0 0 3px rgb(46 84 255 / .22);
     --hit-cozy: 40px;
     --font-sans: 'Mulish', system-ui, sans-serif;
-    --chev-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    /* background-image, not mask+bg-color: force-dark repaints background colors
+       (chevron vanishes) but leaves background images alone */
+    --chev-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7388' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   }
 
   body {
@@ -63,9 +65,7 @@
   }
   .chev {
     width: 16px; height: 16px; margin-left: auto; flex: none;
-    background: var(--icon-default);
-    mask: var(--chev-svg) center / contain no-repeat;
-    -webkit-mask: var(--chev-svg) center / contain no-repeat;
+    background: var(--chev-svg) center / contain no-repeat;
   }
   .value { font-weight: 700; font-size: 13.5px; white-space: nowrap; }
   .inp {
@@ -129,6 +129,41 @@
   .opt-h.editing .inp { flex: 1; width: auto; min-width: 80px; }
   .opt-h .inp::selection { background: var(--primary-muted); }
 
+  /* F · hybrid + clearable × (react-select · ds-select clearable) */
+  .opt-f { cursor: pointer; }
+  .opt-f .inp { flex: 0 1 0; width: 0; min-width: 0; }
+  .opt-f.editing { cursor: text; }
+  .opt-f.editing .value { display: none; }
+  .opt-f.editing .inp { flex: 1; width: auto; min-width: 80px; }
+  .opt-f .inp::selection { background: var(--primary-muted); }
+  .opt-f.empty .value, .opt-f.empty .clear { display: none; }
+  .opt-f.empty .inp { flex: 1; width: auto; min-width: 80px; }
+  .clear {
+    flex: none; border: 0; background: transparent; cursor: pointer;
+    width: 24px; height: 24px; border-radius: 6px; padding: 0;
+    color: var(--icon-default); font-size: 14px; line-height: 1;
+  }
+  .clear:hover { background: var(--surface-secondary); color: var(--text-primary); }
+
+  /* G · value as removable chip (unify with multi mode) */
+  .opt-g { cursor: pointer; }
+  .opt-g .inp { flex: 0 1 0; width: 0; min-width: 0; }
+  .opt-g:focus-within { cursor: text; }
+  .opt-g:focus-within .inp { flex: 1; width: auto; min-width: 80px; }
+  .opt-g.empty .chip { display: none; }
+  .opt-g.empty .inp { flex: 1; width: auto; min-width: 80px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--surface-secondary); border-radius: 6px;
+    padding: 3px 6px 3px 10px; font-weight: 700; font-size: 13px; white-space: nowrap;
+  }
+  .chip button {
+    border: 0; background: transparent; cursor: pointer; padding: 0;
+    width: 16px; height: 16px; border-radius: 4px;
+    color: var(--icon-default); font-size: 12px; line-height: 1;
+  }
+  .chip button:hover { background: rgb(0 0 0 / 8%); color: var(--text-primary); }
+
   /* E · search lives in the PANEL (PrimeNG / Select2 / shadcn) */
   .sel2 .trigger { cursor: pointer; }
   .sel2.open .trigger { border-color: var(--primary); box-shadow: var(--focus-field); }
@@ -156,7 +191,7 @@
 </head>
 <body>
 
-<h1>V2 · single-combobox с выбранным значением — 5 вариантов, все живые</h1>
+<h1>V2 · single-combobox с выбранным значением — 8 вариантов, все живые</h1>
 <p class="lede">
   Вопрос: как должен выглядеть и вести себя single-<code>ds-combobox</code>, когда значение уже
   выбрано. Всё настоящее: клик/Tab открывает панель с опциями, печать фильтрует, клик по опции
@@ -231,6 +266,32 @@
     </div>
 
     <div class="cell">
+      <span class="cap">F · Гибрид + clearable ✕ <span class="who">react-select · как наш ds-select</span></span>
+      <div class="combo" data-variant="clear">
+        <label class="trigger opt-f"><span class="value">Festicket Ltd</span><input class="inp"><button class="clear" type="button" aria-label="Очистить">✕</button><span class="chev"></span></label>
+        <div class="panel"><ul>
+          <li>Acme Holdings</li><li>Festicket Ltd</li><li>Live Nation Festivals</li><li>SJM Concerts</li>
+        </ul></div>
+      </div>
+      <span class="sub">Гибрид плюс явный <b>крестик «сбросить»</b>: замену можно не печатать —
+      ✕ → пустое поле с плейсхолдером и фокусом. Консистентно с <code>clearable</code>
+      у ds-select / ds-dropdown / ds-input.</span>
+    </div>
+
+    <div class="cell">
+      <span class="cap">G · Значение — чип <span class="who">унификация с multi</span></span>
+      <div class="combo" data-variant="chip">
+        <label class="trigger opt-g"><span class="chip"><span class="chip-label">Festicket Ltd</span><button type="button" aria-label="Убрать">✕</button></span><input class="inp"><span class="chev"></span></label>
+        <div class="panel"><ul>
+          <li>Acme Holdings</li><li>Festicket Ltd</li><li>Live Nation Festivals</li><li>SJM Concerts</li>
+        </ul></div>
+      </div>
+      <span class="sub">Single = multi с одним чипом: значение — <b>съёмный чип</b>, инпут схлопнут.
+      Клик → инпут разворачивается рядом (чип остаётся виден, пока печатаешь), ✕ на чипе → пустой typeahead.
+      Один визуальный язык для single и multi.</span>
+    </div>
+
+    <div class="cell">
       <span class="cap">E · Поиск в панели <span class="who">PrimeNG / Select2 / shadcn</span></span>
       <div class="sel2">
         <button class="trigger" type="button"><span class="value">Festicket Ltd</span><span class="chev"></span></button>
@@ -299,13 +360,14 @@
 <section>
   <h2>Сравнение</h2>
   <table>
-    <tr><th></th><th>0 сегодня</th><th>A схлопнуть рядом</th><th>B вместо значения</th><th>C значение в инпуте</th><th>E поиск в панели</th></tr>
-    <tr><td>Закрытый вид читается как…</td><td class="bad">поле ввода</td><td class="good">select</td><td class="good">select</td><td class="mid">заполненный инпут</td><td class="good">select (буквально)</td></tr>
-    <tr><td>Видно текущее значение, пока печатаешь замену</td><td class="mid">да (рядом)</td><td class="good">да (рядом)</td><td class="mid">призраком, до 1-й буквы</td><td class="mid">выделено, до 1-й буквы</td><td class="good">да (в триггере)</td></tr>
-    <tr><td>Layout shift при входе в редактирование</td><td class="good">нет</td><td class="mid">инпут 0→80px</td><td class="mid">спан↔инпут (ширины близки)</td><td class="good">нет вообще</td><td class="good">нет (панель поверх)</td></tr>
-    <tr><td>Знакомый паттерн</td><td class="bad">—</td><td class="mid">редкий</td><td class="good">Ant, react-select</td><td class="good">MUI Autocomplete</td><td class="good">PrimeNG, Select2, shadcn</td></tr>
-    <tr><td>Цена в нашем компоненте</td><td class="good">0</td><td class="good">~5 строк scss + класс</td><td class="good">scss + 3-5 строк ts</td><td class="mid">~20-25 строк ts (query↔label)</td><td class="bad">рефактор: инпут в панель, фокус/aria</td></tr>
-    <tr><td>Пустое состояние (без значения)</td><td colspan="4">во всех A/B/C — как сегодня: развёрнутый инпут с плейсхолдером</td><td>кнопка с плейсхолдером</td></tr>
+    <tr><th></th><th>0 сегодня</th><th>A схлопнуть рядом</th><th>B вместо значения</th><th>C значение в инпуте</th><th>B+C гибрид</th><th>F гибрид + ✕</th><th>G значение-чип</th><th>E поиск в панели</th></tr>
+    <tr><td>Закрытый вид читается как…</td><td class="bad">поле ввода</td><td class="good">select</td><td class="good">select</td><td class="mid">заполненный инпут</td><td class="good">select</td><td class="good">select + сброс</td><td class="mid">токен-поле</td><td class="good">select (буквально)</td></tr>
+    <tr><td>Видно текущее значение, пока печатаешь замену</td><td class="mid">да (рядом)</td><td class="good">да (рядом)</td><td class="mid">призраком, до 1-й буквы</td><td class="mid">выделено, до 1-й буквы</td><td class="mid">выделено, до 1-й буквы</td><td class="mid">выделено, до 1-й буквы</td><td class="good">да (чип рядом)</td><td class="good">да (в триггере)</td></tr>
+    <tr><td>Layout shift при входе в редактирование</td><td class="good">нет</td><td class="mid">инпут 0→80px</td><td class="mid">спан↔инпут (близко)</td><td class="good">нет вообще</td><td class="good">нет в fill / микро в content</td><td class="good">как гибрид</td><td class="mid">инпут 0→80px</td><td class="good">нет (панель поверх)</td></tr>
+    <tr><td>Замена без печати (сброс)</td><td class="bad">нет</td><td class="bad">нет</td><td class="bad">нет</td><td class="bad">нет</td><td class="bad">нет</td><td class="good">✕ одним кликом</td><td class="good">✕ на чипе</td><td class="mid">выбором в панели</td></tr>
+    <tr><td>Знакомый паттерн</td><td class="bad">—</td><td class="mid">редкий</td><td class="good">Ant, react-select</td><td class="good">MUI Autocomplete</td><td class="good">MUI + select-вид</td><td class="good">react-select, наш ds-select</td><td class="mid">tagify / token-fields</td><td class="good">PrimeNG, Select2, shadcn</td></tr>
+    <tr><td>Цена в нашем компоненте</td><td class="good">0</td><td class="good">~5 строк scss</td><td class="good">scss + 3-5 строк ts</td><td class="mid">~20-25 строк ts</td><td class="mid">≈ B + C</td><td class="mid">гибрид + clear-btn (паттерн есть)</td><td class="good">чип из multi переиспользуем</td><td class="bad">рефактор: инпут в панель, фокус/aria</td></tr>
+    <tr><td>Пустое состояние (без значения)</td><td colspan="5">как сегодня: развёрнутый инпут с плейсхолдером</td><td>✕ → пустой typeahead с фокусом</td><td>✕ на чипе → пустой typeahead</td><td>кнопка с плейсхолдером</td></tr>
   </table>
   <p class="note" style="margin-top:12px">
     <b>Гибрид B+C:</b> закрытый вид от B (select: жирное значение, pointer), редактирование от C
@@ -319,9 +381,12 @@
   <p class="note">
     <b>Input Affordance:</b> контрол должен выглядеть тем, чем является — «выбрано одно значение» ≠ «введи текст»;
     это довод против 0 и наполовину против C (C честен, но по-другому: он говорит «можно печатать», а не «выбери из списка»).
-    <b>Content Jumping:</b> избегать layout shift при взаимодействии — сильная сторона C и E, слабое место A.
+    <b>Content Jumping:</b> избегать layout shift при взаимодействии — сильная сторона C и E, слабое место A;
+    нюанс: правило в первую очередь про <i>неожиданные</i> сдвиги (async-подгрузка), сдвиг-ответ на клик пользователя мягче.
+    <b>Touch Target Size (High):</b> крестики F/G — маленькие мишени; в компоненте делать зону ≥24px с отступами
+    (прецедент — closable у ds-tag), на таче ✕ важнее чем на десктопе, т.к. «выделить и перепечатать» там неудобно.
     <b>Focus States:</b> во всех вариантах кольцо фокуса на триггере сохраняется (:focus-within не трогаем).
-    <b>Cursor:</b> закрытое состояние — pointer (A/B/E), у C — text.
+    <b>Cursor:</b> закрытое состояние — pointer (A/B/гибрид/F/G/E), у C — text.
   </p>
 </section>
 
@@ -332,11 +397,14 @@
     const variant = widget.dataset.variant;
     const trigger = widget.querySelector('.trigger');
     const inputElement = widget.querySelector('.inp');
-    const valueElement = widget.querySelector('.value');
+    const valueElement = widget.querySelector('.value') || widget.querySelector('.chip-label');
     const optionElements = [...widget.querySelectorAll('.panel li')];
 
-    const committedLabel = () =>
-      variant === 'in-input' ? inputElement.dataset.committed : valueElement.textContent.trim();
+    const isEmpty = () => trigger.classList.contains('empty');
+    const committedLabel = () => {
+      if (variant === 'in-input') return inputElement.dataset.committed;
+      return isEmpty() ? '' : valueElement.textContent.trim();
+    };
 
     const applyFilter = (query) => {
       optionElements.forEach(option => {
@@ -357,7 +425,7 @@
         trigger.classList.add('editing');
         inputElement.placeholder = committedLabel();
       }
-      if (variant === 'hybrid') {
+      if ((variant === 'hybrid' || variant === 'clear') && !isEmpty()) {
         trigger.classList.add('editing');
         inputElement.value = committedLabel();
         inputElement.select();
@@ -366,9 +434,9 @@
     });
 
     inputElement.addEventListener('blur', () => {
-      if (variant === 'swap' || variant === 'hybrid') {
+      if (variant === 'swap' || variant === 'hybrid' || variant === 'clear') {
         trigger.classList.remove('editing');
-        inputElement.placeholder = '';
+        if (!isEmpty()) inputElement.placeholder = '';
       }
       if (variant === 'in-input') {
         inputElement.value = inputElement.dataset.committed;
@@ -392,10 +460,27 @@
           inputElement.dataset.committed = label;
         } else {
           valueElement.textContent = label;
+          trigger.classList.remove('empty');
+          inputElement.placeholder = '';
         }
         inputElement.blur();
       });
     });
+
+    // F / G — the ✕ resets to the empty typeahead state and focuses it
+    const resetButton = widget.querySelector('.clear') || widget.querySelector('.chip button');
+    if (resetButton) {
+      resetButton.addEventListener('mousedown', (event) => event.preventDefault());
+      resetButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        trigger.classList.add('empty');
+        trigger.classList.remove('editing');
+        inputElement.value = '';
+        inputElement.placeholder = 'Pick a member…';
+        inputElement.focus();
+      });
+    }
   });
 
   // ---- E: select-look trigger, filter input inside the panel ----
