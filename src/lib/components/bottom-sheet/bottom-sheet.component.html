@@ -1,9 +1,11 @@
 @if (rendered()) {
+  <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- backdrop; click dismisses, keyboard dismisses via Escape (host document:keydown.escape) -->
   <div
     class="sheet-overlay"
     [class.closing]="closing()"
     (click)="close()"
   >
+    <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -- (click) only stops propagation to the backdrop; the dialog itself isn't an activatable control -->
     <div
       #sheet
       cdkTrapFocus

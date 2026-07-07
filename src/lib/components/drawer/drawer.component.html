@@ -1,4 +1,5 @@
 @if (rendered()) {
+  <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- scrim; click dismisses, keyboard dismisses via Escape (host document:keydown.escape) -->
   <div
     class="drawer-scrim"
     [class.closing]="closing()"

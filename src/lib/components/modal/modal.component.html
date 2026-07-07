@@ -1,4 +1,5 @@
 @if (rendered() || preview.staticPreview()) {
+  <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -- backdrop; keyboard dismissal is (keydown.escape) below, a backdrop isn't a tabbable control -->
   <div
     [class]="preview.staticPreview() ? 'modal-static' : 'modal-backdrop'"
     [class.closing]="closing()"

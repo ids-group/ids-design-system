@@ -1,3 +1,4 @@
+<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- click opens/focuses; keyboard runs through the inner <input role="combobox"> (type/arrows/Enter/Esc) -->
 <div
   #trigger
   class="autocomplete-trigger"
@@ -85,6 +86,7 @@
           </span>
 
           @for (option of group.options; track option.value) {
+            <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
             <div
               role="option"
               [class]="optionClass(option)"
@@ -125,6 +127,7 @@
       }
     } @else {
       @for (option of filteredOptions(); track option.value; let i = $index) {
+        <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
         <li
           role="option"
           [class]="optionClass(option)"
@@ -173,6 +176,7 @@
     }
 
     @if (showCreateRow()) {
+      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
       <li
         class="option create-row"
         role="option"
