@@ -229,6 +229,19 @@ export class DatePickerComponent extends DsControlValueAccessor<
     return d;
   }
 
+  private clampToBounds(date: Date): Date {
+    const min = this.minDate();
+    const max = this.maxDate();
+    if (min && date < min) {
+      return new Date(min);
+    }
+    if (max && date > max) {
+      return new Date(max);
+    }
+
+    return date;
+  }
+
   private focusGridDay(): void {
     const f = this.gridFocus();
     if (!f || !this.overlayRef) {
@@ -536,7 +549,7 @@ export class DatePickerComponent extends DsControlValueAccessor<
       this.mode() === 'single'
         ? (this.value() as Date | null)
         : ((this.value() as RangeValue | null)?.[0] ?? null);
-    const focus = selected ?? new Date();
+    const focus = this.clampToBounds(selected ?? this.defaultMonth() ?? new Date());
     this.gridFocus.set(focus);
     this.viewMonth.set(new Date(focus.getFullYear(), focus.getMonth(), 1));
     afterNextRender(() => this.focusGridDay(), { injector: this.injector });
