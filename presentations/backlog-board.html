@@ -124,7 +124,7 @@
     <div class="stat a11y"><div class="n">3</div><div class="l">A11y (P0–P2)</div></div>
     <div class="stat untouched"><div class="n">7</div><div class="l">Компоненты + foundations</div></div>
     <div class="stat untouched"><div class="n">14</div><div class="l">Motion / DS-docs / PIN-475 / API</div></div>
-    <div class="stat raw"><div class="n">6</div><div class="l">Raw / frozen / lint</div></div>
+    <div class="stat raw"><div class="n">4</div><div class="l">Raw / frozen / lint</div></div>
   </div>
 
   <!-- ============ NEEDS YOU ============ -->
@@ -229,11 +229,9 @@
 
   <!-- ============ LINT DEBT ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🧹 Lint debt</h2><span class="count c-track">3</span><span class="why">Остаток после rollout 2026-06-17. Lint авторитетен над prettier.</span></div>
+    <div class="lane-head"><h2>🧹 Lint debt</h2><span class="count c-track">1</span><span class="why">Rollout-остаток закрыт 08-07; осталась a11y date-picker (правит параллельная сессия).</span></div>
     <div class="cards">
-      <div class="card track"><span class="chip ch-p2">warn ×1</span><div class="t">prefer-for-of (select)</div><p class="d">Индексный цикл с модульной арифметикой — механический рефактор сломал бы логику. Понижено до warn, per-line дисейблы сняты. Переписать руками. (Был ×2 — цикл dropdown умер вместе с компонентом 07-07.)</p></div>
-      <div class="card a11y"><span class="chip ch-p2">warn ×17</span><div class="t">template a11y (click/focus)</div><p class="d">bottom-sheet/modal/combobox — в основном false-positive (клавиатура на host/document-уровне). <b>card</b> — реальный пробел: `pressed` только при `elevation=interactive`, без клавиатуры/фокуса. drawer Esc уже починен.</p></div>
-      <div class="card track"><span class="chip ch-p2">warn ×3</span><div class="t">sibling-blank-line не-автофиксимые</div><p class="d">Между сиблингами коммент — фиксер не может вставить пустую строку. Добавить вручную.</p></div>
+      <div class="card a11y"><span class="chip ch-p2">warn ×4</span><div class="t">date-picker a11y (click/focus)</div><p class="d">4 варнинга (стр. ~159/183/225). Файл под активной правкой параллельной сессии — оставлено ей. Остальной lint-долг (prefer-for-of, whitespace, a11y card/tabs/overlays/listbox) закрыт: <code>ec73779</code> / <code>ef71ec4</code> / <code>6f1adcf</code> / <code>5da9b4e</code>.</p></div>
     </div>
   </div>
 
@@ -377,11 +375,12 @@ Gaps hit while building filter toolbars with `ds-combobox` / `ds-select` / `ds-s
 
 ## Lint debt (pre-existing, surfaced by the 2026-06-17 lint/format rollout)
 
-Found while rolling prettier/stylelint/eslint across all components. Final state after the rollout: **prettier clean, stylelint 0, eslint 0 errors / 22 warnings** (all `warn`, kept visible). Template format decision: **lint is authoritative over prettier** — run prettier first, `eslint --fix` on top (the `ds/template/*` whitespace fixers re-expand what prettier collapses). Still open:
+Template format decision: **lint is authoritative over prettier** — run prettier first, then stylelint, then `eslint --fix` on top; only that result is committed. **RESOLVED 2026-07-08 (commits `ec73779`, `ef71ec4`, `6f1adcf`, `5da9b4e`):**
 
-- [ ] **`@typescript-eslint/prefer-for-of`** (1 warning — was 2: `ds-dropdown`'s loop died with the component, 2026-07-07) — indexed `for` loop that should be `for…of`, but it uses index arithmetic (modulo cycling), so a mechanical rewrite would change logic: `select` (`combobox` got an aria fix instead). Rule downgraded to `warn`, the earlier per-line disables removed (`2af17b7`) — left visible to fix by hand later.
-- [ ] **Template a11y warnings** (17: `click-events-have-key-events` / `interactive-supports-focus`) on interactive non-button elements: `bottom-sheet`, `card`, `modal`, `combobox`. Most are FALSE POSITIVES — keyboard is handled at host/document level (modal/bottom-sheet Esc, combobox arrow/Esc); `card` is a REAL gap (emits `pressed` only when `elevation="interactive"`, no keyboard/focus). `drawer` had a real gap → FIXED (Esc-to-close, `52a6ee9`). Decide per-component: add `tabindex`/keydown where genuinely interactive, suppress the verified false-positives.
-- [ ] **3 non-auto-fixable `ds/template/sibling-blank-line`** — comment sits between sibling blocks so the fixer can't insert the blank line; add it by hand.
+- [x] **`@typescript-eslint/prefer-for-of`** — justified inline disable on `select`'s `moveActive` loop (modulo wraparound from `activeIndex`; `attempts` bounds the walk, not a sequential index).
+- [x] **12 template whitespace/order** (`sibling-blank-line` / `element-content-newline` / `attributes-order`) — auto-fixed via prettier→eslint --fix (alert/empty-state/otp-input/radio-group/slider).
+- [x] **18 template a11y** — REAL gaps fixed: `card` (role=button + tabindex + Enter/Space when `elevation="interactive"`), `tabs` close (Delete-to-close per APG + suppress the mouse-only ×). FALSE POSITIVES suppressed: autocomplete trigger + listbox options (combobox/activedescendant), bottom-sheet/drawer scrims + modal backdrop (keyboard via Escape).
+- [ ] **date-picker a11y (4 warnings, ~lines 159/183/225)** — NOT covered here; the file was under active edit by a parallel session 2026-07-08, left to that work.
 
 ## Frontend architecture starter (new initiative, designed 2026-06-19)
 
@@ -668,9 +667,7 @@ _Archived 2026-07-06 from `todo.md`._
 
       ["design-system.md",                  "design-system.md: one global note",          ""],
 
-      ["prefer-for-of",                     "prefer-for-of",                              ""],
-      ["template a11y (click/focus)",       "Template a11y warnings",                     ""],
-      ["sibling-blank-line",                "sibling-blank-line",                         ""],
+      ["date-picker a11y (click/focus)",    "date-picker a11y",                           ""],
 
       // done — formulations from todo-done.md
       ["Токен-фолбэк + деривация",          "Button tokens: fallback pattern + state-color", ""],
