@@ -16,8 +16,13 @@
   </h3>
 
   <p class="block-desc t-s">
-    Trigger shows the selected date or placeholder; click opens a one-month
-    panel.
+    The field accepts masked typing (the locale mask, e.g.
+    <code class="t-mono-inline">
+      MM/DD/YYYY
+    </code>); the calendar icon or
+    <kbd>
+      ↓
+    </kbd> opens a one-month panel.
   </p>
 
   <div class="row">
@@ -200,6 +205,142 @@
       label="Show window"
       placeholder="Pick a range"
       [presets]="rangePresets"
+    />
+  </div>
+
+  <!-- ============================================================ Masked entry -->
+  <h3 class="block-title t-h4">
+    Masked manual entry
+  </h3>
+
+  <p class="block-desc t-s">
+    The trigger is a text field by default
+    (<code class="t-mono-inline">[allowInput]="true"</code>). Typing is masked to
+    the active locale format — non-numeric characters are rejected as typed, and
+    an impossible or out-of-range date flags an error on blur. Range mode exposes
+    two independent masked fields.
+  </p>
+
+  <div class="grid-2">
+    <ds-date-picker
+      mode="single"
+      label="Planned start"
+      hint="Type MM/DD/YYYY or pick from the calendar."
+      placeholder="Pick a date"
+    />
+
+    <ds-date-picker
+      mode="range"
+      label="Period"
+      hint="Type both ends, or pick a range."
+      placeholder="Pick a range"
+    />
+  </div>
+
+  <!-- ============================================================ Date of birth -->
+  <h3 class="block-title t-h4">
+    Date of birth
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [maxDate]="today"
+    </code> rejects future dates, and
+    <code class="t-mono-inline">
+      [defaultMonth]
+    </code> opens the panel near a
+    realistic year instead of the current month.
+  </p>
+
+  <div class="row">
+    <ds-date-picker
+      mode="single"
+      label="Date of birth"
+      placeholder="MM/DD/YYYY"
+      [maxDate]="today"
+      [defaultMonth]="birthDefaultMonth"
+    />
+  </div>
+
+  <!-- ============================================================ Localization -->
+  <h3 class="block-title t-h4">
+    Localization
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [locale]
+    </code> drives month names, weekday
+    headers and the value format together via <code>Intl</code> — no OS-locale
+    mixing. <code class="t-mono-inline">[firstDayOfWeek]</code> (0–6, default
+    Monday) shifts the week. Set app-wide via
+    <code class="t-mono-inline">
+      provideDsConfig({{ '{' }} datePicker: {{ '{' }} locale {{ '}' }} {{ '}' }})
+    </code>.
+  </p>
+
+  <div class="grid-2">
+    <ds-date-picker
+      mode="single"
+      label="Дата (ru-RU)"
+      placeholder="ДД.ММ.ГГГГ"
+      locale="ru-RU"
+    />
+
+    <ds-date-picker
+      mode="single"
+      label="Date (en-US, Sunday-first)"
+      placeholder="Pick a date"
+      locale="en-US"
+      [firstDayOfWeek]="0"
+    />
+  </div>
+
+  <!-- ============================================================ Custom format -->
+  <h3 class="block-title t-h4">
+    Custom format
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [dateFormat]
+    </code> pins an explicit token order
+    (<code class="t-mono-inline">DD</code> /
+    <code class="t-mono-inline">
+      MM
+    </code> /
+    <code class="t-mono-inline">
+      YYYY
+    </code>), overriding the locale-derived one.
+  </p>
+
+  <div class="row">
+    <ds-date-picker
+      mode="single"
+      label="ISO-ish (YYYY-MM-DD)"
+      placeholder="YYYY-MM-DD"
+      dateFormat="YYYY-MM-DD"
+    />
+  </div>
+
+  <!-- ============================================================ Calendar-only -->
+  <h3 class="block-title t-h4">
+    Calendar-only
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [allowInput]="false"
+    </code> restores the
+    button-only trigger — no manual typing, selection via the calendar only.
+  </p>
+
+  <div class="row">
+    <ds-date-picker
+      mode="single"
+      label="Pick from calendar"
+      placeholder="Pick a date"
+      [allowInput]="false"
     />
   </div>
 
