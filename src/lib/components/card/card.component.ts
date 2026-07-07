@@ -19,6 +19,10 @@ export class CardComponent {
   readonly padding = input<CardPadding | null>(null);
   readonly pressed = output<MouseEvent>();
 
+  protected readonly interactive = computed(
+    () => this.elevation() === 'interactive',
+  );
+
   protected readonly classes = computed(() => {
     const pad = this.padding();
 

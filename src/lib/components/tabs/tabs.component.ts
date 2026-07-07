@@ -132,6 +132,10 @@ export class TabsComponent {
 
   protected onCloseClick(event: MouseEvent, index: number): void {
     event.stopPropagation();
+    this.closeTab(index);
+  }
+
+  private closeTab(index: number): void {
     const tab = this.tabs()[index];
     if (!tab) {
       return;
@@ -144,6 +148,13 @@ export class TabsComponent {
   protected onKeydown(event: KeyboardEvent, index: number): void {
     const count = this.tabs().length;
     if (!count) {
+      return;
+    }
+    // APG: Delete removes the focused tab when the tablist is closable.
+    if (this.closable() && event.key === 'Delete') {
+      event.preventDefault();
+      this.closeTab(index);
+
       return;
     }
     const isVertical = this.orientation() === 'vertical';
