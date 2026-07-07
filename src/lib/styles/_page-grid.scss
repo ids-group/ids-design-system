@@ -8,14 +8,16 @@
 //
 //   Tier         | Range          | Cols | Gutter        | Margin        | Cap
 //   ------------ | -------------- | ---- | ------------- | ------------- | ----------------
-//   Mobile       | <= 640px       | 4    | --space-3 (12px)  | --space-4 (16px)  | fluid
-//   Tablet       | 641-1024px     | 8    | --space-4 (16px)  | --space-6 (24px)  | fluid
-//   Desktop      | 1025-1440px    | 12   | --space-5 (20px)  | --space-8 (32px)  | fluid
+//   Mobile       | < 640px        | 4    | --space-3 (12px)  | --space-4 (16px)  | fluid
+//   Tablet       | 640-1023px     | 8    | --space-4 (16px)  | --space-6 (24px)  | fluid
+//   Desktop      | 1024-1440px    | 12   | --space-5 (20px)  | --space-8 (32px)  | fluid
 //   Desktop wide | >= 1441px      | 12   | --space-6 (24px)  | --space-10 (40px) | --col-cap-content (1280px)
 //
 // Snap to columns, not pixels: 8+4 / 6+6 / 9+3 are canonical splits;
 // 7+5 is forbidden. Prose blocks cap at --col-cap-text (720px) regardless
 // of grid width.
+
+@use 'breakpoints' as bp;
 
 .page-grid {
   display: grid;
@@ -24,22 +26,22 @@
   max-width: var(--col-cap-content);
   margin: 0 auto;
 
-  // Mobile (default, <= 640px) — 4 columns
+  // Mobile (default, < 640px) — 4 columns
   --page-gutter: var(--page-gutter-mobile);
   --page-margin: var(--page-margin-mobile);
 
   grid-template-columns: repeat(4, minmax(0, 1fr));
 
-  // Tablet (641-1024px) — 8 columns
-  @media (width >= 641px) {
+  // Tablet (640-1023px) — 8 columns
+  @include bp.up(sm) {
     --page-gutter: var(--page-gutter-tablet);
     --page-margin: var(--page-margin-tablet);
 
     grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 
-  // Desktop (1025-1440px) — 12 columns, fluid width
-  @media (width >= 1025px) {
+  // Desktop (1024-1440px) — 12 columns, fluid width
+  @include bp.up(lg) {
     --page-gutter: var(--page-gutter-desktop);
     --page-margin: var(--page-margin-desktop);
 
@@ -47,7 +49,7 @@
   }
 
   // Desktop wide (>= 1441px) — 12 columns, container capped at --col-cap-content
-  @media (width >= 1441px) {
+  @include bp.up(xl) {
     --page-gutter: var(--page-gutter-wide);
     --page-margin: var(--page-margin-wide);
   }
