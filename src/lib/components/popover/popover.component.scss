@@ -7,6 +7,8 @@
 :host { display: contents; }
 
 .popover {
+  /* Portaled to body via CDK overlay → --ds-popover-* overrides are theme-level
+     (:root), not per-instance. One-off panel? Pass a panelClass, target globally. */
   --_popover-bg-color:     var(--ds-popover-bg-color,     var(--surface-overlay));
   --_popover-border-color: var(--ds-popover-border-color, var(--border-default));
   --_popover-radius:       var(--ds-popover-radius,       var(--radius-lg));
