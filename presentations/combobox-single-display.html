@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>V2 · combobox single — брейншторм видов заполненного состояния</title>
+<style>
+  :root {
+    --primary:          rgb(46, 84, 255);
+    --primary-muted:    rgb(225, 230, 254);
+    --surface-default:  #fff;
+    --surface-canvas:   #f8fafc;
+    --surface-secondary:rgb(241, 244, 249);
+    --text-primary:     rgb(22, 26, 40);
+    --text-tertiary:    rgb(155, 163, 180);
+    --icon-default:     rgb(107, 115, 136);
+    --border-default:   rgb(220, 225, 234);
+    --border-strong:    rgb(160, 168, 184);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --shadow-popover: 0 10px 30px rgb(22 26 40 / .16), 0 2px 8px rgb(22 26 40 / .08);
+    --focus-field: 0 0 0 3px rgb(46 84 255 / .22);
+    --hit-cozy: 40px;
+    --font-sans: 'Mulish', system-ui, sans-serif;
+    --chev-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  }
+
+  body {
+    font: 14px/1.5 var(--font-sans);
+    color: var(--text-primary);
+    background: var(--surface-canvas);
+    margin: 0; padding: 40px 40px 160px;
+  }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  .lede { color: #6b7388; max-width: 940px; margin: 0 0 8px; }
+  code, .note code { background: #eef1f6; padding: 1px 5px; border-radius: 4px; font-size: 12.5px; }
+  section { margin: 44px 0; }
+  h2 { font-size: 16px; margin: 0 0 4px; }
+  h2 .tag { font-size: 11px; font-weight: 700; color: rgb(29,67,237); background: var(--primary-muted);
+            padding: 2px 7px; border-radius: 999px; vertical-align: middle; margin-left: 8px; }
+  .note { color: #6b7388; font-size: 13px; margin: 0 0 16px; max-width: 940px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 28px; max-width: 1100px; }
+  .cell { display: flex; flex-direction: column; gap: 8px; }
+  .cap { font-size: 12.5px; font-weight: 800; letter-spacing: .03em; }
+  .cap .who { font-weight: 600; color: #9ba3b4; margin-left: 6px; }
+  .sub { font-size: 12.5px; color: #6b7388; }
+  .sub b { color: var(--text-primary); }
+
+  /* ---- shared field chrome (mirrors combobox/select trigger) ---- */
+  .trigger {
+    display: flex; align-items: center; gap: 8px;
+    width: 300px; min-height: var(--hit-cozy);
+    padding: 4px 10px; box-sizing: border-box;
+    background: var(--surface-default);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    transition: border-color .12s ease, box-shadow .12s ease;
+  }
+  .trigger:hover { border-color: var(--border-strong); }
+  .trigger:focus-within {
+    border-color: var(--primary);
+    box-shadow: var(--focus-field);
+    outline: 0;
+  }
+  .chev {
+    width: 16px; height: 16px; margin-left: auto; flex: none;
+    background: var(--icon-default);
+    mask: var(--chev-svg) center / contain no-repeat;
+    -webkit-mask: var(--chev-svg) center / contain no-repeat;
+  }
+  .value { font-weight: 700; font-size: 13.5px; white-space: nowrap; }
+  .inp {
+    flex: 1; min-width: 80px; border: 0; outline: 0; background: transparent;
+    font: 400 13.5px/1 var(--font-sans); color: var(--text-primary); padding: 0;
+  }
+  .inp::placeholder { color: var(--text-tertiary); }
+
+  /* 0 · today */
+  .today { cursor: text; }
+
+  /* A · collapse beside value */
+  .opt-a { cursor: pointer; }
+  .opt-a .inp { flex: 0 1 0; width: 0; min-width: 0; }
+  .opt-a:focus-within { cursor: text; }
+  .opt-a:focus-within .inp { flex: 1; width: auto; min-width: 80px; }
+
+  /* B · input REPLACES value (ghost placeholder) */
+  .opt-b { cursor: pointer; }
+  .opt-b .inp { flex: 0 1 0; width: 0; min-width: 0; }
+  .opt-b.editing { cursor: text; }
+  .opt-b.editing .value { display: none; }
+  .opt-b.editing .inp { flex: 1; width: auto; min-width: 80px; }
+
+  /* C · value lives IN the input (MUI Autocomplete) */
+  .opt-c { cursor: text; }
+  .opt-c .inp { font-weight: 700; }
+  .opt-c .inp:focus { font-weight: 400; }
+  .opt-c .inp::selection { background: var(--primary-muted); }
+
+  /* E · search lives in the PANEL (PrimeNG / Select2 / shadcn) */
+  .sel2 { position: relative; width: 300px; }
+  .sel2 .trigger { cursor: pointer; width: 100%; }
+  .sel2.open .trigger { border-color: var(--primary); box-shadow: var(--focus-field); }
+  .panel {
+    display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--surface-default); border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow-popover);
+    padding: 8px; z-index: 5;
+  }
+  .sel2.open .panel { display: block; }
+  .pinp {
+    display: block; width: 100%; box-sizing: border-box;
+    border: 1px solid var(--border-default); border-radius: 6px;
+    padding: 7px 10px; margin-bottom: 6px;
+    font: 400 13px/1 var(--font-sans); outline: 0;
+  }
+  .pinp:focus { border-color: var(--primary); box-shadow: var(--focus-field); }
+  .panel ul { list-style: none; margin: 0; padding: 0; }
+  .panel li {
+    padding: 8px 10px; border-radius: 6px; cursor: pointer; font-size: 13.5px; font-weight: 600;
+  }
+  .panel li:hover { background: var(--surface-secondary); }
+
+  /* comparison table */
+  table { border-collapse: collapse; font-size: 13px; max-width: 1100px; background: #fff;
+          border: 1px solid var(--border-default); border-radius: 10px; overflow: hidden; }
+  th, td { padding: 9px 14px; border-bottom: 1px solid var(--border-default); text-align: left; vertical-align: top; }
+  th { background: var(--surface-secondary); font-size: 12px; letter-spacing: .03em; }
+  tr:last-child td { border-bottom: 0; }
+  td.good { color: rgb(11,128,67); font-weight: 700; }
+  td.bad  { color: rgb(190,50,50); font-weight: 700; }
+  td.mid  { color: rgb(160,120,20); font-weight: 700; }
+
+  kbd { background: #eef1f6; border: 1px solid var(--border-default); border-bottom-width: 2px;
+        border-radius: 4px; padding: 0 5px; font: 600 11.5px/1.6 var(--font-sans); }
+</style>
+</head>
+<body>
+
+<h1>V2 · single-combobox с выбранным значением — 5 вариантов, все живые</h1>
+<p class="lede">
+  Вопрос: как должен выглядеть и вести себя single-<code>ds-combobox</code>, когда значение уже
+  выбрано. Кликайте и табайте в каждый — поведение настоящее (CSS/мини-JS, как будет в компоненте).
+  Панель со списком тут мокнута только в варианте E, в остальных представьте её открытие как сейчас.
+</p>
+
+<section>
+  <h2>Варианты</h2>
+  <div class="grid">
+
+    <div class="cell">
+      <span class="cap">0 · Сегодня <span class="who">baseline</span></span>
+      <label class="trigger today"><span class="value">Festicket Ltd</span><input class="inp" placeholder=""><span class="chev"></span></label>
+      <span class="sub">Значение + <b>вечно развёрнутый пустой инпут</b> (cursor: text). Читается как поле
+      свободного ввода — исходная жалоба PIN-475.</span>
+    </div>
+
+    <div class="cell">
+      <span class="cap">A · Инпут схлопнут рядом</span>
+      <label class="trigger opt-a"><span class="value">Festicket Ltd</span><input class="inp" placeholder=""><span class="chev"></span></label>
+      <span class="sub">Закрыт — как select. Клик/Tab → пустой инпут разворачивается <b>рядом со значением</b>:
+      старое значение остаётся видно, пока печатаешь. Минус: два элемента, каретка «около» значения.</span>
+    </div>
+
+    <div class="cell">
+      <span class="cap">B · Инпут ВМЕСТО значения <span class="who">идея Stas · Ant/react-select</span></span>
+      <label class="trigger opt-b"><span class="value">Festicket Ltd</span><input class="inp"><span class="chev"></span></label>
+      <span class="sub">Закрыт — как select. Клик/Tab → значение <b>заменяется инпутом</b>, старое значение
+      остаётся серым «призраком» (placeholder), пока не начнёшь печатать. Blur/<kbd>Esc</kbd> — значение возвращается.</span>
+    </div>
+
+    <div class="cell">
+      <span class="cap">C · Значение живёт В инпуте <span class="who">MUI Autocomplete</span></span>
+      <label class="trigger opt-c"><input class="inp" value="Festicket Ltd"><span class="chev"></span></label>
+      <span class="sub">Никакого отдельного «спана»: текст значения — это текст инпута. Клик →
+      <b>текст выделяется целиком</b>, печатаешь — заменился (фильтр с нуля). <kbd>Esc</kbd>/blur — значение
+      восстанавливается. Ноль layout shift; cursor: text (честное «можно печатать»).</span>
+    </div>
+
+    <div class="cell">
+      <span class="cap">E · Поиск в панели <span class="who">PrimeNG / Select2 / shadcn</span></span>
+      <div class="sel2">
+        <button class="trigger" type="button"><span class="value">Festicket Ltd</span><span class="chev"></span></button>
+        <div class="panel">
+          <input class="pinp" placeholder="Найти…">
+          <ul>
+            <li>Acme Holdings</li>
+            <li>Festicket Ltd</li>
+            <li>Live Nation Festivals</li>
+            <li>SJM Concerts</li>
+          </ul>
+        </div>
+      </div>
+      <span class="sub">Триггер — <b>чистая кнопка-select всегда</b> (и пустой, и заполненный). Поле фильтра
+      живёт сверху открытой панели. Значение в триггере видно всё время, пока ищешь замену.</span>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <h2>Сравнение</h2>
+  <table>
+    <tr><th></th><th>0 сегодня</th><th>A схлопнуть рядом</th><th>B вместо значения</th><th>C значение в инпуте</th><th>E поиск в панели</th></tr>
+    <tr><td>Закрытый вид читается как…</td><td class="bad">поле ввода</td><td class="good">select</td><td class="good">select</td><td class="mid">заполненный инпут</td><td class="good">select (буквально)</td></tr>
+    <tr><td>Видно текущее значение, пока печатаешь замену</td><td class="mid">да (рядом)</td><td class="good">да (рядом)</td><td class="mid">призраком, до 1-й буквы</td><td class="mid">выделено, до 1-й буквы</td><td class="good">да (в триггере)</td></tr>
+    <tr><td>Layout shift при входе в редактирование</td><td class="good">нет</td><td class="mid">инпут 0→80px</td><td class="mid">спан↔инпут (ширины близки)</td><td class="good">нет вообще</td><td class="good">нет (панель поверх)</td></tr>
+    <tr><td>Знакомый паттерн</td><td class="bad">—</td><td class="mid">редкий</td><td class="good">Ant, react-select</td><td class="good">MUI Autocomplete</td><td class="good">PrimeNG, Select2, shadcn</td></tr>
+    <tr><td>Цена в нашем компоненте</td><td class="good">0</td><td class="good">~5 строк scss + класс</td><td class="good">scss + 3-5 строк ts</td><td class="mid">~20-25 строк ts (query↔label)</td><td class="bad">рефактор: инпут в панель, фокус/aria</td></tr>
+    <tr><td>Пустое состояние (без значения)</td><td colspan="4">во всех A/B/C — как сегодня: развёрнутый инпут с плейсхолдером</td><td>кнопка с плейсхолдером</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Заметки <span class="tag">ui-ux-pro-max</span></h2>
+  <p class="note">
+    <b>Input Affordance:</b> контрол должен выглядеть тем, чем является — «выбрано одно значение» ≠ «введи текст»;
+    это довод против 0 и наполовину против C (C честен, но по-другому: он говорит «можно печатать», а не «выбери из списка»).
+    <b>Content Jumping:</b> избегать layout shift при взаимодействии — сильная сторона C и E, слабое место A.
+    <b>Focus States:</b> во всех вариантах кольцо фокуса на триггере сохраняется (:focus-within не трогаем).
+    <b>Cursor:</b> закрытое состояние — pointer (A/B/E), у C — text.
+  </p>
+</section>
+
+<script>
+  // B — input replaces value; old value becomes ghost placeholder
+  document.querySelectorAll('.opt-b').forEach(trigger => {
+    const inputElement = trigger.querySelector('.inp');
+    const valueElement = trigger.querySelector('.value');
+    inputElement.addEventListener('focus', () => {
+      trigger.classList.add('editing');
+      inputElement.placeholder = valueElement.textContent.trim();
+    });
+    inputElement.addEventListener('blur', () => {
+      trigger.classList.remove('editing');
+      inputElement.value = '';
+      inputElement.placeholder = '';
+    });
+    inputElement.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') inputElement.blur();
+    });
+  });
+
+  // C — value lives in the input; focus selects all, blur/Esc restores
+  document.querySelectorAll('.opt-c .inp').forEach(inputElement => {
+    const committed = inputElement.value;
+    inputElement.addEventListener('focus', () => inputElement.select());
+    inputElement.addEventListener('blur', () => { inputElement.value = committed; });
+    inputElement.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') inputElement.blur();
+    });
+  });
+
+  // E — select-look trigger, filter input inside the panel
+  document.querySelectorAll('.sel2').forEach(widget => {
+    const triggerButton = widget.querySelector('.trigger');
+    const panelInput = widget.querySelector('.pinp');
+    const valueElement = widget.querySelector('.value');
+    const optionElements = [...widget.querySelectorAll('.panel li')];
+    const applyFilter = (query) => {
+      optionElements.forEach(option => {
+        option.style.display = option.textContent.toLowerCase().includes(query.toLowerCase()) ? '' : 'none';
+      });
+    };
+    triggerButton.addEventListener('click', () => {
+      widget.classList.toggle('open');
+      if (widget.classList.contains('open')) {
+        panelInput.value = '';
+        applyFilter('');
+        panelInput.focus();
+      }
+    });
+    panelInput.addEventListener('input', () => applyFilter(panelInput.value));
+    panelInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') widget.classList.remove('open');
+    });
+    optionElements.forEach(option => {
+      option.addEventListener('click', () => {
+        valueElement.textContent = option.textContent.trim();
+        widget.classList.remove('open');
+      });
+    });
+    document.addEventListener('click', (event) => {
+      if (!widget.contains(event.target)) widget.classList.remove('open');
+    });
+  });
+</script>
+
+</body>
+</html>
