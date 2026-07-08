@@ -3,6 +3,18 @@
     --ds-time-picker-focus-shadow,
     var(--ds-control-focus-shadow)
   );
+  --_time-picker-trigger-bg-color: var(
+    --ds-time-picker-trigger-bg-color,
+    var(--surface-default)
+  );
+  --_time-picker-trigger-border: var(
+    --ds-time-picker-trigger-border,
+    var(--border-default)
+  );
+  --_time-picker-trigger-color: var(
+    --ds-time-picker-trigger-color,
+    var(--text-primary)
+  );
 
   display: block;
 }
@@ -35,14 +47,14 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  background: var(--surface-default);
-  border: var(--border-width-default) solid var(--border-default);
+  background: var(--_time-picker-trigger-bg-color);
+  border: var(--border-width-default) solid var(--_time-picker-trigger-border);
   border-radius: var(--radius-md);
   padding: 0 var(--space-3);
   height: var(--hit-cozy);
   font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat)
     var(--font-sans);
-  color: var(--text-primary);
+  color: var(--_time-picker-trigger-color);
   cursor: pointer;
   transition: border-color var(--duration-fast) var(--ease-standard);
 

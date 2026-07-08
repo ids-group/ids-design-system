@@ -6,8 +6,12 @@
    Absorbed the former <ds-dropdown> (removed as a duplicate) - trigger and panel share its source.
    ============================================================ */
 :host {
-  --_select-focus-shadow:       var(--ds-select-focus-shadow,       var(--ds-field-focus-shadow));
+  --_select-focus-shadow: var(--ds-select-focus-shadow, var(--ds-field-focus-shadow));
   --_select-focus-shadow-error: var(--ds-select-focus-shadow-error, var(--ds-field-focus-shadow-error));
+  --_select-bg-color: var(--ds-select-bg-color, var(--surface-default));
+  --_select-border-color: var(--ds-select-border-color, var(--border-default));
+  --_select-text-color: var(--ds-select-text-color, var(--text-primary));
+  --_select-radius: var(--ds-select-radius, var(--radius-md));
 
   // Flex column + gap so label→trigger→hint all sit the canonical --space-1-5
   // apart, matching input/textarea/autocomplete/date-picker.
@@ -40,13 +44,13 @@
   align-items: center;
   gap: var(--space-2);
   width: 100%;
-  background: var(--surface-default);
-  border: var(--border-width-default) solid var(--border-default);
-  border-radius: var(--radius-md);
+  background: var(--_select-bg-color);
+  border: var(--border-width-default) solid var(--_select-border-color);
+  border-radius: var(--_select-radius);
   padding: var(--field-pad-y) var(--field-pad-x);
   height: var(--hit-cozy);
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-  color: var(--text-primary);
+  color: var(--_select-text-color);
   text-align: left;
   cursor: pointer;
   transition:

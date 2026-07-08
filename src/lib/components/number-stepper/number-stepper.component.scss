@@ -1,5 +1,7 @@
 :host {
   --_number-stepper-focus-shadow: var(--ds-number-stepper-focus-shadow, var(--ds-field-focus-shadow));
+  --_number-stepper-bg-color: var(--ds-number-stepper-bg-color, var(--surface-default));
+  --_number-stepper-border-color: var(--ds-number-stepper-border-color, var(--border-default));
 
   display: inline-flex;
 }
@@ -7,8 +9,8 @@
 .stepper {
   display: flex;
   align-items: stretch;
-  background: var(--surface-default);
-  border: var(--border-width-default) solid var(--border-default);
+  background: var(--_number-stepper-bg-color);
+  border: var(--border-width-default) solid var(--_number-stepper-border-color);
   border-radius: var(--radius-md);
   overflow: hidden;
 

@@ -3,6 +3,8 @@
    ============================================================ */
 :host {
   --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
+  --_datepicker-trigger-bg-color: var(--ds-datepicker-trigger-bg-color, var(--surface-default));
+  --_datepicker-trigger-border-color: var(--ds-datepicker-trigger-border-color, var(--border-default));
 
   /* Hug the field's content width; a consumer opts into wider by setting a
      width on the host. Prevents an outer grid/flex column from stretching a
@@ -55,8 +57,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  background: var(--surface-default);
-  border: var(--border-width-default) solid var(--border-default);
+  background: var(--_datepicker-trigger-bg-color);
+  border: var(--border-width-default) solid var(--_datepicker-trigger-border-color);
   border-radius: var(--radius-md);
   padding: 0 var(--space-3);
   height: var(--hit-cozy);

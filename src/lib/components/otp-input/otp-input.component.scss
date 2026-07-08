@@ -4,6 +4,8 @@
   --_otp-cell-w: var(--ds-otp-cell-w, var(--otp-cell-w));
   --_otp-cell-h: var(--ds-otp-cell-h, var(--otp-cell-h));
   --_otp-gap: var(--ds-otp-gap, var(--otp-gap));
+  --_otp-cell-bg-color: var(--ds-otp-cell-bg-color, var(--surface-default));
+  --_otp-cell-border-color: var(--ds-otp-cell-border-color, var(--border-default));
 
   display: inline-flex;
   flex-direction: column;
@@ -24,8 +26,8 @@
     var(--font-weight-bold) var(--font-size-h4) / var(--line-height-flat)
     var(--font-sans);
   color: var(--text-primary);
-  background-color: var(--surface-default);
-  border: var(--border-width-default) solid var(--border-default);
+  background-color: var(--_otp-cell-bg-color);
+  border: var(--border-width-default) solid var(--_otp-cell-border-color);
   border-radius: var(--radius-md);
   caret-color: var(--accent);
   transition:

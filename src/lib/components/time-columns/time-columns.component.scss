@@ -1,4 +1,17 @@
 :host {
+  --_time-picker-option-bg-color-selected: var(
+    --ds-time-picker-option-bg-color-selected,
+    var(--accent)
+  );
+  --_time-picker-option-text-color-selected: var(
+    --ds-time-picker-option-text-color-selected,
+    var(--accent-on)
+  );
+  --_time-picker-option-bg-color-hover: var(
+    --ds-time-picker-option-bg-color-hover,
+    var(--surface-secondary)
+  );
+
   display: flex;
   gap: var(--space-1);
   align-items: stretch;
@@ -36,12 +49,12 @@
   transition: background-color var(--duration-fast) var(--ease-standard);
 
   &:hover:not(:disabled) {
-    background-color: var(--surface-secondary);
+    background-color: var(--_time-picker-option-bg-color-hover);
   }
 
   &.is-selected {
-    background-color: var(--accent);
-    color: var(--accent-on);
+    background-color: var(--_time-picker-option-bg-color-selected);
+    color: var(--_time-picker-option-text-color-selected);
   }
 
   &:focus-visible {
