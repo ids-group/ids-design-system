@@ -6,6 +6,10 @@
   --_tree-indent: var(--ds-tree-indent, var(--tree-indent));
   --_tree-row-pad-y: var(--ds-tree-row-pad-y, var(--tree-row-pad-y));
   --_tree-row-pad-x: var(--ds-tree-row-pad-x, var(--tree-row-pad-x));
+  --_tree-row-hover-bg-color: var(--ds-tree-row-hover-bg-color, var(--surface-secondary));
+  --_tree-row-selected-bg-color: var(--ds-tree-row-selected-bg-color, var(--accent-surface-tint));
+  --_tree-row-selected-text-color: var(--ds-tree-row-selected-text-color, var(--accent-strong));
+  --_tree-row-text-color: var(--ds-tree-row-text-color, var(--text-primary));
 
   display: flex;
   flex-direction: column;
@@ -20,7 +24,7 @@
     calc(var(--_tree-row-pad-x) + var(--_level, 0) * var(--_tree-indent));
   border: 0;
   background: transparent;
-  color: var(--text-primary);
+  color: var(--_tree-row-text-color);
   font:
     var(--font-weight-regular) var(--font-size-s) / var(--line-height-base)
     var(--font-sans);
@@ -29,7 +33,7 @@
   transition: background-color var(--duration-fast) var(--ease-standard);
 
   &:hover {
-    background-color: var(--surface-secondary);
+    background-color: var(--_tree-row-hover-bg-color);
   }
 
   &:focus-visible {
@@ -46,8 +50,8 @@
 }
 
 .row.selected {
-  background-color: var(--accent-surface-tint);
-  color: var(--accent-strong);
+  background-color: var(--_tree-row-selected-bg-color);
+  color: var(--_tree-row-selected-text-color);
   font-weight: var(--font-weight-semibold);
 }
 

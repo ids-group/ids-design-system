@@ -1,6 +1,12 @@
 :host {
   display: block;
   position: relative;
+  --_scrim-color: var(--ds-loading-overlay-scrim-color, color-mix(
+    in srgb,
+    var(--surface-canvas) calc(var(--opacity-scrim) * 100%),
+    transparent
+  ));
+  --_label-color: var(--ds-loading-overlay-label-color, var(--text-secondary));
 }
 
 .scrim {
@@ -12,11 +18,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-3);
-  background-color: color-mix(
-    in srgb,
-    var(--surface-canvas) calc(var(--opacity-scrim) * 100%),
-    transparent
-  );
+  background-color: var(--_scrim-color);
   animation: ds-loading-overlay-in var(--duration-fast) var(--ease-standard);
 }
 
@@ -25,7 +27,7 @@
 }
 
 .label {
-  color: var(--text-secondary);
+  color: var(--_label-color);
   font:
     var(--font-weight-medium) var(--font-size-s) / var(--line-height-base)
     var(--font-sans);

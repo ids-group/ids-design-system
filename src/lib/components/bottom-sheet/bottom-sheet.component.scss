@@ -1,8 +1,10 @@
 :host {
   /* Public --ds-bottom-sheet-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_bottom-sheet-maxw:   var(--ds-bottom-sheet-maxw,   480px);
-  --_bottom-sheet-maxh:   var(--ds-bottom-sheet-maxh,   80%);
+  --_bottom-sheet-maxw: var(--ds-bottom-sheet-maxw, 480px);
+  --_bottom-sheet-maxh: var(--ds-bottom-sheet-maxh, 80%);
   --_bottom-sheet-radius: var(--ds-bottom-sheet-radius, var(--radius-lg));
+  --_bottom-sheet-bg-color: var(--ds-bottom-sheet-bg-color, var(--surface-default));
+  --_bottom-sheet-scrim-color: var(--ds-bottom-sheet-scrim-color, var(--surface-scrim));
 
   display: contents;
 }
@@ -11,7 +13,7 @@
   position: fixed;
   inset: 0;
   z-index: var(--layer-modal);
-  background: var(--surface-scrim);
+  background: var(--_bottom-sheet-scrim-color);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -26,7 +28,7 @@
   position: relative;
   width: min(100%, var(--_bottom-sheet-maxw));
   margin-inline: auto;
-  background: var(--surface-default);
+  background: var(--_bottom-sheet-bg-color);
   border-radius: var(--_bottom-sheet-radius) var(--_bottom-sheet-radius) 0 0;
   padding: 0 var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom));
   animation: ds-sheet-up var(--duration-base) var(--ease-decelerate);

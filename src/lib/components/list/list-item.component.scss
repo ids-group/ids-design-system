@@ -6,6 +6,10 @@
   --_list-item-pad-y: var(--ds-list-item-pad-y, var(--list-item-pad-y));
   --_list-item-pad-x: var(--ds-list-item-pad-x, var(--list-item-pad-x));
   --_list-item-gap: var(--ds-list-item-gap, var(--list-item-gap));
+  --_list-item-hover-bg-color: var(--ds-list-item-hover-bg-color, var(--surface-secondary));
+  --_list-item-selected-bg-color: var(--ds-list-item-selected-bg-color, var(--accent-surface-tint));
+  --_list-item-selected-label-color: var(--ds-list-item-selected-label-color, var(--accent-strong));
+  --_list-item-label-color: var(--ds-list-item-label-color, var(--text-primary));
 
   display: block;
 }
@@ -28,7 +32,7 @@ button.activator {
   transition: background-color var(--duration-fast) var(--ease-standard);
 
   &:hover {
-    background-color: var(--surface-secondary);
+    background-color: var(--_list-item-hover-bg-color);
   }
 
   &:focus-visible {
@@ -67,7 +71,7 @@ button.activator {
 }
 
 .title {
-  color: var(--text-primary);
+  color: var(--_list-item-label-color);
   font:
     var(--font-weight-semibold) var(--font-size-s) / var(--line-height-base)
     var(--font-sans);
@@ -81,10 +85,10 @@ button.activator {
 }
 
 :host(.selected) .activator {
-  background-color: var(--accent-surface-tint);
+  background-color: var(--_list-item-selected-bg-color);
 }
 :host(.selected) .title {
-  color: var(--accent-strong);
+  color: var(--_list-item-selected-label-color);
 }
 
 :host(.disabled) .title,

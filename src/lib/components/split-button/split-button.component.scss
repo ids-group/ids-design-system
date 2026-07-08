@@ -1,5 +1,11 @@
 :host {
   display: inline-flex;
+  --_split-button-bg-color: var(--ds-split-button-bg-color, var(--accent));
+  --_split-button-text-color: var(--ds-split-button-text-color, var(--accent-on));
+  --_split-button-bg-hover-color: var(--ds-split-button-bg-hover-color, var(--accent-strong));
+  --_split-button-divider-color: var(--ds-split-button-divider-color, var(--btn-split-divider));
+  --_split-button-outline-bg-color: var(--ds-split-button-outline-bg-color, var(--surface-default));
+  --_split-button-outline-border-color: var(--ds-split-button-outline-border-color, var(--border-default));
 }
 
 .main,
@@ -58,22 +64,22 @@
 /* Primary (filled) variant */
 :host(.primary) .main:not(:disabled),
 :host(.primary) .toggle:not(:disabled) {
-  background: var(--accent);
-  color: var(--accent-on);
+  background: var(--_split-button-bg-color);
+  color: var(--_split-button-text-color);
 }
 :host(.primary) .main:not(:disabled):hover,
 :host(.primary) .toggle:not(:disabled):hover {
-  background: var(--accent-strong);
+  background: var(--_split-button-bg-hover-color);
 }
 :host(.primary) .toggle:not(:disabled) {
-  border-left: var(--border-width-default) solid var(--btn-split-divider);
+  border-left: var(--border-width-default) solid var(--_split-button-divider-color);
 }
 
 /* Outline variant — the -1px overlap collapses adjacent borders into one divider */
 :host(.outline) .main:not(:disabled),
 :host(.outline) .toggle:not(:disabled) {
-  background: var(--surface-default);
-  border-color: var(--border-default);
+  background: var(--_split-button-outline-bg-color);
+  border-color: var(--_split-button-outline-border-color);
   color: var(--text-primary);
 }
 :host(.outline) .main:not(:disabled):hover,

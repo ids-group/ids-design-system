@@ -2,8 +2,9 @@
 
 :host {
   /* Public --ds-menu-item-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_menu-item-label-color:   var(--ds-menu-item-label-color,   var(--text-primary));
-  --_menu-item-focus-shadow:  var(--ds-menu-item-focus-shadow,  var(--ds-control-focus-shadow));
+  --_menu-item-label-color: var(--ds-menu-item-label-color, var(--text-primary));
+  --_menu-item-focus-shadow: var(--ds-menu-item-focus-shadow, var(--ds-control-focus-shadow));
+  --_menu-item-hover-bg-color: var(--ds-menu-item-hover-bg-color, var(--surface-secondary));
 
   display: block;
 }
@@ -23,7 +24,7 @@
   text-align: left;
   transition: background-color var(--duration-fast) var(--ease-standard);
 
-  &:hover { background: var(--surface-secondary); }
+  &:hover { background: var(--_menu-item-hover-bg-color); }
 
   &:focus-visible { outline: none; box-shadow: inset var(--_menu-item-focus-shadow); }
 
