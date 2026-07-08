@@ -19,9 +19,13 @@
   }
 }
 
-:host(.success) > span { background: var(--success); }
-:host(.warn)    > span { background: var(--warning-hover); }
-:host(.error)   > span { background: var(--error); }
+:host(.success) { --_progress-bar-color-success: var(--ds-progress-bar-color-success, var(--success)); }
+:host(.warn) { --_progress-bar-color-warn: var(--ds-progress-bar-color-warn, var(--warning-hover)); }
+:host(.error) { --_progress-bar-color-error: var(--ds-progress-bar-color-error, var(--error)); }
+
+:host(.success) > span { background: var(--_progress-bar-color-success); }
+:host(.warn)    > span { background: var(--_progress-bar-color-warn); }
+:host(.error)   > span { background: var(--_progress-bar-color-error); }
 
 :host(.indeterminate) > span {
   width: 30%;

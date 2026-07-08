@@ -8,6 +8,8 @@
   --_modal-title-text-color-error:  var(--ds-modal-title-text-color-error,  var(--error-text));
   --_modal-close-icon-color:        var(--ds-modal-close-icon-color,        var(--icon-default));
   --_modal-close-icon-color-hover:  var(--ds-modal-close-icon-color-hover,  var(--icon-strong));
+  --_modal-icon-badge-bg-color: var(--ds-modal-icon-badge-bg-color, var(--accent-subtitle));
+  --_modal-icon-badge-icon-color: var(--ds-modal-icon-badge-icon-color, var(--accent));
 
   display: contents;
 }
@@ -48,8 +50,8 @@
     width: var(--space-10);
     height: var(--space-10);
     border-radius: var(--radius-pill);
-    background-color: var(--accent-subtitle);
-    color: var(--accent);
+    background-color: var(--_modal-icon-badge-bg-color);
+    color: var(--_modal-icon-badge-icon-color);
 
     &.danger {
       background-color: var(--error-subtitle);

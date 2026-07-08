@@ -19,13 +19,15 @@
   --_toast-bg-color:     var(--ds-toast-bg-color,     var(--surface-overlay));
   --_toast-border:        var(--ds-toast-border,        var(--border-default));
   --_toast-focus-shadow:  var(--ds-toast-focus-shadow,  var(--ds-control-focus-shadow));
+  --_toast-bar-color: var(--ds-toast-bar-color, var(--accent));
+  --_toast-icon-color: var(--ds-toast-icon-color, var(--accent));
 
   display: flex;
   align-items: flex-start;
   gap: var(--space-3);
   background-color: var(--_toast-bg-color);
   border: var(--border-width-default) solid var(--_toast-border);
-  border-left: var(--toast-bar-w) solid var(--accent);
+  border-left: var(--toast-bar-w) solid var(--_toast-bar-color);
   border-radius: var(--radius-lg);
   padding: var(--space-3) var(--space-4);
   box-shadow: var(--shadow-toast);
@@ -33,7 +35,7 @@
   max-width: var(--toast-maxw);
   animation: ds-toast-in var(--duration-slow) var(--ease-decelerate);
 
-  .icon  { color: var(--accent); flex-shrink: 0; margin-top: var(--space-0-5); }
+  .icon  { color: var(--_toast-icon-color); flex-shrink: 0; margin-top: var(--space-0-5); }
   .body  { flex: 1; font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
   .title { font-weight: var(--font-weight-bold); color: var(--text-primary); margin-bottom: var(--space-0-5); }
   .close { border: 0; background: transparent; color: var(--icon-default); cursor: pointer; padding: var(--space-0-5); }
@@ -65,29 +67,37 @@
   &.info {
     --_toast-bg-color:     var(--ds-toast-bg-color-info,     var(--ds-toast-bg-color,     var(--surface-overlay)));
     --_toast-border: var(--ds-toast-border-info,  var(--ds-toast-border, var(--border-default)));
+    --_toast-bar-color: var(--ds-toast-bar-color, var(--accent));
+    --_toast-icon-color: var(--ds-toast-icon-color, var(--accent));
 
-    border-left-color: var(--accent);
+    border-left-color: var(--_toast-bar-color);
   }
   &.success {
     --_toast-bg-color:     var(--ds-toast-bg-color-success,     var(--ds-toast-bg-color,     var(--surface-overlay)));
     --_toast-border: var(--ds-toast-border-success,  var(--ds-toast-border, var(--border-default)));
+    --_toast-bar-color: var(--ds-toast-bar-color, var(--success));
+    --_toast-icon-color: var(--ds-toast-icon-color, var(--success));
 
-    border-left-color: var(--success);
-    .icon { color: var(--success); }
+    border-left-color: var(--_toast-bar-color);
+    .icon { color: var(--_toast-icon-color); }
   }
   &.warning {
     --_toast-bg-color:     var(--ds-toast-bg-color-warning,     var(--ds-toast-bg-color,     var(--surface-overlay)));
     --_toast-border: var(--ds-toast-border-warning,  var(--ds-toast-border, var(--border-default)));
+    --_toast-bar-color: var(--ds-toast-bar-color, var(--warning-hover));
+    --_toast-icon-color: var(--ds-toast-icon-color, var(--warning-hover));
 
-    border-left-color: var(--warning-hover);
-    .icon { color: var(--warning-hover); }
+    border-left-color: var(--_toast-bar-color);
+    .icon { color: var(--_toast-icon-color); }
   }
   &.error {
     --_toast-bg-color:     var(--ds-toast-bg-color-error,     var(--ds-toast-bg-color,     var(--surface-overlay)));
     --_toast-border: var(--ds-toast-border-error,  var(--ds-toast-border, var(--border-default)));
+    --_toast-bar-color: var(--ds-toast-bar-color, var(--error));
+    --_toast-icon-color: var(--ds-toast-icon-color, var(--error));
 
-    border-left-color: var(--error);
-    .icon { color: var(--error); }
+    border-left-color: var(--_toast-bar-color);
+    .icon { color: var(--_toast-icon-color); }
   }
   &.loading {
     border-left-color: var(--accent);

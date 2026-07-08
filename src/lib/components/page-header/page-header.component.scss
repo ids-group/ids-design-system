@@ -12,6 +12,8 @@
   --_pagehdr-subtitle-text-color:  var(--ds-pagehdr-subtitle-text-color,  var(--text-secondary));
   --_pagehdr-meta-text-color:      var(--ds-pagehdr-meta-text-color,      var(--text-secondary));
   --_pagehdr-meta-icon-color: var(--ds-pagehdr-meta-icon-color, var(--icon-default));
+  --_pagehdr-crumb-text-color: var(--ds-pagehdr-crumb-text-color, var(--text-tertiary));
+  --_pagehdr-crumb-text-color-hover: var(--ds-pagehdr-crumb-text-color-hover, var(--accent));
   --_pagehdr-divider:      var(--ds-pagehdr-divider,      var(--border-divider));
   --_pagehdr-title-fs:     var(--ds-pagehdr-title-fs,     var(--font-size-h3));
   --_pagehdr-title-gap:    var(--ds-pagehdr-title-gap,    var(--space-1-5));
@@ -97,7 +99,7 @@
     padding-bottom: var(--space-1);
   }
   .crumb {
-    color: var(--text-tertiary);
+    color: var(--_pagehdr-crumb-text-color);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
@@ -108,7 +110,7 @@
     max-width: 24ch;
     transition: color var(--duration-fast) var(--ease-standard);
 
-    &:hover { color: var(--accent); }
+    &:hover { color: var(--_pagehdr-crumb-text-color-hover); }
     &.crumb--current {
       color: var(--text-primary);
       font-weight: var(--font-weight-bold);

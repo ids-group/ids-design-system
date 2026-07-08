@@ -12,6 +12,9 @@
   --_dropzone-file-progress:    var(--ds-dropzone-file-progress,    var(--accent));
   --_dropzone-file-success:     var(--ds-dropzone-file-success,     var(--success));
   --_dropzone-file-error:       var(--ds-dropzone-file-error,       var(--error));
+  --_dropzone-file-border: var(--ds-dropzone-file-border, var(--border-default));
+  --_dropzone-file-name-color: var(--ds-dropzone-file-name-color, var(--text-primary));
+  --_dropzone-icon-color: var(--ds-dropzone-icon-color, var(--icon-default));
 
   display: flex;
   flex-direction: column;
@@ -121,13 +124,13 @@
     align-items: center;
     gap: var(--space-3);
     padding: var(--space-3);
-    border: var(--border-width-default) solid var(--border-default);
+    border: var(--border-width-default) solid var(--_dropzone-file-border);
     border-radius: var(--radius-md);
     background: var(--surface-default);
 
-    .icon { flex-shrink: 0; color: var(--icon-default); }
+    .icon { flex-shrink: 0; color: var(--_dropzone-icon-color); }
     .main { flex: 1; min-width: 0; }
-    .name { font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-primary); }
+    .name { font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--_dropzone-file-name-color); }
     .meta { font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans); color: var(--text-tertiary); }
     .progress { height: var(--border-width-strong); background: var(--surface-secondary); border-radius: var(--radius-pill); margin-top: var(--space-1); }
     .progress-fill { height: 100%; background: var(--_dropzone-file-progress); border-radius: var(--radius-pill); transition: width var(--duration-base) var(--ease-standard); }

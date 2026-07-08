@@ -3,6 +3,9 @@
    (falls back to the global token when used standalone). */
 
 :host {
+  --_term-color: var(--ds-description-list-term-color, var(--text-tertiary));
+  --_details-color: var(--ds-description-list-details-color, var(--text-primary));
+
   display: grid;
   grid-template-columns: var(--_dl-label-w, var(--dl-spec-label-w)) 1fr;
   column-gap: var(--_dl-col-gap, var(--space-5));
@@ -16,7 +19,7 @@
 }
 
 .term {
-  color: var(--text-tertiary);
+  color: var(--_term-color);
   font:
     var(--font-weight-regular) var(--font-size-s) / var(--line-height-base)
     var(--font-sans);
@@ -27,7 +30,7 @@
   align-items: center;
   gap: var(--space-2);
   min-width: 0;
-  color: var(--text-primary);
+  color: var(--_details-color);
   font:
     var(--font-weight-regular) var(--font-size-s) / var(--line-height-base)
     var(--font-sans);

@@ -5,6 +5,7 @@
   --_tag-pad-x:        var(--ds-tag-pad-x, var(--tag-pad-x));
   --_tag-radius:       var(--ds-tag-radius, var(--radius-md));
   --_tag-bg-color:           var(--ds-tag-bg-color, var(--accent));
+  --_tag-label-color: var(--ds-tag-label-color, var(--accent-on));
   --_tag-fw:            var(--ds-tag-fw, var(--font-weight-bold));
   --_tag-fs:            var(--ds-tag-fs, var(--font-size-xs));
   --_tag-lh:            var(--ds-tag-lh, var(--line-height-base));
@@ -20,7 +21,7 @@
   padding: var(--_tag-pad-y) var(--_tag-pad-x);
   border-radius: var(--_tag-radius);
   background-color: var(--_tag-bg-color);
-  color: var(--accent-on);
+  color: var(--_tag-label-color);
   font: var(--_tag-fw) var(--_tag-fs) / var(--_tag-lh) var(--font-sans);
 }
 
@@ -30,10 +31,12 @@
 
 :host(.neutral) {
   --_tag-bg-color: var(--ds-tag-bg-color, var(--surface-secondary));
+  --_tag-label-color: var(--ds-tag-label-color, var(--text-primary));
+  --_tag-border-color: var(--ds-tag-border-color, var(--border-divider));
 
   background-color: var(--_tag-bg-color);
-  color: var(--text-primary);
-  border: var(--border-width-default) solid var(--border-divider);
+  color: var(--_tag-label-color);
+  border: var(--border-width-default) solid var(--_tag-border-color);
   padding: calc(var(--_tag-pad-y) - var(--border-width-default)) calc(var(--_tag-pad-x) - var(--border-width-default));
 }
 

@@ -13,6 +13,8 @@
   /* Public --ds-avatargroup-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_avatargroup-overlap: var(--ds-avatargroup-overlap, calc(-1 * var(--space-2)));
   --_avatargroup-ring:    var(--ds-avatargroup-ring,    var(--surface-default));
+  --_avatargroup-overflow-bg-color: var(--ds-avatargroup-overflow-bg-color, var(--accent-muted));
+  --_avatargroup-overflow-label-color: var(--ds-avatargroup-overflow-label-color, var(--accent-strong));
 
   display: inline-flex;
 
@@ -34,8 +36,8 @@
   width: var(--avatar-md);
   height: var(--avatar-md);
   border-radius: var(--radius-pill);
-  background: var(--accent-muted);
-  color: var(--accent-strong);
+  background: var(--_avatargroup-overflow-bg-color);
+  color: var(--_avatargroup-overflow-label-color);
   font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
   letter-spacing: var(--letter-spacing-wide);
   flex-shrink: 0;

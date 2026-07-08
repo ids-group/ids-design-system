@@ -6,9 +6,10 @@
   --_timeline-gap: var(--ds-timeline-gap, var(--timeline-gap));
 
   /* Default (pending) node — bordered neutral surface. Tones override below. */
-  --_timeline-node-bg-color: var(--surface-secondary);
-  --_timeline-node-color: var(--text-tertiary);
-  --_timeline-node-border: var(--border-strong);
+  --_timeline-node-bg-color: var(--ds-timeline-node-bg-color, var(--surface-secondary));
+  --_timeline-node-color: var(--ds-timeline-node-color, var(--text-tertiary));
+  --_timeline-node-border: var(--ds-timeline-node-border-color, var(--border-strong));
+  --_timeline-spine-color: var(--ds-timeline-spine-color, var(--border-divider));
 
   display: grid;
   grid-template-columns: var(--_timeline-node-size) 1fr;
@@ -38,7 +39,7 @@
   flex: 1;
   width: var(--_timeline-spine-w);
   margin-top: var(--space-1);
-  background-color: var(--border-divider);
+  background-color: var(--_timeline-spine-color);
 }
 
 .content {

@@ -21,6 +21,9 @@
   --_tab-pill-label-color-active:    var(--ds-tab-pill-label-color-active,    var(--accent-strong));
   --_tab-pill-radius:       var(--ds-tab-pill-radius,       var(--radius-md));
   --_tabs-focus-shadow:     var(--ds-tabs-focus-shadow,     var(--ds-control-focus-shadow));
+  --_tab-badge-bg-color: var(--ds-tab-badge-bg-color, var(--surface-secondary));
+  --_tab-badge-label-color: var(--ds-tab-badge-label-color, var(--text-secondary));
+  --_tab-close-icon-color: var(--ds-tab-close-icon-color, var(--text-tertiary));
 
   display: block;
 }
@@ -80,8 +83,8 @@
       font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
       letter-spacing: var(--letter-spacing-wide);
       white-space: nowrap;
-      background: var(--surface-secondary);
-      color: var(--text-secondary);
+      background: var(--_tab-badge-bg-color);
+      color: var(--_tab-badge-label-color);
       margin-left: var(--space-1);
     }
 
@@ -92,7 +95,7 @@
       width: var(--icon-md);
       height: var(--icon-md);
       border-radius: var(--radius-sm);
-      color: var(--text-tertiary);
+      color: var(--_tab-close-icon-color);
       margin-left: var(--space-1);
       cursor: pointer;
       transition: background-color var(--duration-fast) var(--ease-standard),
