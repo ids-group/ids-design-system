@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.5.0 — 2026-07-08
+
 ### Breaking
 
 - **`ds-combobox` renamed to `ds-autocomplete`.** The clearer industry name for the editable
