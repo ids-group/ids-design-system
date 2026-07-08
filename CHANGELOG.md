@@ -160,6 +160,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   pill/rounded shapes) is now suppressed globally, the rounded press state replacing it.
   Visual/interaction refinement only — no Angular API change.
 
+### Fixed
+
+- **Accessibility hardening across overlays, pickers, fields and cards.** `ds-bottom-sheet` now
+  carries full dialog semantics (`role="dialog"` + `aria-modal`, labelled by its title, focus-trapped
+  on open). `ds-select` / `ds-autocomplete` close their panel on Tab (focus then moves on naturally) and
+  drop their listbox options out of the tab order (`tabindex="-1"`); `ds-autocomplete`'s "No matches" row
+  is announced via `role="status"`. `ds-field-message` renders its error line as a fresh node so
+  `role="alert"` reliably re-announces (toggling the role onto an existing node did not). `ds-number-stepper`
+  labels its −/+ buttons and gains a new `[ariaLabel]` input to name the field itself; the `ds-avatar-group`
+  "+N" overflow chip gets an accessible label; `ds-sidenav-item` exposes its label via `aria-label` only
+  when collapsed (icon-only). `ds-card` is keyboard-activatable (Enter / Space, with `role="button"` +
+  `tabindex`) when `elevation="interactive"`, and closable `ds-tabs` remove the focused tab on Delete (APG).
+
 ## 0.4.0 — 2026-06-30
 
 ### Added
