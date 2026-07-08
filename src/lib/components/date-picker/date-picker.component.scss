@@ -4,7 +4,12 @@
 :host {
   --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
 
+  /* Hug the field's content width; a consumer opts into wider by setting a
+     width on the host. Prevents an outer grid/flex column from stretching a
+     date field across its whole track. */
   display: block;
+  width: fit-content;
+  max-width: 100%;
 }
 
 .field {
@@ -85,8 +90,9 @@
 }
 
 .date-input {
-  flex: 1;
-  min-width: 0;
+  /* Width is driven by the `size` attribute (the mask length) so the field
+     hugs its content instead of stretching. */
+  width: auto;
   border: none;
   background: transparent;
   color: inherit;
@@ -98,6 +104,10 @@
     color: var(--text-tertiary);
   }
 
+  &:read-only {
+    cursor: pointer;
+  }
+
   &:disabled {
     cursor: not-allowed;
   }
@@ -106,25 +116,16 @@
 .calendar-toggle {
   display: inline-flex;
   align-items: center;
+  margin-left: auto;
   border: none;
   background: transparent;
-  color: inherit;
+  color: var(--icon-default);
   padding: 0;
   cursor: pointer;
 
   &:disabled {
     cursor: not-allowed;
   }
-}
-
-.date-range {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.range-dash {
-  color: var(--text-tertiary);
 }
 
 .calendar {
@@ -314,13 +315,17 @@
      month/year picker cells and nav buttons read them. */
 
   &.has-presets {
+    /* Presets are an ADDITIONAL column — the panel grows so the calendar keeps
+       its full width (otherwise the 7-day grid squeezes and the weekday row
+       collapses). */
     display: flex;
     flex-direction: row;
     gap: var(--space-3);
+    width: auto;
 
     .calendar-body {
-      flex: 1 1 auto;
-      min-width: 0;
+      flex: 0 0 var(--_datepicker-width);
+      width: var(--_datepicker-width);
     }
   }
 
@@ -335,15 +340,17 @@
     gap: var(--space-1);
     border-left: var(--border-width-default) solid var(--_datepicker-border);
     padding-left: var(--space-3);
-    min-width: max-content;
+    min-width: 8.5rem;
   }
 
   .preset-btn {
-    display: block;
+    display: flex;
+    align-items: center;
     width: 100%;
+    min-height: var(--hit-min);
     border: 0;
     background: transparent;
-    padding: var(--space-1-5) var(--space-2);
+    padding: var(--space-2) var(--space-3);
     border-radius: var(--radius-sm);
     font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     color: var(--text-primary);

@@ -217,8 +217,9 @@
     The trigger is a text field by default
     (<code class="t-mono-inline">[allowInput]="true"</code>). Typing is masked to
     the active locale format — non-numeric characters are rejected as typed, and
-    an impossible or out-of-range date flags an error on blur. Range mode exposes
-    two independent masked fields.
+    an impossible or out-of-range date flags an error on blur. Range mode uses one
+    combined field (start and end in a single input). Clicking the field or the
+    calendar icon opens the panel.
   </p>
 
   <div class="grid-2">

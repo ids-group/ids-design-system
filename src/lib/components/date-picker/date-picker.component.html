@@ -23,130 +23,48 @@
     </span>
   }
 
-  @if (allowInput()) {
-    @if (mode() === 'range') {
-      <div
-        #anchor
-        class="date-range"
-      >
-        <span [class]="triggerClasses()">
-          <input
-            #inputEl
-            type="text"
-            class="date-input"
-            [value]="startText()"
-            [attr.placeholder]="formatSpec().mask"
-            [disabled]="isDisabled()"
-            [attr.aria-label]="(resolvedAriaLabel() ?? 'Select date') + ' (from)'"
-            [attr.aria-invalid]="invalid() || rangeInvalid() ? 'true' : null"
-            [attr.aria-describedby]="hintId()"
-            (input)="onRangeInput('start', $event)"
-            (blur)="onRangeBlur()"
-            (keydown.arrowdown)="open(); $event.preventDefault()"
-          />
-        </span>
-
-        <span
-          class="range-dash"
-          aria-hidden="true"
-        >
-          –
-        </span>
-
-        <span [class]="triggerClasses()">
-          <input
-            type="text"
-            class="date-input"
-            [value]="endText()"
-            [attr.placeholder]="formatSpec().mask"
-            [disabled]="isDisabled()"
-            [attr.aria-label]="(resolvedAriaLabel() ?? 'Select date') + ' (to)'"
-            [attr.aria-invalid]="invalid() || rangeInvalid() ? 'true' : null"
-            (input)="onRangeInput('end', $event)"
-            (blur)="onRangeBlur()"
-            (keydown.arrowdown)="open(); $event.preventDefault()"
-          />
-        </span>
-
-        <button
-          type="button"
-          class="calendar-toggle"
-          aria-haspopup="dialog"
-          aria-label="Open calendar"
-          [disabled]="isDisabled()"
-          [attr.aria-expanded]="isOpen()"
-          (click)="open()"
-        >
-          <ds-icon
-            name="calendar"
-            [size]="14"
-          />
-        </button>
-      </div>
-    } @else {
-      <div
-        #anchor
-        [class]="triggerClasses()"
-      >
-        <input
-          #inputEl
-          type="text"
-          class="date-input"
-          [value]="inputText()"
-          [attr.placeholder]="formatSpec().mask"
-          [disabled]="isDisabled()"
-          [attr.aria-labelledby]="label() ? labelId : null"
-          [attr.aria-label]="resolvedAriaLabel()"
-          [attr.aria-required]="required() ? 'true' : null"
-          [attr.aria-invalid]="invalid() || typedInvalid() ? 'true' : null"
-          [attr.aria-describedby]="hintId()"
-          (input)="onInput($event)"
-          (blur)="onBlur()"
-          (keydown.arrowdown)="open(); $event.preventDefault()"
-        />
-
-        <button
-          type="button"
-          class="calendar-toggle"
-          aria-haspopup="dialog"
-          aria-label="Open calendar"
-          [disabled]="isDisabled()"
-          [attr.aria-expanded]="isOpen()"
-          (click)="open()"
-        >
-          <ds-icon
-            name="calendar"
-            [size]="14"
-          />
-        </button>
-      </div>
-    }
-  } @else {
-    <button
-      #anchor
-      #trigger
-      type="button"
+  <div
+    #anchor
+    [class]="triggerClasses()"
+  >
+    <input
+      #inputEl
+      type="text"
+      class="date-input"
+      inputmode="numeric"
+      autocomplete="off"
       aria-haspopup="dialog"
-      [class]="triggerClasses()"
+      [value]="fieldText()"
+      [attr.size]="fieldSize()"
+      [attr.placeholder]="fieldPlaceholder()"
+      [readOnly]="!allowInput()"
       [disabled]="isDisabled()"
       [attr.aria-expanded]="isOpen()"
       [attr.aria-labelledby]="label() ? labelId : null"
       [attr.aria-label]="resolvedAriaLabel()"
       [attr.aria-required]="required() ? 'true' : null"
-      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-invalid]="invalid() || typedInvalid() || rangeInvalid() ? 'true' : null"
       [attr.aria-describedby]="hintId()"
-      (click)="open()"
+      (click)="open(!allowInput())"
+      (input)="onFieldInput($event)"
+      (blur)="onFieldBlur()"
+      (keydown.arrowdown)="open(true); $event.preventDefault()"
+    />
+
+    <button
+      type="button"
+      class="calendar-toggle"
+      tabindex="-1"
+      aria-hidden="true"
+      [disabled]="isDisabled()"
+      (click)="open(true)"
     >
       <ds-icon
         name="calendar"
-        [size]="14"
+        [size]="16"
       />
-
-      <span>
-        {{ displayLabel() }}
-      </span>
     </button>
-  }
+  </div>
 
   <ds-field-message
     [text]="hint()"

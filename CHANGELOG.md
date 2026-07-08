@@ -98,10 +98,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   weekday headers and the value format together via `Intl` (no more OS-locale mixing); `dateFormat`
   pins an explicit token order (e.g. `MM/DD/YYYY`); `firstDayOfWeek` (0–6, default Monday) shifts the
   week; `defaultMonth` opens the panel near a realistic date when the value is empty (e.g. a Date Of
-  Birth). Manual masked entry is now available (`allowInput`, default `true`): the trigger is a text
-  field enforcing the locale mask, rejecting non-numeric input and flagging impossible/out-of-range
-  dates on blur; range mode exposes two masked inputs. New `DsConfig.datePicker`
-  ({ `locale`, `dateFormat`, `firstDayOfWeek` }).
+  Birth). Manual masked entry is now available (`allowInput`, default `true`): the field enforces
+  the locale mask, rejects non-numeric input, hard-caps each segment (so a year can't exceed four
+  digits), and flags impossible/out-of-range dates on blur; range mode uses one combined field
+  (`MM/DD/YYYY – MM/DD/YYYY` in a single input). Clicking the field or the trailing calendar icon
+  opens the panel. New `DsConfig.datePicker` ({ `locale`, `dateFormat`, `firstDayOfWeek` }).
 
 ### Changed
 
@@ -110,10 +111,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   (root cause of the PIN-475 double-focus-ring). Only consumer styling that targeted the
   undocumented internal class is affected.
 - **`ds-date-picker` trigger is now a text input by default.** Manual masked entry is on
-  (`allowInput` defaults to `true`), so the trigger renders as an editable field with a calendar
-  button instead of a plain button. Pass `[allowInput]="false"` to restore the button-only,
-  calendar-only trigger. The selected-date display is now locale-pinned (was the ambient
-  `toLocaleDateString()`), and month/weekday names are localized together via the new `locale`.
+  (`allowInput` defaults to `true`), so the trigger renders as an editable field with a trailing
+  calendar icon (single and range) instead of a plain button. Pass `[allowInput]="false"` for a
+  read-only field that opens the calendar on click but rejects typing. The field also sizes to its
+  content width now (was full-width) — set a width on the host to stretch it. The selected-date
+  display is locale-pinned (was the ambient `toLocaleDateString()`), and month/weekday names are
+  localized together via the new `locale`.
 
 ## 0.4.0 — 2026-06-30
 

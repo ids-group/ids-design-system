@@ -130,6 +130,59 @@ export function parseDate(text: string, spec: DateFormatSpec): Date | null {
   return date;
 }
 
+/** Separator between the two dates of a range, in the field and its placeholder. */
+export const RANGE_SEPARATOR = ' – ';
+
+/** Combined placeholder/mask for a range field, e.g. "MM/DD/YYYY – MM/DD/YYYY". */
+export function rangeMask(spec: DateFormatSpec): string {
+  return `${spec.mask}${RANGE_SEPARATOR}${spec.mask}`;
+}
+
+/** Mask a raw two-date string: digits fill start then end, capped and separated. */
+export function applyMaskRange(raw: string, spec: DateFormatSpec): string {
+  const perDate = totalDigits(spec);
+  const digits = raw.replace(/\D/g, '').slice(0, perDate * 2);
+  const start = applyMask(digits.slice(0, perDate), spec);
+  if (digits.length < perDate) {
+    return start;
+  }
+
+  return `${start}${RANGE_SEPARATOR}${applyMask(digits.slice(perDate), spec)}`;
+}
+
+/** Render a range value to the combined field string. */
+export function formatRange(
+  range: [Date | null, Date | null] | null,
+  spec: DateFormatSpec,
+): string {
+  const [start, end] = range ?? [null, null];
+  if (!start && !end) {
+    return '';
+  }
+  const startText = formatDate(start, spec);
+  if (start && end) {
+    return `${startText}${RANGE_SEPARATOR}${formatDate(end, spec)}`;
+  }
+
+  return start ? `${startText}${RANGE_SEPARATOR}` : '';
+}
+
+/** Parse a combined range field string into [start, end] (either may be null). */
+export function parseDateRange(
+  text: string,
+  spec: DateFormatSpec,
+): [Date | null, Date | null] {
+  const perDate = totalDigits(spec);
+  const digits = text.replace(/\D/g, '');
+  const startDigits = digits.slice(0, perDate);
+  const endDigits = digits.slice(perDate, perDate * 2);
+
+  return [
+    startDigits.length === perDate ? parseDate(startDigits, spec) : null,
+    endDigits.length === perDate ? parseDate(endDigits, spec) : null,
+  ];
+}
+
 export function weekdayLabels(locale: string, firstDayOfWeek: number): string[] {
   const formatter = new Intl.DateTimeFormat(locale, { weekday: 'short' });
   // 2023-01-01 is a Sunday (getDay() === 0).

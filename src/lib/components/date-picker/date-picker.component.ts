@@ -31,10 +31,14 @@ import { DS_CONFIG } from '../../config/ds-config';
 import {
   type DateFormatSpec,
   applyMask,
+  applyMaskRange,
   formatDate,
+  formatRange,
   fullDateLabel,
   monthLabels,
   parseDate,
+  parseDateRange,
+  rangeMask,
   resolveDateFormat,
   weekdayLabels,
 } from './date.util';
@@ -91,9 +95,7 @@ export class DatePickerComponent extends DsControlValueAccessor<
 
         return;
       }
-      const range = (value as RangeValue | null) ?? [null, null];
-      this.startText.set(formatDate(range[0], spec));
-      this.endText.set(formatDate(range[1], spec));
+      this.rangeText.set(formatRange(value as RangeValue | null, spec));
     });
   }
 
@@ -169,9 +171,8 @@ export class DatePickerComponent extends DsControlValueAccessor<
   /** The day that holds keyboard focus in the open grid (roving tabindex). */
   protected readonly gridFocus = signal<Date | null>(null);
   protected readonly inputText = signal<string>('');
+  protected readonly rangeText = signal<string>('');
   protected readonly typedInvalid = signal(false);
-  protected readonly startText = signal<string>('');
-  protected readonly endText = signal<string>('');
   protected readonly rangeInvalid = signal(false);
   // Guards the value→text sync from clobbering the field mid-keystroke.
   private editing = false;
@@ -304,36 +305,29 @@ export class DatePickerComponent extends DsControlValueAccessor<
   protected readonly viewMonth = signal<Date>(new Date());
   protected readonly anchor =
     viewChild.required<ElementRef<HTMLElement>>('anchor');
-  protected readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
-  protected readonly inputEl = viewChild<ElementRef<HTMLInputElement>>('inputEl');
+  protected readonly inputEl =
+    viewChild.required<ElementRef<HTMLInputElement>>('inputEl');
   protected readonly panelTpl =
     viewChild.required<TemplateRef<unknown>>('panel');
   private overlayRef: OverlayRef | null = null;
 
   private focusTrigger(): void {
-    const target = this.inputEl()?.nativeElement ?? this.trigger()?.nativeElement;
-    target?.focus();
+    this.inputEl().nativeElement.focus();
   }
 
-  protected readonly displayLabel = computed(() => {
-    const value = this.value();
-    const spec = this.formatSpec();
-    if (this.mode() === 'single') {
-      const single = value as Date | null;
-
-      return single ? formatDate(single, spec) : this.placeholder();
-    }
-    const range = (value as RangeValue | null) ?? [null, null];
-    const [start, end] = range;
-    if (start && end) {
-      return `${formatDate(start, spec)} – ${formatDate(end, spec)}`;
-    }
-    if (start) {
-      return `${formatDate(start, spec)} – …`;
-    }
-
-    return this.placeholder();
-  });
+  /** Text shown in the field: masked single value, or the combined range string. */
+  protected readonly fieldText = computed(() =>
+    this.mode() === 'single' ? this.inputText() : this.rangeText(),
+  );
+  /** Format-mask placeholder (single) or the doubled range mask. */
+  protected readonly fieldPlaceholder = computed(() =>
+    this.mode() === 'single'
+      ? this.formatSpec().mask
+      : rangeMask(this.formatSpec()),
+  );
+  /** `size` attribute so the field hugs its mask width instead of stretching.
+   * +1 keeps wide glyphs (Y/M) from clipping the last placeholder character. */
+  protected readonly fieldSize = computed(() => this.fieldPlaceholder().length + 1);
 
   // ---- Month / year grid pickers in the calendar header ----
   protected readonly monthMenuOpen = signal(false);
@@ -543,7 +537,7 @@ export class DatePickerComponent extends DsControlValueAccessor<
     };
   }
 
-  protected open(): void {
+  protected open(moveFocusToGrid = true): void {
     if (this.isDisabled() || this.overlayRef) {
       return;
     }
@@ -586,7 +580,9 @@ export class DatePickerComponent extends DsControlValueAccessor<
     const focus = this.clampToBounds(selected ?? this.defaultMonth() ?? new Date());
     this.gridFocus.set(focus);
     this.viewMonth.set(new Date(focus.getFullYear(), focus.getMonth(), 1));
-    afterNextRender(() => this.focusGridDay(), { injector: this.injector });
+    if (moveFocusToGrid) {
+      afterNextRender(() => this.focusGridDay(), { injector: this.injector });
+    }
   }
 
   protected close(): void {
@@ -597,10 +593,23 @@ export class DatePickerComponent extends DsControlValueAccessor<
     this.markTouched();
   }
 
-  protected onInput(event: Event): void {
+  protected onFieldInput(event: Event): void {
+    if (!this.allowInput()) {
+      return;
+    }
     this.editing = true;
+    const element = event.target as HTMLInputElement;
     const spec = this.formatSpec();
-    const masked = applyMask((event.target as HTMLInputElement).value, spec);
+    if (this.mode() === 'range') {
+      const masked = applyMaskRange(element.value, spec);
+      this.writeBack(element, masked);
+      this.rangeText.set(masked);
+      this.applyRangeText(masked, spec, false);
+
+      return;
+    }
+    const masked = applyMask(element.value, spec);
+    this.writeBack(element, masked);
     this.inputText.set(masked);
     const parsed = parseDate(masked, spec);
     if (!parsed) {
@@ -619,14 +628,22 @@ export class DatePickerComponent extends DsControlValueAccessor<
     this.viewMonth.set(new Date(parsed.getFullYear(), parsed.getMonth(), 1));
   }
 
-  protected onBlur(): void {
+  protected onFieldBlur(): void {
+    this.markTouched();
+    if (!this.allowInput()) {
+      return;
+    }
     this.editing = false;
     const spec = this.formatSpec();
+    if (this.mode() === 'range') {
+      this.applyRangeText(this.rangeText(), spec, true);
+
+      return;
+    }
     const text = this.inputText();
     if (!text) {
       this.typedInvalid.set(false);
       this.value.set(null);
-      this.markTouched();
 
       return;
     }
@@ -638,34 +655,35 @@ export class DatePickerComponent extends DsControlValueAccessor<
     } else {
       this.typedInvalid.set(true);
     }
-    this.markTouched();
   }
 
-  protected onRangeInput(part: 'start' | 'end', event: Event): void {
-    this.editing = true;
-    const spec = this.formatSpec();
-    const masked = applyMask((event.target as HTMLInputElement).value, spec);
-    (part === 'start' ? this.startText : this.endText).set(masked);
+  /** Force the DOM value to the mask so over-typed digits can't accumulate. */
+  private writeBack(element: HTMLInputElement, masked: string): void {
+    if (element.value !== masked) {
+      element.value = masked;
+    }
+    const caret = masked.length;
+    element.setSelectionRange(caret, caret);
   }
 
-  protected onRangeBlur(): void {
-    this.editing = false;
-    const spec = this.formatSpec();
-    const start = parseDate(this.startText(), spec);
-    const end = parseDate(this.endText(), spec);
-    const startBad = !!this.startText() && (!start || this.isDayDisabled(start));
-    const endBad = !!this.endText() && (!end || this.isDayDisabled(end));
+  /** Parse the combined range text, flag malformed segments, commit on blur. */
+  private applyRangeText(text: string, spec: DateFormatSpec, commit: boolean): void {
+    const perDate = spec.segments.reduce((sum, seg) => sum + seg.length, 0);
+    const digits = text.replace(/\D/g, '').length;
+    const [start, end] = parseDateRange(text, spec);
+    const startBad = digits >= perDate && (!start || this.isDayDisabled(start));
+    const endBad = digits >= perDate * 2 && (!end || this.isDayDisabled(end));
     this.rangeInvalid.set(startBad || endBad);
     if (start && end && !startBad && !endBad) {
       const ordered: RangeValue =
         start.getTime() <= end.getTime() ? [start, end] : [end, start];
       this.value.set(ordered);
-      this.startText.set(formatDate(ordered[0], spec));
-      this.endText.set(formatDate(ordered[1], spec));
-    } else {
+      if (commit) {
+        this.rangeText.set(formatRange(ordered, spec));
+      }
+    } else if (commit) {
       this.value.set([start ?? null, end ?? null]);
     }
-    this.markTouched();
   }
 
   protected prevMonth(): void {
@@ -684,6 +702,7 @@ export class DatePickerComponent extends DsControlValueAccessor<
     if (cell.isDisabled) {
       return;
     }
+    this.editing = false;
     if (this.mode() === 'single') {
       this.value.set(new Date(cell.date));
       this.close();
@@ -729,6 +748,9 @@ export class DatePickerComponent extends DsControlValueAccessor<
     if (this.isPresetDisabled(preset)) {
       return;
     }
+    this.editing = false;
+    this.typedInvalid.set(false);
+    this.rangeInvalid.set(false);
     const presetValue = preset.value;
     if (presetValue instanceof Date) {
       this.value.set(new Date(presetValue));
