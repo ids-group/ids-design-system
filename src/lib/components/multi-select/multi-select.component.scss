@@ -206,6 +206,6 @@
 .empty {
   padding: var(--space-3) var(--space-3);
   color: var(--text-tertiary);
-  font: var(--font-weight-regular) var(--font-size-s) / 1.4 var(--font-sans);
+  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   text-align: center;
 }

@@ -74,7 +74,7 @@
     font: var(--font-weight-extrabold) var(--_pagehdr-title-fs) / var(--line-height-tight) var(--font-display);
     color: var(--_pagehdr-title-text-color);
     margin: 0;
-    letter-spacing: -0.02em;
+    letter-spacing: var(--letter-spacing-tight);
   }
 
   .title-line {

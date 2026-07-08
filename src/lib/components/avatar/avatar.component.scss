@@ -59,7 +59,7 @@ img {
   width: var(--_avatar-status-size);
   height: var(--_avatar-status-size);
   border-radius: var(--radius-pill);
-  border: 2px solid var(--surface-default);
+  border: var(--border-width-strong) solid var(--surface-default);
 
   &--online  { background-color: var(--success); }
   &--busy    { background-color: var(--error); }

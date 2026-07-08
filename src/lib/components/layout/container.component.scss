@@ -12,13 +12,13 @@
 }
 
 :host([data-size='sm']) {
-  --_container-max: 640px;
+  --_container-max: var(--bp-sm);
 }
 :host([data-size='md']) {
-  --_container-max: 768px;
+  --_container-max: var(--bp-md);
 }
 :host([data-size='lg']) {
-  --_container-max: 1024px;
+  --_container-max: var(--bp-lg);
 }
 :host([data-size='xl']) {
   --_container-max: var(--col-cap-content);

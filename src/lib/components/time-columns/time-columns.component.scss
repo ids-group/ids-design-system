@@ -7,12 +7,12 @@
 .col {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-0-5);
   min-width: var(--ds-time-picker-column-width, 3rem);
   max-height: var(--ds-time-picker-column-height, 13.5rem);
   overflow-y: auto;
   scrollbar-width: thin;
-  padding-inline: 2px;
+  padding-inline: var(--space-0-5);
 
   &:not(:last-child) {
     border-right: var(--border-width-default) solid var(--border-subtitle);

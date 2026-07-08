@@ -89,8 +89,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 16px;
-      height: 16px;
+      width: var(--icon-md);
+      height: var(--icon-md);
       border-radius: var(--radius-sm);
       color: var(--text-tertiary);
       margin-left: var(--space-1);

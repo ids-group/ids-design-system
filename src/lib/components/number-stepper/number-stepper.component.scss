@@ -56,7 +56,7 @@
   color: var(--text-primary);
   font-size: var(--font-size-l);
   font-weight: var(--font-weight-bold);
-  line-height: 1;
+  line-height: var(--line-height-flat);
   cursor: pointer;
   display: flex;
   align-items: center;

@@ -81,6 +81,10 @@
   --border-width-default: 1px;   /* every border, divider, field outline */
   --border-width-strong:  2px;   /* radio dot, slider thumb, tabs underline, focus ring inner band, dropzone dash */
 
+  /* Focus outline-offset — gap between an element edge and its focus ring;
+     unifies the 2px offset repeated across stepper/table/dropzone/color-picker. */
+  --focus-ring-offset:    2px;
+
   /* ============================================================
      Elevation
      Channel-split substrate so a re-skin can re-tint shadows.

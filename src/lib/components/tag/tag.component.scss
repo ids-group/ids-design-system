@@ -38,7 +38,7 @@
 }
 
 :host(.neutral.closable) {
-  padding-right: calc(var(--tag-pad-x-close) - 1px);
+  padding-right: calc(var(--tag-pad-x-close) - var(--border-width-default));
 }
 
 :host(.interactive) {
