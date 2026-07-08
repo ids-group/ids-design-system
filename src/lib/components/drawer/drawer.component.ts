@@ -1,6 +1,6 @@
 import {
   Component,
-  DestroyRef,
+  type OnDestroy,
   ViewEncapsulation,
   computed,
   effect,
@@ -28,7 +28,7 @@ let nextId = 0;
     '(document:keydown.escape)': 'onEscape()',
   },
 })
-export class DrawerComponent {
+export class DrawerComponent implements OnDestroy {
   private readonly doc = inject(DOCUMENT);
 
   readonly open = model<boolean>(false);
@@ -69,9 +69,11 @@ export class DrawerComponent {
     effect(() => {
       this.doc.body.style.overflow = this.rendered() ? 'hidden' : '';
     });
-    inject(DestroyRef).onDestroy(() => {
-      this.doc.body.style.overflow = '';
-    });
+  }
+
+  ngOnDestroy(): void {
+    // Restore body scroll if the host is torn down mid-open.
+    this.doc.body.style.overflow = '';
   }
 
   protected onClose(): void {

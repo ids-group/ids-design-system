@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  type OnDestroy,
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
@@ -52,9 +53,10 @@ let nextId = 0;
     },
   ],
 })
-export class AutocompleteComponent<T = unknown> extends DsControlValueAccessor<
-  T | readonly T[] | null
-> {
+export class AutocompleteComponent<T = unknown>
+  extends DsControlValueAccessor<T | readonly T[] | null>
+  implements OnDestroy
+{
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
 
@@ -378,6 +380,13 @@ export class AutocompleteComponent<T = unknown> extends DsControlValueAccessor<
     this.isOpen.set(false);
     this.activeIndex.set(-1);
     this.markTouched();
+  }
+
+  ngOnDestroy(): void {
+    // Host torn down while open → close() never runs. Dispose the overlay so
+    // its pane and event subscriptions don't leak.
+    this.overlayRef?.dispose();
+    this.overlayRef = null;
   }
 
   protected onFilter(event: Event): void {

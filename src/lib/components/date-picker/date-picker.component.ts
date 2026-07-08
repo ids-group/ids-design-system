@@ -2,6 +2,7 @@ import {
   Component,
   ElementRef,
   Injector,
+  type OnDestroy,
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
@@ -13,7 +14,6 @@ import {
   inject,
   input,
   model,
-  type OnDestroy,
   signal,
   viewChild,
 } from '@angular/core';
@@ -632,9 +632,9 @@ export class DatePickerComponent
   }
 
   ngOnDestroy(): void {
-    // Host torn down while open → close() never runs. Dispose the overlay
-    // directly so its pane and event subscriptions don't leak.
-    disposeWithLeave(this.overlayRef);
+    // Host torn down while open → close() never runs. Dispose the overlay so
+    // its pane and event subscriptions don't leak.
+    this.overlayRef?.dispose();
     this.overlayRef = null;
   }
 

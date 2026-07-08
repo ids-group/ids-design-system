@@ -1,7 +1,7 @@
 import {
   Component,
-  DestroyRef,
   ElementRef,
+  type OnDestroy,
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
@@ -70,7 +70,7 @@ const DEFAULT_PRESETS: readonly string[] = [
 })
 export class ColorPickerComponent
   extends DsControlValueAccessor<string>
-  implements DsOverlayCloseRef
+  implements DsOverlayCloseRef, OnDestroy
 {
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
@@ -99,12 +99,11 @@ export class ColorPickerComponent
   private svDragging = false;
   private hueDragging = false;
 
-  constructor() {
-    super();
-    inject(DestroyRef).onDestroy(() => {
-      this.overlayRef?.dispose();
-      this.overlayRef = null;
-    });
+  ngOnDestroy(): void {
+    // Host torn down while open → close() never runs. Dispose the overlay so
+    // its pane and event subscriptions don't leak.
+    this.overlayRef?.dispose();
+    this.overlayRef = null;
   }
 
   protected readonly uid = nextControlId('ds-color-picker');

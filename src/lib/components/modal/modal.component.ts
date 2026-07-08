@@ -1,6 +1,6 @@
 import {
   Component,
-  DestroyRef,
+  type OnDestroy,
   ViewEncapsulation,
   booleanAttribute,
   effect,
@@ -25,7 +25,7 @@ import type { ModalSize } from './modal.types';
   encapsulation: ViewEncapsulation.Emulated,
   hostDirectives: [{ directive: DsStaticPreview, inputs: ['staticPreview'] }],
 })
-export class ModalComponent {
+export class ModalComponent implements OnDestroy {
   private readonly doc = inject(DOCUMENT);
   protected readonly preview = inject(DsStaticPreview);
 
@@ -72,9 +72,11 @@ export class ModalComponent {
       }
       this.doc.body.style.overflow = this.rendered() ? 'hidden' : '';
     });
-    inject(DestroyRef).onDestroy(() => {
-      this.doc.body.style.overflow = '';
-    });
+  }
+
+  ngOnDestroy(): void {
+    // Restore body scroll if the host is torn down mid-open.
+    this.doc.body.style.overflow = '';
   }
 
   protected onClose(): void {

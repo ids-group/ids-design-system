@@ -2,6 +2,7 @@ import {
   Component,
   ElementRef,
   Injector,
+  type OnDestroy,
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
@@ -55,9 +56,10 @@ let nextId = 0;
     },
   ],
 })
-export class TimePickerComponent extends DsControlValueAccessor<
-  string | TimeRangeValue | null
-> {
+export class TimePickerComponent
+  extends DsControlValueAccessor<string | TimeRangeValue | null>
+  implements OnDestroy
+{
   constructor() {
     super();
   }
@@ -238,6 +240,13 @@ export class TimePickerComponent extends DsControlValueAccessor<
     this.overlayRef = null;
     this.openSegment.set(null);
     this.markTouched();
+  }
+
+  ngOnDestroy(): void {
+    // Host torn down while open → close() never runs. Dispose the overlay so
+    // its pane and event subscriptions don't leak.
+    this.overlayRef?.dispose();
+    this.overlayRef = null;
   }
 
   protected onEscape(): void {

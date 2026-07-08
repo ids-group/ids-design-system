@@ -1,7 +1,7 @@
 import {
   Component,
-  DestroyRef,
   ElementRef,
+  type OnDestroy,
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
@@ -41,7 +41,10 @@ import type { MultiSelectOption } from './multi-select.types';
     },
   ],
 })
-export class MultiSelectComponent extends DsControlValueAccessor<string[]> {
+export class MultiSelectComponent
+  extends DsControlValueAccessor<string[]>
+  implements OnDestroy
+{
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
 
@@ -80,13 +83,12 @@ export class MultiSelectComponent extends DsControlValueAccessor<string[]> {
   private overlayRef: OverlayRef | null = null;
   private focusTimer: ReturnType<typeof setTimeout> | null = null;
 
-  constructor() {
-    super();
-    inject(DestroyRef).onDestroy(() => {
-      clearTimeout(this.focusTimer ?? undefined);
-      this.overlayRef?.dispose();
-      this.overlayRef = null;
-    });
+  ngOnDestroy(): void {
+    // Host torn down while open → close() never runs. Dispose the overlay so
+    // its pane and event subscriptions don't leak.
+    clearTimeout(this.focusTimer ?? undefined);
+    this.overlayRef?.dispose();
+    this.overlayRef = null;
   }
 
   protected readonly isDisabled = computed(
