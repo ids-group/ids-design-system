@@ -79,7 +79,36 @@ function findScss(dir) {
 const compFiles = findScss(join(ROOT, 'src/lib/components'));
 const comp = compFiles.flatMap((f) =>
   extractComponentTokens(readFileSync(f, 'utf8'), basename(dirname(f))));
-const byCat = {};
-for (const t of comp) (byCat[t.component] ??= new Set()).add(t.name);
-console.log('components:', Object.keys(byCat).length);
-console.log(Object.entries(byCat).map(([c, s]) => `  ${c}: ${s.size}`).join('\n'));
+
+const readIf = (p) => { try { return readFileSync(p, 'utf8'); } catch { return ''; } };
+const globalFiles = [
+  'src/lib/styles/_tokens.scss',
+  'src/lib/themes/_semantic.scss',
+  'src/lib/themes/light/_palette.scss',
+  'src/lib/themes/_base-palette.scss',
+].map((p) => join(ROOT, p));
+let globals = globalFiles.flatMap((p) => extractRootDeclarations(readIf(p)));
+
+// --bp-* come from a Sass map (@each), not literal declarations:
+const bpText = readIf(join(ROOT, 'src/lib/styles/_breakpoints.scss'));
+for (const m of bpText.matchAll(/'([a-z0-9]+)':\s*([0-9]+px)/gi))
+  globals.push({ name: `--bp-${m[1]}`, value: m[2] });
+
+// dedupe globals by name (theme + palette may re-declare)
+const seenG = new Set();
+globals = globals.filter((t) => !seenG.has(t.name) && seenG.add(t.name));
+
+const DESCRIPTIONS = JSON.parse(readIf(join(ROOT,
+  'ds-docs/src/app/sections/tokens-reference/token-descriptions.json')) || '{}');
+
+const all = [
+  ...comp.map((t) => ({ ...t, category: 'component' })),
+  ...globals.map((t) => ({ ...t, category: categorize(t.name) })),
+];
+for (const t of all) t.notes = DESCRIPTIONS[t.name] ?? '';
+
+const names = new Set(all.map((t) => t.name));
+const undescribed = all.filter((t) => !t.notes).map((t) => t.name);
+const orphaned = Object.keys(DESCRIPTIONS).filter((k) => !names.has(k));
+console.log(`tokens: ${all.length}, undescribed: ${undescribed.length}, orphaned: ${orphaned.length}`);
+if (orphaned.length) console.warn('orphaned descriptions:\n  ' + orphaned.join('\n  '));
