@@ -55,7 +55,7 @@ const SCALE_RULES = [
   [/^--shadow-|^--blur-/, 'elevation'],
   [/^--duration-|^--ease-/, 'motion'],
   [/^--hit-/, 'density'], [/^--bp-|^--col-cap-/, 'layout'],
-  [/^--icon-/, 'icons'],
+  [/^--icon-(2xs|xs|sm|md|lg)$/, 'icons'],
   [/^--border-width-|^--opacity-|^--layer-/, 'misc'],
   [/^--font-size-|^--font-weight-|^--line-height-|^--letter-spacing-|^--font-/, 'typography'],
 ];
