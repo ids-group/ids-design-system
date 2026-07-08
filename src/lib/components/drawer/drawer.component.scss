@@ -8,6 +8,7 @@
   --_drawer-divider:                var(--ds-drawer-divider,                var(--border-divider));
   --_drawer-close-icon-color:       var(--ds-drawer-close-icon-color,       var(--icon-default));
   --_drawer-close-icon-color-hover: var(--ds-drawer-close-icon-color-hover, var(--icon-strong));
+  --_drawer-radius: var(--ds-drawer-radius, 0);
   --_drawer-width-sm:               var(--ds-drawer-width,                  var(--drawer-w-sm));
   --_drawer-width-md:               var(--ds-drawer-width,                  var(--drawer-w-md));
   --_drawer-width-lg:               var(--ds-drawer-width,                  var(--drawer-w-lg));
@@ -38,6 +39,7 @@
   position: fixed;
   background: var(--_drawer-bg-color);
   box-shadow: var(--_drawer-shadow);
+  border-radius: var(--_drawer-radius);
   z-index: var(--layer-modal);
   display: flex;
   flex-direction: column;

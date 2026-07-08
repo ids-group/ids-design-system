@@ -14,7 +14,7 @@
   --_avatar-label-color:         var(--ds-avatar-label-color,         var(--accent-strong));
   --_avatar-radius:     var(--ds-avatar-radius,     var(--radius-pill));
   --_avatar-ring-width: var(--ds-avatar-ring-width, var(--avatar-bw-group));
-  --_avatar-status-size: 10px;
+  --_avatar-status-size: var(--ds-avatar-status-size, 10px);
 
   display: inline-grid;
   place-items: center;

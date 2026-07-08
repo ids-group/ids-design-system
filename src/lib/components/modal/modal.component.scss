@@ -10,6 +10,7 @@
   --_modal-close-icon-color-hover:  var(--ds-modal-close-icon-color-hover,  var(--icon-strong));
   --_modal-icon-badge-bg-color: var(--ds-modal-icon-badge-bg-color, var(--accent-subtitle));
   --_modal-icon-badge-icon-color: var(--ds-modal-icon-badge-icon-color, var(--accent));
+  --_modal-impact-text-color: var(--ds-modal-impact-text-color, var(--warning-text));
 
   display: contents;
 }
@@ -105,7 +106,7 @@
       margin: var(--space-1) 0 0;
       padding-left: var(--space-4);
       font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
-      color: var(--warning-text);
+      color: var(--_modal-impact-text-color);
     }
   }
 }

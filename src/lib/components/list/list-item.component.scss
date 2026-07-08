@@ -10,6 +10,7 @@
   --_list-item-selected-bg-color: var(--ds-list-item-selected-bg-color, var(--accent-surface-tint));
   --_list-item-selected-label-color: var(--ds-list-item-selected-label-color, var(--accent-strong));
   --_list-item-label-color: var(--ds-list-item-label-color, var(--text-primary));
+  --_list-item-subtitle-color: var(--ds-list-item-subtitle-color, var(--text-tertiary));
 
   display: block;
 }
@@ -78,7 +79,7 @@ button.activator {
 }
 
 .subtitle {
-  color: var(--text-tertiary);
+  color: var(--_list-item-subtitle-color);
   font:
     var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base)
     var(--font-sans);

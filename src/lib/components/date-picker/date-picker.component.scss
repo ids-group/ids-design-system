@@ -5,6 +5,7 @@
   --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
   --_date-picker-trigger-bg-color: var(--ds-date-picker-trigger-bg-color, var(--surface-default));
   --_date-picker-trigger-border-color: var(--ds-date-picker-trigger-border-color, var(--border-default));
+  --_date-picker-trigger-label-color: var(--ds-date-picker-trigger-label-color, var(--text-primary));
 
   /* Hug the field's content width; a consumer opts into wider by setting a
      width on the host. Prevents an outer grid/flex column from stretching a
@@ -63,7 +64,7 @@
   padding: 0 var(--space-3);
   height: var(--hit-cozy);
   font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-  color: var(--text-primary);
+  color: var(--_date-picker-trigger-label-color);
   cursor: pointer;
   transition: border-color var(--duration-fast) var(--ease-standard);
 

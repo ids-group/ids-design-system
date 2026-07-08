@@ -10,6 +10,7 @@
   --_tree-row-selected-bg-color: var(--ds-tree-row-selected-bg-color, var(--accent-surface-tint));
   --_tree-row-selected-text-color: var(--ds-tree-row-selected-text-color, var(--accent-strong));
   --_tree-row-text-color: var(--ds-tree-row-text-color, var(--text-primary));
+  --_tree-caret-icon-color: var(--ds-tree-caret-icon-color, var(--text-tertiary));
 
   display: flex;
   flex-direction: column;
@@ -57,7 +58,7 @@
 
 .caret {
   flex: none;
-  color: var(--text-tertiary);
+  color: var(--_tree-caret-icon-color);
 }
 
 .caret-spacer {

@@ -28,6 +28,7 @@
   --_input-label-fs:       var(--ds-input-label-fs,       var(--font-size-xs));
   --_input-label-fw:       var(--ds-input-label-fw,       var(--font-weight-bold));
   --_input-fs:             var(--ds-input-fs,             var(--font-size-s));
+  --_input-clear-color: var(--ds-input-clear-color, var(--text-secondary));
 
   display: block;
 }
@@ -102,7 +103,7 @@
       height: var(--icon-md);
       padding: 0;
       border: 0;
-      background-color: var(--text-secondary);
+      background-color: var(--_input-clear-color);
       cursor: pointer;
       flex-shrink: 0;
       transition: background-color var(--duration-fast) var(--ease-standard),

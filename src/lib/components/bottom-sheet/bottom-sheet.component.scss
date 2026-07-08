@@ -5,6 +5,7 @@
   --_bottom-sheet-radius: var(--ds-bottom-sheet-radius, var(--radius-lg));
   --_bottom-sheet-bg-color: var(--ds-bottom-sheet-bg-color, var(--surface-default));
   --_bottom-sheet-scrim-color: var(--ds-bottom-sheet-scrim-color, var(--surface-scrim));
+  --_bottom-sheet-title-text-color: var(--ds-bottom-sheet-title-text-color, var(--text-primary));
 
   display: contents;
 }
@@ -75,7 +76,7 @@
 
 .sheet-title {
   font: var(--font-weight-semibold) var(--font-size-l) / var(--line-height-snug) var(--font-sans);
-  color: var(--text-primary);
+  color: var(--_bottom-sheet-title-text-color);
   margin: 0 0 var(--space-3);
 }
 

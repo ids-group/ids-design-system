@@ -24,6 +24,7 @@
   --_tab-badge-bg-color: var(--ds-tab-badge-bg-color, var(--surface-secondary));
   --_tab-badge-label-color: var(--ds-tab-badge-label-color, var(--text-secondary));
   --_tab-close-icon-color: var(--ds-tab-close-icon-color, var(--text-tertiary));
+  --_tab-close-bg-color-hover: var(--ds-tab-close-bg-color-hover, var(--surface-secondary));
 
   display: block;
 }
@@ -102,7 +103,7 @@
         color var(--duration-fast) var(--ease-standard);
 
       &:hover {
-        background-color: var(--surface-secondary);
+        background-color: var(--_tab-close-bg-color-hover);
         color: var(--text-primary);
       }
     }

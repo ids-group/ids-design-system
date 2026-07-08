@@ -15,6 +15,7 @@
     --ds-time-picker-trigger-color,
     var(--text-primary)
   );
+  --_time-picker-trigger-radius: var(--ds-time-picker-trigger-radius, var(--radius-md));
 
   display: block;
 }
@@ -49,7 +50,7 @@
   gap: var(--space-2);
   background: var(--_time-picker-trigger-bg-color);
   border: var(--border-width-default) solid var(--_time-picker-trigger-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--_time-picker-trigger-radius);
   padding: 0 var(--space-3);
   height: var(--hit-cozy);
   font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat)

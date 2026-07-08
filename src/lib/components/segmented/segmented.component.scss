@@ -20,6 +20,7 @@
     --ds-segmented-radius,
     calc(var(--_segmented-r-inner) + var(--_segmented-pad))
   );
+  --_segmented-selected-shadow: var(--ds-segmented-selected-shadow, var(--shadow-card));
 
   display: inline-flex;
 
@@ -60,7 +61,7 @@
   &.selected {
     background: var(--_segmented-selected-bg-color);
     color: var(--_segmented-selected-label-color);
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--_segmented-selected-shadow);
   }
 
   &:focus-visible {

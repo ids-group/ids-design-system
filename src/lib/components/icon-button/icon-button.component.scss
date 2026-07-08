@@ -39,11 +39,13 @@
   --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, oklch(from var(--_icon-button-accent) 58% 0.035 h));
   --_icon-button-border-disabled: var(--ds-icon-button-border-disabled, transparent);
 
+  --_icon-button-size: var(--ds-icon-button-size, var(--hit-cozy));
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--hit-cozy);
-  height: var(--hit-cozy);
+  width: var(--_icon-button-size);
+  height: var(--_icon-button-size);
   aspect-ratio: 1;
   padding: 0;
   border: var(--border-width-default) solid var(--_icon-button-border);
@@ -82,9 +84,21 @@
   }
 
   /* Sizes — align with field/button heights (32 / 40 / 48). */
-  &.sm { width: var(--hit-min);     height: var(--hit-min); }
-  &.md { width: var(--hit-cozy);    height: var(--hit-cozy); }
-  &.lg { width: var(--field-h-lg);  height: var(--field-h-lg); }
+  &.sm {
+    --_icon-button-size: var(--ds-icon-button-size, var(--hit-min));
+
+    width: var(--_icon-button-size); height: var(--_icon-button-size);
+  }
+  &.md {
+    --_icon-button-size: var(--ds-icon-button-size, var(--hit-cozy));
+
+    width: var(--_icon-button-size); height: var(--_icon-button-size);
+  }
+  &.lg {
+    --_icon-button-size: var(--ds-icon-button-size, var(--field-h-lg));
+
+    width: var(--_icon-button-size); height: var(--_icon-button-size);
+  }
 
   /* Variants re-bind the resolvers (consumer token still wins). `standard`
      equals the base defaults (no block needed). */

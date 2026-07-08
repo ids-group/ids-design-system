@@ -1,4 +1,6 @@
 :host {
+  --_menu-divider-color: var(--ds-menu-divider-color, var(--border-divider));
+
   display: block;
   padding: var(--space-1) 0;
 }
@@ -6,5 +8,5 @@
 .divider {
   margin: 0;
   border: 0;
-  border-top: var(--border-width-default) solid var(--border-divider);
+  border-top: var(--border-width-default) solid var(--_menu-divider-color);
 }

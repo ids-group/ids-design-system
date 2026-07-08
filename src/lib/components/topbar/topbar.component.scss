@@ -7,6 +7,7 @@
   --_topbar-crumb-text-color: var(--ds-topbar-crumb-text-color, var(--text-tertiary));
   --_topbar-crumb-hover-text-color: var(--ds-topbar-crumb-hover-text-color, var(--accent));
   --_topbar-crumb-separator-icon-color: var(--ds-topbar-crumb-separator-icon-color, var(--icon-muted));
+  --_topbar-crumb-current-text-color: var(--ds-topbar-crumb-current-text-color, var(--text-primary));
 
   display: block;
 }
@@ -64,7 +65,7 @@
 
     &:hover { color: var(--_topbar-crumb-hover-text-color); }
     &.crumb--current {
-      color: var(--text-primary);
+      color: var(--_topbar-crumb-current-text-color);
       font-weight: var(--font-weight-bold);
       max-width: 32ch;
     }

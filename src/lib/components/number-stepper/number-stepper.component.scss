@@ -2,6 +2,7 @@
   --_number-stepper-focus-shadow: var(--ds-number-stepper-focus-shadow, var(--ds-field-focus-shadow));
   --_number-stepper-bg-color: var(--ds-number-stepper-bg-color, var(--surface-default));
   --_number-stepper-border-color: var(--ds-number-stepper-border-color, var(--border-default));
+  --_number-stepper-step-bg-color-active: var(--ds-number-stepper-step-bg-color-active, var(--accent-muted));
 
   display: inline-flex;
 }
@@ -71,7 +72,7 @@
   }
 
   &:active:not(:disabled) {
-    background: var(--accent-muted);
+    background: var(--_number-stepper-step-bg-color-active);
   }
 
   &:disabled {

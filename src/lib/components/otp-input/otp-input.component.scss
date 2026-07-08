@@ -6,6 +6,7 @@
   --_otp-gap: var(--ds-otp-gap, var(--otp-gap));
   --_otp-cell-bg-color: var(--ds-otp-cell-bg-color, var(--surface-default));
   --_otp-cell-border-color: var(--ds-otp-cell-border-color, var(--border-default));
+  --_otp-cell-border-color-focus: var(--ds-otp-cell-border-color-focus, var(--accent));
 
   display: inline-flex;
   flex-direction: column;
@@ -36,7 +37,7 @@
 
   &:focus {
     outline: none;
-    border-color: var(--accent);
+    border-color: var(--_otp-cell-border-color-focus);
     box-shadow: var(--accent-focus-field);
   }
 

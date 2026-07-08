@@ -13,6 +13,7 @@
   --_cp-sv-h: var(--ds-color-picker-sv-h, var(--color-picker-sv-h));
   --_cp-hue-h: var(--ds-color-picker-hue-h, var(--color-picker-hue-h));
   --_cp-thumb: var(--ds-color-picker-thumb, var(--color-picker-thumb));
+  --_cp-trigger-border-color: var(--ds-color-picker-trigger-border-color, var(--border-default));
 }
 
 :host {
@@ -29,7 +30,7 @@
   height: var(--hit-cozy);
   padding: 0 var(--field-pad-x);
   background-color: var(--surface-default);
-  border: var(--border-width-default) solid var(--border-default);
+  border: var(--border-width-default) solid var(--_cp-trigger-border-color);
   border-radius: var(--radius-md);
   color: var(--text-primary);
   cursor: pointer;
