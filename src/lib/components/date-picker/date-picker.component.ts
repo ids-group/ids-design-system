@@ -13,6 +13,7 @@ import {
   inject,
   input,
   model,
+  type OnDestroy,
   signal,
   viewChild,
 } from '@angular/core';
@@ -80,9 +81,10 @@ interface DayCell {
     },
   ],
 })
-export class DatePickerComponent extends DsControlValueAccessor<
-  Date | RangeValue | null
-> {
+export class DatePickerComponent
+  extends DsControlValueAccessor<Date | RangeValue | null>
+  implements OnDestroy
+{
   constructor() {
     super();
     effect(() => {
@@ -627,6 +629,13 @@ export class DatePickerComponent extends DsControlValueAccessor<
     this.isOpen.set(false);
     this.closeMenus();
     this.markTouched();
+  }
+
+  ngOnDestroy(): void {
+    // Host torn down while open → close() never runs. Dispose the overlay
+    // directly so its pane and event subscriptions don't leak.
+    disposeWithLeave(this.overlayRef);
+    this.overlayRef = null;
   }
 
   protected onFieldClick(): void {
