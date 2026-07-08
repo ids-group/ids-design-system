@@ -50,6 +50,26 @@ function extractRootDeclarations(scssText) {
   return out;
 }
 
+const SCALE_RULES = [
+  [/^--space-/, 'spacing'], [/^--radius-/, 'radius'],
+  [/^--shadow-|^--blur-/, 'elevation'],
+  [/^--duration-|^--ease-/, 'motion'],
+  [/^--hit-/, 'density'], [/^--bp-|^--col-cap-/, 'layout'],
+  [/^--icon-/, 'icons'],
+  [/^--border-width-|^--opacity-|^--layer-/, 'misc'],
+  [/^--font-size-|^--font-weight-|^--line-height-|^--letter-spacing-|^--font-/, 'typography'],
+];
+const COLOUR_ROLE = /^--(primary|secondary|tertiary|accent|success|warning|error|info|surface-|text-|icon-|border-|focus-|status-|link-|static-|scrollbar-|select-bg)/;
+const RAMP = /^--(neutral|blue|red|green|yellow|orange|sky|slate|gray|purple|teal|indigo)-/;
+
+function categorize(name) {
+  for (const [re, cat] of SCALE_RULES) if (re.test(name)) return cat;
+  if (COLOUR_ROLE.test(name)) return 'colour-role';
+  if (RAMP.test(name)) return 'colour-ramp';
+  return 'uncategorized';
+}
+const titleCase = (s) => s.replace(/(^|-)([a-z])/g, (_, d, c) => (d ? ' ' : '') + c.toUpperCase()).trim();
+
 function findScss(dir) {
   return readdirSync(dir).flatMap((e) => {
     const p = join(dir, e);
@@ -59,4 +79,7 @@ function findScss(dir) {
 const compFiles = findScss(join(ROOT, 'src/lib/components'));
 const comp = compFiles.flatMap((f) =>
   extractComponentTokens(readFileSync(f, 'utf8'), basename(dirname(f))));
-console.log('component --ds-* tokens:', new Set(comp.map((t) => t.name)).size);
+const byCat = {};
+for (const t of comp) (byCat[t.component] ??= new Set()).add(t.name);
+console.log('components:', Object.keys(byCat).length);
+console.log(Object.entries(byCat).map(([c, s]) => `  ${c}: ${s.size}`).join('\n'));
