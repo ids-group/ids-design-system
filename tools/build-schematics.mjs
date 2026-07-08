@@ -39,6 +39,11 @@ const pkg = JSON.parse(readFileSync(distPkgPath, 'utf8'));
 pkg.schematics = './schematics/collection.json';
 writeFileSync(distPkgPath, JSON.stringify(pkg, null, 2) + '\n');
 
+// Ship the changelog so consumers (and the auto-update tooling) can read it
+// straight from node_modules — ng-packagr copies README/LICENSE but not this.
+console.log('▶ Copying CHANGELOG.md into dist/ds…');
+cpSync('CHANGELOG.md', 'dist/ds/CHANGELOG.md');
+
 console.log(
   '✔ schematics built into dist/ds/schematics + package.json registered.',
 );
