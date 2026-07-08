@@ -27,6 +27,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `DropdownOptionGroup` / `DropdownSize` → `SelectOption` / `SelectOptionGroup` / `SelectSize`.
   `readOnly` moved to `ds-select` (see Added). Docs "Dropdown" section removed — the Select
   section covers everything.
+- **Public token prefixes normalized to match the selector (not aliased).** Four components had
+  their `--ds-*` token name fragments hyphenated to align with the Angular selector; the old
+  concatenated names silently stop resolving, so consumers who override any of these must rename.
+  `--ds-datepicker-*` → `--ds-date-picker-*` (~14 tokens: `bg-color`, `border`, `shadow`, `width`,
+  `trigger-bg-color`, `trigger-border-color`, `day-hover-bg-color`, `day-today-label-color`,
+  `day-selected-*`, `day-range-*`, `day-disabled-label-color`); `--ds-statusdot-*` →
+  `--ds-status-dot-*` (`color`, `size`); `--ds-pagehdr-*` → `--ds-page-header-*` (~10 tokens:
+  eyebrow / title / subtitle / meta / crumb text colors, `meta-icon-color`, `divider`, `title-fs`,
+  `title-gap`); `--ds-avatargroup-*` → `--ds-avatar-group-*` (`overlap`, `ring`, `overflow-bg-color`,
+  `overflow-label-color`). Only the names changed — the CSS property each feeds and every default
+  value are byte-identical; purely a naming-consistency fix.
 
 ### Added
 
@@ -108,6 +119,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   day carrying a full-date accessible name; out-of-range days are `aria-disabled` yet stay
   keyboard-reachable, and month/year navigation is announced via a polite live region. Masked entry
   edits at the caret (insert/backspace hop over the mask separators).
+- **Public `--ds-*` customization token sweep across ~44 components.** Components/sub-components that
+  previously had no public token API (or only a shallow one) now expose per-instance/theme knobs —
+  spinner, skeleton, progress, divider, accordion, page-footer, tooltip, w3w, drawer, popover, menu
+  (+ item + divider), checkbox, radio, switch, slider, segmented, toggle-button, stepper, select,
+  autocomplete, multi-select, date-picker, time-picker, otp-input, number-stepper, bottom-sheet, list,
+  loading-overlay, split-button, tree, avatar-group, description-list, dropzone, modal, page-header,
+  tabs, tag, timeline, toast, topbar, avatar, color-picker, icon-button, input, empty-state — bringing
+  drawer / popover / tooltip up to the same depth as modal / card. Roughly 160–180 new names,
+  predominantly color (surface/background, border, text/label, icon, accent, plus hover/selected/focus/
+  active states) with secondary sizing (height, width, max-width/height, radius, padding, shadow,
+  font-size). Each is a `--_x: var(--ds-x, <role-token>)` resolver whose default equals the existing
+  role token, so it is purely additive — zero visual change for consumers who set nothing.
 
 ### Changed
 
@@ -122,6 +145,20 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   content width now (was full-width) — set a width on the host to stretch it. The selected-date
   display is locale-pinned (was the ambient `toLocaleDateString()`), and month/weekday names are
   localized together via the new `locale`.
+- **`ds-search` fills its container by default.** Default `max-width` changed from `320px` to `none` —
+  `ds-search` now stretches to `width: 100%` like the rest of the field family (input / select /
+  textarea) instead of being capped at 320px. New public `--ds-search-maxw` override token (default
+  `none`) to opt back into a fixed cap, e.g. `ds-search { --ds-search-maxw: 320px }`.
+- **Rounded press feedback + native tap-highlight suppression.** Interactive controls now show a
+  rounded `:active` press state (`filter: brightness(0.9)` + `transform: scale(0.97)`) that follows
+  each control's own border-radius/shape rather than a square box-shadow/background overlay — applied
+  across interactive controls (accordion-item, calendar-day, checkbox, color-picker, list-item,
+  menu-item, multi-select, pagination, radio, segmented, select, sidenav-item, switch, tabs,
+  toggle-button, tree, autocomplete), skipped on disabled controls. New per-component tuning tokens
+  `--ds-press-brightness` (default 0.9) and `--ds-press-scale` (default 0.97). The native Android-Chrome
+  rectangular tap-highlight overlay (which ignored border-radius and protruded square corners past
+  pill/rounded shapes) is now suppressed globally, the rounded press state replacing it.
+  Visual/interaction refinement only — no Angular API change.
 
 ## 0.4.0 — 2026-06-30
 
