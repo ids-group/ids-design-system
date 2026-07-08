@@ -252,15 +252,15 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
   {
     component: 'Status dot',
     selector: '.status-dot',
-    description: 'Severity classes only override --ds-statusdot-color.',
+    description: 'Severity classes only override --ds-status-dot-color.',
     tokens: [
       {
-        name: '--ds-statusdot-size',
+        name: '--ds-status-dot-size',
         value: 'var(--status-dot-size)',
         notes: 'Diameter.',
       },
       {
-        name: '--ds-statusdot-color',
+        name: '--ds-status-dot-color',
         value: 'var(--neutral-400)',
         notes: 'Default = planning.',
       },
@@ -304,12 +304,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     description: 'Stack overlap + ring colour.',
     tokens: [
       {
-        name: '--ds-avatargroup-overlap',
+        name: '--ds-avatar-group-overlap',
         value: 'calc(-1 * var(--space-2))',
         notes: 'Negative gap between avatars.',
       },
       {
-        name: '--ds-avatargroup-ring',
+        name: '--ds-avatar-group-ring',
         value: 'var(--surface-default)',
         notes: 'Outline between stacked avatars.',
       },
@@ -848,62 +848,62 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       'Pop-over surface + day cell states (today / selected / range / disabled).',
     tokens: [
       {
-        name: '--ds-datepicker-bg-color',
+        name: '--ds-date-picker-bg-color',
         value: 'var(--surface-overlay)',
         notes: 'Popover fill.',
       },
       {
-        name: '--ds-datepicker-border',
+        name: '--ds-date-picker-border',
         value: 'var(--border-default)',
         notes: 'Popover border.',
       },
       {
-        name: '--ds-datepicker-shadow',
+        name: '--ds-date-picker-shadow',
         value: 'var(--shadow-popover)',
         notes: 'Popover shadow.',
       },
       {
-        name: '--ds-datepicker-day-hover-bg-color',
+        name: '--ds-date-picker-day-hover-bg-color',
         value: 'var(--surface-secondary)',
         notes: 'Day hover fill.',
       },
       {
-        name: '--ds-datepicker-day-today-label-color',
+        name: '--ds-date-picker-day-today-label-color',
         value: 'var(--primary)',
         notes: 'Today label.',
       },
       {
-        name: '--ds-datepicker-day-selected-bg-color',
+        name: '--ds-date-picker-day-selected-bg-color',
         value: 'var(--primary)',
         notes: 'Selected day fill.',
       },
       {
-        name: '--ds-datepicker-day-selected-label-color',
+        name: '--ds-date-picker-day-selected-label-color',
         value: 'var(--primary-on)',
         notes: 'Selected day label.',
       },
       {
-        name: '--ds-datepicker-day-range-bg-color',
+        name: '--ds-date-picker-day-range-bg-color',
         value: 'var(--primary-subtitle)',
         notes: 'Range fill.',
       },
       {
-        name: '--ds-datepicker-day-range-label-color',
+        name: '--ds-date-picker-day-range-label-color',
         value: 'var(--primary-strong)',
         notes: 'Range label.',
       },
       {
-        name: '--ds-datepicker-day-disabled-label-color',
+        name: '--ds-date-picker-day-disabled-label-color',
         value: 'var(--text-disabled)',
         notes: 'Disabled day label.',
       },
       {
-        name: '--ds-datepicker-width',
-        value: 'var(--datepicker-w)',
+        name: '--ds-date-picker-width',
+        value: 'var(--date-picker-w)',
         notes: 'Calendar width.',
       },
       {
-        name: '--ds-datepicker-day-selected-bg-color-hover',
+        name: '--ds-date-picker-day-selected-bg-color-hover',
         value: 'var(--primary-selected-hover)',
         notes: 'Selected day hover fill.',
       },
@@ -1110,42 +1110,42 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     description: 'Title block + meta row.',
     tokens: [
       {
-        name: '--ds-pagehdr-eyebrow-text-color',
+        name: '--ds-page-header-eyebrow-text-color',
         value: 'var(--text-tertiary)',
         notes: 'Eyebrow label.',
       },
       {
-        name: '--ds-pagehdr-title-text-color',
+        name: '--ds-page-header-title-text-color',
         value: 'var(--text-primary)',
         notes: 'Title.',
       },
       {
-        name: '--ds-pagehdr-subtitle-text-color',
+        name: '--ds-page-header-subtitle-text-color',
         value: 'var(--text-secondary)',
         notes: 'Subtitle.',
       },
       {
-        name: '--ds-pagehdr-meta-text-color',
+        name: '--ds-page-header-meta-text-color',
         value: 'var(--text-secondary)',
         notes: 'Meta text.',
       },
       {
-        name: '--ds-pagehdr-meta-icon-color',
+        name: '--ds-page-header-meta-icon-color',
         value: 'var(--icon-default)',
         notes: 'Meta icon.',
       },
       {
-        name: '--ds-pagehdr-divider',
+        name: '--ds-page-header-divider',
         value: 'var(--border-divider)',
         notes: 'Divider below header.',
       },
       {
-        name: '--ds-pagehdr-title-fs',
+        name: '--ds-page-header-title-fs',
         value: 'var(--font-size-h3)',
         notes: 'Title size.',
       },
       {
-        name: '--ds-pagehdr-title-gap',
+        name: '--ds-page-header-title-gap',
         value: 'var(--space-1-5)',
         notes: 'Gap below title.',
       },

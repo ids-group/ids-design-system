@@ -3,8 +3,8 @@
    ============================================================ */
 :host {
   --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
-  --_datepicker-trigger-bg-color: var(--ds-datepicker-trigger-bg-color, var(--surface-default));
-  --_datepicker-trigger-border-color: var(--ds-datepicker-trigger-border-color, var(--border-default));
+  --_date-picker-trigger-bg-color: var(--ds-date-picker-trigger-bg-color, var(--surface-default));
+  --_date-picker-trigger-border-color: var(--ds-date-picker-trigger-border-color, var(--border-default));
 
   /* Hug the field's content width; a consumer opts into wider by setting a
      width on the host. Prevents an outer grid/flex column from stretching a
@@ -57,8 +57,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  background: var(--_datepicker-trigger-bg-color);
-  border: var(--border-width-default) solid var(--_datepicker-trigger-border-color);
+  background: var(--_date-picker-trigger-bg-color);
+  border: var(--border-width-default) solid var(--_date-picker-trigger-border-color);
   border-radius: var(--radius-md);
   padding: 0 var(--space-3);
   height: var(--hit-cozy);
@@ -145,26 +145,26 @@
 }
 
 .calendar {
-  /* Public --ds-datepicker-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_datepicker-bg-color:                       var(--ds-datepicker-bg-color,                       var(--surface-overlay));
-  --_datepicker-border:                   var(--ds-datepicker-border,                   var(--border-default));
-  --_datepicker-shadow:                   var(--ds-datepicker-shadow,                   var(--shadow-popover));
-  --_datepicker-day-hover-bg-color:             var(--ds-datepicker-day-hover-bg-color,             var(--surface-secondary));
-  --_datepicker-day-today-label-color:             var(--ds-datepicker-day-today-label-color,             var(--accent));
-  --_datepicker-day-selected-bg-color:          var(--ds-datepicker-day-selected-bg-color,          var(--accent));
-  --_datepicker-day-selected-bg-color-hover:    var(--ds-datepicker-day-selected-bg-color-hover,    var(--accent-hover));
-  --_datepicker-day-selected-label-color:          var(--ds-datepicker-day-selected-label-color,          var(--accent-on));
-  --_datepicker-day-range-bg-color:             var(--ds-datepicker-day-range-bg-color,             var(--accent-subtitle));
-  --_datepicker-day-range-label-color:             var(--ds-datepicker-day-range-label-color,             var(--accent-strong));
-  --_datepicker-day-disabled-label-color:          var(--ds-datepicker-day-disabled-label-color,          var(--text-disabled));
-  --_datepicker-width:                    var(--ds-datepicker-width,                    var(--datepicker-w));
+  /* Public --ds-date-picker-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_date-picker-bg-color:                       var(--ds-date-picker-bg-color,                       var(--surface-overlay));
+  --_date-picker-border:                   var(--ds-date-picker-border,                   var(--border-default));
+  --_date-picker-shadow:                   var(--ds-date-picker-shadow,                   var(--shadow-popover));
+  --_date-picker-day-hover-bg-color:             var(--ds-date-picker-day-hover-bg-color,             var(--surface-secondary));
+  --_date-picker-day-today-label-color:             var(--ds-date-picker-day-today-label-color,             var(--accent));
+  --_date-picker-day-selected-bg-color:          var(--ds-date-picker-day-selected-bg-color,          var(--accent));
+  --_date-picker-day-selected-bg-color-hover:    var(--ds-date-picker-day-selected-bg-color-hover,    var(--accent-hover));
+  --_date-picker-day-selected-label-color:          var(--ds-date-picker-day-selected-label-color,          var(--accent-on));
+  --_date-picker-day-range-bg-color:             var(--ds-date-picker-day-range-bg-color,             var(--accent-subtitle));
+  --_date-picker-day-range-label-color:             var(--ds-date-picker-day-range-label-color,             var(--accent-strong));
+  --_date-picker-day-disabled-label-color:          var(--ds-date-picker-day-disabled-label-color,          var(--text-disabled));
+  --_date-picker-width:                    var(--ds-date-picker-width,                    var(--date-picker-w));
 
-  background-color: var(--_datepicker-bg-color);
-  border: var(--border-width-default) solid var(--_datepicker-border);
+  background-color: var(--_date-picker-bg-color);
+  border: var(--border-width-default) solid var(--_date-picker-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--_datepicker-shadow);
+  box-shadow: var(--_date-picker-shadow);
   padding: var(--space-3);
-  width: var(--_datepicker-width);
+  width: var(--_date-picker-width);
 
   .head {
     display: flex;
@@ -195,7 +195,7 @@
     cursor: pointer;
 
     &:hover {
-      background-color: var(--_datepicker-day-hover-bg-color);
+      background-color: var(--_date-picker-day-hover-bg-color);
     }
 
     &:focus-visible {
@@ -212,10 +212,10 @@
     padding: var(--space-2);
     width: max-content;
     min-width: 100%;
-    background-color: var(--_datepicker-bg-color);
-    border: var(--border-width-default) solid var(--_datepicker-border);
+    background-color: var(--_date-picker-bg-color);
+    border: var(--border-width-default) solid var(--_date-picker-border);
     border-radius: var(--radius-md);
-    box-shadow: var(--_datepicker-shadow);
+    box-shadow: var(--_date-picker-shadow);
   }
 
   .picker-head {
@@ -226,8 +226,8 @@
     margin-bottom: var(--space-2);
 
     .picker-nav {
-      width: var(--datepicker-nav-size);
-      height: var(--datepicker-nav-size);
+      width: var(--date-picker-nav-size);
+      height: var(--date-picker-nav-size);
       border: 0;
       background: transparent;
       display: grid;
@@ -237,7 +237,7 @@
       border-radius: var(--radius-sm);
 
       &:hover:not(:disabled) {
-        background-color: var(--_datepicker-day-hover-bg-color);
+        background-color: var(--_date-picker-day-hover-bg-color);
       }
       &:disabled {
         opacity: var(--opacity-muted);
@@ -269,7 +269,7 @@
     white-space: nowrap;
 
     &:hover {
-      background-color: var(--_datepicker-day-hover-bg-color);
+      background-color: var(--_date-picker-day-hover-bg-color);
     }
 
     &:focus-visible {
@@ -278,8 +278,8 @@
     }
 
     &.selected {
-      background-color: var(--_datepicker-day-selected-bg-color);
-      color: var(--_datepicker-day-selected-label-color);
+      background-color: var(--_date-picker-day-selected-bg-color);
+      color: var(--_date-picker-day-selected-label-color);
 
       /* --primary-independent cue: bold still reads if a brand theme leaves the selected bg unset. */
       font-weight: var(--font-weight-bold);
@@ -291,8 +291,8 @@
     gap: var(--space-1);
 
     button {
-      width: var(--datepicker-nav-size);
-      height: var(--datepicker-nav-size);
+      width: var(--date-picker-nav-size);
+      height: var(--date-picker-nav-size);
       border: 0;
       background: transparent;
       display: grid;
@@ -302,7 +302,7 @@
       border-radius: var(--radius-sm);
 
       &:hover {
-        background-color: var(--_datepicker-day-hover-bg-color);
+        background-color: var(--_date-picker-day-hover-bg-color);
       }
     }
   }
@@ -314,7 +314,7 @@
        narrow panel (e.g. a brand theme with wider tokens) can't push the
        Sunday column outside the overlay. */
     grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: var(--datepicker-cell-gap);
+    gap: var(--date-picker-cell-gap);
   }
 
   /* role="row" wrappers stay out of the layout so the day/header cells remain
@@ -334,7 +334,7 @@
   }
 
   /* Day-cell styles now live in calendar-day.component.scss (the grid renders
-     <ds-calendar-day>). The --_datepicker-day-* resolvers above stay — the
+     <ds-calendar-day>). The --_date-picker-day-* resolvers above stay — the
      month/year picker cells and nav buttons read them. */
 
   &.has-presets {
@@ -347,8 +347,8 @@
     width: auto;
 
     .calendar-body {
-      flex: 0 0 var(--_datepicker-width);
-      width: var(--_datepicker-width);
+      flex: 0 0 var(--_date-picker-width);
+      width: var(--_date-picker-width);
     }
   }
 
@@ -361,7 +361,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
-    border-left: var(--border-width-default) solid var(--_datepicker-border);
+    border-left: var(--border-width-default) solid var(--_date-picker-border);
     padding-left: var(--space-3);
     min-width: 8.5rem;
   }
@@ -382,7 +382,7 @@
     white-space: nowrap;
 
     &:hover:not(:disabled) {
-      background-color: var(--_datepicker-day-hover-bg-color);
+      background-color: var(--_date-picker-day-hover-bg-color);
     }
 
     &:focus-visible {
@@ -391,7 +391,7 @@
     }
 
     &:disabled {
-      color: var(--_datepicker-day-disabled-label-color);
+      color: var(--_date-picker-day-disabled-label-color);
       cursor: not-allowed;
     }
   }

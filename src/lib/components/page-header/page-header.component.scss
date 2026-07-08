@@ -6,23 +6,23 @@
    duplicate — not sourced from here.
    ============================================================ */
 :host {
-  /* Public --ds-pagehdr-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_pagehdr-eyebrow-text-color:   var(--ds-pagehdr-eyebrow-text-color,   var(--text-tertiary));
-  --_pagehdr-title-text-color:     var(--ds-pagehdr-title-text-color,     var(--text-primary));
-  --_pagehdr-subtitle-text-color:  var(--ds-pagehdr-subtitle-text-color,  var(--text-secondary));
-  --_pagehdr-meta-text-color:      var(--ds-pagehdr-meta-text-color,      var(--text-secondary));
-  --_pagehdr-meta-icon-color: var(--ds-pagehdr-meta-icon-color, var(--icon-default));
-  --_pagehdr-crumb-text-color: var(--ds-pagehdr-crumb-text-color, var(--text-tertiary));
-  --_pagehdr-crumb-text-color-hover: var(--ds-pagehdr-crumb-text-color-hover, var(--accent));
-  --_pagehdr-divider:      var(--ds-pagehdr-divider,      var(--border-divider));
-  --_pagehdr-title-fs:     var(--ds-pagehdr-title-fs,     var(--font-size-h3));
-  --_pagehdr-title-gap:    var(--ds-pagehdr-title-gap,    var(--space-1-5));
+  /* Public --ds-page-header-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_page-header-eyebrow-text-color:   var(--ds-page-header-eyebrow-text-color,   var(--text-tertiary));
+  --_page-header-title-text-color:     var(--ds-page-header-title-text-color,     var(--text-primary));
+  --_page-header-subtitle-text-color:  var(--ds-page-header-subtitle-text-color,  var(--text-secondary));
+  --_page-header-meta-text-color:      var(--ds-page-header-meta-text-color,      var(--text-secondary));
+  --_page-header-meta-icon-color: var(--ds-page-header-meta-icon-color, var(--icon-default));
+  --_page-header-crumb-text-color: var(--ds-page-header-crumb-text-color, var(--text-tertiary));
+  --_page-header-crumb-text-color-hover: var(--ds-page-header-crumb-text-color-hover, var(--accent));
+  --_page-header-divider:      var(--ds-page-header-divider,      var(--border-divider));
+  --_page-header-title-fs:     var(--ds-page-header-title-fs,     var(--font-size-h3));
+  --_page-header-title-gap:    var(--ds-page-header-title-gap,    var(--space-1-5));
 
   display: block;
 }
 
 :host(.eyebrow-secondary) {
-  --_pagehdr-eyebrow-text-color: var(--ds-pagehdr-eyebrow-text-color, var(--secondary-strong));
+  --_page-header-eyebrow-text-color: var(--ds-page-header-eyebrow-text-color, var(--secondary-strong));
 }
 
 .page-header {
@@ -35,7 +35,7 @@
      it off when a tabs strip or other element supplies its own border. */
   &.with-divider {
     padding-bottom: var(--space-4);
-    border-bottom: var(--border-width-default) solid var(--_pagehdr-divider);
+    border-bottom: var(--border-width-default) solid var(--_page-header-divider);
   }
 
   /* When tabs are projected, the strip supplies its own bottom border —
@@ -59,7 +59,7 @@
   .title-block {
     display: flex;
     flex-direction: column;
-    gap: var(--_pagehdr-title-gap);
+    gap: var(--_page-header-title-gap);
     min-width: 0;
     flex: 1 1 0;
     align-self: flex-start;
@@ -69,12 +69,12 @@
     font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-flat) var(--font-sans);
     letter-spacing: var(--letter-spacing-wide);
     text-transform: uppercase;
-    color: var(--_pagehdr-eyebrow-text-color);
+    color: var(--_page-header-eyebrow-text-color);
   }
 
   .title {
-    font: var(--font-weight-extrabold) var(--_pagehdr-title-fs) / var(--line-height-tight) var(--font-display);
-    color: var(--_pagehdr-title-text-color);
+    font: var(--font-weight-extrabold) var(--_page-header-title-fs) / var(--line-height-tight) var(--font-display);
+    color: var(--_page-header-title-text-color);
     margin: 0;
     letter-spacing: var(--letter-spacing-tight);
   }
@@ -99,7 +99,7 @@
     padding-bottom: var(--space-1);
   }
   .crumb {
-    color: var(--_pagehdr-crumb-text-color);
+    color: var(--_page-header-crumb-text-color);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
@@ -110,7 +110,7 @@
     max-width: 24ch;
     transition: color var(--duration-fast) var(--ease-standard);
 
-    &:hover { color: var(--_pagehdr-crumb-text-color-hover); }
+    &:hover { color: var(--_page-header-crumb-text-color-hover); }
     &.crumb--current {
       color: var(--text-primary);
       font-weight: var(--font-weight-bold);
@@ -121,7 +121,7 @@
 
   .subtitle {
     font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-    color: var(--_pagehdr-subtitle-text-color);
+    color: var(--_page-header-subtitle-text-color);
     margin: 0;
   }
 
@@ -149,7 +149,7 @@
 
   &.with-meta-divider .meta {
     padding-top: var(--space-2);
-    border-top: var(--border-width-default) solid var(--_pagehdr-divider);
+    border-top: var(--border-width-default) solid var(--_page-header-divider);
   }
 
   .meta-item {
@@ -157,17 +157,17 @@
     align-items: center;
     gap: var(--space-1-5);
     font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
-    color: var(--_pagehdr-meta-text-color);
+    color: var(--_page-header-meta-text-color);
 
     .icon {
       width: var(--icon-sm);
       height: var(--icon-sm);
-      color: var(--_pagehdr-meta-icon-color);
+      color: var(--_page-header-meta-icon-color);
     }
   }
 
   &.compact {
-    --_pagehdr-title-fs: var(--ds-pagehdr-title-fs, var(--font-size-h4));
+    --_page-header-title-fs: var(--ds-page-header-title-fs, var(--font-size-h4));
 
     gap: var(--space-2);
     padding-bottom: var(--space-3);

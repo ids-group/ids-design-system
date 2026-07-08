@@ -10,19 +10,19 @@
    only target the `<ds-avatar>` host and would not match a plain span.
    ============================================================ */
 :host {
-  /* Public --ds-avatargroup-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_avatargroup-overlap: var(--ds-avatargroup-overlap, calc(-1 * var(--space-2)));
-  --_avatargroup-ring:    var(--ds-avatargroup-ring,    var(--surface-default));
-  --_avatargroup-overflow-bg-color: var(--ds-avatargroup-overflow-bg-color, var(--accent-muted));
-  --_avatargroup-overflow-label-color: var(--ds-avatargroup-overflow-label-color, var(--accent-strong));
+  /* Public --ds-avatar-group-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_avatar-group-overlap: var(--ds-avatar-group-overlap, calc(-1 * var(--space-2)));
+  --_avatar-group-ring:    var(--ds-avatar-group-ring,    var(--surface-default));
+  --_avatar-group-overflow-bg-color: var(--ds-avatar-group-overflow-bg-color, var(--accent-muted));
+  --_avatar-group-overflow-label-color: var(--ds-avatar-group-overflow-label-color, var(--accent-strong));
 
   display: inline-flex;
 
   /* Anchored pierce — unanchored ::ng-deep compiles to a GLOBAL rule and would
      hit every ds-avatar on the page (masked only by the undefined group vars). */
   & ::ng-deep ds-avatar {
-    border: var(--avatar-bw-group) solid var(--_avatargroup-ring);
-    margin-left: var(--_avatargroup-overlap);
+    border: var(--avatar-bw-group) solid var(--_avatar-group-ring);
+    margin-left: var(--_avatar-group-overlap);
 
     &:first-child {
       margin-left: 0;
@@ -36,11 +36,11 @@
   width: var(--avatar-md);
   height: var(--avatar-md);
   border-radius: var(--radius-pill);
-  background: var(--_avatargroup-overflow-bg-color);
-  color: var(--_avatargroup-overflow-label-color);
+  background: var(--_avatar-group-overflow-bg-color);
+  color: var(--_avatar-group-overflow-label-color);
   font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
   letter-spacing: var(--letter-spacing-wide);
   flex-shrink: 0;
-  border: var(--avatar-bw-group) solid var(--_avatargroup-ring);
-  margin-left: var(--_avatargroup-overlap);
+  border: var(--avatar-bw-group) solid var(--_avatar-group-ring);
+  margin-left: var(--_avatar-group-overlap);
 }

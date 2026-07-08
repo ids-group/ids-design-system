@@ -1,8 +1,8 @@
 /* Status dot atom — ported verbatim from vendor/claude-design-ds/components.css */
 :host {
-  /* Public --ds-statusdot-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_statusdot-color: var(--ds-statusdot-color, var(--icon-muted));
-  --_statusdot-size:  var(--ds-statusdot-size,  var(--status-dot-size));
+  /* Public --ds-status-dot-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_status-dot-color: var(--ds-status-dot-color, var(--icon-muted));
+  --_status-dot-size:  var(--ds-status-dot-size,  var(--status-dot-size));
 
   // inline-flex with explicit 1em height so the dot is vertically centered
   // against the surrounding text line regardless of the parent layout mode
@@ -16,17 +16,17 @@
 
 .status-dot {
   display: block;
-  width: var(--_statusdot-size);
-  height: var(--_statusdot-size);
+  width: var(--_status-dot-size);
+  height: var(--_status-dot-size);
   border-radius: var(--radius-pill);
   flex-shrink: 0;
-  background: var(--_statusdot-color);
+  background: var(--_status-dot-color);
 
-  &.planning  { --_statusdot-color: var(--ds-statusdot-color, var(--icon-muted)); }
-  &.confirmed { --_statusdot-color: var(--ds-statusdot-color, var(--accent)); }
-  &.active    { --_statusdot-color: var(--ds-statusdot-color, var(--success)); }
-  &.completed { --_statusdot-color: var(--ds-statusdot-color, var(--icon-strong)); }
-  &.warning   { --_statusdot-color: var(--ds-statusdot-color, var(--warning-hover)); }
-  &.error     { --_statusdot-color: var(--ds-statusdot-color, var(--error)); }
-  &.secondary { --_statusdot-color: var(--ds-statusdot-color, var(--secondary)); }
+  &.planning  { --_status-dot-color: var(--ds-status-dot-color, var(--icon-muted)); }
+  &.confirmed { --_status-dot-color: var(--ds-status-dot-color, var(--accent)); }
+  &.active    { --_status-dot-color: var(--ds-status-dot-color, var(--success)); }
+  &.completed { --_status-dot-color: var(--ds-status-dot-color, var(--icon-strong)); }
+  &.warning   { --_status-dot-color: var(--ds-status-dot-color, var(--warning-hover)); }
+  &.error     { --_status-dot-color: var(--ds-status-dot-color, var(--error)); }
+  &.secondary { --_status-dot-color: var(--ds-status-dot-color, var(--secondary)); }
 }

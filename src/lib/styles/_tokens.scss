@@ -501,9 +501,9 @@
   --cmdk-list-maxh:          var(--popover-maxh);    /* alias — keeps cmdk + popover synced */
 
   /* Datepicker */
-  --datepicker-w:            280px;
-  --datepicker-cell-gap:     var(--space-0-5);           /* 2px — grid gap between day cells */
-  --datepicker-nav-size:     var(--hit-xs);          /* 24px — month-step buttons */
+  --date-picker-w:            280px;
+  --date-picker-cell-gap:     var(--space-0-5);           /* 2px — grid gap between day cells */
+  --date-picker-nav-size:     var(--hit-xs);          /* 24px — month-step buttons */
 
   /* Modal close button */
   --modal-close-size:        var(--hit-xs);          /* 24px */

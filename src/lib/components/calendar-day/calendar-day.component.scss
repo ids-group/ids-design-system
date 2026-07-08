@@ -6,16 +6,16 @@
      a11y tree keeps grid → row → gridcell(host) → button. */
   display: contents;
 
-  /* Public --ds-datepicker-day-* are read with fallbacks, never declared —
+  /* Public --ds-date-picker-day-* are read with fallbacks, never declared —
      consumer overrides on <ds-date-picker> inherit straight in. */
-  --_datepicker-day-hover-bg-color:          var(--ds-datepicker-day-hover-bg-color,          var(--surface-secondary));
-  --_datepicker-day-today-label-color:       var(--ds-datepicker-day-today-label-color,       var(--accent));
-  --_datepicker-day-selected-bg-color:       var(--ds-datepicker-day-selected-bg-color,       var(--accent));
-  --_datepicker-day-selected-bg-color-hover: var(--ds-datepicker-day-selected-bg-color-hover, var(--accent-hover));
-  --_datepicker-day-selected-label-color:    var(--ds-datepicker-day-selected-label-color,    var(--accent-on));
-  --_datepicker-day-range-bg-color:          var(--ds-datepicker-day-range-bg-color,          var(--accent-subtitle));
-  --_datepicker-day-range-label-color:       var(--ds-datepicker-day-range-label-color,       var(--accent-strong));
-  --_datepicker-day-disabled-label-color:    var(--ds-datepicker-day-disabled-label-color,    var(--text-disabled));
+  --_date-picker-day-hover-bg-color:          var(--ds-date-picker-day-hover-bg-color,          var(--surface-secondary));
+  --_date-picker-day-today-label-color:       var(--ds-date-picker-day-today-label-color,       var(--accent));
+  --_date-picker-day-selected-bg-color:       var(--ds-date-picker-day-selected-bg-color,       var(--accent));
+  --_date-picker-day-selected-bg-color-hover: var(--ds-date-picker-day-selected-bg-color-hover, var(--accent-hover));
+  --_date-picker-day-selected-label-color:    var(--ds-date-picker-day-selected-label-color,    var(--accent-on));
+  --_date-picker-day-range-bg-color:          var(--ds-date-picker-day-range-bg-color,          var(--accent-subtitle));
+  --_date-picker-day-range-label-color:       var(--ds-date-picker-day-range-label-color,       var(--accent-strong));
+  --_date-picker-day-disabled-label-color:    var(--ds-date-picker-day-disabled-label-color,    var(--text-disabled));
 }
 
 .day {
@@ -36,7 +36,7 @@
   transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
 
   &:hover {
-    background-color: var(--_datepicker-day-hover-bg-color);
+    background-color: var(--_date-picker-day-hover-bg-color);
   }
 
   &.muted {
@@ -45,45 +45,45 @@
 
   &.today {
     font-weight: var(--font-weight-bold);
-    color: var(--_datepicker-day-today-label-color);
+    color: var(--_date-picker-day-today-label-color);
   }
 
   &.selected {
-    background-color: var(--_datepicker-day-selected-bg-color);
-    color: var(--_datepicker-day-selected-label-color);
+    background-color: var(--_date-picker-day-selected-bg-color);
+    color: var(--_date-picker-day-selected-label-color);
   }
 
   &.selected:hover {
-    background-color: var(--_datepicker-day-selected-bg-color-hover);
+    background-color: var(--_date-picker-day-selected-bg-color-hover);
   }
 
   &.in-range {
-    background-color: var(--_datepicker-day-range-bg-color);
-    color: var(--_datepicker-day-range-label-color);
+    background-color: var(--_date-picker-day-range-bg-color);
+    color: var(--_date-picker-day-range-label-color);
     border-radius: var(--radius-flat);
   }
 
   &.range-start {
     border-top-left-radius: var(--radius-sm);
     border-bottom-left-radius: var(--radius-sm);
-    background-color: var(--_datepicker-day-selected-bg-color);
-    color: var(--_datepicker-day-selected-label-color);
+    background-color: var(--_date-picker-day-selected-bg-color);
+    color: var(--_date-picker-day-selected-label-color);
   }
 
   &.range-end {
     border-top-right-radius: var(--radius-sm);
     border-bottom-right-radius: var(--radius-sm);
-    background-color: var(--_datepicker-day-selected-bg-color);
-    color: var(--_datepicker-day-selected-label-color);
+    background-color: var(--_date-picker-day-selected-bg-color);
+    color: var(--_date-picker-day-selected-label-color);
   }
 
   &.range-start:hover,
   &.range-end:hover {
-    background-color: var(--_datepicker-day-selected-bg-color-hover);
+    background-color: var(--_date-picker-day-selected-bg-color-hover);
   }
 
   &.disabled {
-    color: var(--_datepicker-day-disabled-label-color);
+    color: var(--_date-picker-day-disabled-label-color);
     cursor: not-allowed;
   }
 
