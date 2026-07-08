@@ -19,6 +19,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { A11yModule } from '@angular/cdk/a11y';
 import { disposeWithLeave } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { CalendarDayComponent } from '../calendar-day/calendar-day.component';
@@ -67,7 +68,7 @@ interface DayCell {
 @Component({
   selector: 'ds-date-picker',
   standalone: true,
-  imports: [IconComponent, CalendarDayComponent, FieldMessageComponent],
+  imports: [IconComponent, CalendarDayComponent, FieldMessageComponent, A11yModule],
   templateUrl: './date-picker.component.html',
   styleUrl: './date-picker.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -177,9 +178,19 @@ export class DatePickerComponent extends DsControlValueAccessor<
   protected readonly weekdays = computed(() =>
     weekdayLabels(this.resolvedLocale(), this.resolvedFirstDay()),
   );
+  /** Full weekday names for the grid column headers' accessible names. */
+  protected readonly weekdaysFull = computed(() =>
+    weekdayLabels(this.resolvedLocale(), this.resolvedFirstDay(), 'long'),
+  );
+  /** Localized "Month YYYY" caption — the grid's accessible name + live label. */
+  protected readonly monthYearLabel = computed(
+    () => `${this.monthNames()[this.viewMonthIndex()]} ${this.viewYear()}`,
+  );
 
   protected readonly uid = `ds-datepicker-${++nextId}`;
   protected readonly labelId = `${this.uid}-label`;
+  protected readonly panelId = `${this.uid}-panel`;
+  protected readonly captionId = `${this.uid}-caption`;
   protected readonly isOpen = signal(false);
   /** The day that holds keyboard focus in the open grid (roving tabindex). */
   protected readonly gridFocus = signal<Date | null>(null);
@@ -239,12 +250,6 @@ export class DatePickerComponent extends DsControlValueAccessor<
       case ' ':
         event.preventDefault();
         this.selectDay(cell);
-
-        return;
-      case 'Escape':
-        event.preventDefault();
-        this.close();
-        this.focusTrigger();
 
         return;
       default:
@@ -502,6 +507,17 @@ export class DatePickerComponent extends DsControlValueAccessor<
     return cells;
   });
 
+  /** daysGrid split into rows of 7 for the grid's `role="row"` structure. */
+  protected readonly weeksGrid = computed<DayCell[][]>(() => {
+    const cells = this.daysGrid();
+    const weeks: DayCell[][] = [];
+    for (let index = 0; index < cells.length; index += 7) {
+      weeks.push(cells.slice(index, index + 7));
+    }
+
+    return weeks;
+  });
+
   private getRangeContext(d: Date): {
     inRange: boolean;
     isStart: boolean;
@@ -582,6 +598,13 @@ export class DatePickerComponent extends DsControlValueAccessor<
     };
     this.overlayRef = this.overlay.create(cfg);
     this.overlayRef.backdropClick().subscribe(() => this.close());
+    this.overlayRef.keydownEvents().subscribe((event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        this.close();
+        this.focusTrigger();
+      }
+    });
     const portal = new TemplatePortal(this.panelTpl(), this.vcr);
     this.overlayRef.attach(portal);
     this.isOpen.set(true);
@@ -618,33 +641,56 @@ export class DatePickerComponent extends DsControlValueAccessor<
       return;
     }
     const element = event.target as HTMLInputElement;
-    this.commitRaw(element, element.value);
+    const caret = element.selectionStart ?? element.value.length;
+    const digitsBeforeCaret = this.countDigits(element.value.slice(0, caret));
+    this.commitRaw(element, element.value, digitsBeforeCaret);
   }
 
-  /** Backspace deletes the last digit, stepping over the mask separators. */
+  /** Backspace/Delete hop over mask separators — only digits are editable. */
   protected onFieldKeydown(event: KeyboardEvent): void {
-    if (!this.allowInput() || event.key !== 'Backspace') {
+    if (!this.allowInput()) {
       return;
     }
-    event.preventDefault();
     const element = event.target as HTMLInputElement;
-    this.commitRaw(element, element.value.replace(/\D/g, '').slice(0, -1));
+    const start = element.selectionStart ?? 0;
+    if (event.key === 'Backspace' && start === element.selectionEnd) {
+      event.preventDefault();
+      const removeIndex = this.countDigits(element.value.slice(0, start)) - 1;
+      this.commitRaw(element, this.removeDigit(element.value, removeIndex), removeIndex);
+    } else if (event.key === 'Delete' && start === element.selectionEnd) {
+      event.preventDefault();
+      const removeIndex = this.countDigits(element.value.slice(0, start));
+      this.commitRaw(element, this.removeDigit(element.value, removeIndex), removeIndex);
+    }
+  }
+
+  private countDigits(text: string): number {
+    return text.replace(/\D/g, '').length;
+  }
+
+  private removeDigit(text: string, index: number): string {
+    const digits = text.replace(/\D/g, '');
+    if (index < 0 || index >= digits.length) {
+      return digits;
+    }
+
+    return digits.slice(0, index) + digits.slice(index + 1);
   }
 
   /** Mask `raw`, force it into the DOM (defeats over-typing), parse and validate. */
-  private commitRaw(element: HTMLInputElement, raw: string): void {
+  private commitRaw(element: HTMLInputElement, raw: string, targetDigits: number): void {
     this.editing = true;
     const spec = this.formatSpec();
     if (this.mode() === 'range') {
       const masked = applyMaskRange(raw, spec);
-      this.writeBack(element, masked);
+      this.writeBack(element, masked, targetDigits);
       this.rangeText.set(masked);
       this.applyRangeText(masked, spec, false);
 
       return;
     }
     const masked = applyMask(raw, spec);
-    this.writeBack(element, masked);
+    this.writeBack(element, masked, targetDigits);
     this.inputText.set(masked);
     const parsed = parseDate(masked, spec);
     if (!parsed) {
@@ -692,13 +738,37 @@ export class DatePickerComponent extends DsControlValueAccessor<
     }
   }
 
-  /** Force the DOM value to the mask so over-typed digits can't accumulate. */
-  private writeBack(element: HTMLInputElement, masked: string): void {
+  /** Force the DOM value to the mask (over-typed digits can't accumulate) and
+   *  place the caret after `targetDigits` digits, skipping separators. */
+  private writeBack(element: HTMLInputElement, masked: string, targetDigits: number): void {
     if (element.value !== masked) {
       element.value = masked;
     }
-    const caret = masked.length;
+    const caret = this.caretAfterDigits(masked, targetDigits);
     element.setSelectionRange(caret, caret);
+  }
+
+  private caretAfterDigits(text: string, digitCount: number): number {
+    if (digitCount <= 0) {
+      return 0;
+    }
+    let seen = 0;
+    for (let index = 0; index < text.length; index++) {
+      if (/\d/.test(text[index])) {
+        seen++;
+        if (seen === digitCount) {
+          let position = index + 1;
+          // Park the caret past any separator so the next digit lands cleanly.
+          while (position < text.length && !/\d/.test(text[position])) {
+            position++;
+          }
+
+          return position;
+        }
+      }
+    }
+
+    return text.length;
   }
 
   /** Parse the combined range text, flag malformed segments, commit on blur. */

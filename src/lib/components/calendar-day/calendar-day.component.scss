@@ -1,8 +1,9 @@
 @use '../../styles/press' as press;
 
 :host {
-  /* contents → the inner <button> is the grid item, so it sits in the
-     date-picker's 7-col track and stays focusable by [data-day]. */
+  /* contents → the host (role="gridcell") collapses for layout so the inner
+     <button> is the grid item (7-col track, focusable by [data-day]) while the
+     a11y tree keeps grid → row → gridcell(host) → button. */
   display: contents;
 
   /* Public --ds-datepicker-day-* are read with fallbacks, never declared —

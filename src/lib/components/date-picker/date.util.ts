@@ -183,8 +183,12 @@ export function parseDateRange(
   ];
 }
 
-export function weekdayLabels(locale: string, firstDayOfWeek: number): string[] {
-  const formatter = new Intl.DateTimeFormat(locale, { weekday: 'short' });
+export function weekdayLabels(
+  locale: string,
+  firstDayOfWeek: number,
+  style: 'short' | 'long' = 'short',
+): string[] {
+  const formatter = new Intl.DateTimeFormat(locale, { weekday: style });
   // 2023-01-01 is a Sunday (getDay() === 0).
   const sunday = new Date(2023, 0, 1);
   const labels: string[] = [];

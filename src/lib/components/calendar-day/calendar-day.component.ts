@@ -18,6 +18,11 @@ import {
   templateUrl: './calendar-day.component.html',
   styleUrl: './calendar-day.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  host: {
+    role: 'gridcell',
+    '[attr.aria-selected]':
+      "selected() || rangeStart() || rangeEnd() ? 'true' : null",
+  },
 })
 export class CalendarDayComponent {
   readonly selected = input(false, { transform: booleanAttribute });

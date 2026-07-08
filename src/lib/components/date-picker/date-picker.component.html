@@ -44,6 +44,7 @@
       [readOnly]="!allowInput()"
       [disabled]="isDisabled()"
       [attr.aria-expanded]="isOpen()"
+      [attr.aria-controls]="isOpen() ? panelId : null"
       [attr.aria-labelledby]="label() ? labelId : null"
       [attr.aria-label]="resolvedAriaLabel()"
       [attr.aria-required]="required() ? 'true' : null"
@@ -80,12 +81,27 @@
 <ng-template #panel>
   <div
     class="calendar"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Choose date"
+    cdkTrapFocus
+    [id]="panelId"
     [class.has-presets]="presets().length > 0"
     (click)="closeMenus()"
   >
+    <span
+      class="visually-hidden"
+      aria-live="polite"
+    >
+      {{ monthYearLabel() }}
+    </span>
+
     <div class="calendar-body">
       <div class="head">
-        <span class="period">
+        <span
+          class="period"
+          [id]="captionId"
+        >
           <span class="period-item">
             <button
               type="button"
@@ -109,15 +125,16 @@
               >
                 <div
                   class="picker-grid"
-                  role="listbox"
+                  role="group"
+                  aria-label="Select month"
                 >
                   @for (name of monthNames(); track $index) {
                     <button
                       type="button"
-                      role="option"
                       class="picker-cell"
                       [class.selected]="$index === viewMonthIndex()"
-                      [attr.aria-selected]="$index === viewMonthIndex()"
+                      [attr.aria-label]="name"
+                      [attr.aria-current]="$index === viewMonthIndex() ? 'true' : null"
                       (click)="selectMonth($index, $event)"
                     >
                       {{ name.slice(0, 3) }}
@@ -183,15 +200,15 @@
 
                 <div
                   class="picker-grid"
-                  role="listbox"
+                  role="group"
+                  aria-label="Select year"
                 >
                   @for (year of yearsOnPage(); track year) {
                     <button
                       type="button"
-                      role="option"
                       class="picker-cell year-cell"
                       [class.selected]="year === viewYear()"
-                      [attr.aria-selected]="year === viewYear()"
+                      [attr.aria-current]="year === viewYear() ? 'true' : null"
                       (click)="selectYear(year, $event)"
                     >
                       {{ year }}
@@ -228,30 +245,50 @@
         </span>
       </div>
 
-      <div class="grid">
-        @for (dow of weekdays(); track $index) {
-          <span class="dow">
-            {{ dow }}
-          </span>
-        }
+      <div
+        class="grid"
+        role="grid"
+        [attr.aria-labelledby]="captionId"
+      >
+        <div
+          class="dow-row"
+          role="row"
+        >
+          @for (dow of weekdays(); track $index) {
+            <span
+              class="dow"
+              role="columnheader"
+              [attr.aria-label]="weekdaysFull()[$index]"
+            >
+              {{ dow }}
+            </span>
+          }
+        </div>
 
-        @for (cell of daysGrid(); track $index) {
-          <ds-calendar-day
-            [muted]="!cell.inMonth"
-            [today]="cell.isToday"
-            [selected]="cell.isSelected"
-            [inRange]="cell.inRange"
-            [rangeStart]="cell.isRangeStart"
-            [rangeEnd]="cell.isRangeEnd"
-            [disabled]="cell.isDisabled"
-            [dataDay]="dayKey(cell.date)"
-            [tabIndex]="isFocusDay(cell) ? 0 : -1"
-            [ariaLabel]="dayLabel(cell)"
-            (daySelect)="selectDay(cell)"
-            (dayKeydown)="onGridKeydown($event, cell)"
+        @for (week of weeksGrid(); track $index) {
+          <div
+            class="week"
+            role="row"
           >
-            {{ cell.day }}
-          </ds-calendar-day>
+            @for (cell of week; track $index) {
+              <ds-calendar-day
+                [muted]="!cell.inMonth"
+                [today]="cell.isToday"
+                [selected]="cell.isSelected"
+                [inRange]="cell.inRange"
+                [rangeStart]="cell.isRangeStart"
+                [rangeEnd]="cell.isRangeEnd"
+                [disabled]="cell.isDisabled"
+                [dataDay]="dayKey(cell.date)"
+                [tabIndex]="isFocusDay(cell) ? 0 : -1"
+                [ariaLabel]="dayLabel(cell)"
+                (daySelect)="selectDay(cell)"
+                (dayKeydown)="onGridKeydown($event, cell)"
+              >
+                {{ cell.day }}
+              </ds-calendar-day>
+            }
+          </div>
         }
       </div>
     </div>

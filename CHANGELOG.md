@@ -103,6 +103,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   digits), and flags impossible/out-of-range dates on blur; range mode uses one combined field
   (`MM/DD/YYYY – MM/DD/YYYY` in a single input). Clicking the field or the trailing calendar icon
   opens the panel. New `DsConfig.datePicker` ({ `locale`, `dateFormat`, `firstDayOfWeek` }).
+  The panel follows the APG date-picker-dialog pattern: `role="dialog"` (aria-modal, labelled,
+  focus-trapped, Escape to close) over a `role="grid"` of labelled `columnheader`/`gridcell`s, each
+  day carrying a full-date accessible name; out-of-range days are `aria-disabled` yet stay
+  keyboard-reachable, and month/year navigation is announced via a polite live region. Masked entry
+  edits at the caret (insert/backspace hop over the mask separators).
 
 ### Changed
 
