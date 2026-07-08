@@ -6,6 +6,8 @@
   --_date-picker-trigger-bg-color: var(--ds-date-picker-trigger-bg-color, var(--surface-default));
   --_date-picker-trigger-border-color: var(--ds-date-picker-trigger-border-color, var(--border-default));
   --_date-picker-trigger-label-color: var(--ds-date-picker-trigger-label-color, var(--text-primary));
+  --_date-picker-required-color: var(--ds-date-picker-required-color, var(--error));
+  --_date-picker-placeholder-color: var(--ds-date-picker-placeholder-color, var(--text-tertiary));
 
   /* Hug the field's content width; a consumer opts into wider by setting a
      width on the host. Prevents an outer grid/flex column from stretching a
@@ -42,7 +44,7 @@
     gap: var(--space-1);
 
     .req {
-      color: var(--error);
+      color: var(--_date-picker-required-color);
       font-weight: var(--font-weight-semibold);
     }
 
@@ -119,7 +121,7 @@
   outline: none;
 
   &::placeholder {
-    color: var(--text-tertiary);
+    color: var(--_date-picker-placeholder-color);
   }
 
   &:read-only {
@@ -160,6 +162,9 @@
   --_date-picker-day-disabled-label-color:          var(--ds-date-picker-day-disabled-label-color,          var(--text-disabled));
   --_date-picker-day-label-color: var(--ds-date-picker-day-label-color, var(--text-primary));
   --_date-picker-day-muted-label-color: var(--ds-date-picker-day-muted-label-color, var(--text-muted));
+  --_date-picker-weekday-color: var(--ds-date-picker-weekday-color, var(--text-tertiary));
+  --_date-picker-header-label-color: var(--ds-date-picker-header-label-color, var(--text-primary));
+  --_date-picker-nav-icon-color: var(--ds-date-picker-nav-icon-color, var(--icon-default));
   --_date-picker-width:                    var(--ds-date-picker-width,                    var(--date-picker-w));
 
   background-color: var(--_date-picker-bg-color);
@@ -194,7 +199,7 @@
     padding: var(--space-1) var(--space-1-5);
     border-radius: var(--radius-sm);
     font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-    color: var(--text-primary);
+    color: var(--_date-picker-header-label-color);
     cursor: pointer;
 
     &:hover {
@@ -235,7 +240,7 @@
       background: transparent;
       display: grid;
       place-items: center;
-      color: var(--icon-default);
+      color: var(--_date-picker-nav-icon-color);
       cursor: pointer;
       border-radius: var(--radius-sm);
 
@@ -250,7 +255,7 @@
 
     .picker-range {
       font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-      color: var(--text-primary);
+      color: var(--_date-picker-header-label-color);
     }
   }
 
@@ -300,7 +305,7 @@
       background: transparent;
       display: grid;
       place-items: center;
-      color: var(--icon-default);
+      color: var(--_date-picker-nav-icon-color);
       cursor: pointer;
       border-radius: var(--radius-sm);
 
@@ -331,7 +336,7 @@
     font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-flat) var(--font-sans);
     text-align: center;
     padding: var(--space-1) 0;
-    color: var(--text-tertiary);
+    color: var(--_date-picker-weekday-color);
     text-transform: uppercase;
     letter-spacing: var(--letter-spacing-wider);
   }

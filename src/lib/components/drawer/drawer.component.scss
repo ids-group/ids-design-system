@@ -9,6 +9,7 @@
   --_drawer-close-icon-color:       var(--ds-drawer-close-icon-color,       var(--icon-default));
   --_drawer-close-icon-color-hover: var(--ds-drawer-close-icon-color-hover, var(--icon-strong));
   --_drawer-radius: var(--ds-drawer-radius, 0);
+  --_drawer-title-color: var(--ds-drawer-title-color, inherit);
   --_drawer-width-sm:               var(--ds-drawer-width,                  var(--drawer-w-sm));
   --_drawer-width-md:               var(--ds-drawer-width,                  var(--drawer-w-md));
   --_drawer-width-lg:               var(--ds-drawer-width,                  var(--drawer-w-lg));
@@ -105,6 +106,7 @@
 
   .title {
     font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans);
+    color: var(--_drawer-title-color);
     margin: 0;
     flex: 1;
   }
