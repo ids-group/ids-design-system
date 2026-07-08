@@ -79,6 +79,7 @@
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-unicorn": "^63.0.0",
+    "marked": "^18.0.5",
     "ng-packagr": "^21.2.0",
     "npm-run-all2": "^8.0.4",
     "prettier": "^3.8.1",

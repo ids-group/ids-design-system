@@ -90,6 +90,7 @@ import { TokenDisciplineSection } from './practice/token-discipline/token-discip
 import { DoDontSection } from './practice/do-dont/do-dont.section';
 
 import { TokensReferenceSection } from './tokens-reference/tokens-reference.section';
+import { ChangelogSection } from './changelog/changelog.section';
 
 @Component({
   selector: 'page-docs',
@@ -179,6 +180,7 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     TokenDisciplineSection,
     DoDontSection,
     TokensReferenceSection,
+    ChangelogSection,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   template: `
@@ -359,6 +361,10 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
     <h1 class="group-title t-h2">Tokens reference</h1>
 
     <section-tokens-reference />
+
+    <h1 class="group-title t-h2">Changelog</h1>
+
+    <section-changelog />
   `,
   styles: [
     `
@@ -466,7 +472,8 @@ import { TokensReferenceSection } from './tokens-reference/tokens-reference.sect
       pattern-empty-state,
       practice-token-discipline,
       practice-do-dont,
-      section-tokens-reference {
+      section-tokens-reference,
+      section-changelog {
         display: block;
         margin-top: var(--space-12);
       }
