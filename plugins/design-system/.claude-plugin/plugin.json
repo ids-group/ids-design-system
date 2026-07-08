@@ -1,5 +1,5 @@
 {
-  "name": "ids-design-system",
+  "name": "design-system",
   "description": "Step a consumer repo from its installed @ids-group-ltd/ids-design-system version up to the latest, one version at a time, applying documented changelog migrations with automated checks and re-checks.",
   "version": "1.0.0",
   "author": { "name": "IDS Group" },

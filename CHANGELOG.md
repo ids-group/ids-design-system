@@ -478,9 +478,14 @@ rect(…)` → `clip-path: inset(50%)` on visually-hidden helpers, and `min-/max
 
 ## 0.2.2 — 2026-06-17
 
-- Added `.t-mono-inline` typography utility — an inline code chip (mono font on a
+### Added
+
+- `.t-mono-inline` typography utility — an inline code chip (mono font on a
   subtle surface with padding/radius), completing the mono family alongside
   `.t-mono` (font only) and `.t-mono-block` (block).
+
+### Changed
+
 - Removed the repository link from the npm package: dropped the `repository` field
   from `package.json` and moved the maintainer Development/Releasing docs out of the
   published README into a repo-only `CONTRIBUTING.md`. The README License entry is
@@ -488,14 +493,21 @@ rect(…)` → `clip-path: inset(50%)` on visually-hidden helpers, and `min-/max
 
 ## 0.2.1 — 2026-06-16
 
-- Added a `homepage` field linking the live docs/showcase, so the npm package page
+### Added
+
+- A `homepage` field linking the live docs/showcase, so the npm package page
   points to it.
 
 ## 0.2.0 — 2026-06-16
 
-- **Breaking:** renamed the subtle semantic color tokens `--*-subtle` → `--*-subtitle`
+### Breaking
+
+- Renamed the subtle semantic color tokens `--*-subtle` → `--*-subtitle`
   (border, primary, secondary, tertiary, success, warning, error, info). Consumers
   referencing these tokens must rename.
+
+### Changed
+
 - Clarified theme re-skin guidance in the shipped `themes/README`: brand roles
   retint automatically from the `--blue` ramp, but a fully calibrated brand may
   set the `--primary-*` roles directly to hand-picked hex.
@@ -504,6 +516,8 @@ rect(…)` → `clip-path: inset(50%)` on visually-hidden helpers, and `min-/max
 ## 0.1.0 — 2026-06-12
 
 Initial public release.
+
+### Added
 
 - 45+ standalone Angular components: buttons, forms, overlays, navigation, data display
 - Three-tier token architecture: palette → semantic theme → geometry/typography/motion tokens

@@ -41,6 +41,10 @@ writeFileSync(distPkgPath, JSON.stringify(pkg, null, 2) + '\n');
 
 // Ship the changelog so consumers (and the auto-update tooling) can read it
 // straight from node_modules — ng-packagr copies README/LICENSE but not this.
+if (!existsSync('CHANGELOG.md')) {
+  console.error('build-schematics: CHANGELOG.md not found at repo root — cannot ship it in the package.');
+  process.exit(1);
+}
 console.log('▶ Copying CHANGELOG.md into dist/ds…');
 cpSync('CHANGELOG.md', 'dist/ds/CHANGELOG.md');
 
