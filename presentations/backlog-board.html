@@ -113,7 +113,7 @@
 </head>
 <body>
   <h1>DS — карта бэклога</h1>
-  <p class="sub">Что <b>осталось закрыть</b> — по одному пункту на карточку (источник: <span class="tag">docs/todo.md</span>). Только открытое; архив сделанного — <span class="tag">docs/todo-done.md</span>. Обновлено 2026-07-07.</p>
+  <p class="sub">Что <b>осталось закрыть</b> — по одному пункту на карточку (источник: <span class="tag">docs/todo.md</span>). Только открытое; архив сделанного — <span class="tag">docs/done.md</span>. Обновлено 2026-07-07.</p>
   <p class="legend">
     <span class="mark deck"><span class="g">▶</span> дека</span> — карточка кликабельна, открывает презентацию в новой вкладке.
     <span class="mark todo"><span class="g">ⓘ</span> todo</span> — кликни: полная формулировка из todo.md в поповере (закрыть — крестик, backdrop или Esc).
@@ -139,7 +139,7 @@
 
   <!-- ============ A11Y ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>♿ A11y — по компонентам и findings</h2><span class="count c-a11y">3</span><span class="why">Остаток — 3 отложенных/спорных; компонентная волна 07-06 — в архиве todo-done.</span></div>
+    <div class="lane-head"><h2>♿ A11y — по компонентам и findings</h2><span class="count c-a11y">3</span><span class="why">Остаток — 3 отложенных/спорных; компонентная волна 07-06 — в архиве done.</span></div>
     <div class="cards">
       <div class="card a11y"><span class="chip ch-p1">P1 · отложено</span><div class="t">scroll-lock без ref-count</div><p class="d">modal/drawer: при двух оверлеях закрытие первого возвращает скролл под вторым (оба сбрасывают `body.overflow`). Нужен общий ref-counted lock — по одному компоненту не чинится. Отложено 2026-07-06; варианты (сервис / CDK / per-component) расписаны в todo.</p></div>
       <div class="card a11y"><span class="chip ch-p2">P2 · отложено</span><div class="t">date-picker grid-семантика</div><p class="d">Нет `role=grid`/`gridcell` (используется `aria-pressed`) + нет `role=dialog`/имени на панели. Отложено 2026-07-06: `aria-selected` валиден только в grid-структуре, значит нужны строки-недели → риск для CSS-раскладки. focus-баг сверен — НЕ баг.</p></div>
@@ -149,7 +149,7 @@
 
   <!-- ============ COMPONENTS + FEATURE GAPS ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🧩 Компоненты и фичи-гэпы</h2><span class="count c-track">2</span><span class="why">Из gap-analysis + starter; отгруженное по лейну — в архиве todo-done.</span></div>
+    <div class="lane-head"><h2>🧩 Компоненты и фичи-гэпы</h2><span class="count c-track">2</span><span class="why">Из gap-analysis + starter; отгруженное по лейну — в архиве done.</span></div>
     <div class="cards">
       <div class="card track"><span class="chip ch-oos">MED</span><div class="t">Missing components — MED</div><p class="d">Осталось: chart wrapper · calendar (standalone) · image/lightbox · splitter.</p></div>
       <div class="card track"><div class="t">Feature gaps — Forms · остаток</div><p class="d">Осталось только `ds-select` native <b>multi</b> (отложено — не реализуем сейчас, из бэклога не убираем). Всё остальное по Forms ✅ отгружено.</p></div>
@@ -244,17 +244,17 @@
 
   <p class="foot">
     Источник: <span class="tag">docs/todo.md</span> (полные формулировки — в поповерах ⓘ).
-    Архив сделанного целиком — <span class="tag">docs/todo-done.md</span>; на доске выполненное не хранится.
+    Архив сделанного целиком — <span class="tag">docs/done.md</span>; на доске выполненное не хранится.
     Актуализировано 2026-07-08: публичный token-API раскатан на 11 бестокенных компонентов (лейн «Мелочь отложена» закрыт) — детали в архиве.
     2026-07-07: picker-portfolio (rename → <span class="tag">ds-autocomplete</span> · merge dropdown→select · breakpoints-миграция).
   </p>
 
-  <!-- raw docs/todo.md embedded verbatim (as of 2026-07-07; live backlog only — done lives in docs/todo-done.md) so the popover works offline over file:// -->
+  <!-- raw docs/todo.md embedded verbatim (as of 2026-07-07; live backlog only — done lives in docs/done.md) so the popover works offline over file:// -->
   <script type="text/plain" id="todo-md"># DS — improvements backlog
 
 Running list of design-system improvements. Add items here as they come up.
 Deep gap analysis: `docs/superpowers/ds-gap-analysis.md`. Outstanding audit (a11y/API): `docs/superpowers/library-audit.md`.
-Completed items are archived in `todo-done.md` (last review 2026-07-06).
+Completed items are archived in `done.md` (last review 2026-07-06).
 
 ---
 
@@ -273,7 +273,7 @@ Completed items are archived in `todo-done.md` (last review 2026-07-06).
   - drop `--primary-h/s/l` as PUBLIC API (keep at most internal `from`-derived); `--neutral-h`/ramp source their hue from the one token too.
     Roles stay overridable (consumer-first / read-with-fallback, like the `--ds-*` component layer): each `--primary-*` is still a named token DEFAULTING to the derivation, so a brand can pin any single step by hand. **PAYOFF:** scoped recolour becomes ONE declaration — `ds-checkbox { --primary: hsl(5 92% 64%) }` and fill + border + hover + halo all follow — which is exactly what **UNBLOCKS the `ds-color` / `--accent-*` indirection item above**: kills its gotcha (1) "ramp-pick tokens don't recompose from channels" and (2) "`:root`-composed tokens resolve at declaration point" — with single-source + color-mix/relative there are no channels to re-declare and no compose-point trap; `--accent` becomes a single pointer the zone/attr flips and all shades cascade.
     **OPEN for the spec:** (a) colour space for the math — `oklab`/`oklch` (perceptually-uniform mix-to-black/lighten, but shifts the current look) vs `srgb`/`hsl` (matches today's `color-mix`); verify each derived role visually before switching; (b) which roles are pure-derived vs keep an explicit hand-pick (ramp steps likely stay hand-picked-with-sourced-hue; hover/pressed/halo are the clean formula candidates); (c) relative-colour + `var()` substitution edge cases — verify in the 3 target engines; (d) interplay with the future dark theme (the `--focus-field-alpha` token already anticipates a dark-boost). Pairs with the "Theme recipe vs hand-tuned picks" decision and "Палитра — остаточная чистка". Live interactive demo (one `--primary` knob → all shades/halo/checkbox follow via `color-mix` + `hsl(from …)`; today-vs-proposed side-by-side): **`presentations/color-engine-relative.html`**.
-- [ ] **`.ds-interactive` — global state-interaction contract (agreed with user; prototype before spec — see memory `project-interaction-contract-design`).** Replace the per-component `--ds-*-bg-hover/-active` tokens + scattered local `color-mix()` with ONE global contract: a `.ds-interactive` class + presets (`.tint` / `.accent-ink` / `.inked` / `.surface-fx` / `.into-light`) driven by `--state-step-*` tokens, implemented in a NEW `src/lib/styles/_interaction.scss` (does NOT exist yet — verified vs code 2026-06-26). A single `color-mix` state formula derived off the hand-tuned ramp computes hover/active for every interactive surface; an override slot (`--interactive-*-set`) lets a component opt out. Then migrate the interactive components off their local recipes. Pairs with the single-source colour engine + `ds-color` items above (same pointer principle). **NEXT — user verdicts B1–B5 (blocking; live demo `presentations/interaction-formula.html`):** (B1) tint-pressed 28% vs 34%; (B2) pressed step for neutral surfaces (menu-item / table rows); (B3) danger menu-item hover — formula vs `--error-subtitle`; (B4) shape of the `--interactive-*-set` override slot; (B5) pressed step for success/warning buttons. _(Was dropped from todo.md before the 2026-06-24 review; restored 2026-06-26 — still open, not in todo-done.md, `_interaction.scss` absent.)_
+- [ ] **`.ds-interactive` — global state-interaction contract (agreed with user; prototype before spec — see memory `project-interaction-contract-design`).** Replace the per-component `--ds-*-bg-hover/-active` tokens + scattered local `color-mix()` with ONE global contract: a `.ds-interactive` class + presets (`.tint` / `.accent-ink` / `.inked` / `.surface-fx` / `.into-light`) driven by `--state-step-*` tokens, implemented in a NEW `src/lib/styles/_interaction.scss` (does NOT exist yet — verified vs code 2026-06-26). A single `color-mix` state formula derived off the hand-tuned ramp computes hover/active for every interactive surface; an override slot (`--interactive-*-set`) lets a component opt out. Then migrate the interactive components off their local recipes. Pairs with the single-source colour engine + `ds-color` items above (same pointer principle). **NEXT — user verdicts B1–B5 (blocking; live demo `presentations/interaction-formula.html`):** (B1) tint-pressed 28% vs 34%; (B2) pressed step for neutral surfaces (menu-item / table rows); (B3) danger menu-item hover — formula vs `--error-subtitle`; (B4) shape of the `--interactive-*-set` override slot; (B5) pressed step for success/warning buttons. _(Was dropped from todo.md before the 2026-06-24 review; restored 2026-06-26 — still open, not in done.md, `_interaction.scss` absent.)_
 - [ ] **Audit: standalone component vs CSS class (coupled with a11y).** RESEARCH DONE 2026-06-10, per-component decisions deferred by user ("пропусти"). Facts re-verified vs code 2026-07-08 (line counts + API + a11y refreshed; pinkmoon usage from 2026-06-10, not re-counted):
       | component | .ts/.scss lines | 2-way API | built-in a11y | pinkmoon usage |
       |---|---|---|---|---|
@@ -290,7 +290,7 @@ Completed items are archived in `todo-done.md` (last review 2026-07-06).
 
 ### Follow-ups from the button-token rework (2026-06-10)
 
-- [x] **Unify remaining declaring components on the read-with-fallback pattern.** ✅ Done 2026-06-10, commits `427dcb3`…`933b01f`. ALL 22 declaring components converted to the uniform private-resolver style (user mandate mid-rollout: EVERY public token gets a `--_*` resolver, rules reference only privates — no scattered inline fallbacks): banner (pilot), breadcrumbs/search/stat/status-dot/textarea/topbar (A), input/modal/dropzone/page-header/pagination (B), sidenav/sidenav-item/sidenav-group/avatar/avatar-group/card (C), tabs/table/date-picker/bottom-sheet (D). Docs mirror sheets (`_forced-states.scss`) converted too — global mirror declarations were LEAKING into converted components via shared classes (`.field` pad bug caught by snapshot). Verified: full-page computed-style snapshot pixel-identical (13 428 elements), 20/20 per-component override probes pass, button/banner interactive asserts green, zero `--ds-*:` declarations left in components+mirrors. Dead tokens removed along the way (with tokens-reference rows): `--ds-banner-border`, 4× `--ds-topbar-action/ping-*`, `--ds-modal-backdrop` dup, `--ds-avatar-ring-color`. Renames: `--ds-table-header-*` → `--ds-table-head-*` (now matches tokens-reference/mirror; design-system.md synced). Caught & fixed agent mistakes: card padding presets had dropped consumer-first re-binds; `--ds-table-border` wrongly deleted (was live, documented API) — restored. _(Done — also mirrored in `todo-done.md`; kept here as the parent of its still-open follow-ups below.)_
+- [x] **Unify remaining declaring components on the read-with-fallback pattern.** ✅ Done 2026-06-10, commits `427dcb3`…`933b01f`. ALL 22 declaring components converted to the uniform private-resolver style (user mandate mid-rollout: EVERY public token gets a `--_*` resolver, rules reference only privates — no scattered inline fallbacks): banner (pilot), breadcrumbs/search/stat/status-dot/textarea/topbar (A), input/modal/dropzone/page-header/pagination (B), sidenav/sidenav-item/sidenav-group/avatar/avatar-group/card (C), tabs/table/date-picker/bottom-sheet (D). Docs mirror sheets (`_forced-states.scss`) converted too — global mirror declarations were LEAKING into converted components via shared classes (`.field` pad bug caught by snapshot). Verified: full-page computed-style snapshot pixel-identical (13 428 elements), 20/20 per-component override probes pass, button/banner interactive asserts green, zero `--ds-*:` declarations left in components+mirrors. Dead tokens removed along the way (with tokens-reference rows): `--ds-banner-border`, 4× `--ds-topbar-action/ping-*`, `--ds-modal-backdrop` dup, `--ds-avatar-ring-color`. Renames: `--ds-table-header-*` → `--ds-table-head-*` (now matches tokens-reference/mirror; design-system.md synced). Caught & fixed agent mistakes: card padding presets had dropped consumer-first re-binds; `--ds-table-border` wrongly deleted (was live, documented API) — restored. _(Done — also mirrored in `done.md`; kept here as the parent of its still-open follow-ups below.)_
   - [ ] **design-system.md: one global note on the token contract** — state once that all `--ds-*` component tokens are read-with-fallback/consumer-first, then trim the per-component repetition added to the button line. DEFERRED by user 2026-06-10 ("design-system.md щас не трогай") — do not edit the file until asked.
 - [ ] **Theme recipe vs hand-tuned picks — alignment decision.** Button/icon-button state derivation uses the theme's 88%/76% mix-to-black recipe. If the formula-calibration work replaces `--primary-hover/-pressed` with hand-tuned values, the button defaults (color-mix from resolved bg) will diverge from the theme roles — decide then: components read role tokens again, or theme keeps the formula. (See memory: hand-tuned beats formulas; formula is currently only the fallback default.)
 
@@ -313,11 +313,11 @@ Goal: a coherent, **smooth** motion system. **Foundation is healthy** — motion
   2. **API gaps that forced raw markup** (avatar tint, stat free-text delta, inline dropdown panel) → extend component API / use the `staticPreview` pattern (precedent: modal — its mirror was already dropped this way; same happened to drawer/banner/topbar/page-header/search).
   3. **Things that aren't components** (`.check/.radio/.switch`, `.day`) → resolved by the deferred component-vs-class audit.
   - **By-design raw specimens — VISIBLY MARKED** with a `<docs-await>` chip (`ds-docs/src/app/shared/docs-await.component.ts`, commit `93570ee`) showing "Ожидает компонент/API: …". REMAINING chips: calendar day-part only (skipped — extracting a day component risks the date-picker's APG roving-tabindex keyboard nav). MIGRATED to live (chips removed 2026-06-30): ds-table column-templates → `dsCellTemplate`; table bulk-bar → `<ds-table>` native `.bulk-bar` + `[bulk-actions]` slot; ds-dropzone file-list (both blocks) → `[files]` model — `DropzoneFile` gained `message?: string` + a `queued` state; ds-input loading → `[loading]` spinner; ds-input floating label → `[floating]` variant; button toggle → new `ds-toggle-button`. LEFT unmarked (not component specimens, not fully movable): toolbar `.divider` (ds-divider vertical forces 12px margin vs 4px), do-dont `.tooltip` (ds-tooltip is hover-only, this is a static "bad pattern" illustration).
-  - _Completed sweeps (pilot button · sweeps 1–3 · rename→specimens · tail/A · staticPreview ×3 · quick API wins · final raw-copy audit · `[loading]` bg-bug fix) are archived in `todo-done.md`._
+  - _Completed sweeps (pilot button · sweeps 1–3 · rename→specimens · tail/A · staticPreview ×3 · quick API wins · final raw-copy audit · `[loading]` bg-bug fix) are archived in `done.md`._
 
 ## Component feature gaps (from gap analysis — HIGH)
 
-All three feature-gap groups (Forms · Data/overlay · Display) ✅ SHIPPED 2026-07-02/03 — see `todo-done.md`. Only one item stays open here (deferred by Stas, keep on the board):
+All three feature-gap groups (Forms · Data/overlay · Display) ✅ SHIPPED 2026-07-02/03 — see `done.md`. Only one item stays open here (deferred by Stas, keep on the board):
 
 - [ ] **Forms — `ds-select` native `multi`** (deferred 2026-07-02: "пока что пропусти, не реализовывай и не выкидывай"). Everything else in the Forms feature-gap group shipped (char counter, textarea readOnly, select clearable + per-option icons, dropdown/combobox option-groups, combobox create-new, checkbox/radio/switch size+required, radio invalid/hint, date-picker minDate/maxDate/disabledDate/presets). `ds-multi-select` already covers multi-selection; native `<select multiple>` semantics on `ds-select` remain the only open piece.
 
@@ -384,14 +384,14 @@ Template format decision: **lint is authoritative over prettier** — run pretti
 
 ## Frontend architecture starter (new initiative, designed 2026-06-19)
 
-> **EXTRACTED 2026-06-23 → `ai-sdlc-prototype` (Bitbucket `itband/ai-sdlc-prototype`).** The `starter/` workspace was moved to its own repo and removed from here; the `ThemeService` follow-up moved to that repo's `docs/todo.md`. Schematics were split: `ng-add` stays in the DS package, the architecture generators (`feature/store/data-access/page/ui`) moved with the starter. The phase notes below are historical; the DS gaps the starter surfaced (data-grid / CVA / confirm-dialog) have all shipped — archived in `todo-done.md`. Remaining DS-side work is the schematics phases below.
+> **EXTRACTED 2026-06-23 → `ai-sdlc-prototype` (Bitbucket `itband/ai-sdlc-prototype`).** The `starter/` workspace was moved to its own repo and removed from here; the `ThemeService` follow-up moved to that repo's `docs/todo.md`. Schematics were split: `ng-add` stays in the DS package, the architecture generators (`feature/store/data-access/page/ui`) moved with the starter. The phase notes below are historical; the DS gaps the starter surfaced (data-grid / CVA / confirm-dialog) have all shipped — archived in `done.md`. Remaining DS-side work is the schematics phases below.
 
 Capture the proven `PinkMoon.Frontend` architecture as a reproducible, enforced, IDS-first front-end standard inside this repo. Spec → `docs/superpowers/specs/2026-06-19-frontend-architecture-starter-design.md`; Phase-1 plan → `docs/superpowers/plans/2026-06-19-frontend-architecture-starter-phase1.md`. Settled (30 answers): multi-project `app+common`, standalone-only, NgRx Signal Store, Sheriff boundaries, `ApiResult<T>` data layer, pluggable Notification(→ds-toast)/ErrorReporter(+Sentry)/AuthProvider(mock), full dev panel + mock backend, 6 typed envs, IDS-DS-only (PrimeNG dropped), reactive+typed forms (DTO/FormModel/ListItem), CI+lefthook, bun+npm, demo CRUD + remove-demo. Mechanism: degit `starter/` + `ng add` schematics-in-DS-package + `ng g feature|store|data-access|page|ui` + MADR ADRs. Nx rejected. Lands under `starter/` (tracked); `/docs/` stays gitignored so guide+ADRs live in `starter/docs/`.
 
 - [~] **Phase 2 — schematics in the DS package (STARTED 2026-06-22, on `main`).** ✅ Packaging spike SOLVED + first generator: `schematics/` collection compiled into `dist/ds/schematics` via `tools/build-schematics.mjs` (`build:schematics` script) — handles the `"type":"module"` clash with a commonjs-override package.json in the subtree + registers the `schematics` field in `dist/ds/package.json`. `ng g @ids-group-ltd/ids-design-system:feature <name>` scaffolds routes/config/list-page + components/models/services barrels with correct name substitution; generated code passes eslint+Sheriff+prettier. `build:lib` unaffected. **`build:schematics` is deliberately NOT wired into `build:lib`** — so the collection only ships when that wiring is added (the consequential publish step — checkpoint before doing it). ✅ **DONE 2026-06-22** — full generator set: `ng g …:feature|store|data-access|page|ui` (all emit eslint+Sheriff+prettier-clean code, verified against the starter) + `ng-add` (wires the DS styles import, idempotent). `build:schematics` now chained into `build:lib` so the collection ships in the published package (`dist/ds/schematics`); `@angular-devkit/{core,schematics}` added as explicit devDeps; component exports intact. **Publish behavior changed: `build:lib` now ships schematics.** OPEN: when the starter is extracted to its own repo (planned), revisit whether the schematics live with the starter or stay in the DS package; bun-consumer `ng add` resolution not yet checked (verified via local `dist/ds` copy on Windows).
 - [ ] **Phase 3 — `ds-docs/` architecture alignment (REScoped 2026-06-22 after mapping the app — a literal "migrate to the starter architecture" is a CATEGORY ERROR; do NOT do it).** `ds-docs` is a single-page scroll-spy **showcase**, not a CRUD app: 66 `*.section.ts` eagerly rendered into ONE `DocsPage` with a triple-contract (`nav.config.ts` ↔ render order ↔ scroll-spy `IntersectionObserver`/`data-anchor`); zero state/services/backend; zone-based; styles via `includePaths`→`src/lib` (deliberately brand-neutral); already clean (standalone, consistent `*.section.ts` naming, ESLint selector prefixes, `components/foundations/patterns/practice` grouping = already domain-layered). **Inapplicable/harmful** (skip): per-route lazy pages (breaks scroll-spy), core/store/`ApiResult`/auth (no state), zoneless migration (risky, unrelated), renaming 66 selectors to `features/*` (huge churn, no benefit). **Genuinely applicable subset** (if pursued): (1) Sheriff-style boundaries — sections can't import each other, only `shared/` + the `ds` alias; `shared`/`layout` as public surfaces; BUT this entangles the **root `eslint.config.mjs`** (shared with the published lib's lint) → needs a `files:['ds-docs/**']`-scoped block + a `ds-docs/sheriff.config.ts`, non-trivial on a live app. (2) `index.ts` barrels for `shared/` + `layout/`. (3) lint/tsconfig parity check (mostly already there). Verdict: low ROI + real risk to a working showcase; the architecture's value is captured by `starter/` + schematics, which ds-docs can reference. **DONE 2026-06-22 (the safe subset, per user choice "структуру/нейминг + Sheriff + барели"):** added Sheriff boundaries scoped to `ds-docs/src/**` (root `sheriff.config.ts` + scoped block in root `eslint.config.mjs`; each section is its own module → section↛section enforced, verified it fires; encapsulation relaxed so existing deep imports keep working; `ds` lib alias granted root clearance) + `shared/` & `layout/` `index.ts` barrels. Full repo lint stays 0 errors (src/lib untouched); `build:docs` green. CRUD-shaped parts correctly NOT applied. **FOLLOW-UP:** extract a `core/` tier for `nav.config.ts` + `docs-stats.ts` to remove the mild `shared↔layout` cycle (currently allowed in depRules); optional folder-naming parity (`layout/`→`layouts/`).
   </script>
-  <script type="text/plain" id="todo-done-md"># DS — completed work (archive)
+  <script type="text/plain" id="done-md"># DS — completed work (archive)
 
 Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirrors the live backlog (`todo.md`); deep gap analysis stays in `docs/superpowers/ds-gap-analysis.md`.
 
@@ -669,7 +669,7 @@ _Archived 2026-07-06 from `todo.md`._
 
       ["date-picker a11y (click/focus)",    "date-picker a11y",                           ""],
 
-      // done — formulations from todo-done.md
+      // done — formulations from done.md
       ["Токен-фолбэк + деривация",          "Button tokens: fallback pattern + state-color", ""],
       ["Раскат паттерна на ВСЮ либу",       "Unify remaining declaring components",        ""],
       ["Ренейм токенов в полные слова",     "Token naming — expand abbreviations",         ""],
@@ -688,7 +688,7 @@ _Archived 2026-07-06 from `todo.md`._
 
     function read(id) { const el = document.getElementById(id); return el ? el.textContent : ""; }
     const todoMd = read("todo-md");
-    const doneMd = read("todo-done-md");
+    const doneMd = read("done-md");
     const lines = (todoMd + "\n" + doneMd).split("\n");
     const todoLen = todoMd.split("\n").length;
 
@@ -708,7 +708,7 @@ _Archived 2026-07-06 from `todo.md`._
       while (end < lines.length && !isBoundary(lines[end])) end++;
       let block = lines.slice(start, end);
       while (block.length && block[block.length - 1].trim() === "") block.pop();
-      return { block, src: idx < todoLen ? "todo.md" : "todo-done.md" };
+      return { block, src: idx < todoLen ? "todo.md" : "done.md" };
     }
 
     function statusOf(block) {
