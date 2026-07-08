@@ -142,11 +142,24 @@ export class DatePickerComponent extends DsControlValueAccessor<
     () => this.disabled() || this.formDisabled(),
   );
   protected readonly hintId = computed(() =>
-    this.hint() ? `${this.uid}-hint` : null,
+    this.messageText() ? `${this.uid}-hint` : null,
   );
   protected readonly messageState = computed<FieldMessageState>(() =>
     this.invalid() || this.typedInvalid() || this.rangeInvalid() ? 'error' : 'default',
   );
+  /** Field-message text: a validation message when typing is invalid, else the hint. */
+  protected readonly messageText = computed(() => {
+    if (this.typedInvalid() || this.rangeInvalid()) {
+      const mask =
+        this.mode() === 'single'
+          ? this.formatSpec().mask
+          : rangeMask(this.formatSpec());
+
+      return `Enter a valid date (${mask})`;
+    }
+
+    return this.hint();
+  });
 
   protected readonly resolvedLocale = computed(
     () => this.locale() ?? this.config.datePicker?.locale ?? 'en-US',
@@ -326,8 +339,8 @@ export class DatePickerComponent extends DsControlValueAccessor<
       : rangeMask(this.formatSpec()),
   );
   /** `size` attribute so the field hugs its mask width instead of stretching.
-   * +1 keeps wide glyphs (Y/M) from clipping the last placeholder character. */
-  protected readonly fieldSize = computed(() => this.fieldPlaceholder().length + 1);
+   * Digits render with `tabular-nums` so the width never shifts as you type. */
+  protected readonly fieldSize = computed(() => this.fieldPlaceholder().length);
 
   // ---- Month / year grid pickers in the calendar header ----
   protected readonly monthMenuOpen = signal(false);
@@ -593,22 +606,44 @@ export class DatePickerComponent extends DsControlValueAccessor<
     this.markTouched();
   }
 
+  protected onFieldClick(): void {
+    this.open(!this.allowInput());
+    if (this.allowInput()) {
+      this.inputEl().nativeElement.focus();
+    }
+  }
+
   protected onFieldInput(event: Event): void {
     if (!this.allowInput()) {
       return;
     }
-    this.editing = true;
     const element = event.target as HTMLInputElement;
+    this.commitRaw(element, element.value);
+  }
+
+  /** Backspace deletes the last digit, stepping over the mask separators. */
+  protected onFieldKeydown(event: KeyboardEvent): void {
+    if (!this.allowInput() || event.key !== 'Backspace') {
+      return;
+    }
+    event.preventDefault();
+    const element = event.target as HTMLInputElement;
+    this.commitRaw(element, element.value.replace(/\D/g, '').slice(0, -1));
+  }
+
+  /** Mask `raw`, force it into the DOM (defeats over-typing), parse and validate. */
+  private commitRaw(element: HTMLInputElement, raw: string): void {
+    this.editing = true;
     const spec = this.formatSpec();
     if (this.mode() === 'range') {
-      const masked = applyMaskRange(element.value, spec);
+      const masked = applyMaskRange(raw, spec);
       this.writeBack(element, masked);
       this.rangeText.set(masked);
       this.applyRangeText(masked, spec, false);
 
       return;
     }
-    const masked = applyMask(element.value, spec);
+    const masked = applyMask(raw, spec);
     this.writeBack(element, masked);
     this.inputText.set(masked);
     const parsed = parseDate(masked, spec);

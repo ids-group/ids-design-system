@@ -23,9 +23,13 @@
     </span>
   }
 
+  <!-- Whole-field click opens the panel; keyboard access is on the inner input
+       (aria-haspopup + ArrowDown), so the wrapper needs no key handler of its own. -->
+  <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
   <div
     #anchor
     [class]="triggerClasses()"
+    (click)="onFieldClick()"
   >
     <input
       #inputEl
@@ -45,9 +49,9 @@
       [attr.aria-required]="required() ? 'true' : null"
       [attr.aria-invalid]="invalid() || typedInvalid() || rangeInvalid() ? 'true' : null"
       [attr.aria-describedby]="hintId()"
-      (click)="open(!allowInput())"
       (input)="onFieldInput($event)"
       (blur)="onFieldBlur()"
+      (keydown)="onFieldKeydown($event)"
       (keydown.arrowdown)="open(true); $event.preventDefault()"
     />
 
@@ -57,7 +61,7 @@
       tabindex="-1"
       aria-hidden="true"
       [disabled]="isDisabled()"
-      (click)="open(true)"
+      (click)="open(true); $event.stopPropagation()"
     >
       <ds-icon
         name="calendar"
@@ -67,7 +71,7 @@
   </div>
 
   <ds-field-message
-    [text]="hint()"
+    [text]="messageText()"
     [state]="messageState()"
     [messageId]="hintId()"
   />
