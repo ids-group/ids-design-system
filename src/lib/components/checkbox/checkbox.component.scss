@@ -3,6 +3,12 @@
 :host {
   --_checkbox-focus-shadow: var(--ds-checkbox-focus-shadow, var(--ds-control-focus-shadow));
 
+  --_checkbox-bg: var(--ds-checkbox-bg-color, var(--surface-default));
+  --_checkbox-border: var(--ds-checkbox-border-color, var(--border-strong));
+  --_checkbox-hover-border: var(--ds-checkbox-hover-border-color, var(--accent));
+  --_checkbox-selected-bg: var(--ds-checkbox-selected-bg-color, var(--accent));
+  --_checkbox-selected-border: var(--ds-checkbox-selected-border-color, var(--accent));
+
   // Local resolvers for size scaling; md references the global token so it stays
   // density-responsive. sm/lg are explicit per-instance overrides.
   --_checkbox-glyph: var(--check-size);
@@ -46,8 +52,8 @@
   appearance: none;
   width: var(--_checkbox-glyph);
   height: var(--_checkbox-glyph);
-  border: var(--check-bw) solid var(--border-strong);
-  background: var(--surface-default);
+  border: var(--check-bw) solid var(--_checkbox-border);
+  background: var(--_checkbox-bg);
   cursor: pointer;
   display: inline-grid;
   place-items: center;
@@ -57,7 +63,7 @@
   transition: background-color var(--duration-fast) var(--ease-standard),
               border-color var(--duration-fast) var(--ease-standard);
 
-  &:hover:not(:disabled) { border-color: var(--accent); }
+  &:hover:not(:disabled) { border-color: var(--_checkbox-hover-border); }
   &:focus-visible        { outline: none; box-shadow: var(--_checkbox-focus-shadow); }
 
   @include press.feedback;
@@ -79,8 +85,8 @@
   }
 
   &:checked {
-    background: var(--accent);
-    border-color: var(--accent);
+    background: var(--_checkbox-selected-bg);
+    border-color: var(--_checkbox-selected-border);
     &::after {
       content: "";
       width: var(--check-tick-size);
@@ -92,8 +98,8 @@
   }
 
   &:indeterminate {
-    background: var(--accent);
-    border-color: var(--accent);
+    background: var(--_checkbox-selected-bg);
+    border-color: var(--_checkbox-selected-border);
     &::after {
       content: "";
       width: var(--check-indet-w);

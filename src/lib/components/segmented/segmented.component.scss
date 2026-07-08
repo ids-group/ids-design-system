@@ -4,6 +4,15 @@
 
 :host {
   --_segmented-bg-color: var(--ds-segmented-bg-color, var(--surface-secondary));
+  --_segmented-selected-bg-color: var(
+    --ds-segmented-selected-bg-color,
+    var(--surface-default)
+  );
+  --_segmented-selected-label-color: var(
+    --ds-segmented-selected-label-color,
+    var(--text-primary)
+  );
+  --_segmented-label-color: var(--ds-segmented-label-color, var(--text-secondary));
   --_segmented-pad: var(--ds-segmented-pad, var(--segmented-pad));
   --_segmented-btn-h: var(--ds-segmented-btn-h, var(--segmented-btn-h));
   --_segmented-r-inner: var(--ds-segmented-r-inner, var(--segmented-r-inner));
@@ -13,6 +22,7 @@
   );
 
   display: inline-flex;
+
   /* Own our width — an outer flex/grid (e.g. a stretch column) must not be able
      to stretch the track full-bleed; segments size to their content. */
   width: fit-content;
@@ -32,7 +42,7 @@
   border: 0;
   border-radius: var(--_segmented-r-inner);
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--_segmented-label-color);
   font:
     var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat)
     var(--font-sans);
@@ -48,8 +58,8 @@
   }
 
   &.selected {
-    background: var(--surface-default);
-    color: var(--text-primary);
+    background: var(--_segmented-selected-bg-color);
+    color: var(--_segmented-selected-label-color);
     box-shadow: var(--shadow-card);
   }
 

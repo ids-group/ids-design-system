@@ -5,6 +5,12 @@
   --_stepper-label-color: var(--ds-stepper-label-color, var(--text-tertiary));
   --_stepper-label-color-current: var(--ds-stepper-label-color-current, var(--text-primary));
   --_stepper-label-font-size: var(--ds-stepper-label-font-size, var(--font-size-xs));
+  --_stepper-node-bg-color: var(--ds-stepper-node-bg-color, var(--surface-default));
+  --_stepper-node-active-bg-color: var(--ds-stepper-node-active-bg-color, var(--accent));
+  --_stepper-node-active-text-color: var(--ds-stepper-node-active-text-color, var(--accent-on));
+  --_stepper-node-done-text-color: var(--ds-stepper-node-done-text-color, var(--accent));
+  --_stepper-connector-color: var(--ds-stepper-connector-color, var(--border-divider));
+  --_stepper-connector-done-color: var(--ds-stepper-connector-done-color, var(--accent));
 
   .visually-hidden {
     position: absolute;
@@ -37,7 +43,7 @@
     display: grid;
     place-items: center;
     border: var(--border-width-default) solid var(--border-strong);
-    background: var(--surface-default);
+    background: var(--_stepper-node-bg-color);
     color: var(--text-tertiary);
     font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
     transition: background-color var(--duration-base) var(--ease-standard), border-color var(--duration-base) var(--ease-standard), color var(--duration-base) var(--ease-standard);
@@ -45,13 +51,13 @@
     &.done {
       background: var(--accent-subtitle);
       border-color: var(--accent);
-      color: var(--accent);
+      color: var(--_stepper-node-done-text-color);
     }
 
     &.active {
-      background: var(--accent);
+      background: var(--_stepper-node-active-bg-color);
       border-color: var(--accent);
-      color: var(--accent-on);
+      color: var(--_stepper-node-active-text-color);
     }
 
     &.error {
@@ -83,11 +89,11 @@
     left: 50%;
     width: 100%;
     height: var(--stepper-bar-h);
-    background: var(--border-divider);
+    background: var(--_stepper-connector-color);
     transition: background-color var(--duration-base) var(--ease-standard);
 
     &.done {
-      background: var(--accent);
+      background: var(--_stepper-connector-done-color);
     }
   }
 

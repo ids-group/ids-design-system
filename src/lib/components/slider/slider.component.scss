@@ -4,6 +4,10 @@
   --_slider-track-h: var(--ds-slider-track-h, var(--slider-track-h));
   --_slider-thumb-size: var(--ds-slider-thumb-size, var(--slider-thumb-size));
   --_slider-thumb-bw: var(--ds-slider-thumb-bw, var(--slider-thumb-bw));
+  --_slider-fill-color: var(--ds-slider-fill-color, var(--accent));
+  --_slider-track-color: var(--ds-slider-track-color, var(--surface-muted));
+  --_slider-thumb-color: var(--ds-slider-thumb-color, var(--surface-default));
+  --_slider-thumb-border-color: var(--ds-slider-thumb-border-color, var(--accent));
 
   display: flex;
   flex-direction: column;
@@ -20,7 +24,7 @@
 .track {
   position: relative;
   height: var(--_slider-track-h);
-  background-color: var(--surface-muted);
+  background-color: var(--_slider-track-color);
   border-radius: var(--radius-pill);
   cursor: pointer;
   touch-action: none;
@@ -30,7 +34,7 @@
   position: absolute;
   top: 0;
   height: 100%;
-  background-color: var(--accent);
+  background-color: var(--_slider-fill-color);
   border-radius: var(--radius-pill);
 }
 
@@ -41,8 +45,8 @@
   width: var(--_slider-thumb-size);
   height: var(--_slider-thumb-size);
   border-radius: var(--radius-pill);
-  background-color: var(--surface-default);
-  border: var(--_slider-thumb-bw) solid var(--accent);
+  background-color: var(--_slider-thumb-color);
+  border: var(--_slider-thumb-bw) solid var(--_slider-thumb-border-color);
   box-shadow: var(--shadow-card);
   cursor: grab;
   touch-action: none;

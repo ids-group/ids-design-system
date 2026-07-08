@@ -2,6 +2,12 @@
 
 :host {
   display: inline-flex;
+  --_toggle-button-bg-color:          var(--ds-toggle-button-bg-color,          var(--surface-default));
+  --_toggle-button-border-color:      var(--ds-toggle-button-border-color,      var(--border-default));
+  --_toggle-button-color:             var(--ds-toggle-button-color,             var(--text-secondary));
+  --_toggle-button-selected-bg-color:     var(--ds-toggle-button-selected-bg-color,     var(--accent-subtitle));
+  --_toggle-button-selected-border-color: var(--ds-toggle-button-selected-border-color, var(--accent));
+  --_toggle-button-selected-color:        var(--ds-toggle-button-selected-color,        var(--accent-strong));
 }
 
 .button-toggle {
@@ -10,10 +16,10 @@
   gap: var(--space-2);
   height: var(--hit-min);
   padding: 0 var(--space-3);
-  border: var(--border-width-default) solid var(--border-default);
+  border: var(--border-width-default) solid var(--_toggle-button-border-color);
   border-radius: var(--radius-md);
-  background: var(--surface-default);
-  color: var(--text-secondary);
+  background: var(--_toggle-button-bg-color);
+  color: var(--_toggle-button-color);
   font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
   cursor: pointer;
   transition:
@@ -27,9 +33,9 @@
   }
 
   &[aria-pressed='true'] {
-    background: var(--accent-subtitle);
-    border-color: var(--accent);
-    color: var(--accent-strong);
+    background: var(--_toggle-button-selected-bg-color);
+    border-color: var(--_toggle-button-selected-border-color);
+    color: var(--_toggle-button-selected-color);
   }
 
   &:focus-visible {

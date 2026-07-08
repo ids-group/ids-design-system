@@ -3,6 +3,11 @@
 :host {
   --_radio-focus-shadow: var(--ds-radio-focus-shadow, var(--ds-control-focus-shadow));
 
+  --_radio-accent-color: var(--ds-radio-accent-color, var(--accent));
+  --_radio-bg-color: var(--ds-radio-bg-color, var(--surface-default));
+  --_radio-border-color: var(--ds-radio-border-color, var(--border-strong));
+  --_radio-label-color: var(--ds-radio-label-color, var(--text-primary));
+
   // Local resolvers for size scaling; md references the global token so it stays
   // density-responsive. sm/lg are explicit per-instance overrides.
   --_radio-glyph: var(--check-size);
@@ -28,7 +33,7 @@
 
   .control-text {
     font: var(--font-weight-regular) var(--_radio-label-fs) / var(--line-height-base) var(--font-sans);
-    color: var(--text-primary);
+    color: var(--_radio-label-color);
     cursor: pointer;
     user-select: none;
 
@@ -46,8 +51,8 @@
   appearance: none;
   width: var(--_radio-glyph);
   height: var(--_radio-glyph);
-  border: var(--check-bw) solid var(--border-strong);
-  background: var(--surface-default);
+  border: var(--check-bw) solid var(--_radio-border-color);
+  background: var(--_radio-bg-color);
   cursor: pointer;
   display: inline-grid;
   place-items: center;
@@ -80,14 +85,14 @@
   }
 
   &:checked {
-    border-color: var(--accent);
+    border-color: var(--_radio-accent-color);
     border-width: var(--radio-bw-checked);
     &::after {
       content: "";
       width: var(--radio-dot-size);
       height: var(--radio-dot-size);
       border-radius: var(--radius-pill);
-      background: var(--accent);
+      background: var(--_radio-accent-color);
       transform: scale(1);
       opacity: 1;
     }

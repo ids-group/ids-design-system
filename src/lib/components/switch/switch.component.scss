@@ -11,6 +11,9 @@
   --_switch-thumb-size: var(--switch-thumb-size);
   --_switch-thumb-pad: var(--switch-thumb-pad);
   --_switch-label-fs: var(--font-size-s);
+  --_switch-track-on-bg-color: var(--ds-switch-track-on-bg-color, var(--accent));
+  --_switch-track-off-bg-color: var(--ds-switch-track-off-bg-color, var(--border-strong));
+  --_switch-thumb-bg-color: var(--ds-switch-thumb-bg-color, var(--surface-default));
 
   display: inline-flex;
 }
@@ -63,7 +66,7 @@
   appearance: none;
   width: var(--_switch-track-w);
   height: var(--_switch-track-h);
-  background: var(--border-strong);
+  background: var(--_switch-track-off-bg-color);
   border-radius: var(--radius-pill);
   position: relative;
   cursor: pointer;
@@ -78,14 +81,14 @@
     left: var(--_switch-thumb-pad);
     width: var(--_switch-thumb-size);
     height: var(--_switch-thumb-size);
-    background: var(--surface-default);
+    background: var(--_switch-thumb-bg-color);
     border-radius: var(--radius-pill);
     box-shadow: var(--shadow-1);
     transition: transform var(--duration-base) var(--ease-standard),
                 box-shadow var(--duration-base) var(--ease-standard);
   }
 
-  &:checked         { background: var(--accent); }
+  &:checked         { background: var(--_switch-track-on-bg-color); }
   &:checked::after  { transform: translateX(calc(var(--_switch-track-w) - var(--_switch-thumb-size) - 2 * var(--_switch-thumb-pad))); }
   &:focus-visible   { outline: none; box-shadow: var(--_switch-focus-shadow); }
 
