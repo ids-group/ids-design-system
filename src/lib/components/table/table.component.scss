@@ -126,7 +126,7 @@
          cap-height/2, ~1px higher. Compensates the optical offset. */
       transform: translateY(-1px);
       color: var(--icon-default);
-      opacity: 0.4;
+      opacity: var(--sort-ic-opacity-idle);
       transition: opacity var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
 
       /* Inner <svg class="icon"> defaults to var(--icon-md) (16px) via the

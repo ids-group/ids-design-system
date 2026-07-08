@@ -310,6 +310,10 @@
   --check-indet-h:     2px;
   --radio-dot-size:    10px;
   --radio-bw-checked:  var(--border-width-strong);
+  --check-glyph-sm:    14px;   /* .size-sm / .size-lg control box — fixed, not density-scaled */
+  --check-glyph-lg:    24px;
+  --radio-glyph-sm:    14px;
+  --radio-glyph-lg:    24px;
 
   /* Switch */
   --switch-track-w:    36px;
@@ -431,12 +435,17 @@
   --sidenav-logo-size:       var(--hit-sm);          /* 28px — square brand mark */
   --sidenav-collapsed-item:  var(--hit-cozy);        /* 40px — collapsed nav-item hit area */
   --sidenav-section-pad-b:   var(--space-1-5);           /* nav-section bottom padding */
+  --sidenav-item-rail-width: 3px;                    /* active-item left rail */
 
   /* Form section grid */
   --form-section-label-w:    280px;                  /* labels column width */
 
   /* Page header */
   --page-header-sub-mt:      var(--space-1);             /* subtitle top margin */
+
+  /* Bottom sheet */
+  --bottom-sheet-handle-w:   36px;                   /* drag-handle bar */
+  --bottom-sheet-handle-h:   4px;
 
   /* Field internals */
   --field-textarea-rows-min: 60px;                   /* min-h for inline textarea inside the field wrapper */
@@ -447,6 +456,7 @@
   /* Button group */
   --btn-group-overlap:       calc(var(--border-width-default) * -1); /* -1px — collapses adjacent borders */
   --btn-link-uloff:          3px;                    /* underline-offset on link buttons */
+  --breadcrumbs-link-uloff:  2px;                    /* underline-offset on breadcrumb links */
 
   /* Card */
   --card-hover-lift:         1px;                    /* translateY on .card--hover */
@@ -455,6 +465,7 @@
   /* Sort icon (table headers) */
   --sort-ic-size:            var(--icon-xs);         /* 12px */
   --sort-ic-gap:             var(--space-1-5);           /* 6px */
+  --sort-ic-opacity-idle:    0.4;                    /* unsorted column icon */
 
   /* Tag close glyph (when literal svg sits inside .tag .x) */
   --tag-close-glyph:         var(--icon-xs);         /* 12px */

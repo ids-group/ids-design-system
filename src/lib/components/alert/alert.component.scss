@@ -45,7 +45,7 @@
   .a-icon {
     flex-shrink: 0;
     color: inherit;
-    margin-top: 1px;
+    margin-top: var(--border-width-default);
   }
 
   .a-body {

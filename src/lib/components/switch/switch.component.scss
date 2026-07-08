@@ -28,7 +28,7 @@
     --_switch-track-w: 26px;
     --_switch-track-h: 14px;
     --_switch-thumb-size: 10px;
-    --_switch-thumb-pad: 2px;
+    --_switch-thumb-pad: var(--switch-thumb-pad);
     --_switch-label-fs: var(--font-size-xs);
   }
 
@@ -36,7 +36,7 @@
     --_switch-track-w: 48px;
     --_switch-track-h: 26px;
     --_switch-thumb-size: 22px;
-    --_switch-thumb-pad: 2px;
+    --_switch-thumb-pad: var(--switch-thumb-pad);
     --_switch-label-fs: var(--font-size-m);
   }
 }

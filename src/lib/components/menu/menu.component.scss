@@ -15,7 +15,7 @@
 :host-context(.popover) {
   background: transparent;
   border: 0;
-  border-radius: 0;
+  border-radius: var(--radius-flat);
   padding: 0;
 }
 

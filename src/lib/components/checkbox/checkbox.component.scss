@@ -22,8 +22,8 @@
   align-items: flex-start;
   gap: var(--field-label-gap);
 
-  &.size-sm { --_checkbox-glyph: 14px; --_checkbox-label-fs: var(--font-size-xs); }
-  &.size-lg { --_checkbox-glyph: 24px; --_checkbox-label-fs: var(--font-size-m); }
+  &.size-sm { --_checkbox-glyph: var(--check-glyph-sm); --_checkbox-label-fs: var(--font-size-xs); }
+  &.size-lg { --_checkbox-glyph: var(--check-glyph-lg); --_checkbox-label-fs: var(--font-size-m); }
 }
 
 .control-line {

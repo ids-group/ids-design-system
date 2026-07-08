@@ -37,7 +37,7 @@
     &:hover {
       color: var(--_breadcrumbs-label-color-hover);
       text-decoration: underline;
-      text-underline-offset: 2px;
+      text-underline-offset: var(--breadcrumbs-link-uloff);
     }
 
     &:focus-visible {

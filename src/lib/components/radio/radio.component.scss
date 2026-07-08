@@ -21,8 +21,8 @@
   align-items: flex-start;
   gap: var(--field-label-gap);
 
-  &.size-sm { --_radio-glyph: 14px; --_radio-label-fs: var(--font-size-xs); }
-  &.size-lg { --_radio-glyph: 24px; --_radio-label-fs: var(--font-size-m); }
+  &.size-sm { --_radio-glyph: var(--radio-glyph-sm); --_radio-label-fs: var(--font-size-xs); }
+  &.size-lg { --_radio-glyph: var(--radio-glyph-lg); --_radio-label-fs: var(--font-size-m); }
 }
 
 .control-line {

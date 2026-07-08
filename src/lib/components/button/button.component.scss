@@ -101,7 +101,7 @@
   .subtext-slot:empty { display: none; }
   .subtext-slot {
     font: var(--font-weight-medium) var(--font-size-2xs) / var(--line-height-tight) var(--font-sans);
-    letter-spacing: normal;
+    letter-spacing: var(--letter-spacing-normal);
     text-align: center;
   }
 

@@ -67,8 +67,8 @@
 }
 
 .sheet-handle {
-  width: 36px;
-  height: 4px;
+  width: var(--bottom-sheet-handle-w);
+  height: var(--bottom-sheet-handle-h);
   background: var(--border-strong);
   border-radius: var(--radius-pill);
   margin: 0 auto;
