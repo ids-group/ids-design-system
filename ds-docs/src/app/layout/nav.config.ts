@@ -127,4 +127,8 @@ export const NAV: NavGroup[] = [
     title: 'Reference',
     items: [{ label: 'Tokens reference', anchor: 'tokens-reference' }],
   },
+  {
+    title: 'Changelog',
+    items: [{ label: 'Changelog', anchor: 'changelog' }],
+  },
 ];
