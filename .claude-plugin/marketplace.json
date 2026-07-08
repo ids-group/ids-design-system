@@ -1,0 +1,12 @@
+{
+  "name": "ids-ds",
+  "owner": { "name": "IDS Group" },
+  "plugins": [
+    {
+      "name": "ids-design-system",
+      "source": "./plugins/ids-design-system",
+      "description": "Update @ids-group-ltd/ids-design-system across versions with guided, changelog-driven migrations.",
+      "version": "1.0.0"
+    }
+  ]
+}
