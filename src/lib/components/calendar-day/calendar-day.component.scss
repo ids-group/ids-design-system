@@ -16,6 +16,8 @@
   --_date-picker-day-range-bg-color:          var(--ds-date-picker-day-range-bg-color,          var(--accent-subtitle));
   --_date-picker-day-range-label-color:       var(--ds-date-picker-day-range-label-color,       var(--accent-strong));
   --_date-picker-day-disabled-label-color:    var(--ds-date-picker-day-disabled-label-color,    var(--text-disabled));
+  --_date-picker-day-label-color: var(--ds-date-picker-day-label-color, var(--text-primary));
+  --_date-picker-day-muted-label-color: var(--ds-date-picker-day-muted-label-color, var(--text-muted));
 }
 
 .day {
@@ -32,7 +34,7 @@
   cursor: pointer;
   border: 0;
   background: transparent;
-  color: var(--text-primary);
+  color: var(--_date-picker-day-label-color);
   transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
 
   &:hover {
@@ -40,7 +42,7 @@
   }
 
   &.muted {
-    color: var(--text-muted);
+    color: var(--_date-picker-day-muted-label-color);
   }
 
   &.today {

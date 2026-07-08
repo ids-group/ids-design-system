@@ -158,6 +158,8 @@
   --_date-picker-day-range-bg-color:             var(--ds-date-picker-day-range-bg-color,             var(--accent-subtitle));
   --_date-picker-day-range-label-color:             var(--ds-date-picker-day-range-label-color,             var(--accent-strong));
   --_date-picker-day-disabled-label-color:          var(--ds-date-picker-day-disabled-label-color,          var(--text-disabled));
+  --_date-picker-day-label-color: var(--ds-date-picker-day-label-color, var(--text-primary));
+  --_date-picker-day-muted-label-color: var(--ds-date-picker-day-muted-label-color, var(--text-muted));
   --_date-picker-width:                    var(--ds-date-picker-width,                    var(--date-picker-w));
 
   background-color: var(--_date-picker-bg-color);
