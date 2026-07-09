@@ -125,7 +125,10 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Reference',
-    items: [{ label: 'Tokens reference', anchor: 'tokens-reference' }],
+    items: [
+      { label: 'Tokens reference', anchor: 'tokens-reference' },
+      { label: 'Component tokens', anchor: 'component-tokens' },
+    ],
   },
   {
     title: 'Changelog',
