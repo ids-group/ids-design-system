@@ -100,22 +100,16 @@ export class TokensReferenceSection {
 
   /** True when the default value resolves to a colour token (drives the swatch chip vs "geometry" placeholder). */
   protected isColorValue(value: string): boolean {
-    const colourTokens = [
-      'brand',
-      'danger',
-      'success',
-      'warning',
-      'info',
-      'text-',
-      'icon-',
-      'surface-',
-      'border-',
-      'neutral-',
-    ];
     if (value === 'transparent' || value === 'none') {
       return false;
     }
-
-    return colourTokens.some((prefix) => value.includes(prefix));
+    // Explicit colour functions / hex literals (chart series use raw hsl()).
+    if (/hsl\(|rgb\(|oklch\(|#[0-9a-f]{3,8}\b|color-mix\(/i.test(value)) {
+      return true;
+    }
+    // var() references to a colour role or ramp — not size vars like --icon-2xs.
+    return /var\(--(brand|danger|primary|secondary|tertiary|accent|success|warning|error|info|link|status|text-|icon-(default|strong|muted|subtle|on)|surface-|border-|neutral-|blue-|red-|green-|yellow-|orange-|sky-|static-)/.test(
+      value,
+    );
   }
 }

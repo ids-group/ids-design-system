@@ -596,12 +596,18 @@
             </td>
 
             <td>
-              <span
-                class="swatch-chip"
-                [class.is-inverted]="row.inverted"
-                [style.background]="'var(' + row.name + ')'"
-              >
-              </span>
+              @if (isColorValue(row.value)) {
+                <span
+                  class="swatch-chip"
+                  [class.is-inverted]="row.inverted"
+                  [style.background]="'var(' + row.name + ')'"
+                >
+                </span>
+              } @else {
+                <span class="literal-value t-mono">
+                  geometry
+                </span>
+              }
             </td>
 
             <td>
