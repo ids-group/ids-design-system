@@ -77,6 +77,9 @@
   // -----------------------------------------------------------------------
   // Orange — focus / secondary signal
   // -----------------------------------------------------------------------
+  // HSL channels (additive — --secondary composes its fill + tints from these).
+  // Reproduce --orange-500 ≈ #FF7A2E; ramp stops below stay hand-picked hex.
+  --orange-h: 22; --orange-s: 100%; --orange-l: 59%;
   --orange-50:  #FFF7F0;
   --orange-100: #FFEEDF;
   --orange-200: #FFD9B8;
@@ -147,6 +150,13 @@
   --sky-500: #3B82F6;
   --sky-600: #2563EB;
   --sky-700: #1D4ED8;
+
+  // -----------------------------------------------------------------------
+  // Violet — tertiary brand hue. Channel-split only (--tertiary composes its
+  // fill + tints from these); no discrete ramp stops yet — add hand-picked hex
+  // if a component ever needs stepped violet swatches.
+  // -----------------------------------------------------------------------
+  --violet-h: 262; --violet-s: 70%; --violet-l: 56%;
 
   // -----------------------------------------------------------------------
   // Shadow tint — channel-split substrate h/s only. The lightness (-l) is

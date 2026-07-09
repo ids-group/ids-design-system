@@ -117,15 +117,14 @@
   --primary-strong:          var(--blue-700);
   --primary-on:              var(--static-white);
 
-  /* Accent / secondary role — composed from --secondary-h/s/l channels. Ships a
-     distinct default hue (warm accent), INDEPENDENT of --primary, so the three
-     brand slots read apart out of the box. Changing --primary alone no longer
-     recolours secondary — override --secondary-h/s/l per-brand (or via the
-     tweaks panel) to reskin it; --secondary recomposes automatically.
-     Hover/pressed derive from --secondary so any hue change propagates. */
-  --secondary-h:       25;
-  --secondary-s:       95%;
-  --secondary-l:       53%;
+  /* Accent / secondary role — maps onto the palette --orange family (Tier-1),
+     kept distinct from --primary so the brand slots read apart. Override
+     --secondary-h/s/l per-brand (or via the tweaks panel) to reskin it —
+     --secondary recomposes automatically. Hover/pressed derive from --secondary
+     so any hue change propagates. */
+  --secondary-h:       var(--orange-h);
+  --secondary-s:       var(--orange-s);
+  --secondary-l:       var(--orange-l);
 
   --secondary:         hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l));
   --secondary-hover:   color-mix(in srgb, var(--secondary) 88%, black);
@@ -140,12 +139,12 @@
      tonal accents (decorative chips, hierarchy tones, indicators). Mirrors
      the --primary / --secondary token-family shape: HSL channels for halo
      composition, hover/pressed via color-mix, subtle/muted ramps for tonal
-     surfaces. Ships a distinct default hue (cool accent), INDEPENDENT of
-     --primary, so the tertiary slot reads apart out of the box. Brands override
-     --tertiary-h/s/l (or --tertiary directly for non-HSL values) to reskin it. */
-  --tertiary-h:       262;
-  --tertiary-s:       70%;
-  --tertiary-l:       56%;
+     surfaces. Maps onto the palette --violet family (Tier-1), distinct from
+     --primary / --secondary. Brands override --tertiary-h/s/l (or --tertiary
+     directly for non-HSL values) to reskin it. */
+  --tertiary-h:       var(--violet-h);
+  --tertiary-s:       var(--violet-s);
+  --tertiary-l:       var(--violet-l);
 
   --tertiary:         hsl(var(--tertiary-h) var(--tertiary-s) var(--tertiary-l));
   --tertiary-hover:   color-mix(in srgb, var(--tertiary) 88%, black);
