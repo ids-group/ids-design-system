@@ -416,11 +416,11 @@ export class SidebarComponent {
       const targetTop = section.getBoundingClientRect().top;
       main.scrollTo({
         top: main.scrollTop + (targetTop - containerTop) - topbarH,
-        behavior: 'smooth',
+        behavior: 'auto',
       });
       this.watchScrollEnd(main, anchor);
     } else {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      section.scrollIntoView({ behavior: 'auto', block: 'start' });
     }
   }
 
