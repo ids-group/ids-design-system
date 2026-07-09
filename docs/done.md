@@ -4,6 +4,15 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Resolved 2026-07-09 (Component-vs-CSS-class audit — verdict: keep all 8)
+
+_Archived from `todo.md` 2026-07-09. Research done 2026-06-10; facts re-verified vs code 2026-07-08/09. The keep/demote question is settled by the code itself (no demotions). The one open thread — hybrid architecture (styles in global partials, components as thin sugar) — was folded into the `.ds-interactive` global state-contract item in `todo.md`, to be decided together with that design._
+
+- [x] **Audit: standalone component vs CSS class — VERDICT: keep all 8 as components.** Candidates + evidence (`.ts`/`.scss` lines verified 2026-07-09):
+  - **Form trio — checkbox (68/112) · radio (96/99) · switch (74/100):** now full `ControlValueAccessor` form controls (`checked` model() + CVA, `label`/`hint`/`invalid`/`required`, native input / `role=switch`, `ds-radio-group`, focus-shadow tokens). Demote-to-class is off the table → KEEP.
+  - **Presentational five — divider (27/51) · status-dot (20/32) · badge (55/51) · skeleton (22/56) · spinner (19/30):** each bakes real a11y (role/aria: separator · img+label · count→label · aria-hidden · status+label) or carries heavy usage (badge ×15 in pinkmoon) → KEEP.
+  - The "enrich kept components with `label`/ARIA" follow-up is already satisfied — all eight ship their ARIA. No demotion, no new component work. Only churn since the 07-08 re-verify was token-API/prefix refactors (`9ab228c`, `3fa57a6`, `21d8a06`, `2ec4dab`, `5cc2436`, `f1b458a`), which don't touch the verdict.
+
 ## Shipped 2026-07-07 (Picker portfolio: combobox→autocomplete rename + dropdown merge)
 
 _Archived 2026-07-07 from `todo.md`. Fallout of the PIN-475 review → combobox-definition research (ARIA APG + Carbon/Spectrum/MUI/FluentUI): the picker family was mapped, one component renamed, one duplicate removed. Same-day siblings still open in `todo.md`: autocomplete `multiple` vs multi-select (deck built, verdict pending), shared picker internals (recorded), select+multi-select pair kept (Stas: "оставляем пока")._
