@@ -113,7 +113,7 @@
 </head>
 <body>
   <h1>DS — карта бэклога</h1>
-  <p class="sub">Что <b>осталось закрыть</b> — по одному пункту на карточку (источник: <span class="tag">docs/todo.md</span>). Только открытое; архив сделанного — <span class="tag">docs/done.md</span>. Обновлено 2026-07-07.</p>
+  <p class="sub">Что <b>осталось закрыть</b> — по одному пункту на карточку (источник: <span class="tag">docs/todo.md</span>). Только открытое; архив сделанного — <span class="tag">docs/done.md</span>. Обновлено 2026-07-10.</p>
   <p class="legend">
     <span class="mark deck"><span class="g">▶</span> дека</span> — карточка кликабельна, открывает презентацию в новой вкладке.
     <span class="mark todo"><span class="g">ⓘ</span> todo</span> — кликни: полная формулировка из todo.md в поповере (закрыть — крестик, backdrop или Esc).
@@ -189,12 +189,12 @@
 
   <!-- ============ PIN-475 / KIT MOVEMENT ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🔎 Из PIN-475 — фильтр-тулбары</h2><span class="count c-track">4</span><span class="why">Гэпы combobox/select/search (Kit Movement, 2026-06-17). focus-баг — корень в pinkmoon, починен там. Спека 2026-07-07 (все 4 сверены с кодом): `.claude/superpowers/specs/2026-07-07-pin475-filter-toolbar-gaps-design.md` — V1/V3/V4 ✅ приняты, V2 (вид single-режима) решается на прототипе.</span></div>
+    <div class="lane-head"><h2>🔎 Из PIN-475 — фильтр-тулбары</h2><span class="count c-track">4</span><span class="why">Гэпы autocomplete/select/search (Kit Movement, 2026-06-17). focus-баг — корень в pinkmoon, починен там. Спека 2026-07-07 (все 4 сверены с кодом): `.claude/superpowers/specs/2026-07-07-pin475-filter-toolbar-gaps-design.md` — V1/V3/V4 ✅ приняты, V2 (вид single-режима) решается на прототипе.</span></div>
     <div class="cards">
-      <div class="card track"><div class="t">combobox — нет content/compact ширины</div><p class="d">Multi-select всегда тянется на ширину хоста → один короткий чип оставляет пустой триггер справа. Нужен `fit-content`/`max-content`-режим (триггер обнимает чипы + min поле ввода). Сейчас консьюмер хардкодит ширину.</p></div>
-      <div class="card track"><div class="t">combobox single — читается как free-text</div><p class="d">В single-режиме триггер сохраняет поле ввода + шеврон после выбора — выглядит как multi/typeahead и как `ds-select`. Нужен filled-select display-режим или гайд select vs combobox.</p></div>
+      <div class="card track"><div class="t">autocomplete — нет content/compact ширины</div><p class="d">Multi-select всегда тянется на ширину хоста → один короткий чип оставляет пустой триггер справа. Нужен `fit-content`/`max-content`-режим (триггер обнимает чипы + min поле ввода). Сейчас консьюмер хардкодит ширину.</p></div>
+      <div class="card track"><div class="t">autocomplete single — читается как free-text</div><p class="d">В single-режиме триггер сохраняет поле ввода + шеврон после выбора — выглядит как multi/typeahead и как `ds-select`. Нужен filled-select display-режим или гайд select vs autocomplete.</p></div>
       <div class="card track"><span class="chip ch-oos">root-cause найден</span><div class="t">focus-ring на инпутах — DS follow-up</div><p class="d">`ds-search` именует inner-инпут слишком общим `.input` — переименовать в scoped-класс, чтобы либа была иммунна к консьюмерским `.input`-ресетам (глобальный `.input:focus` консьюмера протекает в inner-элемент сквозь emulated encaps.).</p><div class="meta">pin-475-fields.html</div></div>
-      <div class="card track"><span class="chip ch-oos">proposed</span><div class="t">«Склеенное поле» / input-group композер</div><p class="d">Один бордер + один focus-ring из leading-select + trailing-input/search/combobox (search-bar PIN-475: `[ «искать по» select ▾ | divider | input ]`). `ds-select` не годится в leading-addon (нет fit-content, нет API снять свой бордер). Предложение: `ds-field-group`/`ds-input-group` — рисует общий бордер+ring, внутр. divider, велит слотам рендериться «голыми» (`[grouped]`/context-токен), фикс/флекс ширины. Прецеденты: Chakra InputGroup, MUI adornments, Ant Space.Compact. Парный с combobox fit-content + single-display.</p><div class="meta">спека 2026-07-07 (референс search-scope удалён из прототипа)</div></div>
+      <div class="card track"><span class="chip ch-oos">proposed</span><div class="t">«Склеенное поле» / input-group композер</div><p class="d">Один бордер + один focus-ring из leading-select + trailing-input/search/autocomplete (search-bar PIN-475: `[ «искать по» select ▾ | divider | input ]`). `ds-select` не годится в leading-addon (нет fit-content, нет API снять свой бордер). Предложение: `ds-field-group`/`ds-input-group` — рисует общий бордер+ring, внутр. divider, велит слотам рендериться «голыми» (`[grouped]`/context-токен), фикс/флекс ширины. Прецеденты: Chakra InputGroup, MUI adornments, Ant Space.Compact. Парный с autocomplete fit-content + single-display.</p><div class="meta">спека 2026-07-07 (референс search-scope удалён из прототипа)</div></div>
     </div>
   </div>
 
@@ -204,7 +204,7 @@
     <div class="cards">
       <div class="card track"><span class="chip ch-oos">решить</span><div class="t">autocomplete [multiple] vs ds-multi-select</div><p class="d">Индустрия (Carbon/Spectrum/MUI/FluentUI): autocomplete — single-first, multi — отдельный компонент. У нас multi живёт и в `ds-autocomplete [multiple]` (чипы в триггере, сборка печатью, allowCreate), и в `ds-multi-select` (чекбокс-листбокс + selectAll) — один сценарий, две эргономики. Решить (a) deprecate autocomplete-multi или (b) задокументировать границу — на живой деке.</p><div class="meta">multi-pick-comparison.html</div></div>
       <div class="card track"><span class="chip ch-oos">ждёт go</span><div class="t">Shared picker internals</div><p class="d">select / autocomplete / multi-select дублируют приватную сантехнику: CDK-оверлей конфиг, active-descendant навигация со skip-disabled, фильтр опций. Вынести ВНУТРЕННИЕ хелперы (прецедент — DsControlValueAccessor, disposeWithLeave) и мигрировать три пикера; публичные API не трогаем. «Шарим сантехнику, храним контракты». Новый общий паттерн — нужен явный go. (ds-dropdown-дубликат ✅ уже влит в select, 3ffc3dc.)</p></div>
-      <div class="card track"><span class="chip ch-oos">P2</span><div class="t">API consistency</div><p class="d">`booleanAttribute` на все boolean-инпуты (сейчас ~50%) · `danger→error`/`warn→warning` (modal/menu-item/split/stat/progress) · экспорт `DividerSpacing`/`PopoverAlign` · унификация output-имён · pagination model/output дедуп · `title` requiredness · вынести badge `count` и progress `indeterminate` из enum. (`radio.name` ✅ уже string; dropdown `error→invalid` ✅ отпал вместе с ds-dropdown 07-07.)</p></div>
+      <div class="card track"><span class="chip ch-oos">почти закрыт</span><div class="t">API consistency</div><p class="d">✅ Отгружено 2026-07-09/10 (breaking, в CHANGELOG Unreleased): `booleanAttribute` на всех boolean-инпутах · `DsStatus` + `danger→error`/`warn→warning` (+токены) · экспорт `DividerSpacing` (`PopoverAlign` уже был) · output-имена → past-participle (`dismissed→closed`, `*Click→*Clicked` …) · `title` по ролям (required у диалогов) · badge `count` / progress `indeterminate` вынесены из enum. Остался только <b>pagination model/output дедуп</b> — перепроверен (коллизия `pageSizeChange` + тройной emit), отложен.</p></div>
       <div class="card track"><span class="chip ch-oos">if-needed</span><div class="t">CDK Menu adoption (option B)</div><p class="d">Только если понадобятся вложенные сабменю / menubar / context-menu. План — `docs/superpowers/cdk-menu-adoption.md`.</p></div>
     </div>
   </div>
@@ -246,6 +246,7 @@
     Архив сделанного целиком — <span class="tag">docs/done.md</span>; на доске выполненное не хранится.
     Актуализировано 2026-07-08: публичный token-API раскатан на 11 бестокенных компонентов (лейн «Мелочь отложена» закрыт) — детали в архиве.
     2026-07-07: picker-portfolio (rename → <span class="tag">ds-autocomplete</span> · merge dropdown→select · breakpoints-миграция).
+    2026-07-10: API-consistency pass отгружен (booleanAttribute · DsStatus · past-participle outputs · enum splits · title по ролям) — остался pagination-дедуп; лейн PIN-475 актуализирован под ds-autocomplete; попутно фиксы button-tonal :active и снят press с полей-триггеров.
   </p>
 
   <!-- raw docs/todo.md embedded verbatim (as of 2026-07-07; live backlog only — done lives in docs/done.md) so the popover works offline over file:// -->
