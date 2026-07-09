@@ -3,5 +3,5 @@
   "description": "Step a consumer repo from its installed @ids-group-ltd/ids-design-system version up to the latest, one version at a time, applying documented changelog migrations with automated checks and re-checks.",
   "version": "1.0.0",
   "author": { "name": "IDS Group" },
-  "repository": { "type": "git", "url": "https://bitbucket.org/itband/ids-design-system.git" }
+  "repository": "https://bitbucket.org/itband/ids-design-system.git"
 }
