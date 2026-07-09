@@ -19,9 +19,12 @@ Dispatch subagents by name via the Task tool. Never do a subagent's job inline.
 - `ds-migration-planner` (opus) — changelog block → structured MigrationPlan.
 - `ds-usage-finder` (haiku) — locate old-API usages. Parallel across items.
 - `ds-migration-applier` (sonnet) — apply edits. Parallel, **one per file**.
-- `ds-recheck` (sonnet) — independent re-check of **mechanical (rename-type) items only**. Parallel.
+- `ds-recheck` (sonnet) — independent re-check of every item: grep for mechanical, semantic for
+  behavioral. Parallel.
 
-Primary semantic verification is YOUR job (opus). Re-checks are the parallel `ds-recheck` agents.
+This workflow is **full-auto**: the applier attempts EVERY actionable change (mechanical AND
+behavioral). Primary semantic verification is YOUR job (opus) — you own the final green/not-green
+verdict, especially for behavioral fixes. Manual review is a LAST RESORT (Phase B step 9).
 
 ## MigrationPlan schema
 
@@ -37,16 +40,22 @@ from Breaking + Changed. `new` is null for a removal or `behavior`; `map` is pre
 fit a change to a mechanical kind it classifies it `behavior` (catch-all) so nothing is dropped.
 `id` is a stable, unique slug.
 
-Split items into two buckets and treat them differently:
-- **mechanical** = the rename kinds + `value-remap` + `scss-api` + `code-add` → auto-applied AND
-  grep-re-checked by `ds-recheck`. Element-scoped items (a `value-remap` targeting `element[attr]`)
-  MUST be searched/re-checked **scoped to that target element** — the same attribute or class name
-  can exist on other components, so an unscoped grep false-positives on the wrong element and would
-  wrongly stall the run — and a `map` value that keeps the same token stays valid (don't treat it
-  as "old").
-- **manual** = `removed-api` + `behavior` (incl. the catch-all) → the applier performs only a clear
-  mechanical rewrite (else flags `needsReview`); these are **never** grep-re-checked (no
-  deterministic old→new) and ALWAYS surface in the final "needs manual review" report.
+Every actionable item is **auto-applied**; items differ only in how they're VERIFIED:
+- **mechanical** = the rename kinds + `value-remap` + `scss-api` + `code-add` → verified by grep
+  (`ds-recheck`). Element-scoped items (a `value-remap` targeting `element[attr]`) MUST be
+  searched/re-checked **scoped to that target element** — the same attribute or class name can exist
+  on other components, so an unscoped grep false-positives on the wrong element and would wrongly
+  stall the run — and a `map` value that keeps the same token stays valid (don't treat it as "old").
+- **behavioral** = `removed-api` + `behavior` (incl. the catch-all) → the applier ATTEMPTS the
+  migration the `note` describes (real code edits), verified **semantically** (opus reads the change
+  vs what the changelog requires; `ds-recheck` gives a first-pass verdict + confidence). NOT skipped.
+- **informational** = a documented change needing NO consumer code action (purely visual, nothing to
+  edit) → not an item; the planner puts it in `informational` (an FYI line in the report).
+
+**Manual review is a LAST RESORT, not a default bucket.** An item lands there only when the auto
+attempt + auto-fix loop can't make it green (Phase B step 9): the build still fails, or opus can't
+confirm the behavioral fix is correct after the attempts, or the change is genuinely too convoluted
+to do safely. A behavioral change is NOT sent to manual just for being behavioral — it is attempted.
 
 ## Phase A — Run setup (do once)
 
@@ -97,8 +106,11 @@ version is still not green, go straight to step 9. This is a hard per-version ca
 2. **Find (parallel, haiku).** Dispatch `ds-usage-finder` across items with the target's source
    root. Collect per-item `path:line` hits. Zero-hit items are not-applicable — record and drop.
 3. **Apply (parallel, sonnet, one per file).** Group hits by file; dispatch one
-   `ds-migration-applier` per file with the items affecting it. Collect `applied` / `needsReview`.
-   Track the union of touched files (for the commit pathspec).
+   `ds-migration-applier` per file with the items affecting it. **This includes behavioral
+   (`removed-api` / `behavior`) items — the applier ATTEMPTS them, not just mechanical ones.** For an
+   item located by its `note` rather than by hits (e.g. a `code-add` to the app config or global
+   styles), dispatch an applier for that described file. Collect `applied` / `needsReview`, and track
+   the union of touched files (for the commit pathspec).
 4. **Bump + install.** Set the dependency to the EXACT version `V` (no `^` / `~`) in the target's
    `package.json`; run the detected package manager's **mutating** install (`bun install` /
    `npm install` / `yarn` / `pnpm install` — never `npm ci` / `--frozen-lockfile`). Confirm the
@@ -118,24 +130,39 @@ version is still not green, go straight to step 9. This is a hard per-version ca
    errors under strict templates — the build catches them. Token / CSS-custom-property / CSS-class
    renames do NOT fail the build (an unknown custom property or class is not a compile error) — for
    those rely on the element-scoped grep here + the re-check in step 7, not the build.
+   **Behavioral items (you, opus) — the obligatory semantic verdict:** for each attempted
+   `removed-api` / `behavior` item, read the applier's actual change and judge whether it correctly
+   implements what the changelog `note` requires (the build won't catch a semantically-wrong-but-
+   compiling edit — this is the safety net for full-auto). An item the applier left `needsReview`
+   (couldn't do), or whose attempt you judge wrong/incomplete, is NOT green → it feeds the auto-fix
+   loop (retry with more guidance) before any escalation.
 6. **Auto-fix loop.** If not green, dispatch sonnet appliers to fix the specific issues and
    re-verify (increments `attempts`). Bounded by the 3-attempt cap above.
-7. **Re-check (parallel, sonnet) — mechanical items only.** Dispatch `ds-recheck` for each
-   mechanical item independently. If any returns `migrated:false` with unaccounted remaining
-   usages, treat the version as not green and re-enter step 6 (still bounded by the cap). Manual
-   items (`removed-api` / `behavior`) are NOT re-checked — they flow to the report as needs-review.
+7. **Re-check (parallel, sonnet) — every item.** Dispatch `ds-recheck` for each item: grep for
+   mechanical, semantic for behavioral (it returns `migrated` + `confidence`). If any returns
+   `migrated:false`, or a behavioral item comes back low-confidence, treat the version as not green
+   and re-enter step 6 (still bounded by the cap) — dispatch appliers to redo/repair that item using
+   the re-checker's feedback. Only items still unresolved when the cap is hit become manual-review.
 8. **Green → commit.** Stage EXACTLY the applier-touched files + the target's `package.json` + the
    lockfile, by explicit pathspec (never `git add -A`, never a bare directory). Commit
    `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration summary in the body
    (`-m` subject, `-m` body). Do not run any git command containing the word "push". Next version.
-9. **Stuck (cap hit, re-check disagrees, or peer unsatisfied).** **Stop the run.** Leave the
-   partial edits in the working tree (do NOT roll back). Report the version reached, the failing
-   output / unresolved items / peer reason, and the `needsReview` list. Await the user.
+9. **Stuck — LAST RESORT (cap hit, re-check still disagrees, or peer unsatisfied).** Only reached
+   after the auto attempt + auto-fix loop genuinely could not make the version green. **Stop the
+   run.** Leave the partial edits in the working tree (do NOT roll back). Report the version reached,
+   the failing output, and the specific items that couldn't be auto-resolved (with why) as the
+   manual-review list. Await the user. (A peer-dependency mismatch stops here immediately — no
+   applier can fix it.)
 
 ## Phase C — Final report
 
-- Per target: versions completed + committed (from→to), items applied, items not-applicable, and
-  **needs manual review** (every `removed-api` / `behavior` item + any applier `needsReview`).
+- Per target: versions completed + committed (from→to); items **auto-applied** (mechanical AND
+  behavioral); items not-applicable.
+- **Informational (FYI, no action):** documented changes needing no consumer code edit (from the
+  plan's `informational`) — listed so the human is aware, NOT a to-do.
+- **Needs manual review — should be EMPTY in a clean run:** ONLY the items the auto attempt +
+  auto-fix loop could not resolve, each with why. These are the last-resort escalations, not every
+  behavioral change.
 - If stopped: which target/version, why, what to look at.
 - Suggested next step (review the branch / open a PR).
 

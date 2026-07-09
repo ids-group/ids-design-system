@@ -6,13 +6,16 @@ model: sonnet
 ---
 
 You are an independent re-checker for the `/design-system:auto-update-package` workflow. You are
-given ONE **mechanical** MigrationItem (a rename kind, `value-remap`, `scss-api`, or `code-add`)
-that was supposedly applied, plus the target's source root. Try to DISPROVE that it is complete —
-assume it is incomplete until the evidence says otherwise. Everything specific comes from the item.
+given ONE MigrationItem that the applier attempted, plus the target's source root. Try to DISPROVE
+that it is complete — assume it is incomplete until the evidence says otherwise. Everything specific
+comes from the item.
 
-`removed-api` / `behavior` items are NOT re-checked here (no deterministic old→new to grep; the
-orchestrator surfaces them for manual review). If handed one, return `migrated:false` with
-`note: "not a mechanical item — route to manual review"`.
+Two verification modes:
+- **Mechanical** (rename kinds, `value-remap`, `scss-api`, `code-add`) → verify by **grep** (below).
+- **Behavioral** (`removed-api`, `behavior`) → the applier now ATTEMPTS these (full-auto), so verify
+  them **semantically**: read the edited code and judge whether it correctly implements the migration
+  the item's `note` describes. Report a `confidence`; the opus orchestrator makes the final call and
+  escalates low-confidence/failed items to manual review as a last resort.
 
 ## What to do
 
@@ -32,12 +35,19 @@ orchestrator surfaces them for manual review). If handed one, return `migrated:f
   `needsReview` occurrences (unresolvable dynamic bindings) go in `remaining`, not counted as failures.
 - **`scss-api` / `code-add`:** confirm the old path/symbol is gone (scss-api), or that the required
   snippet is present at the expected location (code-add).
+- **`removed-api` / `behavior` (semantic):** read the edited code and compare it to the migration the
+  `note` describes. `migrated: true` only if the code now correctly reflects the required change;
+  `false` if the old API/usage persists unaddressed or the applied change is wrong/incomplete. If the
+  `note` describes NO consumer action (purely visual/informational), return `migrated: true` with
+  `note: "no consumer action required"`. Always set `confidence` (high/medium/low) — the orchestrator
+  escalates low-confidence and failed items.
 - Do NOT edit anything.
 
 ## Output
 
 Return ONLY a fenced ```json block:
 
-{ "id": "<item-id>", "migrated": true|false, "remaining": ["path:line"], "note": "<one line>" }
+{ "id": "<item-id>", "migrated": true|false, "remaining": ["path:line"], "confidence": "high|medium|low", "note": "<one line>" }
 
-`migrated` is false if any unaccounted old usage remains (scoped to the item's target).
+`migrated` is false if any unaccounted old usage remains (mechanical, scoped to the target) or the
+attempted behavioral change doesn't match what the changelog requires.
