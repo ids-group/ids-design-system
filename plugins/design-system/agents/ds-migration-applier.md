@@ -31,9 +31,15 @@ decided WHAT to do; you execute it.
   - **`code-add`**: insert the snippet from `new` at the location `note` describes — but ONLY if
     THIS file is that location (e.g. the app config, the global styles entry, the relevant usage).
     If you're not sure this is the right file, record `needsReview` instead of guessing.
-  - **`removed-api`**: apply the migration in `note` if it's a clear mechanical rewrite; otherwise
-    leave the code and record `needsReview`.
-  - **`behavior`**: do NOT edit — record `needsReview` with the note (for the manual-review report).
+  - **`removed-api`** and **`behavior`**: these need judgement, not a find/replace — but you ATTEMPT
+    them (this workflow is full-auto; manual review is a last resort). Follow the migration the `note`
+    describes and make the real code change — e.g. swap a removed API for its documented replacement,
+    wrap an element in a newly-required container, restructure an attribute into a projected slot,
+    update an event handler whose payload changed, or pin a changed default the consumer relied on.
+    Make your best correct effort, keeping the change minimal and idiomatic.
+    Record `needsReview` ONLY as a last resort: the change is genuinely too ambiguous or intertwined
+    to do safely, OR the `note` describes no concrete consumer action (a purely visual/informational
+    change with nothing to edit — say exactly that in `why`; do NOT invent an edit for it).
 - Keep the diff minimal; follow the file's existing formatting.
 - **Do NOT restructure public API or framework declarations.** (Angular fact: an `input()` /
   `output()` bound by a parent template must stay public — making it private/protected breaks the

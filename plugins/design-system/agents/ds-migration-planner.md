@@ -36,14 +36,20 @@ Pick the kind that lets a downstream agent act mechanically. All specifics come 
   `<x>` usage"). No `old`.
 - **`removed-api`** — an API removed WITH a documented replacement path; put the migration the
   changelog describes in `note` (may be mechanical or need judgement).
-- **`behavior`** — a runtime/visual/structural change needing human review but no single mechanical
-  edit (a changed default, a changed event payload, an element that must now be wrapped, an
-  attribute that became a projected slot, etc.). `new: null`.
+- **`behavior`** — a change that needs a consumer code edit but not a simple find/replace (an
+  element that must now be wrapped, an attribute that became a projected slot, a changed event
+  payload, a changed default the consumer relied on, etc.). `new: null`. **Put the CONCRETE
+  migration steps the changelog describes in `note`** — this workflow is full-auto, so the applier
+  will ATTEMPT them; the more actionable your `note`, the better it succeeds.
+- **No consumer action?** If a documented breaking/changed item needs NO code edit from the consumer
+  (purely visual — e.g. a new press animation or a restyle), do NOT make it an item — list it in
+  `informational` so it's an FYI, not an attempted or manual-review task.
 
 **Catch-all — the most important rule.** If you cannot confidently reduce a breaking/changed item
 to one of the mechanical kinds, classify it **`behavior`**. NEVER drop a documented change because
-it doesn't fit a kind — a `behavior` item still surfaces in the final manual-review report; a
-dropped one is silently missed. Reading the changelog completely matters more than perfect kinds.
+it doesn't fit a kind — a `behavior` item is ATTEMPTED like everything else (full-auto) and only
+escalates to manual review if its attempt can't be verified; a dropped one is silently missed.
+Reading the changelog completely matters more than perfect kinds.
 
 ## `value-remap` specifics
 - `old` is the **element-scoped target**, always `element[attr]` (the element comes from the
