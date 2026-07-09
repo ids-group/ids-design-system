@@ -72,11 +72,15 @@ const titleCase = (s) => s.replace(/(^|-)([a-z])/g, (_, d, c) => (d ? ' ' : '') 
 
 const COLOR_VALUE = /(#[0-9a-f]{3,8}\b|\brgb|\bhsl|\boklch|color-mix|var\(--(?:accent|primary|secondary|tertiary|success|warning|error|info|surface|text|icon|border|focus|link|static|neutral|blue|red|green|yellow|orange|sky)\b)/i;
 function kindOf(name, value, category) {
+  const v = value.trim();
+  if (/^-?[\d.]+$/.test(v)) return 'other';                      // unitless (alpha, 0, etc.)
+  if (/^-?[\d.]+(px|rem|em|%)$/.test(v)) return 'length';        // pure length literal
+  if (/^-?[\d.]+m?s$/.test(v) || /^cubic-bezier/.test(v)) return 'motion';
   if (category === 'colour-role' || category === 'colour-ramp') return 'color';
-  if (COLOR_VALUE.test(value)) return 'color';
+  if (COLOR_VALUE.test(v)) return 'color';
   if (category === 'typography') return 'font';
-  if (/\b\d+m?s\b|cubic-bezier/.test(value)) return 'motion';
-  if (/\d(px|rem|em|%)|var\(--(space|radius|hit|icon|size|bp|col-cap|border-width|blur)/.test(value)) return 'length';
+  if (/\b\d+m?s\b|cubic-bezier/.test(v)) return 'motion';
+  if (/\d(px|rem|em|%)|var\(--(space|radius|hit|icon|size|bp|col-cap|border-width|blur)/.test(v)) return 'length';
   return 'other';
 }
 const invertedOf = (name) =>
