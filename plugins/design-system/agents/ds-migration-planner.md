@@ -22,9 +22,17 @@ must change in their code to adopt that version.
 - One item per distinct rename/removal/behavior change. Prefer precise, greppable `old`/`new`
   identifiers over prose.
 - `kind` is one of: `selector-rename`, `input-rename`, `output-rename`, `token-rename`,
-  `type-rename`, `removed-api`, `behavior`. Use `removed-api` when there is no drop-in
-  replacement; use `behavior` for runtime/visual changes that need review but no mechanical edit
-  (`new` = null for both).
+  `type-rename`, `value-remap`, `removed-api`, `behavior`. Use `removed-api` when there is no
+  drop-in replacement; use `behavior` for runtime/visual changes that need review but no
+  mechanical edit (`new` = null for both).
+- Use **`value-remap`** when an attribute KEEPS its name but its accepted VALUES change (e.g. a
+  `variant` or `size` value set is renamed/remapped — do NOT model this as `input-rename`). Put
+  the target in `old` (e.g. `ds-button[variant]`), set `new` to a one-line summary, and give a
+  **`map`** object of old value → new value: a plain string replaces the value
+  (`"secondary": "tonal"`); `null` drops the attribute (`"primary": null`); a markup string
+  replaces the whole attribute for split cases (`"outline": "color=\"neutral\" variant=\"outline\""`).
+  Describe any non-1:1 nuance in `note`. `searchHints` MUST list the old attribute values as they
+  appear in code (`variant="secondary"`, `size="m"`) so the finder can locate and label each hit.
 - `searchHints` are concrete strings a grep can find in a consumer's `.html` / `.ts` / `.scss`
   (selectors like `ds-combobox`, bindings like `[error]`, exported types like `DropdownOption`,
   CSS custom properties like `--ds-combobox-`). Include every alias worth searching.
@@ -37,8 +45,10 @@ Return ONLY a fenced ```json block containing one MigrationPlan object:
 
 {
   "version": "<the version>",
-  "items": [ { "id", "kind", "old", "new", "note", "searchHints": [] } ],
+  "items": [ { "id", "kind", "old", "new", "note", "searchHints": [],
+               "map": { "<oldValue>": "<newValue | null | replacement markup>" } } ],
   "informational": [ "<one-line summary of each Added/Fixed group>" ]
 }
 
+`map` is present ONLY for `value-remap` items; omit it for every other kind.
 No preamble, no prose outside the JSON block.
