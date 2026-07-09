@@ -167,11 +167,11 @@
   --shadow-tint-s: 39%;
 
   // -----------------------------------------------------------------------
-  // Theme-stable contrast anchors — never flip with the theme. On-fill text/
-  // icon roles point here so a dark theme keeps white-on-coloured-fill correct.
+  // Theme-stable ink anchor — never flips with the theme. On-DARK-fill text
+  // (e.g. text on the yellow warning fill) points here so it stays dark in
+  // both themes. On-LIGHT-fill text uses the literal `white` keyword directly
+  // (a token would be pure indirection — var(--x) === white for a constant).
   // -----------------------------------------------------------------------
-  --static-white: #FFF;
-  --static-black: #000;
   --static-ink:   #161A28;
 
   // -----------------------------------------------------------------------

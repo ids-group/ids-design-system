@@ -12,7 +12,7 @@
 // follow the flip: tint/subtle surfaces (near-white *-50 picks → dark hue
 // tints), on-tint text (*-text / *-strong → lighter stops), hover/pressed
 // direction, scrim (must stay dark), focus halo alpha, and charts.
-// On-fill text already points at theme-stable --static-white/--static-ink.
+// On-dark-fill text points at --static-ink; on-light-fill uses literal white.
 // =========================================================================
 
 @use 'palette';
@@ -25,20 +25,20 @@
   // Interaction states: on dark, hover/pressed must LIGHTEN. The default theme
   // derives them as color-mix toward black (darkens) — wrong direction here.
   // Mirror the light recipe's 88% / 76% steps, mixed toward white instead.
-  --primary-hover:          color-mix(in srgb, var(--primary) 88%, var(--static-white));
-  --primary-pressed:        color-mix(in srgb, var(--primary) 76%, var(--static-white));
-  --primary-selected-hover: color-mix(in srgb, var(--primary) 88%, var(--static-white));
-  --secondary-hover:        color-mix(in srgb, var(--secondary) 88%, var(--static-white));
-  --secondary-pressed:      color-mix(in srgb, var(--secondary) 76%, var(--static-white));
-  --tertiary-hover:         color-mix(in srgb, var(--tertiary) 88%, var(--static-white));
-  --tertiary-pressed:       color-mix(in srgb, var(--tertiary) 76%, var(--static-white));
-  --success-hover:          color-mix(in srgb, var(--success) 88%, var(--static-white));
-  --warning-hover:          color-mix(in srgb, var(--warning) 88%, var(--static-white));
-  --error-hover:            color-mix(in srgb, var(--error) 88%, var(--static-white));
-  --error-pressed:          color-mix(in srgb, var(--error) 76%, var(--static-white));
-  --success-pressed:        color-mix(in srgb, var(--success) 76%, var(--static-white));
-  --warning-pressed:        color-mix(in srgb, var(--warning) 76%, var(--static-white));
-  --info-hover:             color-mix(in srgb, var(--info) 88%, var(--static-white));
+  --primary-hover:          color-mix(in srgb, var(--primary) 88%, white);
+  --primary-pressed:        color-mix(in srgb, var(--primary) 76%, white);
+  --primary-selected-hover: color-mix(in srgb, var(--primary) 88%, white);
+  --secondary-hover:        color-mix(in srgb, var(--secondary) 88%, white);
+  --secondary-pressed:      color-mix(in srgb, var(--secondary) 76%, white);
+  --tertiary-hover:         color-mix(in srgb, var(--tertiary) 88%, white);
+  --tertiary-pressed:       color-mix(in srgb, var(--tertiary) 76%, white);
+  --success-hover:          color-mix(in srgb, var(--success) 88%, white);
+  --warning-hover:          color-mix(in srgb, var(--warning) 88%, white);
+  --error-hover:            color-mix(in srgb, var(--error) 88%, white);
+  --error-pressed:          color-mix(in srgb, var(--error) 76%, white);
+  --success-pressed:        color-mix(in srgb, var(--success) 76%, white);
+  --warning-pressed:        color-mix(in srgb, var(--warning) 76%, white);
+  --info-hover:             color-mix(in srgb, var(--info) 88%, white);
 
   // Brand tint surfaces + on-tint text (channel-derived → track rebrand).
   --surface-tint:         hsl(var(--primary-h) 45% 16%);
@@ -98,7 +98,7 @@
 
   // Chart / dataviz overrides. Axis/grid/label/title/cursor already flip via the
   // --neutral-* / --text-* roles; only the light-bg-tuned bits move here.
-  --chart-hover-bg-color:     color-mix(in srgb, var(--static-white) 6%, transparent); // light wash (default dark wash is invisible on dark)
+  --chart-hover-bg-color:     hsl(0deg 0% 100% / 6%); // light wash (default dark wash is invisible on dark)
   --chart-tooltip-bg-color:   var(--surface-overlay);  // native dark tooltip, not an inverted light box
   --chart-tooltip-text-color: var(--text-primary);
   --chart-tooltip-border:     var(--border-strong);

@@ -9,7 +9,7 @@
   --_sidenav-item-bg-color-hover:        var(--ds-sidenav-item-bg-color-hover,        var(--surface-secondary));
   --_sidenav-item-bg-color-active:       var(--ds-sidenav-item-bg-color-active,       var(--accent));
   --_sidenav-item-label-color-active:       var(--ds-sidenav-item-label-color-active,       var(--text-on-primary));
-  --_sidenav-item-bg-color-active-hover: var(--ds-sidenav-item-bg-color-active-hover, color-mix(in srgb, var(--_sidenav-item-bg-color-active) 88%, var(--static-white)));
+  --_sidenav-item-bg-color-active-hover: var(--ds-sidenav-item-bg-color-active-hover, color-mix(in srgb, var(--_sidenav-item-bg-color-active) 88%, white));
   --_sidenav-item-rail:            var(--ds-sidenav-item-rail,            var(--secondary));
   --_sidenav-item-radius:          var(--ds-sidenav-item-radius,          var(--radius-md));
   --_sidenav-alert-color:          var(--ds-sidenav-alert-color,          var(--error));

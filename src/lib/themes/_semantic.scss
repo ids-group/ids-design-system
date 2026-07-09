@@ -40,7 +40,7 @@
   /* Visible-on-coloured-fill divider. The split-button right-hand chevron
      sits ON the brand fill, so a transparent white hairline reads correctly
      across any brand hue. Override per theme if the brand is too light. */
-  --btn-split-divider: color-mix(in srgb, var(--static-white) 25%, transparent);
+  --btn-split-divider: hsl(0deg 0% 100% / 25%);
 
   /* Visited link — derives from --primary-muted by default so it sympathetically
      shifts with the brand hue. Override (e.g. for financial dashboards that
@@ -65,22 +65,22 @@
 
   /* Text overlaid on arbitrary imagery (camera feeds, photos) — pairs a
      guaranteed-light colour with a contrast shadow. */
-  --text-on-media:        var(--static-white);
-  --text-on-media-shadow: 0 1px 3px color-mix(in srgb, var(--static-black) 70%, transparent);
+  --text-on-media:        white;
+  --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
   --text-link:         var(--blue-700);
-  --text-on-primary:     var(--static-white);
-  --text-on-success:   var(--static-white);
+  --text-on-primary:     white;
+  --text-on-success:   white;
 
   /* Warning fill is yellow (--yellow-400 #F4D43A) — white text on it is only
      ~1.5:1 (fails WCAG). On-warning text is the darkest neutral (~10:1). */
   --text-on-warning:   var(--static-ink);
-  --text-on-error:     var(--static-white);
+  --text-on-error:     white;
 
   /* Icons */
   --icon-default:      var(--neutral-500);
   --icon-strong:       var(--neutral-700);
   --icon-muted:        var(--neutral-400);
-  --icon-on-primary:     var(--static-white);
+  --icon-on-primary:     white;
 
   /* Semantic → palette bridge. The lib knows colours by PURPOSE; the theme
      (themes/light/_theme.scss) ships the concrete ramps + HSL channels. This
@@ -108,14 +108,14 @@
      hue can still override these tokens directly.
      Step sizes (12% / 24% darker) mirror the blue 600→700→800 ramp. */
   --primary:                 var(--blue-600);
-  --primary-hover:           color-mix(in srgb, var(--primary) 88%, var(--static-black));
-  --primary-pressed:         color-mix(in srgb, var(--primary) 76%, var(--static-black));
-  --primary-selected-hover:  color-mix(in srgb, var(--primary) 88%, var(--static-black));
+  --primary-hover:           color-mix(in srgb, var(--primary) 88%, black);
+  --primary-pressed:         color-mix(in srgb, var(--primary) 76%, black);
+  --primary-selected-hover:  color-mix(in srgb, var(--primary) 88%, black);
   --primary-subtitle:          var(--blue-50);
   --primary-muted:           var(--blue-100);
   --primary-muted-strong:    var(--blue-200);
   --primary-strong:          var(--blue-700);
-  --primary-on:              var(--static-white);
+  --primary-on:              white;
 
   /* Accent / secondary role — maps onto the palette --orange family (Tier-1),
      kept distinct from --primary so the brand slots read apart. Override
@@ -127,8 +127,8 @@
   --secondary-l:       var(--orange-l);
 
   --secondary:         hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l));
-  --secondary-hover:   color-mix(in srgb, var(--secondary) 88%, var(--static-black));
-  --secondary-pressed: color-mix(in srgb, var(--secondary) 76%, var(--static-black));
+  --secondary-hover:   color-mix(in srgb, var(--secondary) 88%, black);
+  --secondary-pressed: color-mix(in srgb, var(--secondary) 76%, black);
   --secondary-strong:  hsl(var(--secondary-h) var(--secondary-s) calc(var(--secondary-l) - 11%));
   --secondary-subtitle:  hsl(var(--secondary-h) 100% 97%);
   --secondary-muted:   hsl(var(--secondary-h) 95% 94%);
@@ -147,8 +147,8 @@
   --tertiary-l:       var(--violet-l);
 
   --tertiary:         hsl(var(--tertiary-h) var(--tertiary-s) var(--tertiary-l));
-  --tertiary-hover:   color-mix(in srgb, var(--tertiary) 88%, var(--static-black));
-  --tertiary-pressed: color-mix(in srgb, var(--tertiary) 76%, var(--static-black));
+  --tertiary-hover:   color-mix(in srgb, var(--tertiary) 88%, black);
+  --tertiary-pressed: color-mix(in srgb, var(--tertiary) 76%, black);
   --tertiary-strong:  hsl(var(--tertiary-h) var(--tertiary-s) calc(var(--tertiary-l) - 11%));
   --tertiary-subtitle:  hsl(var(--tertiary-h) 100% 97%);
   --tertiary-muted:   hsl(var(--tertiary-h) 95% 94%);
@@ -161,7 +161,7 @@
      hue. -text / -border / -subtle / -muted stay as ramp picks because their
      contrast targets are tuned, not procedural. */
   --success:           var(--green-500);
-  --success-hover:     color-mix(in srgb, var(--success) 88%, var(--static-black));
+  --success-hover:     color-mix(in srgb, var(--success) 88%, black);
   --success-subtitle:    var(--green-50);
   --success-muted:     var(--green-100);
   --success-muted-strong: var(--green-200);
@@ -169,7 +169,7 @@
   --success-text:      var(--green-700);
 
   --warning:           var(--yellow-400);
-  --warning-hover:     color-mix(in srgb, var(--warning) 88%, var(--static-black));
+  --warning-hover:     color-mix(in srgb, var(--warning) 88%, black);
   --warning-subtitle:    var(--yellow-50);
   --warning-muted:     var(--yellow-100);
   --warning-muted-strong: var(--yellow-200);
@@ -177,8 +177,8 @@
   --warning-text:      var(--yellow-700);
 
   --error:            var(--red-500);
-  --error-hover:      color-mix(in srgb, var(--error) 88%, var(--static-black));
-  --error-pressed:    color-mix(in srgb, var(--error) 76%, var(--static-black));
+  --error-hover:      color-mix(in srgb, var(--error) 88%, black);
+  --error-pressed:    color-mix(in srgb, var(--error) 76%, black);
   --error-subtitle:     var(--red-50);
   --error-muted:      var(--red-100);
   --error-muted-strong: var(--red-200);
@@ -187,14 +187,14 @@
 
   /* -pressed (success/warning) + -on aliases — added for the --accent-* pointer
      family so every ds-color family resolves --accent-pressed / --accent-on. */
-  --success-pressed:  color-mix(in srgb, var(--success) 76%, var(--static-black));
-  --warning-pressed:  color-mix(in srgb, var(--warning) 76%, var(--static-black));
+  --success-pressed:  color-mix(in srgb, var(--success) 76%, black);
+  --warning-pressed:  color-mix(in srgb, var(--warning) 76%, black);
   --error-on:         var(--text-on-error);
   --success-on:       var(--text-on-success);
   --warning-on:       var(--text-on-warning);
 
   --info:              var(--sky-500);
-  --info-hover:        color-mix(in srgb, var(--info) 88%, var(--static-black));
+  --info-hover:        color-mix(in srgb, var(--info) 88%, black);
   --info-subtitle:       var(--sky-50);
   --info-muted:        var(--sky-100);
   --info-border:       var(--sky-200);
