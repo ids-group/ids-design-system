@@ -66,8 +66,10 @@ to do safely. A behavioral change is NOT sent to manual just for being behaviora
 ## Phase A — Run setup (do once)
 
 1. **Confirm consumer + find targets.** Read `package.json`; find `@ids-group-ltd/ids-design-system`
-   in dependencies/devDependencies. In a monorepo, search every `package.json` (skip
-   `node_modules`) for the dependency. If none declares it → report "this repo does not depend on
+   in dependencies/devDependencies. In a monorepo, locate the declaring manifests by
+   CONTENT-searching for the package name across `**/package.json` (ripgrep-style search skips
+   gitignored `node_modules`); do not glob/list all `package.json` files — that floods the result
+   with `node_modules` copies. If none declares it → report "this repo does not depend on
    the design system" and stop. If MORE THAN ONE does → list them and AskUserQuestion which
    consumer(s) to update (default: all). Each selected manifest is a **target**.
 2. **Source root per target** = the folder containing that `package.json`; use its `src/` if
