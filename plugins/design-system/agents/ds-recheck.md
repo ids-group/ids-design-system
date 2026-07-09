@@ -30,9 +30,14 @@ Two verification modes:
   1. **Scope to the item's target element.** An attribute/class NAME can exist on other components,
      so an unscoped grep for the value false-positives on the wrong element — only count matches on
      the target element. A false positive here wrongly reports `migrated:false` and stalls the run.
-  2. **Still-valid values don't count as "old remaining":** a `map` value that keeps the same token,
-     AND any value with no entry in `map` at all (the changelog documented no change for it). Require
-     **0** only of the values the `map` actually removes or renames.
+  2. **Only map-removed values count as "old remaining"** — decide per value by its `map` entry,
+     never by pattern-similarity to a listed value:
+
+     | value's entry in `map` | counts as "old remaining"? |
+     |---|---|
+     | renamed / moved / `null` (dropped) | yes — require **0** occurrences |
+     | maps to itself (same token) | no — still valid |
+     | ABSENT from `map` | no — the changelog documented no change for it |
   Applier-`needsReview` occurrences (unresolvable dynamic bindings) go in `remaining` but are NOT
   failures — tag each with a `reason` so a human can tell an excused leftover from a real miss.
 - **`scss-api` / `code-add`:** confirm the old path/symbol is gone (scss-api), or that the required

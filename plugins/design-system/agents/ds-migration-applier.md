@@ -25,13 +25,20 @@ do; you execute it.
     since `-` is not a regex word boundary — match full names). **If `new` is null the API was
     removed** — delete the usage/override; if deleting isn't safe standalone, record `needsReview`.
   - **`value-remap`** (has a `map`): only the attribute's VALUES change, and only on the item's
-    target element. For each matched occurrence, look up its value in `map` and replace the WHOLE
-    `attr="value"` token with the map value, or DROP the attribute when the map value is `null`. Leave
-    a value untouched if its map entry keeps the same token, OR if the value has no entry in `map` at
-    all (the changelog documented no change for it — never guess). **Dynamic bindings**
-    (`[attr]="expr"`): if the `note` says the value moved to a different attribute, rebind the whole
-    attribute accordingly; if a method/field supplies old values, remap the literals it returns and
-    its type annotation. Any binding you cannot confidently resolve → leave it, record `needsReview`.
+    target element. `map` is the CLOSED set of documented changes — decide every matched occurrence
+    by its own lookup, never by pattern-similarity to a value that IS listed:
+
+    | matched value's entry in `map` | action |
+    |---|---|
+    | a replacement token (`attr="newVal"` / `otherAttr="val"`) | replace the WHOLE `attr="oldValue"` token with it |
+    | `null` | DROP the attribute |
+    | maps to itself (same token) | leave untouched — still valid |
+    | ABSENT from `map` | leave untouched — the changelog documented no change for it; never guess |
+
+    **Dynamic bindings** (`[attr]="expr"`): if the `note` says the value moved to a different
+    attribute, rebind the whole attribute accordingly; if a method/field supplies old values, remap
+    the literals it returns and its type annotation. Any binding you cannot confidently resolve →
+    leave it, record `needsReview`.
   - **`scss-api`**: update the `@use` path / `namespace.symbol` per `old`→`new` in the stylesheet.
   - **`code-add`**: insert the snippet from `new` at the location `note` describes — but ONLY if
     THIS file is that location (e.g. the app config, the global styles entry, the relevant usage).
