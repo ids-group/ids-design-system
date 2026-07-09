@@ -9,9 +9,6 @@
       border-radius: var(--radius-lg);
     }
 
-    /* secondary/tertiary render as distinct hues via the docs-global showcase
-       theme (styles/_showcase-theme.scss), not a per-section override. */
-
     /* ---------- states matrix (button-specific; color × variant uses docs-matrix) ---------- */
     .matrix-scroll { overflow-x: auto; margin-top: var(--space-3); }
     .matrix {

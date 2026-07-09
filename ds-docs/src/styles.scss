@@ -10,9 +10,6 @@
 @use 'styles/theme-activation';
 @use 'styles/tokens';
 @use 'styles/tokens-charts';
-// Docs-only: re-hue secondary/tertiary so multi-hue shows across the showcase
-// (core ships single-hue). Must load after theme-activation to win the cascade.
-@use 'styles/showcase-theme';
 @use 'styles/fonts';
 @use 'styles/reset';
 @use 'styles/typography';
