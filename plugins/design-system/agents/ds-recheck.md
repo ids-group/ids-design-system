@@ -48,6 +48,10 @@ Two verification modes:
   `note` describes NO consumer action (purely visual/informational), return `migrated: true` with
   `note: "no consumer action required"`. Always set `confidence` (high/medium/low) — the orchestrator
   escalates low-confidence and failed items.
+- **Not-applicable items** (the finder reported zero hits, so nothing was applied): your grep is the
+  independent confirmation of that verdict. Clean grep → `migrated: true`,
+  `note: "not applicable — zero usages"`. Usages found → `migrated: false` with them in `remaining`
+  (the finder missed them; the orchestrator re-enters the item into the pipeline).
 - Do NOT edit anything.
 
 ## Output

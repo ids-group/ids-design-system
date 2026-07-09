@@ -12,11 +12,17 @@ you read, never from prior knowledge of any particular component. Your job: read
 each documented breaking/behavioural change into ONE structured, machine-actionable item.
 
 ## What to read
-- Actionable items come from **`### Breaking`** and **`### Changed`**. `### Added` / `### Fixed`
-  are non-actionable → summarize them in `informational`.
-- Safety net for older flat-list entries with no `###` subsections: treat a bullet whose text
-  starts with a bold `**Breaking:**` / `**Changed:**` marker as actionable, the rest as informational.
-- Never invent API not present in the block. If there are no Breaking/Changed items, return an
+- **Decide actionability by CONTENT, not by section name.** An entry is actionable when it documents
+  a change after which existing consumer code no longer works or behaves as before — something
+  renamed, removed, retyped, revalued, restructured, newly required, or behaving differently.
+  Section names are only a prior: `Breaking` / `Changed` / `Removed` / `Deprecated` usually hold
+  actionable entries; `Added` / `Fixed` usually don't (→ `informational`). Read EVERY section and
+  judge each entry on its own text — an actionable entry is actionable wherever it sits: under an
+  unfamiliar heading, in a flat list with no headings at all, or marked inline (`**Breaking:**`).
+- **One bullet may hold several mechanical units.** A single changelog bullet often documents a
+  compound change (e.g. a component rename that also renames its types and tokens) — split it into
+  one item per mechanical unit. Conversely, never merge unrelated bullets into one item.
+- Never invent API not present in the block. If nothing in the block is actionable, return an
   empty `items` array.
 
 ## Classifying each change (`kind`)
@@ -42,7 +48,10 @@ Pick the kind that lets a downstream agent act mechanically. All specifics come 
   element that must now be wrapped, an attribute that became a projected slot, a changed event
   payload, a changed default the consumer relied on, etc.). `new: null`. **Put the CONCRETE
   migration steps the changelog describes in `note`** — this workflow is full-auto, so the applier
-  will ATTEMPT them; the more actionable your `note`, the better it succeeds.
+  will ATTEMPT them; the more actionable your `note`, the better it succeeds. If the changelog
+  prescribes RUNNING something (a codemod, schematic, script) rather than editing, quote the exact
+  command in `note` and say explicitly that it is a command — the orchestrator runs those itself
+  (with user approval), never the applier.
 - **No consumer action?** If a documented breaking/changed item needs NO code edit from the consumer
   (purely visual — e.g. a new press animation or a restyle), do NOT make it an item — list it in
   `informational` so it's an FYI, not an attempted or manual-review task.

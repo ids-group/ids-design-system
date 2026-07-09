@@ -53,6 +53,9 @@ do; you execute it.
     to do safely, OR the `note` describes no concrete consumer action (a purely visual/informational
     change with nothing to edit — say exactly that in `why`; do NOT invent an edit for it).
 - Keep the diff minimal; follow the file's existing formatting.
+- **Several items on the same line/tag** (e.g. a selector rename plus a value remap hitting the same
+  element): apply them together coherently — the hits reference the ORIGINAL line, so one item's
+  edit must not orphan or double-apply another's.
 - **Do NOT restructure public API or framework declarations.** (Angular fact: an `input()` /
   `output()` bound by a parent template must stay public — making it private/protected breaks the
   build.) Don't rename or change the visibility of public members. If a correct migration would

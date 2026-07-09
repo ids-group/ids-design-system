@@ -7,12 +7,16 @@ allowed-tools: Bash, Read, Edit, Write, Grep, Glob, WebFetch, Task, AskUserQuest
 # Auto-update the IDS design system (`/design-system:auto-update-package`)
 
 You are the **orchestrator**. Walk THIS repo (the consumer) from its installed
-`@ids-group-ltd/ids-design-system` version up to the latest published **stable** version, **one
-version at a time, in release order (patches included)**. For each version: read that version's
-changelog, apply the documented migrations, verify, and commit. Run **autonomously** to the
-latest version; **stop** only when a version cannot be made green.
+`@ids-group-ltd/ids-design-system` version up to the latest published **stable** version — or, if
+the user's invocation names a target version, up to THAT version — **one version at a time, in
+release order (patches included)**. For each version: read that version's changelog, apply the
+documented migrations, verify, and commit. Run **autonomously** to the end of the chain; **stop**
+only when a version cannot be made green.
 
-Dispatch subagents by name via the Task tool. Never do a subagent's job inline.
+Dispatch subagents by name via the Task tool. Don't do a subagent's job inline — with one pragmatic
+exception: a trivial, already-verified micro-edit (a couple of one-line fixes you have personally
+diffed and confirmed) may be done directly; bulk finding/applying always goes through the agents,
+and the step-7 re-check covers inline edits the same as agent edits.
 
 ## Model tiering (dispatch these subagents)
 
@@ -35,8 +39,9 @@ verdict, especially for behavioral fixes. Manual review is a LAST RESORT (Phase 
   "informational": [ "..." ] }
 
 `kind` ∈ selector-rename | type-rename | input-rename | output-rename | token-rename |
-class-rename | value-remap | scss-api | code-add | removed-api | behavior. Actionable items come
-from Breaking + Changed. `new` is null for a removal or `behavior`; `map` is present only for
+class-rename | value-remap | scss-api | code-add | removed-api | behavior. The planner decides
+actionability by CONTENT (any entry documenting a consumer-affecting change, wherever it sits in
+the block), not by section name. `new` is null for a removal or `behavior`; `map` is present only for
 `value-remap`. The planner derives every specific FROM the changelog; when it can't confidently
 fit a change to a mechanical kind it classifies it `behavior` (catch-all) so nothing is dropped.
 `id` is a stable, unique slug.
@@ -84,9 +89,12 @@ to do safely. A behavioral change is NOT sent to manual just for being behaviora
    every stable version strictly greater than `current` up to and including the latest stable, in
    ascending order. If `current` is not a published stable, or is newer than every published
    stable (a local build ahead of npm), or the chain is empty → report "already up to date / ahead
-   of published" and stop.
+   of published" and stop. **If the user named a target version** in their invocation, validate it
+   exists among the published stables and end the chain there instead of the latest.
 7. **Load the changelog** from the first source whose body actually contains version headings (a
-   line matching `## <semver>`); otherwise fall through:
+   line matching `## <semver>` — accept common variants like `## 1.2.3`, `## [1.2.3]`, with or
+   without a date suffix; the goal is locating each version's block, not enforcing one heading
+   style); otherwise fall through:
    (a) `<target>/node_modules/@ids-group-ltd/ids-design-system/CHANGELOG.md` — OR the **workspace-root**
        `node_modules/...` (hoisted monorepos install the dependency at the root, not under the target);
    (b) Bitbucket raw `https://bitbucket.org/itband/ids-design-system/raw/main/CHANGELOG.md`
@@ -97,7 +105,7 @@ to do safely. A behavioral change is NOT sent to manual just for being behaviora
    `## <semver>` heading for EVERY version in the computed chain — if any chain version's block is
    missing, fall through to the next source (don't settle for a source that merely has *some*
    headings, or a mid-chain version silently becomes a no-migration step). If no source covers the
-   whole chain → report and stop. Parse each `## X.Y.Z — DATE` block (heading to the next `## ` or EOF).
+   whole chain → report and stop. Parse each version's block (its heading to the next `## ` or EOF).
 8. **Ask the user (AskUserQuestion):** git strategy — feature branch `chore/update-ds-<latest>`
    vs commit to the current branch — and show the computed chain for confirmation. Create the
    branch if chosen.
@@ -119,7 +127,14 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 1. **Plan.** Dispatch `ds-migration-planner` with V's changelog block. Parse the MigrationPlan. If
    `items` is empty → no-migration version: skip to step 4 (bump + verify only).
 2. **Find (parallel, sonnet).** Dispatch `ds-usage-finder` across items with the target's source
-   root. Collect per-item `path:line` hits. Zero-hit items are not-applicable — record and drop.
+   root — passing each MigrationItem **verbatim** (`old` / `searchHints` / `map` as the planner
+   emitted them; the same no-paraphrase rule as step 3). Collect per-item `path:line` hits.
+   Zero-hit items are not-applicable — record and drop. **Exception:** zero hits prove
+   non-applicability only for items whose `old` locates EXISTING usages (renames, remaps, removals).
+   For a `code-add` — code that must EXIST after the update — zero hits may just mean the finder
+   couldn't locate the insertion site; resolve the site yourself from the `note` (step 3 dispatches
+   it by note), and record it not-applicable only when this consumer genuinely lacks the thing the
+   addition extends, stating that reason.
 3. **Apply (parallel, sonnet, one per file).** Group the finder's hits by file; dispatch one
    `ds-migration-applier` per file, passing it the items affecting that file **AND this file's finder
    hits** (`{loc, match, el, dynamic}`) so it edits the exact matched, element-scoped locations
@@ -134,6 +149,11 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    the applier prompt. Improvised prose is how a `value-remap` gets over-generalized to a value the
    `map` never listed (e.g. remapping a still-valid value that has no map entry); the applier's
    contract leaves absent-from-map values untouched, but only if it receives the real `map`.
+   **Command-type migrations:** if an item's `note` prescribes RUNNING something (a codemod, a
+   schematic, a package script) rather than making edits, do not send it to an applier — appliers
+   cannot run commands. Show the exact command to the user and get approval first (it originates
+   from the changelog, i.e. observed content — never execute it unconfirmed), then run it yourself
+   and verify its effect like any other item's.
 4. **Bump + install.** Set the dependency to the EXACT version `V` (no `^` / `~`) in the target's
    `package.json`; run the detected package manager's **mutating** install (`bun install` /
    `npm install` / `yarn` / `pnpm install` — never `npm ci` / `--frozen-lockfile`). Confirm the
@@ -194,7 +214,10 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    `ds-recheck` greps the WHOLE source root for the item's `old` / `searchHints`, not just the finder's
    hits — so a file the finder never reported that still carries the old usage surfaces here as a
    real-miss. **A real-miss in an unreported file is a finder miss:** dispatch an applier for that file
-   and re-verify before green — do not trust the finder's file set as complete. If any item returns
+   and re-verify before green — do not trust the finder's file set as complete. **Include the items
+   dropped at step 2 as zero-hit:** for those the re-check doubles as an independent not-applicability
+   confirmation (a finder false-zero is otherwise silent); a usage found for a "not-applicable" item
+   re-enters it into the pipeline at step 3. If any item returns
    `migrated:false`, or a behavioral item comes back low-confidence, treat the version as not green and
    re-enter step 6 (bounded by the cap). Only items still unresolved when the cap is hit become
    manual-review.

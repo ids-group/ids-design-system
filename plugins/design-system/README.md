@@ -41,10 +41,12 @@ repository access token). Manual install/update needs nothing extra.
 
 ## Scope & limits
 
-- Steps through every published **stable** version (prereleases skipped).
+- Steps through every published **stable** version (prereleases skipped); by default up to the
+  latest, or up to a target version you name when invoking the command.
 - "Green" per version = build/typecheck passes **and** no renamed old API remains in the code.
-- Mechanical renames (selector/input/output/token/type) are applied and re-checked automatically;
-  `removed-api` and `behavior` changes are applied only when a clear mechanical rewrite exists,
-  otherwise surfaced for manual review.
+- **Full-auto:** every documented change is attempted — mechanical renames/remaps verified by grep,
+  behavioral changes applied per the changelog's migration notes and verified semantically. Manual
+  review is a last resort (only what the auto attempt + fix loop could not make green); visual-only
+  edits are committed but flagged "applied — human should eyeball" in the report.
 - If a target's Angular (or other peer) version doesn't satisfy a release's peer range, the run
   stops with that reason rather than trying to upgrade Angular for you.
