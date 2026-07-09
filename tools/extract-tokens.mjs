@@ -140,48 +140,246 @@ const orphaned = Object.keys(DESCRIPTIONS).filter((k) => !names.has(k));
 console.log(`tokens: ${all.length}, undescribed: ${undescribed.length}, orphaned: ${orphaned.length}`);
 if (orphaned.length) console.warn('orphaned descriptions:\n  ' + orphaned.join('\n  '));
 
-// Scatter globals into component groups (by owning folder), else by category.
+// ============================================================================
+// CONFIG-DRIVEN EMIT
+// Rebuild every named array the ORIGINAL section imported — auto-populated from
+// the live `all` list by prefix rules. `used` tracks every token a rule claims;
+// whatever is left over lands in NEW_TOKENS so a newly-added token can never
+// silently go missing from the reference.
+// ============================================================================
+
+const used = new Set();
+const globalsOnly = all.filter((t) => t.category !== 'component');
+const byName = new Map(all.map((t) => [t.name, t]));
+
+/** Globals (SCSS declaration order) matching a prefix regex, claimed as `used`. */
+function pick(re, extraNames = []) {
+  const out = [];
+  for (const t of globalsOnly) {
+    if (used.has(t.name)) continue;
+    if (re.test(t.name)) { used.add(t.name); out.push(t); }
+  }
+  for (const name of extraNames) {
+    const t = byName.get(name);
+    if (t && !used.has(name)) { used.add(name); out.push(t); }
+  }
+  return out;
+}
+
+// ---- Colour roles (ColourRow) ---------------------------------------------
+const INVERTED = /(-on-|--text-on-|--icon-on-|-inverted|-on$|on-media)/;
+const colourRow = (t) => ({
+  name: t.name, value: t.value, notes: t.notes,
+  ...(INVERTED.test(t.name) ? { inverted: true } : {}),
+});
+const SEMANTIC_PRIMARY = pick(/^--primary/).map(colourRow);
+const SEMANTIC_TERTIARY = pick(/^--tertiary/).map(colourRow);
+const SEMANTIC_ERROR = pick(/^--error/).map(colourRow);
+const SEMANTIC_SUCCESS = pick(/^--success/).map(colourRow);
+const SEMANTIC_WARNING = pick(/^--warning/).map(colourRow);
+const SEMANTIC_INFO = pick(/^--info/).map(colourRow);
+const SEMANTIC_TEXT = pick(/^--text-/).map(colourRow);
+const SEMANTIC_SURFACE = pick(/^--surface-/).map(colourRow);
+const SEMANTIC_BORDER = pick(/^--border-(?!width-)/).map(colourRow);
+const SEMANTIC_FOCUS = pick(/^--focus-/).map(colourRow);
+
+// ---- Colour ramps (RampSpec) ----------------------------------------------
+// Fixed labels/prefixes/notes VERBATIM from the original; stops auto-derived
+// from which --<prefix>-<n> tokens actually exist (sorted numerically).
+const RAMP_SPEC = [
+  { label: 'Neutral', prefix: 'neutral', notes: '13 stops. Base for surface/border/text.' },
+  { label: 'Blue (primary)', prefix: 'blue', notes: 'HSL-channel split — default theme maps --primary here; drives focus halos and re-skin.' },
+  { label: 'Orange', prefix: 'orange', notes: 'Secondary signal, focus accent.' },
+  { label: 'Green (success)', prefix: 'green', notes: 'Status — success / confirmed.' },
+  { label: 'Yellow (warning)', prefix: 'yellow', notes: 'Status — attention / warning.' },
+  { label: 'Red (error)', prefix: 'red', notes: 'HSL-channel split — default theme maps --error here; drives error halos.' },
+  { label: 'Sky (info)', prefix: 'sky', notes: 'Informational — a brighter blue, distinct from the primary --blue ramp.' },
+];
+const RAMPS = RAMP_SPEC.map(({ label, prefix, notes }) => {
+  const stopRe = new RegExp(`^--${prefix}-(\\d+)$`);
+  const stops = [];
+  for (const t of globalsOnly) {
+    const m = t.name.match(stopRe);
+    if (m) { stops.push(Number(m[1])); used.add(t.name); }
+  }
+  stops.sort((a, b) => a - b);
+  return { label, prefix, stops, notes };
+});
+
+// ---- Scales ---------------------------------------------------------------
+const scaleRow = (t) => ({ name: t.name, value: t.value, notes: t.notes });
+const SPACING = pick(/^--space-/, ['--ds-container-pad']).map(scaleRow);
+const RADIUS = pick(/^--radius-/).map(scaleRow);
+
+// Shadows: alias = the value when it is a single var(--shadow-N) alias or a
+// channel value (pure number / percentage); else '' so --shadow-1..4 keep an
+// empty alias and hasShadowSample() renders the box-shadow preview.
+const SHADOWS = pick(/^--shadow-/, ['--text-on-media-shadow']).map((t) => {
+  const isAlias = /^var\(--shadow-\d+\)$/.test(t.value);
+  const isChannel = /^-?[\d.]+%?$/.test(t.value);
+  return { name: t.name, alias: isAlias || isChannel ? t.value : '', notes: t.notes };
+});
+
+const MOTION_DUR = pick(/^--duration-/).map(scaleRow);
+const MOTION_EASE = pick(/^--ease-/).map(scaleRow);
+const DENSITY_HIT = pick(/^--hit-/).map(scaleRow);
+const LAYOUT_BP = pick(/^--bp-/).map(scaleRow);
+const LAYOUT_COL = pick(/^--col-cap-/).map(scaleRow);
+const ICONS = pick(/^--icon-(2xs|xs|sm|md|lg)$/).map(scaleRow);
+
+// Misc — carry a renderAs the template switches on.
+const miscRow = (renderAs) => (t) => ({ name: t.name, value: t.value, renderAs, notes: t.notes });
+const MISC_BW = pick(/^--border-width-/).map(miscRow('bar'));
+const MISC_OPACITY = pick(/^--opacity-/).map(miscRow('opacity'));
+const MISC_BLUR = pick(/^--blur-/).map(miscRow('literal'));
+
+// Density tiers — fixed pseudo-rows VERBATIM (not real tokens; nothing claimed).
+const DENSITY_TIERS = [
+  { name: 'ultra-compact', value: '24px hit', notes: 'Power-user tier — keyboard-first, opt-in only.' },
+  { name: 'compact', value: '32px hit', notes: 'Dense desktop default.' },
+  { name: 'cozy', value: '40px hit', notes: 'Default — most products.' },
+  { name: 'comfy', value: '48px hit', notes: 'Touch-friendly.' },
+];
+
+// ---- Typography (TypeRow) -------------------------------------------------
+// sample specimens reuse the original strings; families/weights/etc. use a short
+// specimen per kind. Sizes → 'Aa' by default; weights/LH/LS → a descriptive line.
+const typeRow = (sampleClass, sampleFor) => (t) => ({
+  name: t.name, value: t.value, sample: sampleFor(t), sampleClass, notes: t.notes,
+});
+const TYPOGRAPHY_FONT = pick(/^--font-(sans|serif|mono|display|heading)/)
+  .map(typeRow('sample-font', (t) =>
+    t.name === '--font-mono' ? 'const total = items.reduce(sum, 0);'
+      : 'The quick brown fox jumps over the lazy dog'));
+const TYPOGRAPHY_SIZE = pick(/^--font-size-/)
+  .map(typeRow('sample-fs', (t) => (t.name === '--font-size-mono' ? 'const x = 42;' : 'Aa')));
+const TYPOGRAPHY_LH = pick(/^--line-height-/)
+  .map(typeRow('sample-lh', () => 'Base leading — body copy\nand most UI.'));
+const TYPOGRAPHY_LS = pick(/^--letter-spacing-/)
+  .map(typeRow('sample-ls', () => 'The quick brown fox'));
+const TYPOGRAPHY_FW = pick(/^--font-weight-/)
+  .map(typeRow('sample-fw', () => 'The quick brown fox'));
+
+// ---- Component tokens (ComponentTokenGroup) -------------------------------
+// Each folder owns its --ds-<folder>-* reads PLUS scattered global geometry
+// --<folder>-* (longest-prefix owner match). Groups sorted alphabetically by
+// component; tokens within a group keep extraction order.
 const folderSet = readdirSync(join(ROOT, 'src/lib/components'))
   .filter((e) => statSync(join(ROOT, 'src/lib/components', e)).isDirectory());
 function ownerFolder(name) {                 // longest `--<folder>-` prefix match
   const hits = folderSet.filter((f) => name.startsWith(`--${f}-`));
   return hits.sort((a, b) => b.length - a.length)[0] || null;
 }
-const CATEGORY_LABEL = {
-  spacing: 'Spacing', radius: 'Radius', elevation: 'Elevation', motion: 'Motion',
-  density: 'Density / hit targets', layout: 'Layout', icons: 'Icon sizes',
-  typography: 'Typography', 'colour-role': 'Colour roles', 'colour-ramp': 'Colour ramps',
-  misc: 'Misc', uncategorized: 'Uncategorized',
-};
-const toRow = (t) => ({
-  name: t.name, value: t.value, notes: t.notes,
-  kind: kindOf(t.name, t.value, t.category),
-  ...(invertedOf(t.name) ? { inverted: true } : {}),
-});
-const compGroups = {};   // folder -> rows[]
-const catGroups = {};    // category -> rows[]
+const componentRow = (t) => ({ name: t.name, value: t.value, notes: t.notes });
+const compGroups = {};   // folder -> rows[] (extraction order)
 for (const t of all) {
-  if (t.category === 'component') { (compGroups[t.component] ??= []).push(toRow(t)); continue; }
-  const owner = ownerFolder(t.name);
-  if (owner) (compGroups[owner] ??= []).push(toRow(t));
-  else (catGroups[t.category] ??= []).push(toRow(t));
+  if (used.has(t.name)) continue;
+  let folder = null;
+  if (t.category === 'component') folder = t.component;
+  else folder = ownerFolder(t.name);
+  if (!folder) continue;
+  used.add(t.name);
+  (compGroups[folder] ??= []).push(componentRow(t));
 }
+const titleCaseFolder = (s) =>
+  s.replace(/(^|-)([a-z])/g, (_, d, c) => (d ? ' ' : '') + c.toUpperCase()).trim();
+const COMPONENT_TOKENS = Object.keys(compGroups)
+  .sort((a, b) => titleCaseFolder(a).localeCompare(titleCaseFolder(b)))
+  .map((folder) => ({
+    component: titleCaseFolder(folder),
+    selector: `.${folder}`,
+    description: '',
+    tokens: compGroups[folder],
+  }));
 
-// Serialize the uniform model.
-const COMPONENT_GROUPS = Object.keys(compGroups).sort()
-  .map((folder) => ({ title: titleCase(folder), subtitle: `ds-${folder}`, rows: compGroups[folder] }));
-const CAT_ORDER = ['colour-role','colour-ramp','spacing','radius','typography','elevation','motion','density','icons','layout','misc','uncategorized'];
-const GLOBAL_GROUPS = CAT_ORDER.filter((c) => catGroups[c])
-  .map((c) => ({ title: CATEGORY_LABEL[c], subtitle: c, rows: catGroups[c] }));
-const TOKEN_STATS = { total: all.length, undescribed: undescribed.length };
+// ---- NEW / unresolved -----------------------------------------------------
+// Everything not claimed above (e.g. --secondary-*, --accent-*, --status-*,
+// --link-*, --scrollbar-*, --layer-*, chart tokens, misc geometry with no owner).
+const NEW_TOKENS = all
+  .filter((t) => !used.has(t.name))
+  .map((t) => ({ name: t.name, value: t.value, kind: kindOf(t.name, t.value, t.category) }))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+// ---- Emit -----------------------------------------------------------------
+const stringify = (v) => JSON.stringify(v, null, 2);
+const constLine = (name, type, value) =>
+  `export const ${name}: readonly ${type}[] = ${stringify(value)};\n`;
 
 const OUT = join(ROOT, 'ds-docs/src/app/sections/tokens-reference/tokens.generated.ts');
 const banner = '// AUTO-GENERATED by tools/extract-tokens.mjs — do not edit. Run `npm run extract-tokens`.\n'
-  + '// Token descriptions live in token-descriptions.json.\n\n';
-const body =
-  `import type { GenTokenGroup } from './tokens-reference.types';\n\n`
-  + `export const COMPONENT_GROUPS: readonly GenTokenGroup[] = ${JSON.stringify(COMPONENT_GROUPS, null, 2)};\n\n`
-  + `export const GLOBAL_GROUPS: readonly GenTokenGroup[] = ${JSON.stringify(GLOBAL_GROUPS, null, 2)};\n\n`
-  + `export const TOKEN_STATS = ${JSON.stringify(TOKEN_STATS)} as const;\n`;
+  + '// Every reference array is auto-populated from the live SCSS tokens by prefix rules.\n'
+  + '// Tokens matching no section land in NEW_TOKENS and render in the "New / unresolved\n'
+  + '// tokens" group at the top of the reference until someone files them into a section.\n\n';
+
+const body = [
+  `import type {`,
+  `  ColourRow,`,
+  `  RampSpec,`,
+  `  TypeRow,`,
+  `  SpacingRow,`,
+  `  RadiusRow,`,
+  `  ShadowRow,`,
+  `  MotionRow,`,
+  `  SizeRow,`,
+  `  LayoutRow,`,
+  `  MiscRow,`,
+  `  ComponentTokenGroup,`,
+  `} from './tokens-reference.types';`,
+  ``,
+  `export interface NewToken { name: string; value: string; kind: string; }`,
+  ``,
+  constLine('SEMANTIC_PRIMARY', 'ColourRow', SEMANTIC_PRIMARY),
+  constLine('SEMANTIC_TERTIARY', 'ColourRow', SEMANTIC_TERTIARY),
+  constLine('SEMANTIC_ERROR', 'ColourRow', SEMANTIC_ERROR),
+  constLine('SEMANTIC_SUCCESS', 'ColourRow', SEMANTIC_SUCCESS),
+  constLine('SEMANTIC_WARNING', 'ColourRow', SEMANTIC_WARNING),
+  constLine('SEMANTIC_INFO', 'ColourRow', SEMANTIC_INFO),
+  constLine('SEMANTIC_TEXT', 'ColourRow', SEMANTIC_TEXT),
+  constLine('SEMANTIC_SURFACE', 'ColourRow', SEMANTIC_SURFACE),
+  constLine('SEMANTIC_BORDER', 'ColourRow', SEMANTIC_BORDER),
+  constLine('SEMANTIC_FOCUS', 'ColourRow', SEMANTIC_FOCUS),
+  constLine('RAMPS', 'RampSpec', RAMPS),
+  constLine('TYPOGRAPHY_FONT', 'TypeRow', TYPOGRAPHY_FONT),
+  constLine('TYPOGRAPHY_SIZE', 'TypeRow', TYPOGRAPHY_SIZE),
+  constLine('TYPOGRAPHY_LH', 'TypeRow', TYPOGRAPHY_LH),
+  constLine('TYPOGRAPHY_LS', 'TypeRow', TYPOGRAPHY_LS),
+  constLine('TYPOGRAPHY_FW', 'TypeRow', TYPOGRAPHY_FW),
+  constLine('SPACING', 'SpacingRow', SPACING),
+  constLine('RADIUS', 'RadiusRow', RADIUS),
+  constLine('SHADOWS', 'ShadowRow', SHADOWS),
+  constLine('MOTION_DUR', 'MotionRow', MOTION_DUR),
+  constLine('MOTION_EASE', 'MotionRow', MOTION_EASE),
+  constLine('DENSITY_HIT', 'SizeRow', DENSITY_HIT),
+  `export const DENSITY_TIERS: readonly { name: string; value: string; notes: string }[] = ${stringify(DENSITY_TIERS)};\n`,
+  constLine('LAYOUT_BP', 'LayoutRow', LAYOUT_BP),
+  constLine('LAYOUT_COL', 'LayoutRow', LAYOUT_COL),
+  constLine('ICONS', 'SizeRow', ICONS),
+  constLine('MISC_BW', 'MiscRow', MISC_BW),
+  constLine('MISC_OPACITY', 'MiscRow', MISC_OPACITY),
+  constLine('MISC_BLUR', 'MiscRow', MISC_BLUR),
+  constLine('COMPONENT_TOKENS', 'ComponentTokenGroup', COMPONENT_TOKENS),
+  constLine('NEW_TOKENS', 'NewToken', NEW_TOKENS),
+].join('\n');
+
 writeFileSync(OUT, banner + body);
-console.log(`wrote tokens.generated.ts: ${COMPONENT_GROUPS.length} component groups, ${GLOBAL_GROUPS.length} global groups`);
+
+const summary = {
+  SEMANTIC_PRIMARY: SEMANTIC_PRIMARY.length, SEMANTIC_TERTIARY: SEMANTIC_TERTIARY.length,
+  SEMANTIC_ERROR: SEMANTIC_ERROR.length, SEMANTIC_SUCCESS: SEMANTIC_SUCCESS.length,
+  SEMANTIC_WARNING: SEMANTIC_WARNING.length, SEMANTIC_INFO: SEMANTIC_INFO.length,
+  SEMANTIC_TEXT: SEMANTIC_TEXT.length, SEMANTIC_SURFACE: SEMANTIC_SURFACE.length,
+  SEMANTIC_BORDER: SEMANTIC_BORDER.length, SEMANTIC_FOCUS: SEMANTIC_FOCUS.length,
+  RAMPS: RAMPS.length, TYPOGRAPHY_FONT: TYPOGRAPHY_FONT.length,
+  TYPOGRAPHY_SIZE: TYPOGRAPHY_SIZE.length, TYPOGRAPHY_LH: TYPOGRAPHY_LH.length,
+  TYPOGRAPHY_LS: TYPOGRAPHY_LS.length, TYPOGRAPHY_FW: TYPOGRAPHY_FW.length,
+  SPACING: SPACING.length, RADIUS: RADIUS.length, SHADOWS: SHADOWS.length,
+  MOTION_DUR: MOTION_DUR.length, MOTION_EASE: MOTION_EASE.length,
+  DENSITY_HIT: DENSITY_HIT.length, LAYOUT_BP: LAYOUT_BP.length,
+  LAYOUT_COL: LAYOUT_COL.length, ICONS: ICONS.length,
+  MISC_BW: MISC_BW.length, MISC_OPACITY: MISC_OPACITY.length, MISC_BLUR: MISC_BLUR.length,
+  COMPONENT_TOKENS: `${COMPONENT_TOKENS.length} groups / ${COMPONENT_TOKENS.reduce((n, g) => n + g.tokens.length, 0)} tokens`,
+};
+console.log('wrote tokens.generated.ts — per-export counts:');
+for (const [k, v] of Object.entries(summary)) console.log(`  ${k}: ${v}`);
+console.log(`  NEW_TOKENS: ${NEW_TOKENS.length}`);
+console.log(`(of ${all.length} live tokens; ${used.size} placed)`);
