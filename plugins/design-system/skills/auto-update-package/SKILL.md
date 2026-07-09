@@ -74,7 +74,10 @@ to do safely. A behavioral change is NOT sent to manual just for being behaviora
    `yarn.lock`→yarn, `pnpm-lock.yaml`→pnpm.
 5. **Verify command** from `package.json` scripts: prefer a build/typecheck (`build`, `build:*`,
    `ng build`, `tsc`, `typecheck`). If none, AskUserQuestion for the command that proves the app
-   compiles.
+   compiles. If the consumer has NO such command (pure token/SCSS consumer, no TS build) → declare
+   the run **DEGRADED (grep-only)**: warn the user that input value/type and behavioral changes
+   can't be auto-verified, and either apply mechanical items only and escalate every behavioral item
+   to the report unattempted, OR proceed on explicit user opt-in. Never silently downgrade the net.
 6. **Published versions:** `npm view @ids-group-ltd/ids-design-system versions --json`. Keep only
    **stable** `X.Y.Z` (drop any prerelease tag — `-beta`, `-rc`, etc.). Semver-sort. The chain =
    every stable version strictly greater than `current` up to and including the latest stable, in
@@ -83,34 +86,48 @@ to do safely. A behavioral change is NOT sent to manual just for being behaviora
    of published" and stop.
 7. **Load the changelog** from the first source whose body actually contains version headings (a
    line matching `## <semver>`); otherwise fall through:
-   (a) `<target>/node_modules/@ids-group-ltd/ids-design-system/CHANGELOG.md`;
+   (a) `<target>/node_modules/@ids-group-ltd/ids-design-system/CHANGELOG.md` — OR the **workspace-root**
+       `node_modules/...` (hoisted monorepos install the dependency at the root, not under the target);
    (b) Bitbucket raw `https://bitbucket.org/itband/ids-design-system/raw/main/CHANGELOG.md`
        (WebFetch — a private repo may return a login page; reject any body with no `## <semver>`);
    (c) docs site `https://ids-ds.proto.ids-group.co.uk/` (Changelog section).
-   The node_modules copy (a) is the OLD version's changelog, so for a multi-version chain it will
-   usually lack the newest blocks — fall through to (b) when a needed version is missing. If no
-   source yields real markdown with version headings → report and stop. Parse each
-   `## X.Y.Z — DATE` heading's block (heading through the next `## ` heading or EOF).
+   The node_modules copy (a) is the OLD version's changelog, so for a multi-version chain it usually
+   lacks the newest blocks. **Validate per-chain, not per-run:** accept a source only if it has a
+   `## <semver>` heading for EVERY version in the computed chain — if any chain version's block is
+   missing, fall through to the next source (don't settle for a source that merely has *some*
+   headings, or a mid-chain version silently becomes a no-migration step). If no source covers the
+   whole chain → report and stop. Parse each `## X.Y.Z — DATE` block (heading to the next `## ` or EOF).
 8. **Ask the user (AskUserQuestion):** git strategy — feature branch `chore/update-ds-<latest>`
    vs commit to the current branch — and show the computed chain for confirmation. Create the
    branch if chosen.
 
 ## Phase B — Per-version loop (for each target, for each version V in the chain, ascending)
 
-Keep ONE integer `attempts` per (target, version), starting at 0. **Every** build/typecheck run
-(steps 5, 6, and any re-entry from 7) increments it. The moment `attempts` reaches **3** and the
-version is still not green, go straight to step 9. This is a hard per-version cap.
+**Attempts cap (the sole termination guarantee).** Keep ONE integer `attempts` per (target,
+version), starting at 0. It counts FIX cycles only — the initial verify (step 5) does NOT increment.
+Increment by 1 at the top of every step-6 entry (whether reached from step 5's failed verify or a
+step-7 re-check failure). Before starting a step-6 cycle, if `attempts` is already 3, do not retry —
+go to step 9. So a version gets at most 3 fix attempts after the initial verify, then stops.
+
+**Monorepo (shared lockfile).** Workspace targets share ONE root lockfile, so do NOT run this loop
+independently per target (it double-touches the lockfile and interleaves half-migrated commits).
+For a monorepo, invert the loop: for each version V, apply across ALL selected targets, bump every
+target's `package.json` to V, run ONE install, build each target, and make ONE commit per version
+spanning all targets. (Single-target repos: the plain per-target loop below is fine.)
 
 1. **Plan.** Dispatch `ds-migration-planner` with V's changelog block. Parse the MigrationPlan. If
    `items` is empty → no-migration version: skip to step 4 (bump + verify only).
 2. **Find (parallel, haiku).** Dispatch `ds-usage-finder` across items with the target's source
    root. Collect per-item `path:line` hits. Zero-hit items are not-applicable — record and drop.
-3. **Apply (parallel, sonnet, one per file).** Group hits by file; dispatch one
-   `ds-migration-applier` per file with the items affecting it. **This includes behavioral
-   (`removed-api` / `behavior`) items — the applier ATTEMPTS them, not just mechanical ones.** For an
-   item located by its `note` rather than by hits (e.g. a `code-add` to the app config or global
-   styles), dispatch an applier for that described file. Collect `applied` / `needsReview`, and track
-   the union of touched files (for the commit pathspec).
+3. **Apply (parallel, sonnet, one per file).** Group the finder's hits by file; dispatch one
+   `ds-migration-applier` per file, passing it the items affecting that file **AND this file's finder
+   hits** (`{loc, match, el, dynamic}`) so it edits the exact matched, element-scoped locations
+   instead of re-deriving them (re-deriving reintroduces the wrong-element false-positive the finder
+   exists to prevent). **This includes behavioral (`removed-api` / `behavior`) items — the applier
+   ATTEMPTS them, not just mechanical ones.** For an item located by its `note` rather than by hits
+   (e.g. a `code-add` to the app config or global styles), dispatch an applier for that described
+   file. Collect `applied` / `needsReview`, and start the **touched-files union** (the commit
+   pathspec) — it accumulates here AND across every step-6 fix cycle.
 4. **Bump + install.** Set the dependency to the EXACT version `V` (no `^` / `~`) in the target's
    `package.json`; run the detected package manager's **mutating** install (`bun install` /
    `npm install` / `yarn` / `pnpm install` — never `npm ci` / `--frozen-lockfile`). Confirm the
@@ -132,17 +149,30 @@ version is still not green, go straight to step 9. This is a hard per-version ca
    those rely on the element-scoped grep here + the re-check in step 7, not the build.
    **Behavioral items (you, opus) — the obligatory semantic verdict:** for each attempted
    `removed-api` / `behavior` item, read the applier's actual change and judge whether it correctly
-   implements what the changelog `note` requires (the build won't catch a semantically-wrong-but-
-   compiling edit — this is the safety net for full-auto). An item the applier left `needsReview`
-   (couldn't do), or whose attempt you judge wrong/incomplete, is NOT green → it feeds the auto-fix
-   loop (retry with more guidance) before any escalation.
-6. **Auto-fix loop.** If not green, dispatch sonnet appliers to fix the specific issues and
-   re-verify (increments `attempts`). Bounded by the 3-attempt cap above.
-7. **Re-check (parallel, sonnet) — every item.** Dispatch `ds-recheck` for each item: grep for
-   mechanical, semantic for behavioral (it returns `migrated` + `confidence`). If any returns
-   `migrated:false`, or a behavioral item comes back low-confidence, treat the version as not green
-   and re-enter step 6 (still bounded by the cap) — dispatch appliers to redo/repair that item using
-   the re-checker's feedback. Only items still unresolved when the cap is hit become manual-review.
+   implements what the changelog `note` requires. The build won't catch a semantically-wrong-but-
+   compiling edit — this is the safety net for full-auto, so hold a high bar: **a compiling edit is
+   NOT a verified edit**; if you can't get positive evidence it's correct (only that it compiles and
+   grep is clean), it is NOT green. Where an item's `old` is a token/class/SCSS symbol (no build
+   signal), the element-scoped grep for the removed `old` is a HARD gate independent of build exit.
+   An item left `needsReview`, or whose attempt you judge wrong/incomplete/unproven, feeds the
+   auto-fix loop before escalation.
+   **Visual-only changes:** if a behavioral change's correctness is observable ONLY in rendered
+   output (no build or grep signal — spacing/size/animation/restyle), the edit can't be machine-
+   verified. Do NOT silently green it: keep the edit, but list it in the report under **"applied —
+   human should eyeball"** (distinct from informational and from manual-review) so a
+   plausible-but-visually-wrong edit is never invisible after the `chore(deps)` commit.
+6. **Auto-fix loop.** If not green, increment `attempts` and dispatch sonnet appliers to fix the
+   specific issues — pass forward the previous attempt's diff, the re-checker's failure reason, and
+   your semantic objection, and instruct "do not reproduce the prior attempt; if you can't improve on
+   it, record `needsReview`." If two consecutive attempts on an item produce an identical edit,
+   short-circuit that item to the manual-review list rather than burning the remaining cap. Add any
+   newly-touched files to the touched-files union, then re-verify. Bounded by the 3-attempt cap.
+7. **Re-check (parallel, sonnet) — every item.** Dispatch `ds-recheck` for each item, re-attaching
+   its full MigrationItem by `id` from the plan (the applier's report is id-keyed only): grep for
+   mechanical, semantic for behavioral (returns `migrated` + `confidence` + reasoned `remaining`). If
+   any returns `migrated:false`, or a behavioral item comes back low-confidence, treat the version as
+   not green and re-enter step 6 (bounded by the cap). Only items still unresolved when the cap is hit
+   become manual-review.
 8. **Green → commit.** Stage EXACTLY the applier-touched files + the target's `package.json` + the
    lockfile, by explicit pathspec (never `git add -A`, never a bare directory). Commit
    `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration summary in the body
@@ -160,6 +190,8 @@ version is still not green, go straight to step 9. This is a hard per-version ca
   behavioral); items not-applicable.
 - **Informational (FYI, no action):** documented changes needing no consumer code edit (from the
   plan's `informational`) — listed so the human is aware, NOT a to-do.
+- **Applied — human should eyeball:** behavioral edits that were applied but whose correctness is
+  only visual (no build/grep signal) — committed, but worth a quick visual check.
 - **Needs manual review — should be EMPTY in a clean run:** ONLY the items the auto attempt +
   auto-fix loop could not resolve, each with why. These are the last-resort escalations, not every
   behavioral change.

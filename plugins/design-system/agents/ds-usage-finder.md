@@ -12,7 +12,9 @@ comes from the item; don't assume anything about particular components.
 
 ## What to do
 
-- For each item, search the consumer source for every string in `searchHints` plus `old`.
+- For each item, search the consumer source for every string in `searchHints` plus `old`. Some items
+  have no `old` (e.g. `code-add`) — then `searchHints` is the only signal: locate the insertion
+  site(s) it names, or report `[]` if that site doesn't exist in this consumer.
 - Search `*.html`, `*.ts`, `*.scss`, `*.css`. Skip `node_modules`, `dist`, build output, `.git`.
 - For EVERY hit, capture the **exact matched text** (`match`), not just the line — the specific
   token / selector / class / attribute-with-value that matched. A bare `path:line` is not enough
