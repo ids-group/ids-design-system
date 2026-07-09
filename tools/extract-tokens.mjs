@@ -44,7 +44,11 @@ function extractRootDeclarations(scssText) {
   let m;
   while ((m = re.exec(scssText))) {
     const name = m[2];
-    if (/-(h|s|l)$/.test(name) || name.endsWith('-value')) continue; // channels/internals
+    if (name.endsWith('-value')) continue; // internal alias
+    // Skip HSL channel triplets (--blue-h/-s/-l, --primary-h/-s/-l, …) but NOT a
+    // coincidental -s/-l ending like --font-size-s: a real channel has an -h sibling.
+    const ch = name.match(/^(.*)-(?:h|s|l)$/);
+    if (ch && new RegExp(ch[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '-h\\s*:').test(scssText)) continue;
     out.push({ name, value: m[3].trim() });
   }
   return out;
