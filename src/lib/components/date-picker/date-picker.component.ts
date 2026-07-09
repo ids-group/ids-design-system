@@ -346,8 +346,10 @@ export class DatePickerComponent
       : rangeMask(this.formatSpec()),
   );
   /** `size` attribute so the field hugs its mask width instead of stretching.
-   * Digits render with `tabular-nums` so the width never shifts as you type. */
-  protected readonly fieldSize = computed(() => this.fieldPlaceholder().length);
+   * +1 covers `size` under-counting the mask's wide glyphs (M/D/Y), which
+   * otherwise clip the last chars of the longer range mask. Digits render with
+   * `tabular-nums` so the width never shifts as you type. */
+  protected readonly fieldSize = computed(() => this.fieldPlaceholder().length + 1);
 
   // ---- Month / year grid pickers in the calendar header ----
   protected readonly monthMenuOpen = signal(false);
