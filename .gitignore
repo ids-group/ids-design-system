@@ -74,3 +74,6 @@ Thumbs.db
 Anton_local
 # Docs are tracked; only the superpowers working scratchpad (plans/specs/research) stays local.
 /docs/superpowers/
+
+# Generated at build time by tools/extract-tokens.mjs; never hand-edited or committed.
+ds-docs/src/app/sections/tokens-reference/tokens.generated.ts
