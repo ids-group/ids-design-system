@@ -53,58 +53,6 @@
   vertical-align: middle;
 }
 
-.radius-sample {
-  display: inline-block;
-  width: var(--space-10);
-  height: var(--space-10);
-  background: var(--primary-subtitle);
-  border: var(--border-width-default) solid var(--primary-muted);
-  vertical-align: middle;
-}
-
-.shadow-sample {
-  display: inline-block;
-  width: var(--space-10);
-  height: var(--space-10);
-  background: var(--surface-default);
-  border-radius: var(--radius-md);
-  vertical-align: middle;
-}
-
-.hit-sample {
-  display: inline-block;
-  background: var(--primary-subtitle);
-  border: var(--border-width-default) solid var(--primary-muted);
-  border-radius: var(--radius-sm);
-  vertical-align: middle;
-}
-
-.icon-sample {
-  display: inline-block;
-  background: var(--icon-default);
-  border-radius: var(--radius-sm);
-  vertical-align: middle;
-}
-
-.bw-sample {
-  display: inline-block;
-  width: var(--space-16);
-  height: 1px;
-  border-top-style: solid;
-  border-top-color: var(--text-primary);
-  vertical-align: middle;
-}
-
-.opacity-sample {
-  display: inline-block;
-  padding: 0 var(--space-2);
-  font: var(--font-weight-bold) var(--font-size-m) / var(--line-height-flat) var(--font-sans);
-  color: var(--text-primary);
-  background: var(--surface-default);
-  border: var(--border-width-default) solid var(--border-default);
-  border-radius: var(--radius-sm);
-}
-
 .literal-value {
   color: var(--text-tertiary);
 }
@@ -118,41 +66,9 @@
   color: var(--text-tertiary);
 }
 
-.focus-demo {
-  display: inline-block;
-  width: var(--space-10);
-  height: var(--space-6);
-  background: var(--surface-default);
-  border-radius: var(--radius-md);
-  vertical-align: middle;
-}
-.focus-demo--ring   { box-shadow: var(--focus-ring); }
-.focus-demo--field  { box-shadow: var(--focus-field); }
-.focus-demo--error { box-shadow: var(--focus-ring-error); }
-
 /* ---------- Typography samples ---------- */
 .sample-font {
   color: var(--text-primary);
-}
-.sample-fs {
-  color: var(--text-primary);
-  line-height: var(--line-height-flat);
-}
-.sample-lh {
-  display: inline-block;
-  color: var(--text-primary);
-  white-space: pre-line;
-  font: var(--font-weight-regular) var(--font-size-s) var(--font-sans);
-}
-.sample-ls {
-  color: var(--text-primary);
-  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-}
-.sample-fw {
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-size: var(--font-size-s);
-  line-height: var(--line-height-base);
 }
 
 /* ---------- Component tokens — collapsible group ---------- */

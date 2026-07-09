@@ -45,10 +45,15 @@ function extractRootDeclarations(scssText) {
   while ((m = re.exec(scssText))) {
     const name = m[2];
     if (name.endsWith('-value')) continue; // internal alias
-    // Skip HSL channel triplets (--blue-h/-s/-l, --primary-h/-s/-l, …) but NOT a
-    // coincidental -s/-l ending like --font-size-s: a real channel has an -h sibling.
-    const ch = name.match(/^(.*)-(?:h|s|l)$/);
-    if (ch && new RegExp(ch[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '-h\\s*:').test(scssText)) continue;
+    // HSL channel triplet only: skip --X-h/-s/-l when BOTH sibling channels exist.
+    // Avoids self-matching (--topbar-h is a height, not a hue) and coincidental
+    // -s/-l endings (--font-size-s).
+    const ch = name.match(/^(.*)-(h|s|l)$/);
+    if (ch) {
+      const esc = ch[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const others = { h: ['s', 'l'], s: ['h', 'l'], l: ['h', 's'] }[ch[2]];
+      if (others.every((sfx) => new RegExp(esc + '-' + sfx + '\\s*:').test(scssText))) continue;
+    }
     out.push({ name, value: m[3].trim() });
   }
   return out;
@@ -106,6 +111,8 @@ const globalFiles = [
   'src/lib/themes/_semantic.scss',
   'src/lib/themes/light/_palette.scss',
   'src/lib/themes/_base-palette.scss',
+  'src/lib/styles/_tokens-charts.scss',
+  'src/lib/styles/_page-grid.scss',
 ].map((p) => join(ROOT, p));
 let globals = globalFiles.flatMap((p) => extractRootDeclarations(readIf(p)));
 
