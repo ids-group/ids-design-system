@@ -62,6 +62,12 @@ do; you execute it.
   require re-architecting a component's public API, do the minimal safe part and record the rest as
   `needsReview` rather than guessing.
 - After editing, re-read the file to confirm the old usages are gone (except intentional `needsReview`).
+- **Resolving API questions from sources:** you may READ (never edit) the installed package at
+  `node_modules/@ids-group-ltd/ids-design-system/` — `types/*.d.ts` (public API surface),
+  `fesm2022/` (internals), `themes/` + `styles/` (SCSS tokens) — instead of guessing. Mind the
+  pipeline stage: at apply time it usually still holds the OLD version (right for "what did this
+  mean before"); excerpts of the NEW version's sources, when needed, arrive in your prompt from
+  the orchestrator.
 
 ## Output
 

@@ -52,6 +52,10 @@ Two verification modes:
   independent confirmation of that verdict. Clean grep → `migrated: true`,
   `note: "not applicable — zero usages"`. Usages found → `migrated: false` with them in `remaining`
   (the finder missed them; the orchestrator re-enters the item into the pipeline).
+- **Verifying against the real API:** at re-check time the NEW version V is installed — for semantic
+  verdicts, read the installed package (`node_modules/@ids-group-ltd/ids-design-system/`:
+  `types/*.d.ts` = public API, `fesm2022/` = internals, `themes/` + `styles/` = SCSS tokens) as the
+  authoritative surface to verify the edit against, instead of relying on the `note` alone.
 - Do NOT edit anything.
 
 ## Output

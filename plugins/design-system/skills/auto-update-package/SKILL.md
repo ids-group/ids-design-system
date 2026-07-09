@@ -63,6 +63,26 @@ attempt + auto-fix loop can't make it green (Phase B step 9): the build still fa
 confirm the behavioral fix is correct after the attempts, or the change is genuinely too convoluted
 to do safely. A behavioral change is NOT sent to manual just for being behavioral — it is attempted.
 
+## Reading the DS sources (when the changelog isn't enough)
+
+When a question the changelog can't answer blocks an item — the exact union a new input accepts,
+whether an internal class/token still exists, the shape of a replacement API — read the sources
+instead of guessing. Version-exactness decides WHERE:
+
+- **The installed package** `<target>/node_modules/@ids-group-ltd/ids-design-system/` — local and
+  version-exact for whatever is CURRENTLY installed: `types/*.d.ts` (the whole public API surface,
+  incl. input value unions), `fesm2022/*.mjs` (compiled internals — class names, DOM structure),
+  `themes/` + `styles/` (readable SCSS token sources), `CHANGELOG.md`. Before step 4 (bump) it holds
+  the OLD version — authoritative for "what did this API mean before"; after step 4 it holds V —
+  authoritative for what V actually exposes. Subagents have Read/Grep and may read it directly
+  (editing it stays forbidden).
+- **The repo at the release tag** — `https://bitbucket.org/itband/ids-design-system.git`, ref
+  `v<X.Y.Z>` (releases are tagged): readable component sources and templates that the compiled
+  package can't show. Only YOU have network access — fetch the file at the tag matching V and pass
+  the relevant excerpt to the subagent verbatim. **Never read `main` for this** — it is ahead of V
+  and answers questions about a version you are not migrating to.
+- The docs site is a SPA — WebFetch cannot render it; don't rely on it for API questions.
+
 ## Phase A — Run setup (do once)
 
 1. **Confirm consumer + find targets.** Read `package.json`; find `@ids-group-ltd/ids-design-system`
