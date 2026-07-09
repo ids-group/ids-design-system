@@ -18,7 +18,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { disposeWithLeave } from '../overlay-motion';
+import { disposeWithLeave, forwardOverlayTokens } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { TagComponent } from '../tag/tag.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
@@ -59,6 +59,13 @@ export class AutocompleteComponent<T = unknown>
 {
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
+  private readonly host = inject(ElementRef<HTMLElement>);
+  /** Public panel tokens forwarded onto the portaled overlay pane on open so
+   *  a consumer's `ds-autocomplete { --ds-autocomplete-panel-*: … }` reaches it. */
+  private readonly panelTokens = [
+    '--ds-autocomplete-panel-bg-color',
+    '--ds-autocomplete-option-bg-color-hover',
+  ];
 
   readonly options = input<readonly AutocompleteOption<T>[]>([]);
   readonly optionGroups = input<AutocompleteOptionGroup<T>[]>([]);
@@ -368,6 +375,7 @@ export class AutocompleteComponent<T = unknown>
       overlayConfig.width = triggerWidth;
     }
     this.overlayRef = this.overlay.create(overlayConfig);
+    forwardOverlayTokens(this.overlayRef, this.host.nativeElement, this.panelTokens);
     this.overlayRef.backdropClick().subscribe(() => this.close());
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
     this.isOpen.set(true);

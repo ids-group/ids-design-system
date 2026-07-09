@@ -22,7 +22,7 @@ import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
-import { disposeWithLeave } from '../overlay-motion';
+import { disposeWithLeave, forwardOverlayTokens } from '../overlay-motion';
 import {
   type Hsv,
   hexToHsv,
@@ -75,6 +75,16 @@ export class ColorPickerComponent
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  /** Public panel tokens forwarded onto the portaled overlay pane on open so
+   *  a consumer's `ds-color-picker { --ds-color-picker-panel-*: … }` reaches it. */
+  private readonly panelTokens = [
+    '--ds-color-picker-swatch',
+    '--ds-color-picker-preview',
+    '--ds-color-picker-panel-w',
+    '--ds-color-picker-sv-h',
+    '--ds-color-picker-hue-h',
+    '--ds-color-picker-thumb',
+  ];
 
   readonly value = model<string>('#2F54FF');
   readonly presets = input<readonly string[]>(DEFAULT_PRESETS);
@@ -294,6 +304,7 @@ export class ColorPickerComponent
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
     this.overlayRef = this.overlay.create(cfg);
+    forwardOverlayTokens(this.overlayRef, this.host.nativeElement, this.panelTokens);
     this.overlayRef.backdropClick().subscribe(() => this.close());
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {

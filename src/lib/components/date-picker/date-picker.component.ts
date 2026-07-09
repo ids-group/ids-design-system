@@ -21,7 +21,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { A11yModule } from '@angular/cdk/a11y';
-import { disposeWithLeave } from '../overlay-motion';
+import { disposeWithLeave, forwardOverlayTokens } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { CalendarDayComponent } from '../calendar-day/calendar-day.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
@@ -106,6 +106,29 @@ export class DatePickerComponent
   private readonly vcr = inject(ViewContainerRef);
   private readonly injector = inject(Injector);
   private readonly config = inject(DS_CONFIG);
+  private readonly host = inject(ElementRef<HTMLElement>);
+  /** Public panel tokens forwarded onto the portaled overlay pane on open so
+   *  a consumer's `ds-date-picker { --ds-date-picker-panel-*: … }` reaches it. */
+  private readonly panelTokens = [
+    '--ds-date-picker-bg-color',
+    '--ds-date-picker-border',
+    '--ds-date-picker-shadow',
+    '--ds-date-picker-focus-shadow',
+    '--ds-date-picker-day-hover-bg-color',
+    '--ds-date-picker-day-today-label-color',
+    '--ds-date-picker-day-selected-bg-color',
+    '--ds-date-picker-day-selected-bg-color-hover',
+    '--ds-date-picker-day-selected-label-color',
+    '--ds-date-picker-day-range-bg-color',
+    '--ds-date-picker-day-range-label-color',
+    '--ds-date-picker-day-disabled-label-color',
+    '--ds-date-picker-day-label-color',
+    '--ds-date-picker-day-muted-label-color',
+    '--ds-date-picker-weekday-color',
+    '--ds-date-picker-header-label-color',
+    '--ds-date-picker-nav-icon-color',
+    '--ds-date-picker-width',
+  ];
 
   readonly mode = input<DatePickerMode>('single');
   readonly size = input<DatePickerSize>('md');
@@ -601,6 +624,7 @@ export class DatePickerComponent
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
     this.overlayRef = this.overlay.create(cfg);
+    forwardOverlayTokens(this.overlayRef, this.host.nativeElement, this.panelTokens);
     this.overlayRef.backdropClick().subscribe(() => this.close());
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {

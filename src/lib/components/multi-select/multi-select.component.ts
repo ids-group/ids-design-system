@@ -21,7 +21,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { IconComponent } from '../../icons/icon.component';
 import { TagComponent } from '../tag/tag.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
-import { disposeWithLeave } from '../overlay-motion';
+import { disposeWithLeave, forwardOverlayTokens } from '../overlay-motion';
 import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
 import type { MultiSelectOption } from './multi-select.types';
@@ -47,6 +47,14 @@ export class MultiSelectComponent
 {
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
+  private readonly host = inject(ElementRef<HTMLElement>);
+  /** Public panel tokens forwarded onto the portaled overlay pane on open so
+   *  a consumer's `ds-multi-select { --ds-multi-select-panel-*: … }` reaches it. */
+  private readonly panelTokens = [
+    '--ds-multi-select-panel-bg-color',
+    '--ds-multi-select-option-bg-color-active',
+    '--ds-multi-select-check-bg-color',
+  ];
 
   readonly value = model<string[]>([]);
   readonly options = input<readonly MultiSelectOption[]>([]);
@@ -284,6 +292,7 @@ export class MultiSelectComponent
       width: triggerElement.getBoundingClientRect().width,
     };
     this.overlayRef = this.overlay.create(cfg);
+    forwardOverlayTokens(this.overlayRef, this.host.nativeElement, this.panelTokens);
     this.overlayRef.backdropClick().subscribe(() => this.close());
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {

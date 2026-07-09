@@ -28,3 +28,28 @@ export function disposeWithLeave(
 ): void {
   overlayRef?.dispose();
 }
+
+/**
+ * Forward a portaled panel's public `--ds-*` override tokens from the component
+ * host onto the overlay pane. The panel is portaled into `document.body`
+ * (outside `:host`), so custom properties a consumer sets via `ds-x { … }` on
+ * the host don't inherit down to it. Copying the host's resolved values onto
+ * the pane — the panel's DOM parent — restores that inheritance, so per-instance
+ * overrides re-skin the panel. Only non-empty values are set, so unset tokens
+ * fall through to the panel's own `var(--ds-*, <default>)` fallback. Call once
+ * per open, right after `overlay.create()`.
+ */
+export function forwardOverlayTokens(
+  overlayRef: OverlayRef,
+  host: HTMLElement,
+  tokens: readonly string[],
+): void {
+  const hostStyle = getComputedStyle(host);
+  const paneStyle = overlayRef.overlayElement.style;
+  for (const token of tokens) {
+    const value = hostStyle.getPropertyValue(token).trim();
+    if (value) {
+      paneStyle.setProperty(token, value);
+    }
+  }
+}

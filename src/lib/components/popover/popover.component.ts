@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   OnDestroy,
   TemplateRef,
   ViewContainerRef,
@@ -19,7 +20,7 @@ import {
   OverlayRef,
 } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { disposeWithLeave } from '../overlay-motion';
+import { disposeWithLeave, forwardOverlayTokens } from '../overlay-motion';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { NgTemplateOutlet } from '@angular/common';
 import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
@@ -48,9 +49,21 @@ export type PopoverPlacement = 'top' | 'bottom' | 'left' | 'right';
 export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
+  private readonly host = inject(ElementRef<HTMLElement>);
   protected readonly preview = inject(DsStaticPreview);
   protected readonly panelTpl = viewChild<TemplateRef<unknown>>('panel');
   private ref: OverlayRef | null = null;
+  /** Public panel tokens forwarded onto the portaled overlay pane on open so
+   *  a consumer's `ds-popover { --ds-popover-panel-*: … }` reaches it. */
+  private readonly panelTokens = [
+    '--ds-popover-bg-color',
+    '--ds-popover-border-color',
+    '--ds-popover-radius',
+    '--ds-popover-shadow',
+    '--ds-popover-padding',
+    '--ds-popover-max-width',
+    '--ds-popover-arrow-size',
+  ];
 
   readonly align = input<PopoverAlign>('start');
   /** Which side of the trigger the panel prefers to appear on. */
@@ -106,6 +119,7 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
     this.ref = this.overlay.create(cfg);
+    forwardOverlayTokens(this.ref, this.host.nativeElement, this.panelTokens);
     this.ref.backdropClick().subscribe(() => this.close());
     this.ref.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {

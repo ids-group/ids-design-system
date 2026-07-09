@@ -20,7 +20,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { disposeWithLeave } from '../overlay-motion';
+import { disposeWithLeave, forwardOverlayTokens } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import {
@@ -68,6 +68,14 @@ export class TimePickerComponent
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly injector = inject(Injector);
+  private readonly host = inject(ElementRef<HTMLElement>);
+  /** Public panel tokens forwarded onto the portaled overlay pane on open so
+   *  a consumer's `ds-time-picker { --ds-time-picker-panel-*: … }` reaches it. */
+  private readonly panelTokens = [
+    '--ds-time-picker-bg-color',
+    '--ds-time-picker-border',
+    '--ds-time-picker-shadow',
+  ];
 
   readonly value = model<string | TimeRangeValue | null>(null);
   readonly mode = input<TimePickerMode>('single');
@@ -221,6 +229,7 @@ export class TimePickerComponent
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
     this.overlayRef = this.overlay.create(cfg);
+    forwardOverlayTokens(this.overlayRef, this.host.nativeElement, this.panelTokens);
     this.overlayRef.backdropClick().subscribe(() => this.close());
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {
