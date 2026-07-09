@@ -37,7 +37,10 @@ name stays but whose values change, e.g. button `variant` / `size`). `id` is a s
 
 Split items into two buckets and treat them differently:
 - **mechanical** = the five `*-rename` kinds + `value-remap` → auto-applied AND grep-re-checked by
-  `ds-recheck` (value-remap: grep that no old `map` value remains on the attribute).
+  `ds-recheck`. Value-remap re-check MUST be **scoped to the target element** — `variant`/`size`/
+  `color` are attribute names shared across components, so an unscoped grep false-positives on
+  `ds-badge`/`ds-banner`/`ds-tag` and would wrongly stall the run — and must ignore values whose
+  map entry keeps the same token (`outline`/`text` stay valid).
 - **manual** = `removed-api` + `behavior` → the applier performs only a clear mechanical rewrite
   (else flags `needsReview`); these are **never** grep-re-checked (no deterministic old→new to
   grep) and ALWAYS surface in the final "needs manual review" report.
@@ -102,11 +105,16 @@ version is still not green, go straight to step 9. This is a hard per-version ca
    --json`). If the target's installed `@angular/*` (or any other peer) does not satisfy V's
    range, STOP at step 9 with the distinct reason "peer dependency unsatisfied — bump <peer> to
    <range> first". Do NOT auto-upgrade Angular.
-5. **Primary verify (you, opus).** Run the verify command; read the output. Confirm every
+5. **Primary verify (you, opus).** Run the verify command and read the FULL output. Capture the
+   build's REAL exit status — do NOT pipe it through `tail`/`head` (a pipe reports the filter's
+   exit code and masks a failed build); redirect to a file or read the whole output. Confirm every
    mechanical item is applied or genuinely not-applicable, and spot-grep each mechanical item's
-   `searchHints` to confirm no `old` pattern remains. Verdict: green, or a list of issues.
-   **Note:** token/SCSS renames do NOT fail an Angular build (an unknown CSS custom property is
-   not a compile error) — for those, rely on the grep here and the re-check in step 7, not the build.
+   `searchHints` (element-scoped) to confirm no removed `old` value remains. Verdict: green, or a
+   list of issues.
+   **Two change kinds verify differently:** component value/type changes (e.g. button `variant`
+   values under strict templates) DO surface as build type errors — the build catches them.
+   Token/SCSS renames do NOT fail the build (an unknown CSS custom property is not a compile
+   error) — for those rely on the element-scoped grep here + the re-check in step 7, not the build.
 6. **Auto-fix loop.** If not green, dispatch sonnet appliers to fix the specific issues and
    re-verify (increments `attempts`). Bounded by the 3-attempt cap above.
 7. **Re-check (parallel, sonnet) — mechanical items only.** Dispatch `ds-recheck` for each

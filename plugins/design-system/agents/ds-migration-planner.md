@@ -27,12 +27,20 @@ must change in their code to adopt that version.
   mechanical edit (`new` = null for both).
 - Use **`value-remap`** when an attribute KEEPS its name but its accepted VALUES change (e.g. a
   `variant` or `size` value set is renamed/remapped — do NOT model this as `input-rename`). Put
-  the target in `old` (e.g. `ds-button[variant]`), set `new` to a one-line summary, and give a
-  **`map`** object of old value → new value: a plain string replaces the value
-  (`"secondary": "tonal"`); `null` drops the attribute (`"primary": null`); a markup string
-  replaces the whole attribute for split cases (`"outline": "color=\"neutral\" variant=\"outline\""`).
-  Describe any non-1:1 nuance in `note`. `searchHints` MUST list the old attribute values as they
-  appear in code (`variant="secondary"`, `size="m"`) so the finder can locate and label each hit.
+  the **element-scoped target** in `old` — always `element[attr]`, e.g. `ds-button[variant]` (the
+  element matters: `variant`/`size` are shared attribute names across `ds-badge`/`ds-banner`/etc.).
+  Set `new` to a one-line summary, and give a **`map`** keyed by the old VALUE. **Pin the map-value
+  convention: each value is the full replacement for the whole `attr="oldValue"` token** (never a
+  bare value — that ambiguity makes the applier guess):
+    - same-attr value change → `"secondary": "variant=\"tonal\""`
+    - drop the attribute (becomes the default) → `"primary": null`
+    - axis-move to a different attribute → `"error": "color=\"error\""`
+    - split (keep + add) → `"outline": "color=\"neutral\" variant=\"outline\""`
+    - unchanged / still-valid → `"text": "variant=\"text\""` (kept; the re-checker must NOT treat it as old)
+  Flag axis-moves (values that move to another attribute) in `note`, and note that dynamic
+  bindings (`[variant]="expr"`) resolving to those values need the binding rebound too.
+  `searchHints` MUST list the old attribute values as they appear in code (`variant="secondary"`,
+  `size="m"`) so the finder can locate and label each hit.
 - `searchHints` are concrete strings a grep can find in a consumer's `.html` / `.ts` / `.scss`
   (selectors like `ds-combobox`, bindings like `[error]`, exported types like `DropdownOption`,
   CSS custom properties like `--ds-combobox-`). Include every alias worth searching.

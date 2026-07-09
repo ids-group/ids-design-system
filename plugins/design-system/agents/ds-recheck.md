@@ -21,10 +21,18 @@ review. If you are somehow handed one, return `migrated: false` with
   `.git`) for the item's `old` value and every `searchHint`.
 - For a `*-rename`: complete only if the OLD identifier count is **0** and the `new` identifier
   appears where expected.
-- For a `value-remap`: complete only if NONE of the old values in `map` still appear on the target
-  attribute — grep each old value from `map` / `searchHints` (e.g. `variant="secondary"`,
-  `size="m"`) and require **0** remaining. Occurrences the applier flagged `needsReview`
-  (unresolvable dynamic bindings) don't count as failures — list them in `remaining` with a note.
+- For a `value-remap`: complete only if none of the **removed** old values in `map` still appear
+  **on the target element**. Two things that WILL make you wrong if you skip them:
+  1. **Scope to the target element.** `variant` / `size` / `color` are attribute names shared by
+     many DS components (`ds-badge`, `ds-banner`, `ds-tag` all have `variant`). A bare grep for
+     `variant="secondary"` false-positives on those — only count matches inside a `<ds-button …>`
+     (the target) tag. A false positive here makes you wrongly report `migrated:false` and stalls
+     the whole run.
+  2. **Exclude still-valid values.** A map key whose new value keeps the same token legitimately
+     remains — `outline` stays `variant="outline"` (only gains a `color`), `text` stays
+     `variant="text"`. Do NOT count those as "old remaining". Only require **0** of the values
+     that are actually removed/renamed (e.g. `secondary`, `tertiary`, `primary`).
+  `needsReview` occurrences (unresolvable dynamic bindings) go in `remaining`, not counted as failures.
 - Watch boundary cases: a token prefix like `--ds-combobox-` must be gone in ALL its suffixed
   forms (`--ds-combobox-maxw`, `--ds-combobox-focus-shadow`, …); a selector rename like `ds-input`
   must not be reported complete while `ds-input`-as-a-whole-tag still appears (but `ds-input-group`
