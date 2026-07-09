@@ -20,6 +20,14 @@ migration precisely to THIS file only.
     must NOT touch `ds-input-group`; a CSS custom-property family like `--ds-combobox-` must be
     replaced in every suffixed form (`--ds-combobox-maxw`, `--ds-combobox-focus-shadow`, …) — note
     `-` is not a regex word boundary, so match full token names, not the bare prefix.
+  - `value-remap` (has a `map`): the attribute keeps its name; only its VALUES change. For each
+    occurrence the finder reported (use its `match`, e.g. `variant="secondary"`), look up the old
+    value in `map` and rewrite in place: a string value replaces the value
+    (`variant="secondary"` → `variant="tonal"`); `null` drops the whole attribute
+    (`variant="primary"` → remove it); a markup string replaces the whole attribute
+    (`variant="outline"` → `color="neutral" variant="outline"`). Handle both static attributes and
+    literal bindings (`[variant]="'secondary'"`). Any occurrence whose value is NOT a key in `map`
+    (e.g. a dynamic `[variant]="expr"` you cannot resolve) → leave it and record `needsReview`.
   - `removed-api` (`new` is null): apply the migration described in `note` if it is a clear
     mechanical rewrite; otherwise leave the code and record the item as `needs-review`.
   - `behavior` (`new` is null): do NOT edit — record as `needs-review` with the note.

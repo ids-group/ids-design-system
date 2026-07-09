@@ -26,15 +26,18 @@ Primary semantic verification is YOUR job (opus). Re-checks are the parallel `ds
 ## MigrationPlan schema
 
 { "version": "X.Y.Z",
-  "items": [ { "id", "kind", "old", "new", "note", "searchHints": [] } ],
+  "items": [ { "id", "kind", "old", "new", "note", "searchHints": [],
+               "map": { "<oldValue>": "<newValue|null|markup>" } } ],
   "informational": [ "..." ] }
 
 `kind` ∈ selector-rename | input-rename | output-rename | token-rename | type-rename |
-removed-api | behavior. Actionable items come from Breaking + Changed. `new` is null for
-`removed-api` / `behavior`. `id` is a stable, unique slug within the plan.
+value-remap | removed-api | behavior. Actionable items come from Breaking + Changed. `new` is
+null for `removed-api` / `behavior`. `map` is present only for `value-remap` (an attribute whose
+name stays but whose values change, e.g. button `variant` / `size`). `id` is a stable, unique slug.
 
 Split items into two buckets and treat them differently:
-- **mechanical** = the five `*-rename` kinds → auto-applied AND grep-re-checked by `ds-recheck`.
+- **mechanical** = the five `*-rename` kinds + `value-remap` → auto-applied AND grep-re-checked by
+  `ds-recheck` (value-remap: grep that no old `map` value remains on the attribute).
 - **manual** = `removed-api` + `behavior` → the applier performs only a clear mechanical rewrite
   (else flags `needsReview`); these are **never** grep-re-checked (no deterministic old→new to
   grep) and ALWAYS surface in the final "needs manual review" report.
