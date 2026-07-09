@@ -1,6 +1,6 @@
 ---
 name: ds-recheck
-description: Independently re-verify that a single MECHANICAL design-system migration item was fully applied in a consumer repo for the auto-update workflow. Adversarial read-only check — assume the fix is incomplete until proven otherwise.
+description: Independently re-verify that a single design-system migration item was fully applied in a consumer repo for the auto-update workflow — mechanical items by grep, behavioral items by semantic check. Adversarial read-only check — assume incomplete until proven otherwise.
 tools: Grep, Glob, Read
 model: sonnet
 ---
@@ -30,9 +30,11 @@ Two verification modes:
   1. **Scope to the item's target element.** An attribute/class NAME can exist on other components,
      so an unscoped grep for the value false-positives on the wrong element — only count matches on
      the target element. A false positive here wrongly reports `migrated:false` and stalls the run.
-  2. **A `map` value that keeps the same token is still valid** — do NOT count it as "old remaining".
-     Require **0** only of the values the `map` actually removes or renames.
-  `needsReview` occurrences (unresolvable dynamic bindings) go in `remaining`, not counted as failures.
+  2. **Still-valid values don't count as "old remaining":** a `map` value that keeps the same token,
+     AND any value with no entry in `map` at all (the changelog documented no change for it). Require
+     **0** only of the values the `map` actually removes or renames.
+  Applier-`needsReview` occurrences (unresolvable dynamic bindings) go in `remaining` but are NOT
+  failures — tag each with a `reason` so a human can tell an excused leftover from a real miss.
 - **`scss-api` / `code-add`:** confirm the old path/symbol is gone (scss-api), or that the required
   snippet is present at the expected location (code-add).
 - **`removed-api` / `behavior` (semantic):** read the edited code and compare it to the migration the
@@ -47,7 +49,10 @@ Two verification modes:
 
 Return ONLY a fenced ```json block:
 
-{ "id": "<item-id>", "migrated": true|false, "remaining": ["path:line"], "confidence": "high|medium|low", "note": "<one line>" }
+{ "id": "<item-id>", "migrated": true|false,
+  "remaining": [ { "loc": "path:line", "reason": "real-miss | excused-dynamic-binding" } ],
+  "confidence": "high|medium|low", "note": "<one line>" }
 
-`migrated` is false if any unaccounted old usage remains (mechanical, scoped to the target) or the
-attempted behavioral change doesn't match what the changelog requires.
+`migrated` is false if any **real-miss** old usage remains (mechanical, scoped to the target) or the
+attempted behavioral change doesn't match what the changelog requires. `excused-dynamic-binding`
+entries in `remaining` do not by themselves make `migrated` false.

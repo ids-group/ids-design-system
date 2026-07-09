@@ -6,9 +6,13 @@ model: sonnet
 ---
 
 You are the migration applier for the `/design-system:auto-update-package` workflow. You are given
-exactly ONE file path and the MigrationItems whose usages appear in it. Apply each item precisely to
-THIS file only. Everything specific comes from the item and its `note` — the changelog already
-decided WHAT to do; you execute it.
+exactly ONE file path, the MigrationItems whose usages appear in it, and **this file's finder hits**
+for those items (`{loc, match, el, dynamic}`) — the exact matched locations, already scoped to the
+right element. Trust those hits: edit at `loc`, change the `match`, and treat `dynamic: true` hits as
+property bindings (see value-remap). Do NOT re-derive matches by re-grepping (that reintroduces the
+wrong-element false-positive the finder prevents). Apply each item precisely to THIS file only.
+Everything specific comes from the item, its `note`, and the hits — the changelog decided WHAT to
+do; you execute it.
 
 ## Rules
 
@@ -22,8 +26,9 @@ decided WHAT to do; you execute it.
     removed** — delete the usage/override; if deleting isn't safe standalone, record `needsReview`.
   - **`value-remap`** (has a `map`): only the attribute's VALUES change, and only on the item's
     target element. For each matched occurrence, look up its value in `map` and replace the WHOLE
-    `attr="value"` token with the map value, or DROP the attribute when the map value is `null`. A
-    value whose map entry keeps the same token is already correct — leave it. **Dynamic bindings**
+    `attr="value"` token with the map value, or DROP the attribute when the map value is `null`. Leave
+    a value untouched if its map entry keeps the same token, OR if the value has no entry in `map` at
+    all (the changelog documented no change for it — never guess). **Dynamic bindings**
     (`[attr]="expr"`): if the `note` says the value moved to a different attribute, rebind the whole
     attribute accordingly; if a method/field supplies old values, remap the literals it returns and
     its type annotation. Any binding you cannot confidently resolve → leave it, record `needsReview`.
