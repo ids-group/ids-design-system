@@ -36,7 +36,8 @@ repository access token). Manual install/update needs nothing extra.
 - `agents/ds-migration-planner.md` (opus) — one changelog block → a structured migration plan.
 - `agents/ds-usage-finder.md` (haiku) — locate old-API usages in the consumer's source.
 - `agents/ds-migration-applier.md` (sonnet) — apply the documented edits, one file per agent.
-- `agents/ds-recheck.md` (sonnet) — independently re-verify each mechanical (rename) migration.
+- `agents/ds-recheck.md` (sonnet) — independently re-verify every migration item (grep for
+  mechanical, semantic for behavioral); always runs as a second pass.
 
 ## Scope & limits
 

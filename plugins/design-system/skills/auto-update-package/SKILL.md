@@ -19,7 +19,8 @@ Dispatch subagents by name via the Task tool. Never do a subagent's job inline.
 - `ds-migration-planner` (opus) — changelog block → structured MigrationPlan.
 - `ds-usage-finder` (haiku) — locate old-API usages. Parallel across items.
 - `ds-migration-applier` (sonnet) — apply edits. Parallel, **one per file**.
-- `ds-recheck` (sonnet) — independent re-check of every item: grep for mechanical, semantic for
+- `ds-recheck` (sonnet) — independent re-check of every item, ALWAYS run (never skipped, even when
+  your own verify was green and you fixed everything inline): grep for mechanical, semantic for
   behavioral. Parallel.
 
 This workflow is **full-auto**: the applier attempts EVERY actionable change (mechanical AND
@@ -128,6 +129,11 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    (e.g. a `code-add` to the app config or global styles), dispatch an applier for that described
    file. Collect `applied` / `needsReview`, and start the **touched-files union** (the commit
    pathspec) — it accumulates here AND across every step-6 fix cycle.
+   Pass the planner's STRUCTURED item verbatim (its `map` / `old` / `new` / `note`) plus the finder's
+   hits — do NOT paraphrase the migration into ad-hoc prose rules or a hand-authored value table in
+   the applier prompt. Improvised prose is how a `value-remap` gets over-generalized to a value the
+   `map` never listed (e.g. remapping a still-valid value that has no map entry); the applier's
+   contract leaves absent-from-map values untouched, but only if it receives the real `map`.
 4. **Bump + install.** Set the dependency to the EXACT version `V` (no `^` / `~`) in the target's
    `package.json`; run the detected package manager's **mutating** install (`bun install` /
    `npm install` / `yarn` / `pnpm install` — never `npm ci` / `--frozen-lockfile`). Confirm the
@@ -156,6 +162,18 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    signal), the element-scoped grep for the removed `old` is a HARD gate independent of build exit.
    An item left `needsReview`, or whose attempt you judge wrong/incomplete/unproven, feeds the
    auto-fix loop before escalation.
+   **Customization drift (silent, not a changelog item):** a DS version can change its INTERNAL
+   structure — private class names, DOM shape, internal/undocumented tokens — without a changelog
+   line-item, silently breaking consumer customizations that reach into those internals (deep /
+   `::ng-deep` selectors, styling a component's internal classes, overriding internal tokens). The
+   build won't catch these and no MigrationItem exists for them, so they never enter the apply
+   pipeline. After install, check whether the consumer's DS-targeting customizations still resolve
+   against the newly-installed bundle (read the bundle to see what it now exposes); where one no
+   longer does, reproduce its INTENT on this version's supported theming API where that's derivable —
+   same visual result, **reproduce don't redesign, never guess brand intent** — then build and list
+   it under "applied — human should eyeball". Escalate to manual review only the residue the new API
+   genuinely cannot express, described precisely. Stay generic: read what the customization did and
+   what the bundle now supports; don't hard-code assumptions about specific components.
    **Visual-only changes:** if a behavioral change's correctness is observable ONLY in rendered
    output (no build or grep signal — spacing/size/animation/restyle), the edit can't be machine-
    verified. Do NOT silently green it: keep the edit, but list it in the report under **"applied —
@@ -167,12 +185,19 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    it, record `needsReview`." If two consecutive attempts on an item produce an identical edit,
    short-circuit that item to the manual-review list rather than burning the remaining cap. Add any
    newly-touched files to the touched-files union, then re-verify. Bounded by the 3-attempt cap.
-7. **Re-check (parallel, sonnet) — every item.** Dispatch `ds-recheck` for each item, re-attaching
-   its full MigrationItem by `id` from the plan (the applier's report is id-keyed only): grep for
-   mechanical, semantic for behavioral (returns `migrated` + `confidence` + reasoned `remaining`). If
-   any returns `migrated:false`, or a behavioral item comes back low-confidence, treat the version as
-   not green and re-enter step 6 (bounded by the cap). Only items still unresolved when the cap is hit
-   become manual-review.
+7. **Re-check (parallel, sonnet) — every item, ALWAYS.** Dispatch `ds-recheck` for each item,
+   re-attaching its full MigrationItem by `id` from the plan (the applier's report is id-keyed only):
+   grep for mechanical, semantic for behavioral (returns `migrated` + `confidence` + reasoned
+   `remaining`). **Run this step unconditionally** — even when your step-5 primary verify was already
+   green and even when you applied or fixed every item inline yourself. Re-check is an INDEPENDENT
+   second pass, not a fallback for when you're unsure; never skip it because you're confident. Each
+   `ds-recheck` greps the WHOLE source root for the item's `old` / `searchHints`, not just the finder's
+   hits — so a file the finder never reported that still carries the old usage surfaces here as a
+   real-miss. **A real-miss in an unreported file is a finder miss:** dispatch an applier for that file
+   and re-verify before green — do not trust the finder's file set as complete. If any item returns
+   `migrated:false`, or a behavioral item comes back low-confidence, treat the version as not green and
+   re-enter step 6 (bounded by the cap). Only items still unresolved when the cap is hit become
+   manual-review.
 8. **Green → commit.** Stage EXACTLY the applier-touched files + the target's `package.json` + the
    lockfile, by explicit pathspec (never `git add -A`, never a bare directory). Commit
    `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration summary in the body
