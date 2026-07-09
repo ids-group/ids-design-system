@@ -30,17 +30,23 @@ Primary semantic verification is YOUR job (opus). Re-checks are the parallel `ds
                "map": { "<oldValue>": "<newValue|null|markup>" } } ],
   "informational": [ "..." ] }
 
-`kind` ∈ selector-rename | input-rename | output-rename | token-rename | type-rename |
-value-remap | removed-api | behavior. Actionable items come from Breaking + Changed. `new` is
-null for `removed-api` / `behavior`. `map` is present only for `value-remap` (an attribute whose
-name stays but whose values change, e.g. button `variant` / `size`). `id` is a stable, unique slug.
+`kind` ∈ selector-rename | type-rename | input-rename | output-rename | token-rename |
+class-rename | value-remap | scss-api | code-add | removed-api | behavior. Actionable items come
+from Breaking + Changed. `new` is null for a removal or `behavior`; `map` is present only for
+`value-remap`. The planner derives every specific FROM the changelog; when it can't confidently
+fit a change to a mechanical kind it classifies it `behavior` (catch-all) so nothing is dropped.
+`id` is a stable, unique slug.
 
 Split items into two buckets and treat them differently:
-- **mechanical** = the five `*-rename` kinds + `value-remap` → auto-applied AND grep-re-checked by
-  `ds-recheck` (value-remap: grep that no old `map` value remains on the attribute).
-- **manual** = `removed-api` + `behavior` → the applier performs only a clear mechanical rewrite
-  (else flags `needsReview`); these are **never** grep-re-checked (no deterministic old→new to
-  grep) and ALWAYS surface in the final "needs manual review" report.
+- **mechanical** = the rename kinds + `value-remap` + `scss-api` + `code-add` → auto-applied AND
+  grep-re-checked by `ds-recheck`. Element-scoped items (a `value-remap` targeting `element[attr]`)
+  MUST be searched/re-checked **scoped to that target element** — the same attribute or class name
+  can exist on other components, so an unscoped grep false-positives on the wrong element and would
+  wrongly stall the run — and a `map` value that keeps the same token stays valid (don't treat it
+  as "old").
+- **manual** = `removed-api` + `behavior` (incl. the catch-all) → the applier performs only a clear
+  mechanical rewrite (else flags `needsReview`); these are **never** grep-re-checked (no
+  deterministic old→new) and ALWAYS surface in the final "needs manual review" report.
 
 ## Phase A — Run setup (do once)
 
@@ -102,11 +108,16 @@ version is still not green, go straight to step 9. This is a hard per-version ca
    --json`). If the target's installed `@angular/*` (or any other peer) does not satisfy V's
    range, STOP at step 9 with the distinct reason "peer dependency unsatisfied — bump <peer> to
    <range> first". Do NOT auto-upgrade Angular.
-5. **Primary verify (you, opus).** Run the verify command; read the output. Confirm every
+5. **Primary verify (you, opus).** Run the verify command and read the FULL output. Capture the
+   build's REAL exit status — do NOT pipe it through `tail`/`head` (a pipe reports the filter's
+   exit code and masks a failed build); redirect to a file or read the whole output. Confirm every
    mechanical item is applied or genuinely not-applicable, and spot-grep each mechanical item's
-   `searchHints` to confirm no `old` pattern remains. Verdict: green, or a list of issues.
-   **Note:** token/SCSS renames do NOT fail an Angular build (an unknown CSS custom property is
-   not a compile error) — for those, rely on the grep here and the re-check in step 7, not the build.
+   `searchHints` (element-scoped) to confirm no removed `old` value remains. Verdict: green, or a
+   list of issues.
+   **Two change kinds verify differently:** input value/type changes DO surface as build type
+   errors under strict templates — the build catches them. Token / CSS-custom-property / CSS-class
+   renames do NOT fail the build (an unknown custom property or class is not a compile error) — for
+   those rely on the element-scoped grep here + the re-check in step 7, not the build.
 6. **Auto-fix loop.** If not green, dispatch sonnet appliers to fix the specific issues and
    re-verify (increments `attempts`). Bounded by the 3-attempt cap above.
 7. **Re-check (parallel, sonnet) — mechanical items only.** Dispatch `ds-recheck` for each
