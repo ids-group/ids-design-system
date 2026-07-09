@@ -957,7 +957,6 @@
   "--statemap-arrow-cap": "State-map transition arrow cap size (4px, showcase).",
   "--statemap-arrow-w": "State-map transition arrow width (32px, showcase).",
   "--static-ink": "Fixed dark ink — does not respond to theme or scoping (#161A28).",
-  "--static-white": "Fixed white — does not respond to theme or scoping (#FFF).",
   "--status-active-bg-color": "Status badge background — active state.",
   "--status-active-text-color": "Status badge text — active state.",
   "--status-completed-bg-color": "Status badge background — completed state.",
