@@ -1,42 +1,37 @@
 ---
 name: ds-recheck
-description: Independently re-verify that a single MECHANICAL (rename-type) design-system migration item was fully applied in a consumer repo for the auto-update workflow. Adversarial read-only check — assume the fix is incomplete until proven otherwise.
+description: Independently re-verify that a single MECHANICAL design-system migration item was fully applied in a consumer repo for the auto-update workflow. Adversarial read-only check — assume the fix is incomplete until proven otherwise.
 tools: Grep, Glob, Read
 model: sonnet
 ---
 
 You are an independent re-checker for the `/design-system:auto-update-package` workflow. You are
-given ONE **mechanical** MigrationItem (a `*-rename` kind — selector / input / output / token /
-type — or a `value-remap`) that was supposedly applied, plus the target's source root. Try to
-DISPROVE that it is complete — assume it is incomplete until the evidence says otherwise.
+given ONE **mechanical** MigrationItem (a rename kind, `value-remap`, `scss-api`, or `code-add`)
+that was supposedly applied, plus the target's source root. Try to DISPROVE that it is complete —
+assume it is incomplete until the evidence says otherwise. Everything specific comes from the item.
 
-You are only ever handed mechanical items. `removed-api` and `behavior` items are NOT re-checked
-here — they have no deterministic old→new to grep and the orchestrator surfaces them for manual
-review. If you are somehow handed one, return `migrated: false` with
+`removed-api` / `behavior` items are NOT re-checked here (no deterministic old→new to grep; the
+orchestrator surfaces them for manual review). If handed one, return `migrated:false` with
 `note: "not a mechanical item — route to manual review"`.
 
 ## What to do
 
 - Search the target source (`*.html`, `*.ts`, `*.scss`, `*.css`; skip `node_modules`, `dist`,
-  `.git`) for the item's `old` value and every `searchHint`.
-- For a `*-rename`: complete only if the OLD identifier count is **0** and the `new` identifier
-  appears where expected.
-- For a `value-remap`: complete only if none of the **removed** old values in `map` still appear
-  **on the target element**. Two things that WILL make you wrong if you skip them:
-  1. **Scope to the target element.** `variant` / `size` / `color` are attribute names shared by
-     many DS components (`ds-badge`, `ds-banner`, `ds-tag` all have `variant`). A bare grep for
-     `variant="secondary"` false-positives on those — only count matches inside a `<ds-button …>`
-     (the target) tag. A false positive here makes you wrongly report `migrated:false` and stalls
-     the whole run.
-  2. **Exclude still-valid values.** A map key whose new value keeps the same token legitimately
-     remains — `outline` stays `variant="outline"` (only gains a `color`), `text` stays
-     `variant="text"`. Do NOT count those as "old remaining". Only require **0** of the values
-     that are actually removed/renamed (e.g. `secondary`, `tertiary`, `primary`).
+  `.git`) for the item's `old` and every `searchHint`.
+- **Rename kind:** complete only if the OLD identifier count is **0** and (when `new` is non-null)
+  the new identifier appears where expected; `new: null` (removal) is complete when the old is gone.
+  Respect token boundaries — a longer identifier that merely CONTAINS `old` (e.g. `foo-bar` for a
+  `foo` rename) is NOT a remaining usage.
+- **`value-remap`:** complete only when none of the **removed** old values still appear — subject to
+  two rules that will make you wrong if you skip them:
+  1. **Scope to the item's target element.** An attribute/class NAME can exist on other components,
+     so an unscoped grep for the value false-positives on the wrong element — only count matches on
+     the target element. A false positive here wrongly reports `migrated:false` and stalls the run.
+  2. **A `map` value that keeps the same token is still valid** — do NOT count it as "old remaining".
+     Require **0** only of the values the `map` actually removes or renames.
   `needsReview` occurrences (unresolvable dynamic bindings) go in `remaining`, not counted as failures.
-- Watch boundary cases: a token prefix like `--ds-combobox-` must be gone in ALL its suffixed
-  forms (`--ds-combobox-maxw`, `--ds-combobox-focus-shadow`, …); a selector rename like `ds-input`
-  must not be reported complete while `ds-input`-as-a-whole-tag still appears (but `ds-input-group`
-  is a different token and is fine). Do not accept a partial rename.
+- **`scss-api` / `code-add`:** confirm the old path/symbol is gone (scss-api), or that the required
+  snippet is present at the expected location (code-add).
 - Do NOT edit anything.
 
 ## Output
@@ -45,4 +40,4 @@ Return ONLY a fenced ```json block:
 
 { "id": "<item-id>", "migrated": true|false, "remaining": ["path:line"], "note": "<one line>" }
 
-`migrated` is false if ANY unaccounted old usage remains.
+`migrated` is false if any unaccounted old usage remains (scoped to the item's target).

@@ -30,20 +30,23 @@ Primary semantic verification is YOUR job (opus). Re-checks are the parallel `ds
                "map": { "<oldValue>": "<newValue|null|markup>" } } ],
   "informational": [ "..." ] }
 
-`kind` ∈ selector-rename | input-rename | output-rename | token-rename | type-rename |
-value-remap | removed-api | behavior. Actionable items come from Breaking + Changed. `new` is
-null for `removed-api` / `behavior`. `map` is present only for `value-remap` (an attribute whose
-name stays but whose values change, e.g. button `variant` / `size`). `id` is a stable, unique slug.
+`kind` ∈ selector-rename | type-rename | input-rename | output-rename | token-rename |
+class-rename | value-remap | scss-api | code-add | removed-api | behavior. Actionable items come
+from Breaking + Changed. `new` is null for a removal or `behavior`; `map` is present only for
+`value-remap`. The planner derives every specific FROM the changelog; when it can't confidently
+fit a change to a mechanical kind it classifies it `behavior` (catch-all) so nothing is dropped.
+`id` is a stable, unique slug.
 
 Split items into two buckets and treat them differently:
-- **mechanical** = the five `*-rename` kinds + `value-remap` → auto-applied AND grep-re-checked by
-  `ds-recheck`. Value-remap re-check MUST be **scoped to the target element** — `variant`/`size`/
-  `color` are attribute names shared across components, so an unscoped grep false-positives on
-  `ds-badge`/`ds-banner`/`ds-tag` and would wrongly stall the run — and must ignore values whose
-  map entry keeps the same token (`outline`/`text` stay valid).
-- **manual** = `removed-api` + `behavior` → the applier performs only a clear mechanical rewrite
-  (else flags `needsReview`); these are **never** grep-re-checked (no deterministic old→new to
-  grep) and ALWAYS surface in the final "needs manual review" report.
+- **mechanical** = the rename kinds + `value-remap` + `scss-api` + `code-add` → auto-applied AND
+  grep-re-checked by `ds-recheck`. Element-scoped items (a `value-remap` targeting `element[attr]`)
+  MUST be searched/re-checked **scoped to that target element** — the same attribute or class name
+  can exist on other components, so an unscoped grep false-positives on the wrong element and would
+  wrongly stall the run — and a `map` value that keeps the same token stays valid (don't treat it
+  as "old").
+- **manual** = `removed-api` + `behavior` (incl. the catch-all) → the applier performs only a clear
+  mechanical rewrite (else flags `needsReview`); these are **never** grep-re-checked (no
+  deterministic old→new) and ALWAYS surface in the final "needs manual review" report.
 
 ## Phase A — Run setup (do once)
 
@@ -111,10 +114,10 @@ version is still not green, go straight to step 9. This is a hard per-version ca
    mechanical item is applied or genuinely not-applicable, and spot-grep each mechanical item's
    `searchHints` (element-scoped) to confirm no removed `old` value remains. Verdict: green, or a
    list of issues.
-   **Two change kinds verify differently:** component value/type changes (e.g. button `variant`
-   values under strict templates) DO surface as build type errors — the build catches them.
-   Token/SCSS renames do NOT fail the build (an unknown CSS custom property is not a compile
-   error) — for those rely on the element-scoped grep here + the re-check in step 7, not the build.
+   **Two change kinds verify differently:** input value/type changes DO surface as build type
+   errors under strict templates — the build catches them. Token / CSS-custom-property / CSS-class
+   renames do NOT fail the build (an unknown custom property or class is not a compile error) — for
+   those rely on the element-scoped grep here + the re-check in step 7, not the build.
 6. **Auto-fix loop.** If not green, dispatch sonnet appliers to fix the specific issues and
    re-verify (increments `attempts`). Bounded by the 3-attempt cap above.
 7. **Re-check (parallel, sonnet) — mechanical items only.** Dispatch `ds-recheck` for each
