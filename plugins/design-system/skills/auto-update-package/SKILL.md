@@ -69,18 +69,22 @@ When a question the changelog can't answer blocks an item — the exact union a 
 whether an internal class/token still exists, the shape of a replacement API — read the sources
 instead of guessing. Version-exactness decides WHERE:
 
-- **The installed package** `<target>/node_modules/@ids-group-ltd/ids-design-system/` — local and
-  version-exact for whatever is CURRENTLY installed: `types/*.d.ts` (the whole public API surface,
-  incl. input value unions), `fesm2022/*.mjs` (compiled internals — class names, DOM structure),
-  `themes/` + `styles/` (readable SCSS token sources), `CHANGELOG.md`. Before step 4 (bump) it holds
-  the OLD version — authoritative for "what did this API mean before"; after step 4 it holds V —
-  authoritative for what V actually exposes. Subagents have Read/Grep and may read it directly
-  (editing it stays forbidden).
-- **The repo at the release tag** — `https://bitbucket.org/itband/ids-design-system.git`, ref
-  `v<X.Y.Z>` (releases are tagged): readable component sources and templates that the compiled
-  package can't show. Only YOU have network access — fetch the file at the tag matching V and pass
-  the relevant excerpt to the subagent verbatim. **Never read `main` for this** — it is ahead of V
+- **Primary: a local checkout of the DS sources at the release tag.** In Phase A, clone
+  `https://bitbucket.org/itband/ids-design-system.git` into your scratchpad — NEVER inside the
+  consumer repo (the same git credentials that installed this plugin can clone it). At the start of
+  each version V, check out tag `v<X.Y.Z>` (releases are tagged): the checkout then holds the TRUE
+  readable sources of exactly the version being migrated TO — component `.ts`/`.scss`/templates —
+  available to every agent at every pipeline stage, independent of npm install timing. Pass the
+  checkout path to subagents in their prompts; they Read/Grep it directly. Read-only reference
+  material. If the clone fails (no git access), fall back to fetching individual files at the tag
+  over the network and passing excerpts verbatim. **Never read `main` for this** — it is ahead of V
   and answers questions about a version you are not migrating to.
+- **The installed package** `<target>/node_modules/@ids-group-ltd/ids-design-system/` — what is
+  ACTUALLY installed right now: `types/*.d.ts` (the whole public API surface, incl. input value
+  unions), `fesm2022/*.mjs` (compiled internals — class names, DOM structure), `themes/` +
+  `styles/` (readable SCSS token sources), `CHANGELOG.md`. Before step 4 (bump) it holds the OLD
+  version — authoritative for "what did this API mean before"; after step 4 it holds V. Subagents
+  may read it directly (editing it stays forbidden).
 - The docs site is a SPA — WebFetch cannot render it; don't rely on it for API questions.
 
 ## Phase A — Run setup (do once)
@@ -146,8 +150,10 @@ For a monorepo, invert the loop: for each version V, apply across ALL selected t
 target's `package.json` to V, run ONE install, build each target, and make ONE commit per version
 spanning all targets. (Single-target repos: the plain per-target loop below is fine.)
 
-1. **Plan.** Dispatch `ds-migration-planner` with V's changelog block. Parse the MigrationPlan. If
-   `items` is empty → no-migration version: skip to step 4 (bump + verify only).
+1. **Plan.** Check out tag `v<V>` in the DS sources clone (see "Reading the DS sources") so agents
+   can consult V's real sources throughout this version. Dispatch `ds-migration-planner` with V's
+   changelog block. Parse the MigrationPlan. If `items` is empty → no-migration version: skip to
+   step 4 (bump + verify only).
 2. **Find (parallel, sonnet).** Dispatch `ds-usage-finder` across items with the target's source
    root — passing each MigrationItem **verbatim** (`old` / `searchHints` / `map` as the planner
    emitted them; the same no-paraphrase rule as step 3). Collect per-item `path:line` hits.

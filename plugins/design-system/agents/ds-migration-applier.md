@@ -62,12 +62,13 @@ do; you execute it.
   require re-architecting a component's public API, do the minimal safe part and record the rest as
   `needsReview` rather than guessing.
 - After editing, re-read the file to confirm the old usages are gone (except intentional `needsReview`).
-- **Resolving API questions from sources:** you may READ (never edit) the installed package at
-  `node_modules/@ids-group-ltd/ids-design-system/` — `types/*.d.ts` (public API surface),
-  `fesm2022/` (internals), `themes/` + `styles/` (SCSS tokens) — instead of guessing. Mind the
-  pipeline stage: at apply time it usually still holds the OLD version (right for "what did this
-  mean before"); excerpts of the NEW version's sources, when needed, arrive in your prompt from
-  the orchestrator.
+- **Resolving API questions from sources — read, don't guess.** The NEW version's truth is the DS
+  sources checkout at the release tag (path provided in your prompt) — real component
+  `.ts`/`.scss`/templates; Read/Grep it directly for the exact union a new input accepts or the
+  shape of a replacement API. The OLD version's truth is the installed package at
+  `node_modules/@ids-group-ltd/ids-design-system/` (`types/*.d.ts`, `fesm2022/`, `themes/` +
+  `styles/`) — at apply time it usually still holds the version being migrated FROM. Both are
+  read-only.
 
 ## Output
 

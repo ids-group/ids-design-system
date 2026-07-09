@@ -81,11 +81,11 @@ Reading the changelog completely matters more than perfect kinds.
 ## searchHints & id
 `searchHints` are concrete strings a grep can find in consumer `.html` / `.ts` / `.scss` — the old
 selector, binding, type name, class, token prefix, or attribute value exactly as written in code.
-List every alias worth searching. If the block's wording leaves an exact OLD identifier or value
-ambiguous, you may Read the consumer's installed package
-(`node_modules/@ids-group-ltd/ids-design-system/` — `types/*.d.ts`, `themes/`, `styles/`): at plan
-time it holds the version being migrated FROM, i.e. the authoritative spelling of the old API.
-Never invent identifiers from memory. `id` = a stable, unique kebab slug (the join key the finder,
+List every alias worth searching. If the block's wording leaves an exact identifier or value
+ambiguous, read the real sources instead of inventing from memory: OLD identifiers → the consumer's
+installed package (`node_modules/@ids-group-ltd/ids-design-system/` — `types/*.d.ts`, `themes/`,
+`styles/`; at plan time it holds the version being migrated FROM); NEW identifiers → the DS sources
+checkout at the release tag, when the orchestrator provided its path. `id` = a stable, unique kebab slug (the join key the finder,
 applier and re-checker match on).
 
 ## Output
