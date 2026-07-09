@@ -4,6 +4,11 @@
   color: var(--text-tertiary);
 }
 
+/* Nav-target heading — offset so a jump clears the sticky topbar. */
+.component-tokens-anchor {
+  scroll-margin-top: calc(var(--topbar-h) + var(--space-4));
+}
+
 /* ---------- Reference table ---------- */
 .ref-table {
   width: 100%;
