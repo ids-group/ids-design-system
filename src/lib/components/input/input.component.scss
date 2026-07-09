@@ -7,6 +7,8 @@
    are intentionally omitted — those belong to future Textarea / Select /
    Number components.
    ============================================================ */
+@use '../../styles/press' as press;
+
 :host {
   /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_input-bg-color:             var(--ds-input-bg-color,             var(--surface-default));
@@ -119,6 +121,8 @@
         box-shadow: var(--ds-control-focus-shadow);
         border-radius: var(--radius-sm);
       }
+
+      @include press.feedback;
     }
 
     .password-toggle {

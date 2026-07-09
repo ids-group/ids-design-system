@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 :host {
   display: inline-flex;
 }
@@ -76,6 +78,8 @@
     flex-shrink: 0;
 
     &:hover { color: var(--_alert-close-icon-color-hover); }
+
+    @include press.feedback;
   }
 }
 

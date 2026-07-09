@@ -1,6 +1,8 @@
 /* Toast pill — single notification surface. Consumed by ToastRegion (service-
    driven runtime stack) and by static showcases. */
 
+@use '../../styles/press' as press;
+
 :host {
   display: block;
   transition:
@@ -38,7 +40,7 @@
   .icon  { color: var(--_toast-icon-color); flex-shrink: 0; margin-top: var(--space-0-5); }
   .body  { flex: 1; font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
   .title { font-weight: var(--font-weight-bold); color: var(--text-primary); margin-bottom: var(--space-0-5); }
-  .close { border: 0; background: transparent; color: var(--icon-default); cursor: pointer; padding: var(--space-0-5); }
+  .close { border: 0; background: transparent; color: var(--icon-default); cursor: pointer; padding: var(--space-0-5); @include press.feedback; }
 
   .action {
     flex-shrink: 0;

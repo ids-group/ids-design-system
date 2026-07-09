@@ -1,6 +1,8 @@
 /* Drawer — slide-in panel. Host is display:contents so
    the conditionally-rendered .drawer is the visible layout root. */
 
+@use '../../styles/press' as press;
+
 :host {
   --_drawer-bg-color:               var(--ds-drawer-bg-color,               var(--surface-overlay));
   --_drawer-scrim-color:            var(--ds-drawer-scrim-color,            var(--scrim, hsl(220deg 20% 12% / 45%)));
@@ -121,6 +123,8 @@
     padding: 0;
 
     &:hover { color: var(--_drawer-close-icon-color-hover); }
+
+    @include press.feedback;
   }
 
   .body {

@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 :host {
   display: block;
 }
@@ -78,6 +80,8 @@
     color: var(--_banner-close-icon-color);
 
     &:hover { color: var(--_banner-close-icon-color-hover); }
+
+    @include press.feedback;
   }
 
   .actions {

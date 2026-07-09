@@ -65,6 +65,7 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
             @for (item of group.items; track item.anchor) {
               <a
                 class="link start-link"
+                href="#{{ item.anchor }}"
                 [class.is-active]="isActive(item.anchor)"
                 (click)="scrollTo($event, item.anchor)"
               >
@@ -79,6 +80,7 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
             @for (item of group.items; track item.anchor) {
               <a
                 class="link"
+                href="#{{ item.anchor }}"
                 [class.is-active]="isActive(item.anchor)"
                 (click)="scrollTo($event, item.anchor)"
               >
@@ -219,6 +221,7 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
       .link:active {
         background: var(--surface-muted);
         color: var(--text-primary);
+        transform: scale(0.97);
       }
       .link.is-active {
         background: var(--primary-subtitle);

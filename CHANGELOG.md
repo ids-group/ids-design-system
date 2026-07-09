@@ -55,7 +55,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   (`ds-menu-item`, `ds-list`, `ds-tree`, `ds-accordion` header, `ds-color-picker`) swap the scale for a
   flat rounded `:active` background. Press-scale stays on buttons and compact actionable controls
   (`ds-button`, `ds-calendar-day`, `ds-pagination`, `ds-tabs`, `ds-segmented`, `ds-toggle-button`,
-  `ds-sidenav-item`, checkbox / radio / switch).
+  `ds-sidenav-item`, checkbox / radio / switch). Small icon action buttons — close / dismiss /
+  clear / remove `×`, plus the `ds-tag` chip close (used by autocomplete & multi-select chips) — now
+  consistently get the button press-scale too (they previously had no `:active` feedback, or only a
+  flat tint).
 
 ### Fixed
 

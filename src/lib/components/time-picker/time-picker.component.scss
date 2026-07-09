@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 :host {
   --_time-picker-focus-shadow: var(
     --ds-time-picker-focus-shadow,
@@ -132,6 +134,8 @@
     outline: none;
     box-shadow: var(--_time-picker-focus-shadow);
   }
+
+  @include press.feedback;
 }
 
 .time-panel {

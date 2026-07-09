@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 :host {
   /* Public --ds-dropzone-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_dropzone-bg-color:               var(--ds-dropzone-bg-color,               var(--surface-default));
@@ -141,6 +143,7 @@
       color: var(--icon-default);
       transition: color var(--duration-fast) var(--ease-standard);
       &:hover { color: var(--icon-strong); }
+      @include press.feedback;
     }
 
     &.uploading .icon { color: var(--_dropzone-file-progress); }

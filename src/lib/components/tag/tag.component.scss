@@ -1,3 +1,5 @@
+@use '../../styles/press' as press;
+
 /* Public --ds-tag-* are read with fallbacks, never declared — consumer overrides inherit in. */
 
 :host {
@@ -82,9 +84,7 @@
     background: color-mix(in oklab, currentcolor calc(var(--opacity-state-pressed) * 100%), transparent);
   }
 
-  &:active {
-    background: color-mix(in oklab, currentcolor calc(var(--opacity-state-active) * 100%), transparent);
-  }
+  @include press.feedback;
 
   &:focus-visible {
     outline: var(--border-width-strong, 2px) solid var(--focus-ring-color, currentColor);

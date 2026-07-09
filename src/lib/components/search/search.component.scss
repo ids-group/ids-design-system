@@ -4,6 +4,8 @@
 // scoped naming keeps consumer global `.input` resets from leaking in
 // through emulated encapsulation (PIN-475 double-focus-ring root cause).
 
+@use '../../styles/press' as press;
+
 :host {
   /* Public --ds-search-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_search-height:       var(--ds-search-height,       var(--search-h));
@@ -87,6 +89,8 @@
       opacity: 1;
       background: var(--surface-muted, rgb(0 0 0 / 6%));
     }
+
+    @include press.feedback;
   }
 
   .kbd {

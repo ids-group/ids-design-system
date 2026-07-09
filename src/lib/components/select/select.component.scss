@@ -3,6 +3,8 @@
    Native <select> was replaced; the public API is preserved.
    Absorbed the former <ds-dropdown> (removed as a duplicate) - trigger and panel share its source.
    ============================================================ */
+@use '../../styles/press' as press;
+
 :host {
   --_select-focus-shadow: var(--ds-select-focus-shadow, var(--ds-field-focus-shadow));
   --_select-focus-shadow-error: var(--ds-select-focus-shadow-error, var(--ds-field-focus-shadow-error));
@@ -84,6 +86,8 @@
     flex: 0 0 auto;
 
     &:hover { color: var(--text-primary); background: var(--surface-secondary); }
+
+    @include press.feedback;
   }
 
   .chevron {
