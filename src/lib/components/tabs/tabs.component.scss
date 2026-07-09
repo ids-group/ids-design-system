@@ -123,8 +123,10 @@
     }
   }
 
-  /* Secondary variant — opt-in secondary-toned active indicator + label. */
-  &.secondary .tab.active {
+  /* Secondary variant — opt-in secondary-toned active indicator + label.
+     `secondary` lands on the <ds-tabs> host, not the inner .tabs div, so match
+     the host (@at-root escapes the .tabs nesting). */
+  @at-root :host(.secondary) .tab.active {
     --_tab-label-color-active: var(--ds-tab-label-color-active, var(--secondary-strong));
     --_tab-indicator-color: var(--ds-tab-indicator-color, var(--secondary));
   }
