@@ -18,15 +18,6 @@
     --ds-multi-select-border-color-focus,
     var(--accent)
   );
-  --_panel-bg-color: var(
-    --ds-multi-select-panel-bg-color,
-    var(--surface-overlay)
-  );
-  --_option-bg-color-active: var(
-    --ds-multi-select-option-bg-color-active,
-    var(--surface-secondary)
-  );
-  --_check-bg-color: var(--ds-multi-select-check-bg-color, var(--accent));
 }
 
 /* Unique class — a bare `.field` collides with consumer/docs form styles that
@@ -89,8 +80,14 @@
   color: var(--text-tertiary);
 }
 
-/* Portaled panel — plain selectors reach it via the emulated _ngcontent attr. */
+/* Portaled panel — plain selectors reach it via the emulated _ngcontent attr,
+   but custom-property inheritance follows DOM position, so the panel + option
+   resolvers must live HERE (portaled outside :host), not on :host. */
 .panel {
+  --_panel-bg-color: var(--ds-multi-select-panel-bg-color, var(--surface-overlay));
+  --_option-bg-color-active: var(--ds-multi-select-option-bg-color-active, var(--surface-secondary));
+  --_check-bg-color: var(--ds-multi-select-check-bg-color, var(--accent));
+
   display: flex;
   flex-direction: column;
   width: 100%;
