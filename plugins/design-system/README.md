@@ -34,7 +34,7 @@ repository access token). Manual install/update needs nothing extra.
 
 - `skills/auto-update-package/SKILL.md` — the orchestrator (runs on opus).
 - `agents/ds-migration-planner.md` (opus) — one changelog block → a structured migration plan.
-- `agents/ds-usage-finder.md` (haiku) — locate old-API usages in the consumer's source.
+- `agents/ds-usage-finder.md` (sonnet) — locate old-API usages in the consumer's source.
 - `agents/ds-migration-applier.md` (sonnet) — apply the documented edits, one file per agent.
 - `agents/ds-recheck.md` (sonnet) — independently re-verify every migration item (grep for
   mechanical, semantic for behavioral); always runs as a second pass.

@@ -17,7 +17,7 @@ Dispatch subagents by name via the Task tool. Never do a subagent's job inline.
 ## Model tiering (dispatch these subagents)
 
 - `ds-migration-planner` (opus) — changelog block → structured MigrationPlan.
-- `ds-usage-finder` (haiku) — locate old-API usages. Parallel across items.
+- `ds-usage-finder` (sonnet) — locate old-API usages. Parallel across items.
 - `ds-migration-applier` (sonnet) — apply edits. Parallel, **one per file**.
 - `ds-recheck` (sonnet) — independent re-check of every item, ALWAYS run (never skipped, even when
   your own verify was green and you fixed everything inline): grep for mechanical, semantic for
@@ -118,7 +118,7 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 
 1. **Plan.** Dispatch `ds-migration-planner` with V's changelog block. Parse the MigrationPlan. If
    `items` is empty → no-migration version: skip to step 4 (bump + verify only).
-2. **Find (parallel, haiku).** Dispatch `ds-usage-finder` across items with the target's source
+2. **Find (parallel, sonnet).** Dispatch `ds-usage-finder` across items with the target's source
    root. Collect per-item `path:line` hits. Zero-hit items are not-applicable — record and drop.
 3. **Apply (parallel, sonnet, one per file).** Group the finder's hits by file; dispatch one
    `ds-migration-applier` per file, passing it the items affecting that file **AND this file's finder
