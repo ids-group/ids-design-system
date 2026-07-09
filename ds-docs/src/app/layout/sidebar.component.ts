@@ -216,6 +216,10 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
         background: var(--surface-secondary);
         color: var(--text-primary);
       }
+      .link:active {
+        background: var(--surface-muted);
+        color: var(--text-primary);
+      }
       .link.is-active {
         background: var(--primary-subtitle);
         color: var(--primary-strong);

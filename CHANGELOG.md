@@ -49,10 +49,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
-- **Press feedback removed from field-like triggers.** The `:active` press animation (a slight
-  `scale` + brightness dip) no longer applies to `ds-autocomplete`, `ds-select`, and
-  `ds-multi-select` triggers — a text-field-style trigger shouldn't animate like a button on click.
-  Press feedback stays on buttons and other actionable controls.
+- **Press-feedback reworked — no button-style press on non-buttons.** The `:active` scale+brightness
+  press was removed from the overlay field triggers `ds-autocomplete` / `ds-select` /
+  `ds-multi-select` (opening the panel is the feedback). List/menu rows and the color-picker trigger
+  (`ds-menu-item`, `ds-list`, `ds-tree`, `ds-accordion` header, `ds-color-picker`) swap the scale for a
+  flat rounded `:active` background. Press-scale stays on buttons and compact actionable controls
+  (`ds-button`, `ds-calendar-day`, `ds-pagination`, `ds-tabs`, `ds-segmented`, `ds-toggle-button`,
+  `ds-sidenav-item`, checkbox / radio / switch).
 
 ### Fixed
 
