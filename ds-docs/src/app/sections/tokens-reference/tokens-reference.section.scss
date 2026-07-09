@@ -109,6 +109,15 @@
   color: var(--text-tertiary);
 }
 
+.token-note-missing {
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+.tokens-stats {
+  color: var(--text-tertiary);
+}
+
 .focus-demo {
   display: inline-block;
   width: var(--space-10);
