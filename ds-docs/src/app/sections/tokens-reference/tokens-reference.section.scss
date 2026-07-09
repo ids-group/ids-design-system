@@ -4,8 +4,8 @@
   color: var(--text-tertiary);
 }
 
-/* Nav-target heading — offset so a jump clears the sticky topbar. */
-.component-tokens-anchor {
+/* Every block heading is a nav anchor — offset so a jump clears the sticky topbar. */
+[data-anchor] {
   scroll-margin-top: calc(var(--topbar-h) + var(--space-4));
 }
 

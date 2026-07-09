@@ -1,8 +1,9 @@
 // Docs TOC config — flat list of links per group, matching every
-// data-anchor registered in docs.page.ts. Items within each group are sorted
-// A→Z by label; the rendering order in docs.page.ts mirrors this so the
-// sidenav reads top-to-bottom like the page (scroll-spy highlight stays
-// monotonic). Start/Reference have a single item each.
+// data-anchor registered in docs.page.ts (Reference items are anchors inside
+// the single tokens-reference section). Items within each group are sorted
+// A→Z by label, EXCEPT Reference, which follows token-reading order (colour
+// first). The rendering order in docs.page.ts mirrors this so the sidenav
+// reads top-to-bottom like the page (scroll-spy highlight stays monotonic).
 
 export interface NavItem {
   label: string;
@@ -26,6 +27,7 @@ export const NAV: NavGroup[] = [
     items: [
       { label: 'Accordion', anchor: 'accordion' },
       { label: 'Alert', anchor: 'alert' },
+      { label: 'Autocomplete', anchor: 'autocomplete' },
       { label: 'Avatars', anchor: 'avatar' },
       { label: 'Badges, tags & status', anchor: 'badge' },
       { label: 'Banner', anchor: 'banner' },
@@ -38,7 +40,6 @@ export const NAV: NavGroup[] = [
       { label: 'Cards', anchor: 'card' },
       { label: 'Checkbox', anchor: 'checkbox' },
       { label: 'Color picker', anchor: 'color-picker' },
-      { label: 'Autocomplete', anchor: 'autocomplete' },
       { label: 'Date picker', anchor: 'date-picker' },
       { label: 'Description list', anchor: 'description-list' },
       { label: 'Drawer', anchor: 'drawer' },
@@ -126,7 +127,18 @@ export const NAV: NavGroup[] = [
   {
     title: 'Reference',
     items: [
-      { label: 'Tokens reference', anchor: 'tokens-reference' },
+      { label: 'Semantic tokens', anchor: 'semantic-tokens' },
+      { label: 'Palette', anchor: 'palette' },
+      { label: 'Typography', anchor: 'typography-tokens' },
+      { label: 'Spacing', anchor: 'spacing-tokens' },
+      { label: 'Radius', anchor: 'radius-tokens' },
+      { label: 'Elevation', anchor: 'elevation-tokens' },
+      { label: 'Motion', anchor: 'motion-tokens' },
+      { label: 'Density', anchor: 'density-tokens' },
+      { label: 'Layout', anchor: 'layout-tokens' },
+      { label: 'Icons', anchor: 'icons-tokens' },
+      { label: 'Misc', anchor: 'misc-tokens' },
+      { label: 'Charts', anchor: 'charts-tokens' },
       { label: 'Component tokens', anchor: 'component-tokens' },
     ],
   },

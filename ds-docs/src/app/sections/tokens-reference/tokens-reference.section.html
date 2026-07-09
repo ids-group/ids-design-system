@@ -77,7 +77,7 @@
   }
 
   <!-- ============================================================ Colour — semantic -->
-  <h3 class="block-title t-h4">
+  <h3 class="block-title t-h4" data-anchor="semantic-tokens">
     Colour &mdash; semantic
   </h3>
 
@@ -142,6 +142,65 @@
       }
     </tbody>
   </table>
+
+  @if (secondarySemantic.length) {
+    <div class="cat-sub t-overline">
+      Secondary
+    </div>
+
+    <table class="ref-table">
+      <thead>
+        <tr>
+          <th class="col-name">
+            Token
+          </th>
+
+          <th class="col-value">
+            Value
+          </th>
+
+          <th class="col-resolved">
+            Resolved
+          </th>
+
+          <th class="col-notes">
+            Notes
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (row of secondarySemantic; track row.name) {
+          <tr>
+            <td>
+              <code class="t-mono-inline">
+                {{ row.name }}
+              </code>
+            </td>
+
+            <td>
+              <code class="t-mono-inline">
+                {{ row.value }}
+              </code>
+            </td>
+
+            <td>
+              <span
+                class="swatch-chip"
+                [class.is-inverted]="row.inverted"
+                [style.background]="'var(' + row.name + ')'"
+              >
+              </span>
+            </td>
+
+            <td>
+              {{ row.notes }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
 
   <div class="cat-sub t-overline">
     Tertiary (third brand hue)
@@ -211,6 +270,65 @@
       }
     </tbody>
   </table>
+
+  @if (accentSemantic.length) {
+    <div class="cat-sub t-overline">
+      Accent
+    </div>
+
+    <table class="ref-table">
+      <thead>
+        <tr>
+          <th class="col-name">
+            Token
+          </th>
+
+          <th class="col-value">
+            Value
+          </th>
+
+          <th class="col-resolved">
+            Resolved
+          </th>
+
+          <th class="col-notes">
+            Notes
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (row of accentSemantic; track row.name) {
+          <tr>
+            <td>
+              <code class="t-mono-inline">
+                {{ row.name }}
+              </code>
+            </td>
+
+            <td>
+              <code class="t-mono-inline">
+                {{ row.value }}
+              </code>
+            </td>
+
+            <td>
+              <span
+                class="swatch-chip"
+                [class.is-inverted]="row.inverted"
+                [style.background]="'var(' + row.name + ')'"
+              >
+              </span>
+            </td>
+
+            <td>
+              {{ row.notes }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
 
   <div class="cat-sub t-overline">
     Error
@@ -435,124 +553,6 @@
       }
     </tbody>
   </table>
-
-  @if (secondarySemantic.length) {
-    <div class="cat-sub t-overline">
-      Secondary
-    </div>
-
-    <table class="ref-table">
-      <thead>
-        <tr>
-          <th class="col-name">
-            Token
-          </th>
-
-          <th class="col-value">
-            Value
-          </th>
-
-          <th class="col-resolved">
-            Resolved
-          </th>
-
-          <th class="col-notes">
-            Notes
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        @for (row of secondarySemantic; track row.name) {
-          <tr>
-            <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
-            </td>
-
-            <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
-            </td>
-
-            <td>
-              <span
-                class="swatch-chip"
-                [class.is-inverted]="row.inverted"
-                [style.background]="'var(' + row.name + ')'"
-              >
-              </span>
-            </td>
-
-            <td>
-              {{ row.notes }}
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  }
-
-  @if (accentSemantic.length) {
-    <div class="cat-sub t-overline">
-      Accent
-    </div>
-
-    <table class="ref-table">
-      <thead>
-        <tr>
-          <th class="col-name">
-            Token
-          </th>
-
-          <th class="col-value">
-            Value
-          </th>
-
-          <th class="col-resolved">
-            Resolved
-          </th>
-
-          <th class="col-notes">
-            Notes
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        @for (row of accentSemantic; track row.name) {
-          <tr>
-            <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
-            </td>
-
-            <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
-            </td>
-
-            <td>
-              <span
-                class="swatch-chip"
-                [class.is-inverted]="row.inverted"
-                [style.background]="'var(' + row.name + ')'"
-              >
-              </span>
-            </td>
-
-            <td>
-              {{ row.notes }}
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  }
 
   @if (statusSemantic.length) {
     <div class="cat-sub t-overline">
@@ -970,8 +970,8 @@
   </table>
 
   <!-- ============================================================ Colour ramps -->
-  <h3 class="block-title t-h4">
-    Colour &mdash; ramps
+  <h3 class="block-title t-h4" data-anchor="palette">
+    Colour &mdash; palette
   </h3>
 
   <p class="block-desc t-s">
@@ -1040,7 +1040,7 @@
   }
 
   <!-- ============================================================ Typography -->
-  <h3 class="block-title t-h4">
+  <h3 class="block-title t-h4" data-anchor="typography-tokens">
     Typography
   </h3>
 
@@ -1334,7 +1334,7 @@
   </table>
 
   <!-- ============================================================ Spacing -->
-  <h3 class="block-title t-h4">
+  <h3 class="block-title t-h4" data-anchor="spacing-tokens">
     Spacing
   </h3>
 
@@ -1396,7 +1396,7 @@
   </table>
 
   <!-- ============================================================ Radius -->
-  <h3 class="block-title t-h4">
+  <h3 class="block-title t-h4" data-anchor="radius-tokens">
     Radius
   </h3>
 
@@ -1457,7 +1457,7 @@
   </table>
 
   <!-- ============================================================ Elevation -->
-  <h3 class="block-title t-h4">
+  <h3 class="block-title t-h4" data-anchor="elevation-tokens">
     Elevation &mdash; shadows
   </h3>
 
@@ -1525,7 +1525,7 @@
   </table>
 
   <!-- ============================================================ Motion -->
-  <h3 class="block-title t-h4">
+  <h3 class="block-title t-h4" data-anchor="motion-tokens">
     Motion
   </h3>
 
@@ -1643,7 +1643,7 @@
   </table>
 
   <!-- ============================================================ Density -->
-  <h3 class="block-title t-h4">
+  <h3 class="block-title t-h4" data-anchor="density-tokens">
     Density &mdash; hit targets
   </h3>
 
@@ -1769,7 +1769,7 @@
   </table>
 
   <!-- ============================================================ Layout -->
-  <h3 class="block-title t-h4">
+  <h3 class="block-title t-h4" data-anchor="layout-tokens">
     Layout
   </h3>
 
@@ -1886,7 +1886,7 @@
   </table>
 
   <!-- ============================================================ Icons -->
-  <h3 class="block-title t-h4">
+  <h3 class="block-title t-h4" data-anchor="icons-tokens">
     Icons
   </h3>
 
@@ -1948,7 +1948,7 @@
   </table>
 
   <!-- ============================================================ Misc -->
-  <h3 class="block-title t-h4">
+  <h3 class="block-title t-h4" data-anchor="misc-tokens">
     Misc &mdash; borders, opacity, blur
   </h3>
 
@@ -2125,7 +2125,7 @@
 
   <!-- ============================================================ Charts -->
   @if (charts.length) {
-    <h3 class="block-title t-h4">
+    <h3 class="block-title t-h4" data-anchor="charts-tokens">
       Charts
     </h3>
 
@@ -2135,76 +2135,80 @@
       without a swatch.
     </p>
 
-    <div class="cat-sub t-overline">
-      Chart tokens
-    </div>
+    <details class="component-token-group">
+      <summary>
+        <span class="component-token-name t-h5">
+          Chart tokens
+        </span>
 
-    <table class="ref-table">
-      <thead>
-        <tr>
-          <th class="col-name">
-            Token
-          </th>
+        <span class="component-token-count t-mono">
+          {{ charts.length }} vars
+        </span>
+      </summary>
 
-          <th class="col-value">
-            Value
-          </th>
-
-          <th class="col-resolved">
-            Resolved
-          </th>
-
-          <th class="col-notes">
-            Notes
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        @for (row of charts; track row.name) {
+      <table class="ref-table">
+        <thead>
           <tr>
-            <td>
-              <code class="t-mono-inline">
-                {{ row.name }}
-              </code>
-            </td>
+            <th class="col-name">
+              Token
+            </th>
 
-            <td>
-              <code class="t-mono-inline">
-                {{ row.value }}
-              </code>
-            </td>
+            <th class="col-value">
+              Value
+            </th>
 
-            <td>
-              @if (isColorValue(row.value)) {
-                <span
-                  class="swatch-chip"
-                  [class.is-inverted]="row.inverted"
-                  [style.background]="'var(' + row.name + ')'"
-                >
-                </span>
-              } @else {
-                <span class="literal-value t-mono">
-                  geometry
-                </span>
-              }
-            </td>
+            <th class="col-resolved">
+              Resolved
+            </th>
 
-            <td>
-              {{ row.notes }}
-            </td>
+            <th class="col-notes">
+              Notes
+            </th>
           </tr>
-        }
-      </tbody>
-    </table>
+        </thead>
+
+        <tbody>
+          @for (row of charts; track row.name) {
+            <tr>
+              <td>
+                <code class="t-mono-inline">
+                  {{ row.name }}
+                </code>
+              </td>
+
+              <td>
+                <code class="t-mono-inline">
+                  {{ row.value }}
+                </code>
+              </td>
+
+              <td>
+                @if (isColorValue(row.value)) {
+                  <span
+                    class="swatch-chip"
+                    [class.is-inverted]="row.inverted"
+                    [style.background]="'var(' + row.name + ')'"
+                  >
+                  </span>
+                } @else {
+                  <span class="literal-value t-mono">
+                    geometry
+                  </span>
+                }
+              </td>
+
+              <td>
+                {{ row.notes }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </details>
   }
 
   <!-- ============================================================ Component tokens -->
-  <h3
-    id="component-tokens"
-    data-anchor="component-tokens"
-    class="block-title t-h4 component-tokens-anchor"
-  >
+  <h3 id="component-tokens" data-anchor="component-tokens" class="block-title t-h4">
     Component tokens
   </h3>
 

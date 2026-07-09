@@ -192,6 +192,8 @@ import { ChangelogSection } from './changelog/changelog.section';
 
     <section-components-alert />
 
+    <section-components-autocomplete />
+
     <section-components-avatar />
 
     <section-components-badge />
@@ -215,8 +217,6 @@ import { ChangelogSection } from './changelog/changelog.section';
     <section-components-checkbox />
 
     <section-components-color-picker />
-
-    <section-components-autocomplete />
 
     <section-components-date-picker />
 
