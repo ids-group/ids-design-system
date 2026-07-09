@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, input } from '@angular/core';
+import { Component, ViewEncapsulation, booleanAttribute, input } from '@angular/core';
 import { SIDENAV, type SidenavContract } from './sidenav.token';
 
 @Component({
@@ -14,6 +14,6 @@ import { SIDENAV, type SidenavContract } from './sidenav.token';
   providers: [{ provide: SIDENAV, useExisting: SidenavComponent }],
 })
 export class SidenavComponent implements SidenavContract {
-  readonly collapsed = input<boolean>(false);
+  readonly collapsed = input(false, { transform: booleanAttribute });
   readonly brand = input<string>('');
 }

@@ -1,2 +1,2 @@
 export { DividerComponent } from './divider.component';
-export type { DividerVariant } from './divider.types';
+export type { DividerVariant, DividerSpacing } from './divider.types';

@@ -1,6 +1,7 @@
 import {
   Component,
   ViewEncapsulation,
+  booleanAttribute,
   computed,
   input,
   numberAttribute,
@@ -16,8 +17,8 @@ import type { BadgeVariant } from './badge.types';
 })
 export class BadgeComponent {
   readonly variant = input<BadgeVariant>('neutral');
-  readonly withDot = input<boolean>(false);
-  readonly solid = input<boolean>(false);
+  readonly withDot = input(false, { transform: booleanAttribute });
+  readonly solid = input(false, { transform: booleanAttribute });
   readonly count = input<number | null>(null);
   readonly max = input(99, { transform: numberAttribute });
 

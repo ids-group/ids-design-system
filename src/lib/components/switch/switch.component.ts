@@ -33,7 +33,7 @@ import type { SwitchSize } from './switch.types';
 })
 export class SwitchComponent extends DsBooleanControlValueAccessor {
   readonly checked = model<boolean>(false);
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
   readonly name = input<string | null>(null);
   readonly variant = input<'default' | 'success' | 'error'>('default');
   readonly inputId = input<string | null>(null);

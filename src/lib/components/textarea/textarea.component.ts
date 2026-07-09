@@ -37,11 +37,11 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   readonly label = input<string>('');
   readonly hint = input<string>('');
   readonly placeholder = input<string>('');
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false, { transform: booleanAttribute });
-  readonly invalid = input<boolean>(false);
-  readonly required = input<boolean>(false);
-  readonly optional = input<boolean>(false);
+  readonly invalid = input(false, { transform: booleanAttribute });
+  readonly required = input(false, { transform: booleanAttribute });
+  readonly optional = input(false, { transform: booleanAttribute });
   readonly rows = input<number>(3);
   readonly name = input<string | null>(null);
   readonly autosize = input(false, { transform: booleanAttribute });

@@ -45,7 +45,7 @@ export class SliderComponent extends DsControlValueAccessor<SliderValue> {
   readonly range = input(false, { transform: booleanAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly ariaLabel = input<string | null>(null);
-  readonly invalid = input<boolean>(false);
+  readonly invalid = input(false, { transform: booleanAttribute });
   readonly hint = input<string>('');
 
   private readonly track = viewChild.required<ElementRef<HTMLElement>>('track');

@@ -37,9 +37,9 @@ export class SidenavItemComponent {
   // Angular RouterLink accepts both string and array forms — mirror that so
   // consumers can pass dynamic segments (e.g. `['/programs', id, 'overview']`).
   readonly routerLink = input<string | readonly unknown[] | null>(null);
-  readonly active = input<boolean>(false);
+  readonly active = input(false, { transform: booleanAttribute });
   readonly badge = input<number | null>(null);
-  readonly hasAlert = input<boolean>(false);
+  readonly hasAlert = input(false, { transform: booleanAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
 
   private readonly sidenav = inject(SIDENAV, { optional: true });

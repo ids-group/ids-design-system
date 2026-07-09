@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, input } from '@angular/core';
+import { Component, ViewEncapsulation, booleanAttribute, input } from '@angular/core';
 
 @Component({
   selector: 'ds-skeleton',
@@ -17,6 +17,6 @@ import { Component, ViewEncapsulation, input } from '@angular/core';
 export class SkeletonComponent {
   readonly width = input<string | undefined>(undefined);
   readonly height = input<string | undefined>(undefined);
-  readonly circle = input<boolean>(false);
-  readonly inline = input<boolean>(false);
+  readonly circle = input(false, { transform: booleanAttribute });
+  readonly inline = input(false, { transform: booleanAttribute });
 }

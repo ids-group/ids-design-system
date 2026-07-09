@@ -29,7 +29,7 @@ export class RadioComponent {
   /** Standalone two-way binding. When inside ds-radio-group, isChecked() is
    *  derived from the group value instead. */
   readonly checked = model<boolean>(false);
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
   readonly name = input<string>('');
   readonly value = input<unknown>('');
   readonly inputId = input<string | null>(null);

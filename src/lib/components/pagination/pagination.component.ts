@@ -1,6 +1,7 @@
 import {
   Component,
   ViewEncapsulation,
+  booleanAttribute,
   computed,
   input,
   model,
@@ -23,7 +24,7 @@ export class PaginationComponent {
   readonly pageSize = model<number>(10);
   readonly currentPage = model<number>(1);
   readonly pageSizeOptions = input<number[]>([10, 25, 50, 100]);
-  readonly showLabel = input<boolean>(true);
+  readonly showLabel = input(true, { transform: booleanAttribute });
   readonly pageChange = output<number>();
   readonly pageSizeChange = output<number>();
 

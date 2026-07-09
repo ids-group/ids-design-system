@@ -65,12 +65,12 @@ export class SelectComponent
   readonly placeholder = input<string>('');
   readonly size = input<SelectSize>('md');
   readonly label = input<string>('');
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false, { transform: booleanAttribute });
-  readonly invalid = input<boolean>(false);
+  readonly invalid = input(false, { transform: booleanAttribute });
   readonly hint = input<string>('');
-  readonly required = input<boolean>(false);
-  readonly optional = input<boolean>(false);
+  readonly required = input(false, { transform: booleanAttribute });
+  readonly optional = input(false, { transform: booleanAttribute });
   readonly name = input<string | null>(null);
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);

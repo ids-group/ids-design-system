@@ -136,8 +136,8 @@ export class DatePickerComponent
   readonly placeholder = input<string>('Select date');
   readonly label = input<string>('');
   readonly hint = input<string>('');
-  readonly required = input<boolean>(false);
-  readonly optional = input<boolean>(false);
+  readonly required = input(false, { transform: booleanAttribute });
+  readonly optional = input(false, { transform: booleanAttribute });
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Accessible name when no visible `label` is provided. */

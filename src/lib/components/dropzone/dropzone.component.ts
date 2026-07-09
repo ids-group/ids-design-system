@@ -21,7 +21,7 @@ import type { DropzoneFile } from './dropzone.types';
 })
 export class DropzoneComponent {
   readonly accept = input<string>('');
-  readonly multiple = input<boolean>(false);
+  readonly multiple = input(false, { transform: booleanAttribute });
   readonly files = model<DropzoneFile[]>([]);
   /** Disables the dropzone: blocks all file-picking interactions and signals unavailability. */
   readonly disabled = input(false, { transform: booleanAttribute });

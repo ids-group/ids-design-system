@@ -46,9 +46,9 @@ export class InputComponent extends DsControlValueAccessor<string> {
   readonly label = input<string>('');
   readonly hint = input<string>('');
   readonly placeholder = input<string>('');
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
   readonly readOnly = input(false, { transform: booleanAttribute });
-  readonly invalid = input<boolean>(false);
+  readonly invalid = input(false, { transform: booleanAttribute });
   readonly success = input(false, { transform: booleanAttribute });
   /** Shows a trailing spinner — e.g. async validation in flight. The input
    *  stays editable; pair with a `hint` like "Checking availability…". */
@@ -58,8 +58,8 @@ export class InputComponent extends DsControlValueAccessor<string> {
   readonly floating = input(false, { transform: booleanAttribute });
   readonly withAddon = input(false, { transform: booleanAttribute });
   readonly withAddonRight = input(false, { transform: booleanAttribute });
-  readonly required = input<boolean>(false);
-  readonly optional = input<boolean>(false);
+  readonly required = input(false, { transform: booleanAttribute });
+  readonly optional = input(false, { transform: booleanAttribute });
   readonly name = input<string | null>(null);
   // Numeric constraints (applied when type="number").
   readonly min = input<number | null>(null);
@@ -67,7 +67,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
   readonly step = input<number | null>(null);
   /** Native autocomplete token (e.g. "email", "current-password"). */
   readonly autocomplete = input<string | null>(null);
-  readonly autofocus = input<boolean>(false);
+  readonly autofocus = input(false, { transform: booleanAttribute });
   /** Accessible name when no visible `label` is provided (falls back to the
    *  placeholder so the control is never unnamed). */
   readonly ariaLabel = input<string | null>(null);

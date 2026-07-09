@@ -33,8 +33,8 @@ import type { CheckboxSize } from './checkbox.types';
 })
 export class CheckboxComponent extends DsBooleanControlValueAccessor {
   readonly checked = model<boolean>(false);
-  readonly indeterminate = input<boolean>(false);
-  readonly disabled = input<boolean>(false);
+  readonly indeterminate = input(false, { transform: booleanAttribute });
+  readonly disabled = input(false, { transform: booleanAttribute });
   readonly name = input<string | null>(null);
   readonly inputId = input<string | null>(null);
   readonly invalid = input(false, { transform: booleanAttribute });

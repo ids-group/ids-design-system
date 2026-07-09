@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, input, model } from '@angular/core';
+import { Component, ViewEncapsulation, booleanAttribute, input, model } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
 
@@ -17,7 +17,7 @@ export class SidenavGroupComponent {
   readonly icon = input<IconName | null>(null);
   // When true the label/icon row becomes a clickable header that expands /
   // collapses the projected children with a caret rotation.
-  readonly expandable = input<boolean>(false);
+  readonly expandable = input(false, { transform: booleanAttribute });
   // Two-way bindable open state. Defaults to open (true) so a non-expandable
   // group always shows its items.
   readonly expanded = model<boolean>(true);

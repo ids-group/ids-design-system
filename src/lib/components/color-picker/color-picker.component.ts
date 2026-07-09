@@ -90,7 +90,7 @@ export class ColorPickerComponent
   readonly presets = input<readonly string[]>(DEFAULT_PRESETS);
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly ariaLabel = input<string>('Choose colour');
-  readonly invalid = input<boolean>(false);
+  readonly invalid = input(false, { transform: booleanAttribute });
   readonly hint = input<string>('');
 
   protected readonly trigger =

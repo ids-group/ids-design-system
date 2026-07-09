@@ -2,6 +2,7 @@ import {
   Component,
   ElementRef,
   ViewEncapsulation,
+  booleanAttribute,
   input,
   model,
   output,
@@ -22,9 +23,9 @@ export class SearchComponent {
   readonly value = model<string>('');
   readonly placeholder = input<string>('Search');
   readonly shortcut = input<string>('');
-  readonly showIcon = input<boolean>(true);
+  readonly showIcon = input(true, { transform: booleanAttribute });
   /** Show an inline clear (×) button on the right when there's a value. */
-  readonly clearable = input<boolean>(false);
+  readonly clearable = input(false, { transform: booleanAttribute });
   /** Accessible name for the input (placeholder is not a reliable label). */
   readonly ariaLabel = input<string>('');
   readonly submitted = output<string>();

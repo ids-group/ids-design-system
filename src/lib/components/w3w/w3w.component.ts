@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, input, output } from '@angular/core';
+import { Component, ViewEncapsulation, booleanAttribute, input, output } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 
 @Component({
@@ -21,7 +21,7 @@ import { IconComponent } from '../../icons/icon.component';
 export class W3wComponent {
   readonly prefix = input<string>('///');
   readonly address = input.required<string>();
-  readonly copyable = input<boolean>(true);
+  readonly copyable = input(true, { transform: booleanAttribute });
   readonly copied = output<string>();
 
   protected onKeyActivate(event: Event): void {
