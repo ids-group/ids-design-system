@@ -167,7 +167,7 @@
     --_button-bg-color:        var(--ds-button-bg-color,        var(--c-muted));
     --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));
     --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--c-muted-strong));
-    --_button-bg-color-active: var(--ds-button-bg-color-active, var(--c-muted-strong));
+    --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--c-muted-strong) 90%, black));
     --_button-accent: var(--_button-label-color);
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, color-mix(in srgb, var(--_button-bg-color) 28%, var(--surface-disabled)));
     --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 52% 0.04 h));

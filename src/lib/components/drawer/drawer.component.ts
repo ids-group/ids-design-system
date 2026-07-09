@@ -34,7 +34,7 @@ export class DrawerComponent implements OnDestroy {
   readonly open = model<boolean>(false);
   readonly size = input<DrawerSize>('md');
   readonly placement = input<DrawerPlacement>('right');
-  readonly title = input<string>('');
+  readonly title = input.required<string>();
   readonly closed = output<void>();
 
   protected readonly titleId = `ds-drawer-title-${++nextId}`;

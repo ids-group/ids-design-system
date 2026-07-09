@@ -23,7 +23,7 @@ let nextId = 0;
 export class ModalCardComponent {
   readonly size = input<ModalSize>('md');
   readonly error = input(false, { transform: booleanAttribute });
-  readonly title = input<string>('');
+  readonly title = input.required<string>();
   readonly showClose = input(true, { transform: booleanAttribute });
   readonly icon = input<IconName | null>(null);
   readonly dialogRole = input<'dialog' | 'alertdialog'>('dialog');

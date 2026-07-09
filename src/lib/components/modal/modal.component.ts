@@ -32,7 +32,7 @@ export class ModalComponent implements OnDestroy {
   readonly open = model<boolean>(false);
   readonly size = input<ModalSize>('md');
   readonly error = input(false, { transform: booleanAttribute });
-  readonly title = input<string>('');
+  readonly title = input.required<string>();
   readonly closed = output<void>();
   readonly confirmed = output<void>();
   /** When false, clicking the scrim does not close the modal. */

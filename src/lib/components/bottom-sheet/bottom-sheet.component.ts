@@ -35,7 +35,7 @@ let nextId = 0;
 })
 export class BottomSheetComponent {
   readonly open = model<boolean>(false);
-  readonly title = input<string>('');
+  readonly title = input.required<string>();
   readonly closed = output<void>();
 
   protected readonly titleId = `ds-bottom-sheet-title-${++nextId}`;

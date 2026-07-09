@@ -1,5 +1,3 @@
-@use '../../styles/press' as press;
-
 :host {
   // Flex column + gap so the hint/error (ds-field-message) sits the canonical
   // --space-1-5 below the trigger, matching input/textarea/autocomplete/select.
@@ -51,8 +49,6 @@
     border-color: var(--_trigger-border-color-focus);
     box-shadow: var(--accent-focus-field);
   }
-
-  @include press.feedback;
 
   &.invalid {
     border-color: var(--error);

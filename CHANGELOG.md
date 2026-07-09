@@ -33,9 +33,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-badge` — `'count'` removed from `BadgeVariant`.** It was a dead union member; count mode is
   (and always was) driven by the separate `[count]` input. Drop `variant="count"` — behavior is
   unchanged.
-- **`title` is now optional on `ds-modal`, `ds-modal-card`, `ds-page-header`** (was
-  `input.required`). Existing consumers need no change (they already pass a title); omitting it now
-  renders an empty heading.
+- **`title` is now required on `ds-drawer`, `ds-bottom-sheet`, and `ds-accordion-item`** (was
+  optional). Their `title` is the component's accessible name (dialog `aria-labelledby`) or the
+  disclosure-button label, so a missing title left them unnamed. `ds-modal` / `ds-modal-card` stay
+  required (unchanged); `ds-page-header` is now **optional** (its `title` is a plain `<h1>`, not an
+  accessible-name dependency — a non-breaking loosening).
 
 ### Added
 
@@ -45,12 +47,22 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`DividerSpacing` is now exported** from the public API (the `ds-divider` `[spacing]` input type
   was previously declared but not re-exported).
 
+### Changed
+
+- **Press feedback removed from field-like triggers.** The `:active` press animation (a slight
+  `scale` + brightness dip) no longer applies to `ds-autocomplete`, `ds-select`, and
+  `ds-multi-select` triggers — a text-field-style trigger shouldn't animate like a button on click.
+  Press feedback stays on buttons and other actionable controls.
+
 ### Fixed
 
 - **Boolean attribute coercion on all boolean inputs.** ~54 boolean inputs across ~30 components
   gained `transform: booleanAttribute`, so a bare or string attribute (`<ds-x required>` /
   `disabled="false"`) now coerces correctly instead of being read as a truthy string. Property-
   binding consumers are unaffected.
+- **`ds-button` tonal fill — `:active` now darkens past `:hover`.** The `tonal` variant reused the
+  same token (`--c-muted-strong`) for both hover and active, so the pressed background was identical
+  to hover; active now mixes that tint ~10% toward black for a distinct pressed step.
 
 ## 0.5.0 — 2026-07-08
 

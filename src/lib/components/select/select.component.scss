@@ -1,5 +1,3 @@
-@use '../../styles/press' as press;
-
 /* ============================================================
    SELECT — now backed by a custom-styled popover (CDK Overlay).
    Native <select> was replaced; the public API is preserved.
@@ -105,8 +103,6 @@
     border-color: var(--accent);
     box-shadow: var(--_select-focus-shadow);
   }
-
-  @include press.feedback;
 
   &.open {
     border-color: var(--accent);

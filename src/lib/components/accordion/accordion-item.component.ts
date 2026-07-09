@@ -21,7 +21,7 @@ let nextId = 0;
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class AccordionItemComponent implements AccordionItemRef {
-  readonly title = input<string>('');
+  readonly title = input.required<string>();
   readonly expanded = model<boolean>(false);
   readonly disabled = input(false, { transform: booleanAttribute });
 

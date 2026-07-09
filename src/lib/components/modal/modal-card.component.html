@@ -2,7 +2,7 @@
   aria-modal="true"
   [attr.role]="dialogRole()"
   [class]="classes()"
-  [attr.aria-labelledby]="title() ? titleId : null"
+  [attr.aria-labelledby]="titleId"
 >
   <div class="header">
     @if (icon(); as iconName) {
@@ -17,14 +17,12 @@
       </span>
     }
 
-    @if (title()) {
-      <h2
-        class="title"
-        [id]="titleId"
-      >
-        {{ title() }}
-      </h2>
-    }
+    <h2
+      class="title"
+      [id]="titleId"
+    >
+      {{ title() }}
+    </h2>
 
     @if (showClose()) {
       <button
