@@ -37,7 +37,7 @@ export class TreeComponent {
   readonly nodes = input<readonly TreeNode[]>([]);
   readonly expandedIds = model<Set<string>>(new Set());
   readonly selectedId = model<string | null>(null);
-  readonly nodeSelect = output<TreeNode>();
+  readonly nodeSelected = output<TreeNode>();
 
   private readonly activeId = signal<string | null>(null);
 
@@ -148,7 +148,7 @@ export class TreeComponent {
     }
     this.selectedId.set(node.id);
     this.activeId.set(node.id);
-    this.nodeSelect.emit(node);
+    this.nodeSelected.emit(node);
   }
 
   private moveActive(targetIndex: number): void {

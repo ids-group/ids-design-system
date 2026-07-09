@@ -7,5 +7,5 @@ export interface SplitButtonItem {
   value?: string;
   icon?: IconName;
   disabled?: boolean;
-  danger?: boolean;
+  error?: boolean;
 }

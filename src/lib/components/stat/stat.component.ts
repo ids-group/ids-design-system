@@ -9,7 +9,7 @@ import { IconComponent } from '../../icons/icon.component';
   styleUrl: './stat.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   host: {
-    '[class.danger]': "variant() === 'danger'",
+    '[class.error]': "variant() === 'error'",
     '[class.size-sm]': "size() === 'sm'",
     '[class.size-lg]': "size() === 'lg'",
   },
@@ -22,7 +22,7 @@ export class StatComponent {
   readonly deltaTone = input<'neutral' | 'secondary' | null>(null);
   readonly caption = input<string>('');
   readonly unit = input<string>('');
-  readonly variant = input<'default' | 'danger'>('default');
+  readonly variant = input<'default' | 'error'>('default');
   readonly size = input<'sm' | 'md' | 'lg'>('md');
 
   protected readonly deltaClasses = computed(() => {

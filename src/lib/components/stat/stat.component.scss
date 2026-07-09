@@ -16,7 +16,7 @@
   display: block;
 }
 
-:host(.danger) .value { color: var(--error-text); }
+:host(.error) .value { color: var(--error-text); }
 
 :host(.size-sm) .stat {
   .label { font-size: var(--font-size-2xs); letter-spacing: var(--letter-spacing-wide); }

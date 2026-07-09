@@ -5,7 +5,7 @@
   role="menuitem"
   [attr.tabindex]="tabbable() ? 0 : -1"
   [disabled]="disabled()"
-  [class.danger]="danger()"
+  [class.error]="error()"
   [class.has-submenu]="hasSubmenu()"
   [attr.aria-haspopup]="hasSubmenu() ? 'menu' : null"
   [attr.aria-expanded]="hasSubmenu() ? submenuOpen() : null"

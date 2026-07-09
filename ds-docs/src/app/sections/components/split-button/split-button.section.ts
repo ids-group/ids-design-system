@@ -14,7 +14,7 @@ export class SplitButtonSection {
   protected readonly saveActions: SplitButtonItem[] = [
     { label: 'Save as…', value: 'save-as', icon: 'copy' },
     { label: 'Save a copy', value: 'copy' },
-    { label: 'Discard changes', value: 'discard', icon: 'trash', danger: true },
+    { label: 'Discard changes', value: 'discard', icon: 'trash', error: true },
   ];
 
   protected readonly exportActions: SplitButtonItem[] = [

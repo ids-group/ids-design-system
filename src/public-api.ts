@@ -4,6 +4,7 @@
 export * from './lib/config/ds-config';
 export * from './lib/theme/provide-ds-theme';
 export * from './lib/overlay/ds-overlay-close-ref';
+export * from './lib/core/status';
 export * from './lib/icons';
 export * from './lib/components/button';
 export * from './lib/components/toggle-button';

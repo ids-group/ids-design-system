@@ -10,9 +10,11 @@
       }
 
       <div class="title-line">
-        <h1 class="title">
-          {{ title() }}
-        </h1>
+        @if (title()) {
+          <h1 class="title">
+            {{ title() }}
+          </h1>
+        }
 
         <ng-content select="[title-badge]"></ng-content>
       </div>

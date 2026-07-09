@@ -38,7 +38,7 @@ export class StepperComponent {
   /** Zero-based indices of steps in an error state. Error wins over completed/current/upcoming. */
   readonly errorSteps = input<readonly number[]>([]);
 
-  readonly stepClick = output<number>();
+  readonly stepClicked = output<number>();
 
   protected stepState(
     index: number,
@@ -80,7 +80,7 @@ export class StepperComponent {
 
   protected onStepClick(index: number): void {
     if (this.clickable()) {
-      this.stepClick.emit(index);
+      this.stepClicked.emit(index);
     }
   }
 }

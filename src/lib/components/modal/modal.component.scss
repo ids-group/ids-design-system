@@ -54,7 +54,7 @@
     background-color: var(--_modal-icon-badge-bg-color);
     color: var(--_modal-icon-badge-icon-color);
 
-    &.danger {
+    &.error {
       background-color: var(--error-subtitle);
       color: var(--error);
     }
@@ -94,7 +94,7 @@
     border-top: var(--border-width-default) solid var(--_modal-divider);
   }
 
-  &.danger {
+  &.error {
     .title { color: var(--_modal-title-text-color-error); }
   }
 

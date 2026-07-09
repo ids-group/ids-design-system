@@ -38,7 +38,7 @@ export class CalendarDayComponent {
   readonly tabIndex = input<number>(-1);
   readonly ariaLabel = input<string | null>(null);
 
-  readonly daySelect = output<MouseEvent>();
+  readonly daySelected = output<MouseEvent>();
   readonly dayKeydown = output<KeyboardEvent>();
 
   protected readonly classes = computed(() => {

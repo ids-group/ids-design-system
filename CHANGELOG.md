@@ -8,6 +8,50 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Breaking
+
+- **Status vocabulary unified — `danger` → `error`, `warn` → `warning`.** A new exported
+  `DsStatus = 'info' | 'success' | 'warning' | 'error'` is the canonical status vocabulary.
+  Renamed to match it: the boolean input `[danger]` → `[error]` on `ds-modal` / `ds-modal-card` /
+  `ds-menu-item`; `ds-stat` `variant` value `'danger'` → `'error'`; `ds-progress` `variant` value
+  `'warn'` → `'warning'` (`ProgressVariant` is now `'default' | Exclude<DsStatus, 'info'>`);
+  `ModalConfirmTone` `'danger'` → `'error'` (also `ModalService.confirm({ tone })`);
+  `SplitButtonItem.danger` → `.error`. Public tokens renamed in lockstep:
+  `--ds-menu-item-danger-label-color` → `--ds-menu-item-error-label-color` and
+  `--ds-progress-bar-color-warn` → `--ds-progress-bar-color-warning`. CSS state classes and every
+  default value are otherwise unchanged.
+- **Event outputs renamed to past-participle (consistent event naming).** Dismissal events unified
+  to `closed`: `ds-alert` / `ds-banner` / `ds-toast` `(dismissed)` → `(closed)`. Action events made
+  past-tense: `ds-table` `(rowClick)` → `(rowClicked)`, `ds-stepper` `(stepClick)` →
+  `(stepClicked)`, `ds-calendar-day` `(daySelect)` → `(daySelected)`, `ds-tabs` `(tabClose)` →
+  `(tabClosed)`, `ds-tree` `(nodeSelect)` → `(nodeSelected)`, `ds-split-button` `(itemSelect)` →
+  `(itemSelected)`.
+- **`ds-progress` — `indeterminate` is now a boolean input, not a `variant` value.** The animation
+  mode was conflated with the colour variant (a bar could not be `success`-coloured *and*
+  indeterminate). Migration: `<ds-progress variant="indeterminate" />` →
+  `<ds-progress indeterminate />`; `'indeterminate'` removed from `ProgressVariant`.
+- **`ds-badge` — `'count'` removed from `BadgeVariant`.** It was a dead union member; count mode is
+  (and always was) driven by the separate `[count]` input. Drop `variant="count"` — behavior is
+  unchanged.
+- **`title` is now optional on `ds-modal`, `ds-modal-card`, `ds-page-header`** (was
+  `input.required`). Existing consumers need no change (they already pass a title); omitting it now
+  renders an empty heading.
+
+### Added
+
+- **`DsStatus` type export** — `'info' | 'success' | 'warning' | 'error'`, the shared status
+  vocabulary used across status-bearing components.
+- **`ds-progress` `[indeterminate]` boolean input** — orthogonal to `variant` (see Breaking).
+- **`DividerSpacing` is now exported** from the public API (the `ds-divider` `[spacing]` input type
+  was previously declared but not re-exported).
+
+### Fixed
+
+- **Boolean attribute coercion on all boolean inputs.** ~54 boolean inputs across ~30 components
+  gained `transform: booleanAttribute`, so a bare or string attribute (`<ds-x required>` /
+  `disabled="false"`) now coerces correctly instead of being read as a truthy string. Property-
+  binding consumers are unaffected.
+
 ## 0.5.0 — 2026-07-08
 
 ### Breaking

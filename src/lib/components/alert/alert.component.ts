@@ -24,7 +24,7 @@ export class AlertComponent {
   readonly title = input<string>('');
   readonly dismissible = input(false, { transform: booleanAttribute });
   readonly icon = input<IconName | null>(null);
-  readonly dismissed = output<void>();
+  readonly closed = output<void>();
 
   @HostBinding('attr.role')
   protected get ariaRole(): 'alert' | 'status' {
@@ -60,6 +60,6 @@ export class AlertComponent {
   );
 
   protected onDismiss(): void {
-    this.dismissed.emit();
+    this.closed.emit();
   }
 }

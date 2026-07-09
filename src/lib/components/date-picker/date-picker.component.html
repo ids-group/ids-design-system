@@ -282,7 +282,7 @@
                 [dataDay]="dayKey(cell.date)"
                 [tabIndex]="isFocusDay(cell) ? 0 : -1"
                 [ariaLabel]="dayLabel(cell)"
-                (daySelect)="selectDay(cell)"
+                (daySelected)="selectDay(cell)"
                 (dayKeydown)="onGridKeydown($event, cell)"
               >
                 {{ cell.day }}

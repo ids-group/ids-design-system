@@ -42,19 +42,19 @@ const NUMERIC = /^-?\d+(\.\d+)?$/;
 export class TableComponent<T extends { id: string }> {
   readonly data = input.required<readonly T[]>();
   readonly columns = input.required<readonly TableColumn<T>[]>();
-  readonly selectable = input<boolean>(false);
+  readonly selectable = input(false, { transform: booleanAttribute });
   /** Opt-in outer border + radius. Off by default so tables flush inside a
    *  `<ds-card padding="none">` (workspaces, programs-list) don't double-border.
    *  When `true`, the scroll-wrap gets a `var(--border-default)` outline and
    *  `var(--radius-md)` radius — useful when the table stands alone in a padded card. */
-  readonly bordered = input<boolean>(false);
+  readonly bordered = input(false, { transform: booleanAttribute });
   /** false  — no loading state.
    *  'skeleton' — first-load placeholder; rows are replaced with shimmer
    *  rows that read the global --skeleton-shimmer-x driver.
    *  'overlay'  — re-fetch indicator; existing rows stay visible behind
    *  a translucent overlay with a centred spinner. */
   readonly loading = input<false | 'skeleton' | 'overlay'>(false);
-  readonly stickyHeader = input<boolean>(true);
+  readonly stickyHeader = input(true, { transform: booleanAttribute });
   readonly selectedIds = model<Set<string>>(new Set<string>());
   readonly sortKey = model<string | null>(null);
   readonly sortDir = model<SortDir>(null);
@@ -63,10 +63,10 @@ export class TableComponent<T extends { id: string }> {
    *  Without it, screen-reader users get an unlabelled table. */
   readonly caption = input<string>('');
   /** When true, each row becomes a keyboard-operable control (role=button,
-   *  tabindex, Enter/Space → rowClick) with an accessible name from the first
+   *  tabindex, Enter/Space → rowClicked) with an accessible name from the first
    *  column. Off by default so non-navigating tables don't advertise a false
    *  click affordance. */
-  readonly rowInteractive = input<boolean>(false);
+  readonly rowInteractive = input(false, { transform: booleanAttribute });
 
   /** Rows per page. `null` (default) disables pagination — all rows render. */
   readonly pageSize = model<number | null>(null);
@@ -75,11 +75,11 @@ export class TableComponent<T extends { id: string }> {
   readonly pageSizeOptions = input<number[]>([10, 25, 50, 100]);
   /** When true, the table sorts `data()` itself; otherwise it only emits
    *  `sortChange` and leaves ordering to the consumer (default). */
-  readonly clientSort = input<boolean>(false);
+  readonly clientSort = input(false, { transform: booleanAttribute });
   /** Pin the first data column (and the select column) on horizontal scroll. */
-  readonly stickyFirstColumn = input<boolean>(false);
+  readonly stickyFirstColumn = input(false, { transform: booleanAttribute });
 
-  readonly rowClick = output<T>();
+  readonly rowClicked = output<T>();
   readonly sortChange = output<SortChangeEvent>();
 
   /** Cell templates supplied as an explicit map instead of (or in addition to)
@@ -283,7 +283,7 @@ export class TableComponent<T extends { id: string }> {
     if ((event.target as HTMLElement).closest('input')) {
       return;
     }
-    this.rowClick.emit(row);
+    this.rowClicked.emit(row);
   }
 
   protected onRowKey(row: T, event: Event): void {
@@ -291,7 +291,7 @@ export class TableComponent<T extends { id: string }> {
       return;
     }
     event.preventDefault();
-    this.rowClick.emit(row);
+    this.rowClicked.emit(row);
   }
 
   /** Accessible name for an interactive row, taken from the first column. */

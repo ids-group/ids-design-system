@@ -6,7 +6,7 @@
   <span lede>
     Inline list of actions. Used inside modals, popovers, or any container that
     already provides its own surface. Each item is a full-width button with an
-    optional leading icon. <code>danger</code> turns the item red for
+    optional leading icon. <code>error</code> turns the item red for
     destructive actions (Sign out, Delete); <code>disabled</code> dims it and
     blocks clicks. To float it from a trigger, host it in a
     <code> ds-popover </code> — see the first demo.
@@ -46,7 +46,7 @@
 
         <ds-menu-item
           icon="x"
-          [danger]="true"
+          [error]="true"
         >
           Sign out
         </ds-menu-item>
@@ -80,7 +80,7 @@
 
           <ds-menu-item
             icon="x"
-            [danger]="true"
+            [error]="true"
           >
             Sign out
           </ds-menu-item>
@@ -119,7 +119,7 @@
 
           <ds-menu-item
             icon="x"
-            [danger]="true"
+            [error]="true"
           >
             Delete
           </ds-menu-item>
@@ -157,7 +157,7 @@
 
           <ds-menu-item
             icon="x"
-            [danger]="true"
+            [error]="true"
           >
             Sign out
           </ds-menu-item>
@@ -187,9 +187,9 @@
       </div>
     </div>
 
-    <!-- ============================================================ Danger -->
+    <!-- ============================================================ Error -->
     <div class="showcase-cell">
-      <h3 class="block-title t-h4">Danger</h3>
+      <h3 class="block-title t-h4">Error</h3>
 
       <p class="block-desc t-s">
         Destructive action — colour pulled from <code>--error-text</code>.
@@ -199,7 +199,7 @@
         <ds-menu>
           <ds-menu-item
             icon="x"
-            [danger]="true"
+            [error]="true"
           >
             Delete project
           </ds-menu-item>
@@ -223,7 +223,7 @@
 
           <ds-menu-item> Archive </ds-menu-item>
 
-          <ds-menu-item [danger]="true"> Delete </ds-menu-item>
+          <ds-menu-item [error]="true"> Delete </ds-menu-item>
         </ds-menu>
       </div>
     </div>

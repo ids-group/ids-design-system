@@ -26,7 +26,7 @@
         [variant]="'primary'"
         [menuItems]="saveActions"
         (pressed)="onSave()"
-        (itemSelect)="onPick($event)"
+        (itemSelected)="onPick($event)"
       />
 
       <p class="t-s">
@@ -52,7 +52,7 @@
       [variant]="'outline'"
       [menuItems]="exportActions"
       (pressed)="onSave()"
-      (itemSelect)="onPick($event)"
+      (itemSelected)="onPick($event)"
     />
   </div>
 </docs-section>

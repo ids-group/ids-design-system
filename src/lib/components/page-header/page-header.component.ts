@@ -1,4 +1,10 @@
-import { Component, ViewEncapsulation, computed, input } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  computed,
+  input,
+} from '@angular/core';
 
 @Component({
   selector: 'ds-page-header',
@@ -9,11 +15,11 @@ import { Component, ViewEncapsulation, computed, input } from '@angular/core';
 })
 export class PageHeaderComponent {
   readonly eyebrow = input<string>('');
-  readonly title = input.required<string>();
+  readonly title = input<string>('');
   readonly subtitle = input<string>('');
-  readonly compact = input<boolean>(false);
-  readonly divider = input<boolean>(false);
-  readonly metaDivider = input<boolean>(false);
+  readonly compact = input(false, { transform: booleanAttribute });
+  readonly divider = input(false, { transform: booleanAttribute });
+  readonly metaDivider = input(false, { transform: booleanAttribute });
 
   protected readonly classes = computed(() => {
     const parts = ['page-header'];

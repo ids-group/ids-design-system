@@ -5,6 +5,7 @@ import {
   TemplateRef,
   ViewContainerRef,
   ViewEncapsulation,
+  booleanAttribute,
   inject,
   input,
   output,
@@ -39,8 +40,8 @@ export class MenuItemComponent implements OnDestroy {
     viewChild.required<ElementRef<HTMLButtonElement>>('button');
 
   readonly icon = input<IconName | null>(null);
-  readonly disabled = input<boolean>(false);
-  readonly danger = input<boolean>(false);
+  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly error = input(false, { transform: booleanAttribute });
   /** Optional submenu template — renders a nested `ds-menu` on hover / ArrowRight. */
   readonly submenu = input<TemplateRef<unknown> | null>(null);
   readonly pressed = output<MouseEvent>();

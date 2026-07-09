@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
 import type { IconName } from '../../icons/icons.data';
 
-export type ModalConfirmTone = 'default' | 'danger';
+export type ModalConfirmTone = 'default' | 'error';
 
 export interface ModalConfirmOptions {
   title: string;

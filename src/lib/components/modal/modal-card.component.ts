@@ -1,6 +1,7 @@
 import {
   Component,
   ViewEncapsulation,
+  booleanAttribute,
   computed,
   input,
   output,
@@ -21,9 +22,9 @@ let nextId = 0;
 })
 export class ModalCardComponent {
   readonly size = input<ModalSize>('md');
-  readonly danger = input<boolean>(false);
-  readonly title = input.required<string>();
-  readonly showClose = input<boolean>(true);
+  readonly error = input(false, { transform: booleanAttribute });
+  readonly title = input<string>('');
+  readonly showClose = input(true, { transform: booleanAttribute });
   readonly icon = input<IconName | null>(null);
   readonly dialogRole = input<'dialog' | 'alertdialog'>('dialog');
   readonly closed = output<void>();
@@ -32,8 +33,8 @@ export class ModalCardComponent {
 
   protected readonly classes = computed(() => {
     const parts = ['modal', this.size()];
-    if (this.danger()) {
-      parts.push('danger');
+    if (this.error()) {
+      parts.push('error');
     }
 
     return parts.join(' ');

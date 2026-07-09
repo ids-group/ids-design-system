@@ -76,7 +76,7 @@ export class ModalSection {
       message:
         "This project and its 14 tasks will be permanently removed. This can't be undone.",
       confirmLabel: 'Delete project',
-      tone: 'danger',
+      tone: 'error',
       icon: 'trash',
     });
     this.confirmResult.set(ok ? 'Confirmed delete' : 'Cancelled');
@@ -87,7 +87,7 @@ export class ModalSection {
       title: 'Delete database?',
       message: 'Type the database name to confirm.',
       confirmLabel: 'Delete',
-      tone: 'danger',
+      tone: 'error',
       icon: 'trash',
       typeToConfirm: 'production-db',
     });

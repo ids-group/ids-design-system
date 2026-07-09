@@ -1,6 +1,3 @@
-export type ProgressVariant =
-  | 'default'
-  | 'success'
-  | 'warn'
-  | 'error'
-  | 'indeterminate';
+import type { DsStatus } from '../../core/status';
+
+export type ProgressVariant = 'default' | Exclude<DsStatus, 'info'>;

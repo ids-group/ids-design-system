@@ -295,7 +295,7 @@
     When <code class="t-mono-inline">closable</code> is set each tab shows a
     close button. Clicking it emits
     <code class="t-mono-inline">
-      tabClose
+      tabClosed
     </code> with the tab's
     <code class="t-mono-inline">
       value
@@ -308,7 +308,7 @@
     <div class="variant-row__stage">
       <ds-tabs
         closable
-        (tabClose)="onTabClose($event)"
+        (tabClosed)="onTabClose($event)"
       >
         @for (tab of closableTabs(); track tab.value) {
           <ds-tab

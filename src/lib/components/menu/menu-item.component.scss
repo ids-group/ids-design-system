@@ -5,7 +5,7 @@
   --_menu-item-label-color: var(--ds-menu-item-label-color, var(--text-primary));
   --_menu-item-focus-shadow: var(--ds-menu-item-focus-shadow, var(--ds-control-focus-shadow));
   --_menu-item-hover-bg-color: var(--ds-menu-item-hover-bg-color, var(--surface-secondary));
-  --_menu-item-danger-label-color: var(--ds-menu-item-danger-label-color, var(--error-text));
+  --_menu-item-error-label-color: var(--ds-menu-item-error-label-color, var(--error-text));
 
   display: block;
 }
@@ -39,8 +39,8 @@
     &:hover { background: transparent; }
   }
 
-  &.danger {
-    color: var(--_menu-item-danger-label-color);
+  &.error {
+    color: var(--_menu-item-error-label-color);
 
     &:hover { background: var(--error-subtitle); }
   }

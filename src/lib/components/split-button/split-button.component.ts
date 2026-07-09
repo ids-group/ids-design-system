@@ -33,14 +33,14 @@ export class SplitButtonComponent {
   /** Accessible name for the dropdown trigger. */
   readonly menuLabel = input<string>('More actions');
   readonly pressed = output<MouseEvent>();
-  readonly itemSelect = output<SplitButtonItem>();
+  readonly itemSelected = output<SplitButtonItem>();
 
   protected onItemSelect(item: SplitButtonItem): void {
     if (item.disabled) {
       return;
     }
     // ds-menu-item closes the popover itself via the injected DsOverlayCloseRef.
-    this.itemSelect.emit(item);
+    this.itemSelected.emit(item);
   }
 
   protected onTriggerKeydown(

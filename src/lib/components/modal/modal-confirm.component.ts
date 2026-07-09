@@ -27,7 +27,7 @@ export class ModalConfirmComponent {
   protected readonly options = this.context.options;
   protected readonly tone = this.options.tone ?? 'default';
   protected readonly confirmColor: ButtonColor =
-    this.tone === 'danger' ? 'error' : 'primary';
+    this.tone === 'error' ? 'error' : 'primary';
 
   protected readonly uid = `ds-modal-confirm-${++nextId}`;
   protected readonly messageId = `${this.uid}-message`;

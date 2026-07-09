@@ -41,7 +41,7 @@ export class TabsComponent {
       active tab is scrolled into view on selection. */
   readonly scrollable = input(false, { transform: booleanAttribute });
 
-  /** When true, each tab shows a close button. Clicking it emits tabClose with
+  /** When true, each tab shows a close button. Clicking it emits tabClosed with
       the tab's value (or label as fallback) and does not switch to that tab. */
   readonly closable = input(false, { transform: booleanAttribute });
 
@@ -52,7 +52,7 @@ export class TabsComponent {
   /** Emitted when a close button is clicked. Carries the tab's value input, or
       its label when value is not set. The host is responsible for removing the
       tab from its list. */
-  readonly tabClose = output<string>();
+  readonly tabClosed = output<string>();
 
   private readonly host = inject(ElementRef<HTMLElement>);
   private readonly uid = `ds-tabs-${++nextId}`;
@@ -140,7 +140,7 @@ export class TabsComponent {
     if (!tab) {
       return;
     }
-    this.tabClose.emit(tab.value() ?? tab.label());
+    this.tabClosed.emit(tab.value() ?? tab.label());
   }
 
   /** Roving keyboard navigation across the tablist (APG automatic activation).

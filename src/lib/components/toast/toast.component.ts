@@ -1,6 +1,7 @@
 import {
   Component,
   ViewEncapsulation,
+  booleanAttribute,
   computed,
   input,
   output,
@@ -26,16 +27,16 @@ export class ToastComponent {
   readonly variant = input<ToastVariant>('info');
   readonly title = input<string>('');
   readonly message = input<string>('');
-  readonly dismissible = input<boolean>(false);
+  readonly dismissible = input(false, { transform: booleanAttribute });
   readonly icon = input<IconName | null>(null);
   readonly action = input<ToastAction | null>(null);
-  readonly dismissed = output<void>();
+  readonly closed = output<void>();
 
   protected readonly isLoading = computed(() => this.variant() === 'loading');
 
   protected onAction(action: ToastAction): void {
     action.handler();
-    this.dismissed.emit();
+    this.closed.emit();
   }
 
   protected readonly classes = computed(() => `toast ${this.variant()}`);
@@ -61,6 +62,6 @@ export class ToastComponent {
   });
 
   protected onDismiss(): void {
-    this.dismissed.emit();
+    this.closed.emit();
   }
 }

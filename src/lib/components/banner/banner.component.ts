@@ -2,6 +2,7 @@ import {
   Component,
   HostBinding,
   ViewEncapsulation,
+  booleanAttribute,
   computed,
   input,
   output,
@@ -21,12 +22,12 @@ import type { BannerVariant } from './banner.types';
 export class BannerComponent {
   readonly variant = input<BannerVariant>('info');
   readonly title = input<string>('');
-  readonly dismissible = input<boolean>(false);
+  readonly dismissible = input(false, { transform: booleanAttribute });
   readonly icon = input<IconName | null>(null);
-  readonly compact = input<boolean>(false);
+  readonly compact = input(false, { transform: booleanAttribute });
   readonly layout = input<'stacked' | 'row'>('stacked');
-  readonly accentRail = input<boolean>(true);
-  readonly dismissed = output<void>();
+  readonly accentRail = input(true, { transform: booleanAttribute });
+  readonly closed = output<void>();
 
   @HostBinding('class.no-rail')
   protected get noRail(): boolean {
@@ -75,6 +76,6 @@ export class BannerComponent {
   });
 
   protected onDismiss(): void {
-    this.dismissed.emit();
+    this.closed.emit();
   }
 }

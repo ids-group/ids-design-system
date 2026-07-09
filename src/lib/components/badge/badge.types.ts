@@ -5,4 +5,4 @@ export type BadgeSemantic =
   | 'warning'
   | 'error'
   | 'neutral';
-export type BadgeVariant = BadgeLifecycle | BadgeSemantic | 'solid' | 'count';
+export type BadgeVariant = BadgeLifecycle | BadgeSemantic | 'solid';
