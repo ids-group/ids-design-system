@@ -182,6 +182,14 @@ const SEMANTIC_TEXT = pick(/^--text-/).map(colourRow);
 const SEMANTIC_SURFACE = pick(/^--surface-/).map(colourRow);
 const SEMANTIC_BORDER = pick(/^--border-(?!width-)/).map(colourRow);
 const SEMANTIC_FOCUS = pick(/^--focus-/).map(colourRow);
+const SEMANTIC_SECONDARY = pick(/^--secondary/).map(colourRow);
+const SEMANTIC_ACCENT = pick(/^--accent/).map(colourRow);
+const SEMANTIC_STATUS = pick(/^--status-/).map(colourRow);
+const SEMANTIC_LINK = pick(/^--link/).map(colourRow);
+
+// ---- Charts (ColourRow; mostly colour, a few sizes — size rows just render
+// without a swatch since ColourRow has no renderAs) ----------------------
+const CHARTS = pick(/^--chart-/).map(colourRow);
 
 // ---- Colour ramps (RampSpec) ----------------------------------------------
 // Fixed labels/prefixes/notes VERBATIM from the original; stops auto-derived
@@ -266,7 +274,14 @@ const TYPOGRAPHY_FW = pick(/^--font-weight-/)
 // component; tokens within a group keep extraction order.
 const folderSet = readdirSync(join(ROOT, 'src/lib/components'))
   .filter((e) => statSync(join(ROOT, 'src/lib/components', e)).isDirectory());
+// Geometry prefixes that don't literally match their owning folder name.
+// Only unambiguous cases — leave anything contested (--field-*, --calendar-*,
+// --matrix-*, --kbd-*, etc.) unaliased so it still surfaces in NEW_TOKENS.
+const FOLDER_ALIAS = { btn: 'button', check: 'checkbox', 'sort-ic': 'table' };
 function ownerFolder(name) {                 // longest `--<folder>-` prefix match
+  for (const [prefix, folder] of Object.entries(FOLDER_ALIAS)) {
+    if (name.startsWith(`--${prefix}-`)) return folder;
+  }
   const hits = folderSet.filter((f) => name.startsWith(`--${f}-`));
   return hits.sort((a, b) => b.length - a.length)[0] || null;
 }
@@ -338,6 +353,11 @@ const body = [
   constLine('SEMANTIC_SURFACE', 'ColourRow', SEMANTIC_SURFACE),
   constLine('SEMANTIC_BORDER', 'ColourRow', SEMANTIC_BORDER),
   constLine('SEMANTIC_FOCUS', 'ColourRow', SEMANTIC_FOCUS),
+  constLine('SEMANTIC_SECONDARY', 'ColourRow', SEMANTIC_SECONDARY),
+  constLine('SEMANTIC_ACCENT', 'ColourRow', SEMANTIC_ACCENT),
+  constLine('SEMANTIC_STATUS', 'ColourRow', SEMANTIC_STATUS),
+  constLine('SEMANTIC_LINK', 'ColourRow', SEMANTIC_LINK),
+  constLine('CHARTS', 'ColourRow', CHARTS),
   constLine('RAMPS', 'RampSpec', RAMPS),
   constLine('TYPOGRAPHY_FONT', 'TypeRow', TYPOGRAPHY_FONT),
   constLine('TYPOGRAPHY_SIZE', 'TypeRow', TYPOGRAPHY_SIZE),
@@ -369,6 +389,9 @@ const summary = {
   SEMANTIC_WARNING: SEMANTIC_WARNING.length, SEMANTIC_INFO: SEMANTIC_INFO.length,
   SEMANTIC_TEXT: SEMANTIC_TEXT.length, SEMANTIC_SURFACE: SEMANTIC_SURFACE.length,
   SEMANTIC_BORDER: SEMANTIC_BORDER.length, SEMANTIC_FOCUS: SEMANTIC_FOCUS.length,
+  SEMANTIC_SECONDARY: SEMANTIC_SECONDARY.length, SEMANTIC_ACCENT: SEMANTIC_ACCENT.length,
+  SEMANTIC_STATUS: SEMANTIC_STATUS.length, SEMANTIC_LINK: SEMANTIC_LINK.length,
+  CHARTS: CHARTS.length,
   RAMPS: RAMPS.length, TYPOGRAPHY_FONT: TYPOGRAPHY_FONT.length,
   TYPOGRAPHY_SIZE: TYPOGRAPHY_SIZE.length, TYPOGRAPHY_LH: TYPOGRAPHY_LH.length,
   TYPOGRAPHY_LS: TYPOGRAPHY_LS.length, TYPOGRAPHY_FW: TYPOGRAPHY_FW.length,

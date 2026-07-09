@@ -436,6 +436,242 @@
     </tbody>
   </table>
 
+  @if (secondarySemantic.length) {
+    <div class="cat-sub t-overline">
+      Secondary
+    </div>
+
+    <table class="ref-table">
+      <thead>
+        <tr>
+          <th class="col-name">
+            Token
+          </th>
+
+          <th class="col-value">
+            Value
+          </th>
+
+          <th class="col-resolved">
+            Resolved
+          </th>
+
+          <th class="col-notes">
+            Notes
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (row of secondarySemantic; track row.name) {
+          <tr>
+            <td>
+              <code class="t-mono-inline">
+                {{ row.name }}
+              </code>
+            </td>
+
+            <td>
+              <code class="t-mono-inline">
+                {{ row.value }}
+              </code>
+            </td>
+
+            <td>
+              <span
+                class="swatch-chip"
+                [class.is-inverted]="row.inverted"
+                [style.background]="'var(' + row.name + ')'"
+              >
+              </span>
+            </td>
+
+            <td>
+              {{ row.notes }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  @if (accentSemantic.length) {
+    <div class="cat-sub t-overline">
+      Accent
+    </div>
+
+    <table class="ref-table">
+      <thead>
+        <tr>
+          <th class="col-name">
+            Token
+          </th>
+
+          <th class="col-value">
+            Value
+          </th>
+
+          <th class="col-resolved">
+            Resolved
+          </th>
+
+          <th class="col-notes">
+            Notes
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (row of accentSemantic; track row.name) {
+          <tr>
+            <td>
+              <code class="t-mono-inline">
+                {{ row.name }}
+              </code>
+            </td>
+
+            <td>
+              <code class="t-mono-inline">
+                {{ row.value }}
+              </code>
+            </td>
+
+            <td>
+              <span
+                class="swatch-chip"
+                [class.is-inverted]="row.inverted"
+                [style.background]="'var(' + row.name + ')'"
+              >
+              </span>
+            </td>
+
+            <td>
+              {{ row.notes }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  @if (statusSemantic.length) {
+    <div class="cat-sub t-overline">
+      Status
+    </div>
+
+    <table class="ref-table">
+      <thead>
+        <tr>
+          <th class="col-name">
+            Token
+          </th>
+
+          <th class="col-value">
+            Value
+          </th>
+
+          <th class="col-resolved">
+            Resolved
+          </th>
+
+          <th class="col-notes">
+            Notes
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (row of statusSemantic; track row.name) {
+          <tr>
+            <td>
+              <code class="t-mono-inline">
+                {{ row.name }}
+              </code>
+            </td>
+
+            <td>
+              <code class="t-mono-inline">
+                {{ row.value }}
+              </code>
+            </td>
+
+            <td>
+              <span
+                class="swatch-chip"
+                [class.is-inverted]="row.inverted"
+                [style.background]="'var(' + row.name + ')'"
+              >
+              </span>
+            </td>
+
+            <td>
+              {{ row.notes }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  @if (linkSemantic.length) {
+    <div class="cat-sub t-overline">
+      Link
+    </div>
+
+    <table class="ref-table">
+      <thead>
+        <tr>
+          <th class="col-name">
+            Token
+          </th>
+
+          <th class="col-value">
+            Value
+          </th>
+
+          <th class="col-resolved">
+            Resolved
+          </th>
+
+          <th class="col-notes">
+            Notes
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (row of linkSemantic; track row.name) {
+          <tr>
+            <td>
+              <code class="t-mono-inline">
+                {{ row.name }}
+              </code>
+            </td>
+
+            <td>
+              <code class="t-mono-inline">
+                {{ row.value }}
+              </code>
+            </td>
+
+            <td>
+              <span
+                class="swatch-chip"
+                [class.is-inverted]="row.inverted"
+                [style.background]="'var(' + row.name + ')'"
+              >
+              </span>
+            </td>
+
+            <td>
+              {{ row.notes }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
   <div class="cat-sub t-overline">
     Text
   </div>
@@ -1880,6 +2116,82 @@
       }
     </tbody>
   </table>
+
+  <!-- ============================================================ Charts -->
+  @if (charts.length) {
+    <h3 class="block-title t-h4">
+      Charts
+    </h3>
+
+    <p class="block-desc t-s">
+      Data-visualization colour and geometry — categorical/sequential/diverging
+      series, axes, gridlines, tooltips. Mostly colour; a few size rows render
+      without a swatch.
+    </p>
+
+    <div class="cat-sub t-overline">
+      Chart tokens
+    </div>
+
+    <table class="ref-table">
+      <thead>
+        <tr>
+          <th class="col-name">
+            Token
+          </th>
+
+          <th class="col-value">
+            Value
+          </th>
+
+          <th class="col-resolved">
+            Resolved
+          </th>
+
+          <th class="col-notes">
+            Notes
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (row of charts; track row.name) {
+          <tr>
+            <td>
+              <code class="t-mono-inline">
+                {{ row.name }}
+              </code>
+            </td>
+
+            <td>
+              <code class="t-mono-inline">
+                {{ row.value }}
+              </code>
+            </td>
+
+            <td>
+              @if (isColorValue(row.value)) {
+                <span
+                  class="swatch-chip"
+                  [class.is-inverted]="row.inverted"
+                  [style.background]="'var(' + row.name + ')'"
+                >
+                </span>
+              } @else {
+                <span class="literal-value t-mono">
+                  geometry
+                </span>
+              }
+            </td>
+
+            <td>
+              {{ row.notes }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
 
   <!-- ============================================================ Component tokens -->
   <h3 id="component-tokens" class="block-title t-h4">

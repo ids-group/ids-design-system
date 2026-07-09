@@ -11,6 +11,11 @@ import {
   SEMANTIC_SURFACE,
   SEMANTIC_BORDER,
   SEMANTIC_FOCUS,
+  SEMANTIC_SECONDARY,
+  SEMANTIC_ACCENT,
+  SEMANTIC_STATUS,
+  SEMANTIC_LINK,
+  CHARTS,
   RAMPS,
   TYPOGRAPHY_FONT,
   TYPOGRAPHY_SIZE,
@@ -53,6 +58,11 @@ export class TokensReferenceSection {
   protected readonly surfaceSemantic = SEMANTIC_SURFACE;
   protected readonly borderSemantic = SEMANTIC_BORDER;
   protected readonly focusSemantic = SEMANTIC_FOCUS;
+  protected readonly secondarySemantic = SEMANTIC_SECONDARY;
+  protected readonly accentSemantic = SEMANTIC_ACCENT;
+  protected readonly statusSemantic = SEMANTIC_STATUS;
+  protected readonly linkSemantic = SEMANTIC_LINK;
+  protected readonly charts = CHARTS;
   protected readonly ramps = RAMPS;
   protected readonly typeFont = TYPOGRAPHY_FONT;
   protected readonly typeSize = TYPOGRAPHY_SIZE;
