@@ -17,20 +17,5 @@
       align-items: center;
     }
 
-    /* Demo-only: distinct secondary/tertiary hues so the brand rows read as
-       independent (they default to --primary in the real theme). Override the
-       ROLE TOKENS directly — channel (--*-h/s/l) overrides don't propagate to
-       the :root-composed --secondary/--tertiary on a descendant scope. */
-    .brand-demo {
-      --secondary: hsl(25 95% 53%); /* orange */
-      --secondary-strong: hsl(25 90% 42%);
-      --secondary-subtitle: hsl(25 100% 96%);
-      --secondary-muted: hsl(25 95% 91%);
-      --secondary-muted-strong: hsl(25 95% 86%);
-
-      --tertiary: hsl(262 70% 56%); /* violet */
-      --tertiary-strong: hsl(262 60% 46%);
-      --tertiary-subtitle: hsl(262 80% 97%);
-      --tertiary-muted: hsl(262 70% 93%);
-      --tertiary-muted-strong: hsl(262 65% 88%);
-    }
+    /* secondary/tertiary render as distinct hues via the docs-global showcase
+       theme (styles/_showcase-theme.scss), not a per-section override. */
