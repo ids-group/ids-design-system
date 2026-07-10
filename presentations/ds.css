@@ -40,6 +40,9 @@
   --blue-700: hsl(var(--blue-h) 85% 52%);
   --blue-800: hsl(var(--blue-h) 79% 40%);
   --blue-900: hsl(var(--blue-h) 77% 30%);
+  --orange-h: 22;
+  --orange-s: 100%;
+  --orange-l: 59%;
   --orange-50: #FFF7F0;
   --orange-100: #FFEEDF;
   --orange-200: #FFD9B8;
@@ -90,9 +93,11 @@
   --sky-500: #3B82F6;
   --sky-600: #2563EB;
   --sky-700: #1D4ED8;
+  --violet-h: 262;
+  --violet-s: 70%;
+  --violet-l: 56%;
   --shadow-tint-h: 225;
   --shadow-tint-s: 39%;
-  --static-white: #FFF;
   --static-ink: #161A28;
   --font-sans: "Mulish", -apple-system, blinkmacsystemfont, "Segoe UI", roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, sfmono-regular, menlo, monospace;
@@ -167,20 +172,20 @@
   --text-inverted: var(--neutral-0);
   /* Text overlaid on arbitrary imagery (camera feeds, photos) — pairs a
      guaranteed-light colour with a contrast shadow. */
-  --text-on-media: var(--static-white);
+  --text-on-media: white;
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
   --text-link: var(--blue-700);
-  --text-on-primary: var(--static-white);
-  --text-on-success: var(--static-white);
+  --text-on-primary: white;
+  --text-on-success: white;
   /* Warning fill is yellow (--yellow-400 #F4D43A) — white text on it is only
      ~1.5:1 (fails WCAG). On-warning text is the darkest neutral (~10:1). */
   --text-on-warning: var(--static-ink);
-  --text-on-error: var(--static-white);
+  --text-on-error: white;
   /* Icons */
   --icon-default: var(--neutral-500);
   --icon-strong: var(--neutral-700);
   --icon-muted: var(--neutral-400);
-  --icon-on-primary: var(--static-white);
+  --icon-on-primary: white;
   /* Semantic → palette bridge. The lib knows colours by PURPOSE; the theme
      (themes/light/_theme.scss) ships the concrete ramps + HSL channels. This
      is the one place that maps semantic roles onto a concrete palette. A brand
@@ -213,15 +218,15 @@
   --primary-muted: var(--blue-100);
   --primary-muted-strong: var(--blue-200);
   --primary-strong: var(--blue-700);
-  --primary-on: var(--static-white);
-  /* Accent / secondary role — composed from --secondary-h/s/l channels.
-     Channels default to brand values so unbranded apps render identical to
-     --primary. Override --secondary-h/s/l per-brand (or via the tweaks panel)
-     to introduce a true secondary hue — --secondary recomposes automatically.
-     Hover/pressed derive from --secondary so any hue change propagates. */
-  --secondary-h: var(--primary-h);
-  --secondary-s: var(--primary-s);
-  --secondary-l: var(--primary-l);
+  --primary-on: white;
+  /* Accent / secondary role — maps onto the palette --orange family (Tier-1),
+     kept distinct from --primary so the brand slots read apart. Override
+     --secondary-h/s/l per-brand (or via the tweaks panel) to reskin it —
+     --secondary recomposes automatically. Hover/pressed derive from --secondary
+     so any hue change propagates. */
+  --secondary-h: var(--orange-h);
+  --secondary-s: var(--orange-s);
+  --secondary-l: var(--orange-l);
   --secondary: hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l));
   --secondary-hover: color-mix(in srgb, var(--secondary) 88%, black);
   --secondary-pressed: color-mix(in srgb, var(--secondary) 76%, black);
@@ -234,12 +239,12 @@
      tonal accents (decorative chips, hierarchy tones, indicators). Mirrors
      the --primary / --secondary token-family shape: HSL channels for halo
      composition, hover/pressed via color-mix, subtle/muted ramps for tonal
-     surfaces. Defaults to --primary channels so single-hue themes render
-     identical to primary. Multi-hue brands override --tertiary-h/s/l (or
-     --tertiary directly for non-HSL values). */
-  --tertiary-h: var(--primary-h);
-  --tertiary-s: var(--primary-s);
-  --tertiary-l: var(--primary-l);
+     surfaces. Maps onto the palette --violet family (Tier-1), distinct from
+     --primary / --secondary. Brands override --tertiary-h/s/l (or --tertiary
+     directly for non-HSL values) to reskin it. */
+  --tertiary-h: var(--violet-h);
+  --tertiary-s: var(--violet-s);
+  --tertiary-l: var(--violet-l);
   --tertiary: hsl(var(--tertiary-h) var(--tertiary-s) var(--tertiary-l));
   --tertiary-hover: color-mix(in srgb, var(--tertiary) 88%, black);
   --tertiary-pressed: color-mix(in srgb, var(--tertiary) 76%, black);
@@ -449,20 +454,20 @@
   --text-inverted: var(--neutral-0);
   /* Text overlaid on arbitrary imagery (camera feeds, photos) — pairs a
      guaranteed-light colour with a contrast shadow. */
-  --text-on-media: var(--static-white);
+  --text-on-media: white;
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
   --text-link: var(--blue-700);
-  --text-on-primary: var(--static-white);
-  --text-on-success: var(--static-white);
+  --text-on-primary: white;
+  --text-on-success: white;
   /* Warning fill is yellow (--yellow-400 #F4D43A) — white text on it is only
      ~1.5:1 (fails WCAG). On-warning text is the darkest neutral (~10:1). */
   --text-on-warning: var(--static-ink);
-  --text-on-error: var(--static-white);
+  --text-on-error: white;
   /* Icons */
   --icon-default: var(--neutral-500);
   --icon-strong: var(--neutral-700);
   --icon-muted: var(--neutral-400);
-  --icon-on-primary: var(--static-white);
+  --icon-on-primary: white;
   /* Semantic → palette bridge. The lib knows colours by PURPOSE; the theme
      (themes/light/_theme.scss) ships the concrete ramps + HSL channels. This
      is the one place that maps semantic roles onto a concrete palette. A brand
@@ -495,15 +500,15 @@
   --primary-muted: var(--blue-100);
   --primary-muted-strong: var(--blue-200);
   --primary-strong: var(--blue-700);
-  --primary-on: var(--static-white);
-  /* Accent / secondary role — composed from --secondary-h/s/l channels.
-     Channels default to brand values so unbranded apps render identical to
-     --primary. Override --secondary-h/s/l per-brand (or via the tweaks panel)
-     to introduce a true secondary hue — --secondary recomposes automatically.
-     Hover/pressed derive from --secondary so any hue change propagates. */
-  --secondary-h: var(--primary-h);
-  --secondary-s: var(--primary-s);
-  --secondary-l: var(--primary-l);
+  --primary-on: white;
+  /* Accent / secondary role — maps onto the palette --orange family (Tier-1),
+     kept distinct from --primary so the brand slots read apart. Override
+     --secondary-h/s/l per-brand (or via the tweaks panel) to reskin it —
+     --secondary recomposes automatically. Hover/pressed derive from --secondary
+     so any hue change propagates. */
+  --secondary-h: var(--orange-h);
+  --secondary-s: var(--orange-s);
+  --secondary-l: var(--orange-l);
   --secondary: hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l));
   --secondary-hover: color-mix(in srgb, var(--secondary) 88%, black);
   --secondary-pressed: color-mix(in srgb, var(--secondary) 76%, black);
@@ -516,12 +521,12 @@
      tonal accents (decorative chips, hierarchy tones, indicators). Mirrors
      the --primary / --secondary token-family shape: HSL channels for halo
      composition, hover/pressed via color-mix, subtle/muted ramps for tonal
-     surfaces. Defaults to --primary channels so single-hue themes render
-     identical to primary. Multi-hue brands override --tertiary-h/s/l (or
-     --tertiary directly for non-HSL values). */
-  --tertiary-h: var(--primary-h);
-  --tertiary-s: var(--primary-s);
-  --tertiary-l: var(--primary-l);
+     surfaces. Maps onto the palette --violet family (Tier-1), distinct from
+     --primary / --secondary. Brands override --tertiary-h/s/l (or --tertiary
+     directly for non-HSL values) to reskin it. */
+  --tertiary-h: var(--violet-h);
+  --tertiary-s: var(--violet-s);
+  --tertiary-l: var(--violet-l);
   --tertiary: hsl(var(--tertiary-h) var(--tertiary-s) var(--tertiary-l));
   --tertiary-hover: color-mix(in srgb, var(--tertiary) 88%, black);
   --tertiary-pressed: color-mix(in srgb, var(--tertiary) 76%, black);
@@ -798,6 +803,9 @@
      ============================================================ */
   --border-width-default: 1px; /* every border, divider, field outline */
   --border-width-strong: 2px; /* radio dot, slider thumb, tabs underline, focus ring inner band, dropzone dash */
+  /* Focus outline-offset — gap between an element edge and its focus ring;
+     unifies the 2px offset repeated across stepper/table/dropzone/color-picker. */
+  --focus-ring-offset: 2px;
   /* ============================================================
      Elevation
      Channel-split substrate so a re-skin can re-tint shadows.
@@ -974,7 +982,7 @@
      scale. Density Tweaks override these at :root.
      ============================================================ */
   /* Field padding — density-aware, consumed by input, search and
-     textarea controls. Tokenised so the ultra-compact tier can
+     textarea controls. Tokenised so density tiers can
      compress without component edits. */
   --field-pad-x: var(--space-3);
   --field-pad-y: 0;
@@ -1000,6 +1008,10 @@
   --check-indet-h: 2px;
   --radio-dot-size: 10px;
   --radio-bw-checked: var(--border-width-strong);
+  --check-glyph-sm: 14px; /* .size-sm / .size-lg control box — fixed, not density-scaled */
+  --check-glyph-lg: 24px;
+  --radio-glyph-sm: 14px;
+  --radio-glyph-lg: 24px;
   /* Switch */
   --switch-track-w: 36px;
   --switch-track-h: 20px;
@@ -1100,10 +1112,14 @@
   --sidenav-logo-size: var(--hit-sm); /* 28px — square brand mark */
   --sidenav-collapsed-item: var(--hit-cozy); /* 40px — collapsed nav-item hit area */
   --sidenav-section-pad-b: var(--space-1-5); /* nav-section bottom padding */
+  --sidenav-item-rail-width: 3px; /* active-item left rail */
   /* Form section grid */
   --form-section-label-w: 280px; /* labels column width */
   /* Page header */
   --page-header-sub-mt: var(--space-1); /* subtitle top margin */
+  /* Bottom sheet */
+  --bottom-sheet-handle-w: 36px; /* drag-handle bar */
+  --bottom-sheet-handle-h: 4px;
   /* Field internals */
   --field-textarea-rows-min: 60px; /* min-h for inline textarea inside the field wrapper */
   --field-floating-pad-t: 18px; /* top padding when --floating, leaves room for label */
@@ -1112,12 +1128,14 @@
   /* Button group */
   --btn-group-overlap: calc(var(--border-width-default) * -1); /* -1px — collapses adjacent borders */
   --btn-link-uloff: 3px; /* underline-offset on link buttons */
+  --breadcrumbs-link-uloff: 2px; /* underline-offset on breadcrumb links */
   /* Card */
   --card-hover-lift: 1px; /* translateY on .card--hover */
   --card-title-fs: var(--font-size-h4);
   /* Sort icon (table headers) */
   --sort-ic-size: var(--icon-xs); /* 12px */
   --sort-ic-gap: var(--space-1-5); /* 6px */
+  --sort-ic-opacity-idle: 0.4; /* unsorted column icon */
   /* Tag close glyph (when literal svg sits inside .tag .x) */
   --tag-close-glyph: var(--icon-xs); /* 12px */
   /* Bulk action toolbar */
@@ -1152,9 +1170,9 @@
   --cmdk-w: 560px;
   --cmdk-list-maxh: var(--popover-maxh); /* alias — keeps cmdk + popover synced */
   /* Datepicker */
-  --datepicker-w: 280px;
-  --datepicker-cell-gap: var(--space-0-5); /* 2px — grid gap between day cells */
-  --datepicker-nav-size: var(--hit-xs); /* 24px — month-step buttons */
+  --date-picker-w: 280px;
+  --date-picker-cell-gap: var(--space-0-5); /* 2px — grid gap between day cells */
+  --date-picker-nav-size: var(--hit-xs); /* 24px — month-step buttons */
   /* Modal close button */
   --modal-close-size: var(--hit-xs); /* 24px */
   --modal-enter-y: var(--space-2); /* 8px slide-in */
@@ -1248,26 +1266,6 @@
 /* ============================================================
    Density tiers — applied by Tweaks panel via [data-density]
    ============================================================ */
-[data-density=ultra-compact] {
-  /* Power-user / tradesperson tier: financial dashboards, log viewers,
-     dense data grids. 24px hits sit BELOW WCAG 2.5.5 (44px enhanced)
-     and WCAG 2.5.8 (24px minimum) margins — acceptable only when:
-       (a) the screen is keyboard-first, (b) input is mouse/keys not
-       touch, (c) accidental-tap risk is low, (d) the user opted in.
-     Do not enable for mobile / field-ops layouts. */
-  --hit-cozy: 24px;
-  --hit-min: 24px;
-  --check-size: 14px;
-  --switch-track-w: 24px;
-  --switch-thumb-size: 12px;
-  --segmented-btn-h: 20px;
-  --field-pad-x: var(--space-2);
-  --field-pad-y: var(--space-1);
-  --table-cell-pad-x: var(--space-2);
-  --table-cell-pad-y: var(--space-1);
-  --table-head-pad-y: var(--space-1);
-}
-
 [data-density=compact] {
   --hit-cozy: 32px;
   --check-size: 16px;
@@ -1762,14 +1760,14 @@ h1, h2, h3, h4, h5, h6 {
   --page-margin: var(--page-margin-mobile);
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
-@media (width >= 641px) {
+@media (width >= 640px) {
   .page-grid {
     --page-gutter: var(--page-gutter-tablet);
     --page-margin: var(--page-margin-tablet);
     grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 }
-@media (width >= 1025px) {
+@media (width >= 1024px) {
   .page-grid {
     --page-gutter: var(--page-gutter-desktop);
     --page-margin: var(--page-margin-desktop);

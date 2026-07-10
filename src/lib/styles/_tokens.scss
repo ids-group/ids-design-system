@@ -281,7 +281,7 @@
      ============================================================ */
 
   /* Field padding — density-aware, consumed by input, search and
-     textarea controls. Tokenised so the ultra-compact tier can
+     textarea controls. Tokenised so density tiers can
      compress without component edits. */
   --field-pad-x:       var(--space-3);
   --field-pad-y:       0;
@@ -628,25 +628,6 @@
 /* ============================================================
    Density tiers — applied by Tweaks panel via [data-density]
    ============================================================ */
-[data-density="ultra-compact"] {
-  /* Power-user / tradesperson tier: financial dashboards, log viewers,
-     dense data grids. 24px hits sit BELOW WCAG 2.5.5 (44px enhanced)
-     and WCAG 2.5.8 (24px minimum) margins — acceptable only when:
-       (a) the screen is keyboard-first, (b) input is mouse/keys not
-       touch, (c) accidental-tap risk is low, (d) the user opted in.
-     Do not enable for mobile / field-ops layouts. */
-  --hit-cozy:          24px;
-  --hit-min:           24px;
-  --check-size:        14px;
-  --switch-track-w:    24px;
-  --switch-thumb-size: 12px;
-  --segmented-btn-h:   20px;
-  --field-pad-x:       var(--space-2);
-  --field-pad-y:       var(--space-1);
-  --table-cell-pad-x:  var(--space-2);
-  --table-cell-pad-y:  var(--space-1);
-  --table-head-pad-y:  var(--space-1);
-}
 [data-density="compact"] {
   --hit-cozy:  32px;
   --check-size: 16px;

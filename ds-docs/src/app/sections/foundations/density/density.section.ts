@@ -6,7 +6,7 @@ import {
 } from '../../../shared/docs-truncation.component';
 
 interface Tier {
-  readonly key: 'ultra-compact' | 'compact' | 'cozy' | 'comfy';
+  readonly key: 'compact' | 'cozy' | 'comfy';
   readonly label: string;
   readonly hit: string;
   readonly use: string;
@@ -14,13 +14,6 @@ interface Tier {
 }
 
 const TIERS: readonly Tier[] = [
-  {
-    key: 'ultra-compact',
-    label: 'Ultra-compact',
-    hit: '24 px',
-    use: 'Financial dashboards, log viewers, dense data grids — keyboard/mouse only, never touch',
-    wcag: 'Below WCAG 2.5.8 — opt-in only',
-  },
   {
     key: 'compact',
     label: 'Compact',
