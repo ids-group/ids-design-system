@@ -23,6 +23,7 @@ export class TweaksPanelComponent {
     { label: 'Dark', value: 'dark' },
   ];
   protected readonly densityOptions = [
+    { label: 'Ultra', value: 'ultra-compact' },
     { label: 'Compact', value: 'compact' },
     { label: 'Cozy', value: 'cozy' },
     { label: 'Comfy', value: 'comfy' },
@@ -35,7 +36,7 @@ export class TweaksPanelComponent {
     { label: 'Cool gray', value: 'cool-gray' },
     { label: 'From brand', value: 'brand' },
   ];
-  protected readonly density = signal<'compact' | 'cozy' | 'comfy'>('cozy');
+  protected readonly density = signal<'ultra-compact' | 'compact' | 'cozy' | 'comfy'>('cozy');
   protected readonly brand = signal<BrandPreview>('default');
   protected readonly theme = signal<'light' | 'dark'>('light');
   protected readonly neutrals = signal<'cool-gray' | 'brand'>('cool-gray');
@@ -62,7 +63,7 @@ export class TweaksPanelComponent {
     }
   }
 
-  protected setDensity(d: 'compact' | 'cozy' | 'comfy'): void {
+  protected setDensity(d: 'ultra-compact' | 'compact' | 'cozy' | 'comfy'): void {
     this.density.set(d);
     document.documentElement.setAttribute('data-density', d);
   }

@@ -243,6 +243,7 @@ const MISC_BLUR = pick(/^--blur-/).map(miscRow('literal'));
 
 // Density tiers — fixed pseudo-rows VERBATIM (not real tokens; nothing claimed).
 const DENSITY_TIERS = [
+  { name: 'ultra-compact', value: '24px hit', notes: 'Power-user tier — keyboard-first, opt-in only.' },
   { name: 'compact', value: '32px hit', notes: 'Dense desktop default.' },
   { name: 'cozy', value: '40px hit', notes: 'Default — most products.' },
   { name: 'comfy', value: '48px hit', notes: 'Touch-friendly.' },
