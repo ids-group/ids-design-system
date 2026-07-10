@@ -47,7 +47,7 @@
       dsCellTemplate="status"
     >
       <ds-badge
-        [variant]="asEvent(row).status"
+        [status]="asEvent(row).status"
         [withDot]="true"
       >
         {{ asEvent(row).statusLabel }}
@@ -281,7 +281,7 @@
       dsCellTemplate="status"
     >
       <ds-badge
-        [variant]="asEvent(row).status"
+        [status]="asEvent(row).status"
         [withDot]="true"
       >
         {{ asEvent(row).statusLabel }}
@@ -359,7 +359,7 @@
 
             <td>
               <ds-badge
-                [variant]="row.status"
+                [status]="row.status"
                 [withDot]="true"
               >
                 {{ row.statusLabel }}
@@ -668,7 +668,7 @@
 
             <td>
               <ds-badge
-                [variant]="row.status"
+                [status]="row.status"
                 [withDot]="true"
               >
                 {{ row.statusLabel }}

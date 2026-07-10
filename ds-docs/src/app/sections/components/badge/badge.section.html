@@ -22,7 +22,7 @@
   <docs-specimens [items]="lifecycleVariants">
     <ng-template let-v>
       <ds-badge
-        [variant]="$any(v)"
+        [status]="$any(v)"
         [withDot]="true"
       >
         {{ v }}
@@ -38,7 +38,7 @@
   <div class="states states--cols-4">
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-badge variant="info">
+        <ds-badge status="info">
           Info
         </ds-badge>
       </div>
@@ -50,7 +50,7 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-badge variant="success">
+        <ds-badge status="success">
           Allocated
         </ds-badge>
       </div>
@@ -62,7 +62,7 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-badge variant="warning">
+        <ds-badge status="warning">
           Pending
         </ds-badge>
       </div>
@@ -74,7 +74,7 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-badge variant="error">
+        <ds-badge status="error">
           Conflict
         </ds-badge>
       </div>
@@ -86,7 +86,7 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-badge variant="neutral">
+        <ds-badge status="neutral">
           Draft
         </ds-badge>
       </div>
@@ -99,7 +99,7 @@
     <div class="state-cell">
       <div class="state-cell__stage">
         <ds-badge
-          variant="neutral"
+          status="neutral"
           [solid]="true"
         >
           New
@@ -114,7 +114,7 @@
     <div class="state-cell">
       <div class="state-cell__stage">
         <ds-badge
-          variant="neutral"
+          status="neutral"
           [solid]="true"
         >
           12
@@ -128,7 +128,7 @@
 
     <div class="state-cell">
       <div class="state-cell__stage">
-        <ds-badge variant="neutral">
+        <ds-badge status="neutral">
           3
         </ds-badge>
       </div>

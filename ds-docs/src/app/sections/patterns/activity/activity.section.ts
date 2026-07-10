@@ -4,7 +4,7 @@ import {
   BadgeComponent,
   ButtonComponent,
   IconComponent,
-  type BadgeVariant,
+  type DsStatusKey,
 } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
@@ -14,7 +14,7 @@ interface ActivityEntry {
   readonly verb: string;
   readonly object: string;
   readonly detail?: string;
-  readonly badge?: { label: string; variant: BadgeVariant };
+  readonly badge?: { label: string; status: DsStatusKey };
   readonly time: string;
 }
 
@@ -43,7 +43,7 @@ export class ActivitySection {
       verb: 'changed',
       object: 'Alpha · Build start',
       detail: 'from 26 Jul 06:00 to 27 Jul 06:00',
-      badge: { label: 'Impact pending', variant: 'warning' },
+      badge: { label: 'Impact pending', status: 'warning' },
       time: '2 minutes ago',
     },
     {
@@ -60,7 +60,7 @@ export class ActivitySection {
       verb: 'allocated',
       object: '4× FOH desk',
       detail: 'to Beta and Gamma.',
-      badge: { label: 'Conflict with Delta', variant: 'error' },
+      badge: { label: 'Conflict with Delta', status: 'error' },
       time: '1 hour ago',
     },
     {
@@ -69,7 +69,7 @@ export class ActivitySection {
       verb: 'confirmed',
       object: 'Project Alpha',
       detail: 'after final review.',
-      badge: { label: 'Confirmed', variant: 'confirmed' },
+      badge: { label: 'Confirmed', status: 'confirmed' },
       time: '3 hours ago',
     },
   ];

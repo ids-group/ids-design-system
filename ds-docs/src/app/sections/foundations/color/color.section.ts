@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
-  BadgeComponent,
   ButtonComponent,
   PageHeaderComponent,
   SidenavComponent,
@@ -36,7 +35,6 @@ interface RampSpec {
   encapsulation: ViewEncapsulation.Emulated,
   imports: [
     DocsSectionComponent,
-    BadgeComponent,
     ButtonComponent,
     PageHeaderComponent,
     SidenavComponent,
@@ -50,10 +48,6 @@ interface RampSpec {
   styleUrl: './color.section.scss',
 })
 export class ColorSection {
-  // 'secondary' is supported by badge SCSS but not yet in the BadgeVariant union;
-  // cast-through field keeps the demo working without touching badge.types.ts (owned by a parallel DS-gap agent).
-  protected readonly secondaryVariant = 'secondary' as never;
-
   protected readonly groups: readonly SemanticGroup[] = [
     {
       label: 'Primary',
