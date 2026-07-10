@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   BadgeComponent,
+  ButtonComponent,
   PageHeaderComponent,
   SidenavComponent,
   SidenavItemComponent,
@@ -36,6 +37,7 @@ interface RampSpec {
   imports: [
     DocsSectionComponent,
     BadgeComponent,
+    ButtonComponent,
     PageHeaderComponent,
     SidenavComponent,
     SidenavItemComponent,

@@ -41,12 +41,15 @@
     .surface-cell--inverted .surface-cell__label { color: var(--neutral-300); }
     .surface-cell--inverted code { color: var(--neutral-400); }
 
-    /* ---------- Secondary in use ---------- */
-    .secondary-demos { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-4); margin-top: var(--space-3); }
-    .secondary-demos .demo { padding: var(--space-4); background: var(--surface-default); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-md); display: flex; flex-direction: column; gap: var(--space-3); align-items: flex-start; }
-    .secondary-demos .demo > .t-overline { color: var(--text-tertiary); }
-    .secondary-demos .demo > code.t-mono { color: var(--text-tertiary); }
-    .secondary-demos .demo ds-tabs,
-    .secondary-demos .demo ds-sidenav,
-    .secondary-demos .demo ds-page-header { width: 100%; }
+    /* ---------- Secondary / Tertiary in use ---------- */
+    .role-demos { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-4); margin-top: var(--space-3); }
+    .role-demos .demo { padding: var(--space-4); background: var(--surface-default); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-md); display: flex; flex-direction: column; gap: var(--space-3); align-items: flex-start; }
+    .role-demos .demo > .t-overline { color: var(--text-tertiary); }
+    .role-demos .demo > code.t-mono { color: var(--text-tertiary); }
+    .role-demos .demo ds-tabs,
+    .role-demos .demo ds-sidenav,
+    .role-demos .demo ds-page-header { width: 100%; }
+    .tert-tonal { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-3); border-radius: var(--radius-pill); background: var(--tertiary-subtitle); color: var(--tertiary-strong); font: var(--font-weight-bold) var(--font-size-xs) / 1 var(--font-sans); }
+    .tert-ramp { display: inline-flex; gap: var(--space-1); }
+    .tert-ramp span { width: var(--space-6); height: var(--space-6); border-radius: var(--radius-sm); border: var(--border-width-default) solid var(--border-divider); }
 

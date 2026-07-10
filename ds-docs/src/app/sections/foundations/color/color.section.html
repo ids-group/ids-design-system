@@ -156,7 +156,7 @@
     hue.
   </p>
 
-  <div class="secondary-demos">
+  <div class="role-demos">
     <div class="demo">
       <div class="t-overline">
         ds-badge
@@ -300,6 +300,82 @@
     </code> is Coral (#FF6156) &mdash;
     these examples then render in the brand accent.
   </p>
+
+  <!-- ============================================================ Tertiary in use -->
+  <h3 class="block-title t-h4">
+    Tertiary in use
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">--tertiary</code> is the third brand hue (violet
+    family) with a full ramp (<code class="t-mono-inline">-hover / -strong / -subtitle / -muted</code>).
+    Fewer touchpoints than <code class="t-mono-inline">--secondary</code> — today it drives the
+    <code class="t-mono-inline">tertiary</code> button colour and tonal accents.
+  </p>
+
+  <div class="role-demos">
+    <div class="demo">
+      <div class="t-overline">
+        ds-button color="tertiary"
+      </div>
+
+      <div style="display: inline-flex; gap: var(--space-2); flex-wrap: wrap">
+        <ds-button color="tertiary">
+          Solid
+        </ds-button>
+
+        <ds-button
+          color="tertiary"
+          variant="tonal"
+        >
+          Tonal
+        </ds-button>
+
+        <ds-button
+          color="tertiary"
+          variant="ghost"
+        >
+          Ghost
+        </ds-button>
+      </div>
+
+      <code class="t-mono-inline">
+        &lt;ds-button color="tertiary"&gt;
+      </code>
+    </div>
+
+    <div class="demo">
+      <div class="t-overline">
+        Tonal accent — CSS
+      </div>
+
+      <span class="tert-tonal">
+        Tonal chip
+      </span>
+
+      <code class="t-mono-inline">
+        background: var(--tertiary-subtitle); color: var(--tertiary-strong)
+      </code>
+    </div>
+
+    <div class="demo">
+      <div class="t-overline">
+        Ramp — --tertiary*
+      </div>
+
+      <div class="tert-ramp">
+        <span style="background: var(--tertiary-subtitle)"></span>
+        <span style="background: var(--tertiary-muted)"></span>
+        <span style="background: var(--tertiary)"></span>
+        <span style="background: var(--tertiary-strong)"></span>
+        <span style="background: var(--tertiary-pressed)"></span>
+      </div>
+
+      <code class="t-mono-inline">
+        --tertiary-subtitle → -muted → base → -strong → -pressed
+      </code>
+    </div>
+  </div>
 
   <!-- ============================================================ Semantic groups -->
   <h3 class="block-title t-h4">
