@@ -30,14 +30,33 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   mode was conflated with the colour variant (a bar could not be `success`-coloured *and*
   indeterminate). Migration: `<ds-progress variant="indeterminate" />` →
   `<ds-progress indeterminate />`; `'indeterminate'` removed from `ProgressVariant`.
-- **`ds-badge` — `'count'` removed from `BadgeVariant`.** It was a dead union member; count mode is
-  (and always was) driven by the separate `[count]` input. Drop `variant="count"` — behavior is
-  unchanged.
+- **`ds-badge` / `ds-status-dot` status API redesigned — factory statuses replaced by a
+  consumer-defined registry.** `ds-badge`'s `[variant]` input (`BadgeVariant`) is replaced by
+  `[status]` (typed `DsStatusKey`); `ds-status-dot`'s `[status]` is retyped `StatusValue` →
+  `DsStatusKey` and no longer defaults to `'planning'`. Both now render the value as a `data-status`
+  attribute instead of a factory CSS class, so the built-in per-status rules (`.badge.planning` /
+  `.active` / `.confirmed` / `.completed` / `.info` / `.success` / `.warning` / `.error` /
+  `.neutral` / `.secondary`, plus the matching `.status-dot.*`) and the factory `--status-*`
+  lifecycle theme tokens (`--status-planning-bg-color`, `--status-confirmed-*`, `--status-active-*`,
+  `--status-completed-*`) are all removed. The exported types `BadgeVariant`, `BadgeLifecycle`,
+  `BadgeSemantic`, and `StatusValue` are removed. Migrate `variant="active"` → `status="active"`,
+  then define your own status colours via the new `styles/status` SCSS API (see Added) keyed on
+  `[data-status]`. `[count]` mode, `[solid]`, `[withDot]`, `[max]`, and the `--ds-badge-*` /
+  `--ds-status-dot-*` hooks are unchanged.
 - **`title` is now required on `ds-drawer`, `ds-bottom-sheet`, and `ds-accordion-item`** (was
   optional). Their `title` is the component's accessible name (dialog `aria-labelledby`) or the
   disclosure-button label, so a missing title left them unnamed. `ds-modal` / `ds-modal-card` stay
   required (unchanged); `ds-page-header` is now **optional** (its `title` is a plain `<h1>`, not an
   accessible-name dependency — a non-breaking loosening).
+- **Default `secondary` / `tertiary` hues now diverge from `primary`.** Previously both roles
+  defaulted to the `--primary` channels, so an un-branded app rendered `primary`, `secondary`, and
+  `tertiary` as the same blue. They now default to distinct palette families — `--secondary-h/s/l` →
+  `--orange-h/s/l` (warm orange) and `--tertiary-h/s/l` → `--violet-h/s/l` (cool violet), in both
+  light and dark themes. Consumers who already set `--secondary-h/s/l` / `--tertiary-h/s/l` per brand
+  are unaffected; to keep the old single-hue look, point those channels back at `--primary-h/s/l`.
+- **`--static-white` theme token removed.** The fixed-value `--static-white` custom property is gone;
+  its uses now emit the literal `white`. No visual change, but a consumer who referenced
+  `var(--static-white)` must replace it with `white` (`--static-ink` is retained).
 
 ### Added
 
@@ -46,6 +65,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-progress` `[indeterminate]` boolean input** — orthogonal to `variant` (see Breaking).
 - **`DividerSpacing` is now exported** from the public API (the `ds-divider` `[spacing]` input type
   was previously declared but not re-exported).
+- **Extensible status system — `DsStatusRegistry` / `DsStatusKey` + `styles/status` SCSS API.** New
+  public exports: `DsStatusRegistry` (an empty interface consumers augment via declaration merging to
+  register their own status keys) and `DsStatusKey` (an open `string` until the registry is augmented,
+  then a union of the registered keys — the type of `ds-badge` / `ds-status-dot` `[status]`). A new
+  SCSS entry point `@use '@ids-group-ltd/ids-design-system/styles/status'` exposes `define($map)` —
+  wires `[data-status]` selectors to the `--ds-badge-*` / `--ds-status-dot-*` tokens from a Sass map
+  of `name: (bg:, text?:, dot?:)` — and `semantic-preset`, a ready-made `info` / `success` /
+  `warning` / `error` / `neutral` set. This is the replacement for the removed factory statuses (see
+  Breaking).
 
 ### Changed
 
@@ -69,6 +97,25 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-button` tonal fill — `:active` now darkens past `:hover`.** The `tonal` variant reused the
   same token (`--c-muted-strong`) for both hover and active, so the pressed background was identical
   to hover; active now mixes that tint ~10% toward black for a distinct pressed step.
+- **Per-instance overlay panel token overrides now reach the portaled pane.** `--ds-*` panel tokens
+  set on the host of `ds-autocomplete`, `ds-multi-select`, `ds-date-picker`, `ds-color-picker`,
+  `ds-popover`, and `ds-time-picker` were ignored because the panel renders in a CDK overlay
+  (portaled outside `:host`, where the custom properties no longer inherit); the host's resolved
+  panel tokens are now forwarded onto the overlay element on open. (`ds-select` uses the shared
+  global panel class and was never affected.)
+- **`ds-autocomplete` / `ds-multi-select` panels no longer render transparent.** Their internal panel
+  colour resolvers were declared on `:host`, but the panel is portaled — so the background collapsed
+  to transparent (page content bled through) with broken hover/active highlighting; the resolvers now
+  sit on the panel element itself.
+- **`ds-tabs` `secondary` variant now applies.** The secondary-toned active indicator and label were
+  keyed off `.tabs.secondary`, but the variant class lands on the host, so the selector never
+  matched; rewritten to `:host(.secondary)`.
+- **`ds-date-picker` range mask no longer clips the second date**, and the trigger's value-to-icon
+  gap is tightened to 4px. The field now reserves an extra character of width so the wider range-mode
+  mask (two dates) is no longer cut off.
+- **`ultra-compact` density tier gained full token coverage.** `[data-density="ultra-compact"]` now
+  also scales avatar size, sidenav width, badge / status-dot sizes, and switch geometry — previously
+  left at the cozy defaults, so those controls didn't shrink with the tier.
 
 ## 0.5.0 — 2026-07-08
 
