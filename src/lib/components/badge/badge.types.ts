@@ -1,8 +1,3 @@
-export type BadgeLifecycle = 'planning' | 'confirmed' | 'active' | 'completed';
-export type BadgeSemantic =
-  | 'info'
-  | 'success'
-  | 'warning'
-  | 'error'
-  | 'neutral';
-export type BadgeVariant = BadgeLifecycle | BadgeSemantic | 'solid';
+// Badge form has no factory status vocabulary — colour comes from the consumer's
+// [data-status] wiring (see styles/status). Kept intentionally minimal.
+export {};

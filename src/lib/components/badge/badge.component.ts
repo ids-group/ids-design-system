@@ -6,7 +6,7 @@ import {
   input,
   numberAttribute,
 } from '@angular/core';
-import type { BadgeVariant } from './badge.types';
+import type { DsStatusKey } from '../../core/status';
 
 @Component({
   selector: 'ds-badge',
@@ -14,9 +14,13 @@ import type { BadgeVariant } from './badge.types';
   templateUrl: './badge.component.html',
   styleUrl: './badge.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  host: {
+    '[attr.data-status]': 'status() || null',
+  },
 })
 export class BadgeComponent {
-  readonly variant = input<BadgeVariant>('neutral');
+  /** Consumer-defined status key; colours are wired via styles/status. Unset → neutral. */
+  readonly status = input<DsStatusKey>();
   readonly withDot = input(false, { transform: booleanAttribute });
   readonly solid = input(false, { transform: booleanAttribute });
   readonly count = input<number | null>(null);
@@ -33,10 +37,9 @@ export class BadgeComponent {
   });
 
   protected readonly classes = computed(() => {
-    const isCount = this.count() !== null;
     const parts = [
       'badge',
-      isCount ? 'count' : this.variant(),
+      this.count() !== null ? 'count' : '',
       this.solid() ? 'solid' : '',
     ];
 
