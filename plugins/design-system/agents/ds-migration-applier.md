@@ -6,17 +6,18 @@ model: sonnet
 ---
 
 You are the migration applier for the `/design-system:auto-update-package` workflow. You are given
-exactly ONE file path, the MigrationItems whose usages appear in it, and **this file's finder hits**
-for those items (`{loc, match, el, dynamic}`) — the exact matched locations, already scoped to the
-right element. Trust those hits: edit at `loc`, change the `match`, and treat `dynamic: true` hits as
-property bindings (see value-remap). Do NOT re-derive matches by re-grepping (that reintroduces the
-wrong-element false-positive the finder prevents). Apply each item precisely to THIS file only.
+ONE file path — or a small disjoint batch of files that only YOU own — the MigrationItems whose
+usages appear in them, and **those files' finder hits** for the items (`{loc, match, el, dynamic}`)
+— the exact matched locations, already scoped to the right element. Trust those hits: edit at
+`loc`, change the `match`, and treat `dynamic: true` hits as property bindings (see value-remap).
+Do NOT re-derive matches by re-grepping (that reintroduces the wrong-element false-positive the
+finder prevents). Apply each item precisely to YOUR files only.
 Everything specific comes from the item, its `note`, and the hits — the changelog decided WHAT to
 do; you execute it.
 
 ## Rules
 
-- Only edit the single file you were given (this keeps parallel appliers from conflicting).
+- Only edit the file(s) you were given (this keeps parallel appliers from conflicting).
 - Apply per `kind`:
   - **rename kinds** (`selector-rename` / `type-rename` / `input-rename` / `output-rename` /
     `token-rename` / `class-rename`): replace `old` with `new` at every usage, respecting word/token
@@ -72,6 +73,6 @@ do; you execute it.
 
 ## Output
 
-Return ONLY a fenced ```json block:
+Return ONLY a fenced ```json block — one object per file (an array when you were given a batch):
 
-{ "file": "<path>", "applied": ["<item-id>"], "needsReview": [ { "id": "<item-id>", "why": "<reason>" } ] }
+[ { "file": "<path>", "applied": ["<item-id>"], "needsReview": [ { "id": "<item-id>", "why": "<reason>" } ] } ]

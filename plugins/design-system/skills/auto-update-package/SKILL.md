@@ -22,7 +22,8 @@ and the step-7 re-check covers inline edits the same as agent edits.
 
 - `ds-migration-planner` (opus) — changelog block → structured MigrationPlan.
 - `ds-usage-finder` (sonnet) — locate old-API usages. Parallel across items.
-- `ds-migration-applier` (sonnet) — apply edits. Parallel, **one per file**.
+- `ds-migration-applier` (sonnet) — apply edits. Parallel; one per file, or one per **small
+  disjoint batch** of files (≤~5) — a file is never shared between concurrent appliers.
 - `ds-recheck` (sonnet) — independent re-check of every item, ALWAYS run (never skipped, even when
   your own verify was green and you fixed everything inline): grep for mechanical, semantic for
   behavioral. Parallel.
@@ -163,8 +164,10 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    couldn't locate the insertion site; resolve the site yourself from the `note` (step 3 dispatches
    it by note), and record it not-applicable only when this consumer genuinely lacks the thing the
    addition extends, stating that reason.
-3. **Apply (parallel, sonnet, one per file).** Group the finder's hits by file; dispatch one
-   `ds-migration-applier` per file, passing it the items affecting that file **AND this file's finder
+3. **Apply (parallel, sonnet).** Group the finder's hits by file; dispatch one
+   `ds-migration-applier` per file — or per **small disjoint batch** of files (≤~5) when many small
+   files carry the same items. The invariant is disjointness: a file is NEVER shared between
+   concurrent appliers. Pass each applier the items affecting its file(s) **AND those files' finder
    hits** (`{loc, match, el, dynamic}`) so it edits the exact matched, element-scoped locations
    instead of re-deriving them (re-deriving reintroduces the wrong-element false-positive the finder
    exists to prevent). **This includes behavioral (`removed-api` / `behavior`) items — the applier
@@ -172,11 +175,12 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    (e.g. a `code-add` to the app config or global styles), dispatch an applier for that described
    file. Collect `applied` / `needsReview`, and start the **touched-files union** (the commit
    pathspec) — it accumulates here AND across every step-6 fix cycle.
-   Pass the planner's STRUCTURED item verbatim (its `map` / `old` / `new` / `note`) plus the finder's
-   hits — do NOT paraphrase the migration into ad-hoc prose rules or a hand-authored value table in
-   the applier prompt. Improvised prose is how a `value-remap` gets over-generalized to a value the
-   `map` never listed (e.g. remapping a still-valid value that has no map entry); the applier's
-   contract leaves absent-from-map values untouched, but only if it receives the real `map`.
+   **The applier prompt MUST embed the item's `map` / `old` / `new` / `note` VERBATIM** — the
+   canonical structured data, untranslated. Clarifying prose may go AROUND it, never INSTEAD of it,
+   and per-batch tailoring means selecting WHICH items to send that batch — never rewriting a map's
+   rows. Improvised prose is how a `value-remap` gets over-generalized to a value the `map` never
+   listed (e.g. remapping a still-valid value that has no map entry); the applier's contract leaves
+   absent-from-map values untouched, but only if it receives the real `map`.
    **Command-type migrations:** if an item's `note` prescribes RUNNING something (a codemod, a
    schematic, a package script) rather than making edits, do not send it to an applier — appliers
    cannot run commands. Show the exact command to the user and get approval first (it originates
@@ -222,6 +226,11 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    it under "applied — human should eyeball". Escalate to manual review only the residue the new API
    genuinely cannot express, described precisely. Stay generic: read what the customization did and
    what the bundle now supports; don't hard-code assumptions about specific components.
+   **Drift fixes get a re-check too** (they are born AFTER the main item cycle and would otherwise
+   escape the net): dispatch `ds-recheck` to confirm every retargeted selector/class/token actually
+   exists on the new version's real surface (the sources checkout / installed bundle) and no dead
+   old one remains — a silent typo in a retargeted selector compiles clean and is invisible
+   otherwise.
    **Visual-only changes:** if a behavioral change's correctness is observable ONLY in rendered
    output (no build or grep signal — spacing/size/animation/restyle), the edit can't be machine-
    verified. Do NOT silently green it: keep the edit, but list it in the report under **"applied —
@@ -276,7 +285,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 
 ## Guardrails
 
-- One `ds-migration-applier` per file — never two appliers on the same file concurrently.
+- A file is NEVER shared between concurrent appliers — one `ds-migration-applier` per file or per
+  small disjoint batch (≤~5 files).
 - Never `git push`; never `git add -A`; stage only the exact pathspec from step 8.
 - Never edit files under `node_modules`, `dist`, or build output.
 - Pin the EXACT version `V`; use a mutating install (never a frozen/CI install).

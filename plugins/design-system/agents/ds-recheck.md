@@ -57,6 +57,11 @@ Two verification modes:
   component sources) and/or the installed package (`node_modules/@ids-group-ltd/ids-design-system/`:
   `types/*.d.ts` = public API, `fesm2022/` = internals, `themes/` + `styles/` = SCSS tokens — at
   re-check time it holds V). Both read-only.
+- **Customization-drift fixes** (the orchestrator retargeted consumer deep-selectors/tokens onto the
+  new version's internals): mechanical existence check — confirm every NEW selector/class/token in
+  the fix actually exists on V's real surface (grep the sources checkout / installed bundle for the
+  class or token name) and no dead OLD one remains in the consumer. A typo in a retargeted selector
+  compiles clean — your grep is the only thing that catches it.
 - Do NOT edit anything.
 
 ## Output

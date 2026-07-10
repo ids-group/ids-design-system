@@ -4,6 +4,21 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.2.7 — 2026-07-10
+
+Follow-ups from the second live run (mm-broker, 0.3.0 → 0.5.0, clean full-auto pass):
+
+### Changed
+- Appliers may own a **small disjoint batch** of files (≤~5) instead of strictly one file; the
+  invariant stays — a file is never shared between concurrent appliers. (The run batched safely on
+  its own; the letter now matches the proven behavior.)
+- Applier dispatch prompts must embed the item's `map`/`old`/`new`/`note` **verbatim** — clarifying
+  prose goes around the canonical data, never instead of it; per-batch tailoring selects items, it
+  doesn't rewrite map rows.
+- **Customization-drift fixes now get their own re-check**: every retargeted selector/class/token
+  is verified to exist on the new version's real surface via the sources checkout (a typo in a
+  retargeted selector compiles clean and was previously invisible).
+
 ## 1.2.6 — 2026-07-10
 
 ### Breaking (workflow contract)
