@@ -1,0 +1,187 @@
+{
+  "version": "0.5.0",
+  "items": [
+    {
+      "id": "combobox-selector-rename",
+      "kind": "selector-rename",
+      "old": "ds-combobox",
+      "new": "ds-autocomplete",
+      "note": "Component renamed (clearer industry name); behavior unchanged.",
+      "searchHints": ["<ds-combobox", "ds-combobox"]
+    },
+    {
+      "id": "combobox-component-class-rename",
+      "kind": "type-rename",
+      "old": "ComboboxComponent",
+      "new": "AutocompleteComponent",
+      "note": "TS import/reference rename only.",
+      "searchHints": ["ComboboxComponent"]
+    },
+    {
+      "id": "combobox-option-type-rename",
+      "kind": "type-rename",
+      "old": "ComboboxOption",
+      "new": "AutocompleteOption",
+      "note": "TS type rename. Beware token boundaries: ComboboxOptionGroup contains ComboboxOption — rename the longer identifier first (its own item).",
+      "searchHints": ["ComboboxOption"]
+    },
+    {
+      "id": "combobox-option-group-type-rename",
+      "kind": "type-rename",
+      "old": "ComboboxOptionGroup",
+      "new": "AutocompleteOptionGroup",
+      "note": "TS type rename.",
+      "searchHints": ["ComboboxOptionGroup"]
+    },
+    {
+      "id": "combobox-size-type-rename",
+      "kind": "type-rename",
+      "old": "ComboboxSize",
+      "new": "AutocompleteSize",
+      "note": "TS type rename.",
+      "searchHints": ["ComboboxSize"]
+    },
+    {
+      "id": "combobox-width-type-rename",
+      "kind": "type-rename",
+      "old": "ComboboxWidth",
+      "new": "AutocompleteWidth",
+      "note": "TS type rename.",
+      "searchHints": ["ComboboxWidth"]
+    },
+    {
+      "id": "combobox-token-prefix-rename",
+      "kind": "token-rename",
+      "old": "--ds-combobox-",
+      "new": "--ds-autocomplete-",
+      "note": "Prefix rename covering --ds-combobox-focus-shadow / -maxw / -input-minw; replace within each full suffixed name.",
+      "searchHints": ["--ds-combobox-"]
+    },
+    {
+      "id": "combobox-docs-anchor",
+      "kind": "behavior",
+      "old": "#combobox",
+      "new": null,
+      "note": "Docs-site anchor renamed #combobox -> #autocomplete; update any hardcoded documentation links in consumer code/README.",
+      "searchHints": ["#combobox"]
+    },
+    {
+      "id": "dropdown-removed-use-select",
+      "kind": "selector-rename",
+      "old": "ds-dropdown",
+      "new": "ds-select",
+      "note": "ds-dropdown removed; ds-select is the canonical select-only picker (CVA, invalid+hint, required/optional, per-option icons, readOnly). After the selector rename also apply dropdown-error-input-rename and dropdown-option-groups-fold (separate items).",
+      "searchHints": ["<ds-dropdown", "ds-dropdown"]
+    },
+    {
+      "id": "dropdown-error-input-rename",
+      "kind": "input-rename",
+      "old": "ds-dropdown[error]",
+      "new": "invalid",
+      "note": "On elements migrated from ds-dropdown to ds-select: [error] -> [invalid] (and static error=\"...\" -> invalid=\"...\").",
+      "searchHints": ["[error]=", "error=\""]
+    },
+    {
+      "id": "dropdown-option-groups-fold",
+      "kind": "behavior",
+      "old": "ds-dropdown[optionGroups]",
+      "new": null,
+      "note": "[optionGroups]=\"groups\" is gone on ds-select — pass groups inline in [options]: SelectItem = SelectOption | SelectOptionGroup, so merge the flat options and the groups into one [options] array (order = desired render order).",
+      "searchHints": ["[optionGroups]="]
+    },
+    {
+      "id": "dropdown-component-class-rename",
+      "kind": "type-rename",
+      "old": "DropdownComponent",
+      "new": "SelectComponent",
+      "note": "TS import/reference rename.",
+      "searchHints": ["DropdownComponent"]
+    },
+    {
+      "id": "dropdown-option-type-rename",
+      "kind": "type-rename",
+      "old": "DropdownOption",
+      "new": "SelectOption",
+      "note": "TS type rename. Token boundaries: DropdownOptionGroup contains DropdownOption — rename the longer identifier first.",
+      "searchHints": ["DropdownOption"]
+    },
+    {
+      "id": "dropdown-option-group-type-rename",
+      "kind": "type-rename",
+      "old": "DropdownOptionGroup",
+      "new": "SelectOptionGroup",
+      "note": "TS type rename.",
+      "searchHints": ["DropdownOptionGroup"]
+    },
+    {
+      "id": "dropdown-size-type-rename",
+      "kind": "type-rename",
+      "old": "DropdownSize",
+      "new": "SelectSize",
+      "note": "TS type rename.",
+      "searchHints": ["DropdownSize"]
+    },
+    {
+      "id": "datepicker-token-prefix-rename",
+      "kind": "token-rename",
+      "old": "--ds-datepicker-",
+      "new": "--ds-date-picker-",
+      "note": "Prefix normalized to match the selector (~14 tokens). Names only — CSS property and defaults byte-identical. Replace within each full suffixed name.",
+      "searchHints": ["--ds-datepicker-"]
+    },
+    {
+      "id": "statusdot-token-prefix-rename",
+      "kind": "token-rename",
+      "old": "--ds-statusdot-",
+      "new": "--ds-status-dot-",
+      "note": "Prefix normalized (color, size). Names only.",
+      "searchHints": ["--ds-statusdot-"]
+    },
+    {
+      "id": "pagehdr-token-prefix-rename",
+      "kind": "token-rename",
+      "old": "--ds-pagehdr-",
+      "new": "--ds-page-header-",
+      "note": "Prefix normalized (~10 tokens: eyebrow/title/subtitle/meta/crumb colors, meta-icon-color, divider, title-fs, title-gap). Names only.",
+      "searchHints": ["--ds-pagehdr-"]
+    },
+    {
+      "id": "avatargroup-token-prefix-rename",
+      "kind": "token-rename",
+      "old": "--ds-avatargroup-",
+      "new": "--ds-avatar-group-",
+      "note": "Prefix normalized (overlap, ring, overflow-bg-color, overflow-label-color). Names only.",
+      "searchHints": ["--ds-avatargroup-"]
+    },
+    {
+      "id": "search-inner-input-class-rename",
+      "kind": "class-rename",
+      "old": "ds-search .input",
+      "new": ".search-input",
+      "note": "ds-search's inner input class renamed (over-generic .input let consumer global styles leak in). Only consumer STYLING that targeted the undocumented internal class is affected — scope strictly to selectors under ds-search.",
+      "searchHints": ["ds-search"]
+    },
+    {
+      "id": "date-picker-trigger-text-input-default",
+      "kind": "behavior",
+      "old": "ds-date-picker",
+      "new": null,
+      "note": "Trigger is now an editable masked text input by default (allowInput defaults true) with a trailing calendar icon, and the field sizes to CONTENT width (was full-width). Pass [allowInput]=\"false\" for the old click-only field; set a width on the host to stretch. Usually no code change — flag for visual review (eyeball).",
+      "searchHints": ["<ds-date-picker"]
+    },
+    {
+      "id": "search-fills-container-default",
+      "kind": "behavior",
+      "old": "ds-search",
+      "new": null,
+      "note": "Default max-width changed 320px -> none (ds-search now stretches like the rest of the field family). If the 320px cap was relied on, set --ds-search-maxw: 320px on the host/theme. Usually visual-review only.",
+      "searchHints": ["<ds-search"]
+    }
+  ],
+  "informational": [
+    "New ds-time-picker (24h/12h via provideDsConfig, range mode, CVA) — additive.",
+    "Selection controls gain size + required; standalone ds-radio gains invalid/hint; input/textarea maxLength counter; date-picker minDate/maxDate/disabledDate/presets + locale/dateFormat/firstDayOfWeek/defaultMonth manual masked entry; select clearable/icons/readOnly; autocomplete optionGroups/allowCreate/width=content; table expandable rows; modal closeOnBackdrop/persistent/xl/fullscreen; drawer placement/sm; bottom-sheet snapPoints; toast loading/promise/maxVisible; menu dividers/submenus; popover arrow/placement; tabs lazy/scrollable/closable/vertical; accordion single-open/item disabled; stepper clickable/errorSteps/vertical; sidenav collapsed tooltip; badge count/max; avatar status/fallbackIcon — all additive.",
+    "Public --ds-* customization token sweep across ~44 components (~160-180 new names) — purely additive resolvers, zero visual change when unset.",
+    "Visual-only: rounded press feedback (+ --ds-press-brightness/--ds-press-scale tuning tokens) and native tap-highlight suppression; accessibility hardening across overlays/pickers/fields/cards (dialog semantics, Tab close, role=alert re-announce, labels)."
+  ]
+}

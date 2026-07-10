@@ -48,6 +48,13 @@ if (!existsSync('CHANGELOG.md')) {
 console.log('▶ Copying CHANGELOG.md into dist/ds…');
 cpSync('CHANGELOG.md', 'dist/ds/CHANGELOG.md');
 
+// Ship the machine-readable migration manifests (migrations/<version>.json — structured
+// mirrors of the changelog, consumed by the auto-update plugin) alongside the changelog.
+if (existsSync('migrations')) {
+  console.log('▶ Copying migrations/ into dist/ds/migrations…');
+  cpSync('migrations', 'dist/ds/migrations', { recursive: true });
+}
+
 console.log(
   '✔ schematics built into dist/ds/schematics + package.json registered.',
 );

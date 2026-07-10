@@ -14,13 +14,17 @@ applying the documented migrations, with a build/typecheck gate and independent 
 Then, inside a consumer repo:
 
 ```
-/design-system:auto-update-package
+/design-system:auto-update-package                  # full run, up to the latest stable
+/design-system:auto-update-package 0.4.0            # stop the chain at a target version
+/design-system:auto-update-package dry-run          # read-only plan+find+drift report, zero edits
 ```
 
 It detects the installed version, computes the chain of published versions up to the latest,
 asks once for a git strategy (feature branch vs current branch), then runs autonomously —
 committing one version at a time — and stops (leaving edits in place) on any version it cannot
-make green.
+make green. Migration plans come from the DS's shipped `migrations/<version>.json` manifests when
+a version has one (deterministic), falling back to reading the prose changelog. A skill-scoped
+hook hard-blocks `git push` for the duration of a run — you review the branch and push yourself.
 
 ## Private-repository note
 

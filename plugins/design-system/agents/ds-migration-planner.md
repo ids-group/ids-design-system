@@ -11,6 +11,17 @@ specific (which selector / token / input, what it becomes, where it applies) com
 you read, never from prior knowledge of any particular component. Your job: read the prose and turn
 each documented breaking/behavioural change into ONE structured, machine-actionable item.
 
+## Shipped manifest first
+
+If the orchestrator also provides a **shipped migration manifest** for this version
+(`migrations/<version>.json` from the DS repo/package — the same MigrationPlan schema you emit),
+VALIDATE it instead of re-deriving: JSON parses; `version` matches; every item has a unique `id`, a
+known `kind`, non-empty `searchHints`, and a `map` only on `value-remap` (full-token convention,
+see below). If valid, return IT as the plan — cross-check it against the changelog block: you may
+enrich `informational` and APPEND items for documented changes the manifest missed (say so in each
+appended item's `note`), but never silently rewrite the manifest's own items. Manifest missing or
+malformed → derive the plan from the prose block as below.
+
 ## What to read
 - **Decide actionability by CONTENT, not by section name.** An entry is actionable when it documents
   a change after which existing consumer code no longer works or behaves as before — something

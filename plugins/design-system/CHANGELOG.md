@@ -4,6 +4,35 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.3.0 — 2026-07-10
+
+Deep-review round with external research (codemod prior art, ng-update conventions, Claude Code
+plugin capability audit).
+
+### Added
+- **Shipped migration manifests.** The DS now publishes `migrations/<version>.json` — a structured
+  MigrationPlan mirror of each changelog block (schema in `migrations/README.md`), shipped in the
+  npm package and readable from the repo clone; 0.4.0 and 0.5.0 authored retroactively. The
+  planner validates and PREFERS a manifest, deriving from prose only when absent/malformed —
+  deterministic plans instead of per-run prose parsing.
+- **Invocation arguments** — `/design-system:auto-update-package [target-version | dry-run]`:
+  pin where the chain ends, or run a read-only plan + find + drift report with zero edits.
+- **Run ledger** — per-run JSON state (chain, per-item status, touched files, attempts) updated at
+  step boundaries; an interrupted run (session limits happen) resumes deterministically instead of
+  via improvised handoffs.
+- **Deterministic transform option** for high-volume mechanical items (≳30 static hits): a one-off
+  element-scoped script generated from the item's `map`, verified by the same grep + re-check net;
+  LLM appliers keep everything needing judgment (dynamic bindings, behavioral items).
+- **Enforced never-push:** a skill-scoped PreToolUse hook blocks any `git push` for the duration of
+  a run — verified to fire inside the skill and stay inert outside it.
+
+### Changed
+- **One clone = changelog + sources.** Phase A clones the DS repo once; the clone's default branch
+  is the primary changelog source (the raw-URL fetch demoted to fallback; the docs-site SPA dropped
+  as a source). Migration manifests are saved aside before per-version tag checkouts.
+- Concurrency made explicit: keep ≤~8 subagents concurrent, dispatch in waves.
+- `plugin.json` marketplace hygiene: `displayName`, `homepage`, `license`, `keywords`.
+
 ## 1.2.7 — 2026-07-10
 
 Follow-ups from the second live run (mm-broker, 0.3.0 → 0.5.0, clean full-auto pass):

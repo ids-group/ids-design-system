@@ -1,7 +1,14 @@
 ---
 description: Update @ids-group-ltd/ids-design-system in this repo from its installed version up to the latest, one version at a time, applying documented changelog migrations with checks and re-checks.
 model: opus
+argument-hint: "[target-version | dry-run]"
 allowed-tools: Bash, Read, Edit, Write, Grep, Glob, WebFetch, Task, AskUserQuestion
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "grep -q 'git push' && { echo 'BLOCKED by auto-update-package: git push is forbidden during a migration run — review the branch and push yourself.' >&2; exit 2; } || exit 0"
 ---
 
 # Auto-update the IDS design system (`/design-system:auto-update-package`)
@@ -12,6 +19,17 @@ the user's invocation names a target version, up to THAT version — **one versi
 release order (patches included)**. For each version: read that version's changelog, apply the
 documented migrations, verify, and commit. Run **autonomously** to the end of the chain; **stop**
 only when a version cannot be made green.
+
+## Invocation arguments (`$ARGUMENTS`)
+
+- **A semver** (e.g. `0.4.0`) → target version: end the chain there instead of the latest.
+- **`dry-run`** (or `plan`) → **plan-only mode**: run Phase A read-only (no branch, no
+  AskUserQuestion about git strategy), then for each chain version run plan + find + a read-only
+  customization-drift scan (the sources checkout at tag `v<V>` lets you check consumer deep
+  selectors/tokens against V's internals WITHOUT installing anything). Report per version: the
+  MigrationItems, which are applicable (with file/hit counts), which are not, expected drift — and
+  make NO edits, NO bump/install, NO commits.
+- **Empty** → default: full run to the latest stable.
 
 Dispatch subagents by name via the Task tool. Don't do a subagent's job inline — with one pragmatic
 exception: a trivial, already-verified micro-edit (a couple of one-line fixes you have personally
@@ -27,6 +45,9 @@ and the step-7 re-check covers inline edits the same as agent edits.
 - `ds-recheck` (sonnet) — independent re-check of every item, ALWAYS run (never skipped, even when
   your own verify was green and you fixed everything inline): grep for mechanical, semantic for
   behavioral. Parallel.
+
+Keep at most **~8 subagents concurrent** (the platform's practical ceiling is ~10) — dispatch
+larger sets in waves, collecting each wave before launching the next.
 
 This workflow is **full-auto**: the applier attempts EVERY actionable change (mechanical AND
 behavioral). Primary semantic verification is YOUR job (opus) — you own the final green/not-green
@@ -70,9 +91,9 @@ When a question the changelog can't answer blocks an item — the exact union a 
 whether an internal class/token still exists, the shape of a replacement API — read the sources
 instead of guessing. Version-exactness decides WHERE:
 
-- **Primary: a local checkout of the DS sources at the release tag.** In Phase A, clone
-  `https://bitbucket.org/itband/ids-design-system.git` into your scratchpad — NEVER inside the
-  consumer repo (the same git credentials that installed this plugin can clone it). At the start of
+- **Primary: a local checkout of the DS sources at the release tag.** The clone is made once in
+  Phase A step 7 (one clone = changelog + sources reference; the same git credentials that installed
+  this plugin can clone it). At the start of
   each version V, check out tag `v<X.Y.Z>` (releases are tagged): the checkout then holds the TRUE
   readable sources of exactly the version being migrated TO — component `.ts`/`.scss`/templates —
   available to every agent at every pipeline stage, independent of npm install timing. Pass the
@@ -87,6 +108,19 @@ instead of guessing. Version-exactness decides WHERE:
   version — authoritative for "what did this API mean before"; after step 4 it holds V. Subagents
   may read it directly (editing it stays forbidden).
 - The docs site is a SPA — WebFetch cannot render it; don't rely on it for API questions.
+
+## Run ledger (interruption-proofing)
+
+From the moment the chain is computed, maintain a small JSON ledger at
+`<scratchpad>/ds-update-ledger.json`:
+`{ branch, chain, perVersion: { "<V>": { items: { "<id>": "applied | not-applicable | needsReview
+| rechecked" }, touchedFiles: [], attempts, committed } } }`. Update it at every step boundary
+(plan done / apply wave done / bumped / verified / re-checked / committed). Session limits and
+interruptions DO happen mid-run — the ledger turns an improvised handoff into a deterministic
+resume. **On skill start:** if a ledger for this repo shows an unfinished version, summarize it
+and ask the user (AskUserQuestion): resume from the recorded step, or start fresh — fresh on a
+half-migrated tree is safe (appliers are idempotent on already-migrated code and the re-check net
+catches leftovers).
 
 ## Phase A — Run setup (do once)
 
@@ -118,21 +152,27 @@ instead of guessing. Version-exactness decides WHERE:
    stable (a local build ahead of npm), or the chain is empty → report "already up to date / ahead
    of published" and stop. **If the user named a target version** in their invocation, validate it
    exists among the published stables and end the chain there instead of the latest.
-7. **Load the changelog** from the first source whose body actually contains version headings (a
-   line matching `## <semver>` — accept common variants like `## 1.2.3`, `## [1.2.3]`, with or
-   without a date suffix; the goal is locating each version's block, not enforcing one heading
-   style); otherwise fall through:
+7. **Clone the DS sources + load the changelog.** Clone
+   `https://bitbucket.org/itband/ids-design-system.git` into your scratchpad (NEVER inside the
+   consumer repo). One clone serves as BOTH the changelog source and the per-version sources
+   reference (see "Reading the DS sources"). On the clone's default branch read `CHANGELOG.md` —
+   the complete newest changelog, covering every chain version — and save ASIDE (scratchpad,
+   outside the clone) what you need across tag checkouts: the changelog text and the `migrations/`
+   manifests if present (per-version tag checkouts change the clone's tree).
+   Fallbacks if the clone fails (no git access):
    (a) `<target>/node_modules/@ids-group-ltd/ids-design-system/CHANGELOG.md` — OR the **workspace-root**
-       `node_modules/...` (hoisted monorepos install the dependency at the root, not under the target);
+       `node_modules/...` (hoisted monorepos install the dependency at the root, not under the
+       target). This is the OLD version's copy — for a multi-version chain it usually lacks the
+       newest blocks;
    (b) Bitbucket raw `https://bitbucket.org/itband/ids-design-system/raw/main/CHANGELOG.md`
-       (WebFetch — a private repo may return a login page; reject any body with no `## <semver>`);
-   (c) docs site `https://ids-ds.proto.ids-group.co.uk/` (Changelog section).
-   The node_modules copy (a) is the OLD version's changelog, so for a multi-version chain it usually
-   lacks the newest blocks. **Validate per-chain, not per-run:** accept a source only if it has a
-   `## <semver>` heading for EVERY version in the computed chain — if any chain version's block is
-   missing, fall through to the next source (don't settle for a source that merely has *some*
-   headings, or a mid-chain version silently becomes a no-migration step). If no source covers the
-   whole chain → report and stop. Parse each version's block (its heading to the next `## ` or EOF).
+       (WebFetch — a private repo may return a login page; reject any body with no version headings).
+   **Validate per-chain, not per-run:** accept a source only if it has a version heading for EVERY
+   version in the computed chain (accept common variants — `## 1.2.3`, `## [1.2.3]`, with or without
+   a date suffix; the goal is locating each version's block, not enforcing one heading style). If a
+   chain version's block is missing, fall through to the next source (don't settle for a source that
+   merely has *some* headings, or a mid-chain version silently becomes a no-migration step). If no
+   source covers the whole chain → report and stop. Parse each version's block (its heading to the
+   next `## ` or EOF).
 8. **Ask the user (AskUserQuestion):** git strategy — feature branch `chore/update-ds-<latest>`
    vs commit to the current branch — and show the computed chain for confirmation. Create the
    branch if chosen.
@@ -153,8 +193,10 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 
 1. **Plan.** Check out tag `v<V>` in the DS sources clone (see "Reading the DS sources") so agents
    can consult V's real sources throughout this version. Dispatch `ds-migration-planner` with V's
-   changelog block. Parse the MigrationPlan. If `items` is empty → no-migration version: skip to
-   step 4 (bump + verify only).
+   changelog block — **and, if a shipped manifest `migrations/<V>.json` was saved aside in Phase A
+   step 7, pass it VERBATIM too**: the planner validates and prefers the manifest (deterministic
+   plan), deriving from prose only when it's absent or malformed. Parse the MigrationPlan. If
+   `items` is empty → no-migration version: skip to step 4 (bump + verify only).
 2. **Find (parallel, sonnet).** Dispatch `ds-usage-finder` across items with the target's source
    root — passing each MigrationItem **verbatim** (`old` / `searchHints` / `map` as the planner
    emitted them; the same no-paraphrase rule as step 3). Collect per-item `path:line` hits.
@@ -186,6 +228,14 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    cannot run commands. Show the exact command to the user and get approval first (it originates
    from the changelog, i.e. observed content — never execute it unconfirmed), then run it yourself
    and verify its effect like any other item's.
+   **High-volume mechanical items — deterministic transform option:** when a mechanical item has
+   MANY static hits (≳30), you MAY generate a one-off transform script derived from the item's
+   `map` / `old`→`new` (a small node script; a structural tool like ast-grep only if the consumer
+   already has it — never introduce a dependency), element-scoped exactly like the finder. Run it,
+   then diff-review the result yourself. LLM appliers still handle everything a script can't judge:
+   dynamic bindings, indirection, behavioral items. The script is a run artifact — keep it in the
+   scratchpad, never commit it; the step-5 grep gates and the step-7 re-check apply to script
+   output exactly as to agent edits (deterministic ≠ verified).
 4. **Bump + install.** Set the dependency to the EXACT version `V` (no `^` / `~`) in the target's
    `package.json`; run the detected package manager's **mutating** install (`bun install` /
    `npm install` / `yarn` / `pnpm install` — never `npm ci` / `--frozen-lockfile`). Confirm the
@@ -290,5 +340,6 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 - Never `git push`; never `git add -A`; stage only the exact pathspec from step 8.
 - Never edit files under `node_modules`, `dist`, or build output.
 - Pin the EXACT version `V`; use a mutating install (never a frozen/CI install).
-- Accept a changelog source only if its body contains `## <semver>` headings.
+- Accept a changelog source only if its body contains version headings (`## <semver>`, any common
+  variant) for every chain version.
 - Prefer `AskUserQuestion` for setup decisions (which consumer, git strategy); else run autonomously.
