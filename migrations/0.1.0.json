@@ -1,0 +1,9 @@
+{
+  "version": "0.1.0",
+  "items": [],
+  "informational": [
+    "Initial public release: 45+ standalone Angular components (buttons, forms, overlays, navigation, data display).",
+    "Three-tier token architecture (palette -> semantic theme -> geometry/typography/motion), default theme and palette swappable by consumers.",
+    "Bundled Mulish and JetBrains Mono fonts; SCSS sources shipped in the package (styles/, themes/)."
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "version": "0.2.1",
+  "items": [],
+  "informational": [
+    "Added a homepage field linking the live docs/showcase so the npm package page points to it. No consumer action."
+  ]
+}

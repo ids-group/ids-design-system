@@ -1,0 +1,73 @@
+{
+  "version": "0.2.0",
+  "items": [
+    {
+      "id": "border-subtle-token-rename",
+      "kind": "token-rename",
+      "old": "--border-subtle",
+      "new": "--border-subtitle",
+      "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename (8 families).",
+      "searchHints": ["--border-subtle"]
+    },
+    {
+      "id": "primary-subtle-token-rename",
+      "kind": "token-rename",
+      "old": "--primary-subtle",
+      "new": "--primary-subtitle",
+      "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
+      "searchHints": ["--primary-subtle"]
+    },
+    {
+      "id": "secondary-subtle-token-rename",
+      "kind": "token-rename",
+      "old": "--secondary-subtle",
+      "new": "--secondary-subtitle",
+      "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
+      "searchHints": ["--secondary-subtle"]
+    },
+    {
+      "id": "tertiary-subtle-token-rename",
+      "kind": "token-rename",
+      "old": "--tertiary-subtle",
+      "new": "--tertiary-subtitle",
+      "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
+      "searchHints": ["--tertiary-subtle"]
+    },
+    {
+      "id": "success-subtle-token-rename",
+      "kind": "token-rename",
+      "old": "--success-subtle",
+      "new": "--success-subtitle",
+      "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
+      "searchHints": ["--success-subtle"]
+    },
+    {
+      "id": "warning-subtle-token-rename",
+      "kind": "token-rename",
+      "old": "--warning-subtle",
+      "new": "--warning-subtitle",
+      "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
+      "searchHints": ["--warning-subtle"]
+    },
+    {
+      "id": "error-subtle-token-rename",
+      "kind": "token-rename",
+      "old": "--error-subtle",
+      "new": "--error-subtitle",
+      "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
+      "searchHints": ["--error-subtle"]
+    },
+    {
+      "id": "info-subtle-token-rename",
+      "kind": "token-rename",
+      "old": "--info-subtle",
+      "new": "--info-subtitle",
+      "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
+      "searchHints": ["--info-subtle"]
+    }
+  ],
+  "informational": [
+    "Theme re-skin guidance clarified in the shipped themes/README (brand roles retint from the --blue ramp; a fully calibrated brand may set --primary-* roles directly).",
+    "Relicensed from proprietary (UNLICENSED) to MIT."
+  ]
+}
