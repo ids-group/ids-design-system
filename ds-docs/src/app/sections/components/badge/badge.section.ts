@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { BadgeComponent, StatusDotComponent, TagComponent } from 'ds';
+import { BadgeComponent } from 'ds';
 import {
   DocsTruncationComponent,
   TruncationRule,
@@ -12,8 +12,6 @@ import { DocsSpecimensComponent } from '../../../shared/docs-specimens.component
   standalone: true,
   imports: [
     BadgeComponent,
-    StatusDotComponent,
-    TagComponent,
     DocsTruncationComponent,
     DocsSectionComponent,
     DocsSpecimensComponent,

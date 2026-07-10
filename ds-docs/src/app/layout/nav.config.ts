@@ -29,7 +29,7 @@ export const NAV: NavGroup[] = [
       { label: 'Alert', anchor: 'alert' },
       { label: 'Autocomplete', anchor: 'autocomplete' },
       { label: 'Avatars', anchor: 'avatar' },
-      { label: 'Badges, tags & status', anchor: 'badge' },
+      { label: 'Badge', anchor: 'badge' },
       { label: 'Banner', anchor: 'banner' },
       { label: 'Bottom sheet', anchor: 'bottom-sheet' },
       { label: 'Breadcrumbs', anchor: 'breadcrumbs' },

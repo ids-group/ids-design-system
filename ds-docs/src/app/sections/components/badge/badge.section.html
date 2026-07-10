@@ -1,7 +1,7 @@
 <docs-section
   anchor="badge"
   eyebrow="Components"
-  title="Badges, tags &amp; status"
+  title="Badge"
 >
   <docs-truncation [rules]="truncationRules" />
 
@@ -258,73 +258,4 @@
     </div>
   </div>
 
-  <!-- ============================================================ Tags · status dots showcase -->
-  <h3 class="block-title t-h4">
-    Tags · status dots showcase
-  </h3>
-
-  <div class="states states--cols-4">
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <ds-tag [closable]="true">
-          Project Alpha
-        </ds-tag>
-      </div>
-
-      <div class="state-cell__label">
-        Tag · default
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <ds-tag
-          variant="neutral"
-          [closable]="true"
-        >
-          Project Beta
-        </ds-tag>
-      </div>
-
-      <div class="state-cell__label">
-        Tag · neutral
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <span class="status-line">
-          <ds-status-dot status="active" /> Active
-        </span>
-      </div>
-
-      <div class="state-cell__label">
-        Status dot · active
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <span class="status-line">
-          <ds-status-dot status="warning" /> Pending
-        </span>
-      </div>
-
-      <div class="state-cell__label">
-        Status dot · pending
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <span class="status-line">
-          <ds-status-dot status="error" /> Conflict
-        </span>
-      </div>
-
-      <div class="state-cell__label">
-        Status dot · conflict
-      </div>
-    </div>
-  </div>
 </docs-section>
