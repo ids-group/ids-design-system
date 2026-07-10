@@ -84,12 +84,6 @@
   --info-border:          hsl(217deg 38% 32%);
   --info-text:            hsl(217deg 90% 74%);
 
-  // Status pills that referenced palette stops directly (green-50/700) — repoint
-  // to the dark status roles so the lifecycle pill reads on dark. (planning →
-  // neutral, confirmed → primary-*, completed → neutral all follow flips.)
-  --status-active-bg-color:   var(--success-subtitle);
-  --status-active-text-color: var(--success-text);
-
   // Scrim stays dark — must NOT follow --shadow-tint-l: 95%.
   --surface-scrim: hsl(225deg 39% 4% / 70%);
 

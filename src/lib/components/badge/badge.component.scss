@@ -1,11 +1,6 @@
-/* ============================================================
-   BADGE / TAG
-   Ported verbatim from vendor/claude-design-ds/components.css (lines 504–528).
-   Defect 5: source contained a single `.badge--active` declaration that
-   consumes `--status-active-{bg,text}-color` tokens — no legacy duplicate found,
-   so nothing was removed. Lifecycle and semantic variants now coexist
-   under one unified `.badge` family.
-   ============================================================ */
+/* Badge chip. Colour comes from the consumer's [data-status] wiring (see
+   styles/status) via the public --ds-badge-bg-color / --ds-badge-label-color
+   tokens; no factory status variants. `.solid` and `.count` are form options. */
 :host {
   display: inline-flex;
 }

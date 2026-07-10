@@ -200,24 +200,6 @@
   --info-border:       var(--sky-200);
   --info-text:         var(--sky-700);
 
-  /* Status pills (event lifecycle).
-     DECISION: --status-confirmed-* chains through --primary-* so a
-     brand re-skin moves Confirmed with it. The other lifecycle
-     stages are deliberately neutral/green/dark to keep semantic
-     distance from brand. */
-
-  /* Status pills — canonical (single system).
-     Legacy classes `.badge--active` (single) and ad-hoc semantic
-     pills are unified in the Badge component to consume these tokens. */
-  --status-planning-bg-color:   var(--neutral-150);
-  --status-planning-text-color:   var(--neutral-700);
-  --status-confirmed-bg-color:  var(--primary-subtitle);
-  --status-confirmed-text-color:  var(--primary-strong);
-  --status-active-bg-color:     var(--green-50);
-  --status-active-text-color:     var(--green-700);
-  --status-completed-bg-color:  var(--neutral-900);
-  --status-completed-text-color:  var(--neutral-0);
-
   /* Focus rings.
      Outer halos use hsla() composed from brand/danger HSL channels
      so re-skinning --primary-h propagates into focus state.
