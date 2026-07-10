@@ -26,27 +26,27 @@
     </p>
 
     <div class="badges">
-      <ds-badge variant="solid">
+      <ds-badge [solid]="true">
         v{{ version }}
       </ds-badge>
 
-      <ds-badge variant="neutral">
+      <ds-badge status="neutral">
         {{ tokenCount() ?? '…' }} tokens
       </ds-badge>
 
-      <ds-badge variant="neutral">
+      <ds-badge status="neutral">
         {{ componentCount }} components
       </ds-badge>
 
-      <ds-badge variant="neutral">
+      <ds-badge status="neutral">
         {{ foundationCount }} foundations
       </ds-badge>
 
-      <ds-badge variant="neutral">
+      <ds-badge status="neutral">
         {{ patternCount }} patterns
       </ds-badge>
 
-      <ds-badge variant="neutral">
+      <ds-badge status="neutral">
         Light + dark
       </ds-badge>
     </div>

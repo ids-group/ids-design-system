@@ -38,7 +38,7 @@
       &lt;ds-tabs class="secondary"&gt;
     </code>,
     <code class="t-mono-inline">
-      &lt;ds-badge variant="secondary"&gt;
+      &lt;ds-status-dot [style.--ds-status-dot-color]="'var(--secondary)'"&gt;
     </code>,
     sidenav active rail, stat delta neutral.
   </p>
@@ -204,15 +204,15 @@
 
     <div class="demo">
       <div class="t-overline">
-        ds-status-dot status="secondary"
+        ds-status-dot — inline colour override
       </div>
 
       <div style="display: inline-flex; align-items: center; gap: var(--space-2)">
-        <ds-status-dot status="secondary" /> Custom state
+        <ds-status-dot [style.--ds-status-dot-color]="'var(--secondary)'" /> Custom state
       </div>
 
       <code class="t-mono-inline">
-        &lt;ds-status-dot status="secondary"&gt;
+        &lt;ds-status-dot [style.--ds-status-dot-color]="'var(--secondary)'"&gt;
       </code>
     </div>
 

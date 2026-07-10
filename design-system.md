@@ -25,7 +25,7 @@ Loaded via `@use 'styles/tokens';` (when the consumer also `@use 'styles/ds';` t
 - Error (destructive, was --danger): `--error`, `--error-hover`, `--error-pressed`, `--error-subtle`, `--error-muted`, `--error-border`, `--error-text` + HSL channels `--error-h/s/l`
 - Status: `--success`, `--success-hover`, `--success-subtle`, `--success-muted`, `--success-border`, `--success-text`
 - Status (warning/info): same shape with prefix swapped
-- Status pills: `--status-planning-bg/fg`, `--status-confirmed-bg/fg`, `--status-active-bg/fg`, `--status-completed-bg/fg`
+- Status pills: the DS ships no predefined status keys — consumers register their own vocabulary (e.g. `planning`, `confirmed`) and wire colours per key via `@use 'styles/status'` (`status.define(...)` / `status.semantic-preset`), which sets `--ds-badge-bg-color` / `--ds-badge-label-color` / `--ds-status-dot-color` per `[data-status]`
 
 **Geometry:**
 - Spacing: `--space-0`, `--space-px`, `--space-0-5` (2px), `--space-1` (4px), `--space-1-5` (6px), `--space-2` (8px), `--space-2-5` (10px), `--space-3` (12px), `--space-4` (16px), `--space-5` (20px), `--space-6` (24px), `--space-8` (32px), `--space-10` (40px), `--space-12` (48px), `--space-14` (56px), `--space-16` (64px), `--space-20` (80px), `--space-24` (96px), `--space-32` (128px)
@@ -190,11 +190,11 @@ Outputs: `(filesAdded): File[]` (raw browser File list from drop or picker), `(f
 ### Display & feedback
 
 #### `<ds-badge>` — `BadgeComponent`
-Inputs: `variant: BadgeVariant = 'neutral'` (`'planning' | 'confirmed' | 'active' | 'completed' | 'info' | 'success' | 'warning' | 'error' | 'neutral' | 'solid' | 'count'`), `withDot: boolean = false`, `solid: boolean = false`
+Inputs: `status: DsStatusKey` (consumer-registered status key; colours wired via `styles/status`, unset → neutral), `withDot: boolean = false`, `solid: boolean = false`, `count: number | null = null`, `max: number = 99`
 Content: label text. Use for status pills, counts, lifecycle markers.
 
 #### `<ds-status-dot>` — `StatusDotComponent`
-Input: `status: StatusValue = 'planning'` (`'planning' | 'confirmed' | 'active' | 'completed' | 'warning' | 'error' | 'secondary'`). Tiny coloured dot.
+Input: `status: DsStatusKey` (same consumer-registered vocabulary as `ds-badge`; colours wired via `styles/status`, unset → neutral). Tiny coloured dot.
 
 #### `<ds-tag>` — `TagComponent`
 Inputs: `variant: 'solid' | 'neutral' = 'solid'`, `closable: boolean = false`
