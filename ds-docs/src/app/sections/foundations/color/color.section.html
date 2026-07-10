@@ -145,15 +145,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    Live opt-in adoptions of <code class="t-mono-inline">--secondary</code>.
-    Default theme renders these identically to
+    Live opt-in adoptions of <code class="t-mono-inline">--secondary</code> — a
+    distinct orange accent family (Tier-1), kept apart from
     <code class="t-mono-inline">
       --primary
-    </code>; override via
+    </code> by default. Override
     <code class="t-mono-inline">
-      [data-brand="..."]
-    </code> to see the secondary
-    hue.
+      --secondary-h/s/l
+    </code> (or a brand) to reskin it.
   </p>
 
   <div class="role-demos">
@@ -286,19 +285,18 @@
   </div>
 
   <p class="block-desc t-s">
-    All adoptions are opt-in (use a class or variant input). Default theme
-    aliases <code class="t-mono-inline">--secondary</code> to
+    All adoptions are opt-in (use a class or variant input).
+    <code class="t-mono-inline">--secondary</code> maps to the orange palette
+    family by default — distinct from
     <code class="t-mono-inline">
       --primary
-    </code> so unbranded apps see no
-    visual difference. Under
+    </code>, so these examples already read apart from the blue accent. Under
     <code class="t-mono-inline">
       [data-brand="manage-my"]
-    </code>,
+    </code>
     <code class="t-mono-inline">
       --secondary
-    </code> is Coral (#FF6156) &mdash;
-    these examples then render in the brand accent.
+    </code> becomes Coral (#FF6156).
   </p>
 
   <!-- ============================================================ Tertiary in use -->
