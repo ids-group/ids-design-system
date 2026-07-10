@@ -9,6 +9,7 @@
 @use 'themes/base-palette';
 @use 'styles/theme-activation';
 @use 'styles/tokens';
+@use 'styles/status' as status;
 @use 'styles/tokens-charts';
 @use 'styles/fonts';
 @use 'styles/reset';
@@ -29,6 +30,14 @@
 // activates when <html data-brand="manage-my"> is set. Duplicated from
 // mm-broker for preview purposes; ds itself stays brand-agnostic.
 @use 'styles/preview-brand-manage-my';
+
+@include status.semantic-preset;
+@include status.define((
+  planning:  (bg: var(--neutral-150),      text: var(--neutral-700),   dot: var(--icon-muted)),
+  confirmed: (bg: var(--primary-subtitle), text: var(--primary-strong),dot: var(--accent)),
+  active:    (bg: var(--success-subtitle), text: var(--success-text),  dot: var(--success)),
+  completed: (bg: var(--neutral-900),      text: var(--neutral-0),     dot: var(--icon-strong)),
+));
 
 html, body { height: 100%; margin: 0; }
 
