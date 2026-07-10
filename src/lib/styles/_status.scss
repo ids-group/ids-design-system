@@ -1,0 +1,57 @@
+// =========================================================================
+// Status colour wiring for ds-badge / ds-status-dot.
+//
+// The DS ships NO statuses — a consumer declares their own vocabulary here and
+// wires each to a colour (a palette token, recommended, or a raw value). The
+// component keys off [data-status]; these rules set the public --ds-badge-* /
+// --ds-status-dot-* tokens the components already read.
+//
+//   @use 'styles/status' as status;                                   // ds-docs (loadPaths: src/lib)
+//   // @use '@ids-group-ltd/ids-design-system/styles/status' as status; // external consumer
+//   @include status.semantic-preset;                                  // optional universal set
+//   @include status.define((
+//     confirmed: (bg: var(--primary-subtitle), text: var(--primary-strong), dot: var(--accent)),
+//     shipped:   (bg: #E1EFFF, text: #0A6DB3),
+//   ));
+//
+// Map entry shape: (bg:, text?:, dot?:). `bg` required (badge fill). `text`
+// optional (badge label; unset → component's --text-secondary fallback). `dot`
+// optional (ds-status-dot colour; unset → falls back to `text`).
+// =========================================================================
+
+@use 'sass:map';
+
+@mixin define($statuses) {
+  @each $name, $spec in $statuses {
+    $bg: map.get($spec, bg);
+    $text: map.get($spec, text);
+    $dot: map.get($spec, dot);
+
+    ds-badge[data-status='#{$name}'] {
+      --ds-badge-bg-color: #{$bg};
+      @if $text {
+        --ds-badge-label-color: #{$text};
+      }
+    }
+
+    ds-status-dot[data-status='#{$name}'] {
+      @if $dot {
+        --ds-status-dot-color: #{$dot};
+      } @else if $text {
+        --ds-status-dot-color: #{$text};
+      }
+    }
+  }
+}
+
+// Opt-in: the universal semantics wired to the DS semantic token families.
+// Not emitted unless called — nothing is predefined at the factory.
+@mixin semantic-preset {
+  @include define((
+    info:    (bg: var(--info-subtitle),     text: var(--info-text),     dot: var(--info)),
+    success: (bg: var(--success-subtitle),  text: var(--success-text),  dot: var(--success)),
+    warning: (bg: var(--warning-subtitle),  text: var(--warning-text),  dot: var(--warning)),
+    error:   (bg: var(--error-subtitle),    text: var(--error-text),    dot: var(--error)),
+    neutral: (bg: var(--surface-secondary), text: var(--text-secondary),dot: var(--icon-muted)),
+  ));
+}
