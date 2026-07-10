@@ -1,20 +1,21 @@
-import { Component, ViewEncapsulation, computed, input } from '@angular/core';
-import type { StatusValue } from './status-dot.types';
+import { Component, ViewEncapsulation, input } from '@angular/core';
+import type { DsStatusKey } from '../../core/status';
 
 @Component({
   selector: 'ds-status-dot',
   standalone: true,
-  template: `<span aria-hidden="true" [class]="classes()"></span>`,
+  template: `<span aria-hidden="true" class="status-dot"></span>`,
   styleUrl: './status-dot.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   host: {
     role: 'img',
-    '[attr.aria-label]': 'ariaLabel() || status()',
+    '[attr.data-status]': 'status() || null',
+    '[attr.aria-label]': 'ariaLabel() || status() || null',
   },
 })
 export class StatusDotComponent {
-  readonly status = input<StatusValue>('planning');
+  /** Consumer-defined status key; colours are wired via styles/status. */
+  readonly status = input<DsStatusKey>();
   /** Override the colour-only status with a human label for assistive tech. */
   readonly ariaLabel = input<string | null>(null);
-  protected readonly classes = computed(() => `status-dot ${this.status()}`);
 }

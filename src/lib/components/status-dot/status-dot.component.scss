@@ -21,12 +21,4 @@
   border-radius: var(--radius-pill);
   flex-shrink: 0;
   background: var(--_status-dot-color);
-
-  &.planning  { --_status-dot-color: var(--ds-status-dot-color, var(--icon-muted)); }
-  &.confirmed { --_status-dot-color: var(--ds-status-dot-color, var(--accent)); }
-  &.active    { --_status-dot-color: var(--ds-status-dot-color, var(--success)); }
-  &.completed { --_status-dot-color: var(--ds-status-dot-color, var(--icon-strong)); }
-  &.warning   { --_status-dot-color: var(--ds-status-dot-color, var(--warning-hover)); }
-  &.error     { --_status-dot-color: var(--ds-status-dot-color, var(--error)); }
-  &.secondary { --_status-dot-color: var(--ds-status-dot-color, var(--secondary)); }
 }
