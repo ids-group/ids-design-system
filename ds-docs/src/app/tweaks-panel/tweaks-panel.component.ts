@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { ButtonComponent, SegmentedComponent, SliderComponent } from 'ds';
+import { ButtonComponent, DrawerComponent, SegmentedComponent, SliderComponent } from 'ds';
 
 type BrandPreview = 'default' | 'manage-my';
 
@@ -9,7 +9,7 @@ const THEME_STORAGE_KEY = 'ds-docs-theme';
 @Component({
   selector: 'tweaks-panel',
   standalone: true,
-  imports: [ButtonComponent, SegmentedComponent, SliderComponent],
+  imports: [ButtonComponent, DrawerComponent, SegmentedComponent, SliderComponent],
   templateUrl: './tweaks-panel.component.html',
   styleUrl: './tweaks-panel.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -62,9 +62,6 @@ export class TweaksPanelComponent {
     }
   }
 
-  protected toggle(): void {
-    this.open.update((value) => !value);
-  }
   protected setDensity(d: 'compact' | 'cozy' | 'comfy'): void {
     this.density.set(d);
     document.documentElement.setAttribute('data-density', d);

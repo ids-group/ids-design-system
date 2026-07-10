@@ -1,154 +1,155 @@
-<div
-  class="tweaks-panel"
-  [class.open]="open()"
+<ds-button
+  class="tweaks-trigger"
+  color="neutral"
+  variant="ghost"
+  (pressed)="open.set(true)"
 >
-  <ds-button
-    color="neutral"
-    variant="ghost"
-    (pressed)="toggle()"
-  >
-    {{ open() ? '✕' : '⚙' }} Tweaks
-  </ds-button>
+  ⚙ Tweaks
+</ds-button>
 
-  @if (open()) {
-    <div class="body">
-      <div class="row">
-        <label class="label"> Theme </label>
+<ds-drawer
+  [(open)]="open"
+  title="Tweaks"
+  placement="right"
+  size="sm"
+>
+  <ng-container drawer-body>
+    <div class="row">
+      <label class="label"> Theme </label>
 
-        <ds-segmented
-          [options]="themeOptions"
-          [value]="theme()"
-          (valueChange)="setTheme($any($event))"
-          ariaLabel="Theme"
-        />
-      </div>
-
-      <div class="row">
-        <label class="label"> Density </label>
-
-        <ds-segmented
-          [options]="densityOptions"
-          [value]="density()"
-          (valueChange)="setDensity($any($event))"
-          ariaLabel="Density"
-        />
-      </div>
-
-      <div class="row">
-        <label class="label"> Brand preview </label>
-
-        <ds-segmented
-          [options]="brandOptions"
-          [value]="brand()"
-          (valueChange)="setBrand($any($event))"
-          ariaLabel="Brand preview"
-        />
-      </div>
-
-      <div class="row">
-        <label class="label"> Neutrals </label>
-
-        <ds-segmented
-          [options]="neutralsOptions"
-          [value]="neutrals()"
-          (valueChange)="setNeutrals($any($event))"
-          ariaLabel="Neutrals"
-        />
-      </div>
-
-      <div class="row">
-        <label class="label"> Primary H ({{ primaryH() }}°) </label>
-
-        <ds-slider
-          [min]="0"
-          [max]="360"
-          [value]="primaryH()"
-          (valueChange)="setPrimaryH($any($event))"
-          ariaLabel="Primary hue"
-        />
-      </div>
-
-      <div class="row">
-        <label class="label"> Primary S ({{ primaryS() }}%) </label>
-
-        <ds-slider
-          [min]="0"
-          [max]="100"
-          [value]="primaryS()"
-          (valueChange)="setPrimaryS($any($event))"
-          ariaLabel="Primary saturation"
-        />
-      </div>
-
-      <div class="row">
-        <label class="label"> Primary L ({{ primaryL() }}%) </label>
-
-        <ds-slider
-          [min]="0"
-          [max]="100"
-          [value]="primaryL()"
-          (valueChange)="setPrimaryL($any($event))"
-          ariaLabel="Primary lightness"
-        />
-      </div>
-
-      <div class="row">
-        <label class="label"> Secondary H ({{ secondaryH() }}°) </label>
-
-        <ds-slider
-          [min]="0"
-          [max]="360"
-          [value]="secondaryH()"
-          (valueChange)="setSecondaryH($any($event))"
-          ariaLabel="Secondary hue"
-        />
-      </div>
-
-      <div class="row">
-        <label class="label"> Secondary S ({{ secondaryS() }}%) </label>
-
-        <ds-slider
-          [min]="0"
-          [max]="100"
-          [value]="secondaryS()"
-          (valueChange)="setSecondaryS($any($event))"
-          ariaLabel="Secondary saturation"
-        />
-      </div>
-
-      <div class="row">
-        <label class="label"> Secondary L ({{ secondaryL() }}%) </label>
-
-        <ds-slider
-          [min]="0"
-          [max]="100"
-          [value]="secondaryL()"
-          (valueChange)="setSecondaryL($any($event))"
-          ariaLabel="Secondary lightness"
-        />
-      </div>
-
-      <div class="row">
-        <label class="label"> Root font-size ({{ rootFs() }}px) </label>
-
-        <ds-slider
-          [min]="12"
-          [max]="20"
-          [value]="rootFs()"
-          (valueChange)="setFs($any($event))"
-          ariaLabel="Root font size"
-        />
-      </div>
-
-      <div class="row">
-        <ds-button
-          color="neutral"
-          variant="outline"
-          (pressed)="reset()"
-        >
-          Reset
-        </ds-button>
-      </div>
+      <ds-segmented
+        [options]="themeOptions"
+        [value]="theme()"
+        (valueChange)="setTheme($any($event))"
+        ariaLabel="Theme"
+      />
     </div>
-  }
-</div>
+
+    <div class="row">
+      <label class="label"> Density </label>
+
+      <ds-segmented
+        [options]="densityOptions"
+        [value]="density()"
+        (valueChange)="setDensity($any($event))"
+        ariaLabel="Density"
+      />
+    </div>
+
+    <div class="row">
+      <label class="label"> Brand preview </label>
+
+      <ds-segmented
+        [options]="brandOptions"
+        [value]="brand()"
+        (valueChange)="setBrand($any($event))"
+        ariaLabel="Brand preview"
+      />
+    </div>
+
+    <div class="row">
+      <label class="label"> Neutrals </label>
+
+      <ds-segmented
+        [options]="neutralsOptions"
+        [value]="neutrals()"
+        (valueChange)="setNeutrals($any($event))"
+        ariaLabel="Neutrals"
+      />
+    </div>
+
+    <div class="row">
+      <label class="label"> Primary H ({{ primaryH() }}°) </label>
+
+      <ds-slider
+        [min]="0"
+        [max]="360"
+        [value]="primaryH()"
+        (valueChange)="setPrimaryH($any($event))"
+        ariaLabel="Primary hue"
+      />
+    </div>
+
+    <div class="row">
+      <label class="label"> Primary S ({{ primaryS() }}%) </label>
+
+      <ds-slider
+        [min]="0"
+        [max]="100"
+        [value]="primaryS()"
+        (valueChange)="setPrimaryS($any($event))"
+        ariaLabel="Primary saturation"
+      />
+    </div>
+
+    <div class="row">
+      <label class="label"> Primary L ({{ primaryL() }}%) </label>
+
+      <ds-slider
+        [min]="0"
+        [max]="100"
+        [value]="primaryL()"
+        (valueChange)="setPrimaryL($any($event))"
+        ariaLabel="Primary lightness"
+      />
+    </div>
+
+    <div class="row">
+      <label class="label"> Secondary H ({{ secondaryH() }}°) </label>
+
+      <ds-slider
+        [min]="0"
+        [max]="360"
+        [value]="secondaryH()"
+        (valueChange)="setSecondaryH($any($event))"
+        ariaLabel="Secondary hue"
+      />
+    </div>
+
+    <div class="row">
+      <label class="label"> Secondary S ({{ secondaryS() }}%) </label>
+
+      <ds-slider
+        [min]="0"
+        [max]="100"
+        [value]="secondaryS()"
+        (valueChange)="setSecondaryS($any($event))"
+        ariaLabel="Secondary saturation"
+      />
+    </div>
+
+    <div class="row">
+      <label class="label"> Secondary L ({{ secondaryL() }}%) </label>
+
+      <ds-slider
+        [min]="0"
+        [max]="100"
+        [value]="secondaryL()"
+        (valueChange)="setSecondaryL($any($event))"
+        ariaLabel="Secondary lightness"
+      />
+    </div>
+
+    <div class="row">
+      <label class="label"> Root font-size ({{ rootFs() }}px) </label>
+
+      <ds-slider
+        [min]="12"
+        [max]="20"
+        [value]="rootFs()"
+        (valueChange)="setFs($any($event))"
+        ariaLabel="Root font size"
+      />
+    </div>
+  </ng-container>
+
+  <ng-container drawer-footer>
+    <ds-button
+      color="neutral"
+      variant="outline"
+      (pressed)="reset()"
+    >
+      Reset
+    </ds-button>
+  </ng-container>
+</ds-drawer>

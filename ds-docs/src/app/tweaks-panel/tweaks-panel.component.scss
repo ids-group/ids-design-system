@@ -1,26 +1,9 @@
-.tweaks-panel {
+.tweaks-trigger {
   position: fixed;
-  bottom: var(--space-4);
+  top: var(--space-4);
   right: var(--space-4);
   z-index: var(--layer-popover);
-  background: var(--surface-overlay);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-popover);
-  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-  color: var(--text-primary);
-
-  &.open {
-    width: 280px;
-    backdrop-filter: blur(var(--blur-md));
-    background: var(--surface-overlay);
-  }
-
-  .body {
-    padding: 0 var(--space-3) var(--space-3);
-    display: grid;
-    gap: var(--space-3);
-  }
-
-  .row { display: grid; gap: var(--space-1); }
-  .label { font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
 }
+
+.row { display: grid; gap: var(--space-1); }
+.label { font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
