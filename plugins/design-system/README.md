@@ -39,6 +39,13 @@ repository access token). Manual install/update needs nothing extra.
 - `agents/ds-recheck.md` (sonnet) — independently re-verify every migration item (grep for
   mechanical, semantic for behavioral); always runs as a second pass.
 
+## Versioning
+
+The plugin is versioned (see `CHANGELOG.md` next to this file): **patch** = instruction/prompt
+fixes, **minor** = new capability, **major** = a change to the workflow's behavior contract.
+`plugin.json` and `marketplace.json` are bumped together on every published change — so a plugin
+update is always visible as a version change (the plugin cache is keyed by version).
+
 ## Scope & limits
 
 - Steps through every published **stable** version (prereleases skipped); by default up to the
