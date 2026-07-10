@@ -4,7 +4,7 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
-## 2.0.0 — 2026-07-10
+## 1.2.6 — 2026-07-10
 
 ### Breaking (workflow contract)
 - **Full-auto.** The applier now ATTEMPTS every actionable change, including `removed-api` and
