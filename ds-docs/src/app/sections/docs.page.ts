@@ -186,23 +186,7 @@ import { ChangelogSection } from './changelog/changelog.section';
   template: `
     <section-home />
 
-    <h1 class="group-title t-h2">Components</h1>
-
-    <section-components-accordion />
-
-    <section-components-alert />
-
-    <section-components-autocomplete />
-
-    <section-components-avatar />
-
-    <section-components-badge />
-
-    <section-components-banner />
-
-    <section-components-bottom-sheet />
-
-    <section-components-breadcrumbs />
+    <h1 class="group-title t-h2">Actions</h1>
 
     <section-components-button />
 
@@ -212,7 +196,11 @@ import { ChangelogSection } from './changelog/changelog.section';
 
     <section-components-split-button />
 
-    <section-components-card />
+    <section-components-link />
+
+    <h1 class="group-title t-h2">Forms &amp; inputs</h1>
+
+    <section-components-autocomplete />
 
     <section-components-checkbox />
 
@@ -220,27 +208,9 @@ import { ChangelogSection } from './changelog/changelog.section';
 
     <section-components-date-picker />
 
-    <section-components-description-list />
-
-    <section-components-drawer />
-
     <section-components-dropzone />
 
-    <section-components-empty-state />
-
-    <section-components-icon />
-
     <section-components-input />
-
-    <section-components-link />
-
-    <section-components-list />
-
-    <section-components-loading-overlay />
-
-    <section-components-menu />
-
-    <section-components-modal />
 
     <section-components-multi-select />
 
@@ -248,59 +218,101 @@ import { ChangelogSection } from './changelog/changelog.section';
 
     <section-components-otp-input />
 
-    <section-components-page-footer />
-
-    <section-components-page-header />
-
-    <section-components-pagination />
-
-    <section-components-popover />
-
-    <section-components-progress />
-
     <section-components-radio />
 
     <section-components-search />
 
     <section-components-select />
 
-    <section-components-sidenav />
-
-    <section-components-skeleton />
-
     <section-components-slider />
 
-    <section-components-spinner />
-
-    <section-components-stat />
-
-    <section-components-status-dot />
-
-    <section-components-stepper />
-
     <section-components-switch />
-
-    <section-components-table />
-
-    <section-components-tabs />
-
-    <section-components-tag />
 
     <section-components-textarea />
 
     <section-components-time-picker />
 
-    <section-components-timeline />
+    <section-components-w3w />
 
-    <section-components-toast />
+    <h1 class="group-title t-h2">Navigation</h1>
 
-    <section-components-tooltip />
+    <section-components-breadcrumbs />
+
+    <section-components-menu />
+
+    <section-components-pagination />
+
+    <section-components-sidenav />
+
+    <section-components-stepper />
+
+    <section-components-tabs />
 
     <section-components-topbar />
 
+    <h1 class="group-title t-h2">Data display</h1>
+
+    <section-components-accordion />
+
+    <section-components-avatar />
+
+    <section-components-card />
+
+    <section-components-description-list />
+
+    <section-components-icon />
+
+    <section-components-list />
+
+    <section-components-stat />
+
+    <section-components-table />
+
+    <section-components-tag />
+
+    <section-components-timeline />
+
     <section-components-tree />
 
-    <section-components-w3w />
+    <h1 class="group-title t-h2">Feedback &amp; status</h1>
+
+    <section-components-alert />
+
+    <section-components-badge />
+
+    <section-components-banner />
+
+    <section-components-empty-state />
+
+    <section-components-loading-overlay />
+
+    <section-components-progress />
+
+    <section-components-skeleton />
+
+    <section-components-spinner />
+
+    <section-components-status-dot />
+
+    <section-components-toast />
+
+    <h1 class="group-title t-h2">Overlays</h1>
+
+    <section-components-bottom-sheet />
+
+    <section-components-drawer />
+
+    <section-components-modal />
+
+    <section-components-popover />
+
+    <section-components-tooltip />
+
+    <h1 class="group-title t-h2">Page structure</h1>
+
+    <section-components-page-footer />
+
+    <section-components-page-header />
 
     <h1 class="group-title t-h2">Foundations</h1>
 
