@@ -1,3 +1,4 @@
+@use 'styles/breakpoints' as bp;
 
     .stage {
       margin-top: var(--space-3);
@@ -64,3 +65,15 @@
       gap: var(--space-2);
       max-width: var(--col-cap-text);
     }
+
+@include bp.down(sm) {
+  .filterbar ds-select {
+    min-width: 0;
+    flex: 1 1 45%;
+  }
+
+  .filterbar ds-search {
+    max-width: none;
+    flex: 1 1 100%;
+  }
+}

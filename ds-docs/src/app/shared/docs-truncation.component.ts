@@ -70,8 +70,8 @@ export interface TruncationRule {
         left: 0;
         z-index: var(--layer-tooltip, 100);
         width: max-content;
-        min-width: 320px;
-        max-width: 460px;
+        min-width: min(320px, calc(100vw - var(--space-8)));
+        max-width: min(460px, calc(100vw - var(--space-8)));
         padding: var(--space-3) var(--space-4);
         border-radius: var(--radius-lg);
         background: var(--surface-default);

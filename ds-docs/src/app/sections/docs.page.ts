@@ -368,20 +368,24 @@ import { ChangelogSection } from './changelog/changelog.section';
   `,
   styles: [
     `
+      @use 'styles/breakpoints' as bp;
+
       :host {
         display: block;
         max-width: var(--col-cap-content);
         margin-inline: auto;
-        padding: var(--space-12) var(--space-16) var(--space-24);
+        padding: var(--space-8) var(--page-margin-mobile) var(--space-12);
       }
-      @media (max-width: 1100px) {
+
+      @include bp.up(md) {
         :host {
           padding: var(--space-10) var(--space-8) var(--space-16);
         }
       }
-      @media (max-width: 900px) {
+
+      @include bp.up(lg) {
         :host {
-          padding: var(--space-8) var(--space-6) var(--space-12);
+          padding: var(--space-12) var(--space-16) var(--space-24);
         }
       }
       .group-title {
