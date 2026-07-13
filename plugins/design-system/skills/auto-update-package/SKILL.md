@@ -173,6 +173,14 @@ catches leftovers).
    merely has *some* headings, or a mid-chain version silently becomes a no-migration step). If no
    source covers the whole chain → report and stop. Parse each version's block (its heading to the
    next `## ` or EOF).
+   **Migration manifests (deterministic bonus, same source priority).** The DS ships a structured
+   `migrations/<V>.json` per version (a MigrationPlan mirror of each changelog block). Prefer the
+   clone's `migrations/` (default branch has ALL versions — save the whole dir aside). If the clone
+   failed, try fetching each chain version's `migrations/<V>.json` via Bitbucket raw
+   (`…/raw/main/migrations/<V>.json`); the fallback `node_modules/.../migrations/` only holds
+   versions ≤ installed, so it rarely covers a forward chain. A version whose manifest you couldn't
+   get is NOT an error — the planner just derives that version's plan from its prose block instead
+   (step 1). Manifests make the plan deterministic; they are never required.
 8. **Ask the user (AskUserQuestion):** git strategy — feature branch `chore/update-ds-<latest>`
    vs commit to the current branch — and show the computed chain for confirmation. Create the
    branch if chosen.
