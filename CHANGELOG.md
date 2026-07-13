@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.5.1 — 2026-07-13
+
 ### Breaking
 
 - **Status vocabulary unified — `danger` → `error`, `warn` → `warning`.** A new exported

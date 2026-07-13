@@ -1,5 +1,5 @@
 {
-  "version": "unreleased",
+  "version": "0.5.1",
   "items": [
     {
       "id": "modal-danger-input-rename",
@@ -7,7 +7,11 @@
       "old": "ds-modal[danger]",
       "new": "error",
       "note": "Status vocab unified to DsStatus (info|success|warning|error). Boolean input [danger] -> [error] (also static danger=\"...\" -> error=\"...\"). Default value unchanged.",
-      "searchHints": ["<ds-modal", "[danger]", "danger="]
+      "searchHints": [
+        "<ds-modal",
+        "[danger]",
+        "danger="
+      ]
     },
     {
       "id": "modal-card-danger-input-rename",
@@ -15,7 +19,11 @@
       "old": "ds-modal-card[danger]",
       "new": "error",
       "note": "Same danger -> error boolean-input rename on ds-modal-card.",
-      "searchHints": ["<ds-modal-card", "[danger]", "danger="]
+      "searchHints": [
+        "<ds-modal-card",
+        "[danger]",
+        "danger="
+      ]
     },
     {
       "id": "menu-item-danger-input-rename",
@@ -23,7 +31,11 @@
       "old": "ds-menu-item[danger]",
       "new": "error",
       "note": "Same danger -> error boolean-input rename on ds-menu-item.",
-      "searchHints": ["<ds-menu-item", "[danger]", "danger="]
+      "searchHints": [
+        "<ds-menu-item",
+        "[danger]",
+        "danger="
+      ]
     },
     {
       "id": "stat-variant-danger-remap",
@@ -31,8 +43,14 @@
       "old": "ds-stat[variant]",
       "new": null,
       "note": "ds-stat variant value 'danger' -> 'error'. Other variant values unchanged (absent from map — leave them).",
-      "searchHints": ["<ds-stat", "variant=\"", "[variant]="],
-      "map": { "danger": "variant=\"error\"" }
+      "searchHints": [
+        "<ds-stat",
+        "variant=\"",
+        "[variant]="
+      ],
+      "map": {
+        "danger": "variant=\"error\""
+      }
     },
     {
       "id": "progress-variant-remap",
@@ -40,8 +58,16 @@
       "old": "ds-progress[variant]",
       "new": null,
       "note": "Two changes on ds-progress[variant]: 'warn' -> 'warning'; and 'indeterminate' is no longer a variant value — it becomes the boolean [indeterminate] input, so variant=\"indeterminate\" -> the bare indeterminate attribute (a bar can now be e.g. success-coloured AND indeterminate). ProgressVariant is now 'default' | 'success' | 'warning' | 'error' — TS references to the removed 'warn'/'indeterminate' members update accordingly. 'success'/'error'/'default' unchanged (absent from map).",
-      "searchHints": ["<ds-progress", "variant=\"", "[variant]=", "ProgressVariant"],
-      "map": { "warn": "variant=\"warning\"", "indeterminate": "indeterminate" }
+      "searchHints": [
+        "<ds-progress",
+        "variant=\"",
+        "[variant]=",
+        "ProgressVariant"
+      ],
+      "map": {
+        "warn": "variant=\"warning\"",
+        "indeterminate": "indeterminate"
+      }
     },
     {
       "id": "modal-confirm-tone-danger-remap",
@@ -49,7 +75,11 @@
       "old": "ModalConfirmTone",
       "new": null,
       "note": "ModalConfirmTone value 'danger' -> 'error'. Update ModalService.confirm({ tone: 'danger' }) -> { tone: 'error' } and any TS typed with ModalConfirmTone.",
-      "searchHints": ["ModalConfirmTone", "tone:", "tone="]
+      "searchHints": [
+        "ModalConfirmTone",
+        "tone:",
+        "tone="
+      ]
     },
     {
       "id": "split-button-item-danger-property",
@@ -57,7 +87,10 @@
       "old": "SplitButtonItem",
       "new": null,
       "note": "SplitButtonItem object property `danger` renamed to `error`. Update item literals ({ danger: true } -> { error: true }) and any TS typed with SplitButtonItem.",
-      "searchHints": ["SplitButtonItem", "danger:"]
+      "searchHints": [
+        "SplitButtonItem",
+        "danger:"
+      ]
     },
     {
       "id": "menu-item-danger-label-token-rename",
@@ -65,7 +98,9 @@
       "old": "--ds-menu-item-danger-label-color",
       "new": "--ds-menu-item-error-label-color",
       "note": "Public token renamed in lockstep with [danger] -> [error]. CSS property and default unchanged.",
-      "searchHints": ["--ds-menu-item-danger-label-color"]
+      "searchHints": [
+        "--ds-menu-item-danger-label-color"
+      ]
     },
     {
       "id": "progress-bar-warn-token-rename",
@@ -73,7 +108,9 @@
       "old": "--ds-progress-bar-color-warn",
       "new": "--ds-progress-bar-color-warning",
       "note": "Public token renamed in lockstep with the 'warn' -> 'warning' value. CSS property and default unchanged.",
-      "searchHints": ["--ds-progress-bar-color-warn"]
+      "searchHints": [
+        "--ds-progress-bar-color-warn"
+      ]
     },
     {
       "id": "alert-dismissed-output-rename",
@@ -81,7 +118,10 @@
       "old": "ds-alert[dismissed]",
       "new": "closed",
       "note": "Dismissal event unified to (closed): (dismissed) -> (closed) on ds-alert.",
-      "searchHints": ["<ds-alert", "(dismissed)"]
+      "searchHints": [
+        "<ds-alert",
+        "(dismissed)"
+      ]
     },
     {
       "id": "banner-dismissed-output-rename",
@@ -89,7 +129,10 @@
       "old": "ds-banner[dismissed]",
       "new": "closed",
       "note": "(dismissed) -> (closed) on ds-banner.",
-      "searchHints": ["<ds-banner", "(dismissed)"]
+      "searchHints": [
+        "<ds-banner",
+        "(dismissed)"
+      ]
     },
     {
       "id": "toast-dismissed-output-rename",
@@ -97,7 +140,10 @@
       "old": "ds-toast[dismissed]",
       "new": "closed",
       "note": "(dismissed) -> (closed) on ds-toast.",
-      "searchHints": ["<ds-toast", "(dismissed)"]
+      "searchHints": [
+        "<ds-toast",
+        "(dismissed)"
+      ]
     },
     {
       "id": "table-rowclick-output-rename",
@@ -105,7 +151,10 @@
       "old": "ds-table[rowClick]",
       "new": "rowClicked",
       "note": "Action event made past-tense: (rowClick) -> (rowClicked) on ds-table.",
-      "searchHints": ["<ds-table", "(rowClick)"]
+      "searchHints": [
+        "<ds-table",
+        "(rowClick)"
+      ]
     },
     {
       "id": "stepper-stepclick-output-rename",
@@ -113,7 +162,10 @@
       "old": "ds-stepper[stepClick]",
       "new": "stepClicked",
       "note": "(stepClick) -> (stepClicked) on ds-stepper.",
-      "searchHints": ["<ds-stepper", "(stepClick)"]
+      "searchHints": [
+        "<ds-stepper",
+        "(stepClick)"
+      ]
     },
     {
       "id": "calendar-day-dayselect-output-rename",
@@ -121,7 +173,10 @@
       "old": "ds-calendar-day[daySelect]",
       "new": "daySelected",
       "note": "(daySelect) -> (daySelected) on ds-calendar-day.",
-      "searchHints": ["<ds-calendar-day", "(daySelect)"]
+      "searchHints": [
+        "<ds-calendar-day",
+        "(daySelect)"
+      ]
     },
     {
       "id": "tabs-tabclose-output-rename",
@@ -129,7 +184,10 @@
       "old": "ds-tabs[tabClose]",
       "new": "tabClosed",
       "note": "(tabClose) -> (tabClosed) on ds-tabs.",
-      "searchHints": ["<ds-tabs", "(tabClose)"]
+      "searchHints": [
+        "<ds-tabs",
+        "(tabClose)"
+      ]
     },
     {
       "id": "tree-nodeselect-output-rename",
@@ -137,7 +195,10 @@
       "old": "ds-tree[nodeSelect]",
       "new": "nodeSelected",
       "note": "(nodeSelect) -> (nodeSelected) on ds-tree.",
-      "searchHints": ["<ds-tree", "(nodeSelect)"]
+      "searchHints": [
+        "<ds-tree",
+        "(nodeSelect)"
+      ]
     },
     {
       "id": "split-button-itemselect-output-rename",
@@ -145,7 +206,10 @@
       "old": "ds-split-button[itemSelect]",
       "new": "itemSelected",
       "note": "(itemSelect) -> (itemSelected) on ds-split-button.",
-      "searchHints": ["<ds-split-button", "(itemSelect)"]
+      "searchHints": [
+        "<ds-split-button",
+        "(itemSelect)"
+      ]
     },
     {
       "id": "title-required-name-bearing",
@@ -153,7 +217,11 @@
       "old": "ds-drawer",
       "new": null,
       "note": "title is now REQUIRED on ds-drawer, ds-bottom-sheet, and ds-accordion-item (it is the component's accessible name / disclosure-button label). Add a [title]/title if any instance is missing one. ds-page-header title is now OPTIONAL (plain <h1>) — no action there.",
-      "searchHints": ["<ds-drawer", "<ds-bottom-sheet", "<ds-accordion-item"]
+      "searchHints": [
+        "<ds-drawer",
+        "<ds-bottom-sheet",
+        "<ds-accordion-item"
+      ]
     },
     {
       "id": "badge-variant-to-status-rename",
@@ -161,7 +229,11 @@
       "old": "ds-badge[variant]",
       "new": "status",
       "note": "ds-badge [variant] (BadgeVariant) renamed to [status] (typed DsStatusKey); the value is now emitted as a data-status attribute, not a factory CSS class. Keep your value (variant=\"active\" -> status=\"active\"), BUT the built-in per-status colours are GONE — you must define your status colours via the new styles/status SCSS API keyed on [data-status] (see status-lifecycle-tokens-removed). [count]/[solid]/[withDot]/[max] and the --ds-badge-* hooks are unchanged.",
-      "searchHints": ["<ds-badge", "variant=\"", "[variant]="]
+      "searchHints": [
+        "<ds-badge",
+        "variant=\"",
+        "[variant]="
+      ]
     },
     {
       "id": "status-dot-status-retype",
@@ -169,7 +241,10 @@
       "old": "ds-status-dot",
       "new": null,
       "note": "ds-status-dot [status] keeps its name but is retyped StatusValue -> DsStatusKey and no longer defaults to 'planning'; the value is now emitted as a data-status attribute, not a `.status-dot <value>` CSS class. Any custom CSS targeting .status-dot.active / .planning / .confirmed / .completed / .warning / .error / .secondary must switch to [data-status='...']. Define status colours via the styles/status SCSS API.",
-      "searchHints": ["<ds-status-dot", ".status-dot"]
+      "searchHints": [
+        "<ds-status-dot",
+        ".status-dot"
+      ]
     },
     {
       "id": "badge-status-dot-types-removed",
@@ -177,7 +252,12 @@
       "old": "BadgeVariant",
       "new": null,
       "note": "The exported types BadgeVariant, BadgeLifecycle, BadgeSemantic (badge) and StatusValue (status-dot) are no longer exported. Type badge/status-dot status with DsStatusKey (or your own registered union via DsStatusRegistry augmentation).",
-      "searchHints": ["BadgeVariant", "BadgeLifecycle", "BadgeSemantic", "StatusValue"]
+      "searchHints": [
+        "BadgeVariant",
+        "BadgeLifecycle",
+        "BadgeSemantic",
+        "StatusValue"
+      ]
     },
     {
       "id": "status-lifecycle-tokens-removed",
@@ -185,7 +265,12 @@
       "old": "--status-planning-bg-color",
       "new": null,
       "note": "The factory lifecycle status theme tokens --status-planning-bg-color / -text-color, --status-confirmed-*, --status-active-*, --status-completed-* are removed. If you set them to theme lifecycle badges/dots, define your statuses instead via `@use '@ids-group-ltd/ids-design-system/styles/status' as status; @include status.define((...))` (or status.semantic-preset), which writes the public --ds-badge-* / --ds-status-dot-* tokens keyed on [data-status]. The dimension token --status-dot-size is NOT removed.",
-      "searchHints": ["--status-planning", "--status-confirmed", "--status-active", "--status-completed"]
+      "searchHints": [
+        "--status-planning",
+        "--status-confirmed",
+        "--status-active",
+        "--status-completed"
+      ]
     },
     {
       "id": "default-secondary-tertiary-hues",
@@ -193,7 +278,12 @@
       "old": "--secondary-h",
       "new": null,
       "note": "Default secondary/tertiary hues changed: --secondary-h/s/l now default to the --orange palette family (warm orange) and --tertiary-h/s/l to --violet (cool violet), where they previously both defaulted to --primary channels (blue). Consumers who never set --secondary-h/s/l or --tertiary-h/s/l now render orange/violet where they saw blue — VISUAL REVIEW (usually no code change). To keep the old single-hue look, set --secondary-h/s/l and --tertiary-h/s/l back to var(--primary-h/s/l).",
-      "searchHints": ["--secondary-h", "--tertiary-h", "--secondary", "--tertiary"]
+      "searchHints": [
+        "--secondary-h",
+        "--tertiary-h",
+        "--secondary",
+        "--tertiary"
+      ]
     },
     {
       "id": "static-white-token-removed",
@@ -201,7 +291,10 @@
       "old": "--static-white",
       "new": "white",
       "note": "The fixed-value --static-white custom property is removed; replace any var(--static-white) with the literal keyword white (identical value, no visual change). --static-ink is retained.",
-      "searchHints": ["--static-white", "var(--static-white)"]
+      "searchHints": [
+        "--static-white",
+        "var(--static-white)"
+      ]
     }
   ],
   "informational": [
