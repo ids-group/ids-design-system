@@ -17,7 +17,7 @@ import { TweaksPanelComponent } from './tweaks-panel/tweaks-panel.component';
     ButtonComponent,
   ],
   templateUrl: './app.html',
-  styleUrl: './app.scss',
+  styleUrls: ['./app.scss', './app.responsive.scss'],
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class App {

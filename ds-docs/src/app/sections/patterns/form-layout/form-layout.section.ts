@@ -20,7 +20,10 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './form-layout.section.html',
-  styleUrl: './form-layout.section.scss',
+  styleUrls: [
+    './form-layout.section.scss',
+    './form-layout.section.responsive.scss',
+  ],
 })
 export class FormLayoutSection {
   protected readonly lede =

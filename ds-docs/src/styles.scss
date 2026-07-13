@@ -10,7 +10,6 @@
 @use 'styles/theme-activation';
 @use 'styles/tokens';
 @use 'styles/breakpoints-vars';
-@use 'styles/breakpoints' as bp;
 @use 'styles/status' as status;
 @use 'styles/tokens-charts';
 @use 'styles/fonts';
@@ -41,15 +40,3 @@
 ));
 
 html, body { height: 100%; margin: 0; }
-
-// Sidebar-collapsed grid override. Lives at GLOBAL scope because Angular's
-// emulated encapsulation rewrites `:root.<class>` as `[_ngcontent-…]:root`,
-// which the actual <html> element doesn't satisfy (no _ngcontent attr at
-// the root). Putting it here keeps the selector clean and effective.
-// Gated to the desktop (lg+) rail layout — below lg the sidebar renders in
-// the nav drawer, which never reads the collapsed grid column.
-@media (width >= #{bp.$bp-lg}) {
-  :root.ds-docs-sidebar-collapsed app-root .layout {
-    grid-template-columns: 48px minmax(0, 1fr);
-  }
-}

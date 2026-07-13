@@ -142,7 +142,10 @@ const RAMP: readonly TypeRampRow[] = [
   imports: [DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './typography.section.html',
-  styleUrl: './typography.section.scss',
+  styleUrls: [
+    './typography.section.scss',
+    './typography.section.responsive.scss',
+  ],
 })
 export class TypographySection {
   protected readonly ramp = RAMP;

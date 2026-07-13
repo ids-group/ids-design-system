@@ -10,6 +10,10 @@
 }
 
 /* ---------- Reference table ---------- */
+.scroll-wrap {
+  --docs-scroll-wrap-bg-color: transparent;
+  --docs-scroll-wrap-radius: 0;
+}
 .scroll-wrap .ref-table {
   min-width: 560px;
 }

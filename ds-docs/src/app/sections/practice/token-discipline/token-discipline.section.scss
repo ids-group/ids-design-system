@@ -69,13 +69,3 @@
       gap: var(--space-2);
       max-width: var(--col-cap-text);
     }
-
-    @media (width <= 820px) {
-      .pair { grid-template-columns: 1fr; }
-      .pair__head { border-right: 0; border-bottom: var(--border-width-default) solid var(--border-divider); }
-    }
-
-    @media (width <= 560px) {
-      .pair__body { grid-template-columns: 1fr; }
-      .tile--bad { border-left: 0; border-top: var(--border-width-default) solid var(--border-divider); }
-    }

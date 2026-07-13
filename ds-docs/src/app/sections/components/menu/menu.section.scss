@@ -4,10 +4,6 @@
       grid-template-columns: repeat(2, 1fr);
       gap: var(--space-5);
       margin-top: var(--space-5);
-
-      @media (max-width: 600px) {
-        grid-template-columns: 1fr;
-      }
     }
 
     .showcase-cell {

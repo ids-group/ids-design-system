@@ -1,5 +1,3 @@
-@use 'styles/breakpoints' as bp;
-
     .stack { display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-3); }
 
     /* ---------- States showcase ---------- */
@@ -46,15 +44,3 @@
       gap: var(--space-6);
       margin-top: var(--space-3);
     }
-
-@include bp.down(md) {
-  .states--cols-4 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@include bp.down(xs) {
-  .states--cols-4 {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}

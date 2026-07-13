@@ -93,8 +93,3 @@
       color: var(--text-primary);
       font-size: var(--font-size-s);
     }
-
-    @media (width <= 720px) {
-      .demo-grid { grid-template-columns: 1fr; }
-      .spec { grid-template-columns: 1fr; }
-    }

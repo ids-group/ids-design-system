@@ -1,5 +1,3 @@
-@use 'styles/breakpoints' as bp;
-
 .tweaks-trigger {
   position: fixed;
   top: var(--space-4);
@@ -9,9 +7,3 @@
 
 .row { display: grid; gap: var(--space-1); }
 .label { font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
-
-@include bp.down(lg) {
-  .tweaks-trigger {
-    display: none;
-  }
-}

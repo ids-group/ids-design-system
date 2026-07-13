@@ -101,7 +101,7 @@ const COL_CAPS: readonly ColumnCap[] = [
   imports: [DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './layout.section.html',
-  styleUrl: './layout.section.scss',
+  styleUrls: ['./layout.section.scss', './layout.section.responsive.scss'],
 })
 export class LayoutSection {
   protected readonly breakpoints = BREAKPOINTS;

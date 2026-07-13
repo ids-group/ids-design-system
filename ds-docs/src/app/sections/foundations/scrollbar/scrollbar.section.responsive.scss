@@ -1,0 +1,6 @@
+@use 'styles/breakpoints' as bp;
+
+@include bp.down(md) {
+  .demo-grid { grid-template-columns: 1fr; }
+  .spec { grid-template-columns: 1fr; }
+}

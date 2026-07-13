@@ -8,7 +8,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [DocsSectionComponent, RadioComponent, RadioGroupComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './radio.section.html',
-  styleUrl: './radio.section.scss',
+  styleUrls: ['./radio.section.scss', './radio.section.responsive.scss'],
 })
 export class RadioSection {
   protected readonly scheduleValue = signal<string | null>('single');

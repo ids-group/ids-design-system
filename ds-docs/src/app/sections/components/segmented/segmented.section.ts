@@ -18,7 +18,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './segmented.section.html',
-  styleUrl: '../../../shared/section-demo.scss',
+  styleUrls: ['../../../shared/section-demo.scss', '../../../shared/section-demo.responsive.scss'],
 })
 export class SegmentedSection {
   protected readonly view = signal('list');

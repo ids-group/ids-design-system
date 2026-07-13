@@ -183,6 +183,7 @@ import { ChangelogSection } from './changelog/changelog.section';
     ChangelogSection,
   ],
   encapsulation: ViewEncapsulation.Emulated,
+  styleUrls: ['./docs.page.scss', './docs.page.responsive.scss'],
   template: `
     <section-home />
 
@@ -366,125 +367,5 @@ import { ChangelogSection } from './changelog/changelog.section';
 
     <section-changelog />
   `,
-  styles: [
-    `
-      @use 'styles/breakpoints' as bp;
-
-      :host {
-        display: block;
-        max-width: var(--col-cap-content);
-        margin-inline: auto;
-        padding: var(--space-8) var(--page-margin-mobile) var(--space-12);
-      }
-
-      @include bp.up(md) {
-        :host {
-          padding: var(--space-10) var(--space-8) var(--space-16);
-        }
-      }
-
-      @include bp.up(lg) {
-        :host {
-          padding: var(--space-12) var(--space-16) var(--space-24);
-        }
-      }
-      .group-title {
-        margin-top: var(--space-16);
-        padding-bottom: var(--space-3);
-        border-bottom: var(--border-width-default) solid var(--border-divider);
-      }
-      section-home,
-      section-foundations-color,
-      section-foundations-typography,
-      section-foundations-spacing,
-      section-foundations-radius,
-      section-foundations-elevation,
-      section-foundations-motion,
-      section-foundations-density,
-      section-foundations-icons,
-      section-foundations-layout,
-      section-foundations-scrollbar,
-      section-foundations-borders,
-      section-foundations-opacity,
-      section-foundations-surface-levels,
-      section-foundations-theming,
-      section-foundations-z-index,
-      section-foundations-browser-tab,
-      section-foundations-charts,
-      section-components-icon,
-      section-components-button,
-      section-components-icon-button,
-      section-components-badge,
-      section-components-status-dot,
-      section-components-avatar,
-      section-components-card,
-      section-components-stat,
-      section-components-tabs,
-      section-components-input,
-      section-components-textarea,
-      section-components-number-stepper,
-      section-components-checkbox,
-      section-components-radio,
-      section-components-search,
-      section-components-select,
-      section-components-switch,
-      section-components-table,
-      section-components-pagination,
-      section-components-date-picker,
-      section-components-breadcrumbs,
-      section-components-sidenav,
-      section-components-topbar,
-      section-components-page-header,
-      section-components-modal,
-      section-components-menu,
-      section-components-banner,
-      section-components-dropzone,
-      section-components-empty-state,
-      section-components-progress,
-      section-components-spinner,
-      section-components-skeleton,
-      section-components-accordion,
-      section-components-alert,
-      section-components-stepper,
-      section-components-tooltip,
-      section-components-popover,
-      section-components-toast,
-      section-components-drawer,
-      section-components-bottom-sheet,
-      section-components-tag,
-      section-components-w3w,
-      section-components-link,
-      section-components-page-footer,
-      section-components-autocomplete,
-      section-components-description-list,
-      section-components-layout-primitives,
-      section-components-segmented,
-      section-components-list,
-      section-components-split-button,
-      section-components-time-picker,
-      section-components-timeline,
-      section-components-otp-input,
-      section-components-slider,
-      section-components-loading-overlay,
-      section-components-tree,
-      section-components-color-picker,
-      section-components-multi-select,
-      pattern-page-header,
-      pattern-filter-bar,
-      pattern-form-layout,
-      pattern-activity,
-      pattern-empty-state,
-      practice-token-discipline,
-      practice-do-dont,
-      section-tokens-reference,
-      section-changelog {
-        display: block;
-        margin-top: var(--space-12);
-      }
-      section-home {
-        margin-top: 0;
-      }
-    `,
-  ],
 })
 export class DocsPage {}

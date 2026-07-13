@@ -8,6 +8,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [DocsSectionComponent, TextareaComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './textarea.section.html',
-  styleUrl: './textarea.section.scss',
+  styleUrls: ['./textarea.section.scss', './textarea.section.responsive.scss'],
 })
 export class TextareaSection {}

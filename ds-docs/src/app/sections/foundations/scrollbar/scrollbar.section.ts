@@ -29,7 +29,10 @@ const TOKENS: readonly ScrollToken[] = [
   imports: [DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './scrollbar.section.html',
-  styleUrl: './scrollbar.section.scss',
+  styleUrls: [
+    './scrollbar.section.scss',
+    './scrollbar.section.responsive.scss',
+  ],
 })
 export class ScrollbarSection {
   protected readonly tokens = TOKENS;

@@ -8,7 +8,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [DocsSectionComponent, SliderComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './slider.section.html',
-  styleUrl: '../../../shared/section-demo.scss',
+  styleUrls: ['../../../shared/section-demo.scss', '../../../shared/section-demo.responsive.scss'],
 })
 export class SliderSection {
   protected readonly brightness = signal(62);

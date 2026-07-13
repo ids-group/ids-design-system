@@ -10,6 +10,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   templateUrl: './multi-select.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',
+    '../../../shared/section-demo.responsive.scss',
     './multi-select.section.scss',
   ],
 })
