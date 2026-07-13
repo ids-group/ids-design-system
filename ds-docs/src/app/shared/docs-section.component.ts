@@ -29,6 +29,8 @@ import { Component, ViewEncapsulation, input } from '@angular/core';
         {{ title() }}<ng-content select="docs-truncation" />
       </h2>
 
+      <ng-content select="docs-component-meta" />
+
       <p class="lede t-m">
         <ng-content select="[lede]" />
       </p>
