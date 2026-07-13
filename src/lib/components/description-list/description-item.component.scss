@@ -8,6 +8,7 @@
   --_term-font-size: var(--ds-description-list-term-font-size, var(--font-size-s));
 
   display: grid;
+
   /* minmax(0, …) stops both tracks from expanding to their min-content width */
   grid-template-columns: minmax(0, var(--_dl-label-w, var(--dl-spec-label-w))) minmax(0, 1fr);
   column-gap: var(--_dl-col-gap, var(--space-5));
