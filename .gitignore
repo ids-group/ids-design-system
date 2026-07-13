@@ -77,3 +77,6 @@ Anton_local
 
 # Generated at build time by tools/extract-tokens.mjs; never hand-edited or committed.
 ds-docs/src/app/sections/tokens-reference/tokens.generated.ts
+
+# Generated at build time by tools/extract-component-api.mjs; never hand-edited or committed.
+ds-docs/src/app/shared/component-api.generated.ts
