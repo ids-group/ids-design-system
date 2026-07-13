@@ -87,6 +87,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   clear / remove `×`, plus the `ds-tag` chip close (used by autocomplete & multi-select chips) — now
   consistently get the button press-scale too (they previously had no `:active` feedback, or only a
   flat tint).
+- **`ds-date-picker` keeps the format mask visible while typing.** In manual-input mode the unfilled
+  tail of the date mask now stays on-screen as a muted ghost (after typing `12/` the field reads
+  `12/DD/YYYY`) instead of the placeholder vanishing on the first keystroke. The typed value renders
+  in the monospace font so digits land exactly on the mask's `D`/`M`/`Y` positions and the tail never
+  shifts as you type.
 
 ### Fixed
 
