@@ -1,3 +1,4 @@
+@use 'styles/breakpoints' as bp;
 
     /* ---------- Grids ---------- */
     .grid-2 {
@@ -38,3 +39,9 @@
       text-transform: uppercase;
       color: var(--text-tertiary);
     }
+
+@include bp.down(xs) {
+  .states--cols-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

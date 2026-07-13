@@ -1,3 +1,4 @@
+@use 'styles/breakpoints' as bp;
 
     .grid-3 {
       display: grid;
@@ -91,3 +92,17 @@
 
     /* The "Open" trigger-state cell panel overflows its min-height stage box. */
     .state-cell__stage--overflow { overflow: visible; align-items: flex-start; }
+
+@include bp.down(md) {
+  .states--cols-3,
+  .states--cols-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@include bp.down(xs) {
+  .states--cols-3,
+  .states--cols-4 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
