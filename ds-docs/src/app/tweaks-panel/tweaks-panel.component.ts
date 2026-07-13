@@ -17,6 +17,10 @@ const THEME_STORAGE_KEY = 'ds-docs-theme';
 export class TweaksPanelComponent {
   protected readonly open = signal(false);
 
+  openPanel(): void {
+    this.open.set(true);
+  }
+
   // Option lists for the ds-segmented controls below.
   protected readonly themeOptions = [
     { label: 'Light', value: 'light' },
