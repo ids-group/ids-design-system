@@ -65,7 +65,7 @@
   border-radius: var(--radius-md);
   padding: 0 var(--space-3);
   height: var(--hit-cozy);
-  font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
+  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
   color: var(--_date-picker-trigger-label-color);
   cursor: pointer;
   transition: border-color var(--duration-fast) var(--ease-standard);
@@ -107,21 +107,63 @@
   }
 }
 
+.input-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Ghost mask overlaying the input: the typed prefix is mirrored as transparent
+   text (reserving the exact width) so the unfilled tail lines up right where
+   the caret is. It sits ABOVE the input — the real value and caret still show
+   through the transparent prefix, while the muted tail stays visible whatever
+   background the input picks up (e.g. a dark theme, or the browser's forced-dark
+   auto-painting of form controls). Shares the input's monospace font so digits
+   and the M/D/Y placeholders are equal width — the tail never shifts as digits
+   replace the letters, and the glyphs never collide. */
+.mask-ghost {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  font: inherit;
+  font-family: var(--font-mono);
+  white-space: pre;
+  pointer-events: none;
+  overflow: hidden;
+
+  .filled {
+    color: transparent;
+  }
+
+  .rest {
+    color: var(--_date-picker-placeholder-color);
+  }
+}
+
 .date-input {
   /* Width is driven by the `size` attribute (the mask length) so the field
-     hugs its content instead of stretching. Tabular figures keep every digit
-     the same width, so the value never shifts as it is typed. */
+     hugs its content instead of stretching. The monospace font keeps every
+     glyph the same width, so the value never shifts as it is typed and the
+     typed digits land exactly on the ghost mask's placeholder positions. */
   width: auto;
   border: none;
   background: transparent;
   color: inherit;
   font: inherit;
-  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
   padding: 0;
   outline: none;
 
   &::placeholder {
     color: var(--_date-picker-placeholder-color);
+  }
+
+  /* When the ghost overlay is active it paints the visible mask; keep the
+     native placeholder attribute for screen readers but hide its paint so the
+     two don't double up. */
+  &.masked::placeholder {
+    color: transparent;
   }
 
   &:read-only {
