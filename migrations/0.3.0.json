@@ -6,16 +6,27 @@
       "kind": "token-rename",
       "old": "--ds-*-bg",
       "new": "--ds-*-bg-color",
-      "note": "Every DS background token was renamed by appending -color (they held only a colour and now feed background-color). Pattern: any DS token whose name ENDS in -bg gains the -color suffix. Covers all public --ds-<component>-...-bg hooks (avatar, badge, banner, button, card, date-picker, dropzone, empty-state, icon-button, input, modal, pagination, search, sidenav, stat, table, tabs, tag, toast, topbar) PLUS the globals --select-bg, --chart-hover-bg, --chart-tooltip-bg and the --status-<x>-bg set. Only DS tokens are affected — a consumer's OWN variables ending in -bg are not. When unsure whether a token is DS-owned, confirm the new name exists in the installed 0.3.0 package (themes/, styles/).",
-      "searchHints": ["-bg:", "-bg)", "--select-bg", "--chart-hover-bg", "--chart-tooltip-bg", "--status-"]
+      "note": "Every DS background token was renamed by appending -color (they held only a colour and now feed background-color). Pattern: any DS token whose name ENDS in -bg gains the -color suffix. Covers all public --ds-<component>-...-bg hooks (avatar, badge, banner, button, card, date-picker, dropzone, empty-state, icon-button, input, modal, pagination, search, sidenav, stat, table, tabs, tag, toast, topbar) PLUS the globals --select-bg, --chart-hover-bg, --chart-tooltip-bg and the --status-<x>-bg set. Only DS tokens are affected — a consumer's OWN variables ending in -bg are not. When unsure whether a token is DS-owned, confirm the new name exists in the installed 0.3.0 package (themes/, styles/). The changelog also renamed private `--_*` internal tokens in lockstep, but those are never consumer-facing (no public --ds- hook) — no consumer action for them.",
+      "searchHints": [
+        "-bg:",
+        "-bg)",
+        "--select-bg",
+        "--chart-hover-bg",
+        "--chart-tooltip-bg",
+        "--status-"
+      ]
     },
     {
       "id": "fg-tokens-renamed-semantic",
       "kind": "behavior",
       "old": "--ds-*-fg",
       "new": null,
-      "note": "Every DS foreground token dropped the fg abbreviation for a SEMANTIC suffix — the replacement varies per token: text/titles/inputs -> -text-color; control & nav labels -> -label-color; icons/glyphs -> -icon-color. Examples: --ds-modal-title-fg -> --ds-modal-title-text-color; --ds-sidenav-group-fg -> --ds-sidenav-group-label-color; --ds-icon-button-fg -> --ds-icon-button-icon-color. Covers all public --ds-<component>-...-fg hooks (avatar, badge, banner, breadcrumbs, button, date-picker, dropzone, empty-state, icon-button, input, menu, modal, page-header, pagination, search, sidenav, table, tabs, tag, topbar) plus the --status-* and chart-tooltip globals. For EACH consumer-overridden -fg token, resolve the exact new name by looking it up in the 0.3.0 sources (themes/ + styles/ + component SCSS in the checkout or installed package) — do not guess the semantic suffix.",
-      "searchHints": ["-fg:", "-fg)", "--status-"]
+      "note": "Every DS foreground token dropped the fg abbreviation for a SEMANTIC suffix — the replacement varies per token: text/titles/inputs -> -text-color; control & nav labels -> -label-color; icons/glyphs -> -icon-color. Examples: --ds-modal-title-fg -> --ds-modal-title-text-color; --ds-sidenav-group-fg -> --ds-sidenav-group-label-color; --ds-icon-button-fg -> --ds-icon-button-icon-color. Covers all public --ds-<component>-...-fg hooks (avatar, badge, banner, breadcrumbs, button, date-picker, dropzone, empty-state, icon-button, input, menu, modal, page-header, pagination, search, sidenav, table, tabs, tag, topbar) plus the --status-* and chart-tooltip globals. For EACH consumer-overridden -fg token, resolve the exact new name by looking it up in the 0.3.0 sources (themes/ + styles/ + component SCSS in the checkout or installed package) — do not guess the semantic suffix. Only DS-owned tokens are affected — a consumer's OWN variable ending in -fg is not; when unsure whether a name is DS-owned, confirm the new name exists in the installed 0.3.0 package (themes/ + styles/ + component SCSS).",
+      "searchHints": [
+        "-fg:",
+        "-fg)",
+        "--status-"
+      ]
     },
     {
       "id": "stepper-labels-now-visible",
@@ -23,7 +34,10 @@
       "old": "ds-stepper",
       "new": null,
       "note": "ds-stepper now renders the captions passed via [steps] as VISIBLE labels (previously screen-reader-only; only numbers showed) — a visual change for existing usages. Usually no code change: review that existing captions read well as visible labels; the new labelPosition input (bottom | inline, default bottom) adjusts the layout. Flag for visual review (eyeball).",
-      "searchHints": ["<ds-stepper", "[steps]"]
+      "searchHints": [
+        "<ds-stepper",
+        "[steps]"
+      ]
     }
   ],
   "informational": [

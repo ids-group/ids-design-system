@@ -6,8 +6,12 @@
       "kind": "value-remap",
       "old": "ds-button[variant]",
       "new": null,
-      "note": "The single conflated `variant` input split into two orthogonal axes: `color` (primary|secondary|tertiary|neutral|error|success|warning, default primary) x `variant` (solid|tonal|ghost|outline|text, default solid). Static values migrate per the map. DYNAMIC `[variant]=\"expr\"` bindings whose expression yields only hue values (primary/error/success/warning) rebind to `[color]=\"expr\"` verbatim; expressions/fields typed with a mixed-axis union must be retyped to the new fill vocabulary and split per axis. `variant=\"text\"` still renders but is discouraged (dev-mode console.warn — prefer the global `.link` class); do not migrate it automatically.",
-      "searchHints": ["<ds-button", "variant=\"", "[variant]="],
+      "note": "The single conflated `variant` input split into two orthogonal axes: `color` (primary|secondary|tertiary|neutral|error|success|warning, default primary) x `variant` (solid|tonal|ghost|outline|text, default solid). Static values migrate per the map. DYNAMIC `[variant]=\"expr\"` bindings whose expression yields only hue values (primary/error/success/warning) rebind to `[color]=\"expr\"` verbatim; expressions/fields typed with a mixed-axis union must be retyped to the new fill vocabulary and split per axis. `variant=\"text\"` stays valid (its map entry is an identity — same token in, same out — so the applier leaves it untouched); it is discouraged at runtime (dev-mode console.warn — prefer the global `.link` class) but requires no code migration.",
+      "searchHints": [
+        "<ds-button",
+        "variant=\"",
+        "[variant]="
+      ],
       "map": {
         "primary": null,
         "secondary": "variant=\"tonal\"",
@@ -24,8 +28,12 @@
       "kind": "value-remap",
       "old": "ds-button[size]",
       "new": null,
-      "note": "ButtonSize collapsed to sm|md|lg (32/40/48px); the duplicate legacy one-letter tier is dropped. sm/md/lg values are unchanged (absent from the map — leave them). Default is now md (was l — same 40px, no action for attribute-less buttons). The 24px `s` is removed — its callers move to sm (32px, the closest).",
-      "searchHints": ["<ds-button", "size=\""],
+      "note": "ButtonSize collapsed to sm|md|lg (32/40/48px); the duplicate legacy one-letter tier is dropped. sm/md/lg values are unchanged (absent from the map — leave them). Default is now md (was l — same 40px, no action for attribute-less buttons). The 24px `s` is removed — its callers move to sm (32px, the closest). The exported TS type `ButtonSize` narrowed in lockstep from the old `s|m|l|sm|md|lg` superset to `sm|md|lg`: a consumer who typed a field/variable/input with `ButtonSize` and assigned a legacy literal (`'s'`/`'m'`/`'l'`) now gets a compile error — remap those literals the same way (`s`/`m`->`sm`, `l`->`md`).",
+      "searchHints": [
+        "<ds-button",
+        "size=\"",
+        "ButtonSize"
+      ],
       "map": {
         "s": "size=\"sm\"",
         "m": "size=\"sm\"",
@@ -38,7 +46,10 @@
       "old": "ButtonVariant",
       "new": null,
       "note": "The exported ButtonVariant union changed to the fill vocabulary (solid|tonal|ghost|outline|text); hue values moved to the NEW exported ButtonColor (primary|secondary|tertiary|neutral|error|success|warning). Consumer TS importing ButtonVariant, or typing its own fields/inputs with the old values: a purely-hue union retypes to ButtonColor (and its bindings move to [color]); a purely-fill union remaps values (secondary->tonal, tertiary->ghost, outline stays outline); a mixed-axis union must be split per axis.",
-      "searchHints": ["ButtonVariant", "ButtonSize", "ButtonColor"]
+      "searchHints": [
+        "ButtonVariant",
+        "ButtonColor"
+      ]
     },
     {
       "id": "reactive-radio-needs-radio-group",
@@ -46,7 +57,11 @@
       "old": "ds-radio",
       "new": null,
       "note": "Reactive-forms radio now uses the new <ds-radio-group> as the group container and form control (ControlValueAccessor, roving tabindex, name, group label/invalid/hint). A group of <ds-radio value> bound into a reactive form (formControlName/[formControl]/[(ngModel)] on the group) must be wrapped in <ds-radio-group>. Standalone <ds-radio [(checked)]> is unaffected.",
-      "searchHints": ["<ds-radio", "formControlName", "[(ngModel)]"]
+      "searchHints": [
+        "<ds-radio",
+        "formControlName",
+        "[(ngModel)]"
+      ]
     },
     {
       "id": "input-hint-color-token",
@@ -54,7 +69,9 @@
       "old": "--ds-input-hint-color",
       "new": "--ds-field-message-color",
       "note": "Field helper/error text is now rendered by the shared ds-field-message; the new hook applies to EVERY field's helper/error line, not just input.",
-      "searchHints": ["--ds-input-hint-color"]
+      "searchHints": [
+        "--ds-input-hint-color"
+      ]
     },
     {
       "id": "input-hint-fs-token",
@@ -62,7 +79,9 @@
       "old": "--ds-input-hint-fs",
       "new": "--ds-field-message-font-size",
       "note": "Same field-message consolidation as input-hint-color-token.",
-      "searchHints": ["--ds-input-hint-fs"]
+      "searchHints": [
+        "--ds-input-hint-fs"
+      ]
     },
     {
       "id": "bottom-sheet-closed-after-animation",
@@ -70,7 +89,10 @@
       "old": "ds-bottom-sheet",
       "new": null,
       "note": "ds-bottom-sheet now animates its close; the (closed) output emits at the END of the leave animation instead of on the click. Review (closed) handlers that assumed synchronous-on-click ordering (immediate re-open, focus timing); usually no change is needed.",
-      "searchHints": ["<ds-bottom-sheet", "(closed)"]
+      "searchHints": [
+        "<ds-bottom-sheet",
+        "(closed)"
+      ]
     },
     {
       "id": "button-pressed-shadow-default-none",
@@ -78,7 +100,42 @@
       "old": "--ds-button-pressed-shadow",
       "new": null,
       "note": "The old faint pressed halo now defaults to `none` (press feedback became darken + micro scale-down). Only consumers who RELIED on the halo act: set --ds-button-pressed-shadow explicitly to re-enable. No usage -> no action.",
-      "searchHints": ["--ds-button-pressed-shadow"]
+      "searchHints": [
+        "--ds-button-pressed-shadow"
+      ]
+    },
+    {
+      "id": "button-icon-button-disabled-tint-default",
+      "kind": "behavior",
+      "old": "ds-button",
+      "new": null,
+      "note": "Default DISABLED appearance changed: `[disabled]` is now a per-variant muted tint derived from each variant's own colour (solid + text use a flat pale oklch tint; tonal/ghost/outline and icon-button tonal/outlined use color-mix with --surface-disabled), not one flat grey. Visual-only, no API change. To restore the old flat grey, override the per-variant `--ds-button-*-disabled` / `--ds-icon-button-*-disabled` tokens. Most consumers take no action — eyeball the disabled states.",
+      "searchHints": [
+        "<ds-button",
+        "<ds-icon-button"
+      ]
+    },
+    {
+      "id": "modal-drawer-close-animates",
+      "kind": "behavior",
+      "old": "ds-modal",
+      "new": null,
+      "note": "ds-modal and ds-drawer now animate their close (animate-then-remove, like ds-bottom-sheet) instead of vanishing instantly; honors prefers-reduced-motion. Any close-related output/teardown fires at the END of the leave animation, not synchronously on the dismiss click — review handlers that assumed synchronous-on-click ordering (immediate re-open, focus hand-off). Usually no change needed.",
+      "searchHints": [
+        "<ds-modal",
+        "<ds-drawer"
+      ]
+    },
+    {
+      "id": "styles-tokens-a-la-carte-needs-breakpoints",
+      "kind": "code-add",
+      "old": null,
+      "new": "@use '@ids-group-ltd/ids-design-system/styles/breakpoints';",
+      "note": "Only consumers who import `styles/tokens` A LA CARTE (not via the `styles/ds` entry, which forwards both): the `--bp-*` custom properties moved into the new `styles/breakpoints` partial, so an a-la-carte tokens importer must now also `@use` styles/breakpoints to keep `--bp-*` defined. Consumers using `styles/ds` need no action.",
+      "searchHints": [
+        "styles/tokens",
+        "@use '@ids-group-ltd/ids-design-system/styles/tokens'"
+      ]
     }
   ],
   "informational": [

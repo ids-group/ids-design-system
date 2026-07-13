@@ -21,8 +21,11 @@ One file per released version — `migrations/<version>.json` — mirroring that
 
 **Why:** the auto-update plugin reads the prose changelog with an LLM planner — correct, but
 re-derived on every consumer run. A shipped manifest makes the plan deterministic: the planner
-validates and prefers it, falling back to prose only when a version has no manifest (fine — the
-convention starts at 0.4.0).
+validates and prefers it, falling back to prose only when a version has no manifest. Every published
+version `0.1.0`–`0.5.0` ships a manifest (older ones authored retroactively); new versions add theirs
+at release time.
+
+See `AUTHORING.md` for how to write a good entry.
 
 **Authoring:** drafted at release time alongside the CHANGELOG entry (the `/changelog` workflow
 drafts it from the release diff; the release author reviews). The prose changelog stays canonical
