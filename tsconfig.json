@@ -16,7 +16,7 @@
     "module": "preserve",
     "baseUrl": "./",
     "paths": {
-      "ds": ["./dist/ds"]
+      "ds": ["./src/public-api.ts"]
     }
   },
   "angularCompilerOptions": {

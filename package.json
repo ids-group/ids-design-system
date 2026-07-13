@@ -20,9 +20,9 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "run-p --race watch dev:docs",
+    "start": "npm run dev:docs",
     "dev": "npm run start",
-    "dev:docs": "npm run extract-tokens && wait-on dist/ds/package.json && ng serve ds-docs --port 4300",
+    "dev:docs": "npm run extract-tokens && ng serve ds-docs --port 4300",
     "serve:docs": "ng serve ds-docs --port 4300",
     "watch": "ng build ds --watch --configuration development",
     "build:lib": "ng build ds && node tools/build-schematics.mjs",
@@ -89,7 +89,6 @@
     "stylelint-config-standard-scss": "^17.0.0",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.56.0",
-    "wait-on": "^9.0.10",
     "zone.js": "~0.15.0"
   },
   "sideEffects": false
