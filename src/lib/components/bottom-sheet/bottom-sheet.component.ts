@@ -76,7 +76,7 @@ export class BottomSheetComponent implements OnDestroy {
   private velocity = 0;
   private previousBodyOverflow: string | null = null;
   private wasOpen = false;
-  private closeFallbackTimer: ReturnType<typeof setTimeout> | undefined;
+  private closeFallbackTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     // open → DOM lifecycle. Opening renders immediately; closing keeps the
@@ -87,7 +87,8 @@ export class BottomSheetComponent implements OnDestroy {
       if (isOpen) {
         this.closing.set(false);
         this.rendered.set(true);
-        clearTimeout(this.closeFallbackTimer);
+        clearTimeout(this.closeFallbackTimer ?? undefined);
+        this.closeFallbackTimer = null;
         // Reset to first snap point when opening with snap points configured.
         if (this.snapPoints().length > 0) {
           this.activeSnapIndex.set(0);
@@ -96,7 +97,7 @@ export class BottomSheetComponent implements OnDestroy {
         this.closing.set(true);
         // Chrome freezes CSS animations on a backgrounded tab, so animationend
         // may never fire — this synthetic fallback guarantees teardown anyway.
-        clearTimeout(this.closeFallbackTimer);
+        clearTimeout(this.closeFallbackTimer ?? undefined);
         this.closeFallbackTimer = setTimeout(() => this.finishClose(), 300);
       }
       this.wasOpen = isOpen;
@@ -118,7 +119,8 @@ export class BottomSheetComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    clearTimeout(this.closeFallbackTimer);
+    clearTimeout(this.closeFallbackTimer ?? undefined);
+    this.closeFallbackTimer = null;
   }
 
   protected close(): void {
@@ -140,7 +142,8 @@ export class BottomSheetComponent implements OnDestroy {
     if (!this.closing()) {
       return;
     }
-    clearTimeout(this.closeFallbackTimer);
+    clearTimeout(this.closeFallbackTimer ?? undefined);
+    this.closeFallbackTimer = null;
     this.closing.set(false);
     this.rendered.set(false);
     this.closed.emit();

@@ -43,7 +43,7 @@ export class DrawerComponent implements OnDestroy {
   /** Playing the slide-out + scrim-fade leave animation. */
   protected readonly closing = signal(false);
   private wasOpen = false;
-  private closeFallbackTimer: ReturnType<typeof setTimeout> | undefined;
+  private closeFallbackTimer: ReturnType<typeof setTimeout> | null = null;
 
   protected readonly classes = computed(() => {
     const parts = ['drawer', this.placement(), this.size()];
@@ -59,12 +59,13 @@ export class DrawerComponent implements OnDestroy {
       if (isOpen) {
         this.closing.set(false);
         this.rendered.set(true);
-        clearTimeout(this.closeFallbackTimer);
+        clearTimeout(this.closeFallbackTimer ?? undefined);
+        this.closeFallbackTimer = null;
       } else if (this.wasOpen) {
         this.closing.set(true);
         // Chrome freezes CSS animations on a backgrounded tab, so animationend
         // may never fire — this synthetic fallback guarantees teardown anyway.
-        clearTimeout(this.closeFallbackTimer);
+        clearTimeout(this.closeFallbackTimer ?? undefined);
         this.closeFallbackTimer = setTimeout(() => this.finishClose(), 300);
       }
       this.wasOpen = isOpen;
@@ -80,7 +81,8 @@ export class DrawerComponent implements OnDestroy {
   ngOnDestroy(): void {
     // Restore body scroll if the host is torn down mid-open.
     this.doc.body.style.overflow = '';
-    clearTimeout(this.closeFallbackTimer);
+    clearTimeout(this.closeFallbackTimer ?? undefined);
+    this.closeFallbackTimer = null;
   }
 
   protected onClose(): void {
@@ -106,7 +108,8 @@ export class DrawerComponent implements OnDestroy {
     if (!this.closing()) {
       return;
     }
-    clearTimeout(this.closeFallbackTimer);
+    clearTimeout(this.closeFallbackTimer ?? undefined);
+    this.closeFallbackTimer = null;
     this.closing.set(false);
     this.rendered.set(false);
     this.closed.emit();
