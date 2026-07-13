@@ -8,9 +8,7 @@
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto minmax(0, 1fr);
-  grid-template-areas: 'bar' 'main';
+  grid-template: 'bar' auto 'main' minmax(0, 1fr) / minmax(0, 1fr);
   height: 100vh;
   height: 100svh;
 }
@@ -40,9 +38,7 @@
 
 @include bp.up(lg) {
   .layout {
-    grid-template-columns: 280px minmax(0, 1fr);
-    grid-template-rows: minmax(0, 1fr);
-    grid-template-areas: 'side main';
+    grid-template: 'side main' minmax(0, 1fr) / 280px minmax(0, 1fr);
     transition: grid-template-columns var(--duration-fast) var(--ease-standard);
   }
 
