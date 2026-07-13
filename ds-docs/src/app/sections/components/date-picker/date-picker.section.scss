@@ -1,6 +1,6 @@
     .grid-2 {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--space-4);
       margin-top: var(--space-3);
     }
@@ -20,11 +20,14 @@
     .state-cell {
       display: flex; flex-direction: column;
       gap: var(--space-2);
+      min-width: 0;
     }
     .state-cell__stage {
       display: flex; align-items: center; justify-content: center;
       padding: var(--space-3);
       min-height: 64px;
+      max-width: 100%;
+      overflow-x: auto;
       background: var(--surface-default);
       border: var(--border-width-default) solid var(--border-default);
       border-radius: var(--radius-md);

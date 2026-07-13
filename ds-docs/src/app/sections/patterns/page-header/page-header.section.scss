@@ -4,7 +4,9 @@
       padding: var(--space-5);
       background: var(--surface-secondary);
       border-radius: var(--radius-lg);
+      max-width: 100%;
       display: grid;
+      grid-template-columns: minmax(0, 1fr);
       gap: var(--space-3);
     }
     .pad { padding: var(--space-3) 0; color: var(--text-secondary); }

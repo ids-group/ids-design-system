@@ -25,6 +25,14 @@
     }
     .bulk-bar-wrap .bulk-bar { margin: 0; }
 
+    /* The live bulk-bar (fit-content, no wrap in the lib) can outgrow narrow
+       viewports. Let it wrap its own contents instead of overflowing the page. */
+    :host ::ng-deep .bulk-bar {
+      flex-wrap: wrap;
+      max-width: 100%;
+      justify-content: center;
+    }
+
     /* ---------- States showcase (header sort cells) ---------- */
     .states {
       display: grid;
@@ -35,15 +43,16 @@
       border-radius: var(--radius-lg);
     }
     .states--cols-4 { grid-template-columns: repeat(4, 1fr); }
-    .state-cell { display: flex; flex-direction: column; gap: var(--space-2); }
+    .state-cell { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
     .state-cell__stage {
       display: flex; align-items: center; justify-content: center;
       padding: var(--space-3);
       min-height: 96px;
+      max-width: 100%;
+      overflow-x: auto;
       background: var(--surface-default);
       border: var(--border-width-default) solid var(--border-default);
       border-radius: var(--radius-md);
-      overflow: hidden;
     }
     .state-cell__stage--tbl { padding: 0; align-items: stretch; }
     .state-cell__stage--tbl .table { width: 100%; }

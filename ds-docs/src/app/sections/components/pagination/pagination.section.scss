@@ -17,11 +17,13 @@
     }
     .states--cols-4 { grid-template-columns: repeat(4, 1fr); }
     .states--cols-1 { grid-template-columns: 1fr; }
-    .state-cell { display: flex; flex-direction: column; gap: var(--space-2); }
+    .state-cell { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
     .state-cell__stage {
       display: flex; align-items: center; justify-content: flex-start;
       padding: var(--space-4);
       min-height: 72px;
+      max-width: 100%;
+      overflow-x: auto;
       background: var(--surface-default);
       border: var(--border-width-default) solid var(--border-default);
       border-radius: var(--radius-md);

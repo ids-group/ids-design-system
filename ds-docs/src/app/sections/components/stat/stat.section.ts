@@ -12,7 +12,7 @@ import {
   imports: [StatComponent, DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './stat.section.html',
-  styleUrl: './stat.section.scss',
+  styleUrls: ['./stat.section.scss', './stat.section.responsive.scss'],
 })
 export class StatSection {
   protected readonly truncationRules: TruncationRule[] = [

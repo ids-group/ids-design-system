@@ -6,9 +6,20 @@
   }
 }
 
+/* grid-3 ("With icon · prefix · suffix · floating") holds live ds-input
+   specimens that refuse to shrink past their content width in a 3-up row —
+   collapse to 1 column through tablet (covers the 768px viewport, which
+   bp.down(md) excludes since it is the md boundary itself). */
+@include bp.down(lg) {
+  .grid-3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @include bp.down(xs) {
   .states--cols-2,
-  .states--cols-3 {
+  .states--cols-3,
+  .grid-2 {
     grid-template-columns: minmax(0, 1fr);
   }
 }

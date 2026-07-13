@@ -5,6 +5,7 @@
       border-collapse: collapse;
       font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
     }
+    .stops { min-width: 420px; }
     .stops th, .stops td,
     .literals th, .literals td {
       text-align: left;

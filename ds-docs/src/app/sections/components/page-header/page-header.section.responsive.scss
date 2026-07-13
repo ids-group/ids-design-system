@@ -1,0 +1,9 @@
+@use 'styles/breakpoints' as bp;
+
+/* Lib sets .actions { width: 100% } below 720px but keeps it nowrap — the
+   3-button Default demo needs to reflow under the title at phone widths. */
+@include bp.down(sm) {
+  .stage ::ng-deep .actions {
+    flex-wrap: wrap;
+  }
+}

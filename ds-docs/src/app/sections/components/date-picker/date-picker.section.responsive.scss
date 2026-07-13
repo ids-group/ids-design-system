@@ -6,6 +6,15 @@
   }
 }
 
+/* The trigger has a fixed 280px width (--date-picker-w, no shrink) — two of
+   them side by side in .grid-2 overflow well before 768px. Collapse to one
+   column so each trigger keeps its natural width on its own row. */
+@include bp.down(sm) {
+  .grid-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @include bp.down(xs) {
   .states--cols-4 {
     grid-template-columns: minmax(0, 1fr);

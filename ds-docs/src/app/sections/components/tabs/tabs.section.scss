@@ -4,7 +4,7 @@
     /* ---------- Variant rows ---------- */
     .variant-row {
       display: grid;
-      grid-template-columns: 120px 1fr;
+      grid-template-columns: 120px minmax(0, 1fr);
       gap: var(--space-4);
       align-items: start;
       margin-top: var(--space-4);
@@ -13,7 +13,7 @@
       color: var(--text-tertiary);
       padding-top: var(--space-3);
     }
-    .variant-row__stage { display: block; min-width: 0; }
+    .variant-row__stage { display: block; min-width: 0; max-width: 100%; overflow-x: auto; }
     .scrollable-demo { max-width: 420px; }
 
     /* ---------- States showcase ---------- */
@@ -29,11 +29,14 @@
     .state-cell {
       display: flex; flex-direction: column;
       gap: var(--space-2);
+      min-width: 0;
     }
     .state-cell__stage {
       display: flex; align-items: center; justify-content: center;
       padding: var(--space-4);
       min-height: 72px;
+      max-width: 100%;
+      overflow-x: auto;
       background: var(--surface-default);
       border: var(--border-width-default) solid var(--border-default);
       border-radius: var(--radius-md);

@@ -7,9 +7,16 @@
   }
 }
 
+@include bp.down(lg) {
+  .grid-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @include bp.down(xs) {
   .states--cols-3,
-  .states--cols-4 {
+  .states--cols-4,
+  .grid-3 {
     grid-template-columns: minmax(0, 1fr);
   }
 }
