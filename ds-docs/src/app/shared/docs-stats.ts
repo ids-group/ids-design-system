@@ -9,7 +9,20 @@ export const DS_VERSION: string = pkg.version;
 const groupCount = (title: string): number =>
   NAV.find((group) => group.title === title)?.items.length ?? 0;
 
-export const COMPONENT_COUNT = groupCount('Components');
+// Components are split across several semantic nav groups (Actions, Forms &
+// inputs, …), so sum every group that isn't one of the fixed meta sections.
+const META_GROUPS = new Set([
+  'Start',
+  'Foundations',
+  'Patterns',
+  'Practice',
+  'Reference',
+  'Changelog',
+]);
+
+export const COMPONENT_COUNT = NAV.filter(
+  (group) => !META_GROUPS.has(group.title),
+).reduce((total, group) => total + group.items.length, 0);
 export const FOUNDATION_COUNT = groupCount('Foundations');
 export const PATTERN_COUNT = groupCount('Patterns');
 
