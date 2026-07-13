@@ -14,6 +14,8 @@ export interface NavItem {
 
 export interface NavGroup {
   title: string;
+  /** Marks a group whose items are components — summed for the home component count. */
+  kind?: 'component';
   items: NavItem[];
 }
 
@@ -24,6 +26,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Actions',
+    kind: 'component',
     items: [
       { label: 'Buttons', anchor: 'button' },
       { label: 'Buttons · group & segmented', anchor: 'segmented' },
@@ -34,6 +37,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Forms & inputs',
+    kind: 'component',
     items: [
       { label: 'Autocomplete', anchor: 'autocomplete' },
       { label: 'Checkbox', anchor: 'checkbox' },
@@ -56,6 +60,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Navigation',
+    kind: 'component',
     items: [
       { label: 'Breadcrumbs', anchor: 'breadcrumbs' },
       { label: 'Menu', anchor: 'menu' },
@@ -68,6 +73,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Data display',
+    kind: 'component',
     items: [
       { label: 'Accordion', anchor: 'accordion' },
       { label: 'Avatars', anchor: 'avatar' },
@@ -84,6 +90,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Feedback & status',
+    kind: 'component',
     items: [
       { label: 'Alert', anchor: 'alert' },
       { label: 'Badge', anchor: 'badge' },
@@ -99,6 +106,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Overlays',
+    kind: 'component',
     items: [
       { label: 'Bottom sheet', anchor: 'bottom-sheet' },
       { label: 'Drawer', anchor: 'drawer' },
@@ -109,6 +117,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Page structure',
+    kind: 'component',
     items: [
       { label: 'Page footer', anchor: 'page-footer' },
       { label: 'Page header', anchor: 'page-header' },

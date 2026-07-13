@@ -48,8 +48,8 @@ import { COMPONENT_API } from './component-api.generated';
         display: inline-flex; align-items: center; gap: 6px; font-size: var(--font-size-xs);
         font-weight: var(--font-weight-semibold); padding: 4px 10px; border-radius: var(--radius-pill); text-transform: capitalize;
       }
+      .badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
       .badge.stable { color: var(--success); background: var(--surface-muted); }
-      .badge.stable::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
       .badge.new { color: var(--primary); background: var(--surface-muted); }
       .badge.deprecated { color: var(--error); background: var(--surface-muted); }
       .summary { color: var(--text-secondary); margin: 0; }
