@@ -31,6 +31,10 @@
     "custom-property-empty-line-before": null,
     "declaration-block-single-line-max-declarations": null,
     "rule-empty-line-before": null,
-    "scss/comment-no-empty": null
+    "scss/comment-no-empty": null,
+    "declaration-block-no-redundant-longhand-properties": [
+      true,
+      { "ignoreShorthands": ["grid-template"] }
+    ]
   }
 }
