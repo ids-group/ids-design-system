@@ -2,6 +2,7 @@ import {
   Component,
   DOCUMENT,
   ElementRef,
+  type OnDestroy,
   ViewEncapsulation,
   computed,
   effect,
@@ -33,7 +34,7 @@ let nextId = 0;
     '(document:keydown.escape)': 'onEscape()',
   },
 })
-export class BottomSheetComponent {
+export class BottomSheetComponent implements OnDestroy {
   readonly open = model<boolean>(false);
   readonly title = input.required<string>();
   readonly closed = output<void>();
@@ -75,6 +76,7 @@ export class BottomSheetComponent {
   private velocity = 0;
   private previousBodyOverflow: string | null = null;
   private wasOpen = false;
+  private closeFallbackTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor() {
     // open → DOM lifecycle. Opening renders immediately; closing keeps the
@@ -85,12 +87,17 @@ export class BottomSheetComponent {
       if (isOpen) {
         this.closing.set(false);
         this.rendered.set(true);
+        clearTimeout(this.closeFallbackTimer);
         // Reset to first snap point when opening with snap points configured.
         if (this.snapPoints().length > 0) {
           this.activeSnapIndex.set(0);
         }
       } else if (this.wasOpen) {
         this.closing.set(true);
+        // Chrome freezes CSS animations on a backgrounded tab, so animationend
+        // may never fire — this synthetic fallback guarantees teardown anyway.
+        clearTimeout(this.closeFallbackTimer);
+        this.closeFallbackTimer = setTimeout(() => this.finishClose(), 300);
       }
       this.wasOpen = isOpen;
     });
@@ -110,6 +117,10 @@ export class BottomSheetComponent {
     });
   }
 
+  ngOnDestroy(): void {
+    clearTimeout(this.closeFallbackTimer);
+  }
+
   protected close(): void {
     this.dragOffset.set(null);
     this.open.set(false);
@@ -119,9 +130,17 @@ export class BottomSheetComponent {
     // Angular scopes @keyframes names under emulated encapsulation, so
     // event.animationName arrives as `_ngcontent-…_ds-sheet-down`, not the bare
     // name — match the suffix or teardown never fires and the lock leaks.
-    if (!event.animationName.endsWith('ds-sheet-down') || !this.closing()) {
+    if (!event.animationName.endsWith('ds-sheet-down')) {
       return;
     }
+    this.finishClose();
+  }
+
+  private finishClose(): void {
+    if (!this.closing()) {
+      return;
+    }
+    clearTimeout(this.closeFallbackTimer);
     this.closing.set(false);
     this.rendered.set(false);
     this.closed.emit();

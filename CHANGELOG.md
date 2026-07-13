@@ -39,6 +39,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   item's `1fr` grid column had no `minmax(0, …)`, so its min-content contribution (long unbroken
   values like API keys) blew out the track past the container; both grid tracks now use
   `minmax(0, …)` and the value gains `overflow-wrap: anywhere` to actually wrap into the freed space.
+- **`ds-drawer` / `ds-bottom-sheet` / `ds-modal` no longer hang mid-close when the tab is backgrounded.**
+  Teardown waited on the leave animation's `animationend`, but Chrome freezes CSS animations on a
+  hidden document, so the event never fired and the panel stayed stuck in its `closing` state with
+  the scrim visible and body scroll locked; each now also arms a 300ms synthetic-fallback timer that
+  completes teardown if `animationend` doesn't arrive first (whichever fires first wins, the other is
+  cancelled). `ds-drawer`'s `animationend` name check also switched from a loose `.includes()` match
+  to per-placement `.endsWith()`, matching the guard already used by `ds-bottom-sheet` / `ds-modal`.
 
 ## 0.5.1 — 2026-07-13
 

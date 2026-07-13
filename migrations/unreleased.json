@@ -18,6 +18,7 @@
     ".t-mono-block gains max-width: 100%; overflow-x: auto — long lines scroll instead of overflowing the page, no code change.",
     "ds-modal panel clamps max-width: calc(100vw - var(--space-6)) and max-height 90vh with 90dvh fallback on small screens — visual only, no code change.",
     "New `menu` (hamburger) icon added to the icon registry — additive.",
-    "ds-description-list item grid tracks now use minmax(0, …) and the value gains overflow-wrap: anywhere, fixing page-wide horizontal scroll caused by long unbroken values — visual only, no code change."
+    "ds-description-list item grid tracks now use minmax(0, …) and the value gains overflow-wrap: anywhere, fixing page-wide horizontal scroll caused by long unbroken values — visual only, no code change.",
+    "ds-drawer/ds-bottom-sheet/ds-modal teardown no longer hangs (scrim stuck, body scroll locked) when the tab is backgrounded mid-close — each now arms a 300ms synthetic-fallback timer alongside the animationend listener so teardown completes even if Chrome freezes the leave animation; no code change required from consumers."
   ]
 }
