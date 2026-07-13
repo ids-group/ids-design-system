@@ -9,6 +9,7 @@
 @use 'themes/base-palette';
 @use 'styles/theme-activation';
 @use 'styles/tokens';
+@use 'styles/breakpoints-vars';
 @use 'styles/status' as status;
 @use 'styles/tokens-charts';
 @use 'styles/fonts';

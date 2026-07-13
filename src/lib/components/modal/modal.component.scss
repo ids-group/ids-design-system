@@ -23,7 +23,9 @@
   box-shadow: var(--_modal-shadow);
   display: flex;
   flex-direction: column;
+  max-width: calc(100vw - var(--space-6));
   max-height: 90vh;
+  max-height: 90dvh;
   overflow: hidden;
   animation: modal-card-in var(--duration-base) var(--ease-decelerate);
 
