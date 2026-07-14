@@ -3,43 +3,16 @@
     ds-search.wide { max-width: 560px; flex: 1; }
     .compact-shell { width: 280px; }
 
-    /* ---------- States showcase ---------- */
-    .states {
-      display: grid;
-      gap: var(--space-4);
-      margin-top: var(--space-3);
-      padding: var(--space-4);
-      background: var(--surface-secondary);
-      border-radius: var(--radius-lg);
-    }
-    .states--cols-3 { grid-template-columns: repeat(3, 1fr); }
-    .state-cell {
-      display: flex; flex-direction: column;
-      gap: var(--space-2);
-      min-width: 0;
-    }
+    /* ---------- States showcase overrides ---------- */
     .state-cell__stage {
-      display: flex; align-items: stretch; justify-content: stretch;
-      padding: var(--space-4);
+      align-items: stretch; justify-content: stretch;
       min-height: 96px;
-      max-width: 100%;
-      overflow-x: auto;
-      background: var(--surface-default);
-      border: var(--border-width-default) solid var(--border-default);
-      border-radius: var(--radius-md);
+
+      > * { flex: 1; }
     }
-    .state-cell__stage > * { flex: 1; }
 
     /* Showcase-only: pin focus-within visual without real interaction. */
     .state-cell__stage.force-focus ::ng-deep .search {
       border-color: var(--primary);
       box-shadow: var(--focus-ring);
-    }
-
-    .state-cell__label {
-      text-align: center;
-      font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
-      letter-spacing: var(--letter-spacing-wider);
-      text-transform: uppercase;
-      color: var(--text-tertiary);
     }

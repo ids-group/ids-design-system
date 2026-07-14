@@ -22,7 +22,11 @@ import {
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './sidenav.section.html',
-  styleUrls: ['./sidenav.section.scss', './sidenav.responsive.scss'],
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    '../../../shared/section-demo.responsive.scss',
+    './sidenav.section.scss',
+  ],
 })
 export class SidenavSection {
   protected readonly truncationRules: TruncationRule[] = [

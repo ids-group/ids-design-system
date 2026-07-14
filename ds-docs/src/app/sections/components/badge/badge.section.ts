@@ -18,7 +18,10 @@ import { DocsSpecimensComponent } from '../../../shared/docs-specimens.component
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './badge.section.html',
-  styleUrls: ['./badge.section.scss', './badge.responsive.scss'],
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    '../../../shared/section-demo.responsive.scss',
+  ],
 })
 export class BadgeSection {
   protected readonly lifecycleVariants: readonly string[] = [

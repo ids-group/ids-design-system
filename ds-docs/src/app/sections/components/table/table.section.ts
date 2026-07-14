@@ -47,7 +47,11 @@ interface ProjectRow {
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './table.section.html',
-  styleUrls: ['./table.section.scss', './table.responsive.scss'],
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    '../../../shared/section-demo.responsive.scss',
+    './table.section.scss',
+  ],
 })
 export class TableSection {
   protected readonly truncationRules: TruncationRule[] = [

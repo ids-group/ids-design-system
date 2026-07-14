@@ -1,5 +1,7 @@
 
     /* ---------- Modal specimen grid ---------- */
+    /* Same shape as the shared .states grid, but named .modal-grid since this
+       section reuses it for a plain 1-column layout rather than states/cols. */
     .modal-grid {
       display: grid;
       gap: var(--space-3);
@@ -10,29 +12,10 @@
     }
     .modal-grid--1 { grid-template-columns: 1fr; }
 
-    .state-cell {
-      display: flex; flex-direction: column;
-      gap: var(--space-2);
-      min-width: 0;
-    }
     .state-cell__stage {
-      display: flex; align-items: center; justify-content: center;
-      padding: var(--space-4);
       min-height: 220px;
-      max-width: 100%;
-      overflow-x: auto;
-      background: var(--surface-default);
-      border: var(--border-width-default) solid var(--border-default);
-      border-radius: var(--radius-md);
 
       ::ng-deep .modal { max-width: 100%; }
-    }
-    .state-cell__label {
-      text-align: center;
-      font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
-      letter-spacing: var(--letter-spacing-wider);
-      text-transform: uppercase;
-      color: var(--text-tertiary);
     }
 
     /* ---------- Form stack inside modal body ---------- */

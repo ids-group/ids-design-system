@@ -8,6 +8,10 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [CheckboxComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './checkbox.section.html',
-  styleUrls: ['./checkbox.section.scss', './checkbox.responsive.scss'],
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    '../../../shared/section-demo.responsive.scss',
+    './checkbox.section.scss',
+  ],
 })
 export class CheckboxSection {}
