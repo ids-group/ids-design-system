@@ -183,6 +183,283 @@ export function parseDateRange(
   ];
 }
 
+// ---- Segment-aware mask editing --------------------------------------------
+// The field is a sequence of fixed-width digit slots (MM, DD, YYYY) joined by
+// literals ("/", and " – " between the two dates of a range). Edits stay inside
+// the caret's slot and never shift digits across a literal, so correcting one
+// segment can't corrupt its neighbours or fling the caret away.
+
+/** One editable digit slot in the masked field. */
+export interface FieldSlot {
+  type: 'D' | 'M' | 'Y';
+  maxLength: number;
+}
+
+/** Field layout: the slots and the literal shown after each (except the last). */
+export interface FieldLayout {
+  slots: FieldSlot[];
+  literals: string[];
+}
+
+export function singleFieldLayout(spec: DateFormatSpec): FieldLayout {
+  return {
+    slots: spec.segments.map((segment) => ({
+      type: segment.type,
+      maxLength: segment.length,
+    })),
+    literals: spec.segments.slice(1).map(() => spec.separator),
+  };
+}
+
+export function rangeFieldLayout(spec: DateFormatSpec): FieldLayout {
+  const single = singleFieldLayout(spec);
+
+  return {
+    slots: [...single.slots, ...single.slots],
+    literals: [...single.literals, RANGE_SEPARATOR, ...single.literals],
+  };
+}
+
+function hasLaterContent(segments: string[], index: number): boolean {
+  for (let later = index + 1; later < segments.length; later++) {
+    if (segments[later].length > 0) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/** A literal shows once its slot is full or any later slot holds a digit — so
+ *  separators keep slots visually aligned even while an earlier one is partial. */
+function literalVisible(
+  segments: string[],
+  layout: FieldLayout,
+  index: number,
+): boolean {
+  if (index >= layout.slots.length - 1) {
+    return false;
+  }
+  const full = segments[index].length === layout.slots[index].maxLength;
+
+  return full || hasLaterContent(segments, index);
+}
+
+/** Split clean mask text (always a renderFieldText output) into per-slot digits. */
+export function parseFieldText(text: string, layout: FieldLayout): string[] {
+  const segments: string[] = [];
+  let position = 0;
+  for (let index = 0; index < layout.slots.length; index++) {
+    let digits = '';
+    while (
+      position < text.length &&
+      digits.length < layout.slots[index].maxLength &&
+      /\d/.test(text[position])
+    ) {
+      digits += text[position];
+      position++;
+    }
+    segments.push(digits);
+    if (index < layout.slots.length - 1) {
+      const literal = layout.literals[index];
+      if (text.slice(position, position + literal.length) === literal) {
+        position += literal.length;
+      }
+    }
+  }
+
+  return segments;
+}
+
+export function renderFieldText(
+  segments: string[],
+  layout: FieldLayout,
+): string {
+  let out = '';
+  for (let index = 0; index < layout.slots.length; index++) {
+    out += segments[index];
+    if (literalVisible(segments, layout, index)) {
+      out += layout.literals[index];
+    }
+  }
+
+  return out;
+}
+
+/** Char offset where slot `index` begins in renderFieldText(segments). */
+export function slotStart(
+  segments: string[],
+  layout: FieldLayout,
+  index: number,
+): number {
+  let position = 0;
+  for (let slot = 0; slot < index; slot++) {
+    position += segments[slot].length;
+    if (literalVisible(segments, layout, slot)) {
+      position += layout.literals[slot].length;
+    }
+  }
+
+  return position;
+}
+
+export function slotToCaret(
+  segments: string[],
+  layout: FieldLayout,
+  slot: number,
+  offset: number,
+): number {
+  return slotStart(segments, layout, slot) + offset;
+}
+
+/** Map a caret char offset to its slot; a caret inside a literal snaps forward. */
+export function caretToSlot(
+  segments: string[],
+  layout: FieldLayout,
+  caret: number,
+): { slot: number; offset: number } {
+  let position = 0;
+  for (let index = 0; index < layout.slots.length; index++) {
+    const length = segments[index].length;
+    if (caret <= position + length) {
+      return { slot: index, offset: Math.max(0, caret - position) };
+    }
+    position += length;
+    if (literalVisible(segments, layout, index)) {
+      const literalLength = layout.literals[index].length;
+      if (caret <= position + literalLength) {
+        return { slot: index + 1, offset: 0 };
+      }
+      position += literalLength;
+    }
+  }
+  const last = layout.slots.length - 1;
+
+  return { slot: last, offset: segments[last].length };
+}
+
+interface SlotEdit {
+  segments: string[];
+  slot: number;
+  offset: number;
+}
+
+/** After typing, hop to the next slot once the current one is full. */
+function advanceAfterType(
+  segments: string[],
+  layout: FieldLayout,
+  slot: number,
+  offset: number,
+): SlotEdit {
+  if (
+    offset >= layout.slots[slot].maxLength &&
+    slot < layout.slots.length - 1
+  ) {
+    return { segments, slot: slot + 1, offset: 0 };
+  }
+
+  return { segments, slot, offset };
+}
+
+/** Type a digit into the caret's slot: overtype under the caret, else append;
+ *  a full slot spills the digit into the next one instead of shifting. */
+export function editType(
+  segments: string[],
+  layout: FieldLayout,
+  slot: number,
+  offset: number,
+  digit: string,
+): SlotEdit {
+  const next = segments.slice();
+  const maxLength = layout.slots[slot].maxLength;
+  const current = next[slot];
+  if (offset < current.length) {
+    next[slot] = current.slice(0, offset) + digit + current.slice(offset + 1);
+
+    return advanceAfterType(next, layout, slot, offset + 1);
+  }
+  if (current.length < maxLength) {
+    next[slot] = current + digit;
+
+    return advanceAfterType(next, layout, slot, current.length + 1);
+  }
+  if (slot < layout.slots.length - 1) {
+    return editType(next, layout, slot + 1, 0, digit);
+  }
+
+  return { segments: next, slot, offset };
+}
+
+/** Backspace: drop the digit left of the caret within its slot, else the last
+ *  digit of the nearest earlier non-empty slot. Null when nothing precedes it. */
+export function editBackspace(
+  segments: string[],
+  layout: FieldLayout,
+  slot: number,
+  offset: number,
+): SlotEdit | null {
+  const next = segments.slice();
+  if (offset > 0) {
+    next[slot] = next[slot].slice(0, offset - 1) + next[slot].slice(offset);
+
+    return { segments: next, slot, offset: offset - 1 };
+  }
+  for (let index = slot - 1; index >= 0; index--) {
+    if (next[index].length > 0) {
+      next[index] = next[index].slice(0, -1);
+
+      return { segments: next, slot: index, offset: next[index].length };
+    }
+  }
+
+  return null;
+}
+
+/** Delete: drop the digit at the caret within its slot, else the first digit of
+ *  the nearest later non-empty slot. Null when nothing follows it. */
+export function editDelete(
+  segments: string[],
+  layout: FieldLayout,
+  slot: number,
+  offset: number,
+): SlotEdit | null {
+  const next = segments.slice();
+  if (offset < next[slot].length) {
+    next[slot] = next[slot].slice(0, offset) + next[slot].slice(offset + 1);
+
+    return { segments: next, slot, offset };
+  }
+  for (let index = slot + 1; index < next.length; index++) {
+    if (next[index].length > 0) {
+      next[index] = next[index].slice(1);
+
+      return { segments: next, slot, offset };
+    }
+  }
+
+  return null;
+}
+
+/** True when `text` fills the mask left-to-right with no gaps — every char sits
+ *  on a matching mask position (digit under M/D/Y, literal under a separator).
+ *  The ghost-mask tail (`placeholder.slice(text.length)`) only aligns then;
+ *  a mid-field edit can leave a shorter interior segment (e.g. "1/25/2020")
+ *  where slicing would misalign, so the ghost tail is dropped instead. */
+export function isMaskPrefix(text: string, placeholder: string): boolean {
+  if (text.length > placeholder.length) {
+    return false;
+  }
+  for (let index = 0; index < text.length; index++) {
+    const maskChar = placeholder[index];
+    const isSlot = maskChar === 'M' || maskChar === 'D' || maskChar === 'Y';
+    if (isSlot ? !/\d/.test(text[index]) : text[index] !== maskChar) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 export function weekdayLabels(
   locale: string,
   firstDayOfWeek: number,

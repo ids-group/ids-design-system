@@ -34,14 +34,24 @@ import {
   type DateFormatSpec,
   applyMask,
   applyMaskRange,
+  caretToSlot,
+  editBackspace,
+  editDelete,
+  editType,
   formatDate,
   formatRange,
   fullDateLabel,
+  isMaskPrefix,
   monthLabels,
   parseDate,
   parseDateRange,
+  parseFieldText,
+  rangeFieldLayout,
   rangeMask,
+  renderFieldText,
   resolveDateFormat,
+  singleFieldLayout,
+  slotToCaret,
   weekdayLabels,
 } from './date.util';
 import type {
@@ -374,10 +384,17 @@ export class DatePickerComponent
    * `tabular-nums` so the width never shifts as you type. */
   protected readonly fieldSize = computed(() => this.fieldPlaceholder().length + 1);
   /** Still-empty tail of the mask, kept visible as a ghost while typing so the
-   *  format never disappears (after "12/" the field reads "12/DD/YYYY"). */
-  protected readonly ghostRemainder = computed(() =>
-    this.fieldPlaceholder().slice(this.fieldText().length),
-  );
+   *  format never disappears (after "12/" the field reads "12/DD/YYYY"). Shown
+   *  only while the text fills the mask gap-free; a mid-field edit that shortens
+   *  an interior segment would misalign the sliced tail, so it's dropped then. */
+  protected readonly ghostRemainder = computed(() => {
+    const placeholder = this.fieldPlaceholder();
+    const text = this.fieldText();
+
+    return isMaskPrefix(text, placeholder)
+      ? placeholder.slice(text.length)
+      : '';
+  });
 
   // ---- Month / year grid pickers in the calendar header ----
   protected readonly monthMenuOpen = signal(false);
@@ -686,53 +703,94 @@ export class DatePickerComponent
     this.commitRaw(element, element.value, digitsBeforeCaret);
   }
 
-  /** Backspace/Delete hop over mask separators — only digits are editable. */
+  /** Per-key editing kept inside the caret's mask slot: typed digits fill their
+   *  own segment, Backspace/Delete never shift digits across a separator, so a
+   *  correction can't corrupt a neighbouring segment or fling the caret away.
+   *  Selections, paste and IME fall through to the stream re-mask in onFieldInput. */
   protected onFieldKeydown(event: KeyboardEvent): void {
     if (!this.allowInput()) {
       return;
     }
     const element = event.target as HTMLInputElement;
-    const start = element.selectionStart ?? 0;
-    if (event.key === 'Backspace' && start === element.selectionEnd) {
+    const key = event.key;
+    const plain = !event.ctrlKey && !event.metaKey && !event.altKey;
+    const isDigit = key.length === 1 && key >= '0' && key <= '9' && plain;
+    if (key.length === 1 && plain && !isDigit) {
+      // Reject non-numeric characters outright, as typed.
       event.preventDefault();
-      const removeIndex = this.countDigits(element.value.slice(0, start)) - 1;
-      this.commitRaw(element, this.removeDigit(element.value, removeIndex), removeIndex);
-    } else if (event.key === 'Delete' && start === element.selectionEnd) {
-      event.preventDefault();
-      const removeIndex = this.countDigits(element.value.slice(0, start));
-      this.commitRaw(element, this.removeDigit(element.value, removeIndex), removeIndex);
+
+      return;
     }
+    if (element.selectionStart !== element.selectionEnd) {
+      return;
+    }
+    if (!isDigit && key !== 'Backspace' && key !== 'Delete') {
+      return;
+    }
+    event.preventDefault();
+    const spec = this.formatSpec();
+    const layout =
+      this.mode() === 'range'
+        ? rangeFieldLayout(spec)
+        : singleFieldLayout(spec);
+    const segments = parseFieldText(element.value, layout);
+    const caret = element.selectionStart ?? element.value.length;
+    const { slot, offset } = caretToSlot(segments, layout, caret);
+    const edit = isDigit
+      ? editType(segments, layout, slot, offset, key)
+      : key === 'Backspace'
+        ? editBackspace(segments, layout, slot, offset)
+        : editDelete(segments, layout, slot, offset);
+    if (!edit) {
+      return;
+    }
+    const text = renderFieldText(edit.segments, layout);
+    this.applyEditedText(
+      element,
+      text,
+      slotToCaret(edit.segments, layout, edit.slot, edit.offset),
+    );
   }
 
   private countDigits(text: string): number {
     return text.replace(/\D/g, '').length;
   }
 
-  private removeDigit(text: string, index: number): string {
-    const digits = text.replace(/\D/g, '');
-    if (index < 0 || index >= digits.length) {
-      return digits;
-    }
-
-    return digits.slice(0, index) + digits.slice(index + 1);
+  /** Mask `raw` as a digit stream (paste/IME/selection fallback), then commit. */
+  private commitRaw(
+    element: HTMLInputElement,
+    raw: string,
+    targetDigits: number,
+  ): void {
+    const spec = this.formatSpec();
+    const masked =
+      this.mode() === 'range'
+        ? applyMaskRange(raw, spec)
+        : applyMask(raw, spec);
+    this.applyEditedText(
+      element,
+      masked,
+      this.caretAfterDigits(masked, targetDigits),
+    );
   }
 
-  /** Mask `raw`, force it into the DOM (defeats over-typing), parse and validate. */
-  private commitRaw(element: HTMLInputElement, raw: string, targetDigits: number): void {
+  /** Write masked text + caret into the DOM, then parse and validate it. */
+  private applyEditedText(
+    element: HTMLInputElement,
+    text: string,
+    caret: number,
+  ): void {
     this.editing = true;
+    this.writeBackText(element, text, caret);
     const spec = this.formatSpec();
     if (this.mode() === 'range') {
-      const masked = applyMaskRange(raw, spec);
-      this.writeBack(element, masked, targetDigits);
-      this.rangeText.set(masked);
-      this.applyRangeText(masked, spec, false);
+      this.rangeText.set(text);
+      this.applyRangeText(text, spec, false);
 
       return;
     }
-    const masked = applyMask(raw, spec);
-    this.writeBack(element, masked, targetDigits);
-    this.inputText.set(masked);
-    const parsed = parseDate(masked, spec);
+    this.inputText.set(text);
+    const parsed = parseDate(text, spec);
     if (!parsed) {
       // Incomplete input is not an error yet; a full-but-bad value is caught on blur.
       this.typedInvalid.set(false);
@@ -778,13 +836,18 @@ export class DatePickerComponent
     }
   }
 
-  /** Force the DOM value to the mask (over-typed digits can't accumulate) and
-   *  place the caret after `targetDigits` digits, skipping separators. */
-  private writeBack(element: HTMLInputElement, masked: string, targetDigits: number): void {
-    if (element.value !== masked) {
-      element.value = masked;
+  /** Force the DOM value to `text` (over-typed digits can't accumulate) and
+   *  place the caret at `caret`. Setting `value` first parks the caret at the
+   *  end, so the explicit range must follow; the later `[value]` binding writes
+   *  the same string, which leaves the caret untouched. */
+  private writeBackText(
+    element: HTMLInputElement,
+    text: string,
+    caret: number,
+  ): void {
+    if (element.value !== text) {
+      element.value = text;
     }
-    const caret = this.caretAfterDigits(masked, targetDigits);
     element.setSelectionRange(caret, caret);
   }
 
