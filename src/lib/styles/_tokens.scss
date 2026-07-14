@@ -184,8 +184,8 @@
 
   /* ============================================================
      Breakpoints — $bp-* Sass aliases + up()/down() mixins live in
-     _breakpoints.scss (pure); the --bp-* custom properties are emitted
-     from _breakpoints-vars.scss.
+     _breakpoints.scss (pure); the --bp-* custom properties come from
+     its emit-vars mixin, included once by styles/ds.
      ============================================================ */
 
   /* ============================================================

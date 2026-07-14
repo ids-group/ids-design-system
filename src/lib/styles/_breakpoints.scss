@@ -1,6 +1,6 @@
 // Breakpoint scale — SINGLE source for both representations:
-//   --bp-*  runtime custom properties (regular rules, JS via getComputedStyle;
-//           emitted from _breakpoints-vars.scss, not this file)
+//   --bp-*  runtime custom properties (JS via getComputedStyle) — emitted only
+//           by the emit-vars mixin below, never by a plain @use
 //   $bp-*   compile-time Sass aliases, usable inside @media
 //
 // Why $bp-* exist: a custom property CANNOT be used in a @media condition
@@ -12,8 +12,10 @@
 //   @include bp.down(sm) { … }         // width <  640px
 //   @media (width >= #{bp.$bp-lg}) { } // or read an alias directly
 //
-// This partial is side-effect-free (no CSS emitted) — safe to @use from any
-// component SCSS without duplicating output.
+// Plain @use above is side-effect-free (no CSS emitted) — safe from any
+// component SCSS without duplicating output. The runtime mirror is opt-in via
+// the emit-vars mixin (see bottom of file) — call it from exactly one global
+// stylesheet, not per component.
 
 @use 'sass:map';
 
@@ -43,5 +45,15 @@ $bp-2xl: map.get($breakpoints, '2xl');
 @mixin down($name) {
   @media (width < #{map.get($breakpoints, $name)}) {
     @content;
+  }
+}
+
+// Emits the --bp-* runtime mirror once — call from exactly one global stylesheet
+// (styles/ds does this); plain @use stays CSS-free for component styles.
+@mixin emit-vars {
+  :root {
+    @each $name, $value in $breakpoints {
+      --bp-#{$name}: #{$value};
+    }
   }
 }
