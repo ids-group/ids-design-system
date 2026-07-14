@@ -1,6 +1,8 @@
 /* ============================================================
    DATE PICKER (ported from claude-design-ds/components.css)
    ============================================================ */
+@use '../../styles/breakpoints' as bp;
+
 :host {
   --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
   --_date-picker-trigger-bg-color: var(--ds-date-picker-trigger-bg-color, var(--surface-default));
@@ -443,6 +445,32 @@
     &:disabled {
       color: var(--_date-picker-day-disabled-label-color);
       cursor: not-allowed;
+    }
+  }
+
+  /* Phones: the presets column can't sit beside the day grid without
+     overflowing the viewport — stack it above the calendar body instead and
+     cap the whole panel so it never exceeds the screen. */
+  @media (width < #{bp.$bp-sm}) {
+    max-width: calc(100vw - var(--space-4));
+
+    &.has-presets {
+      flex-direction: column;
+      width: 100%;
+
+      .calendar-body {
+        flex: 1 1 auto;
+        width: 100%;
+      }
+    }
+
+    .presets {
+      border-left: 0;
+      padding-left: 0;
+      border-top: var(--border-width-default) solid var(--_date-picker-border);
+      padding-top: var(--space-3);
+      min-width: 0;
+      width: 100%;
     }
   }
 }

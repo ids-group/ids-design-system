@@ -19,6 +19,8 @@
     "ds-modal panel clamps max-width: calc(100vw - var(--space-6)) and max-height 90vh with 90dvh fallback on small screens — visual only, no code change.",
     "New `menu` (hamburger) icon added to the icon registry — additive.",
     "ds-description-list item grid tracks now use minmax(0, …) and the value gains overflow-wrap: anywhere, fixing page-wide horizontal scroll caused by long unbroken values — visual only, no code change.",
-    "ds-drawer/ds-bottom-sheet/ds-modal teardown no longer hangs (scrim stuck, body scroll locked) when the tab is backgrounded mid-close — each now arms a 300ms synthetic-fallback timer alongside the animationend listener so teardown completes even if Chrome freezes the leave animation; no code change required from consumers."
+    "ds-drawer/ds-bottom-sheet/ds-modal teardown no longer hangs (scrim stuck, body scroll locked) when the tab is backgrounded mid-close — each now arms a 300ms synthetic-fallback timer alongside the animationend listener so teardown completes even if Chrome freezes the leave animation; no code change required from consumers.",
+    "ds-popover overlay now reserves an 8px viewport margin (FlexibleConnectedPositionStrategy.withViewportMargin(8)) — panels no longer touch or cross the screen edge on small viewports; visual only, no code change.",
+    "ds-date-picker calendar panel caps to calc(100vw - var(--space-4)) and stacks the presets column below the day grid below 640px ($bp-sm), replacing the fixed 454px-wide side-by-side layout that overflowed phone viewports — visual only, no code change."
   ]
 }
