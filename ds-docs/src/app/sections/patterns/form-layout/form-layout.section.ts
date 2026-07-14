@@ -22,7 +22,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   templateUrl: './form-layout.section.html',
   styleUrls: [
     './form-layout.section.scss',
-    './form-layout.section.responsive.scss',
+    './form-layout.responsive.scss',
   ],
 })
 export class FormLayoutSection {

@@ -31,7 +31,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   templateUrl: './page-header.section.html',
   styleUrls: [
     './page-header.section.scss',
-    './page-header.section.responsive.scss',
+    './page-header.responsive.scss',
   ],
 })
 export class PageHeaderSection {

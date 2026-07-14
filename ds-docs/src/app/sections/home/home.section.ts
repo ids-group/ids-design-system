@@ -19,7 +19,7 @@ import {
   imports: [BadgeComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './home.section.html',
-  styleUrls: ['./home.section.scss', './home.section.responsive.scss'],
+  styleUrls: ['./home.section.scss', './home.responsive.scss'],
 })
 export class HomeSection {
   readonly version = DS_VERSION;

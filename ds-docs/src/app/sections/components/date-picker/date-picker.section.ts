@@ -12,7 +12,7 @@ import {
   imports: [DatePickerComponent, DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './date-picker.section.html',
-  styleUrls: ['./date-picker.section.scss', './date-picker.section.responsive.scss'],
+  styleUrls: ['./date-picker.section.scss', './date-picker.responsive.scss'],
 })
 export class DatePickerSection {
   protected readonly truncationRules: TruncationRule[] = [

@@ -17,7 +17,7 @@ interface TokenPair {
   templateUrl: './token-discipline.section.html',
   styleUrls: [
     './token-discipline.section.scss',
-    './token-discipline.section.responsive.scss',
+    './token-discipline.responsive.scss',
   ],
 })
 export class TokenDisciplineSection {

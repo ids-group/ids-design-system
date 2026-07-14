@@ -144,7 +144,7 @@ const RAMP: readonly TypeRampRow[] = [
   templateUrl: './typography.section.html',
   styleUrls: [
     './typography.section.scss',
-    './typography.section.responsive.scss',
+    './typography.responsive.scss',
   ],
 })
 export class TypographySection {

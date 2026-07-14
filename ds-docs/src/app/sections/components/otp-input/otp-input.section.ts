@@ -11,7 +11,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   styleUrls: [
     '../../../shared/section-demo.scss',
     '../../../shared/section-demo.responsive.scss',
-    './otp-input.section.responsive.scss',
+    './otp-input.responsive.scss',
   ],
 })
 export class OtpInputSection {

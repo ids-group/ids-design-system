@@ -32,7 +32,7 @@ interface ActivityEntry {
   templateUrl: './activity.section.html',
   styleUrls: [
     './activity.section.scss',
-    './activity.section.responsive.scss',
+    './activity.responsive.scss',
   ],
 })
 export class ActivitySection {

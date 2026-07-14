@@ -16,7 +16,7 @@ import {
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './dropzone.section.html',
-  styleUrls: ['./dropzone.section.scss', './dropzone.section.responsive.scss'],
+  styleUrls: ['./dropzone.section.scss', './dropzone.responsive.scss'],
 })
 export class DropzoneSection {
   protected readonly truncationRules: TruncationRule[] = [

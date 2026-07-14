@@ -13,7 +13,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './do-dont.section.html',
-  styleUrls: ['./do-dont.section.scss', './do-dont.section.responsive.scss'],
+  styleUrls: ['./do-dont.section.scss', './do-dont.responsive.scss'],
 })
 export class DoDontSection {
   protected readonly lede =

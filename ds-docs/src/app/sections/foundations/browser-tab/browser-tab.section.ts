@@ -10,7 +10,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   templateUrl: './browser-tab.section.html',
   styleUrls: [
     './browser-tab.section.scss',
-    './browser-tab.section.responsive.scss',
+    './browser-tab.responsive.scss',
   ],
 })
 export class BrowserTabSection {}

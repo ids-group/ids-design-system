@@ -31,7 +31,7 @@ const TOKENS: readonly ScrollToken[] = [
   templateUrl: './scrollbar.section.html',
   styleUrls: [
     './scrollbar.section.scss',
-    './scrollbar.section.responsive.scss',
+    './scrollbar.responsive.scss',
   ],
 })
 export class ScrollbarSection {
