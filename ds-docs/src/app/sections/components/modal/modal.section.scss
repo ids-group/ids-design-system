@@ -1,49 +1,32 @@
+/* Same shape as the shared .states grid, but named .modal-grid since this
+   section reuses it for a plain 1-column layout rather than states/cols. */
+.modal-grid {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface-secondary);
+  border-radius: var(--radius-lg);
+}
+.modal-grid--1 { grid-template-columns: 1fr; }
 
-    /* ---------- Modal specimen grid ---------- */
-    .modal-grid {
-      display: grid;
-      gap: var(--space-3);
-      margin-top: var(--space-3);
-      padding: var(--space-4);
-      background: var(--surface-secondary);
-      border-radius: var(--radius-lg);
-    }
-    .modal-grid--1 { grid-template-columns: 1fr; }
+.state-cell__stage {
+  min-height: 220px;
 
-    .state-cell {
-      display: flex; flex-direction: column;
-      gap: var(--space-2);
-    }
-    .state-cell__stage {
-      display: flex; align-items: center; justify-content: center;
-      padding: var(--space-4);
-      min-height: 220px;
-      background: var(--surface-default);
-      border: var(--border-width-default) solid var(--border-default);
-      border-radius: var(--radius-md);
+  ::ng-deep .modal { max-width: 100%; }
+}
 
-      ::ng-deep .modal { max-width: 100%; }
-    }
-    .state-cell__label {
-      text-align: center;
-      font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
-      letter-spacing: var(--letter-spacing-wider);
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-    }
+.form-stack {
+  display: flex; flex-direction: column;
+  gap: var(--space-3);
+}
 
-    /* ---------- Form stack inside modal body ---------- */
-    .form-stack {
-      display: flex; flex-direction: column;
-      gap: var(--space-3);
-    }
-
-    kbd {
-      display: inline-block;
-      padding: 1px 6px;
-      font: var(--font-weight-medium) 11px / 1 var(--font-mono);
-      background: var(--surface-default);
-      border: var(--border-width-default) solid var(--border-default);
-      border-radius: var(--radius-sm);
-      color: var(--text-secondary);
-    }
+kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  font: var(--font-weight-medium) 11px / 1 var(--font-mono);
+  background: var(--surface-default);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+}

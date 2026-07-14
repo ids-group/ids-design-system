@@ -17,7 +17,11 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './banner.section.html',
-  styleUrl: './banner.section.scss',
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    '../../../shared/section-demo.responsive.scss',
+    './banner.section.scss',
+  ],
 })
 export class BannerSection {
   protected readonly truncationRules: TruncationRule[] = [

@@ -1,0 +1,7 @@
+@use 'styles/breakpoints' as bp;
+
+@include bp.down(xs) {
+  .grid-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

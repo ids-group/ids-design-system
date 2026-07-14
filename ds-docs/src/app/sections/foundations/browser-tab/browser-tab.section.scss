@@ -110,7 +110,3 @@
       font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
       color: var(--text-secondary);
     }
-
-    @media (width <= 720px) {
-      .rules { grid-template-columns: 1fr; }
-    }

@@ -1,0 +1,6 @@
+@use 'styles/breakpoints' as bp;
+
+@include bp.down(sm) {
+  .activity { grid-template-columns: auto minmax(0, 1fr); }
+  .activity .time { grid-column: 2; padding-top: 0; }
+}

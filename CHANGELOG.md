@@ -8,6 +8,45 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Breaking
+
+- **`styles/breakpoints` is now side-effect-free — `--bp-*` moved to a new `styles/breakpoints-vars`
+  entry.** The partial used to both emit the `--bp-*` runtime custom properties and expose the
+  `$bp-*` Sass aliases / `up()` / `down()` mixins; it's now pure (map/aliases/mixins only, no CSS
+  output), so `@use`-ing it for the mixins no longer duplicates the `:root` block per consumer. The
+  `styles/ds` aggregate forwards both — **unaffected**. Only à-la-carte consumers who added
+  `@use '@ids-group-ltd/ids-design-system/styles/breakpoints';` per the 0.4.0 migration guidance
+  need to additionally `@use '@ids-group-ltd/ids-design-system/styles/breakpoints-vars';` (or switch
+  to it) to keep `--bp-*` defined.
+
+### Added
+
+- **`menu` icon** (hamburger, three horizontal bars) in the icon registry.
+
+### Changed
+
+- **`.grid-2` / `.grid-3` / `.grid-4` layout utils collapse to a single column below 640px**
+  (`$bp-sm`), matching the rest of the responsive grid tiers.
+- **`.t-mono-block` scrolls instead of overflowing.** Added `max-width: 100%; overflow-x: auto;` so
+  long unbroken lines scroll within the block rather than forcing page-level horizontal overflow.
+- **`ds-modal` panel clamps to the viewport on small screens.** New `max-width: calc(100vw -
+  var(--space-6))`; `max-height` is now `90vh` with a `90dvh` fallback (browsers without `dvh`
+  support keep `90vh`).
+
+### Fixed
+
+- **`ds-description-list` no longer forces page-wide horizontal scroll on narrow viewports.** The
+  item's `1fr` grid column had no `minmax(0, …)`, so its min-content contribution (long unbroken
+  values like API keys) blew out the track past the container; both grid tracks now use
+  `minmax(0, …)` and the value gains `overflow-wrap: anywhere` to actually wrap into the freed space.
+- **`ds-drawer` / `ds-bottom-sheet` / `ds-modal` no longer hang mid-close when the tab is backgrounded.**
+  Teardown waited on the leave animation's `animationend`, but Chrome freezes CSS animations on a
+  hidden document, so the event never fired and the panel stayed stuck in its `closing` state with
+  the scrim visible and body scroll locked; each now also arms a 300ms synthetic-fallback timer that
+  completes teardown if `animationend` doesn't arrive first (whichever fires first wins, the other is
+  cancelled). `ds-drawer`'s `animationend` name check also switched from a loose `.includes()` match
+  to per-placement `.endsWith()`, matching the guard already used by `ds-bottom-sheet` / `ds-modal`.
+
 ## 0.5.1 — 2026-07-13
 
 ### Breaking

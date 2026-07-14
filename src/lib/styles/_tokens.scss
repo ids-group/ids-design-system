@@ -183,9 +183,9 @@
   --opacity-state-active:    0.24;  /* deepest pressed layer (e.g. tag close on :active) */
 
   /* ============================================================
-     Breakpoints — moved to _breakpoints.scss, the single source for both
-     the --bp-* custom properties (still emitted, now from that partial)
-     AND the $bp-* Sass aliases usable inside @media.
+     Breakpoints — $bp-* Sass aliases + up()/down() mixins live in
+     _breakpoints.scss (pure); the --bp-* custom properties are emitted
+     from _breakpoints-vars.scss.
      ============================================================ */
 
   /* ============================================================

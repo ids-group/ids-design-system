@@ -1,4 +1,3 @@
-
     /* State pin — force drag-over visual on live ds-dropzone by reading its own resolvers. */
     :host ::ng-deep .pin-active .dropzone {
       border-color: var(--_dropzone-border-active);
@@ -20,30 +19,14 @@
       border-radius: var(--radius-lg);
     }
 
-    /* ---------- States showcase ---------- */
-    .states {
-      display: grid;
-      gap: var(--space-4);
-      margin-top: var(--space-3);
-      padding: var(--space-4);
-      background: var(--surface-secondary);
-      border-radius: var(--radius-lg);
-    }
-    .states--cols-4 { grid-template-columns: repeat(4, 1fr); }
+    /* ---------- States showcase overrides ---------- */
     .states--cols-1 { grid-template-columns: 1fr; }
-    .state-cell {
-      display: flex; flex-direction: column;
-      gap: var(--space-2);
-    }
     .state-cell__stage {
-      display: flex; align-items: stretch; justify-content: stretch;
-      padding: var(--space-4);
+      align-items: stretch; justify-content: stretch;
       min-height: 200px;
-      background: var(--surface-default);
-      border: var(--border-width-default) solid var(--border-default);
-      border-radius: var(--radius-md);
+
+      > * { flex: 1; }
     }
-    .state-cell__stage > * { flex: 1; }
 
     /* File row showcase — height follows row content (icon + name + meta),
        no width cap; let each row span the full stage. */
@@ -51,11 +34,4 @@
       min-height: 0;
       align-items: center;
       justify-content: stretch;
-    }
-    .state-cell__label {
-      text-align: center;
-      font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
-      letter-spacing: var(--letter-spacing-wider);
-      text-transform: uppercase;
-      color: var(--text-tertiary);
     }

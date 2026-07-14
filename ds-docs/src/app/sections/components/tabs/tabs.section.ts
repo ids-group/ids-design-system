@@ -17,7 +17,11 @@ import {
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './tabs.section.html',
-  styleUrl: './tabs.section.scss',
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    '../../../shared/section-demo.responsive.scss',
+    './tabs.section.scss',
+  ],
 })
 export class TabsSection {
   protected readonly truncationRules: TruncationRule[] = [

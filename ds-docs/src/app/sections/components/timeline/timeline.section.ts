@@ -8,6 +8,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [TimelineComponent, TimelineItemComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './timeline.section.html',
-  styleUrl: '../../../shared/section-demo.scss',
+  styleUrls: ['../../../shared/section-demo.scss', '../../../shared/section-demo.responsive.scss'],
 })
 export class TimelineSection {}

@@ -8,6 +8,9 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [IconComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './browser-tab.section.html',
-  styleUrl: './browser-tab.section.scss',
+  styleUrls: [
+    './browser-tab.section.scss',
+    './browser-tab.responsive.scss',
+  ],
 })
 export class BrowserTabSection {}

@@ -22,7 +22,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './filter-bar.section.html',
-  styleUrl: './filter-bar.section.scss',
+  styleUrls: ['./filter-bar.section.scss', './filter-bar.responsive.scss'],
 })
 export class FilterBarSection {
   protected readonly lede =

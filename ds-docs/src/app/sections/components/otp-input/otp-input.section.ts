@@ -8,7 +8,11 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [DocsSectionComponent, OtpInputComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './otp-input.section.html',
-  styleUrl: '../../../shared/section-demo.scss',
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    '../../../shared/section-demo.responsive.scss',
+    './otp-input.responsive.scss',
+  ],
 })
 export class OtpInputSection {
   protected readonly code = signal('');

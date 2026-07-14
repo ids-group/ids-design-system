@@ -24,6 +24,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  min-width: 0;
 }
 .state-cell__stage {
   display: flex;
@@ -31,6 +32,8 @@
   justify-content: center;
   padding: var(--space-4);
   min-height: 72px;
+  max-width: 100%;
+  overflow-x: auto;
   background: var(--surface-default);
   border: var(--border-width-default) solid var(--border-default);
   border-radius: var(--radius-md);

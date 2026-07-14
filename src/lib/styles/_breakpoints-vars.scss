@@ -1,0 +1,10 @@
+// Runtime mirror of the breakpoint scale (JS reads via getComputedStyle).
+// Kept separate from _breakpoints.scss so component styles can @use the
+// mixins without re-emitting these :root declarations per component.
+@use 'breakpoints' as bp;
+
+:root {
+  @each $name, $value in bp.$breakpoints {
+    --bp-#{$name}: #{$value};
+  }
+}

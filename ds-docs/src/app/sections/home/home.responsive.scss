@@ -1,0 +1,14 @@
+@use 'styles/breakpoints' as bp;
+
+@include bp.down(lg) {
+  .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .start-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@include bp.down(md) {
+  .grid-3 { grid-template-columns: 1fr; }
+}
+
+@include bp.down(sm) {
+  .start-links { grid-template-columns: 1fr; }
+}
