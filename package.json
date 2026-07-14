@@ -23,7 +23,7 @@
     "start": "run-p --race watch dev:docs",
     "dev": "npm run start",
     "dev:docs": "npm run extract-docs && wait-on dist/ds/package.json && ng serve ds-docs --port 4300",
-    "serve:docs": "ng serve ds-docs --port 4300",
+    "serve:docs": "npm run extract-docs && ng serve ds-docs --port 4300",
     "watch": "ng build ds --watch --configuration development",
     "build:lib": "ng build ds && node tools/build-schematics.mjs",
     "build:lib:dev": "ng build ds --configuration development",
