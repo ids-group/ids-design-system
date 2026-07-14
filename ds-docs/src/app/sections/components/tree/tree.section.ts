@@ -8,7 +8,11 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [DocsSectionComponent, TreeComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './tree.section.html',
-  styleUrls: ['../../../shared/section-demo.scss', './tree.section.scss'],
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    '../../../shared/section-demo.responsive.scss',
+    './tree.section.scss',
+  ],
 })
 export class TreeSection {
   protected readonly nodes: TreeNode[] = [

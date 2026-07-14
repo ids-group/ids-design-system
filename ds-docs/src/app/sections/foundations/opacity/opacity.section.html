@@ -14,57 +14,59 @@
     Semantic opacity tokens
   </h3>
 
-  <table class="stops">
-    <thead>
-      <tr>
-        <th>
-          Token
-        </th>
-
-        <th>
-          Value
-        </th>
-
-        <th>
-          Use
-        </th>
-
-        <th>
-          Sample
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      @for (s of stops; track s.token) {
+  <div class="scroll-wrap">
+    <table class="stops">
+      <thead>
         <tr>
-          <td>
-            <code class="t-mono-inline">
-              {{ s.token }}
-            </code>
-          </td>
+          <th>
+            Token
+          </th>
 
-          <td>
-            <code class="t-mono-inline">
-              {{ s.value }}
-            </code>
-          </td>
+          <th>
+            Value
+          </th>
 
-          <td>
-            {{ s.use }}
-          </td>
+          <th>
+            Use
+          </th>
 
-          <td>
-            <span
-              class="swatch"
-              [style.opacity]="s.value"
-            >
-            </span>
-          </td>
+          <th>
+            Sample
+          </th>
         </tr>
-      }
-    </tbody>
-  </table>
+      </thead>
+
+      <tbody>
+        @for (s of stops; track s.token) {
+          <tr>
+            <td>
+              <code class="t-mono-inline">
+                {{ s.token }}
+              </code>
+            </td>
+
+            <td>
+              <code class="t-mono-inline">
+                {{ s.value }}
+              </code>
+            </td>
+
+            <td>
+              {{ s.use }}
+            </td>
+
+            <td>
+              <span
+                class="swatch"
+                [style.opacity]="s.value"
+              >
+              </span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 
   <h3 class="block-title t-h4">
     Literal alphas in tokens (reference)
@@ -80,33 +82,35 @@
     </code>).
   </p>
 
-  <table class="literals">
-    <thead>
-      <tr>
-        <th>
-          Alpha
-        </th>
-
-        <th>
-          Where it appears
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      @for (lit of literals; track lit.alpha) {
+  <div class="scroll-wrap">
+    <table class="literals">
+      <thead>
         <tr>
-          <td>
-            <code class="t-mono-inline">
-              {{ lit.alpha }}
-            </code>
-          </td>
+          <th>
+            Alpha
+          </th>
 
-          <td>
-            {{ lit.where }}
-          </td>
+          <th>
+            Where it appears
+          </th>
         </tr>
-      }
-    </tbody>
-  </table>
+      </thead>
+
+      <tbody>
+        @for (lit of literals; track lit.alpha) {
+          <tr>
+            <td>
+              <code class="t-mono-inline">
+                {{ lit.alpha }}
+              </code>
+            </td>
+
+            <td>
+              {{ lit.where }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </docs-section>

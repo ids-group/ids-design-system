@@ -1,40 +1,15 @@
-
     /* ---------- Grids ---------- */
     .grid-2 {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--space-4);
       margin-top: var(--space-3);
     }
 
-    /* ---------- States showcase ---------- */
-    .states {
-      display: grid;
-      gap: var(--space-4);
-      margin-top: var(--space-3);
-      padding: var(--space-4);
-      background: var(--surface-secondary);
-      border-radius: var(--radius-lg);
-    }
-    .states--cols-2 { grid-template-columns: repeat(2, 1fr); }
-    .state-cell {
-      display: flex; flex-direction: column;
-      gap: var(--space-2);
-    }
+    /* ---------- States showcase overrides ---------- */
     .state-cell__stage {
-      display: flex; align-items: stretch; justify-content: stretch;
-      padding: var(--space-4);
+      align-items: stretch; justify-content: stretch;
       min-height: 96px;
-      background: var(--surface-default);
-      border: var(--border-width-default) solid var(--border-default);
-      border-radius: var(--radius-md);
-    }
-    .state-cell__stage > * { flex: 1; }
 
-    .state-cell__label {
-      text-align: center;
-      font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
-      letter-spacing: var(--letter-spacing-wider);
-      text-transform: uppercase;
-      color: var(--text-tertiary);
+      > * { flex: 1; }
     }

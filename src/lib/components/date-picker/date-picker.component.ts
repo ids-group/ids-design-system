@@ -373,6 +373,11 @@ export class DatePickerComponent
    * otherwise clip the last chars of the longer range mask. Digits render with
    * `tabular-nums` so the width never shifts as you type. */
   protected readonly fieldSize = computed(() => this.fieldPlaceholder().length + 1);
+  /** Still-empty tail of the mask, kept visible as a ghost while typing so the
+   *  format never disappears (after "12/" the field reads "12/DD/YYYY"). */
+  protected readonly ghostRemainder = computed(() =>
+    this.fieldPlaceholder().slice(this.fieldText().length),
+  );
 
   // ---- Month / year grid pickers in the calendar header ----
   protected readonly monthMenuOpen = signal(false);

@@ -30,7 +30,11 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './modal.section.html',
-  styleUrl: './modal.section.scss',
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    '../../../shared/section-demo.responsive.scss',
+    './modal.section.scss',
+  ],
 })
 export class ModalSection {
   protected readonly truncationRules: TruncationRule[] = [

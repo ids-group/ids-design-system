@@ -31,30 +31,53 @@
     [class]="triggerClasses()"
     (click)="onFieldClick()"
   >
-    <input
-      #inputEl
-      type="text"
-      class="date-input"
-      inputmode="numeric"
-      autocomplete="off"
-      aria-haspopup="dialog"
-      [value]="fieldText()"
-      [attr.size]="fieldSize()"
-      [attr.placeholder]="fieldPlaceholder()"
-      [readOnly]="!allowInput()"
-      [disabled]="isDisabled()"
-      [attr.aria-expanded]="isOpen()"
-      [attr.aria-controls]="isOpen() ? panelId : null"
-      [attr.aria-labelledby]="label() ? labelId : null"
-      [attr.aria-label]="resolvedAriaLabel()"
-      [attr.aria-required]="required() ? 'true' : null"
-      [attr.aria-invalid]="invalid() || typedInvalid() || rangeInvalid() ? 'true' : null"
-      [attr.aria-describedby]="hintId()"
-      (input)="onFieldInput($event)"
-      (blur)="onFieldBlur()"
-      (keydown)="onFieldKeydown($event)"
-      (keydown.arrowdown)="open(true); $event.preventDefault()"
-    />
+    <span class="input-wrap">
+      <input
+        #inputEl
+        type="text"
+        class="date-input"
+        inputmode="numeric"
+        autocomplete="off"
+        aria-haspopup="dialog"
+        [class.masked]="allowInput()"
+        [value]="fieldText()"
+        [attr.size]="fieldSize()"
+        [attr.placeholder]="fieldPlaceholder()"
+        [readOnly]="!allowInput()"
+        [disabled]="isDisabled()"
+        [attr.aria-expanded]="isOpen()"
+        [attr.aria-controls]="isOpen() ? panelId : null"
+        [attr.aria-labelledby]="label() ? labelId : null"
+        [attr.aria-label]="resolvedAriaLabel()"
+        [attr.aria-required]="required() ? 'true' : null"
+        [attr.aria-invalid]="invalid() || typedInvalid() || rangeInvalid() ? 'true' : null"
+        [attr.aria-describedby]="hintId()"
+        (input)="onFieldInput($event)"
+        (blur)="onFieldBlur()"
+        (keydown)="onFieldKeydown($event)"
+        (keydown.arrowdown)="open(true); $event.preventDefault()"
+      />
+
+      <!-- Ghost mask: the typed part mirrored transparently to reserve width,
+           then the unfilled tail in the placeholder colour. Monospace font
+           keeps letters and digits equal width, so the tail never shifts as
+           digits replace the M/D/Y placeholders. aria-hidden — the real input
+           carries the value and (via placeholder) the format. -->
+      @if (allowInput()) {
+        <!-- Whitespace-tight on purpose: the ghost paints with `white-space:
+             pre`, so the mirrored content must hug its tags or stray spaces
+             would render and knock the tail out of alignment. -->
+        <!-- eslint-disable ds/template/element-content-newline, ds/template/sibling-blank-line -->
+        <span
+          class="mask-ghost"
+          aria-hidden="true"
+        >
+          <span class="filled">{{ fieldText() }}</span>
+          <span class="rest">{{ ghostRemainder() }}</span>
+        </span>
+        <!-- eslint-enable ds/template/element-content-newline, ds/template/sibling-blank-line -->
+      }
+    </span>
 
     <button
       type="button"

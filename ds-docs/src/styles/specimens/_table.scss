@@ -6,14 +6,14 @@
    The `<ds-table>` component owns the same surface in its scoped CSS.
    ============================================================ */
 .scroll-wrap {
-  --_table-radius: var(--ds-table-radius, var(--radius-xl));
-  --_table-bg-color:     var(--ds-table-bg-color,     var(--surface-default));
+  --_scroll-wrap-bg-color: var(--docs-scroll-wrap-bg-color, var(--surface-default));
+  --_scroll-wrap-radius: var(--docs-scroll-wrap-radius, var(--radius-xl));
 
   width: 100%;
   overflow: auto hidden;
   -webkit-overflow-scrolling: touch;
-  border-radius: var(--_table-radius);
-  background-color: var(--_table-bg-color);
+  border-radius: var(--_scroll-wrap-radius);
+  background-color: var(--_scroll-wrap-bg-color);
 }
 
 .table {

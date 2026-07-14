@@ -19,7 +19,12 @@ import { DocsComponentMetaComponent, DocsApiTableComponent } from '../../../shar
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './date-picker.section.html',
-  styleUrl: './date-picker.section.scss',
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    '../../../shared/section-demo.responsive.scss',
+    './date-picker.section.scss',
+    './date-picker.responsive.scss',
+  ],
 })
 export class DatePickerSection {
   protected readonly truncationRules: TruncationRule[] = [

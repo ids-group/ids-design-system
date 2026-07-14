@@ -10,6 +10,54 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Breaking
 
+- **`styles/breakpoints` is now side-effect-free — `--bp-*` moved to a new `styles/breakpoints-vars`
+  entry.** The partial used to both emit the `--bp-*` runtime custom properties and expose the
+  `$bp-*` Sass aliases / `up()` / `down()` mixins; it's now pure (map/aliases/mixins only, no CSS
+  output), so `@use`-ing it for the mixins no longer duplicates the `:root` block per consumer. The
+  `styles/ds` aggregate forwards both — **unaffected**. Only à-la-carte consumers who added
+  `@use '@ids-group-ltd/ids-design-system/styles/breakpoints';` per the 0.4.0 migration guidance
+  need to additionally `@use '@ids-group-ltd/ids-design-system/styles/breakpoints-vars';` (or switch
+  to it) to keep `--bp-*` defined.
+
+### Added
+
+- **`menu` icon** (hamburger, three horizontal bars) in the icon registry.
+
+### Changed
+
+- **`.grid-2` / `.grid-3` / `.grid-4` layout utils collapse to a single column below 640px**
+  (`$bp-sm`), matching the rest of the responsive grid tiers.
+- **`.t-mono-block` scrolls instead of overflowing.** Added `max-width: 100%; overflow-x: auto;` so
+  long unbroken lines scroll within the block rather than forcing page-level horizontal overflow.
+- **`ds-modal` panel clamps to the viewport on small screens.** New `max-width: calc(100vw -
+  var(--space-6))`; `max-height` is now `90vh` with a `90dvh` fallback (browsers without `dvh`
+  support keep `90vh`).
+
+### Fixed
+
+- **`ds-description-list` no longer forces page-wide horizontal scroll on narrow viewports.** The
+  item's `1fr` grid column had no `minmax(0, …)`, so its min-content contribution (long unbroken
+  values like API keys) blew out the track past the container; both grid tracks now use
+  `minmax(0, …)` and the value gains `overflow-wrap: anywhere` to actually wrap into the freed space.
+- **`ds-drawer` / `ds-bottom-sheet` / `ds-modal` no longer hang mid-close when the tab is backgrounded.**
+  Teardown waited on the leave animation's `animationend`, but Chrome freezes CSS animations on a
+  hidden document, so the event never fired and the panel stayed stuck in its `closing` state with
+  the scrim visible and body scroll locked; each now also arms a 300ms synthetic-fallback timer that
+  completes teardown if `animationend` doesn't arrive first (whichever fires first wins, the other is
+  cancelled). `ds-drawer`'s `animationend` name check also switched from a loose `.includes()` match
+  to per-placement `.endsWith()`, matching the guard already used by `ds-bottom-sheet` / `ds-modal`.
+- **`ds-popover` overlay no longer touches or crosses the viewport edge on small screens.** The
+  `FlexibleConnectedPositionStrategy` had no viewport margin, so panels near an edge could butt
+  right up against it or overflow past it; now reserves an 8px margin on all sides.
+- **`ds-date-picker` calendar panel no longer overflows phone viewports.** Below 640px (`$bp-sm`)
+  the panel clamps to `calc(100vw - var(--space-4))` and the presets column stacks below the day
+  grid instead of sitting beside it, replacing the fixed 454px-wide side-by-side layout that
+  overflowed the screen.
+
+## 0.5.1 — 2026-07-13
+
+### Breaking
+
 - **Status vocabulary unified — `danger` → `error`, `warn` → `warning`.** A new exported
   `DsStatus = 'info' | 'success' | 'warning' | 'error'` is the canonical status vocabulary.
   Renamed to match it: the boolean input `[danger]` → `[error]` on `ds-modal` / `ds-modal-card` /
@@ -87,6 +135,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   clear / remove `×`, plus the `ds-tag` chip close (used by autocomplete & multi-select chips) — now
   consistently get the button press-scale too (they previously had no `:active` feedback, or only a
   flat tint).
+- **`ds-date-picker` keeps the format mask visible while typing.** In manual-input mode the unfilled
+  tail of the date mask now stays on-screen as a muted ghost (after typing `12/` the field reads
+  `12/DD/YYYY`) instead of the placeholder vanishing on the first keystroke. The typed value renders
+  in the monospace font so digits land exactly on the mask's `D`/`M`/`Y` positions and the tail never
+  shifts as you type.
 
 ### Fixed
 

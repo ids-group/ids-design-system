@@ -8,6 +8,8 @@
     .demo--centered {
       display: flex;
       justify-content: center;
+      max-width: 100%;
+      overflow-x: auto;
     }
     .states {
       display: flex;
@@ -19,6 +21,7 @@
 
     .single-nodes {
       display: flex;
+      flex-wrap: wrap;
       gap: var(--space-6);
       margin-top: var(--space-3);
       padding: var(--space-4);

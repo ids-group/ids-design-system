@@ -11,11 +11,15 @@ const THEME_STORAGE_KEY = 'ds-docs-theme';
   standalone: true,
   imports: [ButtonComponent, DrawerComponent, SegmentedComponent, SliderComponent],
   templateUrl: './tweaks-panel.component.html',
-  styleUrl: './tweaks-panel.component.scss',
+  styleUrls: ['./tweaks-panel.component.scss', './tweaks-panel.component.responsive.scss'],
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class TweaksPanelComponent {
   protected readonly open = signal(false);
+
+  openPanel(): void {
+    this.open.set(true);
+  }
 
   // Option lists for the ds-segmented controls below.
   protected readonly themeOptions = [

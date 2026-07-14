@@ -4,7 +4,7 @@
 /* ---------- Elevations × paddings matrix ---------- */
     .matrix {
       display: grid;
-      grid-template-columns: 120px repeat(3, 1fr);
+      grid-template-columns: 120px repeat(3, minmax(0, 1fr));
       gap: var(--space-4);
       align-items: stretch;
       margin-top: var(--space-3);
@@ -20,7 +20,7 @@
     /* ---------- Composition grid ---------- */
     .grid-3 {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: var(--space-4);
       margin-top: var(--space-3);
     }

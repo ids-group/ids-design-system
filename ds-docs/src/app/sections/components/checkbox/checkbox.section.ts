@@ -14,6 +14,10 @@ import { DocsComponentMetaComponent, DocsApiTableComponent } from '../../../shar
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './checkbox.section.html',
-  styleUrl: './checkbox.section.scss',
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    '../../../shared/section-demo.responsive.scss',
+    './checkbox.section.scss',
+  ],
 })
 export class CheckboxSection {}

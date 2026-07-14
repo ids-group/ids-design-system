@@ -65,30 +65,25 @@ export interface TruncationRule {
         outline-offset: 2px;
       }
       .panel {
+        display: none;
         position: absolute;
         top: calc(100% + 8px);
         left: 0;
         z-index: var(--layer-tooltip, 100);
         width: max-content;
-        min-width: 320px;
-        max-width: 460px;
+        min-width: min(320px, calc(100vw - var(--space-8)));
+        max-width: min(460px, calc(100vw - var(--space-8)));
         padding: var(--space-3) var(--space-4);
         border-radius: var(--radius-lg);
         background: var(--surface-default);
         border: var(--border-width-default) solid var(--border-default);
         box-shadow: var(--shadow-3, 0 8px 24px rgba(11, 14, 25, 0.16));
-        opacity: 0;
-        pointer-events: none;
-        transform: translateY(-2px);
-        transition:
-          opacity 120ms,
-          transform 120ms;
       }
+      /* display:none keeps the hidden panel out of scroll-container overflow
+         (was opacity/pointer-events only, which still laid out the box). */
       :host:hover .panel,
       :host:focus-within .panel {
-        opacity: 1;
-        pointer-events: auto;
-        transform: none;
+        display: block;
       }
       .panel__title {
         display: inline-flex;

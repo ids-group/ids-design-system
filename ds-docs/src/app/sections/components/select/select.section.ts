@@ -12,7 +12,12 @@ import {
   imports: [SelectComponent, DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './select.section.html',
-  styleUrl: './select.section.scss',
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    '../../../shared/section-demo.responsive.scss',
+    './select.section.scss',
+    './select.responsive.scss',
+  ],
 })
 export class SelectSection {
   protected readonly ownerOptions: SelectOption[] = [

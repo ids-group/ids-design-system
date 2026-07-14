@@ -45,6 +45,7 @@ export class ModalComponent implements OnDestroy {
   /** Playing the scrim fade-out leave animation. */
   protected readonly closing = signal(false);
   private wasOpen = false;
+  private closeFallbackTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     // open → DOM lifecycle: opening renders now; closing keeps the dialog mounted
@@ -58,8 +59,14 @@ export class ModalComponent implements OnDestroy {
       if (isOpen) {
         this.closing.set(false);
         this.rendered.set(true);
+        clearTimeout(this.closeFallbackTimer ?? undefined);
+        this.closeFallbackTimer = null;
       } else if (this.wasOpen) {
         this.closing.set(true);
+        // Chrome freezes CSS animations on a backgrounded tab, so animationend
+        // may never fire — this synthetic fallback guarantees teardown anyway.
+        clearTimeout(this.closeFallbackTimer ?? undefined);
+        this.closeFallbackTimer = setTimeout(() => this.finishClose(), 300);
       }
       this.wasOpen = isOpen;
     });
@@ -77,6 +84,8 @@ export class ModalComponent implements OnDestroy {
   ngOnDestroy(): void {
     // Restore body scroll if the host is torn down mid-open.
     this.doc.body.style.overflow = '';
+    clearTimeout(this.closeFallbackTimer ?? undefined);
+    this.closeFallbackTimer = null;
   }
 
   protected onClose(): void {
@@ -90,9 +99,18 @@ export class ModalComponent implements OnDestroy {
     // Angular scopes @keyframes names under emulated encapsulation, so
     // event.animationName arrives as `_ngcontent-…_modal-out`, not the bare
     // name — match the suffix or teardown never fires and the lock leaks.
-    if (!event.animationName.endsWith('modal-out') || !this.closing()) {
+    if (!event.animationName.endsWith('modal-out')) {
       return;
     }
+    this.finishClose();
+  }
+
+  private finishClose(): void {
+    if (!this.closing()) {
+      return;
+    }
+    clearTimeout(this.closeFallbackTimer ?? undefined);
+    this.closeFallbackTimer = null;
     this.closing.set(false);
     this.rendered.set(false);
     this.closed.emit();

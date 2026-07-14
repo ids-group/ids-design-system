@@ -146,11 +146,3 @@
       font-size: var(--font-size-xs);
       border-radius: var(--radius-sm);
     }
-
-    @media (width <= 820px) {
-      .pair { grid-template-columns: 1fr; }
-      .cell--do {
-        border-right: 0;
-        border-bottom: var(--border-width-default) solid var(--border-divider);
-      }
-    }

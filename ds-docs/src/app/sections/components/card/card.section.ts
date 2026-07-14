@@ -12,7 +12,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [CardComponent, DocsTruncationComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './card.section.html',
-  styleUrl: './card.section.scss',
+  styleUrls: ['./card.section.scss', './card.responsive.scss'],
 })
 export class CardSection {
   protected readonly elevations: readonly CardElevation[] = [

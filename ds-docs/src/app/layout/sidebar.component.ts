@@ -6,6 +6,8 @@ import {
   computed,
   effect,
   inject,
+  input,
+  output,
   signal,
 } from '@angular/core';
 import { IconButtonComponent, SearchComponent } from 'ds';
@@ -20,38 +22,40 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
   imports: [IconButtonComponent, SearchComponent],
   encapsulation: ViewEncapsulation.Emulated,
   host: {
-    '[class.is-collapsed]': 'collapsed()',
+    '[class.is-collapsed]': 'effectiveCollapsed()',
   },
   template: `
-    <nav class="toc" [class.is-collapsed]="collapsed()">
-      <div class="brand">
-        <span class="mark">
-          D
-        </span>
+    <nav class="toc" [class.is-collapsed]="effectiveCollapsed()" [class.is-drawer]="mode() === 'drawer'">
+      @if (mode() === 'rail') {
+        <div class="brand">
+          <span class="mark">
+            D
+          </span>
 
-        @if (!collapsed()) {
-          <div class="brand-text">
-            <span class="brand-name">
-              Design System
-            </span>
+          @if (!effectiveCollapsed()) {
+            <div class="brand-text">
+              <span class="brand-name">
+                Design System
+              </span>
 
-            <small>
-              Boilerplate v{{ version }}
-            </small>
-          </div>
-        }
+              <small>
+                Boilerplate v{{ version }}
+              </small>
+            </div>
+          }
 
-        <ds-icon-button
-          class="collapse-toggle"
-          variant="outlined"
-          size="sm"
-          [icon]="collapsed() ? 'chevronRight' : 'chevronLeft'"
-          [ariaLabel]="collapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
-          (pressed)="toggleCollapsed()"
-        />
-      </div>
+          <ds-icon-button
+            class="collapse-toggle"
+            variant="outlined"
+            size="sm"
+            [icon]="effectiveCollapsed() ? 'chevronRight' : 'chevronLeft'"
+            [ariaLabel]="effectiveCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+            (pressed)="toggleCollapsed()"
+          />
+        </div>
+      }
 
-      @if (!collapsed()) {
+      @if (!effectiveCollapsed()) {
         <ds-search
           class="nav-search"
           placeholder="Search…"
@@ -244,12 +248,27 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
         color: var(--text-tertiary);
         font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
       }
+
+      .toc.is-drawer {
+        border-right: none;
+        padding: var(--space-2) 0 var(--space-6);
+      }
+      .toc.is-drawer .link {
+        min-height: var(--hit-comfy);
+        padding-block: var(--space-2);
+      }
+      .toc.is-drawer .start-link {
+        min-height: var(--hit-comfy);
+      }
     `,
   ],
 })
 export class SidebarComponent {
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
+
+  readonly mode = input<'rail' | 'drawer'>('rail');
+  readonly navigated = output<void>();
 
   protected readonly version = DS_VERSION;
   protected readonly query = signal('');
@@ -266,6 +285,9 @@ export class SidebarComponent {
   });
   protected readonly activeAnchor = signal<string>('');
   protected readonly collapsed = signal<boolean>(this.readCollapsed());
+  protected readonly effectiveCollapsed = computed(() =>
+    this.mode() === 'drawer' ? false : this.collapsed(),
+  );
 
   private observer: IntersectionObserver | null = null;
   // Anchors of sections currently intersecting the spy band.
@@ -425,6 +447,7 @@ export class SidebarComponent {
     } else {
       section.scrollIntoView({ behavior: 'auto', block: 'start' });
     }
+    this.navigated.emit();
   }
 
   // Pin the clicked anchor for at least 1.2s. The real release happens on

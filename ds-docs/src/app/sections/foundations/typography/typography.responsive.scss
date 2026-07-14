@@ -1,0 +1,12 @@
+@use 'styles/breakpoints' as bp;
+
+@include bp.down(lg) {
+  .ramp__head { display: none; }
+  .ramp__row {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+    padding: var(--space-4);
+  }
+  .ramp__row + .ramp__row { border-top: var(--border-width-default) solid var(--border-divider); }
+  .mono-grid { grid-template-columns: 1fr; }
+}

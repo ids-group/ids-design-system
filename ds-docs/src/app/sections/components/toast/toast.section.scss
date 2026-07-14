@@ -11,6 +11,8 @@
 
     .demo {
       display: inline-flex;
+      flex-wrap: wrap;
+      max-width: 100%;
       gap: var(--space-2);
       margin-top: var(--space-3);
       padding: var(--space-3) var(--space-4);

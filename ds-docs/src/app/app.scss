@@ -1,54 +1,37 @@
 :host {
   display: block;
   height: 100vh;
+  height: 100svh;
 }
 
 .layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
-
-  /* Constrain the single row to the viewport so the .main grid item scrolls
-     internally (overflow-y: auto). Without an explicit row track the implicit
-     row is `auto` and grows to content height, pushing the scroll onto <html>. */
-  grid-template-rows: minmax(0, 1fr);
-  min-height: 100vh;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas: 'bar' 'main';
   height: 100vh;
-  transition: grid-template-columns var(--duration-fast) var(--ease-standard);
+  height: 100svh;
 }
 
-// Note: the :root.ds-docs-sidebar-collapsed override for .layout lives in
-// the GLOBAL styles.scss because Angular's view encapsulation mangles :root
-// selectors here (adds [_ngcontent-…] which <html> can't satisfy).
+.mob-bar {
+  grid-area: bar;
+  min-width: 0;
+}
+
+.mob-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
 
 .side {
-  position: sticky;
-  top: 0;
-  align-self: start;
-  height: 100vh;
-  overflow-y: auto;
-  min-height: 0;
+  display: none;
 }
 
 .main {
-  // position:relative makes .main the containing block for any absolutely-
-  // positioned descendant (e.g. `.visually-hidden` sr-only spans deep in the
-  // sections). Without it those abspos boxes resolve against the ICB and are
-  // placed at their static y deep down the document — escaping .main's overflow
-  // clip and inflating <html> scrollHeight into ~50k px of empty scroll.
+  grid-area: main;
   position: relative;
   overflow-y: auto;
   min-height: 0;
-}
-
-// Note: content-width cap + horizontal centering lives on each routed
-// page's :host (e.g. <page-docs>), not here — view-encapsulation blocks
-// `.main > *` from styling the routed component.
-
-@media (width <= 1100px) {
-  .layout { grid-template-columns: 220px 1fr; }
-}
-
-@media (width <= 900px) {
-  .layout { grid-template-columns: 1fr; }
-  .side { display: none; }
+  min-width: 0;
 }

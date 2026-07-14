@@ -1,6 +1,6 @@
 {
   "name": "@ids-group-ltd/ids-design-system",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "IDS Group Angular design system: components, tokens, themes",
   "license": "MIT",
   "homepage": "https://ids-ds.proto.ids-group.co.uk/",
@@ -20,9 +20,9 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "run-p --race watch dev:docs",
+    "start": "npm run dev:docs",
     "dev": "npm run start",
-    "dev:docs": "npm run extract-docs && wait-on dist/ds/package.json && ng serve ds-docs --port 4300",
+    "dev:docs": "npm run extract-docs && ng serve ds-docs --port 4300",
     "watch": "ng build ds --watch --configuration development",
     "build:lib": "ng build ds && node tools/build-schematics.mjs",
     "build:lib:dev": "ng build ds --configuration development",
@@ -90,7 +90,6 @@
     "stylelint-config-standard-scss": "^17.0.0",
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.56.0",
-    "wait-on": "^9.0.10",
     "zone.js": "~0.15.0"
   },
   "sideEffects": false

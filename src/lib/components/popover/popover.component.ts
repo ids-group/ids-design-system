@@ -100,7 +100,8 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
     const positionStrategy: FlexibleConnectedPositionStrategy = this.overlay
       .position()
       .flexibleConnectedTo(trigger)
-      .withPositions(buildPositions(placement, this.align(), arrowOffset));
+      .withPositions(buildPositions(placement, this.align(), arrowOffset))
+      .withViewportMargin(8);
 
     positionStrategy.positionChanges.subscribe((change) => {
       this.resolvedPlacement.set(

@@ -11,6 +11,7 @@ export const ICONS = {
   chevronRight: '<path d="m9 6 6 6-6 6" />',
   chevronLeft: '<path d="m15 6-6 6 6 6" />',
   chevronUp: '<path d="m6 15 6-6 6 6" />',
+  menu: '<path d="M4 6h16M4 12h16M4 18h16" />',
   arrowRight: '<path d="M5 12h14M13 6l6 6-6 6" />',
   arrowUp: '<path d="M12 19V5M6 11l6-6 6 6" />',
   arrowDown: '<path d="M12 5v14M6 13l6 6 6-6" />',

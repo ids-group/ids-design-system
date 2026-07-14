@@ -20,7 +20,7 @@
 .t-caption    { font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans); color: var(--text-tertiary); }
 .t-mono        { font: var(--font-weight-medium) var(--font-size-mono) / var(--line-height-base) var(--font-mono); }
 .t-mono-inline { font: var(--font-weight-regular) var(--font-size-mono) / 1 var(--font-mono); background: var(--surface-secondary); color: var(--text-primary); padding: 1px var(--space-1); border-radius: var(--radius-sm); }
-.t-mono-block  { font: var(--font-weight-regular) var(--font-size-mono) / var(--line-height-loose) var(--font-mono); background: var(--surface-secondary); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); }
+.t-mono-block  { font: var(--font-weight-regular) var(--font-size-mono) / var(--line-height-loose) var(--font-mono); background: var(--surface-secondary); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); max-width: 100%; overflow-x: auto; }
 
 .sr-only {
   position: absolute !important;

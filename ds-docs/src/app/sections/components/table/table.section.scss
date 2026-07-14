@@ -25,35 +25,21 @@
     }
     .bulk-bar-wrap .bulk-bar { margin: 0; }
 
-    /* ---------- States showcase (header sort cells) ---------- */
-    .states {
-      display: grid;
-      gap: var(--space-3);
-      margin-top: var(--space-3);
-      padding: var(--space-4);
-      background: var(--surface-secondary);
-      border-radius: var(--radius-lg);
+    /* The live bulk-bar (fit-content, no wrap in the lib) can outgrow narrow
+       viewports. Let it wrap its own contents instead of overflowing the page. */
+    :host ::ng-deep .bulk-bar {
+      flex-wrap: wrap;
+      max-width: 100%;
+      justify-content: center;
     }
-    .states--cols-4 { grid-template-columns: repeat(4, 1fr); }
-    .state-cell { display: flex; flex-direction: column; gap: var(--space-2); }
+
+    /* ---------- States showcase overrides (header sort cells) ---------- */
     .state-cell__stage {
-      display: flex; align-items: center; justify-content: center;
       padding: var(--space-3);
       min-height: 96px;
-      background: var(--surface-default);
-      border: var(--border-width-default) solid var(--border-default);
-      border-radius: var(--radius-md);
-      overflow: hidden;
     }
     .state-cell__stage--tbl { padding: 0; align-items: stretch; }
     .state-cell__stage--tbl .table { width: 100%; }
-    .state-cell__label {
-      text-align: center;
-      font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
-      letter-spacing: var(--letter-spacing-wider);
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-    }
 
     /* State pin — hover on a sortable header reads the component's own resolvers;
        --text-secondary is a bare token (no --_* resolver for header hover fg). */

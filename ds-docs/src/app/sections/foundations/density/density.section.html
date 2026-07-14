@@ -19,53 +19,55 @@
     The four tiers
   </h3>
 
-  <table class="tbl">
-    <thead>
-      <tr>
-        <th>
-          Tier
-        </th>
-
-        <th>
-          --hit-cozy
-        </th>
-
-        <th>
-          Use case
-        </th>
-
-        <th>
-          Touch / WCAG
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      @for (t of tiers; track t.key) {
+  <div class="scroll-wrap">
+    <table class="tbl">
+      <thead>
         <tr>
-          <td>
-            <strong>
-              {{ t.label }}
-            </strong>
-          </td>
+          <th>
+            Tier
+          </th>
 
-          <td>
-            <code class="t-mono-inline">
-              {{ t.hit }}
-            </code>
-          </td>
+          <th>
+            --hit-cozy
+          </th>
 
-          <td>
-            {{ t.use }}
-          </td>
+          <th>
+            Use case
+          </th>
 
-          <td>
-            {{ t.wcag }}
-          </td>
+          <th>
+            Touch / WCAG
+          </th>
         </tr>
-      }
-    </tbody>
-  </table>
+      </thead>
+
+      <tbody>
+        @for (t of tiers; track t.key) {
+          <tr>
+            <td>
+              <strong>
+                {{ t.label }}
+              </strong>
+            </td>
+
+            <td>
+              <code class="t-mono-inline">
+                {{ t.hit }}
+              </code>
+            </td>
+
+            <td>
+              {{ t.use }}
+            </td>
+
+            <td>
+              {{ t.wcag }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 
   <!-- ============================================================ Live comparison -->
   <h3 class="block-title t-h4">

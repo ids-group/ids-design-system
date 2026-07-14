@@ -4,6 +4,13 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.3.1 — 2026-07-13
+
+### Changed
+- Migration-manifest source priority made symmetric with the changelog's: prefer the clone's
+  `migrations/<V>.json`, fall back to Bitbucket-raw per chain version, and treat a missing manifest
+  as "derive that version from prose" rather than losing determinism silently when the clone fails.
+
 ## 1.3.0 — 2026-07-10
 
 Deep-review round with external research (codemod prior art, ng-update conventions, Claude Code

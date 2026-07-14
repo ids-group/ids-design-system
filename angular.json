@@ -60,7 +60,8 @@
               }
             ],
             "styles": [
-              "ds-docs/src/styles.scss"
+              "ds-docs/src/styles.scss",
+              "ds-docs/src/styles.responsive.scss"
             ],
             "stylePreprocessorOptions": {
               "includePaths": ["src/lib"]
