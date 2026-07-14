@@ -172,8 +172,4 @@
     gap: var(--space-2);
     padding-bottom: var(--space-3);
   }
-
-  @media (width <= 720px) {
-    .actions { width: 100%; }
-  }
 }

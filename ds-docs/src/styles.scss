@@ -9,7 +9,7 @@
 @use 'themes/base-palette';
 @use 'styles/theme-activation';
 @use 'styles/tokens';
-@use 'styles/breakpoints-vars';
+@use 'styles/breakpoints' as bp;
 @use 'styles/status' as status;
 @use 'styles/tokens-charts';
 @use 'styles/fonts';
@@ -18,6 +18,7 @@
 @use 'styles/link';
 @use 'styles/ds-color';
 @use 'styles/layout-utils';
+@use 'styles/layout-utils.responsive' as layout-utils-responsive;
 @use 'styles/scrollbar';
 @use 'styles/icon-base';
 
@@ -31,6 +32,7 @@
 // activates when <html data-brand="manage-my"> is set. Duplicated from
 // mm-broker for preview purposes; ds itself stays brand-agnostic.
 @use 'styles/preview-brand-manage-my';
+@include bp.emit-vars;
 @include status.semantic-preset;
 @include status.define((
   planning:  (bg: var(--neutral-150),      text: var(--neutral-700),   dot: var(--icon-muted)),

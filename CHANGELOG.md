@@ -10,14 +10,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Breaking
 
-- **`styles/breakpoints` is now side-effect-free — `--bp-*` moved to a new `styles/breakpoints-vars`
-  entry.** The partial used to both emit the `--bp-*` runtime custom properties and expose the
-  `$bp-*` Sass aliases / `up()` / `down()` mixins; it's now pure (map/aliases/mixins only, no CSS
-  output), so `@use`-ing it for the mixins no longer duplicates the `:root` block per consumer. The
-  `styles/ds` aggregate forwards both — **unaffected**. Only à-la-carte consumers who added
-  `@use '@ids-group-ltd/ids-design-system/styles/breakpoints';` per the 0.4.0 migration guidance
-  need to additionally `@use '@ids-group-ltd/ids-design-system/styles/breakpoints-vars';` (or switch
-  to it) to keep `--bp-*` defined.
+- **`styles/breakpoints` is side-effect-free — `--bp-*` now comes from an explicit `emit-vars`
+  mixin.** The partial exposes the `$bp-*` Sass aliases and `up()` / `down()` mixins with zero CSS
+  output on plain `@use`, so component styles can import it for media queries without duplicating a
+  `:root` block. The `--bp-*` runtime custom properties (for JS via `getComputedStyle`) are emitted
+  only when `emit-vars` is included. `styles/ds` includes it once — **unaffected** for consumers of
+  the aggregate. À-la-carte consumers who `@use '@ids-group-ltd/ids-design-system/styles/breakpoints'`
+  directly and need `--bp-*` must add `@include bp.emit-vars;` themselves.
 
 ### Added
 
@@ -27,6 +26,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **`.grid-2` / `.grid-3` / `.grid-4` layout utils collapse to a single column below 640px**
   (`$bp-sm`), matching the rest of the responsive grid tiers.
+- **`.grid-3` / `.grid-4` layout-utils collapse tiers normalized to canonical breakpoints**: 1100px →
+  1024px (`$bp-lg`), 820px → 768px (`$bp-md`).
+- **`ds-page-header` actions full-width threshold normalized to canonical breakpoint**: 720px → 768px
+  (`$bp-md`).
 - **`.t-mono-block` scrolls instead of overflowing.** Added `max-width: 100%; overflow-x: auto;` so
   long unbroken lines scroll within the block rather than forcing page-level horizontal overflow.
 - **`ds-modal` panel clamps to the viewport on small screens.** New `max-width: calc(100vw -

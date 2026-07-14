@@ -13,11 +13,11 @@
 //   @use 'themes/base-palette'; @use 'styles/theme-activation'; @use 'styles/tokens';
 //   @use 'styles/fonts'; @use 'styles/link'; …
 
+@use 'breakpoints' as bp-emit;
 @forward '../themes/base-palette';
 @forward 'theme-activation';
 @forward 'tokens';
 @forward 'breakpoints';
-@forward 'breakpoints-vars';
 @forward 'tokens-charts';
 @forward 'fonts';
 @forward 'reset';
@@ -25,10 +25,13 @@
 @forward 'link';
 @forward 'ds-color';
 @forward 'layout-utils';
+@forward 'layout-utils.responsive';
 @forward 'page-grid';
+@forward 'page-grid.responsive';
 @forward 'scrollbar';
 @forward 'icon-base';
 @forward 'dropdown-overlay';
 @forward 'toast-overlay';
 @forward 'overlay-motion';
 @forward 'skeleton-shimmer';
+@include bp-emit.emit-vars;

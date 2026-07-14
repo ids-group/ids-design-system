@@ -5,8 +5,8 @@
       "id": "styles-breakpoints-pure-needs-vars",
       "kind": "code-add",
       "old": null,
-      "new": "@use '@ids-group-ltd/ids-design-system/styles/breakpoints-vars';",
-      "note": "styles/breakpoints is now side-effect-free (map/$bp-*/up()/down() only, no CSS emitted) — the --bp-* runtime custom properties moved to the new styles/breakpoints-vars entry. Only consumers who followed the 0.4.0 guidance and `@use '@ids-group-ltd/ids-design-system/styles/breakpoints'` A LA CARTE (not via the styles/ds aggregate, which forwards both) must additionally `@use` styles/breakpoints-vars (or switch to it) to keep --bp-* defined. Consumers using styles/ds need no action. $bp-* Sass aliases and the up()/down() mixins are unaffected either way.",
+      "new": "@use '@ids-group-ltd/ids-design-system/styles/breakpoints' as bp;\n@include bp.emit-vars;",
+      "note": "styles/breakpoints stays side-effect-free on plain @use (map/$bp-*/up()/down() only, no CSS emitted) — the --bp-* runtime custom properties are now emitted only by its emit-vars mixin. Only consumers who followed the 0.4.0 guidance and `@use '@ids-group-ltd/ids-design-system/styles/breakpoints'` A LA CARTE (not via the styles/ds aggregate, which already includes emit-vars once) must additionally `@include bp.emit-vars;` to keep --bp-* defined. Consumers using styles/ds need no action. $bp-* Sass aliases and the up()/down() mixins are unaffected either way.",
       "searchHints": [
         "styles/breakpoints",
         "@use '@ids-group-ltd/ids-design-system/styles/breakpoints'"
@@ -21,6 +21,8 @@
     "ds-description-list item grid tracks now use minmax(0, …) and the value gains overflow-wrap: anywhere, fixing page-wide horizontal scroll caused by long unbroken values — visual only, no code change.",
     "ds-drawer/ds-bottom-sheet/ds-modal teardown no longer hangs (scrim stuck, body scroll locked) when the tab is backgrounded mid-close — each now arms a 300ms synthetic-fallback timer alongside the animationend listener so teardown completes even if Chrome freezes the leave animation; no code change required from consumers.",
     "ds-popover overlay now reserves an 8px viewport margin (FlexibleConnectedPositionStrategy.withViewportMargin(8)) — panels no longer touch or cross the screen edge on small viewports; visual only, no code change.",
-    "ds-date-picker calendar panel caps to calc(100vw - var(--space-4)) and stacks the presets column below the day grid below 640px ($bp-sm), replacing the fixed 454px-wide side-by-side layout that overflowed phone viewports — visual only, no code change."
+    "ds-date-picker calendar panel caps to calc(100vw - var(--space-4)) and stacks the presets column below the day grid below 640px ($bp-sm), replacing the fixed 454px-wide side-by-side layout that overflowed phone viewports — visual only, no code change.",
+    ".grid-3/.grid-4 layout-utils collapse tiers normalized to canonical breakpoints: 1100px -> 1024px ($bp-lg), 820px -> 768px ($bp-md) — visual only, no code change.",
+    "ds-page-header actions full-width threshold normalized to canonical breakpoint: 720px -> 768px ($bp-md) — visual only, no code change."
   ]
 }
