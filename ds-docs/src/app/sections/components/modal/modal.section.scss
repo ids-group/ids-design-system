@@ -13,7 +13,10 @@
 .state-cell__stage {
   min-height: 220px;
 
-  ::ng-deep .modal { max-width: 100%; }
+  /* Only the static ds-modal-card replicas (direct child) get the 100% escape
+     hatch — live ds-modal demos render .modal-backdrop > ds-modal-card .modal
+     and must keep the lib's real viewport clamp (calc(100vw - space-6)). */
+  > ds-modal-card ::ng-deep .modal { max-width: 100%; }
 }
 
 .form-stack {

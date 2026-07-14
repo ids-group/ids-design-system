@@ -46,6 +46,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   completes teardown if `animationend` doesn't arrive first (whichever fires first wins, the other is
   cancelled). `ds-drawer`'s `animationend` name check also switched from a loose `.includes()` match
   to per-placement `.endsWith()`, matching the guard already used by `ds-bottom-sheet` / `ds-modal`.
+- **`ds-popover` overlay no longer touches or crosses the viewport edge on small screens.** The
+  `FlexibleConnectedPositionStrategy` had no viewport margin, so panels near an edge could butt
+  right up against it or overflow past it; now reserves an 8px margin on all sides.
+- **`ds-date-picker` calendar panel no longer overflows phone viewports.** Below 640px (`$bp-sm`)
+  the panel clamps to `calc(100vw - var(--space-4))` and the presets column stacks below the day
+  grid instead of sitting beside it, replacing the fixed 454px-wide side-by-side layout that
+  overflowed the screen.
 
 ## 0.5.1 — 2026-07-13
 
