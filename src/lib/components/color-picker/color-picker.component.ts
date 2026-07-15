@@ -86,11 +86,17 @@ export class ColorPickerComponent
     '--ds-color-picker-thumb',
   ];
 
+  /** Selected colour as a hex string, two-way bound. */
   readonly value = model<string>('#2F54FF');
+  /** Swatches shown in the panel — defaults to a built-in palette. */
   readonly presets = input<readonly string[]>(DEFAULT_PRESETS);
+  /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Accessible name for the trigger button and panel. */
   readonly ariaLabel = input<string>('Choose colour');
+  /** Applies error styling and marks the trigger `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
+  /** Helper text shown below the trigger. */
   readonly hint = input<string>('');
 
   protected readonly trigger =

@@ -20,8 +20,11 @@ import type { DropzoneFile } from './dropzone.types';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class DropzoneComponent {
+  /** Native `accept` attribute — comma-separated MIME types or extensions. */
   readonly accept = input<string>('');
+  /** Allows picking more than one file at once (ignored when `single`). */
   readonly multiple = input(false, { transform: booleanAttribute });
+  /** Files shown in the list — the consumer owns upload state and progress. */
   readonly files = model<DropzoneFile[]>([]);
   /** Disables the dropzone: blocks all file-picking interactions and signals unavailability. */
   readonly disabled = input(false, { transform: booleanAttribute });
@@ -30,7 +33,9 @@ export class DropzoneComponent {
 
   protected readonly dragOver = signal<boolean>(false);
 
+  /** Fires with the raw files picked or dropped; the consumer adds them to `files`. */
   readonly filesAdded = output<File[]>();
+  /** Fires when the user removes a file from the list. */
   readonly fileRemoved = output<DropzoneFile>();
 
   protected readonly classes = computed(() => {

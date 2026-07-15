@@ -67,20 +67,32 @@ export class AutocompleteComponent<T = unknown>
     '--ds-autocomplete-option-bg-color-hover',
   ];
 
+  /** Flat option list — ignored when `optionGroups` is set. */
   readonly options = input<readonly AutocompleteOption<T>[]>([]);
+  /** Options grouped under labelled sections, rendered instead of `options`. */
   readonly optionGroups = input<AutocompleteOptionGroup<T>[]>([]);
+  /** Selected value, or an array of values when `multiple`. */
   readonly value = model<T | readonly T[] | null>(null);
+  /** Allows selecting more than one option, shown as removable tags. */
   readonly multiple = input(false, { transform: booleanAttribute });
+  /** Trigger height — sm/md/lg. */
   readonly size = input<AutocompleteSize>('md');
+  /** Trigger width — `fill` stretches to the container, `content` hugs the value. */
   readonly width = input<AutocompleteWidth>('fill');
+  /** Placeholder shown in the input when empty. */
   readonly placeholder = input<string>('Select…');
+  /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Applies error styling and marks the field `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
+  /** Helper text shown below the field. */
   readonly hint = input<string>('');
+  /** Shows a "Create «text»" row when the typed text matches no option. */
   readonly allowCreate = input(false, { transform: booleanAttribute });
   /** Accessible name for the combobox input. */
   readonly ariaLabel = input<string | null>(null);
 
+  /** Fires with the typed text when the user picks the create-new option. */
   readonly create = output<string>();
 
   protected readonly isDisabled = computed(

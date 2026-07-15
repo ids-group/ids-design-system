@@ -29,13 +29,21 @@ export class RadioComponent {
   /** Standalone two-way binding. When inside ds-radio-group, isChecked() is
    *  derived from the group value instead. */
   readonly checked = model<boolean>(false);
+  /** Disables the radio; a disabled parent `ds-radio-group` also disables it. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Native `name` attribute — overridden by the group's name when inside `ds-radio-group`. */
   readonly name = input<string>('');
+  /** Value compared against the group's selection when inside `ds-radio-group`. */
   readonly value = input<unknown>('');
+  /** Overrides the auto-generated id used for the input and its label's `for`. */
   readonly inputId = input<string | null>(null);
+  /** Applies error styling and marks the input `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
+  /** Helper text shown below the control. */
   readonly hint = input<string>('');
+  /** Control size — sm/md/lg. */
   readonly size = input<RadioSize>('md');
+  /** Marks the radio required — shows an asterisk on the label and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Inline label rendered beside the dot and wired via for/id. Omit to bring
    *  your own <label>. */

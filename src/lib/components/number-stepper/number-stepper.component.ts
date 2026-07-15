@@ -18,11 +18,17 @@ import type { NumberStepperSize } from './number-stepper.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NumberStepperComponent {
+  /** Current numeric value, two-way bound. */
   readonly value = model<number>(0);
+  /** Lower bound — the decrement button and typed input clamp to it. */
   readonly min = input<number>(0);
+  /** Upper bound — the increment button and typed input clamp to it; unbounded when null. */
   readonly max = input<number | null>(null);
+  /** Amount added or subtracted per increment/decrement. */
   readonly step = input<number>(1);
+  /** Control height — sm/md/lg. */
   readonly size = input<NumberStepperSize>('md');
+  /** Disables the stepper and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Accessible name for the number input (the stepper has no visible label). */
   readonly ariaLabel = input<string | null>(null);

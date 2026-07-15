@@ -40,15 +40,25 @@ import type { InputSize, InputType } from './input.types';
   ],
 })
 export class InputComponent extends DsControlValueAccessor<string> {
+  /** Text value, two-way bound. */
   readonly value = model<string>('');
+  /** Native input type — also affects the default clear button and password toggle. */
   readonly type = input<InputType>('text');
+  /** Field height — sm/md/lg. */
   readonly size = input<InputSize>('md');
+  /** Label shown above the field, or inside it when `floating`. */
   readonly label = input<string>('');
+  /** Helper text shown below the field. */
   readonly hint = input<string>('');
+  /** Placeholder shown when empty. */
   readonly placeholder = input<string>('');
+  /** Disables the field and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Prevents editing while still allowing focus and selection. */
   readonly readOnly = input(false, { transform: booleanAttribute });
+  /** Applies error styling and marks the field `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
+  /** Applies success styling to the field. */
   readonly success = input(false, { transform: booleanAttribute });
   /** Shows a trailing spinner — e.g. async validation in flight. The input
    *  stays editable; pair with a `hint` like "Checking availability…". */
@@ -56,17 +66,26 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Floating-label variant — the label sits inside a taller control instead
    *  of stacked above it. */
   readonly floating = input(false, { transform: booleanAttribute });
+  /** Reserves space for a leading addon projected into `[dsInputPrefix]`. */
   readonly withAddon = input(false, { transform: booleanAttribute });
+  /** Reserves space for a trailing addon projected into `[dsInputSuffix]`. */
   readonly withAddonRight = input(false, { transform: booleanAttribute });
+  /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
+  /** Shows an "(optional)" marker next to the label (ignored when `required`). */
   readonly optional = input(false, { transform: booleanAttribute });
+  /** Native `name` attribute. */
   readonly name = input<string | null>(null);
   // Numeric constraints (applied when type="number").
+  /** Native `min` attribute — applies when `type="number"`. */
   readonly min = input<number | null>(null);
+  /** Native `max` attribute — applies when `type="number"`. */
   readonly max = input<number | null>(null);
+  /** Native `step` attribute — applies when `type="number"`. */
   readonly step = input<number | null>(null);
   /** Native autocomplete token (e.g. "email", "current-password"). */
   readonly autocomplete = input<string | null>(null);
+  /** Focuses the field automatically on render. */
   readonly autofocus = input(false, { transform: booleanAttribute });
   /** Accessible name when no visible `label` is provided (falls back to the
    *  placeholder so the control is never unnamed). */
@@ -78,6 +97,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
   readonly enterKeyHint = input<
     'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send' | null
   >(null);
+  /** Native `inputmode` attribute — hints the on-screen keyboard layout. */
   readonly inputMode = input<
     | 'none'
     | 'text'
@@ -100,7 +120,9 @@ export class InputComponent extends DsControlValueAccessor<string> {
    */
   readonly clearable = input<boolean | null>(null);
 
+  /** Shows a show/hide button when `type="password"`. */
   readonly passwordToggle = input(false, { transform: booleanAttribute });
+  /** Whether the password is currently shown as plain text, two-way bound. */
   readonly passwordVisible = model<boolean>(false);
 
   protected readonly canClear = computed<boolean>(() => {

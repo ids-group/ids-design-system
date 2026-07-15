@@ -39,14 +39,23 @@ export type OtpMode = 'numeric' | 'alphanumeric';
   },
 })
 export class OtpInputComponent extends DsControlValueAccessor<string> {
+  /** Entered code, two-way bound. */
   readonly value = model<string>('');
+  /** Number of character cells. */
   readonly length = input<number>(6);
+  /** Restricts input and the mobile keyboard to digits-only, or allows letters too. */
   readonly mode = input<OtpMode>('numeric');
+  /** Renders each cell as a password dot instead of the typed character. */
   readonly mask = input(false, { transform: booleanAttribute });
+  /** Disables all cells and blocks interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Applies error styling and marks each cell `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
+  /** Helper text shown below the cells. */
   readonly hint = input<string>('');
+  /** Accessible group label for the cell row. */
   readonly ariaLabel = input<string>('Verification code');
+  /** Fires once, with the full code, on the partial → complete transition. */
   readonly completed = output<string>();
 
   private readonly boxes = viewChildren<ElementRef<HTMLInputElement>>('box');

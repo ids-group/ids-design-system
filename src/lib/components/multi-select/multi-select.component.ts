@@ -56,19 +56,27 @@ export class MultiSelectComponent
     '--ds-multi-select-check-bg-color',
   ];
 
+  /** Selected values, two-way bound. */
   readonly value = model<string[]>([]);
+  /** Options shown in the panel. */
   readonly options = input<readonly MultiSelectOption[]>([]);
+  /** Placeholder shown in the trigger when nothing is selected. */
   readonly placeholder = input<string>('Select…');
+  /** Placeholder for the in-panel filter input. */
   readonly searchPlaceholder = input<string>('Filter…');
-  // 0 / null shows every chip; a positive cap collapses the rest into "+N more".
+  /** Caps the number of chips shown before collapsing the rest into "+N more" — 0/null shows all. */
   readonly maxVisibleChips = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
+  /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Applies error styling and marks the field `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
+  /** Helper text shown below the field. */
   readonly hint = input<string>('');
+  /** Accessible name for the trigger — falls back to `placeholder`. */
   readonly ariaLabel = input<string | null>(null);
-  // Show a "Select all" row that toggles every (filter-matching, enabled) option.
+  /** Shows a "Select all" row that toggles every filter-matching, enabled option. */
   readonly selectAll = input(false, { transform: booleanAttribute });
 
   protected readonly uid = nextControlId('ds-multi-select');
