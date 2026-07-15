@@ -5,7 +5,6 @@ import {
   DocsTruncationComponent,
   TruncationRule,
 } from '../../../shared/docs-truncation.component';
-import { DocsComponentMetaComponent, DocsApiTableComponent } from '../../../shared';
 
 @Component({
   selector: 'section-components-date-picker',
@@ -14,8 +13,6 @@ import { DocsComponentMetaComponent, DocsApiTableComponent } from '../../../shar
     DatePickerComponent,
     DocsSectionComponent,
     DocsTruncationComponent,
-    DocsComponentMetaComponent,
-    DocsApiTableComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './date-picker.section.html',

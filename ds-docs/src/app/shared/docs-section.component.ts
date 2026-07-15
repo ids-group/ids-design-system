@@ -1,8 +1,23 @@
-import { Component, ViewEncapsulation, input } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  computed,
+  input,
+} from '@angular/core';
+import { COMPONENT_API } from './component-api.generated';
+import { DocsComponentMetaComponent } from './docs-component-meta.component';
+import { DocsApiTableComponent } from './docs-api-table.component';
 
 /** Section shell shared by every docs section. Owns the `<section>` (with the
  *  `data-anchor`/`id` the sidebar scroll-spy relies on), the eyebrow, the title
  *  and the lede — so that scaffold isn't copy-pasted into ~60 sections.
+ *
+ *  When `anchor` matches a generated component-API key (and `api` isn't turned
+ *  off) the shell AUTO-renders the component meta-header under the title and the
+ *  Inputs/Outputs table at the end — so component sections get their API surface
+ *  for free, no per-section wiring. Set `[api]="false"` to opt out (e.g. a
+ *  foundation whose anchor collides with a component key).
  *
  *  Usage:
  *    <docs-section anchor="button" eyebrow="Components" title="Buttons">
@@ -14,6 +29,7 @@ import { Component, ViewEncapsulation, input } from '@angular/core';
 @Component({
   selector: 'docs-section',
   standalone: true,
+  imports: [DocsComponentMetaComponent, DocsApiTableComponent],
   encapsulation: ViewEncapsulation.Emulated,
   template: `
     <section
@@ -29,13 +45,19 @@ import { Component, ViewEncapsulation, input } from '@angular/core';
         {{ title() }}<ng-content select="docs-truncation" />
       </h2>
 
-      <ng-content select="docs-component-meta" />
+      @if (hasApi()) {
+        <docs-component-meta [key]="anchor()" />
+      }
 
       <p class="lede t-m">
         <ng-content select="[lede]" />
       </p>
 
       <ng-content />
+
+      @if (hasApi()) {
+        <docs-api-table [key]="anchor()" />
+      }
     </section>
   `,
   styles: [
@@ -71,4 +93,11 @@ export class DocsSectionComponent {
   readonly anchor = input.required<string>();
   readonly eyebrow = input<string>('');
   readonly title = input.required<string>();
+  /** Opt out of the auto API surface — for a non-component section whose anchor
+   *  collides with a component key (e.g. the Layout foundation vs `layout`). */
+  readonly api = input(true, { transform: booleanAttribute });
+
+  protected readonly hasApi = computed(
+    () => this.api() && !!COMPONENT_API[this.anchor()],
+  );
 }

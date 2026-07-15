@@ -9,7 +9,6 @@ import {
   DocsTruncationComponent,
   TruncationRule,
 } from '../../../shared/docs-truncation.component';
-import { DocsComponentMetaComponent, DocsApiTableComponent } from '../../../shared';
 
 interface VariantSpec {
   readonly label: string;
@@ -25,8 +24,6 @@ interface VariantSpec {
     DocsMatrixComponent,
     DocsTruncationComponent,
     ToggleButtonComponent,
-    DocsComponentMetaComponent,
-    DocsApiTableComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './button.section.html',
