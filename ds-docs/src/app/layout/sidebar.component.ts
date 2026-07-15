@@ -14,7 +14,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { IconButtonComponent, SearchComponent } from 'ds';
-import { NAV } from './nav.config';
+import {
+  NAV,
+  type NavGroup,
+  groupForAnchor,
+  urlForAnchor,
+  urlForGroupPath,
+} from './nav.config';
 import { DS_VERSION } from '../shared/docs-stats';
 
 const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
@@ -72,8 +78,8 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
             @for (item of group.items; track item.anchor) {
               <a
                 class="link start-link"
-                [routerLink]="'/' + group.path"
                 routerLinkActive="is-active"
+                [routerLink]="urlForGroupPath(group.path)"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="navigated.emit()"
               >
@@ -83,9 +89,8 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
           } @else {
             <a
               class="group group-link"
-              [routerLink]="'/' + group.path"
-              routerLinkActive="is-active"
-              [routerLinkActiveOptions]="{ exact: false }"
+              [routerLink]="urlForGroupPath(group.path)"
+              [class.is-active]="isGroupActive(group)"
               (click)="navigated.emit()"
             >
               {{ group.title }}
@@ -94,8 +99,7 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
             @for (item of group.items; track item.anchor) {
               <a
                 class="link"
-                [routerLink]="'/' + group.path"
-                [fragment]="item.anchor"
+                [routerLink]="urlForAnchor(group.path, item.anchor)"
                 [class.is-active]="isActive(item.anchor)"
                 (click)="onItem(item.anchor)"
               >
@@ -309,13 +313,20 @@ export class SidebarComponent {
     this.mode() === 'drawer' ? false : this.collapsed(),
   );
 
+  protected readonly urlForAnchor = urlForAnchor;
+  protected readonly urlForGroupPath = urlForGroupPath;
+
   private observer: IntersectionObserver | null = null;
   // Anchors of sections currently intersecting the spy band.
   private readonly intersecting = new Set<string>();
   private readonly anchorToSection = new Map<string, HTMLElement>();
-  // Last routed path (without fragment) — lets us ignore the scroll-sync's
-  // fragment-only navigations so they don't re-scroll or re-observe.
-  private lastPath = '';
+  // Group (page) of the last real navigation. The scroll-spy rewrites only the
+  // URL's anchor segment WITHIN a page, so we compare the resolved GROUP (not the
+  // raw path) to skip those self-updates without re-scrolling / re-observing.
+  private lastGroup: string | null = null;
+  // Whether the current page has >1 spy section — home/changelog have ≤1 and so
+  // never sync an anchor into the URL.
+  private multiSection = false;
 
   constructor() {
     this.destroyRef.onDestroy(() => {
@@ -327,27 +338,26 @@ export class SidebarComponent {
     // with zero targets and `activeAnchor` never updates on scroll.
     this.setupWhenSectionsExist();
 
-    // Each real route change swaps in a new group page: reset the main scroll
-    // (to top, or to the target section when the URL carries a fragment) and
-    // re-scan for the new page's `[data-anchor]` sections once they mount.
-    // Fragment-only navigations (from the scroll-sync effect below) keep the
-    // same path — skip them so scrolling never fights itself or thrashes the
-    // observer. `main.main` is the scroll container, not the window, so the
-    // router's own scrollPositionRestoration can't do this for us.
+    // A change to a DIFFERENT group page swaps its sections: reset the main
+    // scroll (to the target section, or the top) and re-scan `[data-anchor]`.
+    // The scroll-spy's within-page anchor rewrites resolve to the SAME group, so
+    // they're skipped here — no fighting / observer thrash. `main.main` is the
+    // scroll container, not the window, so the router can't do this for us.
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe((event) => {
-        const path = (event as NavigationEnd).urlAfterRedirects.split('#')[0];
-        if (path === this.lastPath) {
+        const url = (event as NavigationEnd).urlAfterRedirects.split('?')[0];
+        const group = this.groupPathForUrl(url);
+        if (group === this.lastGroup) {
           return;
         }
-        this.lastPath = path;
+        this.lastGroup = group;
         setTimeout(() => {
           this.refreshObserver();
-          this.scrollForNavigation();
+          this.scrollForNavigation(url);
         }, 0);
       });
 
@@ -365,27 +375,23 @@ export class SidebarComponent {
       );
     });
 
-    // Sync the URL fragment with the active section as the user scrolls —
-    // replaceUrl so history isn't polluted with every intermediate section.
-    // Only the fragment changes; the route path is left untouched.
+    // Sync the URL's anchor segment with the active section as the user scrolls
+    // (/components/button → /components/segmented …) — replaceUrl so history
+    // isn't polluted. Single-section pages (home/changelog) carry no anchor.
     effect(() => {
       const anchor = this.activeAnchor();
-      if (!anchor) {
+      if (!anchor || !this.multiSection) {
         return;
       }
-      const win = this.document.defaultView;
-      if (!win) {
+      const area = this.currentArea();
+      if (!area) {
         return;
       }
-      const targetHash = '#' + anchor;
-      if (win.location.hash === targetHash) {
+      const target = `/${area}/${anchor}`;
+      if (this.router.url.split('?')[0].split('#')[0] === target) {
         return;
       }
-      this.router.navigate([], {
-        fragment: anchor,
-        replaceUrl: true,
-        queryParamsHandling: 'preserve',
-      });
+      void this.router.navigateByUrl(target, { replaceUrl: true });
     });
   }
 
@@ -398,21 +404,21 @@ export class SidebarComponent {
       const found = this.document.querySelectorAll('[data-anchor]').length;
       if (found > 0) {
         this.refreshObserver();
-        this.scrollToHashOnLoad();
+        this.scrollToAnchorOnLoad();
 
         return;
       }
       await new Promise((resolve) => setTimeout(resolve, intervalMs));
     }
     this.refreshObserver();
-    this.scrollToHashOnLoad();
+    this.scrollToAnchorOnLoad();
   }
 
   // Sidebar item click: when the target section is on the CURRENT page, scroll
-  // to it directly — deterministic and independent of the router (a same-group
-  // click is a fragment-only nav, which the NavigationEnd handler skips).
-  // Cross-group items find no section here and fall through to routerLink +
-  // the NavigationEnd handler on the new page.
+  // to it directly — deterministic and independent of the router (the routerLink
+  // still fires but resolves to the same group, so the NavigationEnd handler
+  // skips it). Cross-group items find no section here and fall through to the
+  // routerLink + NavigationEnd handler on the new page.
   protected onItem(anchor: string): void {
     this.navigated.emit();
     const section =
@@ -432,26 +438,26 @@ export class SidebarComponent {
     this.activeAnchor.set(anchor);
   }
 
-  // On route change: scroll the main container to the target section when the
-  // URL has a fragment, else back to the top (a fresh group starts at its top).
-  private scrollForNavigation(): void {
-    const anchor = (this.document.defaultView?.location.hash ?? '').replace(/^#/, '');
-    if (anchor) {
-      this.scrollToHashOnLoad();
+  // On a group-page change: scroll main to the target section (the URL's anchor
+  // segment), else to the top (a fresh group starts at its top).
+  private scrollForNavigation(url: string): void {
+    if (this.scrollToAnchor(this.anchorFromUrl(url))) {
       return;
     }
     const main = this.document.querySelector('main.main') as HTMLElement | null;
     main?.scrollTo({ top: 0, behavior: 'auto' });
   }
 
-  // On initial mount, if the URL has #anchor, scroll the main container
-  // to that section instantly (no smooth scroll on load — feels janky).
-  private scrollToHashOnLoad(): void {
-    const win = this.document.defaultView;
-    const rawHash = win?.location.hash ?? '';
-    const anchor = rawHash.startsWith('#') ? rawHash.slice(1) : '';
+  // On initial mount, jump to the section named by the URL's anchor segment.
+  private scrollToAnchorOnLoad(): void {
+    this.scrollToAnchor(this.anchorFromUrl(this.router.url));
+  }
+
+  // Scroll main to `anchor`'s section and mark it active. Returns false when the
+  // section isn't on the page (no anchor / unknown / not mounted yet).
+  private scrollToAnchor(anchor: string): boolean {
     if (!anchor) {
-      return;
+      return false;
     }
     const section =
       this.anchorToSection.get(anchor) ??
@@ -459,7 +465,7 @@ export class SidebarComponent {
         `[data-anchor="${anchor}"]`,
       ) as HTMLElement | null);
     if (!section) {
-      return;
+      return false;
     }
 
     this.activeAnchor.set(anchor);
@@ -476,6 +482,34 @@ export class SidebarComponent {
     } else {
       section.scrollIntoView({ behavior: 'auto', block: 'start' });
     }
+
+    return true;
+  }
+
+  // '/components/button' -> 'components/actions'; '/foundations/color' ->
+  // 'foundations'; '/changelog' -> 'changelog'; '/' -> ''.
+  private groupPathForUrl(url: string): string {
+    const segments = url.split('/').filter(Boolean);
+    if (segments.length === 0) {
+      return '';
+    }
+    if (segments.length === 1) {
+      return segments[0];
+    }
+    const [area, anchor] = segments;
+
+    return groupForAnchor(area, anchor)?.path ?? area;
+  }
+
+  // The `<anchor>` of a flat `/<area>/<anchor>` URL, else '' (home / bare page).
+  private anchorFromUrl(url: string): string {
+    const segments = url.split('?')[0].split('/').filter(Boolean);
+
+    return segments.length >= 2 ? segments[1] : '';
+  }
+
+  private currentArea(): string {
+    return this.router.url.split('?')[0].split('/').filter(Boolean)[0] ?? '';
   }
 
   protected toggleCollapsed(): void {
@@ -494,6 +528,14 @@ export class SidebarComponent {
     return this.activeAnchor() === anchor;
   }
 
+  // A group header is active when the active section belongs to it (the flat URL
+  // shares the `/components/` prefix across groups, so prefix-match can't do it).
+  protected isGroupActive(group: NavGroup): boolean {
+    const active = this.activeAnchor();
+
+    return group.items.some((item) => item.anchor === active);
+  }
+
   private refreshObserver(): void {
     this.observer?.disconnect();
     this.intersecting.clear();
@@ -503,6 +545,7 @@ export class SidebarComponent {
     const sections = Array.from(
       this.document.querySelectorAll<HTMLElement>('[data-anchor]'),
     );
+    this.multiSection = sections.length > 1;
     if (sections.length === 0) {
       this.observer = null;
       // Landing (home) has no spy sections — clear any stale anchor so the URL
