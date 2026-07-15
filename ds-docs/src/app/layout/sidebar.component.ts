@@ -96,7 +96,7 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
                 [routerLink]="'/' + group.path"
                 [fragment]="item.anchor"
                 [class.is-active]="isActive(item.anchor)"
-                (click)="navigated.emit()"
+                (click)="onItem(item.anchor)"
               >
                 <span class="link-label">
                   {{ item.label }}
@@ -405,6 +405,30 @@ export class SidebarComponent {
     }
     this.refreshObserver();
     this.scrollToHashOnLoad();
+  }
+
+  // Sidebar item click: when the target section is on the CURRENT page, scroll
+  // to it directly — deterministic and independent of the router (a same-group
+  // click is a fragment-only nav, which the NavigationEnd handler skips).
+  // Cross-group items find no section here and fall through to routerLink +
+  // the NavigationEnd handler on the new page.
+  protected onItem(anchor: string): void {
+    this.navigated.emit();
+    const section =
+      this.anchorToSection.get(anchor) ??
+      (this.document.querySelector(`[data-anchor="${anchor}"]`) as HTMLElement | null);
+    const main = this.document.querySelector('main.main') as HTMLElement | null;
+    if (!section || !main) {
+      return;
+    }
+    const topbarHeight = this.computeTopbarHeight();
+    const containerTop = main.getBoundingClientRect().top;
+    const targetTop = section.getBoundingClientRect().top;
+    main.scrollTo({
+      top: main.scrollTop + (targetTop - containerTop) - topbarHeight,
+      behavior: 'auto',
+    });
+    this.activeAnchor.set(anchor);
   }
 
   // On route change: scroll the main container to the target section when the
