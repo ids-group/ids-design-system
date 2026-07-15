@@ -30,17 +30,24 @@ import type {
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class IconButtonComponent {
+  /** Icon to render — the button's only visible content. */
   readonly icon = input.required<IconName>();
+  /** Accessible name — required since the button has no visible text. */
   readonly ariaLabel = input.required<string>();
+  /** Fill style — standard (chromeless), filled, tonal, or outlined. */
   readonly variant = input<IconButtonVariant>('standard');
   /** Brand/status hue family (shared with ds-button). `variant` is the fill
       axis; `color` recolours the accent the fill consumes. Default primary. */
   readonly color = input<ButtonColor>('primary');
+  /** Button size — sm/md/lg, matches the field/button height scale. */
   readonly size = input<IconButtonSize>('md');
+  /** Native `button` type attribute. */
   readonly type = input<IconButtonType>('button');
+  /** Disables the button and blocks `pressed`. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Toggle state — renders the pressed/active look and sets aria-pressed. */
   readonly selected = input(false, { transform: booleanAttribute });
+  /** Fires on click, unless disabled. */
   readonly pressed = output<MouseEvent>();
 
   protected readonly classes = computed(() => {

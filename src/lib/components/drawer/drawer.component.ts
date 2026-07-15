@@ -31,10 +31,15 @@ let nextId = 0;
 export class DrawerComponent implements OnDestroy {
   private readonly doc = inject(DOCUMENT);
 
+  /** Open state, two-way bound. */
   readonly open = model<boolean>(false);
+  /** Panel size — sm/md/lg. */
   readonly size = input<DrawerSize>('md');
+  /** Edge the panel slides in from. */
   readonly placement = input<DrawerPlacement>('right');
+  /** Drawer title, shown in the header and used for `aria-labelledby`. */
   readonly title = input.required<string>();
+  /** Fires once the close (slide-out) animation finishes. */
   readonly closed = output<void>();
 
   protected readonly titleId = `ds-drawer-title-${++nextId}`;

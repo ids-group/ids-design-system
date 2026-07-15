@@ -17,7 +17,10 @@ import type { TooltipPlacement } from './tooltip.types';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class TooltipPanelComponent {
+  /** Tooltip text content. */
   readonly text = input.required<string>();
+  /** Side of the trigger the panel is positioned on; also drives the arrow class. */
   readonly placement = input.required<TooltipPlacement>();
+  /** Element `id`, referenced by the trigger's `aria-describedby`. */
   readonly panelId = input<string>('');
 }

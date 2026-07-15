@@ -65,6 +65,7 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
     '--ds-popover-arrow-size',
   ];
 
+  /** Cross-axis alignment of the panel against the trigger. */
   readonly align = input<PopoverAlign>('start');
   /** Which side of the trigger the panel prefers to appear on. */
   readonly placement = input<PopoverPlacement>('bottom');

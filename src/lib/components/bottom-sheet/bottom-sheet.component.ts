@@ -35,8 +35,11 @@ let nextId = 0;
   },
 })
 export class BottomSheetComponent implements OnDestroy {
+  /** Open state, two-way bound. */
   readonly open = model<boolean>(false);
+  /** Sheet title, shown in the header and used for `aria-labelledby`. */
   readonly title = input.required<string>();
+  /** Fires once the close (leave) animation finishes. */
   readonly closed = output<void>();
 
   protected readonly titleId = `ds-bottom-sheet-title-${++nextId}`;

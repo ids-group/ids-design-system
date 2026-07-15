@@ -25,14 +25,21 @@ import type { SplitButtonItem, SplitButtonVariant } from './split-button.types';
   },
 })
 export class SplitButtonComponent {
+  /** Label text on the main button. */
   readonly label = input<string>('');
+  /** Visual style — primary (solid) or outline. */
   readonly variant = input<SplitButtonVariant>('primary');
+  /** Icon shown on the main button, before the label. */
   readonly icon = input<IconName | null>(null);
+  /** Disables both the main button and the dropdown trigger. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Items listed in the dropdown menu. */
   readonly menuItems = input<readonly SplitButtonItem[]>([]);
   /** Accessible name for the dropdown trigger. */
   readonly menuLabel = input<string>('More actions');
+  /** Fires when the main button (not the dropdown trigger) is clicked. */
   readonly pressed = output<MouseEvent>();
+  /** Fires with the chosen menu item. */
   readonly itemSelected = output<SplitButtonItem>();
 
   protected onItemSelect(item: SplitButtonItem): void {

@@ -29,11 +29,17 @@ export class ModalComponent implements OnDestroy {
   private readonly doc = inject(DOCUMENT);
   protected readonly preview = inject(DsStaticPreview);
 
+  /** Open state, two-way bound. */
   readonly open = model<boolean>(false);
+  /** Dialog width — sm/md/lg/xl/fullscreen. */
   readonly size = input<ModalSize>('md');
+  /** Renders the error styling on the modal card. */
   readonly error = input(false, { transform: booleanAttribute });
+  /** Dialog title, shown in the header and used for `aria-labelledby`. */
   readonly title = input.required<string>();
+  /** Fires once the close (leave) animation finishes. */
   readonly closed = output<void>();
+  /** Emit this yourself from a confirm action in the projected content — not fired by the modal itself. */
   readonly confirmed = output<void>();
   /** When false, clicking the scrim does not close the modal. */
   readonly closeOnBackdrop = input(true, { transform: booleanAttribute });

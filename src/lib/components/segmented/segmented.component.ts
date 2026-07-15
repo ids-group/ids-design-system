@@ -23,8 +23,11 @@ import type { SegmentedOption } from './segmented.types';
   },
 })
 export class SegmentedComponent {
+  /** Segments to render — each needs a `label` and `value`, optional `icon`/`disabled`. */
   readonly options = input<readonly SegmentedOption[]>([]);
+  /** Selected segment's `value`, two-way bound. */
   readonly value = model<string>('');
+  /** Accessible name for the segmented control (radiogroup role). */
   readonly ariaLabel = input<string | null>(null);
 
   private readonly buttons = viewChildren<ElementRef<HTMLButtonElement>>('seg');

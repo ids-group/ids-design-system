@@ -21,12 +21,19 @@ let nextId = 0;
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class ModalCardComponent {
+  /** Card width — sm/md/lg/xl/fullscreen. */
   readonly size = input<ModalSize>('md');
+  /** Renders the error styling (icon badge and card accent). */
   readonly error = input(false, { transform: booleanAttribute });
+  /** Card title, shown in the header and used for `aria-labelledby`. */
   readonly title = input.required<string>();
+  /** Shows the header close button. */
   readonly showClose = input(true, { transform: booleanAttribute });
+  /** Icon badge shown next to the title. */
   readonly icon = input<IconName | null>(null);
+  /** ARIA role for the dialog element. */
   readonly dialogRole = input<'dialog' | 'alertdialog'>('dialog');
+  /** Fires when the header close button is clicked. */
   readonly closed = output<void>();
 
   protected readonly titleId = `ds-modal-title-${++nextId}`;
