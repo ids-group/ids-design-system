@@ -1,3 +1,5 @@
+@use 'styles/breakpoints' as bp;
+
 /* Shared demo-stage styling for the "proposed new components" doc sections.
    Mirrors the per-section .states grid used elsewhere, factored out so the new
    sections don't each duplicate it. Compiled per component (emulated). */
@@ -12,12 +14,22 @@
 }
 .states--cols-2 {
   grid-template-columns: repeat(2, 1fr);
+
+  @include bp.down(xs) { grid-template-columns: minmax(0, 1fr); }
 }
 .states--cols-3 {
   grid-template-columns: repeat(3, 1fr);
+
+  @include bp.down(md) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  @include bp.down(xs) { grid-template-columns: minmax(0, 1fr); }
 }
 .states--cols-4 {
   grid-template-columns: repeat(4, 1fr);
+
+  @include bp.down(md) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  @include bp.down(xs) { grid-template-columns: minmax(0, 1fr); }
 }
 
 .state-cell {

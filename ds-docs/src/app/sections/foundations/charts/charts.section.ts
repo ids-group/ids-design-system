@@ -155,7 +155,7 @@ function stackBarH(value: number): number {
   imports: [IconComponent, SkeletonComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './charts.section.html',
-  styleUrls: ['./charts.section.scss', './charts.responsive.scss'],
+  styleUrl: './charts.section.scss',
 })
 export class ChartsSection {
   protected readonly cats = CATEGORICAL;

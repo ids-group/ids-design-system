@@ -1,3 +1,4 @@
+@use 'styles/breakpoints' as bp;
 
     /* ---------- Demo panes ---------- */
     .demo-grid {
@@ -5,6 +6,8 @@
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: var(--space-4);
       margin-top: var(--space-3);
+
+      @include bp.down(md) { grid-template-columns: minmax(0, 1fr); }
     }
     .scroll-pane {
       min-width: 0;
@@ -84,6 +87,8 @@
       gap: var(--space-2) var(--space-4);
       margin-top: var(--space-3);
       max-width: var(--col-cap-text);
+
+      @include bp.down(md) { grid-template-columns: 1fr; }
     }
     .spec dt {
       font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-base) var(--font-sans);

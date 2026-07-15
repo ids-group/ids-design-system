@@ -14,7 +14,6 @@ import {
   templateUrl: './search.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',
-    '../../../shared/section-demo.responsive.scss',
     './search.section.scss',
   ],
 })

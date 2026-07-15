@@ -13,7 +13,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './list.section.html',
-  styleUrls: ['../../../shared/section-demo.scss', '../../../shared/section-demo.responsive.scss'],
+  styleUrl: '../../../shared/section-demo.scss',
 })
 export class ListSection {
   protected readonly selectedItem = signal<string | null>('notifications');

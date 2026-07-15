@@ -10,7 +10,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   templateUrl: './radio.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',
-    '../../../shared/section-demo.responsive.scss',
     './radio.section.scss',
   ],
 })

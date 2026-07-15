@@ -10,7 +10,7 @@ import {
   selector: 'ds-page-header',
   standalone: true,
   templateUrl: './page-header.component.html',
-  styleUrls: ['./page-header.component.scss', './page-header.component.responsive.scss'],
+  styleUrl: './page-header.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class PageHeaderComponent {

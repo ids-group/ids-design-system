@@ -1,3 +1,4 @@
+@use 'styles/breakpoints' as bp;
 
     .muted { color: var(--text-tertiary); }
 
@@ -8,6 +9,15 @@
       gap: var(--space-4);
       align-items: stretch;
       margin-top: var(--space-3);
+
+      /* Matrix mixes a row-label column with 3 data columns — reflowing to a
+         single column would break the row/column relationship, so it scrolls
+         horizontally instead (irreducibly wide content, genuine containment). */
+      @include bp.down(xs) {
+        grid-template-columns: 100px repeat(3, minmax(160px, 1fr));
+        max-width: 100%;
+        overflow-x: auto;
+      }
     }
     .matrix > .t-overline { align-self: end; padding-bottom: var(--space-1); }
     .matrix__row-label { color: var(--text-tertiary); align-self: center; }
@@ -23,6 +33,10 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: var(--space-4);
       margin-top: var(--space-3);
+
+      @include bp.down(lg) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+      @include bp.down(xs) { grid-template-columns: minmax(0, 1fr); }
     }
     .card-head {
       display: flex; align-items: baseline; justify-content: space-between;

@@ -1,5 +1,0 @@
-@use 'styles/breakpoints' as bp;
-
-@include bp.down(sm) {
-  .showcase-grid { grid-template-columns: 1fr; }
-}

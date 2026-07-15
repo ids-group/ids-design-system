@@ -3,8 +3,8 @@
 /* 6-cell demo (48px cell + 8px gap = 328px) overruns the 288px available
    inside .demo-panel's padding at 360/390. Shrink cell size + gap via the
    component's own public tokens so cells stay legible instead of wrapping. */
-@include bp.down(xs) {
-  ds-otp-input {
+ds-otp-input {
+  @include bp.down(xs) {
     --ds-otp-cell-w: var(--space-10);
     --ds-otp-cell-h: var(--space-12);
     --ds-otp-gap: var(--space-1);

@@ -71,7 +71,7 @@ interface DayCell {
   standalone: true,
   imports: [IconComponent, CalendarDayComponent, FieldMessageComponent, A11yModule],
   templateUrl: './date-picker.component.html',
-  styleUrls: ['./date-picker.component.scss', './date-picker.component.responsive.scss'],
+  styleUrl: './date-picker.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   providers: [
     {

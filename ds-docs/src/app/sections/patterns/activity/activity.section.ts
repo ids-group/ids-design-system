@@ -30,10 +30,7 @@ interface ActivityEntry {
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './activity.section.html',
-  styleUrls: [
-    './activity.section.scss',
-    './activity.responsive.scss',
-  ],
+  styleUrl: './activity.section.scss',
 })
 export class ActivitySection {
   protected readonly lede =

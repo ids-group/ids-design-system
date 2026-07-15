@@ -14,9 +14,7 @@ import {
   templateUrl: './select.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',
-    '../../../shared/section-demo.responsive.scss',
     './select.section.scss',
-    './select.responsive.scss',
   ],
 })
 export class SelectSection {

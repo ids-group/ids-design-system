@@ -10,7 +10,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   templateUrl: './switch.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',
-    '../../../shared/section-demo.responsive.scss',
     './switch.section.scss',
   ],
 })
