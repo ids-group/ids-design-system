@@ -13,6 +13,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './layout-primitives.section.html',
-  styleUrls: ['../../../shared/section-demo.scss', '../../../shared/section-demo.responsive.scss'],
+  styleUrl: '../../../shared/section-demo.scss',
 })
 export class LayoutPrimitivesSection {}

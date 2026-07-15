@@ -18,7 +18,6 @@ import {
   templateUrl: './dropzone.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',
-    '../../../shared/section-demo.responsive.scss',
     './dropzone.section.scss',
   ],
 })

@@ -29,10 +29,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './page-header.section.html',
-  styleUrls: [
-    './page-header.section.scss',
-    './page-header.responsive.scss',
-  ],
+  styleUrl: './page-header.section.scss',
 })
 export class PageHeaderSection {
   protected readonly trail: BreadcrumbItem[] = [

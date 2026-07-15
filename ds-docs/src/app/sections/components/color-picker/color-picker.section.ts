@@ -8,7 +8,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [ColorPickerComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './color-picker.section.html',
-  styleUrls: ['../../../shared/section-demo.scss', '../../../shared/section-demo.responsive.scss'],
+  styleUrl: '../../../shared/section-demo.scss',
 })
 export class ColorPickerSection {
   protected readonly brand = signal('#2F54FF');

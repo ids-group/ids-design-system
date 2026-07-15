@@ -1,3 +1,4 @@
+@use 'styles/breakpoints' as bp;
 
     .stage {
       margin-top: var(--space-3);
@@ -17,6 +18,8 @@
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
       gap: var(--space-6);
+
+      @include bp.down(md) { grid-template-columns: 1fr; gap: var(--space-3); }
     }
     .form-section__body {
       display: grid;
@@ -26,9 +29,21 @@
       display: grid;
       gap: var(--space-3);
     }
-    .row--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .row--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .row--6-12 { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+    .row--2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+
+      @include bp.down(md) { grid-template-columns: 1fr; }
+    }
+    .row--3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+
+      @include bp.down(md) { grid-template-columns: 1fr; }
+    }
+    .row--6-12 {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+
+      @include bp.down(md) { grid-template-columns: 1fr; }
+    }
     .fieldset {
       border: var(--border-width-default) solid var(--border-divider);
       border-radius: var(--radius-md);
@@ -61,6 +76,8 @@
       border: var(--border-width-default) solid var(--border-divider);
       border-radius: var(--radius-md);
       padding: var(--space-3) var(--space-4);
+
+      @include bp.down(md) { grid-template-columns: 1fr; }
     }
     .inline-edit__label {
       color: var(--text-secondary);

@@ -1,3 +1,4 @@
+@use 'styles/breakpoints' as bp;
 
     .pairs {
       margin-top: var(--space-3);
@@ -11,11 +12,18 @@
       overflow: hidden;
       display: grid;
       grid-template-columns: minmax(220px, 1fr) minmax(0, 2fr);
+
+      @include bp.down(md) { grid-template-columns: 1fr; }
     }
     .pair__head {
       padding: var(--space-4) var(--space-5);
       border-right: var(--border-width-default) solid var(--border-divider);
       background: var(--surface-secondary);
+
+      @include bp.down(md) {
+        border-right: 0;
+        border-bottom: var(--border-width-default) solid var(--border-divider);
+      }
     }
     .pair__head .muted {
       color: var(--text-secondary);
@@ -24,6 +32,8 @@
     .pair__body {
       display: grid;
       grid-template-columns: 1fr 1fr;
+
+      @include bp.down(sm) { grid-template-columns: 1fr; }
     }
     .tile {
       padding: var(--space-3) var(--space-4);
@@ -35,6 +45,11 @@
     .tile--bad {
       background: var(--error-subtitle, var(--surface-subtitle));
       border-left: var(--border-width-default) solid var(--border-divider);
+
+      @include bp.down(sm) {
+        border-left: 0;
+        border-top: var(--border-width-default) solid var(--border-divider);
+      }
     }
     .tile__tag {
       display: inline-flex;

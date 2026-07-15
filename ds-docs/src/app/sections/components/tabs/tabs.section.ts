@@ -19,7 +19,6 @@ import {
   templateUrl: './tabs.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',
-    '../../../shared/section-demo.responsive.scss',
     './tabs.section.scss',
   ],
 })

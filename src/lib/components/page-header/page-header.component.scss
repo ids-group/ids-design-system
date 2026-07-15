@@ -5,6 +5,8 @@
    the .page-header rules in patterns.css are the dropped
    duplicate — not sourced from here.
    ============================================================ */
+@use '../../styles/breakpoints' as bp;
+
 :host {
   /* Public --ds-page-header-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_page-header-eyebrow-text-color:   var(--ds-page-header-eyebrow-text-color,   var(--text-tertiary));
@@ -131,6 +133,8 @@
     gap: var(--space-2);
     flex-shrink: 0;
     align-self: flex-start;
+
+    @include bp.down(md) { width: 100%; }
   }
 
   .meta {

@@ -10,7 +10,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   templateUrl: './tree.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',
-    '../../../shared/section-demo.responsive.scss',
     './tree.section.scss',
   ],
 })

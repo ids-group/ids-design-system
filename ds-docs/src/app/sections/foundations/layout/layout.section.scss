@@ -1,3 +1,5 @@
+@use 'styles/breakpoints' as bp;
+
     /* ---------- Breakpoints list ---------- */
     .bp-list { display: grid; gap: var(--space-2); margin-top: var(--space-3); }
     .bp-row {
@@ -9,6 +11,8 @@
       background: var(--surface-default);
       border: var(--border-width-default) solid var(--border-divider);
       border-radius: var(--radius-sm);
+
+      @include bp.down(md) { grid-template-columns: 1fr; }
     }
     .bp-row__tok { color: var(--text-secondary); font-size: 12px; }
     .bp-row__desc { color: var(--text-secondary); }
@@ -76,6 +80,8 @@
       background: var(--surface-default);
       border: var(--border-width-default) solid var(--border-divider);
       border-radius: var(--radius-sm);
+
+      @include bp.down(md) { grid-template-columns: 1fr; }
     }
     .cap-row__tok { color: var(--text-secondary); font-size: 12px; }
     .cap-row__use { color: var(--text-secondary); }

@@ -19,7 +19,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   templateUrl: './banner.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',
-    '../../../shared/section-demo.responsive.scss',
     './banner.section.scss',
   ],
 })

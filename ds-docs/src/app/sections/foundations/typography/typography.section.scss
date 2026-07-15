@@ -1,3 +1,4 @@
+@use 'styles/breakpoints' as bp;
 
     .row { display: flex; gap: var(--space-4); align-items: stretch; flex-wrap: wrap; margin-top: var(--space-3); }
 
@@ -22,8 +23,21 @@
       background: var(--surface-secondary);
       border-bottom: var(--border-width-default) solid var(--border-divider);
       align-items: center;
+
+      @include bp.down(lg) { display: none; }
     }
-    .ramp__row + .ramp__row { border-top: var(--border-width-default) solid var(--border-divider); }
+    .ramp__row {
+      @include bp.down(lg) {
+        grid-template-columns: 1fr;
+        gap: var(--space-2);
+        padding: var(--space-4);
+      }
+    }
+    .ramp__row + .ramp__row {
+      @include bp.down(lg) {
+        border-top: var(--border-width-default) solid var(--border-divider);
+      }
+    }
     .ramp__label { display: grid; gap: var(--space-0-5); min-width: 0; }
     .ramp__cls { color: var(--text-primary); font-size: 12px; }
     .ramp__token { color: var(--text-tertiary); font-size: 11px; }
@@ -36,6 +50,8 @@
       grid-template-columns: 1fr 1fr;
       gap: var(--space-4);
       margin-top: var(--space-3);
+
+      @include bp.down(lg) { grid-template-columns: 1fr; }
     }
     .mono-card {
       display: grid;

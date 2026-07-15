@@ -1,3 +1,4 @@
+@use 'styles/breakpoints' as bp;
 
     /* ---------- Stage ---------- */
     .stage {
@@ -7,6 +8,12 @@
       border: var(--border-width-default) solid var(--border-divider);
       border-radius: var(--radius-lg);
       max-width: 100%;
+
+      /* Lib sets .actions { width: 100% } below 720px but keeps it nowrap — the
+         3-button Default demo needs to reflow under the title at phone widths. */
+      @include bp.down(sm) {
+        ::ng-deep .actions { flex-wrap: wrap; }
+      }
     }
 
     /* Pseudo content area under <ds-page-header> so the header's

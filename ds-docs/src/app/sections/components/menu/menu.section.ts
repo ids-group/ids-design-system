@@ -21,6 +21,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './menu.section.html',
-  styleUrls: ['./menu.section.scss', './menu.responsive.scss'],
+  styleUrl: './menu.section.scss',
 })
 export class MenuSection {}

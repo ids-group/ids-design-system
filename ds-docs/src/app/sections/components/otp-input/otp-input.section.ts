@@ -10,8 +10,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   templateUrl: './otp-input.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',
-    '../../../shared/section-demo.responsive.scss',
-    './otp-input.responsive.scss',
+    './otp-input.section.scss',
   ],
 })
 export class OtpInputSection {

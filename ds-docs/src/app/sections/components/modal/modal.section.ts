@@ -32,7 +32,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   templateUrl: './modal.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',
-    '../../../shared/section-demo.responsive.scss',
     './modal.section.scss',
   ],
 })
