@@ -887,11 +887,18 @@ export class DatePickerComponent
 
   /** Parse the combined range text, flag malformed segments, commit on blur. */
   private applyRangeText(text: string, spec: DateFormatSpec, commit: boolean): void {
-    const perDate = spec.segments.reduce((sum, seg) => sum + seg.length, 0);
-    const digits = text.replace(/\D/g, '').length;
+    const layout = rangeFieldLayout(spec);
+    const slots = parseFieldText(text, layout);
+    const perDate = spec.segments.length;
+    const startFilled = slots
+      .slice(0, perDate)
+      .every((s, i) => s.length === spec.segments[i].length);
+    const endFilled = slots
+      .slice(perDate, perDate * 2)
+      .every((s, i) => s.length === spec.segments[i].length);
     const [start, end] = parseDateRange(text, spec);
-    const startBad = digits >= perDate && (!start || this.isDayDisabled(start));
-    const endBad = digits >= perDate * 2 && (!end || this.isDayDisabled(end));
+    const startBad = startFilled && (!start || this.isDayDisabled(start));
+    const endBad = endFilled && (!end || this.isDayDisabled(end));
     this.rangeInvalid.set(startBad || endBad);
     if (start && end && !startBad && !endBad) {
       const ordered: RangeValue =

@@ -103,16 +103,16 @@ export function applyMask(raw: string, spec: DateFormatSpec): string {
   return out;
 }
 
-export function parseDate(text: string, spec: DateFormatSpec): Date | null {
-  const digits = text.replace(/\D/g, '');
-  if (digits.length !== totalDigits(spec)) {
-    return null;
-  }
+/** Build a date from three per-slot digit strings; null if any slot isn't full-width or invalid. */
+export function parseSegments(segments: string[], spec: DateFormatSpec): Date | null {
   const values: Record<'D' | 'M' | 'Y', number> = { D: 1, M: 1, Y: 2000 };
-  let index = 0;
-  for (const segment of spec.segments) {
-    values[segment.type] = parseInt(digits.slice(index, index + segment.length), 10);
-    index += segment.length;
+  for (let index = 0; index < spec.segments.length; index++) {
+    const seg = spec.segments[index];
+    const digits = segments[index] ?? '';
+    if (digits.length !== seg.length) {
+      return null;
+    }
+    values[seg.type] = parseInt(digits, 10);
   }
   const { D: day, M: month, Y: year } = values;
   if (month < 1 || month > 12 || day < 1 || day > 31) {
@@ -128,6 +128,10 @@ export function parseDate(text: string, spec: DateFormatSpec): Date | null {
   }
 
   return date;
+}
+
+export function parseDate(text: string, spec: DateFormatSpec): Date | null {
+  return parseSegments(parseFieldText(text, singleFieldLayout(spec)), spec);
 }
 
 /** Separator between the two dates of a range, in the field and its placeholder. */
@@ -172,14 +176,12 @@ export function parseDateRange(
   text: string,
   spec: DateFormatSpec,
 ): [Date | null, Date | null] {
-  const perDate = totalDigits(spec);
-  const digits = text.replace(/\D/g, '');
-  const startDigits = digits.slice(0, perDate);
-  const endDigits = digits.slice(perDate, perDate * 2);
+  const slots = parseFieldText(text, rangeFieldLayout(spec));
+  const perDate = spec.segments.length;
 
   return [
-    startDigits.length === perDate ? parseDate(startDigits, spec) : null,
-    endDigits.length === perDate ? parseDate(endDigits, spec) : null,
+    parseSegments(slots.slice(0, perDate), spec),
+    parseSegments(slots.slice(perDate, perDate * 2), spec),
   ];
 }
 
