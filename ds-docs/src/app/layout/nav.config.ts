@@ -25,7 +25,7 @@ export interface NavGroup {
 export const NAV: NavGroup[] = [
   {
     title: 'Start',
-    path: 'home',
+    path: '',
     items: [{ label: 'Start here', anchor: 'home' }],
   },
   {
@@ -202,3 +202,45 @@ export const NAV: NavGroup[] = [
     items: [{ label: 'Changelog', anchor: 'changelog' }],
   },
 ];
+
+// ---- URL <-> group resolution ----------------------------------------------
+// URLs are flat `/<area>/<anchor>` (e.g. /components/button, /foundations/color)
+// — the group name (actions/forms-inputs/…) never appears. Home is `/` and
+// changelog `/changelog` (single-section pages carry no anchor segment).
+
+const GROUP_BY_ANCHOR = new Map<string, NavGroup>();
+for (const group of NAV) {
+  const area = group.path.split('/')[0];
+  for (const item of group.items) {
+    GROUP_BY_ANCHOR.set(`${area}/${item.anchor}`, group);
+  }
+}
+
+/** URL area segment for a group path ('components/actions' -> 'components'). */
+export function areaOfPath(path: string): string {
+  return path.split('/')[0];
+}
+
+/** The nav group that owns `anchor` within `area`, or undefined. */
+export function groupForAnchor(area: string, anchor: string): NavGroup | undefined {
+  return GROUP_BY_ANCHOR.get(`${area}/${anchor}`);
+}
+
+/** First anchor of the group living at `path`. */
+export function firstAnchorOfPath(path: string): string {
+  return NAV.find((group) => group.path === path)?.items[0]?.anchor ?? '';
+}
+
+/** Router URL for a group's landing (its first section). */
+export function urlForGroupPath(path: string): string {
+  if (path === '' || path === 'changelog') {return `/${path}`;}
+
+  return `/${areaOfPath(path)}/${firstAnchorOfPath(path)}`;
+}
+
+/** Router URL for a specific anchor inside its group. */
+export function urlForAnchor(groupPath: string, anchor: string): string {
+  if (groupPath === '' || groupPath === 'changelog') {return `/${groupPath}`;}
+
+  return `/${areaOfPath(groupPath)}/${anchor}`;
+}

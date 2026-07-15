@@ -56,6 +56,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the panel clamps to `calc(100vw - var(--space-4))` and the presets column stacks below the day
   grid instead of sitting beside it, replacing the fixed 454px-wide side-by-side layout that
   overflowed the screen.
+- **`ds-date-picker` text entry is now segment-aware — editing one field no longer disturbs the
+  others or the caret.** Typing, Backspace and Delete stay within the focused `MM` / `DD` / `YYYY`
+  field (single and range mode); previously correcting one segment could shift digits across the
+  `/` separators and fling the caret to the end.
 
 ## 0.5.1 — 2026-07-13
 

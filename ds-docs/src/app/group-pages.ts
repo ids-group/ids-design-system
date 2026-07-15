@@ -105,7 +105,7 @@ export interface GroupPageDef {
 }
 
 export const GROUP_PAGES: readonly GroupPageDef[] = [
-  { path: 'home', sections: [HomeSection] },
+  { path: '', sections: [HomeSection] },
   { path: 'components/actions', title: 'Actions', sections: [ButtonSection, SegmentedSection, IconButtonSection, SplitButtonSection, LinkSection] },
   { path: 'components/forms-inputs', title: 'Forms & inputs', sections: [AutocompleteSection, CheckboxSection, ColorPickerSection, DatePickerSection, DropzoneSection, InputSection, MultiSelectSection, NumberStepperSection, OtpInputSection, RadioSection, SearchSection, SelectSection, SliderSection, SwitchSection, TextareaSection, TimePickerSection, W3wSection] },
   { path: 'components/navigation', title: 'Navigation', sections: [BreadcrumbsSection, MenuSection, PaginationSection, SidenavSection, StepperSection, TabsSection, TopbarSection] },
