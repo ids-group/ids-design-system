@@ -32,23 +32,25 @@ import {
 import { DS_CONFIG } from '../../config/ds-config';
 import {
   type DateFormatSpec,
+  type DisplayPart,
+  type FieldLayout,
   applyMask,
   applyMaskRange,
   caretToSlot,
+  displayParts,
   editBackspace,
   editDelete,
   editType,
   formatDate,
   formatRange,
   fullDateLabel,
-  isMaskPrefix,
   monthLabels,
   parseDate,
   parseDateRange,
   parseFieldText,
   rangeFieldLayout,
   rangeMask,
-  renderFieldText,
+  renderFieldValue,
   resolveDateFormat,
   singleFieldLayout,
   slotToCaret,
@@ -97,18 +99,37 @@ export class DatePickerComponent
 {
   constructor() {
     super();
+    // Renders through renderFieldValue so the field is always the fixed-width
+    // `_`-padded string the mask overlay and caret math expect — even a
+    // partial range (only the start date picked) pads the empty end date.
     effect(() => {
       const spec = this.formatSpec();
       const value = this.value();
+      const layout = this.layout();
       if (this.editing) {
         return;
       }
       if (this.mode() === 'single') {
-        this.inputText.set(formatDate(value as Date | null, spec));
+        const date = value as Date | null;
+        this.inputText.set(
+          date
+            ? formatDate(date, spec)
+            : renderFieldValue(layout.slots.map(() => ''), layout),
+        );
 
         return;
       }
-      this.rangeText.set(formatRange(value as RangeValue | null, spec));
+      const single = singleFieldLayout(spec);
+      const [start, end] = (value as RangeValue | null) ?? [null, null];
+      const startSegments = start
+        ? parseFieldText(formatDate(start, spec), single)
+        : single.slots.map(() => '');
+      const endSegments = end
+        ? parseFieldText(formatDate(end, spec), single)
+        : single.slots.map(() => '');
+      this.rangeText.set(
+        renderFieldValue([...startSegments, ...endSegments], layout),
+      );
     });
   }
 
@@ -219,6 +240,12 @@ export class DatePickerComponent
       this.resolvedLocale(),
       this.dateFormat() ?? this.config.datePicker?.dateFormat,
     ),
+  );
+  /** Slot/literal layout for the current mode — single date or doubled range. */
+  protected readonly layout = computed<FieldLayout>(() =>
+    this.mode() === 'range'
+      ? rangeFieldLayout(this.formatSpec())
+      : singleFieldLayout(this.formatSpec()),
   );
   protected readonly monthNames = computed(() => monthLabels(this.resolvedLocale()));
   protected readonly weekdays = computed(() =>
@@ -394,18 +421,11 @@ export class DatePickerComponent
    * otherwise clip the last chars of the longer range mask. Digits render with
    * `tabular-nums` so the width never shifts as you type. */
   protected readonly fieldSize = computed(() => this.fieldPlaceholder().length + 1);
-  /** Still-empty tail of the mask, kept visible as a ghost while typing so the
-   *  format never disappears (after "12/" the field reads "12/DD/YYYY"). Shown
-   *  only while the text fills the mask gap-free; a mid-field edit that shortens
-   *  an interior segment would misalign the sliced tail, so it's dropped then. */
-  protected readonly ghostRemainder = computed(() => {
-    const placeholder = this.fieldPlaceholder();
-    const text = this.fieldText();
-
-    return isMaskPrefix(text, placeholder)
-      ? placeholder.slice(text.length)
-      : '';
-  });
+  /** Per-slot overlay runs: digits at normal weight, unfilled positions
+   *  (format letters or `_` padding) muted — see displayParts(). */
+  protected readonly displaySlots = computed<DisplayPart[]>(() =>
+    displayParts(parseFieldText(this.fieldText(), this.layout()), this.layout()),
+  );
 
   // ---- Month / year grid pickers in the calendar header ----
   protected readonly monthMenuOpen = signal(false);
@@ -739,11 +759,7 @@ export class DatePickerComponent
       return;
     }
     event.preventDefault();
-    const spec = this.formatSpec();
-    const layout =
-      this.mode() === 'range'
-        ? rangeFieldLayout(spec)
-        : singleFieldLayout(spec);
+    const layout = this.layout();
     const segments = parseFieldText(element.value, layout);
     const caret = element.selectionStart ?? element.value.length;
     const { slot, offset } = caretToSlot(segments, layout, caret);
@@ -755,7 +771,7 @@ export class DatePickerComponent
     if (!edit) {
       return;
     }
-    const text = renderFieldText(edit.segments, layout);
+    const text = renderFieldValue(edit.segments, layout);
     this.applyEditedText(
       element,
       text,

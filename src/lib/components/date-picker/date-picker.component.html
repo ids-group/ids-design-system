@@ -42,7 +42,6 @@
         [class.masked]="allowInput()"
         [value]="fieldText()"
         [attr.size]="fieldSize()"
-        [attr.placeholder]="fieldPlaceholder()"
         [readOnly]="!allowInput()"
         [disabled]="isDisabled()"
         [attr.aria-expanded]="isOpen()"
@@ -58,24 +57,24 @@
         (keydown.arrowdown)="open(true); $event.preventDefault()"
       />
 
-      <!-- Ghost mask: the typed part mirrored transparently to reserve width,
-           then the unfilled tail in the placeholder colour. Monospace font
-           keeps letters and digits equal width, so the tail never shifts as
-           digits replace the M/D/Y placeholders. aria-hidden — the real input
-           carries the value and (via placeholder) the format. -->
+      <!-- Per-slot overlay: the real input is transparent (see .masked in the
+           SCSS), so this paints every glyph — digits at normal weight, unfilled
+           positions muted. Monospace font keeps letters and digits equal
+           width, so glyphs stay aligned 1:1 with the invisible input's caret. -->
       @if (allowInput()) {
-        <!-- Whitespace-tight on purpose: the ghost paints with `white-space:
-             pre`, so the mirrored content must hug its tags or stray spaces
-             would render and knock the tail out of alignment. -->
-        <!-- eslint-disable ds/template/element-content-newline, ds/template/sibling-blank-line -->
+        <!-- Whitespace-tight on purpose: the overlay paints with `white-space:
+             pre`, so it must hug its tags or stray whitespace would render
+             and shift later glyphs out of alignment. -->
+        <!-- eslint-disable ds/template/element-content-newline -->
         <span
           class="mask-ghost"
           aria-hidden="true"
+          >@for (part of displaySlots(); track $index) {<span
+              [class.muted]="part.muted"
+              >{{ part.text }}</span
+            >}</span
         >
-          <span class="filled">{{ fieldText() }}</span>
-          <span class="rest">{{ ghostRemainder() }}</span>
-        </span>
-        <!-- eslint-enable ds/template/element-content-newline, ds/template/sibling-blank-line -->
+        <!-- eslint-enable ds/template/element-content-newline -->
       }
     </span>
 

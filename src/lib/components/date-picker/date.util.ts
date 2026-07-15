@@ -222,70 +222,22 @@ export function rangeFieldLayout(spec: DateFormatSpec): FieldLayout {
   };
 }
 
-function hasLaterContent(segments: string[], index: number): boolean {
-  for (let later = index + 1; later < segments.length; later++) {
-    if (segments[later].length > 0) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-/** A literal shows once its slot is full or any later slot holds a digit — so
- *  separators keep slots visually aligned even while an earlier one is partial. */
-function literalVisible(
-  segments: string[],
-  layout: FieldLayout,
-  index: number,
-): boolean {
-  if (index >= layout.slots.length - 1) {
-    return false;
-  }
-  const full = segments[index].length === layout.slots[index].maxLength;
-
-  return full || hasLaterContent(segments, index);
-}
-
-/** Split clean mask text (always a renderFieldText output) into per-slot digits. */
+/** Split a fixed-width renderFieldValue output into per-slot digits, read at
+ *  each slot's fixed position — every slot is maxLength wide and every literal
+ *  always present, so a `_` pad or any stray char is simply dropped. */
 export function parseFieldText(text: string, layout: FieldLayout): string[] {
   const segments: string[] = [];
   let position = 0;
   for (let index = 0; index < layout.slots.length; index++) {
-    let digits = '';
-    while (
-      position < text.length &&
-      digits.length < layout.slots[index].maxLength &&
-      /\d/.test(text[position])
-    ) {
-      digits += text[position];
-      position++;
-    }
-    segments.push(digits);
+    const raw = text.slice(position, position + layout.slots[index].maxLength);
+    segments.push(raw.replace(/\D/g, ''));
+    position += layout.slots[index].maxLength;
     if (index < layout.slots.length - 1) {
-      const literal = layout.literals[index];
-      if (text.slice(position, position + literal.length) === literal) {
-        position += literal.length;
-      }
+      position += layout.literals[index].length;
     }
   }
 
   return segments;
-}
-
-export function renderFieldText(
-  segments: string[],
-  layout: FieldLayout,
-): string {
-  let out = '';
-  for (let index = 0; index < layout.slots.length; index++) {
-    out += segments[index];
-    if (literalVisible(segments, layout, index)) {
-      out += layout.literals[index];
-    }
-  }
-
-  return out;
 }
 
 export const PLACEHOLDER_CHAR = '_';
@@ -339,7 +291,8 @@ export function displayParts(segments: string[], layout: FieldLayout): DisplayPa
   return parts;
 }
 
-/** Char offset where slot `index` begins in renderFieldText(segments). */
+/** Char offset where slot `index` begins in the fixed-width value — every
+ *  slot is maxLength wide and every literal always present. */
 export function slotStart(
   segments: string[],
   layout: FieldLayout,
@@ -347,10 +300,7 @@ export function slotStart(
 ): number {
   let position = 0;
   for (let slot = 0; slot < index; slot++) {
-    position += segments[slot].length;
-    if (literalVisible(segments, layout, slot)) {
-      position += layout.literals[slot].length;
-    }
+    position += layout.slots[slot].maxLength + layout.literals[slot].length;
   }
 
   return position;
@@ -373,22 +323,21 @@ export function caretToSlot(
 ): { slot: number; offset: number } {
   let position = 0;
   for (let index = 0; index < layout.slots.length; index++) {
-    const length = segments[index].length;
-    if (caret <= position + length) {
+    const width = layout.slots[index].maxLength;
+    if (caret <= position + width) {
       return { slot: index, offset: Math.max(0, caret - position) };
     }
-    position += length;
-    if (literalVisible(segments, layout, index)) {
-      const literalLength = layout.literals[index].length;
-      if (caret <= position + literalLength) {
-        return { slot: index + 1, offset: 0 };
-      }
-      position += literalLength;
+    position += width;
+    const literalLength =
+      index < layout.literals.length ? layout.literals[index].length : 0;
+    if (caret < position + literalLength) {
+      return { slot: index + 1, offset: 0 };
     }
+    position += literalLength;
   }
   const last = layout.slots.length - 1;
 
-  return { slot: last, offset: segments[last].length };
+  return { slot: last, offset: layout.slots[last].maxLength };
 }
 
 interface SlotEdit {
@@ -491,26 +440,6 @@ export function editDelete(
   }
 
   return null;
-}
-
-/** True when `text` fills the mask left-to-right with no gaps — every char sits
- *  on a matching mask position (digit under M/D/Y, literal under a separator).
- *  The ghost-mask tail (`placeholder.slice(text.length)`) only aligns then;
- *  a mid-field edit can leave a shorter interior segment (e.g. "1/25/2020")
- *  where slicing would misalign, so the ghost tail is dropped instead. */
-export function isMaskPrefix(text: string, placeholder: string): boolean {
-  if (text.length > placeholder.length) {
-    return false;
-  }
-  for (let index = 0; index < text.length; index++) {
-    const maskChar = placeholder[index];
-    const isSlot = maskChar === 'M' || maskChar === 'D' || maskChar === 'Y';
-    if (isSlot ? !/\d/.test(text[index]) : text[index] !== maskChar) {
-      return false;
-    }
-  }
-
-  return true;
 }
 
 export function weekdayLabels(

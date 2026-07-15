@@ -115,14 +115,12 @@
   align-items: center;
 }
 
-/* Ghost mask overlaying the input: the typed prefix is mirrored as transparent
-   text (reserving the exact width) so the unfilled tail lines up right where
-   the caret is. It sits ABOVE the input — the real value and caret still show
-   through the transparent prefix, while the muted tail stays visible whatever
-   background the input picks up (e.g. a dark theme, or the browser's forced-dark
-   auto-painting of form controls). Shares the input's monospace font so digits
-   and the M/D/Y placeholders are equal width — the tail never shifts as digits
-   replace the letters, and the glyphs never collide. */
+/* Per-slot overlay: paints every glyph the field shows — digits at normal
+   weight, unfilled positions (format letters or `_` padding) muted. It sits
+   ABOVE the input, which is fully transparent (see .masked below), so the
+   caret and click-to-position still work against the real (fixed-width)
+   value while only the overlay is visible. Shares the input's monospace font
+   so digits and placeholders stay equal width and aligned 1:1. */
 .mask-ghost {
   position: absolute;
   inset: 0;
@@ -134,11 +132,7 @@
   pointer-events: none;
   overflow: hidden;
 
-  .filled {
-    color: transparent;
-  }
-
-  .rest {
+  .muted {
     color: var(--_date-picker-placeholder-color);
   }
 }
@@ -157,15 +151,12 @@
   padding: 0;
   outline: none;
 
-  &::placeholder {
-    color: var(--_date-picker-placeholder-color);
-  }
-
-  /* When the ghost overlay is active it paints the visible mask; keep the
-     native placeholder attribute for screen readers but hide its paint so the
-     two don't double up. */
-  &.masked::placeholder {
+  /* The mask-ghost overlay paints every visible glyph; the real value stays
+     in the DOM (fixed-width, `_`-padded) purely so the native caret and
+     click-to-position land on the right slot. */
+  &.masked {
     color: transparent;
+    caret-color: var(--text-primary);
   }
 
   &:read-only {
