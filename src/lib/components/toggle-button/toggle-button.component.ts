@@ -19,8 +19,11 @@ import { IconComponent } from '../../icons/icon.component';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class ToggleButtonComponent {
+  /** Pressed (on/off) state; two-way bound. */
   readonly pressed = model<boolean>(false);
+  /** Optional leading icon name. */
   readonly icon = input<string>('');
+  /** Disables the toggle. */
   readonly disabled = input(false, { transform: booleanAttribute });
 
   protected toggle(): void {

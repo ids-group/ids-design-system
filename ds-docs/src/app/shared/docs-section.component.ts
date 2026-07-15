@@ -112,44 +112,39 @@ export class DocsSectionComponent {
   /** Opt out of the auto API surface — for a non-component section whose anchor
    *  collides with a component key (e.g. the Layout foundation vs `layout`). */
   readonly api = input(true, { transform: booleanAttribute });
-  /** Explicit component-API keys to render when the anchor doesn't match the
-   *  lib folder (e.g. `layout-primitives` → the `layout` family). Each renders
-   *  as its own meta + table block; nothing is shown under the title. */
+  /** Extra component-API keys to append as their own blocks — for sub-components
+   *  that live in a sibling folder and are documented inside this section (e.g.
+   *  the Button section adds `button-group`, `toggle-button`; layout-primitives
+   *  adds the whole `layout` family). The anchor's own component stays primary. */
   readonly apiKeys = input<readonly string[] | null>(null);
 
-  /** [anchor, ...same-folder secondaries] present in the generated API. */
-  private readonly derivedKeys = computed(() => {
-    const anchor = this.anchor();
-    const keys = COMPONENT_API[anchor] ? [anchor] : [];
-    for (const key of Object.keys(COMPONENT_API)) {
-      if (key.startsWith(`${anchor}:`)) {
-        keys.push(key);
-      }
-    }
-
-    return keys;
-  });
-
-  private readonly explicitKeys = computed(() =>
-    (this.apiKeys() ?? []).filter((key) => !!COMPONENT_API[key]),
-  );
-
-  /** Primary component shown under the title + as the first table. Null in the
-   *  explicit-keys case, where the title heads a family, not one component. */
+  /** The anchor's own component, shown under the title + as the first table. */
   protected readonly primaryKey = computed(() => {
-    if (!this.api() || this.apiKeys()) {
+    if (!this.api()) {
       return null;
     }
 
-    return this.derivedKeys()[0] ?? null;
+    return COMPONENT_API[this.anchor()] ? this.anchor() : null;
   });
 
-  /** Secondary component blocks appended after the primary table. */
+  /** Same-folder secondaries (`<anchor>:*`) plus the explicit `apiKeys` extras,
+   *  each rendered as its own meta + table block after the primary table. */
   protected readonly secondaryKeys = computed(() => {
     if (!this.api()) {
       return [];
     }
 
-    return this.apiKeys() ? this.explicitKeys() : this.derivedKeys().slice(1);
+    const anchor = this.anchor();
+    const primary = this.primaryKey();
+    const keys = Object.keys(COMPONENT_API).filter((key) =>
+      key.startsWith(`${anchor}:`),
+    );
+    for (const key of this.apiKeys() ?? []) {
+      if (COMPONENT_API[key] && key !== primary && !keys.includes(key)) {
+        keys.push(key);
+      }
+    }
+
+    return keys;
   });
 }

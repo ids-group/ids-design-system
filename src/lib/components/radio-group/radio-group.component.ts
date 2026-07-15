@@ -45,12 +45,19 @@ export class RadioGroupComponent
   extends DsControlValueAccessor<unknown>
   implements RadioGroupContract
 {
+  /** Selected radio value; two-way bound. */
   readonly value = model<unknown>(null);
+  /** Native `name` shared by every radio in the group. */
   readonly name = input<string | null>(null);
+  /** Disables the whole group. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Applies error styling and marks the group `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
+  /** Helper text shown below the group. */
   readonly hint = input<string>('');
+  /** Accessible name for the group when no visible label is provided. */
   readonly ariaLabel = input<string | null>(null);
+  /** Visible group label; omit to supply your own. */
   readonly label = input<string>('');
 
   readonly isDisabled = computed(() => this.disabled() || this.formDisabled());

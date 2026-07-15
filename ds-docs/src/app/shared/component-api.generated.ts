@@ -373,7 +373,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "4",
         "required": false,
-        "description": ""
+        "description": "Maximum avatars shown before the rest collapse into an overflow chip."
       },
       {
         "name": "total",
@@ -382,7 +382,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Total avatar count driving the `+N` overflow; null counts the projected children."
       }
     ],
     "outputs": []
@@ -818,7 +818,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Accessible name for the group, set as `aria-label` on the `role=\"group\"` host."
       }
     ],
     "outputs": []
@@ -3424,7 +3424,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Selected radio value; two-way bound."
       },
       {
         "name": "name",
@@ -3433,7 +3433,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Native `name` shared by every radio in the group."
       },
       {
         "name": "disabled",
@@ -3442,7 +3442,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the whole group."
       },
       {
         "name": "invalid",
@@ -3451,7 +3451,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies error styling and marks the group `aria-invalid`."
       },
       {
         "name": "hint",
@@ -3460,7 +3460,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Helper text shown below the group."
       },
       {
         "name": "ariaLabel",
@@ -3469,7 +3469,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Accessible name for the group when no visible label is provided."
       },
       {
         "name": "label",
@@ -3478,7 +3478,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Visible group label; omit to supply your own."
       }
     ],
     "outputs": []
@@ -5556,7 +5556,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Pressed (on/off) state; two-way bound."
       },
       {
         "name": "icon",
@@ -5565,7 +5565,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Optional leading icon name."
       },
       {
         "name": "disabled",
@@ -5574,7 +5574,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the toggle."
       }
     ],
     "outputs": []
