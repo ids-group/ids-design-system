@@ -74,6 +74,7 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
                 class="link start-link"
                 [routerLink]="'/' + group.path"
                 routerLinkActive="is-active"
+                [routerLinkActiveOptions]="{ exact: true }"
                 (click)="navigated.emit()"
               >
                 {{ item.label }}
@@ -504,6 +505,9 @@ export class SidebarComponent {
     );
     if (sections.length === 0) {
       this.observer = null;
+      // Landing (home) has no spy sections — clear any stale anchor so the URL
+      // doesn't carry a leftover fragment from the previous page.
+      this.activeAnchor.set('');
 
       return;
     }

@@ -25,7 +25,7 @@ export interface NavGroup {
 export const NAV: NavGroup[] = [
   {
     title: 'Start',
-    path: 'home',
+    path: '',
     items: [{ label: 'Start here', anchor: 'home' }],
   },
   {
