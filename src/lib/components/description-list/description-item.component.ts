@@ -24,9 +24,9 @@ import { DescriptionListComponent } from './description-list.component';
 export class DescriptionItemComponent {
   private readonly list = inject(DescriptionListComponent, { optional: true });
 
-  // The label. Plain text; rich values go in the projected content.
+  /** The label. Plain text; rich values go in the projected content. */
   readonly term = input<string>('');
-  // When set, a copy button appears that copies this string to the clipboard.
+  /** When set, a copy button appears that copies this string to the clipboard. */
   readonly copyValue = input<string | null>(null);
 
   protected readonly stacked = computed(

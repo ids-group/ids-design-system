@@ -24,13 +24,19 @@ import type { TagVariant } from './tag.types';
   },
 })
 export class TagComponent {
+  /** Fill style — `solid` for high-emphasis, `neutral` for low-emphasis chips. */
   readonly variant = input<TagVariant>('solid');
+  /** Shows a close button that emits `closed`. */
   readonly closable = input(false, { transform: booleanAttribute });
+  /** Makes the tag clickable, emitting `toggled` on click. */
   readonly interactive = input(false, { transform: booleanAttribute });
+  /** Applies the active/selected visual state. */
   readonly selected = input(false, { transform: booleanAttribute });
   /** Accessible label for the close button (e.g. "Remove Source filter"). */
   readonly closeLabel = input<string>('Remove');
+  /** Fires when the close button is clicked. */
   readonly closed = output<void>();
+  /** Fires on click when `interactive` is true. */
   readonly toggled = output<void>();
 
   protected onClick(): void {

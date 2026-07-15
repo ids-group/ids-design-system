@@ -21,8 +21,11 @@ let nextId = 0;
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class AccordionItemComponent implements AccordionItemRef {
+  /** Header text shown in the toggle button. */
   readonly title = input.required<string>();
+  /** Open state, two-way bound. */
   readonly expanded = model<boolean>(false);
+  /** Disables the toggle button; state stays as-is. */
   readonly disabled = input(false, { transform: booleanAttribute });
 
   protected readonly uid = `ds-accordion-${++nextId}`;

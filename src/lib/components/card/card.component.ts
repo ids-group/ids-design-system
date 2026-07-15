@@ -15,8 +15,11 @@ import type { CardElevation, CardPadding } from './card.types';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class CardComponent {
+  /** Visual treatment; `interactive` makes the card clickable and emits `pressed`. */
   readonly elevation = input<CardElevation>('flat');
+  /** Inner padding preset; `null` keeps the card's default padding. */
   readonly padding = input<CardPadding | null>(null);
+  /** Fires the click event when `elevation` is `interactive`. */
   readonly pressed = output<MouseEvent>();
 
   protected readonly interactive = computed(

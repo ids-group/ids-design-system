@@ -30,8 +30,11 @@ const STATUS_ARIA_LABELS: Record<AvatarStatus, string> = {
   },
 })
 export class AvatarComponent {
+  /** Diameter — xs/sm/lg apply a size class; md is the default. */
   readonly size = input<AvatarSize>('md');
+  /** Fallback text shown when there's no `imageUrl`. */
   readonly initials = input<string>('');
+  /** Image source; shown before `initials` or `fallbackIcon` when set. */
   readonly imageUrl = input<string | null>(null);
   /** Accessible name. When omitted, the avatar is treated as decorative
    *  (hidden from AT) — correct when a visible name sits beside it. */

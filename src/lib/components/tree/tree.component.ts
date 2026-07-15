@@ -34,9 +34,13 @@ interface VisibleNode {
 export class TreeComponent {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
+  /** Root-level nodes; nest via `children`. */
   readonly nodes = input<readonly TreeNode[]>([]);
+  /** Two-way set of currently expanded node ids. */
   readonly expandedIds = model<Set<string>>(new Set());
+  /** Two-way id of the currently selected node. */
   readonly selectedId = model<string | null>(null);
+  /** Fires with the node when a row is selected (click or Enter/Space). */
   readonly nodeSelected = output<TreeNode>();
 
   private readonly activeId = signal<string | null>(null);

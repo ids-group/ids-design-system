@@ -40,8 +40,11 @@ const NUMERIC = /^-?\d+(\.\d+)?$/;
   },
 })
 export class TableComponent<T extends { id: string }> {
+  /** Rows to render. */
   readonly data = input.required<readonly T[]>();
+  /** Column definitions driving headers, cells and sorting. */
   readonly columns = input.required<readonly TableColumn<T>[]>();
+  /** Adds a checkbox column for row/select-all selection. */
   readonly selectable = input(false, { transform: booleanAttribute });
   /** Opt-in outer border + radius. Off by default so tables flush inside a
    *  `<ds-card padding="none">` (workspaces, programs-list) don't double-border.
@@ -54,10 +57,15 @@ export class TableComponent<T extends { id: string }> {
    *  'overlay'  — re-fetch indicator; existing rows stay visible behind
    *  a translucent overlay with a centred spinner. */
   readonly loading = input<false | 'skeleton' | 'overlay'>(false);
+  /** Keeps the header row pinned while the body scrolls. */
   readonly stickyHeader = input(true, { transform: booleanAttribute });
+  /** Two-way set of currently selected row ids. */
   readonly selectedIds = model<Set<string>>(new Set<string>());
+  /** Column key currently sorted by; `null` when unsorted. */
   readonly sortKey = model<string | null>(null);
+  /** Sort direction for `sortKey`. */
   readonly sortDir = model<SortDir>(null);
+  /** Number of shimmer rows rendered while `loading` is `'skeleton'`. */
   readonly skeletonRows = input<number>(5);
   /** Accessible name for the table (rendered as a visually-hidden caption).
    *  Without it, screen-reader users get an unlabelled table. */
@@ -72,6 +80,7 @@ export class TableComponent<T extends { id: string }> {
   readonly pageSize = model<number | null>(null);
   /** Current 1-based page. Only meaningful when `pageSize()` is set. */
   readonly page = model<number>(1);
+  /** Selectable page-size choices shown in the pagination control. */
   readonly pageSizeOptions = input<number[]>([10, 25, 50, 100]);
   /** When true, the table sorts `data()` itself; otherwise it only emits
    *  `sortChange` and leaves ordering to the consumer (default). */
@@ -79,7 +88,9 @@ export class TableComponent<T extends { id: string }> {
   /** Pin the first data column (and the select column) on horizontal scroll. */
   readonly stickyFirstColumn = input(false, { transform: booleanAttribute });
 
+  /** Fires with the row on click (or Enter/Space when `rowInteractive`). */
   readonly rowClicked = output<T>();
+  /** Fires whenever sort key/direction changes, regardless of `clientSort`. */
   readonly sortChange = output<SortChangeEvent>();
 
   /** Cell templates supplied as an explicit map instead of (or in addition to)
