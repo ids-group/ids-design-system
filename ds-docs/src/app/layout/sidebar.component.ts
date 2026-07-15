@@ -10,6 +10,9 @@ import {
   output,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { IconButtonComponent, SearchComponent } from 'ds';
 import { NAV } from './nav.config';
 import { DS_VERSION } from '../shared/docs-stats';
@@ -19,7 +22,7 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [IconButtonComponent, SearchComponent],
+  imports: [IconButtonComponent, SearchComponent, RouterLink, RouterLinkActive],
   encapsulation: ViewEncapsulation.Emulated,
   host: {
     '[class.is-collapsed]': 'effectiveCollapsed()',
@@ -69,24 +72,31 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
             @for (item of group.items; track item.anchor) {
               <a
                 class="link start-link"
-                href="#{{ item.anchor }}"
-                [class.is-active]="isActive(item.anchor)"
-                (click)="scrollTo($event, item.anchor)"
+                [routerLink]="'/' + group.path"
+                routerLinkActive="is-active"
+                (click)="navigated.emit()"
               >
                 {{ item.label }}
               </a>
             }
           } @else {
-            <div class="group">
+            <a
+              class="group group-link"
+              [routerLink]="'/' + group.path"
+              routerLinkActive="is-active"
+              [routerLinkActiveOptions]="{ exact: false }"
+              (click)="navigated.emit()"
+            >
               {{ group.title }}
-            </div>
+            </a>
 
             @for (item of group.items; track item.anchor) {
               <a
                 class="link"
-                href="#{{ item.anchor }}"
+                [routerLink]="'/' + group.path"
+                [fragment]="item.anchor"
                 [class.is-active]="isActive(item.anchor)"
-                (click)="scrollTo($event, item.anchor)"
+                (click)="navigated.emit()"
               >
                 <span class="link-label">
                   {{ item.label }}
@@ -182,11 +192,19 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
       }
 
       .group {
+        display: block;
         font: var(--font-weight-bold) 11px/1.4 var(--font-sans);
         letter-spacing: var(--letter-spacing-wider);
         text-transform: uppercase;
         color: var(--text-tertiary);
         padding: var(--space-4) var(--space-2) var(--space-1-5);
+      }
+      .group-link {
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .group-link.is-active {
+        color: var(--text-primary);
       }
 
       .link {
@@ -266,6 +284,7 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
 export class SidebarComponent {
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
 
   readonly mode = input<'rail' | 'drawer'>('rail');
   readonly navigated = output<void>();
@@ -293,11 +312,6 @@ export class SidebarComponent {
   // Anchors of sections currently intersecting the spy band.
   private readonly intersecting = new Set<string>();
   private readonly anchorToSection = new Map<string, HTMLElement>();
-  // True while a user-initiated smooth scroll (nav click) is in flight.
-  // Suppresses scroll-spy updates so intermediate sections passing through
-  // the spy band don't sequentially light up the nav.
-  private programmaticScrollUntil = 0;
-  private programmaticScrollTimer: number | null = null;
 
   constructor() {
     this.destroyRef.onDestroy(() => {
@@ -308,6 +322,15 @@ export class SidebarComponent {
     // wiring the IntersectionObserver. Without this the observer initialises
     // with zero targets and `activeAnchor` never updates on scroll.
     this.setupWhenSectionsExist();
+
+    // Each route change swaps in a new group page — re-scan for its
+    // `[data-anchor]` sections once they've mounted.
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(() => setTimeout(() => this.refreshObserver(), 0));
 
     // Reflect collapsed state on the document so the layout grid can react.
     effect(() => {
@@ -323,8 +346,9 @@ export class SidebarComponent {
       );
     });
 
-    // Sync URL hash with the active section as the user scrolls — replaceState
-    // so the browser history isn't polluted with every intermediate section.
+    // Sync the URL fragment with the active section as the user scrolls —
+    // replaceUrl so history isn't polluted with every intermediate section.
+    // Only the fragment changes; the route path is left untouched.
     effect(() => {
       const anchor = this.activeAnchor();
       if (!anchor) {
@@ -338,11 +362,11 @@ export class SidebarComponent {
       if (win.location.hash === targetHash) {
         return;
       }
-      try {
-        win.history.replaceState(null, '', targetHash);
-      } catch {
-        /* ignore */
-      }
+      this.router.navigate([], {
+        fragment: anchor,
+        replaceUrl: true,
+        queryParamsHandling: 'preserve',
+      });
     });
   }
 
@@ -415,78 +439,6 @@ export class SidebarComponent {
     return this.activeAnchor() === anchor;
   }
 
-  // Click handler: scroll the .main container to the section without
-  // touching window.location.hash. The clicked anchor stays pinned during
-  // the smooth scroll — scroll-spy updates are suppressed via
-  // `programmaticScrollUntil` so intermediate sections don't flicker the
-  // active highlight as they pass through the spy band.
-  protected scrollTo(event: Event, anchor: string): void {
-    event.preventDefault();
-    const section =
-      this.anchorToSection.get(anchor) ??
-      (this.document.querySelector(
-        `[data-anchor="${anchor}"]`,
-      ) as HTMLElement | null);
-    if (!section) {
-      return;
-    }
-
-    this.activeAnchor.set(anchor);
-    this.beginProgrammaticScroll();
-
-    const main = this.document.querySelector('main.main') as HTMLElement | null;
-    const topbarH = this.computeTopbarHeight();
-    if (main) {
-      const containerTop = main.getBoundingClientRect().top;
-      const targetTop = section.getBoundingClientRect().top;
-      main.scrollTo({
-        top: main.scrollTop + (targetTop - containerTop) - topbarH,
-        behavior: 'auto',
-      });
-      this.watchScrollEnd(main, anchor);
-    } else {
-      section.scrollIntoView({ behavior: 'auto', block: 'start' });
-    }
-    this.navigated.emit();
-  }
-
-  // Pin the clicked anchor for at least 1.2s. The real release happens on
-  // scroll-end detection (`watchScrollEnd`); this is the upper-bound safety
-  // net in case scroll events stop firing before reaching the target.
-  private beginProgrammaticScroll(): void {
-    this.programmaticScrollUntil = Date.now() + 1200;
-    if (this.programmaticScrollTimer !== null) {
-      clearTimeout(this.programmaticScrollTimer);
-    }
-    this.programmaticScrollTimer = window.setTimeout(() => {
-      this.programmaticScrollUntil = 0;
-      this.programmaticScrollTimer = null;
-    }, 1200);
-  }
-
-  // Listen for scroll events on the container; when they stop firing for
-  // ~150ms the smooth scroll has settled. Release the guard immediately
-  // and re-assert the clicked anchor as the active one (the observer was
-  // suppressed during the animation, so its last verdict is stale).
-  private watchScrollEnd(main: HTMLElement, anchor: string): void {
-    let settleTimer: number | null = null;
-    const onScroll = (): void => {
-      if (settleTimer !== null) {
-        clearTimeout(settleTimer);
-      }
-      settleTimer = window.setTimeout(() => {
-        main.removeEventListener('scroll', onScroll);
-        this.programmaticScrollUntil = 0;
-        if (this.programmaticScrollTimer !== null) {
-          clearTimeout(this.programmaticScrollTimer);
-          this.programmaticScrollTimer = null;
-        }
-        this.activeAnchor.set(anchor);
-      }, 150);
-    };
-    main.addEventListener('scroll', onScroll, { passive: true });
-  }
-
   private refreshObserver(): void {
     this.observer?.disconnect();
     this.intersecting.clear();
@@ -532,12 +484,6 @@ export class SidebarComponent {
           } else {
             this.intersecting.delete(anchor);
           }
-        }
-
-        // Suppress spy-driven updates while a click-triggered smooth scroll
-        // is animating — intermediate sections would otherwise flash active.
-        if (Date.now() < this.programmaticScrollUntil) {
-          return;
         }
 
         // Pick THE topmost intersecting section: smallest non-negative
