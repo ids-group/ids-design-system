@@ -4,6 +4,7 @@ import {
   afterNextRender,
   signal,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { BadgeComponent } from 'ds';
 import {
   COMPONENT_COUNT,
@@ -16,7 +17,7 @@ import {
 @Component({
   selector: 'section-home',
   standalone: true,
-  imports: [BadgeComponent],
+  imports: [BadgeComponent, RouterLink],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './home.section.html',
   styleUrls: ['./home.section.scss', './home.responsive.scss'],

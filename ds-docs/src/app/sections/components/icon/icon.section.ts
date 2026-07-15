@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { IconComponent, type IconName } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
@@ -38,7 +39,7 @@ const SAMPLES: readonly IconName[] = [
 @Component({
   selector: 'section-components-icon',
   standalone: true,
-  imports: [DocsSectionComponent, DocsTruncationComponent, IconComponent],
+  imports: [DocsSectionComponent, DocsTruncationComponent, IconComponent, RouterLink],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './icon.section.html',
   styleUrl: './icon.section.scss',
