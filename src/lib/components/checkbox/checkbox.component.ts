@@ -32,14 +32,23 @@ import type { CheckboxSize } from './checkbox.types';
   ],
 })
 export class CheckboxComponent extends DsBooleanControlValueAccessor {
+  /** Checked state, two-way bound. */
   readonly checked = model<boolean>(false);
+  /** Shows the partial/mixed visual state — independent of `checked`. */
   readonly indeterminate = input(false, { transform: booleanAttribute });
+  /** Disables the checkbox and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Native `name` attribute. */
   readonly name = input<string | null>(null);
+  /** Overrides the generated id used by the native `<input>` and its `<label for>`. */
   readonly inputId = input<string | null>(null);
+  /** Applies error styling and marks the input `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
+  /** Helper text shown below the checkbox. */
   readonly hint = input<string>('');
+  /** Checkbox size — sm/md/lg. */
   readonly size = input<CheckboxSize>('md');
+  /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Inline label rendered beside the box and wired via for/id. Omit to
    *  bring your own <label>. */

@@ -63,9 +63,13 @@ export class ButtonComponent {
       discouraged for ALL colours — prefer the global `.link` class; it stays for
       cases needing the ds-button API (loading/fullWidth/typed pressed). */
   readonly variant = input<ButtonVariant>('solid');
+  /** Button height — sm/md/lg. */
   readonly size = input<ButtonSize>('md');
+  /** Native `<button>` `type` attribute. */
   readonly type = input<ButtonType>('button');
+  /** Disables the button and blocks `pressed`. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Busy state — disables interaction and sets `aria-busy`. */
   readonly loading = input(false, { transform: booleanAttribute });
   /** Stretch the button to fill its container — the host becomes block-level
       and 100% wide (the inner control is already full-width). Use for mobile
@@ -74,7 +78,9 @@ export class ButtonComponent {
   /** Accessible name — forwarded to the inner <button> as aria-label. Use when
       the visible label is absent or non-descriptive. */
   readonly ariaLabel = input<string | null>(null);
+  /** Leading icon, before the projected content. */
   readonly icon = input<IconName | null>(null);
+  /** Trailing icon, after the projected content. */
   readonly trailingIcon = input<IconName | null>(null);
   /** ARIA `aria-haspopup`, forwarded to the inner <button> — set when this
    *  button triggers a menu/dialog/listbox overlay. */
@@ -84,6 +90,7 @@ export class ButtonComponent {
   /** ARIA `aria-expanded`, forwarded to the inner <button> — bind to the
    *  overlay's open state on a trigger button. */
   readonly ariaExpanded = input<boolean | null>(null);
+  /** Fires on click, unless `disabled` or `loading`. */
   readonly pressed = output<MouseEvent>();
 
   /** The inner native <button>, exposed so overlay triggers can position

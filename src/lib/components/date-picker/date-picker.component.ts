@@ -140,20 +140,31 @@ export class DatePickerComponent
     '--ds-date-picker-width',
   ];
 
+  /** Selection mode — single date or start/end range. */
   readonly mode = input<DatePickerMode>('single');
+  /** Trigger height — sm/md/lg. */
   readonly size = input<DatePickerSize>('md');
+  /** Selected date (single) or `[start, end]` (range), two-way bound. */
   readonly value = model<Date | RangeValue | null>(null);
+  /** Accessible-name fallback only — the mask fills the visible placeholder, not this. */
   readonly placeholder = input<string>('Select date');
+  /** Field label shown above the trigger. */
   readonly label = input<string>('');
+  /** Helper text shown below the field. */
   readonly hint = input<string>('');
+  /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
+  /** Shows an "(optional)" marker beside the label — ignored when `required` is set. */
   readonly optional = input(false, { transform: booleanAttribute });
+  /** Disables the picker and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Applies error styling and marks the trigger `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
   /** Bounds for the year dropdown in the calendar header. */
   readonly minYear = input<number>(new Date().getFullYear() - 100);
+  /** Upper bound for the year dropdown in the calendar header. */
   readonly maxYear = input<number>(new Date().getFullYear() + 10);
   /** Earliest selectable date (inclusive). Days before this are disabled. */
   readonly minDate = input<Date | null>(null);
