@@ -34,8 +34,6 @@ import {
   type DateFormatSpec,
   type DisplayPart,
   type FieldLayout,
-  applyMask,
-  applyMaskRange,
   caretToSlot,
   displayParts,
   editBackspace,
@@ -783,22 +781,24 @@ export class DatePickerComponent
     return text.replace(/\D/g, '').length;
   }
 
-  /** Mask `raw` as a digit stream (paste/IME/selection fallback), then commit. */
+  /** Rebuild `raw` as a digit stream (paste/IME/selection fallback), split per
+   *  slot by its fixed width, then render fixed-width so it matches the overlay. */
   private commitRaw(
     element: HTMLInputElement,
     raw: string,
     targetDigits: number,
   ): void {
-    const spec = this.formatSpec();
-    const masked =
-      this.mode() === 'range'
-        ? applyMaskRange(raw, spec)
-        : applyMask(raw, spec);
-    this.applyEditedText(
-      element,
-      masked,
-      this.caretAfterDigits(masked, targetDigits),
-    );
+    const layout = this.layout();
+    const capacity = layout.slots.reduce((sum, slot) => sum + slot.maxLength, 0);
+    const digits = raw.replace(/\D/g, '').slice(0, capacity);
+    const segments: string[] = [];
+    let index = 0;
+    for (const slot of layout.slots) {
+      segments.push(digits.slice(index, index + slot.maxLength));
+      index += slot.maxLength;
+    }
+    const text = renderFieldValue(segments, layout);
+    this.applyEditedText(element, text, this.caretAfterDigits(text, targetDigits));
   }
 
   /** Write masked text + caret into the DOM, then parse and validate it. */
