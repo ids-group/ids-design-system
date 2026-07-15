@@ -77,18 +77,31 @@ export class TimePickerComponent
     '--ds-time-picker-shadow',
   ];
 
+  /** Selected time, or `[start, end]` tuple when `mode="range"`. Two-way bound. */
   readonly value = model<string | TimeRangeValue | null>(null);
+  /** Single time or `[start, end]` range picker. */
   readonly mode = input<TimePickerMode>('single');
+  /** Minute increment shown in the picker columns. */
   readonly minuteStep = input(1, { transform: numberAttribute });
+  /** Earliest selectable time ("HH:MM"). */
   readonly minTime = input<string | null>(null);
+  /** Latest selectable time ("HH:MM"). */
   readonly maxTime = input<string | null>(null);
+  /** Predicate marking individual times unselectable. */
   readonly disabledTime = input<((time: string) => boolean) | null>(null);
+  /** Trigger height — sm/md/lg. */
   readonly size = input<TimePickerSize>('md');
+  /** Disables the picker and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Applies error styling and marks the trigger `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
+  /** Helper text shown below the picker. */
   readonly hint = input<string>('');
+  /** Shown in the trigger when no time is set. */
   readonly placeholder = input<string>('--:--');
+  /** Shows an inline clear button when a value is set — single mode only. */
   readonly clearable = input(false, { transform: booleanAttribute });
+  /** Accessible name for the trigger(s), suffixed "(from)"/"(to)" in range mode. */
   readonly ariaLabel = input<string | null>(null);
   /** Override the DS-config format for this instance. */
   readonly format = input<TimeFormat | null>(null);

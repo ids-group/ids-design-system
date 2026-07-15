@@ -19,9 +19,13 @@ import { IconComponent } from '../../icons/icon.component';
   },
 })
 export class W3wComponent {
+  /** Marker rendered before the address (e.g. the "///" glyph). */
   readonly prefix = input<string>('///');
+  /** The three-word address, rendered after `prefix`. */
   readonly address = input.required<string>();
+  /** Makes the address clickable/focusable and copies `prefix` + `address` to the clipboard. */
   readonly copyable = input(true, { transform: booleanAttribute });
+  /** Fires with `address` after a successful copy. */
   readonly copied = output<string>();
 
   protected onKeyActivate(event: Event): void {

@@ -20,14 +20,19 @@ import { IconComponent } from '../../icons/icon.component';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class SearchComponent {
+  /** Search text, two-way bound. */
   readonly value = model<string>('');
+  /** Placeholder shown when empty. */
   readonly placeholder = input<string>('Search');
+  /** Keyboard shortcut hint rendered in a trailing `<kbd>` badge. */
   readonly shortcut = input<string>('');
+  /** Shows the leading search icon. */
   readonly showIcon = input(true, { transform: booleanAttribute });
   /** Show an inline clear (×) button on the right when there's a value. */
   readonly clearable = input(false, { transform: booleanAttribute });
   /** Accessible name for the input (placeholder is not a reliable label). */
   readonly ariaLabel = input<string>('');
+  /** Fires with the current value on Enter. */
   readonly submitted = output<string>();
 
   private readonly inputEl =

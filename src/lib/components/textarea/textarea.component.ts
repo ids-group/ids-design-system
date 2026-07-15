@@ -32,21 +32,37 @@ import { nextControlId } from '../field-ids';
   ],
 })
 export class TextareaComponent extends DsControlValueAccessor<string> {
+  /** Text value, two-way bound. */
   readonly value = model<string>('');
+  /** Field height — sm/md/lg. */
   readonly size = input<TextareaSize>('md');
+  /** Label shown above the field. */
   readonly label = input<string>('');
+  /** Helper text shown below the field. */
   readonly hint = input<string>('');
+  /** Placeholder shown when empty. */
   readonly placeholder = input<string>('');
+  /** Disables the field and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Prevents editing while still allowing focus and selection. */
   readonly readOnly = input(false, { transform: booleanAttribute });
+  /** Applies error styling and marks the field `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
+  /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
+  /** Shows an "(optional)" marker next to the label (ignored when `required`). */
   readonly optional = input(false, { transform: booleanAttribute });
+  /** Native `rows` attribute — visible line count. */
   readonly rows = input<number>(3);
+  /** Native `name` attribute. */
   readonly name = input<string | null>(null);
+  /** Grows the field with content instead of scrolling; forces `resize` to none. */
   readonly autosize = input(false, { transform: booleanAttribute });
+  /** Minimum height in lines when `autosize`. */
   readonly minRows = input<number | null>(null);
+  /** Maximum height in lines when `autosize`, beyond which it scrolls. */
   readonly maxRows = input<number | null>(null);
+  /** Native CSS `resize` behaviour — ignored when `autosize`. */
   readonly resize = input<TextareaResize>('vertical');
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);

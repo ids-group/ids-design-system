@@ -38,14 +38,23 @@ type SliderValue = number | readonly [number, number];
   },
 })
 export class SliderComponent extends DsControlValueAccessor<SliderValue> {
+  /** Current value, or `[low, high]` when `range`. Two-way bound. */
   readonly value = model<SliderValue>(0);
+  /** Minimum selectable value. */
   readonly min = input(0, { transform: numberAttribute });
+  /** Maximum selectable value. */
   readonly max = input(100, { transform: numberAttribute });
+  /** Increment applied when dragging (snap) or nudging with arrow keys. */
   readonly step = input(1, { transform: numberAttribute });
+  /** Two-thumb range mode — `value` becomes a `[low, high]` tuple. */
   readonly range = input(false, { transform: booleanAttribute });
+  /** Disables the slider and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Accessible name for the thumb(s) — suffixed "minimum"/"maximum" in `range` mode. */
   readonly ariaLabel = input<string | null>(null);
+  /** Applies error styling. */
   readonly invalid = input(false, { transform: booleanAttribute });
+  /** Helper text shown below the slider. */
   readonly hint = input<string>('');
 
   private readonly track = viewChild.required<ElementRef<HTMLElement>>('track');

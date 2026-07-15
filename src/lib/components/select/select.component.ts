@@ -60,20 +60,33 @@ export class SelectComponent
   private readonly vcr = inject(ViewContainerRef);
   protected readonly preview = inject(DsStaticPreview);
 
+  /** Selected option's value, two-way bound. */
   readonly value = model<string>('');
+  /** Flat options or option groups rendered in the dropdown panel. */
   readonly options = input<SelectItem[]>([]);
+  /** Shown in the trigger when nothing is selected. */
   readonly placeholder = input<string>('');
+  /** Trigger height — sm/md/lg. */
   readonly size = input<SelectSize>('md');
+  /** Label shown above the trigger. */
   readonly label = input<string>('');
+  /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Prevents opening the dropdown while still allowing focus. */
   readonly readOnly = input(false, { transform: booleanAttribute });
+  /** Applies error styling and marks the trigger `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
+  /** Helper text shown below the trigger. */
   readonly hint = input<string>('');
+  /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
+  /** Shows an "(optional)" marker next to the label (ignored when `required`). */
   readonly optional = input(false, { transform: booleanAttribute });
+  /** Native `name` attribute forwarded to the trigger. */
   readonly name = input<string | null>(null);
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
+  /** Shows an inline clear (×) button when a value is selected. */
   readonly clearable = input(false, { transform: booleanAttribute });
 
   protected readonly uid = nextControlId('ds-select');
