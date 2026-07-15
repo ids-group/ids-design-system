@@ -312,6 +312,9 @@ export class SidebarComponent {
   // Anchors of sections currently intersecting the spy band.
   private readonly intersecting = new Set<string>();
   private readonly anchorToSection = new Map<string, HTMLElement>();
+  // Last routed path (without fragment) — lets us ignore the scroll-sync's
+  // fragment-only navigations so they don't re-scroll or re-observe.
+  private lastPath = '';
 
   constructor() {
     this.destroyRef.onDestroy(() => {
@@ -323,14 +326,29 @@ export class SidebarComponent {
     // with zero targets and `activeAnchor` never updates on scroll.
     this.setupWhenSectionsExist();
 
-    // Each route change swaps in a new group page — re-scan for its
-    // `[data-anchor]` sections once they've mounted.
+    // Each real route change swaps in a new group page: reset the main scroll
+    // (to top, or to the target section when the URL carries a fragment) and
+    // re-scan for the new page's `[data-anchor]` sections once they mount.
+    // Fragment-only navigations (from the scroll-sync effect below) keep the
+    // same path — skip them so scrolling never fights itself or thrashes the
+    // observer. `main.main` is the scroll container, not the window, so the
+    // router's own scrollPositionRestoration can't do this for us.
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(() => setTimeout(() => this.refreshObserver(), 0));
+      .subscribe((event) => {
+        const path = (event as NavigationEnd).urlAfterRedirects.split('#')[0];
+        if (path === this.lastPath) {
+          return;
+        }
+        this.lastPath = path;
+        setTimeout(() => {
+          this.refreshObserver();
+          this.scrollForNavigation();
+        }, 0);
+      });
 
     // Reflect collapsed state on the document so the layout grid can react.
     effect(() => {
@@ -387,6 +405,18 @@ export class SidebarComponent {
     }
     this.refreshObserver();
     this.scrollToHashOnLoad();
+  }
+
+  // On route change: scroll the main container to the target section when the
+  // URL has a fragment, else back to the top (a fresh group starts at its top).
+  private scrollForNavigation(): void {
+    const anchor = (this.document.defaultView?.location.hash ?? '').replace(/^#/, '');
+    if (anchor) {
+      this.scrollToHashOnLoad();
+      return;
+    }
+    const main = this.document.querySelector('main.main') as HTMLElement | null;
+    main?.scrollTo({ top: 0, behavior: 'auto' });
   }
 
   // On initial mount, if the URL has #anchor, scroll the main container
