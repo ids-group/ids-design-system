@@ -13,7 +13,7 @@ import type { ApiProp } from './component-api.types';
 
     @if (api) {
       @if (inputs().length) {
-        <details class="api" open>
+        <details class="api">
           <summary>
             Inputs <span class="count">{{ inputs().length }}</span>
           </summary>
@@ -84,7 +84,7 @@ import type { ApiProp } from './component-api.types';
       }
 
       @if (outputs().length) {
-        <details class="api" open>
+        <details class="api">
           <summary>
             Outputs <span class="count">{{ outputs().length }}</span>
           </summary>
