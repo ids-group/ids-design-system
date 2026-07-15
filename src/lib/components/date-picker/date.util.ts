@@ -286,6 +286,57 @@ export function renderFieldText(
   return out;
 }
 
+export const PLACEHOLDER_CHAR = '_';
+
+export interface DisplayPart {
+  text: string;
+  muted: boolean;
+}
+
+function slotPlaceholder(slot: FieldSlot): string {
+  return slot.type === 'Y' ? 'YYYY' : slot.type === 'M' ? 'MM' : 'DD';
+}
+
+/** Fixed-width input value: every slot padded to maxLength with `_`, all literals present. */
+export function renderFieldValue(segments: string[], layout: FieldLayout): string {
+  let out = '';
+  for (let index = 0; index < layout.slots.length; index++) {
+    const slot = layout.slots[index];
+    out += segments[index].padEnd(slot.maxLength, PLACEHOLDER_CHAR);
+    if (index < layout.slots.length - 1) {
+      out += layout.literals[index];
+    }
+  }
+
+  return out;
+}
+
+/** Ordered runs for the overlay: digits (not muted), placeholders (muted), literals (not muted).
+ *  Untouched slot → its format letters; partial slot → digits + `_` for the missing positions. */
+export function displayParts(segments: string[], layout: FieldLayout): DisplayPart[] {
+  const parts: DisplayPart[] = [];
+  for (let index = 0; index < layout.slots.length; index++) {
+    const slot = layout.slots[index];
+    const digits = segments[index];
+    if (digits.length === 0) {
+      parts.push({ text: slotPlaceholder(slot), muted: true });
+    } else {
+      parts.push({ text: digits, muted: false });
+      if (digits.length < slot.maxLength) {
+        parts.push({
+          text: PLACEHOLDER_CHAR.repeat(slot.maxLength - digits.length),
+          muted: true,
+        });
+      }
+    }
+    if (index < layout.slots.length - 1) {
+      parts.push({ text: layout.literals[index], muted: false });
+    }
+  }
+
+  return parts;
+}
+
 /** Char offset where slot `index` begins in renderFieldText(segments). */
 export function slotStart(
   segments: string[],
