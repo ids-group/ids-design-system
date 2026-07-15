@@ -19,12 +19,14 @@ import type { SpinnerSize } from '../spinner/spinner.types';
   },
 })
 export class LoadingOverlayComponent {
-  // Show the scrim + spinner over the projected region.
+  /** Show the scrim + spinner over the projected region. */
   readonly loading = input(false, { transform: booleanAttribute });
-  // Optional caption beneath the spinner.
+  /** Optional caption beneath the spinner. */
   readonly label = input<string>('');
+  /** Backdrop-blur the projected content behind the scrim. */
   readonly blur = input(true, { transform: booleanAttribute });
+  /** Size of the spinner shown in the scrim. */
   readonly spinnerSize = input<SpinnerSize>('md');
-  // Offset the scrim top edge — useful when a sticky header should stay uncovered.
+  /** Offset the scrim top edge — useful when a sticky header should stay uncovered. */
   readonly insetTop = input<string>('0');
 }

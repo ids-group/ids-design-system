@@ -15,5 +15,6 @@ import type { SpinnerSize } from './spinner.types';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class SpinnerComponent {
+  /** Spinner size — sm/md/lg. */
   readonly size = input<SpinnerSize>('md');
 }

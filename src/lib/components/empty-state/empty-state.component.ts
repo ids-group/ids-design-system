@@ -13,9 +13,13 @@ import type { EmptyStateVariant } from './empty-state.types';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class EmptyStateComponent {
+  /** State — drives the default icon and shows a loading overlay when `'loading'`. */
   readonly variant = input<EmptyStateVariant>('none');
+  /** Override the variant's default icon. */
   readonly icon = input<IconName | null>(null);
+  /** Optional heading below the icon. */
   readonly title = input<string>('');
+  /** Optional supporting text below the title. */
   readonly body = input<string>('');
 
   protected readonly classes = computed(() => {

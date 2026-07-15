@@ -24,12 +24,19 @@ import type { ToastAction, ToastVariant } from './toast.types';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class ToastComponent {
+  /** Severity — drives colour, the default icon/spinner and the ARIA role/live. */
   readonly variant = input<ToastVariant>('info');
+  /** Optional bold heading above the message. */
   readonly title = input<string>('');
+  /** Body text of the toast. */
   readonly message = input<string>('');
+  /** Show a close button that emits `closed`. */
   readonly dismissible = input(false, { transform: booleanAttribute });
+  /** Override the variant's default icon. */
   readonly icon = input<IconName | null>(null);
+  /** Optional action button rendered before the dismiss control. */
   readonly action = input<ToastAction | null>(null);
+  /** Fires when the toast is dismissed or its action is invoked. */
   readonly closed = output<void>();
 
   protected readonly isLoading = computed(() => this.variant() === 'loading');

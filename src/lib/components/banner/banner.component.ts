@@ -20,13 +20,21 @@ import type { BannerVariant } from './banner.types';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class BannerComponent {
+  /** Severity — drives colour, the default icon and the ARIA role/live. */
   readonly variant = input<BannerVariant>('info');
+  /** Optional bold heading above the message. */
   readonly title = input<string>('');
+  /** Show a close button that emits `closed`. */
   readonly dismissible = input(false, { transform: booleanAttribute });
+  /** Override the variant's default icon. */
   readonly icon = input<IconName | null>(null);
+  /** Tighter padding, centred items, single-line title. */
   readonly compact = input(false, { transform: booleanAttribute });
+  /** `'stacked'` wraps actions onto their own line; `'row'` keeps them inline. */
   readonly layout = input<'stacked' | 'row'>('stacked');
+  /** Coloured accent rail on the leading edge; set false to hide it. */
   readonly accentRail = input(true, { transform: booleanAttribute });
+  /** Fires when the user dismisses the banner. */
   readonly closed = output<void>();
 
   @HostBinding('class.no-rail')

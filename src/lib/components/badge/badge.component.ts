@@ -21,9 +21,13 @@ import type { DsStatusKey } from '../../core/status';
 export class BadgeComponent {
   /** Consumer-defined status key; colours are wired via styles/status. Unset → neutral. */
   readonly status = input<DsStatusKey>();
+  /** Shows a status dot; only rendered when `count` is unset. */
   readonly withDot = input(false, { transform: booleanAttribute });
+  /** Solid accent fill instead of the default subtle background. */
   readonly solid = input(false, { transform: booleanAttribute });
+  /** Numeric count to display; overrides projected content when set. */
   readonly count = input<number | null>(null);
+  /** Count is capped at this value, shown as `"max+"` beyond it. */
   readonly max = input(99, { transform: numberAttribute });
 
   /** Display text for the count, capped at max+. */

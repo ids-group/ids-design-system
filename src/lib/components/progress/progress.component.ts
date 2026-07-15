@@ -27,8 +27,11 @@ import type { ProgressVariant } from './progress.types';
   },
 })
 export class ProgressComponent {
+  /** Progress 0–100; clamped, and ignored while `indeterminate`. */
   readonly value = input<number>(0);
+  /** Colour variant — drives the success/warning/error styling. */
   readonly variant = input<ProgressVariant>('default');
+  /** Indeterminate (unknown-duration) animation instead of a fixed `value`. */
   readonly indeterminate = input(false, { transform: booleanAttribute });
   /** Accessible name for the progress bar (e.g. "Upload progress"). */
   readonly ariaLabel = input<string | null>(null);
