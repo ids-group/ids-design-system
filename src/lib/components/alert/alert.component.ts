@@ -20,10 +20,15 @@ import type { AlertVariant } from './alert.types';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class AlertComponent {
+  /** Severity — drives colour, the default icon and the ARIA role/live. */
   readonly variant = input<AlertVariant>('info');
+  /** Optional bold heading above the message. */
   readonly title = input<string>('');
+  /** Show a close button that emits `closed`. */
   readonly dismissible = input(false, { transform: booleanAttribute });
+  /** Override the variant's default icon. */
   readonly icon = input<IconName | null>(null);
+  /** Fires when the user dismisses the alert. */
   readonly closed = output<void>();
 
   @HostBinding('attr.role')
