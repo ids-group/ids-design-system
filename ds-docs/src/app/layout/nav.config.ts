@@ -14,6 +14,8 @@ export interface NavItem {
 
 export interface NavGroup {
   title: string;
+  /** Route this group's page lives at (e.g. 'components/actions', 'home'). */
+  path: string;
   /** Marks a group whose items are components — summed for the home component count. */
   kind?: 'component';
   items: NavItem[];
@@ -22,10 +24,12 @@ export interface NavGroup {
 export const NAV: NavGroup[] = [
   {
     title: 'Start',
+    path: 'home',
     items: [{ label: 'Start here', anchor: 'home' }],
   },
   {
     title: 'Actions',
+    path: 'components/actions',
     kind: 'component',
     items: [
       { label: 'Buttons', anchor: 'button' },
@@ -37,6 +41,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Forms & inputs',
+    path: 'components/forms-inputs',
     kind: 'component',
     items: [
       { label: 'Autocomplete', anchor: 'autocomplete' },
@@ -60,6 +65,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Navigation',
+    path: 'components/navigation',
     kind: 'component',
     items: [
       { label: 'Breadcrumbs', anchor: 'breadcrumbs' },
@@ -73,6 +79,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Data display',
+    path: 'components/data-display',
     kind: 'component',
     items: [
       { label: 'Accordion', anchor: 'accordion' },
@@ -90,6 +97,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Feedback & status',
+    path: 'components/feedback-status',
     kind: 'component',
     items: [
       { label: 'Alert', anchor: 'alert' },
@@ -106,6 +114,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Overlays',
+    path: 'components/overlays',
     kind: 'component',
     items: [
       { label: 'Bottom sheet', anchor: 'bottom-sheet' },
@@ -117,6 +126,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Page structure',
+    path: 'components/page-structure',
     kind: 'component',
     items: [
       { label: 'Page footer', anchor: 'page-footer' },
@@ -125,6 +135,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Foundations',
+    path: 'foundations',
     items: [
       { label: 'Borders', anchor: 'borders' },
       { label: 'Browser tab', anchor: 'browser-tab' },
@@ -148,6 +159,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Patterns',
+    path: 'patterns',
     items: [
       { label: 'Activity', anchor: 'pattern-activity' },
       { label: 'Empty states', anchor: 'pattern-empty-state' },
@@ -158,6 +170,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Practice',
+    path: 'practice',
     items: [
       { label: "Do / Don't", anchor: 'practice-do-dont' },
       { label: 'Token Discipline', anchor: 'practice-token-discipline' },
@@ -165,6 +178,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Reference',
+    path: 'reference',
     items: [
       { label: 'Semantic tokens', anchor: 'semantic-tokens' },
       { label: 'Palette', anchor: 'palette' },
@@ -183,6 +197,7 @@ export const NAV: NavGroup[] = [
   },
   {
     title: 'Changelog',
+    path: 'changelog',
     items: [{ label: 'Changelog', anchor: 'changelog' }],
   },
 ];
