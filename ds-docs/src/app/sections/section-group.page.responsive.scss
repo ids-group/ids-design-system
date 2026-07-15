@@ -1,0 +1,13 @@
+@use 'styles/breakpoints' as bp;
+
+@include bp.up(md) {
+  :host {
+    padding: var(--space-10) var(--space-8) var(--space-16);
+  }
+}
+
+@include bp.up(lg) {
+  :host {
+    padding: var(--space-12) var(--space-16) var(--space-24);
+  }
+}

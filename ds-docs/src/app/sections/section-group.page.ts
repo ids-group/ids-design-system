@@ -8,7 +8,10 @@ import { GROUP_PAGES } from '../group-pages';
   standalone: true,
   imports: [NgComponentOutlet, RouterLink],
   encapsulation: ViewEncapsulation.Emulated,
-  styleUrls: ['./section-group.page.scss'],
+  styleUrls: [
+    './section-group.page.scss',
+    './section-group.page.responsive.scss',
+  ],
   template: `
     @let group = def();
     @if (group) {
