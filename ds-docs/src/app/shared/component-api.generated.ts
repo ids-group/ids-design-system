@@ -325,9 +325,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "name": "tint",
         "kind": "input",
         "type": "{ bg: string; fg: string } | 'neutral' | null",
-        "union": [
-          "neutral"
-        ],
+        "union": null,
         "default": "null",
         "required": false,
         "description": "Off-token color tint. Accepts a `{ bg, fg }` pair for arbitrary palettes, the literal `'neutral'` for the neutral overflow-chip treatment, or null for the default brand-subtle tones from avatar.scss."
@@ -3272,7 +3270,10 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "ProgressVariant",
         "union": [
-          "default"
+          "default",
+          "success",
+          "warning",
+          "error"
         ],
         "default": "'default'",
         "required": false,
@@ -4545,6 +4546,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "false | 'skeleton' | 'overlay'",
         "union": [
+          "false",
           "skeleton",
           "overlay"
         ],
