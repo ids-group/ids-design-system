@@ -1,9 +1,13 @@
 import type { Routes } from '@angular/router';
+import { GROUP_PAGES } from './group-pages';
 
 export const routes: Routes = [
-  {
-    path: '',
-    loadComponent: () => import('./sections/docs.page').then((m) => m.DocsPage),
-  },
-  { path: '**', redirectTo: '' },
+  { path: '', pathMatch: 'full', redirectTo: 'home' },
+  ...GROUP_PAGES.map((group) => ({
+    path: group.path,
+    loadComponent: () =>
+      import('./sections/section-group.page').then((m) => m.SectionGroupPage),
+    data: { path: group.path },
+  })),
+  { path: '**', redirectTo: 'home' },
 ];
