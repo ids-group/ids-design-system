@@ -1,13 +1,6 @@
 {
   "$importPathDefault": "@ids-group-ltd/ids-design-system",
-  "button": {
-    "status": "stable",
-    "props": {
-      "ariaLabel": "Accessible label when the button renders no visible text.",
-      "ariaHasPopup": "Marks the button as opening a popup of the given kind.",
-      "ariaExpanded": "Reflects the expanded state of the popup the button controls."
-    }
-  },
+  "button": { "status": "stable" },
   "checkbox": { "status": "stable" },
   "date-picker": { "status": "stable" }
 }

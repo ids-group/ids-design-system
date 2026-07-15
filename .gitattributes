@@ -1,3 +1,7 @@
 # Shell scripts must stay LF — CRLF breaks them on the alpine CI runner
 # (`/bin/sh^M: bad interpreter`), regardless of a contributor's core.autocrlf.
 *.sh text eol=lf
+
+# Generated docs data is emitted with LF by the extractors; pin eol=lf so it
+# doesn't churn to CRLF on every build under core.autocrlf.
+*.generated.ts text eol=lf
