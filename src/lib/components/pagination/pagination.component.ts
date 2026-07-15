@@ -20,12 +20,19 @@ import { SelectComponent } from '../select/select.component';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class PaginationComponent {
+  /** Total item count, used to compute the page count. */
   readonly total = input.required<number>();
+  /** Items per page, two-way bound. */
   readonly pageSize = model<number>(10);
+  /** 1-based active page, two-way bound. */
   readonly currentPage = model<number>(1);
+  /** Preset choices offered in the page-size dropdown. */
   readonly pageSizeOptions = input<number[]>([10, 25, 50, 100]);
+  /** Shows the "Showing X–Y of Z" range label. */
   readonly showLabel = input(true, { transform: booleanAttribute });
+  /** Fires whenever the active page changes, including the reset to page 1 after a size change. */
   readonly pageChange = output<number>();
+  /** Fires when the page size changes via the size dropdown. */
   readonly pageSizeChange = output<number>();
 
   protected readonly totalPages = computed(() =>

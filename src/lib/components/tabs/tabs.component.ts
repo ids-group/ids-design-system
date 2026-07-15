@@ -30,7 +30,9 @@ let nextId = 0;
   },
 })
 export class TabsComponent {
+  /** Index of the active tab, two-way bound. */
   readonly selectedIndex = model<number>(0);
+  /** Visual style of the tab strip. */
   readonly variant = input<TabsVariant>('line');
 
   /** When true, a tab's content is instantiated only on first activation and

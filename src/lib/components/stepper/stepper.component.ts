@@ -29,15 +29,20 @@ export type StepperOrientation = 'horizontal' | 'vertical';
   },
 })
 export class StepperComponent {
+  /** Step labels, in order — one node is rendered per entry. */
   readonly steps = input<readonly string[]>([]);
+  /** Zero-based index of the active step; earlier steps render as completed. */
   readonly current = input<number>(0);
+  /** Where the step caption sits relative to its node. */
   readonly labelPosition = input<StepperLabelPosition>('bottom');
+  /** Layout axis of the stepper. */
   readonly orientation = input<StepperOrientation>('horizontal');
   /** When true, each step node renders as a button and emits its index on activation. */
   readonly clickable = input(false, { transform: booleanAttribute });
   /** Zero-based indices of steps in an error state. Error wins over completed/current/upcoming. */
   readonly errorSteps = input<readonly number[]>([]);
 
+  /** Fires with a step's index when it's activated (only when `clickable`). */
   readonly stepClicked = output<number>();
 
   protected stepState(

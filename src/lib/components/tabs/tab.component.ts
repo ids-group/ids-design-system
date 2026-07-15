@@ -18,9 +18,13 @@ import type { IconName } from '../../icons/icons.data';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class TabComponent {
+  /** Text shown in the tab button. */
   readonly label = input.required<string>();
+  /** Icon shown before the label. */
   readonly icon = input<IconName | null>(null);
+  /** Numeric badge shown after the label. */
   readonly count = input<number | null>(null);
+  /** Excludes the tab from selection and keyboard navigation. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Identifier emitted by tabClosed. Falls back to label when omitted. */
   readonly value = input<string | null>(null);

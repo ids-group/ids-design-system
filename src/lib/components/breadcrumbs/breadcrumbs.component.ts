@@ -29,8 +29,11 @@ export class BreadcrumbsComponent {
    * Pass an explicit array to opt out of the service (per-page override).
    */
   readonly items = input<BreadcrumbItem[] | null>(null);
+  /** Icon between crumbs; falls back to `DS_CONFIG.breadcrumbs.separator`, then `chevronRight`. */
   readonly separator = input<IconName | null>(null);
+  /** Whether crumbs render as links; falls back to `DS_CONFIG.breadcrumbs.clickable`, then `true`. */
   readonly clickable = input<boolean | null>(null);
+  /** Fires when a clickable crumb with `href` is activated; default navigation is always prevented. */
   readonly navigate = output<BreadcrumbItem>();
 
   protected readonly resolvedItems = computed<BreadcrumbItem[]>(

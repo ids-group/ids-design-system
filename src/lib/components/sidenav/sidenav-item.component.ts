@@ -28,18 +28,21 @@ import { SIDENAV } from './sidenav.token';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class SidenavItemComponent {
-  // `icon` is optional — consumers without a DS IconName can project a custom
-  // icon via the `[icon]` content slot. When both are supplied, the input
-  // wins (legacy DS-consumer behaviour).
+  /** Icon shown before the label; omit to project a custom icon via the `[icon]` slot instead. */
   readonly icon = input<IconName | null>(null);
+  /** Visible link text; also used as the tooltip/aria-label when the rail is collapsed. */
   readonly label = input.required<string>();
+  /** Plain `href` target, used when `routerLink` is not set. */
   readonly href = input<string>('');
-  // Angular RouterLink accepts both string and array forms — mirror that so
-  // consumers can pass dynamic segments (e.g. `['/programs', id, 'overview']`).
+  /** Angular `RouterLink` target — string or array form for dynamic segments. */
   readonly routerLink = input<string | readonly unknown[] | null>(null);
+  /** Applies the active style; also drives `aria-current` when not using `routerLink`. */
   readonly active = input(false, { transform: booleanAttribute });
+  /** Numeric count shown at the end of the item. */
   readonly badge = input<number | null>(null);
+  /** Shows an alert dot alongside the badge. */
   readonly hasAlert = input(false, { transform: booleanAttribute });
+  /** Disables the item — non-navigable and styled as inactive. */
   readonly disabled = input(false, { transform: booleanAttribute });
 
   private readonly sidenav = inject(SIDENAV, { optional: true });

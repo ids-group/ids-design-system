@@ -11,15 +11,13 @@ import type { IconName } from '../../icons/icons.data';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class SidenavGroupComponent {
+  /** Group heading text. */
   readonly label = input<string>('');
-  // Optional group icon (DS IconName). Consumers without a DS icon can project
-  // custom content via the `[icon]` slot.
+  /** Optional group icon; omit to project custom content via the `[icon]` slot instead. */
   readonly icon = input<IconName | null>(null);
-  // When true the label/icon row becomes a clickable header that expands /
-  // collapses the projected children with a caret rotation.
+  /** When true, the label/icon row becomes a clickable header that expands/collapses the group. */
   readonly expandable = input(false, { transform: booleanAttribute });
-  // Two-way bindable open state. Defaults to open (true) so a non-expandable
-  // group always shows its items.
+  /** Two-way bindable open state; defaults open so a non-expandable group always shows its items. */
   readonly expanded = model<boolean>(true);
 
   protected toggle(): void {

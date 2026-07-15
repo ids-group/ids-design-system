@@ -39,11 +39,15 @@ export class MenuItemComponent implements OnDestroy {
   private readonly button =
     viewChild.required<ElementRef<HTMLButtonElement>>('button');
 
+  /** Leading icon shown before the projected label. */
   readonly icon = input<IconName | null>(null);
+  /** Disables the item and excludes it from `ds-menu`'s roving-tabindex navigation. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Renders the item in an error/destructive style. */
   readonly error = input(false, { transform: booleanAttribute });
   /** Optional submenu template — renders a nested `ds-menu` on hover / ArrowRight. */
   readonly submenu = input<TemplateRef<unknown> | null>(null);
+  /** Fires on click, unless the item is disabled or opens a submenu. */
   readonly pressed = output<MouseEvent>();
 
   /** Roving tabindex, owned by ds-menu — exactly one item is tabbable (0), the
