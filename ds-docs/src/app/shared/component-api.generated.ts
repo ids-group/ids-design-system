@@ -44,7 +44,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "Header text shown in the toggle button."
       },
       {
         "name": "expanded",
@@ -53,7 +53,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Open state, two-way bound."
       },
       {
         "name": "disabled",
@@ -62,7 +62,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the toggle button; state stays as-is."
       }
     ],
     "outputs": []
@@ -90,7 +90,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'info'",
         "required": false,
-        "description": ""
+        "description": "Severity — drives colour, the default icon and the ARIA role/live."
       },
       {
         "name": "title",
@@ -99,7 +99,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Optional bold heading above the message."
       },
       {
         "name": "dismissible",
@@ -108,7 +108,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Show a close button that emits `closed`."
       },
       {
         "name": "icon",
@@ -117,7 +117,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Override the variant's default icon."
       }
     ],
     "outputs": [
@@ -128,7 +128,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires when the user dismisses the alert."
       }
     ]
   },
@@ -149,7 +149,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": ""
+        "description": "Flat option list — ignored when `optionGroups` is set."
       },
       {
         "name": "optionGroups",
@@ -158,7 +158,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": ""
+        "description": "Options grouped under labelled sections, rendered instead of `options`."
       },
       {
         "name": "value",
@@ -167,7 +167,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Selected value, or an array of values when `multiple`."
       },
       {
         "name": "multiple",
@@ -176,7 +176,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Allows selecting more than one option, shown as removable tags."
       },
       {
         "name": "size",
@@ -189,7 +189,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Trigger height — sm/md/lg."
       },
       {
         "name": "width",
@@ -201,7 +201,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'fill'",
         "required": false,
-        "description": ""
+        "description": "Trigger width — `fill` stretches to the container, `content` hugs the value."
       },
       {
         "name": "placeholder",
@@ -210,7 +210,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'Select…'",
         "required": false,
-        "description": ""
+        "description": "Placeholder shown in the input when empty."
       },
       {
         "name": "disabled",
@@ -219,7 +219,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the trigger and blocks all interaction."
       },
       {
         "name": "invalid",
@@ -228,7 +228,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies error styling and marks the field `aria-invalid`."
       },
       {
         "name": "hint",
@@ -237,7 +237,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Helper text shown below the field."
       },
       {
         "name": "allowCreate",
@@ -246,7 +246,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows a \"Create «text»\" row when the typed text matches no option."
       },
       {
         "name": "ariaLabel",
@@ -266,7 +266,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires with the typed text when the user picks the create-new option."
       }
     ]
   },
@@ -292,7 +292,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Diameter — xs/sm/lg apply a size class; md is the default."
       },
       {
         "name": "initials",
@@ -301,7 +301,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Fallback text shown when there's no `imageUrl`."
       },
       {
         "name": "imageUrl",
@@ -310,7 +310,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Image source; shown before `initials` or `fallbackIcon` when set."
       },
       {
         "name": "ariaLabel",
@@ -415,7 +415,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows a status dot; only rendered when `count` is unset."
       },
       {
         "name": "solid",
@@ -424,7 +424,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Solid accent fill instead of the default subtle background."
       },
       {
         "name": "count",
@@ -433,7 +433,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Numeric count to display; overrides projected content when set."
       },
       {
         "name": "max",
@@ -442,7 +442,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "99",
         "required": false,
-        "description": ""
+        "description": "Count is capped at this value, shown as `\"max+\"` beyond it."
       }
     ],
     "outputs": []
@@ -471,7 +471,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'info'",
         "required": false,
-        "description": ""
+        "description": "Severity — drives colour, the default icon and the ARIA role/live."
       },
       {
         "name": "title",
@@ -480,7 +480,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Optional bold heading above the message."
       },
       {
         "name": "dismissible",
@@ -489,7 +489,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Show a close button that emits `closed`."
       },
       {
         "name": "icon",
@@ -498,7 +498,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Override the variant's default icon."
       },
       {
         "name": "compact",
@@ -507,7 +507,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Tighter padding, centred items, single-line title."
       },
       {
         "name": "layout",
@@ -519,7 +519,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'stacked'",
         "required": false,
-        "description": ""
+        "description": "`'stacked'` wraps actions onto their own line; `'row'` keeps them inline."
       },
       {
         "name": "accentRail",
@@ -528,7 +528,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": ""
+        "description": "Coloured accent rail on the leading edge; set false to hide it."
       }
     ],
     "outputs": [
@@ -539,7 +539,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires when the user dismisses the banner."
       }
     ]
   },
@@ -560,7 +560,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Open state, two-way bound."
       },
       {
         "name": "title",
@@ -569,7 +569,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "Sheet title, shown in the header and used for `aria-labelledby`."
       },
       {
         "name": "snapPoints",
@@ -589,7 +589,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires once the close (leave) animation finishes."
       }
     ]
   },
@@ -619,7 +619,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Icon between crumbs; falls back to `DS_CONFIG.breadcrumbs.separator`, then `chevronRight`."
       },
       {
         "name": "clickable",
@@ -628,7 +628,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Whether crumbs render as links; falls back to `DS_CONFIG.breadcrumbs.clickable`, then `true`."
       }
     ],
     "outputs": [
@@ -639,7 +639,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires when a clickable crumb with `href` is activated; default navigation is always prevented."
       }
     ]
   },
@@ -696,7 +696,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Button height — sm/md/lg."
       },
       {
         "name": "type",
@@ -709,7 +709,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'button'",
         "required": false,
-        "description": ""
+        "description": "Native `<button>` `type` attribute."
       },
       {
         "name": "disabled",
@@ -718,7 +718,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the button and blocks `pressed`."
       },
       {
         "name": "loading",
@@ -727,7 +727,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Busy state — disables interaction and sets `aria-busy`."
       },
       {
         "name": "fullWidth",
@@ -754,7 +754,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Leading icon, before the projected content."
       },
       {
         "name": "trailingIcon",
@@ -763,7 +763,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Trailing icon, after the projected content."
       },
       {
         "name": "ariaHasPopup",
@@ -799,7 +799,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires on click, unless `disabled` or `loading`."
       }
     ]
   },
@@ -969,7 +969,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'flat'",
         "required": false,
-        "description": ""
+        "description": "Visual treatment; `interactive` makes the card clickable and emits `pressed`."
       },
       {
         "name": "padding",
@@ -983,7 +983,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Inner padding preset; `null` keeps the card's default padding."
       }
     ],
     "outputs": [
@@ -994,7 +994,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires the click event when `elevation` is `interactive`."
       }
     ]
   },
@@ -1015,7 +1015,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Checked state, two-way bound."
       },
       {
         "name": "indeterminate",
@@ -1024,7 +1024,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows the partial/mixed visual state — independent of `checked`."
       },
       {
         "name": "disabled",
@@ -1033,7 +1033,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the checkbox and blocks all interaction."
       },
       {
         "name": "name",
@@ -1042,7 +1042,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Native `name` attribute."
       },
       {
         "name": "inputId",
@@ -1051,7 +1051,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Overrides the generated id used by the native `<input>` and its `<label for>`."
       },
       {
         "name": "invalid",
@@ -1060,7 +1060,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies error styling and marks the input `aria-invalid`."
       },
       {
         "name": "hint",
@@ -1069,7 +1069,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Helper text shown below the checkbox."
       },
       {
         "name": "size",
@@ -1082,7 +1082,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Checkbox size — sm/md/lg."
       },
       {
         "name": "required",
@@ -1091,7 +1091,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Marks the field required — shows an asterisk and sets `aria-required`."
       },
       {
         "name": "label",
@@ -1122,7 +1122,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'#2F54FF'",
         "required": false,
-        "description": ""
+        "description": "Selected colour as a hex string, two-way bound."
       },
       {
         "name": "presets",
@@ -1131,7 +1131,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "DEFAULT_PRESETS",
         "required": false,
-        "description": ""
+        "description": "Swatches shown in the panel — defaults to a built-in palette."
       },
       {
         "name": "disabled",
@@ -1140,7 +1140,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the trigger and blocks all interaction."
       },
       {
         "name": "ariaLabel",
@@ -1149,7 +1149,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'Choose colour'",
         "required": false,
-        "description": ""
+        "description": "Accessible name for the trigger button and panel."
       },
       {
         "name": "invalid",
@@ -1158,7 +1158,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies error styling and marks the trigger `aria-invalid`."
       },
       {
         "name": "hint",
@@ -1167,7 +1167,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Helper text shown below the trigger."
       }
     ],
     "outputs": []
@@ -1192,7 +1192,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'single'",
         "required": false,
-        "description": ""
+        "description": "Selection mode — single date or start/end range."
       },
       {
         "name": "size",
@@ -1205,7 +1205,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Trigger height — sm/md/lg."
       },
       {
         "name": "value",
@@ -1214,7 +1214,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Selected date (single) or `[start, end]` (range), two-way bound."
       },
       {
         "name": "placeholder",
@@ -1223,7 +1223,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'Select date'",
         "required": false,
-        "description": ""
+        "description": "Accessible-name fallback only — the mask fills the visible placeholder, not this."
       },
       {
         "name": "label",
@@ -1232,7 +1232,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Field label shown above the trigger."
       },
       {
         "name": "hint",
@@ -1241,7 +1241,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Helper text shown below the field."
       },
       {
         "name": "required",
@@ -1250,7 +1250,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Marks the field required — shows an asterisk and sets `aria-required`."
       },
       {
         "name": "optional",
@@ -1259,7 +1259,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows an \"(optional)\" marker beside the label — ignored when `required` is set."
       },
       {
         "name": "disabled",
@@ -1268,7 +1268,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the picker and blocks all interaction."
       },
       {
         "name": "invalid",
@@ -1277,7 +1277,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies error styling and marks the trigger `aria-invalid`."
       },
       {
         "name": "ariaLabel",
@@ -1304,7 +1304,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "new Date().getFullYear() + 10",
         "required": false,
-        "description": ""
+        "description": "Upper bound for the year dropdown in the calendar header."
       },
       {
         "name": "minDate",
@@ -1407,7 +1407,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "The label. Plain text; rich values go in the projected content."
       },
       {
         "name": "copyValue",
@@ -1416,7 +1416,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "When set, a copy button appears that copies this string to the clipboard."
       }
     ],
     "outputs": []
@@ -1441,7 +1441,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'horizontal'",
         "required": false,
-        "description": ""
+        "description": "horizontal = label column + value; stacked = label above value."
       }
     ],
     "outputs": []
@@ -1504,7 +1504,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Open state, two-way bound."
       },
       {
         "name": "size",
@@ -1517,7 +1517,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Panel size — sm/md/lg."
       },
       {
         "name": "placement",
@@ -1531,7 +1531,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'right'",
         "required": false,
-        "description": ""
+        "description": "Edge the panel slides in from."
       },
       {
         "name": "title",
@@ -1540,7 +1540,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "Drawer title, shown in the header and used for `aria-labelledby`."
       }
     ],
     "outputs": [
@@ -1551,7 +1551,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires once the close (slide-out) animation finishes."
       }
     ]
   },
@@ -1572,7 +1572,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Native `accept` attribute — comma-separated MIME types or extensions."
       },
       {
         "name": "multiple",
@@ -1581,7 +1581,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Allows picking more than one file at once (ignored when `single`)."
       },
       {
         "name": "files",
@@ -1590,7 +1590,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": ""
+        "description": "Files shown in the list — the consumer owns upload state and progress."
       },
       {
         "name": "disabled",
@@ -1619,7 +1619,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires with the raw files picked or dropped; the consumer adds them to `files`."
       },
       {
         "name": "fileRemoved",
@@ -1628,7 +1628,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires when the user removes a file from the list."
       }
     ]
   },
@@ -1655,7 +1655,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'none'",
         "required": false,
-        "description": ""
+        "description": "State — drives the default icon and shows a loading overlay when `'loading'`."
       },
       {
         "name": "icon",
@@ -1664,7 +1664,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Override the variant's default icon."
       },
       {
         "name": "title",
@@ -1673,7 +1673,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Optional heading below the icon."
       },
       {
         "name": "body",
@@ -1682,7 +1682,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Optional supporting text below the title."
       }
     ],
     "outputs": []
@@ -1757,7 +1757,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "Icon to render — the button's only visible content."
       },
       {
         "name": "ariaLabel",
@@ -1766,7 +1766,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "Accessible name — required since the button has no visible text."
       },
       {
         "name": "variant",
@@ -1780,7 +1780,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'standard'",
         "required": false,
-        "description": ""
+        "description": "Fill style — standard (chromeless), filled, tonal, or outlined."
       },
       {
         "name": "color",
@@ -1810,7 +1810,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Button size — sm/md/lg, matches the field/button height scale."
       },
       {
         "name": "type",
@@ -1823,7 +1823,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'button'",
         "required": false,
-        "description": ""
+        "description": "Native `button` type attribute."
       },
       {
         "name": "disabled",
@@ -1832,7 +1832,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the button and blocks `pressed`."
       },
       {
         "name": "selected",
@@ -1852,7 +1852,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires on click, unless disabled."
       }
     ]
   },
@@ -1873,7 +1873,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Text value, two-way bound."
       },
       {
         "name": "type",
@@ -1890,7 +1890,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'text'",
         "required": false,
-        "description": ""
+        "description": "Native input type — also affects the default clear button and password toggle."
       },
       {
         "name": "size",
@@ -1903,7 +1903,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Field height — sm/md/lg."
       },
       {
         "name": "label",
@@ -1912,7 +1912,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Label shown above the field, or inside it when `floating`."
       },
       {
         "name": "hint",
@@ -1921,7 +1921,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Helper text shown below the field."
       },
       {
         "name": "placeholder",
@@ -1930,7 +1930,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Placeholder shown when empty."
       },
       {
         "name": "disabled",
@@ -1939,7 +1939,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the field and blocks all interaction."
       },
       {
         "name": "readOnly",
@@ -1948,7 +1948,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Prevents editing while still allowing focus and selection."
       },
       {
         "name": "invalid",
@@ -1957,7 +1957,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies error styling and marks the field `aria-invalid`."
       },
       {
         "name": "success",
@@ -1966,7 +1966,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies success styling to the field."
       },
       {
         "name": "loading",
@@ -1993,7 +1993,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Reserves space for a leading addon projected into `[dsInputPrefix]`."
       },
       {
         "name": "withAddonRight",
@@ -2002,7 +2002,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Reserves space for a trailing addon projected into `[dsInputSuffix]`."
       },
       {
         "name": "required",
@@ -2011,7 +2011,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Marks the field required — shows an asterisk and sets `aria-required`."
       },
       {
         "name": "optional",
@@ -2020,7 +2020,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows an \"(optional)\" marker next to the label (ignored when `required`)."
       },
       {
         "name": "name",
@@ -2029,7 +2029,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Native `name` attribute."
       },
       {
         "name": "min",
@@ -2038,7 +2038,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Native `min` attribute — applies when `type=\"number\"`."
       },
       {
         "name": "max",
@@ -2047,7 +2047,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Native `max` attribute — applies when `type=\"number\"`."
       },
       {
         "name": "step",
@@ -2056,7 +2056,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Native `step` attribute — applies when `type=\"number\"`."
       },
       {
         "name": "autocomplete",
@@ -2074,7 +2074,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Focuses the field automatically on render."
       },
       {
         "name": "ariaLabel",
@@ -2127,7 +2127,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Native `inputmode` attribute — hints the on-screen keyboard layout."
       },
       {
         "name": "clearable",
@@ -2145,7 +2145,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows a show/hide button when `type=\"password\"`."
       },
       {
         "name": "passwordVisible",
@@ -2154,7 +2154,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Whether the password is currently shown as plain text, two-way bound."
       }
     ],
     "outputs": [
@@ -2323,7 +2323,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": ""
+        "description": "Draw a hairline separator between adjacent items."
       }
     ],
     "outputs": []
@@ -2345,7 +2345,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Convenience text; richer middle content can be projected as default content."
       },
       {
         "name": "subtitle",
@@ -2354,7 +2354,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Secondary line below `title`."
       },
       {
         "name": "clickable",
@@ -2363,7 +2363,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Whole-row navigation: renders an inner button and emits `activated`."
       },
       {
         "name": "selected",
@@ -2372,7 +2372,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Marks the row current via `aria-current`."
       },
       {
         "name": "disabled",
@@ -2381,7 +2381,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the row; only affects the button when `clickable`."
       }
     ],
     "outputs": [
@@ -2392,7 +2392,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires when the clickable row's button is activated."
       }
     ]
   },
@@ -2413,7 +2413,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Show the scrim + spinner over the projected region."
       },
       {
         "name": "label",
@@ -2422,7 +2422,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Optional caption beneath the spinner."
       },
       {
         "name": "blur",
@@ -2431,7 +2431,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": ""
+        "description": "Backdrop-blur the projected content behind the scrim."
       },
       {
         "name": "spinnerSize",
@@ -2444,7 +2444,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Size of the spinner shown in the scrim."
       },
       {
         "name": "insetTop",
@@ -2453,7 +2453,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'0'",
         "required": false,
-        "description": ""
+        "description": "Offset the scrim top edge — useful when a sticky header should stay uncovered."
       }
     ],
     "outputs": []
@@ -2499,7 +2499,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Leading icon shown before the projected label."
       },
       {
         "name": "disabled",
@@ -2508,7 +2508,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the item and excludes it from `ds-menu`'s roving-tabindex navigation."
       },
       {
         "name": "error",
@@ -2517,7 +2517,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Renders the item in an error/destructive style."
       },
       {
         "name": "submenu",
@@ -2537,7 +2537,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires on click, unless the item is disabled or opens a submenu."
       }
     ]
   },
@@ -2564,7 +2564,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Card width — sm/md/lg/xl/fullscreen."
       },
       {
         "name": "error",
@@ -2573,7 +2573,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Renders the error styling (icon badge and card accent)."
       },
       {
         "name": "title",
@@ -2582,7 +2582,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "Card title, shown in the header and used for `aria-labelledby`."
       },
       {
         "name": "showClose",
@@ -2591,7 +2591,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": ""
+        "description": "Shows the header close button."
       },
       {
         "name": "icon",
@@ -2600,7 +2600,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Icon badge shown next to the title."
       },
       {
         "name": "dialogRole",
@@ -2612,7 +2612,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'dialog'",
         "required": false,
-        "description": ""
+        "description": "ARIA role for the dialog element."
       }
     ],
     "outputs": [
@@ -2623,7 +2623,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires when the header close button is clicked."
       }
     ]
   },
@@ -2644,7 +2644,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Open state, two-way bound."
       },
       {
         "name": "size",
@@ -2659,7 +2659,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Dialog width — sm/md/lg/xl/fullscreen."
       },
       {
         "name": "error",
@@ -2668,7 +2668,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Renders the error styling on the modal card."
       },
       {
         "name": "title",
@@ -2677,7 +2677,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "Dialog title, shown in the header and used for `aria-labelledby`."
       },
       {
         "name": "closeOnBackdrop",
@@ -2706,7 +2706,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires once the close (leave) animation finishes."
       },
       {
         "name": "confirmed",
@@ -2715,7 +2715,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Emit this yourself from a confirm action in the projected content — not fired by the modal itself."
       }
     ]
   },
@@ -2748,7 +2748,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": ""
+        "description": "Selected values, two-way bound."
       },
       {
         "name": "options",
@@ -2757,7 +2757,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": ""
+        "description": "Options shown in the panel."
       },
       {
         "name": "placeholder",
@@ -2766,7 +2766,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'Select…'",
         "required": false,
-        "description": ""
+        "description": "Placeholder shown in the trigger when nothing is selected."
       },
       {
         "name": "searchPlaceholder",
@@ -2775,7 +2775,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'Filter…'",
         "required": false,
-        "description": ""
+        "description": "Placeholder for the in-panel filter input."
       },
       {
         "name": "maxVisibleChips",
@@ -2784,7 +2784,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Caps the number of chips shown before collapsing the rest into \"+N more\" — 0/null shows all."
       },
       {
         "name": "disabled",
@@ -2793,7 +2793,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the trigger and blocks all interaction."
       },
       {
         "name": "invalid",
@@ -2802,7 +2802,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies error styling and marks the field `aria-invalid`."
       },
       {
         "name": "hint",
@@ -2811,7 +2811,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Helper text shown below the field."
       },
       {
         "name": "ariaLabel",
@@ -2820,7 +2820,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Accessible name for the trigger — falls back to `placeholder`."
       },
       {
         "name": "selectAll",
@@ -2829,7 +2829,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows a \"Select all\" row that toggles every filter-matching, enabled option."
       }
     ],
     "outputs": []
@@ -2851,7 +2851,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "0",
         "required": false,
-        "description": ""
+        "description": "Current numeric value, two-way bound."
       },
       {
         "name": "min",
@@ -2860,7 +2860,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "0",
         "required": false,
-        "description": ""
+        "description": "Lower bound — the decrement button and typed input clamp to it."
       },
       {
         "name": "max",
@@ -2869,7 +2869,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Upper bound — the increment button and typed input clamp to it; unbounded when null."
       },
       {
         "name": "step",
@@ -2878,7 +2878,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "1",
         "required": false,
-        "description": ""
+        "description": "Amount added or subtracted per increment/decrement."
       },
       {
         "name": "size",
@@ -2891,7 +2891,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Control height — sm/md/lg."
       },
       {
         "name": "disabled",
@@ -2900,7 +2900,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the stepper and blocks all interaction."
       },
       {
         "name": "ariaLabel",
@@ -2931,7 +2931,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Entered code, two-way bound."
       },
       {
         "name": "length",
@@ -2940,7 +2940,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "6",
         "required": false,
-        "description": ""
+        "description": "Number of character cells."
       },
       {
         "name": "mode",
@@ -2952,7 +2952,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'numeric'",
         "required": false,
-        "description": ""
+        "description": "Restricts input and the mobile keyboard to digits-only, or allows letters too."
       },
       {
         "name": "mask",
@@ -2961,7 +2961,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Renders each cell as a password dot instead of the typed character."
       },
       {
         "name": "disabled",
@@ -2970,7 +2970,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables all cells and blocks interaction."
       },
       {
         "name": "invalid",
@@ -2979,7 +2979,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies error styling and marks each cell `aria-invalid`."
       },
       {
         "name": "hint",
@@ -2988,7 +2988,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Helper text shown below the cells."
       },
       {
         "name": "ariaLabel",
@@ -2997,7 +2997,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'Verification code'",
         "required": false,
-        "description": ""
+        "description": "Accessible group label for the cell row."
       }
     ],
     "outputs": [
@@ -3008,7 +3008,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires once, with the full code, on the partial → complete transition."
       }
     ]
   },
@@ -3033,7 +3033,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'default'",
         "required": false,
-        "description": ""
+        "description": "Visual style — default, compact, or the accented `save`-bar look."
       }
     ],
     "outputs": []
@@ -3055,7 +3055,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Small label shown above the title."
       },
       {
         "name": "title",
@@ -3064,7 +3064,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Page title, rendered as the `h1`."
       },
       {
         "name": "subtitle",
@@ -3073,7 +3073,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Supporting line shown under the title."
       },
       {
         "name": "compact",
@@ -3082,7 +3082,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Tightens spacing for dense layouts."
       },
       {
         "name": "divider",
@@ -3091,7 +3091,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows a rule under the whole header."
       },
       {
         "name": "metaDivider",
@@ -3100,7 +3100,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows a rule under the meta row only."
       }
     ],
     "outputs": []
@@ -3122,7 +3122,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "Total item count, used to compute the page count."
       },
       {
         "name": "pageSize",
@@ -3131,7 +3131,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "10",
         "required": false,
-        "description": ""
+        "description": "Items per page, two-way bound."
       },
       {
         "name": "currentPage",
@@ -3140,7 +3140,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "1",
         "required": false,
-        "description": ""
+        "description": "1-based active page, two-way bound."
       },
       {
         "name": "pageSizeOptions",
@@ -3149,7 +3149,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[10, 25, 50, 100]",
         "required": false,
-        "description": ""
+        "description": "Preset choices offered in the page-size dropdown."
       },
       {
         "name": "showLabel",
@@ -3158,7 +3158,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": ""
+        "description": "Shows the \"Showing X–Y of Z\" range label."
       }
     ],
     "outputs": [
@@ -3169,7 +3169,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires whenever the active page changes, including the reset to page 1 after a size change."
       },
       {
         "name": "pageSizeChange",
@@ -3178,7 +3178,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires when the page size changes via the size dropdown."
       }
     ]
   },
@@ -3202,7 +3202,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'start'",
         "required": false,
-        "description": ""
+        "description": "Cross-axis alignment of the panel against the trigger."
       },
       {
         "name": "placement",
@@ -3265,7 +3265,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "0",
         "required": false,
-        "description": ""
+        "description": "Progress 0–100; clamped, and ignored while `indeterminate`."
       },
       {
         "name": "variant",
@@ -3276,7 +3276,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'default'",
         "required": false,
-        "description": ""
+        "description": "Colour variant — drives the success/warning/error styling."
       },
       {
         "name": "indeterminate",
@@ -3285,7 +3285,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Indeterminate (unknown-duration) animation instead of a fixed `value`."
       },
       {
         "name": "ariaLabel",
@@ -3325,7 +3325,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the radio; a disabled parent `ds-radio-group` also disables it."
       },
       {
         "name": "name",
@@ -3334,7 +3334,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Native `name` attribute — overridden by the group's name when inside `ds-radio-group`."
       },
       {
         "name": "value",
@@ -3343,7 +3343,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Value compared against the group's selection when inside `ds-radio-group`."
       },
       {
         "name": "inputId",
@@ -3352,7 +3352,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Overrides the auto-generated id used for the input and its label's `for`."
       },
       {
         "name": "invalid",
@@ -3361,7 +3361,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies error styling and marks the input `aria-invalid`."
       },
       {
         "name": "hint",
@@ -3370,7 +3370,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Helper text shown below the control."
       },
       {
         "name": "size",
@@ -3383,7 +3383,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Control size — sm/md/lg."
       },
       {
         "name": "required",
@@ -3392,7 +3392,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Marks the radio required — shows an asterisk on the label and sets `aria-required`."
       },
       {
         "name": "label",
@@ -3499,7 +3499,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Search text, two-way bound."
       },
       {
         "name": "placeholder",
@@ -3508,7 +3508,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'Search'",
         "required": false,
-        "description": ""
+        "description": "Placeholder shown when empty."
       },
       {
         "name": "shortcut",
@@ -3517,7 +3517,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Keyboard shortcut hint rendered in a trailing `<kbd>` badge."
       },
       {
         "name": "showIcon",
@@ -3526,7 +3526,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": ""
+        "description": "Shows the leading search icon."
       },
       {
         "name": "clearable",
@@ -3555,7 +3555,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires with the current value on Enter."
       }
     ]
   },
@@ -3576,7 +3576,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": ""
+        "description": "Segments to render — each needs a `label` and `value`, optional `icon`/`disabled`."
       },
       {
         "name": "value",
@@ -3585,7 +3585,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Selected segment's `value`, two-way bound."
       },
       {
         "name": "ariaLabel",
@@ -3594,7 +3594,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Accessible name for the segmented control (radiogroup role)."
       }
     ],
     "outputs": []
@@ -3616,7 +3616,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Selected option's value, two-way bound."
       },
       {
         "name": "options",
@@ -3625,7 +3625,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": ""
+        "description": "Flat options or option groups rendered in the dropdown panel."
       },
       {
         "name": "placeholder",
@@ -3634,7 +3634,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Shown in the trigger when nothing is selected."
       },
       {
         "name": "size",
@@ -3647,7 +3647,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Trigger height — sm/md/lg."
       },
       {
         "name": "label",
@@ -3656,7 +3656,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Label shown above the trigger."
       },
       {
         "name": "disabled",
@@ -3665,7 +3665,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the trigger and blocks all interaction."
       },
       {
         "name": "readOnly",
@@ -3674,7 +3674,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Prevents opening the dropdown while still allowing focus."
       },
       {
         "name": "invalid",
@@ -3683,7 +3683,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies error styling and marks the trigger `aria-invalid`."
       },
       {
         "name": "hint",
@@ -3692,7 +3692,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Helper text shown below the trigger."
       },
       {
         "name": "required",
@@ -3701,7 +3701,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Marks the field required — shows an asterisk and sets `aria-required`."
       },
       {
         "name": "optional",
@@ -3710,7 +3710,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows an \"(optional)\" marker next to the label (ignored when `required`)."
       },
       {
         "name": "name",
@@ -3719,7 +3719,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Native `name` attribute forwarded to the trigger."
       },
       {
         "name": "ariaLabel",
@@ -3737,7 +3737,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows an inline clear (×) button when a value is selected."
       }
     ],
     "outputs": []
@@ -3759,7 +3759,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Collapses the rail to icon-only width; read by nested `ds-sidenav-item`/`ds-sidenav-group`."
       },
       {
         "name": "brand",
@@ -3768,7 +3768,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Brand/logo text shown at the top of the rail."
       }
     ],
     "outputs": []
@@ -3790,7 +3790,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Group heading text."
       },
       {
         "name": "icon",
@@ -3799,7 +3799,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Optional group icon; omit to project custom content via the `[icon]` slot instead."
       },
       {
         "name": "expandable",
@@ -3808,7 +3808,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "When true, the label/icon row becomes a clickable header that expands/collapses the group."
       },
       {
         "name": "expanded",
@@ -3817,7 +3817,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": ""
+        "description": "Two-way bindable open state; defaults open so a non-expandable group always shows its items."
       }
     ],
     "outputs": []
@@ -3839,7 +3839,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Icon shown before the label; omit to project a custom icon via the `[icon]` slot instead."
       },
       {
         "name": "label",
@@ -3848,7 +3848,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "Visible link text; also used as the tooltip/aria-label when the rail is collapsed."
       },
       {
         "name": "href",
@@ -3857,7 +3857,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Plain `href` target, used when `routerLink` is not set."
       },
       {
         "name": "routerLink",
@@ -3866,7 +3866,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Angular `RouterLink` target — string or array form for dynamic segments."
       },
       {
         "name": "active",
@@ -3875,7 +3875,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies the active style; also drives `aria-current` when not using `routerLink`."
       },
       {
         "name": "badge",
@@ -3884,7 +3884,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Numeric count shown at the end of the item."
       },
       {
         "name": "hasAlert",
@@ -3893,7 +3893,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows an alert dot alongside the badge."
       },
       {
         "name": "disabled",
@@ -3902,7 +3902,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the item — non-navigable and styled as inactive."
       }
     ],
     "outputs": []
@@ -3924,7 +3924,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "undefined",
         "required": false,
-        "description": ""
+        "description": "CSS width of the placeholder (e.g. `'120px'`, `'50%'`)."
       },
       {
         "name": "height",
@@ -3933,7 +3933,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "undefined",
         "required": false,
-        "description": ""
+        "description": "CSS height of the placeholder."
       },
       {
         "name": "circle",
@@ -3942,7 +3942,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Pill radius, for avatar/dot-shaped placeholders."
       },
       {
         "name": "inline",
@@ -3951,7 +3951,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "`display: inline-block` instead of `block`, to sit inline with text."
       }
     ],
     "outputs": []
@@ -3973,7 +3973,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "0",
         "required": false,
-        "description": ""
+        "description": "Current value, or `[low, high]` when `range`. Two-way bound."
       },
       {
         "name": "min",
@@ -3982,7 +3982,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "0",
         "required": false,
-        "description": ""
+        "description": "Minimum selectable value."
       },
       {
         "name": "max",
@@ -3991,7 +3991,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "100",
         "required": false,
-        "description": ""
+        "description": "Maximum selectable value."
       },
       {
         "name": "step",
@@ -4000,7 +4000,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "1",
         "required": false,
-        "description": ""
+        "description": "Increment applied when dragging (snap) or nudging with arrow keys."
       },
       {
         "name": "range",
@@ -4009,7 +4009,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Two-thumb range mode — `value` becomes a `[low, high]` tuple."
       },
       {
         "name": "disabled",
@@ -4018,7 +4018,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the slider and blocks all interaction."
       },
       {
         "name": "ariaLabel",
@@ -4027,7 +4027,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Accessible name for the thumb(s) — suffixed \"minimum\"/\"maximum\" in `range` mode."
       },
       {
         "name": "invalid",
@@ -4036,7 +4036,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies error styling."
       },
       {
         "name": "hint",
@@ -4045,7 +4045,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Helper text shown below the slider."
       }
     ],
     "outputs": []
@@ -4071,7 +4071,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Spinner size — sm/md/lg."
       }
     ],
     "outputs": []
@@ -4093,7 +4093,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Label text on the main button."
       },
       {
         "name": "variant",
@@ -4105,7 +4105,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'primary'",
         "required": false,
-        "description": ""
+        "description": "Visual style — primary (solid) or outline."
       },
       {
         "name": "icon",
@@ -4114,7 +4114,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Icon shown on the main button, before the label."
       },
       {
         "name": "disabled",
@@ -4123,7 +4123,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables both the main button and the dropdown trigger."
       },
       {
         "name": "menuItems",
@@ -4132,7 +4132,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": ""
+        "description": "Items listed in the dropdown menu."
       },
       {
         "name": "menuLabel",
@@ -4152,7 +4152,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires when the main button (not the dropdown trigger) is clicked."
       },
       {
         "name": "itemSelected",
@@ -4161,7 +4161,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires with the chosen menu item."
       }
     ]
   },
@@ -4182,7 +4182,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "Metric name shown above the value."
       },
       {
         "name": "value",
@@ -4191,7 +4191,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "Headline metric; `unit` is appended directly after it."
       },
       {
         "name": "delta",
@@ -4200,7 +4200,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Change amount; sign drives the up/down arrow and color."
       },
       {
         "name": "deltaLabel",
@@ -4209,7 +4209,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Suffix appended after the delta's magnitude, e.g. \"vs last month\"."
       },
       {
         "name": "deltaTone",
@@ -4221,7 +4221,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Overrides the automatic up/down coloring of the delta."
       },
       {
         "name": "caption",
@@ -4230,7 +4230,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Secondary text shown below the value when there's no `delta`."
       },
       {
         "name": "unit",
@@ -4239,7 +4239,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Suffix appended directly after `value`, e.g. \"%\"."
       },
       {
         "name": "variant",
@@ -4251,7 +4251,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'default'",
         "required": false,
-        "description": ""
+        "description": "`error` applies the error color treatment."
       },
       {
         "name": "size",
@@ -4264,7 +4264,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Controls the stat's overall type scale."
       }
     ],
     "outputs": []
@@ -4317,7 +4317,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": ""
+        "description": "Step labels, in order — one node is rendered per entry."
       },
       {
         "name": "current",
@@ -4326,7 +4326,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "0",
         "required": false,
-        "description": ""
+        "description": "Zero-based index of the active step; earlier steps render as completed."
       },
       {
         "name": "labelPosition",
@@ -4338,7 +4338,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'bottom'",
         "required": false,
-        "description": ""
+        "description": "Where the step caption sits relative to its node."
       },
       {
         "name": "orientation",
@@ -4350,7 +4350,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'horizontal'",
         "required": false,
-        "description": ""
+        "description": "Layout axis of the stepper."
       },
       {
         "name": "clickable",
@@ -4379,7 +4379,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires with a step's index when it's activated (only when `clickable`)."
       }
     ]
   },
@@ -4400,7 +4400,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "On/off state, two-way bound."
       },
       {
         "name": "disabled",
@@ -4409,7 +4409,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the switch and blocks all interaction."
       },
       {
         "name": "name",
@@ -4418,7 +4418,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Native `name` attribute."
       },
       {
         "name": "variant",
@@ -4431,7 +4431,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'default'",
         "required": false,
-        "description": ""
+        "description": "Track colour when checked."
       },
       {
         "name": "inputId",
@@ -4440,7 +4440,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Overrides the generated id used by the native `<input>` and its `<label for>`."
       },
       {
         "name": "invalid",
@@ -4449,7 +4449,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies error styling and marks the input `aria-invalid`."
       },
       {
         "name": "hint",
@@ -4458,7 +4458,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Helper text shown below the switch."
       },
       {
         "name": "size",
@@ -4471,7 +4471,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Switch size — sm/md/lg."
       },
       {
         "name": "required",
@@ -4480,7 +4480,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Marks the field required — shows an asterisk and sets `aria-required`."
       },
       {
         "name": "label",
@@ -4511,7 +4511,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "Rows to render."
       },
       {
         "name": "columns",
@@ -4520,7 +4520,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "Column definitions driving headers, cells and sorting."
       },
       {
         "name": "selectable",
@@ -4529,7 +4529,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Adds a checkbox column for row/select-all selection."
       },
       {
         "name": "bordered",
@@ -4559,7 +4559,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": ""
+        "description": "Keeps the header row pinned while the body scrolls."
       },
       {
         "name": "selectedIds",
@@ -4568,7 +4568,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "new Set<string>()",
         "required": false,
-        "description": ""
+        "description": "Two-way set of currently selected row ids."
       },
       {
         "name": "sortKey",
@@ -4577,7 +4577,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Column key currently sorted by; `null` when unsorted."
       },
       {
         "name": "sortDir",
@@ -4589,7 +4589,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Sort direction for `sortKey`."
       },
       {
         "name": "skeletonRows",
@@ -4598,7 +4598,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "5",
         "required": false,
-        "description": ""
+        "description": "Number of shimmer rows rendered while `loading` is `'skeleton'`."
       },
       {
         "name": "caption",
@@ -4643,7 +4643,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[10, 25, 50, 100]",
         "required": false,
-        "description": ""
+        "description": "Selectable page-size choices shown in the pagination control."
       },
       {
         "name": "clientSort",
@@ -4717,7 +4717,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires with the row on click (or Enter/Space when `rowInteractive`)."
       },
       {
         "name": "sortChange",
@@ -4726,7 +4726,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires whenever sort key/direction changes, regardless of `clientSort`."
       }
     ]
   },
@@ -4747,7 +4747,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "Text shown in the tab button."
       },
       {
         "name": "icon",
@@ -4756,7 +4756,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Icon shown before the label."
       },
       {
         "name": "count",
@@ -4765,7 +4765,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Numeric badge shown after the label."
       },
       {
         "name": "disabled",
@@ -4774,7 +4774,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Excludes the tab from selection and keyboard navigation."
       },
       {
         "name": "value",
@@ -4805,7 +4805,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "0",
         "required": false,
-        "description": ""
+        "description": "Index of the active tab, two-way bound."
       },
       {
         "name": "variant",
@@ -4817,7 +4817,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'line'",
         "required": false,
-        "description": ""
+        "description": "Visual style of the tab strip."
       },
       {
         "name": "lazy",
@@ -4891,7 +4891,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'solid'",
         "required": false,
-        "description": ""
+        "description": "Fill style — `solid` for high-emphasis, `neutral` for low-emphasis chips."
       },
       {
         "name": "closable",
@@ -4900,7 +4900,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows a close button that emits `closed`."
       },
       {
         "name": "interactive",
@@ -4909,7 +4909,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Makes the tag clickable, emitting `toggled` on click."
       },
       {
         "name": "selected",
@@ -4918,7 +4918,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies the active/selected visual state."
       },
       {
         "name": "closeLabel",
@@ -4938,7 +4938,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires when the close button is clicked."
       },
       {
         "name": "toggled",
@@ -4947,7 +4947,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires on click when `interactive` is true."
       }
     ]
   },
@@ -4968,7 +4968,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Text value, two-way bound."
       },
       {
         "name": "size",
@@ -4981,7 +4981,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Field height — sm/md/lg."
       },
       {
         "name": "label",
@@ -4990,7 +4990,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Label shown above the field."
       },
       {
         "name": "hint",
@@ -4999,7 +4999,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Helper text shown below the field."
       },
       {
         "name": "placeholder",
@@ -5008,7 +5008,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Placeholder shown when empty."
       },
       {
         "name": "disabled",
@@ -5017,7 +5017,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the field and blocks all interaction."
       },
       {
         "name": "readOnly",
@@ -5026,7 +5026,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Prevents editing while still allowing focus and selection."
       },
       {
         "name": "invalid",
@@ -5035,7 +5035,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies error styling and marks the field `aria-invalid`."
       },
       {
         "name": "required",
@@ -5044,7 +5044,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Marks the field required — shows an asterisk and sets `aria-required`."
       },
       {
         "name": "optional",
@@ -5053,7 +5053,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows an \"(optional)\" marker next to the label (ignored when `required`)."
       },
       {
         "name": "rows",
@@ -5062,7 +5062,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "3",
         "required": false,
-        "description": ""
+        "description": "Native `rows` attribute — visible line count."
       },
       {
         "name": "name",
@@ -5071,7 +5071,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Native `name` attribute."
       },
       {
         "name": "autosize",
@@ -5080,7 +5080,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Grows the field with content instead of scrolling; forces `resize` to none."
       },
       {
         "name": "minRows",
@@ -5089,7 +5089,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Minimum height in lines when `autosize`."
       },
       {
         "name": "maxRows",
@@ -5098,7 +5098,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Maximum height in lines when `autosize`, beyond which it scrolls."
       },
       {
         "name": "resize",
@@ -5112,7 +5112,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'vertical'",
         "required": false,
-        "description": ""
+        "description": "Native CSS `resize` behaviour — ignored when `autosize`."
       },
       {
         "name": "ariaLabel",
@@ -5232,7 +5232,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Selected time, or `[start, end]` tuple when `mode=\"range\"`. Two-way bound."
       },
       {
         "name": "mode",
@@ -5244,7 +5244,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'single'",
         "required": false,
-        "description": ""
+        "description": "Single time or `[start, end]` range picker."
       },
       {
         "name": "minuteStep",
@@ -5253,7 +5253,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "1",
         "required": false,
-        "description": ""
+        "description": "Minute increment shown in the picker columns."
       },
       {
         "name": "minTime",
@@ -5262,7 +5262,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Earliest selectable time (\"HH:MM\")."
       },
       {
         "name": "maxTime",
@@ -5271,7 +5271,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Latest selectable time (\"HH:MM\")."
       },
       {
         "name": "disabledTime",
@@ -5280,7 +5280,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Predicate marking individual times unselectable."
       },
       {
         "name": "size",
@@ -5293,7 +5293,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Trigger height — sm/md/lg."
       },
       {
         "name": "disabled",
@@ -5302,7 +5302,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Disables the picker and blocks all interaction."
       },
       {
         "name": "invalid",
@@ -5311,7 +5311,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Applies error styling and marks the trigger `aria-invalid`."
       },
       {
         "name": "hint",
@@ -5320,7 +5320,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Helper text shown below the picker."
       },
       {
         "name": "placeholder",
@@ -5329,7 +5329,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'--:--'",
         "required": false,
-        "description": ""
+        "description": "Shown in the trigger when no time is set."
       },
       {
         "name": "clearable",
@@ -5338,7 +5338,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows an inline clear button when a value is set — single mode only."
       },
       {
         "name": "ariaLabel",
@@ -5347,7 +5347,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Accessible name for the trigger(s), suffixed \"(from)\"/\"(to)\" in range mode."
       },
       {
         "name": "format",
@@ -5393,7 +5393,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Primary text for the entry."
       },
       {
         "name": "time",
@@ -5402,7 +5402,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Timestamp or date label shown below the content."
       },
       {
         "name": "icon",
@@ -5411,7 +5411,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Icon shown in the marker; omit for a plain dot."
       },
       {
         "name": "tone",
@@ -5427,7 +5427,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'default'",
         "required": false,
-        "description": ""
+        "description": "Semantic accent color for the marker."
       }
     ],
     "outputs": []
@@ -5455,7 +5455,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'info'",
         "required": false,
-        "description": ""
+        "description": "Severity — drives colour, the default icon/spinner and the ARIA role/live."
       },
       {
         "name": "title",
@@ -5464,7 +5464,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Optional bold heading above the message."
       },
       {
         "name": "message",
@@ -5473,7 +5473,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Body text of the toast."
       },
       {
         "name": "dismissible",
@@ -5482,7 +5482,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Show a close button that emits `closed`."
       },
       {
         "name": "icon",
@@ -5491,7 +5491,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Override the variant's default icon."
       },
       {
         "name": "action",
@@ -5500,7 +5500,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Optional action button rendered before the dismiss control."
       }
     ],
     "outputs": [
@@ -5511,7 +5511,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires when the toast is dismissed or its action is invoked."
       }
     ]
   },
@@ -5594,7 +5594,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "Tooltip text content."
       },
       {
         "name": "placement",
@@ -5608,7 +5608,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": null,
         "required": true,
-        "description": ""
+        "description": "Side of the trigger the panel is positioned on; also drives the arrow class."
       },
       {
         "name": "panelId",
@@ -5617,7 +5617,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Element `id`, referenced by the trigger's `aria-describedby`."
       }
     ],
     "outputs": []
@@ -5651,7 +5651,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": ""
+        "description": "Root-level nodes; nest via `children`."
       },
       {
         "name": "expandedIds",
@@ -5660,7 +5660,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "new Set()",
         "required": false,
-        "description": ""
+        "description": "Two-way set of currently expanded node ids."
       },
       {
         "name": "selectedId",
@@ -5669,7 +5669,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Two-way id of the currently selected node."
       }
     ],
     "outputs": [
@@ -5680,7 +5680,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires with the node when a row is selected (click or Enter/Space)."
       }
     ]
   },
@@ -5701,7 +5701,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'///'",
         "required": false,
-        "description": ""
+        "description": "Marker rendered before the address (e.g. the \"///\" glyph)."
       },
       {
         "name": "address",
@@ -5710,7 +5710,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "The three-word address, rendered after `prefix`."
       },
       {
         "name": "copyable",
@@ -5719,7 +5719,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": ""
+        "description": "Makes the address clickable/focusable and copies `prefix` + `address` to the clipboard."
       }
     ],
     "outputs": [
@@ -5730,7 +5730,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Fires with `address` after a successful copy."
       }
     ]
   }
