@@ -44,6 +44,17 @@
     "declaration-block-no-redundant-longhand-properties": [
       true,
       { "ignoreShorthands": ["grid-template"] }
-    ]
+    ],
+    "media-feature-name-value-allowed-list": {
+      "/^(min-|max-)?width$/": [
+        "480px",
+        "640px",
+        "768px",
+        "1024px",
+        "1441px",
+        "1536px",
+        "/#\\{/"
+      ]
+    }
   }
 }

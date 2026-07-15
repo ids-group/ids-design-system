@@ -1,7 +1,0 @@
-@use 'styles/breakpoints' as bp;
-
-@include bp.down(lg) {
-  .tweaks-trigger {
-    display: none;
-  }
-}

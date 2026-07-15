@@ -18,7 +18,9 @@
 // of grid width.
 //
 // Mobile tier is the base rule below; the Tablet/Desktop/Desktop-wide tiers
-// (the @include bp.up(...) blocks) live in _page-grid.responsive.scss (repo rule).
+// (the @include bp.up(...) blocks) nest inside the same selector below.
+
+@use 'breakpoints' as bp;
 
 .page-grid {
   display: grid;
@@ -32,6 +34,28 @@
   --page-margin: var(--page-margin-mobile);
 
   grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  // Tablet (640-1023px) — 8 columns
+  @include bp.up(sm) {
+    --page-gutter: var(--page-gutter-tablet);
+    --page-margin: var(--page-margin-tablet);
+
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  // Desktop (1024-1440px) — 12 columns, fluid width
+  @include bp.up(lg) {
+    --page-gutter: var(--page-gutter-desktop);
+    --page-margin: var(--page-margin-desktop);
+
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  // Desktop wide (>= 1441px) — 12 columns, container capped at --col-cap-content
+  @include bp.up(xl) {
+    --page-gutter: var(--page-gutter-wide);
+    --page-margin: var(--page-margin-wide);
+  }
 }
 
 // Column-span helpers. The 12-col base covers every tier — at narrower tiers

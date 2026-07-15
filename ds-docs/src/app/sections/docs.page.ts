@@ -183,7 +183,7 @@ import { ChangelogSection } from './changelog/changelog.section';
     ChangelogSection,
   ],
   encapsulation: ViewEncapsulation.Emulated,
-  styleUrls: ['./docs.page.scss', './docs.page.responsive.scss'],
+  styleUrl: './docs.page.scss',
   template: `
     <section-home />
 

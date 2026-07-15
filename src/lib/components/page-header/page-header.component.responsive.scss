@@ -1,7 +1,0 @@
-@use '../../styles/breakpoints' as bp;
-
-.page-header {
-  @include bp.down(md) {
-    .actions { width: 100%; }
-  }
-}

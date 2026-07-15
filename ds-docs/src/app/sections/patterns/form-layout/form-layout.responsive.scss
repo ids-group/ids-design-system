@@ -1,7 +1,0 @@
-@use 'styles/breakpoints' as bp;
-
-@include bp.down(md) {
-  .form-section { grid-template-columns: 1fr; gap: var(--space-3); }
-  .row--2, .row--3, .row--6-12 { grid-template-columns: 1fr; }
-  .inline-edit { grid-template-columns: 1fr; }
-}

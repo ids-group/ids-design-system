@@ -1,8 +1,12 @@
+@use 'styles/breakpoints' as bp;
+
 .tweaks-trigger {
   position: fixed;
   top: var(--space-4);
   right: var(--space-4);
   z-index: var(--layer-popover);
+
+  @include bp.down(lg) { display: none; }
 }
 
 .row { display: grid; gap: var(--space-1); }

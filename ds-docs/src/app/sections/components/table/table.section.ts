@@ -49,7 +49,6 @@ interface ProjectRow {
   templateUrl: './table.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',
-    '../../../shared/section-demo.responsive.scss',
     './table.section.scss',
   ],
 })

@@ -1,3 +1,4 @@
+@use 'styles/breakpoints' as bp;
 
     .pair {
       margin-top: var(--space-3);
@@ -8,6 +9,8 @@
       border-radius: var(--radius-lg);
       overflow: hidden;
       position: relative;
+
+      @include bp.down(md) { grid-template-columns: 1fr; }
     }
     .pair::before,
     .pair::after {
@@ -26,7 +29,14 @@
       gap: var(--space-3);
       min-width: 0;
     }
-    .cell--do { border-right: var(--border-width-default) solid var(--border-divider); }
+    .cell--do {
+      border-right: var(--border-width-default) solid var(--border-divider);
+
+      @include bp.down(md) {
+        border-right: 0;
+        border-bottom: var(--border-width-default) solid var(--border-divider);
+      }
+    }
     .cell__tag {
       display: inline-flex;
       align-items: center;

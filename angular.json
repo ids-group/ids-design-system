@@ -59,10 +59,7 @@
                 "output": "/"
               }
             ],
-            "styles": [
-              "ds-docs/src/styles.scss",
-              "ds-docs/src/styles.responsive.scss"
-            ],
+            "styles": ["ds-docs/src/styles.scss"],
             "stylePreprocessorOptions": {
               "includePaths": ["src/lib"]
             }

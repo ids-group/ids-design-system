@@ -8,7 +8,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [DocsSectionComponent, SplitButtonComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './split-button.section.html',
-  styleUrls: ['../../../shared/section-demo.scss', '../../../shared/section-demo.responsive.scss'],
+  styleUrl: '../../../shared/section-demo.scss',
 })
 export class SplitButtonSection {
   protected readonly saveActions: SplitButtonItem[] = [

@@ -10,9 +10,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   templateUrl: './textarea.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',
-    '../../../shared/section-demo.responsive.scss',
     './textarea.section.scss',
-    './textarea.responsive.scss',
   ],
 })
 export class TextareaSection {}

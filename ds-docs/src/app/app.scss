@@ -1,3 +1,5 @@
+@use 'styles/breakpoints' as bp;
+
 :host {
   display: block;
   height: 100vh;
@@ -11,11 +13,20 @@
   grid-template-areas: 'bar' 'main';
   height: 100vh;
   height: 100svh;
+
+  @include bp.up(lg) {
+    grid-template-columns: 280px minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-areas: 'side main';
+    transition: grid-template-columns var(--duration-fast) var(--ease-standard);
+  }
 }
 
 .mob-bar {
   grid-area: bar;
   min-width: 0;
+
+  @include bp.up(lg) { display: none; }
 }
 
 .mob-brand {
@@ -26,6 +37,14 @@
 
 .side {
   display: none;
+
+  @include bp.up(lg) {
+    display: block;
+    grid-area: side;
+    height: 100%;
+    overflow-y: auto;
+    min-height: 0;
+  }
 }
 
 .main {

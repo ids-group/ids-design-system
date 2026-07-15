@@ -19,9 +19,7 @@ import {
   templateUrl: './input.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',
-    '../../../shared/section-demo.responsive.scss',
     './input.section.scss',
-    './input.responsive.scss',
   ],
 })
 export class InputSection {

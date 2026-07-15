@@ -11,7 +11,7 @@ const THEME_STORAGE_KEY = 'ds-docs-theme';
   standalone: true,
   imports: [ButtonComponent, DrawerComponent, SegmentedComponent, SliderComponent],
   templateUrl: './tweaks-panel.component.html',
-  styleUrls: ['./tweaks-panel.component.scss', './tweaks-panel.component.responsive.scss'],
+  styleUrl: './tweaks-panel.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class TweaksPanelComponent {

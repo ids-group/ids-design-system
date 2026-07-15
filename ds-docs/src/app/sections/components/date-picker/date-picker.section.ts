@@ -14,9 +14,7 @@ import {
   templateUrl: './date-picker.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',
-    '../../../shared/section-demo.responsive.scss',
     './date-picker.section.scss',
-    './date-picker.responsive.scss',
   ],
 })
 export class DatePickerSection {

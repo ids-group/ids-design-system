@@ -15,10 +15,7 @@ interface TokenPair {
   imports: [DocsSectionComponent, IconComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './token-discipline.section.html',
-  styleUrls: [
-    './token-discipline.section.scss',
-    './token-discipline.responsive.scss',
-  ],
+  styleUrl: './token-discipline.section.scss',
 })
 export class TokenDisciplineSection {
   protected readonly lede =

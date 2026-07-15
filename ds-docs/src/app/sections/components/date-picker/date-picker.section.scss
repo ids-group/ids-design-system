@@ -1,8 +1,15 @@
+@use 'styles/breakpoints' as bp;
+
     .grid-2 {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--space-4);
       margin-top: var(--space-3);
+
+      /* The trigger has a fixed 280px width (--date-picker-w, no shrink) — two of
+         them side by side in .grid-2 overflow well before 768px. Collapse to one
+         column so each trigger keeps its natural width on its own row. */
+      @include bp.down(sm) { grid-template-columns: minmax(0, 1fr); }
     }
 
     .row { display: flex; gap: var(--space-6); align-items: center; flex-wrap: wrap; margin-top: var(--space-3); }

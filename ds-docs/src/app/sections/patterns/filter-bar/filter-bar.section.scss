@@ -1,3 +1,5 @@
+@use 'styles/breakpoints' as bp;
+
     .stage {
       margin-top: var(--space-3);
       padding: var(--space-5);
@@ -23,8 +25,20 @@
 
     /* ds-select and ds-search default to host width:100%; in the filterbar
        they sit inline so we cap them to content-width with a min-width. */
-    .filterbar ds-select { width: auto; min-width: 160px; flex: 0 0 auto; }
-    .filterbar ds-search { width: auto; flex: 1 1 200px; max-width: 320px; }
+    .filterbar ds-select {
+      width: auto;
+      min-width: 160px;
+      flex: 0 0 auto;
+
+      @include bp.down(sm) { min-width: 0; flex: 1 1 45%; }
+    }
+    .filterbar ds-search {
+      width: auto;
+      flex: 1 1 200px;
+      max-width: 320px;
+
+      @include bp.down(sm) { max-width: none; flex: 1 1 100%; }
+    }
     .row {
       display: flex;
       gap: var(--space-2);
