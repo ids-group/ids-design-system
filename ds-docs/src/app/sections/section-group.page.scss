@@ -21,3 +21,34 @@
 .section-slot:first-of-type {
   margin-top: var(--space-8);
 }
+
+.next-group {
+  display: block;
+  margin-top: var(--space-16);
+  padding: var(--space-4) var(--space-6);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-md);
+  text-align: right;
+  text-decoration: none;
+  transition: background var(--duration-fast) var(--ease-standard);
+}
+.next-group:hover {
+  background: var(--surface-secondary);
+}
+.next-group__label {
+  display: block;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wider);
+  color: var(--text-tertiary);
+}
+.next-group__title {
+  display: block;
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+.next-group:hover .next-group__title {
+  color: var(--text-primary);
+}
