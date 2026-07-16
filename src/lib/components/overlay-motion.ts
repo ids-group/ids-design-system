@@ -70,3 +70,23 @@ export function closeOnOutsidePointer(
     close();
   });
 }
+
+/** Close a non-modal overlay when the page scrolls. CDK's scroll strategies only
+ *  observe `window` + registered `cdkScrollable`s, so they miss a plain
+ *  `overflow:auto` container (e.g. an app's scrolling `<main>`); this listens on
+ *  the document in the CAPTURE phase, which catches the non-bubbling `scroll`
+ *  event from ANY nested container. A scroll inside the panel itself is ignored.
+ *  Returns a teardown to remove the listener. */
+export function closeOnScroll(overlayRef: OverlayRef, close: () => void): () => void {
+  const onScroll = (event: Event): void => {
+    const target = event.target as Node | null;
+    if (target && overlayRef.overlayElement.contains(target)) {
+      return;
+    }
+    close();
+  };
+  const doc = overlayRef.overlayElement.ownerDocument;
+  doc.addEventListener('scroll', onScroll, true);
+
+  return () => doc.removeEventListener('scroll', onScroll, true);
+}

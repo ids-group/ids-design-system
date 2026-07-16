@@ -23,6 +23,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { A11yModule } from '@angular/cdk/a11y';
 import {
   closeOnOutsidePointer,
+  closeOnScroll,
   disposeWithLeave,
   forwardOverlayTokens,
 } from '../overlay-motion';
@@ -684,9 +685,7 @@ export class DatePickerComponent
       positionStrategy,
       hasBackdrop: false,
       panelClass: 'ds-overlay-pane',
-      // No backdrop, so a page scroll would leave the panel floating — close it
-      // instead (matches the non-modal "surroundings stay live" behaviour).
-      scrollStrategy: this.overlay.scrollStrategies.close(),
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
     this.overlayRef = this.overlay.create(cfg);
     forwardOverlayTokens(this.overlayRef, this.host.nativeElement, this.panelTokens);
@@ -695,6 +694,15 @@ export class DatePickerComponent
       (target) => this.host.nativeElement.contains(target),
       () => this.close(),
     );
+    // No backdrop catches a page scroll, and CDK's scroll strategies don't see a
+    // plain overflow container — so close on any outside scroll ourselves. Sync
+    // state on every detach so a stray CDK detach can't wedge the reopen guard.
+    const removeScrollClose = closeOnScroll(this.overlayRef, () => this.close());
+    this.overlayRef.detachments().subscribe(() => {
+      removeScrollClose();
+      this.overlayRef = null;
+      this.isOpen.set(false);
+    });
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {
         event.preventDefault();
