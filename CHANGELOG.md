@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.6.1 — 2026-07-16
+
 ### Fixed
 
 - **`ds-date-picker` panel now closes on scroll of any scroll container.** 0.6.0 used the CDK
