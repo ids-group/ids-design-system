@@ -8,6 +8,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Fixed
+
+- **`ds-date-picker` panel now closes on scroll of any scroll container.** 0.6.0 used the CDK
+  close-scroll strategy, which only observes the window and registered `cdkScrollable`s — so a plain
+  `overflow: auto` container (e.g. an app's scrolling `<main>`) never triggered the close and the
+  panel floated. It now also closes via a capture-phase document scroll listener, which catches the
+  non-bubbling scroll from any nested container.
+
 ## 0.6.0 — 2026-07-16
 
 ### Breaking
@@ -46,8 +54,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `hasBackdrop: false`, so hover/pointer events reach the rest of the page instead of being
   swallowed by a full-screen scrim, and the trigger input stays live — clicking it while the panel
   is open repositions the caret without closing. The panel closes on a pointer-down outside the
-  field and panel, on Escape, on selecting a day, and on any page scroll (a capture-phase scroll
-  listener, since a plain overflow container isn't seen by the CDK scroll strategies).
+  field and panel, on Escape, on selecting a day, and on scroll.
 
 ### Fixed
 
