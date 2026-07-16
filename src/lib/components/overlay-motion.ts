@@ -1,4 +1,4 @@
-import { OverlayRef } from '@angular/cdk/overlay';
+import type { OverlayRef } from '@angular/cdk/overlay';
 
 /**
  * Close a DS overlay panel.
@@ -52,4 +52,21 @@ export function forwardOverlayTokens(
       paneStyle.setProperty(token, value);
     }
   }
+}
+
+/** Close a non-modal overlay on a pointer press outside it, EXCEPT when the press
+ *  lands on its trigger — so the trigger stays interactive (caret, re-focus) while
+ *  open. Use with `hasBackdrop: false` so hover/cursor/pointer reach the live page. */
+export function closeOnOutsidePointer(
+  overlayRef: OverlayRef,
+  isInsideTrigger: (target: Node) => boolean,
+  close: () => void,
+): void {
+  overlayRef.outsidePointerEvents().subscribe((event) => {
+    const target = event.target as Node | null;
+    if (target && isInsideTrigger(target)) {
+      return;
+    }
+    close();
+  });
 }

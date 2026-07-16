@@ -21,7 +21,11 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { A11yModule } from '@angular/cdk/a11y';
-import { disposeWithLeave, forwardOverlayTokens } from '../overlay-motion';
+import {
+  closeOnOutsidePointer,
+  disposeWithLeave,
+  forwardOverlayTokens,
+} from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { CalendarDayComponent } from '../calendar-day/calendar-day.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
@@ -678,14 +682,17 @@ export class DatePickerComponent
       ]);
     const cfg: OverlayConfig = {
       positionStrategy,
-      hasBackdrop: true,
-      backdropClass: 'cdk-overlay-transparent-backdrop',
+      hasBackdrop: false,
       panelClass: 'ds-overlay-pane',
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
     this.overlayRef = this.overlay.create(cfg);
     forwardOverlayTokens(this.overlayRef, this.host.nativeElement, this.panelTokens);
-    this.overlayRef.backdropClick().subscribe(() => this.close());
+    closeOnOutsidePointer(
+      this.overlayRef,
+      (target) => this.host.nativeElement.contains(target),
+      () => this.close(),
+    );
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {
         event.preventDefault();
