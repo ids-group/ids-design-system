@@ -978,10 +978,10 @@ export class DatePickerComponent
     const perDate = spec.segments.length;
     const startFilled = slots
       .slice(0, perDate)
-      .every((s, i) => s.length === spec.segments[i].length);
+      .every((seg, i) => seg.length === spec.segments[i].length);
     const endFilled = slots
       .slice(perDate, perDate * 2)
-      .every((s, i) => s.length === spec.segments[i].length);
+      .every((seg, i) => seg.length === spec.segments[i].length);
     const [start, end] = parseDateRange(text, spec);
     const startBad = startFilled && (!start || this.isDayDisabled(start));
     const endBad = endFilled && (!end || this.isDayDisabled(end));
