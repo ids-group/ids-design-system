@@ -43,9 +43,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   with a transparent input layered over a per-slot overlay, so the value stays fixed-width and the
   caret stays aligned as you type across segments (single and range mode).
 - **`ds-date-picker` calendar panel is now non-blocking (no backdrop).** The panel renders with
-  `hasBackdrop: false`: it closes on pointer-down outside the panel, but the trigger stays live —
-  clicking the calendar icon while the panel is open toggles it closed, and hover/pointer events
-  reach the rest of the page instead of being swallowed by a full-screen scrim.
+  `hasBackdrop: false`, so hover/pointer events reach the rest of the page instead of being
+  swallowed by a full-screen scrim, and the trigger input stays live — clicking it while the panel
+  is open repositions the caret without closing. The panel closes on a pointer-down outside the
+  field and panel, on Escape, on selecting a day, and on any page scroll (a capture-phase scroll
+  listener, since a plain overflow container isn't seen by the CDK scroll strategies).
 
 ### Fixed
 
