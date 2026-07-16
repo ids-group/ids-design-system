@@ -15,6 +15,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `overflow: auto` container (e.g. an app's scrolling `<main>`) never triggered the close and the
   panel floated. It now also closes via a capture-phase document scroll listener, which catches the
   non-bubbling scroll from any nested container.
+- **`ds-date-picker` masked typing works on mobile keyboards.** Segment-aware editing was wired to
+  `keydown`, but Android/Gboard fires no reliable `keydown` for edits (Backspace arrives as a
+  `beforeinput` with `inputType: "deleteContentBackward"`), so deletion fell back to a native delete
+  + re-mask that couldn't cross a `/` separator — leaving the caret stuck (many taps to pass a
+  separator). Editing (digit entry, Backspace, Delete, selection replace) now also routes through
+  `beforeinput`, so a single tap crosses separators on a phone, matching desktop.
 
 ## 0.6.0 — 2026-07-16
 
