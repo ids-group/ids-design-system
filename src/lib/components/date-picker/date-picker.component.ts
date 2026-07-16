@@ -817,7 +817,16 @@ export class DatePickerComponent
       return;
     }
     event.preventDefault();
-    this.runSegmentEdit(element, kind, digit);
+    // Gboard reports Backspace/Delete on mobile with a full-segment "selection" (its
+    // composing region), which would hit the selection-clear branch below and wipe
+    // the whole slot. Collapse to the caret edge so a mobile delete removes one digit.
+    const collapsed =
+      kind === 'backspace'
+        ? element.selectionEnd
+        : kind === 'delete'
+          ? element.selectionStart
+          : undefined;
+    this.runSegmentEdit(element, kind, digit, collapsed);
     this.mobileEdit = {
       value: element.value,
       caret: element.selectionStart ?? element.value.length,
@@ -833,11 +842,14 @@ export class DatePickerComponent
     element: HTMLInputElement,
     kind: 'type' | 'backspace' | 'delete',
     digit?: string,
+    caretOverride?: number | null,
   ): void {
     const layout = this.layout();
     const segments = parseFieldText(element.value, layout);
-    const caret = element.selectionStart ?? element.value.length;
-    const selectionEnd = element.selectionEnd ?? caret;
+    // A caretOverride collapses the range (caret === selectionEnd), forcing the
+    // single-character branch below — used by the mobile beforeinput path.
+    const caret = caretOverride ?? element.selectionStart ?? element.value.length;
+    const selectionEnd = caretOverride ?? element.selectionEnd ?? caret;
     let edit: { segments: string[]; slot: number; offset: number } | null;
     if (selectionEnd !== caret) {
       const firstSel = caretToSlot(layout, caret);
