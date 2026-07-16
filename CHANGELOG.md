@@ -35,6 +35,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-modal` panel clamps to the viewport on small screens.** New `max-width: calc(100vw -
   var(--space-6))`; `max-height` is now `90vh` with a `90dvh` fallback (browsers without `dvh`
   support keep `90vh`).
+- **`ds-date-picker` shows per-segment placeholders and a fixed-width value.** Each empty
+  `MM` / `DD` / `YYYY` segment now renders its own format-letter placeholder (e.g. `MM/DD/YYYY`),
+  and a partially-typed segment shows the typed digits followed by muted padding letters. Achieved
+  with a transparent input layered over a per-slot overlay, so the value stays fixed-width and the
+  caret stays aligned as you type across segments (single and range mode).
+- **`ds-date-picker` calendar panel is now non-blocking (no backdrop).** The panel renders with
+  `hasBackdrop: false`: it closes on pointer-down outside the panel, but the trigger stays live —
+  clicking the calendar icon while the panel is open toggles it closed, and hover/pointer events
+  reach the rest of the page instead of being swallowed by a full-screen scrim.
 
 ### Fixed
 
@@ -60,6 +69,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   others or the caret.** Typing, Backspace and Delete stay within the focused `MM` / `DD` / `YYYY`
   field (single and range mode); previously correcting one segment could shift digits across the
   `/` separators and fling the caret to the end.
+- **`ds-date-picker` no longer shows a mask residue or a false invalid state when pristine.** An
+  untouched field previously held a `__/__/____` residue that was read out to screen readers and
+  could trip validation on blur; it now renders empty and raises no invalid state until the user
+  actually enters a value (single and range mode).
+- **`ds-date-picker` paste is slot-aware.** Pasting digits fills segments sequentially from the
+  caret position rather than flattening the field or clearing unrelated segments.
+- **`ds-date-picker` range values can no longer be corrupted by clearing one segment.** Parsing is
+  now slot-based instead of slicing by digit count, so clearing one segment of a range no longer
+  pulls a digit from an adjacent segment into the emptied slot; a date is parsed and validated only
+  once all of its slots are filled.
+- **`ds-date-picker` exposes its format hint to screen readers via `aria-placeholder`.** After the
+  native placeholder was removed for the overlay rework, the `MM/DD/YYYY` format hint is now surfaced
+  to assistive technology through `aria-placeholder`.
 
 ## 0.5.1 — 2026-07-13
 

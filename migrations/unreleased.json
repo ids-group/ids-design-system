@@ -24,6 +24,12 @@
     "ds-date-picker calendar panel caps to calc(100vw - var(--space-4)) and stacks the presets column below the day grid below 640px ($bp-sm), replacing the fixed 454px-wide side-by-side layout that overflowed phone viewports — visual only, no code change.",
     ".grid-3/.grid-4 layout-utils collapse tiers normalized to canonical breakpoints: 1100px -> 1024px ($bp-lg), 820px -> 768px ($bp-md) — visual only, no code change.",
     "ds-page-header actions full-width threshold normalized to canonical breakpoint: 720px -> 768px ($bp-md) — visual only, no code change.",
-    "ds-date-picker text entry is now segment-aware — typing/Backspace/Delete stay within the focused MM/DD/YYYY field (single and range mode) instead of shifting digits across the separators and moving the caret; behavior only, no code change."
+    "ds-date-picker text entry is now segment-aware — typing/Backspace/Delete stay within the focused MM/DD/YYYY field (single and range mode) instead of shifting digits across the separators and moving the caret; behavior only, no code change.",
+    "ds-date-picker now shows per-segment placeholders (each empty MM/DD/YYYY segment renders its own format letters, partial segments show digits + muted padding) via a transparent input over a per-slot overlay, keeping the value fixed-width and the caret aligned — visual/behavior only, no code change.",
+    "ds-date-picker calendar panel is now non-blocking (hasBackdrop: false) — it closes on outside pointer-down but the trigger stays live (clicking the icon while open toggles it closed) and hover/pointer events reach the rest of the page; behavior only, no code change.",
+    "ds-date-picker no longer shows a __/__/____ mask residue or raises a false invalid state on blur when the field is pristine (single and range mode) — behavior only, no code change.",
+    "ds-date-picker paste is now slot-aware — pasted digits fill segments sequentially from the caret instead of flattening the field or clearing unrelated segments; behavior only, no code change.",
+    "ds-date-picker range values can no longer be corrupted by clearing one segment (slot-based parsing replaced digit-count slicing; a date is parsed/validated only once all its slots are filled) — behavior only, no code change.",
+    "ds-date-picker now exposes its MM/DD/YYYY format hint to screen readers via aria-placeholder after the native placeholder was removed for the overlay rework — a11y only, no code change."
   ]
 }
