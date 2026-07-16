@@ -21,6 +21,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   + re-mask that couldn't cross a `/` separator — leaving the caret stuck (many taps to pass a
   separator). Editing (digit entry, Backspace, Delete, selection replace) now also routes through
   `beforeinput`, so a single tap crosses separators on a phone, matching desktop.
+- **`ds-date-picker` panel drops the misleading `aria-modal` attribute.** The calendar panel is
+  non-modal (no backdrop, the rest of the page stays interactive) but still advertised
+  `aria-modal="true"`, telling assistive technology the page behind it was inert. Removed so the
+  announced ARIA state matches the panel's actual non-blocking behaviour.
 
 ## 0.6.0 — 2026-07-16
 
