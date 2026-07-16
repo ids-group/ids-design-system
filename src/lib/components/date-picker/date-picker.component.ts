@@ -748,11 +748,24 @@ export class DatePickerComponent
     }
   }
 
+  // Intended result of a `beforeinput` segment edit, re-asserted in onFieldInput
+  // when a native mutation slips past a non-cancelable beforeinput (Android).
+  private mobileEdit: { value: string; caret: number } | null = null;
+
   protected onFieldInput(event: Event): void {
     if (!this.allowInput()) {
       return;
     }
     const element = event.target as HTMLInputElement;
+    if (this.mobileEdit) {
+      const { value, caret } = this.mobileEdit;
+      this.mobileEdit = null;
+      // beforeinput already applied the segment edit; overwrite whatever the
+      // native change did with the intended fixed-width value + caret.
+      this.writeBackText(element, value, caret);
+
+      return;
+    }
     this.commitRaw(element, element.value);
   }
 
@@ -783,28 +796,44 @@ export class DatePickerComponent
     );
   }
 
-  /** Mobile virtual keyboards don't fire a reliable `keydown` for edits — they
-   *  fire `beforeinput` with a precise `inputType`. Route deletion / digit entry
-   *  through the same segment editor here so a phone can cross separators too
-   *  (native delete + the onFieldInput re-mask couldn't, hence the stuck caret at
-   *  a `/`). On desktop `onFieldKeydown` preventDefaults first, which suppresses
-   *  this event — no double-handling; paste / IME fall through to their handlers. */
+  /** Mobile virtual keyboards don't fire a reliable `keydown` for edits — Gboard
+   *  reports Backspace/letters as keyCode 229 / "Unidentified" — so route deletion
+   *  and digit entry through the same segment editor here, keyed off `beforeinput`'s
+   *  precise `inputType`, so a phone can cross separators too (the old native-delete
+   *  + re-mask couldn't, hence the caret stuck at a `/`). On desktop `onFieldKeydown`
+   *  preventDefaults first, suppressing this event — no double-handling; paste / IME
+   *  fall through to their handlers.
+   *
+   *  Android Chrome is known to IGNORE `preventDefault()` for delete/insert
+   *  `beforeinput`, so a native mutation can still land and fire `input`; we stash
+   *  the intended result and re-assert it in onFieldInput. The microtask clears the
+   *  stash when preventDefault DID work (no `input` follows in the same task), so it
+   *  never goes stale. */
   protected onFieldBeforeInput(event: InputEvent): void {
     if (!this.allowInput()) {
       return;
     }
     const element = event.target as HTMLInputElement;
     const type = event.inputType;
+    let kind: 'type' | 'backspace' | 'delete' | null = null;
+    let digit: string | undefined;
     if (type === 'insertText' && event.data && /^\d$/.test(event.data)) {
-      event.preventDefault();
-      this.runSegmentEdit(element, 'type', event.data);
+      kind = 'type';
+      digit = event.data;
     } else if (type === 'deleteContentBackward') {
-      event.preventDefault();
-      this.runSegmentEdit(element, 'backspace');
+      kind = 'backspace';
     } else if (type === 'deleteContentForward') {
-      event.preventDefault();
-      this.runSegmentEdit(element, 'delete');
+      kind = 'delete';
+    } else {
+      return;
     }
+    event.preventDefault();
+    this.runSegmentEdit(element, kind, digit);
+    this.mobileEdit = {
+      value: element.value,
+      caret: element.selectionStart ?? element.value.length,
+    };
+    queueMicrotask(() => (this.mobileEdit = null));
   }
 
   /** Apply one segment edit (type a digit / Backspace / Delete) at the caret or
