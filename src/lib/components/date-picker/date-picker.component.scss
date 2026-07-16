@@ -137,15 +137,6 @@
   }
 }
 
-/* Forced colors (Windows High Contrast) override `.masked` back to an opaque
-   text color, so the real input value shows through — hide the ghost overlay
-   or its glyphs would double up with the UA-colored value underneath. */
-@media (forced-colors: active) {
-  .mask-ghost {
-    display: none;
-  }
-}
-
 .date-input {
   /* Width is driven by the `size` attribute (the mask length) so the field
      hugs its content instead of stretching. The monospace font keeps every
