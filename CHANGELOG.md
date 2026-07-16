@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.6.0 — 2026-07-16
+
 ### Breaking
 
 - **`styles/breakpoints` is side-effect-free — `--bp-*` now comes from an explicit `emit-vars`
