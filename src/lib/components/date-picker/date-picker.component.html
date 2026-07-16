@@ -52,6 +52,7 @@
         [attr.aria-invalid]="invalid() || typedInvalid() || rangeInvalid() ? 'true' : null"
         [attr.aria-describedby]="hintId()"
         [attr.aria-placeholder]="fieldPlaceholder()"
+        (beforeinput)="onFieldBeforeInput($event)"
         (input)="onFieldInput($event)"
         (paste)="onFieldPaste($event)"
         (blur)="onFieldBlur()"

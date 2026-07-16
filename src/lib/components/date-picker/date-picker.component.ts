@@ -756,16 +756,13 @@ export class DatePickerComponent
     this.commitRaw(element, element.value);
   }
 
-  /** Per-key editing kept inside the caret's mask slot: typed digits fill their
-   *  own segment, Backspace/Delete never shift digits across a separator, so a
-   *  correction can't corrupt a neighbouring segment or fling the caret away.
-   *  A non-collapsed selection is handled here too (never natively erased) —
-   *  only IME/paste fall through to the stream re-mask in onFieldInput/onFieldPaste. */
+  /** Physical-keyboard editing (desktop): typed digits fill the caret's slot;
+   *  Backspace/Delete never shift digits across a separator. Delegates to the
+   *  shared segment editor. */
   protected onFieldKeydown(event: KeyboardEvent): void {
     if (!this.allowInput()) {
       return;
     }
-    const element = event.target as HTMLInputElement;
     const key = event.key;
     const plain = !event.ctrlKey && !event.metaKey && !event.altKey;
     const isDigit = key.length === 1 && key >= '0' && key <= '9' && plain;
@@ -779,38 +776,71 @@ export class DatePickerComponent
       return;
     }
     event.preventDefault();
+    this.runSegmentEdit(
+      event.target as HTMLInputElement,
+      isDigit ? 'type' : key === 'Backspace' ? 'backspace' : 'delete',
+      isDigit ? key : undefined,
+    );
+  }
+
+  /** Mobile virtual keyboards don't fire a reliable `keydown` for edits — they
+   *  fire `beforeinput` with a precise `inputType`. Route deletion / digit entry
+   *  through the same segment editor here so a phone can cross separators too
+   *  (native delete + the onFieldInput re-mask couldn't, hence the stuck caret at
+   *  a `/`). On desktop `onFieldKeydown` preventDefaults first, which suppresses
+   *  this event — no double-handling; paste / IME fall through to their handlers. */
+  protected onFieldBeforeInput(event: InputEvent): void {
+    if (!this.allowInput()) {
+      return;
+    }
+    const element = event.target as HTMLInputElement;
+    const type = event.inputType;
+    if (type === 'insertText' && event.data && /^\d$/.test(event.data)) {
+      event.preventDefault();
+      this.runSegmentEdit(element, 'type', event.data);
+    } else if (type === 'deleteContentBackward') {
+      event.preventDefault();
+      this.runSegmentEdit(element, 'backspace');
+    } else if (type === 'deleteContentForward') {
+      event.preventDefault();
+      this.runSegmentEdit(element, 'delete');
+    }
+  }
+
+  /** Apply one segment edit (type a digit / Backspace / Delete) at the caret or
+   *  over the selection, then write the fixed-width value + caret back. A
+   *  selection is cleared through the model so `_` placeholders are never
+   *  natively erased — only digits are editable. Shared by keydown + beforeinput. */
+  private runSegmentEdit(
+    element: HTMLInputElement,
+    kind: 'type' | 'backspace' | 'delete',
+    digit?: string,
+  ): void {
     const layout = this.layout();
     const segments = parseFieldText(element.value, layout);
     const caret = element.selectionStart ?? element.value.length;
-    if (element.selectionStart !== element.selectionEnd) {
-      // A selection is never natively erased: clear the digits it spans
-      // through the segment model, so `_` placeholders can't be typed over or
-      // deleted directly — only digits are real, editable content.
-      const selectionEnd = element.selectionEnd ?? caret;
+    const selectionEnd = element.selectionEnd ?? caret;
+    let edit: { segments: string[]; slot: number; offset: number } | null;
+    if (selectionEnd !== caret) {
       const firstSel = caretToSlot(segments, layout, caret);
       const lastSel = caretToSlot(segments, layout, selectionEnd);
       const cleared = segments.slice();
       for (let index = firstSel.slot; index <= lastSel.slot; index++) {
         cleared[index] = '';
       }
-      const edit = isDigit
-        ? editType(cleared, layout, firstSel.slot, 0, key)
-        : { segments: cleared, slot: firstSel.slot, offset: 0 };
-      const text = this.toFieldText(edit.segments, layout);
-      this.applyEditedText(
-        element,
-        text,
-        text ? slotToCaret(edit.segments, layout, edit.slot, edit.offset) : 0,
-      );
-
-      return;
+      edit =
+        kind === 'type'
+          ? editType(cleared, layout, firstSel.slot, 0, digit as string)
+          : { segments: cleared, slot: firstSel.slot, offset: 0 };
+    } else {
+      const { slot, offset } = caretToSlot(segments, layout, caret);
+      edit =
+        kind === 'type'
+          ? editType(segments, layout, slot, offset, digit as string)
+          : kind === 'backspace'
+            ? editBackspace(segments, layout, slot, offset)
+            : editDelete(segments, layout, slot, offset);
     }
-    const { slot, offset } = caretToSlot(segments, layout, caret);
-    const edit = isDigit
-      ? editType(segments, layout, slot, offset, key)
-      : key === 'Backspace'
-        ? editBackspace(segments, layout, slot, offset)
-        : editDelete(segments, layout, slot, offset);
     if (!edit) {
       return;
     }
