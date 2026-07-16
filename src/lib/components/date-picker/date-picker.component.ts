@@ -684,7 +684,9 @@ export class DatePickerComponent
       positionStrategy,
       hasBackdrop: false,
       panelClass: 'ds-overlay-pane',
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+      // No backdrop, so a page scroll would leave the panel floating — close it
+      // instead (matches the non-modal "surroundings stay live" behaviour).
+      scrollStrategy: this.overlay.scrollStrategies.close(),
     };
     this.overlayRef = this.overlay.create(cfg);
     forwardOverlayTokens(this.overlayRef, this.host.nativeElement, this.panelTokens);
