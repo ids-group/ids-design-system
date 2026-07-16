@@ -97,9 +97,9 @@ export class DatePickerComponent
 {
   constructor() {
     super();
-    // Renders through renderFieldValue so the field is always the fixed-width
-    // `_`-padded string the mask overlay and caret math expect — even a
-    // partial range (only the start date picked) pads the empty end date.
+    // Renders through toFieldText so the field is fixed-width `_`-padded once
+    // any digit exists (even a partial range pads the empty end date), but
+    // genuinely empty ('') when untouched — see Fix A.
     effect(() => {
       const spec = this.formatSpec();
       const value = this.value();
@@ -112,7 +112,7 @@ export class DatePickerComponent
         this.inputText.set(
           date
             ? formatDate(date, spec)
-            : renderFieldValue(layout.slots.map(() => ''), layout),
+            : this.toFieldText(layout.slots.map(() => ''), layout),
         );
 
         return;
@@ -126,9 +126,18 @@ export class DatePickerComponent
         ? parseFieldText(formatDate(end, spec), single)
         : single.slots.map(() => '');
       this.rangeText.set(
-        renderFieldValue([...startSegments, ...endSegments], layout),
+        this.toFieldText([...startSegments, ...endSegments], layout),
       );
     });
+  }
+
+  /** Field text for the DOM: fixed-width `_`-padded once any digit exists,
+   *  else '' (so an untouched field is genuinely empty — no error on blur,
+   *  nothing for AT to read out). */
+  private toFieldText(segments: string[], layout: FieldLayout): string {
+    return segments.some((segment) => segment.length > 0)
+      ? renderFieldValue(segments, layout)
+      : '';
   }
 
   private readonly overlay = inject(Overlay);
@@ -727,15 +736,14 @@ export class DatePickerComponent
       return;
     }
     const element = event.target as HTMLInputElement;
-    const caret = element.selectionStart ?? element.value.length;
-    const digitsBeforeCaret = this.countDigits(element.value.slice(0, caret));
-    this.commitRaw(element, element.value, digitsBeforeCaret);
+    this.commitRaw(element, element.value);
   }
 
   /** Per-key editing kept inside the caret's mask slot: typed digits fill their
    *  own segment, Backspace/Delete never shift digits across a separator, so a
    *  correction can't corrupt a neighbouring segment or fling the caret away.
-   *  Selections, paste and IME fall through to the stream re-mask in onFieldInput. */
+   *  A non-collapsed selection is handled here too (never natively erased) —
+   *  only IME/paste fall through to the stream re-mask in onFieldInput/onFieldPaste. */
   protected onFieldKeydown(event: KeyboardEvent): void {
     if (!this.allowInput()) {
       return;
@@ -750,9 +758,6 @@ export class DatePickerComponent
 
       return;
     }
-    if (element.selectionStart !== element.selectionEnd) {
-      return;
-    }
     if (!isDigit && key !== 'Backspace' && key !== 'Delete') {
       return;
     }
@@ -760,6 +765,29 @@ export class DatePickerComponent
     const layout = this.layout();
     const segments = parseFieldText(element.value, layout);
     const caret = element.selectionStart ?? element.value.length;
+    if (element.selectionStart !== element.selectionEnd) {
+      // A selection is never natively erased: clear the digits it spans
+      // through the segment model, so `_` placeholders can't be typed over or
+      // deleted directly — only digits are real, editable content.
+      const selectionEnd = element.selectionEnd ?? caret;
+      const firstSel = caretToSlot(segments, layout, caret);
+      const lastSel = caretToSlot(segments, layout, selectionEnd);
+      const cleared = segments.slice();
+      for (let index = firstSel.slot; index <= lastSel.slot; index++) {
+        cleared[index] = '';
+      }
+      const edit = isDigit
+        ? editType(cleared, layout, firstSel.slot, 0, key)
+        : { segments: cleared, slot: firstSel.slot, offset: 0 };
+      const text = this.toFieldText(edit.segments, layout);
+      this.applyEditedText(
+        element,
+        text,
+        text ? slotToCaret(edit.segments, layout, edit.slot, edit.offset) : 0,
+      );
+
+      return;
+    }
     const { slot, offset } = caretToSlot(segments, layout, caret);
     const edit = isDigit
       ? editType(segments, layout, slot, offset, key)
@@ -769,11 +797,38 @@ export class DatePickerComponent
     if (!edit) {
       return;
     }
-    const text = renderFieldValue(edit.segments, layout);
+    const text = this.toFieldText(edit.segments, layout);
     this.applyEditedText(
       element,
       text,
-      slotToCaret(edit.segments, layout, edit.slot, edit.offset),
+      text ? slotToCaret(edit.segments, layout, edit.slot, edit.offset) : 0,
+    );
+  }
+
+  /** Paste digits into the segment model at the caret slot — never a global
+   *  flatten — so existing digits elsewhere in the field survive untouched. */
+  protected onFieldPaste(event: ClipboardEvent): void {
+    if (!this.allowInput()) {
+      return;
+    }
+    event.preventDefault();
+    const element = event.target as HTMLInputElement;
+    const layout = this.layout();
+    const pasted = (event.clipboardData?.getData('text') ?? '').replace(/\D/g, '');
+    if (!pasted) {
+      return;
+    }
+    const segments = parseFieldText(element.value, layout);
+    const caret = element.selectionStart ?? element.value.length;
+    const start = caretToSlot(segments, layout, caret);
+    let result = { segments, slot: start.slot, offset: start.offset };
+    for (const digit of pasted) {
+      result = editType(result.segments, layout, result.slot, result.offset, digit);
+    }
+    this.applyEditedText(
+      element,
+      this.toFieldText(result.segments, layout),
+      slotToCaret(result.segments, layout, result.slot, result.offset),
     );
   }
 
@@ -781,13 +836,10 @@ export class DatePickerComponent
     return text.replace(/\D/g, '').length;
   }
 
-  /** Rebuild `raw` as a digit stream (paste/IME/selection fallback), split per
-   *  slot by its fixed width, then render fixed-width so it matches the overlay. */
-  private commitRaw(
-    element: HTMLInputElement,
-    raw: string,
-    targetDigits: number,
-  ): void {
+  /** Rebuild `raw` as a digit stream (IME / other input-event fallback), split
+   *  per slot by its fixed width, then render fixed-width so it matches the
+   *  overlay — empty when no digits remain. */
+  private commitRaw(element: HTMLInputElement, raw: string): void {
     const layout = this.layout();
     const capacity = layout.slots.reduce((sum, slot) => sum + slot.maxLength, 0);
     const digits = raw.replace(/\D/g, '').slice(0, capacity);
@@ -797,8 +849,8 @@ export class DatePickerComponent
       segments.push(digits.slice(index, index + slot.maxLength));
       index += slot.maxLength;
     }
-    const text = renderFieldValue(segments, layout);
-    this.applyEditedText(element, text, this.caretAfterDigits(text, targetDigits));
+    const text = this.toFieldText(segments, layout);
+    this.applyEditedText(element, text, this.caretAfterFill(segments, layout));
   }
 
   /** Write masked text + caret into the DOM, then parse and validate it. */
@@ -847,9 +899,10 @@ export class DatePickerComponent
       return;
     }
     const text = this.inputText();
-    if (!text) {
+    if (this.countDigits(text) === 0) {
       this.typedInvalid.set(false);
       this.value.set(null);
+      this.inputText.set('');
 
       return;
     }
@@ -878,31 +931,31 @@ export class DatePickerComponent
     element.setSelectionRange(caret, caret);
   }
 
-  private caretAfterDigits(text: string, digitCount: number): number {
-    if (digitCount <= 0) {
-      return 0;
-    }
-    let seen = 0;
-    for (let index = 0; index < text.length; index++) {
-      if (/\d/.test(text[index])) {
-        seen++;
-        if (seen === digitCount) {
-          let position = index + 1;
-          // Park the caret past any separator so the next digit lands cleanly.
-          while (position < text.length && !/\d/.test(text[position])) {
-            position++;
-          }
-
-          return position;
-        }
+  /** Caret just past the last digit filled by a flat digit stream (commitRaw's
+   *  fallback path) — the first slot short of its max length, or the very end
+   *  once every slot is full. Empty segments naturally resolve to 0. */
+  private caretAfterFill(segments: string[], layout: FieldLayout): number {
+    for (let slot = 0; slot < segments.length; slot++) {
+      if (segments[slot].length < layout.slots[slot].maxLength) {
+        return slotToCaret(segments, layout, slot, segments[slot].length);
       }
     }
+    const last = segments.length - 1;
 
-    return text.length;
+    return slotToCaret(segments, layout, last, layout.slots[last].maxLength);
   }
 
   /** Parse the combined range text, flag malformed segments, commit on blur. */
   private applyRangeText(text: string, spec: DateFormatSpec, commit: boolean): void {
+    if (this.countDigits(text) === 0) {
+      this.rangeInvalid.set(false);
+      this.value.set(null);
+      if (commit) {
+        this.rangeText.set('');
+      }
+
+      return;
+    }
     const layout = rangeFieldLayout(spec);
     const slots = parseFieldText(text, layout);
     const perDate = spec.segments.length;
