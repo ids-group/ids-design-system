@@ -114,11 +114,7 @@ export class DatePickerComponent
       }
       if (this.mode() === 'single') {
         const date = value as Date | null;
-        this.inputText.set(
-          date
-            ? formatDate(date, spec)
-            : this.toFieldText(layout.slots.map(() => ''), layout),
-        );
+        this.inputText.set(date ? formatDate(date, spec) : '');
 
         return;
       }
@@ -430,8 +426,9 @@ export class DatePickerComponent
   );
   /** `size` attribute so the field hugs its mask width instead of stretching.
    * +1 covers `size` under-counting the mask's wide glyphs (M/D/Y), which
-   * otherwise clip the last chars of the longer range mask. Digits render with
-   * `tabular-nums` so the width never shifts as you type. */
+   * otherwise clip the last chars of the longer range mask. The field's
+   * `font-family: var(--font-mono)` keeps every glyph equal width, so the
+   * width never shifts as you type. */
   protected readonly fieldSize = computed(() => this.fieldPlaceholder().length + 1);
   /** Per-slot overlay runs: digits at normal weight, unfilled positions
    *  (format letters or `_` padding) muted — see displayParts(). */
@@ -796,19 +793,11 @@ export class DatePickerComponent
     );
   }
 
-  /** Mobile virtual keyboards don't fire a reliable `keydown` for edits — Gboard
-   *  reports Backspace/letters as keyCode 229 / "Unidentified" — so route deletion
-   *  and digit entry through the same segment editor here, keyed off `beforeinput`'s
-   *  precise `inputType`, so a phone can cross separators too (the old native-delete
-   *  + re-mask couldn't, hence the caret stuck at a `/`). On desktop `onFieldKeydown`
-   *  preventDefaults first, suppressing this event — no double-handling; paste / IME
-   *  fall through to their handlers.
-   *
-   *  Android Chrome is known to IGNORE `preventDefault()` for delete/insert
-   *  `beforeinput`, so a native mutation can still land and fire `input`; we stash
-   *  the intended result and re-assert it in onFieldInput. The microtask clears the
-   *  stash when preventDefault DID work (no `input` follows in the same task), so it
-   *  never goes stale. */
+  /** Mobile keyboards don't fire a reliable `keydown` (Gboard reports keyCode 229 /
+   *  "Unidentified"), so edits are routed here via `beforeinput`'s `inputType` instead.
+   *  Android Chrome can also ignore `preventDefault()` here, so the intended result is
+   *  stashed and re-asserted in `onFieldInput`; the microtask expires the stash once
+   *  preventDefault worked (no following `input` in the same task). */
   protected onFieldBeforeInput(event: InputEvent): void {
     if (!this.allowInput()) {
       return;
@@ -912,9 +901,10 @@ export class DatePickerComponent
     return text.replace(/\D/g, '').length;
   }
 
-  /** Rebuild `raw` as a digit stream (IME / other input-event fallback), split
-   *  per slot by its fixed width, then render fixed-width so it matches the
-   *  overlay — empty when no digits remain. */
+  /** Rebuild `raw` as a digit stream (IME / autofill / suggestion fallback —
+   *  any `input` event with no preceding handled `beforeinput`), split per slot
+   *  by its fixed width, then render fixed-width so it matches the overlay —
+   *  empty when no digits remain. */
   private commitRaw(element: HTMLInputElement, raw: string): void {
     const layout = this.layout();
     const capacity = layout.slots.reduce((sum, slot) => sum + slot.maxLength, 0);
