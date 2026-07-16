@@ -79,40 +79,16 @@ export function formatDate(date: Date | null, spec: DateFormatSpec): string {
   return spec.order.map((token) => values[token]).join(spec.separator);
 }
 
-function totalDigits(spec: DateFormatSpec): number {
-  return spec.segments.reduce((sum, segment) => sum + segment.length, 0);
-}
-
-export function applyMask(raw: string, spec: DateFormatSpec): string {
-  const digits = raw.replace(/\D/g, '').slice(0, totalDigits(spec));
-  let out = '';
-  let index = 0;
-  for (let segmentIndex = 0; segmentIndex < spec.segments.length; segmentIndex++) {
-    const segment = spec.segments[segmentIndex];
-    if (index >= digits.length) {
-      break;
-    }
-    const chunk = digits.slice(index, index + segment.length);
-    out += chunk;
-    index += segment.length;
-    if (chunk.length === segment.length && segmentIndex < spec.segments.length - 1) {
-      out += spec.separator;
-    }
-  }
-
-  return out;
-}
-
 /** Build a date from three per-slot digit strings; null if any slot isn't full-width or invalid. */
-export function parseSegments(segments: string[], spec: DateFormatSpec): Date | null {
+function parseSegments(segments: string[], spec: DateFormatSpec): Date | null {
   const values: Record<'D' | 'M' | 'Y', number> = { D: 1, M: 1, Y: 2000 };
   for (let index = 0; index < spec.segments.length; index++) {
-    const seg = spec.segments[index];
+    const segment = spec.segments[index];
     const digits = segments[index] ?? '';
-    if (digits.length !== seg.length) {
+    if (digits.length !== segment.length) {
       return null;
     }
-    values[seg.type] = parseInt(digits, 10);
+    values[segment.type] = parseInt(digits, 10);
   }
   const { D: day, M: month, Y: year } = values;
   if (month < 1 || month > 12 || day < 1 || day > 31) {
@@ -140,18 +116,6 @@ export const RANGE_SEPARATOR = ' – ';
 /** Combined placeholder/mask for a range field, e.g. "MM/DD/YYYY – MM/DD/YYYY". */
 export function rangeMask(spec: DateFormatSpec): string {
   return `${spec.mask}${RANGE_SEPARATOR}${spec.mask}`;
-}
-
-/** Mask a raw two-date string: digits fill start then end, capped and separated. */
-export function applyMaskRange(raw: string, spec: DateFormatSpec): string {
-  const perDate = totalDigits(spec);
-  const digits = raw.replace(/\D/g, '').slice(0, perDate * 2);
-  const start = applyMask(digits.slice(0, perDate), spec);
-  if (digits.length < perDate) {
-    return start;
-  }
-
-  return `${start}${RANGE_SEPARATOR}${applyMask(digits.slice(perDate), spec)}`;
 }
 
 /** Render a range value to the combined field string. */
@@ -240,7 +204,7 @@ export function parseFieldText(text: string, layout: FieldLayout): string[] {
   return segments;
 }
 
-export const PLACEHOLDER_CHAR = '_';
+const PLACEHOLDER_CHAR = '_';
 
 export interface DisplayPart {
   text: string;
@@ -293,11 +257,7 @@ export function displayParts(segments: string[], layout: FieldLayout): DisplayPa
 
 /** Char offset where slot `index` begins in the fixed-width value — every
  *  slot is maxLength wide and every literal always present. */
-export function slotStart(
-  segments: string[],
-  layout: FieldLayout,
-  index: number,
-): number {
+function slotStart(layout: FieldLayout, index: number): number {
   let position = 0;
   for (let slot = 0; slot < index; slot++) {
     position += layout.slots[slot].maxLength + layout.literals[slot].length;
@@ -306,18 +266,12 @@ export function slotStart(
   return position;
 }
 
-export function slotToCaret(
-  segments: string[],
-  layout: FieldLayout,
-  slot: number,
-  offset: number,
-): number {
-  return slotStart(segments, layout, slot) + offset;
+export function slotToCaret(layout: FieldLayout, slot: number, offset: number): number {
+  return slotStart(layout, slot) + offset;
 }
 
 /** Map a caret char offset to its slot; a caret inside a literal snaps forward. */
 export function caretToSlot(
-  segments: string[],
   layout: FieldLayout,
   caret: number,
 ): { slot: number; offset: number } {

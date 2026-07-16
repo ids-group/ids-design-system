@@ -851,8 +851,8 @@ export class DatePickerComponent
     const selectionEnd = element.selectionEnd ?? caret;
     let edit: { segments: string[]; slot: number; offset: number } | null;
     if (selectionEnd !== caret) {
-      const firstSel = caretToSlot(segments, layout, caret);
-      const lastSel = caretToSlot(segments, layout, selectionEnd);
+      const firstSel = caretToSlot(layout, caret);
+      const lastSel = caretToSlot(layout, selectionEnd);
       const cleared = segments.slice();
       for (let index = firstSel.slot; index <= lastSel.slot; index++) {
         cleared[index] = '';
@@ -862,7 +862,7 @@ export class DatePickerComponent
           ? editType(cleared, layout, firstSel.slot, 0, digit as string)
           : { segments: cleared, slot: firstSel.slot, offset: 0 };
     } else {
-      const { slot, offset } = caretToSlot(segments, layout, caret);
+      const { slot, offset } = caretToSlot(layout, caret);
       edit =
         kind === 'type'
           ? editType(segments, layout, slot, offset, digit as string)
@@ -877,7 +877,7 @@ export class DatePickerComponent
     this.applyEditedText(
       element,
       text,
-      text ? slotToCaret(edit.segments, layout, edit.slot, edit.offset) : 0,
+      text ? slotToCaret(layout, edit.slot, edit.offset) : 0,
     );
   }
 
@@ -896,7 +896,7 @@ export class DatePickerComponent
     }
     const segments = parseFieldText(element.value, layout);
     const caret = element.selectionStart ?? element.value.length;
-    const start = caretToSlot(segments, layout, caret);
+    const start = caretToSlot(layout, caret);
     let result = { segments, slot: start.slot, offset: start.offset };
     for (const digit of pasted) {
       result = editType(result.segments, layout, result.slot, result.offset, digit);
@@ -904,7 +904,7 @@ export class DatePickerComponent
     this.applyEditedText(
       element,
       this.toFieldText(result.segments, layout),
-      slotToCaret(result.segments, layout, result.slot, result.offset),
+      slotToCaret(layout, result.slot, result.offset),
     );
   }
 
@@ -1013,12 +1013,12 @@ export class DatePickerComponent
   private caretAfterFill(segments: string[], layout: FieldLayout): number {
     for (let slot = 0; slot < segments.length; slot++) {
       if (segments[slot].length < layout.slots[slot].maxLength) {
-        return slotToCaret(segments, layout, slot, segments[slot].length);
+        return slotToCaret(layout, slot, segments[slot].length);
       }
     }
     const last = segments.length - 1;
 
-    return slotToCaret(segments, layout, last, layout.slots[last].maxLength);
+    return slotToCaret(layout, last, layout.slots[last].maxLength);
   }
 
   /** Parse the combined range text, flag malformed segments, commit on blur. */
