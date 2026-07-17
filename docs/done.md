@@ -10,6 +10,12 @@ _Archived from `todo.md`. Follow-up from the a11y-branch review (surfaced 2026-0
 
 - [x] **bottom-sheet Escape moved from document-level to panel-scoped** — the host `(document:keydown.escape)` binding was replaced by `(keydown.escape)="onEscape()"` on the `.sheet-overlay` element (which contains the `cdkTrapFocusAutoCapture` `.sheet`), mirroring `modal.component.html`. Aligns bottom-sheet with modal/drawer so a stacked Escape can't be consumed by the wrong sheet. Bonus: the `(keydown.escape)` satisfies `click-events-have-key-events`, so the overlay's eslint-disable dropped to `interactive-supports-focus` only (matching modal). Lib build + lint green.
 
+## Shipped 2026-07-17 (ds-sidenav — brand/logo content slot)
+
+_Archived from `todo.md`. Surfaced 2026-07-10 by the `ai-sdlc-prototype` branding agent._
+
+- [x] **`ds-sidenav` — `[brand]` content slot for a custom logo** — `ds-sidenav` exposed `brand` as a STRING only (auto letter-mark + name), so a rebrand couldn't render a client's logo image/SVG. Added `<ng-content select="[brand]">` in the `.brand` header alongside the existing string path: project `[brand]` for a custom `<img>`/inline SVG (logo-only, no string needed), or keep setting `brand` for the auto letter-mark. The `.brand` row now renders unconditionally and collapses via `.brand:empty { display: none }` (blessed lib idiom — alert/banner/button/modal/…), so an unbranded rail is unchanged; `collapsed` centring still applies. Additive, non-breaking; lib build + eslint + stylelint green. NOTE: `ds-topbar` likely wants the same slot — left for when it's next touched. Optional follow-up: a logo-slot demo in the ds-docs sidenav section.
+
 ## Resolved 2026-07-09 (Component-vs-CSS-class audit — verdict: keep all 8)
 
 _Archived from `todo.md` 2026-07-09. Research done 2026-06-10; facts re-verified vs code 2026-07-08/09. The keep/demote question is settled by the code itself (no demotions). The one open thread — hybrid architecture (styles in global partials, components as thin sugar) — was folded into the `.ds-interactive` global state-contract item in `todo.md`, to be decided together with that design._

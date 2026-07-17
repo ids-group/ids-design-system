@@ -16,6 +16,7 @@ import { SIDENAV, type SidenavContract } from './sidenav.token';
 export class SidenavComponent implements SidenavContract {
   /** Collapses the rail to icon-only width; read by nested `ds-sidenav-item`/`ds-sidenav-group`. */
   readonly collapsed = input(false, { transform: booleanAttribute });
-  /** Brand/logo text shown at the top of the rail. */
+  /** Brand text at the top of the rail (auto letter-mark + name). For a custom
+   *  logo image/SVG, project it into the `[brand]` slot instead. */
   readonly brand = input<string>('');
 }

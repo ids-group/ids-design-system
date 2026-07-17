@@ -1,5 +1,7 @@
-@if (brand()) {
-  <div class="brand">
+<div class="brand">
+  <ng-content select="[brand]"></ng-content>
+
+  @if (brand()) {
     <span class="mark">
       {{ brand().charAt(0) }}
     </span>
@@ -7,7 +9,7 @@
     <span class="brand-name">
       {{ brand() }}
     </span>
-  </div>
-}
+  }
+</div>
 
 <ng-content></ng-content>
