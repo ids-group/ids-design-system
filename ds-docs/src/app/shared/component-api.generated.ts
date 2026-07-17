@@ -3769,7 +3769,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Brand/logo text shown at the top of the rail."
+        "description": "Brand text at the top of the rail (auto letter-mark + name). For a custom logo image/SVG, project it into the `[brand]` slot instead."
       }
     ],
     "outputs": []

@@ -25,3 +25,28 @@
        the component's own resolvers; --focus-ring is a bare token (no --_* resolver). */
     :host ::ng-deep .pin-hover .item { background-color: var(--_sidenav-item-bg-color-hover); color: var(--_sidenav-item-label-color-hover); }
     :host ::ng-deep .pin-focus .item { outline: none; box-shadow: var(--focus-ring); }
+
+    /* ---------- Custom brand logo demo (projected [brand] slot) ---------- */
+    .logo-demos {
+      display: flex;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin-top: var(--space-3);
+
+      .stage { margin-top: 0; }
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      color: var(--accent);
+    }
+    .brand-logo__mark { flex-shrink: 0; fill: currentcolor; }
+    .brand-logo__name {
+      font: var(--font-weight-extrabold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans);
+      color: var(--text-primary);
+    }
+
+    /* Consumer hides its own wordmark when the rail collapses, keeps the mark. */
+    ds-sidenav.collapsed .brand-logo__name { display: none; }

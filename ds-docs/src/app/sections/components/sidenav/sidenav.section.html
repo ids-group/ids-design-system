@@ -71,6 +71,108 @@
     </ds-sidenav>
   </div>
 
+  <!-- ============================================================ Custom brand logo -->
+  <h3 class="block-title t-h4">
+    Custom brand logo
+  </h3>
+
+  <p class="block-desc t-s">
+    Project a logo image or inline SVG into the
+    <code class="t-mono-inline">
+      [brand]
+    </code> slot instead of the string
+    <code class="t-mono-inline">
+      brand
+    </code> input — the auto letter-mark is
+    skipped. When the rail collapses, the consumer hides its own wordmark and
+    keeps the mark.
+  </p>
+
+  <div class="logo-demos">
+    <div class="stage stage--frame">
+      <ds-sidenav>
+        <span
+          brand
+          class="brand-logo"
+        >
+          <svg
+            class="brand-logo__mark"
+            viewBox="0 0 24 24"
+            width="28"
+            height="28"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 2 2 7l10 5 10-5-10-5Zm0 20 10-5V7l-10 5-10-5v10l10 5Z"
+            />
+          </svg>
+
+          <span class="brand-logo__name">
+            Atlas
+          </span>
+        </span>
+
+        <ds-sidenav-item
+          icon="home"
+          label="Dashboard"
+          [active]="true"
+        />
+
+        <ds-sidenav-item
+          icon="calendar"
+          label="Records"
+          [badge]="12"
+        />
+
+        <ds-sidenav-item
+          icon="package"
+          label="Asset register"
+        />
+      </ds-sidenav>
+    </div>
+
+    <div class="stage stage--frame">
+      <ds-sidenav [collapsed]="true">
+        <span
+          brand
+          class="brand-logo"
+        >
+          <svg
+            class="brand-logo__mark"
+            viewBox="0 0 24 24"
+            width="28"
+            height="28"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 2 2 7l10 5 10-5-10-5Zm0 20 10-5V7l-10 5-10-5v10l10 5Z"
+            />
+          </svg>
+
+          <span class="brand-logo__name">
+            Atlas
+          </span>
+        </span>
+
+        <ds-sidenav-item
+          icon="home"
+          label="Dashboard"
+          [active]="true"
+        />
+
+        <ds-sidenav-item
+          icon="calendar"
+          label="Records"
+        />
+
+        <ds-sidenav-item
+          icon="package"
+          label="Asset register"
+        />
+      </ds-sidenav>
+    </div>
+  </div>
+
   <!-- ============================================================ Expandable groups -->
   <h3 class="block-title t-h4">
     Expandable groups
