@@ -4,6 +4,12 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Shipped 2026-07-17 (A11y polish — bottom-sheet Escape scoping)
+
+_Archived from `todo.md`. Follow-up from the a11y-branch review (surfaced 2026-07-06)._
+
+- [x] **bottom-sheet Escape moved from document-level to panel-scoped** — the host `(document:keydown.escape)` binding was replaced by `(keydown.escape)="onEscape()"` on the `.sheet-overlay` element (which contains the `cdkTrapFocusAutoCapture` `.sheet`), mirroring `modal.component.html`. Aligns bottom-sheet with modal/drawer so a stacked Escape can't be consumed by the wrong sheet. Bonus: the `(keydown.escape)` satisfies `click-events-have-key-events`, so the overlay's eslint-disable dropped to `interactive-supports-focus` only (matching modal). Lib build + lint green.
+
 ## Resolved 2026-07-09 (Component-vs-CSS-class audit — verdict: keep all 8)
 
 _Archived from `todo.md` 2026-07-09. Research done 2026-06-10; facts re-verified vs code 2026-07-08/09. The keep/demote question is settled by the code itself (no demotions). The one open thread — hybrid architecture (styles in global partials, components as thin sugar) — was folded into the `.ds-interactive` global state-contract item in `todo.md`, to be decided together with that design._

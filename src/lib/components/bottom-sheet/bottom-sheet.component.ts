@@ -30,9 +30,6 @@ let nextId = 0;
   templateUrl: './bottom-sheet.component.html',
   styleUrl: './bottom-sheet.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
-  host: {
-    '(document:keydown.escape)': 'onEscape()',
-  },
 })
 export class BottomSheetComponent implements OnDestroy {
   /** Open state, two-way bound. */
