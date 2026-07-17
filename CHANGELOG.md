@@ -8,6 +8,34 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **`ds-sidenav` accepts a projected `[brand]` slot for a custom logo.** A
+  `<ng-content select="[brand]">` now sits in the brand row at the top of the rail, so consumers
+  can project an `img`/SVG/any markup as the logo instead of — or alongside — the string `brand`
+  input. The string `brand` input is unchanged (it still renders an auto letter-mark from the
+  first character plus the brand name). The brand row, previously gated on the string `brand`
+  being set, now always renders and hides itself via `:empty` when there is neither brand text
+  nor projected content, so the empty state is identical to before.
+
+### Fixed
+
+- **`ds-bottom-sheet` Escape is now scoped to its own panel instead of the document.** The sheet
+  bound `(document:keydown.escape)`, whereas modal and drawer scope Escape to their panel; with
+  stacked overlays this let a background sheet steal the Escape meant for the overlay on top. The
+  binding moves to `(keydown.escape)` on the sheet's overlay element, mirroring modal —
+  single-sheet keyboard dismissal is unchanged (focus is trapped inside the sheet via
+  `cdkTrapFocusAutoCapture`), but a stacked overlay above the sheet no longer has its Escape
+  consumed underneath.
+- **`ds-date-picker` mobile Backspace/Delete removes one digit and crosses separators instead of
+  wiping the whole segment.** Following 0.6.1's routing of mobile edits through `beforeinput`,
+  Gboard reports Backspace/Delete with a full-segment "selection" (its composing region), which
+  hit the segment editor's selection-clear branch and erased the entire segment (e.g. all of
+  `MM`) on one tap — also defeating 0.6.1's separator-crossing behaviour. The mobile `beforeinput`
+  path now collapses the selection to the caret edge (`selectionEnd` for Backspace,
+  `selectionStart` for Delete) before editing, forcing the single-character branch so one tap
+  deletes exactly one digit and crosses a `/` separator, matching desktop `keydown`.
+
 ## 0.6.1 — 2026-07-16
 
 ### Fixed
