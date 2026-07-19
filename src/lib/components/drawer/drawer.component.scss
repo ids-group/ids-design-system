@@ -57,6 +57,10 @@
   display: flex;
   flex-direction: column;
 
+  /* The old fixed+z-index panel was a stacking context; keep it one so negative
+     z-index content projected into the body can't sink under the scrim. */
+  isolation: isolate;
+
   /* Size variants (applied to right/left panels) */
   &.sm { width: var(--_drawer-width-sm); }
   &.md { width: var(--_drawer-width-md); }
