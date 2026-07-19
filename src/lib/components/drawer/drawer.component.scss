@@ -1,5 +1,5 @@
 /* Drawer — slide-in panel. Host is display:contents so
-   the conditionally-rendered .drawer is the visible layout root. */
+   the conditionally-rendered .drawer-root is the visible layout root. */
 
 @use '../../styles/press' as press;
 
@@ -19,11 +19,22 @@
   display: contents;
 }
 
-.drawer-scrim {
+.drawer-root {
   position: fixed;
   inset: 0;
-  background: var(--_drawer-scrim-color);
   z-index: var(--layer-modal);
+
+  /* clip, not hidden: the sliding panel (translate ±100%) must not add scrollable
+     overflow to ancestor frames (filter containing-block + overflow: hidden), where the
+     focus-trap's initial focus() would scroll-into-view and yank the host app's content.
+     Scrim and panel are `absolute` (not fixed) so this box clips them. */
+  overflow: clip;
+}
+
+.drawer-scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--_drawer-scrim-color);
   animation: drawer-scrim-in var(--duration-fast, 120ms) var(--ease-decelerate, ease-out);
 
   &.closing { animation: drawer-scrim-out var(--duration-fast) var(--ease-accelerate) forwards; }
@@ -39,11 +50,10 @@
 }
 
 .drawer {
-  position: fixed;
+  position: absolute;
   background: var(--_drawer-bg-color);
   box-shadow: var(--_drawer-shadow);
   border-radius: var(--_drawer-radius);
-  z-index: var(--layer-modal);
   display: flex;
   flex-direction: column;
 

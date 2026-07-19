@@ -1,50 +1,52 @@
 @if (rendered()) {
-  <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- scrim; click dismisses, keyboard dismisses via Escape (host document:keydown.escape) -->
-  <div
-    class="drawer-scrim"
-    [class.closing]="closing()"
-    (click)="onClose()"
-  >
-  </div>
-
-  <div
-    role="dialog"
-    aria-modal="true"
-    cdkTrapFocus
-    cdkTrapFocusAutoCapture
-    [class]="classes()"
-    [class.closing]="closing()"
-    [attr.aria-labelledby]="title() ? titleId : null"
-    (keydown.escape)="onClose()"
-    (animationend)="onLeaveEnd($event)"
-  >
-    <header class="header">
-      <h4
-        class="title"
-        [id]="titleId"
-      >
-        {{ title() }}
-      </h4>
-
-      <button
-        type="button"
-        class="close"
-        aria-label="Close"
-        (click)="onClose()"
-      >
-        <ds-icon
-          name="x"
-          [size]="16"
-        />
-      </button>
-    </header>
-
-    <div class="body">
-      <ng-content select="[drawer-body]"></ng-content>
+  <div class="drawer-root">
+    <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- scrim; click dismisses, keyboard dismisses via Escape (host document:keydown.escape) -->
+    <div
+      class="drawer-scrim"
+      [class.closing]="closing()"
+      (click)="onClose()"
+    >
     </div>
 
-    <div class="footer">
-      <ng-content select="[drawer-footer]"></ng-content>
+    <div
+      role="dialog"
+      aria-modal="true"
+      cdkTrapFocus
+      cdkTrapFocusAutoCapture
+      [class]="classes()"
+      [class.closing]="closing()"
+      [attr.aria-labelledby]="title() ? titleId : null"
+      (keydown.escape)="onClose()"
+      (animationend)="onLeaveEnd($event)"
+    >
+      <header class="header">
+        <h4
+          class="title"
+          [id]="titleId"
+        >
+          {{ title() }}
+        </h4>
+
+        <button
+          type="button"
+          class="close"
+          aria-label="Close"
+          (click)="onClose()"
+        >
+          <ds-icon
+            name="x"
+            [size]="16"
+          />
+        </button>
+      </header>
+
+      <div class="body">
+        <ng-content select="[drawer-body]"></ng-content>
+      </div>
+
+      <div class="footer">
+        <ng-content select="[drawer-footer]"></ng-content>
+      </div>
     </div>
   </div>
 }
