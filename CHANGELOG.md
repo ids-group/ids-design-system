@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.6.2 — 2026-07-21
+
 ### Added
 
 - **`ds-sidenav` accepts a projected `[brand]` slot for a custom logo.** A
