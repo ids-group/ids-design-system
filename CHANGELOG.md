@@ -23,10 +23,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-bottom-sheet` Escape is now scoped to its own panel instead of the document.** The sheet
   bound `(document:keydown.escape)`, whereas modal and drawer scope Escape to their panel; with
   stacked overlays this let a background sheet steal the Escape meant for the overlay on top. The
-  binding moves to `(keydown.escape)` on the sheet's overlay element, mirroring modal —
-  single-sheet keyboard dismissal is unchanged (focus is trapped inside the sheet via
-  `cdkTrapFocusAutoCapture`), but a stacked overlay above the sheet no longer has its Escape
-  consumed underneath.
+  binding moves to `(keydown.escape)` on the sheet's overlay element, mirroring modal — the focus
+  trap auto-captures focus inside the sheet so Escape lands on the panel (sheets whose body has no
+  focusable content now need one for Escape to reach them), and a stacked overlay above the sheet
+  no longer has its Escape consumed underneath.
 - **`ds-date-picker` mobile Backspace/Delete removes one digit and crosses separators instead of
   wiping the whole segment.** Following 0.6.1's routing of mobile edits through `beforeinput`,
   Gboard reports Backspace/Delete with a full-segment "selection" (its composing region), which
@@ -35,6 +35,31 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   path now collapses the selection to the caret edge (`selectionEnd` for Backspace,
   `selectionStart` for Delete) before editing, forcing the single-character branch so one tap
   deletes exactly one digit and crosses a `/` separator, matching desktop `keydown`.
+- **`ds-bottom-sheet` no longer jolts all host-app content up then down as it opens.** The `.sheet`
+  enters via `translateY(100%) → none` inside the `position: fixed; inset: 0` `.sheet-overlay`, and
+  `cdkTrapFocusAutoCapture` focuses the panel's first tabbable at frame ~0 via `element.focus()`
+  without `preventScroll` — while the panel still sticks out below the frame. In consumer shells that
+  are a containing block for fixed descendants (`filter`/`transform`) combined with `overflow: hidden`
+  (e.g. a centred "phone frame"), the still-translated panel contributes scrollable overflow to that
+  shell, so the focus scroll-into-view yanks the shell's `scrollTop` up by ≈ the sheet height (all app
+  content jumps up in one frame); as the enter animation lands the overflow vanishes and the browser
+  clamps the scroll back to 0 (content slides back down). `.sheet-overlay` now uses `overflow: clip`,
+  which clips the translating panel so it never leaks scrollable overflow to consumer ancestors and —
+  unlike `hidden` — is not programmatically scrollable, so scroll-into-view cannot move it either. No
+  visual change: the panel was already visually cut at the frame edge.
+- **`ds-drawer` no longer scroll-jolts host-app content as it opens.** Same bug class as the
+  bottom-sheet fix: the `.drawer` panel was itself `position: fixed` (a sibling of the fixed
+  `.drawer-scrim`) sliding in from `translateX/Y(±100%)` under the same `cdkTrapFocusAutoCapture`, so
+  the right/bottom (positive-direction) placements leaked scrollable overflow into the same kind of
+  containing-block-plus-`overflow: hidden` consumer frames. The scrim and panel are now wrapped in a
+  `.drawer-root` div (`position: fixed; inset: 0; z-index: var(--layer-modal); overflow: clip`) and
+  both children switched from `fixed` to `absolute`, so the wrapper genuinely clips them (fixed
+  descendants would escape an ancestor's clip); geometry is identical in normal and framed apps across
+  all four placements, including the RTL left-drawer case. `isolation: isolate` was added to `.drawer`
+  to preserve the stacking context the old `fixed` + `z-index` panel provided, so negative-`z-index`
+  content projected into the drawer body can't sink under the scrim. No public API or token change:
+  scrim click-to-close, panel-scoped plus document-level Escape, `animationend` teardown, and the focus
+  trap are all unchanged.
 
 ## 0.6.1 — 2026-07-16
 
