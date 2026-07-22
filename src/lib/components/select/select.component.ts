@@ -18,7 +18,11 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { disposeWithLeave } from '../overlay-motion';
+import {
+  closeOnOutsidePointer,
+  closeOnScroll,
+  disposeWithLeave,
+} from '../overlay-motion';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
@@ -250,8 +254,7 @@ export class SelectComponent
       ]);
     const cfg: OverlayConfig = {
       positionStrategy,
-      hasBackdrop: true,
-      backdropClass: 'cdk-overlay-transparent-backdrop',
+      hasBackdrop: false,
       // Reuse the global panel skin defined in styles/_dropdown-overlay.scss
       // so the portaled panel actually renders styled — `:host ::ng-deep`
       // selectors can't reach a node outside the host's DOM tree.
@@ -260,7 +263,21 @@ export class SelectComponent
       width,
     };
     this.overlayRef = this.overlay.create(cfg);
-    this.overlayRef.backdropClick().subscribe(() => this.close());
+    closeOnOutsidePointer(
+      this.overlayRef,
+      (target) => triggerElement.contains(target),
+      () => this.close(),
+    );
+    // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
+    // overflow container, so close on any outside scroll ourselves.
+    const removeScrollClose = closeOnScroll(this.overlayRef, () =>
+      this.close(),
+    );
+    this.overlayRef.detachments().subscribe(() => {
+      removeScrollClose();
+      this.overlayRef = null;
+      this.open.set(false);
+    });
     const portal = new TemplatePortal(this.panelTpl(), this.vcr);
     this.overlayRef.attach(portal);
     this.open.set(true);
