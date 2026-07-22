@@ -8,6 +8,28 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Changed
+
+- **`ds-select`, `ds-autocomplete`, `ds-multi-select`, `ds-time-picker`, `ds-color-picker` and
+  `ds-popover` overlay panels are now non-modal (no backdrop), matching `ds-date-picker`.** They drop
+  the transparent CDK backdrop (`hasBackdrop: true` + `backdropClick`-to-close) for
+  `hasBackdrop: false`, so while a panel is open the page behind it stays fully interactive — hover,
+  cursor and pointer all reach it, and an outside click both activates whatever it lands on and closes
+  the panel. Panels now dismiss on a pointer press outside the panel or on page scroll (a capture-phase
+  document scroll listener, since CDK scroll strategies miss a plain `overflow: auto` container).
+  Button-style triggers (`ds-select`, `ds-color-picker`, `ds-popover`, `ds-multi-select`) now toggle —
+  a click, or Enter/Space, on the trigger closes an open panel (previously a trigger click couldn't
+  close it); `ds-time-picker` segment buttons toggle the open segment and switch directly between the
+  start/end segments; `ds-autocomplete`'s text input keeps its click for caret placement (only its
+  chevron toggles), and typing that overflows the filter input no longer collapses the panel. Focus
+  returns to the trigger when a panel closes via Escape, a selection (e.g. a `ds-color-picker` preset)
+  or an in-panel control, but an outside-pointer/scroll close leaves focus where the user's click or
+  scroll put it (no focus stealing). `ds-modal` / `ModalService` are intentionally unaffected — they
+  stay modal. No public API or token changes.
+- **`ds-toast` now slides up from below into place as it enters** (previously it dropped in from
+  slightly above). The exit animation is unchanged — the toast still slides up as it fades out.
+  Visual/motion only; no API change.
+
 ## 0.6.2 — 2026-07-21
 
 ### Added
