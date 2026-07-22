@@ -108,6 +108,6 @@
 }
 
 @keyframes ds-toast-in {
-  from { transform: translateY(calc(var(--space-2) * -1)); opacity: 0; }
+  from { transform: translateY(var(--space-2)); opacity: 0; }
   to   { transform: none; opacity: 1; }
 }
