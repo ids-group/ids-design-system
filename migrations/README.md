@@ -27,6 +27,12 @@ at release time.
 
 See `AUTHORING.md` for how to write a good entry.
 
+**Prose guides per version.** The `<version>.json` manifest is the terse machine mirror. When a
+release needs a longer human walkthrough (a worked before/after, a mental model, edge cases the
+`note` can't hold), put it in a sibling folder named for that version: `migrations/<version>/*.md`
+(e.g. `migrations/0.5.1/badge-statuses.md`). The folder never matches the `*.json` glob, so tooling
+ignores it; the manifest `note` and the CHANGELOG point at the guide by path.
+
 **Authoring:** drafted at release time alongside the CHANGELOG entry (the `/changelog` workflow
 drafts it from the release diff; the release author reviews). The prose changelog stays canonical
 for humans — the manifest is its machine mirror; if they disagree, fix the manifest.

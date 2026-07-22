@@ -198,7 +198,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   then define your own status colours via the new `styles/status` SCSS API (see Added) keyed on
   `[data-status]`. `[count]` mode, `[solid]`, `[withDot]`, `[max]`, and the `--ds-badge-*` /
   `--ds-status-dot-*` hooks are unchanged. Full migration guide (model, worked example, and the
-  case where a consumer coloured badges via its own status-named class): `docs/badge-statuses.md`.
+  case where a consumer coloured badges via its own status-named class): `migrations/0.5.1/badge-statuses.md`.
 - **`title` is now required on `ds-drawer`, `ds-bottom-sheet`, and `ds-accordion-item`** (was
   optional). Their `title` is the component's accessible name (dialog `aria-labelledby`) or the
   disclosure-button label, so a missing title left them unnamed. `ds-modal` / `ds-modal-card` stay

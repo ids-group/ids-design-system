@@ -131,7 +131,7 @@ unknown attribute rather than erroring, so grep for `variant=` on `ds-badge` spe
 (`ds-progress` etc. keep their own `variant` input — only badge/status-dot changed.)
 
 **2. Wire the colours via `styles/status`** (replaces the removed factory `--status-*` tokens and
-per-status classes — see `status-lifecycle-tokens-removed` in `migrations/0.5.1.json`):
+per-status classes — see `status-lifecycle-tokens-removed` in `../0.5.1.json`):
 
 ```scss
 @use '@ids-group-ltd/ids-design-system/styles/status' as status;
