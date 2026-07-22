@@ -25,6 +25,7 @@ import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  focusIsInside,
   forwardOverlayTokens,
 } from '../overlay-motion';
 import {
@@ -232,11 +233,13 @@ export class MultiSelectComponent
     if (this.isDisabled()) {
       return;
     }
-    if (
-      event.key === 'ArrowDown' ||
-      event.key === 'Enter' ||
-      event.key === ' '
-    ) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.onTriggerClick();
+
+      return;
+    }
+    if (event.key === 'ArrowDown') {
       event.preventDefault();
       this.openPanel();
     }
@@ -333,7 +336,6 @@ export class MultiSelectComponent
       if (event.key === 'Escape') {
         event.preventDefault();
         this.close();
-        this.trigger().nativeElement.focus();
       }
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
@@ -363,12 +365,16 @@ export class MultiSelectComponent
     }
     clearTimeout(this.focusTimer ?? undefined);
     this.focusTimer = null;
+    const focusWasInPanel = focusIsInside(this.overlayRef);
     disposeWithLeave(this.overlayRef);
     this.overlayRef = null;
     this.open.set(false);
     this.filter.set('');
     this.activeIndex.set(-1);
     this.markTouched();
+    if (focusWasInPanel) {
+      this.trigger().nativeElement.focus({ preventScroll: true });
+    }
   }
 
   private moveActive(delta: number): void {

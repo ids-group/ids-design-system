@@ -62,6 +62,7 @@ export class SelectComponent
 {
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
+  private readonly host = inject(ElementRef<HTMLElement>);
   protected readonly preview = inject(DsStaticPreview);
 
   /** Selected option's value, two-way bound. */
@@ -265,7 +266,7 @@ export class SelectComponent
     this.overlayRef = this.overlay.create(cfg);
     closeOnOutsidePointer(
       this.overlayRef,
-      (target) => triggerElement.contains(target),
+      (target) => this.host.nativeElement.contains(target),
       () => this.close(),
     );
     // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
@@ -344,7 +345,7 @@ export class SelectComponent
     }
     if (key === 'Tab') {
       // Close the panel but let Tab move focus naturally (no preventDefault),
-      // else the overlay + transparent backdrop leak behind the moved focus.
+      // else the open overlay panel lingers behind the moved focus.
       this.close();
 
       return;

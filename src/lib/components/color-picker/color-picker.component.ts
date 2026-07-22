@@ -29,6 +29,7 @@ import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  focusIsInside,
   forwardOverlayTokens,
 } from '../overlay-motion';
 import {
@@ -343,7 +344,6 @@ export class ColorPickerComponent
       if (event.key === 'Escape') {
         event.preventDefault();
         this.close();
-        this.trigger().nativeElement.focus();
       }
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
@@ -354,10 +354,14 @@ export class ColorPickerComponent
     if (!this.overlayRef) {
       return;
     }
+    const focusWasInPanel = focusIsInside(this.overlayRef);
     disposeWithLeave(this.overlayRef);
     this.overlayRef = null;
     this.open.set(false);
     this.markTouched();
+    if (focusWasInPanel) {
+      this.trigger().nativeElement.focus({ preventScroll: true });
+    }
   }
 
   private setHsv(partial: Partial<Hsv>): void {

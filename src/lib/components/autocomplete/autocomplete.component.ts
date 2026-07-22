@@ -335,7 +335,7 @@ export class AutocompleteComponent<T = unknown>
         break;
       case 'Tab':
         // Close the panel but let Tab move focus naturally (no preventDefault),
-        // else the overlay + transparent backdrop leak behind the moved focus.
+        // else the open overlay panel lingers behind the moved focus.
         if (this.overlayRef) {
           this.close();
         }

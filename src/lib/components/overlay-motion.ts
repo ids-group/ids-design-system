@@ -77,10 +77,23 @@ export function closeOnOutsidePointer(
  *  the document in the CAPTURE phase, which catches the non-bubbling `scroll`
  *  event from ANY nested container. A scroll inside the panel itself is ignored.
  *  Returns a teardown to remove the listener. */
-export function closeOnScroll(overlayRef: OverlayRef, close: () => void): () => void {
+export function closeOnScroll(
+  overlayRef: OverlayRef,
+  close: () => void,
+): () => void {
   const onScroll = (event: Event): void => {
     const target = event.target as Node | null;
     if (target && overlayRef.overlayElement.contains(target)) {
+      return;
+    }
+    // A form control scrolling its own text (e.g. typing past the visible edge
+    // of a host-side filter input) never moves the panel's anchor — ignore it.
+    if (
+      target instanceof HTMLElement &&
+      (target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.tagName === 'SELECT')
+    ) {
       return;
     }
     close();
@@ -89,4 +102,17 @@ export function closeOnScroll(overlayRef: OverlayRef, close: () => void): () => 
   doc.addEventListener('scroll', onScroll, true);
 
   return () => doc.removeEventListener('scroll', onScroll, true);
+}
+
+/** True when keyboard focus currently sits inside the overlay pane. Read this
+ *  BEFORE disposing: a close that would otherwise strand focus on `<body>`
+ *  (a scroll-close, or an in-panel button/selection) should then refocus its
+ *  trigger — with `{ preventScroll: true }` so a scroll-close never yanks the
+ *  page back. An outside-pointer close leaves focus on the clicked element
+ *  (mousedown moved it out of the pane first), so this returns false there and
+ *  focus is correctly left alone. */
+export function focusIsInside(overlayRef: OverlayRef): boolean {
+  const doc = overlayRef.overlayElement.ownerDocument;
+
+  return overlayRef.overlayElement.contains(doc.activeElement);
 }

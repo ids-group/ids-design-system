@@ -24,6 +24,7 @@ import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  focusIsInside,
   forwardOverlayTokens,
 } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
@@ -300,10 +301,17 @@ export class TimePickerComponent
   }
 
   protected close(): void {
+    const segment = this.openSegment();
+    const focusWasInPanel = this.overlayRef
+      ? focusIsInside(this.overlayRef)
+      : false;
     disposeWithLeave(this.overlayRef);
     this.overlayRef = null;
     this.openSegment.set(null);
     this.markTouched();
+    if (focusWasInPanel && segment) {
+      this.triggerFor(segment)?.nativeElement.focus({ preventScroll: true });
+    }
   }
 
   ngOnDestroy(): void {
@@ -314,9 +322,7 @@ export class TimePickerComponent
   }
 
   protected onEscape(): void {
-    const segment = this.openSegment();
     this.close();
-    (segment ? this.triggerFor(segment) : null)?.nativeElement.focus();
   }
 
   protected onPick(next: string): void {
