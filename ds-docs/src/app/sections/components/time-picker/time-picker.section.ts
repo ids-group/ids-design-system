@@ -2,11 +2,17 @@ import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TimePickerComponent, type TimePickerValue } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 
 @Component({
   selector: 'section-components-time-picker',
   standalone: true,
-  imports: [TimePickerComponent, DocsSectionComponent, ReactiveFormsModule],
+  imports: [
+    TimePickerComponent,
+    DocsSectionComponent,
+    ReactiveFormsModule,
+    DocsNonmodalNoteComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './time-picker.section.html',
   styleUrl: './time-picker.section.scss',

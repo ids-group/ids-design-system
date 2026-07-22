@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { SelectComponent, type SelectOption } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 import {
   DocsTruncationComponent,
   TruncationRule,
@@ -9,13 +10,15 @@ import {
 @Component({
   selector: 'section-components-select',
   standalone: true,
-  imports: [SelectComponent, DocsSectionComponent, DocsTruncationComponent],
+  imports: [
+    SelectComponent,
+    DocsSectionComponent,
+    DocsTruncationComponent,
+    DocsNonmodalNoteComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './select.section.html',
-  styleUrls: [
-    '../../../shared/section-demo.scss',
-    './select.section.scss',
-  ],
+  styleUrls: ['../../../shared/section-demo.scss', './select.section.scss'],
 })
 export class SelectSection {
   protected readonly ownerOptions: SelectOption[] = [

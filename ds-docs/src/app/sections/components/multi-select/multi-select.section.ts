@@ -1,11 +1,16 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { MultiSelectComponent, MultiSelectOption } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 
 @Component({
   selector: 'section-components-multi-select',
   standalone: true,
-  imports: [MultiSelectComponent, DocsSectionComponent],
+  imports: [
+    MultiSelectComponent,
+    DocsSectionComponent,
+    DocsNonmodalNoteComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './multi-select.section.html',
   styleUrls: [

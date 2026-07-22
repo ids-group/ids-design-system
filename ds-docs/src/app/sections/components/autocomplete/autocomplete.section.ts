@@ -9,6 +9,7 @@ import {
   TruncationRule,
 } from '../../../shared/docs-truncation.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 
 const MEMBERS: readonly AutocompleteOption<string>[] = [
   { value: 'acme', label: 'Acme Holdings' },
@@ -58,6 +59,7 @@ const VENUE_GROUPS: AutocompleteOptionGroup<string>[] = [
     AutocompleteComponent,
     DocsTruncationComponent,
     DocsSectionComponent,
+    DocsNonmodalNoteComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './autocomplete.section.html',

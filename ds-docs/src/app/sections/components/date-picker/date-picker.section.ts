@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DatePickerComponent, type DatePickerPreset } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 import {
   DocsTruncationComponent,
   TruncationRule,
@@ -13,6 +14,7 @@ import {
     DatePickerComponent,
     DocsSectionComponent,
     DocsTruncationComponent,
+    DocsNonmodalNoteComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './date-picker.section.html',
