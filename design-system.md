@@ -25,7 +25,7 @@ Loaded via `@use 'styles/tokens';` (when the consumer also `@use 'styles/ds';` t
 - Error (destructive, was --danger): `--error`, `--error-hover`, `--error-pressed`, `--error-subtle`, `--error-muted`, `--error-border`, `--error-text` + HSL channels `--error-h/s/l`
 - Status: `--success`, `--success-hover`, `--success-subtle`, `--success-muted`, `--success-border`, `--success-text`
 - Status (warning/info): same shape with prefix swapped
-- Status pills: the DS ships no predefined status keys — consumers register their own vocabulary (e.g. `planning`, `confirmed`) and wire colours per key via `@use 'styles/status'` (`status.define(...)` / `status.semantic-preset`), which sets `--ds-badge-bg-color` / `--ds-badge-label-color` / `--ds-status-dot-color` per `[data-status]`
+- Status pills: the DS ships no predefined status keys — consumers register their own vocabulary (e.g. `planning`, `confirmed`) and wire colours per key via `@use 'styles/status'` (`status.define(...)` / `status.semantic-preset`), which sets `--ds-badge-bg-color` / `--ds-badge-label-color` / `--ds-status-dot-color` per `[data-status]`. Full guide (model, worked example, migration from factory statuses): [`docs/badge-statuses.md`](docs/badge-statuses.md)
 
 **Geometry:**
 - Spacing: `--space-0`, `--space-px`, `--space-0-5` (2px), `--space-1` (4px), `--space-1-5` (6px), `--space-2` (8px), `--space-2-5` (10px), `--space-3` (12px), `--space-4` (16px), `--space-5` (20px), `--space-6` (24px), `--space-8` (32px), `--space-10` (40px), `--space-12` (48px), `--space-14` (56px), `--space-16` (64px), `--space-20` (80px), `--space-24` (96px), `--space-32` (128px)
