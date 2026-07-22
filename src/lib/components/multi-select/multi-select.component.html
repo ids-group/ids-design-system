@@ -12,7 +12,7 @@
   [attr.aria-controls]="listboxId"
   [attr.aria-label]="resolvedAriaLabel()"
   [attr.tabindex]="isDisabled() ? -1 : 0"
-  (click)="openPanel()"
+  (click)="onTriggerClick()"
   (keydown)="onTriggerKeydown($event)"
 >
   @if (selectedOptions().length === 0) {
