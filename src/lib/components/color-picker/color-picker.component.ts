@@ -20,9 +20,17 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { IconComponent } from '../../icons/icon.component';
 import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
 import { DsControlValueAccessor } from '../control-value-accessor';
-import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
+import {
+  FieldMessageComponent,
+  type FieldMessageState,
+} from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
-import { disposeWithLeave, forwardOverlayTokens } from '../overlay-motion';
+import {
+  closeOnOutsidePointer,
+  closeOnScroll,
+  disposeWithLeave,
+  forwardOverlayTokens,
+} from '../overlay-motion';
 import {
   type Hsv,
   hexToHsv,
@@ -123,7 +131,9 @@ export class ColorPickerComponent
   }
 
   protected readonly uid = nextControlId('ds-color-picker');
-  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly hintId = computed(() =>
+    this.hint() ? `${this.uid}-hint` : null,
+  );
   protected readonly messageState = computed<FieldMessageState>(() =>
     this.invalid() ? 'error' : 'default',
   );
@@ -304,18 +314,36 @@ export class ColorPickerComponent
       ]);
     const cfg: OverlayConfig = {
       positionStrategy,
-      hasBackdrop: true,
-      backdropClass: 'cdk-overlay-transparent-backdrop',
+      hasBackdrop: false,
       panelClass: ['ds-dropdown-panel', 'ds-overlay-pane'],
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
     this.overlayRef = this.overlay.create(cfg);
-    forwardOverlayTokens(this.overlayRef, this.host.nativeElement, this.panelTokens);
-    this.overlayRef.backdropClick().subscribe(() => this.close());
+    forwardOverlayTokens(
+      this.overlayRef,
+      this.host.nativeElement,
+      this.panelTokens,
+    );
+    closeOnOutsidePointer(
+      this.overlayRef,
+      (target) => this.host.nativeElement.contains(target),
+      () => this.close(),
+    );
+    // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
+    // overflow container, so close on any outside scroll ourselves.
+    const removeScrollClose = closeOnScroll(this.overlayRef, () =>
+      this.close(),
+    );
+    this.overlayRef.detachments().subscribe(() => {
+      removeScrollClose();
+      this.overlayRef = null;
+      this.open.set(false);
+    });
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {
         event.preventDefault();
         this.close();
+        this.trigger().nativeElement.focus();
       }
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
@@ -330,7 +358,6 @@ export class ColorPickerComponent
     this.overlayRef = null;
     this.open.set(false);
     this.markTouched();
-    this.trigger().nativeElement.focus();
   }
 
   private setHsv(partial: Partial<Hsv>): void {
