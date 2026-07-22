@@ -20,7 +20,12 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { disposeWithLeave, forwardOverlayTokens } from '../overlay-motion';
+import {
+  closeOnOutsidePointer,
+  closeOnScroll,
+  disposeWithLeave,
+  forwardOverlayTokens,
+} from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import {
@@ -29,7 +34,13 @@ import {
 } from '../field-message/field-message.component';
 import { TimeColumnsComponent } from '../time-columns/time-columns.component';
 import { DS_CONFIG } from '../../config/ds-config';
-import { clampToRange, formatTime, pad2, snapToStep, toMinutes } from './time.util';
+import {
+  clampToRange,
+  formatTime,
+  pad2,
+  snapToStep,
+  toMinutes,
+} from './time.util';
 import type {
   TimeConstraints,
   TimeFormat,
@@ -236,14 +247,31 @@ export class TimePickerComponent
       ]);
     const cfg: OverlayConfig = {
       positionStrategy,
-      hasBackdrop: true,
-      backdropClass: 'cdk-overlay-transparent-backdrop',
+      hasBackdrop: false,
       panelClass: 'ds-overlay-pane',
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
     this.overlayRef = this.overlay.create(cfg);
-    forwardOverlayTokens(this.overlayRef, this.host.nativeElement, this.panelTokens);
-    this.overlayRef.backdropClick().subscribe(() => this.close());
+    forwardOverlayTokens(
+      this.overlayRef,
+      this.host.nativeElement,
+      this.panelTokens,
+    );
+    closeOnOutsidePointer(
+      this.overlayRef,
+      (target) => this.host.nativeElement.contains(target),
+      () => this.close(),
+    );
+    // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
+    // overflow container, so close on any outside scroll ourselves.
+    const removeScrollClose = closeOnScroll(this.overlayRef, () =>
+      this.close(),
+    );
+    this.overlayRef.detachments().subscribe(() => {
+      removeScrollClose();
+      this.overlayRef = null;
+      this.openSegment.set(null);
+    });
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {
         event.preventDefault();
@@ -255,6 +283,20 @@ export class TimePickerComponent
     afterNextRender(() => this.columns()?.focusSelected(), {
       injector: this.injector,
     });
+  }
+
+  protected onTriggerClick(segment: Segment): void {
+    if (this.isDisabled()) {
+      return;
+    }
+    if (this.overlayRef) {
+      const wasSameSegment = this.openSegment() === segment;
+      this.close();
+      if (wasSameSegment) {
+        return;
+      }
+    }
+    this.open(segment);
   }
 
   protected close(): void {
@@ -310,7 +352,9 @@ export class TimePickerComponent
     this.value.set(null);
   }
 
-  private triggerFor(segment: Segment): ElementRef<HTMLButtonElement> | undefined {
+  private triggerFor(
+    segment: Segment,
+  ): ElementRef<HTMLButtonElement> | undefined {
     if (segment === 'start') {
       return this.startTrigger();
     }

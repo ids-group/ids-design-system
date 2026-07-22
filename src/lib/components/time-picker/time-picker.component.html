@@ -12,7 +12,7 @@
           [attr.aria-label]="ariaLabelFor('start')"
           [attr.aria-invalid]="invalid() ? 'true' : null"
           [attr.aria-describedby]="hintId()"
-          (click)="open('start')"
+          (click)="onTriggerClick('start')"
         >
           <ds-icon
             name="clock"
@@ -43,7 +43,7 @@
           [attr.aria-label]="ariaLabelFor('end')"
           [attr.aria-invalid]="invalid() ? 'true' : null"
           [attr.aria-describedby]="hintId()"
-          (click)="open('end')"
+          (click)="onTriggerClick('end')"
         >
           <ds-icon
             name="clock"
@@ -68,7 +68,7 @@
         [attr.aria-label]="ariaLabelFor('single')"
         [attr.aria-invalid]="invalid() ? 'true' : null"
         [attr.aria-describedby]="hintId()"
-        (click)="open('single')"
+        (click)="onTriggerClick('single')"
       >
         <ds-icon
           name="clock"
