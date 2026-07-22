@@ -20,7 +20,12 @@ import {
   OverlayRef,
 } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { disposeWithLeave, forwardOverlayTokens } from '../overlay-motion';
+import {
+  closeOnOutsidePointer,
+  closeOnScroll,
+  disposeWithLeave,
+  forwardOverlayTokens,
+} from '../overlay-motion';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { NgTemplateOutlet } from '@angular/common';
 import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
@@ -115,14 +120,25 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
 
     const cfg: OverlayConfig = {
       positionStrategy,
-      hasBackdrop: true,
-      backdropClass: 'cdk-overlay-transparent-backdrop',
+      hasBackdrop: false,
       panelClass: 'ds-overlay-pane',
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
     this.ref = this.overlay.create(cfg);
     forwardOverlayTokens(this.ref, this.host.nativeElement, this.panelTokens);
-    this.ref.backdropClick().subscribe(() => this.close());
+    closeOnOutsidePointer(
+      this.ref,
+      (target) => trigger.contains(target),
+      () => this.close(),
+    );
+    // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
+    // overflow container, so close on any outside scroll ourselves.
+    const removeScrollClose = closeOnScroll(this.ref, () => this.close());
+    this.ref.detachments().subscribe(() => {
+      removeScrollClose();
+      this.ref = null;
+      this.opened.set(false);
+    });
     this.ref.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {
         event.preventDefault();
