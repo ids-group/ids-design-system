@@ -18,7 +18,12 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { disposeWithLeave, forwardOverlayTokens } from '../overlay-motion';
+import {
+  closeOnOutsidePointer,
+  closeOnScroll,
+  disposeWithLeave,
+  forwardOverlayTokens,
+} from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { TagComponent } from '../tag/tag.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
@@ -373,8 +378,7 @@ export class AutocompleteComponent<T = unknown>
       ]);
     const overlayConfig: OverlayConfig = {
       positionStrategy,
-      hasBackdrop: true,
-      backdropClass: 'cdk-overlay-transparent-backdrop',
+      hasBackdrop: false,
       panelClass: 'ds-overlay-pane',
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
@@ -387,8 +391,26 @@ export class AutocompleteComponent<T = unknown>
       overlayConfig.width = triggerWidth;
     }
     this.overlayRef = this.overlay.create(overlayConfig);
-    forwardOverlayTokens(this.overlayRef, this.host.nativeElement, this.panelTokens);
-    this.overlayRef.backdropClick().subscribe(() => this.close());
+    forwardOverlayTokens(
+      this.overlayRef,
+      this.host.nativeElement,
+      this.panelTokens,
+    );
+    closeOnOutsidePointer(
+      this.overlayRef,
+      (target) => this.host.nativeElement.contains(target),
+      () => this.close(),
+    );
+    // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
+    // overflow container, so close on any outside scroll ourselves.
+    const removeScrollClose = closeOnScroll(this.overlayRef, () =>
+      this.close(),
+    );
+    this.overlayRef.detachments().subscribe(() => {
+      removeScrollClose();
+      this.overlayRef = null;
+      this.isOpen.set(false);
+    });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
     this.isOpen.set(true);
     this.activeIndex.set(this.visibleOptions().length ? 0 : -1);
