@@ -293,22 +293,6 @@
   --info-muted: var(--sky-100);
   --info-border: var(--sky-200);
   --info-text: var(--sky-700);
-  /* Status pills (event lifecycle).
-     DECISION: --status-confirmed-* chains through --primary-* so a
-     brand re-skin moves Confirmed with it. The other lifecycle
-     stages are deliberately neutral/green/dark to keep semantic
-     distance from brand. */
-  /* Status pills — canonical (single system).
-     Legacy classes `.badge--active` (single) and ad-hoc semantic
-     pills are unified in the Badge component to consume these tokens. */
-  --status-planning-bg-color: var(--neutral-150);
-  --status-planning-text-color: var(--neutral-700);
-  --status-confirmed-bg-color: var(--primary-subtitle);
-  --status-confirmed-text-color: var(--primary-strong);
-  --status-active-bg-color: var(--green-50);
-  --status-active-text-color: var(--green-700);
-  --status-completed-bg-color: var(--neutral-900);
-  --status-completed-text-color: var(--neutral-0);
   /* Focus rings.
      Outer halos use hsla() composed from brand/danger HSL channels
      so re-skinning --primary-h propagates into focus state.
@@ -575,22 +559,6 @@
   --info-muted: var(--sky-100);
   --info-border: var(--sky-200);
   --info-text: var(--sky-700);
-  /* Status pills (event lifecycle).
-     DECISION: --status-confirmed-* chains through --primary-* so a
-     brand re-skin moves Confirmed with it. The other lifecycle
-     stages are deliberately neutral/green/dark to keep semantic
-     distance from brand. */
-  /* Status pills — canonical (single system).
-     Legacy classes `.badge--active` (single) and ad-hoc semantic
-     pills are unified in the Badge component to consume these tokens. */
-  --status-planning-bg-color: var(--neutral-150);
-  --status-planning-text-color: var(--neutral-700);
-  --status-confirmed-bg-color: var(--primary-subtitle);
-  --status-confirmed-text-color: var(--primary-strong);
-  --status-active-bg-color: var(--green-50);
-  --status-active-text-color: var(--green-700);
-  --status-completed-bg-color: var(--neutral-900);
-  --status-completed-text-color: var(--neutral-0);
   /* Focus rings.
      Outer halos use hsla() composed from brand/danger HSL channels
      so re-skinning --primary-h propagates into focus state.
@@ -704,8 +672,6 @@
   --info-muted: hsl(217deg 40% 24%);
   --info-border: hsl(217deg 38% 32%);
   --info-text: hsl(217deg 90% 74%);
-  --status-active-bg-color: var(--success-subtitle);
-  --status-active-text-color: var(--success-text);
   --surface-scrim: hsl(225deg 39% 4% / 70%);
   --focus-field-alpha: .35;
   --chart-hover-bg-color: hsl(0deg 0% 100% / 6%);
@@ -894,9 +860,9 @@
   --opacity-state-pressed: 0.16; /* active/pressed layer */
   --opacity-state-active: 0.24; /* deepest pressed layer (e.g. tag close on :active) */
   /* ============================================================
-     Breakpoints — moved to _breakpoints.scss, the single source for both
-     the --bp-* custom properties (still emitted, now from that partial)
-     AND the $bp-* Sass aliases usable inside @media.
+     Breakpoints — $bp-* Sass aliases + up()/down() mixins live in
+     _breakpoints.scss (pure); the --bp-* custom properties come from
+     its emit-vars mixin, included once by styles/ds.
      ============================================================ */
   /* ============================================================
      Page grid — tier-specific gutters + margins.
@@ -1328,15 +1294,6 @@
   --segmented-btn-h: 32px;
 }
 
-:root {
-  --bp-xs: 480px;
-  --bp-sm: 640px;
-  --bp-md: 768px;
-  --bp-lg: 1024px;
-  --bp-xl: 1441px;
-  --bp-2xl: 1536px;
-}
-
 /* ============================================================
    Boilerplate — Chart / dataviz tokens
    ------------------------------------------------------------
@@ -1594,6 +1551,8 @@ h1, h2, h3, h4, h5, h6 {
   border: var(--border-width-default) solid var(--border-divider);
   border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4);
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .sr-only {
@@ -1755,11 +1714,26 @@ h1, h2, h3, h4, h5, h6 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-4);
 }
+@media (width < 640px) {
+  .grid-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
 
 .grid-3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-4);
+}
+@media (width < 768px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (width < 640px) {
+  .grid-3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .grid-4 {
@@ -1767,17 +1741,22 @@ h1, h2, h3, h4, h5, h6 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-4);
 }
-
-@media (width <= 1100px) {
+@media (width < 1024px) {
   .grid-4 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
-@media (width <= 820px) {
-  .grid-3, .grid-4 {
+@media (width < 768px) {
+  .grid-4 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+@media (width < 640px) {
+  .grid-4 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .page-grid {
   display: grid;
   gap: var(--page-gutter);
@@ -2030,4 +2009,12 @@ html {
   :root {
     animation: none;
   }
+}
+:root {
+  --bp-xs: 480px;
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1441px;
+  --bp-2xl: 1536px;
 }
