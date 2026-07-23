@@ -108,17 +108,13 @@ export class FilterBarSection {
     },
   ];
 
-  protected readonly filteredRows = computed<readonly RecordRow[]>(() => {
-    const query = this.filterQuery().trim().toLowerCase();
+  /** Status facet only — free-text search rides the table's own [filterQuery]. */
+  protected readonly statusFilteredRows = computed<readonly RecordRow[]>(() => {
     const status = this.filterStatus();
 
-    return this.recordRows.filter(
-      (row) =>
-        (!query ||
-          row.project.toLowerCase().includes(query) ||
-          row.venue.toLowerCase().includes(query)) &&
-        (!status || row.status === status),
-    );
+    return status
+      ? this.recordRows.filter((row) => row.status === status)
+      : this.recordRows;
   });
 
   protected statusLabel(value: string): string {

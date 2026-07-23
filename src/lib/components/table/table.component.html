@@ -54,12 +54,13 @@
             </th>
           }
 
-          @for (col of columns(); track col.key; let first = $first) {
+          @for (col of visibleColumns(); track col.key; let first = $first) {
             <th
               scope="col"
               [class]="headerClasses(col)"
               [class.numeric]="col.align === 'right'"
               [class.pin-first]="first && stickyFirstColumn()"
+              [style.width.px]="col.width ?? null"
               [attr.aria-sort]="ariaSort(col)"
             >
               @if (col.sortable) {
@@ -119,7 +120,7 @@
                 </td>
               }
 
-              @for (col of columns(); track col.key; let first = $first) {
+              @for (col of visibleColumns(); track col.key; let first = $first) {
                 <td
                   [class.numeric]="col.align === 'right'"
                   [class.pin-first]="first && stickyFirstColumn()"
@@ -137,7 +138,7 @@
               }
             </tr>
           }
-        } @else if (!data().length) {
+        } @else if (!filteredData().length) {
           <tr>
             <td
               class="empty"
@@ -157,6 +158,8 @@
               [class.selected]="isSelected(row)"
               [class.expanded]="isExpanded(row)"
               [class.clickable]="rowInteractive()"
+              [class.active]="row.id === activeRowId()"
+              [attr.aria-current]="row.id === activeRowId() ? 'true' : null"
               [attr.tabindex]="rowInteractive() ? 0 : null"
               [attr.aria-label]="rowInteractive() ? rowAriaLabel(row) : null"
               (click)="onRowClick(row, $event)"
@@ -200,7 +203,7 @@
                 </td>
               }
 
-              @for (col of columns(); track col.key; let first = $first) {
+              @for (col of visibleColumns(); track col.key; let first = $first) {
                 <td
                   [class.numeric]="col.align === 'right'"
                   [class.pin-first]="first && stickyFirstColumn()"
@@ -211,6 +214,14 @@
                       [ngTemplateOutletContext]="{ $implicit: row, row: row }"
                     >
                     </ng-container>
+                  } @else if (col.truncate) {
+                    <span
+                      class="cell-clip"
+                      [style.max-width.px]="col.width ?? 240"
+                      [attr.title]="cellValue(row, col)"
+                    >
+                      {{ cellValue(row, col) }}
+                    </span>
                   } @else {
                     {{ cellValue(row, col) }}
                   }
@@ -262,7 +273,7 @@
 @if (pageSize(); as size) {
   <div class="pagination-footer">
     <ds-pagination
-      [total]="data().length"
+      [total]="filteredData().length"
       [pageSize]="size"
       [pageSizeOptions]="pageSizeOptions()"
       [(currentPage)]="page"

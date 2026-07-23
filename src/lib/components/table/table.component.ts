@@ -87,8 +87,17 @@ export class TableComponent<T extends { id: string }> {
   /** When true, each row becomes a keyboard-operable control (role=button,
    *  tabindex, Enter/Space → rowClicked) with an accessible name from the first
    *  column. Off by default so non-navigating tables don't advertise a false
-   *  click affordance. */
+   *  click affordance. Also the gate for the hover/pressed row tints. */
   readonly rowInteractive = input(false, { transform: booleanAttribute });
+
+  /** Id of the row rendered as current (highlight + `aria-current`) — e.g. the
+   *  row whose detail drawer or side panel is open. `null` — none. */
+  readonly activeRowId = input<string | null>(null);
+
+  /** Client-side row filter — case-insensitive substring match against cell
+   *  text. Columns with `filterable: true` restrict the match set (none
+   *  marked — every column matches, hidden ones included). '' — no filtering. */
+  readonly filterQuery = input<string>('');
 
   /** Rows per page. `null` (default) disables pagination — all rows render. */
   readonly pageSize = model<number | null>(null);
@@ -183,9 +192,32 @@ export class TableComponent<T extends { id: string }> {
     () => this.loading() === 'overlay',
   );
 
-  /** Client-side sort over the full data set — only when `clientSort()`. */
+  /** Columns actually rendered — `hidden: true` columns are skipped. */
+  protected readonly visibleColumns = computed<readonly TableColumn<T>[]>(() =>
+    this.columns().filter((col) => !col.hidden),
+  );
+
+  /** Client-side filter over the full data set — active when `filterQuery` is
+   *  non-empty. Sorting and pagination run on the filtered rows. */
+  protected readonly filteredData = computed<readonly T[]>(() => {
+    const query = this.filterQuery().trim().toLowerCase();
+    if (!query) {
+      return this.data();
+    }
+    const columns = this.columns();
+    const marked = columns.filter((col) => col.filterable);
+    const scope = marked.length ? marked : columns;
+
+    return this.data().filter((row) =>
+      scope.some((col) =>
+        this.cellValue(row, col).toLowerCase().includes(query),
+      ),
+    );
+  });
+
+  /** Client-side sort over the filtered data set — only when `clientSort()`. */
   protected readonly sortedData = computed<readonly T[]>(() => {
-    const rows = this.data();
+    const rows = this.filteredData();
     if (!this.clientSort()) {
       return rows;
     }
@@ -257,7 +289,7 @@ export class TableComponent<T extends { id: string }> {
 
   /** Total colspan for the expanded-row panel: data cols + optional select/expand/actions cols. */
   protected readonly expandedColspan = computed(() => {
-    let count = this.columns().length;
+    let count = this.visibleColumns().length;
     if (this.selectable()) {
       count += 1;
     }
@@ -358,9 +390,9 @@ export class TableComponent<T extends { id: string }> {
     this.rowClicked.emit(row);
   }
 
-  /** Accessible name for an interactive row, taken from the first column. */
+  /** Accessible name for an interactive row, taken from the first visible column. */
   protected rowAriaLabel(row: T): string {
-    const first = this.columns()[0];
+    const first = this.visibleColumns()[0];
 
     return first ? this.cellValue(row, first) : '';
   }

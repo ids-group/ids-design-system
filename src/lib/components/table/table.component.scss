@@ -55,6 +55,8 @@
   --_table-bg-color:              var(--ds-table-bg-color,              var(--surface-default));
   --_table-row-hover-bg-color:    var(--ds-table-row-hover-bg-color,    var(--surface-secondary));
   --_table-row-selected-bg-color: var(--ds-table-row-selected-bg-color, var(--accent-subtitle));
+  --_table-row-pressed-bg-color: var(--ds-table-row-pressed-bg-color, var(--surface-muted));
+  --_table-row-active-bg-color: var(--ds-table-row-active-bg-color, var(--accent-subtitle));
   --_table-head-text-color:         var(--ds-table-head-text-color,         var(--text-secondary));
   --_table-head-bg-color:         var(--ds-table-head-bg-color,         var(--surface-secondary));
   --_table-head-fs:         var(--ds-table-head-fs,         var(--font-size-xs));
@@ -194,12 +196,22 @@
         box-shadow: none;
       }
 
-      &:hover td {
+      /* Interaction tints are exclusive to rowInteractive tables — a passive
+         table stays static so the tint honestly signals clickability. */
+      &.clickable:not(.active):hover td {
         background-color: var(--_table-row-hover-bg-color);
       }
 
       &.selected td {
         background-color: var(--_table-row-selected-bg-color);
+      }
+
+      &.active td {
+        background-color: var(--_table-row-active-bg-color);
+      }
+
+      &.clickable:active td {
+        background-color: var(--_table-row-pressed-bg-color);
       }
 
       &.clickable {
@@ -209,13 +221,6 @@
       &.clickable:focus-visible {
         outline: var(--border-width-strong, 2px) solid var(--accent);
         outline-offset: -2px;
-      }
-
-      &.expand-panel-row {
-        // Suppress hover tint so the expansion panel doesn't flash on hover.
-        &:hover td {
-          background-color: var(--_table-bg-color);
-        }
       }
     }
 
@@ -265,24 +270,22 @@
     .expand-panel-cell {
       padding: var(--_table-cell-pad-y) var(--_table-cell-pad-x);
     }
+
+    /* Ellipsis clip for `truncate` text cells — the inline max-width (column
+       `width`, 240px fallback) caps the cell's max-content so auto table
+       layout can't stretch the column to fit the full text. */
+    .cell-clip {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 
   &.compact {
     tbody td,
     thead th {
       padding: var(--space-2) var(--space-3);
-    }
-  }
-
-  /* Skeleton/loading state — disable hover & selection visuals
-     so the placeholder doesn't read as interactive. */
-  &.skeleton-mode {
-    tbody tr:hover td {
-      background: transparent;
-      cursor: default;
-    }
-    tbody tr.clickable {
-      cursor: default;
     }
   }
 
@@ -326,14 +329,24 @@
     background-color: var(--_table-head-bg-color);
   }
 
-  tbody tr:hover .pin-first,
-  tbody tr:hover .pin-select {
+  tbody tr.clickable:not(.active):hover .pin-first,
+  tbody tr.clickable:not(.active):hover .pin-select {
     background-color: var(--_table-row-hover-bg-color);
   }
 
   tbody tr.selected .pin-first,
   tbody tr.selected .pin-select {
     background-color: var(--_table-row-selected-bg-color);
+  }
+
+  tbody tr.active .pin-first,
+  tbody tr.active .pin-select {
+    background-color: var(--_table-row-active-bg-color);
+  }
+
+  tbody tr.clickable:active .pin-first,
+  tbody tr.clickable:active .pin-select {
+    background-color: var(--_table-row-pressed-bg-color);
   }
 }
 
@@ -358,12 +371,20 @@
     background-color: var(--_table-head-bg-color);
   }
 
-  tbody tr:hover .pin-expand {
+  tbody tr.clickable:not(.active):hover .pin-expand {
     background-color: var(--_table-row-hover-bg-color);
   }
 
   tbody tr.selected .pin-expand {
     background-color: var(--_table-row-selected-bg-color);
+  }
+
+  tbody tr.active .pin-expand {
+    background-color: var(--_table-row-active-bg-color);
+  }
+
+  tbody tr.clickable:active .pin-expand {
+    background-color: var(--_table-row-pressed-bg-color);
   }
 
   /* pin-first must skip past the expand column. */

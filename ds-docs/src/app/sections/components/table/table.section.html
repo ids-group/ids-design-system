@@ -762,12 +762,15 @@
 
   <p class="block-desc t-s">
     <code class="t-mono-inline"> [rowInteractive]="true" </code> turns every row
-    into a keyboard-operable control — pointer cursor, focus ring, Enter/Space —
-    and <code class="t-mono-inline"> (rowClicked) </code> emits the row. The
+    into a keyboard-operable control — pointer cursor, hover and pressed tints
+    (passive tables render none), focus ring, Enter/Space — and
+    <code class="t-mono-inline"> (rowClicked) </code> emits the row. The
     classic master-detail wiring: clicking a row opens a
-    <code class="t-mono-inline"> ds-drawer </code> with the record. Controls
-    inside cells (checkboxes, menus) stop propagation, so they never trigger the
-    row click.
+    <code class="t-mono-inline"> ds-drawer </code> with the record, and
+    <code class="t-mono-inline"> [activeRowId] </code> keeps that row
+    highlighted (plus <code class="t-mono-inline"> aria-current </code>) while
+    the drawer is open. Controls inside cells (checkboxes, menus) stop
+    propagation, so they never trigger the row click.
   </p>
 
   <ds-table
@@ -775,6 +778,7 @@
     [data]="events"
     [columns]="loadingColumns"
     [rowInteractive]="true"
+    [activeRowId]="detailOpen() ? (detailRow()?.id ?? null) : null"
     [stickyHeader]="false"
     (rowClicked)="openDetail($event)"
   />

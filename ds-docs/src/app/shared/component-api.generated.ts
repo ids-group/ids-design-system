@@ -4618,7 +4618,25 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "When true, each row becomes a keyboard-operable control (role=button, tabindex, Enter/Space → rowClicked) with an accessible name from the first column. Off by default so non-navigating tables don't advertise a false click affordance."
+        "description": "When true, each row becomes a keyboard-operable control (role=button, tabindex, Enter/Space → rowClicked) with an accessible name from the first column. Off by default so non-navigating tables don't advertise a false click affordance. Also the gate for the hover/pressed row tints."
+      },
+      {
+        "name": "activeRowId",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Id of the row rendered as current (highlight + `aria-current`) — e.g. the row whose detail drawer or side panel is open. `null` — none."
+      },
+      {
+        "name": "filterQuery",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Client-side row filter — case-insensitive substring match against cell text. Columns with `filterable: true` restrict the match set (none marked — every column matches, hidden ones included). '' — no filtering."
       },
       {
         "name": "pageSize",

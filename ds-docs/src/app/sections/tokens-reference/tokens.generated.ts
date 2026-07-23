@@ -4403,12 +4403,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-table-row-hover-bg-color",
         "value": "var(--surface-secondary)",
-        "notes": "Row hover fill."
+        "notes": "Row hover fill (rowInteractive tables only)."
       },
       {
         "name": "--ds-table-row-selected-bg-color",
         "value": "var(--accent-subtitle)",
         "notes": "Selected row."
+      },
+      {
+        "name": "--ds-table-row-pressed-bg-color",
+        "value": "var(--surface-muted)",
+        "notes": "Clickable row pressed (:active) fill."
+      },
+      {
+        "name": "--ds-table-row-active-bg-color",
+        "value": "var(--accent-subtitle)",
+        "notes": "Current row (activeRowId) fill."
       },
       {
         "name": "--ds-table-head-text-color",

@@ -16,8 +16,23 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   on pick. Off by default — tables without `rowActions` render exactly as before. Kebab clicks stop
   propagation, so on a `rowInteractive` table a menu click never triggers `rowClicked`. New exported
   types `TableRowAction` / `TableRowActionEvent`.
+- **`ds-table` current-row highlight, client filter, and honored column fields.** New opt-in
+  `activeRowId` input marks one row as current (tinted via the new `--ds-table-row-active-bg-color`
+  token + `aria-current`) — e.g. the row whose detail drawer is open. New `filterQuery` input filters
+  rows client-side (case-insensitive substring over cell text; columns with `filterable: true`
+  restrict the match set, none marked = all columns) — sorting, pagination totals and the empty slot
+  all follow the filtered set. `TableColumn.width` (px, applied to the header cell),
+  `TableColumn.truncate` (ellipsis-clip at `width`, 240px fallback, full value in the title tooltip;
+  text cells only) and `TableColumn.hidden` (column skipped, still filterable/sortable) were declared
+  but ignored — they now work.
 
 ### Changed
+
+- **`ds-table` row hover/pressed tints are now exclusive to `rowInteractive` tables.** Passive
+  tables no longer tint rows on hover — the tint now honestly signals clickability; interactive rows
+  additionally gain a pressed (`:active`) fill via the new `--ds-table-row-pressed-bg-color` token
+  (default `--surface-muted`). To restore the old always-on hover on a specific passive table, add
+  consumer CSS: `ds-table tbody tr:hover td { background-color: var(--surface-secondary); }`.
 
 - **Breaking: `ds-date-picker` input `defaultMonth` is renamed to `defaultDate`.** The input always
   accepted a full `Date` and used its exact day (grid focus lands on that day, the panel opens on

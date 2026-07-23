@@ -4,12 +4,18 @@ export interface TableColumn<T = unknown> {
   key: string;
   label: string;
   sortable?: boolean;
+  /** Include the column in `filterQuery` matching. When no column is marked,
+   *  every column matches. Works on `hidden` columns too. */
   filterable?: boolean;
+  /** Ellipsis-clip long cell text at `width` (240px when unset), full value in
+   *  the title tooltip. Text cells only — template cells own their overflow. */
   truncate?: boolean;
+  /** Column width in px — also the clip width for `truncate`. */
   width?: number;
   align?: 'left' | 'right' | 'center';
   cell?: (row: T) => string;
   hideable?: boolean;
+  /** Skip rendering the column. It stays available to `filterable`/sorting. */
   hidden?: boolean;
 }
 

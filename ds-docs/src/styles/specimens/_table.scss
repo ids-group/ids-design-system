@@ -22,6 +22,8 @@
   --_table-bg-color:              var(--ds-table-bg-color,              var(--surface-default));
   --_table-row-hover-bg-color:    var(--ds-table-row-hover-bg-color,    var(--surface-secondary));
   --_table-row-selected-bg-color: var(--ds-table-row-selected-bg-color, var(--primary-subtitle));
+  --_table-row-pressed-bg-color: var(--ds-table-row-pressed-bg-color, var(--surface-muted));
+  --_table-row-active-bg-color: var(--ds-table-row-active-bg-color, var(--primary-subtitle));
   --_table-head-bg-color:         var(--ds-table-head-bg-color,         var(--surface-secondary));
   --_table-head-text-color:         var(--ds-table-head-text-color,         var(--text-tertiary));
   --_table-divider:         var(--ds-table-divider,         var(--border-divider));
@@ -115,8 +117,12 @@
 
     tr {
       &:last-child td { box-shadow: none; }
-      &:hover td { background-color: var(--_table-row-hover-bg-color); }
+
+      /* Interaction tints only on rowInteractive tables — mirrors the component. */
+      &.clickable:not(.active):hover td { background-color: var(--_table-row-hover-bg-color); }
       &.selected td { background-color: var(--_table-row-selected-bg-color); }
+      &.active td { background-color: var(--_table-row-active-bg-color); }
+      &.clickable:active td { background-color: var(--_table-row-pressed-bg-color); }
       &.clickable { cursor: pointer; }
     }
   }
@@ -129,11 +135,6 @@
   /* Zebra rows — odd-row tint for dense scans. */
   &.zebra tbody tr:nth-child(odd) td { background-color: var(--_table-row-hover-bg-color); }
   &.zebra tbody tr:hover td { background-color: var(--_table-row-selected-bg-color); }
-
-  &.skeleton-mode {
-    tbody tr:hover td { background: transparent; cursor: default; }
-    tbody tr.clickable { cursor: default; }
-  }
 
 }
 
