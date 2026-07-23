@@ -24,6 +24,7 @@ import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  focusIsInside,
   forwardOverlayTokens,
 } from '../overlay-motion';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
@@ -57,7 +58,10 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
   private readonly host = inject(ElementRef<HTMLElement>);
   protected readonly preview = inject(DsStaticPreview);
   protected readonly panelTpl = viewChild<TemplateRef<unknown>>('panel');
+  private readonly panelTrap = viewChild(CdkTrapFocus);
   private ref: OverlayRef | null = null;
+  private triggerElement: HTMLElement | null = null;
+  private focusTimer: ReturnType<typeof setTimeout> | null = null;
   /** Public panel tokens forwarded onto the portaled overlay pane on open so
    *  a consumer's `ds-popover { --ds-popover-panel-*: … }` reaches it. */
   private readonly panelTokens = [
@@ -78,9 +82,10 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
   readonly arrow = input(false, { transform: booleanAttribute });
 
   /** ARIA role for the panel (e.g. 'dialog' for interactive popovers). When set,
-   *  the panel also traps focus, auto-captures it into the panel on open, and
-   *  restores it to the trigger on close. Leave null for
-   *  plain, non-interactive text popovers. */
+   *  the panel traps focus and captures it on open; a keyboard (Escape) or
+   *  in-panel close returns focus to the trigger, while an outside click or
+   *  scroll leaves focus where it lands (non-modal). Leave null for plain,
+   *  non-interactive text popovers. */
   readonly panelRole = input<string | null>(null);
   /** Accessible name for the panel; pair with `panelRole`. */
   readonly panelLabel = input<string | null>(null);
@@ -100,6 +105,7 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
       return;
     }
 
+    this.triggerElement = trigger;
     const placement = this.placement();
     const arrowOffset = this.arrow() ? 8 : 4;
 
@@ -143,21 +149,38 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
       if (event.key === 'Escape') {
         event.preventDefault();
         this.close();
-        trigger.focus();
       }
     });
     this.ref.attach(new TemplatePortal(this.panelTpl()!, this.vcr));
     this.resolvedPlacement.set(placement);
     this.opened.set(true);
+    if (this.panelRole()) {
+      // Same initial focus as cdkTrapFocusAutoCapture, minus its destroy-time
+      // restore — that restore steals focus on an outside/scroll close.
+      this.focusTimer = setTimeout(() => {
+        this.focusTimer = null;
+        void this.panelTrap()?.focusTrap?.focusInitialElementWhenReady();
+      });
+    }
   }
 
   close(): void {
+    if (!this.ref) {
+      return;
+    }
+    clearTimeout(this.focusTimer ?? undefined);
+    this.focusTimer = null;
+    const focusWasInPanel = focusIsInside(this.ref);
     disposeWithLeave(this.ref);
     this.ref = null;
     this.opened.set(false);
+    if (focusWasInPanel) {
+      this.triggerElement?.focus({ preventScroll: true });
+    }
   }
 
   ngOnDestroy(): void {
+    clearTimeout(this.focusTimer ?? undefined);
     this.ref?.dispose();
     this.ref = null;
   }

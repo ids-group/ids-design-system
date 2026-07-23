@@ -28,7 +28,6 @@
     [class.has-arrow]="arrow()"
     [attr.data-placement]="arrow() ? resolvedPlacement() : null"
     [cdkTrapFocus]="!!panelRole()"
-    [cdkTrapFocusAutoCapture]="!!panelRole()"
   >
     @if (arrow()) {
       <span class="arrow"></span>
