@@ -4666,6 +4666,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Pin the first data column (and the select column) on horizontal scroll."
       },
       {
+        "name": "rowActions",
+        "kind": "input",
+        "type": "readonly TableRowAction<T>[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Row-action menu items rendered as a trailing kebab (⋮) column. Empty (default) — no column. Menu clicks never trigger `rowClicked`."
+      },
+      {
         "name": "cellTemplateMap",
         "kind": "input",
         "type": "Record<string, TemplateRef<{ $implicit: unknown; row: unknown }>>",
@@ -4729,6 +4738,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": false,
         "description": "Fires whenever sort key/direction changes, regardless of `clientSort`."
+      },
+      {
+        "name": "rowActionSelected",
+        "kind": "output",
+        "type": "TableRowActionEvent<T>",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Fires with the chosen action and its row when a kebab menu item is selected."
       }
     ]
   },

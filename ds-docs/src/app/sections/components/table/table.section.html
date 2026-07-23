@@ -824,4 +824,35 @@
       }
     </ng-container>
   </ds-drawer>
+
+  <!-- ============================================================ Row actions · kebab -->
+  <h3 class="block-title t-h4">Row actions · kebab menu</h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline"> [rowActions] </code> renders a trailing ⋮
+    column — the button opens a menu of the configured items and
+    <code class="t-mono-inline"> (rowActionSelected) </code> reports the chosen
+    action together with its row. A per-row
+    <code class="t-mono-inline"> disabled </code> predicate greys items out
+    (here Delete is blocked for completed records). The kebab stops
+    propagation, so on a
+    <code class="t-mono-inline"> [rowInteractive] </code> table a menu click
+    never fires <code class="t-mono-inline"> (rowClicked) </code>.
+  </p>
+
+  <ds-table
+    caption="Records"
+    [data]="events"
+    [columns]="loadingColumns"
+    [rowInteractive]="true"
+    [rowActions]="rowActions"
+    [stickyHeader]="false"
+    (rowClicked)="lastRowClick.set($event.project)"
+    (rowActionSelected)="onRowAction($event)"
+  />
+
+  <p class="block-desc t-s">
+    Row clicked: {{ lastRowClick() ?? '—' }} · Action:
+    {{ lastRowAction() ?? '—' }}
+  </p>
 </docs-section>

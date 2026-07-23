@@ -8,6 +8,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **`ds-table` row-action kebab menu.** New opt-in `rowActions` input renders a trailing ⋮ column;
+  the per-row button opens a `ds-menu` of the configured items (`id`, `label`, optional `icon`,
+  destructive `error`, per-row `disabled` predicate) and `rowActionSelected` emits `{ action, row }`
+  on pick. Off by default — tables without `rowActions` render exactly as before. Kebab clicks stop
+  propagation, so on a `rowInteractive` table a menu click never triggers `rowClicked`. New exported
+  types `TableRowAction` / `TableRowActionEvent`.
+
 ### Changed
 
 - **Breaking: `ds-date-picker` input `defaultMonth` is renamed to `defaultDate`.** The input always

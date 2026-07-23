@@ -83,6 +83,17 @@
               }
             </th>
           }
+
+          @if (hasRowActions()) {
+            <th
+              scope="col"
+              class="actions-col"
+            >
+              <span class="visually-hidden">
+                Actions
+              </span>
+            </th>
+          }
         </tr>
       </thead>
 
@@ -119,6 +130,10 @@
                     [inline]="true"
                   />
                 </td>
+              }
+
+              @if (hasRowActions()) {
+                <td class="actions-col"></td>
               }
             </tr>
           }
@@ -201,6 +216,26 @@
                   }
                 </td>
               }
+
+              @if (hasRowActions()) {
+                <td class="actions-col">
+                  <button
+                    type="button"
+                    class="row-actions-btn"
+                    aria-haspopup="menu"
+                    [attr.aria-expanded]="isMenuOpenFor(row)"
+                    [attr.aria-label]="'Actions for ' + rowAriaLabel(row)"
+                    (click)="onRowMenuClick(row, $event)"
+                    (keydown.enter)="$event.stopPropagation()"
+                    (keydown.space)="$event.stopPropagation()"
+                  >
+                    <ds-icon
+                      name="moreV"
+                      [size]="16"
+                    />
+                  </button>
+                </td>
+              }
             </tr>
 
             @if (expandableRows() && isExpanded(row) && rowExpandTemplate()) {
@@ -234,6 +269,26 @@
       (pageSizeChange)="pageSize.set($event)"
     />
   </div>
+}
+
+@if (hasRowActions()) {
+  <ds-popover
+    #rowMenuPopover
+    align="end"
+  >
+    <ds-menu>
+      @for (action of rowActions(); track action.id) {
+        <ds-menu-item
+          [icon]="action.icon ?? null"
+          [error]="action.error ?? false"
+          [disabled]="isActionDisabled(action)"
+          (pressed)="onRowAction(action)"
+        >
+          {{ action.label }}
+        </ds-menu-item>
+      }
+    </ds-menu>
+  </ds-popover>
 }
 
 @if (selectable() && someSelected()) {

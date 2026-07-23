@@ -8,6 +8,8 @@ import {
   IconComponent,
   TableComponent,
   type TableColumn,
+  type TableRowAction,
+  type TableRowActionEvent,
 } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
@@ -316,5 +318,25 @@ export class TableSection {
   protected openDetail(row: EventRow): void {
     this.detailRow.set(row);
     this.detailOpen.set(true);
+  }
+
+  protected readonly rowActions: TableRowAction<EventRow>[] = [
+    { id: 'view', label: 'View', icon: 'eye' },
+    { id: 'duplicate', label: 'Duplicate', icon: 'copy' },
+    { id: 'archive', label: 'Archive', icon: 'archive' },
+    {
+      id: 'delete',
+      label: 'Delete',
+      icon: 'trash',
+      error: true,
+      disabled: (row) => row.status === 'completed',
+    },
+  ];
+
+  protected readonly lastRowClick = signal<string | null>(null);
+  protected readonly lastRowAction = signal<string | null>(null);
+
+  protected onRowAction(event: TableRowActionEvent<EventRow>): void {
+    this.lastRowAction.set(`${event.action.label} · ${event.row.project}`);
   }
 }

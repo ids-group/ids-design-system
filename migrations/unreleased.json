@@ -11,6 +11,7 @@
     }
   ],
   "informational": [
+    "ds-table gains an opt-in rowActions kebab (⋮) column with a rowActionSelected output and new TableRowAction/TableRowActionEvent types — additive, off by default (no rowActions input = no column), no code change.",
     "ds-select/ds-autocomplete/ds-multi-select/ds-time-picker/ds-color-picker/ds-popover overlay panels are now non-modal (no backdrop): the page behind stays interactive, panels close on outside pointer-down or page scroll, button-style triggers toggle, and focus returns to the trigger only for Escape/selection/in-panel closes — behavior only, no code change.",
     "ds-toast enter animation now slides up from below into place (exit unchanged) — visual/motion only, no code change."
   ]

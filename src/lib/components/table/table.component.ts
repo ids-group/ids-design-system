@@ -8,14 +8,25 @@ import {
   input,
   model,
   output,
+  signal,
+  viewChild,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { LoadingOverlayComponent } from '../loading-overlay/loading-overlay.component';
+import { PopoverComponent } from '../popover/popover.component';
+import { MenuComponent } from '../menu/menu.component';
+import { MenuItemComponent } from '../menu/menu-item.component';
 import { CellTemplateDirective } from './cell-template.directive';
-import type { SortChangeEvent, SortDir, TableColumn } from './table.types';
+import type {
+  SortChangeEvent,
+  SortDir,
+  TableColumn,
+  TableRowAction,
+  TableRowActionEvent,
+} from './table.types';
 
 const NUMERIC = /^-?\d+(\.\d+)?$/;
 
@@ -28,6 +39,9 @@ const NUMERIC = /^-?\d+(\.\d+)?$/;
     SkeletonComponent,
     PaginationComponent,
     LoadingOverlayComponent,
+    PopoverComponent,
+    MenuComponent,
+    MenuItemComponent,
   ],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
@@ -92,6 +106,12 @@ export class TableComponent<T extends { id: string }> {
   readonly rowClicked = output<T>();
   /** Fires whenever sort key/direction changes, regardless of `clientSort`. */
   readonly sortChange = output<SortChangeEvent>();
+
+  /** Row-action menu items rendered as a trailing kebab (⋮) column.
+   *  Empty (default) — no column. Menu clicks never trigger `rowClicked`. */
+  readonly rowActions = input<readonly TableRowAction<T>[]>([]);
+  /** Fires with the chosen action and its row when a kebab menu item is selected. */
+  readonly rowActionSelected = output<TableRowActionEvent<T>>();
 
   /** Cell templates supplied as an explicit map instead of (or in addition to)
    *  projected `dsCellTemplate` directives. Lets a wrapper component (e.g.
@@ -235,7 +255,7 @@ export class TableComponent<T extends { id: string }> {
     Array(this.skeletonRows()).fill(0),
   );
 
-  /** Total colspan for the expanded-row panel: data cols + optional select + expand col. */
+  /** Total colspan for the expanded-row panel: data cols + optional select/expand/actions cols. */
   protected readonly expandedColspan = computed(() => {
     let count = this.columns().length;
     if (this.selectable()) {
@@ -244,9 +264,42 @@ export class TableComponent<T extends { id: string }> {
     if (this.expandableRows()) {
       count += 1;
     }
+    if (this.hasRowActions()) {
+      count += 1;
+    }
 
     return count;
   });
+
+  protected readonly hasRowActions = computed(() => this.rowActions().length > 0);
+  /** Row whose kebab menu is open — drives the per-row `disabled` predicates. */
+  protected readonly menuRow = signal<T | null>(null);
+  private readonly rowMenuPopover =
+    viewChild<PopoverComponent>('rowMenuPopover');
+
+  protected onRowMenuClick(row: T, event: Event): void {
+    event.stopPropagation();
+    this.menuRow.set(row);
+    this.rowMenuPopover()?.toggle(event.currentTarget as HTMLElement);
+  }
+
+  protected isMenuOpenFor(row: T): boolean {
+    return this.menuRow() === row && !!this.rowMenuPopover()?.opened();
+  }
+
+  protected isActionDisabled(action: TableRowAction<T>): boolean {
+    const row = this.menuRow();
+
+    return row !== null && !!action.disabled?.(row);
+  }
+
+  protected onRowAction(action: TableRowAction<T>): void {
+    const row = this.menuRow();
+    if (row === null) {
+      return;
+    }
+    this.rowActionSelected.emit({ action, row });
+  }
 
   protected isExpanded(row: T): boolean {
     return this.expandedIds().has(row.id);
