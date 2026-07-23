@@ -135,6 +135,86 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Wired to a table
+  </h3>
+
+  <p class="block-desc t-s">
+    The same bar driving a live
+    <code class="t-mono-inline"> ds-table </code> — search matches record and
+    venue, the status facet narrows further, applied tags mirror the active
+    filters and clear individually. When nothing matches, the table's empty
+    slot shows the filtered variant. Against a real backend, flip the table's
+    <code class="t-mono-inline"> [loading]="'overlay'" </code> while the query
+    runs.
+  </p>
+
+  <div class="stage">
+    <div class="filterbar">
+      <div class="search-slot">
+        <ds-search
+          placeholder="Search records…"
+          [clearable]="true"
+          [(value)]="filterQuery"
+        />
+      </div>
+
+      <ds-select
+        placeholder="Status"
+        size="sm"
+        [options]="statusOptions"
+        [(value)]="filterStatus"
+      />
+
+      @if (filterQuery() || filterStatus()) {
+        <span class="divider"></span>
+
+        <span class="t-s applied-label">
+          Applied:
+        </span>
+
+        <div class="applied">
+          @if (filterQuery()) {
+            <ds-tag
+              [closable]="true"
+              (closed)="filterQuery.set('')"
+            >
+              Search: {{ filterQuery() }}
+            </ds-tag>
+          }
+
+          @if (filterStatus()) {
+            <ds-tag
+              [closable]="true"
+              (closed)="filterStatus.set('')"
+            >
+              Status: {{ statusLabel(filterStatus()) }}
+            </ds-tag>
+          }
+        </div>
+
+        <button
+          class="link"
+          type="button"
+          (click)="clearFilters()"
+        >
+          Clear filters
+        </button>
+      }
+    </div>
+
+    <ds-table
+      class="results"
+      caption="Filtered records"
+      [data]="filteredRows()"
+      [columns]="recordColumns"
+      [bordered]="true"
+      [stickyHeader]="false"
+    >
+      <span empty> No records match your filters </span>
+    </ds-table>
+  </div>
+
+  <h3 class="block-title t-h4">
     Usage
   </h3>
 

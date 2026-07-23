@@ -1,13 +1,23 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, computed, signal } from '@angular/core';
 import {
   SearchComponent,
   ButtonComponent,
   IconComponent,
   SelectComponent,
+  TableComponent,
   TagComponent,
   type SelectOption,
+  type TableColumn,
 } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+
+interface RecordRow {
+  readonly id: string;
+  readonly project: string;
+  readonly venue: string;
+  readonly status: string;
+  readonly statusLabel: string;
+}
 
 @Component({
   selector: 'pattern-filter-bar',
@@ -18,6 +28,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
     ButtonComponent,
     IconComponent,
     SelectComponent,
+    TableComponent,
     TagComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
@@ -42,4 +53,83 @@ export class FilterBarSection {
     { label: 'North Site Co.', value: 'north' },
     { label: 'Delta Partners', value: 'delta' },
   ];
+
+  protected readonly filterQuery = signal('');
+  protected readonly filterStatus = signal('');
+
+  protected readonly recordColumns: TableColumn<RecordRow>[] = [
+    { key: 'project', label: 'Record' },
+    { key: 'venue', label: 'Venue' },
+    { key: 'statusLabel', label: 'Status' },
+  ];
+
+  protected readonly recordRows: readonly RecordRow[] = [
+    {
+      id: 'ORD-2026-0142',
+      project: 'Project Alpha',
+      venue: 'North Site',
+      status: 'active',
+      statusLabel: 'Active',
+    },
+    {
+      id: 'ORD-2026-0156',
+      project: 'Project Beta',
+      venue: 'East Campus',
+      status: 'confirmed',
+      statusLabel: 'Confirmed',
+    },
+    {
+      id: 'ORD-2026-0157',
+      project: 'Q3 Initiative',
+      venue: 'South Hub',
+      status: 'confirmed',
+      statusLabel: 'Confirmed',
+    },
+    {
+      id: 'ORD-2026-0188',
+      project: 'Annual Summit',
+      venue: 'HQ Auditorium',
+      status: 'planning',
+      statusLabel: 'Planning',
+    },
+    {
+      id: 'EVT-2026-0091',
+      project: 'Download 2026',
+      venue: 'Donington Park',
+      status: 'completed',
+      statusLabel: 'Completed',
+    },
+    {
+      id: 'EVT-2026-0104',
+      project: 'Field Day',
+      venue: 'West Pavilion',
+      status: 'active',
+      statusLabel: 'Active',
+    },
+  ];
+
+  protected readonly filteredRows = computed<readonly RecordRow[]>(() => {
+    const query = this.filterQuery().trim().toLowerCase();
+    const status = this.filterStatus();
+
+    return this.recordRows.filter(
+      (row) =>
+        (!query ||
+          row.project.toLowerCase().includes(query) ||
+          row.venue.toLowerCase().includes(query)) &&
+        (!status || row.status === status),
+    );
+  });
+
+  protected statusLabel(value: string): string {
+    return (
+      this.statusOptions.find((option) => option.value === value)?.label ??
+      value
+    );
+  }
+
+  protected clearFilters(): void {
+    this.filterQuery.set('');
+    this.filterStatus.set('');
+  }
 }

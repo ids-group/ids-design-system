@@ -3,6 +3,7 @@ import {
   BadgeComponent,
   ButtonComponent,
   CellTemplateDirective,
+  DrawerComponent,
   EmptyStateComponent,
   IconComponent,
   TableComponent,
@@ -41,6 +42,7 @@ interface ProjectRow {
     CellTemplateDirective,
     DocsSectionComponent,
     DocsTruncationComponent,
+    DrawerComponent,
     EmptyStateComponent,
     IconComponent,
     TableComponent,
@@ -306,5 +308,13 @@ export class TableSection {
   /** Narrows the `unknown` row a projected `dsCellTemplate` receives back to EventRow. */
   protected asEvent(row: unknown): EventRow {
     return row as EventRow;
+  }
+
+  protected readonly detailOpen = signal(false);
+  protected readonly detailRow = signal<EventRow | null>(null);
+
+  protected openDetail(row: EventRow): void {
+    this.detailRow.set(row);
+    this.detailOpen.set(true);
   }
 }

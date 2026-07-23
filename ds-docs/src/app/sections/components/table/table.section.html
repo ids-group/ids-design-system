@@ -15,7 +15,7 @@
   <h3 class="block-title t-h4">Default</h3>
 
   <p class="block-desc t-s">
-    Standard table — header, six rows, status pill column, trailing actions.
+    Standard table — header, six rows, status pill column.
   </p>
 
   <ds-table
@@ -756,4 +756,72 @@
       </span>
     </div>
   </ng-template>
+
+  <!-- ============================================================ Clickable rows · drawer -->
+  <h3 class="block-title t-h4">Clickable rows · drawer detail</h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline"> [rowInteractive]="true" </code> turns every row
+    into a keyboard-operable control — pointer cursor, focus ring, Enter/Space —
+    and <code class="t-mono-inline"> (rowClicked) </code> emits the row. The
+    classic master-detail wiring: clicking a row opens a
+    <code class="t-mono-inline"> ds-drawer </code> with the record. Controls
+    inside cells (checkboxes, menus) stop propagation, so they never trigger the
+    row click.
+  </p>
+
+  <ds-table
+    caption="Records"
+    [data]="events"
+    [columns]="loadingColumns"
+    [rowInteractive]="true"
+    [stickyHeader]="false"
+    (rowClicked)="openDetail($event)"
+  />
+
+  <ds-drawer
+    [title]="detailRow()?.project ?? 'Record'"
+    [(open)]="detailOpen"
+  >
+    <ng-container drawer-body>
+      @if (detailRow(); as row) {
+        <div class="expand-detail">
+          <span class="expand-detail__label"> Order ID </span>
+
+          <span class="expand-detail__value mono muted">
+            {{ row.id }}
+          </span>
+
+          <span class="expand-detail__label"> Dates </span>
+
+          <span class="expand-detail__value">
+            {{ row.date }}
+          </span>
+
+          <span class="expand-detail__label"> Venue </span>
+
+          <span class="expand-detail__value">
+            {{ row.venue }}
+          </span>
+
+          <span class="expand-detail__label"> Status </span>
+
+          <span class="expand-detail__value">
+            <ds-badge
+              [status]="row.status"
+              [withDot]="true"
+            >
+              {{ row.statusLabel }}
+            </ds-badge>
+          </span>
+
+          <span class="expand-detail__label"> Capacity </span>
+
+          <span class="expand-detail__value">
+            {{ row.capacity }} attendees
+          </span>
+        </div>
+      }
+    </ng-container>
+  </ds-drawer>
 </docs-section>
