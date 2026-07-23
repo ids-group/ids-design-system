@@ -1,0 +1,17 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "date-picker-default-month-input-rename",
+      "kind": "input-rename",
+      "old": "ds-date-picker[defaultMonth]",
+      "new": "defaultDate",
+      "note": "Pure rename, behavior unchanged: the input always took a full Date and the calendar opens on its month with grid focus on its exact day (only when the value is empty; never written to the value). [defaultMonth] -> [defaultDate]. No other component has a defaultMonth input.",
+      "searchHints": ["[defaultMonth]", "defaultMonth"]
+    }
+  ],
+  "informational": [
+    "ds-select/ds-autocomplete/ds-multi-select/ds-time-picker/ds-color-picker/ds-popover overlay panels are now non-modal (no backdrop): the page behind stays interactive, panels close on outside pointer-down or page scroll, button-style triggers toggle, and focus returns to the trigger only for Escape/selection/in-panel closes — behavior only, no code change.",
+    "ds-toast enter animation now slides up from below into place (exit unchanged) — visual/motion only, no code change."
+  ]
+}

@@ -1368,13 +1368,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "First weekday column: 0=Sunday … 6=Saturday. Default 1 (Monday)."
       },
       {
-        "name": "defaultMonth",
+        "name": "defaultDate",
         "kind": "input",
         "type": "Date | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Month the calendar opens on when the value is empty (e.g. a Date Of Birth)."
+        "description": "Date the calendar opens on when the value is empty (e.g. a Date Of Birth): the panel shows its month and grid focus lands on its exact day. Never written to `value` — selection stays with the user."
       },
       {
         "name": "allowInput",

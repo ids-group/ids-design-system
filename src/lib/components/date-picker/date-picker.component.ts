@@ -210,8 +210,10 @@ export class DatePickerComponent
   readonly dateFormat = input<string | null>(null);
   /** First weekday column: 0=Sunday … 6=Saturday. Default 1 (Monday). */
   readonly firstDayOfWeek = input<number | null>(null);
-  /** Month the calendar opens on when the value is empty (e.g. a Date Of Birth). */
-  readonly defaultMonth = input<Date | null>(null);
+  /** Date the calendar opens on when the value is empty (e.g. a Date Of Birth):
+   *  the panel shows its month and grid focus lands on its exact day.
+   *  Never written to `value` — selection stays with the user. */
+  readonly defaultDate = input<Date | null>(null);
   /** Allow masked manual typing. When false the trigger is a button (calendar-only). */
   readonly allowInput = input(true, { transform: booleanAttribute });
 
@@ -716,7 +718,7 @@ export class DatePickerComponent
       this.mode() === 'single'
         ? (this.value() as Date | null)
         : ((this.value() as RangeValue | null)?.[0] ?? null);
-    const focus = this.clampToBounds(selected ?? this.defaultMonth() ?? new Date());
+    const focus = this.clampToBounds(selected ?? this.defaultDate() ?? new Date());
     this.gridFocus.set(focus);
     this.viewMonth.set(new Date(focus.getFullYear(), focus.getMonth(), 1));
     if (moveFocusToGrid) {

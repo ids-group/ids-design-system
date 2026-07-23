@@ -55,7 +55,7 @@ export class DatePickerSection {
 
   /** Date-of-birth demo: no future dates, open near a realistic birth year */
   protected readonly today = new Date();
-  protected readonly birthDefaultMonth = new Date(1990, 0, 1);
+  protected readonly birthDefaultDate = new Date(1990, 0, 1);
 
   /** Preset shortcuts for a range picker */
   protected readonly rangePresets: readonly DatePickerPreset[] = [

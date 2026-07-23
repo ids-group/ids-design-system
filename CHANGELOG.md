@@ -10,6 +10,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **Breaking: `ds-date-picker` input `defaultMonth` is renamed to `defaultDate`.** The input always
+  accepted a full `Date` and used its exact day (grid focus lands on that day, the panel opens on
+  its month) — the old name undersold it as month-only granularity. Behavior is unchanged: it only
+  positions the calendar when the value is empty and is never written to the value. Rename
+  `[defaultMonth]="…"` to `[defaultDate]="…"`.
 - **`ds-select`, `ds-autocomplete`, `ds-multi-select`, `ds-time-picker`, `ds-color-picker` and
   `ds-popover` overlay panels are now non-modal (no backdrop), matching `ds-date-picker`.** They drop
   the transparent CDK backdrop (`hasBackdrop: true` + `backdropClick`-to-close) for

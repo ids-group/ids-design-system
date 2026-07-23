@@ -251,9 +251,10 @@
       [maxDate]="today"
     </code> rejects future dates, and
     <code class="t-mono-inline">
-      [defaultMonth]
-    </code> opens the panel near a
-    realistic year instead of the current month.
+      [defaultDate]
+    </code> opens the panel on that date
+    instead of the current month — the calendar
+    focuses its exact day without selecting it.
   </p>
 
   <div class="row">
@@ -262,7 +263,7 @@
       label="Date of birth"
       placeholder="MM/DD/YYYY"
       [maxDate]="today"
-      [defaultMonth]="birthDefaultMonth"
+      [defaultDate]="birthDefaultDate"
     />
   </div>
 
