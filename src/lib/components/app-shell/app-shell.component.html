@@ -1,0 +1,13 @@
+<div class="rail">
+  <ng-content select="[sidenav]"></ng-content>
+</div>
+
+<div class="bar">
+  <ng-content select="[topbar]"></ng-content>
+</div>
+
+<main #content class="content">
+  <div class="inner">
+    <ng-content></ng-content>
+  </div>
+</main>

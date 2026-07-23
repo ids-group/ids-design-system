@@ -11,6 +11,7 @@ export * from './lib/components/toggle-button';
 export * from './lib/components/icon-button';
 export * from './lib/components/badge';
 export * from './lib/components/status-dot';
+export * from './lib/components/app-shell';
 export * from './lib/components/avatar';
 export * from './lib/components/avatar-group';
 export * from './lib/components/card';
