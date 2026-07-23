@@ -1,0 +1,228 @@
+@if (searchProvider(); as provider) {
+  <button
+    #searchTrigger
+    type="button"
+    class="row"
+    aria-label="Search"
+    [attr.aria-expanded]="searchPop.opened()"
+    (click)="searchPop.toggle(searchTrigger)"
+  >
+    <ds-icon name="search" [size]="20" />
+
+    <span class="label">
+      Search
+    </span>
+  </button>
+
+  <ds-popover #searchPop align="start" panelRole="dialog" panelLabel="Search">
+    <div class="search-panel">
+      <div class="search-box">
+        <ds-icon name="search" [size]="18" />
+
+        <input
+          #searchInput
+          type="text"
+          class="search-in"
+          placeholder="Search…"
+          autocomplete="off"
+          aria-label="Search"
+          [value]="query()"
+          (input)="query.set($any($event.target).value)"
+          (keydown.enter)="goFirst(provider) && searchPop.close()"
+          (keydown.escape)="searchPop.close()"
+        />
+
+        @if (query()) {
+          <button
+            type="button"
+            class="search-clear"
+            aria-label="Clear"
+            (click)="query.set(''); searchInput.focus()"
+          >
+            <ds-icon name="x" [size]="16" />
+          </button>
+        }
+      </div>
+
+      @if (query().trim()) {
+        @for (group of searchGroups(provider); track group.group) {
+          <p class="menu-head">
+            {{ group.group }}
+          </p>
+
+          @for (result of group.items; track result.id) {
+            <button type="button" class="sr-item" (click)="searchPop.close(); goResult(result)">
+              @if (result.icon) {
+                <ds-icon [name]="result.icon" [size]="16" />
+              }
+
+              <span class="sr-text">
+                <span class="sr-label">
+                  {{ result.label }}
+                </span>
+
+                @if (result.sublabel) {
+                  <span class="sr-sub">
+                    {{ result.sublabel }}
+                  </span>
+                }
+              </span>
+            </button>
+          }
+        } @empty {
+          <p class="sr-empty">
+            No matches for “{{ query().trim() }}”.
+          </p>
+        }
+      } @else {
+        <p class="sr-empty">
+          Type to search the admin console.
+        </p>
+      }
+    </div>
+  </ds-popover>
+} @else {
+  <button type="button" class="row">
+    <ds-icon name="search" [size]="20" />
+
+    <span class="label">
+      Search
+    </span>
+  </button>
+}
+
+@if (alertItems(); as items) {
+  <button
+    #alertTrigger
+    type="button"
+    class="row"
+    aria-label="Alerts"
+    [attr.aria-expanded]="alertsPop.opened()"
+    (click)="alertsPop.toggle(alertTrigger); alertsOpened.emit()"
+  >
+    <ds-icon name="bell" [size]="20" />
+
+    <span class="label">
+      Alerts
+    </span>
+
+    @if (alerts()) {
+      <span class="dot" aria-hidden="true"></span>
+    }
+  </button>
+
+  <ds-popover #alertsPop align="start" panelRole="dialog" panelLabel="Alerts">
+    <div class="alerts-panel">
+      <p class="menu-head">
+        Alerts
+      </p>
+
+      @for (alert of items; track alert.id) {
+        <button type="button" class="alert-item" (click)="alertsPop.close(); goAlert(alert)">
+          <span class="ai-icon ai-{{ alert.variant }}">
+            <ds-icon [name]="alert.icon" [size]="16" />
+          </span>
+
+          <span class="ai-text">
+            <span class="ai-top">
+              <span class="ai-title">
+                {{ alert.title }}
+              </span>
+
+              @if (alert.at) {
+                <span class="ai-at">
+                  {{ alert.at }}
+                </span>
+              }
+            </span>
+
+            <span class="ai-body">
+              {{ alert.body }}
+            </span>
+          </span>
+        </button>
+      } @empty {
+        <p class="sr-empty">
+          You’re all caught up.
+        </p>
+      }
+    </div>
+  </ds-popover>
+} @else {
+  <button type="button" class="row">
+    <ds-icon name="bell" [size]="20" />
+
+    <span class="label">
+      Alerts
+    </span>
+
+    @if (alerts()) {
+      <span class="dot" aria-hidden="true"></span>
+    }
+  </button>
+}
+
+<button type="button" class="row" (click)="collapseToggled.emit()">
+  <ds-icon [name]="collapsed() ? 'chevronRight' : 'chevronLeft'" [size]="20" />
+
+  <span class="label">
+    Collapse
+  </span>
+</button>
+
+@if (userName()) {
+  <div class="divider"></div>
+
+  <div class="profile">
+    <ds-avatar size="sm" [initials]="initials()" />
+
+    <span class="profile-text">
+      <span class="name">
+        {{ userName() }}
+      </span>
+
+      @if (userRole()) {
+        <span class="role">
+          {{ userRole() }}
+        </span>
+      }
+    </span>
+
+    <button
+      #accountTrigger
+      type="button"
+      class="more"
+      aria-label="Account menu"
+      [attr.aria-expanded]="accountPop.opened()"
+      (click)="accountPop.toggle(accountTrigger)"
+    >
+      <ds-icon name="moreV" [size]="18" />
+    </button>
+
+    <ds-popover #accountPop align="end" panelRole="menu" panelLabel="Account">
+      <ds-menu>
+        <p class="menu-head">
+          Signed in as {{ userName() }}
+        </p>
+
+        <ds-menu-item icon="user" (pressed)="goProfile()">
+          Your profile
+        </ds-menu-item>
+
+        <ds-menu-item icon="settings">
+          Account settings
+        </ds-menu-item>
+
+        <ds-menu-item icon="help">
+          Help &amp; support
+        </ds-menu-item>
+
+        <div class="menu-sep"></div>
+
+        <ds-menu-item icon="logout" [error]="true" (pressed)="signOutSelected.emit()">
+          Sign out
+        </ds-menu-item>
+      </ds-menu>
+    </ds-popover>
+  </div>
+}

@@ -28,6 +28,7 @@ export * from './lib/components/date-picker';
 export * from './lib/components/time-picker';
 export * from './lib/components/breadcrumbs';
 export * from './lib/components/sidenav';
+export * from './lib/components/sidenav-footer';
 export * from './lib/components/topbar';
 export * from './lib/components/page-header';
 export * from './lib/components/modal';
