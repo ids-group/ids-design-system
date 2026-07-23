@@ -25,6 +25,7 @@ import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  focusIsInside,
   forwardOverlayTokens,
 } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
@@ -724,11 +725,22 @@ export class DatePickerComponent
   }
 
   protected close(): void {
+    const focusWasInPanel = this.overlayRef
+      ? focusIsInside(this.overlayRef)
+      : false;
     disposeWithLeave(this.overlayRef);
     this.overlayRef = null;
     this.isOpen.set(false);
     this.closeMenus();
     this.markTouched();
+    // Refocusing the editable field on a coarse pointer would summon the soft
+    // keyboard mid-scroll; the readonly field (allowInput=false) never does.
+    if (
+      focusWasInPanel &&
+      (!this.allowInput() || !window.matchMedia('(pointer: coarse)').matches)
+    ) {
+      this.inputEl().nativeElement.focus({ preventScroll: true });
+    }
   }
 
   ngOnDestroy(): void {
