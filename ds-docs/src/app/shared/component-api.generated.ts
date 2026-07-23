@@ -3232,7 +3232,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "ARIA role for the panel (e.g. 'dialog' for interactive popovers). When set, the panel also traps focus, auto-captures it into the panel on open, and restores it to the trigger on close. Leave null for plain, non-interactive text popovers."
+        "description": "ARIA role for the panel (e.g. 'dialog' for interactive popovers). When set, the panel traps focus and captures it on open; a keyboard (Escape) or in-panel close returns focus to the trigger, while an outside click or scroll leaves focus where it lands (non-modal). Leave null for plain, non-interactive text popovers."
       },
       {
         "name": "panelLabel",
