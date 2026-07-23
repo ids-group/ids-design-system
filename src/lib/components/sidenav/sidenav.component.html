@@ -3,11 +3,16 @@
 
   @if (brand()) {
     <span class="mark">
-      {{ brand().charAt(0) }}
+      {{ logoLetter() || brand().charAt(0) }}
     </span>
 
     <span class="brand-name">
-      {{ brand() }}
+      @if (accentParts(); as parts) {
+        <span class="brand-accent">{{ parts.accent }}</span
+        >{{ parts.rest }}
+      } @else {
+        {{ brand() }}
+      }
     </span>
   }
 </div>
