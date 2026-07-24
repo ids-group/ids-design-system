@@ -3,8 +3,10 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  contentChild,
   input,
 } from '@angular/core';
+import { BrandNameDirective } from './brand-name.directive';
 import { SIDENAV, type SidenavContract } from './sidenav.token';
 
 @Component({
@@ -28,19 +30,8 @@ export class SidenavComponent implements SidenavContract {
   /** Letter-mark glyph when it differs from the brand's first letter (e.g. an
    *  "A" tile beside the "MyAdmin" wordmark). Empty = first letter of `brand`. */
   readonly logoLetter = input<string>('');
-  /** Leading slice of the wordmark tinted with the mark colour (e.g. "My" in
-   *  "MyAdmin"); the remainder renders in the default text colour. Empty (or
-   *  not a prefix of `brand`) = single-tone wordmark. */
-  readonly brandAccent = input<string>('');
 
-  /** Wordmark split when `brandAccent` is a real prefix of `brand`, else null. */
-  protected readonly accentParts = computed(() => {
-    const brand = this.brand();
-    const accent = this.brandAccent();
-    if (!accent || !brand.startsWith(accent)) {
-      return null;
-    }
-
-    return { accent, rest: brand.slice(accent.length) };
-  });
+  /** Projected `[dsBrandName]` wordmark markup, when the consumer provides one. */
+  protected readonly brandNameRef = contentChild(BrandNameDirective);
+  protected readonly hasBrandName = computed(() => !!this.brandNameRef());
 }

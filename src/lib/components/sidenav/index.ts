@@ -1,3 +1,4 @@
+export { BrandNameDirective } from './brand-name.directive';
 export { SidenavComponent } from './sidenav.component';
 export { SidenavGroupComponent } from './sidenav-group.component';
 export { SidenavItemComponent } from './sidenav-item.component';

@@ -56,10 +56,6 @@
   font: var(--font-weight-extrabold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans);
 }
 
-.brand-accent {
-  color: var(--_sidenav-mark-bg-color);
-}
-
 :host(.collapsed) {
   width: var(--_sidenav-width-collapsed);
   padding: var(--space-3);
