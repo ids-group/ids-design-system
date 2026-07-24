@@ -4,6 +4,15 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Shipped 2026-07-24 (backlog review — verified DONE vs code by 12 parallel audit agents)
+
+_Archived from `todo.md` during the full 2026-07-24 backlog review. Each verified against current code._
+
+- [x] **Non-modal overlay pattern — rolled to all sibling pickers (Phase 2).** `select`, `autocomplete`, `multi-select`, `time-picker`, `color-picker`, `popover` all migrated to the shared `overlay-motion.ts` helpers (`hasBackdrop:false` + `closeOnOutsidePointer` + `closeOnScroll` capture-phase listener + `disposeWithLeave`), matching `date-picker`. Zero `backdropClick`/`hasBackdrop:true` remain outside `modal.service` (kept modal by design). Button-triggers toggle; close-on-scroll does NOT use CDK `scrollStrategies.close()`. Shipped this session (CHANGELOG Unreleased). _[Verified: select.component.ts:258-288, autocomplete:381-420, multi-select:309-369, time-picker:251-308, color-picker:318-358, popover:129-174.]_
+- [x] **date-picker grid semantics (was deferred P2) — fully landed.** The calendar is now `role="grid"` with `role="row"` / `columnheader` / `gridcell`; day cells use `aria-selected` (not `aria-pressed`); the popup has `role="dialog"` + `aria-label="Choose date"` + `cdkTrapFocus`. Roving-tabindex + arrow-nav present. The "coupled — aria-selected needs grid role first" concern is resolved (both landed together). _[Verified: date-picker.component.html:108-111,273-294; calendar-day.component.ts:22-24.]_ Backlog text was stale.
+- [x] **autocomplete content/compact width (PIN-475).** `width` input (`'fill' | 'content'`) + `--ds-autocomplete-maxw` cap + `--_autocomplete-input-minw` (80px min typing area); `:host(.content-width){ width: fit-content }`. Landed during the `ds-combobox → ds-autocomplete` rename. _[Verified: autocomplete.component.ts:85-86,51; .scss:27-31,7-8,20.]_
+- [x] **focus-ring double-outline DS-side follow-ups (PIN-475) — both closed.** (1) `ds-search` inner input already scoped as `.search-input` (not the leaky `.input`) — scss header documents it as the PIN-475 double-focus-ring root-cause fix. (2) combobox/autocomplete focus token already unified to `--focus-field`. _[Verified: search.component.html:14, search.component.scss:1-5,57.]_ The APP-side leak was fixed in pinkmoon earlier.
+
 ## Shipped 2026-07-17 (A11y polish — bottom-sheet Escape scoping)
 
 _Archived from `todo.md`. Follow-up from the a11y-branch review (surfaced 2026-07-06)._
