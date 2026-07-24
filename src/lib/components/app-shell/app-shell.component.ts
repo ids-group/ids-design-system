@@ -28,7 +28,9 @@ import { ShellScrollService } from './shell-scroll.service';
  * The shell renders the `<main>` landmark itself — do not nest another
  * `<main>` in the content. Scroll-to-top on navigation is built in
  * (`ShellScrollService`); the content padding auto-compensates the native
- * scrollbar width so the right inset always equals the left one.
+ * scrollbar width so the right inset always equals the left one. The shell
+ * requires the application router (`provideRouter`) because its scroll-to-top
+ * service subscribes to navigation events.
  */
 @Component({
   selector: 'ds-app-shell',

@@ -1,10 +1,12 @@
 <div class="brand">
   <ng-content select="[brand]"></ng-content>
 
-  @if (brand()) {
-    <span class="mark">
-      {{ logoLetter() || brand().charAt(0) }}
-    </span>
+  @if (brand() || hasBrandName()) {
+    @if (logoLetter() || brand()) {
+      <span class="mark">
+        {{ logoLetter() || brand().charAt(0) }}
+      </span>
+    }
 
     <span class="brand-name">
       @if (hasBrandName()) {
