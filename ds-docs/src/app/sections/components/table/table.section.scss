@@ -45,6 +45,11 @@
        --text-secondary is a bare token (no --_* resolver for header hover fg). */
     :host ::ng-deep .pin-hover-th .table thead th { background-color: var(--_table-row-hover-bg-color); color: var(--text-secondary); }
 
+    /* Row-state pins — force the live ds-table's :hover / :active tints
+       statically so the showcase can display them side by side. */
+    :host ::ng-deep .pin-row-hover ds-table tbody tr td { background-color: var(--_table-row-hover-bg-color); }
+    :host ::ng-deep .pin-row-pressed ds-table tbody tr td { background-color: var(--_table-row-pressed-bg-color); }
+
     /* Expandable rows — detail panel layout. */
     .expand-detail {
       display: grid;

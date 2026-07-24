@@ -91,6 +91,10 @@ export class TableSection {
     { key: 'status', label: 'Status' },
   ];
 
+  protected readonly stateColumns: TableColumn<EventRow>[] = [
+    { key: 'project', label: 'Record' },
+  ];
+
   protected readonly events: readonly EventRow[] = [
     {
       id: 'ORD-2026-0142',
@@ -195,6 +199,9 @@ export class TableSection {
   protected readonly bulkSelected = signal(
     new Set(this.events.slice(0, 3).map((row) => row.id)),
   );
+
+  protected readonly stateRow: readonly EventRow[] = this.events.slice(0, 1);
+  protected readonly stateSelectedIds = signal(new Set([this.events[0].id]));
 
   protected readonly projectColumns: TableColumn<ProjectRow>[] = [
     { key: 'project', label: 'Project', sortable: true },
