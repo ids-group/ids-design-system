@@ -57,8 +57,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-table` column reordering.** New opt-in `reorderableColumns` input adds a drag handle and
   up/down buttons to each row of the column panel (which now lists every column, not just hideable
   ones); the order is two-way bindable via the new `columnOrder` model (`string[] | null`, `null` =
-  declaration order), and the panel's `Reset to default` clears both order and visibility. The
-  panel surfaces whenever any column is `hideable` **or** `reorderableColumns` is set.
+  declaration order), and the panel's `Reset to default` resets all three column models — order,
+  visibility **and** widths (`columnOrder`, `hiddenKeys`, `columnWidths`). The panel surfaces
+  whenever any column is `hideable` **or** `reorderableColumns` is set.
 - **`ds-table` CSV export.** New public `exportCsv(filename?)` method downloads the visible columns
   of the filtered + sorted rows (all rows, not just the current page) as a UTF-8 CSV — wire it to a
   consumer toolbar button via a template reference.
@@ -142,6 +143,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-toast` now slides up from below into place as it enters** (previously it dropped in from
   slightly above). The exit animation is unchanged — the toast still slides up as it fades out.
   Visual/motion only; no API change.
+
+### Fixed
+
+- **`ds-date-picker` no longer strands focus on `<body>` when the calendar closes by outside
+  click or page scroll.** The picker was already non-modal, but a scroll-close or
+  outside-pointer close left focus on the document body instead of the field. `close()` now
+  returns focus to the field (`preventScroll`) whenever focus was inside the calendar — with
+  one exception: a coarse-pointer device with an editable field (`allowInput`) is left alone,
+  to avoid re-summoning the soft keyboard, while a readonly field (`allowInput=false`) always
+  refocuses. Escape / selection / preset closes already refocused and are unchanged; no API
+  change.
 
 ## 0.6.2 — 2026-07-21
 
