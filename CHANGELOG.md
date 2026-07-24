@@ -10,6 +10,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **Typography utilities (`.t-*`) expose per-axis `--ds-t-*` token hooks.** Every `.t-display`/`.t-h1`
+  …`.t-mono-block` utility now reads each type property as a longhand through a public
+  `--ds-t-<name>-<prop>` custom property that falls back to the current semantic token —
+  `font-weight`, `font-size`, `line-height`, `font-family`, plus `letter-spacing` / `text-transform` /
+  `color` / `background-color` / `border-color` / `border-radius` where the class sets them. A consumer
+  can now retune a single axis in a scope (`[data-brand] .t-h3 { --ds-t-h3-font-weight: var(--font-weight-bold) }`)
+  without re-declaring the whole rule or forking the class — the same consumer-first `--ds-*` contract
+  the components use, extended to the global utility layer. Default rendering is unchanged (structural
+  box props — padding/margin/border-width/max-width/overflow — stay raw). Minor: the `font` shorthand
+  was split into longhands, so `.t-*` no longer force `font-style`/`font-variant` back to `normal`
+  (they inherit) — only observable inside an italic/small-caps ancestor.
 - **`ds-table` row-action kebab menu.** New opt-in `rowActions` input renders a trailing ⋮ column;
   the per-row button opens a `ds-menu` of the configured items (`id`, `label`, optional `icon`,
   destructive `error`, per-row `disabled` predicate) and `rowActionSelected` emits `{ action, row }`
