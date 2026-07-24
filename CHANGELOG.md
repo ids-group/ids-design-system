@@ -30,6 +30,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   visibility, with `hidden: true` as the initial state and the last visible column locked so the
   grid can't go empty. New two-way `hiddenKeys` model (`Set<string> | null`; `null`, the default,
   derives the set from the `hidden` flags — binding a Set takes over and the flags are ignored).
+- **`ds-table` column resizing.** New opt-in `resizableColumns` input adds a drag handle to each
+  column header's right edge; widths are two-way bindable via the new `columnWidths` model
+  (`Map<key, px>`), seeded from `column.width`. The header clips its label so a narrowed column
+  can't spill into its neighbour.
 - **`ds-table` column reordering.** New opt-in `reorderableColumns` input adds a drag handle and
   up/down buttons to each row of the column panel (which now lists every column, not just hideable
   ones); the order is two-way bindable via the new `columnOrder` model (`string[] | null`, `null` =

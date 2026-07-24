@@ -743,6 +743,55 @@
     [stickyHeader]="false"
   />
 
+  <!-- ============================================================ Resizable columns -->
+  <h3 class="block-title t-h4">Resizable columns</h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline"> [resizableColumns]="true" </code> adds a
+    drag handle to each header's right edge. Widths are two-way bindable via
+    <code class="t-mono-inline"> [(columnWidths)] </code> (a
+    <code class="t-mono-inline"> Map&lt;key, px&gt; </code>), seeded from any
+    <code class="t-mono-inline"> column.width </code>.
+  </p>
+
+  <ds-table
+    caption="Records"
+    [data]="events"
+    [columns]="defaultColumns"
+    [resizableColumns]="true"
+    [stickyHeader]="false"
+  >
+    <ng-template
+      let-row
+      dsCellTemplate="project"
+    >
+      <span class="t-s-bold">
+        {{ asEvent(row).project }}
+      </span>
+    </ng-template>
+
+    <ng-template
+      let-row
+      dsCellTemplate="id"
+    >
+      <span class="mono muted">
+        {{ asEvent(row).id }}
+      </span>
+    </ng-template>
+
+    <ng-template
+      let-row
+      dsCellTemplate="status"
+    >
+      <ds-badge
+        [status]="asEvent(row).status"
+        [withDot]="true"
+      >
+        {{ asEvent(row).statusLabel }}
+      </ds-badge>
+    </ng-template>
+  </ds-table>
+
   <!-- ============================================================ Truncation · popover -->
   <h3 class="block-title t-h4">Truncation · full-text popover</h3>
 

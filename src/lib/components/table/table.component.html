@@ -65,7 +65,9 @@
               [class]="headerClasses(col)"
               [class.numeric]="col.align === 'right'"
               [class.pin-first]="first && stickyFirstColumn()"
-              [style.width.px]="col.width ?? null"
+              [style.width.px]="columnWidth(col)"
+              [style.min-width.px]="columnWidth(col)"
+              [style.max-width.px]="columnWidth(col)"
               [attr.aria-sort]="ariaSort(col)"
             >
               @if (col.sortable) {
@@ -85,6 +87,18 @@
               } @else {
                 <span class="th-label">
                   {{ col.label }}
+                </span>
+              }
+
+              @if (resizableColumns()) {
+                <span
+                  class="col-resize"
+                  aria-hidden="true"
+                  (pointerdown)="onResizeStart(col, $event)"
+                  (pointermove)="onResizeMove($event)"
+                  (pointerup)="onResizeEnd()"
+                  (pointercancel)="onResizeEnd()"
+                >
                 </span>
               }
             </th>

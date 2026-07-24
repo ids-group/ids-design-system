@@ -65,6 +65,38 @@
   }
 }
 
+/* Drag-to-resize handles (opt-in `resizableColumns`). The header clips its
+   label so a narrowed column can't spill into its neighbour. */
+:host(.resizable) thead th {
+  position: relative;
+  overflow: hidden;
+}
+
+.col-resize {
+  position: absolute;
+  inset-block: 0;
+  right: 0;
+  width: var(--space-2);
+  cursor: col-resize;
+  touch-action: none;
+  user-select: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset-block: var(--space-2);
+    right: 0;
+    width: var(--border-width-default);
+    background-color: transparent;
+    transition: background-color var(--duration-fast) var(--ease-standard);
+  }
+
+  &:hover::after,
+  &:active::after {
+    background-color: var(--_table-sort-active-icon-color);
+  }
+}
+
 .hscroll-proxy {
   position: sticky;
   bottom: 0;

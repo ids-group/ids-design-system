@@ -4816,6 +4816,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Two-way set of hidden column keys. `null` (default) derives the set from each column's `hidden` flag; the column picker then owns it. Binding a Set takes over — `hidden` flags are ignored."
       },
       {
+        "name": "resizableColumns",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Enables drag-to-resize handles on each column header."
+      },
+      {
+        "name": "columnWidths",
+        "kind": "model",
+        "type": "Map<string, number>",
+        "union": null,
+        "default": "new Map()",
+        "required": false,
+        "description": "Two-way per-column pixel width overrides (keyed by column key), set by dragging a resize handle. Seeded from `column.width` where unset."
+      },
+      {
         "name": "reorderableColumns",
         "kind": "input",
         "type": "boolean",

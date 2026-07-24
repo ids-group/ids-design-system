@@ -64,6 +64,7 @@ const NUMERIC = /^-?\d+(\.\d+)?$/;
     '[class.pinned]': 'stickyFirstColumn()',
     '[class.expandable]': 'expandableRows()',
     '[class.sticky-scrollbar]': 'stickyScrollbar()',
+    '[class.resizable]': 'resizableColumns()',
   },
 })
 export class TableComponent<T extends { id: string }> {
@@ -125,6 +126,11 @@ export class TableComponent<T extends { id: string }> {
    *  Set takes over — `hidden` flags are ignored. */
   readonly hiddenKeys = model<Set<string> | null>(null);
 
+  /** Enables drag-to-resize handles on each column header. */
+  readonly resizableColumns = input(false, { transform: booleanAttribute });
+  /** Two-way per-column pixel width overrides (keyed by column key), set by
+   *  dragging a resize handle. Seeded from `column.width` where unset. */
+  readonly columnWidths = model<Map<string, number>>(new Map());
   /** Enables drag + up/down reordering in the column panel. */
   readonly reorderableColumns = input(false, { transform: booleanAttribute });
   /** Two-way column order as a list of keys. `null` (default) keeps declaration
@@ -334,6 +340,48 @@ export class TableComponent<T extends { id: string }> {
   protected resetColumns(): void {
     this.columnOrder.set(null);
     this.hiddenKeys.set(null);
+    this.columnWidths.set(new Map());
+  }
+
+  private static readonly MIN_COLUMN_WIDTH = 48;
+  private resizeState: { key: string; startX: number; startWidth: number } | null =
+    null;
+
+  /** Resolved pixel width for a column: a drag override wins, else `column.width`. */
+  protected columnWidth(col: TableColumn<T>): number | null {
+    return this.columnWidths().get(col.key) ?? col.width ?? null;
+  }
+
+  protected onResizeStart(col: TableColumn<T>, event: PointerEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    const header = (event.target as HTMLElement).closest('th');
+    if (!header) {
+      return;
+    }
+    this.resizeState = {
+      key: col.key,
+      startX: event.clientX,
+      startWidth: header.offsetWidth,
+    };
+    (event.target as HTMLElement).setPointerCapture(event.pointerId);
+  }
+
+  protected onResizeMove(event: PointerEvent): void {
+    if (!this.resizeState) {
+      return;
+    }
+    const width = Math.max(
+      TableComponent.MIN_COLUMN_WIDTH,
+      this.resizeState.startWidth + (event.clientX - this.resizeState.startX),
+    );
+    const next = new Map(this.columnWidths());
+    next.set(this.resizeState.key, Math.round(width));
+    this.columnWidths.set(next);
+  }
+
+  protected onResizeEnd(): void {
+    this.resizeState = null;
   }
 
   /** Client-side filter over the full data set — active when `filterQuery` is
