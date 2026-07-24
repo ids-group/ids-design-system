@@ -4702,6 +4702,36 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Keeps the header row pinned while the body scrolls."
       },
       {
+        "name": "maxHeight",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Caps the scroll body height (any CSS length, e.g. `'320px'`) and scrolls it vertically — pair with `stickyHeader` for a self-contained scroll region. `null` (default) lets the table grow to its content."
+      },
+      {
+        "name": "density",
+        "kind": "input",
+        "type": "'default' | 'compact'",
+        "union": [
+          "default",
+          "compact"
+        ],
+        "default": "'default'",
+        "required": false,
+        "description": "Row density — `'compact'` tightens cell padding for spreadsheet-dense lists."
+      },
+      {
+        "name": "zebra",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Tints odd rows for easier row-tracking across wide tables."
+      },
+      {
         "name": "selectedIds",
         "kind": "model",
         "type": "Set<string>",

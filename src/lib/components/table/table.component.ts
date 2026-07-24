@@ -76,6 +76,14 @@ export class TableComponent<T extends { id: string }> {
   readonly loading = input<false | 'skeleton' | 'overlay'>(false);
   /** Keeps the header row pinned while the body scrolls. */
   readonly stickyHeader = input(true, { transform: booleanAttribute });
+  /** Caps the scroll body height (any CSS length, e.g. `'320px'`) and scrolls it
+   *  vertically — pair with `stickyHeader` for a self-contained scroll region.
+   *  `null` (default) lets the table grow to its content. */
+  readonly maxHeight = input<string | null>(null);
+  /** Row density — `'compact'` tightens cell padding for spreadsheet-dense lists. */
+  readonly density = input<'default' | 'compact'>('default');
+  /** Tints odd rows for easier row-tracking across wide tables. */
+  readonly zebra = input(false, { transform: booleanAttribute });
   /** Two-way set of currently selected row ids. */
   readonly selectedIds = model<Set<string>>(new Set<string>());
   /** Column key currently sorted by; `null` when unsorted. */
@@ -193,6 +201,12 @@ export class TableComponent<T extends { id: string }> {
     }
     if (this.stickyHeader()) {
       parts.push('sticky-header');
+    }
+    if (this.density() === 'compact') {
+      parts.push('compact');
+    }
+    if (this.zebra()) {
+      parts.push('zebra');
     }
 
     return parts.join(' ');

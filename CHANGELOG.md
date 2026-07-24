@@ -30,6 +30,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   visibility, with `hidden: true` as the initial state and the last visible column locked so the
   grid can't go empty. New two-way `hiddenKeys` model (`Set<string> | null`; `null`, the default,
   derives the set from the `hidden` flags — binding a Set takes over and the flags are ignored).
+- **`ds-table` density, zebra striping and capped scroll height.** New `density="compact"` input
+  tightens cell padding for spreadsheet-dense lists; `zebra` tints odd rows (via the new
+  `--ds-table-row-stripe-bg-color` token); `maxHeight` (any CSS length) caps the scroll body and
+  scrolls it vertically, pairing with `stickyHeader` for a self-contained scroll region. All opt-in.
 - **`ds-table` sticky horizontal scrollbar.** New opt-in `stickyScrollbar` input hides the scroll
   container's native horizontal bar and renders a proxy scrollbar stuck to the bottom of the nearest
   scroll ancestor while the table is in view, mirroring `scrollLeft` both ways — on a tall, wide

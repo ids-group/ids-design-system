@@ -4,12 +4,6 @@
       letter-spacing: var(--letter-spacing-wider);
     }
 
-    .scroll-wrap { margin-top: var(--space-3); border: var(--border-width-default) solid var(--border-divider); }
-    .scroll-wrap--capped { max-height: 220px; overflow-y: auto; }
-
-    /* Tabular figures on numeric cells so digits line up across rows. */
-    .table .numeric { font-variant-numeric: tabular-nums; }
-
     /* Inline mono / muted cell helpers. */
     .mono { font-family: var(--font-mono); font-size: var(--font-size-xs); }
     .muted { color: var(--text-tertiary); }
@@ -39,11 +33,11 @@
       min-height: 96px;
     }
     .state-cell__stage--tbl { padding: 0; align-items: stretch; }
-    .state-cell__stage--tbl .table { width: 100%; }
+    .state-cell__stage--tbl ds-table { width: 100%; }
 
     /* State pin — hover on a sortable header reads the component's own resolvers;
        --text-secondary is a bare token (no --_* resolver for header hover fg). */
-    :host ::ng-deep .pin-hover-th .table thead th { background-color: var(--_table-row-hover-bg-color); color: var(--text-secondary); }
+    :host ::ng-deep .pin-hover-th ds-table thead th { background-color: var(--_table-row-hover-bg-color); color: var(--text-secondary); }
 
     /* Row-state pins — force the live ds-table's :hover / :active tints
        statically so the showcase can display them side by side. */

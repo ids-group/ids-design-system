@@ -5,7 +5,6 @@ import {
   CellTemplateDirective,
   DrawerComponent,
   EmptyStateComponent,
-  IconComponent,
   TableComponent,
   type TableColumn,
   type TableRowAction,
@@ -46,7 +45,6 @@ interface ProjectRow {
     DocsTruncationComponent,
     DrawerComponent,
     EmptyStateComponent,
-    IconComponent,
     TableComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
@@ -94,6 +92,19 @@ export class TableSection {
   protected readonly stateColumns: TableColumn<EventRow>[] = [
     { key: 'project', label: 'Record' },
   ];
+
+  protected readonly sortStateColumns: TableColumn<EventRow>[] = [
+    { key: 'project', label: 'Record', sortable: true },
+  ];
+
+  protected readonly sortableColumns: TableColumn<EventRow>[] = [
+    { key: 'project', label: 'Record', sortable: true },
+    { key: 'date', label: 'Dates', sortable: true },
+    { key: 'venue', label: 'Venue', sortable: true },
+    { key: 'capacity', label: 'Capacity', align: 'right', sortable: true },
+  ];
+
+  protected readonly noRows: readonly EventRow[] = [];
 
   protected readonly events: readonly EventRow[] = [
     {
@@ -202,6 +213,7 @@ export class TableSection {
 
   protected readonly stateRow: readonly EventRow[] = this.events.slice(0, 1);
   protected readonly stateSelectedIds = signal(new Set([this.events[0].id]));
+  protected readonly sortableRows: readonly EventRow[] = this.events.slice(0, 4);
 
   protected readonly projectColumns: TableColumn<ProjectRow>[] = [
     { key: 'project', label: 'Project', sortable: true },

@@ -4485,6 +4485,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Current row (activeRowId) fill."
       },
       {
+        "name": "--ds-table-row-stripe-bg-color",
+        "value": "var(--surface-secondary)",
+        "notes": "Zebra odd-row stripe fill."
+      },
+      {
         "name": "--ds-table-head-text-color",
         "value": "var(--text-secondary)",
         "notes": "Head label."

@@ -59,77 +59,28 @@
   <h3 class="block-title t-h4">Sortable columns</h3>
 
   <p class="block-desc t-s">
-    Click a header to cycle asc → desc → none. Active column shows a coloured
-    chevron.
+    Mark columns <code class="t-mono-inline"> sortable: true </code> and add
+    <code class="t-mono-inline"> [clientSort]="true" </code> to let the table
+    order its own rows. Click a header to cycle asc → desc → none; the active
+    column shows a coloured chevron.
   </p>
 
-  <div class="scroll-wrap">
-    <table class="table">
-      <thead>
-        <tr>
-          <th class="sortable sorted-asc">
-            Record
-            <ds-icon
-              class="sort-icon"
-              name="sortAsc"
-              [size]="12"
-            />
-          </th>
-
-          <th class="sortable">
-            Dates
-            <ds-icon
-              class="sort-icon"
-              name="sort"
-              [size]="12"
-            />
-          </th>
-
-          <th class="sortable">
-            Venue
-            <ds-icon
-              class="sort-icon"
-              name="sort"
-              [size]="12"
-            />
-          </th>
-
-          <th class="sortable numeric">
-            <ds-icon
-              class="sort-icon"
-              name="sort"
-              [size]="12"
-            />
-            Capacity
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        @for (row of events.slice(0, 4); track row.id) {
-          <tr>
-            <td>
-              <span class="t-s-bold">
-                {{ row.project }}
-              </span>
-            </td>
-
-            <td>
-              {{ row.date }}
-            </td>
-
-            <td>
-              {{ row.venue }}
-            </td>
-
-            <td class="numeric">
-              {{ row.capacity }}
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
+  <ds-table
+    caption="Records"
+    [data]="sortableRows"
+    [columns]="sortableColumns"
+    [clientSort]="true"
+    [stickyHeader]="false"
+  >
+    <ng-template
+      let-row
+      dsCellTemplate="project"
+    >
+      <span class="t-s-bold">
+        {{ asEvent(row).project }}
+      </span>
+    </ng-template>
+  </ds-table>
 
   <!-- ============================================================ Header sort states -->
   <h3 class="block-title t-h4">Header sort states</h3>
@@ -141,110 +92,55 @@
   <div class="states states--cols-4">
     <div class="state-cell">
       <div class="state-cell__stage state-cell__stage--tbl">
-        <table class="table">
-          <thead>
-            <tr>
-              <th class="sortable">
-                Record
-                <ds-icon
-                  class="sort-icon"
-                  name="sort"
-                  [size]="12"
-                />
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td>Project Alpha</td>
-            </tr>
-          </tbody>
-        </table>
+        <ds-table
+          caption="Sortable idle"
+          [data]="stateRow"
+          [columns]="sortStateColumns"
+          [stickyHeader]="false"
+        />
       </div>
 
       <div class="state-cell__label">Sortable · idle</div>
     </div>
 
     <div class="state-cell">
-      <!-- sorted-asc already triggers the real .sorted-asc .sort-icon rule -->
       <div class="state-cell__stage state-cell__stage--tbl">
-        <table class="table">
-          <thead>
-            <tr>
-              <th class="sortable sorted-asc">
-                Record
-                <ds-icon
-                  class="sort-icon"
-                  name="sortAsc"
-                  [size]="12"
-                />
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td>Project Alpha</td>
-            </tr>
-          </tbody>
-        </table>
+        <ds-table
+          caption="Sorted ascending"
+          sortKey="project"
+          sortDir="asc"
+          [data]="stateRow"
+          [columns]="sortStateColumns"
+          [stickyHeader]="false"
+        />
       </div>
 
       <div class="state-cell__label">Sorted · ascending</div>
     </div>
 
     <div class="state-cell">
-      <!-- sorted-desc already triggers the real .sorted-desc .sort-icon rule -->
       <div class="state-cell__stage state-cell__stage--tbl">
-        <table class="table">
-          <thead>
-            <tr>
-              <th class="sortable sorted-desc">
-                Record
-                <ds-icon
-                  class="sort-icon"
-                  name="sortDesc"
-                  [size]="12"
-                />
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td>Project Alpha</td>
-            </tr>
-          </tbody>
-        </table>
+        <ds-table
+          caption="Sorted descending"
+          sortKey="project"
+          sortDir="desc"
+          [data]="stateRow"
+          [columns]="sortStateColumns"
+          [stickyHeader]="false"
+        />
       </div>
 
       <div class="state-cell__label">Sorted · descending</div>
     </div>
 
     <div class="state-cell">
-      <!-- pin-hover on stage targets the th via ::ng-deep (see styles below) -->
       <div class="state-cell__stage state-cell__stage--tbl pin-hover-th">
-        <table class="table">
-          <thead>
-            <tr>
-              <th class="sortable">
-                Record
-                <ds-icon
-                  class="sort-icon"
-                  name="sort"
-                  [size]="12"
-                />
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td>Project Alpha</td>
-            </tr>
-          </tbody>
-        </table>
+        <ds-table
+          caption="Header hover"
+          [data]="stateRow"
+          [columns]="sortStateColumns"
+          [stickyHeader]="false"
+        />
       </div>
 
       <div class="state-cell__label">Hover</div>
@@ -393,54 +289,40 @@
   <h3 class="block-title t-h4">Sticky header</h3>
 
   <p class="block-desc t-s">
-    Header stays pinned while the body scrolls. Capped at ~220 px to force the
-    scroll.
+    The header stays pinned while the body scrolls.
+    <code class="t-mono-inline"> maxHeight="220px" </code> caps the scroll
+    region and <code class="t-mono-inline"> [stickyHeader]="true" </code> (the
+    default) pins the header inside it.
   </p>
 
-  <div class="scroll-wrap scroll-wrap--capped">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Record</th>
+  <ds-table
+    caption="Records"
+    maxHeight="220px"
+    [data]="longList"
+    [columns]="selectionColumns"
+    [stickyHeader]="true"
+  >
+    <ng-template
+      let-row
+      dsCellTemplate="project"
+    >
+      <span class="t-s-bold">
+        {{ asEvent(row).project }}
+      </span>
+    </ng-template>
 
-          <th>Dates</th>
-
-          <th>Venue</th>
-
-          <th>Status</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        @for (row of longList; track row.id) {
-          <tr>
-            <td>
-              <span class="t-s-bold">
-                {{ row.project }}
-              </span>
-            </td>
-
-            <td>
-              {{ row.date }}
-            </td>
-
-            <td>
-              {{ row.venue }}
-            </td>
-
-            <td>
-              <ds-badge
-                [status]="row.status"
-                [withDot]="true"
-              >
-                {{ row.statusLabel }}
-              </ds-badge>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
+    <ng-template
+      let-row
+      dsCellTemplate="status"
+    >
+      <ds-badge
+        [status]="asEvent(row).status"
+        [withDot]="true"
+      >
+        {{ asEvent(row).statusLabel }}
+      </ds-badge>
+    </ng-template>
+  </ds-table>
 
   <!-- ============================================================ Bordered -->
   <h3 class="block-title t-h4">Bordered</h3>
@@ -506,38 +388,18 @@
   <div class="block-sub t-overline">a · Plain row</div>
 
   <p class="block-desc t-s">
-    Mirrors source — single tertiary line in a colspan cell. Use when the empty
-    state is transient or context-obvious.
+    A single tertiary line in the <code class="t-mono-inline"> [empty] </code>
+    slot. Use when the empty state is transient or context-obvious.
   </p>
 
-  <div class="scroll-wrap">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Record</th>
-
-          <th>Dates</th>
-
-          <th>Venue</th>
-
-          <th>Status</th>
-
-          <th class="numeric">Capacity</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td
-            colspan="5"
-            class="empty"
-          >
-            No records match your filters
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <ds-table
+    caption="Records"
+    [data]="noRows"
+    [columns]="loadingColumns"
+    [stickyHeader]="false"
+  >
+    <span empty> No records match your filters </span>
+  </ds-table>
 
   <!-- (b) No data — first-run / nothing exists yet. Icon + title + body + primary CTA. -->
   <div class="block-sub t-overline">b · No data · primary CTA</div>
@@ -546,48 +408,29 @@
     First-run variant — nothing exists yet, so the CTA invites creation.
   </p>
 
-  <div class="scroll-wrap">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Record</th>
-
-          <th>Dates</th>
-
-          <th>Venue</th>
-
-          <th>Status</th>
-
-          <th class="numeric">Capacity</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td
-            colspan="5"
-            class="empty"
-          >
-            <ds-empty-state
-              variant="none"
-              icon="inbox"
-              title="No records yet"
-              body="Create your first record to start tracking schedules, venues and capacity."
-            >
-              <ds-button
-                actions
-                variant="tonal"
-                size="sm"
-                icon="plus"
-              >
-                New record
-              </ds-button>
-            </ds-empty-state>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <ds-table
+    caption="Records"
+    [data]="noRows"
+    [columns]="loadingColumns"
+    [stickyHeader]="false"
+  >
+    <ds-empty-state
+      empty
+      variant="none"
+      icon="inbox"
+      title="No records yet"
+      body="Create your first record to start tracking schedules, venues and capacity."
+    >
+      <ds-button
+        actions
+        variant="tonal"
+        size="sm"
+        icon="plus"
+      >
+        New record
+      </ds-button>
+    </ds-empty-state>
+  </ds-table>
 
   <!-- (c) Filtered — query returned nothing. Secondary "clear filters" action. -->
   <div class="block-sub t-overline">c · Filtered · clear-filters CTA</div>
@@ -596,48 +439,29 @@
     Data exists but the current filter or search excluded every row.
   </p>
 
-  <div class="scroll-wrap">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Record</th>
-
-          <th>Dates</th>
-
-          <th>Venue</th>
-
-          <th>Status</th>
-
-          <th class="numeric">Capacity</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td
-            colspan="5"
-            class="empty"
-          >
-            <ds-empty-state
-              variant="none"
-              icon="search"
-              title="No matches for your filters"
-              body="Try a broader query or clear the active filters to see every record."
-            >
-              <ds-button
-                actions
-                color="neutral"
-                variant="outline"
-                size="sm"
-              >
-                Clear filters
-              </ds-button>
-            </ds-empty-state>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <ds-table
+    caption="Records"
+    [data]="noRows"
+    [columns]="loadingColumns"
+    [stickyHeader]="false"
+  >
+    <ds-empty-state
+      empty
+      variant="none"
+      icon="search"
+      title="No matches for your filters"
+      body="Try a broader query or clear the active filters to see every record."
+    >
+      <ds-button
+        actions
+        color="neutral"
+        variant="outline"
+        size="sm"
+      >
+        Clear filters
+      </ds-button>
+    </ds-empty-state>
+  </ds-table>
 
   <!-- (d) Error — request failed. Retry is the primary action. -->
   <div class="block-sub t-overline">d · Failed to load · retry CTA</div>
@@ -647,113 +471,76 @@
     primary action.
   </p>
 
-  <div class="scroll-wrap">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Record</th>
-
-          <th>Dates</th>
-
-          <th>Venue</th>
-
-          <th>Status</th>
-
-          <th class="numeric">Capacity</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td
-            colspan="5"
-            class="empty"
-          >
-            <ds-empty-state
-              variant="error"
-              title="Couldn't load records"
-              body="Network error — the request timed out after 30 seconds."
-            >
-              <ds-button
-                actions
-                variant="tonal"
-                size="sm"
-                icon="refresh"
-              >
-                Retry
-              </ds-button>
-            </ds-empty-state>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <ds-table
+    caption="Records"
+    [data]="noRows"
+    [columns]="loadingColumns"
+    [stickyHeader]="false"
+  >
+    <ds-empty-state
+      empty
+      variant="error"
+      title="Couldn't load records"
+      body="Network error — the request timed out after 30 seconds."
+    >
+      <ds-button
+        actions
+        variant="tonal"
+        size="sm"
+        icon="refresh"
+      >
+        Retry
+      </ds-button>
+    </ds-empty-state>
+  </ds-table>
 
   <!-- ============================================================ Dense · zebra -->
   <h3 class="block-title t-h4">Dense · zebra</h3>
 
   <p class="block-desc t-s">
-    Compact padding plus odd-row tint for spreadsheet-style scanning.
+    <code class="t-mono-inline"> density="compact" </code> tightens cell
+    padding and <code class="t-mono-inline"> [zebra]="true" </code> tints odd
+    rows for spreadsheet-style scanning.
   </p>
 
-  <div class="scroll-wrap">
-    <table class="table compact zebra">
-      <thead>
-        <tr>
-          <th>Record</th>
+  <ds-table
+    caption="Records"
+    density="compact"
+    [data]="events"
+    [columns]="defaultColumns"
+    [zebra]="true"
+    [stickyHeader]="false"
+  >
+    <ng-template
+      let-row
+      dsCellTemplate="project"
+    >
+      <span class="t-s-bold">
+        {{ asEvent(row).project }}
+      </span>
+    </ng-template>
 
-          <th>ID</th>
+    <ng-template
+      let-row
+      dsCellTemplate="id"
+    >
+      <span class="mono muted">
+        {{ asEvent(row).id }}
+      </span>
+    </ng-template>
 
-          <th>Dates</th>
-
-          <th>Venue</th>
-
-          <th>Status</th>
-
-          <th class="numeric">Capacity</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        @for (row of events; track row.id) {
-          <tr>
-            <td>
-              <span class="t-s-bold">
-                {{ row.project }}
-              </span>
-            </td>
-
-            <td>
-              <span class="mono muted">
-                {{ row.id }}
-              </span>
-            </td>
-
-            <td>
-              {{ row.date }}
-            </td>
-
-            <td>
-              {{ row.venue }}
-            </td>
-
-            <td>
-              <ds-badge
-                [status]="row.status"
-                [withDot]="true"
-              >
-                {{ row.statusLabel }}
-              </ds-badge>
-            </td>
-
-            <td class="numeric">
-              {{ row.capacity }}
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
+    <ng-template
+      let-row
+      dsCellTemplate="status"
+    >
+      <ds-badge
+        [status]="asEvent(row).status"
+        [withDot]="true"
+      >
+        {{ asEvent(row).statusLabel }}
+      </ds-badge>
+    </ng-template>
+  </ds-table>
 
   <!-- ============================================================ Pagination · sticky column -->
   <h3 class="block-title t-h4">Pagination · sticky column</h3>

@@ -1,6 +1,8 @@
 <div
   #scrollWrap
   class="scroll-wrap"
+  [class.scroll-y]="maxHeight()"
+  [style.max-height]="maxHeight()"
 >
   <div
     class="visually-hidden"
