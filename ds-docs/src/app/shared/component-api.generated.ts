@@ -132,6 +132,31 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
+  "app-shell": {
+    "key": "app-shell",
+    "selector": "ds-app-shell",
+    "isElement": true,
+    "className": "AppShellComponent",
+    "status": "stable",
+    "importName": "AppShellComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "topbarSpan",
+        "kind": "input",
+        "type": "'content' | 'full'",
+        "union": [
+          "content",
+          "full"
+        ],
+        "default": "'content'",
+        "required": false,
+        "description": "`'content'` (default): the rail spans the full viewport height on the left and the topbar sits above the content column only. `'full'`: the topbar spans the full width and the rail + content sit below it."
+      }
+    ],
+    "outputs": []
+  },
   "autocomplete": {
     "key": "autocomplete",
     "selector": "ds-autocomplete",
@@ -3770,6 +3795,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Brand text at the top of the rail (auto letter-mark + name). For a custom logo image/SVG, project it into the `[brand]` slot instead."
+      },
+      {
+        "name": "logoLetter",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`."
+      },
+      {
+        "name": "brandAccent",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Leading slice of the wordmark tinted with the mark colour (e.g. \"My\" in \"MyAdmin\"); the remainder renders in the default text colour. Empty (or not a prefix of `brand`) = single-tone wordmark."
       }
     ],
     "outputs": []
@@ -3907,6 +3950,110 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ],
     "outputs": []
+  },
+  "sidenav-footer": {
+    "key": "sidenav-footer",
+    "selector": "ds-sidenav-footer",
+    "isElement": true,
+    "className": "SidenavFooterComponent",
+    "status": "stable",
+    "importName": "SidenavFooterComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "userName",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "userRole",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "alerts",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Show the unread dot on the Alerts row."
+      },
+      {
+        "name": "collapsed",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "searchProvider",
+        "kind": "input",
+        "type": "SidenavSearchProvider | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "When set, the Search row opens a live results popover; unset keeps it inert."
+      },
+      {
+        "name": "alertItems",
+        "kind": "input",
+        "type": "readonly SidenavAlertItem[] | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "When non-null (even empty) the Alerts row opens a list popover; null keeps it inert."
+      },
+      {
+        "name": "profileRoute",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Route for the account menu's \"Your profile\"; empty = the item is a no-op."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "collapseToggled",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "alertsOpened",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Emitted when the Alerts popover is opened, so the layout can mark-all-read."
+      },
+      {
+        "name": "signOutSelected",
+        "kind": "output",
+        "type": "void",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Emitted when \"Sign out\" is chosen; the layout owns the actual logout flow."
+      }
+    ]
   },
   "skeleton": {
     "key": "skeleton",

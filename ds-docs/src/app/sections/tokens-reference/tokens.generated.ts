@@ -1822,6 +1822,38 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "App Shell",
+    "selector": ".app-shell",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-app-shell-pad-x",
+        "value": "var(--space-6)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-app-shell-pad-y",
+        "value": "var(--space-6)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-app-shell-content-max-width",
+        "value": "none",
+        "notes": ""
+      },
+      {
+        "name": "--ds-app-shell-height",
+        "value": "100dvh",
+        "notes": ""
+      },
+      {
+        "name": "--ds-scrollbar-width",
+        "value": "0px",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Autocomplete",
     "selector": ".autocomplete",
     "description": "",
@@ -4046,6 +4078,33 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--sidenav-item-rail-width",
         "value": "3px",
         "notes": "Sidenav active-item side rail width (3px)."
+      }
+    ]
+  },
+  {
+    "component": "Sidenav Footer",
+    "selector": ".sidenav-footer",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-sidenav-footer-popover-width",
+        "value": "300px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-sidenav-footer-popover-max-width",
+        "value": "82vw",
+        "notes": ""
+      },
+      {
+        "name": "--ds-sidenav-footer-head-tracking",
+        "value": "0.04em",
+        "notes": ""
+      },
+      {
+        "name": "--ds-sidenav-footer-dot-size",
+        "value": "6px",
+        "notes": ""
       }
     ]
   },

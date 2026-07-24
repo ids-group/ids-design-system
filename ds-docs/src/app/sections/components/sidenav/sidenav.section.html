@@ -173,6 +173,47 @@
     </div>
   </div>
 
+  <!-- ============================================================ Letter-mark & accent wordmark -->
+  <h3 class="block-title t-h4">
+    Letter-mark &amp; accent wordmark
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      logoLetter
+    </code> sets the tile glyph when it differs from the brand's first letter,
+    and
+    <code class="t-mono-inline">
+      brandAccent
+    </code> tints the leading slice of the wordmark in the mark colour — here an
+    "A" tile beside a two-tone "MyAdmin".
+  </p>
+
+  <div class="stage stage--frame">
+    <ds-sidenav
+      brand="MyAdmin"
+      brandAccent="My"
+      logoLetter="A"
+    >
+      <ds-sidenav-item
+        icon="home"
+        label="Dashboard"
+        [active]="true"
+      />
+
+      <ds-sidenav-item
+        icon="calendar"
+        label="Records"
+        [badge]="12"
+      />
+
+      <ds-sidenav-item
+        icon="package"
+        label="Asset register"
+      />
+    </ds-sidenav>
+  </div>
+
   <!-- ============================================================ Expandable groups -->
   <h3 class="block-title t-h4">
     Expandable groups
