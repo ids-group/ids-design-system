@@ -537,6 +537,27 @@
   margin-top: 0;
 }
 
+/* Inline editing (opt-in `column.editable`). */
+.editable-cell {
+  cursor: text;
+}
+
+.cell-edit {
+  width: 100%;
+  box-sizing: border-box;
+  margin: calc(-1 * var(--space-1)) 0;
+  padding: var(--space-1) var(--space-2);
+  border: var(--border-width-default) solid var(--accent);
+  border-radius: var(--radius-sm);
+  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  color: var(--text-primary);
+  background-color: var(--surface-default);
+
+  &:focus-visible {
+    outline: 0;
+  }
+}
+
 /* Full value of a clipped `truncate` cell — also portaled into a popover. */
 .cell-text-pop {
   max-width: 360px;

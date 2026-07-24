@@ -1,12 +1,15 @@
 import {
   Component,
   ElementRef,
+  Injector,
   TemplateRef,
   ViewEncapsulation,
+  afterNextRender,
   booleanAttribute,
   computed,
   contentChildren,
   effect,
+  inject,
   input,
   model,
   output,
@@ -32,6 +35,7 @@ import { CellTemplateDirective } from './cell-template.directive';
 import type {
   SortChangeEvent,
   SortDir,
+  TableCellEditEvent,
   TableColumn,
   TableRowAction,
   TableRowActionEvent,
@@ -168,6 +172,9 @@ export class TableComponent<T extends { id: string }> {
   readonly rowActions = input<readonly TableRowAction<T>[]>([]);
   /** Fires with the chosen action and its row when a kebab menu item is selected. */
   readonly rowActionSelected = output<TableRowActionEvent<T>>();
+
+  /** Fires when an `editable` cell is committed (Enter or blur) with the new value. */
+  readonly cellEdited = output<TableCellEditEvent<T>>();
 
   /** Cell templates supplied as an explicit map instead of (or in addition to)
    *  projected `dsCellTemplate` directives. Lets a wrapper component (e.g.
@@ -448,6 +455,54 @@ export class TableComponent<T extends { id: string }> {
     const next = new Map(this.columnFilters());
     next.delete(col.key);
     this.columnFilters.set(next);
+  }
+
+  // ---- Inline cell editing (opt-in `column.editable`) ----
+  private readonly injector = inject(Injector);
+  private readonly editInput =
+    viewChild<ElementRef<HTMLInputElement>>('editInput');
+  protected readonly editingCell = signal<{ rowId: string; key: string } | null>(
+    null,
+  );
+  protected readonly editDraft = signal('');
+
+  protected isEditing(row: T, col: TableColumn<T>): boolean {
+    const cell = this.editingCell();
+
+    return !!cell && cell.rowId === row.id && cell.key === col.key;
+  }
+
+  protected startEdit(row: T, col: TableColumn<T>, event: Event): void {
+    if (!col.editable) {
+      return;
+    }
+    event.stopPropagation();
+    this.editDraft.set(this.cellValue(row, col));
+    this.editingCell.set({ rowId: row.id, key: col.key });
+    afterNextRender(
+      () => {
+        const input = this.editInput()?.nativeElement;
+        input?.focus();
+        input?.select();
+      },
+      { injector: this.injector },
+    );
+  }
+
+  protected onEditInput(event: Event): void {
+    this.editDraft.set((event.target as HTMLInputElement).value);
+  }
+
+  protected commitEdit(row: T, col: TableColumn<T>): void {
+    if (!this.isEditing(row, col)) {
+      return;
+    }
+    this.editingCell.set(null);
+    this.cellEdited.emit({ row, key: col.key, value: this.editDraft() });
+  }
+
+  protected cancelEdit(): void {
+    this.editingCell.set(null);
   }
 
   private static readonly MIN_COLUMN_WIDTH = 48;

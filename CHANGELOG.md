@@ -30,6 +30,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   visibility, with `hidden: true` as the initial state and the last visible column locked so the
   grid can't go empty. New two-way `hiddenKeys` model (`Set<string> | null`; `null`, the default,
   derives the set from the `hidden` flags — binding a Set takes over and the flags are ignored).
+- **`ds-table` inline cell editing.** Columns marked `editable: true` turn into a text input on
+  double-click; Enter or blur commits, Escape cancels. The table stays data-agnostic — it emits
+  `cellEdited` (`{ row, key, value }`, new exported `TableCellEditEvent` type) and the consumer owns
+  the data update.
 - **`ds-table` per-column set filters.** A column marked `filter: 'set'` gets a header funnel
   button opening a searchable checkbox list of that column's distinct values; unchecking narrows the
   rows and the funnel highlights while a filter is active. State is two-way bindable via the new

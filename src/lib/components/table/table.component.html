@@ -259,8 +259,22 @@
                 <td
                   [class.numeric]="col.align === 'right'"
                   [class.pin-first]="first && stickyFirstColumn()"
+                  [class.editable-cell]="col.editable"
+                  (dblclick)="startEdit(row, col, $event)"
                 >
-                  @if (cellTemplate(col); as tpl) {
+                  @if (isEditing(row, col)) {
+                    <input
+                      #editInput
+                      type="text"
+                      class="cell-edit"
+                      [value]="editDraft()"
+                      (input)="onEditInput($event)"
+                      (click)="$event.stopPropagation()"
+                      (keydown.enter)="commitEdit(row, col)"
+                      (keydown.escape)="cancelEdit()"
+                      (blur)="commitEdit(row, col)"
+                    />
+                  } @else if (cellTemplate(col); as tpl) {
                     <ng-container
                       [ngTemplateOutlet]="tpl"
                       [ngTemplateOutletContext]="{ $implicit: row, row: row }"

@@ -792,6 +792,26 @@
     </ng-template>
   </ds-table>
 
+  <!-- ============================================================ Inline editing -->
+  <h3 class="block-title t-h4">Inline editing</h3>
+
+  <p class="block-desc t-s">
+    Columns marked <code class="t-mono-inline"> editable: true </code>
+    (Record, Venue, Capacity here) turn into an input on double-click; Enter or
+    blur commits, Escape cancels. The table stays data-agnostic — it emits
+    <code class="t-mono-inline"> (cellEdited)="…" </code> with
+    <code class="t-mono-inline"> {{ '{' }} row, key, value {{ '}' }} </code>
+    and the consumer applies the update.
+  </p>
+
+  <ds-table
+    caption="Records"
+    [data]="editRows()"
+    [columns]="editColumns"
+    [stickyHeader]="false"
+    (cellEdited)="onCellEdited($event)"
+  />
+
   <!-- ============================================================ Column filters -->
   <h3 class="block-title t-h4">Column filters</h3>
 

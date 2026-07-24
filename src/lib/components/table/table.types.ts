@@ -18,6 +18,9 @@ export interface TableColumn<T = unknown> {
   width?: number;
   align?: 'left' | 'right' | 'center';
   cell?: (row: T) => string;
+  /** Double-click the cell to edit it inline; the committed value is emitted
+   *  via the table's `cellEdited` output (the consumer owns the data update). */
+  editable?: boolean;
   /** Let the user toggle the column in the header column picker — the picker
    *  button appears once at least one column is hideable. */
   hideable?: boolean;
@@ -48,4 +51,10 @@ export interface TableRowAction<T = unknown> {
 export interface TableRowActionEvent<T = unknown> {
   action: TableRowAction<T>;
   row: T;
+}
+
+export interface TableCellEditEvent<T = unknown> {
+  row: T;
+  key: string;
+  value: string;
 }

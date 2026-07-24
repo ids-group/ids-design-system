@@ -6,6 +6,7 @@ import {
   DrawerComponent,
   EmptyStateComponent,
   TableComponent,
+  type TableCellEditEvent,
   type TableColumn,
   type TableRowAction,
   type TableRowActionEvent,
@@ -221,6 +222,27 @@ export class TableSection {
     { key: 'statusLabel', label: 'Status', filter: 'set' },
     { key: 'capacity', label: 'Capacity', align: 'right' },
   ];
+
+  protected readonly editColumns: TableColumn<EventRow>[] = [
+    { key: 'project', label: 'Record', editable: true },
+    { key: 'venue', label: 'Venue', editable: true },
+    { key: 'statusLabel', label: 'Status' },
+    { key: 'capacity', label: 'Capacity', align: 'right', editable: true },
+  ];
+
+  protected readonly editRows = signal<EventRow[]>(
+    this.events.slice(0, 4).map((row) => ({ ...row })),
+  );
+
+  protected onCellEdited(event: TableCellEditEvent<EventRow>): void {
+    this.editRows.update((rows) =>
+      rows.map((row) =>
+        row.id === event.row.id
+          ? ({ ...row, [event.key]: event.value } as EventRow)
+          : row,
+      ),
+    );
+  }
 
   protected readonly projectColumns: TableColumn<ProjectRow>[] = [
     { key: 'project', label: 'Project', sortable: true },

@@ -4996,6 +4996,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": false,
         "description": "Fires with the chosen action and its row when a kebab menu item is selected."
+      },
+      {
+        "name": "cellEdited",
+        "kind": "output",
+        "type": "TableCellEditEvent<T>",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Fires when an `editable` cell is committed (Enter or blur) with the new value."
       }
     ]
   },

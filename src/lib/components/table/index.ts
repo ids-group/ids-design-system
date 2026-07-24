@@ -6,4 +6,5 @@ export type {
   SortChangeEvent,
   TableRowAction,
   TableRowActionEvent,
+  TableCellEditEvent,
 } from './table.types';
