@@ -12,7 +12,9 @@
       [size]="20"
     />
 
-    <span class="label"> Search </span>
+    <span class="label">
+      Search
+    </span>
   </button>
 
   <ds-popover
@@ -89,10 +91,14 @@
             </button>
           }
         } @empty {
-          <p class="empty">No matches for “{{ query().trim() }}”.</p>
+          <p class="empty">
+            No matches for “{{ query().trim() }}”.
+          </p>
         }
       } @else {
-        <p class="empty">Type to search.</p>
+        <p class="empty">
+          Type to search.
+        </p>
       }
     </div>
   </ds-popover>
@@ -106,7 +112,9 @@
       [size]="20"
     />
 
-    <span class="label"> Search </span>
+    <span class="label">
+      Search
+    </span>
   </button>
 }
 
@@ -124,13 +132,16 @@
       [size]="20"
     />
 
-    <span class="label"> Alerts </span>
+    <span class="label">
+      Alerts
+    </span>
 
     @if (alerts()) {
       <span
         class="dot"
         aria-hidden="true"
-      ></span>
+      >
+      </span>
     }
   </button>
 
@@ -141,7 +152,9 @@
     panelLabel="Alerts"
   >
     <div class="alerts-panel">
-      <p class="heading">Alerts</p>
+      <p class="heading">
+        Alerts
+      </p>
 
       @for (alert of items; track alert.id) {
         <button
@@ -175,7 +188,9 @@
           </span>
         </button>
       } @empty {
-        <p class="empty">You’re all caught up.</p>
+        <p class="empty">
+          You’re all caught up.
+        </p>
       }
     </div>
   </ds-popover>
@@ -189,13 +204,16 @@
       [size]="20"
     />
 
-    <span class="label"> Alerts </span>
+    <span class="label">
+      Alerts
+    </span>
 
     @if (alerts()) {
       <span
         class="dot"
         aria-hidden="true"
-      ></span>
+      >
+      </span>
     }
   </button>
 }
@@ -210,7 +228,9 @@
     [size]="20"
   />
 
-  <span class="label"> Collapse </span>
+  <span class="label">
+    Collapse
+  </span>
 </button>
 
 @if (userName()) {
@@ -255,7 +275,9 @@
       panelLabel="Account"
     >
       <ds-menu>
-        <p class="heading">Signed in as {{ userName() }}</p>
+        <p class="heading">
+          Signed in as {{ userName() }}
+        </p>
 
         <ds-menu-item
           icon="user"
@@ -264,9 +286,13 @@
           Your profile
         </ds-menu-item>
 
-        <ds-menu-item icon="settings"> Account settings </ds-menu-item>
+        <ds-menu-item icon="settings">
+          Account settings
+        </ds-menu-item>
 
-        <ds-menu-item icon="help"> Help &amp; support </ds-menu-item>
+        <ds-menu-item icon="help">
+          Help &amp; support
+        </ds-menu-item>
 
         <div class="separator"></div>
 
