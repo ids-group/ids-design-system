@@ -69,8 +69,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   consumer CSS: `ds-table tbody tr:hover td { background-color: var(--surface-secondary); }`.
 - **`ds-table` row click yields to text selection.** On a `rowInteractive` table, a click that
   finishes a mouse text selection no longer emits `rowClicked` — users can drag-select and copy
-  cell text without triggering the row's navigation. Keyboard activation (Enter/Space) is
-  unaffected.
+  cell text without triggering the row's navigation. Only a selection created by that same
+  press-drag-release gesture counts (compared against a mousedown snapshot): a pre-existing
+  selection the browser can't collapse (e.g. over `user-select: none` content) never wedges row
+  clicks. Keyboard activation (Enter/Space) is unaffected.
 
 - **Breaking: `ds-date-picker` input `defaultMonth` is renamed to `defaultDate`.** The input always
   accepted a full `Date` and used its exact day (grid focus lands on that day, the panel opens on

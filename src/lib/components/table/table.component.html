@@ -181,6 +181,7 @@
               [attr.aria-current]="row.id === activeRowId() ? 'true' : null"
               [attr.tabindex]="rowInteractive() ? 0 : null"
               [attr.aria-label]="rowInteractive() ? rowAriaLabel(row) : null"
+              (mousedown)="onRowMousedown()"
               (click)="onRowClick(row, $event)"
               (keydown.enter)="onRowKey(row, $event)"
               (keydown.space)="onRowKey(row, $event)"

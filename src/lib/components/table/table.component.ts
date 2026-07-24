@@ -508,14 +508,20 @@ export class TableComponent<T extends { id: string }> {
     this.selectedIds.set(next);
   }
 
+  private selectionBeforeGesture = '';
+
+  protected onRowMousedown(): void {
+    this.selectionBeforeGesture = window.getSelection()?.toString() ?? '';
+  }
+
   protected onRowClick(row: T, event: Event): void {
     if ((event.target as HTMLElement).closest('input')) {
       return;
     }
-    // A drag-selection ends in a click — let the user copy cell text instead
-    // of navigating. Mousedown collapses any prior selection, so only a fresh
-    // selection from this gesture is non-empty here.
-    if (window.getSelection()?.toString()) {
+    // Only a selection created by this gesture blocks the click — a stale one
+    // mousedown can't collapse (user-select:none content) must not wedge rows.
+    const selection = window.getSelection()?.toString() ?? '';
+    if (selection && selection !== this.selectionBeforeGesture) {
       return;
     }
     this.rowClicked.emit(row);
