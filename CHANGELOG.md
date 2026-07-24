@@ -30,6 +30,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   visibility, with `hidden: true` as the initial state and the last visible column locked so the
   grid can't go empty. New two-way `hiddenKeys` model (`Set<string> | null`; `null`, the default,
   derives the set from the `hidden` flags — binding a Set takes over and the flags are ignored).
+- **`ds-table` CSV export.** New public `exportCsv(filename?)` method downloads the visible columns
+  of the filtered + sorted rows (all rows, not just the current page) as a UTF-8 CSV — wire it to a
+  consumer toolbar button via a template reference.
 - **`ds-table` density, zebra striping and capped scroll height.** New `density="compact"` input
   tightens cell padding for spreadsheet-dense lists; `zebra` tints odd rows (via the new
   `--ds-table-row-stripe-bg-color` token); `maxHeight` (any CSS length) caps the scroll body and

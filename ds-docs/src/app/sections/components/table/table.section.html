@@ -774,4 +774,62 @@
     [stickyScrollbar]="true"
     [stickyHeader]="false"
   />
+
+  <!-- ============================================================ CSV export -->
+  <h3 class="block-title t-h4">CSV export</h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline"> exportCsv() </code> downloads the visible
+    columns of the filtered + sorted rows (all rows, not just the current
+    page). It's a public method — wire it to your own toolbar button via a
+    template reference.
+  </p>
+
+  <ds-button
+    color="neutral"
+    variant="outline"
+    size="sm"
+    icon="download"
+    (pressed)="exportTable.exportCsv('records.csv')"
+  >
+    Export CSV
+  </ds-button>
+
+  <ds-table
+    #exportTable
+    caption="Records"
+    [data]="events"
+    [columns]="defaultColumns"
+    [stickyHeader]="false"
+  >
+    <ng-template
+      let-row
+      dsCellTemplate="project"
+    >
+      <span class="t-s-bold">
+        {{ asEvent(row).project }}
+      </span>
+    </ng-template>
+
+    <ng-template
+      let-row
+      dsCellTemplate="id"
+    >
+      <span class="mono muted">
+        {{ asEvent(row).id }}
+      </span>
+    </ng-template>
+
+    <ng-template
+      let-row
+      dsCellTemplate="status"
+    >
+      <ds-badge
+        [status]="asEvent(row).status"
+        [withDot]="true"
+      >
+        {{ asEvent(row).statusLabel }}
+      </ds-badge>
+    </ng-template>
+  </ds-table>
 </docs-section>

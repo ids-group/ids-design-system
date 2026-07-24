@@ -619,6 +619,34 @@ export class TableComponent<T extends { id: string }> {
     return String((row as Record<string, unknown>)[col.key] ?? '');
   }
 
+  /** Exports the visible columns of the filtered + sorted rows (all rows, not
+   *  just the current page) as a CSV download. Call from a consumer button:
+   *  `<ds-button (pressed)="table.exportCsv()">`. */
+  exportCsv(filename = 'table.csv'): void {
+    if (typeof document === 'undefined') {
+      return;
+    }
+    const columns = this.visibleColumns();
+    const escapeCell = (value: string): string =>
+      /[",\r\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
+    const header = columns.map((col) => escapeCell(col.label));
+    const body = this.sortedData().map((row) =>
+      columns.map((col) => escapeCell(this.cellValue(row, col))),
+    );
+    // Leading BOM so Excel reads UTF-8 (accented labels/values) correctly.
+    const csv =
+      '﻿' +
+      [header, ...body].map((cells) => cells.join(',')).join('\r\n');
+    const url = URL.createObjectURL(
+      new Blob([csv], { type: 'text/csv;charset=utf-8;' }),
+    );
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
   /** Deterministic per-cell width so skeleton rows look organic but stable
    *  across re-renders. Mixes column key + row index into one of five widths. */
   protected skeletonWidth(col: TableColumn<T>, rowIndex: number): string {
