@@ -30,6 +30,26 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   visibility, with `hidden: true` as the initial state and the last visible column locked so the
   grid can't go empty. New two-way `hiddenKeys` model (`Set<string> | null`; `null`, the default,
   derives the set from the `hidden` flags — binding a Set takes over and the flags are ignored).
+- **`ds-app-shell` — slotted fixed-frame application shell.** `[sidenav]`/`[topbar]`/default
+  content slots; the host pins to the viewport (`100dvh`, `overflow: hidden`) and ONLY the content
+  `<main>` scrolls (`scrollbar-gutter: stable` + automatic native-scrollbar-width padding
+  compensation via the new `--ds-scrollbar-width` root variable). `topbarSpan` input switches the
+  geometry (`'content'` default: full-height rail; `'full'`: full-width topbar). Built-in
+  scroll-to-top on router navigation via the new exported `ShellScrollService` (also injectable
+  from routed pages for manual `scrollToTop()`). Tokens: `--ds-app-shell-pad-x/-pad-y/`
+  `-content-max-width/-height`.
+- **`ds-sidenav-footer` — rail footer brick.** Search row with a live grouped-results popover
+  (Enter opens the first hit), Alerts row with an unread dot + feed popover, Collapse row, and a
+  user card with an account menu. Inputs `userName`/`userRole`/`alerts`/`collapsed`/
+  `searchProvider`/`alertItems`/`profileRoute`; outputs `collapseToggled`/`alertsOpened`/
+  `signOutSelected`. New exported types `SidenavSearchProvider`/`SidenavSearchResult`/
+  `SidenavAlertItem`. Tokens: `--ds-sidenav-footer-popover-width/-popover-max-width/`
+  `-popover-max-height/-head-tracking/-dot-size`.
+- **`ds-sidenav` brand-row logo glyph + wordmark projection.** New optional `logoLetter` input sets
+  the tile glyph when it differs from the brand's first letter. A new `[dsBrandName]` projection
+  slot (exported marker directive `BrandNameDirective`) lets consumers project custom wordmark
+  markup — two-tone wordmarks, inline logos — which renders inside `.brand-name` in place of the
+  plain `brand` text. Both are optional; omitting them renders exactly as before.
 
 ### Changed
 
