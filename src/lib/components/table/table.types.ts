@@ -7,8 +7,9 @@ export interface TableColumn<T = unknown> {
   /** Include the column in `filterQuery` matching. When no column is marked,
    *  every column matches. Works on `hidden` columns too. */
   filterable?: boolean;
-  /** Ellipsis-clip long cell text at `width` (240px when unset), full value in
-   *  the title tooltip. Text cells only — template cells own their overflow. */
+  /** Ellipsis-clip long cell text at `width` (240px when unset) — full value
+   *  in the title tooltip, and clicking a clipped cell opens it in a popover.
+   *  Text cells only — template cells own their overflow. */
   truncate?: boolean;
   /** Column width in px — also the clip width for `truncate`. */
   width?: number;

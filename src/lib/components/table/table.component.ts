@@ -1,10 +1,12 @@
 import {
   Component,
+  ElementRef,
   TemplateRef,
   ViewEncapsulation,
   booleanAttribute,
   computed,
   contentChildren,
+  effect,
   input,
   model,
   output,
@@ -51,6 +53,7 @@ const NUMERIC = /^-?\d+(\.\d+)?$/;
     '[class.selectable]': 'selectable()',
     '[class.pinned]': 'stickyFirstColumn()',
     '[class.expandable]': 'expandableRows()',
+    '[class.sticky-scrollbar]': 'stickyScrollbar()',
   },
 })
 export class TableComponent<T extends { id: string }> {
@@ -103,6 +106,11 @@ export class TableComponent<T extends { id: string }> {
    *  each column's `hidden` flag; the column picker then owns it. Binding a
    *  Set takes over — `hidden` flags are ignored. */
   readonly hiddenKeys = model<Set<string> | null>(null);
+
+  /** Keeps the horizontal scrollbar reachable on tall tables: the scroll
+   *  container's native bar is hidden and a proxy stuck to the bottom of the
+   *  nearest scroll ancestor mirrors it both ways. Off by default. */
+  readonly stickyScrollbar = input(false, { transform: booleanAttribute });
 
   /** Rows per page. `null` (default) disables pagination — all rows render. */
   readonly pageSize = model<number | null>(null);
@@ -368,6 +376,72 @@ export class TableComponent<T extends { id: string }> {
     this.columnPickerPopover()?.toggle(event.currentTarget as HTMLElement);
   }
 
+  // ---- Truncated-cell full-text popover ----
+  protected readonly hasTruncate = computed(() =>
+    this.columns().some((col) => col.truncate),
+  );
+  private readonly cellTextPopover =
+    viewChild<PopoverComponent>('cellTextPopover');
+  protected readonly cellPopoverText = signal('');
+
+  /** Click on a `truncate` cell: when the text is actually clipped, show the
+   *  full value in a popover; otherwise let the click fall through to the row. */
+  protected onCellClipClick(row: T, col: TableColumn<T>, event: Event): void {
+    const element = event.currentTarget as HTMLElement;
+    if (element.scrollWidth <= element.clientWidth) {
+      return;
+    }
+    event.stopPropagation();
+    this.cellPopoverText.set(this.cellValue(row, col));
+    this.cellTextPopover()?.toggle(element);
+  }
+
+  // ---- Sticky-proxy horizontal scrollbar (opt-in `stickyScrollbar`) ----
+  private readonly scrollWrap =
+    viewChild.required<ElementRef<HTMLElement>>('scrollWrap');
+  private readonly hscrollProxy =
+    viewChild<ElementRef<HTMLElement>>('hscrollProxy');
+  protected readonly hscrollContentWidth = signal(0);
+  protected readonly hscrollNeeded = signal(false);
+
+  constructor() {
+    // Wire the proxy whenever it exists (stickyScrollbar on). Assigning an
+    // equal scrollLeft fires no scroll event, so the two mirrors can't loop.
+    effect((onCleanup) => {
+      const proxy = this.hscrollProxy()?.nativeElement;
+      if (!proxy) {
+        return;
+      }
+      const wrap = this.scrollWrap().nativeElement;
+      const fromWrap = (): void => {
+        proxy.scrollLeft = wrap.scrollLeft;
+      };
+      const fromProxy = (): void => {
+        wrap.scrollLeft = proxy.scrollLeft;
+      };
+      wrap.addEventListener('scroll', fromWrap, { passive: true });
+      proxy.addEventListener('scroll', fromProxy, { passive: true });
+      const measure = (): void => {
+        this.hscrollContentWidth.set(wrap.scrollWidth);
+        this.hscrollNeeded.set(wrap.scrollWidth > wrap.clientWidth + 1);
+      };
+      // The wrap's own box never changes with content — watch the table too
+      // (column toggles, data swaps change its width).
+      const resizeObserver = new ResizeObserver(measure);
+      resizeObserver.observe(wrap);
+      const table = wrap.querySelector('table');
+      if (table) {
+        resizeObserver.observe(table);
+      }
+      measure();
+      onCleanup(() => {
+        wrap.removeEventListener('scroll', fromWrap);
+        proxy.removeEventListener('scroll', fromProxy);
+        resizeObserver.disconnect();
+      });
+    });
+  }
+
   protected onRowMenuClick(row: T, event: Event): void {
     event.stopPropagation();
     this.menuRow.set(row);
@@ -436,6 +510,12 @@ export class TableComponent<T extends { id: string }> {
 
   protected onRowClick(row: T, event: Event): void {
     if ((event.target as HTMLElement).closest('input')) {
+      return;
+    }
+    // A drag-selection ends in a click — let the user copy cell text instead
+    // of navigating. Mousedown collapses any prior selection, so only a fresh
+    // selection from this gesture is non-empty here.
+    if (window.getSelection()?.toString()) {
       return;
     }
     this.rowClicked.emit(row);

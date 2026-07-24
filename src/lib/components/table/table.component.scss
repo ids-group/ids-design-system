@@ -50,6 +50,32 @@
 
 }
 
+/* Sticky-proxy horizontal scrollbar (opt-in `stickyScrollbar`): the native
+   bar on .scroll-wrap is hidden and the proxy — stuck to the bottom of the
+   nearest scroll ancestor while the table is in view — mirrors scrollLeft
+   both ways, so a tall table's horizontal bar is always reachable. */
+:host(.sticky-scrollbar) .scroll-wrap {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.hscroll-proxy {
+  position: sticky;
+  bottom: 0;
+  overflow: auto hidden;
+}
+
+.hscroll-spacer {
+  height: 1px;
+}
+
+.hscroll-hidden {
+  display: none;
+}
+
 .table {
   /* Public --ds-table-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_table-bg-color:              var(--ds-table-bg-color,              var(--surface-default));
@@ -314,6 +340,14 @@
     color: var(--text-tertiary);
     cursor: default;
   }
+}
+
+/* Full value of a clipped `truncate` cell — also portaled into a popover. */
+.cell-text-pop {
+  max-width: 360px;
+  overflow-wrap: anywhere;
+  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  color: var(--text-primary);
 }
 
 /* Sticky first column — opt-in via `stickyFirstColumn()`. Pinned cells need

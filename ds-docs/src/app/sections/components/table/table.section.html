@@ -770,7 +770,8 @@
     <code class="t-mono-inline"> [activeRowId] </code> keeps that row
     highlighted (plus <code class="t-mono-inline"> aria-current </code>) while
     the drawer is open. Controls inside cells (checkboxes, menus) stop
-    propagation, so they never trigger the row click.
+    propagation, so they never trigger the row click — and neither does
+    finishing a text selection, so cell values stay copyable by mouse.
   </p>
 
   <ds-table
@@ -876,6 +877,43 @@
     caption="Records"
     [data]="events"
     [columns]="pickerColumns"
+    [stickyHeader]="false"
+  />
+
+  <!-- ============================================================ Truncation · popover -->
+  <h3 class="block-title t-h4">Truncation · full-text popover</h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline"> truncate: true </code> ellipsis-clips a text
+    column at its <code class="t-mono-inline"> width </code> (240px when
+    unset). The full value sits in the hover tooltip, and clicking a clipped
+    cell opens it in a popover — an unclipped cell passes the click through to
+    the row.
+  </p>
+
+  <ds-table
+    caption="Records"
+    [data]="truncateRows"
+    [columns]="truncateColumns"
+    [stickyHeader]="false"
+  />
+
+  <!-- ============================================================ Sticky horizontal scrollbar -->
+  <h3 class="block-title t-h4">Sticky horizontal scrollbar</h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline"> [stickyScrollbar]="true" </code> hides the
+    scroll container's native bar and pins a proxy scrollbar to the bottom of
+    the viewport while the table is on screen — on a tall, wide table the
+    horizontal bar stays reachable without scrolling to the table's end. Wide
+    fixed column widths force the overflow here.
+  </p>
+
+  <ds-table
+    caption="Records"
+    [data]="longList"
+    [columns]="wideColumns"
+    [stickyScrollbar]="true"
     [stickyHeader]="false"
   />
 </docs-section>

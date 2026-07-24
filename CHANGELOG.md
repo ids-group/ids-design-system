@@ -30,6 +30,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   visibility, with `hidden: true` as the initial state and the last visible column locked so the
   grid can't go empty. New two-way `hiddenKeys` model (`Set<string> | null`; `null`, the default,
   derives the set from the `hidden` flags — binding a Set takes over and the flags are ignored).
+- **`ds-table` sticky horizontal scrollbar.** New opt-in `stickyScrollbar` input hides the scroll
+  container's native horizontal bar and renders a proxy scrollbar stuck to the bottom of the nearest
+  scroll ancestor while the table is in view, mirroring `scrollLeft` both ways — on a tall, wide
+  table the horizontal bar stays reachable without scrolling to the table's end. The proxy hides
+  itself when the table doesn't overflow.
+- **`ds-table` truncated cells open a full-value popover on click.** A `truncate` column's clipped
+  cell now shows its complete text in a popover when clicked (in addition to the existing title
+  tooltip); the click is swallowed so it never doubles as a row click, while an unclipped cell
+  passes the click through to the row unchanged.
 - **`ds-app-shell` — slotted fixed-frame application shell.** `[sidenav]`/`[topbar]`/default
   content slots; the host pins to the viewport (`100dvh`, `overflow: hidden`) and ONLY the content
   `<main>` scrolls (`scrollbar-gutter: stable` + automatic native-scrollbar-width padding
@@ -58,6 +67,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   additionally gain a pressed (`:active`) fill via the new `--ds-table-row-pressed-bg-color` token
   (default `--surface-muted`). To restore the old always-on hover on a specific passive table, add
   consumer CSS: `ds-table tbody tr:hover td { background-color: var(--surface-secondary); }`.
+- **`ds-table` row click yields to text selection.** On a `rowInteractive` table, a click that
+  finishes a mouse text selection no longer emits `rowClicked` — users can drag-select and copy
+  cell text without triggering the row's navigation. Keyboard activation (Enter/Space) is
+  unaffected.
 
 - **Breaking: `ds-date-picker` input `defaultMonth` is renamed to `defaultDate`.** The input always
   accepted a full `Date` and used its exact day (grid focus lands on that day, the panel opens on

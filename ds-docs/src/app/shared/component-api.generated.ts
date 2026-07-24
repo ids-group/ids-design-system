@@ -4786,6 +4786,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Two-way set of hidden column keys. `null` (default) derives the set from each column's `hidden` flag; the column picker then owns it. Binding a Set takes over — `hidden` flags are ignored."
       },
       {
+        "name": "stickyScrollbar",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Keeps the horizontal scrollbar reachable on tall tables: the scroll container's native bar is hidden and a proxy stuck to the bottom of the nearest scroll ancestor mirrors it both ways. Off by default."
+      },
+      {
         "name": "pageSize",
         "kind": "model",
         "type": "number | null",

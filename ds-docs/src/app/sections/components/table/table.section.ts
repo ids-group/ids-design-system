@@ -61,7 +61,7 @@ export class TableSection {
     {
       field: 'Cell text',
       behaviour:
-        'Single line, ellipsis at column width. Tooltip on hover when clipped.',
+        'Single line, ellipsis at column width (truncate + width). Tooltip on hover; click a clipped cell for a full-value popover.',
     },
     { field: 'Header label', behaviour: 'Single line, no clip.' },
     { field: 'Action column', behaviour: 'No clip — icon-only buttons.' },
@@ -335,6 +335,54 @@ export class TableSection {
 
   protected readonly lastRowClick = signal<string | null>(null);
   protected readonly lastRowAction = signal<string | null>(null);
+
+  protected readonly truncateColumns: TableColumn<EventRow>[] = [
+    { key: 'project', label: 'Record', truncate: true, width: 220 },
+    { key: 'date', label: 'Dates' },
+    { key: 'venue', label: 'Venue', truncate: true, width: 200 },
+    { key: 'statusLabel', label: 'Status' },
+  ];
+
+  protected readonly truncateRows: readonly EventRow[] = [
+    {
+      id: 'ORD-2026-0201',
+      project:
+        'Multi-year infrastructure modernisation programme for the northern logistics corridor',
+      date: '3 – 7 Mar 2026',
+      venue: 'International Conference & Exhibition Centre, Hall 4',
+      status: 'active',
+      statusLabel: 'Active',
+      capacity: '2,400',
+    },
+    {
+      id: 'ORD-2026-0202',
+      project: 'Quarterly stakeholder alignment and budget review',
+      date: '18 Mar 2026',
+      venue: 'HQ Auditorium',
+      status: 'planning',
+      statusLabel: 'Planning',
+      capacity: '160',
+    },
+    {
+      id: 'ORD-2026-0203',
+      project:
+        'Cross-regional field operations safety certification workshop series',
+      date: '2 – 4 Apr 2026',
+      venue: 'Westgate Training & Development Campus, Building C',
+      status: 'confirmed',
+      statusLabel: 'Confirmed',
+      capacity: '380',
+    },
+  ];
+
+  protected readonly wideColumns: TableColumn<EventRow>[] = [
+    { key: 'project', label: 'Record', width: 260 },
+    { key: 'id', label: 'ID', width: 200 },
+    { key: 'date', label: 'Dates', width: 220 },
+    { key: 'venue', label: 'Venue', width: 220 },
+    { key: 'statusLabel', label: 'Status', width: 160 },
+    { key: 'capacity', label: 'Capacity', align: 'right', width: 140 },
+  ];
 
   protected readonly pickerColumns: TableColumn<EventRow>[] = [
     { key: 'project', label: 'Record' },
