@@ -4097,6 +4097,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-sidenav-footer-popover-max-height",
+        "value": "56vh",
+        "notes": ""
+      },
+      {
         "name": "--ds-sidenav-footer-head-tracking",
         "value": "0.04em",
         "notes": ""

@@ -99,6 +99,11 @@ export class TableComponent<T extends { id: string }> {
    *  marked — every column matches, hidden ones included). '' — no filtering. */
   readonly filterQuery = input<string>('');
 
+  /** Two-way set of hidden column keys. `null` (default) derives the set from
+   *  each column's `hidden` flag; the column picker then owns it. Binding a
+   *  Set takes over — `hidden` flags are ignored. */
+  readonly hiddenKeys = model<Set<string> | null>(null);
+
   /** Rows per page. `null` (default) disables pagination — all rows render. */
   readonly pageSize = model<number | null>(null);
   /** Current 1-based page. Only meaningful when `pageSize()` is set. */
@@ -192,10 +197,54 @@ export class TableComponent<T extends { id: string }> {
     () => this.loading() === 'overlay',
   );
 
-  /** Columns actually rendered — `hidden: true` columns are skipped. */
-  protected readonly visibleColumns = computed<readonly TableColumn<T>[]>(() =>
-    this.columns().filter((col) => !col.hidden),
+  protected readonly effectiveHiddenKeys = computed<ReadonlySet<string>>(
+    () =>
+      this.hiddenKeys() ??
+      new Set(
+        this.columns()
+          .filter((col) => col.hidden)
+          .map((col) => col.key),
+      ),
   );
+
+  /** Columns actually rendered — hidden ones (flag or picker) are skipped. */
+  protected readonly visibleColumns = computed<readonly TableColumn<T>[]>(() =>
+    this.columns().filter((col) => !this.effectiveHiddenKeys().has(col.key)),
+  );
+
+  /** Columns the user may toggle — drives the header column picker. */
+  protected readonly hideableColumns = computed<readonly TableColumn<T>[]>(() =>
+    this.columns().filter((col) => col.hideable),
+  );
+  protected readonly hasColumnPicker = computed(
+    () => this.hideableColumns().length > 0,
+  );
+  /** The trailing utility column hosts the picker button and/or row kebabs. */
+  protected readonly hasUtilityColumn = computed(
+    () => this.hasRowActions() || this.hasColumnPicker(),
+  );
+
+  protected isColumnVisible(col: TableColumn<T>): boolean {
+    return !this.effectiveHiddenKeys().has(col.key);
+  }
+
+  /** The last visible column can't be hidden — an all-hidden grid is useless. */
+  protected isColumnLocked(col: TableColumn<T>): boolean {
+    return this.isColumnVisible(col) && this.visibleColumns().length === 1;
+  }
+
+  protected toggleColumn(col: TableColumn<T>): void {
+    if (this.isColumnLocked(col)) {
+      return;
+    }
+    const next = new Set(this.effectiveHiddenKeys());
+    if (next.has(col.key)) {
+      next.delete(col.key);
+    } else {
+      next.add(col.key);
+    }
+    this.hiddenKeys.set(next);
+  }
 
   /** Client-side filter over the full data set — active when `filterQuery` is
    *  non-empty. Sorting and pagination run on the filtered rows. */
@@ -296,7 +345,7 @@ export class TableComponent<T extends { id: string }> {
     if (this.expandableRows()) {
       count += 1;
     }
-    if (this.hasRowActions()) {
+    if (this.hasUtilityColumn()) {
       count += 1;
     }
 
@@ -308,6 +357,16 @@ export class TableComponent<T extends { id: string }> {
   protected readonly menuRow = signal<T | null>(null);
   private readonly rowMenuPopover =
     viewChild<PopoverComponent>('rowMenuPopover');
+  private readonly columnPickerPopover =
+    viewChild<PopoverComponent>('columnPickerPopover');
+
+  protected readonly columnPickerOpened = computed(
+    () => this.columnPickerPopover()?.opened() ?? false,
+  );
+
+  protected onColumnPickerClick(event: Event): void {
+    this.columnPickerPopover()?.toggle(event.currentTarget as HTMLElement);
+  }
 
   protected onRowMenuClick(row: T, event: Event): void {
     event.stopPropagation();

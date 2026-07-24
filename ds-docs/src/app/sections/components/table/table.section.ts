@@ -336,6 +336,15 @@ export class TableSection {
   protected readonly lastRowClick = signal<string | null>(null);
   protected readonly lastRowAction = signal<string | null>(null);
 
+  protected readonly pickerColumns: TableColumn<EventRow>[] = [
+    { key: 'project', label: 'Record' },
+    { key: 'id', label: 'ID', hideable: true, hidden: true },
+    { key: 'date', label: 'Dates', hideable: true },
+    { key: 'venue', label: 'Venue', hideable: true },
+    { key: 'statusLabel', label: 'Status', hideable: true },
+    { key: 'capacity', label: 'Capacity', align: 'right', hideable: true },
+  ];
+
   protected onRowAction(event: TableRowActionEvent<EventRow>): void {
     this.lastRowAction.set(`${event.action.label} · ${event.row.project}`);
   }

@@ -229,31 +229,6 @@
       width: var(--space-10);
     }
 
-    .expand-btn,
-    .row-actions-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: var(--space-6);
-      height: var(--space-6);
-      padding: 0;
-      border: 0;
-      background: none;
-      cursor: pointer;
-      color: var(--icon-default);
-      border-radius: var(--radius-sm);
-      transition: color var(--duration-fast) var(--ease-standard);
-
-      &:hover {
-        color: var(--icon-strong);
-      }
-
-      &:focus-visible {
-        outline: var(--border-width-strong, 2px) solid var(--accent);
-        outline-offset: var(--focus-ring-offset);
-      }
-    }
-
     .expand-chev {
       display: block;
       transition: transform var(--duration-base) var(--ease-standard);
@@ -282,6 +257,34 @@
     }
   }
 
+  /* Shared icon-button chrome — expand chevron (tbody), row kebab (tbody)
+     and the column-picker trigger (thead). */
+  .expand-btn,
+  .row-actions-btn,
+  .col-picker-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-6);
+    height: var(--space-6);
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    color: var(--icon-default);
+    border-radius: var(--radius-sm);
+    transition: color var(--duration-fast) var(--ease-standard);
+
+    &:hover {
+      color: var(--icon-strong);
+    }
+
+    &:focus-visible {
+      outline: var(--border-width-strong, 2px) solid var(--accent);
+      outline-offset: var(--focus-ring-offset);
+    }
+  }
+
   &.compact {
     tbody td,
     thead th {
@@ -289,6 +292,28 @@
     }
   }
 
+}
+
+/* Column-picker panel — portaled into the popover overlay, styled via the
+   component's emulated-encapsulation attribute (not nested under .table). */
+.col-picker {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 160px;
+}
+
+.col-picker-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  color: var(--text-primary);
+  cursor: pointer;
+
+  &:has(input:disabled) {
+    color: var(--text-tertiary);
+    cursor: default;
+  }
 }
 
 /* Sticky first column — opt-in via `stickyFirstColumn()`. Pinned cells need

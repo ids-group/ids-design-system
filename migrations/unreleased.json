@@ -22,6 +22,7 @@
     "ds-table gains an opt-in rowActions kebab (⋮) column with a rowActionSelected output and new TableRowAction/TableRowActionEvent types — additive, off by default (no rowActions input = no column), no code change.",
     "ds-table gains opt-in activeRowId (current-row highlight + aria-current, --ds-table-row-active-bg-color token) and filterQuery (client-side substring filter; TableColumn.filterable restricts the match set) inputs — additive, off by default, no code change.",
     "TableColumn.width / .truncate / .hidden were declared but ignored — they now take effect (header width px, ellipsis clip at width with title tooltip, column skipped). Consumers who set these fields expecting nothing will see them start working.",
+    "TableColumn.hideable now works too: hideable columns surface a header column-picker button (checkbox popover, last visible column locked); new two-way hiddenKeys model (Set<string> | null, null derives from hidden flags) — additive, no picker unless a column sets hideable.",
     "ds-select/ds-autocomplete/ds-multi-select/ds-time-picker/ds-color-picker/ds-popover overlay panels are now non-modal (no backdrop): the page behind stays interactive, panels close on outside pointer-down or page scroll, button-style triggers toggle, and focus returns to the trigger only for Escape/selection/in-panel closes — behavior only, no code change.",
     "ds-toast enter animation now slides up from below into place (exit unchanged) — visual/motion only, no code change."
   ]

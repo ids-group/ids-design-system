@@ -25,6 +25,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `TableColumn.truncate` (ellipsis-clip at `width`, 240px fallback, full value in the title tooltip;
   text cells only) and `TableColumn.hidden` (column skipped, still filterable/sortable) were declared
   but ignored — they now work.
+- **`ds-table` column picker.** Columns marked `hideable: true` (declared but ignored until now)
+  surface a picker button in the header's trailing cell — a checkbox popover toggles column
+  visibility, with `hidden: true` as the initial state and the last visible column locked so the
+  grid can't go empty. New two-way `hiddenKeys` model (`Set<string> | null`; `null`, the default,
+  derives the set from the `hidden` flags — binding a Set takes over and the flags are ignored).
 
 ### Changed
 

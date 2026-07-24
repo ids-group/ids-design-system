@@ -859,4 +859,23 @@
     Row clicked: {{ lastRowClick() ?? '—' }} · Action:
     {{ lastRowAction() ?? '—' }}
   </p>
+
+  <!-- ============================================================ Column picker -->
+  <h3 class="block-title t-h4">Column picker</h3>
+
+  <p class="block-desc t-s">
+    Columns marked <code class="t-mono-inline"> hideable: true </code> surface
+    a picker button in the header — a checkbox popover toggles their
+    visibility. <code class="t-mono-inline"> hidden: true </code> sets the
+    initial state (here ID starts hidden), the last visible column is locked,
+    and the state is two-way bindable via
+    <code class="t-mono-inline"> [(hiddenKeys)] </code>.
+  </p>
+
+  <ds-table
+    caption="Records"
+    [data]="events"
+    [columns]="pickerColumns"
+    [stickyHeader]="false"
+  />
 </docs-section>

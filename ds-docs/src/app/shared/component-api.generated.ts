@@ -3804,15 +3804,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`."
-      },
-      {
-        "name": "brandAccent",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Leading slice of the wordmark tinted with the mark colour (e.g. \"My\" in \"MyAdmin\"); the remainder renders in the default text colour. Empty (or not a prefix of `brand`) = single-tone wordmark."
       }
     ],
     "outputs": []
@@ -4784,6 +4775,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Client-side row filter — case-insensitive substring match against cell text. Columns with `filterable: true` restrict the match set (none marked — every column matches, hidden ones included). '' — no filtering."
+      },
+      {
+        "name": "hiddenKeys",
+        "kind": "model",
+        "type": "Set<string> | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Two-way set of hidden column keys. `null` (default) derives the set from each column's `hidden` flag; the column picker then owns it. Binding a Set takes over — `hidden` flags are ignored."
       },
       {
         "name": "pageSize",

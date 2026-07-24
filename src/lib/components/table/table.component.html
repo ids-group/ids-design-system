@@ -85,14 +85,30 @@
             </th>
           }
 
-          @if (hasRowActions()) {
+          @if (hasUtilityColumn()) {
             <th
               scope="col"
               class="actions-col"
             >
-              <span class="visually-hidden">
-                Actions
-              </span>
+              @if (hasColumnPicker()) {
+                <button
+                  type="button"
+                  class="col-picker-btn"
+                  aria-haspopup="dialog"
+                  aria-label="Choose columns"
+                  [attr.aria-expanded]="columnPickerOpened()"
+                  (click)="onColumnPickerClick($event)"
+                >
+                  <ds-icon
+                    name="grid"
+                    [size]="14"
+                  />
+                </button>
+              } @else {
+                <span class="visually-hidden">
+                  Actions
+                </span>
+              }
             </th>
           }
         </tr>
@@ -133,7 +149,7 @@
                 </td>
               }
 
-              @if (hasRowActions()) {
+              @if (hasUtilityColumn()) {
                 <td class="actions-col"></td>
               }
             </tr>
@@ -228,23 +244,25 @@
                 </td>
               }
 
-              @if (hasRowActions()) {
+              @if (hasUtilityColumn()) {
                 <td class="actions-col">
-                  <button
-                    type="button"
-                    class="row-actions-btn"
-                    aria-haspopup="menu"
-                    [attr.aria-expanded]="isMenuOpenFor(row)"
-                    [attr.aria-label]="'Actions for ' + rowAriaLabel(row)"
-                    (click)="onRowMenuClick(row, $event)"
-                    (keydown.enter)="$event.stopPropagation()"
-                    (keydown.space)="$event.stopPropagation()"
-                  >
-                    <ds-icon
-                      name="moreV"
-                      [size]="16"
-                    />
-                  </button>
+                  @if (hasRowActions()) {
+                    <button
+                      type="button"
+                      class="row-actions-btn"
+                      aria-haspopup="menu"
+                      [attr.aria-expanded]="isMenuOpenFor(row)"
+                      [attr.aria-label]="'Actions for ' + rowAriaLabel(row)"
+                      (click)="onRowMenuClick(row, $event)"
+                      (keydown.enter)="$event.stopPropagation()"
+                      (keydown.space)="$event.stopPropagation()"
+                    >
+                      <ds-icon
+                        name="moreV"
+                        [size]="16"
+                      />
+                    </button>
+                  }
                 </td>
               }
             </tr>
@@ -280,6 +298,30 @@
       (pageSizeChange)="pageSize.set($event)"
     />
   </div>
+}
+
+@if (hasColumnPicker()) {
+  <ds-popover
+    #columnPickerPopover
+    align="end"
+    panelRole="dialog"
+    panelLabel="Column visibility"
+  >
+    <div class="col-picker">
+      @for (col of hideableColumns(); track col.key) {
+        <label class="col-picker-option">
+          <input
+            type="checkbox"
+            class="check"
+            [checked]="isColumnVisible(col)"
+            [disabled]="isColumnLocked(col)"
+            (change)="toggleColumn(col)"
+          />
+          {{ col.label }}
+        </label>
+      }
+    </div>
+  </ds-popover>
 }
 
 @if (hasRowActions()) {

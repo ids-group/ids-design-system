@@ -14,8 +14,12 @@ export interface TableColumn<T = unknown> {
   width?: number;
   align?: 'left' | 'right' | 'center';
   cell?: (row: T) => string;
+  /** Let the user toggle the column in the header column picker — the picker
+   *  button appears once at least one column is hideable. */
   hideable?: boolean;
-  /** Skip rendering the column. It stays available to `filterable`/sorting. */
+  /** Initial visibility: start hidden. The column picker (or a bound
+   *  `hiddenKeys` set) owns the state from then on; a hidden column stays
+   *  available to `filterable` matching and sorting. */
   hidden?: boolean;
 }
 
