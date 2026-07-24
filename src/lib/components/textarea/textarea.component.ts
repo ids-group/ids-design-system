@@ -15,11 +15,12 @@ import {
   type FieldMessageState,
 } from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
+import { FieldClickFocusDirective } from '../field-click-focus.directive';
 
 @Component({
   selector: 'ds-textarea',
   standalone: true,
-  imports: [FormsModule, FieldMessageComponent],
+  imports: [FormsModule, FieldMessageComponent, FieldClickFocusDirective],
   templateUrl: './textarea.component.html',
   styleUrl: './textarea.component.scss',
   encapsulation: ViewEncapsulation.Emulated,

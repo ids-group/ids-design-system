@@ -10,11 +10,12 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
+import { FieldClickFocusDirective } from '../field-click-focus.directive';
 
 @Component({
   selector: 'ds-search',
   standalone: true,
-  imports: [FormsModule, IconComponent],
+  imports: [FormsModule, IconComponent, FieldClickFocusDirective],
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
   encapsulation: ViewEncapsulation.Emulated,

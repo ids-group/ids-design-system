@@ -62,6 +62,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **`ds-input`, `ds-search` and `ds-textarea` focus the control when the frame chrome is clicked.**
+  Clicking a leading/trailing icon, a prefix/suffix add-on, or the frame padding now focuses the
+  inner `input`/`textarea` instead of doing nothing — the whole field box is a focus target, matching
+  native `<label>` behaviour. Clicks on nested controls (projected buttons, the clear ✕, the password
+  toggle) are left untouched. Driven by the new exported `FieldClickFocusDirective`
+  (`[dsFieldClickFocus]`), which consumers can apply to their own field wrappers. Overlay-trigger
+  fields (`ds-autocomplete`, `ds-date-picker`, `ds-select`, `ds-multi-select`, `ds-color-picker`)
+  already focused on trigger click and are unchanged.
 - **`ds-table` row hover/pressed tints are now exclusive to `rowInteractive` tables.** Passive
   tables no longer tint rows on hover — the tint now honestly signals clickability; interactive rows
   additionally gain a pressed (`:active`) fill via the new `--ds-table-row-pressed-bg-color` token

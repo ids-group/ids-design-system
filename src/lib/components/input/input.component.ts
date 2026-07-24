@@ -17,6 +17,7 @@ import {
   type FieldMessageState,
 } from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
+import { FieldClickFocusDirective } from '../field-click-focus.directive';
 import type { InputSize, InputType } from './input.types';
 
 @Component({
@@ -27,6 +28,7 @@ import type { InputSize, InputType } from './input.types';
     IconComponent,
     SpinnerComponent,
     FieldMessageComponent,
+    FieldClickFocusDirective,
   ],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
