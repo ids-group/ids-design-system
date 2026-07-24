@@ -7,22 +7,31 @@
     [attr.aria-expanded]="searchPop.opened()"
     (click)="searchPop.toggle(searchTrigger)"
   >
-    <ds-icon name="search" [size]="20" />
+    <ds-icon
+      name="search"
+      [size]="20"
+    />
 
-    <span class="label">
-      Search
-    </span>
+    <span class="label"> Search </span>
   </button>
 
-  <ds-popover #searchPop align="start" panelRole="dialog" panelLabel="Search">
+  <ds-popover
+    #searchPop
+    align="start"
+    panelRole="dialog"
+    panelLabel="Search"
+  >
     <div class="search-panel">
       <div class="search-box">
-        <ds-icon name="search" [size]="18" />
+        <ds-icon
+          name="search"
+          [size]="18"
+        />
 
         <input
           #searchInput
           type="text"
-          class="search-in"
+          class="search-input"
           placeholder="Search…"
           autocomplete="off"
           aria-label="Search"
@@ -35,34 +44,44 @@
         @if (query()) {
           <button
             type="button"
-            class="search-clear"
+            class="clear"
             aria-label="Clear"
             (click)="query.set(''); searchInput.focus()"
           >
-            <ds-icon name="x" [size]="16" />
+            <ds-icon
+              name="x"
+              [size]="16"
+            />
           </button>
         }
       </div>
 
       @if (query().trim()) {
         @for (group of searchGroups(provider); track group.group) {
-          <p class="menu-head">
+          <p class="heading">
             {{ group.group }}
           </p>
 
           @for (result of group.items; track result.id) {
-            <button type="button" class="sr-item" (click)="searchPop.close(); goResult(result)">
+            <button
+              type="button"
+              class="result"
+              (click)="searchPop.close(); goResult(result)"
+            >
               @if (result.icon) {
-                <ds-icon [name]="result.icon" [size]="16" />
+                <ds-icon
+                  [name]="result.icon"
+                  [size]="16"
+                />
               }
 
-              <span class="sr-text">
-                <span class="sr-label">
+              <span class="text">
+                <span class="title">
                   {{ result.label }}
                 </span>
 
                 @if (result.sublabel) {
-                  <span class="sr-sub">
+                  <span class="subtitle">
                     {{ result.sublabel }}
                   </span>
                 }
@@ -70,24 +89,24 @@
             </button>
           }
         } @empty {
-          <p class="sr-empty">
-            No matches for “{{ query().trim() }}”.
-          </p>
+          <p class="empty">No matches for “{{ query().trim() }}”.</p>
         }
       } @else {
-        <p class="sr-empty">
-          Type to search.
-        </p>
+        <p class="empty">Type to search.</p>
       }
     </div>
   </ds-popover>
 } @else {
-  <button type="button" class="row">
-    <ds-icon name="search" [size]="20" />
+  <button
+    type="button"
+    class="row"
+  >
+    <ds-icon
+      name="search"
+      [size]="20"
+    />
 
-    <span class="label">
-      Search
-    </span>
+    <span class="label"> Search </span>
   </button>
 }
 
@@ -100,81 +119,108 @@
     [attr.aria-expanded]="alertsPop.opened()"
     (click)="alertsPop.toggle(alertTrigger); alertsOpened.emit()"
   >
-    <ds-icon name="bell" [size]="20" />
+    <ds-icon
+      name="bell"
+      [size]="20"
+    />
 
-    <span class="label">
-      Alerts
-    </span>
+    <span class="label"> Alerts </span>
 
     @if (alerts()) {
-      <span class="dot" aria-hidden="true"></span>
+      <span
+        class="dot"
+        aria-hidden="true"
+      ></span>
     }
   </button>
 
-  <ds-popover #alertsPop align="start" panelRole="dialog" panelLabel="Alerts">
+  <ds-popover
+    #alertsPop
+    align="start"
+    panelRole="dialog"
+    panelLabel="Alerts"
+  >
     <div class="alerts-panel">
-      <p class="menu-head">
-        Alerts
-      </p>
+      <p class="heading">Alerts</p>
 
       @for (alert of items; track alert.id) {
-        <button type="button" class="alert-item" (click)="alertsPop.close(); goAlert(alert)">
-          <span class="ai-icon ai-{{ alert.variant }}">
-            <ds-icon [name]="alert.icon" [size]="16" />
+        <button
+          type="button"
+          class="alert"
+          (click)="alertsPop.close(); goAlert(alert)"
+        >
+          <span class="icon {{ alert.variant }}">
+            <ds-icon
+              [name]="alert.icon"
+              [size]="16"
+            />
           </span>
 
-          <span class="ai-text">
-            <span class="ai-top">
-              <span class="ai-title">
+          <span class="text">
+            <span class="header">
+              <span class="title">
                 {{ alert.title }}
               </span>
 
               @if (alert.at) {
-                <span class="ai-at">
+                <span class="time">
                   {{ alert.at }}
                 </span>
               }
             </span>
 
-            <span class="ai-body">
+            <span class="body">
               {{ alert.body }}
             </span>
           </span>
         </button>
       } @empty {
-        <p class="sr-empty">
-          You’re all caught up.
-        </p>
+        <p class="empty">You’re all caught up.</p>
       }
     </div>
   </ds-popover>
 } @else {
-  <button type="button" class="row">
-    <ds-icon name="bell" [size]="20" />
+  <button
+    type="button"
+    class="row"
+  >
+    <ds-icon
+      name="bell"
+      [size]="20"
+    />
 
-    <span class="label">
-      Alerts
-    </span>
+    <span class="label"> Alerts </span>
 
     @if (alerts()) {
-      <span class="dot" aria-hidden="true"></span>
+      <span
+        class="dot"
+        aria-hidden="true"
+      ></span>
     }
   </button>
 }
 
-<button type="button" class="row" (click)="collapseToggled.emit()">
-  <ds-icon [name]="collapsed() ? 'chevronRight' : 'chevronLeft'" [size]="20" />
+<button
+  type="button"
+  class="row"
+  (click)="collapseToggled.emit()"
+>
+  <ds-icon
+    [name]="collapsed() ? 'chevronRight' : 'chevronLeft'"
+    [size]="20"
+  />
 
-  <span class="label">
-    Collapse
-  </span>
+  <span class="label"> Collapse </span>
 </button>
 
 @if (userName()) {
   <div class="divider"></div>
 
   <div class="profile">
-    <ds-avatar size="sm" [initials]="initials()" />
+    <ds-avatar
+      size="sm"
+      [initials]="initials()"
+    />
 
     <span class="profile-text">
       <span class="name">
@@ -196,30 +242,39 @@
       [attr.aria-expanded]="accountPop.opened()"
       (click)="accountPop.toggle(accountTrigger)"
     >
-      <ds-icon name="moreV" [size]="18" />
+      <ds-icon
+        name="moreV"
+        [size]="18"
+      />
     </button>
 
-    <ds-popover #accountPop align="end" panelRole="menu" panelLabel="Account">
+    <ds-popover
+      #accountPop
+      align="end"
+      panelRole="menu"
+      panelLabel="Account"
+    >
       <ds-menu>
-        <p class="menu-head">
-          Signed in as {{ userName() }}
-        </p>
+        <p class="heading">Signed in as {{ userName() }}</p>
 
-        <ds-menu-item icon="user" (pressed)="goProfile()">
+        <ds-menu-item
+          icon="user"
+          (pressed)="goProfile()"
+        >
           Your profile
         </ds-menu-item>
 
-        <ds-menu-item icon="settings">
-          Account settings
-        </ds-menu-item>
+        <ds-menu-item icon="settings"> Account settings </ds-menu-item>
 
-        <ds-menu-item icon="help">
-          Help &amp; support
-        </ds-menu-item>
+        <ds-menu-item icon="help"> Help &amp; support </ds-menu-item>
 
-        <div class="menu-sep"></div>
+        <div class="separator"></div>
 
-        <ds-menu-item icon="logout" [error]="true" (pressed)="signOutSelected.emit()">
+        <ds-menu-item
+          icon="logout"
+          [error]="true"
+          (pressed)="signOutSelected.emit()"
+        >
           Sign out
         </ds-menu-item>
       </ds-menu>
