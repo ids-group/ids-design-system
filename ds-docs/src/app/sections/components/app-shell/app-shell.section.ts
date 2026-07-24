@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import {
   AppShellComponent,
+  BrandNameDirective,
   SidenavComponent,
   SidenavFooterComponent,
   SidenavItemComponent,
@@ -20,6 +21,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   standalone: true,
   imports: [
     AppShellComponent,
+    BrandNameDirective,
     SidenavComponent,
     SidenavFooterComponent,
     SidenavItemComponent,

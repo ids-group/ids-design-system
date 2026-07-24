@@ -50,3 +50,11 @@
 
     /* Consumer hides its own wordmark when the rail collapses, keeps the mark. */
     ds-sidenav.collapsed .brand-logo__name { display: none; }
+
+    /* Two-tone dsBrandName wordmark: flex swallows the inter-span whitespace so
+       "My" + "Admin" stay glued; the accent matches the mark tile (--accent). */
+    .wordmark {
+      display: inline-flex;
+
+      .accent { color: var(--accent); }
+    }

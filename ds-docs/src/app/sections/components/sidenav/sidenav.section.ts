@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import {
+  BrandNameDirective,
   SidenavComponent,
   SidenavGroupComponent,
   SidenavItemComponent,
@@ -14,6 +15,7 @@ import {
   selector: 'section-components-sidenav',
   standalone: true,
   imports: [
+    BrandNameDirective,
     SidenavComponent,
     SidenavGroupComponent,
     SidenavItemComponent,
@@ -22,10 +24,7 @@ import {
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './sidenav.section.html',
-  styleUrls: [
-    '../../../shared/section-demo.scss',
-    './sidenav.section.scss',
-  ],
+  styleUrls: ['../../../shared/section-demo.scss', './sidenav.section.scss'],
 })
 export class SidenavSection {
   protected readonly truncationRules: TruncationRule[] = [
