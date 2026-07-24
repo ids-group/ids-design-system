@@ -338,19 +338,85 @@
     panelRole="dialog"
     panelLabel="Column visibility"
   >
-    <div class="col-picker">
-      @for (col of hideableColumns(); track col.key) {
-        <label class="col-picker-option">
-          <input
-            type="checkbox"
-            class="check"
-            [checked]="isColumnVisible(col)"
-            [disabled]="isColumnLocked(col)"
-            (change)="toggleColumn(col)"
-          />
-          {{ col.label }}
-        </label>
+    <div
+      class="col-picker"
+      cdkDropList
+      (cdkDropListDropped)="onColumnDrop($event)"
+    >
+      @for (
+        col of orderedColumns();
+        track col.key;
+        let first = $first;
+        let last = $last
+      ) {
+        <div
+          class="col-picker-row"
+          cdkDrag
+          [cdkDragDisabled]="!reorderableColumns()"
+        >
+          @if (reorderableColumns()) {
+            <span
+              class="col-drag"
+              cdkDragHandle
+              aria-hidden="true"
+            >
+              <ds-icon
+                name="drag"
+                [size]="14"
+              />
+            </span>
+          }
+
+          <label class="col-picker-option">
+            <input
+              type="checkbox"
+              class="check"
+              [checked]="isColumnVisible(col)"
+              [disabled]="!col.hideable || isColumnLocked(col)"
+              (change)="toggleColumn(col)"
+            />
+            {{ col.label }}
+          </label>
+
+          @if (reorderableColumns()) {
+            <span class="col-move">
+              <button
+                type="button"
+                class="col-move-btn"
+                aria-label="Move up"
+                [disabled]="first"
+                (click)="moveColumn(col, -1)"
+              >
+                <ds-icon
+                  name="chevronUp"
+                  [size]="14"
+                />
+              </button>
+
+              <button
+                type="button"
+                class="col-move-btn"
+                aria-label="Move down"
+                [disabled]="last"
+                (click)="moveColumn(col, 1)"
+              >
+                <ds-icon
+                  name="chevronDown"
+                  [size]="14"
+                />
+              </button>
+            </span>
+          }
+        </div>
       }
+
+      <button
+        type="button"
+        class="col-reset"
+        (click)="resetColumns()"
+      >
+        Reset to default
+      </button>
     </div>
   </ds-popover>
 }

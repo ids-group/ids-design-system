@@ -30,6 +30,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   visibility, with `hidden: true` as the initial state and the last visible column locked so the
   grid can't go empty. New two-way `hiddenKeys` model (`Set<string> | null`; `null`, the default,
   derives the set from the `hidden` flags — binding a Set takes over and the flags are ignored).
+- **`ds-table` column reordering.** New opt-in `reorderableColumns` input adds a drag handle and
+  up/down buttons to each row of the column panel (which now lists every column, not just hideable
+  ones); the order is two-way bindable via the new `columnOrder` model (`string[] | null`, `null` =
+  declaration order), and the panel's `Reset to default` clears both order and visibility. The
+  panel surfaces whenever any column is `hideable` **or** `reorderableColumns` is set.
 - **`ds-table` CSV export.** New public `exportCsv(filename?)` method downloads the visible columns
   of the filtered + sorted rows (all rows, not just the current page) as a UTF-8 CSV — wire it to a
   consumer toolbar button via a template reference.

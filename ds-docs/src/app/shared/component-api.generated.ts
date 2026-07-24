@@ -4816,6 +4816,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Two-way set of hidden column keys. `null` (default) derives the set from each column's `hidden` flag; the column picker then owns it. Binding a Set takes over — `hidden` flags are ignored."
       },
       {
+        "name": "reorderableColumns",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Enables drag + up/down reordering in the column panel."
+      },
+      {
+        "name": "columnOrder",
+        "kind": "model",
+        "type": "string[] | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Two-way column order as a list of keys. `null` (default) keeps declaration order; the column panel owns it once the user reorders. Keys absent from the list fall back to declaration order after the listed ones."
+      },
+      {
         "name": "stickyScrollbar",
         "kind": "input",
         "type": "boolean",

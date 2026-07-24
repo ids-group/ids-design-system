@@ -719,22 +719,27 @@
     {{ lastRowAction() ?? '—' }}
   </p>
 
-  <!-- ============================================================ Column picker -->
-  <h3 class="block-title t-h4">Column picker</h3>
+  <!-- ============================================================ Column picker · reorder -->
+  <h3 class="block-title t-h4">Column picker · reorder</h3>
 
   <p class="block-desc t-s">
-    Columns marked <code class="t-mono-inline"> hideable: true </code> surface
-    a picker button in the header — a checkbox popover toggles their
-    visibility. <code class="t-mono-inline"> hidden: true </code> sets the
-    initial state (here ID starts hidden), the last visible column is locked,
-    and the state is two-way bindable via
-    <code class="t-mono-inline"> [(hiddenKeys)] </code>.
+    The header <code class="t-mono-inline"> Columns </code> button opens a panel
+    that toggles visibility for
+    <code class="t-mono-inline"> hideable: true </code> columns (two-way
+    <code class="t-mono-inline"> [(hiddenKeys)] </code>;
+    <code class="t-mono-inline"> hidden: true </code> is the initial state, the
+    last visible column is locked). With
+    <code class="t-mono-inline"> [reorderableColumns]="true" </code> each row
+    gains a drag handle and up/down buttons — order is two-way bindable via
+    <code class="t-mono-inline"> [(columnOrder)] </code>, and
+    <code class="t-mono-inline"> Reset to default </code> clears both.
   </p>
 
   <ds-table
     caption="Records"
     [data]="events"
     [columns]="pickerColumns"
+    [reorderableColumns]="true"
     [stickyHeader]="false"
   />
 

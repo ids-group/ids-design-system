@@ -14,6 +14,13 @@ import {
   viewChild,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragHandle,
+  CdkDropList,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { IconComponent } from '../../icons/icon.component';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { PaginationComponent } from '../pagination/pagination.component';
@@ -44,6 +51,9 @@ const NUMERIC = /^-?\d+(\.\d+)?$/;
     PopoverComponent,
     MenuComponent,
     MenuItemComponent,
+    CdkDropList,
+    CdkDrag,
+    CdkDragHandle,
   ],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
@@ -114,6 +124,13 @@ export class TableComponent<T extends { id: string }> {
    *  each column's `hidden` flag; the column picker then owns it. Binding a
    *  Set takes over — `hidden` flags are ignored. */
   readonly hiddenKeys = model<Set<string> | null>(null);
+
+  /** Enables drag + up/down reordering in the column panel. */
+  readonly reorderableColumns = input(false, { transform: booleanAttribute });
+  /** Two-way column order as a list of keys. `null` (default) keeps declaration
+   *  order; the column panel owns it once the user reorders. Keys absent from
+   *  the list fall back to declaration order after the listed ones. */
+  readonly columnOrder = model<string[] | null>(null);
 
   /** Keeps the horizontal scrollbar reachable on tall tables: the scroll
    *  container's native bar is hidden and a proxy stuck to the bottom of the
@@ -229,9 +246,38 @@ export class TableComponent<T extends { id: string }> {
       ),
   );
 
-  /** Columns actually rendered — hidden ones (flag or picker) are skipped. */
+  /** Columns in the user-controlled order — `columnOrder` first (dropping
+   *  unknown keys), then any declared column the order omitted. */
+  protected readonly orderedColumns = computed<readonly TableColumn<T>[]>(() => {
+    const order = this.columnOrder();
+    const columns = this.columns();
+    if (!order) {
+      return columns;
+    }
+    const byKey = new Map(columns.map((col) => [col.key, col]));
+    const placed = new Set<string>();
+    const out: TableColumn<T>[] = [];
+    for (const key of order) {
+      const col = byKey.get(key);
+      if (col && !placed.has(key)) {
+        out.push(col);
+        placed.add(key);
+      }
+    }
+    for (const col of columns) {
+      if (!placed.has(col.key)) {
+        out.push(col);
+      }
+    }
+
+    return out;
+  });
+
+  /** Columns actually rendered — reordered, then hidden ones skipped. */
   protected readonly visibleColumns = computed<readonly TableColumn<T>[]>(() =>
-    this.columns().filter((col) => !this.effectiveHiddenKeys().has(col.key)),
+    this.orderedColumns().filter(
+      (col) => !this.effectiveHiddenKeys().has(col.key),
+    ),
   );
 
   /** Columns the user may toggle — drives the header column picker. */
@@ -239,7 +285,7 @@ export class TableComponent<T extends { id: string }> {
     this.columns().filter((col) => col.hideable),
   );
   protected readonly hasColumnPicker = computed(
-    () => this.hideableColumns().length > 0,
+    () => this.hideableColumns().length > 0 || this.reorderableColumns(),
   );
   /** The trailing utility column hosts the picker button and/or row kebabs. */
   protected readonly hasUtilityColumn = computed(
@@ -256,7 +302,7 @@ export class TableComponent<T extends { id: string }> {
   }
 
   protected toggleColumn(col: TableColumn<T>): void {
-    if (this.isColumnLocked(col)) {
+    if (!col.hideable || this.isColumnLocked(col)) {
       return;
     }
     const next = new Set(this.effectiveHiddenKeys());
@@ -266,6 +312,28 @@ export class TableComponent<T extends { id: string }> {
       next.add(col.key);
     }
     this.hiddenKeys.set(next);
+  }
+
+  protected moveColumn(col: TableColumn<T>, delta: -1 | 1): void {
+    const keys = this.orderedColumns().map((column) => column.key);
+    const from = keys.indexOf(col.key);
+    const to = from + delta;
+    if (from < 0 || to < 0 || to >= keys.length) {
+      return;
+    }
+    moveItemInArray(keys, from, to);
+    this.columnOrder.set(keys);
+  }
+
+  protected onColumnDrop(event: CdkDragDrop<unknown>): void {
+    const keys = this.orderedColumns().map((column) => column.key);
+    moveItemInArray(keys, event.previousIndex, event.currentIndex);
+    this.columnOrder.set(keys);
+  }
+
+  protected resetColumns(): void {
+    this.columnOrder.set(null);
+    this.hiddenKeys.set(null);
   }
 
   /** Client-side filter over the full data set — active when `filterQuery` is
