@@ -90,6 +90,22 @@
                 </span>
               }
 
+              @if (hasColumnFilter(col)) {
+                <button
+                  type="button"
+                  class="col-filter-btn"
+                  aria-haspopup="dialog"
+                  [class.active]="isColumnFiltered(col)"
+                  [attr.aria-label]="'Filter ' + col.label"
+                  (click)="onColumnFilterClick(col, $event)"
+                >
+                  <ds-icon
+                    name="filter"
+                    [size]="12"
+                  />
+                </button>
+              }
+
               @if (resizableColumns()) {
                 <span
                   class="col-resize"
@@ -341,6 +357,56 @@
   <ds-popover #cellTextPopover>
     <div class="cell-text-pop">
       {{ cellPopoverText() }}
+    </div>
+  </ds-popover>
+}
+
+@if (filterColumn()) {
+  <ds-popover
+    #columnFilterPopover
+    align="start"
+    panelRole="dialog"
+    panelLabel="Filter values"
+  >
+    <div class="col-filter">
+      <input
+        type="text"
+        class="col-filter-search"
+        placeholder="Search…"
+        [value]="filterSearch()"
+        (input)="onFilterSearch($event)"
+        (click)="$event.stopPropagation()"
+      />
+
+      <div class="col-filter-list">
+        @for (value of filterValues(); track value) {
+          <label class="col-filter-option">
+            <input
+              type="checkbox"
+              class="check"
+              [checked]="isFilterValueChecked(value)"
+              (change)="toggleFilterValue(value)"
+            />
+            {{ value || '(empty)' }}
+          </label>
+        } @empty {
+          <div class="col-filter-empty">No matches</div>
+        }
+      </div>
+
+      <div class="col-filter-footer">
+        <span class="col-filter-count">
+          {{ filterSelectedCount() }} selected
+        </span>
+
+        <button
+          type="button"
+          class="col-reset"
+          (click)="clearColumnFilter()"
+        >
+          Clear
+        </button>
+      </div>
     </div>
   </ds-popover>
 }

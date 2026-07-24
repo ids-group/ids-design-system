@@ -30,6 +30,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   visibility, with `hidden: true` as the initial state and the last visible column locked so the
   grid can't go empty. New two-way `hiddenKeys` model (`Set<string> | null`; `null`, the default,
   derives the set from the `hidden` flags — binding a Set takes over and the flags are ignored).
+- **`ds-table` per-column set filters.** A column marked `filter: 'set'` gets a header funnel
+  button opening a searchable checkbox list of that column's distinct values; unchecking narrows the
+  rows and the funnel highlights while a filter is active. State is two-way bindable via the new
+  `columnFilters` model (`Map<key, Set<value>>` — the still-checked values; a column absent or fully
+  checked reads as unfiltered) and combines with `filterQuery`.
 - **`ds-table` column resizing.** New opt-in `resizableColumns` input adds a drag handle to each
   column header's right edge; widths are two-way bindable via the new `columnWidths` model
   (`Map<key, px>`), seeded from `column.width`. The header clips its label so a narrowed column

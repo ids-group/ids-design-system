@@ -215,6 +215,13 @@ export class TableSection {
   protected readonly stateSelectedIds = signal(new Set([this.events[0].id]));
   protected readonly sortableRows: readonly EventRow[] = this.events.slice(0, 4);
 
+  protected readonly filterColumns: TableColumn<EventRow>[] = [
+    { key: 'project', label: 'Record' },
+    { key: 'venue', label: 'Venue', filter: 'set' },
+    { key: 'statusLabel', label: 'Status', filter: 'set' },
+    { key: 'capacity', label: 'Capacity', align: 'right' },
+  ];
+
   protected readonly projectColumns: TableColumn<ProjectRow>[] = [
     { key: 'project', label: 'Project', sortable: true },
     { key: 'owner', label: 'Owner' },

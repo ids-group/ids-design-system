@@ -792,6 +792,34 @@
     </ng-template>
   </ds-table>
 
+  <!-- ============================================================ Column filters -->
+  <h3 class="block-title t-h4">Column filters</h3>
+
+  <p class="block-desc t-s">
+    A column marked <code class="t-mono-inline"> filter: 'set' </code> gets a
+    funnel button in its header — a searchable checkbox list of the column's
+    distinct values (here Venue and Status). Unchecking narrows the rows; the
+    funnel highlights while a filter is active. State is two-way bindable via
+    <code class="t-mono-inline"> [(columnFilters)] </code> and combines with
+    <code class="t-mono-inline"> [filterQuery] </code>.
+  </p>
+
+  <ds-table
+    caption="Records"
+    [data]="events"
+    [columns]="filterColumns"
+    [stickyHeader]="false"
+  >
+    <ng-template
+      let-row
+      dsCellTemplate="project"
+    >
+      <span class="t-s-bold">
+        {{ asEvent(row).project }}
+      </span>
+    </ng-template>
+  </ds-table>
+
   <!-- ============================================================ Truncation · popover -->
   <h3 class="block-title t-h4">Truncation · full-text popover</h3>
 

@@ -7,6 +7,9 @@ export interface TableColumn<T = unknown> {
   /** Include the column in `filterQuery` matching. When no column is marked,
    *  every column matches. Works on `hidden` columns too. */
   filterable?: boolean;
+  /** Adds a header filter menu. `'set'` lists the column's distinct values as
+   *  a searchable checkbox list; a row passes when its value stays checked. */
+  filter?: 'set';
   /** Ellipsis-clip long cell text at `width` (240px when unset) — full value
    *  in the title tooltip, and clicking a clipped cell opens it in a popover.
    *  Text cells only — template cells own their overflow. */

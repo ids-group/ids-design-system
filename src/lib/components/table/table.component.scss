@@ -452,6 +452,91 @@
   }
 }
 
+/* Header filter (funnel) button + its popover (opt-in `column.filter: 'set'`). */
+.col-filter-btn {
+  display: inline-flex;
+  margin-left: var(--space-1);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--icon-default);
+  opacity: 0.5;
+  cursor: pointer;
+  vertical-align: middle;
+  transition: color var(--duration-fast) var(--ease-standard), opacity var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    opacity: 1;
+    color: var(--icon-strong);
+  }
+
+  &.active {
+    opacity: 1;
+    color: var(--_table-sort-active-icon-color);
+  }
+}
+
+.col-filter {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 180px;
+}
+
+.col-filter-search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-1) var(--space-2);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-sm);
+  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  color: var(--text-primary);
+  background-color: var(--surface-default);
+
+  &:focus-visible {
+    outline: 0;
+    border-color: var(--accent);
+  }
+}
+
+.col-filter-list {
+  display: grid;
+  gap: var(--space-1);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.col-filter-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.col-filter-empty {
+  color: var(--text-tertiary);
+  font-size: var(--font-size-s);
+  padding: var(--space-1) 0;
+}
+
+.col-filter-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-1);
+  border-top: var(--border-width-default) solid var(--border-divider);
+}
+
+.col-filter-count {
+  color: var(--text-tertiary);
+  font-size: var(--font-size-xs);
+}
+
+.col-filter-footer .col-reset {
+  margin-top: 0;
+}
+
 /* Full value of a clipped `truncate` cell — also portaled into a popover. */
 .cell-text-pop {
   max-width: 360px;

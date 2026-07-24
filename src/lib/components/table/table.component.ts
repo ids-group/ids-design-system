@@ -120,6 +120,9 @@ export class TableComponent<T extends { id: string }> {
    *  text. Columns with `filterable: true` restrict the match set (none
    *  marked — every column matches, hidden ones included). '' — no filtering. */
   readonly filterQuery = input<string>('');
+  /** Two-way per-column set-filters: column key → the still-checked values.
+   *  A column absent from the map (or with every value checked) is unfiltered. */
+  readonly columnFilters = model<Map<string, ReadonlySet<string>>>(new Map());
 
   /** Two-way set of hidden column keys. `null` (default) derives the set from
    *  each column's `hidden` flag; the column picker then owns it. Binding a
@@ -343,6 +346,110 @@ export class TableComponent<T extends { id: string }> {
     this.columnWidths.set(new Map());
   }
 
+  // ---- Per-column set filter ----
+  private readonly columnFilterPopover =
+    viewChild<PopoverComponent>('columnFilterPopover');
+  /** The column whose filter menu is open — drives the distinct-value list. */
+  protected readonly filterColumn = signal<TableColumn<T> | null>(null);
+  protected readonly filterSearch = signal('');
+
+  protected hasColumnFilter(col: TableColumn<T>): boolean {
+    return col.filter === 'set';
+  }
+
+  /** A column is "actively filtered" when at least one of its values is unchecked. */
+  protected isColumnFiltered(col: TableColumn<T>): boolean {
+    const allowed = this.columnFilters().get(col.key);
+
+    return !!allowed && allowed.size < this.distinctValuesOf(col).length;
+  }
+
+  private distinctValuesOf(col: TableColumn<T>): string[] {
+    const seen = new Set<string>();
+    for (const row of this.data()) {
+      seen.add(this.cellValue(row, col));
+    }
+
+    return [...seen].sort((a, b) => a.localeCompare(b));
+  }
+
+  /** Distinct values of the open column, narrowed by the popover search box. */
+  protected readonly filterValues = computed<string[]>(() => {
+    const col = this.filterColumn();
+    if (!col) {
+      return [];
+    }
+    const needle = this.filterSearch().trim().toLowerCase();
+    const values = this.distinctValuesOf(col);
+
+    return needle
+      ? values.filter((value) => value.toLowerCase().includes(needle))
+      : values;
+  });
+
+  protected readonly filterSelectedCount = computed<number>(() => {
+    const col = this.filterColumn();
+    if (!col) {
+      return 0;
+    }
+    const allowed = this.columnFilters().get(col.key);
+
+    return allowed ? allowed.size : this.distinctValuesOf(col).length;
+  });
+
+  protected isFilterValueChecked(value: string): boolean {
+    const col = this.filterColumn();
+    if (!col) {
+      return false;
+    }
+    const allowed = this.columnFilters().get(col.key);
+
+    return !allowed || allowed.has(value);
+  }
+
+  protected onColumnFilterClick(col: TableColumn<T>, event: Event): void {
+    event.stopPropagation();
+    this.filterColumn.set(col);
+    this.filterSearch.set('');
+    this.columnFilterPopover()?.toggle(event.currentTarget as HTMLElement);
+  }
+
+  protected onFilterSearch(event: Event): void {
+    this.filterSearch.set((event.target as HTMLInputElement).value);
+  }
+
+  protected toggleFilterValue(value: string): void {
+    const col = this.filterColumn();
+    if (!col) {
+      return;
+    }
+    const distinct = this.distinctValuesOf(col);
+    const current = new Set(this.columnFilters().get(col.key) ?? distinct);
+    if (current.has(value)) {
+      current.delete(value);
+    } else {
+      current.add(value);
+    }
+    const next = new Map(this.columnFilters());
+    // Every value checked again → drop the entry so the column reads unfiltered.
+    if (current.size >= distinct.length) {
+      next.delete(col.key);
+    } else {
+      next.set(col.key, current);
+    }
+    this.columnFilters.set(next);
+  }
+
+  protected clearColumnFilter(): void {
+    const col = this.filterColumn();
+    if (!col) {
+      return;
+    }
+    const next = new Map(this.columnFilters());
+    next.delete(col.key);
+    this.columnFilters.set(next);
+  }
+
   private static readonly MIN_COLUMN_WIDTH = 48;
   private resizeState: { key: string; startX: number; startWidth: number } | null =
     null;
@@ -384,22 +491,42 @@ export class TableComponent<T extends { id: string }> {
     this.resizeState = null;
   }
 
-  /** Client-side filter over the full data set — active when `filterQuery` is
-   *  non-empty. Sorting and pagination run on the filtered rows. */
+  /** Client-side filter over the full data set — combines the `filterQuery`
+   *  substring search with any per-column set filters. Sorting and pagination
+   *  run on the filtered rows. */
   protected readonly filteredData = computed<readonly T[]>(() => {
     const query = this.filterQuery().trim().toLowerCase();
-    if (!query) {
+    const setFilters = this.columnFilters();
+    const columns = this.columns();
+    if (!query && setFilters.size === 0) {
       return this.data();
     }
-    const columns = this.columns();
     const marked = columns.filter((col) => col.filterable);
     const scope = marked.length ? marked : columns;
+    const activeSetFilters = [...setFilters]
+      .map(([key, allowed]) => ({
+        col: columns.find((col) => col.key === key),
+        allowed,
+      }))
+      .filter(
+        (entry): entry is { col: TableColumn<T>; allowed: ReadonlySet<string> } =>
+          !!entry.col,
+      );
 
-    return this.data().filter((row) =>
-      scope.some((col) =>
-        this.cellValue(row, col).toLowerCase().includes(query),
-      ),
-    );
+    return this.data().filter((row) => {
+      if (
+        query &&
+        !scope.some((col) =>
+          this.cellValue(row, col).toLowerCase().includes(query),
+        )
+      ) {
+        return false;
+      }
+
+      return activeSetFilters.every(({ col, allowed }) =>
+        allowed.has(this.cellValue(row, col)),
+      );
+    });
   });
 
   /** Client-side sort over the filtered data set — only when `clientSort()`. */

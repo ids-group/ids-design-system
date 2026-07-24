@@ -4807,6 +4807,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Client-side row filter — case-insensitive substring match against cell text. Columns with `filterable: true` restrict the match set (none marked — every column matches, hidden ones included). '' — no filtering."
       },
       {
+        "name": "columnFilters",
+        "kind": "model",
+        "type": "Map<string, ReadonlySet<string>>",
+        "union": null,
+        "default": "new Map()",
+        "required": false,
+        "description": "Two-way per-column set-filters: column key → the still-checked values. A column absent from the map (or with every value checked) is unfiltered."
+      },
+      {
         "name": "hiddenKeys",
         "kind": "model",
         "type": "Set<string> | null",
