@@ -1,0 +1,70 @@
+# design-sync notes — @ids-group-ltd/ids-design-system
+
+- **Target project:** "IDS Design System" (455f9a87-1a6e-4b1d-a0e7-cf47ed772e63), created 2026-07-24. First sync ran the incremental path (project created empty this run).
+- **Package manager: bun** (`bun install --frozen-lockfile`). Both `bun.lock` and `package-lock.json` exist; bun is authoritative — CI (`infrastructure/scripts/_setup.sh`) uses bun because `npm ci` fails under alpine/musl on `@emnapi/*` optional deps. Node 22 in CI.
+- **No Storybook.** Zero `*.stories.*` files on `main` (stories existed only on the stale `a11y` branch). Package shape. The `ds-docs` Angular app (`ng serve ds-docs --port 4300` / `bun run build:docs`) is the repo's own showcase.
+- **Visual reference:** `c:\Documents\proposals\CompanyKnwoledgeBase\ids-ds-snapshot\` — a prerendered `ds-docs` build snapshot (2026-07-24, same-day as the synced commit). ~59 component pages, tokens CSS (`styles-KQKWN7OR.css`), fonts in `media/`. Component CSS in the snapshot pages is inlined per page and Angular-scoped (`_ngcontent-*`); the unscoped truth is `src/lib/**/*.scss`.
+- **Angular 21 library (ng-packagr)** — outside the React/esbuild converter envelope. The JS layer for Claude Design is authored React bindings that emit the DS's real markup/classes over the real compiled CSS; per-component truth lives in `src/lib/components/<name>/<name>.component.html|scss|ts` + `*.types.ts`.
+- Repo has its own extraction tooling worth reusing: `tools/extract-tokens.mjs`, `tools/extract-component-api.mjs` (both run via `bun run extract-docs`).
+- User history: originally asked to sync from the stale snapshot dir name (`ids-ds-snaphshot`); after a `git pull` redirected to the Angular repo as primary source (2026-07-24). 66 component dirs in `src/lib/components/` on main @ v0.6.2.
+
+## Architecture of this sync (first run, 2026-07-24)
+- **React binding layer** at `.design-sync/react-bindings/` (durable, committed): thin React components rendering the exact Angular template markup/classes, host tags included (`ds-button` etc. as real custom elements). Built by `.design-sync/tools/build-bindings.mjs` (esbuild bundle + tsc declarations; regenerates `src/lib/icons.gen.ts` from the repo's icons.data.ts).
+- **CSS** built by `.design-sync/tools/build-css.mjs`: compiles `ds.scss` (global layer, verbatim) + every `*.component.scss` re-scoped from Angular emulated encapsulation onto the `ds-*` host tag (`:host`→tag, `:host-context(X)`→`X tag`, `::ng-deep`→descendant pass-through, everything else descendant-prefixed). Output `.design-sync/react-bindings/dist/ds-all.css` + fonts copied next to it. Inline-styles components handled: accordion, tab (single-quoted string), icon (ViewEncapsulation.None → unscoped).
+- **No portals** in bindings: overlay/panel content renders inline inside the host tag (re-scoped CSS only matches host descendants). Previews show open states inline.
+- Converter runs with `--node-modules .ds-sync/node_modules` (react 18.3.1 installed there); entry = `react-bindings/dist/index.js` (cwd-relative in config); cssEntry/docsDir package-relative to react-bindings/.
+- `cfg.docsDir ../docs` = `.design-sync/docs/` — one .md per component, frontmatter `category:` = the ds-docs nav group (Actions, Forms & inputs, Navigation, Data display, Feedback & status, Overlays, Page structure, Layout).
+- **Playwright pin**: cached chromium build is 1223 → playwright(-core) 1.60.0 in `.ds-sync` (1.61 pins 1228 and fails to launch).
+- Package manager quirk: `bun install` does NOT install `@fontsource/*` (peer deps) — irrelevant; fonts are self-hosted at `src/lib/styles/fonts/` and referenced by `_fonts.scss`.
+
+## Binding conventions (folded from Wave 1 learnings)
+- **Uncontrolled seeding**: every stateful binding accepts its state prop WITHOUT the matching `on*Change` to seed internal state (SplitButton `open`, Segmented `value`, ToggleButton `pressed`, Input `value`) — this is how previews render static states. Passing the callback switches to fully-controlled.
+- CVA plumbing (formDisabled/markTouched) is deliberately NOT ported — `disabled` prop only, everywhere.
+- React <19 sets `on*` props on custom elements as properties, not listeners — event handlers go on inner real elements (e.g. RadioGroup's keydown on `.radios` div), except simple onClick on hosts (Tag) which works via React's delegation.
+- `input.indeterminate` is a DOM property → ref + useEffect (Checkbox).
+- Slots that collapse via CSS `:empty` must render the element with NO whitespace children when unset (Alert/Banner actions).
+- `lib/Icon.tsx` takes `className`/`style` applied to the `ds-icon` host (Angular templates put scoped classes there). Older W1 workarounds (wrapper spans in Alert/Banner, cloneElement) still render correctly.
+- Textarea `autosize` is pure CSS (`field-sizing: content`) — no JS port needed; freezes to rows-based in Firefox/Safari.
+- Icon key names in icons.gen.ts are mixed camelCase/kebab (`chevronDown` vs `'eye-off'`) — always copy from the file.
+- IconButton renders `variant`/`size` class parts unconditionally (unlike Button which omits defaults) — per the Angular sources.
+- Search is flat standalone markup, NOT an Input composition.
+
+## Preview conventions (folded from Wave 1 learnings)
+- Keep a story's natural height under ~650px (default 900×700 story viewport) or request a viewport override.
+- Glue text inherits `--font-sans` from the bundle's `html, body` rule; the bundle also ships docs typography utilities (`.t-overline`, `.t-h5`, `.t-s`, `.link`) — safe for realistic compositions.
+- StatusDot/Badge colour variety in previews: set `--ds-status-dot-color` / `--ds-badge-bg-color` inline on a wrapper (no `[data-status]` CSS is shipped by design).
+- Remote image URLs are blocked in capture; skip `imageUrl`-type stories (initials/fallback states cover visuals).
+- Animations (spinner, progress indeterminate, shimmer) freeze at a frame in capture — expected, gradeable.
+- SplitButton's open menu flows beside the control (`ds-popover` is `display:contents`) — fully visible, no card override needed.
+
+## Upstream findings (report to DS maintainers someday)
+- Stat: `variant="error"` never recolours `.value` — `:host(.error) .value` ties on specificity with the later `.stat .value` rule and loses on source order (stat.component.scss:19). Port is parity.
+- Banner: source close button lacks an aria-label (binding adds `aria-label="Dismiss"`).
+- Disabled RadioGroup leaves the group label at full strength (no `.group-label` disabled rule) — by design or gap, matches DS CSS.
+
+## Binding conventions (folded from Waves 2–3)
+- **Binding-only API extensions** (deliberate, keep on re-port): Autocomplete `query`, Pagination `sizeSelectOpen`, TimePicker `openSegment`, DatePicker `month` (deterministic visible month), BottomSheet `activeSnapIndex`, Modal `staticPreview` (mirrors the DS's own DsStaticPreview branch). All exist so static previews/designs can render open/filtered states.
+- Pagination inlines an internal PageSizeSelect with ds-select markup (Select binding didn't exist yet); could delegate to Select on a future pass.
+- `build-css.mjs` walks `*.component.ts` and emits each `styleUrl` sheet under EVERY referencing component's selector (Angular gives each component its own scoped copy — modal-card/modal share modal.component.scss). A component whose selector/styleUrl the regexes miss is silently skipped except for the `!` warn lines — watch them on rebuild.
+- Container (`ds-container`) uses `margin-inline: auto` — it shrink-wraps inside flex/grid parents; compose it in block flow.
+- AppShell height in previews/designs: set `--ds-app-shell-height` inline (defaults to viewport-ish).
+- PageHeader `tabs` slot must be wrapped `<div tabs="">` (CSS `:has(> [tabs])` contract) — the binding does this internally.
+- Intentionally not ported anywhere (CDK/runtime-only): outside-click/Escape close, focus traps, scroll lock, menu type-ahead, toast queue animations, Table drag resize/reorder + CSV export + popover sub-UIs (render trigger buttons only), collapsed-sidenav hover tooltip, routerLink (→ `onNavigate`/plain callbacks).
+- DescriptionList's copy button is hover-revealed by DS CSS (`opacity:0` until `:host(:hover)`) — invisible in static captures, by design.
+
+## Re-sync risks (watch-list for the next run)
+- **Angular template drift is NOT auto-detected.** The driver's diff tracks the React binding sources, not `src/lib/**`. After upstream component changes: re-run `buildCmd` (CSS re-compiles automatically → styleSha changes → re-verify fires), but TEMPLATE/API changes need manual re-porting of the affected binding. Diff `src/lib/components/<x>` against the binding before trusting a carry-forward.
+- Binding-only props (list above) must survive any re-port from upstream.
+- `icons.gen.ts` regenerates from `icons.data.ts` on every build-bindings run — no drift, but new icon names only appear after a rebuild.
+- Toolchain pins: repo deps via `bun install --frozen-lockfile`; converter deps in `.ds-sync` via npm (esbuild, ts-morph, @types/react, react/react-dom 18.3.1, sass, postcss, playwright(-core) **1.60.0** — pinned to cached chromium-1223).
+- Fresh clone: recreate the junction `.design-sync/node_modules` → `.ds-sync/node_modules` (build-bindings tsc + esbuild resolve react through it).
+- The 5-component calibration batch was first uploaded under `components/general/` and later regrouped — stale paths already deleted remotely; close-out reconciliation re-checks.
+
+## Known render warns (triaged legitimate)
+- `[RENDER_THIN] ModalCard, ModalConfirm` — their preview roots use the DS's `.modal-static` `display:contents` branch, so root offsetHeight is 0 by construction; the cards render fully (verified on sheets 2026-07-25). False positive of the height heuristic.
+- `[RENDER_THIN] AccordionItem` — derived card is a single collapsed accordion row (~40px), legitimately short.
+- `[TOKENS_MISSING] --error-strong, --success-strong, --warning-strong, --icon-disabled, --border-error` — upstream token gaps in the DS itself: the `[ds-color]` zone map in `_ds-color.scss` references `--<family>-strong` for status families that never define it, and `accordion-item.component.scss` uses `--icon-disabled` which nothing defines. Present in the production docs CSS too. Report upstream someday; not a sync defect.
+
+## First-sync progress log
+- Project "IDS Design System" 455f9a87-1a6e-4b1d-a0e7-cf47ed772e63, incremental path, plan approved 2026-07-24.
+- Batch 1 pushed (calibration): Button, Badge, Input, Icon, Spinner — all cells graded good. NOTE: pushed under `components/general/` BEFORE docsDir regrouping landed; the regrouped paths (actions/, forms-inputs/, …) upload with the next batch and the stale `general/` paths must be deleted then (or at close-out reconciliation at latest).
