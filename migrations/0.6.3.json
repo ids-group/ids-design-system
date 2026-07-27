@@ -1,5 +1,5 @@
 {
-  "version": "unreleased",
+  "version": "0.6.3",
   "items": [
     {
       "id": "date-picker-default-month-input-rename",
@@ -7,7 +7,10 @@
       "old": "ds-date-picker[defaultMonth]",
       "new": "defaultDate",
       "note": "Pure rename, behavior unchanged: the input always took a full Date and the calendar opens on its month with grid focus on its exact day (only when the value is empty; never written to the value). [defaultMonth] -> [defaultDate]. No other component has a defaultMonth input.",
-      "searchHints": ["[defaultMonth]", "defaultMonth"]
+      "searchHints": [
+        "[defaultMonth]",
+        "defaultMonth"
+      ]
     },
     {
       "id": "table-passive-row-hover-removed",
@@ -15,7 +18,10 @@
       "old": null,
       "new": null,
       "note": "ds-table row hover tint is now rendered ONLY when rowInteractive is set (clickable rows also gain a pressed :active fill via --ds-table-row-pressed-bg-color). Was: every table tinted rows on hover. No code compiles differently — visual/behavior only. If a passive table must keep the old always-on hover, add consumer CSS: ds-table tbody tr:hover td { background-color: var(--surface-secondary); }. Tables that already set rowInteractive need no action.",
-      "searchHints": ["<ds-table", "rowInteractive"]
+      "searchHints": [
+        "<ds-table",
+        "rowInteractive"
+      ]
     }
   ],
   "informational": [
