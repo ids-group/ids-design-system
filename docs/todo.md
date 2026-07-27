@@ -141,6 +141,43 @@ Filter-toolbar gaps for `ds-autocomplete` / `ds-select` / `ds-search`. Design sp
 - [ ] **[P3] Manual dev-docs browser check** of the two shell demos.
 - [ ] **[P3, deferred] Responsive drawer mode** — rail hides below a breakpoint, opens as a topbar-burger overlay (focus trap, backdrop, burger slot). Design when a real mobile consumer appears.
 
+## Packaging — secondary entry points (optional, future)
+
+> **Not needed for correctness — tree-shaking already works.** Verified 2026-07-27 via a linker+esbuild pseudo-build on `dist/ds`: bundle size scales with imports (Button-only < 6-component subset < whole lib), so unused components ARE dropped by a consumer's production build. Precondition holds: root `package.json` `"sideEffects": false` + 81 standalone components + ESM FESM. Consider secondary entry points ONLY if the lib grows much larger or we want guaranteed per-component chunks / lazy loading.
+
+**What it is.** Ship the library as many small sub-packages under one name, à la `@angular/material/button`, `@angular/cdk/overlay`. Consumers import `@ids-group-ltd/ids-design-system/button` instead of the single barrel. Each entry point is its own module graph the bundler reasons about independently.
+
+**Why (beyond what we already have).**
+- Bundler-agnostic tree-shaking: even a naive/older bundler, or a consumer doing `import * as DS`, gets only the entry point it touched — no reliance on `sideEffects` + DCE being perfect.
+- True lazy loading: `import('@ids-group-ltd/ids-design-system/date-picker')` splits date-picker into its own async chunk.
+- Faster consumer rebuilds, clearer dependency edges.
+
+**Current state (single entry point).** `ng-package.json` → `lib.entryFile: src/public-api.ts`; one barrel re-exports all ~74 component folders → one FESM (`dist/ds/fesm2022/…mjs`, ~1.2 MB raw). Styles ship separately as raw SCSS assets under `styles/` + `themes/` — unaffected by this change.
+
+**What to do (ng-packagr secondary entry points).**
+1. In each component folder that becomes its own entry point, add a minimal `ng-package.json` + a local `public-api.ts`. Example — `src/lib/components/button/`:
+   - `ng-package.json`: `{ "lib": { "entryFile": "public-api.ts" } }`
+   - `public-api.ts`: `export * from './button.component'; export type * from './button.types';`
+   ng-packagr auto-discovers nested `ng-package.json` under the primary source root and emits a secondary entry point named by folder path (→ `@ids-group-ltd/ids-design-system/button`).
+2. Keep the root `public-api.ts` as a **facade** re-exporting the secondary entry points, so the current barrel import keeps working — no forced breaking change; new code opts into the granular path.
+3. Secondary entry points may **not** deep-import each other's internals (`../modal/modal.component`) — they must go through the sibling's public entry, or share via a `core`/`internal` entry point. ng-packagr errors on cross-entry deep imports, which is exactly what surfaces hidden coupling.
+4. Shared internals (icons, overlay/portal helpers, `core/status`, config, theme) → their own entry points (`…/icons`, `…/core`) that components depend on.
+
+**How it looks in our case.**
+```ts
+// today (kept working as a facade):
+import { ButtonComponent, DatePickerComponent } from '@ids-group-ltd/ids-design-system';
+// after (granular, opt-in):
+import { ButtonComponent } from '@ids-group-ltd/ids-design-system/button';
+import { DatePickerComponent } from '@ids-group-ltd/ids-design-system/date-picker';
+// lazy:
+const { DatePickerComponent } = await import('@ids-group-ltd/ids-design-system/date-picker');
+```
+
+**Cost / caveats.** ~74 tiny `ng-package.json` + `public-api.ts` pairs to add + maintain (scriptable via a generator); cross-entry imports must launder through public entries — a one-time refactor that also **exposes and forces fixing real coupling**; slightly longer lib build; styles/tokens layer unchanged (already asset-based).
+
+**Verdict:** defer. Revisit if (a) component count roughly doubles, (b) a consumer needs route-level lazy loading of a heavy component (date-picker/table/color-picker/tree), or (c) we want tree-shaking guaranteed independent of consumer bundler quality.
+
 ## Frontend architecture starter
 
 > **EXTRACTED 2026-06-23 → `ai-sdlc-prototype` (Bitbucket).** The `starter/` workspace + architecture generators moved to their own repo; the DS package keeps only the `ng-add` schematic. The DS gaps the starter surfaced (data-grid / CVA / confirm-dialog) all shipped — see `done.md`. Remaining DS-side work below.
