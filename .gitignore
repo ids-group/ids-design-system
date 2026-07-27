@@ -75,3 +75,6 @@ Anton_local
 # Docs are tracked; only the superpowers working scratchpad (plans/specs/research) stays local.
 /docs/superpowers/
 
+# Serena MCP local project cache (LSP index + memories) — tooling-generated
+.serena/
+
