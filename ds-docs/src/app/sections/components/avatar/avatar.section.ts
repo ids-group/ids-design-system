@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { AvatarComponent, AvatarGroupComponent } from 'ds';
+import { AvatarComponent, AvatarGroupComponent, initialsFrom } from 'ds';
 import {
   DocsTruncationComponent,
   TruncationRule,
@@ -20,6 +20,22 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   styleUrl: './avatar.section.scss',
 })
 export class AvatarSection {
+  protected readonly initialsFrom = initialsFrom;
+  protected readonly people: readonly (readonly [string, string])[] = [
+    ['Alice', 'Nguyen'],
+    ['Bob', 'Martin'],
+    ['Carla', 'Ivanova'],
+    ['Ekaterina', 'Petrova'],
+    ['Farid', 'Hassan'],
+    ['Grace', 'Lee'],
+    ['Hiro', 'Tanaka'],
+    ['Priya', 'Sharma'],
+  ];
+  protected readonly brandAvoid: readonly (readonly [number, number])[] = [
+    [310, 360],
+    [0, 20],
+  ];
+
   protected readonly truncationRules: TruncationRule[] = [
     {
       field: 'Initials fallback',

@@ -131,4 +131,44 @@
       fallbackIcon="user"
     />
   </div>
+
+  <!-- ============================================================ Seeded tint -->
+  <h3 class="block-title t-h4">
+    Seeded tint
+  </h3>
+
+  <p class="block-desc t-s">
+    Pass <code class="t-mono-inline">seed</code> (an email or name) for a
+    deterministic colour — the same person always gets the same tint, across
+    apps. The helpers <code class="t-mono-inline">avatarTint</code> and
+    <code class="t-mono-inline">initialsFrom</code> are exported for use outside
+    the component.
+  </p>
+
+  <div class="row">
+    @for (person of people; track person) {
+      <ds-avatar
+        [seed]="person[0] + '.' + person[1]"
+        [initials]="initialsFrom(person[0], person[1])"
+        [ariaLabel]="person[0] + ' ' + person[1]"
+      />
+    }
+  </div>
+
+  <p class="block-desc t-s">
+    Same seeds with
+    <code class="t-mono-inline">[avoidHues]="[[310, 360], [0, 20]]"</code> — pink
+    and red hues are skipped so seeded avatars never clash with a brand colour:
+  </p>
+
+  <div class="row">
+    @for (person of people; track person) {
+      <ds-avatar
+        [seed]="person[0] + '.' + person[1]"
+        [initials]="initialsFrom(person[0], person[1])"
+        [avoidHues]="brandAvoid"
+        [ariaLabel]="person[0] + ' ' + person[1]"
+      />
+    }
+  </div>
 </docs-section>

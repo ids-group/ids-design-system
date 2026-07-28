@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, computed, input } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
+import { avatarTint } from './avatar-tint';
 import type { AvatarSize, AvatarStatus } from './avatar.types';
 
 const STATUS_ARIA_LABELS: Record<AvatarStatus, string> = {
@@ -47,11 +48,25 @@ export class AvatarComponent {
   readonly status = input<AvatarStatus | null>(null);
   /** Icon rendered when there is no imageUrl and no initials. */
   readonly fallbackIcon = input<IconName | null>(null);
+  /** Seed for a deterministic tint (e.g. an email or name) used when no explicit
+   *  `tint` is set — the same seed always yields the same colour. */
+  readonly seed = input<string | null>(null);
+  /** Hue arcs `[start, end]` (0–360°) the seeded tint must avoid, e.g. a brand
+   *  hue: `[[310, 360], [0, 20]]`. Only applies when `seed` drives the tint. */
+  readonly avoidHues = input<readonly (readonly [number, number])[]>([]);
 
   protected readonly tintStyle = computed(() => {
     const value = this.tint();
-    if (value && value !== 'neutral') {
+    if (value === 'neutral') {
+      return { bg: null as string | null, fg: null as string | null };
+    }
+    if (value) {
       return { bg: value.bg, fg: value.fg };
+    }
+
+    const seed = this.seed();
+    if (seed) {
+      return avatarTint(seed, { avoidHues: this.avoidHues() });
     }
 
     return { bg: null as string | null, fg: null as string | null };
