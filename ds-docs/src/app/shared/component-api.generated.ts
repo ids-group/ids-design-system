@@ -132,13 +132,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
-  "app-shell": {
-    "key": "app-shell",
-    "selector": "ds-app-shell",
+  "app-layout": {
+    "key": "app-layout",
+    "selector": "ds-app-layout",
     "isElement": true,
-    "className": "AppShellComponent",
+    "className": "AppLayoutComponent",
     "status": "stable",
-    "importName": "AppShellComponent",
+    "importName": "AppLayoutComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [

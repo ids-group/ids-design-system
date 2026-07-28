@@ -5,7 +5,7 @@ import {
   signal,
 } from '@angular/core';
 import {
-  AppShellComponent,
+  AppLayoutComponent,
   BrandNameDirective,
   SidenavComponent,
   SidenavFooterComponent,
@@ -17,10 +17,10 @@ import {
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
-  selector: 'section-components-app-shell',
+  selector: 'section-components-app-layout',
   standalone: true,
   imports: [
-    AppShellComponent,
+    AppLayoutComponent,
     BrandNameDirective,
     SidenavComponent,
     SidenavFooterComponent,
@@ -29,11 +29,11 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
     DocsSectionComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
-  templateUrl: './app-shell.section.html',
-  styleUrls: ['../../../shared/section-demo.scss', './app-shell.section.scss'],
+  templateUrl: './app-layout.section.html',
+  styleUrls: ['../../../shared/section-demo.scss', './app-layout.section.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppShellSection {
+export class AppLayoutSection {
   protected readonly collapsed = signal(false);
   protected readonly unread = signal(true);
 

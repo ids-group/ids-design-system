@@ -1822,27 +1822,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
-    "component": "App Shell",
-    "selector": ".app-shell",
+    "component": "App Layout",
+    "selector": ".app-layout",
     "description": "",
     "tokens": [
       {
-        "name": "--ds-app-shell-pad-x",
+        "name": "--ds-app-layout-pad-x",
         "value": "var(--space-6)",
         "notes": ""
       },
       {
-        "name": "--ds-app-shell-pad-y",
+        "name": "--ds-app-layout-pad-y",
         "value": "var(--space-6)",
         "notes": ""
       },
       {
-        "name": "--ds-app-shell-content-max-width",
+        "name": "--ds-app-layout-content-max-width",
         "value": "none",
         "notes": ""
       },
       {
-        "name": "--ds-app-shell-height",
+        "name": "--ds-app-layout-height",
         "value": "100dvh",
         "notes": ""
       },
