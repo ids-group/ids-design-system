@@ -6,6 +6,8 @@
 # Triggered manually via the `validate` custom pipeline — not on every PR.
 #
 # build  -> fails the step if the library or docs don't compile
+# parity -> fails the step if the design-sync React bindings drifted from the
+#           Angular sources they port (no pre-existing debt to carry)
 # lint   -> report-only (prettier/stylelint/eslint), never fails the step while
 #           the repo carries pre-existing lint debt
 set -e
@@ -22,6 +24,7 @@ echo "Building (lib -> docs) and linting in parallel..."
 # ds-docs needs the built dist/ds, so build is ordered inside its own subshell;
 # the artifact checks fail loud if a build silently produced nothing.
 ( bun run build:lib && [ -f dist/ds/package.json ] && bun run build:docs && [ -f dist/ds-docs/browser/index.html ] ) > "$log_dir/build.log" 2>&1 &  pid_build=$!
+bun run check:design-sync               > "$log_dir/parity.log"    2>&1 &  pid_parity=$!
 bun run format                          > "$log_dir/format.log"    2>&1 &  pid_format=$!
 bun run lint:styles                     > "$log_dir/stylelint.log" 2>&1 &  pid_styles=$!
 bun run lint                            > "$log_dir/eslint.log"    2>&1 &  pid_eslint=$!
@@ -29,12 +32,15 @@ bun run lint                            > "$log_dir/eslint.log"    2>&1 &  pid_e
 build_failed=0
 wait "$pid_build" || build_failed=1
 
+parity_failed=0
+wait "$pid_parity" || parity_failed=1
+
 lint_failed=0
 wait "$pid_format" || lint_failed=1
 wait "$pid_styles" || lint_failed=1
 wait "$pid_eslint" || lint_failed=1
 
-for name in build format stylelint eslint; do
+for name in build parity format stylelint eslint; do
   echo "===== $name ====="
   cat "$log_dir/$name.log"
 done
@@ -50,3 +56,9 @@ if [ "$build_failed" -ne 0 ]; then
   exit 1
 fi
 echo "Build passed"
+
+if [ "$parity_failed" -ne 0 ]; then
+  echo "design-sync parity failed"
+  exit 1
+fi
+echo "design-sync parity passed"

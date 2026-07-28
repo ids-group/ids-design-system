@@ -13,7 +13,7 @@ adapted to a design-system repo (library `ds` + showcase `ds-docs`).
 | `build-lib.sh` | Build the `ds` library → `dist/ds` (the npm artifact).                  |
 | `build-docs.sh`| Ensure `dist/ds` exists (cache hit or build), then build `ds-docs` → `dist/ds-docs`. |
 | `lint.sh`      | Run prettier + stylelint + eslint in parallel. `lint.sh report-only` prints results but never fails. Standalone — handy locally. |
-| `ci-pr.sh`     | PR validation in one container: build (hard gate) ∥ lint (report-only) after a single install. Used by the `validate` pipeline. |
+| `ci-pr.sh`     | PR validation in one container: build ∥ design-sync parity (`check:design-sync` — see `.design-sync/NOTES.md`), both hard gates, ∥ lint (report-only), after a single install. Used by the `validate` pipeline. |
 | `publish.sh`   | The single npm publisher. Guards: tag↔version match (`BITBUCKET_TAG`), refuse double-publish, prereleases → `next` dist-tag. Called by the tag (`v*`) pipeline after `build-lib.sh`, for both one-click and local releases. |
 | `cut-release.sh`| One-click release `<patch\|minor\|major\|beta>`: bump + stamp CHANGELOG + commit + tag + push `main` + tag. Does **not** publish — the pushed tag triggers the `v*` publish pipeline. Run by the `release-*` custom pipelines. Needs `RELEASE_TOKEN`. No install/build. |
 

@@ -3,7 +3,7 @@ import { NumberStepper } from '@ids-group-ltd/ids-design-system';
 
 const row: React.CSSProperties = { display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap' };
 const cell: React.CSSProperties = { display: 'grid', gap: 6, justifyItems: 'start' };
-const caption: React.CSSProperties = { fontSize: 12, color: '#667085' };
+const caption: React.CSSProperties = { fontSize: 12, color: 'var(--text-secondary)' };
 
 /** sm / md / lg — heights aligned with input and select fields. */
 export const Sizes = () => (

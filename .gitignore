@@ -86,3 +86,4 @@ Anton_local
 /.design-sync/node_modules
 /.design-sync/react-bindings/dist/
 /.design-sync/react-bindings/src/lib/icons.gen.ts
+/.design-sync/react-bindings/src/generated/

@@ -69,6 +69,12 @@ export interface InputProps {
   clearable?: boolean;
   /** Shows a show/hide button when `type="password"`. */
   passwordToggle?: boolean;
+  /** Reveals the password. Controlled when `onPasswordVisibleChange` is
+   *  provided; otherwise seeds the internal state (a design can show the
+   *  revealed state statically). */
+  passwordVisible?: boolean;
+  /** Emits the new reveal state each time the show/hide button is pressed. */
+  onPasswordVisibleChange?: (visible: boolean) => void;
   /** Leading addon content (the `[dsInputPrefix]` slot) — set `withAddon`. */
   prefix?: React.ReactNode;
   /** Trailing addon content (the `[dsInputSuffix]` slot) — set `withAddonRight`. */
@@ -109,25 +115,32 @@ export function Input({
   inputMode,
   clearable,
   passwordToggle = false,
+  passwordVisible,
+  onPasswordVisibleChange,
   prefix,
   suffix,
   onBlurred,
 }: InputProps) {
   const [uid] = React.useState(() => nextControlId('ds-input'));
   const [ownValue, setOwnValue] = React.useState(value ?? '');
-  const [passwordVisible, setPasswordVisible] = React.useState(false);
+  const [ownVisible, setOwnVisible] = React.useState(passwordVisible ?? false);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const val = onValueChange ? (value ?? '') : ownValue;
   const setVal = (v: string) => {
     if (!onValueChange) setOwnValue(v);
     onValueChange?.(v);
   };
+  const isVisible = onPasswordVisibleChange ? (passwordVisible ?? false) : ownVisible;
+  const setVisible = (visible: boolean) => {
+    if (!onPasswordVisibleChange) setOwnVisible(visible);
+    onPasswordVisibleChange?.(visible);
+  };
 
   const canClear = clearable ?? type === 'search';
   const messageState: FieldMessageState = invalid ? 'error' : success ? 'success' : 'default';
   const resolvedAriaLabel = label ? undefined : ariaLabel || placeholder || undefined;
   const showPasswordToggle = passwordToggle && type === 'password' && !disabled;
-  const effectiveType = passwordToggle && type === 'password' && passwordVisible ? 'text' : type;
+  const effectiveType = passwordToggle && type === 'password' && isVisible ? 'text' : type;
   const hintId = hint ? `${uid}-hint` : undefined;
 
   const wrapperClasses = cx(
@@ -205,10 +218,10 @@ export function Input({
             type="button"
             className="password-toggle"
             tabIndex={-1}
-            aria-label={passwordVisible ? 'Hide password' : 'Show password'}
-            onClick={() => setPasswordVisible((v) => !v)}
+            aria-label={isVisible ? 'Hide password' : 'Show password'}
+            onClick={() => setVisible(!isVisible)}
           >
-            <Icon name={passwordVisible ? 'eye-off' : 'eye'} size={16} />
+            <Icon name={isVisible ? 'eye-off' : 'eye'} size={16} />
           </button>
         )}
 

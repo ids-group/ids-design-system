@@ -2,6 +2,17 @@
 
 React bindings over the IDS Group Angular design system's real compiled CSS. Components render `ds-*` host elements (e.g. `<ds-button>`) carrying the library's exact markup — **never hand-write DS internals** like `<button class="button md">`; always use the exported component.
 
+## Handing off to Angular
+
+The shipping library is **Angular**; these React components exist so designs render its real markup and CSS. Engineers translate what you build here, so stay on the mapping and it stays mechanical:
+
+- component → its host tag: `<Button>` → `<ds-button>`, `<SidenavFooter>` → `<ds-sidenav-footer>`
+- prop → input of the same name, camelCase kept (Angular templates are case-sensitive): `color="error"`, and booleans as bare attributes — `<ds-button fullWidth loading>`
+- `on<Event>` → output: `onPressed` → `(pressed)`, `onClosed` → `(closed)`; `onValueChange` pairs with `value` as `[(value)]`
+- `children` → `<ng-content>`; a named node prop (`actions`, `subtext`, `impact`) → the same slot attribute, e.g. `<div actions>`
+
+Anything with no Angular counterpart can't be handed off — if a prop isn't in the component's `<Name>.d.ts`, don't invent it.
+
 ## Setup
 - **No provider or wrapper is required.** Tokens, fonts (self-hosted Mulish + JetBrains Mono), and all component styles come from `styles.css`.
 - **Theming:** light is the default at bare `:root`. Dark = set `data-theme="dark"` on `<html>`. Brand-tinted grays = `data-neutrals="brand"`. There is no automatic OS switch.

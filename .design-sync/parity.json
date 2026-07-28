@@ -1,0 +1,583 @@
+{
+  "allow": {
+    "Dropzone": {
+      "onFilesChange": "upstream `files` is a model the component mutates; the binding takes `files` read-only and reports picks through `onFilesAdded` so a preview can render a fixed file list"
+    },
+    "Modal": {
+      "onConfirmed": "upstream never emits `confirmed` itself — the consumer's own confirm action does; in React that is an onClick inside the `actions` slot"
+    },
+    "Pagination": {
+      "onCurrentPageChange": "the `currentPage` model and the `pageChange` output are the same event upstream (see the pagination dedup item in docs/todo.md) — ported once as `onPageChange`"
+    },
+    "SidenavItem": {
+      "routerLink": "Angular router is runtime-only and out of scope for a static design — navigation is surfaced as `onNavigate`"
+    },
+    "Table": {
+      "onSortKeyChange": "sortKey/sortDir are one user action — ported as a single `onSortChange({ key, dir })`",
+      "onSortDirChange": "sortKey/sortDir are one user action — ported as a single `onSortChange({ key, dir })`",
+      "onColumnFiltersChange": "the set-filter popover UI is not ported (only its trigger renders), so nothing in the binding can change it — the prop seeds a static state",
+      "onHiddenKeysChange": "the column-picker popover UI is not ported, so nothing in the binding can change it — the prop seeds a static state",
+      "onColumnWidthsChange": "drag-resize is not ported (pointer-driven, runtime-only) — the prop seeds a static state",
+      "onColumnOrderChange": "drag-reorder is not ported (pointer-driven, runtime-only) — the prop seeds a static state",
+      "onRowActionSelected": "the row-action kebab menu is not ported (only the trigger column renders)",
+      "cellTemplateMap": "TemplateRef input — the React stand-in is `cellTemplates` (keyed render functions)",
+      "emptyTemplate": "TemplateRef input — the React stand-in is the `empty` node prop",
+      "rowExpandTemplate": "TemplateRef input — the React stand-in is `renderRowExpand`"
+    }
+  },
+  "components": {
+    "Accordion": {
+      "tag": "ds-accordion",
+      "sources": {
+        "src/lib/components/accordion/accordion.component.ts": "7ef35e0cce1d"
+      }
+    },
+    "AccordionItem": {
+      "tag": "ds-accordion-item",
+      "sources": {
+        "src/lib/components/accordion/accordion-item.component.ts": "a6c0c7ec6b24",
+        "src/lib/components/accordion/accordion-item.component.html": "3854bd54caa6"
+      }
+    },
+    "Alert": {
+      "tag": "ds-alert",
+      "sources": {
+        "src/lib/components/alert/alert.component.ts": "3a54cd22c756",
+        "src/lib/components/alert/alert.component.html": "fcd26becfa71"
+      }
+    },
+    "AppShell": {
+      "tag": "ds-app-shell",
+      "sources": {
+        "src/lib/components/app-shell/app-shell.component.ts": "a95e0d96d0e0",
+        "src/lib/components/app-shell/app-shell.component.html": "b32d1d2c4f1e"
+      }
+    },
+    "Autocomplete": {
+      "tag": "ds-autocomplete",
+      "sources": {
+        "src/lib/components/autocomplete/autocomplete.component.ts": "ebce57882a5f",
+        "src/lib/components/autocomplete/autocomplete.component.html": "557b8e2bb43a"
+      }
+    },
+    "Avatar": {
+      "tag": "ds-avatar",
+      "sources": {
+        "src/lib/components/avatar/avatar.component.ts": "9585f69d842c",
+        "src/lib/components/avatar/avatar.component.html": "7ee2badb0518"
+      }
+    },
+    "AvatarGroup": {
+      "tag": "ds-avatar-group",
+      "sources": {
+        "src/lib/components/avatar-group/avatar-group.component.ts": "0d0f8f906991",
+        "src/lib/components/avatar-group/avatar-group.component.html": "327166a65939"
+      }
+    },
+    "Badge": {
+      "tag": "ds-badge",
+      "sources": {
+        "src/lib/components/badge/badge.component.ts": "e48bfa71e6ca",
+        "src/lib/components/badge/badge.component.html": "81a3d3d53cde"
+      }
+    },
+    "Banner": {
+      "tag": "ds-banner",
+      "sources": {
+        "src/lib/components/banner/banner.component.ts": "1071f41e41b7",
+        "src/lib/components/banner/banner.component.html": "3652a3241afc"
+      }
+    },
+    "BottomSheet": {
+      "tag": "ds-bottom-sheet",
+      "sources": {
+        "src/lib/components/bottom-sheet/bottom-sheet.component.ts": "d14a1ade8c8b",
+        "src/lib/components/bottom-sheet/bottom-sheet.component.html": "798ba263ac3b"
+      }
+    },
+    "Breadcrumbs": {
+      "tag": "ds-breadcrumbs",
+      "sources": {
+        "src/lib/components/breadcrumbs/breadcrumbs.component.ts": "455504558859",
+        "src/lib/components/breadcrumbs/breadcrumbs.component.html": "3a8519f3383e"
+      }
+    },
+    "Button": {
+      "tag": "ds-button",
+      "sources": {
+        "src/lib/components/button/button.component.ts": "ae7e39beae47",
+        "src/lib/components/button/button.component.html": "1aadbaccea23"
+      }
+    },
+    "ButtonGroup": {
+      "tag": "ds-button-group",
+      "sources": {
+        "src/lib/components/button-group/button-group.component.ts": "245a67c1c66e"
+      }
+    },
+    "CalendarDay": {
+      "tag": "ds-calendar-day",
+      "sources": {
+        "src/lib/components/calendar-day/calendar-day.component.ts": "73373731457a",
+        "src/lib/components/calendar-day/calendar-day.component.html": "fbb6be4aa2a7"
+      }
+    },
+    "Card": {
+      "tag": "ds-card",
+      "sources": {
+        "src/lib/components/card/card.component.ts": "fc750b081841",
+        "src/lib/components/card/card.component.html": "4cb02bb46f15"
+      }
+    },
+    "Checkbox": {
+      "tag": "ds-checkbox",
+      "sources": {
+        "src/lib/components/checkbox/checkbox.component.ts": "02e60e8e52ef",
+        "src/lib/components/checkbox/checkbox.component.html": "1d9406b6aac8"
+      }
+    },
+    "ColorPicker": {
+      "tag": "ds-color-picker",
+      "sources": {
+        "src/lib/components/color-picker/color-picker.component.ts": "45a2ccb688c1",
+        "src/lib/components/color-picker/color-picker.component.html": "aa952031952b"
+      }
+    },
+    "Container": {
+      "tag": "ds-container",
+      "sources": {
+        "src/lib/components/layout/container.component.ts": "cdca108efe5a"
+      }
+    },
+    "DatePicker": {
+      "tag": "ds-date-picker",
+      "sources": {
+        "src/lib/components/date-picker/date-picker.component.ts": "5a920927cc09",
+        "src/lib/components/date-picker/date-picker.component.html": "b8cdc620f7c0"
+      }
+    },
+    "DescriptionItem": {
+      "tag": "ds-description-item",
+      "sources": {
+        "src/lib/components/description-list/description-item.component.ts": "8ededab41a2c",
+        "src/lib/components/description-list/description-item.component.html": "73eb44fd1bd8"
+      }
+    },
+    "DescriptionList": {
+      "tag": "ds-description-list",
+      "sources": {
+        "src/lib/components/description-list/description-list.component.ts": "8eb4308f68c1",
+        "src/lib/components/description-list/description-list.component.html": "fa7de2df3607"
+      }
+    },
+    "Divider": {
+      "tag": "ds-divider",
+      "sources": {
+        "src/lib/components/divider/divider.component.ts": "50f48dc1a93b"
+      }
+    },
+    "Drawer": {
+      "tag": "ds-drawer",
+      "sources": {
+        "src/lib/components/drawer/drawer.component.ts": "65ce0bb98bb1",
+        "src/lib/components/drawer/drawer.component.html": "47629d94e372"
+      }
+    },
+    "Dropzone": {
+      "tag": "ds-dropzone",
+      "sources": {
+        "src/lib/components/dropzone/dropzone.component.ts": "6cc4fef0e7e8",
+        "src/lib/components/dropzone/dropzone.component.html": "3bad9870f44f"
+      }
+    },
+    "EmptyState": {
+      "tag": "ds-empty-state",
+      "sources": {
+        "src/lib/components/empty-state/empty-state.component.ts": "a502460d1d30",
+        "src/lib/components/empty-state/empty-state.component.html": "a7b55ca64b2d"
+      }
+    },
+    "FieldMessage": {
+      "tag": "ds-field-message",
+      "sources": {
+        "src/lib/components/field-message/field-message.component.ts": "eaa33e3eef56",
+        "src/lib/components/field-message/field-message.component.html": "95cd28dafd48"
+      }
+    },
+    "Icon": {
+      "tag": "ds-icon",
+      "sources": {
+        "src/lib/icons/icon.component.ts": "e6591e40e946"
+      }
+    },
+    "IconButton": {
+      "tag": "ds-icon-button",
+      "sources": {
+        "src/lib/components/icon-button/icon-button.component.ts": "fa372afb0088",
+        "src/lib/components/icon-button/icon-button.component.html": "2ea5ce380ed8"
+      }
+    },
+    "Inline": {
+      "tag": "ds-inline",
+      "sources": {
+        "src/lib/components/layout/inline.component.ts": "816ddb136d8c"
+      }
+    },
+    "Input": {
+      "tag": "ds-input",
+      "sources": {
+        "src/lib/components/input/input.component.ts": "e64687a8b38c",
+        "src/lib/components/input/input.component.html": "eed14658ed4a"
+      }
+    },
+    "List": {
+      "tag": "ds-list",
+      "sources": {
+        "src/lib/components/list/list.component.ts": "ab8f4871d73e"
+      }
+    },
+    "ListItem": {
+      "tag": "ds-list-item",
+      "sources": {
+        "src/lib/components/list/list-item.component.ts": "920fee4afed5",
+        "src/lib/components/list/list-item.component.html": "3b62dfc33bb9"
+      }
+    },
+    "LoadingOverlay": {
+      "tag": "ds-loading-overlay",
+      "sources": {
+        "src/lib/components/loading-overlay/loading-overlay.component.ts": "3a583195fc86",
+        "src/lib/components/loading-overlay/loading-overlay.component.html": "571d5b7f686e"
+      }
+    },
+    "Menu": {
+      "tag": "ds-menu",
+      "sources": {
+        "src/lib/components/menu/menu.component.ts": "936b6bc9f942",
+        "src/lib/components/menu/menu.component.html": "2eb561f82e10"
+      }
+    },
+    "MenuDivider": {
+      "tag": "ds-menu-divider",
+      "sources": {
+        "src/lib/components/menu/menu-divider.component.ts": "383bb4fce22c"
+      }
+    },
+    "MenuItem": {
+      "tag": "ds-menu-item",
+      "sources": {
+        "src/lib/components/menu/menu-item.component.ts": "5eff796d44b2",
+        "src/lib/components/menu/menu-item.component.html": "fe2caf323790"
+      }
+    },
+    "Modal": {
+      "tag": "ds-modal",
+      "sources": {
+        "src/lib/components/modal/modal.component.ts": "aa5787e1a1c8",
+        "src/lib/components/modal/modal.component.html": "5e5fbd3b0709"
+      }
+    },
+    "ModalCard": {
+      "tag": "ds-modal-card",
+      "sources": {
+        "src/lib/components/modal/modal-card.component.ts": "d0070d9db20e",
+        "src/lib/components/modal/modal-card.component.html": "57b4880e1d34"
+      }
+    },
+    "ModalConfirm": {
+      "tag": "ds-modal-confirm",
+      "sources": {
+        "src/lib/components/modal/modal-confirm.component.ts": "2228f1ecab42",
+        "src/lib/components/modal/modal-confirm.component.html": "07717644cf73"
+      }
+    },
+    "MultiSelect": {
+      "tag": "ds-multi-select",
+      "sources": {
+        "src/lib/components/multi-select/multi-select.component.ts": "ac7c16698f66",
+        "src/lib/components/multi-select/multi-select.component.html": "42a9e946eb8e"
+      }
+    },
+    "NumberStepper": {
+      "tag": "ds-number-stepper",
+      "sources": {
+        "src/lib/components/number-stepper/number-stepper.component.ts": "9569325c7e79",
+        "src/lib/components/number-stepper/number-stepper.component.html": "fa7f95ce772a"
+      }
+    },
+    "OtpInput": {
+      "tag": "ds-otp-input",
+      "sources": {
+        "src/lib/components/otp-input/otp-input.component.ts": "560bbc535274",
+        "src/lib/components/otp-input/otp-input.component.html": "fc46e5981380"
+      }
+    },
+    "PageFooter": {
+      "tag": "ds-page-footer",
+      "sources": {
+        "src/lib/components/page-footer/page-footer.component.ts": "a45792c8b7b2",
+        "src/lib/components/page-footer/page-footer.component.html": "13e0c7541b33"
+      }
+    },
+    "PageHeader": {
+      "tag": "ds-page-header",
+      "sources": {
+        "src/lib/components/page-header/page-header.component.ts": "220efce249a9",
+        "src/lib/components/page-header/page-header.component.html": "db218c15b1aa"
+      }
+    },
+    "Pagination": {
+      "tag": "ds-pagination",
+      "sources": {
+        "src/lib/components/pagination/pagination.component.ts": "780058442acb",
+        "src/lib/components/pagination/pagination.component.html": "43cc0a8f06cb"
+      }
+    },
+    "Popover": {
+      "tag": "ds-popover",
+      "sources": {
+        "src/lib/components/popover/popover.component.ts": "4f4dbb2eeff5",
+        "src/lib/components/popover/popover.component.html": "8fca61850361"
+      }
+    },
+    "Progress": {
+      "tag": "ds-progress",
+      "sources": {
+        "src/lib/components/progress/progress.component.ts": "2e1549800c6b",
+        "src/lib/components/progress/progress.component.html": "1dec102e596a"
+      }
+    },
+    "Radio": {
+      "tag": "ds-radio",
+      "sources": {
+        "src/lib/components/radio/radio.component.ts": "e313777f1b59",
+        "src/lib/components/radio/radio.component.html": "92d973a07d24"
+      }
+    },
+    "RadioGroup": {
+      "tag": "ds-radio-group",
+      "sources": {
+        "src/lib/components/radio-group/radio-group.component.ts": "ed8cd0d887e1",
+        "src/lib/components/radio-group/radio-group.component.html": "e63521f91921"
+      }
+    },
+    "Search": {
+      "tag": "ds-search",
+      "sources": {
+        "src/lib/components/search/search.component.ts": "2affa3e812d5",
+        "src/lib/components/search/search.component.html": "bcf716b53930"
+      }
+    },
+    "Segmented": {
+      "tag": "ds-segmented",
+      "sources": {
+        "src/lib/components/segmented/segmented.component.ts": "432504e1052b",
+        "src/lib/components/segmented/segmented.component.html": "e12c8a8ff026"
+      }
+    },
+    "Select": {
+      "tag": "ds-select",
+      "sources": {
+        "src/lib/components/select/select.component.ts": "a188bfe0deb2",
+        "src/lib/components/select/select.component.html": "d6aeabee1c73"
+      }
+    },
+    "Sidenav": {
+      "tag": "ds-sidenav",
+      "sources": {
+        "src/lib/components/sidenav/sidenav.component.ts": "e9844d714a6e",
+        "src/lib/components/sidenav/sidenav.component.html": "4ca0cdacb5bc"
+      }
+    },
+    "SidenavFooter": {
+      "tag": "ds-sidenav-footer",
+      "sources": {
+        "src/lib/components/sidenav-footer/sidenav-footer.component.ts": "f880db6bd112",
+        "src/lib/components/sidenav-footer/sidenav-footer.component.html": "48ceb5d123d9"
+      }
+    },
+    "SidenavGroup": {
+      "tag": "ds-sidenav-group",
+      "sources": {
+        "src/lib/components/sidenav/sidenav-group.component.ts": "38ef57f41ea1",
+        "src/lib/components/sidenav/sidenav-group.component.html": "7b7c267352fc"
+      }
+    },
+    "SidenavItem": {
+      "tag": "ds-sidenav-item",
+      "sources": {
+        "src/lib/components/sidenav/sidenav-item.component.ts": "adc476a97622",
+        "src/lib/components/sidenav/sidenav-item.component.html": "debb3ecfb15b"
+      }
+    },
+    "Skeleton": {
+      "tag": "ds-skeleton",
+      "sources": {
+        "src/lib/components/skeleton/skeleton.component.ts": "73eabfc0fc51"
+      }
+    },
+    "Slider": {
+      "tag": "ds-slider",
+      "sources": {
+        "src/lib/components/slider/slider.component.ts": "da99a7d6582d",
+        "src/lib/components/slider/slider.component.html": "51b57618128d"
+      }
+    },
+    "Spinner": {
+      "tag": "ds-spinner",
+      "sources": {
+        "src/lib/components/spinner/spinner.component.ts": "764be358e7c0"
+      }
+    },
+    "SplitButton": {
+      "tag": "ds-split-button",
+      "sources": {
+        "src/lib/components/split-button/split-button.component.ts": "af242e8c3563",
+        "src/lib/components/split-button/split-button.component.html": "b6c85ae2cb25"
+      }
+    },
+    "Stack": {
+      "tag": "ds-stack",
+      "sources": {
+        "src/lib/components/layout/stack.component.ts": "50636b067b28"
+      }
+    },
+    "Stat": {
+      "tag": "ds-stat",
+      "sources": {
+        "src/lib/components/stat/stat.component.ts": "4dd07066768c",
+        "src/lib/components/stat/stat.component.html": "b298ca82d3b5"
+      }
+    },
+    "StatusDot": {
+      "tag": "ds-status-dot",
+      "sources": {
+        "src/lib/components/status-dot/status-dot.component.ts": "cdbc55b2ff66"
+      }
+    },
+    "Stepper": {
+      "tag": "ds-stepper",
+      "sources": {
+        "src/lib/components/stepper/stepper.component.ts": "daec236dce6a",
+        "src/lib/components/stepper/stepper.component.html": "945356ead197"
+      }
+    },
+    "Switch": {
+      "tag": "ds-switch",
+      "sources": {
+        "src/lib/components/switch/switch.component.ts": "235b856a2e32",
+        "src/lib/components/switch/switch.component.html": "38cc831fd148"
+      }
+    },
+    "Tab": {
+      "tag": "ds-tab",
+      "sources": {
+        "src/lib/components/tabs/tab.component.ts": "c7fae81c72a7",
+        "src/lib/components/tabs/tab.component.html": "ebda7e258e39"
+      }
+    },
+    "Table": {
+      "tag": "ds-table",
+      "sources": {
+        "src/lib/components/table/table.component.ts": "ba832c2d7a6b",
+        "src/lib/components/table/table.component.html": "e05dfc113df8"
+      }
+    },
+    "Tabs": {
+      "tag": "ds-tabs",
+      "sources": {
+        "src/lib/components/tabs/tabs.component.ts": "47a371bf814b",
+        "src/lib/components/tabs/tabs.component.html": "e8f70d9afd30"
+      }
+    },
+    "Tag": {
+      "tag": "ds-tag",
+      "sources": {
+        "src/lib/components/tag/tag.component.ts": "7710216e9bd1",
+        "src/lib/components/tag/tag.component.html": "9426f0cfb5ad"
+      }
+    },
+    "Textarea": {
+      "tag": "ds-textarea",
+      "sources": {
+        "src/lib/components/textarea/textarea.component.ts": "f9098a4dd4d5",
+        "src/lib/components/textarea/textarea.component.html": "5d723dd5c998"
+      }
+    },
+    "TimeColumns": {
+      "tag": "ds-time-columns",
+      "sources": {
+        "src/lib/components/time-columns/time-columns.component.ts": "a7254277e731",
+        "src/lib/components/time-columns/time-columns.component.html": "e86d1c6545de"
+      }
+    },
+    "TimePicker": {
+      "tag": "ds-time-picker",
+      "sources": {
+        "src/lib/components/time-picker/time-picker.component.ts": "a5fd22e25fab",
+        "src/lib/components/time-picker/time-picker.component.html": "a7961fb018ed"
+      }
+    },
+    "Timeline": {
+      "tag": "ds-timeline",
+      "sources": {
+        "src/lib/components/timeline/timeline.component.ts": "8bf121b182ea"
+      }
+    },
+    "TimelineItem": {
+      "tag": "ds-timeline-item",
+      "sources": {
+        "src/lib/components/timeline/timeline-item.component.ts": "9b7ea3f5286f",
+        "src/lib/components/timeline/timeline-item.component.html": "b8b0a11e819e"
+      }
+    },
+    "Toast": {
+      "tag": "ds-toast",
+      "sources": {
+        "src/lib/components/toast/toast.component.ts": "2f5a21551c8e",
+        "src/lib/components/toast/toast.component.html": "2ceae1545a8c"
+      }
+    },
+    "ToastRegion": {
+      "tag": "ds-toast-region",
+      "sources": {
+        "src/lib/components/toast/toast-region.component.ts": "6a690627b867",
+        "src/lib/components/toast/toast-region.component.html": "9c7161263740"
+      }
+    },
+    "ToggleButton": {
+      "tag": "ds-toggle-button",
+      "sources": {
+        "src/lib/components/toggle-button/toggle-button.component.ts": "0eae1e280a2c",
+        "src/lib/components/toggle-button/toggle-button.component.html": "91e27fe7a550"
+      }
+    },
+    "TooltipPanel": {
+      "tag": "ds-tooltip-panel",
+      "sources": {
+        "src/lib/components/tooltip/tooltip-panel.component.ts": "ec48871891bc"
+      }
+    },
+    "Topbar": {
+      "tag": "ds-topbar",
+      "sources": {
+        "src/lib/components/topbar/topbar.component.ts": "6a108ff9886a",
+        "src/lib/components/topbar/topbar.component.html": "668c3c69a85d"
+      }
+    },
+    "Tree": {
+      "tag": "ds-tree",
+      "sources": {
+        "src/lib/components/tree/tree.component.ts": "25d5ad7c47fc",
+        "src/lib/components/tree/tree.component.html": "e9ba2392a62c"
+      }
+    },
+    "W3w": {
+      "tag": "ds-w3w",
+      "sources": {
+        "src/lib/components/w3w/w3w.component.ts": "d6c825c191b5",
+        "src/lib/components/w3w/w3w.component.html": "ec93a191b5e0"
+      }
+    }
+  }
+}
