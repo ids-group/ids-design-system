@@ -60,6 +60,7 @@
   width: var(--_sidenav-width-collapsed);
   padding: var(--space-3);
   align-items: center;
+  overflow-x: clip;
 
   .brand {
     padding: var(--sidenav-pad-brand-y) 0 var(--sidenav-pad-brand-b);
