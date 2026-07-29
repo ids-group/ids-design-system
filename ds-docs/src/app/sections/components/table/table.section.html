@@ -62,7 +62,10 @@
     Mark columns <code class="t-mono-inline"> sortable: true </code> and add
     <code class="t-mono-inline"> [clientSort]="true" </code> to let the table
     order its own rows. Click a header to cycle asc → desc → none; the active
-    column shows a coloured chevron.
+    column shows a coloured chevron. Pass
+    <code class="t-mono-inline"> [sortingOrder]="['asc', 'desc']" </code> to drop
+    the “none” step where an unsorted state isn't legal (e.g. a server-paged
+    list).
   </p>
 
   <ds-table
@@ -551,7 +554,13 @@
     <code class="t-mono-inline"> [stickyFirstColumn] </code> pins the first
     column on horizontal scroll;
     <code class="t-mono-inline"> [clientSort] </code> lets the table sort its
-    own rows. 12 rows across three pages.
+    own rows. 12 rows across three pages;
+    <code class="t-mono-inline"> [animateHeight] </code> tweens the body height
+    between pages (page 3 has only two rows) instead of snapping. For
+    server-side paging, bind <code class="t-mono-inline"> [total] </code> to the
+    full row count and hand the table one page at a time — it then drives the
+    pager off <code class="t-mono-inline"> total </code> and skips its own
+    slicing.
   </p>
 
   <ds-table
@@ -562,6 +571,7 @@
     [clientSort]="true"
     [stickyFirstColumn]="true"
     [pageSize]="5"
+    [animateHeight]="true"
     [(selectedIds)]="projectSelected"
   />
 
@@ -700,7 +710,11 @@
     (here Delete is blocked for completed records). The kebab stops
     propagation, so on a
     <code class="t-mono-inline"> [rowInteractive] </code> table a menu click
-    never fires <code class="t-mono-inline"> (rowClicked) </code>.
+    never fires <code class="t-mono-inline"> (rowClicked) </code>. A hand-built
+    action column with no visible header should give its
+    <code class="t-mono-inline"> TableColumn </code> an
+    <code class="t-mono-inline"> srLabel </code> so screen-reader users still
+    hear a column name.
   </p>
 
   <ds-table

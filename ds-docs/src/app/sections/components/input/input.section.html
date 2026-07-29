@@ -437,4 +437,32 @@
       [optional]="true"
     />
   </div>
+
+  <!-- ============================================================ Reserved message row -->
+  <h3 class="block-title t-h4">
+    Reserved message row
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline"> reserveMessage </code> (default on) holds a
+    message line's height even when there's no hint or error, so a form doesn't
+    reflow the moment validation appears. Set
+    <code class="t-mono-inline"> [reserveMessage]="false" </code> to collapse it
+    where a shift is fine. The reserved row sits ~23px under the control, so
+    stack reserved fields tighter (≈4px) than bare ones or the gap reads as a
+    hole.
+  </p>
+
+  <div class="grid-2">
+    <ds-input
+      label="Reserves (default)"
+      placeholder="No hint — the row is still held"
+    />
+
+    <ds-input
+      label="Collapsed"
+      placeholder="No row until a message shows"
+      [reserveMessage]="false"
+    />
+  </div>
 </docs-section>
