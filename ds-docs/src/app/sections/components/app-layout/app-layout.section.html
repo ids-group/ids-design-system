@@ -36,7 +36,7 @@
         sidenav
         brand="MyAdmin"
         logoLetter="A"
-        [collapsed]="collapsed()"
+        [collapsed]="collapsedContentSpan()"
       >
         <span
           dsBrandName
@@ -74,8 +74,8 @@
           [alerts]="unread()"
           [alertItems]="alertItems"
           [searchProvider]="searchProvider"
-          [collapsed]="collapsed()"
-          (collapseToggled)="toggleCollapsed()"
+          [collapsed]="collapsedContentSpan()"
+          (collapseToggled)="toggleCollapsedContentSpan()"
           (alertsOpened)="markRead()"
           (signOutSelected)="markRead()"
         />
@@ -112,7 +112,7 @@
         sidenav
         brand="MyAdmin"
         logoLetter="A"
-        [collapsed]="collapsed()"
+        [collapsed]="collapsedFullSpan()"
       >
         <span
           dsBrandName
@@ -150,8 +150,8 @@
           [alerts]="unread()"
           [alertItems]="alertItems"
           [searchProvider]="searchProvider"
-          [collapsed]="collapsed()"
-          (collapseToggled)="toggleCollapsed()"
+          [collapsed]="collapsedFullSpan()"
+          (collapseToggled)="toggleCollapsedFullSpan()"
           (alertsOpened)="markRead()"
           (signOutSelected)="markRead()"
         />

@@ -86,6 +86,14 @@
   margin-top: var(--space-3);
 }
 
+/* Two-tone dsBrandName wordmark: flex swallows the inter-span whitespace so
+   "My" + "Admin" stay glued; the accent matches the mark tile (--accent). */
+.wordmark {
+  display: inline-flex;
+
+  .accent { color: var(--accent); }
+}
+
 .status-line {
   display: inline-flex;
   align-items: center;

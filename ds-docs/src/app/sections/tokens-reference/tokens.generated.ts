@@ -1829,27 +1829,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-app-layout-pad-x",
         "value": "var(--space-6)",
-        "notes": ""
+        "notes": "Content region horizontal padding (defaults to --space-6); right side nets out --ds-scrollbar-width."
       },
       {
         "name": "--ds-app-layout-pad-y",
         "value": "var(--space-6)",
-        "notes": ""
+        "notes": "Content region vertical padding (defaults to --space-6)."
       },
       {
         "name": "--ds-app-layout-content-max-width",
         "value": "none",
-        "notes": ""
+        "notes": "Max width of the centred content wrapper (none by default — full width)."
       },
       {
         "name": "--ds-app-layout-height",
         "value": "100dvh",
-        "notes": ""
+        "notes": "Host height, pinned to the viewport so only the content region scrolls (defaults to 100dvh)."
       },
       {
         "name": "--ds-scrollbar-width",
         "value": "0px",
-        "notes": ""
+        "notes": "Native scrollbar width measured per device and published on :root; app-layout subtracts it from the content's right padding to keep insets symmetric."
       }
     ]
   },
@@ -4089,27 +4089,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-sidenav-footer-popover-width",
         "value": "300px",
-        "notes": ""
+        "notes": "Search/alerts popover panel width (300px)."
       },
       {
         "name": "--ds-sidenav-footer-popover-max-width",
         "value": "82vw",
-        "notes": ""
+        "notes": "Search/alerts popover max width clamp for narrow viewports (82vw)."
       },
       {
         "name": "--ds-sidenav-footer-popover-max-height",
         "value": "56vh",
-        "notes": ""
+        "notes": "Search/alerts popover max height before the panel scrolls (56vh)."
       },
       {
         "name": "--ds-sidenav-footer-head-tracking",
         "value": "0.04em",
-        "notes": ""
+        "notes": "Letter-spacing on the uppercase group heading in the search/alerts popovers (0.04em)."
       },
       {
         "name": "--ds-sidenav-footer-dot-size",
         "value": "6px",
-        "notes": ""
+        "notes": "Unread indicator dot diameter (6px); pins to the icon corner when the rail is collapsed."
       }
     ]
   },
