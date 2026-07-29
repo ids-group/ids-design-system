@@ -3990,7 +3990,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Name shown in the footer's account row."
       },
       {
         "name": "userRole",
@@ -3999,7 +3999,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Secondary line under the name (role / organisation)."
       },
       {
         "name": "alerts",
@@ -4017,7 +4017,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Mirrors the rail's collapsed state — labels hide, the avatar + icons stay."
       },
       {
         "name": "searchProvider",
