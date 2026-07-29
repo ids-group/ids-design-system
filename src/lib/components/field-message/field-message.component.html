@@ -30,4 +30,9 @@
       {{ text() }}
     </span>
   }
+} @else if (reserve()) {
+  <span
+    class="field-message reserve-placeholder"
+    aria-hidden="true"
+  ></span>
 }

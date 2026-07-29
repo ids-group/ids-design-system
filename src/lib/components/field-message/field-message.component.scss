@@ -16,4 +16,8 @@
 
   &.error   { color: var(--error-text); }
   &.success { color: var(--success-text); }
+
+  /* Empty reserve placeholder: an nbsp gives it exactly one line of height so
+     the footer row stays present with no message (prevents layout shift). */
+  &.reserve-placeholder::before { content: '\00a0'; }
 }

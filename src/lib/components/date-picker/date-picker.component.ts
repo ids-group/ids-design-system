@@ -182,6 +182,10 @@ export class DatePickerComponent
   readonly label = input<string>('');
   /** Helper text shown below the field. */
   readonly hint = input<string>('');
+  /** Reserve the message-row height even when empty, so the field doesn't shift
+   *  the layout below it when a hint/error appears. Default on — opt out for a
+   *  deliberately collapsing field. */
+  readonly reserveMessage = input(true, { transform: booleanAttribute });
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Shows an "(optional)" marker beside the label — ignored when `required` is set. */

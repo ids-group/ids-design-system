@@ -107,6 +107,10 @@ export class ColorPickerComponent
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Helper text shown below the trigger. */
   readonly hint = input<string>('');
+  /** Reserve the message-row height even when empty, so the field doesn't shift
+   *  the layout below it when a hint/error appears. Default on — opt out for a
+   *  deliberately collapsing field. */
+  readonly reserveMessage = input(true, { transform: booleanAttribute });
 
   protected readonly trigger =
     viewChild.required<ElementRef<HTMLButtonElement>>('trigger');

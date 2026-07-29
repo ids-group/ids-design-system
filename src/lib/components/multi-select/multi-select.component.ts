@@ -83,6 +83,10 @@ export class MultiSelectComponent
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Helper text shown below the field. */
   readonly hint = input<string>('');
+  /** Reserve the message-row height even when empty, so the field doesn't shift
+   *  the layout below it when a hint/error appears. Default on — opt out for a
+   *  deliberately collapsing field. */
+  readonly reserveMessage = input(true, { transform: booleanAttribute });
   /** Accessible name for the trigger — falls back to `placeholder`. */
   readonly ariaLabel = input<string | null>(null);
   /** Shows a "Select all" row that toggles every filter-matching, enabled option. */

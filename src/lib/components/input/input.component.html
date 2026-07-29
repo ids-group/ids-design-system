@@ -70,8 +70,7 @@
         class="clear-btn"
         aria-label="Clear input"
         (click)="clear()"
-      >
-      </button>
+      ></button>
     }
 
     @if (showPasswordToggle()) {
@@ -100,12 +99,18 @@
     </span>
   </div>
 
-  @if (hint() || messageState() !== 'default' || maxLength() !== null) {
+  @if (
+    reserveMessage() ||
+    hint() ||
+    messageState() !== 'default' ||
+    maxLength() !== null
+  ) {
     <div class="field-footer">
       <ds-field-message
         [text]="hint()"
         [state]="messageState()"
         [messageId]="hintId()"
+        [reserve]="reserveMessage()"
       />
 
       @if (maxLength() !== null) {

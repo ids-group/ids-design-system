@@ -55,6 +55,10 @@ export class RadioGroupComponent
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Helper text shown below the group. */
   readonly hint = input<string>('');
+  /** Reserve the message-row height even when empty, so the field doesn't shift
+   *  the layout below it when a hint/error appears. Default on — opt out for a
+   *  deliberately collapsing field. */
+  readonly reserveMessage = input(true, { transform: booleanAttribute });
   /** Accessible name for the group when no visible label is provided. */
   readonly ariaLabel = input<string | null>(null);
   /** Visible group label; omit to supply your own. */

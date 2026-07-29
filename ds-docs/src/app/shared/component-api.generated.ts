@@ -265,6 +265,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the field."
       },
       {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+      },
+      {
         "name": "allowCreate",
         "kind": "input",
         "type": "boolean",
@@ -1113,6 +1122,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the checkbox."
       },
       {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+      },
+      {
         "name": "size",
         "kind": "input",
         "type": "DsSize",
@@ -1209,6 +1227,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the trigger."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       }
     ],
     "outputs": []
@@ -1283,6 +1310,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the field."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       },
       {
         "name": "required",
@@ -1777,6 +1813,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "reserve",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Reserve one line of height even when there's no `text`, so a field that gains/loses a message doesn't shift the layout below it."
       }
     ],
     "outputs": []
@@ -1963,6 +2008,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the field."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       },
       {
         "name": "placeholder",
@@ -2855,6 +2909,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the field."
       },
       {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+      },
+      {
         "name": "ariaLabel",
         "kind": "input",
         "type": "string | null",
@@ -3030,6 +3093,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the cells."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       },
       {
         "name": "ariaLabel",
@@ -3417,6 +3489,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the control."
       },
       {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+      },
+      {
         "name": "size",
         "kind": "input",
         "type": "DsSize",
@@ -3504,6 +3585,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the group."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       },
       {
         "name": "ariaLabel",
@@ -3750,6 +3840,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the trigger."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       },
       {
         "name": "required",
@@ -4216,6 +4315,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the slider."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       }
     ],
     "outputs": []
@@ -4629,6 +4737,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the switch."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       },
       {
         "name": "size",
@@ -5320,6 +5437,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the field."
       },
       {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+      },
+      {
         "name": "placeholder",
         "kind": "input",
         "type": "string",
@@ -5639,6 +5765,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the picker."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       },
       {
         "name": "placeholder",
