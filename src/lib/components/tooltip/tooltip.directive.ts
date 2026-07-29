@@ -30,7 +30,7 @@ export class TooltipDirective implements OnDestroy {
   private readonly tipId = `ds-tooltip-${++nextId}`;
 
   @HostListener('mouseenter')
-  @HostListener('focus')
+  @HostListener('focusin')
   protected onOpen(): void {
     if (!this.dsTooltip()) {
       return;
@@ -45,7 +45,7 @@ export class TooltipDirective implements OnDestroy {
   // dismiss, and a re-rendered anchor (e.g. a navigated sidenav item) under a
   // stationary cursor fires no mouseleave, which would otherwise strand the panel.
   @HostListener('mouseleave')
-  @HostListener('blur')
+  @HostListener('focusout')
   @HostListener('click')
   protected onClose(): void {
     if (this.timer !== null) {
