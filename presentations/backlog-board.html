@@ -121,10 +121,10 @@
 
   <div class="summary">
     <div class="stat you"><div class="n">2</div><div class="l">Ждёт твоего решения</div></div>
-    <div class="stat a11y"><div class="n">4</div><div class="l">A11y (P0–P2)</div></div>
+    <div class="stat a11y"><div class="n">3</div><div class="l">A11y (P0–P2)</div></div>
     <div class="stat untouched"><div class="n">8</div><div class="l">Компоненты + foundations</div></div>
-    <div class="stat untouched"><div class="n">15</div><div class="l">Motion / DS-docs / PIN-475 / API</div></div>
-    <div class="stat raw"><div class="n">4</div><div class="l">Raw / frozen / lint</div></div>
+    <div class="stat untouched"><div class="n">14</div><div class="l">Motion / DS-docs / PIN-475 / API</div></div>
+    <div class="stat raw"><div class="n">3</div><div class="l">Raw / frozen</div></div>
   </div>
 
   <!-- ============ NEEDS YOU ============ -->
@@ -138,12 +138,11 @@
 
   <!-- ============ A11Y ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>♿ A11y — по компонентам и findings</h2><span class="count c-a11y">4</span><span class="why">Остаток — 4 отложенных/спорных/minor; компонентная волна 07-06 — в архиве done.</span></div>
+    <div class="lane-head"><h2>♿ A11y — по компонентам и findings</h2><span class="count c-a11y">3</span><span class="why">Остаток — 3 отложенных/спорных; badge count wording ✅ закрыт 07-29 (см. done.md); компонентная волна 07-06 — в архиве done.</span></div>
     <div class="cards">
       <div class="card a11y"><span class="chip ch-p1">P1 · отложено</span><div class="t">scroll-lock без ref-count</div><p class="d">modal/drawer: при двух оверлеях закрытие первого возвращает скролл под вторым (оба сбрасывают `body.overflow`). Нужен общий ref-counted lock — по одному компоненту не чинится. Отложено 2026-07-06; варианты (сервис / CDK / per-component) расписаны в todo.</p></div>
       <div class="card a11y"><span class="chip ch-p2">P2 · отложено</span><div class="t">date-picker grid-семантика</div><p class="d">Нет `role=grid`/`gridcell` (используется `aria-pressed`) + нет `role=dialog`/имени на панели. Отложено 2026-07-06: `aria-selected` валиден только в grid-структуре, значит нужны строки-недели → риск для CSS-раскладки. focus-баг сверен — НЕ баг.</p></div>
       <div class="card a11y"><span class="chip ch-p2">валидировано</span><div class="t">topbar role=banner</div><p class="d">Не делаем (Stas: «пропусти, не удаляй»): `<header>` уже даёт banner-landmark неявно (`<ds-topbar>` — generic, не sectioning); W3C-валидатор помечает явный `role=banner` на `<header>` как unnecessary, а при вложении в `<main>`/`<section>` он был бы вреден. Оставлено как decision-record.</p></div>
-      <div class="card a11y"><span class="chip ch-p2">minor</span><div class="t">badge count — формулировка «notifications»</div><p class="d">`aria-label` жёстко «N notifications», а `[count]` используют для ЛЮБОГО счётчика (корзина, непрочитанные, поиск) — бейдж корзины объявляет «3 notifications». Fix: сделать существительное настраиваемым (`countLabel`/`unit` или `ariaLabel` override), дефолт — текущая формулировка. Низкий приоритет.</p></div>
     </div>
   </div>
 
@@ -201,14 +200,13 @@
 
   <!-- ============ API / OTHER ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🛠 API-консистентность + прочее</h2><span class="count c-track">6</span><span class="why">P2 + портфельные перекрытия (2026-07-07) + 2 точечных API-гэпа (2026-07-10).</span></div>
+    <div class="lane-head"><h2>🛠 API-консистентность + прочее</h2><span class="count c-track">5</span><span class="why">P2 + портфельные перекрытия (2026-07-07) + 1 точечный API-гэп (2026-07-10); ds-select clear-× ✅ закрыт 07-29 (см. done.md).</span></div>
     <div class="cards">
       <div class="card track"><span class="chip ch-oos">решить</span><div class="t">autocomplete [multiple] vs ds-multi-select</div><p class="d">Индустрия (Carbon/Spectrum/MUI/FluentUI): autocomplete — single-first, multi — отдельный компонент. У нас multi живёт и в `ds-autocomplete [multiple]` (чипы в триггере, сборка печатью, allowCreate), и в `ds-multi-select` (чекбокс-листбокс + selectAll) — один сценарий, две эргономики. Решить (a) deprecate autocomplete-multi или (b) задокументировать границу — на живой деке.</p><div class="meta">multi-pick-comparison.html</div></div>
       <div class="card track"><span class="chip ch-oos">ждёт go</span><div class="t">Shared picker internals</div><p class="d">select / autocomplete / multi-select дублируют приватную сантехнику: CDK-оверлей конфиг, active-descendant навигация со skip-disabled, фильтр опций. Вынести ВНУТРЕННИЕ хелперы (прецедент — DsControlValueAccessor, disposeWithLeave) и мигрировать три пикера; публичные API не трогаем. «Шарим сантехнику, храним контракты». Новый общий паттерн — нужен явный go. (ds-dropdown-дубликат ✅ уже влит в select, 3ffc3dc.)</p></div>
       <div class="card track"><span class="chip ch-oos">почти закрыт</span><div class="t">API consistency</div><p class="d">✅ Отгружено 2026-07-09/10 (breaking, в CHANGELOG Unreleased): `booleanAttribute` на всех boolean-инпутах · `DsStatus` + `danger→error`/`warn→warning` (+токены) · экспорт `DividerSpacing` (`PopoverAlign` уже был) · output-имена → past-participle (`dismissed→closed`, `*Click→*Clicked` …) · `title` по ролям (required у диалогов) · badge `count` / progress `indeterminate` вынесены из enum. Остался только <b>pagination model/output дедуп</b> — перепроверен (коллизия `pageSizeChange` + тройной emit), отложен.</p></div>
       <div class="card track"><span class="chip ch-oos">if-needed</span><div class="t">CDK Menu adoption (option B)</div><p class="d">Только если понадобятся вложенные сабменю / menubar / context-menu. План — `docs/superpowers/cdk-menu-adoption.md`.</p></div>
       <div class="card track"><span class="chip ch-oos">ждёт go</span><div class="t">ds-sidenav-item — (activate) output</div><p class="d">Компонент — чисто display-примитив (label/icon/active/badge + href/routerLink) без событийного output, поэтому ds-docs sidebar не может дожфудить его (нав вынужден перехватывать клик напрямую). Добавить опциональный `(activate)` click-passthrough output — консьюмеры перехватывают навигацию, active/badge/tooltip/collapse рендерятся как есть. Низкий приоритет — дожфудинг, не функциональный гэп; публичный API на шаренном компоненте — нужен явный go.</p></div>
-      <div class="card track"><span class="chip ch-oos">отложено</span><div class="t">ds-select clear-× — недоступен с клавиатуры</div><p class="d">Крестик очистки — mouse-only `<span aria-hidden>`, не может быть `<button>`, т.к. вложен в trigger `<button role="combobox">` (nested interactive невалиден в HTML). Предпочтительный фикс: trigger → `<div role="combobox" tabindex="0">`, тогда clear — настоящая `<button>` (APG-канонично, раскладка и клавиатура не ломаются). Тот же nested-interactive нюанс вероятен у autocomplete/multi-select/color-picker триггеров — сверить вместе. Отложено 2026-07-10.</p></div>
     </div>
   </div>
 
@@ -230,14 +228,7 @@
   </div>
 
   <!-- ============ LINT DEBT ============ -->
-  <div class="lane">
-    <div class="lane-head"><h2>🧹 Lint debt</h2><span class="count c-track">1</span><span class="why">Rollout-остаток закрыт 08-07; осталась a11y date-picker (правит параллельная сессия).</span></div>
-    <div class="cards">
-      <div class="card a11y"><span class="chip ch-p2">warn ×4</span><div class="t">date-picker a11y (click/focus)</div><p class="d">4 варнинга (стр. ~159/183/225). Файл под активной правкой параллельной сессии — оставлено ей. Остальной lint-долг (prefer-for-of, whitespace, a11y card/tabs/overlays/listbox) закрыт: <code>ec73779</code> / <code>ef71ec4</code> / <code>6f1adcf</code> / <code>5da9b4e</code>.</p></div>
-    </div>
-  </div>
-
-
+  <!-- Lane removed 2026-07-29: its only remaining card (date-picker a11y) shipped — see done.md. -->
 
 
 
@@ -247,7 +238,8 @@
   <p class="foot">
     Источник: <span class="tag">docs/todo.md</span> (полные формулировки — в поповерах ⓘ).
     Архив сделанного целиком — <span class="tag">docs/done.md</span>; на доске выполненное не хранится.
-    Актуализировано 2026-07-23 (с 07-10): non-modal overlay Phase 2 докатан на select/autocomplete/multi-select/time-picker/color-picker/popover (07-23 починены 2 focus-follow-up'а: popover `panelRole` focus-steal и date-picker scroll-close) — лейн Motion пересобран, 2 закрытых пункта (press-дизайн, система рецептов) сняты как отгруженные ранее; добавлены «Семантический radius/elevation слой» (Foundations, запрошено 07-08), «badge count wording» (A11y, minor), «ds-sidenav-item (activate)» и «ds-select clear-× клавиатура» (API/прочее, оба surfaced 07-10). Также обновлены встроенные копии todo.md/done.md.
+    Актуализировано 2026-07-29 (session): 3 карточки закрыты и сняты с доски — «ds-select clear-× клавиатура» (API/прочее), «badge count wording» (A11y) и «date-picker a11y (click/focus)» (весь лейн Lint debt пуст → удалён); подробности в <span class="tag">docs/done.md</span> → Shipped 2026-07-29. NOTE: между 07-23 и 07-29 в <span class="tag">docs/todo.md</span> прошли ещё несколько ревью/сессий (07-24 полный аудит, 07-27/07-28/07-29 новые находки) — их карточки на доску ещё не заведены; эта правка только зеркалит то, что реально шипнулось в текущей сессии и уже имело карточку здесь. Встроенные raw-копии todo.md/done.md (для поповеров) НЕ пересинхронизированы с этой правкой — они остаются снимком на 07-23/пред.
+    2026-07-23 (с 07-10): non-modal overlay Phase 2 докатан на select/autocomplete/multi-select/time-picker/color-picker/popover (07-23 починены 2 focus-follow-up'а: popover `panelRole` focus-steal и date-picker scroll-close) — лейн Motion пересобран, 2 закрытых пункта (press-дизайн, система рецептов) сняты как отгруженные ранее; добавлены «Семантический radius/elevation слой» (Foundations, запрошено 07-08), «badge count wording» (A11y, minor), «ds-sidenav-item (activate)» и «ds-select clear-× клавиатура» (API/прочее, оба surfaced 07-10).
     2026-07-08: публичный token-API раскатан на 11 бестокенных компонентов — детали в архиве.
     2026-07-07: picker-portfolio (rename → <span class="tag">ds-autocomplete</span> · merge dropdown→select · breakpoints-миграция).
   </p>
@@ -615,7 +607,6 @@ _Archived 2026-07-06 from `todo.md`._
       ["scroll-lock без ref-count",         "scroll-lock isn't ref-counted",              ""],
       ["date-picker grid-семантика",        "date-picker grid semantics",                 ""],
       ["topbar role=banner",                "topbar →",                                   ""],
-      ["badge count — формулировка",        "wording is hardcoded",                       ""],
 
       ["Missing components — MED",          "Most of the original gap list has SHIPPED",  ""],
       ["Feature gaps — Forms",              "ds-select` native `multi",                   ""],
@@ -644,14 +635,11 @@ _Archived 2026-07-06 from `todo.md`._
       ["API consistency",                   "API consistency (P2)",                       ""],
       ["CDK Menu adoption",                 "CDK Menu adoption (option B)",               ""],
       ["ds-sidenav-item — (activate)",      "add an `(activate)` output for click interception", ""],
-      ["ds-select clear-×",                 "clear-× is a mouse-only",                    ""],
 
       ["day (календарь)",                   "By-design raw specimens — VISIBLY MARKED",   ""],
       ["toolbar .divider",                  "By-design raw specimens — VISIBLY MARKED",   ""],
 
-      ["design-system.md",                  "design-system.md: one global note",          ""],
-
-      ["date-picker a11y (click/focus)",    "date-picker a11y (4 warnings",               ""]
+      ["design-system.md",                  "design-system.md: one global note",          ""]
     ];
 
     function read(id) { const el = document.getElementById(id); return el ? el.textContent : ""; }
