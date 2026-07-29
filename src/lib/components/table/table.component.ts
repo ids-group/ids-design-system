@@ -787,19 +787,23 @@ export class TableComponent<T extends { id: string }> {
       }
       const wrap = this.scrollWrap().nativeElement;
       let previousHeight: number | null = null;
+      let previousWidth: number | null = null;
       let heightAnim: Animation | null = null;
       const observer = new ResizeObserver((entries) => {
         const entry = entries[0];
-        const nextHeight = entry.borderBoxSize?.[0]
-          ? entry.borderBoxSize[0].blockSize
-          : entry.contentRect.height;
-        if (previousHeight === null || nextHeight === previousHeight) {
-          previousHeight = nextHeight;
-
+        const box = entry.borderBoxSize?.[0];
+        const nextHeight = box ? box.blockSize : entry.contentRect.height;
+        const nextWidth = box ? box.inlineSize : entry.contentRect.width;
+        const fromHeight = previousHeight;
+        const widthChanged = nextWidth !== previousWidth;
+        previousHeight = nextHeight;
+        previousWidth = nextWidth;
+        // Only a height change at a stable width is a row-set swap; skip the
+        // first measure and width-driven reflows (window/column resize) so the
+        // tween doesn't chase a resize.
+        if (fromHeight === null || widthChanged || nextHeight === fromHeight) {
           return;
         }
-        const fromHeight = previousHeight;
-        previousHeight = nextHeight;
         const styles = getComputedStyle(wrap);
         const duration = this.parseDurationMs(
           styles.getPropertyValue('--duration-base'),
