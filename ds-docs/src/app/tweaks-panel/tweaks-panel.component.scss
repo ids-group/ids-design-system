@@ -4,7 +4,7 @@
   position: fixed;
   top: var(--space-4);
   right: var(--space-4);
-  z-index: var(--layer-popover);
+  z-index: var(--layer-sticky);
 
   @include bp.down(lg) { display: none; }
 }

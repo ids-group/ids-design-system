@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  AppShell,
+  AppLayout,
   Avatar,
   Card,
   IconButton,
@@ -14,10 +14,10 @@ import {
 } from '@ids-group-ltd/ids-design-system';
 
 /** The shell pins itself to 100dvh — previews cap it via the public
- *  `--ds-app-shell-height` hook so the whole frame fits a card. */
+ *  `--ds-app-layout-height` hook so the whole frame fits a card. */
 const frame = (height: number): React.CSSProperties =>
   ({
-    '--ds-app-shell-height': `${height}px`,
+    '--ds-app-layout-height': `${height}px`,
     border: '1px solid var(--border-default)',
     borderRadius: 8,
     overflow: 'hidden',
@@ -96,9 +96,9 @@ const content = (
  *  topbar sits above the content column only. Only `.content` scrolls. */
 export const FullShell = () => (
   <div style={frame(600)}>
-    <AppShell sidenav={rail(false)} topbar={bar}>
+    <AppLayout sidenav={rail(false)} topbar={bar}>
       {content}
-    </AppShell>
+    </AppLayout>
   </div>
 );
 
@@ -106,8 +106,8 @@ export const FullShell = () => (
  *  collapsed to its icon rail) and content sit beneath it. */
 export const TopbarFullSpan = () => (
   <div style={frame(600)}>
-    <AppShell topbarSpan="full" sidenav={rail(true)} topbar={bar}>
+    <AppLayout topbarSpan="full" sidenav={rail(true)} topbar={bar}>
       {content}
-    </AppShell>
+    </AppLayout>
   </div>
 );

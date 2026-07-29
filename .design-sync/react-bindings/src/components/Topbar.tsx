@@ -18,7 +18,7 @@ export interface TopbarProps {
 /** Horizontal app header — port of `ds-topbar`. A fixed-height flex bar with
  *  four named slots: `title`, `breadcrumbs`, `search` (flexes to fill), and
  *  `actions` (right-aligned). No default children slot — all content goes
- *  through the props. Compose inside `AppShell`'s `topbar` prop. */
+ *  through the props. Compose inside `AppLayout`'s `topbar` prop. */
 export function Topbar({ title, breadcrumbs, search, actions }: TopbarProps) {
   return host(
     'ds-topbar',

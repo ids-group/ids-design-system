@@ -10,7 +10,7 @@ export * from './components/DatePicker';
 export * from './components/TimePicker';
 export * from './components/ColorPicker';
 // W3C — shell, sidenav, topbar, layout
-export * from './components/AppShell';
+export * from './components/AppLayout';
 export * from './components/Topbar';
 export * from './components/Sidenav';
 export * from './components/SidenavFooter';

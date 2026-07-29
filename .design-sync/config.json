@@ -35,7 +35,7 @@
     "ModalCard": { "cardMode": "column" },
     "ModalConfirm": { "cardMode": "column" },
     "Drawer": { "cardMode": "column" },
-    "AppShell": { "cardMode": "column", "primaryStory": "FullShell" },
+    "AppLayout": { "cardMode": "column", "primaryStory": "FullShell" },
     "Topbar": { "cardMode": "column" }
   },
   "buildCmd": "node .design-sync/tools/build-css.mjs && node .design-sync/tools/build-bindings.mjs"

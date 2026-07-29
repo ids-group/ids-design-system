@@ -47,7 +47,7 @@
 - Pagination inlines an internal PageSizeSelect with ds-select markup (Select binding didn't exist yet); could delegate to Select on a future pass.
 - `build-css.mjs` walks `*.component.ts` under all of `src/lib` (so `icons/` and any new directory come along) and emits each `styleUrl` sheet under EVERY referencing component's selector (Angular gives each component its own scoped copy — modal-card/modal share modal.component.scss). Inline `styles: [...]` are discovered per file, not from a list. A component whose selector or stylesheet can't be parsed is now **fatal** (exit 1) rather than a `!` line to notice: shipping a silently unstyled component is worse than a failed build. The summary line carries the counts to sanity-check (currently 81 blocks / 81 components / 0 styleless).
 - Container (`ds-container`) uses `margin-inline: auto` — it shrink-wraps inside flex/grid parents; compose it in block flow.
-- AppShell height in previews/designs: set `--ds-app-shell-height` inline (defaults to viewport-ish).
+- AppLayout height in previews/designs: set `--ds-app-layout-height` inline (defaults to viewport-ish).
 - PageHeader `tabs` slot must be wrapped `<div tabs="">` (CSS `:has(> [tabs])` contract) — the binding does this internally.
 - Intentionally not ported anywhere (CDK/runtime-only): outside-click/Escape close, focus traps, scroll lock, menu type-ahead, toast queue animations, Table drag resize/reorder + CSV export + popover sub-UIs (render trigger buttons only), collapsed-sidenav hover tooltip, routerLink (→ `onNavigate`/plain callbacks).
 - DescriptionList's copy button is hover-revealed by DS CSS (`opacity:0` until `:host(:hover)`) — invisible in static captures, by design.
@@ -57,6 +57,9 @@
 - **Workflow after an upstream component change:** the gate names the changed source and the binding to diff it against. Re-port the binding, then `node .design-sync/tools/check-parity.mjs --bless` to re-record the hashes. Blessing without reading the diff defeats the whole mechanism.
 - Deliberate API gaps live in `parity.json` → `allow`, keyed by the missing prop, each with a reason. Stale entries fail the gate, so the excuse list can't outlive what it excuses.
 - What the gate cannot see: template markup that changed WITHOUT changing the file hash is impossible, but a re-port that is wrong in substance still passes — it only proves someone looked.
+
+## Re-port log
+- **2026-07-29, merge of `main` into this branch.** The parity gate caught two things the merge brought in. `ds-avatar` gained `seed` + `avoidHues` (OKLCH seeded tint) — ported, with `avatar-tint.ts` added to the mirrored modules so the React side runs the DS's own hashing/hue-avoidance. `ds-app-shell` was renamed to `ds-app-layout` (breaking, `e282b99`) — binding, preview, doc and the `cfg.overrides` key renamed, host class `app-shell` → `app-layout`, `--ds-app-shell-*` → `--ds-app-layout-*`. The rename also exposed a hole in the gate: a binding whose component disappears upstream was invisible to it, since the check only walked components that still exist. Fixed.
 
 ## Re-sync risks (watch-list for the next run)
 - Binding-only props (list above) must survive any re-port from upstream.

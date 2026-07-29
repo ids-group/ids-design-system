@@ -9,43 +9,43 @@ import {
   viewChild,
 } from '@angular/core';
 import { ScrollbarWidthService } from './scrollbar-width.service';
-import { ShellScrollService } from './shell-scroll.service';
+import { LayoutScrollService } from './layout-scroll.service';
 
 /**
- * Fixed-frame application shell: the host is pinned to the viewport
+ * Fixed-frame application layout: the host is pinned to the viewport
  * (`100dvh` + `overflow: hidden`) and ONLY the content region scrolls, so
  * the sidenav rail and the topbar stay put on pages taller than the
  * viewport. Consumers project their own chrome into the slots:
  *
  * ```html
- * <ds-app-shell>
+ * <ds-app-layout>
  *   <ds-sidenav sidenav>…</ds-sidenav>
  *   <ds-topbar topbar>…</ds-topbar>
  *   <router-outlet />
- * </ds-app-shell>
+ * </ds-app-layout>
  * ```
  *
- * The shell renders the `<main>` landmark itself — do not nest another
+ * The layout renders the `<main>` landmark itself — do not nest another
  * `<main>` in the content. Scroll-to-top on navigation is built in
- * (`ShellScrollService`); the content padding auto-compensates the native
- * scrollbar width so the right inset always equals the left one. The shell
+ * (`LayoutScrollService`); the content padding auto-compensates the native
+ * scrollbar width so the right inset always equals the left one. The layout
  * requires the application router (`provideRouter`) because its scroll-to-top
  * service subscribes to navigation events.
  */
 @Component({
-  selector: 'ds-app-shell',
+  selector: 'ds-app-layout',
   standalone: true,
-  templateUrl: './app-shell.component.html',
-  styleUrl: './app-shell.component.scss',
+  templateUrl: './app-layout.component.html',
+  styleUrl: './app-layout.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class.app-shell]': 'true',
+    '[class.app-layout]': 'true',
     '[class.topbar-full]': "topbarSpan() === 'full'",
   },
-  providers: [ShellScrollService],
+  providers: [LayoutScrollService],
 })
-export class AppShellComponent {
+export class AppLayoutComponent {
   /**
    * `'content'` (default): the rail spans the full viewport height on the
    * left and the topbar sits above the content column only. `'full'`: the
@@ -53,7 +53,7 @@ export class AppShellComponent {
    */
   readonly topbarSpan = input<'content' | 'full'>('content');
 
-  private readonly shellScroll = inject(ShellScrollService);
+  private readonly layoutScroll = inject(LayoutScrollService);
   private readonly content =
     viewChild.required<ElementRef<HTMLElement>>('content');
 
@@ -62,7 +62,7 @@ export class AppShellComponent {
     inject(ScrollbarWidthService);
 
     afterNextRender(() => {
-      this.shellScroll.setScrollContainer(this.content().nativeElement);
+      this.layoutScroll.setScrollContainer(this.content().nativeElement);
     });
   }
 }

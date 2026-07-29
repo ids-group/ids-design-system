@@ -6,11 +6,11 @@ import { debounceTime, fromEvent } from 'rxjs';
 /**
  * Measures the native scrollbar width per device and publishes it as
  * `--ds-scrollbar-width` on `:root` (recomputed on debounced resize).
- * `ds-app-shell` subtracts it from the content region's right padding so the
+ * `ds-app-layout` subtracts it from the content region's right padding so the
  * visual inset stays equal on both sides whether the scrollbar area is a real
  * bar (classic scrollbars), a reserved gutter, or nothing (overlay
  * scrollbars, where the measured width is 0). Internal — instantiated by
- * `ds-app-shell`; not part of the public API.
+ * `ds-app-layout`; not part of the public API.
  */
 @Injectable({ providedIn: 'root' })
 export class ScrollbarWidthService {

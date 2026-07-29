@@ -1,7 +1,7 @@
 <docs-section
-  anchor="app-shell"
+  anchor="app-layout"
   eyebrow="Components"
-  title="App shell"
+  title="App layout"
 >
   <span lede>
     The fixed application frame: the rail and topbar stay pinned while only the
@@ -11,7 +11,7 @@
     </code>,
     <code class="t-mono-inline">
       [topbar]
-    </code> and default slots — the shell renders the
+    </code> and default slots â€” the layout renders the
     <code class="t-mono-inline">
       &lt;main&gt;
     </code> landmark and compensates the scrollbar so the content insets stay
@@ -24,14 +24,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    Default geometry — the rail spans the full height on the left and the topbar
+    Default geometry â€” the rail spans the full height on the left and the topbar
     sits above the content column only. Scroll the filler: the rail and topbar
     hold their place. The footer's Search and Alerts rows open live popovers, and
     opening Alerts clears the unread dot.
   </p>
 
-  <div class="shell-demo">
-    <ds-app-shell>
+  <div class="layout-demo">
+    <ds-app-layout>
       <ds-sidenav
         sidenav
         brand="MyAdmin"
@@ -88,9 +88,9 @@
       </ds-topbar>
 
       <div class="filler">
-        Scroll me — the rail and topbar stay put; only this region scrolls.
+        Scroll me â€” the rail and topbar stay put; only this region scrolls.
       </div>
-    </ds-app-shell>
+    </ds-app-layout>
   </div>
 
   <!-- ============================================================ Full-span topbar -->
@@ -106,8 +106,8 @@
     Same projected chrome as above.
   </p>
 
-  <div class="shell-demo">
-    <ds-app-shell topbarSpan="full">
+  <div class="layout-demo">
+    <ds-app-layout topbarSpan="full">
       <ds-sidenav
         sidenav
         brand="MyAdmin"
@@ -164,8 +164,8 @@
       </ds-topbar>
 
       <div class="filler">
-        Scroll me — the rail and topbar stay put; only this region scrolls.
+        Scroll me â€” the rail and topbar stay put; only this region scrolls.
       </div>
-    </ds-app-shell>
+    </ds-app-layout>
   </div>
 </docs-section>

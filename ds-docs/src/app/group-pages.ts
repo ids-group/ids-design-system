@@ -26,7 +26,7 @@ import { TextareaSection } from './sections/components/textarea/textarea.section
 import { TimePickerSection } from './sections/components/time-picker/time-picker.section';
 import { W3wSection } from './sections/components/w3w/w3w.section';
 
-import { AppShellSection } from './sections/components/app-shell/app-shell.section';
+import { AppLayoutSection } from './sections/components/app-layout/app-layout.section';
 import { BreadcrumbsSection } from './sections/components/breadcrumbs/breadcrumbs.section';
 import { MenuSection } from './sections/components/menu/menu.section';
 import { PaginationSection } from './sections/components/pagination/pagination.section';
@@ -109,7 +109,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
   { path: '', sections: [HomeSection] },
   { path: 'components/actions', title: 'Actions', sections: [ButtonSection, SegmentedSection, IconButtonSection, SplitButtonSection, LinkSection] },
   { path: 'components/forms-inputs', title: 'Forms & inputs', sections: [AutocompleteSection, CheckboxSection, ColorPickerSection, DatePickerSection, DropzoneSection, InputSection, MultiSelectSection, NumberStepperSection, OtpInputSection, RadioSection, SearchSection, SelectSection, SliderSection, SwitchSection, TextareaSection, TimePickerSection, W3wSection] },
-  { path: 'components/navigation', title: 'Navigation', sections: [AppShellSection, BreadcrumbsSection, MenuSection, PaginationSection, SidenavSection, StepperSection, TabsSection, TopbarSection] },
+  { path: 'components/navigation', title: 'Navigation', sections: [AppLayoutSection, BreadcrumbsSection, MenuSection, PaginationSection, SidenavSection, StepperSection, TabsSection, TopbarSection] },
   { path: 'components/data-display', title: 'Data display', sections: [AccordionSection, AvatarSection, CardSection, DescriptionListSection, IconSection, ListSection, StatSection, TableSection, TagSection, TimelineSection, TreeSection] },
   { path: 'components/feedback-status', title: 'Feedback & status', sections: [AlertSection, BadgeSection, BannerSection, EmptyStateComponentSection, LoadingOverlaySection, ProgressSection, SkeletonSection, SpinnerSection, StatusDotSection, ToastSection] },
   { path: 'components/overlays', title: 'Overlays', sections: [BottomSheetSection, DrawerSection, ModalSection, PopoverSection, TooltipSection] },

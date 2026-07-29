@@ -1,7 +1,7 @@
 :host {
-  --_shell-pad-x: var(--ds-app-shell-pad-x, var(--space-6));
-  --_shell-pad-y: var(--ds-app-shell-pad-y, var(--space-6));
-  --_shell-content-max-width: var(--ds-app-shell-content-max-width, none);
+  --_layout-pad-x: var(--ds-app-layout-pad-x, var(--space-6));
+  --_layout-pad-y: var(--ds-app-layout-pad-y, var(--space-6));
+  --_layout-content-max-width: var(--ds-app-layout-content-max-width, none);
 
   display: grid;
   grid-template-areas:
@@ -9,7 +9,7 @@
     'sidenav content';
   grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
-  height: var(--ds-app-shell-height, 100dvh);
+  height: var(--ds-app-layout-height, 100dvh);
   overflow: hidden;
 }
 
@@ -32,18 +32,18 @@
 
 .content {
   grid-area: content;
-  padding: var(--_shell-pad-y) var(--_shell-pad-x);
+  padding: var(--_layout-pad-y) var(--_layout-pad-x);
 
   // The reserved gutter + scrollbar count towards the right inset: subtract
-  // the measured width so gutter + padding always equals --_shell-pad-x and
+  // the measured width so gutter + padding always equals --_layout-pad-x and
   // the inset matches the left edge on every device (0 with overlay
   // scrollbars).
-  padding-right: calc(var(--_shell-pad-x) - var(--ds-scrollbar-width, 0px));
+  padding-right: calc(var(--_layout-pad-x) - var(--ds-scrollbar-width, 0px));
   overflow: auto;
   scrollbar-gutter: stable;
 }
 
 .inner {
-  max-width: var(--_shell-content-max-width);
+  max-width: var(--_layout-content-max-width);
   margin-inline: auto;
 }

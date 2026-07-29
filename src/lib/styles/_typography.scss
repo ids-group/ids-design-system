@@ -1,26 +1,175 @@
 // Type utility classes — ported from CLAUDE_DESIGN_DS/tokens.css §Type utilities.
 // These are GLOBAL by design — consumers apply them via class.
+//
+// Consumer-first token contract (same as components): every token-driven
+// property is a longhand read through a public `--ds-t-<name>-*` custom
+// property that FALLS BACK to the current semantic token, so a consumer can
+// retune a single axis in a scope — e.g.
+// `[data-brand] .t-h3 { --ds-t-h3-font-weight: var(--font-weight-bold) }` —
+// without re-declaring the rest or forking the class. Structural box props
+// (padding / margin / border-width / max-width / overflow) stay raw.
 
-.t-display    { font: var(--font-weight-extrabold) var(--font-size-display) / var(--line-height-tight) var(--font-display); letter-spacing: var(--letter-spacing-tight); }
-.t-h1         { font: var(--font-weight-extrabold) var(--font-size-h1) / var(--line-height-tight) var(--font-heading); letter-spacing: var(--letter-spacing-tight); }
-.t-h2         { font: var(--font-weight-extrabold) var(--font-size-h2) / var(--line-height-snug) var(--font-heading); letter-spacing: var(--letter-spacing-snug); }
-.t-h3         { font: var(--font-weight-extrabold) var(--font-size-h3) / var(--line-height-snug) var(--font-heading); letter-spacing: var(--letter-spacing-snug); }
-.t-h4         { font: var(--font-weight-bold) var(--font-size-h4) / var(--line-height-snug) var(--font-heading); }
-.t-h5         { font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-heading); }
-.t-card-title { font: var(--font-weight-bold) var(--card-title-fs) / var(--line-height-snug) var(--font-heading); margin: 0; color: var(--text-primary); }
-.t-l          { font: var(--font-weight-regular) var(--font-size-l) / var(--line-height-base) var(--font-sans); }
-.t-l-bold     { font: var(--font-weight-bold) var(--font-size-l) / var(--line-height-base) var(--font-sans); }
-.t-m          { font: var(--font-weight-regular) var(--font-size-m) / var(--line-height-base) var(--font-sans); }
-.t-m-bold     { font: var(--font-weight-bold) var(--font-size-m) / var(--line-height-base) var(--font-sans); }
-.t-s          { font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); }
-.t-s-bold     { font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-base) var(--font-sans); }
-.t-xs         { font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans); }
-.t-xs-bold    { font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans); }
-.t-overline   { font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans); letter-spacing: var(--letter-spacing-wider); text-transform: uppercase; color: var(--text-tertiary); }
-.t-caption    { font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans); color: var(--text-tertiary); }
-.t-mono        { font: var(--font-weight-medium) var(--font-size-mono) / var(--line-height-base) var(--font-mono); }
-.t-mono-inline { font: var(--font-weight-regular) var(--font-size-mono) / 1 var(--font-mono); background: var(--surface-secondary); color: var(--text-primary); padding: 1px var(--space-1); border-radius: var(--radius-sm); }
-.t-mono-block  { font: var(--font-weight-regular) var(--font-size-mono) / var(--line-height-loose) var(--font-mono); background: var(--surface-secondary); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); max-width: 100%; overflow-x: auto; }
+.t-display {
+  font-weight: var(--ds-t-display-font-weight, var(--font-weight-extrabold));
+  font-size: var(--ds-t-display-font-size, var(--font-size-display));
+  line-height: var(--ds-t-display-line-height, var(--line-height-tight));
+  font-family: var(--ds-t-display-font-family, var(--font-display));
+  letter-spacing: var(--ds-t-display-letter-spacing, var(--letter-spacing-tight));
+}
+
+.t-h1 {
+  font-weight: var(--ds-t-h1-font-weight, var(--font-weight-extrabold));
+  font-size: var(--ds-t-h1-font-size, var(--font-size-h1));
+  line-height: var(--ds-t-h1-line-height, var(--line-height-tight));
+  font-family: var(--ds-t-h1-font-family, var(--font-heading));
+  letter-spacing: var(--ds-t-h1-letter-spacing, var(--letter-spacing-tight));
+}
+
+.t-h2 {
+  font-weight: var(--ds-t-h2-font-weight, var(--font-weight-extrabold));
+  font-size: var(--ds-t-h2-font-size, var(--font-size-h2));
+  line-height: var(--ds-t-h2-line-height, var(--line-height-snug));
+  font-family: var(--ds-t-h2-font-family, var(--font-heading));
+  letter-spacing: var(--ds-t-h2-letter-spacing, var(--letter-spacing-snug));
+}
+
+.t-h3 {
+  font-weight: var(--ds-t-h3-font-weight, var(--font-weight-extrabold));
+  font-size: var(--ds-t-h3-font-size, var(--font-size-h3));
+  line-height: var(--ds-t-h3-line-height, var(--line-height-snug));
+  font-family: var(--ds-t-h3-font-family, var(--font-heading));
+  letter-spacing: var(--ds-t-h3-letter-spacing, var(--letter-spacing-snug));
+}
+
+.t-h4 {
+  font-weight: var(--ds-t-h4-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-t-h4-font-size, var(--font-size-h4));
+  line-height: var(--ds-t-h4-line-height, var(--line-height-snug));
+  font-family: var(--ds-t-h4-font-family, var(--font-heading));
+}
+
+.t-h5 {
+  font-weight: var(--ds-t-h5-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-t-h5-font-size, var(--font-size-h5));
+  line-height: var(--ds-t-h5-line-height, var(--line-height-snug));
+  font-family: var(--ds-t-h5-font-family, var(--font-heading));
+}
+
+.t-card-title {
+  font-weight: var(--ds-t-card-title-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-t-card-title-font-size, var(--card-title-fs));
+  line-height: var(--ds-t-card-title-line-height, var(--line-height-snug));
+  font-family: var(--ds-t-card-title-font-family, var(--font-heading));
+  margin: 0;
+  color: var(--ds-t-card-title-color, var(--text-primary));
+}
+
+.t-l {
+  font-weight: var(--ds-t-l-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-t-l-font-size, var(--font-size-l));
+  line-height: var(--ds-t-l-line-height, var(--line-height-base));
+  font-family: var(--ds-t-l-font-family, var(--font-sans));
+}
+
+.t-l-bold {
+  font-weight: var(--ds-t-l-bold-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-t-l-bold-font-size, var(--font-size-l));
+  line-height: var(--ds-t-l-bold-line-height, var(--line-height-base));
+  font-family: var(--ds-t-l-bold-font-family, var(--font-sans));
+}
+
+.t-m {
+  font-weight: var(--ds-t-m-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-t-m-font-size, var(--font-size-m));
+  line-height: var(--ds-t-m-line-height, var(--line-height-base));
+  font-family: var(--ds-t-m-font-family, var(--font-sans));
+}
+
+.t-m-bold {
+  font-weight: var(--ds-t-m-bold-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-t-m-bold-font-size, var(--font-size-m));
+  line-height: var(--ds-t-m-bold-line-height, var(--line-height-base));
+  font-family: var(--ds-t-m-bold-font-family, var(--font-sans));
+}
+
+.t-s {
+  font-weight: var(--ds-t-s-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-t-s-font-size, var(--font-size-s));
+  line-height: var(--ds-t-s-line-height, var(--line-height-base));
+  font-family: var(--ds-t-s-font-family, var(--font-sans));
+}
+
+.t-s-bold {
+  font-weight: var(--ds-t-s-bold-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-t-s-bold-font-size, var(--font-size-s));
+  line-height: var(--ds-t-s-bold-line-height, var(--line-height-base));
+  font-family: var(--ds-t-s-bold-font-family, var(--font-sans));
+}
+
+.t-xs {
+  font-weight: var(--ds-t-xs-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-t-xs-font-size, var(--font-size-xs));
+  line-height: var(--ds-t-xs-line-height, var(--line-height-base));
+  font-family: var(--ds-t-xs-font-family, var(--font-sans));
+}
+
+.t-xs-bold {
+  font-weight: var(--ds-t-xs-bold-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-t-xs-bold-font-size, var(--font-size-xs));
+  line-height: var(--ds-t-xs-bold-line-height, var(--line-height-base));
+  font-family: var(--ds-t-xs-bold-font-family, var(--font-sans));
+}
+
+.t-overline {
+  font-weight: var(--ds-t-overline-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-t-overline-font-size, var(--font-size-2xs));
+  line-height: var(--ds-t-overline-line-height, var(--line-height-base));
+  font-family: var(--ds-t-overline-font-family, var(--font-sans));
+  letter-spacing: var(--ds-t-overline-letter-spacing, var(--letter-spacing-wider));
+  text-transform: var(--ds-t-overline-text-transform, uppercase);
+  color: var(--ds-t-overline-color, var(--text-tertiary));
+}
+
+.t-caption {
+  font-weight: var(--ds-t-caption-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-t-caption-font-size, var(--font-size-xs));
+  line-height: var(--ds-t-caption-line-height, var(--line-height-base));
+  font-family: var(--ds-t-caption-font-family, var(--font-sans));
+  color: var(--ds-t-caption-color, var(--text-tertiary));
+}
+
+.t-mono {
+  font-weight: var(--ds-t-mono-font-weight, var(--font-weight-medium));
+  font-size: var(--ds-t-mono-font-size, var(--font-size-mono));
+  line-height: var(--ds-t-mono-line-height, var(--line-height-base));
+  font-family: var(--ds-t-mono-font-family, var(--font-mono));
+}
+
+.t-mono-inline {
+  font-weight: var(--ds-t-mono-inline-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-t-mono-inline-font-size, var(--font-size-mono));
+  line-height: var(--ds-t-mono-inline-line-height, 1);
+  font-family: var(--ds-t-mono-inline-font-family, var(--font-mono));
+  color: var(--ds-t-mono-inline-color, var(--text-primary));
+  background-color: var(--ds-t-mono-inline-bg-color, var(--surface-secondary));
+  padding: 1px var(--space-1);
+  border-radius: var(--ds-t-mono-inline-radius, var(--radius-sm));
+}
+
+.t-mono-block {
+  font-weight: var(--ds-t-mono-block-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-t-mono-block-font-size, var(--font-size-mono));
+  line-height: var(--ds-t-mono-block-line-height, var(--line-height-loose));
+  font-family: var(--ds-t-mono-block-font-family, var(--font-mono));
+  background-color: var(--ds-t-mono-block-bg-color, var(--surface-secondary));
+  border-width: var(--border-width-default);
+  border-style: solid;
+  border-color: var(--ds-t-mono-block-border-color, var(--border-divider));
+  border-radius: var(--ds-t-mono-block-radius, var(--radius-md));
+  padding: var(--space-3) var(--space-4);
+  max-width: 100%;
+  overflow-x: auto;
+}
 
 .sr-only {
   position: absolute !important;

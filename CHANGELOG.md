@@ -8,8 +8,21 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.6.3 — 2026-07-27
+
 ### Added
 
+- **Typography utilities (`.t-*`) expose per-axis `--ds-t-*` token hooks.** Every `.t-display`/`.t-h1`
+  …`.t-mono-block` utility now reads each type property as a longhand through a public
+  `--ds-t-<name>-<prop>` custom property that falls back to the current semantic token —
+  `font-weight`, `font-size`, `line-height`, `font-family`, plus `letter-spacing` / `text-transform` /
+  `color` / `background-color` / `border-color` / `border-radius` where the class sets them. A consumer
+  can now retune a single axis in a scope (`[data-brand] .t-h3 { --ds-t-h3-font-weight: var(--font-weight-bold) }`)
+  without re-declaring the whole rule or forking the class — the same consumer-first `--ds-*` contract
+  the components use, extended to the global utility layer. Default rendering is unchanged (structural
+  box props — padding/margin/border-width/max-width/overflow — stay raw). Minor: the `font` shorthand
+  was split into longhands, so `.t-*` no longer force `font-style`/`font-variant` back to `normal`
+  (they inherit) — only observable inside an italic/small-caps ancestor.
 - **`ds-table` row-action kebab menu.** New opt-in `rowActions` input renders a trailing ⋮ column;
   the per-row button opens a `ds-menu` of the configured items (`id`, `label`, optional `icon`,
   destructive `error`, per-row `disabled` predicate) and `rowActionSelected` emits `{ action, row }`
@@ -46,8 +59,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-table` column reordering.** New opt-in `reorderableColumns` input adds a drag handle and
   up/down buttons to each row of the column panel (which now lists every column, not just hideable
   ones); the order is two-way bindable via the new `columnOrder` model (`string[] | null`, `null` =
-  declaration order), and the panel's `Reset to default` clears both order and visibility. The
-  panel surfaces whenever any column is `hideable` **or** `reorderableColumns` is set.
+  declaration order), and the panel's `Reset to default` resets all three column models — order,
+  visibility **and** widths (`columnOrder`, `hiddenKeys`, `columnWidths`). The panel surfaces
+  whenever any column is `hideable` **or** `reorderableColumns` is set.
 - **`ds-table` CSV export.** New public `exportCsv(filename?)` method downloads the visible columns
   of the filtered + sorted rows (all rows, not just the current page) as a UTF-8 CSV — wire it to a
   consumer toolbar button via a template reference.
@@ -64,13 +78,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   cell now shows its complete text in a popover when clicked (in addition to the existing title
   tooltip); the click is swallowed so it never doubles as a row click, while an unclipped cell
   passes the click through to the row unchanged.
-- **`ds-app-shell` — slotted fixed-frame application shell.** `[sidenav]`/`[topbar]`/default
+- **`ds-app-layout` — slotted fixed-frame application layout.** `[sidenav]`/`[topbar]`/default
   content slots; the host pins to the viewport (`100dvh`, `overflow: hidden`) and ONLY the content
   `<main>` scrolls (`scrollbar-gutter: stable` + automatic native-scrollbar-width padding
   compensation via the new `--ds-scrollbar-width` root variable). `topbarSpan` input switches the
   geometry (`'content'` default: full-height rail; `'full'`: full-width topbar). Built-in
-  scroll-to-top on router navigation via the new exported `ShellScrollService` (also injectable
-  from routed pages for manual `scrollToTop()`). Tokens: `--ds-app-shell-pad-x/-pad-y/`
+  scroll-to-top on router navigation via the new exported `LayoutScrollService` (also injectable
+  from routed pages for manual `scrollToTop()`). Tokens: `--ds-app-layout-pad-x/-pad-y/`
   `-content-max-width/-height`.
 - **`ds-sidenav-footer` — rail footer brick.** Search row with a live grouped-results popover
   (Enter opens the first hit), Alerts row with an unread dot + feed popover, Collapse row, and a
@@ -131,6 +145,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-toast` now slides up from below into place as it enters** (previously it dropped in from
   slightly above). The exit animation is unchanged — the toast still slides up as it fades out.
   Visual/motion only; no API change.
+
+### Fixed
+
+- **`ds-date-picker` no longer strands focus on `<body>` when the calendar closes by outside
+  click or page scroll.** The picker was already non-modal, but a scroll-close or
+  outside-pointer close left focus on the document body instead of the field. `close()` now
+  returns focus to the field (`preventScroll`) whenever focus was inside the calendar — with
+  one exception: a coarse-pointer device with an editable field (`allowInput`) is left alone,
+  to avoid re-summoning the soft keyboard, while a readonly field (`allowInput=false`) always
+  refocuses. Escape / selection / preset closes already refocused and are unchanged; no API
+  change.
 
 ## 0.6.2 — 2026-07-21
 

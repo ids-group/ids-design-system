@@ -132,13 +132,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
-  "app-shell": {
-    "key": "app-shell",
-    "selector": "ds-app-shell",
+  "app-layout": {
+    "key": "app-layout",
+    "selector": "ds-app-layout",
     "isElement": true,
-    "className": "AppShellComponent",
+    "className": "AppLayoutComponent",
     "status": "stable",
-    "importName": "AppShellComponent",
+    "importName": "AppLayoutComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
@@ -377,6 +377,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Icon rendered when there is no imageUrl and no initials."
+      },
+      {
+        "name": "seed",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Seed for a deterministic tint (e.g. an email or name) used when no explicit `tint` is set — the same seed always yields the same colour."
+      },
+      {
+        "name": "avoidHues",
+        "kind": "input",
+        "type": "readonly (readonly [number, number])[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Hue arcs `[start, end]` (0–360°) the seeded tint must avoid, e.g. a brand hue: `[[310, 360], [0, 20]]`. Only applies when `seed` drives the tint."
       }
     ],
     "outputs": []

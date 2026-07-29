@@ -34,6 +34,7 @@ writeFileSync(
 // nothing would catch. Rewrites are asserted: an upstream import that changes
 // shape fails the build instead of producing a broken mirror.
 const MIRRORS = [
+  { from: 'src/lib/components/avatar/avatar-tint.ts', to: 'avatar-tint.ts' },
   { from: 'src/lib/components/color-picker/color-picker.utils.ts', to: 'color-picker.utils.ts' },
   { from: 'src/lib/components/date-picker/date.util.ts', to: 'date.util.ts' },
   {
