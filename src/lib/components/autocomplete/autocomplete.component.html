@@ -2,9 +2,8 @@
 <div
   #trigger
   class="autocomplete-trigger"
+  [class]="size()"
   [class.open]="isOpen()"
-  [class.sm]="size() === 'sm'"
-  [class.lg]="size() === 'lg'"
   [class.disabled]="isDisabled()"
   [class.error]="invalid()"
   (click)="onTriggerClick()"

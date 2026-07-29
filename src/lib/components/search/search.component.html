@@ -1,9 +1,7 @@
 <div
   class="search"
-  [class.sm]="size() === 'sm'"
-  [class.md]="size() === 'md'"
-  [class.lg]="size() === 'lg'"
   dsFieldClickFocus
+  [class]="size()"
 >
   @if (showIcon()) {
     <ds-icon
