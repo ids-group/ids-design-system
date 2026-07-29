@@ -3299,6 +3299,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Danger title colour."
       },
       {
+        "name": "--ds-modal-title-weight",
+        "value": "var(--font-weight-bold)",
+        "notes": "Title font-weight (defaults to --font-weight-bold)."
+      },
+      {
         "name": "--ds-modal-close-icon-color",
         "value": "var(--icon-default)",
         "notes": "Close icon."
@@ -3968,6 +3973,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-sidenav-item-label-color-hover",
         "value": "var(--text-primary)",
         "notes": "Item hover label."
+      },
+      {
+        "name": "--ds-sidenav-item-label-weight",
+        "value": "var(--font-weight-semibold)",
+        "notes": "Item label font-weight (defaults to --font-weight-semibold)."
       },
       {
         "name": "--ds-sidenav-item-bg-color-hover",

@@ -36,9 +36,11 @@ img {
   overflow: hidden;
 }
 
-:host(.xs) { width: var(--avatar-xs); height: var(--avatar-xs); font-size: var(--font-size-4xs); }
-:host(.sm) { width: var(--avatar-sm); height: var(--avatar-sm); font-size: var(--font-size-3xs); }
-:host(.lg) { width: var(--avatar-lg); height: var(--avatar-lg); font-size: var(--font-size-s); }
+/* Redefine the private size var per step (not width/height directly) so a
+   consumer's --ds-avatar-size still wins at every size, not only md. */
+:host(.xs) { --_avatar-size: var(--ds-avatar-size, var(--avatar-xs)); font-size: var(--font-size-4xs); }
+:host(.sm) { --_avatar-size: var(--ds-avatar-size, var(--avatar-sm)); font-size: var(--font-size-3xs); }
+:host(.lg) { --_avatar-size: var(--ds-avatar-size, var(--avatar-lg)); font-size: var(--font-size-s); }
 
 /* Neutral tint — used by the +N overflow chip in avatar groups. */
 :host(.neutral) {

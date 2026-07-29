@@ -8,6 +8,7 @@
   --_modal-divider:         var(--ds-modal-divider,         var(--border-divider));
   --_modal-title-text-color:        var(--ds-modal-title-text-color,        var(--text-primary));
   --_modal-title-text-color-error:  var(--ds-modal-title-text-color-error,  var(--error-text));
+  --_modal-title-weight: var(--ds-modal-title-weight, var(--font-weight-bold));
   --_modal-close-icon-color:        var(--ds-modal-close-icon-color,        var(--icon-default));
   --_modal-close-icon-color-hover:  var(--ds-modal-close-icon-color-hover,  var(--icon-strong));
   --_modal-icon-badge-bg-color: var(--ds-modal-icon-badge-bg-color, var(--accent-subtitle));
@@ -65,7 +66,7 @@
   }
 
   .title {
-    font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-heading);
+    font: var(--_modal-title-weight) var(--font-size-h5) / var(--line-height-snug) var(--font-heading);
     margin: 0;
     flex: 1;
     min-width: 0;
