@@ -55,8 +55,7 @@
               scope="col"
               class="expand-col"
               [class.pin-expand]="stickyFirstColumn()"
-            >
-            </th>
+            ></th>
           }
 
           @for (col of visibleColumns(); track col.key; let first = $first) {
@@ -140,9 +139,7 @@
                   />
                 </button>
               } @else {
-                <span class="visually-hidden">
-                  Actions
-                </span>
+                <span class="visually-hidden"> Actions </span>
               }
             </th>
           }
@@ -167,11 +164,14 @@
                 <td
                   class="expand-col"
                   [class.pin-expand]="stickyFirstColumn()"
-                >
-                </td>
+                ></td>
               }
 
-              @for (col of visibleColumns(); track col.key; let first = $first) {
+              @for (
+                col of visibleColumns();
+                track col.key;
+                let first = $first
+              ) {
                 <td
                   [class.numeric]="col.align === 'right'"
                   [class.pin-first]="first && stickyFirstColumn()"
@@ -255,7 +255,11 @@
                 </td>
               }
 
-              @for (col of visibleColumns(); track col.key; let first = $first) {
+              @for (
+                col of visibleColumns();
+                track col.key;
+                let first = $first
+              ) {
                 <td
                   [class.numeric]="col.align === 'right'"
                   [class.pin-first]="first && stickyFirstColumn()"
@@ -350,15 +354,14 @@
     <div
       class="hscroll-spacer"
       [style.width.px]="hscrollContentWidth()"
-    >
-    </div>
+    ></div>
   </div>
 }
 
 @if (pageSize(); as size) {
   <div class="pagination-footer">
     <ds-pagination
-      [total]="filteredData().length"
+      [total]="total() ?? filteredData().length"
       [pageSize]="size"
       [pageSizeOptions]="pageSizeOptions()"
       [(currentPage)]="page"
@@ -537,9 +540,7 @@
 
 @if (selectable() && someSelected()) {
   <div class="bulk-bar">
-    <span class="count">
-      {{ selectedIds().size }} selected
-    </span>
+    <span class="count"> {{ selectedIds().size }} selected </span>
 
     <span class="sep"></span>
 

@@ -156,6 +156,11 @@ export class TableComponent<T extends { id: string }> {
   readonly page = model<number>(1);
   /** Selectable page-size choices shown in the pagination control. */
   readonly pageSizeOptions = input<number[]>([10, 25, 50, 100]);
+  /** Server-side total row count. `null` (default) = client paging: the table
+   *  slices `data()` itself and the pager counts the rows in hand. When set, the
+   *  host has already sliced to one page — the pager uses this count and the
+   *  table renders `data()` as-is (no internal slice). */
+  readonly total = input<number | null>(null);
   /** When true, the table sorts `data()` itself; otherwise it only emits
    *  `sortChange` and leaves ordering to the consumer (default). */
   readonly clientSort = input(false, { transform: booleanAttribute });
@@ -264,30 +269,32 @@ export class TableComponent<T extends { id: string }> {
 
   /** Columns in the user-controlled order — `columnOrder` first (dropping
    *  unknown keys), then any declared column the order omitted. */
-  protected readonly orderedColumns = computed<readonly TableColumn<T>[]>(() => {
-    const order = this.columnOrder();
-    const columns = this.columns();
-    if (!order) {
-      return columns;
-    }
-    const byKey = new Map(columns.map((col) => [col.key, col]));
-    const placed = new Set<string>();
-    const out: TableColumn<T>[] = [];
-    for (const key of order) {
-      const col = byKey.get(key);
-      if (col && !placed.has(key)) {
-        out.push(col);
-        placed.add(key);
+  protected readonly orderedColumns = computed<readonly TableColumn<T>[]>(
+    () => {
+      const order = this.columnOrder();
+      const columns = this.columns();
+      if (!order) {
+        return columns;
       }
-    }
-    for (const col of columns) {
-      if (!placed.has(col.key)) {
-        out.push(col);
+      const byKey = new Map(columns.map((col) => [col.key, col]));
+      const placed = new Set<string>();
+      const out: TableColumn<T>[] = [];
+      for (const key of order) {
+        const col = byKey.get(key);
+        if (col && !placed.has(key)) {
+          out.push(col);
+          placed.add(key);
+        }
       }
-    }
+      for (const col of columns) {
+        if (!placed.has(col.key)) {
+          out.push(col);
+        }
+      }
 
-    return out;
-  });
+      return out;
+    },
+  );
 
   /** Columns actually rendered — reordered, then hidden ones skipped. */
   protected readonly visibleColumns = computed<readonly TableColumn<T>[]>(() =>
@@ -354,8 +361,9 @@ export class TableComponent<T extends { id: string }> {
   }
 
   // ---- Per-column set filter ----
-  private readonly columnFilterPopover =
-    viewChild<PopoverComponent>('columnFilterPopover');
+  private readonly columnFilterPopover = viewChild<PopoverComponent>(
+    'columnFilterPopover',
+  );
   /** The column whose filter menu is open — drives the distinct-value list. */
   protected readonly filterColumn = signal<TableColumn<T> | null>(null);
   protected readonly filterSearch = signal('');
@@ -461,9 +469,10 @@ export class TableComponent<T extends { id: string }> {
   private readonly injector = inject(Injector);
   private readonly editInput =
     viewChild<ElementRef<HTMLInputElement>>('editInput');
-  protected readonly editingCell = signal<{ rowId: string; key: string } | null>(
-    null,
-  );
+  protected readonly editingCell = signal<{
+    rowId: string;
+    key: string;
+  } | null>(null);
   protected readonly editDraft = signal('');
 
   protected isEditing(row: T, col: TableColumn<T>): boolean {
@@ -506,8 +515,11 @@ export class TableComponent<T extends { id: string }> {
   }
 
   private static readonly MIN_COLUMN_WIDTH = 48;
-  private resizeState: { key: string; startX: number; startWidth: number } | null =
-    null;
+  private resizeState: {
+    key: string;
+    startX: number;
+    startWidth: number;
+  } | null = null;
 
   /** Resolved pixel width for a column: a drag override wins, else `column.width`. */
   protected columnWidth(col: TableColumn<T>): number | null {
@@ -564,7 +576,9 @@ export class TableComponent<T extends { id: string }> {
         allowed,
       }))
       .filter(
-        (entry): entry is { col: TableColumn<T>; allowed: ReadonlySet<string> } =>
+        (
+          entry,
+        ): entry is { col: TableColumn<T>; allowed: ReadonlySet<string> } =>
           !!entry.col,
       );
 
@@ -615,7 +629,8 @@ export class TableComponent<T extends { id: string }> {
   /** Current page's slice of the sorted rows, when paginating. */
   protected readonly pagedData = computed<readonly T[]>(() => {
     const size = this.pageSize();
-    if (size === null) {
+    // Server-side paging (`total` set): the host already sliced to one page.
+    if (size === null || this.total() !== null) {
       return this.sortedData();
     }
     const start = (this.page() - 1) * size;
@@ -672,13 +687,16 @@ export class TableComponent<T extends { id: string }> {
     return count;
   });
 
-  protected readonly hasRowActions = computed(() => this.rowActions().length > 0);
+  protected readonly hasRowActions = computed(
+    () => this.rowActions().length > 0,
+  );
   /** Row whose kebab menu is open — drives the per-row `disabled` predicates. */
   protected readonly menuRow = signal<T | null>(null);
   private readonly rowMenuPopover =
     viewChild<PopoverComponent>('rowMenuPopover');
-  private readonly columnPickerPopover =
-    viewChild<PopoverComponent>('columnPickerPopover');
+  private readonly columnPickerPopover = viewChild<PopoverComponent>(
+    'columnPickerPopover',
+  );
 
   protected readonly columnPickerOpened = computed(
     () => this.columnPickerPopover()?.opened() ?? false,
@@ -933,8 +951,7 @@ export class TableComponent<T extends { id: string }> {
     );
     // Leading BOM so Excel reads UTF-8 (accented labels/values) correctly.
     const csv =
-      '﻿' +
-      [header, ...body].map((cells) => cells.join(',')).join('\r\n');
+      '﻿' + [header, ...body].map((cells) => cells.join(',')).join('\r\n');
     const url = URL.createObjectURL(
       new Blob([csv], { type: 'text/csv;charset=utf-8;' }),
     );

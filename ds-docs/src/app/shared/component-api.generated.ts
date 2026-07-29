@@ -4928,6 +4928,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Selectable page-size choices shown in the pagination control."
       },
       {
+        "name": "total",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Server-side total row count. `null` (default) = client paging: the table slices `data()` itself and the pager counts the rows in hand. When set, the host has already sliced to one page — the pager uses this count and the table renders `data()` as-is (no internal slice)."
+      },
+      {
         "name": "clientSort",
         "kind": "input",
         "type": "boolean",
