@@ -22,13 +22,13 @@
   </span>
 }
 
-<button
+<div
   #trigger
-  type="button"
   role="combobox"
   aria-haspopup="listbox"
   [class]="triggerClasses()"
   [attr.name]="name()"
+  [attr.tabindex]="isDisabled() ? -1 : 0"
   [attr.aria-expanded]="open() || preview.staticPreview()"
   [attr.aria-controls]="listboxId"
   [attr.aria-activedescendant]="activeDescendant()"
@@ -37,7 +37,7 @@
   [attr.aria-invalid]="invalid() ? 'true' : null"
   [attr.aria-describedby]="hintId()"
   [attr.aria-required]="required() ? 'true' : null"
-  [disabled]="isDisabled()"
+  [attr.aria-disabled]="isDisabled() ? 'true' : null"
   (click)="toggle()"
   (keydown)="onTriggerKeydown($event)"
 >
@@ -57,16 +57,17 @@
   </span>
 
   @if (clearable() && hasValue() && !isDisabled() && !readOnly()) {
-    <span
+    <button
+      type="button"
       class="clear-btn"
-      aria-hidden="true"
+      aria-label="Clear selection"
       (click)="clearValue($event)"
     >
       <ds-icon
         name="x"
         [size]="14"
       />
-    </span>
+    </button>
   }
 
   <span class="chevron">
@@ -75,7 +76,7 @@
       [size]="14"
     />
   </span>
-</button>
+</div>
 
 <ds-field-message
   [text]="hint()"

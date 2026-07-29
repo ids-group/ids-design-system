@@ -122,7 +122,7 @@ export class SelectComponent
   );
 
   protected readonly trigger =
-    viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
+    viewChild.required<ElementRef<HTMLElement>>('trigger');
   protected readonly panelTpl =
     viewChild.required<TemplateRef<unknown>>('panel');
   protected readonly panelContentTpl =
