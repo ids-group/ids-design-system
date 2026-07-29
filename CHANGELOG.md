@@ -27,6 +27,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **New override tokens for two baked-in weights: `--ds-sidenav-item-label-weight` and
+  `--ds-modal-title-weight`.** The nav-item label weight and the modal title weight were locked inside a
+  `font:` shorthand with no `--ds-*` hook; a brand can now retune either without reaching past the public
+  token contract. Defaults unchanged (`--font-weight-semibold` / `--font-weight-bold`).
+
+- **`ds-table` gains an opt-in `scrollToTopOnPageChange` input.** With it on, changing page scrolls the
+  table back into view, so paging from a bottom pager doesn't leave the viewport on the old page's rows.
+  Off by default.
+
 - **`ds-search` gains a `size` input (`sm`/`md`/`lg`, default `md`).** Search previously ignored `size`
   and its size CSS never matched, so it sat 4px taller than sibling controls in dense toolbars. `sm` is
   now 32px (matching `ds-input`/`ds-button` at `sm`); the default `md` keeps the prior 36px search-row
@@ -55,6 +64,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `'results'`, …).
 
 ### Fixed
+
+- **`ds-avatar`: `--ds-avatar-size` now applies at every size, not just `md`.** The `xs`/`sm`/`lg`
+  modifiers set `width`/`height` directly, silently ignoring a consumer's `--ds-avatar-size`; they now
+  route through the same private var the token feeds, so an override wins at any size.
+
+- **`ds-table`: an out-of-range page is clamped back into range.** When a client-side filter shrinks the
+  result set below the current page, the table now pulls `page` down to the last page that has rows
+  instead of rendering an empty body (guarded to client paging — with `total` set the host owns the clamp).
 
 - **`ds-sidenav`: collapsed items no longer overflow by 1px.** A collapsed item was sized to the
   `--sidenav-collapsed-item` hit target, 1px wider than the rail's content box (border-box minus padding
