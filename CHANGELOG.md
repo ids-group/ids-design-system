@@ -18,12 +18,53 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `ModalSize` and `ContainerSize` remain and now extend it (`'xs' | DsSize`, `DsSize | 'xl' | 'fullscreen'`,
   `DsSize | 'xl' | 'full'`). No runtime or visual change — every component's `size` input behaves exactly as before.
 
+- **BREAKING: form fields now reserve one line for the message row by default.** Every field
+  (`ds-input`, `ds-textarea`, `ds-select`, `ds-autocomplete`, and the other message-bearing controls)
+  gains a `reserveMessage` input (default `true`). With it on, the field always keeps a message line's
+  worth of vertical space even when there's no hint or error, so a form no longer reflows when
+  validation messages appear — the row is there from the start. Set `[reserveMessage]="false"` to
+  collapse the space back (the previous behaviour) where the layout can absorb the shift.
+
 ### Added
 
 - **`ds-search` gains a `size` input (`sm`/`md`/`lg`, default `md`).** Search previously ignored `size`
   and its size CSS never matched, so it sat 4px taller than sibling controls in dense toolbars. `sm` is
   now 32px (matching `ds-input`/`ds-button` at `sm`); the default `md` keeps the prior 36px search-row
   height, so existing consumers are unaffected.
+
+- **`ds-table` gains a `total` input for server-side pagination.** Set `[total]` to the full row count
+  when the data you pass in is already the current page (fetched from the server); the table then treats
+  `data` as pre-paged — it no longer slices it — and drives the pager off `total` instead of the local
+  row count. Leave `total` unset (default `null`) to keep the existing client-side paging behaviour.
+
+- **`ds-table` gains a `sortingOrder` input.** By default a sortable header cycles
+  `asc → desc → unsorted`; pass `[sortingOrder]="['asc','desc']"` to drop the unsorted state (useful with
+  server-paged lists that must always send a sort direction). The default is unchanged.
+
+- **`TableColumn` gains an optional `srLabel`.** Provides a visually-hidden accessible name for columns
+  whose visible `label` is intentionally empty (e.g. an actions column), so screen-reader users still
+  hear a column name.
+
+- **`ds-badge` gains a `countLabel` input (default `'notifications'`).** The count's accessible label was
+  hard-coded to `"N notifications"`; set `countLabel` for non-notification counts (`'items in cart'`,
+  `'results'`, …).
+
+### Fixed
+
+- **`ds-sidenav`: collapsed items no longer overflow by 1px.** A collapsed item was sized to the
+  `--sidenav-collapsed-item` hit target, 1px wider than the rail's content box (border-box minus padding
+  and the right border), which produced a hairline horizontal scrollbar. Collapsed items now fill the
+  available width, and the rail clips any residual x-overflow.
+
+- **`dsTooltip`: keyboard focus now shows and hides the tip reliably, and panels no longer strand.** The
+  directive listened on `focus`/`blur`, which don't fire for focus moving between descendants; it now uses
+  the bubbling `focusin`/`focusout`, so tooltips on composite controls open and close as focus enters and
+  leaves. A re-rendered anchor under a stationary cursor could also leave a panel open — `show()` now
+  disposes any existing overlay first, and activation (`click`) dismisses too.
+
+- **`ds-select`: the clear (×) button is now keyboard-operable.** It was a non-focusable `<span>`; it is
+  now a real `<button aria-label="Clear selection">`, and the trigger is a focusable `role="combobox"`
+  container so the nested button is valid.
 
 ## 0.6.3 — 2026-07-27
 
