@@ -8,6 +8,23 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Changed
+
+- **BREAKING: the control `size` scale is unified into one shared `DsSize` type.** The per-component
+  size types (`InputSize`, `ButtonSize`, `SelectSize`, `SearchSize`, `CheckboxSize`, `RadioSize`,
+  `SwitchSize`, `SpinnerSize`, `TextareaSize`, `NumberStepperSize`, `DatePickerSize`, `TimePickerSize`,
+  `DrawerSize`, `IconButtonSize`, `AutocompleteSize`) are removed from the public API — import
+  `DsSize` instead (`type DsSize = 'sm' | 'md' | 'lg'`, exported from the package root). `AvatarSize`,
+  `ModalSize` and `ContainerSize` remain and now extend it (`'xs' | DsSize`, `DsSize | 'xl' | 'fullscreen'`,
+  `DsSize | 'xl' | 'full'`). No runtime or visual change — every component's `size` input behaves exactly as before.
+
+### Added
+
+- **`ds-search` gains a `size` input (`sm`/`md`/`lg`, default `md`).** Search previously ignored `size`
+  and its size CSS never matched, so it sat 4px taller than sibling controls in dense toolbars. `sm` is
+  now 32px (matching `ds-input`/`ds-button` at `sm`); the default `md` keeps the prior 36px search-row
+  height, so existing consumers are unaffected.
+
 ## 0.6.3 — 2026-07-27
 
 ### Added
