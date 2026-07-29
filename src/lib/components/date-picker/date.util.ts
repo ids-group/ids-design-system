@@ -149,11 +149,9 @@ export function parseDateRange(
   ];
 }
 
-// ---- Segment-aware mask editing --------------------------------------------
-// The field is a sequence of fixed-width digit slots (MM, DD, YYYY) joined by
-// literals ("/", and " – " between the two dates of a range). Edits stay inside
-// the caret's slot and never shift digits across a literal, so correcting one
-// segment can't corrupt its neighbours or fling the caret away.
+// Each field is fixed-width digit slots (MM/DD/YYYY) joined by literals; edits
+// stay inside the caret's slot and never shift digits across a literal, so
+// fixing one segment can't corrupt its neighbours.
 
 /** One editable digit slot in the masked field. */
 export interface FieldSlot {

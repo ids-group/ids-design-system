@@ -61,7 +61,7 @@ export class ButtonComponent {
   readonly variant = input<ButtonVariant>('solid');
   /** Button height — sm/md/lg. */
   readonly size = input<DsSize>('md');
-  /** Native `<button>` `type` attribute. */
+  /** Native `<button>` `type`; defaults to `'button'` (not `'submit'`) so it never submits an ancestor form by accident. */
   readonly type = input<ButtonType>('button');
   /** Disables the button and blocks `pressed`. */
   readonly disabled = input(false, { transform: booleanAttribute });

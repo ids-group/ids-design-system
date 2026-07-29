@@ -768,7 +768,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'button'",
         "required": false,
-        "description": "Native `<button>` `type` attribute."
+        "description": "Native `<button>` `type`; defaults to `'button'` (not `'submit'`) so it never submits an ancestor form by accident."
       },
       {
         "name": "disabled",
@@ -1714,7 +1714,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Fires when the user removes a file from the list."
+        "description": "Fires when the user removes a file; unlike `filesAdded`, the consumer must remove the matching entry from `files` itself."
       }
     ]
   },
@@ -1918,7 +1918,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'button'",
         "required": false,
-        "description": "Native `button` type attribute."
+        "description": "Native `<button>` `type`; defaults to `'button'` (not `'submit'`) so it never submits an ancestor form by accident."
       },
       {
         "name": "disabled",

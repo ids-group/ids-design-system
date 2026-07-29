@@ -38,7 +38,7 @@ export class IconButtonComponent {
   readonly color = input<ButtonColor>('primary');
   /** Button size — sm/md/lg, matches the field/button height scale. */
   readonly size = input<DsSize>('md');
-  /** Native `button` type attribute. */
+  /** Native `<button>` `type`; defaults to `'button'` (not `'submit'`) so it never submits an ancestor form by accident. */
   readonly type = input<IconButtonType>('button');
   /** Disables the button and blocks `pressed`. */
   readonly disabled = input(false, { transform: booleanAttribute });

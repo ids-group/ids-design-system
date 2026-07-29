@@ -1,12 +1,5 @@
-/* ============================================================
-   FIELD (single-line text input subset)
-   Ported from vendor/claude-design-ds/components.css (FIELD block, lines 165–292).
-   Subset scope: base wrapper, label, control box, single-line <input>,
-   hint, addon prefix/suffix, sizes (sm/lg), states (error/success/disabled),
-   hover/focus. Textarea, select, number-stepper and floating-label rules
-   are intentionally omitted — those belong to future Textarea / Select /
-   Number components.
-   ============================================================ */
+// Ported from vendor/claude-design-ds components.css (FIELD block); textarea/
+// select/number-stepper/floating-label rules are intentionally out of scope here.
 @use '../../styles/press' as press;
 
 :host {
@@ -189,7 +182,6 @@
     }
   }
 
-  /* Sizes */
   &.sm .control {
     height: var(--hit-min);
     padding: 0 var(--space-2);

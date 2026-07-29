@@ -171,12 +171,10 @@ export class MenuItemComponent implements OnDestroy {
       }
     });
 
-    // Close when clicking outside the submenu.
     this.submenuRef.outsidePointerEvents().subscribe(() => this.closeSubmenu());
 
     this.submenuRef.attach(new TemplatePortal(this.submenu()!, this.vcr));
 
-    // Listen for mouse enter into the overlay panel to cancel the close timer.
     this.submenuRef.overlayElement.addEventListener('mouseenter', () =>
       this.clearCloseTimer(),
     );

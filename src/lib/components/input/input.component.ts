@@ -83,7 +83,6 @@ export class InputComponent extends DsControlValueAccessor<string> {
   readonly optional = input(false, { transform: booleanAttribute });
   /** Native `name` attribute. */
   readonly name = input<string | null>(null);
-  // Numeric constraints (applied when type="number").
   /** Native `min` attribute — applies when `type="number"`. */
   readonly min = input<number | null>(null);
   /** Native `max` attribute — applies when `type="number"`. */

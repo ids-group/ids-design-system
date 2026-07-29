@@ -1,6 +1,3 @@
-/* ============================================================
-   BUTTON
-   ============================================================ */
 :host {
   display: inline-flex;
 
@@ -15,11 +12,9 @@
 }
 
 .button {
-  /* Colour-family slots — default to the --accent-* pointer (= primary unless a
-     ds-color zone/attr flips it), so a button WITHOUT an explicit color follows
-     the zone. An explicit `color` class (.c-*) overrides these on the element,
-     winning over the inherited accent. Fill classes (.f-*) map slots into the
-     --_button-* resolvers below. */
+  /* Colour-family slots default to --accent-* (primary unless a ds-color zone/attr
+     flips it); .c-* overrides them. .v-* variant classes below remap these slots
+     into the --_button-* resolvers. */
   --c-base:           var(--accent);
   --c-on:             var(--accent-on);
   --c-strong:         var(--accent-strong);

@@ -32,7 +32,6 @@ export class BadgeComponent {
   /** Noun used in the count's accessible label — set for non-notification counts (cart, results, …). */
   readonly countLabel = input('notifications');
 
-  /** Display text for the count, capped at max+. */
   protected readonly countDisplay = computed(() => {
     const value = this.count();
     if (value === null) {

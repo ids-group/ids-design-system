@@ -103,9 +103,9 @@ export class DatePickerComponent
 {
   constructor() {
     super();
-    // Renders through toFieldText so the field is fixed-width `_`-padded once
-    // any digit exists (even a partial range pads the empty end date), but
-    // genuinely empty ('') when untouched — see Fix A.
+    // Renders through toFieldText so the field is fixed-width `_`-padded once any
+    // digit exists (even a partial range pads the empty end date), but genuinely
+    // empty ('') when untouched.
     effect(() => {
       const spec = this.formatSpec();
       const value = this.value();
@@ -443,7 +443,6 @@ export class DatePickerComponent
     displayParts(parseFieldText(this.fieldText(), this.layout()), this.layout()),
   );
 
-  // ---- Month / year grid pickers in the calendar header ----
   protected readonly monthMenuOpen = signal(false);
   protected readonly yearMenuOpen = signal(false);
   protected readonly viewMonthIndex = computed(() =>
@@ -795,7 +794,6 @@ export class DatePickerComponent
     const plain = !event.ctrlKey && !event.metaKey && !event.altKey;
     const isDigit = key.length === 1 && key >= '0' && key <= '9' && plain;
     if (key.length === 1 && plain && !isDigit) {
-      // Reject non-numeric characters outright, as typed.
       event.preventDefault();
 
       return;

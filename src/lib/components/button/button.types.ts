@@ -1,21 +1,9 @@
-// Button has two orthogonal axes:
-//   color   — which brand/status hue family (the theme holds full --secondary/
-//             --tertiary channel families; statuses are error/success/warning).
-//   variant — the fill pattern: solid / tonal / ghost / outline, plus `text`
-//             (no chrome, underlined — a link-styled button). Matches
-//             ds-icon-button's `variant` axis. `text` coexists with the global
-//             `.link` class (use `.link` on bare <a>/<button> outside the
-//             component; use variant="text" when you want the ds-button API —
-//             loading, fullWidth, color, typed (pressed) — on a link look).
-// Defaults: color="primary" variant="solid". Icon-only actions → ds-icon-button.
-//
-// All color × variant pairs RENDER. Some are UX-discouraged (they work, but
-// read poorly) — flagged with a dev-mode console.warn:
-//   neutral + solid          → a solid grey button reads as disabled
-//   success + ghost/outline  → low-emphasis success rarely warrants an action
-//   warning + ghost/outline  → yellow at low emphasis is too low-contrast
-//   text (any colour)        → prefer the global `.link` class
-// Prefer solid/tonal for success & warning, and tonal/ghost/outline for neutral.
+// Button has two orthogonal axes: color (brand/status hue family) and variant
+// (fill pattern solid/tonal/ghost/outline, plus `text` — a link-styled button).
+// `text` coexists with the global `.link` class: use `.link` on bare <a>/<button>;
+// use variant="text" for the ds-button API (loading, fullWidth, color, typed) on
+// a link look. All color×variant pairs render; some are UX-discouraged and
+// dev-warned — see DISCOURAGED_COMBOS in button.component.ts.
 export type ButtonColor =
   | 'primary'
   | 'secondary'

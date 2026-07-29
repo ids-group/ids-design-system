@@ -1,12 +1,6 @@
-/* ============================================================
-   AVATAR
-
-   Group-overlap visuals (border + negative margins for stacked
-   avatars) live in avatar-group.component.scss. They target the
-   projected `<ds-avatar>` host element from inside the
-   `<ds-avatar-group>` view via `::ng-deep`, because emulated
-   encapsulation otherwise scopes both stylesheets independently.
-   ============================================================ */
+// Group-overlap visuals live in avatar-group.component.scss, reaching this host
+// via ::ng-deep — emulated encapsulation otherwise scopes the two stylesheets
+// independently.
 :host {
   /* Public --ds-avatar-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_avatar-size:       var(--ds-avatar-size,       var(--avatar-md));

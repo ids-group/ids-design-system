@@ -89,7 +89,6 @@ export class BottomSheetComponent implements OnDestroy {
         this.rendered.set(true);
         clearTimeout(this.closeFallbackTimer ?? undefined);
         this.closeFallbackTimer = null;
-        // Reset to first snap point when opening with snap points configured.
         if (this.snapPoints().length > 0) {
           this.activeSnapIndex.set(0);
         }
@@ -219,7 +218,6 @@ export class BottomSheetComponent implements OnDestroy {
       return;
     }
 
-    // Find the nearest snap point to the dragged height.
     let nearestIndex = 0;
     let smallestDelta = Infinity;
     for (let pointIndex = 0; pointIndex < points.length; pointIndex++) {

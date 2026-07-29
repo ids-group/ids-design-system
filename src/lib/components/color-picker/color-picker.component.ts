@@ -193,7 +193,6 @@ export class ColorPickerComponent
     }
   }
 
-  // --- Saturation / value plane ---
   protected onSvPointerDown(event: PointerEvent): void {
     const plane = event.currentTarget as HTMLElement;
     plane.setPointerCapture(event.pointerId);
@@ -246,7 +245,6 @@ export class ColorPickerComponent
     });
   }
 
-  // --- Hue slider ---
   protected onHuePointerDown(event: PointerEvent): void {
     const track = event.currentTarget as HTMLElement;
     track.setPointerCapture(event.pointerId);

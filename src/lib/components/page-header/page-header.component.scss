@@ -1,10 +1,5 @@
-/* ============================================================
-   PAGE HEADER
-   Ported from vendor/claude-design-ds/components-extras.css
-   (canonical .page-hdr block, lines 636–706). Defect 4 fix:
-   the .page-header rules in patterns.css are the dropped
-   duplicate — not sourced from here.
-   ============================================================ */
+// Ported from vendor/claude-design-ds components-extras.css (.page-hdr, lines 636-706).
+// patterns.css's .page-header is a dropped duplicate, not the source.
 @use '../../styles/breakpoints' as bp;
 
 :host {
@@ -88,7 +83,6 @@
     flex-wrap: wrap;
   }
 
-  /* Breadcrumb trail above the title — typical on deep record pages. */
   .crumbs-trail {
     display: flex;
     align-items: center;

@@ -35,7 +35,7 @@ export class DropzoneComponent {
 
   /** Fires with the raw files picked or dropped; the consumer adds them to `files`. */
   readonly filesAdded = output<File[]>();
-  /** Fires when the user removes a file from the list. */
+  /** Fires when the user removes a file; unlike `filesAdded`, the consumer must remove the matching entry from `files` itself. */
   readonly fileRemoved = output<DropzoneFile>();
 
   protected readonly classes = computed(() => {
