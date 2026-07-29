@@ -3589,6 +3589,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Accessible name for the input (placeholder is not a reliable label)."
+      },
+      {
+        "name": "size",
+        "kind": "input",
+        "type": "SearchSize",
+        "union": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "'md'",
+        "required": false,
+        "description": "Control height. `md` (default) keeps the 36px search-row height; `sm` (32px) aligns search with dense toolbars beside `sm` inputs/buttons; `lg` is touch."
       }
     ],
     "outputs": [

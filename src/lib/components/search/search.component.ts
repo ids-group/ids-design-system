@@ -12,6 +12,8 @@ import { FormsModule } from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
 
+export type SearchSize = 'sm' | 'md' | 'lg';
+
 @Component({
   selector: 'ds-search',
   standalone: true,
@@ -33,6 +35,9 @@ export class SearchComponent {
   readonly clearable = input(false, { transform: booleanAttribute });
   /** Accessible name for the input (placeholder is not a reliable label). */
   readonly ariaLabel = input<string>('');
+  /** Control height. `md` (default) keeps the 36px search-row height; `sm` (32px)
+   *  aligns search with dense toolbars beside `sm` inputs/buttons; `lg` is touch. */
+  readonly size = input<SearchSize>('md');
   /** Fires with the current value on Enter. */
   readonly submitted = output<string>();
 
