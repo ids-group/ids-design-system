@@ -299,8 +299,7 @@
     </div>
 
     <div class="state-cell">
-      <!-- Live ds-select; pin classes on the stage reach the .dropdown
-               button via ::ng-deep; hover/focus use bare tokens (no --_* resolvers). -->
+      <!-- Custom-dropdown variant: same ::ng-deep pin mechanism as above; hover/focus route through bare tokens here too. -->
       <div class="state-cell__stage pin-hover">
         <ds-select
           placeholder="Pick a product…"
