@@ -493,6 +493,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "99",
         "required": false,
         "description": "Count is capped at this value, shown as `\"max+\"` beyond it."
+      },
+      {
+        "name": "countLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'notifications'",
+        "required": false,
+        "description": "Noun used in the count's accessible label — set for non-notification counts (cart, results, …)."
       }
     ],
     "outputs": []
@@ -4908,6 +4917,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Sort direction for `sortKey`."
+      },
+      {
+        "name": "sortingOrder",
+        "kind": "input",
+        "type": "SortDir[]",
+        "union": null,
+        "default": "['asc', 'desc', null]",
+        "required": false,
+        "description": "Sort states a column cycles through on click. Default includes null (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g. server-paged lists)."
       },
       {
         "name": "skeletonRows",
