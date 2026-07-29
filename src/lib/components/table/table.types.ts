@@ -3,6 +3,9 @@ import type { IconName } from '../../icons/icons.data';
 export interface TableColumn<T = unknown> {
   key: string;
   label: string;
+  /** Visually-hidden accessible header name — use when `label` is
+   *  intentionally empty (e.g. an actions column). */
+  srLabel?: string;
   sortable?: boolean;
   /** Include the column in `filterQuery` matching. When no column is marked,
    *  every column matches. Works on `hidden` columns too. */

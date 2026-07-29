@@ -75,7 +75,13 @@
                   class="th-label"
                   (click)="onSort(col)"
                 >
-                  {{ col.label }}
+                  @if (col.label) {
+                    {{ col.label }}
+                  } @else if (col.srLabel) {
+                    <span class="visually-hidden">
+                      {{ col.srLabel }}
+                    </span>
+                  }
                   <ds-icon
                     class="sort-icon"
                     [name]="sortIcon(col)"
@@ -85,7 +91,13 @@
                 </button>
               } @else {
                 <span class="th-label">
-                  {{ col.label }}
+                  @if (col.label) {
+                    {{ col.label }}
+                  } @else if (col.srLabel) {
+                    <span class="visually-hidden">
+                      {{ col.srLabel }}
+                    </span>
+                  }
                 </span>
               }
 

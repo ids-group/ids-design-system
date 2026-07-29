@@ -105,6 +105,10 @@ export class TableComponent<T extends { id: string }> {
   readonly sortKey = model<string | null>(null);
   /** Sort direction for `sortKey`. */
   readonly sortDir = model<SortDir>(null);
+  /** Sort states a column cycles through on click. Default includes null
+   *  (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g.
+   *  server-paged lists). */
+  readonly sortingOrder = input<SortDir[]>(['asc', 'desc', null]);
   /** Number of shimmer rows rendered while `loading` is `'skeleton'`. */
   readonly skeletonRows = input<number>(5);
   /** Accessible name for the table (rendered as a visually-hidden caption).
@@ -890,17 +894,14 @@ export class TableComponent<T extends { id: string }> {
     if (!col.sortable) {
       return;
     }
+    const order = this.sortingOrder();
     const currentKey = this.sortKey();
-    const currentDir = this.sortDir();
     let dir: SortDir;
     if (currentKey !== col.key) {
-      dir = 'asc';
-    } else if (currentDir === 'asc') {
-      dir = 'desc';
-    } else if (currentDir === 'desc') {
-      dir = null;
+      dir = order[0] ?? null;
     } else {
-      dir = 'asc';
+      const currentIndex = order.indexOf(this.sortDir());
+      dir = order[(currentIndex + 1) % order.length] ?? null;
     }
     this.sortKey.set(dir ? col.key : null);
     this.sortDir.set(dir);
