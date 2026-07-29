@@ -105,6 +105,9 @@
 </div>
 
 <ng-template #panel>
+  <!-- Dialog-level click is a pointer-only light-dismiss that closes an open
+       month/year popup; keyboard users dismiss it with Escape (bound on each popup). -->
+  <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
   <div
     class="calendar"
     role="dialog"
@@ -143,6 +146,9 @@
             </button>
 
             @if (monthMenuOpen()) {
+              <!-- Popup container, not a focusable widget: it wraps real <button>s
+                   and closes on Escape; the click only stops light-dismiss bubbling. -->
+              <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
               <div
                 class="picker-menu"
                 (click)="$event.stopPropagation()"
@@ -186,6 +192,9 @@
             </button>
 
             @if (yearMenuOpen()) {
+              <!-- Popup container, not a focusable widget: it wraps real <button>s
+                   and closes on Escape; the click only stops light-dismiss bubbling. -->
+              <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
               <div
                 class="picker-menu"
                 (click)="$event.stopPropagation()"
