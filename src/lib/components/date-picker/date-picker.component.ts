@@ -85,7 +85,12 @@ interface DayCell {
 @Component({
   selector: 'ds-date-picker',
   standalone: true,
-  imports: [IconComponent, CalendarDayComponent, FieldMessageComponent, A11yModule],
+  imports: [
+    IconComponent,
+    CalendarDayComponent,
+    FieldMessageComponent,
+    A11yModule,
+  ],
   templateUrl: './date-picker.component.html',
   styleUrl: './date-picker.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -228,7 +233,9 @@ export class DatePickerComponent
     this.messageText() ? `${this.uid}-hint` : null,
   );
   protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() || this.typedInvalid() || this.rangeInvalid() ? 'error' : 'default',
+    this.invalid() || this.typedInvalid() || this.rangeInvalid()
+      ? 'error'
+      : 'default',
   );
   /** Field-message text: a validation message when typing is invalid, else the hint. */
   protected readonly messageText = computed(() => {
@@ -262,7 +269,9 @@ export class DatePickerComponent
       ? rangeFieldLayout(this.formatSpec())
       : singleFieldLayout(this.formatSpec()),
   );
-  protected readonly monthNames = computed(() => monthLabels(this.resolvedLocale()));
+  protected readonly monthNames = computed(() =>
+    monthLabels(this.resolvedLocale()),
+  );
   protected readonly weekdays = computed(() =>
     weekdayLabels(this.resolvedLocale(), this.resolvedFirstDay()),
   );
@@ -323,10 +332,16 @@ export class DatePickerComponent
         next = this.addDays(f, 7);
         break;
       case 'Home':
-        next = this.addDays(f, -((f.getDay() - this.resolvedFirstDay() + 7) % 7));
+        next = this.addDays(
+          f,
+          -((f.getDay() - this.resolvedFirstDay() + 7) % 7),
+        );
         break;
       case 'End':
-        next = this.addDays(f, 6 - ((f.getDay() - this.resolvedFirstDay() + 7) % 7));
+        next = this.addDays(
+          f,
+          6 - ((f.getDay() - this.resolvedFirstDay() + 7) % 7),
+        );
         break;
       case 'PageUp':
         next = this.addMonths(f, -1);
@@ -436,11 +451,16 @@ export class DatePickerComponent
    * otherwise clip the last chars of the longer range mask. The field's
    * `font-family: var(--font-mono)` keeps every glyph equal width, so the
    * width never shifts as you type. */
-  protected readonly fieldSize = computed(() => this.fieldPlaceholder().length + 1);
+  protected readonly fieldSize = computed(
+    () => this.fieldPlaceholder().length + 1,
+  );
   /** Per-slot overlay runs: digits at normal weight, unfilled positions
    *  (format letters or `_` padding) muted — see displayParts(). */
   protected readonly displaySlots = computed<DisplayPart[]>(() =>
-    displayParts(parseFieldText(this.fieldText(), this.layout()), this.layout()),
+    displayParts(
+      parseFieldText(this.fieldText(), this.layout()),
+      this.layout(),
+    ),
   );
 
   protected readonly monthMenuOpen = signal(false);
@@ -691,7 +711,11 @@ export class DatePickerComponent
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
     this.overlayRef = this.overlay.create(cfg);
-    forwardOverlayTokens(this.overlayRef, this.host.nativeElement, this.panelTokens);
+    forwardOverlayTokens(
+      this.overlayRef,
+      this.host.nativeElement,
+      this.panelTokens,
+    );
     closeOnOutsidePointer(
       this.overlayRef,
       (target) => this.host.nativeElement.contains(target),
@@ -700,7 +724,9 @@ export class DatePickerComponent
     // No backdrop catches a page scroll, and CDK's scroll strategies don't see a
     // plain overflow container — so close on any outside scroll ourselves. Sync
     // state on every detach so a stray CDK detach can't wedge the reopen guard.
-    const removeScrollClose = closeOnScroll(this.overlayRef, () => this.close());
+    const removeScrollClose = closeOnScroll(this.overlayRef, () =>
+      this.close(),
+    );
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
       this.overlayRef = null;
@@ -721,7 +747,9 @@ export class DatePickerComponent
       this.mode() === 'single'
         ? (this.value() as Date | null)
         : ((this.value() as RangeValue | null)?.[0] ?? null);
-    const focus = this.clampToBounds(selected ?? this.defaultDate() ?? new Date());
+    const focus = this.clampToBounds(
+      selected ?? this.defaultDate() ?? new Date(),
+    );
     this.gridFocus.set(focus);
     this.viewMonth.set(new Date(focus.getFullYear(), focus.getMonth(), 1));
     if (moveFocusToGrid) {
@@ -864,7 +892,8 @@ export class DatePickerComponent
     const segments = parseFieldText(element.value, layout);
     // A caretOverride collapses the range (caret === selectionEnd), forcing the
     // single-character branch below — used by the mobile beforeinput path.
-    const caret = caretOverride ?? element.selectionStart ?? element.value.length;
+    const caret =
+      caretOverride ?? element.selectionStart ?? element.value.length;
     const selectionEnd = caretOverride ?? element.selectionEnd ?? caret;
     let edit: { segments: string[]; slot: number; offset: number } | null;
     if (selectionEnd !== caret) {
@@ -907,7 +936,10 @@ export class DatePickerComponent
     event.preventDefault();
     const element = event.target as HTMLInputElement;
     const layout = this.layout();
-    const pasted = (event.clipboardData?.getData('text') ?? '').replace(/\D/g, '');
+    const pasted = (event.clipboardData?.getData('text') ?? '').replace(
+      /\D/g,
+      '',
+    );
     if (!pasted) {
       return;
     }
@@ -916,7 +948,13 @@ export class DatePickerComponent
     const start = caretToSlot(layout, caret);
     let result = { segments, slot: start.slot, offset: start.offset };
     for (const digit of pasted) {
-      result = editType(result.segments, layout, result.slot, result.offset, digit);
+      result = editType(
+        result.segments,
+        layout,
+        result.slot,
+        result.offset,
+        digit,
+      );
     }
     this.applyEditedText(
       element,
@@ -935,7 +973,10 @@ export class DatePickerComponent
    *  empty when no digits remain. */
   private commitRaw(element: HTMLInputElement, raw: string): void {
     const layout = this.layout();
-    const capacity = layout.slots.reduce((sum, slot) => sum + slot.maxLength, 0);
+    const capacity = layout.slots.reduce(
+      (sum, slot) => sum + slot.maxLength,
+      0,
+    );
     const digits = raw.replace(/\D/g, '').slice(0, capacity);
     const segments: string[] = [];
     let index = 0;
@@ -1040,7 +1081,11 @@ export class DatePickerComponent
   }
 
   /** Parse the combined range text, flag malformed segments, commit on blur. */
-  private applyRangeText(text: string, spec: DateFormatSpec, commit: boolean): void {
+  private applyRangeText(
+    text: string,
+    spec: DateFormatSpec,
+    commit: boolean,
+  ): void {
     if (this.countDigits(text) === 0) {
       this.rangeInvalid.set(false);
       this.value.set(null);

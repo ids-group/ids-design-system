@@ -22,5 +22,6 @@ export interface DsStatusRegistry {}
  * open `string`; once a consumer augments DsStatusRegistry it narrows to the
  * union of their keys (autocomplete). The tuple wrap avoids `never` distribution.
  */
-export type DsStatusKey =
-  [keyof DsStatusRegistry] extends [never] ? string : keyof DsStatusRegistry;
+export type DsStatusKey = [keyof DsStatusRegistry] extends [never]
+  ? string
+  : keyof DsStatusRegistry;

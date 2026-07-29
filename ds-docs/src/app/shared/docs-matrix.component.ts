@@ -76,7 +76,8 @@ export interface DocsMatrixRow {
                   <span
                     class="warn"
                     title="UX-discouraged combination — renders, but reads poorly"
-                  ></span>
+                  >
+                  </span>
                 }
               } @else {
                 <span class="na">

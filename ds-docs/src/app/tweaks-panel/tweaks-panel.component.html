@@ -8,137 +8,159 @@
 </ds-button>
 
 <ds-drawer
-  [(open)]="open"
   title="Tweaks"
   placement="right"
   size="sm"
+  [(open)]="open"
 >
   <ng-container drawer-body>
     <div class="row">
-      <label class="label"> Theme </label>
+      <label class="label">
+        Theme
+      </label>
 
       <ds-segmented
+        ariaLabel="Theme"
         [options]="themeOptions"
         [value]="theme()"
         (valueChange)="setTheme($any($event))"
-        ariaLabel="Theme"
       />
     </div>
 
     <div class="row">
-      <label class="label"> Density </label>
+      <label class="label">
+        Density
+      </label>
 
       <ds-segmented
+        ariaLabel="Density"
         [options]="densityOptions"
         [value]="density()"
         (valueChange)="setDensity($any($event))"
-        ariaLabel="Density"
       />
     </div>
 
     <div class="row">
-      <label class="label"> Brand preview </label>
+      <label class="label">
+        Brand preview
+      </label>
 
       <ds-segmented
+        ariaLabel="Brand preview"
         [options]="brandOptions"
         [value]="brand()"
         (valueChange)="setBrand($any($event))"
-        ariaLabel="Brand preview"
       />
     </div>
 
     <div class="row">
-      <label class="label"> Neutrals </label>
+      <label class="label">
+        Neutrals
+      </label>
 
       <ds-segmented
+        ariaLabel="Neutrals"
         [options]="neutralsOptions"
         [value]="neutrals()"
         (valueChange)="setNeutrals($any($event))"
-        ariaLabel="Neutrals"
       />
     </div>
 
     <div class="row">
-      <label class="label"> Primary H ({{ primaryH() }}°) </label>
+      <label class="label">
+        Primary H ({{ primaryH() }}°)
+      </label>
 
       <ds-slider
+        ariaLabel="Primary hue"
         [min]="0"
         [max]="360"
         [value]="primaryH()"
         (valueChange)="setPrimaryH($any($event))"
-        ariaLabel="Primary hue"
       />
     </div>
 
     <div class="row">
-      <label class="label"> Primary S ({{ primaryS() }}%) </label>
+      <label class="label">
+        Primary S ({{ primaryS() }}%)
+      </label>
 
       <ds-slider
+        ariaLabel="Primary saturation"
         [min]="0"
         [max]="100"
         [value]="primaryS()"
         (valueChange)="setPrimaryS($any($event))"
-        ariaLabel="Primary saturation"
       />
     </div>
 
     <div class="row">
-      <label class="label"> Primary L ({{ primaryL() }}%) </label>
+      <label class="label">
+        Primary L ({{ primaryL() }}%)
+      </label>
 
       <ds-slider
+        ariaLabel="Primary lightness"
         [min]="0"
         [max]="100"
         [value]="primaryL()"
         (valueChange)="setPrimaryL($any($event))"
-        ariaLabel="Primary lightness"
       />
     </div>
 
     <div class="row">
-      <label class="label"> Secondary H ({{ secondaryH() }}°) </label>
+      <label class="label">
+        Secondary H ({{ secondaryH() }}°)
+      </label>
 
       <ds-slider
+        ariaLabel="Secondary hue"
         [min]="0"
         [max]="360"
         [value]="secondaryH()"
         (valueChange)="setSecondaryH($any($event))"
-        ariaLabel="Secondary hue"
       />
     </div>
 
     <div class="row">
-      <label class="label"> Secondary S ({{ secondaryS() }}%) </label>
+      <label class="label">
+        Secondary S ({{ secondaryS() }}%)
+      </label>
 
       <ds-slider
+        ariaLabel="Secondary saturation"
         [min]="0"
         [max]="100"
         [value]="secondaryS()"
         (valueChange)="setSecondaryS($any($event))"
-        ariaLabel="Secondary saturation"
       />
     </div>
 
     <div class="row">
-      <label class="label"> Secondary L ({{ secondaryL() }}%) </label>
+      <label class="label">
+        Secondary L ({{ secondaryL() }}%)
+      </label>
 
       <ds-slider
+        ariaLabel="Secondary lightness"
         [min]="0"
         [max]="100"
         [value]="secondaryL()"
         (valueChange)="setSecondaryL($any($event))"
-        ariaLabel="Secondary lightness"
       />
     </div>
 
     <div class="row">
-      <label class="label"> Root font-size ({{ rootFs() }}px) </label>
+      <label class="label">
+        Root font-size ({{ rootFs() }}px)
+      </label>
 
       <ds-slider
+        ariaLabel="Root font size"
         [min]="12"
         [max]="20"
         [value]="rootFs()"
         (valueChange)="setFs($any($event))"
-        ariaLabel="Root font size"
       />
     </div>
   </ng-container>

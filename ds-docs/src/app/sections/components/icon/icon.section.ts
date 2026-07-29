@@ -39,7 +39,12 @@ const SAMPLES: readonly IconName[] = [
 @Component({
   selector: 'section-components-icon',
   standalone: true,
-  imports: [DocsSectionComponent, DocsTruncationComponent, IconComponent, RouterLink],
+  imports: [
+    DocsSectionComponent,
+    DocsTruncationComponent,
+    IconComponent,
+    RouterLink,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './icon.section.html',
   styleUrl: './icon.section.scss',

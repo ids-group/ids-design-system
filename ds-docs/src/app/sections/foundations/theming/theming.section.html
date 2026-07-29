@@ -4,14 +4,16 @@
   title="Theming &amp; dark mode"
 >
   <span lede>
-    Colour is layered in three concerns — a theme-independent <strong>base palette</strong>, the
+    Colour is layered in three concerns — a theme-independent
     <strong>
-      theme
-    </strong> role maps (light / dark), and optional <strong>brand</strong> overlays.
+      base palette
+    </strong>, the <strong> theme </strong> role maps (light
+    / dark), and optional <strong>brand</strong> overlays.
     <strong>
       Light is the default; dark is opt-in.
-    </strong> Components only ever read semantic roles,
-    so swapping a theme or brand re-skins everything without touching component code.
+    </strong> Components only
+    ever read semantic roles, so swapping a theme or brand re-skins everything
+    without touching component code.
   </span>
 
   <!-- ============================================================ Activation -->
@@ -20,8 +22,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    The active theme is a single attribute on the document root
-    (<code class="t-mono-inline">&lt;html&gt;</code>) — a whole-document switch, not per-subtree.
+    The active theme is a single attribute on the document root (<code
+      class="t-mono-inline"
+      >&lt;html&gt;</code
+    >) — a whole-document switch, not per-subtree.
   </p>
 
   <ul class="theming-list t-s">
@@ -32,24 +36,37 @@
     <li>
       <code class="t-mono-inline">
         &lt;html data-theme="dark"&gt;
-      </code> — <strong>dark</strong>
+      </code> —
+      <strong>
+        dark
+      </strong>
     </li>
 
     <li>
       <code class="t-mono-inline">
         &lt;html data-theme="light"&gt;
-      </code> — explicit light (same as
-      the default)
+      </code> —
+      explicit light (same as the default)
     </li>
   </ul>
 
   <p class="block-desc t-s">
-    There is <strong>no automatic <code class="t-mono-inline">prefers-color-scheme</code>
-    switch</strong> — light is deterministic by default. To follow the OS, opt in from your app
+    There is
+    <strong
+      >
+      no automatic
+      <code class="t-mono-inline">
+        prefers-color-scheme
+      </code> switch
+    </strong
+    >
+    — light is deterministic by default. To follow the OS, opt in from your app
     bootstrap; set the attribute before first paint to avoid a flash:
   </p>
 
-  <pre class="t-mono-block">{{ osFollowSnippet }}</pre>
+  <pre class="t-mono-block">
+    {{ osFollowSnippet }}
+  </pre>
 
   <!-- ============================================================ Three layers -->
   <h3 class="block-title t-h4">
@@ -59,9 +76,15 @@
   <p class="block-desc t-s">
     <strong>
       Base palette
-    </strong> (<code class="t-mono-inline">themes/_base-palette</code>) —
-    theme-independent primitives at <code class="t-mono-inline">:root</code>: hue ramps + HSL
-    channels, <code class="t-mono-inline">--static-white</code> /
+    </strong> (<code class="t-mono-inline"
+      >themes/_base-palette</code
+    >) — theme-independent primitives at
+    <code class="t-mono-inline">
+      :root
+    </code>: hue ramps + HSL channels,
+    <code class="t-mono-inline">
+      --static-white
+    </code> /
     <code class="t-mono-inline">
       --static-ink
     </code> (never flip), fonts.
@@ -69,14 +92,20 @@
 
     <strong>
       Theme / roles
-    </strong> (<code class="t-mono-inline">themes/_semantic</code> +
+    </strong> (<code class="t-mono-inline"
+      >themes/_semantic</code
+    >
+    + <code class="t-mono-inline"> themes/&lt;t&gt;/ </code>) — the semantic
+    role map (<code class="t-mono-inline">--primary</code>,
     <code class="t-mono-inline">
-      themes/&lt;t&gt;/
-    </code>) — the semantic role map
-    (<code class="t-mono-inline">--primary</code>, <code class="t-mono-inline">--surface-*</code>,
+      --surface-*
+    </code>,
     <code class="t-mono-inline">
       --text-*
-    </code>, <code class="t-mono-inline">--neutral-*</code>,
+    </code>,
+    <code class="t-mono-inline">
+      --neutral-*
+    </code>,
     <code class="t-mono-inline">
       --focus-ring
     </code>). Light at
@@ -90,13 +119,15 @@
 
     <strong>
       Component / scale
-    </strong> (<code class="t-mono-inline">styles/_tokens</code>,
-    <code class="t-mono-inline">
-      *.component.scss
-    </code>) —
+    </strong> (<code class="t-mono-inline"
+      >styles/_tokens</code
+    >, <code class="t-mono-inline"> *.component.scss </code>) —
     <code class="t-mono-inline">
       --space-*
-    </code>, <code class="t-mono-inline">--radius-*</code>,
+    </code>,
+    <code class="t-mono-inline">
+      --radius-*
+    </code>,
     <code class="t-mono-inline">
       --ds-*
     </code>, motion. Theme-independent.
@@ -119,21 +150,27 @@
   </h3>
 
   <p class="block-desc t-s">
-    Light and dark are <strong>sibling role maps</strong> sharing the base palette and the same role
-    structure. The dark block declares the <strong>complete</strong> token set, so
+    Light and dark are <strong>sibling role maps</strong> sharing the base
+    palette and the same role structure. The dark block declares the
+    <strong>
+      complete
+    </strong> token set, so
     <code class="t-mono-inline">
       :root[data-theme='dark']
-    </code> fully <em>replaces</em> light rather
-    than delta-patching it. On-fill text uses theme-stable
-    <code class="t-mono-inline">
-      --static-white
-    </code> /
+    </code> fully
+    <em>
+      replaces
+    </em> light rather than delta-patching it. On-fill text uses
+    theme-stable <code class="t-mono-inline"> --static-white </code> /
     <code class="t-mono-inline">
       --static-ink
-    </code> so it keeps correct contrast across themes.
+    </code> so it keeps correct
+    contrast across themes.
   </p>
 
-  <pre class="t-mono-block">{{ activationSnippet }}</pre>
+  <pre class="t-mono-block">
+    {{ activationSnippet }}
+  </pre>
 
   <!-- ============================================================ Custom theme / brand -->
   <h3 class="block-title t-h4">
@@ -142,23 +179,34 @@
 
   <p class="block-desc t-s">
     Two levers. A <strong>brand</strong> is a thin overlay scoped by attribute
-    (<code class="t-mono-inline">[data-brand="X"]</code>) — override the brand hue ramp
-    (<code class="t-mono-inline">--blue-*</code>) and/or <code class="t-mono-inline">--primary</code>
-    plus a few roles. A full <strong>theme</strong> is a new sibling role map.
+    (<code class="t-mono-inline">[data-brand="X"]</code>) — override the brand
+    hue ramp (<code class="t-mono-inline">--blue-*</code>) and/or
+    <code class="t-mono-inline">
+      --primary
+    </code> plus a few roles. A full
+    <strong>
+      theme
+    </strong> is a new sibling role map.
   </p>
 
   <p class="block-desc t-s">
     <strong>
       You author on light — the default.
-    </strong> Dark is a self-contained sibling, so a
-    light-authored brand does <strong>not</strong> automatically carry into dark. If the brand must
-    also restyle dark, add a separate
+    </strong> Dark is a
+    self-contained sibling, so a light-authored brand does
+    <strong>
+      not
+    </strong> automatically carry into dark. If the brand must also
+    restyle dark, add a separate
     <code class="t-mono-inline">
       [data-theme='dark'][data-brand="X"]
-    </code> block.
+    </code>
+    block.
   </p>
 
-  <pre class="t-mono-block">{{ brandSnippet }}</pre>
+  <pre class="t-mono-block">
+    {{ brandSnippet }}
+  </pre>
 
   <p class="theming-note t-xs">
     Leave <code class="t-mono-inline">--primary-hover</code> /
@@ -167,8 +215,11 @@
     </code> to the DS
     <code class="t-mono-inline">
       color-mix()
-    </code> derivation (toward black in light, toward white in
-    dark). Full guide: <code class="t-mono-inline">themes/README.md</code>.
+    </code> derivation (toward black in
+    light, toward white in dark). Full guide:
+    <code class="t-mono-inline">
+      themes/README.md
+    </code>.
   </p>
 
   <!-- ============================================================ Consuming -->
@@ -176,5 +227,7 @@
     Picking a theme (consumer)
   </h3>
 
-  <pre class="t-mono-block">{{ consumerSnippet }}</pre>
+  <pre class="t-mono-block">
+    {{ consumerSnippet }}
+  </pre>
 </docs-section>

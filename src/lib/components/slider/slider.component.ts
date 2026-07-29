@@ -12,7 +12,10 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
-import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
+import {
+  FieldMessageComponent,
+  type FieldMessageState,
+} from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
 
 type SliderValue = number | readonly [number, number];
@@ -65,7 +68,9 @@ export class SliderComponent extends DsControlValueAccessor<SliderValue> {
   private dragging = -1;
 
   protected readonly uid = nextControlId('ds-slider');
-  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly hintId = computed(() =>
+    this.hint() ? `${this.uid}-hint` : null,
+  );
   protected readonly messageState = computed<FieldMessageState>(() =>
     this.invalid() ? 'error' : 'default',
   );

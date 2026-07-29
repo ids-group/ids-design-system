@@ -39,8 +39,8 @@
     </code>,
     <code class="t-mono-inline">
       &lt;ds-status-dot [style.--ds-status-dot-color]="'var(--secondary)'"&gt;
-    </code>,
-    sidenav active rail, stat delta neutral.
+    </code
+    >, sidenav active rail, stat delta neutral.
   </p>
 
   <div class="role-grid">
@@ -152,7 +152,8 @@
     </code> by default. Override
     <code class="t-mono-inline">
       --secondary-h/s/l
-    </code> (or a brand) to reskin it.
+    </code> (or a brand) to
+    reskin it.
   </p>
 
   <div class="role-demos">
@@ -207,8 +208,11 @@
         ds-status-dot — inline colour override
       </div>
 
-      <div style="display: inline-flex; align-items: center; gap: var(--space-2)">
-        <ds-status-dot [style.--ds-status-dot-color]="'var(--secondary)'" /> Custom state
+      <div
+        style="display: inline-flex; align-items: center; gap: var(--space-2)"
+      >
+        <ds-status-dot [style.--ds-status-dot-color]="'var(--secondary)'" />
+        Custom state
       </div>
 
       <code class="t-mono-inline">
@@ -272,14 +276,18 @@
 
   <p class="block-desc t-s">
     All adoptions are opt-in (use a class or variant input).
-    <code class="t-mono-inline">--secondary</code> maps to the orange palette
+    <code class="t-mono-inline">
+      --secondary
+    </code> maps to the orange palette
     family by default — distinct from
     <code class="t-mono-inline">
       --primary
-    </code>, so these examples already read apart from the blue accent. Under
+    </code>, so these examples already
+    read apart from the blue accent. Under
     <code class="t-mono-inline">
       [data-brand="manage-my"]
     </code>
+
     <code class="t-mono-inline">
       --secondary
     </code> becomes Coral (#FF6156).
@@ -291,10 +299,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">--tertiary</code> is the third brand hue (violet
-    family) with a full ramp (<code class="t-mono-inline">-hover / -strong / -subtitle / -muted</code>).
-    Fewer touchpoints than <code class="t-mono-inline">--secondary</code> — today it drives the
-    <code class="t-mono-inline">tertiary</code> button colour and tonal accents.
+    <code class="t-mono-inline">
+      --tertiary
+    </code> is the third brand hue (violet
+    family) with a full ramp (<code class="t-mono-inline"
+      >-hover / -strong / -subtitle / -muted</code
+    >). Fewer touchpoints than <code class="t-mono-inline">--secondary</code> —
+    today it drives the <code class="t-mono-inline">tertiary</code> button
+    colour and tonal accents.
   </p>
 
   <div class="role-demos">
@@ -349,9 +361,13 @@
 
       <div class="tert-ramp">
         <span style="background: var(--tertiary-subtitle)"></span>
+
         <span style="background: var(--tertiary-muted)"></span>
+
         <span style="background: var(--tertiary)"></span>
+
         <span style="background: var(--tertiary-strong)"></span>
+
         <span style="background: var(--tertiary-pressed)"></span>
       </div>
 

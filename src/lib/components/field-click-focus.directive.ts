@@ -22,12 +22,14 @@ export class FieldClickFocusDirective {
 
   protected onMousedown(event: MouseEvent): void {
     const target = event.target as HTMLElement;
-    if (target.closest('input, textarea, button, a, select, [contenteditable]')) {
+    if (
+      target.closest('input, textarea, button, a, select, [contenteditable]')
+    ) {
       return;
     }
-    const field = this.host.querySelector<HTMLInputElement | HTMLTextAreaElement>(
-      'input, textarea',
-    );
+    const field = this.host.querySelector<
+      HTMLInputElement | HTMLTextAreaElement
+    >('input, textarea');
     if (field && !field.disabled && !field.readOnly) {
       event.preventDefault();
       field.focus();

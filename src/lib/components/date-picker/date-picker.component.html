@@ -49,7 +49,9 @@
         [attr.aria-labelledby]="label() ? labelId : null"
         [attr.aria-label]="resolvedAriaLabel()"
         [attr.aria-required]="required() ? 'true' : null"
-        [attr.aria-invalid]="invalid() || typedInvalid() || rangeInvalid() ? 'true' : null"
+        [attr.aria-invalid]="
+          invalid() || typedInvalid() || rangeInvalid() ? 'true' : null
+        "
         [attr.aria-describedby]="hintId()"
         [attr.aria-placeholder]="fieldPlaceholder()"
         (beforeinput)="onFieldBeforeInput($event)"
@@ -72,11 +74,11 @@
         <span
           class="mask-ghost"
           aria-hidden="true"
-          >@for (part of displaySlots(); track $index) {<span
-              [class.muted]="part.muted"
-              >{{ part.text }}</span
-            >}</span
         >
+          @for (part of displaySlots(); track $index) {
+            <span [class.muted]="part.muted">{{ part.text }}</span>
+          }
+        </span>
         <!-- eslint-enable ds/template/element-content-newline -->
       }
     </span>
@@ -165,7 +167,9 @@
                       class="picker-cell"
                       [class.selected]="$index === viewMonthIndex()"
                       [attr.aria-label]="name"
-                      [attr.aria-current]="$index === viewMonthIndex() ? 'true' : null"
+                      [attr.aria-current]="
+                        $index === viewMonthIndex() ? 'true' : null
+                      "
                       (click)="selectMonth($index, $event)"
                     >
                       {{ name.slice(0, 3) }}

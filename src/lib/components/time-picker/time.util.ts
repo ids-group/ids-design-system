@@ -89,7 +89,10 @@ export function snapToStep(value: string, step: number): string {
   return fromMinutes(Math.round(mins / stepSize) * stepSize);
 }
 
-export function isTimeDisabled(value: string, constraints: TimeConstraints): boolean {
+export function isTimeDisabled(
+  value: string,
+  constraints: TimeConstraints,
+): boolean {
   const mins = toMinutes(value);
   if (mins === null) {
     return true;
@@ -106,7 +109,10 @@ export function isTimeDisabled(value: string, constraints: TimeConstraints): boo
   return constraints.disabledTime ? constraints.disabledTime(value) : false;
 }
 
-export function clampToRange(value: string, constraints: TimeConstraints): string {
+export function clampToRange(
+  value: string,
+  constraints: TimeConstraints,
+): string {
   const mins = toMinutes(value);
   if (mins === null) {
     return value;

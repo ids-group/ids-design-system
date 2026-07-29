@@ -11,7 +11,12 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { IconButtonComponent, SearchComponent } from 'ds';
 import {
@@ -34,7 +39,11 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
     '[class.is-collapsed]': 'effectiveCollapsed()',
   },
   template: `
-    <nav class="toc" [class.is-collapsed]="effectiveCollapsed()" [class.is-drawer]="mode() === 'drawer'">
+    <nav
+      class="toc"
+      [class.is-collapsed]="effectiveCollapsed()"
+      [class.is-drawer]="mode() === 'drawer'"
+    >
       @if (mode() === 'rail') {
         <div class="brand">
           <span class="mark">
@@ -58,7 +67,9 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
             variant="outlined"
             size="sm"
             [icon]="effectiveCollapsed() ? 'chevronRight' : 'chevronLeft'"
-            [ariaLabel]="effectiveCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+            [ariaLabel]="
+              effectiveCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'
+            "
             (pressed)="toggleCollapsed()"
           />
         </div>
@@ -415,7 +426,9 @@ export class SidebarComponent {
     this.navigated.emit();
     const section =
       this.anchorToSection.get(anchor) ??
-      (this.document.querySelector(`[data-anchor="${anchor}"]`) as HTMLElement | null);
+      (this.document.querySelector(
+        `[data-anchor="${anchor}"]`,
+      ) as HTMLElement | null);
     const main = this.document.querySelector('main.main') as HTMLElement | null;
     if (!section || !main) {
       return;

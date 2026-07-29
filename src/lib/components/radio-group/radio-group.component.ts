@@ -10,10 +10,17 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
-import { FieldMessageComponent, type FieldMessageState } from '../field-message/field-message.component';
+import {
+  FieldMessageComponent,
+  type FieldMessageState,
+} from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
 import { RadioComponent } from '../radio/radio.component';
-import { RADIO_GROUP, type RadioGroupChild, type RadioGroupContract } from './radio-group.token';
+import {
+  RADIO_GROUP,
+  type RadioGroupChild,
+  type RadioGroupContract,
+} from './radio-group.token';
 
 @Component({
   selector: 'ds-radio-group',
@@ -68,7 +75,9 @@ export class RadioGroupComponent
 
   protected readonly uid = nextControlId('ds-radio-group');
   readonly groupName = computed(() => this.name() ?? this.uid);
-  protected readonly hintId = computed(() => (this.hint() ? `${this.uid}-hint` : null));
+  protected readonly hintId = computed(() =>
+    this.hint() ? `${this.uid}-hint` : null,
+  );
   protected readonly messageState = computed<FieldMessageState>(() =>
     this.invalid() ? 'error' : 'default',
   );
@@ -113,7 +122,16 @@ export class RadioGroupComponent
 
   protected onKeydown(event: KeyboardEvent): void {
     const key = event.key;
-    if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft', ' ', 'Enter'].includes(key)) {
+    if (
+      ![
+        'ArrowDown',
+        'ArrowRight',
+        'ArrowUp',
+        'ArrowLeft',
+        ' ',
+        'Enter',
+      ].includes(key)
+    ) {
       return;
     }
 
@@ -132,7 +150,9 @@ export class RadioGroupComponent
         // To detect which radio's input is focused we cast to the concrete type.
         const component = radio as unknown as RadioComponent;
 
-        return component.inputElement()?.nativeElement === document.activeElement;
+        return (
+          component.inputElement()?.nativeElement === document.activeElement
+        );
       });
       if (focused) {
         this.select(focused.value());
@@ -153,7 +173,9 @@ export class RadioGroupComponent
 
     if (currentIndex === -1) {
       // Fall back to the selected radio's index in the enabled list.
-      currentIndex = enabled.findIndex((radio) => radio.value() === currentValue);
+      currentIndex = enabled.findIndex(
+        (radio) => radio.value() === currentValue,
+      );
     }
 
     let nextIndex: number;

@@ -1,4 +1,9 @@
-import { Component, ViewEncapsulation, booleanAttribute, input } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  input,
+} from '@angular/core';
 
 @Component({
   selector: 'ds-skeleton',

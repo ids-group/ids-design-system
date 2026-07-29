@@ -20,10 +20,7 @@ export class DrawerSection {
   protected readonly activePlacement = signal<DrawerPlacement>('right');
   protected readonly activeSize = signal<DsSize>('md');
 
-  protected openWith(
-    placement: DrawerPlacement,
-    size: DsSize = 'md',
-  ): void {
+  protected openWith(placement: DrawerPlacement, size: DsSize = 'md'): void {
     this.activePlacement.set(placement);
     this.activeSize.set(size);
     this.open.set(true);

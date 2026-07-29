@@ -205,8 +205,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Layout is only half a form — this is when feedback appears and where it goes.
-    These rules keep the happy path unblocked and errors legible.
+    Layout is only half a form — this is when feedback appears and where it
+    goes. These rules keep the happy path unblocked and errors legible.
   </p>
 
   <ul class="rules">
@@ -224,7 +224,9 @@
 
     <li>
       Field errors live in the field's own message row (reserved via
-      <code class="t-mono-inline">reserveMessage</code> so nothing shifts);
+      <code class="t-mono-inline">
+        reserveMessage
+      </code> so nothing shifts);
       whole-request failures go in a <code class="t-mono-inline">ds-alert</code>
       after the submit button — an error region above the inputs pushes every
       control down.

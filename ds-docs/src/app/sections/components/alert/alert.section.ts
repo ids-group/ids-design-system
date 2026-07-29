@@ -8,9 +8,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [AlertComponent, ButtonComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './alert.section.html',
-  styleUrls: [
-    '../../../shared/section-demo.scss',
-    './alert.section.scss',
-  ],
+  styleUrls: ['../../../shared/section-demo.scss', './alert.section.scss'],
 })
 export class AlertSection {}

@@ -11,7 +11,9 @@
   </span>
 
   <!-- ============================================================ Sizes -->
-  <h3 class="block-title t-h4">Sizes</h3>
+  <h3 class="block-title t-h4">
+    Sizes
+  </h3>
 
   <div class="row">
     <ds-avatar
@@ -36,7 +38,9 @@
   </div>
 
   <!-- ============================================================ Group -->
-  <h3 class="block-title t-h4">Group</h3>
+  <h3 class="block-title t-h4">
+    Group
+  </h3>
 
   <div class="row">
     <ds-avatar-group
@@ -58,7 +62,9 @@
   </div>
 
   <!-- ============================================================ Status dots -->
-  <h3 class="block-title t-h4">Status dots</h3>
+  <h3 class="block-title t-h4">
+    Status dots
+  </h3>
 
   <p class="block-desc t-s">
     Pass <code class="t-mono-inline">status</code> to show a presence indicator
@@ -92,11 +98,15 @@
   </div>
 
   <!-- ============================================================ Fallback icon -->
-  <h3 class="block-title t-h4">Fallback icon</h3>
+  <h3 class="block-title t-h4">
+    Fallback icon
+  </h3>
 
   <p class="block-desc t-s">
     When neither <code class="t-mono-inline">imageUrl</code> nor
-    <code class="t-mono-inline"> initials </code> are provided, the avatar
+    <code class="t-mono-inline">
+      initials
+    </code> are provided, the avatar
     renders the <code class="t-mono-inline">fallbackIcon</code>.
   </p>
 
@@ -123,14 +133,18 @@
   </div>
 
   <!-- ============================================================ Seeded tint -->
-  <h3 class="block-title t-h4">Seeded tint</h3>
+  <h3 class="block-title t-h4">
+    Seeded tint
+  </h3>
 
   <p class="block-desc t-s">
     Pass <code class="t-mono-inline">seed</code> (an email or name) for a
     deterministic OKLCH colour — the same person always gets the same tint
     across apps, and the initials auto-pick black or white for contrast. The
     helpers <code class="t-mono-inline">avatarTint</code> and
-    <code class="t-mono-inline">initialsFrom</code> (which also accepts a single
+    <code class="t-mono-inline">
+      initialsFrom
+    </code> (which also accepts a single
     full name) are exported for use outside the component.
   </p>
 
@@ -146,7 +160,9 @@
 
   <p class="block-desc t-s">
     Same seeds with
-    <code class="t-mono-inline">[avoidHues]="[[310, 360], [0, 20]]"</code> —
+    <code class="t-mono-inline">
+      [avoidHues]="[[310, 360], [0, 20]]"
+    </code> —
     pink and red hues are skipped so seeded avatars never clash with a brand
     colour:
   </p>

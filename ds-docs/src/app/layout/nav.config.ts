@@ -217,7 +217,10 @@ export function areaOfPath(path: string): string {
 }
 
 /** The nav group that owns `anchor` within `area`, or undefined. */
-export function groupForAnchor(area: string, anchor: string): NavGroup | undefined {
+export function groupForAnchor(
+  area: string,
+  anchor: string,
+): NavGroup | undefined {
   return GROUP_BY_ANCHOR.get(`${area}/${anchor}`);
 }
 
@@ -228,14 +231,18 @@ export function firstAnchorOfPath(path: string): string {
 
 /** Router URL for a group's landing (its first section). */
 export function urlForGroupPath(path: string): string {
-  if (path === '' || path === 'changelog') {return `/${path}`;}
+  if (path === '' || path === 'changelog') {
+    return `/${path}`;
+  }
 
   return `/${areaOfPath(path)}/${firstAnchorOfPath(path)}`;
 }
 
 /** Router URL for a specific anchor inside its group. */
 export function urlForAnchor(groupPath: string, anchor: string): string {
-  if (groupPath === '' || groupPath === 'changelog') {return `/${groupPath}`;}
+  if (groupPath === '' || groupPath === 'changelog') {
+    return `/${groupPath}`;
+  }
 
   return `/${areaOfPath(groupPath)}/${anchor}`;
 }
