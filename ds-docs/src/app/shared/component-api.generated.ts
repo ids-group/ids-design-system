@@ -4889,6 +4889,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Tints odd rows for easier row-tracking across wide tables."
       },
       {
+        "name": "animateHeight",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Animate the body height when the row set changes (page/filter) instead of snapping. Opt-in; instant under reduced-motion (the DS zeroes the token)."
+      },
+      {
         "name": "selectedIds",
         "kind": "model",
         "type": "Set<string>",

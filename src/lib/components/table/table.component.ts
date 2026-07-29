@@ -99,6 +99,9 @@ export class TableComponent<T extends { id: string }> {
   readonly density = input<'default' | 'compact'>('default');
   /** Tints odd rows for easier row-tracking across wide tables. */
   readonly zebra = input(false, { transform: booleanAttribute });
+  /** Animate the body height when the row set changes (page/filter) instead of
+   *  snapping. Opt-in; instant under reduced-motion (the DS zeroes the token). */
+  readonly animateHeight = input(false, { transform: booleanAttribute });
   /** Two-way set of currently selected row ids. */
   readonly selectedIds = model<Set<string>>(new Set<string>());
   /** Column key currently sorted by; `null` when unsorted. */
@@ -774,6 +777,79 @@ export class TableComponent<T extends { id: string }> {
         resizeObserver.disconnect();
       });
     });
+
+    // Opt-in height tween. Observer fires pre-paint: freezing the old height
+    // here stops the jump being painted; disconnect during the anim so its own
+    // resizes don't re-trigger it; clip (not hidden) avoids a scroll container.
+    effect((onCleanup) => {
+      if (!this.animateHeight()) {
+        return;
+      }
+      const wrap = this.scrollWrap().nativeElement;
+      let previousHeight: number | null = null;
+      let heightAnim: Animation | null = null;
+      const observer = new ResizeObserver((entries) => {
+        const entry = entries[0];
+        const nextHeight = entry.borderBoxSize?.[0]
+          ? entry.borderBoxSize[0].blockSize
+          : entry.contentRect.height;
+        if (previousHeight === null || nextHeight === previousHeight) {
+          previousHeight = nextHeight;
+
+          return;
+        }
+        const fromHeight = previousHeight;
+        previousHeight = nextHeight;
+        const styles = getComputedStyle(wrap);
+        const duration = this.parseDurationMs(
+          styles.getPropertyValue('--duration-base'),
+        );
+        if (duration <= 0) {
+          return;
+        }
+        observer.disconnect();
+        heightAnim?.cancel();
+        wrap.style.height = `${fromHeight}px`;
+        wrap.style.overflowY = 'clip';
+        heightAnim = wrap.animate(
+          [{ height: `${fromHeight}px` }, { height: `${nextHeight}px` }],
+          {
+            duration,
+            easing:
+              styles.getPropertyValue('--ease-standard').trim() || 'ease-out',
+          },
+        );
+        heightAnim.onfinish = heightAnim.oncancel = () => {
+          heightAnim = null;
+          wrap.style.height = '';
+          wrap.style.overflowY = '';
+          observer.observe(wrap);
+        };
+      });
+      observer.observe(wrap);
+      onCleanup(() => {
+        if (heightAnim) {
+          heightAnim.onfinish = heightAnim.oncancel = null;
+          heightAnim.cancel();
+          heightAnim = null;
+        }
+        wrap.style.height = '';
+        wrap.style.overflowY = '';
+        observer.disconnect();
+      });
+    });
+  }
+
+  private parseDurationMs(raw: string): number {
+    const value = raw.trim();
+    if (value.endsWith('ms')) {
+      return parseFloat(value);
+    }
+    if (value.endsWith('s')) {
+      return parseFloat(value) * 1000;
+    }
+
+    return parseFloat(value) || 0;
   }
 
   protected onRowMenuClick(row: T, event: Event): void {

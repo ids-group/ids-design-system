@@ -41,6 +41,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `asc → desc → unsorted`; pass `[sortingOrder]="['asc','desc']"` to drop the unsorted state (useful with
   server-paged lists that must always send a sort direction). The default is unchanged.
 
+- **`ds-table` gains an `animateHeight` input (opt-in).** With `[animateHeight]="true"` the body
+  tweens its height when the row set changes (paging, filtering) instead of snapping — the flicker
+  when a full page gives way to a short one. Off by default; instant under reduced-motion (it reads the
+  DS `--duration-*` token, which the reduced-motion reset zeroes).
+
 - **`TableColumn` gains an optional `srLabel`.** Provides a visually-hidden accessible name for columns
   whose visible `label` is intentionally empty (e.g. an actions column), so screen-reader users still
   hear a column name.
