@@ -5081,6 +5081,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Server-side total row count. `null` (default) = client paging: the table slices `data()` itself and the pager counts the rows in hand. When set, the host has already sliced to one page — the pager uses this count and the table renders `data()` as-is (no internal slice)."
       },
       {
+        "name": "scrollToTopOnPageChange",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Scroll the table into view on a page change (opt-in) — keeps a bottom pager from leaving the viewport on the previous page's last rows."
+      },
+      {
         "name": "clientSort",
         "kind": "input",
         "type": "boolean",

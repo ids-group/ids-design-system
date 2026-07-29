@@ -168,6 +168,11 @@ export class TableComponent<T extends { id: string }> {
    *  host has already sliced to one page — the pager uses this count and the
    *  table renders `data()` as-is (no internal slice). */
   readonly total = input<number | null>(null);
+  /** Scroll the table into view on a page change (opt-in) — keeps a bottom
+   *  pager from leaving the viewport on the previous page's last rows. */
+  readonly scrollToTopOnPageChange = input(false, {
+    transform: booleanAttribute,
+  });
   /** When true, the table sorts `data()` itself; otherwise it only emits
    *  `sortChange` and leaves ordering to the consumer (default). */
   readonly clientSort = input(false, { transform: booleanAttribute });
@@ -841,6 +846,33 @@ export class TableComponent<T extends { id: string }> {
         wrap.style.overflowY = '';
         observer.disconnect();
       });
+    });
+
+    // Client-side paging only (with `total` set the host owns the clamp): when a
+    // filter shrinks the result set below the current page, pull `page` back to
+    // the last page that still has rows so the body never renders empty.
+    effect(() => {
+      const size = this.pageSize();
+      if (size === null || this.total() !== null) {
+        return;
+      }
+      const lastPage = Math.max(
+        1,
+        Math.ceil(this.filteredData().length / size),
+      );
+      if (this.page() > lastPage) {
+        this.page.set(lastPage);
+      }
+    });
+
+    let previousPage = this.page();
+    effect(() => {
+      const current = this.page();
+      const enabled = this.scrollToTopOnPageChange();
+      if (current !== previousPage && enabled) {
+        this.scrollWrap().nativeElement.scrollIntoView({ block: 'start' });
+      }
+      previousPage = current;
     });
   }
 
