@@ -59,9 +59,13 @@
                 "output": "/"
               }
             ],
-            "styles": ["ds-docs/src/styles.scss"],
+            "styles": [
+              "ds-docs/src/styles.scss"
+            ],
             "stylePreprocessorOptions": {
-              "includePaths": ["src/lib"]
+              "includePaths": [
+                "src/lib"
+              ]
             }
           },
           "configurations": {
@@ -102,6 +106,35 @@
         },
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n"
+        }
+      }
+    },
+    "ds-elements": {
+      "projectType": "application",
+      "root": ".design-sync/elements",
+      "sourceRoot": ".design-sync/elements",
+      "prefix": "ds",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": ".design-sync/elements/main.ts",
+            "tsConfig": ".design-sync/elements/tsconfig.app.json",
+            "outputPath": ".design-sync/elements/dist",
+            "outputHashing": "none",
+            "optimization": true,
+            "sourceMap": false,
+            "extractLicenses": false,
+            "styles": [
+              "src/lib/styles/ds.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/lib"
+              ]
+            },
+            "index": false
+          }
         }
       }
     }
