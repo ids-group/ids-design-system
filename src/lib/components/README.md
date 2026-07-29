@@ -83,4 +83,4 @@ Each component subfolder contains:
 └── index.ts                    # re-exports
 ```
 
-Global stylesheets in `../styles/` (tokens, typography, layout-utils, scrollbar, icon-base, link) remain — they ship base classes (`.t-*`, `.grid-*`, `.link`, `.icon-base`). Forced-state demo helpers (`.is-forced-hover`/`-active`/`-focus`/`-disabled`) live in `prototype/ds-docs/src/styles/_forced-states.scss` — docs-only.
+Global stylesheets in `../styles/` (tokens, typography, layout-utils, scrollbar, icon-base, link) remain — they ship base classes (`.t-*`, `.grid-*`, `.link`, `.icon-base`).
