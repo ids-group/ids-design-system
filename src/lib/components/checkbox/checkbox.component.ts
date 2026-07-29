@@ -14,7 +14,7 @@ import {
   type FieldMessageState,
 } from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
-import type { CheckboxSize } from './checkbox.types';
+import type { DsSize } from '../../core/size';
 
 @Component({
   selector: 'ds-checkbox',
@@ -47,7 +47,7 @@ export class CheckboxComponent extends DsBooleanControlValueAccessor {
   /** Helper text shown below the checkbox. */
   readonly hint = input<string>('');
   /** Checkbox size — sm/md/lg. */
-  readonly size = input<CheckboxSize>('md');
+  readonly size = input<DsSize>('md');
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Inline label rendered beside the box and wired via for/id. Omit to

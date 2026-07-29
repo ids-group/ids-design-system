@@ -206,7 +206,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "AutocompleteSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -729,7 +729,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "ButtonSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -1115,7 +1115,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "CheckboxSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -1238,7 +1238,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DatePickerSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -1550,7 +1550,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DrawerSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -1843,7 +1843,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "IconButtonSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -1936,7 +1936,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "InputSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -2477,7 +2477,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "spinnerSize",
         "kind": "input",
-        "type": "SpinnerSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -2924,7 +2924,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "NumberStepperSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -3419,7 +3419,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "RadioSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -3593,7 +3593,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "SearchSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -3696,7 +3696,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "SelectSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -4233,7 +4233,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "SpinnerSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -4633,7 +4633,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "SwitchSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -5282,7 +5282,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "TextareaSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -5594,7 +5594,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "TimePickerSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",

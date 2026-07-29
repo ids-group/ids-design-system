@@ -9,7 +9,8 @@ import {
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
-import type { TextareaSize, TextareaResize } from './textarea.types';
+import type { TextareaResize } from './textarea.types';
+import type { DsSize } from '../../core/size';
 import {
   FieldMessageComponent,
   type FieldMessageState,
@@ -36,7 +37,7 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   /** Text value, two-way bound. */
   readonly value = model<string>('');
   /** Field height — sm/md/lg. */
-  readonly size = input<TextareaSize>('md');
+  readonly size = input<DsSize>('md');
   /** Label shown above the field. */
   readonly label = input<string>('');
   /** Helper text shown below the field. */

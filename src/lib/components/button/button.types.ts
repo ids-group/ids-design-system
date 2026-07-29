@@ -25,6 +25,4 @@ export type ButtonColor =
   | 'success'
   | 'warning';
 export type ButtonVariant = 'solid' | 'tonal' | 'ghost' | 'outline' | 'text';
-// sm/md/lg = 32/40/48, aligned with input, select, dropdown, date-picker and icon-button.
-export type ButtonSize = 'sm' | 'md' | 'lg';
 export type ButtonType = 'button' | 'submit' | 'reset';

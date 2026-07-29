@@ -14,7 +14,7 @@ import {
   type FieldMessageState,
 } from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
-import type { SwitchSize } from './switch.types';
+import type { DsSize } from '../../core/size';
 
 @Component({
   selector: 'ds-switch',
@@ -47,7 +47,7 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
   /** Helper text shown below the switch. */
   readonly hint = input<string>('');
   /** Switch size — sm/md/lg. */
-  readonly size = input<SwitchSize>('md');
+  readonly size = input<DsSize>('md');
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Inline label rendered beside the track and wired via for/id. Omit to

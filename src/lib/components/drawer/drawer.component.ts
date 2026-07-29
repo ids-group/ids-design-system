@@ -13,7 +13,8 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { A11yModule } from '@angular/cdk/a11y';
 import { IconComponent } from '../../icons/icon.component';
-import type { DrawerPlacement, DrawerSize } from './drawer.types';
+import type { DrawerPlacement } from './drawer.types';
+import type { DsSize } from '../../core/size';
 
 let nextId = 0;
 
@@ -34,7 +35,7 @@ export class DrawerComponent implements OnDestroy {
   /** Open state, two-way bound. */
   readonly open = model<boolean>(false);
   /** Panel size — sm/md/lg. */
-  readonly size = input<DrawerSize>('md');
+  readonly size = input<DsSize>('md');
   /** Edge the panel slides in from. */
   readonly placement = input<DrawerPlacement>('right');
   /** Drawer title, shown in the header and used for `aria-labelledby`. */

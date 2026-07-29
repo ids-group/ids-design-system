@@ -63,9 +63,9 @@ import {
 import type {
   DatePickerMode,
   DatePickerPreset,
-  DatePickerSize,
   RangeValue,
 } from './date-picker.types';
+import type { DsSize } from '../../core/size';
 
 let nextId = 0;
 const YEAR_PAGE_SIZE = 12;
@@ -173,7 +173,7 @@ export class DatePickerComponent
   /** Selection mode — single date or start/end range. */
   readonly mode = input<DatePickerMode>('single');
   /** Trigger height — sm/md/lg. */
-  readonly size = input<DatePickerSize>('md');
+  readonly size = input<DsSize>('md');
   /** Selected date (single) or `[start, end]` (range), two-way bound. */
   readonly value = model<Date | RangeValue | null>(null);
   /** Accessible-name fallback only — the mask fills the visible placeholder, not this. */

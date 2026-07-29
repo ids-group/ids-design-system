@@ -5,7 +5,7 @@ import {
   input,
 } from '@angular/core';
 import { SpinnerComponent } from '../spinner/spinner.component';
-import type { SpinnerSize } from '../spinner/spinner.types';
+import type { DsSize } from '../../core/size';
 
 @Component({
   selector: 'ds-loading-overlay',
@@ -26,7 +26,7 @@ export class LoadingOverlayComponent {
   /** Backdrop-blur the projected content behind the scrim. */
   readonly blur = input(true, { transform: booleanAttribute });
   /** Size of the spinner shown in the scrim. */
-  readonly spinnerSize = input<SpinnerSize>('md');
+  readonly spinnerSize = input<DsSize>('md');
   /** Offset the scrim top edge — useful when a sticky header should stay uncovered. */
   readonly insetTop = input<string>('0');
 }

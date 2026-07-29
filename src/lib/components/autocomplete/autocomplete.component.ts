@@ -34,9 +34,9 @@ import {
 import type {
   AutocompleteOption,
   AutocompleteOptionGroup,
-  AutocompleteSize,
   AutocompleteWidth,
 } from './autocomplete.types';
+import type { DsSize } from '../../core/size';
 
 let nextId = 0;
 
@@ -81,7 +81,7 @@ export class AutocompleteComponent<T = unknown>
   /** Allows selecting more than one option, shown as removable tags. */
   readonly multiple = input(false, { transform: booleanAttribute });
   /** Trigger height — sm/md/lg. */
-  readonly size = input<AutocompleteSize>('md');
+  readonly size = input<DsSize>('md');
   /** Trigger width — `fill` stretches to the container, `content` hugs the value. */
   readonly width = input<AutocompleteWidth>('fill');
   /** Placeholder shown in the input when empty. */

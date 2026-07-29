@@ -1,5 +1,4 @@
 export type TimePickerMode = 'single' | 'range';
-export type TimePickerSize = 'sm' | 'md' | 'lg';
 export type TimeFormat = '24h' | '12h';
 
 /** Canonical stored value: 24h `"HH:MM"`. */

@@ -15,7 +15,7 @@ import {
   FieldMessageComponent,
   type FieldMessageState,
 } from '../field-message/field-message.component';
-import type { RadioSize } from './radio.types';
+import type { DsSize } from '../../core/size';
 
 @Component({
   selector: 'ds-radio',
@@ -42,7 +42,7 @@ export class RadioComponent {
   /** Helper text shown below the control. */
   readonly hint = input<string>('');
   /** Control size — sm/md/lg. */
-  readonly size = input<RadioSize>('md');
+  readonly size = input<DsSize>('md');
   /** Marks the radio required — shows an asterisk on the label and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Inline label rendered beside the dot and wired via for/id. Omit to bring

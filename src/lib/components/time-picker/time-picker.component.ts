@@ -46,9 +46,9 @@ import type {
   TimeConstraints,
   TimeFormat,
   TimePickerMode,
-  TimePickerSize,
   TimeRangeValue,
 } from './time-picker.types';
+import type { DsSize } from '../../core/size';
 
 type Segment = 'single' | 'start' | 'end';
 let nextId = 0;
@@ -102,7 +102,7 @@ export class TimePickerComponent
   /** Predicate marking individual times unselectable. */
   readonly disabledTime = input<((time: string) => boolean) | null>(null);
   /** Trigger height — sm/md/lg. */
-  readonly size = input<TimePickerSize>('md');
+  readonly size = input<DsSize>('md');
   /** Disables the picker and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Applies error styling and marks the trigger `aria-invalid`. */

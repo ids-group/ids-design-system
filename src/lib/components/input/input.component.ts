@@ -18,7 +18,8 @@ import {
 } from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
-import type { InputSize, InputType } from './input.types';
+import type { InputType } from './input.types';
+import type { DsSize } from '../../core/size';
 
 @Component({
   selector: 'ds-input',
@@ -47,7 +48,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Native input type — also affects the default clear button and password toggle. */
   readonly type = input<InputType>('text');
   /** Field height — sm/md/lg. */
-  readonly size = input<InputSize>('md');
+  readonly size = input<DsSize>('md');
   /** Label shown above the field, or inside it when `floating`. */
   readonly label = input<string>('');
   /** Helper text shown below the field. */

@@ -32,8 +32,8 @@ import {
   type SelectItem,
   type SelectOption,
   type SelectOptionGroup,
-  type SelectSize,
 } from './select.types';
+import type { DsSize } from '../../core/size';
 import {
   FieldMessageComponent,
   type FieldMessageState,
@@ -72,7 +72,7 @@ export class SelectComponent
   /** Shown in the trigger when nothing is selected. */
   readonly placeholder = input<string>('');
   /** Trigger height — sm/md/lg. */
-  readonly size = input<SelectSize>('md');
+  readonly size = input<DsSize>('md');
   /** Label shown above the trigger. */
   readonly label = input<string>('');
   /** Disables the trigger and blocks all interaction. */
