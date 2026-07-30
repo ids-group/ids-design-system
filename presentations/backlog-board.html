@@ -121,9 +121,9 @@
 
   <div class="summary">
     <div class="stat you"><div class="n">3</div><div class="l">Ждёт твоего решения</div></div>
-    <div class="stat a11y"><div class="n">3</div><div class="l">A11y (P0–P2)</div></div>
-    <div class="stat untouched"><div class="n">18</div><div class="l">Компоненты + foundations</div></div>
-    <div class="stat untouched"><div class="n">11</div><div class="l">Motion / DS-docs / PIN-475 / API</div></div>
+    <div class="stat a11y"><div class="n">2</div><div class="l">A11y (P0–P2)</div></div>
+    <div class="stat untouched"><div class="n">17</div><div class="l">Компоненты + foundations</div></div>
+    <div class="stat untouched"><div class="n">9</div><div class="l">Motion / DS-docs / PIN-475 / API</div></div>
     <div class="stat raw"><div class="n">4</div><div class="l">Raw / frozen</div></div>
   </div>
 
@@ -139,21 +139,19 @@
 
   <!-- ============ A11Y ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>♿ A11y — по компонентам и findings</h2><span class="count c-a11y">3</span><span class="why">Компонентная волна 07-06 и date-picker grid-семантика — в архиве done; остаток — 3 пункта.</span></div>
+    <div class="lane-head"><h2>♿ A11y — по компонентам и findings</h2><span class="count c-a11y">2</span><span class="why">Компонентная волна 07-06, date-picker grid-семантика и scroll-lock ref-count — в архиве done; остаток — 2 пункта.</span></div>
     <div class="cards">
-      <div class="card a11y"><span class="chip ch-oos">ждёт go</span><div class="t">scroll-lock без ref-count</div><p class="d">Единственный открытый P1: два стековых оверлея безусловно сбрасывают `body.overflow` — закрытие первого возвращает скролл под вторым. Рекомендованный фикс — ref-counted lock-сервис, но это новый паттерн shared-service и нужен явный go.</p></div>
-      <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">disabled-tooltip недоступен с клавиатуры</div><p class="d">`ds-menu-item`/`ds-button` с `[disabled]` выпадают из roving tabindex и несут `role="none"` — причина в `dsTooltip` не доходит до клавиатурных пользователей. Нужны правки в `ds-menu`.</p></div>
+      <div class="card a11y"><span class="chip ch-p2">P2</span><div class="t">disabled-tooltip: остаётся SR-объявление</div><p class="d">Часть 1 отгружена 07-30: disabled `ds-menu-item` теперь фокусируется с клавиатуры (`aria-disabled`, roving/arrow/type-ahead порядок сохранён), `dsTooltip` показывается ВИЗУАЛЬНО на фокусе. Остаётся: надёжное объявление причины скринридером — `aria-describedby` стоит на хосте с `role="none"`, а не на внутренней `<button>`.</p></div>
       <div class="card a11y"><span class="chip ch-p2">P3</span><div class="t">topbar role=banner</div><p class="d">Не делаем (Stas: «пропусти, не удаляй»): `<header>` в `<ds-topbar>` уже даёт banner-landmark неявно; явный role лишний и был бы вреден при вложении. Decision-record.</p></div>
     </div>
   </div>
 
   <!-- ============ COMPONENTS + FOUNDATIONS ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🧩 Компоненты + foundations</h2><span class="count c-track">18</span><span class="why">Component feature gaps · missing components · missing tokens/foundations — из gap-analysis и дожфудинга.</span></div>
+    <div class="lane-head"><h2>🧩 Компоненты + foundations</h2><span class="count c-track">17</span><span class="why">Component feature gaps · missing components · missing tokens/foundations — из gap-analysis и дожфудинга.</span></div>
     <div class="cards">
       <div class="card track"><span class="chip ch-p2">P2</span><div class="t">Цвет-движок: один источник</div><p class="d">Схлопнуть `--primary` + `--primary-h/s/l` в ОДИН токен; оттенки через `color-mix()` + `hsl(from …)`, сохраняя ручную калибровку рампы. Разблокирует `--accent`-indirection.</p><div class="meta">color-engine-relative.html</div></div>
       <div class="card track"><span class="chip ch-p2">P2</span><div class="t">ds-auth-shell</div><p class="d">Готовая обёртка для полноэкранных auth-экранов (login/forgot/reset) — пара к `ds-app-shell` (запрошено Stas 2026-07-24). Разблокирована brand-row-паттерном шелла; own full-height centering вместо двойного `100vh`+`100dvh` стека как в mm-admin.</p></div>
-      <div class="card track"><span class="chip ch-p2">P2</span><div class="t">ds-input: withAddon не нужен</div><p class="d">Флаг дублирует то, что и так видно в DOM — компонент может реагировать на спроецированный контент через `:has()` (прецедент — `button.component.scss`). Заодно док-строка врёт: якобы «резервирует место», реально снимает inset.</p></div>
       <div class="card track"><span class="chip ch-p2">P3</span><div class="t">Feature gaps — Forms: ds-select multi</div><p class="d">Отложено по прямой просьбе (2026-07-02, «пока не реализовывай и не выкидывай»). `ds-multi-select` уже закрывает мульти-выбор — нативная семантика `<select multiple>` остаётся единственным открытым куском.</p></div>
       <div class="card track"><span class="chip ch-p2">P2</span><div class="t">ds-table: virtual scroll + lazy loading</div><p class="d">10k+ строк рендерятся целиком и тормозят скролл/paint. Выбран подход — CDK fixed-size virtual scroll внутри существующего `<table>` (без AG Grid/TanStack); фиксированная высота строки обязательна, expandable/wrap-режимы гасятся под virtual.</p></div>
       <div class="card track"><span class="chip ch-p2">P3</span><div class="t">ds-table: row-expansion — доводка</div><p class="d">База уже отгружена (`expandableRows` + `expandedIds`); остались мелкие дельты — single-expand режим, expand-all/collapse-all в шапке, опциональные `(rowExpand)`/`(rowCollapse)` outputs. Только по запросу консьюмера.</p></div>
@@ -174,14 +172,12 @@
 
   <!-- ============ MOTION / DS-DOCS / PIN-475 / API ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🎬 Motion / DS-docs / PIN-475 / API</h2><span class="count c-track">11</span><span class="why">Overlay/motion · ds-docs showcase · API-консистентность · PIN-475 filter-toolbar · picker internals.</span></div>
+    <div class="lane-head"><h2>🎬 Motion / DS-docs / PIN-475 / API</h2><span class="count c-track">9</span><span class="why">Overlay/motion · ds-docs showcase · API-консистентность · PIN-475 filter-toolbar · picker internals.</span></div>
     <div class="cards">
       <div class="card track"><span class="chip ch-oos">решить</span><div class="t">Overlay leave animation — политика</div><p class="d">Floating-панели закрываются мгновенно (leave снята в `d2e4712`). Актуализация 07-24: все 8 оверлеев уже идут через общий `disposeWithLeave` — вернуть leave теперь ОДНА правка хелпера, но продуктовое решение всё ещё не принято.</p></div>
       <div class="card track"><span class="chip ch-p2">P2</span><div class="t">Rounded `:active` touch-feedback</div><p class="d">После сброса tap-highlight ~14 контролов без явного `:active` потеряли press-подсветку на тач (checkbox/radio/switch/select/tabs/tag и др.). Скруглённый `:active` — единым шагом вместе с `.ds-interactive`.</p><div class="meta">tap-feedback-test.html</div></div>
       <div class="card track"><span class="chip ch-p2">P3</span><div class="t">Inspect-mode (Figma-style)</div><p class="d">Тоггл в заголовке секции → overlay со спекой paddings/gaps/sizes + какой токен за что отвечает. Начать пилотом на одной секции (например, button), затем обобщить.</p></div>
-      <div class="card track"><span class="chip ch-p2">P2</span><div class="t">pagination: дубль model()/outputs</div><p class="d">`pageSize`/`currentPage` объявлены и как `model()`, и как ручные outputs — коллизия имён + двойной эмит на `onSizeChange`. Убрать ручные outputs, как уже сделано в `ds-table`. Breaking — под мажор.</p></div>
       <div class="card track"><span class="chip ch-oos">ждёт go</span><div class="t">Shared picker internals</div><p class="d">`select`/`autocomplete`/`multi-select` дублируют active-descendant навигацию и фильтрацию опций (overlay-слой уже общий через `overlay-motion.ts`). Вынести внутренние хелперы, публичные API не трогать — новый паттерн, нужен явный go.</p></div>
-      <div class="card track"><span class="chip ch-oos">ждёт go</span><div class="t">ds-sidenav-item: (activate) output</div><p class="d">Чисто display-примитив без событийного output — ds-docs сайдбар не может его дожфудить (перехватывает клик напрямую). Добавить опциональный `(activate)` passthrough; публичный API на шаренном компоненте — нужен go.</p></div>
       <div class="card track"><span class="chip ch-oos">решить</span><div class="t">Combobox multiple vs multi-select</div><p class="d">Индустрия держит их раздельно; у нас multi живёт и в `ds-autocomplete [multiple]`, и в `ds-multi-select` — один сценарий, две эргономики. Решить: deprecate autocomplete-multi или задокументировать границу.</p><div class="meta">multi-pick-comparison.html</div></div>
       <div class="card track"><span class="chip ch-oos">if-needed</span><div class="t">CDK Menu adoption (option B)</div><p class="d">Только если понадобятся вложенные сабменю/menubar/context-menu; сейчас `ds-menu` — нативная roving-навигация, корректна для плоских меню. План запаркован.</p></div>
       <div class="card track"><span class="chip ch-p2">P2</span><div class="t">autocomplete single — читается как free-text</div><p class="d">В single-режиме триггер сохраняет вводимое поле + шеврон после выбора — выглядит как `ds-select`. Нужен single-select display-режим; решение V2 ждёт визуального прототипа.</p><div class="meta">combobox-single-display.html</div></div>
@@ -206,6 +202,7 @@
   <p class="foot">
     Источник: <span class="tag">docs/todo.md</span> (полные формулировки — в поповерах ⓘ).
     Архив сделанного целиком — <span class="tag">docs/done.md</span>; на доске выполненное не хранится.
+    Актуализировано 2026-07-30 (session, продолжение): закрыты 4 карточки — «scroll-lock без ref-count» (A11y 3→2, весь P1 закрыт), «ds-input: withAddon не нужен» (Компоненты 18→17), «pagination: дубль model()/outputs» и «ds-sidenav-item: (activate) output» (Motion 11→9); «disabled-tooltip недоступен с клавиатуры» переименована в «disabled-tooltip: остаётся SR-объявление» — часть 1 (клавиатурный фокус + видимый tooltip) отгружена, карточка не удалена, остаётся SR-объявление причины. Подробности в <span class="tag">docs/done.md</span> → Shipped 2026-07-29.
     Актуализировано 2026-07-30 (session): закрыты 3 карточки — «Три токена без публичного API» и «Skeleton — shimmer sync» (Motion 13→11), «ds-table: paging-поведения» (Компоненты 19→18); + housekeeping `--ds-t-*` extractor. Подробности в <span class="tag">docs/done.md</span> → Shipped 2026-07-29.
     Актуализировано 2026-07-29 (session): полная пересборка карточек из docs/todo.md — заведены карточки под аудит 07-24 + находки 07-27/28/29; lanes/stats/MAP пересчитаны.
     2026-07-23 (с 07-10): non-modal overlay Phase 2 докатан на select/autocomplete/multi-select/time-picker/color-picker/popover (07-23 починены 2 focus-follow-up'а: popover `panelRole` focus-steal и date-picker scroll-close) — лейн Motion пересобран, 2 закрытых пункта (press-дизайн, система рецептов) сняты как отгруженные ранее; добавлены «Семантический radius/elevation слой» (Foundations, запрошено 07-08), «badge count wording» (A11y, minor), «ds-sidenav-item (activate)» и «ds-select clear-× клавиатура» (API/прочее, оба surfaced 07-10).
@@ -674,13 +671,11 @@ _Archived 2026-07-06 from `todo.md`._
       [".ds-interactive — вердикты",        "global state-interaction contract",          "interaction-formula.html"],
       ["Recipe vs hand-tuned",              "Theme recipe vs hand-tuned picks",           ""],
 
-      ["scroll-lock без ref-count",         "scroll-lock isn't ref-counted",              ""],
-      ["disabled-tooltip недоступен",       "can never show its `dsTooltip` reason",      ""],
+      ["disabled-tooltip: остаётся SR",     "can never show its `dsTooltip` reason",      ""],
       ["topbar role=banner",                "VALIDATED-REDUNDANT & DEFERRED",             ""],
 
       ["Цвет-движок: один источник",        "Single-source colour engine",                "color-engine-relative.html"],
       ["ds-auth-shell",                     "counterpart to the shipped `ds-app-shell`",   ""],
-      ["ds-input: withAddon",               "withAddon` / `withAddonRight` should not exist", ""],
       ["Feature gaps — Forms",              "ds-select` native `multi",                   ""],
       ["ds-table: virtual scroll",          "virtual scroll + lazy loading",              ""],
       ["ds-table: row-expansion",           "row-expansion parity polish",                ""],
@@ -700,9 +695,7 @@ _Archived 2026-07-06 from `todo.md`._
       ["Overlay leave animation",           "Overlay leave animation — decide the policy", ""],
       ["Rounded `:active`",                 "Rounded `:active` touch-feedback",           "tap-feedback-test.html"],
       ["Inspect-mode",                      "Figma-style spec overlay",                   ""],
-      ["pagination: дубль",                 "redundant `model()` + manual outputs",       ""],
       ["Shared picker internals",           "extract the common nav/filter plumbing",     ""],
-      ["ds-sidenav-item: (activate)",       "add an `(activate)` output for click interception", ""],
       ["Combobox multiple vs multi-select", "portfolio overlap (decision",                "multi-pick-comparison.html"],
       ["CDK Menu adoption",                 "CDK Menu adoption (option B)",               ""],
       ["autocomplete single — читается",    "autocomplete single-select still reads",     "combobox-single-display.html"],
