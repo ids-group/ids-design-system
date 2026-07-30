@@ -6,20 +6,28 @@
   <span lede>
     Mobile-first panel anchored to the bottom edge — the touch equivalent of a
     drawer / modal. Drag the grab strip down or tap the scrim to dismiss;
-    <kbd> Esc </kbd> also closes. Body scroll locks while open. On wider
+    <kbd>
+      Esc
+    </kbd> also closes. Body scroll locks while open. On wider
     viewports it caps its width and centres.
   </span>
 
   <!-- ============================================================ Live demo -->
-  <h3 class="block-title t-h4">Live demo</h3>
+  <h3 class="block-title t-h4">
+    Live demo
+  </h3>
 
   <p class="block-desc t-s">
     Two-way <code class="t-mono-inline">[(open)]</code> drives visibility; the
-    <code class="t-mono-inline"> [actions] </code> slot holds footer buttons.
+    <code class="t-mono-inline">
+      [actions]
+    </code> slot holds footer buttons.
   </p>
 
   <div class="demo">
-    <ds-button (pressed)="open.set(true)"> Open bottom sheet </ds-button>
+    <ds-button (pressed)="open.set(true)">
+      Open bottom sheet
+    </ds-button>
 
     <ds-bottom-sheet
       title="Edit registration"
@@ -52,7 +60,9 @@
   </div>
 
   <!-- ============================================================ Snap points -->
-  <h3 class="block-title t-h4">Snap points</h3>
+  <h3 class="block-title t-h4">
+    Snap points
+  </h3>
 
   <p class="block-desc t-s">
     Pass <code class="t-mono-inline">[snapPoints]="[0.35, 0.65, 0.9]"</code>
@@ -79,11 +89,17 @@
       </p>
 
       <p class="t-s sheet-body rules">
-        <span> 35 % — compact filter panel </span>
+        <span>
+          35 % — compact filter panel
+        </span>
 
-        <span> 65 % — medium with sort options </span>
+        <span>
+          65 % — medium with sort options
+        </span>
 
-        <span> 90 % — full sheet with map preview </span>
+        <span>
+          90 % — full sheet with map preview
+        </span>
       </p>
 
       <ng-container actions>

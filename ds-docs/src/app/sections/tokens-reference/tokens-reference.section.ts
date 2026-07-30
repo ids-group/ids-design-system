@@ -107,6 +107,7 @@ export class TokensReferenceSection {
     if (/hsl\(|rgb\(|oklch\(|#[0-9a-f]{3,8}\b|color-mix\(/i.test(value)) {
       return true;
     }
+
     // var() references to a colour role or ramp — not size vars like --icon-2xs.
     return /var\(--(brand|danger|primary|secondary|tertiary|accent|success|warning|error|info|link|status|text-|icon-(default|strong|muted|subtle|on)|surface-|border-|neutral-|blue-|red-|green-|yellow-|orange-|sky-|static-)/.test(
       value,

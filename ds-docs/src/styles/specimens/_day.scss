@@ -1,9 +1,5 @@
-/* Day-state showcase specimen — a raw mirror of the INTERNAL ds-calendar-day
-   cell (which <ds-date-picker> uses in its grid). The component is not part of
-   the public API, so the docs can't render it standalone; this `.day-specimen`
-   markup reproduces its states side-by-side. Class is scoped (NOT `.day`) so it
-   can't leak onto the live component's `.day` buttons. Keep the resolver
-   fallbacks in sync with calendar-day.component.scss. */
+/* Raw mirror of the INTERNAL ds-calendar-day cell (not public API, so docs can't render it live). Scoped `.day-specimen`
+   (not `.day`) so it can't leak onto the real component. Keep resolver fallbacks in sync with calendar-day.component.scss. */
 
 .day-specimen {
   --_date-picker-day-hover-bg-color:          var(--ds-date-picker-day-hover-bg-color,          var(--surface-secondary));

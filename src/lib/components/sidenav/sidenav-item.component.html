@@ -15,6 +15,7 @@
     [attr.aria-disabled]="disabled() ? 'true' : null"
     [attr.tabindex]="disabled() ? -1 : null"
     [dsTooltip]="collapsedTooltip()"
+    (click)="onActivate($event)"
   >
     <ng-container [ngTemplateOutlet]="content" />
   </a>
@@ -28,6 +29,7 @@
     [attr.aria-disabled]="disabled() ? 'true' : null"
     [attr.tabindex]="disabled() ? -1 : null"
     [dsTooltip]="collapsedTooltip()"
+    (click)="onActivate($event)"
   >
     <ng-container [ngTemplateOutlet]="content" />
   </a>

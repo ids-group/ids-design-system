@@ -24,19 +24,7 @@ export interface DocsMatrixRow {
   readonly [extra: string]: unknown;
 }
 
-/**
- * Generic 2-axis showcase matrix: column headers × labelled rows, each cell
- * rendered by a projected `<ng-template let-col let-row="row">`. Replaces the
- * hand-rolled grid markup duplicated across the button / icon-button sections.
- *
- * ```html
- * <docs-matrix [cols]="variants" [rows]="rows" cornerLabel="color \ variant">
- *   <ng-template let-variant let-row="row">
- *     <ds-button [color]="row['color']" [variant]="variant">{{ row.label }}</ds-button>
- *   </ng-template>
- * </docs-matrix>
- * ```
- */
+/** Generic 2-axis showcase matrix — projected `<ng-template let-col let-row="row">` per cell. Replaces the hand-rolled grid markup duplicated across button / icon-button sections. */
 @Component({
   selector: 'docs-matrix',
   standalone: true,
@@ -88,7 +76,8 @@ export interface DocsMatrixRow {
                   <span
                     class="warn"
                     title="UX-discouraged combination — renders, but reads poorly"
-                  ></span>
+                  >
+                  </span>
                 }
               } @else {
                 <span class="na">

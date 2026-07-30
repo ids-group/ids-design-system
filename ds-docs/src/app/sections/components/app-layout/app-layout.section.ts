@@ -5,7 +5,7 @@ import {
   signal,
 } from '@angular/core';
 import {
-  AppShellComponent,
+  AppLayoutComponent,
   BrandNameDirective,
   SidenavComponent,
   SidenavFooterComponent,
@@ -17,10 +17,10 @@ import {
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
-  selector: 'section-components-app-shell',
+  selector: 'section-components-app-layout',
   standalone: true,
   imports: [
-    AppShellComponent,
+    AppLayoutComponent,
     BrandNameDirective,
     SidenavComponent,
     SidenavFooterComponent,
@@ -29,12 +29,13 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
     DocsSectionComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
-  templateUrl: './app-shell.section.html',
-  styleUrls: ['../../../shared/section-demo.scss', './app-shell.section.scss'],
+  templateUrl: './app-layout.section.html',
+  styleUrls: ['../../../shared/section-demo.scss', './app-layout.section.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppShellSection {
-  protected readonly collapsed = signal(false);
+export class AppLayoutSection {
+  protected readonly collapsedContentSpan = signal(false);
+  protected readonly collapsedFullSpan = signal(false);
   protected readonly unread = signal(true);
 
   protected readonly alertItems: readonly SidenavAlertItem[] = [
@@ -69,8 +70,12 @@ export class AppShellSection {
       .map((label) => ({ id: label, label, group: 'Sections', route: '.' }));
   };
 
-  protected toggleCollapsed(): void {
-    this.collapsed.update((value) => !value);
+  protected toggleCollapsedContentSpan(): void {
+    this.collapsedContentSpan.update((value) => !value);
+  }
+
+  protected toggleCollapsedFullSpan(): void {
+    this.collapsedFullSpan.update((value) => !value);
   }
 
   protected markRead(): void {

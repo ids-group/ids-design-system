@@ -19,7 +19,6 @@
     /* State pins — force a visual state on live ds-tabs by reading the
        component's own resolvers; tokens without resolvers noted below. */
 
-    /* line: hover recolors the non-active tab */
     :host ::ng-deep .pin-hover .tab:not(.active) { color: var(--_tab-label-color-hover); }
 
     /* focus: --focus-ring and --radius-sm are bare tokens (no --_* resolver) */

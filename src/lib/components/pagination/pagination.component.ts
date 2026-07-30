@@ -5,7 +5,6 @@ import {
   computed,
   input,
   model,
-  output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
@@ -24,16 +23,13 @@ export class PaginationComponent {
   readonly total = input.required<number>();
   /** Items per page, two-way bound. */
   readonly pageSize = model<number>(10);
-  /** 1-based active page, two-way bound. */
+  /** 1-based active page, two-way bound; a page change (incl. the reset to 1
+   *  after a size change) emits via the implicit `currentPageChange`. */
   readonly currentPage = model<number>(1);
   /** Preset choices offered in the page-size dropdown. */
   readonly pageSizeOptions = input<number[]>([10, 25, 50, 100]);
   /** Shows the "Showing X–Y of Z" range label. */
   readonly showLabel = input(true, { transform: booleanAttribute });
-  /** Fires whenever the active page changes, including the reset to page 1 after a size change. */
-  readonly pageChange = output<number>();
-  /** Fires when the page size changes via the size dropdown. */
-  readonly pageSizeChange = output<number>();
 
   protected readonly totalPages = computed(() =>
     Math.max(1, Math.ceil(this.total() / this.pageSize())),
@@ -89,14 +85,11 @@ export class PaginationComponent {
       return;
     }
     this.currentPage.set(page);
-    this.pageChange.emit(page);
   }
 
   protected onSizeChange(value: string): void {
     const next = Number(value);
     this.pageSize.set(next);
     this.currentPage.set(1);
-    this.pageSizeChange.emit(next);
-    this.pageChange.emit(1);
   }
 }

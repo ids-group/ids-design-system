@@ -9,7 +9,4 @@ export type { ButtonColor } from '../button/button.types';
 //   outlined — bordered, transparent fill
 export type IconButtonVariant = 'standard' | 'filled' | 'tonal' | 'outlined';
 
-// Heights align with the field / button scale: sm 32, md 40, lg 48.
-export type IconButtonSize = 'sm' | 'md' | 'lg';
-
 export type IconButtonType = 'button' | 'submit' | 'reset';

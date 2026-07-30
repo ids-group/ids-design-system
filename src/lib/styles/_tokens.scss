@@ -138,9 +138,6 @@
   --btn-focus-z:           var(--layer-raised);
   --btn-group-focus-z:     2;          /* focused button rises above its neighbour */
 
-  /* ============================================================
-     Motion
-     ============================================================ */
   --duration-instant: 80ms;
   --duration-fast:    120ms;
   --duration-base:    180ms;
@@ -203,9 +200,6 @@
   --page-margin-desktop: var(--space-8);   /* 32px */
   --page-margin-wide:    var(--space-10);  /* 40px */
 
-  /* ============================================================
-     System chrome
-     ============================================================ */
   --scrollbar-w: 10px;
   --scrollbar-thumb:        var(--neutral-300);
   --scrollbar-thumb-hover:  var(--neutral-400);
@@ -265,9 +259,6 @@
   --hit-comfy: 44px;   /* WCAG min for touch */
   --hit-touch: 48px;   /* mobile-friendly — also used by floating-label fields */
 
-  /* ============================================================
-     Iconography
-     ============================================================ */
   --icon-2xs: 10px;
   --icon-xs:  12px;
   --icon-sm:  14px;
@@ -426,7 +417,7 @@
      inside component CSS. Grouped by component for readability.
      ============================================================ */
 
-  /* Top bar / app shell */
+  /* Top bar / app layout */
   --topbar-h:                var(--space-14);            /* 56px — global app bar height */
 
   /* Sidenav internals — w / w-collapsed defined above */
@@ -598,9 +589,6 @@
   --tab-spec-dot-offset:     var(--border-width-strong);       /* -2px notification offset (negated inline) */
 }
 
-/* ============================================================
-   Reduced motion
-   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   :root {
     --duration-instant: 0ms;
@@ -648,6 +636,7 @@
   --sidenav-w:         200px;
   --field-floating-label-top: 4px;
   --segmented-btn-h:   20px;
+
   /* Ultra also compresses field + table padding (tighter than compact/comfy). */
   --field-pad-x:       var(--space-2);
   --field-pad-y:       var(--space-1);

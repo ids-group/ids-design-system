@@ -3,7 +3,10 @@
 # Build/lint logic lives in infrastructure/scripts/*.sh (see its README); this
 # file only wires images, caches, and triggers.
 #
-#   tags v*           -> build the library and publish to npm
+# Branch model: develop on `dev` (default); `main` is release-only. A release merges
+# dev->main, tags vX.Y.Z, publishes, then auto-deploys the docs. Triggers:
+#   tags v*           -> build + publish to npm, then trigger deploy-docs (3rd stage)
+#   custom release-*  -> cut a release from `dev` (merge dev->main, bump, tag, push)
 #   custom validate   -> on-demand build (gate) + lint (report-only)
 #   custom deploy-docs -> deploy the ds-docs showcase to the IDS prototypes CDN
 #
@@ -15,9 +18,10 @@
 # stores the literal string ${NPM_TOKEN}; npm substitutes the env var at runtime,
 # so the token value is never written to disk.
 #
-# Release flow:
-#   npm run release:minor                 # bumps version, commits, creates vX.Y.Z tag
-#   git push origin main --follow-tags    # the tag push triggers the publish pipeline
+# Release flow (one-click): Pipelines -> Run pipeline -> branch `dev` -> release-*.
+# cut-release.sh merges dev->main, bumps, tags, pushes main + tag, back-syncs dev.
+# The tag runs the v* pipeline (publish -> trigger-docs-deploy), which starts the
+# deploy-docs pipeline over the REST API. Three runs: release, publish, deploy-docs.
 
 image: node:22-alpine
 
@@ -75,6 +79,7 @@ pipelines:
           script:
             - sh infrastructure/scripts/build-lib.sh
             - sh infrastructure/scripts/publish.sh
+            - sh infrastructure/scripts/trigger-docs-deploy.sh
 
   custom:
     # PR validation, run on demand (Bitbucket UI "Run pipeline" or API) rather

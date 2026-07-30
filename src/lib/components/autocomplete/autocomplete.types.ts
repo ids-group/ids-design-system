@@ -1,5 +1,3 @@
-export type AutocompleteSize = 'sm' | 'md' | 'lg';
-
 /** `fill` stretches to the host container (default); `content` hugs chips/value + a min typing area. */
 export type AutocompleteWidth = 'fill' | 'content';
 

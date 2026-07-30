@@ -1,24 +1,5 @@
-// PREVIEW ONLY — duplicated from mm-broker for the docs Tweaks-panel brand
-// toggle. Source of truth for the actual brand config is
-// `prototype/mm-broker/src/app/styles/_brand-manage-my.scss`.
-//
-// Brand: ManageMy.
-// Applied via `<html data-brand="manage-my">` toggled from the Tweaks panel.
-//
-// Palette extracted from the official ManageMy brand pack and the broker
-// portal mockup (Brand Guidelines v2.0, Jan 2026):
-//   Deep Teal    #00414B  — primary brand · logo · sidebar tone · headings
-//   Midnight Teal #0A2129 — sidebar surface · body text
-//   Topaz        #00ACAA  — interactive accent · success
-//   Coral        #FF6156  — secondary accent · alerts · highlights
-//   Off White    #F5F5F7  — page canvas
-//   Warm Grey    #DEDDDC  — borders / dividers
-//   Ice Gray     #DAEAF0  — tinted brand surface
-//
-// Type: Manrope (loaded by the host app via Google Fonts).
-//
-// Authored on the LIGHT theme — pair with light (the default). A dark ManageMy
-// skin would be a separate `[data-theme="dark"][data-brand="manage-my"]` layer.
+// PREVIEW ONLY — duplicated from mm-broker's _brand-manage-my.scss for the Tweaks-panel brand toggle; keep in sync manually.
+// Palette: ManageMy Brand Guidelines v2.0 (Jan 2026), authored on the light theme only.
 [data-brand="manage-my"] {
   // Brand colour channels (Deep Teal · #00414B ≈ hsl(189, 100%, 15%)).
   // Channel-split lets focus rings + halos retint with the brand.

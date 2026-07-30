@@ -7,20 +7,7 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
-/**
- * Generic 1-axis showcase grid: a list of values, each rendered by a projected
- * `<ng-template let-item>` with the value shown as a caption below. Replaces the
- * hand-rolled `.row`/`.cell` specimen markup duplicated across single-axis
- * (variant-only) component sections — badge, banner, tag, toast, …
- *
- * ```html
- * <docs-specimens [items]="variants">
- *   <ng-template let-v>
- *     <ds-badge [variant]="v">{{ v }}</ds-badge>
- *   </ng-template>
- * </docs-specimens>
- * ```
- */
+/** Generic 1-axis showcase grid — projected `<ng-template let-item>` per value. Replaces the hand-rolled `.row`/`.cell` markup duplicated across badge/banner/tag/toast sections. */
 @Component({
   selector: 'docs-specimens',
   standalone: true,

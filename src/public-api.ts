@@ -1,17 +1,16 @@
-/**
- * Public surface of @ids-group-ltd/ids-design-system.
- */
 export * from './lib/config/ds-config';
 export * from './lib/theme/provide-ds-theme';
 export * from './lib/overlay/ds-overlay-close-ref';
+export * from './lib/overlay/body-scroll-lock.service';
 export * from './lib/core/status';
+export * from './lib/core/size';
 export * from './lib/icons';
 export * from './lib/components/button';
 export * from './lib/components/toggle-button';
 export * from './lib/components/icon-button';
 export * from './lib/components/badge';
 export * from './lib/components/status-dot';
-export * from './lib/components/app-shell';
+export * from './lib/components/app-layout';
 export * from './lib/components/avatar';
 export * from './lib/components/avatar-group';
 export * from './lib/components/card';

@@ -66,7 +66,6 @@
   &.md { width: var(--_drawer-width-md); }
   &.lg { width: var(--_drawer-width-lg); }
 
-  /* ---- Placement: right (default) ---- */
   &.right {
     top: 0;
     right: 0;
@@ -77,7 +76,6 @@
     &.closing { animation: drawer-panel-close-right var(--duration-base) var(--ease-accelerate) forwards; }
   }
 
-  /* ---- Placement: left ---- */
   &.left {
     top: 0;
     left: 0;
@@ -88,7 +86,6 @@
     &.closing { animation: drawer-panel-close-left var(--duration-base) var(--ease-accelerate) forwards; }
   }
 
-  /* ---- Placement: top ---- */
   &.top {
     top: 0;
     left: 0;
@@ -100,7 +97,6 @@
     &.closing { animation: drawer-panel-close-top var(--duration-base) var(--ease-accelerate) forwards; }
   }
 
-  /* ---- Placement: bottom ---- */
   &.bottom {
     bottom: 0;
     left: 0;
@@ -156,7 +152,6 @@
   }
 }
 
-/* Right: slide in from right, close to right */
 @keyframes drawer-in-right {
   from { transform: translateX(100%); }
   to   { transform: none; }
@@ -166,7 +161,6 @@
   to { transform: translateX(100%); }
 }
 
-/* Left: slide in from left, close to left */
 @keyframes drawer-in-left {
   from { transform: translateX(-100%); }
   to   { transform: none; }
@@ -176,7 +170,6 @@
   to { transform: translateX(-100%); }
 }
 
-/* Top: slide in from top, close upward */
 @keyframes drawer-in-top {
   from { transform: translateY(-100%); }
   to   { transform: none; }
@@ -186,7 +179,6 @@
   to { transform: translateY(-100%); }
 }
 
-/* Bottom: slide in from bottom, close downward */
 @keyframes drawer-in-bottom {
   from { transform: translateY(100%); }
   to   { transform: none; }

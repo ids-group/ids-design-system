@@ -232,7 +232,10 @@ export class TimeColumnsComponent {
   private firstEnabledMinute(hour24: number): number {
     const minute = this.minuteNums().find(
       (candidate) =>
-        !isTimeDisabled(`${pad2(hour24)}:${pad2(candidate)}`, this.constraints()),
+        !isTimeDisabled(
+          `${pad2(hour24)}:${pad2(candidate)}`,
+          this.constraints(),
+        ),
     );
 
     return minute ?? 0;
@@ -255,9 +258,7 @@ export class TimeColumnsComponent {
   ): number {
     const selected = cells.findIndex((cell) => cell.selected && !cell.disabled);
 
-    return selected >= 0
-      ? selected
-      : cells.findIndex((cell) => !cell.disabled);
+    return selected >= 0 ? selected : cells.findIndex((cell) => !cell.disabled);
   }
 
   private nextEnabled(

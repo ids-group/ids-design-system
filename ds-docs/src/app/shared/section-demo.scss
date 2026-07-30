@@ -60,7 +60,6 @@
   color: var(--text-tertiary);
 }
 
-/* A single bordered demo surface for a live component. */
 .demo-panel {
   margin-top: var(--space-3);
   padding: var(--space-5);
@@ -69,7 +68,6 @@
   border-radius: var(--radius-lg);
 }
 
-/* Horizontal cluster of demo controls. */
 .demo-row {
   display: flex;
   flex-wrap: wrap;
@@ -78,12 +76,19 @@
   margin-top: var(--space-3);
 }
 
-/* Vertical stack of demo blocks. */
 .demo-stack {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
   margin-top: var(--space-3);
+}
+
+/* Two-tone dsBrandName wordmark: flex swallows the inter-span whitespace so
+   "My" + "Admin" stay glued; the accent matches the mark tile (--accent). */
+.wordmark {
+  display: inline-flex;
+
+  .accent { color: var(--accent); }
 }
 
 .status-line {

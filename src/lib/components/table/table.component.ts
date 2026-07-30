@@ -99,12 +99,19 @@ export class TableComponent<T extends { id: string }> {
   readonly density = input<'default' | 'compact'>('default');
   /** Tints odd rows for easier row-tracking across wide tables. */
   readonly zebra = input(false, { transform: booleanAttribute });
+  /** Animate the body height when the row set changes (page/filter) instead of
+   *  snapping. Opt-in; instant under reduced-motion (the DS zeroes the token). */
+  readonly animateHeight = input(false, { transform: booleanAttribute });
   /** Two-way set of currently selected row ids. */
   readonly selectedIds = model<Set<string>>(new Set<string>());
   /** Column key currently sorted by; `null` when unsorted. */
   readonly sortKey = model<string | null>(null);
   /** Sort direction for `sortKey`. */
   readonly sortDir = model<SortDir>(null);
+  /** Sort states a column cycles through on click. Default includes null
+   *  (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g.
+   *  server-paged lists). */
+  readonly sortingOrder = input<SortDir[]>(['asc', 'desc', null]);
   /** Number of shimmer rows rendered while `loading` is `'skeleton'`. */
   readonly skeletonRows = input<number>(5);
   /** Accessible name for the table (rendered as a visually-hidden caption).
@@ -156,6 +163,16 @@ export class TableComponent<T extends { id: string }> {
   readonly page = model<number>(1);
   /** Selectable page-size choices shown in the pagination control. */
   readonly pageSizeOptions = input<number[]>([10, 25, 50, 100]);
+  /** Server-side total row count. `null` (default) = client paging: the table
+   *  slices `data()` itself and the pager counts the rows in hand. When set, the
+   *  host has already sliced to one page — the pager uses this count and the
+   *  table renders `data()` as-is (no internal slice). */
+  readonly total = input<number | null>(null);
+  /** Scroll the table into view on a page change (opt-in) — keeps a bottom
+   *  pager from leaving the viewport on the previous page's last rows. */
+  readonly scrollToTopOnPageChange = input(false, {
+    transform: booleanAttribute,
+  });
   /** When true, the table sorts `data()` itself; otherwise it only emits
    *  `sortChange` and leaves ordering to the consumer (default). */
   readonly clientSort = input(false, { transform: booleanAttribute });
@@ -264,30 +281,32 @@ export class TableComponent<T extends { id: string }> {
 
   /** Columns in the user-controlled order — `columnOrder` first (dropping
    *  unknown keys), then any declared column the order omitted. */
-  protected readonly orderedColumns = computed<readonly TableColumn<T>[]>(() => {
-    const order = this.columnOrder();
-    const columns = this.columns();
-    if (!order) {
-      return columns;
-    }
-    const byKey = new Map(columns.map((col) => [col.key, col]));
-    const placed = new Set<string>();
-    const out: TableColumn<T>[] = [];
-    for (const key of order) {
-      const col = byKey.get(key);
-      if (col && !placed.has(key)) {
-        out.push(col);
-        placed.add(key);
+  protected readonly orderedColumns = computed<readonly TableColumn<T>[]>(
+    () => {
+      const order = this.columnOrder();
+      const columns = this.columns();
+      if (!order) {
+        return columns;
       }
-    }
-    for (const col of columns) {
-      if (!placed.has(col.key)) {
-        out.push(col);
+      const byKey = new Map(columns.map((col) => [col.key, col]));
+      const placed = new Set<string>();
+      const out: TableColumn<T>[] = [];
+      for (const key of order) {
+        const col = byKey.get(key);
+        if (col && !placed.has(key)) {
+          out.push(col);
+          placed.add(key);
+        }
       }
-    }
+      for (const col of columns) {
+        if (!placed.has(col.key)) {
+          out.push(col);
+        }
+      }
 
-    return out;
-  });
+      return out;
+    },
+  );
 
   /** Columns actually rendered — reordered, then hidden ones skipped. */
   protected readonly visibleColumns = computed<readonly TableColumn<T>[]>(() =>
@@ -354,8 +373,9 @@ export class TableComponent<T extends { id: string }> {
   }
 
   // ---- Per-column set filter ----
-  private readonly columnFilterPopover =
-    viewChild<PopoverComponent>('columnFilterPopover');
+  private readonly columnFilterPopover = viewChild<PopoverComponent>(
+    'columnFilterPopover',
+  );
   /** The column whose filter menu is open — drives the distinct-value list. */
   protected readonly filterColumn = signal<TableColumn<T> | null>(null);
   protected readonly filterSearch = signal('');
@@ -461,9 +481,10 @@ export class TableComponent<T extends { id: string }> {
   private readonly injector = inject(Injector);
   private readonly editInput =
     viewChild<ElementRef<HTMLInputElement>>('editInput');
-  protected readonly editingCell = signal<{ rowId: string; key: string } | null>(
-    null,
-  );
+  protected readonly editingCell = signal<{
+    rowId: string;
+    key: string;
+  } | null>(null);
   protected readonly editDraft = signal('');
 
   protected isEditing(row: T, col: TableColumn<T>): boolean {
@@ -506,8 +527,11 @@ export class TableComponent<T extends { id: string }> {
   }
 
   private static readonly MIN_COLUMN_WIDTH = 48;
-  private resizeState: { key: string; startX: number; startWidth: number } | null =
-    null;
+  private resizeState: {
+    key: string;
+    startX: number;
+    startWidth: number;
+  } | null = null;
 
   /** Resolved pixel width for a column: a drag override wins, else `column.width`. */
   protected columnWidth(col: TableColumn<T>): number | null {
@@ -564,7 +588,9 @@ export class TableComponent<T extends { id: string }> {
         allowed,
       }))
       .filter(
-        (entry): entry is { col: TableColumn<T>; allowed: ReadonlySet<string> } =>
+        (
+          entry,
+        ): entry is { col: TableColumn<T>; allowed: ReadonlySet<string> } =>
           !!entry.col,
       );
 
@@ -615,7 +641,8 @@ export class TableComponent<T extends { id: string }> {
   /** Current page's slice of the sorted rows, when paginating. */
   protected readonly pagedData = computed<readonly T[]>(() => {
     const size = this.pageSize();
-    if (size === null) {
+    // Server-side paging (`total` set): the host already sliced to one page.
+    if (size === null || this.total() !== null) {
       return this.sortedData();
     }
     const start = (this.page() - 1) * size;
@@ -672,13 +699,16 @@ export class TableComponent<T extends { id: string }> {
     return count;
   });
 
-  protected readonly hasRowActions = computed(() => this.rowActions().length > 0);
+  protected readonly hasRowActions = computed(
+    () => this.rowActions().length > 0,
+  );
   /** Row whose kebab menu is open — drives the per-row `disabled` predicates. */
   protected readonly menuRow = signal<T | null>(null);
   private readonly rowMenuPopover =
     viewChild<PopoverComponent>('rowMenuPopover');
-  private readonly columnPickerPopover =
-    viewChild<PopoverComponent>('columnPickerPopover');
+  private readonly columnPickerPopover = viewChild<PopoverComponent>(
+    'columnPickerPopover',
+  );
 
   protected readonly columnPickerOpened = computed(
     () => this.columnPickerPopover()?.opened() ?? false,
@@ -752,6 +782,110 @@ export class TableComponent<T extends { id: string }> {
         resizeObserver.disconnect();
       });
     });
+
+    // Opt-in height tween. Observer fires pre-paint: freezing the old height
+    // here stops the jump being painted; disconnect during the anim so its own
+    // resizes don't re-trigger it; clip (not hidden) avoids a scroll container.
+    effect((onCleanup) => {
+      if (!this.animateHeight()) {
+        return;
+      }
+      const wrap = this.scrollWrap().nativeElement;
+      let previousHeight: number | null = null;
+      let previousWidth: number | null = null;
+      let heightAnim: Animation | null = null;
+      const observer = new ResizeObserver((entries) => {
+        const entry = entries[0];
+        const box = entry.borderBoxSize?.[0];
+        const nextHeight = box ? box.blockSize : entry.contentRect.height;
+        const nextWidth = box ? box.inlineSize : entry.contentRect.width;
+        const fromHeight = previousHeight;
+        const widthChanged = nextWidth !== previousWidth;
+        previousHeight = nextHeight;
+        previousWidth = nextWidth;
+        // Only a height change at a stable width is a row-set swap; skip the
+        // first measure and width-driven reflows (window/column resize) so the
+        // tween doesn't chase a resize.
+        if (fromHeight === null || widthChanged || nextHeight === fromHeight) {
+          return;
+        }
+        const styles = getComputedStyle(wrap);
+        const duration = this.parseDurationMs(
+          styles.getPropertyValue('--duration-base'),
+        );
+        if (duration <= 0) {
+          return;
+        }
+        observer.disconnect();
+        heightAnim?.cancel();
+        wrap.style.height = `${fromHeight}px`;
+        wrap.style.overflowY = 'clip';
+        heightAnim = wrap.animate(
+          [{ height: `${fromHeight}px` }, { height: `${nextHeight}px` }],
+          {
+            duration,
+            easing:
+              styles.getPropertyValue('--ease-standard').trim() || 'ease-out',
+          },
+        );
+        heightAnim.onfinish = heightAnim.oncancel = () => {
+          heightAnim = null;
+          wrap.style.height = '';
+          wrap.style.overflowY = '';
+          observer.observe(wrap);
+        };
+      });
+      observer.observe(wrap);
+      onCleanup(() => {
+        if (heightAnim) {
+          heightAnim.onfinish = heightAnim.oncancel = null;
+          heightAnim.cancel();
+          heightAnim = null;
+        }
+        wrap.style.height = '';
+        wrap.style.overflowY = '';
+        observer.disconnect();
+      });
+    });
+
+    // Client-side paging only (with `total` set the host owns the clamp): when a
+    // filter shrinks the result set below the current page, pull `page` back to
+    // the last page that still has rows so the body never renders empty.
+    effect(() => {
+      const size = this.pageSize();
+      if (size === null || this.total() !== null) {
+        return;
+      }
+      const lastPage = Math.max(
+        1,
+        Math.ceil(this.filteredData().length / size),
+      );
+      if (this.page() > lastPage) {
+        this.page.set(lastPage);
+      }
+    });
+
+    let previousPage = this.page();
+    effect(() => {
+      const current = this.page();
+      const enabled = this.scrollToTopOnPageChange();
+      if (current !== previousPage && enabled) {
+        this.scrollWrap().nativeElement.scrollIntoView({ block: 'start' });
+      }
+      previousPage = current;
+    });
+  }
+
+  private parseDurationMs(raw: string): number {
+    const value = raw.trim();
+    if (value.endsWith('ms')) {
+      return parseFloat(value);
+    }
+    if (value.endsWith('s')) {
+      return parseFloat(value) * 1000;
+    }
+
+    return parseFloat(value) || 0;
   }
 
   protected onRowMenuClick(row: T, event: Event): void {
@@ -872,17 +1006,14 @@ export class TableComponent<T extends { id: string }> {
     if (!col.sortable) {
       return;
     }
+    const order = this.sortingOrder();
     const currentKey = this.sortKey();
-    const currentDir = this.sortDir();
     let dir: SortDir;
     if (currentKey !== col.key) {
-      dir = 'asc';
-    } else if (currentDir === 'asc') {
-      dir = 'desc';
-    } else if (currentDir === 'desc') {
-      dir = null;
+      dir = order[0] ?? null;
     } else {
-      dir = 'asc';
+      const currentIndex = order.indexOf(this.sortDir());
+      dir = order[(currentIndex + 1) % order.length] ?? null;
     }
     this.sortKey.set(dir ? col.key : null);
     this.sortDir.set(dir);
@@ -933,8 +1064,7 @@ export class TableComponent<T extends { id: string }> {
     );
     // Leading BOM so Excel reads UTF-8 (accented labels/values) correctly.
     const csv =
-      '﻿' +
-      [header, ...body].map((cells) => cells.join(',')).join('\r\n');
+      '﻿' + [header, ...body].map((cells) => cells.join(',')).join('\r\n');
     const url = URL.createObjectURL(
       new Blob([csv], { type: 'text/csv;charset=utf-8;' }),
     );

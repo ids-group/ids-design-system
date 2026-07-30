@@ -6,11 +6,15 @@
   <span lede>
     Auto-dismissing notification anchored to top-right of the viewport. Stacks
     vertically. Trigger imperatively via
-    <code class="t-mono-inline"> ToastService.show() </code> — one variant per
+    <code class="t-mono-inline">
+      ToastService.show()
+    </code> — one variant per
     system event severity.
   </span>
 
-  <h3 class="block-title t-h4">States showcase (static specimens)</h3>
+  <h3 class="block-title t-h4">
+    States showcase (static specimens)
+  </h3>
 
   <div class="states">
     <ds-toast
@@ -45,7 +49,9 @@
     />
   </div>
 
-  <h3 class="block-title t-h4">Live demo</h3>
+  <h3 class="block-title t-h4">
+    Live demo
+  </h3>
 
   <p class="block-desc t-s">
     Click a button to trigger a toast (auto-dismisses after 5 s).
@@ -89,7 +95,9 @@
     </ds-button>
   </div>
 
-  <h3 class="block-title t-h4">With action</h3>
+  <h3 class="block-title t-h4">
+    With action
+  </h3>
 
   <p class="block-desc t-s">
     Pass
@@ -111,12 +119,18 @@
     </ds-button>
   </div>
 
-  <h3 class="block-title t-h4">Promise toast</h3>
+  <h3 class="block-title t-h4">
+    Promise toast
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> ToastService.promise() </code> shows a loading
+    <code class="t-mono-inline">
+      ToastService.promise()
+    </code> shows a loading
     toast while the promise is pending and updates it in-place to
-    <strong> success </strong> or <strong>error</strong> when it settles (60 %
+    <strong>
+      success
+    </strong> or <strong>error</strong> when it settles (60 %
     chance of success in this demo).
   </p>
 
@@ -132,14 +146,20 @@
     </ds-button>
   </div>
 
-  <h3 class="block-title t-h4">maxVisible queue</h3>
+  <h3 class="block-title t-h4">
+    maxVisible queue
+  </h3>
 
   <p class="block-desc t-s">
     Provide <code class="t-mono-inline">DS_TOAST_CONFIG</code> with
-    <code class="t-mono-inline"> maxVisible </code> to cap concurrent toasts.
+    <code class="t-mono-inline">
+      maxVisible
+    </code> to cap concurrent toasts.
     Extras queue and appear as earlier ones dismiss. The button below fires 5
     toasts in one go; the default region is unlimited so all 5 appear. Set
-    <code class="t-mono-inline"> maxVisible: 2 </code> in your app config to see
+    <code class="t-mono-inline">
+      maxVisible: 2
+    </code> in your app config to see
     the queuing in action.
   </p>
 

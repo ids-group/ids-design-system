@@ -106,6 +106,6 @@
      when sitting in a control row beside input/select/button. Default stays at
      --search-h (36px / --hit-md) for back-compat. */
   &.sm { --_search-height: var(--ds-search-height, var(--hit-min)); }
-  &.md { --_search-height: var(--ds-search-height, var(--hit-cozy)); }
+  &.md { --_search-height: var(--ds-search-height, var(--search-h)); }
   &.lg { --_search-height: var(--ds-search-height, var(--field-h-lg)); }
 }

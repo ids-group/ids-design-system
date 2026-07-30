@@ -8,8 +8,155 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.7.0 — 2026-07-30
+
+### Changed
+
+- **BREAKING: the control `size` scale is unified into one shared `DsSize` type.** The per-component
+  size types (`InputSize`, `ButtonSize`, `SelectSize`, `SearchSize`, `CheckboxSize`, `RadioSize`,
+  `SwitchSize`, `SpinnerSize`, `TextareaSize`, `NumberStepperSize`, `DatePickerSize`, `TimePickerSize`,
+  `DrawerSize`, `IconButtonSize`, `AutocompleteSize`) are removed from the public API — import
+  `DsSize` instead (`type DsSize = 'sm' | 'md' | 'lg'`, exported from the package root). `AvatarSize`,
+  `ModalSize` and `ContainerSize` remain and now extend it (`'xs' | DsSize`, `DsSize | 'xl' | 'fullscreen'`,
+  `DsSize | 'xl' | 'full'`). No runtime or visual change — every component's `size` input behaves exactly as before.
+
+- **BREAKING: form fields now reserve one line for the message row by default.** Every field
+  (`ds-input`, `ds-textarea`, `ds-select`, `ds-autocomplete`, and the other message-bearing controls)
+  gains a `reserveMessage` input (default `true`). With it on, the field always keeps a message line's
+  worth of vertical space even when there's no hint or error, so a form no longer reflows when
+  validation messages appear — the row is there from the start. Set `[reserveMessage]="false"` to
+  collapse the space back (the previous behaviour) where the layout can absorb the shift.
+
+- **BREAKING: `ds-pagination` drops its manual `(pageChange)` and `(pageSizeChange)` outputs.** They
+  duplicated the two-way models — the manual `pageSizeChange` even name-collided with the `pageSize`
+  model's own implicit output, and one size change fired the change events three times over. Page and
+  size are now driven purely by the `[(currentPage)]` / `[(pageSize)]` two-way models. Migrate
+  `(pageChange)="…"` to `(currentPageChange)="…"`; `(pageSizeChange)` keeps working unchanged (it is now
+  the `pageSize` model's implicit output, same name and payload). `[(currentPage)]` / `[(pageSize)]`
+  bindings are unaffected. (`ds-table` already drove pagination via the models, so it is untouched.)
+
+- **BREAKING: `ds-input` drops the `withAddon` / `withAddonRight` inputs.** They hand-declared what the
+  DOM already states — and the doc line was wrong (the flag stripped the control's inset rather than
+  "reserving space"). The flush-addon layout is now derived automatically: a boxed `.addon` projected
+  into `[dsInputPrefix]`/`[dsInputSuffix]` (`<span dsInputPrefix class="addon">…</span>`) sits flush via
+  `:has()`, while a bare projected `<ds-icon dsInputPrefix>` correctly keeps its inset. Delete
+  `[withAddon]` / `[withAddonRight]` from your templates — a boxed addon renders identically, and a bare
+  icon that previously (mis)set the flag regains its proper inset (a bugfix).
+
+- **BREAKING: `ds-app-shell` is renamed to `ds-app-layout`.** The slotted fixed-frame application layout
+  shipped as `ds-app-shell` in the tagged 0.6.3 source; this renames the selector (`ds-app-shell` →
+  `ds-app-layout`), the component class (`AppShellComponent` → `AppLayoutComponent`), the exported scroll
+  service (`ShellScrollService` → `LayoutScrollService`), and its four tokens (`--ds-app-shell-pad-x` /
+  `-pad-y` / `-content-max-width` / `-height` → `--ds-app-layout-*`). Behaviour is unchanged — rename the
+  references (see `migrations/`). A consumer still on 0.6.3's `ds-app-shell` must migrate.
+
 ### Added
 
+- **New override tokens for two baked-in weights: `--ds-sidenav-item-label-weight` and
+  `--ds-modal-title-weight`.** The nav-item label weight and the modal title weight were locked inside a
+  `font:` shorthand with no `--ds-*` hook; a brand can now retune either without reaching past the public
+  token contract. Defaults unchanged (`--font-weight-semibold` / `--font-weight-bold`).
+
+- **`ds-table` gains an opt-in `scrollToTopOnPageChange` input.** With it on, changing page scrolls the
+  table back into view, so paging from a bottom pager doesn't leave the viewport on the old page's rows.
+  Off by default.
+
+- **`ds-search` gains a `size` input (`sm`/`md`/`lg`, default `md`).** Search previously ignored `size`
+  and its size CSS never matched, so it sat 4px taller than sibling controls in dense toolbars. `sm` is
+  now 32px (matching `ds-input`/`ds-button` at `sm`); the default `md` keeps the prior 36px search-row
+  height, so existing consumers are unaffected.
+
+- **`ds-table` gains a `total` input for server-side pagination.** Set `[total]` to the full row count
+  when the data you pass in is already the current page (fetched from the server); the table then treats
+  `data` as pre-paged — it no longer slices it — and drives the pager off `total` instead of the local
+  row count. Leave `total` unset (default `null`) to keep the existing client-side paging behaviour.
+
+- **`ds-table` gains a `sortingOrder` input.** By default a sortable header cycles
+  `asc → desc → unsorted`; pass `[sortingOrder]="['asc','desc']"` to drop the unsorted state (useful with
+  server-paged lists that must always send a sort direction). The default is unchanged.
+
+- **`ds-table` gains an `animateHeight` input (opt-in).** With `[animateHeight]="true"` the body
+  tweens its height when the row set changes (paging, filtering) instead of snapping — the flicker
+  when a full page gives way to a short one. Off by default; instant under reduced-motion (it reads the
+  DS `--duration-*` token, which the reduced-motion reset zeroes).
+
+- **`TableColumn` gains an optional `srLabel`.** Provides a visually-hidden accessible name for columns
+  whose visible `label` is intentionally empty (e.g. an actions column), so screen-reader users still
+  hear a column name.
+
+- **`ds-badge` gains a `countLabel` input (default `'notifications'`).** The count's accessible label was
+  hard-coded to `"N notifications"`; set `countLabel` for non-notification counts (`'items in cart'`,
+  `'results'`, …).
+
+- **`ds-avatar` gains deterministic seeded tinting.** Pass `[seed]` (a user id, email or name) and the
+  avatar derives a stable per-person background + auto-contrast text colour, so the same person gets the
+  same colour across the product; `[avoidHues]` excludes hue arcs (e.g. a brand colour), and `[tint]` now
+  also accepts `'neutral'`. The maths ships standalone too — `avatarTint(seed, options)` returns an OKLCH
+  background (`AvatarTintOptions`: `avoidHues` / `lightness` / `chroma` / `foreground`) with a
+  WCAG-luminance black-or-white foreground, and `initialsFrom(first, last)` (which also accepts a single
+  full-name string) — both exported from the package root.
+
+- **`ds-sidenav-item` gains an `(activate)` output.** Emitted on click, carrying the `MouseEvent`. On an
+  `href` item, `preventDefault()` intercepts navigation (e.g. a sidebar driving its own scroll-spy); a
+  `routerLink` item navigates regardless (Angular's `RouterLink` ignores `defaultPrevented`), so it's a
+  click hook there. Additive; omit it to navigate as before, keeping active/badge/tooltip/collapse intact.
+
+- **`BodyScrollLockService` is now exported.** The ref-counted body-scroll lock that `ds-modal` /
+  `ds-drawer` / `ds-bottom-sheet` share is injectable, so a consumer's own full-screen overlay can
+  participate in the same lock instead of fighting it (`lock()` / `unlock()`, paired).
+
+### Fixed
+
+- **`ds-menu`: disabled items are now keyboard-reachable.** A disabled `ds-menu-item` was dropped from the
+  roving-tabindex nav (unreachable by keyboard) and rendered a native `disabled` button; it now uses
+  `aria-disabled` and stays in the arrow / type-ahead order (ARIA menu practice), so a keyboard user can
+  focus it — and a `[dsTooltip]` on it now shows on focus, surfacing a "why is this disabled" reason.
+  Activation stays blocked. (Reliable screen-reader announcement of that reason is a separate follow-up —
+  the tooltip's `aria-describedby` currently lands on the `role="none"` host, not the inner button.)
+
+- **Stacked overlays no longer unlock body scroll under each other.** `ds-modal`, `ds-drawer` and
+  `ds-bottom-sheet` each wrote `body.style.overflow` directly, so closing the outer of two stacked
+  overlays re-enabled page scroll while the inner one was still open. They now share a ref-counted
+  `BodyScrollLockService` — the first lock hides `body` overflow, the last unlock restores it.
+
+- **`ds-avatar`: `--ds-avatar-size` now applies at every size, not just `md`.** The `xs`/`sm`/`lg`
+  modifiers set `width`/`height` directly, silently ignoring a consumer's `--ds-avatar-size`; they now
+  route through the same private var the token feeds, so an override wins at any size.
+
+- **`ds-table`: an out-of-range page is clamped back into range.** When a client-side filter shrinks the
+  result set below the current page, the table now pulls `page` down to the last page that has rows
+  instead of rendering an empty body (guarded to client paging — with `total` set the host owns the clamp).
+
+- **`ds-sidenav`: collapsed items no longer overflow by 1px.** A collapsed item was sized to the
+  `--sidenav-collapsed-item` hit target, 1px wider than the rail's content box (border-box minus padding
+  and the right border), which produced a hairline horizontal scrollbar. Collapsed items now fill the
+  available width, and the rail clips any residual x-overflow.
+
+- **`dsTooltip`: keyboard focus now shows and hides the tip reliably, and panels no longer strand.** The
+  directive listened on `focus`/`blur`, which don't fire for focus moving between descendants; it now uses
+  the bubbling `focusin`/`focusout`, so tooltips on composite controls open and close as focus enters and
+  leaves. A re-rendered anchor under a stationary cursor could also leave a panel open — `show()` now
+  disposes any existing overlay first, and activation (`click`) dismisses too.
+
+- **`ds-select`: the clear (×) button is now keyboard-operable.** It was a non-focusable `<span>`; it is
+  now a real `<button aria-label="Clear selection">`, and the trigger is a focusable `role="combobox"`
+  container so the nested button is valid.
+
+## 0.6.3 — 2026-07-27
+
+### Added
+
+- **Typography utilities (`.t-*`) expose per-axis `--ds-t-*` token hooks.** Every `.t-display`/`.t-h1`
+  …`.t-mono-block` utility now reads each type property as a longhand through a public
+  `--ds-t-<name>-<prop>` custom property that falls back to the current semantic token —
+  `font-weight`, `font-size`, `line-height`, `font-family`, plus `letter-spacing` / `text-transform` /
+  `color` / `background-color` / `border-color` / `border-radius` where the class sets them. A consumer
+  can now retune a single axis in a scope (`[data-brand] .t-h3 { --ds-t-h3-font-weight: var(--font-weight-bold) }`)
+  without re-declaring the whole rule or forking the class — the same consumer-first `--ds-*` contract
+  the components use, extended to the global utility layer. Default rendering is unchanged (structural
+  box props — padding/margin/border-width/max-width/overflow — stay raw). Minor: the `font` shorthand
+  was split into longhands, so `.t-*` no longer force `font-style`/`font-variant` back to `normal`
+  (they inherit) — only observable inside an italic/small-caps ancestor.
 - **`ds-table` row-action kebab menu.** New opt-in `rowActions` input renders a trailing ⋮ column;
   the per-row button opens a `ds-menu` of the configured items (`id`, `label`, optional `icon`,
   destructive `error`, per-row `disabled` predicate) and `rowActionSelected` emits `{ action, row }`
@@ -46,8 +193,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-table` column reordering.** New opt-in `reorderableColumns` input adds a drag handle and
   up/down buttons to each row of the column panel (which now lists every column, not just hideable
   ones); the order is two-way bindable via the new `columnOrder` model (`string[] | null`, `null` =
-  declaration order), and the panel's `Reset to default` clears both order and visibility. The
-  panel surfaces whenever any column is `hideable` **or** `reorderableColumns` is set.
+  declaration order), and the panel's `Reset to default` resets all three column models — order,
+  visibility **and** widths (`columnOrder`, `hiddenKeys`, `columnWidths`). The panel surfaces
+  whenever any column is `hideable` **or** `reorderableColumns` is set.
 - **`ds-table` CSV export.** New public `exportCsv(filename?)` method downloads the visible columns
   of the filtered + sorted rows (all rows, not just the current page) as a UTF-8 CSV — wire it to a
   consumer toolbar button via a template reference.
@@ -131,6 +279,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-toast` now slides up from below into place as it enters** (previously it dropped in from
   slightly above). The exit animation is unchanged — the toast still slides up as it fades out.
   Visual/motion only; no API change.
+
+### Fixed
+
+- **`ds-date-picker` no longer strands focus on `<body>` when the calendar closes by outside
+  click or page scroll.** The picker was already non-modal, but a scroll-close or
+  outside-pointer close left focus on the document body instead of the field. `close()` now
+  returns focus to the field (`preventScroll`) whenever focus was inside the calendar — with
+  one exception: a coarse-pointer device with an editable field (`allowInput`) is left alone,
+  to avoid re-summoning the soft keyboard, while a readonly field (`allowInput=false`) always
+  refocuses. Escape / selection / preset closes already refocused and are unchanged; no API
+  change.
 
 ## 0.6.2 — 2026-07-21
 

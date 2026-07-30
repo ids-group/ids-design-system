@@ -14,7 +14,10 @@ function parseVarCall(text, varIndex) {
   let i = open;
   for (; i < text.length; i++) {
     if (text[i] === '(') depth++;
-    else if (text[i] === ')') { depth--; if (depth === 0) break; }
+    else if (text[i] === ')') {
+      depth--;
+      if (depth === 0) break;
+    }
   }
   const inner = text.slice(open + 1, i); // "--ds-x, <fallback>"
   const comma = inner.indexOf(',');
@@ -52,7 +55,12 @@ function extractRootDeclarations(scssText) {
     if (ch) {
       const esc = ch[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const others = { h: ['s', 'l'], s: ['h', 'l'], l: ['h', 's'] }[ch[2]];
-      if (others.every((sfx) => new RegExp(esc + '-' + sfx + '\\s*:').test(scssText))) continue;
+      if (
+        others.every((sfx) =>
+          new RegExp(esc + '-' + sfx + '\\s*:').test(scssText),
+        )
+      )
+        continue;
     }
     out.push({ name, value: m[3].trim() });
   }
@@ -60,16 +68,23 @@ function extractRootDeclarations(scssText) {
 }
 
 const SCALE_RULES = [
-  [/^--space-/, 'spacing'], [/^--radius-/, 'radius'],
+  [/^--space-/, 'spacing'],
+  [/^--radius-/, 'radius'],
   [/^--shadow-|^--blur-/, 'elevation'],
   [/^--duration-|^--ease-/, 'motion'],
-  [/^--hit-/, 'density'], [/^--bp-|^--col-cap-/, 'layout'],
+  [/^--hit-/, 'density'],
+  [/^--bp-|^--col-cap-/, 'layout'],
   [/^--icon-(2xs|xs|sm|md|lg)$/, 'icons'],
   [/^--border-width-|^--opacity-|^--layer-/, 'misc'],
-  [/^--font-size-|^--font-weight-|^--line-height-|^--letter-spacing-|^--font-/, 'typography'],
+  [
+    /^--font-size-|^--font-weight-|^--line-height-|^--letter-spacing-|^--font-/,
+    'typography',
+  ],
 ];
-const COLOUR_ROLE = /^--(primary|secondary|tertiary|accent|success|warning|error|info|surface-|text-|icon-|border-|focus-|status-|link-|static-|scrollbar-|select-bg)/;
-const RAMP = /^--(neutral|blue|red|green|yellow|orange|sky|slate|gray|purple|teal|indigo)-/;
+const COLOUR_ROLE =
+  /^--(primary|secondary|tertiary|accent|success|warning|error|info|surface-|text-|icon-|border-|focus-|status-|link-|static-|scrollbar-|select-bg)/;
+const RAMP =
+  /^--(neutral|blue|red|green|yellow|orange|sky|slate|gray|purple|teal|indigo)-/;
 
 function categorize(name) {
   for (const [re, cat] of SCALE_RULES) if (re.test(name)) return cat;
@@ -77,35 +92,83 @@ function categorize(name) {
   if (RAMP.test(name)) return 'colour-ramp';
   return 'uncategorized';
 }
-const titleCase = (s) => s.replace(/(^|-)([a-z])/g, (_, d, c) => (d ? ' ' : '') + c.toUpperCase()).trim();
+const titleCase = (s) =>
+  s
+    .replace(/(^|-)([a-z])/g, (_, d, c) => (d ? ' ' : '') + c.toUpperCase())
+    .trim();
 
-const COLOR_VALUE = /(#[0-9a-f]{3,8}\b|\brgb|\bhsl|\boklch|color-mix|var\(--(?:accent|primary|secondary|tertiary|success|warning|error|info|surface|text|icon|border|focus|link|static|neutral|blue|red|green|yellow|orange|sky)\b)/i;
+// --ds-t-* are per-axis override hooks on the .t-* type utilities (reads inside
+// _typography.scss, not :root declarations). Templating the note from the name
+// keeps all ~90 out of the undescribed list without hand-writing each.
+const T_PROPS = [
+  'font-weight',
+  'font-size',
+  'line-height',
+  'letter-spacing',
+  'text-transform',
+  'bg-color',
+  'border-color',
+  'border-radius',
+  'radius',
+  'font-family',
+  'color',
+];
+function typographyNote(name) {
+  if (!name.startsWith('--ds-t-')) return null;
+  const rest = name.slice('--ds-t-'.length);
+  const prop = T_PROPS.find((p) => rest.endsWith('-' + p));
+  if (!prop) return null;
+  const util = rest.slice(0, rest.length - prop.length - 1);
+  const label = prop === 'bg-color' ? 'background color' : prop.replace(/-/g, ' ');
+  return `Per-axis override for the \`.t-${util}\` utility's ${label}.`;
+}
+
+const COLOR_VALUE =
+  /(#[0-9a-f]{3,8}\b|\brgb|\bhsl|\boklch|color-mix|var\(--(?:accent|primary|secondary|tertiary|success|warning|error|info|surface|text|icon|border|focus|link|static|neutral|blue|red|green|yellow|orange|sky)\b)/i;
 function kindOf(name, value, category) {
   const v = value.trim();
-  if (/^-?[\d.]+$/.test(v)) return 'other';                      // unitless (alpha, 0, etc.)
-  if (/^-?[\d.]+(px|rem|em|%)$/.test(v)) return 'length';        // pure length literal
+  if (/^-?[\d.]+$/.test(v)) return 'other'; // unitless (alpha, 0, etc.)
+  if (/^-?[\d.]+(px|rem|em|%)$/.test(v)) return 'length'; // pure length literal
   if (/^-?[\d.]+m?s$/.test(v) || /^cubic-bezier/.test(v)) return 'motion';
   if (category === 'colour-role' || category === 'colour-ramp') return 'color';
   if (COLOR_VALUE.test(v)) return 'color';
   if (category === 'typography') return 'font';
   if (/\b\d+m?s\b|cubic-bezier/.test(v)) return 'motion';
-  if (/\d(px|rem|em|%)|var\(--(space|radius|hit|icon|size|bp|col-cap|border-width|blur)/.test(v)) return 'length';
+  if (
+    /\d(px|rem|em|%)|var\(--(space|radius|hit|icon|size|bp|col-cap|border-width|blur)/.test(
+      v,
+    )
+  )
+    return 'length';
   return 'other';
 }
 const invertedOf = (name) =>
-  /(--text-on-|--icon-on-|-on-media|-inverted\b|--surface-inverted|--border-inverted)/.test(name);
+  /(--text-on-|--icon-on-|-on-media|-inverted\b|--surface-inverted|--border-inverted)/.test(
+    name,
+  );
 
 function findScss(dir) {
   return readdirSync(dir).flatMap((e) => {
     const p = join(dir, e);
-    return statSync(p).isDirectory() ? findScss(p) : p.endsWith('.component.scss') ? [p] : [];
+    return statSync(p).isDirectory()
+      ? findScss(p)
+      : p.endsWith('.component.scss')
+        ? [p]
+        : [];
   });
 }
 const compFiles = findScss(join(ROOT, 'src/lib/components'));
 const comp = compFiles.flatMap((f) =>
-  extractComponentTokens(readFileSync(f, 'utf8'), basename(dirname(f))));
+  extractComponentTokens(readFileSync(f, 'utf8'), basename(dirname(f))),
+);
 
-const readIf = (p) => { try { return readFileSync(p, 'utf8'); } catch { return ''; } };
+const readIf = (p) => {
+  try {
+    return readFileSync(p, 'utf8');
+  } catch {
+    return '';
+  }
+};
 const globalFiles = [
   'src/lib/styles/_tokens.scss',
   'src/lib/themes/_semantic.scss',
@@ -125,20 +188,36 @@ for (const m of bpText.matchAll(/'([a-z0-9]+)':\s*([0-9]+px)/gi))
 const seenG = new Set();
 globals = globals.filter((t) => !seenG.has(t.name) && seenG.add(t.name));
 
-const DESCRIPTIONS = JSON.parse(readIf(join(ROOT,
-  'ds-docs/src/app/sections/tokens-reference/token-descriptions.json')) || '{}');
+const DESCRIPTIONS = JSON.parse(
+  readIf(
+    join(
+      ROOT,
+      'ds-docs/src/app/sections/tokens-reference/token-descriptions.json',
+    ),
+  ) || '{}',
+);
 
+// --ds-t-* utility override hooks: extract like component reads, grouped under 't'.
+const typographyHooks = extractComponentTokens(
+  readIf(join(ROOT, 'src/lib/styles/_typography.scss')),
+  't',
+);
 const all = [
   ...comp.map((t) => ({ ...t, category: 'component' })),
+  ...typographyHooks.map((t) => ({ ...t, category: 'component' })),
   ...globals.map((t) => ({ ...t, category: categorize(t.name) })),
 ];
-for (const t of all) t.notes = DESCRIPTIONS[t.name] ?? '';
+for (const t of all)
+  t.notes = DESCRIPTIONS[t.name] ?? typographyNote(t.name) ?? '';
 
 const names = new Set(all.map((t) => t.name));
 const undescribed = all.filter((t) => !t.notes).map((t) => t.name);
 const orphaned = Object.keys(DESCRIPTIONS).filter((k) => !names.has(k));
-console.log(`tokens: ${all.length}, undescribed: ${undescribed.length}, orphaned: ${orphaned.length}`);
-if (orphaned.length) console.warn('orphaned descriptions:\n  ' + orphaned.join('\n  '));
+console.log(
+  `tokens: ${all.length}, undescribed: ${undescribed.length}, orphaned: ${orphaned.length}`,
+);
+if (orphaned.length)
+  console.warn('orphaned descriptions:\n  ' + orphaned.join('\n  '));
 
 // ============================================================================
 // CONFIG-DRIVEN EMIT
@@ -157,11 +236,17 @@ function pick(re, extraNames = []) {
   const out = [];
   for (const t of globalsOnly) {
     if (used.has(t.name)) continue;
-    if (re.test(t.name)) { used.add(t.name); out.push(t); }
+    if (re.test(t.name)) {
+      used.add(t.name);
+      out.push(t);
+    }
   }
   for (const name of extraNames) {
     const t = byName.get(name);
-    if (t && !used.has(name)) { used.add(name); out.push(t); }
+    if (t && !used.has(name)) {
+      used.add(name);
+      out.push(t);
+    }
   }
   return out;
 }
@@ -169,7 +254,9 @@ function pick(re, extraNames = []) {
 // ---- Colour roles (ColourRow) ---------------------------------------------
 const INVERTED = /(-on-|--text-on-|--icon-on-|-inverted|-on$|on-media)/;
 const colourRow = (t) => ({
-  name: t.name, value: t.value, notes: t.notes,
+  name: t.name,
+  value: t.value,
+  notes: t.notes,
   ...(INVERTED.test(t.name) ? { inverted: true } : {}),
 });
 const SEMANTIC_PRIMARY = pick(/^--primary/).map(colourRow);
@@ -195,20 +282,54 @@ const CHARTS = pick(/^--chart-/).map(colourRow);
 // Fixed labels/prefixes/notes VERBATIM from the original; stops auto-derived
 // from which --<prefix>-<n> tokens actually exist (sorted numerically).
 const RAMP_SPEC = [
-  { label: 'Neutral', prefix: 'neutral', notes: '13 stops. Base for surface/border/text.' },
-  { label: 'Blue (primary)', prefix: 'blue', notes: 'HSL-channel split — default theme maps --primary here; drives focus halos and re-skin.' },
-  { label: 'Orange', prefix: 'orange', notes: 'Secondary signal, focus accent.' },
-  { label: 'Green (success)', prefix: 'green', notes: 'Status — success / confirmed.' },
-  { label: 'Yellow (warning)', prefix: 'yellow', notes: 'Status — attention / warning.' },
-  { label: 'Red (error)', prefix: 'red', notes: 'HSL-channel split — default theme maps --error here; drives error halos.' },
-  { label: 'Sky (info)', prefix: 'sky', notes: 'Informational — a brighter blue, distinct from the primary --blue ramp.' },
+  {
+    label: 'Neutral',
+    prefix: 'neutral',
+    notes: '13 stops. Base for surface/border/text.',
+  },
+  {
+    label: 'Blue (primary)',
+    prefix: 'blue',
+    notes:
+      'HSL-channel split — default theme maps --primary here; drives focus halos and re-skin.',
+  },
+  {
+    label: 'Orange',
+    prefix: 'orange',
+    notes: 'Secondary signal, focus accent.',
+  },
+  {
+    label: 'Green (success)',
+    prefix: 'green',
+    notes: 'Status — success / confirmed.',
+  },
+  {
+    label: 'Yellow (warning)',
+    prefix: 'yellow',
+    notes: 'Status — attention / warning.',
+  },
+  {
+    label: 'Red (error)',
+    prefix: 'red',
+    notes:
+      'HSL-channel split — default theme maps --error here; drives error halos.',
+  },
+  {
+    label: 'Sky (info)',
+    prefix: 'sky',
+    notes:
+      'Informational — a brighter blue, distinct from the primary --blue ramp.',
+  },
 ];
 const RAMPS = RAMP_SPEC.map(({ label, prefix, notes }) => {
   const stopRe = new RegExp(`^--${prefix}-(\\d+)$`);
   const stops = [];
   for (const t of globalsOnly) {
     const m = t.name.match(stopRe);
-    if (m) { stops.push(Number(m[1])); used.add(t.name); }
+    if (m) {
+      stops.push(Number(m[1]));
+      used.add(t.name);
+    }
   }
   stops.sort((a, b) => a - b);
   return { label, prefix, stops, notes };
@@ -225,7 +346,11 @@ const RADIUS = pick(/^--radius-/).map(scaleRow);
 const SHADOWS = pick(/^--shadow-/, ['--text-on-media-shadow']).map((t) => {
   const isAlias = /^var\(--shadow-\d+\)$/.test(t.value);
   const isChannel = /^-?[\d.]+%?$/.test(t.value);
-  return { name: t.name, alias: isAlias || isChannel ? t.value : '', notes: t.notes };
+  return {
+    name: t.name,
+    alias: isAlias || isChannel ? t.value : '',
+    notes: t.notes,
+  };
 });
 
 const MOTION_DUR = pick(/^--duration-/).map(scaleRow);
@@ -236,14 +361,23 @@ const LAYOUT_COL = pick(/^--col-cap-/).map(scaleRow);
 const ICONS = pick(/^--icon-(2xs|xs|sm|md|lg)$/).map(scaleRow);
 
 // Misc — carry a renderAs the template switches on.
-const miscRow = (renderAs) => (t) => ({ name: t.name, value: t.value, renderAs, notes: t.notes });
+const miscRow = (renderAs) => (t) => ({
+  name: t.name,
+  value: t.value,
+  renderAs,
+  notes: t.notes,
+});
 const MISC_BW = pick(/^--border-width-/).map(miscRow('bar'));
 const MISC_OPACITY = pick(/^--opacity-/).map(miscRow('opacity'));
 const MISC_BLUR = pick(/^--blur-/).map(miscRow('literal'));
 
 // Density tiers — fixed pseudo-rows VERBATIM (not real tokens; nothing claimed).
 const DENSITY_TIERS = [
-  { name: 'ultra-compact', value: '24px hit', notes: 'Power-user tier — keyboard-first, opt-in only.' },
+  {
+    name: 'ultra-compact',
+    value: '24px hit',
+    notes: 'Power-user tier — keyboard-first, opt-in only.',
+  },
   { name: 'compact', value: '32px hit', notes: 'Dense desktop default.' },
   { name: 'cozy', value: '40px hit', notes: 'Default — most products.' },
   { name: 'comfy', value: '48px hit', notes: 'Touch-friendly.' },
@@ -253,32 +387,47 @@ const DENSITY_TIERS = [
 // sample specimens reuse the original strings; families/weights/etc. use a short
 // specimen per kind. Sizes → 'Aa' by default; weights/LH/LS → a descriptive line.
 const typeRow = (sampleClass, sampleFor) => (t) => ({
-  name: t.name, value: t.value, sample: sampleFor(t), sampleClass, notes: t.notes,
+  name: t.name,
+  value: t.value,
+  sample: sampleFor(t),
+  sampleClass,
+  notes: t.notes,
 });
-const TYPOGRAPHY_FONT = pick(/^--font-(sans|serif|mono|display|heading)/)
-  .map(typeRow('sample-font', (t) =>
-    t.name === '--font-mono' ? 'const total = items.reduce(sum, 0);'
-      : 'The quick brown fox jumps over the lazy dog'));
-const TYPOGRAPHY_SIZE = pick(/^--font-size-/)
-  .map(typeRow('sample-fs', (t) => (t.name === '--font-size-mono' ? 'const x = 42;' : 'Aa')));
-const TYPOGRAPHY_LH = pick(/^--line-height-/)
-  .map(typeRow('sample-lh', () => 'Base leading — body copy\nand most UI.'));
-const TYPOGRAPHY_LS = pick(/^--letter-spacing-/)
-  .map(typeRow('sample-ls', () => 'The quick brown fox'));
-const TYPOGRAPHY_FW = pick(/^--font-weight-/)
-  .map(typeRow('sample-fw', () => 'The quick brown fox'));
+const TYPOGRAPHY_FONT = pick(/^--font-(sans|serif|mono|display|heading)/).map(
+  typeRow('sample-font', (t) =>
+    t.name === '--font-mono'
+      ? 'const total = items.reduce(sum, 0);'
+      : 'The quick brown fox jumps over the lazy dog',
+  ),
+);
+const TYPOGRAPHY_SIZE = pick(/^--font-size-/).map(
+  typeRow('sample-fs', (t) =>
+    t.name === '--font-size-mono' ? 'const x = 42;' : 'Aa',
+  ),
+);
+const TYPOGRAPHY_LH = pick(/^--line-height-/).map(
+  typeRow('sample-lh', () => 'Base leading — body copy\nand most UI.'),
+);
+const TYPOGRAPHY_LS = pick(/^--letter-spacing-/).map(
+  typeRow('sample-ls', () => 'The quick brown fox'),
+);
+const TYPOGRAPHY_FW = pick(/^--font-weight-/).map(
+  typeRow('sample-fw', () => 'The quick brown fox'),
+);
 
 // ---- Component tokens (ComponentTokenGroup) -------------------------------
 // Each folder owns its --ds-<folder>-* reads PLUS scattered global geometry
 // --<folder>-* (longest-prefix owner match). Groups sorted alphabetically by
 // component; tokens within a group keep extraction order.
-const folderSet = readdirSync(join(ROOT, 'src/lib/components'))
-  .filter((e) => statSync(join(ROOT, 'src/lib/components', e)).isDirectory());
+const folderSet = readdirSync(join(ROOT, 'src/lib/components')).filter((e) =>
+  statSync(join(ROOT, 'src/lib/components', e)).isDirectory(),
+);
 // Geometry prefixes that don't literally match their owning folder name.
 // Only unambiguous cases — leave anything contested (--field-*, --calendar-*,
 // --matrix-*, --kbd-*, etc.) unaliased so it still surfaces in NEW_TOKENS.
 const FOLDER_ALIAS = { btn: 'button', check: 'checkbox', 'sort-ic': 'table' };
-function ownerFolder(name) {                 // longest `--<folder>-` prefix match
+function ownerFolder(name) {
+  // longest `--<folder>-` prefix match
   for (const [prefix, folder] of Object.entries(FOLDER_ALIAS)) {
     if (name.startsWith(`--${prefix}-`)) return folder;
   }
@@ -286,7 +435,7 @@ function ownerFolder(name) {                 // longest `--<folder>-` prefix mat
   return hits.sort((a, b) => b.length - a.length)[0] || null;
 }
 const componentRow = (t) => ({ name: t.name, value: t.value, notes: t.notes });
-const compGroups = {};   // folder -> rows[] (extraction order)
+const compGroups = {}; // folder -> rows[] (extraction order)
 for (const t of all) {
   if (used.has(t.name)) continue;
   let folder = null;
@@ -297,13 +446,19 @@ for (const t of all) {
   (compGroups[folder] ??= []).push(componentRow(t));
 }
 const titleCaseFolder = (s) =>
-  s.replace(/(^|-)([a-z])/g, (_, d, c) => (d ? ' ' : '') + c.toUpperCase()).trim();
+  s
+    .replace(/(^|-)([a-z])/g, (_, d, c) => (d ? ' ' : '') + c.toUpperCase())
+    .trim();
 const COMPONENT_TOKENS = Object.keys(compGroups)
   .sort((a, b) => titleCaseFolder(a).localeCompare(titleCaseFolder(b)))
   .map((folder) => ({
-    component: titleCaseFolder(folder),
-    selector: `.${folder}`,
-    description: '',
+    component:
+      folder === 't' ? 'Typography utilities' : titleCaseFolder(folder),
+    selector: folder === 't' ? '.t-*' : `.${folder}`,
+    description:
+      folder === 't'
+        ? 'Per-axis --ds-t-* override hooks on the .t-* type utilities.'
+        : '',
     tokens: compGroups[folder],
   }));
 
@@ -312,7 +467,11 @@ const COMPONENT_TOKENS = Object.keys(compGroups)
 // --link-*, --scrollbar-*, --layer-*, chart tokens, misc geometry with no owner).
 const NEW_TOKENS = all
   .filter((t) => !used.has(t.name))
-  .map((t) => ({ name: t.name, value: t.value, kind: kindOf(t.name, t.value, t.category) }))
+  .map((t) => ({
+    name: t.name,
+    value: t.value,
+    kind: kindOf(t.name, t.value, t.category),
+  }))
   .sort((a, b) => a.name.localeCompare(b.name));
 
 // ---- Emit -----------------------------------------------------------------
@@ -320,11 +479,15 @@ const stringify = (v) => JSON.stringify(v, null, 2);
 const constLine = (name, type, value) =>
   `export const ${name}: readonly ${type}[] = ${stringify(value)};\n`;
 
-const OUT = join(ROOT, 'ds-docs/src/app/sections/tokens-reference/tokens.generated.ts');
-const banner = '// AUTO-GENERATED by tools/extract-tokens.mjs — do not edit. Run `npm run extract-tokens`.\n'
-  + '// Every reference array is auto-populated from the live SCSS tokens by prefix rules.\n'
-  + '// Tokens matching no section land in NEW_TOKENS and render in the "New / unresolved\n'
-  + '// tokens" group at the top of the reference until someone files them into a section.\n\n';
+const OUT = join(
+  ROOT,
+  'ds-docs/src/app/sections/tokens-reference/tokens.generated.ts',
+);
+const banner =
+  '// AUTO-GENERATED by tools/extract-tokens.mjs — do not edit. Run `npm run extract-tokens`.\n' +
+  '// Every reference array is auto-populated from the live SCSS tokens by prefix rules.\n' +
+  '// Tokens matching no section land in NEW_TOKENS and render in the "New / unresolved\n' +
+  '// tokens" group at the top of the reference until someone files them into a section.\n\n';
 
 const body = [
   `import type {`,
@@ -384,22 +547,39 @@ const body = [
 writeFileSync(OUT, banner + body);
 
 const summary = {
-  SEMANTIC_PRIMARY: SEMANTIC_PRIMARY.length, SEMANTIC_TERTIARY: SEMANTIC_TERTIARY.length,
-  SEMANTIC_ERROR: SEMANTIC_ERROR.length, SEMANTIC_SUCCESS: SEMANTIC_SUCCESS.length,
-  SEMANTIC_WARNING: SEMANTIC_WARNING.length, SEMANTIC_INFO: SEMANTIC_INFO.length,
-  SEMANTIC_TEXT: SEMANTIC_TEXT.length, SEMANTIC_SURFACE: SEMANTIC_SURFACE.length,
-  SEMANTIC_BORDER: SEMANTIC_BORDER.length, SEMANTIC_FOCUS: SEMANTIC_FOCUS.length,
-  SEMANTIC_SECONDARY: SEMANTIC_SECONDARY.length, SEMANTIC_ACCENT: SEMANTIC_ACCENT.length,
-  SEMANTIC_STATUS: SEMANTIC_STATUS.length, SEMANTIC_LINK: SEMANTIC_LINK.length,
+  SEMANTIC_PRIMARY: SEMANTIC_PRIMARY.length,
+  SEMANTIC_TERTIARY: SEMANTIC_TERTIARY.length,
+  SEMANTIC_ERROR: SEMANTIC_ERROR.length,
+  SEMANTIC_SUCCESS: SEMANTIC_SUCCESS.length,
+  SEMANTIC_WARNING: SEMANTIC_WARNING.length,
+  SEMANTIC_INFO: SEMANTIC_INFO.length,
+  SEMANTIC_TEXT: SEMANTIC_TEXT.length,
+  SEMANTIC_SURFACE: SEMANTIC_SURFACE.length,
+  SEMANTIC_BORDER: SEMANTIC_BORDER.length,
+  SEMANTIC_FOCUS: SEMANTIC_FOCUS.length,
+  SEMANTIC_SECONDARY: SEMANTIC_SECONDARY.length,
+  SEMANTIC_ACCENT: SEMANTIC_ACCENT.length,
+  SEMANTIC_STATUS: SEMANTIC_STATUS.length,
+  SEMANTIC_LINK: SEMANTIC_LINK.length,
   CHARTS: CHARTS.length,
-  RAMPS: RAMPS.length, TYPOGRAPHY_FONT: TYPOGRAPHY_FONT.length,
-  TYPOGRAPHY_SIZE: TYPOGRAPHY_SIZE.length, TYPOGRAPHY_LH: TYPOGRAPHY_LH.length,
-  TYPOGRAPHY_LS: TYPOGRAPHY_LS.length, TYPOGRAPHY_FW: TYPOGRAPHY_FW.length,
-  SPACING: SPACING.length, RADIUS: RADIUS.length, SHADOWS: SHADOWS.length,
-  MOTION_DUR: MOTION_DUR.length, MOTION_EASE: MOTION_EASE.length,
-  DENSITY_HIT: DENSITY_HIT.length, LAYOUT_BP: LAYOUT_BP.length,
-  LAYOUT_COL: LAYOUT_COL.length, ICONS: ICONS.length,
-  MISC_BW: MISC_BW.length, MISC_OPACITY: MISC_OPACITY.length, MISC_BLUR: MISC_BLUR.length,
+  RAMPS: RAMPS.length,
+  TYPOGRAPHY_FONT: TYPOGRAPHY_FONT.length,
+  TYPOGRAPHY_SIZE: TYPOGRAPHY_SIZE.length,
+  TYPOGRAPHY_LH: TYPOGRAPHY_LH.length,
+  TYPOGRAPHY_LS: TYPOGRAPHY_LS.length,
+  TYPOGRAPHY_FW: TYPOGRAPHY_FW.length,
+  SPACING: SPACING.length,
+  RADIUS: RADIUS.length,
+  SHADOWS: SHADOWS.length,
+  MOTION_DUR: MOTION_DUR.length,
+  MOTION_EASE: MOTION_EASE.length,
+  DENSITY_HIT: DENSITY_HIT.length,
+  LAYOUT_BP: LAYOUT_BP.length,
+  LAYOUT_COL: LAYOUT_COL.length,
+  ICONS: ICONS.length,
+  MISC_BW: MISC_BW.length,
+  MISC_OPACITY: MISC_OPACITY.length,
+  MISC_BLUR: MISC_BLUR.length,
   COMPONENT_TOKENS: `${COMPONENT_TOKENS.length} groups / ${COMPONENT_TOKENS.reduce((n, g) => n + g.tokens.length, 0)} tokens`,
 };
 console.log('wrote tokens.generated.ts — per-export counts:');

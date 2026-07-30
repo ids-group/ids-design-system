@@ -1,4 +1,9 @@
-import { Component, ViewEncapsulation, input } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  input,
+} from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
 
@@ -20,4 +25,7 @@ export class FieldMessageComponent {
   readonly state = input<FieldMessageState>('default');
   readonly messageId = input<string | null>(null);
   readonly icon = input<IconName | null>(null);
+  /** Reserve one line of height even when there's no `text`, so a field that
+   *  gains/loses a message doesn't shift the layout below it. */
+  readonly reserve = input(false, { transform: booleanAttribute });
 }

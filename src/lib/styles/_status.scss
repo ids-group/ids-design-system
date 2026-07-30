@@ -29,6 +29,7 @@
 
     ds-badge[data-status='#{$name}'] {
       --ds-badge-bg-color: #{$bg};
+
       @if $text {
         --ds-badge-label-color: #{$text};
       }

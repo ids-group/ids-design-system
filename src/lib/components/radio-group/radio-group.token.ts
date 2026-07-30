@@ -18,4 +18,6 @@ export interface RadioGroupChild {
   focus(): void;
 }
 
-export const RADIO_GROUP = new InjectionToken<RadioGroupContract>('RADIO_GROUP');
+export const RADIO_GROUP = new InjectionToken<RadioGroupContract>(
+  'RADIO_GROUP',
+);

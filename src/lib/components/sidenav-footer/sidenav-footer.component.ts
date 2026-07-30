@@ -51,10 +51,13 @@ interface SearchGroup {
 export class SidenavFooterComponent {
   private readonly router = inject(Router);
 
+  /** Name shown in the footer's account row. */
   readonly userName = input('');
+  /** Secondary line under the name (role / organisation). */
   readonly userRole = input('');
   /** Show the unread dot on the Alerts row. */
   readonly alerts = input(false);
+  /** Mirrors the rail's collapsed state — labels hide, the avatar + icons stay. */
   readonly collapsed = input(false);
   /** When set, the Search row opens a live results popover; unset keeps it inert. */
   readonly searchProvider = input<SidenavSearchProvider | null>(null);

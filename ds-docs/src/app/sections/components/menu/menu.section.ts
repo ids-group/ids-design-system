@@ -5,6 +5,7 @@ import {
   MenuDividerComponent,
   MenuItemComponent,
   PopoverComponent,
+  TooltipDirective,
 } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
@@ -17,6 +18,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
     MenuDividerComponent,
     MenuItemComponent,
     PopoverComponent,
+    TooltipDirective,
     DocsSectionComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,

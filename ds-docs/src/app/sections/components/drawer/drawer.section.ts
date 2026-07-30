@@ -3,7 +3,7 @@ import {
   ButtonComponent,
   DrawerComponent,
   type DrawerPlacement,
-  type DrawerSize,
+  type DsSize,
 } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
@@ -18,12 +18,9 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
 export class DrawerSection {
   protected readonly open = signal(false);
   protected readonly activePlacement = signal<DrawerPlacement>('right');
-  protected readonly activeSize = signal<DrawerSize>('md');
+  protected readonly activeSize = signal<DsSize>('md');
 
-  protected openWith(
-    placement: DrawerPlacement,
-    size: DrawerSize = 'md',
-  ): void {
+  protected openWith(placement: DrawerPlacement, size: DsSize = 'md'): void {
     this.activePlacement.set(placement);
     this.activeSize.set(size);
     this.open.set(true);

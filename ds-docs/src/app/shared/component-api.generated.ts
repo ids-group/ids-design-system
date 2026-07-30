@@ -132,13 +132,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
-  "app-shell": {
-    "key": "app-shell",
-    "selector": "ds-app-shell",
+  "app-layout": {
+    "key": "app-layout",
+    "selector": "ds-app-layout",
     "isElement": true,
-    "className": "AppShellComponent",
+    "className": "AppLayoutComponent",
     "status": "stable",
-    "importName": "AppShellComponent",
+    "importName": "AppLayoutComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
@@ -206,7 +206,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "AutocompleteSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -263,6 +263,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the field."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       },
       {
         "name": "allowCreate",
@@ -377,6 +386,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Icon rendered when there is no imageUrl and no initials."
+      },
+      {
+        "name": "seed",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Seed for a deterministic tint (e.g. an email or name) used when no explicit `tint` is set — the same seed always yields the same colour."
+      },
+      {
+        "name": "avoidHues",
+        "kind": "input",
+        "type": "readonly (readonly [number, number])[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Hue arcs `[start, end]` (0–360°) the seeded tint must avoid, e.g. a brand hue: `[[310, 360], [0, 20]]`. Only applies when `seed` drives the tint."
       }
     ],
     "outputs": []
@@ -466,6 +493,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "99",
         "required": false,
         "description": "Count is capped at this value, shown as `\"max+\"` beyond it."
+      },
+      {
+        "name": "countLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'notifications'",
+        "required": false,
+        "description": "Noun used in the count's accessible label — set for non-notification counts (cart, results, …)."
       }
     ],
     "outputs": []
@@ -711,7 +747,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "ButtonSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -732,7 +768,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'button'",
         "required": false,
-        "description": "Native `<button>` `type` attribute."
+        "description": "Native `<button>` `type`; defaults to `'button'` (not `'submit'`) so it never submits an ancestor form by accident."
       },
       {
         "name": "disabled",
@@ -1095,9 +1131,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the checkbox."
       },
       {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+      },
+      {
         "name": "size",
         "kind": "input",
-        "type": "CheckboxSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -1191,6 +1236,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the trigger."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       }
     ],
     "outputs": []
@@ -1220,7 +1274,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DatePickerSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -1265,6 +1319,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the field."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       },
       {
         "name": "required",
@@ -1532,7 +1595,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DrawerSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -1651,7 +1714,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Fires when the user removes a file from the list."
+        "description": "Fires when the user removes a file; unlike `filesAdded`, the consumer must remove the matching entry from `files` itself."
       }
     ]
   },
@@ -1759,6 +1822,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "reserve",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Reserve one line of height even when there's no `text`, so a field that gains/loses a message doesn't shift the layout below it."
       }
     ],
     "outputs": []
@@ -1825,7 +1897,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "IconButtonSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -1846,7 +1918,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'button'",
         "required": false,
-        "description": "Native `button` type attribute."
+        "description": "Native `<button>` `type`; defaults to `'button'` (not `'submit'`) so it never submits an ancestor form by accident."
       },
       {
         "name": "disabled",
@@ -1918,7 +1990,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "InputSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -1945,6 +2017,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the field."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       },
       {
         "name": "placeholder",
@@ -2008,24 +2089,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Floating-label variant — the label sits inside a taller control instead of stacked above it."
-      },
-      {
-        "name": "withAddon",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Reserves space for a leading addon projected into `[dsInputPrefix]`."
-      },
-      {
-        "name": "withAddonRight",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Reserves space for a trailing addon projected into `[dsInputSuffix]`."
       },
       {
         "name": "required",
@@ -2459,7 +2522,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "spinnerSize",
         "kind": "input",
-        "type": "SpinnerSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -2531,7 +2594,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Disables the item and excludes it from `ds-menu`'s roving-tabindex navigation."
+        "description": "Blocks activation and styles the item as inactive. It stays keyboard-focusable (`aria-disabled`, ARIA menu practice) and in `ds-menu`'s roving order, so a `[dsTooltip]` explaining why can be reached and shown."
       },
       {
         "name": "error",
@@ -2837,6 +2900,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the field."
       },
       {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+      },
+      {
         "name": "ariaLabel",
         "kind": "input",
         "type": "string | null",
@@ -2906,7 +2978,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "NumberStepperSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -3012,6 +3084,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the cells."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       },
       {
         "name": "ariaLabel",
@@ -3163,7 +3244,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "1",
         "required": false,
-        "description": "1-based active page, two-way bound."
+        "description": "1-based active page, two-way bound; a page change (incl. the reset to 1 after a size change) emits via the implicit `currentPageChange`."
       },
       {
         "name": "pageSizeOptions",
@@ -3184,26 +3265,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Shows the \"Showing X–Y of Z\" range label."
       }
     ],
-    "outputs": [
-      {
-        "name": "pageChange",
-        "kind": "output",
-        "type": "number",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": "Fires whenever the active page changes, including the reset to page 1 after a size change."
-      },
-      {
-        "name": "pageSizeChange",
-        "kind": "output",
-        "type": "number",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": "Fires when the page size changes via the size dropdown."
-      }
-    ]
+    "outputs": []
   },
   "popover": {
     "key": "popover",
@@ -3399,9 +3461,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the control."
       },
       {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+      },
+      {
         "name": "size",
         "kind": "input",
-        "type": "RadioSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -3488,6 +3559,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the group."
       },
       {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+      },
+      {
         "name": "ariaLabel",
         "kind": "input",
         "type": "string | null",
@@ -3571,6 +3651,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Accessible name for the input (placeholder is not a reliable label)."
+      },
+      {
+        "name": "size",
+        "kind": "input",
+        "type": "DsSize",
+        "union": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "'md'",
+        "required": false,
+        "description": "Control height. `md` (default) keeps the 36px search-row height; `sm` (32px) aligns search with dense toolbars beside `sm` inputs/buttons; `lg` is touch."
       }
     ],
     "outputs": [
@@ -3665,7 +3758,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "SelectSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -3719,6 +3812,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the trigger."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       },
       {
         "name": "required",
@@ -3940,7 +4042,17 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Disables the item — non-navigable and styled as inactive."
       }
     ],
-    "outputs": []
+    "outputs": [
+      {
+        "name": "activate",
+        "kind": "output",
+        "type": "MouseEvent",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Emitted on click, carrying the `MouseEvent`. On an `href` item, `preventDefault()` intercepts navigation (e.g. a docs sidebar driving scroll-spy); a `routerLink` item navigates regardless — Angular's RouterLink ignores `defaultPrevented` — so treat it as a click hook there."
+      }
+    ]
   },
   "sidenav-footer": {
     "key": "sidenav-footer",
@@ -3959,7 +4071,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Name shown in the footer's account row."
       },
       {
         "name": "userRole",
@@ -3968,7 +4080,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "Secondary line under the name (role / organisation)."
       },
       {
         "name": "alerts",
@@ -3986,7 +4098,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Mirrors the rail's collapsed state — labels hide, the avatar + icons stay."
       },
       {
         "name": "searchProvider",
@@ -4185,6 +4297,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the slider."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       }
     ],
     "outputs": []
@@ -4202,7 +4323,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "SpinnerSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -4600,9 +4721,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the switch."
       },
       {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+      },
+      {
         "name": "size",
         "kind": "input",
-        "type": "SwitchSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -4732,6 +4862,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Tints odd rows for easier row-tracking across wide tables."
       },
       {
+        "name": "animateHeight",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Animate the body height when the row set changes (page/filter) instead of snapping. Opt-in; instant under reduced-motion (the DS zeroes the token)."
+      },
+      {
         "name": "selectedIds",
         "kind": "model",
         "type": "Set<string>",
@@ -4760,6 +4899,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Sort direction for `sortKey`."
+      },
+      {
+        "name": "sortingOrder",
+        "kind": "input",
+        "type": "SortDir[]",
+        "union": null,
+        "default": "['asc', 'desc', null]",
+        "required": false,
+        "description": "Sort states a column cycles through on click. Default includes null (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g. server-paged lists)."
       },
       {
         "name": "skeletonRows",
@@ -4895,6 +5043,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "[10, 25, 50, 100]",
         "required": false,
         "description": "Selectable page-size choices shown in the pagination control."
+      },
+      {
+        "name": "total",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Server-side total row count. `null` (default) = client paging: the table slices `data()` itself and the pager counts the rows in hand. When set, the host has already sliced to one page — the pager uses this count and the table renders `data()` as-is (no internal slice)."
+      },
+      {
+        "name": "scrollToTopOnPageChange",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Scroll the table into view on a page change (opt-in) — keeps a bottom pager from leaving the viewport on the previous page's last rows."
       },
       {
         "name": "clientSort",
@@ -5251,7 +5417,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "TextareaSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -5278,6 +5444,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the field."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       },
       {
         "name": "placeholder",
@@ -5563,7 +5738,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "TimePickerSize",
+        "type": "DsSize",
         "union": [
           "sm",
           "md",
@@ -5599,6 +5774,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the picker."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
       },
       {
         "name": "placeholder",

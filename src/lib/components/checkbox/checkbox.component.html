@@ -22,7 +22,7 @@
       <label
         class="control-text"
         [attr.for]="controlId()"
-        >
+      >
         {{ label() }}
         @if (required()) {
           <span
@@ -40,5 +40,6 @@
     [text]="hint()"
     [state]="messageState()"
     [messageId]="hintId()"
+    [reserve]="reserveMessage()"
   />
 </div>

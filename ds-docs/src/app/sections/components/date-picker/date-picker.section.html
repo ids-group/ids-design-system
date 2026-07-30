@@ -3,7 +3,6 @@
   eyebrow="Components"
   title="Date picker"
 >
-
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
@@ -93,8 +92,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [invalid]="true"
-    </code> switches the hint to an
-    error message; <code class="t-mono-inline">[disabled]="true"</code>
+    </code> switches the hint to
+    an error message; <code class="t-mono-inline">[disabled]="true"</code>
     makes the picker inert.
   </p>
 
@@ -154,8 +153,8 @@
     </code> accepts a
     <code class="t-mono-inline">
       (date: Date) =&gt; boolean
-    </code> predicate. The
-    example disables weekends — useful for booking working days only.
+    </code> predicate.
+    The example disables weekends — useful for booking working days only.
   </p>
 
   <div class="row">
@@ -217,12 +216,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    The trigger is a text field by default
-    (<code class="t-mono-inline">[allowInput]="true"</code>). Typing is masked to
-    the active locale format — non-numeric characters are rejected as typed, and
-    an impossible or out-of-range date flags an error on blur. Range mode uses one
-    combined field (start and end in a single input). Clicking the field or the
-    calendar icon opens the panel.
+    The trigger is a text field by default (<code class="t-mono-inline"
+      >[allowInput]="true"</code
+    >). Typing is masked to the active locale format — non-numeric characters
+    are rejected as typed, and an impossible or out-of-range date flags an error
+    on blur. Range mode uses one combined field (start and end in a single
+    input). Clicking the field or the calendar icon opens the panel.
   </p>
 
   <div class="grid-2">
@@ -249,12 +248,10 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [maxDate]="today"
-    </code> rejects future dates, and
-    <code class="t-mono-inline">
-      [defaultDate]
-    </code> opens the panel on that date
-    instead of the current month — the calendar
-    focuses its exact day without selecting it.
+    </code> rejects future dates,
+    and <code class="t-mono-inline"> [defaultDate] </code> opens the panel on
+    that date instead of the current month — the calendar focuses its exact day
+    without selecting it.
   </p>
 
   <div class="row">
@@ -280,8 +277,10 @@
     mixing. <code class="t-mono-inline">[firstDayOfWeek]</code> (0–6, default
     Monday) shifts the week. Set app-wide via
     <code class="t-mono-inline">
-      provideDsConfig({{ '{' }} datePicker: {{ '{' }} locale {{ '}' }} {{ '}' }})
-    </code>.
+      provideDsConfig({{ '{' }} datePicker: {{ '{' }} locale {{ '}' }}
+      {{ '}' }})
+    </code
+    >.
   </p>
 
   <div class="grid-2">
@@ -309,14 +308,15 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       [dateFormat]
-    </code> pins an explicit token order
-    (<code class="t-mono-inline">DD</code> /
+    </code> pins an explicit token
+    order (<code class="t-mono-inline">DD</code> /
     <code class="t-mono-inline">
       MM
     </code> /
     <code class="t-mono-inline">
       YYYY
-    </code>), overriding the locale-derived one.
+    </code>), overriding the locale-derived
+    one.
   </p>
 
   <div class="row">
@@ -483,5 +483,4 @@
       </div>
     </div>
   </div>
-
 </docs-section>

@@ -1,5 +1,10 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
-import { ButtonComponent, DrawerComponent, SegmentedComponent, SliderComponent } from 'ds';
+import {
+  ButtonComponent,
+  DrawerComponent,
+  SegmentedComponent,
+  SliderComponent,
+} from 'ds';
 
 type BrandPreview = 'default' | 'manage-my';
 
@@ -9,7 +14,12 @@ const THEME_STORAGE_KEY = 'ds-docs-theme';
 @Component({
   selector: 'tweaks-panel',
   standalone: true,
-  imports: [ButtonComponent, DrawerComponent, SegmentedComponent, SliderComponent],
+  imports: [
+    ButtonComponent,
+    DrawerComponent,
+    SegmentedComponent,
+    SliderComponent,
+  ],
   templateUrl: './tweaks-panel.component.html',
   styleUrl: './tweaks-panel.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -40,7 +50,9 @@ export class TweaksPanelComponent {
     { label: 'Cool gray', value: 'cool-gray' },
     { label: 'From brand', value: 'brand' },
   ];
-  protected readonly density = signal<'ultra-compact' | 'compact' | 'cozy' | 'comfy'>('cozy');
+  protected readonly density = signal<
+    'ultra-compact' | 'compact' | 'cozy' | 'comfy'
+  >('cozy');
   protected readonly brand = signal<BrandPreview>('default');
   protected readonly theme = signal<'light' | 'dark'>('light');
   protected readonly neutrals = signal<'cool-gray' | 'brand'>('cool-gray');
@@ -67,7 +79,9 @@ export class TweaksPanelComponent {
     }
   }
 
-  protected setDensity(d: 'ultra-compact' | 'compact' | 'cozy' | 'comfy'): void {
+  protected setDensity(
+    d: 'ultra-compact' | 'compact' | 'cozy' | 'comfy',
+  ): void {
     this.density.set(d);
     document.documentElement.setAttribute('data-density', d);
   }

@@ -1,12 +1,5 @@
-/* ============================================================
-   FIELD (single-line text input subset)
-   Ported from vendor/claude-design-ds/components.css (FIELD block, lines 165–292).
-   Subset scope: base wrapper, label, control box, single-line <input>,
-   hint, addon prefix/suffix, sizes (sm/lg), states (error/success/disabled),
-   hover/focus. Textarea, select, number-stepper and floating-label rules
-   are intentionally omitted — those belong to future Textarea / Select /
-   Number components.
-   ============================================================ */
+// Ported from vendor/claude-design-ds components.css (FIELD block); textarea/
+// select/number-stepper/floating-label rules are intentionally out of scope here.
 @use '../../styles/press' as press;
 
 :host {
@@ -189,7 +182,6 @@
     }
   }
 
-  /* Sizes */
   &.sm .control {
     height: var(--hit-min);
     padding: 0 var(--space-2);
@@ -228,17 +220,19 @@
     }
   }
 
-  &.with-addon .control {
+  /* A boxed .addon (not a bare projected icon) sits flush: drop the control's
+     inset on that side and round the addon's outer corners to match the field. */
+  &:has(.addon-slot.prefix .addon) .control {
     padding-left: 0;
   }
-  &.with-addon-right .control {
+  &:has(.addon-slot.suffix .addon) .control {
     padding-right: 0;
   }
-  &.with-addon ::ng-deep .addon {
+  .addon-slot.prefix ::ng-deep .addon {
     border-top-left-radius: var(--_input-radius);
     border-bottom-left-radius: var(--_input-radius);
   }
-  &.with-addon-right ::ng-deep .addon.right {
+  .addon-slot.suffix ::ng-deep .addon.right {
     border-top-right-radius: var(--_input-radius);
     border-bottom-right-radius: var(--_input-radius);
   }

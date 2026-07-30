@@ -4,11 +4,11 @@ Colour is layered in three concerns: a **base palette** (theme-independent primi
 
 ## Architecture: three layers
 
-| Layer                          | Lives in                                       | Examples                                                                                              | Applied at                          |
-| ------------------------------ | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| **Base palette** (primitives)  | `themes/_base-palette.scss`                    | `--blue-600`, `--cool-gray-*`, `--brand-gray-*`, `--red-h/s/l`, `--static-white`, fonts, `--shadow-tint-h/s` | `:root` (theme-independent)         |
-| **Theme** (role map)           | `themes/_semantic.scss` + `themes/<t>/_*.scss` | `--primary`, `--surface-canvas`, `--text-primary`, the `--neutral-*` slot, `--focus-ring`              | `:root` (light) / `:root[data-theme='dark']` |
-| **Component / scale**          | `styles/_tokens.scss`, `*.component.scss`      | `--space-*`, `--radius-*`, `--ds-button-bg-color`, `--duration-fast`                                   | `:root` (theme-independent)         |
+| Layer                         | Lives in                                       | Examples                                                                                                     | Applied at                                   |
+| ----------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------- |
+| **Base palette** (primitives) | `themes/_base-palette.scss`                    | `--blue-600`, `--cool-gray-*`, `--brand-gray-*`, `--red-h/s/l`, `--static-white`, fonts, `--shadow-tint-h/s` | `:root` (theme-independent)                  |
+| **Theme** (role map)          | `themes/_semantic.scss` + `themes/<t>/_*.scss` | `--primary`, `--surface-canvas`, `--text-primary`, the `--neutral-*` slot, `--focus-ring`                    | `:root` (light) / `:root[data-theme='dark']` |
+| **Component / scale**         | `styles/_tokens.scss`, `*.component.scss`      | `--space-*`, `--radius-*`, `--ds-button-bg-color`, `--duration-fast`                                         | `:root` (theme-independent)                  |
 
 **Hard rule:** components NEVER consume base-palette primitives directly. `var(--blue-600)` inside `button.component.scss` is a bug — use a Tier-2 role (`--primary`, `--text-secondary`) or a component token.
 
@@ -33,8 +33,12 @@ Colour is layered in three concerns: a **base palette** (theme-independent primi
 - `<html data-theme="light">` — also light (explicit; same as the default)
 
 ```scss
-:root                    { @include light.theme; }   // default
-:root[data-theme='dark'] { @include dark.theme; }     // opt-in (complete set → fully wins)
+:root {
+  @include light.theme;
+} // default
+:root[data-theme='dark'] {
+  @include dark.theme;
+} // opt-in (complete set → fully wins)
 ```
 
 There is **no automatic `prefers-color-scheme` switch** — light is deterministic by default. To follow the OS, opt in at the app root with `provideDsTheme`:

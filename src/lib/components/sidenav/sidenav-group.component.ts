@@ -1,4 +1,10 @@
-import { Component, ViewEncapsulation, booleanAttribute, input, model } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  booleanAttribute,
+  input,
+  model,
+} from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
 

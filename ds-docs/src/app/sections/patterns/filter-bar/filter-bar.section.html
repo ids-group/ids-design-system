@@ -140,14 +140,21 @@
 
   <p class="block-desc t-s">
     The same bar driving a live
-    <code class="t-mono-inline"> ds-table </code> — the search box feeds the
-    table's built-in client filter
-    (<code class="t-mono-inline"> [filterQuery] </code>, case-insensitive
-    substring over every column), the status facet narrows the data app-side,
-    applied tags mirror the active filters and clear individually. When nothing
-    matches, the table's empty slot shows the filtered variant. Against a real
-    backend, skip <code class="t-mono-inline"> [filterQuery] </code> and flip
-    <code class="t-mono-inline"> [loading]="'overlay'" </code> while the query
+    <code class="t-mono-inline">
+      ds-table
+    </code> — the search box feeds the
+    table's built-in client filter (<code class="t-mono-inline">
+      [filterQuery] </code
+    >, case-insensitive substring over every column), the status facet narrows
+    the data app-side, applied tags mirror the active filters and clear
+    individually. When nothing matches, the table's empty slot shows the
+    filtered variant. Against a real backend, skip
+    <code class="t-mono-inline">
+      [filterQuery]
+    </code> and flip
+    <code class="t-mono-inline">
+      [loading]="'overlay'"
+    </code> while the query
     runs instead.
   </p>
 
@@ -214,7 +221,9 @@
       [bordered]="true"
       [stickyHeader]="false"
     >
-      <span empty> No records match your filters </span>
+      <span empty>
+        No records match your filters
+      </span>
     </ds-table>
   </div>
 

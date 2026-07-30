@@ -30,7 +30,7 @@ export class TooltipDirective implements OnDestroy {
   private readonly tipId = `ds-tooltip-${++nextId}`;
 
   @HostListener('mouseenter')
-  @HostListener('focus')
+  @HostListener('focusin')
   protected onOpen(): void {
     if (!this.dsTooltip()) {
       return;
@@ -41,13 +41,21 @@ export class TooltipDirective implements OnDestroy {
     this.timer = window.setTimeout(() => this.show(), this.dsTooltipDelay());
   }
 
+  // Close on activation too: clicking the thing the tip describes is a clear
+  // dismiss, and a re-rendered anchor (e.g. a navigated sidenav item) under a
+  // stationary cursor fires no mouseleave, which would otherwise strand the panel.
   @HostListener('mouseleave')
-  @HostListener('blur')
+  @HostListener('focusout')
+  @HostListener('click')
   protected onClose(): void {
     if (this.timer !== null) {
       clearTimeout(this.timer);
       this.timer = null;
     }
+    this.disposeRef();
+  }
+
+  private disposeRef(): void {
     this.ref?.dispose();
     this.ref = null;
     const host = this.host.nativeElement;
@@ -70,6 +78,10 @@ export class TooltipDirective implements OnDestroy {
   }
 
   private show(): void {
+    // A re-render or re-entrant hover can call show() with a panel still open;
+    // dispose it first so the OverlayRef isn't leaked and aria-describedby
+    // doesn't accumulate the same id twice.
+    this.disposeRef();
     const placement = this.dsTooltipPlacement();
     const positionStrategy = this.overlay
       .position()

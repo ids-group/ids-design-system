@@ -12,10 +12,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [PaginationComponent, DocsTruncationComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './pagination.section.html',
-  styleUrls: [
-    '../../../shared/section-demo.scss',
-    './pagination.section.scss',
-  ],
+  styleUrls: ['../../../shared/section-demo.scss', './pagination.section.scss'],
 })
 export class PaginationSection {
   protected readonly pageDefault = signal(4);
