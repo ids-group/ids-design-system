@@ -17,7 +17,21 @@
   </h3>
 
   <p class="block-desc t-s">
-    Three groups, brand mark at the top, one item active.
+    Three groups, brand mark at the top, one item active. Each item exposes an
+    <code class="t-mono-inline">
+      (activate)
+    </code> output (the click
+    <code class="t-mono-inline">
+      MouseEvent
+    </code>) —
+    <code class="t-mono-inline">
+      preventDefault()
+    </code> intercepts navigation on
+    an <code class="t-mono-inline">href</code> item (a
+    <code class="t-mono-inline">
+      routerLink
+    </code> navigates regardless), e.g. to
+    drive scroll-spy.
   </p>
 
   <div class="stage stage--frame">

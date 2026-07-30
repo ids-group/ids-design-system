@@ -216,7 +216,12 @@
       </h3>
 
       <p class="block-desc t-s">
-        A row blocked from interaction.
+        A row blocked from interaction — still keyboard-focusable
+        (<code class="t-mono-inline">aria-disabled</code>), so a
+        <code class="t-mono-inline">
+          dsTooltip
+        </code> can explain why on
+        hover/focus. Activation stays blocked.
       </p>
 
       <div class="stage">
@@ -227,6 +232,7 @@
 
           <ds-menu-item
             icon="copy"
+            dsTooltip="Save the record before duplicating it"
             [disabled]="true"
           >
             Duplicate
