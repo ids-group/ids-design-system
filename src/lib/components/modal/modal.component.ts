@@ -10,10 +10,10 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
 import { A11yModule } from '@angular/cdk/a11y';
 import { ModalCardComponent } from './modal-card.component';
 import { DsStaticPreview } from '../static-preview.directive';
+import { BodyScrollLockService } from '../../overlay/body-scroll-lock.service';
 import type { ModalSize } from './modal.types';
 
 @Component({
@@ -26,7 +26,7 @@ import type { ModalSize } from './modal.types';
   hostDirectives: [{ directive: DsStaticPreview, inputs: ['staticPreview'] }],
 })
 export class ModalComponent implements OnDestroy {
-  private readonly doc = inject(DOCUMENT);
+  private readonly scrollLock = inject(BodyScrollLockService);
   protected readonly preview = inject(DsStaticPreview);
 
   /** Open state, two-way bound. */
@@ -77,19 +77,19 @@ export class ModalComponent implements OnDestroy {
       this.wasOpen = isOpen;
     });
 
-    // Lock background scroll while the dialog occupies the screen (skipped in
-    // preview); keyed on `rendered` so the lock survives the leave animation.
-    effect(() => {
-      if (this.preview.staticPreview()) {
+    // Ref-counted body-scroll lock, shared with drawer/bottom-sheet so stacked
+    // overlays don't unlock each other. The effect's cleanup fires on the
+    // rendered→false transition and on destroy, keeping lock/unlock paired.
+    effect((onCleanup) => {
+      if (this.preview.staticPreview() || !this.rendered()) {
         return;
       }
-      this.doc.body.style.overflow = this.rendered() ? 'hidden' : '';
+      this.scrollLock.lock();
+      onCleanup(() => this.scrollLock.unlock());
     });
   }
 
   ngOnDestroy(): void {
-    // Restore body scroll if the host is torn down mid-open.
-    this.doc.body.style.overflow = '';
     clearTimeout(this.closeFallbackTimer ?? undefined);
     this.closeFallbackTimer = null;
   }

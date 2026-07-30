@@ -14,6 +14,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { A11yModule } from '@angular/cdk/a11y';
+import { BodyScrollLockService } from '../../overlay/body-scroll-lock.service';
 
 let nextId = 0;
 
@@ -49,6 +50,7 @@ export class BottomSheetComponent implements OnDestroy {
   readonly snapPoints = input<readonly number[]>([]);
 
   private readonly doc = inject(DOCUMENT);
+  private readonly scrollLock = inject(BodyScrollLockService);
   private readonly sheetRef = viewChild<ElementRef<HTMLElement>>('sheet');
 
   protected readonly dragOffset = signal<number | null>(null);
@@ -74,7 +76,6 @@ export class BottomSheetComponent implements OnDestroy {
   private lastMoveY = 0;
   private lastMoveTime = 0;
   private velocity = 0;
-  private previousBodyOverflow: string | null = null;
   private wasOpen = false;
   private closeFallbackTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -102,18 +103,15 @@ export class BottomSheetComponent implements OnDestroy {
       this.wasOpen = isOpen;
     });
 
-    // Lock body scroll while the sheet occupies the screen — keyed on
-    // `rendered` so the lock survives the leave animation.
+    // Ref-counted body-scroll lock, shared with modal/drawer so stacked
+    // overlays don't unlock each other. The cleanup fires on the rendered→false
+    // transition and on destroy, keeping lock/unlock paired.
     effect((onCleanup) => {
       if (!this.rendered()) {
         return;
       }
-      this.previousBodyOverflow = this.doc.body.style.overflow;
-      this.doc.body.style.overflow = 'hidden';
-      onCleanup(() => {
-        this.doc.body.style.overflow = this.previousBodyOverflow ?? '';
-        this.previousBodyOverflow = null;
-      });
+      this.scrollLock.lock();
+      onCleanup(() => this.scrollLock.unlock());
     });
   }
 
