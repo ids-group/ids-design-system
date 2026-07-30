@@ -203,13 +203,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   cell now shows its complete text in a popover when clicked (in addition to the existing title
   tooltip); the click is swallowed so it never doubles as a row click, while an unclipped cell
   passes the click through to the row unchanged.
-- **`ds-app-layout` — slotted fixed-frame application layout.** `[sidenav]`/`[topbar]`/default
+- **`ds-app-shell` — slotted fixed-frame application shell.** `[sidenav]`/`[topbar]`/default
   content slots; the host pins to the viewport (`100dvh`, `overflow: hidden`) and ONLY the content
   `<main>` scrolls (`scrollbar-gutter: stable` + automatic native-scrollbar-width padding
   compensation via the new `--ds-scrollbar-width` root variable). `topbarSpan` input switches the
   geometry (`'content'` default: full-height rail; `'full'`: full-width topbar). Built-in
-  scroll-to-top on router navigation via the new exported `LayoutScrollService` (also injectable
-  from routed pages for manual `scrollToTop()`). Tokens: `--ds-app-layout-pad-x/-pad-y/`
+  scroll-to-top on router navigation via the new exported `ShellScrollService` (also injectable
+  from routed pages for manual `scrollToTop()`). Tokens: `--ds-app-shell-pad-x/-pad-y/`
   `-content-max-width/-height`.
 - **`ds-sidenav-footer` — rail footer brick.** Search row with a live grouped-results popover
   (Enter opens the first hit), Alerts row with an unread dot + feed popover, Collapse row, and a
