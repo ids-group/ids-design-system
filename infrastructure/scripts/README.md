@@ -15,7 +15,8 @@ adapted to a design-system repo (library `ds` + showcase `ds-docs`).
 | `lint.sh`      | Run prettier + stylelint + eslint in parallel. `lint.sh report-only` prints results but never fails. Standalone — handy locally. |
 | `ci-pr.sh`     | PR validation in one container: build (hard gate) ∥ lint (report-only) after a single install. Used by the `validate` pipeline. |
 | `publish.sh`   | The single npm publisher. Guards: tag↔version match (`BITBUCKET_TAG`), refuse double-publish, prereleases → `next` dist-tag. Called by the tag (`v*`) pipeline after `build-lib.sh`, for both one-click and local releases. |
-| `cut-release.sh`| One-click release `<patch\|minor\|major\|beta>`: bump + stamp CHANGELOG + commit + tag + push `main` + tag. Does **not** publish — the pushed tag triggers the `v*` publish pipeline. Run by the `release-*` custom pipelines. Needs `RELEASE_TOKEN`. No install/build. |
+| `cut-release.sh`| One-click release `<patch\|minor\|major\|beta>`: merge `dev`->`main` + bump + stamp CHANGELOG + commit + tag + push `main` + tag, then back-merge `main`->`dev`. Does **not** publish — the pushed tag triggers the `v*` pipeline. Run by the `release-*` custom pipelines. Needs `RELEASE_TOKEN`. No install/build. |
+| `trigger-docs-deploy.sh`| Final step of the `v*` pipeline: after `publish.sh`, start the `deploy-docs` custom pipeline via the Bitbucket REST API. Skips prereleases. Needs `RELEASE_TOKEN` with `pipeline:write`. |
 
 Invoke as `sh infrastructure/scripts/<name>.sh` (no executable bit needed, which
 Windows checkouts cannot set reliably).
@@ -54,17 +55,15 @@ worth auto-firing on our cadence.
   were added recently and not yet applied repo-wide); make it blocking once the
   codebase is clean. To run it automatically on PRs again, add a top-level
   `pull-requests:` section pointing at `ci-pr.sh`.
-- **Tags** (`v*`): the **single publisher** — build the library (`build-lib.sh`)
-  and publish it (`publish.sh`, which guards tag↔version and refuses to republish
-  an existing version). Fires whenever a `vX.Y.Z` tag is pushed, by either release
-  path below.
-- **Custom `release-{patch,minor,major,beta}`**: one-click release from the UI.
-  `cut-release.sh` bumps the version, stamps the CHANGELOG, commits, tags, and
-  pushes `main` + tag — but does **not** publish. The pushed tag triggers the `v*`
-  pipeline, which publishes. So a one-click release shows two runs (cut, then
-  publish). Needs Secured `RELEASE_TOKEN` (repository:write); `NPM_TOKEN` is used by
-  the `v*` step. Local `npm run release:*` is the equivalent fallback (same tag →
-  same `v*` publish).
+- **Tags** (`v*`): build the library (`build-lib.sh`), publish it (`publish.sh`),
+  then start the docs deploy (`trigger-docs-deploy.sh`, which POSTs to the Bitbucket
+  API to run the `deploy-docs` pipeline). Fires whenever a `vX.Y.Z` tag is pushed.
+- **Custom `release-{patch,minor,major,beta}`**: one-click release from the UI, run
+  from `dev`. `cut-release.sh` merges `dev`->`main`, bumps, stamps the CHANGELOG,
+  commits, tags, pushes `main` + tag, then back-merges `main`->`dev`. It does **not**
+  publish — the pushed tag triggers the `v*` pipeline. Needs Secured `RELEASE_TOKEN`
+  (`repository:write` + `pipeline:write`). Local `npm run release:*` is the fallback
+  (merge `dev`->`main` yourself first).
 - **Custom `deploy-docs`**: build and deploy the showcase to the IDS prototypes
   CDN.
 
