@@ -4892,7 +4892,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-t-mono-inline-bg-color",
         "value": "var(--surface-secondary)",
-        "notes": "Per-axis override for the `.t-mono-inline-bg` utility's color."
+        "notes": "Per-axis override for the `.t-mono-inline` utility's background color."
       },
       {
         "name": "--ds-t-mono-inline-radius",
@@ -4922,7 +4922,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-t-mono-block-bg-color",
         "value": "var(--surface-secondary)",
-        "notes": "Per-axis override for the `.t-mono-block-bg` utility's color."
+        "notes": "Per-axis override for the `.t-mono-block` utility's background color."
       },
       {
         "name": "--ds-t-mono-block-border-color",

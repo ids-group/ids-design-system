@@ -333,6 +333,12 @@ export class SelectComponent
     if (this.isDisabled() || this.readOnly() || this.preview.staticPreview()) {
       return;
     }
+    // Only handle keys aimed at the trigger itself — a keydown bubbling up from
+    // the nested clear <button> must reach its own activation (Enter/Space to
+    // clear), not be hijacked here into reopening the panel.
+    if (event.target !== event.currentTarget) {
+      return;
+    }
     const key = event.key;
     if (!this.open()) {
       if (

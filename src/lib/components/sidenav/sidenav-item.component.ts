@@ -45,8 +45,10 @@ export class SidenavItemComponent {
   readonly hasAlert = input(false, { transform: booleanAttribute });
   /** Disables the item — non-navigable and styled as inactive. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Emitted on click, before navigation. Call `preventDefault()` on the event
-   *  to intercept — e.g. a docs sidebar driving its own scroll-spy. */
+  /** Emitted on click, carrying the `MouseEvent`. On an `href` item,
+   *  `preventDefault()` intercepts navigation (e.g. a docs sidebar driving
+   *  scroll-spy); a `routerLink` item navigates regardless — Angular's
+   *  RouterLink ignores `defaultPrevented` — so treat it as a click hook there. */
   readonly activate = output<MouseEvent>();
 
   private readonly sidenav = inject(SIDENAV, { optional: true });

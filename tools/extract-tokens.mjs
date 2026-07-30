@@ -106,7 +106,7 @@ const T_PROPS = [
   'line-height',
   'letter-spacing',
   'text-transform',
-  'background-color',
+  'bg-color',
   'border-color',
   'border-radius',
   'radius',
@@ -119,7 +119,8 @@ function typographyNote(name) {
   const prop = T_PROPS.find((p) => rest.endsWith('-' + p));
   if (!prop) return null;
   const util = rest.slice(0, rest.length - prop.length - 1);
-  return `Per-axis override for the \`.t-${util}\` utility's ${prop.replace(/-/g, ' ')}.`;
+  const label = prop === 'bg-color' ? 'background color' : prop.replace(/-/g, ' ');
+  return `Per-axis override for the \`.t-${util}\` utility's ${label}.`;
 }
 
 const COLOR_VALUE =

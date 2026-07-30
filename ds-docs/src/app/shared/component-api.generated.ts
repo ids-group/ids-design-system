@@ -4050,7 +4050,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Emitted on click, before navigation. Call `preventDefault()` on the event to intercept — e.g. a docs sidebar driving its own scroll-spy."
+        "description": "Emitted on click, carrying the `MouseEvent`. On an `href` item, `preventDefault()` intercepts navigation (e.g. a docs sidebar driving scroll-spy); a `routerLink` item navigates regardless — Angular's RouterLink ignores `defaultPrevented` — so treat it as a click hook there."
       }
     ]
   },
