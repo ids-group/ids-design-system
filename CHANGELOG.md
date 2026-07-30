@@ -63,6 +63,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   hard-coded to `"N notifications"`; set `countLabel` for non-notification counts (`'items in cart'`,
   `'results'`, …).
 
+- **`ds-avatar` gains deterministic seeded tinting.** Pass `[seed]` (a user id, email or name) and the
+  avatar derives a stable per-person background + auto-contrast text colour, so the same person gets the
+  same colour across the product; `[avoidHues]` excludes hue arcs (e.g. a brand colour), and `[tint]` now
+  also accepts `'neutral'`. The maths ships standalone too — `avatarTint(seed, options)` returns an OKLCH
+  background (`AvatarTintOptions`: `avoidHues` / `lightness` / `chroma` / `foreground`) with a
+  WCAG-luminance black-or-white foreground, and `initialsFrom(first, last)` (which also accepts a single
+  full-name string) — both exported from the package root.
+
 ### Fixed
 
 - **`ds-avatar`: `--ds-avatar-size` now applies at every size, not just `md`.** The `xs`/`sm`/`lg`

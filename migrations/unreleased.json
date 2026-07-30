@@ -1,0 +1,143 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "size-type-icon-button-to-dssize",
+      "kind": "type-rename",
+      "old": "IconButtonSize",
+      "new": "DsSize",
+      "note": "The per-component size scale is now the shared `DsSize` ('sm'|'md'|'lg'), exported from the package root. Rename this type BEFORE `ButtonSize` — this identifier contains it, so an unordered replace would corrupt it. Collapse any duplicate `DsSize` imports that result.",
+      "searchHints": ["IconButtonSize"]
+    },
+    {
+      "id": "size-type-button-to-dssize",
+      "kind": "type-rename",
+      "old": "ButtonSize",
+      "new": "DsSize",
+      "note": "Removed — use the shared `DsSize` from the package root. Rename `IconButtonSize` FIRST (it contains `ButtonSize`). Collapse any duplicate `DsSize` imports.",
+      "searchHints": ["ButtonSize"]
+    },
+    {
+      "id": "size-type-input-to-dssize",
+      "kind": "type-rename",
+      "old": "InputSize",
+      "new": "DsSize",
+      "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports if you import several of these together.",
+      "searchHints": ["InputSize"]
+    },
+    {
+      "id": "size-type-select-to-dssize",
+      "kind": "type-rename",
+      "old": "SelectSize",
+      "new": "DsSize",
+      "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
+      "searchHints": ["SelectSize"]
+    },
+    {
+      "id": "size-type-search-to-dssize",
+      "kind": "type-rename",
+      "old": "SearchSize",
+      "new": "DsSize",
+      "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
+      "searchHints": ["SearchSize"]
+    },
+    {
+      "id": "size-type-checkbox-to-dssize",
+      "kind": "type-rename",
+      "old": "CheckboxSize",
+      "new": "DsSize",
+      "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
+      "searchHints": ["CheckboxSize"]
+    },
+    {
+      "id": "size-type-radio-to-dssize",
+      "kind": "type-rename",
+      "old": "RadioSize",
+      "new": "DsSize",
+      "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
+      "searchHints": ["RadioSize"]
+    },
+    {
+      "id": "size-type-switch-to-dssize",
+      "kind": "type-rename",
+      "old": "SwitchSize",
+      "new": "DsSize",
+      "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
+      "searchHints": ["SwitchSize"]
+    },
+    {
+      "id": "size-type-spinner-to-dssize",
+      "kind": "type-rename",
+      "old": "SpinnerSize",
+      "new": "DsSize",
+      "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
+      "searchHints": ["SpinnerSize"]
+    },
+    {
+      "id": "size-type-textarea-to-dssize",
+      "kind": "type-rename",
+      "old": "TextareaSize",
+      "new": "DsSize",
+      "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
+      "searchHints": ["TextareaSize"]
+    },
+    {
+      "id": "size-type-number-stepper-to-dssize",
+      "kind": "type-rename",
+      "old": "NumberStepperSize",
+      "new": "DsSize",
+      "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
+      "searchHints": ["NumberStepperSize"]
+    },
+    {
+      "id": "size-type-date-picker-to-dssize",
+      "kind": "type-rename",
+      "old": "DatePickerSize",
+      "new": "DsSize",
+      "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
+      "searchHints": ["DatePickerSize"]
+    },
+    {
+      "id": "size-type-time-picker-to-dssize",
+      "kind": "type-rename",
+      "old": "TimePickerSize",
+      "new": "DsSize",
+      "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
+      "searchHints": ["TimePickerSize"]
+    },
+    {
+      "id": "size-type-drawer-to-dssize",
+      "kind": "type-rename",
+      "old": "DrawerSize",
+      "new": "DsSize",
+      "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
+      "searchHints": ["DrawerSize"]
+    },
+    {
+      "id": "size-type-autocomplete-to-dssize",
+      "kind": "type-rename",
+      "old": "AutocompleteSize",
+      "new": "DsSize",
+      "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
+      "searchHints": ["AutocompleteSize"]
+    },
+    {
+      "id": "field-reserve-message-default-on",
+      "kind": "behavior",
+      "old": null,
+      "new": null,
+      "note": "Message-bearing fields (ds-input, ds-textarea, ds-select, ds-autocomplete, ds-search, ds-date-picker, ds-number-stepper, and the other message-carrying controls) now reserve one message line of height by DEFAULT via the new reserveMessage input (default true). Was: the footer existed only when a hint/error/counter was present, so a field with no message was shorter and grew when a message first appeared. Purely visual — nothing stops compiling. To restore the old collapsing behaviour on a field, set [reserveMessage]=\"false\". Review form vertical rhythm: the reserved row sits ~23px under the control, so tightly-stacked field pairs may read as a gap.",
+      "searchHints": ["<ds-input", "<ds-textarea", "<ds-select", "reserveMessage"]
+    }
+  ],
+  "informational": [
+    "AvatarSize, ModalSize and ContainerSize are NOT removed — they remain and now extend DsSize ('xs' | DsSize, DsSize | 'xl' | 'fullscreen', DsSize | 'xl' | 'full'); no change needed for consumers using those three.",
+    "ds-avatar gains deterministic seeded tinting: [seed]/[avoidHues] inputs derive a stable per-person OKLCH background + auto-contrast text; standalone exports avatarTint(seed, options), AvatarTintOptions and initialsFrom(first, last) (also accepts a full-name string), and [tint] now also accepts 'neutral' — additive, off by default, no code change.",
+    "New override tokens --ds-sidenav-item-label-weight and --ds-modal-title-weight (previously baked into font: shorthands); defaults unchanged (--font-weight-semibold / --font-weight-bold) — additive, no code change.",
+    "ds-table gains opt-in inputs total (server-side paging: feed the full row count and pass one pre-sliced page), sortingOrder (e.g. ['asc','desc'] to drop the unsorted state), animateHeight (tween body height on a row-set change), scrollToTopOnPageChange, plus TableColumn.srLabel (visually-hidden header name) — all additive, off by default, no code change.",
+    "ds-search gains a size input (sm/md/lg); default md keeps the prior 36px height, so existing consumers are unaffected — additive, no code change.",
+    "ds-badge gains a countLabel input (default 'notifications') for the count's accessible-label noun — additive, no code change.",
+    "Bugfixes, no code change: --ds-avatar-size now applies at every size (not only md); ds-table clamps an out-of-range page after a client-side filter shrinks the result set; collapsed ds-sidenav no longer overflows by 1px; dsTooltip now listens on focusin/focusout so keyboard focus toggles the tip and re-rendered anchors no longer strand panels.",
+    "ds-select clear-x is now keyboard-operable: the trigger became <div role=\"combobox\" tabindex=\"0\"> and the clear is a real <button aria-label=\"Clear selection\">. A consumer targeting the old <button role=combobox> trigger or the <span> clear in CSS/tests must retarget — DOM/behavior only, no compile break."
+  ]
+}
