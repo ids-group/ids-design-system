@@ -134,7 +134,7 @@ export class MenuItemComponent implements OnDestroy {
   }
 
   openSubmenu(): void {
-    if (this.submenuRef || !this.submenu()) {
+    if (this.disabled() || this.submenuRef || !this.submenu()) {
       return;
     }
     const trigger = this.hostElement.nativeElement;
