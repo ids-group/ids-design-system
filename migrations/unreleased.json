@@ -146,11 +146,51 @@
       "searchHints": ["[withAddonRight]"]
     },
     {
+      "id": "app-shell-selector-to-app-layout",
+      "kind": "selector-rename",
+      "old": "ds-app-shell",
+      "new": "ds-app-layout",
+      "note": "Component renamed (shipped as ds-app-shell in the tagged 0.6.3 source). Behaviour unchanged — rename the element and its closing tag. Also rename the class, service and tokens (separate entries below).",
+      "searchHints": ["ds-app-shell"]
+    },
+    {
+      "id": "app-shell-class-to-app-layout",
+      "kind": "type-rename",
+      "old": "AppShellComponent",
+      "new": "AppLayoutComponent",
+      "note": "The exported component class renamed alongside the ds-app-shell → ds-app-layout selector. Update imports / type references.",
+      "searchHints": ["AppShellComponent"]
+    },
+    {
+      "id": "shell-scroll-service-to-layout-scroll-service",
+      "kind": "type-rename",
+      "old": "ShellScrollService",
+      "new": "LayoutScrollService",
+      "note": "The exported scroll-to-top-on-navigation service renamed with the app-shell → app-layout rename. Update inject()/import references; the scrollToTop() API is unchanged.",
+      "searchHints": ["ShellScrollService"]
+    },
+    {
+      "id": "app-shell-tokens-to-app-layout",
+      "kind": "token-rename",
+      "old": "--ds-app-shell-",
+      "new": "--ds-app-layout-",
+      "note": "Prefix rename for the four layout tokens: --ds-app-shell-pad-x / -pad-y / -content-max-width / -height → --ds-app-layout-*. DS-owned tokens only (no others ship under this prefix); a consumer's own --ds-app-shell-* variable is out of scope. Confirm the new name exists in the installed package.",
+      "searchHints": ["--ds-app-shell-"]
+    },
+    {
+      "id": "select-clear-button-dom-change",
+      "kind": "behavior",
+      "old": null,
+      "new": null,
+      "note": "ds-select's clear-x is now keyboard-operable: the trigger changed from <button role=\"combobox\"> to <div role=\"combobox\" tabindex=\"0\">, and the clear affordance from a mouse-only <span aria-hidden> to a real <button aria-label=\"Clear selection\">. Nothing stops compiling, but a consumer that targeted the old <button role=combobox> trigger or the <span> clear in CSS selectors or e2e/unit tests must retarget to the div / the button.",
+      "searchHints": ["ds-select", "role=\"combobox\"", "Clear selection"]
+    },
+    {
       "id": "field-reserve-message-default-on",
       "kind": "behavior",
       "old": null,
       "new": null,
-      "note": "Message-bearing fields (ds-input, ds-textarea, ds-select, ds-autocomplete, ds-search, ds-date-picker, ds-number-stepper, and the other message-carrying controls) now reserve one message line of height by DEFAULT via the new reserveMessage input (default true). Was: the footer existed only when a hint/error/counter was present, so a field with no message was shorter and grew when a message first appeared. Purely visual — nothing stops compiling. To restore the old collapsing behaviour on a field, set [reserveMessage]=\"false\". Review form vertical rhythm: the reserved row sits ~23px under the control, so tightly-stacked field pairs may read as a gap.",
+      "note": "Message-bearing fields (ds-input, ds-textarea, ds-select, ds-autocomplete, ds-multi-select, ds-checkbox, ds-radio, ds-radio-group, ds-switch, ds-slider, ds-otp-input, ds-date-picker, ds-time-picker, ds-color-picker) now reserve one message line of height by DEFAULT via the new reserveMessage input (default true). Was: the footer existed only when a hint/error/counter was present, so a field with no message was shorter and grew when a message first appeared. Purely visual — nothing stops compiling. To restore the old collapsing behaviour on a field, set [reserveMessage]=\"false\". Review form vertical rhythm: the reserved row sits ~23px under the control, so tightly-stacked field pairs may read as a gap. (ds-search and ds-number-stepper have no message row and are NOT affected.)",
       "searchHints": ["<ds-input", "<ds-textarea", "<ds-select", "reserveMessage"]
     }
   ],
@@ -161,7 +201,8 @@
     "ds-table gains opt-in inputs total (server-side paging: feed the full row count and pass one pre-sliced page), sortingOrder (e.g. ['asc','desc'] to drop the unsorted state), animateHeight (tween body height on a row-set change), scrollToTopOnPageChange, plus TableColumn.srLabel (visually-hidden header name) — all additive, off by default, no code change.",
     "ds-search gains a size input (sm/md/lg); default md keeps the prior 36px height, so existing consumers are unaffected — additive, no code change.",
     "ds-badge gains a countLabel input (default 'notifications') for the count's accessible-label noun — additive, no code change.",
-    "Bugfixes, no code change: --ds-avatar-size now applies at every size (not only md); ds-table clamps an out-of-range page after a client-side filter shrinks the result set; collapsed ds-sidenav no longer overflows by 1px; dsTooltip now listens on focusin/focusout so keyboard focus toggles the tip and re-rendered anchors no longer strand panels.",
-    "ds-select clear-x is now keyboard-operable: the trigger became <div role=\"combobox\" tabindex=\"0\"> and the clear is a real <button aria-label=\"Clear selection\">. A consumer targeting the old <button role=combobox> trigger or the <span> clear in CSS/tests must retarget — DOM/behavior only, no compile break."
+    "Bugfixes, no code change: --ds-avatar-size now applies at every size (not only md); ds-table clamps an out-of-range page after a client-side filter shrinks the result set; collapsed ds-sidenav no longer overflows by 1px; dsTooltip now listens on focusin/focusout so keyboard focus toggles the tip and re-rendered anchors no longer strand panels; stacked overlays (modal/drawer/bottom-sheet) no longer unlock body scroll under each other (shared ref-counted BodyScrollLockService).",
+    "ds-sidenav-item gains an optional (activate) output — emits the click MouseEvent; preventDefault() intercepts navigation on an href item, but a routerLink item navigates regardless. Additive, no code change.",
+    "BodyScrollLockService is now a public export — inject it to make a consumer's own full-screen overlay share the DS body-scroll lock (paired lock()/unlock()). Additive, no code change."
   ]
 }

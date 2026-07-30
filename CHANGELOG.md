@@ -41,6 +41,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `[withAddon]` / `[withAddonRight]` from your templates — a boxed addon renders identically, and a bare
   icon that previously (mis)set the flag regains its proper inset (a bugfix).
 
+- **BREAKING: `ds-app-shell` is renamed to `ds-app-layout`.** The slotted fixed-frame application layout
+  shipped as `ds-app-shell` in the tagged 0.6.3 source; this renames the selector (`ds-app-shell` →
+  `ds-app-layout`), the component class (`AppShellComponent` → `AppLayoutComponent`), the exported scroll
+  service (`ShellScrollService` → `LayoutScrollService`), and its four tokens (`--ds-app-shell-pad-x` /
+  `-pad-y` / `-content-max-width` / `-height` → `--ds-app-layout-*`). Behaviour is unchanged — rename the
+  references (see `migrations/`). A consumer still on 0.6.3's `ds-app-shell` must migrate.
+
 ### Added
 
 - **New override tokens for two baked-in weights: `--ds-sidenav-item-label-weight` and
@@ -87,11 +94,21 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   WCAG-luminance black-or-white foreground, and `initialsFrom(first, last)` (which also accepts a single
   full-name string) — both exported from the package root.
 
-- **`ds-sidenav-item` gains an `(activate)` output.** Emitted on click before navigation, carrying the
-  `MouseEvent` — call `preventDefault()` on it to intercept (e.g. a sidebar driving its own scroll-spy)
-  while keeping the item's active/badge/tooltip/collapse behaviour. Additive; omit it to navigate as before.
+- **`ds-sidenav-item` gains an `(activate)` output.** Emitted on click, carrying the `MouseEvent`. On an
+  `href` item, `preventDefault()` intercepts navigation (e.g. a sidebar driving its own scroll-spy); a
+  `routerLink` item navigates regardless (Angular's `RouterLink` ignores `defaultPrevented`), so it's a
+  click hook there. Additive; omit it to navigate as before, keeping active/badge/tooltip/collapse intact.
+
+- **`BodyScrollLockService` is now exported.** The ref-counted body-scroll lock that `ds-modal` /
+  `ds-drawer` / `ds-bottom-sheet` share is injectable, so a consumer's own full-screen overlay can
+  participate in the same lock instead of fighting it (`lock()` / `unlock()`, paired).
 
 ### Fixed
+
+- **Stacked overlays no longer unlock body scroll under each other.** `ds-modal`, `ds-drawer` and
+  `ds-bottom-sheet` each wrote `body.style.overflow` directly, so closing the outer of two stacked
+  overlays re-enabled page scroll while the inner one was still open. They now share a ref-counted
+  `BodyScrollLockService` — the first lock hides `body` overflow, the last unlock restores it.
 
 - **`ds-avatar`: `--ds-avatar-size` now applies at every size, not just `md`.** The `xs`/`sm`/`lg`
   modifiers set `width`/`height` directly, silently ignoring a consumer's `--ds-avatar-size`; they now
