@@ -1,5 +1,5 @@
 {
-  "version": "unreleased",
+  "version": "0.7.0",
   "items": [
     {
       "id": "size-type-icon-button-to-dssize",
@@ -7,7 +7,9 @@
       "old": "IconButtonSize",
       "new": "DsSize",
       "note": "The per-component size scale is now the shared `DsSize` ('sm'|'md'|'lg'), exported from the package root. Rename this type BEFORE `ButtonSize` — this identifier contains it, so an unordered replace would corrupt it. Collapse any duplicate `DsSize` imports that result.",
-      "searchHints": ["IconButtonSize"]
+      "searchHints": [
+        "IconButtonSize"
+      ]
     },
     {
       "id": "size-type-button-to-dssize",
@@ -15,7 +17,9 @@
       "old": "ButtonSize",
       "new": "DsSize",
       "note": "Removed — use the shared `DsSize` from the package root. Rename `IconButtonSize` FIRST (it contains `ButtonSize`). Collapse any duplicate `DsSize` imports.",
-      "searchHints": ["ButtonSize"]
+      "searchHints": [
+        "ButtonSize"
+      ]
     },
     {
       "id": "size-type-input-to-dssize",
@@ -23,7 +27,9 @@
       "old": "InputSize",
       "new": "DsSize",
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports if you import several of these together.",
-      "searchHints": ["InputSize"]
+      "searchHints": [
+        "InputSize"
+      ]
     },
     {
       "id": "size-type-select-to-dssize",
@@ -31,7 +37,9 @@
       "old": "SelectSize",
       "new": "DsSize",
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
-      "searchHints": ["SelectSize"]
+      "searchHints": [
+        "SelectSize"
+      ]
     },
     {
       "id": "size-type-search-to-dssize",
@@ -39,7 +47,9 @@
       "old": "SearchSize",
       "new": "DsSize",
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
-      "searchHints": ["SearchSize"]
+      "searchHints": [
+        "SearchSize"
+      ]
     },
     {
       "id": "size-type-checkbox-to-dssize",
@@ -47,7 +57,9 @@
       "old": "CheckboxSize",
       "new": "DsSize",
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
-      "searchHints": ["CheckboxSize"]
+      "searchHints": [
+        "CheckboxSize"
+      ]
     },
     {
       "id": "size-type-radio-to-dssize",
@@ -55,7 +67,9 @@
       "old": "RadioSize",
       "new": "DsSize",
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
-      "searchHints": ["RadioSize"]
+      "searchHints": [
+        "RadioSize"
+      ]
     },
     {
       "id": "size-type-switch-to-dssize",
@@ -63,7 +77,9 @@
       "old": "SwitchSize",
       "new": "DsSize",
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
-      "searchHints": ["SwitchSize"]
+      "searchHints": [
+        "SwitchSize"
+      ]
     },
     {
       "id": "size-type-spinner-to-dssize",
@@ -71,7 +87,9 @@
       "old": "SpinnerSize",
       "new": "DsSize",
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
-      "searchHints": ["SpinnerSize"]
+      "searchHints": [
+        "SpinnerSize"
+      ]
     },
     {
       "id": "size-type-textarea-to-dssize",
@@ -79,7 +97,9 @@
       "old": "TextareaSize",
       "new": "DsSize",
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
-      "searchHints": ["TextareaSize"]
+      "searchHints": [
+        "TextareaSize"
+      ]
     },
     {
       "id": "size-type-number-stepper-to-dssize",
@@ -87,7 +107,9 @@
       "old": "NumberStepperSize",
       "new": "DsSize",
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
-      "searchHints": ["NumberStepperSize"]
+      "searchHints": [
+        "NumberStepperSize"
+      ]
     },
     {
       "id": "size-type-date-picker-to-dssize",
@@ -95,7 +117,9 @@
       "old": "DatePickerSize",
       "new": "DsSize",
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
-      "searchHints": ["DatePickerSize"]
+      "searchHints": [
+        "DatePickerSize"
+      ]
     },
     {
       "id": "size-type-time-picker-to-dssize",
@@ -103,7 +127,9 @@
       "old": "TimePickerSize",
       "new": "DsSize",
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
-      "searchHints": ["TimePickerSize"]
+      "searchHints": [
+        "TimePickerSize"
+      ]
     },
     {
       "id": "size-type-drawer-to-dssize",
@@ -111,7 +137,9 @@
       "old": "DrawerSize",
       "new": "DsSize",
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
-      "searchHints": ["DrawerSize"]
+      "searchHints": [
+        "DrawerSize"
+      ]
     },
     {
       "id": "size-type-autocomplete-to-dssize",
@@ -119,7 +147,9 @@
       "old": "AutocompleteSize",
       "new": "DsSize",
       "note": "Removed — use the shared `DsSize` from the package root; collapse any duplicate `DsSize` imports.",
-      "searchHints": ["AutocompleteSize"]
+      "searchHints": [
+        "AutocompleteSize"
+      ]
     },
     {
       "id": "pagination-page-change-to-current-page-change",
@@ -127,7 +157,10 @@
       "old": "ds-pagination[pageChange]",
       "new": "currentPageChange",
       "note": "The manual (pageChange) output is removed; the currentPage two-way model already emits (currentPageChange) on every page change (including the reset to page 1 after a size change). Rename (pageChange)=\"...\" to (currentPageChange)=\"...\" on ds-pagination. (pageSizeChange) is UNCHANGED — it is now the pageSize model's implicit output, same name and payload; [(currentPage)] / [(pageSize)] two-way bindings need no change.",
-      "searchHints": ["(pageChange)", "pageChange"]
+      "searchHints": [
+        "(pageChange)",
+        "pageChange"
+      ]
     },
     {
       "id": "input-with-addon-removed",
@@ -135,7 +168,9 @@
       "old": "ds-input[withAddon]",
       "new": null,
       "note": "Removed (distinct from withAddonRight below — match the exact attribute; withAddon is a substring of withAddonRight). The flush-addon layout is now derived from the DOM: a boxed .addon projected into [dsInputPrefix] (<span dsInputPrefix class=\"addon\">…</span>) sits flush automatically via :has(), and a bare <ds-icon dsInputPrefix> keeps its inset. Delete the [withAddon] attribute — a boxed addon renders identically; a bare icon that used the flag regains its proper left inset (bugfix).",
-      "searchHints": ["[withAddon]"]
+      "searchHints": [
+        "[withAddon]"
+      ]
     },
     {
       "id": "input-with-addon-right-removed",
@@ -143,7 +178,9 @@
       "old": "ds-input[withAddonRight]",
       "new": null,
       "note": "Removed — the trailing counterpart of withAddon. A boxed .addon.right projected into [dsInputSuffix] now sits flush automatically via :has(). Delete the [withAddonRight] attribute.",
-      "searchHints": ["[withAddonRight]"]
+      "searchHints": [
+        "[withAddonRight]"
+      ]
     },
     {
       "id": "app-shell-selector-to-app-layout",
@@ -151,7 +188,9 @@
       "old": "ds-app-shell",
       "new": "ds-app-layout",
       "note": "Component renamed (shipped as ds-app-shell in the tagged 0.6.3 source). Behaviour unchanged — rename the element and its closing tag. Also rename the class, service and tokens (separate entries below).",
-      "searchHints": ["ds-app-shell"]
+      "searchHints": [
+        "ds-app-shell"
+      ]
     },
     {
       "id": "app-shell-class-to-app-layout",
@@ -159,7 +198,9 @@
       "old": "AppShellComponent",
       "new": "AppLayoutComponent",
       "note": "The exported component class renamed alongside the ds-app-shell → ds-app-layout selector. Update imports / type references.",
-      "searchHints": ["AppShellComponent"]
+      "searchHints": [
+        "AppShellComponent"
+      ]
     },
     {
       "id": "shell-scroll-service-to-layout-scroll-service",
@@ -167,7 +208,9 @@
       "old": "ShellScrollService",
       "new": "LayoutScrollService",
       "note": "The exported scroll-to-top-on-navigation service renamed with the app-shell → app-layout rename. Update inject()/import references; the scrollToTop() API is unchanged.",
-      "searchHints": ["ShellScrollService"]
+      "searchHints": [
+        "ShellScrollService"
+      ]
     },
     {
       "id": "app-shell-tokens-to-app-layout",
@@ -175,7 +218,9 @@
       "old": "--ds-app-shell-",
       "new": "--ds-app-layout-",
       "note": "Prefix rename for the four layout tokens: --ds-app-shell-pad-x / -pad-y / -content-max-width / -height → --ds-app-layout-*. DS-owned tokens only (no others ship under this prefix); a consumer's own --ds-app-shell-* variable is out of scope. Confirm the new name exists in the installed package.",
-      "searchHints": ["--ds-app-shell-"]
+      "searchHints": [
+        "--ds-app-shell-"
+      ]
     },
     {
       "id": "select-clear-button-dom-change",
@@ -183,7 +228,11 @@
       "old": null,
       "new": null,
       "note": "ds-select's clear-x is now keyboard-operable: the trigger changed from <button role=\"combobox\"> to <div role=\"combobox\" tabindex=\"0\">, and the clear affordance from a mouse-only <span aria-hidden> to a real <button aria-label=\"Clear selection\">. Nothing stops compiling, but a consumer that targeted the old <button role=combobox> trigger or the <span> clear in CSS selectors or e2e/unit tests must retarget to the div / the button.",
-      "searchHints": ["ds-select", "role=\"combobox\"", "Clear selection"]
+      "searchHints": [
+        "ds-select",
+        "role=\"combobox\"",
+        "Clear selection"
+      ]
     },
     {
       "id": "field-reserve-message-default-on",
@@ -191,7 +240,12 @@
       "old": null,
       "new": null,
       "note": "Message-bearing fields (ds-input, ds-textarea, ds-select, ds-autocomplete, ds-multi-select, ds-checkbox, ds-radio, ds-radio-group, ds-switch, ds-slider, ds-otp-input, ds-date-picker, ds-time-picker, ds-color-picker) now reserve one message line of height by DEFAULT via the new reserveMessage input (default true). Was: the footer existed only when a hint/error/counter was present, so a field with no message was shorter and grew when a message first appeared. Purely visual — nothing stops compiling. To restore the old collapsing behaviour on a field, set [reserveMessage]=\"false\". Review form vertical rhythm: the reserved row sits ~23px under the control, so tightly-stacked field pairs may read as a gap. (ds-search and ds-number-stepper have no message row and are NOT affected.)",
-      "searchHints": ["<ds-input", "<ds-textarea", "<ds-select", "reserveMessage"]
+      "searchHints": [
+        "<ds-input",
+        "<ds-textarea",
+        "<ds-select",
+        "reserveMessage"
+      ]
     }
   ],
   "informational": [

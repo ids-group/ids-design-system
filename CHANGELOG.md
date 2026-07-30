@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.7.0 — 2026-07-30
+
 ### Changed
 
 - **BREAKING: the control `size` scale is unified into one shared `DsSize` type.** The per-component
