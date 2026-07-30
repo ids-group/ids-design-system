@@ -1,9 +1,5 @@
 @use '../../styles/press' as press;
 
-/* ============================================================
-   TABS
-   ============================================================ */
-
 :host {
   /* Public --ds-tab*-/-tabs-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_tabs-divider:          var(--ds-tabs-divider,          var(--border-divider));

@@ -3,7 +3,6 @@
     :host { display: block; }
     .section { scroll-margin-top: calc(var(--topbar-h) + var(--space-4)); }
 
-    /* Page hero — top of docs landing */
     .page-hero {
       padding-bottom: var(--space-12);
       border-bottom: var(--border-width-default) solid var(--border-divider);
@@ -29,7 +28,6 @@
       flex-wrap: wrap;
     }
 
-    /* Start-here section */
     .start-section { display: block; }
     .eyebrow { color: var(--primary); }
     .title {
@@ -58,7 +56,6 @@
       @include bp.down(md) { grid-template-columns: 1fr; }
     }
 
-    /* How-to card */
     .howto-card {
       background: var(--surface-default);
       border: var(--border-width-default) solid var(--border-divider);
@@ -89,7 +86,6 @@
     .t-link { color: var(--text-link); text-decoration: none; }
     .t-link:hover { text-decoration: underline; }
 
-    /* Quick-link tiles */
     .start-links {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));

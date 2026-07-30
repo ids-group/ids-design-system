@@ -1,9 +1,4 @@
-/* ============================================================
-   ---------- SCROLL-WRAP ----------
-   Shared docs layout utility: a horizontal-scroll frame around wide
-   raw content (token tables, density/opacity swatch grids). Not tied
-   to any one component — ds-table owns its own internal scroll frame.
-   ============================================================ */
+/* Shared horizontal-scroll frame for wide raw content (token tables, swatch grids) — not tied to any one component; ds-table owns its own scroll frame. */
 .scroll-wrap {
   --_scroll-wrap-bg-color: var(--docs-scroll-wrap-bg-color, var(--surface-default));
   --_scroll-wrap-radius: var(--docs-scroll-wrap-radius, var(--radius-xl));

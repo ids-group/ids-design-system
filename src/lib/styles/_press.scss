@@ -21,7 +21,7 @@
 // wanting an eased release add `filter`/`transform` to their own transition.
 
 @mixin feedback {
-  &:active:not(:disabled):not([disabled]):not(.is-disabled) {
+  &:active:not(:disabled, [disabled], .is-disabled) {
     filter: brightness(var(--ds-press-brightness, 0.9));
     transform: scale(var(--ds-press-scale, 0.97));
   }

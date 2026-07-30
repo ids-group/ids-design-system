@@ -1,9 +1,5 @@
-/* ============================================================
-   CARD
-   Ported verbatim from vendor/claude-design-ds/components.css (lines 603-614).
-   Padding modifiers (padding-none/-sm/-md/-lg) are our addition; the
-   base .card already carries padding var(--space-6) which equals .padding-md.
-   ============================================================ */
+/* Ported verbatim from vendor/claude-design-ds/components.css (lines 603-614).
+   padding-none/-sm/-md/-lg are our addition; base .card's padding already equals .padding-md. */
 :host {
   display: block;
 

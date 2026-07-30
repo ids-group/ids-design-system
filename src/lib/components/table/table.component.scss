@@ -1,14 +1,5 @@
-/* ============================================================
-   TABLE
-   Ported from CLAUDE_DESIGN_DS/components.css (TABLE block, lines 619–698).
-   Notes:
-   - [aria-sort="ascending"] / [aria-sort="descending"] replaced with
-     class-based .sorted-asc / .sorted-desc (no a11y in this prototype).
-   - The cell-content shimmer placeholder uses the GLOBAL `.skeleton` class.
-     `.table.skeleton-mode` is the row-level loading flag — distinct so the
-     global class is not shadowed.
-   - .is-forced-* selectors are docs-only and live in _forced-states.scss.
-   ============================================================ */
+/* `.table.skeleton-mode` is the row-level loading flag — named distinctly so it
+   does not shadow the global `.skeleton` cell-shimmer class. */
 
 :host {
   display: block;

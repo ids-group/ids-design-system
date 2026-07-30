@@ -1,4 +1,3 @@
-export type InputSize = 'sm' | 'md' | 'lg';
 export type InputType =
   | 'text'
   | 'email'

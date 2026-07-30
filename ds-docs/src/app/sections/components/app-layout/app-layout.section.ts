@@ -34,7 +34,8 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppLayoutSection {
-  protected readonly collapsed = signal(false);
+  protected readonly collapsedContentSpan = signal(false);
+  protected readonly collapsedFullSpan = signal(false);
   protected readonly unread = signal(true);
 
   protected readonly alertItems: readonly SidenavAlertItem[] = [
@@ -69,8 +70,12 @@ export class AppLayoutSection {
       .map((label) => ({ id: label, label, group: 'Sections', route: '.' }));
   };
 
-  protected toggleCollapsed(): void {
-    this.collapsed.update((value) => !value);
+  protected toggleCollapsedContentSpan(): void {
+    this.collapsedContentSpan.update((value) => !value);
+  }
+
+  protected toggleCollapsedFullSpan(): void {
+    this.collapsedFullSpan.update((value) => !value);
   }
 
   protected markRead(): void {

@@ -22,13 +22,21 @@ import type { ApiProp } from './component-api.types';
             <table>
               <thead>
                 <tr>
-                  <th>Name</th>
+                  <th>
+                    Name
+                  </th>
 
-                  <th>Type</th>
+                  <th>
+                    Type
+                  </th>
 
-                  <th>Default</th>
+                  <th>
+                    Default
+                  </th>
 
-                  <th>Description</th>
+                  <th>
+                    Description
+                  </th>
                 </tr>
               </thead>
 
@@ -41,11 +49,15 @@ import type { ApiProp } from './component-api.types';
                       </span>
 
                       @if (p.required) {
-                        <span class="req" title="required">*</span>
+                        <span class="req" title="required">
+                          *
+                        </span>
                       }
 
                       @if (p.kind === 'model') {
-                        <span class="tag">two-way</span>
+                        <span class="tag">
+                          two-way
+                        </span>
                       }
                     </td>
 
@@ -70,9 +82,13 @@ import type { ApiProp } from './component-api.types';
 
                     <td>
                       @if (p.description) {
-                        <span class="desc">{{ p.description }}</span>
+                        <span class="desc">
+                          {{ p.description }}
+                        </span>
                       } @else {
-                        <span class="desc missing">— needs description —</span>
+                        <span class="desc missing">
+                          — needs description —
+                        </span>
                       }
                     </td>
                   </tr>
@@ -93,13 +109,21 @@ import type { ApiProp } from './component-api.types';
             <table>
               <thead>
                 <tr>
-                  <th>Name</th>
+                  <th>
+                    Name
+                  </th>
 
-                  <th>Type</th>
+                  <th>
+                    Type
+                  </th>
 
-                  <th>Emits</th>
+                  <th>
+                    Emits
+                  </th>
 
-                  <th>Description</th>
+                  <th>
+                    Description
+                  </th>
                 </tr>
               </thead>
 
@@ -119,14 +143,20 @@ import type { ApiProp } from './component-api.types';
                     </td>
 
                     <td>
-                      <span class="muted"> event </span>
+                      <span class="muted">
+                        event
+                      </span>
                     </td>
 
                     <td>
                       @if (p.description) {
-                        <span class="desc">{{ p.description }}</span>
+                        <span class="desc">
+                          {{ p.description }}
+                        </span>
                       } @else {
-                        <span class="desc missing">— needs description —</span>
+                        <span class="desc missing">
+                          — needs description —
+                        </span>
                       }
                     </td>
                   </tr>
@@ -137,14 +167,18 @@ import type { ApiProp } from './component-api.types';
         </details>
       }
     } @else {
-      <p class="unknown">No API metadata for key "{{ key() }}".</p>
+      <p class="unknown">
+        No API metadata for key "{{ key() }}".
+      </p>
     }
 
     <ng-template #typeCell let-p>
       @if (p.union) {
         <span class="uni">
           @for (v of p.union; track v) {
-            <code class="mono chip">{{ v }}</code>
+            <code class="mono chip">
+              {{ v }}
+            </code>
           }
         </span>
       } @else {

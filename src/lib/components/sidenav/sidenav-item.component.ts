@@ -6,6 +6,7 @@ import {
   computed,
   inject,
   input,
+  output,
 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IconComponent } from '../../icons/icon.component';
@@ -44,8 +45,20 @@ export class SidenavItemComponent {
   readonly hasAlert = input(false, { transform: booleanAttribute });
   /** Disables the item — non-navigable and styled as inactive. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Emitted on click, carrying the `MouseEvent`. On an `href` item,
+   *  `preventDefault()` intercepts navigation (e.g. a docs sidebar driving
+   *  scroll-spy); a `routerLink` item navigates regardless — Angular's
+   *  RouterLink ignores `defaultPrevented` — so treat it as a click hook there. */
+  readonly activate = output<MouseEvent>();
 
   private readonly sidenav = inject(SIDENAV, { optional: true });
+
+  protected onActivate(event: MouseEvent): void {
+    if (this.disabled()) {
+      return;
+    }
+    this.activate.emit(event);
+  }
 
   /** Tooltip text shown when collapsed; empty string suppresses the tooltip when expanded. */
   protected readonly collapsedTooltip = computed(() =>

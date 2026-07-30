@@ -29,8 +29,9 @@ export class BadgeComponent {
   readonly count = input<number | null>(null);
   /** Count is capped at this value, shown as `"max+"` beyond it. */
   readonly max = input(99, { transform: numberAttribute });
+  /** Noun used in the count's accessible label — set for non-notification counts (cart, results, …). */
+  readonly countLabel = input('notifications');
 
-  /** Display text for the count, capped at max+. */
   protected readonly countDisplay = computed(() => {
     const value = this.count();
     if (value === null) {
@@ -57,7 +58,7 @@ export class BadgeComponent {
     }
 
     return value > this.max()
-      ? `More than ${this.max()} notifications`
-      : `${value} notifications`;
+      ? `More than ${this.max()} ${this.countLabel()}`
+      : `${value} ${this.countLabel()}`;
   });
 }

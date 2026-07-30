@@ -171,7 +171,6 @@
         <ds-input
           label="Site URL"
           value="member.example.com"
-          [withAddon]="true"
         >
           <span
             dsInputPrefix
@@ -193,7 +192,6 @@
           label="Capacity"
           value="250"
           type="number"
-          [withAddonRight]="true"
         >
           <span
             dsInputSuffix
@@ -246,8 +244,12 @@
     Clicking anywhere in the frame — a leading icon, a prefix/suffix add-on, or
     the padding — focuses the input; only nested controls (a projected button,
     the clear ✕, the password toggle) keep their own click. Same behaviour on
-    <code class="t-mono-inline"> ds-search </code> and
-    <code class="t-mono-inline"> ds-textarea </code>.
+    <code class="t-mono-inline">
+      ds-search
+    </code> and
+    <code class="t-mono-inline">
+      ds-textarea
+    </code>.
   </p>
 
   <div class="grid-3">
@@ -266,7 +268,6 @@
       label="Cap length"
       value="13.55"
       type="number"
-      [withAddonRight]="true"
     >
       <span
         dsInputSuffix
@@ -279,7 +280,6 @@
     <ds-input
       label="Site URL"
       value="member.example.com"
-      [withAddon]="true"
     >
       <span
         dsInputPrefix
@@ -293,7 +293,6 @@
       label="Capacity"
       value="250"
       type="number"
-      [withAddonRight]="true"
     >
       <span
         dsInputSuffix
@@ -435,6 +434,38 @@
       label="Description"
       placeholder="Internal notes…"
       [optional]="true"
+    />
+  </div>
+
+  <!-- ============================================================ Reserved message row -->
+  <h3 class="block-title t-h4">
+    Reserved message row
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      reserveMessage
+    </code> (default on) holds a
+    message line's height even when there's no hint or error, so a form doesn't
+    reflow the moment validation appears. Set
+    <code class="t-mono-inline">
+      [reserveMessage]="false"
+    </code> to collapse it
+    where a shift is fine. The reserved row sits ~23px under the control, so
+    stack reserved fields tighter (≈4px) than bare ones or the gap reads as a
+    hole.
+  </p>
+
+  <div class="grid-2">
+    <ds-input
+      label="Reserves (default)"
+      placeholder="No hint — the row is still held"
+    />
+
+    <ds-input
+      label="Collapsed"
+      placeholder="No row until a message shows"
+      [reserveMessage]="false"
     />
   </div>
 </docs-section>

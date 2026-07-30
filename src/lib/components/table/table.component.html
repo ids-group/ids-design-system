@@ -76,7 +76,14 @@
                   class="th-label"
                   (click)="onSort(col)"
                 >
-                  {{ col.label }}
+                  @if (col.label) {
+                    {{ col.label }}
+                  } @else if (col.srLabel) {
+                    <span class="visually-hidden">
+                      {{ col.srLabel }}
+                    </span>
+                  }
+
                   <ds-icon
                     class="sort-icon"
                     [name]="sortIcon(col)"
@@ -86,7 +93,13 @@
                 </button>
               } @else {
                 <span class="th-label">
-                  {{ col.label }}
+                  @if (col.label) {
+                    {{ col.label }}
+                  } @else if (col.srLabel) {
+                    <span class="visually-hidden">
+                      {{ col.srLabel }}
+                    </span>
+                  }
                 </span>
               }
 
@@ -171,7 +184,11 @@
                 </td>
               }
 
-              @for (col of visibleColumns(); track col.key; let first = $first) {
+              @for (
+                col of visibleColumns();
+                track col.key;
+                let first = $first
+              ) {
                 <td
                   [class.numeric]="col.align === 'right'"
                   [class.pin-first]="first && stickyFirstColumn()"
@@ -255,7 +272,11 @@
                 </td>
               }
 
-              @for (col of visibleColumns(); track col.key; let first = $first) {
+              @for (
+                col of visibleColumns();
+                track col.key;
+                let first = $first
+              ) {
                 <td
                   [class.numeric]="col.align === 'right'"
                   [class.pin-first]="first && stickyFirstColumn()"
@@ -358,7 +379,7 @@
 @if (pageSize(); as size) {
   <div class="pagination-footer">
     <ds-pagination
-      [total]="filteredData().length"
+      [total]="total() ?? filteredData().length"
       [pageSize]="size"
       [pageSizeOptions]="pageSizeOptions()"
       [(currentPage)]="page"
@@ -404,7 +425,9 @@
             {{ value || '(empty)' }}
           </label>
         } @empty {
-          <div class="col-filter-empty">No matches</div>
+          <div class="col-filter-empty">
+            No matches
+          </div>
         }
       </div>
 

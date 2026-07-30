@@ -34,9 +34,9 @@ import {
 import type {
   AutocompleteOption,
   AutocompleteOptionGroup,
-  AutocompleteSize,
   AutocompleteWidth,
 } from './autocomplete.types';
+import type { DsSize } from '../../core/size';
 
 let nextId = 0;
 
@@ -81,7 +81,7 @@ export class AutocompleteComponent<T = unknown>
   /** Allows selecting more than one option, shown as removable tags. */
   readonly multiple = input(false, { transform: booleanAttribute });
   /** Trigger height — sm/md/lg. */
-  readonly size = input<AutocompleteSize>('md');
+  readonly size = input<DsSize>('md');
   /** Trigger width — `fill` stretches to the container, `content` hugs the value. */
   readonly width = input<AutocompleteWidth>('fill');
   /** Placeholder shown in the input when empty. */
@@ -92,6 +92,10 @@ export class AutocompleteComponent<T = unknown>
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Helper text shown below the field. */
   readonly hint = input<string>('');
+  /** Reserve the message-row height even when empty, so the field doesn't shift
+   *  the layout below it when a hint/error appears. Default on — opt out for a
+   *  deliberately collapsing field. */
+  readonly reserveMessage = input(true, { transform: booleanAttribute });
   /** Shows a "Create «text»" row when the typed text matches no option. */
   readonly allowCreate = input(false, { transform: booleanAttribute });
   /** Accessible name for the combobox input. */

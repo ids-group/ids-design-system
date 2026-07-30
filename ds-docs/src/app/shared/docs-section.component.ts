@@ -9,27 +9,7 @@ import { COMPONENT_API } from './component-api.generated';
 import { DocsComponentMetaComponent } from './docs-component-meta.component';
 import { DocsApiTableComponent } from './docs-api-table.component';
 
-/** Section shell shared by every docs section. Owns the `<section>` (with the
- *  `data-anchor`/`id` the sidebar scroll-spy relies on), the eyebrow, the title
- *  and the lede — so that scaffold isn't copy-pasted into ~60 sections.
- *
- *  When `anchor` matches a generated component-API key (and `api` isn't turned
- *  off) the shell AUTO-renders that component's meta-header under the title and
- *  its Inputs/Outputs table at the end. Secondary components living in the same
- *  lib folder (keyed `<anchor>:<ClassName>`, e.g. `ds-accordion-item`) are
- *  appended as their own meta + table blocks — so a section documents its whole
- *  component family for free. Set `[api]="false"` to opt out (e.g. a foundation
- *  whose anchor collides with a component key), or pass `[apiKeys]` to render an
- *  explicit set when the anchor doesn't match the folder (e.g. layout-primitives
- *  → the `layout` family).
- *
- *  Usage:
- *    <docs-section anchor="button" eyebrow="Components" title="Buttons">
- *      <docs-truncation [rules]="truncationRules" />   <!-- optional, lands in the title -->
- *      <span lede>Lede text, may contain <code>inline</code> markup.</span>
- *      ...body blocks...
- *    </docs-section>
- */
+/** Section shell shared by every docs section. Auto-renders the matching component's meta + Inputs/Outputs table when `anchor` hits a component-API key; `[api]="false"` opts out, `[apiKeys]` adds extras. */
 @Component({
   selector: 'docs-section',
   standalone: true,

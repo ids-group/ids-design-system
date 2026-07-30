@@ -44,13 +44,7 @@
   mask-size: 200vw 100%;
   mask-repeat: no-repeat;
 
-  /* Intent: anchor the mask to the viewport so every skeleton shares one
-     page-wide sweep. NB: mask-attachment was dropped from the spec and is a
-     no-op in all current browsers — kept as documented intent only; the
-     lock-step effect currently relies on the shared --skeleton-shimmer-x.
-     See docs/todo.md (page-wide shimmer). */
-  -webkit-mask-attachment: fixed;
-  /* stylelint-disable-next-line property-no-unknown */
-  mask-attachment: fixed;
+  /* Lock-step across the page: the mask position tracks a single viewport-wide
+     driver animated once on :root, so every skeleton reveals the same slice. */
   mask-position: var(--skeleton-shimmer-x, 100vw) 0;
 }

@@ -1,11 +1,5 @@
-// ds-docs is BRAND-NEUTRAL: it renders the base DS look (Mulish + JetBrains
-// Mono per tokens.css). We import the individual DS partials directly to
-// avoid pulling in brand-specific overrides — those live in mm-broker (or
-// any other host app that opts in via `<html data-brand="…">`).
-//
-// Theme contract: base-palette emits theme-independent primitives at :root;
-// theme-activation scopes light + dark under mutually-exclusive selectors.
-// Load base-palette → theme-activation → tokens so role aliases resolve.
+// ds-docs is BRAND-NEUTRAL — imports DS partials directly (not the bundled entry) so no brand override sneaks in.
+// Load order matters: base-palette → theme-activation → tokens, so role aliases resolve.
 @use 'themes/base-palette';
 @use 'styles/theme-activation';
 @use 'styles/tokens';
@@ -42,12 +36,8 @@
 
 html, body { height: 100%; margin: 0; }
 
-// Sidebar-collapsed grid override. Lives at GLOBAL scope because Angular's
-// emulated encapsulation rewrites `:root.<class>` as `[_ngcontent-…]:root`,
-// which the actual <html> element doesn't satisfy (no _ngcontent attr at
-// the root). Putting it here keeps the selector clean and effective.
-// Gated to the desktop (lg+) rail layout — below lg the sidebar renders in
-// the nav drawer, which never reads the collapsed grid column.
+// Global scope only: Angular's emulated encapsulation can't rewrite `:root` on the real <html> element.
+// Gated to lg+ — below that the sidebar renders in the nav drawer, which ignores this column.
 @media (width >= #{bp.$bp-lg}) {
   :root.ds-docs-sidebar-collapsed app-root .layout {
     grid-template-columns: 48px minmax(0, 1fr);

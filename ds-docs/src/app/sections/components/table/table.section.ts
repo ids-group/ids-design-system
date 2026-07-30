@@ -50,10 +50,7 @@ interface ProjectRow {
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './table.section.html',
-  styleUrls: [
-    '../../../shared/section-demo.scss',
-    './table.section.scss',
-  ],
+  styleUrls: ['../../../shared/section-demo.scss', './table.section.scss'],
 })
 export class TableSection {
   protected readonly truncationRules: TruncationRule[] = [
@@ -214,7 +211,10 @@ export class TableSection {
 
   protected readonly stateRow: readonly EventRow[] = this.events.slice(0, 1);
   protected readonly stateSelectedIds = signal(new Set([this.events[0].id]));
-  protected readonly sortableRows: readonly EventRow[] = this.events.slice(0, 4);
+  protected readonly sortableRows: readonly EventRow[] = this.events.slice(
+    0,
+    4,
+  );
 
   protected readonly filterColumns: TableColumn<EventRow>[] = [
     { key: 'project', label: 'Record' },

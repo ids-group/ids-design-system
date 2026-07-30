@@ -10,12 +10,18 @@ const TOKEN: Record<'D' | 'M' | 'Y', string> = { D: 'DD', M: 'MM', Y: 'YYYY' };
 // 2023-11-22: day, month and year are all distinct values.
 const REFERENCE_DATE = new Date(2023, 10, 22);
 
-function buildSpec(order: ('D' | 'M' | 'Y')[], separator: string): DateFormatSpec {
+function buildSpec(
+  order: ('D' | 'M' | 'Y')[],
+  separator: string,
+): DateFormatSpec {
   return {
     order,
     separator,
     mask: order.map((token) => TOKEN[token]).join(separator),
-    segments: order.map((token) => ({ type: token, length: SEGMENT_LENGTH[token] })),
+    segments: order.map((token) => ({
+      type: token,
+      length: SEGMENT_LENGTH[token],
+    })),
   };
 }
 
@@ -35,7 +41,10 @@ function parseFormatTokens(format: string): DateFormatSpec {
   return buildSpec(order.length === 3 ? order : ['M', 'D', 'Y'], separator);
 }
 
-export function resolveDateFormat(locale: string, explicit?: string | null): DateFormatSpec {
+export function resolveDateFormat(
+  locale: string,
+  explicit?: string | null,
+): DateFormatSpec {
   if (explicit) {
     return parseFormatTokens(explicit);
   }
@@ -149,11 +158,9 @@ export function parseDateRange(
   ];
 }
 
-// ---- Segment-aware mask editing --------------------------------------------
-// The field is a sequence of fixed-width digit slots (MM, DD, YYYY) joined by
-// literals ("/", and " – " between the two dates of a range). Edits stay inside
-// the caret's slot and never shift digits across a literal, so correcting one
-// segment can't corrupt its neighbours or fling the caret away.
+// Each field is fixed-width digit slots (MM/DD/YYYY) joined by literals; edits
+// stay inside the caret's slot and never shift digits across a literal, so
+// fixing one segment can't corrupt its neighbours.
 
 /** One editable digit slot in the masked field. */
 export interface FieldSlot {
@@ -216,7 +223,10 @@ function slotPlaceholder(slot: FieldSlot): string {
 }
 
 /** Fixed-width input value: every slot padded to maxLength with `_`, all literals present. */
-export function renderFieldValue(segments: string[], layout: FieldLayout): string {
+export function renderFieldValue(
+  segments: string[],
+  layout: FieldLayout,
+): string {
   let out = '';
   for (let index = 0; index < layout.slots.length; index++) {
     const slot = layout.slots[index];
@@ -231,7 +241,10 @@ export function renderFieldValue(segments: string[], layout: FieldLayout): strin
 
 /** Ordered runs for the overlay: digits (not muted), placeholders (muted), literals (not muted).
  *  Untouched slot → its format letters; partial slot → digits + `_` for the missing positions. */
-export function displayParts(segments: string[], layout: FieldLayout): DisplayPart[] {
+export function displayParts(
+  segments: string[],
+  layout: FieldLayout,
+): DisplayPart[] {
   const parts: DisplayPart[] = [];
   for (let index = 0; index < layout.slots.length; index++) {
     const slot = layout.slots[index];
@@ -266,7 +279,11 @@ function slotStart(layout: FieldLayout, index: number): number {
   return position;
 }
 
-export function slotToCaret(layout: FieldLayout, slot: number, offset: number): number {
+export function slotToCaret(
+  layout: FieldLayout,
+  slot: number,
+  offset: number,
+): number {
   return slotStart(layout, slot) + offset;
 }
 

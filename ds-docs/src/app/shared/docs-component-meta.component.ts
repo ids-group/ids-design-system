@@ -28,7 +28,9 @@ import { COMPONENT_API } from './component-api.generated';
           </span>
 
           <span class="chip">
-            <span class="k"> class </span>{{ api.className }}
+            <span class="k">
+              class
+            </span>{{ api.className }}
           </span>
 
           <span class="badge" [class]="api.status">
@@ -37,7 +39,9 @@ import { COMPONENT_API } from './component-api.generated';
         </div>
 
         @if (api.summary) {
-          <p class="summary">{{ api.summary }}</p>
+          <p class="summary">
+            {{ api.summary }}
+          </p>
         }
 
         <div class="importbar">

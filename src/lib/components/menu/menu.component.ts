@@ -23,15 +23,17 @@ export class MenuComponent {
   private readonly activeIndex = signal(0);
 
   constructor() {
-    // Roving tabindex: exactly one enabled item is tabbable (0), the rest -1.
+    // Roving tabindex: exactly one item is tabbable (0), the rest -1. Disabled
+    // items stay in the order (APG menu practice) — they're focusable so a
+    // tooltip explaining why can be read; activation is blocked in menu-item.
     effect(() => {
       const items = this.items();
       if (!items.length) {
         return;
       }
       let index = this.activeIndex();
-      if (index >= items.length || items[index].disabled()) {
-        index = items.findIndex((item) => !item.disabled());
+      if (index >= items.length) {
+        index = 0;
       }
       items.forEach((item, i) => item.tabbable.set(i === index));
     });
@@ -48,8 +50,8 @@ export class MenuComponent {
     );
     const from = focused >= 0 ? focused : this.activeIndex();
 
-    // Single-character type-ahead: jump to the next enabled item whose label
-    // starts with the typed character.
+    // Single-character type-ahead: jump to the next item whose label starts
+    // with the typed character.
     if (
       event.key.length === 1 &&
       /\S/.test(event.key) &&
@@ -81,16 +83,8 @@ export class MenuComponent {
         return;
     }
     event.preventDefault();
-    // Skip disabled items in the travel direction (guard against all-disabled).
-    const step = event.key === 'ArrowUp' || event.key === 'End' ? -1 : 1;
-    let guard = 0;
-    while (items[next]?.disabled() && guard < count) {
-      next = (next + step + count) % count;
-      guard++;
-    }
-    if (!items[next] || items[next].disabled()) {
-      return;
-    }
+    // Disabled items are NOT skipped — they stay reachable (APG); onClick blocks
+    // their activation.
     this.focusItem(next);
   }
 
@@ -104,7 +98,7 @@ export class MenuComponent {
     for (let offset = 1; offset <= count; offset++) {
       const i = (from + offset) % count;
       const item = items[i];
-      if (!item.disabled() && item.label().toLowerCase().startsWith(needle)) {
+      if (item.label().toLowerCase().startsWith(needle)) {
         this.focusItem(i);
 
         return;

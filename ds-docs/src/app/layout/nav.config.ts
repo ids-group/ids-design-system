@@ -1,10 +1,5 @@
-// Docs TOC config — flat list of links per group, matching every
-// data-anchor registered on the group's section components (Reference items
-// are anchors inside the single tokens-reference section). Items within each
-// group are sorted A→Z by label, EXCEPT Reference, which follows token-reading
-// order (colour first). The rendering order in group-pages.ts mirrors this so
-// the sidenav reads top-to-bottom like the page (scroll-spy highlight stays
-// monotonic).
+// Docs TOC config — one entry per `data-anchor` on the group's section components. Items sort A→Z except Reference
+// (token-reading order); group-pages.ts render order mirrors this so the sidenav/scroll-spy stay monotonic.
 
 export interface NavItem {
   label: string;
@@ -222,7 +217,10 @@ export function areaOfPath(path: string): string {
 }
 
 /** The nav group that owns `anchor` within `area`, or undefined. */
-export function groupForAnchor(area: string, anchor: string): NavGroup | undefined {
+export function groupForAnchor(
+  area: string,
+  anchor: string,
+): NavGroup | undefined {
   return GROUP_BY_ANCHOR.get(`${area}/${anchor}`);
 }
 
@@ -233,14 +231,18 @@ export function firstAnchorOfPath(path: string): string {
 
 /** Router URL for a group's landing (its first section). */
 export function urlForGroupPath(path: string): string {
-  if (path === '' || path === 'changelog') {return `/${path}`;}
+  if (path === '' || path === 'changelog') {
+    return `/${path}`;
+  }
 
   return `/${areaOfPath(path)}/${firstAnchorOfPath(path)}`;
 }
 
 /** Router URL for a specific anchor inside its group. */
 export function urlForAnchor(groupPath: string, anchor: string): string {
-  if (groupPath === '' || groupPath === 'changelog') {return `/${groupPath}`;}
+  if (groupPath === '' || groupPath === 'changelog') {
+    return `/${groupPath}`;
+  }
 
   return `/${areaOfPath(groupPath)}/${anchor}`;
 }

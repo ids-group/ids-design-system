@@ -24,8 +24,13 @@ if (git('status --porcelain') !== '') {
 }
 
 git('fetch origin main --quiet');
-if (git('rev-parse main') !== git('rev-parse origin/main')) {
-  fail("local 'main' is out of sync with 'origin/main' — pull/push first.");
+// cut-release merges dev into main before bumping, so local main is intentionally
+// AHEAD of origin/main here; require only that origin/main is reachable from HEAD
+// (ahead-or-equal), which still catches a stale or diverged main.
+try {
+  execSync('git merge-base --is-ancestor origin/main HEAD', { stdio: 'ignore' });
+} catch {
+  fail("local 'main' is behind or diverged from 'origin/main' — pull first.");
 }
 
 const changelog = readFileSync('CHANGELOG.md', 'utf8').replace(/\r\n/g, '\n');

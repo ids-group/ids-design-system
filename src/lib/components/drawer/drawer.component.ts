@@ -10,10 +10,11 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
 import { A11yModule } from '@angular/cdk/a11y';
 import { IconComponent } from '../../icons/icon.component';
-import type { DrawerPlacement, DrawerSize } from './drawer.types';
+import { BodyScrollLockService } from '../../overlay/body-scroll-lock.service';
+import type { DrawerPlacement } from './drawer.types';
+import type { DsSize } from '../../core/size';
 
 let nextId = 0;
 
@@ -29,12 +30,12 @@ let nextId = 0;
   },
 })
 export class DrawerComponent implements OnDestroy {
-  private readonly doc = inject(DOCUMENT);
+  private readonly scrollLock = inject(BodyScrollLockService);
 
   /** Open state, two-way bound. */
   readonly open = model<boolean>(false);
   /** Panel size — sm/md/lg. */
-  readonly size = input<DrawerSize>('md');
+  readonly size = input<DsSize>('md');
   /** Edge the panel slides in from. */
   readonly placement = input<DrawerPlacement>('right');
   /** Drawer title, shown in the header and used for `aria-labelledby`. */
@@ -76,16 +77,19 @@ export class DrawerComponent implements OnDestroy {
       this.wasOpen = isOpen;
     });
 
-    // Lock body scroll while the panel occupies the screen — keyed on `rendered`
-    // so the lock survives the leave animation.
-    effect(() => {
-      this.doc.body.style.overflow = this.rendered() ? 'hidden' : '';
+    // Ref-counted body-scroll lock, shared with modal/bottom-sheet so stacked
+    // overlays don't unlock each other. The effect's cleanup fires on the
+    // rendered→false transition and on destroy, keeping lock/unlock paired.
+    effect((onCleanup) => {
+      if (!this.rendered()) {
+        return;
+      }
+      this.scrollLock.lock();
+      onCleanup(() => this.scrollLock.unlock());
     });
   }
 
   ngOnDestroy(): void {
-    // Restore body scroll if the host is torn down mid-open.
-    this.doc.body.style.overflow = '';
     clearTimeout(this.closeFallbackTimer ?? undefined);
     this.closeFallbackTimer = null;
   }

@@ -70,6 +70,7 @@
       font-size: 11px;
       color: inherit;
     }
+
     /* On the primary card the chip's own light t-mono-inline pill is unreadable;
        give it a translucent-dark pill + on-primary text so the token stays legible. */
     .role-cell--on-brand .role-cell__tok {

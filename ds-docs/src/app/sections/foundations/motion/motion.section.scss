@@ -86,7 +86,6 @@
     }
     .combined-label { color: var(--text-primary); }
 
-    /* Fade / lift demo */
     .demo-card-lift {
       padding: var(--space-3) var(--space-4);
       background: var(--surface-default);
@@ -101,7 +100,6 @@
       box-shadow: var(--shadow-3);
     }
 
-    /* Slide demo · toast */
     .demo-toast {
       display: flex;
       align-items: center;
@@ -130,7 +128,6 @@
       opacity: 1;
     }
 
-    /* Scale demo · modal */
     .demo-modal {
       padding: var(--space-3) var(--space-4);
       background: var(--surface-default);
@@ -147,7 +144,6 @@
       opacity: 1;
     }
 
-    /* Overshoot demo · tick */
     .demo-tick {
       display: inline-flex;
       align-items: center;

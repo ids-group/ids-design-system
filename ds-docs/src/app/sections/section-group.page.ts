@@ -28,10 +28,7 @@ import { groupForAnchor, urlForGroupPath } from '../layout/nav.config';
       }
 
       @if (nextLink(); as link) {
-        <a
-          class="next-group"
-          [routerLink]="link"
-        >
+        <a class="next-group" [routerLink]="link">
           <span class="next-group__label">
             Next
           </span>
@@ -46,7 +43,9 @@ import { groupForAnchor, urlForGroupPath } from '../layout/nav.config';
 })
 export class SectionGroupPage {
   private readonly route = inject(ActivatedRoute);
-  private readonly params = toSignal(this.route.paramMap, { requireSync: true });
+  private readonly params = toSignal(this.route.paramMap, {
+    requireSync: true,
+  });
   private readonly data = toSignal(this.route.data, { requireSync: true });
 
   // URLs are flat `/<area>/<anchor>` — resolve the owning group from the params,

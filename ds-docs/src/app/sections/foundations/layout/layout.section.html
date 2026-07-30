@@ -1,8 +1,8 @@
 <docs-section
   anchor="layout"
-  [api]="false"
   eyebrow="Foundations"
   title="Layout"
+  [api]="false"
 >
   <docs-truncation [rules]="truncationRules" />
 
@@ -18,8 +18,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    A custom property can't be read inside an <code class="t-mono-inline">&#64;media</code>
-    condition, so for media queries use the compile-time Sass aliases instead: after
+    A custom property can't be read inside an
+    <code class="t-mono-inline">
+      &#64;media
+    </code>
+    condition, so for media queries use the compile-time Sass aliases instead:
+    after
     <code class="t-mono-inline">
       &#64;use 'breakpoints' as bp
     </code> write
@@ -34,8 +38,8 @@
     </code> directly. The
     <code class="t-mono-inline">
       --bp-*
-    </code> custom properties below stay for regular
-    rules and JS.
+    </code> custom properties below stay for
+    regular rules and JS.
   </p>
 
   <div class="bp-list">

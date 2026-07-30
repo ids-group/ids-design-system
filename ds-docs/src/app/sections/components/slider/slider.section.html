@@ -73,7 +73,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">hint</code> renders a helper line below the
+    <code class="t-mono-inline">
+      hint
+    </code> renders a helper line below the
     track. Paired with <code class="t-mono-inline">[invalid]="true"</code> it
     switches to an error style with <code>role="alert"</code>.
   </p>
@@ -86,10 +88,10 @@
 
       <ds-slider
         ariaLabel="Volume"
+        hint="Drag to adjust the output volume."
         [min]="0"
         [max]="100"
         [step]="1"
-        hint="Drag to adjust the output volume."
       />
     </div>
   </div>
@@ -102,10 +104,10 @@
 
       <ds-slider
         ariaLabel="Volume — error"
+        hint="Value is outside the allowed range."
         [min]="0"
         [max]="100"
         [step]="1"
-        hint="Value is outside the allowed range."
         [invalid]="true"
       />
     </div>

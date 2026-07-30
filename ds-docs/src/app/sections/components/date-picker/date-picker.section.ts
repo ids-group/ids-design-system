@@ -36,17 +36,15 @@ export class DatePickerSection {
     },
   ];
 
-  /** minDate example: today as lower bound */
   protected readonly minDateToday = new Date();
 
-  /** maxDate example: 30 days from now */
   protected readonly maxDateThirtyDays = new Date(
     new Date().getFullYear(),
     new Date().getMonth(),
     new Date().getDate() + 30,
   );
 
-  /** disabledDate example: disable weekends (Saturday=6, Sunday=0) */
+  /** Saturday=6, Sunday=0 — JS Date.getDay() weekday numbering. */
   protected readonly disableWeekends = (date: Date): boolean => {
     const day = date.getDay();
 
@@ -57,7 +55,6 @@ export class DatePickerSection {
   protected readonly today = new Date();
   protected readonly birthDefaultDate = new Date(1990, 0, 1);
 
-  /** Preset shortcuts for a range picker */
   protected readonly rangePresets: readonly DatePickerPreset[] = [
     {
       label: 'Today',

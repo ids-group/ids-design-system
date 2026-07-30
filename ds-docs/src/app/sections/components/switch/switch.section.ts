@@ -8,9 +8,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [DocsSectionComponent, SwitchComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './switch.section.html',
-  styleUrls: [
-    '../../../shared/section-demo.scss',
-    './switch.section.scss',
-  ],
+  styleUrls: ['../../../shared/section-demo.scss', './switch.section.scss'],
 })
 export class SwitchSection {}

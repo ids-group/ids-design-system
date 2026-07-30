@@ -7,7 +7,7 @@ import {
   input,
   model,
 } from '@angular/core';
-import type { NumberStepperSize } from './number-stepper.types';
+import type { DsSize } from '../../core/size';
 
 @Component({
   selector: 'ds-number-stepper',
@@ -27,7 +27,7 @@ export class NumberStepperComponent {
   /** Amount added or subtracted per increment/decrement. */
   readonly step = input<number>(1);
   /** Control height — sm/md/lg. */
-  readonly size = input<NumberStepperSize>('md');
+  readonly size = input<DsSize>('md');
   /** Disables the stepper and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Accessible name for the number input (the stepper has no visible label). */

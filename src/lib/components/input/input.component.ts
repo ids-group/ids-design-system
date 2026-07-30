@@ -18,7 +18,8 @@ import {
 } from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
-import type { InputSize, InputType } from './input.types';
+import type { InputType } from './input.types';
+import type { DsSize } from '../../core/size';
 
 @Component({
   selector: 'ds-input',
@@ -47,11 +48,15 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Native input type — also affects the default clear button and password toggle. */
   readonly type = input<InputType>('text');
   /** Field height — sm/md/lg. */
-  readonly size = input<InputSize>('md');
+  readonly size = input<DsSize>('md');
   /** Label shown above the field, or inside it when `floating`. */
   readonly label = input<string>('');
   /** Helper text shown below the field. */
   readonly hint = input<string>('');
+  /** Reserve the message-row height even when empty, so the field doesn't shift
+   *  the layout below it when a hint/error appears. Default on — opt out for a
+   *  deliberately collapsing field. */
+  readonly reserveMessage = input(true, { transform: booleanAttribute });
   /** Placeholder shown when empty. */
   readonly placeholder = input<string>('');
   /** Disables the field and blocks all interaction. */
@@ -68,17 +73,12 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Floating-label variant — the label sits inside a taller control instead
    *  of stacked above it. */
   readonly floating = input(false, { transform: booleanAttribute });
-  /** Reserves space for a leading addon projected into `[dsInputPrefix]`. */
-  readonly withAddon = input(false, { transform: booleanAttribute });
-  /** Reserves space for a trailing addon projected into `[dsInputSuffix]`. */
-  readonly withAddonRight = input(false, { transform: booleanAttribute });
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Shows an "(optional)" marker next to the label (ignored when `required`). */
   readonly optional = input(false, { transform: booleanAttribute });
   /** Native `name` attribute. */
   readonly name = input<string | null>(null);
-  // Numeric constraints (applied when type="number").
   /** Native `min` attribute — applies when `type="number"`. */
   readonly min = input<number | null>(null);
   /** Native `max` attribute — applies when `type="number"`. */
@@ -193,12 +193,6 @@ export class InputComponent extends DsControlValueAccessor<string> {
     }
     if (this.readOnly()) {
       parts.push('read-only');
-    }
-    if (this.withAddon()) {
-      parts.push('with-addon');
-    }
-    if (this.withAddonRight()) {
-      parts.push('with-addon-right');
     }
     if (this.loading()) {
       parts.push('loading');

@@ -32,8 +32,8 @@ import {
   type SelectItem,
   type SelectOption,
   type SelectOptionGroup,
-  type SelectSize,
 } from './select.types';
+import type { DsSize } from '../../core/size';
 import {
   FieldMessageComponent,
   type FieldMessageState,
@@ -72,7 +72,7 @@ export class SelectComponent
   /** Shown in the trigger when nothing is selected. */
   readonly placeholder = input<string>('');
   /** Trigger height — sm/md/lg. */
-  readonly size = input<SelectSize>('md');
+  readonly size = input<DsSize>('md');
   /** Label shown above the trigger. */
   readonly label = input<string>('');
   /** Disables the trigger and blocks all interaction. */
@@ -83,6 +83,10 @@ export class SelectComponent
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Helper text shown below the trigger. */
   readonly hint = input<string>('');
+  /** Reserve the message-row height even when empty, so the field doesn't shift
+   *  the layout below it when a hint/error appears. Default on — opt out for a
+   *  deliberately collapsing field. */
+  readonly reserveMessage = input(true, { transform: booleanAttribute });
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Shows an "(optional)" marker next to the label (ignored when `required`). */
@@ -122,7 +126,7 @@ export class SelectComponent
   );
 
   protected readonly trigger =
-    viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
+    viewChild.required<ElementRef<HTMLElement>>('trigger');
   protected readonly panelTpl =
     viewChild.required<TemplateRef<unknown>>('panel');
   protected readonly panelContentTpl =
@@ -327,6 +331,12 @@ export class SelectComponent
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
     if (this.isDisabled() || this.readOnly() || this.preview.staticPreview()) {
+      return;
+    }
+    // Only handle keys aimed at the trigger itself — a keydown bubbling up from
+    // the nested clear <button> must reach its own activation (Enter/Space to
+    // clear), not be hijacked here into reopening the panel.
+    if (event.target !== event.currentTarget) {
       return;
     }
     const key = event.key;

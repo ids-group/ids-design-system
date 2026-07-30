@@ -9,11 +9,8 @@ import {
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
 import type { ButtonColor } from '../button/button.types';
-import type {
-  IconButtonSize,
-  IconButtonType,
-  IconButtonVariant,
-} from './icon-button.types';
+import type { IconButtonType, IconButtonVariant } from './icon-button.types';
+import type { DsSize } from '../../core/size';
 
 /**
  * Icon-only action button with its own variant taxonomy (standard / filled /
@@ -40,8 +37,8 @@ export class IconButtonComponent {
       axis; `color` recolours the accent the fill consumes. Default primary. */
   readonly color = input<ButtonColor>('primary');
   /** Button size — sm/md/lg, matches the field/button height scale. */
-  readonly size = input<IconButtonSize>('md');
-  /** Native `button` type attribute. */
+  readonly size = input<DsSize>('md');
+  /** Native `<button>` `type`; defaults to `'button'` (not `'submit'`) so it never submits an ancestor form by accident. */
   readonly type = input<IconButtonType>('button');
   /** Disables the button and blocks `pressed`. */
   readonly disabled = input(false, { transform: booleanAttribute });

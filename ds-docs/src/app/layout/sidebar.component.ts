@@ -11,7 +11,12 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { IconButtonComponent, SearchComponent } from 'ds';
 import {
@@ -34,7 +39,11 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
     '[class.is-collapsed]': 'effectiveCollapsed()',
   },
   template: `
-    <nav class="toc" [class.is-collapsed]="effectiveCollapsed()" [class.is-drawer]="mode() === 'drawer'">
+    <nav
+      class="toc"
+      [class.is-collapsed]="effectiveCollapsed()"
+      [class.is-drawer]="mode() === 'drawer'"
+    >
       @if (mode() === 'rail') {
         <div class="brand">
           <span class="mark">
@@ -58,7 +67,9 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
             variant="outlined"
             size="sm"
             [icon]="effectiveCollapsed() ? 'chevronRight' : 'chevronLeft'"
-            [ariaLabel]="effectiveCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+            [ariaLabel]="
+              effectiveCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'
+            "
             (pressed)="toggleCollapsed()"
           />
         </div>
@@ -332,17 +343,12 @@ export class SidebarComponent {
     this.destroyRef.onDestroy(() => {
       this.observer?.disconnect();
     });
-    // Docs pages are lazy-loaded — sections may not be in the DOM when the
-    // sidebar mounts. Poll for `[data-anchor]` elements up to ~3s before
-    // wiring the IntersectionObserver. Without this the observer initialises
-    // with zero targets and `activeAnchor` never updates on scroll.
+    // Docs pages are lazy-loaded, so sections may not be in the DOM yet when the sidebar mounts. Poll for `[data-anchor]`
+    // elements for ~3s before wiring the IntersectionObserver — otherwise it starts with zero targets and never updates.
     this.setupWhenSectionsExist();
 
-    // A change to a DIFFERENT group page swaps its sections: reset the main
-    // scroll (to the target section, or the top) and re-scan `[data-anchor]`.
-    // The scroll-spy's within-page anchor rewrites resolve to the SAME group, so
-    // they're skipped here — no fighting / observer thrash. `main.main` is the
-    // scroll container, not the window, so the router can't do this for us.
+    // A different group page swaps its sections: reset scroll to the target section (or top) and re-scan `[data-anchor]`.
+    // Same-group anchor rewrites are skipped here to avoid observer thrash; `main.main` is the scroll container, not window.
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
@@ -414,16 +420,15 @@ export class SidebarComponent {
     this.scrollToAnchorOnLoad();
   }
 
-  // Sidebar item click: when the target section is on the CURRENT page, scroll
-  // to it directly — deterministic and independent of the router (the routerLink
-  // still fires but resolves to the same group, so the NavigationEnd handler
-  // skips it). Cross-group items find no section here and fall through to the
-  // routerLink + NavigationEnd handler on the new page.
+  // A click on a section already on this page scrolls directly (deterministic, router-independent); routerLink still fires
+  // but resolves to the same group so NavigationEnd no-ops. Cross-group items fall through to routerLink + NavigationEnd.
   protected onItem(anchor: string): void {
     this.navigated.emit();
     const section =
       this.anchorToSection.get(anchor) ??
-      (this.document.querySelector(`[data-anchor="${anchor}"]`) as HTMLElement | null);
+      (this.document.querySelector(
+        `[data-anchor="${anchor}"]`,
+      ) as HTMLElement | null);
     const main = this.document.querySelector('main.main') as HTMLElement | null;
     if (!section || !main) {
       return;
@@ -567,10 +572,8 @@ export class SidebarComponent {
       this.activeAnchor.set(firstAnchor);
     }
 
-    // rootMargin: shrink the top by the topbar height so a section only
-    // counts as active once its top has crossed the topbar. The -60%
-    // bottom margin means the section must occupy at least the top 40%
-    // of the visible area to qualify.
+    // rootMargin shrinks the top by the topbar height so a section counts as active only once it clears the topbar;
+    // the -60% bottom margin requires the section to occupy the top 40% of the viewport to qualify.
     const topbarH = this.computeTopbarHeight();
 
     this.observer = new IntersectionObserver(
@@ -587,11 +590,8 @@ export class SidebarComponent {
           }
         }
 
-        // Pick THE topmost intersecting section: smallest non-negative
-        // top relative to the topbar line wins. If none qualify (all
-        // have scrolled past the line), fall back to the one closest
-        // to the line from above. If nothing intersects at all, keep
-        // the last active anchor.
+        // Picks the topmost intersecting section (smallest non-negative top vs. the topbar line); falls back to the closest
+        // section above the line if none qualify, or keeps the last active anchor if nothing intersects at all.
         let bestAnchor: string | null = null;
         let bestNonNeg = Number.POSITIVE_INFINITY;
         let fallbackAnchor: string | null = null;

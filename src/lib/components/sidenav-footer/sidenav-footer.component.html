@@ -125,7 +125,9 @@
     class="row"
     aria-label="Alerts"
     [attr.aria-expanded]="alertsPop.opened()"
-    (click)="!alertsPop.opened() && alertsOpened.emit(); alertsPop.toggle(alertTrigger)"
+    (click)="
+      !alertsPop.opened() && alertsOpened.emit(); alertsPop.toggle(alertTrigger)
+    "
   >
     <ds-icon
       name="bell"

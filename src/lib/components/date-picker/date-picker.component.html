@@ -49,7 +49,9 @@
         [attr.aria-labelledby]="label() ? labelId : null"
         [attr.aria-label]="resolvedAriaLabel()"
         [attr.aria-required]="required() ? 'true' : null"
-        [attr.aria-invalid]="invalid() || typedInvalid() || rangeInvalid() ? 'true' : null"
+        [attr.aria-invalid]="
+          invalid() || typedInvalid() || rangeInvalid() ? 'true' : null
+        "
         [attr.aria-describedby]="hintId()"
         [attr.aria-placeholder]="fieldPlaceholder()"
         (beforeinput)="onFieldBeforeInput($event)"
@@ -72,11 +74,11 @@
         <span
           class="mask-ghost"
           aria-hidden="true"
-          >@for (part of displaySlots(); track $index) {<span
-              [class.muted]="part.muted"
-              >{{ part.text }}</span
-            >}</span
         >
+          @for (part of displaySlots(); track $index) {
+            <span [class.muted]="part.muted">{{ part.text }}</span>
+          }
+        </span>
         <!-- eslint-enable ds/template/element-content-newline -->
       }
     </span>
@@ -100,10 +102,14 @@
     [text]="messageText()"
     [state]="messageState()"
     [messageId]="hintId()"
+    [reserve]="reserveMessage()"
   />
 </div>
 
 <ng-template #panel>
+  <!-- Dialog-level click is a pointer-only light-dismiss that closes an open
+       month/year popup; keyboard users dismiss it with Escape (bound on each popup). -->
+  <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
   <div
     class="calendar"
     role="dialog"
@@ -142,6 +148,9 @@
             </button>
 
             @if (monthMenuOpen()) {
+              <!-- Popup container, not a focusable widget: it wraps real <button>s
+                   and closes on Escape; the click only stops light-dismiss bubbling. -->
+              <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
               <div
                 class="picker-menu"
                 (click)="$event.stopPropagation()"
@@ -158,7 +167,9 @@
                       class="picker-cell"
                       [class.selected]="$index === viewMonthIndex()"
                       [attr.aria-label]="name"
-                      [attr.aria-current]="$index === viewMonthIndex() ? 'true' : null"
+                      [attr.aria-current]="
+                        $index === viewMonthIndex() ? 'true' : null
+                      "
                       (click)="selectMonth($index, $event)"
                     >
                       {{ name.slice(0, 3) }}
@@ -185,6 +196,9 @@
             </button>
 
             @if (yearMenuOpen()) {
+              <!-- Popup container, not a focusable widget: it wraps real <button>s
+                   and closes on Escape; the click only stops light-dismiss bubbling. -->
+              <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
               <div
                 class="picker-menu"
                 (click)="$event.stopPropagation()"

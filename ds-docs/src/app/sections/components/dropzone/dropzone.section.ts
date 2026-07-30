@@ -9,17 +9,10 @@ import {
 @Component({
   selector: 'section-components-dropzone',
   standalone: true,
-  imports: [
-    DocsSectionComponent,
-    DocsTruncationComponent,
-    DropzoneComponent,
-  ],
+  imports: [DocsSectionComponent, DocsTruncationComponent, DropzoneComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './dropzone.section.html',
-  styleUrls: [
-    '../../../shared/section-demo.scss',
-    './dropzone.section.scss',
-  ],
+  styleUrls: ['../../../shared/section-demo.scss', './dropzone.section.scss'],
 })
 export class DropzoneSection {
   protected readonly truncationRules: TruncationRule[] = [
@@ -62,7 +55,13 @@ export class DropzoneSection {
   ];
 
   protected readonly rowQueued: DropzoneFile[] = [
-    { id: 'row-queued', name: 'project-brief.pdf', size: 2_516_582, state: 'queued', progress: 0 },
+    {
+      id: 'row-queued',
+      name: 'project-brief.pdf',
+      size: 2_516_582,
+      state: 'queued',
+      progress: 0,
+    },
   ];
   protected readonly rowUploading: DropzoneFile[] = [
     {

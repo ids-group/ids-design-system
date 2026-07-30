@@ -6,6 +6,7 @@
   /* Public --ds-sidenav-item-* / --ds-sidenav-alert-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_sidenav-item-label-color:              var(--ds-sidenav-item-label-color,              var(--text-secondary));
   --_sidenav-item-label-color-hover:        var(--ds-sidenav-item-label-color-hover,        var(--text-primary));
+  --_sidenav-item-label-weight: var(--ds-sidenav-item-label-weight, var(--font-weight-semibold));
   --_sidenav-item-bg-color-hover:        var(--ds-sidenav-item-bg-color-hover,        var(--surface-secondary));
   --_sidenav-item-bg-color-active:       var(--ds-sidenav-item-bg-color-active,       var(--accent));
   --_sidenav-item-label-color-active:       var(--ds-sidenav-item-label-color-active,       var(--text-on-primary));
@@ -26,7 +27,7 @@
   border-radius: var(--_sidenav-item-radius);
   color: var(--_sidenav-item-label-color);
   text-decoration: none;
-  font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  font: var(--_sidenav-item-label-weight) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   cursor: pointer;
   transition:
     background var(--duration-fast) var(--ease-standard),
@@ -117,7 +118,7 @@
   .item {
     justify-content: center;
     padding: 0;
-    width: var(--sidenav-collapsed-item);
+    width: 100%;
     height: var(--sidenav-collapsed-item);
     gap: 0;
     font-size: 0;

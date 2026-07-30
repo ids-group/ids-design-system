@@ -12,10 +12,7 @@ import {
   imports: [SearchComponent, DocsSectionComponent, DocsTruncationComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './search.section.html',
-  styleUrls: [
-    '../../../shared/section-demo.scss',
-    './search.section.scss',
-  ],
+  styleUrls: ['../../../shared/section-demo.scss', './search.section.scss'],
 })
 export class SearchSection {
   protected readonly truncationRules: TruncationRule[] = [

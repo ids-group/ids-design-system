@@ -1,17 +1,29 @@
 <div class="layout">
   <header class="mob-bar">
     <ds-topbar>
-      <span title class="mob-brand">
+      <span
+        title
+        class="mob-brand"
+      >
         <ds-icon-button
           variant="standard"
           icon="menu"
           ariaLabel="Open navigation"
           (pressed)="navOpen.set(true)"
         />
-        <span class="mob-name">Design System</span>
+
+        <span class="mob-name">
+          Design System
+        </span>
       </span>
+
       <span actions>
-        <ds-button color="neutral" variant="ghost" size="sm" (pressed)="tweaks.openPanel()">
+        <ds-button
+          color="neutral"
+          variant="ghost"
+          size="sm"
+          (pressed)="tweaks.openPanel()"
+        >
           ⚙ Tweaks
         </ds-button>
       </span>
@@ -27,9 +39,21 @@
   </main>
 </div>
 
-<ds-drawer [(open)]="navOpen" title="Navigation" placement="left" size="sm">
-  <div drawer-body class="drawer-nav">
-    <app-sidebar mode="drawer" (navigated)="navOpen.set(false)"></app-sidebar>
+<ds-drawer
+  title="Navigation"
+  placement="left"
+  size="sm"
+  [(open)]="navOpen"
+>
+  <div
+    drawer-body
+    class="drawer-nav"
+  >
+    <app-sidebar
+      mode="drawer"
+      (navigated)="navOpen.set(false)"
+    >
+    </app-sidebar>
   </div>
 </ds-drawer>
 

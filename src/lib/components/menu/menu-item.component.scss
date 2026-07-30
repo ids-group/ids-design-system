@@ -25,11 +25,11 @@
 
   &:hover { background: var(--_menu-item-hover-bg-color); }
 
-  &:active:not([disabled]) { background: var(--surface-muted); }
+  &:active:not(.disabled) { background: var(--surface-muted); }
 
   &:focus-visible { outline: none; box-shadow: inset var(--_menu-item-focus-shadow); }
 
-  &[disabled] {
+  &.disabled {
     color: var(--text-disabled);
     cursor: not-allowed;
     opacity: var(--opacity-muted);

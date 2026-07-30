@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, input } from '@angular/core';
-import type { SpinnerSize } from './spinner.types';
+import type { DsSize } from '../../core/size';
 
 @Component({
   selector: 'ds-spinner',
@@ -16,5 +16,5 @@ import type { SpinnerSize } from './spinner.types';
 })
 export class SpinnerComponent {
   /** Spinner size — sm/md/lg. */
-  readonly size = input<SpinnerSize>('md');
+  readonly size = input<DsSize>('md');
 }

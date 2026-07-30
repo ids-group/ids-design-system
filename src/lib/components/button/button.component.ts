@@ -12,12 +12,8 @@ import {
 } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
-import type {
-  ButtonColor,
-  ButtonVariant,
-  ButtonSize,
-  ButtonType,
-} from './button.types';
+import type { ButtonColor, ButtonVariant, ButtonType } from './button.types';
+import type { DsSize } from '../../core/size';
 
 // color×variant pairs that RENDER but read poorly — surfaced as a dev-mode
 // console.warn (two inputs can't be narrowed against each other at compile
@@ -64,8 +60,8 @@ export class ButtonComponent {
       cases needing the ds-button API (loading/fullWidth/typed pressed). */
   readonly variant = input<ButtonVariant>('solid');
   /** Button height — sm/md/lg. */
-  readonly size = input<ButtonSize>('md');
-  /** Native `<button>` `type` attribute. */
+  readonly size = input<DsSize>('md');
+  /** Native `<button>` `type`; defaults to `'button'` (not `'submit'`) so it never submits an ancestor form by accident. */
   readonly type = input<ButtonType>('button');
   /** Disables the button and blocks `pressed`. */
   readonly disabled = input(false, { transform: booleanAttribute });

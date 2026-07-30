@@ -1,6 +1,17 @@
-import { Component, DestroyRef, ViewEncapsulation, inject, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  ViewEncapsulation,
+  inject,
+  signal,
+} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ButtonComponent, DrawerComponent, IconButtonComponent, TopBarComponent } from 'ds';
+import {
+  ButtonComponent,
+  DrawerComponent,
+  IconButtonComponent,
+  TopBarComponent,
+} from 'ds';
 import { SidebarComponent } from './layout/sidebar.component';
 import { TweaksPanelComponent } from './tweaks-panel/tweaks-panel.component';
 
@@ -32,6 +43,8 @@ export class App {
       }
     };
     desktop.addEventListener('change', onChange);
-    inject(DestroyRef).onDestroy(() => desktop.removeEventListener('change', onChange));
+    inject(DestroyRef).onDestroy(() =>
+      desktop.removeEventListener('change', onChange),
+    );
   }
 }

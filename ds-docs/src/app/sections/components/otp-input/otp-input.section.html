@@ -62,7 +62,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">hint</code> renders a helper line below the
+    <code class="t-mono-inline">
+      hint
+    </code> renders a helper line below the
     cells. Paired with <code class="t-mono-inline">[invalid]="true"</code> it
     switches to an error style with <code>role="alert"</code>.
   </p>
@@ -70,16 +72,16 @@
   <div class="demo-panel">
     <ds-otp-input
       ariaLabel="Verification code"
-      [length]="6"
       hint="Check your email for a 6-digit code."
+      [length]="6"
     />
   </div>
 
   <div class="demo-panel">
     <ds-otp-input
       ariaLabel="Verification code — error"
-      [length]="6"
       hint="The code you entered is incorrect. Please try again."
+      [length]="6"
       [invalid]="true"
     />
   </div>

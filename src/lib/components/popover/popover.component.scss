@@ -32,8 +32,6 @@
   }
 }
 
-/* ---- Arrow caret ---- */
-
 .arrow {
   --_arrow-size: var(--ds-popover-arrow-size, 7px);
 
@@ -55,7 +53,6 @@
   }
 }
 
-/* Placement-specific arrow positioning */
 [data-placement='bottom'] .arrow,
 [data-placement='bottom'] > .arrow {
   top: calc(var(--_arrow-size) * -1);

@@ -1,7 +1,8 @@
 #!/bin/sh
-# Cut a release from CI: bump the version, stamp the CHANGELOG, commit, tag, and
-# push to main. It does NOT publish — pushing the vX.Y.Z tag triggers the
-# `tags: v*` pipeline, which is the single publisher (build-lib.sh + publish.sh).
+# Cut a release from CI: merge dev into main (main is release-only), bump the
+# version, stamp the CHANGELOG, commit, tag, push main, then back-merge main into
+# dev so it carries the bump. It does NOT publish — pushing the vX.Y.Z tag triggers
+# the `tags: v*` pipeline, which publishes and then deploys the docs.
 # Triggered by the custom release-{patch,minor,major,beta} pipelines
 # (Bitbucket UI -> Run pipeline).
 #
@@ -38,11 +39,20 @@ command -v git > /dev/null || apk add --no-cache git > /dev/null
 git config user.name "${RELEASE_GIT_NAME:-IDS Release Bot}"
 git config user.email "${RELEASE_GIT_EMAIL:-ci@ids-group.co.uk}"
 git remote set-url origin "https://x-token-auth:${RELEASE_TOKEN}@bitbucket.org/itband/ids-design-system.git"
-git fetch origin main --quiet
+git fetch origin main dev --quiet
 git checkout -B main origin/main
 
-# Bump: runs the preversion preflight (branch/clean/sync/changelog) + the version
-# hook (CHANGELOG stamp + git add) + commit + tag.
+# Fold dev's work (incl. the ## Unreleased notes + migrations/unreleased.json) into
+# main before bumping — this merge IS the release. A conflict means dev must be
+# reconciled first, so fail rather than guess.
+git merge --no-edit origin/dev || {
+  git merge --abort 2>/dev/null || true
+  echo "cut-release: merge of origin/dev into main conflicts — resolve on dev first."
+  exit 1
+}
+
+# Bump: runs the preversion preflight (branch/clean/ancestor/changelog) + the
+# version hook (CHANGELOG stamp + migration promote + git add) + commit + tag.
 if [ "$level" = "beta" ]; then
   npm version prerelease --preid=beta -m "release: %s"
 else
@@ -50,5 +60,17 @@ else
 fi
 
 new_version=$(node -p "require('./package.json').version")
-echo "cut-release: tagged $new_version — pushing main + tag (the v* pipeline publishes)..."
+echo "cut-release: tagged $new_version — pushing main + tag (the v* pipeline publishes + deploys docs)..."
 git push origin main --follow-tags
+
+# Back-sync dev with the bump commit (new version, emptied ## Unreleased, promoted
+# migration) so the next release doesn't re-emit the same notes. The release already
+# published; a conflict here is fix-forward on dev, not a rollback.
+git checkout -B dev origin/dev
+git merge --no-edit main || {
+  git merge --abort 2>/dev/null || true
+  echo "cut-release: back-merge of main into dev conflicts — reconcile dev manually (the release itself succeeded)."
+  exit 1
+}
+git push origin dev
+echo "cut-release: dev synced to $new_version."

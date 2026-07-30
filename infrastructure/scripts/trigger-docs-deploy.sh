@@ -1,0 +1,38 @@
+#!/bin/sh
+# Final step of the tag (v*) pipeline: after publish.sh, start the separate
+# deploy-docs custom pipeline via the Bitbucket REST API so a release auto-deploys
+# the ds-docs showcase. Skipped for prereleases (public docs track latest stable).
+# Auth: RELEASE_TOKEN (a repo access token) with the pipeline:write scope; it is a
+# repository variable, so it is visible to this tag pipeline.
+set -e
+
+cd "$(dirname "$0")/../.."
+
+[ -n "$BITBUCKET_TAG" ] || { echo "trigger-docs-deploy: BITBUCKET_TAG is not set — this runs from the tag pipeline."; exit 1; }
+
+# Prereleases (e.g. v0.7.0-beta.0) publish under `next`; don't refresh the public docs.
+case "$BITBUCKET_TAG" in
+  *-*) echo "trigger-docs-deploy: $BITBUCKET_TAG is a prerelease — skipping docs deploy."; exit 0 ;;
+esac
+
+[ -n "$RELEASE_TOKEN" ] || { echo "trigger-docs-deploy: RELEASE_TOKEN is not set."; exit 1; }
+
+# node:22-alpine ships without curl (only busybox wget); add it like cut-release adds git.
+command -v curl > /dev/null || apk add --no-cache curl > /dev/null
+
+api="https://api.bitbucket.org/2.0/repositories/itband/ids-design-system/pipelines"
+body='{"target":{"type":"pipeline_ref_target","ref_type":"branch","ref_name":"main","selector":{"type":"custom","pattern":"deploy-docs"}}}'
+
+echo "trigger-docs-deploy: starting deploy-docs on main for $BITBUCKET_TAG..."
+status=$(curl -sS -o /tmp/trigger-resp.json -w '%{http_code}' \
+  -X POST "$api" \
+  -H "Authorization: Bearer $RELEASE_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "$body")
+
+if [ "$status" -lt 200 ] || [ "$status" -ge 300 ]; then
+  echo "trigger-docs-deploy: API returned HTTP $status:"
+  cat /tmp/trigger-resp.json
+  exit 1
+fi
+echo "trigger-docs-deploy: deploy-docs started (HTTP $status)."

@@ -17,10 +17,7 @@ import {
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './input.section.html',
-  styleUrls: [
-    '../../../shared/section-demo.scss',
-    './input.section.scss',
-  ],
+  styleUrls: ['../../../shared/section-demo.scss', './input.section.scss'],
 })
 export class InputSection {
   protected readonly truncationRules: TruncationRule[] = [
