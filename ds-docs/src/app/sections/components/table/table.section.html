@@ -634,7 +634,12 @@
     server-side paging, bind <code class="t-mono-inline"> [total] </code> to the
     full row count and hand the table one page at a time — it then drives the
     pager off <code class="t-mono-inline"> total </code> and skips its own
-    slicing.
+    slicing. Add
+    <code class="t-mono-inline">
+      [scrollToTopOnPageChange]
+    </code> to scroll the
+    table back into view on a page change — handy when the pager sits below a
+    long table.
   </p>
 
   <ds-table
