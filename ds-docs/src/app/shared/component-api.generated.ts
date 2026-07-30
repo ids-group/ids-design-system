@@ -4079,7 +4079,17 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Disables the item — non-navigable and styled as inactive."
       }
     ],
-    "outputs": []
+    "outputs": [
+      {
+        "name": "activate",
+        "kind": "output",
+        "type": "MouseEvent",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Emitted on click, before navigation. Call `preventDefault()` on the event to intercept — e.g. a docs sidebar driving its own scroll-spy."
+      }
+    ]
   },
   "sidenav-footer": {
     "key": "sidenav-footer",

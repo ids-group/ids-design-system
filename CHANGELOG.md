@@ -71,6 +71,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   WCAG-luminance black-or-white foreground, and `initialsFrom(first, last)` (which also accepts a single
   full-name string) — both exported from the package root.
 
+- **`ds-sidenav-item` gains an `(activate)` output.** Emitted on click before navigation, carrying the
+  `MouseEvent` — call `preventDefault()` on it to intercept (e.g. a sidebar driving its own scroll-spy)
+  while keeping the item's active/badge/tooltip/collapse behaviour. Additive; omit it to navigate as before.
+
 ### Fixed
 
 - **`ds-avatar`: `--ds-avatar-size` now applies at every size, not just `md`.** The `xs`/`sm`/`lg`
