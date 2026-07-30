@@ -122,6 +122,14 @@
       "searchHints": ["AutocompleteSize"]
     },
     {
+      "id": "pagination-page-change-to-current-page-change",
+      "kind": "output-rename",
+      "old": "ds-pagination[pageChange]",
+      "new": "currentPageChange",
+      "note": "The manual (pageChange) output is removed; the currentPage two-way model already emits (currentPageChange) on every page change (including the reset to page 1 after a size change). Rename (pageChange)=\"...\" to (currentPageChange)=\"...\" on ds-pagination. (pageSizeChange) is UNCHANGED — it is now the pageSize model's implicit output, same name and payload; [(currentPage)] / [(pageSize)] two-way bindings need no change.",
+      "searchHints": ["(pageChange)", "pageChange"]
+    },
+    {
       "id": "field-reserve-message-default-on",
       "kind": "behavior",
       "old": null,

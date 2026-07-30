@@ -25,6 +25,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   validation messages appear — the row is there from the start. Set `[reserveMessage]="false"` to
   collapse the space back (the previous behaviour) where the layout can absorb the shift.
 
+- **BREAKING: `ds-pagination` drops its manual `(pageChange)` and `(pageSizeChange)` outputs.** They
+  duplicated the two-way models — the manual `pageSizeChange` even name-collided with the `pageSize`
+  model's own implicit output, and one size change fired the change events three times over. Page and
+  size are now driven purely by the `[(currentPage)]` / `[(pageSize)]` two-way models. Migrate
+  `(pageChange)="…"` to `(currentPageChange)="…"`; `(pageSizeChange)` keeps working unchanged (it is now
+  the `pageSize` model's implicit output, same name and payload). `[(currentPage)]` / `[(pageSize)]`
+  bindings are unaffected. (`ds-table` already drove pagination via the models, so it is untouched.)
+
 ### Added
 
 - **New override tokens for two baked-in weights: `--ds-sidenav-item-label-weight` and

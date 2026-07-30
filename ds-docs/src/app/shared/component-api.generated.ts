@@ -3262,7 +3262,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "1",
         "required": false,
-        "description": "1-based active page, two-way bound."
+        "description": "1-based active page, two-way bound; a page change (incl. the reset to 1 after a size change) emits via the implicit `currentPageChange`."
       },
       {
         "name": "pageSizeOptions",
@@ -3283,26 +3283,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Shows the \"Showing X–Y of Z\" range label."
       }
     ],
-    "outputs": [
-      {
-        "name": "pageChange",
-        "kind": "output",
-        "type": "number",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": "Fires whenever the active page changes, including the reset to page 1 after a size change."
-      },
-      {
-        "name": "pageSizeChange",
-        "kind": "output",
-        "type": "number",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": "Fires when the page size changes via the size dropdown."
-      }
-    ]
+    "outputs": []
   },
   "popover": {
     "key": "popover",
