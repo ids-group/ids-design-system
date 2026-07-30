@@ -73,10 +73,6 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Floating-label variant — the label sits inside a taller control instead
    *  of stacked above it. */
   readonly floating = input(false, { transform: booleanAttribute });
-  /** Reserves space for a leading addon projected into `[dsInputPrefix]`. */
-  readonly withAddon = input(false, { transform: booleanAttribute });
-  /** Reserves space for a trailing addon projected into `[dsInputSuffix]`. */
-  readonly withAddonRight = input(false, { transform: booleanAttribute });
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Shows an "(optional)" marker next to the label (ignored when `required`). */
@@ -197,12 +193,6 @@ export class InputComponent extends DsControlValueAccessor<string> {
     }
     if (this.readOnly()) {
       parts.push('read-only');
-    }
-    if (this.withAddon()) {
-      parts.push('with-addon');
-    }
-    if (this.withAddonRight()) {
-      parts.push('with-addon-right');
     }
     if (this.loading()) {
       parts.push('loading');

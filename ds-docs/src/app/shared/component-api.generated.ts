@@ -2091,24 +2091,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Floating-label variant — the label sits inside a taller control instead of stacked above it."
       },
       {
-        "name": "withAddon",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Reserves space for a leading addon projected into `[dsInputPrefix]`."
-      },
-      {
-        "name": "withAddonRight",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Reserves space for a trailing addon projected into `[dsInputSuffix]`."
-      },
-      {
         "name": "required",
         "kind": "input",
         "type": "boolean",

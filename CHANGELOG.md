@@ -33,6 +33,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the `pageSize` model's implicit output, same name and payload). `[(currentPage)]` / `[(pageSize)]`
   bindings are unaffected. (`ds-table` already drove pagination via the models, so it is untouched.)
 
+- **BREAKING: `ds-input` drops the `withAddon` / `withAddonRight` inputs.** They hand-declared what the
+  DOM already states — and the doc line was wrong (the flag stripped the control's inset rather than
+  "reserving space"). The flush-addon layout is now derived automatically: a boxed `.addon` projected
+  into `[dsInputPrefix]`/`[dsInputSuffix]` (`<span dsInputPrefix class="addon">…</span>`) sits flush via
+  `:has()`, while a bare projected `<ds-icon dsInputPrefix>` correctly keeps its inset. Delete
+  `[withAddon]` / `[withAddonRight]` from your templates — a boxed addon renders identically, and a bare
+  icon that previously (mis)set the flag regains its proper inset (a bugfix).
+
 ### Added
 
 - **New override tokens for two baked-in weights: `--ds-sidenav-item-label-weight` and

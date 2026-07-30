@@ -130,6 +130,22 @@
       "searchHints": ["(pageChange)", "pageChange"]
     },
     {
+      "id": "input-with-addon-removed",
+      "kind": "removed-api",
+      "old": "ds-input[withAddon]",
+      "new": null,
+      "note": "Removed (distinct from withAddonRight below — match the exact attribute; withAddon is a substring of withAddonRight). The flush-addon layout is now derived from the DOM: a boxed .addon projected into [dsInputPrefix] (<span dsInputPrefix class=\"addon\">…</span>) sits flush automatically via :has(), and a bare <ds-icon dsInputPrefix> keeps its inset. Delete the [withAddon] attribute — a boxed addon renders identically; a bare icon that used the flag regains its proper left inset (bugfix).",
+      "searchHints": ["[withAddon]"]
+    },
+    {
+      "id": "input-with-addon-right-removed",
+      "kind": "removed-api",
+      "old": "ds-input[withAddonRight]",
+      "new": null,
+      "note": "Removed — the trailing counterpart of withAddon. A boxed .addon.right projected into [dsInputSuffix] now sits flush automatically via :has(). Delete the [withAddonRight] attribute.",
+      "searchHints": ["[withAddonRight]"]
+    },
+    {
       "id": "field-reserve-message-default-on",
       "kind": "behavior",
       "old": null,

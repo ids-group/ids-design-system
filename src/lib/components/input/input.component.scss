@@ -220,17 +220,19 @@
     }
   }
 
-  &.with-addon .control {
+  /* A boxed .addon (not a bare projected icon) sits flush: drop the control's
+     inset on that side and round the addon's outer corners to match the field. */
+  &:has(.addon-slot.prefix .addon) .control {
     padding-left: 0;
   }
-  &.with-addon-right .control {
+  &:has(.addon-slot.suffix .addon) .control {
     padding-right: 0;
   }
-  &.with-addon ::ng-deep .addon {
+  .addon-slot.prefix ::ng-deep .addon {
     border-top-left-radius: var(--_input-radius);
     border-bottom-left-radius: var(--_input-radius);
   }
-  &.with-addon-right ::ng-deep .addon.right {
+  .addon-slot.suffix ::ng-deep .addon.right {
     border-top-right-radius: var(--_input-radius);
     border-bottom-right-radius: var(--_input-radius);
   }
