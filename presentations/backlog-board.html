@@ -122,8 +122,8 @@
   <div class="summary">
     <div class="stat you"><div class="n">3</div><div class="l">Ждёт твоего решения</div></div>
     <div class="stat a11y"><div class="n">3</div><div class="l">A11y (P0–P2)</div></div>
-    <div class="stat untouched"><div class="n">19</div><div class="l">Компоненты + foundations</div></div>
-    <div class="stat untouched"><div class="n">13</div><div class="l">Motion / DS-docs / PIN-475 / API</div></div>
+    <div class="stat untouched"><div class="n">18</div><div class="l">Компоненты + foundations</div></div>
+    <div class="stat untouched"><div class="n">11</div><div class="l">Motion / DS-docs / PIN-475 / API</div></div>
     <div class="stat raw"><div class="n">4</div><div class="l">Raw / frozen</div></div>
   </div>
 
@@ -149,7 +149,7 @@
 
   <!-- ============ COMPONENTS + FOUNDATIONS ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🧩 Компоненты + foundations</h2><span class="count c-track">19</span><span class="why">Component feature gaps · missing components · missing tokens/foundations — из gap-analysis и дожфудинга.</span></div>
+    <div class="lane-head"><h2>🧩 Компоненты + foundations</h2><span class="count c-track">18</span><span class="why">Component feature gaps · missing components · missing tokens/foundations — из gap-analysis и дожфудинга.</span></div>
     <div class="cards">
       <div class="card track"><span class="chip ch-p2">P2</span><div class="t">Цвет-движок: один источник</div><p class="d">Схлопнуть `--primary` + `--primary-h/s/l` в ОДИН токен; оттенки через `color-mix()` + `hsl(from …)`, сохраняя ручную калибровку рампы. Разблокирует `--accent`-indirection.</p><div class="meta">color-engine-relative.html</div></div>
       <div class="card track"><span class="chip ch-p2">P2</span><div class="t">ds-auth-shell</div><p class="d">Готовая обёртка для полноэкранных auth-экранов (login/forgot/reset) — пара к `ds-app-shell` (запрошено Stas 2026-07-24). Разблокирована brand-row-паттерном шелла; own full-height centering вместо двойного `100vh`+`100dvh` стека как в mm-admin.</p></div>
@@ -158,7 +158,6 @@
       <div class="card track"><span class="chip ch-p2">P2</span><div class="t">ds-table: virtual scroll + lazy loading</div><p class="d">10k+ строк рендерятся целиком и тормозят скролл/paint. Выбран подход — CDK fixed-size virtual scroll внутри существующего `<table>` (без AG Grid/TanStack); фиксированная высота строки обязательна, expandable/wrap-режимы гасятся под virtual.</p></div>
       <div class="card track"><span class="chip ch-p2">P3</span><div class="t">ds-table: row-expansion — доводка</div><p class="d">База уже отгружена (`expandableRows` + `expandedIds`); остались мелкие дельты — single-expand режим, expand-all/collapse-all в шапке, опциональные `(rowExpand)`/`(rowCollapse)` outputs. Только по запросу консьюмера.</p></div>
       <div class="card track"><span class="chip ch-p2">P3</span><div class="t">ds-number-stepper: форматирование</div><p class="d">Сейчас голое `value: number` без отображаемого форматирования. Добавить opt-in `mode` (decimal/currency/percent) + locale/группировка разрядов — гейтить на первый финансовый консьюмер.</p></div>
-      <div class="card track"><span class="chip ch-p2">P3</span><div class="t">ds-table: paging-поведения из mm-fork</div><p class="d">Забрать из mm-broker `ids-data-table` два общих паттерна до закрытия форка: клэмп страницы за пределами набора после фильтра и `scrollIntoView` при смене страницы.</p></div>
       <div class="card track"><span class="chip ch-frozen">blocked</span><div class="t">Chart wrapper</div><p class="d">Тонкая обёртка над charting-библиотекой — токены и CSS-каркас уже есть, самого Angular-компонента нет. Заблокировано выбором библиотеки — триггерит правило «без новых библиотек без спроса».</p></div>
       <div class="card track"><span class="chip ch-p2">P2</span><div class="t">ds-filter-bar</div><p class="d">Приоритетная строка фильтров с «+N ещё» в поповере при нехватке места (запрошено Stas 2026-07-28, по образцу pinkmoon `filter-bar`). Слоты с декларируемой номинальной шириной + `ResizeObserver` на хосте.</p></div>
       <div class="card track"><span class="chip ch-oos">решить</span><div class="t">Calendar (standalone)</div><p class="d">Отдельный month/agenda-вид, отличный от внутренней сетки date-picker. Decision-pending по скоупу; дёшево собрать из `calendar-day` + логики грида date-picker.</p></div>
@@ -175,10 +174,9 @@
 
   <!-- ============ MOTION / DS-DOCS / PIN-475 / API ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🎬 Motion / DS-docs / PIN-475 / API</h2><span class="count c-track">13</span><span class="why">Overlay/motion · ds-docs showcase · API-консистентность · PIN-475 filter-toolbar · picker internals.</span></div>
+    <div class="lane-head"><h2>🎬 Motion / DS-docs / PIN-475 / API</h2><span class="count c-track">11</span><span class="why">Overlay/motion · ds-docs showcase · API-консистентность · PIN-475 filter-toolbar · picker internals.</span></div>
     <div class="cards">
       <div class="card track"><span class="chip ch-oos">решить</span><div class="t">Overlay leave animation — политика</div><p class="d">Floating-панели закрываются мгновенно (leave снята в `d2e4712`). Актуализация 07-24: все 8 оверлеев уже идут через общий `disposeWithLeave` — вернуть leave теперь ОДНА правка хелпера, но продуктовое решение всё ещё не принято.</p></div>
-      <div class="card track"><span class="chip ch-p2">P3</span><div class="t">Skeleton — shimmer sync (доводка)</div><p class="d">Sync уже работает через общий `--skeleton-shimmer-x`; остались мёртвые строки `mask-attachment` (no-op) — убрать, либо решить настоящий viewport-anchor.</p><div class="meta">skeleton.component.scss</div></div>
       <div class="card track"><span class="chip ch-p2">P2</span><div class="t">Rounded `:active` touch-feedback</div><p class="d">После сброса tap-highlight ~14 контролов без явного `:active` потеряли press-подсветку на тач (checkbox/radio/switch/select/tabs/tag и др.). Скруглённый `:active` — единым шагом вместе с `.ds-interactive`.</p><div class="meta">tap-feedback-test.html</div></div>
       <div class="card track"><span class="chip ch-p2">P3</span><div class="t">Inspect-mode (Figma-style)</div><p class="d">Тоггл в заголовке секции → overlay со спекой paddings/gaps/sizes + какой токен за что отвечает. Начать пилотом на одной секции (например, button), затем обобщить.</p></div>
       <div class="card track"><span class="chip ch-p2">P2</span><div class="t">pagination: дубль model()/outputs</div><p class="d">`pageSize`/`currentPage` объявлены и как `model()`, и как ручные outputs — коллизия имён + двойной эмит на `onSizeChange`. Убрать ручные outputs, как уже сделано в `ds-table`. Breaking — под мажор.</p></div>
@@ -186,7 +184,6 @@
       <div class="card track"><span class="chip ch-oos">ждёт go</span><div class="t">ds-sidenav-item: (activate) output</div><p class="d">Чисто display-примитив без событийного output — ds-docs сайдбар не может его дожфудить (перехватывает клик напрямую). Добавить опциональный `(activate)` passthrough; публичный API на шаренном компоненте — нужен go.</p></div>
       <div class="card track"><span class="chip ch-oos">решить</span><div class="t">Combobox multiple vs multi-select</div><p class="d">Индустрия держит их раздельно; у нас multi живёт и в `ds-autocomplete [multiple]`, и в `ds-multi-select` — один сценарий, две эргономики. Решить: deprecate autocomplete-multi или задокументировать границу.</p><div class="meta">multi-pick-comparison.html</div></div>
       <div class="card track"><span class="chip ch-oos">if-needed</span><div class="t">CDK Menu adoption (option B)</div><p class="d">Только если понадобятся вложенные сабменю/menubar/context-menu; сейчас `ds-menu` — нативная roving-навигация, корректна для плоских меню. План запаркован.</p></div>
-      <div class="card track"><span class="chip ch-p2">P2</span><div class="t">Три токена без публичного API</div><p class="d">`ds-sidenav-item` label-weight, `ds-avatar` `--ds-avatar-size` (работает только на `md`), `ds-modal` title-weight — консьюмер вынужден таргетить внутренности DS и проигрывает specificity под emulated encapsulation (mm-admin дожфудинг 2026-07-29). Общее правило: если CSS компонента может задать визуальное свойство — токен обязан существовать.</p></div>
       <div class="card track"><span class="chip ch-p2">P2</span><div class="t">autocomplete single — читается как free-text</div><p class="d">В single-режиме триггер сохраняет вводимое поле + шеврон после выбора — выглядит как `ds-select`. Нужен single-select display-режим; решение V2 ждёт визуального прототипа.</p><div class="meta">combobox-single-display.html</div></div>
       <div class="card track"><span class="chip ch-frozen">blocked</span><div class="t">«Склеенное поле» — ds-field-group</div><p class="d">Один бордер + один focus-ring из leading-select + trailing-input/search/autocomplete, слоты рендерятся «голыми» через `[grouped]`. Спека готова (§D) — блокирован только решением про single-select display выше.</p></div>
       <div class="card track"><span class="chip ch-p2">P3</span><div class="t">Manual dev-docs browser check (шелл)</div><p class="d">Ручная проверка двух demo-секций `ds-app-shell` в реальном браузере после мержа — ещё не сделана.</p></div>
@@ -209,6 +206,7 @@
   <p class="foot">
     Источник: <span class="tag">docs/todo.md</span> (полные формулировки — в поповерах ⓘ).
     Архив сделанного целиком — <span class="tag">docs/done.md</span>; на доске выполненное не хранится.
+    Актуализировано 2026-07-30 (session): закрыты 3 карточки — «Три токена без публичного API» и «Skeleton — shimmer sync» (Motion 13→11), «ds-table: paging-поведения» (Компоненты 19→18); + housekeeping `--ds-t-*` extractor. Подробности в <span class="tag">docs/done.md</span> → Shipped 2026-07-29.
     Актуализировано 2026-07-29 (session): полная пересборка карточек из docs/todo.md — заведены карточки под аудит 07-24 + находки 07-27/28/29; lanes/stats/MAP пересчитаны.
     2026-07-23 (с 07-10): non-modal overlay Phase 2 докатан на select/autocomplete/multi-select/time-picker/color-picker/popover (07-23 починены 2 focus-follow-up'а: popover `panelRole` focus-steal и date-picker scroll-close) — лейн Motion пересобран, 2 закрытых пункта (press-дизайн, система рецептов) сняты как отгруженные ранее; добавлены «Семантический radius/elevation слой» (Foundations, запрошено 07-08), «badge count wording» (A11y, minor), «ds-sidenav-item (activate)» и «ds-select clear-× клавиатура» (API/прочее, оба surfaced 07-10).
     2026-07-08: публичный token-API раскатан на 11 бестокенных компонентов — детали в архиве.
@@ -687,7 +685,6 @@ _Archived 2026-07-06 from `todo.md`._
       ["ds-table: virtual scroll",          "virtual scroll + lazy loading",              ""],
       ["ds-table: row-expansion",           "row-expansion parity polish",                ""],
       ["ds-number-stepper",                 "optional numeric formatting",                ""],
-      ["ds-table: paging-поведения",        "pull the two paging behaviours",             ""],
       ["Chart wrapper",                     "Chart wrapper",                              ""],
       ["ds-filter-bar",                     "priority+ filter row",                        ""],
       ["Calendar (standalone)",             "month / agenda view",                        ""],
@@ -701,7 +698,6 @@ _Archived 2026-07-06 from `todo.md`._
       ["Responsive drawer mode",            "rail hides below a breakpoint",               ""],
 
       ["Overlay leave animation",           "Overlay leave animation — decide the policy", ""],
-      ["Skeleton — shimmer sync",           "page-wide shimmer sync",                     ""],
       ["Rounded `:active`",                 "Rounded `:active` touch-feedback",           "tap-feedback-test.html"],
       ["Inspect-mode",                      "Figma-style spec overlay",                   ""],
       ["pagination: дубль",                 "redundant `model()` + manual outputs",       ""],
@@ -709,7 +705,6 @@ _Archived 2026-07-06 from `todo.md`._
       ["ds-sidenav-item: (activate)",       "add an `(activate)` output for click interception", ""],
       ["Combobox multiple vs multi-select", "portfolio overlap (decision",                "multi-pick-comparison.html"],
       ["CDK Menu adoption",                 "CDK Menu adoption (option B)",               ""],
-      ["Три токена без публичного API",     "Three visual properties have no public token", ""],
       ["autocomplete single — читается",    "autocomplete single-select still reads",     "combobox-single-display.html"],
       ["«Склеенное поле»",                  "Glued field",                                ""],
       ["Manual dev-docs browser check",     "Manual dev-docs browser check",              ""],
