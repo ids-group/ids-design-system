@@ -203,6 +203,7 @@
     "ds-badge gains a countLabel input (default 'notifications') for the count's accessible-label noun — additive, no code change.",
     "Bugfixes, no code change: --ds-avatar-size now applies at every size (not only md); ds-table clamps an out-of-range page after a client-side filter shrinks the result set; collapsed ds-sidenav no longer overflows by 1px; dsTooltip now listens on focusin/focusout so keyboard focus toggles the tip and re-rendered anchors no longer strand panels; stacked overlays (modal/drawer/bottom-sheet) no longer unlock body scroll under each other (shared ref-counted BodyScrollLockService).",
     "ds-sidenav-item gains an optional (activate) output — emits the click MouseEvent; preventDefault() intercepts navigation on an href item, but a routerLink item navigates regardless. Additive, no code change.",
-    "BodyScrollLockService is now a public export — inject it to make a consumer's own full-screen overlay share the DS body-scroll lock (paired lock()/unlock()). Additive, no code change."
+    "BodyScrollLockService is now a public export — inject it to make a consumer's own full-screen overlay share the DS body-scroll lock (paired lock()/unlock()). Additive, no code change.",
+    "ds-menu: a disabled ds-menu-item is now keyboard-focusable (aria-disabled, kept in the roving/arrow/type-ahead order) instead of being dropped from nav and rendered as a native disabled button; activation stays blocked and a [dsTooltip] on it now shows on focus. Behavior/a11y only, no code change — but an e2e/unit test asserting a disabled menu item is unfocusable/native-disabled must be updated."
   ]
 }

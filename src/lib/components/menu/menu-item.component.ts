@@ -41,7 +41,9 @@ export class MenuItemComponent implements OnDestroy {
 
   /** Leading icon shown before the projected label. */
   readonly icon = input<IconName | null>(null);
-  /** Disables the item and excludes it from `ds-menu`'s roving-tabindex navigation. */
+  /** Blocks activation and styles the item as inactive. It stays
+   *  keyboard-focusable (`aria-disabled`, ARIA menu practice) and in `ds-menu`'s
+   *  roving order, so a `[dsTooltip]` explaining why can be reached and shown. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Renders the item in an error/destructive style. */
   readonly error = input(false, { transform: booleanAttribute });
@@ -94,7 +96,7 @@ export class MenuItemComponent implements OnDestroy {
   }
 
   protected onKeydown(event: KeyboardEvent): void {
-    if (!this.hasSubmenu()) {
+    if (this.disabled() || !this.hasSubmenu()) {
       return;
     }
     if (event.key === 'ArrowRight') {

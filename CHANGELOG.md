@@ -105,6 +105,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **`ds-menu`: disabled items are now keyboard-reachable.** A disabled `ds-menu-item` was dropped from the
+  roving-tabindex nav (unreachable by keyboard) and rendered a native `disabled` button; it now uses
+  `aria-disabled` and stays in the arrow / type-ahead order (ARIA menu practice), so a keyboard user can
+  focus it — and a `[dsTooltip]` on it now shows on focus, surfacing a "why is this disabled" reason.
+  Activation stays blocked. (Reliable screen-reader announcement of that reason is a separate follow-up —
+  the tooltip's `aria-describedby` currently lands on the `role="none"` host, not the inner button.)
+
 - **Stacked overlays no longer unlock body scroll under each other.** `ds-modal`, `ds-drawer` and
   `ds-bottom-sheet` each wrote `body.style.overflow` directly, so closing the outer of two stacked
   overlays re-enabled page scroll while the inner one was still open. They now share a ref-counted

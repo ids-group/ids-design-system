@@ -2594,7 +2594,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Disables the item and excludes it from `ds-menu`'s roving-tabindex navigation."
+        "description": "Blocks activation and styles the item as inactive. It stays keyboard-focusable (`aria-disabled`, ARIA menu practice) and in `ds-menu`'s roving order, so a `[dsTooltip]` explaining why can be reached and shown."
       },
       {
         "name": "error",
