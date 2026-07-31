@@ -9,6 +9,7 @@
   --_modal-title-text-color:        var(--ds-modal-title-text-color,        var(--text-primary));
   --_modal-title-text-color-error:  var(--ds-modal-title-text-color-error,  var(--error-text));
   --_modal-title-weight: var(--ds-modal-title-weight, var(--font-weight-bold));
+  --_modal-title-font-size: var(--ds-modal-title-font-size, var(--font-size-h5));
   --_modal-close-icon-color:        var(--ds-modal-close-icon-color,        var(--icon-default));
   --_modal-close-icon-color-hover:  var(--ds-modal-close-icon-color-hover,  var(--icon-strong));
   --_modal-icon-badge-bg-color: var(--ds-modal-icon-badge-bg-color, var(--accent-subtitle));
@@ -82,7 +83,7 @@
   }
 
   .title {
-    font: var(--_modal-title-weight) var(--font-size-h5) / var(--line-height-snug) var(--font-heading);
+    font: var(--_modal-title-weight) var(--_modal-title-font-size) / var(--line-height-snug) var(--font-heading);
     margin: 0;
     flex: 1;
     min-width: 0;
@@ -115,6 +116,10 @@
     justify-content: flex-end;
     padding: var(--space-4) var(--space-5);
     border-top: var(--border-width-default) solid var(--_modal-divider);
+
+    // A read-only dialog projects nothing here — without this it still draws a
+    // stray padded strip with a divider (same guard as .impact below).
+    &:empty { display: none; }
   }
 
   &.error {

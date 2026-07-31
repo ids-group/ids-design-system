@@ -10,6 +10,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **Five override tokens that were previously hardcoded:** `--ds-modal-title-font-size` (pairs with the
+  existing `-title-weight`), `--ds-date-picker-trigger-radius` (the counterpart of
+  `--ds-time-picker-trigger-radius`), `--ds-date-picker-panel-radius` (forwarded onto the portaled pane),
+  `--ds-checkbox-radius` (the box only — the indeterminate dash keeps its own), and `--ds-menu-max-width`.
+  `ds-toast` also gains `--ds-toast-min-width` / `--ds-toast-max-width` as per-instance hooks over the
+  global `--toast-minw` / `--toast-maxw` geometry. All default to the current values.
+
 - **`--ds-popover-min-width` and `--ds-menu-min-width`.** A popover (or a `ds-menu` projected into one)
   hugged its content with no way to widen it — `--ds-popover-max-width` was the only size hook, so a user
   menu that should be wider than its longest item needed global CSS against `.popover` / `ds-menu`. Both
@@ -40,6 +47,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   a tooltip sitting above its trigger, animated top-down. Purely visual; no API change.
 
 ### Fixed
+
+- **A selected dropdown option no longer loses its tint to the hover/keyboard-active state.** In
+  `styles/_dropdown-overlay.scss` the `:hover` / `.is-active` branch out-ranked `.is-selected` on
+  specificity, so it repainted the row to `--surface-secondary` while keeping the selected label colour —
+  and because the panel seeds `.is-active` on the selected option when it opens, it showed at REST too, not
+  only under the cursor. A brand that gives the selected row a dark fill got unreadable text. The neutral
+  branch is now scoped with `:not(.is-selected)` and the selected row has its own hover/active step
+  (`--primary-muted`).
+
+- **A read-only `ds-modal` no longer draws an empty footer strip.** `.actions` rendered its `border-top`
+  and padding even with nothing projected into `[actions]`; it now hides when empty, the same guard the
+  card already used for `.impact`.
 
 - **`ds-docs`-style à la carte consumers were missing the overlay-panel entrance.** `styles/overlay-motion`
   is now imported by the docs app itself, so portaled panels animate there as they do for consumers of the

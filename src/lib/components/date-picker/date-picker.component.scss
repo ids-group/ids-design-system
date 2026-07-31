@@ -8,6 +8,7 @@
   --_date-picker-trigger-label-color: var(--ds-date-picker-trigger-label-color, var(--text-primary));
   --_date-picker-required-color: var(--ds-date-picker-required-color, var(--error));
   --_date-picker-placeholder-color: var(--ds-date-picker-placeholder-color, var(--text-tertiary));
+  --_date-picker-trigger-radius: var(--ds-date-picker-trigger-radius, var(--radius-md));
 
   /* Hug the field's content width; a consumer opts into wider by setting a
      width on the host. Prevents an outer grid/flex column from stretching a
@@ -62,7 +63,7 @@
   gap: var(--space-1);
   background: var(--_date-picker-trigger-bg-color);
   border: var(--border-width-default) solid var(--_date-picker-trigger-border-color);
-  border-radius: var(--radius-md);
+  border-radius: var(--_date-picker-trigger-radius);
   padding: 0 var(--space-3);
   height: var(--hit-cozy);
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
@@ -199,10 +200,11 @@
   --_date-picker-header-label-color: var(--ds-date-picker-header-label-color, var(--text-primary));
   --_date-picker-nav-icon-color: var(--ds-date-picker-nav-icon-color, var(--icon-default));
   --_date-picker-width: var(--ds-date-picker-width, var(--date-picker-w));
+  --_date-picker-panel-radius: var(--ds-date-picker-panel-radius, var(--radius-lg));
 
   background-color: var(--_date-picker-bg-color);
   border: var(--border-width-default) solid var(--_date-picker-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--_date-picker-panel-radius);
   box-shadow: var(--_date-picker-shadow);
   padding: var(--space-3);
   width: var(--_date-picker-width);

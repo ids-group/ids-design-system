@@ -2539,6 +2539,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Checked box border colour (defaults to --accent)."
       },
       {
+        "name": "--ds-checkbox-radius",
+        "value": "var(--radius-sm)",
+        "notes": "Checkbox box corner radius (default --radius-sm). The indeterminate dash keeps its own radius."
+      },
+      {
         "name": "--check-size",
         "value": "20px",
         "notes": "20px — checkbox/radio box glyph (density-scaled)."
@@ -2683,6 +2688,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Date picker trigger placeholder text colour."
       },
       {
+        "name": "--ds-date-picker-trigger-radius",
+        "value": "var(--radius-md)",
+        "notes": "Date-picker trigger corner radius (default --radius-md) — the counterpart of --ds-time-picker-trigger-radius."
+      },
+      {
         "name": "--ds-date-picker-bg-color",
         "value": "var(--surface-overlay)",
         "notes": "Popover fill."
@@ -2716,6 +2726,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-date-picker-width",
         "value": "var(--date-picker-w)",
         "notes": "Calendar width."
+      },
+      {
+        "name": "--ds-date-picker-panel-radius",
+        "value": "var(--radius-lg)",
+        "notes": "Calendar panel corner radius (default --radius-lg). Forwarded onto the portaled pane on open."
       },
       {
         "name": "--date-picker-w",
@@ -3387,6 +3402,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Minimum menu width (default auto). Forwarded onto the overlay pane by ds-popover, so it also works for a menu projected into a popover."
       },
       {
+        "name": "--ds-menu-max-width",
+        "value": "none",
+        "notes": "Maximum menu width (default none). Pairs with --ds-menu-min-width; forwarded onto the pane by ds-popover."
+      },
+      {
         "name": "--menu-minw",
         "value": "200px",
         "notes": "Menu panel minimum width (200px)."
@@ -3437,6 +3457,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-modal-title-weight",
         "value": "var(--font-weight-bold)",
         "notes": "Title font-weight (defaults to --font-weight-bold)."
+      },
+      {
+        "name": "--ds-modal-title-font-size",
+        "value": "var(--font-size-h5)",
+        "notes": "Modal/dialog title size (default --font-size-h5). Pairs with --ds-modal-title-weight."
       },
       {
         "name": "--ds-modal-close-icon-color",
@@ -5649,6 +5674,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-toast-enter-offset",
         "value": "var(--space-2)",
         "notes": "How far the toast rises into place — read by ds-slide-in (default --space-2)."
+      },
+      {
+        "name": "--ds-toast-min-width",
+        "value": "var(--toast-minw)",
+        "notes": "Toast minimum width (default --toast-minw) — a per-instance hook over the global geometry token."
+      },
+      {
+        "name": "--ds-toast-max-width",
+        "value": "var(--toast-maxw)",
+        "notes": "Toast maximum width (default --toast-maxw) — a per-instance hook over the global geometry token."
       },
       {
         "name": "--ds-toast-enter-scale",

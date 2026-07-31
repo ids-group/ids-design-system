@@ -173,10 +173,10 @@
   </p>
 
   <ds-segmented
+    ariaLabel="Entrance preset"
     [options]="presetOptions"
     [value]="preset()"
     (valueChange)="preset.set($event)"
-    ariaLabel="Entrance preset"
   />
 
   <div
@@ -198,7 +198,9 @@
           title="Manifest saved"
         >
           Entrance played with
-          <code class="t-mono-inline">{{ preset() }}</code>.
+          <code class="t-mono-inline">
+            {{ preset() }}
+          </code>.
         </ds-alert>
       }
 

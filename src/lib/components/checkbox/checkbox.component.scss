@@ -7,6 +7,7 @@
   --_checkbox-hover-border: var(--ds-checkbox-hover-border-color, var(--accent));
   --_checkbox-selected-bg: var(--ds-checkbox-selected-bg-color, var(--accent));
   --_checkbox-selected-border: var(--ds-checkbox-selected-border-color, var(--accent));
+  --_checkbox-radius: var(--ds-checkbox-radius, var(--radius-sm));
 
   // Local resolvers for size scaling; md references the global token so it stays
   // density-responsive. sm/lg are explicit per-instance overrides.
@@ -58,7 +59,7 @@
   place-items: center;
   flex-shrink: 0;
   margin: 0;
-  border-radius: var(--radius-sm);
+  border-radius: var(--_checkbox-radius);
   transition: background-color var(--duration-fast) var(--ease-standard),
               border-color var(--duration-fast) var(--ease-standard);
 

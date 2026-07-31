@@ -174,6 +174,7 @@ export class DatePickerComponent
     '--ds-date-picker-header-label-color',
     '--ds-date-picker-nav-icon-color',
     '--ds-date-picker-width',
+    '--ds-date-picker-panel-radius',
   ];
 
   /** Selection mode — single date or start/end range. */

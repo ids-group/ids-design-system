@@ -30,6 +30,8 @@
   --_toast-enter-duration: var(--ds-toast-enter-duration, var(--duration-slow));
   --_toast-enter-easing: var(--ds-toast-enter-easing, var(--ease-decelerate));
   --_toast-enter-offset: var(--ds-toast-enter-offset, var(--space-2));
+  --_toast-min-width: var(--ds-toast-min-width, var(--toast-minw));
+  --_toast-max-width: var(--ds-toast-max-width, var(--toast-maxw));
 
   /* Positive: the toast rises INTO place from below its resting spot. */
   --_ds-enter-y: var(--_toast-enter-offset);
@@ -44,8 +46,8 @@
   border-radius: var(--radius-lg);
   padding: var(--space-3) var(--space-4);
   box-shadow: var(--shadow-toast);
-  min-width: var(--toast-minw);
-  max-width: var(--toast-maxw);
+  min-width: var(--_toast-min-width);
+  max-width: var(--_toast-max-width);
   animation-name: var(--_toast-enter-keyframes);
   animation-duration: var(--_toast-enter-duration);
   animation-timing-function: var(--_toast-enter-easing);
