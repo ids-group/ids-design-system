@@ -129,7 +129,6 @@ export class TimePickerComponent
   readonly reserveMessage = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
-  /** Input, else `DS_CONFIG.field.reserveMessage`, else on. */
   protected readonly reserveMessageResolved = resolveReserveMessage(
     this.reserveMessage,
   );
