@@ -43,6 +43,13 @@ export class SearchComponent {
   private readonly inputEl =
     viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
+  /** Move keyboard focus to the search input. Public so a host can hand focus
+   *  over deliberately — e.g. a Clear button that disables itself on activation
+   *  would otherwise blur into `<body>` and restart Tab order at the top. */
+  focus(options?: FocusOptions): void {
+    this.inputEl()?.nativeElement.focus(options);
+  }
+
   protected onSubmit(): void {
     this.submitted.emit(this.value());
   }
