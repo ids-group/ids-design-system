@@ -14,8 +14,22 @@
   --_modal-icon-badge-bg-color: var(--ds-modal-icon-badge-bg-color, var(--accent-subtitle));
   --_modal-icon-badge-icon-color: var(--ds-modal-icon-badge-icon-color, var(--accent));
   --_modal-impact-text-color: var(--ds-modal-impact-text-color, var(--warning-text));
+  --_modal-enter-keyframes: var(--ds-modal-enter-keyframes, ds-scale-in);
+  --_modal-enter-duration: var(--ds-modal-enter-duration, var(--duration-base));
+  --_modal-enter-easing: var(--ds-modal-enter-easing, var(--ease-decelerate));
+  --_modal-leave-duration: var(--ds-modal-leave-duration, var(--duration-fast));
+  --_modal-leave-easing: var(--ds-modal-leave-easing, var(--ease-accelerate));
+  --_ds-enter-scale: var(--ds-modal-enter-scale, 0.97);
 
   display: contents;
+
+  // Zeroing the duration (rather than dropping the animation) keeps the
+  // animationend that tears the modal down firing — and outranks a consumer
+  // keyframe carrying its own timing.
+  @media (prefers-reduced-motion: reduce) {
+    --_modal-enter-duration: 0ms;
+    --_modal-leave-duration: 0ms;
+  }
 }
 
 .modal {
@@ -28,7 +42,9 @@
   max-height: 90vh;
   max-height: 90dvh;
   overflow: hidden;
-  animation: modal-card-in var(--duration-base) var(--ease-decelerate);
+  animation-name: var(--_modal-enter-keyframes);
+  animation-duration: var(--_modal-enter-duration);
+  animation-timing-function: var(--_modal-enter-easing);
 
   &.sm { width: var(--modal-w-sm); }
   &.md { width: var(--modal-w-md); }
@@ -133,20 +149,20 @@
   z-index: var(--layer-modal);
   display: grid;
   place-items: center;
-  animation: fade-in var(--duration-base) var(--ease-decelerate);
+  animation-name: ds-fade-in;
+  animation-duration: var(--_modal-enter-duration);
+  animation-timing-function: var(--_modal-enter-easing);
 
-  &.closing { animation: modal-out var(--duration-fast) var(--ease-accelerate) forwards; }
+  &.closing {
+    animation-name: modal-out;
+    animation-duration: var(--_modal-leave-duration);
+    animation-timing-function: var(--_modal-leave-easing);
+    animation-fill-mode: forwards;
+  }
 }
 
-@keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
+// Stays local and literally named: onLeaveEnd() matches this name to tear the
+// modal down, so it must not be swappable.
 @keyframes modal-out {
   to { opacity: 0; }
-}
-
-@keyframes modal-card-in {
-  from { opacity: 0; transform: scale(0.97); }
 }

@@ -7,6 +7,14 @@
     transparent
   ));
   --_label-color: var(--ds-loading-overlay-label-color, var(--text-secondary));
+  --_enter-keyframes: var(--ds-loading-overlay-enter-keyframes, ds-fade-in);
+  --_enter-duration: var(--ds-loading-overlay-enter-duration, var(--duration-fast));
+  --_enter-easing: var(--ds-loading-overlay-enter-easing, var(--ease-standard));
+  --_ds-enter-scale: var(--ds-loading-overlay-enter-scale, 0.96);
+
+  @media (prefers-reduced-motion: reduce) {
+    --_enter-duration: 0ms;
+  }
 }
 
 .scrim {
@@ -19,7 +27,9 @@
   justify-content: center;
   gap: var(--space-3);
   background-color: var(--_scrim-color);
-  animation: ds-loading-overlay-in var(--duration-fast) var(--ease-standard);
+  animation-name: var(--_enter-keyframes);
+  animation-duration: var(--_enter-duration);
+  animation-timing-function: var(--_enter-easing);
 }
 
 .scrim.blur {
@@ -33,11 +43,3 @@
     var(--font-sans);
 }
 
-@keyframes ds-loading-overlay-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}

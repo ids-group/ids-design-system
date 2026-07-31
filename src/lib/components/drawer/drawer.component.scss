@@ -15,8 +15,29 @@
   --_drawer-width-sm:               var(--ds-drawer-width,                  var(--drawer-w-sm));
   --_drawer-width-md:               var(--ds-drawer-width,                  var(--drawer-w-md));
   --_drawer-width-lg:               var(--ds-drawer-width,                  var(--drawer-w-lg));
+  --_drawer-enter-keyframes: var(--ds-drawer-enter-keyframes, ds-slide-edge-in);
+  --_drawer-enter-duration: var(--ds-drawer-enter-duration, var(--duration-slow));
+  --_drawer-enter-easing: var(--ds-drawer-enter-easing, var(--ease-decelerate));
+  --_drawer-leave-duration: var(--ds-drawer-leave-duration, var(--duration-base));
+  --_drawer-leave-easing: var(--ds-drawer-leave-easing, var(--ease-accelerate));
+
+  /* The scrim reads the same public tokens but keeps its own faster default,
+     so an unset drawer still fades its scrim ahead of the sliding panel. */
+  --_drawer-scrim-enter-duration: var(--ds-drawer-enter-duration, var(--duration-fast));
+  --_drawer-scrim-leave-duration: var(--ds-drawer-leave-duration, var(--duration-fast));
+  --_ds-enter-scale: var(--ds-drawer-enter-scale, 0.96);
 
   display: contents;
+
+  // Zeroing the duration (rather than dropping the animation) keeps the
+  // animationend that tears the drawer down firing — and outranks a consumer
+  // keyframe carrying its own timing.
+  @media (prefers-reduced-motion: reduce) {
+    --_drawer-enter-duration: 0ms;
+    --_drawer-leave-duration: 0ms;
+    --_drawer-scrim-enter-duration: 0ms;
+    --_drawer-scrim-leave-duration: 0ms;
+  }
 }
 
 .drawer-root {
@@ -35,14 +56,16 @@
   position: absolute;
   inset: 0;
   background: var(--_drawer-scrim-color);
-  animation: drawer-scrim-in var(--duration-fast, 120ms) var(--ease-decelerate, ease-out);
+  animation-name: ds-fade-in;
+  animation-duration: var(--_drawer-scrim-enter-duration);
+  animation-timing-function: var(--_drawer-enter-easing);
 
-  &.closing { animation: drawer-scrim-out var(--duration-fast) var(--ease-accelerate) forwards; }
-}
-
-@keyframes drawer-scrim-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  &.closing {
+    animation-name: drawer-scrim-out;
+    animation-duration: var(--_drawer-scrim-leave-duration);
+    animation-timing-function: var(--_drawer-leave-easing);
+    animation-fill-mode: forwards;
+  }
 }
 
 @keyframes drawer-scrim-out {
@@ -61,51 +84,67 @@
      z-index content projected into the body can't sink under the scrim. */
   isolation: isolate;
 
+  /* Enter is shared — only the travel (--_ds-enter-x/y) and the leave keyframe
+     differ per side, so switching --ds-drawer-enter-keyframes re-skins all four. */
+  animation-name: var(--_drawer-enter-keyframes);
+  animation-duration: var(--_drawer-enter-duration);
+  animation-timing-function: var(--_drawer-enter-easing);
+
+  &.closing {
+    animation-duration: var(--_drawer-leave-duration);
+    animation-timing-function: var(--_drawer-leave-easing);
+    animation-fill-mode: forwards;
+  }
+
   /* Size variants (applied to right/left panels) */
   &.sm { width: var(--_drawer-width-sm); }
   &.md { width: var(--_drawer-width-md); }
   &.lg { width: var(--_drawer-width-lg); }
 
   &.right {
+    --_ds-enter-x: 100%;
+
     top: 0;
     right: 0;
     bottom: 0;
     max-width: 100vw;
-    animation: drawer-in-right var(--duration-slow) var(--ease-decelerate);
 
-    &.closing { animation: drawer-panel-close-right var(--duration-base) var(--ease-accelerate) forwards; }
+    &.closing { animation-name: drawer-panel-close-right; }
   }
 
   &.left {
+    --_ds-enter-x: -100%;
+
     top: 0;
     left: 0;
     bottom: 0;
     max-width: 100vw;
-    animation: drawer-in-left var(--duration-slow) var(--ease-decelerate);
 
-    &.closing { animation: drawer-panel-close-left var(--duration-base) var(--ease-accelerate) forwards; }
+    &.closing { animation-name: drawer-panel-close-left; }
   }
 
   &.top {
+    --_ds-enter-y: -100%;
+
     top: 0;
     left: 0;
     right: 0;
     width: auto;
     max-height: 80vh;
-    animation: drawer-in-top var(--duration-slow) var(--ease-decelerate);
 
-    &.closing { animation: drawer-panel-close-top var(--duration-base) var(--ease-accelerate) forwards; }
+    &.closing { animation-name: drawer-panel-close-top; }
   }
 
   &.bottom {
+    --_ds-enter-y: 100%;
+
     bottom: 0;
     left: 0;
     right: 0;
     width: auto;
     max-height: 80vh;
-    animation: drawer-in-bottom var(--duration-slow) var(--ease-decelerate);
 
-    &.closing { animation: drawer-panel-close-bottom var(--duration-base) var(--ease-accelerate) forwards; }
+    &.closing { animation-name: drawer-panel-close-bottom; }
   }
 
   .header {
@@ -152,36 +191,18 @@
   }
 }
 
-@keyframes drawer-in-right {
-  from { transform: translateX(100%); }
-  to   { transform: none; }
-}
-
+// The close keyframes stay local and literally named: onLeaveEnd() matches them
+// to tear the drawer down, so they must not be swappable.
 @keyframes drawer-panel-close-right {
   to { transform: translateX(100%); }
-}
-
-@keyframes drawer-in-left {
-  from { transform: translateX(-100%); }
-  to   { transform: none; }
 }
 
 @keyframes drawer-panel-close-left {
   to { transform: translateX(-100%); }
 }
 
-@keyframes drawer-in-top {
-  from { transform: translateY(-100%); }
-  to   { transform: none; }
-}
-
 @keyframes drawer-panel-close-top {
   to { transform: translateY(-100%); }
-}
-
-@keyframes drawer-in-bottom {
-  from { transform: translateY(100%); }
-  to   { transform: none; }
 }
 
 @keyframes drawer-panel-close-bottom {
