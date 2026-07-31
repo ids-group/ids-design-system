@@ -377,7 +377,6 @@ export class TableComponent<T extends object> {
     this.columnWidths.set(new Map());
   }
 
-  // ---- Per-column set filter ----
   private readonly columnFilterPopover = viewChild<PopoverComponent>(
     'columnFilterPopover',
   );
@@ -482,7 +481,6 @@ export class TableComponent<T extends object> {
     this.columnFilters.set(next);
   }
 
-  // ---- Inline cell editing (opt-in `column.editable`) ----
   private readonly injector = inject(Injector);
   private readonly editInput =
     viewChild<ElementRef<HTMLInputElement>>('editInput');
@@ -723,7 +721,6 @@ export class TableComponent<T extends object> {
     this.columnPickerPopover()?.toggle(event.currentTarget as HTMLElement);
   }
 
-  // ---- Truncated-cell full-text popover ----
   protected readonly hasTruncate = computed(() =>
     this.columns().some((col) => col.truncate),
   );
@@ -743,7 +740,6 @@ export class TableComponent<T extends object> {
     this.cellTextPopover()?.toggle(element);
   }
 
-  // ---- Sticky-proxy horizontal scrollbar (opt-in `stickyScrollbar`) ----
   private readonly scrollWrap =
     viewChild.required<ElementRef<HTMLElement>>('scrollWrap');
   private readonly hscrollProxy =
@@ -1031,12 +1027,9 @@ export class TableComponent<T extends object> {
       const currentIndex = order.indexOf(this.sortDir());
       dir = order[(currentIndex + 1) % order.length] ?? null;
     }
-    // Keep the key even when cycling to "unsorted" — `sortDir === null` alone
-    // means unsorted (sortedData/sortIcon/ariaSort all gate on it). Nulling the
-    // key desynced a host that maps "off" back to its own default sort: on the
-    // default column it pushes the same key the binding already held, Angular
-    // skips the write, and the header froze on the neutral icon while the rows
-    // stayed ordered.
+    // The key survives "unsorted" (`sortDir === null` alone means that): nulling
+    // it desynced a host that maps off back to its own default sort, because on
+    // the default column that write is a no-op for Angular's binding diff.
     this.sortKey.set(col.key);
     this.sortDir.set(dir);
     this.sortChange.emit({ key: col.key, dir });

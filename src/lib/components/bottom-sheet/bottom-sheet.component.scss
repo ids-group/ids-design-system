@@ -19,9 +19,8 @@
 
   display: contents;
 
-  // Zeroing the duration (rather than dropping the animation) keeps the
-  // animationend that tears the sheet down firing — and outranks a consumer
-  // keyframe carrying its own timing.
+  // Reduced motion zeroes the DURATION, never the animation — the sheet's
+  // animationend teardown must still fire (see styles/_surface-motion.scss).
   @media (prefers-reduced-motion: reduce) {
     --_bottom-sheet-enter-duration: 0ms;
     --_bottom-sheet-leave-duration: 0ms;
