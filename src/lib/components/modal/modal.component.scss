@@ -10,6 +10,11 @@
   --_modal-title-text-color-error:  var(--ds-modal-title-text-color-error,  var(--error-text));
   --_modal-title-weight: var(--ds-modal-title-weight, var(--font-weight-bold));
   --_modal-title-font-size: var(--ds-modal-title-font-size, var(--font-size-h5));
+  --_modal-eyebrow-text-color: var(--ds-modal-eyebrow-text-color, var(--text-tertiary));
+  --_modal-eyebrow-font-size: var(--ds-modal-eyebrow-font-size, var(--font-size-xs));
+  --_modal-eyebrow-weight: var(--ds-modal-eyebrow-weight, var(--font-weight-bold));
+  --_modal-eyebrow-tracking: var(--ds-modal-eyebrow-tracking, var(--letter-spacing-wide));
+  --_modal-eyebrow-transform: var(--ds-modal-eyebrow-transform, uppercase);
   --_modal-close-icon-color:        var(--ds-modal-close-icon-color,        var(--icon-default));
   --_modal-close-icon-color-hover:  var(--ds-modal-close-icon-color-hover,  var(--icon-strong));
   --_modal-icon-badge-bg-color: var(--ds-modal-icon-badge-bg-color, var(--accent-subtitle));
@@ -82,10 +87,26 @@
     }
   }
 
+  // Owns the flex slot the title used to hold, so an optional eyebrow stacks
+  // ABOVE the title instead of beside it.
+  .heading {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .eyebrow {
+    font: var(--_modal-eyebrow-weight) var(--_modal-eyebrow-font-size) / var(--line-height-flat) var(--font-sans);
+    letter-spacing: var(--_modal-eyebrow-tracking);
+    text-transform: var(--_modal-eyebrow-transform);
+    color: var(--_modal-eyebrow-text-color);
+    margin-bottom: var(--space-0-5);
+
+    &:empty { display: none; }
+  }
+
   .title {
     font: var(--_modal-title-weight) var(--_modal-title-font-size) / var(--line-height-snug) var(--font-heading);
     margin: 0;
-    flex: 1;
     min-width: 0;
     color: var(--_modal-title-text-color);
   }

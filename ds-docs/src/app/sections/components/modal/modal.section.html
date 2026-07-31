@@ -11,6 +11,58 @@
     the backdrop so all sizes can be compared side by side.
   </span>
 
+  <!-- ========================================================== Eyebrow -->
+  <h3 class="block-title t-h4">
+    Eyebrow · context above the title
+  </h3>
+
+  <p class="block-desc t-s">
+    Project into <code class="t-mono-inline">[eyebrow]</code> when the dialog
+    needs to name the record it acts on. Nothing renders when the slot is
+    unfilled; it is uppercase and tracked by default, retunable through the
+    <code class="t-mono-inline">
+      --ds-modal-eyebrow-*
+    </code> tokens.
+  </p>
+
+  <div class="modal-grid modal-grid--1">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-modal-card
+          title="Deactivate policyholder"
+          size="sm"
+          [showClose]="false"
+        >
+          <span eyebrow>
+            My activity · Robert Thompson
+          </span>
+
+          <span body>
+            The eyebrow carries the record's identity, so the title can stay a
+            plain statement of the action.
+          </span>
+
+          <ng-container actions>
+            <ds-button
+              color="neutral"
+              variant="outline"
+            >
+              Cancel
+            </ds-button>
+
+            <ds-button color="error">
+              Deactivate
+            </ds-button>
+          </ng-container>
+        </ds-modal-card>
+      </div>
+
+      <div class="state-cell__label">
+        with eyebrow
+      </div>
+    </div>
+  </div>
+
   <!-- ============================================================ Sizes -->
   <h3 class="block-title t-h4">
     Sizes
