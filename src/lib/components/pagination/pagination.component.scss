@@ -12,6 +12,9 @@
   --_pagination-active-label-color:    var(--ds-pagination-active-label-color,    var(--accent-on));
   --_pagination-radius:        var(--ds-pagination-radius,        var(--radius-md));
   --_pagination-focus-shadow:  var(--ds-pagination-focus-shadow,  var(--ds-control-focus-shadow));
+  --_pagination-label-font-size: var(--ds-pagination-label-font-size, var(--font-size-s));
+  --_pagination-label-weight: var(--ds-pagination-label-weight, var(--font-weight-regular));
+  --_pagination-label-color: var(--ds-pagination-label-color, var(--text-secondary));
 
   display: inline-flex;
 }
@@ -23,8 +26,8 @@
   flex-wrap: wrap;
 
   .label {
-    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-    color: var(--text-secondary);
+    font: var(--_pagination-label-weight) var(--_pagination-label-font-size) / var(--line-height-flat) var(--font-sans);
+    color: var(--_pagination-label-color);
     margin-right: var(--space-2);
   }
 

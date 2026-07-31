@@ -30,6 +30,9 @@ export class PaginationComponent {
   readonly pageSizeOptions = input<number[]>([10, 25, 50, 100]);
   /** Shows the "Showing X–Y of Z" range label. */
   readonly showLabel = input(true, { transform: booleanAttribute });
+  /** Shows the rows-per-page dropdown. Turn it off for a screen with a fixed
+   *  page size — otherwise the control offers a choice the host won't honour. */
+  readonly showPageSize = input(true, { transform: booleanAttribute });
 
   protected readonly totalPages = computed(() =>
     Math.max(1, Math.ceil(this.total() / this.pageSize())),

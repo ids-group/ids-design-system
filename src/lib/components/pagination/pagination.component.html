@@ -58,13 +58,15 @@
     </ds-icon>
   </button>
 
-  <ds-select
-    class="size"
-    ariaLabel="Rows per page"
-    size="sm"
-    [options]="sizeOptions()"
-    [value]="pageSizeStr()"
-    (valueChange)="onSizeChange($event)"
-  >
-  </ds-select>
+  @if (showPageSize()) {
+    <ds-select
+      class="size"
+      ariaLabel="Rows per page"
+      size="sm"
+      [options]="sizeOptions()"
+      [value]="pageSizeStr()"
+      (valueChange)="onSizeChange($event)"
+    >
+    </ds-select>
+  }
 </nav>
