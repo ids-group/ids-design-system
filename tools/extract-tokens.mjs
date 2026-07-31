@@ -202,9 +202,17 @@ const typographyHooks = extractComponentTokens(
   readIf(join(ROOT, 'src/lib/styles/_typography.scss')),
   't',
 );
+// Overlay-pane motion hooks: read in a GLOBAL partial (the pane is portaled
+// outside every component, so its rule can't live in one), grouped under
+// 'overlay'. Without this they'd be invisible to the reference entirely.
+const overlayMotionHooks = extractComponentTokens(
+  readIf(join(ROOT, 'src/lib/styles/_overlay-motion.scss')),
+  'overlay',
+);
 const all = [
   ...comp.map((t) => ({ ...t, category: 'component' })),
   ...typographyHooks.map((t) => ({ ...t, category: 'component' })),
+  ...overlayMotionHooks.map((t) => ({ ...t, category: 'component' })),
   ...globals.map((t) => ({ ...t, category: categorize(t.name) })),
 ];
 for (const t of all)
@@ -449,16 +457,26 @@ const titleCaseFolder = (s) =>
   s
     .replace(/(^|-)([a-z])/g, (_, d, c) => (d ? ' ' : '') + c.toUpperCase())
     .trim();
+// Groups that aren't component folders — global partials surfaced alongside them.
+const PSEUDO_FOLDERS = {
+  t: {
+    component: 'Typography utilities',
+    selector: '.t-*',
+    description: 'Per-axis --ds-t-* override hooks on the .t-* type utilities.',
+  },
+  overlay: {
+    component: 'Overlay panels',
+    selector: '.ds-overlay-pane',
+    description:
+      'Enter-motion hooks shared by every portaled DS panel — select, multi-select, autocomplete, date / time / colour picker, popover, tooltip, menu submenu.',
+  },
+};
 const COMPONENT_TOKENS = Object.keys(compGroups)
   .sort((a, b) => titleCaseFolder(a).localeCompare(titleCaseFolder(b)))
   .map((folder) => ({
-    component:
-      folder === 't' ? 'Typography utilities' : titleCaseFolder(folder),
-    selector: folder === 't' ? '.t-*' : `.${folder}`,
-    description:
-      folder === 't'
-        ? 'Per-axis --ds-t-* override hooks on the .t-* type utilities.'
-        : '',
+    component: PSEUDO_FOLDERS[folder]?.component ?? titleCaseFolder(folder),
+    selector: PSEUDO_FOLDERS[folder]?.selector ?? `.${folder}`,
+    description: PSEUDO_FOLDERS[folder]?.description ?? '',
     tokens: compGroups[folder],
   }));
 

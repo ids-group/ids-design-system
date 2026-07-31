@@ -1,4 +1,12 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  AlertComponent,
+  ButtonComponent,
+  SegmentedComponent,
+  SelectComponent,
+  type SegmentedOption,
+  type SelectItem,
+} from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,
@@ -92,10 +100,58 @@ const COMBINED: CombinedDemo[] = [
   },
 ];
 
+interface EnterPreset {
+  readonly keyframes: string;
+  readonly label: string;
+  readonly feel: string;
+  readonly defaultFor: string;
+}
+
+const ENTER_PRESETS: readonly EnterPreset[] = [
+  {
+    keyframes: 'ds-slide-in',
+    label: 'Slide',
+    feel: 'Fades while travelling a short distance — for a panel, in from the trigger edge.',
+    defaultFor: 'Overlay panels, toast, banner, alert',
+  },
+  {
+    keyframes: 'ds-scale-in',
+    label: 'Scale',
+    feel: 'Grows into place from a micro-scale, out of the trigger edge — no travel.',
+    defaultFor: 'Modal',
+  },
+  {
+    keyframes: 'ds-fade-in',
+    label: 'Fade',
+    feel: 'Opacity only — the calmest option, and the steadiest on dense screens.',
+    defaultFor: 'Scrims, loading overlay',
+  },
+  {
+    keyframes: 'ds-slide-edge-in',
+    label: 'Slide from edge',
+    feel: 'Full-distance travel with NO fade — a fade would read as a flicker on a large panel.',
+    defaultFor: 'Drawer, bottom sheet',
+  },
+];
+
+const DEMO_OPTIONS: SelectItem[] = [
+  { label: 'Rotterdam', value: 'rtm' },
+  { label: 'Felixstowe', value: 'fxt' },
+  { label: 'Gdańsk', value: 'gdn' },
+  { label: 'Antwerp', value: 'anr' },
+];
+
 @Component({
   selector: 'section-foundations-motion',
   standalone: true,
-  imports: [DocsSectionComponent, DocsTruncationComponent],
+  imports: [
+    AlertComponent,
+    ButtonComponent,
+    DocsSectionComponent,
+    DocsTruncationComponent,
+    SegmentedComponent,
+    SelectComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './motion.section.html',
   styleUrl: './motion.section.scss',
@@ -104,6 +160,21 @@ export class MotionSection {
   protected readonly durations = DURATIONS;
   protected readonly eases = EASES;
   protected readonly combined = COMBINED;
+  protected readonly enterPresets = ENTER_PRESETS;
+  protected readonly demoOptions = DEMO_OPTIONS;
+  protected readonly presetOptions: SegmentedOption[] = ENTER_PRESETS.map(
+    (preset) => ({ label: preset.label, value: preset.keyframes }),
+  );
+  protected readonly preset = signal('ds-slide-in');
+  protected readonly alertShown = signal(true);
+
+  /** An entrance plays on insert, so the only honest way to replay it is to
+   *  re-mount the surface — a timeout, because the removal needs to render. */
+  protected replayAlert(): void {
+    this.alertShown.set(false);
+    setTimeout(() => this.alertShown.set(true));
+  }
+
   protected readonly truncationRules: TruncationRule[] = [
     {
       field: 'Reduced motion',

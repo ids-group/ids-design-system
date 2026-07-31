@@ -176,3 +176,38 @@
       .demo-modal,
       .demo-tick { opacity: 1; transform: none; }
     }
+
+    /* ---------- Entrance presets ---------- */
+    .motion-preset-stage {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: var(--space-5);
+      margin-top: var(--space-4);
+      padding: var(--space-5);
+      background: var(--surface-default);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
+    }
+    .motion-preset-select { width: 240px; }
+    .motion-preset-replay {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+      min-height: 76px;
+    }
+    .motion-preset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+    }
+    .motion-preset-cell {
+      display: grid;
+      gap: var(--space-2);
+      padding: var(--space-4);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-md);
+    }
+    .motion-preset-default { color: var(--text-tertiary); }

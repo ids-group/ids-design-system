@@ -1818,6 +1818,31 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-alert-radius",
         "value": "var(--radius-md)",
         "notes": "Alert corner radius (8px)."
+      },
+      {
+        "name": "--ds-alert-enter-keyframes",
+        "value": "ds-slide-in",
+        "notes": "Alert entrance @keyframes (default ds-slide-in)."
+      },
+      {
+        "name": "--ds-alert-enter-duration",
+        "value": "var(--duration-base)",
+        "notes": "Alert entrance duration (default --duration-base)."
+      },
+      {
+        "name": "--ds-alert-enter-easing",
+        "value": "var(--ease-decelerate)",
+        "notes": "Alert entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-alert-enter-offset",
+        "value": "2px",
+        "notes": "How far the alert drops in — read by ds-slide-in (default 2px)."
+      },
+      {
+        "name": "--ds-alert-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the alert enters with ds-scale-in (default 0.96)."
       }
     ]
   },
@@ -2112,6 +2137,31 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Close icon hover."
       },
       {
+        "name": "--ds-banner-enter-keyframes",
+        "value": "ds-slide-in",
+        "notes": "Banner entrance @keyframes (default ds-slide-in)."
+      },
+      {
+        "name": "--ds-banner-enter-duration",
+        "value": "var(--duration-base)",
+        "notes": "Banner entrance duration (default --duration-base)."
+      },
+      {
+        "name": "--ds-banner-enter-easing",
+        "value": "var(--ease-decelerate)",
+        "notes": "Banner entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-banner-enter-offset",
+        "value": "4px",
+        "notes": "How far the banner drops in — read by ds-slide-in (default 4px)."
+      },
+      {
+        "name": "--ds-banner-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the banner enters with ds-scale-in (default 0.96)."
+      },
+      {
         "name": "--banner-bar-w",
         "value": "4px",
         "notes": "Banner left accent bar width (4px)."
@@ -2157,6 +2207,36 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-bottom-sheet-title-text-color",
         "value": "var(--text-primary)",
         "notes": "Bottom sheet title text colour."
+      },
+      {
+        "name": "--ds-bottom-sheet-enter-keyframes",
+        "value": "ds-slide-edge-in",
+        "notes": "Bottom-sheet entrance @keyframes (default ds-slide-edge-in — travel with no fade)."
+      },
+      {
+        "name": "--ds-bottom-sheet-enter-duration",
+        "value": "var(--duration-base)",
+        "notes": "Bottom-sheet entrance duration (default --duration-base); the scrim uses --duration-fast until this is set."
+      },
+      {
+        "name": "--ds-bottom-sheet-enter-easing",
+        "value": "var(--ease-decelerate)",
+        "notes": "Bottom-sheet + scrim entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-bottom-sheet-leave-duration",
+        "value": "var(--duration-base)",
+        "notes": "Bottom-sheet close duration (default --duration-base); the scrim uses --duration-fast until this is set."
+      },
+      {
+        "name": "--ds-bottom-sheet-leave-easing",
+        "value": "var(--ease-accelerate)",
+        "notes": "Bottom-sheet + scrim close easing (default --ease-accelerate)."
+      },
+      {
+        "name": "--ds-bottom-sheet-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the sheet enters with ds-scale-in (default 0.96)."
       },
       {
         "name": "--bottom-sheet-handle-w",
@@ -2769,6 +2849,36 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Drawer panel width (defaults to --drawer-w-sm)."
       },
       {
+        "name": "--ds-drawer-enter-keyframes",
+        "value": "ds-slide-edge-in",
+        "notes": "Drawer panel entrance @keyframes, shared by all four sides (default ds-slide-edge-in)."
+      },
+      {
+        "name": "--ds-drawer-enter-duration",
+        "value": "var(--duration-slow)",
+        "notes": "Drawer entrance duration (default --duration-slow); the scrim uses --duration-fast until this is set."
+      },
+      {
+        "name": "--ds-drawer-enter-easing",
+        "value": "var(--ease-decelerate)",
+        "notes": "Drawer panel + scrim entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-drawer-leave-duration",
+        "value": "var(--duration-base)",
+        "notes": "Drawer close duration (default --duration-base); the scrim uses --duration-fast until this is set."
+      },
+      {
+        "name": "--ds-drawer-leave-easing",
+        "value": "var(--ease-accelerate)",
+        "notes": "Drawer panel + scrim close easing (default --ease-accelerate)."
+      },
+      {
+        "name": "--ds-drawer-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the drawer enters with ds-scale-in (default 0.96)."
+      },
+      {
         "name": "--drawer-w-sm",
         "value": "320px",
         "notes": "Drawer small width preset (320px)."
@@ -3208,6 +3318,26 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-loading-overlay-label-color",
         "value": "var(--text-secondary)",
         "notes": "Loading overlay status text colour (defaults to --text-secondary)."
+      },
+      {
+        "name": "--ds-loading-overlay-enter-keyframes",
+        "value": "ds-fade-in",
+        "notes": "Loading-scrim entrance @keyframes (default ds-fade-in)."
+      },
+      {
+        "name": "--ds-loading-overlay-enter-duration",
+        "value": "var(--duration-fast)",
+        "notes": "Loading-scrim entrance duration (default --duration-fast)."
+      },
+      {
+        "name": "--ds-loading-overlay-enter-easing",
+        "value": "var(--ease-standard)",
+        "notes": "Loading-scrim entrance easing (default --ease-standard)."
+      },
+      {
+        "name": "--ds-loading-overlay-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the scrim enters with ds-scale-in (default 0.96)."
       }
     ]
   },
@@ -3327,6 +3457,36 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-modal-impact-text-color",
         "value": "var(--warning-text)",
         "notes": "Modal impact/warning message text colour (defaults to --warning-text)."
+      },
+      {
+        "name": "--ds-modal-enter-keyframes",
+        "value": "ds-scale-in",
+        "notes": "Modal card entrance @keyframes (default ds-scale-in); the backdrop always fades."
+      },
+      {
+        "name": "--ds-modal-enter-duration",
+        "value": "var(--duration-base)",
+        "notes": "Modal card + backdrop entrance duration (default --duration-base)."
+      },
+      {
+        "name": "--ds-modal-enter-easing",
+        "value": "var(--ease-decelerate)",
+        "notes": "Modal card + backdrop entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-modal-leave-duration",
+        "value": "var(--duration-fast)",
+        "notes": "Modal close duration (default --duration-fast). Reduced motion zeroes it so teardown stays instant."
+      },
+      {
+        "name": "--ds-modal-leave-easing",
+        "value": "var(--ease-accelerate)",
+        "notes": "Modal close easing (default --ease-accelerate)."
+      },
+      {
+        "name": "--ds-modal-enter-scale",
+        "value": "0.97",
+        "notes": "Start scale for the modal card with ds-scale-in (default 0.97)."
       },
       {
         "name": "--ds-modal-backdrop",
@@ -3473,6 +3633,38 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-otp-cell-border-color-focus",
         "value": "var(--accent)",
         "notes": "OTP input cell border on focus (defaults to --accent)."
+      }
+    ]
+  },
+  {
+    "component": "Overlay panels",
+    "selector": ".ds-overlay-pane",
+    "description": "Enter-motion hooks shared by every portaled DS panel — select, multi-select, autocomplete, date / time / colour picker, popover, tooltip, menu submenu.",
+    "tokens": [
+      {
+        "name": "--ds-overlay-enter-keyframes",
+        "value": "ds-slide-in",
+        "notes": "Entrance @keyframes for every portaled panel — default ds-slide-in; also ds-scale-in / ds-fade-in, your own GLOBAL keyframes, or none."
+      },
+      {
+        "name": "--ds-overlay-enter-duration",
+        "value": "var(--duration-fast)",
+        "notes": "Portaled-panel entrance duration (default --duration-fast)."
+      },
+      {
+        "name": "--ds-overlay-enter-easing",
+        "value": "var(--ease-decelerate)",
+        "notes": "Portaled-panel entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-overlay-enter-offset",
+        "value": "4px",
+        "notes": "How far a panel travels in from the trigger edge — read by ds-slide-in (default 4px)."
+      },
+      {
+        "name": "--ds-overlay-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale when a panel enters with ds-scale-in (default 0.96)."
       }
     ]
   },
@@ -5394,6 +5586,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-toast-leave-duration",
+        "value": "var(--duration-base)",
+        "notes": "Toast dismiss duration — a transition, not an animation (default --duration-base)."
+      },
+      {
+        "name": "--ds-toast-leave-easing",
+        "value": "var(--ease-standard)",
+        "notes": "Toast dismiss easing (default --ease-standard)."
+      },
+      {
         "name": "--ds-toast-bg-color",
         "value": "var(--surface-overlay)",
         "notes": "Base surface fill."
@@ -5417,6 +5619,31 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-toast-icon-color",
         "value": "var(--accent)",
         "notes": "Toast leading icon colour (defaults to --accent, per severity)."
+      },
+      {
+        "name": "--ds-toast-enter-keyframes",
+        "value": "ds-slide-in",
+        "notes": "Toast entrance @keyframes (default ds-slide-in — rises into place from below)."
+      },
+      {
+        "name": "--ds-toast-enter-duration",
+        "value": "var(--duration-slow)",
+        "notes": "Toast entrance duration (default --duration-slow)."
+      },
+      {
+        "name": "--ds-toast-enter-easing",
+        "value": "var(--ease-decelerate)",
+        "notes": "Toast entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-toast-enter-offset",
+        "value": "var(--space-2)",
+        "notes": "How far the toast rises into place — read by ds-slide-in (default --space-2)."
+      },
+      {
+        "name": "--ds-toast-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the toast enters with ds-scale-in (default 0.96)."
       },
       {
         "name": "--ds-toast-bg-color-info",

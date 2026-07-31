@@ -8,6 +8,41 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **Surface entrances are now customizable per surface, via four shipped presets.** Every DS surface
+  names its entrance through `--ds-<surface>-enter-keyframes` and takes `-enter-duration` / `-enter-easing`
+  (plus `-enter-offset` or `-enter-scale` for the travel/scale a preset reads); surfaces that animate on
+  close also take `-leave-duration` / `-leave-easing`. Covered: overlay panels (`--ds-overlay-*`, shared by
+  select, multi-select, autocomplete, date / time / colour picker, popover, tooltip and menu submenus),
+  modal, drawer, bottom sheet, toast, banner, alert and loading overlay. The presets are global keyframes —
+  `ds-slide-in` (fade + short travel), `ds-scale-in` (grows from a micro-scale), `ds-fade-in` (opacity only)
+  and `ds-slide-edge-in` (full-distance travel, no fade) — so `ds-select { --ds-overlay-enter-keyframes:
+  ds-fade-in; }` is enough to re-skin one instance, and portaled panels forward the tokens onto their
+  overlay pane on open. Your own `@keyframes` work too, but must be declared in GLOBAL styles: emulated
+  view encapsulation renames keyframes defined in a component stylesheet. `none` disables an entrance.
+  All defaults are unchanged. Leave keyframes are deliberately not swappable — modal/drawer/bottom-sheet
+  teardown matches them by name — and reduced motion still wins: the library zeroes the duration itself,
+  so a custom entrance carrying its own timing is silenced too. New: `src/lib/styles/_surface-motion.scss`
+  (exported from `styles/ds`; add it alongside `styles/overlay-motion` if you import partials à la carte).
+
+### Changed
+
+- **Overlay panels now enter FROM their trigger edge instead of always sliding downward.** A panel below
+  its trigger still slides down into place; one placed above now rises, and a side-placed panel comes in
+  horizontally — `ds-scale-in` likewise grows out of the anchored edge. Previously every panel, including
+  a tooltip sitting above its trigger, animated top-down. Purely visual; no API change.
+
+### Fixed
+
+- **`ds-docs`-style à la carte consumers were missing the overlay-panel entrance.** `styles/overlay-motion`
+  is now imported by the docs app itself, so portaled panels animate there as they do for consumers of the
+  bundled `styles/ds` entry.
+
+- **The confirm dialog opened by `ModalService.confirm()` no longer carries a dead `ds-overlay-pane`
+  panel class.** Its pane child is `display: contents`, so the pane entrance never rendered — the dialog's
+  own card/backdrop animation is what plays, and now that is the only rule involved.
+
 ## 0.7.0 — 2026-07-30
 
 ### Changed
