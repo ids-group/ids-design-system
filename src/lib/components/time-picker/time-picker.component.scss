@@ -35,6 +35,16 @@
   width: fit-content;
 }
 
+// Opt-in stretch: the wrap, the range row and the trigger all hug by default,
+// so all three have to give for the field to fill a grid track.
+:host(.full-width) {
+  .trigger-wrap,
+  .range-wrap,
+  .trigger {
+    width: 100%;
+  }
+}
+
 .range-wrap {
   display: inline-flex;
   align-items: center;

@@ -17,6 +17,7 @@ import {
   type FieldMessageState,
 } from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
+import { resolveReserveMessage } from '../field-defaults';
 
 export type OtpMode = 'numeric' | 'alphanumeric';
 
@@ -57,9 +58,16 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
   /** Helper text shown below the cells. */
   readonly hint = input<string>('');
   /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+   *  the layout below it when a hint/error appears. Falls back to
+   *  `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide
+   *  for a form of hint-less controls. */
+  readonly reserveMessage = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  /** Input, else `DS_CONFIG.field.reserveMessage`, else on. */
+  protected readonly reserveMessageResolved = resolveReserveMessage(
+    this.reserveMessage,
+  );
   /** Accessible group label for the cell row. */
   readonly ariaLabel = input<string>('Verification code');
   /** Fires once, with the full code, on the partial → complete transition. */

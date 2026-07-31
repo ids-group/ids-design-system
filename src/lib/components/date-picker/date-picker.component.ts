@@ -67,6 +67,7 @@ import type {
   RangeValue,
 } from './date-picker.types';
 import type { DsSize } from '../../core/size';
+import { resolveReserveMessage } from '../field-defaults';
 
 let nextId = 0;
 const YEAR_PAGE_SIZE = 12;
@@ -102,6 +103,7 @@ interface DayCell {
       multi: true,
     },
   ],
+  host: { '[class.full-width]': 'fullWidth()' },
 })
 export class DatePickerComponent
   extends DsControlValueAccessor<Date | RangeValue | null>
@@ -181,6 +183,9 @@ export class DatePickerComponent
   readonly mode = input<DatePickerMode>('single');
   /** Trigger height — sm/md/lg. */
   readonly size = input<DsSize>('md');
+  /** Stretch the trigger to fill its container instead of hugging the mask
+   *  width — opt in when the field shares a grid/flex track with inputs. */
+  readonly fullWidth = input(false, { transform: booleanAttribute });
   /** Selected date (single) or `[start, end]` (range), two-way bound. */
   readonly value = model<Date | RangeValue | null>(null);
   /** Accessible-name fallback only — the mask fills the visible placeholder, not this. */
@@ -190,9 +195,16 @@ export class DatePickerComponent
   /** Helper text shown below the field. */
   readonly hint = input<string>('');
   /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+   *  the layout below it when a hint/error appears. Falls back to
+   *  `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide
+   *  for a form of hint-less controls. */
+  readonly reserveMessage = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  /** Input, else `DS_CONFIG.field.reserveMessage`, else on. */
+  protected readonly reserveMessageResolved = resolveReserveMessage(
+    this.reserveMessage,
+  );
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Shows an "(optional)" marker beside the label — ignored when `required` is set. */

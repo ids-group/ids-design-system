@@ -18,6 +18,14 @@
   max-width: 100%;
 }
 
+:host(.full-width) {
+  width: 100%;
+
+  .trigger {
+    width: 100%;
+  }
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;

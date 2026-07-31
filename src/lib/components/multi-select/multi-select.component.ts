@@ -35,6 +35,7 @@ import {
 } from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
 import type { MultiSelectOption } from './multi-select.types';
+import { resolveReserveMessage } from '../field-defaults';
 
 @Component({
   selector: 'ds-multi-select',
@@ -85,9 +86,16 @@ export class MultiSelectComponent
   /** Helper text shown below the field. */
   readonly hint = input<string>('');
   /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+   *  the layout below it when a hint/error appears. Falls back to
+   *  `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide
+   *  for a form of hint-less controls. */
+  readonly reserveMessage = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  /** Input, else `DS_CONFIG.field.reserveMessage`, else on. */
+  protected readonly reserveMessageResolved = resolveReserveMessage(
+    this.reserveMessage,
+  );
   /** Accessible name for the trigger — falls back to `placeholder`. */
   readonly ariaLabel = input<string | null>(null);
   /** Shows a "Select all" row that toggles every filter-matching, enabled option. */

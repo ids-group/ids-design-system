@@ -15,6 +15,7 @@ import {
 } from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
 import type { DsSize } from '../../core/size';
+import { resolveReserveMessage } from '../field-defaults';
 
 @Component({
   selector: 'ds-checkbox',
@@ -47,9 +48,16 @@ export class CheckboxComponent extends DsBooleanControlValueAccessor {
   /** Helper text shown below the checkbox. */
   readonly hint = input<string>('');
   /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+   *  the layout below it when a hint/error appears. Falls back to
+   *  `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide
+   *  for a form of hint-less controls. */
+  readonly reserveMessage = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  /** Input, else `DS_CONFIG.field.reserveMessage`, else on. */
+  protected readonly reserveMessageResolved = resolveReserveMessage(
+    this.reserveMessage,
+  );
   /** Checkbox size — sm/md/lg. */
   readonly size = input<DsSize>('md');
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
