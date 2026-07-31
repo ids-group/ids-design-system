@@ -88,7 +88,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   its default key back, and on the *default* column that write is a no-op for Angular's binding diff — so the
   table kept `sortKey === null`, leaving rows ordered while every header showed the neutral icon and
   `aria-sort="none"`. The key now survives the cycle and `sortDir === null` alone means unsorted; rendering
-  is unchanged.
+  is unchanged. **If your host reads `sortKey` to decide whether a sort is active, gate on `sortDir`
+  instead** — `sortKey` is now non-null after the third click (it names the column the user last touched),
+  so `if (sortKey) …` would keep sorting where it previously stopped.
 
 - **A selected dropdown option no longer loses its tint to the hover/keyboard-active state.** In
   `styles/_dropdown-overlay.scss` the `:hover` / `.is-active` branch out-ranked `.is-selected` on
