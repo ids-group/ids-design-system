@@ -71,9 +71,14 @@ const NUMERIC = /^-?\d+(\.\d+)?$/;
     '[class.resizable]': 'resizableColumns()',
   },
 })
-export class TableComponent<T extends { id: string }> {
+export class TableComponent<T extends object> {
   /** Rows to render. */
   readonly data = input.required<readonly T[]>();
+  /** Row identity used for tracking, selection, expansion and the active-row
+   *  highlight. Defaults to `row.id`; pass an accessor for display-only data
+   *  with no natural key (`[rowId]="row => row.channel + row.sentAt"`), which
+   *  beats mapping synthetic ids into the data just to satisfy the table. */
+  readonly rowId = input<((row: T) => string) | null>(null);
   /** Column definitions driving headers, cells and sorting. */
   readonly columns = input.required<readonly TableColumn<T>[]>();
   /** Adds a checkbox column for row/select-all selection. */
@@ -490,7 +495,7 @@ export class TableComponent<T extends { id: string }> {
   protected isEditing(row: T, col: TableColumn<T>): boolean {
     const cell = this.editingCell();
 
-    return !!cell && cell.rowId === row.id && cell.key === col.key;
+    return !!cell && cell.rowId === this.rowKey(row) && cell.key === col.key;
   }
 
   protected startEdit(row: T, col: TableColumn<T>, event: Event): void {
@@ -499,7 +504,7 @@ export class TableComponent<T extends { id: string }> {
     }
     event.stopPropagation();
     this.editDraft.set(this.cellValue(row, col));
-    this.editingCell.set({ rowId: row.id, key: col.key });
+    this.editingCell.set({ rowId: this.rowKey(row), key: col.key });
     afterNextRender(
       () => {
         const input = this.editInput()?.nativeElement;
@@ -662,14 +667,14 @@ export class TableComponent<T extends { id: string }> {
     }
     const sel = this.selectedIds();
 
-    return data.every((row) => sel.has(row.id));
+    return data.every((row) => sel.has(this.rowKey(row)));
   });
 
   protected readonly someSelected = computed(() => {
     const data = this.displayData();
     const sel = this.selectedIds();
 
-    return data.some((row) => sel.has(row.id)) && !this.allSelected();
+    return data.some((row) => sel.has(this.rowKey(row))) && !this.allSelected();
   });
 
   /** Select-all is page-scoped only when paginating. */
@@ -913,31 +918,31 @@ export class TableComponent<T extends { id: string }> {
   }
 
   protected isExpanded(row: T): boolean {
-    return this.expandedIds().has(row.id);
+    return this.expandedIds().has(this.rowKey(row));
   }
 
   protected onToggleExpand(row: T, event: Event): void {
     event.stopPropagation();
     const next = new Set<string>(this.expandedIds());
-    if (next.has(row.id)) {
-      next.delete(row.id);
+    if (next.has(this.rowKey(row))) {
+      next.delete(this.rowKey(row));
     } else {
-      next.add(row.id);
+      next.add(this.rowKey(row));
     }
     this.expandedIds.set(next);
   }
 
   protected isSelected(row: T): boolean {
-    return this.selectedIds().has(row.id);
+    return this.selectedIds().has(this.rowKey(row));
   }
 
   protected onToggleAll(event: Event): void {
     const checked = (event.target as HTMLInputElement).checked;
     const next = new Set<string>(this.selectedIds());
     if (checked) {
-      this.displayData().forEach((row) => next.add(row.id));
+      this.displayData().forEach((row) => next.add(this.rowKey(row)));
     } else {
-      this.displayData().forEach((row) => next.delete(row.id));
+      this.displayData().forEach((row) => next.delete(this.rowKey(row)));
     }
     this.selectedIds.set(next);
   }
@@ -947,9 +952,9 @@ export class TableComponent<T extends { id: string }> {
     const checked = (event.target as HTMLInputElement).checked;
     const next = new Set<string>(this.selectedIds());
     if (checked) {
-      next.add(row.id);
+      next.add(this.rowKey(row));
     } else {
-      next.delete(row.id);
+      next.delete(this.rowKey(row));
     }
     this.selectedIds.set(next);
   }
@@ -989,6 +994,17 @@ export class TableComponent<T extends { id: string }> {
   }
 
   /** `aria-sort` value for a header: only meaningful on sortable columns. */
+  /** Row identity — the `rowId` accessor when given, else `row.id`. Public so a
+   *  host reading `selectedIds`/`expandedIds` can compute the same keys. */
+  rowKey(row: T): string {
+    const accessor = this.rowId();
+    if (accessor) {
+      return accessor(row);
+    }
+
+    return String((row as { id?: unknown }).id ?? '');
+  }
+
   protected ariaSort(
     col: TableColumn<T>,
   ): 'ascending' | 'descending' | 'none' | null {
@@ -1015,7 +1031,13 @@ export class TableComponent<T extends { id: string }> {
       const currentIndex = order.indexOf(this.sortDir());
       dir = order[(currentIndex + 1) % order.length] ?? null;
     }
-    this.sortKey.set(dir ? col.key : null);
+    // Keep the key even when cycling to "unsorted" — `sortDir === null` alone
+    // means unsorted (sortedData/sortIcon/ariaSort all gate on it). Nulling the
+    // key desynced a host that maps "off" back to its own default sort: on the
+    // default column it pushes the same key the binding already held, Angular
+    // skips the write, and the header froze on the neutral icon while the rows
+    // stayed ordered.
+    this.sortKey.set(col.key);
     this.sortDir.set(dir);
     this.sortChange.emit({ key: col.key, dir });
   }
