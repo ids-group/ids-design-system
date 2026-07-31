@@ -10,6 +10,22 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-time-picker` gains `label`, `required` and `optional` — a date + time row now aligns without a
+  hand-rolled label.** The time picker had no label API at all, so a labelled form row meant authoring the
+  label yourself; the date picker's own label reserved a row the time picker did not, leaving the two
+  triggers 22.8px apart vertically. The label renders the same `.label` block with the same tokens as
+  `ds-date-picker`, and drives the trigger's accessible name (`aria-labelledby`) plus `aria-required`.
+  Measured on a two-column probe, date vs time now differ by 0px on label top/height, trigger
+  top/height/bottom, value inset and glyph top.
+
+- **The value typography of both pickers is now tokenised.** It was hardcoded: the date value was pinned to
+  `--font-mono` and the time trigger to `--font-weight-medium`, so a brand could not bring either in line
+  with `ds-input` / `ds-select`. Adds `--ds-date-picker-value-font-family` / `-font-size` / `-weight` and
+  `--ds-time-picker-value-font-family` / `-font-size` / `-weight`, plus `--ds-time-picker-required-color`.
+  The date picker's ghost mask now follows the same three tokens — without that, overriding the family
+  drifted the painted placeholders off the value behind them — and both the input and the mask carry
+  `font-variant-numeric: tabular-nums`, so a proportional override still lands on the mask.
+
 - **`ds-modal` / `ds-modal-card` take an `[eyebrow]` slot above the title.** Dialogs that need a context
   line ("MY ACTIVITY · ROBERT THOMPSON") had to put it as the first line of the body. The slot renders
   nothing when unfilled, and ships uppercase + tracked by default, retunable via
@@ -75,6 +91,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   (exported from `styles/ds`; add it alongside `styles/overlay-motion` if you import partials à la carte).
 
 ### Changed
+
+- **`ds-time-picker` matches the field family: the clock glyph moved to the trailing edge, the value
+  weight dropped to regular, and the trigger gap narrowed.** The glyph rendered BEFORE the value at 14px
+  while every sibling field (`ds-date-picker`, `ds-select`, `ds-input`) puts its affordance last at 16px, so
+  a date + time row read as two mirrored controls; the trigger also carried `--font-weight-medium` against
+  the family's regular, and an 8px gap against 4px. Purely visual — set
+  `--ds-time-picker-value-weight: var(--font-weight-medium)` to keep the old weight.
+
+- **`fullWidth` on `ds-date-picker` now pushes the calendar glyph to the trailing edge.** Stretching the
+  trigger left the value + glyph packed at the left (the glyph sat 122px short of the right edge on a 274px
+  field), so a full-width date field did not line up with the time picker or a `ds-select` beside it.
 
 - **Overlay panels now enter FROM their trigger edge instead of always sliding downward.** A panel below
   its trigger still slides down into place; one placed above now rises, and a side-placed panel comes in

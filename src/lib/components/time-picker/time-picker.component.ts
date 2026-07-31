@@ -109,6 +109,13 @@ export class TimePickerComponent
   /** Stretch the trigger to fill its container instead of hugging its content —
    *  opt in when the field shares a grid/flex track with inputs. */
   readonly fullWidth = input(false, { transform: booleanAttribute });
+  /** Field label shown above the trigger — same row a `ds-date-picker` label
+   *  occupies, so date + time in one form row line up without a hand-rolled label. */
+  readonly label = input<string>('');
+  /** Marks the field required — shows an asterisk and sets `aria-required`. */
+  readonly required = input(false, { transform: booleanAttribute });
+  /** Shows an "(optional)" marker beside the label — ignored when `required` is set. */
+  readonly optional = input(false, { transform: booleanAttribute });
   /** Disables the picker and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Applies error styling and marks the trigger `aria-invalid`. */
@@ -136,6 +143,7 @@ export class TimePickerComponent
   readonly format = input<TimeFormat | null>(null);
 
   protected readonly uid = `ds-timepicker-${++nextId}`;
+  protected readonly labelId = `${this.uid}-label`;
   protected readonly openSegment = signal<Segment | null>(null);
   private overlayRef: OverlayRef | null = null;
 
@@ -221,7 +229,9 @@ export class TimePickerComponent
   protected readonly panelMaxTime = computed(() => this.maxTime());
 
   protected ariaLabelFor(segment: Segment): string {
-    const base = this.ariaLabel() ?? 'Select time';
+    // A visible label is the accessible name; range segments still need the
+    // from/to suffix, so they keep an aria-label built from it.
+    const base = this.ariaLabel() ?? (this.label() || 'Select time');
     if (segment === 'start') {
       return `${base} (from)`;
     }

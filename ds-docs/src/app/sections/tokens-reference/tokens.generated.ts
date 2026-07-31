@@ -2693,6 +2693,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Date-picker trigger corner radius (default --radius-md) — the counterpart of --ds-time-picker-trigger-radius."
       },
       {
+        "name": "--ds-date-picker-value-font-family",
+        "value": "var(--font-mono)",
+        "notes": "Font family of the date value AND its ghost mask (default --font-mono — fixed-width digits keep the typed value on the mask; a proportional override still lines up thanks to tabular-nums)."
+      },
+      {
+        "name": "--ds-date-picker-value-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Size of the date value and its ghost mask (default --font-size-s)."
+      },
+      {
+        "name": "--ds-date-picker-value-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "Weight of the date value and its ghost mask (default --font-weight-regular)."
+      },
+      {
         "name": "--ds-date-picker-bg-color",
         "value": "var(--surface-overlay)",
         "notes": "Popover fill."
@@ -5615,6 +5630,26 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-time-picker-trigger-radius",
         "value": "var(--radius-md)",
         "notes": "Time picker trigger corner radius (defaults to --radius-md)."
+      },
+      {
+        "name": "--ds-time-picker-required-color",
+        "value": "var(--error)",
+        "notes": "Colour of the required asterisk beside the time label (default --error)."
+      },
+      {
+        "name": "--ds-time-picker-value-font-family",
+        "value": "var(--font-sans)",
+        "notes": "Font family of the time value (default --font-sans). Set it to --font-mono to pair with a mono date value."
+      },
+      {
+        "name": "--ds-time-picker-value-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Size of the time value (default --font-size-s)."
+      },
+      {
+        "name": "--ds-time-picker-value-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "Weight of the time value (default --font-weight-regular — matches ds-input / ds-select / ds-date-picker)."
       },
       {
         "name": "--ds-time-picker-bg-color",

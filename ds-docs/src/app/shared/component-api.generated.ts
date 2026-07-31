@@ -5785,6 +5785,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Stretch the trigger to fill its container instead of hugging its content — opt in when the field shares a grid/flex track with inputs."
       },
       {
+        "name": "label",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Field label shown above the trigger — same row a `ds-date-picker` label occupies, so date + time in one form row line up without a hand-rolled label."
+      },
+      {
+        "name": "required",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Marks the field required — shows an asterisk and sets `aria-required`."
+      },
+      {
+        "name": "optional",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows an \"(optional)\" marker beside the label — ignored when `required` is set."
+      },
+      {
         "name": "disabled",
         "kind": "input",
         "type": "boolean",
