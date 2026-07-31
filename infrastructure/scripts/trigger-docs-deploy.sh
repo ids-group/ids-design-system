@@ -2,7 +2,8 @@
 # Final step of the tag (v*) pipeline: after publish.sh, start the separate
 # deploy-docs custom pipeline via the Bitbucket REST API so a release auto-deploys
 # the ds-docs showcase. Skipped for prereleases (public docs track latest stable).
-# Auth: RELEASE_TOKEN (a repo access token) with the pipeline:write scope; it is a
+# Auth: DOCS_DEPLOY_TOKEN — a dedicated repo access token scoped to pipeline:write
+# only (least privilege; RELEASE_TOKEN keeps just repository:write). It is a
 # repository variable, so it is visible to this tag pipeline.
 set -e
 
@@ -15,7 +16,7 @@ case "$BITBUCKET_TAG" in
   *-*) echo "trigger-docs-deploy: $BITBUCKET_TAG is a prerelease — skipping docs deploy."; exit 0 ;;
 esac
 
-[ -n "$RELEASE_TOKEN" ] || { echo "trigger-docs-deploy: RELEASE_TOKEN is not set."; exit 1; }
+[ -n "$DOCS_DEPLOY_TOKEN" ] || { echo "trigger-docs-deploy: DOCS_DEPLOY_TOKEN is not set."; exit 1; }
 
 # node:22-alpine ships without curl (only busybox wget); add it like cut-release adds git.
 command -v curl > /dev/null || apk add --no-cache curl > /dev/null
@@ -26,7 +27,7 @@ body='{"target":{"type":"pipeline_ref_target","ref_type":"branch","ref_name":"ma
 echo "trigger-docs-deploy: starting deploy-docs on main for $BITBUCKET_TAG..."
 status=$(curl -sS -o /tmp/trigger-resp.json -w '%{http_code}' \
   -X POST "$api" \
-  -H "Authorization: Bearer $RELEASE_TOKEN" \
+  -H "Authorization: Bearer $DOCS_DEPLOY_TOKEN" \
   -H "Content-Type: application/json" \
   -d "$body")
 

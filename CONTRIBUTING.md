@@ -62,9 +62,10 @@ Bypass preflight in emergencies with `SKIP_PREFLIGHT=1 npm run release:patch`.
 
 CI auth uses two Secured repository variables: `NPM_TOKEN` (npm granular access
 token, read+write on `@ids-group-ltd`, "Bypass 2FA" enabled) for publishing, and —
-for the one-click pipelines only — `RELEASE_TOKEN`, a Bitbucket Repository Access
-Token with `repository:write` (push the bump commit, tag, and dev back-sync) and
-`pipeline:write` (start the `deploy-docs` pipeline after publish).
+for the one-click pipelines only — two Bitbucket Repository Access Tokens:
+`RELEASE_TOKEN` (`repository:write`, to push the bump commit, tag, and dev
+back-sync) and `DOCS_DEPLOY_TOKEN` (`pipeline:write`, to start the `deploy-docs`
+pipeline after publish). Split so each carries only the scope it needs.
 
 Manual publish (fallback, requires an authenticated npm session):
 
