@@ -26,7 +26,6 @@ export class ModalService {
           .centerVertically(),
         hasBackdrop: true,
         backdropClass: 'cdk-overlay-dark-backdrop',
-        panelClass: 'ds-overlay-pane',
         scrollStrategy: this.overlay.scrollStrategies.block(),
       });
 

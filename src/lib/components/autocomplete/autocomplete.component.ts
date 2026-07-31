@@ -23,6 +23,7 @@ import {
   closeOnScroll,
   disposeWithLeave,
   forwardOverlayTokens,
+  prepareOverlayEnter,
 } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { TagComponent } from '../tag/tag.component';
@@ -395,6 +396,11 @@ export class AutocompleteComponent<T = unknown>
       overlayConfig.width = triggerWidth;
     }
     this.overlayRef = this.overlay.create(overlayConfig);
+    prepareOverlayEnter(
+      this.overlayRef,
+      this.host.nativeElement,
+      positionStrategy,
+    );
     forwardOverlayTokens(
       this.overlayRef,
       this.host.nativeElement,

@@ -9,6 +9,7 @@ import {
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { TooltipPanelComponent } from './tooltip-panel.component';
+import { prepareOverlayEnter } from '../overlay-motion';
 import type { TooltipPlacement } from './tooltip.types';
 
 let nextId = 0;
@@ -93,6 +94,7 @@ export class TooltipDirective implements OnDestroy {
       panelClass: 'ds-overlay-pane',
       scrollStrategy: this.overlay.scrollStrategies.close(),
     });
+    prepareOverlayEnter(this.ref, this.host.nativeElement, positionStrategy);
 
     const cmpRef = this.ref.attach(new ComponentPortal(TooltipPanelComponent));
     cmpRef.setInput('text', this.dsTooltip());

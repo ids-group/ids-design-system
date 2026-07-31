@@ -26,6 +26,7 @@ import {
   disposeWithLeave,
   focusIsInside,
   forwardOverlayTokens,
+  prepareOverlayEnter,
 } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
@@ -257,6 +258,11 @@ export class TimePickerComponent
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
     this.overlayRef = this.overlay.create(cfg);
+    prepareOverlayEnter(
+      this.overlayRef,
+      this.host.nativeElement,
+      positionStrategy,
+    );
     forwardOverlayTokens(
       this.overlayRef,
       this.host.nativeElement,

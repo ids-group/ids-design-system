@@ -27,6 +27,7 @@ import {
   disposeWithLeave,
   focusIsInside,
   forwardOverlayTokens,
+  prepareOverlayEnter,
 } from '../overlay-motion';
 import {
   FieldMessageComponent,
@@ -316,6 +317,11 @@ export class MultiSelectComponent
       width: triggerElement.getBoundingClientRect().width,
     };
     this.overlayRef = this.overlay.create(cfg);
+    prepareOverlayEnter(
+      this.overlayRef,
+      this.host.nativeElement,
+      positionStrategy,
+    );
     forwardOverlayTokens(
       this.overlayRef,
       this.host.nativeElement,

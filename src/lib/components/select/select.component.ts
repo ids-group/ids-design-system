@@ -22,6 +22,7 @@ import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  prepareOverlayEnter,
 } from '../overlay-motion';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
@@ -268,6 +269,11 @@ export class SelectComponent
       width,
     };
     this.overlayRef = this.overlay.create(cfg);
+    prepareOverlayEnter(
+      this.overlayRef,
+      this.host.nativeElement,
+      positionStrategy,
+    );
     closeOnOutsidePointer(
       this.overlayRef,
       (target) => this.host.nativeElement.contains(target),
