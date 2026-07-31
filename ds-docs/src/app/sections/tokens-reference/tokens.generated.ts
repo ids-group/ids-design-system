@@ -3464,6 +3464,31 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Modal/dialog title size (default --font-size-h5). Pairs with --ds-modal-title-weight."
       },
       {
+        "name": "--ds-modal-eyebrow-text-color",
+        "value": "var(--text-tertiary)",
+        "notes": "Colour of the optional [eyebrow] line above the dialog title (default --text-tertiary)."
+      },
+      {
+        "name": "--ds-modal-eyebrow-font-size",
+        "value": "var(--font-size-xs)",
+        "notes": "Size of the [eyebrow] line above the dialog title (default --font-size-xs)."
+      },
+      {
+        "name": "--ds-modal-eyebrow-weight",
+        "value": "var(--font-weight-bold)",
+        "notes": "Weight of the [eyebrow] line above the dialog title (default --font-weight-bold)."
+      },
+      {
+        "name": "--ds-modal-eyebrow-tracking",
+        "value": "var(--letter-spacing-wide)",
+        "notes": "Letter-spacing of the [eyebrow] line (default --letter-spacing-wide) — it renders uppercase by default."
+      },
+      {
+        "name": "--ds-modal-eyebrow-transform",
+        "value": "uppercase",
+        "notes": "text-transform for the [eyebrow] line (default uppercase; set none for sentence case)."
+      },
+      {
         "name": "--ds-modal-close-icon-color",
         "value": "var(--icon-default)",
         "notes": "Close icon."
@@ -3846,6 +3871,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-pagination-focus-shadow",
         "value": "var(--ds-control-focus-shadow)",
         "notes": "Pagination control focus ring (defaults to --ds-control-focus-shadow)."
+      },
+      {
+        "name": "--ds-pagination-label-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Size of the \"Showing X–Y of Z\" range label (default --font-size-s)."
+      },
+      {
+        "name": "--ds-pagination-label-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "Weight of the range label (default --font-weight-regular)."
+      },
+      {
+        "name": "--ds-pagination-label-color",
+        "value": "var(--text-secondary)",
+        "notes": "Colour of the range label (default --text-secondary)."
       }
     ]
   },
@@ -5242,6 +5282,41 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-table-cell-pad-y",
         "value": "var(--table-cell-pad-y)",
         "notes": "Cell vertical padding."
+      },
+      {
+        "name": "--ds-table-cell-pad-top",
+        "value": "var(--_table-cell-pad-y)",
+        "notes": "Per-side cell padding override; falls back to --ds-table-cell-pad-y."
+      },
+      {
+        "name": "--ds-table-cell-pad-right",
+        "value": "var(--_table-cell-pad-x)",
+        "notes": "Per-side cell padding override (also the header gutter); falls back to --ds-table-cell-pad-x."
+      },
+      {
+        "name": "--ds-table-cell-pad-bottom",
+        "value": "var(--_table-cell-pad-y)",
+        "notes": "Per-side cell padding override; falls back to --ds-table-cell-pad-y."
+      },
+      {
+        "name": "--ds-table-cell-pad-left",
+        "value": "var(--_table-cell-pad-x)",
+        "notes": "Per-side cell padding override (also the header gutter) — set 0 for a flush first column; falls back to --ds-table-cell-pad-x."
+      },
+      {
+        "name": "--ds-table-head-border-color",
+        "value": "var(--_table-divider)",
+        "notes": "Colour of the rule under the header row (default --ds-table-divider)."
+      },
+      {
+        "name": "--ds-table-head-weight",
+        "value": "var(--font-weight-bold)",
+        "notes": "Header label weight (default --font-weight-bold)."
+      },
+      {
+        "name": "--ds-table-head-tracking",
+        "value": "var(--letter-spacing-wider)",
+        "notes": "Header label letter-spacing (default --letter-spacing-wider)."
       },
       {
         "name": "--ds-table-select-col-w",

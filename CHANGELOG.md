@@ -10,6 +10,41 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-modal` / `ds-modal-card` take an `[eyebrow]` slot above the title.** Dialogs that need a context
+  line ("MY ACTIVITY · ROBERT THOMPSON") had to put it as the first line of the body. The slot renders
+  nothing when unfilled, and ships uppercase + tracked by default, retunable via
+  `--ds-modal-eyebrow-text-color` / `-font-size` / `-weight` / `-tracking` / `-transform`.
+
+- **`ds-table` takes a `rowId` accessor.** Row identity (tracking, selection, expansion, the active-row
+  highlight) defaulted to `row.id`, so display-only data with no natural key had to be mapped through a
+  synthetic id just to satisfy the generic. Pass `[rowId]="row => row.channel + row.sentAt"` instead; the
+  row type relaxes from `{ id: string }` to `object`, and the resolver is public as `rowKey(row)` for hosts
+  reading `selectedIds` / `expandedIds`. Rows keeping an `id` need no change.
+
+- **`ds-date-picker` and `ds-time-picker` take `fullWidth`.** Both hugged their content, so neither filled
+  a grid/flex track the way `ds-input` and `ds-select` do — a mixed form row had to pin the picker widths
+  by hand. Opt-in; the default stays hug-your-content.
+
+- **`ds-pagination` takes `showPageSize`, and its range label is tokenised.** A screen with a fixed page
+  size had to hide the rows-per-page dropdown in CSS; the label could only be switched off, not restyled.
+  Adds `--ds-pagination-label-font-size` / `-weight` / `-color`.
+
+- **`ds-table` per-side cell padding + header tokens.** `--ds-table-cell-pad-{top,right,bottom,left}` each
+  fall back to the existing `-pad-x` / `-pad-y` pair, so an editorial table can ask for a right-only gutter
+  (first column flush) without redefining both axes. Also adds `--ds-table-head-border-color`,
+  `--ds-table-head-weight` and `--ds-table-head-tracking`.
+
+- **`DS_CONFIG.field.reserveMessage` sets the message-row default app-wide.** A hint-less dialog repeated
+  `[reserveMessage]="false"` on every control. `provideDsConfig({ field: { reserveMessage: false } })` now
+  covers all 14 message-bearing fields; a per-field input still wins. The input's type widens to
+  `boolean | null` (`null` = "not set" → fall through to the config, then `true`), so bindings and bare
+  attributes behave exactly as before.
+
+- **`focus()` on `ds-search`, `ds-input` and `ds-textarea`.** The search input was only reachable from
+  inside the component, so a filter toolbar's Clear button — disabled once there is nothing left to clear —
+  blurred into `<body>` and restarted Tab order at the top of the document. Also gives forms a way to
+  focus the first invalid field.
+
 - **Five override tokens that were previously hardcoded:** `--ds-modal-title-font-size` (pairs with the
   existing `-title-weight`), `--ds-date-picker-trigger-radius` (the counterpart of
   `--ds-time-picker-trigger-radius`), `--ds-date-picker-panel-radius` (forwarded onto the portaled pane),
@@ -47,6 +82,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   a tooltip sitting above its trigger, animated top-down. Purely visual; no API change.
 
 ### Fixed
+
+- **`ds-table`'s header no longer desyncs when a host maps the "off" sort click back to its own default.**
+  Cycling past `desc` nulled `sortKey` internally; a server-paged host that cannot honour "unordered" pushes
+  its default key back, and on the *default* column that write is a no-op for Angular's binding diff — so the
+  table kept `sortKey === null`, leaving rows ordered while every header showed the neutral icon and
+  `aria-sort="none"`. The key now survives the cycle and `sortDir === null` alone means unsorted; rendering
+  is unchanged.
 
 - **A selected dropdown option no longer loses its tint to the hover/keyboard-active state.** In
   `styles/_dropdown-overlay.scss` the `:hover` / `.is-active` branch out-ranked `.is-selected` on
