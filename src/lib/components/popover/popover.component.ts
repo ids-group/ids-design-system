@@ -73,7 +73,11 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
     '--ds-popover-shadow',
     '--ds-popover-padding',
     '--ds-popover-max-width',
+    '--ds-popover-min-width',
     '--ds-popover-arrow-size',
+    // Forwarded too: a projected ds-menu is portaled into the pane, so a
+    // consumer scoping --ds-menu-min-width in their own DOM can't reach it.
+    '--ds-menu-min-width',
   ];
 
   /** Cross-axis alignment of the panel against the trigger. */

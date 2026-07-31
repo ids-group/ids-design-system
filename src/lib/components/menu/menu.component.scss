@@ -1,8 +1,10 @@
 :host {
   --_menu-bg-color:     var(--ds-menu-bg-color,     var(--surface-default));
   --_menu-border-color: var(--ds-menu-border-color, var(--border-divider));
+  --_menu-min-width: var(--ds-menu-min-width, auto);
 
   display: block;
+  min-width: var(--_menu-min-width);
   background: var(--_menu-bg-color);
   border: var(--border-width-default) solid var(--_menu-border-color);
   border-radius: var(--radius-md);

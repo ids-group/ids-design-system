@@ -10,6 +10,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`--ds-popover-min-width` and `--ds-menu-min-width`.** A popover (or a `ds-menu` projected into one)
+  hugged its content with no way to widen it — `--ds-popover-max-width` was the only size hook, so a user
+  menu that should be wider than its longest item needed global CSS against `.popover` / `ds-menu`. Both
+  default to `auto` (today's behaviour) and both are forwarded onto the portaled overlay pane on open, so
+  scoping them per instance (`ds-popover { --ds-popover-min-width: 220px; }`) works.
+
 - **Surface entrances are now customizable per surface, via four shipped presets.** Every DS surface
   names its entrance through `--ds-<surface>-enter-keyframes` and takes `-enter-duration` / `-enter-easing`
   (plus `-enter-offset` or `-enter-scale` for the travel/scale a preset reads); surfaces that animate on

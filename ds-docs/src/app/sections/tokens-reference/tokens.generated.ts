@@ -3382,6 +3382,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Menu panel border colour (defaults to --border-divider)."
       },
       {
+        "name": "--ds-menu-min-width",
+        "value": "auto",
+        "notes": "Minimum menu width (default auto). Forwarded onto the overlay pane by ds-popover, so it also works for a menu projected into a popover."
+      },
+      {
         "name": "--menu-minw",
         "value": "200px",
         "notes": "Menu panel minimum width (200px)."
@@ -3853,6 +3858,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-popover-max-width",
         "value": "var(--popover-maxw)",
         "notes": "Popover max width (defaults to --popover-maxw)."
+      },
+      {
+        "name": "--ds-popover-min-width",
+        "value": "auto",
+        "notes": "Minimum panel width (default auto — the panel hugs its content). Set it to widen a menu/actions popover without touching internals."
       },
       {
         "name": "--ds-popover-arrow-size",
