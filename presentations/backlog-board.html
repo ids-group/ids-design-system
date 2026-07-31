@@ -123,7 +123,7 @@
     <div class="stat you"><div class="n">5</div><div class="l">Ждёт твоего решения</div></div>
     <div class="stat a11y"><div class="n">2</div><div class="l">A11y (P0–P2)</div></div>
     <div class="stat untouched"><div class="n">19</div><div class="l">Компоненты + foundations</div></div>
-    <div class="stat untouched"><div class="n">11</div><div class="l">Motion / DS-docs / PIN-475 / API</div></div>
+    <div class="stat untouched"><div class="n">12</div><div class="l">Motion / DS-docs / PIN-475 / API</div></div>
     <div class="stat raw"><div class="n">4</div><div class="l">Raw / frozen</div></div>
   </div>
 
@@ -176,12 +176,13 @@
 
   <!-- ============ MOTION / DS-DOCS / PIN-475 / API ============ -->
   <div class="lane">
-    <div class="lane-head"><h2>🎬 Motion / DS-docs / PIN-475 / API</h2><span class="count c-track">11</span><span class="why">Overlay/motion · ds-docs showcase · API-консистентность · PIN-475 filter-toolbar · picker internals.</span></div>
+    <div class="lane-head"><h2>🎬 Motion / DS-docs / PIN-475 / API</h2><span class="count c-track">12</span><span class="why">Overlay/motion · ds-docs showcase · API-консистентность · PIN-475 filter-toolbar · picker internals.</span></div>
     <div class="cards">
       <div class="card track"><span class="chip ch-p2">P3</span><div class="t">Motion: роль-слой --motion-*</div><p class="d">Пер-поверхностные крутилки (отгружены 07-31) падают на СЫРЫЕ `--duration-*`/`--ease-*`. Роль-слой (`enter-panel`/`enter-surface`/`enter-large`/`exit`) — motion-близнец radius/elevation-слоя; делать внутри token-архитектурного пасса, не отдельно.</p></div>
       <div class="card track"><span class="chip ch-oos">решить</span><div class="t">Leave-кейфреймы не подменяются</div><p class="d">`-leave-duration`/`-leave-easing` отгружены, а ИМЯ leave-кейфрейма фиксировано: modal/drawer/bottom-sheet сносят DOM, сверяя `animationName.endsWith(...)`. Чужое имя промахнётся по гарду и закрытие уедет на 300ms fallback-таймер — панель на глазах замрёт. Решить, снимать ли гард с имени (или гнать teardown от токена длительности).</p></div>
       <div class="card track"><span class="chip ch-oos">решить</span><div class="t">Overlay leave animation — политика</div><p class="d">Floating-панели закрываются мгновенно (leave снята в `d2e4712`). Актуализация 07-24: все 8 оверлеев уже идут через общий `disposeWithLeave` — вернуть leave теперь ОДНА правка хелпера, но продуктовое решение всё ещё не принято.</p></div>
       <div class="card track"><span class="chip ch-p2">P2</span><div class="t">Rounded `:active` touch-feedback</div><p class="d">После сброса tap-highlight ~14 контролов без явного `:active` потеряли press-подсветку на тач (checkbox/radio/switch/select/tabs/tag и др.). Скруглённый `:active` — единым шагом вместе с `.ds-interactive`.</p><div class="meta">tap-feedback-test.html</div></div>
+      <div class="card track"><span class="chip ch-oos">решить</span><div class="t">Секционные маркеры в шаблонах доков</div><p class="d">266 маркеров вида <code>&lt;!-- ====== Sizes --&gt;</code> в 58 секциях ds-docs стоят прямо над <code>&lt;h3&gt;</code> с тем же текстом — по правилу «без секционных заголовков» это дубль. В библиотеке правило применено (4 заголовка снято из table.component.ts), в доках — нет: это сложившаяся навигация в 1000-строчных шаблонах, снос — стилевое решение. Решить: вычистить одним проходом или зафиксировать доки как исключение.</p></div>
       <div class="card track"><span class="chip ch-p2">P3</span><div class="t">Inspect-mode (Figma-style)</div><p class="d">Тоггл в заголовке секции → overlay со спекой paddings/gaps/sizes + какой токен за что отвечает. Начать пилотом на одной секции (например, button), затем обобщить.</p></div>
       <div class="card track"><span class="chip ch-oos">ждёт go</span><div class="t">Shared picker internals</div><p class="d">`select`/`autocomplete`/`multi-select` дублируют active-descendant навигацию и фильтрацию опций (overlay-слой уже общий через `overlay-motion.ts`). Вынести внутренние хелперы, публичные API не трогать — новый паттерн, нужен явный go.</p></div>
       <div class="card track"><span class="chip ch-oos">решить</span><div class="t">Combobox multiple vs multi-select</div><p class="d">Индустрия держит их раздельно; у нас multi живёт и в `ds-autocomplete [multiple]`, и в `ds-multi-select` — один сценарий, две эргономики. Решить: deprecate autocomplete-multi или задокументировать границу.</p><div class="meta">multi-pick-comparison.html</div></div>
@@ -310,6 +311,7 @@ Goal: a coherent **smooth** motion system. **Foundation is healthy** — motion 
 
 ## DS-docs showcase
 
+- [ ] **[P3] Section-marker comments in ds-docs templates contradict the no-section-headers rule (surfaced 2026-07-31 by a week-wide comment audit).** 266 markers of the shape `<!-- ====== Sizes -->` across 58 section templates, each sitting directly above the `<h3 class="block-title">` that says the same thing — redundant by the house rule ("no section headers"), which the audit did enforce in library code (4 `// ---- X ----` headers removed from `table.component.ts`). NOT removed unilaterally: it is a pervasive, pre-existing navigation convention in 1000+ line demo templates, and stripping it is a style decision, not a fix. **Decide:** strip them all (one mechanical pass, `<h3>` already provides the landmark), or keep them and record the docs app as an explicit exception to the rule. Zero occurrences in `src/lib` — the library is clean.
 - [ ] **[P3] Inspect mode — Figma-style spec overlay per section.** A section-heading toggle that draws a visual "inspect" overlay on the live demos: colour-coded lines/boxes for paddings, gaps, sizes with values+units, plus WHICH token/class drives each value. Read computed styles + `getBoundingClientRect`; map values back to the `--space-*`/`--radius-*`/`--font-size-*` scales. **Rewritten 2026-07-24 → start as a scoped pilot:** spacing-only on ONE section (e.g. button), then generalize. Greenfield, docs-only, no product impact. _(Verified: nothing exists today.)_
 - [ ] **[P3] Raw-specimen tidy-up (was "eliminate raw-markup mirrors" — mostly DONE, rewritten 2026-07-24).** The big work is landed: central `_forced-states.scss` **eliminated** (state-forcing is now per-section `:host ::ng-deep .pin-*` reading each component's own `--_*` resolvers — 12 section stylesheets); ALL raw `<table class="table">` specimens **converted to live `<ds-table>`** this session (`_table.scss` deleted, `.scroll-wrap` moved to `_scroll-wrap.scss`); modal/banner/empty-state/dropzone sections render live components. **REMAINING (small):**
   1. **By-design raw specimen:** calendar day-part (`.day-specimen` + `ds-docs/src/styles/specimens/_day.scss`, used in the date-picker section) — kept because extracting a day component risks the date-picker's APG roving-tabindex nav. Legitimately by-design.
@@ -766,6 +768,7 @@ _Archived 2026-07-06 from `todo.md`._
       ["ds-button: хуки типографики",        "no type-scale or box hooks",                 ""],
       ["Контракт высоты контролов",          "Control height is computed two different ways", ""],
       ["Motion: роль-слой",                  "Semantic motion presets",                    ""],
+      ["Секционные маркеры",                 "Section-marker comments in ds-docs templates", ""],
       ["Leave-кейфреймы не подменяются",     "Leave keyframes are NOT swappable",          ""]
     ];
 
