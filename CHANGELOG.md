@@ -181,6 +181,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `-pad-y` / `-content-max-width` / `-height` → `--ds-app-layout-*`). Behaviour is unchanged — rename the
   references (see `migrations/`). A consumer still on 0.6.3's `ds-app-shell` must migrate.
 
+- **Retroactive note: `TableComponent` gained four more members (`total`, `sortingOrder`,
+  `animateHeight`, `scrollToTopOnPageChange`), and most other component classes changed too**, so a
+  consumer that extends a DS class (unsupported — `design-system.md` § Components) can collide on a
+  name here as well, exactly as in 0.6.3. Same resolution: rename the subclass's own member, or add
+  `override` where the base's semantics genuinely match.
+
 ### Added
 
 - **New override tokens for two baked-in weights: `--ds-sidenav-item-label-weight` and
@@ -410,6 +416,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-toast` now slides up from below into place as it enters** (previously it dropped in from
   slightly above). The exit animation is unchanged — the toast still slides up as it fades out.
   Visual/motion only; no API change.
+- **Retroactive note: the new `ds-table` column API grew `TableComponent`'s member surface by ~76
+  names, which breaks a consumer that extends the class.** Everything above is additive for anyone
+  using the `<ds-table>` element. Subclassing a DS component is unsupported (`design-system.md`
+  § Components), but where it happens the new names collide — TS4114 demands an `override` modifier,
+  TS2416 fires where the signature differs. Collisions seen in the wild: `zebra`, `columnOrder`,
+  `orderedColumns`, `visibleColumns`, `toggleColumn`, `onColumnDrop`, `moveColumn`, `resetColumns`,
+  `columnFilters`, `exportCsv`, `onResizeMove`, `onResizeEnd`. Rename the subclass's own member, or
+  add `override` where the base's semantics genuinely match (`zebra` must then adopt the base's
+  `booleanAttribute` transform). Build after upgrading — the compiler enumerates every collision.
 
 ### Fixed
 

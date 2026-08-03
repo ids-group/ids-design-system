@@ -246,6 +246,17 @@
         "<ds-select",
         "reserveMessage"
       ]
+    },
+    {
+      "id": "table-component-subclass-member-collisions",
+      "kind": "behavior",
+      "old": null,
+      "new": null,
+      "note": "Only affects a consumer that EXTENDS a DS component class. Subclassing is unsupported (design-system.md - Components), but where it happens this release can break the build the same way 0.6.3 did: TableComponent gained total, sortingOrder, animateHeight and scrollToTopOnPageChange, and most other component classes changed too, so a subclass that already used one of those names no longer compiles — TS4114 requires an 'override' modifier, TS2416 fires where the signature differs. Resolution per member: where the base member means the same thing, keep the name and add `override` with a base-compatible signature; otherwise RENAME the subclass's own member, checking the new name against the base's member list first. Build the consumer right after the bump: the compiler enumerates every collision. A consumer that only uses the DS elements needs no action.",
+      "searchHints": [
+        "extends TableComponent",
+        "extends "
+      ]
     }
   ],
   "informational": [

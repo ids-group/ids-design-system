@@ -121,6 +121,16 @@ Actionable = existing consumer code stops working or *behaving as before*. Every
 components, new optional inputs, additive tokens whose defaults equal the old role token, pure
 bugfixes, visual polish) → `informational`, so a reader knows silence = safe.
 
+**Members added to an exported class are actionable even when the feature is additive.** Subclassing
+a DS component is unsupported (`design-system.md` § Components), but a consumer who does it breaks on
+a name collision — TS4114 demands `override`, TS2416 fires when the signature differs — so a release
+that only ADDS can fail their build. Emit ONE `behavior` item per release naming the classes whose
+member surface grew, with the added member names where few enough to list and the count where not,
+`searchHints` that locate the subclass (`extends TableComponent`, `extends `), and a `note` giving the
+resolution: rename the subclass's own member, or add `override` where the base's semantics genuinely
+match. Keep the feature bullets themselves in `informational` — the item is the collision, not the
+feature.
+
 ## Per-entry checklist
 
 - [ ] `id` is a stable, unique kebab slug.
