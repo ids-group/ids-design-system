@@ -5123,7 +5123,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "{}",
         "required": false,
-        "description": "Cell templates supplied as an explicit map instead of (or in addition to) projected `dsCellTemplate` directives. Lets a wrapper component (e.g. ids-data-table) collect the directives itself and pass them down, since content projected through a wrapper's `<ng-content>` is not seen by this component's content query. Entries here override projected ones."
+        "description": "Cell templates supplied as an explicit map instead of (or in addition to) projected `dsCellTemplate` directives. Lets a wrapper component collect the directives itself and pass them down, since content projected through a wrapper's `<ng-content>` is not seen by this component's content query. Entries here override projected ones."
       },
       {
         "name": "emptyTemplate",

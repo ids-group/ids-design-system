@@ -199,10 +199,10 @@ export class TableComponent<T extends object> {
   readonly cellEdited = output<TableCellEditEvent<T>>();
 
   /** Cell templates supplied as an explicit map instead of (or in addition to)
-   *  projected `dsCellTemplate` directives. Lets a wrapper component (e.g.
-   *  ids-data-table) collect the directives itself and pass them down, since
-   *  content projected through a wrapper's `<ng-content>` is not seen by this
-   *  component's content query. Entries here override projected ones. */
+   *  projected `dsCellTemplate` directives. Lets a wrapper component collect
+   *  the directives itself and pass them down, since content projected through
+   *  a wrapper's `<ng-content>` is not seen by this component's content query.
+   *  Entries here override projected ones. */
   readonly cellTemplateMap = input<
     Record<string, TemplateRef<{ $implicit: unknown; row: unknown }>>
   >({});
