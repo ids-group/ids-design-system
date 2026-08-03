@@ -196,3 +196,34 @@ not lost:
 - Whether ng-packagr's secondary-entry-point output preserves the measured variant-B
   behaviour end-to-end through the Angular application builder. The fixtures prove the
   bundler semantics, not the ng-packagr → builder pipeline. Verify before committing to B.
+
+## 9. Corrections owed to the consumer report
+
+Written into the consumer's own backlog as `mm-broker-platform/src/frontend/todo.md` §13k on
+2026-08-03 — **but that file is gitignored** (`src/frontend/.gitignore:7`), so the copy there
+is local to one machine and cannot be relied on. This is the durable record. Two of the five
+are ours to act on and are folded into `todo.md`; the rest are the consumer's.
+
+1. **Their prescribed fix breaks error handling** — §2 above. Theirs to act on.
+2. **Their §13e is stale**: it opens "`package.json` pins `0.6.2`", but the bump landed on the
+   review day (`c401942f` → 0.6.3, `b5965305` → 0.7.0) and the lockfile agrees. Its
+   consequences list is already actioned (`ids-data-table.component.html:375` binds
+   `(currentPageChange)`). Theirs.
+3. **The sidenav rail-tooltip item they filed on 2026-07-31 describes pre-0.7.0 behaviour.**
+   The mechanism it names is what `0a804cc` fixed by closing the tip on activation — that
+   commit and `8c92d50` are in **v0.7.0** (2026-07-30) and absent from **v0.6.2**
+   (2026-07-21), the version installed there on 07-31. **Ours** → the `todo.md` item is
+   annotated, not closed: a narrower residual case survives (if navigation removes the anchor
+   before `click` dispatches, the close handler never runs), so it needs a real-browser check
+   on 0.7.0 first.
+4. **"`ds-table` sorts DISPLAY STRINGS lexically" overstates the blast radius.** `NUMERIC =
+   /^-?\d+(\.\d+)?$/` (`table.component.ts:44`) is tried before `localeCompare` (`:632-641`),
+   so bare numeric columns already sort correctly; the defect is scoped to *formatted* values.
+   **Ours** → the P1 item's framing is narrowed; the `sortValue` ask is unchanged.
+5. **The doc nit named two symbols, one is affected** — `cellTemplateMap`
+   (`table.component.ts:203`) only. Ours, already split into its own `todo.md` item.
+
+**Two suspicions raised here and disproved — do not re-open.** (a) The consumer's page-level
+`(pageChange)` bindings on `<ids-data-table>` are valid and do fire: `ds-table` declares `page`
+as `model<number>(1)` (`table.component.ts:168`), whose implicit output is exactly
+`pageChange`. (b) Their lockfile is not mispinned; only the on-disk install is stale.
