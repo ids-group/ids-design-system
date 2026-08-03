@@ -26,8 +26,11 @@ import { LayoutScrollService } from './layout-scroll.service';
  * ```
  *
  * The layout renders the `<main>` landmark itself — do not nest another
- * `<main>` in the content. Scroll-to-top on navigation is built in
- * (`LayoutScrollService`); the content padding auto-compensates the native
+ * `<main>` in the content. Scroll-to-top is built in (`LayoutScrollService`)
+ * and fires when navigation changes the PATH, so a URL-driven list can page
+ * and filter without losing the reader's place; inject the service and call
+ * `scrollToTop()` for the changes that do want the top. The content padding
+ * auto-compensates the native
  * scrollbar width so the right inset always equals the left one. The layout
  * requires the application router (`provideRouter`) because its scroll-to-top
  * service subscribes to navigation events.
