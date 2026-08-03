@@ -103,6 +103,52 @@
       ]
     },
     {
+      "id": "modal-card-danger-class-rename",
+      "kind": "class-rename",
+      "old": "ds-modal .danger",
+      "new": ".error",
+      "note": "The status-vocabulary rename also renamed the class the card puts on its root: [danger] used to emit `danger`, [error] now emits `error`. The input-rename item fixes the BINDING; a consumer stylesheet that keys off the class needs this one, and nothing in the binding rename would find it. Scope strictly to selectors under ds-modal / ds-modal-card.",
+      "searchHints": [
+        "ds-modal",
+        "ds-modal-card",
+        ".modal.danger",
+        "&.danger"
+      ]
+    },
+    {
+      "id": "menu-item-danger-class-rename",
+      "kind": "class-rename",
+      "old": "ds-menu-item .danger",
+      "new": ".error",
+      "note": "Same rename on ds-menu-item: the host used to carry `danger`, it now carries `error`. Consumer STYLING only.",
+      "searchHints": [
+        "ds-menu-item",
+        ".danger"
+      ]
+    },
+    {
+      "id": "stat-danger-class-rename",
+      "kind": "class-rename",
+      "old": "ds-stat .danger",
+      "new": ".error",
+      "note": "ds-stat's variant value moved danger -> error, and the host class follows it (host binding [class.error]). Consumer STYLING only; the value-remap item covers the binding.",
+      "searchHints": [
+        "ds-stat",
+        ".danger"
+      ]
+    },
+    {
+      "id": "progress-danger-class-rename",
+      "kind": "class-rename",
+      "old": "ds-progress .danger",
+      "new": ".error",
+      "note": "Same as ds-stat: variant value danger -> error with a matching host class. Consumer STYLING only.",
+      "searchHints": [
+        "ds-progress",
+        ".danger"
+      ]
+    },
+    {
       "id": "progress-bar-warn-token-rename",
       "kind": "token-rename",
       "old": "--ds-progress-bar-color-warn",
