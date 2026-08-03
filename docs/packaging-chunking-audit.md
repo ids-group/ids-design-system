@@ -61,7 +61,7 @@ the strongest independent evidence for it:
 | `ToastService` is the *only* eager DS anchor | confirmed | `platform-admin/src/app/app.routes.ts` — every route is `loadComponent`/`loadChildren`, including the layout shell |
 | Their own fix works | **refuted** | `GlobalErrorHandler` takes `NotificationService` as a field initializer (`global-error-handler.ts:13`) and is bound at root (`provide-common.ts:63`); `errorInterceptor` is registered root-level (`app.config.ts:54`) and injects it too (`error.interceptor.ts:59`). Binding the implementation only in lazy route `providers` leaves both resolving from the root injector → `NullInjectorError`. |
 | The 631 966 B / 720 kB figures | **not reproducible from artifacts on disk** | their `dist/broker-portal` is 2026-07-23 and has no lazy chunks at all; `dist/platform-admin` is 2026-07-29 and is a dev build. No production rebuild was run — measuring in another repo was out of scope. |
-| They measured 0.7.0 | **false** | `package.json` declares `0.7.0`, but the installed `node_modules` copy is **0.6.2** (FESM 1 113 693 B, 2026-07-23). Structurally identical — one entry point either way — so the mechanism is unaffected, but the byte figures are against 0.6.2. |
+| They measured 0.7.0 | **can't tell** | `package.json` *and* `package-lock.json` both pin `0.7.0` — bumped `0.6.2 → 0.6.3 → 0.7.0` on 2026-08-03, the review day (`c401942f`, `b5965305`). But the `node_modules` copy on disk is still **0.6.2** (FESM 1 113 693 B, 2026-07-23), so a local measurement without a reinstall measured 0.6.2 while CI would measure 0.7.0. Structurally identical — one entry point either way — so the mechanism is unaffected; only the byte figures are in doubt. |
 
 ## 3. The bundler experiment
 
