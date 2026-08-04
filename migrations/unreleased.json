@@ -75,6 +75,20 @@
         "radio-group",
         "label"
       ]
+    },
+    {
+      "id": "ng-add-schematic-now-loads",
+      "kind": "behavior",
+      "old": "ng add @ids-group-ltd/ids-design-system",
+      "new": null,
+      "note": "`ng add` never actually ran its schematic in any released version, so the DS global styles were NEVER wired automatically - every consumer either did it by hand or shipped without them. The package is `\"type\": \"module\"` while the compiled schematic was CommonJS, so Node refused to load it: \"exports is not defined in ES module scope\". The build wrote a nested schematics/package.json with {\"type\":\"commonjs\"} to fix exactly that, and `npm pack` silently DROPPED it - npm treats a directory holding a package.json as a separate package root - so the marker existed in dist/ and was absent from the tarball. The schematic is now `.cts` compiled to `.cjs`, which survives packing. ACTION: consumers who added `@use '@ids-group-ltd/ids-design-system/styles/ds';` to their global stylesheet by hand need do nothing - ng add prepends the same line and skips when it is already present. Consumers who never wired the styles (and whose components therefore render unthemed) can now run `ng add` and have it work, or add that one line themselves.",
+      "searchHints": [
+        "ng add",
+        "ng-add",
+        "styles/ds",
+        "@use '@ids-group-ltd",
+        "schematics"
+      ]
     }
   ],
   "informational": [

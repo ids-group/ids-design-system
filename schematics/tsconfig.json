@@ -11,5 +11,5 @@
     "rootDir": ".",
     "outDir": "../dist/ds/schematics"
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts", "**/*.cts"]
 }
