@@ -27,6 +27,20 @@
         "(sortChange)",
         "[(sortKey)]"
       ]
+    },
+    {
+      "id": "field-reserve-message-default-off",
+      "kind": "behavior",
+      "old": "ds-input[reserveMessage]",
+      "new": null,
+      "note": "Every message-bearing field now defaults `reserveMessage` to FALSE (was true since 0.7.0). The resolution chain is unchanged - per-field input, then `DS_CONFIG.field.reserveMessage`, then the default - only the final fallback flipped. VISIBLE CONSEQUENCE: a field with no hint/error no longer holds a message line, so a form gets ~23px shorter per field and the controls below shift down the first time a hint or error appears. Affects all 14 fields: input, textarea, select, autocomplete, multi-select, checkbox, radio, radio-group, switch, slider, date-picker, time-picker, color-picker, otp-input. ACTION: a form that validates and must not reflow should turn it back on. App-wide in one line - `provideDsConfig({ field: { reserveMessage: true } })` - which is also how to restore 0.7.0 behaviour exactly; or per field with `[reserveMessage]=\"true\"`. Consumers that had written `[reserveMessage]=\"false\"` to opt OUT can delete those bindings, and any tighter sub-stack added to compensate for the reserved gap (e.g. a `var(--space-1)` wrapper) should be re-checked - with the row collapsed, a normal 16px stack is correct again.",
+      "searchHints": [
+        "reserveMessage",
+        "[reserveMessage]",
+        "provideDsConfig",
+        "field: {",
+        "DS_CONFIG"
+      ]
     }
   ],
   "informational": [

@@ -4,8 +4,8 @@ import type { IconName } from '../icons/icons.data';
 export interface DsConfig {
   field?: {
     /** Default for every field's `reserveMessage` — keeps a message line's worth
-     *  of space even when empty. Default `true`; set `false` app-wide (or for a
-     *  hint-less dialog's injector) instead of repeating the input per control. */
+     *  of space even when empty. Default `false`; set `true` app-wide (or for a
+     *  validated form's injector) instead of repeating the input per control. */
     reserveMessage?: boolean;
   };
   breadcrumbs?: {

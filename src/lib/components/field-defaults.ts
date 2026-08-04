@@ -5,9 +5,9 @@ import { DS_CONFIG } from '../config/ds-config';
  * Resolve a field's `reserveMessage` against the app-level default.
  *
  * Fields declare the input as `boolean | null` with a `null` default so "not set"
- * stays distinguishable from an explicit `false` — a signal input cannot report
+ * stays distinguishable from an explicit `true` — a signal input cannot report
  * whether it was bound. Precedence: the component input, then
- * `DS_CONFIG.field.reserveMessage`, then `true`.
+ * `DS_CONFIG.field.reserveMessage`, then `false`.
  *
  * Call from a field initializer (an injection context), e.g.
  * `protected readonly reserve = resolveReserveMessage(this.reserveMessage);`
@@ -18,6 +18,6 @@ export function resolveReserveMessage(
   const config = inject(DS_CONFIG);
 
   return computed(
-    () => reserveMessage() ?? config.field?.reserveMessage ?? true,
+    () => reserveMessage() ?? config.field?.reserveMessage ?? false,
   );
 }

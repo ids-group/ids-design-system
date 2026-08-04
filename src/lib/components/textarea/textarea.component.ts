@@ -50,8 +50,8 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   readonly hint = input<string>('');
   /** Reserve the message-row height even when empty, so the field doesn't shift
    *  the layout below it when a hint/error appears. Falls back to
-   *  `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide
-   *  for a form of hint-less controls. */
+   *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
+   *  for a form that shows validation messages. */
   readonly reserveMessage = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });

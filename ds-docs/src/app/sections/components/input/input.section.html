@@ -445,27 +445,31 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       reserveMessage
-    </code> (default on) holds a
+    </code> (default off) holds a
     message line's height even when there's no hint or error, so a form doesn't
-    reflow the moment validation appears. Set
+    reflow the moment validation appears. Turn it on with
     <code class="t-mono-inline">
-      [reserveMessage]="false"
-    </code> to collapse it
-    where a shift is fine. The reserved row sits ~23px under the control, so
-    stack reserved fields tighter (≈4px) than bare ones or the gap reads as a
-    hole.
+      [reserveMessage]="true"
+    </code> on a form that
+    validates, or app-wide via
+    <code class="t-mono-inline">
+      provideDsConfig({{ '{' }} field: {{ '{' }} reserveMessage: true {{ '}' }} {{ '}' }})
+    </code>. The reserved row sits ~23px under the control, so stack reserved
+    fields tighter — <code class="t-mono-inline">
+      &lt;ds-stack gap="none"&gt;
+    </code> — than bare ones, or the gap reads as a hole.
   </p>
 
-  <div class="grid-2">
+  <div class="grid-2 reserve-demo">
     <ds-input
-      label="Reserves (default)"
-      placeholder="No hint — the row is still held"
+      label="Collapsed (default)"
+      placeholder="No row until a message shows"
     />
 
     <ds-input
-      label="Collapsed"
-      placeholder="No row until a message shows"
-      [reserveMessage]="false"
+      label="Reserved"
+      placeholder="No hint — the row is still held"
+      [reserveMessage]="true"
     />
   </div>
 </docs-section>

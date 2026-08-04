@@ -92,6 +92,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **BREAKING (layout): `reserveMessage` now defaults to `false` on every field.** It shipped default-on
+  in 0.7.0; the reserved row is right for a form that validates and wrong for the many forms that never
+  show a message, where it added ~23px of dead space under every control and made a normal 16px field
+  stack read as a ~39px hole. The resolution chain is unchanged — per-field input, then
+  `DS_CONFIG.field.reserveMessage`, then the default — only the final fallback flipped, so all 14
+  message-bearing fields follow (`ds-input`, `ds-textarea`, `ds-select`, `ds-autocomplete`,
+  `ds-multi-select`, `ds-checkbox`, `ds-radio`, `ds-radio-group`, `ds-switch`, `ds-slider`,
+  `ds-date-picker`, `ds-time-picker`, `ds-color-picker`, `ds-otp-input`). **To restore 0.7.0 behaviour
+  exactly, one line:** `provideDsConfig({ field: { reserveMessage: true } })`. Per form or per field,
+  bind `[reserveMessage]="true"`. Two clean-ups this enables: existing `[reserveMessage]="false"`
+  bindings are now redundant and can be deleted, and any tighter sub-stack added to absorb the reserved
+  gap should go back to the normal stack spacing.
+
 - **`ds-time-picker` matches the field family: the clock glyph moved to the trailing edge, the value
   weight dropped to regular, and the trigger gap narrowed.** The glyph rendered BEFORE the value at 14px
   while every sibling field (`ds-date-picker`, `ds-select`, `ds-input`) puts its affordance last at 16px, so

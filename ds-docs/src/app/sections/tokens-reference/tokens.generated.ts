@@ -1867,6 +1867,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Max width of the centred content wrapper (none by default — full width)."
       },
       {
+        "name": "--ds-app-layout-rail-bg-color",
+        "value": "var(--surface-overlay)",
+        "notes": "Rail background while it is an overlay below the lg breakpoint (defaults to --surface-overlay); above lg the rail is in the layout and inherits its own component's surface."
+      },
+      {
+        "name": "--ds-app-layout-rail-shadow",
+        "value": "var(--shadow-modal)",
+        "notes": "Rail elevation while it is an overlay below the lg breakpoint (defaults to --shadow-modal)."
+      },
+      {
+        "name": "--ds-app-layout-scrim-color",
+        "value": "var(--scrim, hsl(220deg 20% 12% / 45%))",
+        "notes": "Scrim behind the rail overlay below the lg breakpoint (defaults to --scrim)."
+      },
+      {
         "name": "--ds-app-layout-height",
         "value": "100dvh",
         "notes": "Host height, pinned to the viewport so only the content region scrolls (defaults to 100dvh)."

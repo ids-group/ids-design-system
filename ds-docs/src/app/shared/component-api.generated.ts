@@ -153,6 +153,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'content'",
         "required": false,
         "description": "`'content'` (default): the rail spans the full viewport height on the left and the topbar sits above the content column only. `'full'`: the topbar spans the full width and the rail + content sit below it."
+      },
+      {
+        "name": "railOpen",
+        "kind": "model",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the rail is open as an overlay. Only meaningful below the `lg` breakpoint — above it the rail is always in the layout and this is ignored. Two-way, so a burger in your topbar can drive it."
+      },
+      {
+        "name": "railLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Navigation'",
+        "required": false,
+        "description": "Accessible name for the rail while it is a modal overlay."
       }
     ],
     "outputs": []
@@ -271,7 +289,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide for a form of hint-less controls."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "allowCreate",
@@ -1137,7 +1155,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide for a form of hint-less controls."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "size",
@@ -1244,7 +1262,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide for a form of hint-less controls."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       }
     ],
     "outputs": []
@@ -1336,7 +1354,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide for a form of hint-less controls."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "required",
@@ -2034,7 +2052,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide for a form of hint-less controls."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "placeholder",
@@ -2209,7 +2227,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "inputMode",
         "kind": "input",
-        "type": "| 'none'\r\n    | 'text'\r\n    | 'decimal'\r\n    | 'numeric'\r\n    | 'tel'\r\n    | 'search'\r\n    | 'email'\r\n    | 'url'\r\n    | null",
+        "type": "| 'none'\n    | 'text'\n    | 'decimal'\n    | 'numeric'\n    | 'tel'\n    | 'search'\n    | 'email'\n    | 'url'\n    | null",
         "union": [
           "none",
           "text",
@@ -2915,7 +2933,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide for a form of hint-less controls."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "ariaLabel",
@@ -3101,7 +3119,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide for a form of hint-less controls."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "ariaLabel",
@@ -3485,7 +3503,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide for a form of hint-less controls."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "size",
@@ -3583,7 +3601,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide for a form of hint-less controls."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "ariaLabel",
@@ -3838,7 +3856,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide for a form of hint-less controls."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "required",
@@ -4323,7 +4341,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide for a form of hint-less controls."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       }
     ],
     "outputs": []
@@ -4745,7 +4763,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide for a form of hint-less controls."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "size",
@@ -5479,7 +5497,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide for a form of hint-less controls."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "placeholder",
@@ -5845,7 +5863,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then on — opt out per field, or app-wide for a form of hint-less controls."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "placeholder",
