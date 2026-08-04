@@ -145,7 +145,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-table`’s `clientSort` is replaced by `sortMode: 'client' | 'server' | 'none'`, and the default flips to client sorting.** The boolean could not express "nothing sorts", so a column marked `sortable: true` on a table with no sorting drew a header that looked live, showed a caret on hover and did nothing — an invisible failure that survived review and was caught by opening the page. An enum makes that state unrepresentable: `'none'` now renders the header as plain text, with no button, caret or `aria-sort`. Unset resolves to `'client'`, so `sortable: true` always does something; a server-sorted table declares `'server'`, which is the side that actually knows it wants server sorting. **Migration is mechanical except for one case:** a table that previously bound no `clientSort` and reordered in its own `(sortChange)` handler must now declare `sortMode="server"`, or it will sort locally as well. For a server-PAGED table (one that binds `total`) that is worse than a dead header, because only the current page reorders and the rows look sorted without being sorted — so dev builds warn on exactly that combination: `total` bound, sortable columns, `sortMode` never declared. Rejected alternative: reading `OutputEmitterRef.listeners` to detect an unbound `(sortChange)`. It is private, and a rename would kill the warning SILENTLY — `?.length` on `undefined` just means it never fires again.
 ### Changed
 
-- **`ds-select`’s label element is `.label`, not `.select-label`, and `ds-radio-group`’s is `.label`, not `.group-label`.** Consumer CSS targeting either class stops matching — see the migration manifest.
+- **A `ds-menu` row's hover fill is square and runs edge to edge.** The row carried `--radius-md`, the
+  same 8px the standalone menu panel uses, while sitting flush inside it — and inside a `ds-popover`,
+  which drops its padding for a menu, that 8px sat against the popover's 12px corner and left visible
+  slivers at the top and bottom of the list. A curve at zero inset can never be concentric with the
+  panel's, so the row is now square and the panel clips it: `ds-menu` drops its own `padding` and gains
+  `overflow: hidden`, which is what rounds the first and last row. To keep the old rounded highlight,
+  set the new hook — `ds-menu { --ds-menu-item-radius: var(--radius-sm); }` — and note the panel no
+  longer insets the rows, so a radius there reads best with a padding of your own.
 - **`ds-radio-group`’s label now looks like every other field label.** It was the one component drawing
   its own type (`medium` weight at `--font-size-s` on `--line-height-flat`) rather than the family’s
   `bold`/`--font-size-xs`; in a form beside an input or a select it read as a different kind of thing.

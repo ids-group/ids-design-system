@@ -10,7 +10,11 @@
   background: var(--_menu-bg-color);
   border: var(--border-width-default) solid var(--_menu-border-color);
   border-radius: var(--radius-md);
-  padding: var(--space-1);
+
+  // No padding, and clip: rows run edge to edge, so this radius is what rounds
+  // the first and last row's hover fill.
+  padding: 0;
+  overflow: hidden;
 }
 
 // When projected inside a ds-popover (which already provides surface +
