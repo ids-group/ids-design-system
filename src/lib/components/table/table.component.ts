@@ -25,6 +25,7 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import { ButtonComponent } from '../button/button.component';
 import { IconComponent } from '../../icons/icon.component';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { PaginationComponent } from '../pagination/pagination.component';
@@ -92,6 +93,7 @@ function compareSortValues(
   selector: 'ds-table',
   standalone: true,
   imports: [
+    ButtonComponent,
     IconComponent,
     NgTemplateOutlet,
     SkeletonComponent,
@@ -201,6 +203,27 @@ export class TableComponent<T extends object> {
    *  order; the column panel owns it once the user reorders. Keys absent from
    *  the list fall back to declaration order after the listed ones. */
   readonly columnOrder = model<string[] | null>(null);
+
+  /** Round-trip `columnOrder`, `columnWidths` and `hiddenKeys` through
+   *  `localStorage`, so a reader's column layout survives a reload. Needs
+   *  `storageKey` — without one there is nothing to key a screen by, and two
+   *  tables would overwrite each other. Off by default. */
+  readonly persistLayout = input(false, { transform: booleanAttribute });
+  /** Screen id the persisted layout is stored under. Pick something stable per
+   *  table, not per route instance. */
+  readonly storageKey = input<string>('');
+
+  /** Render an export button above the table. Off by default; `exportCsv()`
+   *  stays available for a consumer's own button. */
+  readonly exportButton = input(false, { transform: booleanAttribute });
+  /** Filename the export button downloads as. */
+  readonly exportFilename = input<string>('table.csv');
+  /** Rows to export instead of what the table holds. A server-paged table only
+   *  HAS the current page, so exporting without this silently exports one page —
+   *  return the whole set here and the button awaits it. */
+  readonly exportFetcher = input<(() => Promise<readonly T[]>) | null>(null);
+  /** True while `exportFetcher` is in flight, so the button can disable itself. */
+  protected readonly exporting = signal(false);
 
   /** Keeps the horizontal scrollbar reachable on tall tables: the scroll
    *  container's native bar is hidden and a proxy stuck to the bottom of the
@@ -811,6 +834,27 @@ export class TableComponent<T extends object> {
   protected readonly hscrollNeeded = signal(false);
 
   constructor() {
+    // One effect for both halves, because the restore CANNOT run in the
+    // constructor: input signals are not set yet there, so storageKey() is still
+    // '' and the restore silently no-ops. The first run with a usable key
+    // restores; every later run saves.
+    effect(() => {
+      const key = this.layoutKey();
+      const order = this.columnOrder();
+      const widths = this.columnWidths();
+      const hidden = this.hiddenKeys();
+      if (!key) {
+        return;
+      }
+      if (!this.layoutRestored) {
+        this.layoutRestored = true;
+        this.restoreLayout(key);
+
+        return;
+      }
+      this.saveLayout(key, order, widths, hidden);
+    });
+
     if (isDevMode()) {
       effect(() => {
         // Only when the mode was never DECLARED: a table that asks for 'client'
@@ -1150,7 +1194,7 @@ export class TableComponent<T extends object> {
   /** Exports the visible columns of the filtered + sorted rows (all rows, not
    *  just the current page) as a CSV download. Call from a consumer button:
    *  `<ds-button (pressed)="table.exportCsv()">`. */
-  exportCsv(filename = 'table.csv'): void {
+  exportCsv(filename = 'table.csv', rows?: readonly T[]): void {
     if (typeof document === 'undefined') {
       return;
     }
@@ -1158,7 +1202,7 @@ export class TableComponent<T extends object> {
     const escapeCell = (value: string): string =>
       /[",\r\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
     const header = columns.map((col) => escapeCell(col.label));
-    const body = this.sortedData().map((row) =>
+    const body = (rows ?? this.sortedData()).map((row) =>
       columns.map((col) => escapeCell(this.cellValue(row, col))),
     );
     // Leading BOM so Excel reads UTF-8 (accented labels/values) correctly.
@@ -1172,6 +1216,81 @@ export class TableComponent<T extends object> {
     link.download = filename;
     link.click();
     URL.revokeObjectURL(url);
+  }
+
+  // localStorage, not session: a column layout the reader arranged should still
+  // be there tomorrow. Every access is guarded — Safari private mode throws on
+  // write, and a quota error must not take the table down with it.
+  private layoutKey(): string | null {
+    const key = this.storageKey().trim();
+
+    return this.persistLayout() && key ? `ds-table:${key}` : null;
+  }
+
+  private layoutRestored = false;
+
+  private restoreLayout(key: string): void {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) {
+        return;
+      }
+      const saved = JSON.parse(raw) as {
+        order?: string[] | null;
+        widths?: [string, number][];
+        hidden?: string[] | null;
+      };
+      // Only apply what was actually stored: a table that has never been
+      // rearranged must keep its declaration order and `hidden` flags.
+      if (saved.order) {
+        this.columnOrder.set(saved.order);
+      }
+      if (saved.widths) {
+        this.columnWidths.set(new Map(saved.widths));
+      }
+      if (saved.hidden) {
+        this.hiddenKeys.set(new Set(saved.hidden));
+      }
+    } catch {
+      // Unreadable or from an older shape: fall back to the declared layout.
+    }
+  }
+
+  private saveLayout(
+    key: string,
+    order: string[] | null,
+    widths: Map<string, number>,
+    hidden: Set<string> | null,
+  ): void {
+    try {
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          order,
+          widths: [...widths],
+          hidden: hidden ? [...hidden] : null,
+        }),
+      );
+    } catch {
+      // Full or blocked: a lost column layout is not worth an error.
+    }
+  }
+
+  /** Export button handler: awaits `exportFetcher` when one is given, so a
+   *  server-paged table exports the whole set rather than the page it holds. */
+  protected async runExport(): Promise<void> {
+    const fetcher = this.exportFetcher();
+    if (!fetcher) {
+      this.exportCsv(this.exportFilename());
+
+      return;
+    }
+    this.exporting.set(true);
+    try {
+      this.exportCsv(this.exportFilename(), await fetcher());
+    } finally {
+      this.exporting.set(false);
+    }
   }
 
   /** Deterministic per-cell width so skeleton rows look organic but stable

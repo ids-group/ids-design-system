@@ -970,6 +970,45 @@
   />
 
   <h3 class="block-title t-h4">
+    Persisted layout &amp; export
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [persistLayout]="true"
+    </code> with a
+    <code class="t-mono-inline">
+      storageKey
+    </code> round-trips the column order,
+    widths and hidden set through
+    <code class="t-mono-inline">
+      localStorage
+    </code>, so reorder a
+    column or hide one, reload the page, and it stays. Without a key nothing is
+    stored — two tables would otherwise overwrite each other.
+    <code class="t-mono-inline">
+      [exportButton]="true"
+    </code> renders the CSV button;
+    a server-paged table passes
+    <code class="t-mono-inline">
+      [exportFetcher]
+    </code> so the export covers
+    the whole set instead of the page it holds.
+  </p>
+
+  <ds-table
+    caption="Projects"
+    storageKey="docs-demo-projects"
+    [data]="projectRows"
+    [columns]="projectColumns"
+    [persistLayout]="true"
+    [exportButton]="true"
+    [reorderableColumns]="true"
+    [resizableColumns]="true"
+    sortMode="client"
+  />
+
+  <h3 class="block-title t-h4">
     Column filters
   </h3>
 

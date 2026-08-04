@@ -14,6 +14,20 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-table` persists the column layout and can render its own export button.** These were the last two
+  things keeping a consumer wrapper alive around the table: after 0.6.3/0.7.0 it owned every other feature
+  mm-broker forked it for, but the three column models were two-way with nothing storing them, so every
+  consumer wrote the same `localStorage` effect keyed by a screen id, and `exportCsv()` was a public method
+  with no affordance.
+  — `[persistLayout]="true"` + `storageKey` round-trip `columnOrder`, `columnWidths` and `hiddenKeys`
+  through `localStorage`. Both are required: without a key there is nothing to identify a screen by and two
+  tables would overwrite each other, so a missing key stores nothing rather than guessing. Only what was
+  actually saved is applied, so a table nobody has rearranged keeps its declaration order and `hidden`
+  flags.
+  — `[exportButton]="true"` renders the CSV button; `exportFilename` names the file and `exportFetcher`
+  covers the server-paged case — a table that only HAS the current page would otherwise export one page and
+  call it the export, so the button awaits the fetcher and disables itself while it runs. `exportCsv()`
+  stays public for a consumer’s own button and now takes an optional row set.
 - **Focus-indicator style is a one-place switch: `<html data-focus="ring | field | edge | outline">`.**
   The library shipped two fixed families — a soft halo on fields, a crisp double ring on controls — with no
   way for a brand to choose. Since 20 components already resolve through `--ds-field-focus-shadow` /

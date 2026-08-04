@@ -1,3 +1,17 @@
+@if (exportButton()) {
+  <div class="table-toolbar">
+    <ds-button
+      color="neutral"
+      variant="outline"
+      size="sm"
+      [disabled]="exporting()"
+      (pressed)="runExport()"
+    >
+      {{ exporting() ? 'Preparing…' : 'Export CSV' }}
+    </ds-button>
+  </div>
+}
+
 <div
   #scrollWrap
   class="scroll-wrap"

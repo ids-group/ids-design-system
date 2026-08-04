@@ -171,6 +171,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'Navigation'",
         "required": false,
         "description": "Accessible name for the rail while it is a modal overlay."
+      },
+      {
+        "name": "restoreScroll",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Remember the content scroll per path and restore it on the way BACK. Off by default: a layout that silently moved the scroll would surprise every existing consumer. Only a history traversal restores — following a link into a screen still lands at the top — plus a host that pushes its own \"back to list\" and says so with `state: { dsRestoreScroll: true }`, and the first navigation after a reload."
+      },
+      {
+        "name": "restoreScrollTimeout",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "2000",
+        "required": false,
+        "description": "How long to wait for the restored screen's content to grow tall enough before landing as close as it allows. Only meaningful with `restoreScroll`."
       }
     ],
     "outputs": []
@@ -5512,6 +5530,51 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Two-way column order as a list of keys. `null` (default) keeps declaration order; the column panel owns it once the user reorders. Keys absent from the list fall back to declaration order after the listed ones."
+      },
+      {
+        "name": "persistLayout",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Round-trip `columnOrder`, `columnWidths` and `hiddenKeys` through `localStorage`, so a reader's column layout survives a reload. Needs `storageKey` — without one there is nothing to key a screen by, and two tables would overwrite each other. Off by default."
+      },
+      {
+        "name": "storageKey",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Screen id the persisted layout is stored under. Pick something stable per table, not per route instance."
+      },
+      {
+        "name": "exportButton",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Render an export button above the table. Off by default; `exportCsv()` stays available for a consumer's own button."
+      },
+      {
+        "name": "exportFilename",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'table.csv'",
+        "required": false,
+        "description": "Filename the export button downloads as."
+      },
+      {
+        "name": "exportFetcher",
+        "kind": "input",
+        "type": "(() => Promise<readonly T[]>) | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Rows to export instead of what the table holds. A server-paged table only HAS the current page, so exporting without this silently exports one page — return the whole set here and the button awaits it."
       },
       {
         "name": "stickyScrollbar",
