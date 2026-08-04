@@ -1,0 +1,157 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.toc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-8) var(--space-6);
+  background: var(--surface-default);
+  border-right: var(--border-width-default) solid var(--border-divider);
+  min-height: 100%;
+  transition: padding var(--duration-fast) var(--ease-standard);
+}
+.toc.is-collapsed {
+  padding: var(--space-3) var(--space-1);
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2-5);
+  margin-bottom: var(--space-6);
+  letter-spacing: var(--letter-spacing-snug);
+}
+.toc.is-collapsed .brand {
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: 0;
+}
+
+.collapse-toggle {
+  margin-left: auto;
+}
+.toc.is-collapsed .collapse-toggle {
+  margin-left: 0;
+}
+.brand .mark {
+  width: var(--space-8);
+  height: var(--space-8);
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: var(--primary-on);
+  display: grid;
+  place-items: center;
+  font: var(--font-weight-extrabold) 16px/1 var(--font-sans);
+  flex-shrink: 0;
+}
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.brand-name {
+  font: var(--font-weight-extrabold) var(--font-size-h5) / 1 var(--font-sans);
+  color: var(--text-primary);
+}
+.brand small {
+  display: block;
+  font: var(--font-weight-medium) 11px/1 var(--font-sans);
+  color: var(--text-tertiary);
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+}
+
+.group {
+  display: block;
+  font: var(--font-weight-bold) 11px/1.4 var(--font-sans);
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  padding: var(--space-4) var(--space-2) var(--space-1-5);
+}
+.group-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+.group-link.is-active {
+  color: var(--text-primary);
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 7px var(--space-2-5);
+  color: var(--text-secondary);
+  font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+.link-label {
+  min-width: 0;
+}
+.nav-new {
+  flex: none;
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+  color: var(--primary-on);
+  font: var(--font-weight-bold) 9px/1 var(--font-sans);
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+}
+.link:hover {
+  background: var(--surface-secondary);
+  color: var(--text-primary);
+}
+.link:active {
+  background: var(--surface-muted);
+  color: var(--text-primary);
+  transform: scale(0.97);
+}
+.link.is-active {
+  background: var(--primary-subtitle);
+  color: var(--primary-strong);
+  font-weight: var(--font-weight-bold);
+}
+
+.start-link {
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.nav-search {
+  display: block;
+  margin-bottom: var(--space-2);
+}
+.nav-empty {
+  padding: var(--space-3) var(--space-2);
+  color: var(--text-tertiary);
+  font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
+}
+
+/* Horizontal padding included: as an overlay the nav sits in the shell's
+   rail, which has none of its own — the ds-drawer that used to wrap it did. */
+.toc.is-drawer {
+  border-right: none;
+  padding: var(--space-2) var(--space-4) var(--space-6);
+}
+.toc.is-drawer .link {
+  min-height: var(--hit-comfy);
+  padding-block: var(--space-2);
+}
+.toc.is-drawer .start-link {
+  min-height: var(--hit-comfy);
+}

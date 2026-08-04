@@ -16,38 +16,7 @@ import { DocsApiTableComponent } from './docs-api-table.component';
   imports: [DocsComponentMetaComponent, DocsApiTableComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './docs-section.component.html',
-  styles: [
-    `
-      :host {
-        display: block;
-      }
-      .section {
-        scroll-margin-top: calc(var(--topbar-h) + var(--space-4));
-      }
-      .eyebrow {
-        color: var(--primary);
-        margin-bottom: var(--space-2);
-      }
-      .lede {
-        color: var(--text-secondary);
-        margin-top: var(--space-2);
-        max-width: var(--col-cap-text);
-      }
-      /* Body scaffolding (projected content) — shared block heading/description. */
-      :host ::ng-deep .block-title {
-        margin-top: var(--space-8);
-      }
-      :host ::ng-deep .block-desc {
-        color: var(--text-secondary);
-        margin-top: var(--space-1);
-        max-width: var(--col-cap-text);
-      }
-      /* Secondary same-family component: its own meta + API table block. */
-      .api-sub {
-        margin-top: var(--space-8);
-      }
-    `,
-  ],
+  styleUrl: './docs-section.component.scss',
 })
 export class DocsSectionComponent {
   readonly anchor = input.required<string>();

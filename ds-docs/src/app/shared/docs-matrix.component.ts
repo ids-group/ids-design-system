@@ -31,69 +31,7 @@ export interface DocsMatrixRow {
   imports: [NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './docs-matrix.component.html',
-  styles: [
-    `
-      .scroll {
-        overflow-x: auto;
-        margin-top: var(--space-3);
-      }
-      .matrix {
-        display: grid;
-        gap: var(--space-4) var(--space-6);
-        align-items: center;
-        padding: var(--space-4);
-        background: var(--surface-secondary);
-        border-radius: var(--radius-lg);
-      }
-      .head {
-        text-align: center;
-      }
-      .corner {
-        color: var(--text-tertiary);
-      }
-      .row-label {
-        display: flex;
-        align-items: center;
-        gap: var(--space-2);
-      }
-      .dot {
-        width: 12px;
-        height: 12px;
-        border-radius: var(--radius-pill);
-        flex-shrink: 0;
-      }
-      .name {
-        font-weight: var(--font-weight-semibold);
-        color: var(--text-primary);
-      }
-      .note {
-        color: var(--text-tertiary);
-        margin-left: auto;
-      }
-      .cell {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 52px;
-      }
-      .warn {
-        position: absolute;
-        top: 0;
-        right: 2px;
-        font-size: 12px;
-        line-height: 1;
-        opacity: 0.7;
-        pointer-events: none;
-      }
-      .warn::after {
-        content: '⚠';
-      }
-      .na {
-        color: var(--text-tertiary);
-      }
-    `,
-  ],
+  styleUrl: './docs-matrix.component.scss',
 })
 export class DocsMatrixComponent {
   /** Column headers (the variant / fill axis). */
