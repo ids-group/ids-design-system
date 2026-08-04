@@ -43,9 +43,9 @@ import type {
 
 const NUMERIC = /^-?\d+(\.\d+)?$/;
 
-/** Rendered values that read as "no data" — sorted last in EITHER direction, so
- *  a descending sort does not fill the first screen with empty rows. Matched
- *  case-insensitively; mirrors the set mm-broker had to maintain itself. */
+/** Rendered values that read as "no data", matched case-insensitively. The list
+ *  is wider than the empty string because consumers render placeholders; these
+ *  are the ones mm-broker had to enumerate itself before `sortValue` existed. */
 const BLANK_CELL = new Set(['', '—', '-', '–', 'n/a', 'never', 'none']);
 
 /** Normalises "no data" to a single `null`, so the comparator has one blank

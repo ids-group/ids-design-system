@@ -35,10 +35,10 @@
       </label>
     }
 
-    <!-- Dev-only probe. The caption comes from [label] and there is no
-         <ng-content> in the rendered output, so a projected caption would
-         vanish silently; this gives it a home just long enough to notice and
-         warn. Gated on dev mode, so production renders no extra node.
+    <!-- Dev-only probe, NOT projection support. The caption comes from [label],
+         so content written between the tags would vanish silently; this is the
+         only <ng-content> in the component and it exists purely so the warning
+         can see that content was passed. Production renders no extra node.
          Implementing real projection is still open — see docs/todo.md. -->
     @if (devMode) {
       <span
