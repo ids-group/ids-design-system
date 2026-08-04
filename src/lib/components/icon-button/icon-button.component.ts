@@ -44,6 +44,13 @@ export class IconButtonComponent {
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Toggle state — renders the pressed/active look and sets aria-pressed. */
   readonly selected = input(false, { transform: booleanAttribute });
+  /** ARIA `aria-expanded`, forwarded to the inner `<button>` — bind to the open
+   *  state when this button opens a panel. On the host element it would land on
+   *  a non-focusable wrapper, which no screen reader reads. */
+  readonly ariaExpanded = input<boolean | null>(null);
+  /** ARIA `aria-controls`, forwarded to the inner `<button>` — the id of the
+   *  panel this button opens, e.g. `ds-app-layout`'s `railId`. */
+  readonly ariaControls = input<string | null>(null);
   /** Fires on click, unless disabled. */
   readonly pressed = output<MouseEvent>();
 

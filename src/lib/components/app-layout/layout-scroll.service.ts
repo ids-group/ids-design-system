@@ -1,4 +1,4 @@
-import { DestroyRef, Injectable, inject } from '@angular/core';
+import { DestroyRef, Injectable, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LayoutNavigationService } from './layout-navigation.service';
 
@@ -16,7 +16,15 @@ import { LayoutNavigationService } from './layout-navigation.service';
 export class LayoutScrollService {
   private readonly navigation = inject(LayoutNavigationService);
   private readonly destroyRef = inject(DestroyRef);
-  private scrollContainer: Element | null = null;
+  private readonly container = signal<Element | null>(null);
+
+  /**
+   * The content scroller, once the layout has rendered it. Exposed so a host that
+   * must measure or drive the scroll itself — a scroll-spy, a virtualizer — can
+   * ask the layout for it instead of guessing the layout's internal markup with
+   * `document.querySelector`.
+   */
+  readonly scroller = this.container.asReadonly();
 
   constructor() {
     this.navigation.pathChanged
@@ -25,12 +33,22 @@ export class LayoutScrollService {
   }
 
   setScrollContainer(element: Element): void {
-    this.scrollContainer = element;
+    this.container.set(element);
   }
 
   scrollToTop(): void {
-    if (this.scrollContainer) {
-      this.scrollContainer.scrollTop = 0;
+    this.scrollTo(0);
+  }
+
+  /**
+   * Scroll the content region to an absolute offset. Assigns `scrollTop` rather
+   * than calling `scrollTo`, so a themed `scroll-behavior: smooth` cannot turn a
+   * positioning jump into an animation.
+   */
+  scrollTo(top: number): void {
+    const element = this.container();
+    if (element) {
+      element.scrollTop = top;
     }
   }
 }

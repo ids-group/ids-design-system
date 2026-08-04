@@ -9,13 +9,20 @@ import { AppLayoutComponent } from './app-layout.component';
  * ```html
  * <ds-app-layout>
  *   <ds-topbar topbar>
- *     <ds-icon-button dsRailTrigger icon="menu" ariaLabel="Navigation" />
+ *     <button dsRailTrigger type="button" aria-label="Navigation">☰</button>
  *   </ds-topbar>
  * </ds-app-layout>
  * ```
  *
  * A directive rather than documentation because these are exactly the attributes
  * a consumer forgets — the DS itself shipped the rail without them.
+ *
+ * PUT IT ON THE FOCUSABLE CONTROL, not on a wrapper: the attributes go on the
+ * host element, and on `<ds-icon-button>` that is the wrapper, whose inner
+ * `<button>` is what a screen reader actually reads. With a DS button, skip this
+ * directive and bind its forwarding inputs instead —
+ * `[ariaExpanded]="shell.railOverlay() ? shell.railOpen() : null"` and
+ * `[ariaControls]="shell.railId"` off a `<ds-app-layout #shell>` template ref.
  *
  * Both attributes are dropped while the rail is NOT an overlay: above the
  * breakpoint the rail is permanently in the layout, so `aria-expanded="false"`

@@ -902,6 +902,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "ARIA `aria-expanded`, forwarded to the inner <button> — bind to the overlay's open state on a trigger button."
+      },
+      {
+        "name": "ariaControls",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "ARIA `aria-controls`, forwarded to the inner <button> — the id of the panel this button opens, e.g. `ds-app-layout`'s `railId`."
       }
     ],
     "outputs": [
@@ -2109,6 +2118,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Toggle state — renders the pressed/active look and sets aria-pressed."
+      },
+      {
+        "name": "ariaExpanded",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "ARIA `aria-expanded`, forwarded to the inner `<button>` — bind to the open state when this button opens a panel. On the host element it would land on a non-focusable wrapper, which no screen reader reads."
+      },
+      {
+        "name": "ariaControls",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "ARIA `aria-controls`, forwarded to the inner `<button>` — the id of the panel this button opens, e.g. `ds-app-layout`'s `railId`."
       }
     ],
     "outputs": [

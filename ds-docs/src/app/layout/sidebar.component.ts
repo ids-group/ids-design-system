@@ -6,7 +6,6 @@ import {
   computed,
   effect,
   inject,
-  input,
   output,
   signal,
 } from '@angular/core';
@@ -18,7 +17,12 @@ import {
   RouterLinkActive,
 } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { IconButtonComponent, SearchComponent } from 'ds';
+import {
+  AppLayoutComponent,
+  IconButtonComponent,
+  LayoutScrollService,
+  SearchComponent,
+} from 'ds';
 import {
   NAV,
   type NavGroup,
@@ -42,9 +46,9 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
     <nav
       class="toc"
       [class.is-collapsed]="effectiveCollapsed()"
-      [class.is-drawer]="mode() === 'drawer'"
+      [class.is-drawer]="layout.railOverlay()"
     >
-      @if (mode() === 'rail') {
+      @if (!layout.railOverlay()) {
         <div class="brand">
           <span class="mark">
             D
@@ -301,8 +305,9 @@ export class SidebarComponent {
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
+  private readonly layoutScroll = inject(LayoutScrollService);
+  protected readonly layout = inject(AppLayoutComponent);
 
-  readonly mode = input<'rail' | 'drawer'>('rail');
   readonly navigated = output<void>();
 
   protected readonly version = DS_VERSION;
@@ -320,8 +325,12 @@ export class SidebarComponent {
   });
   protected readonly activeAnchor = signal<string>('');
   protected readonly collapsed = signal<boolean>(this.readCollapsed());
+  // While the shell's rail is an overlay there is room for the full nav, and the
+  // collapse toggle is not reachable anyway. Read from the shell rather than a
+  // second media query: ds-app-layout already owns the lg breakpoint, and a copy
+  // here is the duplication its own --bp-lg lesson was about.
   protected readonly effectiveCollapsed = computed(() =>
-    this.mode() === 'drawer' ? false : this.collapsed(),
+    this.layout.railOverlay() ? false : this.collapsed(),
   );
 
   protected readonly urlForAnchor = urlForAnchor;
@@ -348,7 +357,7 @@ export class SidebarComponent {
     this.setupWhenSectionsExist();
 
     // A different group page swaps its sections: reset scroll to the target section (or top) and re-scan `[data-anchor]`.
-    // Same-group anchor rewrites are skipped here to avoid observer thrash; `main.main` is the scroll container, not window.
+    // Same-group anchor rewrites are skipped here to avoid observer thrash; the shell's content region is the scroll container, not window.
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
@@ -429,7 +438,7 @@ export class SidebarComponent {
       (this.document.querySelector(
         `[data-anchor="${anchor}"]`,
       ) as HTMLElement | null);
-    const main = this.document.querySelector('main.main') as HTMLElement | null;
+    const main = this.layoutScroll.scroller() as HTMLElement | null;
     if (!section || !main) {
       return;
     }
@@ -449,7 +458,7 @@ export class SidebarComponent {
     if (this.scrollToAnchor(this.anchorFromUrl(url))) {
       return;
     }
-    const main = this.document.querySelector('main.main') as HTMLElement | null;
+    const main = this.layoutScroll.scroller() as HTMLElement | null;
     main?.scrollTo({ top: 0, behavior: 'auto' });
   }
 
@@ -475,7 +484,7 @@ export class SidebarComponent {
 
     this.activeAnchor.set(anchor);
 
-    const main = this.document.querySelector('main.main') as HTMLElement | null;
+    const main = this.layoutScroll.scroller() as HTMLElement | null;
     const topbarH = this.computeTopbarHeight();
     if (main) {
       const containerTop = main.getBoundingClientRect().top;
@@ -546,7 +555,7 @@ export class SidebarComponent {
     this.intersecting.clear();
     this.anchorToSection.clear();
 
-    const main = this.document.querySelector('main.main') as HTMLElement | null;
+    const main = this.layoutScroll.scroller() as HTMLElement | null;
     const sections = Array.from(
       this.document.querySelectorAll<HTMLElement>('[data-anchor]'),
     );

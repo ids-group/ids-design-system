@@ -86,6 +86,9 @@ export class ButtonComponent {
   /** ARIA `aria-expanded`, forwarded to the inner <button> — bind to the
    *  overlay's open state on a trigger button. */
   readonly ariaExpanded = input<boolean | null>(null);
+  /** ARIA `aria-controls`, forwarded to the inner <button> — the id of the panel
+   *  this button opens, e.g. `ds-app-layout`'s `railId`. */
+  readonly ariaControls = input<string | null>(null);
   /** Fires on click, unless `disabled` or `loading`. */
   readonly pressed = output<MouseEvent>();
 

@@ -4,6 +4,8 @@
   [disabled]="disabled()"
   [attr.aria-label]="ariaLabel()"
   [attr.aria-pressed]="selected() ? true : null"
+  [attr.aria-expanded]="ariaExpanded()"
+  [attr.aria-controls]="ariaControls()"
   (click)="onClick($event)"
 >
   <ds-icon
