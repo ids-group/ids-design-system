@@ -227,10 +227,19 @@
     }
   }
 
-  /* Sticky header — gated on the `stickyHeader()` input (default on). */
+  /* Sticky header — gated on the `stickyHeader()` input (default on).
+     Pinned header cells are excluded from the z-index: the corner where both
+     sticky axes meet has to sit above the body's pinned cells, which is what
+     `--table-sticky-corner-z` is for. This rule out-specifies that one, so
+     including them left the corner at the same z as the body's pinned cells —
+     and on a tie DOM order wins, which painted the first BODY row over the
+     header. Position and offset still apply to every header cell. */
   &.sticky-header thead th {
     position: sticky;
     top: 0;
+  }
+
+  &.sticky-header thead th:not(.pin-select, .pin-first, .pin-expand) {
     z-index: var(--table-sticky-header-z);
   }
 
@@ -358,8 +367,48 @@
     }
   }
 
-  &.zebra tbody tr:nth-child(odd) td {
+  /* :nth-child cannot see past windowing — a rendered row's parity depends on its
+     ABSOLUTE index, and the spacer rows are children too. Virtual mode gets the
+     parity from a class instead. */
+  &.zebra:not(.virtual) tbody tr:nth-child(odd) td {
     background-color: var(--_table-row-stripe-bg-color);
+  }
+
+  &.zebra.virtual tbody tr.stripe td {
+    background-color: var(--_table-row-stripe-bg-color);
+  }
+
+  /* Virtual mode. Every row must be exactly --_table-virtual-row-h tall, because
+     that is the only thing telling the arithmetic where a row starts: a row that
+     grows puts every offset below it out by the difference. So the height comes
+     from the same input as the maths, cells may not wrap whatever the column
+     asked for, and the layout is fixed — auto layout re-measures against
+     whichever rows happen to be rendered and the columns would twitch as you
+     scroll. */
+  &.virtual {
+    table-layout: fixed;
+
+    tbody tr:not(.spacer) {
+      height: var(--_table-virtual-row-h);
+    }
+
+    tbody td {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  /* Pure height: it stands in for the rows that are not rendered, so it must not
+     take a border, a stripe or a hover. */
+  tbody tr.spacer {
+    padding: 0;
+    border: 0;
+    background: none;
+
+    &:hover td {
+      background-color: transparent;
+    }
   }
 
 }

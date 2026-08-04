@@ -14,6 +14,24 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-table` renders only the rows in view: `[virtualScroll]="true"` + `virtualRowSize`.** The body used to
+  `@for` over every row of `data()`, so 10 000 rows tanked scroll and paint. Virtual mode keeps ~25 rows in
+  the DOM regardless of the row count, padding above and below with two spacer rows that stand in for the
+  rest — so the scrollbar still spans the whole data set. Needs `maxHeight`: a bounded scroller is the
+  viewport it windows against, and without one nothing is virtualized (dev-warned).
+  — **NOT the CDK virtual-scroll viewport**, deliberately. That arrangement wraps the table in a transformed
+  content wrapper, and the transform creates a containing block that breaks both the sticky header and the
+  sticky first column this table already has. Spacer rows leave the existing scroller — and everything
+  sticky in it — untouched.
+  — Uniform row height is the precondition, not a preference: `virtualRowSize` is the only thing telling the
+  arithmetic where a row starts, so one row that grows puts every offset below it out by the difference.
+  Virtual mode therefore drives the CSS row height from that same input, forces `table-layout: fixed` (auto
+  layout re-measures against whichever rows are rendered, and the columns twitch as you scroll) and keeps
+  cells to one line. Row EXPANSION is suppressed with a dev warning; `pageSize` alongside it is warned about
+  too, since virtual scrolling is what pagination was for. Sorting, filtering, selection, sticky header,
+  sticky first column and column resizing all keep working.
+  — Zebra striping switches from `:nth-child` to an absolute-index class while windowing: a rendered row's
+  parity depends on its real position, and the spacer rows are children too.
 - **`ds-filter-bar` — a Priority+ filter row: as many filters as fit, the rest behind "+N more".**
   Every admin list past three filters hits the same wall — the row wraps to a second line on a laptop, or
   the consumer hand-rolls an overflow menu. Each filter goes in an
@@ -211,6 +229,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **`ds-table`: with `stickyHeader` and `stickyFirstColumn` together, the first body row painted OVER the
+  header.** `--table-sticky-corner-z` exists so the corner where both sticky axes meet sits above the body's
+  pinned cells, but the sticky-header rule out-specified it, leaving the pinned header cells at the same
+  z-index as the pinned body cells — and on a tie DOM order wins, so the body won. The header row read as
+  the first row's data in the pinned columns. Found while building virtual scroll, and it was never specific
+  to it: any tall table with both flags had it. The sticky-header rule now leaves the pinned cells' z-index
+  to the corner token.
 - **`ng add` never ran its schematic — in any released version.** The package is `"type": "module"` while
   the compiled schematic is CommonJS, so Node refused to load it (`exports is not defined in ES module
   scope`) and the DS global styles were never wired automatically; every consumer either added the `@use`

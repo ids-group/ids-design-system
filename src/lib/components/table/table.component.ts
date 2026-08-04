@@ -46,6 +46,15 @@ import type {
 
 const NUMERIC = /^-?\d+(\.\d+)?$/;
 
+// Assumed viewport until the scroller has been measured. Tall enough to fill a
+// laptop screen, so the first paint is not visibly short, and nowhere near the
+// row count a virtualized table is reached for.
+const VIRTUAL_FALLBACK_HEIGHT = 720;
+
+// Rows kept rendered past each edge of the viewport, so a flick does not expose
+// blank space before the next range lands.
+const VIRTUAL_OVERSCAN = 6;
+
 /** Rendered values that read as "no data", matched case-insensitively. The list
  *  is wider than the empty string because consumers render placeholders; these
  *  are the ones mm-broker had to enumerate itself before `sortValue` existed. */
@@ -256,6 +265,21 @@ export class TableComponent<T extends object> {
   /** Pin the first data column (and the select column) on horizontal scroll. */
   readonly stickyFirstColumn = input(false, { transform: booleanAttribute });
 
+  /**
+   * Render only the rows in view, padding the rest with two spacer rows. Opt-in,
+   * and it needs `maxHeight` — without a bounded scroller there is no viewport to
+   * window against, so nothing is virtualized (dev-warned).
+   *
+   * Every row must be the same height, which is `virtualRowSize`: the arithmetic
+   * that decides what is in view has no other way to know where a row starts. So
+   * virtual mode forces `table-layout: fixed` and single-line cells, and the
+   * expansion panel is suppressed — a row that can grow breaks the maths.
+   */
+  readonly virtualScroll = input(false, { transform: booleanAttribute });
+  /** Row height in px in virtual mode. Must match what the rows actually
+   *  measure, so it drives the CSS height rather than merely describing it. */
+  readonly virtualRowSize = input(44);
+
   /** Fires with the row on click (or Enter/Space when `rowInteractive`). */
   readonly rowClicked = output<T>();
   /** Fires whenever sort key/direction changes, in every `sortMode` but `'none'`. */
@@ -334,6 +358,9 @@ export class TableComponent<T extends object> {
     }
     if (this.zebra()) {
       parts.push('zebra');
+    }
+    if (this.virtualizing()) {
+      parts.push('virtual');
     }
 
     return parts.join(' ');
@@ -744,6 +771,57 @@ export class TableComponent<T extends object> {
     this.pageSize() !== null ? this.pagedData() : this.sortedData(),
   );
 
+  /** Virtual mode needs a bounded scroller to window against. */
+  protected readonly virtualizing = computed(
+    () => this.virtualScroll() && !!this.maxHeight(),
+  );
+
+  /** Drives the CSS row height from the same number the arithmetic uses, so the
+   *  two cannot drift — which would make every offset progressively wrong. */
+  protected readonly virtualRowHeight = computed(
+    () => `${this.virtualRowSize()}px`,
+  );
+
+  /** `null` when not virtualizing — the row loop then walks `displayData()` whole. */
+  protected readonly virtualWindow = computed(() => {
+    if (!this.virtualizing()) {
+      return null;
+    }
+    const rowSize = Math.max(1, this.virtualRowSize());
+    const count = this.displayData().length;
+    const height = this.viewportHeight() || VIRTUAL_FALLBACK_HEIGHT;
+    const firstVisible = Math.floor(this.scrollTop() / rowSize);
+    const start = Math.max(0, firstVisible - VIRTUAL_OVERSCAN);
+    const end = Math.min(
+      count,
+      firstVisible + Math.ceil(height / rowSize) + VIRTUAL_OVERSCAN,
+    );
+
+    return {
+      start,
+      end,
+      padTop: start * rowSize,
+      padBottom: Math.max(0, count - end) * rowSize,
+    };
+  });
+
+  /** The rows the template actually renders. */
+  protected readonly windowData = computed<readonly T[]>(() => {
+    const window = this.virtualWindow();
+    const data = this.displayData();
+
+    return window ? data.slice(window.start, window.end) : data;
+  });
+
+  /** Zebra striping cannot come from `:nth-child` while windowing — the parity
+   *  of a rendered row depends on its ABSOLUTE index, and the spacer rows are
+   *  children too. Matches `:nth-child(odd)`, which is 1-based. */
+  protected isStriped(rowIndex: number): boolean {
+    const window = this.virtualWindow();
+
+    return !!window && (window.start + rowIndex) % 2 === 0;
+  }
+
   protected readonly allSelected = computed(() => {
     const data = this.displayData();
     if (data.length === 0) {
@@ -832,6 +910,8 @@ export class TableComponent<T extends object> {
     viewChild<ElementRef<HTMLElement>>('hscrollProxy');
   protected readonly hscrollContentWidth = signal(0);
   protected readonly hscrollNeeded = signal(false);
+  private readonly scrollTop = signal(0);
+  private readonly viewportHeight = signal(0);
 
   constructor() {
     // One effect for both halves, because the restore CANNOT run in the
@@ -866,6 +946,49 @@ export class TableComponent<T extends object> {
         ) {
           console.warn(
             '[ds-table] sortable columns default to sortMode="client", but `total` is set, so this table is server-paged and only the CURRENT PAGE would sort — the rows would look sorted and not be. Declare sortMode="server" and reorder in the (sortChange) handler, or sortMode="client" if page-local sorting is really what you want.',
+          );
+        }
+      });
+    }
+
+    // Virtual mode's two measurements. Only wired while virtualizing, so a
+    // normal table pays for neither the scroll listener nor the observer.
+    effect((onCleanup) => {
+      if (!this.virtualizing()) {
+        return;
+      }
+      const wrap = this.scrollWrap().nativeElement;
+      const onScroll = (): void => this.scrollTop.set(wrap.scrollTop);
+      const measure = (): void => this.viewportHeight.set(wrap.clientHeight);
+      wrap.addEventListener('scroll', onScroll, { passive: true });
+      const resizeObserver = new ResizeObserver(measure);
+      resizeObserver.observe(wrap);
+      measure();
+      onScroll();
+      onCleanup(() => {
+        wrap.removeEventListener('scroll', onScroll);
+        resizeObserver.disconnect();
+      });
+    });
+
+    if (isDevMode()) {
+      effect(() => {
+        if (!this.virtualScroll()) {
+          return;
+        }
+        if (!this.maxHeight()) {
+          console.warn(
+            '[ds-table] virtualScroll needs maxHeight — without a bounded scroller there is no viewport to window against, so every row renders and nothing is virtualized. Set maxHeight (e.g. "480px").',
+          );
+        }
+        if (this.expandableRows()) {
+          console.warn(
+            '[ds-table] virtualScroll and expandableRows do not combine: an expanded row is taller than virtualRowSize, and every offset after it would be wrong. The expander renders but the panel is suppressed — move the detail into a modal or a drawer, or drop virtualScroll.',
+          );
+        }
+        if (this.pageSize() !== null) {
+          console.warn(
+            '[ds-table] virtualScroll with pageSize paginates a window of a page. Virtual scrolling is what pagination was for on a long list — pick one.',
           );
         }
       });

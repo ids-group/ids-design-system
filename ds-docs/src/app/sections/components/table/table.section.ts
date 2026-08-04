@@ -35,6 +35,22 @@ interface ProjectRow {
   budget: number;
 }
 
+const BULK_SUBJECTS = [
+  'intake review',
+  'renewal',
+  'audit',
+  'onboarding',
+  'settlement',
+];
+const BULK_OWNERS = [
+  'Ann Fletcher',
+  'Raj Patel',
+  'Mei Lin',
+  'Tomas Novak',
+  'Sara Okafor',
+];
+const BULK_STATUSES = ['Open', 'Pending', 'Closed'];
+
 @Component({
   selector: 'section-components-table',
   standalone: true,
@@ -440,6 +456,26 @@ export class TableSection {
     { key: 'statusLabel', label: 'Status', hideable: true },
     { key: 'capacity', label: 'Capacity', align: 'right', hideable: true },
   ];
+
+  protected readonly bulkColumns: TableColumn<ProjectRow>[] = [
+    { key: 'id', label: 'ID', width: 120 },
+    { key: 'project', label: 'Record', width: 320, sortable: true },
+    { key: 'owner', label: 'Owner', width: 200, sortable: true },
+    { key: 'status', label: 'Status', width: 160 },
+    { key: 'budget', label: 'Budget', align: 'right', width: 160 },
+  ];
+
+  /** 10 000 rows — the size at which rendering every row tanks scroll and paint. */
+  protected readonly bulkRows: ProjectRow[] = Array.from(
+    { length: 10_000 },
+    (_, index) => ({
+      id: `REC-${String(index + 1).padStart(5, '0')}`,
+      project: `Record ${index + 1} · ${BULK_SUBJECTS[index % BULK_SUBJECTS.length]}`,
+      owner: BULK_OWNERS[index % BULK_OWNERS.length],
+      status: BULK_STATUSES[index % BULK_STATUSES.length],
+      budget: 1000 + ((index * 37) % 90_000),
+    }),
+  );
 
   protected onRowAction(event: TableRowActionEvent<EventRow>): void {
     this.lastRowAction.set(`${event.action.label} · ${event.row.project}`);

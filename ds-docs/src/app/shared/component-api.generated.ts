@@ -5819,6 +5819,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Pin the first data column (and the select column) on horizontal scroll."
       },
       {
+        "name": "virtualScroll",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Render only the rows in view, padding the rest with two spacer rows. Opt-in, and it needs `maxHeight` — without a bounded scroller there is no viewport to window against, so nothing is virtualized (dev-warned). Every row must be the same height, which is `virtualRowSize`: the arithmetic that decides what is in view has no other way to know where a row starts. So virtual mode forces `table-layout: fixed` and single-line cells, and the expansion panel is suppressed — a row that can grow breaks the maths."
+      },
+      {
+        "name": "virtualRowSize",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "44",
+        "required": false,
+        "description": "Row height in px in virtual mode. Must match what the rows actually measure, so it drives the CSS height rather than merely describing it."
+      },
+      {
         "name": "rowActions",
         "kind": "input",
         "type": "readonly TableRowAction<T>[]",
