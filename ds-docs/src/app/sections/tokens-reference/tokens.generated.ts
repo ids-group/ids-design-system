@@ -2631,6 +2631,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Checkbox box corner radius (default --radius-sm). The indeterminate dash keeps its own radius."
       },
       {
+        "name": "--ds-checkbox-label-font-size",
+        "value": "var(--_checkbox-label-fs)",
+        "notes": "Checkbox caption size. Overrides the size class, so setting it pins the caption regardless of `size`."
+      },
+      {
+        "name": "--ds-checkbox-label-color",
+        "value": "var(--text-primary)",
+        "notes": "Checkbox caption text colour (defaults to --text-primary). A control caption is deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, while a caption beside a checkbox is the content you are agreeing to and reads primary. Routing them together would put \"Remember me\" in uppercase in any brand that sets --ds-field-label-transform."
+      },
+      {
         "name": "--check-size",
         "value": "20px",
         "notes": "20px — checkbox/radio box glyph (density-scaled)."
@@ -3154,7 +3164,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-field-label-color",
         "value": "var(--text-secondary)",
-        "notes": "Label colour for the whole field family."
+        "notes": "Label colour for the field family — input, textarea, select, both pickers and radio-group. Does NOT reach the checkbox / switch / radio CAPTIONS, which have their own --ds-<control>-label-color: see those for why."
       },
       {
         "name": "--ds-field-label-transform",
@@ -4214,7 +4224,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-radio-label-color",
         "value": "var(--text-primary)",
-        "notes": "Radio label text colour (defaults to --text-primary)."
+        "notes": "Radio caption text colour (defaults to --text-primary). A control caption is deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, while a caption beside a checkbox is the content you are agreeing to and reads primary. Routing them together would put \"Remember me\" in uppercase in any brand that sets --ds-field-label-transform."
+      },
+      {
+        "name": "--ds-radio-label-font-size",
+        "value": "var(--_radio-label-fs)",
+        "notes": "Radio caption size. Overrides the size class, so setting it pins the caption regardless of `size`."
       },
       {
         "name": "--radio-dot-size",
@@ -4891,6 +4906,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-switch-thumb-bg-color",
         "value": "var(--surface-default)",
         "notes": "Switch thumb fill (defaults to --surface-default)."
+      },
+      {
+        "name": "--ds-switch-label-font-size",
+        "value": "var(--_switch-label-fs)",
+        "notes": "Switch caption size. Overrides the size class, so setting it pins the caption regardless of `size`."
+      },
+      {
+        "name": "--ds-switch-label-color",
+        "value": "var(--text-primary)",
+        "notes": "Switch caption text colour (defaults to --text-primary). A control caption is deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, while a caption beside a checkbox is the content you are agreeing to and reads primary. Routing them together would put \"Remember me\" in uppercase in any brand that sets --ds-field-label-transform."
       },
       {
         "name": "--switch-track-w",

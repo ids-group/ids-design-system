@@ -18,11 +18,11 @@
       (blur)="markTouched()"
     />
 
-    @if (label()) {
-      <label
-        class="control-text"
-        [attr.for]="controlId()"
-      >
+    <label
+      class="control-text"
+      [attr.for]="controlId()"
+    >
+      @if (label()) {
         {{ label() }}
         @if (required()) {
           <span
@@ -32,14 +32,11 @@
             *
           </span>
         }
-      </label>
-    }
-
-    @if (devMode) {
-      <span dsProjectionDropped="ds-checkbox">
+      } @else {
         <ng-content></ng-content>
-      </span>
-    }
+      }
+    </label>
+
   </span>
 
   <ds-field-message

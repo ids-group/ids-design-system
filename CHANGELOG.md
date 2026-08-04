@@ -14,6 +14,20 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-checkbox`, `ds-switch` and `ds-radio` now RENDER a projected caption, and expose its colour and
+  size.** `<ds-checkbox>I accept the <a …>Terms</a></ds-checkbox>` — the first thing a consumer tries, and
+  the idiom every other body-bearing DS component accepts — used to render a control with no caption at all:
+  no error, nothing in the types. 0.7.1 added a dev warning; this makes the markup work. `[label]` stays the
+  documented API and still wins when both are given. One difference worth knowing: the required asterisk
+  comes with `[label]` only, because a projected caption's own markup is the only thing that knows where the
+  marker belongs.
+  — New hooks: `--ds-checkbox-label-color` / `-label-font-size`, the same pair on `ds-switch`, and
+  `--ds-radio-label-font-size` (`--ds-radio-label-color` already shipped). The font-size hook beats the size
+  class, so setting it pins the caption regardless of `size`. These are deliberately NOT part of the
+  `--ds-field-label-*` contract: a label above an input is a heading for the field and reads secondary, while
+  a caption beside a checkbox is the content being agreed to and reads primary — routing them together would
+  put "Remember me" in uppercase in any brand that sets `--ds-field-label-transform`. Recorded in the token
+  reference so it reads as a decision rather than an omission.
 - **`ds-table` renders only the rows in view: `[virtualScroll]="true"` + `virtualRowSize`.** The body used to
   `@for` over every row of `data()`, so 10 000 rows tanked scroll and paint. Virtual mode keeps ~25 rows in
   the DOM regardless of the row count, padding above and below with two spacer rows that stand in for the
