@@ -14,6 +14,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **Focus-indicator style is a one-place switch: `<html data-focus="ring | field | edge | outline">`.**
+  The library shipped two fixed families — a soft halo on fields, a crisp double ring on controls — with no
+  way for a brand to choose. Since 20 components already resolve through `--ds-field-focus-shadow` /
+  `--ds-control-focus-shadow`, the switch simply retargets those roles: `ring` and `field` make both groups
+  match, `edge` is a hairline flush against the element, and `outline` swaps to a real `outline` — which a
+  box-shadow token cannot express, so that style also emits a zero-specificity `:where(:focus-visible)`
+  rule. Omit the attribute and today’s split is unchanged.
+- **Focus survives Windows High Contrast.** Forced-colors mode DROPS `box-shadow`, so a shadow-only
+  indicator vanished entirely and a keyboard user in that mode had nothing to follow — a real a11y gap, now
+  closed once for every style with a `CanvasText` outline under `@media (forced-colors: active)`. A system
+  keyword rather than a brand colour, because forced-colors replaces the palette.
 - **A role layer between the foundation scales and the components: radius, elevation and motion.** Reading
   the raw scale directly meant a consumer could not re-round "panels" without also re-rounding every
   control that shared `--radius-md`, could not lift every overlay without touching each surface, and could

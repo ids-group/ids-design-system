@@ -1,0 +1,58 @@
+// Focus-indicator style, switched in ONE place: `<html data-focus="…">`.
+//
+// The library ships two families — a soft halo on fields (`--focus-field`) and a
+// crisp double ring on controls (`--focus-ring`) — and 20 components already
+// resolve through the `--ds-field-focus-shadow` / `--ds-control-focus-shadow`
+// roles, so retargeting the roles is all a brand-wide switch needs. Absent
+// attribute keeps today's split.
+//
+// `outline` cannot be a box-shadow token, which is why that style also emits a
+// rule: the roles go to `none` and the indicator becomes a real `outline`.
+// `:where()` keeps that rule at zero specificity so a component or a consumer
+// still wins.
+//
+// The forced-colors block is not part of the switch and applies to every style:
+// Windows High Contrast DROPS box-shadow, so a shadow-only indicator disappears
+// entirely there. This is the one place that gap can be closed once.
+
+:root[data-focus='ring'] {
+  --ds-field-focus-shadow: var(--focus-ring);
+  --ds-field-focus-shadow-error: var(--focus-ring-error);
+}
+
+:root[data-focus='field'] {
+  --ds-control-focus-shadow: var(--focus-field);
+  --ds-control-focus-shadow-error: var(--focus-field-error);
+}
+
+// Contiguous primary edge — a hairline flush against the element, no gap, from
+// the pin-475 prototype.
+:root[data-focus='edge'] {
+  --ds-field-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
+  --ds-field-focus-shadow-error: 0 0 0 var(--border-width-default) var(--error);
+  --ds-control-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
+  --ds-control-focus-shadow-error: 0 0 0 var(--border-width-default)
+    var(--error);
+}
+
+:root[data-focus='outline'] {
+  --ds-field-focus-shadow: none;
+  --ds-field-focus-shadow-error: none;
+  --ds-control-focus-shadow: none;
+  --ds-control-focus-shadow-error: none;
+}
+
+:root[data-focus='outline'] :where(:focus-visible) {
+  outline: var(--border-width-strong) solid var(--primary);
+  outline-offset: var(--focus-ring-offset);
+}
+
+@media (forced-colors: active) {
+  // CanvasText, not a brand colour: forced-colors replaces the palette, and a
+  // system keyword is the only value guaranteed to contrast with the forced
+  // background.
+  :where(:focus-visible) {
+    outline: var(--border-width-strong) solid CanvasText;
+    outline-offset: var(--focus-ring-offset);
+  }
+}
