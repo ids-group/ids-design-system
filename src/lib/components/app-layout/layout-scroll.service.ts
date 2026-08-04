@@ -1,6 +1,6 @@
 import { DestroyRef, Injectable, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavigationEnd, Router } from '@angular/router';
+import { LayoutNavigationService } from './layout-navigation.service';
 
 /**
  * Owns the layout's content scroller. In the fixed-frame layout the window
@@ -14,28 +14,14 @@ import { NavigationEnd, Router } from '@angular/router';
  */
 @Injectable()
 export class LayoutScrollService {
-  private readonly router = inject(Router);
+  private readonly navigation = inject(LayoutNavigationService);
   private readonly destroyRef = inject(DestroyRef);
   private scrollContainer: Element | null = null;
-  private previousPath: string | null = null;
 
   constructor() {
-    this.router.events
+    this.navigation.pathChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((event) => {
-        if (!(event instanceof NavigationEnd)) {
-          return;
-        }
-        // A query/fragment-only navigation is a search, sort or page step on
-        // the SAME screen — resetting there yanks a long list back to the top
-        // mid-read, so only a path change counts as "went somewhere else".
-        const path = event.urlAfterRedirects.split(/[?#]/)[0];
-        if (path === this.previousPath) {
-          return;
-        }
-        this.previousPath = path;
-        this.scrollToTop();
-      });
+      .subscribe(() => this.scrollToTop());
   }
 
   setScrollContainer(element: Element): void {

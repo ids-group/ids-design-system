@@ -1,7 +1,12 @@
+@use '../../styles/breakpoints' as bp;
+
 :host {
   --_layout-pad-x: var(--ds-app-layout-pad-x, var(--space-6));
   --_layout-pad-y: var(--ds-app-layout-pad-y, var(--space-6));
   --_layout-content-max-width: var(--ds-app-layout-content-max-width, none);
+  --_layout-rail-bg-color: var(--ds-app-layout-rail-bg-color, var(--surface-overlay));
+  --_layout-rail-shadow: var(--ds-app-layout-rail-shadow, var(--shadow-modal));
+  --_layout-scrim-color: var(--ds-app-layout-scrim-color, var(--scrim, hsl(220deg 20% 12% / 45%)));
 
   display: grid;
   grid-template-areas:
@@ -23,6 +28,50 @@
   display: grid;
   grid-area: sidenav;
   overflow-y: auto;
+
+  // Below lg the rail leaves the grid and becomes an overlay. It stays in the
+  // SAME DOM position on purpose: the consumer projects its sidenav once, and
+  // the component's state and scroll position survive open/close.
+  // `left`, not a logical property: RTL support was dropped for this library
+  // (2026-07-07), so a logical inset here would imply a guarantee nothing else
+  // honours.
+  @include bp.down(lg) {
+    position: fixed;
+    z-index: var(--layer-drawer);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background: var(--_layout-rail-bg-color);
+    box-shadow: var(--_layout-rail-shadow);
+    transform: translateX(-100%);
+    transition: transform var(--duration-base) var(--ease-standard);
+
+    :host(.rail-open) & {
+      transform: translateX(0);
+    }
+  }
+}
+
+.scrim {
+  display: none;
+
+  @include bp.down(lg) {
+    display: block;
+    position: fixed;
+    z-index: calc(var(--layer-drawer) - 1);
+    inset: 0;
+    background: var(--_layout-scrim-color);
+    opacity: 0;
+    transition:
+      opacity var(--duration-base) var(--ease-standard),
+      visibility var(--duration-base) var(--ease-standard);
+    visibility: hidden;
+
+    :host(.rail-open) & {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
 }
 
 .bar {
