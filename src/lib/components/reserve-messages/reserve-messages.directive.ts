@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { DS_CONFIG, inheritDsConfig } from '../config/ds-config';
+import { DS_CONFIG, inheritDsConfig } from '../../config/ds-config';
 
 /**
  * Turns on `reserveMessage` for every DS field declared inside the host

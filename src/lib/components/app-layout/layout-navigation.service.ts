@@ -8,8 +8,15 @@ import { distinctUntilChanged, filter, map, type Observable } from 'rxjs';
  * page step on the same screen, and both the scroll reset and the responsive
  * rail must agree on that — so they read one source instead of each deciding
  * for itself what "went somewhere else" means.
+ *
+ * Root-provided although it is internal: the PUBLIC `LayoutScrollService` now
+ * depends on it, and that service must be provided by whoever uses it. A
+ * consumer who provides it outside `ds-app-layout` cannot provide this one too
+ * — it is not exported — so anything but root would hand them a
+ * `NullInjectorError`. Safe as a singleton: the stream is derived from the
+ * router and holds no state.
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class LayoutNavigationService {
   private readonly router = inject(Router);
 

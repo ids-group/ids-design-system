@@ -492,4 +492,39 @@
       [reserveMessage]="true"
     />
   </div>
+
+  <h3 class="block-title t-h4">
+    Whole form at once
+  </h3>
+
+  <p class="block-desc t-s">
+    Put <code class="t-mono-inline">
+      dsReserveMessages
+    </code> on the form and every field
+    declared inside it reserves — no per-control binding. A field's own
+    <code class="t-mono-inline">
+      [reserveMessage]
+    </code> still wins.
+  </p>
+
+  <form
+    dsReserveMessages
+    class="reserve-group-demo"
+  >
+    <ds-input
+      label="Email"
+      placeholder="Both fields reserve"
+    />
+
+    <ds-input
+      label="Password"
+      placeholder="…without binding either"
+    />
+
+    <ds-input
+      label="Opted back out"
+      placeholder="Per-field input still wins"
+      [reserveMessage]="false"
+    />
+  </form>
 </docs-section>

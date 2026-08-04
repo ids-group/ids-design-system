@@ -1,11 +1,11 @@
 export * from './lib/config/ds-config';
-export { ReserveMessagesDirective } from './lib/components/reserve-messages.directive';
 export * from './lib/theme/provide-ds-theme';
 export * from './lib/overlay/ds-overlay-close-ref';
 export * from './lib/overlay/body-scroll-lock.service';
 export * from './lib/core/status';
 export * from './lib/core/size';
 export * from './lib/icons';
+export * from './lib/components/reserve-messages';
 export * from './lib/components/button';
 export * from './lib/components/toggle-button';
 export * from './lib/components/icon-button';

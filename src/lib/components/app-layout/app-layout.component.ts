@@ -59,7 +59,7 @@ import { LayoutScrollService } from './layout-scroll.service';
     '[class.rail-open]': 'railOpen()',
     '(document:keydown.escape)': 'closeRail()',
   },
-  providers: [LayoutNavigationService, LayoutScrollService],
+  providers: [LayoutScrollService],
 })
 export class AppLayoutComponent {
   /**
