@@ -6,6 +6,8 @@ import {
   ElementRef,
   ViewEncapsulation,
   afterNextRender,
+  booleanAttribute,
+  effect,
   inject,
   input,
   isDevMode,
@@ -82,6 +84,22 @@ export class AppLayoutComponent {
   readonly railLabel = input<string>('Navigation');
 
   /**
+   * Remember the content scroll per path and restore it on the way BACK. Off by
+   * default: a layout that silently moved the scroll would surprise every existing
+   * consumer. Only a history traversal restores — following a link into a screen
+   * still lands at the top — plus a host that pushes its own "back to list" and
+   * says so with `state: { dsRestoreScroll: true }`, and the first navigation after
+   * a reload.
+   */
+  readonly restoreScroll = input(false, { transform: booleanAttribute });
+
+  /**
+   * How long to wait for the restored screen's content to grow tall enough before
+   * landing as close as it allows. Only meaningful with `restoreScroll`.
+   */
+  readonly restoreScrollTimeout = input(2000);
+
+  /**
    * True only while the rail is an overlay. Gates the dialog semantics: above
    * the breakpoint the rail is an ordinary region, and a permanent
    * `role="dialog"` there would lie to a screen reader.
@@ -103,6 +121,12 @@ export class AppLayoutComponent {
   constructor() {
     // Root service: instantiating it publishes --ds-scrollbar-width.
     inject(ScrollbarWidthService);
+
+    effect(() => {
+      this.layoutScroll.configureRestore(
+        this.restoreScroll() ? this.restoreScrollTimeout() : null,
+      );
+    });
 
     afterNextRender(() => {
       this.layoutScroll.setScrollContainer(this.content().nativeElement);

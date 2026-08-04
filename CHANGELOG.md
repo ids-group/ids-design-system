@@ -14,6 +14,26 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-app-layout` restores the reader's scroll on the way BACK: opt-in `restoreScroll` +
+  `restoreScrollTimeout` (2000ms).** List → details → back returned the list to the top, because a real
+  back IS a path change and the layout resets on those. Off by default — a layout that silently moved the
+  scroll would surprise every existing consumer. Restores only when ARMED, which is the whole design: a
+  history traversal (back, forward, the mouse side button, `Alt+←`, an edge swipe — all arrive as
+  `popstate`), a host whose own "back to list" adds a history entry instead of traversing and says so with
+  `state: { dsRestoreScroll: true }`, or the first navigation after a reload. Following a link into a new
+  screen still lands at the top.
+  — The offset is remembered per PATH in `sessionStorage` (one namespaced blob, 20 entries, oldest first,
+  every access guarded — Safari private mode throws on write). Restoring waits for the content to grow via
+  `ResizeObserver` rather than counting frames, clamps to what the content allows at the deadline (a list
+  that loaded 8 of 40 rows still lands near the reader's row), and cancels on `wheel` / `touchstart` /
+  `keydown` — input events only, since our own restore writes emit `scroll`. It never touches
+  `history.scrollRestoration`, and it bails on a bfcache restore, which brings its own position back.
+  — `LayoutScrollService` gained `contentReady()` (optional: end the growth wait early when your data has
+  arrived) and `consumePendingOffset()` (take the offset and cancel the restore — for a virtualizer, which
+  needs it BEFORE deciding which rows to build).
+  — **Interaction worth knowing:** an app that scrolls on navigation itself — a docs shell whose URL names a
+  section, an anchor jump — writes after the layout does and therefore wins. That is the right precedence,
+  and it means `restoreScroll` is a no-op on those routes rather than a fight.
 - **`ds-button` type and box hooks: `--ds-button-font-size` / `-weight` / `-tracking` / `-height` /
   `-pad-x` / `-pad-y`, plus `data-variant` / `data-color` reflected on the host.** The label type and the
   box were hard-coded, and the size class pinned `height` and `padding`, so a brand wanting 14px/600
