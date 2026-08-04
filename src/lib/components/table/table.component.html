@@ -221,13 +221,13 @@
             </td>
           </tr>
         } @else {
-          @for (row of displayData(); track row.id) {
+          @for (row of displayData(); track rowKey(row)) {
             <tr
               [class.selected]="isSelected(row)"
               [class.expanded]="isExpanded(row)"
               [class.clickable]="rowInteractive()"
-              [class.active]="row.id === activeRowId()"
-              [attr.aria-current]="row.id === activeRowId() ? 'true' : null"
+              [class.active]="rowKey(row) === activeRowId()"
+              [attr.aria-current]="rowKey(row) === activeRowId() ? 'true' : null"
               [attr.tabindex]="rowInteractive() ? 0 : null"
               [attr.aria-label]="rowInteractive() ? rowAriaLabel(row) : null"
               (mousedown)="onRowMousedown()"

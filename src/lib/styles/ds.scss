@@ -30,6 +30,7 @@
 @forward 'icon-base';
 @forward 'dropdown-overlay';
 @forward 'toast-overlay';
+@forward 'surface-motion';
 @forward 'overlay-motion';
 @forward 'skeleton-shimmer';
 @include bp-emit.emit-vars;

@@ -28,6 +28,7 @@
     dsFieldClickFocus
   >
     <textarea
+      #control
       [id]="uid"
       [rows]="rows()"
       [attr.name]="name()"
@@ -51,7 +52,7 @@
   </div>
 
   @if (
-    reserveMessage() ||
+    reserveMessageResolved() ||
     hint() ||
     messageState() !== 'default' ||
     maxLength() !== null
@@ -61,7 +62,7 @@
         [text]="hint()"
         [state]="messageState()"
         [messageId]="hintId()"
-        [reserve]="reserveMessage()"
+        [reserve]="reserveMessageResolved()"
       />
 
       @if (maxLength() !== null) {

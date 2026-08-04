@@ -1,11 +1,13 @@
 import {
   Component,
+  ElementRef,
   ViewEncapsulation,
   booleanAttribute,
   computed,
   forwardRef,
   input,
   model,
+  viewChild,
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
@@ -17,6 +19,7 @@ import {
 } from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
+import { resolveReserveMessage } from '../field-defaults';
 
 @Component({
   selector: 'ds-textarea',
@@ -34,6 +37,9 @@ import { FieldClickFocusDirective } from '../field-click-focus.directive';
   ],
 })
 export class TextareaComponent extends DsControlValueAccessor<string> {
+  private readonly control =
+    viewChild<ElementRef<HTMLTextAreaElement>>('control');
+
   /** Text value, two-way bound. */
   readonly value = model<string>('');
   /** Field height — sm/md/lg. */
@@ -43,9 +49,15 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   /** Helper text shown below the field. */
   readonly hint = input<string>('');
   /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+   *  the layout below it when a hint/error appears. Falls back to
+   *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
+   *  for a form that shows validation messages. */
+  readonly reserveMessage = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  protected readonly reserveMessageResolved = resolveReserveMessage(
+    this.reserveMessage,
+  );
   /** Placeholder shown when empty. */
   readonly placeholder = input<string>('');
   /** Disables the field and blocks all interaction. */
@@ -132,4 +144,10 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   protected readonly effectiveResize = computed<TextareaResize>(() =>
     this.autosize() ? 'none' : this.resize(),
   );
+
+  /** Move keyboard focus to the native textarea — public so a host can drive it
+   *  deliberately, e.g. focusing the first invalid field on a failed submit. */
+  focus(options?: FocusOptions): void {
+    this.control()?.nativeElement.focus(options);
+  }
 }

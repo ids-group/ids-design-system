@@ -1,7 +1,14 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, Provider, inject } from '@angular/core';
 import type { IconName } from '../icons/icons.data';
 
 export interface DsConfig {
+  field?: {
+    /** Default for every field's `reserveMessage` — keeps a message line's worth
+     *  of space even when empty. Default `false`. Setting `true` here applies to
+     *  EVERY field in the injector's subtree, which is rarely what a whole app
+     *  wants; prefer `dsReserveMessages` on the individual form that validates. */
+    reserveMessage?: boolean;
+  };
   breadcrumbs?: {
     separator?: IconName;
     clickable?: boolean;
@@ -24,12 +31,45 @@ export const DS_CONFIG = new InjectionToken<DsConfig>('DS_CONFIG', {
   factory: () => ({}),
 });
 
-/** Provide DS-level defaults at the app root.
+/** Provide DS-level defaults.
  *
  *   providers: [provideDsConfig({ card: { padding: 'sm' } })]
  *
- * Component inputs (e.g. `<ds-card padding="lg">`) still win over the config.
+ * Works at the app root, on a `Route`, or on a component/directive — the
+ * config resolves through the element-injector chain, so a subtree can differ
+ * from the app. Component inputs (e.g. `<ds-card padding="lg">`) still win.
+ *
+ * A nested call MERGES with the config above it, section by section, so
+ * scoping one flag cannot silently drop unrelated app-level settings. Only the
+ * keys you name are replaced.
  */
 export function provideDsConfig(config: DsConfig): Provider {
-  return { provide: DS_CONFIG, useValue: config };
+  return { provide: DS_CONFIG, useFactory: () => inheritDsConfig(config) };
+}
+
+/**
+ * The factory body behind `provideDsConfig`, exported so a directive can put the
+ * provider in its metadata as a plain object literal. Calling `provideDsConfig`
+ * there instead would run at module-evaluation time, which makes the module
+ * side-effectful and costs the consumer its tree-shaking (measured: the whole
+ * library moved into ds-docs' eager chunk, +566 kB).
+ *
+ * Must be called from an injection context.
+ */
+export function inheritDsConfig(config: DsConfig): DsConfig {
+  return mergeDsConfig(
+    inject(DS_CONFIG, { skipSelf: true, optional: true }) ?? {},
+    config,
+  );
+}
+
+function mergeDsConfig(parent: DsConfig, own: DsConfig): DsConfig {
+  const merged: DsConfig = { ...parent };
+  for (const section of Object.keys(own) as (keyof DsConfig)[]) {
+    Object.assign(merged, {
+      [section]: { ...parent[section], ...own[section] },
+    });
+  }
+
+  return merged;
 }

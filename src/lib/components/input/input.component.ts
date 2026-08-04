@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   ViewEncapsulation,
   booleanAttribute,
   computed,
@@ -7,6 +8,7 @@ import {
   input,
   model,
   output,
+  viewChild,
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
@@ -20,6 +22,7 @@ import { nextControlId } from '../field-ids';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
 import type { InputType } from './input.types';
 import type { DsSize } from '../../core/size';
+import { resolveReserveMessage } from '../field-defaults';
 
 @Component({
   selector: 'ds-input',
@@ -43,6 +46,9 @@ import type { DsSize } from '../../core/size';
   ],
 })
 export class InputComponent extends DsControlValueAccessor<string> {
+  private readonly control =
+    viewChild<ElementRef<HTMLInputElement>>('control');
+
   /** Text value, two-way bound. */
   readonly value = model<string>('');
   /** Native input type — also affects the default clear button and password toggle. */
@@ -54,9 +60,15 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Helper text shown below the field. */
   readonly hint = input<string>('');
   /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+   *  the layout below it when a hint/error appears. Falls back to
+   *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
+   *  for a form that shows validation messages. */
+  readonly reserveMessage = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  protected readonly reserveMessageResolved = resolveReserveMessage(
+    this.reserveMessage,
+  );
   /** Placeholder shown when empty. */
   readonly placeholder = input<string>('');
   /** Disables the field and blocks all interaction. */
@@ -203,6 +215,12 @@ export class InputComponent extends DsControlValueAccessor<string> {
 
     return parts.join(' ');
   });
+
+  /** Move keyboard focus to the native input — public so a host can drive it
+   *  deliberately, e.g. focusing the first invalid field on a failed submit. */
+  focus(options?: FocusOptions): void {
+    this.control()?.nativeElement.focus(options);
+  }
 
   protected clear(): void {
     this.value.set('');

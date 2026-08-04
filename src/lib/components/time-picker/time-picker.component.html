@@ -1,4 +1,28 @@
 <div class="field">
+  @if (label()) {
+    <span
+      class="label"
+      [id]="labelId"
+    >
+      {{ label() }}
+      @if (required()) {
+        <span
+          class="req"
+          aria-hidden="true"
+        >
+          *
+        </span>
+      } @else if (optional()) {
+        <span
+          class="optional-marker"
+          aria-hidden="true"
+        >
+          (optional)
+        </span>
+      }
+    </span>
+  }
+
   @if (mode() === 'range') {
     <div class="range-wrap">
       <div class="trigger-wrap">
@@ -14,14 +38,14 @@
           [attr.aria-describedby]="hintId()"
           (click)="onTriggerClick('start')"
         >
-          <ds-icon
-            name="clock"
-            [size]="14"
-          />
-
           <span class="time-value">
             {{ formatFor(rangeValue()[0]) || placeholder() }}
           </span>
+
+          <ds-icon
+            name="clock"
+            [size]="16"
+          />
         </button>
       </div>
 
@@ -45,14 +69,14 @@
           [attr.aria-describedby]="hintId()"
           (click)="onTriggerClick('end')"
         >
-          <ds-icon
-            name="clock"
-            [size]="14"
-          />
-
           <span class="time-value">
             {{ formatFor(rangeValue()[1]) || placeholder() }}
           </span>
+
+          <ds-icon
+            name="clock"
+            [size]="16"
+          />
         </button>
       </div>
     </div>
@@ -65,19 +89,21 @@
         [class]="triggerClasses()"
         [disabled]="isDisabled()"
         [attr.aria-expanded]="openSegment() === 'single'"
-        [attr.aria-label]="ariaLabelFor('single')"
+        [attr.aria-labelledby]="label() ? labelId : null"
+        [attr.aria-label]="label() ? null : ariaLabelFor('single')"
+        [attr.aria-required]="required() ? 'true' : null"
         [attr.aria-invalid]="invalid() ? 'true' : null"
         [attr.aria-describedby]="hintId()"
         (click)="onTriggerClick('single')"
       >
-        <ds-icon
-          name="clock"
-          [size]="14"
-        />
-
         <span class="time-value">
           {{ displayValue() }}
         </span>
+
+        <ds-icon
+          name="clock"
+          [size]="16"
+        />
       </button>
 
       @if (clearable() && hasValue()) {
@@ -101,7 +127,7 @@
     [text]="hint()"
     [state]="messageState()"
     [messageId]="hintId()"
-    [reserve]="reserveMessage()"
+    [reserve]="reserveMessageResolved()"
   />
 </div>
 

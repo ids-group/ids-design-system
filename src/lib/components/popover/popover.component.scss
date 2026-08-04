@@ -15,6 +15,7 @@
   --_popover-shadow:       var(--ds-popover-shadow,       var(--shadow-popover));
   --_popover-padding:      var(--ds-popover-padding,      var(--space-3));
   --_popover-max-width:    var(--ds-popover-max-width,    var(--popover-maxw));
+  --_popover-min-width:    var(--ds-popover-min-width,    auto);
 
   position: relative;
   background: var(--_popover-bg-color);
@@ -24,6 +25,7 @@
   padding: var(--_popover-padding);
   z-index: var(--layer-popover);
   max-width: var(--_popover-max-width);
+  min-width: var(--_popover-min-width);
 
   // ds-menu items already have their own per-item padding; outer padding here
   // would double-pad. Drop it when the popover hosts a menu.

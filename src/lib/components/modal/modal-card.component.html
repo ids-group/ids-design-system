@@ -17,12 +17,18 @@
       </span>
     }
 
-    <h2
-      class="title"
-      [id]="titleId"
-    >
-      {{ title() }}
-    </h2>
+    <div class="heading">
+      <div class="eyebrow">
+        <ng-content select="[eyebrow]"></ng-content>
+      </div>
+
+      <h2
+        class="title"
+        [id]="titleId"
+      >
+        {{ title() }}
+      </h2>
+    </div>
 
     @if (showClose()) {
       <button

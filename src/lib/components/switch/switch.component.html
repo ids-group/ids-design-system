@@ -35,12 +35,18 @@
         }
       </label>
     }
+
+    @if (devMode) {
+      <span dsProjectionDropped="ds-switch">
+        <ng-content></ng-content>
+      </span>
+    }
   </span>
 
   <ds-field-message
     [text]="hint()"
     [state]="messageState()"
     [messageId]="hintId()"
-    [reserve]="reserveMessage()"
+    [reserve]="reserveMessageResolved()"
   />
 </div>

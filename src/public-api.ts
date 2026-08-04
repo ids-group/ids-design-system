@@ -5,6 +5,7 @@ export * from './lib/overlay/body-scroll-lock.service';
 export * from './lib/core/status';
 export * from './lib/core/size';
 export * from './lib/icons';
+export * from './lib/components/reserve-messages';
 export * from './lib/components/button';
 export * from './lib/components/toggle-button';
 export * from './lib/components/icon-button';

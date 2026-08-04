@@ -9,13 +9,32 @@
   --_modal-title-text-color:        var(--ds-modal-title-text-color,        var(--text-primary));
   --_modal-title-text-color-error:  var(--ds-modal-title-text-color-error,  var(--error-text));
   --_modal-title-weight: var(--ds-modal-title-weight, var(--font-weight-bold));
+  --_modal-title-font-size: var(--ds-modal-title-font-size, var(--font-size-h5));
+  --_modal-eyebrow-text-color: var(--ds-modal-eyebrow-text-color, var(--text-tertiary));
+  --_modal-eyebrow-font-size: var(--ds-modal-eyebrow-font-size, var(--font-size-xs));
+  --_modal-eyebrow-weight: var(--ds-modal-eyebrow-weight, var(--font-weight-bold));
+  --_modal-eyebrow-tracking: var(--ds-modal-eyebrow-tracking, var(--letter-spacing-wide));
+  --_modal-eyebrow-transform: var(--ds-modal-eyebrow-transform, uppercase);
   --_modal-close-icon-color:        var(--ds-modal-close-icon-color,        var(--icon-default));
   --_modal-close-icon-color-hover:  var(--ds-modal-close-icon-color-hover,  var(--icon-strong));
   --_modal-icon-badge-bg-color: var(--ds-modal-icon-badge-bg-color, var(--accent-subtitle));
   --_modal-icon-badge-icon-color: var(--ds-modal-icon-badge-icon-color, var(--accent));
   --_modal-impact-text-color: var(--ds-modal-impact-text-color, var(--warning-text));
+  --_modal-enter-keyframes: var(--ds-modal-enter-keyframes, ds-scale-in);
+  --_modal-enter-duration: var(--ds-modal-enter-duration, var(--duration-base));
+  --_modal-enter-easing: var(--ds-modal-enter-easing, var(--ease-decelerate));
+  --_modal-leave-duration: var(--ds-modal-leave-duration, var(--duration-fast));
+  --_modal-leave-easing: var(--ds-modal-leave-easing, var(--ease-accelerate));
+  --_ds-enter-scale: var(--ds-modal-enter-scale, 0.97);
 
   display: contents;
+
+  // Reduced motion zeroes the DURATION, never the animation — the modal's
+  // animationend teardown must still fire (see styles/_surface-motion.scss).
+  @media (prefers-reduced-motion: reduce) {
+    --_modal-enter-duration: 0ms;
+    --_modal-leave-duration: 0ms;
+  }
 }
 
 .modal {
@@ -28,7 +47,9 @@
   max-height: 90vh;
   max-height: 90dvh;
   overflow: hidden;
-  animation: modal-card-in var(--duration-base) var(--ease-decelerate);
+  animation-name: var(--_modal-enter-keyframes);
+  animation-duration: var(--_modal-enter-duration);
+  animation-timing-function: var(--_modal-enter-easing);
 
   &.sm { width: var(--modal-w-sm); }
   &.md { width: var(--modal-w-md); }
@@ -65,10 +86,26 @@
     }
   }
 
-  .title {
-    font: var(--_modal-title-weight) var(--font-size-h5) / var(--line-height-snug) var(--font-heading);
-    margin: 0;
+  // Owns the flex slot the title used to hold, so an optional eyebrow stacks
+  // ABOVE the title instead of beside it.
+  .heading {
     flex: 1;
+    min-width: 0;
+  }
+
+  .eyebrow {
+    font: var(--_modal-eyebrow-weight) var(--_modal-eyebrow-font-size) / var(--line-height-flat) var(--font-sans);
+    letter-spacing: var(--_modal-eyebrow-tracking);
+    text-transform: var(--_modal-eyebrow-transform);
+    color: var(--_modal-eyebrow-text-color);
+    margin-bottom: var(--space-0-5);
+
+    &:empty { display: none; }
+  }
+
+  .title {
+    font: var(--_modal-title-weight) var(--_modal-title-font-size) / var(--line-height-snug) var(--font-heading);
+    margin: 0;
     min-width: 0;
     color: var(--_modal-title-text-color);
   }
@@ -99,6 +136,10 @@
     justify-content: flex-end;
     padding: var(--space-4) var(--space-5);
     border-top: var(--border-width-default) solid var(--_modal-divider);
+
+    // A read-only dialog projects nothing here — without this it still draws a
+    // stray padded strip with a divider (same guard as .impact below).
+    &:empty { display: none; }
   }
 
   &.error {
@@ -133,20 +174,20 @@
   z-index: var(--layer-modal);
   display: grid;
   place-items: center;
-  animation: fade-in var(--duration-base) var(--ease-decelerate);
+  animation-name: ds-fade-in;
+  animation-duration: var(--_modal-enter-duration);
+  animation-timing-function: var(--_modal-enter-easing);
 
-  &.closing { animation: modal-out var(--duration-fast) var(--ease-accelerate) forwards; }
+  &.closing {
+    animation-name: modal-out;
+    animation-duration: var(--_modal-leave-duration);
+    animation-timing-function: var(--_modal-leave-easing);
+    animation-fill-mode: forwards;
+  }
 }
 
-@keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
+// Stays local and literally named: onLeaveEnd() matches this name to tear the
+// modal down, so it must not be swappable.
 @keyframes modal-out {
   to { opacity: 0; }
-}
-
-@keyframes modal-card-in {
-  from { opacity: 0; transform: scale(0.97); }
 }

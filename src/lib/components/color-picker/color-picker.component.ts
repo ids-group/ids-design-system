@@ -31,6 +31,7 @@ import {
   disposeWithLeave,
   focusIsInside,
   forwardOverlayTokens,
+  prepareOverlayEnter,
 } from '../overlay-motion';
 import {
   type Hsv,
@@ -38,6 +39,7 @@ import {
   hsvToHex,
   normalizeHex,
 } from './color-picker.utils';
+import { resolveReserveMessage } from '../field-defaults';
 
 const DEFAULT_PRESETS: readonly string[] = [
   '#2F54FF',
@@ -108,9 +110,15 @@ export class ColorPickerComponent
   /** Helper text shown below the trigger. */
   readonly hint = input<string>('');
   /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+   *  the layout below it when a hint/error appears. Falls back to
+   *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
+   *  for a form that shows validation messages. */
+  readonly reserveMessage = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  protected readonly reserveMessageResolved = resolveReserveMessage(
+    this.reserveMessage,
+  );
 
   protected readonly trigger =
     viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
@@ -322,6 +330,11 @@ export class ColorPickerComponent
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
     this.overlayRef = this.overlay.create(cfg);
+    prepareOverlayEnter(
+      this.overlayRef,
+      this.host.nativeElement,
+      positionStrategy,
+    );
     forwardOverlayTokens(
       this.overlayRef,
       this.host.nativeElement,

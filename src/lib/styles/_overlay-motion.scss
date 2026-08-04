@@ -1,17 +1,58 @@
 // Enter motion for CDK-overlay panels that carry the `ds-overlay-pane`
 // panelClass (select, autocomplete, multi-select, date-picker, time-picker,
-// color-picker, popover, tooltip). Animates the panel's ROOT CHILD, not the
-// pane itself, so CDK's positioning transforms on `.cdk-overlay-pane` are left
-// untouched. The leave/exit animation was removed (close is instant) — see the
-// TODO(overlay-leave) in components/overlay-motion.ts to reinstate it.
+// color-picker, popover, tooltip, menu submenu). Animates the panel's ROOT
+// CHILD, not the pane itself, so CDK's positioning transforms on
+// `.cdk-overlay-pane` are left untouched. The leave/exit animation was removed
+// (close is instant) — see the TODO(overlay-leave) in components/overlay-motion.ts
+// to reinstate it.
+//
+// `data-ds-placement` names WHERE the panel sits relative to its trigger and is
+// stamped by `prepareOverlayEnter()` before the panel is attached, so the panel
+// always enters FROM the trigger edge: the offset axis/sign and the scale origin
+// both follow it. The keyframe name never changes with placement, so a mid-scroll
+// CDK flip redirects the motion instead of restarting it.
+//
+// Duration/easing stay longhands the library owns: reduced motion zeroes the
+// duration rather than dropping the animation, which keeps `animationend`-driven
+// teardown working and outranks a consumer keyframe carrying its own timing.
 
-.cdk-overlay-pane.ds-overlay-pane > * {
-  animation: ds-overlay-in var(--duration-fast) var(--ease-decelerate);
-}
+.cdk-overlay-pane.ds-overlay-pane {
+  /* Public --ds-overlay-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-slide-in);
+  --_overlay-enter-duration: var(--ds-overlay-enter-duration, var(--duration-fast));
+  --_overlay-enter-easing: var(--ds-overlay-enter-easing, var(--ease-decelerate));
+  --_overlay-enter-offset: var(--ds-overlay-enter-offset, 4px);
+  --_ds-enter-scale: var(--ds-overlay-enter-scale, 0.96);
 
-@keyframes ds-overlay-in {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
+  --_ds-enter-x: 0px;
+  --_ds-enter-y: calc(-1 * var(--_overlay-enter-offset));
+  --_overlay-enter-origin: top center;
+
+  &[data-ds-placement='top'] {
+    --_ds-enter-y: var(--_overlay-enter-offset);
+    --_overlay-enter-origin: bottom center;
+  }
+
+  &[data-ds-placement='left'] {
+    --_ds-enter-x: var(--_overlay-enter-offset);
+    --_ds-enter-y: 0px;
+    --_overlay-enter-origin: center right;
+  }
+
+  &[data-ds-placement='right'] {
+    --_ds-enter-x: calc(-1 * var(--_overlay-enter-offset));
+    --_ds-enter-y: 0px;
+    --_overlay-enter-origin: center left;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    --_overlay-enter-duration: 0ms;
+  }
+
+  > * {
+    animation-name: var(--_overlay-enter-keyframes);
+    animation-duration: var(--_overlay-enter-duration);
+    animation-timing-function: var(--_overlay-enter-easing);
+    transform-origin: var(--_overlay-enter-origin);
   }
 }

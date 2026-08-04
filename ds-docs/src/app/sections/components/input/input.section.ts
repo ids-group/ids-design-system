@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { IconComponent, InputComponent } from 'ds';
+import { IconComponent, InputComponent, ReserveMessagesDirective } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsTruncationComponent,
@@ -14,6 +14,7 @@ import {
     DocsTruncationComponent,
     IconComponent,
     InputComponent,
+    ReserveMessagesDirective,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './input.section.html',

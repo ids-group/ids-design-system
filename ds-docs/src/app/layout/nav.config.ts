@@ -64,6 +64,7 @@ export const NAV: NavGroup[] = [
     path: 'components/navigation',
     kind: 'component',
     items: [
+      { label: 'App layout', anchor: 'app-layout' },
       { label: 'Breadcrumbs', anchor: 'breadcrumbs' },
       { label: 'Menu', anchor: 'menu' },
       { label: 'Pagination', anchor: 'pagination' },
@@ -176,6 +177,7 @@ export const NAV: NavGroup[] = [
     title: 'Reference',
     path: 'reference',
     items: [
+      { label: 'Tokens reference', anchor: 'tokens-reference' },
       { label: 'Semantic tokens', anchor: 'semantic-tokens' },
       { label: 'Palette', anchor: 'palette' },
       { label: 'Typography', anchor: 'typography-tokens' },

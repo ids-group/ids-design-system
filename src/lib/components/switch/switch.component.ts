@@ -5,6 +5,7 @@ import {
   computed,
   forwardRef,
   input,
+  isDevMode,
   model,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -15,11 +16,13 @@ import {
 } from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
 import type { DsSize } from '../../core/size';
+import { resolveReserveMessage } from '../field-defaults';
+import { ProjectionDroppedDirective } from '../projection-dropped.directive';
 
 @Component({
   selector: 'ds-switch',
   standalone: true,
-  imports: [FieldMessageComponent],
+  imports: [FieldMessageComponent, ProjectionDroppedDirective],
   templateUrl: './switch.component.html',
   styleUrl: './switch.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -47,9 +50,15 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
   /** Helper text shown below the switch. */
   readonly hint = input<string>('');
   /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+   *  the layout below it when a hint/error appears. Falls back to
+   *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
+   *  for a form that shows validation messages. */
+  readonly reserveMessage = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  protected readonly reserveMessageResolved = resolveReserveMessage(
+    this.reserveMessage,
+  );
   /** Switch size — sm/md/lg. */
   readonly size = input<DsSize>('md');
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
@@ -84,4 +93,6 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
   protected onCheckedChange(event: Event): void {
     this.checked.set((event.target as HTMLInputElement).checked);
   }
+
+  protected readonly devMode = isDevMode();
 }

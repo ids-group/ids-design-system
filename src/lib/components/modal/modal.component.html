@@ -15,6 +15,10 @@
       [title]="title()"
       (closed)="onClose()"
     >
+      <ng-container eyebrow>
+        <ng-content select="[eyebrow]"></ng-content>
+      </ng-container>
+
       <ng-container body>
         <ng-content select="[body]"></ng-content>
       </ng-container>

@@ -1,4 +1,20 @@
-import type { OverlayRef } from '@angular/cdk/overlay';
+import type {
+  FlexibleConnectedPositionStrategy,
+  OverlayRef,
+} from '@angular/cdk/overlay';
+
+/** Where a connected panel sits relative to its trigger. `_overlay-motion.scss`
+ *  maps this onto the enter direction, so the panel moves in FROM the trigger. */
+export type DsOverlayPlacement = 'top' | 'bottom' | 'left' | 'right';
+
+/** Public enter-motion tokens read by every `ds-overlay-pane`
+ *  (styles/_overlay-motion.scss). */
+const OVERLAY_MOTION_TOKENS = [
+  '--ds-overlay-enter-keyframes',
+  '--ds-overlay-enter-duration',
+  '--ds-overlay-enter-easing',
+  '--ds-overlay-enter-offset',
+] as const;
 
 /**
  * Close a DS overlay panel.
@@ -52,6 +68,51 @@ export function forwardOverlayTokens(
       paneStyle.setProperty(token, value);
     }
   }
+}
+
+/** Read a CDK connection pair as the panel's placement. `overlayY` is the panel
+ *  edge pinned to the trigger, so `top` means the panel hangs BELOW the trigger. */
+export function overlayPlacementOf(
+  overlayY: string,
+  overlayX: string,
+): DsOverlayPlacement {
+  if (overlayY === 'top') {
+    return 'bottom';
+  }
+  if (overlayY === 'bottom') {
+    return 'top';
+  }
+  if (overlayX === 'start') {
+    return 'right';
+  }
+
+  return 'left';
+}
+
+/**
+ * Prime a `ds-overlay-pane` for its enter animation: forward the consumer's
+ * `--ds-overlay-enter-*` overrides onto the portaled pane, then stamp the
+ * resolved placement that `_overlay-motion.scss` turns into an enter direction.
+ * Call right after `overlay.create()` — CDK applies the position in
+ * `afterNextRender`, so the stamp still lands before the first painted frame.
+ * Until it does (or with no strategy passed) the CSS default applies: entering
+ * from above, i.e. today's behaviour for a panel below its trigger.
+ *
+ * The subscription needs no teardown — disposing the overlay disposes the
+ * strategy, which completes `positionChanges`.
+ */
+export function prepareOverlayEnter(
+  overlayRef: OverlayRef,
+  host: HTMLElement,
+  positionStrategy?: FlexibleConnectedPositionStrategy,
+): void {
+  forwardOverlayTokens(overlayRef, host, OVERLAY_MOTION_TOKENS);
+  positionStrategy?.positionChanges.subscribe(({ connectionPair }) => {
+    overlayRef.overlayElement.dataset['dsPlacement'] = overlayPlacementOf(
+      connectionPair.overlayY,
+      connectionPair.overlayX,
+    );
+  });
 }
 
 /** Close a non-modal overlay on a pointer press outside it, EXCEPT when the press

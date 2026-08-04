@@ -113,6 +113,14 @@ family with "point the channel back at `--primary-h/s/l` to keep the old look".)
 **Catch-all:** if you can't confidently fit a breaking/changed entry to a mechanical kind, make it
 `behavior` (never drop it). Reading the changelog completely matters more than perfect kinds.
 
+**One rename can need TWO items.** When an input, a `variant` value or a tone also changes the class
+the component puts in the DOM, the `input-rename` / `value-remap` fixes the consumer's *binding* and
+finds nothing in their stylesheet — a selector like `.modal.danger` survives the upgrade and silently
+matches nothing. Emit a `class-rename` alongside it, element-scoped (`ds-modal .danger`), and say in
+the `note` that only consumer STYLING of the internal class is affected. This is how 0.5.1's
+`danger` → `error` vocabulary rename left a consumer with a dead destructive-modal stripe: every
+binding item was present and correct, the class items were missing (added retroactively 2026-08-03).
+
 ## actionable vs informational
 
 Decide by CONTENT, not by which `###` section it sits in — an actionable change can hide in
@@ -120,6 +128,16 @@ Added/Changed/Fixed prose, and an "additive" bullet can carry a behavioral defau
 Actionable = existing consumer code stops working or *behaving as before*. Everything else (new
 components, new optional inputs, additive tokens whose defaults equal the old role token, pure
 bugfixes, visual polish) → `informational`, so a reader knows silence = safe.
+
+**Members added to an exported class are actionable even when the feature is additive.** Subclassing
+a DS component is unsupported (`design-system.md` § Components), but a consumer who does it breaks on
+a name collision — TS4114 demands `override`, TS2416 fires when the signature differs — so a release
+that only ADDS can fail their build. Emit ONE `behavior` item per release naming the classes whose
+member surface grew, with the added member names where few enough to list and the count where not,
+`searchHints` that locate the subclass (`extends TableComponent`, `extends `), and a `note` giving the
+resolution: rename the subclass's own member, or add `override` where the base's semantics genuinely
+match. Keep the feature bullets themselves in `informational` — the item is the collision, not the
+feature.
 
 ## Per-entry checklist
 

@@ -22,6 +22,17 @@
         "<ds-table",
         "rowInteractive"
       ]
+    },
+    {
+      "id": "table-component-subclass-member-collisions",
+      "kind": "behavior",
+      "old": null,
+      "new": null,
+      "note": "Only affects a consumer that EXTENDS the DS TableComponent class. Subclassing a DS component is unsupported (design-system.md - Components), but where it happens this release breaks the build: the new column API added ~76 members to TableComponent, so a subclass that already used one of those names no longer compiles — TS4114 requires an 'override' modifier, TS2416 fires where the signature differs. Collisions observed: zebra, columnOrder, orderedColumns, visibleColumns, toggleColumn, onColumnDrop, moveColumn, resetColumns, columnFilters, exportCsv, onResizeMove, onResizeEnd. Resolution per member: where the base member means the same thing, keep the name and add `override` with a base-compatible signature (zebra must adopt the base's booleanAttribute transform); otherwise RENAME the subclass's own member — the private/protected ones are internal to the component and its own template, so renaming is behaviour-preserving, but check the new name against the base's member list so it does not collide again. Build the consumer right after the bump: the compiler enumerates every collision. A consumer that only uses the <ds-table> element needs no action.",
+      "searchHints": [
+        "extends TableComponent",
+        "extends "
+      ]
     }
   ],
   "informational": [

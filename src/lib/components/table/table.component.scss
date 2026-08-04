@@ -118,6 +118,16 @@
   --_table-cell-pad-x:      var(--ds-table-cell-pad-x,      var(--table-cell-pad-x));
   --_table-cell-pad-y:      var(--ds-table-cell-pad-y,      var(--table-cell-pad-y));
 
+  /* Per-side overrides fall back to the x/y pair, so an editorial table can ask
+     for a right-only gutter (first column flush) without redefining both axes. */
+  --_table-cell-pad-top: var(--ds-table-cell-pad-top, var(--_table-cell-pad-y));
+  --_table-cell-pad-right: var(--ds-table-cell-pad-right, var(--_table-cell-pad-x));
+  --_table-cell-pad-bottom: var(--ds-table-cell-pad-bottom, var(--_table-cell-pad-y));
+  --_table-cell-pad-left: var(--ds-table-cell-pad-left, var(--_table-cell-pad-x));
+  --_table-head-border-color: var(--ds-table-head-border-color, var(--_table-divider));
+  --_table-head-weight: var(--ds-table-head-weight, var(--font-weight-bold));
+  --_table-head-tracking: var(--ds-table-head-tracking, var(--letter-spacing-wider));
+
   width: 100%;
   border-collapse: collapse;
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
@@ -126,13 +136,13 @@
 
   thead th {
     text-align: left;
-    padding: var(--table-head-pad-y) var(--_table-cell-pad-x);
-    font: var(--font-weight-bold) var(--_table-head-fs) / var(--line-height-base) var(--font-sans);
-    letter-spacing: var(--letter-spacing-wider);
+    padding: var(--table-head-pad-y) var(--_table-cell-pad-right) var(--table-head-pad-y) var(--_table-cell-pad-left);
+    font: var(--_table-head-weight) var(--_table-head-fs) / var(--line-height-base) var(--font-sans);
+    letter-spacing: var(--_table-head-tracking);
     text-transform: uppercase;
     color: var(--_table-head-text-color);
     background-color: var(--_table-head-bg-color);
-    border-bottom: var(--border-width-default) solid var(--_table-divider);
+    border-bottom: var(--border-width-default) solid var(--_table-head-border-color);
     white-space: nowrap;
 
     .th-label {
@@ -223,7 +233,7 @@
 
   tbody {
     td {
-      padding: var(--_table-cell-pad-y) var(--_table-cell-pad-x);
+      padding: var(--_table-cell-pad-top) var(--_table-cell-pad-right) var(--_table-cell-pad-bottom) var(--_table-cell-pad-left);
       line-height: var(--line-height-flat);
       transition: background-color var(--duration-fast) var(--ease-standard);
 
@@ -296,7 +306,7 @@
     }
 
     .expand-panel-cell {
-      padding: var(--_table-cell-pad-y) var(--_table-cell-pad-x);
+      padding: var(--_table-cell-pad-top) var(--_table-cell-pad-right) var(--_table-cell-pad-bottom) var(--_table-cell-pad-left);
     }
 
     /* Ellipsis clip for `truncate` text cells — the inline max-width (column

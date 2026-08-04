@@ -26,6 +26,7 @@ import {
   disposeWithLeave,
   focusIsInside,
   forwardOverlayTokens,
+  prepareOverlayEnter,
 } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
@@ -49,6 +50,7 @@ import type {
   TimeRangeValue,
 } from './time-picker.types';
 import type { DsSize } from '../../core/size';
+import { resolveReserveMessage } from '../field-defaults';
 
 type Segment = 'single' | 'start' | 'end';
 let nextId = 0;
@@ -67,6 +69,7 @@ let nextId = 0;
       multi: true,
     },
   ],
+  host: { '[class.full-width]': 'fullWidth()' },
 })
 export class TimePickerComponent
   extends DsControlValueAccessor<string | TimeRangeValue | null>
@@ -103,6 +106,16 @@ export class TimePickerComponent
   readonly disabledTime = input<((time: string) => boolean) | null>(null);
   /** Trigger height — sm/md/lg. */
   readonly size = input<DsSize>('md');
+  /** Stretch the trigger to fill its container instead of hugging its content —
+   *  opt in when the field shares a grid/flex track with inputs. */
+  readonly fullWidth = input(false, { transform: booleanAttribute });
+  /** Field label shown above the trigger — same row a `ds-date-picker` label
+   *  occupies, so date + time in one form row line up without a hand-rolled label. */
+  readonly label = input<string>('');
+  /** Marks the field required — shows an asterisk and sets `aria-required`. */
+  readonly required = input(false, { transform: booleanAttribute });
+  /** Shows an "(optional)" marker beside the label — ignored when `required` is set. */
+  readonly optional = input(false, { transform: booleanAttribute });
   /** Disables the picker and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Applies error styling and marks the trigger `aria-invalid`. */
@@ -110,9 +123,15 @@ export class TimePickerComponent
   /** Helper text shown below the picker. */
   readonly hint = input<string>('');
   /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+   *  the layout below it when a hint/error appears. Falls back to
+   *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
+   *  for a form that shows validation messages. */
+  readonly reserveMessage = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  protected readonly reserveMessageResolved = resolveReserveMessage(
+    this.reserveMessage,
+  );
   /** Shown in the trigger when no time is set. */
   readonly placeholder = input<string>('--:--');
   /** Shows an inline clear button when a value is set — single mode only. */
@@ -123,6 +142,7 @@ export class TimePickerComponent
   readonly format = input<TimeFormat | null>(null);
 
   protected readonly uid = `ds-timepicker-${++nextId}`;
+  protected readonly labelId = `${this.uid}-label`;
   protected readonly openSegment = signal<Segment | null>(null);
   private overlayRef: OverlayRef | null = null;
 
@@ -208,7 +228,9 @@ export class TimePickerComponent
   protected readonly panelMaxTime = computed(() => this.maxTime());
 
   protected ariaLabelFor(segment: Segment): string {
-    const base = this.ariaLabel() ?? 'Select time';
+    // A visible label is the accessible name; range segments still need the
+    // from/to suffix, so they keep an aria-label built from it.
+    const base = this.ariaLabel() ?? (this.label() || 'Select time');
     if (segment === 'start') {
       return `${base} (from)`;
     }
@@ -257,6 +279,11 @@ export class TimePickerComponent
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
     this.overlayRef = this.overlay.create(cfg);
+    prepareOverlayEnter(
+      this.overlayRef,
+      this.host.nativeElement,
+      positionStrategy,
+    );
     forwardOverlayTokens(
       this.overlayRef,
       this.host.nativeElement,

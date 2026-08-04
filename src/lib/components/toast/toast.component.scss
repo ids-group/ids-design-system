@@ -4,10 +4,13 @@
 @use '../../styles/press' as press;
 
 :host {
+  --_toast-leave-duration: var(--ds-toast-leave-duration, var(--duration-base));
+  --_toast-leave-easing: var(--ds-toast-leave-easing, var(--ease-standard));
+
   display: block;
   transition:
-    opacity var(--duration-base) var(--ease-standard),
-    transform var(--duration-base) var(--ease-standard);
+    opacity var(--_toast-leave-duration) var(--_toast-leave-easing),
+    transform var(--_toast-leave-duration) var(--_toast-leave-easing);
 }
 
 :host(.leaving) {
@@ -23,6 +26,16 @@
   --_toast-focus-shadow:  var(--ds-toast-focus-shadow,  var(--ds-control-focus-shadow));
   --_toast-bar-color: var(--ds-toast-bar-color, var(--accent));
   --_toast-icon-color: var(--ds-toast-icon-color, var(--accent));
+  --_toast-enter-keyframes: var(--ds-toast-enter-keyframes, ds-slide-in);
+  --_toast-enter-duration: var(--ds-toast-enter-duration, var(--duration-slow));
+  --_toast-enter-easing: var(--ds-toast-enter-easing, var(--ease-decelerate));
+  --_toast-enter-offset: var(--ds-toast-enter-offset, var(--space-2));
+  --_toast-min-width: var(--ds-toast-min-width, var(--toast-minw));
+  --_toast-max-width: var(--ds-toast-max-width, var(--toast-maxw));
+
+  /* Positive: the toast rises INTO place from below its resting spot. */
+  --_ds-enter-y: var(--_toast-enter-offset);
+  --_ds-enter-scale: var(--ds-toast-enter-scale, 0.96);
 
   display: flex;
   align-items: flex-start;
@@ -33,9 +46,15 @@
   border-radius: var(--radius-lg);
   padding: var(--space-3) var(--space-4);
   box-shadow: var(--shadow-toast);
-  min-width: var(--toast-minw);
-  max-width: var(--toast-maxw);
-  animation: ds-toast-in var(--duration-slow) var(--ease-decelerate);
+  min-width: var(--_toast-min-width);
+  max-width: var(--_toast-max-width);
+  animation-name: var(--_toast-enter-keyframes);
+  animation-duration: var(--_toast-enter-duration);
+  animation-timing-function: var(--_toast-enter-easing);
+
+  @media (prefers-reduced-motion: reduce) {
+    --_toast-enter-duration: 0ms;
+  }
 
   .icon  { color: var(--_toast-icon-color); flex-shrink: 0; margin-top: var(--space-0-5); }
   .body  { flex: 1; font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
@@ -109,7 +128,3 @@
   }
 }
 
-@keyframes ds-toast-in {
-  from { transform: translateY(var(--space-2)); opacity: 0; }
-  to   { transform: none; opacity: 1; }
-}

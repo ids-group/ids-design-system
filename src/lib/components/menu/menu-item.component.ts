@@ -17,6 +17,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
 import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
+import { prepareOverlayEnter } from '../overlay-motion';
 
 @Component({
   selector: 'ds-menu-item',
@@ -164,6 +165,11 @@ export class MenuItemComponent implements OnDestroy {
       panelClass: 'ds-overlay-pane',
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     });
+    prepareOverlayEnter(
+      this.submenuRef,
+      this.hostElement.nativeElement,
+      positionStrategy,
+    );
 
     this.submenuRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape' || event.key === 'ArrowLeft') {

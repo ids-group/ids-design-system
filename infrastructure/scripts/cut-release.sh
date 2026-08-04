@@ -39,13 +39,26 @@ command -v git > /dev/null || apk add --no-cache git > /dev/null
 git config user.name "${RELEASE_GIT_NAME:-IDS Release Bot}"
 git config user.email "${RELEASE_GIT_EMAIL:-ci@ids-group.co.uk}"
 git remote set-url origin "https://x-token-auth:${RELEASE_TOKEN}@bitbucket.org/itband/ids-design-system.git"
-git fetch origin main dev --quiet
+
+# Bitbucket clones ONE branch, shallow: `--branch dev --depth 50`. So remote.origin.fetch
+# maps dev only — naming a branch on the fetch command line writes FETCH_HEAD but creates
+# no refs/remotes/origin/main (hence "fatal: 'origin/main' is not a commit") — and dev's
+# truncated history need not even reach the last tag, leaving the dev->main merge with no
+# merge base. Widen the refspec to both release branches, then deepen to full history.
+git remote set-branches origin main dev
+if [ -f "$(git rev-parse --git-dir)/shallow" ]; then
+  git fetch --unshallow origin --quiet
+else
+  git fetch origin --quiet
+fi
 git checkout -B main origin/main
 
 # Fold dev's work (incl. the ## Unreleased notes + migrations/unreleased.json) into
-# main before bumping — this merge IS the release. A conflict means dev must be
-# reconciled first, so fail rather than guess.
-git merge --no-edit origin/dev || {
+# main before bumping — this merge IS the release. --no-ff because main is normally a
+# strict ancestor of dev, so a default merge would fast-forward and leave no release
+# boundary in main's history. A conflict means dev must be reconciled first, so fail
+# rather than guess.
+git merge --no-edit --no-ff origin/dev || {
   git merge --abort 2>/dev/null || true
   echo "cut-release: merge of origin/dev into main conflicts — resolve on dev first."
   exit 1
@@ -67,7 +80,7 @@ git push origin main --follow-tags
 # migration) so the next release doesn't re-emit the same notes. The release already
 # published; a conflict here is fix-forward on dev, not a rollback.
 git checkout -B dev origin/dev
-git merge --no-edit main || {
+git merge --no-edit --no-ff main || {
   git merge --abort 2>/dev/null || true
   echo "cut-release: back-merge of main into dev conflicts — reconcile dev manually (the release itself succeeded)."
   exit 1

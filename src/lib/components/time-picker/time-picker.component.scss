@@ -18,6 +18,10 @@
     var(--text-primary)
   );
   --_time-picker-trigger-radius: var(--ds-time-picker-trigger-radius, var(--radius-md));
+  --_time-picker-required-color: var(--ds-time-picker-required-color, var(--error));
+  --_time-picker-value-font-family: var(--ds-time-picker-value-font-family, var(--font-sans));
+  --_time-picker-value-font-size: var(--ds-time-picker-value-font-size, var(--font-size-s));
+  --_time-picker-value-weight: var(--ds-time-picker-value-weight, var(--font-weight-regular));
 
   display: block;
 }
@@ -27,12 +31,43 @@
   flex-direction: column;
   gap: var(--field-label-gap);
   width: 100%;
+
+  // Mirrors ds-date-picker's label block exactly (same class names, same tokens)
+  // so date + time in one form row occupy an identical label row and their
+  // triggers land on the same baseline.
+  .label {
+    font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+
+    .req {
+      color: var(--_time-picker-required-color);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .optional-marker {
+      color: var(--text-tertiary);
+      font-weight: var(--font-weight-regular);
+    }
+  }
 }
 
 .trigger-wrap {
   position: relative;
   display: inline-flex;
   width: fit-content;
+}
+
+// Opt-in stretch: the wrap, the range row and the trigger all hug by default,
+// so all three have to give for the field to fill a grid track.
+:host(.full-width) {
+  .trigger-wrap,
+  .range-wrap,
+  .trigger {
+    width: 100%;
+  }
 }
 
 .range-wrap {
@@ -49,13 +84,13 @@
 .trigger {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
   background: var(--_time-picker-trigger-bg-color);
   border: var(--border-width-default) solid var(--_time-picker-trigger-border);
   border-radius: var(--_time-picker-trigger-radius);
   padding: 0 var(--space-3);
   height: var(--hit-cozy);
-  font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat)
+  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat)
     var(--font-sans);
   color: var(--_time-picker-trigger-color);
   cursor: pointer;
@@ -107,6 +142,13 @@
 }
 
 .time-value {
+  // Takes the slack so the trailing glyph sits at the right edge in fullWidth
+  // mode, matching where the date picker's calendar button lands.
+  flex: 1;
+  text-align: left;
+  font-family: var(--_time-picker-value-font-family);
+  font-size: var(--_time-picker-value-font-size);
+  font-weight: var(--_time-picker-value-weight);
   font-variant-numeric: tabular-nums;
 }
 

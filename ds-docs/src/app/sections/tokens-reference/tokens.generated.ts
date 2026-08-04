@@ -1818,6 +1818,31 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-alert-radius",
         "value": "var(--radius-md)",
         "notes": "Alert corner radius (8px)."
+      },
+      {
+        "name": "--ds-alert-enter-keyframes",
+        "value": "ds-slide-in",
+        "notes": "Alert entrance @keyframes (default ds-slide-in)."
+      },
+      {
+        "name": "--ds-alert-enter-duration",
+        "value": "var(--duration-base)",
+        "notes": "Alert entrance duration (default --duration-base)."
+      },
+      {
+        "name": "--ds-alert-enter-easing",
+        "value": "var(--ease-decelerate)",
+        "notes": "Alert entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-alert-enter-offset",
+        "value": "2px",
+        "notes": "How far the alert drops in — read by ds-slide-in (default 2px)."
+      },
+      {
+        "name": "--ds-alert-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the alert enters with ds-scale-in (default 0.96)."
       }
     ]
   },
@@ -1840,6 +1865,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-app-layout-content-max-width",
         "value": "none",
         "notes": "Max width of the centred content wrapper (none by default — full width)."
+      },
+      {
+        "name": "--ds-app-layout-rail-bg-color",
+        "value": "var(--surface-overlay)",
+        "notes": "Rail background while it is an overlay below the lg breakpoint (defaults to --surface-overlay); above lg the rail is in the layout and inherits its own component's surface."
+      },
+      {
+        "name": "--ds-app-layout-rail-shadow",
+        "value": "var(--shadow-modal)",
+        "notes": "Rail elevation while it is an overlay below the lg breakpoint (defaults to --shadow-modal)."
+      },
+      {
+        "name": "--ds-app-layout-scrim-color",
+        "value": "var(--scrim, hsl(220deg 20% 12% / 45%))",
+        "notes": "Scrim behind the rail overlay below the lg breakpoint (defaults to --scrim)."
       },
       {
         "name": "--ds-app-layout-height",
@@ -2112,6 +2152,31 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Close icon hover."
       },
       {
+        "name": "--ds-banner-enter-keyframes",
+        "value": "ds-slide-in",
+        "notes": "Banner entrance @keyframes (default ds-slide-in)."
+      },
+      {
+        "name": "--ds-banner-enter-duration",
+        "value": "var(--duration-base)",
+        "notes": "Banner entrance duration (default --duration-base)."
+      },
+      {
+        "name": "--ds-banner-enter-easing",
+        "value": "var(--ease-decelerate)",
+        "notes": "Banner entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-banner-enter-offset",
+        "value": "4px",
+        "notes": "How far the banner drops in — read by ds-slide-in (default 4px)."
+      },
+      {
+        "name": "--ds-banner-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the banner enters with ds-scale-in (default 0.96)."
+      },
+      {
         "name": "--banner-bar-w",
         "value": "4px",
         "notes": "Banner left accent bar width (4px)."
@@ -2157,6 +2222,36 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-bottom-sheet-title-text-color",
         "value": "var(--text-primary)",
         "notes": "Bottom sheet title text colour."
+      },
+      {
+        "name": "--ds-bottom-sheet-enter-keyframes",
+        "value": "ds-slide-edge-in",
+        "notes": "Bottom-sheet entrance @keyframes (default ds-slide-edge-in — travel with no fade)."
+      },
+      {
+        "name": "--ds-bottom-sheet-enter-duration",
+        "value": "var(--duration-base)",
+        "notes": "Bottom-sheet entrance duration (default --duration-base); the scrim uses --duration-fast until this is set."
+      },
+      {
+        "name": "--ds-bottom-sheet-enter-easing",
+        "value": "var(--ease-decelerate)",
+        "notes": "Bottom-sheet + scrim entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-bottom-sheet-leave-duration",
+        "value": "var(--duration-base)",
+        "notes": "Bottom-sheet close duration (default --duration-base); the scrim uses --duration-fast until this is set."
+      },
+      {
+        "name": "--ds-bottom-sheet-leave-easing",
+        "value": "var(--ease-accelerate)",
+        "notes": "Bottom-sheet + scrim close easing (default --ease-accelerate)."
+      },
+      {
+        "name": "--ds-bottom-sheet-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the sheet enters with ds-scale-in (default 0.96)."
       },
       {
         "name": "--bottom-sheet-handle-w",
@@ -2459,6 +2554,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Checked box border colour (defaults to --accent)."
       },
       {
+        "name": "--ds-checkbox-radius",
+        "value": "var(--radius-sm)",
+        "notes": "Checkbox box corner radius (default --radius-sm). The indeterminate dash keeps its own radius."
+      },
+      {
         "name": "--check-size",
         "value": "20px",
         "notes": "20px — checkbox/radio box glyph (density-scaled)."
@@ -2603,6 +2703,26 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Date picker trigger placeholder text colour."
       },
       {
+        "name": "--ds-date-picker-trigger-radius",
+        "value": "var(--radius-md)",
+        "notes": "Date-picker trigger corner radius (default --radius-md) — the counterpart of --ds-time-picker-trigger-radius."
+      },
+      {
+        "name": "--ds-date-picker-value-font-family",
+        "value": "var(--font-mono)",
+        "notes": "Font family of the date value AND its ghost mask (default --font-mono — fixed-width digits keep the typed value on the mask; a proportional override still lines up thanks to tabular-nums)."
+      },
+      {
+        "name": "--ds-date-picker-value-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Size of the date value and its ghost mask (default --font-size-s)."
+      },
+      {
+        "name": "--ds-date-picker-value-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "Weight of the date value and its ghost mask (default --font-weight-regular)."
+      },
+      {
         "name": "--ds-date-picker-bg-color",
         "value": "var(--surface-overlay)",
         "notes": "Popover fill."
@@ -2636,6 +2756,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-date-picker-width",
         "value": "var(--date-picker-w)",
         "notes": "Calendar width."
+      },
+      {
+        "name": "--ds-date-picker-panel-radius",
+        "value": "var(--radius-lg)",
+        "notes": "Calendar panel corner radius (default --radius-lg). Forwarded onto the portaled pane on open."
       },
       {
         "name": "--date-picker-w",
@@ -2767,6 +2892,36 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-drawer-width",
         "value": "var(--drawer-w-sm)",
         "notes": "Drawer panel width (defaults to --drawer-w-sm)."
+      },
+      {
+        "name": "--ds-drawer-enter-keyframes",
+        "value": "ds-slide-edge-in",
+        "notes": "Drawer panel entrance @keyframes, shared by all four sides (default ds-slide-edge-in)."
+      },
+      {
+        "name": "--ds-drawer-enter-duration",
+        "value": "var(--duration-slow)",
+        "notes": "Drawer entrance duration (default --duration-slow); the scrim uses --duration-fast until this is set."
+      },
+      {
+        "name": "--ds-drawer-enter-easing",
+        "value": "var(--ease-decelerate)",
+        "notes": "Drawer panel + scrim entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-drawer-leave-duration",
+        "value": "var(--duration-base)",
+        "notes": "Drawer close duration (default --duration-base); the scrim uses --duration-fast until this is set."
+      },
+      {
+        "name": "--ds-drawer-leave-easing",
+        "value": "var(--ease-accelerate)",
+        "notes": "Drawer panel + scrim close easing (default --ease-accelerate)."
+      },
+      {
+        "name": "--ds-drawer-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the drawer enters with ds-scale-in (default 0.96)."
       },
       {
         "name": "--drawer-w-sm",
@@ -3208,6 +3363,26 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-loading-overlay-label-color",
         "value": "var(--text-secondary)",
         "notes": "Loading overlay status text colour (defaults to --text-secondary)."
+      },
+      {
+        "name": "--ds-loading-overlay-enter-keyframes",
+        "value": "ds-fade-in",
+        "notes": "Loading-scrim entrance @keyframes (default ds-fade-in)."
+      },
+      {
+        "name": "--ds-loading-overlay-enter-duration",
+        "value": "var(--duration-fast)",
+        "notes": "Loading-scrim entrance duration (default --duration-fast)."
+      },
+      {
+        "name": "--ds-loading-overlay-enter-easing",
+        "value": "var(--ease-standard)",
+        "notes": "Loading-scrim entrance easing (default --ease-standard)."
+      },
+      {
+        "name": "--ds-loading-overlay-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the scrim enters with ds-scale-in (default 0.96)."
       }
     ]
   },
@@ -3250,6 +3425,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-menu-border-color",
         "value": "var(--border-divider)",
         "notes": "Menu panel border colour (defaults to --border-divider)."
+      },
+      {
+        "name": "--ds-menu-min-width",
+        "value": "auto",
+        "notes": "Minimum menu width (default auto). Forwarded onto the overlay pane by ds-popover, so it also works for a menu projected into a popover."
+      },
+      {
+        "name": "--ds-menu-max-width",
+        "value": "none",
+        "notes": "Maximum menu width (default none). Pairs with --ds-menu-min-width; forwarded onto the pane by ds-popover."
       },
       {
         "name": "--menu-minw",
@@ -3304,6 +3489,36 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Title font-weight (defaults to --font-weight-bold)."
       },
       {
+        "name": "--ds-modal-title-font-size",
+        "value": "var(--font-size-h5)",
+        "notes": "Modal/dialog title size (default --font-size-h5). Pairs with --ds-modal-title-weight."
+      },
+      {
+        "name": "--ds-modal-eyebrow-text-color",
+        "value": "var(--text-tertiary)",
+        "notes": "Colour of the optional [eyebrow] line above the dialog title (default --text-tertiary)."
+      },
+      {
+        "name": "--ds-modal-eyebrow-font-size",
+        "value": "var(--font-size-xs)",
+        "notes": "Size of the [eyebrow] line above the dialog title (default --font-size-xs)."
+      },
+      {
+        "name": "--ds-modal-eyebrow-weight",
+        "value": "var(--font-weight-bold)",
+        "notes": "Weight of the [eyebrow] line above the dialog title (default --font-weight-bold)."
+      },
+      {
+        "name": "--ds-modal-eyebrow-tracking",
+        "value": "var(--letter-spacing-wide)",
+        "notes": "Letter-spacing of the [eyebrow] line (default --letter-spacing-wide) — it renders uppercase by default."
+      },
+      {
+        "name": "--ds-modal-eyebrow-transform",
+        "value": "uppercase",
+        "notes": "text-transform for the [eyebrow] line (default uppercase; set none for sentence case)."
+      },
+      {
         "name": "--ds-modal-close-icon-color",
         "value": "var(--icon-default)",
         "notes": "Close icon."
@@ -3327,6 +3542,36 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-modal-impact-text-color",
         "value": "var(--warning-text)",
         "notes": "Modal impact/warning message text colour (defaults to --warning-text)."
+      },
+      {
+        "name": "--ds-modal-enter-keyframes",
+        "value": "ds-scale-in",
+        "notes": "Modal card entrance @keyframes (default ds-scale-in); the backdrop always fades."
+      },
+      {
+        "name": "--ds-modal-enter-duration",
+        "value": "var(--duration-base)",
+        "notes": "Modal card + backdrop entrance duration (default --duration-base)."
+      },
+      {
+        "name": "--ds-modal-enter-easing",
+        "value": "var(--ease-decelerate)",
+        "notes": "Modal card + backdrop entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-modal-leave-duration",
+        "value": "var(--duration-fast)",
+        "notes": "Modal close duration (default --duration-fast). Reduced motion zeroes it so teardown stays instant."
+      },
+      {
+        "name": "--ds-modal-leave-easing",
+        "value": "var(--ease-accelerate)",
+        "notes": "Modal close easing (default --ease-accelerate)."
+      },
+      {
+        "name": "--ds-modal-enter-scale",
+        "value": "0.97",
+        "notes": "Start scale for the modal card with ds-scale-in (default 0.97)."
       },
       {
         "name": "--ds-modal-backdrop",
@@ -3473,6 +3718,38 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-otp-cell-border-color-focus",
         "value": "var(--accent)",
         "notes": "OTP input cell border on focus (defaults to --accent)."
+      }
+    ]
+  },
+  {
+    "component": "Overlay panels",
+    "selector": ".ds-overlay-pane",
+    "description": "Enter-motion hooks shared by every portaled DS panel — select, multi-select, autocomplete, date / time / colour picker, popover, tooltip, menu submenu.",
+    "tokens": [
+      {
+        "name": "--ds-overlay-enter-keyframes",
+        "value": "ds-slide-in",
+        "notes": "Entrance @keyframes for every portaled panel — default ds-slide-in; also ds-scale-in / ds-fade-in, your own GLOBAL keyframes, or none."
+      },
+      {
+        "name": "--ds-overlay-enter-duration",
+        "value": "var(--duration-fast)",
+        "notes": "Portaled-panel entrance duration (default --duration-fast)."
+      },
+      {
+        "name": "--ds-overlay-enter-easing",
+        "value": "var(--ease-decelerate)",
+        "notes": "Portaled-panel entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-overlay-enter-offset",
+        "value": "4px",
+        "notes": "How far a panel travels in from the trigger edge — read by ds-slide-in (default 4px)."
+      },
+      {
+        "name": "--ds-overlay-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale when a panel enters with ds-scale-in (default 0.96)."
       }
     ]
   },
@@ -3624,6 +3901,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-pagination-focus-shadow",
         "value": "var(--ds-control-focus-shadow)",
         "notes": "Pagination control focus ring (defaults to --ds-control-focus-shadow)."
+      },
+      {
+        "name": "--ds-pagination-label-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Size of the \"Showing X–Y of Z\" range label (default --font-size-s)."
+      },
+      {
+        "name": "--ds-pagination-label-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "Weight of the range label (default --font-weight-regular)."
+      },
+      {
+        "name": "--ds-pagination-label-color",
+        "value": "var(--text-secondary)",
+        "notes": "Colour of the range label (default --text-secondary)."
       }
     ]
   },
@@ -3661,6 +3953,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-popover-max-width",
         "value": "var(--popover-maxw)",
         "notes": "Popover max width (defaults to --popover-maxw)."
+      },
+      {
+        "name": "--ds-popover-min-width",
+        "value": "auto",
+        "notes": "Minimum panel width (default auto — the panel hugs its content). Set it to widen a menu/actions popover without touching internals."
       },
       {
         "name": "--ds-popover-arrow-size",
@@ -5017,6 +5314,41 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Cell vertical padding."
       },
       {
+        "name": "--ds-table-cell-pad-top",
+        "value": "var(--_table-cell-pad-y)",
+        "notes": "Per-side cell padding override; falls back to --ds-table-cell-pad-y."
+      },
+      {
+        "name": "--ds-table-cell-pad-right",
+        "value": "var(--_table-cell-pad-x)",
+        "notes": "Per-side cell padding override (also the header gutter); falls back to --ds-table-cell-pad-x."
+      },
+      {
+        "name": "--ds-table-cell-pad-bottom",
+        "value": "var(--_table-cell-pad-y)",
+        "notes": "Per-side cell padding override; falls back to --ds-table-cell-pad-y."
+      },
+      {
+        "name": "--ds-table-cell-pad-left",
+        "value": "var(--_table-cell-pad-x)",
+        "notes": "Per-side cell padding override (also the header gutter) — set 0 for a flush first column; falls back to --ds-table-cell-pad-x."
+      },
+      {
+        "name": "--ds-table-head-border-color",
+        "value": "var(--_table-divider)",
+        "notes": "Colour of the rule under the header row (default --ds-table-divider)."
+      },
+      {
+        "name": "--ds-table-head-weight",
+        "value": "var(--font-weight-bold)",
+        "notes": "Header label weight (default --font-weight-bold)."
+      },
+      {
+        "name": "--ds-table-head-tracking",
+        "value": "var(--letter-spacing-wider)",
+        "notes": "Header label letter-spacing (default --letter-spacing-wider)."
+      },
+      {
         "name": "--ds-table-select-col-w",
         "value": "var(--space-10)",
         "notes": "Table row-selection checkbox column width (--space-10)."
@@ -5315,6 +5647,26 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Time picker trigger corner radius (defaults to --radius-md)."
       },
       {
+        "name": "--ds-time-picker-required-color",
+        "value": "var(--error)",
+        "notes": "Colour of the required asterisk beside the time label (default --error)."
+      },
+      {
+        "name": "--ds-time-picker-value-font-family",
+        "value": "var(--font-sans)",
+        "notes": "Font family of the time value (default --font-sans). Set it to --font-mono to pair with a mono date value."
+      },
+      {
+        "name": "--ds-time-picker-value-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Size of the time value (default --font-size-s)."
+      },
+      {
+        "name": "--ds-time-picker-value-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "Weight of the time value (default --font-weight-regular — matches ds-input / ds-select / ds-date-picker)."
+      },
+      {
         "name": "--ds-time-picker-bg-color",
         "value": "var(--surface-overlay)",
         "notes": "Panel fill."
@@ -5394,6 +5746,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-toast-leave-duration",
+        "value": "var(--duration-base)",
+        "notes": "Toast dismiss duration — a transition, not an animation (default --duration-base)."
+      },
+      {
+        "name": "--ds-toast-leave-easing",
+        "value": "var(--ease-standard)",
+        "notes": "Toast dismiss easing (default --ease-standard)."
+      },
+      {
         "name": "--ds-toast-bg-color",
         "value": "var(--surface-overlay)",
         "notes": "Base surface fill."
@@ -5417,6 +5779,41 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-toast-icon-color",
         "value": "var(--accent)",
         "notes": "Toast leading icon colour (defaults to --accent, per severity)."
+      },
+      {
+        "name": "--ds-toast-enter-keyframes",
+        "value": "ds-slide-in",
+        "notes": "Toast entrance @keyframes (default ds-slide-in — rises into place from below)."
+      },
+      {
+        "name": "--ds-toast-enter-duration",
+        "value": "var(--duration-slow)",
+        "notes": "Toast entrance duration (default --duration-slow)."
+      },
+      {
+        "name": "--ds-toast-enter-easing",
+        "value": "var(--ease-decelerate)",
+        "notes": "Toast entrance easing (default --ease-decelerate)."
+      },
+      {
+        "name": "--ds-toast-enter-offset",
+        "value": "var(--space-2)",
+        "notes": "How far the toast rises into place — read by ds-slide-in (default --space-2)."
+      },
+      {
+        "name": "--ds-toast-min-width",
+        "value": "var(--toast-minw)",
+        "notes": "Toast minimum width (default --toast-minw) — a per-instance hook over the global geometry token."
+      },
+      {
+        "name": "--ds-toast-max-width",
+        "value": "var(--toast-maxw)",
+        "notes": "Toast maximum width (default --toast-maxw) — a per-instance hook over the global geometry token."
+      },
+      {
+        "name": "--ds-toast-enter-scale",
+        "value": "0.96",
+        "notes": "Start scale if the toast enters with ds-scale-in (default 0.96)."
       },
       {
         "name": "--ds-toast-bg-color-info",

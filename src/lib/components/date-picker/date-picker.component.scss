@@ -8,6 +8,13 @@
   --_date-picker-trigger-label-color: var(--ds-date-picker-trigger-label-color, var(--text-primary));
   --_date-picker-required-color: var(--ds-date-picker-required-color, var(--error));
   --_date-picker-placeholder-color: var(--ds-date-picker-placeholder-color, var(--text-tertiary));
+  --_date-picker-trigger-radius: var(--ds-date-picker-trigger-radius, var(--radius-md));
+
+  /* Mono by default: the ghost mask paints the placeholder glyphs and the real
+     value sits behind it, so fixed-width digits are what keep the two in step. */
+  --_date-picker-value-font-family: var(--ds-date-picker-value-font-family, var(--font-mono));
+  --_date-picker-value-font-size: var(--ds-date-picker-value-font-size, var(--font-size-s));
+  --_date-picker-value-weight: var(--ds-date-picker-value-weight, var(--font-weight-regular));
 
   /* Hug the field's content width; a consumer opts into wider by setting a
      width on the host. Prevents an outer grid/flex column from stretching a
@@ -15,6 +22,25 @@
   display: block;
   width: fit-content;
   max-width: 100%;
+}
+
+:host(.full-width) {
+  width: 100%;
+
+  .trigger {
+    width: 100%;
+  }
+
+  // Stretching the trigger alone leaves the value + calendar glyph packed at the
+  // left; the wrap has to take the slack so the affordance lands on the right
+  // edge — where ds-time-picker's and ds-select's do, one vertical line down a row.
+  .input-wrap {
+    flex: 1;
+  }
+
+  .date-input {
+    flex: 1;
+  }
 }
 
 .visually-hidden {
@@ -62,7 +88,7 @@
   gap: var(--space-1);
   background: var(--_date-picker-trigger-bg-color);
   border: var(--border-width-default) solid var(--_date-picker-trigger-border-color);
-  border-radius: var(--radius-md);
+  border-radius: var(--_date-picker-trigger-radius);
   padding: 0 var(--space-3);
   height: var(--hit-cozy);
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
@@ -117,15 +143,21 @@
    weight, unfilled positions (format letters or `_` padding) muted. It sits
    ABOVE the input, which is fully transparent (see .masked below), so the
    caret and click-to-position still work against the real (fixed-width)
-   value while only the overlay is visible. Shares the input's monospace font
-   so digits and placeholders stay equal width and aligned 1:1. */
+   value while only the overlay is visible. Shares the input's value font so
+   digits and placeholders stay equal width and aligned 1:1. */
 .mask-ghost {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   font: inherit;
-  font-family: var(--font-mono);
+
+  /* Must track the input's own family/size/weight, or the painted placeholders
+     stop lining up with the value behind them. */
+  font-family: var(--_date-picker-value-font-family);
+  font-size: var(--_date-picker-value-font-size);
+  font-weight: var(--_date-picker-value-weight);
+  font-variant-numeric: tabular-nums;
   white-space: pre;
   pointer-events: none;
   overflow: hidden;
@@ -137,15 +169,21 @@
 
 .date-input {
   /* Width is driven by the `size` attribute (the mask length) so the field
-     hugs its content instead of stretching. The monospace font keeps every
-     glyph the same width, so the value never shifts as it is typed and the
-     typed digits land exactly on the ghost mask's placeholder positions. */
+     hugs its content instead of stretching. Fixed-width digits are what keep the
+     typed value landing on the ghost mask's placeholder positions — hence the
+     mono default plus tabular-nums below. */
   width: auto;
   border: none;
   background: transparent;
   color: inherit;
   font: inherit;
-  font-family: var(--font-mono);
+  font-family: var(--_date-picker-value-font-family);
+  font-size: var(--_date-picker-value-font-size);
+  font-weight: var(--_date-picker-value-weight);
+
+  /* Keeps digits fixed-width even when a consumer swaps the family to a
+     proportional sans — without it the value drifts off the ghost mask. */
+  font-variant-numeric: tabular-nums;
   padding: 0;
   outline: none;
 
@@ -199,10 +237,11 @@
   --_date-picker-header-label-color: var(--ds-date-picker-header-label-color, var(--text-primary));
   --_date-picker-nav-icon-color: var(--ds-date-picker-nav-icon-color, var(--icon-default));
   --_date-picker-width: var(--ds-date-picker-width, var(--date-picker-w));
+  --_date-picker-panel-radius: var(--ds-date-picker-panel-radius, var(--radius-lg));
 
   background-color: var(--_date-picker-bg-color);
   border: var(--border-width-default) solid var(--_date-picker-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--_date-picker-panel-radius);
   box-shadow: var(--_date-picker-shadow);
   padding: var(--space-3);
   width: var(--_date-picker-width);

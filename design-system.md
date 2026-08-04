@@ -107,6 +107,8 @@ The DS aggregate (`@use 'styles/ds'`) forwards the full stack: theme primitives 
 
 ## Components
 
+Every entry below names its exported class (`ButtonComponent`, `TableComponent<T>`, …). Those names are exported for typing, DI, `viewChild` and template refs — **not as an extension point: subclassing a DS component is unsupported.** Any minor release may add members to a class, and a subclass that happens to have used one of those names breaks on it (TS4114 "must have an 'override' modifier", or TS2416 when the signature differs) — DS 0.6.3 added ~76 members to `TableComponent` alone. Compose instead: wrap the component, project into its slots, retune it through its `--ds-*` tokens. If you subclass anyway, treat every upgrade as potentially build-breaking — the changelog flags the risk (see `migrations/AUTHORING.md`), it does not avoid it.
+
 ### Form & input
 
 #### `<ds-button>` — `ButtonComponent`

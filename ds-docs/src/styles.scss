@@ -18,6 +18,11 @@
 // Global rules for the CDK Overlay portal used by <ds-select>.
 @use 'styles/dropdown-overlay';
 
+// Enter-motion presets + the overlay-pane entrance. Both are global by design
+// (see _surface-motion.scss) — without them DS surfaces render with no entrance.
+@use 'styles/surface-motion';
+@use 'styles/overlay-motion';
+
 // Surfaces for raw showcase specimens (docs only) — see _specimens.scss header.
 @use 'styles/specimens';
 

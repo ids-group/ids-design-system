@@ -23,6 +23,7 @@ import {
   closeOnScroll,
   disposeWithLeave,
   forwardOverlayTokens,
+  prepareOverlayEnter,
 } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { TagComponent } from '../tag/tag.component';
@@ -37,6 +38,7 @@ import type {
   AutocompleteWidth,
 } from './autocomplete.types';
 import type { DsSize } from '../../core/size';
+import { resolveReserveMessage } from '../field-defaults';
 
 let nextId = 0;
 
@@ -93,9 +95,15 @@ export class AutocompleteComponent<T = unknown>
   /** Helper text shown below the field. */
   readonly hint = input<string>('');
   /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+   *  the layout below it when a hint/error appears. Falls back to
+   *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
+   *  for a form that shows validation messages. */
+  readonly reserveMessage = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  protected readonly reserveMessageResolved = resolveReserveMessage(
+    this.reserveMessage,
+  );
   /** Shows a "Create «text»" row when the typed text matches no option. */
   readonly allowCreate = input(false, { transform: booleanAttribute });
   /** Accessible name for the combobox input. */
@@ -395,6 +403,11 @@ export class AutocompleteComponent<T = unknown>
       overlayConfig.width = triggerWidth;
     }
     this.overlayRef = this.overlay.create(overlayConfig);
+    prepareOverlayEnter(
+      this.overlayRef,
+      this.host.nativeElement,
+      positionStrategy,
+    );
     forwardOverlayTokens(
       this.overlayRef,
       this.host.nativeElement,

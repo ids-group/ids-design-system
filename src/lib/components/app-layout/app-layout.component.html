@@ -1,4 +1,18 @@
-<div class="rail">
+<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- scrim; click dismisses, keyboard dismisses via Escape (host document:keydown.escape) -->
+<div
+  class="scrim"
+  (click)="closeRail()"
+>
+</div>
+
+<div
+  class="rail"
+  [attr.role]="compact() ? 'dialog' : null"
+  [attr.aria-modal]="compact() ? 'true' : null"
+  [attr.aria-label]="compact() ? railLabel() : null"
+  [cdkTrapFocus]="compact() && railOpen()"
+  [cdkTrapFocusAutoCapture]="compact() && railOpen()"
+>
   <ng-content select="[sidenav]"></ng-content>
 </div>
 

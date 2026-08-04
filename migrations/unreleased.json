@@ -1,0 +1,145 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "surface-motion-partial-a-la-carte",
+      "kind": "scss-api",
+      "old": "@use 'styles/overlay-motion';",
+      "new": "@use 'styles/surface-motion';\n@use 'styles/overlay-motion';",
+      "note": "New GLOBAL partial `styles/_surface-motion.scss` holds the shared entrance keyframes (ds-fade-in, ds-scale-in, ds-slide-in, ds-slide-edge-in) that every DS surface now names through --ds-<surface>-enter-keyframes. Consumers of the bundled entry (`@use 'styles/ds';`) need NO change — ds.scss forwards it. Only à-la-carte consumers that @use DS partials individually must add it, next to `styles/overlay-motion`: without it the keyframes do not exist and modal / drawer / bottom-sheet / toast / banner / alert / loading-overlay / overlay panels render with no entrance (silently — no error). Order does not matter; @use anywhere in the styles entry is enough. If a consumer's styles.scss has no `styles/overlay-motion` line, add `@use 'styles/surface-motion';` beside whatever DS partials it does @use.",
+      "searchHints": [
+        "styles/overlay-motion",
+        "styles/ds",
+        "@use 'styles/",
+        "ids-design-system/styles"
+      ]
+    },
+    {
+      "id": "table-sortkey-non-null-when-unsorted",
+      "kind": "behavior",
+      "old": "ds-table[sortKey]",
+      "new": null,
+      "note": "`ds-table` no longer nulls `sortKey` when the sort cycle reaches \"unsorted\" — the key keeps naming the column the user last touched and `sortDir === null` alone means unsorted. Fixes a header desync for hosts that map \"off\" back to their own default sort. ACTION: any host that treats a non-null `sortKey` as \"a sort is active\" must gate on `sortDir` instead — e.g. `if (sortKey())` becomes `if (sortDir())`, and a server query built as `orderBy: sortKey()` must skip the clause when `sortDir()` is null. Hosts that already read both, or that pass `sortingOrder: ['asc','desc']` (no unsorted state), need no change. The table's own rendering (icons, aria-sort) and its client-side sorting were already gated on `sortDir` and are unchanged.",
+      "searchHints": [
+        "sortKey",
+        "sortDir",
+        "sortChange",
+        "(sortChange)",
+        "[(sortKey)]"
+      ]
+    },
+    {
+      "id": "field-reserve-message-default-off",
+      "kind": "behavior",
+      "old": "ds-input[reserveMessage]",
+      "new": null,
+      "note": "Every message-bearing field now defaults `reserveMessage` to FALSE (was true since 0.7.0). The resolution chain is unchanged - per-field input, then `DS_CONFIG.field.reserveMessage`, then the default - only the final fallback flipped. VISIBLE CONSEQUENCE: a field with no hint/error no longer holds a message line, so a form gets ~23px shorter per field and the controls below shift down the first time a hint or error appears. Affects all 14 fields: input, textarea, select, autocomplete, multi-select, checkbox, radio, radio-group, switch, slider, date-picker, time-picker, color-picker, otp-input. ACTION: a form that validates and must not reflow should turn it back on. App-wide in one line - `provideDsConfig({ field: { reserveMessage: true } })` - which is also how to restore 0.7.0 behaviour exactly; or per field with `[reserveMessage]=\"true\"`. Consumers that had written `[reserveMessage]=\"false\"` to opt OUT can delete those bindings, and any tighter sub-stack added to compensate for the reserved gap (e.g. a `var(--space-1)` wrapper) should be re-checked - with the row collapsed, a normal 16px stack is correct again.",
+      "searchHints": [
+        "reserveMessage",
+        "[reserveMessage]",
+        "provideDsConfig",
+        "field: {",
+        "DS_CONFIG"
+      ]
+    },
+    {
+      "id": "ds-config-nested-provide-merges",
+      "kind": "behavior",
+      "old": "provideDsConfig",
+      "new": null,
+      "note": "A nested `provideDsConfig` (on a Route, component or directive) now MERGES with the config above it, section by section, instead of replacing it wholesale. Previously the provider used `useValue`, so a subtree that set one flag silently reset every unrelated section to its default. NO ACTION for the normal case - a single root-level `provideDsConfig` behaves exactly as before, and nested provision was neither documented nor safe to use. Only relevant if a consumer deliberately relied on a nested call to RESET a section back to defaults: that now needs the section spelled out explicitly, e.g. `provideDsConfig({ datePicker: { locale: 'en-US', dateFormat: undefined, firstDayOfWeek: 1 } })`. Enables the new `dsReserveMessages` directive to scope one field flag without disturbing the rest.",
+      "searchHints": [
+        "provideDsConfig",
+        "DS_CONFIG",
+        "providers: [provideDsConfig"
+      ]
+    },
+    {
+      "id": "exported-classes-gained-members",
+      "kind": "behavior",
+      "old": "extends TableComponent",
+      "new": null,
+      "note": "Several exported component classes CHANGED their member surface this range, which breaks a consumer that EXTENDS one (subclassing a DS component is unsupported - design-system.md section Components - but where it happens the names collide: TS4114 demands an `override` modifier, TS2415 fires on a redeclared private member, TS2416 where a signature differs). New members: all 14 message-bearing fields (ds-autocomplete, ds-checkbox, ds-color-picker, ds-date-picker, ds-input, ds-multi-select, ds-otp-input, ds-radio, ds-radio-group, ds-select, ds-slider, ds-switch, ds-textarea, ds-time-picker) gained `reserveMessageResolved`, and CheckboxComponent, SwitchComponent and RadioComponent also gained a protected `devMode`; InputComponent and TextareaComponent also gained `control` and `focus`; SearchComponent gained `focus`; TableComponent gained `rowId` and `rowKey`; PaginationComponent gained `showPageSize`; TimePickerComponent gained `label`, `required`, `optional`, `labelId`, `fullWidth`; DatePickerComponent gained `fullWidth`; AppLayoutComponent gained `railOpen`, `railLabel`, `compact`, `closeRail` plus the private `navigation`, `destroyRef`, `watchDesktopBreakpoint`. ONE REMOVAL: TooltipDirective (dsTooltip) dropped its protected `onOpen`, split into `onPointerEnter` / `onFocusIn` / `onFocusOut` plus a private `scheduleShow`, `describedElement`, `focusedTarget` - a subclass that overrode `onOpen` fails to compile because its `override` names a member the base no longer declares; move a mouse-path body to `onPointerEnter` and a keyboard-path body to `onFocusIn`. ACTION: rename the subclass's own member, or add `override` where the base's semantics genuinely match. Build after upgrading - the compiler enumerates every collision. Consumers who only use the <ds-...> elements need no change.",
+      "searchHints": [
+        "extends TableComponent",
+        "extends InputComponent",
+        "extends TextareaComponent",
+        "extends PaginationComponent",
+        "extends TimePickerComponent",
+        "extends DatePickerComponent",
+        "extends SearchComponent",
+        "extends TooltipDirective",
+        "extends CheckboxComponent",
+        "extends SwitchComponent",
+        "extends RadioComponent",
+        "extends AppLayoutComponent",
+        "extends ",
+        "override readonly"
+      ]
+    },
+    {
+      "id": "app-layout-scroll-reset-path-only",
+      "kind": "behavior",
+      "old": "LayoutScrollService",
+      "new": null,
+      "note": "`ds-app-layout` no longer resets the content scroll on EVERY router NavigationEnd - only when the PATH changes (the part before `?` or `#`). A sort, page or filter change that rewrites just the query string or fragment now KEEPS the reader's scroll position. ACTION only if a screen relied on the old blanket reset: inject the still-public `LayoutScrollService` and call `scrollToTop()` from the handler that changes the filter, which is per-interaction and more precise than the old behaviour. No action for anyone who found the old reset disruptive.",
+      "searchHints": [
+        "LayoutScrollService",
+        "scrollToTop",
+        "ds-app-layout",
+        "NavigationEnd"
+      ]
+    },
+    {
+      "id": "modal-title-flex-moved-to-heading",
+      "kind": "class-rename",
+      "old": "ds-modal-card .title",
+      "new": ".heading",
+      "note": "STYLING ONLY, and only for a consumer who styles the modal's internal DOM. The `[eyebrow]` slot wrapped `<h2 class=\"title\">` together with the eyebrow in a new `<div class=\"heading\">`, and the `flex: 1` that used to sit on the `<h2>` moved to that wrapper. A consumer rule that targeted `.modal-card .title` for the flex slot must retarget `.heading`; rules that target `.title` for typography or colour are unaffected. Scope strictly to selectors under ds-modal / ds-modal-card.",
+      "searchHints": [
+        "ds-modal",
+        "ds-modal-card",
+        ".modal-card .title",
+        ".title",
+        "flex: 1"
+      ]
+    },
+    {
+      "id": "table-client-sort-blanks-last-and-numeric-collation",
+      "kind": "behavior",
+      "old": "ds-table[clientSort]",
+      "new": null,
+      "note": "`clientSort` changes how existing columns order in two ways, both applying with or without the new per-column `sortValue`. (1) BLANKS SINK: a cell reading as no-data - empty string, or one of the em dash, en dash, hyphen, 'n/a', 'never', 'none' matched case-insensitively - now sorts LAST in both ascending and descending order. Previously an empty string was just the smallest value, so it floated to the top on ascending. (2) NATURAL TEXT COLLATION: the text fallback now passes { numeric: true } to localeCompare, so 'item 9' precedes 'item 10' instead of following it. ACTION: none for most tables - both changes are what a reader expects. Only if a screen deliberately relied on blanks sorting first, or on the old pure-lexical order of strings containing digits, supply a per-column `sortValue` that maps the values the way that screen wants.",
+      "searchHints": [
+        "clientSort",
+        "sortChange",
+        "sortKey",
+        "sortDir",
+        "[columns]",
+        "TableColumn"
+      ]
+    }
+  ],
+  "informational": [
+    "Purely additive, opt-in inputs — no consumer action: `ds-table` [rowId] accessor (row identity for tracking/selection/expansion; still defaults to row.id), `ds-date-picker`/`ds-time-picker` [fullWidth], `ds-pagination` [showPageSize], and public `focus(options?)` on `ds-search` / `ds-input` / `ds-textarea`.",
+    "`ds-table`'s row generic relaxes from `{ id: string }` to `object` so keyless data can supply [rowId]; rows that keep an `id` type-check exactly as before, and the resolver is public as `rowKey(row)`.",
+    "New override tokens, all defaulting to the current values: --ds-<surface>-enter-keyframes / -enter-duration / -enter-easing (+ -enter-offset / -enter-scale) and -leave-duration / -leave-easing across overlay panels, modal, drawer, bottom sheet, toast, banner, alert and loading overlay; --ds-modal-eyebrow-* (5); --ds-modal-title-font-size; --ds-date-picker-trigger-radius; --ds-date-picker-panel-radius; --ds-checkbox-radius; --ds-popover-min-width; --ds-menu-min-width / -max-width; --ds-toast-min-width / -max-width; --ds-table-cell-pad-{top,right,bottom,left}; --ds-table-head-border-color / -weight / -tracking; --ds-pagination-label-font-size / -weight / -color.",
+    "`ds-modal` / `ds-modal-card` gained an `[eyebrow]` projection slot above the title; unfilled it renders nothing, so existing dialogs are unaffected.",
+    "`DS_CONFIG` gained a `field.reserveMessage` key — `provideDsConfig({ field: { reserveMessage: false } })` sets the message-row default for all 14 message-bearing fields. The per-field input still wins; its type widens to `boolean | null` (null = not set), so existing bindings and bare attributes behave identically.",
+    "Visual-only: overlay panels now enter FROM their trigger edge (a panel above its trigger rises instead of sliding down), a selected dropdown option keeps its tint under hover/keyboard-active, and a read-only `ds-modal` no longer draws an empty footer strip.",
+    "ds-time-picker gained label / required / optional inputs (additive) — a date + time form row now aligns without a hand-rolled label; existing usages without label render exactly as before.",
+    "Visual-only in ds-time-picker: the clock glyph moved from before the value to the trailing edge and grew 14px -> 16px, the value weight dropped from medium to regular, and the trigger gap narrowed 8px -> 4px, all to match ds-date-picker / ds-select / ds-input. Recover the old weight with --ds-time-picker-value-weight: var(--font-weight-medium).",
+    "Value typography of both pickers is now tokenised: --ds-date-picker-value-font-family / -font-size / -weight (mono default, shared with the ghost mask) and --ds-time-picker-value-font-family / -font-size / -weight, plus --ds-time-picker-required-color. Defaults unchanged except the time value weight noted above.",
+    "ds-date-picker [fullWidth] now pushes the calendar glyph to the trailing edge instead of leaving it packed beside the value; only affects fields that opt into fullWidth.",
+    "`ds-app-layout` gained an opt-in responsive rail: below the `lg` breakpoint the rail becomes an off-canvas overlay driven by the new two-way `[(railOpen)]` model, with `railLabel` (default 'Navigation') naming it for a screen reader. At/above `lg` nothing changes and `railOpen` has no effect, so an existing desktop-only consumer is unaffected. New tokens --ds-app-layout-rail-bg-color / -rail-shadow / --ds-app-layout-scrim-color all default to current values. PREREQUISITE: the breakpoint is read at runtime from the emitted `--bp-lg` custom property, with no literal px fallback - a consumer whose global styles never emit the `--bp-*` scale keeps the desktop layout at every width (dev builds log a console.error saying so). Include the DS global styles, or the bundled `styles/ds` entry, to get the compact behaviour.",
+    "`inheritDsConfig(config)` is a new public export beside `provideDsConfig`: it reads the nearest ancestor DS_CONFIG (skipSelf, optional) and shallow-merges per top-level section. Call it from an injection context if you need the merging behaviour in your own factory provider or directive metadata.",
+    "`dsReserveMessages` is a new directive: put it on a form and every DS field DECLARED inside reserves its message row, without a per-control binding. Presence-driven (no input), merges with the config above it, and a field's own [reserveMessage] still wins. Projected <ng-content> is not covered - it keeps the injector of the template it was written in.",
+    "Visual-only: dialogs opened through `ModalService` no longer carry the `ds-overlay-pane` panel class, so the shared overlay-panel entrance is no longer layered on top of the modal's own card/backdrop animation.",
+    "Known gap, not a regression: the ds-time-picker label wiring (aria-labelledby / aria-required) landed on the SINGLE-mode trigger only; range mode's start/end segment triggers are not wired to the label yet.",
+    "`TableColumn` gained an optional `sortValue: (row) => string | number | Date | null | undefined` so a column sorts by its domain value instead of the rendered text; formatted money, percents and dates sorted wrong before. Purely additive - a column without it keeps today's behaviour. Only affects sorting, not the header filter's value list.",
+    "`ds-checkbox`, `ds-switch` and `ds-radio` log a dev-mode warning when a caption is projected (`<ds-checkbox>text</ds-checkbox>`) instead of passed via [label]; the text never rendered and failed silently. All three share the [label]-only contract. Dev only - the detection node is gated on isDevMode(), so production is unchanged. Projection itself is still unsupported. The directive doing the detection is internal (not exported from public-api).",
+    "Known gap, not a regression: `--ds-overlay-enter-scale` is the one entrance token NOT forwarded onto a portaled overlay pane, so setting it per instance (`ds-select { --ds-overlay-enter-scale: 0.9 }`) has no effect on select / autocomplete / multi-select / date / time / colour picker / popover / tooltip / menu submenu panels. Scope it globally until it is forwarded; the other four (-enter-keyframes / -duration / -easing / -offset) do forward.",
+    "Bugfix, no action: `dsTooltip` now puts `aria-describedby` on the element that actually took focus (recorded from the bubbling `focusin`) rather than unconditionally on its host, so a tooltip on a host that is not itself focusable — `ds-menu-item` carries `role=\"none\"` and holds the real button inside — finally reaches a screen reader. A pointer-only open still describes the host.",
+    "Visual-only fixes: `ds-pagination` pins its internal rows-per-page select to `reserveMessage: false` (it inherited the app default and pushed the pager off the page buttons' baseline), and `ds-stat`'s card fills a stretched host so a KPI row with mixed captions paints equal-height tiles. Consumers can drop the global workarounds for both (`ds-pagination ds-field-message { display: none }` and `ds-stat { height: 100% }`)."
+  ]
+}

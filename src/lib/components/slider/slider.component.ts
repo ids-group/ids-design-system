@@ -17,6 +17,7 @@ import {
   type FieldMessageState,
 } from '../field-message/field-message.component';
 import { nextControlId } from '../field-ids';
+import { resolveReserveMessage } from '../field-defaults';
 
 type SliderValue = number | readonly [number, number];
 
@@ -60,9 +61,15 @@ export class SliderComponent extends DsControlValueAccessor<SliderValue> {
   /** Helper text shown below the slider. */
   readonly hint = input<string>('');
   /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+   *  the layout below it when a hint/error appears. Falls back to
+   *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
+   *  for a form that shows validation messages. */
+  readonly reserveMessage = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  protected readonly reserveMessageResolved = resolveReserveMessage(
+    this.reserveMessage,
+  );
 
   private readonly track = viewChild.required<ElementRef<HTMLElement>>('track');
   private dragging = -1;

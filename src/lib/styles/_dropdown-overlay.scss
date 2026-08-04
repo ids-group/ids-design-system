@@ -92,8 +92,12 @@
       flex: 0 0 auto;
     }
 
-    &:hover:not(.is-disabled),
-    &.is-active:not(.is-disabled) {
+    // `:not(.is-selected)` is load-bearing: this branch outranks `.is-selected`
+    // on specificity, so without it a hovered (or keyboard-active) selected row
+    // repaints to the neutral surface while KEEPING the selected label colour —
+    // unreadable as soon as a brand gives the selected row a dark fill.
+    &:hover:not(.is-disabled, .is-selected),
+    &.is-active:not(.is-disabled, .is-selected) {
       background: var(--surface-secondary);
     }
 
@@ -107,6 +111,11 @@
       color: var(--primary-strong);
 
       .option-icon { color: var(--primary-strong); }
+
+      &:hover:not(.is-disabled),
+      &.is-active:not(.is-disabled) {
+        background: var(--primary-muted);
+      }
     }
 
     &.is-disabled {

@@ -21,6 +21,7 @@ import {
   type RadioGroupChild,
   type RadioGroupContract,
 } from './radio-group.token';
+import { resolveReserveMessage } from '../field-defaults';
 
 @Component({
   selector: 'ds-radio-group',
@@ -63,9 +64,15 @@ export class RadioGroupComponent
   /** Helper text shown below the group. */
   readonly hint = input<string>('');
   /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+   *  the layout below it when a hint/error appears. Falls back to
+   *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
+   *  for a form that shows validation messages. */
+  readonly reserveMessage = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  protected readonly reserveMessageResolved = resolveReserveMessage(
+    this.reserveMessage,
+  );
   /** Accessible name for the group when no visible label is provided. */
   readonly ariaLabel = input<string | null>(null);
   /** Visible group label; omit to supply your own. */

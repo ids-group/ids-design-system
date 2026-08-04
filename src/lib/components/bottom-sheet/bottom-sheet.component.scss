@@ -6,8 +6,27 @@
   --_bottom-sheet-bg-color: var(--ds-bottom-sheet-bg-color, var(--surface-default));
   --_bottom-sheet-scrim-color: var(--ds-bottom-sheet-scrim-color, var(--surface-scrim));
   --_bottom-sheet-title-text-color: var(--ds-bottom-sheet-title-text-color, var(--text-primary));
+  --_bottom-sheet-enter-keyframes: var(--ds-bottom-sheet-enter-keyframes, ds-slide-edge-in);
+  --_bottom-sheet-enter-duration: var(--ds-bottom-sheet-enter-duration, var(--duration-base));
+  --_bottom-sheet-enter-easing: var(--ds-bottom-sheet-enter-easing, var(--ease-decelerate));
+  --_bottom-sheet-leave-duration: var(--ds-bottom-sheet-leave-duration, var(--duration-base));
+  --_bottom-sheet-leave-easing: var(--ds-bottom-sheet-leave-easing, var(--ease-accelerate));
+
+  /* The scrim reads the same public tokens but keeps its own faster default. */
+  --_bottom-sheet-scrim-enter-duration: var(--ds-bottom-sheet-enter-duration, var(--duration-fast));
+  --_bottom-sheet-scrim-leave-duration: var(--ds-bottom-sheet-leave-duration, var(--duration-fast));
+  --_ds-enter-scale: var(--ds-bottom-sheet-enter-scale, 0.96);
 
   display: contents;
+
+  // Reduced motion zeroes the DURATION, never the animation — the sheet's
+  // animationend teardown must still fire (see styles/_surface-motion.scss).
+  @media (prefers-reduced-motion: reduce) {
+    --_bottom-sheet-enter-duration: 0ms;
+    --_bottom-sheet-leave-duration: 0ms;
+    --_bottom-sheet-scrim-enter-duration: 0ms;
+    --_bottom-sheet-scrim-leave-duration: 0ms;
+  }
 }
 
 .sheet-overlay {
@@ -23,21 +42,30 @@
      overflow to ancestor frames (filter containing-block + overflow: hidden), where the
      focus-trap's initial focus() would scroll-into-view and yank the host app's content. */
   overflow: clip;
-  animation: ds-sheet-fade-in var(--duration-fast) var(--ease-decelerate);
+  animation-name: ds-fade-in;
+  animation-duration: var(--_bottom-sheet-scrim-enter-duration);
+  animation-timing-function: var(--_bottom-sheet-enter-easing);
 
   &.closing {
-    animation: ds-sheet-fade-out var(--duration-fast) var(--ease-accelerate) forwards;
+    animation-name: ds-sheet-fade-out;
+    animation-duration: var(--_bottom-sheet-scrim-leave-duration);
+    animation-timing-function: var(--_bottom-sheet-leave-easing);
+    animation-fill-mode: forwards;
   }
 }
 
 .sheet {
+  --_ds-enter-y: 100%;
+
   position: relative;
   width: min(100%, var(--_bottom-sheet-maxw));
   margin-inline: auto;
   background: var(--_bottom-sheet-bg-color);
   border-radius: var(--_bottom-sheet-radius) var(--_bottom-sheet-radius) 0 0;
   padding: 0 var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom));
-  animation: ds-sheet-up var(--duration-base) var(--ease-decelerate);
+  animation-name: var(--_bottom-sheet-enter-keyframes);
+  animation-duration: var(--_bottom-sheet-enter-duration);
+  animation-timing-function: var(--_bottom-sheet-enter-easing);
   max-height: var(--_bottom-sheet-maxh);
   display: flex;
   flex-direction: column;
@@ -60,7 +88,10 @@
   }
 
   &.closing {
-    animation: ds-sheet-down var(--duration-base) var(--ease-accelerate) forwards;
+    animation-name: ds-sheet-down;
+    animation-duration: var(--_bottom-sheet-leave-duration);
+    animation-timing-function: var(--_bottom-sheet-leave-easing);
+    animation-fill-mode: forwards;
   }
 }
 
@@ -108,16 +139,8 @@
   }
 }
 
-@keyframes ds-sheet-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes ds-sheet-up {
-  from { transform: translateY(100%); }
-  to { transform: none; }
-}
-
+// The leave keyframes stay local and literally named: onLeaveEnd() matches
+// ds-sheet-down to tear the sheet down, so they must not be swappable.
 @keyframes ds-sheet-fade-out {
   to { opacity: 0; }
 }

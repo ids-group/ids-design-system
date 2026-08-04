@@ -26,6 +26,8 @@ import {
   disposeWithLeave,
   focusIsInside,
   forwardOverlayTokens,
+  overlayPlacementOf,
+  prepareOverlayEnter,
 } from '../overlay-motion';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { NgTemplateOutlet } from '@angular/common';
@@ -71,7 +73,12 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
     '--ds-popover-shadow',
     '--ds-popover-padding',
     '--ds-popover-max-width',
+    '--ds-popover-min-width',
     '--ds-popover-arrow-size',
+    // Forwarded too: a projected ds-menu is portaled into the pane, so a
+    // consumer scoping the menu's width in their own DOM can't reach it.
+    '--ds-menu-min-width',
+    '--ds-menu-max-width',
   ];
 
   /** Cross-axis alignment of the panel against the trigger. */
@@ -117,7 +124,7 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
 
     positionStrategy.positionChanges.subscribe((change) => {
       this.resolvedPlacement.set(
-        connectionToPlacement(
+        overlayPlacementOf(
           change.connectionPair.overlayY,
           change.connectionPair.overlayX,
         ),
@@ -131,6 +138,7 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
     };
     this.ref = this.overlay.create(cfg);
+    prepareOverlayEnter(this.ref, this.host.nativeElement, positionStrategy);
     forwardOverlayTokens(this.ref, this.host.nativeElement, this.panelTokens);
     closeOnOutsidePointer(
       this.ref,
@@ -278,21 +286,4 @@ function buildPositions(
         },
       ];
   }
-}
-
-function connectionToPlacement(
-  overlayY: string,
-  overlayX: string,
-): PopoverPlacement {
-  if (overlayY === 'top') {
-    return 'bottom';
-  }
-  if (overlayY === 'bottom') {
-    return 'top';
-  }
-  if (overlayX === 'start') {
-    return 'right';
-  }
-
-  return 'left';
 }

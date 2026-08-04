@@ -41,3 +41,16 @@
     .state-cell__stage.force-hover ::ng-deep .control {
       border-color: var(--border-strong);
     }
+
+/* The reserved-row demo is about the HEIGHT difference, so the two cells must
+   hug their content — a stretched grid row would make both look identical. */
+.reserve-demo {
+  align-items: start;
+}
+
+.reserve-group-demo {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+  align-items: start;
+}

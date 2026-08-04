@@ -6,6 +6,7 @@ import {
   computed,
   inject,
   input,
+  isDevMode,
   model,
   viewChild,
 } from '@angular/core';
@@ -16,11 +17,13 @@ import {
   type FieldMessageState,
 } from '../field-message/field-message.component';
 import type { DsSize } from '../../core/size';
+import { resolveReserveMessage } from '../field-defaults';
+import { ProjectionDroppedDirective } from '../projection-dropped.directive';
 
 @Component({
   selector: 'ds-radio',
   standalone: true,
-  imports: [FieldMessageComponent],
+  imports: [FieldMessageComponent, ProjectionDroppedDirective],
   templateUrl: './radio.component.html',
   styleUrl: './radio.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -42,9 +45,15 @@ export class RadioComponent {
   /** Helper text shown below the control. */
   readonly hint = input<string>('');
   /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Default on — opt out for a
-   *  deliberately collapsing field. */
-  readonly reserveMessage = input(true, { transform: booleanAttribute });
+   *  the layout below it when a hint/error appears. Falls back to
+   *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
+   *  for a form that shows validation messages. */
+  readonly reserveMessage = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  protected readonly reserveMessageResolved = resolveReserveMessage(
+    this.reserveMessage,
+  );
   /** Control size — sm/md/lg. */
   readonly size = input<DsSize>('md');
   /** Marks the radio required — shows an asterisk on the label and sets `aria-required`. */
@@ -105,4 +114,6 @@ export class RadioComponent {
       this.checked.set(true);
     }
   }
+
+  protected readonly devMode = isDevMode();
 }

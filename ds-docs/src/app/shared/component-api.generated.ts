@@ -153,6 +153,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'content'",
         "required": false,
         "description": "`'content'` (default): the rail spans the full viewport height on the left and the topbar sits above the content column only. `'full'`: the topbar spans the full width and the rail + content sit below it."
+      },
+      {
+        "name": "railOpen",
+        "kind": "model",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the rail is open as an overlay. Only meaningful below the `lg` breakpoint — above it the rail is always in the layout and this is ignored. Two-way, so a burger in your topbar can drive it."
+      },
+      {
+        "name": "railLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Navigation'",
+        "required": false,
+        "description": "Accessible name for the rail while it is a modal overlay."
       }
     ],
     "outputs": []
@@ -267,11 +285,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "reserveMessage",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "allowCreate",
@@ -1133,11 +1151,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "reserveMessage",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "size",
@@ -1240,11 +1258,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "reserveMessage",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       }
     ],
     "outputs": []
@@ -1285,6 +1303,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Trigger height — sm/md/lg."
       },
       {
+        "name": "fullWidth",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Stretch the trigger to fill its container instead of hugging the mask width — opt in when the field shares a grid/flex track with inputs."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "Date | RangeValue | null",
@@ -1323,11 +1350,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "reserveMessage",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "required",
@@ -2021,11 +2048,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "reserveMessage",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "placeholder",
@@ -2200,7 +2227,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "inputMode",
         "kind": "input",
-        "type": "| 'none'\r\n    | 'text'\r\n    | 'decimal'\r\n    | 'numeric'\r\n    | 'tel'\r\n    | 'search'\r\n    | 'email'\r\n    | 'url'\r\n    | null",
+        "type": "| 'none'\n    | 'text'\n    | 'decimal'\n    | 'numeric'\n    | 'tel'\n    | 'search'\n    | 'email'\n    | 'url'\n    | null",
         "union": [
           "none",
           "text",
@@ -2902,11 +2929,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "reserveMessage",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "ariaLabel",
@@ -3088,11 +3115,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "reserveMessage",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "ariaLabel",
@@ -3263,6 +3290,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "Shows the \"Showing X–Y of Z\" range label."
+      },
+      {
+        "name": "showPageSize",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Shows the rows-per-page dropdown. Turn it off for a screen with a fixed page size — otherwise the control offers a choice the host won't honour."
       }
     ],
     "outputs": []
@@ -3463,11 +3499,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "reserveMessage",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "size",
@@ -3561,11 +3597,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "reserveMessage",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "ariaLabel",
@@ -3816,11 +3852,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "reserveMessage",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "required",
@@ -4301,11 +4337,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "reserveMessage",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       }
     ],
     "outputs": []
@@ -4723,11 +4759,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "reserveMessage",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "size",
@@ -4781,6 +4817,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": true,
         "description": "Rows to render."
+      },
+      {
+        "name": "rowId",
+        "kind": "input",
+        "type": "((row: T) => string) | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Row identity used for tracking, selection, expansion and the active-row highlight. Defaults to `row.id`; pass an accessor for display-only data with no natural key (`[rowId]=\"row => row.channel + row.sentAt\"`), which beats mapping synthetic ids into the data just to satisfy the table."
       },
       {
         "name": "columns",
@@ -5096,7 +5141,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "{}",
         "required": false,
-        "description": "Cell templates supplied as an explicit map instead of (or in addition to) projected `dsCellTemplate` directives. Lets a wrapper component (e.g. ids-data-table) collect the directives itself and pass them down, since content projected through a wrapper's `<ng-content>` is not seen by this component's content query. Entries here override projected ones."
+        "description": "Cell templates supplied as an explicit map instead of (or in addition to) projected `dsCellTemplate` directives. Lets a wrapper component collect the directives itself and pass them down, since content projected through a wrapper's `<ng-content>` is not seen by this component's content query. Entries here override projected ones."
       },
       {
         "name": "emptyTemplate",
@@ -5448,11 +5493,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "reserveMessage",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "placeholder",
@@ -5749,6 +5794,42 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Trigger height — sm/md/lg."
       },
       {
+        "name": "fullWidth",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Stretch the trigger to fill its container instead of hugging its content — opt in when the field shares a grid/flex track with inputs."
+      },
+      {
+        "name": "label",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Field label shown above the trigger — same row a `ds-date-picker` label occupies, so date + time in one form row line up without a hand-rolled label."
+      },
+      {
+        "name": "required",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Marks the field required — shows an asterisk and sets `aria-required`."
+      },
+      {
+        "name": "optional",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows an \"(optional)\" marker beside the label — ignored when `required` is set."
+      },
+      {
         "name": "disabled",
         "kind": "input",
         "type": "boolean",
@@ -5778,11 +5859,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "reserveMessage",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Default on — opt out for a deliberately collapsing field."
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "placeholder",

@@ -17,7 +17,6 @@
     </em> for exit.
   </span>
 
-  <!-- ============================================================ Durations -->
   <h3 class="block-title t-h4">
     Durations
   </h3>
@@ -53,7 +52,6 @@
     }
   </div>
 
-  <!-- ============================================================ Easings -->
   <h3 class="block-title t-h4">
     Easings
   </h3>
@@ -89,7 +87,6 @@
     }
   </div>
 
-  <!-- ============================================================ Combined -->
   <h3 class="block-title t-h4">
     Combined · how the DS uses motion in practice
   </h3>
@@ -159,4 +156,103 @@
       </div>
     }
   </div>
+
+  <h3 class="block-title t-h4">
+    Entrance presets · customizing a surface
+  </h3>
+
+  <p class="block-desc t-s">
+    Every DS surface names its entrance through a token, so a consumer can retune
+    or replace it without touching the component. Pick a preset below, then open
+    the dropdown (a portaled panel) and replay the alert (an inline surface) —
+    both read the same vocabulary.
+  </p>
+
+  <ds-segmented
+    ariaLabel="Entrance preset"
+    [options]="presetOptions"
+    [value]="preset()"
+    (valueChange)="preset.set($event)"
+  />
+
+  <div
+    class="motion-preset-stage"
+    [style.--ds-overlay-enter-keyframes]="preset()"
+    [style.--ds-alert-enter-keyframes]="preset()"
+  >
+    <ds-select
+      class="motion-preset-select"
+      label="Discharge port"
+      placeholder="Pick a port"
+      [options]="demoOptions"
+    />
+
+    <div class="motion-preset-replay">
+      @if (alertShown()) {
+        <ds-alert
+          variant="success"
+          title="Manifest saved"
+        >
+          Entrance played with
+          <code class="t-mono-inline">
+            {{ preset() }}
+          </code>.
+        </ds-alert>
+      }
+
+      <ds-button
+        variant="outline"
+        size="sm"
+        (pressed)="replayAlert()"
+      >
+        Replay
+      </ds-button>
+    </div>
+  </div>
+
+  <div class="motion-preset-grid">
+    @for (p of enterPresets; track p.keyframes) {
+      <div class="motion-preset-cell">
+        <code class="t-mono-inline token-name">
+          {{ p.keyframes }}
+        </code>
+
+        <div class="t-caption token-desc">
+          {{ p.feel }}
+        </div>
+
+        <div class="t-caption motion-preset-default">
+          Default for: {{ p.defaultFor }}
+        </div>
+      </div>
+    }
+  </div>
+
+  <p class="block-desc t-s">
+    The knobs are the same on every surface —
+    <code class="t-mono-inline">
+      --ds-&lt;surface&gt;-enter-keyframes
+    </code>,
+    <code class="t-mono-inline">
+      -enter-duration
+    </code>,
+    <code class="t-mono-inline">
+      -enter-easing
+    </code>, plus
+    <code class="t-mono-inline">
+      -enter-offset
+    </code> or
+    <code class="t-mono-inline">
+      -enter-scale
+    </code> for the travel/scale a preset reads. Surfaces that animate on close
+    also take
+    <code class="t-mono-inline">
+      -leave-duration
+    </code> and
+    <code class="t-mono-inline">
+      -leave-easing
+    </code>. Set them globally, per theme, or on a single component instance —
+    portaled panels forward them onto their overlay pane on open. See the token
+    reference for the full per-surface list.
+  </p>
 </docs-section>
