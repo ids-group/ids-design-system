@@ -28,8 +28,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   extra node ships. Real projection support is still open — see `docs/todo.md`.
 
 - **`ds-app-layout` collapses its rail to an off-canvas overlay below `lg`.** On narrow viewports the
-  rail no longer occupies a grid column: below the `lg` breakpoint (read at runtime from `--bp-lg`,
-  fallback `1024px`) it leaves the flow, becomes a `position: fixed` panel translated off-canvas, and
+  rail no longer occupies a grid column: below the `lg` breakpoint (read at runtime from `--bp-lg`) it
+  leaves the flow, becomes a `position: fixed` panel translated off-canvas, and
   animates in over a scrim. A new two-way `[(railOpen)]` model drives it (ignored at/above `lg`), and a
   new `railLabel` input (`'Navigation'` by default) sets the panel's `aria-label` in compact mode. While
   open and compact the panel is a focus-trapped `role="dialog"` with `aria-modal="true"`; clicking the
@@ -132,7 +132,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `ds-slide-in` (fade + short travel), `ds-scale-in` (grows from a micro-scale), `ds-fade-in` (opacity only)
   and `ds-slide-edge-in` (full-distance travel, no fade) — so `ds-select { --ds-overlay-enter-keyframes:
   ds-fade-in; }` is enough to re-skin one instance, and portaled panels forward the tokens onto their
-  overlay pane on open. Your own `@keyframes` work too, but must be declared in GLOBAL styles: emulated
+  overlay pane on open — every one except `--ds-overlay-enter-scale`, which is not forwarded, so scaling
+  one overlay panel per instance does not work yet (scope it globally instead). Your own `@keyframes` work
+  too, but must be declared in GLOBAL styles: emulated
   view encapsulation renames keyframes defined in a component stylesheet. `none` disables an entrance.
   All defaults are unchanged. Leave keyframes are deliberately not swappable — modal/drawer/bottom-sheet
   teardown matches them by name — and reduced motion still wins: the library zeroes the duration itself,
@@ -150,17 +152,23 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `clientSort` column, with or without the new `sortValue`. If a table relied on blanks sorting first,
   supply a `sortValue` that maps them to a real value.
 
-- **Several exported component classes grow their member surface, which breaks a consumer that extends
+- **Several exported component classes change their member surface, which breaks a consumer that extends
   them.** Everything else in this release is additive for anyone using the `<ds-…>` elements. Subclassing
-  a DS component is unsupported (`design-system.md` § Components), but where it happens the new names
-  collide — TS4114 demands an `override` modifier, TS2416 fires where a signature differs. New members
-  this range: all 14 message-bearing field components gain `reserveMessageResolved`; `InputComponent` and
-  `TextareaComponent` also gain `control` and `focus`, and `SearchComponent` gains `focus`;
-  `TableComponent` gains `rowId` and `rowKey`; `PaginationComponent` gains `showPageSize`;
-  `TimePickerComponent` gains `label`, `required`, `optional`, `labelId` and `fullWidth`;
-  `DatePickerComponent` gains `fullWidth`; and `AppLayoutComponent` gains `railOpen`, `railLabel`,
-  `compact` and `closeRail`. Rename the subclass's own member, or add `override` where the base's
-  semantics genuinely match. Build after upgrading — the compiler enumerates every collision.
+  a DS component is unsupported (`design-system.md` § Components), but where it happens the names collide —
+  TS4114 demands an `override` modifier, TS2415 fires on a redeclared private member, TS2416 where a
+  signature differs. New members this range: all 14 message-bearing field components gain
+  `reserveMessageResolved`, and `CheckboxComponent`, `SwitchComponent` and `RadioComponent` also gain a
+  protected `devMode`; `InputComponent` and `TextareaComponent` also gain `control` and `focus`, and
+  `SearchComponent` gains `focus`; `TableComponent` gains `rowId` and `rowKey`; `PaginationComponent`
+  gains `showPageSize`; `TimePickerComponent` gains `label`, `required`, `optional`, `labelId` and
+  `fullWidth`; `DatePickerComponent` gains `fullWidth`; and `AppLayoutComponent` gains `railOpen`,
+  `railLabel`, `compact`, `closeRail` and the private `navigation`, `destroyRef` and
+  `watchDesktopBreakpoint`. One REMOVAL: `TooltipDirective` (`dsTooltip`) drops its protected `onOpen`,
+  split into `onPointerEnter` / `onFocusIn` / `onFocusOut` plus a private `scheduleShow`,
+  `describedElement` and `focusedTarget` — a subclass that overrode `onOpen` no longer compiles, because
+  its `override` now names a member the base does not declare. Rename the subclass's own member, or add
+  `override` where the base's semantics genuinely match. Build after upgrading — the compiler enumerates
+  every collision.
 
 - **A nested `provideDsConfig` now MERGES with the config above it instead of replacing it.** The
   config resolves through the element-injector chain, so it was always scopable to a route, component
