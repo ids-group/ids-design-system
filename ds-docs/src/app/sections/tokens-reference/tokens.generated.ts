@@ -3191,6 +3191,23 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Filter Bar",
+    "selector": ".filter-bar",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-filter-bar-gap",
+        "value": "var(--space-3)",
+        "notes": "Space between filters, and between the row and the trailing group (defaults to --space-3). Read back off the DOM by the overflow arithmetic, so retuning it stays in sync with what is rendered."
+      },
+      {
+        "name": "--ds-filter-bar-panel-gap",
+        "value": "var(--space-4)",
+        "notes": "Vertical space between filters stacked in the overflow panel (defaults to --space-4, looser than the row because they read as a form there)."
+      }
+    ]
+  },
+  {
     "component": "Icon Button",
     "selector": ".icon-button",
     "description": "",

@@ -14,6 +14,28 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-filter-bar` — a Priority+ filter row: as many filters as fit, the rest behind "+N more".**
+  Every admin list past three filters hits the same wall — the row wraps to a second line on a laptop, or
+  the consumer hand-rolls an overflow menu. Each filter goes in an
+  `<ng-template [dsFilterItem]="180">`, and the split is decided from those declared widths plus one
+  `ResizeObserver` on the row. Never by measuring the filters: they would have to be in the DOM to be
+  measured, so anything that did not fit would flash into view before being taken away.
+  — A template rather than plain projection because the bar has to MOVE what does not fit into the panel,
+  and projected DOM cannot be relocated. Consequence worth knowing: crossing that boundary destroys and
+  re-creates the view, so a control's internal state (an open dropdown, focus) does not survive a resize
+  that collapses it — its value does, because that lives in the consumer's own signal or form control.
+  — The declared width is a contract, not a hint: the slot is sized to exactly that number, so the
+  arithmetic is true by construction and a filter is the same width in the panel as in the row.
+  — Mark trailing controls with `dsFilterBarTrailing` (search, a Clear button) rather than wrapping them:
+  the bar owns that group's gap and alignment, and a projected wrapper would be a plain block whose children
+  stack. The group sits outside the measured row, so flexbox subtracts its width before the row is measured.
+  — The trigger carries the count as text plus `aria-expanded`, and the panel is a focus-trapped
+  `role="dialog"`. There is exactly one copy of each filter in the accessibility tree, because filters MOVE
+  rather than being rendered twice and hidden — the usual implementation of this pattern needs `aria-hidden`
+  bookkeeping to compensate. `moreLabel` and `panelLabel` are there for translation.
+  — Both slots collapse when nothing lands in them (`:not(:has(*))`, not `:empty`, which a single whitespace
+  text node defeats): an empty flex child would still take the row's gap. Dev-mode warning when content
+  reaches the bar carrying neither slot marker, since such content is silently dropped.
 - **`ds-auth-shell` — the scaffold for the screens in front of the login, counterpart to `ds-app-layout`.**
   Consumers hand-rolled the unauthenticated scaffold every time, and it is the same four parts in each: a
   brand lockup, an optional tagline, one card holding the form, and a support line under it. The brand row

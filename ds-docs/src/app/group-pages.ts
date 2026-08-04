@@ -66,6 +66,7 @@ import { ModalSection } from './sections/components/modal/modal.section';
 import { PopoverSection } from './sections/components/popover/popover.section';
 import { TooltipSection } from './sections/components/tooltip/tooltip.section';
 
+import { FilterBarSection as ComponentsFilterBarSection } from './sections/components/filter-bar/filter-bar.section';
 import { PageFooterSection } from './sections/components/page-footer/page-footer.section';
 import { PageHeaderSection as ComponentsPageHeaderSection } from './sections/components/page-header/page-header.section';
 
@@ -90,7 +91,7 @@ import { ZIndexSection } from './sections/foundations/z-index/z-index.section';
 
 import { ActivitySection } from './sections/patterns/activity/activity.section';
 import { EmptyStateSection } from './sections/patterns/empty-state/empty-state.section';
-import { FilterBarSection } from './sections/patterns/filter-bar/filter-bar.section';
+import { FilterBarSection as PatternsFilterBarSection } from './sections/patterns/filter-bar/filter-bar.section';
 import { FormLayoutSection } from './sections/patterns/form-layout/form-layout.section';
 import { PageHeaderSection as PatternsPageHeaderSection } from './sections/patterns/page-header/page-header.section';
 
@@ -206,7 +207,11 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
   {
     path: 'components/page-structure',
     title: 'Page structure',
-    sections: [PageFooterSection, ComponentsPageHeaderSection],
+    sections: [
+      ComponentsFilterBarSection,
+      PageFooterSection,
+      ComponentsPageHeaderSection,
+    ],
   },
   {
     path: 'foundations',
@@ -238,7 +243,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
     sections: [
       ActivitySection,
       EmptyStateSection,
-      FilterBarSection,
+      PatternsFilterBarSection,
       FormLayoutSection,
       PatternsPageHeaderSection,
     ],

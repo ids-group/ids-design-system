@@ -128,6 +128,7 @@ export const NAV: NavGroup[] = [
     path: 'components/page-structure',
     kind: 'component',
     items: [
+      { label: 'Filter bar', anchor: 'filter-bar' },
       { label: 'Page footer', anchor: 'page-footer' },
       { label: 'Page header', anchor: 'page-header' },
     ],

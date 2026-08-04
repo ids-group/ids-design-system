@@ -2102,6 +2102,37 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "filter-bar": {
+    "key": "filter-bar",
+    "selector": "ds-filter-bar",
+    "isElement": true,
+    "className": "FilterBarComponent",
+    "status": "stable",
+    "importName": "FilterBarComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "moreLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'more'",
+        "required": false,
+        "description": "Trailing word of the trigger, after the count: \"+2 filters\"."
+      },
+      {
+        "name": "panelLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'More filters'",
+        "required": false,
+        "description": "Accessible name of the overflow panel."
+      }
+    ],
+    "outputs": []
+  },
   "icon-button": {
     "key": "icon-button",
     "selector": "ds-icon-button",
