@@ -3992,6 +3992,38 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Password Rules",
+    "selector": ".password-rules",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-password-rules-gap",
+        "value": "var(--space-1)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-password-rules-font-size",
+        "value": "var(--font-size-xs)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-password-rules-pending-color",
+        "value": "var(--text-tertiary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-password-rules-met-color",
+        "value": "var(--success-text)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-password-rules-failed-color",
+        "value": "var(--error-text)",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Popover",
     "selector": ".popover",
     "description": "",

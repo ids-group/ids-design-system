@@ -3601,6 +3601,55 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "password-rules": {
+    "key": "password-rules",
+    "selector": "ds-password-rules",
+    "isElement": true,
+    "className": "PasswordRulesComponent",
+    "status": "stable",
+    "importName": "PasswordRulesComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "value",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "The password being typed."
+      },
+      {
+        "name": "rules",
+        "kind": "input",
+        "type": "readonly DsPasswordRule[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "The rule set, in the order it should read."
+      },
+      {
+        "name": "judge",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an unmet rule may show as FAILED. Bind it to \"the user has tried to submit\": before that, an unmet rule is merely pending, because marking a half-typed password with errors scolds someone who is still typing."
+      },
+      {
+        "name": "columns",
+        "kind": "input",
+        "type": "1 | 2",
+        "union": null,
+        "default": "1",
+        "required": false,
+        "description": "Lay the rows out in two columns — for a checklist beside a wide form."
+      }
+    ],
+    "outputs": []
+  },
   "popover": {
     "key": "popover",
     "selector": "ds-popover",

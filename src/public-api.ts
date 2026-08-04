@@ -24,6 +24,7 @@ export * from './lib/components/search';
 export * from './lib/components/select';
 export * from './lib/components/table';
 export * from './lib/components/pagination';
+export * from './lib/components/password-rules';
 export * from './lib/components/date-picker';
 export * from './lib/components/time-picker';
 export * from './lib/components/breadcrumbs';

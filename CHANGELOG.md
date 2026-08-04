@@ -14,6 +14,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-password-rules` — the live requirement checklist under a new-password field.** One consumer had
+  written it twice (set-password and registration) and the two copies had already drifted: different labels
+  for the same rule, a different order, different state class names. Each rule carries its own `test`,
+  because the POLICY has to mirror the server and only the consumer knows it; the component owns the
+  tri-state glyph, the met/failed colours and the type scale. A rule that has not passed reads as PENDING
+  and only becomes a failure once `[judge]` is true — bind that to "the user has tried to submit", or a
+  half-typed password scolds someone who is still typing. `[columns]="2"` for a checklist beside a wide
+  form, and `metCount` / `allMet` are exposed for a host gating its own submit.
 - **`ds-table` persists the column layout and can render its own export button.** These were the last two
   things keeping a consumer wrapper alive around the table: after 0.6.3/0.7.0 it owned every other feature
   mm-broker forked it for, but the three column models were two-way with nothing storing them, so every

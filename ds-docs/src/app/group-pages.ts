@@ -17,6 +17,7 @@ import { InputSection } from './sections/components/input/input.section';
 import { MultiSelectSection } from './sections/components/multi-select/multi-select.section';
 import { NumberStepperSection } from './sections/components/number-stepper/number-stepper.section';
 import { OtpInputSection } from './sections/components/otp-input/otp-input.section';
+import { PasswordRulesSection } from './sections/components/password-rules/password-rules.section';
 import { RadioSection } from './sections/components/radio/radio.section';
 import { SearchSection } from './sections/components/search/search.section';
 import { SelectSection } from './sections/components/select/select.section';
@@ -131,6 +132,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       MultiSelectSection,
       NumberStepperSection,
       OtpInputSection,
+      PasswordRulesSection,
       RadioSection,
       SearchSection,
       SelectSection,

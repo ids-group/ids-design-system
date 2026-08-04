@@ -49,6 +49,7 @@ export const NAV: NavGroup[] = [
       { label: 'Multi-select', anchor: 'multi-select' },
       { label: 'Number stepper', anchor: 'number-stepper' },
       { label: 'OTP input', anchor: 'otp-input' },
+      { label: 'Password rules', anchor: 'password-rules' },
       { label: 'Radio', anchor: 'radio' },
       { label: 'Search', anchor: 'search' },
       { label: 'Select', anchor: 'select' },
