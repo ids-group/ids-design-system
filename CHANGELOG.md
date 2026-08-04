@@ -95,8 +95,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **`ds-app-layout` collapses its rail to an off-canvas overlay below `lg`.** On narrow viewports the
   rail no longer occupies a grid column: below the `lg` breakpoint (read at runtime from `--bp-lg`) it
-  leaves the flow, becomes a `position: fixed` panel translated off-canvas, and
-  animates in over a scrim. A new two-way `[(railOpen)]` model drives it (ignored at/above `lg`), and a
+  leaves the flow, becomes a `position: fixed` panel translated off-canvas, and animates in over a
+  scrim. A new two-way `[(railOpen)]` model drives it (ignored at/above `lg`), and a
   new `railLabel` input (`'Navigation'` by default) sets the panel's `aria-label` in compact mode. While
   open and compact the panel is a focus-trapped `role="dialog"` with `aria-modal="true"`; clicking the
   scrim, pressing `Escape` anywhere, navigating to a new path, or crossing back above `lg` all close it
@@ -200,8 +200,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   ds-fade-in; }` is enough to re-skin one instance, and portaled panels forward the tokens onto their
   overlay pane on open — every one except `--ds-overlay-enter-scale`, which is not forwarded, so scaling
   one overlay panel per instance does not work yet (scope it globally instead). Your own `@keyframes` work
-  too, but must be declared in GLOBAL styles: emulated
-  view encapsulation renames keyframes defined in a component stylesheet. `none` disables an entrance.
+  too, but must be declared in GLOBAL styles: emulated view encapsulation renames keyframes defined in a
+  component stylesheet. `none` disables an entrance.
   All defaults are unchanged. Leave keyframes are deliberately not swappable — modal/drawer/bottom-sheet
   teardown matches them by name — and reduced motion still wins: the library zeroes the duration itself,
   so a custom entrance carrying its own timing is silenced too. New: `src/lib/styles/_surface-motion.scss`
