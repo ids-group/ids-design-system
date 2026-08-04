@@ -9,7 +9,7 @@ Completed items are archived in `done.md` (last archive pass **2026-08-04** — 
 
 ## Priority board (2026-08-04 actualization)
 
-Actionable items, ranked. Full context under the thematic sections below. 47 open, plus 2 nested children under the shipped customizable-motion item.
+Actionable items, ranked. Full context under the thematic sections below. 46 open, plus 2 nested children under the shipped customizable-motion item.
 
 **P1 — real defects, do next:**
 
