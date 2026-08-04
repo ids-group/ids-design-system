@@ -34,6 +34,20 @@
         }
       </label>
     }
+
+    <!-- Dev-only probe. The caption comes from [label] and there is no
+         <ng-content> in the rendered output, so a projected caption would
+         vanish silently; this gives it a home just long enough to notice and
+         warn. Gated on dev mode, so production renders no extra node.
+         Implementing real projection is still open — see docs/todo.md. -->
+    @if (devMode) {
+      <span
+        #projectionProbe
+        class="projection-probe"
+      >
+        <ng-content></ng-content>
+      </span>
+    }
   </span>
 
   <ds-field-message

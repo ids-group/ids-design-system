@@ -4,8 +4,9 @@ import type { IconName } from '../icons/icons.data';
 export interface DsConfig {
   field?: {
     /** Default for every field's `reserveMessage` — keeps a message line's worth
-     *  of space even when empty. Default `false`; set `true` app-wide (or for a
-     *  validated form's injector) instead of repeating the input per control. */
+     *  of space even when empty. Default `false`. Setting `true` here applies to
+     *  EVERY field in the injector's subtree, which is rarely what a whole app
+     *  wants; prefer `dsReserveMessages` on the individual form that validates. */
     reserveMessage?: boolean;
   };
   breadcrumbs?: {

@@ -43,6 +43,49 @@ import type {
 
 const NUMERIC = /^-?\d+(\.\d+)?$/;
 
+/** Rendered values that read as "no data" — sorted last in EITHER direction, so
+ *  a descending sort does not fill the first screen with empty rows. Matched
+ *  case-insensitively; mirrors the set mm-broker had to maintain itself. */
+const BLANK_CELL = new Set(['', '—', '-', '–', 'n/a', 'never', 'none']);
+
+/** Normalises "no data" to a single `null`, so the comparator has one blank
+ *  case to test and TypeScript narrows the rest without a cast. */
+function sortableOf(
+  value: string | number | Date | null | undefined,
+): string | number | Date | null {
+  if (value === null || value === undefined) {
+    return null;
+  }
+  if (typeof value === 'string' && BLANK_CELL.has(value.trim().toLowerCase())) {
+    return null;
+  }
+
+  return value;
+}
+
+/** Both sides are known non-blank here. Dates and numbers compare numerically;
+ *  anything else falls back to text, where `numeric: true` keeps "item 10" after
+ *  "item 9" instead of before it. */
+function compareSortValues(
+  first: string | number | Date,
+  second: string | number | Date,
+): number {
+  if (first instanceof Date && second instanceof Date) {
+    return first.getTime() - second.getTime();
+  }
+  if (typeof first === 'number' && typeof second === 'number') {
+    return first - second;
+  }
+
+  const firstText = String(first);
+  const secondText = String(second);
+  if (NUMERIC.test(firstText) && NUMERIC.test(secondText)) {
+    return Number(firstText) - Number(secondText);
+  }
+
+  return firstText.localeCompare(secondText, undefined, { numeric: true });
+}
+
 @Component({
   selector: 'ds-table',
   standalone: true,
@@ -629,15 +672,29 @@ export class TableComponent<T extends object> {
       return rows;
     }
 
-    return rows.slice().sort((a, b) => {
-      const aValue = this.cellValue(a, column);
-      const bValue = this.cellValue(b, column);
-      const comparison =
-        NUMERIC.test(aValue) && NUMERIC.test(bValue)
-          ? Number(aValue) - Number(bValue)
-          : aValue.localeCompare(bValue);
+    const direction = dir === 'asc' ? 1 : -1;
+    const sortValue = column.sortValue;
 
-      return dir === 'asc' ? comparison : -comparison;
+    return rows.slice().sort((a, b) => {
+      const aValue = sortableOf(
+        sortValue ? sortValue(a) : this.cellValue(a, column),
+      );
+      const bValue = sortableOf(
+        sortValue ? sortValue(b) : this.cellValue(b, column),
+      );
+
+      // Blanks sink in BOTH directions, so `direction` is deliberately not
+      // applied to this branch — a descending sort must not open with a screen
+      // of empty rows.
+      if (aValue === null || bValue === null) {
+        if (aValue === null && bValue === null) {
+          return 0;
+        }
+
+        return aValue === null ? 1 : -1;
+      }
+
+      return compareSortValues(aValue, bValue) * direction;
     });
   });
 

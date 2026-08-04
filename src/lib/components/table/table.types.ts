@@ -21,6 +21,14 @@ export interface TableColumn<T = unknown> {
   width?: number;
   align?: 'left' | 'right' | 'center';
   cell?: (row: T) => string;
+  /** Sort this column by a DOMAIN value instead of the rendered text. Without
+   *  it, `clientSort` compares what the cell displays, so `$1.2M / $840K / $95K`
+   *  sorts by the leading character and `Oct 09, 2023 / Feb 27, 2024` sorts by
+   *  month NAME — the table looks sorted and is not. Return the underlying
+   *  number, `Date` or plain string; `null`/`undefined`/`''` counts as blank and
+   *  sorts last in BOTH directions. Only affects sorting — the header filter
+   *  still lists what the user can see. */
+  sortValue?: (row: T) => string | number | Date | null | undefined;
   /** Double-click the cell to edit it inline; the committed value is emitted
    *  via the table's `cellEdited` output (the consumer owns the data update). */
   editable?: boolean;

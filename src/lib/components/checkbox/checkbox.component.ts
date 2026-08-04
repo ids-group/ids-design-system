@@ -1,11 +1,15 @@
 import {
   Component,
+  type ElementRef,
   ViewEncapsulation,
+  afterNextRender,
   booleanAttribute,
   computed,
   forwardRef,
   input,
+  isDevMode,
   model,
+  viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsBooleanControlValueAccessor } from '../control-value-accessor';
@@ -84,5 +88,24 @@ export class CheckboxComponent extends DsBooleanControlValueAccessor {
 
   protected onCheckedChange(event: Event): void {
     this.checked.set((event.target as HTMLInputElement).checked);
+  }
+
+  protected readonly devMode = isDevMode();
+  private readonly projectionProbe =
+    viewChild<ElementRef<HTMLElement>>('projectionProbe');
+
+  constructor() {
+    super();
+
+    if (this.devMode) {
+      afterNextRender(() => {
+        if (!this.projectionProbe()?.nativeElement.textContent?.trim()) {
+          return;
+        }
+        console.warn(
+          '[ds-checkbox] Projected content renders nothing — the caption comes from the [label] input only, so `<ds-checkbox>Some text</ds-checkbox>` shows no caption at all. Move the text into [label].',
+        );
+      });
+    }
   }
 }

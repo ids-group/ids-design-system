@@ -33,6 +33,11 @@
   border-radius: var(--_stat-radius);
   padding: var(--_stat-pad);
 
+  // Fills a stretched host so a KPI row whose tiles have different content
+  // (say, only some carry a caption) paints equal-height cards. In an
+  // unstretched context the host is still content-sized, so nothing changes.
+  height: 100%;
+
   .label {
     font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
     letter-spacing: var(--letter-spacing-wider);

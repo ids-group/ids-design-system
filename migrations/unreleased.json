@@ -97,6 +97,21 @@
         ".title",
         "flex: 1"
       ]
+    },
+    {
+      "id": "table-client-sort-blanks-last-and-numeric-collation",
+      "kind": "behavior",
+      "old": "ds-table[clientSort]",
+      "new": null,
+      "note": "`clientSort` changes how existing columns order in two ways, both applying with or without the new per-column `sortValue`. (1) BLANKS SINK: a cell reading as no-data - empty string, or one of the em dash, en dash, hyphen, 'n/a', 'never', 'none' matched case-insensitively - now sorts LAST in both ascending and descending order. Previously an empty string was just the smallest value, so it floated to the top on ascending. (2) NATURAL TEXT COLLATION: the text fallback now passes { numeric: true } to localeCompare, so 'item 9' precedes 'item 10' instead of following it. ACTION: none for most tables - both changes are what a reader expects. Only if a screen deliberately relied on blanks sorting first, or on the old pure-lexical order of strings containing digits, supply a per-column `sortValue` that maps the values the way that screen wants.",
+      "searchHints": [
+        "clientSort",
+        "sortChange",
+        "sortKey",
+        "sortDir",
+        "[columns]",
+        "TableColumn"
+      ]
     }
   ],
   "informational": [
@@ -114,6 +129,9 @@
     "`inheritDsConfig(config)` is a new public export beside `provideDsConfig`: it reads the nearest ancestor DS_CONFIG (skipSelf, optional) and shallow-merges per top-level section. Call it from an injection context if you need the merging behaviour in your own factory provider or directive metadata.",
     "`dsReserveMessages` is a new directive: put it on a form and every DS field DECLARED inside reserves its message row, without a per-control binding. Presence-driven (no input), merges with the config above it, and a field's own [reserveMessage] still wins. Projected <ng-content> is not covered - it keeps the injector of the template it was written in.",
     "Visual-only: dialogs opened through `ModalService` no longer carry the `ds-overlay-pane` panel class, so the shared overlay-panel entrance is no longer layered on top of the modal's own card/backdrop animation.",
-    "Known gap, not a regression: the ds-time-picker label wiring (aria-labelledby / aria-required) landed on the SINGLE-mode trigger only; range mode's start/end segment triggers are not wired to the label yet."
+    "Known gap, not a regression: the ds-time-picker label wiring (aria-labelledby / aria-required) landed on the SINGLE-mode trigger only; range mode's start/end segment triggers are not wired to the label yet.",
+    "`TableColumn` gained an optional `sortValue: (row) => string | number | Date | null | undefined` so a column sorts by its domain value instead of the rendered text; formatted money, percents and dates sorted wrong before. Purely additive - a column without it keeps today's behaviour. Only affects sorting, not the header filter's value list.",
+    "`ds-checkbox` logs a dev-mode warning when a caption is projected (`<ds-checkbox>text</ds-checkbox>`) instead of passed via [label]; the text never rendered and failed silently. Dev only - the detection node is gated on isDevMode(), so production is unchanged. Projection itself is still unsupported.",
+    "Visual-only fixes: `ds-pagination` pins its internal rows-per-page select to `reserveMessage: false` (it inherited the app default and pushed the pager off the page buttons' baseline), and `ds-stat`'s card fills a stretched host so a KPI row with mixed captions paints equal-height tiles. Consumers can drop the global workarounds for both (`ds-pagination ds-field-message { display: none }` and `ds-stat { height: 100% }`)."
   ]
 }

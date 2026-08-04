@@ -10,6 +10,23 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`TableColumn.sortValue` — sort a column by its DOMAIN value instead of the rendered text.** Without
+  it `clientSort` compares what the cell displays, so `$1.2M / $840K / $95K` sorted by the leading
+  character and `Oct 09, 2023 / Feb 27, 2024` sorted by month NAME: the table looked sorted and was not,
+  which is worse than leaving it unsorted. Pass an accessor per column —
+  `{ key: 'amount', label: 'Amount', sortValue: (row) => row.amountCents }` — returning a number, `Date`
+  or plain string. A consumer that had to re-parse its own rendered output (mm-broker shipped a
+  `display-compare.ts` sniffing currency, percents and three date formats) can delete it. Only affects
+  sorting: the header filter still lists what the user can see. Columns with plain numeric text already
+  sorted correctly and need nothing.
+
+- **`ds-checkbox` warns in dev when a caption is projected instead of passed.** `<ds-checkbox>Accept the
+  terms</ds-checkbox>` renders no caption — the text comes from `[label]` only — and it failed silently:
+  no error, no warning, nothing in the types, so it survived review and was caught by opening the page.
+  Dev builds now log which component swallowed the text. Production is untouched: the probe that detects
+  it is rendered only under `isDevMode()`, so no extra node ships. Real projection support is still
+  open — see `docs/todo.md`.
+
 - **`ds-app-layout` collapses its rail to an off-canvas overlay below `lg`.** On narrow viewports the
   rail no longer occupies a grid column: below the `lg` breakpoint (read at runtime from `--bp-lg`,
   fallback `1024px`) it leaves the flow, becomes a `position: fixed` panel translated off-canvas, and
@@ -120,6 +137,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **`clientSort` now sinks blank cells to the bottom in BOTH directions, and collates text naturally.**
+  Two changes to how an existing table sorts, both deliberate. (1) A cell that reads as "no data" — empty,
+  `—`, `–`, `-`, `n/a`, `never`, `none`, matched case-insensitively — sorts last regardless of direction,
+  so a descending sort no longer opens with a screen of empty rows. Previously an empty string was simply
+  the smallest value and floated to the top. (2) The text fallback now passes `{ numeric: true }` to
+  `localeCompare`, so `item 9` comes before `item 10` instead of after it. Both apply to every
+  `clientSort` column, with or without the new `sortValue`. If a table relied on blanks sorting first,
+  supply a `sortValue` that maps them to a real value.
+
 - **Several exported component classes grow their member surface, which breaks a consumer that extends
   them.** Everything else in this release is additive for anyone using the `<ds-…>` elements. Subclassing
   a DS component is unsupported (`design-system.md` § Components), but where it happens the new names
@@ -174,6 +200,24 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   a tooltip sitting above its trigger, animated top-down. Purely visual; no API change.
 
 ### Fixed
+
+- **`ds-pagination`'s rows-per-page dropdown no longer follows the app's field defaults.** The internal
+  `ds-select` was rendered without a `reserveMessage` binding, so it inherited whatever the app had set —
+  and a page-size dropdown shows neither hint nor error, so it had nothing to reserve. With the row
+  reserved the pager measured 54.8px instead of 32 and, because the `nav` centres its children, the
+  select's control sat ~11px above the page buttons' baseline. It is now pinned off inside the template,
+  which also makes it immune in the other direction: an app that opts back in with
+  `provideDsConfig({ field: { reserveMessage: true } })` or wraps a region in `dsReserveMessages` no
+  longer re-breaks every pager inside it. A consumer that collapsed the row with a global
+  `ds-pagination ds-field-message { display: none }` can drop that rule.
+
+- **`ds-stat`'s card now fills a stretched host, so a KPI row renders equal-height tiles.** The host is
+  `display: block` and `.stat` carried no height, so in a `1fr` grid track the host stretched while the
+  visible surface stayed content-sized: three tiles where only two had a `caption` painted 102.1px inside
+  126.9px hosts, leaving 24.8px of empty cell under the odd one out. It reads as a layout bug rather than
+  as a missing caption, and no token reached it — consumers were shipping
+  `ds-stat { height: 100%; .stat { height: 100% } }` from a global stylesheet against DS-internal markup.
+  A tile in an unstretched context is unaffected, since the host is still content-sized there.
 
 - **`ds-app-layout` no longer scrolls the content back to top on a same-page URL change.**
   `LayoutScrollService` reset the scroll on every router `NavigationEnd`, so a sort, page or filter change

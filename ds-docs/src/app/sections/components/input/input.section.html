@@ -442,11 +442,11 @@
     reflow the moment validation appears. Turn it on with
     <code class="t-mono-inline">
       [reserveMessage]="true"
-    </code> on a form that
-    validates, or app-wide via
-    <code class="t-mono-inline">
-      provideDsConfig({{ '{' }} field: {{ '{' }} reserveMessage: true {{ '}' }} {{ '}' }})
-    </code>. The reserved row sits ~23px under the control, so stack reserved
+    </code> on a single control, or with
+    the <code class="t-mono-inline">
+      dsReserveMessages
+    </code> directive for a whole form
+    (below). The reserved row sits ~23px under the control, so stack reserved
     fields tighter — <code class="t-mono-inline">
       &lt;ds-stack gap="none"&gt;
     </code> — than bare ones, or the gap reads as a hole.
