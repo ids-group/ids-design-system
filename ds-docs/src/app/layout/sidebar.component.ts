@@ -48,24 +48,37 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
       [class.is-collapsed]="effectiveCollapsed()"
       [class.is-drawer]="layout.railOverlay()"
     >
-      @if (!layout.railOverlay()) {
-        <div class="brand">
-          <span class="mark">
-            D
-          </span>
+      <!-- The brand row also heads the OVERLAY: the shell's rail is a bare
+           container, so nothing else names the panel now that the ds-drawer
+           that used to wrap it is gone. Collapsing is desktop-only (the overlay
+           is always full width), and closing is overlay-only. -->
+      <div class="brand">
+        <span class="mark">
+          D
+        </span>
 
-          @if (!effectiveCollapsed()) {
-            <div class="brand-text">
-              <span class="brand-name">
-                Design System
-              </span>
+        @if (!effectiveCollapsed()) {
+          <div class="brand-text">
+            <span class="brand-name">
+              Design System
+            </span>
 
-              <small>
-                Boilerplate v{{ version }}
-              </small>
-            </div>
-          }
+            <small>
+              Boilerplate v{{ version }}
+            </small>
+          </div>
+        }
 
+        @if (layout.railOverlay()) {
+          <ds-icon-button
+            class="collapse-toggle"
+            variant="outlined"
+            size="sm"
+            icon="x"
+            ariaLabel="Close navigation"
+            (pressed)="layout.railOpen.set(false)"
+          />
+        } @else {
           <ds-icon-button
             class="collapse-toggle"
             variant="outlined"
@@ -76,8 +89,8 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
             "
             (pressed)="toggleCollapsed()"
           />
-        </div>
-      }
+        }
+      </div>
 
       @if (!effectiveCollapsed()) {
         <ds-search
@@ -287,9 +300,11 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
         font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
       }
 
+      /* Horizontal padding included: as an overlay the nav sits in the shell's
+         rail, which has none of its own — the ds-drawer that used to wrap it did. */
       .toc.is-drawer {
         border-right: none;
-        padding: var(--space-2) 0 var(--space-6);
+        padding: var(--space-2) var(--space-4) var(--space-6);
       }
       .toc.is-drawer .link {
         min-height: var(--hit-comfy);
@@ -390,7 +405,9 @@ export class SidebarComponent {
 
     // Sync the URL's anchor segment with the active section as the user scrolls
     // (/components/button → /components/segmented …) — replaceUrl so history
-    // isn't polluted. Single-section pages (home/changelog) carry no anchor.
+    // isn't polluted, and dsSamePage so the shell does not read a scroll-driven
+    // path rewrite as a page change and reset the scroll we are describing.
+    // Single-section pages (home/changelog) carry no anchor.
     effect(() => {
       const anchor = this.activeAnchor();
       if (!anchor || !this.multiSection) {
@@ -404,7 +421,10 @@ export class SidebarComponent {
       if (this.router.url.split('?')[0].split('#')[0] === target) {
         return;
       }
-      void this.router.navigateByUrl(target, { replaceUrl: true });
+      void this.router.navigateByUrl(target, {
+        replaceUrl: true,
+        state: { dsSamePage: true },
+      });
     });
   }
 

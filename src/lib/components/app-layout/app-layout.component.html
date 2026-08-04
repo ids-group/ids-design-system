@@ -1,12 +1,14 @@
 <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- scrim; click dismisses, keyboard dismisses via Escape (host document:keydown.escape) -->
 <div
   class="scrim"
+  [class.open]="railOpen()"
   (click)="closeRail()"
 >
 </div>
 
 <div
   class="rail"
+  [class.open]="railOpen()"
   [id]="railId"
   [attr.role]="compact() ? 'dialog' : null"
   [attr.aria-modal]="compact() ? 'true' : null"

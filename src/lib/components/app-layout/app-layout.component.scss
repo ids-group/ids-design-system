@@ -15,6 +15,12 @@
   grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
   height: var(--ds-app-layout-height, 100dvh);
+
+  // Containing block for the overlay rail below lg. Without it the rail's
+  // `position: fixed` resolves against the VIEWPORT, so a layout embedded in a
+  // page - a docs demo, a preview pane - throws its rail over the whole window
+  // instead of its own box. For a full-viewport shell the two are identical.
+  position: relative;
   overflow: hidden;
 }
 
@@ -36,7 +42,7 @@
   // (2026-07-07), so a logical inset here would imply a guarantee nothing else
   // honours.
   @include bp.down(lg) {
-    position: fixed;
+    position: absolute;
     z-index: var(--layer-drawer);
     top: 0;
     bottom: 0;
@@ -46,7 +52,12 @@
     transform: translateX(-100%);
     transition: transform var(--duration-base) var(--ease-standard);
 
-    :host(.rail-open) & {
+    // `&.open`, NOT `:host(.rail-open) &`: the latter compiles to a DESCENDANT
+    // selector, and every instance of this component shares one encapsulation
+    // attribute - so an outer layout carrying `.rail-open` opened the rail of
+    // every layout nested inside it, and its scrim swallowed the clicks meant
+    // for the outer one. The state has to live on the element it styles.
+    &.open {
       transform: translateX(0);
     }
   }
@@ -57,7 +68,7 @@
 
   @include bp.down(lg) {
     display: block;
-    position: fixed;
+    position: absolute;
     z-index: calc(var(--layer-drawer) - 1);
     inset: 0;
     background: var(--_layout-scrim-color);
@@ -67,7 +78,7 @@
       visibility var(--duration-base) var(--ease-standard);
     visibility: hidden;
 
-    :host(.rail-open) & {
+    &.open {
       opacity: 1;
       visibility: visible;
     }
