@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.7.1 — 2026-08-04
+
 ### Added
 
 - **`TableColumn.sortValue` — sort a column by its DOMAIN value instead of the rendered text.** Without
