@@ -1,3 +1,17 @@
+/**
+ * Who sorts a `ds-table`.
+ *
+ * - `'client'` (default) — the table reorders `data()` itself.
+ * - `'server'` — the table only emits `sortChange`; the host reorders.
+ * - `'none'` — nothing sorts, and `sortable` columns render no affordance rather
+ *   than a control that does nothing.
+ *
+ * Replaces the boolean `clientSort`, which could not express `'none'`: a column
+ * marked `sortable` on a table with no sorting drew a live-looking header that
+ * did nothing, and no type or dev check could catch it.
+ */
+export type TableSortMode = 'client' | 'server' | 'none';
+
 import type { IconName } from '../../icons/icons.data';
 
 export interface TableColumn<T = unknown> {
@@ -22,7 +36,7 @@ export interface TableColumn<T = unknown> {
   align?: 'left' | 'right' | 'center';
   cell?: (row: T) => string;
   /** Sort this column by a DOMAIN value instead of the rendered text. Without
-   *  it, `clientSort` compares what the cell displays, so `$1.2M / $840K / $95K`
+   *  it, client sorting compares what the cell displays, so `$1.2M / $840K / $95K`
    *  sorts by the leading character and `Oct 09, 2023 / Feb 27, 2024` sorts by
    *  month NAME — the table looks sorted and is not. Return the underlying
    *  number, `Date` or plain string; `null`/`undefined`/`''` counts as blank and

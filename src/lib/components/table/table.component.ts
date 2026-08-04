@@ -1,4 +1,5 @@
 import {
+  isDevMode,
   Component,
   ElementRef,
   Injector,
@@ -39,6 +40,7 @@ import type {
   TableColumn,
   TableRowAction,
   TableRowActionEvent,
+  TableSortMode,
 } from './table.types';
 
 const NUMERIC = /^-?\d+(\.\d+)?$/;
@@ -221,15 +223,19 @@ export class TableComponent<T extends object> {
   readonly scrollToTopOnPageChange = input(false, {
     transform: booleanAttribute,
   });
-  /** When true, the table sorts `data()` itself; otherwise it only emits
-   *  `sortChange` and leaves ordering to the consumer (default). */
-  readonly clientSort = input(false, { transform: booleanAttribute });
+  /** Who sorts — see `TableSortMode`. Unset resolves to `'client'`, so a column
+   *  marked `sortable` always does something; declare `'server'` when the host
+   *  reorders, or `'none'` to drop the affordance entirely. */
+  readonly sortMode = input<TableSortMode | null>(null);
+  protected readonly sortModeResolved = computed<TableSortMode>(
+    () => this.sortMode() ?? 'client',
+  );
   /** Pin the first data column (and the select column) on horizontal scroll. */
   readonly stickyFirstColumn = input(false, { transform: booleanAttribute });
 
   /** Fires with the row on click (or Enter/Space when `rowInteractive`). */
   readonly rowClicked = output<T>();
-  /** Fires whenever sort key/direction changes, regardless of `clientSort`. */
+  /** Fires whenever sort key/direction changes, in every `sortMode` but `'none'`. */
   readonly sortChange = output<SortChangeEvent>();
 
   /** Row-action menu items rendered as a trailing kebab (⋮) column.
@@ -656,10 +662,10 @@ export class TableComponent<T extends object> {
     });
   });
 
-  /** Client-side sort over the filtered data set — only when `clientSort()`. */
+  /** Client-side sort over the filtered data set — only in `'client'` mode. */
   protected readonly sortedData = computed<readonly T[]>(() => {
     const rows = this.filteredData();
-    if (!this.clientSort()) {
+    if (this.sortModeResolved() !== 'client') {
       return rows;
     }
     const key = this.sortKey();
@@ -805,6 +811,24 @@ export class TableComponent<T extends object> {
   protected readonly hscrollNeeded = signal(false);
 
   constructor() {
+    if (isDevMode()) {
+      effect(() => {
+        // `total` set means the HOST pages, so it holds one page of rows and
+        // client sorting would reorder that page only — the rows look sorted and
+        // are not. Warn only when the mode was never declared: a table that asks
+        // for 'client' with server paging has made that choice knowingly.
+        if (
+          this.sortMode() === null &&
+          this.total() !== null &&
+          this.columns().some((col) => col.sortable)
+        ) {
+          console.warn(
+            '[ds-table] sortable columns default to sortMode="client", but `total` is set, so this table is server-paged and only the CURRENT PAGE would sort — the rows would look sorted and not be. Declare sortMode="server" and reorder in the (sortChange) handler, or sortMode="client" if page-local sorting is really what you want.',
+          );
+        }
+      });
+    }
+
     // Wire the proxy whenever it exists (stickyScrollbar on). Assigning an
     // equal scrollLeft fires no scroll event, so the two mirrors can't loop.
     effect((onCleanup) => {
@@ -1058,10 +1082,15 @@ export class TableComponent<T extends object> {
     return String((row as { id?: unknown }).id ?? '');
   }
 
+  /** Whether this column's header is an actual sort control right now. */
+  protected sortableCol(col: TableColumn<T>): boolean {
+    return !!col.sortable && this.sortModeResolved() !== 'none';
+  }
+
   protected ariaSort(
     col: TableColumn<T>,
   ): 'ascending' | 'descending' | 'none' | null {
-    if (!col.sortable) {
+    if (!this.sortableCol(col)) {
       return null;
     }
     if (this.sortKey() === col.key && this.sortDir()) {
@@ -1072,7 +1101,7 @@ export class TableComponent<T extends object> {
   }
 
   protected onSort(col: TableColumn<T>): void {
-    if (!col.sortable) {
+    if (!this.sortableCol(col)) {
       return;
     }
     const order = this.sortingOrder();
@@ -1094,7 +1123,7 @@ export class TableComponent<T extends object> {
 
   protected headerClasses(col: TableColumn<T>): string {
     const parts: string[] = [];
-    if (col.sortable) {
+    if (this.sortableCol(col)) {
       parts.push('sortable');
     }
     if (this.sortKey() === col.key && this.sortDir()) {

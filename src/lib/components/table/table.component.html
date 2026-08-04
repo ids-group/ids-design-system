@@ -70,7 +70,7 @@
               [style.max-width.px]="columnWidth(col)"
               [attr.aria-sort]="ariaSort(col)"
             >
-              @if (col.sortable) {
+              @if (sortableCol(col)) {
                 <button
                   type="button"
                   class="th-label"

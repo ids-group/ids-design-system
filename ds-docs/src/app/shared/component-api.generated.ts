@@ -5541,13 +5541,17 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Scroll the table into view on a page change (opt-in) — keeps a bottom pager from leaving the viewport on the previous page's last rows."
       },
       {
-        "name": "clientSort",
+        "name": "sortMode",
         "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
+        "type": "TableSortMode | null",
+        "union": [
+          "client",
+          "server",
+          "none"
+        ],
+        "default": "null",
         "required": false,
-        "description": "When true, the table sorts `data()` itself; otherwise it only emits `sortChange` and leaves ordering to the consumer (default)."
+        "description": "Who sorts — see `TableSortMode`. Unset resolves to `'client'`, so a column marked `sortable` always does something; declare `'server'` when the host reorders, or `'none'` to drop the affordance entirely."
       },
       {
         "name": "stickyFirstColumn",
@@ -5606,7 +5610,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "rowExpandTemplate",
         "kind": "input",
-        "type": "TemplateRef<{\r\n    $implicit: unknown;\r\n    row: unknown;\r\n  }> | null",
+        "type": "TemplateRef<{\n    $implicit: unknown;\n    row: unknown;\n  }> | null",
         "union": null,
         "default": "null",
         "required": false,
@@ -5630,7 +5634,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Fires whenever sort key/direction changes, regardless of `clientSort`."
+        "description": "Fires whenever sort key/direction changes, in every `sortMode` but `'none'`."
       },
       {
         "name": "rowActionSelected",

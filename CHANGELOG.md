@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+- **`dsRailTrigger` wires a consumer's own burger to the overlay rail.** The responsive rail shipped with `role="dialog"`, `aria-modal` and a focus trap, but nothing connected it to the button that opens it — the burger lives in the consumer's projected topbar, so it announced no state and no relationship. Put the directive on the burger and it toggles `[(railOpen)]` and keeps `aria-expanded` and `aria-controls` correct. Both attributes are dropped while the rail is not an overlay, where `aria-expanded="false"` would contradict what the user sees. A directive rather than a documentation note because these are exactly the attributes a consumer forgets — the DS itself forgot them. `ds-app-layout` also exposes `railId` and the read-only `railOverlay` signal for a consumer that builds its own trigger.
+
 ### Added
 
 - **Every field takes `error` and `warning` beside `hint`, and shows exactly one of them.** Until now a
@@ -37,6 +39,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `minlength` or `email`. An error that resolves to no text anywhere warns in dev rather than rendering
   an error style with an empty line.
 
+- **`ds-table`’s `clientSort` is replaced by `sortMode: 'client' | 'server' | 'none'`, and the default flips to client sorting.** The boolean could not express "nothing sorts", so a column marked `sortable: true` on a table with no sorting drew a header that looked live, showed a caret on hover and did nothing — an invisible failure that survived review and was caught by opening the page. An enum makes that state unrepresentable: `'none'` now renders the header as plain text, with no button, caret or `aria-sort`. Unset resolves to `'client'`, so `sortable: true` always does something; a server-sorted table declares `'server'`, which is the side that actually knows it wants server sorting. **Migration is mechanical except for one case:** a table that previously bound no `clientSort` and reordered in its own `(sortChange)` handler must now declare `sortMode="server"`, or it will sort locally as well. For a server-PAGED table (one that binds `total`) that is worse than a dead header, because only the current page reorders and the rows look sorted without being sorted — so dev builds warn on exactly that combination: `total` bound, sortable columns, `sortMode` never declared. Rejected alternative: reading `OutputEmitterRef.listeners` to detect an unbound `(sortChange)`. It is private, and a rename would kill the warning SILENTLY — `?.length` on `undefined` just means it never fires again.
 ### Changed
 
 - **`FieldMessageState` gained `'warning'`.** Additive, but an exhaustive `switch` over the exported

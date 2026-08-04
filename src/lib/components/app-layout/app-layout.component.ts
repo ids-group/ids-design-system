@@ -17,6 +17,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ScrollbarWidthService } from './scrollbar-width.service';
 import { LayoutNavigationService } from './layout-navigation.service';
 import { LayoutScrollService } from './layout-scroll.service';
+import { nextControlId } from '../field-ids';
 
 /**
  * Fixed-frame application layout: the host is pinned to the viewport
@@ -86,6 +87,12 @@ export class AppLayoutComponent {
    * `role="dialog"` there would lie to a screen reader.
    */
   protected readonly compact = signal(false);
+
+  /** Whether the rail is currently an overlay rather than part of the layout. */
+  readonly railOverlay = this.compact.asReadonly();
+
+  /** Id of the rail panel, for a trigger's `aria-controls`. */
+  readonly railId = nextControlId('ds-rail');
 
   private readonly layoutScroll = inject(LayoutScrollService);
   private readonly navigation = inject(LayoutNavigationService);

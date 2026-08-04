@@ -63,7 +63,7 @@
   <p class="block-desc t-s">
     Mark columns <code class="t-mono-inline"> sortable: true </code> and add
     <code class="t-mono-inline">
-      [clientSort]="true"
+      sortMode="client"
     </code> to let the table
     order its own rows. Click a header to cycle asc → desc → none; the active
     column shows a coloured chevron. Pass
@@ -76,9 +76,9 @@
 
   <ds-table
     caption="Records"
+    sortMode="client"
     [data]="sortableRows"
     [columns]="sortableColumns"
-    [clientSort]="true"
     [stickyHeader]="false"
   >
     <ng-template
@@ -612,9 +612,26 @@
     </code> pins the first
     column on horizontal scroll;
     <code class="t-mono-inline">
-      [clientSort]
-    </code> lets the table sort its
-    own rows. 12 rows across three pages;
+      sortMode
+    </code> says who sorts —
+    <code class="t-mono-inline">
+      "client"
+    </code> (the default) has the table
+    reorder its own rows,
+    <code class="t-mono-inline">
+      "server"
+    </code> emits
+    <code class="t-mono-inline">
+      (sortChange)
+    </code> and leaves ordering to you,
+    and
+    <code class="t-mono-inline">
+      "none"
+    </code> drops the affordance so a
+    <code class="t-mono-inline">
+      sortable
+    </code> column cannot draw a header
+    that does nothing. 12 rows across three pages;
     <code class="t-mono-inline">
       [animateHeight]
     </code> tweens the body height
@@ -632,10 +649,10 @@
 
   <ds-table
     caption="Projects"
+    sortMode="client"
     [data]="projectRows"
     [columns]="projectColumns"
     [selectable]="true"
-    [clientSort]="true"
     [stickyFirstColumn]="true"
     [pageSize]="5"
     [animateHeight]="true"
