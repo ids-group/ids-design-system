@@ -267,7 +267,7 @@ function textFor(
         .map((error) => `"${error.kind}"`)
         .join(
           ', ',
-        )}, so the field shows an error style with no text. Give the validator a message — required(path, { message: '…' }) or { myError: 'text' } — or map the kind in provideDsConfig({ field: { errorMessages: … } }).`,
+        )}, so the field falls back to showing its hint in the error state - or, with no hint, an error style and no message at all. Give the validator a message — required(path, { message: '…' }) or { myError: 'text' } — or map the kind in provideDsConfig({ field: { errorMessages: … } }).`,
     );
   }
 
