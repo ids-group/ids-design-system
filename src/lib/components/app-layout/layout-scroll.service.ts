@@ -6,7 +6,7 @@ import { LayoutNavigationService } from './layout-navigation.service';
 
 const STORAGE_KEY = 'ds-app-layout:scroll';
 
-// Enough for a reader's back-stack; the oldest entry drops first.
+// Enough for a reader's back-stack without letting one tab's history grow unbounded.
 const MAX_ENTRIES = 20;
 
 // Input events only. NOT `scroll`: our own restore writes emit one, so listening
