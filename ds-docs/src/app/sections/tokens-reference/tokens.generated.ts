@@ -3489,6 +3489,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Destructive menu item label colour (defaults to --error-text)."
       },
       {
+        "name": "--ds-menu-item-radius",
+        "value": "0",
+        "notes": ""
+      },
+      {
         "name": "--ds-menu-bg-color",
         "value": "var(--surface-default)",
         "notes": "Menu panel surface fill (defaults to --surface-default)."

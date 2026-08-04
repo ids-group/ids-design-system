@@ -53,7 +53,7 @@
       [attr.placeholder]="placeholder() || null"
       [attr.aria-label]="resolvedAriaLabel()"
       [attr.aria-invalid]="invalidResolved() ? 'true' : null"
-      [attr.aria-describedby]="hintId()"
+      [attr.aria-describedby]="describedBy()"
       [attr.aria-required]="required() ? 'true' : null"
       [attr.enterkeyhint]="enterKeyHint()"
       [attr.inputmode]="inputMode()"

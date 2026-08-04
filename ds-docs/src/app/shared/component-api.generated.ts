@@ -2425,6 +2425,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Accessible name when no visible `label` is provided (falls back to the placeholder so the control is never unnamed)."
       },
       {
+        "name": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Extra element ids to describe the control with — a password-rule list, a policy note. MERGED with the field's own message id rather than replacing it, and it has to be an input because the attribute belongs on the inner `<input>`: set on the host it lands on a wrapper no screen reader reads."
+      },
+      {
         "name": "maxLength",
         "kind": "input",
         "type": "number | null",
@@ -3630,13 +3639,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The rule set, in the order it should read."
       },
       {
-        "name": "judge",
+        "name": "showUnmet",
         "kind": "input",
         "type": "boolean",
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether an unmet rule may show as FAILED. Bind it to \"the user has tried to submit\": before that, an unmet rule is merely pending, because marking a half-typed password with errors scolds someone who is still typing."
+        "description": "Whether an unmet rule may read as FAILED. Bind it to \"the user has tried to submit\": before that an unmet rule is merely pending, because marking a half-typed password with errors scolds someone who is still typing."
       },
       {
         "name": "columns",
@@ -3646,6 +3655,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "1",
         "required": false,
         "description": "Lay the rows out in two columns — for a checklist beside a wide form."
+      },
+      {
+        "name": "listId",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "nextControlId('ds-password-rules')",
+        "required": false,
+        "description": "Id put on the rule list, for the field's `aria-describedby`. Defaults to a generated one; set it explicitly and both sides can name the same string, which avoids threading a template ref between two siblings."
       }
     ],
     "outputs": []

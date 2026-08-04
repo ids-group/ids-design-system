@@ -120,6 +120,11 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Accessible name when no visible `label` is provided (falls back to the
    *  placeholder so the control is never unnamed). */
   readonly ariaLabel = input<string | null>(null);
+  /** Extra element ids to describe the control with — a password-rule list, a
+   *  policy note. MERGED with the field's own message id rather than replacing
+   *  it, and it has to be an input because the attribute belongs on the inner
+   *  `<input>`: set on the host it lands on a wrapper no screen reader reads. */
+  readonly ariaDescribedBy = input<string | null>(null);
   /** Hard character cap — applies the native maxlength attribute and shows a
    *  live "{current}/{max}" counter below the field. */
   readonly maxLength = input<number | null>(null);
@@ -168,6 +173,11 @@ export class InputComponent extends DsControlValueAccessor<string> {
   protected readonly hintId = computed(() =>
     this.message().text ? `${this.uid}-hint` : null,
   );
+  protected readonly describedBy = computed(() => {
+    const ids = [this.hintId(), this.ariaDescribedBy()].filter(Boolean);
+
+    return ids.length ? ids.join(' ') : null;
+  });
   private readonly fieldMessage = resolveFieldMessage({
     hint: this.hint,
     warning: this.warning,

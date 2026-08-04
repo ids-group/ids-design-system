@@ -22,6 +22,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   and only becomes a failure once `[judge]` is true — bind that to "the user has tried to submit", or a
   half-typed password scolds someone who is still typing. `[columns]="2"` for a checklist beside a wide
   form, and `metCount` / `allMet` are exposed for a host gating its own submit.
+- **`ds-input` takes `ariaDescribedBy`, MERGED with its own message id.** Needed by the rule list above,
+  and by any policy note: setting `aria-describedby` on `<ds-input>` by hand lands on the wrapper, which no
+  screen reader reads, and replacing the attribute would have dropped the field's own hint/error
+  association. The input joins both ids instead.
+
 - **`ds-table` persists the column layout and can render its own export button.** These were the last two
   things keeping a consumer wrapper alive around the table: after 0.6.3/0.7.0 it owned every other feature
   mm-broker forked it for, but the three column models were two-way with nothing storing them, so every
