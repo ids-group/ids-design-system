@@ -42,6 +42,19 @@
   justify-content: center;
   min-height: 52px;
 }
+
+/* Hatching, not a tint: a flat wash would read as one more surface colour in a
+   matrix whose whole job is comparing colours. The stripes are behind the
+   specimen and clipped to the cell, so the button on top is still judged on its
+   own fill. The ⚠ badge stays — the hatch is the at-a-glance layer. */
+.cell.is-discouraged {
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0 5px,
+    var(--border-divider) 5px 6px
+  );
+  border-radius: var(--radius-sm);
+}
 .warn {
   position: absolute;
   top: 0;

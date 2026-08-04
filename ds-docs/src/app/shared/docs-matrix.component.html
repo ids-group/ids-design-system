@@ -35,7 +35,10 @@
       </div>
 
       @for (col of cols(); track col) {
-        <div class="cell">
+        <div
+          class="cell"
+          [class.is-discouraged]="isLegal(row, col) && isDiscouraged(row, col)"
+        >
           @if (isLegal(row, col)) {
             <ng-container
               [ngTemplateOutlet]="cell()"
