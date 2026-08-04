@@ -14,9 +14,6 @@ import { AppLayoutComponent } from './app-layout.component';
  * </ds-app-layout>
  * ```
  *
- * A directive rather than documentation because these are exactly the attributes
- * a consumer forgets — the DS itself shipped the rail without them.
- *
  * PUT IT ON THE FOCUSABLE CONTROL, not on a wrapper: the attributes go on the
  * host element, and on `<ds-icon-button>` that is the wrapper, whose inner
  * `<button>` is what a screen reader actually reads. With a DS button, skip this

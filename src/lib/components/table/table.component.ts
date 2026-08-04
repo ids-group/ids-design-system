@@ -813,10 +813,8 @@ export class TableComponent<T extends object> {
   constructor() {
     if (isDevMode()) {
       effect(() => {
-        // `total` set means the HOST pages, so it holds one page of rows and
-        // client sorting would reorder that page only — the rows look sorted and
-        // are not. Warn only when the mode was never declared: a table that asks
-        // for 'client' with server paging has made that choice knowingly.
+        // Only when the mode was never DECLARED: a table that asks for 'client'
+        // with server paging has made that choice knowingly.
         if (
           this.sortMode() === null &&
           this.total() !== null &&

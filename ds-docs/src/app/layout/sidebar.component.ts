@@ -325,10 +325,8 @@ export class SidebarComponent {
   });
   protected readonly activeAnchor = signal<string>('');
   protected readonly collapsed = signal<boolean>(this.readCollapsed());
-  // While the shell's rail is an overlay there is room for the full nav, and the
-  // collapse toggle is not reachable anyway. Read from the shell rather than a
-  // second media query: ds-app-layout already owns the lg breakpoint, and a copy
-  // here is the duplication its own --bp-lg lesson was about.
+  // Read from the shell, not a second media query: ds-app-layout already owns the
+  // lg breakpoint, and a copy here is the duplication its --bp-lg lesson was about.
   protected readonly effectiveCollapsed = computed(() =>
     this.layout.railOverlay() ? false : this.collapsed(),
   );
