@@ -9,7 +9,7 @@ Completed items are archived in `done.md` (last archive pass **2026-08-04** — 
 
 ## Priority board (2026-08-04 actualization)
 
-Actionable items, ranked. Full context under the thematic sections below. 41 open, plus 2 nested children under the shipped customizable-motion item.
+Actionable items, ranked. Full context under the thematic sections below. 40 open, plus 2 nested children under the shipped customizable-motion item.
 
 **P1 — real defects, do next:**
 
@@ -18,7 +18,6 @@ Actionable items, ranked. Full context under the thematic sections below. 41 ope
 
 **P2 — designed or trivial, nothing left to decide:**
 
-- **Per-route scroll restoration** — spec approved 2026-08-04, contract duplicated inline in the item (the spec file is gitignored). **Harness now exists** (ds-docs runs on the shell as of 2026-08-04), so this is the next unblocked P2.
 
 **P2 — decision-gated / interlocked:**
 
@@ -156,7 +155,7 @@ Filter-toolbar gaps for `ds-autocomplete` / `ds-select` / `ds-search`. Design sp
 - ~~[P3] Two docs shell demos share one `collapsed` signal~~ — DONE 2026-07-29 (see `done.md`).
 - ~~[P3] Wordmark demo scss duplicated~~ — DONE 2026-07-29, hoisted to `section-demo.scss` (see `done.md`).
 - ~~[P3] Footer inputs lack JSDoc~~ — DONE 2026-07-29 (see `done.md`).
-- [ ] **[P2] Per-route scroll restoration — designed 2026-08-04, ready to implement.** List → details → back still returns the list to the top: the 2026-08-03 path-compare fix (see `done.md`) stopped the reset on query-only navigations, but a real back IS a path change, so the reader's place is still lost. Never implemented — the app-shell spec deliberately deferred it ("per-route scroll restoration is a documented growth point … NOT implemented now"). **Design is written and approved: `.claude/superpowers/specs/2026-08-04-layout-scroll-restoration-design.md` — NOTE that path is gitignored, so the spec exists only on Stas's machine; if it is missing, the summary below is the whole contract.** Opt-in `restoreScroll` + `restoreScrollTimeout` (default 2000ms) on `ds-app-layout`; `contentReady()` and `consumePendingOffset()` on the service. Save the offset per PATH on `NavigationStart`; restore when armed — history traversal (covers browser back, mouse side button, `Alt+←`, swipe), or an explicit `state: { dsRestoreScroll: true }` for a "Back to list" button that pushes instead of traversing, or the initial navigation after a reload. Wait for the container to grow via `ResizeObserver`, clamp to max at the deadline, cancel on `wheel`/`touchstart`/`keydown` (input events — NOT `scroll`, which our own writes emit). `sessionStorage`, one namespaced blob, 20-entry cap, every access in `try`/`catch`. **Traps the spec pins down:** restore with `behavior: 'instant'` (a themed `scroll-behavior: smooth` would animate it), never touch `history.scrollRestoration` (the Next.js `manual`-vs-`auto` conflict does not apply — this host has no window scroll), bail on bfcache (`pageshow.persisted`), and no fixed frame count (native timing differs Chrome vs Safari). `consumePendingOffset()` is the hook `ds-table` virtual scroll will need, since a virtualizer wants the offset BEFORE it renders. Rejected: pinkmoon's `WATCHED_ROUTES` allowlist (a DS cannot know consumer routes) and its uncancellable 120-frame retry loop.
+- [x] **[P2] Per-route scroll restoration — SHIPPED 2026-08-04 (`c87a7bbb`), verified end to end.** See `done.md`; the one thing the design did not anticipate is that an app which scrolls on navigation itself writes after the layout and wins, so `restoreScroll` is a no-op on those routes (the docs’ own group pages are exactly that case).
 - [x] **[P2] Migrate ds-docs onto `ds-app-layout` — DONE 2026-08-04, see `done.md`.** All three scoped obstacles resolved without a shell input; the hand-rolled grid, the second `matchMedia` with a hardcoded `1024px`, the `ds-drawer` wrapper and the duplicate `app-sidebar` are gone. **Per-route scroll restoration is now unblocked** — the docs shell outlives navigation, which is the harness that item needed. **Not verified in a browser** (fifth item in the queue below).
 - [ ] **[P3] Browser-verify the responsive rail** (`118a539` shipped unverified in a browser): burger opens, scrim and Escape close, focus is trapped while open and returns to the burger, crossing the breakpoint up resets the state, a path navigation closes it while a query-only navigation does not. **Explicitly re-check** the `cdkTrapFocusAutoCapture` + entering-transform scroll yank from [[reference-focus-scroll-overflow-class]] — host `overflow: hidden` should contain it, but that is a prediction, not a measurement.
 - [ ] **[P3] Manual dev-docs browser check** of the two shell demos.
