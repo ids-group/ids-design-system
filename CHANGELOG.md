@@ -52,6 +52,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A closed compact `ds-app-layout` rail no longer holds focus, or 112 tab stops, behind the screen.**
+  Below the breakpoint the rail is translated off-canvas, which hides it visually and not at all from
+  assistive tech: it kept `role="dialog"` + `aria-modal="true"`, every nav link stayed tabbable, and the
+  caret stayed inside the hidden panel after Escape or a scrim click — `cdkTrapFocusAutoCapture` hands
+  focus back only when the directive is DESTROYED, not when it flips off — so the next Tab continued from
+  invisible navigation with no visible focus ring. The closed overlay rail is now `inert`, and closing it
+  returns focus to whatever control claims the rail through `aria-controls`, which both `dsRailTrigger`
+  and the DS-button forwarding (`[ariaControls]="shell.railId"`) already set. Verified in Chrome at 604px.
+  At/above the breakpoint nothing changes — the rail stays in the layout and interactive.
+
 - **`--ds-overlay-enter-scale` now reaches the portaled panel, so `ds-scale-in` can be retuned per
   instance.** The token was declared and resolved on the pane but missing from the set
   `prepareOverlayEnter()` forwards, so `ds-select { --ds-overlay-enter-scale: 0.9; }` did nothing while

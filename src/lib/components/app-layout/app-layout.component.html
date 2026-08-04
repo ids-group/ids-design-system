@@ -11,6 +11,7 @@
   [attr.role]="compact() ? 'dialog' : null"
   [attr.aria-modal]="compact() ? 'true' : null"
   [attr.aria-label]="compact() ? railLabel() : null"
+  [attr.inert]="compact() && !railOpen() ? '' : null"
   [cdkTrapFocus]="compact() && railOpen()"
   [cdkTrapFocusAutoCapture]="compact() && railOpen()"
 >

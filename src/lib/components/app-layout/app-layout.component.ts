@@ -115,7 +115,21 @@ export class AppLayoutComponent {
   }
 
   protected closeRail(): void {
+    if (!this.railOpen()) {
+      return;
+    }
     this.railOpen.set(false);
+    if (!this.compact()) {
+      return;
+    }
+    // cdkTrapFocusAutoCapture returns focus only when the directive is DESTROYED, not when it flips
+    // off, so without this the caret stays inside the now off-canvas panel. Whatever control claims
+    // the rail through aria-controls owns it — dsRailTrigger and the DS-button forwarding both set it.
+    this.content()
+      .nativeElement.ownerDocument.querySelector<HTMLElement>(
+        `[aria-controls="${this.railId}"]`,
+      )
+      ?.focus();
   }
 
   private watchDesktopBreakpoint(): void {
