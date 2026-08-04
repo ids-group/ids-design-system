@@ -2358,6 +2358,36 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Corner radius."
       },
       {
+        "name": "--ds-button-font-size",
+        "value": "var(--font-size-m)",
+        "notes": "Label size. Overrides the size class, so one value holds across sm/md/lg."
+      },
+      {
+        "name": "--ds-button-weight",
+        "value": "var(--font-weight-extrabold)",
+        "notes": "Label weight (default extrabold)."
+      },
+      {
+        "name": "--ds-button-tracking",
+        "value": "var(--letter-spacing-wide)",
+        "notes": "Label letter-spacing (default --letter-spacing-wide)."
+      },
+      {
+        "name": "--ds-button-height",
+        "value": "var(--field-h-md)",
+        "notes": "Button height, overriding the size class. Set with --ds-button-pad-y for a box sized by its padding instead."
+      },
+      {
+        "name": "--ds-button-pad-x",
+        "value": "var(--space-5)",
+        "notes": "Horizontal padding."
+      },
+      {
+        "name": "--ds-button-pad-y",
+        "value": "0",
+        "notes": "Vertical padding — 0 by default, since height is fixed; pair with height:auto styling for a padding-sized button."
+      },
+      {
         "name": "--ds-button-bg-color-disabled",
         "value": "oklch(from var(--_button-accent) 92% 0.03 h)",
         "notes": "Disabled fill — per-variant muted tint: A (flat pale) for solid + text; secondary/tertiary/outline use B = color-mix(fill 28%, surface-disabled)."

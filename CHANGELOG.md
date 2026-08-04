@@ -14,6 +14,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-button` type and box hooks: `--ds-button-font-size` / `-weight` / `-tracking` / `-height` /
+  `-pad-x` / `-pad-y`, plus `data-variant` / `data-color` reflected on the host.** The label type and the
+  box were hard-coded, and the size class pinned `height` and `padding`, so a brand wanting 14px/600
+  buttons sized by their own padding had to write `.button.button.button { … }` to out-rank the shimmed
+  `.button.md` (0,3,0). The hooks follow the read-never-declare rule the colour resolvers already use, and
+  each size class re-resolves them with the hook still first — so `--ds-button-height` beats the size it
+  would otherwise pick instead of being undone by it. The reflected attributes let a consumer target one
+  axis from outside (`ds-button[data-variant="outline"] { --ds-button-border: white; }`) without reaching
+  for the `c-*` / `v-*` classes, which sit on the inner `<button>` and are not addressable from a
+  host-scoped rule.
 - **`--ds-field-height` — one control-box height for the field family, and the `--field-h-*` scale is
   finally the knob its name advertises.** `--field-h-sm`/`-md`/`-lg` have shipped as the field height
   scale for as long as the token file has existed, but only `-lg` was ever read: `ds-input`, `ds-select`,

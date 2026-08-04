@@ -48,7 +48,15 @@ const DISCOURAGED_COMBOS = new Map<string, string>([
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
-  host: { '[class.full-width]': 'fullWidth()' },
+  host: {
+    '[class.full-width]': 'fullWidth()',
+    // Reflected so a consumer can target one axis from outside without knowing
+    // the inner class names: `ds-button[data-variant="outline"] { … }`. The
+    // c-*/v-* classes sit on the inner <button>, which is not reachable from a
+    // host-scoped rule. Styling only — nothing reads these back.
+    '[attr.data-variant]': 'variant()',
+    '[attr.data-color]': 'color()',
+  },
 })
 export class ButtonComponent {
   /** Brand/status hue family. */
