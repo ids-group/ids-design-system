@@ -27,9 +27,9 @@ export class PasswordRulesSection {
   // The consumer owns the policy — these predicates are what has to mirror the
   // server, which is why the component takes them rather than inventing rules.
   protected readonly rules: readonly DsPasswordRule[] = [
-    { label: 'At least 8 characters', test: (v) => v.length >= 8 },
-    { label: 'One uppercase letter', test: (v) => /[A-Z]/.test(v) },
-    { label: 'One lowercase letter', test: (v) => /[a-z]/.test(v) },
-    { label: 'One number', test: (v) => /[0-9]/.test(v) },
+    { label: 'At least 8 characters', test: (value) => value.length >= 8 },
+    { label: 'One uppercase letter', test: (value) => /[A-Z]/.test(value) },
+    { label: 'One lowercase letter', test: (value) => /[a-z]/.test(value) },
+    { label: 'One number', test: (value) => /[0-9]/.test(value) },
   ];
 }
