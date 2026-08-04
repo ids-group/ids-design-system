@@ -14,6 +14,7 @@ import type { TooltipPlacement } from './tooltip.types';
 
 let nextId = 0;
 
+
 @Directive({
   selector: '[dsTooltip]',
   standalone: true,
@@ -30,9 +31,31 @@ export class TooltipDirective implements OnDestroy {
   private timer: number | null = null;
   private readonly tipId = `ds-tooltip-${++nextId}`;
 
+  /**
+   * The element `aria-describedby` belongs on. Not always the host: a host that
+   * is not focusable itself never reaches a screen reader — `ds-menu-item`
+   * carries `role="none"` and puts the real `<button>` inside — so describing
+   * the host describes something the user never focuses. `focusin` bubbles, so
+   * its target IS whatever took focus; recording that is what keeps this
+   * directive out of the host component's internal DOM. A pointer-only open
+   * leaves it at the host, where no screen reader is involved anyway.
+   */
+  private described: HTMLElement = this.host.nativeElement;
+
   @HostListener('mouseenter')
-  @HostListener('focusin')
-  protected onOpen(): void {
+  protected onPointerEnter(): void {
+    this.scheduleShow();
+  }
+
+  @HostListener('focusin', ['$event'])
+  protected onFocusIn(event: FocusEvent): void {
+    if (event.target instanceof HTMLElement) {
+      this.described = event.target;
+    }
+    this.scheduleShow();
+  }
+
+  private scheduleShow(): void {
     if (!this.dsTooltip()) {
       return;
     }
@@ -54,20 +77,23 @@ export class TooltipDirective implements OnDestroy {
       this.timer = null;
     }
     this.disposeRef();
+    // Back to the host, so a later pointer-only open cannot describe whatever
+    // happened to hold focus last time.
+    this.described = this.host.nativeElement;
   }
 
   private disposeRef(): void {
     this.ref?.dispose();
     this.ref = null;
-    const host = this.host.nativeElement;
-    const remaining = (host.getAttribute('aria-describedby') ?? '')
+    const described = this.described;
+    const remaining = (described.getAttribute('aria-describedby') ?? '')
       .split(' ')
       .filter((id: string) => id && id !== this.tipId)
       .join(' ');
     if (remaining) {
-      host.setAttribute('aria-describedby', remaining);
+      described.setAttribute('aria-describedby', remaining);
     } else {
-      host.removeAttribute('aria-describedby');
+      described.removeAttribute('aria-describedby');
     }
   }
 
@@ -100,9 +126,9 @@ export class TooltipDirective implements OnDestroy {
     cmpRef.setInput('text', this.dsTooltip());
     cmpRef.setInput('placement', placement);
     cmpRef.setInput('panelId', this.tipId);
-    const host = this.host.nativeElement;
-    const existing = host.getAttribute('aria-describedby');
-    host.setAttribute(
+    const described = this.described;
+    const existing = described.getAttribute('aria-describedby');
+    described.setAttribute(
       'aria-describedby',
       existing ? `${existing} ${this.tipId}` : this.tipId,
     );

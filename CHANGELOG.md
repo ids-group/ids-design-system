@@ -38,7 +38,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   Wire a trigger — e.g. a burger in your own projected topbar — to `[(railOpen)]`. The rail keeps its DOM
   position, so you still project the sidenav once. New tokens:
   `--ds-app-layout-rail-bg-color` (`--surface-overlay`), `--ds-app-layout-rail-shadow`
-  (`--shadow-modal`), `--ds-app-layout-scrim-color` (`--scrim, hsl(220deg 20% 12% / 45%)`).
+  (`--shadow-modal`), `--ds-app-layout-scrim-color` (`--scrim, hsl(220deg 20% 12% / 45%)`). The
+  breakpoint is read from the emitted `--bp-lg` with no literal fallback, so the query and the
+  stylesheet's media block cannot disagree; if that custom property is missing — meaning the DS global
+  styles were never included — the layout stays in desktop mode and says so in dev rather than guessing
+  a width.
 
 - **`dsReserveMessages` — turn on the reserved message row for a whole form at once.** With
   `reserveMessage` now off by default, a validated form would otherwise repeat `[reserveMessage]="true"`
@@ -200,6 +204,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   a tooltip sitting above its trigger, animated top-down. Purely visual; no API change.
 
 ### Fixed
+
+- **`dsTooltip` now describes the element that actually takes focus, so a tooltip on a non-focusable
+  host reaches a screen reader.** It set `aria-describedby` on its host unconditionally. That is right
+  when the host is the control, but `ds-menu-item` carries `role="none"` and puts the real `<button>`
+  inside, so the description landed on an element the user never focuses: a disabled menu item showed
+  its "why" to sighted keyboard users and to nobody else. The directive now records the target of the
+  `focusin` event — which bubbles, so it IS whatever took focus — and describes that. A pointer-only
+  open still uses the host, where no screen reader is involved. Deliberately not implemented by
+  searching the host's subtree for something focusable: that would put the tooltip inside another
+  component's internal DOM and hard-code a list of what counts as focusable.
 
 - **`ds-pagination`'s rows-per-page dropdown no longer follows the app's field defaults.** The internal
   `ds-select` was rendered without a `reserveMessage` binding, so it inherited whatever the app had set —

@@ -8,6 +8,7 @@ import {
   afterNextRender,
   inject,
   input,
+  isDevMode,
   model,
   signal,
   viewChild,
@@ -110,13 +111,24 @@ export class AppLayoutComponent {
     this.railOpen.set(false);
   }
 
-  // The width is read from the emitted --bp-lg so this query cannot drift from
-  // the scale the stylesheet's media block uses.
   private watchDesktopBreakpoint(): void {
-    const lg =
-      getComputedStyle(document.documentElement)
-        .getPropertyValue('--bp-lg')
-        .trim() || '1024px';
+    // Single source of truth: the stylesheet's media block and this query both
+    // resolve to `--bp-lg`. There is deliberately NO literal fallback — one here
+    // could disagree with the scale and the rail would flip at a different width
+    // than the CSS, silently. A missing value means the DS global styles were
+    // never included, which breaks far more than this component, so say so.
+    const lg = getComputedStyle(document.documentElement)
+      .getPropertyValue('--bp-lg')
+      .trim();
+    if (!lg) {
+      if (isDevMode()) {
+        console.error(
+          '[ds-app-layout] --bp-lg is not defined, so the responsive rail cannot know its breakpoint and stays in desktop layout. Include the DS global styles (@use "…/styles/ds") — or, à la carte, the partial that emits the breakpoint vars.',
+        );
+      }
+
+      return;
+    }
     const desktop = window.matchMedia(`(width >= ${lg})`);
     const sync = (): void => {
       this.compact.set(!desktop.matches);
