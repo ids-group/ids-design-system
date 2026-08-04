@@ -5,6 +5,7 @@
    ============================================================ */
 @use '../../styles/press' as press;
 @use '../../styles/field-label' as field-label;
+@use '../../styles/field-box' as field-box;
 
 :host {
   --_select-focus-shadow: var(--ds-select-focus-shadow, var(--ds-field-focus-shadow));
@@ -45,7 +46,9 @@
   border: var(--border-width-default) solid var(--_select-border-color);
   border-radius: var(--_select-radius);
   padding: var(--field-pad-y) var(--field-pad-x);
-  height: var(--hit-cozy);
+
+  @include field-box.field-box-height(md);
+
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--_select-text-color);
   text-align: left;
@@ -147,12 +150,13 @@
   }
 
   &.sm {
-    height: var(--hit-min);
+    @include field-box.field-box-height(sm);
+
     padding: 0 var(--space-2);
   }
 
   &.lg {
-    height: var(--field-h-lg);
+    @include field-box.field-box-height(lg);
   }
 }
 

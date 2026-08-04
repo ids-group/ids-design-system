@@ -217,11 +217,16 @@ const fieldLabelHooks = extractComponentTokens(
   readIf(join(ROOT, 'src/lib/styles/_field-label.scss')),
   'field',
 );
+const fieldBoxHooks = extractComponentTokens(
+  readIf(join(ROOT, 'src/lib/styles/_field-box.scss')),
+  'field',
+);
 const all = [
   ...comp.map((t) => ({ ...t, category: 'component' })),
   ...typographyHooks.map((t) => ({ ...t, category: 'component' })),
   ...overlayMotionHooks.map((t) => ({ ...t, category: 'component' })),
   ...fieldLabelHooks.map((t) => ({ ...t, category: 'component' })),
+  ...fieldBoxHooks.map((t) => ({ ...t, category: 'component' })),
   ...globals.map((t) => ({ ...t, category: categorize(t.name) })),
 ];
 for (const t of all)

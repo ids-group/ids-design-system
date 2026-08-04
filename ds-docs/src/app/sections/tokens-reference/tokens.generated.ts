@@ -3093,6 +3093,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-field-label-tracking",
         "value": "normal",
         "notes": "Label letter-spacing, for uppercase labels that need opening up. Default `normal`."
+      },
+      {
+        "name": "--ds-field-height",
+        "value": "var(--_field-box-height)",
+        "notes": "Control-box height for the field family, overriding the size class. The sm/md/lg defaults come from the --field-h-* scale; set this to pin one height regardless of size."
       }
     ]
   },

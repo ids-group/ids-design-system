@@ -2,6 +2,7 @@
 // select/number-stepper/floating-label rules are intentionally out of scope here.
 @use '../../styles/press' as press;
 @use '../../styles/field-label' as field-label;
+@use '../../styles/field-box' as field-box;
 
 :host {
   /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
@@ -65,7 +66,9 @@
     border: var(--border-width-default) solid var(--_input-border);
     border-radius: var(--_input-radius);
     padding: var(--_input-pad-y) var(--_input-pad-x);
-    height: var(--hit-cozy);
+
+    @include field-box.field-box-height(md);
+
     transition:
       border-color var(--duration-fast) var(--ease-standard),
       box-shadow var(--duration-fast) var(--ease-standard),
@@ -188,11 +191,12 @@
   }
 
   &.sm .control {
-    height: var(--hit-min);
+    @include field-box.field-box-height(sm);
+
     padding: 0 var(--space-2);
   }
   &.lg .control {
-    height: var(--field-h-lg);
+    @include field-box.field-box-height(lg);
   }
 
   /* Addon slots. Slotted pills/icons carry the CONSUMER's scope attribute —

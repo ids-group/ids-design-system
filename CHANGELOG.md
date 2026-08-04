@@ -14,6 +14,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`--ds-field-height` — one control-box height for the field family, and the `--field-h-*` scale is
+  finally the knob its name advertises.** `--field-h-sm`/`-md`/`-lg` have shipped as the field height
+  scale for as long as the token file has existed, but only `-lg` was ever read: `ds-input`, `ds-select`,
+  `ds-date-picker` and `ds-time-picker` all spelled the other two out as the raw `var(--hit-min)` /
+  `var(--hit-cozy)`. Retuning `--field-h-md` therefore changed nothing — a lever that looked live and was
+  not. All four now resolve through the scale (identical values, so nothing moves), and
+  `--ds-field-height` overrides the resolved size for a consumer who wants one height regardless of
+  `size`; scope it per component the usual way (`ds-select { --ds-field-height: 44px; }`).
 - **One label contract for the whole field family: `--ds-field-label-font-size` / `-weight` / `-color` / `-transform` / `-tracking`.** Five components hard-coded the identical label rule and only `ds-input`
   had hooks, so a form mixing a select with an input rendered labels in two sizes and colours out of the
   box, and retuning them from an app needed `.field.field .label.label, .select-label.select-label` to

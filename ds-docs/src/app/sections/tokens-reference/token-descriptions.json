@@ -359,6 +359,7 @@
   "--ds-empty-state-title-text-color": "Title colour.",
   "--ds-field-focus-shadow": "Field focus ring shadow — themeable (defaults to --focus-field).",
   "--ds-field-focus-shadow-error": "Field focus ring shadow in error state (defaults to --focus-field-error).",
+  "--ds-field-height": "Control-box height for the field family, overriding the size class. The sm/md/lg defaults come from the --field-h-* scale; set this to pin one height regardless of size.",
   "--ds-field-label-color": "Label colour for the whole field family.",
   "--ds-field-label-font-size": "Label size for the whole field family — input, textarea, select, both pickers and radio-group resolve through it.",
   "--ds-field-label-tracking": "Label letter-spacing, for uppercase labels that need opening up. Default `normal`.",
