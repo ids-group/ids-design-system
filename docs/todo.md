@@ -9,7 +9,7 @@ Completed items are archived in `done.md` (last archive pass **2026-08-04** — 
 
 ## Priority board (2026-08-04 actualization)
 
-Actionable items, ranked. Full context under the thematic sections below. 48 open, plus 2 nested children under the shipped customizable-motion item.
+Actionable items, ranked. Full context under the thematic sections below. 49 open, plus 2 nested children under the shipped customizable-motion item.
 
 **P1 — real defects, do next:**
 
@@ -19,8 +19,7 @@ Actionable items, ranked. Full context under the thematic sections below. 48 ope
 
 - **Per-route scroll restoration** — spec approved 2026-08-04, contract duplicated inline in the item (the spec file is gitignored). Needs the harness below.
 - **Migrate ds-docs onto `ds-app-layout`** — the shell's own dogfood; three obstacles scoped, none blocking. Unblocks verifying scroll restoration at all.
-- **Two shell debts from reviewing 118a539** — the `lg` breakpoint has two sources of truth (and the comment claiming otherwise is wrong), and the burger is never wired to `aria-expanded` / `aria-controls`, so the panel and its trigger are unrelated to a screen reader.
-- **`ds-docs` `layout/header.component.ts` is dead code** — exported from the barrel, placed zero times. Delete it.
+- **The rail burger is never wired to `aria-expanded` / `aria-controls`**, so the panel and its trigger are unrelated to a screen reader. The burger is the consumer’s own element, so this needs a call: expose the panel id and document the two attributes, or ship a trigger directive. (The other half of that review — the duplicated `lg` breakpoint — was resolved 2026-08-04; what remains is the recorded TS-vs-CSS note, not a defect.)
 
 **P2 — decision-gated / interlocked:**
 
@@ -29,7 +28,6 @@ Actionable items, ranked. Full context under the thematic sections below. 48 ope
 - **Token-architecture pass** (spec together, sequence colour first): single-source colour engine · `.ds-interactive` contract (blocked on verdicts B1–B5) · theme-recipe-vs-hand-tuned · semantic radius+elevation role layer · `--motion-*` role layer. **Rounded `:active`** on ~14 controls rides along with `.ds-interactive`.
 - **`ds-button` type-scale/box hooks** (Misha) — needs an approach call: reflect `variant` as a host attribute vs a host-settable fallback chain.
 - **Control-height contract** (Misha) — pairs with the token pass.
-- **A field has no `error` beside `hint`**, so every consumer multiplexes the string — additive, but whether `invalid` becomes derived is a fork.
 - **Packaging / secondary entry points** — re-audited 2026-08-03 (`packaging-chunking-audit.md`); mechanism confirmed, decision still open.
 - **Shared picker internals** — nav/filter helpers; needs an explicit go.
 - **autocomplete single-select display mode** → unblocks the `ds-field-group` composer.
@@ -45,7 +43,7 @@ Actionable items, ranked. Full context under the thematic sections below. 48 ope
 
 - Overlay leave-animation policy · leave-keyframe swappability (blocked by the `animationend` name guard) · inspect-mode pilot · `ds-select` native `multi` (deferred) · `ds-table` row-expansion deltas · `ds-table` layout persistence + export affordance · `ds-number-stepper` numeric formatting · form-layout live gap demo · image/lightbox · splitter (decision) · CascadeSelect (decision) · primary-CTA token · MED cluster · topbar `role="banner"` (decision-record) · combobox-vs-multi-select boundary (decision) · CDK Menu (parked) · ds-docs `core/` tier · design-system.md note (user-frozen) · browser-verify the responsive rail · manual shell-demo browser check.
 
-**Shipped 2026-08-03/04 (see `done.md`):** responsive rail on `ds-app-layout` · picker parity closed (value typography + glyph order) · `reserveMessage` default reversed to off + `dsReserveMessages` group opt-in + `provideDsConfig` merge · path-only scroll reset · sidenav rail-tooltip item closed as not-reproducing · ds-docs blank-page nav fix · 266 section markers stripped · named-re-export tree-shaking fix · `cellTemplateMap` doc nit.
+**Shipped 2026-08-03/04 (see `done.md`):** `error` + `warning` beside `hint` across all 14 fields, resolved from the form control (both signal and reactive forms) · dropped-projection guard extended to checkbox + switch + radio via one directive · `dsTooltip` describes the focused element · responsive rail on `ds-app-layout` · picker parity closed (value typography + glyph order) · `reserveMessage` default reversed to off + `dsReserveMessages` group opt-in + `provideDsConfig` merge · path-only scroll reset · sidenav rail-tooltip item closed as not-reproducing · ds-docs blank-page nav fix · 266 section markers stripped · named-re-export tree-shaking fix · `cellTemplateMap` doc nit.
 
 **Housekeeping surfaced by the 07-24 review** — all four resolved (2026-07-29/30, see `done.md`): stale `_forced-states.scss` refs removed; orphaned `_dropzone.scss` deleted; unused `DocsAwaitComponent` removed; `tools/extract-tokens.mjs` now scans `_typography.scss` so the ~95 `--ds-t-*` hooks surface in the ds-docs token reference.
 
@@ -98,7 +96,7 @@ Goal: a coherent **smooth** motion system. **Foundation is healthy** — motion 
 
 ## DS-docs showcase
 
-- [ ] **[P3] `ds-docs` `layout/header.component.ts` is dead code (found 2026-08-04).** `HeaderComponent` (`selector: 'app-header'`) is defined and re-exported from the `layout/` barrel (`index.ts:2`, whose own comment still calls the shell "header, sidebar, nav config") but placed **zero** times — the docs shell renders `ds-topbar` directly in `app.html`. Same class as the `DocsAwaitComponent` deleted on 2026-07-29. **Do:** delete the component and its barrel line, and fix the barrel comment. Verify first that the docs build still passes — it should, nothing imports it.
+- [x] **[P3] `ds-docs` `layout/header.component.ts` is dead code — DELETED 2026-08-04**, with its barrel line and the barrel comment that still called the shell "header, sidebar, nav config". Docs build clean, as predicted: nothing imported it.
 - [ ] **[P3] Inspect mode — Figma-style spec overlay per section.** A section-heading toggle that draws a visual "inspect" overlay on the live demos: colour-coded lines/boxes for paddings, gaps, sizes with values+units, plus WHICH token/class drives each value. Read computed styles + `getBoundingClientRect`; map values back to the `--space-*`/`--radius-*`/`--font-size-*` scales. **Rewritten 2026-07-24 → start as a scoped pilot:** spacing-only on ONE section (e.g. button), then generalize. Greenfield, docs-only, no product impact. _(Verified: nothing exists today.)_
 
 ## Component feature gaps

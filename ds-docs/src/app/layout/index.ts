@@ -1,4 +1,3 @@
-// Public surface of the docs `layout/` module (shell: header, sidebar, nav config).
-export * from './header.component';
+// Public surface of the docs `layout/` module (shell: sidebar, nav config).
 export * from './sidebar.component';
 export * from './nav.config';
