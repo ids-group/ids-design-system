@@ -9,11 +9,12 @@ Completed items are archived in `done.md` (last archive pass **2026-08-04** — 
 
 ## Priority board (2026-08-04 actualization)
 
-Actionable items, ranked. Full context under the thematic sections below. 46 open, plus 2 nested children under the shipped customizable-motion item.
+Actionable items, ranked. Full context under the thematic sections below. 41 open, plus 2 nested children under the shipped customizable-motion item.
 
 **P1 — real defects, do next:**
 
-- **Field labels have three different contracts** across the field family (Misha, mm-ecm) — one class name + one `--ds-field-label-*` set incl. `-transform`/`-tracking`. **Breaking** (renames `ds-select`'s `.select-label`) → needs a version + naming call. Spec with the token pass.
+- _(empty — the field-label contract shipped 2026-08-04.)_
+
 
 **P2 — designed or trivial, nothing left to decide:**
 
@@ -23,8 +24,6 @@ Actionable items, ranked. Full context under the thematic sections below. 46 ope
 
 - **A caption projected into `ds-checkbox`** — the dev warning shipped 2026-08-04; real projection is still open and turned out to be fiddly (three dead ends recorded in the item).
 - **Token-architecture pass** (spec together, sequence colour first): single-source colour engine · `.ds-interactive` contract (blocked on verdicts B1–B5) · theme-recipe-vs-hand-tuned · semantic radius+elevation role layer · `--motion-*` role layer. **Rounded `:active`** on ~14 controls rides along with `.ds-interactive`.
-- **`ds-button` type-scale/box hooks** (Misha) — needs an approach call: reflect `variant` as a host attribute vs a host-settable fallback chain.
-- **Control-height contract** (Misha) — pairs with the token pass.
 - **Packaging / secondary entry points** — re-audited 2026-08-03 (`packaging-chunking-audit.md`); mechanism confirmed, decision still open.
 - **Shared picker internals** — nav/filter helpers; needs an explicit go.
 - **autocomplete single-select display mode** → unblocks the `ds-field-group` composer.
@@ -53,18 +52,9 @@ Dogfooding source: migrating the **NYL "refresh" editorial design** (square corn
 
 **Provenance caveat:** all claims read out of the **compiled 0.7.0 bundle** (`fesm2022/*.mjs` + `types/*.d.ts`) as installed in the consumer, NOT from `src/lib` — selectors, class names and token names are exact, but re-confirm file:line at fix time per [[feedback-validate-before-applying]].
 
-- [ ] **[P1] Field labels have THREE different contracts across the field family — `--ds-input-label-*` styles exactly one component.** `ds-input` reads `--ds-input-label-fs`/`-fw`/`-color` ✅; `ds-textarea` + `ds-date-picker` hard-code `font: var(--font-weight-bold) var(--font-size-xs)/… var(--font-sans)` + `--text-secondary` with NO hooks; `ds-select` hard-codes the same **and names its element `.select-label`** instead of `.label`; `ds-checkbox` uses `.control-text` + internal `--_checkbox-label-fs`. Consequence: any form mixing select + input renders labels in two sizes/colours out of the box, and a consumer retune needs `.field.field .label.label, .select-label.select-label` (the `.field` doubling only because the shimmed DS rule is `.field[_ngcontent] .label[_ngcontent]` = (0,4,0)). **Ask:** one shared label partial, ONE class name across the family, one token set — `--ds-field-label-fs`/`-fw`/`-color` **plus `-transform` and `-tracking`** (uppercase tracked labels are a common editorial pattern, currently unreachable through tokens). Same consumer-first `--ds-*` principle as the `.t-*` hooks item — spec together.
-- [ ] **[P2] Control height is computed two different ways across the field family.** `ds-input`/`ds-select` are padding-driven (`--_input-pad-y`, `--field-pad-*`); both pickers are fixed `height: var(--hit-cozy)`. The same nominal `size` therefore does NOT guarantee equal box heights in one row — the consumer had to pin both picker triggers by hand. **Ask:** a shared control-box contract (`--ds-field-h`, `--ds-field-pad-x`) every field resolves through. **Pairs with the token-architecture pass.**
-- [ ] **[P2] `ds-button` — no type-scale or box hooks, and per-variant tokens are unreachable from the host.** `.button` hard-codes `font: var(--font-weight-extrabold) var(--font-size-m)` + `letter-spacing: var(--letter-spacing-wide)`, and `.button.md` pins `height` + `padding` — so a brand wanting 14px/600 square buttons sized by their padding needs `.button.button.button { font-size; font-weight; letter-spacing; padding; height: auto }` (tripled class to clear the shimmed `.button.md[_ngcontent]` = (0,3,0)). Worse, variant styling lives on the **inner** `.button.v-*`, so per-variant `--ds-button-*` values can only be declared there — and a declaration on `.button` beats anything the consumer sets on the host, which forced an indirection-var layer (`--rp-btn-*`) just to keep per-instance overrides working (one banner needed white-hairline outline buttons on navy). **Ask:** `--ds-button-fs`/`-fw`/`-tracking`/`-h`/`-pad-x`/`-pad-y`, and either reflect `variant`/`color` as host attributes (`[attr.data-variant]`) or resolve variant tokens through a host-settable fallback chain.
-
-**What the DS already got right here (keep as the pattern):** `styles/_dropdown-overlay.scss` ships the portaled option list as GLOBAL css and styles it from semantic tokens (`--primary-subtitle`, `--primary-strong`, `--surface-secondary`), so rebranding the selected row was three token retargets scoped to `.ds-dropdown-panel` — no class coupling, no specificity fight (bar the hover bug above). Same for `forwardOverlayTokens`, which copies host `--ds-*` values onto the portaled pane. Extending both patterns is the cheapest route to closing most of this section.
-
-## Motion / overlays
-
-- [x] **[P2] Customizable motion — per-surface `--ds-*` hooks for enter/leave animations (requested 2026-07-31, Stas). SHIPPED 2026-07-31** — see `done.md` for the delivered scope. Kept here for the two open children below.
-  - [ ] **[P3] Semantic motion presets `--motion-<role>` (slice 3, deferred into the token-architecture pass).** The per-surface knobs currently default to RAW `--duration-*`/`--ease-*`. A role layer (`enter-panel` = fast+decelerate, `enter-surface` = base+decelerate, `enter-large` = slow+decelerate, `exit` = fast+accelerate) is the motion twin of the radius/elevation role layer — sequence it with that pass, not separately. (Folded in from the MED cluster, which no longer carries the clause.)
-  - [ ] **[P3] Leave keyframes are NOT swappable — decide whether that stays.** `-leave-duration`/`-leave-easing` ship, but the leave KEYFRAME name is fixed per surface, because modal / drawer / bottom-sheet tear their DOM down in `onLeaveEnd()` by matching `event.animationName.endsWith('<name>')` ([[reference-angular-scoped-keyframes]]) — a consumer name would miss the guard and teardown would fall back to the 300ms timer (visible as a frozen panel). Closing this needs the guard to stop keying on the name (e.g. match "any animation on the closing element", or drive teardown from a single `--ds-*-leave-duration`-derived timer instead of the event). Pairs with the overlay leave-animation policy item below.
-
+- [x] **[P1] Field labels — ONE contract, SHIPPED 2026-08-04 (`f864bfb6`). The item undercounted: there were five contracts, not three.** See `done.md`.
+- [x] **[P2] Control height — SHIPPED 2026-08-04 (`87702569`), and half the item was stale: all four fields are already fixed-height and equal. What was real is worse — `--field-h-sm`/`-md` were read by NOBODY.** See `done.md`.
+- [x] **[P2] `ds-button` type/box hooks — SHIPPED 2026-08-04 (`e6430550`). The per-variant half was already fixed by the color×fill refactor; what remained was external targeting, now `data-variant`/`data-color` on the host.** See `done.md`.
 - [ ] **[P3] Overlay leave animation — decide the policy (Stas undecided, 2026-06-30).** Floating panels close INSTANTLY — the exit animation was removed in `d2e4712` because the ~120ms `ds-overlay-out` fade read as lag on a deliberate action. Open question: bring back a "proper" leave — **instant on action-select** but a quick (~100ms) fade **only on ambient dismiss** (outside-pointer / Escape)? Needs the panel to distinguish selection-close from dismiss-close (a flag through `disposeWithLeave()`). **Actualized 2026-07-24:** the non-modal migration (now DONE, see done.md) routed all 8 overlay call-sites through the single `disposeWithLeave` helper, so reinstating a leave animation is now ONE helper change that fans out everywhere — the per-component wiring cost this item worried about has largely evaporated. Still blocked on the product decision. (Open `ds-overlay-in` animation is unaffected and still plays.)
 
 ---
