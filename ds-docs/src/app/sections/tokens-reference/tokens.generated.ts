@@ -1425,22 +1425,22 @@ export const SHADOWS: readonly ShadowRow[] = [
   },
   {
     "name": "--shadow-popover",
-    "alias": "var(--shadow-2)",
+    "alias": "",
     "notes": "Alias — popovers, dropdowns."
   },
   {
     "name": "--shadow-modal",
-    "alias": "var(--shadow-4)",
+    "alias": "",
     "notes": "Alias — modals."
   },
   {
     "name": "--shadow-toast",
-    "alias": "var(--shadow-3)",
+    "alias": "",
     "notes": "Alias — toasts."
   },
   {
     "name": "--shadow-card",
-    "alias": "var(--shadow-1)",
+    "alias": "",
     "notes": "Alias — applied to .card."
   },
   {
@@ -1816,7 +1816,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-alert-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Alert corner radius (8px)."
       },
       {
@@ -1826,12 +1826,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-alert-enter-duration",
-        "value": "var(--duration-base)",
+        "value": "var(--ds-motion-enter-surface-duration)",
         "notes": "Alert entrance duration (default --duration-base)."
       },
       {
         "name": "--ds-alert-enter-easing",
-        "value": "var(--ease-decelerate)",
+        "value": "var(--ds-motion-enter-surface-easing)",
         "notes": "Alert entrance easing (default --ease-decelerate)."
       },
       {
@@ -1873,7 +1873,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-app-layout-rail-shadow",
-        "value": "var(--shadow-modal)",
+        "value": "var(--ds-elevation-modal)",
         "notes": "Rail elevation while it is an overlay below the lg breakpoint (defaults to --shadow-modal)."
       },
       {
@@ -1925,7 +1925,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-autocomplete-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Autocomplete field corner radius (8px)."
       },
       {
@@ -1967,7 +1967,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-avatar-radius",
-        "value": "var(--radius-pill)",
+        "value": "var(--ds-radius-pill)",
         "notes": "Pill / square."
       },
       {
@@ -2051,7 +2051,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-badge-radius",
-        "value": "var(--radius-pill)",
+        "value": "var(--ds-radius-pill)",
         "notes": "Pill radius."
       },
       {
@@ -2128,7 +2128,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-banner-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
       },
       {
@@ -2158,12 +2158,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-banner-enter-duration",
-        "value": "var(--duration-base)",
+        "value": "var(--ds-motion-enter-surface-duration)",
         "notes": "Banner entrance duration (default --duration-base)."
       },
       {
         "name": "--ds-banner-enter-easing",
-        "value": "var(--ease-decelerate)",
+        "value": "var(--ds-motion-enter-surface-easing)",
         "notes": "Banner entrance easing (default --ease-decelerate)."
       },
       {
@@ -2205,7 +2205,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-bottom-sheet-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Top corner radius."
       },
       {
@@ -2230,22 +2230,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-bottom-sheet-enter-duration",
-        "value": "var(--duration-base)",
+        "value": "var(--ds-motion-enter-surface-duration)",
         "notes": "Bottom-sheet entrance duration (default --duration-base); the scrim uses --duration-fast until this is set."
       },
       {
         "name": "--ds-bottom-sheet-enter-easing",
-        "value": "var(--ease-decelerate)",
+        "value": "var(--ds-motion-enter-surface-easing)",
         "notes": "Bottom-sheet + scrim entrance easing (default --ease-decelerate)."
       },
       {
         "name": "--ds-bottom-sheet-leave-duration",
-        "value": "var(--duration-base)",
+        "value": "var(--ds-motion-exit-large-duration)",
         "notes": "Bottom-sheet close duration (default --duration-base); the scrim uses --duration-fast until this is set."
       },
       {
         "name": "--ds-bottom-sheet-leave-easing",
-        "value": "var(--ease-accelerate)",
+        "value": "var(--ds-motion-exit-large-easing)",
         "notes": "Bottom-sheet + scrim close easing (default --ease-accelerate)."
       },
       {
@@ -2354,7 +2354,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-button-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
       },
       {
@@ -2508,7 +2508,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-card-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Corner radius."
       },
       {
@@ -2585,7 +2585,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-checkbox-radius",
-        "value": "var(--radius-sm)",
+        "value": "var(--ds-radius-inner)",
         "notes": "Checkbox box corner radius (default --radius-sm). The indeterminate dash keeps its own radius."
       },
       {
@@ -2734,7 +2734,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-date-picker-trigger-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Date-picker trigger corner radius (default --radius-md) — the counterpart of --ds-time-picker-trigger-radius."
       },
       {
@@ -2764,7 +2764,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-date-picker-shadow",
-        "value": "var(--shadow-popover)",
+        "value": "var(--ds-elevation-overlay)",
         "notes": "Popover shadow."
       },
       {
@@ -2789,7 +2789,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-date-picker-panel-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Calendar panel corner radius (default --radius-lg). Forwarded onto the portaled pane on open."
       },
       {
@@ -2890,7 +2890,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-drawer-shadow",
-        "value": "var(--shadow-modal)",
+        "value": "var(--ds-elevation-modal)",
         "notes": "Drawer panel elevation shadow (defaults to --shadow-modal)."
       },
       {
@@ -2930,22 +2930,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-drawer-enter-duration",
-        "value": "var(--duration-slow)",
+        "value": "var(--ds-motion-enter-large-duration)",
         "notes": "Drawer entrance duration (default --duration-slow); the scrim uses --duration-fast until this is set."
       },
       {
         "name": "--ds-drawer-enter-easing",
-        "value": "var(--ease-decelerate)",
+        "value": "var(--ds-motion-enter-large-easing)",
         "notes": "Drawer panel + scrim entrance easing (default --ease-decelerate)."
       },
       {
         "name": "--ds-drawer-leave-duration",
-        "value": "var(--duration-base)",
+        "value": "var(--ds-motion-exit-large-duration)",
         "notes": "Drawer close duration (default --duration-base); the scrim uses --duration-fast until this is set."
       },
       {
         "name": "--ds-drawer-leave-easing",
-        "value": "var(--ease-accelerate)",
+        "value": "var(--ds-motion-exit-large-easing)",
         "notes": "Drawer panel + scrim close easing (default --ease-accelerate)."
       },
       {
@@ -3017,7 +3017,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-dropzone-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Corner radius."
       },
       {
@@ -3190,7 +3190,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-icon-button-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
       },
       {
@@ -3257,7 +3257,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-input-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
       },
       {
@@ -3532,12 +3532,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-modal-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Corner radius."
       },
       {
         "name": "--ds-modal-shadow",
-        "value": "var(--shadow-modal)",
+        "value": "var(--ds-elevation-modal)",
         "notes": "Dialog shadow."
       },
       {
@@ -3622,22 +3622,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-modal-enter-duration",
-        "value": "var(--duration-base)",
+        "value": "var(--ds-motion-enter-surface-duration)",
         "notes": "Modal card + backdrop entrance duration (default --duration-base)."
       },
       {
         "name": "--ds-modal-enter-easing",
-        "value": "var(--ease-decelerate)",
+        "value": "var(--ds-motion-enter-surface-easing)",
         "notes": "Modal card + backdrop entrance easing (default --ease-decelerate)."
       },
       {
         "name": "--ds-modal-leave-duration",
-        "value": "var(--duration-fast)",
+        "value": "var(--ds-motion-exit-duration)",
         "notes": "Modal close duration (default --duration-fast). Reduced motion zeroes it so teardown stays instant."
       },
       {
         "name": "--ds-modal-leave-easing",
-        "value": "var(--ease-accelerate)",
+        "value": "var(--ds-motion-exit-easing)",
         "notes": "Modal close easing (default --ease-accelerate)."
       },
       {
@@ -3704,7 +3704,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-multi-select-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Multi-select control corner radius (defaults to --radius-md)."
       },
       {
@@ -3805,12 +3805,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-overlay-enter-duration",
-        "value": "var(--duration-fast)",
+        "value": "var(--ds-motion-enter-panel-duration)",
         "notes": "Portaled-panel entrance duration (default --duration-fast)."
       },
       {
         "name": "--ds-overlay-enter-easing",
-        "value": "var(--ease-decelerate)",
+        "value": "var(--ds-motion-enter-panel-easing)",
         "notes": "Portaled-panel entrance easing (default --ease-decelerate)."
       },
       {
@@ -3852,7 +3852,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-page-footer-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Page footer corner radius (defaults to --radius-lg)."
       }
     ]
@@ -3966,7 +3966,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-pagination-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Button radius."
       },
       {
@@ -4008,12 +4008,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-popover-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Popover corner radius (defaults to --radius-lg)."
       },
       {
         "name": "--ds-popover-shadow",
-        "value": "var(--shadow-popover)",
+        "value": "var(--ds-elevation-overlay)",
         "notes": "Popover drop shadow (defaults to --shadow-popover)."
       },
       {
@@ -4164,7 +4164,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-search-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
       },
       {
@@ -4241,7 +4241,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-segmented-selected-shadow",
-        "value": "var(--shadow-card)",
+        "value": "var(--ds-elevation-raised)",
         "notes": "Selected segment shadow (defaults to --shadow-card)."
       },
       {
@@ -4293,7 +4293,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-select-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Select corner radius (defaults to --radius-md)."
       },
       {
@@ -4320,7 +4320,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-sidenav-group-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Group radius."
       },
       {
@@ -4375,7 +4375,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-sidenav-item-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Item radius."
       },
       {
@@ -4657,7 +4657,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-stat-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Corner radius."
       },
       {
@@ -5265,7 +5265,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-t-mono-inline-radius",
-        "value": "var(--radius-sm)",
+        "value": "var(--ds-radius-inner)",
         "notes": "Per-axis override for the `.t-mono-inline` utility's radius."
       },
       {
@@ -5300,7 +5300,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-t-mono-block-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Per-axis override for the `.t-mono-block` utility's radius."
       }
     ]
@@ -5317,7 +5317,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-table-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Outer corner radius."
       },
       {
@@ -5549,7 +5549,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-tab-pill-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Pill radius."
       },
       {
@@ -5596,7 +5596,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-tag-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
       },
       {
@@ -5715,7 +5715,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-time-picker-trigger-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Time picker trigger corner radius (defaults to --radius-md)."
       },
       {
@@ -5750,7 +5750,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-time-picker-shadow",
-        "value": "var(--shadow-popover)",
+        "value": "var(--ds-elevation-overlay)",
         "notes": "Panel shadow."
       }
     ]
@@ -5859,12 +5859,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-enter-duration",
-        "value": "var(--duration-slow)",
+        "value": "var(--ds-motion-enter-large-duration)",
         "notes": "Toast entrance duration (default --duration-slow)."
       },
       {
         "name": "--ds-toast-enter-easing",
-        "value": "var(--ease-decelerate)",
+        "value": "var(--ds-motion-enter-large-easing)",
         "notes": "Toast entrance easing (default --ease-decelerate)."
       },
       {
@@ -6003,12 +6003,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-tooltip-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Tooltip corner radius (defaults to --radius-md)."
       },
       {
         "name": "--ds-tooltip-shadow",
-        "value": "var(--shadow-2)",
+        "value": "var(--ds-elevation-overlay)",
         "notes": "Tooltip drop shadow (defaults to --shadow-2)."
       },
       {
@@ -6383,6 +6383,26 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "length"
   },
   {
+    "name": "--ds-elevation-floating",
+    "value": "var(--shadow-3)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-elevation-modal",
+    "value": "var(--shadow-4)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-elevation-overlay",
+    "value": "var(--shadow-2)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-elevation-raised",
+    "value": "var(--shadow-1)",
+    "kind": "other"
+  },
+  {
     "name": "--ds-field-focus-shadow",
     "value": "var(--focus-field)",
     "kind": "color"
@@ -6391,6 +6411,76 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--ds-field-focus-shadow-error",
     "value": "var(--focus-field-error)",
     "kind": "color"
+  },
+  {
+    "name": "--ds-motion-enter-large-duration",
+    "value": "var(--duration-slow)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-enter-large-easing",
+    "value": "var(--ease-decelerate)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-enter-panel-duration",
+    "value": "var(--duration-fast)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-enter-panel-easing",
+    "value": "var(--ease-decelerate)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-enter-surface-duration",
+    "value": "var(--duration-base)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-enter-surface-easing",
+    "value": "var(--ease-decelerate)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-exit-duration",
+    "value": "var(--duration-fast)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-exit-easing",
+    "value": "var(--ease-accelerate)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-exit-large-duration",
+    "value": "var(--duration-base)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-exit-large-easing",
+    "value": "var(--ease-accelerate)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-radius-control",
+    "value": "var(--radius-md)",
+    "kind": "length"
+  },
+  {
+    "name": "--ds-radius-inner",
+    "value": "var(--radius-sm)",
+    "kind": "length"
+  },
+  {
+    "name": "--ds-radius-panel",
+    "value": "var(--radius-lg)",
+    "kind": "length"
+  },
+  {
+    "name": "--ds-radius-pill",
+    "value": "var(--radius-pill)",
+    "kind": "length"
   },
   {
     "name": "--empty-body-maxw",

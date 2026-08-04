@@ -5,7 +5,7 @@
   --_layout-pad-y: var(--ds-app-layout-pad-y, var(--space-6));
   --_layout-content-max-width: var(--ds-app-layout-content-max-width, none);
   --_layout-rail-bg-color: var(--ds-app-layout-rail-bg-color, var(--surface-overlay));
-  --_layout-rail-shadow: var(--ds-app-layout-rail-shadow, var(--shadow-modal));
+  --_layout-rail-shadow: var(--ds-app-layout-rail-shadow, var(--ds-elevation-modal));
   --_layout-scrim-color: var(--ds-app-layout-scrim-color, var(--scrim, hsl(220deg 20% 12% / 45%)));
 
   display: grid;

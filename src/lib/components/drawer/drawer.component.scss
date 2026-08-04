@@ -6,7 +6,7 @@
 :host {
   --_drawer-bg-color:               var(--ds-drawer-bg-color,               var(--surface-overlay));
   --_drawer-scrim-color:            var(--ds-drawer-scrim-color,            var(--scrim, hsl(220deg 20% 12% / 45%)));
-  --_drawer-shadow:                 var(--ds-drawer-shadow,                 var(--shadow-modal));
+  --_drawer-shadow:                 var(--ds-drawer-shadow,                 var(--ds-elevation-modal));
   --_drawer-divider:                var(--ds-drawer-divider,                var(--border-divider));
   --_drawer-close-icon-color:       var(--ds-drawer-close-icon-color,       var(--icon-default));
   --_drawer-close-icon-color-hover: var(--ds-drawer-close-icon-color-hover, var(--icon-strong));
@@ -16,15 +16,15 @@
   --_drawer-width-md:               var(--ds-drawer-width,                  var(--drawer-w-md));
   --_drawer-width-lg:               var(--ds-drawer-width,                  var(--drawer-w-lg));
   --_drawer-enter-keyframes: var(--ds-drawer-enter-keyframes, ds-slide-edge-in);
-  --_drawer-enter-duration: var(--ds-drawer-enter-duration, var(--duration-slow));
-  --_drawer-enter-easing: var(--ds-drawer-enter-easing, var(--ease-decelerate));
-  --_drawer-leave-duration: var(--ds-drawer-leave-duration, var(--duration-base));
-  --_drawer-leave-easing: var(--ds-drawer-leave-easing, var(--ease-accelerate));
+  --_drawer-enter-duration: var(--ds-drawer-enter-duration, var(--ds-motion-enter-large-duration));
+  --_drawer-enter-easing: var(--ds-drawer-enter-easing, var(--ds-motion-enter-large-easing));
+  --_drawer-leave-duration: var(--ds-drawer-leave-duration, var(--ds-motion-exit-large-duration));
+  --_drawer-leave-easing: var(--ds-drawer-leave-easing, var(--ds-motion-exit-large-easing));
 
   /* The scrim reads the same public tokens but keeps its own faster default,
      so an unset drawer still fades its scrim ahead of the sliding panel. */
-  --_drawer-scrim-enter-duration: var(--ds-drawer-enter-duration, var(--duration-fast));
-  --_drawer-scrim-leave-duration: var(--ds-drawer-leave-duration, var(--duration-fast));
+  --_drawer-scrim-enter-duration: var(--ds-drawer-enter-duration, var(--ds-motion-enter-panel-duration));
+  --_drawer-scrim-leave-duration: var(--ds-drawer-leave-duration, var(--ds-motion-exit-duration));
   --_ds-enter-scale: var(--ds-drawer-enter-scale, 0.96);
 
   display: contents;

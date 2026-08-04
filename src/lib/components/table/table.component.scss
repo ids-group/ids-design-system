@@ -33,7 +33,7 @@
 .scroll-wrap {
   /* Public --ds-table-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_table-border: var(--ds-table-border, var(--border-default));
-  --_table-radius: var(--ds-table-radius, var(--radius-md));
+  --_table-radius: var(--ds-table-radius, var(--ds-radius-control));
   --_table-bg-color:     var(--ds-table-bg-color,     var(--surface-default));
 
   width: 100%;

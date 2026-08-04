@@ -19,8 +19,8 @@
 .cdk-overlay-pane.ds-overlay-pane {
   /* Public --ds-overlay-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-slide-in);
-  --_overlay-enter-duration: var(--ds-overlay-enter-duration, var(--duration-fast));
-  --_overlay-enter-easing: var(--ds-overlay-enter-easing, var(--ease-decelerate));
+  --_overlay-enter-duration: var(--ds-overlay-enter-duration, var(--ds-motion-enter-panel-duration));
+  --_overlay-enter-easing: var(--ds-overlay-enter-easing, var(--ds-motion-enter-panel-easing));
   --_overlay-enter-offset: var(--ds-overlay-enter-offset, 4px);
   --_ds-enter-scale: var(--ds-overlay-enter-scale, 0.96);
 

@@ -5,7 +5,7 @@
 :host {
   --_tag-pad-y:        var(--ds-tag-pad-y, var(--tag-pad-y));
   --_tag-pad-x:        var(--ds-tag-pad-x, var(--tag-pad-x));
-  --_tag-radius:       var(--ds-tag-radius, var(--radius-md));
+  --_tag-radius:       var(--ds-tag-radius, var(--ds-radius-control));
   --_tag-bg-color:           var(--ds-tag-bg-color, var(--accent));
   --_tag-label-color: var(--ds-tag-label-color, var(--accent-on));
   --_tag-fw:            var(--ds-tag-fw, var(--font-weight-bold));

@@ -2,19 +2,19 @@
   /* Public --ds-bottom-sheet-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_bottom-sheet-maxw: var(--ds-bottom-sheet-maxw, 480px);
   --_bottom-sheet-maxh: var(--ds-bottom-sheet-maxh, 80%);
-  --_bottom-sheet-radius: var(--ds-bottom-sheet-radius, var(--radius-lg));
+  --_bottom-sheet-radius: var(--ds-bottom-sheet-radius, var(--ds-radius-panel));
   --_bottom-sheet-bg-color: var(--ds-bottom-sheet-bg-color, var(--surface-default));
   --_bottom-sheet-scrim-color: var(--ds-bottom-sheet-scrim-color, var(--surface-scrim));
   --_bottom-sheet-title-text-color: var(--ds-bottom-sheet-title-text-color, var(--text-primary));
   --_bottom-sheet-enter-keyframes: var(--ds-bottom-sheet-enter-keyframes, ds-slide-edge-in);
-  --_bottom-sheet-enter-duration: var(--ds-bottom-sheet-enter-duration, var(--duration-base));
-  --_bottom-sheet-enter-easing: var(--ds-bottom-sheet-enter-easing, var(--ease-decelerate));
-  --_bottom-sheet-leave-duration: var(--ds-bottom-sheet-leave-duration, var(--duration-base));
-  --_bottom-sheet-leave-easing: var(--ds-bottom-sheet-leave-easing, var(--ease-accelerate));
+  --_bottom-sheet-enter-duration: var(--ds-bottom-sheet-enter-duration, var(--ds-motion-enter-surface-duration));
+  --_bottom-sheet-enter-easing: var(--ds-bottom-sheet-enter-easing, var(--ds-motion-enter-surface-easing));
+  --_bottom-sheet-leave-duration: var(--ds-bottom-sheet-leave-duration, var(--ds-motion-exit-large-duration));
+  --_bottom-sheet-leave-easing: var(--ds-bottom-sheet-leave-easing, var(--ds-motion-exit-large-easing));
 
   /* The scrim reads the same public tokens but keeps its own faster default. */
-  --_bottom-sheet-scrim-enter-duration: var(--ds-bottom-sheet-enter-duration, var(--duration-fast));
-  --_bottom-sheet-scrim-leave-duration: var(--ds-bottom-sheet-leave-duration, var(--duration-fast));
+  --_bottom-sheet-scrim-enter-duration: var(--ds-bottom-sheet-enter-duration, var(--ds-motion-enter-panel-duration));
+  --_bottom-sheet-scrim-leave-duration: var(--ds-bottom-sheet-leave-duration, var(--ds-motion-exit-duration));
   --_ds-enter-scale: var(--ds-bottom-sheet-enter-scale, 0.96);
 
   display: contents;

@@ -6,7 +6,7 @@
   /* Public --ds-card-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_card-bg-color:           var(--ds-card-bg-color,           var(--surface-default));
   --_card-border:       var(--ds-card-border,       var(--border-divider));
-  --_card-radius:       var(--ds-card-radius,       var(--radius-lg));
+  --_card-radius:       var(--ds-card-radius,       var(--ds-radius-panel));
   --_card-pad:          var(--ds-card-pad,          var(--ds-container-pad));
   --_card-shadow:       var(--ds-card-shadow,       none);
   --_card-shadow-hover: var(--ds-card-shadow-hover, var(--shadow-1));

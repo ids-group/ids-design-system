@@ -42,7 +42,7 @@
      pressed halo is opt-in now (default none) — set --ds-button-pressed-shadow. */
   --_button-press-scale: var(--ds-button-press-scale, 0.98);
   --_button-pressed-shadow: var(--ds-button-pressed-shadow, none);
-  --_button-radius:    var(--ds-button-radius,    var(--radius-md));
+  --_button-radius:    var(--ds-button-radius,    var(--ds-radius-control));
 
   /* Type + box, same read-never-declare rule as the colour resolvers above: a
      brand wanting 14px/600 buttons sized by their own padding had to write

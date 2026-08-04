@@ -14,6 +14,26 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **A role layer between the foundation scales and the components: radius, elevation and motion.** Reading
+  the raw scale directly meant a consumer could not re-round "panels" without also re-rounding every
+  control that shared `--radius-md`, could not lift every overlay without touching each surface, and could
+  not make panel entrances snappier without retuning each one. Every role defaults to the value its members
+  already used, so nothing moves until a role is set, and a per-component `--ds-<comp>-*` override still
+  wins over its role.
+  — **Radius:** `--ds-radius-inner` (the checkbox box, option rows, tags), `--ds-radius-control` (buttons,
+  field frames, picker triggers, tooltips), `--ds-radius-panel` (menus, popovers, cards, modals, drawers),
+  `--ds-radius-pill`. No `field` role: fields share `--radius-md` with buttons, so one would either
+  duplicate `control` or silently re-round every field — scope the role instead
+  (`ds-input { --ds-radius-control: 4px; }`).
+  — **Elevation:** `--ds-elevation-raised` / `-overlay` / `-floating` / `-modal`. Four, not the three first
+  sketched: the library genuinely uses four heights, and folding toast into `overlay` would have changed its
+  shadow. The older `--shadow-popover` / `-modal` / `-toast` / `-card` aliases now point AT the roles, so
+  either name works — a role moves every surface at that height, an alias retunes one family.
+  — **Motion:** `--ds-motion-enter-panel-*`, `-enter-surface-*`, `-enter-large-*`, `-exit-*`,
+  `-exit-large-*` (duration + easing each). Five roles, not four: panel LEAVES run at `--duration-base`,
+  not `fast`, so folding them into `exit` would have sped them up. `ds-loading-overlay` and the toast leave
+  stay on the raw scale — they use `--ease-standard`, which no role carries, and a role for two sites would
+  be worse than naming the value.
 - **`ds-app-layout` restores the reader's scroll on the way BACK: opt-in `restoreScroll` +
   `restoreScrollTimeout` (2000ms).** List → details → back returned the list to the top, because a real
   back IS a path change and the layout resets on those. Off by default — a layout that silently moved the

@@ -13,7 +13,7 @@
   --_select-bg-color: var(--ds-select-bg-color, var(--surface-default));
   --_select-border-color: var(--ds-select-border-color, var(--border-default));
   --_select-text-color: var(--ds-select-text-color, var(--text-primary));
-  --_select-radius: var(--ds-select-radius, var(--radius-md));
+  --_select-radius: var(--ds-select-radius, var(--ds-radius-control));
 
   // Flex column + gap so label→trigger→hint all sit the canonical --space-1-5
   // apart, matching input/textarea/autocomplete/date-picker.

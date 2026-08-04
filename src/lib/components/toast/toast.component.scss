@@ -27,8 +27,8 @@
   --_toast-bar-color: var(--ds-toast-bar-color, var(--accent));
   --_toast-icon-color: var(--ds-toast-icon-color, var(--accent));
   --_toast-enter-keyframes: var(--ds-toast-enter-keyframes, ds-slide-in);
-  --_toast-enter-duration: var(--ds-toast-enter-duration, var(--duration-slow));
-  --_toast-enter-easing: var(--ds-toast-enter-easing, var(--ease-decelerate));
+  --_toast-enter-duration: var(--ds-toast-enter-duration, var(--ds-motion-enter-large-duration));
+  --_toast-enter-easing: var(--ds-toast-enter-easing, var(--ds-motion-enter-large-easing));
   --_toast-enter-offset: var(--ds-toast-enter-offset, var(--space-2));
   --_toast-min-width: var(--ds-toast-min-width, var(--toast-minw));
   --_toast-max-width: var(--ds-toast-max-width, var(--toast-maxw));

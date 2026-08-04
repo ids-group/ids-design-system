@@ -11,8 +11,8 @@
      (:root), not per-instance. One-off panel? Pass a panelClass, target globally. */
   --_popover-bg-color:     var(--ds-popover-bg-color,     var(--surface-overlay));
   --_popover-border-color: var(--ds-popover-border-color, var(--border-default));
-  --_popover-radius:       var(--ds-popover-radius,       var(--radius-lg));
-  --_popover-shadow:       var(--ds-popover-shadow,       var(--shadow-popover));
+  --_popover-radius:       var(--ds-popover-radius,       var(--ds-radius-panel));
+  --_popover-shadow:       var(--ds-popover-shadow,       var(--ds-elevation-overlay));
   --_popover-padding:      var(--ds-popover-padding,      var(--space-3));
   --_popover-max-width:    var(--ds-popover-max-width,    var(--popover-maxw));
   --_popover-min-width:    var(--ds-popover-min-width,    auto);
