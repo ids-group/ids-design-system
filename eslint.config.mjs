@@ -99,6 +99,7 @@ export default defineConfig(
     rules: {
       'ds/template/sibling-blank-line': 'warn',
       'ds/template/element-content-newline': 'warn',
+      'ds/template/control-flow-condition-newline': 'warn',
       '@angular-eslint/template/attributes-order': 'warn',
       '@angular-eslint/template/click-events-have-key-events': 'warn',
       '@angular-eslint/template/interactive-supports-focus': 'warn',

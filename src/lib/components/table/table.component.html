@@ -342,7 +342,11 @@
               }
             </tr>
 
-            @if (expandableRows() && isExpanded(row) && rowExpandTemplate()) {
+            @if (
+                expandableRows() &&
+                isExpanded(row) &&
+                rowExpandTemplate()
+              ) {
               <tr class="expand-panel-row">
                 <td
                   class="expand-panel-cell"
