@@ -1,4 +1,5 @@
 export * from './lib/config/ds-config';
+export { ReserveMessagesDirective } from './lib/components/reserve-messages.directive';
 export * from './lib/theme/provide-ds-theme';
 export * from './lib/overlay/ds-overlay-close-ref';
 export * from './lib/overlay/body-scroll-lock.service';

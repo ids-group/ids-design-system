@@ -41,6 +41,18 @@
         "field: {",
         "DS_CONFIG"
       ]
+    },
+    {
+      "id": "ds-config-nested-provide-merges",
+      "kind": "behavior",
+      "old": "provideDsConfig",
+      "new": null,
+      "note": "A nested `provideDsConfig` (on a Route, component or directive) now MERGES with the config above it, section by section, instead of replacing it wholesale. Previously the provider used `useValue`, so a subtree that set one flag silently reset every unrelated section to its default. NO ACTION for the normal case - a single root-level `provideDsConfig` behaves exactly as before, and nested provision was neither documented nor safe to use. Only relevant if a consumer deliberately relied on a nested call to RESET a section back to defaults: that now needs the section spelled out explicitly, e.g. `provideDsConfig({ datePicker: { locale: 'en-US', dateFormat: undefined, firstDayOfWeek: 1 } })`. Enables the new `dsReserveMessages` directive to scope one field flag without disturbing the rest.",
+      "searchHints": [
+        "provideDsConfig",
+        "DS_CONFIG",
+        "providers: [provideDsConfig"
+      ]
     }
   ],
   "informational": [

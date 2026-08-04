@@ -10,6 +10,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`dsReserveMessages` — turn on the reserved message row for a whole form at once.** With
+  `reserveMessage` now off by default, a validated form would otherwise repeat `[reserveMessage]="true"`
+  on every control. Put the directive on the form and every DS field declared inside it reserves:
+  `<form dsReserveMessages>…</form>`. It provides `DS_CONFIG` for its subtree, so it composes with the
+  app-level config instead of replacing it, and a field's own `[reserveMessage]` still wins so one
+  control can opt back out. The switch is the directive's presence, not an input — providers resolve
+  before inputs exist. Note it applies to fields **declared** inside the host: projected content keeps
+  the injector of the template it was written in.
+
 - **`ds-time-picker` gains `label`, `required` and `optional` — a date + time row now aligns without a
   hand-rolled label.** The time picker had no label API at all, so a labelled form row meant authoring the
   label yourself; the date picker's own label reserved a row the time picker did not, leaving the two
@@ -91,6 +100,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   (exported from `styles/ds`; add it alongside `styles/overlay-motion` if you import partials à la carte).
 
 ### Changed
+
+- **A nested `provideDsConfig` now MERGES with the config above it instead of replacing it.** The
+  config resolves through the element-injector chain, so it was always scopable to a route, component
+  or directive — but because the provider used `useValue`, a subtree that set one flag silently dropped
+  every unrelated app-level setting (scoping `field.reserveMessage` on a form would reset
+  `datePicker.locale`, `timePicker.format`, `breadcrumbs.separator` to their defaults, with no error).
+  Merging is section by section: only the keys you name are replaced. No action needed — a single
+  root-level call behaves exactly as before, and nested provision was neither documented nor usable
+  safely. This is what makes `dsReserveMessages` composable.
 
 - **BREAKING (layout): `reserveMessage` now defaults to `false` on every field.** It shipped default-on
   in 0.7.0; the reserved row is right for a form that validates and wrong for the many forms that never
