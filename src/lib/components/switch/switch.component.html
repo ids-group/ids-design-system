@@ -35,6 +35,12 @@
         }
       </label>
     }
+
+    @if (devMode) {
+      <span dsProjectionDropped="ds-switch">
+        <ng-content></ng-content>
+      </span>
+    }
   </span>
 
   <ds-field-message

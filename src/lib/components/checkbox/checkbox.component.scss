@@ -114,6 +114,3 @@
 
 /* Dev-only detection sink for a projected caption (checkbox.component.html).
    Never rendered visible, so it cannot become a flex item in .control-line's gap. */
-.projection-probe {
-  display: none;
-}

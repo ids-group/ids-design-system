@@ -35,16 +35,8 @@
       </label>
     }
 
-    <!-- Dev-only probe, NOT projection support. The caption comes from [label],
-         so content written between the tags would vanish silently; this is the
-         only <ng-content> in the component and it exists purely so the warning
-         can see that content was passed. Production renders no extra node.
-         Implementing real projection is still open — see docs/todo.md. -->
     @if (devMode) {
-      <span
-        #projectionProbe
-        class="projection-probe"
-      >
+      <span dsProjectionDropped="ds-checkbox">
         <ng-content></ng-content>
       </span>
     }

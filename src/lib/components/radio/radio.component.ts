@@ -6,6 +6,7 @@ import {
   computed,
   inject,
   input,
+  isDevMode,
   model,
   viewChild,
 } from '@angular/core';
@@ -17,11 +18,12 @@ import {
 } from '../field-message/field-message.component';
 import type { DsSize } from '../../core/size';
 import { resolveReserveMessage } from '../field-defaults';
+import { ProjectionDroppedDirective } from '../projection-dropped.directive';
 
 @Component({
   selector: 'ds-radio',
   standalone: true,
-  imports: [FieldMessageComponent],
+  imports: [FieldMessageComponent, ProjectionDroppedDirective],
   templateUrl: './radio.component.html',
   styleUrl: './radio.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -112,4 +114,6 @@ export class RadioComponent {
       this.checked.set(true);
     }
   }
+
+  protected readonly devMode = isDevMode();
 }

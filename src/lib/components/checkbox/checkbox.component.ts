@@ -1,15 +1,12 @@
 import {
   Component,
-  type ElementRef,
   ViewEncapsulation,
-  afterNextRender,
   booleanAttribute,
   computed,
   forwardRef,
   input,
   isDevMode,
   model,
-  viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsBooleanControlValueAccessor } from '../control-value-accessor';
@@ -20,11 +17,12 @@ import {
 import { nextControlId } from '../field-ids';
 import type { DsSize } from '../../core/size';
 import { resolveReserveMessage } from '../field-defaults';
+import { ProjectionDroppedDirective } from '../projection-dropped.directive';
 
 @Component({
   selector: 'ds-checkbox',
   standalone: true,
-  imports: [FieldMessageComponent],
+  imports: [FieldMessageComponent, ProjectionDroppedDirective],
   templateUrl: './checkbox.component.html',
   styleUrl: './checkbox.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -91,21 +89,4 @@ export class CheckboxComponent extends DsBooleanControlValueAccessor {
   }
 
   protected readonly devMode = isDevMode();
-  private readonly projectionProbe =
-    viewChild<ElementRef<HTMLElement>>('projectionProbe');
-
-  constructor() {
-    super();
-
-    if (this.devMode) {
-      afterNextRender(() => {
-        if (!this.projectionProbe()?.nativeElement.textContent?.trim()) {
-          return;
-        }
-        console.warn(
-          '[ds-checkbox] Projected content renders nothing — the caption comes from the [label] input only, so `<ds-checkbox>Some text</ds-checkbox>` shows no caption at all. Move the text into [label].',
-        );
-      });
-    }
-  }
 }

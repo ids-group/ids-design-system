@@ -20,12 +20,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   sorting: the header filter still lists what the user can see. Columns with plain numeric text already
   sorted correctly and need nothing.
 
-- **`ds-checkbox` warns in dev when a caption is projected instead of passed.** `<ds-checkbox>Accept the
-  terms</ds-checkbox>` renders no caption — the text comes from `[label]` only — and it failed silently:
-  no error, no warning, nothing in the types, so it survived review and was caught by opening the page.
-  Dev builds now log which component swallowed the text. Production is untouched: the probe that detects
-  it is rendered only under `isDevMode()`, so no extra node ships. Real projection support is still
-  open — see `docs/todo.md`.
+- **`ds-checkbox`, `ds-switch` and `ds-radio` warn in dev when a caption is projected instead of passed.**
+  `<ds-checkbox>Accept the terms</ds-checkbox>` renders no caption — the text comes from `[label]` only —
+  and it failed silently: no error, no warning, nothing in the types, so it survived review and was caught
+  by opening the page. All three share that contract, so all three now log which component swallowed the
+  text. Production is untouched: the probe that detects it is rendered only under `isDevMode()`, so no
+  extra node ships. Real projection support is still open — see `docs/todo.md`.
 
 - **`ds-app-layout` collapses its rail to an off-canvas overlay below `lg`.** On narrow viewports the
   rail no longer occupies a grid column: below the `lg` breakpoint (read at runtime from `--bp-lg`,

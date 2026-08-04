@@ -5,6 +5,7 @@ import {
   computed,
   forwardRef,
   input,
+  isDevMode,
   model,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -16,11 +17,12 @@ import {
 import { nextControlId } from '../field-ids';
 import type { DsSize } from '../../core/size';
 import { resolveReserveMessage } from '../field-defaults';
+import { ProjectionDroppedDirective } from '../projection-dropped.directive';
 
 @Component({
   selector: 'ds-switch',
   standalone: true,
-  imports: [FieldMessageComponent],
+  imports: [FieldMessageComponent, ProjectionDroppedDirective],
   templateUrl: './switch.component.html',
   styleUrl: './switch.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -91,4 +93,6 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
   protected onCheckedChange(event: Event): void {
     this.checked.set((event.target as HTMLInputElement).checked);
   }
+
+  protected readonly devMode = isDevMode();
 }
