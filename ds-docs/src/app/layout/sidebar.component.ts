@@ -194,7 +194,7 @@ const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
          rail, which has none of its own — the ds-drawer that used to wrap it did. */
       .toc.is-drawer {
         border-right: none;
-        padding: var(--space-2) var(--space-4) var(--space-6);
+        padding: var(--space-6) var(--space-4);
       }
       .toc.is-drawer .link {
         min-height: var(--hit-comfy);
