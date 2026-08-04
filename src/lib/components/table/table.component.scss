@@ -1,9 +1,8 @@
 /* `.table.skeleton-mode` is the row-level loading flag — named distinctly so it
    does not shadow the global `.skeleton` cell-shimmer class. */
 
-// Positioned so the absolute `.visually-hidden` nodes below resolve against this host. Without it
-// they fall back to the initial containing block and add their layout offset to the PAGE's root
-// scroller — a table below the fold then gives the document a second scrollbar beside the app's own.
+// Positioned to contain the absolute `.visually-hidden` nodes below; without it they resolve against
+// the initial containing block and grow the consuming PAGE's root scroller into a second scrollbar.
 :host {
   display: block;
   position: relative;

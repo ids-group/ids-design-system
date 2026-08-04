@@ -1,6 +1,5 @@
 // No padding by default: `ds-menu` already sets `gap: var(--space-0-5)` between rows, so the line takes
-// one row's place instead of adding a second gap on top of it. Padding here read as a hole three times
-// the inter-item rhythm. A menu that wants a divider AND extra air opts in through the token.
+// one row's place instead of stacking a second gap on top of it and tripling the rhythm at the boundary.
 :host {
   --_menu-divider-color: var(--ds-menu-divider-color, var(--border-divider));
   --_menu-divider-spacing: var(--ds-menu-divider-spacing, 0);
