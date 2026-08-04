@@ -45,6 +45,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `invalidResolved` replace it. Only reachable by subclassing a field component, which is not a
   supported extension point, but noted for parity with the class-member changes in 0.7.0.
 
+### Fixed
+
+- **`--ds-overlay-enter-scale` now reaches the portaled panel, so `ds-scale-in` can be retuned per
+  instance.** The token was declared and resolved on the pane but missing from the set
+  `prepareOverlayEnter()` forwards, so `ds-select { --ds-overlay-enter-scale: 0.9; }` did nothing while
+  the other four enter tokens worked — 0.7.1 shipped it as a known gap. Covers every overlay panel
+  (select, multi-select, autocomplete, date / time / colour picker, popover, tooltip, menu submenus). A
+  global override always worked and is unaffected.
+
 ## 0.7.1 — 2026-08-04
 
 ### Added

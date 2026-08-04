@@ -14,6 +14,7 @@ const OVERLAY_MOTION_TOKENS = [
   '--ds-overlay-enter-duration',
   '--ds-overlay-enter-easing',
   '--ds-overlay-enter-offset',
+  '--ds-overlay-enter-scale',
 ] as const;
 
 /**
