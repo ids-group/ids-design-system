@@ -11,57 +11,7 @@ import { COMPONENT_API } from './component-api.generated';
   selector: 'docs-component-meta',
   standalone: true,
   encapsulation: ViewEncapsulation.Emulated,
-  template: `
-    @let api = data();
-
-    @if (api) {
-      <div class="meta">
-        <div class="row">
-          <span class="chip tagchip">
-            <span class="k">
-              {{ api.isElement ? 'tag' : 'attr' }}
-            </span>
-
-            <span class="tag">
-              {{ api.isElement ? '<' + api.selector + '>' : api.selector }}
-            </span>
-          </span>
-
-          <span class="chip">
-            <span class="k">
-              class
-            </span>{{ api.className }}
-          </span>
-
-          <span class="badge" [class]="api.status">
-            {{ api.status }}
-          </span>
-        </div>
-
-        @if (api.summary) {
-          <p class="summary">
-            {{ api.summary }}
-          </p>
-        }
-
-        <div class="importbar">
-          <code class="imp">
-            import {{ '{' }} {{ api.importName }} {{ '}' }} from '{{
-              api.importPath
-            }}';
-          </code>
-
-          <button
-            type="button"
-            class="copy"
-            (click)="copy(api.importName, api.importPath)"
-          >
-            {{ copied() ? 'Copied ✓' : 'Copy' }}
-          </button>
-        </div>
-      </div>
-    }
-  `,
+  templateUrl: './docs-component-meta.component.html',
   styles: [
     `
       :host {

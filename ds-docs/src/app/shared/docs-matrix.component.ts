@@ -30,66 +30,7 @@ export interface DocsMatrixRow {
   standalone: true,
   imports: [NgTemplateOutlet],
   encapsulation: ViewEncapsulation.Emulated,
-  template: `
-    <div class="scroll">
-      <div class="matrix" [style.grid-template-columns]="gridCols()">
-        <div class="t-overline corner">
-          {{ cornerLabel() }}
-        </div>
-
-        @for (col of cols(); track col) {
-          <div class="t-overline head">
-            {{ col }}
-          </div>
-        }
-
-        @for (row of rows(); track row.key) {
-          <div class="row-label">
-            @if (row.dot) {
-              <span class="dot" [style.background]="row.dot"></span>
-            }
-
-            <span class="name">
-              {{ row.label }}
-            </span>
-
-            @if (row.note) {
-              <span class="note t-mono-inline">
-                {{ row.note }}
-              </span>
-            }
-          </div>
-
-          @for (col of cols(); track col) {
-            <div class="cell">
-              @if (isLegal(row, col)) {
-                <ng-container
-                  [ngTemplateOutlet]="cell()"
-                  [ngTemplateOutletContext]="{
-                    $implicit: col,
-                    row: row,
-                    col: col,
-                  }"
-                />
-
-                @if (isDiscouraged(row, col)) {
-                  <span
-                    class="warn"
-                    title="UX-discouraged combination — renders, but reads poorly"
-                  >
-                  </span>
-                }
-              } @else {
-                <span class="na">
-                  —
-                </span>
-              }
-            </div>
-          }
-        }
-      </div>
-    </div>
-  `,
+  templateUrl: './docs-matrix.component.html',
   styles: [
     `
       .scroll {
