@@ -9,7 +9,7 @@ Completed items are archived in `done.md` (last archive pass **2026-08-04** — 
 
 ## Priority board (2026-08-04 actualization)
 
-Actionable items, ranked. Full context under the thematic sections below. 49 open, plus 2 nested children under the shipped customizable-motion item.
+Actionable items, ranked. Full context under the thematic sections below. 47 open, plus 2 nested children under the shipped customizable-motion item.
 
 **P1 — real defects, do next:**
 
@@ -29,7 +29,7 @@ Actionable items, ranked. Full context under the thematic sections below. 49 ope
 - **Shared picker internals** — nav/filter helpers; needs an explicit go.
 - **autocomplete single-select display mode** → unblocks the `ds-field-group` composer.
 - **Global focus-type config** — forced-colors survivability.
-- **Disabled `ds-menu-item` reason not announced** to a screen reader (`aria-describedby` sits on the `role="none"` host).
+- **Disabled `ds-menu-item` reason** — fixed in `dsTooltip` 2026-08-04 (it now describes the element that took focus); the item stays open only for the browser check.
 - **schematics `ng add` under bun** — verify against a real bun consumer.
 
 **P2 — new components:**
@@ -38,9 +38,9 @@ Actionable items, ranked. Full context under the thematic sections below. 49 ope
 
 **P3 — someday / minor / decision-record:**
 
-- Overlay leave-animation policy · leave-keyframe swappability (blocked by the `animationend` name guard) · inspect-mode pilot · `ds-select` native `multi` (deferred) · `ds-table` row-expansion deltas · `ds-table` layout persistence + export affordance · `ds-number-stepper` numeric formatting · form-layout live gap demo · image/lightbox · splitter (decision) · CascadeSelect (decision) · primary-CTA token · MED cluster · topbar `role="banner"` (decision-record) · combobox-vs-multi-select boundary (decision) · CDK Menu (parked) · ds-docs `core/` tier · design-system.md note (user-frozen) · browser-verify the responsive rail · manual shell-demo browser check.
+- Overlay leave-animation policy · leave-keyframe swappability (blocked by the `animationend` name guard) · inspect-mode pilot · `ds-select` native `multi` (deferred) · `ds-table` row-expansion deltas · `ds-table` layout persistence + export affordance · `ds-number-stepper` numeric formatting · form-layout live gap demo · image/lightbox · splitter (decision) · CascadeSelect (decision) · primary-CTA token · MED cluster · topbar `role="banner"` (decision-record) · combobox-vs-multi-select boundary (decision) · CDK Menu (parked) · ds-docs `core/` tier · design-system.md note (user-frozen). **Plus the five queued browser checks**, held open together until the Chrome extension is back: responsive rail, `dsTooltip` focus fix, the two shell demos, and the ds-docs shell migration.
 
-**Shipped 2026-08-03/04 (see `done.md`):** `error` + `warning` beside `hint` across all 14 fields, resolved from the form control (both signal and reactive forms) · dropped-projection guard extended to checkbox + switch + radio via one directive · `dsTooltip` describes the focused element · responsive rail on `ds-app-layout` · picker parity closed (value typography + glyph order) · `reserveMessage` default reversed to off + `dsReserveMessages` group opt-in + `provideDsConfig` merge · path-only scroll reset · sidenav rail-tooltip item closed as not-reproducing · ds-docs blank-page nav fix · 266 section markers stripped · named-re-export tree-shaking fix · `cellTemplateMap` doc nit.
+**Shipped 2026-08-03/04 (see `done.md`):** ds-docs now RUNS on `ds-app-layout` (shell dogfood; `LayoutScrollService` gained a public scroller + `scrollTo`) · `ds-table` `clientSort` → `sortMode` (breaking, migration written) · `dsRailTrigger` + `ariaExpanded`/`ariaControls` forwarded on both buttons · `error` + `warning` beside `hint` across all 14 fields, resolved from the form control (both signal and reactive forms) · dropped-projection guard extended to checkbox + switch + radio via one directive · `dsTooltip` describes the focused element · responsive rail on `ds-app-layout` · picker parity closed (value typography + glyph order) · `reserveMessage` default reversed to off + `dsReserveMessages` group opt-in + `provideDsConfig` merge · path-only scroll reset · sidenav rail-tooltip item closed as not-reproducing · ds-docs blank-page nav fix · 266 section markers stripped · named-re-export tree-shaking fix · `cellTemplateMap` doc nit · dead docs `HeaderComponent` deleted · comment review against the house rule (five trims).
 
 **Housekeeping surfaced by the 07-24 review** — all four resolved (2026-07-29/30, see `done.md`): stale `_forced-states.scss` refs removed; orphaned `_dropzone.scss` deleted; unused `DocsAwaitComponent` removed; `tools/extract-tokens.mjs` now scans `_typography.scss` so the ~95 `--ds-t-*` hooks surface in the ds-docs token reference.
 
