@@ -227,7 +227,9 @@
               [class.expanded]="isExpanded(row)"
               [class.clickable]="rowInteractive()"
               [class.active]="rowKey(row) === activeRowId()"
-              [attr.aria-current]="rowKey(row) === activeRowId() ? 'true' : null"
+              [attr.aria-current]="
+                rowKey(row) === activeRowId() ? 'true' : null
+              "
               [attr.tabindex]="rowInteractive() ? 0 : null"
               [attr.aria-label]="rowInteractive() ? rowAriaLabel(row) : null"
               (mousedown)="onRowMousedown()"

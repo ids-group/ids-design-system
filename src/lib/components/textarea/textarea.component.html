@@ -51,11 +51,7 @@
     </textarea>
   </div>
 
-  @if (
-    reserveMessageResolved() ||
-    message().text ||
-    maxLength() !== null
-  ) {
+  @if (reserveMessageResolved() || message().text || maxLength() !== null) {
     <div class="field-footer">
       <ds-field-message
         [text]="message().text"

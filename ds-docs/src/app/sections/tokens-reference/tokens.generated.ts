@@ -3397,6 +3397,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Menu item group divider colour (defaults to --border-divider)."
       },
       {
+        "name": "--ds-menu-divider-spacing",
+        "value": "0",
+        "notes": ""
+      },
+      {
         "name": "--ds-menu-item-label-color",
         "value": "var(--text-primary)",
         "notes": "Item label colour."

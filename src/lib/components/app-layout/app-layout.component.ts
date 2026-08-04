@@ -167,6 +167,8 @@ export class AppLayoutComponent {
     };
     sync();
     desktop.addEventListener('change', sync);
-    this.destroyRef.onDestroy(() => desktop.removeEventListener('change', sync));
+    this.destroyRef.onDestroy(() =>
+      desktop.removeEventListener('change', sync),
+    );
   }
 }

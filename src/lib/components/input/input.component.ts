@@ -49,8 +49,7 @@ import { resolveReserveMessage } from '../field-defaults';
   ],
 })
 export class InputComponent extends DsControlValueAccessor<string> {
-  private readonly control =
-    viewChild<ElementRef<HTMLInputElement>>('control');
+  private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
 
   /** Text value, two-way bound. */
   readonly value = model<string>('');

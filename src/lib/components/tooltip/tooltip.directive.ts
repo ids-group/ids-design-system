@@ -14,7 +14,6 @@ import type { TooltipPlacement } from './tooltip.types';
 
 let nextId = 0;
 
-
 @Directive({
   selector: '[dsTooltip]',
   standalone: true,
