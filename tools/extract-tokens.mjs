@@ -209,10 +209,19 @@ const overlayMotionHooks = extractComponentTokens(
   readIf(join(ROOT, 'src/lib/styles/_overlay-motion.scss')),
   'overlay',
 );
+// --ds-field-label-* are read in a MIXIN, included by every field rather than
+// declared in any one component's stylesheet, so the *.component.scss sweep
+// cannot see them. Grouped under 'field': they are the family's contract, not
+// one component's.
+const fieldLabelHooks = extractComponentTokens(
+  readIf(join(ROOT, 'src/lib/styles/_field-label.scss')),
+  'field',
+);
 const all = [
   ...comp.map((t) => ({ ...t, category: 'component' })),
   ...typographyHooks.map((t) => ({ ...t, category: 'component' })),
   ...overlayMotionHooks.map((t) => ({ ...t, category: 'component' })),
+  ...fieldLabelHooks.map((t) => ({ ...t, category: 'component' })),
   ...globals.map((t) => ({ ...t, category: categorize(t.name) })),
 ];
 for (const t of all)

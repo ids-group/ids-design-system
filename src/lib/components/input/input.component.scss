@@ -1,6 +1,7 @@
 // Ported from vendor/claude-design-ds components.css (FIELD block); textarea/
 // select/number-stepper/floating-label rules are intentionally out of scope here.
 @use '../../styles/press' as press;
+@use '../../styles/field-label' as field-label;
 
 :host {
   /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
@@ -19,9 +20,13 @@
   --_input-bg-color-error:       var(--ds-input-bg-color-error,       var(--error-subtitle));
   --_input-border-success: var(--ds-input-border-success, var(--success));
   --_input-bg-color-disabled:    var(--ds-input-bg-color-disabled,    var(--surface-disabled));
-  --_input-label-color:    var(--ds-input-label-color,    var(--text-secondary));
-  --_input-label-fs:       var(--ds-input-label-fs,       var(--font-size-xs));
-  --_input-label-fw:       var(--ds-input-label-fw,       var(--font-weight-bold));
+
+  // Shipped in 0.7.x, so they still win — but they now fall through to the family
+  // token instead of straight to the raw scale, which is what lets one
+  // --ds-field-label-* retune reach ds-input too. Also feeds .floating-label.
+  --_input-label-color:    var(--ds-input-label-color,    var(--ds-field-label-color,       var(--text-secondary)));
+  --_input-label-fs:       var(--ds-input-label-fs,       var(--ds-field-label-font-size,   var(--font-size-xs)));
+  --_input-label-fw:       var(--ds-input-label-fw,       var(--ds-field-label-weight,      var(--font-weight-bold)));
   --_input-fs:             var(--ds-input-fs,             var(--font-size-s));
   --_input-clear-color: var(--ds-input-clear-color, var(--text-secondary));
 
@@ -35,11 +40,11 @@
   width: 100%;
 
   .label {
-    font: var(--_input-label-fw) var(--_input-label-fs) / var(--line-height-base) var(--font-sans);
-    color: var(--_input-label-color);
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
+    @include field-label.field-label;
+
+    --_field-label-font-size: var(--_input-label-fs);
+    --_field-label-weight: var(--_input-label-fw);
+    --_field-label-color: var(--_input-label-color);
 
     .req {
       color: var(--error);

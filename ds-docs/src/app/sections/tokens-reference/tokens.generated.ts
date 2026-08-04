@@ -3065,6 +3065,38 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Field",
+    "selector": ".field",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-field-label-font-size",
+        "value": "var(--font-size-xs)",
+        "notes": "Label size for the whole field family — input, textarea, select, both pickers and radio-group resolve through it."
+      },
+      {
+        "name": "--ds-field-label-weight",
+        "value": "var(--font-weight-bold)",
+        "notes": "Label weight for the whole field family."
+      },
+      {
+        "name": "--ds-field-label-color",
+        "value": "var(--text-secondary)",
+        "notes": "Label colour for the whole field family."
+      },
+      {
+        "name": "--ds-field-label-transform",
+        "value": "none",
+        "notes": "Label text-transform — set `uppercase` for the tracked editorial label pattern. Default `none`."
+      },
+      {
+        "name": "--ds-field-label-tracking",
+        "value": "normal",
+        "notes": "Label letter-spacing, for uppercase labels that need opening up. Default `normal`."
+      }
+    ]
+  },
+  {
     "component": "Field Message",
     "selector": ".field-message",
     "description": "",
@@ -3235,17 +3267,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-input-label-color",
-        "value": "var(--text-secondary)",
+        "value": "var(--ds-field-label-color,       var(--text-secondary))",
         "notes": "Label colour."
       },
       {
         "name": "--ds-input-label-fs",
-        "value": "var(--font-size-xs)",
+        "value": "var(--ds-field-label-font-size,   var(--font-size-xs))",
         "notes": "Label size."
       },
       {
         "name": "--ds-input-label-fw",
-        "value": "var(--font-weight-bold)",
+        "value": "var(--ds-field-label-weight,      var(--font-weight-bold))",
         "notes": "Label weight."
       },
       {

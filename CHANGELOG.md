@@ -14,6 +14,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **One label contract for the whole field family: `--ds-field-label-font-size` / `-weight` / `-color` / `-transform` / `-tracking`.** Five components hard-coded the identical label rule and only `ds-input`
+  had hooks, so a form mixing a select with an input rendered labels in two sizes and colours out of the
+  box, and retuning them from an app needed `.field.field .label.label, .select-label.select-label` to
+  out-rank the shimmed component rule. `input`, `textarea`, `select`, `date-picker`, `time-picker` and
+  `radio-group` now resolve through one mixin and one token set. No per-component token set is needed —
+  custom-property scoping already narrows a retune to one component
+  (`ds-select { --ds-field-label-transform: uppercase; }`), and `-transform`/`-tracking` make the
+  uppercase tracked editorial label reachable through tokens for the first time. `ds-input`’s older
+  `--ds-input-label-color`/`-fs`/`-fw` still win where set, and now fall through to the family token
+  instead of straight to the raw scale.
 - **Every field takes `error` and `warning` beside `hint`, and shows exactly one of them.** Until now a
   field had one message input, so a consumer had to multiplex it by hand —
   `[invalid]="showError()" [hint]="showError() ? errorText() : helperText()"` — on every screen that
@@ -44,6 +54,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-table`’s `clientSort` is replaced by `sortMode: 'client' | 'server' | 'none'`, and the default flips to client sorting.** The boolean could not express "nothing sorts", so a column marked `sortable: true` on a table with no sorting drew a header that looked live, showed a caret on hover and did nothing — an invisible failure that survived review and was caught by opening the page. An enum makes that state unrepresentable: `'none'` now renders the header as plain text, with no button, caret or `aria-sort`. Unset resolves to `'client'`, so `sortable: true` always does something; a server-sorted table declares `'server'`, which is the side that actually knows it wants server sorting. **Migration is mechanical except for one case:** a table that previously bound no `clientSort` and reordered in its own `(sortChange)` handler must now declare `sortMode="server"`, or it will sort locally as well. For a server-PAGED table (one that binds `total`) that is worse than a dead header, because only the current page reorders and the rows look sorted without being sorted — so dev builds warn on exactly that combination: `total` bound, sortable columns, `sortMode` never declared. Rejected alternative: reading `OutputEmitterRef.listeners` to detect an unbound `(sortChange)`. It is private, and a rename would kill the warning SILENTLY — `?.length` on `undefined` just means it never fires again.
 ### Changed
 
+- **`ds-select`’s label element is `.label`, not `.select-label`, and `ds-radio-group`’s is `.label`, not `.group-label`.** Consumer CSS targeting either class stops matching — see the migration manifest.
+- **`ds-radio-group`’s label now looks like every other field label.** It was the one component drawing
+  its own type (`medium` weight at `--font-size-s` on `--line-height-flat`) rather than the family’s
+  `bold`/`--font-size-xs`; in a form beside an input or a select it read as a different kind of thing.
+  Restore the old look with `ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); }`.
 - **`FieldMessageState` gained `'warning'`.** Additive, but an exhaustive `switch` over the exported
   union in consumer code will no longer compile without that arm.
 - **Fields no longer expose a `protected messageState`;** the resolved `message` (text + state) and

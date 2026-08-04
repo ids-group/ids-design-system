@@ -4,6 +4,7 @@
    Absorbed the former <ds-dropdown> (removed as a duplicate) - trigger and panel share its source.
    ============================================================ */
 @use '../../styles/press' as press;
+@use '../../styles/field-label' as field-label;
 
 :host {
   --_select-focus-shadow: var(--ds-select-focus-shadow, var(--ds-field-focus-shadow));
@@ -21,12 +22,8 @@
   width: 100%;
 }
 
-.select-label {
-  font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
+.label {
+  @include field-label.field-label;
 
   .req {
     color: var(--error);

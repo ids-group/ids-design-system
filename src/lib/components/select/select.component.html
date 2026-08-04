@@ -1,6 +1,6 @@
 @if (label()) {
   <span
-    class="select-label"
+    class="label"
     [id]="labelId"
   >
     {{ label() }}
@@ -56,7 +56,12 @@
     {{ displayLabel() }}
   </span>
 
-  @if (clearable() && hasValue() && !isDisabled() && !readOnly()) {
+  @if (
+      clearable() &&
+      hasValue() &&
+      !isDisabled() &&
+      !readOnly()
+    ) {
     <button
       type="button"
       class="clear-btn"

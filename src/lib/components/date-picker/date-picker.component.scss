@@ -1,5 +1,6 @@
 /* Ported from claude-design-ds/components.css. */
 @use '../../styles/breakpoints' as bp;
+@use '../../styles/field-label' as field-label;
 
 :host {
   --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
@@ -63,11 +64,7 @@
   width: 100%;
 
   .label {
-    font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
+    @include field-label.field-label;
 
     .req {
       color: var(--_date-picker-required-color);

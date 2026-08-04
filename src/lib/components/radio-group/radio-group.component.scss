@@ -1,8 +1,9 @@
+@use '../../styles/field-label' as field-label;
+
 :host { display: flex; flex-direction: column; gap: var(--field-label-gap); }
 
-.group-label {
-  font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-  color: var(--text-secondary);
+.label {
+  @include field-label.field-label;
 }
 
 .radios { display: flex; flex-direction: column; gap: var(--space-2, 8px); }

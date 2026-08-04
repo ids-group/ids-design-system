@@ -47,6 +47,34 @@
         "messageState",
         "override readonly"
       ]
+    },
+    {
+      "id": "select-label-class-renamed-to-label",
+      "kind": "class-rename",
+      "old": "ds-select .select-label",
+      "new": ".label",
+      "note": "STYLING ONLY, and only for a consumer who styles ds-select's internal DOM. The label element is now `.label`, the same class every other field in the family uses, so a rule written as `.select-label` (or the doubled `.select-label.select-label` needed to out-rank the shimmed component rule) silently matches nothing after the upgrade. Retarget to `.label`, scoped to the element: `ds-select .label { … }`. In most cases the rule can be DELETED instead — it existed to make the select's label match the input's, and they now match by default. Scope strictly to selectors under ds-select; `.label` is also the class ds-input, ds-textarea, ds-date-picker, ds-time-picker and ds-radio-group use.",
+      "searchHints": [
+        "select-label",
+        ".select-label",
+        "ds-select",
+        "label",
+        "field-label"
+      ]
+    },
+    {
+      "id": "radio-group-label-class-and-type",
+      "kind": "class-rename",
+      "old": "ds-radio-group .group-label",
+      "new": ".label",
+      "note": "TWO changes to the same element. (1) CLASS: `ds-radio-group`'s label is now `.label`, so consumer CSS targeting `.group-label` under ds-radio-group stops matching — retarget or delete. Note `.group-label` is ALSO the class `ds-sidenav-group` uses for its heading, which is unchanged; only rules scoped under ds-radio-group are affected. (2) VISIBLE: the label now draws the family's type - `--font-weight-bold` at `--font-size-xs` - instead of its own `--font-weight-medium` at `--font-size-s` on `--line-height-flat`. It was the only field label drawing its own, and in a form beside an input or select it read as a different kind of element. ACTION: none for most screens, since matching the family is the point. To keep the old look, scope the family tokens: `ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); }`.",
+      "searchHints": [
+        "group-label",
+        ".group-label",
+        "ds-radio-group",
+        "radio-group",
+        "label"
+      ]
     }
   ],
   "informational": [
@@ -56,6 +84,7 @@
     "`dsRailTrigger` is a new directive: put it on your own burger anywhere inside `ds-app-layout` and it toggles `[(railOpen)]` and keeps `aria-expanded` / `aria-controls` pointing at the rail panel, so the trigger and the panel are related for a screen reader. Both attributes are dropped while the rail is not an overlay, where `aria-expanded=\"false\"` would contradict what the user sees. `ds-app-layout` also exposes `railId` and the read-only `railOverlay` signal for a consumer that builds its own trigger.",
     "`ds-table` `sortMode=\"none\"` is the way to render a column that is sortable in principle but not on this screen: the header renders as plain text, with no button, caret or `aria-sort`, instead of a control that does nothing.",
     "Bugfix, no action: a CLOSED compact `ds-app-layout` rail is now `inert`, and closing it (Escape, scrim click, navigation) returns focus to the control that claims the rail via `aria-controls`. Before, the off-canvas panel kept `role=\"dialog\"`/`aria-modal=\"true\"`, left every nav link tabbable and stranded the caret inside the hidden panel, because cdkTrapFocusAutoCapture restores focus only on directive destroy. A consumer whose custom burger sets neither `dsRailTrigger` nor `aria-controls` gets the inert fix but no focus return - add `aria-controls` pointing at `ds-app-layout`'s `railId` to get it.",
-    "Bugfix, no action: `--ds-overlay-enter-scale` is now forwarded onto the portaled overlay pane, so scoping it per instance (`ds-select { --ds-overlay-enter-scale: 0.9; }`) finally reaches select / multi-select / autocomplete / date / time / colour picker / popover / tooltip / menu-submenu panels. 0.7.1 shipped it as a known gap — the token was resolved on the pane but absent from the forwarded set, while the other four enter tokens did forward. A GLOBAL override worked before and is unaffected."
+    "Bugfix, no action: `--ds-overlay-enter-scale` is now forwarded onto the portaled overlay pane, so scoping it per instance (`ds-select { --ds-overlay-enter-scale: 0.9; }`) finally reaches select / multi-select / autocomplete / date / time / colour picker / popover / tooltip / menu-submenu panels. 0.7.1 shipped it as a known gap — the token was resolved on the pane but absent from the forwarded set, while the other four enter tokens did forward. A GLOBAL override worked before and is unaffected.",
+    "The field family gained one label contract: --ds-field-label-font-size / -weight / -color / -transform / -tracking, resolved by ds-input, ds-textarea, ds-select, ds-date-picker, ds-time-picker and ds-radio-group through a shared mixin. Defaults equal the values those components hard-coded, so nothing moves unless you set a token. There is deliberately no per-component token set - custom-property scoping already narrows a retune to one element (`ds-select { --ds-field-label-transform: uppercase; }`) - and -transform/-tracking make the uppercase tracked label reachable through tokens for the first time. ds-input's --ds-input-label-color/-fs/-fw still take precedence where set and now fall through to the family token rather than the raw scale."
   ]
 }
