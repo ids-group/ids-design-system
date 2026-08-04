@@ -1,7 +1,13 @@
 import { NgComponentOutlet } from '@angular/common';
-import { Component, ViewEncapsulation, computed, inject } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  computed,
+  effect,
+  inject,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { GROUP_PAGES } from '../group-pages';
 import { groupForAnchor, urlForGroupPath } from '../layout/nav.config';
 
@@ -43,6 +49,7 @@ import { groupForAnchor, urlForGroupPath } from '../layout/nav.config';
 })
 export class SectionGroupPage {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly params = toSignal(this.route.paramMap, {
     requireSync: true,
   });
@@ -63,6 +70,17 @@ export class SectionGroupPage {
 
     return GROUP_PAGES.find((group) => group.path === path) ?? null;
   });
+
+  constructor() {
+    // `:area/:anchor` matches any pair, so a mistyped or renamed anchor under a
+    // real area (/foundations/app-layout) is a route hit with nothing to render —
+    // the `**` fallback never sees it. Send those home instead of a blank page.
+    effect(() => {
+      if (!this.def()) {
+        void this.router.navigateByUrl('/', { replaceUrl: true });
+      }
+    });
+  }
 
   protected readonly nextGroup = computed(() => {
     const current = this.def();

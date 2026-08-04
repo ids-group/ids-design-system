@@ -109,11 +109,15 @@ export class AppLayoutComponent {
       this.watchDesktopBreakpoint();
     });
 
+    // Not closeRail(): navigating is not a dismissal. The reader activated a link,
+    // so focus belongs wherever the router put it - handing it back to the burger
+    // would announce "Open navigation" instead of the page they asked for.
     this.navigation.pathChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.closeRail());
+      .subscribe(() => this.railOpen.set(false));
   }
 
+  /** Dismissal: Escape or the scrim. Restores focus, which navigation must not. */
   protected closeRail(): void {
     if (!this.railOpen()) {
       return;
@@ -154,9 +158,11 @@ export class AppLayoutComponent {
     const sync = (): void => {
       this.compact.set(!desktop.matches);
       // Crossing UP drops the overlay state: leaving it set would re-open the
-      // rail unprompted the next time the viewport narrows.
+      // rail unprompted the next time the viewport narrows. Set the model
+      // directly rather than calling closeRail(), whose focus restore has no
+      // business firing here - the trigger it would focus is hidden on desktop.
       if (desktop.matches) {
-        this.closeRail();
+        this.railOpen.set(false);
       }
     };
     sync();

@@ -32,6 +32,11 @@ export class LayoutScrollService {
       .subscribe(() => this.scrollToTop());
   }
 
+  /**
+   * Wiring, called by `ds-app-layout` once its content region exists. Public only
+   * because the component and the service sit in different files - a consumer has
+   * no reason to call it, and calling it points the service at the wrong element.
+   */
   setScrollContainer(element: Element): void {
     this.container.set(element);
   }
