@@ -419,6 +419,9 @@
   --modal-w-fullscreen: calc(100vw - var(--space-6));
   --modal-h-fullscreen: calc(100vh - var(--space-6));
 
+  /* Auth shell */
+  --auth-card-w: 420px;
+
   /* Drawer */
   --drawer-w-sm: 320px;
   --drawer-w-md: 480px;

@@ -28,6 +28,7 @@ import { TimePickerSection } from './sections/components/time-picker/time-picker
 import { W3wSection } from './sections/components/w3w/w3w.section';
 
 import { AppLayoutSection } from './sections/components/app-layout/app-layout.section';
+import { AuthShellSection } from './sections/components/auth-shell/auth-shell.section';
 import { BreadcrumbsSection } from './sections/components/breadcrumbs/breadcrumbs.section';
 import { MenuSection } from './sections/components/menu/menu.section';
 import { PaginationSection } from './sections/components/pagination/pagination.section';
@@ -148,6 +149,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
     title: 'Navigation',
     sections: [
       AppLayoutSection,
+      AuthShellSection,
       BreadcrumbsSection,
       MenuSection,
       PaginationSection,

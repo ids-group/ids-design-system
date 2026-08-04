@@ -193,6 +193,74 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "auth-shell": {
+    "key": "auth-shell",
+    "selector": "ds-auth-shell",
+    "isElement": true,
+    "className": "AuthShellComponent",
+    "status": "stable",
+    "importName": "AuthShellComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "brand",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Wordmark beside the letter-mark tile. For a logo image/SVG, project it into the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`."
+      },
+      {
+        "name": "logoLetter",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`."
+      },
+      {
+        "name": "tagline",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "One line under the wordmark naming the product or audience."
+      },
+      {
+        "name": "cardElevation",
+        "kind": "input",
+        "type": "CardElevation",
+        "union": [
+          "flat",
+          "raised",
+          "hover",
+          "interactive"
+        ],
+        "default": "'raised'",
+        "required": false,
+        "description": "Card treatment. `flat` suits a screen that already sits on a tinted canvas."
+      },
+      {
+        "name": "cardPadding",
+        "kind": "input",
+        "type": "CardPadding",
+        "union": [
+          "none",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "'lg'",
+        "required": false,
+        "description": "Card padding preset."
+      }
+    ],
+    "outputs": []
+  },
   "autocomplete": {
     "key": "autocomplete",
     "selector": "ds-autocomplete",

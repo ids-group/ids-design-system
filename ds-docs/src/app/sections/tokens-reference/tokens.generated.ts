@@ -1894,6 +1894,48 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Auth Shell",
+    "selector": ".auth-shell",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-auth-shell-min-height",
+        "value": "100dvh",
+        "notes": "Host height the centring works against (defaults to 100dvh); set it to 100% to embed the shell in a box that is not the page."
+      },
+      {
+        "name": "--ds-auth-shell-bg-color",
+        "value": "var(--surface-canvas)",
+        "notes": "Auth screen canvas fill (defaults to --surface-canvas)."
+      },
+      {
+        "name": "--ds-auth-shell-gap",
+        "value": "var(--space-8)",
+        "notes": "Space between masthead, card and support footer (defaults to --space-8)."
+      },
+      {
+        "name": "--ds-auth-shell-card-max-width",
+        "value": "var(--auth-card-w)",
+        "notes": "Measure of the auth column — the card, and with it the tagline and support line (defaults to --auth-card-w, 420px)."
+      },
+      {
+        "name": "--ds-auth-shell-mark-bg-color",
+        "value": "var(--accent)",
+        "notes": "Letter-mark tile fill (defaults to --accent, matching the sidenav's mark)."
+      },
+      {
+        "name": "--ds-auth-shell-mark-label-color",
+        "value": "var(--accent-on)",
+        "notes": "Letter-mark glyph colour (defaults to --accent-on)."
+      },
+      {
+        "name": "--ds-radius-control",
+        "value": "—",
+        "notes": "Radius role for controls and field frames — buttons, inputs, selects, both picker triggers, tooltips. Defaults to --radius-md."
+      }
+    ]
+  },
+  {
     "component": "Autocomplete",
     "selector": ".autocomplete",
     "description": "",
@@ -6215,6 +6257,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
 
 export const NEW_TOKENS: readonly NewToken[] = [
   {
+    "name": "--auth-card-w",
+    "value": "420px",
+    "kind": "length"
+  },
+  {
     "name": "--binpack-bay-h",
     "value": "var(--hit-touch)",
     "kind": "length"
@@ -6498,11 +6545,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--ds-motion-exit-large-easing",
     "value": "var(--ease-accelerate)",
     "kind": "other"
-  },
-  {
-    "name": "--ds-radius-control",
-    "value": "var(--radius-md)",
-    "kind": "length"
   },
   {
     "name": "--ds-radius-inner",

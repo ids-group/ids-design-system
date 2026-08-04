@@ -14,12 +14,31 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-auth-shell` — the scaffold for the screens in front of the login, counterpart to `ds-app-layout`.**
+  Consumers hand-rolled the unauthenticated scaffold every time, and it is the same four parts in each: a
+  brand lockup, an optional tagline, one card holding the form, and a support line under it. The brand row
+  is the sidenav's row — same `brand` / `logoLetter` / `[dsBrandName]` contract and the same letter-mark
+  tile, so the mark on the login screen is the mark in the rail afterwards. Deliberately NOT the string
+  splitting the ports used to tint one slice of a wordmark: a split has to guess where the accent belongs,
+  and the projection already says.
+  — The card body is the default slot, the support line is `[dsAuthSupport]` (a real `<footer>`, so it
+  carries the `contentinfo` landmark), and both the tagline and the support line collapse when absent
+  rather than leaving an empty flex child that would take the column's gap and push the card off centre.
+  — `cardElevation` / `cardPadding` pass through to `ds-card`; `--ds-auth-shell-min-height`,
+  `-card-max-width`, `-gap`, `-bg-color` and the two `-mark-*` colours are the public hooks.
+  — The host is the ONLY full-height box, which is what the ports got wrong: nesting a `100vh` wrapper
+  inside a `100dvh` one scrolls a page whose content fits. It also carries `env(safe-area-inset-*)` so a
+  notched phone in landscape does not put the card under the cutout. Inside it the column centres with auto
+  margins rather than centre alignment — identical while the host can grow, but not when it cannot: embed
+  the shell at `--ds-auth-shell-min-height: 100%` in a fixed-height parent and centre alignment puts a form
+  taller than the box above the scroll origin where no scrolling reaches it (measured at −115px), while
+  auto margins collapse to zero and pin it to the padding edge.
 - **`ds-password-rules` — the live requirement checklist under a new-password field.** One consumer had
   written it twice (set-password and registration) and the two copies had already drifted: different labels
   for the same rule, a different order, different state class names. Each rule carries its own `test`,
   because the POLICY has to mirror the server and only the consumer knows it; the component owns the
   tri-state glyph, the met/failed colours and the type scale. A rule that has not passed reads as PENDING
-  and only becomes a failure once `[judge]` is true — bind that to "the user has tried to submit", or a
+  and only becomes a failure once `[showUnmet]` is true — bind that to "the user has tried to submit", or a
   half-typed password scolds someone who is still typing. `[columns]="2"` for a checklist beside a wide
   form, and `metCount` / `allMet` are exposed for a host gating its own submit.
 - **`ds-input` takes `ariaDescribedBy`, MERGED with its own message id.** Needed by the rule list above,
