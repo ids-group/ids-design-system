@@ -3356,7 +3356,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-loading-overlay-scrim-color",
-        "value": "color-mix(\n    in srgb,\n    var(--surface-canvas) calc(var(--opacity-scrim) * 100%),\n    transparent\n  )",
+        "value": "color-mix(\r\n    in srgb,\r\n    var(--surface-canvas) calc(var(--opacity-scrim) * 100%),\r\n    transparent\r\n  )",
         "notes": "Loading overlay scrim tint over the canvas (opacity-driven mix of --surface-canvas)."
       },
       {

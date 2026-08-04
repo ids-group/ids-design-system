@@ -50,7 +50,7 @@
         [attr.aria-label]="resolvedAriaLabel()"
         [attr.aria-required]="required() ? 'true' : null"
         [attr.aria-invalid]="
-          invalid() || typedInvalid() || rangeInvalid() ? 'true' : null
+          invalidResolved() ? 'true' : null
         "
         [attr.aria-describedby]="hintId()"
         [attr.aria-placeholder]="fieldPlaceholder()"
@@ -99,8 +99,8 @@
   </div>
 
   <ds-field-message
-    [text]="messageText()"
-    [state]="messageState()"
+    [text]="message().text"
+    [state]="message().state"
     [messageId]="hintId()"
     [reserve]="reserveMessageResolved()"
   />

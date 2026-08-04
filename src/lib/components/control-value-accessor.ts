@@ -21,6 +21,12 @@ export abstract class DsControlValueAccessor<
   /** Driven by the forms API via `setDisabledState`. */
   protected readonly formDisabled = signal(false);
 
+  // The field's own touched state. Read by `resolveFieldMessage` to decide when a
+  // validator error may show, so a `required` error waits for the first blur
+  // instead of greeting an untouched form. Separate from the control's `touched`,
+  // which is only reachable once `NgControl` resolves.
+  protected readonly touchedSelf = signal(false);
+
   private onChange: (value: T) => void = () => {};
   private onTouched: () => void = () => {};
 
@@ -50,6 +56,7 @@ export abstract class DsControlValueAccessor<
 
   /** Call from a blur handler so the control reports `ng-touched`. */
   protected markTouched(): void {
+    this.touchedSelf.set(true);
     this.onTouched();
   }
 
@@ -87,6 +94,12 @@ export abstract class DsBooleanControlValueAccessor implements ControlValueAcces
   /** Driven by the forms API via `setDisabledState`. */
   protected readonly formDisabled = signal(false);
 
+  // The field's own touched state. Read by `resolveFieldMessage` to decide when a
+  // validator error may show, so a `required` error waits for the first blur
+  // instead of greeting an untouched form. Separate from the control's `touched`,
+  // which is only reachable once `NgControl` resolves.
+  protected readonly touchedSelf = signal(false);
+
   private onChange: (value: boolean) => void = () => {};
   private onTouched: () => void = () => {};
 
@@ -112,6 +125,7 @@ export abstract class DsBooleanControlValueAccessor implements ControlValueAcces
 
   /** Call from a blur handler so the control reports `ng-touched`. */
   protected markTouched(): void {
+    this.touchedSelf.set(true);
     this.onTouched();
   }
 

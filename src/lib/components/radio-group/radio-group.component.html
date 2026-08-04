@@ -9,8 +9,8 @@
 </div>
 
 <ds-field-message
-  [text]="hint()"
-  [state]="messageState()"
+  [text]="message().text"
+  [state]="message().state"
   [messageId]="hintId()"
   [reserve]="reserveMessageResolved()"
 />

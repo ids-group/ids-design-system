@@ -32,10 +32,13 @@ import {
 import { IconComponent } from '../../icons/icon.component';
 import { CalendarDayComponent } from '../calendar-day/calendar-day.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
+import { FieldMessageComponent } from '../field-message/field-message.component';
 import {
-  FieldMessageComponent,
-  type FieldMessageState,
-} from '../field-message/field-message.component';
+  normalizeFieldErrors,
+  resolveFieldMessage,
+  type DsFieldError,
+  type DsFieldErrorsInput,
+} from '../field-errors';
 import { DS_CONFIG } from '../../config/ds-config';
 import {
   type DateFormatSpec,
@@ -194,6 +197,21 @@ export class DatePickerComponent
   readonly label = input<string>('');
   /** Helper text shown below the field. */
   readonly hint = input<string>('');
+  /** Error text. Shown immediately — binding it says the consumer has already
+   *  decided this field is in error. Takes precedence over `errors` and over the
+   *  picker's own "enter a valid date" message. */
+  readonly error = input<string>('');
+  /** Advisory text, shown when there is no error. */
+  readonly warning = input<string>('');
+  /** Validation errors, shown once the user has interacted. Bound automatically
+   *  by signal forms; reactive and template-driven forms are read through
+   *  `NgControl` and need nothing here. Accepts a string, one error, or an array. */
+  readonly errors = input<readonly DsFieldError[], DsFieldErrorsInput>([], {
+    transform: normalizeFieldErrors,
+  });
+  /** Whether the user has interacted with the field. Bound by signal forms; gates
+   *  `errors`, so a `required` error does not greet an untouched form. */
+  readonly touched = input(false, { transform: booleanAttribute });
   /** Reserve the message-row height even when empty, so the field doesn't shift
    *  the layout below it when a hint/error appears. Falls back to
    *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
@@ -243,15 +261,16 @@ export class DatePickerComponent
     () => this.disabled() || this.formDisabled(),
   );
   protected readonly hintId = computed(() =>
-    this.messageText() ? `${this.uid}-hint` : null,
+    this.message().text ? `${this.uid}-hint` : null,
   );
-  protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() || this.typedInvalid() || this.rangeInvalid()
-      ? 'error'
-      : 'default',
-  );
-  /** Field-message text: a validation message when typing is invalid, else the hint. */
-  protected readonly messageText = computed(() => {
+  // An unparseable date is the picker's OWN error, so it enters the ladder at the
+  // error rung rather than replacing the hint. An explicit `error` still wins:
+  // the consumer knows something this component cannot.
+  private readonly localError = computed(() => {
+    const explicit = this.error().trim();
+    if (explicit) {
+      return explicit;
+    }
     if (this.typedInvalid() || this.rangeInvalid()) {
       const mask =
         this.mode() === 'single'
@@ -261,8 +280,22 @@ export class DatePickerComponent
       return `Enter a valid date (${mask})`;
     }
 
-    return this.hint();
+    return '';
   });
+  private readonly dateInvalid = computed(
+    () => this.invalid() || this.typedInvalid() || this.rangeInvalid(),
+  );
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.localError,
+    errors: this.errors,
+    invalid: this.dateInvalid,
+    touchedSelf: this.touchedSelf,
+    touched: this.touched,
+  });
+  protected readonly message = this.fieldMessage.message;
+  protected readonly invalidResolved = this.fieldMessage.invalid;
 
   protected readonly resolvedLocale = computed(
     () => this.locale() ?? this.config.datePicker?.locale ?? 'en-US',
@@ -429,7 +462,7 @@ export class DatePickerComponent
     if (this.isDisabled()) {
       parts.push('disabled');
     }
-    if (this.invalid() || this.typedInvalid() || this.rangeInvalid()) {
+    if (this.invalidResolved()) {
       parts.push('error');
     }
 

@@ -52,7 +52,7 @@
       [attr.autofocus]="autofocus() ? '' : null"
       [attr.placeholder]="placeholder() || null"
       [attr.aria-label]="resolvedAriaLabel()"
-      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-invalid]="invalidResolved() ? 'true' : null"
       [attr.aria-describedby]="hintId()"
       [attr.aria-required]="required() ? 'true' : null"
       [attr.enterkeyhint]="enterKeyHint()"
@@ -103,14 +103,13 @@
 
   @if (
     reserveMessageResolved() ||
-    hint() ||
-    messageState() !== 'default' ||
+    message().text ||
     maxLength() !== null
   ) {
     <div class="field-footer">
       <ds-field-message
-        [text]="hint()"
-        [state]="messageState()"
+        [text]="message().text"
+        [state]="message().state"
         [messageId]="hintId()"
         [reserve]="reserveMessageResolved()"
       />

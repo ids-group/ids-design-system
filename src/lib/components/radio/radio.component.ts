@@ -12,10 +12,13 @@ import {
 } from '@angular/core';
 import { nextControlId } from '../field-ids';
 import { RADIO_GROUP } from '../radio-group/radio-group.token';
+import { FieldMessageComponent } from '../field-message/field-message.component';
 import {
-  FieldMessageComponent,
-  type FieldMessageState,
-} from '../field-message/field-message.component';
+  normalizeFieldErrors,
+  resolveFieldMessage,
+  type DsFieldError,
+  type DsFieldErrorsInput,
+} from '../field-errors';
 import type { DsSize } from '../../core/size';
 import { resolveReserveMessage } from '../field-defaults';
 import { ProjectionDroppedDirective } from '../projection-dropped.directive';
@@ -44,6 +47,20 @@ export class RadioComponent {
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Helper text shown below the control. */
   readonly hint = input<string>('');
+  /** Error text. Shown immediately — binding it says the consumer has already
+   *  decided this field is in error. Takes precedence over `errors`. */
+  readonly error = input<string>('');
+  /** Advisory text, shown when there is no error. */
+  readonly warning = input<string>('');
+  /** Validation errors, shown once the user has interacted. Bound automatically
+   *  by signal forms; reactive and template-driven forms are read through
+   *  `NgControl` and need nothing here. Accepts a string, one error, or an array. */
+  readonly errors = input<readonly DsFieldError[], DsFieldErrorsInput>([], {
+    transform: normalizeFieldErrors,
+  });
+  /** Whether the user has interacted with the field. Bound by signal forms; gates
+   *  `errors`, so a `required` error does not greet an untouched form. */
+  readonly touched = input(false, { transform: booleanAttribute });
   /** Reserve the message-row height even when empty, so the field doesn't shift
    *  the layout below it when a hint/error appears. Falls back to
    *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
@@ -65,11 +82,18 @@ export class RadioComponent {
   protected readonly uid = nextControlId('ds-radio');
   protected readonly controlId = computed(() => this.inputId() ?? this.uid);
   protected readonly hintId = computed(() =>
-    this.hint() ? `${this.uid}-hint` : null,
+    this.message().text ? `${this.uid}-hint` : null,
   );
-  protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() ? 'error' : 'default',
-  );
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.error,
+    errors: this.errors,
+    invalid: this.invalid,
+    touched: this.touched,
+  });
+  protected readonly message = this.fieldMessage.message;
+  protected readonly invalidResolved = this.fieldMessage.invalid;
 
   /** Injected via token to avoid circular import with RadioGroupComponent. */
   protected readonly group = inject(RADIO_GROUP, { optional: true });

@@ -5,7 +5,7 @@
   [class]="size()"
   [class.open]="isOpen()"
   [class.disabled]="isDisabled()"
-  [class.error]="invalid()"
+  [class.error]="invalidResolved()"
   (click)="onTriggerClick()"
 >
   @if (multiple()) {
@@ -34,7 +34,7 @@
     [attr.aria-controls]="listboxId"
     [attr.aria-activedescendant]="activeDescendant()"
     [attr.aria-label]="ariaLabel() || placeholder()"
-    [attr.aria-invalid]="invalid() ? 'true' : null"
+    [attr.aria-invalid]="invalidResolved() ? 'true' : null"
     [attr.aria-describedby]="hintId()"
     [disabled]="isDisabled()"
     [value]="query()"
@@ -54,8 +54,8 @@
 </div>
 
 <ds-field-message
-  [text]="hint()"
-  [state]="messageState()"
+  [text]="message().text"
+  [state]="message().state"
   [messageId]="hintId()"
   [reserve]="reserveMessageResolved()"
 />

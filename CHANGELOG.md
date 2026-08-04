@@ -8,6 +8,43 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **Every field takes `error` and `warning` beside `hint`, and shows exactly one of them.** Until now a
+  field had one message input, so a consumer had to multiplex it by hand —
+  `[invalid]="showError()" [hint]="showError() ? errorText() : helperText()"` — on every screen that
+  validates, and the two bindings could silently disagree. The four sources now resolve on a fixed
+  ladder, highest first: `error` (an explicit string — shown at once, because binding it says you have
+  already decided), then validation errors, then `warning`, then `hint`. Only ONE line ever renders, so
+  a field's height does not depend on how many sources are populated — the same rule Carbon
+  (`invalidText` → `warnText` → `helperText`) and Material's subscript follow. `ds-field-message` gained
+  a matching `warning` state coloured from `--warning-text`.
+- **Fields read validation state from the form control, so `error` is optional.** Both Angular form
+  systems are supported at once and neither needs the other. Signal forms binds `errors` and `touched`
+  straight in — those input names are Angular 21's `FormUiControl` contract, and the `Field` directive
+  already drives the value through the `ControlValueAccessor` the fields have always implemented.
+  Reactive and template-driven forms need nothing at all: the field resolves `NgControl` after first
+  render (it cannot be injected directly — a field provides `NG_VALUE_ACCESSOR` pointing at itself, so
+  asking for `NgControl` in the same constructor is a DI cycle) and subscribes to `control.events`,
+  which is what reports touching — `statusChanges` does not. Errors wait for the first blur, or for the
+  parent form to be submitted, so a `required` error never greets an untouched form. `invalid` no longer
+  has to be kept in sync by hand: it is now OR-ed with what the control reports, and the explicit input
+  still wins.
+- **`DS_CONFIG.field.errorMessages` — one shared map from error kind to text.** A message on the error
+  itself always wins (`required(path, { message: … })` in signal forms, or `{ myError: 'text' }` from a
+  plain validator), so this is the fallback for Angular's built-ins, which carry detail objects and no
+  wording. Declare it once in `provideDsConfig` and a consumer writes no text at all for `required`,
+  `minlength` or `email`. An error that resolves to no text anywhere warns in dev rather than rendering
+  an error style with an empty line.
+
+### Changed
+
+- **`FieldMessageState` gained `'warning'`.** Additive, but an exhaustive `switch` over the exported
+  union in consumer code will no longer compile without that arm.
+- **Fields no longer expose a `protected messageState`;** the resolved `message` (text + state) and
+  `invalidResolved` replace it. Only reachable by subclassing a field component, which is not a
+  supported extension point, but noted for parity with the class-member changes in 0.7.0.
+
 ## 0.7.1 — 2026-08-04
 
 ### Added
