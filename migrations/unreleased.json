@@ -53,6 +53,50 @@
         "DS_CONFIG",
         "providers: [provideDsConfig"
       ]
+    },
+    {
+      "id": "exported-classes-gained-members",
+      "kind": "behavior",
+      "old": "extends TableComponent",
+      "new": null,
+      "note": "Several exported component classes grew their member surface this range, which breaks a consumer that EXTENDS one (subclassing a DS component is unsupported - design-system.md section Components - but where it happens the new names collide: TS4114 demands an `override` modifier, TS2416 fires where a signature differs). New members: all 14 message-bearing fields (ds-autocomplete, ds-checkbox, ds-color-picker, ds-date-picker, ds-input, ds-multi-select, ds-otp-input, ds-radio, ds-radio-group, ds-select, ds-slider, ds-switch, ds-textarea, ds-time-picker) gained `reserveMessageResolved`; InputComponent and TextareaComponent also gained `control` and `focus`; SearchComponent gained `focus`; TableComponent gained `rowId` and `rowKey`; PaginationComponent gained `showPageSize`; TimePickerComponent gained `label`, `required`, `optional`, `labelId`, `fullWidth`; DatePickerComponent gained `fullWidth`; AppLayoutComponent gained `railOpen`, `railLabel`, `compact`, `closeRail`. ACTION: rename the subclass's own member, or add `override` where the base's semantics genuinely match. Build after upgrading - the compiler enumerates every collision. Consumers who only use the <ds-...> elements need no change.",
+      "searchHints": [
+        "extends TableComponent",
+        "extends InputComponent",
+        "extends TextareaComponent",
+        "extends PaginationComponent",
+        "extends TimePickerComponent",
+        "extends DatePickerComponent",
+        "extends SearchComponent",
+        "override readonly"
+      ]
+    },
+    {
+      "id": "app-layout-scroll-reset-path-only",
+      "kind": "behavior",
+      "old": "LayoutScrollService",
+      "new": null,
+      "note": "`ds-app-layout` no longer resets the content scroll on EVERY router NavigationEnd - only when the PATH changes (the part before `?` or `#`). A sort, page or filter change that rewrites just the query string or fragment now KEEPS the reader's scroll position. ACTION only if a screen relied on the old blanket reset: inject the still-public `LayoutScrollService` and call `scrollToTop()` from the handler that changes the filter, which is per-interaction and more precise than the old behaviour. No action for anyone who found the old reset disruptive.",
+      "searchHints": [
+        "LayoutScrollService",
+        "scrollToTop",
+        "ds-app-layout",
+        "NavigationEnd"
+      ]
+    },
+    {
+      "id": "modal-title-flex-moved-to-heading",
+      "kind": "class-rename",
+      "old": "ds-modal-card .title",
+      "new": ".heading",
+      "note": "STYLING ONLY, and only for a consumer who styles the modal's internal DOM. The `[eyebrow]` slot wrapped `<h2 class=\"title\">` together with the eyebrow in a new `<div class=\"heading\">`, and the `flex: 1` that used to sit on the `<h2>` moved to that wrapper. A consumer rule that targeted `.modal-card .title` for the flex slot must retarget `.heading`; rules that target `.title` for typography or colour are unaffected. Scope strictly to selectors under ds-modal / ds-modal-card.",
+      "searchHints": [
+        "ds-modal",
+        "ds-modal-card",
+        ".modal-card .title",
+        ".title",
+        "flex: 1"
+      ]
     }
   ],
   "informational": [
@@ -65,6 +109,11 @@
     "ds-time-picker gained label / required / optional inputs (additive) — a date + time form row now aligns without a hand-rolled label; existing usages without label render exactly as before.",
     "Visual-only in ds-time-picker: the clock glyph moved from before the value to the trailing edge and grew 14px -> 16px, the value weight dropped from medium to regular, and the trigger gap narrowed 8px -> 4px, all to match ds-date-picker / ds-select / ds-input. Recover the old weight with --ds-time-picker-value-weight: var(--font-weight-medium).",
     "Value typography of both pickers is now tokenised: --ds-date-picker-value-font-family / -font-size / -weight (mono default, shared with the ghost mask) and --ds-time-picker-value-font-family / -font-size / -weight, plus --ds-time-picker-required-color. Defaults unchanged except the time value weight noted above.",
-    "ds-date-picker [fullWidth] now pushes the calendar glyph to the trailing edge instead of leaving it packed beside the value; only affects fields that opt into fullWidth."
+    "ds-date-picker [fullWidth] now pushes the calendar glyph to the trailing edge instead of leaving it packed beside the value; only affects fields that opt into fullWidth.",
+    "`ds-app-layout` gained an opt-in responsive rail: below the `lg` breakpoint the rail becomes an off-canvas overlay driven by the new two-way `[(railOpen)]` model, with `railLabel` (default 'Navigation') naming it for a screen reader. At/above `lg` nothing changes and `railOpen` has no effect, so an existing desktop-only consumer is unaffected. New tokens --ds-app-layout-rail-bg-color / -rail-shadow / --ds-app-layout-scrim-color all default to current values.",
+    "`inheritDsConfig(config)` is a new public export beside `provideDsConfig`: it reads the nearest ancestor DS_CONFIG (skipSelf, optional) and shallow-merges per top-level section. Call it from an injection context if you need the merging behaviour in your own factory provider or directive metadata.",
+    "`dsReserveMessages` is a new directive: put it on a form and every DS field DECLARED inside reserves its message row, without a per-control binding. Presence-driven (no input), merges with the config above it, and a field's own [reserveMessage] still wins. Projected <ng-content> is not covered - it keeps the injector of the template it was written in.",
+    "Visual-only: dialogs opened through `ModalService` no longer carry the `ds-overlay-pane` panel class, so the shared overlay-panel entrance is no longer layered on top of the modal's own card/backdrop animation.",
+    "Known gap, not a regression: the ds-time-picker label wiring (aria-labelledby / aria-required) landed on the SINGLE-mode trigger only; range mode's start/end segment triggers are not wired to the label yet."
   ]
 }

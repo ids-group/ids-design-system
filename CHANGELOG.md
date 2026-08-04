@@ -10,6 +10,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-app-layout` collapses its rail to an off-canvas overlay below `lg`.** On narrow viewports the
+  rail no longer occupies a grid column: below the `lg` breakpoint (read at runtime from `--bp-lg`,
+  fallback `1024px`) it leaves the flow, becomes a `position: fixed` panel translated off-canvas, and
+  animates in over a scrim. A new two-way `[(railOpen)]` model drives it (ignored at/above `lg`), and a
+  new `railLabel` input (`'Navigation'` by default) sets the panel's `aria-label` in compact mode. While
+  open and compact the panel is a focus-trapped `role="dialog"` with `aria-modal="true"`; clicking the
+  scrim, pressing `Escape` anywhere, navigating to a new path, or crossing back above `lg` all close it
+  (no body-scroll lock — the host is already `100dvh; overflow: hidden`). At/above `lg` nothing changes.
+  Wire a trigger — e.g. a burger in your own projected topbar — to `[(railOpen)]`. The rail keeps its DOM
+  position, so you still project the sidenav once. New tokens:
+  `--ds-app-layout-rail-bg-color` (`--surface-overlay`), `--ds-app-layout-rail-shadow`
+  (`--shadow-modal`), `--ds-app-layout-scrim-color` (`--scrim, hsl(220deg 20% 12% / 45%)`).
+
 - **`dsReserveMessages` — turn on the reserved message row for a whole form at once.** With
   `reserveMessage` now off by default, a validated form would otherwise repeat `[reserveMessage]="true"`
   on every control. Put the directive on the form and every DS field declared inside it reserves:
@@ -23,7 +36,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   hand-rolled label.** The time picker had no label API at all, so a labelled form row meant authoring the
   label yourself; the date picker's own label reserved a row the time picker did not, leaving the two
   triggers 22.8px apart vertically. The label renders the same `.label` block with the same tokens as
-  `ds-date-picker`, and drives the trigger's accessible name (`aria-labelledby`) plus `aria-required`.
+  `ds-date-picker`, and drives the single-mode trigger's accessible name (`aria-labelledby` when a label
+  is set, `aria-label` when it is not) plus `aria-required`; range mode's start/end segment triggers are
+  not wired to the label yet.
   Measured on a two-column probe, date vs time now differ by 0px on label top/height, trigger
   top/height/bottom, value inset and glyph top.
 
@@ -38,7 +53,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-modal` / `ds-modal-card` take an `[eyebrow]` slot above the title.** Dialogs that need a context
   line ("MY ACTIVITY · ROBERT THOMPSON") had to put it as the first line of the body. The slot renders
   nothing when unfilled, and ships uppercase + tracked by default, retunable via
-  `--ds-modal-eyebrow-text-color` / `-font-size` / `-weight` / `-tracking` / `-transform`.
+  `--ds-modal-eyebrow-text-color` / `-font-size` / `-weight` / `-tracking` / `-transform`. Internally the
+  `<h2 class="title">` and the eyebrow are now wrapped together in a `<div class="heading">` that carries
+  the `flex: 1` the `<h2>` used to hold — a consumer whose own CSS targeted `.modal-card .title` for that
+  flex must retarget `.heading`.
 
 - **`ds-table` takes a `rowId` accessor.** Row identity (tracking, selection, expansion, the active-row
   highlight) defaulted to `row.id`, so display-only data with no natural key had to be mapped through a
@@ -59,11 +77,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   (first column flush) without redefining both axes. Also adds `--ds-table-head-border-color`,
   `--ds-table-head-weight` and `--ds-table-head-tracking`.
 
-- **`DS_CONFIG.field.reserveMessage` sets the message-row default app-wide.** A hint-less dialog repeated
-  `[reserveMessage]="false"` on every control. `provideDsConfig({ field: { reserveMessage: false } })` now
-  covers all 14 message-bearing fields; a per-field input still wins. The input's type widens to
-  `boolean | null` (`null` = "not set" → fall through to the config, then `true`), so bindings and bare
-  attributes behave exactly as before.
+- **`DS_CONFIG.field.reserveMessage` sets the message-row default app-wide.** With the per-field default
+  now `false` (see Changed), a form that validates throughout can turn the reserved row back on in one
+  place: `provideDsConfig({ field: { reserveMessage: true } })` covers all 14 message-bearing fields
+  instead of repeating `[reserveMessage]="true"` on every control; a per-field input still wins. The
+  input's type widens from `boolean` to `boolean | null` (`null` = "not set" → fall through to the config,
+  then to the hard-coded fallback), so existing bindings and bare attributes behave exactly as before.
 
 - **`focus()` on `ds-search`, `ds-input` and `ds-textarea`.** The search input was only reachable from
   inside the component, so a filter toolbar's Clear button — disabled once there is nothing left to clear —
@@ -101,6 +120,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **Several exported component classes grow their member surface, which breaks a consumer that extends
+  them.** Everything else in this release is additive for anyone using the `<ds-…>` elements. Subclassing
+  a DS component is unsupported (`design-system.md` § Components), but where it happens the new names
+  collide — TS4114 demands an `override` modifier, TS2416 fires where a signature differs. New members
+  this range: all 14 message-bearing field components gain `reserveMessageResolved`; `InputComponent` and
+  `TextareaComponent` also gain `control` and `focus`, and `SearchComponent` gains `focus`;
+  `TableComponent` gains `rowId` and `rowKey`; `PaginationComponent` gains `showPageSize`;
+  `TimePickerComponent` gains `label`, `required`, `optional`, `labelId` and `fullWidth`;
+  `DatePickerComponent` gains `fullWidth`; and `AppLayoutComponent` gains `railOpen`, `railLabel`,
+  `compact` and `closeRail`. Rename the subclass's own member, or add `override` where the base's
+  semantics genuinely match. Build after upgrading — the compiler enumerates every collision.
+
 - **A nested `provideDsConfig` now MERGES with the config above it instead of replacing it.** The
   config resolves through the element-injector chain, so it was always scopable to a route, component
   or directive — but because the provider used `useValue`, a subtree that set one flag silently dropped
@@ -108,7 +139,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `datePicker.locale`, `timePicker.format`, `breadcrumbs.separator` to their defaults, with no error).
   Merging is section by section: only the keys you name are replaced. No action needed — a single
   root-level call behaves exactly as before, and nested provision was neither documented nor usable
-  safely. This is what makes `dsReserveMessages` composable.
+  safely. The merge runs through a newly exported helper, `inheritDsConfig(config)`, which reads the
+  nearest ancestor config (`skipSelf`, `optional`) and shallow-merges per top-level section; call it from
+  within an injection context if you need the same behaviour in your own factory provider or directive
+  metadata. This is what makes `dsReserveMessages` composable.
 
 - **BREAKING (layout): `reserveMessage` now defaults to `false` on every field.** It shipped default-on
   in 0.7.0; the reserved row is right for a form that validates and wrong for the many forms that never
@@ -141,6 +175,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **`ds-app-layout` no longer scrolls the content back to top on a same-page URL change.**
+  `LayoutScrollService` reset the scroll on every router `NavigationEnd`, so a sort, page or filter change
+  that only rewrites the query string or fragment yanked the user to the top of the list. It now compares
+  the path (the part before `?` / `#`) and only resets when the path itself changes; `scrollToTop()` stays
+  public for a host that wants to reset explicitly, which is per-interaction and therefore more precise
+  than the old blanket reset.
+
 - **`ds-table`'s header no longer desyncs when a host maps the "off" sort click back to its own default.**
   Cycling past `desc` nulled `sortKey` internally; a server-paged host that cannot honour "unordered" pushes
   its default key back, and on the *default* column that write is a no-op for Angular's binding diff — so the
@@ -166,9 +207,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   is now imported by the docs app itself, so portaled panels animate there as they do for consumers of the
   bundled `styles/ds` entry.
 
-- **The confirm dialog opened by `ModalService.confirm()` no longer carries a dead `ds-overlay-pane`
-  panel class.** Its pane child is `display: contents`, so the pane entrance never rendered — the dialog's
-  own card/backdrop animation is what plays, and now that is the only rule involved.
+- **Dialogs opened through `ModalService` no longer carry the `ds-overlay-pane` panel class.**
+  `ModalService.open()` — and therefore `confirm()` — tagged the CDK overlay pane with `ds-overlay-pane`,
+  which layered the shared overlay-panel entrance onto the modal on top of its own card/backdrop
+  animation; the class is dropped, so `styles/overlay-motion` no longer applies to the pane and the modal
+  plays only its own `--ds-modal-*` entrance.
 
 ## 0.7.0 — 2026-07-30
 
