@@ -8,6 +8,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Fixed
+
+- **Options in the picker panels had no pressed state.** Hover only — so on a phone, where there is no
+  hover, tapping a row in `ds-select`, `ds-autocomplete` or `ds-multi-select` gave no feedback that it had
+  been hit. The equivalent rows elsewhere (`ds-menu-item`, `ds-list-item`) have had one since 0.7.x. Fixed
+  once in the shared dropdown-overlay partial, so all three pickers get it, with a selected-row variant that
+  stays in the brand family rather than stranding the selected label colour on a neutral fill.
+
 ### Added
 
 - **`ds-app-layout` takes a `scrollReset` strategy, and `LayoutNavigationService` is public** (both asked
