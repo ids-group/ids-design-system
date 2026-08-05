@@ -2,13 +2,32 @@
   "version": "unreleased",
   "items": [
     {
-      "id": "auth-shell-renamed-to-auth-layout",
-      "kind": "removed-api",
-      "old": "ds-auth-shell / AuthShellComponent / --ds-auth-shell-*",
-      "new": "ds-auth-layout / AuthLayoutComponent / --ds-auth-layout-*",
-      "note": "The component shipped in 0.8.0 as ds-auth-shell and is renamed to ds-auth-layout. \"Shell\" is not this library's word for a layout: the app-level one was renamed ds-app-shell -> ds-app-layout in 0.7.0, and calling the auth counterpart a shell put the split vocabulary back. ACTION, mechanical and complete: rename the element <ds-auth-shell> to <ds-auth-layout>, the imported class AuthShellComponent to AuthLayoutComponent, and any of the six tokens you override from --ds-auth-shell-* to --ds-auth-layout-* (min-height, card-max-width, gap, bg-color, mark-bg-color, mark-label-color). Behaviour, inputs and slots are unchanged - [dsAuthSupport], [dsBrandName], brand, logoLetter, tagline, cardElevation and cardPadding all keep their names.",
-      "searchHints": ["ds-auth-shell", "AuthShellComponent", "--ds-auth-shell-"]
+      "id": "auth-shell-selector-to-auth-layout",
+      "kind": "selector-rename",
+      "old": "ds-auth-shell",
+      "new": "ds-auth-layout",
+      "note": "Component renamed (shipped as ds-auth-shell in the tagged 0.8.0 source, its only release under that name). \"Shell\" is not this library's word for a layout: the app-level one was renamed ds-app-shell -> ds-app-layout in 0.7.0, and calling the auth counterpart a shell put the split vocabulary back. ACTION: rename the element and its closing tag. Behaviour, inputs and slots are unchanged - brand, logoLetter, tagline, cardElevation, cardPadding, [brand], [dsBrandName] and dsAuthSupport all keep their names. Also rename the class and the tokens (separate entries below).",
+      "searchHints": ["ds-auth-shell"]
+    },
+    {
+      "id": "auth-shell-class-to-auth-layout",
+      "kind": "type-rename",
+      "old": "AuthShellComponent",
+      "new": "AuthLayoutComponent",
+      "note": "The exported component class renamed alongside the ds-auth-shell -> ds-auth-layout selector. Update imports and any type references. No members changed.",
+      "searchHints": ["AuthShellComponent"]
+    },
+    {
+      "id": "auth-shell-tokens-to-auth-layout",
+      "kind": "token-rename",
+      "old": "--ds-auth-shell-",
+      "new": "--ds-auth-layout-",
+      "note": "Prefix rename for the six component tokens: --ds-auth-shell-min-height / -card-max-width / -gap / -bg-color / -mark-bg-color / -mark-label-color -> --ds-auth-layout-*. Values and defaults are unchanged. DS-owned tokens only (no others ship under this prefix); a consumer's own --ds-auth-shell-* variable is out of scope. EXCLUDED, do not rename: the global scale token --auth-card-w, the fallback behind -card-max-width, which carries no --ds-auth-shell- prefix and keeps its name. Confirm the new name exists in the installed package.",
+      "searchHints": ["--ds-auth-shell-"]
     }
   ],
-  "informational": []
+  "informational": [
+    "The ds-auth-shell -> ds-auth-layout rename is vocabulary only: no input, output, slot, token value or behaviour changed, and it is the same component 0.8.0 shipped. If you never adopted ds-auth-shell (it was added in 0.8.0), there is nothing to do.",
+    "FIXED in ds-textarea: size=\"sm\" and size=\"lg\" rendered the md vertical padding (12px top and bottom) regardless of the size. The size blocks set the inner textarea's vertical pad, but a :host-prefixed pin at the end of the file out-ranked them once emulated encapsulation shimmed both selectors - it carries one more attribute than the size selector. There are now three pins, one per size, and the size blocks keep only the horizontal padding they own. NO ACTION: the change is visible only on a non-md textarea and the md default is unchanged. Note that retuning --ds-input-pad-y previously moved all three sizes together; if you compensated for the wrong padding with your own override on a sm or lg textarea, that override now stacks on the corrected value and can go."
+  ]
 }
