@@ -8,6 +8,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **`ds-icon` warns in dev when a name resolves to nothing** (asked for by the ai-sdlc starter after an audit
+  found misspelled names on three screens). An unknown name rendered an empty `<svg>` in silence: the types
+  cannot catch it, because `IconName` stays open (`| (string & {})`) so a consumer can register their own
+  glyphs through `provideDsIcons()`, and closing the union would reject every registered name. The warning
+  names the offending value and sits on the one branch that knows — production pays a single falsy check.
+
 ### Changed
 
 - **`ds-auth-layout` compresses its own chrome on a short viewport, so the layout is never the reason a

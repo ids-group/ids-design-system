@@ -4,6 +4,7 @@ import {
   computed,
   inject,
   input,
+  isDevMode,
 } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { DS_ICON_REGISTRY } from './icon-registry';
@@ -63,6 +64,16 @@ export class IconComponent {
     // Built-in DS set wins over consumer registry — see provideDsIcons() docs.
     const body =
       (ICONS as Record<string, string>)[key] ?? this.registry[key] ?? '';
+    // A misspelled name renders an empty <svg> and nothing else — no error, and
+    // the type cannot catch it: IconName stays open (`| (string & {})`) so a
+    // consumer can register their own through provideDsIcons(), and closing the
+    // union would reject every registered name. This branch is the only place
+    // that knows. Production pays one falsy check.
+    if (!body && isDevMode()) {
+      console.warn(
+        `[ds-icon] Unknown icon name "${key}" — not in the DS set and not registered through provideDsIcons(), so nothing renders.`,
+      );
+    }
 
     return this.sanitizer.bypassSecurityTrustHtml(body);
   });
