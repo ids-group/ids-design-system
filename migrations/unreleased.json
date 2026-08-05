@@ -6,7 +6,7 @@
       "kind": "removed-api",
       "old": "ds-table[clientSort]",
       "new": "sortMode",
-      "note": "`ds-table`'s boolean `clientSort` is REMOVED and replaced by `sortMode: 'client' | 'server' | 'none'`. The boolean could not express \"nothing sorts\", so a column marked `sortable: true` on a table with no sorting drew a header that looked live, showed a caret on hover and did nothing — mm-broker shipped several detail tables that way and only caught it in a browser walkthrough. ACTION, mechanical: `[clientSort]=\"true\"` becomes `sortMode=\"client\"`; a bare `clientSort` attribute becomes `sortMode=\"client\"`; `[clientSort]=\"false\"` or `[clientSort]=\"expr\"` becomes `[sortMode]=\"expr ? 'client' : 'server'\"`. A table that had NO clientSort binding and reorders in its own `(sortChange)` handler must now say `sortMode=\"server\"` — this is the one case that is not a find/replace, because the DEFAULT CHANGED: unset now resolves to `'client'`, so a table that previously only emitted `sortChange` will ALSO sort its own rows unless it declares `'server'`. That default flip is deliberate — it makes `sortable: true` always do something — but for a SERVER-PAGED table (one that binds `total`) client sorting reorders the current page only, so the rows look sorted and are not; dev builds warn about exactly that combination. Tables that render a sortable column but sort nowhere should declare `sortMode=\"none\"`, which now drops the button, the caret and `aria-sort` instead of leaving a dead control. NOTE for TypeScript callers: the `TableSortMode` union is declared in the package's table.types.ts but is NOT re-exported from the table's index, so `import { TableSortMode }` does NOT compile — type a field or computed that supplies the mode with the inline literal union `'client' | 'server' | 'none'` instead.",
+      "note": "`ds-table`'s boolean `clientSort` is REMOVED and replaced by `sortMode: 'client' | 'server' | 'none'`. The boolean could not express \"nothing sorts\", so a column marked `sortable: true` on a table with no sorting drew a header that looked live, showed a caret on hover and did nothing — mm-broker shipped several detail tables that way and only caught it in a browser walkthrough. ACTION, mechanical: `[clientSort]=\"true\"` becomes `sortMode=\"client\"`; a bare `clientSort` attribute becomes `sortMode=\"client\"`; `[clientSort]=\"false\"` or `[clientSort]=\"expr\"` becomes `[sortMode]=\"expr ? 'client' : 'server'\"`. A table that had NO clientSort binding and reorders in its own `(sortChange)` handler must now say `sortMode=\"server\"` — this is the one case that is not a find/replace, because the DEFAULT CHANGED: unset now resolves to `'client'`, so a table that previously only emitted `sortChange` will ALSO sort its own rows unless it declares `'server'`. That default flip is deliberate — it makes `sortable: true` always do something — but for a SERVER-PAGED table (one that binds `total`) client sorting reorders the current page only, so the rows look sorted and are not; dev builds warn about exactly that combination. Tables that render a sortable column but sort nowhere should declare `sortMode=\"none\"`, which now drops the button, the caret and `aria-sort` instead of leaving a dead control. NOTE for TypeScript callers: the union is exported as `TableSortMode`, so a field, computed or method that supplies the mode to `[sortMode]` can be typed with `import type { TableSortMode } from '@ids-group-ltd/ids-design-system';` rather than repeating the literals.",
       "searchHints": [
         "clientSort",
         "[clientSort]",
@@ -106,6 +106,20 @@
         "--ds-menu-divider-spacing",
         "menu-divider",
         "ds-menu"
+      ]
+    },
+    {
+      "id": "time-picker-panel-radius-now-panel-role",
+      "kind": "behavior",
+      "old": "ds-time-picker",
+      "new": null,
+      "note": "DEFAULT CHANGED, visual: the `ds-time-picker` dropdown panel's corner radius was `var(--radius-md)` (8px) and is now `var(--ds-radius-panel)` (`--radius-lg`, 12px). It was the one floating panel in the library still drawing the CONTROL radius — its own sibling `ds-date-picker` has always drawn the panel role, so the two pickers rendered different corners side by side in the same form. The radius was also the only property on that element with no public hook (fill, border and shadow all had one). ACTION: none unless you want the old 8px corner back, in which case set `ds-time-picker { --ds-time-picker-panel-radius: var(--radius-md); }` — the new hook is forwarded onto the portaled overlay pane, so a per-instance override on the element does reach the panel. Affects only the open dropdown; the trigger's radius is unchanged and still resolves through `--ds-time-picker-trigger-radius`.",
+      "searchHints": [
+        "ds-time-picker",
+        "--ds-time-picker-panel-radius",
+        "--ds-time-picker-trigger-radius",
+        "time-panel",
+        "time-picker"
       ]
     },
     {

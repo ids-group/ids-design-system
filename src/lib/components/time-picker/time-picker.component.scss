@@ -20,6 +20,7 @@
     var(--text-primary)
   );
   --_time-picker-trigger-radius: var(--ds-time-picker-trigger-radius, var(--ds-radius-control));
+  --_time-picker-panel-radius: var(--ds-time-picker-panel-radius, var(--ds-radius-panel));
   --_time-picker-required-color: var(--ds-time-picker-required-color, var(--error));
   --_time-picker-value-font-family: var(--ds-time-picker-value-font-family, var(--font-sans));
   --_time-picker-value-font-size: var(--ds-time-picker-value-font-size, var(--font-size-s));
@@ -188,7 +189,7 @@
   background: var(--ds-time-picker-bg-color, var(--surface-overlay));
   border: var(--border-width-default) solid
     var(--ds-time-picker-border, var(--border-default));
-  border-radius: var(--radius-md);
+  border-radius: var(--_time-picker-panel-radius);
   box-shadow: var(--ds-time-picker-shadow, var(--ds-elevation-overlay));
   padding: var(--space-2);
   gap: var(--space-1);

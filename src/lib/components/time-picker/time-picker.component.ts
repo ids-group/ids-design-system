@@ -94,6 +94,7 @@ export class TimePickerComponent
     '--ds-time-picker-bg-color',
     '--ds-time-picker-border',
     '--ds-time-picker-shadow',
+    '--ds-time-picker-panel-radius',
   ];
 
   /** Selected time, or `[start, end]` tuple when `mode="range"`. Two-way bound. */

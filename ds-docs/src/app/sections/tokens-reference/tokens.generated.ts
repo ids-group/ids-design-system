@@ -5850,6 +5850,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Time picker trigger corner radius (defaults to --radius-md)."
       },
       {
+        "name": "--ds-time-picker-panel-radius",
+        "value": "var(--ds-radius-panel)",
+        "notes": "Time panel corner radius (default --radius-lg). Forwarded onto the portaled pane on open."
+      },
+      {
         "name": "--ds-time-picker-required-color",
         "value": "var(--error)",
         "notes": "Colour of the required asterisk beside the time label (default --error)."

@@ -706,6 +706,7 @@
   "--ds-time-picker-border": "Panel border.",
   "--ds-time-picker-column-height": "Max height of each scroll column.",
   "--ds-time-picker-column-width": "Min width of each column.",
+  "--ds-time-picker-panel-radius": "Time panel corner radius (default --radius-lg). Forwarded onto the portaled pane on open.",
   "--ds-time-picker-required-color": "Colour of the required asterisk beside the time label (default --error).",
   "--ds-time-picker-shadow": "Panel shadow.",
   "--ds-time-picker-trigger-radius": "Time picker trigger corner radius (defaults to --radius-md).",
