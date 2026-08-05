@@ -128,6 +128,65 @@
   </div>
 
   <h3 class="block-title t-h4">
+    On a short screen the chrome compresses, not the card
+  </h3>
+
+  <p class="block-desc t-s">
+    A landscape phone leaves about 330px of viewport, and the furniture this
+    layout puts around your card — block padding, the column gap, the letter-mark
+    tile, the wordmark, the masthead's inner gap — used to cost ~219px of that
+    before your form got a single pixel. All of it now clamps against
+    <code class="t-mono-inline">
+      svh
+    </code>, so at ~330px the same chrome costs
+    ~131px. Every multiplier reaches its maximum at an 800px-tall viewport, which
+    means a desktop is pixel-for-pixel what it was and compression happens only
+    below that. The glyph inside the letter-mark tracks the tile, so a compressed
+    tile is not cramped.
+  </p>
+
+  <p class="block-desc t-s">
+    The demos above cannot show it: the clamps read the real VIEWPORT, and a framed
+    demo only shrinks its own box. Make the browser window short — or rotate a
+    phone — and watch the padding, the gap and the wordmark come down together.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      svh
+    </code> and not
+    <code class="t-mono-inline">
+      dvh
+    </code>: the dynamic unit changes as a mobile
+    URL bar hides, which would resize the wordmark and re-space the column while
+    the reader scrolls. Setting any of
+    <code class="t-mono-inline">
+      --ds-auth-layout-pad-block
+    </code>,
+    <code class="t-mono-inline">
+      -gap
+    </code> or
+    <code class="t-mono-inline">
+      -mark-size
+    </code> to a fixed value opts out of
+    the compression for that one dimension.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      What this does not promise.
+    </strong> A card taller than the space left
+    still scrolls, and should — the fix is for the LAYOUT never to be the reason.
+    Compressing rather than pinning is deliberate: the same exercise elsewhere
+    takes the masthead and footer out of the flow with
+    <code class="t-mono-inline">
+      position: absolute
+    </code>, which frees more room
+    but lets that chrome overlap a tall form instead of scrolling past it. A card
+    here holds whatever you project into it, so overlap is the worse failure.
+  </p>
+
+  <h3 class="block-title t-h4">
     Why it centres with auto margins
   </h3>
 

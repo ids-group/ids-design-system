@@ -1910,8 +1910,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-auth-layout-gap",
-        "value": "var(--space-8)",
-        "notes": "Space between masthead, card and support footer (defaults to --space-8)."
+        "value": "clamp(var(--space-4), 4svh, var(--space-8))",
+        "notes": "Space between masthead, card and support footer. Defaults to a clamp that compresses on a short viewport (16px…32px, 32px at an 800px-tall viewport); a fixed value opts out."
+      },
+      {
+        "name": "--ds-auth-layout-pad-block",
+        "value": "clamp(var(--space-4), 5svh, var(--space-10))",
+        "notes": "Block padding around the auth column. Defaults to a clamp that COMPRESSES on a short viewport (16px…40px, reaching 40px at an 800px-tall viewport) so the layout's own furniture is never what pushes a card into scrolling; set a fixed value to opt out of the compression."
+      },
+      {
+        "name": "--ds-auth-layout-mark-size",
+        "value": "clamp(var(--space-6), 4svh, var(--space-8))",
+        "notes": "Letter-mark tile size. Defaults to a clamp (24px…32px, 32px at an 800px-tall viewport); the glyph inside tracks it so a compressed tile is not cramped."
       },
       {
         "name": "--ds-auth-layout-card-max-width",

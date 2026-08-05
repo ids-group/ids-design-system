@@ -1,4 +1,23 @@
-/* The host is the ONLY full-height box here. The port this replaces nested a
+/* Everything the layout puts around the card COMPRESSES as the viewport gets
+   shorter, so the layout's own furniture is never what pushes a card into
+   scrolling: the block padding, the column gap, the letter-mark tile, the
+   wordmark and the masthead's inner gap all clamp. Each multiplier is chosen so
+   the clamp reaches its MAX at an 800px-tall viewport — a desktop is pixel-for-
+   pixel what it was before, and compression only happens below that. At ~330px
+   (a landscape phone) the chrome costs ~131px instead of ~219px.
+
+   `svh`, not `dvh`: `dvh` changes as the mobile URL bar hides, which would
+   resize the wordmark and re-space the column mid-scroll. `svh` is the
+   URL-bar-visible height, so it holds still.
+
+   NOT pinkmoon's approach for the same exercise, which pins the masthead and the
+   footer with `position: absolute` (top/bottom) so they leave the flow entirely.
+   That buys more room — but a DS card holds arbitrary content, and out-of-flow
+   chrome OVERLAPS a tall form instead of scrolling past it. Compression cannot
+   overlap. The limit is honest either way: a card taller than the space left
+   still scrolls, and should.
+
+   The host is the ONLY full-height box here. The port this replaces nested a
    100vh wrapper inside a 100dvh one, which scrolls a page whose content fits.
 
    `.auth` is centred with auto margins rather than centre ALIGNMENT. While the
@@ -13,7 +32,9 @@
 :host {
   --_auth-min-height: var(--ds-auth-layout-min-height, 100dvh);
   --_auth-bg-color: var(--ds-auth-layout-bg-color, var(--surface-canvas));
-  --_auth-gap: var(--ds-auth-layout-gap, var(--space-8));
+  --_auth-gap: var(--ds-auth-layout-gap, clamp(var(--space-4), 4svh, var(--space-8)));
+  --_auth-pad-block: var(--ds-auth-layout-pad-block, clamp(var(--space-4), 5svh, var(--space-10)));
+  --_auth-mark-size: var(--ds-auth-layout-mark-size, clamp(var(--space-6), 4svh, var(--space-8)));
   --_auth-card-max-width: var(--ds-auth-layout-card-max-width, var(--auth-card-w));
   --_auth-mark-bg-color: var(--ds-auth-layout-mark-bg-color, var(--accent));
   --_auth-mark-label-color: var(--ds-auth-layout-mark-label-color, var(--accent-on));
@@ -26,8 +47,8 @@
      a landscape phone is where it keeps the card clear of the notch and the
      gesture bar. */
   padding-block:
-    calc(var(--space-10) + env(safe-area-inset-top))
-    calc(var(--space-10) + env(safe-area-inset-bottom));
+    calc(var(--_auth-pad-block) + env(safe-area-inset-top))
+    calc(var(--_auth-pad-block) + env(safe-area-inset-bottom));
   padding-inline:
     calc(var(--space-4) + env(safe-area-inset-left))
     calc(var(--space-4) + env(safe-area-inset-right));
@@ -49,7 +70,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-2);
+  gap: clamp(var(--space-1), 1svh, var(--space-2));
 
   /* Nothing to show — no brand text, no projected logo, no tagline. Hidden
      rather than left empty, because an empty flex child still takes the
@@ -74,16 +95,16 @@
 .mark {
   display: grid;
   place-items: center;
-  width: var(--space-8);
-  height: var(--space-8);
+  width: var(--_auth-mark-size);
+  height: var(--_auth-mark-size);
   border-radius: var(--ds-radius-control);
   background-color: var(--_auth-mark-bg-color);
   color: var(--_auth-mark-label-color);
-  font: var(--font-weight-bold) var(--font-size-m) / 1 var(--font-sans);
+  font: var(--font-weight-bold) clamp(var(--font-size-s), 2svh, var(--font-size-m)) / 1 var(--font-sans);
 }
 
 .brand-name {
-  font: var(--font-weight-extrabold) var(--font-size-h4) / var(--line-height-snug) var(--font-sans);
+  font: var(--font-weight-extrabold) clamp(var(--font-size-m), 2.75svh, var(--font-size-h4)) / var(--line-height-snug) var(--font-sans);
   color: var(--text-primary);
 }
 

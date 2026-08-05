@@ -10,6 +10,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **`ds-auth-layout` compresses its own chrome on a short viewport, so the layout is never the reason a
+  card scrolls.** Block padding, the column gap, the letter-mark tile (and the glyph inside it), the wordmark
+  and the masthead's inner gap all clamp against `svh`. At ~330px of viewport — a landscape phone — that
+  furniture costs ~131px instead of ~219px. Every multiplier reaches its maximum at an 800px-tall viewport,
+  so a desktop renders pixel-for-pixel what it did before and compression only happens below that.
+  `svh` rather than `dvh` because the dynamic unit changes as a mobile URL bar hides, which would resize the
+  wordmark mid-scroll. New opt-outs: `--ds-auth-layout-pad-block` and `--ds-auth-layout-mark-size` (set
+  either, or the existing `-gap`, to a fixed value and that dimension stops compressing). A card taller than
+  the space left still scrolls — deliberately, because the alternative (pinning the masthead and footer out
+  of the flow) frees more room but lets chrome overlap a tall form.
+
 - **BREAKING: `ds-auth-shell` is renamed `ds-auth-layout`** (`AuthShellComponent` → `AuthLayoutComponent`,
   and `--ds-auth-shell-*` → `--ds-auth-layout-*`). "Shell" is not this library's word for a layout — the
   app-level one was renamed `ds-app-shell` → `ds-app-layout` back in 0.7.0, and shipping an auth counterpart
