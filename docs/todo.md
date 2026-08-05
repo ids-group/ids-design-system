@@ -84,6 +84,20 @@ The nine below are what the base cannot express — the first three are what sti
 specification.** Building three replacements outside the table (a host-owned filter popover, a live
 region in a wrapper, a resize-key directive) only to delete them again when the DS grows its own is
 worse than waiting, so they keep the fork and the nine items above are the acceptance criteria.
+**ALL EIGHT CRITERIA MET 2026-08-06 — the section is now a green spec.** Point by point:
+`filterMode="server"` + `columnFilterOptions` · `dsHeaderFilter` projection slot (with `active`, because only
+the host knows whether its own criterion is set) · one `role="status"` carrying sort state and row range,
+wording overridable · `sortValue` strings collate with `sensitivity: 'base'` · clip detection walks
+descendants so a `dsCellTemplate` cell surfaces its text, and a resized header gets a `title` on enter ·
+keyboard resize (Arrow / PageUp / PageDown / Home) on a focusable `role="separator"` handle ·
+`exportFetcher` resolves rows, a `Blob` or a URL and `exportFailed` emits the rejection ·
+`--ds-table-min-width` and `--ds-table-hscroll-bottom`. **Two deliberate narrowings mm-broker should know
+about before they retire the fork:** clip detection covers template cells in a column that asked for
+`truncate` rather than every overflowing cell — a handler on every `<td>` swallows the row click on an
+interactive table; and the first resize (pointer or keyboard) now freezes ALL visible column widths, so a
+persisted `columnWidths` map gains entries for columns nobody dragged. Everything else matches the ask as
+written.
+
 **Definition of done for their retirement:** a server-paged table can declare `filterMode="server"`
 with host-supplied options; a filter the `'set'` checklist cannot express can be projected into the
 header; sorting and paging announce themselves to a screen reader; `sortValue` returning a string
