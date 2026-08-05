@@ -8,11 +8,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
 - **`ds-icon-button` forwards `ariaExpanded` and `ariaControls` to its inner `<button>`, and `ds-button` gains `ariaControls`.** A trigger that opens a panel has to announce state on the element a screen reader focuses; set on `<ds-icon-button>` itself those attributes land on the wrapper, which is not focusable and is never read. `ds-button` already forwarded `ariaExpanded`; the pair is now complete on both.
 - **`LayoutScrollService` exposes its scroller and an absolute `scrollTo(top)`.** A scroll-spy or a virtualizer inside `ds-app-layout` needs the content region to measure against, and the only way to get it was `document.querySelector` against the layout's internal markup — a consumer reaching into DS internals for something the DS already holds. `scrollTo` assigns `scrollTop` rather than calling `scrollTo({ behavior })`, so a themed `scroll-behavior: smooth` cannot turn a positioning jump into an animation.
 - **`dsRailTrigger` wires a consumer's own burger to the overlay rail.** The responsive rail shipped with `role="dialog"`, `aria-modal` and a focus trap, but nothing connected it to the button that opens it — the burger lives in the consumer's projected topbar, so it announced no state and no relationship. Put the directive on the burger and it toggles `[(railOpen)]` and keeps `aria-expanded` and `aria-controls` correct. Both attributes are dropped while the rail is not an overlay, where `aria-expanded="false"` would contradict what the user sees. A directive rather than a documentation note because these are exactly the attributes a consumer forgets — the DS itself forgot them. `ds-app-layout` also exposes `railId` and the read-only `railOverlay` signal for a consumer that builds its own trigger.
-
-### Added
 
 - **Overlay panels fade out when DISMISSED, and still close instantly when you choose something.** Floating
   panels (select, autocomplete, multi-select, both pickers, colour picker, popover) have closed instantly
@@ -106,7 +106,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   tri-state glyph, the met/failed colours and the type scale. A rule that has not passed reads as PENDING
   and only becomes a failure once `[showUnmet]` is true — bind that to "the user has tried to submit", or a
   half-typed password scolds someone who is still typing. `[columns]="2"` for a checklist beside a wide
-  form, and `metCount` / `allMet` are exposed for a host gating its own submit.
+  form, and `metCount` / `allMet` are exposed for a host gating its own submit — or import the standalone
+  `passwordRulesMet(value, rules)`, the same predicate that backs `allMet`, to gate a submit without
+  rendering the list at all. `[listId]` names the `<ul>` so a field's `aria-describedby` can point at it,
+  and `DsPasswordRule` (`{ label, test }`) and `DsPasswordRuleState` (`'pending' | 'met' | 'failed'`) are
+  exported for typing the rule set.
 - **`ds-input` takes `ariaDescribedBy`, MERGED with its own message id.** Needed by the rule list above,
   and by any policy note: setting `aria-describedby` on `<ds-input>` by hand lands on the wrapper, which no
   screen reader reads, and replacing the attribute would have dropped the field's own hint/error
@@ -137,6 +141,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   indicator vanished entirely and a keyboard user in that mode had nothing to follow — a real a11y gap, now
   closed once for every style with a `CanvasText` outline under `@media (forced-colors: active)`. A system
   keyword rather than a brand colour, because forced-colors replaces the palette.
+  — Both the switch and this fallback live in the new `styles/_focus.scss`, forwarded into the bundled
+  `styles/ds` entry, so a consumer of that entry gets both automatically. A consumer who `@use`s DS
+  partials individually gets NEITHER until they add `@use 'styles/focus';`.
 - **A role layer between the foundation scales and the components: radius, elevation and motion.** Reading
   the raw scale directly meant a consumer could not re-round "panels" without also re-rounding every
   control that shared `--radius-md`, could not lift every overlay without touching each surface, and could
@@ -232,8 +239,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `minlength` or `email`. An error that resolves to no text anywhere warns in dev rather than rendering
   an error style with an empty line.
 
-- **`ds-table`’s `clientSort` is replaced by `sortMode: 'client' | 'server' | 'none'`, and the default flips to client sorting.** The boolean could not express "nothing sorts", so a column marked `sortable: true` on a table with no sorting drew a header that looked live, showed a caret on hover and did nothing — an invisible failure that survived review and was caught by opening the page. An enum makes that state unrepresentable: `'none'` now renders the header as plain text, with no button, caret or `aria-sort`. Unset resolves to `'client'`, so `sortable: true` always does something; a server-sorted table declares `'server'`, which is the side that actually knows it wants server sorting. **Migration is mechanical except for one case:** a table that previously bound no `clientSort` and reordered in its own `(sortChange)` handler must now declare `sortMode="server"`, or it will sort locally as well. For a server-PAGED table (one that binds `total`) that is worse than a dead header, because only the current page reorders and the rows look sorted without being sorted — so dev builds warn on exactly that combination: `total` bound, sortable columns, `sortMode` never declared. Rejected alternative: reading `OutputEmitterRef.listeners` to detect an unbound `(sortChange)`. It is private, and a rename would kill the warning SILENTLY — `?.length` on `undefined` just means it never fires again.
 ### Changed
+
+- **`ds-table`’s `clientSort` is replaced by `sortMode: 'client' | 'server' | 'none'`, and the default flips to client sorting.** The boolean could not express "nothing sorts", so a column marked `sortable: true` on a table with no sorting drew a header that looked live, showed a caret on hover and did nothing — an invisible failure that survived review and was caught by opening the page. An enum makes that state unrepresentable: `'none'` now renders the header as plain text, with no button, caret or `aria-sort`. Unset resolves to `'client'`, so `sortable: true` always does something; a server-sorted table declares `'server'`, which is the side that actually knows it wants server sorting. **Migration is mechanical except for one case:** a table that previously bound no `clientSort` and reordered in its own `(sortChange)` handler must now declare `sortMode="server"`, or it will sort locally as well. For a server-PAGED table (one that binds `total`) that is worse than a dead header, because only the current page reorders and the rows look sorted without being sorted — so dev builds warn on exactly that combination: `total` bound, sortable columns, `sortMode` never declared. Rejected alternative: reading `OutputEmitterRef.listeners` to detect an unbound `(sortChange)`. It is private, and a rename would kill the warning SILENTLY — `?.length` on `undefined` just means it never fires again.
 
 - **A `ds-menu` row's hover fill is square and runs edge to edge.** The row carried `--radius-md`, the
   same 8px the standalone menu panel uses, while sitting flush inside it — and inside a `ds-popover`,
@@ -241,14 +249,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   slivers at the top and bottom of the list. A curve at zero inset can never be concentric with the
   panel's, so the row is now square and the panel clips it: `ds-menu` drops its own `padding` and gains
   `overflow: hidden`, which is what rounds the first and last row. To keep the old rounded highlight,
-  set the new hook — `ds-menu { --ds-menu-item-radius: var(--radius-sm); }` — and note the panel no
+  set the new hook — `ds-menu { --ds-menu-item-radius: var(--radius-md); }` — and note the panel no
   longer insets the rows, so a radius there reads best with a padding of your own.
 - **`ds-radio-group`’s label now looks like every other field label.** It was the one component drawing
   its own type (`medium` weight at `--font-size-s` on `--line-height-flat`) rather than the family’s
   `bold`/`--font-size-xs`; in a form beside an input or a select it read as a different kind of thing.
   Restore the old look with `ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); }`.
-- **`FieldMessageState` gained `'warning'`.** Additive, but an exhaustive `switch` over the exported
-  union in consumer code will no longer compile without that arm.
 - **Fields no longer expose a `protected messageState`;** the resolved `message` (text + state) and
   `invalidResolved` replace it. Only reachable by subclassing a field component, which is not a
   supported extension point, but noted for parity with the class-member changes in 0.7.0.
@@ -286,6 +292,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-table` gave the page a second scrollbar when it sat below the fold.** Its host was `display: block` with no `position`, while the `.visually-hidden` nodes it renders — the caption, the two `role="status"` announcers and the per-header sort-state spans — are `position: absolute`. With no positioned ancestor they resolved against the initial containing block, so each one contributed its layout offset to the DOCUMENT's root scroller: a consumer whose shell is `100vh` + `overflow: hidden` with one inner scrolling region got a phantom second scrollbar beside it, growing with how far down the page the table sat. Measured in a consumer with three tables on one tab — the root scroller reported 1902px against a 728px viewport, 1174px of overflow that no visible content occupied; with the host positioned it is 0 and the app's own region still scrolls. The host is now `position: relative`. Nothing else moves: the SR nodes stay 1×1 and clipped, and the overlays that must escape the table are portaled rather than absolutely positioned inside it.
 - **A nested `ds-app-layout` opened its rail whenever an OUTER one was open, and its scrim swallowed the clicks meant for the outer.** The open state was written as `:host(.rail-open) &`, which Angular's emulated encapsulation compiles to a DESCENDANT selector — and every instance of a component shares one encapsulation attribute, so `.rail-open[_nghost-x] .rail[_ngcontent-x]` matched the rail of every layout nested inside an open one. Two layouts on a page (a docs shell holding a demo, an app holding a preview pane) opened and closed in lockstep, and clicking the backdrop hit the inner layout's scrim, whose `closeRail()` was a no-op. The state now lives on the elements it styles (`.rail.open` / `.scrim.open`), where a selector cannot reach across host boundaries.
 - **The overlay rail escaped its layout and covered the whole window.** Below `lg` the rail is `position: fixed`, which resolves against the viewport, so a layout embedded in a page threw its rail over the top-left of the window instead of its own box — three shells on one docs page stacked three rails and three full-page scrims. The rail and scrim are now `absolute` against a `position: relative` host, which is identical for a full-viewport shell and correct for an embedded one.
+- **A nested `ds-app-layout` could paint its rail OVER the outer shell's.** The rail sits at
+  `--layer-drawer` and its scrim one below; `position: relative` alone still left every layout resolving
+  that layer in the one root stacking context, so an inner layout's rail could stack above an outer
+  layout's open rail instead of beneath it. The host now sets `isolation: isolate`, giving each
+  `ds-app-layout` its own stacking context — the same fix `ds-drawer` already carries. Nothing changes
+  for a full-viewport shell with no layout embedded inside it.
 - **A path change that only mirrors the reader's position no longer resets the content scroll.** A docs shell whose scroll spy rewrites `/area/section` as the user scrolls hit a loop: the rewrite looked like a page change, the layout scrolled to top, the spy saw the first section again and rewrote the path back. Such a navigation must now carry `state: { dsSamePage: true }`, which the layout skips for both the scroll reset and the rail close. Read from `Router.lastSuccessfulNavigation()` — `getCurrentNavigation()` is already cleared when `NavigationEnd` reaches a subscriber.
 - **Closing the rail by NAVIGATING no longer pulls focus back to the burger.** Restoring focus to the trigger is right for a dismissal — Escape, the scrim — and wrong for a link: the reader activated it, so focus belongs wherever the router put it, and handing it back announced "Open navigation" instead of the page they asked for. Dismissal keeps the restore; the navigation and breakpoint paths now clear `railOpen` directly. The breakpoint path had also depended on `compact` being written one line earlier to avoid focusing a trigger that is hidden on desktop — that ordering trap is gone with it.
 - **A closed compact `ds-app-layout` rail no longer holds focus, or 112 tab stops, behind the screen.**
