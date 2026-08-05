@@ -8,6 +8,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Fixed
+
+- **A settled `ds-autocomplete` no longer shows an empty text box beside its value.** In single mode the
+  chosen label has always rendered as its own element, but the filter input stayed 80px wide next to it and
+  took the caret, so a field with a value read as free text rather than a picker. With a value and the panel
+  closed the input now collapses to zero width — it keeps focus, so clicking still opens the panel and
+  typing still filters.
+
 ### Added
 
 - **`ds-table`: the rest of what mm-broker's fork did that the base could not.** Keyboard column resizing —
