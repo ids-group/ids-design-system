@@ -26,26 +26,26 @@ import { BrandNameDirective } from '../sidenav/brand-name.directive';
  * two-tone wordmark, and `[brand]` projects a real logo instead of the tile.
  *
  * ```html
- * <ds-auth-shell brand="MyAdmin" logoLetter="A" tagline="Broker administration">
+ * <ds-auth-layout brand="MyAdmin" logoLetter="A" tagline="Broker administration">
  *   <h1 class="title">Sign in</h1>
  *   <form class="form">…</form>
  *
  *   <p dsAuthSupport>
  *     Need a hand? <a href="mailto:support@example.com">Contact support</a>
  *   </p>
- * </ds-auth-shell>
+ * </ds-auth-layout>
  * ```
  */
 @Component({
-  selector: 'ds-auth-shell',
+  selector: 'ds-auth-layout',
   standalone: true,
   imports: [CardComponent],
-  templateUrl: './auth-shell.component.html',
-  styleUrl: './auth-shell.component.scss',
+  templateUrl: './auth-layout.component.html',
+  styleUrl: './auth-layout.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthShellComponent {
+export class AuthLayoutComponent {
   /** Wordmark beside the letter-mark tile. For a logo image/SVG, project it into
    *  the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`. */
   readonly brand = input<string>('');

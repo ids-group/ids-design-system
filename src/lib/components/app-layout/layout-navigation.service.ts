@@ -10,7 +10,7 @@ import { distinctUntilChanged, filter, map, type Observable } from 'rxjs';
  * for itself what "went somewhere else" means.
  *
  * A PATH change is not always a page change. An app whose URL mirrors the
- * reader's position — a docs shell rewriting `/area/section` from a scroll spy,
+ * reader's position — a docs layout rewriting `/area/section` from a scroll spy,
  * a wizard that names its step — changes the path while staying on the screen,
  * and resetting the scroll there fights the user: the reset moves the scroll,
  * the spy rewrites the path again, and the page ping-pongs. Such a navigation

@@ -195,10 +195,10 @@
     </code> is what a screen reader reads.
     Bind that component's forwarding inputs instead, off a template ref:
     <code class="t-mono-inline">
-      [ariaExpanded]="shell.railOverlay() ? shell.railOpen() : null"
+      [ariaExpanded]="layout.railOverlay() ? layout.railOpen() : null"
     </code> and
     <code class="t-mono-inline">
-      [ariaControls]="shell.railId"
+      [ariaControls]="layout.railId"
     </code>. These docs use the second
     route — the burger at the top of this page on a narrow screen is it.
   </p>

@@ -1894,37 +1894,37 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
-    "component": "Auth Shell",
-    "selector": ".auth-shell",
+    "component": "Auth Layout",
+    "selector": ".auth-layout",
     "description": "",
     "tokens": [
       {
-        "name": "--ds-auth-shell-min-height",
+        "name": "--ds-auth-layout-min-height",
         "value": "100dvh",
-        "notes": "Host height the centring works against (defaults to 100dvh); set it to 100% to embed the shell in a box that is not the page."
+        "notes": "Host height the centring works against (defaults to 100dvh); set it to 100% to embed the layout in a box that is not the page."
       },
       {
-        "name": "--ds-auth-shell-bg-color",
+        "name": "--ds-auth-layout-bg-color",
         "value": "var(--surface-canvas)",
         "notes": "Auth screen canvas fill (defaults to --surface-canvas)."
       },
       {
-        "name": "--ds-auth-shell-gap",
+        "name": "--ds-auth-layout-gap",
         "value": "var(--space-8)",
         "notes": "Space between masthead, card and support footer (defaults to --space-8)."
       },
       {
-        "name": "--ds-auth-shell-card-max-width",
+        "name": "--ds-auth-layout-card-max-width",
         "value": "var(--auth-card-w)",
         "notes": "Measure of the auth column — the card, and with it the tagline and support line (defaults to --auth-card-w, 420px)."
       },
       {
-        "name": "--ds-auth-shell-mark-bg-color",
+        "name": "--ds-auth-layout-mark-bg-color",
         "value": "var(--accent)",
         "notes": "Letter-mark tile fill (defaults to --accent, matching the sidenav's mark)."
       },
       {
-        "name": "--ds-auth-shell-mark-label-color",
+        "name": "--ds-auth-layout-mark-label-color",
         "value": "var(--accent-on)",
         "notes": "Letter-mark glyph colour (defaults to --accent-on)."
       },

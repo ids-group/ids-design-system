@@ -4,9 +4,9 @@
   display: block;
 }
 
-// The topbar is mobile-only here. The shell always renders its `[topbar]` slot,
+// The topbar is mobile-only here. The layout always renders its `[topbar]` slot,
 // but that grid row is `auto`, so hiding the only child collapses it to zero and
-// the desktop layout is unchanged — no shell input needed for a bar-less desktop.
+// the desktop layout is unchanged — no layout input needed for a bar-less desktop.
 .mob-bar {
   min-width: 0;
 
@@ -19,7 +19,7 @@
   gap: var(--space-2);
 }
 
-// Width only: the shell's rail owns the frame, the overlay behaviour and its own
+// Width only: the layout's rail owns the frame, the overlay behaviour and its own
 // vertical scrolling. Below lg the rail sizes itself as an overlay, so a fixed
 // width here would fight it.
 .side {

@@ -1,7 +1,7 @@
 <docs-section
-  anchor="auth-shell"
+  anchor="auth-layout"
   eyebrow="Components"
-  title="Auth shell"
+  title="Auth layout"
 >
   <span lede>
     The scaffold for the screens in front of the login — counterpart to
@@ -30,7 +30,7 @@
 
   <p class="block-desc t-s">
     Everything inside the card is yours: the default slot projects straight into
-    it, and the shell deliberately leaves your headings and form alone so its
+    it, and the layout deliberately leaves your headings and form alone so its
     type scale never fights your screen's. The support line goes into
     <code class="t-mono-inline">
       [dsAuthSupport]
@@ -39,7 +39,7 @@
   </p>
 
   <div class="auth-demo">
-    <ds-auth-shell
+    <ds-auth-layout
       brand="MyAdmin"
       logoLetter="A"
       tagline="Broker administration"
@@ -76,13 +76,13 @@
         Need a hand?
         <a
           class="link"
-          href="#section-auth-shell"
+          href="#section-auth-layout"
           >
           Contact support
         </a
         >
       </p>
-    </ds-auth-shell>
+    </ds-auth-layout>
   </div>
 
   <h3 class="block-title t-h4">
@@ -91,13 +91,13 @@
 
   <p class="block-desc t-s">
     Project <code class="t-mono-inline"> [dsBrandName] </code> when one slice of
-    the wordmark carries the brand colour. The shell never splits your brand
+    the wordmark carries the brand colour. The layout never splits your brand
     string for you, because a split has to guess where the accent belongs. The
     tagline is optional, and a flat card suits a canvas that is already tinted.
   </p>
 
   <div class="auth-demo">
-    <ds-auth-shell
+    <ds-auth-layout
       logoLetter="M"
       cardElevation="flat"
     >
@@ -124,7 +124,7 @@
           Send reset link
         </ds-button>
       </div>
-    </ds-auth-shell>
+    </ds-auth-layout>
   </div>
 
   <h3 class="block-title t-h4">
@@ -132,12 +132,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    The full-height box is the shell's own host, and there is only one of it —
+    The full-height box is the layout's own host, and there is only one of it —
     the hand-rolled version this replaces nested a 100vh wrapper inside a 100dvh
     one, which scrolls a page whose content fits. Inside it the column is centred
     with auto margins rather than centre alignment. On a normal page the two are
     the same, because the host is free to grow and a tall form simply lengthens
-    it. They differ once the host cannot grow — when you embed the shell by
+    it. They differ once the host cannot grow — when you embed the layout by
     setting its min-height token to 100% in a fixed-height parent. There, centre
     alignment puts a form taller than the box above the scroll origin, out of
     reach of any scrolling; auto margins collapse to zero instead, so the form

@@ -1,0 +1,14 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "auth-shell-renamed-to-auth-layout",
+      "kind": "removed-api",
+      "old": "ds-auth-shell / AuthShellComponent / --ds-auth-shell-*",
+      "new": "ds-auth-layout / AuthLayoutComponent / --ds-auth-layout-*",
+      "note": "The component shipped in 0.8.0 as ds-auth-shell and is renamed to ds-auth-layout. \"Shell\" is not this library's word for a layout: the app-level one was renamed ds-app-shell -> ds-app-layout in 0.7.0, and calling the auth counterpart a shell put the split vocabulary back. ACTION, mechanical and complete: rename the element <ds-auth-shell> to <ds-auth-layout>, the imported class AuthShellComponent to AuthLayoutComponent, and any of the six tokens you override from --ds-auth-shell-* to --ds-auth-layout-* (min-height, card-max-width, gap, bg-color, mark-bg-color, mark-label-color). Behaviour, inputs and slots are unchanged - [dsAuthSupport], [dsBrandName], brand, logoLetter, tagline, cardElevation and cardPadding all keep their names.",
+      "searchHints": ["ds-auth-shell", "AuthShellComponent", "--ds-auth-shell-"]
+    }
+  ],
+  "informational": []
+}

@@ -69,7 +69,7 @@ export class SidebarComponent {
   });
   protected readonly activeAnchor = signal<string>('');
   protected readonly collapsed = signal<boolean>(this.readCollapsed());
-  // Read from the shell, not a second media query: ds-app-layout already owns the
+  // Read from the layout, not a second media query: ds-app-layout already owns the
   // lg breakpoint, and a copy here is the duplication its --bp-lg lesson was about.
   protected readonly effectiveCollapsed = computed(() =>
     this.layout.railOverlay() ? false : this.collapsed(),
@@ -99,7 +99,7 @@ export class SidebarComponent {
     this.setupWhenSectionsExist();
 
     // A different group page swaps its sections: reset scroll to the target section (or top) and re-scan `[data-anchor]`.
-    // Same-group anchor rewrites are skipped here to avoid observer thrash; the shell's content region is the scroll container, not window.
+    // Same-group anchor rewrites are skipped here to avoid observer thrash; the layout's content region is the scroll container, not window.
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
@@ -134,7 +134,7 @@ export class SidebarComponent {
 
     // Sync the URL's anchor segment with the active section as the user scrolls
     // (/components/button → /components/segmented …) — replaceUrl so history
-    // isn't polluted, and dsSamePage so the shell does not read a scroll-driven
+    // isn't polluted, and dsSamePage so the layout does not read a scroll-driven
     // path rewrite as a page change and reset the scroll we are describing.
     // Single-section pages (home/changelog) carry no anchor.
     effect(() => {

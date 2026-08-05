@@ -1,7 +1,7 @@
     .row { display: flex; gap: var(--space-3); align-items: center; flex-wrap: wrap; margin-top: var(--space-3); }
 
     ds-search.wide { max-width: 560px; flex: 1; }
-    .compact-shell { width: 280px; }
+    .compact-frame { width: 280px; }
 
     /* ---------- States showcase overrides ---------- */
     .state-cell__stage {

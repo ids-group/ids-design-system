@@ -42,9 +42,13 @@ import { groupForAnchor, urlForGroupPath } from '../core/nav.config';
 
       @if (nextLink(); as link) {
         <a class="next-group" [routerLink]="link">
-          <span class="next-group__label"> Next </span>
+          <span class="next-group__label">
+            Next
+          </span>
 
-          <span class="next-group__title"> {{ nextGroup()?.title }} → </span>
+          <span class="next-group__title">
+            {{ nextGroup()?.title }} →
+          </span>
         </a>
       }
     }
@@ -94,7 +98,7 @@ export class SectionGroupPage {
     // Angular leaves focus on BODY after a route change, so a keyboard user's
     // next Tab restarts from the top of the document instead of the page they
     // just navigated to. Moving focus is the APP's call — a layout that stole it
-    // on every navigation would be wrong — so the shell only makes its `<main>`
+    // on every navigation would be wrong — so the layout only makes its `<main>`
     // focusable and this does the moving. `preventScroll` because the layout's
     // scroll service owns the position, including a restored one.
     let first = !this.resumed;

@@ -2,7 +2,7 @@
 
 /* ============================================================
    FIELD (multiline text input subset)
-   Mirrors input.component.scss `.field` shell so consumers can
+   Mirrors input.component.scss `.field` box so consumers can
    override via the same `--ds-input-*` token family. The only
    visual divergence is the inner <textarea>: vertical resize,
    min-height driven by --field-textarea-rows-min, and a

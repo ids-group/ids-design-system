@@ -66,7 +66,7 @@ export const NAV: NavGroup[] = [
     kind: 'component',
     items: [
       { label: 'App layout', anchor: 'app-layout' },
-      { label: 'Auth shell', anchor: 'auth-shell' },
+      { label: 'Auth layout', anchor: 'auth-layout' },
       { label: 'Breadcrumbs', anchor: 'breadcrumbs' },
       { label: 'Menu', anchor: 'menu' },
       { label: 'Pagination', anchor: 'pagination' },

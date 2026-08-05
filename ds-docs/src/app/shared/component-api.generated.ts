@@ -193,13 +193,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
-  "auth-shell": {
-    "key": "auth-shell",
-    "selector": "ds-auth-shell",
+  "auth-layout": {
+    "key": "auth-layout",
+    "selector": "ds-auth-layout",
     "isElement": true,
-    "className": "AuthShellComponent",
+    "className": "AuthLayoutComponent",
     "status": "stable",
-    "importName": "AuthShellComponent",
+    "importName": "AuthLayoutComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [

@@ -9,7 +9,7 @@ import { COMPONENT_API } from './component-api.generated';
 import { DocsComponentMetaComponent } from './docs-component-meta.component';
 import { DocsApiTableComponent } from './docs-api-table.component';
 
-/** Section shell shared by every docs section. Auto-renders the matching component's meta + Inputs/Outputs table when `anchor` hits a component-API key; `[api]="false"` opts out, `[apiKeys]` adds extras. */
+/** Section wrapper shared by every docs section. Auto-renders the matching component's meta + Inputs/Outputs table when `anchor` hits a component-API key; `[api]="false"` opts out, `[apiKeys]` adds extras. */
 @Component({
   selector: 'docs-section',
   standalone: true,

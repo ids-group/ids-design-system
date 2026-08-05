@@ -43,8 +43,8 @@
 html, body { height: 100%; margin: 0; }
 
 // Global scope only: Angular's emulated encapsulation can't rewrite `:root` on the real <html> element.
-// Gated to lg+ — below that the shell's rail is an overlay and sizes itself.
-// Targets the projected wrapper's width, not a grid column: the shell's rail
+// Gated to lg+ — below that the layout's rail is an overlay and sizes itself.
+// Targets the projected wrapper's width, not a grid column: the layout's rail
 // track is `auto`, so the width the docs set on .side is what defines it.
 @media (width >= #{bp.$bp-lg}) {
   :root.ds-docs-sidebar-collapsed app-root .side {

@@ -8,6 +8,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Changed
+
+- **BREAKING: `ds-auth-shell` is renamed `ds-auth-layout`** (`AuthShellComponent` → `AuthLayoutComponent`,
+  and `--ds-auth-shell-*` → `--ds-auth-layout-*`). "Shell" is not this library's word for a layout — the
+  app-level one was renamed `ds-app-shell` → `ds-app-layout` back in 0.7.0, and shipping an auth counterpart
+  called a shell in 0.8.0 reintroduced the split vocabulary that rename existed to remove. Mechanical:
+  rename the tag, the class and the six tokens. Nothing about the behaviour or the slots changes.
+
 ### Fixed
 
 - **`ds-textarea size="sm"` and `="lg"` got the md vertical padding.** The size variants set the inner

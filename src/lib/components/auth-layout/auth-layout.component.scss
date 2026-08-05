@@ -4,19 +4,19 @@
    `.auth` is centred with auto margins rather than centre ALIGNMENT. While the
    host is free to grow — the default, `min-height: 100dvh` — the two are
    identical. They part company once it cannot: embedded through
-   `--ds-auth-shell-min-height: 100%` inside a fixed-height parent, a form
+   `--ds-auth-layout-min-height: 100%` inside a fixed-height parent, a form
    taller than the box lands 115px above the scroll origin under
    `align-items: center` (measured), and `scrollTop = 0` does not reach it. Auto
    margins collapse to zero when free space runs out, so the same form pins to
    the padding edge and scrolls normally. */
 
 :host {
-  --_auth-min-height: var(--ds-auth-shell-min-height, 100dvh);
-  --_auth-bg-color: var(--ds-auth-shell-bg-color, var(--surface-canvas));
-  --_auth-gap: var(--ds-auth-shell-gap, var(--space-8));
-  --_auth-card-max-width: var(--ds-auth-shell-card-max-width, var(--auth-card-w));
-  --_auth-mark-bg-color: var(--ds-auth-shell-mark-bg-color, var(--accent));
-  --_auth-mark-label-color: var(--ds-auth-shell-mark-label-color, var(--accent-on));
+  --_auth-min-height: var(--ds-auth-layout-min-height, 100dvh);
+  --_auth-bg-color: var(--ds-auth-layout-bg-color, var(--surface-canvas));
+  --_auth-gap: var(--ds-auth-layout-gap, var(--space-8));
+  --_auth-card-max-width: var(--ds-auth-layout-card-max-width, var(--auth-card-w));
+  --_auth-mark-bg-color: var(--ds-auth-layout-mark-bg-color, var(--accent));
+  --_auth-mark-label-color: var(--ds-auth-layout-mark-label-color, var(--accent-on));
 
   display: flex;
   min-height: var(--_auth-min-height);
