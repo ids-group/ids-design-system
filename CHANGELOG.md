@@ -8,6 +8,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **`dsTabUrl()` binds `ds-tabs` to a query parameter**, so a tab survives F5, a shared link and the Back
+  button (asked for by the ai-sdlc starter). A function rather than an input on `ds-tabs`, which stays
+  router-free because plenty of tab strips are not routed — a routed page opts in from its injection
+  context. The evidence for shipping it: in one admin port THREE of the four tabbed screens never got the
+  hand-wiring at all, so only the screen whose author reached for a helper worked. Names go in the URL, not
+  indices (inserting a tab would otherwise repoint old links), the first tab writes no parameter and every
+  write replaces (clean address, and flipping tabs does not fill the history), and an unknown name resolves
+  to tab 0 rather than throwing.
+
 ### Fixed
 
 - **Options in the picker panels had no pressed state.** Hover only — so on a phone, where there is no

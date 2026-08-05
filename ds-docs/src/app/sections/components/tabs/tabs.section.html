@@ -571,4 +571,67 @@
       </div>
     </div>
   </div>
+
+  <h3 class="block-title t-h4">
+    Keeping the tab in the URL
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsTabUrl()
+    </code> binds a tab strip to a query
+    parameter, so the tab survives F5, a shared link and the Back button. It is a
+    function rather than an input, because
+    <code class="t-mono-inline">
+      ds-tabs
+    </code> itself stays router-free — plenty of
+    tab strips are not routed — and a routed page opts in from its injection
+    context:
+  </p>
+
+  <pre class="t-mono-block">
+    <code>
+      protected readonly tabs = dsTabUrl(['profile', 'activity', 'billing']);
+
+&lt;ds-tabs
+  [selectedIndex]="tabs.index()"
+  (selectedIndexChange)="tabs.select($event)"
+&gt;
+    </code>
+  </pre>
+
+  <p class="block-desc t-s">
+    Two decisions are baked in, both carried over from the consumer helper this
+    replaces. <strong>Names, not indices</strong> —
+    <code class="t-mono-inline">
+      ?tab=activity
+    </code>, never
+    <code class="t-mono-inline">
+      ?tab=1
+    </code>, because inserting a tab later
+    would silently repoint every old link. And <strong>the first tab writes no
+    parameter, while every write replaces</strong> — a pristine screen keeps a
+    clean address, and flipping tabs does not fill the history with entries the
+    Back button has to walk one at a time. An unknown or missing name resolves to
+    tab 0 rather than throwing: a URL is user input, and a stale bookmark should
+    land on the first tab.
+  </p>
+
+  <p class="block-desc t-s">
+    It pairs with
+    <code class="t-mono-inline">
+      ds-app-layout
+    </code>: the write is query-only, and
+    that layout's
+    <code class="t-mono-inline">
+      pathChanged
+    </code> ignores query-only navigations, so
+    switching tabs does not trip its scroll reset. There is deliberately no live
+    demo on this page — a working one would write
+    <code class="t-mono-inline">
+      ?tab=
+    </code> into the docs' own address while
+    the sidebar is rewriting the path from the scroll position, and the two would
+    look like they were fighting.
+  </p>
 </docs-section>
