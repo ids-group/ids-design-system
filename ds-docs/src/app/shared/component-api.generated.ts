@@ -189,6 +189,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "2000",
         "required": false,
         "description": "How long to wait for the restored screen's content to grow tall enough before landing as close as it allows. Only meaningful with `restoreScroll`."
+      },
+      {
+        "name": "scrollReset",
+        "kind": "input",
+        "type": "DsScrollReset",
+        "union": [
+          "path",
+          "never",
+          "always"
+        ],
+        "default": "'path'",
+        "required": false,
+        "description": "When the content scroll resets to the top. `'path'` (default) is what the layout has always done; `'always'` also resets on a query- or fragment-only navigation, which is what a server-paged list wants; `'never'` hands the decision to the screen, which can still call `LayoutScrollService.scrollToTop()`. It exists because the layout owning the scroll CONTAINER also meant it owned the POLICY: a screen could add a reset but had no way to suppress one."
       }
     ],
     "outputs": []

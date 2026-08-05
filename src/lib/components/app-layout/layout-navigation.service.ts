@@ -3,11 +3,26 @@ import { NavigationEnd, Router } from '@angular/router';
 import { distinctUntilChanged, filter, map, type Observable } from 'rxjs';
 
 /**
- * Emits the new path whenever navigation lands on a DIFFERENT one. Internal to
- * `ds-app-layout`: a query- or fragment-only navigation is a search, sort or
- * page step on the same screen, and both the scroll reset and the responsive
- * rail must agree on that — so they read one source instead of each deciding
- * for itself what "went somewhere else" means.
+ * Emits the new path whenever navigation lands on a DIFFERENT one. A query- or
+ * fragment-only navigation is a search, sort or page step on the same screen, and
+ * everything that reacts to "went somewhere else" must agree on that — the scroll
+ * reset, the responsive rail, and now your own code — so they read one source
+ * instead of each deciding for itself.
+ *
+ * PUBLIC since 0.8.x, because consumers were re-deriving it and disagreeing: one
+ * consumer had three separate answers to "did the path change?" — route snapshots
+ * in a view-transition skip, this stream inside the layout, and a `split('?')`
+ * in a tab helper that ignored the fragment this one strips. Inject it and read
+ * `pathChanged` rather than writing a fourth:
+ *
+ * ```ts
+ * private readonly navigation = inject(LayoutNavigationService);
+ * constructor() {
+ *   this.navigation.pathChanged
+ *     .pipe(takeUntilDestroyed())
+ *     .subscribe((path) => …);
+ * }
+ * ```
  *
  * A PATH change is not always a page change. An app whose URL mirrors the
  * reader's position — a docs layout rewriting `/area/section` from a scroll spy,
@@ -16,12 +31,10 @@ import { distinctUntilChanged, filter, map, type Observable } from 'rxjs';
  * the spy rewrites the path again, and the page ping-pongs. Such a navigation
  * must carry `state: { dsSamePage: true }`, which is skipped here.
  *
- * Root-provided although it is internal: the PUBLIC `LayoutScrollService` now
- * depends on it, and that service must be provided by whoever uses it. A
- * consumer who provides it outside `ds-app-layout` cannot provide this one too
- * — it is not exported — so anything but root would hand them a
- * `NullInjectorError`. Safe as a singleton: the stream is derived from the
- * router and holds no state.
+ * Root-provided, which is also what makes it safe to expose: the stream is
+ * derived from the router and holds no state, so one instance serves every
+ * reader. `LayoutScrollService` depends on it, so a consumer providing THAT
+ * outside `ds-app-layout` needs this one resolvable too.
  */
 @Injectable({ providedIn: 'root' })
 export class LayoutNavigationService {

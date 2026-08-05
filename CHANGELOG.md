@@ -10,6 +10,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-app-layout` takes a `scrollReset` strategy, and `LayoutNavigationService` is public** (both asked
+  for by the ai-sdlc starter after their `ds-app-layout` migration). Owning the scroll CONTAINER had
+  quietly meant owning the POLICY: `scrollToTop()` was public so a screen could ADD a reset, but nothing
+  could suppress one the layout decided to do. `scrollReset: 'path' | 'never' | 'always'` defaults to
+  `'path'`, which is exactly today's behaviour — no consumer sees a change unless they set it. `'always'`
+  also resets on a query- or fragment-only navigation (what a server-paged list wants); `'never'` hands the
+  decision to the screen.
+  — Exporting the navigation service removes a duplication the layout was causing: "did the path change?"
+  was being re-derived per consumer, and one of them had THREE answers that disagreed, because a
+  `split('?')` keeps the fragment `pathChanged` strips. It is root-provided and stateless, so exposing it
+  costs nothing.
+
 - **`ds-icon` warns in dev when a name resolves to nothing** (asked for by the ai-sdlc starter after an audit
   found misspelled names on three screens). An unknown name rendered an empty `<svg>` in silence: the types
   cannot catch it, because `IconName` stays open (`| (string & {})`) so a consumer can register their own

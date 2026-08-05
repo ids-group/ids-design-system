@@ -234,6 +234,48 @@
   </p>
 
   <p class="block-desc t-s">
+    Resetting is separate from restoring, and it now has a switch:
+    <code class="t-mono-inline">
+      scrollReset
+    </code> is
+    <code class="t-mono-inline">
+      'path'
+    </code> by default — the top only when
+    navigation lands on a different PATH, so a search, a sort or a page step on
+    the same screen keeps the reader's place.
+    <code class="t-mono-inline">
+      'always'
+    </code> resets on those too, which is what a
+    server-paged list usually wants, and
+    <code class="t-mono-inline">
+      'never'
+    </code> hands the decision back to the
+    screen — which can still call
+    <code class="t-mono-inline">
+      scrollToTop()
+    </code> itself. The input exists because
+    owning the scroll CONTAINER had quietly meant owning the POLICY: a screen
+    could ADD a reset and had no way to suppress one.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      LayoutNavigationService
+    </code> is public for the same
+    reason. Its
+    <code class="t-mono-inline">
+      pathChanged
+    </code> stream is the layout's own answer to
+    "did we go somewhere else?" — `NavigationEnd`, path only, de-duplicated, and
+    skipping any navigation that carries
+    <code class="t-mono-inline">
+      state: {{ '{' }} dsSamePage: true {{ '}' }}
+    </code>. Inject it instead of
+    deriving your own: one consumer ended up with three answers that disagreed,
+    because a `split('?')` keeps the fragment this one strips.
+  </p>
+
+  <p class="block-desc t-s">
     The offset is applied once the content is tall enough to hold it, watched with
     a
     <code class="t-mono-inline">
