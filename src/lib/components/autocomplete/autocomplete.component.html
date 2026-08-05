@@ -30,6 +30,7 @@
     class="autocomplete-input"
     role="combobox"
     aria-autocomplete="list"
+    [class.collapsed]="displayLabel() && !isOpen()"
     [attr.aria-expanded]="isOpen()"
     [attr.aria-controls]="listboxId"
     [attr.aria-activedescendant]="activeDescendant()"

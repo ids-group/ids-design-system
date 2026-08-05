@@ -79,6 +79,19 @@
 .autocomplete-input {
   flex: 1;
   min-width: var(--_autocomplete-input-minw);
+
+  /* Single mode with a value and the panel closed: the field has nothing to
+     filter yet, and an empty 80px text area sitting beside the chosen label is
+     what made this read as a free-text input rather than a picker. Collapsed,
+     not removed — it keeps focus, so clicking the field (which focuses it) opens
+     the panel and expands it again, and typing still filters. */
+  &.collapsed {
+    flex: 0 0 0;
+    min-width: 0;
+    width: 0;
+    padding: 0;
+  }
+
   border: 0;
   outline: 0;
   background: transparent;
