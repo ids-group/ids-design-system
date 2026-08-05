@@ -3,6 +3,8 @@
 Running list of design-system improvements. Add items here as they come up.
 Deep gap analysis: `docs/superpowers/ds-gap-analysis.md`. Outstanding audit (a11y/API): `docs/superpowers/library-audit.md`.
 Packaging / initial-bundle chunking: `packaging-chunking-audit.md` (2026-08-03 — also lists corrections this file still owes).
+**Baseline: v0.8.0 is released** (2026-08-05) — everything the 08-04/05 sessions built shipped in it, so "since the last release" now means since 0.8.0. Unreleased on `dev`: the `ds-auth-shell` → `ds-auth-layout` rename (breaking, migration written) and a textarea size-padding fix.
+
 Completed items are archived in `done.md` (last archive pass **2026-08-05** — 40 items moved out across the 08-04/05 sessions; last full re-verification of open items **2026-07-24**, by 12 parallel audit agents).
 
 ---
