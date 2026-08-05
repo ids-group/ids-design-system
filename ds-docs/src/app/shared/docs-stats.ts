@@ -2,7 +2,7 @@
 // reality. Counts come from the nav config and the loaded stylesheets; the
 // version comes from the published package.json.
 import pkg from '../../../../package.json';
-import { NAV } from '../layout/nav.config';
+import { NAV } from '../core/nav.config';
 
 export const DS_VERSION: string = pkg.version;
 

@@ -16,7 +16,7 @@ import {
 import { filter } from 'rxjs/operators';
 import { LayoutScrollService } from 'ds';
 import { GROUP_PAGES } from '../group-pages';
-import { groupForAnchor, urlForGroupPath } from '../layout/nav.config';
+import { groupForAnchor, urlForGroupPath } from '../core/nav.config';
 
 @Component({
   selector: 'page-section-group',

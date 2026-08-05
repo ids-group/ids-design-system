@@ -29,7 +29,7 @@ import {
   groupForAnchor,
   urlForAnchor,
   urlForGroupPath,
-} from './nav.config';
+} from '../core/nav.config';
 import { DS_VERSION } from '../shared/docs-stats';
 
 const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
