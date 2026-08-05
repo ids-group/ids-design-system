@@ -56,7 +56,7 @@ export class AuthShellComponent {
   readonly tagline = input<string>('');
   /** Card treatment. `flat` suits a screen that already sits on a tinted canvas. */
   readonly cardElevation = input<CardElevation>('raised');
-  /** Card padding preset. */
+  /** Card padding, passed through to `ds-card`. `md` tightens a short form. */
   readonly cardPadding = input<CardPadding>('lg');
 
   /** Projected `[dsBrandName]` wordmark markup, when the consumer provides one. */

@@ -256,7 +256,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'lg'",
         "required": false,
-        "description": "Card padding preset."
+        "description": "Card padding, passed through to `ds-card`. `md` tightens a short form."
       }
     ],
     "outputs": []
