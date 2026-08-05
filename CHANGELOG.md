@@ -243,6 +243,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A `required` `ds-time-picker` in `mode="range"` never announced as required.** `aria-required` was on the
+  single-mode trigger only, so a screen-reader user on a range field was not told either segment was
+  mandatory. Both segments now carry it. (Their accessible NAME was already correct — each announces the
+  field's own label plus "(from)" / "(to)" — and the docs gained a labelled, required range demo, whose
+  absence is why the gap went unnoticed.)
 - **`ds-table`: with `stickyHeader` and `stickyFirstColumn` together, the first body row painted OVER the
   header.** `--table-sticky-corner-z` exists so the corner where both sticky axes meet sits above the body's
   pinned cells, but the sticky-header rule out-specified it, leaving the pinned header cells at the same
