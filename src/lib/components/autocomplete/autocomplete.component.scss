@@ -108,8 +108,8 @@
   border: var(--border-width-default) solid var(--border-default);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-popover);
-  margin: var(--combobox-offset) 0 0;
-  max-height: var(--combobox-maxh);
+  margin: var(--picker-offset) 0 0;
+  max-height: var(--picker-maxh);
   overflow-y: auto;
   z-index: var(--layer-popover);
 

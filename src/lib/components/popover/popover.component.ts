@@ -24,6 +24,7 @@ import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  type DsOverlayCloseCause,
   focusIsInside,
   forwardOverlayTokens,
   overlayPlacementOf,
@@ -143,11 +144,13 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
     closeOnOutsidePointer(
       this.ref,
       (target) => trigger.contains(target),
-      () => this.close(),
+      () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
     // overflow container, so close on any outside scroll ourselves.
-    const removeScrollClose = closeOnScroll(this.ref, () => this.close());
+    const removeScrollClose = closeOnScroll(this.ref, () =>
+      this.close('dismiss'),
+    );
     this.ref.detachments().subscribe(() => {
       removeScrollClose();
       this.ref = null;
@@ -156,7 +159,7 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
     this.ref.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        this.close();
+        this.close('dismiss');
       }
     });
     this.ref.attach(new TemplatePortal(this.panelTpl()!, this.vcr));
@@ -172,14 +175,14 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
     }
   }
 
-  close(): void {
+  close(cause: DsOverlayCloseCause = 'select'): void {
     if (!this.ref) {
       return;
     }
     clearTimeout(this.focusTimer ?? undefined);
     this.focusTimer = null;
     const focusWasInPanel = focusIsInside(this.ref);
-    disposeWithLeave(this.ref);
+    disposeWithLeave(this.ref, cause);
     this.ref = null;
     this.opened.set(false);
     if (focusWasInPanel) {

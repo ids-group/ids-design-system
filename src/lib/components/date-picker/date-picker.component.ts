@@ -25,6 +25,7 @@ import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  type DsOverlayCloseCause,
   focusIsInside,
   forwardOverlayTokens,
   prepareOverlayEnter,
@@ -770,13 +771,13 @@ export class DatePickerComponent
     closeOnOutsidePointer(
       this.overlayRef,
       (target) => this.host.nativeElement.contains(target),
-      () => this.close(),
+      () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll, and CDK's scroll strategies don't see a
     // plain overflow container — so close on any outside scroll ourselves. Sync
     // state on every detach so a stray CDK detach can't wedge the reopen guard.
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
-      this.close(),
+      this.close('dismiss'),
     );
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
@@ -786,7 +787,7 @@ export class DatePickerComponent
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        this.close();
+        this.close('dismiss');
         this.focusTrigger();
       }
     });
@@ -808,11 +809,11 @@ export class DatePickerComponent
     }
   }
 
-  protected close(): void {
+  protected close(cause: DsOverlayCloseCause = 'select'): void {
     const focusWasInPanel = this.overlayRef
       ? focusIsInside(this.overlayRef)
       : false;
-    disposeWithLeave(this.overlayRef);
+    disposeWithLeave(this.overlayRef, cause);
     this.overlayRef = null;
     this.isOpen.set(false);
     this.closeMenus();

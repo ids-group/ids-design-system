@@ -32,6 +32,7 @@ import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  type DsOverlayCloseCause,
   focusIsInside,
   forwardOverlayTokens,
   prepareOverlayEnter,
@@ -368,12 +369,12 @@ export class ColorPickerComponent
     closeOnOutsidePointer(
       this.overlayRef,
       (target) => this.host.nativeElement.contains(target),
-      () => this.close(),
+      () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
     // overflow container, so close on any outside scroll ourselves.
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
-      this.close(),
+      this.close('dismiss'),
     );
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
@@ -383,19 +384,19 @@ export class ColorPickerComponent
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        this.close();
+        this.close('dismiss');
       }
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
     this.open.set(true);
   }
 
-  close(): void {
+  close(cause: DsOverlayCloseCause = 'select'): void {
     if (!this.overlayRef) {
       return;
     }
     const focusWasInPanel = focusIsInside(this.overlayRef);
-    disposeWithLeave(this.overlayRef);
+    disposeWithLeave(this.overlayRef, cause);
     this.overlayRef = null;
     this.open.set(false);
     this.markTouched();

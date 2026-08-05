@@ -14,6 +14,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **Overlay panels fade out when DISMISSED, and still close instantly when you choose something.** Floating
+  panels (select, autocomplete, multi-select, both pickers, colour picker, popover) have closed instantly
+  since the unconditional leave animation was cut, because ~120ms of fade after picking an option reads as the
+  panel lagging behind a decision already made. A dismissal is the opposite: Escape, a press outside or the
+  page scrolling away produced no result, so the fade reads as the panel backing out rather than as delay.
+  `disposeWithLeave()` now takes that cause — `'select'` (the default, instant) or `'dismiss'` — and each
+  panel passes `'dismiss'` from exactly its Escape / outside-press / scroll paths. Tab still closes instantly,
+  because a fading panel must not linger behind moved focus.
+  — Tunable through `--ds-overlay-leave-duration` / `-easing`, defaulting to the `--ds-motion-exit-*` role.
+  Reduced motion zeroes the duration at `:root`, so the animation still runs and still drives teardown. A
+  fading panel is `pointer-events: none`, so it cannot swallow a click aimed at what is behind it.
+
 - **`ds-checkbox`, `ds-switch` and `ds-radio` now RENDER a projected caption, and expose its colour and
   size.** `<ds-checkbox>I accept the <a …>Terms</a></ds-checkbox>` — the first thing a consumer tries, and
   the idiom every other body-bearing DS component accepts — used to render a control with no caption at all:
@@ -243,6 +255,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **Two leftover `--combobox-*` tokens renamed to `--picker-*`.** `--combobox-offset` and
+  `--combobox-maxh` size the listbox panel shared by `ds-autocomplete` and `ds-multi-select`, and survived the
+  `ds-combobox` → `ds-autocomplete` rename carrying the name of a component that no longer exists. Now
+  `--picker-offset` / `--picker-maxh`. These are global scale tokens rather than `--ds-*` component tokens, so
+  the blast radius is anyone who happened to override them — rename the override. The docs also now state the
+  autocomplete-vs-multi-select boundary in both sections: the LIST decides, not the count — typing is how you
+  narrow a set too large to scan, while a checkbox list shows the whole choice and what is NOT selected.
 - **A `required` `ds-time-picker` in `mode="range"` never announced as required.** `aria-required` was on the
   single-mode trigger only, so a screen-reader user on a range field was not told either segment was
   mandatory. Both segments now carry it. (Their accessible NAME was already correct — each announces the

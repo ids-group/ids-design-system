@@ -24,6 +24,9 @@
   --_overlay-enter-offset: var(--ds-overlay-enter-offset, 4px);
   --_ds-enter-scale: var(--ds-overlay-enter-scale, 0.96);
 
+  --_overlay-leave-duration: var(--ds-overlay-leave-duration, var(--ds-motion-exit-duration));
+  --_overlay-leave-easing: var(--ds-overlay-leave-easing, var(--ds-motion-exit-easing));
+
   --_ds-enter-x: 0px;
   --_ds-enter-y: calc(-1 * var(--_overlay-enter-offset));
   --_overlay-enter-origin: top center;
@@ -54,5 +57,32 @@
     animation-duration: var(--_overlay-enter-duration);
     animation-timing-function: var(--_overlay-enter-easing);
     transform-origin: var(--_overlay-enter-origin);
+  }
+
+  /* Leave, on an AMBIENT DISMISS only — Escape, a press outside, a scroll —
+     which `disposeWithLeave` marks by adding `ds-leaving`. Picking an option
+     still closes instantly: a fade on a deliberate choice reads as the panel
+     lagging behind it, which is why the old unconditional leave was cut. Opacity
+     only, no travel: a dismissal has nowhere to travel to, and movement would
+     re-add exactly the lag this avoids. Reduced motion zeroes the duration at
+     `:root`, so the animation still runs and `animationend` still tears down. */
+  &.ds-leaving {
+    /* A fading panel must not swallow the click aimed at what is behind it. */
+    pointer-events: none;
+
+    > * {
+      animation-name: ds-overlay-out;
+      animation-duration: var(--_overlay-leave-duration);
+      animation-timing-function: var(--_overlay-leave-easing);
+      animation-fill-mode: forwards;
+    }
+  }
+}
+
+/* Global, like the enter presets: a keyframe declared in a component stylesheet
+   is renamed by emulated encapsulation. */
+@keyframes ds-overlay-out {
+  to {
+    opacity: 0;
   }
 }

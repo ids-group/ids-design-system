@@ -24,6 +24,7 @@ import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  type DsOverlayCloseCause,
   focusIsInside,
   forwardOverlayTokens,
   prepareOverlayEnter,
@@ -317,12 +318,12 @@ export class TimePickerComponent
     closeOnOutsidePointer(
       this.overlayRef,
       (target) => this.host.nativeElement.contains(target),
-      () => this.close(),
+      () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
     // overflow container, so close on any outside scroll ourselves.
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
-      this.close(),
+      this.close('dismiss'),
     );
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
@@ -332,7 +333,7 @@ export class TimePickerComponent
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        this.onEscape();
+        this.onEscape('dismiss');
       }
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
@@ -356,12 +357,12 @@ export class TimePickerComponent
     this.open(segment);
   }
 
-  protected close(): void {
+  protected close(cause: DsOverlayCloseCause = 'select'): void {
     const segment = this.openSegment();
     const focusWasInPanel = this.overlayRef
       ? focusIsInside(this.overlayRef)
       : false;
-    disposeWithLeave(this.overlayRef);
+    disposeWithLeave(this.overlayRef, cause);
     this.overlayRef = null;
     this.openSegment.set(null);
     this.markTouched();
@@ -377,8 +378,8 @@ export class TimePickerComponent
     this.overlayRef = null;
   }
 
-  protected onEscape(): void {
-    this.close();
+  protected onEscape(cause: DsOverlayCloseCause = 'dismiss'): void {
+    this.close(cause);
   }
 
   protected onPick(next: string): void {

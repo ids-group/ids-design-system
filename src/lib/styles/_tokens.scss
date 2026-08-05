@@ -542,9 +542,9 @@
   --empty-icon-size:         var(--space-16);            /* 64px */
   --empty-body-maxw:         360px;
 
-  /* Combobox */
-  --combobox-offset:         var(--space-1);             /* gap below trigger */
-  --combobox-maxh:           280px;                  /* listbox max height */
+  /* Pickers — the listbox panel shared by autocomplete and multi-select. */
+  --picker-offset:           var(--space-1);             /* gap below trigger */
+  --picker-maxh:             280px;                  /* listbox max height */
 
   /* Command palette (cmdk) */
   --cmdk-w:                  560px;

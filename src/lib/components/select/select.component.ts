@@ -22,6 +22,7 @@ import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  type DsOverlayCloseCause,
   prepareOverlayEnter,
 } from '../overlay-motion';
 import { NgTemplateOutlet } from '@angular/common';
@@ -309,12 +310,12 @@ export class SelectComponent
     closeOnOutsidePointer(
       this.overlayRef,
       (target) => this.host.nativeElement.contains(target),
-      () => this.close(),
+      () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
     // overflow container, so close on any outside scroll ourselves.
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
-      this.close(),
+      this.close('dismiss'),
     );
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
@@ -326,8 +327,8 @@ export class SelectComponent
     this.open.set(true);
   }
 
-  protected close(): void {
-    disposeWithLeave(this.overlayRef);
+  protected close(cause: DsOverlayCloseCause = 'select'): void {
+    disposeWithLeave(this.overlayRef, cause);
     this.overlayRef = null;
     this.open.set(false);
     this.activeIndex.set(-1);
@@ -400,7 +401,7 @@ export class SelectComponent
     }
     if (key === 'Escape') {
       event.preventDefault();
-      this.close();
+      this.close('dismiss');
 
       return;
     }

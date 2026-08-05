@@ -429,7 +429,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible name for the combobox input."
+        "description": "Accessible name for the input."
       }
     ],
     "outputs": [

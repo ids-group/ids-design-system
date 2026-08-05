@@ -3896,6 +3896,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-overlay-enter-scale",
         "value": "0.96",
         "notes": "Start scale when a panel enters with ds-scale-in (default 0.96)."
+      },
+      {
+        "name": "--ds-overlay-leave-duration",
+        "value": "var(--ds-motion-exit-duration)",
+        "notes": "Fade-out length when an overlay panel is DISMISSED (Escape, a press outside, a scroll). Defaults to --ds-motion-exit-duration (120ms). Choosing an option closes instantly and is not affected."
+      },
+      {
+        "name": "--ds-overlay-leave-easing",
+        "value": "var(--ds-motion-exit-easing)",
+        "notes": "Easing of that dismissal fade. Defaults to --ds-motion-exit-easing."
       }
     ]
   },
@@ -6419,16 +6429,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "length"
   },
   {
-    "name": "--combobox-maxh",
-    "value": "280px",
-    "kind": "length"
-  },
-  {
-    "name": "--combobox-offset",
-    "value": "var(--space-1)",
-    "kind": "length"
-  },
-  {
     "name": "--compare-dt-w",
     "value": "90px",
     "kind": "length"
@@ -6916,6 +6916,16 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--page-margin-wide",
     "value": "var(--space-10)",
+    "kind": "length"
+  },
+  {
+    "name": "--picker-maxh",
+    "value": "280px",
+    "kind": "length"
+  },
+  {
+    "name": "--picker-offset",
+    "value": "var(--space-1)",
     "kind": "length"
   },
   {

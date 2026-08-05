@@ -22,6 +22,7 @@ import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  type DsOverlayCloseCause,
   forwardOverlayTokens,
   prepareOverlayEnter,
 } from '../overlay-motion';
@@ -123,7 +124,7 @@ export class AutocompleteComponent<T = unknown>
   );
   /** Shows a "Create «text»" row when the typed text matches no option. */
   readonly allowCreate = input(false, { transform: booleanAttribute });
-  /** Accessible name for the combobox input. */
+  /** Accessible name for the input. */
   readonly ariaLabel = input<string | null>(null);
 
   /** Fires with the typed text when the user picks the create-new option. */
@@ -367,7 +368,7 @@ export class AutocompleteComponent<T = unknown>
       case 'Escape':
         if (this.overlayRef) {
           event.preventDefault();
-          this.close();
+          this.close('dismiss');
         }
         break;
       case 'Tab':
@@ -441,12 +442,12 @@ export class AutocompleteComponent<T = unknown>
     closeOnOutsidePointer(
       this.overlayRef,
       (target) => this.host.nativeElement.contains(target),
-      () => this.close(),
+      () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
     // overflow container, so close on any outside scroll ourselves.
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
-      this.close(),
+      this.close('dismiss'),
     );
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
@@ -458,8 +459,8 @@ export class AutocompleteComponent<T = unknown>
     this.activeIndex.set(this.visibleOptions().length ? 0 : -1);
   }
 
-  protected close(): void {
-    disposeWithLeave(this.overlayRef);
+  protected close(cause: DsOverlayCloseCause = 'select'): void {
+    disposeWithLeave(this.overlayRef, cause);
     this.overlayRef = null;
     this.isOpen.set(false);
     this.activeIndex.set(-1);
