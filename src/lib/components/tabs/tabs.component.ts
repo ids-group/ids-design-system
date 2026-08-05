@@ -6,12 +6,15 @@ import {
   booleanAttribute,
   computed,
   contentChildren,
+  effect,
   inject,
   input,
   model,
   output,
   signal,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IconComponent } from '../../icons/icon.component';
 import { TabComponent } from './tab.component';
 import type { TabsOrientation, TabsVariant } from './tabs.types';
@@ -51,6 +54,26 @@ export class TabsComponent {
       or the tab list runs vertically beside the panel. */
   readonly orientation = input<TabsOrientation>('horizontal');
 
+  /**
+   * Keep the active tab in a query parameter, so it survives F5, a shared link
+   * and the Back button: `urlParam="tab"` gives `?tab=activity`. Empty (the
+   * default) leaves the URL alone, and the strip works exactly as before.
+   *
+   * The names come from each `ds-tab`'s `value` (falling back to its `label`),
+   * so there is no second list to keep in step. **Names, not indices** — writing
+   * `?tab=1` would silently repoint every old link the moment a tab is inserted.
+   * The FIRST tab writes no parameter and every write REPLACES the history
+   * entry, so a pristine screen keeps a clean address and flipping tabs does not
+   * fill the Back button.
+   *
+   * An unknown or missing name lands on the first tab rather than throwing: a
+   * URL is user input, and a stale bookmark should still open the screen.
+   *
+   * Outside a routed context the input is inert — the router is injected
+   * optionally, so a tab strip in a dialog or a static page is unaffected.
+   */
+  readonly urlParam = input<string>('');
+
   /** Emitted when a close button is clicked. Carries the tab's value input, or
       its label when value is not set. The host is responsible for removing the
       tab from its list. */
@@ -60,6 +83,57 @@ export class TabsComponent {
   private readonly uid = `ds-tabs-${++nextId}`;
 
   protected readonly tabs = contentChildren(TabComponent);
+
+  // Optional: a tab strip is perfectly valid outside a routed context, and
+  // injecting these hard would break it in a dialog or a static page.
+  private readonly router = inject(Router, { optional: true });
+  private readonly route = inject(ActivatedRoute, { optional: true });
+  private readonly queryParams = this.route
+    ? toSignal(this.route.queryParamMap, {
+        initialValue: this.route.snapshot.queryParamMap,
+      })
+    : signal(null);
+
+  constructor() {
+    // URL -> tab. Runs again when the tabs arrive (content children resolve
+    // after the first pass) and on every Back/Forward, which is what makes the
+    // history walk the tabs. Writing back is guarded by the equality check
+    // below, so this cannot loop with `writeUrl`.
+    effect(() => {
+      const param = this.urlParam();
+      const params = this.queryParams();
+      const tabs = this.tabs();
+      if (!param || !params || tabs.length === 0) {
+        return;
+      }
+      const name = params.get(param);
+      const found = name
+        ? tabs.findIndex((tab) => this.tabName(tab) === name)
+        : 0;
+      const index = found < 0 ? 0 : found;
+      if (index !== this.selectedIndex()) {
+        this.selectedIndex.set(index);
+      }
+    });
+  }
+
+  private tabName(tab: TabComponent): string {
+    return tab.value() ?? tab.label();
+  }
+
+  private writeUrl(index: number): void {
+    const param = this.urlParam();
+    if (!param || !this.router || !this.route) {
+      return;
+    }
+    const tab = this.tabs()[index];
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { [param]: index === 0 || !tab ? null : this.tabName(tab) },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  }
 
   /** Tracks which tab indices have ever been activated (for lazy rendering). */
   private readonly activatedIndices = signal<ReadonlySet<number>>(new Set([0]));
@@ -113,6 +187,7 @@ export class TabsComponent {
       return;
     }
     this.selectedIndex.set(index);
+    this.writeUrl(index);
     if (this.lazy()) {
       this.activatedIndices.update((previous) => {
         if (previous.has(index)) {

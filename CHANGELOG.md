@@ -10,14 +10,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
-- **`dsTabUrl()` binds `ds-tabs` to a query parameter**, so a tab survives F5, a shared link and the Back
-  button (asked for by the ai-sdlc starter). A function rather than an input on `ds-tabs`, which stays
-  router-free because plenty of tab strips are not routed — a routed page opts in from its injection
-  context. The evidence for shipping it: in one admin port THREE of the four tabbed screens never got the
-  hand-wiring at all, so only the screen whose author reached for a helper worked. Names go in the URL, not
-  indices (inserting a tab would otherwise repoint old links), the first tab writes no parameter and every
-  write replaces (clean address, and flipping tabs does not fill the history), and an unknown name resolves
-  to tab 0 rather than throwing.
+- **`ds-tabs` keeps the active tab in the URL: `urlParam="tab"`** (asked for by the ai-sdlc starter). The
+  input both switches it on and names the parameter; leave it out and the URL is untouched. Names come from
+  each `ds-tab`'s `value` — the identifier `tabClosed` already emits — so there is no second list to keep in
+  step. The evidence for shipping it: in one admin port THREE of the four tabbed screens never got the
+  hand-wiring at all, so only the screen whose author reached for a helper worked.
+  — Names, not indices (`?tab=1` would repoint every old link the moment a tab is inserted); the first tab
+  writes no parameter and every write replaces (clean address, and flipping tabs does not fill the Back
+  button); an unknown or missing name lands on tab 0 rather than throwing. Outside a routed context the
+  input is inert — the router is injected optionally, so a strip in a dialog is unaffected.
 
 ### Fixed
 

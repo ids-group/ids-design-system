@@ -577,61 +577,69 @@
   </h3>
 
   <p class="block-desc t-s">
+    Set
     <code class="t-mono-inline">
-      dsTabUrl()
-    </code> binds a tab strip to a query
-    parameter, so the tab survives F5, a shared link and the Back button. It is a
-    function rather than an input, because
-    <code class="t-mono-inline">
-      ds-tabs
-    </code> itself stays router-free — plenty of
-    tab strips are not routed — and a routed page opts in from its injection
-    context:
+      urlParam
+    </code> and the strip keeps the active tab in
+    a query parameter, so it survives F5, a shared link and the Back button. The
+    input both switches the behaviour on and names the parameter; leave it out and
+    the URL is untouched.
   </p>
 
   <pre class="t-mono-block">
     <code>
-      protected readonly tabs = dsTabUrl(['profile', 'activity', 'billing']);
+      &lt;ds-tabs urlParam="tab"&gt;
+  &lt;ds-tab label="Profile"  value="profile" /&gt;
+  &lt;ds-tab label="Activity" value="activity" /&gt;
+&lt;/ds-tabs&gt;
 
-&lt;ds-tabs
-  [selectedIndex]="tabs.index()"
-  (selectedIndexChange)="tabs.select($event)"
-&gt;
+&lt;!-- second tab active --&gt;  ?tab=activity
     </code>
   </pre>
 
   <p class="block-desc t-s">
-    Two decisions are baked in, both carried over from the consumer helper this
-    replaces. <strong>Names, not indices</strong> —
+    The names come from each tab's
     <code class="t-mono-inline">
-      ?tab=activity
-    </code>, never
+      value
+    </code> (falling back to its
+    <code class="t-mono-inline">
+      label
+    </code>), so there is no second list to keep in
+    step — the same identifier
+    <code class="t-mono-inline">
+      tabClosed
+    </code> already emits. Three decisions
+    are baked in. <strong>Names, not indices:</strong>
+
     <code class="t-mono-inline">
       ?tab=1
-    </code>, because inserting a tab later
-    would silently repoint every old link. And <strong>the first tab writes no
-    parameter, while every write replaces</strong> — a pristine screen keeps a
-    clean address, and flipping tabs does not fill the history with entries the
-    Back button has to walk one at a time. An unknown or missing name resolves to
-    tab 0 rather than throwing: a URL is user input, and a stale bookmark should
-    land on the first tab.
+    </code> would silently repoint every old link
+    the moment a tab is inserted. <strong>The first tab writes no parameter and
+    every write replaces:</strong> a pristine screen keeps a clean address, and
+    flipping tabs does not fill the Back button with entries to walk one at a
+    time. <strong>An unknown or missing name lands on the first tab</strong>
+    rather than throwing — a URL is user input, and a stale bookmark should still
+    open the screen.
   </p>
 
   <p class="block-desc t-s">
-    It pairs with
+    Outside a routed context the input is inert: the router is injected
+    optionally, so a strip in a dialog or on a static page is unaffected. It also
+    pairs with
     <code class="t-mono-inline">
       ds-app-layout
-    </code>: the write is query-only, and
+    </code> — the write is query-only, and
     that layout's
     <code class="t-mono-inline">
       pathChanged
     </code> ignores query-only navigations, so
-    switching tabs does not trip its scroll reset. There is deliberately no live
-    demo on this page — a working one would write
+    switching tabs cannot trip its scroll reset. There is deliberately no live
+    demo here: it would write
     <code class="t-mono-inline">
       ?tab=
-    </code> into the docs' own address while
-    the sidebar is rewriting the path from the scroll position, and the two would
-    look like they were fighting.
+    </code> into the docs' own address while the
+    sidebar rewrites the path from the scroll position, and the two would read as
+    fighting.
   </p>
+
 </docs-section>

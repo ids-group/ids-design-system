@@ -6070,6 +6070,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'horizontal'",
         "required": false,
         "description": "Controls whether the tab list and panel are stacked horizontally (default) or the tab list runs vertically beside the panel."
+      },
+      {
+        "name": "urlParam",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Keep the active tab in a query parameter, so it survives F5, a shared link and the Back button: `urlParam=\"tab\"` gives `?tab=activity`. Empty (the default) leaves the URL alone, and the strip works exactly as before. The names come from each `ds-tab`'s `value` (falling back to its `label`), so there is no second list to keep in step. **Names, not indices** — writing `?tab=1` would silently repoint every old link the moment a tab is inserted. The FIRST tab writes no parameter and every write REPLACES the history entry, so a pristine screen keeps a clean address and flipping tabs does not fill the Back button. An unknown or missing name lands on the first tab rather than throwing: a URL is user input, and a stale bookmark should still open the screen. Outside a routed context the input is inert — the router is injected optionally, so a tab strip in a dialog or a static page is unaffected."
       }
     ],
     "outputs": [
