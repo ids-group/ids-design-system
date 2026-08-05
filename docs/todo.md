@@ -32,6 +32,7 @@ Completed items are archived in `done.md` (last archive pass **2026-08-05** — 
 - **Header filters have no server mode** — `filterMode` + host-supplied options. Today the checkbox list is built from the rows on the current page and the filtering is local, so a server-paged table cannot use it at all.
 - **No projection slot for a filter the `'set'` checklist cannot express** — date range, numeric threshold, async option list.
 - **No live region for sort state or row range** — the last thing keeping a wrapper around `ds-table`; six more of their findings sit at P3 in that section.
+- **`ds-date-picker`'s trigger looks unfocused while its panel is open** — the ring is bound to focus only, and opening from the calendar glyph moves focus into the day grid. Found on a live screen 2026-08-06; filed in the same section.
 
 **P2 — genuinely waiting on Stas:**
 
@@ -76,6 +77,21 @@ The nine below are what the base cannot express — the first three are what sti
 - [ ] **[P3] CSV export cannot take a server-built file.** `exportFetcher: () => Promise<readonly T[]>` returns ROWS and the base serializes them in the browser; mm-broker's fetcher returns an `Observable<Blob>` the backend already formatted (its own number formats, extra columns). There is also no `exportError` output and no export-status live region, both of which the fork has. **ASK:** let `exportFetcher` resolve either rows or a Blob/URL, and emit a failure.
 - [ ] **[P3] Two missing box tokens the fork had to invent.** `--ids-dt-min-width` (a readability floor on the inner `<table>`, below which the horizontal scroller takes over) and `--ids-dt-hscroll-bottom` (the sticky scrollbar sits at `bottom: 0`, `table.component.scss:94`, which is wrong inside a scroll container with bottom padding — the fork offsets it with a negative inset). Neither has a hook in the base.
 - [ ] **[P3] `sortValue`'s string fallback drops case/accent insensitivity.** `compareSortValues` (`:98`) calls `localeCompare(text, undefined, { numeric: true })`; the comparator mm-broker is retiring passes `{ numeric: true, sensitivity: 'base' }`, so a column whose `sortValue` returns strings orders mixed-case and accented text differently after migration. Cheap to align — and `BLANK_CELL` was already taken from that same file.
+
+- [ ] **[P2] `ds-date-picker`'s trigger looks unfocused while its own panel is open.** Found by mm-broker on a live screen, 2026-08-06. The trigger's indicator is bound to `:focus-visible` / `:focus-within` only (`date-picker.component.scss:103-106`); nothing styles the OPEN state, and the `aria-expanded` that would express it sits on an inner element (`date-picker.component.html:47`) with no rule reading it. The two open paths then disagree about focus: clicking the FIELD runs `onFieldClick()` → `open(false)` + `inputEl().focus()`, so the ring stays; clicking the CALENDAR GLYPH runs `open(true)` → `focusGridDay()` (`.html:90`, `.ts:731,808`), which moves focus into the day grid, so the ring vanishes while the panel is open. `close()` refocuses the field afterwards, so a second click appears to bring the ring back — from outside it reads as a flicker defect. **ASK:** style the open state (a class on the trigger, or a rule reading the element that carries `aria-expanded="true"`), so a control stays visibly active while its own panel is open no matter where focus went. Worth deciding separately: whether a POINTER open should move focus into the grid at all — a mouse user did not ask for it, and with `allowInput` defaulting to `true` it takes the caret out of a field they may want to type in.
+
+**Decision on the consumer side, 2026-08-06: mm-broker is NOT migrating yet — treat this section as a
+specification.** Building three replacements outside the table (a host-owned filter popover, a live
+region in a wrapper, a resize-key directive) only to delete them again when the DS grows its own is
+worse than waiting, so they keep the fork and the nine items above are the acceptance criteria.
+**Definition of done for their retirement:** a server-paged table can declare `filterMode="server"`
+with host-supplied options; a filter the `'set'` checklist cannot express can be projected into the
+header; sorting and paging announce themselves to a screen reader; `sortValue` returning a string
+collates case- and accent-insensitively; a clipped cell inside a `dsCellTemplate` and a clipped
+header label both surface their full text; a resizable column can be resized from the keyboard;
+`exportFetcher` can resolve a server-built file and report a failure; and the inner table has a
+`min-width` hook plus a bottom-offset hook for the sticky scrollbar. With those in, the fork goes in
+one pass — everything else already maps onto native inputs.
 
 Migration notes for whoever picks these up, not asks: `hideable` inverts (the fork treats every column as hideable unless opted out, the base only when `hideable: true`) and `bordered` flips `true` → `false`, so a consumer retiring a fork must touch every column config and every template. Worth a line in the retirement guidance rather than a change. Also worth knowing why the fork's inherited inputs were dead: it declares its own `@Component`, so it renders none of the base's template — `filterQuery`, `columnFilters`, `virtualScroll`, `rowActions`, `expandableRows`, `stickyFirstColumn` and `rowId` were bindable and inert, and even `stickyHeader` was ignored (its header is unconditionally sticky).
 
