@@ -11,7 +11,7 @@ Completed items are archived in `done.md` (last archive pass **2026-08-05** — 
 
 ## Priority board (2026-08-05 actualization)
 
-**25 open**, every one of them below. Nothing is waiting on a decision from Stas except the two marked so.
+**25 open**, plus **9 filed 2026-08-05** from mm-broker's `ids-data-table` retirement (their own section, three of them P2) — every one of them below. Nothing is waiting on a decision from Stas except the two marked so.
 
 **P1 — real defects:** _(none)_
 
@@ -26,6 +26,12 @@ Completed items are archived in `done.md` (last archive pass **2026-08-05** — 
 
 - **Unknown icon name warns nothing** — a misspelled name renders an empty `<svg>` in silence; the fix is a dev warning on one branch.
 - **`ds-app-layout` seals its scroll policy** — export `LayoutNavigationService`/`pathChanged` (cheap, unblocks them) and add a `scrollReset` strategy input (the real API call). A `ds-tabs`↔URL helper rides alongside as a P3.
+
+**P2 — new consumer asks, filed 2026-08-05 from mm-broker retiring its `ds-table` fork:**
+
+- **Header filters have no server mode** — `filterMode` + host-supplied options. Today the checkbox list is built from the rows on the current page and the filtering is local, so a server-paged table cannot use it at all.
+- **No projection slot for a filter the `'set'` checklist cannot express** — date range, numeric threshold, async option list.
+- **No live region for sort state or row range** — the last thing keeping a wrapper around `ds-table`; six more of their findings sit at P3 in that section.
 
 **P2 — genuinely waiting on Stas:**
 
@@ -48,7 +54,30 @@ Completed items are archived in `done.md` (last archive pass **2026-08-05** — 
 
 All 11 items shipped or closed by 2026-08-05 — the section moved to `done.md` with its dogfooding provenance intact.
 
-**Consumer-side staleness found 2026-08-05, recorded here because their file is gitignored (so this is the durable copy) and correcting theirs is a separate ask:** `mm-broker-platform/src/frontend/todo.md:115` still says "`ds-auth-shell` (§1a) did NOT ship and is still a DS backlog item". It shipped in **0.8.0** and was renamed the same day — the selector is `ds-auth-layout`. Their §1a migration (`app-auth-card` → the DS scaffold) is therefore unblocked, and the name to migrate to is the new one.
+**Consumer-side staleness found 2026-08-05, recorded here because their file is gitignored (so this is the durable copy) and correcting theirs is a separate ask:** `mm-broker-platform/src/frontend/todo.md:115` still says "`ds-auth-shell` (§1a) did NOT ship and is still a DS backlog item". It shipped in **0.8.0** and was renamed the same day — the selector is `ds-auth-layout`. Their §1a migration (`app-auth-card` → the DS scaffold) is therefore unblocked, and the name to migrate to is the new one. **Closed 2026-08-05 later the same day:** they bumped to 0.8.0, corrected that line, and migrated — `app-auth-card` is now a thin adapter over `ds-auth-shell`, so the `ds-auth-layout` rename will reach them as one more migration at the next bump.
+
+---
+
+## From mm-broker `ids-data-table` retirement (2026-08-05)
+
+mm-broker bumped to 0.8.0 and scoped folding its 2160-line `ids-data-table` fork onto plain
+`ds-table` against the real v0.8.0 sources. 0.8.0 closed the last two API reasons for the fork
+(`persistLayout` + `storageKey`, `exportButton` + `exportFetcher`), and the column manager, mouse
+resize, sticky-scrollbar mirror, skeleton + loading overlay, empty slot, bulk bar, cell templates,
+row click/selection, zebra, density and pagination all map onto native inputs with renames only.
+The nine below are what the base cannot express — the first three are what still force a wrapper.
+
+- [ ] **[P2] Header filters are client-only by construction — no `filterMode`, and no way to supply the option list.** `filter?: 'set'` is the only value; the checkbox list comes from `distinctValuesOf(col)` (the rows currently loaded, `table.component.ts:497`) and `filteredData()` filters locally (`:678`). On a SERVER-PAGED table both halves are wrong: the user can only tick values that happen to be on the current page, and the local pass then runs on top of what the server already filtered. `columnFilters` being a `model()` means a host CAN drive a request from it, so the mechanism is half there. **ASK:** `filterMode: 'client' | 'server' | 'none'` mirroring `sortMode` (in `'server'` the table emits and does not filter), plus per-column `filterOptions` (or one `columnFilterOptions` input) so the host supplies the full domain instead of the page. Consumer evidence: mm-broker's ai-stats status funnel, whose options are a fixed three and whose selection is a query parameter.
+- [ ] **[P2] No projection slot for a filter the checklist cannot express.** mm-broker's `ColumnFilterDirective` (`[dsColumnFilter]="key"`) projects an arbitrary template into the `<th>` popover; the base has no `<ng-content>` inside a header cell, so a date range, a numeric threshold or an async option list has nowhere to go but a host-owned popover outside the table — losing the in-header placement and the `active` styling the base already draws. **ASK:** a header-filter template slot keyed by column, with the base still owning the button, the popover and the active state.
+- [ ] **[P2] No live region for sort state or row range — the last thing forcing a table wrapper.** `ds-table` announces loading (`table.component.html:21-29`) and nothing else: `onSort()` mutates `sortKey`/`sortDir` and emits, so a screen-reader user gets no confirmation that the order changed, and paging never announces the new range. mm-broker's fork carries a second `role="status"` saying "Sorted by X ascending" and "Showing 1–25 of 240", and nothing in the component exposes a hook to inject one from outside. **ASK:** a `role="status"` region in the component, wording overridable for translation (`sortAnnouncement` / `rangeAnnouncement`, or one formatter input).
+- [ ] **[P3] The clipped-cell affordance only covers `truncate` text cells.** `onCellClipClick` (`:888`) is a near copy of the fork's and behaves the same, but the fork also catches ANY overflowing cell — it walks the `<td>`'s descendants (`isCellClipped`), so overflow inside a `dsCellTemplate` gets the same popover — and shows the full column label in a `title` when a RESIZED header clips its own text (`onHeaderEnter`). Both disappear on migration. **ASK:** extend clip detection to template cells, and give a clipped header label its tooltip.
+- [ ] **[P3] Column resize is pointer-only — no keyboard path.** The `.col-resize` handle is `pointerdown`/`move`/`up` (`table.component.html:137-147`); the fork's `onResizeKey` resizes with Arrow / PageUp / PageDown. A resizable column is unusable without a mouse today, which reads as an a11y gap rather than a missing nicety.
+- [ ] **[P3] Resize starts from `offsetWidth`, so there is no auto-measure-then-lock pass.** The fork measures rendered widths once real data has painted and only then locks `table-layout: fixed`, redistributing the remainder between explicit-`width` and unmeasured columns. The base tracks a drag delta from the current width, so a table whose columns were auto-sized loses that starting geometry.
+- [ ] **[P3] CSV export cannot take a server-built file.** `exportFetcher: () => Promise<readonly T[]>` returns ROWS and the base serializes them in the browser; mm-broker's fetcher returns an `Observable<Blob>` the backend already formatted (its own number formats, extra columns). There is also no `exportError` output and no export-status live region, both of which the fork has. **ASK:** let `exportFetcher` resolve either rows or a Blob/URL, and emit a failure.
+- [ ] **[P3] Two missing box tokens the fork had to invent.** `--ids-dt-min-width` (a readability floor on the inner `<table>`, below which the horizontal scroller takes over) and `--ids-dt-hscroll-bottom` (the sticky scrollbar sits at `bottom: 0`, `table.component.scss:94`, which is wrong inside a scroll container with bottom padding — the fork offsets it with a negative inset). Neither has a hook in the base.
+- [ ] **[P3] `sortValue`'s string fallback drops case/accent insensitivity.** `compareSortValues` (`:98`) calls `localeCompare(text, undefined, { numeric: true })`; the comparator mm-broker is retiring passes `{ numeric: true, sensitivity: 'base' }`, so a column whose `sortValue` returns strings orders mixed-case and accented text differently after migration. Cheap to align — and `BLANK_CELL` was already taken from that same file.
+
+Migration notes for whoever picks these up, not asks: `hideable` inverts (the fork treats every column as hideable unless opted out, the base only when `hideable: true`) and `bordered` flips `true` → `false`, so a consumer retiring a fork must touch every column config and every template. Worth a line in the retirement guidance rather than a change. Also worth knowing why the fork's inherited inputs were dead: it declares its own `@Component`, so it renders none of the base's template — `filterQuery`, `columnFilters`, `virtualScroll`, `rowActions`, `expandableRows`, `stickyFirstColumn` and `rowId` were bindable and inert, and even `stickyHeader` was ignored (its header is unconditionally sticky).
 
 ---
 
