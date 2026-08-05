@@ -8,6 +8,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Fixed
+
+- **`ds-textarea size="sm"` and `="lg"` got the md vertical padding.** The size variants set the inner
+  `<textarea>`'s vertical pad (`--space-2` / `--space-4`), but the `:host`-prefixed pin at the end of the
+  file — added so the docs' unencapsulated `.field .control` specimen could not zero it — out-ranks them
+  once emulated encapsulation shims both selectors: `[_nghost] .field[_ngcontent] .control[_ngcontent]
+  textarea[_ngcontent]` carries one more attribute than `.field.sm[_ngcontent] …`. So every textarea
+  rendered with 12px top and bottom regardless of `size`, and retuning
+  `--ds-input-pad-y` moved all three. There are now three pins, one per size, and the size blocks keep
+  only the horizontal padding they own. Consumers see it only on a non-md textarea; the md default is
+  unchanged.
+
 ## 0.8.0 — 2026-08-05
 
 ### Added
