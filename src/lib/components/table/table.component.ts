@@ -34,6 +34,7 @@ import { PopoverComponent } from '../popover/popover.component';
 import { MenuComponent } from '../menu/menu.component';
 import { MenuItemComponent } from '../menu/menu-item.component';
 import { CellTemplateDirective } from './cell-template.directive';
+import { HeaderFilterDirective } from './header-filter.directive';
 import type {
   SortChangeEvent,
   SortDir,
@@ -174,6 +175,24 @@ export class TableComponent<T extends object> {
    *  (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g.
    *  server-paged lists). */
   readonly sortingOrder = input<SortDir[]>(['asc', 'desc', null]);
+  /**
+   * Wording for the sort announcement, so it can be translated. Receives the
+   * column's label and the new direction; return an empty string to say nothing.
+   */
+  readonly sortAnnouncement = input<(label: string, dir: SortDir) => string>(
+    (label, dir) =>
+      dir
+        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`
+        : `Sorting cleared`,
+  );
+  /**
+   * Wording for the row-range announcement, so it can be translated. Receives
+   * the 1-based first and last row on screen and the total; return an empty
+   * string to say nothing.
+   */
+  readonly rangeAnnouncement = input<
+    (first: number, last: number, total: number) => string
+  >((first, last, total) => `Showing ${first}–${last} of ${total}`);
   /** Number of shimmer rows rendered while `loading` is `'skeleton'`. */
   readonly skeletonRows = input<number>(5);
   /** Accessible name for the table (rendered as a visually-hidden caption).
@@ -500,12 +519,42 @@ export class TableComponent<T extends object> {
   protected readonly filterColumn = signal<TableColumn<T> | null>(null);
   protected readonly filterSearch = signal('');
 
+  private readonly headerFilters = contentChildren(HeaderFilterDirective);
+
+  private readonly headerFilterByKey = computed(() => {
+    const map = new Map<string, HeaderFilterDirective>();
+    for (const filter of this.headerFilters()) {
+      map.set(filter.dsHeaderFilter(), filter);
+    }
+
+    return map;
+  });
+
+  /** The projected filter for a column, when the host supplied one. */
+  protected headerFilterFor(
+    col: TableColumn<T>,
+  ): HeaderFilterDirective | undefined {
+    return this.headerFilterByKey().get(col.key);
+  }
+
+  /** A projected filter makes the column filterable on its own — the host does
+   *  not also have to mark it `filter: 'set'` to get the header button. */
   protected hasColumnFilter(col: TableColumn<T>): boolean {
-    return col.filter === 'set' && this.filterModeResolved() !== 'none';
+    if (this.filterModeResolved() === 'none') {
+      return false;
+    }
+
+    return col.filter === 'set' || !!this.headerFilterFor(col);
   }
 
   /** A column is "actively filtered" when at least one of its values is unchecked. */
   protected isColumnFiltered(col: TableColumn<T>): boolean {
+    // A projected filter owns its own criterion, so only the host can say
+    // whether it is set; the table still draws the highlight.
+    const projected = this.headerFilterFor(col);
+    if (projected) {
+      return projected.active();
+    }
     const allowed = this.columnFilters().get(col.key);
 
     return !!allowed && allowed.size < this.optionsFor(col).length;
@@ -590,6 +639,20 @@ export class TableComponent<T extends object> {
       next.set(col.key, current);
     }
     this.columnFilters.set(next);
+  }
+
+  /** Context handed to a projected header filter. Rebuilt per open, which is
+   *  cheap and keeps `close` bound to the popover that is actually showing. */
+  protected headerFilterContext(col: TableColumn<T>): {
+    $implicit: unknown;
+    column: unknown;
+    close: () => void;
+  } {
+    return {
+      $implicit: col,
+      column: col,
+      close: () => this.columnFilterPopover()?.close(),
+    };
   }
 
   protected clearColumnFilter(): void {
@@ -798,6 +861,51 @@ export class TableComponent<T extends object> {
   protected readonly displayData = computed<readonly T[]>(() =>
     this.pageSize() !== null ? this.pagedData() : this.sortedData(),
   );
+
+  /**
+   * The single live-region line. Loading wins while it lasts — a sort
+   * announcement over rows that are being replaced tells the reader about a
+   * state they cannot inspect yet. Otherwise it carries the sort state and the
+   * row range, which are the two things a sighted user reads off the header and
+   * the pager and a screen-reader user was told nothing about.
+   *
+   * `aria-live="polite"` does not announce a region's INITIAL content, so the
+   * unsorted first render is silent; only real changes speak.
+   */
+  protected readonly statusMessage = computed<string>(() => {
+    if (this.loading() !== false) {
+      return 'Loading…';
+    }
+    const parts = [this.sortMessage(), this.rangeMessage()].filter(Boolean);
+
+    return parts.join('. ');
+  });
+
+  private readonly sortMessage = computed<string>(() => {
+    const key = this.sortKey();
+    const dir = this.sortDir();
+    if (!key) {
+      return '';
+    }
+    const label = this.columns().find((col) => col.key === key)?.label ?? key;
+
+    return this.sortAnnouncement()(label, dir);
+  });
+
+  private readonly rangeMessage = computed<string>(() => {
+    const size = this.pageSize();
+    if (size === null) {
+      return '';
+    }
+    const rows = this.displayData().length;
+    if (rows === 0) {
+      return '';
+    }
+    const first = (this.page() - 1) * size + 1;
+    const total = this.total() ?? this.filteredData().length;
+
+    return this.rangeAnnouncement()(first, first + rows - 1, total);
+  });
 
   /** Virtual mode needs a bounded scroller to window against. */
   protected readonly virtualizing = computed(

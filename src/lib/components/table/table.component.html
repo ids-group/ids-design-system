@@ -23,9 +23,7 @@
     role="status"
     aria-live="polite"
   >
-    @if (loading() !== false) {
-      Loading…
-    }
+    {{ statusMessage() }}
   </div>
 
   <ds-loading-overlay
@@ -448,6 +446,14 @@
     panelRole="dialog"
     panelLabel="Filter values"
   >
+    @if (headerFilterFor(filterColumn()!); as projected) {
+      <div class="col-filter col-filter-custom">
+        <ng-container
+          [ngTemplateOutlet]="projected.template"
+          [ngTemplateOutletContext]="headerFilterContext(filterColumn()!)"
+        />
+      </div>
+    } @else {
     <div class="col-filter">
       <input
         type="text"
@@ -490,6 +496,7 @@
         </button>
       </div>
     </div>
+    }
   </ds-popover>
 }
 

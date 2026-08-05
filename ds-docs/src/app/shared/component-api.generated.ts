@@ -5612,6 +5612,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Sort states a column cycles through on click. Default includes null (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g. server-paged lists)."
       },
       {
+        "name": "sortAnnouncement",
+        "kind": "input",
+        "type": "(label: string, dir: SortDir) => string",
+        "union": null,
+        "default": "(label, dir) =>\n      dir\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\n        : `Sorting cleared`",
+        "required": false,
+        "description": "Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing."
+      },
+      {
+        "name": "rangeAnnouncement",
+        "kind": "input",
+        "type": "(first: number, last: number, total: number) => string",
+        "union": null,
+        "default": "(first, last, total) => `Showing ${first}–${last} of ${total}`",
+        "required": false,
+        "description": "Wording for the row-range announcement, so it can be translated. Receives the 1-based first and last row on screen and the total; return an empty string to say nothing."
+      },
+      {
         "name": "skeletonRows",
         "kind": "input",
         "type": "number",

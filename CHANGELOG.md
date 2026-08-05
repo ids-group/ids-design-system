@@ -10,6 +10,24 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-table`: the three things that still forced a consumer wrapper.** All from mm-broker folding its
+  2160-line `ids-data-table` fork onto the base.
+  — **`filterMode: 'client' | 'server' | 'none'`**, mirroring `sortMode` and defaulting to `'client'`, plus
+  **`columnFilterOptions`** for the real value domain. A header filter on a server-paged table was wrong
+  twice over: the checklist could only offer values from the page in hand, and the local pass then filtered
+  what the server had already filtered. `'server'` tracks `columnFilters` and filters nothing; `'none'`
+  drops the affordance. A dev warning catches the silent case — `filter: 'set'` with `total` bound and no
+  declared mode.
+  — **`dsHeaderFilter`**, a template slot for a criterion the checklist cannot express (a date range, a
+  numeric threshold, an async lookup). The table keeps the header button, the popover and the active-filter
+  styling; `active` on the directive tells the highlight whether your criterion is set, because only you
+  know. The context carries `close`, so the panel can dismiss itself after applying.
+  — **A live region for sort state and row range.** The table announced loading and nothing else, so a
+  screen-reader user got no confirmation that the order changed and paging never announced the new range.
+  One `role="status"` now carries both, with loading taking precedence while it lasts. `sortAnnouncement`
+  and `rangeAnnouncement` take the facts and return the sentence, so translation and word order stay with
+  the consumer.
+
 - **`ds-tabs` keeps the active tab in the URL: `urlParam="tab"`** (asked for by the ai-sdlc starter). The
   input both switches it on and names the parameter; leave it out and the URL is untouched. Names come from
   each `ds-tab`'s `value` — the identifier `tabClosed` already emits — so there is no second list to keep in

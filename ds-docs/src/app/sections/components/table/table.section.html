@@ -1145,6 +1145,77 @@
   </ds-table>
 
   <h3 class="block-title t-h4">
+    Server-side filtering, and a filter of your own
+  </h3>
+
+  <p class="block-desc t-s">
+    Header filters default to
+    <code class="t-mono-inline">
+      filterMode="client"
+    </code>, which is right until
+    the table is server-paged — then the checklist can only offer the values that
+    happen to be on THIS page, and the local pass filters what the server already
+    filtered. Declare
+    <code class="t-mono-inline">
+      filterMode="server"
+    </code> and the table tracks
+    <code class="t-mono-inline">
+      columnFilters
+    </code> without filtering anything, so
+    your request drives the rows; pass the real domain through
+    <code class="t-mono-inline">
+      columnFilterOptions
+    </code>. There is a dev warning for
+    the combination that gets this wrong silently — a `filter: 'set'` column on a
+    table with `total` bound and no declared mode.
+    <code class="t-mono-inline">
+      filterMode="none"
+    </code> drops the affordance entirely.
+  </p>
+
+  <p class="block-desc t-s">
+    When the criterion is not a list of values — a date range, a numeric
+    threshold, an async lookup — project the panel instead. The table keeps the
+    header button, the popover and the active-filter styling; only the contents
+    change. It cannot know whether YOUR criterion is set, so
+    <code class="t-mono-inline">
+      active
+    </code> is how the highlight is told.
+  </p>
+
+  <pre class="t-mono-block"><code>&lt;ng-template dsHeaderFilter="opened" [active]="!!range()" let-close="close"&gt;
+  &lt;ds-date-picker mode="range" [(value)]="range" /&gt;
+  &lt;ds-button size="sm" (pressed)="apply(); close()"&gt;Apply&lt;/ds-button&gt;
+&lt;/ng-template&gt;</code></pre>
+
+  <h3 class="block-title t-h4">
+    What a screen reader is told
+  </h3>
+
+  <p class="block-desc t-s">
+    Sorting and paging are read off the header and the pager by everyone else;
+    the table now says them out loud too. One
+    <code class="t-mono-inline">
+      role="status"
+    </code> region carries "Sorted by Owner,
+    ascending" and "Showing 1–25 of 240", with loading taking precedence while it
+    lasts — announcing a new sort order over rows that are still being replaced
+    describes a state the reader cannot inspect. Both strings are inputs
+    (<code class="t-mono-inline">
+      sortAnnouncement
+    </code>,
+    <code class="t-mono-inline">
+      rangeAnnouncement
+    </code>) taking the facts and
+    returning the sentence, so translation and word order stay yours; return an
+    empty string to stay silent. The first render is silent regardless —
+    <code class="t-mono-inline">
+      aria-live="polite"
+    </code> announces changes, not
+    initial content.
+  </p>
+
+  <h3 class="block-title t-h4">
     Virtual scroll
   </h3>
 
