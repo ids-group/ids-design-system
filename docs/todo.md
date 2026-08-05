@@ -11,7 +11,7 @@ Completed items are archived in `done.md` (last archive pass **2026-08-05** — 
 
 ## Priority board (2026-08-05 actualization)
 
-**22 open**, every one of them below. Nothing is waiting on a decision from Stas except the two marked so.
+**25 open**, every one of them below. Nothing is waiting on a decision from Stas except the two marked so.
 
 **P1 — real defects:** _(none)_
 
@@ -21,6 +21,11 @@ Completed items are archived in `done.md` (last archive pass **2026-08-05** — 
 - **autocomplete single-select display mode** → also unblocks the `ds-field-group` composer.
 - **"Glued field" / adornment composer** (`ds-field-group`) — blocked by the line above, not by a decision.
 - **Shared picker internals** — surveyed 08-05; the premise turned out wrong (three components, not six), so what is left is smaller than the item claimed.
+
+**P2 — new consumer asks, filed 2026-08-05 from the ai-sdlc starter's own backlog (they were never in ours):**
+
+- **Unknown icon name warns nothing** — a misspelled name renders an empty `<svg>` in silence; the fix is a dev warning on one branch.
+- **`ds-app-layout` seals its scroll policy** — export `LayoutNavigationService`/`pathChanged` (cheap, unblocks them) and add a `scrollReset` strategy input (the real API call). A `ds-tabs`↔URL helper rides alongside as a P3.
 
 **P2 — genuinely waiting on Stas:**
 
@@ -42,6 +47,8 @@ Completed items are archived in `done.md` (last archive pass **2026-08-05** — 
 ## From mm-ecm agent-portal migration (2026-07-31)
 
 All 11 items shipped or closed by 2026-08-05 — the section moved to `done.md` with its dogfooding provenance intact.
+
+**Consumer-side staleness found 2026-08-05, recorded here because their file is gitignored (so this is the durable copy) and correcting theirs is a separate ask:** `mm-broker-platform/src/frontend/todo.md:115` still says "`ds-auth-shell` (§1a) did NOT ship and is still a DS backlog item". It shipped in **0.8.0** and was renamed the same day — the selector is `ds-auth-layout`. Their §1a migration (`app-auth-card` → the DS scaffold) is therefore unblocked, and the name to migrate to is the new one.
 
 ---
 
@@ -69,6 +76,13 @@ Goal: a coherent **smooth** motion system. **Foundation is healthy** — motion 
 - [ ] **[P3] Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below).** A section-heading toggle that draws a visual "inspect" overlay on the live demos: colour-coded lines/boxes for paddings, gaps, sizes with values+units, plus WHICH token/class drives each value. Read computed styles + `getBoundingClientRect`; map values back to the `--space-*`/`--radius-*`/`--font-size-*` scales. **Rewritten 2026-07-24 → start as a scoped pilot:** spacing-only on ONE section (e.g. button), then generalize. Greenfield, docs-only, no product impact. _(Verified: nothing exists today.)_
 
 ## Component feature gaps
+
+- [ ] **[P2] An unknown icon name renders an empty `<svg>` in silence (ai-sdlc starter, 2026-08-04 — found auditing `screenshot-to-page` on three screens).** Verified in our code: `icon.component.ts:65` resolves `(ICONS as Record<string, string>)[key] ?? this.registry[key] ?? ''`, and that `''` branch has no warning of any kind. A misspelled name therefore renders nothing at all — no error, no gap in the types.
+  **The types cannot catch it and should not try.** `IconName = keyof typeof ICONS | (string & {})` is deliberately open so a consumer can register their own glyphs through `provideDsIcons()`; closing the union would reject every registered custom name. **Ask:** a dev-mode `console.warn` on exactly that `''` branch, naming the offending value. No API change, nothing in production. The requester points at our own precedent — the same technique ships as `ProjectionDroppedDirective` for the dropped caption on checkbox/switch/radio — so the pattern and its justification already exist here.
+
+- [ ] **[P3] No `ds-tabs`↔URL binding helper, so every tabbed screen hand-rolls both directions (ai-sdlc starter, 2026-08-05, from the mm-broker admin port).** The consumer evidence is the strongest part of this item: in that port **three of the four tabbed screens never got the wiring at all** (carrier detail, employer-group detail, settings), so F5 and a shared link dropped the reader back onto tab one and Back did not walk the tabs. Only the one screen whose author reached for a helper had it. Hand-wiring is the shape consumers copy, and copying is exactly what failed.
+  **Feasible with today's API — checked:** `ds-tabs` exposes `selectedIndex` as a two-way `model<number>`, and `ds-tab` already takes `value` (an identifier that falls back to `label`), so a helper can map name↔index without any new input. The consumer's own version is a ~35-line `useTabUrl(['profile', 'activity', …])` returning `{ index, select }`, bound as `[selectedIndex]` / `(selectedIndexChange)`. Two decisions in it worth keeping if we upstream it: **names in the URL, not indices** (inserting a tab later cannot silently repoint old links) and **`replaceUrl: true` with the first tab writing no param** (a pristine screen keeps a clean address and tab-flipping does not fill the history).
+  **Open question before building:** whether this belongs in the DS at all — it is router-coupled, and the DS has so far kept the router out of everything except `ds-app-layout`. If the answer is no, say so in the docs and point at the consumer helper, because the alternative is that four more consumers hand-roll it.
 
 - [ ] **[P3] Forms — `ds-select` native `multi`** (deferred 2026-07-02 "пока что пропусти, не реализовывай и не выкидывай"). `ds-multi-select` already covers multi-selection; native `<select multiple>` semantics on `ds-select` remain the only open piece. Functionally redundant — keep parked until a fresh consumer pull.
 - [ ] **[P2] `ds-table` — LAZY LOADING only; virtual scroll SHIPPED 2026-08-05 (see `done.md`).** What landed: opt-in `virtualScroll` + `virtualRowSize`, ~25 rows in the DOM at any row count, `table-layout: fixed` and a CSS row height driven by the same input as the arithmetic, expansion suppressed with a dev warning, and zebra parity moved off `:nth-child`. **It is NOT built on the CDK viewport, contrary to the plan below**, and the reason matters if this item is revisited: the CDK viewport wraps the table in a TRANSFORMED content wrapper, and a transform creates a containing block that breaks both the sticky header and the sticky first column this table already ships — the very combination the plan flagged as "fragile everywhere". Two spacer rows inside the existing scroller leave everything sticky untouched, need no version pinning, and are the same technique TanStack documents for tables. A latent `stickyHeader` × `stickyFirstColumn` z-index bug was found and fixed along the way.
@@ -122,6 +136,10 @@ Filter-toolbar gaps for `ds-autocomplete` / `ds-select` / `ds-search`. Design sp
 - [ ] **[P2] "Glued field" / adornment composer — `ds-field-group`/`ds-input-group` (proposed 2026-06-18).** One bordered control from `select + input`/`search`/`autocomplete` (shared border + one focus-within ring, internal divider, fixed-width leading + flexible trailing segment), with slotted controls rendering "naked" via a context token or `[grouped]` input. **Verified 2026-07-24: no such component exists; spec written** (`…/2026-07-07-pin475-filter-toolbar-gaps-design.md` §D). **Dependency actualized:** the fit-content blocker is CLEARED (autocomplete `width` shipped); now blocked only on the single-select-display decision above. Precedents: Chakra `InputGroup`, MUI adornments, Ant `Space.Compact`, Bootstrap input-group, PrimeNG `p-inputgroup` (https://primeng.dev/inputgroup — its addon slots take text/icon/**button**/checkbox/spinner on either side, a wider addon vocabulary than this item's current select+input framing; fold those addon kinds into the composer's slot design, and note the single-input prefix/suffix case already ships via `dsInputPrefix`/`dsInputSuffix`, now laid out purely via `:has()` with no `withAddon`/`withAddonRight` flag — see `done.md`).
 
 ## ds-app-layout (SHIPPED 2026-07-24) — post-merge polish
+
+- [ ] **[P2] `ds-app-layout` seals its scroll POLICY, and consumers re-derive "the path changed" three incompatible ways (ai-sdlc starter, 2026-08-04, follow-up to their `ds-app-layout` migration).** Owning the scroll CONTAINER is rightly ours — after the migration the scrolling `<main>` is in our template, so no consumer service can register it without reaching into DS-internal DOM. But the policy came along with the mechanism and is not reachable: the layout declares `providers: [LayoutScrollService]` and wires the container to its own instance. `scrollToTop()` is public, so a screen can ADD a reset; there is no way to SUPPRESS one the layout decided to do.
+  **Two asks, both verified against our code.** (1) **Export `LayoutNavigationService`, or just its `pathChanged` stream** — it is stateless, already root-provided, and NOT in `public-api.ts` (checked), so consumers cannot reuse it. The cost of that is concrete on their side: "did we go somewhere else?" is answered in three independent derivations that disagree — their `createViewTransitionSkip` compares route-snapshot paths, our `LayoutNavigationService` uses `urlAfterRedirects.split(/[?#]/)[0]` with `distinctUntilChanged()`, and their `tab.helpers.ts` uses `split('?')[0]`, which ignores the fragment we strip. (2) **A reset-strategy input** — e.g. `scrollReset: 'path' | 'never' | 'always'`, default `'path'` (today's behaviour). Checked: no such input exists; `restoreScroll` / `restoreScrollTimeout` govern RESTORATION, while the path-based reset is unconditional.
+  **Note for whoever takes it:** (1) is cheap and unblocks them immediately; (2) is the real API decision, because it admits that a layout deciding scroll policy for every routed page was the wrong default.
 
 > **Parent DONE** — `ds-app-layout` (shipped as `ds-app-shell`, renamed in 0.7.0) + `ds-sidenav-footer` + `ds-sidenav` brand row (`logoLetter` + `[dsBrandName]` projection) all merged to main (branch `feat/app-shell`, final review clean). Spec: `.claude/superpowers/specs/2026-07-24-ds-app-shell-design.md`. Kept on the board only for the open polish children below. Consumer migrations (ai-sdlc → mm-admin → pinkmoon) are post-release follow-ups.
 
