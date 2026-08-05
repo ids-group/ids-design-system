@@ -49,6 +49,7 @@ export const NAV: NavGroup[] = [
       { label: 'Multi-select', anchor: 'multi-select' },
       { label: 'Number stepper', anchor: 'number-stepper' },
       { label: 'OTP input', anchor: 'otp-input' },
+      { label: 'Password rules', anchor: 'password-rules' },
       { label: 'Radio', anchor: 'radio' },
       { label: 'Search', anchor: 'search' },
       { label: 'Select', anchor: 'select' },
@@ -65,6 +66,7 @@ export const NAV: NavGroup[] = [
     kind: 'component',
     items: [
       { label: 'App layout', anchor: 'app-layout' },
+      { label: 'Auth shell', anchor: 'auth-shell' },
       { label: 'Breadcrumbs', anchor: 'breadcrumbs' },
       { label: 'Menu', anchor: 'menu' },
       { label: 'Pagination', anchor: 'pagination' },
@@ -126,6 +128,7 @@ export const NAV: NavGroup[] = [
     path: 'components/page-structure',
     kind: 'component',
     items: [
+      { label: 'Filter bar', anchor: 'filter-bar' },
       { label: 'Page footer', anchor: 'page-footer' },
       { label: 'Page header', anchor: 'page-header' },
     ],

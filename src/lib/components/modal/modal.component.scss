@@ -3,8 +3,8 @@
 :host {
   /* Public --ds-modal-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_modal-bg-color:              var(--ds-modal-bg-color,              var(--surface-overlay));
-  --_modal-radius:          var(--ds-modal-radius,          var(--radius-lg));
-  --_modal-shadow:          var(--ds-modal-shadow,          var(--shadow-modal));
+  --_modal-radius:          var(--ds-modal-radius,          var(--ds-radius-panel));
+  --_modal-shadow:          var(--ds-modal-shadow,          var(--ds-elevation-modal));
   --_modal-divider:         var(--ds-modal-divider,         var(--border-divider));
   --_modal-title-text-color:        var(--ds-modal-title-text-color,        var(--text-primary));
   --_modal-title-text-color-error:  var(--ds-modal-title-text-color-error,  var(--error-text));
@@ -21,10 +21,10 @@
   --_modal-icon-badge-icon-color: var(--ds-modal-icon-badge-icon-color, var(--accent));
   --_modal-impact-text-color: var(--ds-modal-impact-text-color, var(--warning-text));
   --_modal-enter-keyframes: var(--ds-modal-enter-keyframes, ds-scale-in);
-  --_modal-enter-duration: var(--ds-modal-enter-duration, var(--duration-base));
-  --_modal-enter-easing: var(--ds-modal-enter-easing, var(--ease-decelerate));
-  --_modal-leave-duration: var(--ds-modal-leave-duration, var(--duration-fast));
-  --_modal-leave-easing: var(--ds-modal-leave-easing, var(--ease-accelerate));
+  --_modal-enter-duration: var(--ds-modal-enter-duration, var(--ds-motion-enter-surface-duration));
+  --_modal-enter-easing: var(--ds-modal-enter-easing, var(--ds-motion-enter-surface-easing));
+  --_modal-leave-duration: var(--ds-modal-leave-duration, var(--ds-motion-exit-duration));
+  --_modal-leave-easing: var(--ds-modal-leave-easing, var(--ds-motion-exit-easing));
   --_ds-enter-scale: var(--ds-modal-enter-scale, 0.97);
 
   display: contents;

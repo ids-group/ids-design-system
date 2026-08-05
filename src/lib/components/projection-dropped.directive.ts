@@ -22,6 +22,10 @@ import {
  * NOT projection support: the probe exists only so the warning can see that
  * content was passed, and the directive hides it. Real projection for the field
  * family is still open — see docs/todo.md.
+ *
+ * `reason` replaces the default `[label]` wording for a host that drops content
+ * for a different reason — `ds-filter-bar` drops anything that carries neither of
+ * its slot attributes.
  */
 @Directive({
   selector: '[dsProjectionDropped]',
@@ -31,6 +35,9 @@ import {
 export class ProjectionDroppedDirective {
   /** The host component's selector, named in the warning. */
   readonly dsProjectionDropped = input.required<string>();
+  /** Overrides the `[label]` explanation for a host that drops content for
+   *  another reason. Ends up after "renders nothing — ". */
+  readonly reason = input<string>('');
 
   private readonly probe = inject(ElementRef<HTMLElement>);
 
@@ -40,8 +47,11 @@ export class ProjectionDroppedDirective {
         return;
       }
       const selector = this.dsProjectionDropped();
+      const reason =
+        this.reason() ||
+        `the caption comes from the [label] input only, so \`<${selector}>Some text</${selector}>\` shows no caption at all. Move the text into [label].`;
       console.warn(
-        `[${selector}] Projected content renders nothing — the caption comes from the [label] input only, so \`<${selector}>Some text</${selector}>\` shows no caption at all. Move the text into [label].`,
+        `[${selector}] Projected content renders nothing — ${reason}`,
       );
     });
   }

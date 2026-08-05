@@ -34,7 +34,8 @@
           [disabled]="isDisabled()"
           [attr.aria-expanded]="openSegment() === 'start'"
           [attr.aria-label]="ariaLabelFor('start')"
-          [attr.aria-invalid]="invalid() ? 'true' : null"
+          [attr.aria-required]="required() ? 'true' : null"
+          [attr.aria-invalid]="invalidResolved() ? 'true' : null"
           [attr.aria-describedby]="hintId()"
           (click)="onTriggerClick('start')"
         >
@@ -65,7 +66,8 @@
           [disabled]="isDisabled()"
           [attr.aria-expanded]="openSegment() === 'end'"
           [attr.aria-label]="ariaLabelFor('end')"
-          [attr.aria-invalid]="invalid() ? 'true' : null"
+          [attr.aria-required]="required() ? 'true' : null"
+          [attr.aria-invalid]="invalidResolved() ? 'true' : null"
           [attr.aria-describedby]="hintId()"
           (click)="onTriggerClick('end')"
         >
@@ -92,7 +94,7 @@
         [attr.aria-labelledby]="label() ? labelId : null"
         [attr.aria-label]="label() ? null : ariaLabelFor('single')"
         [attr.aria-required]="required() ? 'true' : null"
-        [attr.aria-invalid]="invalid() ? 'true' : null"
+        [attr.aria-invalid]="invalidResolved() ? 'true' : null"
         [attr.aria-describedby]="hintId()"
         (click)="onTriggerClick('single')"
       >
@@ -124,8 +126,8 @@
   }
 
   <ds-field-message
-    [text]="hint()"
-    [state]="messageState()"
+    [text]="message().text"
+    [state]="message().state"
     [messageId]="hintId()"
     [reserve]="reserveMessageResolved()"
   />

@@ -1425,22 +1425,22 @@ export const SHADOWS: readonly ShadowRow[] = [
   },
   {
     "name": "--shadow-popover",
-    "alias": "var(--shadow-2)",
+    "alias": "",
     "notes": "Alias — popovers, dropdowns."
   },
   {
     "name": "--shadow-modal",
-    "alias": "var(--shadow-4)",
+    "alias": "",
     "notes": "Alias — modals."
   },
   {
     "name": "--shadow-toast",
-    "alias": "var(--shadow-3)",
+    "alias": "",
     "notes": "Alias — toasts."
   },
   {
     "name": "--shadow-card",
-    "alias": "var(--shadow-1)",
+    "alias": "",
     "notes": "Alias — applied to .card."
   },
   {
@@ -1816,7 +1816,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-alert-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Alert corner radius (8px)."
       },
       {
@@ -1826,12 +1826,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-alert-enter-duration",
-        "value": "var(--duration-base)",
+        "value": "var(--ds-motion-enter-surface-duration)",
         "notes": "Alert entrance duration (default --duration-base)."
       },
       {
         "name": "--ds-alert-enter-easing",
-        "value": "var(--ease-decelerate)",
+        "value": "var(--ds-motion-enter-surface-easing)",
         "notes": "Alert entrance easing (default --ease-decelerate)."
       },
       {
@@ -1873,7 +1873,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-app-layout-rail-shadow",
-        "value": "var(--shadow-modal)",
+        "value": "var(--ds-elevation-modal)",
         "notes": "Rail elevation while it is an overlay below the lg breakpoint (defaults to --shadow-modal)."
       },
       {
@@ -1890,6 +1890,48 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-scrollbar-width",
         "value": "0px",
         "notes": "Native scrollbar width measured per device and published on :root; app-layout subtracts it from the content's right padding to keep insets symmetric."
+      }
+    ]
+  },
+  {
+    "component": "Auth Shell",
+    "selector": ".auth-shell",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-auth-shell-min-height",
+        "value": "100dvh",
+        "notes": "Host height the centring works against (defaults to 100dvh); set it to 100% to embed the shell in a box that is not the page."
+      },
+      {
+        "name": "--ds-auth-shell-bg-color",
+        "value": "var(--surface-canvas)",
+        "notes": "Auth screen canvas fill (defaults to --surface-canvas)."
+      },
+      {
+        "name": "--ds-auth-shell-gap",
+        "value": "var(--space-8)",
+        "notes": "Space between masthead, card and support footer (defaults to --space-8)."
+      },
+      {
+        "name": "--ds-auth-shell-card-max-width",
+        "value": "var(--auth-card-w)",
+        "notes": "Measure of the auth column — the card, and with it the tagline and support line (defaults to --auth-card-w, 420px)."
+      },
+      {
+        "name": "--ds-auth-shell-mark-bg-color",
+        "value": "var(--accent)",
+        "notes": "Letter-mark tile fill (defaults to --accent, matching the sidenav's mark)."
+      },
+      {
+        "name": "--ds-auth-shell-mark-label-color",
+        "value": "var(--accent-on)",
+        "notes": "Letter-mark glyph colour (defaults to --accent-on)."
+      },
+      {
+        "name": "--ds-radius-control",
+        "value": "—",
+        "notes": "Radius role for controls and field frames — buttons, inputs, selects, both picker triggers, tooltips. Defaults to --radius-md."
       }
     ]
   },
@@ -1925,7 +1967,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-autocomplete-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Autocomplete field corner radius (8px)."
       },
       {
@@ -1967,7 +2009,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-avatar-radius",
-        "value": "var(--radius-pill)",
+        "value": "var(--ds-radius-pill)",
         "notes": "Pill / square."
       },
       {
@@ -2051,7 +2093,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-badge-radius",
-        "value": "var(--radius-pill)",
+        "value": "var(--ds-radius-pill)",
         "notes": "Pill radius."
       },
       {
@@ -2128,7 +2170,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-banner-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
       },
       {
@@ -2158,12 +2200,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-banner-enter-duration",
-        "value": "var(--duration-base)",
+        "value": "var(--ds-motion-enter-surface-duration)",
         "notes": "Banner entrance duration (default --duration-base)."
       },
       {
         "name": "--ds-banner-enter-easing",
-        "value": "var(--ease-decelerate)",
+        "value": "var(--ds-motion-enter-surface-easing)",
         "notes": "Banner entrance easing (default --ease-decelerate)."
       },
       {
@@ -2205,7 +2247,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-bottom-sheet-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Top corner radius."
       },
       {
@@ -2230,22 +2272,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-bottom-sheet-enter-duration",
-        "value": "var(--duration-base)",
+        "value": "var(--ds-motion-enter-surface-duration)",
         "notes": "Bottom-sheet entrance duration (default --duration-base); the scrim uses --duration-fast until this is set."
       },
       {
         "name": "--ds-bottom-sheet-enter-easing",
-        "value": "var(--ease-decelerate)",
+        "value": "var(--ds-motion-enter-surface-easing)",
         "notes": "Bottom-sheet + scrim entrance easing (default --ease-decelerate)."
       },
       {
         "name": "--ds-bottom-sheet-leave-duration",
-        "value": "var(--duration-base)",
+        "value": "var(--ds-motion-exit-large-duration)",
         "notes": "Bottom-sheet close duration (default --duration-base); the scrim uses --duration-fast until this is set."
       },
       {
         "name": "--ds-bottom-sheet-leave-easing",
-        "value": "var(--ease-accelerate)",
+        "value": "var(--ds-motion-exit-large-easing)",
         "notes": "Bottom-sheet + scrim close easing (default --ease-accelerate)."
       },
       {
@@ -2354,8 +2396,38 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-button-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
+      },
+      {
+        "name": "--ds-button-font-size",
+        "value": "var(--font-size-m)",
+        "notes": "Label size. Overrides the size class, so one value holds across sm/md/lg."
+      },
+      {
+        "name": "--ds-button-weight",
+        "value": "var(--font-weight-extrabold)",
+        "notes": "Label weight (default extrabold)."
+      },
+      {
+        "name": "--ds-button-tracking",
+        "value": "var(--letter-spacing-wide)",
+        "notes": "Label letter-spacing (default --letter-spacing-wide)."
+      },
+      {
+        "name": "--ds-button-height",
+        "value": "var(--field-h-md)",
+        "notes": "Button height, overriding the size class. Set with --ds-button-pad-y for a box sized by its padding instead."
+      },
+      {
+        "name": "--ds-button-pad-x",
+        "value": "var(--space-5)",
+        "notes": "Horizontal padding."
+      },
+      {
+        "name": "--ds-button-pad-y",
+        "value": "0",
+        "notes": "Vertical padding — 0 by default, since height is fixed; pair with height:auto styling for a padding-sized button."
       },
       {
         "name": "--ds-button-bg-color-disabled",
@@ -2478,7 +2550,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-card-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Corner radius."
       },
       {
@@ -2555,8 +2627,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-checkbox-radius",
-        "value": "var(--radius-sm)",
+        "value": "var(--ds-radius-inner)",
         "notes": "Checkbox box corner radius (default --radius-sm). The indeterminate dash keeps its own radius."
+      },
+      {
+        "name": "--ds-checkbox-label-font-size",
+        "value": "var(--_checkbox-label-fs)",
+        "notes": "Checkbox caption size. Overrides the size class, so setting it pins the caption regardless of `size`."
+      },
+      {
+        "name": "--ds-checkbox-label-color",
+        "value": "var(--text-primary)",
+        "notes": "Checkbox caption text colour (defaults to --text-primary). A control caption is deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, while a caption beside a checkbox is the content you are agreeing to and reads primary. Routing them together would put \"Remember me\" in uppercase in any brand that sets --ds-field-label-transform."
       },
       {
         "name": "--check-size",
@@ -2704,7 +2786,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-date-picker-trigger-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Date-picker trigger corner radius (default --radius-md) — the counterpart of --ds-time-picker-trigger-radius."
       },
       {
@@ -2734,7 +2816,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-date-picker-shadow",
-        "value": "var(--shadow-popover)",
+        "value": "var(--ds-elevation-overlay)",
         "notes": "Popover shadow."
       },
       {
@@ -2759,7 +2841,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-date-picker-panel-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Calendar panel corner radius (default --radius-lg). Forwarded onto the portaled pane on open."
       },
       {
@@ -2860,7 +2942,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-drawer-shadow",
-        "value": "var(--shadow-modal)",
+        "value": "var(--ds-elevation-modal)",
         "notes": "Drawer panel elevation shadow (defaults to --shadow-modal)."
       },
       {
@@ -2900,22 +2982,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-drawer-enter-duration",
-        "value": "var(--duration-slow)",
+        "value": "var(--ds-motion-enter-large-duration)",
         "notes": "Drawer entrance duration (default --duration-slow); the scrim uses --duration-fast until this is set."
       },
       {
         "name": "--ds-drawer-enter-easing",
-        "value": "var(--ease-decelerate)",
+        "value": "var(--ds-motion-enter-large-easing)",
         "notes": "Drawer panel + scrim entrance easing (default --ease-decelerate)."
       },
       {
         "name": "--ds-drawer-leave-duration",
-        "value": "var(--duration-base)",
+        "value": "var(--ds-motion-exit-large-duration)",
         "notes": "Drawer close duration (default --duration-base); the scrim uses --duration-fast until this is set."
       },
       {
         "name": "--ds-drawer-leave-easing",
-        "value": "var(--ease-accelerate)",
+        "value": "var(--ds-motion-exit-large-easing)",
         "notes": "Drawer panel + scrim close easing (default --ease-accelerate)."
       },
       {
@@ -2987,7 +3069,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-dropzone-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Corner radius."
       },
       {
@@ -3065,6 +3147,43 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Field",
+    "selector": ".field",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-field-label-font-size",
+        "value": "var(--font-size-xs)",
+        "notes": "Label size for the whole field family — input, textarea, select, both pickers and radio-group resolve through it."
+      },
+      {
+        "name": "--ds-field-label-weight",
+        "value": "var(--font-weight-bold)",
+        "notes": "Label weight for the whole field family."
+      },
+      {
+        "name": "--ds-field-label-color",
+        "value": "var(--text-secondary)",
+        "notes": "Label colour for the field family — input, textarea, select, both pickers and radio-group. Does NOT reach the checkbox / switch / radio CAPTIONS, which have their own --ds-<control>-label-color: see those for why."
+      },
+      {
+        "name": "--ds-field-label-transform",
+        "value": "none",
+        "notes": "Label text-transform — set `uppercase` for the tracked editorial label pattern. Default `none`."
+      },
+      {
+        "name": "--ds-field-label-tracking",
+        "value": "normal",
+        "notes": "Label letter-spacing, for uppercase labels that need opening up. Default `normal`."
+      },
+      {
+        "name": "--ds-field-height",
+        "value": "var(--_field-box-height)",
+        "notes": "Control-box height for the field family, overriding the size class. The sm/md/lg defaults come from the --field-h-* scale; set this to pin one height regardless of size."
+      }
+    ]
+  },
+  {
     "component": "Field Message",
     "selector": ".field-message",
     "description": "",
@@ -3078,6 +3197,23 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-field-message-font-size",
         "value": "var(--font-size-xs)",
         "notes": "Helper-text size."
+      }
+    ]
+  },
+  {
+    "component": "Filter Bar",
+    "selector": ".filter-bar",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-filter-bar-gap",
+        "value": "var(--space-3)",
+        "notes": "Space between filters, and between the row and the trailing group (defaults to --space-3). Read back off the DOM by the overflow arithmetic, so retuning it stays in sync with what is rendered."
+      },
+      {
+        "name": "--ds-filter-bar-panel-gap",
+        "value": "var(--space-4)",
+        "notes": "Vertical space between filters stacked in the overflow panel (defaults to --space-4, looser than the row because they read as a form there)."
       }
     ]
   },
@@ -3123,7 +3259,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-icon-button-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
       },
       {
@@ -3190,7 +3326,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-input-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
       },
       {
@@ -3235,17 +3371,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-input-label-color",
-        "value": "var(--text-secondary)",
+        "value": "var(--ds-field-label-color,       var(--text-secondary))",
         "notes": "Label colour."
       },
       {
         "name": "--ds-input-label-fs",
-        "value": "var(--font-size-xs)",
+        "value": "var(--ds-field-label-font-size,   var(--font-size-xs))",
         "notes": "Label size."
       },
       {
         "name": "--ds-input-label-fw",
-        "value": "var(--font-weight-bold)",
+        "value": "var(--ds-field-label-weight,      var(--font-weight-bold))",
         "notes": "Label weight."
       },
       {
@@ -3356,7 +3492,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-loading-overlay-scrim-color",
-        "value": "color-mix(\n    in srgb,\n    var(--surface-canvas) calc(var(--opacity-scrim) * 100%),\n    transparent\n  )",
+        "value": "color-mix(\r\n    in srgb,\r\n    var(--surface-canvas) calc(var(--opacity-scrim) * 100%),\r\n    transparent\r\n  )",
         "notes": "Loading overlay scrim tint over the canvas (opacity-driven mix of --surface-canvas)."
       },
       {
@@ -3397,6 +3533,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Menu item group divider colour (defaults to --border-divider)."
       },
       {
+        "name": "--ds-menu-divider-spacing",
+        "value": "0",
+        "notes": ""
+      },
+      {
         "name": "--ds-menu-item-label-color",
         "value": "var(--text-primary)",
         "notes": "Item label colour."
@@ -3415,6 +3556,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-menu-item-error-label-color",
         "value": "var(--error-text)",
         "notes": "Destructive menu item label colour (defaults to --error-text)."
+      },
+      {
+        "name": "--ds-menu-item-radius",
+        "value": "0",
+        "notes": ""
       },
       {
         "name": "--ds-menu-bg-color",
@@ -3460,12 +3606,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-modal-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Corner radius."
       },
       {
         "name": "--ds-modal-shadow",
-        "value": "var(--shadow-modal)",
+        "value": "var(--ds-elevation-modal)",
         "notes": "Dialog shadow."
       },
       {
@@ -3550,22 +3696,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-modal-enter-duration",
-        "value": "var(--duration-base)",
+        "value": "var(--ds-motion-enter-surface-duration)",
         "notes": "Modal card + backdrop entrance duration (default --duration-base)."
       },
       {
         "name": "--ds-modal-enter-easing",
-        "value": "var(--ease-decelerate)",
+        "value": "var(--ds-motion-enter-surface-easing)",
         "notes": "Modal card + backdrop entrance easing (default --ease-decelerate)."
       },
       {
         "name": "--ds-modal-leave-duration",
-        "value": "var(--duration-fast)",
+        "value": "var(--ds-motion-exit-duration)",
         "notes": "Modal close duration (default --duration-fast). Reduced motion zeroes it so teardown stays instant."
       },
       {
         "name": "--ds-modal-leave-easing",
-        "value": "var(--ease-accelerate)",
+        "value": "var(--ds-motion-exit-easing)",
         "notes": "Modal close easing (default --ease-accelerate)."
       },
       {
@@ -3632,7 +3778,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-multi-select-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Multi-select control corner radius (defaults to --radius-md)."
       },
       {
@@ -3733,12 +3879,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-overlay-enter-duration",
-        "value": "var(--duration-fast)",
+        "value": "var(--ds-motion-enter-panel-duration)",
         "notes": "Portaled-panel entrance duration (default --duration-fast)."
       },
       {
         "name": "--ds-overlay-enter-easing",
-        "value": "var(--ease-decelerate)",
+        "value": "var(--ds-motion-enter-panel-easing)",
         "notes": "Portaled-panel entrance easing (default --ease-decelerate)."
       },
       {
@@ -3750,6 +3896,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-overlay-enter-scale",
         "value": "0.96",
         "notes": "Start scale when a panel enters with ds-scale-in (default 0.96)."
+      },
+      {
+        "name": "--ds-overlay-leave-duration",
+        "value": "var(--ds-motion-exit-duration)",
+        "notes": "Fade-out length when an overlay panel is DISMISSED (Escape, a press outside, a scroll). Defaults to --ds-motion-exit-duration (120ms). Choosing an option closes instantly and is not affected."
+      },
+      {
+        "name": "--ds-overlay-leave-easing",
+        "value": "var(--ds-motion-exit-easing)",
+        "notes": "Easing of that dismissal fade. Defaults to --ds-motion-exit-easing."
       }
     ]
   },
@@ -3780,7 +3936,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-page-footer-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Page footer corner radius (defaults to --radius-lg)."
       }
     ]
@@ -3894,7 +4050,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-pagination-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Button radius."
       },
       {
@@ -3920,6 +4076,38 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Password Rules",
+    "selector": ".password-rules",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-password-rules-gap",
+        "value": "var(--space-1)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-password-rules-font-size",
+        "value": "var(--font-size-xs)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-password-rules-pending-color",
+        "value": "var(--text-tertiary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-password-rules-met-color",
+        "value": "var(--success-text)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-password-rules-failed-color",
+        "value": "var(--error-text)",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Popover",
     "selector": ".popover",
     "description": "",
@@ -3936,12 +4124,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-popover-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Popover corner radius (defaults to --radius-lg)."
       },
       {
         "name": "--ds-popover-shadow",
-        "value": "var(--shadow-popover)",
+        "value": "var(--ds-elevation-overlay)",
         "notes": "Popover drop shadow (defaults to --shadow-popover)."
       },
       {
@@ -4046,7 +4234,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-radio-label-color",
         "value": "var(--text-primary)",
-        "notes": "Radio label text colour (defaults to --text-primary)."
+        "notes": "Radio caption text colour (defaults to --text-primary). A control caption is deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, while a caption beside a checkbox is the content you are agreeing to and reads primary. Routing them together would put \"Remember me\" in uppercase in any brand that sets --ds-field-label-transform."
+      },
+      {
+        "name": "--ds-radio-label-font-size",
+        "value": "var(--_radio-label-fs)",
+        "notes": "Radio caption size. Overrides the size class, so setting it pins the caption regardless of `size`."
       },
       {
         "name": "--radio-dot-size",
@@ -4092,7 +4285,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-search-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
       },
       {
@@ -4169,7 +4362,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-segmented-selected-shadow",
-        "value": "var(--shadow-card)",
+        "value": "var(--ds-elevation-raised)",
         "notes": "Selected segment shadow (defaults to --shadow-card)."
       },
       {
@@ -4221,7 +4414,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-select-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Select corner radius (defaults to --radius-md)."
       },
       {
@@ -4248,7 +4441,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-sidenav-group-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Group radius."
       },
       {
@@ -4303,7 +4496,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-sidenav-item-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Item radius."
       },
       {
@@ -4585,7 +4778,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-stat-radius",
-        "value": "var(--radius-lg)",
+        "value": "var(--ds-radius-panel)",
         "notes": "Corner radius."
       },
       {
@@ -4723,6 +4916,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-switch-thumb-bg-color",
         "value": "var(--surface-default)",
         "notes": "Switch thumb fill (defaults to --surface-default)."
+      },
+      {
+        "name": "--ds-switch-label-font-size",
+        "value": "var(--_switch-label-fs)",
+        "notes": "Switch caption size. Overrides the size class, so setting it pins the caption regardless of `size`."
+      },
+      {
+        "name": "--ds-switch-label-color",
+        "value": "var(--text-primary)",
+        "notes": "Switch caption text colour (defaults to --text-primary). A control caption is deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, while a caption beside a checkbox is the content you are agreeing to and reads primary. Routing them together would put \"Remember me\" in uppercase in any brand that sets --ds-field-label-transform."
       },
       {
         "name": "--switch-track-w",
@@ -5193,7 +5396,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-t-mono-inline-radius",
-        "value": "var(--radius-sm)",
+        "value": "var(--ds-radius-inner)",
         "notes": "Per-axis override for the `.t-mono-inline` utility's radius."
       },
       {
@@ -5228,7 +5431,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-t-mono-block-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Per-axis override for the `.t-mono-block` utility's radius."
       }
     ]
@@ -5245,7 +5448,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-table-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Outer corner radius."
       },
       {
@@ -5477,7 +5680,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-tab-pill-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Pill radius."
       },
       {
@@ -5524,7 +5727,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-tag-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
       },
       {
@@ -5643,8 +5846,13 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-time-picker-trigger-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Time picker trigger corner radius (defaults to --radius-md)."
+      },
+      {
+        "name": "--ds-time-picker-panel-radius",
+        "value": "var(--ds-radius-panel)",
+        "notes": "Time panel corner radius (default --radius-lg). Forwarded onto the portaled pane on open."
       },
       {
         "name": "--ds-time-picker-required-color",
@@ -5678,7 +5886,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-time-picker-shadow",
-        "value": "var(--shadow-popover)",
+        "value": "var(--ds-elevation-overlay)",
         "notes": "Panel shadow."
       }
     ]
@@ -5787,12 +5995,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-enter-duration",
-        "value": "var(--duration-slow)",
+        "value": "var(--ds-motion-enter-large-duration)",
         "notes": "Toast entrance duration (default --duration-slow)."
       },
       {
         "name": "--ds-toast-enter-easing",
-        "value": "var(--ease-decelerate)",
+        "value": "var(--ds-motion-enter-large-easing)",
         "notes": "Toast entrance easing (default --ease-decelerate)."
       },
       {
@@ -5931,12 +6139,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-tooltip-radius",
-        "value": "var(--radius-md)",
+        "value": "var(--ds-radius-control)",
         "notes": "Tooltip corner radius (defaults to --radius-md)."
       },
       {
         "name": "--ds-tooltip-shadow",
-        "value": "var(--shadow-2)",
+        "value": "var(--ds-elevation-overlay)",
         "notes": "Tooltip drop shadow (defaults to --shadow-2)."
       },
       {
@@ -6106,6 +6314,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
 
 export const NEW_TOKENS: readonly NewToken[] = [
   {
+    "name": "--auth-card-w",
+    "value": "420px",
+    "kind": "length"
+  },
+  {
     "name": "--binpack-bay-h",
     "value": "var(--hit-touch)",
     "kind": "length"
@@ -6221,16 +6434,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "length"
   },
   {
-    "name": "--combobox-maxh",
-    "value": "280px",
-    "kind": "length"
-  },
-  {
-    "name": "--combobox-offset",
-    "value": "var(--space-1)",
-    "kind": "length"
-  },
-  {
     "name": "--compare-dt-w",
     "value": "90px",
     "kind": "length"
@@ -6311,6 +6514,26 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "length"
   },
   {
+    "name": "--ds-elevation-floating",
+    "value": "var(--shadow-3)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-elevation-modal",
+    "value": "var(--shadow-4)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-elevation-overlay",
+    "value": "var(--shadow-2)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-elevation-raised",
+    "value": "var(--shadow-1)",
+    "kind": "other"
+  },
+  {
     "name": "--ds-field-focus-shadow",
     "value": "var(--focus-field)",
     "kind": "color"
@@ -6319,6 +6542,71 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--ds-field-focus-shadow-error",
     "value": "var(--focus-field-error)",
     "kind": "color"
+  },
+  {
+    "name": "--ds-motion-enter-large-duration",
+    "value": "var(--duration-slow)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-enter-large-easing",
+    "value": "var(--ease-decelerate)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-enter-panel-duration",
+    "value": "var(--duration-fast)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-enter-panel-easing",
+    "value": "var(--ease-decelerate)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-enter-surface-duration",
+    "value": "var(--duration-base)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-enter-surface-easing",
+    "value": "var(--ease-decelerate)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-exit-duration",
+    "value": "var(--duration-fast)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-exit-easing",
+    "value": "var(--ease-accelerate)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-exit-large-duration",
+    "value": "var(--duration-base)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-motion-exit-large-easing",
+    "value": "var(--ease-accelerate)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-radius-inner",
+    "value": "var(--radius-sm)",
+    "kind": "length"
+  },
+  {
+    "name": "--ds-radius-panel",
+    "value": "var(--radius-lg)",
+    "kind": "length"
+  },
+  {
+    "name": "--ds-radius-pill",
+    "value": "var(--radius-pill)",
+    "kind": "length"
   },
   {
     "name": "--empty-body-maxw",
@@ -6633,6 +6921,16 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--page-margin-wide",
     "value": "var(--space-10)",
+    "kind": "length"
+  },
+  {
+    "name": "--picker-maxh",
+    "value": "280px",
+    "kind": "length"
+  },
+  {
+    "name": "--picker-offset",
+    "value": "var(--space-1)",
     "kind": "length"
   },
   {

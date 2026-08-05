@@ -7,8 +7,8 @@
     Colour is layered in three concerns — a theme-independent
     <strong>
       base palette
-    </strong>, the <strong> theme </strong> role maps (light
-    / dark), and optional <strong>brand</strong> overlays.
+    </strong>, the <strong> theme </strong> role maps
+    (light / dark), and optional <strong>brand</strong> overlays.
     <strong>
       Light is the default; dark is opt-in.
     </strong> Components only
@@ -51,14 +51,12 @@
 
   <p class="block-desc t-s">
     There is
-    <strong
-      >
+    <strong>
       no automatic
       <code class="t-mono-inline">
         prefers-color-scheme
       </code> switch
-    </strong
-    >
+    </strong>
     — light is deterministic by default. To follow the OS, opt in from your app
     bootstrap; set the attribute before first paint to avoid a flash:
   </p>

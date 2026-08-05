@@ -6,6 +6,8 @@ import {
   ElementRef,
   ViewEncapsulation,
   afterNextRender,
+  booleanAttribute,
+  effect,
   inject,
   input,
   isDevMode,
@@ -17,6 +19,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ScrollbarWidthService } from './scrollbar-width.service';
 import { LayoutNavigationService } from './layout-navigation.service';
 import { LayoutScrollService } from './layout-scroll.service';
+import { nextControlId } from '../field-ids';
 
 /**
  * Fixed-frame application layout: the host is pinned to the viewport
@@ -81,11 +84,33 @@ export class AppLayoutComponent {
   readonly railLabel = input<string>('Navigation');
 
   /**
+   * Remember the content scroll per path and restore it on the way BACK. Off by
+   * default: a layout that silently moved the scroll would surprise every existing
+   * consumer. Only a history traversal restores — following a link into a screen
+   * still lands at the top — plus a host that pushes its own "back to list" and
+   * says so with `state: { dsRestoreScroll: true }`, and the first navigation after
+   * a reload.
+   */
+  readonly restoreScroll = input(false, { transform: booleanAttribute });
+
+  /**
+   * How long to wait for the restored screen's content to grow tall enough before
+   * landing as close as it allows. Only meaningful with `restoreScroll`.
+   */
+  readonly restoreScrollTimeout = input(2000);
+
+  /**
    * True only while the rail is an overlay. Gates the dialog semantics: above
    * the breakpoint the rail is an ordinary region, and a permanent
    * `role="dialog"` there would lie to a screen reader.
    */
   protected readonly compact = signal(false);
+
+  /** Whether the rail is currently an overlay rather than part of the layout. */
+  readonly railOverlay = this.compact.asReadonly();
+
+  /** Id of the rail panel, for a trigger's `aria-controls`. */
+  readonly railId = nextControlId('ds-rail');
 
   private readonly layoutScroll = inject(LayoutScrollService);
   private readonly navigation = inject(LayoutNavigationService);
@@ -97,18 +122,42 @@ export class AppLayoutComponent {
     // Root service: instantiating it publishes --ds-scrollbar-width.
     inject(ScrollbarWidthService);
 
+    effect(() => {
+      this.layoutScroll.configureRestore(
+        this.restoreScroll() ? this.restoreScrollTimeout() : null,
+      );
+    });
+
     afterNextRender(() => {
       this.layoutScroll.setScrollContainer(this.content().nativeElement);
       this.watchDesktopBreakpoint();
     });
 
+    // Not closeRail(): navigating is not a dismissal. The reader activated a link,
+    // so focus belongs wherever the router put it - handing it back to the burger
+    // would announce "Open navigation" instead of the page they asked for.
     this.navigation.pathChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.closeRail());
+      .subscribe(() => this.railOpen.set(false));
   }
 
+  /** Dismissal: Escape or the scrim. Restores focus, which navigation must not. */
   protected closeRail(): void {
+    if (!this.railOpen()) {
+      return;
+    }
     this.railOpen.set(false);
+    if (!this.compact()) {
+      return;
+    }
+    // cdkTrapFocusAutoCapture returns focus only when the directive is DESTROYED, not when it flips
+    // off, so without this the caret stays inside the now off-canvas panel. Whatever control claims
+    // the rail through aria-controls owns it — dsRailTrigger and the DS-button forwarding both set it.
+    this.content()
+      .nativeElement.ownerDocument.querySelector<HTMLElement>(
+        `[aria-controls="${this.railId}"]`,
+      )
+      ?.focus();
   }
 
   private watchDesktopBreakpoint(): void {
@@ -133,13 +182,17 @@ export class AppLayoutComponent {
     const sync = (): void => {
       this.compact.set(!desktop.matches);
       // Crossing UP drops the overlay state: leaving it set would re-open the
-      // rail unprompted the next time the viewport narrows.
+      // rail unprompted the next time the viewport narrows. Set the model
+      // directly rather than calling closeRail(), whose focus restore has no
+      // business firing here - the trigger it would focus is hidden on desktop.
       if (desktop.matches) {
-        this.closeRail();
+        this.railOpen.set(false);
       }
     };
     sync();
     desktop.addEventListener('change', sync);
-    this.destroyRef.onDestroy(() => desktop.removeEventListener('change', sync));
+    this.destroyRef.onDestroy(() =>
+      desktop.removeEventListener('change', sync),
+    );
   }
 }

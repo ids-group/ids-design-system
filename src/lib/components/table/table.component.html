@@ -1,3 +1,17 @@
+@if (exportButton()) {
+  <div class="table-toolbar">
+    <ds-button
+      color="neutral"
+      variant="outline"
+      size="sm"
+      [disabled]="exporting()"
+      (pressed)="runExport()"
+    >
+      {{ exporting() ? 'Preparing…' : 'Export CSV' }}
+    </ds-button>
+  </div>
+}
+
 <div
   #scrollWrap
   class="scroll-wrap"
@@ -21,6 +35,7 @@
   >
     <table
       [class]="tableClasses()"
+      [style.--_table-virtual-row-h]="virtualRowHeight()"
       [attr.role]="rowInteractive() ? 'grid' : null"
       [attr.aria-busy]="loading() !== false ? 'true' : null"
     >
@@ -70,7 +85,7 @@
               [style.max-width.px]="columnWidth(col)"
               [attr.aria-sort]="ariaSort(col)"
             >
-              @if (col.sortable) {
+              @if (sortableCol(col)) {
                 <button
                   type="button"
                   class="th-label"
@@ -221,13 +236,29 @@
             </td>
           </tr>
         } @else {
-          @for (row of displayData(); track rowKey(row)) {
+          @if (virtualWindow(); as window) {
+            <tr
+              class="spacer"
+              aria-hidden="true"
+              [style.height.px]="window.padTop"
+            >
+            </tr>
+          }
+
+          @for (
+            row of windowData();
+            track rowKey(row);
+            let rowIndex = $index
+          ) {
             <tr
               [class.selected]="isSelected(row)"
               [class.expanded]="isExpanded(row)"
               [class.clickable]="rowInteractive()"
+              [class.stripe]="isStriped(rowIndex)"
               [class.active]="rowKey(row) === activeRowId()"
-              [attr.aria-current]="rowKey(row) === activeRowId() ? 'true' : null"
+              [attr.aria-current]="
+                rowKey(row) === activeRowId() ? 'true' : null
+              "
               [attr.tabindex]="rowInteractive() ? 0 : null"
               [attr.aria-label]="rowInteractive() ? rowAriaLabel(row) : null"
               (mousedown)="onRowMousedown()"
@@ -340,7 +371,12 @@
               }
             </tr>
 
-            @if (expandableRows() && isExpanded(row) && rowExpandTemplate()) {
+            @if (
+                expandableRows() &&
+                isExpanded(row) &&
+                rowExpandTemplate() &&
+                !virtualizing()
+              ) {
               <tr class="expand-panel-row">
                 <td
                   class="expand-panel-cell"
@@ -354,6 +390,15 @@
                 </td>
               </tr>
             }
+          }
+
+          @if (virtualWindow(); as window) {
+            <tr
+              class="spacer"
+              aria-hidden="true"
+              [style.height.px]="window.padBottom"
+            >
+            </tr>
           }
         }
       </tbody>

@@ -7,7 +7,7 @@ import {
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
 
-export type FieldMessageState = 'default' | 'error' | 'success';
+export type FieldMessageState = 'default' | 'error' | 'warning' | 'success';
 
 /** Internal shared helper/error line for form fields. Renders nothing when
  *  `text` is empty. The host field owns the `aria-describedby` relationship

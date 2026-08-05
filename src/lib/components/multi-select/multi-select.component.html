@@ -4,9 +4,9 @@
   aria-haspopup="listbox"
   [attr.role]="open() ? 'group' : 'combobox'"
   [class.open]="open()"
-  [class.invalid]="invalid()"
+  [class.invalid]="invalidResolved()"
   [class.disabled]="isDisabled()"
-  [attr.aria-invalid]="invalid() ? 'true' : null"
+  [attr.aria-invalid]="invalidResolved() ? 'true' : null"
   [attr.aria-describedby]="hintId()"
   [attr.aria-expanded]="open()"
   [attr.aria-controls]="listboxId"
@@ -46,8 +46,8 @@
 </div>
 
 <ds-field-message
-  [text]="hint()"
-  [state]="messageState()"
+  [text]="message().text"
+  [state]="message().state"
   [messageId]="hintId()"
   [reserve]="reserveMessageResolved()"
 />

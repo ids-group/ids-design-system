@@ -1,6 +1,6 @@
 @if (label()) {
   <span
-    class="select-label"
+    class="label"
     [id]="labelId"
   >
     {{ label() }}
@@ -34,7 +34,7 @@
   [attr.aria-activedescendant]="activeDescendant()"
   [attr.aria-labelledby]="label() ? labelId : null"
   [attr.aria-label]="resolvedAriaLabel()"
-  [attr.aria-invalid]="invalid() ? 'true' : null"
+  [attr.aria-invalid]="invalidResolved() ? 'true' : null"
   [attr.aria-describedby]="hintId()"
   [attr.aria-required]="required() ? 'true' : null"
   [attr.aria-disabled]="isDisabled() ? 'true' : null"
@@ -56,7 +56,12 @@
     {{ displayLabel() }}
   </span>
 
-  @if (clearable() && hasValue() && !isDisabled() && !readOnly()) {
+  @if (
+      clearable() &&
+      hasValue() &&
+      !isDisabled() &&
+      !readOnly()
+    ) {
     <button
       type="button"
       class="clear-btn"
@@ -79,8 +84,8 @@
 </div>
 
 <ds-field-message
-  [text]="hint()"
-  [state]="messageState()"
+  [text]="message().text"
+  [state]="message().state"
   [messageId]="hintId()"
   [reserve]="reserveMessageResolved()"
 />

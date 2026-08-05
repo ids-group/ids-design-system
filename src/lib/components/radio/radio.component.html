@@ -13,17 +13,17 @@
       [attr.value]="value() ?? null"
       [attr.id]="controlId()"
       [attr.tabindex]="tabIndexAttr"
-      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-invalid]="invalidResolved() ? 'true' : null"
       [attr.aria-describedby]="hintId()"
       [attr.aria-required]="required() ? 'true' : null"
       (change)="onSelect()"
     />
 
-    @if (label()) {
-      <label
-        class="control-text"
-        [attr.for]="controlId()"
-      >
+    <label
+      class="control-text"
+      [attr.for]="controlId()"
+    >
+      @if (label()) {
         {{ label() }}
         @if (required()) {
           <span
@@ -33,19 +33,16 @@
             *
           </span>
         }
-      </label>
-    }
-
-    @if (devMode) {
-      <span dsProjectionDropped="ds-radio">
+      } @else {
         <ng-content></ng-content>
-      </span>
-    }
+      }
+    </label>
+
   </span>
 
   <ds-field-message
-    [text]="hint()"
-    [state]="messageState()"
+    [text]="message().text"
+    [state]="message().state"
     [messageId]="hintId()"
     [reserve]="reserveMessageResolved()"
   />

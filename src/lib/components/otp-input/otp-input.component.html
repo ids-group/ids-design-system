@@ -7,7 +7,7 @@
       [attr.inputmode]="mode() === 'numeric' ? 'numeric' : 'text'"
       [attr.autocomplete]="i === 0 ? 'one-time-code' : 'off'"
       [attr.aria-label]="cellLabel(i)"
-      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-invalid]="invalidResolved() ? 'true' : null"
       [value]="cell"
       [disabled]="isDisabled()"
       (input)="onInput($event, i)"
@@ -20,8 +20,8 @@
 </div>
 
 <ds-field-message
-  [text]="hint()"
-  [state]="messageState()"
+  [text]="message().text"
+  [state]="message().state"
   [messageId]="hintId()"
   [reserve]="reserveMessageResolved()"
 />

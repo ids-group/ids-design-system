@@ -68,6 +68,19 @@
   --radius-pill-value: 999px;
   --radius-pill: var(--radius-pill-value);
 
+  /* Radius ROLES — the layer a consumer retunes. Reading the raw scale directly
+     meant re-rounding "panels" also re-rounded every control sharing
+     --radius-md. Each role defaults to the value its members already used, so
+     nothing moves until one is set. Components resolve
+     --ds-<comp>-radius -> role -> value, so a per-component override still wins.
+     No `field` role: fields share --radius-md with buttons, so it would either
+     duplicate `control` or silently re-round every field. A consumer who wants
+     them apart scopes the role: `ds-input { --ds-radius-control: 4px; }`. */
+  --ds-radius-inner:   var(--radius-sm);
+  --ds-radius-control: var(--radius-md);
+  --ds-radius-panel:   var(--radius-lg);
+  --ds-radius-pill:    var(--radius-pill);
+
   /* Component-scoped radius — kept only when the semantic intent matters
      beyond the value itself, OR when the global scale doesn't fit. */
   --radius-flat:         var(--radius-0);    /* explicit "intentionally squared" — middle of btn-group, in-range datepicker */
@@ -106,10 +119,21 @@
               0 16px 32px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 14%);
   --shadow-4: 0 16px 32px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 12%),
               0 24px 48px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 18%);
-  --shadow-popover: var(--shadow-2);
-  --shadow-modal:   var(--shadow-4);
-  --shadow-toast:   var(--shadow-3);
-  --shadow-card:    var(--shadow-1);
+
+  /* Elevation ROLES, and the older --shadow-<surface> aliases now point AT them
+     rather than at a step: setting a role moves every surface at that height,
+     while an alias still retunes one family. Four roles, not the three first
+     sketched — the library genuinely uses four heights, and folding toast into
+     `overlay` would have changed its shadow. */
+  --ds-elevation-raised:   var(--shadow-1);
+  --ds-elevation-overlay:  var(--shadow-2);
+  --ds-elevation-floating: var(--shadow-3);
+  --ds-elevation-modal:    var(--shadow-4);
+
+  --shadow-popover: var(--ds-elevation-overlay);
+  --shadow-modal:   var(--ds-elevation-modal);
+  --shadow-toast:   var(--ds-elevation-floating);
+  --shadow-card:    var(--ds-elevation-raised);
 
   /* Backdrop blur */
   --blur-sm: 4px;
@@ -167,6 +191,27 @@
   --ease-decelerate: cubic-bezier(0,   0,    0,   1);
   --ease-accelerate: cubic-bezier(.3,  0,    1,   1);
   --ease-spring:     cubic-bezier(.5,  1.5, .5,   1);
+
+  /* Motion ROLES — the per-surface --ds-<surface>-enter/leave-* hooks defaulted
+     straight to the raw scale, so "make every panel entrance snappier" meant
+     retuning each surface. A role names the intent once and every surface at that
+     scale follows. Defaults equal the values each surface already used, so nothing
+     moves until a role is set.
+     FIVE roles, not the four first sketched: panel LEAVES run at --duration-base,
+     not fast, so folding them into `exit` would have sped them up. Two resolvers
+     stay on the raw scale on purpose — ds-loading-overlay and the toast leave use
+     --ease-standard, which no role carries, and inventing a role for two sites
+     would be worse than naming the value. */
+  --ds-motion-enter-panel-duration:   var(--duration-fast);
+  --ds-motion-enter-panel-easing:     var(--ease-decelerate);
+  --ds-motion-enter-surface-duration: var(--duration-base);
+  --ds-motion-enter-surface-easing:   var(--ease-decelerate);
+  --ds-motion-enter-large-duration:   var(--duration-slow);
+  --ds-motion-enter-large-easing:     var(--ease-decelerate);
+  --ds-motion-exit-duration:          var(--duration-fast);
+  --ds-motion-exit-easing:            var(--ease-accelerate);
+  --ds-motion-exit-large-duration:    var(--duration-base);
+  --ds-motion-exit-large-easing:      var(--ease-accelerate);
 
   /* Opacity — semantic, purpose-named (Material/Carbon/Polaris convention).
      Each token has a real consumer in the codebase; symmetric "unused"
@@ -374,6 +419,9 @@
   --modal-w-fullscreen: calc(100vw - var(--space-6));
   --modal-h-fullscreen: calc(100vh - var(--space-6));
 
+  /* Auth shell */
+  --auth-card-w: 420px;
+
   /* Drawer */
   --drawer-w-sm: 320px;
   --drawer-w-md: 480px;
@@ -494,9 +542,9 @@
   --empty-icon-size:         var(--space-16);            /* 64px */
   --empty-body-maxw:         360px;
 
-  /* Combobox */
-  --combobox-offset:         var(--space-1);             /* gap below trigger */
-  --combobox-maxh:           280px;                  /* listbox max height */
+  /* Pickers — the listbox panel shared by autocomplete and multi-select. */
+  --picker-offset:           var(--space-1);             /* gap below trigger */
+  --picker-maxh:             280px;                  /* listbox max height */
 
   /* Command palette (cmdk) */
   --cmdk-w:                  560px;

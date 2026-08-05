@@ -15,6 +15,7 @@
   color: var(--_field-message-color);
 
   &.error   { color: var(--error-text); }
+  &.warning { color: var(--warning-text); }
   &.success { color: var(--success-text); }
 
   /* Empty reserve placeholder: an nbsp gives it exactly one line of height so

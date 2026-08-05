@@ -42,7 +42,19 @@
      pressed halo is opt-in now (default none) — set --ds-button-pressed-shadow. */
   --_button-press-scale: var(--ds-button-press-scale, 0.98);
   --_button-pressed-shadow: var(--ds-button-pressed-shadow, none);
-  --_button-radius:    var(--ds-button-radius,    var(--radius-md));
+  --_button-radius:    var(--ds-button-radius,    var(--ds-radius-control));
+
+  /* Type + box, same read-never-declare rule as the colour resolvers above: a
+     brand wanting 14px/600 buttons sized by their own padding had to write
+     `.button.button.button { … }` to out-rank the shimmed `.button.md` (0,3,0).
+     The size classes below re-resolve these, keeping the hook first, so
+     --ds-button-* wins over the size it would otherwise pick. */
+  --_button-font-size: var(--ds-button-font-size, var(--font-size-m));
+  --_button-weight:    var(--ds-button-weight,    var(--font-weight-extrabold));
+  --_button-tracking:  var(--ds-button-tracking,  var(--letter-spacing-wide));
+  --_button-height:    var(--ds-button-height,    var(--field-h-md));
+  --_button-pad-x:     var(--ds-button-pad-x,     var(--space-5));
+  --_button-pad-y:     var(--ds-button-pad-y,     0);
 
   /* Disabled tone — two recipes (chosen visually). A (this default, for solid):
      a flat pale tint, hue from accent, pinned L/C. B (color-mix of the enabled
@@ -55,14 +67,14 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  font: var(--font-weight-extrabold) var(--font-size-m) / var(--line-height-flat) var(--font-sans);
-  letter-spacing: var(--letter-spacing-wide);
+  font: var(--_button-weight) var(--_button-font-size) / var(--line-height-flat) var(--font-sans);
+  letter-spacing: var(--_button-tracking);
   color: var(--_button-label-color);
   background-color: var(--_button-bg-color);
   border: var(--border-width-default) solid var(--_button-border);
   border-radius: var(--_button-radius);
-  padding: 0 var(--space-5);
-  height: var(--hit-cozy);
+  padding: var(--_button-pad-y) var(--_button-pad-x);
+  height: var(--_button-height);
   width: 100%;
   cursor: pointer;
   white-space: nowrap;
@@ -104,19 +116,34 @@
     flex-direction: column;
     gap: var(--space-1);
     height: auto;
-    min-height: var(--hit-cozy);
-    padding-block: var(--space-2);
+    min-height: var(--field-h-md);
+    padding-block: var(--ds-button-pad-y, var(--space-2));
     white-space: normal;
 
     .button-main { display: inline-flex; align-items: center; gap: var(--space-2); }
     &.lg { height: auto; min-height: var(--field-h-lg); }
   }
 
-  /* Sizes — sm/md/lg (32/40/48), default md. */
-  &.lg { font-size: var(--font-size-m); height: var(--field-h-lg); padding: 0 var(--space-5); }
-  &.md { font-size: var(--font-size-m); height: var(--hit-cozy);    padding: 0 var(--space-5); }
+  /* Sizes — sm/md/lg (32/40/48), default md. Each re-resolves the locals with
+     the public hook still first, so a consumer override is not undone by the
+     size class the way a plain `height:` here would undo it. */
+  &.lg {
+    --_button-font-size: var(--ds-button-font-size, var(--font-size-m));
+    --_button-height:    var(--ds-button-height,    var(--field-h-lg));
+    --_button-pad-x:     var(--ds-button-pad-x,     var(--space-5));
+  }
+
+  &.md {
+    --_button-font-size: var(--ds-button-font-size, var(--font-size-m));
+    --_button-height:    var(--ds-button-height,    var(--field-h-md));
+    --_button-pad-x:     var(--ds-button-pad-x,     var(--space-5));
+  }
+
   &.sm {
-    font-size: var(--font-size-s); height: var(--hit-min); padding: 0 var(--space-4);
+    --_button-font-size: var(--ds-button-font-size, var(--font-size-s));
+    --_button-height:    var(--ds-button-height,    var(--field-h-sm));
+    --_button-pad-x:     var(--ds-button-pad-x,     var(--space-4));
+
     .icon { width: var(--icon-sm); height: var(--icon-sm); }
   }
 

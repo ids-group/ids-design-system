@@ -8,6 +8,12 @@ export interface DsConfig {
      *  EVERY field in the injector's subtree, which is rarely what a whole app
      *  wants; prefer `dsReserveMessages` on the individual form that validates. */
     reserveMessage?: boolean;
+    /** Fallback text per validation-error kind, for errors whose validator did
+     *  not carry a `message` — Angular's built-ins never do, so this is where
+     *  `required`, `minlength`, `email` and friends get their wording. A message
+     *  on the error itself always wins, so one shared map here plus a per-case
+     *  override at the validator covers both. Unmapped kinds warn in dev. */
+    errorMessages?: Record<string, string>;
   };
   breadcrumbs?: {
     separator?: IconName;

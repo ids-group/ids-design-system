@@ -24,16 +24,20 @@ import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  type DsOverlayCloseCause,
   focusIsInside,
   forwardOverlayTokens,
   prepareOverlayEnter,
 } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
+import { FieldMessageComponent } from '../field-message/field-message.component';
 import {
-  FieldMessageComponent,
-  type FieldMessageState,
-} from '../field-message/field-message.component';
+  normalizeFieldErrors,
+  resolveFieldMessage,
+  type DsFieldError,
+  type DsFieldErrorsInput,
+} from '../field-errors';
 import { TimeColumnsComponent } from '../time-columns/time-columns.component';
 import { DS_CONFIG } from '../../config/ds-config';
 import {
@@ -90,6 +94,7 @@ export class TimePickerComponent
     '--ds-time-picker-bg-color',
     '--ds-time-picker-border',
     '--ds-time-picker-shadow',
+    '--ds-time-picker-panel-radius',
   ];
 
   /** Selected time, or `[start, end]` tuple when `mode="range"`. Two-way bound. */
@@ -122,6 +127,20 @@ export class TimePickerComponent
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Helper text shown below the picker. */
   readonly hint = input<string>('');
+  /** Error text. Shown immediately — binding it says the consumer has already
+   *  decided this field is in error. Takes precedence over `errors`. */
+  readonly error = input<string>('');
+  /** Advisory text, shown when there is no error. */
+  readonly warning = input<string>('');
+  /** Validation errors, shown once the user has interacted. Bound automatically
+   *  by signal forms; reactive and template-driven forms are read through
+   *  `NgControl` and need nothing here. Accepts a string, one error, or an array. */
+  readonly errors = input<readonly DsFieldError[], DsFieldErrorsInput>([], {
+    transform: normalizeFieldErrors,
+  });
+  /** Whether the user has interacted with the field. Bound by signal forms; gates
+   *  `errors`, so a `required` error does not greet an untouched form. */
+  readonly touched = input(false, { transform: booleanAttribute });
   /** Reserve the message-row height even when empty, so the field doesn't shift
    *  the layout below it when a hint/error appears. Falls back to
    *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
@@ -160,11 +179,19 @@ export class TimePickerComponent
     () => this.disabled() || this.formDisabled(),
   );
   protected readonly hintId = computed(() =>
-    this.hint() ? `${this.uid}-hint` : null,
+    this.message().text ? `${this.uid}-hint` : null,
   );
-  protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() ? 'error' : 'default',
-  );
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.error,
+    errors: this.errors,
+    invalid: this.invalid,
+    touchedSelf: this.touchedSelf,
+    touched: this.touched,
+  });
+  protected readonly message = this.fieldMessage.message;
+  protected readonly invalidResolved = this.fieldMessage.invalid;
   protected readonly resolvedFormat = computed<TimeFormat>(
     () => this.format() ?? this.config.timePicker?.format ?? '24h',
   );
@@ -193,7 +220,7 @@ export class TimePickerComponent
     if (this.isDisabled()) {
       parts.push('disabled');
     }
-    if (this.invalid()) {
+    if (this.invalidResolved()) {
       parts.push('error');
     }
     if (this.mode() === 'single' && this.clearable() && this.hasValue()) {
@@ -292,12 +319,12 @@ export class TimePickerComponent
     closeOnOutsidePointer(
       this.overlayRef,
       (target) => this.host.nativeElement.contains(target),
-      () => this.close(),
+      () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
     // overflow container, so close on any outside scroll ourselves.
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
-      this.close(),
+      this.close('dismiss'),
     );
     this.overlayRef.detachments().subscribe(() => {
       removeScrollClose();
@@ -307,7 +334,7 @@ export class TimePickerComponent
     this.overlayRef.keydownEvents().subscribe((event) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        this.onEscape();
+        this.onEscape('dismiss');
       }
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
@@ -331,12 +358,12 @@ export class TimePickerComponent
     this.open(segment);
   }
 
-  protected close(): void {
+  protected close(cause: DsOverlayCloseCause = 'select'): void {
     const segment = this.openSegment();
     const focusWasInPanel = this.overlayRef
       ? focusIsInside(this.overlayRef)
       : false;
-    disposeWithLeave(this.overlayRef);
+    disposeWithLeave(this.overlayRef, cause);
     this.overlayRef = null;
     this.openSegment.set(null);
     this.markTouched();
@@ -352,8 +379,8 @@ export class TimePickerComponent
     this.overlayRef = null;
   }
 
-  protected onEscape(): void {
-    this.close();
+  protected onEscape(cause: DsOverlayCloseCause = 'dismiss'): void {
+    this.close(cause);
   }
 
   protected onPick(next: string): void {

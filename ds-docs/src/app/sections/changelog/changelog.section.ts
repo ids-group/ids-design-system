@@ -14,8 +14,8 @@ import { DocsSectionComponent } from '../../shared/docs-section.component';
         Every published release of
         <code>
           &#64;ids-group-ltd/ids-design-system
-        </code>, newest first. This is
-        the same <code>CHANGELOG.md</code> shipped in the npm package.
+        </code>, newest first. This
+        is the same <code>CHANGELOG.md</code> shipped in the npm package.
       </span>
 
       <div class="changelog-body" [innerHTML]="html()"></div>

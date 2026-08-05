@@ -1,9 +1,11 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import {
   InputComponent,
   SelectComponent,
   ButtonComponent,
   IconComponent,
+  StackComponent,
+  SwitchComponent,
   type SelectOption,
 } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
@@ -17,12 +19,15 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
     SelectComponent,
     ButtonComponent,
     IconComponent,
+    StackComponent,
+    SwitchComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './form-layout.section.html',
   styleUrl: './form-layout.section.scss',
 })
 export class FormLayoutSection {
+  protected readonly showError = signal(false);
   protected readonly lede =
     'Two-column form section, side-by-side date pairs, a 6/12 city/country split, and an inline-edit row for one-field changes. Footer with Discard and Save anchors every full form.';
 

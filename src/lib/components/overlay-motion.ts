@@ -14,35 +14,77 @@ const OVERLAY_MOTION_TOKENS = [
   '--ds-overlay-enter-duration',
   '--ds-overlay-enter-easing',
   '--ds-overlay-enter-offset',
+  '--ds-overlay-enter-scale',
 ] as const;
 
 /**
- * Close a DS overlay panel.
+ * Why a panel is closing. `'select'` is a deliberate action that produced a
+ * result — an option chosen, a date picked, the trigger pressed again, Tab moving
+ * on; `'dismiss'` is ambient — Escape, a press outside, the page scrolling away.
+ */
+export type DsOverlayCloseCause = 'select' | 'dismiss';
+
+// Backstop for the leave animation: if the class never produces an animation
+// (a pane that is display:none, a consumer stylesheet that removed it), the
+// panel must still go away. Comfortably past --ds-motion-exit-duration.
+const LEAVE_TIMEOUT_MS = 400;
+
+/**
+ * Close a DS overlay panel — instantly on a `'select'`, with a short fade on a
+ * `'dismiss'`.
  *
- * TODO(overlay-leave): reinstate the exit ("leave") animation. This helper used
- * to add a `ds-leaving` class, wait for the animation to finish, then dispose —
- * hence the name. It was cut because a leave animation on a deliberate close
- * read as lag, so today it just disposes immediately; only the enter animation
- * (`ds-overlay-in`, styles/_overlay-motion.scss) still plays. When the leave
- * animation is redone here, it takes effect at every call site below.
+ * The split is the point. An unconditional leave animation shipped once and was
+ * cut in `d2e4712`, because ~120ms of fade after picking an option reads as the
+ * panel lagging behind a decision the user has already made. A dismissal is the
+ * opposite: nothing was chosen, so the fade reads as the panel backing out rather
+ * than as delay. Defaults to `'select'`, so a call site that says nothing keeps
+ * closing instantly.
  *
- * Applied in each panel's `close()` — file:line:
- *   - components/select/select.component.ts:257
- *   - components/autocomplete/autocomplete.component.ts:378
- *   - components/multi-select/multi-select.component.ts:309
- *   - components/date-picker/date-picker.component.ts:627
- *   - components/time-picker/time-picker.component.ts:239
- *   - components/color-picker/color-picker.component.ts:312
- *   - components/popover/popover.component.ts:123
- *   - components/modal/modal.service.ts:39
+ * Applied in each panel's `close()`:
+ *   - select, autocomplete, multi-select, date-picker, time-picker, color-picker,
+ *     popover — each passing `'dismiss'` from its Escape / outside-press / scroll
+ *     paths and nothing from its selection paths.
  *
- * NOTE: `ngOnDestroy` teardown paths dispose directly (no leave on host destroy),
- * so they are intentionally NOT in this list.
+ * NOTE: `ngOnDestroy` teardown paths dispose directly — a host being destroyed has
+ * no time to animate, and holding its overlay open for 120ms after it is gone
+ * would leave a panel floating over the next screen. `ModalService` likewise
+ * disposes directly: a modal's leave belongs to its own scrim-and-card animation,
+ * not to this panel fade.
  */
 export function disposeWithLeave(
   overlayRef: OverlayRef | null | undefined,
+  cause: DsOverlayCloseCause = 'select',
 ): void {
-  overlayRef?.dispose();
+  if (!overlayRef) {
+    return;
+  }
+  if (cause === 'select') {
+    overlayRef.dispose();
+
+    return;
+  }
+
+  const pane = overlayRef.overlayElement;
+  let disposed = false;
+  const finish = (): void => {
+    if (disposed) {
+      return;
+    }
+    disposed = true;
+    clearTimeout(timer);
+    pane.removeEventListener('animationend', onAnimationEnd);
+    overlayRef.dispose();
+  };
+  // The pane's ROOT CHILD is what animates (CDK owns transforms on the pane
+  // itself), so the event arrives from a descendant and bubbles up to here.
+  const onAnimationEnd = (event: AnimationEvent): void => {
+    if (event.animationName.endsWith('ds-overlay-out')) {
+      finish();
+    }
+  };
+  const timer = setTimeout(finish, LEAVE_TIMEOUT_MS);
+  pane.addEventListener('animationend', onAnimationEnd);
+  pane.classList.add('ds-leaving');
 }
 
 /**

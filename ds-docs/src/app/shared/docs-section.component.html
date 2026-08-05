@@ -1,0 +1,35 @@
+<section
+  class="section"
+  [id]="'section-' + anchor()"
+  [attr.data-anchor]="anchor()"
+>
+  <div class="eyebrow t-overline">
+    {{ eyebrow() }}
+  </div>
+
+  <h2 class="t-h2">
+    {{ title() }}<ng-content select="docs-truncation" />
+  </h2>
+
+  @if (primaryKey(); as pk) {
+    <docs-component-meta [key]="pk" />
+  }
+
+  <p class="lede t-m">
+    <ng-content select="[lede]" />
+  </p>
+
+  <ng-content />
+
+  @if (primaryKey(); as pk) {
+    <docs-api-table [key]="pk" />
+  }
+
+  @for (key of secondaryKeys(); track key) {
+    <div class="api-sub">
+      <docs-component-meta [key]="key" />
+
+      <docs-api-table [key]="key" />
+    </div>
+  }
+</section>

@@ -1,0 +1,41 @@
+<div class="auth">
+  <header class="masthead">
+    <div class="brand">
+      <ng-content select="[brand]"></ng-content>
+
+      @if (brand() || hasBrandName()) {
+        @if (logoLetter() || brand()) {
+          <span class="mark">
+            {{ logoLetter() || brand().charAt(0) }}
+          </span>
+        }
+
+        <span class="brand-name">
+          @if (hasBrandName()) {
+            <ng-content select="[dsBrandName]"></ng-content>
+          } @else {
+            {{ brand() }}
+          }
+        </span>
+      }
+    </div>
+
+    @if (tagline()) {
+      <p class="tagline">
+        {{ tagline() }}
+      </p>
+    }
+  </header>
+
+  <ds-card
+    class="card"
+    [elevation]="cardElevation()"
+    [padding]="cardPadding()"
+  >
+    <ng-content></ng-content>
+  </ds-card>
+
+  <footer class="support">
+    <ng-content select="[dsAuthSupport]"></ng-content>
+  </footer>
+</div>

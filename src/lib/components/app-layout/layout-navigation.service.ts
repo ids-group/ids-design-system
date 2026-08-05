@@ -9,6 +9,13 @@ import { distinctUntilChanged, filter, map, type Observable } from 'rxjs';
  * rail must agree on that — so they read one source instead of each deciding
  * for itself what "went somewhere else" means.
  *
+ * A PATH change is not always a page change. An app whose URL mirrors the
+ * reader's position — a docs shell rewriting `/area/section` from a scroll spy,
+ * a wizard that names its step — changes the path while staying on the screen,
+ * and resetting the scroll there fights the user: the reset moves the scroll,
+ * the spy rewrites the path again, and the page ping-pongs. Such a navigation
+ * must carry `state: { dsSamePage: true }`, which is skipped here.
+ *
  * Root-provided although it is internal: the PUBLIC `LayoutScrollService` now
  * depends on it, and that service must be provided by whoever uses it. A
  * consumer who provides it outside `ds-app-layout` cannot provide this one too
@@ -22,7 +29,16 @@ export class LayoutNavigationService {
 
   readonly pathChanged: Observable<string> = this.router.events.pipe(
     filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+    filter(() => !this.samePage()),
     map((event) => event.urlAfterRedirects.split(/[?#]/)[0]),
     distinctUntilChanged(),
   );
+
+  // `lastSuccessfulNavigation`, not `getCurrentNavigation()`: the latter is
+  // already cleared by the time NavigationEnd reaches a subscriber.
+  private samePage(): boolean {
+    const state = this.router.lastSuccessfulNavigation()?.extras.state;
+
+    return state?.['dsSamePage'] === true;
+  }
 }

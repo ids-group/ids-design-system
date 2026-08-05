@@ -7,7 +7,7 @@
   --_checkbox-hover-border: var(--ds-checkbox-hover-border-color, var(--accent));
   --_checkbox-selected-bg: var(--ds-checkbox-selected-bg-color, var(--accent));
   --_checkbox-selected-border: var(--ds-checkbox-selected-border-color, var(--accent));
-  --_checkbox-radius: var(--ds-checkbox-radius, var(--radius-sm));
+  --_checkbox-radius: var(--ds-checkbox-radius, var(--ds-radius-inner));
 
   // Local resolvers for size scaling; md references the global token so it stays
   // density-responsive. sm/lg are explicit per-instance overrides.
@@ -33,10 +33,16 @@
   gap: var(--space-2);
 
   .control-text {
-    font: var(--font-weight-regular) var(--_checkbox-label-fs) / var(--line-height-base) var(--font-sans);
-    color: var(--text-primary);
+    font: var(--font-weight-regular) var(--ds-checkbox-label-font-size, var(--_checkbox-label-fs)) / var(--line-height-base) var(--font-sans);
+    color: var(--ds-checkbox-label-color, var(--text-primary));
     cursor: pointer;
     user-select: none;
+
+    /* No [label] and nothing projected: collapse, or the empty caption
+       still takes the row gap and offsets the control. */
+    &:empty {
+      display: none;
+    }
 
     .req {
       color: var(--error);

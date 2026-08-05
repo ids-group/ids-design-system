@@ -13,10 +13,13 @@ import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import type { TextareaResize } from './textarea.types';
 import type { DsSize } from '../../core/size';
+import { FieldMessageComponent } from '../field-message/field-message.component';
 import {
-  FieldMessageComponent,
-  type FieldMessageState,
-} from '../field-message/field-message.component';
+  normalizeFieldErrors,
+  resolveFieldMessage,
+  type DsFieldError,
+  type DsFieldErrorsInput,
+} from '../field-errors';
 import { nextControlId } from '../field-ids';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
 import { resolveReserveMessage } from '../field-defaults';
@@ -48,6 +51,20 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   readonly label = input<string>('');
   /** Helper text shown below the field. */
   readonly hint = input<string>('');
+  /** Error text. Shown immediately — binding it says the consumer has already
+   *  decided this field is in error. Takes precedence over `errors`. */
+  readonly error = input<string>('');
+  /** Advisory text, shown when there is no error. */
+  readonly warning = input<string>('');
+  /** Validation errors, shown once the user has interacted. Bound automatically
+   *  by signal forms; reactive and template-driven forms are read through
+   *  `NgControl` and need nothing here. Accepts a string, one error, or an array. */
+  readonly errors = input<readonly DsFieldError[], DsFieldErrorsInput>([], {
+    transform: normalizeFieldErrors,
+  });
+  /** Whether the user has interacted with the field. Bound by signal forms; gates
+   *  `errors`, so a `required` error does not greet an untouched form. */
+  readonly touched = input(false, { transform: booleanAttribute });
   /** Reserve the message-row height even when empty, so the field doesn't shift
    *  the layout below it when a hint/error appears. Falls back to
    *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
@@ -90,11 +107,19 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
 
   protected readonly uid = nextControlId('ds-textarea');
   protected readonly hintId = computed(() =>
-    this.hint() ? `${this.uid}-hint` : null,
+    this.message().text ? `${this.uid}-hint` : null,
   );
-  protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() ? 'error' : 'default',
-  );
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.error,
+    errors: this.errors,
+    invalid: this.invalid,
+    touchedSelf: this.touchedSelf,
+    touched: this.touched,
+  });
+  protected readonly message = this.fieldMessage.message;
+  protected readonly invalidResolved = this.fieldMessage.invalid;
   protected readonly resolvedAriaLabel = computed(() =>
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,
   );
@@ -117,7 +142,7 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     if (this.size() === 'lg') {
       parts.push('lg');
     }
-    if (this.invalid()) {
+    if (this.invalidResolved()) {
       parts.push('error');
     }
     if (this.isDisabled()) {

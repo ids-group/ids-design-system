@@ -22,6 +22,7 @@ export class TimePickerSection {
   protected readonly stepped = signal<TimePickerValue>(null);
   protected readonly bounded = signal<TimePickerValue>(null);
   protected readonly range = signal<TimePickerValue>(['09:00', '17:00']);
+  protected readonly requiredRange = signal<TimePickerValue>([null, null]);
   protected readonly timeControl = new FormControl<string | null>(null);
 
   /** disabledTime demo — block the lunch hour (works on zero-padded 24h strings). */

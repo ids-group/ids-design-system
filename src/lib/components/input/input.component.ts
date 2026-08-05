@@ -14,10 +14,13 @@ import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
+import { FieldMessageComponent } from '../field-message/field-message.component';
 import {
-  FieldMessageComponent,
-  type FieldMessageState,
-} from '../field-message/field-message.component';
+  normalizeFieldErrors,
+  resolveFieldMessage,
+  type DsFieldError,
+  type DsFieldErrorsInput,
+} from '../field-errors';
 import { nextControlId } from '../field-ids';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
 import type { InputType } from './input.types';
@@ -46,8 +49,7 @@ import { resolveReserveMessage } from '../field-defaults';
   ],
 })
 export class InputComponent extends DsControlValueAccessor<string> {
-  private readonly control =
-    viewChild<ElementRef<HTMLInputElement>>('control');
+  private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
 
   /** Text value, two-way bound. */
   readonly value = model<string>('');
@@ -59,6 +61,20 @@ export class InputComponent extends DsControlValueAccessor<string> {
   readonly label = input<string>('');
   /** Helper text shown below the field. */
   readonly hint = input<string>('');
+  /** Error text. Shown immediately — binding it says the consumer has already
+   *  decided this field is in error. Takes precedence over `errors`. */
+  readonly error = input<string>('');
+  /** Advisory text, shown when there is no error. */
+  readonly warning = input<string>('');
+  /** Validation errors, shown once the user has interacted. Bound automatically
+   *  by signal forms; reactive and template-driven forms are read through
+   *  `NgControl` and need nothing here. Accepts a string, one error, or an array. */
+  readonly errors = input<readonly DsFieldError[], DsFieldErrorsInput>([], {
+    transform: normalizeFieldErrors,
+  });
+  /** Whether the user has interacted with the field. Bound by signal forms; gates
+   *  `errors`, so a `required` error does not greet an untouched form. */
+  readonly touched = input(false, { transform: booleanAttribute });
   /** Reserve the message-row height even when empty, so the field doesn't shift
    *  the layout below it when a hint/error appears. Falls back to
    *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
@@ -104,6 +120,11 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Accessible name when no visible `label` is provided (falls back to the
    *  placeholder so the control is never unnamed). */
   readonly ariaLabel = input<string | null>(null);
+  /** Extra element ids to describe the control with — a password-rule list, a
+   *  policy note. MERGED with the field's own message id rather than replacing
+   *  it, and it has to be an input because the attribute belongs on the inner
+   *  `<input>`: set on the host it lands on a wrapper no screen reader reads. */
+  readonly ariaDescribedBy = input<string | null>(null);
   /** Hard character cap — applies the native maxlength attribute and shows a
    *  live "{current}/{max}" counter below the field. */
   readonly maxLength = input<number | null>(null);
@@ -150,11 +171,25 @@ export class InputComponent extends DsControlValueAccessor<string> {
 
   protected readonly uid = nextControlId('ds-input');
   protected readonly hintId = computed(() =>
-    this.hint() ? `${this.uid}-hint` : null,
+    this.message().text ? `${this.uid}-hint` : null,
   );
-  protected readonly messageState = computed<FieldMessageState>(() =>
-    this.invalid() ? 'error' : this.success() ? 'success' : 'default',
-  );
+  protected readonly describedBy = computed(() => {
+    const ids = [this.hintId(), this.ariaDescribedBy()].filter(Boolean);
+
+    return ids.length ? ids.join(' ') : null;
+  });
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.error,
+    errors: this.errors,
+    invalid: this.invalid,
+    success: this.success,
+    touchedSelf: this.touchedSelf,
+    touched: this.touched,
+  });
+  protected readonly message = this.fieldMessage.message;
+  protected readonly invalidResolved = this.fieldMessage.invalid;
   /** Only name via aria-label when there's no visible `<label for>`. */
   protected readonly resolvedAriaLabel = computed(() =>
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,
@@ -195,7 +230,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
     if (this.size() === 'lg') {
       parts.push('lg');
     }
-    if (this.invalid()) {
+    if (this.invalidResolved()) {
       parts.push('error');
     } else if (this.success()) {
       parts.push('success');

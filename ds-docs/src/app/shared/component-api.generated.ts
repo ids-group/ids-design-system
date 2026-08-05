@@ -171,6 +171,92 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'Navigation'",
         "required": false,
         "description": "Accessible name for the rail while it is a modal overlay."
+      },
+      {
+        "name": "restoreScroll",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Remember the content scroll per path and restore it on the way BACK. Off by default: a layout that silently moved the scroll would surprise every existing consumer. Only a history traversal restores — following a link into a screen still lands at the top — plus a host that pushes its own \"back to list\" and says so with `state: { dsRestoreScroll: true }`, and the first navigation after a reload."
+      },
+      {
+        "name": "restoreScrollTimeout",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "2000",
+        "required": false,
+        "description": "How long to wait for the restored screen's content to grow tall enough before landing as close as it allows. Only meaningful with `restoreScroll`."
+      }
+    ],
+    "outputs": []
+  },
+  "auth-shell": {
+    "key": "auth-shell",
+    "selector": "ds-auth-shell",
+    "isElement": true,
+    "className": "AuthShellComponent",
+    "status": "stable",
+    "importName": "AuthShellComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "brand",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Wordmark beside the letter-mark tile. For a logo image/SVG, project it into the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`."
+      },
+      {
+        "name": "logoLetter",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`."
+      },
+      {
+        "name": "tagline",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "One line under the wordmark naming the product or audience."
+      },
+      {
+        "name": "cardElevation",
+        "kind": "input",
+        "type": "CardElevation",
+        "union": [
+          "flat",
+          "raised",
+          "hover",
+          "interactive"
+        ],
+        "default": "'raised'",
+        "required": false,
+        "description": "Card treatment. `flat` suits a screen that already sits on a tinted canvas."
+      },
+      {
+        "name": "cardPadding",
+        "kind": "input",
+        "type": "CardPadding",
+        "union": [
+          "none",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "'lg'",
+        "required": false,
+        "description": "Card padding, passed through to `ds-card`. `md` tightens a short form."
       }
     ],
     "outputs": []
@@ -283,6 +369,42 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the field."
       },
       {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
         "name": "reserveMessage",
         "kind": "input",
         "type": "boolean | null",
@@ -307,7 +429,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible name for the combobox input."
+        "description": "Accessible name for the input."
       }
     ],
     "outputs": [
@@ -866,6 +988,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "ARIA `aria-expanded`, forwarded to the inner <button> — bind to the overlay's open state on a trigger button."
+      },
+      {
+        "name": "ariaControls",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "ARIA `aria-controls`, forwarded to the inner <button> — the id of the panel this button opens, e.g. `ds-app-layout`'s `railId`."
       }
     ],
     "outputs": [
@@ -1149,6 +1280,42 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the checkbox."
       },
       {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
         "name": "reserveMessage",
         "kind": "input",
         "type": "boolean | null",
@@ -1256,6 +1423,42 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the trigger."
       },
       {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
         "name": "reserveMessage",
         "kind": "input",
         "type": "boolean | null",
@@ -1346,6 +1549,42 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors` and over the picker's own \"enter a valid date\" message."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
       },
       {
         "name": "reserveMessage",
@@ -1826,6 +2065,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": [
           "default",
           "error",
+          "warning",
           "success"
         ],
         "default": "'default'",
@@ -1858,6 +2098,37 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Reserve one line of height even when there's no `text`, so a field that gains/loses a message doesn't shift the layout below it."
+      }
+    ],
+    "outputs": []
+  },
+  "filter-bar": {
+    "key": "filter-bar",
+    "selector": "ds-filter-bar",
+    "isElement": true,
+    "className": "FilterBarComponent",
+    "status": "stable",
+    "importName": "FilterBarComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "moreLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'more'",
+        "required": false,
+        "description": "Trailing word of the trigger, after the count: \"+2 filters\"."
+      },
+      {
+        "name": "panelLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'More filters'",
+        "required": false,
+        "description": "Accessible name of the overflow panel."
       }
     ],
     "outputs": []
@@ -1964,6 +2235,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Toggle state — renders the pressed/active look and sets aria-pressed."
+      },
+      {
+        "name": "ariaExpanded",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "ARIA `aria-expanded`, forwarded to the inner `<button>` — bind to the open state when this button opens a panel. On the host element it would land on a non-focusable wrapper, which no screen reader reads."
+      },
+      {
+        "name": "ariaControls",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "ARIA `aria-controls`, forwarded to the inner `<button>` — the id of the panel this button opens, e.g. `ds-app-layout`'s `railId`."
       }
     ],
     "outputs": [
@@ -2044,6 +2333,42 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
       },
       {
         "name": "reserveMessage",
@@ -2197,6 +2522,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Accessible name when no visible `label` is provided (falls back to the placeholder so the control is never unnamed)."
+      },
+      {
+        "name": "ariaDescribedBy",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Extra element ids to describe the control with — a password-rule list, a policy note. MERGED with the field's own message id rather than replacing it, and it has to be an input because the attribute belongs on the inner `<input>`: set on the host it lands on a wrapper no screen reader reads."
       },
       {
         "name": "maxLength",
@@ -2927,6 +3261,42 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the field."
       },
       {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
         "name": "reserveMessage",
         "kind": "input",
         "type": "boolean | null",
@@ -3111,6 +3481,42 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the cells."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
       },
       {
         "name": "reserveMessage",
@@ -3299,6 +3705,64 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "Shows the rows-per-page dropdown. Turn it off for a screen with a fixed page size — otherwise the control offers a choice the host won't honour."
+      }
+    ],
+    "outputs": []
+  },
+  "password-rules": {
+    "key": "password-rules",
+    "selector": "ds-password-rules",
+    "isElement": true,
+    "className": "PasswordRulesComponent",
+    "status": "stable",
+    "importName": "PasswordRulesComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "value",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "The password being typed."
+      },
+      {
+        "name": "rules",
+        "kind": "input",
+        "type": "readonly DsPasswordRule[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "The rule set, in the order it should read."
+      },
+      {
+        "name": "showUnmet",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether an unmet rule may read as FAILED. Bind it to \"the user has tried to submit\": before that an unmet rule is merely pending, because marking a half-typed password with errors scolds someone who is still typing."
+      },
+      {
+        "name": "columns",
+        "kind": "input",
+        "type": "1 | 2",
+        "union": null,
+        "default": "1",
+        "required": false,
+        "description": "Lay the rows out in two columns — for a checklist beside a wide form."
+      },
+      {
+        "name": "listId",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "nextControlId('ds-password-rules')",
+        "required": false,
+        "description": "Id put on the rule list, for the field's `aria-describedby`. Defaults to a generated one; set it explicitly and both sides can name the same string, which avoids threading a template ref between two siblings."
       }
     ],
     "outputs": []
@@ -3497,6 +3961,42 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the control."
       },
       {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
         "name": "reserveMessage",
         "kind": "input",
         "type": "boolean | null",
@@ -3593,6 +4093,42 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the group."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
       },
       {
         "name": "reserveMessage",
@@ -3848,6 +4384,42 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the trigger."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
       },
       {
         "name": "reserveMessage",
@@ -4335,6 +4907,42 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the slider."
       },
       {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
         "name": "reserveMessage",
         "kind": "input",
         "type": "boolean | null",
@@ -4757,6 +5365,42 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Helper text shown below the switch."
       },
       {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
         "name": "reserveMessage",
         "kind": "input",
         "type": "boolean | null",
@@ -5054,6 +5698,51 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Two-way column order as a list of keys. `null` (default) keeps declaration order; the column panel owns it once the user reorders. Keys absent from the list fall back to declaration order after the listed ones."
       },
       {
+        "name": "persistLayout",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Round-trip `columnOrder`, `columnWidths` and `hiddenKeys` through `localStorage`, so a reader's column layout survives a reload. Needs `storageKey` — without one there is nothing to key a screen by, and two tables would overwrite each other. Off by default."
+      },
+      {
+        "name": "storageKey",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Screen id the persisted layout is stored under. Pick something stable per table, not per route instance."
+      },
+      {
+        "name": "exportButton",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Render an export button above the table. Off by default; `exportCsv()` stays available for a consumer's own button."
+      },
+      {
+        "name": "exportFilename",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'table.csv'",
+        "required": false,
+        "description": "Filename the export button downloads as."
+      },
+      {
+        "name": "exportFetcher",
+        "kind": "input",
+        "type": "(() => Promise<readonly T[]>) | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Rows to export instead of what the table holds. A server-paged table only HAS the current page, so exporting without this silently exports one page — return the whole set here and the button awaits it."
+      },
+      {
         "name": "stickyScrollbar",
         "kind": "input",
         "type": "boolean",
@@ -5108,13 +5797,17 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Scroll the table into view on a page change (opt-in) — keeps a bottom pager from leaving the viewport on the previous page's last rows."
       },
       {
-        "name": "clientSort",
+        "name": "sortMode",
         "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
+        "type": "TableSortMode | null",
+        "union": [
+          "client",
+          "server",
+          "none"
+        ],
+        "default": "null",
         "required": false,
-        "description": "When true, the table sorts `data()` itself; otherwise it only emits `sortChange` and leaves ordering to the consumer (default)."
+        "description": "Who sorts — see `TableSortMode`. Unset resolves to `'client'`, so a column marked `sortable` always does something; declare `'server'` when the host reorders, or `'none'` to drop the affordance entirely."
       },
       {
         "name": "stickyFirstColumn",
@@ -5124,6 +5817,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Pin the first data column (and the select column) on horizontal scroll."
+      },
+      {
+        "name": "virtualScroll",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Render only the rows in view, padding the rest with two spacer rows. Opt-in, and it needs `maxHeight` — without a bounded scroller there is no viewport to window against, so nothing is virtualized (dev-warned). Every row must be the same height, which is `virtualRowSize`: the arithmetic that decides what is in view has no other way to know where a row starts. So virtual mode forces `table-layout: fixed` and single-line cells, and the expansion panel is suppressed — a row that can grow breaks the maths."
+      },
+      {
+        "name": "virtualRowSize",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "44",
+        "required": false,
+        "description": "Row height in px in virtual mode. Must match what the rows actually measure, so it drives the CSS height rather than merely describing it."
       },
       {
         "name": "rowActions",
@@ -5173,7 +5884,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "rowExpandTemplate",
         "kind": "input",
-        "type": "TemplateRef<{\r\n    $implicit: unknown;\r\n    row: unknown;\r\n  }> | null",
+        "type": "TemplateRef<{\n    $implicit: unknown;\n    row: unknown;\n  }> | null",
         "union": null,
         "default": "null",
         "required": false,
@@ -5197,7 +5908,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Fires whenever sort key/direction changes, regardless of `clientSort`."
+        "description": "Fires whenever sort key/direction changes, in every `sortMode` but `'none'`."
       },
       {
         "name": "rowActionSelected",
@@ -5489,6 +6200,42 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
       },
       {
         "name": "reserveMessage",
@@ -5855,6 +6602,42 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Helper text shown below the picker."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
       },
       {
         "name": "reserveMessage",

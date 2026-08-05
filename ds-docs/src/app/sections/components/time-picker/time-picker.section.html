@@ -30,8 +30,8 @@
     </code> renders the same label row a
     <code class="t-mono-inline">
       ds-date-picker
-    </code> uses, so date + time in one form row line up without a hand-rolled
-    label above the trigger.
+    </code> uses, so date + time in
+    one form row line up without a hand-rolled label above the trigger.
   </p>
 
   <div class="row">
@@ -164,6 +164,13 @@
     <ds-time-picker
       mode="range"
       [(value)]="range"
+    />
+
+    <ds-time-picker
+      mode="range"
+      label="Cover window"
+      [required]="true"
+      [(value)]="requiredRange"
     />
 
     <span class="value-tag t-mono-inline">

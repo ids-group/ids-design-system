@@ -63,7 +63,7 @@
   <p class="block-desc t-s">
     Mark columns <code class="t-mono-inline"> sortable: true </code> and add
     <code class="t-mono-inline">
-      [clientSort]="true"
+      sortMode="client"
     </code> to let the table
     order its own rows. Click a header to cycle asc → desc → none; the active
     column shows a coloured chevron. Pass
@@ -76,9 +76,9 @@
 
   <ds-table
     caption="Records"
+    sortMode="client"
     [data]="sortableRows"
     [columns]="sortableColumns"
-    [clientSort]="true"
     [stickyHeader]="false"
   >
     <ng-template
@@ -612,9 +612,18 @@
     </code> pins the first
     column on horizontal scroll;
     <code class="t-mono-inline">
-      [clientSort]
-    </code> lets the table sort its
-    own rows. 12 rows across three pages;
+      sortMode
+    </code> says who sorts —
+    <code class="t-mono-inline">
+      "client"
+    </code> (the default) has the table
+    reorder its own rows, <code class="t-mono-inline"> "server" </code> emits
+    <code class="t-mono-inline">
+      (sortChange)
+    </code> and leaves ordering to
+    you, and <code class="t-mono-inline"> "none" </code> drops the affordance so
+    a <code class="t-mono-inline"> sortable </code> column cannot draw a header
+    that does nothing. 12 rows across three pages;
     <code class="t-mono-inline">
       [animateHeight]
     </code> tweens the body height
@@ -632,10 +641,10 @@
 
   <ds-table
     caption="Projects"
+    sortMode="client"
     [data]="projectRows"
     [columns]="projectColumns"
     [selectable]="true"
-    [clientSort]="true"
     [stickyFirstColumn]="true"
     [pageSize]="5"
     [animateHeight]="true"
@@ -961,6 +970,45 @@
   />
 
   <h3 class="block-title t-h4">
+    Persisted layout &amp; export
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [persistLayout]="true"
+    </code> with a
+    <code class="t-mono-inline">
+      storageKey
+    </code> round-trips the column order,
+    widths and hidden set through
+    <code class="t-mono-inline">
+      localStorage
+    </code>, so reorder a
+    column or hide one, reload the page, and it stays. Without a key nothing is
+    stored — two tables would otherwise overwrite each other.
+    <code class="t-mono-inline">
+      [exportButton]="true"
+    </code> renders the CSV button;
+    a server-paged table passes
+    <code class="t-mono-inline">
+      [exportFetcher]
+    </code> so the export covers
+    the whole set instead of the page it holds.
+  </p>
+
+  <ds-table
+    caption="Projects"
+    storageKey="docs-demo-projects"
+    sortMode="client"
+    [data]="projectRows"
+    [columns]="projectColumns"
+    [persistLayout]="true"
+    [exportButton]="true"
+    [reorderableColumns]="true"
+    [resizableColumns]="true"
+  />
+
+  <h3 class="block-title t-h4">
     Column filters
   </h3>
 
@@ -1095,4 +1143,51 @@
       </ds-badge>
     </ng-template>
   </ds-table>
+
+  <h3 class="block-title t-h4">
+    Virtual scroll
+  </h3>
+
+  <p class="block-desc t-s">
+    10 000 rows. With
+    <code class="t-mono-inline">
+      [virtualScroll]="true"
+    </code> only the rows in
+    view are in the DOM, padded above and below by two spacer rows that stand in
+    for the rest — so the scrollbar is the full length of the data and the row
+    count in the DOM stays flat. It needs
+    <code class="t-mono-inline">
+      maxHeight
+    </code>, because a bounded scroller is
+    the viewport it windows against.
+  </p>
+
+  <p class="block-desc t-s">
+    Every row must be exactly
+    <code class="t-mono-inline">
+      virtualRowSize
+    </code> tall — that number
+    is the only thing telling the maths where a row starts, so one row that grows
+    puts every offset below it out by the difference. Virtual mode therefore fixes
+    the row height from that same input, forces
+    <code class="t-mono-inline">
+      table-layout: fixed
+    </code> (auto layout
+    re-measures against whichever rows happen to be rendered, and the columns
+    twitch as you scroll) and keeps cells to one line. Row EXPANSION is suppressed
+    for the same reason, with a dev warning; sorting, selection, sticky header and
+    sticky first column all keep working.
+  </p>
+
+  <ds-table
+    caption="Ten thousand records"
+    maxHeight="420px"
+    [data]="bulkRows"
+    [columns]="bulkColumns"
+    [virtualScroll]="true"
+    [virtualRowSize]="44"
+    [selectable]="true"
+    [zebra]="true"
+    [stickyFirstColumn]="true"
+  />
 </docs-section>

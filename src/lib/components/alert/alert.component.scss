@@ -13,10 +13,10 @@
   --_alert-close-icon-color-hover: var(--ds-alert-close-icon-color-hover, var(--icon-strong));
   --_alert-pad-y:              var(--ds-alert-pad-y,              var(--space-2));
   --_alert-pad-x:              var(--ds-alert-pad-x,              var(--space-3));
-  --_alert-radius:             var(--ds-alert-radius,             var(--radius-md));
+  --_alert-radius:             var(--ds-alert-radius,             var(--ds-radius-control));
   --_alert-enter-keyframes: var(--ds-alert-enter-keyframes, ds-slide-in);
-  --_alert-enter-duration: var(--ds-alert-enter-duration, var(--duration-base));
-  --_alert-enter-easing: var(--ds-alert-enter-easing, var(--ease-decelerate));
+  --_alert-enter-duration: var(--ds-alert-enter-duration, var(--ds-motion-enter-surface-duration));
+  --_alert-enter-easing: var(--ds-alert-enter-easing, var(--ds-motion-enter-surface-easing));
   --_alert-enter-offset: var(--ds-alert-enter-offset, 2px);
   --_ds-enter-y: calc(-1 * var(--_alert-enter-offset));
   --_ds-enter-scale: var(--ds-alert-enter-scale, 0.96);

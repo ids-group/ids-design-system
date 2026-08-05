@@ -31,10 +31,16 @@
   gap: var(--space-2);
 
   .control-text {
-    font: var(--font-weight-regular) var(--_radio-label-fs) / var(--line-height-base) var(--font-sans);
+    font: var(--font-weight-regular) var(--ds-radio-label-font-size, var(--_radio-label-fs)) / var(--line-height-base) var(--font-sans);
     color: var(--_radio-label-color);
     cursor: pointer;
     user-select: none;
+
+    /* No [label] and nothing projected: collapse, or the empty caption
+       still takes the row gap and offsets the control. */
+    &:empty {
+      display: none;
+    }
 
     .req {
       color: var(--error);

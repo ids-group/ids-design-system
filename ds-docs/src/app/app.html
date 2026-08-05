@@ -1,5 +1,20 @@
-<div class="layout">
-  <header class="mob-bar">
+<ds-app-layout
+  #shell
+  railLabel="Navigation"
+  [restoreScroll]="true"
+  [(railOpen)]="navOpen"
+>
+  <div
+    sidenav
+    class="side"
+  >
+    <app-sidebar (navigated)="navOpen.set(false)"></app-sidebar>
+  </div>
+
+  <header
+    topbar
+    class="mob-bar"
+  >
     <ds-topbar>
       <span
         title
@@ -9,7 +24,9 @@
           variant="standard"
           icon="menu"
           ariaLabel="Open navigation"
-          (pressed)="navOpen.set(true)"
+          [ariaExpanded]="shell.railOverlay() ? shell.railOpen() : null"
+          [ariaControls]="shell.railOverlay() ? shell.railId : null"
+          (pressed)="navOpen.set(!navOpen())"
         />
 
         <span class="mob-name">
@@ -30,31 +47,7 @@
     </ds-topbar>
   </header>
 
-  <aside class="side">
-    <app-sidebar></app-sidebar>
-  </aside>
-
-  <main class="main">
-    <router-outlet></router-outlet>
-  </main>
-</div>
-
-<ds-drawer
-  title="Navigation"
-  placement="left"
-  size="sm"
-  [(open)]="navOpen"
->
-  <div
-    drawer-body
-    class="drawer-nav"
-  >
-    <app-sidebar
-      mode="drawer"
-      (navigated)="navOpen.set(false)"
-    >
-    </app-sidebar>
-  </div>
-</ds-drawer>
+  <router-outlet></router-outlet>
+</ds-app-layout>
 
 <tweaks-panel #tweaks></tweaks-panel>

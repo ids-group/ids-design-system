@@ -7,8 +7,8 @@
      are theme-level (:root), not per-instance. */
   --_tooltip-bg-color:   var(--ds-tooltip-bg-color,   var(--surface-inverted));
   --_tooltip-text-color: var(--ds-tooltip-text-color, var(--text-inverted));
-  --_tooltip-radius:     var(--ds-tooltip-radius,     var(--radius-md));
-  --_tooltip-shadow:     var(--ds-tooltip-shadow,     var(--shadow-2));
+  --_tooltip-radius:     var(--ds-tooltip-radius,     var(--ds-radius-control));
+  --_tooltip-shadow:     var(--ds-tooltip-shadow,     var(--ds-elevation-overlay));
   --_tooltip-max-width:  var(--ds-tooltip-max-width,  var(--tooltip-maxw));
   --_tooltip-padding:    var(--ds-tooltip-padding,    var(--space-1-5) var(--space-2-5));
 

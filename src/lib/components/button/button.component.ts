@@ -48,7 +48,15 @@ const DISCOURAGED_COMBOS = new Map<string, string>([
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
-  host: { '[class.full-width]': 'fullWidth()' },
+  host: {
+    '[class.full-width]': 'fullWidth()',
+    // Reflected so a consumer can target one axis from outside without knowing
+    // the inner class names: `ds-button[data-variant="outline"] { … }`. The
+    // c-*/v-* classes sit on the inner <button>, which is not reachable from a
+    // host-scoped rule. Styling only — nothing reads these back.
+    '[attr.data-variant]': 'variant()',
+    '[attr.data-color]': 'color()',
+  },
 })
 export class ButtonComponent {
   /** Brand/status hue family. */
@@ -86,6 +94,9 @@ export class ButtonComponent {
   /** ARIA `aria-expanded`, forwarded to the inner <button> — bind to the
    *  overlay's open state on a trigger button. */
   readonly ariaExpanded = input<boolean | null>(null);
+  /** ARIA `aria-controls`, forwarded to the inner <button> — the id of the panel
+   *  this button opens, e.g. `ds-app-layout`'s `railId`. */
+  readonly ariaControls = input<string | null>(null);
   /** Fires on click, unless `disabled` or `loading`. */
   readonly pressed = output<MouseEvent>();
 

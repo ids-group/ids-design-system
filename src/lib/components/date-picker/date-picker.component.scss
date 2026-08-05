@@ -1,5 +1,7 @@
 /* Ported from claude-design-ds/components.css. */
 @use '../../styles/breakpoints' as bp;
+@use '../../styles/field-label' as field-label;
+@use '../../styles/field-box' as field-box;
 
 :host {
   --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
@@ -8,7 +10,7 @@
   --_date-picker-trigger-label-color: var(--ds-date-picker-trigger-label-color, var(--text-primary));
   --_date-picker-required-color: var(--ds-date-picker-required-color, var(--error));
   --_date-picker-placeholder-color: var(--ds-date-picker-placeholder-color, var(--text-tertiary));
-  --_date-picker-trigger-radius: var(--ds-date-picker-trigger-radius, var(--radius-md));
+  --_date-picker-trigger-radius: var(--ds-date-picker-trigger-radius, var(--ds-radius-control));
 
   /* Mono by default: the ghost mask paints the placeholder glyphs and the real
      value sits behind it, so fixed-width digits are what keep the two in step. */
@@ -63,11 +65,7 @@
   width: 100%;
 
   .label {
-    font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
+    @include field-label.field-label;
 
     .req {
       color: var(--_date-picker-required-color);
@@ -90,7 +88,9 @@
   border: var(--border-width-default) solid var(--_date-picker-trigger-border-color);
   border-radius: var(--_date-picker-trigger-radius);
   padding: 0 var(--space-3);
-  height: var(--hit-cozy);
+
+  @include field-box.field-box-height(md);
+
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
   color: var(--_date-picker-trigger-label-color);
   cursor: pointer;
@@ -107,13 +107,15 @@
   }
 
   &.sm {
-    height: var(--hit-min);
+    @include field-box.field-box-height(sm);
+
     padding: 0 var(--space-2);
     font-size: var(--font-size-xs);
   }
 
   &.lg {
-    height: var(--field-h-lg);
+    @include field-box.field-box-height(lg);
+
     padding: 0 var(--space-4);
     font-size: var(--font-size-m);
   }
@@ -222,7 +224,7 @@
   /* Public --ds-date-picker-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_date-picker-bg-color: var(--ds-date-picker-bg-color, var(--surface-overlay));
   --_date-picker-border: var(--ds-date-picker-border, var(--border-default));
-  --_date-picker-shadow: var(--ds-date-picker-shadow, var(--shadow-popover));
+  --_date-picker-shadow: var(--ds-date-picker-shadow, var(--ds-elevation-overlay));
   --_date-picker-day-hover-bg-color: var(--ds-date-picker-day-hover-bg-color, var(--surface-secondary));
   --_date-picker-day-today-label-color: var(--ds-date-picker-day-today-label-color, var(--accent));
   --_date-picker-day-selected-bg-color: var(--ds-date-picker-day-selected-bg-color, var(--accent));
@@ -237,7 +239,7 @@
   --_date-picker-header-label-color: var(--ds-date-picker-header-label-color, var(--text-primary));
   --_date-picker-nav-icon-color: var(--ds-date-picker-nav-icon-color, var(--icon-default));
   --_date-picker-width: var(--ds-date-picker-width, var(--date-picker-w));
-  --_date-picker-panel-radius: var(--ds-date-picker-panel-radius, var(--radius-lg));
+  --_date-picker-panel-radius: var(--ds-date-picker-panel-radius, var(--ds-radius-panel));
 
   background-color: var(--_date-picker-bg-color);
   border: var(--border-width-default) solid var(--_date-picker-border);

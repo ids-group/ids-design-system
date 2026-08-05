@@ -1,4 +1,5 @@
 import {
+  isDevMode,
   Component,
   ElementRef,
   Injector,
@@ -24,6 +25,7 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import { ButtonComponent } from '../button/button.component';
 import { IconComponent } from '../../icons/icon.component';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { PaginationComponent } from '../pagination/pagination.component';
@@ -39,9 +41,19 @@ import type {
   TableColumn,
   TableRowAction,
   TableRowActionEvent,
+  TableSortMode,
 } from './table.types';
 
 const NUMERIC = /^-?\d+(\.\d+)?$/;
+
+// Assumed viewport until the scroller has been measured. Tall enough to fill a
+// laptop screen, so the first paint is not visibly short, and nowhere near the
+// row count a virtualized table is reached for.
+const VIRTUAL_FALLBACK_HEIGHT = 720;
+
+// Rows kept rendered past each edge of the viewport, so a flick does not expose
+// blank space before the next range lands.
+const VIRTUAL_OVERSCAN = 6;
 
 /** Rendered values that read as "no data", matched case-insensitively. The list
  *  is wider than the empty string because consumers render placeholders; these
@@ -90,6 +102,7 @@ function compareSortValues(
   selector: 'ds-table',
   standalone: true,
   imports: [
+    ButtonComponent,
     IconComponent,
     NgTemplateOutlet,
     SkeletonComponent,
@@ -200,6 +213,27 @@ export class TableComponent<T extends object> {
    *  the list fall back to declaration order after the listed ones. */
   readonly columnOrder = model<string[] | null>(null);
 
+  /** Round-trip `columnOrder`, `columnWidths` and `hiddenKeys` through
+   *  `localStorage`, so a reader's column layout survives a reload. Needs
+   *  `storageKey` — without one there is nothing to key a screen by, and two
+   *  tables would overwrite each other. Off by default. */
+  readonly persistLayout = input(false, { transform: booleanAttribute });
+  /** Screen id the persisted layout is stored under. Pick something stable per
+   *  table, not per route instance. */
+  readonly storageKey = input<string>('');
+
+  /** Render an export button above the table. Off by default; `exportCsv()`
+   *  stays available for a consumer's own button. */
+  readonly exportButton = input(false, { transform: booleanAttribute });
+  /** Filename the export button downloads as. */
+  readonly exportFilename = input<string>('table.csv');
+  /** Rows to export instead of what the table holds. A server-paged table only
+   *  HAS the current page, so exporting without this silently exports one page —
+   *  return the whole set here and the button awaits it. */
+  readonly exportFetcher = input<(() => Promise<readonly T[]>) | null>(null);
+  /** True while `exportFetcher` is in flight, so the button can disable itself. */
+  protected readonly exporting = signal(false);
+
   /** Keeps the horizontal scrollbar reachable on tall tables: the scroll
    *  container's native bar is hidden and a proxy stuck to the bottom of the
    *  nearest scroll ancestor mirrors it both ways. Off by default. */
@@ -221,15 +255,34 @@ export class TableComponent<T extends object> {
   readonly scrollToTopOnPageChange = input(false, {
     transform: booleanAttribute,
   });
-  /** When true, the table sorts `data()` itself; otherwise it only emits
-   *  `sortChange` and leaves ordering to the consumer (default). */
-  readonly clientSort = input(false, { transform: booleanAttribute });
+  /** Who sorts — see `TableSortMode`. Unset resolves to `'client'`, so a column
+   *  marked `sortable` always does something; declare `'server'` when the host
+   *  reorders, or `'none'` to drop the affordance entirely. */
+  readonly sortMode = input<TableSortMode | null>(null);
+  protected readonly sortModeResolved = computed<TableSortMode>(
+    () => this.sortMode() ?? 'client',
+  );
   /** Pin the first data column (and the select column) on horizontal scroll. */
   readonly stickyFirstColumn = input(false, { transform: booleanAttribute });
 
+  /**
+   * Render only the rows in view, padding the rest with two spacer rows. Opt-in,
+   * and it needs `maxHeight` — without a bounded scroller there is no viewport to
+   * window against, so nothing is virtualized (dev-warned).
+   *
+   * Every row must be the same height, which is `virtualRowSize`: the arithmetic
+   * that decides what is in view has no other way to know where a row starts. So
+   * virtual mode forces `table-layout: fixed` and single-line cells, and the
+   * expansion panel is suppressed — a row that can grow breaks the maths.
+   */
+  readonly virtualScroll = input(false, { transform: booleanAttribute });
+  /** Row height in px in virtual mode. Must match what the rows actually
+   *  measure, so it drives the CSS height rather than merely describing it. */
+  readonly virtualRowSize = input(44);
+
   /** Fires with the row on click (or Enter/Space when `rowInteractive`). */
   readonly rowClicked = output<T>();
-  /** Fires whenever sort key/direction changes, regardless of `clientSort`. */
+  /** Fires whenever sort key/direction changes, in every `sortMode` but `'none'`. */
   readonly sortChange = output<SortChangeEvent>();
 
   /** Row-action menu items rendered as a trailing kebab (⋮) column.
@@ -305,6 +358,9 @@ export class TableComponent<T extends object> {
     }
     if (this.zebra()) {
       parts.push('zebra');
+    }
+    if (this.virtualizing()) {
+      parts.push('virtual');
     }
 
     return parts.join(' ');
@@ -656,10 +712,10 @@ export class TableComponent<T extends object> {
     });
   });
 
-  /** Client-side sort over the filtered data set — only when `clientSort()`. */
+  /** Client-side sort over the filtered data set — only in `'client'` mode. */
   protected readonly sortedData = computed<readonly T[]>(() => {
     const rows = this.filteredData();
-    if (!this.clientSort()) {
+    if (this.sortModeResolved() !== 'client') {
       return rows;
     }
     const key = this.sortKey();
@@ -714,6 +770,57 @@ export class TableComponent<T extends object> {
   protected readonly displayData = computed<readonly T[]>(() =>
     this.pageSize() !== null ? this.pagedData() : this.sortedData(),
   );
+
+  /** Virtual mode needs a bounded scroller to window against. */
+  protected readonly virtualizing = computed(
+    () => this.virtualScroll() && !!this.maxHeight(),
+  );
+
+  /** Drives the CSS row height from the same number the arithmetic uses, so the
+   *  two cannot drift — which would make every offset progressively wrong. */
+  protected readonly virtualRowHeight = computed(
+    () => `${this.virtualRowSize()}px`,
+  );
+
+  /** `null` when not virtualizing — the row loop then walks `displayData()` whole. */
+  protected readonly virtualWindow = computed(() => {
+    if (!this.virtualizing()) {
+      return null;
+    }
+    const rowSize = Math.max(1, this.virtualRowSize());
+    const count = this.displayData().length;
+    const height = this.viewportHeight() || VIRTUAL_FALLBACK_HEIGHT;
+    const firstVisible = Math.floor(this.scrollTop() / rowSize);
+    const start = Math.max(0, firstVisible - VIRTUAL_OVERSCAN);
+    const end = Math.min(
+      count,
+      firstVisible + Math.ceil(height / rowSize) + VIRTUAL_OVERSCAN,
+    );
+
+    return {
+      start,
+      end,
+      padTop: start * rowSize,
+      padBottom: Math.max(0, count - end) * rowSize,
+    };
+  });
+
+  /** The rows the template actually renders. */
+  protected readonly windowData = computed<readonly T[]>(() => {
+    const window = this.virtualWindow();
+    const data = this.displayData();
+
+    return window ? data.slice(window.start, window.end) : data;
+  });
+
+  /** Zebra striping cannot come from `:nth-child` while windowing — the parity
+   *  of a rendered row depends on its ABSOLUTE index, and the spacer rows are
+   *  children too. Matches `:nth-child(odd)`, which is 1-based. */
+  protected isStriped(rowIndex: number): boolean {
+    const window = this.virtualWindow();
+
+    return !!window && (window.start + rowIndex) % 2 === 0;
+  }
 
   protected readonly allSelected = computed(() => {
     const data = this.displayData();
@@ -803,8 +910,90 @@ export class TableComponent<T extends object> {
     viewChild<ElementRef<HTMLElement>>('hscrollProxy');
   protected readonly hscrollContentWidth = signal(0);
   protected readonly hscrollNeeded = signal(false);
+  private readonly scrollTop = signal(0);
+  private readonly viewportHeight = signal(0);
 
   constructor() {
+    // One effect for both halves, because the restore CANNOT run in the
+    // constructor: input signals are not set yet there, so storageKey() is still
+    // '' and the restore silently no-ops. The first run with a usable key
+    // restores; every later run saves.
+    effect(() => {
+      const key = this.layoutKey();
+      const order = this.columnOrder();
+      const widths = this.columnWidths();
+      const hidden = this.hiddenKeys();
+      if (!key) {
+        return;
+      }
+      if (!this.layoutRestored) {
+        this.layoutRestored = true;
+        this.restoreLayout(key);
+
+        return;
+      }
+      this.saveLayout(key, order, widths, hidden);
+    });
+
+    if (isDevMode()) {
+      effect(() => {
+        // Only when the mode was never DECLARED: a table that asks for 'client'
+        // with server paging has made that choice knowingly.
+        if (
+          this.sortMode() === null &&
+          this.total() !== null &&
+          this.columns().some((col) => col.sortable)
+        ) {
+          console.warn(
+            '[ds-table] sortable columns default to sortMode="client", but `total` is set, so this table is server-paged and only the CURRENT PAGE would sort — the rows would look sorted and not be. Declare sortMode="server" and reorder in the (sortChange) handler, or sortMode="client" if page-local sorting is really what you want.',
+          );
+        }
+      });
+    }
+
+    // Virtual mode's two measurements. Only wired while virtualizing, so a
+    // normal table pays for neither the scroll listener nor the observer.
+    effect((onCleanup) => {
+      if (!this.virtualizing()) {
+        return;
+      }
+      const wrap = this.scrollWrap().nativeElement;
+      const onScroll = (): void => this.scrollTop.set(wrap.scrollTop);
+      const measure = (): void => this.viewportHeight.set(wrap.clientHeight);
+      wrap.addEventListener('scroll', onScroll, { passive: true });
+      const resizeObserver = new ResizeObserver(measure);
+      resizeObserver.observe(wrap);
+      measure();
+      onScroll();
+      onCleanup(() => {
+        wrap.removeEventListener('scroll', onScroll);
+        resizeObserver.disconnect();
+      });
+    });
+
+    if (isDevMode()) {
+      effect(() => {
+        if (!this.virtualScroll()) {
+          return;
+        }
+        if (!this.maxHeight()) {
+          console.warn(
+            '[ds-table] virtualScroll needs maxHeight — without a bounded scroller there is no viewport to window against, so every row renders and nothing is virtualized. Set maxHeight (e.g. "480px").',
+          );
+        }
+        if (this.expandableRows()) {
+          console.warn(
+            '[ds-table] virtualScroll and expandableRows do not combine: an expanded row is taller than virtualRowSize, and every offset after it would be wrong. The expander renders but the panel is suppressed — move the detail into a modal or a drawer, or drop virtualScroll.',
+          );
+        }
+        if (this.pageSize() !== null) {
+          console.warn(
+            '[ds-table] virtualScroll with pageSize paginates a window of a page. Virtual scrolling is what pagination was for on a long list — pick one.',
+          );
+        }
+      });
+    }
+
     // Wire the proxy whenever it exists (stickyScrollbar on). Assigning an
     // equal scrollLeft fires no scroll event, so the two mirrors can't loop.
     effect((onCleanup) => {
@@ -1058,10 +1247,15 @@ export class TableComponent<T extends object> {
     return String((row as { id?: unknown }).id ?? '');
   }
 
+  /** Whether this column's header is an actual sort control right now. */
+  protected sortableCol(col: TableColumn<T>): boolean {
+    return !!col.sortable && this.sortModeResolved() !== 'none';
+  }
+
   protected ariaSort(
     col: TableColumn<T>,
   ): 'ascending' | 'descending' | 'none' | null {
-    if (!col.sortable) {
+    if (!this.sortableCol(col)) {
       return null;
     }
     if (this.sortKey() === col.key && this.sortDir()) {
@@ -1072,7 +1266,7 @@ export class TableComponent<T extends object> {
   }
 
   protected onSort(col: TableColumn<T>): void {
-    if (!col.sortable) {
+    if (!this.sortableCol(col)) {
       return;
     }
     const order = this.sortingOrder();
@@ -1094,7 +1288,7 @@ export class TableComponent<T extends object> {
 
   protected headerClasses(col: TableColumn<T>): string {
     const parts: string[] = [];
-    if (col.sortable) {
+    if (this.sortableCol(col)) {
       parts.push('sortable');
     }
     if (this.sortKey() === col.key && this.sortDir()) {
@@ -1123,7 +1317,7 @@ export class TableComponent<T extends object> {
   /** Exports the visible columns of the filtered + sorted rows (all rows, not
    *  just the current page) as a CSV download. Call from a consumer button:
    *  `<ds-button (pressed)="table.exportCsv()">`. */
-  exportCsv(filename = 'table.csv'): void {
+  exportCsv(filename = 'table.csv', rows?: readonly T[]): void {
     if (typeof document === 'undefined') {
       return;
     }
@@ -1131,7 +1325,7 @@ export class TableComponent<T extends object> {
     const escapeCell = (value: string): string =>
       /[",\r\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
     const header = columns.map((col) => escapeCell(col.label));
-    const body = this.sortedData().map((row) =>
+    const body = (rows ?? this.sortedData()).map((row) =>
       columns.map((col) => escapeCell(this.cellValue(row, col))),
     );
     // Leading BOM so Excel reads UTF-8 (accented labels/values) correctly.
@@ -1145,6 +1339,81 @@ export class TableComponent<T extends object> {
     link.download = filename;
     link.click();
     URL.revokeObjectURL(url);
+  }
+
+  // localStorage, not session: a column layout the reader arranged should still
+  // be there tomorrow. Every access is guarded — Safari private mode throws on
+  // write, and a quota error must not take the table down with it.
+  private layoutKey(): string | null {
+    const key = this.storageKey().trim();
+
+    return this.persistLayout() && key ? `ds-table:${key}` : null;
+  }
+
+  private layoutRestored = false;
+
+  private restoreLayout(key: string): void {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) {
+        return;
+      }
+      const saved = JSON.parse(raw) as {
+        order?: string[] | null;
+        widths?: [string, number][];
+        hidden?: string[] | null;
+      };
+      // Only apply what was actually stored: a table that has never been
+      // rearranged must keep its declaration order and `hidden` flags.
+      if (saved.order) {
+        this.columnOrder.set(saved.order);
+      }
+      if (saved.widths) {
+        this.columnWidths.set(new Map(saved.widths));
+      }
+      if (saved.hidden) {
+        this.hiddenKeys.set(new Set(saved.hidden));
+      }
+    } catch {
+      // Unreadable or from an older shape: fall back to the declared layout.
+    }
+  }
+
+  private saveLayout(
+    key: string,
+    order: string[] | null,
+    widths: Map<string, number>,
+    hidden: Set<string> | null,
+  ): void {
+    try {
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          order,
+          widths: [...widths],
+          hidden: hidden ? [...hidden] : null,
+        }),
+      );
+    } catch {
+      // Full or blocked: a lost column layout is not worth an error.
+    }
+  }
+
+  /** Export button handler: awaits `exportFetcher` when one is given, so a
+   *  server-paged table exports the whole set rather than the page it holds. */
+  protected async runExport(): Promise<void> {
+    const fetcher = this.exportFetcher();
+    if (!fetcher) {
+      this.exportCsv(this.exportFilename());
+
+      return;
+    }
+    this.exporting.set(true);
+    try {
+      this.exportCsv(this.exportFilename(), await fetcher());
+    } finally {
+      this.exporting.set(false);
+    }
   }
 
   /** Deterministic per-cell width so skeleton rows look organic but stable

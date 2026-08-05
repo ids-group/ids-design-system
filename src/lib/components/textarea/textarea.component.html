@@ -34,7 +34,7 @@
       [attr.name]="name()"
       [attr.placeholder]="placeholder() || null"
       [attr.aria-label]="resolvedAriaLabel()"
-      [attr.aria-invalid]="invalid() ? 'true' : null"
+      [attr.aria-invalid]="invalidResolved() ? 'true' : null"
       [attr.aria-describedby]="hintId()"
       [attr.aria-required]="required() ? 'true' : null"
       [attr.maxlength]="maxLength()"
@@ -52,15 +52,14 @@
   </div>
 
   @if (
-    reserveMessageResolved() ||
-    hint() ||
-    messageState() !== 'default' ||
-    maxLength() !== null
-  ) {
+      reserveMessageResolved() ||
+      message().text ||
+      maxLength() !== null
+    ) {
     <div class="field-footer">
       <ds-field-message
-        [text]="hint()"
-        [state]="messageState()"
+        [text]="message().text"
+        [state]="message().state"
         [messageId]="hintId()"
         [reserve]="reserveMessageResolved()"
       />

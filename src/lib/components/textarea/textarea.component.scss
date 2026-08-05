@@ -1,3 +1,5 @@
+@use '../../styles/field-label' as field-label;
+
 /* ============================================================
    FIELD (multiline text input subset)
    Mirrors input.component.scss `.field` shell so consumers can
@@ -10,7 +12,7 @@
   /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_input-bg-color:             var(--ds-input-bg-color,             var(--surface-default));
   --_input-border:         var(--ds-input-border,         var(--border-default));
-  --_input-radius:         var(--ds-input-radius,         var(--radius-md));
+  --_input-radius:         var(--ds-input-radius,         var(--ds-radius-control));
   --_input-pad-y:          var(--ds-input-pad-y,          var(--space-3));
   --_input-pad-x:          var(--ds-input-pad-x,          var(--field-pad-x));
   --_input-text-color:             var(--ds-input-text-color,             var(--text-primary));
@@ -34,11 +36,7 @@
   width: 100%;
 
   .label {
-    font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
+    @include field-label.field-label;
 
     .req {
       color: var(--error);

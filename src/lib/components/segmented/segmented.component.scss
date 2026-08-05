@@ -20,7 +20,7 @@
     --ds-segmented-radius,
     calc(var(--_segmented-r-inner) + var(--_segmented-pad))
   );
-  --_segmented-selected-shadow: var(--ds-segmented-selected-shadow, var(--shadow-card));
+  --_segmented-selected-shadow: var(--ds-segmented-selected-shadow, var(--ds-elevation-raised));
 
   display: inline-flex;
 

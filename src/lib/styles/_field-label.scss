@@ -1,0 +1,34 @@
+// One label contract for the field family.
+//
+// Five components hard-coded the identical rule and ds-select named its element
+// `.select-label`, so a form mixing a select with an input rendered labels in two
+// sizes and colours out of the box, and retuning them from an app needed
+// `.field.field .label.label, .select-label.select-label` to out-rank the shimmed
+// component rule. One class (`.label`), one token set, resolved here.
+//
+// A MIXIN, not a global rule: a global `.label` would match consumer markup that
+// happens to use the same class name — the leak that global `.field`/`.check`
+// specimens caused in ds-docs. Each field pays ~6 declarations of its own CSS.
+//
+// Per-instance retune is CSS-variable scoping, so no per-component token set is
+// needed: `ds-select { --ds-field-label-transform: uppercase; }` reaches exactly
+// one component. ds-input keeps its older `--ds-input-label-*` trio winning above
+// this, since those shipped in 0.7.x.
+@mixin field-label {
+  --_field-label-font-size: var(--ds-field-label-font-size, var(--font-size-xs));
+  --_field-label-weight: var(--ds-field-label-weight, var(--font-weight-bold));
+  --_field-label-color: var(--ds-field-label-color, var(--text-secondary));
+  --_field-label-transform: var(--ds-field-label-transform, none);
+  --_field-label-tracking: var(--ds-field-label-tracking, normal);
+
+  display: flex;
+  align-items: center;
+
+  // --field-gap-req is the label↔asterisk token; the old rules all spelled its
+  // value out as var(--space-1) instead of naming it.
+  gap: var(--field-gap-req);
+  font: var(--_field-label-weight) var(--_field-label-font-size) / var(--line-height-base) var(--font-sans);
+  color: var(--_field-label-color);
+  text-transform: var(--_field-label-transform);
+  letter-spacing: var(--_field-label-tracking);
+}
