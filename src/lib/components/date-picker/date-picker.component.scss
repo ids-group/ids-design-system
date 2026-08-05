@@ -101,7 +101,8 @@
   }
 
   &:focus-visible,
-  &:focus-within {
+  &:focus-within,
+  &.open {
     outline: none;
     box-shadow: var(--_date-picker-focus-shadow);
   }

@@ -82,6 +82,8 @@
               [style.min-width.px]="columnWidth(col)"
               [style.max-width.px]="columnWidth(col)"
               [attr.aria-sort]="ariaSort(col)"
+              [attr.data-col-key]="col.key"
+              (pointerenter)="onHeaderEnter($event, col)"
             >
               @if (sortableCol(col)) {
                 <button
@@ -135,11 +137,16 @@
               @if (resizableColumns()) {
                 <span
                   class="col-resize"
-                  aria-hidden="true"
+                  role="separator"
+                  tabindex="0"
+                  aria-orientation="vertical"
+                  [attr.aria-label]="'Resize ' + col.label"
+                  [attr.aria-valuenow]="columnWidth(col)"
                   (pointerdown)="onResizeStart(col, $event)"
                   (pointermove)="onResizeMove($event)"
                   (pointerup)="onResizeEnd()"
                   (pointercancel)="onResizeEnd()"
+                  (keydown)="onResizeKey(col, $event)"
                 >
                 </span>
               }
@@ -325,11 +332,27 @@
                       (blur)="commitEdit(row, col)"
                     />
                   } @else if (cellTemplate(col); as tpl) {
-                    <ng-container
-                      [ngTemplateOutlet]="tpl"
-                      [ngTemplateOutletContext]="{ $implicit: row, row: row }"
-                    >
-                    </ng-container>
+                    @if (col.truncate) {
+                      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- same pointer-only enhancement as the plain truncate branch below; the value stays in the DOM for AT -->
+                      <span
+                        class="cell-clip"
+                        [style.max-width.px]="col.width ?? 240"
+                        [attr.title]="cellValue(row, col)"
+                        (click)="onCellClipClick(row, col, $event)"
+                      >
+                        <ng-container
+                          [ngTemplateOutlet]="tpl"
+                          [ngTemplateOutletContext]="{ $implicit: row, row: row }"
+                        >
+                        </ng-container>
+                      </span>
+                    } @else {
+                      <ng-container
+                        [ngTemplateOutlet]="tpl"
+                        [ngTemplateOutletContext]="{ $implicit: row, row: row }"
+                      >
+                      </ng-container>
+                    }
                   } @else if (col.truncate) {
                     <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- pointer-only enhancement: the clip is visual (CSS ellipsis), keyboard/AT users already get the full DOM text + title; a tab stop per cell would wreck keyboard traversal -->
                     <span

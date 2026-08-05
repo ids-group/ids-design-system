@@ -97,7 +97,14 @@ function compareSortValues(
     return Number(firstText) - Number(secondText);
   }
 
-  return firstText.localeCompare(secondText, undefined, { numeric: true });
+  // `sensitivity: 'base'` so "Ångström" sorts next to "Angstrom" and casing does
+  // not split a column into two runs. Taken from the comparator mm-broker is
+  // retiring, which is also where BLANK_CELL above came from — without it a
+  // column whose `sortValue` returns strings reorders on migration.
+  return firstText.localeCompare(secondText, undefined, {
+    numeric: true,
+    sensitivity: 'base',
+  });
 }
 
 @Component({
@@ -247,12 +254,26 @@ export class TableComponent<T extends object> {
   readonly exportButton = input(false, { transform: booleanAttribute });
   /** Filename the export button downloads as. */
   readonly exportFilename = input<string>('table.csv');
-  /** Rows to export instead of what the table holds. A server-paged table only
-   *  HAS the current page, so exporting without this silently exports one page —
-   *  return the whole set here and the button awaits it. */
-  readonly exportFetcher = input<(() => Promise<readonly T[]>) | null>(null);
+  /**
+   * Where the export button gets its data. A server-paged table only HAS the
+   * current page, so exporting without this silently exports one page.
+   *
+   * Return ROWS and the table serializes them the same way it serializes its
+   * own. Return a `Blob` (or a URL string) and the table just downloads it —
+   * which is what you want when the backend already formatted the file with its
+   * own number formats, its own columns, or a sheet the table never held.
+   */
+  readonly exportFetcher = input<
+    (() => Promise<readonly T[] | Blob | string>) | null
+  >(null);
+  /** Fires when `exportFetcher` rejects. Without it a failed export is silent —
+   *  the button simply re-enables and no file arrives. */
+  readonly exportFailed = output<unknown>();
   /** True while `exportFetcher` is in flight, so the button can disable itself. */
   protected readonly exporting = signal(false);
+  /** Announced in the table's live region while an export is running or after it
+   *  failed, so the button's own disabled state is not the only signal. */
+  protected readonly exportStatus = signal('');
 
   /** Keeps the horizontal scrollbar reachable on tall tables: the scroll
    *  container's native bar is hidden and a proxy stuck to the bottom of the
@@ -713,6 +734,9 @@ export class TableComponent<T extends object> {
     this.editingCell.set(null);
   }
 
+  // One notch is a comfortable nudge; a page is roughly a short column.
+  private static readonly RESIZE_STEP = 16;
+  private static readonly RESIZE_PAGE = 64;
   private static readonly MIN_COLUMN_WIDTH = 48;
   private resizeState: {
     key: string;
@@ -732,12 +756,54 @@ export class TableComponent<T extends object> {
     if (!header) {
       return;
     }
+    this.lockMeasuredWidths(header);
     this.resizeState = {
       key: col.key,
       startX: event.clientX,
       startWidth: header.offsetWidth,
     };
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
+  }
+
+  /**
+   * Freeze the columns at what they currently measure, once, before the first
+   * drag moves anything.
+   *
+   * Without it only the dragged column has a width and the rest are still
+   * auto-sized, so the browser redistributes the remainder across them and
+   * columns the reader never touched visibly jump. Measuring first means the
+   * drag changes one column and leaves the others where they were — the
+   * auto-sized geometry is kept rather than lost at the first grab.
+   *
+   * Runs only while something is unmeasured, so a second drag is untouched, and
+   * it reads the header row that is actually on screen rather than assuming a
+   * column order.
+   */
+  private lockMeasuredWidths(from: HTMLElement): void {
+    const columns = this.visibleColumns();
+    if (columns.every((col) => this.columnWidth(col) !== null)) {
+      return;
+    }
+    const headerRow = from.parentElement;
+    if (!headerRow) {
+      return;
+    }
+    const widths = new Map(this.columnWidths());
+    for (const col of columns) {
+      if (this.columnWidth(col) !== null) {
+        continue;
+      }
+      const cell = headerRow.querySelector<HTMLElement>(
+        `th[data-col-key="${CSS.escape(col.key)}"]`,
+      );
+      if (cell) {
+        widths.set(
+          col.key,
+          Math.max(TableComponent.MIN_COLUMN_WIDTH, cell.offsetWidth),
+        );
+      }
+    }
+    this.columnWidths.set(widths);
   }
 
   protected onResizeMove(event: PointerEvent): void {
@@ -755,6 +821,67 @@ export class TableComponent<T extends object> {
 
   protected onResizeEnd(): void {
     this.resizeState = null;
+  }
+
+  /** Current rendered width, for the keyboard path and the handle's
+   *  `aria-valuenow`. Falls back to the DOM when the column was auto-sized and
+   *  has neither an override nor a declared width. */
+  protected resolvedColumnWidth(
+    col: TableColumn<T>,
+    from?: HTMLElement,
+  ): number {
+    const known = this.columnWidth(col);
+    if (known !== null) {
+      return known;
+    }
+
+    return from?.closest('th')?.offsetWidth ?? TableComponent.MIN_COLUMN_WIDTH;
+  }
+
+  /**
+   * Keyboard resizing. A drag handle that only answers to a pointer makes a
+   * resizable column unusable without a mouse, which is an a11y gap rather than
+   * a missing nicety — hence Arrow for fine steps, PageUp/PageDown for coarse
+   * ones and Home to hand the column back to automatic sizing.
+   */
+  protected onResizeKey(col: TableColumn<T>, event: KeyboardEvent): void {
+    const target = event.target as HTMLElement;
+    const header = target.closest('th');
+    if (header) {
+      this.lockMeasuredWidths(header);
+    }
+    const current = this.resolvedColumnWidth(col, target);
+    let next: number | null = current;
+    switch (event.key) {
+      case 'ArrowLeft':
+        next = current - TableComponent.RESIZE_STEP;
+        break;
+      case 'ArrowRight':
+        next = current + TableComponent.RESIZE_STEP;
+        break;
+      case 'PageDown':
+        next = current - TableComponent.RESIZE_PAGE;
+        break;
+      case 'PageUp':
+        next = current + TableComponent.RESIZE_PAGE;
+        break;
+      case 'Home':
+        next = null;
+        break;
+      default:
+        return;
+    }
+    event.preventDefault();
+    const widths = new Map(this.columnWidths());
+    if (next === null) {
+      widths.delete(col.key);
+    } else {
+      widths.set(
+        col.key,
+        Math.max(TableComponent.MIN_COLUMN_WIDTH, Math.round(next)),
+      );
+    }
+    this.columnWidths.set(widths);
   }
 
   /** Client-side filter over the full data set — combines the `filterQuery`
@@ -875,6 +1002,10 @@ export class TableComponent<T extends object> {
   protected readonly statusMessage = computed<string>(() => {
     if (this.loading() !== false) {
       return 'Loading…';
+    }
+    const exportState = this.exportStatus();
+    if (exportState) {
+      return exportState;
     }
     const parts = [this.sortMessage(), this.rangeMessage()].filter(Boolean);
 
@@ -1032,12 +1163,40 @@ export class TableComponent<T extends object> {
    *  full value in a popover; otherwise let the click fall through to the row. */
   protected onCellClipClick(row: T, col: TableColumn<T>, event: Event): void {
     const element = event.currentTarget as HTMLElement;
-    if (element.scrollWidth <= element.clientWidth) {
+    if (!TableComponent.isClipped(element)) {
       return;
     }
     event.stopPropagation();
     this.cellPopoverText.set(this.cellValue(row, col));
     this.cellTextPopover()?.toggle(element);
+  }
+
+  /** Clipped horizontally — itself or anything it renders. A `dsCellTemplate`
+   *  puts the ellipsis on a descendant, so testing only the wrapper misses it. */
+  private static isClipped(element: HTMLElement): boolean {
+    if (element.scrollWidth > element.clientWidth) {
+      return true;
+    }
+
+    return [...element.querySelectorAll<HTMLElement>('*')].some(
+      (child) => child.scrollWidth > child.clientWidth,
+    );
+  }
+
+  /**
+   * A header narrowed by resizing clips its own label, and the label is the only
+   * thing naming the column — so the full text has to stay reachable. Set on
+   * enter rather than always, because a `title` on every header would fire a
+   * tooltip on hover for text that is perfectly readable.
+   */
+  protected onHeaderEnter(event: Event, col: TableColumn<T>): void {
+    const element = event.currentTarget as HTMLElement;
+    const label = element.querySelector<HTMLElement>('.th-label') ?? element;
+    if (TableComponent.isClipped(label)) {
+      element.setAttribute('title', col.label);
+    } else {
+      element.removeAttribute('title');
+    }
   }
 
   private readonly scrollWrap =
@@ -1557,10 +1716,38 @@ export class TableComponent<T extends object> {
       return;
     }
     this.exporting.set(true);
+    this.exportStatus.set('Preparing export…');
     try {
-      this.exportCsv(this.exportFilename(), await fetcher());
+      const result = await fetcher();
+      if (typeof result === 'string' || result instanceof Blob) {
+        this.downloadFile(result, this.exportFilename());
+      } else {
+        this.exportCsv(this.exportFilename(), result);
+      }
+      this.exportStatus.set('Export ready');
+    } catch (error) {
+      // Swallowing this is what made a failed export indistinguishable from a
+      // slow one: the button re-enabled and no file ever arrived.
+      this.exportStatus.set('Export failed');
+      this.exportFailed.emit(error);
     } finally {
       this.exporting.set(false);
+    }
+  }
+
+  /** Hands a ready-made file to the browser. Only a Blob gets its object URL
+   *  revoked — a URL the caller supplied is theirs to manage. */
+  private downloadFile(source: Blob | string, filename: string): void {
+    if (typeof document === 'undefined') {
+      return;
+    }
+    const url = source instanceof Blob ? URL.createObjectURL(source) : source;
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    if (source instanceof Blob) {
+      URL.revokeObjectURL(url);
     }
   }
 

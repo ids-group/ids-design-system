@@ -466,6 +466,13 @@ export class DatePickerComponent
     if (this.invalidResolved()) {
       parts.push('error');
     }
+    // The indicator cannot be left to :focus-within: opening from the calendar
+    // glyph moves focus into the day grid, so the trigger would go dark while
+    // its OWN panel is open. A control stays visibly active for as long as it
+    // owns an open panel, wherever focus went.
+    if (this.isOpen()) {
+      parts.push('open');
+    }
 
     return parts.join(' ');
   });

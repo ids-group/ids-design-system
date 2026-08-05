@@ -5467,6 +5467,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Table fill."
       },
       {
+        "name": "--ds-table-hscroll-bottom",
+        "value": "0",
+        "notes": "Offset of the sticky horizontal scrollbar from the scrollport edge (default 0). Set a negative value equal to the container's bottom padding when the table sits in a padded box, or the bar floats above the content it belongs to."
+      },
+      {
+        "name": "--ds-table-min-width",
+        "value": "0",
+        "notes": "Readability floor on the inner table (default 0 = none). Below it the columns stop shrinking and the wrapper's horizontal scroller takes over, which is what a wide table wants on a narrow screen."
+      },
+      {
         "name": "--ds-table-row-hover-bg-color",
         "value": "var(--surface-secondary)",
         "notes": "Row hover fill (rowInteractive tables only)."

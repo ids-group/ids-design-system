@@ -5767,11 +5767,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "exportFetcher",
         "kind": "input",
-        "type": "(() => Promise<readonly T[]>) | null",
+        "type": "(() => Promise<readonly T[] | Blob | string>) | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Rows to export instead of what the table holds. A server-paged table only HAS the current page, so exporting without this silently exports one page — return the whole set here and the button awaits it."
+        "description": "Where the export button gets its data. A server-paged table only HAS the current page, so exporting without this silently exports one page. Return ROWS and the table serializes them the same way it serializes its own. Return a `Blob` (or a URL string) and the table just downloads it — which is what you want when the backend already formatted the file with its own number formats, its own columns, or a sheet the table never held."
       },
       {
         "name": "stickyScrollbar",
@@ -5945,6 +5945,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ],
     "outputs": [
+      {
+        "name": "exportFailed",
+        "kind": "output",
+        "type": "unknown",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Fires when `exportFetcher` rejects. Without it a failed export is silent — the button simply re-enables and no file arrives."
+      },
       {
         "name": "rowClicked",
         "kind": "output",

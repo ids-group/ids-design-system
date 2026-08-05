@@ -10,6 +10,29 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-table`: the rest of what mm-broker's fork did that the base could not.** Keyboard column resizing —
+  the handle is a focusable `role="separator"` with Arrow (16px), PageUp/PageDown (64px) and Home to hand
+  the column back to automatic sizing; a drag handle that answered only to a pointer made a resizable column
+  unusable without a mouse. `exportFetcher` may now resolve a `Blob` or a URL as well as rows, for a file
+  the backend already formatted, and `exportFailed` emits the rejection — swallowing it made a failed export
+  indistinguishable from a slow one. Two box tokens: `--ds-table-min-width` (a readability floor, default 0)
+  and `--ds-table-hscroll-bottom` (offsets the sticky scrollbar out of a padded container, default 0).
+
+### Fixed
+
+- **A column resize no longer moves columns the reader never touched.** Only the dragged column had a width,
+  so the browser redistributed the remainder across the auto-sized rest and they visibly jumped. The first
+  resize — pointer or keyboard — now freezes every visible column at what it currently measures, once.
+- **The clipped-cell popover reaches template cells, and a narrowed header keeps its label.** Clip detection
+  walks descendants, so overflow inside a `dsCellTemplate` behaves like a plain truncated cell; a header
+  narrowed by resizing gets a `title` with the full label on hover. Scoped to columns that asked for
+  `truncate` — a handler on every cell would swallow the row click on an interactive table.
+- **`sortValue` string ordering is case- and accent-insensitive** (`sensitivity: 'base'`), matching the
+  comparator consumers are migrating off, so a column of strings does not silently reorder.
+- **`ds-date-picker`'s trigger stays visibly active while its own panel is open.** The indicator was bound to
+  focus only, and opening from the calendar glyph moves focus into the day grid — so the trigger went dark
+  while its panel was open, and the refocus on close made it read as a flicker.
+
 - **`ds-table`: the three things that still forced a consumer wrapper.** All from mm-broker folding its
   2160-line `ids-data-table` fork onto the base.
   — **`filterMode: 'client' | 'server' | 'none'`**, mirroring `sortMode` and defaulting to `'client'`, plus
