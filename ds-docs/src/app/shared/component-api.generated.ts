@@ -5823,6 +5823,28 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Who sorts — see `TableSortMode`. Unset resolves to `'client'`, so a column marked `sortable` always does something; declare `'server'` when the host reorders, or `'none'` to drop the affordance entirely."
       },
       {
+        "name": "filterMode",
+        "kind": "input",
+        "type": "TableFilterMode | null",
+        "union": [
+          "client",
+          "server",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Who filters — see `TableFilterMode`. Unset resolves to `'client'`. Declare `'server'` when the host turns `columnFilters` into a request: the table then tracks the selection and runs no local pass."
+      },
+      {
+        "name": "columnFilterOptions",
+        "kind": "input",
+        "type": "ReadonlyMap<string, readonly string[]>",
+        "union": null,
+        "default": "new Map()",
+        "required": false,
+        "description": "The full value domain per column key, for a header filter the table cannot derive itself. Without it the checklist is built from the rows in hand, which on a server-paged table offers only the values that happen to be on the current page."
+      },
+      {
         "name": "stickyFirstColumn",
         "kind": "input",
         "type": "boolean",
@@ -6078,7 +6100,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Keep the active tab in a query parameter, so it survives F5, a shared link and the Back button: `urlParam=\"tab\"` gives `?tab=activity`. Empty (the default) leaves the URL alone, and the strip works exactly as before. The names come from each `ds-tab`'s `value` (falling back to its `label`), so there is no second list to keep in step. **Names, not indices** — writing `?tab=1` would silently repoint every old link the moment a tab is inserted. The FIRST tab writes no parameter and every write REPLACES the history entry, so a pristine screen keeps a clean address and flipping tabs does not fill the Back button. An unknown or missing name lands on the first tab rather than throwing: a URL is user input, and a stale bookmark should still open the screen. Outside a routed context the input is inert — the router is injected optionally, so a tab strip in a dialog or a static page is unaffected."
+        "description": "Keep the active tab in a query parameter, so it survives F5, a shared link and the Back button: `urlParam=\"tab\"` gives `?tab=activity`. Empty (the default) leaves the URL alone, and the strip works exactly as before. The names come from each `ds-tab`'s `value` (falling back to its `label`), so there is no second list to keep in step. **Names, not indices** — writing `?tab=1` would silently repoint every old link the moment a tab is inserted. The FIRST tab writes no parameter and every write REPLACES the history entry, so a pristine screen keeps a clean address and flipping tabs does not fill the Back button. An unknown or missing name lands on the first tab rather than throwing: a URL is user input, and a stale bookmark should still open the screen. Outside a routed context the input is inert. Nothing router-shaped is even resolved until you set it — no DI lookup and, more to the point, no subscription — so a strip that never uses this costs exactly what it did before the input existed."
       }
     ],
     "outputs": [

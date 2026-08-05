@@ -8,13 +8,13 @@ import {
   contentChildren,
   effect,
   inject,
+  Injector,
   input,
   model,
   output,
   signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, type ParamMap } from '@angular/router';
 import { IconComponent } from '../../icons/icon.component';
 import { TabComponent } from './tab.component';
 import type { TabsOrientation, TabsVariant } from './tabs.types';
@@ -69,8 +69,10 @@ export class TabsComponent {
    * An unknown or missing name lands on the first tab rather than throwing: a
    * URL is user input, and a stale bookmark should still open the screen.
    *
-   * Outside a routed context the input is inert — the router is injected
-   * optionally, so a tab strip in a dialog or a static page is unaffected.
+   * Outside a routed context the input is inert. Nothing router-shaped is even
+   * resolved until you set it — no DI lookup and, more to the point, no
+   * subscription — so a strip that never uses this costs exactly what it did
+   * before the input existed.
    */
   readonly urlParam = input<string>('');
 
@@ -84,24 +86,38 @@ export class TabsComponent {
 
   protected readonly tabs = contentChildren(TabComponent);
 
-  // Optional: a tab strip is perfectly valid outside a routed context, and
-  // injecting these hard would break it in a dialog or a static page.
-  private readonly router = inject(Router, { optional: true });
-  private readonly route = inject(ActivatedRoute, { optional: true });
-  private readonly queryParams = this.route
-    ? toSignal(this.route.queryParamMap, {
-        initialValue: this.route.snapshot.queryParamMap,
-      })
-    : signal(null);
+  // Nothing router-shaped is touched until `urlParam` is set: no DI lookup, and
+  // above all no subscription. A tab strip is perfectly valid outside a routed
+  // context — in a dialog, on a static page — and most are, so the default must
+  // cost nothing. Resolved through the component's own Injector rather than
+  // `inject(Router)` at construction, which would run for every instance.
+  private readonly injector = inject(Injector);
+  private router: Router | null = null;
+  private route: ActivatedRoute | null = null;
+  private readonly urlParams = signal<ParamMap | null>(null);
 
   constructor() {
+    // Subscribe only while the feature is on, and drop the subscription again if
+    // `urlParam` is cleared.
+    effect((onCleanup) => {
+      if (!this.urlParam() || !this.resolveRouting()) {
+        this.urlParams.set(null);
+
+        return;
+      }
+      const subscription = this.route!.queryParamMap.subscribe((map) =>
+        this.urlParams.set(map),
+      );
+      onCleanup(() => subscription.unsubscribe());
+    });
+
     // URL -> tab. Runs again when the tabs arrive (content children resolve
     // after the first pass) and on every Back/Forward, which is what makes the
     // history walk the tabs. Writing back is guarded by the equality check
     // below, so this cannot loop with `writeUrl`.
     effect(() => {
       const param = this.urlParam();
-      const params = this.queryParams();
+      const params = this.urlParams();
       const tabs = this.tabs();
       if (!param || !params || tabs.length === 0) {
         return;
@@ -117,17 +133,26 @@ export class TabsComponent {
     });
   }
 
+  /** Resolves the router pair on first use. Null outside a routed context, which
+   *  makes `urlParam` inert there rather than an error. */
+  private resolveRouting(): boolean {
+    this.router ??= this.injector.get(Router, null);
+    this.route ??= this.injector.get(ActivatedRoute, null);
+
+    return !!this.router && !!this.route;
+  }
+
   private tabName(tab: TabComponent): string {
     return tab.value() ?? tab.label();
   }
 
   private writeUrl(index: number): void {
     const param = this.urlParam();
-    if (!param || !this.router || !this.route) {
+    if (!param || !this.resolveRouting()) {
       return;
     }
     const tab = this.tabs()[index];
-    void this.router.navigate([], {
+    void this.router!.navigate([], {
       relativeTo: this.route,
       queryParams: { [param]: index === 0 || !tab ? null : this.tabName(tab) },
       queryParamsHandling: 'merge',

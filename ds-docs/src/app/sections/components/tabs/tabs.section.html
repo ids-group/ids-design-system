@@ -623,8 +623,11 @@
   </p>
 
   <p class="block-desc t-s">
-    Outside a routed context the input is inert: the router is injected
-    optionally, so a strip in a dialog or on a static page is unaffected. It also
+    Outside a routed context the input is inert, and a strip that never sets it
+    costs exactly what it did before the input existed: nothing router-shaped is
+    resolved until you set it — no DI lookup, and no subscription to the query
+    parameters. Setting it later switches both on; clearing it drops the
+    subscription again. It also
     pairs with
     <code class="t-mono-inline">
       ds-app-layout

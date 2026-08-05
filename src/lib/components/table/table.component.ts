@@ -41,6 +41,7 @@ import type {
   TableColumn,
   TableRowAction,
   TableRowActionEvent,
+  TableFilterMode,
   TableSortMode,
 } from './table.types';
 
@@ -259,6 +260,22 @@ export class TableComponent<T extends object> {
    *  marked `sortable` always does something; declare `'server'` when the host
    *  reorders, or `'none'` to drop the affordance entirely. */
   readonly sortMode = input<TableSortMode | null>(null);
+  /** Who filters — see `TableFilterMode`. Unset resolves to `'client'`. Declare
+   *  `'server'` when the host turns `columnFilters` into a request: the table
+   *  then tracks the selection and runs no local pass. */
+  readonly filterMode = input<TableFilterMode | null>(null);
+  /**
+   * The full value domain per column key, for a header filter the table cannot
+   * derive itself. Without it the checklist is built from the rows in hand,
+   * which on a server-paged table offers only the values that happen to be on
+   * the current page.
+   */
+  readonly columnFilterOptions = input<ReadonlyMap<string, readonly string[]>>(
+    new Map(),
+  );
+  protected readonly filterModeResolved = computed<TableFilterMode>(
+    () => this.filterMode() ?? 'client',
+  );
   protected readonly sortModeResolved = computed<TableSortMode>(
     () => this.sortMode() ?? 'client',
   );
@@ -484,17 +501,22 @@ export class TableComponent<T extends object> {
   protected readonly filterSearch = signal('');
 
   protected hasColumnFilter(col: TableColumn<T>): boolean {
-    return col.filter === 'set';
+    return col.filter === 'set' && this.filterModeResolved() !== 'none';
   }
 
   /** A column is "actively filtered" when at least one of its values is unchecked. */
   protected isColumnFiltered(col: TableColumn<T>): boolean {
     const allowed = this.columnFilters().get(col.key);
 
-    return !!allowed && allowed.size < this.distinctValuesOf(col).length;
+    return !!allowed && allowed.size < this.optionsFor(col).length;
   }
 
-  private distinctValuesOf(col: TableColumn<T>): string[] {
+  /** The checklist's domain: what the host declared, else what is in hand. */
+  private optionsFor(col: TableColumn<T>): readonly string[] {
+    const supplied = this.columnFilterOptions().get(col.key);
+    if (supplied) {
+      return supplied;
+    }
     const seen = new Set<string>();
     for (const row of this.data()) {
       seen.add(this.cellValue(row, col));
@@ -504,13 +526,13 @@ export class TableComponent<T extends object> {
   }
 
   /** Distinct values of the open column, narrowed by the popover search box. */
-  protected readonly filterValues = computed<string[]>(() => {
+  protected readonly filterValues = computed<readonly string[]>(() => {
     const col = this.filterColumn();
     if (!col) {
       return [];
     }
     const needle = this.filterSearch().trim().toLowerCase();
-    const values = this.distinctValuesOf(col);
+    const values = this.optionsFor(col);
 
     return needle
       ? values.filter((value) => value.toLowerCase().includes(needle))
@@ -524,7 +546,7 @@ export class TableComponent<T extends object> {
     }
     const allowed = this.columnFilters().get(col.key);
 
-    return allowed ? allowed.size : this.distinctValuesOf(col).length;
+    return allowed ? allowed.size : this.optionsFor(col).length;
   });
 
   protected isFilterValueChecked(value: string): boolean {
@@ -553,7 +575,7 @@ export class TableComponent<T extends object> {
     if (!col) {
       return;
     }
-    const distinct = this.distinctValuesOf(col);
+    const distinct = this.optionsFor(col);
     const current = new Set(this.columnFilters().get(col.key) ?? distinct);
     if (current.has(value)) {
       current.delete(value);
@@ -677,7 +699,13 @@ export class TableComponent<T extends object> {
    *  run on the filtered rows. */
   protected readonly filteredData = computed<readonly T[]>(() => {
     const query = this.filterQuery().trim().toLowerCase();
-    const setFilters = this.columnFilters();
+    // In 'server' mode the host has already filtered; running the set filters
+    // again here would filter the filtered. `filterQuery` is deliberately left
+    // alone — it is a separate input with its own client/server story.
+    const setFilters =
+      this.filterModeResolved() === 'client'
+        ? this.columnFilters()
+        : new Map<string, ReadonlySet<string>>();
     const columns = this.columns();
     if (!query && setFilters.size === 0) {
       return this.data();
@@ -946,6 +974,18 @@ export class TableComponent<T extends object> {
         ) {
           console.warn(
             '[ds-table] sortable columns default to sortMode="client", but `total` is set, so this table is server-paged and only the CURRENT PAGE would sort — the rows would look sorted and not be. Declare sortMode="server" and reorder in the (sortChange) handler, or sortMode="client" if page-local sorting is really what you want.',
+          );
+        }
+        // Same trap one column over: a header filter on a server-paged table
+        // offers only the values that happen to be on this page, and then
+        // filters locally on top of what the server already filtered.
+        if (
+          this.filterMode() === null &&
+          this.total() !== null &&
+          this.columns().some((col) => col.filter === 'set')
+        ) {
+          console.warn(
+            '[ds-table] a header filter defaults to filterMode="client", but `total` is set, so this table is server-paged: the checklist lists only the values on the CURRENT PAGE and then filters what the server already filtered. Declare filterMode="server" and turn `columnFilters` into your request, and pass the full domain through `columnFilterOptions`.',
           );
         }
       });

@@ -10,6 +10,18 @@
  * marked `sortable` on a table with no sorting drew a live-looking header that
  * did nothing, and no type or dev check could catch it.
  */
+/**
+ * Who applies the header filters.
+ *
+ * `'client'` (the default when unset) filters the rows in hand. `'server'` means
+ * the host does it: the table still tracks `columnFilters` so a request can be
+ * driven from it, but runs no local pass — on a server-paged table a local pass
+ * would filter what the server already filtered. `'none'` drops the affordance,
+ * so a column left marked `filter: 'set'` renders no button rather than a
+ * control that does nothing.
+ */
+export type TableFilterMode = 'client' | 'server' | 'none';
+
 export type TableSortMode = 'client' | 'server' | 'none';
 
 import type { IconName } from '../../icons/icons.data';
