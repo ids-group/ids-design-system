@@ -615,13 +615,14 @@
       sortMode
     </code> says who sorts —
     <code class="t-mono-inline">
-      "client"
-    </code> (the default) has the table
-    reorder its own rows, <code class="t-mono-inline"> "server" </code> emits
+      "server"
+    </code> (the default) emits
     <code class="t-mono-inline">
       (sortChange)
     </code> and leaves ordering to
-    you, and <code class="t-mono-inline"> "none" </code> drops the affordance so
+    you, <code class="t-mono-inline"> "client" </code> has the table reorder its
+    own rows and is what a table holding EVERY row wants,
+    and <code class="t-mono-inline"> "none" </code> drops the affordance so
     a <code class="t-mono-inline"> sortable </code> column cannot draw a header
     that does nothing. 12 rows across three pages;
     <code class="t-mono-inline">
@@ -1151,23 +1152,23 @@
   <p class="block-desc t-s">
     Header filters default to
     <code class="t-mono-inline">
-      filterMode="client"
-    </code>, which is right until
-    the table is server-paged — then the checklist can only offer the values that
-    happen to be on THIS page, and the local pass filters what the server already
-    filtered. Declare
-    <code class="t-mono-inline">
       filterMode="server"
-    </code> and the table tracks
+    </code>: the table tracks
     <code class="t-mono-inline">
       columnFilters
     </code> without filtering anything, so
     your request drives the rows; pass the real domain through
     <code class="t-mono-inline">
       columnFilterOptions
-    </code>. There is a dev warning for
-    the combination that gets this wrong silently — a `filter: 'set'` column on a
-    table with `total` bound and no declared mode.
+    </code>. That is the right default because
+    a paged table filtering locally would filter what the server already
+    filtered, over a checklist offering only the values on THIS page. Declare
+    <code class="t-mono-inline">
+      filterMode="client"
+    </code> when the table holds every
+    row and should filter them itself — there is a dev warning for the giveaway
+    case, a filterable column on a table that binds no `total` and declares no
+    mode.
     <code class="t-mono-inline">
       filterMode="none"
     </code> drops the affordance entirely.
