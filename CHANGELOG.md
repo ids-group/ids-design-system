@@ -10,6 +10,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **Opening `ds-date-picker` with the mouse no longer takes the caret out of the field.** Clicking the
+  calendar glyph moved focus into the day grid, which a mouse user did not ask for and which, with
+  `allowInput` on by default, pulled them out of a field they may have been typing in. The glyph now behaves
+  like a click on the field itself: focus follows what the field IS — typeable keeps the caret, read-only
+  focuses the grid. The keyboard path is unchanged, ArrowDown still enters the grid however the panel opened.
 - **A settled `ds-autocomplete` no longer shows an empty text box beside its value.** In single mode the
   chosen label has always rendered as its own element, but the filter input stayed 80px wide next to it and
   took the caret, so a field with a value read as free text rather than a picker. With a value and the panel

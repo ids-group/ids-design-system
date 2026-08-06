@@ -842,6 +842,14 @@ export class DatePickerComponent
     this.overlayRef = null;
   }
 
+  /**
+   * Also the calendar glyph's handler. A POINTER open must not drag focus into
+   * the day grid: the reader did not ask to leave a field they may want to type
+   * in, and `allowInput` defaults to true. So focus follows what the field IS —
+   * typeable, and the caret stays; read-only, and the grid is the only thing
+   * worth focusing. The keyboard path is unaffected: ArrowDown on the field
+   * calls `open(true)` and enters the grid however the panel was opened.
+   */
   protected onFieldClick(): void {
     this.open(!this.allowInput());
     if (this.allowInput()) {
