@@ -34,6 +34,12 @@ import { DS_VERSION } from '../shared/docs-stats';
 
 const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
 
+// How long to keep looking for a freshly-navigated section before giving up and
+// showing the top of the page. Group pages are lazy-loaded, so the section a
+// click asked for is routinely absent for a frame or two after NavigationEnd.
+const ANCHOR_WAIT_MS = 2000;
+const ANCHOR_POLL_MS = 50;
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -114,7 +120,7 @@ export class SidebarComponent {
         this.lastGroup = group;
         setTimeout(() => {
           this.refreshObserver();
-          this.scrollForNavigation(url);
+          void this.scrollForNavigation(url);
         }, 0);
       });
 
@@ -199,11 +205,35 @@ export class SidebarComponent {
     this.activeAnchor.set(anchor);
   }
 
-  // On a group-page change: scroll main to the target section (the URL's anchor
-  // segment), else to the top (a fresh group starts at its top).
-  private scrollForNavigation(url: string): void {
-    if (this.scrollToAnchor(this.anchorFromUrl(url))) {
-      return;
+  /**
+   * On a group-page change: scroll main to the target section (the URL's anchor
+   * segment), else to the top (a fresh group starts at its top).
+   *
+   * Waits for the section, because group pages are lazy-loaded and their
+   * sections are routinely NOT in the DOM one macrotask after `NavigationEnd`.
+   * A single lookup therefore missed, this fell back to the top, and the section
+   * was only reached on a SECOND click — by which time the page was mounted and
+   * `onItem` could scroll to it directly.
+   *
+   * Only a URL that names an anchor waits; without one the top is the answer
+   * straight away, so `changelog` and `home` are unaffected.
+   */
+  private async scrollForNavigation(url: string): Promise<void> {
+    const anchor = this.anchorFromUrl(url);
+    if (anchor) {
+      const start = Date.now();
+      for (let attempt = 0; Date.now() - start < ANCHOR_WAIT_MS; attempt++) {
+        if (this.scrollToAnchor(anchor)) {
+          // The sections mounted after refreshObserver() already ran, so it
+          // observed nothing and the active-section highlight would never move.
+          if (attempt > 0) {
+            this.refreshObserver();
+          }
+
+          return;
+        }
+        await new Promise((resolve) => setTimeout(resolve, ANCHOR_POLL_MS));
+      }
     }
     const main = this.layoutScroll.scroller() as HTMLElement | null;
     main?.scrollTo({ top: 0, behavior: 'auto' });
