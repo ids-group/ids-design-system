@@ -11,6 +11,7 @@
   --_date-picker-required-color: var(--ds-date-picker-required-color, var(--error));
   --_date-picker-placeholder-color: var(--ds-date-picker-placeholder-color, var(--text-tertiary));
   --_date-picker-trigger-radius: var(--ds-date-picker-trigger-radius, var(--ds-radius-control));
+  --_date-picker-trigger-pad-x: var(--ds-date-picker-trigger-pad-x, var(--field-pad-x));
 
   /* Mono by default: the ghost mask paints the placeholder glyphs and the real
      value sits behind it, so fixed-width digits are what keep the two in step. */
@@ -87,7 +88,11 @@
   background: var(--_date-picker-trigger-bg-color);
   border: var(--border-width-default) solid var(--_date-picker-trigger-border-color);
   border-radius: var(--_date-picker-trigger-radius);
-  padding: 0 var(--space-3);
+
+  /* --field-pad-x, not --space-3: the two are equal at default density but the
+     token shrinks under [data-density] and the literal did not, so a picker beside
+     a ds-input drifted 8px wider the moment a consumer set a density. */
+  padding: 0 var(--_date-picker-trigger-pad-x);
 
   @include field-box.field-box-height(md);
 

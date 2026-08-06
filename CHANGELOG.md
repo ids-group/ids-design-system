@@ -55,6 +55,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `truncate` — a handler on every cell would swallow the row click on an interactive table.
 - **`sortValue` string ordering is case- and accent-insensitive** (`sensitivity: 'base'`), matching the
   comparator consumers are migrating off, so a column of strings does not silently reorder.
+- **Date and time pickers keep step with the fields beside them under `[data-density]`.** Both triggers
+  hard-coded their horizontal padding, which happened to equal `--field-pad-x` at default density but did
+  not shrink with it — so setting a density left a picker 8px wider than the `ds-input` next to it. Both now
+  resolve `--ds-date-picker-trigger-pad-x` / `--ds-time-picker-trigger-pad-x` from the field family.
 - **`density="compact"` no longer defeats every `ds-table` padding hook.** It pinned `padding` straight onto
   the cells, which out-specifies the `--ds-table-cell-pad-*` and head hooks, so a compact table silently
   ignored all of them. It now retunes the same density tokens `[data-density]` uses — identical spacing, and

@@ -2805,6 +2805,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Date-picker trigger corner radius (default --radius-md) — the counterpart of --ds-time-picker-trigger-radius."
       },
       {
+        "name": "--ds-date-picker-trigger-pad-x",
+        "value": "var(--field-pad-x)",
+        "notes": "Trigger horizontal padding; follows the field family via --field-pad-x, so it tracks density like ds-input."
+      },
+      {
         "name": "--ds-date-picker-value-font-family",
         "value": "var(--font-mono)",
         "notes": "Font family of the date value AND its ghost mask (default --font-mono — fixed-width digits keep the typed value on the mask; a proportional override still lines up thanks to tabular-nums)."
@@ -5883,6 +5888,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-time-picker-trigger-radius",
         "value": "var(--ds-radius-control)",
         "notes": "Time picker trigger corner radius (defaults to --radius-md)."
+      },
+      {
+        "name": "--ds-time-picker-trigger-pad-x",
+        "value": "var(--field-pad-x)",
+        "notes": "Trigger horizontal padding; follows the field family via --field-pad-x, so it tracks density like ds-input."
       },
       {
         "name": "--ds-time-picker-panel-radius",

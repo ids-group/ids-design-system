@@ -20,6 +20,7 @@
     var(--text-primary)
   );
   --_time-picker-trigger-radius: var(--ds-time-picker-trigger-radius, var(--ds-radius-control));
+  --_time-picker-trigger-pad-x: var(--ds-time-picker-trigger-pad-x, var(--field-pad-x));
   --_time-picker-panel-radius: var(--ds-time-picker-panel-radius, var(--ds-radius-panel));
   --_time-picker-required-color: var(--ds-time-picker-required-color, var(--error));
   --_time-picker-value-font-family: var(--ds-time-picker-value-font-family, var(--font-sans));
@@ -87,7 +88,7 @@
   background: var(--_time-picker-trigger-bg-color);
   border: var(--border-width-default) solid var(--_time-picker-trigger-border);
   border-radius: var(--_time-picker-trigger-radius);
-  padding: 0 var(--space-3);
+  padding: 0 var(--_time-picker-trigger-pad-x);
 
   @include field-box.field-box-height(md);
 
