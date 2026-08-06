@@ -5865,7 +5865,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Who sorts — see `TableSortMode`. Unset resolves to `'client'`, so a column marked `sortable` always does something; declare `'server'` when the host reorders, or `'none'` to drop the affordance entirely."
+        "description": "Who sorts — see `TableSortMode`. Unset resolves to `'server'`: the table emits `(sortChange)` and reorders nothing, which is what a paged table needs. Declare `'client'` when the table holds every row, or `'none'` to drop the affordance entirely."
       },
       {
         "name": "filterMode",
@@ -5878,7 +5878,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Who filters — see `TableFilterMode`. Unset resolves to `'client'`. Declare `'server'` when the host turns `columnFilters` into a request: the table then tracks the selection and runs no local pass."
+        "description": "Who filters — see `TableFilterMode`. Unset resolves to `'server'`: the table tracks the selection in `columnFilters` for the host to turn into a request, and runs no local pass. Declare `'client'` when the table holds every row and should filter them itself."
       },
       {
         "name": "columnFilterOptions",

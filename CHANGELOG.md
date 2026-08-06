@@ -8,6 +8,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Changed (breaking, behaviour)
+
+- **`ds-table` `sortMode` and `filterMode` default to `'server'`, were `'client'`.** Server-paged is the
+  normal case, and there the old default was actively wrong: the table sorted the current page, so the
+  rows looked sorted and were not — a dev warning existed only to say so. An undeclared table now emits
+  `(sortChange)` / updates `columnFilters` and reorders nothing itself. **A table that holds every row
+  must now declare `sortMode="client"` / `filterMode="client"`**; the dev warning has been turned around
+  to catch exactly that case (no `total` bound + sortable or filterable columns + no declared mode).
+
 ### Changed (breaking, visual)
 
 - **`ds-search` is 40px tall by default, was 36px.** It was the only control in the library on that

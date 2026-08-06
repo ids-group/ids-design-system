@@ -301,13 +301,15 @@ export class TableComponent<T extends object> {
   readonly scrollToTopOnPageChange = input(false, {
     transform: booleanAttribute,
   });
-  /** Who sorts — see `TableSortMode`. Unset resolves to `'client'`, so a column
-   *  marked `sortable` always does something; declare `'server'` when the host
-   *  reorders, or `'none'` to drop the affordance entirely. */
+  /** Who sorts — see `TableSortMode`. Unset resolves to `'server'`: the table
+   *  emits `(sortChange)` and reorders nothing, which is what a paged table
+   *  needs. Declare `'client'` when the table holds every row, or `'none'` to
+   *  drop the affordance entirely. */
   readonly sortMode = input<TableSortMode | null>(null);
-  /** Who filters — see `TableFilterMode`. Unset resolves to `'client'`. Declare
-   *  `'server'` when the host turns `columnFilters` into a request: the table
-   *  then tracks the selection and runs no local pass. */
+  /** Who filters — see `TableFilterMode`. Unset resolves to `'server'`: the
+   *  table tracks the selection in `columnFilters` for the host to turn into a
+   *  request, and runs no local pass. Declare `'client'` when the table holds
+   *  every row and should filter them itself. */
   readonly filterMode = input<TableFilterMode | null>(null);
   /**
    * The full value domain per column key, for a header filter the table cannot
@@ -319,10 +321,10 @@ export class TableComponent<T extends object> {
     new Map(),
   );
   protected readonly filterModeResolved = computed<TableFilterMode>(
-    () => this.filterMode() ?? 'client',
+    () => this.filterMode() ?? 'server',
   );
   protected readonly sortModeResolved = computed<TableSortMode>(
-    () => this.sortMode() ?? 'client',
+    () => this.sortMode() ?? 'server',
   );
   /** Pin the first data column (and the select column) on horizontal scroll. */
   readonly stickyFirstColumn = input(false, { transform: booleanAttribute });
@@ -1237,27 +1239,28 @@ export class TableComponent<T extends object> {
 
     if (isDevMode()) {
       effect(() => {
-        // Only when the mode was never DECLARED: a table that asks for 'client'
-        // with server paging has made that choice knowingly.
+        // The default is 'server', which is right for the paged tables that make
+        // up most of them. A table holding ALL its rows is the exception, and
+        // `total` unbound is how it says so — so that is where the reminder goes.
+        // Only when the mode was never DECLARED.
         if (
           this.sortMode() === null &&
-          this.total() !== null &&
+          this.total() === null &&
           this.columns().some((col) => col.sortable)
         ) {
           console.warn(
-            '[ds-table] sortable columns default to sortMode="client", but `total` is set, so this table is server-paged and only the CURRENT PAGE would sort — the rows would look sorted and not be. Declare sortMode="server" and reorder in the (sortChange) handler, or sortMode="client" if page-local sorting is really what you want.',
+            '[ds-table] sortable columns default to sortMode="server", so a header click only emits (sortChange) and the table reorders nothing itself. This table binds no `total`, which usually means it holds every row — declare sortMode="client" to sort them in place.',
           );
         }
-        // Same trap one column over: a header filter on a server-paged table
-        // offers only the values that happen to be on this page, and then
-        // filters locally on top of what the server already filtered.
+        // Same trap one column over: a header filter defaults to the server too,
+        // so the checklist tracks a selection and runs no local pass.
         if (
           this.filterMode() === null &&
-          this.total() !== null &&
+          this.total() === null &&
           this.columns().some((col) => col.filter === 'set')
         ) {
           console.warn(
-            '[ds-table] a header filter defaults to filterMode="client", but `total` is set, so this table is server-paged: the checklist lists only the values on the CURRENT PAGE and then filters what the server already filtered. Declare filterMode="server" and turn `columnFilters` into your request, and pass the full domain through `columnFilterOptions`.',
+            '[ds-table] a header filter defaults to filterMode="server", so ticking a value only updates `columnFilters` and filters nothing locally. This table binds no `total`, which usually means it holds every row — declare filterMode="client" to filter them in place.',
           );
         }
       });

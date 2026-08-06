@@ -42,6 +42,14 @@
       "searchHints": ["--search-h"]
     },
     {
+      "id": "table-sort-filter-mode-default-server",
+      "kind": "behavior",
+      "old": "ds-table",
+      "new": null,
+      "note": "CHANGED DEFAULT: ds-table sortMode and filterMode resolve to 'server' when unset, were 'client'. An undeclared table now emits (sortChange) / updates columnFilters and reorders or filters NOTHING itself. ACTION, and it is per-table: if the table receives ALL its rows - the giveaway is that it does NOT bind `total` - add sortMode=\"client\" and, where any column has filter: 'set', filterMode=\"client\", or its headers will look live and do nothing. If it binds `total` it is server-paged and the new default is what you already wanted: the old 'client' sorted only the page in hand, so the rows looked sorted and were not, and a dev warning said exactly that. Tables that already declare a mode are untouched. A reversed dev warning now fires on the client case (no `total` + sortable/filterable columns + no declared mode), so run the app and let the console list them.",
+      "searchHints": ["ds-table", "sortMode", "filterMode", "sortable", "sortChange"]
+    },
+    {
       "id": "number-stepper-lg-height",
       "kind": "behavior",
       "old": "ds-number-stepper",
