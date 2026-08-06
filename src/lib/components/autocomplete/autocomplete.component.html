@@ -8,6 +8,10 @@
   [class.error]="invalidResolved()"
   (click)="onTriggerClick()"
 >
+  <span class="addon-slot prefix">
+    <ng-content select="[dsAutocompletePrefix]"></ng-content>
+  </span>
+
   @if (multiple()) {
     @for (selectedOption of selectedTags(); track selectedOption.value) {
       <ds-tag
@@ -46,12 +50,18 @@
     (keydown)="onKeydown($event)"
   />
 
-  <ds-icon
-    name="chevronDown"
-    class="autocomplete-chevron"
-    [size]="16"
-    (click)="togglePanel($event)"
-  />
+  <span class="addon-slot suffix">
+    <ng-content select="[dsAutocompleteSuffix]"></ng-content>
+  </span>
+
+  @if (showChevron()) {
+    <ds-icon
+      name="chevronDown"
+      class="autocomplete-chevron"
+      [size]="16"
+      (click)="togglePanel($event)"
+    />
+  }
 </div>
 
 <ds-field-message

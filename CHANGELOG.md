@@ -38,6 +38,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   table that stayed symmetric — body cells have had per-side hooks since 07-31 — so a header wanting its
   label tight to the top with air above the rule could only be reached with `!important`. Both fall back to
   the density value, so nothing moves until one is set.
+- **`ds-autocomplete` can be built as a search field.** `dsAutocompletePrefix` / `dsAutocompleteSuffix`
+  content slots — the same names and the same contract as `ds-input`'s addon slots — plus `[showChevron]`
+  (default `true`) to drop the trailing arrow, which on a search field invites a click that would list
+  everything. Previously a leading glyph had to be absolutely positioned over the field and the chevron
+  hidden with a global selector reaching for `.autocomplete-chevron`. Unlike a fixed `variant="search"`,
+  the slots also cover the icon-**and**-chevron case a combobox often wants.
 - **`ds-autocomplete.clear()`**, emptying both the selected value and the text the user typed. Setting
   `value` to null from outside left the typed query on screen, because the query is component state with no
   input bound to it — so a host resetting the field after navigating had to query the inner `<input>` and

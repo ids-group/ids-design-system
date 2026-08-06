@@ -45,6 +45,18 @@
   flex-wrap: wrap;
   transition: border-color var(--duration-fast) var(--ease-standard);
 
+  /* Same contract as ds-input's addon slots, down to the class names — a leading
+     search glyph belongs in one place across the field family, not two. */
+  .addon-slot {
+    display: inline-flex;
+    align-items: center;
+    align-self: stretch;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+
+    &:empty { display: none; }
+  }
+
   &:hover:not(.disabled) { border-color: var(--border-strong); }
   &:focus-within:not(.disabled) {
     border-color: var(--_autocomplete-border-color-focus);

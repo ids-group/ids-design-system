@@ -88,6 +88,9 @@ export class AutocompleteComponent<T = unknown>
   readonly value = model<T | readonly T[] | null>(null);
   /** Allows selecting more than one option, shown as removable tags. */
   readonly multiple = input(false, { transform: booleanAttribute });
+  /** Draws the trailing chevron. Turn it off for a search field, where an arrow
+   *  invites a click that would list everything instead of searching. */
+  readonly showChevron = input(true, { transform: booleanAttribute });
   /** Trigger height — sm/md/lg. */
   readonly size = input<DsSize>('md');
   /** Trigger width — `fill` stretches to the container, `content` hugs the value. */

@@ -321,6 +321,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Allows selecting more than one option, shown as removable tags."
       },
       {
+        "name": "showChevron",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Draws the trailing chevron. Turn it off for a search field, where an arrow invites a click that would list everything instead of searching."
+      },
+      {
         "name": "size",
         "kind": "input",
         "type": "DsSize",
