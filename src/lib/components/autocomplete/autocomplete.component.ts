@@ -76,6 +76,7 @@ export class AutocompleteComponent<T = unknown>
   private readonly panelTokens = [
     '--ds-autocomplete-panel-bg-color',
     '--ds-autocomplete-panel-radius',
+    '--ds-autocomplete-panel-maxh',
     '--ds-autocomplete-option-bg-color-hover',
   ];
 
@@ -466,6 +467,26 @@ export class AutocompleteComponent<T = unknown>
     this.isOpen.set(false);
     this.activeIndex.set(-1);
     this.markTouched();
+  }
+
+  /**
+   * Empties the field — both the selected value and the text the user typed.
+   *
+   * `value.set(null)` alone is not enough from outside: the typed query is
+   * component state with no input bound to it, so the text stays on screen after
+   * the value goes. That gap is why a host reaching for "reset after navigating"
+   * ends up querying the inner `<input>` and dispatching a synthetic `input`
+   * event.
+   *
+   * Deliberately does NOT move focus — the caller may be navigating away, and
+   * stealing focus back into a field they just left is worse than leaving it.
+   */
+  clear(): void {
+    this.value.set(this.multiple() ? [] : null);
+    this.query.set('');
+    if (this.isOpen()) {
+      this.close('dismiss');
+    }
   }
 
   ngOnDestroy(): void {

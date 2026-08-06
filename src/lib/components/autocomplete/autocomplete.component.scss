@@ -110,6 +110,7 @@
      inherit down to it and background would collapse to transparent. */
   --_autocomplete-panel-bg-color: var(--ds-autocomplete-panel-bg-color, var(--surface-overlay));
   --_autocomplete-panel-radius: var(--ds-autocomplete-panel-radius, var(--ds-radius-panel));
+  --_autocomplete-panel-maxh: var(--ds-autocomplete-panel-maxh, var(--picker-maxh));
   --_autocomplete-option-bg-color-hover: var(--ds-autocomplete-option-bg-color-hover, var(--surface-secondary));
 
   /* Fill the cdk-overlay-pane width (set from trigger.getBoundingClientRect()
@@ -123,7 +124,7 @@
   border-radius: var(--_autocomplete-panel-radius);
   box-shadow: var(--shadow-popover);
   margin: var(--picker-offset) 0 0;
-  max-height: var(--picker-maxh);
+  max-height: var(--_autocomplete-panel-maxh);
   overflow-y: auto;
   z-index: var(--layer-popover);
 

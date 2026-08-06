@@ -38,6 +38,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   table that stayed symmetric — body cells have had per-side hooks since 07-31 — so a header wanting its
   label tight to the top with air above the rule could only be reached with `!important`. Both fall back to
   the density value, so nothing moves until one is set.
+- **`ds-autocomplete.clear()`**, emptying both the selected value and the text the user typed. Setting
+  `value` to null from outside left the typed query on screen, because the query is component state with no
+  input bound to it — so a host resetting the field after navigating had to query the inner `<input>` and
+  dispatch a synthetic `input` event at it. It deliberately does not move focus.
+- **`--ds-autocomplete-panel-maxh`**, so the dropdown's height before it scrolls no longer needs the private
+  `--picker-maxh` (which `ds-multi-select` also reads, making it the wrong lever for one component).
 - **`--ds-autocomplete-panel-radius`, bringing the last panel into the radius role layer.** Its dropdown was
   the one portaled surface still hard-coding `--radius-lg` while modal, popover, card, bottom-sheet and both
   picker panels resolve `--ds-radius-panel`, so a consumer who squared the three radius roles got a square
