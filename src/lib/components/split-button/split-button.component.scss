@@ -1,3 +1,5 @@
+@use '../../styles/field-box' as field-box;
+
 :host {
   display: inline-flex;
   --_split-button-bg-color: var(--ds-split-button-bg-color, var(--accent));
@@ -14,7 +16,9 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  height: var(--hit-cozy);
+
+  @include field-box.field-box-height(md);
+
   border: var(--border-width-default) solid transparent;
   background: transparent;
   font:
