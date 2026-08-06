@@ -7,8 +7,9 @@
 @use '../../styles/press' as press;
 
 :host {
-  /* Public --ds-search-* are read with fallbacks, never declared — consumer overrides inherit in. */
-  --_search-height:       var(--ds-search-height,       var(--search-h));
+  /* Public --ds-search-* are read with fallbacks, never declared — consumer overrides inherit in.
+     Height also falls through --ds-field-height, so one token levels a whole toolbar. */
+  --_search-height:       var(--ds-search-height,       var(--ds-field-height, var(--field-h-md)));
   --_search-bg-color:           var(--ds-search-bg-color,           var(--surface-default));
   --_search-border:       var(--ds-search-border,       var(--border-default));
   --_search-radius:       var(--ds-search-radius,       var(--ds-radius-control));
@@ -102,10 +103,10 @@
     color: var(--text-tertiary);
   }
 
-  /* Size modifiers — opt-in, align search with the canonical hit-target scale
-     when sitting in a control row beside input/select/button. Default stays at
-     --search-h (36px / --hit-md) for back-compat. */
-  &.sm { --_search-height: var(--ds-search-height, var(--hit-min)); }
-  &.md { --_search-height: var(--ds-search-height, var(--search-h)); }
-  &.lg { --_search-height: var(--ds-search-height, var(--field-h-lg)); }
+  /* Search sits in control rows beside input/select/button, so it takes the same
+     scale they do. It used to default to its own 36px, which left it a step short
+     of every neighbour — ds-button resolves --field-h-md like the fields. */
+  &.sm { --_search-height: var(--ds-search-height, var(--ds-field-height, var(--field-h-sm))); }
+  &.md { --_search-height: var(--ds-search-height, var(--ds-field-height, var(--field-h-md))); }
+  &.lg { --_search-height: var(--ds-search-height, var(--ds-field-height, var(--field-h-lg))); }
 }

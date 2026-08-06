@@ -3203,7 +3203,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-field-height",
-        "value": "var(--_field-box-height)",
+        "value": "var(--field-h-#{$size})",
         "notes": "Control-box height for the field family, overriding the size class. The sm/md/lg defaults come from the --field-h-* scale; set this to pin one height regardless of size."
       }
     ]
@@ -4295,7 +4295,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-search-height",
-        "value": "var(--search-h)",
+        "value": "var(--ds-field-height, var(--field-h-md))",
         "notes": "Control height."
       },
       {
@@ -4347,11 +4347,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-search-maxw",
         "value": "none",
         "notes": "Search field max-width cap (none by default)."
-      },
-      {
-        "name": "--search-h",
-        "value": "var(--hit-md)",
-        "notes": "Search input height (var(--hit-md))."
       }
     ]
   },

@@ -8,6 +8,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Changed (breaking, visual)
+
+- **`ds-search` is 40px tall by default, was 36px.** It was the only control in the library on that
+  height — `ds-button`, `ds-input`, `ds-select` and both pickers all resolve `--field-h-md` — so a search
+  box in a toolbar sat a step short of everything beside it. All three sizes now come off the field scale
+  (sm 32 / md 40 / lg 48; only md moved). Restore with `ds-search { --ds-search-height: 36px; }`. The
+  height also falls through `--ds-field-height` now, so one token levels a whole toolbar.
+- **The global `--search-h` token is gone.** It existed only to hold that 36px and nothing reads it.
+  Use `--ds-search-height` to retune search alone, or `--ds-field-height` for the family.
+
 ### Fixed
 
 - **Opening `ds-date-picker` with the mouse no longer takes the caret out of the field.** Clicking the

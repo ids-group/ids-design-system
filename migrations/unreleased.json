@@ -24,9 +24,40 @@
       "new": "--ds-auth-layout-",
       "note": "Prefix rename for the six component tokens: --ds-auth-shell-min-height / -card-max-width / -gap / -bg-color / -mark-bg-color / -mark-label-color -> --ds-auth-layout-*. Values and defaults are unchanged. DS-owned tokens only (no others ship under this prefix); a consumer's own --ds-auth-shell-* variable is out of scope. EXCLUDED, do not rename: the global scale token --auth-card-w, the fallback behind -card-max-width, which carries no --ds-auth-shell- prefix and keeps its name. Confirm the new name exists in the installed package.",
       "searchHints": ["--ds-auth-shell-"]
+    },
+    {
+      "id": "search-height-joins-field-scale",
+      "kind": "behavior",
+      "old": "ds-search",
+      "new": null,
+      "note": "CHANGED DEFAULT: ds-search is 40px tall at the default size, was 36px. Every size moved onto the field scale - sm var(--field-h-sm) 32px (was --hit-min 32px, unchanged), md var(--field-h-md) 40px (was --search-h 36px, CHANGED), lg var(--field-h-lg) 48px (unchanged). The old 36px was a lone tier: nothing else in the library used it, while ds-button, ds-input, ds-select and both pickers all resolve --field-h-md, so a search box in a toolbar sat 4px short of every neighbour. RESTORE the old height with `ds-search { --ds-search-height: 36px; }` - that token still wins over everything. ALSO NEW: the height now falls through --ds-field-height, so `--ds-field-height: 44px` on a toolbar levels search along with the fields, which was the point of the change.",
+      "searchHints": ["ds-search", "--ds-search-height", "--search-h"]
+    },
+    {
+      "id": "search-h-token-removed",
+      "kind": "removed-api",
+      "old": "--search-h",
+      "new": null,
+      "note": "The global --search-h token is gone; it existed only to hold ds-search's 36px and nothing reads it any more. Its replacements, in precedence order: --ds-search-height (retunes search alone) and --ds-field-height (levels the whole field family). If you declared --search-h to resize search, that declaration is now inert - swap it for --ds-search-height with the same value. Reading it in your own CSS resolves to nothing. The --hit-md scale token it pointed at (36px) is untouched and still available.",
+      "searchHints": ["--search-h"]
+    },
+    {
+      "id": "number-stepper-lg-height",
+      "kind": "behavior",
+      "old": "ds-number-stepper",
+      "new": null,
+      "note": "CHANGED DEFAULT, one size only: ds-number-stepper with size=\"lg\" is 48px tall, was 44px. It resolved --hit-comfy while the field family's large size is --field-h-lg (--hit-touch, 48px), so a large stepper was a step short of a large input beside it. The +/- buttons and the quantity box derive their widths from that height, so they widen with it. size=\"sm\" (32px) and the size=\"md\" default (40px) are unchanged. RESTORE with `ds-number-stepper { --ds-field-height: 44px; }` scoped to the instance, or set the size back to md.",
+      "searchHints": ["ds-number-stepper", "size=\"lg\"", "--hit-comfy"]
     }
   ],
   "informational": [
+    "--ds-field-height now reaches ds-autocomplete, ds-multi-select, ds-color-picker and ds-number-stepper. All four spelled their height as the raw --hit-* value, so the token the name advertises did nothing for them; they read the field scale now. Pixel-identical at every size EXCEPT ds-number-stepper at size=\"lg\" (its own actionable entry above). NO ACTION unless you had already worked around the gap by pinning height on one of these - that pin can go.",
+    "The six connected panels (ds-select, ds-multi-select, ds-autocomplete, ds-color-picker, ds-date-picker, ds-time-picker) now build their overlay from one shared helper instead of six identical copies. Internal only, NO ACTION: the position, the 4px gap, the flip-above fallback, the panel classes and the scroll strategy are byte-for-byte what they were.",
+    "ds-autocomplete gained dsAutocompletePrefix / dsAutocompleteSuffix content slots and [showChevron] (default true). Additive, NO ACTION. If you absolutely positioned a search glyph over the field and re-padded the input, or hid the arrow with a global rule reaching for .autocomplete-chevron, replace both: put the icon in the prefix slot and set [showChevron]=\"false\". The slot names and behaviour match ds-input's dsInputPrefix / dsInputSuffix.",
+    "ds-autocomplete gained a public clear() that empties the value AND the typed text. If you reset the field by querying the inner <input> out of the DS's DOM and dispatching a synthetic input event, delete that and call clear() on a viewChild ref - the DOM shape it depended on is not part of the public API. It deliberately does not move focus.",
+    "ds-autocomplete gained --ds-autocomplete-panel-radius (default --ds-radius-panel) and --ds-autocomplete-panel-maxh (default --picker-maxh). NO ACTION - both defaults equal today's values. The radius one matters if you square the radius roles: the autocomplete panel was the last portaled surface hard-coding --radius-lg, so it stayed rounded in an otherwise square brand. The max-height one replaces reaching for the private --picker-maxh, which ds-multi-select also reads.",
+    "ds-table gained --ds-table-head-pad-top / --ds-table-head-pad-bottom, plus showPageSize and showLabel forwarded to its footer pager. All additive with today's values as defaults, NO ACTION. Separately FIXED: density=\"compact\" pinned padding onto the cells, which out-specified every --ds-table-*-pad-* hook, so a compact table silently ignored all of them; it now retunes the density tokens instead. Spacing is unchanged - but if you fought that with an !important, it can go.",
+    "ds-date-picker and ds-time-picker resolve their trigger's horizontal padding from --field-pad-x (new hooks: --ds-date-picker-trigger-pad-x, --ds-time-picker-trigger-pad-x) instead of a hard-coded --space-3. Identical at the default density; the difference shows under [data-density], where the token shrinks and the literal did not, leaving a picker 8px wider than the input beside it. NO ACTION unless you hand-pinned picker padding to compensate.",
     "The ds-auth-shell -> ds-auth-layout rename is vocabulary only: no input, output, slot, token value or behaviour changed, and it is the same component 0.8.0 shipped. If you never adopted ds-auth-shell (it was added in 0.8.0), there is nothing to do.",
     "FIXED in ds-textarea: size=\"sm\" and size=\"lg\" rendered the md vertical padding (12px top and bottom) regardless of the size. The size blocks set the inner textarea's vertical pad, but a :host-prefixed pin at the end of the file out-ranked them once emulated encapsulation shimmed both selectors - it carries one more attribute than the size selector. There are now three pins, one per size, and the size blocks keep only the horizontal padding they own. NO ACTION: the change is visible only on a non-md textarea and the md default is unchanged. Note that retuning --ds-input-pad-y previously moved all three sizes together; if you compensated for the wrong padding with your own override on a sm or lg textarea, that override now stacks on the corrected value and can go.",
     "ds-auth-layout now COMPRESSES its own chrome on a short viewport: block padding, the column gap, the letter-mark tile and its glyph, the wordmark and the masthead inner gap all clamp against svh. No action - behaviour only, and a viewport 800px tall or more renders exactly what it did before, so desktop is unchanged. Below that the furniture shrinks so it is not what pushes a card into scrolling (~131px instead of ~219px at a landscape phone's ~330px). Two new tokens opt out per dimension: --ds-auth-layout-pad-block and --ds-auth-layout-mark-size; setting any of those or the existing --ds-auth-layout-gap to a fixed value stops that one compressing. A card taller than the remaining space still scrolls - that is intended.",
