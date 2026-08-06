@@ -49,6 +49,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the backend already formatted, and `exportFailed` emits the rejection — swallowing it made a failed export
   indistinguishable from a slow one. Two box tokens: `--ds-table-min-width` (a readability floor, default 0)
   and `--ds-table-hscroll-bottom` (offsets the sticky scrollbar out of a padded container, default 0).
+- **`ds-table` lazy loading** — `[lazy]` plus a `(lazyLoad)` output emitting `{ first, rows }` for the
+  range now on screen. `data` becomes a sparse array `total` long: write each fetched row at its absolute
+  index, and every gap inside the window renders a skeleton row until it arrives. The scroller is sized
+  from `total` rather than from what has arrived, so the scrollbar tells the truth from the first frame.
+  Needs `virtualScroll` (there is no window to fetch against otherwise) and `total`; a request is not
+  re-sent while the range it covered is still on screen. Dev warnings cover all three ways to wire it
+  wrong, including `sortMode="client"`, which would sort only the rows that happen to have loaded.
 - **`[quiet]` on `ds-menu-item`** — a muted row for a secondary action like "Sign out" under a divider,
   the sibling of the existing `[error]`. Recolouring one item was previously impossible through the
   token: `--ds-menu-item-label-color` resolves on the host against the value inherited from `ds-menu`, so

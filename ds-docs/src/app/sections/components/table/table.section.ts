@@ -480,4 +480,30 @@ export class TableSection {
   protected onRowAction(event: TableRowActionEvent<EventRow>): void {
     this.lastRowAction.set(`${event.action.label} · ${event.row.project}`);
   }
+
+  /** Lazy demo: the same 10 000 records, but the table starts with NONE of them
+   *  and the array is filled at the absolute indices each request covers. */
+  protected readonly lazyTotal = 10_000;
+  protected readonly lazyRows = signal<ProjectRow[]>(
+    new Array<ProjectRow>(this.lazyTotal),
+  );
+  protected readonly lazyRequests = signal<string[]>([]);
+
+  protected onLazyLoad(range: { first: number; rows: number }): void {
+    this.lazyRequests.update((log) =>
+      [`first ${range.first} · rows ${range.rows}`, ...log].slice(0, 4),
+    );
+    // A real host would fetch here; the delay is what makes the skeleton rows
+    // visible, which is the whole point of the demo.
+    setTimeout(() => {
+      this.lazyRows.update((rows) => {
+        const next = rows.slice();
+        for (let index = range.first; index < range.first + range.rows; index++) {
+          next[index] = this.bulkRows[index];
+        }
+
+        return next;
+      });
+    }, 600);
+  }
 }

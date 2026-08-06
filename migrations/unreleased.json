@@ -47,7 +47,13 @@
       "old": "ds-table",
       "new": null,
       "note": "CHANGED DEFAULT: ds-table sortMode and filterMode resolve to 'server' when unset, were 'client'. An undeclared table now emits (sortChange) / updates columnFilters and reorders or filters NOTHING itself. ACTION, and it is per-table: if the table receives ALL its rows - the giveaway is that it does NOT bind `total` - add sortMode=\"client\" and, where any column has filter: 'set', filterMode=\"client\", or its headers will look live and do nothing. If it binds `total` it is server-paged and the new default is what you already wanted: the old 'client' sorted only the page in hand, so the rows looked sorted and were not, and a dev warning said exactly that. Tables that already declare a mode are untouched. A reversed dev warning now fires on the client case (no `total` + sortable/filterable columns + no declared mode), so run the app and let the console list them.",
-      "searchHints": ["ds-table", "sortMode", "filterMode", "sortable", "sortChange"]
+      "searchHints": [
+        "ds-table",
+        "sortMode",
+        "filterMode",
+        "sortable",
+        "sortChange"
+      ]
     },
     {
       "id": "number-stepper-lg-height",
@@ -59,6 +65,7 @@
     }
   ],
   "informational": [
+    "ds-table gained [lazy] + (lazyLoad) for fetching rows as they scroll into view. Additive and opt-in, NO ACTION. If you paged a long list yourself to keep it responsive, this is the alternative: set lazy with virtualScroll and total, make data a SPARSE array total long, and write each fetched row at its ABSOLUTE index - gaps inside the window render skeleton rows. Note sortMode must not be \"client\" (it would sort only the rows that happen to have arrived); the new server default is already right.",
     "--ds-field-height now reaches ds-autocomplete, ds-multi-select, ds-color-picker, ds-number-stepper, ds-split-button and the ds-modal confirm input. All six spelled their height as the raw --hit-* value, so the token the name advertises did nothing for them; they read the field scale now. Pixel-identical at every size EXCEPT ds-number-stepper at size=\"lg\" (its own actionable entry above). NO ACTION unless you had already worked around the gap by pinning height on one of these - that pin can go.",
     "The six connected panels (ds-select, ds-multi-select, ds-autocomplete, ds-color-picker, ds-date-picker, ds-time-picker) now build their overlay from one shared helper instead of six identical copies. Internal only, NO ACTION: the position, the 4px gap, the flip-above fallback, the panel classes and the scroll strategy are byte-for-byte what they were.",
     "ds-autocomplete gained dsAutocompletePrefix / dsAutocompleteSuffix content slots and [showChevron] (default true). Additive, NO ACTION. If you absolutely positioned a search glyph over the field and re-padded the input, or hid the arrow with a global rule reaching for .autocomplete-chevron, replace both: put the icon in the prefix slot and set [showChevron]=\"false\". The slot names and behaviour match ds-input's dsInputPrefix / dsInputSuffix.",

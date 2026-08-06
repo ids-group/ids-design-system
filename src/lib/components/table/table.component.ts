@@ -343,6 +343,20 @@ export class TableComponent<T extends object> {
   /** Row height in px in virtual mode. Must match what the rows actually
    *  measure, so it drives the CSS height rather than merely describing it. */
   readonly virtualRowSize = input(44);
+  /**
+   * Fetch rows as they scroll into view instead of receiving them all.
+   *
+   * `data` becomes a SPARSE array `total` long: put each fetched row at its
+   * absolute index and leave the rest empty. Every gap inside the window
+   * renders a skeleton row, and `(lazyLoad)` asks for the range covering it.
+   *
+   * Needs `virtualScroll` — without a window there is nothing to load
+   * lazily AGAINST — and `total`, which is what the scrollbar is sized from.
+   */
+  readonly lazy = input(false, { transform: booleanAttribute });
+  /** The range now on screen that `data` has gaps in — fetch it and write the
+   *  rows back at their absolute indices. Re-emits only when the range moves. */
+  readonly lazyLoad = output<{ first: number; rows: number }>();
 
   /** Fires with the row on click (or Enter/Space when `rowInteractive`). */
   readonly rowClicked = output<T>();
@@ -1056,13 +1070,20 @@ export class TableComponent<T extends object> {
     () => `${this.virtualRowSize()}px`,
   );
 
+  /** How many rows the scroller spans. Lazy counts the rows that EXIST, not the
+   *  ones that have arrived — otherwise the spacers shrink to the loaded slice
+   *  and the scrollbar lies about the length of the list. */
+  protected readonly virtualCount = computed(() =>
+    this.lazy() ? (this.total() ?? this.displayData().length) : this.displayData().length,
+  );
+
   /** `null` when not virtualizing — the row loop then walks `displayData()` whole. */
   protected readonly virtualWindow = computed(() => {
     if (!this.virtualizing()) {
       return null;
     }
     const rowSize = Math.max(1, this.virtualRowSize());
-    const count = this.displayData().length;
+    const count = this.virtualCount();
     const height = this.viewportHeight() || VIRTUAL_FALLBACK_HEIGHT;
     const firstVisible = Math.floor(this.scrollTop() / rowSize);
     const start = Math.max(0, firstVisible - VIRTUAL_OVERSCAN);
@@ -1087,13 +1108,35 @@ export class TableComponent<T extends object> {
     return window ? data.slice(window.start, window.end) : data;
   });
 
+  /**
+   * What the row loop walks: each slot carries its ABSOLUTE index, and a `null`
+   * row is a gap the host has not filled yet.
+   *
+   * Absolute rather than loop-relative because everything downstream needs it —
+   * striping parity, the skeleton's width seed, and the range `(lazyLoad)` asks
+   * for. Outside lazy mode every slot is filled, so the extra object per visible
+   * row buys uniformity for the ~25 rows windowing keeps in the DOM.
+   */
+  protected readonly rowSlots = computed<readonly { row: T | null; index: number }[]>(
+    () => {
+      const window = this.virtualWindow();
+      const data = this.displayData();
+      const start = window ? window.start : 0;
+      const end = window ? window.end : data.length;
+      const slots: { row: T | null; index: number }[] = [];
+      for (let index = start; index < end; index++) {
+        slots.push({ row: data[index] ?? null, index });
+      }
+
+      return slots;
+    },
+  );
+
   /** Zebra striping cannot come from `:nth-child` while windowing — the parity
    *  of a rendered row depends on its ABSOLUTE index, and the spacer rows are
    *  children too. Matches `:nth-child(odd)`, which is 1-based. */
-  protected isStriped(rowIndex: number): boolean {
-    const window = this.virtualWindow();
-
-    return !!window && (window.start + rowIndex) % 2 === 0;
+  protected isStriped(absoluteIndex: number): boolean {
+    return !!this.virtualWindow() && absoluteIndex % 2 === 0;
   }
 
   protected readonly allSelected = computed(() => {
@@ -1214,6 +1257,8 @@ export class TableComponent<T extends object> {
   protected readonly hscrollNeeded = signal(false);
   private readonly scrollTop = signal(0);
   private readonly viewportHeight = signal(0);
+  // Range last handed to (lazyLoad), so an unanswered request is not re-sent.
+  private lastLazyRequest: { first: number; rows: number } | null = null;
 
   constructor() {
     // One effect for both halves, because the restore CANNOT run in the
@@ -1286,8 +1331,51 @@ export class TableComponent<T extends object> {
       });
     });
 
+    // Ask for the visible range whenever it has gaps. Keyed on the range itself,
+    // so scrolling within an already-requested window stays quiet and a request
+    // in flight is not repeated every frame — the host is free to answer slowly.
+    effect(() => {
+      if (!this.lazy()) {
+        return;
+      }
+      const slots = this.rowSlots();
+      const gaps = slots.filter((slot) => slot.row === null);
+      if (gaps.length === 0) {
+        return;
+      }
+      const first = gaps[0].index;
+      const rows = gaps[gaps.length - 1].index - first + 1;
+      // Contained, not equal: the viewport is measured after the first paint, so
+      // the window grows by an overscan or two right after opening and an
+      // exact-match guard would fetch the same rows twice.
+      const covered =
+        this.lastLazyRequest &&
+        first >= this.lastLazyRequest.first &&
+        first + rows <= this.lastLazyRequest.first + this.lastLazyRequest.rows;
+      if (covered) {
+        return;
+      }
+      this.lastLazyRequest = { first, rows };
+      this.lazyLoad.emit({ first, rows });
+    });
+
     if (isDevMode()) {
       effect(() => {
+        if (this.lazy() && !this.virtualScroll()) {
+          console.warn(
+            '[ds-table] lazy needs virtualScroll: without a window there is no range to fetch, so every gap in `data` renders a skeleton row and (lazyLoad) never narrows. Set virtualScroll (and maxHeight), or hand the table its rows outright.',
+          );
+        }
+        if (this.lazy() && this.total() === null) {
+          console.warn(
+            '[ds-table] lazy needs `total`: the scroller is sized from the rows that EXIST, and without it the spacers collapse to the slice that has arrived — the scrollbar then lies about the length of the list.',
+          );
+        }
+        if (this.lazy() && this.sortMode() === 'client') {
+          console.warn(
+            '[ds-table] lazy with sortMode="client" sorts only the rows that happen to have arrived, which is a different order every time a window loads. The server owns the order here — drop sortMode or declare "server".',
+          );
+        }
         if (!this.virtualScroll()) {
           return;
         }

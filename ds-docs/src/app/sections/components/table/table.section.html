@@ -1262,4 +1262,56 @@
     [zebra]="true"
     [stickyFirstColumn]="true"
   />
+
+  <h3 class="block-title t-h4">
+    Lazy loading
+  </h3>
+
+  <p class="block-desc t-s">
+    The same 10 000 records, except the table starts with none of them. With
+    <code class="t-mono-inline">
+      [lazy]="true"
+    </code> the window asks for the range
+    it is about to show through
+    <code class="t-mono-inline">
+      (lazyLoad)
+    </code>, and every index the host has
+    not filled yet renders a skeleton row. Scroll fast and you outrun the fetch
+    — that is what the skeletons are for.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      data
+    </code> is a SPARSE array
+    <code class="t-mono-inline">
+      total
+    </code> long: write each fetched row at
+    its absolute index. The scroller is sized from
+    <code class="t-mono-inline">
+      total
+    </code>, not from what has arrived, so
+    the scrollbar tells the truth from the first frame. The demo answers after
+    600 ms; a request already in flight is never re-sent.
+  </p>
+
+  <p class="block-desc t-s">
+    Requests so far:
+    <code class="t-mono-inline">
+      {{ lazyRequests().join(' · ') || 'none yet' }}
+    </code>
+  </p>
+
+  <ds-table
+    caption="Ten thousand records, fetched as they scroll into view"
+    maxHeight="420px"
+    [data]="lazyRows()"
+    [columns]="bulkColumns"
+    [total]="lazyTotal"
+    [lazy]="true"
+    [virtualScroll]="true"
+    [virtualRowSize]="44"
+    [zebra]="true"
+    (lazyLoad)="onLazyLoad($event)"
+  />
 </docs-section>

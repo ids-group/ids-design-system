@@ -5926,6 +5926,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Row height in px in virtual mode. Must match what the rows actually measure, so it drives the CSS height rather than merely describing it."
       },
       {
+        "name": "lazy",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fetch rows as they scroll into view instead of receiving them all. `data` becomes a SPARSE array `total` long: put each fetched row at its absolute index and leave the rest empty. Every gap inside the window renders a skeleton row, and `(lazyLoad)` asks for the range covering it. Needs `virtualScroll` — without a window there is nothing to load lazily AGAINST — and `total`, which is what the scrollbar is sized from."
+      },
+      {
         "name": "rowActions",
         "kind": "input",
         "type": "readonly TableRowAction<T>[]",
@@ -5989,6 +5998,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": false,
         "description": "Fires when `exportFetcher` rejects. Without it a failed export is silent — the button simply re-enables and no file arrives."
+      },
+      {
+        "name": "lazyLoad",
+        "kind": "output",
+        "type": "{ first: number; rows: number }",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The range now on screen that `data` has gaps in — fetch it and write the rows back at their absolute indices. Re-emits only when the range moves."
       },
       {
         "name": "rowClicked",
