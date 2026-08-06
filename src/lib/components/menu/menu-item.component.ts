@@ -48,6 +48,9 @@ export class MenuItemComponent implements OnDestroy {
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Renders the item in an error/destructive style. */
   readonly error = input(false, { transform: booleanAttribute });
+  /** Renders the item muted — a secondary row like "Sign out" under a divider,
+   *  still actionable but not competing with the items above it. */
+  readonly quiet = input(false, { transform: booleanAttribute });
   /** Optional submenu template — renders a nested `ds-menu` on hover / ArrowRight. */
   readonly submenu = input<TemplateRef<unknown> | null>(null);
   /** Fires on click, unless the item is disabled or opens a submenu. */

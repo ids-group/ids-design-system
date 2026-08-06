@@ -458,6 +458,7 @@
   "--ds-menu-item-label-weight": "Menu item label weight.",
   "--ds-menu-item-pad-x": "Menu item horizontal padding.",
   "--ds-menu-item-pad-y": "Menu item vertical padding.",
+  "--ds-menu-item-quiet-label-color": "Label colour for a [quiet] item (default --text-secondary) — a secondary row like \"Sign out\" under a divider.",
   "--ds-menu-max-width": "Maximum menu width (default none). Pairs with --ds-menu-min-width; forwarded onto the pane by ds-popover.",
   "--ds-menu-min-width": "Minimum menu width (default auto). Forwarded onto the overlay pane by ds-popover, so it also works for a menu projected into a popover.",
   "--ds-modal-backdrop": "Backdrop scrim.",

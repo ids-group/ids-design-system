@@ -2989,6 +2989,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Renders the item in an error/destructive style."
       },
       {
+        "name": "quiet",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Renders the item muted — a secondary row like \"Sign out\" under a divider, still actionable but not competing with the items above it."
+      },
+      {
         "name": "submenu",
         "kind": "input",
         "type": "TemplateRef<unknown> | null",

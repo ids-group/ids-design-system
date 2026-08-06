@@ -3618,6 +3618,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Destructive menu item label colour (defaults to --error-text)."
       },
       {
+        "name": "--ds-menu-item-quiet-label-color",
+        "value": "var(--text-secondary)",
+        "notes": "Label colour for a [quiet] item (default --text-secondary) — a secondary row like \"Sign out\" under a divider."
+      },
+      {
         "name": "--ds-menu-item-pad-x",
         "value": "var(--space-3)",
         "notes": "Menu item horizontal padding."

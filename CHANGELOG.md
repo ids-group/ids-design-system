@@ -49,6 +49,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the backend already formatted, and `exportFailed` emits the rejection — swallowing it made a failed export
   indistinguishable from a slow one. Two box tokens: `--ds-table-min-width` (a readability floor, default 0)
   and `--ds-table-hscroll-bottom` (offsets the sticky scrollbar out of a padded container, default 0).
+- **`[quiet]` on `ds-menu-item`** — a muted row for a secondary action like "Sign out" under a divider,
+  the sibling of the existing `[error]`. Recolouring one item was previously impossible through the
+  token: `--ds-menu-item-label-color` resolves on the host against the value inherited from `ds-menu`, so
+  setting it per item did not win and the colour had to go on the inner element. `[error]` still wins if
+  both are set. Colour comes from `--ds-menu-item-quiet-label-color`.
 - **21 hooks for type and box values that a `font:`/`border:`/`padding` shorthand had swallowed.** Same
   shape every time: the value sat inside a shorthand, so overriding the one property meant a selector
   out-ranking the shimmed component rule. `ds-description-item` completes the eyebrow set both halves

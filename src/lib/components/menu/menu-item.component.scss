@@ -4,6 +4,7 @@
   --_menu-item-focus-shadow: var(--ds-menu-item-focus-shadow, var(--ds-control-focus-shadow));
   --_menu-item-hover-bg-color: var(--ds-menu-item-hover-bg-color, var(--surface-secondary));
   --_menu-item-error-label-color: var(--ds-menu-item-error-label-color, var(--error-text));
+  --_menu-item-quiet-label-color: var(--ds-menu-item-quiet-label-color, var(--text-secondary));
   --_menu-item-pad-x: var(--ds-menu-item-pad-x, var(--space-3));
   --_menu-item-pad-y: var(--ds-menu-item-pad-y, var(--space-2));
   --_menu-item-label-weight: var(--ds-menu-item-label-weight, var(--font-weight-medium));
@@ -44,6 +45,13 @@
     opacity: var(--opacity-muted);
 
     &:hover { background: transparent; }
+  }
+
+  /* Before `.error` on purpose: an item marked both should read destructive,
+     which is the louder of the two. Hover is deliberately left alone — a quiet
+     row is still actionable and should highlight like its neighbours. */
+  &.quiet {
+    color: var(--_menu-item-quiet-label-color);
   }
 
   &.error {
