@@ -83,6 +83,7 @@
           <a
             class="link"
             [routerLink]="urlForAnchor(group.path, item.anchor)"
+            [state]="linkState(group.path)"
             [class.is-active]="isActive(item.anchor)"
             (click)="onItem(item.anchor)"
           >

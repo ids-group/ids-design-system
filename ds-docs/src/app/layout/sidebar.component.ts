@@ -34,12 +34,6 @@ import { DS_VERSION } from '../shared/docs-stats';
 
 const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
 
-// How long to keep looking for a freshly-navigated section before giving up and
-// showing the top of the page. Group pages are lazy-loaded, so the section a
-// click asked for is routinely absent for a frame or two after NavigationEnd.
-const ANCHOR_WAIT_MS = 2000;
-const ANCHOR_POLL_MS = 50;
-
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -91,7 +85,7 @@ export class SidebarComponent {
   // Group (page) of the last real navigation. The scroll-spy rewrites only the
   // URL's anchor segment WITHIN a page, so we compare the resolved GROUP (not the
   // raw path) to skip those self-updates without re-scrolling / re-observing.
-  private lastGroup: string | null = null;
+  private readonly lastGroup = signal<string | null>(null);
   // Whether the current page has >1 spy section — home/changelog have ≤1 and so
   // never sync an anchor into the URL.
   private multiSection = false;
@@ -114,13 +108,13 @@ export class SidebarComponent {
       .subscribe((event) => {
         const url = (event as NavigationEnd).urlAfterRedirects.split('?')[0];
         const group = this.groupPathForUrl(url);
-        if (group === this.lastGroup) {
+        if (group === this.lastGroup()) {
           return;
         }
-        this.lastGroup = group;
+        this.lastGroup.set(group);
         setTimeout(() => {
           this.refreshObserver();
-          void this.scrollForNavigation(url);
+          this.scrollForNavigation(url);
         }, 0);
       });
 
@@ -205,35 +199,11 @@ export class SidebarComponent {
     this.activeAnchor.set(anchor);
   }
 
-  /**
-   * On a group-page change: scroll main to the target section (the URL's anchor
-   * segment), else to the top (a fresh group starts at its top).
-   *
-   * Waits for the section, because group pages are lazy-loaded and their
-   * sections are routinely NOT in the DOM one macrotask after `NavigationEnd`.
-   * A single lookup therefore missed, this fell back to the top, and the section
-   * was only reached on a SECOND click — by which time the page was mounted and
-   * `onItem` could scroll to it directly.
-   *
-   * Only a URL that names an anchor waits; without one the top is the answer
-   * straight away, so `changelog` and `home` are unaffected.
-   */
-  private async scrollForNavigation(url: string): Promise<void> {
-    const anchor = this.anchorFromUrl(url);
-    if (anchor) {
-      const start = Date.now();
-      for (let attempt = 0; Date.now() - start < ANCHOR_WAIT_MS; attempt++) {
-        if (this.scrollToAnchor(anchor)) {
-          // The sections mounted after refreshObserver() already ran, so it
-          // observed nothing and the active-section highlight would never move.
-          if (attempt > 0) {
-            this.refreshObserver();
-          }
-
-          return;
-        }
-        await new Promise((resolve) => setTimeout(resolve, ANCHOR_POLL_MS));
-      }
+  // On a group-page change: scroll main to the target section (the URL's anchor
+  // segment), else to the top (a fresh group starts at its top).
+  private scrollForNavigation(url: string): void {
+    if (this.scrollToAnchor(this.anchorFromUrl(url))) {
+      return;
     }
     const main = this.layoutScroll.scroller() as HTMLElement | null;
     main?.scrollTo({ top: 0, behavior: 'auto' });
@@ -317,6 +287,24 @@ export class SidebarComponent {
 
   protected isActive(anchor: string): boolean {
     return this.activeAnchor() === anchor;
+  }
+
+  /**
+   * Marks a link whose section is already on screen as same-page navigation.
+   *
+   * `onItem` scrolls those directly and synchronously, but the `routerLink`
+   * beside it still changes the path — and `ds-app-layout` resets the scroll on
+   * a path change, undoing it before the reader sees anything. Clicking the SAME
+   * item again then worked, because the second navigation was to an unchanged
+   * URL and triggered no reset. That is the "only opens on the second click".
+   *
+   * `dsSamePage` is the contract `LayoutNavigationService` documents for exactly
+   * this: a docs URL that names the reader's position changes the path without
+   * changing the page. The scroll-spy rewrite already used it; the click that
+   * causes the rewrite did not.
+   */
+  protected linkState(groupPath: string): { dsSamePage: true } | undefined {
+    return groupPath === this.lastGroup() ? { dsSamePage: true } : undefined;
   }
 
   // A group header is active when the active section belongs to it (the flat URL
