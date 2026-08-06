@@ -15,7 +15,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { IconComponent } from '../../icons/icon.component';
 import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
@@ -35,6 +35,7 @@ import {
   type DsOverlayCloseCause,
   focusIsInside,
   forwardOverlayTokens,
+  dropdownOverlay,
   prepareOverlayEnter,
 } from '../overlay-motion';
 import {
@@ -330,32 +331,11 @@ export class ColorPickerComponent
     if (parsed) {
       this.hsv.set(parsed);
     }
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(this.host.nativeElement)
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-          offsetY: 4,
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
-          offsetY: -4,
-        },
-      ]);
-    const cfg: OverlayConfig = {
-      positionStrategy,
-      hasBackdrop: false,
-      panelClass: ['ds-dropdown-panel', 'ds-overlay-pane'],
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-    };
-    this.overlayRef = this.overlay.create(cfg);
+    const { positionStrategy, config } = dropdownOverlay(
+      this.overlay,
+      this.host.nativeElement,
+    );
+    this.overlayRef = this.overlay.create(config);
     prepareOverlayEnter(
       this.overlayRef,
       this.host.nativeElement,

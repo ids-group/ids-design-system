@@ -18,7 +18,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { A11yModule } from '@angular/cdk/a11y';
 import {
@@ -28,6 +28,7 @@ import {
   type DsOverlayCloseCause,
   focusIsInside,
   forwardOverlayTokens,
+  dropdownOverlay,
   prepareOverlayEnter,
 } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
@@ -739,32 +740,12 @@ export class DatePickerComponent
     if (this.isDisabled() || this.overlayRef) {
       return;
     }
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(this.anchor().nativeElement)
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-          offsetY: 4,
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
-          offsetY: -4,
-        },
-      ]);
-    const cfg: OverlayConfig = {
-      positionStrategy,
-      hasBackdrop: false,
-      panelClass: 'ds-overlay-pane',
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-    };
-    this.overlayRef = this.overlay.create(cfg);
+    const { positionStrategy, config } = dropdownOverlay(
+      this.overlay,
+      this.anchor().nativeElement,
+      'ds-overlay-pane',
+    );
+    this.overlayRef = this.overlay.create(config);
     prepareOverlayEnter(
       this.overlayRef,
       this.host.nativeElement,

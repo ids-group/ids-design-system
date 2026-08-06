@@ -16,12 +16,13 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  dropdownOverlay,
   type DsOverlayCloseCause,
   prepareOverlayEnter,
 } from '../overlay-motion';
@@ -272,36 +273,12 @@ export class SelectComponent
     }
     const triggerElement = this.trigger().nativeElement;
     const width = triggerElement.getBoundingClientRect().width;
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(triggerElement)
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-          offsetY: 4,
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
-          offsetY: -4,
-        },
-      ]);
-    const cfg: OverlayConfig = {
-      positionStrategy,
-      hasBackdrop: false,
-      // Reuse the global panel skin defined in styles/_dropdown-overlay.scss
-      // so the portaled panel actually renders styled — `:host ::ng-deep`
-      // selectors can't reach a node outside the host's DOM tree.
-      panelClass: ['ds-dropdown-panel', 'ds-overlay-pane'],
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-      width,
-    };
-    this.overlayRef = this.overlay.create(cfg);
+    const { positionStrategy, config } = dropdownOverlay(
+      this.overlay,
+      triggerElement,
+    );
+    config.width = width;
+    this.overlayRef = this.overlay.create(config);
     prepareOverlayEnter(
       this.overlayRef,
       this.host.nativeElement,

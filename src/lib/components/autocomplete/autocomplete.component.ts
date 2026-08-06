@@ -16,7 +16,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
   closeOnOutsidePointer,
@@ -24,6 +24,7 @@ import {
   disposeWithLeave,
   type DsOverlayCloseCause,
   forwardOverlayTokens,
+  dropdownOverlay,
   prepareOverlayEnter,
 } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
@@ -400,31 +401,11 @@ export class AutocompleteComponent<T = unknown>
       return;
     }
     const triggerElement = this.trigger().nativeElement;
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(triggerElement)
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-          offsetY: 4,
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
-          offsetY: -4,
-        },
-      ]);
-    const overlayConfig: OverlayConfig = {
-      positionStrategy,
-      hasBackdrop: false,
-      panelClass: 'ds-overlay-pane',
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-    };
+    const { positionStrategy, config: overlayConfig } = dropdownOverlay(
+      this.overlay,
+      triggerElement,
+      'ds-overlay-pane',
+    );
     // Content-width trigger can be narrow — let the panel size to its options
     // with the trigger as the floor; fill mode keeps the exact trigger width.
     const triggerWidth = triggerElement.getBoundingClientRect().width;

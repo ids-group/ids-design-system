@@ -1,5 +1,7 @@
 import type {
   FlexibleConnectedPositionStrategy,
+  Overlay,
+  OverlayConfig,
   OverlayRef,
 } from '@angular/cdk/overlay';
 
@@ -23,6 +25,65 @@ const OVERLAY_MOTION_TOKENS = [
  * on; `'dismiss'` is ambient — Escape, a press outside, the page scrolling away.
  */
 export type DsOverlayCloseCause = 'select' | 'dismiss';
+
+// Breathing room between a trigger and its panel. Negative when the panel flips
+// above, so the gap reads the same from either side.
+const DROPDOWN_GAP = 4;
+
+/**
+ * The geometry every DS dropdown shares: directly below the trigger with a small
+ * gap, flipping above when there is no room, no backdrop, repositioning rather
+ * than closing on scroll.
+ *
+ * `select`, `multi-select` and `autocomplete` each carried a byte-identical copy
+ * of this, which meant three places to change and three chances to drift. Width
+ * is deliberately NOT set here — each caller has its own policy (exact trigger
+ * width, or the trigger as a floor) and that is a real difference, not
+ * duplication.
+ *
+ * Returns the strategy alongside the config because `prepareOverlayEnter` needs
+ * the strategy itself, not just the config that holds it.
+ */
+export function dropdownOverlay(
+  overlay: Overlay,
+  trigger: HTMLElement,
+  panelClass: string | string[] = ['ds-dropdown-panel', 'ds-overlay-pane'],
+): {
+  positionStrategy: FlexibleConnectedPositionStrategy;
+  config: OverlayConfig;
+} {
+  const positionStrategy = overlay
+    .position()
+    .flexibleConnectedTo(trigger)
+    .withPositions([
+      {
+        originX: 'start',
+        originY: 'bottom',
+        overlayX: 'start',
+        overlayY: 'top',
+        offsetY: DROPDOWN_GAP,
+      },
+      {
+        originX: 'start',
+        originY: 'top',
+        overlayX: 'start',
+        overlayY: 'bottom',
+        offsetY: -DROPDOWN_GAP,
+      },
+    ]);
+
+  return {
+    positionStrategy,
+    config: {
+      positionStrategy,
+      hasBackdrop: false,
+      // The global panel skin lives in styles/_dropdown-overlay.scss: a portaled
+      // node sits outside the host's DOM tree, so `:host ::ng-deep` cannot reach it.
+      panelClass,
+      scrollStrategy: overlay.scrollStrategies.reposition(),
+    },
+  };
+}
 
 // Backstop for the leave animation: if the class never produces an animation
 // (a pane that is display:none, a consumer stylesheet that removed it), the
