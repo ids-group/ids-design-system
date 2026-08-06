@@ -11,7 +11,7 @@ Completed items are archived in `done.md` (last archive pass **2026-08-05** — 
 
 ## Priority board (2026-08-06 actualization)
 
-**30 open**, every one of them below: carried from 08-05, plus **9 from mm-broker's `ids-data-table` retirement** (their own section, three of them P2) and **10 from the mm-ecm agent-portal audit on 08-06**. Nothing is waiting on a decision from Stas except the two marked so.
+**33 open**, every one of them below: carried from 08-05, plus **9 from mm-broker's `ids-data-table` retirement** (their own section, three of them P2), **10 from the mm-ecm agent-portal audit on 08-06**, and **3 more mm-broker filed the same day** after sweeping their whole consumer against 0.8.0. Nothing is waiting on a decision from Stas except the two marked so.
 
 **P1 — real defects:** _(none)_
 
@@ -29,6 +29,8 @@ _Archived to `done.md` on 08-06: the whole mm-broker `ids-data-table` section (n
 - **`ds-autocomplete` as a search field** — leading-icon slot, chevron opt-out, `clear()`, panel max-height. The missing `clear()` is why a consumer today reaches into the DS's DOM and dispatches a synthetic `input` event; that is the upgrade risk worth removing first.
 - **`ds-autocomplete` panel reads `--radius-lg` instead of `--ds-radius-panel`** — one line, and it is the only panel still outside the role layer.
 - **Date/time picker `fullWidth`** — pickers cannot fill a form column, so every mixed field row gets hand-pinned by the consumer.
+
+**P3 — from mm-broker's whole-consumer sweep (08-06), the last two DS-internals reaches they have left:** `ds-badge` hardcodes `white-space: nowrap` (no hook, so a badge in a narrow table column cannot wrap) · `ds-card`'s inner box cannot fill the host height, which `ds-stat` already solved for itself · `ds-search` resolves its own 36px ladder instead of the new field-height contract, so a toolbar cannot be levelled from one token.
 
 **P3 — from the agent-portal audit (08-06):** eyebrow tokens on `ds-description-item` · type/border pinned in shorthands (`segmented`/`tabs`/`menu`/`checkbox`, one review not four items) · per-item menu label colour (likely a `quiet` variant) · selected-option hooks instead of theme-role hijacking (sequence after the colour engine) · radius roles not forwarded onto portaled panes.
 
@@ -69,6 +71,17 @@ persisted `columnWidths` map gains entries for columns nobody dragged.
 Migration notes, not asks: `hideable` inverts (the fork treats every column as hideable unless opted
 out, the base only when `hideable: true`) and `bordered` flips `true` → `false`, so retiring the fork
 means touching every column config and every template.
+
+### Three more from sweeping the whole consumer against 0.8.0 (2026-08-06)
+
+They audited every consumer selector and every `--ds-*` declaration in their four projects against
+0.8.0 and deleted what the release made redundant. After that pass exactly **two** places in the
+whole codebase still reach into DS internals, and both are here because a hook is missing. The third
+item is a paper cut the new field-height contract left behind.
+
+- [ ] **[P3] `ds-badge` hardcodes `white-space: nowrap`, so a badge in a narrow column cannot wrap.** `badge.component.scss:24` sets it directly while nine other properties on the same element resolve through a `--ds-badge-*` / `--_badge-*` pair. In a fixed-layout table a badge cell must be allowed to wrap or the label clips, so the consumer keeps `:host ::ng-deep .table.layout-fixed tbody td:has(ds-badge) { … .badge { white-space: normal } }` — a reach into a private class purely for one property. **ASK:** `--ds-badge-white-space` resolved like its siblings, or a `[wrap]` input.
+- [ ] **[P3] `ds-card`'s inner box cannot fill the host's height, so equal-height cards need a deep selector.** The visible box is `<article class="card">`; `card.component.scss` gives `:host` no height rule and exposes no sizing hook, so `ds-card { height: 100% }` in a grid row stretches the host while the bordered box inside keeps its content height. The consumer's dashboard therefore carries `.charts ::ng-deep .card { height: 100% }`. **Precedent:** `ds-stat` already solved exactly this — `stat.component.scss:37-39` puts `height: 100%` on its inner `.stat` with the comment about a grid row painting equal-height cards. **ASK:** the same treatment on `ds-card` (or a `--ds-card-height` hook).
+- [ ] **[P3] `ds-search` sits outside the field-height contract, so a toolbar cannot be levelled from one token.** 0.8.0 gave the field family `--ds-field-height` plus a live `--field-h-*` scale, but the search resolves its own ladder — `search.component.scss:11` `var(--ds-search-height, var(--search-h))`, i.e. `--hit-md` 36px for `md` against the family's 40px. A search beside a date picker renders 4px short out of the box (this consumer had it 8px short, having pinned the search to `--hit-min` years ago), and levelling the row means pointing `--ds-search-height` at `--field-h-md` by hand in every brand. **ASK:** let `ds-search` read `--ds-field-height` / the `--field-h-*` step for its size, or state in the token reference that it deliberately does not and pair the two names.
 
 ---
 
