@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { marked } from 'marked';
 
 import { DocsSectionComponent } from '../../shared/docs-section.component';
+import { DS_VERSION } from '../../shared/docs-stats';
 
 @Component({
   selector: 'section-changelog',
@@ -54,7 +55,12 @@ export class ChangelogSection {
   readonly html = signal<string>('Loading changelog…');
 
   constructor() {
-    fetch(new URL('CHANGELOG.md', document.baseURI))
+    // Versioned URL, because CHANGELOG.md has a stable name and was served for a
+    // year as `immutable`. Fixing the header stops NEW caches going stale but
+    // cannot dislodge the copies already pinned in visitors' browsers — only a
+    // different URL does that. The file only changes on release, so the package
+    // version is exactly the right key.
+    fetch(new URL(`CHANGELOG.md?v=${DS_VERSION}`, document.baseURI))
       .then((response) => response.text())
       .then((markdown) => Promise.resolve(marked.parse(markdown)))
       .then((rendered) => this.html.set(rendered))
