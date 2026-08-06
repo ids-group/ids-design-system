@@ -2,6 +2,7 @@
    is portaled via CDK Overlay OUTSIDE the host, so the private resolvers are
    declared on both :host (the trigger) and .panel — custom properties inherit
    down the DOM tree, which the portaled panel is not part of. */
+@use '../../styles/field-box' as field-box;
 
 :host,
 .panel {
@@ -25,7 +26,9 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  height: var(--hit-cozy);
+
+  @include field-box.field-box-height(md);
+
   padding: 0 var(--field-pad-x);
   background-color: var(--surface-default);
   border: var(--border-width-default) solid var(--_cp-trigger-border-color);

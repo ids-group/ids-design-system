@@ -67,6 +67,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `truncate` — a handler on every cell would swallow the row click on an interactive table.
 - **`sortValue` string ordering is case- and accent-insensitive** (`sensitivity: 'base'`), matching the
   comparator consumers are migrating off, so a column of strings does not silently reorder.
+- **`--ds-field-height` now reaches four more controls.** `ds-autocomplete`, `ds-multi-select`,
+  `ds-color-picker` and `ds-number-stepper` each spelled their height as the raw `--hit-*` value, so the
+  knob the token name advertises did nothing for them. All four are on the `field-box-height` contract now.
+  Same pixels at every size **except `ds-number-stepper` at `size="lg"`, which goes 44px → 48px** to match
+  the family's large field; the other sizes are unchanged.
 - **Date and time pickers keep step with the fields beside them under `[data-density]`.** Both triggers
   hard-coded their horizontal padding, which happened to equal `--field-pad-x` at default density but did
   not shrink with it — so setting a density left a picker 8px wider than the `ds-input` next to it. Both now

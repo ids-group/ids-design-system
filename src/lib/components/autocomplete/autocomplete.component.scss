@@ -1,6 +1,7 @@
 /* Autocomplete — trigger lives on host; listbox panel is rendered via
    TemplatePortal so its DOM carries this component's encapsulation attrs.
    Both halves are styled here. */
+@use '../../styles/field-box' as field-box;
 
 :host {
   --_autocomplete-focus-shadow: var(--ds-autocomplete-focus-shadow, var(--ds-field-focus-shadow));
@@ -35,7 +36,9 @@
   align-items: center;
   gap: var(--space-2);
   width: 100%;
-  min-height: var(--hit-cozy);
+
+  @include field-box.field-box-height(md, min-height);
+
   padding: var(--space-1) var(--space-2);
   background: var(--_autocomplete-bg-color);
   border: var(--border-width-default) solid var(--_autocomplete-border-color);
@@ -79,8 +82,8 @@
 
   /* Density — mirror ds-select (sm 32 / md 40 / lg 48). Multi chips wrap, so
      size sets min-height; the default (md) lives on the base rule above. */
-  &.sm { min-height: var(--hit-min); }
-  &.lg { min-height: var(--field-h-lg); }
+  &.sm { @include field-box.field-box-height(sm, min-height); }
+  &.lg { @include field-box.field-box-height(lg, min-height); }
 }
 
 .autocomplete-value {
