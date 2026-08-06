@@ -1991,6 +1991,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Autocomplete dropdown panel fill."
       },
       {
+        "name": "--ds-autocomplete-panel-radius",
+        "value": "var(--ds-radius-panel)",
+        "notes": "Autocomplete dropdown panel corner radius (default --ds-radius-panel). Forwarded onto the portaled pane on open."
+      },
+      {
         "name": "--ds-autocomplete-option-bg-color-hover",
         "value": "var(--surface-secondary)",
         "notes": "Autocomplete option row fill on hover."

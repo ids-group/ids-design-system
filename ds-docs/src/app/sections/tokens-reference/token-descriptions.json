@@ -201,6 +201,7 @@
   "--ds-autocomplete-maxw": "Autocomplete max width (none by default).",
   "--ds-autocomplete-option-bg-color-hover": "Autocomplete option row fill on hover.",
   "--ds-autocomplete-panel-bg-color": "Autocomplete dropdown panel fill.",
+  "--ds-autocomplete-panel-radius": "Autocomplete dropdown panel corner radius (default --ds-radius-panel). Forwarded onto the portaled pane on open.",
   "--ds-autocomplete-radius": "Autocomplete field corner radius (8px).",
   "--ds-avatar-bg-color": "Surface fill.",
   "--ds-avatar-group-overflow-bg-color": "Avatar group \"+N\" overflow badge fill.",

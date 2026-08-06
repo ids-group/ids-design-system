@@ -75,6 +75,7 @@ export class AutocompleteComponent<T = unknown>
    *  a consumer's `ds-autocomplete { --ds-autocomplete-panel-*: … }` reaches it. */
   private readonly panelTokens = [
     '--ds-autocomplete-panel-bg-color',
+    '--ds-autocomplete-panel-radius',
     '--ds-autocomplete-option-bg-color-hover',
   ];
 

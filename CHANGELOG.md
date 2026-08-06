@@ -30,6 +30,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the backend already formatted, and `exportFailed` emits the rejection — swallowing it made a failed export
   indistinguishable from a slow one. Two box tokens: `--ds-table-min-width` (a readability floor, default 0)
   and `--ds-table-hscroll-bottom` (offsets the sticky scrollbar out of a padded container, default 0).
+- **`--ds-autocomplete-panel-radius`, bringing the last panel into the radius role layer.** Its dropdown was
+  the one portaled surface still hard-coding `--radius-lg` while modal, popover, card, bottom-sheet and both
+  picker panels resolve `--ds-radius-panel`, so a consumer who squared the three radius roles got a square
+  app with one rounded panel and no hook to reach it. Nothing moves by default — the role still resolves to
+  `--radius-lg` — and the token is forwarded onto the portaled pane on open like the other panel tokens.
 
 ### Fixed
 
