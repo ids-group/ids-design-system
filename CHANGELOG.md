@@ -30,6 +30,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the backend already formatted, and `exportFailed` emits the rejection — swallowing it made a failed export
   indistinguishable from a slow one. Two box tokens: `--ds-table-min-width` (a readability floor, default 0)
   and `--ds-table-hscroll-bottom` (offsets the sticky scrollbar out of a padded container, default 0).
+- **`--ds-table-head-pad-top` / `--ds-table-head-pad-bottom`.** Header cells were the one padding in the
+  table that stayed symmetric — body cells have had per-side hooks since 07-31 — so a header wanting its
+  label tight to the top with air above the rule could only be reached with `!important`. Both fall back to
+  the density value, so nothing moves until one is set.
 - **`--ds-autocomplete-panel-radius`, bringing the last panel into the radius role layer.** Its dropdown was
   the one portaled surface still hard-coding `--radius-lg` while modal, popover, card, bottom-sheet and both
   picker panels resolve `--ds-radius-panel`, so a consumer who squared the three radius roles got a square
@@ -47,6 +51,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `truncate` — a handler on every cell would swallow the row click on an interactive table.
 - **`sortValue` string ordering is case- and accent-insensitive** (`sensitivity: 'base'`), matching the
   comparator consumers are migrating off, so a column of strings does not silently reorder.
+- **`density="compact"` no longer defeats every `ds-table` padding hook.** It pinned `padding` straight onto
+  the cells, which out-specifies the `--ds-table-cell-pad-*` and head hooks, so a compact table silently
+  ignored all of them. It now retunes the same density tokens `[data-density]` uses — identical spacing, and
+  the hooks apply.
 - **`ds-date-picker`'s trigger stays visibly active while its own panel is open.** The indicator was bound to
   focus only, and opening from the calendar glyph moves focus into the day grid — so the trigger went dark
   while its panel was open, and the refocus on close made it read as a flicker.

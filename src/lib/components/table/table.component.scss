@@ -146,6 +146,8 @@
   --_table-cell-pad-right: var(--ds-table-cell-pad-right, var(--_table-cell-pad-x));
   --_table-cell-pad-bottom: var(--ds-table-cell-pad-bottom, var(--_table-cell-pad-y));
   --_table-cell-pad-left: var(--ds-table-cell-pad-left, var(--_table-cell-pad-x));
+  --_table-head-pad-top: var(--ds-table-head-pad-top, var(--table-head-pad-y));
+  --_table-head-pad-bottom: var(--ds-table-head-pad-bottom, var(--table-head-pad-y));
   --_table-head-border-color: var(--ds-table-head-border-color, var(--_table-divider));
   --_table-head-weight: var(--ds-table-head-weight, var(--font-weight-bold));
   --_table-head-tracking: var(--ds-table-head-tracking, var(--letter-spacing-wider));
@@ -158,7 +160,7 @@
 
   thead th {
     text-align: left;
-    padding: var(--table-head-pad-y) var(--_table-cell-pad-right) var(--table-head-pad-y) var(--_table-cell-pad-left);
+    padding: var(--_table-head-pad-top) var(--_table-cell-pad-right) var(--_table-head-pad-bottom) var(--_table-cell-pad-left);
     font: var(--_table-head-weight) var(--_table-head-fs) / var(--line-height-base) var(--font-sans);
     letter-spacing: var(--_table-head-tracking);
     text-transform: uppercase;
@@ -379,11 +381,14 @@
     }
   }
 
+  /* Retunes the density tokens the resolvers already read, rather than setting
+     `padding` on the cells. Pinning padding here out-specifies every
+     `--ds-table-*-pad-*` hook, so a compact table silently ignored all of them —
+     the same values, reached the way `[data-density]` reaches them. */
   &.compact {
-    tbody td,
-    thead th {
-      padding: var(--space-2) var(--space-3);
-    }
+    --table-cell-pad-x: var(--space-3);
+    --table-cell-pad-y: var(--space-2);
+    --table-head-pad-y: var(--space-2);
   }
 
   /* :nth-child cannot see past windowing — a rendered row's parity depends on its

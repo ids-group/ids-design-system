@@ -5562,6 +5562,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Per-side cell padding override (also the header gutter) — set 0 for a flush first column; falls back to --ds-table-cell-pad-x."
       },
       {
+        "name": "--ds-table-head-pad-top",
+        "value": "var(--table-head-pad-y)",
+        "notes": "Per-side header padding override; falls back to the density value --table-head-pad-y."
+      },
+      {
+        "name": "--ds-table-head-pad-bottom",
+        "value": "var(--table-head-pad-y)",
+        "notes": "Per-side header padding override; falls back to the density value --table-head-pad-y."
+      },
+      {
         "name": "--ds-table-head-border-color",
         "value": "var(--_table-divider)",
         "notes": "Colour of the rule under the header row (default --ds-table-divider)."

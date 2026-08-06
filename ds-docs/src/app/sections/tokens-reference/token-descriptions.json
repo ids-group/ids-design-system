@@ -677,6 +677,8 @@
   "--ds-table-head-bg-color": "Head fill.",
   "--ds-table-head-border-color": "Colour of the rule under the header row (default --ds-table-divider).",
   "--ds-table-head-fs": "Head label size.",
+  "--ds-table-head-pad-bottom": "Per-side header padding override; falls back to the density value --table-head-pad-y.",
+  "--ds-table-head-pad-top": "Per-side header padding override; falls back to the density value --table-head-pad-y.",
   "--ds-table-head-text-color": "Head label.",
   "--ds-table-head-tracking": "Header label letter-spacing (default --letter-spacing-wider).",
   "--ds-table-head-weight": "Header label weight (default --font-weight-bold).",
