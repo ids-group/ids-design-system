@@ -49,6 +49,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the backend already formatted, and `exportFailed` emits the rejection — swallowing it made a failed export
   indistinguishable from a slow one. Two box tokens: `--ds-table-min-width` (a readability floor, default 0)
   and `--ds-table-hscroll-bottom` (offsets the sticky scrollbar out of a padded container, default 0).
+- **`--ds-badge-white-space`** (default `nowrap`, so nothing moves). A badge in a narrow, fixed-layout
+  table column has to be allowed to wrap or its label clips, and the property was the one thing on that
+  element not reachable through a token — the workaround was a global rule against the private `.badge`.
 - **`showPageSize` and `showLabel` on `ds-table`**, forwarded to its footer pager. Both have always existed
   on the standalone `ds-pagination` but were unreachable once the pager was inside a table, so hiding the
   size picker on a fixed-page-size table meant a global selector reaching into the DS. Default `true` — no
@@ -95,6 +98,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   hard-coded their horizontal padding, which happened to equal `--field-pad-x` at default density but did
   not shrink with it — so setting a density left a picker 8px wider than the `ds-input` next to it. Both now
   resolve `--ds-date-picker-trigger-pad-x` / `--ds-time-picker-trigger-pad-x` from the field family.
+- **`ds-card`'s box fills a stretched host**, so a grid row of cards with unequal content paints equal
+  heights instead of a stretched host wrapping a short bordered box. `ds-stat` already did this; cards
+  needed a `::ng-deep .card { height: 100% }` from the consumer. Nothing changes where the host is
+  content-sized, which is every card not in a stretching row.
 - **`density="compact"` no longer defeats every `ds-table` padding hook.** It pinned `padding` straight onto
   the cells, which out-specifies the `--ds-table-cell-pad-*` and head hooks, so a compact table silently
   ignored all of them. It now retunes the same density tokens `[data-density]` uses — identical spacing, and

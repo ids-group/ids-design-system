@@ -220,6 +220,7 @@
   "--ds-badge-pad-x": "Horizontal padding.",
   "--ds-badge-pad-y": "Vertical padding.",
   "--ds-badge-radius": "Pill radius.",
+  "--ds-badge-white-space": "Label wrapping (default nowrap). Set to normal for a badge in a narrow, fixed-layout table column, where nowrap clips the label.",
   "--ds-banner-bar": "Left bar colour.",
   "--ds-banner-bar-width": "Left bar width.",
   "--ds-banner-bg-color": "Banner fill (default = info).",

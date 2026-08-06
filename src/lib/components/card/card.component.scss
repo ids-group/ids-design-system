@@ -20,6 +20,12 @@
   border-radius: var(--_card-radius);
   padding: var(--_card-pad);
   box-shadow: var(--_card-shadow);
+
+  // Fills a stretched host, so a grid row of cards with unequal content paints
+  // equal-height boxes instead of a stretched host wrapping a short box. Same
+  // treatment ds-stat already carries; in an unstretched context the host is
+  // still content-sized, so nothing changes.
+  height: 100%;
   transition: box-shadow var(--duration-base) var(--ease-standard), transform var(--duration-base) var(--ease-standard);
 
   &.flat { box-shadow: none; }

@@ -2132,6 +2132,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Label weight."
       },
       {
+        "name": "--ds-badge-white-space",
+        "value": "nowrap",
+        "notes": "Label wrapping (default nowrap). Set to normal for a badge in a narrow, fixed-layout table column, where nowrap clips the label."
+      },
+      {
         "name": "--badge-dot-size",
         "value": "6px",
         "notes": "Badge status dot diameter (6px)."

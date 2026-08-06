@@ -13,6 +13,7 @@
   --_badge-pad-x:       var(--ds-badge-pad-x,       var(--badge-pad-x));
   --_badge-pad-y:       var(--ds-badge-pad-y,       var(--badge-pad-y));
   --_badge-font-weight: var(--ds-badge-font-weight, var(--font-weight-bold));
+  --_badge-white-space: var(--ds-badge-white-space, nowrap);
 
   display: inline-flex;
   align-items: center;
@@ -21,7 +22,7 @@
   border-radius: var(--_badge-radius);
   font: var(--_badge-font-weight) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
   letter-spacing: var(--letter-spacing-wide);
-  white-space: nowrap;
+  white-space: var(--_badge-white-space);
   background-color: var(--_badge-bg-color);
   color: var(--_badge-label-color);
 
