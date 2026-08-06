@@ -49,6 +49,21 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the backend already formatted, and `exportFailed` emits the rejection — swallowing it made a failed export
   indistinguishable from a slow one. Two box tokens: `--ds-table-min-width` (a readability floor, default 0)
   and `--ds-table-hscroll-bottom` (offsets the sticky scrollbar out of a padded container, default 0).
+- **21 hooks for type and box values that a `font:`/`border:`/`padding` shorthand had swallowed.** Same
+  shape every time: the value sat inside a shorthand, so overriding the one property meant a selector
+  out-ranking the shimmed component rule. `ds-description-item` completes the eyebrow set both halves
+  (`--ds-description-list-term-weight` / `-tracking` / `-transform`, `-details-font-size` / `-weight`) —
+  the same five `ds-field-label` and the modal eyebrow already exposed. `ds-segmented` gains
+  `--ds-segmented-btn-border` (for a hairline chip row), `-btn-pad-x` and label type; `ds-tabs` gains
+  `--ds-tab-pad-top` / `-bottom` (an underline tab wants bottom-only and could not say so), label type,
+  `--ds-tabs-strip-gap` and `--ds-tabs-panel-pad-top`; `ds-menu` gains item padding, item label type and
+  `--ds-menu-gap`; `ds-checkbox` gains `--ds-checkbox-label-weight`, the third label property where size
+  and colour were already hookable. Every default reproduces today's value.
+- **The theme's radius and elevation roles now reach portaled panels.** A pane lives under `<body>`, so
+  nothing component-scoped could reach it: squaring `--ds-radius-panel` left a square app with round
+  dropdowns, and the only fix was re-declaring the roles on `.ds-overlay-pane` globally. Roles now travel
+  with the tokens each component already forwards — but only where the host actually overrides the root,
+  so an open panel still follows a theme switch instead of pinning the value it opened with.
 - **`--ds-badge-white-space`** (default `nowrap`, so nothing moves). A badge in a narrow, fixed-layout
   table column has to be allowed to wrap or its label clips, and the property was the one thing on that
   element not reachable through a token — the workaround was a global rule against the private `.badge`.

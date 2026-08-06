@@ -2656,6 +2656,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Checkbox box corner radius (default --radius-sm). The indeterminate dash keeps its own radius."
       },
       {
+        "name": "--ds-checkbox-label-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "Checkbox label weight — the third label property; size and colour were already hookable."
+      },
+      {
         "name": "--ds-checkbox-label-font-size",
         "value": "var(--_checkbox-label-fs)",
         "notes": "Checkbox caption size. Overrides the size class, so setting it pins the caption regardless of `size`."
@@ -2902,14 +2907,39 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Description list term (label) text colour."
       },
       {
+        "name": "--ds-description-list-term-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Description list term font size (defaults to --font-size-s)."
+      },
+      {
+        "name": "--ds-description-list-term-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "Term (label) weight. Completes the eyebrow set the modal eyebrow and ds-field-label already expose."
+      },
+      {
+        "name": "--ds-description-list-term-tracking",
+        "value": "normal",
+        "notes": "Term letter-spacing (default normal)."
+      },
+      {
+        "name": "--ds-description-list-term-transform",
+        "value": "none",
+        "notes": "Term text-transform (default none) — set uppercase for an eyebrow-style label column."
+      },
+      {
         "name": "--ds-description-list-details-color",
         "value": "var(--text-primary)",
         "notes": "Description list details (value) text colour."
       },
       {
-        "name": "--ds-description-list-term-font-size",
+        "name": "--ds-description-list-details-font-size",
         "value": "var(--font-size-s)",
-        "notes": "Description list term font size (defaults to --font-size-s)."
+        "notes": "Value size."
+      },
+      {
+        "name": "--ds-description-list-details-weight",
+        "value": "var(--font-weight-regular)",
+        "notes": "Value weight."
       },
       {
         "name": "--ds-description-list-label-w",
@@ -3588,6 +3618,26 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Destructive menu item label colour (defaults to --error-text)."
       },
       {
+        "name": "--ds-menu-item-pad-x",
+        "value": "var(--space-3)",
+        "notes": "Menu item horizontal padding."
+      },
+      {
+        "name": "--ds-menu-item-pad-y",
+        "value": "var(--space-2)",
+        "notes": "Menu item vertical padding."
+      },
+      {
+        "name": "--ds-menu-item-label-weight",
+        "value": "var(--font-weight-medium)",
+        "notes": "Menu item label weight."
+      },
+      {
+        "name": "--ds-menu-item-label-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Menu item label size."
+      },
+      {
         "name": "--ds-menu-item-radius",
         "value": "0",
         "notes": ""
@@ -3611,6 +3661,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-menu-max-width",
         "value": "none",
         "notes": "Maximum menu width (default none). Pairs with --ds-menu-min-width; forwarded onto the pane by ds-popover."
+      },
+      {
+        "name": "--ds-menu-gap",
+        "value": "var(--space-0-5)",
+        "notes": "Gap between menu items."
       },
       {
         "name": "--menu-minw",
@@ -4389,6 +4444,26 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-segmented-selected-shadow",
         "value": "var(--ds-elevation-raised)",
         "notes": "Selected segment shadow (defaults to --shadow-card)."
+      },
+      {
+        "name": "--ds-segmented-btn-border",
+        "value": "0",
+        "notes": "Segment border (default 0) — set a hairline for a bordered chip row."
+      },
+      {
+        "name": "--ds-segmented-btn-pad-x",
+        "value": "var(--space-4)",
+        "notes": "Segment horizontal padding."
+      },
+      {
+        "name": "--ds-segmented-label-weight",
+        "value": "var(--font-weight-semibold)",
+        "notes": "Segment label weight."
+      },
+      {
+        "name": "--ds-segmented-label-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Segment label size."
       },
       {
         "name": "--segmented-btn-h",
@@ -5672,6 +5747,36 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-tab-pad-y",
         "value": "var(--space-3)",
         "notes": "Vertical padding."
+      },
+      {
+        "name": "--ds-tab-pad-top",
+        "value": "var(--_tab-pad-y)",
+        "notes": "Per-side tab padding override; falls back to --ds-tab-pad-y."
+      },
+      {
+        "name": "--ds-tab-pad-bottom",
+        "value": "var(--_tab-pad-y)",
+        "notes": "Per-side tab padding override; falls back to --ds-tab-pad-y. An underline tab usually wants its padding here only."
+      },
+      {
+        "name": "--ds-tab-label-weight",
+        "value": "var(--font-weight-semibold)",
+        "notes": "Tab label weight."
+      },
+      {
+        "name": "--ds-tab-label-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Tab label size."
+      },
+      {
+        "name": "--ds-tabs-strip-gap",
+        "value": "var(--space-2)",
+        "notes": "Gap between tabs in the strip."
+      },
+      {
+        "name": "--ds-tabs-panel-pad-top",
+        "value": "var(--space-3)",
+        "notes": "Space between the tab strip and its panel."
       },
       {
         "name": "--ds-tab-label-color",

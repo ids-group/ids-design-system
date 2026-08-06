@@ -5,6 +5,15 @@
   --_tabs-divider:          var(--ds-tabs-divider,          var(--border-divider));
   --_tab-pad-x:             var(--ds-tab-pad-x,             var(--space-4));
   --_tab-pad-y:             var(--ds-tab-pad-y,             var(--space-3));
+
+  /* Per-side, falling back to the symmetric pair: an underline tab usually
+     wants its padding on the bottom only, and could not say so. */
+  --_tab-pad-top:           var(--ds-tab-pad-top,           var(--_tab-pad-y));
+  --_tab-pad-bottom:        var(--ds-tab-pad-bottom,        var(--_tab-pad-y));
+  --_tab-label-weight:      var(--ds-tab-label-weight,      var(--font-weight-semibold));
+  --_tab-label-font-size:   var(--ds-tab-label-font-size,   var(--font-size-s));
+  --_tabs-strip-gap:        var(--ds-tabs-strip-gap,        var(--space-2));
+  --_tabs-panel-pad-top:    var(--ds-tabs-panel-pad-top,    var(--space-3));
   --_tab-label-color:                var(--ds-tab-label-color,                var(--text-secondary));
   --_tab-label-color-hover:          var(--ds-tab-label-color-hover,          var(--text-primary));
   --_tab-label-color-active:         var(--ds-tab-label-color-active,         var(--accent));
@@ -27,7 +36,7 @@
 
 .tabs {
   display: flex;
-  gap: var(--space-2);
+  gap: var(--_tabs-strip-gap);
   border-bottom: var(--border-width-default) solid var(--_tabs-divider);
 
   &.scrollable {
@@ -44,10 +53,10 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    padding: var(--_tab-pad-y) var(--_tab-pad-x);
+    padding: var(--_tab-pad-top) var(--_tab-pad-x) var(--_tab-pad-bottom);
     border: 0;
     background: transparent;
-    font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
+    font: var(--_tab-label-weight) var(--_tab-label-font-size) / var(--line-height-flat) var(--font-sans);
     color: var(--_tab-label-color);
     cursor: pointer;
     border-bottom: var(--_tab-indicator-width) solid transparent;
@@ -200,7 +209,7 @@
 }
 
 .panel {
-  padding-top: var(--space-3);
+  padding-top: var(--_tabs-panel-pad-top);
 
   /* When tabs are used purely as a filter selector (content rendered outside
      the panel), the empty panel would still add its padding-top as a phantom
