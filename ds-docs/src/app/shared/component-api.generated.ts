@@ -5810,6 +5810,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Selectable page-size choices shown in the pagination control."
       },
       {
+        "name": "showPageSize",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Shows the page-size picker in the footer pager. Set false for a table whose page size is fixed — the standalone `ds-pagination` has always taken this."
+      },
+      {
+        "name": "showLabel",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Shows the \"N of M\" range label in the footer pager."
+      },
+      {
         "name": "total",
         "kind": "input",
         "type": "number | null",

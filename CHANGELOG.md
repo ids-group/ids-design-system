@@ -30,6 +30,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the backend already formatted, and `exportFailed` emits the rejection — swallowing it made a failed export
   indistinguishable from a slow one. Two box tokens: `--ds-table-min-width` (a readability floor, default 0)
   and `--ds-table-hscroll-bottom` (offsets the sticky scrollbar out of a padded container, default 0).
+- **`showPageSize` and `showLabel` on `ds-table`**, forwarded to its footer pager. Both have always existed
+  on the standalone `ds-pagination` but were unreachable once the pager was inside a table, so hiding the
+  size picker on a fixed-page-size table meant a global selector reaching into the DS. Default `true` — no
+  change unless set.
 - **`--ds-table-head-pad-top` / `--ds-table-head-pad-bottom`.** Header cells were the one padding in the
   table that stayed symmetric — body cells have had per-side hooks since 07-31 — so a header wanting its
   label tight to the top with air above the rule could only be reached with `!important`. Both fall back to

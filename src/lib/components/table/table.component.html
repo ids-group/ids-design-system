@@ -448,6 +448,8 @@
       [total]="total() ?? filteredData().length"
       [pageSize]="size"
       [pageSizeOptions]="pageSizeOptions()"
+      [showPageSize]="showPageSize()"
+      [showLabel]="showLabel()"
       [(currentPage)]="page"
       (pageSizeChange)="pageSize.set($event)"
     />

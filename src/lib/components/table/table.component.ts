@@ -286,6 +286,11 @@ export class TableComponent<T extends object> {
   readonly page = model<number>(1);
   /** Selectable page-size choices shown in the pagination control. */
   readonly pageSizeOptions = input<number[]>([10, 25, 50, 100]);
+  /** Shows the page-size picker in the footer pager. Set false for a table whose
+   *  page size is fixed — the standalone `ds-pagination` has always taken this. */
+  readonly showPageSize = input(true, { transform: booleanAttribute });
+  /** Shows the "N of M" range label in the footer pager. */
+  readonly showLabel = input(true, { transform: booleanAttribute });
   /** Server-side total row count. `null` (default) = client paging: the table
    *  slices `data()` itself and the pager counts the rows in hand. When set, the
    *  host has already sliced to one page — the pager uses this count and the
