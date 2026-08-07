@@ -49,6 +49,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the backend already formatted, and `exportFailed` emits the rejection — swallowing it made a failed export
   indistinguishable from a slow one. Two box tokens: `--ds-table-min-width` (a readability floor, default 0)
   and `--ds-table-hscroll-bottom` (offsets the sticky scrollbar out of a padded container, default 0).
+- **Selected dropdown rows have their own hooks** — `--ds-option-selected-bg-color`, `-label-color`,
+  `-bg-color-hover` and `--ds-option-check-color`, defaulting to the theme roles they used to read
+  directly. A brand that wanted a different selected treatment previously had to RETARGET `--primary-*`
+  inside `.ds-dropdown-panel` and then track what else in the panel read the same role. Panel-level: one
+  partial paints select, autocomplete and multi-select alike. Nothing moves by default.
 - **`ds-field-group` — several controls in one bordered box** (`select + input`, `input + button`,
   `input + select`). The group owns the border, the radius, the divider and a single `:focus-within` ring;
   the controls inside render naked. Segments hug their content, `grow` takes the slack. `size` uses the

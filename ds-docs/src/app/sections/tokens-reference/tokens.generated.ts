@@ -3083,6 +3083,33 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Dropdown Panel",
+    "selector": ".dropdown-panel",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-option-selected-bg-color",
+        "value": "var(--primary-subtitle)",
+        "notes": "Fill of the selected row in a dropdown panel (default --primary-subtitle). Panel-level: one partial paints select, autocomplete and multi-select alike."
+      },
+      {
+        "name": "--ds-option-selected-label-color",
+        "value": "var(--primary-strong)",
+        "notes": "Label and icon colour of the selected row (default --primary-strong)."
+      },
+      {
+        "name": "--ds-option-selected-bg-color-hover",
+        "value": "var(--primary-muted)",
+        "notes": "Fill of the selected row while hovered or keyboard-active (default --primary-muted)."
+      },
+      {
+        "name": "--ds-option-check-color",
+        "value": "var(--primary)",
+        "notes": "The check glyph on a selected row (default --primary)."
+      }
+    ]
+  },
+  {
     "component": "Dropzone",
     "selector": ".dropzone",
     "description": "",

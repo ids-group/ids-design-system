@@ -157,11 +157,6 @@ function findScss(dir) {
         : [];
   });
 }
-const compFiles = findScss(join(ROOT, 'src/lib/components'));
-const comp = compFiles.flatMap((f) =>
-  extractComponentTokens(readFileSync(f, 'utf8'), basename(dirname(f))),
-);
-
 const readIf = (p) => {
   try {
     return readFileSync(p, 'utf8');
@@ -169,6 +164,23 @@ const readIf = (p) => {
     return '';
   }
 };
+
+const compFiles = findScss(join(ROOT, 'src/lib/components'));
+const comp = compFiles.flatMap((f) =>
+  extractComponentTokens(readFileSync(f, 'utf8'), basename(dirname(f))),
+);
+
+// Global partials that expose --ds-* hooks the same way a component does, via
+// read-with-fallback. findScss only walks *.component.scss, so tokens declared
+// in a shared partial were invisible here — and an undocumented public token is
+// the discoverability failure the whole reference exists to prevent.
+const sharedPartials = [['src/lib/styles/_dropdown-overlay.scss', 'dropdown-panel']];
+comp.push(
+  ...sharedPartials.flatMap(([path, group]) =>
+    extractComponentTokens(readIf(join(ROOT, path)), group),
+  ),
+);
+
 const globalFiles = [
   'src/lib/styles/_tokens.scss',
   'src/lib/themes/_semantic.scss',
