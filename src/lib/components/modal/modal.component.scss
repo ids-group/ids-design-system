@@ -25,6 +25,15 @@
   --_modal-enter-easing: var(--ds-modal-enter-easing, var(--ds-motion-enter-surface-easing));
   --_modal-leave-duration: var(--ds-modal-leave-duration, var(--ds-motion-exit-duration));
   --_modal-leave-easing: var(--ds-modal-leave-easing, var(--ds-motion-exit-easing));
+
+  /* The horizontal gutter is one value for all three regions, and was already
+     uniform before it was tokenised — so it is one knob, not three. Only the
+     vertical differs, because the header and the actions sit against a divider
+     and the body does not. */
+  --_modal-pad-x: var(--ds-modal-pad-x, var(--space-5));
+  --_modal-header-pad-y: var(--ds-modal-header-pad-y, var(--space-4));
+  --_modal-body-pad-y: var(--ds-modal-body-pad-y, var(--space-5));
+  --_modal-actions-pad-y: var(--ds-modal-actions-pad-y, var(--space-4));
   --_ds-enter-scale: var(--ds-modal-enter-scale, 0.97);
 
   display: contents;
@@ -65,7 +74,7 @@
     align-items: center;
     gap: var(--space-3);
     justify-content: space-between;
-    padding: var(--space-4) var(--space-5);
+    padding: var(--_modal-header-pad-y) var(--_modal-pad-x);
     border-bottom: var(--border-width-default) solid var(--_modal-divider);
   }
 
@@ -126,7 +135,7 @@
   }
 
   .body {
-    padding: var(--space-5);
+    padding: var(--_modal-body-pad-y) var(--_modal-pad-x);
     overflow-y: auto;
   }
 
@@ -134,7 +143,7 @@
     display: flex;
     gap: var(--space-3);
     justify-content: flex-end;
-    padding: var(--space-4) var(--space-5);
+    padding: var(--_modal-actions-pad-y) var(--_modal-pad-x);
     border-top: var(--border-width-default) solid var(--_modal-divider);
 
     // A read-only dialog projects nothing here — without this it still draws a

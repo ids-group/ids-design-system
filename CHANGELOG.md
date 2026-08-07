@@ -49,6 +49,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the backend already formatted, and `exportFailed` emits the rejection — swallowing it made a failed export
   indistinguishable from a slow one. Two box tokens: `--ds-table-min-width` (a readability floor, default 0)
   and `--ds-table-hscroll-bottom` (offsets the sticky scrollbar out of a padded container, default 0).
+- **The three `ds-modal` regions take their padding from tokens** — `--ds-modal-pad-x` for the gutter all
+  three share, plus `--ds-modal-header-pad-y`, `-body-pad-y` and `-actions-pad-y`. Two consumers were
+  rewriting these, one with `!important`, because the regions are padded for a divider-separated layout:
+  set `--ds-modal-divider: transparent` and you are left with spacing sized for dividers that are no
+  longer there. Nothing moves by default. Note the tokens go on `ds-modal` AND `ds-modal-card` — a dialog
+  opened through `ModalService` renders the card with no `ds-modal` ancestor.
 - **`maxItems` on `ds-breadcrumbs`** — collapses the middle of a deep trail into a crumb that says how
   many it stands for, keeping the first and, crucially, the LAST. Without a cap the row is `nowrap` with
   `overflow: hidden`, so an overlong trail is clipped from the END — hiding the current page, the one

@@ -3869,6 +3869,26 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Modal close easing (default --ease-accelerate)."
       },
       {
+        "name": "--ds-modal-pad-x",
+        "value": "var(--space-5)",
+        "notes": "Horizontal gutter shared by the header, body and actions. Set it on ds-modal AND ds-modal-card — a dialog opened through ModalService has no ds-modal ancestor."
+      },
+      {
+        "name": "--ds-modal-header-pad-y",
+        "value": "var(--space-4)",
+        "notes": "Vertical padding of the header row."
+      },
+      {
+        "name": "--ds-modal-body-pad-y",
+        "value": "var(--space-5)",
+        "notes": "Vertical padding of the body."
+      },
+      {
+        "name": "--ds-modal-actions-pad-y",
+        "value": "var(--space-4)",
+        "notes": "Vertical padding of the footer actions row. Worth tightening alongside --ds-modal-divider: transparent, which leaves spacing sized for dividers that are gone."
+      },
+      {
         "name": "--ds-modal-enter-scale",
         "value": "0.97",
         "notes": "Start scale for the modal card with ds-scale-in (default 0.97)."
