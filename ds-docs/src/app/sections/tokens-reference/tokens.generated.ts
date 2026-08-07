@@ -3244,6 +3244,43 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Field Group",
+    "selector": ".field-group",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-field-group-bg-color",
+        "value": "var(--surface-default)",
+        "notes": "Fill behind the whole glued row."
+      },
+      {
+        "name": "--ds-field-group-border-color",
+        "value": "var(--border-default)",
+        "notes": "The single border the group draws around all its segments."
+      },
+      {
+        "name": "--ds-field-group-border-color-focus",
+        "value": "var(--accent)",
+        "notes": "Border colour while any segment has focus (default --accent)."
+      },
+      {
+        "name": "--ds-field-group-radius",
+        "value": "var(--ds-radius-control)",
+        "notes": "Corner radius of the group (default --ds-radius-control); the end segments are clipped to it."
+      },
+      {
+        "name": "--ds-field-group-focus-shadow",
+        "value": "var(--ds-field-focus-shadow)",
+        "notes": "The ONE focus ring for the group (default --ds-field-focus-shadow) — segments suppress their own."
+      },
+      {
+        "name": "--ds-field-group-divider-color",
+        "value": "var(--border-divider)",
+        "notes": "Hairline between adjacent segments (default --border-divider)."
+      }
+    ]
+  },
+  {
     "component": "Field Message",
     "selector": ".field-message",
     "description": "",

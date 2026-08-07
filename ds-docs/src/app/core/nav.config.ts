@@ -45,6 +45,7 @@ export const NAV: NavGroup[] = [
       { label: 'Color picker', anchor: 'color-picker' },
       { label: 'Date picker', anchor: 'date-picker' },
       { label: 'Dropzone', anchor: 'dropzone' },
+      { label: 'Field group', anchor: 'field-group' },
       { label: 'Input', anchor: 'input' },
       { label: 'Multi-select', anchor: 'multi-select' },
       { label: 'Number stepper', anchor: 'number-stepper' },

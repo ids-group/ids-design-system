@@ -25,6 +25,7 @@ import { nextControlId } from '../field-ids';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
 import type { InputType } from './input.types';
 import type { DsSize } from '../../core/size';
+import { inFieldGroup } from '../field-group/field-group.token';
 import { resolveReserveMessage } from '../field-defaults';
 
 @Component({
@@ -37,6 +38,7 @@ import { resolveReserveMessage } from '../field-defaults';
     FieldMessageComponent,
     FieldClickFocusDirective,
   ],
+  host: { '[class.in-group]': 'inGroup' },
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -50,6 +52,10 @@ import { resolveReserveMessage } from '../field-defaults';
 })
 export class InputComponent extends DsControlValueAccessor<string> {
   private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
+  /** Segment of a ds-field-group: the group owns the border, radius and focus
+   *  ring, so .in-group strips this control back to its bare contents. */
+  protected readonly inGroup = inFieldGroup();
+
 
   /** Text value, two-way bound. */
   readonly value = model<string>('');

@@ -14,6 +14,7 @@ export * from './lib/components/status-dot';
 export * from './lib/components/app-layout';
 export * from './lib/components/auth-layout';
 export * from './lib/components/filter-bar';
+export * from './lib/components/field-group';
 export * from './lib/components/avatar';
 export * from './lib/components/avatar-group';
 export * from './lib/components/card';

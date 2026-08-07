@@ -66,6 +66,7 @@ import { ModalSection } from './sections/components/modal/modal.section';
 import { PopoverSection } from './sections/components/popover/popover.section';
 import { TooltipSection } from './sections/components/tooltip/tooltip.section';
 
+import { FieldGroupSection } from './sections/components/field-group/field-group.section';
 import { FilterBarSection as ComponentsFilterBarSection } from './sections/components/filter-bar/filter-bar.section';
 import { PageFooterSection } from './sections/components/page-footer/page-footer.section';
 import { PageHeaderSection as ComponentsPageHeaderSection } from './sections/components/page-header/page-header.section';
@@ -130,6 +131,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       ColorPickerSection,
       DatePickerSection,
       DropzoneSection,
+      FieldGroupSection,
       InputSection,
       MultiSelectSection,
       NumberStepperSection,

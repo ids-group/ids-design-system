@@ -2061,6 +2061,59 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "field-group": {
+    "key": "field-group",
+    "selector": "ds-field-group",
+    "isElement": true,
+    "className": "FieldGroupComponent",
+    "status": "stable",
+    "importName": "FieldGroupComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "size",
+        "kind": "input",
+        "type": "DsSize",
+        "union": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "'md'",
+        "required": false,
+        "description": "Segment height — the field family's scale, so a group lines up with a plain field beside it."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws the error border on the whole group. A single segment cannot be invalid on its own: the border belongs to the group."
+      },
+      {
+        "name": "disabled",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Dims the group. Disable the CONTROLS too — this is the chrome, not their interactivity."
+      },
+      {
+        "name": "fullWidth",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fills the container instead of hugging its segments."
+      }
+    ],
+    "outputs": []
+  },
   "field-message": {
     "key": "field-message",
     "selector": "ds-field-message",
@@ -5634,7 +5687,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "(label: string, dir: SortDir) => string",
         "union": null,
-        "default": "(label, dir) =>\n      dir\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\n        : `Sorting cleared`",
+        "default": "(label, dir) =>\r\n      dir\r\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\r\n        : `Sorting cleared`",
         "required": false,
         "description": "Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing."
       },
@@ -5982,7 +6035,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "rowExpandTemplate",
         "kind": "input",
-        "type": "TemplateRef<{\n    $implicit: unknown;\n    row: unknown;\n  }> | null",
+        "type": "TemplateRef<{\r\n    $implicit: unknown;\r\n    row: unknown;\r\n  }> | null",
         "union": null,
         "default": "null",
         "required": false,

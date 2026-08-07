@@ -29,6 +29,7 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
+import { inFieldGroup } from '../field-group/field-group.token';
 import { DsStaticPreview } from '../static-preview.directive';
 import {
   isSelectOptionGroup,
@@ -51,6 +52,7 @@ import { resolveReserveMessage } from '../field-defaults';
   selector: 'ds-select',
   standalone: true,
   imports: [IconComponent, NgTemplateOutlet, FieldMessageComponent],
+  host: { '[class.in-group]': 'inGroup' },
   templateUrl: './select.component.html',
   styleUrl: './select.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -68,6 +70,10 @@ export class SelectComponent
   implements OnDestroy
 {
   private readonly overlay = inject(Overlay);
+  /** Segment of a ds-field-group: the group owns the border, radius and focus
+   *  ring, so .in-group strips this control back to its bare contents. */
+  protected readonly inGroup = inFieldGroup();
+
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject(ElementRef<HTMLElement>);
   protected readonly preview = inject(DsStaticPreview);
