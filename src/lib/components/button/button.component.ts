@@ -4,12 +4,11 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
-  effect,
   input,
-  isDevMode,
   output,
   viewChild,
 } from '@angular/core';
+import { devWarn } from '../../core/dev-warning';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
 import type { ButtonColor, ButtonVariant, ButtonType } from './button.types';
@@ -126,24 +125,17 @@ export class ButtonComponent {
   });
 
   constructor() {
-    if (isDevMode()) {
-      effect(() => {
-        const variant = this.variant();
-        if (variant === 'text') {
-          console.warn(
-            '[ds-button] variant="text" is discouraged — prefer the global `.link` class for link-styled actions. It renders, but `.link` is the canonical link affordance.',
-          );
+    devWarn(() => {
+      const variant = this.variant();
+      if (variant === 'text') {
+        return '[ds-button] variant="text" is discouraged — prefer the global `.link` class for link-styled actions. It renders, but `.link` is the canonical link affordance.';
+      }
+      const reason = DISCOURAGED_COMBOS.get(`${this.color()}|${variant}`);
 
-          return;
-        }
-        const reason = DISCOURAGED_COMBOS.get(`${this.color()}|${variant}`);
-        if (reason) {
-          console.warn(
-            `[ds-button] color="${this.color()}" variant="${variant}" is a UX-discouraged combination — it renders, but ${reason}.`,
-          );
-        }
-      });
-    }
+      return reason
+        ? `[ds-button] color="${this.color()}" variant="${variant}" is a UX-discouraged combination — it renders, but ${reason}.`
+        : null;
+    });
   }
 
   protected onClick(event: MouseEvent): void {

@@ -1,11 +1,5 @@
-import {
-  Component,
-  ViewEncapsulation,
-  computed,
-  effect,
-  input,
-  isDevMode,
-} from '@angular/core';
+import { Component, ViewEncapsulation, computed, input } from '@angular/core';
+import { devWarn } from '../../core/dev-warning';
 import { IconComponent } from '../../icons/icon.component';
 
 @Component({
@@ -26,15 +20,11 @@ export class StatComponent {
     // `unit` concatenates onto the INPUT value, so a projected value silently
     // drops it — and "kg" quietly missing from a tile is the kind of thing that
     // reads as fine until someone checks the number against the source.
-    if (isDevMode()) {
-      effect(() => {
-        if (this.unit() && !this.value()) {
-          console.warn(
-            `[ds-stat] unit="${this.unit()}" is set but there is no \`value\` input — a projected [value] owns the whole line, so the unit is not rendered. Put it inside the projected content, or drop the input.`,
-          );
-        }
-      });
-    }
+    devWarn(() =>
+      this.unit() && !this.value()
+        ? `[ds-stat] unit="${this.unit()}" is set but there is no \`value\` input — a projected [dsStatValue] owns the whole line, so the unit is not rendered. Put it inside the projected content, or drop the input.`
+        : null,
+    );
   }
 
   /** Metric name shown above the value. */

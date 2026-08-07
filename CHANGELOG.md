@@ -49,6 +49,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the backend already formatted, and `exportFailed` emits the rejection — swallowing it made a failed export
   indistinguishable from a slow one. Two box tokens: `--ds-table-min-width` (a readability floor, default 0)
   and `--ds-table-hscroll-bottom` (offsets the sticky scrollbar out of a padded container, default 0).
+- **Dev warnings no longer repeat themselves.** Every component with one wrote the same four lines around
+  it — `isDevMode`, an `effect`, a condition, a `console.warn` — and each copy shared the same flaw: the
+  effect re-runs when ANY signal it read changes, so a warning about a static misconfiguration could be
+  logged again on every keystroke. They now go through one internal helper that fires at most once per
+  message. Nine warnings across `ds-button`, `ds-stat` and `ds-table` moved onto it; `ds-tabs` keeps its
+  own, because its effect also owns registry bookkeeping that a plain warning cannot express.
 - **`maxVisibleChips` on `ds-autocomplete`** — caps the chips in the trigger and collapses the rest into
   "+N more". Without it a multi-select trigger grows a line per selection and pushes the rest of the form
   down the page, which is how it was reported. Same input name, same transform and same wording as

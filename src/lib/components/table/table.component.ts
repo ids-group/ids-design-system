@@ -1,5 +1,4 @@
 import {
-  isDevMode,
   Component,
   ElementRef,
   Injector,
@@ -17,6 +16,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { devWarn } from '../../core/dev-warning';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   CdkDrag,
@@ -1282,34 +1282,27 @@ export class TableComponent<T extends object> {
       this.saveLayout(key, order, widths, hidden);
     });
 
-    if (isDevMode()) {
-      effect(() => {
-        // The default is 'server', which is right for the paged tables that make
-        // up most of them. A table holding ALL its rows is the exception, and
-        // `total` unbound is how it says so — so that is where the reminder goes.
-        // Only when the mode was never DECLARED.
-        if (
-          this.sortMode() === null &&
-          this.total() === null &&
-          this.columns().some((col) => col.sortable)
-        ) {
-          console.warn(
-            '[ds-table] sortable columns default to sortMode="server", so a header click only emits (sortChange) and the table reorders nothing itself. This table binds no `total`, which usually means it holds every row — declare sortMode="client" to sort them in place.',
-          );
-        }
-        // Same trap one column over: a header filter defaults to the server too,
-        // so the checklist tracks a selection and runs no local pass.
-        if (
-          this.filterMode() === null &&
-          this.total() === null &&
-          this.columns().some((col) => col.filter === 'set')
-        ) {
-          console.warn(
-            '[ds-table] a header filter defaults to filterMode="server", so ticking a value only updates `columnFilters` and filters nothing locally. This table binds no `total`, which usually means it holds every row — declare filterMode="client" to filter them in place.',
-          );
-        }
-      });
-    }
+    // The default is 'server', which is right for the paged tables that make up
+    // most of them. A table holding ALL its rows is the exception, and `total`
+    // unbound is how it says so — so that is where the reminder goes. Only when
+    // the mode was never DECLARED.
+    devWarn(() =>
+      this.sortMode() === null &&
+      this.total() === null &&
+      this.columns().some((col) => col.sortable)
+        ? '[ds-table] sortable columns default to sortMode="server", so a header click only emits (sortChange) and the table reorders nothing itself. This table binds no `total`, which usually means it holds every row — declare sortMode="client" to sort them in place.'
+        : null,
+    );
+
+    // Same trap one column over: a header filter defaults to the server too, so
+    // the checklist tracks a selection and runs no local pass.
+    devWarn(() =>
+      this.filterMode() === null &&
+      this.total() === null &&
+      this.columns().some((col) => col.filter === 'set')
+        ? '[ds-table] a header filter defaults to filterMode="server", so ticking a value only updates `columnFilters` and filters nothing locally. This table binds no `total`, which usually means it holds every row — declare filterMode="client" to filter them in place.'
+        : null,
+    );
 
     // Virtual mode's two measurements. Only wired while virtualizing, so a
     // normal table pays for neither the scroll listener nor the observer.
@@ -1359,43 +1352,36 @@ export class TableComponent<T extends object> {
       this.lazyLoad.emit({ first, rows });
     });
 
-    if (isDevMode()) {
-      effect(() => {
-        if (this.lazy() && !this.virtualScroll()) {
-          console.warn(
-            '[ds-table] lazy needs virtualScroll: without a window there is no range to fetch, so every gap in `data` renders a skeleton row and (lazyLoad) never narrows. Set virtualScroll (and maxHeight), or hand the table its rows outright.',
-          );
-        }
-        if (this.lazy() && this.total() === null) {
-          console.warn(
-            '[ds-table] lazy needs `total`: the scroller is sized from the rows that EXIST, and without it the spacers collapse to the slice that has arrived — the scrollbar then lies about the length of the list.',
-          );
-        }
-        if (this.lazy() && this.sortMode() === 'client') {
-          console.warn(
-            '[ds-table] lazy with sortMode="client" sorts only the rows that happen to have arrived, which is a different order every time a window loads. The server owns the order here — drop sortMode or declare "server".',
-          );
-        }
-        if (!this.virtualScroll()) {
-          return;
-        }
-        if (!this.maxHeight()) {
-          console.warn(
-            '[ds-table] virtualScroll needs maxHeight — without a bounded scroller there is no viewport to window against, so every row renders and nothing is virtualized. Set maxHeight (e.g. "480px").',
-          );
-        }
-        if (this.expandableRows()) {
-          console.warn(
-            '[ds-table] virtualScroll and expandableRows do not combine: an expanded row is taller than virtualRowSize, and every offset after it would be wrong. The expander renders but the panel is suppressed — move the detail into a modal or a drawer, or drop virtualScroll.',
-          );
-        }
-        if (this.pageSize() !== null) {
-          console.warn(
-            '[ds-table] virtualScroll with pageSize paginates a window of a page. Virtual scrolling is what pagination was for on a long list — pick one.',
-          );
-        }
-      });
-    }
+    devWarn(() =>
+      this.lazy() && !this.virtualScroll()
+        ? '[ds-table] lazy needs virtualScroll: without a window there is no range to fetch, so every gap in `data` renders a skeleton row and (lazyLoad) never narrows. Set virtualScroll (and maxHeight), or hand the table its rows outright.'
+        : null,
+    );
+    devWarn(() =>
+      this.lazy() && this.total() === null
+        ? '[ds-table] lazy needs `total`: the scroller is sized from the rows that EXIST, and without it the spacers collapse to the slice that has arrived — the scrollbar then lies about the length of the list.'
+        : null,
+    );
+    devWarn(() =>
+      this.lazy() && this.sortMode() === 'client'
+        ? '[ds-table] lazy with sortMode="client" sorts only the rows that happen to have arrived, which is a different order every time a window loads. The server owns the order here — drop sortMode or declare "server".'
+        : null,
+    );
+    devWarn(() =>
+      this.virtualScroll() && !this.maxHeight()
+        ? '[ds-table] virtualScroll needs maxHeight — without a bounded scroller there is no viewport to window against, so every row renders and nothing is virtualized. Set maxHeight (e.g. "480px").'
+        : null,
+    );
+    devWarn(() =>
+      this.virtualScroll() && this.expandableRows()
+        ? '[ds-table] virtualScroll and expandableRows do not combine: an expanded row is taller than virtualRowSize, and every offset after it would be wrong. The expander renders but the panel is suppressed — move the detail into a modal or a drawer, or drop virtualScroll.'
+        : null,
+    );
+    devWarn(() =>
+      this.virtualScroll() && this.pageSize() !== null
+        ? '[ds-table] virtualScroll with pageSize paginates a window of a page. Virtual scrolling is what pagination was for on a long list — pick one.'
+        : null,
+    );
 
     // Wire the proxy whenever it exists (stickyScrollbar on). Assigning an
     // equal scrollLeft fires no scroll event, so the two mirrors can't loop.
