@@ -54,9 +54,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the controls inside render naked. Segments hug their content, `grow` takes the slack. `size` uses the
   field height scale, plus `invalid` and `fullWidth`. A control knows it is a segment by injecting
   `DS_FIELD_GROUP` rather than being told with an input — the alternative is manual, and one segment where
-  it was forgotten draws its own border mid-row. **This first cut supports `ds-input` and `ds-select` as
-  segments**; `ds-search`, `ds-autocomplete`, `ds-date-picker` and `ds-button` still need their own naked
-  block and are not stripped yet. Grouped controls must not carry a `label` or `hint` — the message row
+  it was forgotten draws its own border mid-row. Six controls can be segments: `ds-input`, `ds-select`,
+  `ds-search`, `ds-autocomplete`, `ds-date-picker` and `ds-button`. Not `ds-number-stepper` (a composite
+  already) or `ds-multi-select` (its chips wrap, which a fixed-height row cannot take). Grouped controls must not carry a `label` or `hint` — the message row
   would break the glued line, so it is suppressed and a group-level one is not built.
 - **`ds-table` lazy loading** — `[lazy]` plus a `(lazyLoad)` output emitting `{ first, rows }` for the
   range now on screen. `data` becomes a sparse array `total` long: write each fetched row at its absolute

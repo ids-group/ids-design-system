@@ -6,8 +6,10 @@ import {
 } from '@angular/core';
 import {
   ButtonComponent,
+  DatePickerComponent,
   FieldGroupComponent,
   InputComponent,
+  SearchComponent,
   SelectComponent,
   type SelectOption,
 } from 'ds';
@@ -18,8 +20,10 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   standalone: true,
   imports: [
     ButtonComponent,
+    DatePickerComponent,
     FieldGroupComponent,
     InputComponent,
+    SearchComponent,
     SelectComponent,
     DocsSectionComponent,
   ],
@@ -44,4 +48,6 @@ export class FieldGroupSection {
   protected readonly amount = signal('');
   protected readonly unit = signal('kg');
   protected readonly invalidTerm = signal('');
+  protected readonly since = signal<Date | null>(null);
+  protected readonly quickFind = signal('');
 }

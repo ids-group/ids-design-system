@@ -110,3 +110,30 @@
   &.md { --_search-height: var(--ds-search-height, var(--ds-field-height, var(--field-h-md))); }
   &.lg { --_search-height: var(--ds-search-height, var(--ds-field-height, var(--field-h-lg))); }
 }
+
+/* Segment of a ds-field-group — see input.component.scss for why. The group
+   draws the border, the radius and the one shared focus ring. */
+:host(.in-group) {
+  width: auto;
+
+  .label,
+  ds-field-message {
+    display: none;
+  }
+
+  .search {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    height: 100%;
+
+    &:hover,
+    &:focus,
+    &:focus-visible,
+    &:focus-within {
+      border: 0;
+      box-shadow: none;
+      outline: 0;
+    }
+  }
+}

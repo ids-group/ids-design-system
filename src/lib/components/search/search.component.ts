@@ -12,16 +12,22 @@ import { FormsModule } from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
 import type { DsSize } from '../../core/size';
+import { inFieldGroup } from '../field-group/field-group.token';
 
 @Component({
   selector: 'ds-search',
   standalone: true,
   imports: [FormsModule, IconComponent, FieldClickFocusDirective],
+  host: { '[class.in-group]': 'inGroup' },
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class SearchComponent {
+  /** Segment of a ds-field-group: the group owns the border, radius and focus
+   *  ring, so .in-group strips this control back to its bare contents. */
+  protected readonly inGroup = inFieldGroup();
+
   /** Search text, two-way bound. */
   readonly value = model<string>('');
   /** Placeholder shown when empty. */

@@ -179,7 +179,9 @@
     display: none;
   }
 
-  .trigger {
+  /* .dropdown, not .trigger: this component's bordered box is the div that
+     carries role="combobox", and its class is .dropdown. */
+  .dropdown {
     border: 0;
     border-radius: 0;
     background: transparent;

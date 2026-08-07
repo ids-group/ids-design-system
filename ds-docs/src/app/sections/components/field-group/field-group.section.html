@@ -84,6 +84,52 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Every supported control
+  </h3>
+
+  <p class="block-desc t-s">
+    Six controls can be segments:
+    <code class="t-mono-inline">
+      ds-input
+    </code>,
+    <code class="t-mono-inline">
+      ds-select
+    </code>,
+    <code class="t-mono-inline">
+      ds-search
+    </code>,
+    <code class="t-mono-inline">
+      ds-autocomplete
+    </code>,
+    <code class="t-mono-inline">
+      ds-date-picker
+    </code> and
+    <code class="t-mono-inline">
+      ds-button
+    </code>. Not
+    <code class="t-mono-inline">
+      ds-number-stepper
+    </code> (already a composite of its
+    own) or
+    <code class="t-mono-inline">
+      ds-multi-select
+    </code> (its chips wrap, which a
+    fixed-height row cannot take).
+  </p>
+
+  <div class="demo-row">
+    <ds-field-group>
+      <ds-search
+        grow
+        placeholder="Quick find"
+        [(value)]="quickFind"
+      />
+
+      <ds-date-picker [(value)]="since" />
+    </ds-field-group>
+  </div>
+
+  <h3 class="block-title t-h4">
     Sizes, error and full width
   </h3>
 

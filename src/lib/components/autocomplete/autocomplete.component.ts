@@ -44,6 +44,7 @@ import type {
 } from './autocomplete.types';
 import type { DsSize } from '../../core/size';
 import { resolveReserveMessage } from '../field-defaults';
+import { inFieldGroup } from '../field-group/field-group.token';
 
 let nextId = 0;
 
@@ -55,6 +56,7 @@ let nextId = 0;
   styleUrl: './autocomplete.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   host: {
+    '[class.in-group]': 'inGroup',
     '[class.content-width]': "width() === 'content'",
   },
   providers: [
@@ -69,6 +71,10 @@ export class AutocompleteComponent<T = unknown>
   extends DsControlValueAccessor<T | readonly T[] | null>
   implements OnDestroy
 {
+  /** Segment of a ds-field-group: the group owns the border, radius and focus
+   *  ring, so .in-group strips this control back to its bare contents. */
+  protected readonly inGroup = inFieldGroup();
+
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject(ElementRef<HTMLElement>);

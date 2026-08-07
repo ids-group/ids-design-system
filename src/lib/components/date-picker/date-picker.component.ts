@@ -73,6 +73,7 @@ import type {
 } from './date-picker.types';
 import type { DsSize } from '../../core/size';
 import { resolveReserveMessage } from '../field-defaults';
+import { inFieldGroup } from '../field-group/field-group.token';
 
 let nextId = 0;
 const YEAR_PAGE_SIZE = 12;
@@ -108,12 +109,16 @@ interface DayCell {
       multi: true,
     },
   ],
-  host: { '[class.full-width]': 'fullWidth()' },
+  host: { '[class.in-group]': 'inGroup', '[class.full-width]': 'fullWidth()' },
 })
 export class DatePickerComponent
   extends DsControlValueAccessor<Date | RangeValue | null>
   implements OnDestroy
 {
+  /** Segment of a ds-field-group: the group owns the border, radius and focus
+   *  ring, so .in-group strips this control back to its bare contents. */
+  protected readonly inGroup = inFieldGroup();
+
   constructor() {
     super();
     // Renders through toFieldText so the field is fixed-width `_`-padded once any
