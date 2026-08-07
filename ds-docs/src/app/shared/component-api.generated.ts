@@ -330,6 +330,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Draws the trailing chevron. Turn it off for a search field, where an arrow invites a click that would list everything instead of searching."
       },
       {
+        "name": "maxVisibleChips",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Caps the number of chips shown before collapsing the rest into \"+N more\" — 0/null shows all. Same name and semantics as `ds-multi-select`: without it a trigger grows a line per selection and pushes the rest of the form down the page."
+      },
+      {
         "name": "size",
         "kind": "input",
         "type": "DsSize",

@@ -49,6 +49,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the backend already formatted, and `exportFailed` emits the rejection — swallowing it made a failed export
   indistinguishable from a slow one. Two box tokens: `--ds-table-min-width` (a readability floor, default 0)
   and `--ds-table-hscroll-bottom` (offsets the sticky scrollbar out of a padded container, default 0).
+- **`maxVisibleChips` on `ds-autocomplete`** — caps the chips in the trigger and collapses the rest into
+  "+N more". Without it a multi-select trigger grows a line per selection and pushes the rest of the form
+  down the page, which is how it was reported. Same input name, same transform and same wording as
+  `ds-multi-select`, which already had it — the two multi-value pickers should not diverge on this.
+  Backspace still removes the last SELECTED chip, not the last visible one.
 - **`ds-stat` takes a projected value** — `[dsStatValue]` for a tile whose headline is a badge, a status
   dot or anything a number slot cannot hold. `value` is now optional and acts as the fallback, the same
   shape `[delta]` already had; existing tiles are untouched. The slot is namespaced on purpose: twenty

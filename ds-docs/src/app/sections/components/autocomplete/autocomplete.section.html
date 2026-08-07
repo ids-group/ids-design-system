@@ -81,6 +81,38 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Capping the chips
+  </h3>
+
+  <p class="block-desc t-s">
+    Without a cap the trigger grows a line per selection and pushes the rest of the
+    form down the page — the reason this exists.
+    <code class="t-mono-inline">
+      maxVisibleChips
+    </code> keeps the first N and
+    collapses the rest into a count, the same input and the same wording
+    <code class="t-mono-inline">
+      ds-multi-select
+    </code> takes, so the two multi-value
+    pickers do not diverge. Backspace still removes the last SELECTED chip, not the
+    last visible one.
+  </p>
+
+  <div class="autocomplete-field-wrap">
+    <label class="autocomplete-field-label t-s">
+      Allowed products · capped at 2
+    </label>
+
+    <ds-autocomplete
+      placeholder="Add product…"
+      [options]="products"
+      [multiple]="true"
+      [maxVisibleChips]="2"
+      [(value)]="cappedProductsValue"
+    />
+  </div>
+
+  <h3 class="block-title t-h4">
     Width
   </h3>
 

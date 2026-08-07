@@ -86,6 +86,14 @@
   &.lg { @include field-box.field-box-height(lg, min-height); }
 }
 
+/* Same treatment as ds-multi-select's overflow marker — the two triggers are the
+   same control to a reader, and should not differ on how the count looks. */
+.overflow {
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xs);
+}
+
 .autocomplete-value {
   font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
   color: var(--text-primary);

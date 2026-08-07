@@ -11,6 +11,7 @@ import {
   inject,
   input,
   model,
+  numberAttribute,
   output,
   signal,
   viewChild,
@@ -98,6 +99,12 @@ export class AutocompleteComponent<T = unknown>
   /** Draws the trailing chevron. Turn it off for a search field, where an arrow
    *  invites a click that would list everything instead of searching. */
   readonly showChevron = input(true, { transform: booleanAttribute });
+  /** Caps the number of chips shown before collapsing the rest into "+N more" — 0/null shows all.
+   *  Same name and semantics as `ds-multi-select`: without it a trigger grows a
+   *  line per selection and pushes the rest of the form down the page. */
+  readonly maxVisibleChips = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
   /** Trigger height — sm/md/lg. */
   readonly size = input<DsSize>('md');
   /** Trigger width — `fill` stretches to the container, `content` hugs the value. */
@@ -257,6 +264,24 @@ export class AutocompleteComponent<T = unknown>
     const selectedSet = new Set(selectedValues);
 
     return this.allOptions().filter((option) => selectedSet.has(option.value));
+  });
+
+  /** What the trigger renders. Separate from `selectedTags`, which stays the
+   *  full selection: Backspace removes the last SELECTED chip, and capping the
+   *  list it reads would silently make it remove the last VISIBLE one instead. */
+  protected readonly visibleTags = computed(() => {
+    const max = this.maxVisibleChips();
+    const tags = this.selectedTags();
+
+    return max && max > 0 ? tags.slice(0, max) : tags;
+  });
+
+  protected readonly overflowCount = computed<number>(() => {
+    const max = this.maxVisibleChips();
+
+    return max && max > 0
+      ? Math.max(0, this.selectedTags().length - max)
+      : 0;
   });
 
   protected readonly displayLabel = computed(() => {

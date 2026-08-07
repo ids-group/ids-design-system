@@ -75,6 +75,12 @@ export class AutocompleteSection {
     'cider',
     'spirits',
   ]);
+  protected readonly cappedProductsValue = signal<readonly string[]>([
+    'beer',
+    'cider',
+    'spirits',
+    'wine',
+  ]);
   protected readonly venueValue = signal<string | null>(null);
   protected readonly toolbarProductsValue = signal<readonly string[]>(['beer']);
   protected readonly toolbarVenueValue = signal<string | null>(null);
