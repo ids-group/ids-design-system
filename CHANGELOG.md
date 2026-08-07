@@ -49,6 +49,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the backend already formatted, and `exportFailed` emits the rejection — swallowing it made a failed export
   indistinguishable from a slow one. Two box tokens: `--ds-table-min-width` (a readability floor, default 0)
   and `--ds-table-hscroll-bottom` (offsets the sticky scrollbar out of a padded container, default 0).
+- **`ds-tabs` warns when two strips claim the same `urlParam`.** Both write the same query parameter, so
+  each erases the other's tab and a reload restores whichever wrote last — nothing throws and the URL
+  looks plausible. It is the easy mistake when turning `urlParam` on across an app, because `"tab"` is the
+  obvious name every time. Dev-mode only.
 - **Selected dropdown rows have their own hooks** — `--ds-option-selected-bg-color`, `-label-color`,
   `-bg-color-hover` and `--ds-option-check-color`, defaulting to the theme roles they used to read
   directly. A brand that wanted a different selected treatment previously had to RETARGET `--primary-*`

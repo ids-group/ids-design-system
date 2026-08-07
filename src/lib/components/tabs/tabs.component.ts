@@ -10,6 +10,7 @@ import {
   inject,
   Injector,
   input,
+  isDevMode,
   model,
   output,
   signal,
@@ -20,6 +21,11 @@ import { TabComponent } from './tab.component';
 import type { TabsOrientation, TabsVariant } from './tabs.types';
 
 let nextId = 0;
+
+// Which query parameters are already claimed, so two strips on one screen cannot
+// quietly fight over the same one. Dev-only bookkeeping; nothing reads it in
+// production.
+const claimedUrlParams = new Map<string, number>();
 
 @Component({
   selector: 'ds-tabs',
@@ -97,6 +103,38 @@ export class TabsComponent {
   private readonly urlParams = signal<ParamMap | null>(null);
 
   constructor() {
+    /**
+     * Two strips sharing a parameter is the failure mode of going round a screen
+     * turning this on: `tab` is the obvious name, so the second strip takes it
+     * too, and from then on each write erases the other's tab. Nothing throws and
+     * the URL looks plausible — it just restores the wrong tab on reload.
+     */
+    if (isDevMode()) {
+      effect((onCleanup) => {
+        const param = this.urlParam();
+        if (!param) {
+          return;
+        }
+        const held = claimedUrlParams.get(param) ?? 0;
+        if (held > 0) {
+          console.warn(
+            `[ds-tabs] urlParam="${param}" is already used by another ds-tabs on this screen. Both strips write the same query parameter, so each one erases the other's tab and a reload restores whichever wrote last. Give each strip its own name.`,
+          );
+        }
+        claimedUrlParams.set(param, held + 1);
+        // onCleanup alone: it runs before every re-run AND on destroy, so
+        // releasing again from a DestroyRef would double-count the way out.
+        onCleanup(() => {
+          const now = (claimedUrlParams.get(param) ?? 1) - 1;
+          if (now > 0) {
+            claimedUrlParams.set(param, now);
+          } else {
+            claimedUrlParams.delete(param);
+          }
+        });
+      });
+    }
+
     // Subscribe only while the feature is on, and drop the subscription again if
     // `urlParam` is cleared.
     effect((onCleanup) => {
