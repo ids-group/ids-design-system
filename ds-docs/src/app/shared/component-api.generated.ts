@@ -5174,12 +5174,12 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       },
       {
         "name": "value",
-        "kind": "input-required",
+        "kind": "input",
         "type": "string | number",
         "union": null,
-        "default": null,
-        "required": true,
-        "description": "Headline metric; `unit` is appended directly after it."
+        "default": "''",
+        "required": false,
+        "description": "Headline metric; `unit` is appended directly after it. Optional because the value can be PROJECTED instead — `[dsStatValue]` takes a badge, a status dot, anything a tile needs where a number would go. The input is the fallback, the same shape `[delta]` already has. Namespaced, unlike `[delta]`: twenty components in this library have a `value` input, so a bare `value` attribute used to slot one of them in would also set that input to the empty string."
       },
       {
         "name": "delta",
