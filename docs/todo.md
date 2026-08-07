@@ -11,7 +11,7 @@ Completed items are archived in `done.md` (last archive pass **2026-08-05** — 
 
 ## Priority board (2026-08-06 actualization)
 
-**18 open**, every one of them below. Nothing is waiting on a decision from Stas except the two marked so.
+**21 open**, every one of them below. Nothing is waiting on a decision from Stas except the two marked so.
 
 **Cleared 2026-08-06, after the agent-portal audit + Misha's review:** all four P2 items from the audit (table head padding — which also turned up `density="compact"` defeating every padding hook — the table pager inputs, the four autocomplete search gaps, the autocomplete panel radius), plus `ds-search` on the field-height contract. Two docs-site defects Misha found are fixed as well: `/changelog` served from a one-year `immutable` cache on a stable-name file, and sidebar anchors needing a second click — `onItem` scrolled, then the `routerLink`'s path change made `ds-app-layout` reset the scroll and undo it; the links now carry `dsSamePage`. (My first diagnosis blamed a lazy-load race and was WRONG: measurement showed the sections are always mounted by then, and the live site reproduced the real cause instead — first click 0px, second 15145px.) `sortMode`/`filterMode` now default to `'server'` (Stas 2026-08-06, breaking, migration written).
 
@@ -50,6 +50,49 @@ _mm-broker's whole-consumer sweep (08-06) is CLEARED: `--ds-badge-white-space`, 
 - **Asked and answered 2026-08-05, keep in the backlog:** inspect-mode pilot · splitter · CascadeSelect · primary-CTA token · MED cluster.
 - **Build on the first consumer ask:** `ds-select` native `multi` · `ds-table` row-expansion deltas · `ds-number-stepper` numeric formatting · image/lightbox · CDK Menu.
 - **Decision records, deliberately kept and NOT to be "simplified":** topbar `role="banner"` · `compact` re-evaluated in TS.
+
+---
+
+## From mm-broker's `_ds-overrides.scss`, read as a record (2026-08-07)
+
+Three consumer apps on **0.7.1**, so anything 0.8.0 fixed shows up here as debt they
+have not bumped past: `platform-admin/_ds-overrides.scss` (232 lines),
+`broker-portal/_ds-overrides.scss` (116) and `employee-portal/_ds-compat.scss` (92).
+Read the way the mm-ecm audit read that consumer's sheet — as the record of what the
+DS made them write. `_ds-compat.scss` is out of scope: it aliases their PREVIOUS
+local vocabulary (`--s-*`, `--fs-*`, `--brand*`) onto DS names, which is their
+migration debt, not a DS gap.
+
+**Pile one — the hook already exists and they never migrated to it (no DS work).**
+Both portals reach into the button's INTERNAL class to retint variants —
+`ds-button .button.v-tonal { --ds-button-bg-color: … }`, plus a nine-term `:not()`
+chain to isolate the primary. `button.component.ts:59-60` reflects
+`[attr.data-variant]` and `[attr.data-color]` on the HOST precisely so nobody needs
+that, and the comment there spells out the intended form. ~40 lines across the two
+apps. Also `ds-menu-divider { padding: 0 }` — `--ds-menu-divider-spacing` exists and
+already defaults to 0; their own `TODO(ds-bump)` says so.
+
+**Pile two — genuine gaps, verified against `dev` today.**
+
+- [ ] **[P2] `ds-modal` has 25 public tokens and not one for the padding of its three regions.** Both portals rewrite `.header` / `.body` / `.actions` padding, and platform-admin needs `!important` plus a `stylelint-disable` to win. The trigger is the DS's own design: the regions are padded for a divider-separated layout, so a consumer who sets `--ds-modal-divider: transparent` — which both do — is left with paddings that stack into oversized gaps and no way to close them. **Fix:** `--ds-modal-header-pad` / `-body-pad` / `-actions-pad`, or one `--ds-modal-region-pad`. Note the region is `.actions`, not `.footer`; both apps comment on having discovered that the hard way.
+- [ ] **[P3] No status accent on `ds-modal`.** The DS reddens the title (`--ds-modal-title-text-color-error`); both apps also want a coloured top stripe and hand-roll `.modal.error { border-top: … }`. broker-portal's comment records a second cost: the card emits `error`, never `danger`, so their pre-rename class silently matched nothing. **Fix:** a stripe hook, or document that the title colour is the whole status treatment.
+- [ ] **[P3] `ds-stat` takes its value as `input.required<string | number>()`, so a tile whose value is not text cannot use it.** platform-admin hand-built a `.kpi` block — 30 lines duplicating stat's own geometry, with a comment saying "same tokens as `ds-stat`, so it sits level with the ds-stat tiles beside it" — purely to put a `ds-badge` where the number goes. Only `[delta]` has a projection slot. **Fix:** let the value be projected, the way `[delta]` already is.
+
+**Signal about DEFAULTS, not missing hooks — the interesting finding.** Four overrides
+are IDENTICAL in two independently-built apps: `ds-page-header` title bumped to
+`--font-size-h2` (the DS defaults to h3); `ds-table` head set to tertiary text on
+`--surface-secondary` with a matching row hover; `ds-stat` given a tile radius and
+`--space-5` padding; and `ds-sidenav-item` given a wash + coloured label with
+`--ds-sidenav-item-rail: transparent`. Two teams reaching the same conclusion
+separately is evidence about the default, not about the knob — worth deciding whether
+the DS should move rather than having every consumer retune it. **Needs Stas.**
+
+**One thing today's work made worse for them:** platform-admin pins
+`--ds-search-height: var(--hit-min)` (32px) for a toolbar of 32px controls, and the
+comment already complains that `md` was 36px. Today's change moved the default to
+40px, further from what they want. Their pin still wins so nothing breaks — but the
+field-height contract assumes a 40px norm that this consumer does not share, and
+`[data-density="compact"]` may be the answer they actually need.
 
 ---
 
