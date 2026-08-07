@@ -859,6 +859,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Whether crumbs render as links; falls back to `DS_CONFIG.breadcrumbs.clickable`, then `true`."
+      },
+      {
+        "name": "maxItems",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Caps how many crumbs render, collapsing the middle into an ellipsis — the first and the LAST always survive. Null (default) renders every crumb. Worth setting on any trail that can get deep: the row is `nowrap` with `overflow: hidden`, so without a cap an overlong trail is clipped from the END, which is the current page — the one crumb the reader needs most."
       }
     ],
     "outputs": [
@@ -5696,7 +5705,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "(label: string, dir: SortDir) => string",
         "union": null,
-        "default": "(label, dir) =>\r\n      dir\r\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\r\n        : `Sorting cleared`",
+        "default": "(label, dir) =>\n      dir\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\n        : `Sorting cleared`",
         "required": false,
         "description": "Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing."
       },
@@ -6044,7 +6053,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "rowExpandTemplate",
         "kind": "input",
-        "type": "TemplateRef<{\r\n    $implicit: unknown;\r\n    row: unknown;\r\n  }> | null",
+        "type": "TemplateRef<{\n    $implicit: unknown;\n    row: unknown;\n  }> | null",
         "union": null,
         "default": "null",
         "required": false,

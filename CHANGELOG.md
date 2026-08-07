@@ -49,6 +49,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the backend already formatted, and `exportFailed` emits the rejection — swallowing it made a failed export
   indistinguishable from a slow one. Two box tokens: `--ds-table-min-width` (a readability floor, default 0)
   and `--ds-table-hscroll-bottom` (offsets the sticky scrollbar out of a padded container, default 0).
+- **`maxItems` on `ds-breadcrumbs`** — collapses the middle of a deep trail into a crumb that says how
+  many it stands for, keeping the first and, crucially, the LAST. Without a cap the row is `nowrap` with
+  `overflow: hidden`, so an overlong trail is clipped from the END — hiding the current page, the one
+  crumb the reader needs most. Opt-in; every crumb still renders by default.
 - **Dev warnings no longer repeat themselves.** Every component with one wrote the same four lines around
   it — `isDevMode`, an `effect`, a condition, a `console.warn` — and each copy shared the same flaw: the
   effect re-runs when ANY signal it read changes, so a warning about a static misconfiguration could be

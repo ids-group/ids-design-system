@@ -27,12 +27,26 @@
   </h3>
 
   <p class="block-desc t-s">
-    Six original levels collapsed to root · … · parent · leaf. The middle "…" is
-    a static glyph; the live affordance would be a menu trigger that re-expands.
+    Six levels, capped with
+    <code class="t-mono-inline">
+      [maxItems]="4"
+    </code> — the first and the LAST
+    always survive, and the collapsed crumb says how many it stands for. Worth
+    setting on any trail that can get deep: the row is
+    <code class="t-mono-inline">
+      nowrap
+    </code> with
+    <code class="t-mono-inline">
+      overflow: hidden
+    </code>, so an uncapped overlong trail is
+    clipped from the END — the current page, the one crumb the reader needs most.
   </p>
 
   <div class="stage">
-    <ds-breadcrumbs [items]="longTrail" />
+    <ds-breadcrumbs
+      [items]="longTrail"
+      [maxItems]="4"
+    />
   </div>
 
   <div class="legend t-s">
