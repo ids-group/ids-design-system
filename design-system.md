@@ -1,491 +1,145 @@
-# DS Library Catalogue
+# Design System — rules and approaches
 
-> Index of the design system components, global helpers, tokens and icons. Use it as a single reference when migrating UI to DS. Each entry shows the selector, the key inputs/outputs/slots, and the public CSS custom properties that consumers can override.
+> **This file is the HOW.** Which spacing goes between what, which type role a piece of
+> text takes, where a value belongs and where a literal is a bug. For the WHAT — the
+> inventory of components, their inputs and their tokens — see `components.md`, and
+> prefer the ds-docs Component API and token reference, which are extracted from source
+> on every build and cannot go stale.
 >
-> **Import path:** `import { ButtonComponent, … } from 'ds'` (the library publishes as `ds`; consumer apps add a `paths` mapping in their `tsconfig.json` or install the built `dist/ds` package).
+> **Audience: whoever composes a screen, human or agent.** Knowing the 639 tokens is not
+> enough to build a page with them: the tokens are a vocabulary, and these are the rules
+> that decide which word.
 >
-> **Templating note:** every component is standalone with `ViewEncapsulation.Emulated`. Pass classes on the host element to scope local tweaks; override DS tokens at the host level (`ds-xxx { --ds-xxx-…: … }`) — defaults are declared on `:host` (or the root class) so consumer overrides cascade in.
+> **Every rule below was measured against this library, not imported from general UI
+> advice.** Where a generic rule and this file disagree, this file wins — it describes
+> the system you are actually building on. The scale rule below is a live example.
 
 ---
 
-## Foundations
+## 1. Spacing
 
-### Tokens (Tier 2 — semantic roles)
+### The scale is 4px-based WITH half-steps — not a 4/8 scale
 
-Loaded via `@use 'styles/tokens';` (when the consumer also `@use 'styles/ds';` the full aggregate is pulled in). Brand themes override Tier 1 palette + a few Tier 2 roles in their own `_brand-*.scss`.
-
-**Colour roles:**
-- Surfaces: `--surface-canvas`, `--surface-default`, `--surface-secondary`, `--surface-overlay`, `--surface-tint`, `--surface-disabled`, `--surface-muted`, `--surface-inverted`, `--surface-inverted-hover`, `--surface-scrim`
-- Borders: `--border-default`, `--border-strong`, `--border-subtle`, `--border-divider`, `--border-disabled`, `--border-inverted`
-- Text: `--text-primary`, `--text-secondary`, `--text-tertiary`, `--text-muted`, `--text-disabled`, `--text-inverted`, `--text-link`, `--text-on-primary`, `--text-on-success`, `--text-on-error`
-- Icons: `--icon-default`, `--icon-strong`, `--icon-muted`, `--icon-on-primary`
-- Primary (main brand fill): `--primary`, `--primary-hover`, `--primary-pressed`, `--primary-selected-hover`, `--primary-strong`, `--primary-subtle`, `--primary-muted`, `--primary-muted-strong`, `--primary-on` + HSL channels `--primary-h/s/l`
-- Secondary (paired CTAs, accent rails, opt-in variants): `--secondary`, `--secondary-hover`, `--secondary-pressed`, `--secondary-strong`, `--secondary-subtle`, `--secondary-muted`, `--secondary-on` + HSL channels `--secondary-h/s/l`
-- Tertiary (third brand hue — tertiary button, tonal chips, indicators): `--tertiary`, `--tertiary-hover`, `--tertiary-pressed`, `--tertiary-strong`, `--tertiary-subtle`, `--tertiary-muted`, `--tertiary-on` + HSL channels `--tertiary-h/s/l`
-- Error (destructive, was --danger): `--error`, `--error-hover`, `--error-pressed`, `--error-subtle`, `--error-muted`, `--error-border`, `--error-text` + HSL channels `--error-h/s/l`
-- Status: `--success`, `--success-hover`, `--success-subtle`, `--success-muted`, `--success-border`, `--success-text`
-- Status (warning/info): same shape with prefix swapped
-- Status pills: the DS ships no predefined status keys — consumers register their own vocabulary (e.g. `planning`, `confirmed`) and wire colours per key via `@use 'styles/status'` (`status.define(...)` / `status.semantic-preset`), which sets `--ds-badge-bg-color` / `--ds-badge-label-color` / `--ds-status-dot-color` per `[data-status]`. Full guide (model, worked example, migration from factory statuses): [`migrations/0.5.1/badge-statuses.md`](migrations/0.5.1/badge-statuses.md)
-
-**Geometry:**
-- Spacing: `--space-0`, `--space-px`, `--space-0-5` (2px), `--space-1` (4px), `--space-1-5` (6px), `--space-2` (8px), `--space-2-5` (10px), `--space-3` (12px), `--space-4` (16px), `--space-5` (20px), `--space-6` (24px), `--space-8` (32px), `--space-10` (40px), `--space-12` (48px), `--space-14` (56px), `--space-16` (64px), `--space-20` (80px), `--space-24` (96px), `--space-32` (128px)
-- Radius: `--radius-0`, `--radius-sm` (4px), `--radius-md` (8px), `--radius-lg` (12px), `--radius-2xl` (24px), `--radius-pill` (999px), `--radius-pill-value`, `--radius-flat`
-- Border widths: `--border-width-default` (1px), `--border-width-strong` (2px)
-- Hit targets: `--hit-xs` (24), `--hit-sm` (28), `--hit-md` (36), `--hit-min` (32), `--hit-cozy` (40), `--hit-comfy` (44), `--hit-touch` (48)
-- Icon sizes: `--icon-2xs` (10), `--icon-xs` (12), `--icon-sm` (14), `--icon-md` (16), `--icon-lg` (20)
-
-**Typography:**
-- Families: `--font-sans`, `--font-mono`, `--font-display`, `--font-heading`
-- Weights: `--font-weight-regular` 400, `--font-weight-medium` 500, `--font-weight-semibold` 600, `--font-weight-bold` 700, `--font-weight-extrabold` 800 (overridden to 700 in brand-mm)
-- Sizes: `--font-size-display` 64, `--font-size-h1` 48, `--font-size-h2` 36, `--font-size-h3` 28, `--font-size-h4` 22, `--font-size-h5` 18, `--font-size-h5-strong` 20, `--font-size-l` 18, `--font-size-m` 16, `--font-size-s` 14, `--font-size-xs` 12, `--font-size-2xs` 11, `--font-size-3xs` 10, `--font-size-4xs` 9, `--font-size-mono` 13
-- Line heights: `--line-height-tight` 1.1, `--line-height-snug` 1.25, `--line-height-base` 1.4, `--line-height-loose` 1.6, `--line-height-flat` 1
-- Letter spacing: `--letter-spacing-tight`, `--letter-spacing-snug`, `--letter-spacing-normal`, `--letter-spacing-wide`, `--letter-spacing-wider`
-
-**Motion:**
-- Durations: `--duration-instant` 80ms, `--duration-fast` 120ms, `--duration-base` 180ms, `--duration-slow` 260ms, `--duration-slower` 400ms
-- Loop: `--duration-loop-fast` 700ms, `--duration-loop-slow` 1400ms
-- Easing: `--ease-standard`, `--ease-emphasized`, `--ease-decelerate`, `--ease-accelerate`, `--ease-spring`
-
-**Elevation:**
-- `--z100/200/300/400` (raw), `--shadow-popover`, `--shadow-modal`, `--shadow-toast`, `--shadow-card`
-- `--blur-sm`, `--blur-md`
-
-**Z-index:**
-- `--layer-base`, `--layer-raised`, `--layer-sticky`, `--layer-dropdown`, `--layer-overlay`, `--layer-drawer`, `--layer-modal`, `--layer-popover`, `--layer-toast`, `--layer-tooltip`
-
-**Focus rings:** `--focus-ring`, `--focus-ring-inverted`, `--focus-ring-error`, `--focus-field`, `--focus-field-error`
-
----
-
-### Grid
-
-Responsive 4-tier page grid loaded via `@use 'styles/ds'` (or directly via `@use '../../ds/src/lib/styles/page-grid';`). One column-count per breakpoint, gutters and margins scale with the viewport, container caps on the widest tier and stays fluid below.
-
-| Tier         | Range         | Cols | Gutter        | Margin         | Container cap            |
-| ------------ | ------------- | ---- | ------------- | -------------- | ------------------------ |
-| Mobile       | ≤ 640px       | 4    | `--space-3` (12)  | `--space-4` (16)   | fluid                    |
-| Tablet       | 641 – 1024px  | 8    | `--space-4` (16)  | `--space-6` (24)   | fluid                    |
-| Desktop      | 1025 – 1440px | 12   | `--space-5` (20)  | `--space-8` (32)   | fluid                    |
-| Desktop wide | ≥ 1441px      | 12   | `--space-6` (24)  | `--space-10` (40)  | `--col-cap-content` 1280 |
-
-**Tokens:** `--bp-xs` 480, `--bp-sm` 640, `--bp-md` 768, `--bp-lg` 1024, `--bp-xl` 1441, `--bp-2xl` 1536. Per-tier gutters/margins live as `--page-gutter-{mobile|tablet|desktop|wide}` and `--page-margin-{mobile|tablet|desktop|wide}`; the active values resolve through `--page-gutter` / `--page-margin` on `.page-grid`. Content caps: `--col-cap-text` 720, `--col-cap-content` 1280.
-
-**Class API:**
-- `.page-grid` — root grid container. Sets `display: grid`, tier-appropriate `grid-template-columns`, `gap`, horizontal `padding`, and `max-width: var(--col-cap-content)` with `margin: 0 auto` for centring at the widest tier.
-- `.col-span-1` … `.col-span-12` — span helpers. At narrower tiers (8 / 4 cols), a span wider than the active column-count wraps to its own row.
-
-**Composition rules:**
-- One grid per page. Sub-regions align to the same column tracks — never invent a local grid.
-- Snap to columns, not pixels. Canonical two-column splits: 8+4, 6+6, 9+3. Never 7+5.
-- Sidenav lives OUTSIDE the grid. Reserve its rail (collapsed 64px / open 240px via `--sidenav-w` / `--sidenav-w-collapsed`), then start `.page-grid` in the remaining width.
-- Prose caps at 720px via `--col-cap-text` regardless of grid width.
-- 8+4 is canonical for record-detail pages (main + meta sidebar); 9+3 is reserved for kit / track-plan picker rails.
-
-**Markup example:**
-
-```html
-<main class="page-grid">
-  <section class="col-span-8">Main content</section>
-  <aside class="col-span-4">Meta sidebar</aside>
-</main>
+```
+0 · 2 · 4 · 6 · 8 · 10 · 12 · 16 · 20 · 24 · 32 · 40 · 48 · 56 · 64 · 80
 ```
 
+`--space-0-5` (2px), `--space-1-5` (6px) and `--space-2-5` (10px) are real, deliberate
+steps used for the inside of small controls. A reviewer applying a strict "everything on
+4 or 8" rule will flag correct DS values as violations — that rule belongs to other
+systems, not this one.
+
+### Which step, by distance
+
+Measured across the library's own components (occurrence counts in parentheses), the
+scale is used in four bands. Match the band to the relationship, not to a pixel target:
+
+| Between | Token | Why |
+| --- | --- | --- |
+| Parts of one control — icon and its label, a chip and its × | `--space-1` (74) or `--space-2` (130) | They read as one object; more than 8px starts to separate them |
+| Sibling controls in a row — a field and its button, two chips | `--space-2` (130) or `--space-3` (82) | Related, but individually clickable |
+| Blocks inside a section — a heading and its table, stacked fields | `--space-4` (55) | The default "these belong together" gap |
+| Sections of a page | `--space-6` (21) and up | A visible break in the reading order |
+
+`--space-2` being the most-used value in the library is not an accident to copy blindly:
+it is the dominant *intra-component* gap. Reaching for it between page sections is the
+most common way a screen ends up feeling cramped.
+
+### Page gutters are already decided — do not re-pick them
+
+The grid sets the horizontal rhythm per breakpoint tier, and a page should inherit it
+rather than declare padding:
+
+| Tier | Gutter | Margin |
+| --- | --- | --- |
+| ≤ 640px (4 col) | `--page-gutter-mobile` (12px) | `--page-margin-mobile` (16px) |
+| 641–1024px (8 col) | `--page-gutter-tablet` (16px) | `--page-margin-tablet` (24px) |
+| 1025–1440px (12 col) | `--page-gutter-desktop` (20px) | — |
+| ≥ 1441px (12 col) | `--page-gutter-wide` (24px) | — |
+
+### Who owns the gap
+
+A stack sets `gap`, and every child is expected to carry its own trailing space. That is
+why `gap="none"` works on a column of fields: each field already reserves its message
+row. The failure mode is reaching for `gap="md"` to rescue one child that does not — it
+re-adds the doubled rhythm to every other child in the column. Fix the child, not the
+container.
+
 ---
 
-### Global helper classes
+## 2. Type
 
-The DS aggregate (`@use 'styles/ds'`) forwards the full stack: theme primitives + tokens + tokens-charts + fonts + reset + typography + link + layout-utils + page-grid + scrollbar + icon-base + dropdown-overlay + skeleton-shimmer. Consumers that only `@use 'styles/tokens'` get pure tokens — **no** font faces, `.link`, typography utilities, `.grid-*`, `.page-grid` / `.col-span-*`, or the dropdown/skeleton overlay rules — load each partial explicitly (`@use 'styles/fonts'; @use 'styles/link';` …) or switch to the aggregate.
+### Choose a ROLE, never a raw size
 
-- `.link` — anchor styling, declared in `_link.scss`. Modifiers: `.quiet` `.inline` `.standalone` `.xs` `.sm` `.lg`. Hover→`color-mix(text-link, black 20%)`, active→`color-mix(text-link, black 35%)`, disabled via `[aria-disabled="true"]`. Loaded via `@use 'styles/link'` (included in the `@use 'styles/ds'` aggregate).
-- Typography utilities (`_typography.scss`): `.t-display`, `.t-h1`, `.t-h2`, `.t-h3`, `.t-h4`, `.t-h5`, `.t-l`, `.t-l-bold`, `.t-m`, `.t-m-bold`, `.t-s`, `.t-s-bold`, `.t-xs`, `.t-xs-bold`, `.t-overline`, `.t-caption`, `.t-mono`, `.t-mono-block`, `.sr-only`
-- Layout (`_layout-utils.scss`): `.grid-2`, `.grid-3`, `.grid-4`. Breakpoints: at ≤1100px `.grid-4` drops to 3 columns; at ≤820px both `.grid-3` and `.grid-4` drop to 2 columns. Gap is `--space-4`.
-- Page grid (`_page-grid.scss`): `.page-grid` + `.col-span-1` … `.col-span-12`. 4-tier responsive grid (4 / 8 / 12 / 12 columns); see Foundations → Grid above for the full spec.
-- Skeleton shimmer (`_skeleton-shimmer.scss`): drives the global `--skeleton-shimmer-x` keyframe used by `<ds-skeleton>` and table skeleton rows.
-- Dropdown overlay (`_dropdown-overlay.scss`): styles the `.ds-dropdown-panel` class used by select/dropdown/combobox/date-picker CDK portals — these panels live outside the host's encapsulated tree, so the styles must be global.
+The library ships named roles. Use the class; the size, weight, line-height and tracking
+come with it, and every one is retunable through `--ds-t-<role>-*` without touching the
+call site.
+
+| Role | Use for |
+| --- | --- |
+| `.t-display` | One number or word that IS the screen — a hero metric |
+| `.t-h1` … `.t-h5` | Document hierarchy. A page title is `.t-h2` here more often than `.t-h1` |
+| `.t-card-title` | The title inside a card or tile, which is not part of the page's heading outline |
+| `.t-l` / `.t-m` / `.t-s` / `.t-xs` | Body copy, descending. `.t-s` is the workhorse for dense admin UI |
+| `.t-overline` | The small uppercase eyebrow above a title |
+| `.t-caption` | Supporting text under a control or figure |
+| `.t-mono-inline` / `.t-mono-block` | Code, tokens, IDs — anything where character alignment carries meaning |
+| `*-bold` variants | The same role, emphasised. Do not reach for a larger role to get weight |
+
+Writing `font-size: var(--font-size-s)` by hand reproduces one of four properties the
+role would have set, and silently opts out of every future retune.
 
 ---
 
-## Components
+## 3. Size and density
 
-Every entry below names its exported class (`ButtonComponent`, `TableComponent<T>`, …). Those names are exported for typing, DI, `viewChild` and template refs — **not as an extension point: subclassing a DS component is unsupported.** Any minor release may add members to a class, and a subclass that happens to have used one of those names breaks on it (TS4114 "must have an 'override' modifier", or TS2416 when the signature differs) — DS 0.6.3 added ~76 members to `TableComponent` alone. Compose instead: wrap the component, project into its slots, retune it through its `--ds-*` tokens. If you subclass anyway, treat every upgrade as potentially build-breaking — the changelog flags the risk (see `migrations/AUTHORING.md`), it does not avoid it.
+### A control in a field row takes the field-height contract
 
-**The `--ds-*` token contract, once for every component below.** Every public `--ds-<component>-*` token is READ WITH A FALLBACK and never declared by the component, so a consumer's value always wins and always inherits: set it on the host (`ds-button { --ds-button-bg-color: teal }`), on any ancestor, at `:root`, or inline. Unset tokens fall through to the component's own default, so there is nothing to opt into and nothing to reset. Two consequences worth stating: a token set at `:root` reaches EVERY instance — scope per instance or per section and keep theme-wide re-skins at role level (`--primary`, `--ds-radius-control`) — and where a component derives one value from another (a hover fill mixed from the resolved background), overriding the source retunes the derived states with it. Individual entries below therefore note only what DEVIATES from this: a derived state, a variant-specific default, a token that beats a size class.
+`--ds-field-height` overrides the family; `--field-h-sm` / `-md` / `-lg` are the scale.
+Every field-shaped control resolves it — inputs, selects, pickers, search, buttons, the
+field group, the number stepper. A literal `height` on a control is a bug: it will not
+line up with its neighbours and will not follow a density change.
 
-> **Token and API lists below are hand-maintained and have drifted.** `ds-button` in particular is documented here with its pre-`color`×`variant` API and the pre-rename token names (`--ds-button-bg`, `-fg`), neither of which is current. The authoritative, auto-generated surfaces are the **Component API tables** and the **token reference** in `ds-docs` (extracted from source on every build, so they cannot go stale) — trust those first, and treat this file as prose about intent. Re-verified 2026-08-05; the sweep to reconcile it is tracked in `docs/todo.md`.
+### Never express a rule in pixels
 
-### Form & input
+`[data-density]` retunes the private spacing and height tokens underneath everything
+above. A value written as `12px` survives that; a value written as `var(--space-3)`
+follows it. This is why every rule on this page names a token.
 
-#### `<ds-button>` — `ButtonComponent`
-Inputs: `variant: ButtonVariant = 'primary'` (`'primary' | 'secondary' | 'tertiary' | 'outline' | 'error' | 'success' | 'warning' | 'text'`), `size: ButtonSize = 'l'` (`'s' | 'm' | 'l' | 'sm' | 'md' | 'lg'` — legacy s/m/l = 24/32/40, canonical sm/md/lg = 32/40/48), `type: 'button' | 'submit' | 'reset' = 'button'`, `disabled: boolean = false`, `loading: boolean = false`, `fullWidth: boolean = false` (stretches the host to `display: block; width: 100%` — for mobile primary CTAs and full-bleed submits)
-Variant → role mapping: `primary` → `--primary` fill · `secondary` → `--primary-muted` tonal fill · `tertiary` → transparent with `--primary-strong` text · `outline` → bordered neutral surface · `error/success/warning` → status fills · `text` → no-chrome text button. (Renamed 2026-06 from danger→error, link→text, ghost→outline.)
-Output: `(pressed): MouseEvent` — only fires when not disabled and not loading
-Content slots: default (label / leading or trailing icon). For icon-only actions use `<ds-icon-button>`.
-Tokens: `--ds-button-bg`, `--ds-button-bg-hover`, `--ds-button-bg-active`, `--ds-button-bg-disabled`, `--ds-button-fg`, `--ds-button-fg-disabled`, `--ds-button-border`, `--ds-button-radius`, `--ds-button-focus-shadow`, `--ds-button-pressed-shadow`. For solid variants (primary/error/success/warning), `-bg-hover` / `-bg-active` / `-pressed-shadow` default to a `color-mix()` derivation from the resolved `-bg` (88 % / 76 % + black — the theme's hover/pressed recipe), so overriding the bg alone retints the full state set; tonal variants (secondary/tertiary/outline/text) keep explicit ramp defaults, so a full retint there means also setting the state tokens. 
+---
 
-#### `<ds-icon-button>` — `IconButtonComponent`
-Icon-only action with its own taxonomy, distinct from `ds-button`. `ariaLabel` is required (icon-only must be labelled for a11y).
-Inputs: `icon: required IconName`, `ariaLabel: required string`, `variant: IconButtonVariant = 'standard'` (`'standard' | 'filled' | 'tonal' | 'outlined'`), `size: IconButtonSize = 'md'` (`'sm' | 'md' | 'lg'` = 32/40/48), `type: 'button' | 'submit' | 'reset' = 'button'`, `disabled: boolean = false`, `selected: boolean = false` (toggle — sets `aria-pressed`)
-Output: `(pressed): MouseEvent` — fires when not disabled
-Variant emphasis: `standard` chromeless (hover-reveal) · `filled` `--primary` · `tonal` `--primary-muted` · `outlined` bordered. `selected` renders the pressed/active fill.
-Tokens: `--ds-icon-button-bg`, `--ds-icon-button-fg`, `--ds-icon-button-border`, `--ds-icon-button-bg-hover`, `--ds-icon-button-bg-active`, `--ds-icon-button-fg-hover`, `--ds-icon-button-radius`, `--ds-icon-button-focus-shadow`. `filled`/`selected` derive hover/active from the resolved bg, `standard`/`tonal`/`outlined` keep explicit ramp defaults.
+## 4. Overriding a component
 
-#### `<ds-input>` — `InputComponent`
-Inputs: `value: model<string>`, `type: InputType = 'text'` (`'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search'`), `size: 'sm' | 'md' | 'lg' = 'md'`, `label: string = ''`, `hint: string = ''`, `placeholder: string = ''`, `disabled: boolean = false`, `invalid: boolean = false`, `required: boolean = false`, `optional: boolean = false`, `name: string | null = null`, `clearable: boolean | null = null` (inline clear (×) button; `null` resolves to `true` for `type="search"` and `false` otherwise)
-Content slots — addon attributes apply to any child element:
-- `[dsInputPrefix]` — leading content (icon, label, etc.)
-- `[dsInputSuffix]` — trailing content (icon button, label, etc.)
-- `class="addon"` — heavyweight slot pill with its own background + divider (use for textual `https://` style prefixes; for icons, prefer plain `dsInputPrefix`)
+Set the component's own `--ds-*` token **on the host element**, scoped as narrowly as the
+change deserves:
 
-Example:
-```html
-<ds-input label="Email" type="email" [(value)]="email">
-  <ds-icon dsInputPrefix name="mail" [size]="16"/>
-  <button dsInputSuffix type="button" (click)="reveal()">
-    <ds-icon name="eye-off" [size]="16"/>
-  </button>
-</ds-input>
+```scss
+ds-select { --ds-field-height: 44px; }              /* every select        */
+.toolbar ds-select { --ds-field-height: 32px; }     /* only in the toolbar */
 ```
 
-Tokens: `--ds-input-bg`, `--ds-input-border`, `--ds-input-border-hover`, `--ds-input-border-focus`, `--ds-input-fg`, `--ds-input-placeholder`, `--ds-input-radius`, `--ds-input-pad-x`, `--ds-input-pad-y`, `--ds-input-focus-shadow`, `--ds-input-border-error`, `--ds-input-bg-error`, `--ds-input-border-success`, `--ds-input-bg-disabled`
+Defaults are declared on `:host` (or the component's root class) with a read-with-fallback
+chain, so a consumer declaration cascades in without `!important` and without knowing the
+internals.
 
-#### `<ds-textarea>` — `TextareaComponent`
-Multi-line counterpart to `<ds-input>` — same wrapper/states, reuses the `--ds-input-*` token family. No prefix/suffix slots.
-Inputs: `value: model<string>`, `size: 'sm' | 'md' | 'lg' = 'md'`, `label`, `hint`, `placeholder`, `disabled`, `invalid`, `required`, `optional: boolean = false`, `name`, `rows: number = 3`
-Tokens: same `--ds-input-*` family as `<ds-input>` (textarea overrides `--ds-input-pad-y` to `--space-3` for vertical breathing room).
-New: `autosize: boolean = false` (grows with content; forces `resize='none'`), `minRows`/`maxRows: number | null = null`, `resize: 'none' | 'vertical' | 'horizontal' | 'both' = 'vertical'`.
+**Two things that break this, both by design:**
 
-#### `<ds-number-stepper>` — `NumberStepperComponent`
-Spinbox for bounded quantities — −/+ buttons around a numeric value.
-Inputs: `value: model<number> = 0`, `min: number = 0`, `max: number | null = null`, `step: number = 1`, `size: 'sm' | 'md' | 'lg' = 'md'`, `disabled: boolean = false`
-Methods: `inc()`, `dec()` (clamp to min/max). Buttons disable at the bounds.
-
-#### `<ds-checkbox>` — `CheckboxComponent`
-Inputs: `checked: model<boolean>`, `indeterminate: boolean = false`, `disabled: boolean = false`, `name: string | null = null`, `inputId: string | null = null`
-
-#### `<ds-radio>` — `RadioComponent`
-Inputs: `checked: model<boolean>`, `disabled: boolean = false`, `name: string = ''`, `value: string = ''`, `inputId: string | null = null`. Use in groups via shared `name`.
-
-#### `<ds-switch>` — `SwitchComponent`
-Inputs: `checked: model<boolean>`, `disabled: boolean = false`, `name: string | null = null`, `variant: 'default' | 'success' | 'error' = 'default'`, `inputId: string | null = null`
-
-#### `<ds-select>` — `SelectComponent`
-Inputs: `value: model<string>`, `options: SelectItem[]` (`SelectOption | SelectOptionGroup`, where `SelectOption = { label, value, disabled? }` and `SelectOptionGroup = { label, options: SelectOption[], disabled? }`), `placeholder: string = ''`, `size: 'sm' | 'md' | 'lg' = 'md'`, `label: string = ''`, `disabled: boolean = false`, `invalid: boolean = false`, `required: boolean = false`, `optional: boolean = false`, `name: string | null = null`
-Renders trigger + CDK overlay panel; keyboard support: ArrowUp/Down, Enter/Space, Home/End, Escape — skipping group-header labels. Pass a mix of flat `SelectOption`s and `SelectOptionGroup`s to render `<optgroup>`-style sections; existing flat-list consumers keep working unchanged. Type guard `isSelectOptionGroup(item)` is re-exported.
-
-#### `<ds-combobox>` — `ComboboxComponent<T>`
-Searchable select with typeahead. Generic on the option value type `T`.
-Inputs: `options: readonly ComboboxOption<T>[]` (`{ value: T, label: string }`), `value: model<T | readonly T[] | null>`, `multiple: boolean = false`, `placeholder: string = 'Select…'`
-In multi mode, selected values render as `<ds-tag closable>` chips above the trigger.
-
-#### `<ds-search>` — `SearchComponent`
-Pre-styled search input with built-in icon.
-Inputs: `value: model<string>`, `placeholder: string = 'Search'`, `shortcut: string = ''` (rendered as a hint pill, e.g. `⌘K`), `showIcon: boolean = true`
-Output: `(submitted): string` — emits the current value on Enter / form submit
-
-#### `<ds-date-picker>` — `DatePickerComponent`
-Inputs: `mode: 'single' | 'range' = 'single'`, `size: 'sm' | 'md' | 'lg' = 'md'`, `value: model<Date | RangeValue | null>` (`RangeValue = [Date | null, Date | null]`), `placeholder: string = 'Select date'`, `label: string = ''`, `hint: string = ''`, `required: boolean = false`, `optional: boolean = false`
-Trigger button opens a CDK overlay calendar; selecting a day in `'single'` closes the panel, in `'range'` it closes after the second pick.
-
-#### `<ds-dropzone>` — `DropzoneComponent`
-File upload area.
-Inputs: `accept: string = ''`, `multiple: boolean = false`, `files: model<DropzoneFile[]>` (`{ id, name, size, state: 'uploading' | 'success' | 'error', progress }`)
-Outputs: `(filesAdded): File[]` (raw browser File list from drop or picker), `(fileRemoved): DropzoneFile` (a chip's remove button)
+- **Reaching for an internal class** — `ds-button .button.v-tonal { … }` — works until the
+  internals move. Components reflect what you need on the host instead: `ds-button` carries
+  `[data-variant]` and `[data-color]`, so `ds-button[data-variant="outline"]` is the
+  supported form.
+- **Portaled panels.** A dropdown, a date picker's calendar and a modal render under
+  `<body>`, outside the host's subtree, so a host-scoped declaration cannot reach them.
+  Those components forward their own panel tokens onto the pane on open, and the theme's
+  radius and elevation ROLES travel with them when the host overrides one. A token that is
+  neither is best set at `:root`.
 
 ---
 
-### Display & feedback
-
-#### `<ds-badge>` — `BadgeComponent`
-Inputs: `status: DsStatusKey` (consumer-registered status key; colours wired via `styles/status`, unset → neutral), `withDot: boolean = false`, `solid: boolean = false`, `count: number | null = null`, `max: number = 99`
-Content: label text. Use for status pills, counts, lifecycle markers.
-
-#### `<ds-status-dot>` — `StatusDotComponent`
-Input: `status: DsStatusKey` (same consumer-registered vocabulary as `ds-badge`; colours wired via `styles/status`, unset → neutral). Tiny coloured dot.
-
-#### `<ds-tag>` — `TagComponent`
-Inputs: `variant: 'solid' | 'neutral' = 'solid'`, `closable: boolean = false`
-Output: `(closed): void` — emits when the close button is pressed
-Content: label.
-
-#### `<ds-avatar>` — `AvatarComponent`
-Inputs: `size: 'xs' | 'sm' | 'md' | 'lg' = 'md'`, `initials: string = ''`, `imageUrl: string | null = null`, `tint: { bg, fg } | 'neutral' | null = null` (off-token override; `'neutral'` swaps to the overflow-chip palette)
-
-#### `<ds-avatar-group>` — `AvatarGroupComponent`
-Inputs: `max: number = 4` (visible avatars before "+N" overflow), `total: number | null = null` (used to compute the overflow count; without `total` no overflow chip renders).
-Content: project `<ds-avatar>` children.
-
-#### `<ds-progress>` — `ProgressComponent`
-Linear progress bar (no circular variant).
-Inputs: `value: number = 0` (0–100, clamped), `variant: 'default' | 'success' | 'warn' | 'error' | 'indeterminate' = 'default'`
-
-#### `<ds-spinner>` — `SpinnerComponent`
-Input: `size: 'sm' | 'md' | 'lg' = 'md'`. Pure-CSS spinner, `role="status"` with built-in `aria-label`.
-
-#### `<ds-skeleton>` — `SkeletonComponent`
-Inputs: `width?: string`, `height?: string`, `circle: boolean = false`, `inline: boolean = false`. Shimmer animation requires the global `_skeleton-shimmer.scss` (already pulled in by `ds.scss`).
-
-#### `<ds-stat>` — `StatComponent`
-Inputs: `label: required string`, `value: required string | number`, `delta: number | null = null`, `deltaLabel: string = ''`, `caption: string = ''`, `unit: string = ''`, `variant: 'default' | 'danger' = 'default'`
-Delta direction is derived from the sign of `delta`: positive → up (arrow + green), negative → down (arrow + red), zero/null → neutral.
-
-#### `<ds-empty-state>` — `EmptyStateComponent`
-Inputs: `variant: 'none' | 'loading' | 'error' | 'locked' = 'none'`, `icon: IconName | null = null` (defaults derive from variant — `warn` for error, `lock` for locked, `package` otherwise), `title: string = ''`, `body: string = ''`
-Content slot: `[actions]` — CTA buttons / links.
-
-#### `<ds-banner>` — `BannerComponent`
-Inputs: `variant: 'info' | 'success' | 'warning' | 'severe' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null` (variant-derived default), `compact: boolean = false`, `layout: 'stacked' | 'row' = 'stacked'`, `accentRail: boolean = true`
-Output: `(dismissed): void`
-Content slots: default (body text), `[actions]` (trailing CTAs)
-- `layout="stacked"` (default): actions wrap onto a new line, indented under the body. Use for multi-line messages or multiple CTAs.
-- `layout="row"`: actions sit at the right edge, vertically centred with the body. Use for one-line messages with a single trailing CTA.
-
-#### `<ds-toast>` — `ToastComponent`
-Inputs: `variant: 'info' | 'success' | 'warning' | 'error' = 'info'`, `title: string = ''`, `message: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null` (variant-derived default)
-Output: `(dismissed): void`
-
-The companion `<ds-toast-region>` lives inside the `ToastService` (see Services) — it is auto-mounted via a CDK overlay on first `toast.show()`, so consumers do **not** need to place `<ds-toast-region>` anywhere in their markup. Render `<ds-toast>` directly only for static specimens.
-
----
-
-### Layout & navigation
-
-#### `<ds-sidenav>` — `SidenavComponent`
-Inputs: `collapsed: boolean = false`, `brand: string = ''` (renders a letter mark + name; omit to project custom content)
-Content: default slot for groups/items + custom brand/footer rows
-Tokens: `--ds-sidenav-bg`, `--ds-sidenav-border`, `--ds-sidenav-width`, `--ds-sidenav-width-collapsed`, `--ds-sidenav-mark-bg`, `--ds-sidenav-mark-fg`
-
-#### `<ds-sidenav-group>` — `SidenavGroupComponent`
-Inputs: `label: string = ''`, `icon: IconName | null = null`, `expandable: boolean = false`, `expanded: model<boolean> = true`
-Content slots: default (items); `[ds-group-icon]` (custom group icon when not using a DS IconName)
-When `expandable=true` renders header button with toggle + caret; collapses body when not expanded.
-
-#### `<ds-sidenav-item>` — `SidenavItemComponent`
-Inputs: `icon: IconName | null = null` (optional — falls back to `[icon]` slot), `label: required string`, `href: string = ''`, `routerLink: string | readonly unknown[] | null = null`, `active: boolean = false`, `badge: number | null = null`, `hasAlert: boolean = false`
-Content slots: `[icon]` (custom icon when not using a DS IconName), `[trailing]` (right-aligned chrome — badges, indicators, kbd shortcuts)
-Tokens (on `:host`): `--ds-sidenav-item-fg`, `--ds-sidenav-item-fg-hover`, `--ds-sidenav-item-bg-hover`, `--ds-sidenav-item-bg-active` (default: `--primary`), `--ds-sidenav-item-fg-active` (default: `--text-on-primary`), `--ds-sidenav-item-rail` (left rail, default: `--secondary`), `--ds-sidenav-item-radius`, `--ds-sidenav-alert-color`
-
-#### `<ds-topbar>` — `TopBarComponent`
-No inputs.
-Content slots: `[title]`, `[breadcrumbs]`, `[search]`, `[actions]`. Sits at `--topbar-h` height.
-Tokens (on `:host`): `--ds-topbar-margin-b` (default `--space-4` = 16px) — bottom gap to the next content block. The topbar owns this gap globally; pages MUST NOT add their own `padding-top` to compensate.
-
-#### `<ds-page-header>` — `PageHeaderComponent`
-Inputs: `eyebrow: string = ''`, `title: required string`, `subtitle: string = ''`, `compact: boolean = false`, `divider: boolean = false`, `metaDivider: boolean = false`
-Content slots: `[breadcrumbs]`, `[title-badge]` (sits next to the title text), `[actions]` (right edge of title row), `[meta]` (under the title row), `[tabs]` (under the meta row)
-Tokens: `--ds-pagehdr-eyebrow-fg`, `--ds-pagehdr-title-fg`, `--ds-pagehdr-subtitle-fg`, `--ds-pagehdr-meta-fg`, `--ds-pagehdr-meta-icon-fg`, `--ds-pagehdr-divider`, `--ds-pagehdr-title-fs` (default `--font-size-h3`; `compact` flips to `--font-size-h4`). The page-header does NOT own its bottom gap — the parent page `:host` owns spacing via `display: flex; flex-direction: column; gap: var(--space-4)`.
-
-#### `<ds-page-footer>` — `PageFooterComponent`
-Input: `variant: 'default' | 'compact' | 'save' = 'default'`
-Content: default `<ng-content>`. Sticky footer bar pattern.
-
-#### `<ds-breadcrumbs>` — `BreadcrumbsComponent`
-Inputs: `items: BreadcrumbItem[] | null = null` (`{ label?, href?, icon? }` — when `null`/omitted, the component reads from `BreadcrumbsService.items` so route-driven flows work without a per-page `[items]` binding), `separator: IconName | null = null` (overrides `DsConfig.breadcrumbs.separator`, falls back to `'chevronRight'`), `clickable: boolean | null = null` (overrides `DsConfig.breadcrumbs.clickable`, falls back to `true`)
-Output: `(navigate): BreadcrumbItem` — emits when an item with `href` is clicked and `clickable` resolves to `true` (event is `preventDefault`-ed so the consumer can decide what to do)
-
-#### `<ds-tabs>` + `<ds-tab>` — `TabsComponent`, `TabComponent`
-Container holds `<ds-tab label="…">` children.
-Tabs inputs: `selectedIndex: model<number> = 0`, `variant: 'line' | 'pills' = 'line'`
-Tab inputs: `label: required string`, `icon: IconName | null = null`, `count: number | null = null`, `disabled: boolean = false`. The tab's projected content renders in the active panel.
-Tokens: `--ds-tab-fg`, `--ds-tab-fg-hover`, `--ds-tab-fg-active`, `--ds-tab-indicator-color`, `--ds-tab-indicator-width`, `--ds-tab-pad-x`, `--ds-tab-pad-y`, `--ds-tabs-divider`, `--ds-tabs-pills-bg`, `--ds-tab-pill-bg-hover` (inactive hover, defaults to `var(--primary-subtle)`), `--ds-tab-pill-bg-active` (defaults to `var(--surface-default)` — elevated card), `--ds-tab-pill-bg-active-hover` (defaults to `var(--primary-subtle)`), `--ds-tab-pill-fg-active` (defaults to `var(--primary-strong)`), `--ds-tab-pill-radius` (defaults to `var(--radius-md)` — same as buttons/inputs; override per-instance to `var(--radius-pill)` for fully round pills).
-
-#### `<ds-stepper>` — `StepperComponent`
-Inputs: `steps: readonly string[] = []`, `current: number = 0`. Horizontal step indicator with done/active/upcoming nodes.
-
-#### `<ds-pagination>` — `PaginationComponent`
-Inputs: `total: required number`, `pageSize: model<number> = 10`, `currentPage: model<number> = 1`, `pageSizeOptions: number[] = [10, 25, 50, 100]`, `showLabel: boolean = true`
-Outputs: `(pageChange): number`, `(pageSizeChange): number`
-
-#### `<ds-divider>` — `DividerComponent`
-Inputs: `variant: 'default' | 'strong' | 'vertical' | 'label' = 'default'`, `spacing: 'none' | 'sm' | 'md' | 'lg' = 'md'`
-Content: label text (when `variant="label"`).
-
----
-
-### Surfaces
-
-#### `<ds-card>` — `CardComponent`
-Inputs: `elevation: 'flat' | 'raised' | 'hover' | 'interactive' = 'flat'`, `padding: 'none' | 'sm' | 'md' | 'lg' | null = null` (when `null`, no `padding-*` class is applied and the consumer controls padding via own CSS or `--ds-card-pad`)
-Output: `(pressed): MouseEvent` — fires only when `elevation="interactive"`
-Tokens: `--ds-card-bg`, `--ds-card-border`, `--ds-card-radius`, `--ds-card-pad`, `--ds-card-shadow`, `--ds-card-shadow-hover`, `--ds-card-focus-shadow`, `--ds-card-hover-lift`
-Convention tokens (consumer-side `.title` projected into the card slot — declared at `:root`, not on the host): `--card-title-fs` (default `var(--font-size-h4)` = 22px; MM brand steps down to `var(--font-size-h5)` = 18px). Consumer markup: `<h3 class="title">…</h3>`; local `.title` class reads the token via `font:` shorthand together with `--font-weight-bold` / `--line-height-snug` / `--font-heading`.
-
-#### `<ds-accordion>` + `<ds-accordion-item>` — `AccordionComponent`, `AccordionItemComponent`
-Accordion is a thin wrapper that rounds + borders its children. Item inputs: `title: string = ''`, `expanded: model<boolean> = false`. Content slots on item: default (body), `[badge]` (rendered next to the title in the header).
-
----
-
-### Overlay
-
-#### `<ds-modal>` — `ModalComponent`
-Inputs: `open: model<boolean> = false`, `size: 'sm' | 'md' | 'lg' = 'md'`, `danger: boolean = false`, `title: required string`
-Output: `(closed): void` — fires on backdrop click, close button, or `open` being set to false. `(confirmed)` is declared on the component but no internal handler emits it; treat it as not implemented and emit confirmation from the consumer-side action button instead.
-Content slots: `[body]`, `[impact]` (highlighted strip under the body for destructive consequences), `[actions]` (footer button row). Backdrop click + close button close the dialog.
-
-#### `<ds-modal-card>` — `ModalCardComponent`
-The visual card the `<ds-modal>` host renders inside its backdrop. Exposed as a separate selector for cases where you need custom positioning (e.g. inside a drawer) without re-implementing the dialog chrome. Inputs: `size`, `danger`, `title: required`, `showClose: boolean = true`. Output: `(closed)`. Slots: `[body]`, `[impact]`, `[actions]`.
-
-#### `<ds-drawer>` — `DrawerComponent`
-Side panel (no `side` input — always anchored right).
-Inputs: `open: model<boolean> = false`, `size: 'md' | 'lg' = 'md'`, `title: string = ''`
-Output: `(closed): void`
-Content slots: `[drawer-body]`, `[drawer-footer]`.
-
-#### `<ds-bottom-sheet>` — `BottomSheetComponent`
-Mobile-first panel anchored to the bottom edge (touch equivalent of drawer/modal). Drag-down on the grab strip, scrim tap, or Esc dismisses; body scroll locks while open; caps width + centres on wide viewports.
-Inputs: `open: model<boolean> = false`, `title: string = ''`
-Output: `(closed): void`
-Content slots: default (body), `[actions]` (footer).
-
-#### `<ds-popover>` — `PopoverComponent`
-Floating panel anchored to a trigger via CDK overlay. Input: `align: 'start' | 'end' = 'start'` — controls overlay alignment relative to the trigger (`start` = left-edge anchored, `end` = right-edge anchored). Open via the component method `toggle(triggerElement)` (or `close()`), and project the panel body inside a `<ng-template #panel>` (read internally via `viewChild`).
-
-#### `[dsTooltip]` — `TooltipDirective`
-Attribute directive. Apply to any focusable element.
-Inputs: `dsTooltip: string = ''` (the text; empty disables), `dsTooltipPlacement: 'top' | 'bottom' | 'left' | 'right' = 'top'`, `dsTooltipDelay: number = 120` (ms)
-Renders `<ds-tooltip-panel>` via CDK overlay on hover / focus; hides on leave / blur.
-
-#### `<ds-menu>` + `<ds-menu-item>` — `MenuComponent`, `MenuItemComponent`
-Menu is a container. Item inputs: `icon: IconName | null = null`, `disabled: boolean = false`, `danger: boolean = false`. Output: `(pressed): MouseEvent`. Content: label text; supports `[icon]` content slot for custom icons.
-
-#### `<ds-dropdown>` — `DropdownComponent`
-Trigger button + CDK overlay panel combo.
-Inputs: `value: model<string> = ''`, `options: DropdownOption[]` (`{ label, value, disabled?, icon? }`), `placeholder: string = 'Select…'`, `size: 'sm' | 'md' | 'lg' = 'md'`, `label: string = ''`, `disabled: boolean = false`, `readOnly: boolean = false`, `error: boolean = false`, `name: string | null = null`
-Selection is communicated via the `value` model. Keyboard: ArrowUp/Down, Enter/Space, Home/End, Escape.
-
----
-
-### Tables
-
-#### `<ds-table>` — `TableComponent<T extends { id: string }>`
-Inputs: `data: required readonly T[]`, `columns: required readonly TableColumn<T>[]`, `selectable: boolean = false`, `bordered: boolean = false` (opt-in outer border + radius; off by default so tables flush inside `<ds-card padding="none">` don't double-border), `loading: false | 'skeleton' | 'overlay' = false`, `stickyHeader: boolean = true`, `selectedIds: model<Set<string>>`, `sortKey: model<string | null>`, `sortDir: model<SortDir>` (`'asc' | 'desc' | null`), `skeletonRows: number = 5`
-Outputs: `(rowClick): T`, `(sortChange): SortChangeEvent` (`{ key, dir }`)
-Column shape: `{ key: string, label: string, sortable?: boolean, align?: 'left' | 'right' | 'center', cell?: (row: T) => string }`
-Cell templates: `<ng-template dsCellTemplate="<colKey>" let-row>…</ng-template>` — `row` is typed `unknown`, narrow via a helper method on the host.
-Content slots: `[empty]` (rendered when `data.length === 0`), `[bulk-actions]` (rendered in the bulk action bar when `selectable && some selected`)
-Loading modes: `'skeleton'` replaces rows with shimmer placeholders driven by the global `--skeleton-shimmer-x` keyframe; `'overlay'` keeps existing rows visible behind a translucent layer with a centred spinner.
-Tokens: `--ds-table-border: var(--border-default)`, `--ds-table-radius: var(--radius-md)`, `--ds-table-bg`, `--ds-table-head-fg: var(--text-secondary)`, `--ds-table-head-bg: var(--surface-secondary)`, `--ds-table-head-fs: var(--font-size-xs)`, `--ds-table-row-hover-bg`, `--ds-table-row-selected-bg`, `--ds-table-divider`, `--ds-table-sort-active-fg`, `--ds-table-cell-pad-x/y`. (Renamed 2026-06: `--ds-table-header-*` → `--ds-table-head-*`, matching the tokens reference.)
-
----
-
-### Domain
-
-#### `<ds-w3w>` — `W3wComponent`
-What3Words address chip — branded display for `///word.word.word` addresses; click-to-copy.
-Inputs: `address: required string`, `prefix: string = '///'`, `copyable: boolean = true`
-Output: `(copied): string` — emits the raw `address` value after a copy attempt
-
----
-
-## Icons
-
-Icon component: `<ds-icon [name]="iconName" [size]="16" [stroke]="1.75">`. `IconName` is `keyof typeof ICONS | string` — built-in DS names autocomplete; consumer-registered names (see `provideDsIcons` below) accept any string at the cost of autocomplete.
-
-All built-in icons (kebab-case where indicated, camelCase otherwise — DS uses both):
-
-`search` `plus` `minus` `check` `x` `chevronDown` `chevronRight` `chevronLeft` `chevronUp` `arrowRight` `arrowUp` `arrowDown` `info` `warn` `error` `success` `bell` `settings` `user` `users` `home` `calendar` `truck` `box` `map` `activity` `folder` `edit` `external` `trash` `copy` `download` `upload` `eye` `filter` `sort` `sortAsc` `sortDesc` `grid` `list` `moreH` `moreV` `link` `flag` `star` `inbox` `archive` `clock` `refresh` `play` `pause` `cmd` `paperclip` `file` `image` `lock` `logout` `help` `pin` `bookmark` `sparkle` `layers` `chart` `gauge` `package` `git` `sun` `moon` `save` `rotate` `qr` `globe` `phone` `bin` `pen` `smile` `frown` `mail` `eye-off` `check-circle` `drag`
-
-Adding icons to DS: edit `src/lib/icons/icons.data.ts`; SVG paths render inside `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor">`. For consumer-side icons without forking DS, use `provideDsIcons(…)` below.
-
-#### `DS_ICON_REGISTRY` / `provideDsIcons(icons)`
-
-Consumer apps can register additional icons without forking DS. Each entry maps a name to the raw SVG body — everything that goes *inside* `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">`. Typically one or more `<path>` / `<circle>` / `<rect>` elements with no `stroke`/`fill` of their own (the host SVG paints them).
-
-```ts
-import { provideDsIcons } from 'ds';
-
-bootstrapApplication(AppComponent, {
-  providers: [
-    provideDsIcons({
-      'cloud-upload': '<path d="M7 18a5 5 0 1 1 .9-9.9 …"/><path d="M12 21V11"/>',
-      shield:         '<path d="M12 3 4 6v6c0 5 …"/>',
-    }),
-  ],
-});
-```
-
-Lookup order: built-in `ICONS` first, then the consumer registry. Names that collide with built-ins are ignored — fork the DS source if you need to override a built-in.
-
----
-
-## App config
-
-#### `DS_CONFIG` / `provideDsConfig(config)`
-
-Inject `DS_CONFIG` token (default factory returns `{}`) to set library-wide defaults that consumer-level component inputs can still override.
-
-```ts
-import { provideDsConfig } from 'ds';
-
-bootstrapApplication(AppComponent, {
-  providers: [
-    provideDsConfig({
-      breadcrumbs: { separator: 'chevronRight', clickable: true },
-    }),
-  ],
-});
-```
-
-`DsConfig` shape (see `src/lib/config/ds-config.ts`):
-
-```ts
-interface DsConfig {
-  breadcrumbs?: {
-    separator?: IconName;
-    clickable?: boolean;
-  };
-}
-```
-
-Currently consumed by:
-- `<ds-breadcrumbs>` — `[separator]` / `[clickable]` inputs fall back to `breadcrumbs.separator` / `breadcrumbs.clickable` from config, then to `'chevronRight'` / `true`.
-
-Add more sections to `DsConfig` as we extract reusable defaults; the precedence chain is always: explicit input → config → component default.
-
----
-
-## Services
-
-#### `BreadcrumbsService`
-
-`@Injectable({ providedIn: 'root' })`. Signal-based state primitive — apps push crumbs, `<ds-breadcrumbs>` reads from here when its `[items]` input is omitted.
-
-```ts
-private readonly crumbs = inject(BreadcrumbsService);
-// signal-readable items
-this.crumbs.items()      // -> BreadcrumbItem[]
-// mutators
-this.crumbs.set([{ label: 'Overview', href: '/workspaces' }, { label: 'Detail' }]);
-this.crumbs.push({ label: 'Extra' });
-this.crumbs.replaceLast({ label: 'Renamed' });
-this.crumbs.pop();
-this.crumbs.clear();
-```
-
-**Two ways to feed it:**
-
-1. **Programmatic** — each page calls `this.crumbs.set(...)` (e.g. inside `effect(() => …)` when the page model resolves). Use when crumb labels depend on data the page already has loaded (a program name, a campaign title).
-
-2. **Route-driven** — annotate routes with `data.breadcrumb` and run a Router→Service bridge once at app bootstrap. Example bridge lives at `app/core/breadcrumbs/breadcrumbs-route.bootstrap.ts` in this repo. `breadcrumb` accepts:
-   - `string` → `{ label: string, href: <built-from-url> }`
-   - `BreadcrumbItem`
-   - `BreadcrumbItem[]`
-   - `(snap: ActivatedRouteSnapshot) => string | BreadcrumbItem | BreadcrumbItem[]`
-
-   Mix-and-match: route bridge sets a base trail, page effect overrides with a richer version when its data is ready.
-
-#### `ToastService`
-`@Injectable({ providedIn: 'root' })`. Inject and call:
-- `show(opts: ToastOptions): ToastRef` — `{ title?, body, variant?: 'info' | 'success' | 'warning' | 'error', dismissible?, durationMs? = 5000 }`. Returns `{ id, dismiss() }`.
-- `dismissAll(): void`
-
-On first `show()` the service lazily creates a CDK overlay and mounts a `<ds-toast-region>` into it. **Consumers do not need to add a region element to their template** — the service handles mounting itself.
-
----
-
-## Migration tips
-
-- **Don't add `class="card"` on `<ds-card>`.** Some consumer apps carry a legacy global `.card` rule that adds a second border on top of the component's own — use `ds-card` as-is, override tokens via `ds-card { --ds-card-...: ... }`, or pass a domain class like `class="kpi"`.
-- **`@use 'tokens'` alone won't give you `.link` / `.t-*` / `.grid-*`.** Pull those partials explicitly or `@use 'styles/ds'` for the full aggregate. See Foundations → Global helper classes.
-- **`<ng-content>` default slot is allowed once per template.** If you duplicate it across `@if/@else` branches Angular silently drops projected children. Hoist a single default slot and toggle visibility via a class.
-- **Tokens on `:host`, not on the inner root class.** Defaults declared inside `.card { --ds-card-...: … }` block external overrides because the inner specificity wins. Move them to `:host` so consumer `ds-card { --ds-card-...: ... }` cascades through.
-- **Brand overrides Tier 1 palette + a few Tier 2 roles.** Don't add brand-specific values inside individual components; put them in a consumer-side `_brand-*.scss` scoped to `[data-brand="…"]` — the DS itself stays brand-agnostic.
+## 5. What this file does not cover yet
+
+Colour pairing (which surface takes which text role), motion (when a transition earns its
+place) and content rules (labels, empty states, error copy) are not written down here yet.
+Until they are, ds-docs `Practice → Do / Don't` carries the component-choice decisions —
+modal vs drawer, button hierarchy, table density, status without colour — and
+`Practice → Token Discipline` carries the token-vs-literal rule in worked form.

@@ -49,6 +49,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the backend already formatted, and `exportFailed` emits the rejection — swallowing it made a failed export
   indistinguishable from a slow one. Two box tokens: `--ds-table-min-width` (a readability floor, default 0)
   and `--ds-table-hscroll-bottom` (offsets the sticky scrollbar out of a padded container, default 0).
+- **The package now ships `design-system.md` and `components.md`.** `design-system.md` is no longer a
+  catalogue: it carries the RULES — which spacing token goes between what, which type role a piece of
+  text takes, the field-height contract, who owns a gap, and how to override a component (including the
+  two things that break it: reaching for an internal class, and portaled panels). The 491-line inventory
+  it used to be moved to `components.md`. Both are readable from `node_modules`, so a consumer's agents
+  and tooling can follow the system instead of guessing plausible token values.
 - **`ds-tabs` warns when two strips claim the same `urlParam`.** Both write the same query parameter, so
   each erases the other's tab and a reload restores whichever wrote last — nothing throws and the URL
   looks plausible. It is the easy mistake when turning `urlParam` on across an app, because `"tab"` is the
