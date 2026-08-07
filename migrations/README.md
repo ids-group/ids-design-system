@@ -30,8 +30,15 @@ See `AUTHORING.md` for how to write a good entry.
 **Prose guides per version.** The `<version>.json` manifest is the terse machine mirror. When a
 release needs a longer human walkthrough (a worked before/after, a mental model, edge cases the
 `note` can't hold), put it in a sibling folder named for that version: `migrations/<version>/*.md`
-(e.g. `migrations/0.5.1/badge-statuses.md`). The folder never matches the `*.json` glob, so tooling
+(e.g. `migrations/0.5.1/badge-statuses.md`, `migrations/unreleased/README.md`). The folder never matches the `*.json` glob, so tooling
 ignores it; the manifest `note` and the CHANGELOG point at the guide by path.
+
+**A guide should carry the half a manifest cannot: what the consumer can now DELETE.** Two
+dogfooding audits (mm-ecm 08-06, mm-broker 08-07) read consumer stylesheets as a record of what
+this library made them write, and both found the same thing — most workarounds were written
+against hooks that ALREADY existed, because a release note says what broke and never says what
+became unnecessary. `unreleased/README.md` §3 is the first guide to carry that list; treat it as
+the shape to follow.
 
 **Authoring:** drafted at release time alongside the CHANGELOG entry (the `/changelog` workflow
 drafts it from the release diff; the release author reviews). The prose changelog stays canonical
