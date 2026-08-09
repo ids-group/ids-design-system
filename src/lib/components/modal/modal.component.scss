@@ -167,10 +167,9 @@
     &:empty { display: none; }
   }
 
-  // The header and actions padding is sized to clear a rule. With no rule to
-  // clear, header-bottom + body-top stack into one oversized gap — which is why
-  // setting --ds-modal-divider: transparent alone never looked right. A consumer
-  // token still wins: the fallback is what changes, not the resolver.
+  // The regions are padded to clear a rule; with no rule, header-bottom and
+  // body-top stack into one oversized gap. Zero the FALLBACK, not the resolver —
+  // collapsing this to `0` would silently drop a consumer's override.
   &.no-dividers {
     --_modal-body-pad-y: var(--ds-modal-body-pad-y, 0);
 

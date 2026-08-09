@@ -25,10 +25,8 @@ export default {
       return !/\S/.test(text.substring(lineStart, offset));
     }
 
-    // Inside these, whitespace IS content: the indentation this rule adds shows
-    // up on screen, and every code sample in the docs had its first line pushed
-    // four columns right of the rest before this exemption existed. Nested
-    // elements are exempt too — a <code> inside a <pre> is the usual shape.
+    // Inside these, whitespace IS content — the indentation this rule adds renders.
+    // Matched by source range, not node name: a <code> inside a <pre> is exempt too.
     const WHITESPACE_SENSITIVE = /<(pre|textarea)\b[\s\S]*?<\/\1>/gi;
     const exemptRanges = Array.from(text.matchAll(WHITESPACE_SENSITIVE), (m) => [
       m.index,
