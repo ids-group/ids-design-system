@@ -3152,6 +3152,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Shows the header close button."
       },
       {
+        "name": "dividers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for."
+      },
+      {
         "name": "icon",
         "kind": "input",
         "type": "IconName | null",
@@ -3245,6 +3254,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Secondary line under the title. Not part of the accessible name."
+      },
+      {
+        "name": "dividers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for."
       },
       {
         "name": "closeOnBackdrop",

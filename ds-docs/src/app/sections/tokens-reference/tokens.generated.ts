@@ -3771,7 +3771,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-modal-divider",
         "value": "var(--border-divider)",
-        "notes": "Header/actions divider."
+        "notes": "Header/actions divider colour. To remove the rules entirely use [dividers]=\"false\" — it also drops the padding they were sized for, which setting this to transparent does not."
       },
       {
         "name": "--ds-modal-title-text-color",
@@ -3891,7 +3891,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-modal-body-pad-y",
         "value": "var(--space-5)",
-        "notes": "Vertical padding of the body."
+        "notes": "Vertical padding of the body. Falls to 0 under [dividers]=\"false\", since it exists to clear a rule; set this token to keep a value in both modes."
       },
       {
         "name": "--ds-modal-actions-pad-y",

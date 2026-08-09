@@ -89,6 +89,7 @@ Search your styles for these; if you find them, they can go.
 | Pagination label type overrides | `--ds-pagination-label-*` |
 | `.size { display: none }` on a pager | `[showPageSize]="false"` — and it is now forwarded through `ds-table` too |
 | `.actions:empty { display: none }` on a modal | The library already ships it |
+| `--ds-modal-divider: transparent`, plus whatever you rewrote the modal padding to afterwards | `[dividers]="false"` — it drops the rules *and* the padding that existed to clear them |
 | A defensive hover rule on the selected dropdown row | The `:not(.is-selected)` branch already handles it |
 | `ds-menu-divider { padding: 0 }` | `--ds-menu-divider-spacing`, which already defaults to 0 |
 | A dozen scattered `--ds-*-radius: 0` | Three role declarations: `--ds-radius-inner`, `-control`, `-panel` |

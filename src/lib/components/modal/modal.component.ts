@@ -43,6 +43,8 @@ export class ModalComponent implements OnDestroy {
   readonly closed = output<void>();
   /** Emit this yourself from a confirm action in the projected content — not fired by the modal itself. */
   readonly confirmed = output<void>();
+  /** Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for. */
+  readonly dividers = input(true, { transform: booleanAttribute });
   /** When false, clicking the scrim does not close the modal. */
   readonly closeOnBackdrop = input(true, { transform: booleanAttribute });
   /** When true, neither backdrop click nor Escape closes the modal — only programmatic or explicit close button. */

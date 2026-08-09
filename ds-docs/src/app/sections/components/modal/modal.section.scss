@@ -9,6 +9,7 @@
   border-radius: var(--radius-lg);
 }
 .modal-grid--1 { grid-template-columns: 1fr; }
+.modal-grid--2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
 
 .state-cell__stage {
   min-height: 220px;

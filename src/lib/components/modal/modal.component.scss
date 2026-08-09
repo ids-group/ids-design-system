@@ -167,6 +167,17 @@
     &:empty { display: none; }
   }
 
+  // The header and actions padding is sized to clear a rule. With no rule to
+  // clear, header-bottom + body-top stack into one oversized gap — which is why
+  // setting --ds-modal-divider: transparent alone never looked right. A consumer
+  // token still wins: the fallback is what changes, not the resolver.
+  &.no-dividers {
+    --_modal-body-pad-y: var(--ds-modal-body-pad-y, 0);
+
+    .header { border-bottom-width: 0; }
+    .actions { border-top-width: 0; }
+  }
+
   &.error {
     .title { color: var(--_modal-title-text-color-error); }
   }

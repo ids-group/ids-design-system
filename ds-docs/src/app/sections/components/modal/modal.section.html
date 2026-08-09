@@ -127,6 +127,88 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Without dividers
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [dividers]="false"
+    </code> drops the rules and tightens the
+    vertical padding in one move, because those are one design decision. Hiding
+    the rules alone —
+    <code class="t-mono-inline">
+      --ds-modal-divider: transparent
+    </code> —
+    leaves the header and body padding stacked into a gap sized for a rule that
+    is no longer drawn.
+  </p>
+
+  <div class="modal-grid modal-grid--2">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-modal-card
+          title="Archive this record"
+          size="sm"
+          [showClose]="false"
+        >
+          <span body>
+            Archived records stay searchable and can be restored for 30 days.
+          </span>
+
+          <ng-container actions>
+            <ds-button
+              color="neutral"
+              variant="outline"
+            >
+              Cancel
+            </ds-button>
+
+            <ds-button>
+              Archive
+            </ds-button>
+          </ng-container>
+        </ds-modal-card>
+      </div>
+
+      <div class="state-cell__label">
+        default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-modal-card
+          title="Archive this record"
+          size="sm"
+          [showClose]="false"
+          [dividers]="false"
+        >
+          <span body>
+            Archived records stay searchable and can be restored for 30 days.
+          </span>
+
+          <ng-container actions>
+            <ds-button
+              color="neutral"
+              variant="outline"
+            >
+              Cancel
+            </ds-button>
+
+            <ds-button>
+              Archive
+            </ds-button>
+          </ng-container>
+        </ds-modal-card>
+      </div>
+
+      <div class="state-cell__label">
+        dividers false
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Sizes
   </h3>
 
