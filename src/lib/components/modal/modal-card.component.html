@@ -22,12 +22,22 @@
         <ng-content select="[eyebrow]"></ng-content>
       </div>
 
-      <h2
-        class="title"
-        [id]="titleId"
-      >
-        {{ title() }}
-      </h2>
+      <div class="title-line">
+        <h2
+          class="title"
+          [id]="titleId"
+        >
+          {{ title() }}
+        </h2>
+
+        <ng-content select="[title-badge]"></ng-content>
+      </div>
+
+      @if (subtitle()) {
+        <p class="subtitle">
+          {{ subtitle() }}
+        </p>
+      }
     </div>
 
     @if (showClose()) {

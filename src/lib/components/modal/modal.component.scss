@@ -10,6 +10,8 @@
   --_modal-title-text-color-error:  var(--ds-modal-title-text-color-error,  var(--error-text));
   --_modal-title-weight: var(--ds-modal-title-weight, var(--font-weight-bold));
   --_modal-title-font-size: var(--ds-modal-title-font-size, var(--font-size-h5));
+  --_modal-subtitle-text-color: var(--ds-modal-subtitle-text-color, var(--text-secondary));
+  --_modal-subtitle-font-size: var(--ds-modal-subtitle-font-size, var(--font-size-s));
   --_modal-eyebrow-text-color: var(--ds-modal-eyebrow-text-color, var(--text-tertiary));
   --_modal-eyebrow-font-size: var(--ds-modal-eyebrow-font-size, var(--font-size-xs));
   --_modal-eyebrow-weight: var(--ds-modal-eyebrow-weight, var(--font-weight-bold));
@@ -112,11 +114,25 @@
     &:empty { display: none; }
   }
 
+  .title-line {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
   .title {
     font: var(--_modal-title-weight) var(--_modal-title-font-size) / var(--line-height-snug) var(--font-heading);
     margin: 0;
     min-width: 0;
     color: var(--_modal-title-text-color);
+  }
+
+  .subtitle {
+    font: var(--font-weight-regular) var(--_modal-subtitle-font-size) / var(--line-height-snug) var(--font-sans);
+    color: var(--_modal-subtitle-text-color);
+    margin: var(--space-0-5) 0 0;
   }
 
   .close {

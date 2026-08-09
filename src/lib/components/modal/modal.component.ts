@@ -37,6 +37,8 @@ export class ModalComponent implements OnDestroy {
   readonly error = input(false, { transform: booleanAttribute });
   /** Dialog title, shown in the header and used for `aria-labelledby`. */
   readonly title = input.required<string>();
+  /** Secondary line under the title. Not part of the accessible name. */
+  readonly subtitle = input<string | null>(null);
   /** Fires once the close (leave) animation finishes. */
   readonly closed = output<void>();
   /** Emit this yourself from a confirm action in the projected content — not fired by the modal itself. */

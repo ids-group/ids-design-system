@@ -492,6 +492,8 @@
   "--ds-modal-pad-x": "Horizontal gutter shared by the header, body and actions. Set it on ds-modal AND ds-modal-card — a dialog opened through ModalService has no ds-modal ancestor.",
   "--ds-modal-radius": "Corner radius.",
   "--ds-modal-shadow": "Dialog shadow.",
+  "--ds-modal-subtitle-font-size": "Size of the optional subtitle under the title (default --font-size-s).",
+  "--ds-modal-subtitle-text-color": "Colour of the optional subtitle under the title (default --text-secondary).",
   "--ds-modal-title-font-size": "Modal/dialog title size (default --font-size-h5). Pairs with --ds-modal-title-weight.",
   "--ds-modal-title-text-color": "Title colour.",
   "--ds-modal-title-text-color-error": "Danger title colour.",

@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import {
+  BadgeComponent,
   BannerComponent,
   ButtonComponent,
   SelectComponent,
@@ -19,6 +20,7 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   selector: 'section-components-modal',
   standalone: true,
   imports: [
+    BadgeComponent,
     BannerComponent,
     ButtonComponent,
     DocsTruncationComponent,

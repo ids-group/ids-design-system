@@ -3134,6 +3134,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Card title, shown in the header and used for `aria-labelledby`."
       },
       {
+        "name": "subtitle",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Secondary line under the title. Not part of the accessible name."
+      },
+      {
         "name": "showClose",
         "kind": "input",
         "type": "boolean",
@@ -3227,6 +3236,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": true,
         "description": "Dialog title, shown in the header and used for `aria-labelledby`."
+      },
+      {
+        "name": "subtitle",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Secondary line under the title. Not part of the accessible name."
       },
       {
         "name": "closeOnBackdrop",

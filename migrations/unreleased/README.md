@@ -96,6 +96,7 @@ Search your styles for these; if you find them, they can go.
 | Absolutely positioning a search glyph over an autocomplete, or hiding `.autocomplete-chevron` | `dsAutocompletePrefix` and `[showChevron]="false"` |
 | Querying the autocomplete's inner `<input>` and dispatching a synthetic `input` event to clear it | `clear()` |
 | A hand-built KPI tile whose value is a badge | `ds-stat` takes a projected `[dsStatValue]` |
+| A hand-rolled `.scrim` + `.panel` dialog, written because the modal header could not hold a badge or a second line | `ds-modal` projects `[title-badge]` and takes a `subtitle`. You get back the focus trap, focus restore, the scroll lock, Escape and the footer |
 | `white-space: normal` forced onto a badge in a table cell | `--ds-badge-white-space` |
 | `::ng-deep .card { height: 100% }` for equal-height cards | The card's box fills a stretched host on its own |
 | `!important` on `ds-table` cell padding under `density="compact"` | Compact no longer out-specifies the padding hooks |

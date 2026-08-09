@@ -3794,6 +3794,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Modal/dialog title size (default --font-size-h5). Pairs with --ds-modal-title-weight."
       },
       {
+        "name": "--ds-modal-subtitle-text-color",
+        "value": "var(--text-secondary)",
+        "notes": "Colour of the optional subtitle under the title (default --text-secondary)."
+      },
+      {
+        "name": "--ds-modal-subtitle-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Size of the optional subtitle under the title (default --font-size-s)."
+      },
+      {
         "name": "--ds-modal-eyebrow-text-color",
         "value": "var(--text-tertiary)",
         "notes": "Colour of the optional [eyebrow] line above the dialog title (default --text-tertiary)."
