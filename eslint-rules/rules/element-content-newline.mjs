@@ -1,3 +1,5 @@
+import { detectEol } from '../eol.mjs';
+
 /** @type {import('eslint').Rule.RuleModule} */
 export default {
   meta: {
@@ -16,10 +18,25 @@ export default {
 
   create(context) {
     const text = context.sourceCode.getText();
+    const eol = detectEol(text);
 
     function isAtLineStart(offset) {
       const lineStart = text.lastIndexOf('\n', offset - 1) + 1;
       return !/\S/.test(text.substring(lineStart, offset));
+    }
+
+    // Inside these, whitespace IS content: the indentation this rule adds shows
+    // up on screen, and every code sample in the docs had its first line pushed
+    // four columns right of the rest before this exemption existed. Nested
+    // elements are exempt too — a <code> inside a <pre> is the usual shape.
+    const WHITESPACE_SENSITIVE = /<(pre|textarea)\b[\s\S]*?<\/\1>/gi;
+    const exemptRanges = Array.from(text.matchAll(WHITESPACE_SENSITIVE), (m) => [
+      m.index,
+      m.index + m[0].length,
+    ]);
+
+    function isWhitespaceSensitive(offset) {
+      return exemptRanges.some(([start, end]) => offset >= start && offset < end);
     }
 
     function isSelfClosing(node) {
@@ -32,6 +49,8 @@ export default {
 
     function check(node) {
       if (!node.endSourceSpan) return;
+
+      if (isWhitespaceSensitive(node.startSourceSpan.start.offset)) return;
 
       // Skip self-closing elements (<input />, <br />, <ng-content />, etc.)
       if (isSelfClosing(node)) return;
@@ -63,7 +82,7 @@ export default {
             fix(fixer) {
               return fixer.replaceTextRange(
                 [innerStart, innerEnd],
-                '\n' + tagIndent,
+                eol + tagIndent,
               );
             },
           });
@@ -93,7 +112,7 @@ export default {
             fixes.push(
               fixer.replaceTextRange(
                 [innerStart, innerStart + leadingWs.length],
-                '\n' + contentIndent,
+                eol + contentIndent,
               ),
             );
           }
@@ -102,7 +121,7 @@ export default {
             fixes.push(
               fixer.replaceTextRange(
                 [innerEnd - trailingWs.length, innerEnd],
-                '\n' + tagIndent,
+                eol + tagIndent,
               ),
             );
           }
