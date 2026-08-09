@@ -124,9 +124,7 @@
     crumbs from route data or an effect when the page model resolves.
   </p>
 
-  <pre class="snippet t-mono">
-    <code>
-      {{ '// in a page component or route effect' }}
+  <pre class="snippet t-mono"><code>{{ '// in a page component or route effect' }}
 import {{ '{' }} BreadcrumbsService {{ '}' }} from 'ds';
 private readonly crumbs = inject(BreadcrumbsService);
 this.crumbs.set([
@@ -136,7 +134,5 @@ this.crumbs.set([
 ]);
 
 {{ '// template — items input omitted, reads from service' }}
-&lt;ds-breadcrumbs /&gt;
-    </code>
-  </pre>
+&lt;ds-breadcrumbs /&gt;</code></pre>
 </docs-section>
