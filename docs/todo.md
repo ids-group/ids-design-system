@@ -11,9 +11,9 @@ Completed items are archived in `done.md` (last archive pass **2026-08-10**; bef
 
 ## Priority board (2026-08-10 actualization)
 
-**20 open**, every one of them below — but that count flatters the board. **Twelve are parked P3s** with their scope already written down, waiting on a first consumer ask (splitter, CascadeSelect, lightbox, CDK Menu, `ds-select` native multi, stepper formatting, row-expansion deltas, primary-CTA, MED, inspect mode) or deliberately kept as decision records not to be "simplified" (`role="banner"`, the duplicated `compact` condition). **One more, a P2 — shared picker internals — is open against its own recommendation**, which is not to build it until a fourth list picker appears. (The thirteenth open P3, the modal status treatment, is NOT parked: it is real, and it is breaking, so it sits in the batch after 0.9.0.)
+**24 open — 7 P2 and 17 P3 — but the count flatters the board.** **Twelve are parked**: ten P3s waiting on a first consumer ask (splitter, CascadeSelect, lightbox, CDK Menu, `ds-select` native multi, stepper formatting, row-expansion deltas, primary-CTA, MED, inspect mode) and two kept deliberately as decision records not to be "simplified" (`role="banner"`, the duplicated `compact` condition). **A P2 — shared picker internals — is open against its own recommendation**, which is not to build it until a fourth list picker appears.
 
-**So the live board is four decisions and three pieces of work.** The decisions: cut 0.9.0 · packaging A/C/D · the breaking batch after 0.9.0 (modal `status`, the four default changes, the width-overflow default flip) · the interlocked token trio, which is blocked on verdicts B1–B5 and a colour-space choice. The work: composition rules · width-based overflow as an opt-in · and whatever the DEFAULTS signal below turns into.
+**So the live board is four decisions, three pieces of work, and five small ones.** The decisions: cut 0.9.0 · packaging A/C/D · the breaking batch after 0.9.0 (modal `status`, the four default changes, the width-overflow default flip) · the interlocked token trio, blocked on verdicts B1–B5 and a colour-space choice. The work: composition rules · width-based overflow as an opt-in · whatever the DEFAULTS signal below turns into. **The five small ones are all P3 and all cheap** — swappable leave keyframes, the "square brand" worked example, the two undocumented `ds-table` behaviours, the 32px-toolbar answer, and the modal status treatment (that last one breaking, so it rides the batch). _Four of those five were filed on 2026-08-10 out of prose that had been sitting in this file with no checkbox — which is the failure mode to watch for here: a finding written as a sentence never gets done._
 
 **Cleared 2026-08-06, after the agent-portal audit + Misha's review:** all four P2 items from the audit (table head padding — which also turned up `density="compact"` defeating every padding hook — the table pager inputs, the four autocomplete search gaps, the autocomplete panel radius), plus `ds-search` on the field-height contract. Two docs-site defects Misha found are fixed as well: `/changelog` served from a one-year `immutable` cache on a stable-name file, and sidebar anchors needing a second click — `onItem` scrolled, then the `routerLink`'s path change made `ds-app-layout` reset the scroll and undo it; the links now carry `dsSamePage`. (My first diagnosis blamed a lazy-load race and was WRONG: measurement showed the sections are always mounted by then, and the live site reproduced the real cause instead — first click 0px, second 15145px.) `sortMode`/`filterMode` now default to `'server'` (Stas 2026-08-06, breaking, migration written).
 
@@ -93,44 +93,21 @@ are IDENTICAL in two independently-built apps: `ds-page-header` title bumped to
 separately is evidence about the default, not about the knob — worth deciding whether
 the DS should move rather than having every consumer retune it. **Needs Stas.**
 
-**One thing today's work made worse for them:** platform-admin pins
-`--ds-search-height: var(--hit-min)` (32px) for a toolbar of 32px controls, and the
-comment already complains that `md` was 36px. Today's change moved the default to
-40px, further from what they want. Their pin still wins so nothing breaks — but the
-field-height contract assumes a 40px norm that this consumer does not share, and
-`[data-density="compact"]` may be the answer they actually need.
-
----
-
-## From mm-ecm agent-portal migration (2026-07-31)
-
-All 11 items shipped or closed by 2026-08-05 — the section moved to `done.md` with its dogfooding provenance intact.
-
-**Consumer-side staleness found 2026-08-05, recorded here because their file is gitignored (so this is the durable copy) and correcting theirs is a separate ask:** `mm-broker-platform/src/frontend/todo.md:115` still says "`ds-auth-shell` (§1a) did NOT ship and is still a DS backlog item". It shipped in **0.8.0** and was renamed the same day — the selector is `ds-auth-layout`. Their §1a migration (`app-auth-card` → the DS scaffold) is therefore unblocked, and the name to migrate to is the new one. **Closed 2026-08-05 later the same day:** they bumped to 0.8.0, corrected that line, and migrated — `app-auth-card` is now a thin adapter over `ds-auth-shell`, so the `ds-auth-layout` rename will reach them as one more migration at the next bump.
+- [ ] **[P3] A 32px toolbar has no supported answer, and the field-height work moved further from it.** platform-admin pins `--ds-search-height: var(--hit-min)` (32px) for a toolbar of 32px controls, with a comment already complaining that `md` was 36px; the 08-06 change moved the default to 40px. Their pin still wins so nothing breaks — but the field-height contract assumes a 40px norm this consumer does not share, and per-component pins are exactly what the contract exists to remove. `[data-density="compact"]` is probably the real answer: verify it actually lands a toolbar at 32px, and if it does, say so in the density docs and in the migration notes, because they will not find it on their own. _(Filed as an item 2026-08-10; it had sat as a closing observation since 08-07.)_
 
 ---
 
 ## From mm-broker `ids-data-table` retirement (2026-08-05)
 
 All nine acceptance criteria plus the date-picker defect are MET as of 2026-08-06 — the section moved
-to `done.md` with its provenance. **mm-broker has not migrated yet**, so the two things they must know
-before retiring the fork stay here: clip detection covers template cells in a column that asked for
-`truncate` rather than every overflowing cell (a handler on every `<td>` swallows the row click on an
-interactive table), and the first resize — pointer or keyboard — freezes ALL visible column widths, so a
-persisted `columnWidths` map gains entries for columns nobody dragged.
+to `done.md` with its provenance. **mm-broker has not migrated yet.** Two of the four things recorded
+for them turned out to be DS work rather than migration notes, so they are an item now:
 
-Migration notes, not asks: `hideable` inverts (the fork treats every column as hideable unless opted
-out, the base only when `hideable: true`) and `bordered` flips `true` → `false`, so retiring the fork
-means touching every column config and every template.
+- [ ] **[P3] `ds-table` — two deliberate behaviours that read as bugs are undocumented.** Both surfaced while a consumer prepared to retire its fork, and either will be filed as a defect by the next person who meets it. **(a) The first resize — pointer or keyboard — freezes ALL visible column widths**, so a persisted `[(columnWidths)]` map gains entries for columns nobody dragged; the docs describe the two-way binding (`table.section.html:893-907`) and say nothing about this. **(b) Clip detection covers template cells only in a column that asked for `truncate`**, not every overflowing cell — deliberate, because a handler on every `<td>` swallows the row click on an interactive table, and that reason is exactly what a reader needs. Docs-only; the behaviours are right as they are.
 
-### Three more from sweeping the whole consumer against 0.8.0 (2026-08-06)
-
-They audited every consumer selector and every `--ds-*` declaration in their four projects against
-0.8.0 and deleted what the release made redundant. After that pass exactly **two** places in the
-whole codebase still reach into DS internals, and both are here because a hook is missing. The third
-item is a paper cut the new field-height contract left behind.
-
----
+Migration notes for them, not asks: `hideable` inverts (the fork treats every column as hideable unless
+opted out, the base only when `hideable: true`) and `bordered` flips `true` → `false`, so retiring the
+fork means touching every column config and every template.
 
 ## From mm-ecm agent-portal audit (2026-08-06)
 
@@ -138,9 +115,7 @@ A second dogfooding pass over the same consumer, this time reading its `styles.s
 
 **Pile one — hooks that now EXIST and the consumer never migrated to (no DS work; recorded because of what it says about discoverability).** Eight blocks, ~40 lines, all removed in the consumer on 08-06: the `.button.button.button` triple-class (the very workaround `button.component.scss:47-51` documents as the reason `--ds-button-font-size/-weight/-tracking/-pad-x/-pad-y/-height` were added), per-variant rules against `.v-outline` (`[attr.data-variant]` is reflected at `button.component.ts:57-58` precisely so a consumer does not need them), `--radius-sm: 0` to square a checkbox (`--ds-checkbox-radius`), `.title.title { font-size }` in a modal (`--ds-modal-title-font-size`), pagination label type (`--ds-pagination-label-*`), `.size { display: none }` on a standalone pager (`[showPageSize]`), a re-declared `.actions:empty { display: none }` the DS already ships at `modal.component.scss:142`, and a defensive selected-row hover rule made unnecessary by the `:not(.is-selected)` branch at `_dropdown-overlay.scss:95-102`. **Every one was written against a real reading of the shipped CSS at the time.** The consumer had no signal that any of it had since been tokenised — which is what the composition-rules item below exists to fix, and the strongest evidence yet for it. _(It also produced §3 of `migrations/unreleased/README.md`, the "what you can now DELETE" table — the release-notes half of the same problem.)_
 
-The consumer also collapsed ~12 scattered `--ds-*-radius: 0` into three role declarations (`--ds-radius-inner/-control/-panel`) once it noticed the roles exist. **The role layer works exactly as designed and nobody knew.** Worth a worked "square brand" example in the docs — it is the single highest-leverage thing a rebranding consumer can be told.
-
-**Pile two — genuine gaps, below.**
+- [ ] **[P3] A worked "square brand" example in the docs.** The consumer collapsed ~12 scattered `--ds-*-radius: 0` into three role declarations (`--ds-radius-inner` / `-control` / `-panel`) once it noticed the roles exist. **The role layer works exactly as designed and nobody knew** — which makes one worked example the highest-leverage thing a rebranding consumer can be told, and cheaper than any of the hooks in this file. _(Filed as an item 2026-08-10; it had sat as a sentence of prose since 08-06, which is why nobody did it.)_
 
 **Feeding one existing item rather than duplicating it:** the `design-system.md` drift item below predicted "the file is 487 lines and the rest is unaudited, so assume more." Confirmed, and worse than a stale API list — **twelve shipped components have ZERO coverage**: `ds-autocomplete`, `ds-segmented`, `ds-description-list`, `ds-time-picker`, `ds-filter-bar`, `ds-multi-select`, `ds-split-button`, `ds-tree`, `ds-slider`, `ds-otp-input`, `ds-timeline`, `ds-color-picker`. This consumer uses four of them. With no prose and no generated tables to fall back on, it read the compiled CSS to find the token surfaces — and pile one above is what that cost: eight workarounds written against hooks that already existed. **This is the concrete price of the drift.** _(RESOLVED 2026-08-07 the way this paragraph argued: the catalogue became `components.md` and now lists every component, and `design-system.md` was rewritten as the rules. Both ship in the npm package. The remaining half — writing the rules themselves — is the composition-rules item.)_
 
@@ -156,9 +131,11 @@ The consumer also collapsed ~12 scattered `--ds-*-radius: 0` into three role dec
 
 ## Animations
 
-### Motion system audit — abrupt state changes (2026-06-26)
+- [ ] **[P3] Leave keyframes are not swappable, where entrances are.** Eight components expose `--ds-*-enter-keyframes` (alert, banner, bottom-sheet, drawer, loading-overlay, modal, overlay, toast) and **none exposes the exit** — grepped 2026-08-10, zero `-leave-keyframes` / `-exit-keyframes` hooks in the library. So a consumer can swap a modal's entrance for `ds-fade-in` and still get the library's scale-out on the way back, which reads as two different dialogs. Duration and easing ARE already tokenised per surface (`--ds-modal-leave-duration` / `-easing`), so this is the keyframe name only. **Carefully:** the teardown listener matches on the animation NAME (`endsWith('modal-out')` — see [[reference-angular-scoped-keyframes]]), so a swappable exit must either keep a stable sentinel name or move teardown off `animationend`; getting this wrong leaks the scroll lock. _(Recovered 2026-08-10: `done.md` recorded this as one of two open children of the customizable-motion parent, but neither had ever been carried into this file. The other — the `--ds-motion-*` role layer — SHIPPED 08-04.)_
 
-Goal: a coherent **smooth** motion system. **Foundation is healthy** — motion tokens used consistently (0 hardcoded durations/easings), reduced-motion zeroed globally. The problem is breadth: many interactive state changes have NO `transition` and SNAP. Reference patterns to replicate: animate-then-remove = `bottom-sheet.component.ts` / `toast-region`; state-change transition = `input.component.scss`. (The rounded-`:active` item above is one concrete slice; re-confirm file:line at fix time per [[feedback-validate-before-applying]].)
+### Motion system audit (2026-06-26) — premise no longer holds, kept as the record
+
+The 06-26 audit said the foundation was healthy but the problem was breadth: "many interactive state changes have NO `transition` and SNAP". **Re-measured 2026-08-10 and that is no longer true** — 45 of 81 component stylesheets declare a `transition`, and of the files that style `:hover`, only five lack one: `alert`, `banner`, `drawer`, `modal`, `sidenav-footer`, all of which are surfaces animated by keyframes rather than controls. Its one concrete slice, rounded `:active`, shipped 2026-07-02 and is archived. Reference patterns, still the ones to copy: animate-then-remove = `bottom-sheet.component.ts` / `toast-region`; state-change transition = `input.component.scss`.
 
 ## DS-docs showcase
 
@@ -208,21 +185,16 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
 
 ## Component API / portfolio
 
-> **API-consistency pass (P2) shipped 2026-07-09** — `booleanAttribute` sweep, `DsStatus` vocab (`danger`→`error`, `warn`→`warning`), past-participle outputs, `title` requiredness, enum splits — all in CHANGELOG Unreleased (breaking; Stas releases the version). See `done.md`. Its one sub-item (pagination double-emit) shipped this session too — see `done.md`.
-
 - [ ] **[P2] Shared picker internals — SURVEYED 2026-08-05, and the premise is wrong: it is THREE components, not six, and the duplicated surface is ~25 lines each.** Measured: only `ds-select`, `ds-multi-select` and `ds-autocomplete` share the shape (an `activeIndex` signal + wrap-around arrow nav over a flat option list). `ds-date-picker` navigates a 2-D day grid, `ds-time-picker` has NO arrow handling at all (it delegates to `ds-time-columns`), and `ds-color-picker`’s arrows drive a continuous saturation/hue canvas — three different models that a shared list helper would not serve. **Type-ahead does not exist anywhere** (zero hits), so that part of the ask describes code that was never written. And the three that DO overlap differ where it matters: select carries groups + Home/End + `firstEnabledIndex()` skipping disabled, multi-select works over a filtered list with a select-all row, autocomplete counts a create/no-match slot into its modulo. **Recommendation: extract only the index cursor** — a ~30-line `createListCursor({ length, isEnabled })` returning `{ index, next, prev, first, last, reset }` — and NOT a picker base class. **Worth doing when a fourth list picker appears, not before:** 3 × 25 lines against a 30-line helper is a wash today, and the wrong shared abstraction here costs more than the duplication.
 - [ ] **[P3] CDK Menu adoption (option B) — parked.** ONLY if/when nested submenus, a menubar, or context menus are needed. `ds-menu` = native roving + `DsOverlayCloseRef` (verified still native, 2026-07-24 — correct for flat menus). Plan: `docs/superpowers/cdk-menu-adoption.md`. When we move, prefer `@angular/aria` `ngMenu` over CDK Menu; gated on a real need or `@angular/aria` going stable.
-
-### From PIN-475 Kit Movement filters prototype (2026-06-17)
-
-Filter-toolbar gaps for `ds-autocomplete` / `ds-select` / `ds-search`. Design spec: `.claude/superpowers/specs/2026-07-07-pin475-filter-toolbar-gaps-design.md`. **Actualized 2026-07-24:** autocomplete content/compact width + the focus-ring double-outline follow-ups are DONE → moved to `done.md`. **Nothing remains** — the "Remaining:" list under this heading has been empty since that pass; the section is kept only for the spec pointer, which is still the record of how those gaps were decided.
 
 ## ds-app-layout (SHIPPED 2026-07-24) — post-merge polish
 
 > **Parent DONE** — `ds-app-layout` (shipped as `ds-app-shell`, renamed in 0.7.0) + `ds-sidenav-footer` + `ds-sidenav` brand row (`logoLetter` + `[dsBrandName]` projection) all merged to main (branch `feat/app-shell`, final review clean). Spec: `.claude/superpowers/specs/2026-07-24-ds-app-shell-design.md`. Kept on the board only for the open polish children below. Consumer migrations (ai-sdlc → mm-admin → pinkmoon) are post-release follow-ups.
 
-- ~~[P3] Empty `notes` on the new generated tokens~~ — DONE 2026-07-29 (see `done.md`).
-- ~~[P3] Two docs shell demos share one `collapsed` signal~~ — DONE 2026-07-29 (see `done.md`).
-- ~~[P3] Wordmark demo scss duplicated~~ — DONE 2026-07-29, hoisted to `section-demo.scss` (see `done.md`).
-- ~~[P3] Footer inputs lack JSDoc~~ — DONE 2026-07-29 (see `done.md`).
 - [ ] **[P3] `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing my own `118a539`).** The rail's layout switch lives in `app-layout.component.scss` as `bp.down(lg)`, and `watchDesktopBreakpoint()` runs `matchMedia` over the same `--bp-lg`. The VALUE cannot drift — both read one custom property, and a missing one now errors in dev instead of falling back to a literal — but the CONDITION is decided twice, in two languages, and changing one does not force the other. The JS copy is not removable today: `compact` gates `cdkTrapFocus` and the `role="dialog"`/`aria-modal` pair, and no CSS feature (container queries, `:has`) can drive a focus trap. **Recorded so nobody "simplifies" it blindly, and to revisit if** CSS gains a way to gate focus trapping, or Angular ships a breakpoint primitive. Not a bug — a knowingly duplicated decision over a single source of truth.
+
+- [ ] **[P2] Form controls cannot bind to Angular's Signal Forms — a consumer wraps or hand-binds every field (2026-08-10, Stas — raised from mm-broker).** `@angular/forms@21.2` ships a `signals` entry point (`form(model)`, `required`, `email`, `pattern`, `applyWhen`, `validateHttp`), and it binds a field through the **`FormField` directive applied to a native input**. Every DS control owns its own `<input>` inside the component, so `FormField` has nothing to attach to: the built `.d.ts` has `ControlValueAccessor` and `DsControlValueAccessor` but no `FormField`, no `FieldTree`, no reference to `@angular/forms/signals`.
+  **What it costs, measured on a consumer that already made the jump:** pinkmoon's admin uses signal forms in its auth feature and needed four wrapper components (`icon-input`, `checkbox`, `password-input`, `password-form`) to carry `FormField`. It could do that only because its inputs are PrimeNG **directives on a real `<input>`**. Against a DS component that escape hatch does not exist — the consumer hand-binds `[value]="f.email().value()" (valueChange)="f.email().value.set($event)"` per field, so the form owns validation while the template still wires values one at a time.
+  **Ask:** decide and document how a DS control takes part in a signal form — either the controls accept a `FieldTree` (a `field` input, or `FormField` on the inner element), or the DS publishes the hand-binding recipe as the supported answer so consumers stop each inventing one. It is `@experimental 21.0.0`, so "document the recipe now, add the API when it stabilises" is a legitimate answer; silence is not, because three sibling products are on three different form approaches today (ai-sdlc: reactive forms; pinkmoon: signal forms; mm-broker: plain signals).
+  **Prior art in the library:** `DsControlValueAccessor` already exists for classic forms, so "controls opt into a forms API" is an established shape — this is the same move for the new one.
