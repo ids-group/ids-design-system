@@ -21,9 +21,16 @@ import { BrandNameDirective } from '../sidenav/brand-name.directive';
  * content fits. Here the host is the only one, and it also carries the safe-area
  * insets a notched phone in landscape needs.
  *
- * The brand row follows `ds-sidenav`: a `brand` string gets a letter-mark tile
- * plus wordmark, `logoLetter` overrides the glyph, `[dsBrandName]` projects a
- * two-tone wordmark, and `[brand]` projects a real logo instead of the tile.
+ * The brand row takes the same CONTRACT as `ds-sidenav` — a `brand` string gets a
+ * letter-mark tile plus wordmark, `logoLetter` overrides the glyph, `[dsBrandName]`
+ * projects a two-tone wordmark (import `BrandNameDirective` alongside this
+ * component, or the attribute is inert and the wordmark lands in the card), and
+ * `[brand]` projects a real logo. The two are not pixel-identical: the rail's tile
+ * is a fixed 28px at weight 800, this one 24-32px at 700, and each has its own
+ * `--ds-*-mark-*` hooks, so retinting the mark means setting both.
+ *
+ * Projecting into `[brand]` does NOT suppress the tile — leave `brand`/`logoLetter`
+ * unset when you supply a logo.
  *
  * ```html
  * <ds-auth-layout brand="MyAdmin" logoLetter="A" tagline="Broker administration">
@@ -58,8 +65,24 @@ export class AuthLayoutComponent {
   readonly cardElevation = input<CardElevation>('raised');
   /** Card padding, passed through to `ds-card`. `md` tightens a short form. */
   readonly cardPadding = input<CardPadding>('lg');
+  /** Announce the card as the page's `main` landmark. The card holds the whole
+   *  content of an auth screen and `ds-card` renders an `<article>`, which is NOT
+   *  a landmark, so by default a screen-reader user has nothing to jump to — set
+   *  this to `'main'` on a standalone auth page. It is opt-in because the layout
+   *  is also embedded inside pages that already own a `main` (this repo's own docs
+   *  site nests it inside `ds-app-layout`), and two `main`s is its own violation.
+   *  Defaulting it to `'main'` is the better end state and belongs in the next
+   *  batch of default changes. */
+  readonly landmark = input<'main' | 'none'>('none');
 
   /** Projected `[dsBrandName]` wordmark markup, when the consumer provides one. */
   protected readonly brandNameRef = contentChild(BrandNameDirective);
   protected readonly hasBrandName = computed(() => !!this.brandNameRef());
+
+  /** Spread, not `charAt(0)`: the latter indexes UTF-16 code UNITS, so a brand
+   *  starting with an astral character (an emoji, a rarer CJK glyph) yields half
+   *  a surrogate pair and paints as tofu. */
+  protected readonly markGlyph = computed(
+    () => this.logoLetter() || [...this.brand()][0] || '',
+  );
 }

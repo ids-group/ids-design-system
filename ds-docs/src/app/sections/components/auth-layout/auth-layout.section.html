@@ -23,9 +23,11 @@
     </code> /
     <code class="t-mono-inline">
       [dsBrandName]
-    </code> contract, and the same
-    letter-mark tile — so the mark a user meets on the login screen is the mark
-    that greets them in the rail afterwards.
+    </code> contract, and an accent
+    letter-mark tile of its own — close enough that the mark a user meets on the
+    login screen reads as the mark that greets them in the rail, but not identical:
+    the rail's is a fixed 28px at weight 800, this one 24-32px at 700, and the two
+    carry separate token hooks, so retinting the mark means setting both.
   </p>
 
   <p class="block-desc t-s">
@@ -34,8 +36,19 @@
     type scale never fights your screen's. The support line goes into
     <code class="t-mono-inline">
       [dsAuthSupport]
-    </code> and renders as the
-    page's contentinfo landmark; leave it out and the footer collapses.
+    </code> and renders as the page's
+    contentinfo landmark when this layout IS the page — nested inside another
+    layout's
+    <code class="t-mono-inline">
+      main
+    </code> (as on this docs site) it is a plain footer. Leave it out and the footer
+    collapses. The card itself is an
+    <code class="t-mono-inline">
+      article
+    </code>, which is not a landmark: on a standalone auth page set
+    <code class="t-mono-inline">
+      landmark="main"
+    </code> so a screen-reader user can jump to the form.
   </p>
 
   <div class="auth-demo">
@@ -139,10 +152,13 @@
     <code class="t-mono-inline">
       svh
     </code>, so at ~330px the same chrome costs
-    ~131px. Every multiplier reaches its maximum at an 800px-tall viewport, which
-    means a desktop is pixel-for-pixel what it was and compression happens only
-    below that. The glyph inside the letter-mark tracks the tile, so a compressed
-    tile is not cramped.
+    ~131px. Every multiplier reaches its maximum at a viewport 800px tall or more —
+    which is a viewport height, not a screen size: a 1366x768 laptop lands near
+    630px after browser and OS chrome, and a 1080p screen at 150% display scaling
+    near 585px, so plenty of desktops render the compressed furniture too. Type is
+    deliberately not part of it: the wordmark and the tile's glyph stay fixed,
+    because in a row whose height the tile already sets they cost nothing to shrink
+    and only flatten the brand against the tagline.
   </p>
 
   <p class="block-desc t-s">

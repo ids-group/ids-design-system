@@ -247,15 +247,41 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 ### Changed
 
 - **`ds-auth-layout` compresses its own chrome on a short viewport, so the layout is never the reason a
-  card scrolls.** Block padding, the column gap, the letter-mark tile (and the glyph inside it), the wordmark
-  and the masthead's inner gap all clamp against `svh`. At ~330px of viewport — a landscape phone — that
-  furniture costs ~131px instead of ~219px. Every multiplier reaches its maximum at an 800px-tall viewport,
-  so a desktop renders pixel-for-pixel what it did before and compression only happens below that.
-  `svh` rather than `dvh` because the dynamic unit changes as a mobile URL bar hides, which would resize the
-  wordmark mid-scroll. New opt-outs: `--ds-auth-layout-pad-block` and `--ds-auth-layout-mark-size` (set
+  card scrolls.** Block padding, the column gap, the letter-mark tile and the masthead's inner gap clamp
+  against `svh`. At ~330px of viewport — a landscape phone — that furniture costs ~131px instead of ~219px.
+  Every multiplier reaches its maximum at a viewport **800px tall or more** — a viewport height, not a
+  screen size: a 1366x768 laptop sits near 630px once browser and OS chrome come off, and a 1080p screen at
+  150% display scaling near 585px, so a good many desktops render the compressed furniture too.
+  **Type is deliberately excluded.** An earlier draft clamped the wordmark and the tile's glyph as well;
+  both were measured to buy zero vertical space — the wordmark shares a flex row with the tile, whose height
+  exceeds the wordmark's line box at every viewport height, and the glyph sits in a fixed-size grid box —
+  while shrinking the brand against a fixed 14px tagline, worst for the users who scale their display up.
+  Both are back to the fixed sizes 0.8.0 ships.
+  `svh` rather than `dvh` because the dynamic unit changes as a mobile URL bar hides, which would re-space
+  the column mid-scroll; `min-height` stays on `dvh` so no strip of body background shows when the bar
+  retracts. New opt-outs: `--ds-auth-layout-pad-block` and `--ds-auth-layout-mark-size` (set
   either, or the existing `-gap`, to a fixed value and that dimension stops compressing). A card taller than
   the space left still scrolls — deliberately, because the alternative (pinning the masthead and footer out
   of the flow) frees more room but lets chrome overlap a tall form.
+
+- **`ds-auth-layout` — a round of fixes from an audit of the above.** All additive or corrective; nothing
+  to migrate. The letter-mark is now `aria-hidden`, so a screen reader announces "MyAdmin" rather than
+  "A MyAdmin"; it also carries `flex-shrink: 0`, so a long wordmark can no longer squash the square tile
+  into a rectangle. `logoLetter` on its own renders its tile instead of nothing (the outer gate never
+  tested it). The glyph is taken with a code-point split rather than `charAt(0)`, which returned half a
+  surrogate pair for a brand starting with an emoji. `box-sizing: border-box` is declared on the host
+  rather than inherited, because the documented à-la-carte style path omits `styles/reset` and without it
+  `min-height: 100dvh` plus the block padding overflows by exactly that padding — the scrollbar this
+  component exists to avoid. The four `env(safe-area-inset-*)` calls gained `0px` fallbacks and moved to
+  physical `padding-left`/`padding-right`, since the safe area belongs to the device and must not swap
+  sides with text direction; note the insets are inert unless the **host app** sets `viewport-fit=cover`
+  in its viewport meta, which the library cannot do and did not previously say. New tokens, both
+  defaulting to today's behaviour: `--ds-auth-layout-mark-radius` (the tile's radius was the one value
+  with no override hop) and `--ds-auth-layout-brand-max-height` (`none` by default — set it to cap a
+  projected `[brand]` logo, which nothing constrained). New input `landmark` (`'none'` by default): the
+  card holds the whole content of an auth screen but `ds-card` renders an `<article>`, which is not a
+  landmark, so `landmark="main"` gives a screen-reader user something to jump to on a standalone auth
+  page. It is opt-in because the layout is also embedded inside pages that already own a `main`.
 
 - **BREAKING: `ds-auth-shell` is renamed `ds-auth-layout`** (`AuthShellComponent` → `AuthLayoutComponent`,
   and `--ds-auth-shell-*` → `--ds-auth-layout-*`). "Shell" is not this library's word for a layout — the
