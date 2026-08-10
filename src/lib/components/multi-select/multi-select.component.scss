@@ -1,4 +1,5 @@
 @use '../../styles/field-box' as field-box;
+@use '../../styles/chip-row' as chip-row;
 
 :host {
   // Flex column + gap so the hint/error (ds-field-message) sits the canonical
@@ -67,6 +68,10 @@
 
 .placeholder {
   color: var(--text-tertiary);
+}
+
+.chip-row {
+  @include chip-row.chip-row;
 }
 
 .overflow {

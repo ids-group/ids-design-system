@@ -48,7 +48,12 @@
 
   <p class="block-desc t-s">
     Set <code>[maxVisibleChips]</code> to a positive number to collapse extra
-    chips into a "+N more" pill.
+    chips into a "+N more" pill. <code>maxVisibleChips="fit"</code> collapses by
+    measured width instead — as many chips as one line holds, re-split on resize.
+    Pick the number when the trigger's HEIGHT has to be predictable whatever the
+    width, and <code>fit</code> when the space is what's fixed. Same input and
+    same wording on <code>ds-autocomplete</code>, so the two multi-value pickers
+    do not diverge.
   </p>
 
   <div class="demo-panel">
@@ -64,6 +69,22 @@
 
     <p style="margin-top: var(--space-3); font-size: var(--font-size-s)">
       Selected: {{ overflow().join(', ') }}
+    </p>
+  </div>
+
+  <div class="demo-panel">
+    <div class="ms-resizable">
+      <ds-multi-select
+        placeholder="Add tags…"
+        ariaLabel="Tags fitted to width"
+        maxVisibleChips="fit"
+        [options]="tagOptions"
+        [(value)]="fitted"
+      />
+    </div>
+
+    <p style="margin-top: var(--space-3); font-size: var(--font-size-s)">
+      Drag the handle — the split moves with the width.
     </p>
   </div>
 

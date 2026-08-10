@@ -1,0 +1,29 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "chip-row-wrapper-in-multi-value-triggers",
+      "kind": "behavior",
+      "old": "ds-autocomplete .autocomplete-trigger > ds-tag",
+      "new": "ds-autocomplete .autocomplete-trigger > .chip-row > ds-tag",
+      "note": "The chips of ds-autocomplete and ds-multi-select now render inside a <span class=\"chip-row\"> instead of sitting directly in the trigger. LAYOUT IS UNCHANGED: outside the new fit mode the wrapper is display:contents, so it adds no box and the chips remain flex items of the trigger exactly as before — spacing, wrapping and height are identical, and nothing needs doing if you never styled the chips from outside. WHAT BREAKS is a CSS override that walks the structure: any selector using the direct-child combinator from the trigger to a chip (`.autocomplete-trigger > ds-tag`, `ds-multi-select .trigger > ds-tag`, and `:first-child`/`:last-child`/`:nth-child` written against the trigger's children) now matches nothing or matches the wrapper. ACTION: drop the combinator (`.autocomplete-trigger ds-tag`) or insert `.chip-row`. Positional selectors should target `.chip-row > ds-tag:first-child` — note the chips are no longer siblings of the filter input, the addon slots or the chevron, so `ds-tag + .autocomplete-input` style adjacency is gone with no replacement. Chips also carry a `data-chip` attribute and the '+N more' marker a `data-chip-overflow` attribute; both are how the width measurement finds them, so do not strip them, but they are fine to select on.",
+      "searchHints": [
+        "autocomplete-trigger > ds-tag",
+        "autocomplete-trigger>ds-tag",
+        "> ds-tag",
+        "ds-tag:first-child",
+        "ds-tag:last-child",
+        "ds-tag + ",
+        "chip-row",
+        "data-chip",
+        ".trigger > ds-tag"
+      ]
+    }
+  ],
+  "informational": [
+    "ds-autocomplete and ds-multi-select accept maxVisibleChips=\"fit\" — the chips are capped by MEASURED width rather than a count, so one line holds as many as the trigger is wide and the rest collapse into '+N more', re-split whenever the trigger resizes. Purely additive and opt-in: the input still takes a number and still defaults to null (show everything), and nothing changes for a picker that does not ask for it. Choose by what has to stay predictable — a number pins the trigger's HEIGHT whatever the width, 'fit' pins the width and lets the count move.",
+    "The measurement behind maxVisibleChips=\"fit\" runs ONLY when that mode is on: a picker on the default does not observe, measure or force layout, so adopting the release costs nothing on pages full of pickers that keep wrapping.",
+    "DELETE-LIST: if you wrote a ResizeObserver, a container query or a hand-tuned per-breakpoint maxVisibleChips number to keep a chip trigger on one line -> maxVisibleChips=\"fit\" replaces it, and it re-splits on any width change rather than at the breakpoints you listed.",
+    "DELETE-LIST: if you capped a chip trigger's height with max-height plus overflow:hidden to stop it growing a line per selection -> that clips a chip mid-glyph and hides the count; maxVisibleChips (a number, or \"fit\") drops whole chips and reports how many are hidden."
+  ]
+}

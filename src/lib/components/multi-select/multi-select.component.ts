@@ -18,6 +18,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { chipFit } from '../chip-overflow';
 import { IconComponent } from '../../icons/icon.component';
 import { TagComponent } from '../tag/tag.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
@@ -80,9 +81,14 @@ export class MultiSelectComponent
   readonly placeholder = input<string>('Select…');
   /** Placeholder for the in-panel filter input. */
   readonly searchPlaceholder = input<string>('Filter…');
-  /** Caps the number of chips shown before collapsing the rest into "+N more" — 0/null shows all. */
-  readonly maxVisibleChips = input<number | null>(null, {
-    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  /** Caps the chips shown before the rest collapse into "+N more" — 0/null shows all.
+   *
+   *  `"fit"` caps by measured width instead of a count: as many chips as one line
+   *  holds, re-split on resize. A count is the right answer when the trigger's
+   *  height must be predictable regardless of width; "fit" when the space is. */
+  readonly maxVisibleChips = input<number | 'fit' | null>(null, {
+    transform: (raw: unknown) =>
+      raw === 'fit' ? 'fit' : raw == null ? null : numberAttribute(raw),
   });
   /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
@@ -131,6 +137,7 @@ export class MultiSelectComponent
     viewChild<ElementRef<HTMLInputElement>>('search');
   protected readonly panelTpl =
     viewChild.required<TemplateRef<unknown>>('panel');
+  private readonly chipRow = viewChild<ElementRef<HTMLElement>>('chipRow');
 
   protected readonly open = signal(false);
   protected readonly filter = signal('');
@@ -158,20 +165,28 @@ export class MultiSelectComponent
     return this.options().filter((option) => selected.includes(option.value));
   });
 
+  protected readonly fitsChipsToWidth = computed(
+    () => this.maxVisibleChips() === 'fit',
+  );
+  private readonly chipsThatFit = chipFit(
+    computed(() => this.selectedOptions().length),
+    this.chipRow,
+    this.fitsChipsToWidth,
+  );
+
   protected readonly visibleChips = computed<MultiSelectOption[]>(() => {
     const max = this.maxVisibleChips();
     const selected = this.selectedOptions();
+    if (max === 'fit') {
+      return selected.slice(0, this.chipsThatFit());
+    }
 
     return max && max > 0 ? selected.slice(0, max) : selected;
   });
 
-  protected readonly overflowCount = computed<number>(() => {
-    const max = this.maxVisibleChips();
-
-    return max && max > 0
-      ? Math.max(0, this.selectedOptions().length - max)
-      : 0;
-  });
+  protected readonly overflowCount = computed<number>(
+    () => this.selectedOptions().length - this.visibleChips().length,
+  );
 
   protected readonly filteredOptions = computed<MultiSelectOption[]>(() => {
     const query = this.filter().trim().toLowerCase();

@@ -26,6 +26,12 @@ export class MultiSelectSection {
     'research',
     'marketing',
   ]);
+  protected readonly fitted = signal<string[]>([
+    'design',
+    'frontend',
+    'research',
+    'marketing',
+  ]);
 
   protected readonly tagOptions: MultiSelectOption[] = [
     { label: 'Design', value: 'design' },

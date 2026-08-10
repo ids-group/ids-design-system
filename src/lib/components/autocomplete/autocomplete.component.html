@@ -13,21 +13,24 @@
   </span>
 
   @if (multiple()) {
-    @for (selectedOption of visibleTags(); track selectedOption.value) {
-      <ds-tag
-        [closable]="true"
-        [closeLabel]="'Remove ' + selectedOption.label"
-        (closed)="remove(selectedOption.value)"
-      >
-        {{ selectedOption.label }}
-      </ds-tag>
-    }
+    <span #chipRow class="chip-row" [class.fit]="fitsChipsToWidth()">
+      @for (selectedOption of visibleTags(); track selectedOption.value) {
+        <ds-tag
+          data-chip
+          [closable]="true"
+          [closeLabel]="'Remove ' + selectedOption.label"
+          (closed)="remove(selectedOption.value)"
+        >
+          {{ selectedOption.label }}
+        </ds-tag>
+      }
 
-    @if (overflowCount() > 0) {
-      <span class="overflow">
-        +{{ overflowCount() }} more
-      </span>
-    }
+      @if (overflowCount() > 0) {
+        <span class="overflow" data-chip-overflow>
+          +{{ overflowCount() }} more
+        </span>
+      }
+    </span>
   } @else if (displayLabel()) {
     <span class="autocomplete-value">
       {{ displayLabel() }}

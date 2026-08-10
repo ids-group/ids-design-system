@@ -353,11 +353,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "maxVisibleChips",
         "kind": "input",
-        "type": "number | null",
+        "type": "number | 'fit' | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Caps the number of chips shown before collapsing the rest into \"+N more\" — 0/null shows all. Same name and semantics as `ds-multi-select`: without it a trigger grows a line per selection and pushes the rest of the form down the page."
+        "description": "Caps the chips shown before the rest collapse into \"+N more\" — 0/null shows all. Same name and semantics as `ds-multi-select`: without it a trigger grows a line per selection and pushes the rest of the form down the page. `\"fit\"` caps by measured width instead of a count: as many chips as one line holds, re-split on resize. A count is the right answer when the trigger's height must be predictable regardless of width; \"fit\" when the space is."
       },
       {
         "name": "size",
@@ -3458,11 +3458,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "maxVisibleChips",
         "kind": "input",
-        "type": "number | null",
+        "type": "number | 'fit' | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Caps the number of chips shown before collapsing the rest into \"+N more\" — 0/null shows all."
+        "description": "Caps the chips shown before the rest collapse into \"+N more\" — 0/null shows all. `\"fit\"` caps by measured width instead of a count: as many chips as one line holds, re-split on resize. A count is the right answer when the trigger's height must be predictable regardless of width; \"fit\" when the space is."
       },
       {
         "name": "disabled",

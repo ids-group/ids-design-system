@@ -112,6 +112,32 @@
     />
   </div>
 
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      maxVisibleChips="fit"
+    </code> caps by measured width
+    instead: as many chips as one line holds, re-split whenever the trigger
+    resizes. Pick the count when the trigger's HEIGHT has to be predictable
+    whatever the width, and <code class="t-mono-inline">fit</code> when the space
+    is what's fixed. Drag the handle to watch the split move.
+  </p>
+
+  <div class="autocomplete-resizable">
+    <div class="autocomplete-field-wrap">
+      <label class="autocomplete-field-label t-s">
+        Allowed products · fit to width
+      </label>
+
+      <ds-autocomplete
+        placeholder="Add product…"
+        maxVisibleChips="fit"
+        [options]="products"
+        [multiple]="true"
+        [(value)]="fitProductsValue"
+      />
+    </div>
+  </div>
+
   <h3 class="block-title t-h4">
     Width
   </h3>

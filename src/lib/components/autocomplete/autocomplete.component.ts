@@ -28,6 +28,7 @@ import {
   dropdownOverlay,
   prepareOverlayEnter,
 } from '../overlay-motion';
+import { chipFit } from '../chip-overflow';
 import { IconComponent } from '../../icons/icon.component';
 import { TagComponent } from '../tag/tag.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
@@ -99,11 +100,16 @@ export class AutocompleteComponent<T = unknown>
   /** Draws the trailing chevron. Turn it off for a search field, where an arrow
    *  invites a click that would list everything instead of searching. */
   readonly showChevron = input(true, { transform: booleanAttribute });
-  /** Caps the number of chips shown before collapsing the rest into "+N more" — 0/null shows all.
+  /** Caps the chips shown before the rest collapse into "+N more" — 0/null shows all.
    *  Same name and semantics as `ds-multi-select`: without it a trigger grows a
-   *  line per selection and pushes the rest of the form down the page. */
-  readonly maxVisibleChips = input<number | null>(null, {
-    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+   *  line per selection and pushes the rest of the form down the page.
+   *
+   *  `"fit"` caps by measured width instead of a count: as many chips as one line
+   *  holds, re-split on resize. A count is the right answer when the trigger's
+   *  height must be predictable regardless of width; "fit" when the space is. */
+  readonly maxVisibleChips = input<number | 'fit' | null>(null, {
+    transform: (raw: unknown) =>
+      raw === 'fit' ? 'fit' : raw == null ? null : numberAttribute(raw),
   });
   /** Trigger height — sm/md/lg. */
   readonly size = input<DsSize>('md');
@@ -176,6 +182,7 @@ export class AutocompleteComponent<T = unknown>
     viewChild.required<ElementRef<HTMLInputElement>>('filter');
   protected readonly panelTpl =
     viewChild.required<TemplateRef<unknown>>('panel');
+  private readonly chipRow = viewChild<ElementRef<HTMLElement>>('chipRow');
   private overlayRef: OverlayRef | null = null;
 
   protected readonly uid = `ds-autocomplete-${++nextId}`;
@@ -266,23 +273,31 @@ export class AutocompleteComponent<T = unknown>
     return this.allOptions().filter((option) => selectedSet.has(option.value));
   });
 
+  protected readonly fitsChipsToWidth = computed(
+    () => this.maxVisibleChips() === 'fit',
+  );
+  private readonly chipsThatFit = chipFit(
+    computed(() => this.selectedTags().length),
+    this.chipRow,
+    this.fitsChipsToWidth,
+  );
+
   /** What the trigger renders. Separate from `selectedTags`, which stays the
    *  full selection: Backspace removes the last SELECTED chip, and capping the
    *  list it reads would silently make it remove the last VISIBLE one instead. */
   protected readonly visibleTags = computed(() => {
     const max = this.maxVisibleChips();
     const tags = this.selectedTags();
+    if (max === 'fit') {
+      return tags.slice(0, this.chipsThatFit());
+    }
 
     return max && max > 0 ? tags.slice(0, max) : tags;
   });
 
-  protected readonly overflowCount = computed<number>(() => {
-    const max = this.maxVisibleChips();
-
-    return max && max > 0
-      ? Math.max(0, this.selectedTags().length - max)
-      : 0;
-  });
+  protected readonly overflowCount = computed<number>(
+    () => this.selectedTags().length - this.visibleTags().length,
+  );
 
   protected readonly displayLabel = computed(() => {
     if (this.multiple()) {

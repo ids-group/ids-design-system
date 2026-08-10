@@ -8,6 +8,30 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **`maxVisibleChips="fit"` on `ds-autocomplete` and `ds-multi-select`** caps the chips by measured
+  width instead of a count: one line holds as many as the trigger is wide, the rest collapse into
+  "+N more", and the split is redone whenever the trigger resizes. Opt-in and additive — the input
+  still takes a number and still defaults to `null` (show everything). Choose by what has to stay
+  predictable: a number pins the trigger's HEIGHT whatever the width, `"fit"` pins the width and
+  lets the count move. **You can now delete** a `ResizeObserver`, container query or per-breakpoint
+  `maxVisibleChips` number written to keep a chip trigger on one line — and a `max-height` +
+  `overflow: hidden` cap, which clips a chip mid-glyph and hides the count instead of dropping whole
+  chips. The measurement runs only in `"fit"` mode, so a picker left on the default does not
+  observe, measure or force layout.
+
+### Changed
+
+- **The chips of both pickers now render inside a `<span class="chip-row">`** rather than directly
+  in the trigger — the element the width measurement needs. **Layout is unchanged**: outside `"fit"`
+  the wrapper is `display: contents`, so it adds no box and the chips stay flex items of the trigger,
+  identical in spacing, wrapping and height. What breaks is a CSS override that walks the structure:
+  `.autocomplete-trigger > ds-tag`, `:nth-child` written against the trigger's children, or
+  `ds-tag + .autocomplete-input` adjacency — the chips are no longer siblings of the filter input,
+  the addon slots or the chevron. Drop the combinator or insert `.chip-row`. Chips carry `data-chip`
+  and the marker `data-chip-overflow`; the measurement finds them that way, so leave them in place.
+
 ## 0.9.1 — 2026-08-10
 
 ### Added

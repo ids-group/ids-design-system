@@ -2,6 +2,7 @@
    TemplatePortal so its DOM carries this component's encapsulation attrs.
    Both halves are styled here. */
 @use '../../styles/field-box' as field-box;
+@use '../../styles/chip-row' as chip-row;
 
 :host {
   --_autocomplete-focus-shadow: var(--ds-autocomplete-focus-shadow, var(--ds-field-focus-shadow));
@@ -84,6 +85,10 @@
      size sets min-height; the default (md) lives on the base rule above. */
   &.sm { @include field-box.field-box-height(sm, min-height); }
   &.lg { @include field-box.field-box-height(lg, min-height); }
+}
+
+.chip-row {
+  @include chip-row.chip-row;
 }
 
 /* Same treatment as ds-multi-select's overflow marker — the two triggers are the

@@ -1,0 +1,27 @@
+// One chip row for the two multi-value triggers.
+//
+// By default the container is `display: contents`, so it adds no box and a
+// trigger that wraps its chips lays out exactly as it did before this element
+// existed — the whole point, since both pickers shipped wrapping and consumers
+// style against that.
+//
+// Fit mode turns it into the box the measurement needs. `min-width: 0` is what
+// makes it work: the addons, filter input and chevron take their share first and
+// the browser hands the row whatever is left, so `chipFit()` can read that width
+// instead of subtracting every sibling itself. See chip-overflow.ts for why
+// clipping — not wrapping — is what makes measuring rendered chips safe.
+@mixin chip-row {
+  display: contents;
+
+  &.fit {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    min-width: 0;
+    overflow: hidden;
+
+    // The trigger owns chip spacing in both modes; inheriting it keeps one source
+    // rather than a copy of each picker's own gap token, which differ.
+    gap: inherit;
+  }
+}
