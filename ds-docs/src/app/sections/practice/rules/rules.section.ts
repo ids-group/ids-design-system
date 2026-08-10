@@ -34,7 +34,8 @@ import { DS_VERSION } from '../../../shared/docs-stats';
       <div
         class="rules-body"
         [innerHTML]="html()"
-      ></div>
+      >
+      </div>
     </docs-section>
   `,
   styles: [
