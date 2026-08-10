@@ -18,6 +18,21 @@
         "data-chip",
         ".trigger > ds-tag"
       ]
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "extends AutocompleteComponent",
+      "new": null,
+      "note": "This release's class-member-collision entry, the counterpart of 0.8.0's and 0.9.0's: it covers every exported class whose member surface changed, so a consumer who EXTENDS a DS component resolves them in one pass. Subclassing a DS component is unsupported (design-system.md), but where it happens the names collide and the build stops: TS4114 demands `override`, TS2415 fires on a redeclared private. WHAT GAINED MEMBERS: AutocompleteComponent and MultiSelectComponent each gained `fitsChipsToWidth`, `chipRow` and `chipsThatFit` — the three fields behind maxVisibleChips=\"fit\". No member was removed and no signature changed. ACTION: rename the subclass's own member, or add `override` if the base's semantics genuinely match. Consumers who only use the <ds-...> elements in templates need no change.",
+      "searchHints": [
+        "extends AutocompleteComponent",
+        "extends MultiSelectComponent",
+        "extends ",
+        "override readonly",
+        "chipRow",
+        "TS4114"
+      ]
     }
   ],
   "informational": [

@@ -38,12 +38,23 @@ function show(ref, path) {
 // A member a subclass can collide with: a signal-based field, or a method at class
 // depth. `constructor` is excluded — it does not take `override` and only ever adds
 // noise to the report.
-const FIELD = /^ {2}(?:protected |public |private )?readonly (\w+) = (?:input|model|output|viewChild|viewChildren|contentChild|contentChildren|computed|signal)/gm;
+// Any `readonly x = <call>` at class depth: the initializer list used to be an
+// allowlist of Angular's own factories, which silently dropped a field built by a
+// DS helper (`chipFit(...)`) even though a subclass collides with it just the same.
+const FIELD = /^ {2}(?:protected |public |private )?readonly (\w+) = \w+[(<]/gm;
 const METHOD = /^ {2}(?:protected |public |private )?(?:override )?(?:async )?(\w+)\(/gm;
 const NOT_A_MEMBER = new Set(['constructor', 'if', 'for', 'while', 'switch', 'catch', 'return']);
+const FIRST_CLASS = /^export (?:abstract )?class /m;
 
 function surface(source) {
   if (source === null) return null;
+  // Two-space depth means "class member" only inside a class. A module-level
+  // function body has the same indentation, and reporting its calls as members
+  // sent a release author looking for an `afterRenderEffect` that never existed.
+  const classStart = source.search(FIRST_CLASS);
+  if (classStart === -1) return new Set();
+  source = source.slice(classStart);
+
   const names = new Set();
   for (const [, name] of source.matchAll(FIELD)) names.add(name);
   for (const [, name] of source.matchAll(METHOD)) {

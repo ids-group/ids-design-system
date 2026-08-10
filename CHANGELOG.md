@@ -32,6 +32,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the addon slots or the chevron. Drop the combinator or insert `.chip-row`. Chips carry `data-chip`
   and the marker `data-chip-overflow`; the measurement finds them that way, so leave them in place.
 
+- **If you EXTEND either picker**, `AutocompleteComponent` and `MultiSelectComponent` each gained
+  `fitsChipsToWidth`, `chipRow` and `chipsThatFit`; a subclass declaring any of those names now fails
+  with TS4114. Nothing was removed and no signature changed. Subclassing a DS component remains
+  unsupported, but this is the third release in a row where it broke someone, so it is stated.
+
 ## 0.9.1 — 2026-08-10
 
 ### Added
