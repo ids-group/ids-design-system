@@ -118,6 +118,31 @@
         "tabChanged",
         "queryParamMap"
       ]
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "extends TableComponent",
+      "new": null,
+      "note": "This release's single class-member-collision entry, the counterpart of 0.8.0's: it covers EVERY exported class whose member surface changed, so a consumer who EXTENDS a DS component resolves them in one pass. Subclassing a DS component is unsupported (design-system.md), but where it happens the names collide and the build stops: TS4114 demands `override`, TS2415 fires on a redeclared private, TS2416 on a differing signature. This is not hypothetical - migrating to 0.8.0, one consumer's ids-data-table (which extends TableComponent) failed on exactly three of them. WHAT GAINED MEMBERS: (1) TableComponent, by far the largest - lazy, lazyLoad, showLabel, showPageSize, filterMode, columnFilterOptions, sortAnnouncement, rangeAnnouncement and exportFailed as inputs/outputs, plus protected filterModeResolved, headerFilters, headerFilterByKey, headerFilterFor(), headerFilterContext(), statusMessage, sortMessage, rangeMessage, virtualCount, rowSlots, exportStatus, resolvedColumnWidth(), onResizeKey() and onHeaderEnter(). Note isStriped() now takes an ABSOLUTE row index rather than a window-relative one, so a subclass that overrode it computes the wrong row. (2) Both CVA bases (DsControlValueAccessor, DsBooleanControlValueAccessor) gained the `hidden` input and a `focus()` method - inherited by every field control, so a subclass with its own focus() needs `override`. (3) InputComponent and TextareaComponent gained readonlyBinding, isReadOnly, minLength, pattern and patternAttribute; SelectComponent gained readonlyBinding and isReadOnly. (4) ModalComponent and ModalCardComponent each gained `subtitle` and `dividers`. (5) AutocompleteComponent gained maxVisibleChips, showChevron, clear(), visibleTags and overflowCount. (6) BreadcrumbsComponent gained maxItems and allItems; MenuItemComponent gained `quiet`; AppLayoutComponent gained scrollReset; AuthLayoutComponent gained `landmark`; TabsComponent gained urlParam and urlParams; LayoutScrollService gained configureReset(). (7) NEW exported symbols that can shadow a local name: FieldGroupComponent, DS_FIELD_GROUP, HeaderFilterDirective and HeaderFilterContext. ACTION: rename the subclass's own member, or add `override` where the base's semantics genuinely match - and re-read isStriped() if you overrode it. Consumers who only use the <ds-...> elements in templates need no change.",
+      "searchHints": [
+        "extends TableComponent",
+        "extends InputComponent",
+        "extends TextareaComponent",
+        "extends SelectComponent",
+        "extends ModalComponent",
+        "extends AutocompleteComponent",
+        "extends BreadcrumbsComponent",
+        "extends AppLayoutComponent",
+        "extends AuthLayoutComponent",
+        "extends TabsComponent",
+        "extends DsControlValueAccessor",
+        "extends DsBooleanControlValueAccessor",
+        "extends ",
+        "override readonly",
+        "isStriped",
+        "TS4114"
+      ]
     }
   ],
   "informational": [

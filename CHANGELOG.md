@@ -85,6 +85,21 @@ genuine gap worth reporting.
 
 ### Changed (breaking, behaviour)
 
+- **If you EXTEND a DS component, this release collides with your subclass.** Sixteen exported
+  classes gained members, so a subclass declaring the same name stops the build: `TS4114` wants
+  `override`, `TS2415` fires on a redeclared private, `TS2416` on a differing signature. Not
+  hypothetical — a consumer migrating to 0.8.0 hit exactly this on three `TableComponent` members.
+  **`TableComponent` is by far the largest**: `lazy`, `lazyLoad`, `showLabel`, `showPageSize`,
+  `filterMode`, `columnFilterOptions`, `sortAnnouncement`, `rangeAnnouncement` and `exportFailed`,
+  plus a dozen protected members. **And one signature changed rather than appeared:** `isStriped()`
+  now takes an ABSOLUTE row index instead of a window-relative one, so a subclass that overrode it
+  stripes the wrong rows rather than failing to compile. Elsewhere: both control-value-accessor
+  bases gained `hidden` and `focus()` (inherited by every field control); `ds-input` / `ds-textarea`
+  gained `readonlyBinding`, `isReadOnly`, `minLength`, `pattern`; `ds-modal` and `ds-modal-card`
+  gained `subtitle` and `dividers`; `ds-autocomplete` gained `maxVisibleChips`, `showChevron` and
+  `clear()`. The full per-class list is in `migrations/0.9.0.json`. **Using the `<ds-…>` elements in
+  a template needs no change** — this only reaches you through `extends`.
+
 - **`ds-table` `sortMode` and `filterMode` default to `'server'`, were `'client'`.** Server-paged is the
   normal case, and there the old default was actively wrong: the table sorted the current page, so the
   rows looked sorted and were not — a dev warning existed only to say so. An undeclared table now emits
