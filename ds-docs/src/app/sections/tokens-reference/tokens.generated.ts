@@ -1921,7 +1921,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-auth-layout-mark-size",
         "value": "clamp(var(--space-6), 4svh, var(--space-8))",
-        "notes": "Letter-mark tile size. Defaults to a clamp (24px…32px, 32px at an 800px-tall viewport); the glyph inside tracks it so a compressed tile is not cramped."
+        "notes": "Letter-mark tile size. Defaults to a clamp (24px…32px, reaching 32px at a viewport 800px tall or more). The glyph inside is a fixed size and does not track it."
+      },
+      {
+        "name": "--ds-auth-layout-mark-radius",
+        "value": "var(--ds-radius-control)",
+        "notes": "Letter-mark tile radius (defaults to --ds-radius-control). Squaring a brand with --ds-radius-control: 0 reaches this tile too; set this to keep it rounded independently."
       },
       {
         "name": "--ds-auth-layout-card-max-width",
@@ -1931,7 +1936,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-auth-layout-mark-bg-color",
         "value": "var(--accent)",
-        "notes": "Letter-mark tile fill (defaults to --accent, matching the sidenav's mark)."
+        "notes": "Letter-mark tile fill (defaults to --accent — the same default as the sidenav's mark, but a separate hook, so retinting the mark means setting both)."
       },
       {
         "name": "--ds-auth-layout-mark-label-color",
@@ -1939,9 +1944,9 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Letter-mark glyph colour (defaults to --accent-on)."
       },
       {
-        "name": "--ds-radius-control",
-        "value": "—",
-        "notes": "Radius role for controls and field frames — buttons, inputs, selects, both picker triggers, tooltips. Defaults to --radius-md."
+        "name": "--ds-auth-layout-brand-max-height",
+        "value": "none",
+        "notes": "Cap for a logo projected into [brand] (defaults to none — nothing constrains it, so an oversized image sets the masthead's height). Set it to var(--ds-auth-layout-mark-size) to make the logo track the letter-mark tile it replaces."
       }
     ]
   },
@@ -6846,6 +6851,11 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--ds-motion-exit-large-easing",
     "value": "var(--ease-accelerate)",
     "kind": "other"
+  },
+  {
+    "name": "--ds-radius-control",
+    "value": "var(--radius-md)",
+    "kind": "length"
   },
   {
     "name": "--ds-radius-inner",
