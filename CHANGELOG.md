@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.9.1 — 2026-08-10
+
 ### Added
 
 - **The token and component reference now documents every public token and prop** — 41 were
