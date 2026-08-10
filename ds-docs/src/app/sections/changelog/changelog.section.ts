@@ -28,23 +28,23 @@ import { DS_VERSION } from '../../shared/docs-stats';
         margin-top: var(--space-6);
         max-width: var(--col-cap-text);
       }
-      .changelog-body h2 {
+      :host ::ng-deep .changelog-body h2 {
         margin-top: var(--space-10);
         padding-top: var(--space-4);
         border-top: var(--border-width-default) solid var(--border-divider);
       }
-      .changelog-body h3 {
+      :host ::ng-deep .changelog-body h3 {
         margin-top: var(--space-6);
         color: var(--text-secondary);
       }
-      .changelog-body ul {
+      :host ::ng-deep .changelog-body ul {
         margin: var(--space-2) 0;
         padding-left: var(--space-6);
       }
-      .changelog-body li {
+      :host ::ng-deep .changelog-body li {
         margin-top: var(--space-1);
       }
-      .changelog-body code {
+      :host ::ng-deep .changelog-body code {
         font-family: var(--font-mono);
         font-size: 0.9em;
       }

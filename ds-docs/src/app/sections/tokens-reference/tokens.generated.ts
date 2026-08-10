@@ -3684,7 +3684,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-menu-divider-spacing",
         "value": "0",
-        "notes": ""
+        "notes": "Vertical padding around a ds-menu-divider (default 0). Already 0, so a consumer zeroing it is deleting a no-op — one did."
       },
       {
         "name": "--ds-menu-item-label-color",
@@ -3734,7 +3734,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-menu-item-radius",
         "value": "0",
-        "notes": ""
+        "notes": "Corner radius of a menu row (default 0). Square by design: rows sit flush inside the panel, whose own radius is --ds-menu-radius."
       },
       {
         "name": "--ds-menu-bg-color",
@@ -4003,12 +4003,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-multi-select-panel-bg-color",
         "value": "var(--surface-overlay)",
-        "notes": ""
+        "notes": "Dropdown panel surface (default --surface-overlay). The panel is portaled, so set it on the host — a global rule against the pane cannot see the host override."
       },
       {
         "name": "--ds-multi-select-option-bg-color-active",
         "value": "var(--surface-secondary)",
-        "notes": ""
+        "notes": "Option row fill while pressed (default --surface-secondary). Separate from hover, which does nothing on touch."
       },
       {
         "name": "--ds-multi-select-check-bg-color",
@@ -4297,27 +4297,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-password-rules-gap",
         "value": "var(--space-1)",
-        "notes": ""
+        "notes": "Space between rule lines in ds-password-rules (default --space-1)."
       },
       {
         "name": "--ds-password-rules-font-size",
         "value": "var(--font-size-xs)",
-        "notes": ""
+        "notes": "Rule line size (default --font-size-xs) — a checklist beside a field, not body copy."
       },
       {
         "name": "--ds-password-rules-pending-color",
         "value": "var(--text-tertiary)",
-        "notes": ""
+        "notes": "Colour of a rule not yet evaluated (default --text-tertiary): the user has not typed enough to judge it, which must not read as failure."
       },
       {
         "name": "--ds-password-rules-met-color",
         "value": "var(--success-text)",
-        "notes": ""
+        "notes": "Colour of a satisfied rule (default --success-text)."
       },
       {
         "name": "--ds-password-rules-failed-color",
         "value": "var(--error-text)",
-        "notes": ""
+        "notes": "Colour of a rule the current value breaks (default --error-text). Only after the user has typed — see the pending colour."
       }
     ]
   },

@@ -99,6 +99,7 @@ import { PageHeaderSection as PatternsPageHeaderSection } from './sections/patte
 import { DoDontSection } from './sections/practice/do-dont/do-dont.section';
 import { TokenDisciplineSection } from './sections/practice/token-discipline/token-discipline.section';
 import { SignalFormsSection } from './sections/practice/signal-forms/signal-forms.section';
+import { RulesSection } from './sections/practice/rules/rules.section';
 
 import { TokensReferenceSection } from './sections/tokens-reference/tokens-reference.section';
 import { ChangelogSection } from './sections/changelog/changelog.section';
@@ -254,7 +255,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
   {
     path: 'practice',
     title: 'Practice',
-    sections: [DoDontSection, TokenDisciplineSection, SignalFormsSection],
+    sections: [RulesSection, DoDontSection, TokenDisciplineSection, SignalFormsSection],
   },
   {
     path: 'reference',

@@ -1111,7 +1111,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "The chosen day in single mode, or an end of the range in range mode. Drives `aria-selected`."
       },
       {
         "name": "inRange",
@@ -1120,7 +1120,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "A day BETWEEN the two ends of a range — tinted, but not itself selected."
       },
       {
         "name": "rangeStart",
@@ -1129,7 +1129,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "First day of a range: rounds the leading corners and counts as selected."
       },
       {
         "name": "rangeEnd",
@@ -1138,7 +1138,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Last day of a range: rounds the trailing corners and counts as selected."
       },
       {
         "name": "today",
@@ -1147,7 +1147,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Marks the current date. Independent of selection — today can be unselected."
       },
       {
         "name": "muted",
@@ -1165,7 +1165,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Outside `minDate`/`maxDate` or rejected by `disabledDate` — dimmed and not clickable."
       },
       {
         "name": "dataDay",
@@ -1183,7 +1183,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "-1",
         "required": false,
-        "description": ""
+        "description": "Roving tabindex: exactly one day in the grid carries 0, the rest -1, so Tab enters the grid once and arrows move within it."
       },
       {
         "name": "ariaLabel",
@@ -1192,7 +1192,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Full spoken date (\"12 March 2026\"), since the cell text is only the day number."
       }
     ],
     "outputs": [
@@ -1203,7 +1203,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Click on an enabled day. Carries the event so the host can read modifier keys."
       },
       {
         "name": "dayKeydown",
@@ -1212,7 +1212,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "Key press on the focused day — the grid owns arrow/Home/End navigation, not the cell."
       }
     ]
   },
@@ -1908,7 +1908,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'default'",
         "required": false,
-        "description": ""
+        "description": "`default` hairline · `strong` heavier rule · `vertical` for a row · `label` to carry projected text in the middle of the line."
       },
       {
         "name": "spacing",
@@ -1922,7 +1922,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": ""
+        "description": "Vertical breathing room around the rule. `none` when the parent layout already owns the gap."
       }
     ],
     "outputs": []
@@ -2197,7 +2197,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": ""
+        "description": "The one line under a field. Empty renders nothing (or reserved space, if the field asks)."
       },
       {
         "name": "state",
@@ -2211,7 +2211,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'default'",
         "required": false,
-        "description": ""
+        "description": "Which role the line is playing — hint, error, warning or success. Decides colour and icon."
       },
       {
         "name": "messageId",
@@ -2220,7 +2220,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Id the field points `aria-describedby` at, so the message is announced with the control."
       },
       {
         "name": "icon",
@@ -2229,7 +2229,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Overrides the glyph the `state` would pick."
       },
       {
         "name": "reserve",
@@ -2816,7 +2816,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'xl'",
         "required": false,
-        "description": ""
+        "description": "Max content width before the container centres itself. `full` removes the cap."
       }
     ],
     "outputs": []
@@ -2845,7 +2845,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Space between children. `null` inherits whatever the enclosing layout set."
       },
       {
         "name": "align",
@@ -2859,7 +2859,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Cross-axis alignment — vertical, for a row."
       },
       {
         "name": "justify",
@@ -2873,7 +2873,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Main-axis distribution — horizontal, for a row. `between` pushes the ends apart."
       },
       {
         "name": "wrap",
@@ -2882,7 +2882,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": ""
+        "description": "Let the row wrap onto more lines (default). `false` keeps one line and lets it overflow."
       }
     ],
     "outputs": []
@@ -2911,7 +2911,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Space between children. `null` inherits whatever the enclosing layout set."
       },
       {
         "name": "align",
@@ -2925,7 +2925,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Cross-axis alignment — horizontal, for a column."
       }
     ],
     "outputs": []
@@ -5011,7 +5011,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "The collapse control was activated. The footer does not collapse itself — `ds-app-layout` owns the rail state, so the host relays this."
       },
       {
         "name": "alertsOpened",
@@ -6812,7 +6812,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Current time as `HH:mm` (24h, always — `format` changes only what is DISPLAYED)."
       },
       {
         "name": "format",
@@ -6824,7 +6824,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'24h'",
         "required": false,
-        "description": ""
+        "description": "Display clock. `12h` adds an AM/PM column; the emitted value stays 24h either way."
       },
       {
         "name": "minuteStep",
@@ -6833,7 +6833,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "1",
         "required": false,
-        "description": ""
+        "description": "Minute granularity — 15 gives four rows an hour instead of sixty."
       },
       {
         "name": "minTime",
@@ -6842,7 +6842,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Earliest selectable time, `HH:mm`. Earlier rows render disabled rather than being removed, so the columns do not reflow as the bound changes."
       },
       {
         "name": "maxTime",
@@ -6851,7 +6851,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Latest selectable time, `HH:mm`."
       },
       {
         "name": "disabledTime",
@@ -6860,7 +6860,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Per-time predicate for what a range cannot express — booked slots, a lunch break. Receives `HH:mm`; return true to disable."
       }
     ],
     "outputs": [
@@ -6871,7 +6871,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "A complete time was picked, as `HH:mm`. Not emitted while only one column has moved."
       }
     ]
   },

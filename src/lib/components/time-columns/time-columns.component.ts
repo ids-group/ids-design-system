@@ -45,12 +45,21 @@ interface Cell<T> {
   },
 })
 export class TimeColumnsComponent {
+  /** Current time as `HH:mm` (24h, always — `format` changes only what is DISPLAYED). */
   readonly value = input<string | null>(null);
+  /** Display clock. `12h` adds an AM/PM column; the emitted value stays 24h either way. */
   readonly format = input<TimeFormat>('24h');
+  /** Minute granularity — 15 gives four rows an hour instead of sixty. */
   readonly minuteStep = input(1, { transform: numberAttribute });
+  /** Earliest selectable time, `HH:mm`. Earlier rows render disabled rather than being removed,
+   *  so the columns do not reflow as the bound changes. */
   readonly minTime = input<string | null>(null);
+  /** Latest selectable time, `HH:mm`. */
   readonly maxTime = input<string | null>(null);
+  /** Per-time predicate for what a range cannot express — booked slots, a lunch break.
+   *  Receives `HH:mm`; return true to disable. */
   readonly disabledTime = input<((time: string) => boolean) | null>(null);
+  /** A complete time was picked, as `HH:mm`. Not emitted while only one column has moved. */
   readonly timeChange = output<string>();
 
   private readonly hourButtons =

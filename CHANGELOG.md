@@ -8,7 +8,78 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **The token and component reference now documents every public token and prop** — 41 were
+  shipping with a name, a type and no description: 10 `--ds-*` tokens (the whole
+  `--ds-password-rules-*` set among them, plus `--ds-multi-select-panel-bg-color` and
+  `--ds-menu-item-radius`) and 31 inputs and outputs across `ds-calendar-day`, `ds-time-columns`,
+  `ds-field-message`, `ds-divider`, `ds-sidenav-footer` and the three layout primitives. **Three of
+  them were guessable wrong**, so check yours if you use them: `ds-time-columns` `value` is always
+  `HH:mm` in 24h and `format` changes only the DISPLAY, so a 12h picker still emits 24h;
+  `minTime`/`maxTime` disable the out-of-range rows rather than removing them, so the columns keep
+  their height as a bound moves; and `ds-calendar-day` `tabIndex` is a roving tabindex (one cell at
+  0, the rest at -1), not a tab position you set per day. No behaviour changed — only what the
+  reference tells you.
+
+### Fixed
+
+- **The changelog page on the docs site was rendering with browser defaults.** Its markdown styles
+  were scoped by emulated encapsulation, which stamps its attribute on the container but not on the
+  nodes the markdown renderer produces — so every rule in that block matched nothing: measured
+  border-top 0px and margin-top 0px on the version headings, and `h3` white instead of
+  `--text-secondary`. Docs-site only, nothing in the package.
+
+### Changed
+
+- **`migrations/<version>.json` now carries the delete-list, so an upgrade tool can act on it.**
+  Each version's manifest gains `DELETE-LIST: if you have <X> -> <why it can go>` entries — 21 of
+  them for 0.9.0 — naming the workarounds that release made unnecessary, from the
+  `.button.button.button` triple-class to hand-binding `[value]`/`(valueChange)` on every field of a
+  signal form. They existed for 0.9.0 but only in a prose file the tooling does not read, so nothing
+  applied them. **Nothing here is required**: skipping it leaves working code that is merely
+  redundant. The same table is in this file under 0.9.0 if you would rather read than run.
+  `migrations/unreleased/README.md` no longer ships — it duplicated the manifest and had already gone
+  stale inside one release.
+
 ## 0.9.0 — 2026-08-10
+
+### What you can now DELETE
+
+The half a release note usually leaves out. Two dogfooding audits (mm-ecm 2026-08-06, mm-broker
+2026-08-07) read consumer stylesheets as a record of what this library made them write, and both
+found the same thing: **most of the workarounds were written against hooks that already existed** —
+the consumer had no signal that anything had been tokenised since. That is a failure of these notes,
+not of the consumer. None of this is required; skipping it leaves working code that is merely
+redundant.
+
+| If you have | Delete it, because |
+| --- | --- |
+| `.button.button.button { … }` or rules against `.v-outline` / `.c-secondary` | `ds-button` reflects `[data-variant]` and `[data-color]` on the HOST. Use `ds-button[data-variant="outline"]` |
+| `--radius-sm: 0` to square a checkbox | `--ds-checkbox-radius` |
+| `.title.title { font-size }` inside a modal | `--ds-modal-title-font-size` |
+| Pagination label type overrides | `--ds-pagination-label-*` |
+| `.size { display: none }` on a pager | `[showPageSize]="false"` — and it is now forwarded through `ds-table` too |
+| `.actions:empty { display: none }` on a modal | The library already ships it |
+| `--ds-modal-divider: transparent`, plus whatever you rewrote the modal padding to afterwards | `[dividers]="false"` — it drops the rules *and* the padding that existed to clear them |
+| A defensive hover rule on the selected dropdown row | The `:not(.is-selected)` branch already handles it |
+| `ds-menu-divider { padding: 0 }` | `--ds-menu-divider-spacing`, which already defaults to 0 |
+| A dozen scattered `--ds-*-radius: 0` | For a fully square brand, four lines: `--radius-sm/md/lg/xl: 0` (leave `--radius-pill`). Measured — the three ROLES alone leave options, clear buttons and dropdown panels rounded; they are the tool for squaring one family and keeping another. Worked example on the Theming page |
+| A global rule squaring `.ds-overlay-pane` | Radius and elevation roles now travel onto portaled panes when the host overrides them |
+| Absolutely positioning a search glyph over an autocomplete, or hiding `.autocomplete-chevron` | `dsAutocompletePrefix` and `[showChevron]="false"` |
+| Querying the autocomplete's inner `<input>` and dispatching a synthetic `input` event to clear it | `clear()` |
+| A hand-built KPI tile whose value is a badge | `ds-stat` takes a projected `[dsStatValue]` |
+| A pinned `--ds-search-height` (or any sibling) to get a shorter control row | `density="compact"` on the container — every field control is 32px there, measured |
+| A hand-rolled `.scrim` + `.panel` dialog, written because the modal header could not hold a badge or a second line | `ds-modal` projects `[title-badge]` and takes a `subtitle`. You get back the focus trap, focus restore, the scroll lock, Escape and the footer |
+| `[value]="f.x().value()" (valueChange)="f.x().value.set($event)"` on every field of a signal form | `[formField]="f.x"` — the control implements the contract already |
+| `white-space: normal` forced onto a badge in a table cell | `--ds-badge-white-space` |
+| `::ng-deep .card { height: 100% }` for equal-height cards | The card's box fills a stretched host on its own |
+| `!important` on `ds-table` cell padding under `density="compact"` | Compact no longer out-specifies the padding hooks |
+| A wrapper around `ds-table` for sort/range announcements, keyboard column resize, or a header filter the checklist cannot express | All three ship: the live region, the `role="separator"` handle, and `dsHeaderFilter` |
+
+**To sweep for the rest:** grep your styles for `::ng-deep`, `!important` and any selector naming a
+DS internal class (`.button`, `.trigger`, `.option`, `.modal`). Each hit is either a row above or a
+genuine gap worth reporting.
 
 ### Changed (breaking, behaviour)
 
@@ -42,6 +113,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   Use `--ds-search-height` to retune search alone, or `--ds-field-height` for the family.
 
 ### Changed
+
+- **`--ds-radius-inner` now reaches the small affordances it was written for.** Thirty-three reads across
+  fifteen component stylesheets took `var(--radius-sm)` directly — dropdown options, field clear buttons,
+  calendar days, chips, tag and toast close buttons — so the role a consumer is told to retune reached
+  exactly one component. Nothing moves (the role's default IS `--radius-sm`, verified by measuring a page
+  before and after), but it changes what a square brand costs: zeroing the three radius roles used to leave
+  five surfaces rounded and now squares every one. Five focus-ring radii inside `:focus-visible` keep
+  following the raw scale deliberately — a ring traces a box, it is not a surface a brand designs.
 
 - **`ds-auth-layout` compresses its own chrome on a short viewport, so the layout is never the reason a
   card scrolls.** Block padding, the column gap, the letter-mark tile and the masthead's inner gap clamp
@@ -85,16 +164,6 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   app-level one was renamed `ds-app-shell` → `ds-app-layout` back in 0.7.0, and shipping an auth counterpart
   called a shell in 0.8.0 reintroduced the split vocabulary that rename existed to remove. Mechanical:
   rename the tag, the class and the six tokens. Nothing about the behaviour or the slots changes.
-
-### Changed (internal, no action)
-
-- **`--ds-radius-inner` now reaches the small affordances it was written for.** Thirty-three reads across
-  fifteen component stylesheets took `var(--radius-sm)` directly — dropdown options, field clear buttons,
-  calendar days, chips, tag and toast close buttons — so the role a consumer is told to retune reached
-  exactly one component. Nothing moves (the role's default IS `--radius-sm`, verified by measuring a page
-  before and after), but it changes what a square brand costs: zeroing the three radius roles used to leave
-  five surfaces rounded and now squares every one. Five focus-ring radii inside `:focus-visible` keep
-  following the raw scale deliberately — a ring traces a box, it is not a surface a brand designs.
 
 ### Added
 

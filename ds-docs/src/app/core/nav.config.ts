@@ -173,6 +173,7 @@ export const NAV: NavGroup[] = [
     title: 'Practice',
     path: 'practice',
     items: [
+      { label: 'Composition rules', anchor: 'practice-rules' },
       { label: "Do / Don't", anchor: 'practice-do-dont' },
       { label: 'Token Discipline', anchor: 'practice-token-discipline' },
       { label: 'Signal Forms', anchor: 'practice-signal-forms' },
