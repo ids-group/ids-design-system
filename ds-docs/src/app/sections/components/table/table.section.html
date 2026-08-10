@@ -907,6 +907,22 @@
     </code>.
   </p>
 
+  <p class="block-desc t-s">
+    <strong>
+      The first resize records a width for EVERY visible column, not just the one
+      you dragged — deliberately.
+    </strong> Until then the untouched columns are
+    auto-sized, so the browser redistributes whatever the dragged column gives up
+    and columns nobody touched visibly jump. Measuring them all once, at the first
+    grab, keeps the auto-sized geometry instead of losing it. The consequence to
+    expect: if you persist
+    <code class="t-mono-inline">
+      [(columnWidths)]
+    </code>, one drag
+    fills the map for the whole row. That is the saved layout, not a leak — and a
+    second drag adds nothing further.
+  </p>
+
   <ds-table
     caption="Records"
     [data]="events"
@@ -1053,6 +1069,26 @@
     column at its <code class="t-mono-inline"> width </code> (240px when unset).
     The full value sits in the hover tooltip, and clicking a clipped cell opens
     it in a popover — an unclipped cell passes the click through to the row.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      Only columns that asked for it are watched, and that is the point.
+    </strong>
+    Clip detection runs on cells in a
+    <code class="t-mono-inline">
+      truncate
+    </code> column, not on every
+    overflowing cell in the table: a click handler on every
+    <code class="t-mono-inline">
+      &lt;td&gt;
+    </code> would swallow the row click on
+    an interactive table. Within such a column it does look deeper than the cell
+    itself — a
+    <code class="t-mono-inline">
+      dsCellTemplate
+    </code> puts the ellipsis on a
+    descendant, so testing only the wrapper would miss it.
   </p>
 
   <ds-table
