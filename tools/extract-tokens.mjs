@@ -626,7 +626,9 @@ const summary = {
   MISC_BLUR: MISC_BLUR.length,
   COMPONENT_TOKENS: `${COMPONENT_TOKENS.length} groups / ${COMPONENT_TOKENS.reduce((n, g) => n + g.tokens.length, 0)} tokens`,
 };
+// Prefixed because these keys are export NAMES: an unprefixed `SEMANTIC_ERROR: 10`
+// in a CI log reads as a build failure, and a grep for /error/i finds it.
 console.log('wrote tokens.generated.ts — per-export counts:');
-for (const [k, v] of Object.entries(summary)) console.log(`  ${k}: ${v}`);
+for (const [k, v] of Object.entries(summary)) console.log(`  rows in ${k}: ${v}`);
 console.log(`  NEW_TOKENS: ${NEW_TOKENS.length}`);
 console.log(`(of ${all.length} live tokens; ${used.size} placed)`);
