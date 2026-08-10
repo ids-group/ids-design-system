@@ -215,7 +215,70 @@ anything with an exit.
 
 ---
 
-## 6. Overriding a component
+## 6. Content
+
+### Labels are sentence case
+
+Measured: of 57 multi-word labels across the docs' own specimens, **45 are sentence case**. The
+apparent exceptions are not exceptions — they are acronyms and notation the case rule does not
+touch (`Site URL`, `Project ID`, `Date (en-US, Sunday-first)`). So: capitalise the first word
+and whatever is a proper noun or an acronym, and nothing else. `Asset register`, not
+`Asset Register`. No trailing colon: the field's shape already says a value follows.
+
+Mark the exception, not the rule. `required` is the default expectation in most forms, so
+`ds-input` and its siblings carry an `optional` input that renders "(optional)" rather than
+making you label every other field.
+
+### An empty state is five different situations, and saying which is the whole job
+
+`ds-empty-state` takes a `variant`, and the vocabulary is the rule:
+`none | loading | error | locked | success`. A screen that shows the same "No data" for a
+first-run list, a filter that matched nothing, a failed request and a permission denial has
+told the user nothing in four different ways. The pattern's own worked examples show the shape:
+
+| Variant | Title says the SITUATION | Body says the NEXT STEP or the CAUSE |
+| --- | --- | --- |
+| `none` | "No asset allocated yet" | "Pick from the asset register to start building this Sub-record." |
+| `error` | "Couldn't load resource allocations" | "Network error — the request timed out after 30 seconds." |
+| `locked` | "You don't have access to this Logistics plan" | "Logistics plans are restricted to Logistics and Producer roles. Ask Alex Park or your team lead." |
+
+Three things to copy from those: the title is a **statement, not a label** — "No asset
+allocated yet", never "Empty"; the error body names a **concrete** cause with the number in it,
+not "Something went wrong"; and the locked body names **who can unblock them**, because a
+permission wall with no next step is a dead end.
+
+### A message says what happened, what follows, and what to do
+
+The library holds itself to this. All 15 messages it prints are tagged with the component that
+printed them (`[ds-table] …`), 7 of 15 state the consequence with a plain "so", and 5 name the
+fix outright:
+
+> `[ds-table] lazy needs virtualScroll: without a window there is no range to fetch, so every
+> gap in `data` renders a skeleton row and nothing ever asks for the rows.`
+
+Anatomy worth keeping: **where** (the tag) → **what is wrong** → **what follows from it** →
+**what to do**. The middle clause is the one people drop, and it is the one that stops the
+reader guessing whether the warning matters.
+
+### Field errors: the validator owns the words, and it must supply them
+
+A DS field renders the message; it never invents one. Give the validator a message
+(`required(path.email, { message: 'We need an email to send the invite to' })`) or map the kind
+once for the app in `provideDsConfig({ field: { errorMessages: { … } } })`. With neither, an
+invalid field goes red with no words and a dev warning names the kinds it could not resolve —
+deliberately, because the alternative is the library writing copy for your domain.
+
+Say what to do, not what went wrong: "Enter a valid email address" beats "Invalid email".
+
+**Errors appear after the user has finished with the field, not while they type**, and the
+library enforces it rather than asking you to: `errors` is gated on `touched`, so a `required`
+error cannot greet an untouched form and a half-typed address is not yet wrong. An explicit
+`error` string is the deliberate exception — binding it says the consumer has already decided,
+so it shows immediately.
+
+---
+
+## 7. Overriding a component
 
 Set the component's own `--ds-*` token **on the host element**, scoped as narrowly as the
 change deserves:
@@ -243,9 +306,11 @@ internals.
 
 ---
 
-## 7. What this file does not cover yet
+## 8. Where the rest lives
 
-**Content rules** — label wording, empty-state copy, error phrasing — are not written down
-here. Until they are, ds-docs `Practice → Do / Don't` carries the component-choice decisions
-(modal vs drawer, button hierarchy, table density, badge proliferation, empty-state copy) and
-`Practice → Token Discipline` carries the token-vs-literal rule in worked form.
+The decisions this file does NOT make are the ones about which COMPONENT to reach for, and they
+have their own home: ds-docs `Practice → Do / Don't` (modal vs drawer, button hierarchy, table
+density, badge proliferation, status without colour, tooltips vs banners) and
+`Practice → Token Discipline` (the token-vs-literal rule, in worked pairs). The component
+inventory is `components.md`; the generated Component API and token reference in ds-docs are
+extracted from source on every build and are the only surfaces that cannot go stale.
