@@ -41,6 +41,14 @@ Work through them in this order. The first three are one rename and are best don
 
 ### Worth a deliberate pass, not a find/replace
 
+- **Signal Forms bind to DS controls.** `<ds-input [formField]="f.email" />` — that is the whole
+  integration; `[formField]` comes from `@angular/forms/signals`, not from this library. Thirteen
+  of fifteen controls already bound before this release; the other two, and the `readonly()`,
+  `pattern()`, `minLength()` and `hidden()` rules, work now. If you hand-bound
+  `[value]="f.x().value()" (valueChange)="f.x().value.set($event)"` per field, **all of that can
+  go.** Give each validator a `message`, or map the kinds once in `provideDsConfig`, or the field
+  turns red with no words. See the Practice → Signal Forms page.
+
 - **`ds-tabs` can now own the URL.** Set `urlParam="tab"` and the active tab survives F5,
   a shared link and the Back button. Per strip: give each `ds-tab` a `value` (the URL is
   written from it, so without one your links carry the visible label and break when it is
@@ -98,6 +106,7 @@ Search your styles for these; if you find them, they can go.
 | Querying the autocomplete's inner `<input>` and dispatching a synthetic `input` event to clear it | `clear()` |
 | A hand-built KPI tile whose value is a badge | `ds-stat` takes a projected `[dsStatValue]` |
 | A hand-rolled `.scrim` + `.panel` dialog, written because the modal header could not hold a badge or a second line | `ds-modal` projects `[title-badge]` and takes a `subtitle`. You get back the focus trap, focus restore, the scroll lock, Escape and the footer |
+| `[value]="f.x().value()" (valueChange)="f.x().value.set($event)"` on every field of a signal form | `[formField]="f.x"` — the control implements the contract already |
 | `white-space: normal` forced onto a badge in a table cell | `--ds-badge-white-space` |
 | `::ng-deep .card { height: 100% }` for equal-height cards | The card's box fills a stretched host on its own |
 | `!important` on `ds-table` cell padding under `density="compact"` | Compact no longer out-specifies the padding hooks |
