@@ -100,7 +100,7 @@ Search your styles for these; if you find them, they can go.
 | `--ds-modal-divider: transparent`, plus whatever you rewrote the modal padding to afterwards | `[dividers]="false"` — it drops the rules *and* the padding that existed to clear them |
 | A defensive hover rule on the selected dropdown row | The `:not(.is-selected)` branch already handles it |
 | `ds-menu-divider { padding: 0 }` | `--ds-menu-divider-spacing`, which already defaults to 0 |
-| A dozen scattered `--ds-*-radius: 0` | Three role declarations: `--ds-radius-inner`, `-control`, `-panel` |
+| A dozen scattered `--ds-*-radius: 0` | For a fully square brand, four lines: `--radius-sm/md/lg/xl: 0` (leave `--radius-pill`). Measured — the three ROLES alone leave options, clear buttons and dropdown panels rounded; they are the tool for squaring one family and keeping another. Worked example on the Theming page |
 | A global rule squaring `.ds-overlay-pane` | Radius and elevation roles now travel onto portaled panes when the host overrides them |
 | Absolutely positioning a search glyph over an autocomplete, or hiding `.autocomplete-chevron` | `dsAutocompletePrefix` and `[showChevron]="false"` |
 | Querying the autocomplete's inner `<input>` and dispatching a synthetic `input` event to clear it | `clear()` |

@@ -215,4 +215,55 @@
   </h3>
 
   <pre class="t-mono-block">{{ consumerSnippet }}</pre>
+
+  <h3 class="block-title t-h4">
+    Worked example — a square brand
+  </h3>
+
+  <p class="block-desc t-s">
+    The most common whole-brand change, and the one most often done the long way:
+    a consumer audit found <strong>twelve</strong> scattered
+    <code class="t-mono-inline">
+      --ds-&lt;component&gt;-radius: 0
+    </code> declarations
+    written one component at a time. Four lines replace all of them.
+  </p>
+
+  <pre class="t-mono-block">{{ squareSnippet }}</pre>
+
+  <p class="block-desc t-s">
+    <strong>
+      Set the SCALE, not the roles — measured, because the intuitive answer is
+      wrong.
+    </strong> Zeroing the three radius roles leaves surfaces behind: on one
+    component page, 11 rounded surfaces became 5, not 0. Dropdown options, a
+    field's clear button and the dropdown panel all read the raw scale directly,
+    so a role override never reaches them. Zeroing
+    <code class="t-mono-inline">
+      --radius-sm/md/lg/xl
+    </code> took the same page to
+    zero.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      Leave
+      <code class="t-mono-inline">
+        --radius-pill
+      </code> alone.
+    </strong> A switch track, an
+    avatar and a status dot are round because of what they are, not because of
+    the brand — verified: with the scale zeroed, the switch track stays fully
+    rounded because it resolves the pill token instead.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      The roles are for the PARTIAL case
+    </strong>, which is where they earn
+    their keep — one declaration moves a whole family instead of every component
+    in it:
+  </p>
+
+  <pre class="t-mono-block">{{ squarePartialSnippet }}</pre>
 </docs-section>
