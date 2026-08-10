@@ -108,7 +108,114 @@ follows it. This is why every rule on this page names a token.
 
 ---
 
-## 4. Overriding a component
+## 4. Colour
+
+### Pick the ROLE for the job, not the colour that looks right
+
+Components never read a palette primitive (`--blue-600`). They read a semantic role, and the
+role names say what the thing IS, so the theme and any brand can move underneath. Measured
+usage across the library:
+
+| Role | Uses | What it is for |
+| --- | --- | --- |
+| `--text-primary` | 82 | Body copy, labels, values — the default. If you are unsure, this. |
+| `--text-tertiary` | 69 | Meta that must not compete: eyebrows, placeholders, counters, timestamps. |
+| `--text-secondary` | 46 | Supporting copy that still has to be read — hints, subtitles, descriptions. |
+| `--text-disabled` | 33 | Only for a disabled control. Never as "quiet text". |
+| `--surface-default` | 50 | The page and the inside of a control. |
+| `--surface-secondary` | 52 | A tier up from the page: table heads, sandboxes, code blocks. |
+| `--surface-muted` | 16 | Hover and pressed fills on a neutral row. |
+| `--surface-overlay` | 15 | Anything that floats — panels, menus, dialogs. |
+| `--border-default` | 44 | The edge of a control. |
+| `--border-divider` | 31 | A line BETWEEN things, not around them. |
+
+`--text-tertiary` being the second most used role is the load-bearing fact here: most of what
+looks like "grey text" in this system is a deliberate tertiary, and reaching for
+`--text-disabled` to get the same greyness tells a screen reader's user nothing and lies to
+the next reader of your CSS.
+
+### A status family has four members and they are not interchangeable
+
+Measured by which property each one actually lands on, across every component that uses one:
+
+- **`--<status>`** — the saturated one: `border-color`, the fill of a solid button, and the
+  `color` of a MARKER — a required asterisk, an icon badge's glyph. Every one of the eight
+  `color: var(--error)` declarations in the library is a marker of that kind, six of them the
+  `.req` asterisk, and the other two an icon sitting on an `--error-subtitle` tint. **That
+  glyph-on-tint pair is the pattern to copy**, and the reason not to put prose in this member:
+  it is contrast-checked as a large glyph, not as text.
+- **`--<status>-text`** — `color`, on a light surface. This is the contrast-safe member, and the
+  one you want for a message.
+- **`--<status>-subtitle`** — `background`. The tint behind an alert or an icon badge.
+- **`--<status>-muted` / `-hover`** — interaction states on the tinted surface.
+
+So a status message is `--error-text` on `--error-subtitle`, never `--error` on anything with
+text on it. Statuses are `info | success | warning | error` (`DsStatus`); `danger` and `warn`
+are not words this library uses.
+
+### Text on a saturated fill uses the on-role, and it does not flip with the theme
+
+`--text-on-primary`, `-on-error`, `-on-success`, `-on-warning`. They resolve to
+`--static-white` / `--static-ink`, which are theme-INDEPENDENT on purpose: the fill under them
+is the same colour in light and dark, so flipping the text with the theme would break the pair
+that was contrast-checked. Never use `--text-primary` on a filled button.
+
+### Colour is never the only carrier
+
+Every status in this library also has a glyph or a word. A red border alone fails the
+colour-blind reader and fails a printout; `ds-alert`, `ds-badge` and the field message all
+pair the colour with an icon or text, and a new status surface should too.
+
+---
+
+## 5. Motion
+
+### Four durations, and 109 of the 139 uses are one of them
+
+| Token | Value | What it is for | Uses |
+| --- | --- | --- | --- |
+| `--duration-instant` | 80ms | A press that must feel like contact. | 2 |
+| `--duration-fast` | 120ms | Every hover, colour and border change — the default. | 109 |
+| `--duration-base` | 180ms | A surface arriving (dialog, drawer) or a layout settling. | 27 |
+| `--duration-slow` | 260ms | Only something large crossing the screen. | 1 |
+
+If a transition you are adding is not `--duration-fast`, be able to say why. The one
+`--duration-slow` in the library is a full-height drawer; that is the bar.
+
+### Easing follows direction
+
+`--ease-standard` (132 uses) for anything that changes in place — colour, border, a fill.
+`--ease-decelerate` for something ARRIVING, `--ease-accelerate` for something LEAVING: an
+entrance slows into its resting place, an exit gets out of the way. The role layer already
+encodes this, so prefer it to picking an easing yourself: `--ds-motion-enter-panel-*` (a
+dropdown), `--ds-motion-enter-surface-*` (a dialog), `--ds-motion-enter-large-*` (a drawer),
+and `--ds-motion-exit-*`, which is deliberately FASTER than its entrance.
+
+### Transition properties, not `all`
+
+Measured: `background-color` (20), `transform` (12), `color` (10), `border-color` (5),
+`opacity` (2). Nothing in the library transitions `all`, and only three places transition a
+`width` — animating a layout property costs a reflow per frame. Prefer `transform` and
+`opacity`; if you find yourself animating `height`, the answer is usually a `grid-template-rows`
+trick or an overlay.
+
+### An animation must mean something
+
+Motion in this library either shows where a surface came from (a panel grows out of its
+trigger, a drawer travels from its edge) or confirms a hit (a press). Decoration is not a
+reason. The test: describe what the animation TELLS the user in one clause — if you cannot,
+delete it.
+
+### Reduced motion zeroes the DURATION, never the animation
+
+`prefers-reduced-motion` sets the duration to `0ms` and leaves the keyframes in place, because
+the modal, drawer and bottom sheet tear themselves down on `animationend` — removing the
+animation would strand them mounted and leak the body-scroll lock. Follow that pattern in
+anything with an exit.
+
+---
+
+## 6. Overriding a component
 
 Set the component's own `--ds-*` token **on the host element**, scoped as narrowly as the
 change deserves:
@@ -136,10 +243,9 @@ internals.
 
 ---
 
-## 5. What this file does not cover yet
+## 7. What this file does not cover yet
 
-Colour pairing (which surface takes which text role), motion (when a transition earns its
-place) and content rules (labels, empty states, error copy) are not written down here yet.
-Until they are, ds-docs `Practice → Do / Don't` carries the component-choice decisions —
-modal vs drawer, button hierarchy, table density, status without colour — and
+**Content rules** — label wording, empty-state copy, error phrasing — are not written down
+here. Until they are, ds-docs `Practice → Do / Don't` carries the component-choice decisions
+(modal vs drawer, button hierarchy, table density, badge proliferation, empty-state copy) and
 `Practice → Token Discipline` carries the token-vs-literal rule in worked form.
