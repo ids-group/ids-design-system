@@ -13,9 +13,15 @@
 // `--ds-<surface>-enter-offset` / `-scale`. One keyframe therefore serves every
 // surface, and swapping presets never loses the surface's own geometry.
 //
-// Leave motion is deliberately absent: a closing modal/drawer/bottom-sheet is
-// torn down on `animationend` matched BY NAME, so those keyframes stay local to
-// their component and are not swappable.
+// Exit presets mirror the entrances and are swappable the same way, via
+// `--ds-<surface>-leave-keyframes`. They were absent until 2026-08-10 for a real
+// reason — teardown matched the animation NAME, so renaming the keyframe broke
+// closing entirely — and the guard now checks that the event came from the
+// animated element rather than from something inside it, which frees the name.
+//
+// An exit reads `--_ds-exit-*` and falls back to the matching `--_ds-enter-*`, so
+// a surface that leaves the way it arrived declares nothing: one preset replaces
+// the drawer's four direction-specific keyframes.
 
 /* Opacity only — the calmest entrance. */
 @keyframes ds-fade-in {
@@ -46,5 +52,44 @@
 @keyframes ds-slide-edge-in {
   from {
     transform: translate(var(--_ds-enter-x, 0), var(--_ds-enter-y, 0));
+  }
+}
+
+/* ── Exits ───────────────────────────────────────────────────────────────── */
+
+/* Opacity only — the calmest exit, and what a scrim wants. */
+@keyframes ds-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* Shrinks away as it fades — the mirror of ds-scale-in. */
+@keyframes ds-scale-out {
+  to {
+    opacity: 0;
+    transform: scale(var(--_ds-exit-scale, var(--_ds-enter-scale, 0.96)));
+  }
+}
+
+/* Travels a short distance while fading — the mirror of ds-slide-in. */
+@keyframes ds-slide-out {
+  to {
+    opacity: 0;
+    transform: translate(
+      var(--_ds-exit-x, var(--_ds-enter-x, 0)),
+      var(--_ds-exit-y, var(--_ds-enter-y, 0))
+    );
+  }
+}
+
+/* Edge-anchored travel with NO fade, for panels that slide fully off-screen
+   (drawer, bottom-sheet) where a fade would read as a flicker. */
+@keyframes ds-slide-edge-out {
+  to {
+    transform: translate(
+      var(--_ds-exit-x, var(--_ds-enter-x, 0)),
+      var(--_ds-exit-y, var(--_ds-enter-y, 0))
+    );
   }
 }

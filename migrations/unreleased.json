@@ -2,6 +2,22 @@
   "version": "unreleased",
   "items": [
     {
+      "id": "leave-keyframes-renamed",
+      "kind": "token-rename",
+      "old": "modal-out / ds-sheet-down / ds-sheet-fade-out / drawer-panel-close-right|left|top|bottom / drawer-scrim-out",
+      "new": "ds-fade-out / ds-scale-out / ds-slide-out / ds-slide-edge-out",
+      "note": "REMOVED: seven exit @keyframes local to modal, drawer and bottom-sheet are gone, replaced by four GLOBAL presets mirroring the entrance vocabulary. ACTION: nothing, unless you referenced one of the old names - only possible from a global stylesheet, since they were view-encapsulated. If you did, the mapping is: modal-out, ds-sheet-fade-out and drawer-scrim-out -> ds-fade-out; ds-sheet-down and all four drawer-panel-close-* -> ds-slide-edge-out. WHY: teardown matched the animation NAME on animationend, so the exit could not be swapped without breaking close entirely; the guard now checks the event came from the animated element rather than a child, which frees the name. WHAT YOU GAIN: --ds-modal-leave-keyframes, --ds-drawer-leave-keyframes and --ds-bottom-sheet-leave-keyframes, the exit counterparts of the --ds-*-enter-keyframes you already have. Point one at your own GLOBAL @keyframes - a component-scoped name is renamed by Angular and will not resolve. An exit preset reads --_ds-exit-x/y/scale and falls back to the matching --_ds-enter-*, so a surface that leaves the way it arrived declares nothing. VERIFY AFTER UPGRADING: open and close a modal, a drawer and a bottom sheet and confirm the page scrolls again afterwards - a teardown that does not fire leaks the body-scroll lock, which is the failure this change could cause and the one we tested for.",
+      "searchHints": ["modal-out", "ds-sheet-down", "drawer-panel-close", "drawer-scrim-out", "ds-sheet-fade-out"]
+    },
+    {
+      "id": "dropdown-panel-radius",
+      "kind": "behavior",
+      "old": "--radius-md (8px) on the ds-select / ds-multi-select panel",
+      "new": "--ds-radius-panel (12px)",
+      "note": "CHANGED DEFAULT, visual: the dropdown panel behind ds-select and ds-multi-select has a 12px corner, was 8px. It was the one panel outside the radius role layer - modal, popover, date-picker, time-picker, autocomplete, bottom-sheet, card, stat and page-footer all resolve --ds-radius-panel already - so it both disagreed with its siblings and could not be retuned through the role a consumer is told to use. ACTION: none unless you want the old corner, in which case set --ds-select-panel-radius: 8px, or --ds-radius-panel: 8px to move every panel together. CHECK: a screen where a dropdown opens beside a popover or a date picker - that is where the 4px difference was visible and is now gone.",
+      "searchHints": ["--radius-md", "dropdown-panel", "ds-select", "--ds-radius-panel"]
+    },
+    {
       "id": "auth-shell-selector-to-auth-layout",
       "kind": "selector-rename",
       "old": "ds-auth-shell",

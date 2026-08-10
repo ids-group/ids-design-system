@@ -233,48 +233,38 @@
 
   <p class="block-desc t-s">
     <strong>
-      Set the SCALE for a whole-brand change.
-    </strong> It reaches everything,
-    including the focus-ring radii, which deliberately follow the scale rather
-    than a role — a ring traces a box, it is not a surface a brand designs.
-  </p>
-
-  <p class="block-desc t-s">
-    <strong>
-      The three roles now get you almost all the way, and that is new.
-    </strong> Measured on a component page: nine rounded surfaces, and zeroing
-    the roles squares eight of them. Until 2026-08-10 it squared four — thirty-three
-    small affordances (dropdown options, clear buttons, calendar days, chips, tag
-    and toast close buttons) read
-    <code class="t-mono-inline">
-      --radius-sm
-    </code> directly, so
+      Three role declarations do it, and as of 2026-08-10 that is finally true.
+    </strong> Measured: on a component page, zeroing
     <code class="t-mono-inline">
       --ds-radius-inner
-    </code> reached one component
-    and nothing else. They resolve the role now, at the same default, so nothing
-    moved.
+    </code>,
+    <code class="t-mono-inline">
+      -control
+    </code> and
+    <code class="t-mono-inline">
+      -panel
+    </code> squares
+    <strong>
+      every
+    </strong> rounded surface. It used to leave five behind —
+    thirty-three small affordances read
+    <code class="t-mono-inline">
+      --radius-sm
+    </code> directly, and
+    the shared dropdown panel read
+    <code class="t-mono-inline">
+      --radius-md
+    </code>; both now
+    resolve their role.
   </p>
 
   <p class="block-desc t-s">
     <strong>
-      One surface still does not follow a role: the shared dropdown panel
-    </strong> behind
-    <code class="t-mono-inline">
-      ds-select
-    </code> and
-    <code class="t-mono-inline">
-      ds-multi-select
-    </code>. It reads
-    <code class="t-mono-inline">
-      --radius-md
-    </code> (8px) where every other panel —
-    modal, popover, date picker, time picker, autocomplete, bottom sheet — resolves
-    <code class="t-mono-inline">
-      --ds-radius-panel
-    </code> (12px). Squaring it needs
-    the scale, and the 8px-against-12px difference is a real inconsistency being
-    tracked rather than quietly changed, since fixing it moves a visible corner.
+      Zeroing the SCALE instead is the blunter option, and it reaches one more
+      thing:
+    </strong> the focus-ring radii, which deliberately follow the scale rather
+    than a role — a ring traces a box, it is not a surface a brand designs. Use it
+    if you want square focus rings too.
   </p>
 
   <p class="block-desc t-s">
@@ -282,19 +272,18 @@
       Leave
       <code class="t-mono-inline">
         --radius-pill
-      </code> alone.
-    </strong> A switch track, an
-    avatar and a status dot are round because of what they are, not because of
-    the brand — verified: with the scale zeroed, the switch track stays fully
-    rounded because it resolves the pill token instead.
+      </code> alone either way.
+    </strong> A
+    switch track, an avatar and a status dot are round because of what they are,
+    not because of the brand — verified: with the scale zeroed, the switch track
+    stays fully rounded because it resolves the pill token instead.
   </p>
 
   <p class="block-desc t-s">
     <strong>
-      The roles are for the PARTIAL case
-    </strong>, which is where they earn
-    their keep — one declaration moves a whole family instead of every component
-    in it:
+      The roles also give you the partial case
+    </strong>, which the scale cannot
+    — one declaration moves a family and leaves its neighbour alone:
   </p>
 
   <pre class="t-mono-block">{{ squarePartialSnippet }}</pre>

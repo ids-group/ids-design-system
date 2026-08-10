@@ -2306,6 +2306,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Bottom-sheet entrance @keyframes (default ds-slide-edge-in — travel with no fade)."
       },
       {
+        "name": "--ds-bottom-sheet-leave-keyframes",
+        "value": "ds-slide-edge-out",
+        "notes": "Exit keyframes name for the sheet panel (default ds-slide-edge-out). The scrim keeps its own fade."
+      },
+      {
         "name": "--ds-bottom-sheet-enter-duration",
         "value": "var(--ds-motion-enter-surface-duration)",
         "notes": "Bottom-sheet entrance duration (default --duration-base); the scrim uses --duration-fast until this is set."
@@ -3051,6 +3056,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Drawer panel entrance @keyframes, shared by all four sides (default ds-slide-edge-in)."
       },
       {
+        "name": "--ds-drawer-leave-keyframes",
+        "value": "ds-slide-edge-out",
+        "notes": "Exit keyframes name (default ds-slide-edge-out, which travels back the way the panel arrived). One token covers all four sides."
+      },
+      {
         "name": "--ds-drawer-enter-duration",
         "value": "var(--ds-motion-enter-large-duration)",
         "notes": "Drawer entrance duration (default --duration-slow); the scrim uses --duration-fast until this is set."
@@ -3116,6 +3126,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-option-check-color",
         "value": "var(--primary)",
         "notes": "The check glyph on a selected row (default --primary)."
+      },
+      {
+        "name": "--ds-radius-panel",
+        "value": "—",
+        "notes": "Radius role for floating and container surfaces — menus, popovers, cards, modals, drawers, sheets. Defaults to --radius-lg."
       }
     ]
   },
@@ -3882,6 +3897,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-modal-leave-duration",
         "value": "var(--ds-motion-exit-duration)",
         "notes": "Modal close duration (default --duration-fast). Reduced motion zeroes it so teardown stays instant."
+      },
+      {
+        "name": "--ds-modal-leave-keyframes",
+        "value": "ds-fade-out",
+        "notes": "Exit keyframes name (default ds-fade-out). Must name GLOBAL @keyframes — a component-scoped name is renamed by Angular and will not resolve."
       },
       {
         "name": "--ds-modal-leave-easing",
@@ -6860,11 +6880,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--ds-radius-control",
     "value": "var(--radius-md)",
-    "kind": "length"
-  },
-  {
-    "name": "--ds-radius-panel",
-    "value": "var(--radius-lg)",
     "kind": "length"
   },
   {

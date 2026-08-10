@@ -106,10 +106,10 @@ export class ModalComponent implements OnDestroy {
   }
 
   protected onLeaveEnd(event: AnimationEvent): void {
-    // Angular scopes @keyframes names under emulated encapsulation, so
-    // event.animationName arrives as `_ngcontent-…_modal-out`, not the bare
-    // name — match the suffix or teardown never fires and the lock leaks.
-    if (!event.animationName.endsWith('modal-out')) {
+    // The animated element is the one with the handler, so its OWN animationend is
+    // the signal; anything bubbling from inside is not. This replaces matching the
+    // keyframes NAME, which is what made the exit un-overridable.
+    if (event.target !== event.currentTarget) {
       return;
     }
     this.finishClose();

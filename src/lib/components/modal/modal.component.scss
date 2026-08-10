@@ -26,6 +26,7 @@
   --_modal-enter-duration: var(--ds-modal-enter-duration, var(--ds-motion-enter-surface-duration));
   --_modal-enter-easing: var(--ds-modal-enter-easing, var(--ds-motion-enter-surface-easing));
   --_modal-leave-duration: var(--ds-modal-leave-duration, var(--ds-motion-exit-duration));
+  --_modal-leave-keyframes: var(--ds-modal-leave-keyframes, ds-fade-out);
   --_modal-leave-easing: var(--ds-modal-leave-easing, var(--ds-motion-exit-easing));
 
   /* The horizontal gutter is one value for all three regions, and was already
@@ -214,15 +215,10 @@
   animation-timing-function: var(--_modal-enter-easing);
 
   &.closing {
-    animation-name: modal-out;
+    animation-name: var(--_modal-leave-keyframes);
     animation-duration: var(--_modal-leave-duration);
     animation-timing-function: var(--_modal-leave-easing);
     animation-fill-mode: forwards;
   }
 }
 
-// Stays local and literally named: onLeaveEnd() matches this name to tear the
-// modal down, so it must not be swappable.
-@keyframes modal-out {
-  to { opacity: 0; }
-}

@@ -19,6 +19,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed (breaking, visual)
 
+- **The `ds-select` / `ds-multi-select` dropdown panel has a 12px corner, was 8px.** It was the one panel
+  outside the radius role layer — modal, popover, date picker, time picker, autocomplete, bottom sheet, card,
+  stat and page footer all resolve `--ds-radius-panel` — so it disagreed with its siblings by 4px and could
+  not be retuned through the role consumers are told to use. Restore with
+  `--ds-select-panel-radius: 8px`, or `--ds-radius-panel: 8px` to move every panel together.
+- **Seven exit `@keyframes` are gone, replaced by four global presets.** `modal-out`, `ds-sheet-fade-out`
+  and `drawer-scrim-out` become `ds-fade-out`; `ds-sheet-down` and the four `drawer-panel-close-*` become
+  `ds-slide-edge-out`. They were view-encapsulated, so referencing one was only possible from a global
+  stylesheet — but if you did, that is the mapping. Nothing about the rendered motion changed.
 - **`ds-search` is 40px tall by default, was 36px.** It was the only control in the library on that
   height — `ds-button`, `ds-input`, `ds-select` and both pickers all resolve `--field-h-md` — so a search
   box in a toolbar sat a step short of everything beside it. All three sizes now come off the field scale
@@ -26,6 +35,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   height also falls through `--ds-field-height` now, so one token levels a whole toolbar.
 - **The global `--search-h` token is gone.** It existed only to hold that 36px and nothing reads it.
   Use `--ds-search-height` to retune search alone, or `--ds-field-height` for the family.
+
+### Changed (internal, no action)
+
+- **`--ds-radius-inner` now reaches the small affordances it was written for.** Thirty-three reads across
+  fifteen component stylesheets took `var(--radius-sm)` directly — dropdown options, field clear buttons,
+  calendar days, chips, tag and toast close buttons — so the role a consumer is told to retune reached
+  exactly one component. Nothing moves (the role's default IS `--radius-sm`, verified by measuring a page
+  before and after), but it changes what a square brand costs: zeroing the three radius roles used to leave
+  five surfaces rounded and now squares every one. Five focus-ring radii inside `:focus-visible` keep
+  following the raw scale deliberately — a ring traces a box, it is not a surface a brand designs.
+- **`devWarn()` replaces seven hand-written dev warnings.** Each copy was an `effect` that re-ran whenever
+  any signal it read changed, so a warning about a static misconfiguration could log again on every
+  keystroke. It now fires once per distinct message.
 
 ### Fixed
 
@@ -42,6 +64,39 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **Exit motion is swappable, the way entrances already were** — `--ds-modal-leave-keyframes`,
+  `--ds-drawer-leave-keyframes` and `--ds-bottom-sheet-leave-keyframes`, plus four global presets that
+  mirror the entrance vocabulary (`ds-fade-out`, `ds-scale-out`, `ds-slide-out`, `ds-slide-edge-out`).
+  This was blocked by a real constraint the code documented: teardown matched the animation NAME on
+  `animationend`, so renaming the keyframe broke closing entirely. The guard now checks that the event came
+  from the animated element rather than from a child, which frees the name — and that same check collapsed
+  the drawer's four direction-specific exits into one preset, since an exit reads `--_ds-exit-x/y/scale`
+  and falls back to the matching `--_ds-enter-*`. Point a token at your own **global** `@keyframes`; a
+  component-scoped name is renamed by Angular and will not resolve.
+- **Signal Forms bind to every DS control, with no wrapper and no adapter** — `<ds-input [formField]="f.email" />`
+  and the form owns the value, the validation, `touched`, `disabled` and the error text. This was very nearly
+  true already and nobody knew: `FormValueControl` requires exactly one member, a `value` `model()`, and all
+  fifteen controls had it. Measured across all of them — thirteen bound with no library change at all. What
+  was fixed here: `min`/`max`/`maxLength` on `ds-input`, `ds-textarea` and `ds-number-stepper` now accept
+  `undefined` on the write side (the binder sends it for an unset bound; read types are untouched);
+  `readonly` joins `ds-input`, `ds-textarea` and `ds-select` as the contract spelling of the existing
+  `readOnly`, because signal forms binds by NAME and a `readonly()` rule was reaching nothing; `minLength`
+  and `pattern` are new native attributes on `ds-input` and `ds-textarea`; `hidden` is declared on both
+  control-value-accessor bases, so a `hidden()` rule removes the control on all thirteen that carry one; and
+  `focus()` resolves the element that holds the value, so `focusBoundControl()` reaches the stepper's number
+  box rather than its minus button and the tabbable radio rather than the first in the DOM. Not implemented:
+  `dirty`, `pending`, `disabledReasons`. Reactive and template-driven forms are untouched. Docs: **Practice →
+  Signal Forms**, with a live form and a contract table stating the measured state.
+- **`ds-modal` takes a `[title-badge]` slot and a `subtitle`.** Two consumer screens had abandoned
+  `ds-modal` and hand-rolled a `.scrim` + `.panel` because the header could only hold one string — losing
+  the focus trap, focus restore, the scroll lock, Escape, the enter/leave animation and, in one case, the
+  footer, which put a destructive action beside the close button. Same shape as `ds-page-header`; `title`
+  stays the accessible name, so projected markup never enters `aria-labelledby`. Two tokens:
+  `--ds-modal-subtitle-text-color` and `-font-size`.
+- **`[dividers]` on `ds-modal` / `ds-modal-card`, default `true`.** `[dividers]="false"` drops the header
+  and actions rules AND the vertical padding that existed to clear them, because those are one design
+  decision. Two consumers had set `--ds-modal-divider: transparent` and were left with a 35px gap where 16
+  was wanted; one needed `!important` to win it back.
 - **`ds-table`: the rest of what mm-broker's fork did that the base could not.** Keyboard column resizing —
   the handle is a focusable `role="separator"` with Arrow (16px), PageUp/PageDown (64px) and Home to hand
   the column back to automatic sizing; a drag handle that answered only to a pointer made a resizable column

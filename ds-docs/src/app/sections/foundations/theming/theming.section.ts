@@ -29,14 +29,14 @@ mq.addEventListener('change', apply);`;
 // only if the brand also needs a dark skin:
 [data-theme='dark'][data-brand='acme'] { --primary: #8a63e8; }`;
 
-  protected readonly squareSnippet = `// A square brand — set the SCALE, not the roles.
+  protected readonly squareSnippet = `// A square brand — three roles.
 :root {
-  --radius-sm: 0;
-  --radius-md: 0;
-  --radius-lg: 0;
-  --radius-xl: 0;
-  // --radius-pill is deliberately left alone: switch tracks, avatars
-  // and status dots are round by shape, not by style.
+  --ds-radius-inner: 0;     // options, chips, calendar days, close buttons
+  --ds-radius-control: 0;   // buttons, fields, triggers
+  --ds-radius-panel: 0;     // menus, modals, dropdown panels
+  // Not --radius-pill: switch tracks, avatars and status dots are round
+  // by shape, not by style. Add --radius-sm/md/lg/xl: 0 as well if you
+  // also want square focus rings.
 }`;
 
   protected readonly squarePartialSnippet = `// Square the controls, keep panels rounded — this is what the ROLES are for.
