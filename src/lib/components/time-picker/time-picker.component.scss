@@ -166,7 +166,7 @@
   justify-content: center;
   border: 0;
   padding: var(--space-1);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   background: transparent;
   color: var(--text-tertiary);
   cursor: pointer;
@@ -210,7 +210,7 @@
   background: transparent;
   cursor: pointer;
   padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat)
     var(--font-sans);
   color: var(--text-secondary);

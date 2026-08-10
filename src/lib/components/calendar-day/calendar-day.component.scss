@@ -30,7 +30,7 @@
   display: grid;
   place-items: center;
   font: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   cursor: pointer;
   border: 0;
   background: transparent;
@@ -66,15 +66,15 @@
   }
 
   &.range-start {
-    border-top-left-radius: var(--radius-sm);
-    border-bottom-left-radius: var(--radius-sm);
+    border-top-left-radius: var(--ds-radius-inner);
+    border-bottom-left-radius: var(--ds-radius-inner);
     background-color: var(--_date-picker-day-selected-bg-color);
     color: var(--_date-picker-day-selected-label-color);
   }
 
   &.range-end {
-    border-top-right-radius: var(--radius-sm);
-    border-bottom-right-radius: var(--radius-sm);
+    border-top-right-radius: var(--ds-radius-inner);
+    border-bottom-right-radius: var(--ds-radius-inner);
     background-color: var(--_date-picker-day-selected-bg-color);
     color: var(--_date-picker-day-selected-label-color);
   }

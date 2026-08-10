@@ -368,7 +368,7 @@
     background: none;
     cursor: pointer;
     color: var(--icon-default);
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
     transition: color var(--duration-fast) var(--ease-standard);
 
     &:hover {
@@ -459,7 +459,7 @@
 
   &.cdk-drag-preview {
     background-color: var(--surface-default);
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
     box-shadow: var(--shadow-popover);
     padding: var(--space-1) var(--space-2);
   }
@@ -571,7 +571,7 @@
   box-sizing: border-box;
   padding: var(--space-1) var(--space-2);
   border: var(--border-width-default) solid var(--border-default);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--text-primary);
   background-color: var(--surface-default);
@@ -632,7 +632,7 @@
   margin: calc(-1 * var(--space-1)) 0;
   padding: var(--space-1) var(--space-2);
   border: var(--border-width-default) solid var(--accent);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--text-primary);
   background-color: var(--surface-default);

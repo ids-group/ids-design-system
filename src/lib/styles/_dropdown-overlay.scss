@@ -81,7 +81,7 @@
     font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     color: var(--text-primary);
     cursor: pointer;
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
     text-align: left;
     transition: background-color var(--duration-fast) var(--ease-standard);
 

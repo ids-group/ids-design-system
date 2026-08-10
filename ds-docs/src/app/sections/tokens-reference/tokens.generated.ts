@@ -2009,6 +2009,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-autocomplete-option-bg-color-hover",
         "value": "var(--surface-secondary)",
         "notes": "Autocomplete option row fill on hover."
+      },
+      {
+        "name": "--ds-radius-inner",
+        "value": "—",
+        "notes": "Radius role for shapes INSIDE a control — the checkbox box, an option row, a tag. Defaults to --radius-sm."
       }
     ]
   },
@@ -6855,11 +6860,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--ds-radius-control",
     "value": "var(--radius-md)",
-    "kind": "length"
-  },
-  {
-    "name": "--ds-radius-inner",
-    "value": "var(--radius-sm)",
     "kind": "length"
   },
   {

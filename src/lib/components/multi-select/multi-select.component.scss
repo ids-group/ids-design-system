@@ -144,7 +144,7 @@
   width: 100%;
   padding: var(--space-2) var(--space-2-5);
   border: 0;
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   background: transparent;
   color: var(--text-primary);
   font:
@@ -172,7 +172,7 @@
   margin: var(--space-1) var(--space-1) 0;
   border: 0;
   border-bottom: var(--border-width-default) solid var(--border-divider);
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  border-radius: var(--ds-radius-inner) var(--ds-radius-inner) 0 0;
   background: transparent;
   color: var(--text-secondary);
   font:
@@ -195,7 +195,7 @@
   flex: none;
   width: var(--check-size);
   height: var(--check-size);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   border: var(--border-width-strong) solid var(--border-strong);
   color: var(--text-on-primary);
 
@@ -209,7 +209,7 @@
 .checkbox .dash {
   width: var(--check-indet-w);
   height: var(--check-indet-h);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   background-color: var(--text-on-primary);
 }
 

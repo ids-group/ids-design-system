@@ -72,7 +72,7 @@
     font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     cursor: pointer;
     padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
 
     &:hover { background: var(--surface-secondary); }
     &:focus-visible { outline: none; box-shadow: var(--_toast-focus-shadow); }

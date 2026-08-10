@@ -194,7 +194,7 @@
       width: var(--check-size);
       height: var(--check-size);
       border: var(--border-width-strong) solid var(--border-strong);
-      border-radius: var(--radius-sm);
+      border-radius: var(--ds-radius-inner);
       color: var(--text-on-primary);
 
       &.checked {
