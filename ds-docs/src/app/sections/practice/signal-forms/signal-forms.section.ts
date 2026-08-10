@@ -119,14 +119,14 @@ loginForm = form(this.model, (path) => {
       note: 'Forwarded to the native element as attributes on input and textarea; min and max also bound on the number stepper.',
     },
     {
-      member: 'dirty / pending / disabledReasons',
-      state: 'no',
-      note: 'Not implemented. The form still tracks them — the control just does not render anything from them yet.',
+      member: 'focus()',
+      state: 'yes',
+      note: 'focusBoundControl() reaches the control that actually holds the value — the stepper’s number box rather than its minus button, the tabbable radio rather than the first one, a picker’s trigger rather than an input inside its closed panel.',
     },
     {
-      member: 'focus()',
+      member: 'dirty / pending / disabledReasons',
       state: 'no',
-      note: 'Not implemented, so focusing an invalid field falls back to the host element rather than the inner control.',
+      note: 'Not implemented, and blocked on a visual decision rather than wiring: nothing in the library renders "edited" or "validating" today, so there is no established look to bind these to.',
     },
   ];
 }

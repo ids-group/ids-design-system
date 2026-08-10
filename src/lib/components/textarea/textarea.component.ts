@@ -211,7 +211,7 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
 
   /** Move keyboard focus to the native textarea — public so a host can drive it
    *  deliberately, e.g. focusing the first invalid field on a failed submit. */
-  focus(options?: FocusOptions): void {
+  override focus(options?: FocusOptions): void {
     this.control()?.nativeElement.focus(options);
   }
 }
