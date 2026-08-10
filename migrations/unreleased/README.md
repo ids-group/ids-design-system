@@ -105,6 +105,7 @@ Search your styles for these; if you find them, they can go.
 | Absolutely positioning a search glyph over an autocomplete, or hiding `.autocomplete-chevron` | `dsAutocompletePrefix` and `[showChevron]="false"` |
 | Querying the autocomplete's inner `<input>` and dispatching a synthetic `input` event to clear it | `clear()` |
 | A hand-built KPI tile whose value is a badge | `ds-stat` takes a projected `[dsStatValue]` |
+| A pinned `--ds-search-height` (or any sibling) to get a shorter control row | `density="compact"` on the container — every field control is 32px there, measured |
 | A hand-rolled `.scrim` + `.panel` dialog, written because the modal header could not hold a badge or a second line | `ds-modal` projects `[title-badge]` and takes a `subtitle`. You get back the focus trap, focus restore, the scroll lock, Escape and the footer |
 | `[value]="f.x().value()" (valueChange)="f.x().value.set($event)"` on every field of a signal form | `[formField]="f.x"` — the control implements the contract already |
 | `white-space: normal` forced onto a badge in a table cell | `--ds-badge-white-space` |
