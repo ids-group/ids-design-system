@@ -1,4 +1,11 @@
-import { Directive, effect, signal, type ModelSignal } from '@angular/core';
+import {
+  Directive,
+  booleanAttribute,
+  effect,
+  input,
+  signal,
+  type ModelSignal,
+} from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
 
 /**
@@ -11,12 +18,23 @@ import type { ControlValueAccessor } from '@angular/forms';
  * effective disabled state so `FormControl.disable()` actually reaches the
  * control; it should also call `markTouched()` from a blur handler.
  */
-@Directive()
+@Directive({
+  host: { '[style.display]': 'hidden() ? "none" : null' },
+})
 export abstract class DsControlValueAccessor<
   T,
 > implements ControlValueAccessor {
   /** The component's two-way value model. */
   abstract readonly value: ModelSignal<T>;
+
+  /**
+   * Hides the control. Declared here rather than per component because signal
+   * forms binds it by name on every control that has it, and a `hidden()` rule
+   * that renders the field anyway is worse than no rule at all. Inline `display`
+   * rather than the `hidden` attribute: every control sets its own `:host`
+   * display, which the attribute's UA rule would lose to.
+   */
+  readonly hidden = input(false, { transform: booleanAttribute });
 
   /** Driven by the forms API via `setDisabledState`. */
   protected readonly formDisabled = signal(false);
@@ -84,10 +102,15 @@ export abstract class DsControlValueAccessor<
  * signal API. Subclasses must OR `formDisabled()` into their effective disabled
  * state and call `markTouched()` from a blur handler.
  */
-@Directive()
+@Directive({
+  host: { '[style.display]': 'hidden() ? "none" : null' },
+})
 export abstract class DsBooleanControlValueAccessor implements ControlValueAccessor {
   /** The component's two-way checked model. */
   abstract readonly checked: ModelSignal<boolean>;
+
+  /** Hides the control — see the note on `DsControlValueAccessor.hidden`. */
+  readonly hidden = input(false, { transform: booleanAttribute });
 
   /** Driven by the forms API via `setDisabledState`. */
   protected readonly formDisabled = signal(false);

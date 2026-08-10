@@ -97,6 +97,21 @@ export class InputComponent extends DsControlValueAccessor<string> {
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Prevents editing while still allowing focus and selection. */
   readonly readOnly = input(false, { transform: booleanAttribute });
+  /**
+   * The contract spelling of `readOnly`, kept as a separate input because signal
+   * forms binds by NAME: a `readonly()` rule was reaching nothing before this.
+   * Either name sets it; `isReadOnly` resolves both.
+   */
+  readonly readonlyBinding = input(false, {
+    // The alias IS the point: signal forms binds by name, and the contract
+    // spells it `readonly` where the DS spells it `readOnly`.
+    // eslint-disable-next-line @angular-eslint/no-input-rename
+    alias: 'readonly',
+    transform: booleanAttribute,
+  });
+  protected readonly isReadOnly = computed(
+    () => this.readOnly() || this.readonlyBinding(),
+  );
   /** Applies error styling and marks the field `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Applies success styling to the field. */
@@ -142,6 +157,17 @@ export class InputComponent extends DsControlValueAccessor<string> {
   readonly maxLength = input<number | null, number | null | undefined>(null, {
     transform: (value) => value ?? null,
   });
+  // Signal forms binds these by name; without them a `pattern()` or `minLength()`
+  // rule validated in the form model while the native element advertised nothing.
+  /** Native `minlength` attribute. */
+  readonly minLength = input<number | null, number | null | undefined>(null, {
+    transform: (value) => value ?? null,
+  });
+  /** Native `pattern` attribute — signal forms sends the schema's RegExp list. */
+  readonly pattern = input<readonly RegExp[], readonly RegExp[] | string | undefined>([], {
+    transform: (value) =>
+      value === undefined ? [] : typeof value === 'string' ? [new RegExp(value)] : value,
+  });
   /** Mobile keyboard hints — forwarded to the native input as attributes. */
   readonly enterKeyHint = input<
     'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send' | null
@@ -183,6 +209,16 @@ export class InputComponent extends DsControlValueAccessor<string> {
     return this.type() === 'search';
   });
 
+  /** A native `pattern` takes ONE expression; the schema can carry several, so
+   *  they are ANDed with lookaheads rather than silently dropping all but one. */
+  protected readonly patternAttribute = computed(() => {
+    const expressions = this.pattern();
+    if (!expressions.length) {
+      return null;
+    }
+
+    return expressions.map((expression) => `(?=${expression.source})`).join('') + '.*';
+  });
   protected readonly uid = nextControlId('ds-input');
   protected readonly hintId = computed(() =>
     this.message().text ? `${this.uid}-hint` : null,
@@ -252,7 +288,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
     if (this.isDisabled()) {
       parts.push('disabled');
     }
-    if (this.readOnly()) {
+    if (this.isReadOnly()) {
       parts.push('read-only');
     }
     if (this.loading()) {

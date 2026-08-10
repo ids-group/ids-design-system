@@ -92,6 +92,21 @@ export class SelectComponent
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Prevents opening the dropdown while still allowing focus. */
   readonly readOnly = input(false, { transform: booleanAttribute });
+  /**
+   * The contract spelling of `readOnly`, kept as a separate input because signal
+   * forms binds by NAME: a `readonly()` rule was reaching nothing before this.
+   * Either name sets it; `isReadOnly` resolves both.
+   */
+  readonly readonlyBinding = input(false, {
+    // The alias IS the point: signal forms binds by name, and the contract
+    // spells it `readonly` where the DS spells it `readOnly`.
+    // eslint-disable-next-line @angular-eslint/no-input-rename
+    alias: 'readonly',
+    transform: booleanAttribute,
+  });
+  protected readonly isReadOnly = computed(
+    () => this.readOnly() || this.readonlyBinding(),
+  );
   /** Applies error styling and marks the trigger `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Helper text shown below the trigger. */
@@ -226,7 +241,7 @@ export class SelectComponent
     if (this.isDisabled()) {
       parts.push('disabled');
     }
-    if (this.readOnly()) {
+    if (this.isReadOnly()) {
       parts.push('readonly');
     }
     if (this.invalidResolved()) {
@@ -263,7 +278,7 @@ export class SelectComponent
   }
 
   protected toggle(): void {
-    if (this.isDisabled() || this.readOnly() || this.preview.staticPreview()) {
+    if (this.isDisabled() || this.isReadOnly() || this.preview.staticPreview()) {
       return;
     }
     if (this.open()) {
@@ -352,7 +367,7 @@ export class SelectComponent
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
-    if (this.isDisabled() || this.readOnly() || this.preview.staticPreview()) {
+    if (this.isDisabled() || this.isReadOnly() || this.preview.staticPreview()) {
       return;
     }
     // Only handle keys aimed at the trigger itself — a keydown bubbling up from

@@ -297,6 +297,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+      },
+      {
         "name": "options",
         "kind": "input",
         "type": "readonly AutocompleteOption<T>[]",
@@ -1269,6 +1278,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control — see the note on `DsControlValueAccessor.hidden`."
+      },
+      {
         "name": "checked",
         "kind": "model",
         "type": "boolean",
@@ -1421,6 +1439,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "string",
@@ -1532,6 +1559,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+      },
       {
         "name": "mode",
         "kind": "input",
@@ -2383,6 +2419,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "string",
@@ -2510,6 +2555,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Prevents editing while still allowing focus and selection."
+      },
+      {
+        "name": "readonlyBinding",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The contract spelling of `readOnly`, kept as a separate input because signal forms binds by NAME: a `readonly()` rule was reaching nothing before this. Either name sets it; `isReadOnly` resolves both."
       },
       {
         "name": "invalid",
@@ -2645,6 +2699,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Hard character cap — applies the native maxlength attribute and shows a live \"{current}/{max}\" counter below the field."
+      },
+      {
+        "name": "minLength",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Native `minlength` attribute."
+      },
+      {
+        "name": "pattern",
+        "kind": "input",
+        "type": "readonly RegExp[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Native `pattern` attribute — signal forms sends the schema's RegExp list."
       },
       {
         "name": "enterKeyHint",
@@ -3339,6 +3411,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "string[]",
@@ -3566,6 +3647,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+      },
       {
         "name": "value",
         "kind": "model",
@@ -4200,6 +4290,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "unknown",
@@ -4451,6 +4550,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "string",
@@ -4516,6 +4624,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Prevents opening the dropdown while still allowing focus."
+      },
+      {
+        "name": "readonlyBinding",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The contract spelling of `readOnly`, kept as a separate input because signal forms binds by NAME: a `readonly()` rule was reaching nothing before this. Either name sets it; `isReadOnly` resolves both."
       },
       {
         "name": "invalid",
@@ -4975,6 +5092,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+      },
       {
         "name": "value",
         "kind": "model",
@@ -5447,6 +5573,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control — see the note on `DsControlValueAccessor.hidden`."
+      },
       {
         "name": "checked",
         "kind": "model",
@@ -6406,6 +6541,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "string",
@@ -6518,6 +6662,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Prevents editing while still allowing focus and selection."
       },
       {
+        "name": "readonlyBinding",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The contract spelling of `readOnly`, kept as a separate input because signal forms binds by NAME: a `readonly()` rule was reaching nothing before this. Either name sets it; `isReadOnly` resolves both."
+      },
+      {
         "name": "invalid",
         "kind": "input",
         "type": "boolean",
@@ -6620,6 +6773,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Hard character cap — applies the native maxlength attribute and shows a live \"{current}/{max}\" counter below the field."
+      },
+      {
+        "name": "minLength",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Native `minlength` attribute."
+      },
+      {
+        "name": "pattern",
+        "kind": "input",
+        "type": "readonly RegExp[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Native `pattern` attribute — signal forms sends the schema's RegExp list."
       }
     ],
     "outputs": []
@@ -6714,6 +6885,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+      },
       {
         "name": "value",
         "kind": "model",
