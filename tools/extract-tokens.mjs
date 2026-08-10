@@ -250,6 +250,10 @@ const orphaned = Object.keys(DESCRIPTIONS).filter((k) => !names.has(k));
 console.log(
   `tokens: ${all.length}, undescribed: ${undescribed.length}, orphaned: ${orphaned.length}`,
 );
+if (undescribed.length) {
+  console.log('undescribed tokens:');
+  for (const name of undescribed) console.log(`  ${name}`);
+}
 if (orphaned.length)
   console.warn('orphaned descriptions:\n  ' + orphaned.join('\n  '));
 

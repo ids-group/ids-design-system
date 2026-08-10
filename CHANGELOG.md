@@ -8,6 +8,50 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Changed
+
+- **The migration manifest now carries the delete-list, and the prose guide beside it is gone.**
+  `migrations/0.9.0.json` gains 21 `DELETE-LIST: if you have <X> -> <why it can go>` entries — the
+  consumer workarounds that 0.9.0 made unnecessary, from the `.button.button.button` triple-class to
+  hand-binding `[value]`/`(valueChange)` on every field of a signal form. They were written for 0.9.0
+  but only existed in `migrations/unreleased/README.md`, a prose file the auto-update plugin does not
+  read: it loads `<version>.json`. So the content shipped without ever reaching the thing that applies
+  it. **`migrations/unreleased/README.md` is deleted from the package** — it duplicated the manifest,
+  and it had already gone stale inside one release (three late 0.9.0 changes never reached it), which
+  misleads where no file would merely be silent. The same table is now also in this file, under the
+  0.9.0 heading, for anyone reading the changelog instead.
+- **`migrations/README.md` no longer prescribes a prose guide per release.** A sibling
+  `migrations/<version>/*.md` stays legal for the rare walkthrough a `note` genuinely cannot hold —
+  `migrations/0.5.1/badge-statuses.md` is the standing example — with one test before writing another:
+  would a tool or an agent ever open it? If only a human might, it belongs in the CHANGELOG.
+
+### Added
+
+- **Every public token and every public component prop now carries a description.** The build has
+  always counted what it could not describe and nobody read the number: `undescribed: 10, orphaned: 1`
+  for tokens and `31 undescribed props` for components, in a passing build. So the generated reference
+  a consumer reads had 10 `--ds-*` tokens with a blank description — the whole
+  `--ds-password-rules-*` set among them — and 31 inputs and outputs listed with a type and nothing
+  else, across `ds-calendar-day`, `ds-divider`, `ds-field-message`, `ds-time-columns`,
+  `ds-sidenav-footer` and the three layout primitives. All 41 are written now, each read off the
+  declaration rather than paraphrased from its name, so the ones that carry a trap say so: a
+  `ds-time-columns` `value` is always 24h and `format` changes only the display; `minTime` disables
+  earlier rows rather than removing them, so the columns do not reflow; `ds-calendar-day` `tabIndex`
+  is a roving tabindex, not a tab position. The extractor also names the tokens it cannot describe
+  instead of only counting them, so the next gap is actionable from the log.
+- **The description for `--search-h` is gone.** 0.9.0 removed the token and left its description
+  behind, which the reference would have rendered against nothing. The build called it `orphaned: 1`.
+
+### Fixed
+
+- **The release script promotes a guide folder alongside the manifest, not just the JSON.** 0.9.0
+  exposed the gap: `npm version` renamed `migrations/unreleased.json` → `0.9.0.json` and left
+  `migrations/unreleased/` where the NEXT release would have written over it, with the manifest
+  pointing at that doomed path. Nothing was lost, but the same slip cannot recur.
+- **The token extractor no longer prints lines that read as build failures.** Its per-export counts
+  are keyed by export NAME, so a healthy build logged `SEMANTIC_ERROR: 10` and a CI grep for
+  `/error/i` matched it. They now read `rows in SEMANTIC_ERROR: 10`.
+
 ## 0.9.0 — 2026-08-10
 
 ### What you can now DELETE

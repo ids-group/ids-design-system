@@ -14,6 +14,8 @@ import type { LayoutAlign, LayoutGap } from './layout.types';
 })
 export class StackComponent {
   // null → semantic --space-stack default; named sizes map to the spacing scale.
+  /** Space between children. `null` inherits whatever the enclosing layout set. */
   readonly gap = input<LayoutGap | null>(null);
+  /** Cross-axis alignment — horizontal, for a column. */
   readonly align = input<LayoutAlign | null>(null);
 }

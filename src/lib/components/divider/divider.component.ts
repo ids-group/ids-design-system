@@ -20,8 +20,11 @@ import type { DividerSpacing, DividerVariant } from './divider.types';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class DividerComponent {
+  /** `default` hairline · `strong` heavier rule · `vertical` for a row · `label` to carry
+   *  projected text in the middle of the line. */
   readonly variant = input<DividerVariant>('default');
   // Vertical margin around the divider. Defaults to `md` (8px) for parity
   // with menus / sidenavs; bump to `lg` for content-section separators.
+  /** Vertical breathing room around the rule. `none` when the parent layout already owns the gap. */
   readonly spacing = input<DividerSpacing>('md');
 }
