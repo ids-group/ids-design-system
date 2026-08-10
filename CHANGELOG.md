@@ -22,6 +22,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   0, the rest at -1), not a tab position you set per day. No behaviour changed — only what the
   reference tells you.
 
+### Fixed
+
+- **The changelog page on the docs site was rendering with browser defaults.** Its markdown styles
+  were scoped by emulated encapsulation, which stamps its attribute on the container but not on the
+  nodes the markdown renderer produces — so every rule in that block matched nothing: measured
+  border-top 0px and margin-top 0px on the version headings, and `h3` white instead of
+  `--text-secondary`. Docs-site only, nothing in the package.
+
 ### Changed
 
 - **`migrations/<version>.json` now carries the delete-list, so an upgrade tool can act on it.**
