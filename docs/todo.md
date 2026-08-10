@@ -201,3 +201,45 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   **Why this is not just a version bump.** (1) **Signal Forms went STABLE in 22.0.0** — it left `@experimental` two months ago, which retires the "wait for it to stabilise" reasoning that shaped the original item. (2) The 22.0.0 changelog carries a signal-forms breaking change — `min`/`max` rules no longer accept string values, numbers or `null` only — and the fix shipped today (`fc1714d5`) touches exactly `min`/`max`, so it wants re-testing on 22 rather than assuming it carries. (3) 22.0.0 also added `ngNoCva`, an opt-out from `ControlValueAccessor` interop; every DS control provides a CVA **and** satisfies `FormValueControl`, so it is worth checking which path Angular 22 actually picks for our controls and whether the two ever race. There was a real bug of this shape in the 22 line (`angular/angular#67847`, CVA `writeValue` called back after `onChange`, infinite loop — fixed).
   **RE-VERIFY ON 22, specifically:** the whole Practice → Signal Forms page against 22 · `min`/`max`/`maxLength` write-type widening · the `readonly` alias · `hidden` on both CVA bases · whether `ngNoCva` should be set anywhere · whether the `touched` mechanism changed (one third-party source reports a v21 `touchedChange` → v22 `touch` output rename; NOT confirmed against the official changelog, so confirm it before relying on either).
   **The decision is the peer range, and it should be made BEFORE 0.9.0 is cut**, since that is what the release publishes: widen to `^21.2.0 || ^22.0.0` (cheap, but claims a compatibility nobody has tested) or move the repo to 22 (honest, costs a real upgrade pass). **Context for the call:** Angular Material has NOT shipped signal-forms support (`angular/components#32072` still open), PrimeNG deliberately waited for stable and is repairing `[formField]` typing in 22.0.1, and Spartan has shipped it — so on this axis the DS is currently ahead of both libraries its consumers compare it to, and that lead is worth keeping installable.
+
+## ds-auth-layout — residue from the 0.8.0/0.9.0 audit (recorded 2026-08-11, from the ai-sdlc-prototype side)
+
+> Parent work landed: the type clamps came back out of `ds-auth-layout`, the a11y and robustness
+> fixes shipped, and the false comments were corrected. What follows is what was deliberately NOT
+> done in that pass, each with the reason, so none of it is rediscovered from scratch.
+
+- [ ] **[P3] `ds-sidenav` carries the same four defects the auth layout just fixed.** Byte-identical
+  code, so they were found by diffing the two: `brand().charAt(0)` returns half a surrogate pair for a
+  brand starting with an astral character (these are the only two `charAt` calls in `src`); the
+  letter-mark `<span class="mark">` has no `aria-hidden`, so a screen reader announces the glyph and
+  then the wordmark ("A MyAdmin"); the outer `@if (brand() || hasBrandName())` gates out a
+  `logoLetter`-only lockup even though the inner gate tests it; and the projected `[brand]` slot has no
+  size constraint. Fixing only one side is what made the "same letter-mark as the sidenav" claim false
+  in the first place, so these should move together — or the divergence should be stated on purpose.
+
+- [ ] **[P3] `env(safe-area-inset-*)` is inert in the library's own showcase.** The insets resolve to
+  **0** unless the document sets `<meta name="viewport" content="viewport-fit=cover">` — a cutout alone
+  is not enough. Repo-wide there is exactly one `viewport-fit` hit, in `presentations/`;
+  `ds-docs/src/index.html` does not set it. So the notch handling `ds-auth-layout` advertises cannot be
+  demonstrated on the docs site, and no page tells a consumer they must opt in. Two lines: set it in the
+  docs index, and say so where the component is documented. Also `bottom-sheet.component.scss:65` still
+  uses `env(safe-area-inset-bottom)` with no fallback — the auth layout's four now carry `, 0px`, so the
+  repo currently has two conventions.
+
+- [ ] **[P3] Three deferred DEFAULT changes for the batch after 0.9.0**, all held back by the release
+  gate rather than by doubt: (1) the auth wordmark at `--font-size-h5` and the tile at 28px, which is
+  what actually makes the sidenav-parity claim true and removes the one remaining case where the
+  wordmark's line box (22 x 1.25 = 27.5px) drives the brand row above the 24px tile floor on a short
+  viewport; (2) `landmark` defaulting to `'main'` instead of `'none'`, so the auth card is a landmark
+  without the consumer asking — held because the docs site embeds the layout inside `ds-app-layout`'s
+  own `<main>` and two of them is its own violation; (3) `--ds-auth-layout-brand-max-height` defaulting
+  to the tile size rather than `none`, which would silently resize logos consumers already ship. Each
+  needs a `behavior` migration item worded "was X, now Y, restore via Z" — and (1) additionally needs
+  two font-size tokens to EXIST first, since neither is exposed today.
+
+- [ ] **[P3] Two documentation surfaces still carry claims corrected elsewhere.** `docs/done.md:191`
+  repeats "the same letter-mark tile" (the tile is 28px/weight 800 in the rail versus 24-32px/weight 700
+  in the auth layout, with separate token hooks, so retinting the mark means setting both). And
+  `components.md` — which ships inside the npm package and is what a consumer's agent reads — has **no
+  `ds-auth-layout` or `ds-app-layout` entry at all**, while its `ds-sidenav*` block still names the
+  pre-rename `--ds-sidenav-mark-bg` / `-fg` tokens.
