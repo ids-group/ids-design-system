@@ -101,9 +101,13 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   readonly resize = input<TextareaResize>('vertical');
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
+  // Signal forms binds this by name and sends undefined when the schema sets no
+  // cap; the READ type stays what it was, so nothing else has to change.
   /** Hard character cap — applies the native maxlength attribute and shows a
    *  live "{current}/{max}" counter below the field. */
-  readonly maxLength = input<number | null>(null);
+  readonly maxLength = input<number | null, number | null | undefined>(null, {
+    transform: (value) => value ?? null,
+  });
 
   protected readonly uid = nextControlId('ds-textarea');
   protected readonly hintId = computed(() =>

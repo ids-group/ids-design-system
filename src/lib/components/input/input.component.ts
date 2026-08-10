@@ -113,10 +113,16 @@ export class InputComponent extends DsControlValueAccessor<string> {
   readonly optional = input(false, { transform: booleanAttribute });
   /** Native `name` attribute. */
   readonly name = input<string | null>(null);
+  // Signal forms binds these by name and sends undefined when the schema sets
+  // no bound; the READ type stays what it was, so nothing else has to change.
   /** Native `min` attribute — applies when `type="number"`. */
-  readonly min = input<number | null>(null);
+  readonly min = input<number | null, number | null | undefined>(null, {
+    transform: (value) => value ?? null,
+  });
   /** Native `max` attribute — applies when `type="number"`. */
-  readonly max = input<number | null>(null);
+  readonly max = input<number | null, number | null | undefined>(null, {
+    transform: (value) => value ?? null,
+  });
   /** Native `step` attribute — applies when `type="number"`. */
   readonly step = input<number | null>(null);
   /** Native autocomplete token (e.g. "email", "current-password"). */
@@ -133,7 +139,9 @@ export class InputComponent extends DsControlValueAccessor<string> {
   readonly ariaDescribedBy = input<string | null>(null);
   /** Hard character cap — applies the native maxlength attribute and shows a
    *  live "{current}/{max}" counter below the field. */
-  readonly maxLength = input<number | null>(null);
+  readonly maxLength = input<number | null, number | null | undefined>(null, {
+    transform: (value) => value ?? null,
+  });
   /** Mobile keyboard hints — forwarded to the native input as attributes. */
   readonly enterKeyHint = input<
     'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send' | null

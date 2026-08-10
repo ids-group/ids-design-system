@@ -20,10 +20,16 @@ import type { DsSize } from '../../core/size';
 export class NumberStepperComponent {
   /** Current numeric value, two-way bound. */
   readonly value = model<number>(0);
+  // Signal forms binds these by name and sends undefined when the schema sets
+  // no bound; the READ type stays what it was, so nothing else has to change.
   /** Lower bound — the decrement button and typed input clamp to it. */
-  readonly min = input<number>(0);
+  readonly min = input<number, number | undefined>(0, {
+    transform: (value) => value ?? 0,
+  });
   /** Upper bound — the increment button and typed input clamp to it; unbounded when null. */
-  readonly max = input<number | null>(null);
+  readonly max = input<number | null, number | null | undefined>(null, {
+    transform: (value) => value ?? null,
+  });
   /** Amount added or subtracted per increment/decrement. */
   readonly step = input<number>(1);
   /** Control height — sm/md/lg. */

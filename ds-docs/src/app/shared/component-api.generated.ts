@@ -270,6 +270,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'lg'",
         "required": false,
         "description": "Card padding, passed through to `ds-card`. `md` tightens a short form."
+      },
+      {
+        "name": "landmark",
+        "kind": "input",
+        "type": "'main' | 'none'",
+        "union": [
+          "main",
+          "none"
+        ],
+        "default": "'none'",
+        "required": false,
+        "description": "Announce the card as the page's `main` landmark. The card holds the whole content of an auth screen and `ds-card` renders an `<article>`, which is NOT a landmark, so by default a screen-reader user has nothing to jump to — set this to `'main'` on a standalone auth page. It is opt-in because the layout is also embedded inside pages that already own a `main` (this repo's own docs site nests it inside `ds-app-layout`), and two `main`s is its own violation. Defaulting it to `'main'` is the better end state and belongs in the next batch of default changes."
       }
     ],
     "outputs": []
