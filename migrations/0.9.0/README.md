@@ -1,6 +1,9 @@
-# Migrating to the next release
+# Migrating to 0.9.0
 
-The manifest (`../unreleased.json`) is the terse machine mirror — what a tool applies.
+The manifest (`../0.9.0.json`) is the terse machine mirror — what a tool applies, and it is the
+COMPLETE list. This file is not: it was written on 2026-08-07 as "the next release" and three
+later changes never reached it (the exit-`@keyframes` rename, the dropdown-panel radius, the
+`--ds-radius-inner` sweep). Read the manifest for what breaks; read §3 here for what you can delete.
 This is the human half: **where to look, what to change, and what you can now delete.**
 
 > **If you are on 0.7.x**, you are taking two releases at once. Read the 0.8.0 notes
