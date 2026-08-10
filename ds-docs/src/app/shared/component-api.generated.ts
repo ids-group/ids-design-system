@@ -303,7 +303,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
         "name": "options",
@@ -1445,7 +1445,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
         "name": "value",
@@ -1566,7 +1566,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
         "name": "mode",
@@ -2425,7 +2425,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
         "name": "value",
@@ -2563,7 +2563,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "The contract spelling of `readOnly`, kept as a separate input because signal forms binds by NAME: a `readonly()` rule was reaching nothing before this. Either name sets it; `isReadOnly` resolves both."
+        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
       },
       {
         "name": "invalid",
@@ -3417,7 +3417,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
         "name": "value",
@@ -3654,7 +3654,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
         "name": "value",
@@ -4296,7 +4296,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
         "name": "value",
@@ -4556,7 +4556,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
         "name": "value",
@@ -4632,7 +4632,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "The contract spelling of `readOnly`, kept as a separate input because signal forms binds by NAME: a `readonly()` rule was reaching nothing before this. Either name sets it; `isReadOnly` resolves both."
+        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
       },
       {
         "name": "invalid",
@@ -5099,7 +5099,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
         "name": "value",
@@ -6547,7 +6547,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
         "name": "value",
@@ -6668,7 +6668,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "The contract spelling of `readOnly`, kept as a separate input because signal forms binds by NAME: a `readonly()` rule was reaching nothing before this. Either name sets it; `isReadOnly` resolves both."
+        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
       },
       {
         "name": "invalid",
@@ -6892,7 +6892,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Declared here rather than per component because signal forms binds it by name on every control that has it, and a `hidden()` rule that renders the field anyway is worse than no rule at all. Inline `display` rather than the `hidden` attribute: every control sets its own `:host` display, which the attribute's UA rule would lose to."
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
         "name": "value",

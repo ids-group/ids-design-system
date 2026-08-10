@@ -28,11 +28,9 @@ export abstract class DsControlValueAccessor<
   abstract readonly value: ModelSignal<T>;
 
   /**
-   * Hides the control. Declared here rather than per component because signal
-   * forms binds it by name on every control that has it, and a `hidden()` rule
-   * that renders the field anyway is worse than no rule at all. Inline `display`
-   * rather than the `hidden` attribute: every control sets its own `:host`
-   * display, which the attribute's UA rule would lose to.
+   * Hides the control. On the base so signal forms reaches every control at once.
+   * Inline `display`, not the `hidden` attribute — each control sets its own
+   * `:host` display, which the attribute's weaker UA rule would lose to.
    */
   readonly hidden = input(false, { transform: booleanAttribute });
 

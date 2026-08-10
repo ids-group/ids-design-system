@@ -82,9 +82,8 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   /** Prevents editing while still allowing focus and selection. */
   readonly readOnly = input(false, { transform: booleanAttribute });
   /**
-   * The contract spelling of `readOnly`, kept as a separate input because signal
-   * forms binds by NAME: a `readonly()` rule was reaching nothing before this.
-   * Either name sets it; `isReadOnly` resolves both.
+   * The contract spelling of `readOnly`, a second input because signal forms binds
+   * by NAME — a `readonly()` rule was reaching nothing before this existed.
    */
   readonly readonlyBinding = input(false, {
     // The alias IS the point: signal forms binds by name, and the contract
