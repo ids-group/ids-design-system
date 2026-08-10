@@ -1,5 +1,5 @@
 {
-  "version": "unreleased",
+  "version": "0.9.0",
   "items": [
     {
       "id": "leave-keyframes-renamed",
@@ -7,7 +7,13 @@
       "old": "modal-out / ds-sheet-down / ds-sheet-fade-out / drawer-panel-close-right|left|top|bottom / drawer-scrim-out",
       "new": "ds-fade-out / ds-scale-out / ds-slide-out / ds-slide-edge-out",
       "note": "REMOVED: seven exit @keyframes local to modal, drawer and bottom-sheet are gone, replaced by four GLOBAL presets mirroring the entrance vocabulary. ACTION: nothing, unless you referenced one of the old names - only possible from a global stylesheet, since they were view-encapsulated. If you did, the mapping is: modal-out, ds-sheet-fade-out and drawer-scrim-out -> ds-fade-out; ds-sheet-down and all four drawer-panel-close-* -> ds-slide-edge-out. WHY: teardown matched the animation NAME on animationend, so the exit could not be swapped without breaking close entirely; the guard now checks the event came from the animated element rather than a child, which frees the name. WHAT YOU GAIN: --ds-modal-leave-keyframes, --ds-drawer-leave-keyframes and --ds-bottom-sheet-leave-keyframes, the exit counterparts of the --ds-*-enter-keyframes you already have. Point one at your own GLOBAL @keyframes - a component-scoped name is renamed by Angular and will not resolve. An exit preset reads --_ds-exit-x/y/scale and falls back to the matching --_ds-enter-*, so a surface that leaves the way it arrived declares nothing. VERIFY AFTER UPGRADING: open and close a modal, a drawer and a bottom sheet and confirm the page scrolls again afterwards - a teardown that does not fire leaks the body-scroll lock, which is the failure this change could cause and the one we tested for.",
-      "searchHints": ["modal-out", "ds-sheet-down", "drawer-panel-close", "drawer-scrim-out", "ds-sheet-fade-out"]
+      "searchHints": [
+        "modal-out",
+        "ds-sheet-down",
+        "drawer-panel-close",
+        "drawer-scrim-out",
+        "ds-sheet-fade-out"
+      ]
     },
     {
       "id": "dropdown-panel-radius",
@@ -15,7 +21,12 @@
       "old": "--radius-md (8px) on the ds-select / ds-multi-select panel",
       "new": "--ds-radius-panel (12px)",
       "note": "CHANGED DEFAULT, visual: the dropdown panel behind ds-select and ds-multi-select has a 12px corner, was 8px. It was the one panel outside the radius role layer - modal, popover, date-picker, time-picker, autocomplete, bottom-sheet, card, stat and page-footer all resolve --ds-radius-panel already - so it both disagreed with its siblings and could not be retuned through the role a consumer is told to use. ACTION: none unless you want the old corner, in which case set --ds-select-panel-radius: 8px, or --ds-radius-panel: 8px to move every panel together. CHECK: a screen where a dropdown opens beside a popover or a date picker - that is where the 4px difference was visible and is now gone.",
-      "searchHints": ["--radius-md", "dropdown-panel", "ds-select", "--ds-radius-panel"]
+      "searchHints": [
+        "--radius-md",
+        "dropdown-panel",
+        "ds-select",
+        "--ds-radius-panel"
+      ]
     },
     {
       "id": "auth-shell-selector-to-auth-layout",
@@ -23,7 +34,9 @@
       "old": "ds-auth-shell",
       "new": "ds-auth-layout",
       "note": "Component renamed (shipped as ds-auth-shell in the tagged 0.8.0 source, its only release under that name). \"Shell\" is not this library's word for a layout: the app-level one was renamed ds-app-shell -> ds-app-layout in 0.7.0, and calling the auth counterpart a shell put the split vocabulary back. ACTION: rename the element and its closing tag. Behaviour, inputs and slots are unchanged - brand, logoLetter, tagline, cardElevation, cardPadding, [brand], [dsBrandName] and dsAuthSupport all keep their names. Also rename the class and the tokens (separate entries below).",
-      "searchHints": ["ds-auth-shell"]
+      "searchHints": [
+        "ds-auth-shell"
+      ]
     },
     {
       "id": "auth-shell-class-to-auth-layout",
@@ -31,7 +44,9 @@
       "old": "AuthShellComponent",
       "new": "AuthLayoutComponent",
       "note": "The exported component class renamed alongside the ds-auth-shell -> ds-auth-layout selector. Update imports and any type references. No members changed.",
-      "searchHints": ["AuthShellComponent"]
+      "searchHints": [
+        "AuthShellComponent"
+      ]
     },
     {
       "id": "auth-shell-tokens-to-auth-layout",
@@ -39,7 +54,9 @@
       "old": "--ds-auth-shell-",
       "new": "--ds-auth-layout-",
       "note": "Prefix rename for the six component tokens: --ds-auth-shell-min-height / -card-max-width / -gap / -bg-color / -mark-bg-color / -mark-label-color -> --ds-auth-layout-*. Values and defaults are unchanged. DS-owned tokens only (no others ship under this prefix); a consumer's own --ds-auth-shell-* variable is out of scope. EXCLUDED, do not rename: the global scale token --auth-card-w, the fallback behind -card-max-width, which carries no --ds-auth-shell- prefix and keeps its name. Confirm the new name exists in the installed package.",
-      "searchHints": ["--ds-auth-shell-"]
+      "searchHints": [
+        "--ds-auth-shell-"
+      ]
     },
     {
       "id": "search-height-joins-field-scale",
@@ -47,7 +64,11 @@
       "old": "ds-search",
       "new": null,
       "note": "CHANGED DEFAULT: ds-search is 40px tall at the default size, was 36px. Every size moved onto the field scale - sm var(--field-h-sm) 32px (was --hit-min 32px, unchanged), md var(--field-h-md) 40px (was --search-h 36px, CHANGED), lg var(--field-h-lg) 48px (unchanged). The old 36px was a lone tier: nothing else in the library used it, while ds-button, ds-input, ds-select and both pickers all resolve --field-h-md, so a search box in a toolbar sat 4px short of every neighbour. RESTORE the old height with `ds-search { --ds-search-height: 36px; }` - that token still wins over everything. ALSO NEW: the height now falls through --ds-field-height, so `--ds-field-height: 44px` on a toolbar levels search along with the fields, which was the point of the change.",
-      "searchHints": ["ds-search", "--ds-search-height", "--search-h"]
+      "searchHints": [
+        "ds-search",
+        "--ds-search-height",
+        "--search-h"
+      ]
     },
     {
       "id": "search-h-token-removed",
@@ -55,7 +76,9 @@
       "old": "--search-h",
       "new": null,
       "note": "The global --search-h token is gone; it existed only to hold ds-search's 36px and nothing reads it any more. Its replacements, in precedence order: --ds-search-height (retunes search alone) and --ds-field-height (levels the whole field family). If you declared --search-h to resize search, that declaration is now inert - swap it for --ds-search-height with the same value. Reading it in your own CSS resolves to nothing. The --hit-md scale token it pointed at (36px) is untouched and still available.",
-      "searchHints": ["--search-h"]
+      "searchHints": [
+        "--search-h"
+      ]
     },
     {
       "id": "table-sort-filter-mode-default-server",
@@ -77,7 +100,11 @@
       "old": "ds-number-stepper",
       "new": null,
       "note": "CHANGED DEFAULT, one size only: ds-number-stepper with size=\"lg\" is 48px tall, was 44px. It resolved --hit-comfy while the field family's large size is --field-h-lg (--hit-touch, 48px), so a large stepper was a step short of a large input beside it. The +/- buttons and the quantity box derive their widths from that height, so they widen with it. size=\"sm\" (32px) and the size=\"md\" default (40px) are unchanged. RESTORE with `ds-number-stepper { --ds-field-height: 44px; }` scoped to the instance, or set the size back to md.",
-      "searchHints": ["ds-number-stepper", "size=\"lg\"", "--hit-comfy"]
+      "searchHints": [
+        "ds-number-stepper",
+        "size=\"lg\"",
+        "--hit-comfy"
+      ]
     },
     {
       "id": "tabs-url-param-adoption",
@@ -85,7 +112,12 @@
       "old": "ds-tabs",
       "new": "urlParam=\"tab\"",
       "note": "ds-tabs can now keep the active tab in the URL: set urlParam (e.g. urlParam=\"tab\") and the strip writes ?tab=<name>, so the tab survives F5, a shared link and the Back button. Nothing changes until you set it, but this is worth a deliberate pass rather than a skim. ACTION, per strip: (1) GIVE EACH ds-tab A `value` if it has none - the URL is written from value, falling back to label, so without one a link carries the visible label and breaks the moment the label is translated or reworded. (2) ONE STRIP PER PARAMETER NAME. Two ds-tabs sharing a name on the same screen erase each other: both write the same query parameter, and a reload restores whichever wrote last. A dev-mode warning now names the clash. Nested or sibling strips need distinct names (tab, subtab). (3) DELETE any hand-rolled wiring - a queryParamMap subscription plus a navigate() on tabChanged is exactly what this replaces, and running both fights. Behaviour to expect: NAMES not indices (an index would silently repoint every old link as soon as a tab is inserted), the FIRST tab writes no parameter, every write uses replaceUrl so flipping tabs does not fill the Back button, and an unknown or missing name lands on the first tab instead of throwing. Inert outside a routed context, and being query-only it does not trip ds-app-layout's scroll reset.",
-      "searchHints": ["<ds-tabs", "ds-tabs", "tabChanged", "queryParamMap"]
+      "searchHints": [
+        "<ds-tabs",
+        "ds-tabs",
+        "tabChanged",
+        "queryParamMap"
+      ]
     }
   ],
   "informational": [
