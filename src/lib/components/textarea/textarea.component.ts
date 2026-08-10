@@ -9,6 +9,7 @@ import {
   model,
   viewChild,
 } from '@angular/core';
+import { optionalBound } from '../../core/field-bounds';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import type { TextareaResize } from './textarea.types';
@@ -115,19 +116,17 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   readonly resize = input<TextareaResize>('vertical');
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
-  // Signal forms binds this by name and sends undefined when the schema sets no
-  // cap; the READ type stays what it was, so nothing else has to change.
   /** Hard character cap — applies the native maxlength attribute and shows a
    *  live "{current}/{max}" counter below the field. */
   readonly maxLength = input<number | null, number | null | undefined>(null, {
-    transform: (value) => value ?? null,
+    transform: optionalBound,
   });
 
   // Signal forms binds these by name; without them a `pattern()` or `minLength()`
   // rule validated in the form model while the native element advertised nothing.
   /** Native `minlength` attribute. */
   readonly minLength = input<number | null, number | null | undefined>(null, {
-    transform: (value) => value ?? null,
+    transform: optionalBound,
   });
   /** Native `pattern` attribute — signal forms sends the schema's RegExp list. */
   readonly pattern = input<readonly RegExp[], readonly RegExp[] | string | undefined>([], {
