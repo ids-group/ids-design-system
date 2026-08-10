@@ -12,6 +12,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **A release can no longer ship without warning subclassers.** `npm run class-surface` diffs the
+  exported member surface between the last tag and HEAD and prints it per class, and the changelog
+  workflow now requires it before writing the class-collision migration entry. It exists because
+  that entry was assembled by eye twice and was wrong both times in a way a consumer found first:
+  0.9.0's manifest named no collisions at all while sixteen classes had grown, and 0.8.0's named the
+  public additions but not the private `saveLayout` that stopped a consumer's build. Both manifests
+  have been corrected. Tooling only — nothing in the package changed.
+
 - **The token and component reference now documents every public token and prop** — 41 were
   shipping with a name, a type and no description: 10 `--ds-*` tokens (the whole
   `--ds-password-rules-*` set among them, plus `--ds-multi-select-panel-bg-color` and
@@ -97,7 +105,7 @@ genuine gap worth reporting.
   bases gained `hidden` and `focus()` (inherited by every field control); `ds-input` / `ds-textarea`
   gained `readonlyBinding`, `isReadOnly`, `minLength`, `pattern`; `ds-modal` and `ds-modal-card`
   gained `subtitle` and `dividers`; `ds-autocomplete` gained `maxVisibleChips`, `showChevron` and
-  `clear()`. The full per-class list is in `migrations/0.9.0.json`. **Using the `<ds-…>` elements in
+  `clear()`. One member was also REMOVED: `TableComponent`'s private `distinctValuesOf()`, now `optionsFor()`, which prefers the new `columnFilterOptions` input. The full per-class list is in `migrations/0.9.0.json`. **Using the `<ds-…>` elements in
   a template needs no change** — this only reaches you through `extends`.
 
 - **`ds-table` `sortMode` and `filterMode` default to `'server'`, were `'client'`.** Server-paged is the
