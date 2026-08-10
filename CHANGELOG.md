@@ -21,6 +21,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   chips. The measurement runs only in `"fit"` mode, so a picker left on the default does not
   observe, measure or force layout.
 
+- **A release can no longer ship without warning subclassers.** `npm run class-surface` diffs the
+  exported member surface between the last tag and HEAD and prints it per class, and the changelog
+  workflow now requires it before writing the class-collision migration entry. It exists because
+  that entry was assembled by eye twice and was wrong both times in a way a consumer found first:
+  0.9.0's manifest named no collisions at all while sixteen classes had grown, and 0.8.0's named the
+  public additions but not the private `saveLayout` that stopped a consumer's build. Both manifests
+  have been corrected. Tooling only — nothing in the package changed. (This entry sat under 0.9.1
+  until 2026-08-11; the tool landed after that tag was cut, so 0.9.1 never carried it.)
+
 ### Changed
 
 - **The chips of both pickers now render inside a `<span class="chip-row">`** rather than directly
@@ -40,14 +49,6 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 ## 0.9.1 — 2026-08-10
 
 ### Added
-
-- **A release can no longer ship without warning subclassers.** `npm run class-surface` diffs the
-  exported member surface between the last tag and HEAD and prints it per class, and the changelog
-  workflow now requires it before writing the class-collision migration entry. It exists because
-  that entry was assembled by eye twice and was wrong both times in a way a consumer found first:
-  0.9.0's manifest named no collisions at all while sixteen classes had grown, and 0.8.0's named the
-  public additions but not the private `saveLayout` that stopped a consumer's build. Both manifests
-  have been corrected. Tooling only — nothing in the package changed.
 
 - **The token and component reference now documents every public token and prop** — 41 were
   shipping with a name, a type and no description: 10 `--ds-*` tokens (the whole
