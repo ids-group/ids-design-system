@@ -8,49 +8,31 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
-### Changed
-
-- **The migration manifest now carries the delete-list, and the prose guide beside it is gone.**
-  `migrations/0.9.0.json` gains 21 `DELETE-LIST: if you have <X> -> <why it can go>` entries — the
-  consumer workarounds that 0.9.0 made unnecessary, from the `.button.button.button` triple-class to
-  hand-binding `[value]`/`(valueChange)` on every field of a signal form. They were written for 0.9.0
-  but only existed in `migrations/unreleased/README.md`, a prose file the auto-update plugin does not
-  read: it loads `<version>.json`. So the content shipped without ever reaching the thing that applies
-  it. **`migrations/unreleased/README.md` is deleted from the package** — it duplicated the manifest,
-  and it had already gone stale inside one release (three late 0.9.0 changes never reached it), which
-  misleads where no file would merely be silent. The same table is now also in this file, under the
-  0.9.0 heading, for anyone reading the changelog instead.
-- **`migrations/README.md` no longer prescribes a prose guide per release.** A sibling
-  `migrations/<version>/*.md` stays legal for the rare walkthrough a `note` genuinely cannot hold —
-  `migrations/0.5.1/badge-statuses.md` is the standing example — with one test before writing another:
-  would a tool or an agent ever open it? If only a human might, it belongs in the CHANGELOG.
-
 ### Added
 
-- **Every public token and every public component prop now carries a description.** The build has
-  always counted what it could not describe and nobody read the number: `undescribed: 10, orphaned: 1`
-  for tokens and `31 undescribed props` for components, in a passing build. So the generated reference
-  a consumer reads had 10 `--ds-*` tokens with a blank description — the whole
-  `--ds-password-rules-*` set among them — and 31 inputs and outputs listed with a type and nothing
-  else, across `ds-calendar-day`, `ds-divider`, `ds-field-message`, `ds-time-columns`,
-  `ds-sidenav-footer` and the three layout primitives. All 41 are written now, each read off the
-  declaration rather than paraphrased from its name, so the ones that carry a trap say so: a
-  `ds-time-columns` `value` is always 24h and `format` changes only the display; `minTime` disables
-  earlier rows rather than removing them, so the columns do not reflow; `ds-calendar-day` `tabIndex`
-  is a roving tabindex, not a tab position. The extractor also names the tokens it cannot describe
-  instead of only counting them, so the next gap is actionable from the log.
-- **The description for `--search-h` is gone.** 0.9.0 removed the token and left its description
-  behind, which the reference would have rendered against nothing. The build called it `orphaned: 1`.
+- **The token and component reference now documents every public token and prop** — 41 were
+  shipping with a name, a type and no description: 10 `--ds-*` tokens (the whole
+  `--ds-password-rules-*` set among them, plus `--ds-multi-select-panel-bg-color` and
+  `--ds-menu-item-radius`) and 31 inputs and outputs across `ds-calendar-day`, `ds-time-columns`,
+  `ds-field-message`, `ds-divider`, `ds-sidenav-footer` and the three layout primitives. **Three of
+  them were guessable wrong**, so check yours if you use them: `ds-time-columns` `value` is always
+  `HH:mm` in 24h and `format` changes only the DISPLAY, so a 12h picker still emits 24h;
+  `minTime`/`maxTime` disable the out-of-range rows rather than removing them, so the columns keep
+  their height as a bound moves; and `ds-calendar-day` `tabIndex` is a roving tabindex (one cell at
+  0, the rest at -1), not a tab position you set per day. No behaviour changed — only what the
+  reference tells you.
 
-### Fixed
+### Changed
 
-- **The release script promotes a guide folder alongside the manifest, not just the JSON.** 0.9.0
-  exposed the gap: `npm version` renamed `migrations/unreleased.json` → `0.9.0.json` and left
-  `migrations/unreleased/` where the NEXT release would have written over it, with the manifest
-  pointing at that doomed path. Nothing was lost, but the same slip cannot recur.
-- **The token extractor no longer prints lines that read as build failures.** Its per-export counts
-  are keyed by export NAME, so a healthy build logged `SEMANTIC_ERROR: 10` and a CI grep for
-  `/error/i` matched it. They now read `rows in SEMANTIC_ERROR: 10`.
+- **`migrations/<version>.json` now carries the delete-list, so an upgrade tool can act on it.**
+  Each version's manifest gains `DELETE-LIST: if you have <X> -> <why it can go>` entries — 21 of
+  them for 0.9.0 — naming the workarounds that release made unnecessary, from the
+  `.button.button.button` triple-class to hand-binding `[value]`/`(valueChange)` on every field of a
+  signal form. They existed for 0.9.0 but only in a prose file the tooling does not read, so nothing
+  applied them. **Nothing here is required**: skipping it leaves working code that is merely
+  redundant. The same table is in this file under 0.9.0 if you would rather read than run.
+  `migrations/unreleased/README.md` no longer ships — it duplicated the manifest and had already gone
+  stale inside one release.
 
 ## 0.9.0 — 2026-08-10
 
@@ -124,6 +106,14 @@ genuine gap worth reporting.
 
 ### Changed
 
+- **`--ds-radius-inner` now reaches the small affordances it was written for.** Thirty-three reads across
+  fifteen component stylesheets took `var(--radius-sm)` directly — dropdown options, field clear buttons,
+  calendar days, chips, tag and toast close buttons — so the role a consumer is told to retune reached
+  exactly one component. Nothing moves (the role's default IS `--radius-sm`, verified by measuring a page
+  before and after), but it changes what a square brand costs: zeroing the three radius roles used to leave
+  five surfaces rounded and now squares every one. Five focus-ring radii inside `:focus-visible` keep
+  following the raw scale deliberately — a ring traces a box, it is not a surface a brand designs.
+
 - **`ds-auth-layout` compresses its own chrome on a short viewport, so the layout is never the reason a
   card scrolls.** Block padding, the column gap, the letter-mark tile and the masthead's inner gap clamp
   against `svh`. At ~330px of viewport — a landscape phone — that furniture costs ~131px instead of ~219px.
@@ -166,16 +156,6 @@ genuine gap worth reporting.
   app-level one was renamed `ds-app-shell` → `ds-app-layout` back in 0.7.0, and shipping an auth counterpart
   called a shell in 0.8.0 reintroduced the split vocabulary that rename existed to remove. Mechanical:
   rename the tag, the class and the six tokens. Nothing about the behaviour or the slots changes.
-
-### Changed (internal, no action)
-
-- **`--ds-radius-inner` now reaches the small affordances it was written for.** Thirty-three reads across
-  fifteen component stylesheets took `var(--radius-sm)` directly — dropdown options, field clear buttons,
-  calendar days, chips, tag and toast close buttons — so the role a consumer is told to retune reached
-  exactly one component. Nothing moves (the role's default IS `--radius-sm`, verified by measuring a page
-  before and after), but it changes what a square brand costs: zeroing the three radius roles used to leave
-  five surfaces rounded and now squares every one. Five focus-ring radii inside `:focus-visible` keep
-  following the raw scale deliberately — a ring traces a box, it is not a surface a brand designs.
 
 ### Added
 
