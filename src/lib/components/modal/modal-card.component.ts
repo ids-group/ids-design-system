@@ -27,8 +27,12 @@ export class ModalCardComponent {
   readonly error = input(false, { transform: booleanAttribute });
   /** Card title, shown in the header and used for `aria-labelledby`. */
   readonly title = input.required<string>();
+  /** Secondary line under the title. Not part of the accessible name. */
+  readonly subtitle = input<string | null>(null);
   /** Shows the header close button. */
   readonly showClose = input(true, { transform: booleanAttribute });
+  /** Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for. */
+  readonly dividers = input(true, { transform: booleanAttribute });
   /** Icon badge shown next to the title. */
   readonly icon = input<IconName | null>(null);
   /** ARIA role for the dialog element. */
@@ -42,6 +46,9 @@ export class ModalCardComponent {
     const parts = ['modal', this.size()];
     if (this.error()) {
       parts.push('error');
+    }
+    if (!this.dividers()) {
+      parts.push('no-dividers');
     }
 
     return parts.join(' ');

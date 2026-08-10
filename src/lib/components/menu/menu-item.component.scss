@@ -4,6 +4,11 @@
   --_menu-item-focus-shadow: var(--ds-menu-item-focus-shadow, var(--ds-control-focus-shadow));
   --_menu-item-hover-bg-color: var(--ds-menu-item-hover-bg-color, var(--surface-secondary));
   --_menu-item-error-label-color: var(--ds-menu-item-error-label-color, var(--error-text));
+  --_menu-item-quiet-label-color: var(--ds-menu-item-quiet-label-color, var(--text-secondary));
+  --_menu-item-pad-x: var(--ds-menu-item-pad-x, var(--space-3));
+  --_menu-item-pad-y: var(--ds-menu-item-pad-y, var(--space-2));
+  --_menu-item-label-weight: var(--ds-menu-item-label-weight, var(--font-weight-medium));
+  --_menu-item-label-font-size: var(--ds-menu-item-label-font-size, var(--font-size-s));
 
   display: block;
 }
@@ -13,7 +18,7 @@
   align-items: center;
   gap: var(--space-2-5);
   width: 100%;
-  padding: var(--space-2) var(--space-3);
+  padding: var(--_menu-item-pad-y) var(--_menu-item-pad-x);
   background: transparent;
   border: 0;
 
@@ -22,7 +27,7 @@
   // curve that cannot be concentric with the panel's and leaves slivers in the
   // corners. The panel clips the fill instead. Token'd for a brand that wants it back.
   border-radius: var(--ds-menu-item-radius, 0);
-  font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  font: var(--_menu-item-label-weight) var(--_menu-item-label-font-size) / var(--line-height-base) var(--font-sans);
   color: var(--_menu-item-label-color);
   cursor: pointer;
   text-align: left;
@@ -40,6 +45,13 @@
     opacity: var(--opacity-muted);
 
     &:hover { background: transparent; }
+  }
+
+  /* Before `.error` on purpose: an item marked both should read destructive,
+     which is the louder of the two. Hover is deliberately left alone — a quiet
+     row is still actionable and should highlight like its neighbours. */
+  &.quiet {
+    color: var(--_menu-item-quiet-label-color);
   }
 
   &.error {

@@ -79,6 +79,20 @@ if (!existsSync('CHANGELOG.md')) {
 console.log('▶ Copying CHANGELOG.md into dist/ds…');
 cpSync('CHANGELOG.md', 'dist/ds/CHANGELOG.md');
 
+// Ship the rules and the catalogue so a consumer's agents can read them straight from
+// node_modules — the rules are the half that cannot be generated from source, and they
+// are only useful where the code that uses them lives.
+for (const doc of ['design-system.md', 'components.md']) {
+  if (!existsSync(doc)) {
+    console.error(
+      `build-schematics: ${doc} not found at repo root — cannot ship it in the package.`,
+    );
+    process.exit(1);
+  }
+  console.log(`▶ Copying ${doc} into dist/ds…`);
+  cpSync(doc, `dist/ds/${doc}`);
+}
+
 // Ship the machine-readable migration manifests (migrations/<version>.json — structured
 // mirrors of the changelog, consumed by the auto-update plugin) alongside the changelog.
 if (existsSync('migrations')) {

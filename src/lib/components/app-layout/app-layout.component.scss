@@ -19,13 +19,13 @@
   // Containing block for the overlay rail below lg. Without it the rail's
   // `position: fixed` resolves against the VIEWPORT, so a layout embedded in a
   // page - a docs demo, a preview pane - throws its rail over the whole window
-  // instead of its own box. For a full-viewport shell the two are identical.
+  // instead of its own box. For a full-viewport layout the two are identical.
   position: relative;
 
   // Own stacking context, so a layout nested in the content area keeps its rail
   // and scrim inside its own box. Without it both layouts z-index against the
   // ROOT context at the same --layer-drawer, and the later one in the DOM - the
-  // embedded demo - paints over the outer shell's open overlay rail.
+  // embedded demo - paints over the outer layout's open overlay rail.
   isolation: isolate;
   overflow: hidden;
 }

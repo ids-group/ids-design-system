@@ -28,7 +28,7 @@ import { TimePickerSection } from './sections/components/time-picker/time-picker
 import { W3wSection } from './sections/components/w3w/w3w.section';
 
 import { AppLayoutSection } from './sections/components/app-layout/app-layout.section';
-import { AuthShellSection } from './sections/components/auth-shell/auth-shell.section';
+import { AuthLayoutSection } from './sections/components/auth-layout/auth-layout.section';
 import { BreadcrumbsSection } from './sections/components/breadcrumbs/breadcrumbs.section';
 import { MenuSection } from './sections/components/menu/menu.section';
 import { PaginationSection } from './sections/components/pagination/pagination.section';
@@ -66,6 +66,7 @@ import { ModalSection } from './sections/components/modal/modal.section';
 import { PopoverSection } from './sections/components/popover/popover.section';
 import { TooltipSection } from './sections/components/tooltip/tooltip.section';
 
+import { FieldGroupSection } from './sections/components/field-group/field-group.section';
 import { FilterBarSection as ComponentsFilterBarSection } from './sections/components/filter-bar/filter-bar.section';
 import { PageFooterSection } from './sections/components/page-footer/page-footer.section';
 import { PageHeaderSection as ComponentsPageHeaderSection } from './sections/components/page-header/page-header.section';
@@ -97,6 +98,7 @@ import { PageHeaderSection as PatternsPageHeaderSection } from './sections/patte
 
 import { DoDontSection } from './sections/practice/do-dont/do-dont.section';
 import { TokenDisciplineSection } from './sections/practice/token-discipline/token-discipline.section';
+import { SignalFormsSection } from './sections/practice/signal-forms/signal-forms.section';
 
 import { TokensReferenceSection } from './sections/tokens-reference/tokens-reference.section';
 import { ChangelogSection } from './sections/changelog/changelog.section';
@@ -130,6 +132,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       ColorPickerSection,
       DatePickerSection,
       DropzoneSection,
+      FieldGroupSection,
       InputSection,
       MultiSelectSection,
       NumberStepperSection,
@@ -150,7 +153,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
     title: 'Navigation',
     sections: [
       AppLayoutSection,
-      AuthShellSection,
+      AuthLayoutSection,
       BreadcrumbsSection,
       MenuSection,
       PaginationSection,
@@ -251,7 +254,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
   {
     path: 'practice',
     title: 'Practice',
-    sections: [DoDontSection, TokenDisciplineSection],
+    sections: [DoDontSection, TokenDisciplineSection, SignalFormsSection],
   },
   {
     path: 'reference',

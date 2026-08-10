@@ -10,6 +10,7 @@ import {
   output,
   viewChild,
 } from '@angular/core';
+import { optionalBound } from '../../core/field-bounds';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
 import { SpinnerComponent } from '../spinner/spinner.component';
@@ -25,6 +26,7 @@ import { nextControlId } from '../field-ids';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
 import type { InputType } from './input.types';
 import type { DsSize } from '../../core/size';
+import { inFieldGroup } from '../field-group/field-group.token';
 import { resolveReserveMessage } from '../field-defaults';
 
 @Component({
@@ -37,6 +39,7 @@ import { resolveReserveMessage } from '../field-defaults';
     FieldMessageComponent,
     FieldClickFocusDirective,
   ],
+  host: { '[class.in-group]': 'inGroup' },
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -50,6 +53,10 @@ import { resolveReserveMessage } from '../field-defaults';
 })
 export class InputComponent extends DsControlValueAccessor<string> {
   private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
+  /** Segment of a ds-field-group: the group owns the border, radius and focus
+   *  ring, so .in-group strips this control back to its bare contents. */
+  protected readonly inGroup = inFieldGroup();
+
 
   /** Text value, two-way bound. */
   readonly value = model<string>('');
@@ -91,6 +98,20 @@ export class InputComponent extends DsControlValueAccessor<string> {
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Prevents editing while still allowing focus and selection. */
   readonly readOnly = input(false, { transform: booleanAttribute });
+  /**
+   * The contract spelling of `readOnly`, a second input because signal forms binds
+   * by NAME — a `readonly()` rule was reaching nothing before this existed.
+   */
+  readonly readonlyBinding = input(false, {
+    // The alias IS the point: signal forms binds by name, and the contract
+    // spells it `readonly` where the DS spells it `readOnly`.
+    // eslint-disable-next-line @angular-eslint/no-input-rename
+    alias: 'readonly',
+    transform: booleanAttribute,
+  });
+  protected readonly isReadOnly = computed(
+    () => this.readOnly() || this.readonlyBinding(),
+  );
   /** Applies error styling and marks the field `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Applies success styling to the field. */
@@ -108,9 +129,13 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Native `name` attribute. */
   readonly name = input<string | null>(null);
   /** Native `min` attribute — applies when `type="number"`. */
-  readonly min = input<number | null>(null);
+  readonly min = input<number | null, number | null | undefined>(null, {
+    transform: optionalBound,
+  });
   /** Native `max` attribute — applies when `type="number"`. */
-  readonly max = input<number | null>(null);
+  readonly max = input<number | null, number | null | undefined>(null, {
+    transform: optionalBound,
+  });
   /** Native `step` attribute — applies when `type="number"`. */
   readonly step = input<number | null>(null);
   /** Native autocomplete token (e.g. "email", "current-password"). */
@@ -127,7 +152,20 @@ export class InputComponent extends DsControlValueAccessor<string> {
   readonly ariaDescribedBy = input<string | null>(null);
   /** Hard character cap — applies the native maxlength attribute and shows a
    *  live "{current}/{max}" counter below the field. */
-  readonly maxLength = input<number | null>(null);
+  readonly maxLength = input<number | null, number | null | undefined>(null, {
+    transform: optionalBound,
+  });
+  // Signal forms binds these by name; without them a `pattern()` or `minLength()`
+  // rule validated in the form model while the native element advertised nothing.
+  /** Native `minlength` attribute. */
+  readonly minLength = input<number | null, number | null | undefined>(null, {
+    transform: optionalBound,
+  });
+  /** Native `pattern` attribute — signal forms sends the schema's RegExp list. */
+  readonly pattern = input<readonly RegExp[], readonly RegExp[] | string | undefined>([], {
+    transform: (value) =>
+      value === undefined ? [] : typeof value === 'string' ? [new RegExp(value)] : value,
+  });
   /** Mobile keyboard hints — forwarded to the native input as attributes. */
   readonly enterKeyHint = input<
     'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send' | null
@@ -169,6 +207,16 @@ export class InputComponent extends DsControlValueAccessor<string> {
     return this.type() === 'search';
   });
 
+  /** A native `pattern` takes ONE expression; the schema can carry several, so
+   *  they are ANDed with lookaheads rather than silently dropping all but one. */
+  protected readonly patternAttribute = computed(() => {
+    const expressions = this.pattern();
+    if (!expressions.length) {
+      return null;
+    }
+
+    return expressions.map((expression) => `(?=${expression.source})`).join('') + '.*';
+  });
   protected readonly uid = nextControlId('ds-input');
   protected readonly hintId = computed(() =>
     this.message().text ? `${this.uid}-hint` : null,
@@ -238,7 +286,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
     if (this.isDisabled()) {
       parts.push('disabled');
     }
-    if (this.readOnly()) {
+    if (this.isReadOnly()) {
       parts.push('read-only');
     }
     if (this.loading()) {
@@ -253,7 +301,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
 
   /** Move keyboard focus to the native input — public so a host can drive it
    *  deliberately, e.g. focusing the first invalid field on a failed submit. */
-  focus(options?: FocusOptions): void {
+  override focus(options?: FocusOptions): void {
     this.control()?.nativeElement.focus(options);
   }
 

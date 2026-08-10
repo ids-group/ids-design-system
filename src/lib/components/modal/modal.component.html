@@ -13,10 +13,16 @@
       [size]="size()"
       [error]="error()"
       [title]="title()"
+      [subtitle]="subtitle()"
+      [dividers]="dividers()"
       (closed)="onClose()"
     >
       <ng-container eyebrow>
         <ng-content select="[eyebrow]"></ng-content>
+      </ng-container>
+
+      <ng-container title-badge>
+        <ng-content select="[title-badge]"></ng-content>
       </ng-container>
 
       <ng-container body>

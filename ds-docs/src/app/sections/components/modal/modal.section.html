@@ -63,6 +63,152 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Title badge · subtitle
+  </h3>
+
+  <p class="block-desc t-s">
+    A header richer than one string, without leaving the component: project a
+    status chip into
+    <code class="t-mono-inline">
+      [title-badge]
+    </code> beside the title, and set
+    <code class="t-mono-inline">
+      subtitle
+    </code> for the line under it. The accessible
+    name stays the
+    <code class="t-mono-inline">
+      title
+    </code> string either way — projected
+    markup never enters
+    <code class="t-mono-inline">
+      aria-labelledby
+    </code>. Same shape as
+    <code class="t-mono-inline">
+      ds-page-header
+    </code>.
+  </p>
+
+  <div class="modal-grid modal-grid--1">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-modal-card
+          title="Fleet cover — commercial"
+          subtitle="Aviva · Motor fleet · renews 12 Mar"
+          size="md"
+          [showClose]="false"
+        >
+          <ds-badge
+            title-badge
+            status="success"
+          >
+            Active
+          </ds-badge>
+
+          <span body>
+            The badge sits on the title line and the subtitle carries the
+            record's coordinates, so neither has to be crammed into the title.
+          </span>
+
+          <ng-container actions>
+            <ds-button
+              color="neutral"
+              variant="outline"
+            >
+              Close
+            </ds-button>
+          </ng-container>
+        </ds-modal-card>
+      </div>
+
+      <div class="state-cell__label">
+        badge + subtitle
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Without dividers
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [dividers]="false"
+    </code> drops the rules and tightens the
+    vertical padding in one move, because those are one design decision. Hiding
+    the rules alone —
+    <code class="t-mono-inline">
+      --ds-modal-divider: transparent
+    </code> —
+    leaves the header and body padding stacked into a gap sized for a rule that
+    is no longer drawn.
+  </p>
+
+  <div class="modal-grid modal-grid--2">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-modal-card
+          title="Archive this record"
+          size="sm"
+          [showClose]="false"
+        >
+          <span body>
+            Archived records stay searchable and can be restored for 30 days.
+          </span>
+
+          <ng-container actions>
+            <ds-button
+              color="neutral"
+              variant="outline"
+            >
+              Cancel
+            </ds-button>
+
+            <ds-button>
+              Archive
+            </ds-button>
+          </ng-container>
+        </ds-modal-card>
+      </div>
+
+      <div class="state-cell__label">
+        default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-modal-card
+          title="Archive this record"
+          size="sm"
+          [showClose]="false"
+          [dividers]="false"
+        >
+          <span body>
+            Archived records stay searchable and can be restored for 30 days.
+          </span>
+
+          <ng-container actions>
+            <ds-button
+              color="neutral"
+              variant="outline"
+            >
+              Cancel
+            </ds-button>
+
+            <ds-button>
+              Archive
+            </ds-button>
+          </ng-container>
+        </ds-modal-card>
+      </div>
+
+      <div class="state-cell__label">
+        dividers false
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Sizes
   </h3>
 

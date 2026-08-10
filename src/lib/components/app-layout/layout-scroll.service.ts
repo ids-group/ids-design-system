@@ -16,6 +16,18 @@ const CANCEL_EVENTS = ['wheel', 'touchstart', 'keydown'] as const;
 const pathOf = (url: string): string => url.split(/[?#]/)[0];
 
 /**
+ * When the layout resets the content scroll to the top.
+ *
+ * `'path'` (default) is today's behaviour: only when navigation lands on a
+ * different PATH, so a search, a sort or a page step on the same screen keeps
+ * the reader's place. `'always'` resets on every navigation, which is what a
+ * server-paged list usually wants — a new page should start at the top.
+ * `'never'` hands the decision back to the screen, which can still call
+ * `LayoutScrollService.scrollToTop()` itself.
+ */
+export type DsScrollReset = 'path' | 'never' | 'always';
+
+/**
  * Owns the layout's content scroller. In the fixed-frame layout the window never
  * scrolls, so the router's built-in window-based scrolling no-ops — this service
  * resets the registered container to the top when navigation lands on a different
@@ -44,6 +56,7 @@ export class LayoutScrollService {
 
   // null = restoration off, which is the default.
   private restoreTimeoutMs: number | null = null;
+  private resetStrategy: DsScrollReset = 'path';
   private armed = false;
   private pendingOffset: number | null = null;
   private endRestore: (() => void) | null = null;
@@ -55,7 +68,7 @@ export class LayoutScrollService {
       // Skipped while a restore is armed for this very navigation: the reset would
       // undo the offset we are about to apply.
       .subscribe(() => {
-        if (!this.armed) {
+        if (this.resetStrategy === 'path' && !this.armed) {
           this.scrollToTop();
         }
       });
@@ -93,6 +106,11 @@ export class LayoutScrollService {
   /** Wiring: `ds-app-layout` mirrors its `restoreScroll` inputs through here. */
   configureRestore(timeoutMs: number | null): void {
     this.restoreTimeoutMs = timeoutMs;
+  }
+
+  /** Wiring: `ds-app-layout` mirrors its `scrollReset` input through here. */
+  configureReset(strategy: DsScrollReset): void {
+    this.resetStrategy = strategy;
   }
 
   scrollToTop(): void {
@@ -167,6 +185,12 @@ export class LayoutScrollService {
   }
 
   private onNavigationEnd(): void {
+    // 'always' resets on navigations `pathChanged` deliberately ignores — a query
+    // or fragment step on the same screen. Guarded by `armed` for the same reason
+    // the path reset is: a restore about to run must not be undone first.
+    if (this.resetStrategy === 'always' && !this.armed) {
+      this.scrollToTop();
+    }
     if (!this.armed || this.pendingOffset === null) {
       this.armed = false;
 

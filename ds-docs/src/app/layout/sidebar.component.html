@@ -3,7 +3,7 @@
   [class.is-collapsed]="effectiveCollapsed()"
   [class.is-drawer]="layout.railOverlay()"
 >
-  <!-- The brand row also heads the OVERLAY: the shell's rail is a bare
+  <!-- The brand row also heads the OVERLAY: the layout's rail is a bare
            container, so nothing else names the panel now that the ds-drawer
            that used to wrap it is gone. Collapsing is desktop-only (the overlay
            is always full width), and closing is overlay-only. -->
@@ -83,6 +83,7 @@
           <a
             class="link"
             [routerLink]="urlForAnchor(group.path, item.anchor)"
+            [state]="linkState(group.path)"
             [class.is-active]="isActive(item.anchor)"
             (click)="onItem(item.anchor)"
           >

@@ -419,7 +419,7 @@
   --modal-w-fullscreen: calc(100vw - var(--space-6));
   --modal-h-fullscreen: calc(100vh - var(--space-6));
 
-  /* Auth shell */
+  /* Auth layout */
   --auth-card-w: 420px;
 
   /* Drawer */
@@ -442,9 +442,6 @@
   --field-floating-label-lh: 14px;
   --field-floating-label-top: 8px;
   --field-num-stepper-w: var(--space-8);
-
-  /* Search */
-  --search-h: var(--hit-md);
 
   /* OTP / PIN input — one box per digit. */
   --otp-cell-w: var(--space-12);   /* 48px */

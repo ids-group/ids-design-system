@@ -615,13 +615,14 @@
       sortMode
     </code> says who sorts —
     <code class="t-mono-inline">
-      "client"
-    </code> (the default) has the table
-    reorder its own rows, <code class="t-mono-inline"> "server" </code> emits
+      "server"
+    </code> (the default) emits
     <code class="t-mono-inline">
       (sortChange)
     </code> and leaves ordering to
-    you, and <code class="t-mono-inline"> "none" </code> drops the affordance so
+    you, <code class="t-mono-inline"> "client" </code> has the table reorder its
+    own rows and is what a table holding EVERY row wants,
+    and <code class="t-mono-inline"> "none" </code> drops the affordance so
     a <code class="t-mono-inline"> sortable </code> column cannot draw a header
     that does nothing. 12 rows across three pages;
     <code class="t-mono-inline">
@@ -906,6 +907,22 @@
     </code>.
   </p>
 
+  <p class="block-desc t-s">
+    <strong>
+      The first resize records a width for EVERY visible column, not just the one
+      you dragged — deliberately.
+    </strong> Until then the untouched columns are
+    auto-sized, so the browser redistributes whatever the dragged column gives up
+    and columns nobody touched visibly jump. Measuring them all once, at the first
+    grab, keeps the auto-sized geometry instead of losing it. The consequence to
+    expect: if you persist
+    <code class="t-mono-inline">
+      [(columnWidths)]
+    </code>, one drag
+    fills the map for the whole row. That is the saved layout, not a leak — and a
+    second drag adds nothing further.
+  </p>
+
   <ds-table
     caption="Records"
     [data]="events"
@@ -1054,6 +1071,26 @@
     it in a popover — an unclipped cell passes the click through to the row.
   </p>
 
+  <p class="block-desc t-s">
+    <strong>
+      Only columns that asked for it are watched, and that is the point.
+    </strong>
+    Clip detection runs on cells in a
+    <code class="t-mono-inline">
+      truncate
+    </code> column, not on every
+    overflowing cell in the table: a click handler on every
+    <code class="t-mono-inline">
+      &lt;td&gt;
+    </code> would swallow the row click on
+    an interactive table. Within such a column it does look deeper than the cell
+    itself — a
+    <code class="t-mono-inline">
+      dsCellTemplate
+    </code> puts the ellipsis on a
+    descendant, so testing only the wrapper would miss it.
+  </p>
+
   <ds-table
     caption="Records"
     [data]="truncateRows"
@@ -1145,6 +1182,77 @@
   </ds-table>
 
   <h3 class="block-title t-h4">
+    Server-side filtering, and a filter of your own
+  </h3>
+
+  <p class="block-desc t-s">
+    Header filters default to
+    <code class="t-mono-inline">
+      filterMode="server"
+    </code>: the table tracks
+    <code class="t-mono-inline">
+      columnFilters
+    </code> without filtering anything, so
+    your request drives the rows; pass the real domain through
+    <code class="t-mono-inline">
+      columnFilterOptions
+    </code>. That is the right default because
+    a paged table filtering locally would filter what the server already
+    filtered, over a checklist offering only the values on THIS page. Declare
+    <code class="t-mono-inline">
+      filterMode="client"
+    </code> when the table holds every
+    row and should filter them itself — there is a dev warning for the giveaway
+    case, a filterable column on a table that binds no `total` and declares no
+    mode.
+    <code class="t-mono-inline">
+      filterMode="none"
+    </code> drops the affordance entirely.
+  </p>
+
+  <p class="block-desc t-s">
+    When the criterion is not a list of values — a date range, a numeric
+    threshold, an async lookup — project the panel instead. The table keeps the
+    header button, the popover and the active-filter styling; only the contents
+    change. It cannot know whether YOUR criterion is set, so
+    <code class="t-mono-inline">
+      active
+    </code> is how the highlight is told.
+  </p>
+
+  <pre class="t-mono-block"><code>&lt;ng-template dsHeaderFilter="opened" [active]="!!range()" let-close="close"&gt;
+  &lt;ds-date-picker mode="range" [(value)]="range" /&gt;
+  &lt;ds-button size="sm" (pressed)="apply(); close()"&gt;Apply&lt;/ds-button&gt;
+&lt;/ng-template&gt;</code></pre>
+
+  <h3 class="block-title t-h4">
+    What a screen reader is told
+  </h3>
+
+  <p class="block-desc t-s">
+    Sorting and paging are read off the header and the pager by everyone else;
+    the table now says them out loud too. One
+    <code class="t-mono-inline">
+      role="status"
+    </code> region carries "Sorted by Owner,
+    ascending" and "Showing 1–25 of 240", with loading taking precedence while it
+    lasts — announcing a new sort order over rows that are still being replaced
+    describes a state the reader cannot inspect. Both strings are inputs
+    (<code class="t-mono-inline">
+      sortAnnouncement
+    </code>,
+    <code class="t-mono-inline">
+      rangeAnnouncement
+    </code>) taking the facts and
+    returning the sentence, so translation and word order stay yours; return an
+    empty string to stay silent. The first render is silent regardless —
+    <code class="t-mono-inline">
+      aria-live="polite"
+    </code> announces changes, not
+    initial content.
+  </p>
+
+  <h3 class="block-title t-h4">
     Virtual scroll
   </h3>
 
@@ -1189,5 +1297,57 @@
     [selectable]="true"
     [zebra]="true"
     [stickyFirstColumn]="true"
+  />
+
+  <h3 class="block-title t-h4">
+    Lazy loading
+  </h3>
+
+  <p class="block-desc t-s">
+    The same 10 000 records, except the table starts with none of them. With
+    <code class="t-mono-inline">
+      [lazy]="true"
+    </code> the window asks for the range
+    it is about to show through
+    <code class="t-mono-inline">
+      (lazyLoad)
+    </code>, and every index the host has
+    not filled yet renders a skeleton row. Scroll fast and you outrun the fetch
+    — that is what the skeletons are for.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      data
+    </code> is a SPARSE array
+    <code class="t-mono-inline">
+      total
+    </code> long: write each fetched row at
+    its absolute index. The scroller is sized from
+    <code class="t-mono-inline">
+      total
+    </code>, not from what has arrived, so
+    the scrollbar tells the truth from the first frame. The demo answers after
+    600 ms; a request already in flight is never re-sent.
+  </p>
+
+  <p class="block-desc t-s">
+    Requests so far:
+    <code class="t-mono-inline">
+      {{ lazyRequests().join(' · ') || 'none yet' }}
+    </code>
+  </p>
+
+  <ds-table
+    caption="Ten thousand records, fetched as they scroll into view"
+    maxHeight="420px"
+    [data]="lazyRows()"
+    [columns]="bulkColumns"
+    [total]="lazyTotal"
+    [lazy]="true"
+    [virtualScroll]="true"
+    [virtualRowSize]="44"
+    [zebra]="true"
+    (lazyLoad)="onLazyLoad($event)"
   />
 </docs-section>

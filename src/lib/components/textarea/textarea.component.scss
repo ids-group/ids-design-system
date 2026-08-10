@@ -2,7 +2,7 @@
 
 /* ============================================================
    FIELD (multiline text input subset)
-   Mirrors input.component.scss `.field` shell so consumers can
+   Mirrors input.component.scss `.field` box so consumers can
    override via the same `--ds-input-*` token family. The only
    visual divergence is the inner <textarea>: vertical resize,
    min-height driven by --field-textarea-rows-min, and a
@@ -123,17 +123,14 @@
     }
   }
 
-  /* Sizes — only padding scales; height stays driven by rows + resize.
-     Vertical pad scales with size; horizontal still uses the input-family. */
+  /* Sizes — only padding scales; height stays driven by rows + resize. The inner
+     textarea's vertical pad is set with the pins at the end of this file, which
+     out-rank anything declared here. */
   &.sm .control {
     padding: 0 var(--space-2);
-
-    textarea { padding: var(--space-2) 0; }
   }
   &.lg .control {
     padding: 0 var(--space-3);
-
-    textarea { padding: var(--space-4) 0; }
   }
 
   &.autosize .control textarea {
@@ -160,7 +157,17 @@
 
 /* The unencapsulated _field.scss docs specimen (shared .field/.control classes)
    reaches this component and zeroes the textarea's vertical padding. Pin it with
-   :host specificity + a concrete token so the text isn't glued to the top edge. */
+   :host specificity so the text isn't glued to the top edge — one rule per size,
+   because a single pin out-ranks the size variants above and pinned every textarea
+   to the md padding. */
 :host .field .control textarea {
-  padding-block: var(--ds-input-pad-y, var(--space-3));
+  padding-block: var(--_input-pad-y);
+}
+
+:host .field.sm .control textarea {
+  padding-block: var(--space-2);
+}
+
+:host .field.lg .control textarea {
+  padding-block: var(--space-4);
 }

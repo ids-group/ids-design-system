@@ -16,6 +16,7 @@
   --_drawer-width-md:               var(--ds-drawer-width,                  var(--drawer-w-md));
   --_drawer-width-lg:               var(--ds-drawer-width,                  var(--drawer-w-lg));
   --_drawer-enter-keyframes: var(--ds-drawer-enter-keyframes, ds-slide-edge-in);
+  --_drawer-leave-keyframes: var(--ds-drawer-leave-keyframes, ds-slide-edge-out);
   --_drawer-enter-duration: var(--ds-drawer-enter-duration, var(--ds-motion-enter-large-duration));
   --_drawer-enter-easing: var(--ds-drawer-enter-easing, var(--ds-motion-enter-large-easing));
   --_drawer-leave-duration: var(--ds-drawer-leave-duration, var(--ds-motion-exit-large-duration));
@@ -60,16 +61,13 @@
   animation-timing-function: var(--_drawer-enter-easing);
 
   &.closing {
-    animation-name: drawer-scrim-out;
+    animation-name: ds-fade-out;
     animation-duration: var(--_drawer-scrim-leave-duration);
     animation-timing-function: var(--_drawer-leave-easing);
     animation-fill-mode: forwards;
   }
 }
 
-@keyframes drawer-scrim-out {
-  to { opacity: 0; }
-}
 
 .drawer {
   position: absolute;
@@ -108,7 +106,7 @@
     bottom: 0;
     max-width: 100vw;
 
-    &.closing { animation-name: drawer-panel-close-right; }
+    &.closing { animation-name: var(--_drawer-leave-keyframes); }
   }
 
   &.left {
@@ -119,7 +117,7 @@
     bottom: 0;
     max-width: 100vw;
 
-    &.closing { animation-name: drawer-panel-close-left; }
+    &.closing { animation-name: var(--_drawer-leave-keyframes); }
   }
 
   &.top {
@@ -131,7 +129,7 @@
     width: auto;
     max-height: 80vh;
 
-    &.closing { animation-name: drawer-panel-close-top; }
+    &.closing { animation-name: var(--_drawer-leave-keyframes); }
   }
 
   &.bottom {
@@ -143,7 +141,7 @@
     width: auto;
     max-height: 80vh;
 
-    &.closing { animation-name: drawer-panel-close-bottom; }
+    &.closing { animation-name: var(--_drawer-leave-keyframes); }
   }
 
   .header {
@@ -188,22 +186,4 @@
     gap: var(--space-2);
     justify-content: flex-end;
   }
-}
-
-// The close keyframes stay local and literally named: onLeaveEnd() matches them
-// to tear the drawer down, so they must not be swappable.
-@keyframes drawer-panel-close-right {
-  to { transform: translateX(100%); }
-}
-
-@keyframes drawer-panel-close-left {
-  to { transform: translateX(-100%); }
-}
-
-@keyframes drawer-panel-close-top {
-  to { transform: translateY(-100%); }
-}
-
-@keyframes drawer-panel-close-bottom {
-  to { transform: translateY(100%); }
 }

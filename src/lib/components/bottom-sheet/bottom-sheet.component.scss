@@ -7,6 +7,7 @@
   --_bottom-sheet-scrim-color: var(--ds-bottom-sheet-scrim-color, var(--surface-scrim));
   --_bottom-sheet-title-text-color: var(--ds-bottom-sheet-title-text-color, var(--text-primary));
   --_bottom-sheet-enter-keyframes: var(--ds-bottom-sheet-enter-keyframes, ds-slide-edge-in);
+  --_bottom-sheet-leave-keyframes: var(--ds-bottom-sheet-leave-keyframes, ds-slide-edge-out);
   --_bottom-sheet-enter-duration: var(--ds-bottom-sheet-enter-duration, var(--ds-motion-enter-surface-duration));
   --_bottom-sheet-enter-easing: var(--ds-bottom-sheet-enter-easing, var(--ds-motion-enter-surface-easing));
   --_bottom-sheet-leave-duration: var(--ds-bottom-sheet-leave-duration, var(--ds-motion-exit-large-duration));
@@ -47,7 +48,7 @@
   animation-timing-function: var(--_bottom-sheet-enter-easing);
 
   &.closing {
-    animation-name: ds-sheet-fade-out;
+    animation-name: ds-fade-out;
     animation-duration: var(--_bottom-sheet-scrim-leave-duration);
     animation-timing-function: var(--_bottom-sheet-leave-easing);
     animation-fill-mode: forwards;
@@ -88,7 +89,7 @@
   }
 
   &.closing {
-    animation-name: ds-sheet-down;
+    animation-name: var(--_bottom-sheet-leave-keyframes);
     animation-duration: var(--_bottom-sheet-leave-duration);
     animation-timing-function: var(--_bottom-sheet-leave-easing);
     animation-fill-mode: forwards;
@@ -137,14 +138,4 @@
   &:not(:empty) {
     margin-top: var(--space-3);
   }
-}
-
-// The leave keyframes stay local and literally named: onLeaveEnd() matches
-// ds-sheet-down to tear the sheet down, so they must not be swappable.
-@keyframes ds-sheet-fade-out {
-  to { opacity: 0; }
-}
-
-@keyframes ds-sheet-down {
-  to { transform: translateY(100%); }
 }

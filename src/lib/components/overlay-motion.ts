@@ -1,5 +1,7 @@
 import type {
   FlexibleConnectedPositionStrategy,
+  Overlay,
+  OverlayConfig,
   OverlayRef,
 } from '@angular/cdk/overlay';
 
@@ -9,6 +11,27 @@ export type DsOverlayPlacement = 'top' | 'bottom' | 'left' | 'right';
 
 /** Public enter-motion tokens read by every `ds-overlay-pane`
  *  (styles/_overlay-motion.scss). */
+/**
+ * The theme's role layer, forwarded onto every portaled pane alongside whatever
+ * tokens the component names for itself.
+ *
+ * A pane lives under `<body>`, so nothing page- or component-scoped reaches it:
+ * a consumer who squared `--ds-radius-panel` got a square app with round
+ * dropdowns, and the only fix was re-declaring the roles on `.ds-overlay-pane`
+ * globally — a recipe every rebranding consumer had to rediscover. Roles belong
+ * with the motion tokens, which have always travelled this way.
+ */
+const ROLE_TOKENS = [
+  '--ds-radius-inner',
+  '--ds-radius-control',
+  '--ds-radius-panel',
+  '--ds-radius-pill',
+  '--ds-elevation-raised',
+  '--ds-elevation-overlay',
+  '--ds-elevation-floating',
+  '--ds-elevation-modal',
+] as const;
+
 const OVERLAY_MOTION_TOKENS = [
   '--ds-overlay-enter-keyframes',
   '--ds-overlay-enter-duration',
@@ -23,6 +46,65 @@ const OVERLAY_MOTION_TOKENS = [
  * on; `'dismiss'` is ambient — Escape, a press outside, the page scrolling away.
  */
 export type DsOverlayCloseCause = 'select' | 'dismiss';
+
+// Breathing room between a trigger and its panel. Negative when the panel flips
+// above, so the gap reads the same from either side.
+const DROPDOWN_GAP = 4;
+
+/**
+ * The geometry every DS dropdown shares: directly below the trigger with a small
+ * gap, flipping above when there is no room, no backdrop, repositioning rather
+ * than closing on scroll.
+ *
+ * `select`, `multi-select` and `autocomplete` each carried a byte-identical copy
+ * of this, which meant three places to change and three chances to drift. Width
+ * is deliberately NOT set here — each caller has its own policy (exact trigger
+ * width, or the trigger as a floor) and that is a real difference, not
+ * duplication.
+ *
+ * Returns the strategy alongside the config because `prepareOverlayEnter` needs
+ * the strategy itself, not just the config that holds it.
+ */
+export function dropdownOverlay(
+  overlay: Overlay,
+  trigger: HTMLElement,
+  panelClass: string | string[] = ['ds-dropdown-panel', 'ds-overlay-pane'],
+): {
+  positionStrategy: FlexibleConnectedPositionStrategy;
+  config: OverlayConfig;
+} {
+  const positionStrategy = overlay
+    .position()
+    .flexibleConnectedTo(trigger)
+    .withPositions([
+      {
+        originX: 'start',
+        originY: 'bottom',
+        overlayX: 'start',
+        overlayY: 'top',
+        offsetY: DROPDOWN_GAP,
+      },
+      {
+        originX: 'start',
+        originY: 'top',
+        overlayX: 'start',
+        overlayY: 'bottom',
+        offsetY: -DROPDOWN_GAP,
+      },
+    ]);
+
+  return {
+    positionStrategy,
+    config: {
+      positionStrategy,
+      hasBackdrop: false,
+      // The global panel skin lives in styles/_dropdown-overlay.scss: a portaled
+      // node sits outside the host's DOM tree, so `:host ::ng-deep` cannot reach it.
+      panelClass,
+      scrollStrategy: overlay.scrollStrategies.reposition(),
+    },
+  };
+}
 
 // Backstop for the leave animation: if the class never produces an animation
 // (a pane that is display:none, a consumer stylesheet that removed it), the
@@ -107,6 +189,18 @@ export function forwardOverlayTokens(
   for (const token of tokens) {
     const value = hostStyle.getPropertyValue(token).trim();
     if (value) {
+      paneStyle.setProperty(token, value);
+    }
+  }
+
+  // Roles resolve at :root, so every host has a value for them and copying it
+  // unconditionally would PIN it inline on the pane — an open panel would then
+  // ignore a theme switch until it was reopened. Forward only where the host
+  // actually overrides the root, which is the case the pane cannot see.
+  const rootStyle = getComputedStyle(host.ownerDocument.documentElement);
+  for (const token of ROLE_TOKENS) {
+    const value = hostStyle.getPropertyValue(token).trim();
+    if (value && value !== rootStyle.getPropertyValue(token).trim()) {
       paneStyle.setProperty(token, value);
     }
   }

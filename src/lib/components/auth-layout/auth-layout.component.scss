@@ -1,0 +1,185 @@
+/* The layout's own furniture COMPRESSES as the viewport gets shorter, so it is
+   never what pushes a card into scrolling. Three values carry that, and the
+   measured 88px they save between a tall viewport and a landscape phone is
+   exactly theirs: the block padding (48px, two edges), the column gap (32px,
+   two gaps) and the letter-mark tile (8px). Each multiplier reaches its MAX at
+   an 800px-tall viewport.
+
+   800px is a VIEWPORT height, not a screen height, and plenty of desktops sit
+   below it: a 1366x768 laptop lands near 630px after browser and OS chrome, and
+   a 1080p screen at 150% display scaling lands near 585px. Those users get
+   compressed furniture — which is the intended behaviour, but it is not "only
+   phones", so do not read the clamps as desktop-inert.
+
+   Type is deliberately NOT clamped. It used to be, and it bought nothing: the
+   wordmark sits in a flex row beside the tile, whose height (4svh) exceeds the
+   wordmark's line box (2.75svh x 1.25 = 3.4375svh) at every viewport height, and
+   the tile's glyph lives in a fixed-size grid box. Both clamps moved type around
+   for zero vertical gain while shrinking the brand against a fixed 14px tagline —
+   worst for the users who scale their display up.
+
+   `svh`, not `dvh`, for the clamps: `dvh` changes as the mobile URL bar hides,
+   which would re-space the column mid-scroll. `svh` is the URL-bar-visible
+   height, so it holds still — and it is also unaffected by the software
+   keyboard, which resizes the visual viewport only. `min-height` deliberately
+   stays on `dvh`: `100svh` would leave a strip of body background below the
+   host once the URL bar retracts, visible to anyone overriding the layout's
+   background.
+
+   NOT pinkmoon's approach for the same exercise, which pins the masthead and the
+   footer with `position: absolute` (top/bottom) so they leave the flow entirely.
+   That buys more room — but a DS card holds arbitrary content, and out-of-flow
+   chrome OVERLAPS a tall form instead of scrolling past it. Compression cannot
+   overlap. The limit is honest either way: a card taller than the space left
+   still scrolls, and should.
+
+   The host is the ONLY full-height box here. The port this replaces nested a
+   100vh wrapper inside a 100dvh one, which scrolls a page whose content fits.
+
+   `.auth` is centred with auto margins rather than centre ALIGNMENT. While the
+   host is free to grow — the default, `min-height: 100dvh` — the two are
+   identical. They part company once it cannot: embedded through
+   `--ds-auth-layout-min-height: 100%` inside a fixed-height parent, a form
+   taller than the box lands 115px above the scroll origin under
+   `align-items: center` (measured), and `scrollTop = 0` does not reach it. Auto
+   margins collapse to zero when free space runs out, so the same form pins to
+   the padding edge and scrolls normally. */
+
+:host {
+  --_auth-min-height: var(--ds-auth-layout-min-height, 100dvh);
+  --_auth-bg-color: var(--ds-auth-layout-bg-color, var(--surface-canvas));
+  --_auth-gap: var(--ds-auth-layout-gap, clamp(var(--space-4), 4svh, var(--space-8)));
+  --_auth-pad-block: var(--ds-auth-layout-pad-block, clamp(var(--space-4), 5svh, var(--space-10)));
+  --_auth-mark-size: var(--ds-auth-layout-mark-size, clamp(var(--space-6), 4svh, var(--space-8)));
+  --_auth-mark-radius: var(--ds-auth-layout-mark-radius, var(--ds-radius-control));
+  --_auth-card-max-width: var(--ds-auth-layout-card-max-width, var(--auth-card-w));
+  --_auth-mark-bg-color: var(--ds-auth-layout-mark-bg-color, var(--accent));
+  --_auth-mark-label-color: var(--ds-auth-layout-mark-label-color, var(--accent-on));
+
+  /* Not inherited from the global reset on purpose: `min-height: 100dvh` plus up
+     to 80px of padding overflows by exactly that padding under `content-box`,
+     which is the scrollbar this component exists to avoid. Stated here so it
+     survives a consumer composing the style partials without `styles/reset`. */
+  box-sizing: border-box;
+  display: flex;
+  min-height: var(--_auth-min-height);
+  background-color: var(--_auth-bg-color);
+
+  /* Physical left/right, not logical: the safe area is a property of the device,
+     so in RTL the insets must NOT swap sides with the text direction.
+     These are 0 unless the HOST APP sets `viewport-fit=cover` in its viewport
+     meta — a cutout alone is not enough, and the library cannot set it. */
+  padding-block:
+    calc(var(--_auth-pad-block) + env(safe-area-inset-top, 0px))
+    calc(var(--_auth-pad-block) + env(safe-area-inset-bottom, 0px));
+  padding-left: calc(var(--space-4) + env(safe-area-inset-left, 0px));
+  padding-right: calc(var(--space-4) + env(safe-area-inset-right, 0px));
+}
+
+.auth {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--_auth-gap);
+  margin: auto;
+  width: 100%;
+  max-width: var(--_auth-card-max-width);
+}
+
+/* Brand lockup and tagline read as one block, set apart from the card by the
+   column's larger gap. */
+.masthead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(var(--space-1), 1svh, var(--space-2));
+
+  /* Nothing to show — no brand text, no projected logo, no tagline. Hidden
+     rather than left empty, because an empty flex child still takes the
+     column's gap and would push the card off centre.
+     `:not(:has(*))` rather than `:empty`, which a single whitespace text node
+     defeats — the same correction ds-filter-bar's slots already carry. */
+  &:has(> .brand:not(:has(*))):not(:has(> .tagline)) {
+    display: none;
+  }
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+
+  &:not(:has(*)) {
+    display: none;
+  }
+
+  /* A projected logo is the production case — the letter-mark tile is only the
+     fallback — so it is the one thing that must not be free to set the masthead's
+     height. Pierces encapsulation because projected nodes carry the CONSUMER's
+     attribute, not this component's (same reason as ds-field-group); anchored on
+     `.brand` so it compiles to a scoped rule and not a global one, and matched by
+     the slot's own attribute as a DIRECT child so a logo's inner markup is left
+     alone. NOTE: ds-sidenav's identical `[brand]` slot is deliberately
+     unconstrained, so these two diverge until that is settled. */
+  ::ng-deep > [brand] {
+    /* `none` by default: constraining a projected logo that consumers already ship
+       unconstrained would silently resize it. Opt in with the tile's own size —
+       `--ds-auth-layout-brand-max-height: var(--ds-auth-layout-mark-size)` — or any
+       height. ds-sidenav's identical slot is unconstrained too. */
+    max-height: var(--ds-auth-layout-brand-max-height, none);
+    width: auto;
+  }
+}
+
+/* The sidenav's letter-mark in spirit — same accent tile, same glyph — but NOT
+   pixel-identical: the rail's is a fixed 28px at weight 800, this one is 24-32px
+   at weight 700. Aligning them is a design call, not a bug fix; until it is
+   made, do not describe them as the same tile. */
+.mark {
+  display: grid;
+  place-items: center;
+  width: var(--_auth-mark-size);
+  height: var(--_auth-mark-size);
+
+  /* The row is a flex line capped at --auth-card-w; without this a long wordmark
+     shrinks the tile horizontally while its height stays fixed, i.e. the square
+     accent tile becomes a rectangle. */
+  flex-shrink: 0;
+  border-radius: var(--_auth-mark-radius);
+  background-color: var(--_auth-mark-bg-color);
+  color: var(--_auth-mark-label-color);
+  font: var(--font-weight-bold) var(--font-size-m) / 1 var(--font-sans);
+}
+
+/* Back to the fixed size this had before the clamp — i.e. what 0.8.0 ships — so
+   this is a revert of unreleased work, not a default change. Note the line box
+   (22 x 1.25 = 27.5px) does exceed the tile's 24px floor, so on a viewport under
+   ~688px the wordmark, not the tile, sets the brand row's height. Dropping to
+   --font-size-h5 would remove that and match the sidenav, but it would shrink the
+   lockup for every 0.8.0 consumer — a default change, and this repo's release gate
+   holds those for the batch after 0.9.0. */
+.brand-name {
+  font: var(--font-weight-extrabold) var(--font-size-h4) / var(--line-height-snug) var(--font-sans);
+  color: var(--text-primary);
+}
+
+.tagline {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--font-size-s);
+  text-align: center;
+}
+
+.card {
+  width: 100%;
+}
+
+.support {
+  color: var(--text-tertiary);
+  font-size: var(--font-size-xs);
+  text-align: center;
+
+  &:empty {
+    display: none;
+  }
+}

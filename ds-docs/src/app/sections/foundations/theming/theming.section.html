@@ -61,9 +61,7 @@
     bootstrap; set the attribute before first paint to avoid a flash:
   </p>
 
-  <pre class="t-mono-block">
-    {{ osFollowSnippet }}
-  </pre>
+  <pre class="t-mono-block">{{ osFollowSnippet }}</pre>
 
   <h3 class="block-title t-h4">
     Three layers
@@ -163,9 +161,7 @@
     contrast across themes.
   </p>
 
-  <pre class="t-mono-block">
-    {{ activationSnippet }}
-  </pre>
+  <pre class="t-mono-block">{{ activationSnippet }}</pre>
 
   <h3 class="block-title t-h4">
     Writing your own theme or brand
@@ -198,9 +194,7 @@
     block.
   </p>
 
-  <pre class="t-mono-block">
-    {{ brandSnippet }}
-  </pre>
+  <pre class="t-mono-block">{{ brandSnippet }}</pre>
 
   <p class="theming-note t-xs">
     Leave <code class="t-mono-inline">--primary-hover</code> /
@@ -220,7 +214,77 @@
     Picking a theme (consumer)
   </h3>
 
-  <pre class="t-mono-block">
-    {{ consumerSnippet }}
-  </pre>
+  <pre class="t-mono-block">{{ consumerSnippet }}</pre>
+
+  <h3 class="block-title t-h4">
+    Worked example — a square brand
+  </h3>
+
+  <p class="block-desc t-s">
+    The most common whole-brand change, and the one most often done the long way:
+    a consumer audit found <strong>twelve</strong> scattered
+    <code class="t-mono-inline">
+      --ds-&lt;component&gt;-radius: 0
+    </code> declarations
+    written one component at a time. Four lines replace all of them.
+  </p>
+
+  <pre class="t-mono-block">{{ squareSnippet }}</pre>
+
+  <p class="block-desc t-s">
+    <strong>
+      Three role declarations do it, and as of 2026-08-10 that is finally true.
+    </strong> Measured: on a component page, zeroing
+    <code class="t-mono-inline">
+      --ds-radius-inner
+    </code>,
+    <code class="t-mono-inline">
+      -control
+    </code> and
+    <code class="t-mono-inline">
+      -panel
+    </code> squares
+    <strong>
+      every
+    </strong> rounded surface. It used to leave five behind —
+    thirty-three small affordances read
+    <code class="t-mono-inline">
+      --radius-sm
+    </code> directly, and
+    the shared dropdown panel read
+    <code class="t-mono-inline">
+      --radius-md
+    </code>; both now
+    resolve their role.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      Zeroing the SCALE instead is the blunter option, and it reaches one more
+      thing:
+    </strong> the focus-ring radii, which deliberately follow the scale rather
+    than a role — a ring traces a box, it is not a surface a brand designs. Use it
+    if you want square focus rings too.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      Leave
+      <code class="t-mono-inline">
+        --radius-pill
+      </code> alone either way.
+    </strong> A
+    switch track, an avatar and a status dot are round because of what they are,
+    not because of the brand — verified: with the scale zeroed, the switch track
+    stays fully rounded because it resolves the pill token instead.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      The roles also give you the partial case
+    </strong>, which the scale cannot
+    — one declaration moves a family and leaves its neighbour alone:
+  </p>
+
+  <pre class="t-mono-block">{{ squarePartialSnippet }}</pre>
 </docs-section>

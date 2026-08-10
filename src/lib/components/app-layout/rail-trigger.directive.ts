@@ -18,8 +18,8 @@ import { AppLayoutComponent } from './app-layout.component';
  * host element, and on `<ds-icon-button>` that is the wrapper, whose inner
  * `<button>` is what a screen reader actually reads. With a DS button, skip this
  * directive and bind its forwarding inputs instead —
- * `[ariaExpanded]="shell.railOverlay() ? shell.railOpen() : null"` and
- * `[ariaControls]="shell.railId"` off a `<ds-app-layout #shell>` template ref.
+ * `[ariaExpanded]="layout.railOverlay() ? layout.railOpen() : null"` and
+ * `[ariaControls]="layout.railId"` off a `<ds-app-layout #layout>` template ref.
  *
  * Both attributes are dropped while the rail is NOT an overlay: above the
  * breakpoint the rail is permanently in the layout, so `aria-expanded="false"`

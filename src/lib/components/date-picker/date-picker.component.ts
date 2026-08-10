@@ -18,7 +18,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { A11yModule } from '@angular/cdk/a11y';
 import {
@@ -28,6 +28,7 @@ import {
   type DsOverlayCloseCause,
   focusIsInside,
   forwardOverlayTokens,
+  dropdownOverlay,
   prepareOverlayEnter,
 } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
@@ -72,6 +73,7 @@ import type {
 } from './date-picker.types';
 import type { DsSize } from '../../core/size';
 import { resolveReserveMessage } from '../field-defaults';
+import { inFieldGroup } from '../field-group/field-group.token';
 
 let nextId = 0;
 const YEAR_PAGE_SIZE = 12;
@@ -107,12 +109,16 @@ interface DayCell {
       multi: true,
     },
   ],
-  host: { '[class.full-width]': 'fullWidth()' },
+  host: { '[class.in-group]': 'inGroup', '[class.full-width]': 'fullWidth()' },
 })
 export class DatePickerComponent
   extends DsControlValueAccessor<Date | RangeValue | null>
   implements OnDestroy
 {
+  /** Segment of a ds-field-group: the group owns the border, radius and focus
+   *  ring, so .in-group strips this control back to its bare contents. */
+  protected readonly inGroup = inFieldGroup();
+
   constructor() {
     super();
     // Renders through toFieldText so the field is fixed-width `_`-padded once any
@@ -466,6 +472,13 @@ export class DatePickerComponent
     if (this.invalidResolved()) {
       parts.push('error');
     }
+    // The indicator cannot be left to :focus-within: opening from the calendar
+    // glyph moves focus into the day grid, so the trigger would go dark while
+    // its OWN panel is open. A control stays visibly active for as long as it
+    // owns an open panel, wherever focus went.
+    if (this.isOpen()) {
+      parts.push('open');
+    }
 
     return parts.join(' ');
   });
@@ -732,32 +745,12 @@ export class DatePickerComponent
     if (this.isDisabled() || this.overlayRef) {
       return;
     }
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(this.anchor().nativeElement)
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-          offsetY: 4,
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
-          offsetY: -4,
-        },
-      ]);
-    const cfg: OverlayConfig = {
-      positionStrategy,
-      hasBackdrop: false,
-      panelClass: 'ds-overlay-pane',
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-    };
-    this.overlayRef = this.overlay.create(cfg);
+    const { positionStrategy, config } = dropdownOverlay(
+      this.overlay,
+      this.anchor().nativeElement,
+      'ds-overlay-pane',
+    );
+    this.overlayRef = this.overlay.create(config);
     prepareOverlayEnter(
       this.overlayRef,
       this.host.nativeElement,
@@ -835,6 +828,14 @@ export class DatePickerComponent
     this.overlayRef = null;
   }
 
+  /**
+   * Also the calendar glyph's handler. A POINTER open must not drag focus into
+   * the day grid: the reader did not ask to leave a field they may want to type
+   * in, and `allowInput` defaults to true. So focus follows what the field IS —
+   * typeable, and the caret stays; read-only, and the grid is the only thing
+   * worth focusing. The keyboard path is unaffected: ArrowDown on the field
+   * calls `open(true)` and enters the grid however the panel was opened.
+   */
   protected onFieldClick(): void {
     this.open(!this.allowInput());
     if (this.allowInput()) {

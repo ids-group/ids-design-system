@@ -69,7 +69,7 @@ export class SidebarComponent {
   });
   protected readonly activeAnchor = signal<string>('');
   protected readonly collapsed = signal<boolean>(this.readCollapsed());
-  // Read from the shell, not a second media query: ds-app-layout already owns the
+  // Read from the layout, not a second media query: ds-app-layout already owns the
   // lg breakpoint, and a copy here is the duplication its --bp-lg lesson was about.
   protected readonly effectiveCollapsed = computed(() =>
     this.layout.railOverlay() ? false : this.collapsed(),
@@ -85,7 +85,7 @@ export class SidebarComponent {
   // Group (page) of the last real navigation. The scroll-spy rewrites only the
   // URL's anchor segment WITHIN a page, so we compare the resolved GROUP (not the
   // raw path) to skip those self-updates without re-scrolling / re-observing.
-  private lastGroup: string | null = null;
+  private readonly lastGroup = signal<string | null>(null);
   // Whether the current page has >1 spy section — home/changelog have ≤1 and so
   // never sync an anchor into the URL.
   private multiSection = false;
@@ -99,7 +99,7 @@ export class SidebarComponent {
     this.setupWhenSectionsExist();
 
     // A different group page swaps its sections: reset scroll to the target section (or top) and re-scan `[data-anchor]`.
-    // Same-group anchor rewrites are skipped here to avoid observer thrash; the shell's content region is the scroll container, not window.
+    // Same-group anchor rewrites are skipped here to avoid observer thrash; the layout's content region is the scroll container, not window.
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
@@ -108,10 +108,10 @@ export class SidebarComponent {
       .subscribe((event) => {
         const url = (event as NavigationEnd).urlAfterRedirects.split('?')[0];
         const group = this.groupPathForUrl(url);
-        if (group === this.lastGroup) {
+        if (group === this.lastGroup()) {
           return;
         }
-        this.lastGroup = group;
+        this.lastGroup.set(group);
         setTimeout(() => {
           this.refreshObserver();
           this.scrollForNavigation(url);
@@ -134,7 +134,7 @@ export class SidebarComponent {
 
     // Sync the URL's anchor segment with the active section as the user scrolls
     // (/components/button → /components/segmented …) — replaceUrl so history
-    // isn't polluted, and dsSamePage so the shell does not read a scroll-driven
+    // isn't polluted, and dsSamePage so the layout does not read a scroll-driven
     // path rewrite as a page change and reset the scroll we are describing.
     // Single-section pages (home/changelog) carry no anchor.
     effect(() => {
@@ -287,6 +287,24 @@ export class SidebarComponent {
 
   protected isActive(anchor: string): boolean {
     return this.activeAnchor() === anchor;
+  }
+
+  /**
+   * Marks a link whose section is already on screen as same-page navigation.
+   *
+   * `onItem` scrolls those directly and synchronously, but the `routerLink`
+   * beside it still changes the path — and `ds-app-layout` resets the scroll on
+   * a path change, undoing it before the reader sees anything. Clicking the SAME
+   * item again then worked, because the second navigation was to an unchanged
+   * URL and triggered no reset. That is the "only opens on the second click".
+   *
+   * `dsSamePage` is the contract `LayoutNavigationService` documents for exactly
+   * this: a docs URL that names the reader's position changes the path without
+   * changing the page. The scroll-spy rewrite already used it; the click that
+   * causes the rewrite did not.
+   */
+  protected linkState(groupPath: string): { dsSamePage: true } | undefined {
+    return groupPath === this.lastGroup() ? { dsSamePage: true } : undefined;
   }
 
   // A group header is active when the active section belongs to it (the flat URL

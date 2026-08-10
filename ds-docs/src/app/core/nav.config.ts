@@ -45,6 +45,7 @@ export const NAV: NavGroup[] = [
       { label: 'Color picker', anchor: 'color-picker' },
       { label: 'Date picker', anchor: 'date-picker' },
       { label: 'Dropzone', anchor: 'dropzone' },
+      { label: 'Field group', anchor: 'field-group' },
       { label: 'Input', anchor: 'input' },
       { label: 'Multi-select', anchor: 'multi-select' },
       { label: 'Number stepper', anchor: 'number-stepper' },
@@ -66,7 +67,7 @@ export const NAV: NavGroup[] = [
     kind: 'component',
     items: [
       { label: 'App layout', anchor: 'app-layout' },
-      { label: 'Auth shell', anchor: 'auth-shell' },
+      { label: 'Auth layout', anchor: 'auth-layout' },
       { label: 'Breadcrumbs', anchor: 'breadcrumbs' },
       { label: 'Menu', anchor: 'menu' },
       { label: 'Pagination', anchor: 'pagination' },
@@ -174,6 +175,7 @@ export const NAV: NavGroup[] = [
     items: [
       { label: "Do / Don't", anchor: 'practice-do-dont' },
       { label: 'Token Discipline', anchor: 'practice-token-discipline' },
+      { label: 'Signal Forms', anchor: 'practice-signal-forms' },
     ],
   },
   {

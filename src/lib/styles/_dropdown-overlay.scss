@@ -5,6 +5,17 @@
 // declares the matching rules so the portaled panel renders styled.
 
 .ds-dropdown-panel {
+  /* The selected row used to paint straight from the theme roles, so a brand that
+     wanted a different selected treatment had to RETARGET --primary-* inside this
+     panel — and then track which other content in it read the same role. Named
+     hooks instead; the defaults are those roles, so nothing moves and a retuned
+     palette still flows through. Panel-level, not per-component: one partial
+     paints the rows for select, autocomplete and multi-select alike. */
+  --_option-selected-bg-color: var(--ds-option-selected-bg-color, var(--primary-subtitle));
+  --_option-selected-label-color: var(--ds-option-selected-label-color, var(--primary-strong));
+  --_option-selected-bg-color-hover: var(--ds-option-selected-bg-color-hover, var(--primary-muted));
+  --_option-check-color: var(--ds-option-check-color, var(--primary));
+
   .dropdown-panel {
     // Fill the cdk-overlay-pane width (set from trigger.getBoundingClientRect()
     // in dropdown.component.ts). Without `width: 100%` the panel is a flex
@@ -12,7 +23,7 @@
     width: 100%;
     background: var(--surface-overlay);
     border: var(--border-width-default) solid var(--border-default);
-    border-radius: var(--radius-md);
+    border-radius: var(--ds-radius-panel);
     box-shadow: var(--shadow-popover);
     padding: var(--space-1);
     max-height: 320px;
@@ -70,7 +81,7 @@
     font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     color: var(--text-primary);
     cursor: pointer;
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
     text-align: left;
     transition: background-color var(--duration-fast) var(--ease-standard);
 
@@ -88,7 +99,7 @@
     }
 
     .option-check {
-      color: var(--primary);
+      color: var(--_option-check-color);
       flex: 0 0 auto;
     }
 
@@ -101,20 +112,36 @@
       background: var(--surface-secondary);
     }
 
+    // Pressed. The equivalent rows elsewhere (ds-menu-item, ds-list-item) have
+    // had one since 2026-07-02; the picker panels were left with hover only, so
+    // a tap on a phone — where there is no hover at all — gave no feedback that
+    // the row had been hit. One rule here covers select, autocomplete and
+    // multi-select, which all render their options through this partial.
+    &:active:not(.is-disabled) {
+      background: var(--surface-muted);
+    }
+
     &:focus-visible {
       outline: none;
       box-shadow: var(--ds-control-focus-shadow);
     }
 
     &.is-selected {
-      background: var(--primary-subtitle);
-      color: var(--primary-strong);
+      background: var(--_option-selected-bg-color);
+      color: var(--_option-selected-label-color);
 
-      .option-icon { color: var(--primary-strong); }
+      .option-icon { color: var(--_option-selected-label-color); }
 
       &:hover:not(.is-disabled),
       &.is-active:not(.is-disabled) {
-        background: var(--primary-muted);
+        background: var(--_option-selected-bg-color-hover);
+      }
+
+      // Selected rows keep the brand family when pressed, for the same reason
+      // the hover above exists: falling back to the neutral pressed fill would
+      // strand the selected label colour on it.
+      &:active:not(.is-disabled) {
+        background: var(--_option-selected-bg-color);
       }
     }
 

@@ -86,14 +86,32 @@
   }
 
   &:hover::after,
-  &:active::after {
+  &:active::after,
+  &:focus-visible::after {
     background-color: var(--_table-sort-active-icon-color);
+  }
+
+  /* The handle is a hairline, so the standard ring would sit almost entirely
+     outside it and read as belonging to the neighbouring column. Widening the
+     line IS the focus indicator here, and the outline is dropped rather than
+     doubled. */
+  &:focus-visible {
+    outline: none;
+
+    &::after {
+      width: var(--border-width-strong);
+    }
   }
 }
 
 .hscroll-proxy {
   position: sticky;
-  bottom: 0;
+
+  /* `bottom: 0` pins it to the scrollport edge, which is wrong when the table
+     sits in a container with bottom padding — the bar then floats above the
+     content it belongs to. A consumer offsets it with a negative value equal to
+     that padding. */
+  bottom: var(--ds-table-hscroll-bottom, 0);
   overflow: auto hidden;
 }
 
@@ -107,6 +125,7 @@
 
 .table {
   /* Public --ds-table-* are read with fallbacks, never declared — consumer overrides inherit in. */
+  --_table-min-width: var(--ds-table-min-width, 0);
   --_table-bg-color:              var(--ds-table-bg-color,              var(--surface-default));
   --_table-row-hover-bg-color:    var(--ds-table-row-hover-bg-color,    var(--surface-secondary));
   --_table-row-selected-bg-color: var(--ds-table-row-selected-bg-color, var(--accent-subtitle));
@@ -127,6 +146,8 @@
   --_table-cell-pad-right: var(--ds-table-cell-pad-right, var(--_table-cell-pad-x));
   --_table-cell-pad-bottom: var(--ds-table-cell-pad-bottom, var(--_table-cell-pad-y));
   --_table-cell-pad-left: var(--ds-table-cell-pad-left, var(--_table-cell-pad-x));
+  --_table-head-pad-top: var(--ds-table-head-pad-top, var(--table-head-pad-y));
+  --_table-head-pad-bottom: var(--ds-table-head-pad-bottom, var(--table-head-pad-y));
   --_table-head-border-color: var(--ds-table-head-border-color, var(--_table-divider));
   --_table-head-weight: var(--ds-table-head-weight, var(--font-weight-bold));
   --_table-head-tracking: var(--ds-table-head-tracking, var(--letter-spacing-wider));
@@ -139,7 +160,7 @@
 
   thead th {
     text-align: left;
-    padding: var(--table-head-pad-y) var(--_table-cell-pad-right) var(--table-head-pad-y) var(--_table-cell-pad-left);
+    padding: var(--_table-head-pad-top) var(--_table-cell-pad-right) var(--_table-head-pad-bottom) var(--_table-cell-pad-left);
     font: var(--_table-head-weight) var(--_table-head-fs) / var(--line-height-base) var(--font-sans);
     letter-spacing: var(--_table-head-tracking);
     text-transform: uppercase;
@@ -347,7 +368,7 @@
     background: none;
     cursor: pointer;
     color: var(--icon-default);
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
     transition: color var(--duration-fast) var(--ease-standard);
 
     &:hover {
@@ -360,16 +381,26 @@
     }
   }
 
+  /* Retunes the density tokens the resolvers already read, rather than setting
+     `padding` on the cells. Pinning padding here out-specifies every
+     `--ds-table-*-pad-*` hook, so a compact table silently ignored all of them —
+     the same values, reached the way `[data-density]` reaches them. */
   &.compact {
-    tbody td,
-    thead th {
-      padding: var(--space-2) var(--space-3);
-    }
+    --table-cell-pad-x: var(--space-3);
+    --table-cell-pad-y: var(--space-2);
+    --table-head-pad-y: var(--space-2);
   }
 
   /* :nth-child cannot see past windowing — a rendered row's parity depends on its
      ABSOLUTE index, and the spacer rows are children too. Virtual mode gets the
      parity from a class instead. */
+
+  /* A readability floor: below this the columns stop shrinking and the wrap's
+     horizontal scroller takes over instead. Defaults to 0, so nothing changes
+     until a consumer sets one — a table with few columns should still be free to
+     be narrow. */
+  min-width: var(--_table-min-width);
+
   &.zebra:not(.virtual) tbody tr:nth-child(odd) td {
     background-color: var(--_table-row-stripe-bg-color);
   }
@@ -428,7 +459,7 @@
 
   &.cdk-drag-preview {
     background-color: var(--surface-default);
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
     box-shadow: var(--shadow-popover);
     padding: var(--space-1) var(--space-2);
   }
@@ -540,7 +571,7 @@
   box-sizing: border-box;
   padding: var(--space-1) var(--space-2);
   border: var(--border-width-default) solid var(--border-default);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--text-primary);
   background-color: var(--surface-default);
@@ -601,7 +632,7 @@
   margin: calc(-1 * var(--space-1)) 0;
   padding: var(--space-1) var(--space-2);
   border: var(--border-width-default) solid var(--accent);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--text-primary);
   background-color: var(--surface-default);

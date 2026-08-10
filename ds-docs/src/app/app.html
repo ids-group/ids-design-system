@@ -1,5 +1,5 @@
 <ds-app-layout
-  #shell
+  #layout
   railLabel="Navigation"
   [restoreScroll]="true"
   [(railOpen)]="navOpen"
@@ -24,8 +24,8 @@
           variant="standard"
           icon="menu"
           ariaLabel="Open navigation"
-          [ariaExpanded]="shell.railOverlay() ? shell.railOpen() : null"
-          [ariaControls]="shell.railOverlay() ? shell.railId : null"
+          [ariaExpanded]="layout.railOverlay() ? layout.railOpen() : null"
+          [ariaControls]="layout.railOverlay() ? layout.railId : null"
           (pressed)="navOpen.set(!navOpen())"
         />
 

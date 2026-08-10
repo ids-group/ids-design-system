@@ -87,7 +87,7 @@
       tabindex="-1"
       aria-hidden="true"
       [disabled]="isDisabled()"
-      (click)="open(true); $event.stopPropagation()"
+      (click)="onFieldClick(); $event.stopPropagation()"
     >
       <ds-icon
         name="calendar"

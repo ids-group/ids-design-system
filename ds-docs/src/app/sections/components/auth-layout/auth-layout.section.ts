@@ -4,7 +4,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
-  AuthShellComponent,
+  AuthLayoutComponent,
   BrandNameDirective,
   ButtonComponent,
   CheckboxComponent,
@@ -13,10 +13,10 @@ import {
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
-  selector: 'section-components-auth-shell',
+  selector: 'section-components-auth-layout',
   standalone: true,
   imports: [
-    AuthShellComponent,
+    AuthLayoutComponent,
     BrandNameDirective,
     ButtonComponent,
     CheckboxComponent,
@@ -25,7 +25,10 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   ],
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './auth-shell.section.html',
-  styleUrls: ['../../../shared/section-demo.scss', './auth-shell.section.scss'],
+  templateUrl: './auth-layout.section.html',
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    './auth-layout.section.scss',
+  ],
 })
-export class AuthShellSection {}
+export class AuthLayoutSection {}

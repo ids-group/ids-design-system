@@ -16,18 +16,20 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
   closeOnOutsidePointer,
   closeOnScroll,
   disposeWithLeave,
+  dropdownOverlay,
   type DsOverlayCloseCause,
   prepareOverlayEnter,
 } from '../overlay-motion';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '../../icons/icon.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
+import { inFieldGroup } from '../field-group/field-group.token';
 import { DsStaticPreview } from '../static-preview.directive';
 import {
   isSelectOptionGroup,
@@ -50,6 +52,7 @@ import { resolveReserveMessage } from '../field-defaults';
   selector: 'ds-select',
   standalone: true,
   imports: [IconComponent, NgTemplateOutlet, FieldMessageComponent],
+  host: { '[class.in-group]': 'inGroup' },
   templateUrl: './select.component.html',
   styleUrl: './select.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -67,6 +70,10 @@ export class SelectComponent
   implements OnDestroy
 {
   private readonly overlay = inject(Overlay);
+  /** Segment of a ds-field-group: the group owns the border, radius and focus
+   *  ring, so .in-group strips this control back to its bare contents. */
+  protected readonly inGroup = inFieldGroup();
+
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject(ElementRef<HTMLElement>);
   protected readonly preview = inject(DsStaticPreview);
@@ -85,6 +92,20 @@ export class SelectComponent
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Prevents opening the dropdown while still allowing focus. */
   readonly readOnly = input(false, { transform: booleanAttribute });
+  /**
+   * The contract spelling of `readOnly`, a second input because signal forms binds
+   * by NAME — a `readonly()` rule was reaching nothing before this existed.
+   */
+  readonly readonlyBinding = input(false, {
+    // The alias IS the point: signal forms binds by name, and the contract
+    // spells it `readonly` where the DS spells it `readOnly`.
+    // eslint-disable-next-line @angular-eslint/no-input-rename
+    alias: 'readonly',
+    transform: booleanAttribute,
+  });
+  protected readonly isReadOnly = computed(
+    () => this.readOnly() || this.readonlyBinding(),
+  );
   /** Applies error styling and marks the trigger `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Helper text shown below the trigger. */
@@ -219,7 +240,7 @@ export class SelectComponent
     if (this.isDisabled()) {
       parts.push('disabled');
     }
-    if (this.readOnly()) {
+    if (this.isReadOnly()) {
       parts.push('readonly');
     }
     if (this.invalidResolved()) {
@@ -256,7 +277,7 @@ export class SelectComponent
   }
 
   protected toggle(): void {
-    if (this.isDisabled() || this.readOnly() || this.preview.staticPreview()) {
+    if (this.isDisabled() || this.isReadOnly() || this.preview.staticPreview()) {
       return;
     }
     if (this.open()) {
@@ -272,36 +293,12 @@ export class SelectComponent
     }
     const triggerElement = this.trigger().nativeElement;
     const width = triggerElement.getBoundingClientRect().width;
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(triggerElement)
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-          offsetY: 4,
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
-          offsetY: -4,
-        },
-      ]);
-    const cfg: OverlayConfig = {
-      positionStrategy,
-      hasBackdrop: false,
-      // Reuse the global panel skin defined in styles/_dropdown-overlay.scss
-      // so the portaled panel actually renders styled — `:host ::ng-deep`
-      // selectors can't reach a node outside the host's DOM tree.
-      panelClass: ['ds-dropdown-panel', 'ds-overlay-pane'],
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-      width,
-    };
-    this.overlayRef = this.overlay.create(cfg);
+    const { positionStrategy, config } = dropdownOverlay(
+      this.overlay,
+      triggerElement,
+    );
+    config.width = width;
+    this.overlayRef = this.overlay.create(config);
     prepareOverlayEnter(
       this.overlayRef,
       this.host.nativeElement,
@@ -369,7 +366,7 @@ export class SelectComponent
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
-    if (this.isDisabled() || this.readOnly() || this.preview.staticPreview()) {
+    if (this.isDisabled() || this.isReadOnly() || this.preview.staticPreview()) {
       return;
     }
     // Only handle keys aimed at the trigger itself — a keydown bubbling up from

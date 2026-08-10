@@ -6,17 +6,26 @@ import {
   booleanAttribute,
   computed,
   contentChildren,
+  effect,
   inject,
+  Injector,
   input,
+  isDevMode,
   model,
   output,
   signal,
 } from '@angular/core';
+import { ActivatedRoute, Router, type ParamMap } from '@angular/router';
 import { IconComponent } from '../../icons/icon.component';
 import { TabComponent } from './tab.component';
 import type { TabsOrientation, TabsVariant } from './tabs.types';
 
 let nextId = 0;
+
+// Which query parameters are already claimed, so two strips on one screen cannot
+// quietly fight over the same one. Dev-only bookkeeping; nothing reads it in
+// production.
+const claimedUrlParams = new Map<string, number>();
 
 @Component({
   selector: 'ds-tabs',
@@ -51,6 +60,28 @@ export class TabsComponent {
       or the tab list runs vertically beside the panel. */
   readonly orientation = input<TabsOrientation>('horizontal');
 
+  /**
+   * Keep the active tab in a query parameter, so it survives F5, a shared link
+   * and the Back button: `urlParam="tab"` gives `?tab=activity`. Empty (the
+   * default) leaves the URL alone, and the strip works exactly as before.
+   *
+   * The names come from each `ds-tab`'s `value` (falling back to its `label`),
+   * so there is no second list to keep in step. **Names, not indices** — writing
+   * `?tab=1` would silently repoint every old link the moment a tab is inserted.
+   * The FIRST tab writes no parameter and every write REPLACES the history
+   * entry, so a pristine screen keeps a clean address and flipping tabs does not
+   * fill the Back button.
+   *
+   * An unknown or missing name lands on the first tab rather than throwing: a
+   * URL is user input, and a stale bookmark should still open the screen.
+   *
+   * Outside a routed context the input is inert. Nothing router-shaped is even
+   * resolved until you set it — no DI lookup and, more to the point, no
+   * subscription — so a strip that never uses this costs exactly what it did
+   * before the input existed.
+   */
+  readonly urlParam = input<string>('');
+
   /** Emitted when a close button is clicked. Carries the tab's value input, or
       its label when value is not set. The host is responsible for removing the
       tab from its list. */
@@ -60,6 +91,112 @@ export class TabsComponent {
   private readonly uid = `ds-tabs-${++nextId}`;
 
   protected readonly tabs = contentChildren(TabComponent);
+
+  // Nothing router-shaped is touched until `urlParam` is set: no DI lookup, and
+  // above all no subscription. A tab strip is perfectly valid outside a routed
+  // context — in a dialog, on a static page — and most are, so the default must
+  // cost nothing. Resolved through the component's own Injector rather than
+  // `inject(Router)` at construction, which would run for every instance.
+  private readonly injector = inject(Injector);
+  private router: Router | null = null;
+  private route: ActivatedRoute | null = null;
+  private readonly urlParams = signal<ParamMap | null>(null);
+
+  constructor() {
+    /**
+     * Two strips sharing a parameter is the failure mode of going round a screen
+     * turning this on: `tab` is the obvious name, so the second strip takes it
+     * too, and from then on each write erases the other's tab. Nothing throws and
+     * the URL looks plausible — it just restores the wrong tab on reload.
+     */
+    if (isDevMode()) {
+      effect((onCleanup) => {
+        const param = this.urlParam();
+        if (!param) {
+          return;
+        }
+        const held = claimedUrlParams.get(param) ?? 0;
+        if (held > 0) {
+          console.warn(
+            `[ds-tabs] urlParam="${param}" is already used by another ds-tabs on this screen. Both strips write the same query parameter, so each one erases the other's tab and a reload restores whichever wrote last. Give each strip its own name.`,
+          );
+        }
+        claimedUrlParams.set(param, held + 1);
+        // onCleanup alone: it runs before every re-run AND on destroy, so
+        // releasing again from a DestroyRef would double-count the way out.
+        onCleanup(() => {
+          const now = (claimedUrlParams.get(param) ?? 1) - 1;
+          if (now > 0) {
+            claimedUrlParams.set(param, now);
+          } else {
+            claimedUrlParams.delete(param);
+          }
+        });
+      });
+    }
+
+    // Subscribe only while the feature is on, and drop the subscription again if
+    // `urlParam` is cleared.
+    effect((onCleanup) => {
+      if (!this.urlParam() || !this.resolveRouting()) {
+        this.urlParams.set(null);
+
+        return;
+      }
+      const subscription = this.route!.queryParamMap.subscribe((map) =>
+        this.urlParams.set(map),
+      );
+      onCleanup(() => subscription.unsubscribe());
+    });
+
+    // URL -> tab. Runs again when the tabs arrive (content children resolve
+    // after the first pass) and on every Back/Forward, which is what makes the
+    // history walk the tabs. Writing back is guarded by the equality check
+    // below, so this cannot loop with `writeUrl`.
+    effect(() => {
+      const param = this.urlParam();
+      const params = this.urlParams();
+      const tabs = this.tabs();
+      if (!param || !params || tabs.length === 0) {
+        return;
+      }
+      const name = params.get(param);
+      const found = name
+        ? tabs.findIndex((tab) => this.tabName(tab) === name)
+        : 0;
+      const index = found < 0 ? 0 : found;
+      if (index !== this.selectedIndex()) {
+        this.selectedIndex.set(index);
+      }
+    });
+  }
+
+  /** Resolves the router pair on first use. Null outside a routed context, which
+   *  makes `urlParam` inert there rather than an error. */
+  private resolveRouting(): boolean {
+    this.router ??= this.injector.get(Router, null);
+    this.route ??= this.injector.get(ActivatedRoute, null);
+
+    return !!this.router && !!this.route;
+  }
+
+  private tabName(tab: TabComponent): string {
+    return tab.value() ?? tab.label();
+  }
+
+  private writeUrl(index: number): void {
+    const param = this.urlParam();
+    if (!param || !this.resolveRouting()) {
+      return;
+    }
+    const tab = this.tabs()[index];
+    void this.router!.navigate([], {
+      relativeTo: this.route,
+      queryParams: { [param]: index === 0 || !tab ? null : this.tabName(tab) },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  }
 
   /** Tracks which tab indices have ever been activated (for lazy rendering). */
   private readonly activatedIndices = signal<ReadonlySet<number>>(new Set([0]));
@@ -113,6 +250,7 @@ export class TabsComponent {
       return;
     }
     this.selectedIndex.set(index);
+    this.writeUrl(index);
     if (this.lazy()) {
       this.activatedIndices.update((previous) => {
         if (previous.has(index)) {

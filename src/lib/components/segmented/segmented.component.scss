@@ -21,6 +21,10 @@
     calc(var(--_segmented-r-inner) + var(--_segmented-pad))
   );
   --_segmented-selected-shadow: var(--ds-segmented-selected-shadow, var(--ds-elevation-raised));
+  --_segmented-btn-border: var(--ds-segmented-btn-border, 0);
+  --_segmented-btn-pad-x: var(--ds-segmented-btn-pad-x, var(--space-4));
+  --_segmented-label-weight: var(--ds-segmented-label-weight, var(--font-weight-semibold));
+  --_segmented-label-font-size: var(--ds-segmented-label-font-size, var(--font-size-s));
 
   display: inline-flex;
 
@@ -39,14 +43,12 @@
   justify-content: center;
   gap: var(--space-1-5);
   height: var(--_segmented-btn-h);
-  padding: 0 var(--space-4);
-  border: 0;
+  padding: 0 var(--_segmented-btn-pad-x);
+  border: var(--_segmented-btn-border);
   border-radius: var(--_segmented-r-inner);
   background: transparent;
   color: var(--_segmented-label-color);
-  font:
-    var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat)
-    var(--font-sans);
+  font: var(--_segmented-label-weight) var(--_segmented-label-font-size) / var(--line-height-flat) var(--font-sans);
   white-space: nowrap;
   cursor: pointer;
   transition:

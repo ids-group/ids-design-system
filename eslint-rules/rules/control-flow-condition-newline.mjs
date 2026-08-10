@@ -1,3 +1,5 @@
+import { detectEol } from '../eol.mjs';
+
 /** @type {import('eslint').Rule.RuleModule} */
 export default {
   meta: {
@@ -31,6 +33,7 @@ export default {
       closingIndent = 2,
     } = context.options[0] ?? {};
     const text = context.sourceCode.getText();
+    const eol = detectEol(text);
 
     // Splits on `||` / `&&` that sit at paren/bracket depth 0 and outside quotes,
     // so `a && (b || c)` and `x === '||'` stay whole.
@@ -96,14 +99,14 @@ export default {
         const operandPad = base + ' '.repeat(operandIndent);
         const closingPad = base + ' '.repeat(closingIndent);
         const wanted =
-          '\n' +
+          eol +
           operands
             .map(
               ({ expression, operator }) =>
                 operandPad + expression + (operator ? ' ' + operator : ''),
             )
-            .join('\n') +
-          '\n' +
+            .join(eol) +
+          eol +
           closingPad;
 
         if (condition === wanted) return;

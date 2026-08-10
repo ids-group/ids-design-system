@@ -10,8 +10,13 @@
 // `--ds-field-height` is the public override and beats the size class, because a
 // consumer setting it has already decided. Per-instance is CSS-variable scoping:
 // `ds-select { --ds-field-height: 44px; }`.
-@mixin field-box-height($size: md) {
-  --_field-box-height: var(--field-h-#{$size});
+// `$prop` is `min-height` for a box that must be able to grow — autocomplete and
+// multi-select wrap chips onto a second line, and a fixed height would clip them.
+// `--_field-box-height` holds the RESOLVED height, so a control that derives other
+// geometry from it (number-stepper sizes its buttons off its own height) can read
+// it back instead of restating the fallback chain.
+@mixin field-box-height($size: md, $prop: height) {
+  --_field-box-height: var(--ds-field-height, var(--field-h-#{$size}));
 
-  height: var(--ds-field-height, var(--_field-box-height));
+  #{$prop}: var(--_field-box-height);
 }

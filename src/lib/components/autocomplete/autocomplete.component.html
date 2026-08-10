@@ -8,8 +8,12 @@
   [class.error]="invalidResolved()"
   (click)="onTriggerClick()"
 >
+  <span class="addon-slot prefix">
+    <ng-content select="[dsAutocompletePrefix]"></ng-content>
+  </span>
+
   @if (multiple()) {
-    @for (selectedOption of selectedTags(); track selectedOption.value) {
+    @for (selectedOption of visibleTags(); track selectedOption.value) {
       <ds-tag
         [closable]="true"
         [closeLabel]="'Remove ' + selectedOption.label"
@@ -17,6 +21,12 @@
       >
         {{ selectedOption.label }}
       </ds-tag>
+    }
+
+    @if (overflowCount() > 0) {
+      <span class="overflow">
+        +{{ overflowCount() }} more
+      </span>
     }
   } @else if (displayLabel()) {
     <span class="autocomplete-value">
@@ -30,6 +40,7 @@
     class="autocomplete-input"
     role="combobox"
     aria-autocomplete="list"
+    [class.collapsed]="displayLabel() && !isOpen()"
     [attr.aria-expanded]="isOpen()"
     [attr.aria-controls]="listboxId"
     [attr.aria-activedescendant]="activeDescendant()"
@@ -45,12 +56,18 @@
     (keydown)="onKeydown($event)"
   />
 
-  <ds-icon
-    name="chevronDown"
-    class="autocomplete-chevron"
-    [size]="16"
-    (click)="togglePanel($event)"
-  />
+  <span class="addon-slot suffix">
+    <ng-content select="[dsAutocompleteSuffix]"></ng-content>
+  </span>
+
+  @if (showChevron()) {
+    <ds-icon
+      name="chevronDown"
+      class="autocomplete-chevron"
+      [size]="16"
+      (click)="togglePanel($event)"
+    />
+  }
 </div>
 
 <ds-field-message

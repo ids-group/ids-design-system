@@ -1,0 +1,77 @@
+@use '../../styles/field-box' as field-box;
+
+/* One chrome around N controls. The border, radius, focus ring and dividers all
+   live here; the segments inside are stripped by their own `.in-group` block,
+   which they apply when DS_FIELD_GROUP resolves. */
+:host {
+  --_field-group-bg-color: var(--ds-field-group-bg-color, var(--surface-default));
+  --_field-group-border-color: var(--ds-field-group-border-color, var(--border-default));
+  --_field-group-border-color-focus: var(--ds-field-group-border-color-focus, var(--accent));
+  --_field-group-radius: var(--ds-field-group-radius, var(--ds-radius-control));
+  --_field-group-focus-shadow: var(--ds-field-group-focus-shadow, var(--ds-field-focus-shadow));
+  --_field-group-divider-color: var(--ds-field-group-divider-color, var(--border-divider));
+
+  display: inline-flex;
+
+  /* Stretch, so a divider drawn on a segment runs the full height of the row
+     rather than the height of that segment's own content. */
+  align-items: stretch;
+  width: fit-content;
+  max-width: 100%;
+  background-color: var(--_field-group-bg-color);
+  border: var(--border-width-default) solid var(--_field-group-border-color);
+  border-radius: var(--_field-group-radius);
+
+  /* Clips each end segment to the group's corners. Safe here for the same
+     reason it is on ds-number-stepper: every panel a segment opens is portaled
+     to the body, so nothing that needs to escape is inside this box. */
+  overflow: hidden;
+  transition: border-color var(--duration-fast) var(--ease-standard);
+
+  @include field-box.field-box-height(md);
+}
+
+:host(.sm) { @include field-box.field-box-height(sm); }
+:host(.lg) { @include field-box.field-box-height(lg); }
+
+:host(.full-width) {
+  display: flex;
+  width: 100%;
+}
+
+:host(:hover:not(.disabled)) {
+  border-color: var(--border-strong);
+}
+
+/* ONE ring for the whole group: each segment suppresses its own, so focusing
+   any of them lights the shared chrome instead of drawing a box mid-row. */
+:host(:focus-within:not(.disabled)) {
+  border-color: var(--_field-group-border-color-focus);
+  box-shadow: var(--_field-group-focus-shadow);
+}
+
+:host(.invalid) { border-color: var(--border-error); }
+
+:host(.disabled) {
+  background-color: var(--surface-disabled);
+  border-color: var(--border-disabled);
+}
+
+/* Projected content carries the CONSUMER's encapsulation attribute, so it can
+   only be reached with ::ng-deep — the same reason ds-input styles its addons
+   this way. Scoped under :host, so nothing here escapes the group. */
+:host ::ng-deep > * {
+  /* Hug by default; `grow` takes the slack. A segment that filled the row by
+     default would leave no room for the one the consumer actually meant. */
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+:host ::ng-deep > [grow] {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+:host ::ng-deep > * + * {
+  border-left: var(--border-width-default) solid var(--_field-group-divider-color);
+}

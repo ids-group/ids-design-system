@@ -1,3 +1,5 @@
+@use '../../styles/field-box' as field-box;
+
 :host {
   display: contents;
 }
@@ -30,7 +32,8 @@
 }
 
 .confirm-input {
-  height: var(--hit-cozy);
+  @include field-box.field-box-height(md);
+
   padding: 0 var(--field-pad-x);
   background-color: var(--surface-default);
   border: var(--border-width-default) solid var(--border-default);

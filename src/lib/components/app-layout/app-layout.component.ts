@@ -18,7 +18,10 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ScrollbarWidthService } from './scrollbar-width.service';
 import { LayoutNavigationService } from './layout-navigation.service';
-import { LayoutScrollService } from './layout-scroll.service';
+import {
+  LayoutScrollService,
+  type DsScrollReset,
+} from './layout-scroll.service';
 import { nextControlId } from '../field-ids';
 
 /**
@@ -100,6 +103,17 @@ export class AppLayoutComponent {
   readonly restoreScrollTimeout = input(2000);
 
   /**
+   * When the content scroll resets to the top. `'path'` (default) is what the
+   * layout has always done; `'always'` also resets on a query- or fragment-only
+   * navigation, which is what a server-paged list wants; `'never'` hands the
+   * decision to the screen, which can still call `LayoutScrollService.scrollToTop()`.
+   *
+   * It exists because the layout owning the scroll CONTAINER also meant it owned
+   * the POLICY: a screen could add a reset but had no way to suppress one.
+   */
+  readonly scrollReset = input<DsScrollReset>('path');
+
+  /**
    * True only while the rail is an overlay. Gates the dialog semantics: above
    * the breakpoint the rail is an ordinary region, and a permanent
    * `role="dialog"` there would lie to a screen reader.
@@ -126,6 +140,7 @@ export class AppLayoutComponent {
       this.layoutScroll.configureRestore(
         this.restoreScroll() ? this.restoreScrollTimeout() : null,
       );
+      this.layoutScroll.configureReset(this.scrollReset());
     });
 
     afterNextRender(() => {

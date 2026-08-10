@@ -1,8 +1,8 @@
 /**
  * Who sorts a `ds-table`.
  *
- * - `'client'` (default) — the table reorders `data()` itself.
- * - `'server'` — the table only emits `sortChange`; the host reorders.
+ * - `'server'` (default) — the table only emits `sortChange`; the host reorders.
+ * - `'client'` — the table reorders `data()` itself, for a table holding every row.
  * - `'none'` — nothing sorts, and `sortable` columns render no affordance rather
  *   than a control that does nothing.
  *
@@ -10,6 +10,19 @@
  * marked `sortable` on a table with no sorting drew a live-looking header that
  * did nothing, and no type or dev check could catch it.
  */
+/**
+ * Who applies the header filters.
+ *
+ * `'server'` (the default when unset) means the host does it: the table tracks
+ * `columnFilters` so a request can be driven from it, but runs no local pass —
+ * on a paged table a local pass would filter what the server already filtered,
+ * and paged is the normal case. `'client'` filters the rows in hand, for a table
+ * that holds every one of them. `'none'` drops the affordance,
+ * so a column left marked `filter: 'set'` renders no button rather than a
+ * control that does nothing.
+ */
+export type TableFilterMode = 'client' | 'server' | 'none';
+
 export type TableSortMode = 'client' | 'server' | 'none';
 
 import type { IconName } from '../../icons/icons.data';

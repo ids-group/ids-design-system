@@ -571,4 +571,97 @@
       </div>
     </div>
   </div>
+
+  <h3 class="block-title t-h4">
+    Keeping the tab in the URL
+  </h3>
+
+  <p class="block-desc t-s">
+    Set
+    <code class="t-mono-inline">
+      urlParam
+    </code> and the strip keeps the active tab in
+    a query parameter, so it survives F5, a shared link and the Back button. The
+    input both switches the behaviour on and names the parameter; leave it out and
+    the URL is untouched.
+  </p>
+
+  <pre class="t-mono-block"><code>&lt;ds-tabs urlParam="tab"&gt;
+  &lt;ds-tab label="Profile"  value="profile" /&gt;
+  &lt;ds-tab label="Activity" value="activity" /&gt;
+&lt;/ds-tabs&gt;
+
+&lt;!-- second tab active --&gt;  ?tab=activity</code></pre>
+
+  <p class="block-desc t-s">
+    The names come from each tab's
+    <code class="t-mono-inline">
+      value
+    </code> (falling back to its
+    <code class="t-mono-inline">
+      label
+    </code>), so there is no second list to keep in
+    step — the same identifier
+    <code class="t-mono-inline">
+      tabClosed
+    </code> already emits. Three decisions
+    are baked in. <strong>Names, not indices:</strong>
+
+    <code class="t-mono-inline">
+      ?tab=1
+    </code> would silently repoint every old link
+    the moment a tab is inserted. <strong>The first tab writes no parameter and
+    every write replaces:</strong> a pristine screen keeps a clean address, and
+    flipping tabs does not fill the Back button with entries to walk one at a
+    time. <strong>An unknown or missing name lands on the first tab</strong>
+    rather than throwing — a URL is user input, and a stale bookmark should still
+    open the screen.
+  </p>
+
+  <p class="block-desc t-s">
+    Outside a routed context the input is inert, and a strip that never sets it
+    costs exactly what it did before the input existed: nothing router-shaped is
+    resolved until you set it — no DI lookup, and no subscription to the query
+    parameters. Setting it later switches both on; clearing it drops the
+    subscription again. It also
+    pairs with
+    <code class="t-mono-inline">
+      ds-app-layout
+    </code> — the write is query-only, and
+    that layout's
+    <code class="t-mono-inline">
+      pathChanged
+    </code> ignores query-only navigations, so
+    switching tabs cannot trip its scroll reset. There is deliberately no live
+    demo here: it would write
+    <code class="t-mono-inline">
+      ?tab=
+    </code> into the docs' own address while the
+    sidebar rewrites the path from the scroll position, and the two would read as
+    fighting.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      One strip per parameter name.
+    </strong> Two
+    <code class="t-mono-inline">
+      ds-tabs
+    </code> sharing a name on the same screen
+    erase each other — both write the same parameter, and a reload restores
+    whichever wrote last. It is the easy mistake to make when turning this on
+    across an app, because
+    <code class="t-mono-inline">
+      "tab"
+    </code> is the obvious name every time, so a
+    dev-mode warning names the clash. Nested or sibling strips need distinct
+    names —
+    <code class="t-mono-inline">
+      tab
+    </code> and
+    <code class="t-mono-inline">
+      subtab
+    </code>.
+  </p>
+
 </docs-section>

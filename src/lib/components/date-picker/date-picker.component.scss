@@ -11,6 +11,7 @@
   --_date-picker-required-color: var(--ds-date-picker-required-color, var(--error));
   --_date-picker-placeholder-color: var(--ds-date-picker-placeholder-color, var(--text-tertiary));
   --_date-picker-trigger-radius: var(--ds-date-picker-trigger-radius, var(--ds-radius-control));
+  --_date-picker-trigger-pad-x: var(--ds-date-picker-trigger-pad-x, var(--field-pad-x));
 
   /* Mono by default: the ghost mask paints the placeholder glyphs and the real
      value sits behind it, so fixed-width digits are what keep the two in step. */
@@ -87,7 +88,11 @@
   background: var(--_date-picker-trigger-bg-color);
   border: var(--border-width-default) solid var(--_date-picker-trigger-border-color);
   border-radius: var(--_date-picker-trigger-radius);
-  padding: 0 var(--space-3);
+
+  /* --field-pad-x, not --space-3: the two are equal at default density but the
+     token shrinks under [data-density] and the literal did not, so a picker beside
+     a ds-input drifted 8px wider the moment a consumer set a density. */
+  padding: 0 var(--_date-picker-trigger-pad-x);
 
   @include field-box.field-box-height(md);
 
@@ -101,7 +106,8 @@
   }
 
   &:focus-visible,
-  &:focus-within {
+  &:focus-within,
+  &.open {
     outline: none;
     box-shadow: var(--_date-picker-focus-shadow);
   }
@@ -271,7 +277,7 @@
     border: 0;
     background: transparent;
     padding: var(--space-1) var(--space-1-5);
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
     font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     color: var(--_date-picker-header-label-color);
     cursor: pointer;
@@ -316,7 +322,7 @@
       place-items: center;
       color: var(--_date-picker-nav-icon-color);
       cursor: pointer;
-      border-radius: var(--radius-sm);
+      border-radius: var(--ds-radius-inner);
 
       &:hover:not(:disabled) {
         background-color: var(--_date-picker-day-hover-bg-color);
@@ -343,7 +349,7 @@
     border: 0;
     background: transparent;
     padding: var(--space-1-5) var(--space-2);
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
     font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     color: var(--text-primary);
     cursor: pointer;
@@ -381,7 +387,7 @@
       place-items: center;
       color: var(--_date-picker-nav-icon-color);
       cursor: pointer;
-      border-radius: var(--radius-sm);
+      border-radius: var(--ds-radius-inner);
 
       &:hover {
         background-color: var(--_date-picker-day-hover-bg-color);
@@ -456,7 +462,7 @@
     border: 0;
     background: transparent;
     padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
     font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     color: var(--text-primary);
     cursor: pointer;
@@ -501,6 +507,33 @@
       padding-top: var(--space-3);
       min-width: 0;
       width: 100%;
+    }
+  }
+}
+
+/* Segment of a ds-field-group — see input.component.scss for why. The group
+   draws the border, the radius and the one shared focus ring. */
+:host(.in-group) {
+  width: auto;
+
+  .label,
+  ds-field-message {
+    display: none;
+  }
+
+  .trigger {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    height: 100%;
+
+    &:hover,
+    &:focus,
+    &:focus-visible,
+    &:focus-within {
+      border: 0;
+      box-shadow: none;
+      outline: 0;
     }
   }
 }

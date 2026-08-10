@@ -1,5 +1,4 @@
 import {
-  isDevMode,
   Component,
   ElementRef,
   Injector,
@@ -17,6 +16,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { devWarn } from '../../core/dev-warning';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   CdkDrag,
@@ -34,6 +34,7 @@ import { PopoverComponent } from '../popover/popover.component';
 import { MenuComponent } from '../menu/menu.component';
 import { MenuItemComponent } from '../menu/menu-item.component';
 import { CellTemplateDirective } from './cell-template.directive';
+import { HeaderFilterDirective } from './header-filter.directive';
 import type {
   SortChangeEvent,
   SortDir,
@@ -41,6 +42,7 @@ import type {
   TableColumn,
   TableRowAction,
   TableRowActionEvent,
+  TableFilterMode,
   TableSortMode,
 } from './table.types';
 
@@ -95,7 +97,14 @@ function compareSortValues(
     return Number(firstText) - Number(secondText);
   }
 
-  return firstText.localeCompare(secondText, undefined, { numeric: true });
+  // `sensitivity: 'base'` so "Ångström" sorts next to "Angstrom" and casing does
+  // not split a column into two runs. Taken from the comparator mm-broker is
+  // retiring, which is also where BLANK_CELL above came from — without it a
+  // column whose `sortValue` returns strings reorders on migration.
+  return firstText.localeCompare(secondText, undefined, {
+    numeric: true,
+    sensitivity: 'base',
+  });
 }
 
 @Component({
@@ -173,6 +182,24 @@ export class TableComponent<T extends object> {
    *  (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g.
    *  server-paged lists). */
   readonly sortingOrder = input<SortDir[]>(['asc', 'desc', null]);
+  /**
+   * Wording for the sort announcement, so it can be translated. Receives the
+   * column's label and the new direction; return an empty string to say nothing.
+   */
+  readonly sortAnnouncement = input<(label: string, dir: SortDir) => string>(
+    (label, dir) =>
+      dir
+        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`
+        : `Sorting cleared`,
+  );
+  /**
+   * Wording for the row-range announcement, so it can be translated. Receives
+   * the 1-based first and last row on screen and the total; return an empty
+   * string to say nothing.
+   */
+  readonly rangeAnnouncement = input<
+    (first: number, last: number, total: number) => string
+  >((first, last, total) => `Showing ${first}–${last} of ${total}`);
   /** Number of shimmer rows rendered while `loading` is `'skeleton'`. */
   readonly skeletonRows = input<number>(5);
   /** Accessible name for the table (rendered as a visually-hidden caption).
@@ -227,12 +254,26 @@ export class TableComponent<T extends object> {
   readonly exportButton = input(false, { transform: booleanAttribute });
   /** Filename the export button downloads as. */
   readonly exportFilename = input<string>('table.csv');
-  /** Rows to export instead of what the table holds. A server-paged table only
-   *  HAS the current page, so exporting without this silently exports one page —
-   *  return the whole set here and the button awaits it. */
-  readonly exportFetcher = input<(() => Promise<readonly T[]>) | null>(null);
+  /**
+   * Where the export button gets its data. A server-paged table only HAS the
+   * current page, so exporting without this silently exports one page.
+   *
+   * Return ROWS and the table serializes them the same way it serializes its
+   * own. Return a `Blob` (or a URL string) and the table just downloads it —
+   * which is what you want when the backend already formatted the file with its
+   * own number formats, its own columns, or a sheet the table never held.
+   */
+  readonly exportFetcher = input<
+    (() => Promise<readonly T[] | Blob | string>) | null
+  >(null);
+  /** Fires when `exportFetcher` rejects. Without it a failed export is silent —
+   *  the button simply re-enables and no file arrives. */
+  readonly exportFailed = output<unknown>();
   /** True while `exportFetcher` is in flight, so the button can disable itself. */
   protected readonly exporting = signal(false);
+  /** Announced in the table's live region while an export is running or after it
+   *  failed, so the button's own disabled state is not the only signal. */
+  protected readonly exportStatus = signal('');
 
   /** Keeps the horizontal scrollbar reachable on tall tables: the scroll
    *  container's native bar is hidden and a proxy stuck to the bottom of the
@@ -245,6 +286,11 @@ export class TableComponent<T extends object> {
   readonly page = model<number>(1);
   /** Selectable page-size choices shown in the pagination control. */
   readonly pageSizeOptions = input<number[]>([10, 25, 50, 100]);
+  /** Shows the page-size picker in the footer pager. Set false for a table whose
+   *  page size is fixed — the standalone `ds-pagination` has always taken this. */
+  readonly showPageSize = input(true, { transform: booleanAttribute });
+  /** Shows the "N of M" range label in the footer pager. */
+  readonly showLabel = input(true, { transform: booleanAttribute });
   /** Server-side total row count. `null` (default) = client paging: the table
    *  slices `data()` itself and the pager counts the rows in hand. When set, the
    *  host has already sliced to one page — the pager uses this count and the
@@ -255,12 +301,30 @@ export class TableComponent<T extends object> {
   readonly scrollToTopOnPageChange = input(false, {
     transform: booleanAttribute,
   });
-  /** Who sorts — see `TableSortMode`. Unset resolves to `'client'`, so a column
-   *  marked `sortable` always does something; declare `'server'` when the host
-   *  reorders, or `'none'` to drop the affordance entirely. */
+  /** Who sorts — see `TableSortMode`. Unset resolves to `'server'`: the table
+   *  emits `(sortChange)` and reorders nothing, which is what a paged table
+   *  needs. Declare `'client'` when the table holds every row, or `'none'` to
+   *  drop the affordance entirely. */
   readonly sortMode = input<TableSortMode | null>(null);
+  /** Who filters — see `TableFilterMode`. Unset resolves to `'server'`: the
+   *  table tracks the selection in `columnFilters` for the host to turn into a
+   *  request, and runs no local pass. Declare `'client'` when the table holds
+   *  every row and should filter them itself. */
+  readonly filterMode = input<TableFilterMode | null>(null);
+  /**
+   * The full value domain per column key, for a header filter the table cannot
+   * derive itself. Without it the checklist is built from the rows in hand,
+   * which on a server-paged table offers only the values that happen to be on
+   * the current page.
+   */
+  readonly columnFilterOptions = input<ReadonlyMap<string, readonly string[]>>(
+    new Map(),
+  );
+  protected readonly filterModeResolved = computed<TableFilterMode>(
+    () => this.filterMode() ?? 'server',
+  );
   protected readonly sortModeResolved = computed<TableSortMode>(
-    () => this.sortMode() ?? 'client',
+    () => this.sortMode() ?? 'server',
   );
   /** Pin the first data column (and the select column) on horizontal scroll. */
   readonly stickyFirstColumn = input(false, { transform: booleanAttribute });
@@ -279,6 +343,20 @@ export class TableComponent<T extends object> {
   /** Row height in px in virtual mode. Must match what the rows actually
    *  measure, so it drives the CSS height rather than merely describing it. */
   readonly virtualRowSize = input(44);
+  /**
+   * Fetch rows as they scroll into view instead of receiving them all.
+   *
+   * `data` becomes a SPARSE array `total` long: put each fetched row at its
+   * absolute index and leave the rest empty. Every gap inside the window
+   * renders a skeleton row, and `(lazyLoad)` asks for the range covering it.
+   *
+   * Needs `virtualScroll` — without a window there is nothing to load
+   * lazily AGAINST — and `total`, which is what the scrollbar is sized from.
+   */
+  readonly lazy = input(false, { transform: booleanAttribute });
+  /** The range now on screen that `data` has gaps in — fetch it and write the
+   *  rows back at their absolute indices. Re-emits only when the range moves. */
+  readonly lazyLoad = output<{ first: number; rows: number }>();
 
   /** Fires with the row on click (or Enter/Space when `rowInteractive`). */
   readonly rowClicked = output<T>();
@@ -483,18 +561,53 @@ export class TableComponent<T extends object> {
   protected readonly filterColumn = signal<TableColumn<T> | null>(null);
   protected readonly filterSearch = signal('');
 
+  private readonly headerFilters = contentChildren(HeaderFilterDirective);
+
+  private readonly headerFilterByKey = computed(() => {
+    const map = new Map<string, HeaderFilterDirective>();
+    for (const filter of this.headerFilters()) {
+      map.set(filter.dsHeaderFilter(), filter);
+    }
+
+    return map;
+  });
+
+  /** The projected filter for a column, when the host supplied one. */
+  protected headerFilterFor(
+    col: TableColumn<T>,
+  ): HeaderFilterDirective | undefined {
+    return this.headerFilterByKey().get(col.key);
+  }
+
+  /** A projected filter makes the column filterable on its own — the host does
+   *  not also have to mark it `filter: 'set'` to get the header button. */
   protected hasColumnFilter(col: TableColumn<T>): boolean {
-    return col.filter === 'set';
+    if (this.filterModeResolved() === 'none') {
+      return false;
+    }
+
+    return col.filter === 'set' || !!this.headerFilterFor(col);
   }
 
   /** A column is "actively filtered" when at least one of its values is unchecked. */
   protected isColumnFiltered(col: TableColumn<T>): boolean {
+    // A projected filter owns its own criterion, so only the host can say
+    // whether it is set; the table still draws the highlight.
+    const projected = this.headerFilterFor(col);
+    if (projected) {
+      return projected.active();
+    }
     const allowed = this.columnFilters().get(col.key);
 
-    return !!allowed && allowed.size < this.distinctValuesOf(col).length;
+    return !!allowed && allowed.size < this.optionsFor(col).length;
   }
 
-  private distinctValuesOf(col: TableColumn<T>): string[] {
+  /** The checklist's domain: what the host declared, else what is in hand. */
+  private optionsFor(col: TableColumn<T>): readonly string[] {
+    const supplied = this.columnFilterOptions().get(col.key);
+    if (supplied) {
+      return supplied;
+    }
     const seen = new Set<string>();
     for (const row of this.data()) {
       seen.add(this.cellValue(row, col));
@@ -504,13 +617,13 @@ export class TableComponent<T extends object> {
   }
 
   /** Distinct values of the open column, narrowed by the popover search box. */
-  protected readonly filterValues = computed<string[]>(() => {
+  protected readonly filterValues = computed<readonly string[]>(() => {
     const col = this.filterColumn();
     if (!col) {
       return [];
     }
     const needle = this.filterSearch().trim().toLowerCase();
-    const values = this.distinctValuesOf(col);
+    const values = this.optionsFor(col);
 
     return needle
       ? values.filter((value) => value.toLowerCase().includes(needle))
@@ -524,7 +637,7 @@ export class TableComponent<T extends object> {
     }
     const allowed = this.columnFilters().get(col.key);
 
-    return allowed ? allowed.size : this.distinctValuesOf(col).length;
+    return allowed ? allowed.size : this.optionsFor(col).length;
   });
 
   protected isFilterValueChecked(value: string): boolean {
@@ -553,7 +666,7 @@ export class TableComponent<T extends object> {
     if (!col) {
       return;
     }
-    const distinct = this.distinctValuesOf(col);
+    const distinct = this.optionsFor(col);
     const current = new Set(this.columnFilters().get(col.key) ?? distinct);
     if (current.has(value)) {
       current.delete(value);
@@ -568,6 +681,20 @@ export class TableComponent<T extends object> {
       next.set(col.key, current);
     }
     this.columnFilters.set(next);
+  }
+
+  /** Context handed to a projected header filter. Rebuilt per open, which is
+   *  cheap and keeps `close` bound to the popover that is actually showing. */
+  protected headerFilterContext(col: TableColumn<T>): {
+    $implicit: unknown;
+    column: unknown;
+    close: () => void;
+  } {
+    return {
+      $implicit: col,
+      column: col,
+      close: () => this.columnFilterPopover()?.close(),
+    };
   }
 
   protected clearColumnFilter(): void {
@@ -628,6 +755,9 @@ export class TableComponent<T extends object> {
     this.editingCell.set(null);
   }
 
+  // One notch is a comfortable nudge; a page is roughly a short column.
+  private static readonly RESIZE_STEP = 16;
+  private static readonly RESIZE_PAGE = 64;
   private static readonly MIN_COLUMN_WIDTH = 48;
   private resizeState: {
     key: string;
@@ -647,12 +777,54 @@ export class TableComponent<T extends object> {
     if (!header) {
       return;
     }
+    this.lockMeasuredWidths(header);
     this.resizeState = {
       key: col.key,
       startX: event.clientX,
       startWidth: header.offsetWidth,
     };
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
+  }
+
+  /**
+   * Freeze the columns at what they currently measure, once, before the first
+   * drag moves anything.
+   *
+   * Without it only the dragged column has a width and the rest are still
+   * auto-sized, so the browser redistributes the remainder across them and
+   * columns the reader never touched visibly jump. Measuring first means the
+   * drag changes one column and leaves the others where they were — the
+   * auto-sized geometry is kept rather than lost at the first grab.
+   *
+   * Runs only while something is unmeasured, so a second drag is untouched, and
+   * it reads the header row that is actually on screen rather than assuming a
+   * column order.
+   */
+  private lockMeasuredWidths(from: HTMLElement): void {
+    const columns = this.visibleColumns();
+    if (columns.every((col) => this.columnWidth(col) !== null)) {
+      return;
+    }
+    const headerRow = from.parentElement;
+    if (!headerRow) {
+      return;
+    }
+    const widths = new Map(this.columnWidths());
+    for (const col of columns) {
+      if (this.columnWidth(col) !== null) {
+        continue;
+      }
+      const cell = headerRow.querySelector<HTMLElement>(
+        `th[data-col-key="${CSS.escape(col.key)}"]`,
+      );
+      if (cell) {
+        widths.set(
+          col.key,
+          Math.max(TableComponent.MIN_COLUMN_WIDTH, cell.offsetWidth),
+        );
+      }
+    }
+    this.columnWidths.set(widths);
   }
 
   protected onResizeMove(event: PointerEvent): void {
@@ -672,12 +844,79 @@ export class TableComponent<T extends object> {
     this.resizeState = null;
   }
 
+  /** Current rendered width, for the keyboard path and the handle's
+   *  `aria-valuenow`. Falls back to the DOM when the column was auto-sized and
+   *  has neither an override nor a declared width. */
+  protected resolvedColumnWidth(
+    col: TableColumn<T>,
+    from?: HTMLElement,
+  ): number {
+    const known = this.columnWidth(col);
+    if (known !== null) {
+      return known;
+    }
+
+    return from?.closest('th')?.offsetWidth ?? TableComponent.MIN_COLUMN_WIDTH;
+  }
+
+  /**
+   * Keyboard resizing. A drag handle that only answers to a pointer makes a
+   * resizable column unusable without a mouse, which is an a11y gap rather than
+   * a missing nicety — hence Arrow for fine steps, PageUp/PageDown for coarse
+   * ones and Home to hand the column back to automatic sizing.
+   */
+  protected onResizeKey(col: TableColumn<T>, event: KeyboardEvent): void {
+    const target = event.target as HTMLElement;
+    const header = target.closest('th');
+    if (header) {
+      this.lockMeasuredWidths(header);
+    }
+    const current = this.resolvedColumnWidth(col, target);
+    let next: number | null = current;
+    switch (event.key) {
+      case 'ArrowLeft':
+        next = current - TableComponent.RESIZE_STEP;
+        break;
+      case 'ArrowRight':
+        next = current + TableComponent.RESIZE_STEP;
+        break;
+      case 'PageDown':
+        next = current - TableComponent.RESIZE_PAGE;
+        break;
+      case 'PageUp':
+        next = current + TableComponent.RESIZE_PAGE;
+        break;
+      case 'Home':
+        next = null;
+        break;
+      default:
+        return;
+    }
+    event.preventDefault();
+    const widths = new Map(this.columnWidths());
+    if (next === null) {
+      widths.delete(col.key);
+    } else {
+      widths.set(
+        col.key,
+        Math.max(TableComponent.MIN_COLUMN_WIDTH, Math.round(next)),
+      );
+    }
+    this.columnWidths.set(widths);
+  }
+
   /** Client-side filter over the full data set — combines the `filterQuery`
    *  substring search with any per-column set filters. Sorting and pagination
    *  run on the filtered rows. */
   protected readonly filteredData = computed<readonly T[]>(() => {
     const query = this.filterQuery().trim().toLowerCase();
-    const setFilters = this.columnFilters();
+    // In 'server' mode the host has already filtered; running the set filters
+    // again here would filter the filtered. `filterQuery` is deliberately left
+    // alone — it is a separate input with its own client/server story.
+    const setFilters =
+      this.filterModeResolved() === 'client'
+        ? this.columnFilters()
+        : new Map<string, ReadonlySet<string>>();
     const columns = this.columns();
     if (!query && setFilters.size === 0) {
       return this.data();
@@ -771,6 +1010,55 @@ export class TableComponent<T extends object> {
     this.pageSize() !== null ? this.pagedData() : this.sortedData(),
   );
 
+  /**
+   * The single live-region line. Loading wins while it lasts — a sort
+   * announcement over rows that are being replaced tells the reader about a
+   * state they cannot inspect yet. Otherwise it carries the sort state and the
+   * row range, which are the two things a sighted user reads off the header and
+   * the pager and a screen-reader user was told nothing about.
+   *
+   * `aria-live="polite"` does not announce a region's INITIAL content, so the
+   * unsorted first render is silent; only real changes speak.
+   */
+  protected readonly statusMessage = computed<string>(() => {
+    if (this.loading() !== false) {
+      return 'Loading…';
+    }
+    const exportState = this.exportStatus();
+    if (exportState) {
+      return exportState;
+    }
+    const parts = [this.sortMessage(), this.rangeMessage()].filter(Boolean);
+
+    return parts.join('. ');
+  });
+
+  private readonly sortMessage = computed<string>(() => {
+    const key = this.sortKey();
+    const dir = this.sortDir();
+    if (!key) {
+      return '';
+    }
+    const label = this.columns().find((col) => col.key === key)?.label ?? key;
+
+    return this.sortAnnouncement()(label, dir);
+  });
+
+  private readonly rangeMessage = computed<string>(() => {
+    const size = this.pageSize();
+    if (size === null) {
+      return '';
+    }
+    const rows = this.displayData().length;
+    if (rows === 0) {
+      return '';
+    }
+    const first = (this.page() - 1) * size + 1;
+    const total = this.total() ?? this.filteredData().length;
+
+    return this.rangeAnnouncement()(first, first + rows - 1, total);
+  });
+
   /** Virtual mode needs a bounded scroller to window against. */
   protected readonly virtualizing = computed(
     () => this.virtualScroll() && !!this.maxHeight(),
@@ -782,13 +1070,20 @@ export class TableComponent<T extends object> {
     () => `${this.virtualRowSize()}px`,
   );
 
+  /** How many rows the scroller spans. Lazy counts the rows that EXIST, not the
+   *  ones that have arrived — otherwise the spacers shrink to the loaded slice
+   *  and the scrollbar lies about the length of the list. */
+  protected readonly virtualCount = computed(() =>
+    this.lazy() ? (this.total() ?? this.displayData().length) : this.displayData().length,
+  );
+
   /** `null` when not virtualizing — the row loop then walks `displayData()` whole. */
   protected readonly virtualWindow = computed(() => {
     if (!this.virtualizing()) {
       return null;
     }
     const rowSize = Math.max(1, this.virtualRowSize());
-    const count = this.displayData().length;
+    const count = this.virtualCount();
     const height = this.viewportHeight() || VIRTUAL_FALLBACK_HEIGHT;
     const firstVisible = Math.floor(this.scrollTop() / rowSize);
     const start = Math.max(0, firstVisible - VIRTUAL_OVERSCAN);
@@ -813,13 +1108,35 @@ export class TableComponent<T extends object> {
     return window ? data.slice(window.start, window.end) : data;
   });
 
+  /**
+   * What the row loop walks: each slot carries its ABSOLUTE index, and a `null`
+   * row is a gap the host has not filled yet.
+   *
+   * Absolute rather than loop-relative because everything downstream needs it —
+   * striping parity, the skeleton's width seed, and the range `(lazyLoad)` asks
+   * for. Outside lazy mode every slot is filled, so the extra object per visible
+   * row buys uniformity for the ~25 rows windowing keeps in the DOM.
+   */
+  protected readonly rowSlots = computed<readonly { row: T | null; index: number }[]>(
+    () => {
+      const window = this.virtualWindow();
+      const data = this.displayData();
+      const start = window ? window.start : 0;
+      const end = window ? window.end : data.length;
+      const slots: { row: T | null; index: number }[] = [];
+      for (let index = start; index < end; index++) {
+        slots.push({ row: data[index] ?? null, index });
+      }
+
+      return slots;
+    },
+  );
+
   /** Zebra striping cannot come from `:nth-child` while windowing — the parity
    *  of a rendered row depends on its ABSOLUTE index, and the spacer rows are
    *  children too. Matches `:nth-child(odd)`, which is 1-based. */
-  protected isStriped(rowIndex: number): boolean {
-    const window = this.virtualWindow();
-
-    return !!window && (window.start + rowIndex) % 2 === 0;
+  protected isStriped(absoluteIndex: number): boolean {
+    return !!this.virtualWindow() && absoluteIndex % 2 === 0;
   }
 
   protected readonly allSelected = computed(() => {
@@ -896,12 +1213,40 @@ export class TableComponent<T extends object> {
    *  full value in a popover; otherwise let the click fall through to the row. */
   protected onCellClipClick(row: T, col: TableColumn<T>, event: Event): void {
     const element = event.currentTarget as HTMLElement;
-    if (element.scrollWidth <= element.clientWidth) {
+    if (!TableComponent.isClipped(element)) {
       return;
     }
     event.stopPropagation();
     this.cellPopoverText.set(this.cellValue(row, col));
     this.cellTextPopover()?.toggle(element);
+  }
+
+  /** Clipped horizontally — itself or anything it renders. A `dsCellTemplate`
+   *  puts the ellipsis on a descendant, so testing only the wrapper misses it. */
+  private static isClipped(element: HTMLElement): boolean {
+    if (element.scrollWidth > element.clientWidth) {
+      return true;
+    }
+
+    return [...element.querySelectorAll<HTMLElement>('*')].some(
+      (child) => child.scrollWidth > child.clientWidth,
+    );
+  }
+
+  /**
+   * A header narrowed by resizing clips its own label, and the label is the only
+   * thing naming the column — so the full text has to stay reachable. Set on
+   * enter rather than always, because a `title` on every header would fire a
+   * tooltip on hover for text that is perfectly readable.
+   */
+  protected onHeaderEnter(event: Event, col: TableColumn<T>): void {
+    const element = event.currentTarget as HTMLElement;
+    const label = element.querySelector<HTMLElement>('.th-label') ?? element;
+    if (TableComponent.isClipped(label)) {
+      element.setAttribute('title', col.label);
+    } else {
+      element.removeAttribute('title');
+    }
   }
 
   private readonly scrollWrap =
@@ -912,6 +1257,8 @@ export class TableComponent<T extends object> {
   protected readonly hscrollNeeded = signal(false);
   private readonly scrollTop = signal(0);
   private readonly viewportHeight = signal(0);
+  // Range last handed to (lazyLoad), so an unanswered request is not re-sent.
+  private lastLazyRequest: { first: number; rows: number } | null = null;
 
   constructor() {
     // One effect for both halves, because the restore CANNOT run in the
@@ -935,21 +1282,27 @@ export class TableComponent<T extends object> {
       this.saveLayout(key, order, widths, hidden);
     });
 
-    if (isDevMode()) {
-      effect(() => {
-        // Only when the mode was never DECLARED: a table that asks for 'client'
-        // with server paging has made that choice knowingly.
-        if (
-          this.sortMode() === null &&
-          this.total() !== null &&
-          this.columns().some((col) => col.sortable)
-        ) {
-          console.warn(
-            '[ds-table] sortable columns default to sortMode="client", but `total` is set, so this table is server-paged and only the CURRENT PAGE would sort — the rows would look sorted and not be. Declare sortMode="server" and reorder in the (sortChange) handler, or sortMode="client" if page-local sorting is really what you want.',
-          );
-        }
-      });
-    }
+    // The default is 'server', which is right for the paged tables that make up
+    // most of them. A table holding ALL its rows is the exception, and `total`
+    // unbound is how it says so — so that is where the reminder goes. Only when
+    // the mode was never DECLARED.
+    devWarn(() =>
+      this.sortMode() === null &&
+      this.total() === null &&
+      this.columns().some((col) => col.sortable)
+        ? '[ds-table] sortable columns default to sortMode="server", so a header click only emits (sortChange) and the table reorders nothing itself. This table binds no `total`, which usually means it holds every row — declare sortMode="client" to sort them in place.'
+        : null,
+    );
+
+    // Same trap one column over: a header filter defaults to the server too, so
+    // the checklist tracks a selection and runs no local pass.
+    devWarn(() =>
+      this.filterMode() === null &&
+      this.total() === null &&
+      this.columns().some((col) => col.filter === 'set')
+        ? '[ds-table] a header filter defaults to filterMode="server", so ticking a value only updates `columnFilters` and filters nothing locally. This table binds no `total`, which usually means it holds every row — declare filterMode="client" to filter them in place.'
+        : null,
+    );
 
     // Virtual mode's two measurements. Only wired while virtualizing, so a
     // normal table pays for neither the scroll listener nor the observer.
@@ -971,28 +1324,64 @@ export class TableComponent<T extends object> {
       });
     });
 
-    if (isDevMode()) {
-      effect(() => {
-        if (!this.virtualScroll()) {
-          return;
-        }
-        if (!this.maxHeight()) {
-          console.warn(
-            '[ds-table] virtualScroll needs maxHeight — without a bounded scroller there is no viewport to window against, so every row renders and nothing is virtualized. Set maxHeight (e.g. "480px").',
-          );
-        }
-        if (this.expandableRows()) {
-          console.warn(
-            '[ds-table] virtualScroll and expandableRows do not combine: an expanded row is taller than virtualRowSize, and every offset after it would be wrong. The expander renders but the panel is suppressed — move the detail into a modal or a drawer, or drop virtualScroll.',
-          );
-        }
-        if (this.pageSize() !== null) {
-          console.warn(
-            '[ds-table] virtualScroll with pageSize paginates a window of a page. Virtual scrolling is what pagination was for on a long list — pick one.',
-          );
-        }
-      });
-    }
+    // Ask for the visible range whenever it has gaps. Keyed on the range itself,
+    // so scrolling within an already-requested window stays quiet and a request
+    // in flight is not repeated every frame — the host is free to answer slowly.
+    effect(() => {
+      if (!this.lazy()) {
+        return;
+      }
+      const slots = this.rowSlots();
+      const gaps = slots.filter((slot) => slot.row === null);
+      if (gaps.length === 0) {
+        return;
+      }
+      const first = gaps[0].index;
+      const rows = gaps[gaps.length - 1].index - first + 1;
+      // Contained, not equal: the viewport is measured after the first paint, so
+      // the window grows by an overscan or two right after opening and an
+      // exact-match guard would fetch the same rows twice.
+      const covered =
+        this.lastLazyRequest &&
+        first >= this.lastLazyRequest.first &&
+        first + rows <= this.lastLazyRequest.first + this.lastLazyRequest.rows;
+      if (covered) {
+        return;
+      }
+      this.lastLazyRequest = { first, rows };
+      this.lazyLoad.emit({ first, rows });
+    });
+
+    devWarn(() =>
+      this.lazy() && !this.virtualScroll()
+        ? '[ds-table] lazy needs virtualScroll: without a window there is no range to fetch, so every gap in `data` renders a skeleton row and (lazyLoad) never narrows. Set virtualScroll (and maxHeight), or hand the table its rows outright.'
+        : null,
+    );
+    devWarn(() =>
+      this.lazy() && this.total() === null
+        ? '[ds-table] lazy needs `total`: the scroller is sized from the rows that EXIST, and without it the spacers collapse to the slice that has arrived — the scrollbar then lies about the length of the list.'
+        : null,
+    );
+    devWarn(() =>
+      this.lazy() && this.sortMode() === 'client'
+        ? '[ds-table] lazy with sortMode="client" sorts only the rows that happen to have arrived, which is a different order every time a window loads. The server owns the order here — drop sortMode or declare "server".'
+        : null,
+    );
+    devWarn(() =>
+      this.virtualScroll() && !this.maxHeight()
+        ? '[ds-table] virtualScroll needs maxHeight — without a bounded scroller there is no viewport to window against, so every row renders and nothing is virtualized. Set maxHeight (e.g. "480px").'
+        : null,
+    );
+    devWarn(() =>
+      this.virtualScroll() && this.expandableRows()
+        ? '[ds-table] virtualScroll and expandableRows do not combine: an expanded row is taller than virtualRowSize, and every offset after it would be wrong. The expander renders but the panel is suppressed — move the detail into a modal or a drawer, or drop virtualScroll.'
+        : null,
+    );
+    devWarn(() =>
+      this.virtualScroll() && this.pageSize() !== null
+        ? '[ds-table] virtualScroll with pageSize paginates a window of a page. Virtual scrolling is what pagination was for on a long list — pick one.'
+        : null,
+    );
 
     // Wire the proxy whenever it exists (stickyScrollbar on). Assigning an
     // equal scrollLeft fires no scroll event, so the two mirrors can't loop.
@@ -1409,10 +1798,38 @@ export class TableComponent<T extends object> {
       return;
     }
     this.exporting.set(true);
+    this.exportStatus.set('Preparing export…');
     try {
-      this.exportCsv(this.exportFilename(), await fetcher());
+      const result = await fetcher();
+      if (typeof result === 'string' || result instanceof Blob) {
+        this.downloadFile(result, this.exportFilename());
+      } else {
+        this.exportCsv(this.exportFilename(), result);
+      }
+      this.exportStatus.set('Export ready');
+    } catch (error) {
+      // Swallowing this is what made a failed export indistinguishable from a
+      // slow one: the button re-enabled and no file ever arrived.
+      this.exportStatus.set('Export failed');
+      this.exportFailed.emit(error);
     } finally {
       this.exporting.set(false);
+    }
+  }
+
+  /** Hands a ready-made file to the browser. Only a Blob gets its object URL
+   *  revoked — a URL the caller supplied is theirs to manage. */
+  private downloadFile(source: Blob | string, filename: string): void {
+    if (typeof document === 'undefined') {
+      return;
+    }
+    const url = source instanceof Blob ? URL.createObjectURL(source) : source;
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    if (source instanceof Blob) {
+      URL.revokeObjectURL(url);
     }
   }
 

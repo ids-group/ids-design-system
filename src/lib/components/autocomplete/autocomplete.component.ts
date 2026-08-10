@@ -11,12 +11,13 @@ import {
   inject,
   input,
   model,
+  numberAttribute,
   output,
   signal,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
   closeOnOutsidePointer,
@@ -24,6 +25,7 @@ import {
   disposeWithLeave,
   type DsOverlayCloseCause,
   forwardOverlayTokens,
+  dropdownOverlay,
   prepareOverlayEnter,
 } from '../overlay-motion';
 import { IconComponent } from '../../icons/icon.component';
@@ -43,6 +45,7 @@ import type {
 } from './autocomplete.types';
 import type { DsSize } from '../../core/size';
 import { resolveReserveMessage } from '../field-defaults';
+import { inFieldGroup } from '../field-group/field-group.token';
 
 let nextId = 0;
 
@@ -54,6 +57,7 @@ let nextId = 0;
   styleUrl: './autocomplete.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   host: {
+    '[class.in-group]': 'inGroup',
     '[class.content-width]': "width() === 'content'",
   },
   providers: [
@@ -68,6 +72,10 @@ export class AutocompleteComponent<T = unknown>
   extends DsControlValueAccessor<T | readonly T[] | null>
   implements OnDestroy
 {
+  /** Segment of a ds-field-group: the group owns the border, radius and focus
+   *  ring, so .in-group strips this control back to its bare contents. */
+  protected readonly inGroup = inFieldGroup();
+
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject(ElementRef<HTMLElement>);
@@ -75,6 +83,8 @@ export class AutocompleteComponent<T = unknown>
    *  a consumer's `ds-autocomplete { --ds-autocomplete-panel-*: … }` reaches it. */
   private readonly panelTokens = [
     '--ds-autocomplete-panel-bg-color',
+    '--ds-autocomplete-panel-radius',
+    '--ds-autocomplete-panel-maxh',
     '--ds-autocomplete-option-bg-color-hover',
   ];
 
@@ -86,6 +96,15 @@ export class AutocompleteComponent<T = unknown>
   readonly value = model<T | readonly T[] | null>(null);
   /** Allows selecting more than one option, shown as removable tags. */
   readonly multiple = input(false, { transform: booleanAttribute });
+  /** Draws the trailing chevron. Turn it off for a search field, where an arrow
+   *  invites a click that would list everything instead of searching. */
+  readonly showChevron = input(true, { transform: booleanAttribute });
+  /** Caps the number of chips shown before collapsing the rest into "+N more" — 0/null shows all.
+   *  Same name and semantics as `ds-multi-select`: without it a trigger grows a
+   *  line per selection and pushes the rest of the form down the page. */
+  readonly maxVisibleChips = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
   /** Trigger height — sm/md/lg. */
   readonly size = input<DsSize>('md');
   /** Trigger width — `fill` stretches to the container, `content` hugs the value. */
@@ -247,6 +266,24 @@ export class AutocompleteComponent<T = unknown>
     return this.allOptions().filter((option) => selectedSet.has(option.value));
   });
 
+  /** What the trigger renders. Separate from `selectedTags`, which stays the
+   *  full selection: Backspace removes the last SELECTED chip, and capping the
+   *  list it reads would silently make it remove the last VISIBLE one instead. */
+  protected readonly visibleTags = computed(() => {
+    const max = this.maxVisibleChips();
+    const tags = this.selectedTags();
+
+    return max && max > 0 ? tags.slice(0, max) : tags;
+  });
+
+  protected readonly overflowCount = computed<number>(() => {
+    const max = this.maxVisibleChips();
+
+    return max && max > 0
+      ? Math.max(0, this.selectedTags().length - max)
+      : 0;
+  });
+
   protected readonly displayLabel = computed(() => {
     if (this.multiple()) {
       return '';
@@ -395,31 +432,11 @@ export class AutocompleteComponent<T = unknown>
       return;
     }
     const triggerElement = this.trigger().nativeElement;
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(triggerElement)
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top',
-          offsetY: 4,
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
-          offsetY: -4,
-        },
-      ]);
-    const overlayConfig: OverlayConfig = {
-      positionStrategy,
-      hasBackdrop: false,
-      panelClass: 'ds-overlay-pane',
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-    };
+    const { positionStrategy, config: overlayConfig } = dropdownOverlay(
+      this.overlay,
+      triggerElement,
+      'ds-overlay-pane',
+    );
     // Content-width trigger can be narrow — let the panel size to its options
     // with the trigger as the floor; fill mode keeps the exact trigger width.
     const triggerWidth = triggerElement.getBoundingClientRect().width;
@@ -465,6 +482,26 @@ export class AutocompleteComponent<T = unknown>
     this.isOpen.set(false);
     this.activeIndex.set(-1);
     this.markTouched();
+  }
+
+  /**
+   * Empties the field — both the selected value and the text the user typed.
+   *
+   * `value.set(null)` alone is not enough from outside: the typed query is
+   * component state with no input bound to it, so the text stays on screen after
+   * the value goes. That gap is why a host reaching for "reset after navigating"
+   * ends up querying the inner `<input>` and dispatching a synthetic `input`
+   * event.
+   *
+   * Deliberately does NOT move focus — the caller may be navigating away, and
+   * stealing focus back into a field they just left is worse than leaving it.
+   */
+  clear(): void {
+    this.value.set(this.multiple() ? [] : null);
+    this.query.set('');
+    if (this.isOpen()) {
+      this.close('dismiss');
+    }
   }
 
   ngOnDestroy(): void {

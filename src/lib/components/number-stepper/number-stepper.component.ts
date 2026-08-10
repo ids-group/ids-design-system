@@ -7,6 +7,7 @@ import {
   input,
   model,
 } from '@angular/core';
+import { optionalBound, boundOr } from '../../core/field-bounds';
 import type { DsSize } from '../../core/size';
 
 @Component({
@@ -21,9 +22,13 @@ export class NumberStepperComponent {
   /** Current numeric value, two-way bound. */
   readonly value = model<number>(0);
   /** Lower bound — the decrement button and typed input clamp to it. */
-  readonly min = input<number>(0);
+  readonly min = input<number, number | undefined>(0, {
+    transform: boundOr(0),
+  });
   /** Upper bound — the increment button and typed input clamp to it; unbounded when null. */
-  readonly max = input<number | null>(null);
+  readonly max = input<number | null, number | null | undefined>(null, {
+    transform: optionalBound,
+  });
   /** Amount added or subtracted per increment/decrement. */
   readonly step = input<number>(1);
   /** Control height — sm/md/lg. */

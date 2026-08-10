@@ -189,17 +189,30 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "2000",
         "required": false,
         "description": "How long to wait for the restored screen's content to grow tall enough before landing as close as it allows. Only meaningful with `restoreScroll`."
+      },
+      {
+        "name": "scrollReset",
+        "kind": "input",
+        "type": "DsScrollReset",
+        "union": [
+          "path",
+          "never",
+          "always"
+        ],
+        "default": "'path'",
+        "required": false,
+        "description": "When the content scroll resets to the top. `'path'` (default) is what the layout has always done; `'always'` also resets on a query- or fragment-only navigation, which is what a server-paged list wants; `'never'` hands the decision to the screen, which can still call `LayoutScrollService.scrollToTop()`. It exists because the layout owning the scroll CONTAINER also meant it owned the POLICY: a screen could add a reset but had no way to suppress one."
       }
     ],
     "outputs": []
   },
-  "auth-shell": {
-    "key": "auth-shell",
-    "selector": "ds-auth-shell",
+  "auth-layout": {
+    "key": "auth-layout",
+    "selector": "ds-auth-layout",
     "isElement": true,
-    "className": "AuthShellComponent",
+    "className": "AuthLayoutComponent",
     "status": "stable",
-    "importName": "AuthShellComponent",
+    "importName": "AuthLayoutComponent",
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
@@ -257,6 +270,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'lg'",
         "required": false,
         "description": "Card padding, passed through to `ds-card`. `md` tightens a short form."
+      },
+      {
+        "name": "landmark",
+        "kind": "input",
+        "type": "'main' | 'none'",
+        "union": [
+          "main",
+          "none"
+        ],
+        "default": "'none'",
+        "required": false,
+        "description": "Announce the card as the page's `main` landmark. The card holds the whole content of an auth screen and `ds-card` renders an `<article>`, which is NOT a landmark, so by default a screen-reader user has nothing to jump to — set this to `'main'` on a standalone auth page. It is opt-in because the layout is also embedded inside pages that already own a `main` (this repo's own docs site nests it inside `ds-app-layout`), and two `main`s is its own violation. Defaulting it to `'main'` is the better end state and belongs in the next batch of default changes."
       }
     ],
     "outputs": []
@@ -271,6 +296,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
       {
         "name": "options",
         "kind": "input",
@@ -306,6 +340,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Allows selecting more than one option, shown as removable tags."
+      },
+      {
+        "name": "showChevron",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Draws the trailing chevron. Turn it off for a search field, where an arrow invites a click that would list everything instead of searching."
+      },
+      {
+        "name": "maxVisibleChips",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Caps the number of chips shown before collapsing the rest into \"+N more\" — 0/null shows all. Same name and semantics as `ds-multi-select`: without it a trigger grows a line per selection and pushes the rest of the form down the page."
       },
       {
         "name": "size",
@@ -828,6 +880,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Whether crumbs render as links; falls back to `DS_CONFIG.breadcrumbs.clickable`, then `true`."
+      },
+      {
+        "name": "maxItems",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Caps how many crumbs render, collapsing the middle into an ellipsis — the first and the LAST always survive. Null (default) renders every crumb. Worth setting on any trail that can get deep: the row is `nowrap` with `overflow: hidden`, so without a cap an overlong trail is clipped from the END, which is the current page — the one crumb the reader needs most."
       }
     ],
     "outputs": [
@@ -1217,6 +1278,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control — see the note on `DsControlValueAccessor.hidden`."
+      },
+      {
         "name": "checked",
         "kind": "model",
         "type": "boolean",
@@ -1369,6 +1439,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "string",
@@ -1480,6 +1559,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
       {
         "name": "mode",
         "kind": "input",
@@ -2039,6 +2127,59 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "field-group": {
+    "key": "field-group",
+    "selector": "ds-field-group",
+    "isElement": true,
+    "className": "FieldGroupComponent",
+    "status": "stable",
+    "importName": "FieldGroupComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "size",
+        "kind": "input",
+        "type": "DsSize",
+        "union": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "'md'",
+        "required": false,
+        "description": "Segment height — the field family's scale, so a group lines up with a plain field beside it."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws the error border on the whole group. A single segment cannot be invalid on its own: the border belongs to the group."
+      },
+      {
+        "name": "disabled",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Dims the group. Disable the CONTROLS too — this is the chrome, not their interactivity."
+      },
+      {
+        "name": "fullWidth",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fills the container instead of hugging its segments."
+      }
+    ],
+    "outputs": []
+  },
   "field-message": {
     "key": "field-message",
     "selector": "ds-field-message",
@@ -2278,6 +2419,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "string",
@@ -2405,6 +2555,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Prevents editing while still allowing focus and selection."
+      },
+      {
+        "name": "readonlyBinding",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
       },
       {
         "name": "invalid",
@@ -2540,6 +2699,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Hard character cap — applies the native maxlength attribute and shows a live \"{current}/{max}\" counter below the field."
+      },
+      {
+        "name": "minLength",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Native `minlength` attribute."
+      },
+      {
+        "name": "pattern",
+        "kind": "input",
+        "type": "readonly RegExp[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Native `pattern` attribute — signal forms sends the schema's RegExp list."
       },
       {
         "name": "enterKeyHint",
@@ -2967,6 +3144,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Renders the item in an error/destructive style."
       },
       {
+        "name": "quiet",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Renders the item muted — a secondary row like \"Sign out\" under a divider, still actionable but not competing with the items above it."
+      },
+      {
         "name": "submenu",
         "kind": "input",
         "type": "TemplateRef<unknown> | null",
@@ -3032,6 +3218,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Card title, shown in the header and used for `aria-labelledby`."
       },
       {
+        "name": "subtitle",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Secondary line under the title. Not part of the accessible name."
+      },
+      {
         "name": "showClose",
         "kind": "input",
         "type": "boolean",
@@ -3039,6 +3234,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "Shows the header close button."
+      },
+      {
+        "name": "dividers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for."
       },
       {
         "name": "icon",
@@ -3127,6 +3331,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Dialog title, shown in the header and used for `aria-labelledby`."
       },
       {
+        "name": "subtitle",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Secondary line under the title. Not part of the accessible name."
+      },
+      {
+        "name": "dividers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for."
+      },
+      {
         "name": "closeOnBackdrop",
         "kind": "input",
         "type": "boolean",
@@ -3188,6 +3410,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
       {
         "name": "value",
         "kind": "model",
@@ -3416,6 +3647,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
       {
         "name": "value",
         "kind": "model",
@@ -4050,6 +4290,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "unknown",
@@ -4301,6 +4550,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "string",
@@ -4366,6 +4624,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Prevents opening the dropdown while still allowing focus."
+      },
+      {
+        "name": "readonlyBinding",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
       },
       {
         "name": "invalid",
@@ -4826,6 +5093,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "SliderValue",
@@ -5090,12 +5366,12 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       },
       {
         "name": "value",
-        "kind": "input-required",
+        "kind": "input",
         "type": "string | number",
         "union": null,
-        "default": null,
-        "required": true,
-        "description": "Headline metric; `unit` is appended directly after it."
+        "default": "''",
+        "required": false,
+        "description": "Headline metric; `unit` is appended directly after it. Optional because the value can be PROJECTED instead — `[dsStatValue]` takes a badge, a status dot, anything a tile needs where a number would go. The input is the fallback, the same shape `[delta]` already has. Namespaced, unlike `[delta]`: twenty components in this library have a `value` input, so a bare `value` attribute used to slot one of them in would also set that input to the empty string."
       },
       {
         "name": "delta",
@@ -5297,6 +5573,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control — see the note on `DsControlValueAccessor.hidden`."
+      },
       {
         "name": "checked",
         "kind": "model",
@@ -5599,6 +5884,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Sort states a column cycles through on click. Default includes null (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g. server-paged lists)."
       },
       {
+        "name": "sortAnnouncement",
+        "kind": "input",
+        "type": "(label: string, dir: SortDir) => string",
+        "union": null,
+        "default": "(label, dir) =>\n      dir\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\n        : `Sorting cleared`",
+        "required": false,
+        "description": "Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing."
+      },
+      {
+        "name": "rangeAnnouncement",
+        "kind": "input",
+        "type": "(first: number, last: number, total: number) => string",
+        "union": null,
+        "default": "(first, last, total) => `Showing ${first}–${last} of ${total}`",
+        "required": false,
+        "description": "Wording for the row-range announcement, so it can be translated. Receives the 1-based first and last row on screen and the total; return an empty string to say nothing."
+      },
+      {
         "name": "skeletonRows",
         "kind": "input",
         "type": "number",
@@ -5736,11 +6039,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "exportFetcher",
         "kind": "input",
-        "type": "(() => Promise<readonly T[]>) | null",
+        "type": "(() => Promise<readonly T[] | Blob | string>) | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Rows to export instead of what the table holds. A server-paged table only HAS the current page, so exporting without this silently exports one page — return the whole set here and the button awaits it."
+        "description": "Where the export button gets its data. A server-paged table only HAS the current page, so exporting without this silently exports one page. Return ROWS and the table serializes them the same way it serializes its own. Return a `Blob` (or a URL string) and the table just downloads it — which is what you want when the backend already formatted the file with its own number formats, its own columns, or a sheet the table never held."
       },
       {
         "name": "stickyScrollbar",
@@ -5779,6 +6082,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Selectable page-size choices shown in the pagination control."
       },
       {
+        "name": "showPageSize",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Shows the page-size picker in the footer pager. Set false for a table whose page size is fixed — the standalone `ds-pagination` has always taken this."
+      },
+      {
+        "name": "showLabel",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Shows the \"N of M\" range label in the footer pager."
+      },
+      {
         "name": "total",
         "kind": "input",
         "type": "number | null",
@@ -5807,7 +6128,29 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Who sorts — see `TableSortMode`. Unset resolves to `'client'`, so a column marked `sortable` always does something; declare `'server'` when the host reorders, or `'none'` to drop the affordance entirely."
+        "description": "Who sorts — see `TableSortMode`. Unset resolves to `'server'`: the table emits `(sortChange)` and reorders nothing, which is what a paged table needs. Declare `'client'` when the table holds every row, or `'none'` to drop the affordance entirely."
+      },
+      {
+        "name": "filterMode",
+        "kind": "input",
+        "type": "TableFilterMode | null",
+        "union": [
+          "client",
+          "server",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Who filters — see `TableFilterMode`. Unset resolves to `'server'`: the table tracks the selection in `columnFilters` for the host to turn into a request, and runs no local pass. Declare `'client'` when the table holds every row and should filter them itself."
+      },
+      {
+        "name": "columnFilterOptions",
+        "kind": "input",
+        "type": "ReadonlyMap<string, readonly string[]>",
+        "union": null,
+        "default": "new Map()",
+        "required": false,
+        "description": "The full value domain per column key, for a header filter the table cannot derive itself. Without it the checklist is built from the rows in hand, which on a server-paged table offers only the values that happen to be on the current page."
       },
       {
         "name": "stickyFirstColumn",
@@ -5835,6 +6178,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "44",
         "required": false,
         "description": "Row height in px in virtual mode. Must match what the rows actually measure, so it drives the CSS height rather than merely describing it."
+      },
+      {
+        "name": "lazy",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fetch rows as they scroll into view instead of receiving them all. `data` becomes a SPARSE array `total` long: put each fetched row at its absolute index and leave the rest empty. Every gap inside the window renders a skeleton row, and `(lazyLoad)` asks for the range covering it. Needs `virtualScroll` — without a window there is nothing to load lazily AGAINST — and `total`, which is what the scrollbar is sized from."
       },
       {
         "name": "rowActions",
@@ -5892,6 +6244,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ],
     "outputs": [
+      {
+        "name": "exportFailed",
+        "kind": "output",
+        "type": "unknown",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Fires when `exportFetcher` rejects. Without it a failed export is silent — the button simply re-enables and no file arrives."
+      },
+      {
+        "name": "lazyLoad",
+        "kind": "output",
+        "type": "{ first: number; rows: number }",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The range now on screen that `data` has gaps in — fetch it and write the rows back at their absolute indices. Re-emits only when the range moves."
+      },
       {
         "name": "rowClicked",
         "kind": "output",
@@ -6057,6 +6427,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'horizontal'",
         "required": false,
         "description": "Controls whether the tab list and panel are stacked horizontally (default) or the tab list runs vertically beside the panel."
+      },
+      {
+        "name": "urlParam",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Keep the active tab in a query parameter, so it survives F5, a shared link and the Back button: `urlParam=\"tab\"` gives `?tab=activity`. Empty (the default) leaves the URL alone, and the strip works exactly as before. The names come from each `ds-tab`'s `value` (falling back to its `label`), so there is no second list to keep in step. **Names, not indices** — writing `?tab=1` would silently repoint every old link the moment a tab is inserted. The FIRST tab writes no parameter and every write REPLACES the history entry, so a pristine screen keeps a clean address and flipping tabs does not fill the Back button. An unknown or missing name lands on the first tab rather than throwing: a URL is user input, and a stale bookmark should still open the screen. Outside a routed context the input is inert. Nothing router-shaped is even resolved until you set it — no DI lookup and, more to the point, no subscription — so a strip that never uses this costs exactly what it did before the input existed."
       }
     ],
     "outputs": [
@@ -6161,6 +6540,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
       {
         "name": "value",
         "kind": "model",
@@ -6274,6 +6662,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Prevents editing while still allowing focus and selection."
       },
       {
+        "name": "readonlyBinding",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
+      },
+      {
         "name": "invalid",
         "kind": "input",
         "type": "boolean",
@@ -6376,6 +6773,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Hard character cap — applies the native maxlength attribute and shows a live \"{current}/{max}\" counter below the field."
+      },
+      {
+        "name": "minLength",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Native `minlength` attribute."
+      },
+      {
+        "name": "pattern",
+        "kind": "input",
+        "type": "readonly RegExp[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Native `pattern` attribute — signal forms sends the schema's RegExp list."
       }
     ],
     "outputs": []
@@ -6470,6 +6885,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
       {
         "name": "value",
         "kind": "model",

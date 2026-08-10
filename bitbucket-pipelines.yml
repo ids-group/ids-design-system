@@ -150,19 +150,35 @@ pipelines:
             - export AWS_DEFAULT_REGION=eu-west-2
             - PROTO_S3_BUCKET="ids-prototypes"
             - PROTO_CF_DISTRIBUTION_ID="E1P3IR95745IWV"
-            # Hashed assets — long immutable cache
+            # Hashed assets — long immutable cache. Everything Angular copies
+            # verbatim is excluded: those keep a STABLE name, so `immutable`
+            # pinned each visitor's first copy for a year and no redeploy could
+            # dislodge it — that is what served a stale /changelog.
             - >
               aws s3 sync dist/ds-docs/browser/ s3://$PROTO_S3_BUCKET/ids-ds/
               --delete
               --cache-control "public, max-age=31536000, immutable"
               --exclude "index.html"
+              --exclude "CHANGELOG.md"
+              --exclude "favicon.ico"
+              --exclude "favicon.svg"
+              --exclude "apple-touch-icon.png"
+            # Stable-name assets — always revalidate
+            - >
+              aws s3 sync dist/ds-docs/browser/ s3://$PROTO_S3_BUCKET/ids-ds/
+              --cache-control "public, max-age=0, must-revalidate"
+              --exclude "*"
+              --include "CHANGELOG.md"
+              --include "favicon.ico"
+              --include "favicon.svg"
+              --include "apple-touch-icon.png"
             # SPA entry point — always revalidate
             - >
               aws s3 cp dist/ds-docs/browser/index.html s3://$PROTO_S3_BUCKET/ids-ds/index.html
               --cache-control "public, max-age=0, must-revalidate"
               --content-type "text/html"
-            # Invalidate the entry point (hashed assets need no invalidation)
+            # Invalidate every stable-name path (hashed assets need none)
             - >
               aws cloudfront create-invalidation
               --distribution-id $PROTO_CF_DISTRIBUTION_ID
-              --paths "/ids-ds/index.html"
+              --paths "/ids-ds/index.html" "/ids-ds/CHANGELOG.md" "/ids-ds/favicon.ico" "/ids-ds/favicon.svg" "/ids-ds/apple-touch-icon.png"

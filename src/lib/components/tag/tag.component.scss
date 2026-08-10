@@ -74,7 +74,7 @@
   color: inherit;
   font: inherit;
   cursor: pointer;
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   padding: var(--tag-close-pad);
   margin-left: var(--tag-close-pad);
   background: color-mix(in oklab, currentcolor calc(var(--opacity-state-hover) * 100%), transparent);

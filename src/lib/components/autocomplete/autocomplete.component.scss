@@ -1,6 +1,7 @@
 /* Autocomplete — trigger lives on host; listbox panel is rendered via
    TemplatePortal so its DOM carries this component's encapsulation attrs.
    Both halves are styled here. */
+@use '../../styles/field-box' as field-box;
 
 :host {
   --_autocomplete-focus-shadow: var(--ds-autocomplete-focus-shadow, var(--ds-field-focus-shadow));
@@ -35,7 +36,9 @@
   align-items: center;
   gap: var(--space-2);
   width: 100%;
-  min-height: var(--hit-cozy);
+
+  @include field-box.field-box-height(md, min-height);
+
   padding: var(--space-1) var(--space-2);
   background: var(--_autocomplete-bg-color);
   border: var(--border-width-default) solid var(--_autocomplete-border-color);
@@ -44,6 +47,18 @@
   text-align: left;
   flex-wrap: wrap;
   transition: border-color var(--duration-fast) var(--ease-standard);
+
+  /* Same contract as ds-input's addon slots, down to the class names — a leading
+     search glyph belongs in one place across the field family, not two. */
+  .addon-slot {
+    display: inline-flex;
+    align-items: center;
+    align-self: stretch;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+
+    &:empty { display: none; }
+  }
 
   &:hover:not(.disabled) { border-color: var(--border-strong); }
   &:focus-within:not(.disabled) {
@@ -67,8 +82,16 @@
 
   /* Density — mirror ds-select (sm 32 / md 40 / lg 48). Multi chips wrap, so
      size sets min-height; the default (md) lives on the base rule above. */
-  &.sm { min-height: var(--hit-min); }
-  &.lg { min-height: var(--field-h-lg); }
+  &.sm { @include field-box.field-box-height(sm, min-height); }
+  &.lg { @include field-box.field-box-height(lg, min-height); }
+}
+
+/* Same treatment as ds-multi-select's overflow marker — the two triggers are the
+   same control to a reader, and should not differ on how the count looks. */
+.overflow {
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xs);
 }
 
 .autocomplete-value {
@@ -79,6 +102,19 @@
 .autocomplete-input {
   flex: 1;
   min-width: var(--_autocomplete-input-minw);
+
+  /* Single mode with a value and the panel closed: the field has nothing to
+     filter yet, and an empty 80px text area sitting beside the chosen label is
+     what made this read as a free-text input rather than a picker. Collapsed,
+     not removed — it keeps focus, so clicking the field (which focuses it) opens
+     the panel and expands it again, and typing still filters. */
+  &.collapsed {
+    flex: 0 0 0;
+    min-width: 0;
+    width: 0;
+    padding: 0;
+  }
+
   border: 0;
   outline: 0;
   background: transparent;
@@ -96,6 +132,8 @@
      into document.body (outside :host), so :host-scoped custom props never
      inherit down to it and background would collapse to transparent. */
   --_autocomplete-panel-bg-color: var(--ds-autocomplete-panel-bg-color, var(--surface-overlay));
+  --_autocomplete-panel-radius: var(--ds-autocomplete-panel-radius, var(--ds-radius-panel));
+  --_autocomplete-panel-maxh: var(--ds-autocomplete-panel-maxh, var(--picker-maxh));
   --_autocomplete-option-bg-color-hover: var(--ds-autocomplete-option-bg-color-hover, var(--surface-secondary));
 
   /* Fill the cdk-overlay-pane width (set from trigger.getBoundingClientRect()
@@ -106,10 +144,10 @@
   padding: 0;
   background: var(--_autocomplete-panel-bg-color);
   border: var(--border-width-default) solid var(--border-default);
-  border-radius: var(--radius-lg);
+  border-radius: var(--_autocomplete-panel-radius);
   box-shadow: var(--shadow-popover);
   margin: var(--picker-offset) 0 0;
-  max-height: var(--picker-maxh);
+  max-height: var(--_autocomplete-panel-maxh);
   overflow-y: auto;
   z-index: var(--layer-popover);
 
@@ -156,7 +194,7 @@
       width: var(--check-size);
       height: var(--check-size);
       border: var(--border-width-strong) solid var(--border-strong);
-      border-radius: var(--radius-sm);
+      border-radius: var(--ds-radius-inner);
       color: var(--text-on-primary);
 
       &.checked {
@@ -193,5 +231,32 @@
     color: var(--accent);
 
     .create-icon { flex: 0 0 auto; }
+  }
+}
+
+/* Segment of a ds-field-group — see input.component.scss for why. The group
+   draws the border, the radius and the one shared focus ring. */
+:host(.in-group) {
+  width: auto;
+
+  .label,
+  ds-field-message {
+    display: none;
+  }
+
+  .autocomplete-trigger {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    height: 100%;
+
+    &:hover,
+    &:focus,
+    &:focus-visible,
+    &:focus-within {
+      border: 0;
+      box-shadow: none;
+      outline: 0;
+    }
   }
 }

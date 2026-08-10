@@ -142,7 +142,7 @@
   font: var(--font-weight-medium) 13px/1.4 var(--font-sans);
 }
 
-/* Horizontal padding included: as an overlay the nav sits in the shell's
+/* Horizontal padding included: as an overlay the nav sits in the layout's
    rail, which has none of its own — the ds-drawer that used to wrap it did. */
 .toc.is-drawer {
   border-right: none;

@@ -4,16 +4,16 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
-  effect,
   input,
-  isDevMode,
   output,
   viewChild,
 } from '@angular/core';
+import { devWarn } from '../../core/dev-warning';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
 import type { ButtonColor, ButtonVariant, ButtonType } from './button.types';
 import type { DsSize } from '../../core/size';
+import { inFieldGroup } from '../field-group/field-group.token';
 
 // color×variant pairs that RENDER but read poorly — surfaced as a dev-mode
 // console.warn (two inputs can't be narrowed against each other at compile
@@ -49,6 +49,7 @@ const DISCOURAGED_COMBOS = new Map<string, string>([
   styleUrl: './button.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   host: {
+    '[class.in-group]': 'inGroup',
     '[class.full-width]': 'fullWidth()',
     // Reflected so a consumer can target one axis from outside without knowing
     // the inner class names: `ds-button[data-variant="outline"] { … }`. The
@@ -59,6 +60,10 @@ const DISCOURAGED_COMBOS = new Map<string, string>([
   },
 })
 export class ButtonComponent {
+  /** Segment of a ds-field-group: the group owns the border, radius and focus
+   *  ring, so .in-group strips this control back to its bare contents. */
+  protected readonly inGroup = inFieldGroup();
+
   /** Brand/status hue family. */
   readonly color = input<ButtonColor>('primary');
   /** Fill pattern: solid | tonal | ghost | outline | text. All color×variant
@@ -120,24 +125,17 @@ export class ButtonComponent {
   });
 
   constructor() {
-    if (isDevMode()) {
-      effect(() => {
-        const variant = this.variant();
-        if (variant === 'text') {
-          console.warn(
-            '[ds-button] variant="text" is discouraged — prefer the global `.link` class for link-styled actions. It renders, but `.link` is the canonical link affordance.',
-          );
+    devWarn(() => {
+      const variant = this.variant();
+      if (variant === 'text') {
+        return '[ds-button] variant="text" is discouraged — prefer the global `.link` class for link-styled actions. It renders, but `.link` is the canonical link affordance.';
+      }
+      const reason = DISCOURAGED_COMBOS.get(`${this.color()}|${variant}`);
 
-          return;
-        }
-        const reason = DISCOURAGED_COMBOS.get(`${this.color()}|${variant}`);
-        if (reason) {
-          console.warn(
-            `[ds-button] color="${this.color()}" variant="${variant}" is a UX-discouraged combination — it renders, but ${reason}.`,
-          );
-        }
-      });
-    }
+      return reason
+        ? `[ds-button] color="${this.color()}" variant="${variant}" is a UX-discouraged combination — it renders, but ${reason}.`
+        : null;
+    });
   }
 
   protected onClick(event: MouseEvent): void {

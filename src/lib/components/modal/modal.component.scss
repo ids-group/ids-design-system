@@ -10,6 +10,8 @@
   --_modal-title-text-color-error:  var(--ds-modal-title-text-color-error,  var(--error-text));
   --_modal-title-weight: var(--ds-modal-title-weight, var(--font-weight-bold));
   --_modal-title-font-size: var(--ds-modal-title-font-size, var(--font-size-h5));
+  --_modal-subtitle-text-color: var(--ds-modal-subtitle-text-color, var(--text-secondary));
+  --_modal-subtitle-font-size: var(--ds-modal-subtitle-font-size, var(--font-size-s));
   --_modal-eyebrow-text-color: var(--ds-modal-eyebrow-text-color, var(--text-tertiary));
   --_modal-eyebrow-font-size: var(--ds-modal-eyebrow-font-size, var(--font-size-xs));
   --_modal-eyebrow-weight: var(--ds-modal-eyebrow-weight, var(--font-weight-bold));
@@ -24,7 +26,17 @@
   --_modal-enter-duration: var(--ds-modal-enter-duration, var(--ds-motion-enter-surface-duration));
   --_modal-enter-easing: var(--ds-modal-enter-easing, var(--ds-motion-enter-surface-easing));
   --_modal-leave-duration: var(--ds-modal-leave-duration, var(--ds-motion-exit-duration));
+  --_modal-leave-keyframes: var(--ds-modal-leave-keyframes, ds-fade-out);
   --_modal-leave-easing: var(--ds-modal-leave-easing, var(--ds-motion-exit-easing));
+
+  /* The horizontal gutter is one value for all three regions, and was already
+     uniform before it was tokenised — so it is one knob, not three. Only the
+     vertical differs, because the header and the actions sit against a divider
+     and the body does not. */
+  --_modal-pad-x: var(--ds-modal-pad-x, var(--space-5));
+  --_modal-header-pad-y: var(--ds-modal-header-pad-y, var(--space-4));
+  --_modal-body-pad-y: var(--ds-modal-body-pad-y, var(--space-5));
+  --_modal-actions-pad-y: var(--ds-modal-actions-pad-y, var(--space-4));
   --_ds-enter-scale: var(--ds-modal-enter-scale, 0.97);
 
   display: contents;
@@ -65,7 +77,7 @@
     align-items: center;
     gap: var(--space-3);
     justify-content: space-between;
-    padding: var(--space-4) var(--space-5);
+    padding: var(--_modal-header-pad-y) var(--_modal-pad-x);
     border-bottom: var(--border-width-default) solid var(--_modal-divider);
   }
 
@@ -103,11 +115,25 @@
     &:empty { display: none; }
   }
 
+  .title-line {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
   .title {
     font: var(--_modal-title-weight) var(--_modal-title-font-size) / var(--line-height-snug) var(--font-heading);
     margin: 0;
     min-width: 0;
     color: var(--_modal-title-text-color);
+  }
+
+  .subtitle {
+    font: var(--font-weight-regular) var(--_modal-subtitle-font-size) / var(--line-height-snug) var(--font-sans);
+    color: var(--_modal-subtitle-text-color);
+    margin: var(--space-0-5) 0 0;
   }
 
   .close {
@@ -126,7 +152,7 @@
   }
 
   .body {
-    padding: var(--space-5);
+    padding: var(--_modal-body-pad-y) var(--_modal-pad-x);
     overflow-y: auto;
   }
 
@@ -134,12 +160,22 @@
     display: flex;
     gap: var(--space-3);
     justify-content: flex-end;
-    padding: var(--space-4) var(--space-5);
+    padding: var(--_modal-actions-pad-y) var(--_modal-pad-x);
     border-top: var(--border-width-default) solid var(--_modal-divider);
 
     // A read-only dialog projects nothing here — without this it still draws a
     // stray padded strip with a divider (same guard as .impact below).
     &:empty { display: none; }
+  }
+
+  // The regions are padded to clear a rule; with no rule, header-bottom and
+  // body-top stack into one oversized gap. Zero the FALLBACK, not the resolver —
+  // collapsing this to `0` would silently drop a consumer's override.
+  &.no-dividers {
+    --_modal-body-pad-y: var(--ds-modal-body-pad-y, 0);
+
+    .header { border-bottom-width: 0; }
+    .actions { border-top-width: 0; }
   }
 
   &.error {
@@ -179,15 +215,10 @@
   animation-timing-function: var(--_modal-enter-easing);
 
   &.closing {
-    animation-name: modal-out;
+    animation-name: var(--_modal-leave-keyframes);
     animation-duration: var(--_modal-leave-duration);
     animation-timing-function: var(--_modal-leave-easing);
     animation-fill-mode: forwards;
   }
 }
 
-// Stays local and literally named: onLeaveEnd() matches this name to tear the
-// modal down, so it must not be swappable.
-@keyframes modal-out {
-  to { opacity: 0; }
-}

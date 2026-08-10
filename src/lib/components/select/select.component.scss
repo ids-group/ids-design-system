@@ -82,7 +82,7 @@
     align-items: center;
     justify-content: center;
     color: var(--icon-default);
-    border-radius: var(--radius-sm);
+    border-radius: var(--ds-radius-inner);
     padding: var(--space-0-5);
     cursor: pointer;
     flex: 0 0 auto;
@@ -164,3 +164,36 @@
    the `ds-dropdown-panel` class (set on the overlay config). The portaled
    panel sits outside this component's encapsulation, so `:host ::ng-deep`
    selectors here would never reach it. */
+
+/* Segment of a ds-field-group. The group draws the border, the radius and the
+   ONE focus ring for the whole row, so this control gives all three up — a
+   second box mid-row is exactly what the group exists to remove. Width goes to
+   auto because the host stretches to 100% inside a flex segment, and the label
+   and message row are suppressed: they would break the glued line, and a
+   group-level label is not built yet. */
+:host(.in-group) {
+  width: auto;
+
+  .label,
+  ds-field-message {
+    display: none;
+  }
+
+  /* .dropdown, not .trigger: this component's bordered box is the div that
+     carries role="combobox", and its class is .dropdown. */
+  .dropdown {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    height: 100%;
+
+    &:hover,
+    &:focus,
+    &:focus-visible,
+    &:focus-within {
+      border: 0;
+      box-shadow: none;
+      outline: 0;
+    }
+  }
+}
