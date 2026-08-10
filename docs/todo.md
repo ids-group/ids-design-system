@@ -3,7 +3,7 @@
 Running list of design-system improvements. Add items here as they come up.
 Deep gap analysis: `docs/superpowers/ds-gap-analysis.md`. Outstanding audit (a11y/API): `docs/superpowers/library-audit.md`.
 Packaging / initial-bundle chunking: `packaging-chunking-audit.md` (2026-08-03 — also lists corrections this file still owes).
-**Baseline: v0.8.0 is released** (2026-08-05) — so "since the last release" means since 0.8.0. **`dev` has since accumulated a whole release and has not been cut:** `migrations/unreleased.json` carries **8 actionable + 28 informational** entries as of 2026-08-10, and `migrations/unreleased/README.md` is the human guide to them. See the RELEASE GATE below before adding anything breaking.
+**Baseline: v0.9.0 is released** (2026-08-10) — everything the 08-06→08-10 sessions built shipped in it, so "since the last release" now means since 0.9.0. Its migration manifest is `migrations/0.9.0.json` (10 actionable + 53 informational, the last 21 being the DELETE-LIST). **The per-release prose guide is retired** — it duplicated the manifest in a form nothing read and went stale inside one release; the delete-list now lives in the manifest and in the CHANGELOG block.
 
 Completed items are archived in `done.md` (last archive pass **2026-08-10**; before that 08-06/07 and 08-05. Last full re-verification of open items **2026-07-24**, by 12 parallel audit agents — several items have been corrected against the code since, each noted in place).
 
@@ -11,7 +11,7 @@ Completed items are archived in `done.md` (last archive pass **2026-08-10**; bef
 
 ## Priority board (2026-08-10 actualization)
 
-**25 open — 1 P1, 10 P2 and 14 P3 — but the count flatters the board.** **Twelve are parked**: ten P3s waiting on a first consumer ask (splitter, CascadeSelect, lightbox, CDK Menu, `ds-select` native multi, stepper formatting, row-expansion deltas, primary-CTA, MED, inspect mode) and two kept deliberately as decision records not to be "simplified" (`role="banner"`, the duplicated `compact` condition). **A P2 — shared picker internals — is open against its own recommendation**, which is not to build it until a fourth list picker appears.
+**24 open — 10 P2 and 14 P3 — but the count flatters the board.** **Twelve are parked**: ten P3s waiting on a first consumer ask (splitter, CascadeSelect, lightbox, CDK Menu, `ds-select` native multi, stepper formatting, row-expansion deltas, primary-CTA, MED, inspect mode) and two kept deliberately as decision records not to be "simplified" (`role="banner"`, the duplicated `compact` condition). **A P2 — shared picker internals — is open against its own recommendation**, which is not to build it until a fourth list picker appears.
 
 **So the live board is seven decisions and three pieces of work.** The decisions, and **all seven are now items rather than prose** — three of them were not, until 2026-08-10, which is the failure this file names twice: **cut 0.9.0** (the P1; everything else queues behind it) · **Angular 22**, whose peer range we currently exclude · **packaging A/C/D** · **the breaking batch after 0.9.0**, decided as one story · **the four identical consumer overrides**, which are evidence about our defaults · **verdicts B1–B5** plus a colour space, for the interlocked token trio · **the LOOK** for `dirty` / `pending` / `disabledReasons`, which is what blocks the last three signal-forms members. The work: composition rules · width-based overflow as an opt-in · the `ds-modal` status widening (breaking, so it rides the batch).
 
@@ -27,9 +27,7 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 
 **P1 — real defects:** _(none. The P1 below is a release decision, not a defect.)_
 
-- [ ] **[P1] Cut 0.9.0. It is the decision the rest of the board waits on, and it has been prose until now (filed as an item 2026-08-10).** `migrations/unreleased.json` carries **10 actionable + 32 informational** entries against 0.8.0, and `migrations/unreleased/README.md` is the written human guide with a "what you can now DELETE" table. On this repo's policy that is a release, and it is sitting uncut.
-  **Why it blocks things rather than just waiting.** mm-broker is on **0.7.1** and the 08-07 audit found it had not adopted hooks from releases it already has, so every further breaking change enlarges the single migration it must eventually swallow. The queued breaking work (modal `status`, the four default changes, the width-overflow flip, packaging D, the Angular 22 peer range) all wants the release AFTER this one — which cannot be sequenced while this one is uncut.
-  **What it needs from you:** the go-ahead, and a call on whether the Angular 22 peer range rides in 0.9.0 or waits, since the range is part of what the release publishes. Everything else is mechanical: the `npm version` hook promotes `migrations/unreleased.json` to `migrations/0.9.0.json` and the three-pipeline chain (cut → publish → deploy-docs) is proven end-to-end.
+- [x] **[P1] Cut 0.9.0 — DONE 2026-08-10, by Stas, while this item was being filed.** The three-pipeline chain ran clean end to end: `cut-release.sh minor` merged dev→main and tagged, the `v*` pipeline published `@ids-group-ltd/ids-design-system@0.9.0` to npmjs (69 files, 853.5 kB), and the `main` pipeline built and uploaded the docs. **One gap the logs exposed:** `npm version` promoted `migrations/unreleased.json` → `0.9.0.json` but left the prose guide folder at `unreleased/`, where the next release would have written over it — and the manifest pointed at that path. The guide has since been retired outright (it duplicated the manifest in a form nothing read); the release script now promotes a guide folder if one exists, so the same slip cannot recur.
 
 - [ ] **[P2] The breaking batch after 0.9.0 — decide it as ONE story, because it is four surprises otherwise (filed as an item 2026-08-10; it was prose in three places).** Each member is recorded in its own item; what is missing is the decision to ship them together. **Members:** (a) `ds-modal` `error: boolean` → `status: DsStatus`, so a warning or info dialog becomes expressible at all; (b) the width-based overflow DEFAULT flip for chip rows; (c) the four DEFAULT changes below that two consumers reached for independently; (d) packaging option D, if that is the packaging answer, since it moves every consumer's imports.
   **Why together:** (a), (b) and (c) are all "what does a component do out of the box", and a consumer who takes them one release at a time is surprised three times by the same class of change. One migration guide can carry the lot with one decision rule per member.
@@ -123,7 +121,7 @@ archived in `done.md` with its provenance.** Two facts stay here because they ar
 
 The lesson these audits keep producing is recorded once, in the composition-rules item:
 eight consumer workarounds were written against hooks that already existed, because nothing
-ever told them a thing had been tokenised. That is what `migrations/unreleased/README.md` §3
+ever told them a thing had been tokenised. That is what the `DELETE-LIST:` entries in each manifest
 ("what you can now DELETE") exists to fix.
 
 ## Architecture / tokens

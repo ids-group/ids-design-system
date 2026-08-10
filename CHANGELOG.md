@@ -10,6 +10,43 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## 0.9.0 — 2026-08-10
 
+### What you can now DELETE
+
+The half a release note usually leaves out. Two dogfooding audits (mm-ecm 2026-08-06, mm-broker
+2026-08-07) read consumer stylesheets as a record of what this library made them write, and both
+found the same thing: **most of the workarounds were written against hooks that already existed** —
+the consumer had no signal that anything had been tokenised since. That is a failure of these notes,
+not of the consumer. None of this is required; skipping it leaves working code that is merely
+redundant.
+
+| If you have | Delete it, because |
+| --- | --- |
+| `.button.button.button { … }` or rules against `.v-outline` / `.c-secondary` | `ds-button` reflects `[data-variant]` and `[data-color]` on the HOST. Use `ds-button[data-variant="outline"]` |
+| `--radius-sm: 0` to square a checkbox | `--ds-checkbox-radius` |
+| `.title.title { font-size }` inside a modal | `--ds-modal-title-font-size` |
+| Pagination label type overrides | `--ds-pagination-label-*` |
+| `.size { display: none }` on a pager | `[showPageSize]="false"` — and it is now forwarded through `ds-table` too |
+| `.actions:empty { display: none }` on a modal | The library already ships it |
+| `--ds-modal-divider: transparent`, plus whatever you rewrote the modal padding to afterwards | `[dividers]="false"` — it drops the rules *and* the padding that existed to clear them |
+| A defensive hover rule on the selected dropdown row | The `:not(.is-selected)` branch already handles it |
+| `ds-menu-divider { padding: 0 }` | `--ds-menu-divider-spacing`, which already defaults to 0 |
+| A dozen scattered `--ds-*-radius: 0` | For a fully square brand, four lines: `--radius-sm/md/lg/xl: 0` (leave `--radius-pill`). Measured — the three ROLES alone leave options, clear buttons and dropdown panels rounded; they are the tool for squaring one family and keeping another. Worked example on the Theming page |
+| A global rule squaring `.ds-overlay-pane` | Radius and elevation roles now travel onto portaled panes when the host overrides them |
+| Absolutely positioning a search glyph over an autocomplete, or hiding `.autocomplete-chevron` | `dsAutocompletePrefix` and `[showChevron]="false"` |
+| Querying the autocomplete's inner `<input>` and dispatching a synthetic `input` event to clear it | `clear()` |
+| A hand-built KPI tile whose value is a badge | `ds-stat` takes a projected `[dsStatValue]` |
+| A pinned `--ds-search-height` (or any sibling) to get a shorter control row | `density="compact"` on the container — every field control is 32px there, measured |
+| A hand-rolled `.scrim` + `.panel` dialog, written because the modal header could not hold a badge or a second line | `ds-modal` projects `[title-badge]` and takes a `subtitle`. You get back the focus trap, focus restore, the scroll lock, Escape and the footer |
+| `[value]="f.x().value()" (valueChange)="f.x().value.set($event)"` on every field of a signal form | `[formField]="f.x"` — the control implements the contract already |
+| `white-space: normal` forced onto a badge in a table cell | `--ds-badge-white-space` |
+| `::ng-deep .card { height: 100% }` for equal-height cards | The card's box fills a stretched host on its own |
+| `!important` on `ds-table` cell padding under `density="compact"` | Compact no longer out-specifies the padding hooks |
+| A wrapper around `ds-table` for sort/range announcements, keyboard column resize, or a header filter the checklist cannot express | All three ship: the live region, the `role="separator"` handle, and `dsHeaderFilter` |
+
+**To sweep for the rest:** grep your styles for `::ng-deep`, `!important` and any selector naming a
+DS internal class (`.button`, `.trigger`, `.option`, `.modal`). Each hit is either a row above or a
+genuine gap worth reporting.
+
 ### Changed (breaking, behaviour)
 
 - **`ds-table` `sortMode` and `filterMode` default to `'server'`, were `'client'`.** Server-paged is the
