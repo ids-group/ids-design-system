@@ -597,15 +597,24 @@
     The names come from each tab's
     <code class="t-mono-inline">
       value
-    </code> (falling back to its
+    </code>, falling back to a SLUG of its
     <code class="t-mono-inline">
       label
-    </code>), so there is no second list to keep in
-    step — the same identifier
+    </code> — kebab, lowercased, diacritics
+    dropped, so "License Verification Status" gives
+    <code class="t-mono-inline">
+      ?tab=license-verification-status
+    </code> rather than a
+    percent-encoded sentence. That is not the identifier
     <code class="t-mono-inline">
       tabClosed
-    </code> already emits. Three decisions
-    are baked in. <strong>Names, not indices:</strong>
+    </code> emits: closing still carries the raw
+    label, because a host matches it against its own list. And a slug is still
+    derived from copy, so renaming a tab still breaks saved links —
+    <code class="t-mono-inline">
+      value
+    </code> is the only fix for that. Three
+    decisions are baked in. <strong>Names, not indices:</strong>
 
     <code class="t-mono-inline">
       ?tab=1
@@ -662,6 +671,33 @@
     <code class="t-mono-inline">
       subtab
     </code>.
+  </p>
+
+  <h3 class="block-title t-h4">
+    Reopening the last tab
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      rememberLastTab
+    </code> stores the active tab per
+    path in <code class="t-mono-inline">sessionStorage</code>, so returning to a
+    record reopens where you left it. Off by default, and it only does anything
+    alongside <code class="t-mono-inline">urlParam</code>, which supplies the
+    names — a remembered INDEX would repoint the moment a tab is inserted, for the
+    same reason the parameter carries names rather than numbers.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      A link always wins.
+    </strong> The parameter is read first; memory only
+    fills the gap the first tab deliberately leaves, since that case writes no
+    parameter at all. Tab one is remembered too — otherwise going back to it would
+    be forgotten, and the next visit would reopen the tab before it. Session
+    storage rather than local, so tomorrow is a fresh visit rather than a stale
+    one, and every access is guarded: Safari in private mode throws on write, and
+    a strip that cannot store simply stops remembering.
   </p>
 
 </docs-section>

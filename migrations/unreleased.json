@@ -47,6 +47,20 @@
         "brand slot",
         "logo width"
       ]
+    },
+    {
+      "id": "tabs-url-param-slugs-the-label",
+      "kind": "behavior",
+      "old": "ds-tabs[urlParam]",
+      "new": null,
+      "note": "ds-tabs' urlParam now SLUGS a tab's label for the query parameter instead of using it raw. A tab that declares no `value` used to put its display string into the address - ?tab=License%20Verification%20Status - and now yields ?tab=license-verification-status (kebab, lowercased, diacritics decomposed and dropped; a label with nothing sluggable in it, CJK or bare punctuation, keeps its raw text). WHO IS AFFECTED: only consumers who adopted urlParam in 0.9.0 AND left `value` off their ds-tab elements. Their existing links stop matching and land on the first tab, which is what a stale bookmark has always done - nothing throws. ACTION: either accept the new parameter values, or declare `value` on each ds-tab to pin the names permanently, which is the better fix regardless: a slug is still derived from display copy, so renaming a tab still moves the link. NOT CHANGED: tabClosed still emits the raw label, because a host matches it against its own list - the two identifiers are deliberately different now, and the docs said they were the same until this release.",
+      "searchHints": [
+        "urlParam",
+        "ds-tabs",
+        "?tab=",
+        "tabClosed",
+        "ds-tab"
+      ]
     }
   ],
   "informational": [
@@ -71,6 +85,7 @@
     "ds-filter-bar takes triggerSize (sm|md|lg, default md) for its own \"+N\" trigger. The bar cannot infer it: dsFilterItem carries a WIDTH and the filters are arbitrary projected controls whose size it never sees, so a row of sm filters got an md trigger standing 8px taller under align-items: flex-end. DELETE-LIST: if you pinned --ds-button-height / --ds-button-font-size / --ds-button-pad-x under ds-filter-bar to force the trigger smaller -> triggerSize=\"sm\" replaces all three.",
     "If you must hold two trailing controls in ONE component, the Filter bar page now shows the three declarations its :host owes (display: flex; align-items: flex-end; gap: var(--ds-filter-bar-gap, var(--space-3))) - the bar's own trailing rule, with the gap read from the existing public token so the copy cannot drift. The usual REASON for pairing them is also gone: a bar-level Clear no longer has to share a component with the search to cancel an armed debounce, because ds-search cancels its own pending keystroke when the host writes value.",
     "DS_CONFIG gained a modal section: provideDsConfig({ modal: { dividers: false } }) sets the default for ds-modal and ds-modal-card app-wide, or on a route or subtree, with an explicit [dividers] on the element still winning. It reaches where an attribute cannot - a ModalService confirm renders a ds-modal-card with no ds-modal ancestor to bind - which is why a per-element input was not enough. Internally [dividers] is now boolean | null so \"unset\" stays distinguishable from an explicit false; existing bindings are unaffected.",
-    "DELETE-LIST: if you repeat [dividers]=\"false\" on every modal (mm-broker has 41), or reach into .modal > .header|.body|.actions with !important because hiding the rules left the padding stacked -> provideDsConfig({ modal: { dividers: false } }) replaces both. Which padding collapses is deliberate: the BODY drops to zero and the header/actions keep theirs, because the body is the scroll container and a gap in its padding would scroll away and let content meet the title."
+    "DELETE-LIST: if you repeat [dividers]=\"false\" on every modal (mm-broker has 41), or reach into .modal > .header|.body|.actions with !important because hiding the rules left the padding stacked -> provideDsConfig({ modal: { dividers: false } }) replaces both. Which padding collapses is deliberate: the BODY drops to zero and the header/actions keep theirs, because the body is the scroll container and a gap in its padding would scroll away and let content meet the title.",
+    "ds-tabs takes rememberLastTab (off by default), which reopens the tab a screen was last left on. Stored per path in sessionStorage under ds-tabs:{path}:{param}; inert without urlParam, which supplies the names because a remembered INDEX would repoint the moment a tab is inserted. A link always wins - the query parameter is read first and memory only fills the gap the first tab deliberately leaves. Every storage access is guarded, so Safari private mode simply means the strip stops remembering. DELETE-LIST: a helper that kept the last tab per path in sessionStorage can go."
   ]
 }

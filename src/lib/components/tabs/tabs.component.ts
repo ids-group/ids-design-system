@@ -27,6 +27,22 @@ let nextId = 0;
 // production.
 const claimedUrlParams = new Map<string, number>();
 
+/** Label → URL name. Diacritics are decomposed and dropped so "Zusätze" gives
+ *  `zusatze` rather than a percent-encoded umlaut; everything else that is not a
+ *  letter or digit collapses to a single dash. A label with nothing sluggable in
+ *  it at all — CJK, or just punctuation — keeps its raw text, which is what this
+ *  used to do for every label: still a name, just an ugly one. */
+function slugify(label: string): string {
+  const slug = label
+    .normalize('NFKD')
+    .replace(/\p{M}/gu, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+  return slug || label;
+}
+
 @Component({
   selector: 'ds-tabs',
   standalone: true,
@@ -81,6 +97,16 @@ export class TabsComponent {
    * before the input existed.
    */
   readonly urlParam = input<string>('');
+
+  /** Reopen the tab this screen was last left on, per path, from
+   *  `sessionStorage`. Off by default and only does anything alongside
+   *  `urlParam`, which supplies the names — a remembered INDEX would repoint the
+   *  moment a tab is inserted, the same reason the parameter carries names.
+   *
+   *  A link always wins: the parameter is consulted first, and memory only fills
+   *  the gap the first tab deliberately leaves in the URL. Session, not local, so
+   *  a tab reopened tomorrow is a fresh visit rather than a stale one. */
+  readonly rememberLastTab = input(false, { transform: booleanAttribute });
 
   /** Emitted when a close button is clicked. Carries the tab's value input, or
       its label when value is not set. The host is responsible for removing the
@@ -160,9 +186,12 @@ export class TabsComponent {
       if (!param || !params || tabs.length === 0) {
         return;
       }
-      const name = params.get(param);
-      const found = name
-        ? tabs.findIndex((tab) => this.tabName(tab) === name)
+      // The parameter first, then memory — a shared link has to beat what this
+      // browser happens to remember. Memory only fills the gap the first tab
+      // leaves, since that case writes no parameter at all.
+      const target = params.get(param) ?? this.rememberedName();
+      const found = target
+        ? tabs.findIndex((tab) => this.tabName(tab) === target)
         : 0;
       const index = found < 0 ? 0 : found;
       if (index !== this.selectedIndex()) {
@@ -180,11 +209,64 @@ export class TabsComponent {
     return !!this.router && !!this.route;
   }
 
+  /** The tab's name AS IT APPEARS IN THE URL. A label is display copy, so it is
+   *  slugged rather than used raw: without this a strip whose tabs declare no
+   *  `value` produced `?tab=License%20Verification%20Status`. Deliberately NOT
+   *  what `tabClosed` emits — that stays the label, because a host matches it
+   *  against its own list.
+   *
+   *  A slug is still derived from copy, so renaming a tab still breaks saved
+   *  links. `value` is the fix for that, and the only one. */
   private tabName(tab: TabComponent): string {
-    return tab.value() ?? tab.label();
+    return tab.value() ?? slugify(tab.label());
+  }
+
+  /** Storage key for `rememberLastTab`: the path plus the parameter name. Per
+   *  path because that is the screen a reader returns to, and the parameter is
+   *  what keeps two strips on one path apart — which the dev warning above
+   *  already insists is unique. */
+  private memoryKey(): string | null {
+    const param = this.urlParam();
+    if (!this.rememberLastTab() || !param || !this.resolveRouting()) {
+      return null;
+    }
+
+    return `ds-tabs:${this.router!.url.split('?')[0]}:${param}`;
+  }
+
+  /** Every access is wrapped: Safari in private mode throws on write, and a
+   *  quota error must not take a tab strip down with it. Same guard as
+   *  `ds-table`'s persisted layout. */
+  private rememberedName(): string | null {
+    const key = this.memoryKey();
+    if (!key) {
+      return null;
+    }
+    try {
+      return sessionStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  }
+
+  private remember(index: number): void {
+    const key = this.memoryKey();
+    const tab = this.tabs()[index];
+    if (!key || !tab) {
+      return;
+    }
+    try {
+      // Stored for the first tab too, which writes no parameter: without that,
+      // deliberately going back to tab one would be forgotten and the next visit
+      // would reopen the tab before it.
+      sessionStorage.setItem(key, this.tabName(tab));
+    } catch {
+      // Storage unavailable — the strip simply stops remembering.
+    }
   }
 
   private writeUrl(index: number): void {
+    this.remember(index);
     const param = this.urlParam();
     if (!param || !this.resolveRouting()) {
       return;

@@ -34,6 +34,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   component and migrated before 2026-08-11: 0.9.0's named no member collisions at all while sixteen
   classes had grown, and 0.8.0's missed the private `saveLayout` that actually stopped a build.
 
+- **`rememberLastTab` on `ds-tabs` — reopen the tab a screen was last left on.** Off by default, and
+  inert without `urlParam`, which supplies the names: a remembered INDEX would repoint the moment a tab
+  is inserted. Stored per path in `sessionStorage`, so tomorrow is a fresh visit. **A link always wins** —
+  the query parameter is read first, and memory only fills the gap the first tab deliberately leaves.
+  Tab one is remembered too, or going back to it would be forgotten. **You can now delete** a helper
+  that kept the last tab per path.
+
 - **`DS_CONFIG.modal.dividers` — turn modal rules off for a whole app in one declaration.**
   `provideDsConfig({ modal: { dividers: false } })` instead of a binding on every `<ds-modal>`, with an
   explicit `[dividers]` on an element still winning. It also reaches where an attribute cannot: a
@@ -114,6 +121,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   rather than described.
 
 ### Changed
+
+- **`ds-tabs` `urlParam` now SLUGS a tab's label instead of using it raw.** A tab with no `value` used
+  to put its display string straight into the address — `?tab=License%20Verification%20Status`. It is now
+  kebab-cased and lowercased with diacritics dropped: `?tab=license-verification-status`. **If you
+  adopted `urlParam` in 0.9.0 with tabs that declare no `value`, your existing links change** — an old
+  one no longer matches and lands on the first tab, which is what a stale bookmark has always done.
+  Declare `value` on each tab to pin the names for good: a slug is still derived from copy, so renaming a
+  tab still moves the link. What `tabClosed` emits is unchanged — still the raw label.
 
 - **`ds-auth-layout`'s projected `[brand]` slot no longer forces `width: auto`.** It shipped in 0.9.0
   alongside the slot's `max-height`, but at `(0,2,0)` it out-ranks a width the consumer set on their

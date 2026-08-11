@@ -6458,6 +6458,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Keep the active tab in a query parameter, so it survives F5, a shared link and the Back button: `urlParam=\"tab\"` gives `?tab=activity`. Empty (the default) leaves the URL alone, and the strip works exactly as before. The names come from each `ds-tab`'s `value` (falling back to its `label`), so there is no second list to keep in step. **Names, not indices** — writing `?tab=1` would silently repoint every old link the moment a tab is inserted. The FIRST tab writes no parameter and every write REPLACES the history entry, so a pristine screen keeps a clean address and flipping tabs does not fill the Back button. An unknown or missing name lands on the first tab rather than throwing: a URL is user input, and a stale bookmark should still open the screen. Outside a routed context the input is inert. Nothing router-shaped is even resolved until you set it — no DI lookup and, more to the point, no subscription — so a strip that never uses this costs exactly what it did before the input existed."
+      },
+      {
+        "name": "rememberLastTab",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Reopen the tab this screen was last left on, per path, from `sessionStorage`. Off by default and only does anything alongside `urlParam`, which supplies the names — a remembered INDEX would repoint the moment a tab is inserted, the same reason the parameter carries names. A link always wins: the parameter is consulted first, and memory only fills the gap the first tab deliberately leaves in the URL. Session, not local, so a tab reopened tomorrow is a fresh visit rather than a stale one."
       }
     ],
     "outputs": [
