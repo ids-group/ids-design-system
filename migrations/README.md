@@ -21,9 +21,12 @@ One file per released version — `migrations/<version>.json` — mirroring that
 
 **Why:** the auto-update plugin reads the prose changelog with an LLM planner — correct, but
 re-derived on every consumer run. A shipped manifest makes the plan deterministic: the planner
-validates and prefers it, falling back to prose only when a version has no manifest. Every published
-version `0.1.0`–`0.5.0` ships a manifest (older ones authored retroactively); new versions add theirs
-at release time.
+validates and prefers it, falling back to prose only when a version has no manifest. **Every
+published version has one**, so the fallback should never fire — the earliest were authored
+retroactively, and `0.6.1`, `0.6.2` and `0.9.1` were backfilled on 2026-08-11 after an audit found
+them missing. A patch release is not exempt: 0.6.2 turned out to carry an actionable change (a sheet
+with nothing focusable in it stopped closing on Escape), which is exactly the kind a "just fixes"
+release is assumed not to have.
 
 See `AUTHORING.md` for how to write a good entry.
 

@@ -167,8 +167,11 @@ genuine gap worth reporting.
 - **The `ds-select` / `ds-multi-select` dropdown panel has a 12px corner, was 8px.** It was the one panel
   outside the radius role layer — modal, popover, date picker, time picker, autocomplete, bottom sheet, card,
   stat and page footer all resolve `--ds-radius-panel` — so it disagreed with its siblings by 4px and could
-  not be retuned through the role consumers are told to use. Restore with
-  `--ds-select-panel-radius: 8px`, or `--ds-radius-panel: 8px` to move every panel together.
+  not be retuned through the role consumers are told to use. Restore with `--ds-radius-panel: 8px`,
+  which moves every panel together. _(Corrected 2026-08-11: this note first offered
+  `--ds-select-panel-radius: 8px` as a way to restore just this panel. That token does not exist —
+  the dropdown resolves `--ds-radius-panel` directly — so setting it does nothing. `ds-autocomplete`
+  does have a per-panel `--ds-autocomplete-panel-radius`; the two dropdowns do not.)_
 
 - **Seven exit `@keyframes` are gone, replaced by four global presets.** `modal-out`, `ds-sheet-fade-out`
   and `drawer-scrim-out` become `ds-fade-out`; `ds-sheet-down` and the four `drawer-panel-close-*` become
@@ -2208,7 +2211,7 @@ rect(…)` → `clip-path: inset(50%)` on visually-hidden helpers, and `min-/max
   set the `--primary-*` roles directly to hand-picked hex.
 - Relicensed from proprietary (UNLICENSED) to MIT.
 
-## 0.1.0 — 2026-06-12
+## 0.1.0 — 2026-06-15
 
 Initial public release.
 
