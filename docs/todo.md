@@ -71,8 +71,35 @@ _mm-broker's whole-consumer sweep (08-06) is CLEARED: `--ds-badge-white-space`, 
 
 ## From mm-broker's `_ds-overrides.scss`, read as a record (2026-08-07)
 
-Three consumer apps on **0.7.1**, so anything 0.8.0 fixed shows up here as debt they
-have not bumped past: `platform-admin/_ds-overrides.scss` (232 lines),
+**Consumer state update, 2026-08-11 — this section's premise has expired.** mm-broker is on **0.9.1**
+now (one branch, two bumps: 0.7.1 → 0.8.0 → 0.9.1, with `main` merged in three times along the way),
+and pile one is closed on their side: the button retint targets the reflected `data-variant` /
+`data-color` on the host, and the `ds-menu-divider { padding: 0 }` override went with the 0.8.0 bump.
+Three things worth knowing back here, because they say something about how these releases land:
+
+- **All four 0.9.0 subclass collisions in their `ds-table` fork were members this library grew BECAUSE
+  they asked** — the clipped-header tooltip, the export status line, the sort/row-range live region and
+  keyboard column resize. So three of the four were resolved by DELETING their implementation, not by
+  adding `override`: `statusMessage` as a computed folding loading + export + sort + range replaced a
+  signal plus two effects, and `onHeaderEnter` reads the same `.th-label` their fork renders. That is
+  the intended outcome of a consumer ask, and it only worked because the collision list in `0.9.0.json`
+  was corrected — the first version of that manifest named no collisions at all.
+- **Three of the 21 DELETE-LIST entries applied to them, and those three removed the last two places
+  in their whole tree that reached into DS internals** (`--ds-badge-white-space` for the badge in a
+  narrow table cell, and the card filling a stretched host, which retired
+  `::ng-deep .card { height: 100% }`). Both were asks filed from here in the first place. The
+  delete-list-in-the-manifest change is doing its job.
+- **`sortMode` defaulting to `'client'` in 0.8.0 and to `'server'` in 0.9.0 cost them nothing**, because
+  the 0.8.0 migration made all 34 of their tables declare the mode explicitly. Worth remembering as the
+  argument for that migration note's insistence on being explicit rather than relying on the default.
+
+Still open on their side, recorded so nobody here counts it as a DS gap: retiring the fork is now a
+pure refactor (34 call sites, `sortValue` per money/date column, the ai-stats funnel onto
+`dsHeaderFilter`, and the `hideable`/`bordered` default flips), and they deferred `[dividers]="false"`
+because 40 of their files carry `<ds-modal>` and it moves spacing app-wide.
+
+The original 08-07 reading follows, as written. Three consumer apps were then on **0.7.1**, so anything
+0.8.0 fixed showed up as debt they had not bumped past: `platform-admin/_ds-overrides.scss` (232 lines),
 `broker-portal/_ds-overrides.scss` (116) and `employee-portal/_ds-compat.scss` (92).
 Read the way the mm-ecm audit read that consumer's sheet — as the record of what the
 DS made them write. `_ds-compat.scss` is out of scope: it aliases their PREVIOUS
@@ -211,7 +238,7 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
 > fixes shipped, and the false comments were corrected. What follows is what was deliberately NOT
 > done in that pass, each with the reason, so none of it is rediscovered from scratch.
 
-- [ ] **[P3] `ds-sidenav` carries the same four defects the auth layout just fixed.** Byte-identical
+- [x] **[P3] `ds-sidenav` carries the same four defects the auth layout just fixed. FIXED 2026-08-11 — all four, plus a fifth found while copying the rule across.** The `[brand]` slot constraint carried `width: auto` alongside its `max-height`; at `(0,2,0)` that out-ranks a width the consumer set on their own logo, and with the default `max-height: none` it never did anything useful — an `<img>` with no CSS width keeps its ratio under `max-height` on its own. Dropped from BOTH components rather than copied into the second. Verified: `charAt(0)` on `"🅰 Corp"` really does return the lone high surrogate `\ud83c` (measured in a browser, not reasoned), the spread returns the glyph, and ASCII is untouched. Byte-identical
   code, so they were found by diffing the two: `brand().charAt(0)` returns half a surrogate pair for a
   brand starting with an astral character (these are the only two `charAt` calls in `src`); the
   letter-mark `<span class="mark">` has no `aria-hidden`, so a screen reader announces the glyph and
@@ -220,7 +247,7 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   size constraint. Fixing only one side is what made the "same letter-mark as the sidenav" claim false
   in the first place, so these should move together — or the divergence should be stated on purpose.
 
-- [ ] **[P3] `env(safe-area-inset-*)` is inert in the library's own showcase.** The insets resolve to
+- [x] **[P3] `env(safe-area-inset-*)` is inert in the library's own showcase. FIXED 2026-08-11.** `ds-docs/src/index.html` now sets `viewport-fit=cover` (confirmed live in the served document), both `ds-auth-layout` and `ds-bottom-sheet` documentation states that the host app must set it and shows the tag, and `bottom-sheet.component.scss` joined the `, 0px` convention — the missing fallback was not cosmetic, since an unknown `env()` variable invalidates the whole declaration and would have taken the horizontal padding with it. The insets resolve to
   **0** unless the document sets `<meta name="viewport" content="viewport-fit=cover">` — a cutout alone
   is not enough. Repo-wide there is exactly one `viewport-fit` hit, in `presentations/`;
   `ds-docs/src/index.html` does not set it. So the notch handling `ds-auth-layout` advertises cannot be
