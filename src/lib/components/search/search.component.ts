@@ -90,7 +90,6 @@ export class SearchComponent {
 
   protected onText(next: string): void {
     this.text.set(next);
-    // Empty bypasses the timer, and so does a debounce of 0.
     if (this.debounce() > 0 && next !== '') {
       this.cancel();
       this.pending = setTimeout(() => {
@@ -118,8 +117,7 @@ export class SearchComponent {
     this.inputEl()?.nativeElement.focus();
   }
 
-  /** Write a still-waiting keystroke through now, so Enter searches what the
-   *  reader can see rather than what the timer last let past. */
+  /** So Enter searches what the reader can see, not what the timer last let past. */
   private flush(): void {
     if (this.pending) {
       this.cancel();
