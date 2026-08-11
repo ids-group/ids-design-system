@@ -320,7 +320,7 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   **The size hook needed the size variants rewired, or it would have worked at `md` only.** `:host(.size-sm) .stat .value { font-size: … }` out-ranks a token read on `.value`, so those two rules now move the RESOLVER instead and the `.label` half stays where it was. Measured: defaults still sm 22px / md 36px / lg 48px, and one override reaches all three.
   **Verified as a pair in the docs**, deliberately in a 240px column: hooked tile `normal` at 18px with `scrollWidth == clientWidth`, plain tile `nowrap` at 36px overflowing 348 into 191. Worth noting the symptom is not "clipped" as the ask put it — the card sets no `overflow`, so the phrase spills visibly past the tile's edge, which is uglier and easier to spot.
 
-- [ ] **[P3] `ds-filter-bar`'s trailing group cannot hold a consumer PAIR without re-creating its
+- [x] **[P3] DONE 2026-08-11 — documented, and the REASON for the pair dissolved the same day. `ds-filter-bar`'s trailing group cannot hold a consumer PAIR without re-creating its
   layout.** The docs say mark each control rather than wrapping them, because a projected wrapper is a
   plain block whose children stack — correct, and it collides with the one case a consumer cannot
   split: search + Clear, where Clear must be able to **cancel an armed debounce** on the search beside
@@ -329,6 +329,8 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   trailing rule, copied. `display: contents` on `.trailing > *:not(:only-child)` would not do it
   (`:host` styles win), but documenting the three declarations a wrapper owes, or exposing them as
   `--ds-filter-bar-trailing-*`, would keep the copy honest.
+  **Documented, with the snippet, on the Filter bar page** — tokens were the weaker half of the ask: `--ds-filter-bar-trailing-*` would only carry the gap VALUE, and the wrapper still has to write `display`/`align-items` itself. The snippet reads the gap from the existing public `--ds-filter-bar-gap`, so the copy cannot drift.
+  **The stated reason for wanting one component is gone.** It was "Clear must cancel an armed debounce on the search beside it" — `ds-search` now cancels its own pending keystroke when the HOST writes `value`, which a bar-level Clear does, so the two controls no longer need to share a component to coordinate. NOT separately measured in that arrangement: both halves were verified on the Search page (a host write reaching the input, and an empty value cancelling a pending timer), and this is those two on the same code path.
 
 - [x] **[P3] DONE 2026-08-11 as `[debounce]`, with both exemptions the ask named and one it did not. `ds-search` has no debounce, so every list screen wraps it.** mm-broker's wrapper exists
   for exactly two behaviours: 200ms on typing, and **immediate on empty** — clearing the field is a
@@ -361,7 +363,7 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
 > Each of these is a case where a consumer looked at the DS answer, measured it, and kept their own —
 > so the ask is what would change that verdict, not "please add a thing".
 
-- [ ] **[P3] `ds-filter-bar` renders its own "+N filters" trigger at the default `md`, in a row it knows
+- [x] **[P3] DONE 2026-08-11 as `triggerSize`, because the preferred answer turned out to be impossible. `ds-filter-bar` renders its own "+N filters" trigger at the default `md`, in a row it knows
   is `sm`.** Verified in mm-broker's rendered DOM: `class="button c-neutral md v-outline"` — 40px — beside
   filters that are all `size="sm"` (32px), and the row is `align-items: flex-end`, so the trigger stands
   8px taller than everything next to it on all nine of their list screens. The bar has no size input, and
@@ -371,6 +373,8 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   from the items it was given, or take a `triggerSize` alongside `moreLabel`. The first is better — the
   bar already knows every item's declared width, and a row of `sm` filters with an `md` button is not a
   configuration anyone wants.
+  **The first candidate cannot be built, which is why the second shipped.** "Size the trigger from the items it was given" assumes the bar can see their size; it cannot. `dsFilterItem` carries a WIDTH and nothing else, and the filters are arbitrary projected templates whose own `size` input the bar never touches — reading their rendered heights instead would mean measuring the very thing this component refuses to measure. So `triggerSize`, defaulting to `md` so no existing bar moves. Verified both directions: unset gives `class="… md …"` at 40px beside a 40px search; `triggerSize="sm"` gives `sm` at 32px.
+  **Deliberately NOT named `size`**: on a bar that would read as sizing the filters too, which it cannot do.
 
 - [ ] **[P3] `dividers: false` should collapse the padding on the side the divider was on — and the
   0.9.0 DELETE-LIST entry that asks consumers to swap the token for the input is a REGRESSION for a
@@ -399,7 +403,7 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   `rememberLastTab` — would retire the helper. Worth deciding as one question with (1), since together
   they are what "superset" would actually mean.
 
-- [ ] **[P2] `ds-filter-bar` clips the focus ring of its first (and last) inline filter.** The row is
+- [x] **[P2] FIXED 2026-08-11, and the "needs no measurement" claim was right — but measured anyway, and the before/after is unambiguous. `ds-filter-bar` clips the focus ring of its first (and last) inline filter.** The row is
   `overflow: hidden` and each `.item` is sized to exactly the width `dsFilterItem` declared, so the row's
   box starts flush with the first control's left edge — and the DS focus ring is an OUTSET box-shadow
   (`--focus-field` is `0 0 0 3px …`, `--focus-ring` reaches 4px). Interior items are fine, because the
@@ -412,3 +416,21 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   token), which keeps the collapse arithmetic exactly as it is — `clip` still prevents scrolling, and the
   clip margin lets the shadow bleed. A consumer cannot fix this: the row is internal, and padding it
   from outside would change the measured width the split is computed from.
+  **Shipped exactly that**, plus the stale comment above the rule — it still explained why `overflow: hidden` was deliberate. **Measured first:** `rowLeft === firstItemLeft` (both 408px) with `padding-left: 0`, so the outset shadow had precisely zero room. Then painted a 3px ring on the first and last item and screenshotted: before, only the side sitting in the 12px gap drew; after, the ring is complete on all four sides. `scrollWidth === clientWidth` both ways, so no scroll container appeared and the width the split reads is untouched.
+  **A trap worth recording for the next person in this component:** the collapse could not be exercised through the automated browser at all — the row's `ResizeObserver` does not deliver while the tab is hidden, so dragging the width slider changed nothing. It fires only when something forces a paint, which a screenshot does. Verified `hidden` and `clip` report the identical row width in that state, which is what rules out a regression; the collapse itself was then confirmed by reloading at a narrower default frame.
+
+- [ ] **[P2] `ds-table` has nowhere to put a filter row, and that is why one consumer's fork exists.**
+  The component has **no content-projection slots at all** — its only toolbar is the `.table-toolbar` div
+  that renders the Export CSV button when `exportButton` is set. So a screen whose table needs a filter
+  row beside that button has three options: fork the table (mm-broker did: their `ids-data-table` invented
+  a `dtToolbarStart` slot, and two screens use it today), put the row outside the table and give up having
+  it next to Export, or push every filter into the header funnel — which works for a per-column value set
+  but has no answer for a free-text search over a **server-paged** table (`filterQuery` is client-side by
+  definition, and `filterMode="server"` covers the funnels, not a search box).
+  **The ask is one slot** — `[toolbar]`, or `[toolbar-start]`/`[toolbar-end]` if the Export button should
+  keep its side — with the row's layout owned by the table so consumers stop reinventing it. That is
+  strictly additive, and it removes one of the reasons the fork cannot retire: a slot the base does not
+  have is code that must move at retirement whatever else changes.
+  **Worth deciding together with the search question**: if `ds-search` grows `[debounce]` (asked above)
+  and the table grows a toolbar slot, the whole "filter row for a table" pattern becomes DS-native and
+  nobody has to choose between the table's toolbar and a page-level `ds-filter-bar`.
