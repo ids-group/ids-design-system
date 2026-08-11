@@ -16,11 +16,12 @@
     class="search-input"
     [placeholder]="placeholder()"
     [attr.aria-label]="ariaLabel() || placeholder() || null"
-    [(ngModel)]="value"
+    [ngModel]="text()"
+    (ngModelChange)="onText($event)"
     (keydown.enter)="onSubmit()"
   />
 
-  @if (clearable() && value()) {
+  @if (clearable() && text()) {
     <button
       type="button"
       class="search-clear"

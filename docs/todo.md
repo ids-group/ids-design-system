@@ -330,12 +330,16 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   (`:host` styles win), but documenting the three declarations a wrapper owes, or exposing them as
   `--ds-filter-bar-trailing-*`, would keep the copy honest.
 
-- [ ] **[P3] `ds-search` has no debounce, so every list screen wraps it.** mm-broker's wrapper exists
+- [x] **[P3] DONE 2026-08-11 as `[debounce]`, with both exemptions the ask named and one it did not. `ds-search` has no debounce, so every list screen wraps it.** mm-broker's wrapper exists
   for exactly two behaviours: 200ms on typing, and **immediate on empty** — clearing the field is a
   deliberate act and should not wait, which is the part a naive `debounceTime` gets wrong. That plus
   the cancel-on-Clear above is the whole component. `[debounce]="200"` on `ds-search`, with the empty
   value bypassing the timer, would delete it. Worth checking against the other consumers first: if
   ai-sdlc and pinkmoon also hand-roll it, this is a third of a component three apps carry.
+  **Shipped `[debounce]="200"`-style, default 0 so the existing path is byte-identical.** The delay could not simply wrap the model: `value` IS what the template bound `ngModel` to, so debouncing it would have lagged the text the user sees. The input now shows a private `text` signal and `value` is written on the timer — so typing never waits, whatever the delay.
+  **Three things skip the timer, not the two in the ask.** Empty (clearing is deliberate; making the list wait 200ms reads as a hang) and the Clear button, both as filed — plus **Enter**, which flushes a keystroke still in flight so `submitted` emits what the reader can see rather than what the timer last let past. A pending keystroke is also CANCELLED when the value goes empty, so a fast type-then-clear cannot land the stale query afterwards.
+  **A host write mid-typing has to win**, which needs telling the component's own echo apart from a genuine external set — hence the `pushed` field: an incoming `value` that is not what we last pushed cancels the timer and takes over.
+  **Verified in a browser, six cases:** at 600ms the input showed `que` while `value` was still empty at 150ms and caught up after; emptying at 80ms wrote through immediately AND dropped the pending word; Enter flushed within 80ms; the Clear button likewise; with `debounce` temporarily set to 0 the value tracked a keystroke within 40ms, i.e. unchanged; and the one-way `value="Project Alpha"` specimen still fills the input, which is the same host→component path a reset uses.
 
 - [ ] **[P3] `initialsFrom(name)` takes the FIRST TWO words, which is the org rule applied to people.**
   "Mary Jane Watson" gives MJ where a person expects MW, and a one-word name gives a single letter

@@ -36,6 +36,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **`[debounce]` on `ds-search`, so a list screen stops wrapping it.** `[debounce]="200"` holds each
+  keystroke back before `value` updates; the default `0` writes on every keystroke exactly as before,
+  and what the input SHOWS is never delayed at any setting. **Three things skip the timer on purpose**,
+  which is what a wrapped `debounceTime` usually gets wrong: emptying the field, the Clear button, and
+  Enter — the last flushing a keystroke still in flight so `submitted` carries what the reader can see.
+  Emptying also cancels a pending keystroke, so type-then-clear cannot land the stale query a moment
+  later. A host writing `value` mid-typing wins and cancels the timer. **You can now delete** a
+  debounce wrapper around this control.
+
 - **`--ds-stat-value-white-space` and `--ds-stat-value-font-size`, for a tile whose value is a phrase.**
   The value line is `nowrap`, which is right for the number `ds-stat` was built around and wrong for a
   date range or a status — so a text value spilled straight out past the tile's edge, and the way out

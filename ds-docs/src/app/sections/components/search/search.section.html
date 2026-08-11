@@ -138,4 +138,50 @@
       placeholder="Large"
     />
   </div>
+
+  <h3 class="block-title t-h4">
+    Debounce, and the two things it must not delay
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [debounce]="200"
+    </code> holds each keystroke back
+    before <code class="t-mono-inline">value</code> updates, so a list screen stops
+    firing a request per character. Default is
+    <code class="t-mono-inline">
+      0
+    </code> — every keystroke writes through, exactly
+    as this control always has.
+  </p>
+
+  <p class="block-desc t-s">
+    Two things deliberately skip the timer, and they are the reason a wrapped
+    <code class="t-mono-inline">
+      debounceTime
+    </code> usually feels wrong.
+    <strong>
+      Clearing the field
+    </strong> — emptying a search is a deliberate act, and
+    waiting 200ms to see the whole list back reads as a hang — and
+    <strong>
+      Enter
+    </strong>, which flushes whatever is still in flight so you search
+    what you can see. What the input SHOWS is never delayed either way.
+  </p>
+
+  <div class="demo-stack">
+    <ds-search
+      clearable
+      placeholder="Type here — value lags 600ms"
+      [debounce]="600"
+      [(value)]="debounced"
+    />
+
+    <p class="t-s">
+      <code class="t-mono-inline">
+        value
+      </code>: {{ debounced() || '(empty)' }}
+    </p>
+  </div>
 </docs-section>

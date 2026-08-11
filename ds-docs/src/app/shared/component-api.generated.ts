@@ -4485,6 +4485,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'md'",
         "required": false,
         "description": "Control height. `md` (default) keeps the 36px search-row height; `sm` (32px) aligns search with dense toolbars beside `sm` inputs/buttons; `lg` is touch."
+      },
+      {
+        "name": "debounce",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds to hold each keystroke back before `value` updates — 0 (default) writes on every keystroke, exactly as this control always has. Clearing the field BYPASSES the delay, which is the part a plain `debounceTime` gets wrong: emptying a search is a deliberate act, and making the user wait 200ms to see the full list back reads as a hang. Enter flushes for the same reason. What the input SHOWS is never delayed."
       }
     ],
     "outputs": [
