@@ -36,6 +36,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **The global `.link` class now works on a `<button>`, which it has been documented as doing all
+  along.** `ds-button` warns `variant="text"` off in favour of `.link`, and an action that is not
+  navigation has to be a button — but the class was written for anchors and reset none of the browser's
+  button chrome, so everyone who took that advice wrote the same rule by hand. Measured against an
+  `<a class="link">` in the same paragraph, a button came out at 13.3px inside 14px text, with
+  `line-height: normal`, `1px 6px` of padding and an outset border; all of that is gone. **You can now
+  delete** a local `.link-button`, or the padding/border/background/font reset in your overrides.
+  `font-weight` is untouched so `.quiet` and `.standalone` still decide it, and `display` stays
+  `inline-block` so a standalone button lays out predictably. The reset is scoped with `:where()`, so
+  it sits at `.link`'s own specificity and your rule still wins on source order.
+
 - **A single-select `ds-autocomplete` kept the text you typed to filter, and since 0.9.0 kept it
   INVISIBLY.** The filter input collapses to zero width once a chosen label is on show, so leftover
   query text disappeared from view while it went on narrowing the list: reopening a settled picker
