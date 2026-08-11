@@ -21,6 +21,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   chips. Adopting the release costs nothing if you never ask for it: the measurement runs only in
   `"fit"` mode, so a page full of pickers on the default does not observe or force layout.
 
+- **`--ds-dropdown-panel-radius` — the lever 0.9.0's notes promised and never shipped.** That release
+  said an 8px select panel could be restored with `--ds-select-panel-radius`; no such token existed,
+  so the advice did nothing (the note has been corrected). This is the honest version, and it is
+  panel-level rather than per-component on purpose: retuning one picker's corner is not a thing to
+  encourage, while `--ds-radius-panel` moves modal, popover and date picker too. Defaults to that
+  role, so an untouched theme is unchanged, and it is forwarded onto the portaled pane — scope it with
+  a selector (`ds-select { --ds-dropdown-panel-radius: 8px }`) and only that panel moves. Verified
+  in a browser: one select at 3px, the other 34 on the 12px role.
+
 - **The 0.8.0 and 0.9.0 migration manifests were corrected**, so re-read them if you subclass a DS
   component and migrated before 2026-08-11: 0.9.0's named no member collisions at all while sixteen
   classes had grown, and 0.8.0's missed the private `saveLayout` that actually stopped a build.

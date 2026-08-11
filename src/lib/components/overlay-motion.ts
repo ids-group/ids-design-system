@@ -40,6 +40,11 @@ const OVERLAY_MOTION_TOKENS = [
   '--ds-overlay-enter-scale',
 ] as const;
 
+/** Forwarded from the same place as the motion tokens rather than from each picker's
+ *  own `panelTokens`: the panel it styles is `dropdownOverlay()`'s default panel
+ *  class, so every connected picker needs it and none of them needs it differently. */
+const DROPDOWN_PANEL_TOKENS = ['--ds-dropdown-panel-radius'] as const;
+
 /**
  * Why a panel is closing. `'select'` is a deliberate action that produced a
  * result — an option chosen, a date picked, the trigger pressed again, Tab moving
@@ -243,6 +248,7 @@ export function prepareOverlayEnter(
   positionStrategy?: FlexibleConnectedPositionStrategy,
 ): void {
   forwardOverlayTokens(overlayRef, host, OVERLAY_MOTION_TOKENS);
+  forwardOverlayTokens(overlayRef, host, DROPDOWN_PANEL_TOKENS);
   positionStrategy?.positionChanges.subscribe(({ connectionPair }) => {
     overlayRef.overlayElement.dataset['dsPlacement'] = overlayPlacementOf(
       connectionPair.overlayY,

@@ -137,7 +137,11 @@
      into document.body (outside :host), so :host-scoped custom props never
      inherit down to it and background would collapse to transparent. */
   --_autocomplete-panel-bg-color: var(--ds-autocomplete-panel-bg-color, var(--surface-overlay));
-  --_autocomplete-panel-radius: var(--ds-autocomplete-panel-radius, var(--ds-radius-panel));
+
+  /* Its own hook first, then the shared dropdown lever, then the role — so this
+     panel and the ds-select ones move together when a consumer reaches for
+     --ds-dropdown-panel-radius, which is the level that lever belongs at. */
+  --_autocomplete-panel-radius: var(--ds-autocomplete-panel-radius, var(--ds-dropdown-panel-radius, var(--ds-radius-panel)));
   --_autocomplete-panel-maxh: var(--ds-autocomplete-panel-maxh, var(--picker-maxh));
   --_autocomplete-option-bg-color-hover: var(--ds-autocomplete-option-bg-color-hover, var(--surface-secondary));
 

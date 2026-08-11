@@ -364,6 +364,7 @@
   "--ds-drawer-shadow": "Drawer panel elevation shadow (defaults to --shadow-modal).",
   "--ds-drawer-title-color": "Drawer title text colour (defaults to inherited colour).",
   "--ds-drawer-width": "Drawer panel width (defaults to --drawer-w-sm).",
+  "--ds-dropdown-panel-radius": "Corner of the connected dropdown panel behind ds-select, ds-multi-select and ds-autocomplete (defaults to the --ds-radius-panel role). The middle lever between retuning one picker, which the library does not encourage, and moving every panel — modal, popover, date picker — with the role. Scope it with a selector (`ds-select { … }`); it is forwarded onto the portaled pane, so a host-scoped value reaches it.",
   "--ds-dropzone-bg-color": "Default fill.",
   "--ds-dropzone-bg-color-active": "Drag-active fill.",
   "--ds-dropzone-bg-color-hover": "Hover fill.",

@@ -1997,7 +1997,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-autocomplete-panel-radius",
-        "value": "var(--ds-radius-panel)",
+        "value": "var(--ds-dropdown-panel-radius, var(--ds-radius-panel))",
         "notes": "Autocomplete dropdown panel corner radius (default --ds-radius-panel). Forwarded onto the portaled pane on open."
       },
       {
@@ -3128,9 +3128,9 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "The check glyph on a selected row (default --primary)."
       },
       {
-        "name": "--ds-radius-panel",
-        "value": "—",
-        "notes": "Radius role for floating and container surfaces — menus, popovers, cards, modals, drawers, sheets. Defaults to --radius-lg."
+        "name": "--ds-dropdown-panel-radius",
+        "value": "var(--ds-radius-panel)",
+        "notes": "Corner of the connected dropdown panel behind ds-select, ds-multi-select and ds-autocomplete (defaults to the --ds-radius-panel role). The middle lever between retuning one picker, which the library does not encourage, and moving every panel — modal, popover, date picker — with the role. Scope it with a selector (`ds-select { … }`); it is forwarded onto the portaled pane, so a host-scoped value reaches it."
       }
     ]
   },
@@ -6885,6 +6885,11 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--ds-radius-control",
     "value": "var(--radius-md)",
+    "kind": "length"
+  },
+  {
+    "name": "--ds-radius-panel",
+    "value": "var(--radius-lg)",
     "kind": "length"
   },
   {
