@@ -342,3 +342,46 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   been retired on the 0.9.1 bump: the swap would be a silent UX regression, not a mechanical one.
   Plausibly out of scope for a component (it is a session-memory policy), which is worth saying
   explicitly so consumers stop treating `urlParam` as a superset.
+
+## Three more from mm-broker, after the head decided against adopting two of ours (2026-08-11)
+
+> Each of these is a case where a consumer looked at the DS answer, measured it, and kept their own —
+> so the ask is what would change that verdict, not "please add a thing".
+
+- [ ] **[P3] `ds-filter-bar` renders its own "+N filters" trigger at the default `md`, in a row it knows
+  is `sm`.** Verified in mm-broker's rendered DOM: `class="button c-neutral md v-outline"` — 40px — beside
+  filters that are all `size="sm"` (32px), and the row is `align-items: flex-end`, so the trigger stands
+  8px taller than everything next to it on all nine of their list screens. The bar has no size input, and
+  the trigger is internal, so a consumer cannot pass one. **They fixed it with three inherited tokens**
+  (`--ds-button-height` / `--ds-button-font-size` / `--ds-button-pad-x` under `ds-filter-bar`, which beat
+  the per-size fallback) and will delete them when this ships. Two candidate answers: size the trigger
+  from the items it was given, or take a `triggerSize` alongside `moreLabel`. The first is better — the
+  bar already knows every item's declared width, and a row of `sm` filters with an `md` button is not a
+  configuration anyone wants.
+
+- [ ] **[P3] `dividers: false` should collapse the padding on the side the divider was on — and the
+  0.9.0 DELETE-LIST entry that asks consumers to swap the token for the input is a REGRESSION for a
+  whole-app opinion.** mm-broker turns modal dividers off app-wide, and the reason the padding then needs
+  overriding is structural: `.header` pads for a border-bottom that is now transparent, `.actions` for a
+  border-top, so with dividers off the gaps stack. They currently reach into `.modal > .header|.body|
+  .actions` with three `!important`s — **the only reach into DS internals left in their tree** — and
+  0.9.1's new `--ds-modal-header-pad-y` / `-body-pad-y` / `-actions-pad-y` cannot replace it, because each
+  is one Y value applied to both sides while the design is asymmetric (header 24/0, body 16/16, actions
+  0/24). Two asks, and the first is the real one: (a) when `dividers` is false, drop the padding on the
+  divider side — it exists to clear a border that is not there; (b) give `DS_CONFIG` a `modal` section, so
+  `dividers: false` is one declaration rather than a binding on each of their **41** `<ds-modal>`s. Note
+  the token also covers `ds-modal-card`, which a `ModalService`-opened modal renders with no `ds-modal`
+  ancestor — an input on the element cannot reach that at all, which is why the DELETE-LIST swap is not
+  merely more verbose but incomplete.
+
+- [ ] **[P3] `ds-tabs` `urlParam`: two things keep a consumer on their own helper.** mm-broker kept
+  `useTabUrl` (head's call) after measuring the swap. (1) **The name comes from the label unless every
+  tab declares a `value`** — none of their 24 `ds-tab` elements does, so adopting as-is would turn
+  `?tab=licenses` into `?tab=License%20Verification%20Status` and break every existing link; a
+  slug-from-label (kebab, lowercased) default would make the input adoptable without touching 24
+  templates. (2) **No session memory.** Their helper remembers the last tab per path in `sessionStorage`,
+  so returning to a record reopens where you left it while a shared link still wins — `urlParam` writes no
+  parameter for the first tab, so every return lands on tab one. They are not asking for that behaviour to
+  become the default (it is a policy, and arguably not a component's business), but an opt-in — say
+  `rememberLastTab` — would retire the helper. Worth deciding as one question with (1), since together
+  they are what "superset" would actually mean.
