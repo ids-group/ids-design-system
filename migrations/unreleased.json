@@ -33,12 +33,29 @@
         "chipRow",
         "TS4114"
       ]
+    },
+    {
+      "id": "auth-layout-brand-slot-drops-width-auto",
+      "kind": "behavior",
+      "old": "ds-auth-layout [brand]",
+      "new": null,
+      "note": "The rule constraining ds-auth-layout's projected [brand] slot no longer declares `width: auto` — only the `max-height` it shipped with in 0.9.0. That declaration sat at specificity (0,2,0), so it out-ranked a width the consumer set on their own logo, and with the slot's default `max-height: none` it achieved nothing: an <img> with no CSS width already keeps its aspect ratio under a max-height. ACTION: none for almost everyone. You are affected ONLY if you both opted into `--ds-auth-layout-brand-max-height` AND set an explicit width on the element you project into [brand] — that logo scaled to keep its ratio before and will now honour your width, i.e. it can squash. Add `width: auto` to your own logo rule to restore the old result. ds-sidenav's identical slot gained the same max-height constraint in this release and deliberately does NOT carry width: auto either, so the two match.",
+      "searchHints": [
+        "--ds-auth-layout-brand-max-height",
+        "[brand]",
+        "ds-auth-layout",
+        "brand slot",
+        "logo width"
+      ]
     }
   ],
   "informational": [
     "ds-autocomplete and ds-multi-select accept maxVisibleChips=\"fit\" — the chips are capped by MEASURED width rather than a count, so one line holds as many as the trigger is wide and the rest collapse into '+N more', re-split whenever the trigger resizes. Purely additive and opt-in: the input still takes a number and still defaults to null (show everything), and nothing changes for a picker that does not ask for it. Choose by what has to stay predictable — a number pins the trigger's HEIGHT whatever the width, 'fit' pins the width and lets the count move.",
     "The measurement behind maxVisibleChips=\"fit\" runs ONLY when that mode is on: a picker on the default does not observe, measure or force layout, so adopting the release costs nothing on pages full of pickers that keep wrapping.",
     "DELETE-LIST: if you wrote a ResizeObserver, a container query or a hand-tuned per-breakpoint maxVisibleChips number to keep a chip trigger on one line -> maxVisibleChips=\"fit\" replaces it, and it re-splits on any width change rather than at the breakpoints you listed.",
-    "DELETE-LIST: if you capped a chip trigger's height with max-height plus overflow:hidden to stop it growing a line per selection -> that clips a chip mid-glyph and hides the count; maxVisibleChips (a number, or \"fit\") drops whole chips and reports how many are hidden."
+    "DELETE-LIST: if you capped a chip trigger's height with max-height plus overflow:hidden to stop it growing a line per selection -> that clips a chip mid-glyph and hides the count; maxVisibleChips (a number, or \"fit\") drops whole chips and reports how many are hidden.",
+    "ds-sidenav's brand row fixes, none of which need action: an astral first character (emoji, rarer CJK) no longer paints as tofu in the letter-mark; the mark is aria-hidden, so a screen reader reads the wordmark once instead of announcing the glyph then the name; and a logoLetter set WITHOUT a brand string now renders its tile at all, where an outer gate used to drop the whole lockup.",
+    "DELETE-LIST: if you constrained a logo projected into ds-sidenav's [brand] slot with your own max-height (or a wrapper sized to hold it) -> --ds-sidenav-brand-max-height now does it, defaulting to none so nothing changes until you set it.",
+    "env(safe-area-inset-*) reads 0 unless YOUR index.html sets viewport-fit=cover in its viewport meta — a notched device alone is not enough, and this library cannot set it for you. ds-auth-layout pads by all four insets and ds-bottom-sheet by the bottom one, so both are plain-padded until you opt in; the docs site now sets it and both component pages state it. ds-bottom-sheet's env() also gained the `, 0px` fallback its siblings had: an unknown env() variable invalidates the entire declaration, which would have taken that sheet's horizontal padding with it."
   ]
 }

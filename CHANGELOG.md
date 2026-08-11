@@ -30,7 +30,33 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   have been corrected. Tooling only — nothing in the package changed. (This entry sat under 0.9.1
   until 2026-08-11; the tool landed after that tag was cut, so 0.9.1 never carried it.)
 
+### Fixed
+
+- **`ds-sidenav`'s brand row carried four defects the auth layout had already fixed**, found by
+  diffing two files that were byte-identical. A brand starting with an astral character (an emoji, a
+  rarer CJK glyph) painted as tofu, because `charAt(0)` indexes UTF-16 code UNITS and returned half
+  a surrogate pair — `"🅰 Corp"` gave `\ud83c`. The letter-mark had no `aria-hidden`, so a screen
+  reader read the glyph and then the wordmark ("A MyAdmin"). A `logoLetter` with no `brand` rendered
+  **nothing at all**, because an outer gate tested `brand() || hasBrandName()` while the inner one
+  tested `logoLetter()`. And the projected `[brand]` slot had no size constraint, so an oversized
+  logo set the rail's height; it now takes `--ds-sidenav-brand-max-height`, defaulting to `none`, so
+  nothing resizes unless you ask.
+
+- **The safe-area insets the layouts pad by were inert on this site, and nothing said they need you.**
+  `env(safe-area-inset-*)` reads 0 until the HOST document sets `viewport-fit=cover` in its viewport
+  meta — a cutout alone is not enough, and a library cannot set it for you. The docs site now does,
+  so `ds-auth-layout`'s notch handling can be seen rather than described, and both it and
+  `ds-bottom-sheet` now say so and show the tag. `ds-bottom-sheet` also gained the `, 0px` fallback
+  its four siblings already had: an unknown `env()` variable invalidates the whole declaration, which
+  would have dropped that sheet's horizontal padding along with the inset.
+
 ### Changed
+
+- **`ds-auth-layout`'s projected `[brand]` slot no longer forces `width: auto`.** It shipped in 0.9.0
+  alongside the slot's `max-height`, but at `(0,2,0)` it out-ranks a width the consumer set on their
+  own logo, and with the default `max-height: none` it never did anything: an `<img>` with no CSS
+  width already keeps its ratio under `max-height`. If you opted into the max-height AND set an
+  explicit width on your logo, add `width: auto` yourself to keep the old scaling.
 
 - **The chips of both pickers now render inside a `<span class="chip-row">`** rather than directly
   in the trigger — the element the width measurement needs. **Layout is unchanged**: outside `"fit"`

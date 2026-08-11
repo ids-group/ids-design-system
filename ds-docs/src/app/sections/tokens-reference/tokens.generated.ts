@@ -4769,6 +4769,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Brand mark label."
       },
       {
+        "name": "--ds-sidenav-brand-max-height",
+        "value": "none",
+        "notes": "Height cap for a logo projected into the [brand] slot; `none` by default, so an oversized logo sets the brand row's height until you set this. Height only — an image with no CSS width keeps its ratio on its own."
+      },
+      {
         "name": "--sidenav-w",
         "value": "240px",
         "notes": "Sidenav geometry — expanded width (240px)."

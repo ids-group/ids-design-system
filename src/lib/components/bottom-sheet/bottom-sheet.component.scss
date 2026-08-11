@@ -63,7 +63,10 @@
   margin-inline: auto;
   background: var(--_bottom-sheet-bg-color);
   border-radius: var(--_bottom-sheet-radius) var(--_bottom-sheet-radius) 0 0;
-  padding: 0 var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom));
+
+  /* `, 0px` is not decoration: an unknown env() variable invalidates the whole
+     declaration, which would drop the horizontal padding with it. */
+  padding: 0 var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
   animation-name: var(--_bottom-sheet-enter-keyframes);
   animation-duration: var(--_bottom-sheet-enter-duration);
   animation-timing-function: var(--_bottom-sheet-enter-easing);

@@ -631,6 +631,7 @@
   "--ds-sidenav-alert-color": "Alert pip colour.",
   "--ds-sidenav-bg-color": "Rail fill.",
   "--ds-sidenav-border": "Rail border.",
+  "--ds-sidenav-brand-max-height": "Height cap for a logo projected into the [brand] slot; `none` by default, so an oversized logo sets the brand row's height until you set this. Height only — an image with no CSS width keeps its ratio on its own.",
   "--ds-sidenav-footer-dot-size": "Unread indicator dot diameter (6px); pins to the icon corner when the rail is collapsed.",
   "--ds-sidenav-footer-head-tracking": "Letter-spacing on the uppercase group heading in the search/alerts popovers (0.04em).",
   "--ds-sidenav-footer-popover-max-height": "Search/alerts popover max height before the panel scrolls (56vh).",

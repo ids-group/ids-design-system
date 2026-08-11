@@ -34,4 +34,11 @@ export class SidenavComponent implements SidenavContract {
   /** Projected `[dsBrandName]` wordmark markup, when the consumer provides one. */
   protected readonly brandNameRef = contentChild(BrandNameDirective);
   protected readonly hasBrandName = computed(() => !!this.brandNameRef());
+
+  /** Spread, not `charAt(0)`: the latter indexes UTF-16 code UNITS, so a brand
+   *  starting with an astral character (an emoji, a rarer CJK glyph) yields half
+   *  a surrogate pair and paints as tofu. */
+  protected readonly markGlyph = computed(
+    () => this.logoLetter() || [...this.brand()][0] || '',
+  );
 }

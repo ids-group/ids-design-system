@@ -1,13 +1,16 @@
 <div class="brand">
   <ng-content select="[brand]"></ng-content>
 
-  @if (brand() || hasBrandName()) {
-    @if (logoLetter() || brand()) {
-      <span class="mark">
-        {{ logoLetter() || brand().charAt(0) }}
-      </span>
-    }
+  @if (logoLetter() || brand()) {
+    <span
+      class="mark"
+      aria-hidden="true"
+    >
+      {{ markGlyph() }}
+    </span>
+  }
 
+  @if (brand() || hasBrandName()) {
     <span class="brand-name">
       @if (hasBrandName()) {
         <ng-content select="[dsBrandName]"></ng-content>
