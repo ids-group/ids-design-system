@@ -276,3 +276,64 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   `components.md` — which ships inside the npm package and is what a consumer's agent reads — has **no
   `ds-auth-layout` or `ds-app-layout` entry at all**, while its `ds-sidenav*` block still names the
   pre-rename `--ds-sidenav-mark-bg` / `-fg` tokens.
+
+## From mm-broker adopting 0.9.1 across all three apps (2026-08-11)
+
+> Five asks out of one consumer sweep: the brand config, two `ds-stat` / `ds-filter-bar` gaps found
+> while migrating onto them, `ds-search` debouncing, and `initialsFrom`'s name rule. Every one is a
+> place a consumer had to write code the library nearly owns; none is a defect.
+
+- [ ] **[P2] One brand config per app, not four bindings per screen — the consumer's own workaround
+  says what the shape should be.** `ds-sidenav` and `ds-auth-layout` both take `brand` + `logoLetter`
+  (+ `tagline` on the auth side) and both offer the `[dsBrandName]` projection, and an app answers
+  them identically everywhere: mm-broker bound the same four values on **six** auth screens from the
+  same injected object before collapsing it into their adapter (`AUTH_BRAND` → one `inject()` inside
+  `app-auth-card`). That adapter is the ask, one layer down: `provideDsConfig({ brand: { name,
+  logoLetter, tagline } })`, with the element inputs staying as the per-instance override. `DsConfig`
+  today carries `field`, `breadcrumbs`, `timePicker`, `datePicker` — brand is the same kind of thing
+  and is *more* app-global than any of them.
+  **The wordmark accent is the one part that does not fit a config value.** The DS deliberately takes
+  projected markup so the consumer says where the accent belongs; a config can only carry a string,
+  and mm-broker's config carries `brandAccent: 'My'` plus an `indexOf` split in the adapter — exactly
+  the guessing the projection was designed to avoid. So either brand-in-config covers name/letter/
+  tagline only and projection stays the accent's home, or the config takes a `TemplateRef`.
+
+- [ ] **[P3] `ds-stat`'s value line is `white-space: nowrap`, so a tile whose value is TEXT has to go
+  through `[dsStatValue]` and undo it.** mm-broker's "Enrollment Window" tile is a date range
+  ("Feb 1 – Feb 28, 2026"): via the `value` input it would be clipped, so it projects a span that sets
+  `white-space: normal` and drops to `--font-size-h5` — two declarations that exist only to argue with
+  the component. `nowrap` is right for a number and wrong for a phrase. Either expose
+  `--ds-stat-value-white-space` (and a value-size hook), or read the case the other way and let
+  `caption`-shaped text tiles say so — `size="sm"` is close but still `nowrap`.
+
+- [ ] **[P3] `ds-filter-bar`'s trailing group cannot hold a consumer PAIR without re-creating its
+  layout.** The docs say mark each control rather than wrapping them, because a projected wrapper is a
+  plain block whose children stack — correct, and it collides with the one case a consumer cannot
+  split: search + Clear, where Clear must be able to **cancel an armed debounce** on the search beside
+  it, so they have to live in one component. mm-broker marks that component `dsFilterBarTrailing` and
+  restates `display: flex; align-items: flex-end; gap: var(--space-3)` on its `:host` — the bar's own
+  trailing rule, copied. `display: contents` on `.trailing > *:not(:only-child)` would not do it
+  (`:host` styles win), but documenting the three declarations a wrapper owes, or exposing them as
+  `--ds-filter-bar-trailing-*`, would keep the copy honest.
+
+- [ ] **[P3] `ds-search` has no debounce, so every list screen wraps it.** mm-broker's wrapper exists
+  for exactly two behaviours: 200ms on typing, and **immediate on empty** — clearing the field is a
+  deliberate act and should not wait, which is the part a naive `debounceTime` gets wrong. That plus
+  the cancel-on-Clear above is the whole component. `[debounce]="200"` on `ds-search`, with the empty
+  value bypassing the timer, would delete it. Worth checking against the other consumers first: if
+  ai-sdlc and pinkmoon also hand-roll it, this is a third of a component three apps carry.
+
+- [ ] **[P3] `initialsFrom(name)` takes the FIRST TWO words, which is the org rule applied to people.**
+  "Mary Jane Watson" gives MJ where a person expects MW, and a one-word name gives a single letter
+  where an avatar wants two. mm-broker ended up with two functions and kept both: first+last for
+  people, first+second (punctuation stripped) for organisations, because "Blue Cross Blue Shield" is
+  BC and emphatically not BS. If `initialsFrom` is meant to serve both, the rule belongs in a
+  parameter; if it is meant for people, the last word is the right second letter.
+
+- [ ] **[P3] Question, not an ask: should `urlParam` remember the last tab per path?** mm-broker's
+  `useTabUrl` helper does one thing `urlParam` does not — with no query parameter present it restores
+  the tab chosen earlier in the session (`sessionStorage`, keyed by `location.pathname`), so returning
+  to a record reopens where you left it while a shared link still wins. That is why the helper has not
+  been retired on the 0.9.1 bump: the swap would be a silent UX regression, not a mechanical one.
+  Plausibly out of scope for a component (it is a session-memory policy), which is worth saying
+  explicitly so consumers stop treating `urlParam` as a superset.
