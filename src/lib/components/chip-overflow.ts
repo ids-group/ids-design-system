@@ -19,19 +19,12 @@ import {
  * they exist, and clipping moves nothing. The flash filter-bar avoids is a WRAP,
  * which changes the trigger's height.
  *
- * NOTHING here may measure something the cut itself changes, or the measurement
- * feeds back into its own input and the split never settles. Two ways to get that
- * wrong, both of which froze a real page before this comment existed:
- *
- *  - Reading the row's own width. The row is sized by its content, so "available"
- *    would shrink every time a chip was dropped, dropping the next one, down to
- *    one chip. The space is therefore taken from the TRIGGER, minus the siblings
- *    that have to fit beside the chips — and a sibling that can grow only owes
- *    its floor, since it hands back whatever it does not need.
- *  - Measuring the rendered "+N more". Its text is the count, so hiding a chip
- *    changes its width, which changes the budget, which changes how many are
- *    hidden: "+2 more" and "+3 more" alternate forever. A fixed reserve is used
- *    instead — see MARKER_RESERVE_EM.
+ * THE RULE, because breaking it froze a real page twice: nothing here may measure
+ * something the cut itself changes, or the measurement feeds back into its own
+ * input and the split never settles. That is why the space is taken from the
+ * TRIGGER rather than from the row, which is sized by its content, and why the
+ * "+N more" marker gets a fixed reserve rather than a measurement, its text being
+ * the count itself.
  *
  * The caller owes two things, both held up by the `chip-row` style block: chips
  * carry `data-chip`, and they sit in a row of their own that is a direct child of
@@ -66,9 +59,10 @@ export function chipFit(
   const chipWidths = signal<readonly number[]>([]);
   /** `count` at that render, so a stale cache is never trusted. */
   const measuredFor = signal(-1);
-  /** Geometry the last measure ran against, to skip the ones that would repeat
-   *  it. Each measure forces layout, and a docs page renders often enough that
-   *  an ungated one ran thirty times per picker on first paint. */
+  /** Geometry the last measure ran against, to skip one that would repeat it.
+   *  Each forces layout: before this guard and `enabled` existed, a single docs
+   *  page load measured 214 times across seven pickers that were all on the
+   *  wrapping default. */
   let lastWidth = -1;
   let lastCount = -1;
 

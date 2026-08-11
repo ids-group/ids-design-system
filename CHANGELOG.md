@@ -18,37 +18,28 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   lets the count move. **You can now delete** a `ResizeObserver`, container query or per-breakpoint
   `maxVisibleChips` number written to keep a chip trigger on one line — and a `max-height` +
   `overflow: hidden` cap, which clips a chip mid-glyph and hides the count instead of dropping whole
-  chips. The measurement runs only in `"fit"` mode, so a picker left on the default does not
-  observe, measure or force layout.
+  chips. Adopting the release costs nothing if you never ask for it: the measurement runs only in
+  `"fit"` mode, so a page full of pickers on the default does not observe or force layout.
 
-- **A release can no longer ship without warning subclassers.** `npm run class-surface` diffs the
-  exported member surface between the last tag and HEAD and prints it per class, and the changelog
-  workflow now requires it before writing the class-collision migration entry. It exists because
-  that entry was assembled by eye twice and was wrong both times in a way a consumer found first:
-  0.9.0's manifest named no collisions at all while sixteen classes had grown, and 0.8.0's named the
-  public additions but not the private `saveLayout` that stopped a consumer's build. Both manifests
-  have been corrected. Tooling only — nothing in the package changed. (This entry sat under 0.9.1
-  until 2026-08-11; the tool landed after that tag was cut, so 0.9.1 never carried it.)
+- **The 0.8.0 and 0.9.0 migration manifests were corrected**, so re-read them if you subclass a DS
+  component and migrated before 2026-08-11: 0.9.0's named no member collisions at all while sixteen
+  classes had grown, and 0.8.0's missed the private `saveLayout` that actually stopped a build.
 
 ### Fixed
 
-- **`ds-sidenav`'s brand row carried four defects the auth layout had already fixed**, found by
-  diffing two files that were byte-identical. A brand starting with an astral character (an emoji, a
-  rarer CJK glyph) painted as tofu, because `charAt(0)` indexes UTF-16 code UNITS and returned half
-  a surrogate pair — `"🅰 Corp"` gave `\ud83c`. The letter-mark had no `aria-hidden`, so a screen
-  reader read the glyph and then the wordmark ("A MyAdmin"). A `logoLetter` with no `brand` rendered
-  **nothing at all**, because an outer gate tested `brand() || hasBrandName()` while the inner one
-  tested `logoLetter()`. And the projected `[brand]` slot had no size constraint, so an oversized
-  logo set the rail's height; it now takes `--ds-sidenav-brand-max-height`, defaulting to `none`, so
-  nothing resizes unless you ask.
+- **Four defects in `ds-sidenav`'s brand row.** A `logoLetter` set without a `brand` string rendered
+  **nothing at all** — if you worked around that by passing a dummy `brand`, you can drop it now. A
+  brand starting with an emoji or a rarer CJK glyph painted as tofu in the letter-mark. The mark had
+  no `aria-hidden`, so a screen reader announced the glyph and then the wordmark ("A MyAdmin"). And a
+  logo projected into `[brand]` had no size constraint, so an oversized one set the rail's height —
+  `--ds-sidenav-brand-max-height` now caps it, defaulting to `none` so nothing moves until you set it.
 
-- **The safe-area insets the layouts pad by were inert on this site, and nothing said they need you.**
-  `env(safe-area-inset-*)` reads 0 until the HOST document sets `viewport-fit=cover` in its viewport
-  meta — a cutout alone is not enough, and a library cannot set it for you. The docs site now does,
-  so `ds-auth-layout`'s notch handling can be seen rather than described, and both it and
-  `ds-bottom-sheet` now say so and show the tag. `ds-bottom-sheet` also gained the `, 0px` fallback
-  its four siblings already had: an unknown `env()` variable invalidates the whole declaration, which
-  would have dropped that sheet's horizontal padding along with the inset.
+- **`env(safe-area-inset-*)` needs one line from YOUR app, and nothing here said so.** The insets read
+  0 until the host document sets `viewport-fit=cover` in its viewport meta — a notched device alone is
+  not enough, and a library cannot set it for you. So `ds-auth-layout`'s notch padding and
+  `ds-bottom-sheet`'s home-indicator padding have been inert in every app that never added it. Both
+  component pages now say so and show the tag, and the docs site sets it, so the behaviour can be seen
+  rather than described.
 
 ### Changed
 

@@ -17,7 +17,7 @@
 }
 
 /* A real resize handle, so the fit-to-width split can be watched moving rather
-   than described. The min-width is the narrowest the trigger stays usable at. */
+   than described. */
 .autocomplete-resizable {
   resize: horizontal;
   overflow: auto;
