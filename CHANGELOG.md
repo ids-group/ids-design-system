@@ -34,6 +34,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   component and migrated before 2026-08-11: 0.9.0's named no member collisions at all while sixteen
   classes had grown, and 0.8.0's missed the private `saveLayout` that actually stopped a build.
 
+- **`initialsFrom(name, { of: 'person' | 'organisation' })` — the two rules are different.**
+  `'person'` takes the first and LAST word, so "Mary Jane Watson" gives MW rather than MJ, and a single
+  word gives two letters instead of one lonely glyph. `'organisation'` takes the first two with
+  punctuation stripped, which is why "Blue Cross Blue Shield" is BC and emphatically not BS. Without the
+  argument nothing changes — first two words, one letter for a lone name — but note that unchanged rule
+  IS the org one, so it is wrong for the people it usually points at: pass `{ of: 'person' }` there.
+  **You can now delete** a pair of local helpers kept because one function could not do both.
+
 - **`DS_CONFIG.brand` — set the brand once instead of on every screen.**
   `provideDsConfig({ brand: { name, logoLetter, tagline } })` answers `ds-sidenav` and `ds-auth-layout`
   together; both ask the same questions and an app answers them identically, so six auth screens were

@@ -143,6 +143,28 @@
     single full name) are exported for use outside the component.
   </p>
 
+  <p class="block-desc t-s">
+    <strong>
+      Say which kind of name it is.
+    </strong>
+
+    <code class="t-mono-inline">
+      initialsFrom(name, &#123; of: 'person' &#125;)
+    </code> takes the first and
+    LAST word, so "Mary Jane Watson" gives MW rather than MJ, and a single word
+    gives two letters instead of one lonely glyph.
+    <code class="t-mono-inline">
+      &#123; of: 'organisation' &#125;
+    </code> takes the first two with
+    punctuation stripped — which is why "Blue Cross Blue Shield" is BC and
+    emphatically not BS. Without
+    <code class="t-mono-inline">
+      of
+    </code> the rule is unchanged from earlier
+    releases: first two words, one letter for a lone name. That is the ORG rule, so
+    it is wrong for the people it usually points at.
+  </p>
+
   <div class="row">
     @for (person of people; track person) {
       <ds-avatar

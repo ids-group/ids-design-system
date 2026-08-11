@@ -347,12 +347,15 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   **A host write mid-typing has to win**, which needs telling the component's own echo apart from a genuine external set — hence the `pushed` field: an incoming `value` that is not what we last pushed cancels the timer and takes over.
   **Verified in a browser, six cases:** at 600ms the input showed `que` while `value` was still empty at 150ms and caught up after; emptying at 80ms wrote through immediately AND dropped the pending word; Enter flushed within 80ms; the Clear button likewise; with `debounce` temporarily set to 0 the value tracked a keystroke within 40ms, i.e. unchanged; and the one-way `value="Project Alpha"` specimen still fills the input, which is the same host→component path a reset uses.
 
-- [ ] **[P3] `initialsFrom(name)` takes the FIRST TWO words, which is the org rule applied to people.**
+- [x] **[P3] DONE 2026-08-11 as a parameter (Stas's call), after finding the answer to "does anyone actually need ORG initials?" — yes, and it is on record. `initialsFrom(name)` takes the FIRST TWO words, which is the org rule applied to people.**
   "Mary Jane Watson" gives MJ where a person expects MW, and a one-word name gives a single letter
   where an avatar wants two. mm-broker ended up with two functions and kept both: first+last for
   people, first+second (punctuation stripped) for organisations, because "Blue Cross Blue Shield" is
   BC and emphatically not BS. If `initialsFrom` is meant to serve both, the rule belongs in a
   parameter; if it is meant for people, the last word is the right second letter.
+  **The evidence for the org mode, since I first argued against it.** Asked whether anyone needs automatic ORG initials, I checked this repo and found none — `initialsFrom` is used nowhere in the library, `ds-avatar` takes `initials` as a plain string, and the docs' two calls both pass `(first, last)` explicitly. That was true and also the wrong place to look: mm-broker's own notes (session `f28e807e`, their `todo.md` §3b) record `common/utils/identity.ts` carrying BOTH rules for a reason — person rows use first+last, and the **tenants page's organisation avatars** use first-two-words-punctuation-stripped. So the org case is live, not hypothetical, and it is exactly why they kept two functions.
+  **Shipped `{ of: 'person' | 'organisation' }` as an optional second argument**, discriminated at runtime from the existing `(first, last)` form by type, with overloads so both shapes type-check. Default UNCHANGED, as agreed — the flip to person stays in the breaking batch.
+  **Verified both rules on the cases that motivated them:** person gives `Mary Jane Watson` → MW, `Ada` → AD, `José María Aznar` → JA; organisation gives `Blue Cross Blue Shield` → BC, `"Acme" Holdings` → AH, `Google` → GO. Default still gives MJ / A / `?`, and the two-argument form still gives AL. Punctuation stripping is leading/trailing only, so `Blue-Cross Shield` keeps both words and yields BS — an inner hyphen is part of a word.
 
 - [ ] **[P3] Question, not an ask: should `urlParam` remember the last tab per path?** mm-broker's
   `useTabUrl` helper does one thing `urlParam` does not — with no query parameter present it restores
