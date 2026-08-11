@@ -11,3 +11,19 @@
 
       @include bp.down(xs) { grid-template-columns: minmax(0, 1fr); }
     }
+
+    /* Narrow on purpose: the point of the pair is that the untouched tile clips,
+       which a full-width row would hide. */
+    .phrase-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 240px));
+      gap: var(--space-4);
+      margin-top: var(--space-3);
+
+      @include bp.down(xs) { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    .stat-phrase {
+      --ds-stat-value-white-space: normal;
+      --ds-stat-value-font-size: var(--font-size-h5);
+    }

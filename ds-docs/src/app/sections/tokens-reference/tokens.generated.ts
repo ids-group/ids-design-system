@@ -5031,6 +5031,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Value colour."
       },
       {
+        "name": "--ds-stat-value-font-size",
+        "value": "var(--font-size-h2)",
+        "notes": "Value size. Applies at every `size`, not just the default — the sm/lg variants move this token rather than restating font-size, so one override reaches all three."
+      },
+      {
+        "name": "--ds-stat-value-white-space",
+        "value": "nowrap",
+        "notes": "Wrapping of the value line (default `nowrap`). Set `normal` when the value is a phrase — a date range or a status — rather than the number the tile was built around; without it the text is clipped."
+      },
+      {
         "name": "--ds-stat-up-color",
         "value": "var(--success-text)",
         "notes": "Positive delta."

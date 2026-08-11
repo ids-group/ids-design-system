@@ -309,13 +309,16 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   the guessing the projection was designed to avoid. So either brand-in-config covers name/letter/
   tagline only and projection stays the accent's home, or the config takes a `TemplateRef`.
 
-- [ ] **[P3] `ds-stat`'s value line is `white-space: nowrap`, so a tile whose value is TEXT has to go
+- [x] **[P3] DONE 2026-08-11 — both hooks, and the size one needed a restructure to work at all. `ds-stat`'s value line is `white-space: nowrap`, so a tile whose value is TEXT has to go
   through `[dsStatValue]` and undo it.** mm-broker's "Enrollment Window" tile is a date range
   ("Feb 1 – Feb 28, 2026"): via the `value` input it would be clipped, so it projects a span that sets
   `white-space: normal` and drops to `--font-size-h5` — two declarations that exist only to argue with
   the component. `nowrap` is right for a number and wrong for a phrase. Either expose
   `--ds-stat-value-white-space` (and a value-size hook), or read the case the other way and let
   `caption`-shaped text tiles say so — `size="sm"` is close but still `nowrap`.
+  **Shipped as `--ds-stat-value-white-space` and `--ds-stat-value-font-size`, both defaulting to today's values**, so no existing tile moves. Read the case the first way (a hook, not a new shape) because the projected slot already covers "the headline is a badge"; what was missing was retuning the ordinary value line.
+  **The size hook needed the size variants rewired, or it would have worked at `md` only.** `:host(.size-sm) .stat .value { font-size: … }` out-ranks a token read on `.value`, so those two rules now move the RESOLVER instead and the `.label` half stays where it was. Measured: defaults still sm 22px / md 36px / lg 48px, and one override reaches all three.
+  **Verified as a pair in the docs**, deliberately in a 240px column: hooked tile `normal` at 18px with `scrollWidth == clientWidth`, plain tile `nowrap` at 36px overflowing 348 into 191. Worth noting the symptom is not "clipped" as the ask put it — the card sets no `overflow`, so the phrase spills visibly past the tile's edge, which is uglier and easier to spot.
 
 - [ ] **[P3] `ds-filter-bar`'s trailing group cannot hold a consumer PAIR without re-creating its
   layout.** The docs say mark each control rather than wrapping them, because a projected wrapper is a

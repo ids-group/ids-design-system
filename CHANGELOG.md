@@ -36,6 +36,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **`--ds-stat-value-white-space` and `--ds-stat-value-font-size`, for a tile whose value is a phrase.**
+  The value line is `nowrap`, which is right for the number `ds-stat` was built around and wrong for a
+  date range or a status — so a text value spilled straight out past the tile's edge, and the way out
+  was the projected
+  `[dsStatValue]` slot plus two declarations undoing the component. Both default to today's values, so
+  nothing moves until you set them. **The size hook works at every `size`**, not just the default: the
+  `sm`/`lg` variants now move the same token instead of restating `font-size`, which used to out-rank
+  any override. **You can now delete** a `[dsStatValue]` span that exists only to set `white-space`
+  or a smaller size.
+
 - **The global `.link` class now works on a `<button>`, which it has been documented as doing all
   along.** `ds-button` warns `variant="text"` off in favour of `.link`, and an action that is not
   navigation has to be a button — but the class was written for anchors and reset none of the browser's
