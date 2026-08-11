@@ -25,7 +25,12 @@ Completed items are archived in `done.md` (last archive pass **2026-08-10**; bef
 
 _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so a multi-select trigger grew a line per selection. `maxVisibleChips` ported from `ds-multi-select` under the same name. Checked the rest of the library — only those two components render a chip list, so nothing else needed it; the pinkmoon prototype the reporter half-remembered is the filter-bar "+N more", which is already `ds-filter-bar`._
 
-**P1 — real defects:** _(none. The P1 below is a release decision, not a defect.)_
+**P1 — real defects:**
+
+- [ ] **[P1] `ds-autocomplete` keeps the filter text after a single-select pick, so the trigger shows the label AND the query side by side (found 2026-08-11 in mm-broker, on 0.7.1; still present in `dev`).** Type `North`, pick `Northwind Trading — census not ready`, and the trigger reads `Northwind Trading — census not ready  North` until the field is re-focused and cleared by hand. Reproduced with real clicks in a browser, not with a scripted one.
+  **Cause, and it is one line.** The trigger renders `<span class="autocomplete-value">{{ displayLabel() }}</span>` next to `<input [value]="query()">`, so anything left in `query` is drawn beside the selected label. `onPick` sets the value and closes for the single-select branch but never resets `query`; `close()` does not touch it either. `onCreateNew` immediately below **does** `this.query.set('')`, which is the same reset this path is missing.
+  **Fix:** `this.query.set('')` in the `else` branch of `onPick`, beside `this.value.set(option.value)`. Multi-select is unaffected — it renders chips and no `displayLabel`.
+  **Reach:** every single-select `ds-autocomplete` where the user types to filter. Not app-fixable — `query` is private to the component.
 
 - [x] **[P1] Cut 0.9.0 — DONE 2026-08-10, by Stas, while this item was being filed.** The three-pipeline chain ran clean end to end: `cut-release.sh minor` merged dev→main and tagged, the `v*` pipeline published `@ids-group-ltd/ids-design-system@0.9.0` to npmjs (69 files, 853.5 kB), and the `main` pipeline built and uploaded the docs. **One gap the logs exposed:** `npm version` promoted `migrations/unreleased.json` → `0.9.0.json` but left the prose guide folder at `unreleased/`, where the next release would have written over it — and the manifest pointed at that path. The guide has since been retired outright (it duplicated the manifest in a form nothing read); the release script now promotes a guide folder if one exists, so the same slip cannot recur.
 
