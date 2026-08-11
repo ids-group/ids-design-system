@@ -34,6 +34,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   component and migrated before 2026-08-11: 0.9.0's named no member collisions at all while sixteen
   classes had grown, and 0.8.0's missed the private `saveLayout` that actually stopped a build.
 
+- **`DS_CONFIG.modal.dividers` — turn modal rules off for a whole app in one declaration.**
+  `provideDsConfig({ modal: { dividers: false } })` instead of a binding on every `<ds-modal>`, with an
+  explicit `[dividers]` on an element still winning. It also reaches where an attribute cannot: a
+  `ModalService` confirm renders a `ds-modal-card` with no `ds-modal` ancestor to bind, and the injected
+  default gets there (verified — the confirm's card comes out `no-dividers`). **You can now delete** a
+  `dividers` binding repeated per modal, and any `!important` reach into `.modal > .header|.body|.actions`
+  written because the token swap left the padding stacked. Note `[dividers]` now reads
+  `boolean | null` internally so "unset" is distinguishable from `false`; bindings are unaffected.
+
 - **`triggerSize` on `ds-filter-bar`, to match its "+N" trigger to the filters beside it.** Default
   `md`, so nothing moves. The bar cannot work this out for itself — `dsFilterItem` carries a width and
   the filters are arbitrary projected controls whose own `size` it never sees — so a row of `sm`

@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
+import { resolveDividers } from './modal-defaults';
 import type { ModalSize } from './modal.types';
 
 let nextId = 0;
@@ -31,8 +32,13 @@ export class ModalCardComponent {
   readonly subtitle = input<string | null>(null);
   /** Shows the header close button. */
   readonly showClose = input(true, { transform: booleanAttribute });
-  /** Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for. */
-  readonly dividers = input(true, { transform: booleanAttribute });
+  /** Draws the rules under the header and over the actions. Turning them off also
+   *  tightens the vertical padding they were sized for. Unset falls back to
+   *  `DS_CONFIG.modal.dividers`, then `true`. */
+  readonly dividers = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  protected readonly dividersResolved = resolveDividers(this.dividers);
   /** Icon badge shown next to the title. */
   readonly icon = input<IconName | null>(null);
   /** ARIA role for the dialog element. */
@@ -47,7 +53,7 @@ export class ModalCardComponent {
     if (this.error()) {
       parts.push('error');
     }
-    if (!this.dividers()) {
+    if (!this.dividersResolved()) {
       parts.push('no-dividers');
     }
 

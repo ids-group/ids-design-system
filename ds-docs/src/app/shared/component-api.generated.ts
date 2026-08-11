@@ -3251,11 +3251,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dividers",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for."
+        "description": "Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for. Unset falls back to `DS_CONFIG.modal.dividers`, then `true`."
       },
       {
         "name": "icon",
@@ -3355,11 +3355,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dividers",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for."
+        "description": "Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for. Unset falls back to `DS_CONFIG.modal.dividers`, then `true`."
       },
       {
         "name": "closeOnBackdrop",

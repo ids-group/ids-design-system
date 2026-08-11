@@ -23,6 +23,15 @@ export interface DsConfig {
     /** Display format for `ds-time-picker` / date-picker time — 24h or 12h AM/PM. Default `'24h'`. */
     format?: '24h' | '12h';
   };
+  modal?: {
+    /** Default for `dividers` on `ds-modal` and `ds-modal-card` — the rules under
+     *  the header and over the actions, and the padding they were sized for.
+     *  Default `true`. Here rather than only per-element because it is a
+     *  whole-app opinion in practice, and because a `ModalService` confirm
+     *  renders a card with no `ds-modal` ancestor to bind: an attribute cannot
+     *  reach it, an injected default can. */
+    dividers?: boolean;
+  };
   datePicker?: {
     /** BCP-47 locale for `ds-date-picker` names + value format. Default `'en-US'`. */
     locale?: string;

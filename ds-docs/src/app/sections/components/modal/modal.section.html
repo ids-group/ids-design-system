@@ -143,6 +143,34 @@
     is no longer drawn.
   </p>
 
+  <p class="block-desc t-s">
+    Which padding collapses is deliberate: the BODY's goes to zero and the header
+    and actions keep theirs. The body is the scroll container, so a gap living in
+    its padding would scroll away and content would meet the title; the header's
+    own padding-bottom cannot, so it separates the two at every scroll position.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      For a whole-app opinion, set it once
+    </strong> —
+    <code class="t-mono-inline">
+      provideDsConfig(&#123; modal: &#123; dividers: false &#125; &#125;)
+    </code>
+    rather than a binding on every modal. It also reaches where an attribute
+    cannot: a <code class="t-mono-inline">ModalService</code> confirm renders a
+    <code class="t-mono-inline">
+      ds-modal-card
+    </code> with no
+    <code class="t-mono-inline">
+      ds-modal
+    </code> ancestor to bind, and the injected
+    default gets there. An explicit
+    <code class="t-mono-inline">
+      [dividers]
+    </code> on the element still wins.
+  </p>
+
   <div class="modal-grid modal-grid--2">
     <div class="state-cell">
       <div class="state-cell__stage">
