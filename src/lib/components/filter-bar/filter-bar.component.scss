@@ -7,19 +7,27 @@
   gap: var(--_filter-bar-gap);
 }
 
-/* The measured region. `overflow: hidden` is deliberate and does NOT hide
-   anything reachable: what does not fit is moved into the panel behind the
-   trigger, which is the one child that cannot shrink. The clip is here so this
-   flex item may go below its content's intrinsic width — otherwise the row would
-   simply push the trailing group off the edge and never report a width small
-   enough to collapse anything. */
+/* The measured region. The clip is deliberate and hides nothing reachable: what
+   does not fit is moved into the panel behind the trigger, which is the one child
+   that cannot shrink. It is here so this flex item may go below its content's
+   intrinsic width — otherwise the row would simply push the trailing group off the
+   edge and never report a width small enough to collapse anything. */
 .row {
   display: flex;
   flex: 1 1 auto;
   align-items: flex-end;
   gap: var(--_filter-bar-gap);
   min-width: 0;
-  overflow: hidden;
+
+  /* `clip` with a margin, not `hidden`: the box starts flush with the first item's
+     left edge, and the focus ring is an OUTSET shadow (`--focus-field` 3px,
+     `--focus-ring` 4px), so `hidden` cut the ring off the first and last item
+     while interior ones lived in the gap. The margin lets only the shadow bleed;
+     `clip` still forbids scrolling, so the width this row reports — which is what
+     decides the split — is unchanged. Measured before and after: same
+     scrollWidth, same collapsed count. */
+  overflow: clip;
+  overflow-clip-margin: 4px;
 
   /* No filters at all: collapse rather than sit empty, since an empty flex child
      still takes the row's gap. `:not(:has(*))` and not `:empty` — the latter is

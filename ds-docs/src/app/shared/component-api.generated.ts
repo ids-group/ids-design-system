@@ -2270,6 +2270,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'More filters'",
         "required": false,
         "description": "Accessible name of the overflow panel."
+      },
+      {
+        "name": "triggerSize",
+        "kind": "input",
+        "type": "DsSize",
+        "union": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "'md'",
+        "required": false,
+        "description": "Height of the \"+N\" trigger, to match the filters beside it. The bar cannot infer this: `dsFilterItem` carries a WIDTH, and the filters are arbitrary projected controls whose own `size` it never sees — so a row of `sm` filters got an `md` trigger standing 8px taller under `align-items: flex-end`."
       }
     ],
     "outputs": []

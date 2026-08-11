@@ -34,7 +34,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   component and migrated before 2026-08-11: 0.9.0's named no member collisions at all while sixteen
   classes had grown, and 0.8.0's missed the private `saveLayout` that actually stopped a build.
 
-### Fixed
+- **`triggerSize` on `ds-filter-bar`, to match its "+N" trigger to the filters beside it.** Default
+  `md`, so nothing moves. The bar cannot work this out for itself — `dsFilterItem` carries a width and
+  the filters are arbitrary projected controls whose own `size` it never sees — so a row of `sm`
+  filters got an `md` trigger standing 8px taller under `align-items: flex-end`. **You can now delete**
+  `--ds-button-height` / `-font-size` / `-pad-x` pinned under `ds-filter-bar` to force this.
 
 - **`[debounce]` on `ds-search`, so a list screen stops wrapping it.** `[debounce]="200"` holds each
   keystroke back before `value` updates; the default `0` writes on every keystroke exactly as before,
@@ -65,6 +69,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `font-weight` is untouched so `.quiet` and `.standalone` still decide it, and `display` stays
   `inline-block` so a standalone button lays out predictably. The reset is scoped with `:where()`, so
   it sits at `.link`'s own specificity and your rule still wins on source order.
+
+### Fixed
+
+- **`ds-filter-bar` clipped the focus ring of its first and last inline filter.** The measured row was
+  `overflow: hidden` and each slot is sized to exactly the width `dsFilterItem` declared, so the row's
+  box starts flush with the first control — and the focus ring is an OUTSET shadow (3px on fields, 4px
+  on controls). Interior filters were fine, living in the 12px gap; the outer two had their ring cut off
+  as you tabbed onto them. Now `overflow: clip` with a 4px clip margin: the shadow bleeds, `clip` still
+  forbids scrolling, and the width the collapse arithmetic reads is unchanged. Not fixable from an app —
+  the row is internal, and padding it from outside would change that measured width.
 
 - **A single-select `ds-autocomplete` kept the text you typed to filter, and since 0.9.0 kept it
   INVISIBLY.** The filter input collapses to zero width once a chosen label is on show, so leftover

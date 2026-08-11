@@ -18,6 +18,7 @@
       color="neutral"
       variant="outline"
       icon="filter"
+      [size]="triggerSize()"
       [ariaExpanded]="more.opened()"
       (pressed)="more.toggle(moreTrigger.buttonRef().nativeElement)"
     >

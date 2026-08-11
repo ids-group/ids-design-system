@@ -33,6 +33,14 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   styleUrls: ['../../../shared/section-demo.scss', './filter-bar.section.scss'],
 })
 export class FilterBarSection {
+  /** In the TS because a template cannot hold a bare `{` — Angular reads it as the
+   *  start of an ICU block. Same shape as the theming page's snippets. */
+  protected readonly trailingWrapperSnippet = `:host {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--ds-filter-bar-gap, var(--space-3));
+}`;
+
   /** Drives the resizable demo frame, so the collapse can be watched without
    *  resizing the browser. */
   protected readonly frameWidth = signal(920);
