@@ -496,6 +496,15 @@ export class AutocompleteComponent<T = unknown>
     this.overlayRef = null;
     this.isOpen.set(false);
     this.activeIndex.set(-1);
+    // Here rather than in onPick, which is the half of it that shows: the input
+    // collapses to zero width whenever a chosen label is on display, so text left
+    // in `query` goes INVISIBLE while it still narrows the list. Reopening then
+    // offers one option with nothing on screen to explain why, and no way to clear
+    // it — dismissing after typing over a settled value did the same. Empty in
+    // multi mode, where the input never collapses and the text stays honest.
+    if (this.displayLabel()) {
+      this.query.set('');
+    }
     this.markTouched();
   }
 

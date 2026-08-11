@@ -36,6 +36,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A single-select `ds-autocomplete` kept the text you typed to filter, and since 0.9.0 kept it
+  INVISIBLY.** The filter input collapses to zero width once a chosen label is on show, so leftover
+  query text disappeared from view while it went on narrowing the list: reopening a settled picker
+  offered one option out of four, with nothing on screen to say why and no way to clear it. Before
+  0.9.0 the same text simply sat beside the label instead. It is now cleared whenever the panel closes
+  over a displayed label — which covers both picking an option and dismissing after typing over a
+  settled value. Multi-select is deliberately unchanged: its input never collapses, so the text stays
+  visible and useful for the next pick. Nothing to do on your side; `query` was component-private, so
+  this was not fixable from an app.
+
 - **Four defects in `ds-sidenav`'s brand row.** A `logoLetter` set without a `brand` string rendered
   **nothing at all** — if you worked around that by passing a dummy `brand`, you can drop it now. A
   brand starting with an emoji or a rarer CJK glyph painted as tofu in the letter-mark. The mark had
