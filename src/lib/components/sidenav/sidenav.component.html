@@ -1,7 +1,7 @@
 <div class="brand">
   <ng-content select="[brand]"></ng-content>
 
-  @if (logoLetter() || brand()) {
+  @if (letterGlyph() || brandName()) {
     <span
       class="mark"
       aria-hidden="true"
@@ -10,12 +10,12 @@
     </span>
   }
 
-  @if (brand() || hasBrandName()) {
+  @if (brandName() || hasBrandName()) {
     <span class="brand-name">
       @if (hasBrandName()) {
         <ng-content select="[dsBrandName]"></ng-content>
       } @else {
-        {{ brand() }}
+        {{ brandName() }}
       }
     </span>
   }

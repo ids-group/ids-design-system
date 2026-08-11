@@ -219,29 +219,29 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "brand",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "''",
+        "default": "null",
         "required": false,
-        "description": "Wordmark beside the letter-mark tile. For a logo image/SVG, project it into the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`."
+        "description": "Wordmark beside the letter-mark tile. For a logo image/SVG, project it into the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`. Unset falls back to `DS_CONFIG.brand.name` — six auth screens answer this identically. Each field resolves on its own, so `brand=\"\"` drops the wordmark but a `logoLetter` in the config still paints its tile; clear both to give one screen no brand row."
       },
       {
         "name": "logoLetter",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "''",
+        "default": "null",
         "required": false,
-        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`."
+        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`."
       },
       {
         "name": "tagline",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "''",
+        "default": "null",
         "required": false,
-        "description": "One line under the wordmark naming the product or audience."
+        "description": "One line under the wordmark naming the product or audience. Unset falls back to `DS_CONFIG.brand.tagline`."
       },
       {
         "name": "cardElevation",
@@ -4789,20 +4789,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "brand",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "''",
+        "default": "null",
         "required": false,
-        "description": "Brand text at the top of the rail (auto letter-mark + name). For a custom logo image/SVG, project it into the `[brand]` slot instead."
+        "description": "Brand text at the top of the rail (auto letter-mark + name). For a custom logo image/SVG, project it into the `[brand]` slot instead. Unset falls back to `DS_CONFIG.brand.name`. Each field resolves on its own, so `brand=\"\"` drops the wordmark while a `logoLetter` in the config still paints its tile."
       },
       {
         "name": "logoLetter",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "''",
+        "default": "null",
         "required": false,
-        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`."
+        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`."
       }
     ],
     "outputs": []

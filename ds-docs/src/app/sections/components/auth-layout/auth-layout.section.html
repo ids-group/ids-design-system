@@ -31,6 +31,43 @@
   </p>
 
   <p class="block-desc t-s">
+    <strong>
+      Set the brand once, not per screen.
+    </strong>
+
+    <code class="t-mono-inline">
+      provideDsConfig(&#123; brand: &#123; name, logoLetter, tagline &#125; &#125;)
+    </code>
+    answers all three for this layout AND for
+    <code class="t-mono-inline">
+      ds-sidenav
+    </code>, which asks the same
+    questions — an app that has six auth screens was binding the same values six
+    times. Each field resolves on its own: an element input beats the config, so
+    one screen can differ without restating the rest, and
+    <code class="t-mono-inline">
+      brand=""
+    </code> drops the wordmark while a
+    <code class="t-mono-inline">
+      logoLetter
+    </code> in the config still paints its
+    tile. Clear both to give a screen no brand row at all.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      The two-tone wordmark stays projected
+    </strong> — there is deliberately no
+    accent in the config. A config can only carry a string, so an accent would have
+    to be found by splitting that string back apart, which is exactly the guessing
+    <code class="t-mono-inline">
+      [dsBrandName]
+    </code> exists to avoid. Provide the
+    plain name in the config and project the accented version on the screens that
+    want one; the projection wins over both.
+  </p>
+
+  <p class="block-desc t-s">
     Everything inside the card is yours: the default slot projects straight into
     it, and the layout deliberately leaves your headings and form alone so its
     type scale never fights your screen's. The support line goes into

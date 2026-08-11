@@ -23,6 +23,21 @@ export interface DsConfig {
     /** Display format for `ds-time-picker` / date-picker time — 24h or 12h AM/PM. Default `'24h'`. */
     format?: '24h' | '12h';
   };
+  brand?: {
+    /** Brand text for `ds-sidenav` and `ds-auth-layout` — the wordmark, and the
+     *  source of the letter-mark's glyph when `logoLetter` is unset. */
+    name?: string;
+    /** Letter-mark glyph when it differs from the brand's first character. */
+    logoLetter?: string;
+    /** Strapline under the brand row. `ds-auth-layout` only. */
+    tagline?: string;
+    /* No accent here on purpose. A two-tone wordmark is PROJECTED markup
+       (`[dsBrandName]`) so the consumer says where the accent belongs; a config
+       could only carry a string, and splitting it back apart — the `indexOf`
+       every app ends up writing — is the guessing the projection exists to
+       avoid. Provide the name here and project the accented version where a
+       screen needs one. */
+  };
   modal?: {
     /** Default for `dividers` on `ds-modal` and `ds-modal-card` — the rules under
      *  the header and over the actions, and the padding they were sized for.

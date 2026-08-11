@@ -34,6 +34,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   component and migrated before 2026-08-11: 0.9.0's named no member collisions at all while sixteen
   classes had grown, and 0.8.0's missed the private `saveLayout` that actually stopped a build.
 
+- **`DS_CONFIG.brand` — set the brand once instead of on every screen.**
+  `provideDsConfig({ brand: { name, logoLetter, tagline } })` answers `ds-sidenav` and `ds-auth-layout`
+  together; both ask the same questions and an app answers them identically, so six auth screens were
+  binding the same values six times. Each field resolves on its own, so a screen can override the name
+  without restating the letter — and `brand=""` drops the wordmark while a `logoLetter` in the config
+  still paints its tile, so clear both to give a screen no brand row. **The two-tone wordmark stays
+  projected:** there is deliberately no accent in the config, because a string would have to be split
+  back apart to find one and that is the guessing `[dsBrandName]` exists to avoid. The projection wins
+  over both. **You can now delete** an adapter component that existed to inject a brand object and fan
+  it out into four bindings.
+
 - **`rememberLastTab` on `ds-tabs` — reopen the tab a screen was last left on.** Off by default, and
   inert without `urlParam`, which supplies the names: a remembered INDEX would repoint the moment a tab
   is inserted. Stored per path in `sessionStorage`, so tomorrow is a fresh visit. **A link always wins** —

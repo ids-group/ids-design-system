@@ -294,7 +294,7 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
 > while migrating onto them, `ds-search` debouncing, and `initialsFrom`'s name rule. Every one is a
 > place a consumer had to write code the library nearly owns; none is a defect.
 
-- [ ] **[P2] One brand config per app, not four bindings per screen — the consumer's own workaround
+- [x] **[P2] DONE 2026-08-11 exactly as the ask framed it, accent included — meaning excluded. One brand config per app, not four bindings per screen — the consumer's own workaround
   says what the shape should be.** `ds-sidenav` and `ds-auth-layout` both take `brand` + `logoLetter`
   (+ `tagline` on the auth side) and both offer the `[dsBrandName]` projection, and an app answers
   them identically everywhere: mm-broker bound the same four values on **six** auth screens from the
@@ -308,6 +308,10 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   and mm-broker's config carries `brandAccent: 'My'` plus an `indexOf` split in the adapter — exactly
   the guessing the projection was designed to avoid. So either brand-in-config covers name/letter/
   tagline only and projection stays the accent's home, or the config takes a `TemplateRef`.
+  **Took the first branch: `DS_CONFIG.brand = { name, logoLetter, tagline }`, no accent.** A `TemplateRef` in a config would make the provider a view-owning thing, and the projection already answers the question better — so the config carries the plain name and `[dsBrandName]` stays where the accent lives, with a comment in `ds-config.ts` saying why for the next person who reaches for it.
+  **Fields resolve INDEPENDENTLY, which is the part worth knowing.** Verified in the browser with an app-level `{ name: 'ConfigBrand', logoLetter: 'C', tagline: 'From the config' }`: a bare `<ds-sidenav>` rendered `C` + `ConfigBrand`; `brand="Explicit"` won for the wordmark while the tile still read `C` from the config; `brand=""` dropped the wordmark and STILL painted the `C`. So an element override does not have to restate the rest — but "give this screen no brand row" means clearing both. My first JSDoc claimed `""` alone did it; corrected.
+  **The projection still beats both**, checked on the same run: the auth demo with `logoLetter="M"` and a projected `[dsBrandName]` rendered `M` + the two-tone `MyBroker` while its UNBOUND tagline came from the config — three different sources on one element, each resolving where it should.
+  **Shape note:** the inputs are now `string | null` with a `null` default, since a signal input cannot report whether it was bound. Their names did not change and template bindings are unaffected; the resolved values are separate protected signals (`brandName`, `letterGlyph`, `taglineText`) so no public name moved.
 
 - [x] **[P3] DONE 2026-08-11 — both hooks, and the size one needed a restructure to work at all. `ds-stat`'s value line is `white-space: nowrap`, so a tile whose value is TEXT has to go
   through `[dsStatValue]` and undo it.** mm-broker's "Enrollment Window" tile is a date range
