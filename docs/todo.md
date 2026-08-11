@@ -398,3 +398,17 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   become the default (it is a policy, and arguably not a component's business), but an opt-in — say
   `rememberLastTab` — would retire the helper. Worth deciding as one question with (1), since together
   they are what "superset" would actually mean.
+
+- [ ] **[P2] `ds-filter-bar` clips the focus ring of its first (and last) inline filter.** The row is
+  `overflow: hidden` and each `.item` is sized to exactly the width `dsFilterItem` declared, so the row's
+  box starts flush with the first control's left edge — and the DS focus ring is an OUTSET box-shadow
+  (`--focus-field` is `0 0 0 3px …`, `--focus-ring` reaches 4px). Interior items are fine, because the
+  12px gap gives the shadow room; the first item's left ring and, on a full row, the last one's right
+  ring are cut off. Found by reading the component's own CSS against `themes/_semantic.scss` while
+  mm-broker adopted the bar on thirteen screens — not measured in a browser, and it needs no
+  measurement: a 3px outset shadow cannot paint outside an `overflow: hidden` ancestor whose box it sits
+  flush against.
+  **The one-property fix is `overflow: clip` + `overflow-clip-margin: 4px`** (or the ring's width as a
+  token), which keeps the collapse arithmetic exactly as it is — `clip` still prevents scrolling, and the
+  clip margin lets the shadow bleed. A consumer cannot fix this: the row is internal, and padding it
+  from outside would change the measured width the split is computed from.
