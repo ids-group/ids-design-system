@@ -67,64 +67,25 @@ function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value));
 }
 
-/** Which rule to read a full name by. The two are genuinely different and a
- *  consumer that shows both people and organisations needs both: "Mary Jane
- *  Watson" is MW, while "Blue Cross Blue Shield" is BC and emphatically not BS. */
-export interface InitialsOptions {
-  of: 'person' | 'organisation';
-}
-
-/** Uppercased initials. `(first, last)` parts, or a single full name —
- *  `initialsFrom('Ada Lovelace')` → `AL`. `?` when empty.
+/** Uppercased initials from the first two words. Accepts `(first, last)` parts or
+ *  a single full name (`initialsFrom('Ada Lovelace')` → `AL`); a lone name gives
+ *  one letter, `?` when empty.
  *
- *  Pass `{ of }` for a name whose shape you know:
- *  - `'person'` takes the first and LAST word, so a middle name does not steal
- *    the second letter, and a single word gives its first two letters rather
- *    than one lonely one.
- *  - `'organisation'` takes the first two words with punctuation stripped, which
- *    is why "Blue Cross Blue Shield" comes out BC.
- *
- *  Without `of` the rule is unchanged from earlier releases: first two words, one
- *  letter for a lone name. That is the ORG rule, so it is wrong for the people it
- *  is usually pointed at — say `{ of: 'person' }` there. Flipping the default is a
- *  breaking change and is queued with the rest of them. */
-export function initialsFrom(first?: string, last?: string): string;
-export function initialsFrom(
-  fullName: string,
-  options: InitialsOptions,
-): string;
-export function initialsFrom(
-  first?: string,
-  last?: string | InitialsOptions,
-): string {
-  const options = typeof last === 'object' && last !== null ? last : null;
-  const parts =
-    options || last === undefined
-      ? (first ?? '').trim().split(/\s+/).filter(Boolean)
-      : [first ?? '', (last as string) ?? ''];
-
+ *  A deliberately naive Latin-script guess, and the library's ONLY naming rule.
+ *  Reading a name is a cultural convention, not a UI decision — "María José
+ *  García López" wants MG from a Spanish reader and "Blue Cross Blue Shield" wants
+ *  BC from an insurer — so an app with a real rule passes its own through
+ *  `DS_CONFIG.avatar.initials` or `ds-avatar`'s `initialsRule` rather than asking
+ *  this to grow modes it cannot get right. */
+export function initialsFrom(first?: string, last?: string): string {
   const words =
-    options?.of === 'organisation' ? stripPunctuation(parts) : parts;
-  const head = words[0] ?? '';
-  const tail =
-    options?.of === 'person'
-      ? (words[words.length - 1] ?? '')
-      : (words[1] ?? '');
+    last === undefined
+      ? (first ?? '').trim().split(/\s+/).filter(Boolean)
+      : [first ?? '', last ?? ''];
+  const firstInitial = (words[0] ?? '').trim()[0] ?? '';
+  const lastInitial = (words[1] ?? '').trim()[0] ?? '';
 
-  // One word, and a mode that asked for two letters: an avatar tile with a single
-  // glyph reads as unfinished, and the second letter has to come from somewhere.
-  const second =
-    options && words.length < 2 ? ([...head][1] ?? '') : ([...tail][0] ?? '');
-
-  return `${[...head][0] ?? ''}${second}`.toUpperCase() || '?';
-}
-
-/** Leading/trailing punctuation only — an inner hyphen is part of the word, so
- *  "Blue-Cross Shield" still yields B and S rather than losing a letter. */
-function stripPunctuation(words: readonly string[]): string[] {
-  return words
-    .map((word) => word.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, ''))
-    .filter(Boolean);
+  return `${firstInitial}${lastInitial}`.toUpperCase() || '?';
 }
 
 // Java String.hashCode shape (hash*31 + charCode); the `<< 5` keeps hash in int range.

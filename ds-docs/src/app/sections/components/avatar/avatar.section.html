@@ -145,24 +145,34 @@
 
   <p class="block-desc t-s">
     <strong>
-      Say which kind of name it is.
+      Or pass the name and let the avatar do both.
     </strong>
 
     <code class="t-mono-inline">
-      initialsFrom(name, &#123; of: 'person' &#125;)
-    </code> takes the first and
-    LAST word, so "Mary Jane Watson" gives MW rather than MJ, and a single word
-    gives two letters instead of one lonely glyph.
+      name
+    </code> replaces the two bindings this demo
+    wires by hand: it derives the initials AND seeds the tint. <strong>The tint
+    hashes the NAME, never the initials</strong> — two letters collide wholesale,
+    so Alice Brown and Adam Bell would otherwise share one colour. Measured: same
+    "AB", hues 198° and 356°.
+  </p>
+
+  <p class="block-desc t-s">
+    The built-in rule takes the first two words, and that is all it claims to be —
+    a Latin-script guess. Reading a name is a cultural convention rather than a UI
+    decision: a Spanish reader wants MG from "María José García López", an insurer
+    wants BC from "Blue Cross Blue Shield". So the rule is replaceable, not
+    configurable-by-mode —
     <code class="t-mono-inline">
-      &#123; of: 'organisation' &#125;
-    </code> takes the first two with
-    punctuation stripped — which is why "Blue Cross Blue Shield" is BC and
-    emphatically not BS. Without
+      [initialsRule]
+    </code> for one table,
     <code class="t-mono-inline">
-      of
-    </code> the rule is unchanged from earlier
-    releases: first two words, one letter for a lone name. That is the ORG rule, so
-    it is wrong for the people it usually points at.
+      provideDsConfig(&#123; avatar: &#123; initials &#125; &#125;)
+    </code>
+    for the app. An explicit
+    <code class="t-mono-inline">
+      initials
+    </code> still wins over both.
   </p>
 
   <div class="row">
@@ -194,4 +204,5 @@
       />
     }
   </div>
+
 </docs-section>

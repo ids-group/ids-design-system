@@ -23,6 +23,14 @@ export interface DsConfig {
     /** Display format for `ds-time-picker` / date-picker time — 24h or 12h AM/PM. Default `'24h'`. */
     format?: '24h' | '12h';
   };
+  avatar?: {
+    /** How `ds-avatar` turns its `name` into initials, app-wide. The built-in
+     *  rule takes the first two words, which is a Latin-script guess and nothing
+     *  more: reading a name is a cultural convention rather than a UI decision, so
+     *  an app that knows its own — first+surname for people, first two words for
+     *  organisations — provides it here instead of asking the library to guess. */
+    initials?: (name: string) => string;
+  };
   brand?: {
     /** Brand text for `ds-sidenav` and `ds-auth-layout` — the wordmark, and the
      *  source of the letter-mark's glyph when `logoLetter` is unset. */
