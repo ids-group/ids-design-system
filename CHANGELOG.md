@@ -10,6 +10,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`provideDsConfig` answers six more inputs, so an app stops restating itself.** New sections:
+  `control.size` (honoured by button, icon-button, input, textarea, select, autocomplete, search,
+  date/time picker, number stepper, checkbox, radio, switch and field-group), `card.elevation`,
+  `card.padding`, `table.stickyScrollbar`, `table.bordered`, `icon.size` and `badge.withDot`.
+  Precedence is **input → config → built-in**, so a screen that differs still binds the attribute and
+  wins. **No default moved** — an app that provides nothing renders exactly as before. **You can now
+  delete** the attribute an app repeats on every element: one consumer binds `[stickyScrollbar]="true"`
+  on all 35 of its tables and `size="sm"` on 146 buttons, which is a house default written 146 times,
+  and each new element is one forgotten binding away from looking wrong. `control.size` is a different
+  axis from `[data-density]`: the tier rewrites hit targets and padding in CSS for a route, this picks
+  which of the three declared sizes a control renders at, and an app can use both. Documented as one
+  page under Foundations → Theming rather than in scraps across eight component pages.
+
 - **Option icons on every picker, and one shape behind all three.** `ds-multi-select` and
   `ds-autocomplete` now render an option's `icon` before its label at 16px, which only `ds-select`
   did. The three option types share a new exported `DsOption<T>` — they were three near-identical
@@ -167,6 +180,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   wide and collapses the rest into "+N more". A trigger that grew a line per selection was pushing
   the rest of the form down the page. **To keep the old behaviour, bind
   `[maxVisibleChips]="null"`**; a NUMBER still caps at exactly that many.
+
+- **`size` is now `DsSize | null` on the fourteen controls that take it**, so an unbound `size` can
+  fall through to `DS_CONFIG.control.size`. **Nothing changes in a template** — `size="sm"` binds as
+  before and an unbound control still renders `md`. **What changes is reading it back:** `size()` now
+  returns `null` when nothing was bound, where it used to return `'md'`. If you read a control's
+  `size()` — from a host, a test, or a `viewChild` — read the public `sizeResolved()` instead. Same for
+  `ds-card`'s `elevation`, `ds-icon`'s `size` and `ds-badge`'s `withDot`. **If you implement
+  `DsFieldGroupContext`**, its member is now `sizeResolved` rather than `size`, for the same reason: a
+  segment must not have to resolve the group's size a second time.
 
 - **`[data-density="ultra-compact"]` now compresses surface padding too** — `--ds-container-pad`,
   the inner padding `ds-card` and `ds-stat` share, drops from 24px to 16px in that tier only.

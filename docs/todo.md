@@ -1,8 +1,12 @@
 # DS — improvements backlog
 
-- [ ] **[P2] Whole-app opinions have to be repeated per element — `stickyScrollbar` 35 times out of 35,
+- [x] **DONE 2026-08-13 — [P2] Whole-app opinions have to be repeated per element — `stickyScrollbar` 35 times out of 35,
   and it is the small end of it (Stas 2026-08-12, who asked for the table flags AND for the general
-  case).** Measured in mm-broker after the fork retirement: every single `ds-table` in the
+  case).**
+  **SHIPPED as CONFIGURABILITY ONLY, which is the distinction Stas drew when the work started: "я не хотел чтобы ты менял дефолты… это же фидбек только от одного консьюмера".** Seven new `DS_CONFIG` keys — `control.size`, `card.elevation`, `card.padding`, `table.stickyScrollbar`, `table.bordered`, `icon.size`, `badge.withDot` — all on one `resolveWithConfig()` helper that replaced the pattern of a bespoke resolver per section. **No built-in default moved**, so an app that provides nothing is byte-identical; verified in a browser by building ds-docs with a full config and again without it.
+  **What the counts do NOT support, measured before building rather than after (and this is why the deferred-defaults item below must not quote the old numbers):** a single house `size`. `ds-button` is 146 `sm` to 5 `lg`, but **`ds-input` is 4 `sm` out of 87**, and `ds-textarea` and `ds-checkbox` are zero out of 7 and 19. "The house speaks sm" is true of buttons and selects and false of fields, so a default flip would have moved more elements wrongly than rightly. The config expresses it without deciding it.
+  **And one line of the original ask was not a gap at all:** the 46 `ds-icon [size]="16"` bindings restate the DS default of 16. Dead bindings, delete-list, same class of finding as the table-head no-op.
+  **Original evidence, kept for the defaults conversation:** measured in mm-broker after the fork retirement, every single `ds-table` in the
   three portals binds `[stickyScrollbar]="true"`, because the fork it replaced mirrored the horizontal
   scrollbar unconditionally and nobody wants a wide table whose only scrollbar sits below the fold. A
   35/35 ratio is not a per-instance decision; it is a house default expressed 35 times, and each new
@@ -26,25 +30,26 @@
 
   | repeated binding | times | apps |
   | --- | --- | --- |
-  | `<ds-button size="sm">` | 173 | all three |
-  | `<ds-card elevation="raised">` | 97 | all three |
-  | `<ds-button variant="ghost">` | 91 | all three |
-  | `<ds-card padding="lg">` | 64 | all three |
-  | `<ds-icon [size]="16">` | 47 | broker + admin + common |
-  | `<ds-select size="sm">` | 37 | broker + admin |
-  | `<ds-badge [withDot]="true">` | 36 | broker + admin |
-  | `<ds-table [stickyScrollbar]="true">` | 35 | broker + admin |
-  | `<ds-modal size="sm">` | 26 | all three |
-  | `<ds-popover align="end">` | 15 | all three |
+  | repeated binding | times | denominator, re-counted 2026-08-13 | shipped as config |
+  | --- | --- | --- | --- |
+  | `<ds-button size="sm">` | 146 | vs 5 `lg` | `control.size` |
+  | `<ds-card elevation="raised">` | 97 | of 115 cards (5 explicit `flat`) | `card.elevation` |
+  | `<ds-button variant="ghost">` | 91 | — | NO — a screen's action hierarchy, not a house style |
+  | `<ds-card padding="lg">` | 64 | of 115 (22 `md`, 13 `none`) | `card.padding` |
+  | `<ds-icon [size]="16">` | 46 | **the DS default is already 16** | NO — dead bindings, delete-list |
+  | `<ds-select size="sm">` | 37 | of 60 | `control.size` |
+  | `<ds-badge [withDot]="true">` | 36 | — | `badge.withDot` |
+  | `<ds-table [stickyScrollbar]="true">` | 35 | of 35 | `table.stickyScrollbar` |
+  | `<ds-input size="sm">` | **4** | **of 87** | `control.size`, but see below |
+  | `<ds-textarea>` / `<ds-checkbox>` `size="sm"` | 0 | of 7 / of 19 | `control.size`, never used |
+  | `<ds-modal size="sm">` | 26 | — | NOT built — a dialog's width is per dialog |
+  | `<ds-popover align="end">` | 15 | — | NOT built — align follows the trigger's position |
 
-  Not all of these should become config — `variant="ghost"` and `padding="lg"` are choices a screen makes
-  and the counts include contexts where the alternative is deliberate. But **`size`/density and
-  `elevation` are exactly the whole-app opinions `field.reserveMessage` and `modal.dividers` already
-  model**: the DS default is `md` and the house speaks `sm`, so every button in three apps says so out
-  loud. A `DsConfig.density?: DsSize` honoured by the size-taking components (button, select, input,
-  search, modal), plus `card.elevation` / `card.padding` and `icon.size`, would remove several hundred
-  attributes whose only message is "we are not the default". Per-instance bindings keep winning, so the
-  exceptions stay visible instead of drowning in the repetition.
+  **The two rows in bold are why the defaults conversation must not reuse the old summary.** It claimed
+  "the DS default is `md` and the house speaks `sm`". True of buttons (146:5) and selects (37 of 60);
+  false of fields — `ds-input` is 4 of 87, textarea and checkbox are zero. A single house `size` default
+  would have moved more elements wrongly than rightly, which is exactly what shipping the CONFIG rather
+  than a new default avoids: the app states its own opinion and the exceptions stay visible as bindings.
 
 - [ ] **[P2] The export a consumer CAN trigger is not the export the table's own button runs (found
   2026-08-12, asking whether Export could move out of the table).** Two methods, and only the wrong one is

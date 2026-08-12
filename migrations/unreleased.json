@@ -103,6 +103,20 @@
         "--ds-card-pad",
         "--ds-stat-pad"
       ]
+    },
+    {
+      "id": "control-size-input-becomes-nullable",
+      "kind": "behavior",
+      "old": "size()",
+      "new": "sizeResolved()",
+      "note": "The size input on fourteen controls (ds-button, ds-icon-button, ds-input, ds-textarea, ds-select, ds-autocomplete, ds-search, ds-date-picker, ds-time-picker, ds-number-stepper, ds-checkbox, ds-radio, ds-switch, ds-field-group) is now typed DsSize | null and defaults to null, so an unbound size can fall through to the new DS_CONFIG.control.size. NOTHING CHANGES IN A TEMPLATE: size=\"sm\" binds exactly as before, and a control with no size still renders md. WHAT CHANGES is reading the signal back - size() returns null when nothing was bound, where it returned 'md' before. ACTION: if you read a control instance's size() (from a host component, a viewChild, or a test assertion), read the public sizeResolved() instead; it returns the same DsSize the component renders at. The same nullable-plus-resolver shape now applies to ds-card elevation (elevationResolved), ds-icon size (sizeResolved) and ds-badge withDot (withDotResolved), and to ds-table bordered / stickyScrollbar. SEPARATELY: if you implement DsFieldGroupContext yourself, its member is now sizeResolved rather than size.",
+      "searchHints": [
+        ".size()",
+        "sizeResolved",
+        "DsFieldGroupContext",
+        "ds-field-group",
+        "viewChild"
+      ]
     }
   ],
   "informational": [
@@ -133,6 +147,9 @@
     "DELETE-LIST: if you wrote an adapter component that injects a brand object and fans it out into brand/logoLetter/tagline bindings on each auth screen -> provideDsConfig({ brand: … }) does it, and the accent stays a [dsBrandName] projection instead of a brandAccent string plus an indexOf split.",
     "ds-avatar takes a `name`, which replaces the two bindings a caller used to wire by hand: it derives the initials AND seeds the tint. The tint hashes the NAME rather than the initials - two letters collide wholesale, so Alice Brown and Adam Bell would otherwise share a colour (measured: same \"AB\", hues 198 and 356). An explicit `initials` still wins, and `seed` still overrides the hash input when identity is an id or an email rather than the display name.",
     "The rule turning a name into initials is REPLACEABLE rather than configurable by mode: [initialsRule] on one avatar or table, provideDsConfig({ avatar: { initials } }) for the app. The built-in stays initialsFrom - first two words - and is documented as a Latin-script guess, because reading a name is a cultural convention rather than a UI decision: a Spanish reader wants MG from \"Maria Jose Garcia Lopez\", an insurer wants BC from \"Blue Cross Blue Shield\". A library that shipped person/organisation modes would be claiming to know both, and would be wrong in ways it cannot see. DELETE-LIST: local initials helpers stay yours, but the ds-avatar wiring around them collapses to [name] plus one [initialsRule].",
-    "ds-multi-select and ds-autocomplete render an option's `icon` before its label at 16px, which previously only ds-select did. The three option types now extend one exported DsOption<T> - they were three near-identical interfaces, which is why the icon field existed on one picker for a release - and each keeps its own exported name, so no import changes. Nothing to do: options without an icon render as before. Only ds-select repeats the icon in its TRIGGER, because its trigger is a button showing one label; the autocomplete trigger is a text input whose leading slot belongs to [dsAutocompletePrefix], and multi-select chips stay text-only so the label keeps the width."
+    "ds-multi-select and ds-autocomplete render an option's `icon` before its label at 16px, which previously only ds-select did. The three option types now extend one exported DsOption<T> - they were three near-identical interfaces, which is why the icon field existed on one picker for a release - and each keeps its own exported name, so no import changes. Nothing to do: options without an icon render as before. Only ds-select repeats the icon in its TRIGGER, because its trigger is a button showing one label; the autocomplete trigger is a text input whose leading slot belongs to [dsAutocompletePrefix], and multi-select chips stay text-only so the label keeps the width.",
+    "provideDsConfig gained five sections, so an app can state a whole-app opinion once instead of on every element: control.size (button, icon-button, input, textarea, select, autocomplete, search, date/time picker, number stepper, checkbox, radio, switch, field-group), card.elevation, card.padding, table.stickyScrollbar, table.bordered, icon.size and badge.withDot. Precedence is input -> config -> built-in, and NO built-in default moved: an app that provides nothing renders exactly as it did. DELETE-LIST: the attribute you repeat identically on every element - one consumer binds [stickyScrollbar]=\"true\" on all 35 of its tables and size=\"sm\" on 146 buttons.",
+    "DS_CONFIG.control.size is NOT the same axis as [data-density]. The density tier rewrites hit targets and padding in CSS for a route subtree; control.size picks which of the three declared sizes (sm/md/lg) a control renders at. An app can set both, and they compose.",
+    "MEASURED IN A CONSUMER, worth checking on your own side: 46 of its ds-icon elements bind [size]=\"16\", which is already the ds-icon default - dead bindings, not a gap. Config or no config, those can go."
   ]
 }
