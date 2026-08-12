@@ -36,6 +36,14 @@
   .cell.next > .tag::before { content: "proposed · "; }
   .cell.next { border-color: var(--primary); }
 
+  h2 > .tag, h3 > .tag {
+    display: inline-block; vertical-align: middle; margin-left: var(--space-2);
+    padding: 2px var(--space-2); border-radius: var(--radius-pill);
+    background: var(--primary-subtitle); color: var(--primary-strong);
+    font: var(--font-weight-bold) var(--font-size-2xs) / 1.6 var(--font-sans);
+    letter-spacing: .06em; text-transform: uppercase;
+  }
+
   /* --- specimens, built from the same tokens the components read --- */
   .pg-head { border-bottom: 1px solid var(--border-divider); padding-bottom: var(--space-3); }
   .pg-title { font: var(--font-weight-extrabold) var(--pg-fs, var(--font-size-h3)) / var(--line-height-snug) var(--font-sans); margin: 0; }
@@ -103,8 +111,8 @@
   <b>It is three members, not four.</b> The batch item lists packaging as “(d) option D, <em>if that is the packaging answer</em>” — it is not. Option <b>B</b> was decided on 2026-08-05 (one services entry point, root <code>public-api.ts</code> kept as a facade), and B is <b>additive</b>: nothing a consumer imports today stops working. It leaves the batch.
 </div>
 
-<h2>A · <code>ds-modal</code> — a boolean where the rest of the library has a vocabulary</h2>
-<p>Today: <code>error = input(false)</code>. Everywhere else the API-consistency pass (2026-07-09) settled on <code>DsStatus</code>. A boolean cannot express a warning or an info dialog at all, so both consumer apps hand-roll one. The rename is mechanical — <b>but it forces a second decision the rename alone does not answer: what a status modal should LOOK like.</b> The DS has no stripe idiom anywhere; <code>ds-alert</code> expresses status as a tinted surface.</p>
+<h2>A · <code>ds-modal</code> — a boolean where the rest of the library has a vocabulary <span class="tag">shipped 2026-08-12 · tinted</span></h2>
+<p>Was: <code>error = input(false)</code>. Everywhere else the API-consistency pass (2026-07-09) settled on <code>DsStatus</code>. A boolean cannot express a warning or an info dialog at all, so both consumer apps hand-roll one. The rename is mechanical — <b>but it forces a second decision the rename alone does not answer: what a status modal should LOOK like.</b> The DS has no stripe idiom anywhere; <code>ds-alert</code> expresses status as a tinted surface.</p>
 
 <div class="pair">
   <div class="cell now">
@@ -158,8 +166,8 @@
   </ol>
 </div>
 
-<h2>B · chip overflow — cap by width by default</h2>
-<p><code>maxVisibleChips</code> defaults to “show everything”, so a multi-value trigger grows a line per selection and pushes the form down the page. <code>"fit"</code> shipped 2026-08-11 as an opt-in; the question is whether it becomes the default for <code>ds-autocomplete</code> and <code>ds-multi-select</code>.</p>
+<h2>B · chip overflow — cap by width by default <span class="tag">shipped 2026-08-12 · default is “fit”</span></h2>
+<p><code>maxVisibleChips</code> used to default to “show everything”, so a multi-value trigger grew a line per selection and pushed the form down the page. <code>"fit"</code> shipped 2026-08-11 as an opt-in and is now the default for <code>ds-autocomplete</code> and <code>ds-multi-select</code>: <code>[maxVisibleChips]="null"</code> restores the growth, a NUMBER still caps at exactly that many.</p>
 
 <div class="pair">
   <div class="cell now">
@@ -180,14 +188,14 @@
   <b>Flip the default to <code>"fit"</code>?</b> <em>Recommend yes.</em> The cost is that a screen relying on the growth sees its trigger stop growing; the fix is one word — <code>[maxVisibleChips]="null"</code>. The benefit is that no form is pushed down the page by a selection the user made three clicks ago.
 </div>
 
-<h2>C · four defaults two teams changed independently</h2>
-<p>These four overrides came out <b>identical</b> in two apps. Every one is already retunable, so the question is not “add a knob” but “is our default the wrong one”.</p>
+<h2>C · four defaults a consumer changed — and how each landed</h2>
+<p>These four overrides came out <b>identical</b> in two apps. Every one is already retunable, so the question was never “add a knob” but “is our default the wrong one”. The panels below are the proposal as filed; the verdicts follow.</p>
 
 <div class="verdict">
-  <b>Researched 2026-08-12, and the premise weakened.</b> The backlog called these “two independently-built apps”. They are not: both override files live in ONE repository — <code>mm-broker-platform/…/broker-portal</code> and <code>…/platform-admin</code> — two portals of the same product, almost certainly one design. The second consumer (mm-ecm) is not on this machine, so it could not be checked. What looked like two teams converging is <b>one design's opinion</b>, which is a much weaker argument for moving a library's default. Two of the four now decide themselves anyway:
+  <b>Researched 2026-08-12, and the premise did not hold.</b> The backlog called these “two independently-built apps”. They are not: both override files live in ONE repository — <code>mm-broker-platform/…/broker-portal</code> and <code>…/platform-admin</code> — two portals of the same product, and both page-header comments say the same words, “H2 to match the design”. So this is <b>one design spec's opinion</b>, not two teams converging, which is a much weaker argument for moving a library's default. The second consumer (mm-ecm) is not on this machine, so it could not be checked. <b>Outcome: C1, C2 and C3 close with no default change; C4 is parked as its own item.</b>
 </div>
 
-<h3>C1 · <code>ds-page-header</code> title — h3 → h2</h3>
+<h3>C1 · <code>ds-page-header</code> title — h3 → h2 <span class="tag">closed · 28px stays</span></h3>
 <div class="pair">
   <div class="cell now"><span class="tag">--font-size-h3</span>
     <div class="pg-head"><p class="pg-title">Policies</p><p class="pg-sub">1,284 records · updated 4m ago</p></div>
@@ -197,7 +205,7 @@
   </div>
 </div>
 
-<h3>C2 · <code>ds-table</code> head — secondary → tertiary text, plus a row hover</h3>
+<h3>C2 · <code>ds-table</code> head — secondary → tertiary text, plus a row hover <span class="tag">closed · fails AA, hover already gated</span></h3>
 <div class="pair">
   <div class="cell now"><span class="tag">text-secondary, no row hover</span>
     <table class="spec"><thead><tr><th>Policy</th><th>Holder</th><th>Renews</th></tr></thead>
@@ -209,7 +217,7 @@
   </div>
 </div>
 
-<h3>C3 · <code>ds-stat</code> — padding 24px → 20px</h3>
+<h3>C3 · <code>ds-stat</code> — padding 24px → 20px <span class="tag">closed · base stays 24, ultra-compact now 16</span></h3>
 <div class="pair">
   <div class="cell now"><span class="tag">--ds-container-pad (24px)</span>
     <div class="stat-tile"><div class="stat-label">Records this cycle</div><div class="stat-value">147</div></div>
@@ -219,7 +227,7 @@
   </div>
 </div>
 
-<h3>C4 · <code>ds-sidenav-item</code> active — solid accent → wash + coloured label</h3>
+<h3>C4 · <code>ds-sidenav-item</code> active — solid accent → wash + coloured label <span class="tag">parked · its own item</span></h3>
 <div class="pair">
   <div class="cell now"><span class="tag">solid accent, rail on</span>
     <div class="rail">
@@ -238,13 +246,18 @@
 </div>
 
 <div class="ask">
-  <b>Where each one landed.</b>
+  <b>Where each one landed — decided 2026-08-12. Three closed with no default change; one parked.</b>
   <ol>
-    <li><b>C2 — disqualified, and not on taste.</b> <code>--text-tertiary</code> on <code>--surface-secondary</code> measures <b>4.30:1</b>, and the head renders at <b>12px bold</b> — normal text by WCAG, so the floor is 4.5. A library cannot default to a contrast failure; an app may choose it for itself. Two corrections while measuring: their second declaration, <code>--ds-table-head-bg-color: var(--surface-secondary)</code>, is a <b>no-op</b> that re-states our own default, and the “matching row hover” this item claimed <b>appears in neither file</b>. One real declaration, and it fails.</li>
-    <li><b>C3 — must not move alone.</b> <code>ds-card</code> and <code>ds-stat</code> both fall back to the same semantic token, <code>--ds-container-pad</code>. Hard-coding <code>--space-5</code> into the tile would not just break the shared rhythm — it would <b>remove the shared knob</b>, so an app tuning <code>--ds-container-pad</code> would stop moving the tile. Carbon and Atlassian both keep a core scale of 5–8 values plus a semantic per-component token, which is exactly what we have. Either move <code>--ds-container-pad</code> (card + stat + container together, its own decision) or leave it.</li>
-    <li><b>C1 — still open, and closer than it looked.</b> The element is already an <code>&lt;h1&gt;</code>; only its SIZE is at issue, 28px against the proposed 36px (+29%). 28px sits inside the productive-UI norm, so our default is defensible — the case for moving rests on the consumer evidence, which is now one design rather than two.</li>
-    <li><b>C4 — deliberately parked</b> (Stas 2026-08-12), to be discussed on its own. Worth carrying into that discussion: both apps also set <code>--ds-sidenav-item-label-weight: bold</code>, a fifth override this item never counted, and their colours DIFFER — one uses its own <code>--nav-active-bg</code>, the other <code>--primary-subtitle</code>. They agreed on a shape, not a value.</li>
+    <li><b>C1 — closed, 28px stays.</b> The heading LEVEL was never wrong: the component already renders <code>&lt;h1 class="title"&gt;</code>, so “h3” names a type RUNG, and the “nothing larger sits above it, so it is under-sized by construction” argument dissolves. On the rung, 28px is Material 3's <b>Headline Medium</b> and Apple's <b>Title 1</b> — the canonical app-page-title size — while 36px is M3's <b>Display Small</b>, the expressive rung for one-off hero moments, not for a header that repeats on every page (Shopify Polaris, the closest analogue, goes lower still). <code>--ds-page-header-title-fs</code> stays the lever; its token description now names the rung and the reason.</li>
+    <li><b>C2 — closed, and both halves were already answered.</b> <code>--text-tertiary</code> on <code>--surface-secondary</code> measures <b>4.30:1</b> at <b>12px bold</b> — normal text by WCAG, so the floor is 4.5 and a library cannot default below it. Their second declaration, <code>--ds-table-head-bg-color: var(--surface-secondary)</code>, is a <b>no-op</b> re-stating our own default. And the “matching row hover” <b>appears in neither file</b> — while the DS already does the asked-for thing: the row tint is <code>tr.clickable:not(.active):hover</code>, gated by <code>rowInteractive</code>, off by default, so a passive table stays static and the tint honestly signals clickability.</li>
+    <li><b>C3 — closed on the value, and it exposed a real gap that is now fixed.</b> The padding was never <code>ds-stat</code>'s to move: it resolves from <code>--ds-container-pad</code>, which <code>ds-card</code> shares, so hard-coding <code>--space-5</code> into the tile would have <b>removed the shared knob</b>. On the value, 24px is where the field sits (Ant card body 24, shadcn <code>p-6</code> 24) and 20px is not a canonical rung anywhere — so the base stays and a consumer who wants 20 sets that one token. <b>What did move:</b> the density tiers compressed field and table padding at <code>ultra-compact</code> but left surface padding at 24px, so a card kept its full frame while its own cells halved. <code>ultra-compact</code> now drops it to <b>16px</b> — one rung, not two, because a frame reads as padding lost long before cells do.</li>
+    <li><b>C4 — deliberately parked</b> (Stas 2026-08-12), now its own board item. Worth carrying into that discussion: both apps also set <code>--ds-sidenav-item-label-weight: bold</code>, a fifth override this item never counted, and their colours DIFFER — one uses its own <code>--nav-active-bg</code>, the other <code>--primary-subtitle</code>. They agreed on a shape, not a value.</li>
   </ol>
+</div>
+
+<div class="ask">
+  <b>The one thing worth keeping from the whole group.</b>
+  <p>A consumer override is evidence about a default <b>only when it is genuinely independent</b>. Four identical declarations inside one Angular workspace are one opinion written twice — and both page-header comments say the same words, “H2 to match the design”, which points at a single design spec rather than at two teams agreeing. Check the repository before counting the overrides. What the group did produce is real, just smaller than it looked: one contrast floor confirmed, one density gap found and fixed, and two token descriptions that now say which rung they sit on and why.</p>
 </div>
 
 <h2>What a “yes” costs</h2>
