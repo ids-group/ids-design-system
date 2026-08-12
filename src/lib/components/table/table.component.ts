@@ -17,6 +17,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { devWarn } from '../../core/dev-warning';
+import { resolveWithConfig } from '../../core/config-defaults';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   CdkDrag,
@@ -128,11 +129,11 @@ function compareSortValues(
   styleUrl: './table.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   host: {
-    '[class.bordered]': 'bordered()',
+    '[class.bordered]': 'borderedResolved()',
     '[class.selectable]': 'selectable()',
     '[class.pinned]': 'stickyFirstColumn()',
     '[class.expandable]': 'expandableRows()',
-    '[class.sticky-scrollbar]': 'stickyScrollbar()',
+    '[class.sticky-scrollbar]': 'stickyScrollbarResolved()',
     '[class.resizable]': 'resizableColumns()',
   },
 })
@@ -151,8 +152,11 @@ export class TableComponent<T extends object> {
   /** Opt-in outer border + radius. Off by default so tables flush inside a
    *  `<ds-card padding="none">` (workspaces, programs-list) don't double-border.
    *  When `true`, the scroll-wrap gets a `var(--border-default)` outline and
-   *  `var(--radius-md)` radius — useful when the table stands alone in a padded card. */
-  readonly bordered = input(false, { transform: booleanAttribute });
+   *  `var(--radius-md)` radius — useful when the table stands alone in a padded card.
+   *  Unset falls back to `DS_CONFIG.table.bordered`, then `false`. */
+  readonly bordered = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
   /** false  — no loading state.
    *  'skeleton' — first-load placeholder; rows are replaced with shimmer
    *  rows that read the global --skeleton-shimmer-x driver.
@@ -277,8 +281,11 @@ export class TableComponent<T extends object> {
 
   /** Keeps the horizontal scrollbar reachable on tall tables: the scroll
    *  container's native bar is hidden and a proxy stuck to the bottom of the
-   *  nearest scroll ancestor mirrors it both ways. Off by default. */
-  readonly stickyScrollbar = input(false, { transform: booleanAttribute });
+   *  nearest scroll ancestor mirrors it both ways. Off by default. Unset falls
+   *  back to `DS_CONFIG.table.stickyScrollbar`, then `false`. */
+  readonly stickyScrollbar = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
 
   /** Rows per page. `null` (default) disables pagination — all rows render. */
   readonly pageSize = model<number | null>(null);
@@ -325,6 +332,16 @@ export class TableComponent<T extends object> {
   );
   protected readonly sortModeResolved = computed<TableSortMode>(
     () => this.sortMode() ?? 'server',
+  );
+  protected readonly borderedResolved = resolveWithConfig(
+    this.bordered,
+    (config) => config.table?.bordered,
+    false,
+  );
+  protected readonly stickyScrollbarResolved = resolveWithConfig(
+    this.stickyScrollbar,
+    (config) => config.table?.stickyScrollbar,
+    false,
   );
   /** Pin the first data column (and the select column) on horizontal scroll. */
   readonly stickyFirstColumn = input(false, { transform: booleanAttribute });
@@ -1074,7 +1091,9 @@ export class TableComponent<T extends object> {
    *  ones that have arrived — otherwise the spacers shrink to the loaded slice
    *  and the scrollbar lies about the length of the list. */
   protected readonly virtualCount = computed(() =>
-    this.lazy() ? (this.total() ?? this.displayData().length) : this.displayData().length,
+    this.lazy()
+      ? (this.total() ?? this.displayData().length)
+      : this.displayData().length,
   );
 
   /** `null` when not virtualizing — the row loop then walks `displayData()` whole. */
@@ -1117,20 +1136,20 @@ export class TableComponent<T extends object> {
    * for. Outside lazy mode every slot is filled, so the extra object per visible
    * row buys uniformity for the ~25 rows windowing keeps in the DOM.
    */
-  protected readonly rowSlots = computed<readonly { row: T | null; index: number }[]>(
-    () => {
-      const window = this.virtualWindow();
-      const data = this.displayData();
-      const start = window ? window.start : 0;
-      const end = window ? window.end : data.length;
-      const slots: { row: T | null; index: number }[] = [];
-      for (let index = start; index < end; index++) {
-        slots.push({ row: data[index] ?? null, index });
-      }
+  protected readonly rowSlots = computed<
+    readonly { row: T | null; index: number }[]
+  >(() => {
+    const window = this.virtualWindow();
+    const data = this.displayData();
+    const start = window ? window.start : 0;
+    const end = window ? window.end : data.length;
+    const slots: { row: T | null; index: number }[] = [];
+    for (let index = start; index < end; index++) {
+      slots.push({ row: data[index] ?? null, index });
+    }
 
-      return slots;
-    },
-  );
+    return slots;
+  });
 
   /** Zebra striping cannot come from `:nth-child` while windowing — the parity
    *  of a rendered row depends on its ABSOLUTE index, and the spacer rows are

@@ -5,10 +5,12 @@ import {
   inject,
   input,
   isDevMode,
+  numberAttribute,
 } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { DS_ICON_REGISTRY } from './icon-registry';
 import { ICONS, type IconName } from './icons.data';
+import { resolveWithConfig } from '../core/config-defaults';
 
 @Component({
   selector: 'ds-icon',
@@ -37,16 +39,15 @@ import { ICONS, type IconName } from './icons.data';
       stroke="currentColor"
       stroke-linecap="round"
       stroke-linejoin="round"
-      [style.--ds-icon-size]="size() + 'px'"
-      [attr.width]="size()"
-      [attr.height]="size()"
+      [style.--ds-icon-size]="sizeResolved() + 'px'"
+      [attr.width]="sizeResolved()"
+      [attr.height]="sizeResolved()"
       [attr.stroke-width]="stroke()"
       [attr.role]="ariaLabel() ? 'img' : null"
       [attr.aria-label]="ariaLabel()"
       [attr.aria-hidden]="ariaLabel() ? null : 'true'"
       [innerHTML]="paths()"
-    >
-    </svg>
+    ></svg>
   `,
 })
 export class IconComponent {
@@ -54,7 +55,16 @@ export class IconComponent {
   // Consumer-supplied icons via provideDsIcons(...). Empty record by default.
   private readonly registry = inject(DS_ICON_REGISTRY);
   readonly name = input.required<IconName>();
-  readonly size = input<number>(16);
+  /** Pixel size of the square glyph. Unset falls back to `DS_CONFIG.icon.size`,
+   *  then `16`. */
+  readonly size = input<number | null, unknown>(null, {
+    transform: (value) => (value == null ? null : numberAttribute(value)),
+  });
+  protected readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.icon?.size,
+    16,
+  );
   readonly stroke = input<number>(1.75);
   /** When set, the icon is exposed to assistive tech as an image with this
    *  name; otherwise it is decorative and hidden (`aria-hidden`). */

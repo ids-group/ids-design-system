@@ -7,6 +7,7 @@ import {
   numberAttribute,
 } from '@angular/core';
 import type { DsStatusKey } from '../../core/status';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 @Component({
   selector: 'ds-badge',
@@ -22,7 +23,15 @@ export class BadgeComponent {
   /** Consumer-defined status key; colours are wired via styles/status. Unset → neutral. */
   readonly status = input<DsStatusKey>();
   /** Shows a status dot; only rendered when `count` is unset. */
-  readonly withDot = input(false, { transform: booleanAttribute });
+  /** Leading status dot. Unset falls back to `DS_CONFIG.badge.withDot`, then `false`. */
+  readonly withDot = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  protected readonly withDotResolved = resolveWithConfig(
+    this.withDot,
+    (config) => config.badge?.withDot,
+    false,
+  );
   /** Solid accent fill instead of the default subtle background. */
   readonly solid = input(false, { transform: booleanAttribute });
   /** Numeric count to display; overrides projected content when set. */
