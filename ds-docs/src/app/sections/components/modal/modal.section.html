@@ -127,6 +127,86 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Status
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      status
+    </code> takes the same
+    <code class="t-mono-inline">
+      DsStatus
+    </code> vocabulary as the rest of the
+    library, and one word drives four things: the icon-badge tint, the title
+    colour, the DEFAULT icon and the ARIA role. The icon comes with the status on
+    purpose — a tint alone signals by colour only, which a colour-blind reader
+    cannot act on. Pass
+    <code class="t-mono-inline">
+      icon
+    </code> to override the glyph, or
+    <code class="t-mono-inline">
+      dialogRole
+    </code> to override the role.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      error
+    </code> and
+    <code class="t-mono-inline">
+      warning
+    </code> resolve to
+    <code class="t-mono-inline">
+      alertdialog
+    </code> — the role for a dialog that interrupts
+    with something the reader must act on — and everything else stays
+    <code class="t-mono-inline">
+      dialog
+    </code>. Same split
+    <code class="t-mono-inline">
+      ds-alert
+    </code> makes between
+    <code class="t-mono-inline">
+      alert
+    </code> and
+    <code class="t-mono-inline">
+      status
+    </code>.
+  </p>
+
+  <div class="modal-grid modal-grid--2">
+    @for (specimen of statusSpecimens; track specimen.status) {
+      <div class="state-cell">
+        <div class="state-cell__stage">
+          <ds-modal-card
+            size="sm"
+            [title]="specimen.title"
+            [status]="specimen.status"
+            [showClose]="false"
+          >
+            <span body>
+              {{ specimen.body }}
+            </span>
+
+            <ng-container actions>
+              <ds-button
+                color="neutral"
+                variant="outline"
+              >
+                Close
+              </ds-button>
+            </ng-container>
+          </ds-modal-card>
+        </div>
+
+        <div class="state-cell__label">
+          {{ specimen.status }} · {{ specimen.role }}
+        </div>
+      </div>
+    }
+  </div>
+
+  <h3 class="block-title t-h4">
     Without dividers
   </h3>
 

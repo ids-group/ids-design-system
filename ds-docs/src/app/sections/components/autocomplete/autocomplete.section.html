@@ -288,4 +288,52 @@
       (create)="onCreateTag($event)"
     />
   </div>
+
+  <h3 class="block-title t-h4">
+    Icons in the options
+  </h3>
+
+  <p class="block-desc t-s">
+    An option carries an optional
+    <code class="t-mono-inline">
+      icon
+    </code>, rendered before its label at
+    16px in the panel rows. Same field and same markup as
+    <code class="t-mono-inline">
+      ds-select
+    </code> and
+    <code class="t-mono-inline">
+      ds-multi-select
+    </code>: all three read one
+    <code class="t-mono-inline">
+      DsOption
+    </code> shape. Use it for a set the reader
+    recognises by glyph, like a channel or a priority scale; an icon per row costs
+    scanning speed everywhere else.
+  </p>
+
+  <p class="block-desc t-s">
+    Only
+    <code class="t-mono-inline">
+      ds-select
+    </code> repeats the icon in its trigger, because
+    its trigger is a button showing one label and has room for it. Here the trigger
+    is the text input the reader types into, and its leading slot belongs to
+    <code class="t-mono-inline">
+      [dsAutocompletePrefix]
+    </code> — the DS will not put a
+    glyph in it uninvited.
+  </p>
+
+  <div class="autocomplete-field-wrap">
+    <label class="autocomplete-field-label t-s">
+      Sales channel
+    </label>
+
+    <ds-autocomplete
+      placeholder="Search channels…"
+      [options]="channels"
+      [(value)]="channelValue"
+    />
+  </div>
 </docs-section>
