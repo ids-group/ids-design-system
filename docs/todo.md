@@ -1,5 +1,15 @@
 # DS — improvements backlog
 
+- [ ] **[P3] `TableColumn` cannot say "size this column to its content", and that is the last reach a
+  consumer needs into the table's markup.** mm-broker retired its `ids-data-table` fork onto `ds-table`
+  on 2026-08-12 — 35 tables, and the only styling that could not come with it is two blocks of
+  `:host ::ng-deep ds-table { .table th, .table td { width: 1%; white-space: nowrap } }` on their users
+  and carriers lists. The need is ordinary: an auto-layout table spreads leftover width evenly, so short
+  data columns end up as wide as their headers and the one column that should absorb the slack (a name)
+  does not. `width` takes fixed pixels, which is a different thing — pin one column and the rest still
+  spread. `width: 'content'` (or a `fit?: boolean`) would express it, and would delete the last
+  `::ng-deep` those pages have. Marked in their tree as `TODO(ds-shrink-to-content)`.
+
 Running list of design-system improvements. Add items here as they come up.
 Deep gap analysis: `docs/superpowers/ds-gap-analysis.md`. Outstanding audit (a11y/API): `docs/superpowers/library-audit.md`.
 Packaging / initial-bundle chunking: `packaging-chunking-audit.md` (2026-08-03 — also lists corrections this file still owes).
@@ -37,6 +47,11 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 - [x] **[P1] Cut 0.9.0 — DONE 2026-08-10, by Stas, while this item was being filed.** The three-pipeline chain ran clean end to end: `cut-release.sh minor` merged dev→main and tagged, the `v*` pipeline published `@ids-group-ltd/ids-design-system@0.9.0` to npmjs (69 files, 853.5 kB), and the `main` pipeline built and uploaded the docs. **One gap the logs exposed:** `npm version` promoted `migrations/unreleased.json` → `0.9.0.json` but left the prose guide folder at `unreleased/`, where the next release would have written over it — and the manifest pointed at that path. The guide has since been retired outright (it duplicated the manifest in a form nothing read); the release script now promotes a guide folder if one exists, so the same slip cannot recur.
 
 - [ ] **[P2] The breaking batch after 0.9.0 — decide it as ONE story, because it is four surprises otherwise (filed as an item 2026-08-10; it was prose in three places).** Each member is recorded in its own item; what is missing is the decision to ship them together. **Members:** (a) `ds-modal` `error: boolean` → `status: DsStatus`, so a warning or info dialog becomes expressible at all; (b) the width-based overflow DEFAULT flip for chip rows; (c) the four DEFAULT changes below that two consumers reached for independently; (d) packaging option D, if that is the packaging answer, since it moves every consumer's imports.
+  **DECIDED 2026-08-12 in a deck (`presentations/breaking-batch.html`, built against real tokens): the batch is THREE members, and two of them are settled.**
+  **(d) packaging leaves the batch entirely.** The member was conditional — "option D, IF that is the packaging answer" — and it is not: option **B** was decided 2026-08-05 (one services entry point, root `public-api.ts` as a facade), and B is ADDITIVE. Nothing a consumer imports today stops working, so it is not a breaking change and does not belong here.
+  **(a) `ds-modal` — YES, `error: boolean` → `status: DsStatus`, treated as a TINTED HEADER.** Stas picked the tint over an accent stripe for the reason the deck put beside it: the DS has no stripe idiom anywhere, while `ds-alert` already expresses status as a tinted surface, so a status dialog and a status alert on one screen paint from the same family and cannot disagree. Both boolean forms have an exact replacement — `[error]="true"` → `status="error"`, `[error]="isDangerous"` → `[status]="isDangerous ? 'error' : null"` — and unset stays neutral, so a screen that never used `error` sees nothing. `ds-modal-card` takes the same input, since a `ModalService` confirm renders one directly.
+  **(b) chip overflow — YES, the default becomes `"fit"`.** All three modes stay: `null` shows every chip uncut, a NUMBER caps at exactly that many, `"fit"` measures. Only the default moves, and the escape is one word.
+  **(c) the four defaults — NOT DECIDED, and deliberately so (Stas 2026-08-12): "изучи ещё раз все проекты которые использовали ds, подумай над архитектурными и дизайн правилами — можем ли мы сделать то или иное действие, будет ли это правильно для дизайн-системы".** The evidence so far is "two teams did the same thing", which is a signal but not an argument: it says our default lost twice, not that the proposed value is right for a LIBRARY. The research owed before this can be answered is in its own item below.
   **Why together:** (a), (b) and (c) are all "what does a component do out of the box", and a consumer who takes them one release at a time is surprised three times by the same class of change. One migration guide can carry the lot with one decision rule per member.
 
 - [ ] **[P2] Width-based overflow as the DEFAULT for anything that lists items in a row (Stas 2026-08-07).** `maxVisibleChips` (shipped 08-07 on autocomplete, older on multi-select) is a guess about width expressed as a count: pick 3 and it still overflows on a narrow column, or wastes room on a wide one. The proposal is to cap by MEASURED width instead, on by default, with an explicit input to opt back into unbounded growth.
@@ -129,6 +144,14 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
   **(b) `ds-modal` and `ds-modal-card` take `error = input(false)` — a BOOLEAN**, where the API-consistency pass (07-09) settled on the `DsStatus` vocabulary everywhere else. A boolean cannot express a warning or an info dialog, so a consumer who wants one is back to hand-rolling. Widening `error` to `status: DsStatus` is the consistent move and would subsume (a): the treatment then comes from the status family rather than from a bespoke error rule. **Breaking**, so it wants sequencing with other API work rather than a drive-by.
 
 - [ ] **[P2] Four overrides came out IDENTICAL in two independently-built apps — that is evidence about our defaults, not about a missing hook (filed as an item 2026-08-10; it had been prose since 08-07).** From reading `_ds-overrides.scss` across mm-broker's portals: `ds-page-header` title bumped to `--font-size-h2` (the DS defaults to h3); `ds-table` head set to tertiary text on `--surface-secondary` with a matching row hover; `ds-stat` given a tile radius and `--space-5` padding; `ds-sidenav-item` given a wash and a coloured label with `--ds-sidenav-item-rail: transparent`.
+  **RESEARCHED 2026-08-12 against the consumer's actual stylesheets rather than the summary, and the summary was wrong in three places. Two of the four now decide themselves; two need a look.**
+  **What I read:** `broker-portal/src/styles/_ds-overrides.scss` (132 lines) and `platform-admin/…/_ds-overrides.scss` (232 lines) — the live files, not the worktree copies.
+  **C2 (table head) is DISQUALIFIED, and not on taste.** `--text-tertiary` on `--surface-secondary` measures **4.30:1**; the head renders at **12px bold**, which is NORMAL text by WCAG (the 3.0 exemption starts at 18.66px bold), so the floor is 4.5. A design system cannot ship a default that fails AA — an app may choose it for itself, that is their risk to take. Two further corrections: the second half of their override, `--ds-table-head-bg-color: var(--surface-secondary)`, is a **no-op** — it re-declares the DS default — and the "matching row hover" this item claimed **does not appear in either file**. So the "identical in two apps" count was inflated: it is one real declaration, and that one fails contrast.
+  **C1 (page-header h2) is the strongest, and the DS default is arguably just wrong.** Both apps set the identical token `--ds-page-header-title-fs: var(--font-size-h2)`, both with a comment saying the design calls for H2. The rule that decides it: a page title is h3 only if something larger sits above it, and `ds-app-layout` provides no h1 — so the component's own title IS the page's top heading and h3 under-sizes it by construction.
+  **C3 (ds-stat) splits in half, and only half may move.** The padding is identical in both — `--ds-stat-pad: var(--space-5)` — and is a DENSITY decision, which is ours to default. The radius is `--ds-stat-radius: var(--app-radius-tile)` in both, i.e. each app's OWN brand token: identical in SHAPE, different in VALUE. A default must never encode a consumer's brand, so the radius stays where it is and only the padding is on the table.
+  **C4 (sidenav item) is the same shape/value split, plus a FIFTH override this item never counted.** Both set `--ds-sidenav-item-rail: transparent` AND `--ds-sidenav-item-label-weight: var(--font-weight-bold)` — the weight bump is not in the summary above. But the colours differ: broker-portal uses its own `--nav-active-bg`/`--nav-active-fg`, platform-admin uses `--primary-subtitle` + `--primary`. So what two teams agreed on is "a quiet wash with a coloured label and no rail", not any particular colour. The DS could adopt the SHAPE by deriving the wash from the accent family it already owns; it must not adopt either app's palette.
+  **The rule I would decide all four by, since it is the one that generalises:** a default should be what is right when nothing is known about the app, and it should not need UNDOING to reach the common case. A solid accent pill on every rail item is a strong opinion that both teams removed; a quieter default is the less opinionated one, and emphasis is cheaper to add than to take away. Contrast is not a preference in that sentence — it is a floor.
+  **Also spotted while reading, and it is theirs not ours:** platform-admin still carries a `.kpi` class "for a tile whose value is not text — a badge, say — which `ds-stat` has no slot for". It does: `[dsStatValue]` shipped in 0.9.0 and they are on 0.9.1. A DELETE-LIST candidate for their next sweep, not a DS gap.
   **Two teams reaching the same four conclusions separately is the strongest signal in this file** — every one of these is already retunable, so the question is not "add a knob" but "is our default wrong". **Needs a verdict per override**, and any that moves is a visual breaking change, so it belongs in the batch above rather than shipping alone.
 
 **Signal about DEFAULTS, not missing hooks — the interesting finding.** Four overrides
@@ -354,10 +377,11 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   BC and emphatically not BS. If `initialsFrom` is meant to serve both, the rule belongs in a
   parameter; if it is meant for people, the last word is the right second letter.
   **The evidence for the org mode, since I first argued against it.** Asked whether anyone needs automatic ORG initials, I checked this repo and found none — `initialsFrom` is used nowhere in the library, `ds-avatar` takes `initials` as a plain string, and the docs' two calls both pass `(first, last)` explicitly. That was true and also the wrong place to look: mm-broker's own notes (session `f28e807e`, their `todo.md` §3b) record `common/utils/identity.ts` carrying BOTH rules for a reason — person rows use first+last, and the **tenants page's organisation avatars** use first-two-words-punctuation-stripped. So the org case is live, not hypothetical, and it is exactly why they kept two functions.
-  **Shipped `{ of: 'person' | 'organisation' }` as an optional second argument**, discriminated at runtime from the existing `(first, last)` form by type, with overloads so both shapes type-check. Default UNCHANGED, as agreed — the flip to person stays in the breaking batch.
-  **Verified both rules on the cases that motivated them:** person gives `Mary Jane Watson` → MW, `Ada` → AD, `José María Aznar` → JA; organisation gives `Blue Cross Blue Shield` → BC, `"Acme" Holdings` → AH, `Google` → GO. Default still gives MJ / A / `?`, and the two-argument form still gives AL. Punctuation stripping is leading/trailing only, so `Blue-Cross Shield` keeps both words and yields BS — an inner hyphen is part of a word.
+  **Landed differently after Stas pushed back, and the pushback was right.** The modes shipped first and came straight back out: a library that offers `{ of: 'person' }` is claiming to know how names are read, and it is wrong in ways it cannot see — "María José García López" gives ML under a first+last rule where a Spanish reader wants MG. Reading a name is a cultural convention, not a UI decision.
+  **What shipped instead:** `ds-avatar` takes a `name` and derives both the initials and the tint seed from it, with the RULE replaceable — `[initialsRule]` per table, `provideDsConfig({ avatar: { initials } })` per app, explicit `initials` still winning. The built-in stays `initialsFrom` (first two words), now documented as the Latin-script guess it is. mm-broker keeps its two helpers, which is correct: the org rule is its domain, not ours.
+  **The seed had to move to the NAME**, which is the part worth remembering: initials are lossy, so hashing them gives one colour per letter-pair. Measured — Alice Brown and Adam Bell both render "AB" and now get hues 198° and 356°.
 
-- [ ] **[P3] Question, not an ask: should `urlParam` remember the last tab per path?** mm-broker's
+- [x] **[P3] ANSWERED YES and shipped 2026-08-11 as the opt-in `rememberLastTab`, so this question is closed — see the `urlParam` item above for the verification. Question, not an ask: should `urlParam` remember the last tab per path?** mm-broker's
   `useTabUrl` helper does one thing `urlParam` does not — with no query parameter present it restores
   the tab chosen earlier in the session (`sessionStorage`, keyed by `location.pathname`), so returning
   to a record reopens where you left it while a shared link still wins. That is why the helper has not
@@ -434,6 +458,12 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   **Shipped exactly that**, plus the stale comment above the rule — it still explained why `overflow: hidden` was deliberate. **Measured first:** `rowLeft === firstItemLeft` (both 408px) with `padding-left: 0`, so the outset shadow had precisely zero room. Then painted a 3px ring on the first and last item and screenshotted: before, only the side sitting in the 12px gap drew; after, the ring is complete on all four sides. `scrollWidth === clientWidth` both ways, so no scroll container appeared and the width the split reads is untouched.
   **A trap worth recording for the next person in this component:** the collapse could not be exercised through the automated browser at all — the row's `ResizeObserver` does not deliver while the tab is hidden, so dragging the width slider changed nothing. It fires only when something forces a paint, which a screenshot does. Verified `hidden` and `clip` report the identical row width in that state, which is what rules out a regression; the collapse itself was then confirmed by reloading at a narrower default frame.
 
+- [ ] **[P2] Option ICONS and a count trigger — `ds-multi-select` and `ds-autocomplete` support neither, `ds-select` supports the first (Misha, 2026-08-12, with a screenshot).** The screenshot is a "Priority" filter: a trigger reading `Priority (1)` with a count badge, and options each carrying a coloured glyph — a flag for Critical, chevrons for High/Low, a dash for Medium. Checked all three pickers rather than guessed:
+  **`ds-select` DOES support it.** `SelectOption` has `icon?: IconName`, and the component renders it twice — `.trigger-icon` beside the chosen value and `.option-icon` at 16px in each row. So for a SINGLE choice the pattern already ships.
+  **`ds-multi-select` and `ds-autocomplete` do NOT.** `MultiSelectOption` is `{ label, value, disabled? }` and `AutocompleteOption` is `{ value, label }` — no icon field, and every `ds-icon` in their templates is chrome: the chevron, the panel's search glyph, the checkbox tick, and (autocomplete) the selected check mark. Nothing renders a per-option glyph.
+  **A second gap in the same screenshot, easy to miss:** the trigger shows a COUNT badge, not chips. `ds-multi-select` renders chips or a placeholder; there is no count presentation, so `Priority (1)` cannot be expressed either. Two asks, not one — and the count trigger is the one that changes the trigger's whole layout contract, since chips are what `maxVisibleChips` measures.
+  **Shape if we build it:** add `icon?: IconName` to both option types and render it in the option row (the `ds-select` markup is the template to copy, so the three pickers stay identical), then a separate decision on a `triggerDisplay`-style input for count-vs-chips. Icons are additive and cheap; the count trigger is not.
+
 - [ ] **[P2] `ds-table` has nowhere to put a filter row, and that is why one consumer's fork exists.**
   The component has **no content-projection slots at all** — its only toolbar is the `.table-toolbar` div
   that renders the Export CSV button when `exportButton` is set. So a screen whose table needs a filter
@@ -449,3 +479,36 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   **Worth deciding together with the search question**: if `ds-search` grows `[debounce]` (asked above)
   and the table grows a toolbar slot, the whole "filter row for a table" pattern becomes DS-native and
   nobody has to choose between the table's toolbar and a page-level `ds-filter-bar`.
+
+## Expose the control focus ring — the token is published, the way to apply it is not
+
+**P3 — consumer-side papercut, reported 2026-08-12 from mm-broker-platform (platform-admin).**
+
+`--ds-control-focus-shadow` is a public token, and every DS component applies its own ring
+internally. A consumer with an element that is interactive but **not** a DS component has neither:
+it has to restate the treatment by hand.
+
+Where that happens in practice — a native `<button>` stripped to bare text used as an affordance
+(a product name that opens a detail, a "View all" link, a back link). `ds-button` is not the answer
+for these: they sit inline in a heading or a card and carry no button chrome, and `variant="text"`
+dev-warns since 0.6.2.
+
+So the consumer writes this, verbatim, once per stylesheet:
+
+```scss
+&:focus-visible {
+  outline: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--ds-control-focus-shadow);
+}
+```
+
+Three copies in platform-admin before it was folded into a local mixin; the same shape appears in the
+`ids-data-table` fork.
+
+**What would remove the need:** a published Sass mixin (`@mixin control-focus`) alongside the existing
+`styles/` partials, or a global helper class next to `.link` (`.focusable`, say). Either is enough —
+the point is that the ring stops being a copied literal in consumer code, so a change to the DS focus
+treatment reaches consumers instead of leaving them on an old shape.
+
+Note `.link` already bakes this in; this is the same treatment for everything that is not a link.
