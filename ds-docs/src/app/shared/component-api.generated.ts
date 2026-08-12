@@ -362,15 +362,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Trigger height — sm/md/lg."
+        "description": "Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "width",
@@ -671,11 +671,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "withDot",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Shows a status dot; only rendered when `count` is unset."
+        "description": "Leading status dot. Unset falls back to `DS_CONFIG.badge.withDot`, then `false`."
       },
       {
         "name": "solid",
@@ -966,15 +966,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Button height — sm/md/lg."
+        "description": "Button height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "type",
@@ -1247,16 +1247,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "elevation",
         "kind": "input",
-        "type": "CardElevation",
+        "type": "CardElevation | null",
         "union": [
           "flat",
           "raised",
           "hover",
           "interactive"
         ],
-        "default": "'flat'",
+        "default": "null",
         "required": false,
-        "description": "Visual treatment; `interactive` makes the card clickable and emits `pressed`."
+        "description": "Visual treatment; `interactive` makes the card clickable and emits `pressed`. Unset falls back to `DS_CONFIG.card.elevation`, then `'flat'`."
       },
       {
         "name": "padding",
@@ -1270,7 +1270,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Inner padding preset; `null` keeps the card's default padding."
+        "description": "Inner padding preset. Unset falls back to `DS_CONFIG.card.padding`, then the card's own padding."
       }
     ],
     "outputs": [
@@ -1415,15 +1415,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Checkbox size — sm/md/lg."
+        "description": "Checkbox size — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "required",
@@ -1601,15 +1601,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Trigger height — sm/md/lg."
+        "description": "Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "fullWidth",
@@ -2158,15 +2158,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Segment height — the field family's scale, so a group lines up with a plain field beside it."
+        "description": "Segment height — the field family's scale, so a group lines up with a plain field beside it. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "invalid",
@@ -2367,15 +2367,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Button size — sm/md/lg, matches the field/button height scale."
+        "description": "Button size — sm/md/lg, matches the field/button height scale. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "type",
@@ -2487,15 +2487,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Field height — sm/md/lg."
+        "description": "Field height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "label",
@@ -3647,15 +3647,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Control height — sm/md/lg."
+        "description": "Control height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "disabled",
@@ -4289,15 +4289,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Control size — sm/md/lg."
+        "description": "Control size — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "required",
@@ -4517,15 +4517,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Control height. `md` (default) keeps the 36px search-row height; `sm` (32px) aligns search with dense toolbars beside `sm` inputs/buttons; `lg` is touch."
+        "description": "Control height. `md` (default) keeps the 36px search-row height; `sm` (32px) aligns search with dense toolbars beside `sm` inputs/buttons; `lg` is touch. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "debounce",
@@ -4638,15 +4638,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Trigger height — sm/md/lg."
+        "description": "Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "label",
@@ -5747,15 +5747,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Switch size — sm/md/lg."
+        "description": "Switch size — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "required",
@@ -5827,11 +5827,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "bordered",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Opt-in outer border + radius. Off by default so tables flush inside a `<ds-card padding=\"none\">` (workspaces, programs-list) don't double-border. When `true`, the scroll-wrap gets a `var(--border-default)` outline and `var(--radius-md)` radius — useful when the table stands alone in a padded card."
+        "description": "Opt-in outer border + radius. Off by default so tables flush inside a `<ds-card padding=\"none\">` (workspaces, programs-list) don't double-border. When `true`, the scroll-wrap gets a `var(--border-default)` outline and `var(--radius-md)` radius — useful when the table stands alone in a padded card. Unset falls back to `DS_CONFIG.table.bordered`, then `false`."
       },
       {
         "name": "loading",
@@ -6098,11 +6098,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "stickyScrollbar",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Keeps the horizontal scrollbar reachable on tall tables: the scroll container's native bar is hidden and a proxy stuck to the bottom of the nearest scroll ancestor mirrors it both ways. Off by default."
+        "description": "Keeps the horizontal scrollbar reachable on tall tables: the scroll container's native bar is hidden and a proxy stuck to the bottom of the nearest scroll ancestor mirrors it both ways. Off by default. Unset falls back to `DS_CONFIG.table.stickyScrollbar`, then `false`."
       },
       {
         "name": "pageSize",
@@ -6620,15 +6620,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Field height — sm/md/lg."
+        "description": "Field height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "label",
@@ -7013,15 +7013,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Trigger height — sm/md/lg."
+        "description": "Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "fullWidth",
