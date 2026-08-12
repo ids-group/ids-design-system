@@ -688,6 +688,10 @@
   --table-cell-pad-x:  var(--space-2);
   --table-cell-pad-y:  var(--space-1);
   --table-head-pad-y:  var(--space-1);
+
+  /* One rung, not two: a card's frame reads as padding lost long before its cells
+     do, so 24 → 16 while the cells inside it go 16 → 8. */
+  --ds-container-pad:  var(--space-4);
 }
 [data-density="compact"] {
   --hit-cozy:  32px;
