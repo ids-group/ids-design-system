@@ -153,8 +153,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-modal` / `ds-modal-card`: `error: boolean` → `status: DsStatus`.** A boolean could not express
   a warning or an info dialog, and the rest of the library settled on the `DsStatus` vocabulary in
   0.9.0. **Migration is one attribute:** `[error]="true"` → `status="error"`, and a computed
-  `[error]="isDangerous"` → `[status]="isDangerous ? 'error' : null"`. Unset stays neutral, so a
-  dialog that never used `error` looks identical. **What you gain beyond the rename:** a status now
+  `[error]="isDangerous"` → `[status]="isDangerous && 'error'"`, since the input takes `false` and
+  `undefined` as "no status" — the longer `? 'error' : null` ternary works too. Unset stays neutral,
+  so a dialog that never used `error` looks identical. **What you gain beyond the rename:** a status now
   drives the icon-badge tint, the title colour, a DEFAULT icon and the ARIA role — the same four
   things `ds-alert`'s variant drives, so a status dialog and a status alert on one screen cannot
   disagree. The default icon matters: a tint alone signals by colour only, which fails the
@@ -166,6 +167,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   wide and collapses the rest into "+N more". A trigger that grew a line per selection was pushing
   the rest of the form down the page. **To keep the old behaviour, bind
   `[maxVisibleChips]="null"`**; a NUMBER still caps at exactly that many.
+
+- **`[data-density="ultra-compact"]` now compresses surface padding too** — `--ds-container-pad`,
+  the inner padding `ds-card` and `ds-stat` share, drops from 24px to 16px in that tier only.
+  Everything else is untouched: the default and the other three tiers still resolve to 24px. It was
+  the one padding the tier missed — it already compressed field padding and table cells, so a card
+  kept its full 24px frame while its own cells halved. **If you want the old 24px inside an
+  ultra-compact container**, re-declare `--ds-container-pad: var(--space-6)` on it. For a value
+  between the rungs — 20px, say — set that one token at `:root`; both components default to it, which
+  is why neither `ds-card` nor `ds-stat` should be pinned on its own.
 
 - **`ds-tabs` `urlParam` now SLUGS a tab's label instead of using it raw.** A tab with no `value` used
   to put its display string straight into the address — `?tab=License%20Verification%20Status`. It is now
