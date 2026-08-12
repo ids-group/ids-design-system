@@ -129,6 +129,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **Releasing the mouse on the backdrop closed `ds-modal` and `ds-bottom-sheet`, even when the press
+  started inside the dialog.** Select a sentence in the body and let go past the edge, or overshoot with
+  a slider, and the dialog vanished — reported by a consumer as "not a click, the mouse-UP". The cause is
+  in the DOM shape: those backdrops WRAP their dialog, and a browser fires `click` at the nearest common
+  ancestor of the press and the release, which for that gesture IS the backdrop — so the
+  `target === currentTarget` guard let it through. Dismissal now tracks the press and fires only when
+  both the press and the release land on the backdrop itself, which is how the CDK has always guarded
+  its own outside-click. `ds-drawer` and the `ModalService` confirm were never affected (their scrim is
+  a SIBLING of the panel, so the common ancestor is a third element) and are unchanged — all four were
+  re-checked. **If a test of yours dismisses a dialog with `backdropEl.click()`**, it now needs
+  `pointerdown` + `pointerup` on the backdrop; a real mouse or touch has always sent both.
+
 - **`ds-filter-bar` clipped the focus ring of its first and last inline filter.** The measured row was
   `overflow: hidden` and each slot is sized to exactly the width `dsFilterItem` declared, so the row's
   box starts flush with the first control — and the focus ring is an OUTSET shadow (3px on fields, 4px
