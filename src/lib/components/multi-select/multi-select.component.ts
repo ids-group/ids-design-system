@@ -81,12 +81,12 @@ export class MultiSelectComponent
   readonly placeholder = input<string>('Select…');
   /** Placeholder for the in-panel filter input. */
   readonly searchPlaceholder = input<string>('Filter…');
-  /** Caps the chips shown before the rest collapse into "+N more" — 0/null shows all.
-   *
-   *  `"fit"` caps by measured width instead of a count: as many chips as one line
-   *  holds, re-split on resize. A count is the right answer when the trigger's
-   *  height must be predictable regardless of width; "fit" when the space is. */
-  readonly maxVisibleChips = input<number | 'fit' | null>(null, {
+  /** How the chips collapse when they outgrow one line. `"fit"` (the default)
+   *  measures and shows as many as the trigger is wide, the rest behind "+N more".
+   *  A NUMBER caps at exactly that many, which is what you want when the trigger's
+   *  height must be predictable whatever the width. `null` shows every chip and
+   *  lets the trigger grow a line per selection. */
+  readonly maxVisibleChips = input<number | 'fit' | null>('fit', {
     transform: (raw: unknown) =>
       raw === 'fit' ? 'fit' : raw == null ? null : numberAttribute(raw),
   });

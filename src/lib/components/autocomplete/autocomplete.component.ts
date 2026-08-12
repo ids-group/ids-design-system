@@ -100,14 +100,12 @@ export class AutocompleteComponent<T = unknown>
   /** Draws the trailing chevron. Turn it off for a search field, where an arrow
    *  invites a click that would list everything instead of searching. */
   readonly showChevron = input(true, { transform: booleanAttribute });
-  /** Caps the chips shown before the rest collapse into "+N more" — 0/null shows all.
-   *  Same name and semantics as `ds-multi-select`: without it a trigger grows a
-   *  line per selection and pushes the rest of the form down the page.
-   *
-   *  `"fit"` caps by measured width instead of a count: as many chips as one line
-   *  holds, re-split on resize. A count is the right answer when the trigger's
-   *  height must be predictable regardless of width; "fit" when the space is. */
-  readonly maxVisibleChips = input<number | 'fit' | null>(null, {
+  /** How the chips collapse when they outgrow one line. `"fit"` (the default)
+   *  measures and shows as many as the trigger is wide, the rest behind "+N more".
+   *  A NUMBER caps at exactly that many, which is what you want when the trigger's
+   *  height must be predictable whatever the width. `null` shows every chip and
+   *  lets the trigger grow a line per selection. */
+  readonly maxVisibleChips = input<number | 'fit' | null>('fit', {
     transform: (raw: unknown) =>
       raw === 'fit' ? 'fit' : raw == null ? null : numberAttribute(raw),
   });
@@ -496,12 +494,11 @@ export class AutocompleteComponent<T = unknown>
     this.overlayRef = null;
     this.isOpen.set(false);
     this.activeIndex.set(-1);
-    // Here rather than in onPick, which is the half of it that shows: the input
-    // collapses to zero width whenever a chosen label is on display, so text left
-    // in `query` goes INVISIBLE while it still narrows the list. Reopening then
-    // offers one option with nothing on screen to explain why, and no way to clear
-    // it — dismissing after typing over a settled value did the same. Empty in
-    // multi mode, where the input never collapses and the text stays honest.
+    // Here rather than in onPick, which is only half the paths: dismissing after
+    // typing over a settled value strands the text the same way. The input
+    // collapses to zero width whenever a label is on display, so anything left in
+    // `query` goes INVISIBLE while it still narrows the next open. Empty in multi
+    // mode, where the input never collapses and the text stays honest.
     if (this.displayLabel()) {
       this.query.set('');
     }

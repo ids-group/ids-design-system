@@ -47,13 +47,17 @@
   </h3>
 
   <p class="block-desc t-s">
-    Set <code>[maxVisibleChips]</code> to a positive number to collapse extra
-    chips into a "+N more" pill. <code>maxVisibleChips="fit"</code> collapses by
-    measured width instead — as many chips as one line holds, re-split on resize.
-    Pick the number when the trigger's HEIGHT has to be predictable whatever the
-    width, and <code>fit</code> when the space is what's fixed. Same input and
-    same wording on <code>ds-autocomplete</code>, so the two multi-value pickers
-    do not diverge.
+    <code>
+      maxVisibleChips
+    </code> defaults to <code>"fit"</code>: the trigger keeps
+    as many chips as it is wide and collapses the rest into a "+N more" pill,
+    re-splitting on resize. Set a <strong>number</strong> to cap at exactly that
+    many — right when the trigger's HEIGHT must be predictable whatever the width —
+    or <code>[maxVisibleChips]="null"</code> to show every chip and let the trigger
+    grow a line per selection. Same input and same default on
+    <code>
+      ds-autocomplete
+    </code>, so the two multi-value pickers do not diverge.
   </p>
 
   <div class="demo-panel">
@@ -119,6 +123,41 @@
         hint="At least one tag is required."
         [invalid]="true"
         [options]="tagOptions"
+      />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Icons in the options
+  </h3>
+
+  <p class="block-desc t-s">
+    An option carries an optional
+    <code class="t-mono-inline">
+      icon
+    </code>, rendered before its label at
+    16px. Same field and same markup as
+    <code class="t-mono-inline">
+      ds-select
+    </code> and
+    <code class="t-mono-inline">
+      ds-autocomplete
+    </code> — all three read one
+    <code class="t-mono-inline">
+      DsOption
+    </code> shape, so a field added for one
+    picker is not missing from the other two. Use it for a set the reader
+    recognises by glyph, like a priority scale; it is decoration for anything else,
+    and an icon per row costs scanning speed.
+  </p>
+
+  <div class="demo-panel">
+    <div class="ms-demo">
+      <ds-multi-select
+        placeholder="Any priority"
+        ariaLabel="Priority"
+        [options]="priorityOptions"
+        [(value)]="priority"
       />
     </div>
   </div>
