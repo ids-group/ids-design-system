@@ -46,6 +46,23 @@
   attributes whose only message is "we are not the default". Per-instance bindings keep winning, so the
   exceptions stay visible instead of drowning in the repetition.
 
+- [ ] **[P2] The export a consumer CAN trigger is not the export the table's own button runs (found
+  2026-08-12, asking whether Export could move out of the table).** Two methods, and only the wrong one is
+  reachable: `exportCsv(filename?, rows?)` is public but serialises `sortedData()` in the browser — on a
+  server-paged grid that is one page, which the input's own doc comment admits ("current page, so exporting
+  without this silently exports one page"). `runExport()` is the one that awaits `exportFetcher`, downloads
+  a server-built Blob or URL, drives `exporting`, writes the `exportStatus` live region and emits
+  `exportFailed` — and it is **`protected`**, as are `exporting` and `exportStatus`. So a consumer who wants
+  the Export button anywhere other than inside the table (in a page header, in a `ds-filter-bar`, beside a
+  card title) cannot reuse any of it: not the fetch, not the download, not the in-flight state, not the
+  announcement. mm-broker has two such tables and both are server-paged, so the layout question — can the
+  button leave the table's one-button toolbar row? — is really an API question.
+  **Ask, all additive:** make `runExport()` public (or take an external trigger), and expose `exporting`
+  and `exportStatus` as public readonly signals so an outside button can show the same state. With that,
+  `exportButton="false"` plus `<ds-button [loading]="table.exporting()" (pressed)="table.runExport()">`
+  covers every placement, and the fetch/download/announce path stays the library's — which is the whole
+  reason the consumer stopped forking it.
+
 - [ ] **[P2] `ds-table` shows its `emptyTemplate` while the first read is still in flight, so every
   consumer writes the same guard inside its own template (found 2026-08-12).** The base's body is
   `@if (isSkeletonLoading()) { skeletons } @else if (!filteredData().length) { emptyTemplate } @else
