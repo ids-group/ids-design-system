@@ -3242,7 +3242,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Severity — drives the icon-badge tint, the title colour, the DEFAULT icon and the ARIA role, which is the same set `ds-alert`'s variant drives. Null (the default) is a neutral dialog. It picks an icon as well as a tint because a tint alone signals by colour only; `icon` overrides the pick."
+        "description": "Severity — drives the icon-badge tint, the title colour, the DEFAULT icon and the ARIA role, which is the same set `ds-alert`'s variant drives. Null (the default) is a neutral dialog. It picks an icon as well as a tint because a tint alone signals by colour only; `icon` overrides the pick. `false` and `undefined` land on null too, so a template can bind the short `[status]=\"isDangerous && 'error'\"` instead of spelling out the ternary."
       },
       {
         "name": "title",
@@ -3360,7 +3360,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Severity, forwarded to the card — drives its icon-badge tint, title colour, default icon and ARIA role. Null (default) is a neutral dialog."
+        "description": "Severity, forwarded to the card — drives its icon-badge tint, title colour, default icon and ARIA role. Null (default) is a neutral dialog. `false` and `undefined` land on null too, so `[status]=\"isDangerous && 'error'\"` binds."
       },
       {
         "name": "title",

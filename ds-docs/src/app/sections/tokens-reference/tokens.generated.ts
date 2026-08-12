@@ -1355,7 +1355,7 @@ export const SPACING: readonly SpacingRow[] = [
   {
     "name": "--ds-container-pad",
     "value": "var(--space-6)",
-    "notes": "Default inner padding for card / stat."
+    "notes": "Default inner padding for card / stat, 24px. Retune it once here instead of per component; ultra-compact density drops it to 16px."
   }
 ];
 
@@ -4218,7 +4218,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-page-header-title-fs",
         "value": "var(--font-size-h3)",
-        "notes": "Title size."
+        "notes": "Title size — 28px, dropping to 22px below the mobile breakpoint. Raise it for a brand-scale header; 28px is the productive-UI rung."
       },
       {
         "name": "--ds-page-header-title-gap",
