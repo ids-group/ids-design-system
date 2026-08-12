@@ -169,11 +169,7 @@ that, and the comment there spells out the intended form. ~40 lines across the t
 apps. Also `ds-menu-divider { padding: 0 }` — `--ds-menu-divider-spacing` exists and
 already defaults to 0; their own `TODO(ds-bump)` says so.
 
-**Pile two — genuine gaps, verified against `dev` today.** _(One of the two is CLOSED and archived: the region padding, Option A on 08-07 and Option B — `[dividers]` — on 08-10. The status treatment below is what is left, and it is breaking.)_
-
-- [ ] **[P3] `ds-modal`'s status treatment is one word of colour, and it is out of step with the rest of the library — two separate findings.** Both apps hand-roll `.modal.error { border-top: 3px solid var(--error) }` because reddening the title (`--ds-modal-title-text-color-error`) is too quiet a signal for a destructive dialog. broker-portal records the second cost: the card emits `error`, never `danger`, so their pre-rename class silently matched nothing.
-  **(a) There is no stripe idiom in the DS at all** — grepped today, nothing draws a status accent bar. `ds-alert` expresses status as a TINTED SURFACE (background + text from the status family), which is the library's existing answer to "make this dialog read as dangerous". Inventing a stripe for the modal alone would add a second vocabulary for the same job; giving the modal header the alert's tinted treatment would not. Worth deciding which, not just adding the hook they asked for.
-  **(b) `ds-modal` and `ds-modal-card` take `error = input(false)` — a BOOLEAN**, where the API-consistency pass (07-09) settled on the `DsStatus` vocabulary everywhere else. A boolean cannot express a warning or an info dialog, so a consumer who wants one is back to hand-rolling. Widening `error` to `status: DsStatus` is the consistent move and would subsume (a): the treatment then comes from the status family rather than from a bespoke error rule. **Breaking**, so it wants sequencing with other API work rather than a drive-by.
+**Pile two — genuine gaps, verified against `dev` today.** _(BOTH are now CLOSED and archived: the region padding, Option A on 08-07 and Option B — `[dividers]` — on 08-10; the status treatment on 08-12, as `status: DsStatus` with the tinted header. See the batch record above and `done.md`.)_
 
 - [ ] **[P2] Four overrides came out IDENTICAL in two independently-built apps — that is evidence about our defaults, not about a missing hook (filed as an item 2026-08-10; it had been prose since 08-07).** From reading `_ds-overrides.scss` across mm-broker's portals: `ds-page-header` title bumped to `--font-size-h2` (the DS defaults to h3); `ds-table` head set to tertiary text on `--surface-secondary` with a matching row hover; `ds-stat` given a tile radius and `--space-5` padding; `ds-sidenav-item` given a wash and a coloured label with `--ds-sidenav-item-rail: transparent`.
   **RESEARCHED then DECIDED 2026-08-12, against the consumer's live stylesheets and the type/spacing scales the DS already keeps. Three of the four close with NO default change; C4 is its own item below. The summary this item opened with was wrong in four places.**
@@ -540,3 +536,22 @@ the point is that the ring stops being a copied literal in consumer code, so a c
 treatment reaches consumers instead of leaving them on an old shape.
 
 Note `.link` already bakes this in; this is the same treatment for everything that is not a link.
+
+## A disabled button does not read as disabled (from mm-broker MBP-121, 2026-08-12)
+
+- [ ] **[P2] `:disabled` dims to `--opacity-muted` (0.6), which is not a disabled level — on a
+  low-emphasis button it reads as "enabled, just quieter".** Found on a list toolbar's ghost `Clear`:
+  the head could not tell the enabled state from the disabled one at a glance, and neither could I
+  from the screenshot — the label stays fully legible and only the tint moves. The token scale
+  already carries the right value twice: `--opacity-disabled: .5` and `--opacity-text-disabled: .38`,
+  and Material's own disabled guidance is 0.38–0.5. `--opacity-muted` is the wrong token for this
+  job by name as well as by value: "muted" is a de-emphasis level (secondary text, hints), while
+  disabled is a state that must be unmistakable — the two should not share one number.
+  **Ask:** dim `:disabled` to `--opacity-disabled` (or `--opacity-text-disabled` for the label),
+  keeping `cursor: not-allowed` and the semantic attribute as they are. Applies to every control that
+  reuses the shared disabled rule, not just buttons — the ghost/text variants are simply where the
+  0.6 is least survivable, because they have no fill to carry the state.
+  **Consumer workaround in place** (`platform-admin/src/styles/_ds-overrides.scss`): retuning
+  `--opacity-muted` to `--opacity-text-disabled` on `ds-button` / `ds-icon-button`. It works because
+  the DS reads that token at use-time, but it is a token hijack — it would also dim anything else
+  inside a button that legitimately wants "muted", so it should be deleted once the DS ships the fix.
