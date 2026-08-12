@@ -1,5 +1,34 @@
 # DS — improvements backlog
 
+- [ ] **[P2] `stickyScrollbar` is a whole-app opinion that has to be repeated per table — 35 out of 35
+  (Stas 2026-08-12).** Measured in mm-broker after the fork retirement: every single `ds-table` in the
+  three portals binds `[stickyScrollbar]="true"`, because the fork it replaced mirrored the horizontal
+  scrollbar unconditionally and nobody wants a wide table whose only scrollbar sits below the fold. A
+  35/35 ratio is not a per-instance decision; it is a house default expressed 35 times, and each new
+  table is one forgotten binding away from a table that scrolls invisibly. **The mechanism already
+  exists and this needs no new one:** `DS_CONFIG.field.reserveMessage` and `DS_CONFIG.modal.dividers`
+  are the same story — the input is typed `boolean | null` with a `null` default so "not bound" stays
+  distinguishable, and a `resolve*` helper reads config when it is `null` (`field-defaults.ts`,
+  `modal-defaults.ts`). Ask: `DsConfig.table.stickyScrollbar`, resolved that way, with an explicit
+  binding still winning. **Measured and NOT asked for: `bordered` splits 18/17 across the same 35
+  tables** (a border reads as "grid of data", its absence as "list of things"), and `persistLayout` is
+  on exactly one — those two are genuinely per-table and should stay inputs only.
+
+- [ ] **[P2] `ds-table` shows its `emptyTemplate` while the first read is still in flight, so every
+  consumer writes the same guard inside its own template (found 2026-08-12).** The base's body is
+  `@if (isSkeletonLoading()) { skeletons } @else if (!filteredData().length) { emptyTemplate } @else
+  { rows }` — so **only `loading="skeleton"` suppresses the empty row**. With `loading="overlay"`, the
+  mode a list uses once it has been loaded at least once, a zero-row load paints the empty state *under*
+  the spinner: "No agents yet" plus a "Connect Agents" call to action, on a table that has not finished
+  asking. Evidence: 14 of mm-broker's tables load with an overlay and 13 of them hand-wrap their empty
+  template in `@if (!loading())`; the fourteenth did not, and said "No payouts to show." on every first
+  paint. (Their retired fork had the identical condition, so this is not a 0.9.x regression — it was
+  wrong in both.) "No rows yet" and "no rows, ever" are different statements and only the table knows
+  which one it is in. Ask: skip the empty row whenever `loading !== false`, regardless of mode — or, if
+  a consumer must be able to say something during a load, pass the loading flag into the template
+  context (`let-loading`) so the choice is at least expressible without reaching for the page's own
+  signal. Thirteen identical guards is the library asking the app to remember something it knows itself.
+
 - [ ] **[P3] `TableColumn` cannot say "size this column to its content", and that is the last reach a
   consumer needs into the table's markup.** mm-broker retired its `ids-data-table` fork onto `ds-table`
   on 2026-08-12 — 35 tables, and the only styling that could not come with it is two blocks of
