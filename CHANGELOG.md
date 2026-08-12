@@ -10,6 +10,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **Option icons on every picker, and one shape behind all three.** `ds-multi-select` and
+  `ds-autocomplete` now render an option's `icon` before its label at 16px, which only `ds-select`
+  did. The three option types share a new exported `DsOption<T>` — they were three near-identical
+  interfaces, which is exactly why `icon` existed on one picker for a release. Each keeps its own
+  name (`SelectOption`, `MultiSelectOption`, `AutocompleteOption`), so nothing you import changes.
+
 - **`maxVisibleChips="fit"` on `ds-autocomplete` and `ds-multi-select`** caps the chips by measured
   width instead of a count: one line holds as many as the trigger is wide, the rest collapse into
   "+N more", and the split is redone whenever the trigger resizes. Opt-in and additive — the input
@@ -34,13 +40,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   component and migrated before 2026-08-11: 0.9.0's named no member collisions at all while sixteen
   classes had grown, and 0.8.0's missed the private `saveLayout` that actually stopped a build.
 
-- **`initialsFrom(name, { of: 'person' | 'organisation' })` — the two rules are different.**
-  `'person'` takes the first and LAST word, so "Mary Jane Watson" gives MW rather than MJ, and a single
-  word gives two letters instead of one lonely glyph. `'organisation'` takes the first two with
-  punctuation stripped, which is why "Blue Cross Blue Shield" is BC and emphatically not BS. Without the
-  argument nothing changes — first two words, one letter for a lone name — but note that unchanged rule
-  IS the org one, so it is wrong for the people it usually points at: pass `{ of: 'person' }` there.
-  **You can now delete** a pair of local helpers kept because one function could not do both.
+- **`ds-avatar` takes a `name`, and the rule that reads it is replaceable.** One binding now does both
+  jobs a caller used to wire by hand: it derives the initials and seeds the tint. **The tint hashes the
+  NAME, not the initials** — two letters collide wholesale, so Alice Brown and Adam Bell used to share a
+  colour whenever a caller seeded from the letters. Swap the rule with `[initialsRule]` on one table or
+  `provideDsConfig({ avatar: { initials } })` for the app; an explicit `initials` still wins over both,
+  and `seed` still overrides the hash input when identity is an id or an email. The built-in rule is
+  `initialsFrom` — first two words — and the docs now say plainly that it is a Latin-script guess: how a
+  name is read is a cultural convention, not a UI decision, so the library takes yours rather than
+  shipping modes it cannot get right. **You can now delete** the `[seed]`/`[initials]` pair you compute
+  beside every avatar.
 
 - **`DS_CONFIG.brand` — set the brand once instead of on every screen.**
   `provideDsConfig({ brand: { name, logoLetter, tagline } })` answers `ds-sidenav` and `ds-auth-layout`
@@ -140,6 +149,23 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   rather than described.
 
 ### Changed
+
+- **`ds-modal` / `ds-modal-card`: `error: boolean` → `status: DsStatus`.** A boolean could not express
+  a warning or an info dialog, and the rest of the library settled on the `DsStatus` vocabulary in
+  0.9.0. **Migration is one attribute:** `[error]="true"` → `status="error"`, and a computed
+  `[error]="isDangerous"` → `[status]="isDangerous ? 'error' : null"`. Unset stays neutral, so a
+  dialog that never used `error` looks identical. **What you gain beyond the rename:** a status now
+  drives the icon-badge tint, the title colour, a DEFAULT icon and the ARIA role — the same four
+  things `ds-alert`'s variant drives, so a status dialog and a status alert on one screen cannot
+  disagree. The default icon matters: a tint alone signals by colour only, which fails the
+  don't-rely-on-colour rule. `icon` still overrides the pick, and `error`/`warning` default the
+  dialog to `alertdialog` (an explicit `dialogRole` still wins).
+
+- **Chips cap by width by default.** `maxVisibleChips` on `ds-autocomplete` and `ds-multi-select`
+  now defaults to `"fit"` instead of "show everything": the trigger keeps as many chips as it is
+  wide and collapses the rest into "+N more". A trigger that grew a line per selection was pushing
+  the rest of the form down the page. **To keep the old behaviour, bind
+  `[maxVisibleChips]="null"`**; a NUMBER still caps at exactly that many.
 
 - **`ds-tabs` `urlParam` now SLUGS a tab's label instead of using it raw.** A tab with no `value` used
   to put its display string straight into the address — `?tab=License%20Verification%20Status`. It is now

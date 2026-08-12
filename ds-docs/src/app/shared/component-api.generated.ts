@@ -355,9 +355,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "number | 'fit' | null",
         "union": null,
-        "default": "null",
+        "default": "'fit'",
         "required": false,
-        "description": "Caps the chips shown before the rest collapse into \"+N more\" — 0/null shows all. Same name and semantics as `ds-multi-select`: without it a trigger grows a line per selection and pushes the rest of the form down the page. `\"fit\"` caps by measured width instead of a count: as many chips as one line holds, re-split on resize. A count is the right answer when the trigger's height must be predictable regardless of width; \"fit\" when the space is."
+        "description": "How the chips collapse when they outgrow one line. `\"fit\"` (the default) measures and shows as many as the trigger is wide, the rest behind \"+N more\". A NUMBER caps at exactly that many, which is what you want when the trigger's height must be predictable whatever the width. `null` shows every chip and lets the trigger grow a line per selection."
       },
       {
         "name": "size",
@@ -527,7 +527,25 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Fallback text shown when there's no `imageUrl`."
+        "description": "Fallback text shown when there's no `imageUrl`. Wins over anything derived from `name`, so a caller that already has the letters keeps passing them."
+      },
+      {
+        "name": "name",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "The person or thing this avatar stands for. One binding covers both jobs the caller used to wire by hand: the initials, and the seed the tint hashes. The tint keys on the NAME, never on the initials — two letters collide wholesale, so every Alice Brown and Adam Bell would share one colour."
+      },
+      {
+        "name": "initialsRule",
+        "kind": "input",
+        "type": "((name: string) => string) | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Replaces the built-in rule for turning `name` into initials, for one avatar or one table of them. Falls back to `DS_CONFIG.avatar.initials`, then to `initialsFrom` — first two words, a Latin-script guess the library does not pretend is universal."
       },
       {
         "name": "imageUrl",
@@ -586,7 +604,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Seed for a deterministic tint (e.g. an email or name) used when no explicit `tint` is set — the same seed always yields the same colour."
+        "description": "Seed for a deterministic tint (e.g. an email) used when no explicit `tint` is set — the same seed always yields the same colour. Defaults to `name`; set it explicitly when identity is an id or an email rather than the display name."
       },
       {
         "name": "avoidHues",
@@ -3213,13 +3231,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Card width — sm/md/lg/xl/fullscreen."
       },
       {
-        "name": "error",
+        "name": "status",
         "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
+        "type": "DsStatus | null",
+        "union": [
+          "info",
+          "success",
+          "warning",
+          "error"
+        ],
+        "default": "null",
         "required": false,
-        "description": "Renders the error styling (icon badge and card accent)."
+        "description": "Severity — drives the icon-badge tint, the title colour, the DEFAULT icon and the ARIA role, which is the same set `ds-alert`'s variant drives. Null (the default) is a neutral dialog. It picks an icon as well as a tint because a tint alone signals by colour only; `icon` overrides the pick."
       },
       {
         "name": "title",
@@ -3264,19 +3287,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Icon badge shown next to the title."
+        "description": "Icon badge shown next to the title. Overrides the icon `status` would pick."
       },
       {
         "name": "dialogRole",
         "kind": "input",
-        "type": "'dialog' | 'alertdialog'",
+        "type": "'dialog' | 'alertdialog' | null",
         "union": [
           "dialog",
           "alertdialog"
         ],
-        "default": "'dialog'",
+        "default": "null",
         "required": false,
-        "description": "ARIA role for the dialog element."
+        "description": "ARIA role. Unset, an error or warning becomes `alertdialog` — the role for a dialog that interrupts with something the reader must act on — and anything else stays `dialog`. Same split `ds-alert` makes between `alert` and `status`."
       }
     ],
     "outputs": [
@@ -3326,13 +3349,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Dialog width — sm/md/lg/xl/fullscreen."
       },
       {
-        "name": "error",
+        "name": "status",
         "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
+        "type": "DsStatus | null",
+        "union": [
+          "info",
+          "success",
+          "warning",
+          "error"
+        ],
+        "default": "null",
         "required": false,
-        "description": "Renders the error styling on the modal card."
+        "description": "Severity, forwarded to the card — drives its icon-badge tint, title colour, default icon and ARIA role. Null (default) is a neutral dialog."
       },
       {
         "name": "title",
@@ -3473,9 +3501,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "number | 'fit' | null",
         "union": null,
-        "default": "null",
+        "default": "'fit'",
         "required": false,
-        "description": "Caps the chips shown before the rest collapse into \"+N more\" — 0/null shows all. `\"fit\"` caps by measured width instead of a count: as many chips as one line holds, re-split on resize. A count is the right answer when the trigger's height must be predictable regardless of width; \"fit\" when the space is."
+        "description": "How the chips collapse when they outgrow one line. `\"fit\"` (the default) measures and shows as many as the trigger is wide, the rest behind \"+N more\". A NUMBER caps at exactly that many, which is what you want when the trigger's height must be predictable whatever the width. `null` shows every chip and lets the trigger grow a line per selection."
       },
       {
         "name": "disabled",

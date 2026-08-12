@@ -4,6 +4,37 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Shipped 2026-08-11/12 (session — the consumer sweep, the breaking batch, and two commands)
+
+The pattern this session: **the filed item was a hypothesis, and reading the code or
+measuring it changed the answer.** The preferred fix for the filter-bar trigger was
+impossible. The "one-line" autocomplete fix covered half the paths. The "two independent
+teams" behind four default changes turned out to be one repo. The tinted modal header was
+half a treatment. Every one of those came from checking rather than trusting the summary.
+
+**Consumer asks closed, all from mm-broker's 0.9.1 adoption sweep:**
+- [x] **P1 `ds-autocomplete` stranded its filter text.** Fixed in `close()`, not in `onPick` as filed — dismissing after typing over a settled value strands it the same way, and that path never reaches `onPick`. Since 0.9.0 the text was also INVISIBLE (the input collapses to zero width over a chosen label) while still narrowing the list: a reopened picker offered one option of four with nothing on screen to explain it.
+- [x] **`.link` on a `<button>`** — eight declarations, not the four filed: a UA button's font SIZE does not inherit, so it rendered 13.3px inside 14px text. Scoped with `:where()` so a consumer's rule still wins.
+- [x] **`ds-stat` value hooks** — `--ds-stat-value-white-space` and `-font-size`, the second rewired through the size resolver so it works at every `size` instead of `md` only.
+- [x] **`ds-search [debounce]`** — three things skip the timer, not the two asked for: empty, Clear, and Enter (which flushes so `submitted` carries what the reader can see).
+- [x] **`ds-filter-bar`** — the edge filters' focus ring was clipped (`overflow: clip` + a 4px margin), and `triggerSize` shipped because the preferred answer ("size it from the items") cannot be built: `dsFilterItem` carries a width and never sees a projected control's size.
+- [x] **`DS_CONFIG.modal.dividers` and `DS_CONFIG.brand`** — app-level defaults. The modal one reaches where an attribute cannot: a `ModalService` confirm renders a card with no `ds-modal` ancestor.
+- [x] **`ds-tabs`** — `urlParam` slugs the label (it was emitting `?tab=License%20Verification%20Status`) and `rememberLastTab` reopens the last tab per path.
+- [x] **`ds-avatar name`** — one binding derives the initials AND seeds the tint, and the tint hashes the NAME: two letters collide, so Alice Brown and Adam Bell used to share a colour. The naming RULE is replaceable rather than modal — a person/organisation pair shipped first and came straight back out, because a library claiming to know how names are read is wrong in ways it cannot see ("María José García López" wants MG).
+- [x] **Option icons on all three pickers**, behind one exported `DsOption<T>`. The three near-identical interfaces are why `icon` lived on `ds-select` alone for a release.
+
+**The breaking batch — three members, two shipped:**
+- [x] **`ds-modal` `error: boolean` → `status: DsStatus`**, driving four things like `ds-alert`'s variant: badge tint, title colour, default icon, ARIA role. The default icon is the a11y half — a tint alone signals by colour only.
+- [x] **Chips cap by width by default** (`maxVisibleChips: "fit"`); `null` restores the growth, a number still caps exactly.
+- Packaging left the batch: option **B** was already decided and is additive.
+
+**Tooling and records:**
+- [x] **`/comments`** — a review pass built from the published comment-smell taxonomy ("obvious" is 30.8% of all smells) plus Ousterhout's different-words and document-once tests. Lives globally now, generalised off this repo's toolchain.
+- [x] **Two `/comments` passes over everything since 0.9.1** — 69 comment lines out, 44 back, net −25. The valuable finds were not verbosity: `_chip-row.scss` still described the FIRST design, whose feedback loop is why the second exists, and the tabs docs claimed the URL name and `tabClosed` were the same identifier.
+- [x] **Three missing migration manifests backfilled** (0.6.1, 0.6.2, 0.9.1) and a token that never existed removed from 0.9.0's notes — it told consumers to restore a radius with `--ds-select-panel-radius`, which does nothing. `--ds-dropdown-panel-radius` now exists as the real lever.
+
+---
+
 ## Shipped 2026-08-10 (session — Signal Forms, exit motion, and the radius role layer closed)
 
 The pattern this session kept repeating: **the item was a hypothesis and the measurement

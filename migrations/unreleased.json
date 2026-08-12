@@ -61,6 +61,34 @@
         "tabClosed",
         "ds-tab"
       ]
+    },
+    {
+      "id": "modal-error-boolean-to-status",
+      "kind": "input-rename",
+      "old": "ds-modal[error]",
+      "new": "ds-modal[status]",
+      "note": "ds-modal and ds-modal-card replace `error: boolean` with `status: DsStatus` ('info' | 'success' | 'warning' | 'error'), because a boolean cannot express a warning or an info dialog and the rest of the library settled on that vocabulary in 0.9.0. MECHANICAL MAPPING, no judgement needed: [error]=\"true\" becomes status=\"error\"; a bare `error` attribute becomes status=\"error\"; [error]=\"false\" and any unset case become nothing at all (unset is neutral and renders exactly as today); a COMPUTED [error]=\"expr\" becomes [status]=\"expr ? 'error' : null\". ALSO CHANGED, and worth knowing before you look at a screenshot: a status now drives four things rather than one - the icon-badge tint, the title colour, a DEFAULT icon (error/warn/success/info) and the ARIA role, where error and warning make the dialog an `alertdialog`. Both the icon and the role are overridable: `icon` beats the status's pick, an explicit `dialogRole` beats the status's role. The default icon is deliberate, not decoration - a tint on its own signals by colour alone.",
+      "searchHints": [
+        "[error]",
+        "ds-modal",
+        "ds-modal-card",
+        "error=\"true\"",
+        "ModalComponent",
+        "dialogRole"
+      ]
+    },
+    {
+      "id": "chips-cap-by-width-by-default",
+      "kind": "behavior",
+      "old": "ds-autocomplete[maxVisibleChips]",
+      "new": null,
+      "note": "CHANGED DEFAULT, visual: maxVisibleChips on ds-autocomplete and ds-multi-select now defaults to \"fit\" instead of null. A multi-value trigger used to grow a line per selection and push the rest of the form down the page; it now keeps as many chips as it is wide and collapses the rest into '+N more', re-splitting on resize. ACTION: nothing, unless a screen relied on the growth - then bind [maxVisibleChips]=\"null\" to show every chip again. A NUMBER still caps at exactly that many, unchanged. CHECK: a form where a trigger sits above other fields, and any layout whose height was measured or asserted with several chips selected.",
+      "searchHints": [
+        "maxVisibleChips",
+        "ds-multi-select",
+        "ds-autocomplete",
+        "chips"
+      ]
     }
   ],
   "informational": [
@@ -89,7 +117,8 @@
     "ds-tabs takes rememberLastTab (off by default), which reopens the tab a screen was last left on. Stored per path in sessionStorage under ds-tabs:{path}:{param}; inert without urlParam, which supplies the names because a remembered INDEX would repoint the moment a tab is inserted. A link always wins - the query parameter is read first and memory only fills the gap the first tab deliberately leaves. Every storage access is guarded, so Safari private mode simply means the strip stops remembering. DELETE-LIST: a helper that kept the last tab per path in sessionStorage can go.",
     "DS_CONFIG gained a brand section: provideDsConfig({ brand: { name, logoLetter, tagline } }) answers ds-sidenav and ds-auth-layout together, since both take the same three and an app answers them identically on every screen. Each field resolves independently - an element input beats the config per FIELD, so overriding the name does not mean restating the letter, and brand=\"\" drops the wordmark while a logoLetter in the config still paints its tile (clear both for no brand row). The two-tone wordmark is deliberately NOT in the config: [dsBrandName] stays the accent's home, because a config string would have to be split apart to find the accent, and the projection wins over both. Shape: brand, logoLetter and tagline are now string | null with a null default so \"unset\" is distinguishable from an explicit empty; the input names did not change and template bindings are unaffected.",
     "DELETE-LIST: if you wrote an adapter component that injects a brand object and fans it out into brand/logoLetter/tagline bindings on each auth screen -> provideDsConfig({ brand: … }) does it, and the accent stays a [dsBrandName] projection instead of a brandAccent string plus an indexOf split.",
-    "initialsFrom takes an optional { of: 'person' | 'organisation' } as its second argument, for a name whose shape you know. person = first and LAST word, so \"Mary Jane Watson\" gives MW rather than MJ, and a single word gives two letters instead of one. organisation = the first two words with leading/trailing punctuation stripped, which is why \"Blue Cross Blue Shield\" is BC and not BS. WITHOUT the argument nothing changes: first two words, one letter for a lone name, ? when empty, and the (first, last) two-argument form is untouched. Note the unchanged default IS the org rule, so it is wrong for the people it usually points at - pass { of: 'person' } there. Flipping that default is breaking and is queued with the other default changes. New exported type: InitialsOptions.",
-    "DELETE-LIST: if you kept two local initials helpers - first+last for people and first+second for organisations - initialsFrom({ of }) covers both now. mm-broker carried exactly that pair in common/utils/identity.ts for its person rows and its tenant avatars."
+    "ds-avatar takes a `name`, which replaces the two bindings a caller used to wire by hand: it derives the initials AND seeds the tint. The tint hashes the NAME rather than the initials - two letters collide wholesale, so Alice Brown and Adam Bell would otherwise share a colour (measured: same \"AB\", hues 198 and 356). An explicit `initials` still wins, and `seed` still overrides the hash input when identity is an id or an email rather than the display name.",
+    "The rule turning a name into initials is REPLACEABLE rather than configurable by mode: [initialsRule] on one avatar or table, provideDsConfig({ avatar: { initials } }) for the app. The built-in stays initialsFrom - first two words - and is documented as a Latin-script guess, because reading a name is a cultural convention rather than a UI decision: a Spanish reader wants MG from \"Maria Jose Garcia Lopez\", an insurer wants BC from \"Blue Cross Blue Shield\". A library that shipped person/organisation modes would be claiming to know both, and would be wrong in ways it cannot see. DELETE-LIST: local initials helpers stay yours, but the ds-avatar wiring around them collapses to [name] plus one [initialsRule].",
+    "ds-multi-select and ds-autocomplete render an option's `icon` before its label at 16px, which previously only ds-select did. The three option types now extend one exported DsOption<T> - they were three near-identical interfaces, which is why the icon field existed on one picker for a release - and each keeps its own exported name, so no import changes. Nothing to do: options without an icon render as before."
   ]
 }
