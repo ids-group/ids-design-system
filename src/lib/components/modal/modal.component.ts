@@ -36,8 +36,12 @@ export class ModalComponent implements OnDestroy {
   /** Dialog width — sm/md/lg/xl/fullscreen. */
   readonly size = input<ModalSize>('md');
   /** Severity, forwarded to the card — drives its icon-badge tint, title colour,
-   *  default icon and ARIA role. Null (default) is a neutral dialog. */
-  readonly status = input<DsStatus | null>(null);
+   *  default icon and ARIA role. Null (default) is a neutral dialog. `false` and
+   *  `undefined` land on null too, so `[status]="isDangerous && 'error'"` binds. */
+  readonly status = input<DsStatus | null, DsStatus | false | null | undefined>(
+    null,
+    { transform: (value) => value || null },
+  );
   /** Dialog title, shown in the header and used for `aria-labelledby`. */
   readonly title = input.required<string>();
   /** Secondary line under the title. Not part of the accessible name. */

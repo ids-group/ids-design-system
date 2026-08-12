@@ -28,8 +28,14 @@ export class ModalCardComponent {
   /** Severity — drives the icon-badge tint, the title colour, the DEFAULT icon and
    *  the ARIA role, which is the same set `ds-alert`'s variant drives. Null (the
    *  default) is a neutral dialog. It picks an icon as well as a tint because a tint
-   *  alone signals by colour only; `icon` overrides the pick. */
-  readonly status = input<DsStatus | null>(null);
+   *  alone signals by colour only; `icon` overrides the pick.
+   *
+   *  `false` and `undefined` land on null too, so a template can bind the short
+   *  `[status]="isDangerous && 'error'"` instead of spelling out the ternary. */
+  readonly status = input<DsStatus | null, DsStatus | false | null | undefined>(
+    null,
+    { transform: (value) => value || null },
+  );
   /** Card title, shown in the header and used for `aria-labelledby`. */
   readonly title = input.required<string>();
   /** Secondary line under the title. Not part of the accessible name. */
