@@ -623,3 +623,23 @@ Note `.link` already bakes this in; this is the same treatment for everything th
   `--opacity-muted` to `--opacity-text-disabled` on `ds-button` / `ds-icon-button`. It works because
   the DS reads that token at use-time, but it is a token hijack — it would also dim anything else
   inside a button that legitimately wants "muted", so it should be deleted once the DS ships the fix.
+
+## `ds-table` loses the sort indicator when only `sortKey` changes (from mm-broker MBP-121, 2026-08-12)
+
+- [ ] **[P2] After the third click clears a column's sort, a server-driven table that hands back its
+  DEFAULT sort renders with NO column highlighted — the rows are sorted, the header says nothing.**
+  Reproduced twice on `sortMode="server"`, and the pair is the diagnosis:
+  1. **Broken.** Screen default `Onboarded` **desc**. Click `Status` → asc, again → desc, third click
+     clears it. The consumer answers with its default (`sortKey='onboarded'`, `sortDir='desc'`), the
+     request goes out with that sort and the rows come back ordered by it — but every `th` reports
+     `aria-sort="none"` and no column is marked.
+  2. **Works.** Screen default `EmpId` **asc**. Same three clicks on `Salary` (which ends on desc),
+     consumer answers `sortKey='empId'`, `sortDir='asc'` → `EMP ID` is highlighted ascending again.
+  The difference between the two is only whether **`sortDir` changed**: in (1) it was `desc` before
+  the clear and `desc` after, so the sole change was `sortKey`. So the input sync appears to key on
+  `sortDir` — a `sortKey`-only change does not restore the internal state the third click reset.
+  **Why it matters:** third-click-returns-to-default is the documented behaviour our list kit
+  implements (ADR 0017 says not to forbid the unsorted state with `[sortingOrder]`), and any screen
+  whose default direction is `desc` hits this on its first use — the user sees an unsorted-looking
+  header over sorted data. There is no consumer workaround worth having: the inputs are one-way
+  (`[sortKey]`/`[sortDir]` come from a computed over the URL), so we cannot write the model back.
