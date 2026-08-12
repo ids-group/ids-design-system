@@ -47,6 +47,7 @@ import {
 } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import { resolveReserveMessage } from '../field-defaults';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 @Component({
   selector: 'ds-select',
@@ -84,8 +85,14 @@ export class SelectComponent
   readonly options = input<SelectItem[]>([]);
   /** Shown in the trigger when nothing is selected. */
   readonly placeholder = input<string>('');
-  /** Trigger height — sm/md/lg. */
-  readonly size = input<DsSize>('md');
+  /** Trigger height — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  protected readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
   /** Label shown above the trigger. */
   readonly label = input<string>('');
   /** Disables the trigger and blocks all interaction. */
@@ -231,10 +238,10 @@ export class SelectComponent
 
   protected readonly triggerClasses = computed<string>(() => {
     const parts = ['dropdown'];
-    if (this.size() === 'sm') {
+    if (this.sizeResolved() === 'sm') {
       parts.push('sm');
     }
-    if (this.size() === 'lg') {
+    if (this.sizeResolved() === 'lg') {
       parts.push('lg');
     }
     if (this.isDisabled()) {

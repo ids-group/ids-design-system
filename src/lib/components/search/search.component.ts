@@ -16,6 +16,7 @@ import { IconComponent } from '../../icons/icon.component';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
 import type { DsSize } from '../../core/size';
 import { inFieldGroup } from '../field-group/field-group.token';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 @Component({
   selector: 'ds-search',
@@ -44,8 +45,14 @@ export class SearchComponent {
   /** Accessible name for the input (placeholder is not a reliable label). */
   readonly ariaLabel = input<string>('');
   /** Control height. `md` (default) keeps the 36px search-row height; `sm` (32px)
-   *  aligns search with dense toolbars beside `sm` inputs/buttons; `lg` is touch. */
-  readonly size = input<DsSize>('md');
+   *  aligns search with dense toolbars beside `sm` inputs/buttons; `lg` is touch.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  protected readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
   /** Fires with the current value on Enter. */
   readonly submitted = output<string>();
   /** Milliseconds to hold each keystroke back before `value` updates — 0 (default)

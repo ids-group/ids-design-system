@@ -47,6 +47,7 @@ import type {
 import type { DsSize } from '../../core/size';
 import { resolveReserveMessage } from '../field-defaults';
 import { inFieldGroup } from '../field-group/field-group.token';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 let nextId = 0;
 
@@ -109,8 +110,14 @@ export class AutocompleteComponent<T = unknown>
     transform: (raw: unknown) =>
       raw === 'fit' ? 'fit' : raw == null ? null : numberAttribute(raw),
   });
-  /** Trigger height — sm/md/lg. */
-  readonly size = input<DsSize>('md');
+  /** Trigger height — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  protected readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
   /** Trigger width — `fill` stretches to the container, `content` hugs the value. */
   readonly width = input<AutocompleteWidth>('fill');
   /** Placeholder shown in the input when empty. */

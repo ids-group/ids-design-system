@@ -19,6 +19,7 @@ import {
 import { nextControlId } from '../field-ids';
 import type { DsSize } from '../../core/size';
 import { resolveReserveMessage } from '../field-defaults';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 @Component({
   selector: 'ds-checkbox',
@@ -74,8 +75,14 @@ export class CheckboxComponent extends DsBooleanControlValueAccessor {
   protected readonly reserveMessageResolved = resolveReserveMessage(
     this.reserveMessage,
   );
-  /** Checkbox size — sm/md/lg. */
-  readonly size = input<DsSize>('md');
+  /** Checkbox size — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  protected readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Inline label rendered beside the box and wired via for/id. Omit to
@@ -104,7 +111,7 @@ export class CheckboxComponent extends DsBooleanControlValueAccessor {
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
   protected readonly fieldClass = computed(
-    () => `checkbox-field size-${this.size()}`,
+    () => `checkbox-field size-${this.sizeResolved()}`,
   );
 
   protected onCheckedChange(event: Event): void {

@@ -24,6 +24,7 @@ import {
 import { nextControlId } from '../field-ids';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
 import { resolveReserveMessage } from '../field-defaults';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 @Component({
   selector: 'ds-textarea',
@@ -46,8 +47,14 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
 
   /** Text value, two-way bound. */
   readonly value = model<string>('');
-  /** Field height — sm/md/lg. */
-  readonly size = input<DsSize>('md');
+  /** Field height — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  protected readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
   /** Label shown above the field. */
   readonly label = input<string>('');
   /** Helper text shown below the field. */
@@ -174,10 +181,10 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
 
   protected readonly wrapperClasses = computed(() => {
     const parts = ['field'];
-    if (this.size() === 'sm') {
+    if (this.sizeResolved() === 'sm') {
       parts.push('sm');
     }
-    if (this.size() === 'lg') {
+    if (this.sizeResolved() === 'lg') {
       parts.push('lg');
     }
     if (this.invalidResolved()) {

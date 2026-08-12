@@ -3,8 +3,10 @@ import type { DsSize } from '../../core/size';
 
 /** What a grouped control can read off the group that encloses it. */
 export interface DsFieldGroupContext {
-  /** The group's size, so a segment matches its neighbours without being told. */
-  readonly size: () => DsSize;
+  /** The group's size, so a segment matches its neighbours without being told.
+   *  Resolved, not the raw input: `size` is unset by default and falls back to
+   *  `DS_CONFIG.control.size`, which a segment must not have to resolve again. */
+  readonly sizeResolved: () => DsSize;
 }
 
 /**

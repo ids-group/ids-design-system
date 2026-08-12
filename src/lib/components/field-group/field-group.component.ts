@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import type { DsSize } from '../../core/size';
 import { DS_FIELD_GROUP, type DsFieldGroupContext } from './field-group.token';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 /**
  * One bordered control out of several: `select + input`, `search + button`,
@@ -38,19 +39,28 @@ import { DS_FIELD_GROUP, type DsFieldGroupContext } from './field-group.token';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'group',
-    '[class]': 'size()',
+    '[class]': 'sizeResolved()',
     '[class.invalid]': 'invalid()',
     '[class.disabled]': 'disabled()',
     '[class.full-width]': 'fullWidth()',
   },
   providers: [
-    { provide: DS_FIELD_GROUP, useExisting: forwardRef(() => FieldGroupComponent) },
+    {
+      provide: DS_FIELD_GROUP,
+      useExisting: forwardRef(() => FieldGroupComponent),
+    },
   ],
 })
 export class FieldGroupComponent implements DsFieldGroupContext {
   /** Segment height — the field family's scale, so a group lines up with a
-   *  plain field beside it. */
-  readonly size = input<DsSize>('md');
+   *  plain field beside it.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
   /** Draws the error border on the whole group. A single segment cannot be
    *  invalid on its own: the border belongs to the group. */
   readonly invalid = input(false, { transform: booleanAttribute });

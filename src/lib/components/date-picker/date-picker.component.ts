@@ -74,6 +74,7 @@ import type {
 import type { DsSize } from '../../core/size';
 import { resolveReserveMessage } from '../field-defaults';
 import { inFieldGroup } from '../field-group/field-group.token';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 let nextId = 0;
 const YEAR_PAGE_SIZE = 12;
@@ -191,8 +192,14 @@ export class DatePickerComponent
 
   /** Selection mode — single date or start/end range. */
   readonly mode = input<DatePickerMode>('single');
-  /** Trigger height — sm/md/lg. */
-  readonly size = input<DsSize>('md');
+  /** Trigger height — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  protected readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
   /** Stretch the trigger to fill its container instead of hugging the mask
    *  width — opt in when the field shares a grid/flex track with inputs. */
   readonly fullWidth = input(false, { transform: booleanAttribute });
@@ -462,7 +469,7 @@ export class DatePickerComponent
 
   protected readonly triggerClasses = computed(() => {
     const parts = ['trigger'];
-    const size = this.size();
+    const size = this.sizeResolved();
     if (size !== 'md') {
       parts.push(size);
     }

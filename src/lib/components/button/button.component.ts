@@ -14,6 +14,7 @@ import type { IconName } from '../../icons/icons.data';
 import type { ButtonColor, ButtonVariant, ButtonType } from './button.types';
 import type { DsSize } from '../../core/size';
 import { inFieldGroup } from '../field-group/field-group.token';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 // color×variant pairs that RENDER but read poorly — surfaced as a dev-mode
 // console.warn (two inputs can't be narrowed against each other at compile
@@ -72,8 +73,14 @@ export class ButtonComponent {
       discouraged for ALL colours — prefer the global `.link` class; it stays for
       cases needing the ds-button API (loading/fullWidth/typed pressed). */
   readonly variant = input<ButtonVariant>('solid');
-  /** Button height — sm/md/lg. */
-  readonly size = input<DsSize>('md');
+  /** Button height — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  protected readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
   /** Native `<button>` `type`; defaults to `'button'` (not `'submit'`) so it never submits an ancestor form by accident. */
   readonly type = input<ButtonType>('button');
   /** Disables the button and blocks `pressed`. */
@@ -117,7 +124,7 @@ export class ButtonComponent {
       'button',
       color === 'primary' ? '' : `c-${color}`,
       variant === 'solid' ? '' : `v-${variant}`,
-      this.size(),
+      this.sizeResolved(),
       this.loading() ? 'loading' : '',
     ];
 

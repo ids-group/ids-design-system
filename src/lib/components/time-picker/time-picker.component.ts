@@ -56,6 +56,7 @@ import type {
 } from './time-picker.types';
 import type { DsSize } from '../../core/size';
 import { resolveReserveMessage } from '../field-defaults';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 type Segment = 'single' | 'start' | 'end';
 let nextId = 0;
@@ -110,8 +111,14 @@ export class TimePickerComponent
   readonly maxTime = input<string | null>(null);
   /** Predicate marking individual times unselectable. */
   readonly disabledTime = input<((time: string) => boolean) | null>(null);
-  /** Trigger height — sm/md/lg. */
-  readonly size = input<DsSize>('md');
+  /** Trigger height — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  protected readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
   /** Stretch the trigger to fill its container instead of hugging its content —
    *  opt in when the field shares a grid/flex track with inputs. */
   readonly fullWidth = input(false, { transform: booleanAttribute });
@@ -214,7 +221,7 @@ export class TimePickerComponent
 
   protected readonly triggerClasses = computed(() => {
     const parts = ['trigger'];
-    const size = this.size();
+    const size = this.sizeResolved();
     if (size !== 'md') {
       parts.push(size);
     }
