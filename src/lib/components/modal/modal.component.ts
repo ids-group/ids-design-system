@@ -16,6 +16,7 @@ import { resolveDividers } from './modal-defaults';
 import { DsStaticPreview } from '../static-preview.directive';
 import { BodyScrollLockService } from '../../overlay/body-scroll-lock.service';
 import type { ModalSize } from './modal.types';
+import type { DsStatus } from '../../core/status';
 
 @Component({
   selector: 'ds-modal',
@@ -34,8 +35,9 @@ export class ModalComponent implements OnDestroy {
   readonly open = model<boolean>(false);
   /** Dialog width — sm/md/lg/xl/fullscreen. */
   readonly size = input<ModalSize>('md');
-  /** Renders the error styling on the modal card. */
-  readonly error = input(false, { transform: booleanAttribute });
+  /** Severity, forwarded to the card — drives its icon-badge tint, title colour,
+   *  default icon and ARIA role. Null (default) is a neutral dialog. */
+  readonly status = input<DsStatus | null>(null);
   /** Dialog title, shown in the header and used for `aria-labelledby`. */
   readonly title = input.required<string>();
   /** Secondary line under the title. Not part of the accessible name. */

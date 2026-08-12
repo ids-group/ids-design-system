@@ -10,6 +10,7 @@ import { IconComponent } from '../../icons/icon.component';
 import type { IconName } from '../../icons/icons.data';
 import { resolveDividers } from './modal-defaults';
 import type { ModalSize } from './modal.types';
+import type { DsStatus } from '../../core/status';
 
 let nextId = 0;
 
@@ -24,8 +25,11 @@ let nextId = 0;
 export class ModalCardComponent {
   /** Card width — sm/md/lg/xl/fullscreen. */
   readonly size = input<ModalSize>('md');
-  /** Renders the error styling (icon badge and card accent). */
-  readonly error = input(false, { transform: booleanAttribute });
+  /** Severity — drives the icon-badge tint, the title colour, the DEFAULT icon and
+   *  the ARIA role, which is the same set `ds-alert`'s variant drives. Null (the
+   *  default) is a neutral dialog. It picks an icon as well as a tint because a tint
+   *  alone signals by colour only; `icon` overrides the pick. */
+  readonly status = input<DsStatus | null>(null);
   /** Card title, shown in the header and used for `aria-labelledby`. */
   readonly title = input.required<string>();
   /** Secondary line under the title. Not part of the accessible name. */
@@ -39,19 +43,54 @@ export class ModalCardComponent {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
   protected readonly dividersResolved = resolveDividers(this.dividers);
-  /** Icon badge shown next to the title. */
+  /** Icon badge shown next to the title. Overrides the icon `status` would pick. */
   readonly icon = input<IconName | null>(null);
-  /** ARIA role for the dialog element. */
-  readonly dialogRole = input<'dialog' | 'alertdialog'>('dialog');
+  /** ARIA role. Unset, an error or warning becomes `alertdialog` — the role for a
+   *  dialog that interrupts with something the reader must act on — and anything
+   *  else stays `dialog`. Same split `ds-alert` makes between `alert` and `status`. */
+  readonly dialogRole = input<'dialog' | 'alertdialog' | null>(null);
   /** Fires when the header close button is clicked. */
   readonly closed = output<void>();
 
   protected readonly titleId = `ds-modal-title-${++nextId}`;
 
+  /** Status picks the glyph so a severity is never carried by colour alone. */
+  protected readonly resolvedIcon = computed<IconName | null>(() => {
+    const explicit = this.icon();
+    if (explicit) {
+      return explicit;
+    }
+    switch (this.status()) {
+      case 'error':
+        return 'error';
+      case 'warning':
+        return 'warn';
+      case 'success':
+        return 'success';
+      case 'info':
+        return 'info';
+      default:
+        return null;
+    }
+  });
+
+  protected readonly resolvedRole = computed<'dialog' | 'alertdialog'>(() => {
+    const explicit = this.dialogRole();
+    if (explicit) {
+      return explicit;
+    }
+    const status = this.status();
+
+    return status === 'error' || status === 'warning'
+      ? 'alertdialog'
+      : 'dialog';
+  });
+
   protected readonly classes = computed(() => {
     const parts = ['modal', this.size()];
-    if (this.error()) {
-      parts.push('error');
+    const status = this.status();
+    if (status) {
+      parts.push(status);
     }
     if (!this.dividersResolved()) {
       parts.push('no-dividers');

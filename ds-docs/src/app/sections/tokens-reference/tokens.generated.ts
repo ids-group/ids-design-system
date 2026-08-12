@@ -3806,7 +3806,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-modal-title-text-color-error",
         "value": "var(--error-text)",
-        "notes": "Danger title colour."
+        "notes": "Title colour when status=\"error\"."
+      },
+      {
+        "name": "--ds-modal-title-text-color-warning",
+        "value": "var(--warning-text)",
+        "notes": "Title colour when status=\"warning\"."
+      },
+      {
+        "name": "--ds-modal-title-text-color-success",
+        "value": "var(--success-text)",
+        "notes": "Title colour when status=\"success\"."
+      },
+      {
+        "name": "--ds-modal-title-text-color-info",
+        "value": "var(--info-text)",
+        "notes": "Title colour when status=\"info\"."
       },
       {
         "name": "--ds-modal-title-weight",

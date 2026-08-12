@@ -2,7 +2,7 @@
   dialogRole="alertdialog"
   cdkTrapFocus
   [title]="options.title"
-  [error]="tone === 'error'"
+  [status]="tone === 'error' ? 'error' : null"
   [icon]="options.icon ?? null"
   [showClose]="false"
   [cdkTrapFocusAutoCapture]="true"
