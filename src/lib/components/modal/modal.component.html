@@ -3,7 +3,8 @@
   <div
     [class]="preview.staticPreview() ? 'modal-static' : 'modal-backdrop'"
     [class.closing]="closing()"
-    (click)="onBackdrop($event)"
+    (pointerdown)="backdropPress.down($event)"
+    (pointerup)="onBackdropRelease($event)"
     (keydown.escape)="onEscape()"
     (animationend)="onLeaveEnd($event)"
   >

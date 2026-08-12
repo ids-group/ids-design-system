@@ -3,10 +3,10 @@
   <div
     class="sheet-overlay"
     [class.closing]="closing()"
-    (click)="close()"
+    (pointerdown)="backdropPress.down($event)"
+    (pointerup)="onBackdropRelease($event)"
     (keydown.escape)="onEscape()"
   >
-    <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -- (click) only stops propagation to the backdrop; the dialog itself isn't an activatable control -->
     <div
       #sheet
       cdkTrapFocus
@@ -23,7 +23,6 @@
       "
       [style.height]="snapHeight()"
       [style.maxHeight]="snapHeight() ? snapHeight() : null"
-      (click)="stop($event)"
       (animationend)="onLeaveEnd($event)"
     >
       <div

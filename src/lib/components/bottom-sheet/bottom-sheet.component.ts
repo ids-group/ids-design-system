@@ -15,6 +15,7 @@ import {
 } from '@angular/core';
 import { A11yModule } from '@angular/cdk/a11y';
 import { BodyScrollLockService } from '../../overlay/body-scroll-lock.service';
+import { backdropDismiss } from '../../core/backdrop-dismiss';
 
 let nextId = 0;
 
@@ -152,8 +153,12 @@ export class BottomSheetComponent implements OnDestroy {
     }
   }
 
-  protected stop(event: Event): void {
-    event.stopPropagation();
+  protected readonly backdropPress = backdropDismiss();
+
+  protected onBackdropRelease(event: PointerEvent): void {
+    if (this.backdropPress.shouldDismiss(event)) {
+      this.close();
+    }
   }
 
   protected onGrabStart(event: PointerEvent): void {

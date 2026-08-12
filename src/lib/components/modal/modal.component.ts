@@ -17,6 +17,7 @@ import { DsStaticPreview } from '../static-preview.directive';
 import { BodyScrollLockService } from '../../overlay/body-scroll-lock.service';
 import type { ModalSize } from './modal.types';
 import type { DsStatus } from '../../core/status';
+import { backdropDismiss } from '../../core/backdrop-dismiss';
 
 @Component({
   selector: 'ds-modal',
@@ -140,8 +141,10 @@ export class ModalComponent implements OnDestroy {
     this.closed.emit();
   }
 
-  protected onBackdrop(event: MouseEvent): void {
-    if (event.target !== event.currentTarget) {
+  protected readonly backdropPress = backdropDismiss();
+
+  protected onBackdropRelease(event: PointerEvent): void {
+    if (!this.backdropPress.shouldDismiss(event)) {
       return;
     }
     if (this.persistent() || !this.closeOnBackdrop()) {
