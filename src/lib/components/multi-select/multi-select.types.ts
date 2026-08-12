@@ -1,5 +1,3 @@
-export interface MultiSelectOption {
-  label: string;
-  value: string;
-  disabled?: boolean;
-}
+import type { DsOption } from '../../core/option';
+
+export interface MultiSelectOption extends DsOption<string> {}

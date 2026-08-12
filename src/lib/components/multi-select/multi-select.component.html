@@ -148,6 +148,14 @@
               }
             </span>
 
+            @if (option.icon) {
+              <ds-icon
+                class="option-icon"
+                [name]="option.icon"
+                [size]="16"
+              />
+            }
+
             <span class="option-label">
               {{ option.label }}
             </span>
