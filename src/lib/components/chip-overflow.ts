@@ -10,14 +10,11 @@ import {
 /**
  * How many chips fit one line of a trigger, measured rather than guessed.
  *
- * `ds-filter-bar` splits the same way from each item's DECLARED width, and its
- * comment says why it refuses to measure: the items must be in the DOM to be
- * measured, so anything that did not fit would flash before being taken away. A
- * chip has no declared width — it is as wide as its label — so this has to
- * measure. What makes that safe is the ROW: in fit mode it is `nowrap` with
- * `overflow: hidden`, so the chips that will be dropped are clipped for the frame
- * they exist, and clipping moves nothing. The flash filter-bar avoids is a WRAP,
- * which changes the trigger's height.
+ * `ds-filter-bar` splits from each item's DECLARED width and refuses to measure,
+ * because anything that did not fit would flash before being taken away. A chip
+ * has no declared width, so this has to measure — and what makes that safe is the
+ * ROW: `nowrap` with `overflow: hidden` clips the doomed chips for the frame they
+ * exist, and clipping moves nothing. The flash filter-bar avoids is a WRAP.
  *
  * THE RULE, because breaking it froze a real page twice: nothing here may measure
  * something the cut itself changes, or the measurement feeds back into its own
@@ -32,9 +29,8 @@ import {
  * picker left on the wrapping default must not pay for a mode it does not use.
  */
 
-/** Room held for "+N more", as a multiple of its own font size so a retuned type
- *  scale carries. At the default 12px the string is 47px at one digit and 54px at
- *  three, i.e. 4.5em; 5em keeps a chip from being dropped for a pixel. */
+/** Room held for "+N more", in em so a retuned type scale carries. Measured at
+ *  4.5em wide with three digits; 5em keeps a chip from being dropped for a pixel. */
 const MARKER_RESERVE_EM = 5;
 
 /** What a sibling of the chip row costs the chips. One that can grow gives back

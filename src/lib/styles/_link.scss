@@ -47,20 +47,16 @@
     flex-shrink: 0;
   }
 
-  /* This class is where the library sends link-styled ACTIONS — ds-button warns
-     `variant="text"` off in favour of it — and an action that is not navigation has
-     to be a <button>, which arrives with UA chrome none of the rules above touch.
-     Measured against an `<a class="link">` in the same paragraph, on a page holding
-     nothing but the reset and this file: the button rendered at 13.3px inside 14px
-     text, with `line-height: normal`, `1px 6px` of padding and an outset border.
-     `:where()` so the reset stays at this class's specificity and a consumer's own
-     rule still wins on source order.
+  /* ds-button warns `variant="text"` off in favour of this class, and an action
+     that is not navigation has to be a <button> — which arrives with UA chrome
+     none of the rules above touch (measured: 13.3px inside 14px text, plus padding
+     and an outset border). `:where()` keeps the reset at this class's specificity,
+     so a consumer's rule still wins on source order.
 
-     Three deliberate omissions. `font-weight`, so `.quiet` / `.standalone` keep
-     deciding it. `display`, because inline-block is what makes a standalone button
-     lay out predictably, and normalising it would not buy the anchor's line-wrapping
-     anyway. `appearance` is the opposite case — it shows no difference in Chrome and
-     is here for the WebKit engines, where native chrome outlives a zeroed border. */
+     Absences are deliberate and invisible in code: no `font-weight`, so `.quiet` /
+     `.standalone` keep deciding it, and no `display`, because inline-block is what
+     lays a standalone button out predictably. `appearance` is the reverse — no
+     effect in Chrome, needed where native chrome outlives a zeroed border. */
   &:where(button) {
     appearance: none;
     padding: 0;

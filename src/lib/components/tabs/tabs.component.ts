@@ -28,10 +28,9 @@ let nextId = 0;
 const claimedUrlParams = new Map<string, number>();
 
 /** Label → URL name. Diacritics are decomposed and dropped so "Zusätze" gives
- *  `zusatze` rather than a percent-encoded umlaut; everything else that is not a
- *  letter or digit collapses to a single dash. A label with nothing sluggable in
- *  it at all — CJK, or just punctuation — keeps its raw text, which is what this
- *  used to do for every label: still a name, just an ugly one. */
+ *  `zusatze` rather than a percent-encoded umlaut. A label with nothing sluggable
+ *  in it — CJK, or bare punctuation — keeps its raw text rather than becoming an
+ *  empty parameter. */
 function slugify(label: string): string {
   const slug = label
     .normalize('NFKD')
@@ -186,9 +185,6 @@ export class TabsComponent {
       if (!param || !params || tabs.length === 0) {
         return;
       }
-      // The parameter first, then memory — a shared link has to beat what this
-      // browser happens to remember. Memory only fills the gap the first tab
-      // leaves, since that case writes no parameter at all.
       const target = params.get(param) ?? this.rememberedName();
       const found = target
         ? tabs.findIndex((tab) => this.tabName(tab) === target)
@@ -209,14 +205,10 @@ export class TabsComponent {
     return !!this.router && !!this.route;
   }
 
-  /** The tab's name AS IT APPEARS IN THE URL. A label is display copy, so it is
-   *  slugged rather than used raw: without this a strip whose tabs declare no
-   *  `value` produced `?tab=License%20Verification%20Status`. Deliberately NOT
-   *  what `tabClosed` emits — that stays the label, because a host matches it
-   *  against its own list.
-   *
-   *  A slug is still derived from copy, so renaming a tab still breaks saved
-   *  links. `value` is the fix for that, and the only one. */
+  /** The tab's name AS IT APPEARS IN THE URL, and deliberately NOT what
+   *  `tabClosed` emits — that stays the label, because a host matches it against
+   *  its own list. A slug is still derived from display copy, so renaming a tab
+   *  still breaks saved links; `value` is the only fix for that. */
   private tabName(tab: TabComponent): string {
     return tab.value() ?? slugify(tab.label());
   }

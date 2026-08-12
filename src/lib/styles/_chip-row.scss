@@ -5,12 +5,10 @@
 // existed — the whole point, since both pickers shipped wrapping and consumers
 // style against that.
 //
-// Fit mode turns it into the box the measurement needs, and the pair carrying that
-// is `min-width: 0` with `overflow: hidden`. A flex item refuses to shrink below
-// its content by default, so without them the frame that renders every chip — the
-// one being measured — would widen the trigger or shove the chevron out instead of
-// quietly clipping. See chip-overflow.ts for why clipping, and not wrapping, is
-// what makes measuring rendered chips safe.
+// Fit mode needs `min-width: 0` with `overflow: hidden`: a flex item refuses to
+// shrink below its content, so without them the frame that renders every chip —
+// the one being measured — would widen the trigger instead of quietly clipping.
+// See chip-overflow.ts for why clipping, not wrapping, makes that safe.
 @mixin chip-row {
   display: contents;
 

@@ -20,12 +20,10 @@
   min-width: 0;
 
   /* `clip` with a margin, not `hidden`: the box starts flush with the first item's
-     left edge, and the focus ring is an OUTSET shadow (`--focus-field` 3px,
-     `--focus-ring` 4px), so `hidden` cut the ring off the first and last item
-     while interior ones lived in the gap. The margin lets only the shadow bleed;
-     `clip` still forbids scrolling, so the width this row reports — which is what
-     decides the split — is unchanged. Measured before and after: same
-     scrollWidth, same collapsed count. */
+     left edge and the focus ring is an OUTSET shadow (3–4px), so `hidden` cut the
+     ring off the first and last item while interior ones lived in the gap. The
+     margin lets only the shadow bleed, and `clip` still forbids scrolling — so the
+     width this row reports, which decides the split, is unchanged. */
   overflow: clip;
   overflow-clip-margin: 4px;
 

@@ -35,7 +35,8 @@ export class SidenavComponent implements SidenavContract {
    *  unset falls back to `DS_CONFIG.brand.logoLetter`. */
   readonly logoLetter = input<string | null>(null);
 
-  /** What the template renders: the input, or the app-level default behind it. */
+  /** The template must read THIS, never the input beside it — that one is null
+   *  until bound, and the config default lives here. */
   protected readonly brandName = resolveBrandValue(this.brand, 'name');
   protected readonly letterGlyph = resolveBrandValue(
     this.logoLetter,

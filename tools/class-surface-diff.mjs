@@ -4,10 +4,8 @@
  *
  * Subclassing a DS component is unsupported, but consumers do it, and then a
  * release that only ADDS fails their build: TS4114 wants `override`, TS2415 fires
- * on a redeclared private. This has been missed twice — 0.8.0's notes named the
- * public additions but not the private `saveLayout` that actually broke a
- * consumer, and 0.9.0 shipped with no collision entry at all while sixteen
- * classes grew. Both were found by reading a consumer's build log after the fact.
+ * on a redeclared private. Assembling that list by eye missed it twice, both times
+ * found in a consumer's build log rather than here.
  *
  *   node tools/class-surface-diff.mjs [base-ref]     # default: last release tag
  *
@@ -38,9 +36,8 @@ function show(ref, path) {
 // A member a subclass can collide with: a signal-based field, or a method at class
 // depth. `constructor` is excluded — it does not take `override` and only ever adds
 // noise to the report.
-// Any `readonly x = <call>` at class depth: the initializer list used to be an
-// allowlist of Angular's own factories, which silently dropped a field built by a
-// DS helper (`chipFit(...)`) even though a subclass collides with it just the same.
+// Any `readonly x = <call>` at class depth, not an allowlist of Angular's own
+// factories: a field built by a DS helper (`chipFit(...)`) collides just the same.
 const FIELD = /^ {2}(?:protected |public |private )?readonly (\w+) = \w+[(<]/gm;
 const METHOD = /^ {2}(?:protected |public |private )?(?:override )?(?:async )?(\w+)\(/gm;
 const NOT_A_MEMBER = new Set(['constructor', 'if', 'for', 'while', 'switch', 'catch', 'return']);
@@ -48,9 +45,8 @@ const FIRST_CLASS = /^export (?:abstract )?class /m;
 
 function surface(source) {
   if (source === null) return null;
-  // Two-space depth means "class member" only inside a class. A module-level
-  // function body has the same indentation, and reporting its calls as members
-  // sent a release author looking for an `afterRenderEffect` that never existed.
+  // Two-space depth means "class member" only inside a class — a module-level
+  // function body has the same indentation, and its calls are not members.
   const classStart = source.search(FIRST_CLASS);
   if (classStart === -1) return new Set();
   source = source.slice(classStart);

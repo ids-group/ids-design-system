@@ -2,12 +2,8 @@ import { Signal, computed, inject } from '@angular/core';
 import { DS_CONFIG } from '../../config/ds-config';
 
 /**
- * Resolve `dividers` against the app-level default.
- *
- * Same shape as `resolveReserveMessage`: the input is `boolean | null` with a
- * `null` default so "not bound" stays distinguishable from an explicit `false` —
- * a signal input cannot report whether it was bound. Precedence: the input, then
- * `DS_CONFIG.modal.dividers`, then `true`.
+ * Resolve `dividers` against the app-level default — same `null`-means-unset
+ * shape as `resolveReserveMessage`, and see it for why.
  *
  * Both `ds-modal` and `ds-modal-card` call this, which is the point: a
  * `ModalService` confirm renders a card with no `ds-modal` ancestor, so an
