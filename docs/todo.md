@@ -1,7 +1,8 @@
 # DS — improvements backlog
 
-- [ ] **[P2] `stickyScrollbar` is a whole-app opinion that has to be repeated per table — 35 out of 35
-  (Stas 2026-08-12).** Measured in mm-broker after the fork retirement: every single `ds-table` in the
+- [ ] **[P2] Whole-app opinions have to be repeated per element — `stickyScrollbar` 35 times out of 35,
+  and it is the small end of it (Stas 2026-08-12, who asked for the table flags AND for the general
+  case).** Measured in mm-broker after the fork retirement: every single `ds-table` in the
   three portals binds `[stickyScrollbar]="true"`, because the fork it replaced mirrored the horizontal
   scrollbar unconditionally and nobody wants a wide table whose only scrollbar sits below the fold. A
   35/35 ratio is not a per-instance decision; it is a house default expressed 35 times, and each new
@@ -10,9 +11,40 @@
   are the same story — the input is typed `boolean | null` with a `null` default so "not bound" stays
   distinguishable, and a `resolve*` helper reads config when it is `null` (`field-defaults.ts`,
   `modal-defaults.ts`). Ask: `DsConfig.table.stickyScrollbar`, resolved that way, with an explicit
-  binding still winning. **Measured and NOT asked for: `bordered` splits 18/17 across the same 35
-  tables** (a border reads as "grid of data", its absence as "list of things"), and `persistLayout` is
-  on exactly one — those two are genuinely per-table and should stay inputs only.
+  binding still winning.
+
+  **`bordered` belongs there too, and my first reading of it was wrong (corrected 2026-08-12 after Stas
+  asked).** The 18/17 split across the 35 tables is not per-table at all — it is **per app**:
+  platform-admin is 17 bordered to 4 not, broker-portal is 13 not-bordered to 1. Two house styles, and
+  `provideDsConfig` already scopes to an app root or a route subtree, so `table.bordered` would delete 30
+  of the 35 bindings and leave exactly the 5 deliberate exceptions visible as bindings — which is the
+  point of a default. `persistLayout` is on one table and stays an input.
+
+  **And the ask generalises past the table, which is Stas's actual point: whatever an app repeats
+  identically everywhere is a default it is being made to restate.** Counted across mm-broker's three
+  apps (identical tag + attribute + value, from the templates):
+
+  | repeated binding | times | apps |
+  | --- | --- | --- |
+  | `<ds-button size="sm">` | 173 | all three |
+  | `<ds-card elevation="raised">` | 97 | all three |
+  | `<ds-button variant="ghost">` | 91 | all three |
+  | `<ds-card padding="lg">` | 64 | all three |
+  | `<ds-icon [size]="16">` | 47 | broker + admin + common |
+  | `<ds-select size="sm">` | 37 | broker + admin |
+  | `<ds-badge [withDot]="true">` | 36 | broker + admin |
+  | `<ds-table [stickyScrollbar]="true">` | 35 | broker + admin |
+  | `<ds-modal size="sm">` | 26 | all three |
+  | `<ds-popover align="end">` | 15 | all three |
+
+  Not all of these should become config — `variant="ghost"` and `padding="lg"` are choices a screen makes
+  and the counts include contexts where the alternative is deliberate. But **`size`/density and
+  `elevation` are exactly the whole-app opinions `field.reserveMessage` and `modal.dividers` already
+  model**: the DS default is `md` and the house speaks `sm`, so every button in three apps says so out
+  loud. A `DsConfig.density?: DsSize` honoured by the size-taking components (button, select, input,
+  search, modal), plus `card.elevation` / `card.padding` and `icon.size`, would remove several hundred
+  attributes whose only message is "we are not the default". Per-instance bindings keep winning, so the
+  exceptions stay visible instead of drowning in the repetition.
 
 - [ ] **[P2] `ds-table` shows its `emptyTemplate` while the first read is still in flight, so every
   consumer writes the same guard inside its own template (found 2026-08-12).** The base's body is
@@ -488,9 +520,12 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   **A second gap in the same screenshot, easy to miss:** the trigger shows a COUNT badge, not chips. `ds-multi-select` renders chips or a placeholder; there is no count presentation, so `Priority (1)` cannot be expressed either. Two asks, not one — and the count trigger is the one that changes the trigger's whole layout contract, since chips are what `maxVisibleChips` measures.
   **Shape if we build it:** add `icon?: IconName` to both option types and render it in the option row (the `ds-select` markup is the template to copy, so the three pickers stay identical), then a separate decision on a `triggerDisplay`-style input for count-vs-chips. Icons are additive and cheap; the count trigger is not.
 
-- [ ] **[P2] `ds-table` has nowhere to put a filter row, and that is why one consumer's fork exists.**
-  The component has **no content-projection slots at all** — its only toolbar is the `.table-toolbar` div
-  that renders the Export CSV button when `exportButton` is set. So a screen whose table needs a filter
+- [ ] **[P2] `ds-table` has nowhere to put a filter row — and now that the fork is gone, two screens pay
+  for it (updated 2026-08-12, Stas asked for the slot explicitly).** The component has **two projection
+  slots in total**, re-measured from the compiled component rather than assumed: `[empty]` (the fallback
+  when `emptyTemplate` is unbound) and `[bulk-actions]`. Nothing else about it is projectable, and its only
+  toolbar is a `.table-toolbar` div that **exists only while `exportButton` is set** — so the row is not
+  merely full, it is absent unless an unrelated input turns it on. So a screen whose table needs a filter
   row beside that button has three options: fork the table (mm-broker did: their `ids-data-table` invented
   a `dtToolbarStart` slot, and two screens use it today), put the row outside the table and give up having
   it next to Export, or push every filter into the header funnel — which works for a per-column value set
@@ -503,6 +538,17 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   **Worth deciding together with the search question**: if `ds-search` grows `[debounce]` (asked above)
   and the table grows a toolbar slot, the whole "filter row for a table" pattern becomes DS-native and
   nobody has to choose between the table's toolbar and a page-level `ds-filter-bar`.
+  **What it cost, now that it is not hypothetical.** mm-broker retired the fork on 2026-08-12, and the two
+  screens that used `dtToolbarStart` — admin's campaign-detail enrollments grid and broker's campaign
+  enrollees grid — had to move their filter row **out** of the table and onto the page, above the card.
+  Nobody chose that: with no slot, a table-scoped control cannot sit beside the Export button that scopes
+  it. The visible result is that a search + status pair that used to read as "these filter THIS grid" now
+  reads as page furniture, one card away from the rows it acts on, and on a detail page that already has
+  its own page-level header the two rows compete. The before/after is drawn for the head at
+  https://claude.ai/code/artifact/ad21c3d4-4d76-4c3a-9fbb-91d5607e9881 (both arrangements from the shipped
+  markup: before `d4d31f5b^`, after `chore/update-ds-0.9.1`). A `[toolbar]` slot (or
+  `[toolbar-start]`/`[toolbar-end]`) puts it back and needs no new layout thinking — the row already
+  exists for Export.
 
 ## Expose the control focus ring — the token is published, the way to apply it is not
 
