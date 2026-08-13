@@ -10,15 +10,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
-- **`ds-table` has a toolbar row you can put things in — `[toolbar-start]` and `[toolbar-end]`.** The
-  component had two projection slots in total (`[empty]`, `[bulk-actions]`) and its toolbar existed only
-  while `exportButton` was on, so a control that acts on THIS table — a search box, a status filter, a
-  refresh — had nowhere to sit next to Export. A consumer forked the table for exactly this and invented
-  `dtToolbarStart`; retiring the fork pushed two screens' filter rows out of the table and onto the page,
-  where a search + status pair reads as page furniture one card away from the rows it narrows. The table
-  owns the row's layout, and the row **takes itself out** when both slots are empty and `exportButton` is
-  off, so a table that uses neither is pixel-identical. Filters that belong to the PAGE still belong in a
-  `ds-filter-bar` above it.
+- **`ds-table` has a toolbar row you can put things in — one `[toolbar]` slot.** The component had two
+  projection slots in total (`[empty]`, `[bulk-actions]`) and its toolbar existed only while
+  `exportButton` was on, so a control that acts on THIS table — a search box, a status filter, a refresh
+  — had nowhere to sit next to Export. A consumer forked the table for exactly this; retiring the fork
+  pushed two screens' filter rows out of the table and onto the page, where a search + status pair reads
+  as page furniture one card away from the rows it narrows. **Project a handful of controls and the row
+  lays them out** (flex, wrap, 8px gap), so the ordinary case needs no CSS of yours; **project one
+  element of your own** and it gets the full row width, so your layout is the only one in play. The row
+  **takes itself out** when nothing filled it and `exportButton` is off, so a table that uses neither is
+  pixel-identical. Filters that belong to the PAGE still belong in a `ds-filter-bar` above it.
 
 - **`runExport()`, `exporting()` and `exportStatus()` are public**, so the Export button can live in a
   page header, a filter bar or the new toolbar slot and still run the library's path — the
