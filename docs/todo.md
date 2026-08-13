@@ -577,7 +577,12 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   `[toolbar-start]`/`[toolbar-end]`) puts it back and needs no new layout thinking — the row already
   exists for Export.
 
-## Expose the control focus ring — the token is published, the way to apply it is not
+## Expose the control focus ring — DONE 2026-08-13, and the audit found the bigger half
+
+- [x] **A base indicator now covers everything focusable.** `:where(:focus-visible) { outline: none; box-shadow: var(--ds-control-focus-shadow) }` in `styles/_focus.scss`, zero specificity so component and app rules both out-rank it. That answers the papercut below (a non-DS element could not apply the published token) AND the defect it was hiding: **45 of 71 component stylesheets styled focus and the rest did not**, so the close buttons in `ds-alert`, `ds-banner` and `ds-drawer` — plus every group link in the docs' own sidebar — fell through to Chrome's black `outline: auto`. That black line is what Stas spotted, and it was NOT `ds-sidenav`: that component has had a proper ring since it shipped.
+- [x] **Verified in a real browser** (chrome-devtools became available this session, after the extension was down all day): 247 focusable elements walked on one docs page, none left without an indicator; all five `data-focus` modes still behave, including `outline`, which replaces the shadow with a real outline. One false alarm on the way — four matrix buttons appeared ringless until the measurement was repeated after the transition finished; they were being read on frame zero of a `box-shadow` transition.
+
+## Original papercut, kept for the reasoning
 
 **P3 — consumer-side papercut, reported 2026-08-12 from mm-broker-platform (platform-admin).**
 
