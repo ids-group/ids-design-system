@@ -11,6 +11,7 @@ import {
   effect,
   inject,
   input,
+  linkedSignal,
   model,
   output,
   signal,
@@ -178,10 +179,40 @@ export class TableComponent<T extends object> {
   readonly animateHeight = input(false, { transform: booleanAttribute });
   /** Two-way set of currently selected row ids. */
   readonly selectedIds = model<Set<string>>(new Set<string>());
-  /** Column key currently sorted by; `null` when unsorted. */
-  readonly sortKey = model<string | null>(null);
+  /** Column key currently sorted by; `null` when unsorted. Two-way bindable
+   *  (`[(sortKey)]`) or one-way from your own state with `(sortChange)`. */
+  readonly sortKey = input<string | null>(null);
+  /** Emitted for `[(sortKey)]`. `sortChange` carries the same click with both
+   *  halves at once, which is usually the one to listen to. */
+  readonly sortKeyChange = output<string | null>();
   /** Sort direction for `sortKey`. */
-  readonly sortDir = model<SortDir>(null);
+  readonly sortDir = input<SortDir>(null);
+  /** Emitted for `[(sortDir)]`. */
+  readonly sortDirChange = output<SortDir>();
+  /**
+   * What the header actually marks, and what a client sort reads.
+   *
+   * Not the inputs directly, and not a `model` either: a header click applies
+   * optimistically, and Angular writes an input only when the bound EXPRESSION
+   * changed — it diffs against the last value it wrote, which an internal `.set()`
+   * never updates. So a host that answers a cleared sort with its own default
+   * silently failed to restore us whenever one half of that default equalled what
+   * it last bound: third click on another column, host says `owner`/`desc`, `desc`
+   * was already bound, and the direction stayed `null` — sorted rows under a header
+   * marking nothing.
+   *
+   * `linkedSignal` over BOTH inputs fixes it by construction: a change in either
+   * one re-seeds the pair from the inputs, so the direction arrives with the key
+   * even when the direction alone would have looked unchanged. A host that binds
+   * neither never re-seeds, so the optimistic state survives and a table sorting
+   * its own rows is unaffected.
+   */
+  private readonly sortState = linkedSignal<{
+    readonly key: string | null;
+    readonly dir: SortDir;
+  }>(() => ({ key: this.sortKey(), dir: this.sortDir() }));
+  protected readonly activeSortKey = computed(() => this.sortState().key);
+  protected readonly activeSortDir = computed(() => this.sortState().dir);
   /** Sort states a column cycles through on click. Default includes null
    *  (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g.
    *  server-paged lists). */
@@ -985,8 +1016,8 @@ export class TableComponent<T extends object> {
     if (this.sortModeResolved() !== 'client') {
       return rows;
     }
-    const key = this.sortKey();
-    const dir = this.sortDir();
+    const key = this.activeSortKey();
+    const dir = this.activeSortDir();
     if (!key || !dir) {
       return rows;
     }
@@ -1062,8 +1093,8 @@ export class TableComponent<T extends object> {
   });
 
   private readonly sortMessage = computed<string>(() => {
-    const key = this.sortKey();
-    const dir = this.sortDir();
+    const key = this.activeSortKey();
+    const dir = this.activeSortDir();
     if (!key) {
       return '';
     }
@@ -1677,8 +1708,8 @@ export class TableComponent<T extends object> {
     if (!this.sortableCol(col)) {
       return null;
     }
-    if (this.sortKey() === col.key && this.sortDir()) {
-      return this.sortDir() === 'asc' ? 'ascending' : 'descending';
+    if (this.activeSortKey() === col.key && this.activeSortDir()) {
+      return this.activeSortDir() === 'asc' ? 'ascending' : 'descending';
     }
 
     return 'none';
@@ -1689,19 +1720,19 @@ export class TableComponent<T extends object> {
       return;
     }
     const order = this.sortingOrder();
-    const currentKey = this.sortKey();
+    const currentKey = this.activeSortKey();
     let dir: SortDir;
     if (currentKey !== col.key) {
       dir = order[0] ?? null;
     } else {
-      const currentIndex = order.indexOf(this.sortDir());
+      const currentIndex = order.indexOf(this.activeSortDir());
       dir = order[(currentIndex + 1) % order.length] ?? null;
     }
-    // The key survives "unsorted" (`sortDir === null` alone means that): nulling
-    // it desynced a host that maps off back to its own default sort, because on
-    // the default column that write is a no-op for Angular's binding diff.
-    this.sortKey.set(col.key);
-    this.sortDir.set(dir);
+    // The key survives "unsorted" — `dir === null` alone means that. Nulling it too
+    // desynced a host that maps off `sortKey` back to its own default sort.
+    this.sortState.set({ key: col.key, dir });
+    this.sortKeyChange.emit(col.key);
+    this.sortDirChange.emit(dir);
     this.sortChange.emit({ key: col.key, dir });
   }
 
@@ -1710,19 +1741,19 @@ export class TableComponent<T extends object> {
     if (this.sortableCol(col)) {
       parts.push('sortable');
     }
-    if (this.sortKey() === col.key && this.sortDir()) {
-      parts.push(`sorted-${this.sortDir()}`);
+    if (this.activeSortKey() === col.key && this.activeSortDir()) {
+      parts.push(`sorted-${this.activeSortDir()}`);
     }
 
     return parts.join(' ');
   }
 
   protected sortIcon(col: TableColumn<T>): 'sortAsc' | 'sortDesc' | 'sort' {
-    if (this.sortKey() !== col.key || !this.sortDir()) {
+    if (this.activeSortKey() !== col.key || !this.activeSortDir()) {
       return 'sort';
     }
 
-    return this.sortDir() === 'asc' ? 'sortAsc' : 'sortDesc';
+    return this.activeSortDir() === 'asc' ? 'sortAsc' : 'sortDesc';
   }
 
   protected cellValue(row: T, col: TableColumn<T>): string {
