@@ -158,6 +158,30 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **An outlined button no longer paints its own white background.** `ds-button variant="outline"`,
+  `ds-icon-button variant="outlined"` and the outlined half of `ds-split-button` defaulted their fill to
+  `--surface-default`, which is invisible on a white page and wrong everywhere else: on a tinted card, a
+  table toolbar or an alert the button read as a white sticker laid over the surface instead of a control
+  drawn on it. The fill is now `transparent`, which is what Material 3 and Bootstrap both specify for this
+  variant. Hover still tints (`--c-subtitle` is opaque), and the disabled state stays transparent as well —
+  mixing a transparent fill toward the disabled surface would have produced a 72%-alpha box, so the border
+  and label carry it, as they do on ghost. **If a button of yours sits on a photo, a gradient or any busy
+  ground and relied on that white fill**, set it back per instance:
+  `--ds-button-bg-color: var(--surface-default)`.
+
+- **A disabled `ds-button` / `ds-icon-button` now reads as disabled on a COLOURED accent.** One label recipe
+  for every variant — `oklch(from accent 70% 0.035 h)` — replacing the 58% default plus the 52% overrides
+  tonal and outline carried. Those sat right where a saturated accent already is, so the disabled label
+  differed from the live one by **1.16–1.60:1** on four of the five variants; only `color="neutral"` was
+  safe, because its enabled label is nearly black. Now **2.40–2.68:1** across every variant and colour.
+  Measured, not guessed: the whole matrix (5 variants x 3 colours x rest/hover/active/disabled, both
+  themes) is in `presentations/disabled-recipe.html`. **The trade, stated:** the disabled label is fainter
+  against its own background than it was — 2.1–2.7:1 where the old recipe gave 4.3–5.2 — which is the point,
+  and disabled text is exempt from the WCAG contrast floor. **Override per component if you disagree:**
+  `--ds-button-label-color-disabled` / `--ds-icon-button-icon-color-disabled` still win. **And delete this
+  if you have it:** an override retuning `--opacity-muted` on `ds-button` or `ds-icon-button` never did
+  anything — neither component reads that token.
+
 - **A disabled option was dimmed twice, and had nearly disappeared.** `ds-select`, `ds-date-picker`,
   `ds-time-picker`, `ds-menu-item` and the shared dropdown row each set `--text-disabled` AND
   `opacity: 0.6` on top of it. Measured in the light theme: that lands at **1.68:1** against the
