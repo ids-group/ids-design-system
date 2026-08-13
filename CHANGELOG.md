@@ -188,6 +188,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A field inside `ds-field-group` no longer pins its value to the top of the row.** Found by Stas
+  testing the docs on a phone, and it affected **every segment except `ds-button`**: the value sat
+  against the top edge instead of the vertical centre, off by 10px in a 39px row (7px at `size="sm"`,
+  13px at `size="lg"`). The group stretches its segments to one row height, but a segment's host is a
+  block, so the `height: 100%` each one set on its bordered box resolved against `auto` — the box kept
+  its 22px content height, and the value with it. `ds-button` was exempt only because its host already
+  declared `display: inline-flex`. Every segment now measures dead centre at all three sizes. The six
+  `.in-group` blocks — byte-identical apart from the box's class name, which is why the defect sat in
+  five of them at once — are now one `field-group-segment` mixin, so the next change to segment
+  chrome cannot land in some of them and miss the rest.
+
 - **`components.md` had drifted, and it ships inside the package.** The file `tools/build-schematics.mjs`
   copies into `dist/ds/` for a consumer's own agents to read was still documenting the API and token names
   of two renames ago: **37 of the 97 `--ds-*` tokens it named no longer exist** (`--ds-button-fg`,
