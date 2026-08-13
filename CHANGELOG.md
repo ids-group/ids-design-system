@@ -10,6 +10,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-table` takes `[loading]="true"` and picks the treatment itself** — skeleton rows while it has
+  nothing on screen, overlay once there are rows. `'skeleton'` and `'overlay'` still pin either one
+  deliberately, and `false` is unchanged. Which of the two is right is a function of the row count,
+  which the table already holds and every consumer was restating: **you can now delete** the
+  `items().length > 0 ? 'overlay' : 'skeleton'` computed beside each list — one consumer feature had
+  three copies. The rule is not a taste call, which is why it belongs here: replacing visible rows with
+  placeholders throws away what the reader is looking at, and dimming an empty card announces nothing
+  about what is coming, so a hardcoded `'overlay'` makes a first load read as an empty table that
+  flickers.
+
 - **`ds-table` has a toolbar row you can put things in — one `[toolbar]` slot.** The component had two
   projection slots in total (`[empty]`, `[bulk-actions]`) and its toolbar existed only while
   `exportButton` was on, so a control that acts on THIS table — a search box, a status filter, a refresh

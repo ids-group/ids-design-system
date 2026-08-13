@@ -654,8 +654,9 @@ Note `.link` already bakes this in; this is the same treatment for everything th
 
 ## `ds-table` makes every consumer decide skeleton-vs-overlay (from mm-broker MBP-121, 2026-08-13)
 
-- [ ] **[P3] `loading` takes `false | 'skeleton' | 'overlay'`, but which one is right is a function of
-  `data.length` — which the table already has and the consumer has to restate.** Every list screen
+- [x] **DONE 2026-08-13 — [P3] `loading` takes `false | 'skeleton' | 'overlay'`, but which one is right is a function of
+  `data.length` — which the table already has and the consumer has to restate.**
+  **SHIPPED as `[loading]="true"`** rather than `'auto'`: the boolean reads as "yes, it is loading" at the call site, which is the fact the host actually knows, and it leaves the two string values as the deliberate overrides they should be. Resolved off `filteredData()` — the rows the body would render — so it agrees with the empty-row rule shipped the same day rather than off raw `data`. Nothing existing changes: `false`, `'skeleton'` and `'overlay'` behave exactly as before. Every list screen
   ends up writing the same line:
 
   ```ts
