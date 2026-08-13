@@ -2472,17 +2472,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-button-bg-color-disabled",
         "value": "oklch(from var(--_button-accent) 92% 0.03 h)",
-        "notes": "Disabled fill — per-variant muted tint: A (flat pale) for solid + text; secondary/tertiary/outline use B = color-mix(fill 28%, surface-disabled)."
+        "notes": "Disabled fill. Per variant: a flat pale tint of the accent for solid; color-mix(fill 28%, surface-disabled) for tonal; transparent for ghost, outline and text."
       },
       {
         "name": "--ds-button-label-color-disabled",
         "value": "oklch(from var(--_button-accent) 70% 0.035 h)",
-        "notes": "Disabled label — low-chroma tint of the accent hue."
+        "notes": "Disabled label — ONE recipe for every variant, oklch(from accent 70% 0.035 h). 70% because the old 58%/52% pair sat where a saturated accent already is, so a disabled coloured button barely differed from its live self."
       },
       {
         "name": "--ds-button-border-disabled",
         "value": "oklch(from var(--_button-accent) 86% 0.04 h)",
-        "notes": "Disabled border (B variants: color-mix(border 55%))."
+        "notes": "Disabled border — a pale tint of the accent for solid, color-mix(border 55%, surface-disabled) for outline."
       },
       {
         "name": "--ds-control-focus-shadow-error",
@@ -3419,12 +3419,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-icon-button-bg-color-disabled",
         "value": "transparent",
-        "notes": "Disabled fill — boxless for standard; tonal/outlined use color-mix(fill 28%, surface-disabled)."
+        "notes": "Disabled fill — boxless for standard, a pale accent tint for filled, color-mix(fill 28%, surface-disabled) for tonal, transparent for outlined."
       },
       {
         "name": "--ds-icon-button-icon-color-disabled",
         "value": "oklch(from var(--_icon-button-accent) 70% 0.035 h)",
-        "notes": "Disabled icon — low-chroma tint of the accent hue."
+        "notes": "Disabled icon — same single recipe as ds-button's label, oklch(from accent 70% 0.035 h). It matters more here: there is no word to read, only a 16px glyph."
       },
       {
         "name": "--ds-icon-button-border-disabled",
@@ -5001,7 +5001,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-split-button-outline-bg-color",
         "value": "transparent",
-        "notes": "Outline split button surface fill (defaults to --surface-default)."
+        "notes": "Fill of the outlined split button. Transparent by default, so it adopts the surface it sits on."
       },
       {
         "name": "--ds-split-button-outline-border-color",

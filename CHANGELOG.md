@@ -158,6 +158,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **`components.md` had drifted, and it ships inside the package.** The file `tools/build-schematics.mjs`
+  copies into `dist/ds/` for a consumer's own agents to read was still documenting the API and token names
+  of two renames ago: **37 of the 97 `--ds-*` tokens it named no longer exist** (`--ds-button-fg`,
+  `--ds-sidenav-item-bg-hover`, the whole `--ds-pagehdr-*` family, …), `ds-button` was described with its
+  pre-2026-06 single `variant` axis (`'primary' | 'secondary' | 'tertiary' | …`) instead of
+  `color` × `variant`, and the topbar section documented a `--ds-topbar-margin-b` that **has never
+  existed** — telling readers the topbar owns the gap below it and that pages must not add their own.
+  Every name is now the shipped one, verified against `src/lib` rather than assumed, and the two
+  paragraphs are rewritten from the components' actual API.
+
 - **An outlined button no longer paints its own white background.** `ds-button variant="outline"`,
   `ds-icon-button variant="outlined"` and the outlined half of `ds-split-button` defaulted their fill to
   `--surface-default`, which is invisible on a white page and wrong everywhere else: on a tinted card, a
