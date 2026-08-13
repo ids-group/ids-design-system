@@ -47,6 +47,16 @@
   cursor: text;
   text-align: left;
   flex-wrap: wrap;
+
+  /* Wrapping is what an UNCAPPED trigger does — a line per selection. With a cap
+     it is the failure the cap exists to prevent: a flex container that wraps
+     never shrinks its chip row, it moves the text input to a second line
+     instead, which is what a phone-width trigger did. `:has()` keys off the
+     measured row so the rule follows the mode without a second class. */
+  &:has(> .chip-row.fit) {
+    flex-wrap: nowrap;
+  }
+
   transition: border-color var(--duration-fast) var(--ease-standard);
 
   /* Same contract as ds-input's addon slots, down to the class names — a leading

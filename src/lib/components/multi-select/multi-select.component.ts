@@ -165,23 +165,38 @@ export class MultiSelectComponent
     return this.options().filter((option) => selected.includes(option.value));
   });
 
+  /** True for BOTH `'fit'` and a number: a number is a ceiling, not a promise —
+   *  "at most N" — so the row still measures and shows only what the trigger is
+   *  wide enough for. Without that, a phone-width trigger honoured the count and
+   *  wrapped the text input onto a second line, which is the one thing the cap
+   *  exists to prevent. `null` opts out of measuring and grows, as documented. */
   protected readonly fitsChipsToWidth = computed(
-    () => this.maxVisibleChips() === 'fit',
+    () => this.maxVisibleChips() !== null,
   );
+  /** How many chips the row is ASKED to render before measuring: everything for
+   *  `'fit'`, the ceiling for a number. It has to be the ceiling and not the
+   *  selection, because the measurement caches chip widths from a render that
+   *  holds them all — with a numeric cap that render never happens, the cache
+   *  never fills, and the fit fell back to "show them all" without a word. */
+  private readonly chipBudget = computed(() => {
+    const max = this.maxVisibleChips();
+    const total = this.selectedOptions().length;
+
+    return typeof max === 'number' ? Math.min(Math.max(max, 0), total) : total;
+  });
   private readonly chipsThatFit = chipFit(
-    computed(() => this.selectedOptions().length),
+    this.chipBudget,
     this.chipRow,
     this.fitsChipsToWidth,
+    computed(() => this.selectedOptions().length),
   );
 
   protected readonly visibleChips = computed<MultiSelectOption[]>(() => {
-    const max = this.maxVisibleChips();
     const selected = this.selectedOptions();
-    if (max === 'fit') {
-      return selected.slice(0, this.chipsThatFit());
-    }
 
-    return max && max > 0 ? selected.slice(0, max) : selected;
+    return this.maxVisibleChips() === null
+      ? selected
+      : selected.slice(0, this.chipsThatFit());
   });
 
   protected readonly overflowCount = computed<number>(

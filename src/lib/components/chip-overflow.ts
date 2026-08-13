@@ -47,6 +47,11 @@ export function chipFit(
   count: Signal<number>,
   chipRow: Signal<ElementRef<HTMLElement> | undefined>,
   enabled: Signal<boolean>,
+  /** The whole selection, which `count` may already cap. The last chip may spend
+   *  the marker's room only when there is genuinely nothing left to announce —
+   *  with a numeric cap there always is, and letting it spend anyway clipped the
+   *  "+N more" text itself. */
+  selectionSize: Signal<number> = count,
 ): Signal<number> {
   const available = signal(0);
   const gap = signal(0);
@@ -141,8 +146,10 @@ export function chipFit(
     for (let index = 0; index < widths.length; index++) {
       const next = used + widths[index] + (index > 0 ? gap() : 0);
       // The marker is only owed room once something is actually hidden, so the
-      // last chip may spend what the marker would have taken.
-      const isLast = index === widths.length - 1;
+      // last chip may spend what the marker would have taken — but only if this
+      // really is the end of the selection, not the end of a capped slice.
+      const isLast =
+        index === widths.length - 1 && selectionSize() <= widths.length;
       const budget = isLast
         ? available()
         : available() - markerReserve() - gap();

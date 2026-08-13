@@ -106,13 +106,15 @@
   </p>
 
   <p class="block-desc t-s">
-    The other two modes are one binding away. A <strong>number</strong> caps at
-    exactly that many, which is what you want when the trigger's HEIGHT has to be
-    predictable whatever the width;
+    The other two modes are one binding away. A <strong>number</strong> is a
+    CEILING — at most that many, and fewer when the trigger is too narrow to hold
+    them beside the count and the typing area. It measures for the same reason the
+    default does: honouring the count on a phone pushed the text input onto a
+    second line, which is the growth the cap exists to prevent.
     <code class="t-mono-inline">
       [maxVisibleChips]="null"
-    </code> shows every chip and
-    lets the trigger grow.
+    </code> is the one mode that
+    does not measure — it shows every chip and lets the trigger grow.
   </p>
 
   <div class="autocomplete-field-wrap">

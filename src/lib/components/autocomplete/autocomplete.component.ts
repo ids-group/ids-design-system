@@ -278,26 +278,41 @@ export class AutocompleteComponent<T = unknown>
     return this.allOptions().filter((option) => selectedSet.has(option.value));
   });
 
+  /** True for BOTH `'fit'` and a number: a number is a ceiling, not a promise —
+   *  "at most N" — so the row still measures and shows only what the trigger is
+   *  wide enough for. Without that, a phone-width trigger honoured the count and
+   *  wrapped the text input onto a second line, which is the one thing the cap
+   *  exists to prevent. `null` opts out of measuring and grows, as documented. */
   protected readonly fitsChipsToWidth = computed(
-    () => this.maxVisibleChips() === 'fit',
+    () => this.maxVisibleChips() !== null,
   );
+  /** How many chips the row is ASKED to render before measuring: everything for
+   *  `'fit'`, the ceiling for a number. It has to be the ceiling and not the
+   *  selection, because the measurement caches chip widths from a render that
+   *  holds them all — with a numeric cap that render never happens, the cache
+   *  never fills, and the fit fell back to "show them all" without a word. */
+  private readonly chipBudget = computed(() => {
+    const max = this.maxVisibleChips();
+    const total = this.selectedTags().length;
+
+    return typeof max === 'number' ? Math.min(Math.max(max, 0), total) : total;
+  });
   private readonly chipsThatFit = chipFit(
-    computed(() => this.selectedTags().length),
+    this.chipBudget,
     this.chipRow,
     this.fitsChipsToWidth,
+    computed(() => this.selectedTags().length),
   );
 
   /** What the trigger renders. Separate from `selectedTags`, which stays the
    *  full selection: Backspace removes the last SELECTED chip, and capping the
    *  list it reads would silently make it remove the last VISIBLE one instead. */
   protected readonly visibleTags = computed(() => {
-    const max = this.maxVisibleChips();
     const tags = this.selectedTags();
-    if (max === 'fit') {
-      return tags.slice(0, this.chipsThatFit());
-    }
 
-    return max && max > 0 ? tags.slice(0, max) : tags;
+    return this.maxVisibleChips() === null
+      ? tags
+      : tags.slice(0, this.chipsThatFit());
   });
 
   protected readonly overflowCount = computed<number>(

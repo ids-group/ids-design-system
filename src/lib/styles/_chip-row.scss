@@ -22,5 +22,15 @@
     // The trigger owns chip spacing in both modes; inheriting it keeps one source
     // rather than a copy of each picker's own gap token, which differ.
     gap: inherit;
+
+    // A chip squeezed by the row must clip, never wrap: a wrapped label makes
+    // that one chip two lines tall, which grows the trigger — the exact failure
+    // the cap exists to prevent, and what a phone-width trigger did. Measured on
+    // a 412px viewport: one chip at 46px beside two at 29px and 31px.
+    > * {
+      flex: 0 1 auto;
+      min-width: 0;
+      white-space: nowrap;
+    }
   }
 }
