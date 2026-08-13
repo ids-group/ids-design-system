@@ -217,7 +217,8 @@
      Each token has a real consumer in the codebase; symmetric "unused"
      numeric stops are deliberately omitted. */
   --opacity-disabled:        0.5;   /* full disabled state on interactive components */
-  --opacity-muted:           0.6;   /* legacy alias — being phased out in favour of --text-* roles */
+  --opacity-muted:           0.6;   /* legacy alias, no component reads it since the disabled
+                                       states moved onto --text-disabled + --opacity-disabled */
   --opacity-text-disabled:   0.38;  /* disabled text alpha (WCAG-derived) */
   --opacity-scrim:           0.55;  /* modal/drawer backdrop overlay (light theme) */
   --opacity-state-hover:     0.08;  /* hover layer over surface (overlay vs surface swap) */

@@ -1681,13 +1681,13 @@ export const MISC_OPACITY: readonly MiscRow[] = [
     "name": "--opacity-disabled",
     "value": "0.5",
     "renderAs": "opacity",
-    "notes": "Full disabled state on interactive components."
+    "notes": "Full disabled state where opacity is the ONLY signal — a calendar day, a toggle button. A control that already swaps to --text-disabled must not stack this on top."
   },
   {
     "name": "--opacity-muted",
     "value": "0.6",
     "renderAs": "opacity",
-    "notes": "Legacy alias — being phased out."
+    "notes": "Legacy alias (0.6). No component reads it — disabled states use --text-disabled with --opacity-disabled."
   },
   {
     "name": "--opacity-text-disabled",
