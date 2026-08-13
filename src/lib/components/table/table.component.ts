@@ -253,8 +253,9 @@ export class TableComponent<T extends object> {
    *  table, not per route instance. */
   readonly storageKey = input<string>('');
 
-  /** Render an export button above the table. Off by default; `exportCsv()`
-   *  stays available for a consumer's own button. */
+  /** Render an export button in the table's toolbar row. Off by default. Leave it
+   *  off and drive `runExport()` from your own button — in a page header, a filter
+   *  bar, the `[toolbar-start]` slot — reading `exporting()` for its loading state. */
   readonly exportButton = input(false, { transform: booleanAttribute });
   /** Filename the export button downloads as. */
   readonly exportFilename = input<string>('table.csv');
@@ -273,11 +274,14 @@ export class TableComponent<T extends object> {
   /** Fires when `exportFetcher` rejects. Without it a failed export is silent —
    *  the button simply re-enables and no file arrives. */
   readonly exportFailed = output<unknown>();
-  /** True while `exportFetcher` is in flight, so the button can disable itself. */
-  protected readonly exporting = signal(false);
+  private readonly exportingState = signal(false);
+  /** True while `exportFetcher` is in flight. Public so a button OUTSIDE the table
+   *  can show the same in-flight state as the built-in one. */
+  readonly exporting = this.exportingState.asReadonly();
+  private readonly exportStatusState = signal('');
   /** Announced in the table's live region while an export is running or after it
    *  failed, so the button's own disabled state is not the only signal. */
-  protected readonly exportStatus = signal('');
+  readonly exportStatus = this.exportStatusState.asReadonly();
 
   /** Keeps the horizontal scrollbar reachable on tall tables: the scroll
    *  container's native bar is hidden and a proxy stuck to the bottom of the
@@ -466,6 +470,13 @@ export class TableComponent<T extends object> {
   );
   protected readonly isOverlayLoading = computed(
     () => this.loading() === 'overlay',
+  );
+  /** The empty row is a CLAIM about the data — "there are none" — so it must not
+   *  appear while the table is still asking. Only `skeleton` used to suppress it,
+   *  and `overlay` is the mode a list uses on every read after the first, so a
+   *  zero-row reload painted "No rows yet" under the spinner. */
+  protected readonly showsEmptyRow = computed(
+    () => this.loading() === false && !this.filteredData().length,
   );
 
   protected readonly effectiveHiddenKeys = computed<ReadonlySet<string>>(
@@ -1722,9 +1733,10 @@ export class TableComponent<T extends object> {
     return String((row as Record<string, unknown>)[col.key] ?? '');
   }
 
-  /** Exports the visible columns of the filtered + sorted rows (all rows, not
-   *  just the current page) as a CSV download. Call from a consumer button:
-   *  `<ds-button (pressed)="table.exportCsv()">`. */
+  /** Serialises the visible columns of the rows the TABLE HOLDS as a CSV download.
+   *  On a server-paged table that is one page — prefer `runExport()`, which goes
+   *  through `exportFetcher` and exports the whole set. Pass `rows` to serialise a
+   *  set you fetched yourself. */
   exportCsv(filename = 'table.csv', rows?: readonly T[]): void {
     if (typeof document === 'undefined') {
       return;
@@ -1807,17 +1819,20 @@ export class TableComponent<T extends object> {
     }
   }
 
-  /** Export button handler: awaits `exportFetcher` when one is given, so a
-   *  server-paged table exports the whole set rather than the page it holds. */
-  protected async runExport(): Promise<void> {
+  /** Runs the export the built-in button runs: awaits `exportFetcher` when one is
+   *  given — so a server-paged table exports the whole set rather than the page it
+   *  holds — downloads the result, drives `exporting`, writes the live region and
+   *  emits `exportFailed`. Public so the button can live anywhere:
+   *  `<ds-button [loading]="table.exporting()" (pressed)="table.runExport()">`. */
+  async runExport(): Promise<void> {
     const fetcher = this.exportFetcher();
     if (!fetcher) {
       this.exportCsv(this.exportFilename());
 
       return;
     }
-    this.exporting.set(true);
-    this.exportStatus.set('Preparing export…');
+    this.exportingState.set(true);
+    this.exportStatusState.set('Preparing export…');
     try {
       const result = await fetcher();
       if (typeof result === 'string' || result instanceof Blob) {
@@ -1825,14 +1840,14 @@ export class TableComponent<T extends object> {
       } else {
         this.exportCsv(this.exportFilename(), result);
       }
-      this.exportStatus.set('Export ready');
+      this.exportStatusState.set('Export ready');
     } catch (error) {
       // Swallowing this is what made a failed export indistinguishable from a
       // slow one: the button re-enabled and no file ever arrived.
-      this.exportStatus.set('Export failed');
+      this.exportStatusState.set('Export failed');
       this.exportFailed.emit(error);
     } finally {
-      this.exporting.set(false);
+      this.exportingState.set(false);
     }
   }
 

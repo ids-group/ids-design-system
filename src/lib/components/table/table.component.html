@@ -1,16 +1,24 @@
-@if (exportButton()) {
-  <div class="table-toolbar">
-    <ds-button
-      color="neutral"
-      variant="outline"
-      size="sm"
-      [disabled]="exporting()"
-      (pressed)="runExport()"
-    >
-      {{ exporting() ? 'Preparing…' : 'Export CSV' }}
-    </ds-button>
+<div class="table-toolbar">
+  <div class="toolbar-start">
+    <ng-content select="[toolbar-start]"></ng-content>
   </div>
-}
+
+  <div class="toolbar-end">
+    <ng-content select="[toolbar-end]"></ng-content>
+
+    @if (exportButton()) {
+      <ds-button
+        color="neutral"
+        variant="outline"
+        size="sm"
+        [disabled]="exporting()"
+        (pressed)="runExport()"
+      >
+        {{ exporting() ? 'Preparing…' : 'Export CSV' }}
+      </ds-button>
+    }
+  </div>
+</div>
 
 <div
   #scrollWrap
@@ -191,7 +199,7 @@
             >
             </ng-container>
           }
-        } @else if (!filteredData().length) {
+        } @else if (showsEmptyRow()) {
           <tr>
             <td
               class="empty"

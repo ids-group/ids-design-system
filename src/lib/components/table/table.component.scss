@@ -806,6 +806,30 @@
 
 .table-toolbar {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  gap: var(--space-2);
   margin-bottom: var(--space-2);
+
+  /* The row is always in the markup now that it holds slots, so it has to take
+     itself out when both are empty and the export button is off — otherwise every
+     table pays its margin. `:not(:has(*))` rather than `:empty`, which a single
+     whitespace text node defeats. */
+  &:not(:has(.toolbar-start > *, .toolbar-end > *)) {
+    display: none;
+  }
+}
+
+.toolbar-start,
+.toolbar-end {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.toolbar-start {
+  flex: 1 1 auto;
+}
+.toolbar-end {
+  flex: 0 0 auto;
+  margin-left: auto;
 }
