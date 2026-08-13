@@ -1,0 +1,39 @@
+// A control rendered as a segment of ds-field-group.
+//
+// The group owns the border, the radius, the divider and the single focus ring,
+// so every segment strips its own and hides the label and the message line — the
+// group carries one of each for the whole row.
+//
+// `$box` is the component's bordered element, which each one names differently:
+// `.control`, `.trigger`, `.dropdown`, `.autocomplete-trigger`, `.button`.
+//
+// The host must be a flex container. The group stretches it to the row height,
+// but a host left as a block gives the box no height to fill: a percentage
+// resolves against `auto`, so the box keeps its content height and the value sits
+// against the top of the row instead of its centre.
+@mixin field-group-segment($box) {
+  width: auto;
+  display: flex;
+
+  .label,
+  ds-field-message {
+    display: none;
+  }
+
+  #{$box} {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    flex: 1;
+    height: auto;
+
+    &:hover,
+    &:focus,
+    &:focus-visible,
+    &:focus-within {
+      border: 0;
+      box-shadow: none;
+      outline: 0;
+    }
+  }
+}

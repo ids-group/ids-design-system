@@ -2,6 +2,7 @@
 @use '../../styles/breakpoints' as bp;
 @use '../../styles/field-label' as field-label;
 @use '../../styles/field-box' as field-box;
+@use '../../styles/field-group-segment' as field-group-segment;
 
 :host {
   --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
@@ -513,26 +514,5 @@
 /* Segment of a ds-field-group — see input.component.scss for why. The group
    draws the border, the radius and the one shared focus ring. */
 :host(.in-group) {
-  width: auto;
-
-  .label,
-  ds-field-message {
-    display: none;
-  }
-
-  .trigger {
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    height: 100%;
-
-    &:hover,
-    &:focus,
-    &:focus-visible,
-    &:focus-within {
-      border: 0;
-      box-shadow: none;
-      outline: 0;
-    }
-  }
+  @include field-group-segment.field-group-segment('.trigger');
 }

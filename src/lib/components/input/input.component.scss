@@ -3,6 +3,7 @@
 @use '../../styles/press' as press;
 @use '../../styles/field-label' as field-label;
 @use '../../styles/field-box' as field-box;
+@use '../../styles/field-group-segment' as field-group-segment;
 
 :host {
   /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
@@ -292,26 +293,5 @@
    and message row are suppressed: they would break the glued line, and a
    group-level label is not built yet. */
 :host(.in-group) {
-  width: auto;
-
-  .label,
-  ds-field-message {
-    display: none;
-  }
-
-  .control {
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    height: 100%;
-
-    &:hover,
-    &:focus,
-    &:focus-visible,
-    &:focus-within {
-      border: 0;
-      box-shadow: none;
-      outline: 0;
-    }
-  }
+  @include field-group-segment.field-group-segment('.control');
 }
