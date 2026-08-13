@@ -644,3 +644,24 @@ Note `.link` already bakes this in; this is the same treatment for everything th
   whose default direction is `desc` hits this on its first use — the user sees an unsorted-looking
   header over sorted data. There is no consumer workaround worth having: the inputs are one-way
   (`[sortKey]`/`[sortDir]` come from a computed over the URL), so we cannot write the model back.
+
+## `ds-table` makes every consumer decide skeleton-vs-overlay (from mm-broker MBP-121, 2026-08-13)
+
+- [ ] **[P3] `loading` takes `false | 'skeleton' | 'overlay'`, but which one is right is a function of
+  `data.length` — which the table already has and the consumer has to restate.** Every list screen
+  ends up writing the same line:
+
+  ```ts
+  protected readonly tableLoading = computed<'skeleton' | 'overlay' | false>(() =>
+    this.loading() ? (this.store.items().length > 0 ? 'overlay' : 'skeleton') : false,
+  );
+  ```
+
+  Three copies of it in one mm-broker feature (list, census, campaigns), and the failure mode when it
+  is skipped is silent: a hardcoded `'overlay'` dims an empty card and says nothing about what is
+  coming, so a first load reads as an empty table that flickers.
+  **Ask:** accept `true` (or `'auto'`) and let the table choose — skeleton rows while `data` is empty,
+  overlay once there are rows on screen. Explicit `'skeleton'`/`'overlay'` stay for the cases that
+  want to override. The rule is not a preference: replacing visible rows with placeholders throws away
+  what the reader is looking at, and dimming an empty card communicates nothing — so there is one
+  correct answer per state, and the table is the only place that knows both halves of it.
