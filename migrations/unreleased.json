@@ -152,6 +152,25 @@
         "ds-split-button",
         "--ds-split-button-outline-bg-color"
       ]
+    },
+    {
+      "id": "input-floating-removed",
+      "kind": "removed-api",
+      "old": "ds-input[floating]",
+      "new": null,
+      "note": "The `floating` input on ds-input is REMOVED, with no replacement. It was half-built: the label was drawn inside a taller control, but it never animated out of the field on focus, which is the whole point of a floating label -- so an empty field read as a permanently mislabelled one. REMOVE the attribute; the label then renders above the field like every other DS field, which is the format the rest of the library already uses. Note the height change that comes with it: a floating ds-input was --hit-touch (48px at default density) and it now takes the normal size scale (39px at `md`), so a row built around one may need its own height re-checked. Also gone with it: the five internal tokens that only this variant read -- --field-h-floating, --field-floating-label-fs, --field-floating-label-lh, --field-floating-label-top and --field-floating-pad-t. Overriding any of them is now inert; DELETE-LIST. Unrelated and UNTOUCHED: --ds-elevation-floating, which is the elevation role for toasts.",
+      "searchHints": [
+        "floating",
+        "[floating]",
+        "floating]=\"true\"",
+        "ds-input",
+        "floating-label",
+        "--field-h-floating",
+        "--field-floating-label-fs",
+        "--field-floating-label-lh",
+        "--field-floating-label-top",
+        "--field-floating-pad-t"
+      ]
     }
   ],
   "informational": [

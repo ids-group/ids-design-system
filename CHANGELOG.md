@@ -321,6 +321,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **`ds-input`'s `floating` label is removed, with no replacement.** It only ever did half the job: the
+  label was drawn inside a taller control, but it never moved out of the field on focus — the animation
+  from inside-the-box to above-it *is* the pattern, and without it an empty field reads as a
+  permanently mislabelled one rather than a floating-label one. Nobody had asked for it, and finishing
+  it is a real piece of motion work, so it goes. **Migration is deleting the attribute:**
+  `[floating]="true"` → nothing, and the label renders above the field like every other field in the
+  library. One thing to re-check when you do: a floating input stood at `--hit-touch` (48px at default
+  density) and now takes the ordinary size scale (39px at `md`), so a row whose height was built around
+  one moves. Gone with it are the five internal tokens only this variant read
+  (`--field-h-floating`, `--field-floating-label-fs`, `--field-floating-label-lh`,
+  `--field-floating-label-top`, `--field-floating-pad-t`) — overriding them is now inert.
+  `--ds-elevation-floating` is a different token for toasts and is untouched.
+
 - **`ds-table`'s `sortKey` and `sortDir` are an `input` + `output` pair instead of a `model`** — the
   mechanism behind the indicator fix above, because a `model` cannot tell a host's write apart from the
   table's own. **Templates are unaffected:** `[(sortKey)]` still works (`sortKeyChange` and
