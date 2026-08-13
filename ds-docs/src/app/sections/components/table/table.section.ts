@@ -5,6 +5,7 @@ import {
   CellTemplateDirective,
   DrawerComponent,
   EmptyStateComponent,
+  SearchComponent,
   TableComponent,
   type TableCellEditEvent,
   type TableColumn,
@@ -62,6 +63,7 @@ const BULK_STATUSES = ['Open', 'Pending', 'Closed'];
     DocsTruncationComponent,
     DrawerComponent,
     EmptyStateComponent,
+    SearchComponent,
     TableComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
@@ -362,6 +364,16 @@ export class TableSection {
 
   protected readonly projectSelected = signal(new Set<string>());
 
+  /** Slow on purpose: the demo is about the in-flight state an OUTSIDE button
+   *  can now read, which a fetch that resolves at once never shows. */
+  protected readonly slowExportFetcher = async (): Promise<
+    readonly ProjectRow[]
+  > => {
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+
+    return this.projectRows;
+  };
+
   protected readonly expandColumns: TableColumn<EventRow>[] = [
     { key: 'project', label: 'Record' },
     { key: 'date', label: 'Dates' },
@@ -498,7 +510,11 @@ export class TableSection {
     setTimeout(() => {
       this.lazyRows.update((rows) => {
         const next = rows.slice();
-        for (let index = range.first; index < range.first + range.rows; index++) {
+        for (
+          let index = range.first;
+          index < range.first + range.rows;
+          index++
+        ) {
           next[index] = this.bulkRows[index];
         }
 

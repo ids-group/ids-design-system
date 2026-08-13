@@ -6075,7 +6075,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Render an export button above the table. Off by default; `exportCsv()` stays available for a consumer's own button."
+        "description": "Render an export button in the table's toolbar row. Off by default. Leave it off and drive `runExport()` from your own button — in a page header, a filter bar, the `[toolbar-start]` slot — reading `exporting()` for its loading state."
       },
       {
         "name": "exportFilename",

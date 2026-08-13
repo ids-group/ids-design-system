@@ -547,6 +547,40 @@
     </ds-empty-state>
   </ds-table>
 
+  <div class="block-sub t-overline">
+    e · Zero rows WHILE loading — the table says nothing
+  </div>
+
+  <p class="block-desc t-s">
+    The empty state is a claim about the data — “there are none” — so the table
+    withholds it until it has finished asking. Both loading modes suppress it:
+    the same table with
+    <code class="t-mono-inline">
+      [loading]="'overlay'"
+    </code> and zero
+    rows shows its spinner and no message, where it used to paint “No records
+    match your filters” underneath one. <strong>You do not need a guard of your
+    own</strong> — a consumer audit found 9 of 14 overlay-loading tables shipping
+    that sentence during a load, because branching failure-vs-empty looks complete
+    while saying nothing about loading.
+  </p>
+
+  <ds-table
+    caption="Records"
+    [data]="noRows"
+    [columns]="loadingColumns"
+    [loading]="'overlay'"
+    [stickyHeader]="false"
+  >
+    <ds-empty-state
+      empty
+      variant="none"
+      icon="search"
+      title="No matches for your filters"
+      body="This message is bound, and deliberately not shown while the load is in flight."
+    />
+  </ds-table>
+
   <h3 class="block-title t-h4">
     Dense · zebra
   </h3>
@@ -1024,6 +1058,84 @@
     [reorderableColumns]="true"
     [resizableColumns]="true"
   />
+
+  <h3 class="block-title t-h4">
+    Toolbar slots · the export button anywhere
+  </h3>
+
+  <p class="block-desc t-s">
+    A row above the table with two slots —
+    <code class="t-mono-inline">
+      [toolbar-start]
+    </code> and
+    <code class="t-mono-inline">
+      [toolbar-end]
+    </code> — for controls that
+    act on THIS table: a search box, a status filter, a refresh. The row keeps its
+    own layout and disappears when both slots are empty and
+    <code class="t-mono-inline">
+      exportButton
+    </code> is off, so a table that
+    uses neither is unchanged. Filters that belong to the PAGE still belong in a
+    <code class="t-mono-inline">
+      ds-filter-bar
+    </code> above it — the slot is for
+    the ones that would otherwise read as page furniture one card away from the
+    rows they narrow.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      The export button does not have to live there either.
+    </strong>
+
+    <code class="t-mono-inline">
+      runExport()
+    </code> is public and so are
+    <code class="t-mono-inline">
+      exporting()
+    </code> and
+    <code class="t-mono-inline">
+      exportStatus()
+    </code>, so a button in a page
+    header or a filter bar runs the same path — the
+    <code class="t-mono-inline">
+      exportFetcher
+    </code> call, the download, the
+    in-flight state and the live-region announcement. Leave
+    <code class="t-mono-inline">
+      exportButton
+    </code> off and drive it yourself.
+  </p>
+
+  <ds-table
+    #toolbarTable
+    caption="Projects"
+    sortMode="client"
+    [data]="projectRows"
+    [columns]="projectColumns"
+    [exportFetcher]="slowExportFetcher"
+  >
+    <ds-search
+      toolbar-start
+      size="sm"
+      placeholder="Search projects…"
+      ariaLabel="Search projects"
+      [debounce]="300"
+    />
+
+    <ds-button
+      toolbar-end
+      color="neutral"
+      variant="outline"
+      size="sm"
+      icon="download"
+      [loading]="toolbarTable.exporting()"
+      (pressed)="toolbarTable.runExport()"
+    >
+      Export
+    </ds-button>
+  </ds-table>
 
   <h3 class="block-title t-h4">
     Column filters
