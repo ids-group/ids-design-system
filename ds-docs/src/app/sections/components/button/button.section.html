@@ -20,6 +20,7 @@
     <strong>
       Only solid and tonal paint a fill.
     </strong>
+
     <code class="t-mono-inline">
       outline
     </code>,
@@ -113,6 +114,14 @@
   </p>
 
   <div class="brand-demo">
+    <div class="demo-head">
+      <ds-switch
+        label="Disabled"
+        size="sm"
+        [(checked)]="matrixDisabled"
+      />
+    </div>
+
     <docs-matrix
       cornerLabel="color \ variant"
       [cols]="variants"
@@ -125,6 +134,7 @@
         <ds-button
           [color]="$any(row.key)"
           [variant]="variant"
+          [disabled]="matrixDisabled()"
         >
           {{ row.label }}
         </ds-button>
