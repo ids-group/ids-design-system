@@ -158,12 +158,34 @@ export class TableComponent<T extends object> {
   readonly bordered = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
-  /** false  — no loading state.
+  /** false — no loading state.
+   *  `true` — the table picks: skeleton rows while it has nothing to show,
+   *  overlay once rows are on screen. Prefer this; which one is right is a
+   *  function of the row count, and the table is the only place holding both
+   *  halves of that.
    *  'skeleton' — first-load placeholder; rows are replaced with shimmer
    *  rows that read the global --skeleton-shimmer-x driver.
    *  'overlay'  — re-fetch indicator; existing rows stay visible behind
-   *  a translucent overlay with a centred spinner. */
-  readonly loading = input<false | 'skeleton' | 'overlay'>(false);
+   *  a translucent overlay with a centred spinner. Pin either one only to
+   *  override the rule deliberately. */
+  readonly loading = input<boolean | 'skeleton' | 'overlay'>(false);
+  /** The mode actually rendered — the two treatments are not interchangeable, so
+   *  `true` resolves rather than picking a favourite: replacing visible rows with
+   *  placeholders throws away what the reader is looking at, and dimming an empty
+   *  card announces nothing about what is coming. */
+  protected readonly loadingMode = computed<'skeleton' | 'overlay' | false>(
+    () => {
+      const loading = this.loading();
+      if (loading === false) {
+        return false;
+      }
+      if (loading === true) {
+        return this.filteredData().length ? 'overlay' : 'skeleton';
+      }
+
+      return loading;
+    },
+  );
   /** Keeps the header row pinned while the body scrolls. */
   readonly stickyHeader = input(true, { transform: booleanAttribute });
   /** Caps the scroll body height (any CSS length, e.g. `'320px'`) and scrolls it
@@ -477,7 +499,7 @@ export class TableComponent<T extends object> {
 
   protected readonly tableClasses = computed(() => {
     const parts = ['table'];
-    if (this.loading() === 'skeleton') {
+    if (this.loadingMode() === 'skeleton') {
       parts.push('skeleton-mode');
     }
     if (this.stickyHeader()) {
@@ -497,17 +519,17 @@ export class TableComponent<T extends object> {
   });
 
   protected readonly isSkeletonLoading = computed(
-    () => this.loading() === 'skeleton',
+    () => this.loadingMode() === 'skeleton',
   );
   protected readonly isOverlayLoading = computed(
-    () => this.loading() === 'overlay',
+    () => this.loadingMode() === 'overlay',
   );
   /** The empty row is a CLAIM about the data — "there are none" — so it must not
    *  appear while the table is still asking. Only `skeleton` used to suppress it,
    *  and `overlay` is the mode a list uses on every read after the first, so a
    *  zero-row reload painted "No rows yet" under the spinner. */
   protected readonly showsEmptyRow = computed(
-    () => this.loading() === false && !this.filteredData().length,
+    () => this.loadingMode() === false && !this.filteredData().length,
   );
 
   protected readonly effectiveHiddenKeys = computed<ReadonlySet<string>>(
@@ -1080,7 +1102,7 @@ export class TableComponent<T extends object> {
    * unsorted first render is silent; only real changes speak.
    */
   protected readonly statusMessage = computed<string>(() => {
-    if (this.loading() !== false) {
+    if (this.loadingMode() !== false) {
       return 'Loading…';
     }
     const exportState = this.exportStatus();
