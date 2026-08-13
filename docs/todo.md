@@ -694,3 +694,17 @@ Note `.link` already bakes this in; this is the same treatment for everything th
   want to override. The rule is not a preference: replacing visible rows with placeholders throws away
   what the reader is looking at, and dimming an empty card communicates nothing — so there is one
   correct answer per state, and the table is the only place that knows both halves of it.
+
+## Validation on the control: warning got a border, but the FILL was never judged (2026-08-13)
+
+- [ ] **[P3] Build a deck for the tinted-fill variants of `warning` and `success`, and re-decide.**
+  Stas chose **border only** for both on 2026-08-13, from
+  `presentations/field-validation-states.html` — but explicitly parked the fill: "может быть я
+  передумаю про заливку потом когда посмотрю". The current ladder is error = border + fill,
+  warning/success = border only.
+  The variants to render, which the deck already has stubs for:
+  `warning` fill `--warning-subtitle` (#FFFBEA, 1.05:1 against a white field — the open worry is
+  whether it survives a phone screen in daylight) and `success` fill `--success-subtitle` (#ECFAEE).
+  Judge them **beside an error field in the same form**, since the question is not "is it visible"
+  but "does warning still read as weaker than error".
+  Not now — return to it deliberately.
