@@ -610,6 +610,34 @@
   </p>
 
   <p class="block-desc t-s">
+    <strong>
+      Anything focusable that styles nothing itself still gets a ring.
+    </strong>
+    The library emits one base rule —
+    <code class="t-mono-inline">
+      :where(:focus-visible)
+    </code> with
+    <code class="t-mono-inline">
+      --ds-control-focus-shadow
+    </code> — at zero
+    specificity, so a component rule and your own CSS both out-rank it. Without it
+    a close button inside
+    <code class="t-mono-inline">
+      ds-alert
+    </code>, a link in projected
+    content, or a plain
+    <code class="t-mono-inline">
+      &lt;button&gt;
+    </code> of yours fell through to
+    the browser default, which in Chrome is a black
+    <code class="t-mono-inline">
+      outline: auto
+    </code> — visibly foreign beside the DS
+    ring. Audited across the docs: 247 focusable elements on one page, none left
+    without an indicator.
+  </p>
+
+  <p class="block-desc t-s">
     <code class="t-mono-inline">
       outline
     </code> is the one style that also emits a

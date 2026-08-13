@@ -179,6 +179,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   ground and relied on that white fill**, set it back per instance:
   `--ds-button-bg-color: var(--surface-default)`.
 
+- **Everything focusable now gets the DS focus ring, not the browser's black outline.** The library
+  styled focus on the elements that remembered to — 45 of 71 component stylesheets — and everything else
+  fell through to `outline: auto`, which Chrome paints black: the close button inside `ds-alert`,
+  `ds-banner` and `ds-drawer`, a link in projected content, and any plain `<button>` an app writes itself.
+  One base rule now covers them, `:where(:focus-visible)` resolving `--ds-control-focus-shadow`, written at
+  **zero specificity** so every component rule and every app rule still out-ranks it. The `data-focus`
+  switch is unaffected — verified in all five modes (default, `ring`, `field`, `edge`, `outline`), the last
+  of which still replaces the shadow with a real outline. **If you deliberately suppressed a focus ring**
+  by leaving an element unstyled, it will now show one; give that element `box-shadow: none` explicitly.
+
 - **A disabled `ds-button` / `ds-icon-button` now reads as disabled on a COLOURED accent.** One label recipe
   for every variant — `oklch(from accent 70% 0.035 h)` — replacing the 58% default plus the 52% overrides
   tonal and outline carried. Those sat right where a saturated accent already is, so the disabled label

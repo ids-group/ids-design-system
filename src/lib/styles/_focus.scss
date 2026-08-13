@@ -15,6 +15,22 @@
 // Windows High Contrast DROPS box-shadow, so a shadow-only indicator disappears
 // entirely there. This is the one place that gap can be closed once.
 
+// BASE INDICATOR — everything focusable that has not styled itself.
+//
+// Without this the library only dressed the elements that remembered to: a close
+// button inside ds-alert / ds-banner / ds-drawer, a link in projected content, or
+// any control an app writes itself fell through to the browser default, which in
+// Chrome is a black `outline: auto` — visibly foreign next to the DS ring, and the
+// reason a group link in the docs sidebar showed one.
+//
+// `:where()` keeps it at ZERO specificity: every component rule (0,2,0 or more)
+// and every app rule still wins, and the data-focus switches below re-point the
+// token or replace the mechanism outright.
+:where(:focus-visible) {
+  outline: none;
+  box-shadow: var(--ds-control-focus-shadow);
+}
+
 :root[data-focus='ring'] {
   --ds-field-focus-shadow: var(--focus-ring);
   --ds-field-focus-shadow-error: var(--focus-ring-error);
