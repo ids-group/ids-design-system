@@ -255,7 +255,7 @@ export class TableComponent<T extends object> {
 
   /** Render an export button in the table's toolbar row. Off by default. Leave it
    *  off and drive `runExport()` from your own button — in a page header, a filter
-   *  bar, the `[toolbar-start]` slot — reading `exporting()` for its loading state. */
+   *  bar, the `[toolbar]` slot — reading `exporting()` for its loading state. */
   readonly exportButton = input(false, { transform: booleanAttribute });
   /** Filename the export button downloads as. */
   readonly exportFilename = input<string>('table.csv');

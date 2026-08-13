@@ -806,30 +806,40 @@
 
 .table-toolbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
   margin-bottom: var(--space-2);
 
-  /* The row is always in the markup now that it holds slots, so it has to take
-     itself out when both are empty and the export button is off — otherwise every
-     table pays its margin. `:not(:has(*))` rather than `:empty`, which a single
-     whitespace text node defeats. */
-  &:not(:has(.toolbar-start > *, .toolbar-end > *)) {
+  /* The row is always in the markup now that it holds a slot, so it has to take
+     itself out when nothing filled it and the export button is off — otherwise
+     every table pays its margin. `:not(:has(*))` rather than `:empty`, which a
+     single whitespace text node defeats. */
+  &:not(:has(.toolbar-slot > *, > ds-button)) {
     display: none;
   }
 }
 
-.toolbar-start,
-.toolbar-end {
+/* Lays out a HANDFUL of projected controls so the simple case needs no CSS at
+   all — every consumer of the fork this replaces wrote these same four
+   declarations, wrap included. Project one element of your own instead and the
+   flex has a single child, so your layout is untouched. */
+.toolbar-slot {
   display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
   min-width: 0;
-}
-.toolbar-start {
-  flex: 1 1 auto;
-}
-.toolbar-end {
-  flex: 0 0 auto;
-  margin-left: auto;
+
+  /* One projected element means the consumer brought their own layout, so give it
+     the whole row — otherwise a `justify-content: space-between` of theirs has
+     nothing to distribute. Pierces encapsulation because projected nodes carry the
+     CONSUMER's attribute, not this component's (same reason as ds-auth-layout's
+     brand slot); anchored here so it compiles scoped rather than global, and a
+     DIRECT child so their inner markup is left alone. */
+  ::ng-deep > :only-child {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
 }

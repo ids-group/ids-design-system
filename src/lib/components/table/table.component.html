@@ -1,23 +1,19 @@
 <div class="table-toolbar">
-  <div class="toolbar-start">
-    <ng-content select="[toolbar-start]"></ng-content>
+  <div class="toolbar-slot">
+    <ng-content select="[toolbar]"></ng-content>
   </div>
 
-  <div class="toolbar-end">
-    <ng-content select="[toolbar-end]"></ng-content>
-
-    @if (exportButton()) {
-      <ds-button
-        color="neutral"
-        variant="outline"
-        size="sm"
-        [disabled]="exporting()"
-        (pressed)="runExport()"
-      >
-        {{ exporting() ? 'Preparing…' : 'Export CSV' }}
-      </ds-button>
-    }
-  </div>
+  @if (exportButton()) {
+    <ds-button
+      color="neutral"
+      variant="outline"
+      size="sm"
+      [disabled]="exporting()"
+      (pressed)="runExport()"
+    >
+      {{ exporting() ? 'Preparing…' : 'Export CSV' }}
+    </ds-button>
+  }
 </div>
 
 <div

@@ -1060,28 +1060,39 @@
   />
 
   <h3 class="block-title t-h4">
-    Toolbar slots · the export button anywhere
+    Toolbar slot · the export button anywhere
   </h3>
 
   <p class="block-desc t-s">
-    A row above the table with two slots —
+    A row above the table, filled through one
     <code class="t-mono-inline">
-      [toolbar-start]
-    </code> and
-    <code class="t-mono-inline">
-      [toolbar-end]
-    </code> — for controls that
-    act on THIS table: a search box, a status filter, a refresh. The row keeps its
-    own layout and disappears when both slots are empty and
+      [toolbar]
+    </code> slot, for controls that act on
+    THIS table: a search box, a status filter, a refresh. Project a handful of
+    controls and the row lays them out — flex, wrap, 8px gap — so the ordinary case
+    needs no CSS of yours. Project one element of your own instead and the layout
+    is entirely yours; the row's flex then has a single child and stays out of the
+    way. It disappears when nothing filled it and
     <code class="t-mono-inline">
       exportButton
-    </code> is off, so a table that
-    uses neither is unchanged. Filters that belong to the PAGE still belong in a
+    </code> is off, so a table that uses
+    neither is unchanged. Filters that belong to the PAGE still belong in a
     <code class="t-mono-inline">
       ds-filter-bar
     </code> above it — the slot is for
     the ones that would otherwise read as page furniture one card away from the
     rows they narrow.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      One slot rather than a start/end pair, and that was a correction.
+    </strong> The
+    fork this replaces had exactly one, its right-hand side being the component's
+    own buttons — and all four screens that used it projected a container of their
+    own anyway, each writing the same four declarations. A second slot would have
+    been API nobody had asked for, and the layout it promised to own is one the
+    consumer writes regardless when their case differs.
   </p>
 
   <p class="block-desc t-s">
@@ -1117,7 +1128,7 @@
     [exportFetcher]="slowExportFetcher"
   >
     <ds-search
-      toolbar-start
+      toolbar
       size="sm"
       placeholder="Search projects…"
       ariaLabel="Search projects"
@@ -1125,7 +1136,7 @@
     />
 
     <ds-button
-      toolbar-end
+      toolbar
       color="neutral"
       variant="outline"
       size="sm"
