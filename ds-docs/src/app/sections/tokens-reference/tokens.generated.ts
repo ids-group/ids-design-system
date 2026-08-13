@@ -2476,7 +2476,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-button-label-color-disabled",
-        "value": "oklch(from var(--_button-accent) 58% 0.035 h)",
+        "value": "oklch(from var(--_button-accent) 70% 0.035 h)",
         "notes": "Disabled label — low-chroma tint of the accent hue."
       },
       {
@@ -3423,7 +3423,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-icon-button-icon-color-disabled",
-        "value": "oklch(from var(--_icon-button-accent) 58% 0.035 h)",
+        "value": "oklch(from var(--_icon-button-accent) 70% 0.035 h)",
         "notes": "Disabled icon — low-chroma tint of the accent hue."
       },
       {
@@ -5000,7 +5000,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-split-button-outline-bg-color",
-        "value": "var(--surface-default)",
+        "value": "transparent",
         "notes": "Outline split button surface fill (defaults to --surface-default)."
       },
       {
