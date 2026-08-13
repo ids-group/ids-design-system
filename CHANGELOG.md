@@ -188,6 +188,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **Binding `error` now tints the control, not just the message.** Every field that takes an `error`
+  string — all 15, via the shared `resolveFieldMessage` — put a red message under a box that stayed
+  neutral grey, because the invalid state was computed from `[invalid]` and from validator `errors` but
+  not from an explicit `error`. That contradicted the input's own contract ("binding it says the
+  consumer has already decided this field is in error") and it is what a phone screenshot caught: a red
+  line under an untouched field. `error="…"` now drives the red border, the tinted fill, the error focus
+  ring and `aria-invalid`, exactly as `[invalid]="true"` always did. **If you were binding both**
+  (`[invalid]="hasError" error="…"`) nothing changes. **If you were binding `error` alone and relying on
+  the box staying neutral**, that is now the error box — drop to `warning` for an advisory message, or
+  bind `hint` and leave `error` empty.
+
 - **A field inside `ds-field-group` no longer pins its value to the top of the row.** Found by Stas
   testing the docs on a phone, and it affected **every segment except `ds-button`**: the value sat
   against the top edge instead of the vertical centre, off by 10px in a 39px row (7px at `size="sm"`,

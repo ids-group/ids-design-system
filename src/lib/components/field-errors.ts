@@ -153,8 +153,14 @@ export function resolveFieldMessage(
     return textFor(current, config.field?.errorMessages);
   });
 
+  // `error` counts as invalid on its own: binding a string to it IS the decision
+  // that the field is in error, so leaving the control untinted put a red message
+  // under a neutral box.
   const invalid = computed(
-    () => sources.invalid() || (errors().length > 0 && interacted()),
+    () =>
+      sources.invalid() ||
+      sources.error().trim().length > 0 ||
+      (errors().length > 0 && interacted()),
   );
 
   const message = computed<DsFieldMessage>(() => {
