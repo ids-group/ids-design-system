@@ -171,6 +171,21 @@
         "--field-floating-label-top",
         "--field-floating-pad-t"
       ]
+    },
+    {
+      "id": "field-invalid-class-to-data-field-state",
+      "kind": "selector-rename",
+      "old": "ds-color-picker.invalid",
+      "new": "ds-color-picker[data-field-state='error']",
+      "note": "Validation state on a field's control is now one shared rule keyed off a `data-field-state` attribute on the host ('error' | 'warning' | 'success'), replacing three different spellings. The dead `.invalid` HOST CLASS is removed from ds-color-picker and ds-otp-input, and the `.invalid` class on ds-multi-select's .field-trigger with it -- nothing styled them any more. ACTION: a CSS override selecting `.invalid` on any of those three now matches nothing; rewrite it as [data-field-state='error']. ds-input, ds-textarea and ds-select kept their `.error` / `.success` WRAPPER classes untouched for other purposes, so only the three named components are affected. NOT affected: ds-field-group, which has its own `[invalid]` input and its own class.",
+      "searchHints": [
+        "ds-color-picker.invalid",
+        "ds-otp-input.invalid",
+        "ds-multi-select .invalid",
+        ".invalid",
+        "invalid]",
+        "data-field-state"
+      ]
     }
   ],
   "informational": [
@@ -219,6 +234,7 @@
     "TableColumn.width now accepts the literal 'content' in addition to a pixel number: the column sizes to its widest cell and stops wrapping, leaving the remaining width to the other columns. Purely additive — a numeric width and an unset width behave exactly as before. DELETE-LIST: a `::ng-deep ds-table { .table th, .table td { width: 1%; white-space: nowrap } }` override, which is the idiom this replaces. Notes: dragging a resizable column's edge overrides the mode (a drag is a deliberate pixel width), and `truncate` on a 'content' column has no clip width to work against, so it does nothing rather than clipping at the 240px default.",
     "maxVisibleChips as a NUMBER is now a ceiling rather than an exact count on ds-autocomplete and ds-multi-select: at most N chips, and fewer when the trigger is too narrow to hold them beside the '+N more' marker and whatever follows (the text input, the chevron). Reported from a phone: [maxVisibleChips]=\"2\" showed two chips, ran out of width and wrapped the text input onto a second line — the growth the cap exists to prevent. Nothing to change on adoption; a wide trigger still shows exactly N. null is untouched and remains the only mode that does not measure. If you relied on a numeric cap to guarantee a fixed chip COUNT regardless of width, that guarantee is gone by design — the trigger's height is the thing being guaranteed instead.",
     "ds-field-group segments now centre their value vertically. Every segment except ds-button pinned its value to the top of the row: the group stretches the segment, but the host is a block, so the height: 100% each control set on its bordered box resolved against `auto` and the box kept its content height (22px inside a 39px row). Nothing to change on adoption. ACTION only if you had a ::ng-deep override compensating for it -- e.g. ds-field-group ds-input .control { align-items: center } or a padding-top nudge -- which is now double-applied; delete it.",
-    "An `error` string now marks the field invalid on its own, across all 15 field components (ds-input, ds-textarea, ds-select, ds-autocomplete, ds-multi-select, ds-date-picker, ds-time-picker, ds-color-picker, ds-otp-input, ds-slider, ds-checkbox, ds-radio, ds-radio-group, ds-switch). Before, error=\"...\" coloured only the message and left the control neutral; it now drives the error border, fill, focus ring and aria-invalid, which is what the input always documented. Nothing to do if you bound [invalid] alongside it. ACTION only if you bound `error` on its own and WANTED a neutral box: move that text to `warning` (advisory) or to `hint`."
+    "An `error` string now marks the field invalid on its own, across all 15 field components (ds-input, ds-textarea, ds-select, ds-autocomplete, ds-multi-select, ds-date-picker, ds-time-picker, ds-color-picker, ds-otp-input, ds-slider, ds-checkbox, ds-radio, ds-radio-group, ds-switch). Before, error=\"...\" coloured only the message and left the control neutral; it now drives the error border, fill, focus ring and aria-invalid, which is what the input always documented. Nothing to do if you bound [invalid] alongside it. ACTION only if you bound `error` on its own and WANTED a neutral box: move that text to `warning` (advisory) or to `hint`.",
+    "A `warning` string now paints the control, not only the message line: a --warning-text border (#8A7400, 4.59:1 on a white field) on all nine bordered fields -- ds-input, ds-textarea, ds-select, ds-autocomplete, ds-multi-select, ds-date-picker, ds-time-picker, ds-color-picker, ds-otp-input. Success keeps its border-only treatment and error keeps border + tinted fill, so the three states stay ranked. Two visual corrections ride along and need no action: an invalid ds-autocomplete drew a near-black border because it read a --border-error token that has never existed, and ds-multi-select / ds-color-picker / ds-otp-input had the error border but not the fill their siblings had. Every per-component override token (--ds-input-bg-color-error, --ds-select-focus-shadow-error, and the rest) still applies."
   ]
 }

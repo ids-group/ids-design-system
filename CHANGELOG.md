@@ -188,6 +188,32 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A `warning` now shows on the control, and one rule drives all nine bordered fields.** `warning="…"`
+  coloured the message and left the box untouched — no `.warning` rule existed anywhere in the library —
+  which is what a phone screenshot caught. It now takes a `--warning-text` border. Not `--warning`:
+  that is `--yellow-400`, **1.47:1** against a white field where WCAG 1.4.11 asks 3:1 for a component
+  boundary, so the obvious mirror of the error recipe would have drawn a border nobody can see;
+  `--warning-text` is the first rung of the ramp that clears it, at 4.59:1. Border only, deliberately —
+  an error blocks submission and keeps border + tinted fill, so it still reads as the loudest thing in
+  a form holding all three.
+
+  The nine had drifted badly and are now one shared `field-state` mixin keyed off a `data-field-state`
+  attribute: five painted the error box as border + fill and four as a border alone;
+  **`ds-autocomplete` reached for a `--border-error` token that does not exist**, so an invalid
+  autocomplete drew a *near-black* border (`rgb(22,26,40)` — `border-color` falling back to
+  `currentColor`) instead of a red one; and the same state was spelled three ways
+  (`.error` on the wrapper, `:host(.invalid)`, `&.invalid` on the box). **What changes visually:**
+  `ds-autocomplete` finally shows red, and `ds-multi-select`, `ds-color-picker` and `ds-otp-input` gain
+  the tinted fill their five siblings already had. Every per-component override token that shipped in
+  0.7.x (`--ds-input-bg-color-error`, `--ds-select-focus-shadow-error`, …) still wins — the mixin takes
+  them as arguments rather than replacing them with the family token.
+
+  **DELETE-LIST:** the dead `.invalid` host class on `ds-color-picker`, `ds-otp-input` and
+  `ds-multi-select` is gone, since nothing styled it any more. If you selected it from outside, use
+  `[data-field-state="error"]`. `ds-checkbox`, `ds-radio`, `ds-radio-group`, `ds-switch` and `ds-slider`
+  bind the same attribute but keep message-only treatment: they have no bordered box, and their
+  existing paint is untouched.
+
 - **Binding `error` now tints the control, not just the message.** Every field that takes an `error`
   string — all 15, via the shared `resolveFieldMessage` — put a red message under a box that stayed
   neutral grey, because the invalid state was computed from `[invalid]` and from validator `errors` but
