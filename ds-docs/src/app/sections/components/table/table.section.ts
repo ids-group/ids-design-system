@@ -364,6 +364,20 @@ export class TableSection {
 
   protected readonly projectSelected = signal(new Set<string>());
 
+  /** Status and Budget shrink to their content; Project absorbs the slack. */
+  protected readonly fitColumns: TableColumn<ProjectRow>[] = [
+    { key: 'project', label: 'Project' },
+    { key: 'owner', label: 'Owner' },
+    { key: 'status', label: 'Status', width: 'content' },
+    {
+      key: 'budget',
+      label: 'Budget',
+      align: 'right',
+      width: 'content',
+      cell: (row) => '£' + row.budget.toLocaleString(),
+    },
+  ];
+
   protected readonly serverSortColumns: TableColumn<ProjectRow>[] = [
     { key: 'project', label: 'Project', sortable: true },
     { key: 'owner', label: 'Owner', sortable: true },

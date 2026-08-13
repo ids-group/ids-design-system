@@ -82,6 +82,7 @@
               [class]="headerClasses(col)"
               [class.numeric]="col.align === 'right'"
               [class.pin-first]="first && stickyFirstColumn()"
+              [class.fit-content]="fitsContent(col)"
               [style.width.px]="columnWidth(col)"
               [style.min-width.px]="columnWidth(col)"
               [style.max-width.px]="columnWidth(col)"
@@ -283,6 +284,7 @@
                     [class.numeric]="col.align === 'right'"
                     [class.pin-first]="first && stickyFirstColumn()"
                     [class.editable-cell]="col.editable"
+                    [class.fit-content]="fitsContent(col)"
                     (dblclick)="startEdit(row, col, $event)"
                   >
                     @if (isEditing(row, col)) {
@@ -302,7 +304,7 @@
                         <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- same pointer-only enhancement as the plain truncate branch below; the value stays in the DOM for AT -->
                         <span
                           class="cell-clip"
-                          [style.max-width.px]="col.width ?? 240"
+                          [style.max-width.px]="clipWidth(col)"
                           [attr.title]="cellValue(row, col)"
                           (click)="onCellClipClick(row, col, $event)"
                         >
@@ -323,7 +325,7 @@
                       <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- pointer-only enhancement: the clip is visual (CSS ellipsis), keyboard/AT users already get the full DOM text + title; a tab stop per cell would wreck keyboard traversal -->
                       <span
                         class="cell-clip"
-                        [style.max-width.px]="col.width ?? 240"
+                        [style.max-width.px]="clipWidth(col)"
                         [attr.title]="cellValue(row, col)"
                         (click)="onCellClipClick(row, col, $event)"
                       >

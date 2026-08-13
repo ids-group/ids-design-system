@@ -846,9 +846,32 @@ export class TableComponent<T extends object> {
     startWidth: number;
   } | null = null;
 
-  /** Resolved pixel width for a column: a drag override wins, else `column.width`. */
+  /** Resolved pixel width for a column: a drag override wins, else `column.width`
+   *  when that is a number. `'content'` is not a pixel value — it is carried by a
+   *  class instead, see `fitsContent`. */
   protected columnWidth(col: TableColumn<T>): number | null {
-    return this.columnWidths().get(col.key) ?? col.width ?? null;
+    const dragged = this.columnWidths().get(col.key);
+    if (dragged !== undefined) {
+      return dragged;
+    }
+
+    return typeof col.width === 'number' ? col.width : null;
+  }
+
+  /** Shrink-to-content mode, unless the user has dragged this column — a drag is a
+   *  deliberate pixel width and must win over the declared intent. */
+  protected fitsContent(col: TableColumn<T>): boolean {
+    return col.width === 'content' && !this.columnWidths().has(col.key);
+  }
+
+  /** Clip width for `truncate`. `'content'` has no clip width — the column is as
+   *  wide as its widest cell, so there is nothing to ellipsis against. */
+  protected clipWidth(col: TableColumn<T>): number | null {
+    return typeof col.width === 'number'
+      ? col.width
+      : col.width === 'content'
+        ? null
+        : 240;
   }
 
   protected onResizeStart(col: TableColumn<T>, event: PointerEvent): void {

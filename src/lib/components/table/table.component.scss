@@ -158,6 +158,17 @@
   color: var(--text-primary);
   background-color: var(--_table-bg-color);
 
+  /* width: 'content' — the shrink-to-fit idiom, spelled once here instead of in
+     every consumer's ::ng-deep. `width: 1%` is the trick: a table lays out at
+     least the content width, so an under-sized request collapses the column onto
+     its widest cell and hands the slack to the columns that can use it. nowrap
+     stops that cell wrapping to defeat the point. */
+  th.fit-content,
+  td.fit-content {
+    width: 1%;
+    white-space: nowrap;
+  }
+
   thead th {
     text-align: left;
     padding: var(--_table-head-pad-top) var(--_table-cell-pad-right) var(--_table-head-pad-bottom) var(--_table-cell-pad-left);

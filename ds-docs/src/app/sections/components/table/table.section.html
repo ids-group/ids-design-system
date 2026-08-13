@@ -1211,6 +1211,35 @@
   </ds-table>
 
   <h3 class="block-title t-h4">
+    Sizing a column to its content
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      width: 'content'
+    </code> on a column sizes it to its
+    widest cell and stops it wrapping, leaving the slack to the columns that should
+    absorb it. An auto-layout table spreads leftover width evenly, so a status or a
+    figure ends up as wide as its own header while the name column that should take
+    the space does not. A pixel
+    <code class="t-mono-inline">
+      width
+    </code> cannot express that — pin one
+    column and the rest still spread. Below, Status and Budget are
+    <code class="t-mono-inline">
+      'content'
+    </code>; Project and Owner share what is
+    left. Dragging a column's edge still wins, since that is a deliberate pixel width.
+  </p>
+
+  <ds-table
+    caption="Projects"
+    [data]="projectRows"
+    [columns]="fitColumns"
+    [resizableColumns]="true"
+  />
+
+  <h3 class="block-title t-h4">
     Server sort · a host that answers with its own default
   </h3>
 
