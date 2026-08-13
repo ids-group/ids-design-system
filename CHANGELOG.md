@@ -10,6 +10,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **A `TableColumn` can say `width: 'content'`.** The column sizes to its widest cell and stops
+  wrapping, so the slack goes to the columns that should absorb it. An auto-layout table spreads
+  leftover width evenly, which is why a status or a figure ends up as wide as its own header while the
+  name column that should take the space does not — and a pixel `width` cannot express that, since
+  pinning one column leaves the rest spreading. Measured in the docs demo: two `'content'` columns come
+  out at 89px and 94px while the two ordinary ones take 438px and 530px of the same 1152px table.
+  **You can now delete** the `::ng-deep ds-table { .table th, .table td { width: 1%; white-space: nowrap } }`
+  block — the last reach into the table's markup a consumer had left, still marked in their tree as
+  `TODO(ds-shrink-to-content)`. Dragging the column's edge still wins, because that is a deliberate
+  pixel width; and a `'content'` column has no clip width, so `truncate` on it is a no-op rather than an
+  ellipsis against 240px.
+
 - **`ds-table` takes `[loading]="true"` and picks the treatment itself** — skeleton rows while it has
   nothing on screen, overlay once there are rows. `'skeleton'` and `'overlay'` still pin either one
   deliberately, and `false` is unchanged. Which of the two is right is a function of the row count,

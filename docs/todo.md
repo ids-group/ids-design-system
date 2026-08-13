@@ -87,8 +87,9 @@
   context (`let-loading`) so the choice is at least expressible without reaching for the page's own
   signal. Fourteen identical guards is the library asking the app to remember something it knows itself.
 
-- [ ] **[P3] `TableColumn` cannot say "size this column to its content", and that is the last reach a
-  consumer needs into the table's markup.** mm-broker retired its `ids-data-table` fork onto `ds-table`
+- [x] **DONE 2026-08-13 — [P3] `TableColumn` cannot say "size this column to its content", and that is the last reach a
+  consumer needs into the table's markup.**
+  **SHIPPED as `width: 'content'`** on the existing field rather than a separate `fit?: boolean` — the two would have had to be reconciled anyway (what does `fit` mean beside `width: 200`?), and one field with two shapes says the exclusivity for free. Carried by a class, not a style, because `'content'` is not a pixel value: `th/td.fit-content { width: 1%; white-space: nowrap }`, the same idiom the consumer had in `::ng-deep`, spelled once. Two edges handled: a drag on a resizable column wins (a drag is a deliberate pixel width), and `truncate` gets no clip width from a `'content'` column instead of silently clipping at the 240px default. Verified in a browser — two `'content'` columns measured 89px and 94px while the ordinary two took 438px and 530px of the same 1152px table. mm-broker retired its `ids-data-table` fork onto `ds-table`
   on 2026-08-12 — 35 tables, and the only styling that could not come with it is two blocks of
   `:host ::ng-deep ds-table { .table th, .table td { width: 1%; white-space: nowrap } }` on their users
   and carriers lists. The need is ordinary: an auto-layout table spreads leftover width evenly, so short
