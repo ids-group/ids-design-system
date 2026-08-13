@@ -56,11 +56,18 @@
   --_button-pad-x:     var(--ds-button-pad-x,     var(--space-5));
   --_button-pad-y:     var(--ds-button-pad-y,     0);
 
-  /* Disabled tone — two recipes (chosen visually). A (this default, for solid):
-     a flat pale tint, hue from accent, pinned L/C. B (color-mix of the enabled
-     fill toward the disabled surface) is set on the tonal/ghost/outline classes. */
+  /* Disabled tone. The FILL still has two recipes — a flat pale tint here for solid,
+     a mix toward --surface-disabled on tonal/ghost/outline — but the LABEL has one
+     for every variant, at 70% lightness.
+     Measured before changing it: the old pair (58% here, 52% on tonal/outline) sat
+     right where a saturated accent already is, so a disabled COLOURED button
+     differed from its live self by 1.16–1.60:1 — a hover's worth of change, on four
+     of the five variants. Only `color="neutral"` was ever safe, because its enabled
+     label is nearly black. 70% costs label legibility (2.1–2.7:1 against its own
+     ground, was 4.3–5.2) and buys the state being unmistakable, which is the trade
+     Stas picked from `presentations/disabled-recipe.html`. */
   --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, oklch(from var(--_button-accent) 92% 0.03 h));
-  --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 58% 0.035 h));
+  --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 70% 0.035 h));
   --_button-border-disabled: var(--ds-button-border-disabled, oklch(from var(--_button-accent) 86% 0.04 h));
 
   display: inline-flex;
@@ -192,7 +199,6 @@
     --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--c-muted-strong) 90%, black));
     --_button-accent: var(--_button-label-color);
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, color-mix(in srgb, var(--_button-bg-color) 28%, var(--surface-disabled)));
-    --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 52% 0.04 h));
   }
   &.v-ghost {
     --_button-bg-color:        var(--ds-button-bg-color,        transparent);
@@ -211,7 +217,6 @@
     --_button-bg-color-active: var(--ds-button-bg-color-active, var(--c-muted));
     --_button-accent: var(--_button-label-color);
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, color-mix(in srgb, var(--_button-bg-color) 28%, var(--surface-disabled)));
-    --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 52% 0.04 h));
     --_button-border-disabled: var(--ds-button-border-disabled, color-mix(in srgb, var(--_button-border) 55%, var(--surface-disabled)));
   }
 

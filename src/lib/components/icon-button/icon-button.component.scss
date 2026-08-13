@@ -30,13 +30,13 @@
   --_icon-button-radius: var(--ds-icon-button-radius, var(--ds-radius-control));
   --_icon-button-press-scale: var(--ds-icon-button-press-scale, 0.96);
 
-  /* Disabled tone — hand-picked per variant (mirrors ds-button): solid fills
-     (filled/selected) + chrome-less standard use recipe A (flat pale tint / boxless);
-     tonal + outlined use recipe B (color-mix of their fill). Icon = low-chroma
-     accent tint throughout. Base/standard stays boxless. */
+  /* Disabled tone, mirroring ds-button: the FILL differs per variant (pale tint for
+     filled, mix toward --surface-disabled for tonal/outlined, nothing for standard)
+     and the ICON has one recipe at 70% lightness. It matters more here than on
+     ds-button — there is no word to read, just a 16px glyph at 1.75px stroke. */
   --_icon-button-accent: var(--_icon-button-icon-color);
   --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, transparent);
-  --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, oklch(from var(--_icon-button-accent) 58% 0.035 h));
+  --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, oklch(from var(--_icon-button-accent) 70% 0.035 h));
   --_icon-button-border-disabled: var(--ds-icon-button-border-disabled, transparent);
 
   --_icon-button-size: var(--ds-icon-button-size, var(--hit-cozy));
