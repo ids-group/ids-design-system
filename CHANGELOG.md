@@ -57,6 +57,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   did. The three option types share a new exported `DsOption<T>` — they were three near-identical
   interfaces, which is exactly why `icon` existed on one picker for a release. Each keeps its own
   name (`SelectOption`, `MultiSelectOption`, `AutocompleteOption`), so nothing you import changes.
+  **One caveat the shared shape introduced:** `AutocompleteOption` now also inherits `disabled?: boolean`,
+  which it never had — but `ds-autocomplete` does not act on it yet. `ds-select` and `ds-multi-select` do
+  (they skip the option and block the click). Setting `disabled` on an autocomplete option compiles and
+  does nothing; treat it as not-yet-supported rather than broken.
 
 - **`maxVisibleChips="fit"` on `ds-autocomplete` and `ds-multi-select`** caps the chips by measured
   width instead of a count: one line holds as many as the trigger is wide, the rest collapse into
@@ -299,7 +303,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   things `ds-alert`'s variant drives, so a status dialog and a status alert on one screen cannot
   disagree. The default icon matters: a tint alone signals by colour only, which fails the
   don't-rely-on-colour rule. `icon` still overrides the pick, and `error`/`warning` default the
-  dialog to `alertdialog` (an explicit `dialogRole` still wins).
+  dialog to `alertdialog` (an explicit `dialogRole` still wins). `dialogRole` itself is now
+  `'dialog' | 'alertdialog' | null` and defaults to `null` rather than `'dialog'`, so "unset" is
+  distinguishable from a deliberate `dialog`; what renders is unchanged unless you set a status.
 
 - **Chips cap by width by default.** `maxVisibleChips` on `ds-autocomplete` and `ds-multi-select`
   now defaults to `"fit"` instead of "show everything": the trigger keeps as many chips as it is
@@ -348,10 +354,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the addon slots or the chevron. Drop the combinator or insert `.chip-row`. Chips carry `data-chip`
   and the marker `data-chip-overflow`; the measurement finds them that way, so leave them in place.
 
-- **If you EXTEND either picker**, `AutocompleteComponent` and `MultiSelectComponent` each gained
-  `fitsChipsToWidth`, `chipRow` and `chipsThatFit`; a subclass declaring any of those names now fails
-  with TS4114. Nothing was removed and no signature changed. Subclassing a DS component remains
-  unsupported, but this is the third release in a row where it broke someone, so it is stated.
+- **If you EXTEND a DS component, this is the release that will break you.** `npm run class-surface`
+  against 0.9.1 reports **27 exported classes whose member surface grew** — among them `ButtonComponent`,
+  `TableComponent`, `ModalComponent`, `SearchComponent`, `AvatarComponent`, `IconComponent`, both
+  pickers, and every control that gained `sizeResolved`. A subclass declaring any of those names now
+  fails with TS4114. **Four classes also LOST members**, which is the case a subclass notices differently
+  — an `override` that now overrides nothing: `ModalComponent.error` and `.onBackdrop`,
+  `ModalCardComponent.error`, `BottomSheetComponent.stop`, and `TableComponent.exporting` /
+  `.exportStatus` (those two still exist, but as public readonly signals rather than the protected
+  writables a subclass could set). Subclassing a DS component remains unsupported, and this is the third
+  release running where it broke someone, so it is stated in full rather than by example.
 
 ## 0.9.1 — 2026-08-10
 
