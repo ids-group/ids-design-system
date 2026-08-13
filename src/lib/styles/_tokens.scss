@@ -303,7 +303,7 @@
   --hit-min:   32px;   /* dense desktop default (alias of --hit-cozy-tier-0) */
   --hit-cozy:  40px;   /* default control height */
   --hit-comfy: 44px;   /* WCAG min for touch */
-  --hit-touch: 48px;   /* mobile-friendly — also used by floating-label fields */
+  --hit-touch: 48px;   /* mobile-friendly */
 
   --icon-2xs: 10px;
   --icon-xs:  12px;
@@ -437,11 +437,7 @@
   --field-h-sm:        var(--hit-min);
   --field-h-md:        var(--hit-cozy);
   --field-h-lg:        var(--hit-touch);
-  --field-h-floating:  var(--hit-touch);
   --field-textarea-min: 96px;
-  --field-floating-label-fs: var(--font-size-2xs);
-  --field-floating-label-lh: 14px;
-  --field-floating-label-top: 8px;
   --field-num-stepper-w: var(--space-8);
 
   /* OTP / PIN input — one box per digit. */
@@ -486,7 +482,6 @@
 
   /* Field internals */
   --field-textarea-rows-min: 60px;                   /* min-h for inline textarea inside the field wrapper */
-  --field-floating-pad-t:    18px;                   /* top padding when --floating, leaves room for label */
   --field-select-pad-r:      var(--space-6);             /* select chevron clearance */
   --field-affix-overlap:     var(--border-width-default);     /* affix bleed over field border */
 
@@ -680,7 +675,6 @@
   --badge-dot-size:    4px;
   --status-dot-size:   5px;
   --sidenav-w:         200px;
-  --field-floating-label-top: 4px;
   --segmented-btn-h:   20px;
 
   /* Ultra also compresses field + table padding (tighter than compact/comfy). */
@@ -705,7 +699,6 @@
   --badge-dot-size: 5px;
   --status-dot-size: 6px;
   --sidenav-w: 220px;
-  --field-floating-label-top: 6px;
   --segmented-btn-h: 24px;
 }
 [data-density="cozy"] {

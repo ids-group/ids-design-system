@@ -71,7 +71,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
     (config) => config.control?.size,
     'md' as DsSize,
   );
-  /** Label shown above the field, or inside it when `floating`. */
+  /** Label shown above the field. */
   readonly label = input<string>('');
   /** Helper text shown below the field. */
   readonly hint = input<string>('');
@@ -126,9 +126,6 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Shows a trailing spinner — e.g. async validation in flight. The input
    *  stays editable; pair with a `hint` like "Checking availability…". */
   readonly loading = input(false, { transform: booleanAttribute });
-  /** Floating-label variant — the label sits inside a taller control instead
-   *  of stacked above it. */
-  readonly floating = input(false, { transform: booleanAttribute });
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Shows an "(optional)" marker next to the label (ignored when `required`). */
@@ -298,9 +295,6 @@ export class InputComponent extends DsControlValueAccessor<string> {
     }
     if (this.loading()) {
       parts.push('loading');
-    }
-    if (this.floating()) {
-      parts.push('floating');
     }
 
     return parts.join(' ');

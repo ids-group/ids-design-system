@@ -1560,7 +1560,7 @@ export const DENSITY_HIT: readonly SizeRow[] = [
   {
     "name": "--hit-touch",
     "value": "48px",
-    "notes": "Mobile-friendly, floating-label fields."
+    "notes": "Mobile-friendly hit target."
   }
 ];
 
@@ -6938,33 +6938,8 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "color"
   },
   {
-    "name": "--field-floating-label-fs",
-    "value": "var(--font-size-2xs)",
-    "kind": "other"
-  },
-  {
-    "name": "--field-floating-label-lh",
-    "value": "14px",
-    "kind": "length"
-  },
-  {
-    "name": "--field-floating-label-top",
-    "value": "8px",
-    "kind": "length"
-  },
-  {
-    "name": "--field-floating-pad-t",
-    "value": "18px",
-    "kind": "length"
-  },
-  {
     "name": "--field-gap-req",
     "value": "var(--space-1)",
-    "kind": "length"
-  },
-  {
-    "name": "--field-h-floating",
-    "value": "var(--hit-touch)",
     "kind": "length"
   },
   {

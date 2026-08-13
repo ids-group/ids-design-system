@@ -2504,7 +2504,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Label shown above the field, or inside it when `floating`."
+        "description": "Label shown above the field."
       },
       {
         "name": "hint",
@@ -2622,15 +2622,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Shows a trailing spinner — e.g. async validation in flight. The input stays editable; pair with a `hint` like \"Checking availability…\"."
-      },
-      {
-        "name": "floating",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Floating-label variant — the label sits inside a taller control instead of stacked above it."
       },
       {
         "name": "required",
