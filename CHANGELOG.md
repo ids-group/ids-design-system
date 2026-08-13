@@ -10,6 +10,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **A capped chip trigger no longer grows a second line on a narrow screen.** Found by Stas testing the
+  docs on a phone: `[maxVisibleChips]="2"` honoured the count, ran out of width, and wrapped the text
+  input onto its own line — the exact growth the cap exists to prevent. **A number is now a CEILING**
+  ("at most N"), measured like `"fit"`, so a 412px trigger shows one chip and `+3 more` on one line
+  instead of two chips over two lines. `null` is unchanged and still the only mode that skips measuring.
+  Three faults sat behind it, all fixed: the trigger kept `flex-wrap: wrap` while capped, so the row
+  could never shrink — it just moved the input down; a squeezed chip wrapped its own label and stood
+  46px tall beside 29px neighbours; and the measurement's width cache only filled on a render holding
+  EVERY chip, which a numeric cap never produces — so the fit silently fell back to "show them all".
+  The `+N more` marker also keeps its room whenever the cap hides anything, instead of being clipped to
+  `+2 mor`.
+
 - **A `TableColumn` can say `width: 'content'`.** The column sizes to its widest cell and stops
   wrapping, so the slack goes to the columns that should absorb it. An auto-layout table spreads
   leftover width evenly, which is why a status or a figure ends up as wide as its own header while the
