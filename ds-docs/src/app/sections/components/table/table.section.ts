@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import { Component, ViewEncapsulation, computed, signal } from '@angular/core';
 import {
   BadgeComponent,
   ButtonComponent,
@@ -363,6 +363,45 @@ export class TableSection {
   ];
 
   protected readonly projectSelected = signal(new Set<string>());
+
+  protected readonly serverSortColumns: TableColumn<ProjectRow>[] = [
+    { key: 'project', label: 'Project', sortable: true },
+    { key: 'owner', label: 'Owner', sortable: true },
+    { key: 'status', label: 'Status', sortable: true },
+  ];
+  /** The host's own sort state, one-way bound into the table — a stand-in for the
+   *  computed over the URL a real list keeps. Its default is owner/desc, and a
+   *  cleared sort returns to it, which is the case that used to desync. */
+  protected readonly serverSortKey = signal<string>('owner');
+  protected readonly serverSortDir = signal<'asc' | 'desc' | null>('desc');
+  protected readonly serverSortedRows = computed<readonly ProjectRow[]>(() => {
+    const key = this.serverSortKey() as keyof ProjectRow;
+    const dir = this.serverSortDir();
+    const rows = this.projectRows.slice(0, 6);
+    if (!dir) {
+      return rows;
+    }
+
+    return rows.sort(
+      (left, right) =>
+        String(left[key]).localeCompare(String(right[key])) *
+        (dir === 'asc' ? 1 : -1),
+    );
+  });
+
+  protected onServerSort(event: {
+    key: string;
+    dir: 'asc' | 'desc' | null;
+  }): void {
+    if (!event.dir) {
+      this.serverSortKey.set('owner');
+      this.serverSortDir.set('desc');
+
+      return;
+    }
+    this.serverSortKey.set(event.key);
+    this.serverSortDir.set(event.dir);
+  }
 
   /** Slow on purpose: the demo is about the in-flight state an OUTSIDE button
    *  can now read, which a fetch that resolves at once never shows. */

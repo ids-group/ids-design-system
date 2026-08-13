@@ -5905,16 +5905,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       },
       {
         "name": "sortKey",
-        "kind": "model",
+        "kind": "input",
         "type": "string | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Column key currently sorted by; `null` when unsorted."
+        "description": "Column key currently sorted by; `null` when unsorted. Two-way bindable (`[(sortKey)]`) or one-way from your own state with `(sortChange)`."
       },
       {
         "name": "sortDir",
-        "kind": "model",
+        "kind": "input",
         "type": "SortDir",
         "union": [
           "asc",
@@ -6294,6 +6294,27 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ],
     "outputs": [
+      {
+        "name": "sortKeyChange",
+        "kind": "output",
+        "type": "string | null",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Emitted for `[(sortKey)]`. `sortChange` carries the same click with both halves at once, which is usually the one to listen to."
+      },
+      {
+        "name": "sortDirChange",
+        "kind": "output",
+        "type": "SortDir",
+        "union": [
+          "asc",
+          "desc"
+        ],
+        "default": null,
+        "required": false,
+        "description": "Emitted for `[(sortDir)]`."
+      },
       {
         "name": "exportFailed",
         "kind": "output",

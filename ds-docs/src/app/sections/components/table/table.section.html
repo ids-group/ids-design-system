@@ -1149,6 +1149,51 @@
   </ds-table>
 
   <h3 class="block-title t-h4">
+    Server sort · a host that answers with its own default
+  </h3>
+
+  <p class="block-desc t-s">
+    The shape a server-paged list actually has:
+    <code class="t-mono-inline">
+      [sortKey]
+    </code> and
+    <code class="t-mono-inline">
+      [sortDir]
+    </code> are bound ONE-WAY from the
+    host's own state (usually a computed over the URL), and
+    <code class="t-mono-inline">
+      (sortChange)
+    </code> is where it hears about a
+    click. This host's default is
+    <strong>
+      Owner descending
+    </strong>, and it answers a
+    cleared sort by returning to it — the case that used to leave the header
+    marking nothing over sorted rows.
+  </p>
+
+  <p class="block-desc t-s">
+    Third click on the same column clears it, so watch the header: after the clear
+    the highlight must land back on
+    <strong>
+      Owner ▼
+    </strong>. Host state:
+    <code class="t-mono-inline">
+      {{ serverSortKey() }} · {{ serverSortDir() ?? 'null' }}
+    </code>
+  </p>
+
+  <ds-table
+    caption="Projects"
+    sortMode="server"
+    [data]="serverSortedRows()"
+    [columns]="serverSortColumns"
+    [sortKey]="serverSortKey()"
+    [sortDir]="serverSortDir()"
+    (sortChange)="onServerSort($event)"
+  />
+
+  <h3 class="block-title t-h4">
     Column filters
   </h3>
 
