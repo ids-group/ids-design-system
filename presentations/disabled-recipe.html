@@ -1,0 +1,85 @@
+<title>Disabled recipe — a colourful ghost button</title>
+<link rel="stylesheet" href="ds.css">
+<style>
+  :root { color-scheme: light; }
+  body {
+    margin: 0; padding: var(--space-6);
+    background: var(--surface-default); color: var(--text-primary);
+    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  }
+  main { max-width: 1100px; margin: 0 auto; }
+  h1 { font: var(--font-weight-extrabold) var(--font-size-h3) / var(--line-height-tight) var(--font-sans); margin: 0 0 var(--space-2); }
+  h2 { font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans); margin: var(--space-6) 0 var(--space-2); }
+  p { max-width: 76ch; color: var(--text-secondary); }
+  b { color: var(--text-primary); }
+  table { border-collapse: collapse; width: 100%; margin-top: var(--space-3); }
+  th, td { border: 1px solid var(--border-default); padding: var(--space-3); vertical-align: top; text-align: left; }
+  thead th { background: var(--surface-secondary); font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans); }
+  tbody th { width: 21ch; font-weight: var(--font-weight-semibold); }
+  code { font: var(--font-weight-medium) var(--font-size-xs) / 1 var(--font-mono); }
+  .tok { display: block; color: var(--text-tertiary); font: var(--font-weight-regular) var(--font-size-2xs) / 1.7 var(--font-mono); }
+  .num { display: block; color: var(--text-tertiary); font: var(--font-weight-regular) var(--font-size-2xs) / 1.7 var(--font-mono); }
+  .pair { display: flex; gap: var(--space-2); align-items: center; }
+  .btn { padding: 6px 10px; border-radius: var(--radius-md); background: transparent;
+         font: var(--font-weight-semibold) var(--font-size-s) / 1 var(--font-sans); }
+  .btn.solid { border: 1px solid var(--border-default); }
+  .swatches { display: flex; gap: 4px; margin: var(--space-2) 0 4px; }
+  .swatches i { width: 34px; height: 14px; border-radius: 3px; border: 1px solid var(--border-default); }
+  .gap { font: var(--font-weight-bold) var(--font-size-2xs) / 1.8 var(--font-mono); }
+  .gap.ok { color: var(--success); }
+  .gap.weak { color: var(--warning); }
+  .gap.bad { color: var(--error); }
+  .note { border-left: 3px solid var(--primary); padding-left: var(--space-3); margin: var(--space-4) 0; }
+  .ask { border: 1px solid var(--primary); border-radius: var(--ds-radius-panel); padding: var(--space-4); margin: var(--space-5) 0; }
+</style>
+<main>
+<h1>Disabled, on a button with no fill</h1>
+
+<p>The report: a ghost <code>Clear</code> in a list toolbar reads as <b>enabled, just quieter</b> — the label
+stays fully legible and only the tint moves. Two things in the filed item turned out to be wrong, and both
+matter for the fix.</p>
+
+<p><b>It is not opacity.</b> <code>ds-button</code> and <code>ds-icon-button</code> never read
+<code>--opacity-muted</code> — their disabled state is a set of <code>oklch(from accent …)</code> colours. So
+the consumer override that retunes <code>--opacity-muted</code> on those two selectors changes nothing at
+all; it is a no-op, like the table-head background before it.</p>
+
+<p><b>And it is not every button.</b> The recipe pins the disabled label at <b>58% lightness</b>, which is
+roughly where a saturated accent already sits — so the two states differ in chroma alone. On
+<code>color="neutral"</code>, where the enabled label is nearly black, the same recipe is fine.</p>
+
+<div class="note"><b>How to read a cell.</b> Two words: the label enabled, then disabled. The swatches under
+them are those same two colours painted as gradients, so a force-dark browser cannot rewrite them. The last
+line is how far apart the two states are — under <b>1.8:1</b> the state is a guess.</div>
+
+<h2>The candidates, on a white surface</h2>
+
+<table>
+  <thead><tr><th>accent</th><th>A &middot; today<span class="tok">oklch(from accent 58% 0.035 h)</span></th><th>B &middot; neutral label, no accent<span class="tok">var(--text-disabled)</span></th><th>C &middot; same recipe, lighter<span class="tok">oklch(from accent 70% 0.035 h)</span></th></tr></thead>
+  <tbody><tr><th scope="row"><code>color="primary"</code><span class="tok">--primary-strong</span><span class="num">#1D43ED &middot; 6.85:1 on white</span></th><td><div class="pair"><span class="btn" style="color:#1D43ED">Clear</span><span class="btn" style="color:#707A90">Clear</span></div><div class="swatches"><i style="background-image:linear-gradient(#1D43ED,#1D43ED)"></i><i style="background-image:linear-gradient(#707A90,#707A90)"></i></div><div class="num">#707A90 &middot; 4.29:1 on white</div><div class="gap bad">enabled &harr; disabled 1.60:1</div></td><td><div class="pair"><span class="btn" style="color:#1D43ED">Clear</span><span class="btn" style="color:#9BA3B4">Clear</span></div><div class="swatches"><i style="background-image:linear-gradient(#1D43ED,#1D43ED)"></i><i style="background-image:linear-gradient(#9BA3B4,#9BA3B4)"></i></div><div class="num">#9BA3B4 &middot; 2.53:1 on white</div><div class="gap ok">enabled &harr; disabled 2.70:1</div></td><td><div class="pair"><span class="btn" style="color:#1D43ED">Clear</span><span class="btn" style="color:#949EB5">Clear</span></div><div class="swatches"><i style="background-image:linear-gradient(#1D43ED,#1D43ED)"></i><i style="background-image:linear-gradient(#949EB5,#949EB5)"></i></div><div class="num">#949EB5 &middot; 2.67:1 on white</div><div class="gap ok">enabled &harr; disabled 2.56:1</div></td></tr><tr><th scope="row"><code>color="neutral"</code><span class="tok">--text-primary</span><span class="num">#161A28 &middot; 17.32:1 on white</span></th><td><div class="pair"><span class="btn" style="color:#161A28">Clear</span><span class="btn" style="color:#737A90">Clear</span></div><div class="swatches"><i style="background-image:linear-gradient(#161A28,#161A28)"></i><i style="background-image:linear-gradient(#737A90,#737A90)"></i></div><div class="num">#737A90 &middot; 4.30:1 on white</div><div class="gap ok">enabled &harr; disabled 4.03:1</div></td><td><div class="pair"><span class="btn" style="color:#161A28">Clear</span><span class="btn" style="color:#9BA3B4">Clear</span></div><div class="swatches"><i style="background-image:linear-gradient(#161A28,#161A28)"></i><i style="background-image:linear-gradient(#9BA3B4,#9BA3B4)"></i></div><div class="num">#9BA3B4 &middot; 2.53:1 on white</div><div class="gap ok">enabled &harr; disabled 6.84:1</div></td><td><div class="pair"><span class="btn" style="color:#161A28">Clear</span><span class="btn" style="color:#969EB5">Clear</span></div><div class="swatches"><i style="background-image:linear-gradient(#161A28,#161A28)"></i><i style="background-image:linear-gradient(#969EB5,#969EB5)"></i></div><div class="num">#969EB5 &middot; 2.68:1 on white</div><div class="gap ok">enabled &harr; disabled 6.46:1</div></td></tr><tr><th scope="row"><code>color="error"</code><span class="tok">--error-text</span><span class="num">#BA1717 &middot; 6.51:1 on white</span></th><td><div class="pair"><span class="btn" style="color:#BA1717">Clear</span><span class="btn" style="color:#8E736F">Clear</span></div><div class="swatches"><i style="background-image:linear-gradient(#BA1717,#BA1717)"></i><i style="background-image:linear-gradient(#8E736F,#8E736F)"></i></div><div class="num">#8E736F &middot; 4.35:1 on white</div><div class="gap bad">enabled &harr; disabled 1.50:1</div></td><td><div class="pair"><span class="btn" style="color:#BA1717">Clear</span><span class="btn" style="color:#9BA3B4">Clear</span></div><div class="swatches"><i style="background-image:linear-gradient(#BA1717,#BA1717)"></i><i style="background-image:linear-gradient(#9BA3B4,#9BA3B4)"></i></div><div class="num">#9BA3B4 &middot; 2.53:1 on white</div><div class="gap ok">enabled &harr; disabled 2.57:1</div></td><td><div class="pair"><span class="btn" style="color:#BA1717">Clear</span><span class="btn" style="color:#B39792">Clear</span></div><div class="swatches"><i style="background-image:linear-gradient(#BA1717,#BA1717)"></i><i style="background-image:linear-gradient(#B39792,#B39792)"></i></div><div class="num">#B39792 &middot; 2.71:1 on white</div><div class="gap weak">enabled &harr; disabled 2.40:1</div></td></tr></tbody>
+</table>
+
+<h2>The same three candidates on a SOLID button</h2>
+
+<p>A solid or tonal button is the reason this cannot be one flat number: there the FILL carries the state and
+the label sits on a pale tint of the accent, so a label chosen for a white surface can vanish against it.</p>
+
+<table>
+  <thead><tr><th>accent</th><th>A &middot; today<span class="tok">oklch(from accent 58% 0.035 h)</span></th><th>B &middot; neutral label, no accent<span class="tok">var(--text-disabled)</span></th><th>C &middot; same recipe, lighter<span class="tok">oklch(from accent 70% 0.035 h)</span></th></tr></thead>
+  <tbody><tr><th scope="row"><code>color="primary"</code><span class="num">fill #DBE5F9</span></th><td><div class="pair"><span class="btn solid" style="background-image:linear-gradient(#DBE5F9,#DBE5F9);color:#707A90">Delete</span></div><div class="gap ok">label on fill 3.38:1</div></td><td><div class="pair"><span class="btn solid" style="background-image:linear-gradient(#DBE5F9,#DBE5F9);color:#9BA3B4">Delete</span></div><div class="gap weak">label on fill 2.00:1</div></td><td><div class="pair"><span class="btn solid" style="background-image:linear-gradient(#DBE5F9,#DBE5F9);color:#949EB5">Delete</span></div><div class="gap weak">label on fill 2.11:1</div></td></tr><tr><th scope="row"><code>color="neutral"</code><span class="num">fill #DDE4F9</span></th><td><div class="pair"><span class="btn solid" style="background-image:linear-gradient(#DDE4F9,#DDE4F9);color:#737A90">Delete</span></div><div class="gap ok">label on fill 3.39:1</div></td><td><div class="pair"><span class="btn solid" style="background-image:linear-gradient(#DDE4F9,#DDE4F9);color:#9BA3B4">Delete</span></div><div class="gap weak">label on fill 2.00:1</div></td><td><div class="pair"><span class="btn solid" style="background-image:linear-gradient(#DDE4F9,#DDE4F9);color:#969EB5">Delete</span></div><div class="gap weak">label on fill 2.11:1</div></td></tr><tr><th scope="row"><code>color="error"</code><span class="num">fill #F8DEDA</span></th><td><div class="pair"><span class="btn solid" style="background-image:linear-gradient(#F8DEDA,#F8DEDA);color:#8E736F">Delete</span></div><div class="gap ok">label on fill 3.40:1</div></td><td><div class="pair"><span class="btn solid" style="background-image:linear-gradient(#F8DEDA,#F8DEDA);color:#9BA3B4">Delete</span></div><div class="gap weak">label on fill 1.98:1</div></td><td><div class="pair"><span class="btn solid" style="background-image:linear-gradient(#F8DEDA,#F8DEDA);color:#B39792">Delete</span></div><div class="gap weak">label on fill 2.12:1</div></td></tr></tbody>
+</table>
+
+<div class="ask">
+<b>What each choice means.</b>
+<ol>
+  <li><b>B — neutral label where there is no fill.</b> One rule, and it says the honest thing: disabled is a
+  STATE, not a shade of the brand. It has to be scoped to the fill-less variants (ghost, text) — the solid
+  column above shows why applying it everywhere would be wrong.</li>
+  <li><b>C — keep the hue, raise the lightness.</b> Reads as the smaller change, one number in one place, and
+  it keeps the family feel. But it moves every variant at once, including the solid label on its 92% tint,
+  which is the pairing to check before shipping it.</li>
+  <li><b>A — today.</b> Correct on neutral, indistinguishable once the accent is saturated. That is exactly
+  the case that was reported, so leaving it means telling the consumer to override per colour.</li>
+</ol>
+</div>
+</main>

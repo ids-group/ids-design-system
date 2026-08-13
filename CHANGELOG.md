@@ -158,6 +158,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A disabled option was dimmed twice, and had nearly disappeared.** `ds-select`, `ds-date-picker`,
+  `ds-time-picker`, `ds-menu-item` and the shared dropdown row each set `--text-disabled` AND
+  `opacity: 0.6` on top of it. Measured in the light theme: that lands at **1.68:1** against the
+  surface, where the colour alone gives **2.53:1** and an enabled row sits at 11.15:1 — so the state was
+  never in danger of being missed, the text was. The opacity is gone from those five; the colour carries
+  the state, which is what it was chosen for. Where opacity IS the only signal — a disabled calendar day,
+  `ds-toggle-button` — it now reads `--opacity-disabled` (0.5) instead of `--opacity-muted` (0.6), the
+  token named for the job. **If you retuned `--opacity-muted` to compensate**, drop it: it is a
+  de-emphasis level for hints and secondary text, and it no longer carries any disabled state.
+
 - **`ds-table` lost the sort indicator when a host answered a cleared sort with its own default.** Third
   click clears a column, the host replies with its default sort, the rows come back ordered by it — and
   every header said `aria-sort="none"`. Not the table's arithmetic: Angular writes an input only when the
