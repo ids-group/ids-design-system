@@ -117,6 +117,21 @@
         "ds-field-group",
         "viewChild"
       ]
+    },
+    {
+      "id": "table-sort-inputs-no-longer-a-model",
+      "kind": "removed-api",
+      "old": "TableComponent.sortKey.set()",
+      "new": null,
+      "note": "ds-table's sortKey and sortDir changed from model() to an input() plus a matching output() (sortKeyChange / sortDirChange), so the component can tell a host's write apart from its own — the fix for the lost sort indicator. TEMPLATES ARE UNAFFECTED: [(sortKey)] and [(sortDir)] still work, one-way [sortKey] with (sortChange) still works, and a static sortKey=\"project\" still works. WHAT BREAKS is TypeScript access to the signal: table.sortKey.set(...) and table.sortDir.set(...) no longer exist, because an input is read-only. ACTION: keep the sort in your own state and bind it in — which every server-paged list already does — or listen to (sortChange) and write your own signal. Reading table.sortKey() still works and returns what the host bound.",
+      "searchHints": [
+        "sortKey.set",
+        "sortDir.set",
+        "sortKeyChange",
+        "sortDirChange",
+        "ds-table",
+        "sortChange"
+      ]
     }
   ],
   "informational": [
@@ -154,6 +169,7 @@
     "ds-modal and ds-bottom-sheet no longer dismiss when the mouse is RELEASED on the backdrop after a press that started inside the dialog (selecting text and letting go past the edge, or overshooting a slider). Their backdrop wraps the dialog, so the browser fires click at the nearest common ancestor - the backdrop itself - which the target===currentTarget guard could not tell apart. Dismissal now requires the press AND the release to land on the backdrop. Nothing to do on adoption. ONE EXCEPTION: a test that dismisses a dialog with backdropElement.click() must now dispatch pointerdown + pointerup on the backdrop; a real mouse or touch always sends both. ds-drawer and the ModalService confirm were never affected - their scrim is a sibling of the panel - and are unchanged.",
     "ds-table gained one projection slot, [toolbar], for controls that act on THAT table (a search box, a status filter, a refresh) — the row the export button already lived in, which until now existed only while exportButton was on. Project several controls and the row lays them out (flex, wrap, 8px gap); project a single element of your own and it takes the full row width, so your own layout is the only one in play. Purely additive: the row removes itself when nothing filled it and exportButton is off, so a table that uses neither renders exactly as before. Page-level filters still belong in a ds-filter-bar above the table.",
     "ds-table now exposes runExport(), exporting() and exportStatus() publicly, so an Export button placed anywhere (page header, filter bar, the new toolbar slot) runs the same path as the built-in one: the exportFetcher call, the download, the in-flight state and the live-region announcement. DELETE-LIST: a consumer button wired to exportCsv() on a SERVER-PAGED table was exporting one page — exportCsv serialises the rows the table holds. Switch it to runExport() and pass exportFetcher.",
-    "ds-table no longer renders its empty row while loading is anything but false. Previously only loading=\"skeleton\" suppressed it, so an overlay reload with zero rows painted the empty state under the spinner. Nothing to do on adoption, and you can delete the @if(!loading) guard around your own empty template — worth checking whether you have one at all: of one consumer 14 overlay-loading tables, 9 shipped \"no rows\" copy during a load."
+    "ds-table no longer renders its empty row while loading is anything but false. Previously only loading=\"skeleton\" suppressed it, so an overlay reload with zero rows painted the empty state under the spinner. Nothing to do on adoption, and you can delete the @if(!loading) guard around your own empty template — worth checking whether you have one at all: of one consumer 14 overlay-loading tables, 9 shipped \"no rows\" copy during a load.",
+    "ds-table no longer loses its sort indicator when a host answers a cleared sort with its own default. Angular writes an input only when the bound expression changed (it diffs against the last value it wrote, which an internal .set() never updates), so whichever half of the host default equalled the last bound value was skipped: a host defaulting to desc had its desc dropped and the header marked nothing over sorted rows, while a host defaulting to asc was restored — the reason the same three clicks worked on one screen and not another. The marked state is now a linkedSignal over BOTH inputs. Nothing to do on adoption; you can delete any workaround that re-bound the sort after a clear."
   ]
 }

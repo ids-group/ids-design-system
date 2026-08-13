@@ -148,6 +148,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **`ds-table` lost the sort indicator when a host answered a cleared sort with its own default.** Third
+  click clears a column, the host replies with its default sort, the rows come back ordered by it — and
+  every header said `aria-sort="none"`. Not the table's arithmetic: Angular writes an input only when the
+  bound EXPRESSION changed, diffing against the last value it wrote, which an internal `.set()` never
+  updates. So the half of the default that equalled what was last bound was skipped — a host defaulting
+  to `owner`/`desc` had its `desc` dropped and stayed at `null`, while a host defaulting to `asc` was
+  restored. That is exactly why the same three clicks worked on one screen and not another. The marked
+  state is now a `linkedSignal` over BOTH inputs, so a change in either re-seeds the pair and the
+  direction arrives with the key. **Verified against both reported screens** by replaying them through
+  Angular's real signal graph with the binding diff modelled: the old shape fails the first and passes
+  the second, the new one passes both. A table that binds neither input is unaffected.
+
 - **`ds-table` painted its empty state while the first read was still in flight.** Only
   `loading="skeleton"` suppressed the empty row, and `overlay` is the mode a list uses on every read
   after the first — so a zero-row reload showed "No records match your filters" or a whole
@@ -203,6 +215,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   rather than described.
 
 ### Changed
+
+- **`ds-table`'s `sortKey` and `sortDir` are an `input` + `output` pair instead of a `model`** — the
+  mechanism behind the indicator fix above, because a `model` cannot tell a host's write apart from the
+  table's own. **Templates are unaffected:** `[(sortKey)]` still works (`sortKeyChange` and
+  `sortDirChange` are emitted), one-way `[sortKey]` with `(sortChange)` still works, and a static
+  `sortKey="project"` still works. What breaks is reaching into the component in TypeScript:
+  `table.sortKey.set(…)` no longer exists — drive it from your own state and bind it, which is what every
+  server-paged list already does. Reading `table.sortKey()` still works and now returns what the host
+  bound; the marked state the header renders is internal.
 
 - **`ds-modal` / `ds-modal-card`: `error: boolean` → `status: DsStatus`.** A boolean could not express
   a warning or an info dialog, and the rest of the library settled on the `DsStatus` vocabulary in
