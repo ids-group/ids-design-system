@@ -5836,15 +5836,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "loading",
         "kind": "input",
-        "type": "false | 'skeleton' | 'overlay'",
-        "union": [
-          "false",
-          "skeleton",
-          "overlay"
-        ],
+        "type": "boolean | 'skeleton' | 'overlay'",
+        "union": null,
         "default": "false",
         "required": false,
-        "description": "false — no loading state. 'skeleton' — first-load placeholder; rows are replaced with shimmer rows that read the global --skeleton-shimmer-x driver. 'overlay' — re-fetch indicator; existing rows stay visible behind a translucent overlay with a centred spinner."
+        "description": "false — no loading state. `true` — the table picks: skeleton rows while it has nothing to show, overlay once rows are on screen. Prefer this; which one is right is a function of the row count, and the table is the only place holding both halves of that. 'skeleton' — first-load placeholder; rows are replaced with shimmer rows that read the global --skeleton-shimmer-x driver. 'overlay' — re-fetch indicator; existing rows stay visible behind a translucent overlay with a centred spinner. Pin either one only to override the rule deliberately."
       },
       {
         "name": "stickyHeader",
