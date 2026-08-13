@@ -79,9 +79,9 @@ const DEFAULT_PRESETS: readonly string[] = [
     },
   ],
   host: {
+    '[attr.data-field-state]': 'controlState()',
     '[class.open]': 'open()',
     '[class.disabled]': 'isDisabled()',
-    '[class.invalid]': 'invalidResolved()',
   },
 })
 export class ColorPickerComponent
@@ -176,6 +176,7 @@ export class ColorPickerComponent
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
   protected readonly isDisabled = computed(

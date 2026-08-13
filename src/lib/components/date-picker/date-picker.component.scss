@@ -3,6 +3,7 @@
 @use '../../styles/field-label' as field-label;
 @use '../../styles/field-box' as field-box;
 @use '../../styles/field-group-segment' as field-group-segment;
+@use '../../styles/field-state' as field-state;
 
 :host {
   --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
@@ -125,11 +126,6 @@
 
     padding: 0 var(--space-4);
     font-size: var(--font-size-m);
-  }
-
-  &.error {
-    background: var(--error-subtitle);
-    border-color: var(--error);
   }
 
   &.disabled,
@@ -516,3 +512,7 @@
 :host(.in-group) {
   @include field-group-segment.field-group-segment('.trigger');
 }
+
+@include field-state.field-state(
+  '.trigger',
+);

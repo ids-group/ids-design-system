@@ -53,7 +53,10 @@ import { resolveWithConfig } from '../../core/config-defaults';
   selector: 'ds-select',
   standalone: true,
   imports: [IconComponent, NgTemplateOutlet, FieldMessageComponent],
-  host: { '[class.in-group]': 'inGroup' },
+  host: {
+    '[attr.data-field-state]': 'controlState()',
+    '[class.in-group]': 'inGroup',
+  },
   templateUrl: './select.component.html',
   styleUrl: './select.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -168,6 +171,7 @@ export class SelectComponent
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
   protected optionId(flatIndex: number): string {
     return `${this.uid}-opt-${flatIndex}`;
@@ -284,7 +288,11 @@ export class SelectComponent
   }
 
   protected toggle(): void {
-    if (this.isDisabled() || this.isReadOnly() || this.preview.staticPreview()) {
+    if (
+      this.isDisabled() ||
+      this.isReadOnly() ||
+      this.preview.staticPreview()
+    ) {
       return;
     }
     if (this.open()) {
@@ -373,7 +381,11 @@ export class SelectComponent
   }
 
   protected onTriggerKeydown(event: KeyboardEvent): void {
-    if (this.isDisabled() || this.isReadOnly() || this.preview.staticPreview()) {
+    if (
+      this.isDisabled() ||
+      this.isReadOnly() ||
+      this.preview.staticPreview()
+    ) {
       return;
     }
     // Only handle keys aimed at the trigger itself — a keydown bubbling up from

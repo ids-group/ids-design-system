@@ -49,6 +49,9 @@ import { resolveReserveMessage } from '../field-defaults';
   imports: [IconComponent, TagComponent, FieldMessageComponent],
   templateUrl: './multi-select.component.html',
   styleUrl: './multi-select.component.scss',
+  host: {
+    '[attr.data-field-state]': 'controlState()',
+  },
   encapsulation: ViewEncapsulation.Emulated,
   providers: [
     {
@@ -235,6 +238,7 @@ export class MultiSelectComponent
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
   // Select-all reflects the currently filter-matching, enabled options.

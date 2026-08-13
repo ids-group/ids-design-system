@@ -3,6 +3,7 @@
    declared on both :host (the trigger) and .panel — custom properties inherit
    down the DOM tree, which the portaled panel is not part of. */
 @use '../../styles/field-box' as field-box;
+@use '../../styles/field-state' as field-state;
 
 :host,
 .panel {
@@ -83,10 +84,6 @@
 
 :host(.open) .trigger .chevron {
   transform: rotate(180deg);
-}
-
-:host(.invalid) .trigger {
-  border-color: var(--error);
 }
 
 .panel {
@@ -246,3 +243,7 @@
     outline-offset: var(--border-width-strong);
   }
 }
+
+@include field-state.field-state(
+  '.trigger',
+);

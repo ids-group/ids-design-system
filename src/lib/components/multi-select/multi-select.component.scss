@@ -1,5 +1,6 @@
 @use '../../styles/field-box' as field-box;
 @use '../../styles/chip-row' as chip-row;
+@use '../../styles/field-state' as field-state;
 
 :host {
   // Flex column + gap so the hint/error (ds-field-message) sits the canonical
@@ -63,10 +64,6 @@
     outline: none;
     border-color: var(--_trigger-border-color-focus);
     box-shadow: var(--accent-focus-field);
-  }
-
-  &.invalid {
-    border-color: var(--error);
   }
 
   &.disabled {
@@ -242,3 +239,7 @@
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   text-align: center;
 }
+
+@include field-state.field-state(
+  '.field-trigger',
+);

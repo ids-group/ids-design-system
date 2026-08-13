@@ -1,6 +1,7 @@
 @use '../../styles/press' as press;
 @use '../../styles/field-label' as field-label;
 @use '../../styles/field-box' as field-box;
+@use '../../styles/field-state' as field-state;
 
 :host {
   --_time-picker-focus-shadow: var(
@@ -121,11 +122,6 @@
     font-size: var(--font-size-m);
   }
 
-  &.error {
-    background: var(--error-subtitle);
-    border-color: var(--error);
-  }
-
   &.disabled,
   &:disabled {
     background: var(--surface-disabled);
@@ -228,3 +224,7 @@
     box-shadow: var(--_time-picker-focus-shadow);
   }
 }
+
+@include field-state.field-state(
+  '.trigger',
+);

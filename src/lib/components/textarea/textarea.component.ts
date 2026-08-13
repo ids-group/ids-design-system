@@ -32,6 +32,9 @@ import { resolveWithConfig } from '../../core/config-defaults';
   imports: [FormsModule, FieldMessageComponent, FieldClickFocusDirective],
   templateUrl: './textarea.component.html',
   styleUrl: './textarea.component.scss',
+  host: {
+    '[attr.data-field-state]': 'controlState()',
+  },
   encapsulation: ViewEncapsulation.Emulated,
   providers: [
     {
@@ -136,9 +139,16 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     transform: optionalBound,
   });
   /** Native `pattern` attribute — signal forms sends the schema's RegExp list. */
-  readonly pattern = input<readonly RegExp[], readonly RegExp[] | string | undefined>([], {
+  readonly pattern = input<
+    readonly RegExp[],
+    readonly RegExp[] | string | undefined
+  >([], {
     transform: (value) =>
-      value === undefined ? [] : typeof value === 'string' ? [new RegExp(value)] : value,
+      value === undefined
+        ? []
+        : typeof value === 'string'
+          ? [new RegExp(value)]
+          : value,
   });
   /** A native `pattern` takes ONE expression; the schema can carry several, so
    *  they are ANDed with lookaheads rather than silently dropping all but one. */
@@ -148,7 +158,10 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
       return null;
     }
 
-    return expressions.map((expression) => `(?=${expression.source})`).join('') + '.*';
+    return (
+      expressions.map((expression) => `(?=${expression.source})`).join('') +
+      '.*'
+    );
   });
   protected readonly uid = nextControlId('ds-textarea');
   protected readonly hintId = computed(() =>
@@ -164,6 +177,7 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
   protected readonly resolvedAriaLabel = computed(() =>
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,

@@ -4,6 +4,7 @@
 @use '../../styles/field-label' as field-label;
 @use '../../styles/field-box' as field-box;
 @use '../../styles/field-group-segment' as field-group-segment;
+@use '../../styles/field-state' as field-state;
 
 :host {
   /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
@@ -174,23 +175,6 @@
     input { cursor: default; }
   }
 
-  &.error {
-    .control {
-      background-color: var(--_input-bg-color-error);
-      border-color: var(--_input-border-error);
-
-      &:focus-within {
-        box-shadow: var(--_input-focus-shadow-error);
-      }
-    }
-  }
-
-  &.success {
-    .control {
-      border-color: var(--_input-border-success);
-    }
-  }
-
   &.sm .control {
     @include field-box.field-box-height(sm);
 
@@ -278,3 +262,11 @@
 :host(.in-group) {
   @include field-group-segment.field-group-segment('.control');
 }
+
+@include field-state.field-state(
+  '.control',
+    $error-border: var(--_input-border-error),
+    $error-bg: var(--_input-bg-color-error),
+    $error-focus-shadow: var(--_input-focus-shadow-error),
+    $success-border: var(--_input-border-success),
+);

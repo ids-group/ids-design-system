@@ -411,6 +411,17 @@
     second adds a warning and the third adds both.
   </p>
 
+  <p class="block-desc t-s">
+    The control paints the state too, not only the line under it. An error takes a
+    red border AND a tinted fill because it blocks submission; a warning and a
+    success take the border alone, so an error still reads as the loudest thing in
+    a form holding all three. One rule drives all nine bordered fields, off a
+    <code class="t-mono-inline">
+      data-field-state
+    </code> attribute on the host —
+    style against that attribute rather than a class if you need to extend it.
+  </p>
+
   <div class="grid-3">
     <ds-input
       label="Hint only"

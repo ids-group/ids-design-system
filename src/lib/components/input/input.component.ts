@@ -40,7 +40,10 @@ import { resolveWithConfig } from '../../core/config-defaults';
     FieldMessageComponent,
     FieldClickFocusDirective,
   ],
-  host: { '[class.in-group]': 'inGroup' },
+  host: {
+    '[attr.data-field-state]': 'controlState()',
+    '[class.in-group]': 'inGroup',
+  },
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -57,7 +60,6 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */
   protected readonly inGroup = inFieldGroup();
-
 
   /** Text value, two-way bound. */
   readonly value = model<string>('');
@@ -166,9 +168,16 @@ export class InputComponent extends DsControlValueAccessor<string> {
     transform: optionalBound,
   });
   /** Native `pattern` attribute — signal forms sends the schema's RegExp list. */
-  readonly pattern = input<readonly RegExp[], readonly RegExp[] | string | undefined>([], {
+  readonly pattern = input<
+    readonly RegExp[],
+    readonly RegExp[] | string | undefined
+  >([], {
     transform: (value) =>
-      value === undefined ? [] : typeof value === 'string' ? [new RegExp(value)] : value,
+      value === undefined
+        ? []
+        : typeof value === 'string'
+          ? [new RegExp(value)]
+          : value,
   });
   /** Mobile keyboard hints — forwarded to the native input as attributes. */
   readonly enterKeyHint = input<
@@ -219,7 +228,10 @@ export class InputComponent extends DsControlValueAccessor<string> {
       return null;
     }
 
-    return expressions.map((expression) => `(?=${expression.source})`).join('') + '.*';
+    return (
+      expressions.map((expression) => `(?=${expression.source})`).join('') +
+      '.*'
+    );
   });
   protected readonly uid = nextControlId('ds-input');
   protected readonly hintId = computed(() =>
@@ -241,6 +253,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
   /** Only name via aria-label when there's no visible `<label for>`. */
   protected readonly resolvedAriaLabel = computed(() =>

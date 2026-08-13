@@ -59,6 +59,7 @@ let nextId = 0;
   styleUrl: './autocomplete.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   host: {
+    '[attr.data-field-state]': 'controlState()',
     '[class.in-group]': 'inGroup',
     '[class.content-width]': "width() === 'content'",
   },
@@ -176,6 +177,7 @@ export class AutocompleteComponent<T = unknown>
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
   protected readonly query = signal('');

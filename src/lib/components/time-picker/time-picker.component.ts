@@ -75,7 +75,10 @@ let nextId = 0;
       multi: true,
     },
   ],
-  host: { '[class.full-width]': 'fullWidth()' },
+  host: {
+    '[attr.data-field-state]': 'controlState()',
+    '[class.full-width]': 'fullWidth()',
+  },
 })
 export class TimePickerComponent
   extends DsControlValueAccessor<string | TimeRangeValue | null>
@@ -199,6 +202,7 @@ export class TimePickerComponent
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
   protected readonly resolvedFormat = computed<TimeFormat>(
     () => this.format() ?? this.config.timePicker?.format ?? '24h',

@@ -4,6 +4,7 @@
 @use '../../styles/field-box' as field-box;
 @use '../../styles/chip-row' as chip-row;
 @use '../../styles/field-group-segment' as field-group-segment;
+@use '../../styles/field-state' as field-state;
 
 :host {
   --_autocomplete-focus-shadow: var(--ds-autocomplete-focus-shadow, var(--ds-field-focus-shadow));
@@ -78,8 +79,6 @@
     box-shadow: var(--_autocomplete-focus-shadow);
     outline: 0;
   }
-
-  &.error { border-color: var(--border-error); }
 
   &.disabled {
     background: var(--surface-disabled);
@@ -259,3 +258,7 @@
 :host(.in-group) {
   @include field-group-segment.field-group-segment('.autocomplete-trigger');
 }
+
+@include field-state.field-state(
+  '.autocomplete-trigger',
+);

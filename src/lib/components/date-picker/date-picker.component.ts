@@ -110,7 +110,11 @@ interface DayCell {
       multi: true,
     },
   ],
-  host: { '[class.in-group]': 'inGroup', '[class.full-width]': 'fullWidth()' },
+  host: {
+    '[attr.data-field-state]': 'controlState()',
+    '[class.in-group]': 'inGroup',
+    '[class.full-width]': 'fullWidth()',
+  },
 })
 export class DatePickerComponent
   extends DsControlValueAccessor<Date | RangeValue | null>
@@ -309,6 +313,7 @@ export class DatePickerComponent
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
   protected readonly resolvedLocale = computed(

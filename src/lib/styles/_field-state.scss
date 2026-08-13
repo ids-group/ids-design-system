@@ -1,0 +1,50 @@
+// How a field's control paints its validation state.
+//
+// ONE definition for all nine bordered fields, keyed off `data-field-state` on
+// the host — the attribute every field binds from `resolveFieldMessage`'s
+// `controlState`. Before this each component wrote its own rules and they had
+// drifted apart: five spelled the error box as border + tinted fill, four as a
+// border alone, `ds-autocomplete` reached for a `--border-error` token that does
+// not exist (so an invalid autocomplete drew a near-black border), and three
+// different selectors — `.error` on the wrapper, `:host(.invalid)`, `&.invalid`
+// on the box — meant the same thing.
+//
+// The ladder is deliberate: an error blocks submission and gets border + fill,
+// while warning and success are advisory and get the border only, so an error
+// still reads as the loudest thing in a form that has all three. Stas chose
+// border-only on 2026-08-13; the tinted-fill variant is parked in docs/todo.md.
+//
+// `$box` is the component's bordered element — `.control`, `.trigger`, `.cell`.
+// The colour arguments exist so a component that already publishes its own
+// override tokens (`--ds-input-bg-color-error`, `--ds-select-focus-shadow-error`,
+// shipped since 0.7.x) keeps them: it passes its private resolver and the
+// consumer's override still wins. Everything else takes the family token.
+@mixin field-state(
+  $box,
+  $error-border: var(--error),
+  $error-bg: var(--error-subtitle),
+  $error-focus-shadow: var(--ds-field-focus-shadow-error),
+  $warning-border: var(--warning-text),
+  $success-border: var(--success)
+) {
+  :host([data-field-state='error']) #{$box} {
+    border-color: #{$error-border};
+    background-color: #{$error-bg};
+
+    &:focus-within,
+    &:focus-visible {
+      box-shadow: #{$error-focus-shadow};
+    }
+  }
+
+  // --warning is yellow-400, 1.47:1 against a white field — invisible as a
+  // boundary, where WCAG 1.4.11 asks 3:1. --warning-text (yellow-700) is the
+  // first rung of the ramp that clears it, at 4.59:1.
+  :host([data-field-state='warning']) #{$box} {
+    border-color: #{$warning-border};
+  }
+
+  :host([data-field-state='success']) #{$box} {
+    border-color: #{$success-border};
+  }
+}

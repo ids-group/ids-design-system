@@ -39,9 +39,9 @@ export type OtpMode = 'numeric' | 'alphanumeric';
     },
   ],
   host: {
+    '[attr.data-field-state]': 'controlState()',
     role: 'group',
     '[attr.aria-label]': 'ariaLabel()',
-    '[class.invalid]': 'invalidResolved()',
     '[attr.aria-describedby]': 'hintId()',
   },
 })
@@ -106,6 +106,7 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
   protected readonly isDisabled = computed(

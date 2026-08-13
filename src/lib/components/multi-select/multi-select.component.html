@@ -4,7 +4,6 @@
   aria-haspopup="listbox"
   [attr.role]="open() ? 'group' : 'combobox'"
   [class.open]="open()"
-  [class.invalid]="invalidResolved()"
   [class.disabled]="isDisabled()"
   [attr.aria-invalid]="invalidResolved() ? 'true' : null"
   [attr.aria-describedby]="hintId()"

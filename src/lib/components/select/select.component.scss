@@ -7,6 +7,7 @@
 @use '../../styles/field-label' as field-label;
 @use '../../styles/field-box' as field-box;
 @use '../../styles/field-group-segment' as field-group-segment;
+@use '../../styles/field-state' as field-state;
 
 :host {
   --_select-focus-shadow: var(--ds-select-focus-shadow, var(--ds-field-focus-shadow));
@@ -120,15 +121,6 @@
     }
   }
 
-  &.error {
-    background: var(--error-subtitle);
-    border-color: var(--error);
-
-    &:focus-visible {
-      box-shadow: var(--_select-focus-shadow-error);
-    }
-  }
-
   &.readonly {
     background: var(--surface-secondary);
     border-color: var(--border-divider);
@@ -174,3 +166,8 @@
 :host(.in-group) {
   @include field-group-segment.field-group-segment('.dropdown');
 }
+
+@include field-state.field-state(
+  '.dropdown',
+    $error-focus-shadow: var(--_select-focus-shadow-error),
+);
