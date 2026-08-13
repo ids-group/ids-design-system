@@ -10,6 +10,24 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-table` has a toolbar row you can put things in — `[toolbar-start]` and `[toolbar-end]`.** The
+  component had two projection slots in total (`[empty]`, `[bulk-actions]`) and its toolbar existed only
+  while `exportButton` was on, so a control that acts on THIS table — a search box, a status filter, a
+  refresh — had nowhere to sit next to Export. A consumer forked the table for exactly this and invented
+  `dtToolbarStart`; retiring the fork pushed two screens' filter rows out of the table and onto the page,
+  where a search + status pair reads as page furniture one card away from the rows it narrows. The table
+  owns the row's layout, and the row **takes itself out** when both slots are empty and `exportButton` is
+  off, so a table that uses neither is pixel-identical. Filters that belong to the PAGE still belong in a
+  `ds-filter-bar` above it.
+
+- **`runExport()`, `exporting()` and `exportStatus()` are public**, so the Export button can live in a
+  page header, a filter bar or the new toolbar slot and still run the library's path — the
+  `exportFetcher` call, the download, the in-flight state and the live-region announcement. Until now the
+  only public export method was `exportCsv()`, which serialises the rows the table HOLDS: on a
+  server-paged grid that is one page, so a consumer's own button silently exported a fraction of the
+  data. Leave `exportButton` off and drive it yourself:
+  `<ds-button [loading]="table.exporting()" (pressed)="table.runExport()">`.
+
 - **`provideDsConfig` answers six more inputs, so an app stops restating itself.** New sections:
   `control.size` (honoured by button, icon-button, input, textarea, select, autocomplete, search,
   date/time picker, number stepper, checkbox, radio, switch and field-group), `card.elevation`,
@@ -128,6 +146,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   it sits at `.link`'s own specificity and your rule still wins on source order.
 
 ### Fixed
+
+- **`ds-table` painted its empty state while the first read was still in flight.** Only
+  `loading="skeleton"` suppressed the empty row, and `overlay` is the mode a list uses on every read
+  after the first — so a zero-row reload showed "No records match your filters" or a whole
+  `ds-empty-state` CTA underneath the spinner. The empty row is a claim about the data ("there are
+  none"), so it is now withheld whenever `loading` is anything but `false`. **You can delete the guard
+  you wrote for this** — and check the ones you did not write: of one consumer's 14 overlay-loading
+  tables, 9 were shipping the sentence during a load, because branching failure-vs-empty looks complete
+  while saying nothing about loading. If you deliberately want copy during a load, that is what the
+  `[empty]` slot's own content plus `loading="skeleton"` express.
 
 - **Releasing the mouse on the backdrop closed `ds-modal` and `ds-bottom-sheet`, even when the press
   started inside the dialog.** Select a sentence in the body and let go past the edge, or overshoot with

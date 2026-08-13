@@ -51,8 +51,9 @@
   would have moved more elements wrongly than rightly, which is exactly what shipping the CONFIG rather
   than a new default avoids: the app states its own opinion and the exceptions stay visible as bindings.
 
-- [ ] **[P2] The export a consumer CAN trigger is not the export the table's own button runs (found
-  2026-08-12, asking whether Export could move out of the table).** Two methods, and only the wrong one is
+- [x] **DONE 2026-08-13 — [P2] The export a consumer CAN trigger is not the export the table's own button runs (found
+  2026-08-12, asking whether Export could move out of the table).**
+  **SHIPPED as asked, all additive:** `runExport()` is public and `exporting` / `exportStatus` are public readonly signals, so `exportButton="false"` plus `<ds-button [loading]="table.exporting()" (pressed)="table.runExport()">` covers every placement. `exportCsv()`'s doc comment was also lying in the other direction — it claimed "all rows, not just the current page", which is only true of a client-held table; it now says it serialises the rows the table HOLDS and points at `runExport()`. Two methods, and only the wrong one is
   reachable: `exportCsv(filename?, rows?)` is public but serialises `sortedData()` in the browser — on a
   server-paged grid that is one page, which the input's own doc comment admits ("current page, so exporting
   without this silently exports one page"). `runExport()` is the one that awaits `exportFetcher`, downloads
@@ -68,8 +69,9 @@
   covers every placement, and the fetch/download/announce path stays the library's — which is the whole
   reason the consumer stopped forking it.
 
-- [ ] **[P2] `ds-table` shows its `emptyTemplate` while the first read is still in flight, so every
-  consumer writes the same guard inside its own template (found 2026-08-12).** The base's body is
+- [x] **DONE 2026-08-13 — [P2] `ds-table` shows its `emptyTemplate` while the first read is still in flight, so every
+  consumer writes the same guard inside its own template (found 2026-08-12).**
+  **SHIPPED the first of the two options offered: the empty row is skipped whenever `loading !== false`**, not just under `skeleton`. Took that over the `let-loading` context because the empty row is a CLAIM about the data and a library should not make a false one and then offer to let the app phrase it — a consumer who genuinely wants copy during a load has `loading="skeleton"` plus their own content. Documented as empty-state variant (e) in ds-docs, with the 9-of-14 count beside it. The base's body is
   `@if (isSkeletonLoading()) { skeletons } @else if (!filteredData().length) { emptyTemplate } @else
   { rows }` — so **only `loading="skeleton"` suppresses the empty row**. With `loading="overlay"`, the
   mode a list uses once it has been loaded at least once, a zero-row load paints the empty state *under*
@@ -543,8 +545,9 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   **`ds-select` DOES support it.** `SelectOption` has `icon?: IconName`, and the component renders it twice — `.trigger-icon` beside the chosen value and `.option-icon` at 16px in each row. So for a SINGLE choice the pattern already ships.
   **`ds-multi-select` and `ds-autocomplete` do NOT.** `MultiSelectOption` is `{ label, value, disabled? }` and `AutocompleteOption` is `{ value, label }` — no icon field, and every `ds-icon` in their templates is chrome: the chevron, the panel's search glyph, the checkbox tick, and (autocomplete) the selected check mark. Nothing renders a per-option glyph.
 
-- [ ] **[P2] `ds-table` has nowhere to put a filter row — and now that the fork is gone, two screens pay
-  for it (updated 2026-08-12, Stas asked for the slot explicitly).** The component has **two projection
+- [x] **DONE 2026-08-13 — [P2] `ds-table` has nowhere to put a filter row — and now that the fork is gone, two screens pay
+  for it (updated 2026-08-12, Stas asked for the slot explicitly).**
+  **SHIPPED as TWO slots, `[toolbar-start]` and `[toolbar-end]`**, rather than one: the export button already owns the right edge, so a single `[toolbar]` would have made every consumer re-solve which side their control goes on. The row is now always in the markup and removes ITSELF — `:not(:has(.toolbar-start > *, .toolbar-end > *))` — so a table using neither slot with `exportButton` off is pixel-identical and pays no margin. Verified in a browser: of 35 tables in ds-docs exactly 2 show the row. The component has **two projection
   slots in total**, re-measured from the compiled component rather than assumed: `[empty]` (the fallback
   when `emptyTemplate` is unbound) and `[bulk-actions]`. Nothing else about it is projectable, and its only
   toolbar is a `.table-toolbar` div that **exists only while `exportButton` is set** — so the row is not
