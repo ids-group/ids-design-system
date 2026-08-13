@@ -120,23 +120,23 @@ Every entry below names its exported class (`ButtonComponent`, `TableComponent<T
 
 **The `--ds-*` token contract, once for every component below.** Every public `--ds-<component>-*` token is READ WITH A FALLBACK and never declared by the component, so a consumer's value always wins and always inherits: set it on the host (`ds-button { --ds-button-bg-color: teal }`), on any ancestor, at `:root`, or inline. Unset tokens fall through to the component's own default, so there is nothing to opt into and nothing to reset. Two consequences worth stating: a token set at `:root` reaches EVERY instance — scope per instance or per section and keep theme-wide re-skins at role level (`--primary`, `--ds-radius-control`) — and where a component derives one value from another (a hover fill mixed from the resolved background), overriding the source retunes the derived states with it. Individual entries below therefore note only what DEVIATES from this: a derived state, a variant-specific default, a token that beats a size class.
 
-> **Token and API lists below are hand-maintained and have drifted.** `ds-button` in particular is documented here with its pre-`color`×`variant` API and the pre-rename token names (`--ds-button-bg`, `-fg`), neither of which is current. The authoritative, auto-generated surfaces are the **Component API tables** and the **token reference** in `ds-docs` (extracted from source on every build, so they cannot go stale) — trust those first, and treat this file as prose about intent. Re-verified 2026-08-05; the sweep to reconcile it is tracked in `docs/todo.md`.
+> **Token and API lists below are hand-maintained and have drifted.** `ds-button` in particular is documented here with its pre-`color`×`variant` API and the pre-rename token names (`--ds-button-bg-color`, `-fg`), neither of which is current. The authoritative, auto-generated surfaces are the **Component API tables** and the **token reference** in `ds-docs` (extracted from source on every build, so they cannot go stale) — trust those first, and treat this file as prose about intent. Re-verified 2026-08-05; the sweep to reconcile it is tracked in `docs/todo.md`.
 
 ### Form & input
 
 #### `<ds-button>` — `ButtonComponent`
-Inputs: `variant: ButtonVariant = 'primary'` (`'primary' | 'secondary' | 'tertiary' | 'outline' | 'error' | 'success' | 'warning' | 'text'`), `size: ButtonSize = 'l'` (`'s' | 'm' | 'l' | 'sm' | 'md' | 'lg'` — legacy s/m/l = 24/32/40, canonical sm/md/lg = 32/40/48), `type: 'button' | 'submit' | 'reset' = 'button'`, `disabled: boolean = false`, `loading: boolean = false`, `fullWidth: boolean = false` (stretches the host to `display: block; width: 100%` — for mobile primary CTAs and full-bleed submits)
-Variant → role mapping: `primary` → `--primary` fill · `secondary` → `--primary-muted` tonal fill · `tertiary` → transparent with `--primary-strong` text · `outline` → bordered neutral surface · `error/success/warning` → status fills · `text` → no-chrome text button. (Renamed 2026-06 from danger→error, link→text, ghost→outline.)
+Inputs: **two orthogonal axes** — `color: ButtonColor = 'primary'` (`'primary' | 'secondary' | 'tertiary' | 'neutral' | 'error' | 'success' | 'warning'`) and `variant: ButtonVariant = 'solid'` (`'solid' | 'tonal' | 'outline' | 'ghost' | 'text'`). Plus `size: DsSize | null = null` (unset resolves `DS_CONFIG.control.size`, then `md`), `type: 'button' | 'submit' | 'reset' = 'button'`, `disabled`, `loading`, `fullWidth`, `icon: IconName | null`.
+Axis meaning: **variant is loudness** (solid > tonal > outline/ghost/text), **color is hue** — every pair renders, and the UX-discouraged ones dev-warn (see `DISCOURAGED_COMBOS`). Only solid and tonal paint a fill: outline, ghost and text are TRANSPARENT, so they adopt the surface they sit on. Disabled uses one label recipe for every variant, `oklch(from accent 70% 0.035 h)`. (History: the single `variant` axis was split into color × variant in 2026-06; `danger`→`error`, `link`→`text`, the old `ghost`→`outline`.)
 Output: `(pressed): MouseEvent` — only fires when not disabled and not loading
 Content slots: default (label / leading or trailing icon). For icon-only actions use `<ds-icon-button>`.
-Tokens: `--ds-button-bg`, `--ds-button-bg-hover`, `--ds-button-bg-active`, `--ds-button-bg-disabled`, `--ds-button-fg`, `--ds-button-fg-disabled`, `--ds-button-border`, `--ds-button-radius`, `--ds-button-focus-shadow`, `--ds-button-pressed-shadow`. For solid variants (primary/error/success/warning), `-bg-hover` / `-bg-active` / `-pressed-shadow` default to a `color-mix()` derivation from the resolved `-bg` (88 % / 76 % + black — the theme's hover/pressed recipe), so overriding the bg alone retints the full state set; tonal variants (secondary/tertiary/outline/text) keep explicit ramp defaults, so a full retint there means also setting the state tokens. 
+Tokens: `--ds-button-bg-color`, `--ds-button-bg-color-hover`, `--ds-button-bg-color-active`, `--ds-button-bg-color-disabled`, `--ds-button-label-color`, `--ds-button-label-color-disabled`, `--ds-button-border`, `--ds-button-radius`, `--ds-button-focus-shadow`, `--ds-button-pressed-shadow`. For `variant="solid"`, `-bg-color-hover` / `-bg-color-active` / `-pressed-shadow` default to a `color-mix()` derivation of the resolved fill (88 % / 76 % + black — the theme's hover/pressed recipe), so overriding the fill alone retints the whole state set; tonal, outline, ghost and text keep explicit ramp defaults, so a full retint there means setting the state tokens too. 
 
 #### `<ds-icon-button>` — `IconButtonComponent`
 Icon-only action with its own taxonomy, distinct from `ds-button`. `ariaLabel` is required (icon-only must be labelled for a11y).
 Inputs: `icon: required IconName`, `ariaLabel: required string`, `variant: IconButtonVariant = 'standard'` (`'standard' | 'filled' | 'tonal' | 'outlined'`), `size: IconButtonSize = 'md'` (`'sm' | 'md' | 'lg'` = 32/40/48), `type: 'button' | 'submit' | 'reset' = 'button'`, `disabled: boolean = false`, `selected: boolean = false` (toggle — sets `aria-pressed`)
 Output: `(pressed): MouseEvent` — fires when not disabled
 Variant emphasis: `standard` chromeless (hover-reveal) · `filled` `--primary` · `tonal` `--primary-muted` · `outlined` bordered. `selected` renders the pressed/active fill.
-Tokens: `--ds-icon-button-bg`, `--ds-icon-button-fg`, `--ds-icon-button-border`, `--ds-icon-button-bg-hover`, `--ds-icon-button-bg-active`, `--ds-icon-button-fg-hover`, `--ds-icon-button-radius`, `--ds-icon-button-focus-shadow`. `filled`/`selected` derive hover/active from the resolved bg, `standard`/`tonal`/`outlined` keep explicit ramp defaults.
+Tokens: `--ds-icon-button-bg-color`, `--ds-icon-button-icon-color`, `--ds-icon-button-border`, `--ds-icon-button-bg-color-hover`, `--ds-icon-button-bg-color-active`, `--ds-icon-button-icon-color-hover`, `--ds-icon-button-radius`, `--ds-icon-button-focus-shadow`. `filled`/`selected` derive hover/active from the resolved bg, `standard`/`tonal`/`outlined` keep explicit ramp defaults.
 
 #### `<ds-input>` — `InputComponent`
 Inputs: `value: model<string>`, `type: InputType = 'text'` (`'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search'`), `size: 'sm' | 'md' | 'lg' = 'md'`, `label: string = ''`, `hint: string = ''`, `placeholder: string = ''`, `disabled: boolean = false`, `invalid: boolean = false`, `required: boolean = false`, `optional: boolean = false`, `name: string | null = null`, `clearable: boolean | null = null` (inline clear (×) button; `null` resolves to `true` for `type="search"` and `false` otherwise)
@@ -155,7 +155,7 @@ Example:
 </ds-input>
 ```
 
-Tokens: `--ds-input-bg`, `--ds-input-border`, `--ds-input-border-hover`, `--ds-input-border-focus`, `--ds-input-fg`, `--ds-input-placeholder`, `--ds-input-radius`, `--ds-input-pad-x`, `--ds-input-pad-y`, `--ds-input-focus-shadow`, `--ds-input-border-error`, `--ds-input-bg-error`, `--ds-input-border-success`, `--ds-input-bg-disabled`
+Tokens: `--ds-input-bg-color`, `--ds-input-border`, `--ds-input-border-hover`, `--ds-input-border-focus`, `--ds-input-text-color`, `--ds-input-placeholder`, `--ds-input-radius`, `--ds-input-pad-x`, `--ds-input-pad-y`, `--ds-input-focus-shadow`, `--ds-input-border-error`, `--ds-input-bg-color-error`, `--ds-input-border-success`, `--ds-input-bg-color-disabled`
 
 #### `<ds-textarea>` — `TextareaComponent`
 Multi-line counterpart to `<ds-input>` — same wrapper/states, reuses the `--ds-input-*` token family. No prefix/suffix slots.
@@ -261,7 +261,7 @@ The companion `<ds-toast-region>` lives inside the `ToastService` (see Services)
 #### `<ds-sidenav>` — `SidenavComponent`
 Inputs: `collapsed: boolean = false`, `brand: string = ''` (renders a letter mark + name; omit to project custom content)
 Content: default slot for groups/items + custom brand/footer rows
-Tokens: `--ds-sidenav-bg`, `--ds-sidenav-border`, `--ds-sidenav-width`, `--ds-sidenav-width-collapsed`, `--ds-sidenav-mark-bg`, `--ds-sidenav-mark-fg`
+Tokens: `--ds-sidenav-bg-color`, `--ds-sidenav-border`, `--ds-sidenav-width`, `--ds-sidenav-width-collapsed`, `--ds-sidenav-mark-bg-color`, `--ds-sidenav-mark-label-color`
 
 #### `<ds-sidenav-group>` — `SidenavGroupComponent`
 Inputs: `label: string = ''`, `icon: IconName | null = null`, `expandable: boolean = false`, `expanded: model<boolean> = true`
@@ -271,17 +271,17 @@ When `expandable=true` renders header button with toggle + caret; collapses body
 #### `<ds-sidenav-item>` — `SidenavItemComponent`
 Inputs: `icon: IconName | null = null` (optional — falls back to `[icon]` slot), `label: required string`, `href: string = ''`, `routerLink: string | readonly unknown[] | null = null`, `active: boolean = false`, `badge: number | null = null`, `hasAlert: boolean = false`
 Content slots: `[icon]` (custom icon when not using a DS IconName), `[trailing]` (right-aligned chrome — badges, indicators, kbd shortcuts)
-Tokens (on `:host`): `--ds-sidenav-item-fg`, `--ds-sidenav-item-fg-hover`, `--ds-sidenav-item-bg-hover`, `--ds-sidenav-item-bg-active` (default: `--primary`), `--ds-sidenav-item-fg-active` (default: `--text-on-primary`), `--ds-sidenav-item-rail` (left rail, default: `--secondary`), `--ds-sidenav-item-radius`, `--ds-sidenav-alert-color`
+Tokens (on `:host`): `--ds-sidenav-item-label-color`, `--ds-sidenav-item-label-color-hover`, `--ds-sidenav-item-bg-color-hover`, `--ds-sidenav-item-bg-color-active` (default: `--primary`), `--ds-sidenav-item-label-color-active` (default: `--text-on-primary`), `--ds-sidenav-item-rail` (left rail, default: `--secondary`), `--ds-sidenav-item-radius`, `--ds-sidenav-alert-color`
 
 #### `<ds-topbar>` — `TopBarComponent`
 No inputs.
 Content slots: `[title]`, `[breadcrumbs]`, `[search]`, `[actions]`. Sits at `--topbar-h` height.
-Tokens (on `:host`): `--ds-topbar-margin-b` (default `--space-4` = 16px) — bottom gap to the next content block. The topbar owns this gap globally; pages MUST NOT add their own `padding-top` to compensate.
+Tokens (on `:host`): `--ds-topbar-height`, `--ds-topbar-bg-color`, `--ds-topbar-border`, `--ds-topbar-title-text-color`, plus the `--ds-topbar-crumb-*` set for the breadcrumb row. **The topbar owns no bottom gap** — it has no margin token and sets no margin; spacing to the next block belongs to the page or to `ds-app-layout`'s content padding. (This paragraph previously documented a `--ds-topbar-margin-b` that has never existed in the shipped component.)
 
 #### `<ds-page-header>` — `PageHeaderComponent`
 Inputs: `eyebrow: string = ''`, `title: required string`, `subtitle: string = ''`, `compact: boolean = false`, `divider: boolean = false`, `metaDivider: boolean = false`
 Content slots: `[breadcrumbs]`, `[title-badge]` (sits next to the title text), `[actions]` (right edge of title row), `[meta]` (under the title row), `[tabs]` (under the meta row)
-Tokens: `--ds-pagehdr-eyebrow-fg`, `--ds-pagehdr-title-fg`, `--ds-pagehdr-subtitle-fg`, `--ds-pagehdr-meta-fg`, `--ds-pagehdr-meta-icon-fg`, `--ds-pagehdr-divider`, `--ds-pagehdr-title-fs` (default `--font-size-h3`; `compact` flips to `--font-size-h4`). The page-header does NOT own its bottom gap — the parent page `:host` owns spacing via `display: flex; flex-direction: column; gap: var(--space-4)`.
+Tokens: `--ds-page-header-eyebrow-text-color`, `--ds-page-header-title-text-color`, `--ds-page-header-subtitle-text-color`, `--ds-page-header-meta-text-color`, `--ds-page-header-meta-icon-color`, `--ds-page-header-divider`, `--ds-page-header-title-fs` (default `--font-size-h3`; `compact` flips to `--font-size-h4`). The page-header does NOT own its bottom gap — the parent page `:host` owns spacing via `display: flex; flex-direction: column; gap: var(--space-4)`.
 
 #### `<ds-page-footer>` — `PageFooterComponent`
 Input: `variant: 'default' | 'compact' | 'save' = 'default'`
@@ -295,7 +295,7 @@ Output: `(navigate): BreadcrumbItem` — emits when an item with `href` is click
 Container holds `<ds-tab label="…">` children.
 Tabs inputs: `selectedIndex: model<number> = 0`, `variant: 'line' | 'pills' = 'line'`
 Tab inputs: `label: required string`, `icon: IconName | null = null`, `count: number | null = null`, `disabled: boolean = false`. The tab's projected content renders in the active panel.
-Tokens: `--ds-tab-fg`, `--ds-tab-fg-hover`, `--ds-tab-fg-active`, `--ds-tab-indicator-color`, `--ds-tab-indicator-width`, `--ds-tab-pad-x`, `--ds-tab-pad-y`, `--ds-tabs-divider`, `--ds-tabs-pills-bg`, `--ds-tab-pill-bg-hover` (inactive hover, defaults to `var(--primary-subtle)`), `--ds-tab-pill-bg-active` (defaults to `var(--surface-default)` — elevated card), `--ds-tab-pill-bg-active-hover` (defaults to `var(--primary-subtle)`), `--ds-tab-pill-fg-active` (defaults to `var(--primary-strong)`), `--ds-tab-pill-radius` (defaults to `var(--radius-md)` — same as buttons/inputs; override per-instance to `var(--radius-pill)` for fully round pills).
+Tokens: `--ds-tab-label-color`, `--ds-tab-label-color-hover`, `--ds-tab-label-color-active`, `--ds-tab-indicator-color`, `--ds-tab-indicator-width`, `--ds-tab-pad-x`, `--ds-tab-pad-y`, `--ds-tabs-divider`, `--ds-tabs-pills-bg-color`, `--ds-tab-pill-bg-color-hover` (inactive hover, defaults to `var(--primary-subtle)`), `--ds-tab-pill-bg-color-active` (defaults to `var(--surface-default)` — elevated card), `--ds-tab-pill-bg-color-active-hover` (defaults to `var(--primary-subtle)`), `--ds-tab-pill-label-color-active` (defaults to `var(--primary-strong)`), `--ds-tab-pill-radius` (defaults to `var(--radius-md)` — same as buttons/inputs; override per-instance to `var(--radius-pill)` for fully round pills).
 
 #### `<ds-stepper>` — `StepperComponent`
 Inputs: `steps: readonly string[] = []`, `current: number = 0`. Horizontal step indicator with done/active/upcoming nodes.
@@ -315,7 +315,7 @@ Content: label text (when `variant="label"`).
 #### `<ds-card>` — `CardComponent`
 Inputs: `elevation: 'flat' | 'raised' | 'hover' | 'interactive' = 'flat'`, `padding: 'none' | 'sm' | 'md' | 'lg' | null = null` (when `null`, no `padding-*` class is applied and the consumer controls padding via own CSS or `--ds-card-pad`)
 Output: `(pressed): MouseEvent` — fires only when `elevation="interactive"`
-Tokens: `--ds-card-bg`, `--ds-card-border`, `--ds-card-radius`, `--ds-card-pad`, `--ds-card-shadow`, `--ds-card-shadow-hover`, `--ds-card-focus-shadow`, `--ds-card-hover-lift`
+Tokens: `--ds-card-bg-color`, `--ds-card-border`, `--ds-card-radius`, `--ds-card-pad`, `--ds-card-shadow`, `--ds-card-shadow-hover`, `--ds-card-focus-shadow`, `--ds-card-hover-lift`
 Convention tokens (consumer-side `.title` projected into the card slot — declared at `:root`, not on the host): `--card-title-fs` (default `var(--font-size-h4)` = 22px; MM brand steps down to `var(--font-size-h5)` = 18px). Consumer markup: `<h3 class="title">…</h3>`; local `.title` class reads the token via `font:` shorthand together with `--font-weight-bold` / `--line-height-snug` / `--font-heading`.
 
 #### `<ds-accordion>` + `<ds-accordion-item>` — `AccordionComponent`, `AccordionItemComponent`
@@ -372,7 +372,7 @@ Column shape: `{ key: string, label: string, sortable?: boolean, align?: 'left' 
 Cell templates: `<ng-template dsCellTemplate="<colKey>" let-row>…</ng-template>` — `row` is typed `unknown`, narrow via a helper method on the host.
 Content slots: `[empty]` (rendered when `data.length === 0`), `[bulk-actions]` (rendered in the bulk action bar when `selectable && some selected`)
 Loading modes: `'skeleton'` replaces rows with shimmer placeholders driven by the global `--skeleton-shimmer-x` keyframe; `'overlay'` keeps existing rows visible behind a translucent layer with a centred spinner.
-Tokens: `--ds-table-border: var(--border-default)`, `--ds-table-radius: var(--radius-md)`, `--ds-table-bg`, `--ds-table-head-fg: var(--text-secondary)`, `--ds-table-head-bg: var(--surface-secondary)`, `--ds-table-head-fs: var(--font-size-xs)`, `--ds-table-row-hover-bg`, `--ds-table-row-selected-bg`, `--ds-table-divider`, `--ds-table-sort-active-fg`, `--ds-table-cell-pad-x/y`. (Renamed 2026-06: `--ds-table-header-*` → `--ds-table-head-*`, matching the tokens reference.)
+Tokens: `--ds-table-border: var(--border-default)`, `--ds-table-radius: var(--radius-md)`, `--ds-table-bg-color`, `--ds-table-head-text-color: var(--text-secondary)`, `--ds-table-head-bg-color: var(--surface-secondary)`, `--ds-table-head-fs: var(--font-size-xs)`, `--ds-table-row-hover-bg-color`, `--ds-table-row-selected-bg-color`, `--ds-table-divider`, `--ds-table-sort-active-icon-color`, `--ds-table-cell-pad-x/y`. (Renamed 2026-06: `--ds-table-header-*` → `--ds-table-head-*`, matching the tokens reference.)
 
 ---
 
