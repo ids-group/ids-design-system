@@ -28,6 +28,12 @@ const PRODUCTS: readonly AutocompleteOption<string>[] = [
 
 const CHANNELS: readonly AutocompleteOption<string>[] = [
   { value: 'broker', label: 'Broker portal', icon: 'users' },
+  {
+    value: 'api',
+    label: 'Partner API — not enabled',
+    icon: 'link',
+    disabled: true,
+  },
   { value: 'direct', label: 'Direct — web', icon: 'globe' },
   { value: 'phone', label: 'Telephone', icon: 'phone' },
   { value: 'post', label: 'Post', icon: 'mail' },

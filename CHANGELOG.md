@@ -57,10 +57,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   did. The three option types share a new exported `DsOption<T>` — they were three near-identical
   interfaces, which is exactly why `icon` existed on one picker for a release. Each keeps its own
   name (`SelectOption`, `MultiSelectOption`, `AutocompleteOption`), so nothing you import changes.
-  **One caveat the shared shape introduced:** `AutocompleteOption` now also inherits `disabled?: boolean`,
-  which it never had — but `ds-autocomplete` does not act on it yet. `ds-select` and `ds-multi-select` do
-  (they skip the option and block the click). Setting `disabled` on an autocomplete option compiles and
-  does nothing; treat it as not-yet-supported rather than broken.
+  **The shared shape also gave `ds-autocomplete` a `disabled` option, and it now behaves.**
+  `AutocompleteOption` never had the field; inheriting it exposed the gap that the component ignored it,
+  so it was implemented rather than documented away: a disabled row greys out through the panel's own
+  `.is-disabled` skin, reports `aria-disabled`, refuses the click, and **the arrow keys step OVER it** —
+  including when the panel opens or the filter re-runs, so the active row is never one that Enter would
+  ignore. Same behaviour as `ds-select` and `ds-multi-select`, which have honoured it all along.
 
 - **`maxVisibleChips="fit"` on `ds-autocomplete` and `ds-multi-select`** caps the chips by measured
   width instead of a count: one line holds as many as the trigger is wide, the rest collapse into

@@ -345,9 +345,37 @@ export class AutocompleteComponent<T = unknown>
     if (this.multiple()) {
       parts.push('multi');
     }
-    void option;
+    if (option.disabled) {
+      parts.push('is-disabled');
+    }
 
     return parts.join(' ');
+  }
+
+  /** First option a reader can actually act on — -1 when the list is empty or
+   *  every option is disabled. */
+  private firstEnabledIndex(): number {
+    return this.visibleOptions().findIndex((option) => !option.disabled);
+  }
+
+  /** Arrow keys step OVER a disabled option rather than landing on it — an active
+   *  row Enter refuses to act on is a dead end the reader has to guess their way
+   *  out of. `step` is +1/-1; the create row (past the last option) is always
+   *  reachable. Returns -1 when every option is disabled. */
+  private nextEnabledIndex(from: number, step: number, slots: number): number {
+    if (!slots) {
+      return -1;
+    }
+    const options = this.visibleOptions();
+    for (let hop = 1; hop <= slots; hop++) {
+      const candidate = (from + step * hop + slots * hop) % slots;
+      const option = options[candidate];
+      if (!option || !option.disabled) {
+        return candidate;
+      }
+    }
+
+    return -1;
   }
 
   /** Flat index of the given option within the visible (filtered) list. */
@@ -394,7 +422,7 @@ export class AutocompleteComponent<T = unknown>
           return;
         }
         this.activeIndex.set(
-          totalSlots ? (this.activeIndex() + 1) % totalSlots : -1,
+          this.nextEnabledIndex(this.activeIndex(), 1, totalSlots),
         );
         break;
       case 'ArrowUp':
@@ -405,7 +433,7 @@ export class AutocompleteComponent<T = unknown>
           return;
         }
         this.activeIndex.set(
-          totalSlots ? (this.activeIndex() - 1 + totalSlots) % totalSlots : -1,
+          this.nextEnabledIndex(this.activeIndex(), -1, totalSlots),
         );
         break;
       case 'Enter': {
@@ -493,7 +521,7 @@ export class AutocompleteComponent<T = unknown>
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
     this.isOpen.set(true);
-    this.activeIndex.set(this.visibleOptions().length ? 0 : -1);
+    this.activeIndex.set(this.firstEnabledIndex());
   }
 
   protected close(cause: DsOverlayCloseCause = 'select'): void {
@@ -541,10 +569,13 @@ export class AutocompleteComponent<T = unknown>
 
   protected onFilter(event: Event): void {
     this.query.set((event.target as HTMLInputElement).value);
-    this.activeIndex.set(0);
+    this.activeIndex.set(this.firstEnabledIndex());
   }
 
   protected onPick(option: AutocompleteOption<T>): void {
+    if (option.disabled) {
+      return;
+    }
     if (this.multiple()) {
       const current = (this.value() as readonly T[] | null) ?? [];
       const next = current.includes(option.value)
