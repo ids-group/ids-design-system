@@ -517,6 +517,22 @@
     while keeping <kbd>Esc</kbd> active.
   </p>
 
+  <p class="block-desc t-s">
+    <strong>
+      A backdrop dismissal needs the press AND the release on the backdrop.
+    </strong>
+    Selecting text in the body and letting go past the edge does not close the
+    dialog, and neither does a slider drag that overshoots — the browser reports
+    that gesture as a click on the backdrop, which is what used to dismiss it.
+    <code class="t-mono-inline">
+      ds-bottom-sheet
+    </code> behaves the same way;
+    <code class="t-mono-inline">
+      ds-drawer
+    </code> never had the problem, because its
+    scrim is a sibling of the panel rather than its parent.
+  </p>
+
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
       <div class="state-cell__stage">
