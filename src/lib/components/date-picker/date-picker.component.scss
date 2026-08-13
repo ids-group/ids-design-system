@@ -137,7 +137,6 @@
     border-color: var(--border-disabled);
     color: var(--text-disabled);
     cursor: not-allowed;
-    opacity: var(--opacity-muted);
   }
 }
 
@@ -328,7 +327,7 @@
         background-color: var(--_date-picker-day-hover-bg-color);
       }
       &:disabled {
-        opacity: var(--opacity-muted);
+        opacity: var(--opacity-disabled);
         cursor: not-allowed;
       }
     }
