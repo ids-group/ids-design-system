@@ -119,14 +119,17 @@
     --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--c-strong));
     --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, color-mix(in srgb, var(--_icon-button-bg-color) 28%, var(--surface-disabled)));
   }
+
+  /* Transparent for the same reason as ds-button's outline: the variant must adopt
+     the surface under it rather than paint its own. */
   &.outlined {
-    --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--surface-default));
+    --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        transparent);
     --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--text-primary));
     --_icon-button-border:    var(--ds-icon-button-border,    var(--border-default));
     --_icon-button-bg-color-hover:  var(--ds-icon-button-bg-color-hover,  var(--surface-secondary));
     --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, var(--surface-muted));
     --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--text-primary));
-    --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, color-mix(in srgb, var(--_icon-button-bg-color) 28%, var(--surface-disabled)));
+    --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, transparent);
     --_icon-button-border-disabled: var(--ds-icon-button-border-disabled, color-mix(in srgb, var(--_icon-button-border) 55%, var(--surface-disabled)));
   }
 

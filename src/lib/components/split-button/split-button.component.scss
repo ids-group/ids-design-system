@@ -6,7 +6,10 @@
   --_split-button-text-color: var(--ds-split-button-text-color, var(--accent-on));
   --_split-button-bg-hover-color: var(--ds-split-button-bg-hover-color, var(--accent-strong));
   --_split-button-divider-color: var(--ds-split-button-divider-color, var(--btn-split-divider));
-  --_split-button-outline-bg-color: var(--ds-split-button-outline-bg-color, var(--surface-default));
+
+  /* Transparent, matching ds-button's outline variant — the split button's outlined
+     half must adopt the surface it sits on. */
+  --_split-button-outline-bg-color: var(--ds-split-button-outline-bg-color, transparent);
   --_split-button-outline-border-color: var(--ds-split-button-outline-border-color, var(--border-default));
 }
 

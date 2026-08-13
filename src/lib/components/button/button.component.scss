@@ -209,14 +209,26 @@
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
     --_button-border-disabled: var(--ds-button-border-disabled, transparent);
   }
+
+  /* Transparent, not --surface-default: an outlined button has to sit on whatever
+     surface it is placed on. Painting it white made it a sticker on any tinted
+     ground — a card at --surface-secondary, a table toolbar, an alert — while
+     looking identical on a white page, which is why it went unnoticed. Material 3
+     and Bootstrap both specify a transparent container for this variant; shadcn and
+     Ant paint the surface, and that is the tradition we are leaving. The hover tint
+     (--c-subtitle) is opaque, so hover still reads. */
   &.v-outline {
-    --_button-bg-color:        var(--ds-button-bg-color,        var(--surface-default));
+    --_button-bg-color:        var(--ds-button-bg-color,        transparent);
     --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));
     --_button-border:          var(--ds-button-border,          var(--c-outline-border));
     --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--c-subtitle));
     --_button-bg-color-active: var(--ds-button-bg-color-active, var(--c-muted));
     --_button-accent: var(--_button-label-color);
-    --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, color-mix(in srgb, var(--_button-bg-color) 28%, var(--surface-disabled)));
+
+    /* Stays transparent when disabled too: mixing a transparent fill toward the
+       disabled surface would produce a 72%-alpha box. The border and the label carry
+       the state instead, as they do on ghost. */
+    --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
     --_button-border-disabled: var(--ds-button-border-disabled, color-mix(in srgb, var(--_button-border) 55%, var(--surface-disabled)));
   }
 
