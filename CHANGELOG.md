@@ -188,6 +188,24 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **`ds-password-rules`: a pending rule is an empty circle, and a rule fades as it passes.** The
+  pending glyph was `minus`, which at 14px beside 12px text read as a stray em-dash rather than an
+  unticked box; it is now `circle` — the empty counterpart of the check it turns into. A `circle` icon
+  joins the set (52 now), available to anything else that wants one. The row also transitions its
+  colour over `--duration-base` instead of snapping, because the reader is looking at the field they
+  are typing in, so an instant change says a rule flipped but not which one. No reduced-motion guard
+  is needed: the duration tokens are already zeroed globally. Row spacing is unchanged at
+  `--space-1` — deliberately, after comparing both.
+
+- **`ds-password-rules` printed its screen-reader text on screen.** Every row rendered a visible
+  "— not met" / "— not yet met" beside the label, because the component used `.visually-hidden` and
+  **nothing anywhere defined it**: three other components (`ds-table`, `ds-date-picker`, `ds-stepper`)
+  each declared their own byte-identical copy, so the class only ever worked by accident of being in
+  the right component. The leaked text is also what made the two-column layout look broken on a phone —
+  it ate the column width and wrapped every label onto two lines, which read as a spacing failure and
+  was not one. One `visually-hidden` mixin now backs all four. **No API change**; a checklist just
+  stops saying "not met" four times in a row.
+
 - **`ds-otp-input` no longer shows two digits in one cell.** Typing a second character into a cell that
   already held one left `12` sitting in that box while the model had already split it correctly across
   two cells — so what the user read and what the form held disagreed. The distribution was never the
