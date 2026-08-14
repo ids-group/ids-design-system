@@ -1,3 +1,5 @@
+@use '../../styles/visually-hidden' as visually-hidden;
+
 :host {
   display: flex;
   align-items: flex-start;
@@ -13,15 +15,7 @@
   --_stepper-connector-done-color: var(--ds-stepper-connector-done-color, var(--accent));
 
   .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-    border: 0;
+    @include visually-hidden.visually-hidden;
   }
 
   .step {
