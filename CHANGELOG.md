@@ -253,9 +253,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   did. Pasting a full code is unaffected — it cancels the native input, so nothing ever reaches the box.
 
 - **A `warning` now shows on the control, and one rule drives all nine bordered fields.** `warning="…"`
-  coloured the message and left the box untouched — `.warning` was styled in `ds-field-message` and in
-  the banner-shaped components, and on none of the nine bordered controls — which is what a phone
-  screenshot caught. It now takes a `--warning-text` border. Not `--warning`:
+  coloured the message and left the box untouched — seven stylesheets styled `.warning` and not one of
+  them belonged to a bordered field: `ds-field-message`, which is the message this describes, plus
+  `ds-alert`, `ds-banner`, `ds-modal`, `ds-progress`, `ds-sidenav-footer` and `ds-toast` — which is what
+  a phone screenshot caught. It now takes a `--warning-text` border. Not `--warning`:
   that is `--yellow-400`, **1.47:1** against a white field where WCAG 1.4.11 asks 3:1 for a component
   boundary, so the obvious mirror of the error recipe would have drawn a border nobody can see;
   `--warning-text` is the first rung of the ramp that clears it, at 4.59:1. Border only, deliberately —
