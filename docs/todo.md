@@ -708,3 +708,75 @@ Note `.link` already bakes this in; this is the same treatment for everything th
   Judge them **beside an error field in the same form**, since the question is not "is it visible"
   but "does warning still read as weaker than error".
   Not now — return to it deliberately.
+
+## Found by the 0.9.1..HEAD changelog re-review (2026-08-15)
+
+Eight defects the prose review turned up in the code itself. The CHANGELOG and
+`migrations/unreleased.json` were corrected to describe what the code actually does, so nothing
+below is a documentation gap any more — each is a real thing to fix.
+
+- [ ] **[P1] `ds-autocomplete`'s disabled option has no visual treatment at all.** The component
+  honours `disabled` behaviourally (aria-disabled, click refused, arrow keys skip it) but the
+  grey-out lives in `.ds-dropdown-panel .option.is-disabled` in `_dropdown-overlay.scss`, and
+  `autocomplete.component.ts:500` opens its overlay with `'ds-overlay-pane'` ONLY, so the skin never
+  reaches it. A disabled row keeps `--text-primary`, keeps `cursor: pointer`, and still paints its
+  hover background (the `.option:hover` rule carries no `:not(.is-disabled)`). The same root cause
+  leaves the option icon this release added unstyled on this component — `.option-icon` is only
+  styled inside `.ds-dropdown-panel`. Decide: take the pane class, or give the component its own
+  `.is-disabled` / `.option-icon` rules.
+
+- [ ] **[P1] `ds-field-group` still reads `--border-error`, a token that has never existed.**
+  `field-group.component.scss:53` — `:host(.invalid) { border-color: var(--border-error); }`. This
+  is byte-for-byte the `ds-autocomplete` defect that `823c9b64` fixed, missed in the same sweep, so
+  `[invalid]="true"` on a group still draws a near-black `currentColor` border (`#161A28`) instead
+  of a red one.
+
+- [ ] **[P1] The resolved-size signals are `protected`, so the documented migration path does not
+  compile.** `size()` now returns `null` when unbound, and the replacement a host is told to read —
+  `sizeResolved()` — is `protected` on 13 of the 14 controls (public only on `FieldGroupComponent`),
+  as are `elevationResolved` / `paddingResolved` (card), `sizeResolved` (icon), `withDotResolved`
+  (badge), `borderedResolved` / `stickyScrollbarResolved` (table), `dividersResolved` (both modals)
+  and `brandName` / `letterGlyph` / `taglineText` (sidenav, auth-layout). Reading any of them from a
+  host, a test or a `viewChild` is TS2445. Either make them public — which is what the release notes
+  wanted to say — or keep them closed and accept that the readback has no answer. The CHANGELOG now
+  states the second, honestly; the first is the better product.
+
+- [ ] **[P2] `--ds-dropdown-panel-radius` does not reach `ds-multi-select`.** Its panel element is
+  `class="panel"`, not `.dropdown-panel`, and `multi-select.component.scss:108` hardcodes
+  `border-radius: var(--radius-md)`. So that panel is the one place neither the new token nor
+  `--ds-radius-panel` has ever reached, and it stays at 8px while the other two move.
+
+- [ ] **[P2] Cascade risk: a bordered field inside `ds-field-group` may repaint its own state
+  chrome.** In `input`, `select`, `date-picker` and `autocomplete`, the `field-state` include now
+  sits AFTER the `field-group-segment` include, and `:host(.in-group) .control` ties on specificity
+  with `:host([data-field-state='error']) .control`, so source order favours `field-state`. Before
+  `823c9b64` the `.field.error` rule came first and the group's stripping won. That contradicts
+  `FieldGroupComponent.invalid`'s own doc ("a single segment cannot be invalid on its own: the
+  border belongs to the group"). Derived from the cascade, NOT browser-confirmed — check it in a
+  real browser before changing anything.
+
+- [ ] **[P2] `components.md`'s header contradicts its own body, and the file ships.** Line 123 still
+  warns that the `ds-button` section documents the pre-`color`×`variant` API and the pre-rename
+  token names — which is exactly what `b69a83d2` rewrote — and still names the dead `-fg`. The
+  "Re-verified 2026-08-05" stamp was not moved either. `tools/build-schematics.mjs` copies this file
+  into `dist/ds/`, so consumers' agents read it.
+
+- [ ] **[P3] Two stale strings that outlived the code.** The `maxVisibleChips` JSDoc in BOTH pickers
+  still says "A NUMBER caps at exactly that many", which `7ceed418` made false; it feeds
+  `component-api.generated.ts`, so the docs site renders it too. And `ds-config.ts`'s `control.size`
+  JSDoc lists `multi-select` among the honouring controls — `ds-multi-select` has no `size` input.
+
+- [ ] **[P3] Cosmetic, in passing.** `badge.component.ts:25-26` carries two consecutive JSDoc blocks
+  on `withDot`, the first being the pre-change text, and it feeds the generated API table. The
+  ds-docs search section says "Two things skip the timer" where code and changelog say three, and
+  the generated stat token description says an unwrapped phrase value is "clipped" when `.stat` sets
+  no `overflow` and it actually escapes the tile.
+
+- [ ] **[P3] Re-measure the `ds-field-group` segment offsets, or leave them out for good.** The
+  CHANGELOG used to say the value sat "off by 10px in a 39px row (7px at `sm`, 13px at `lg`)". Two
+  problems: `--field-h-md` resolves through `--hit-cozy` to **40px**, not 39, at every density tier
+  (24/32/40/48 — none yields 39); and the three offsets are mutually inconsistent, since a single
+  content height cannot produce 10/7/13 against a 32/40/48 scale (22px gives 9/5/13, 18px gives
+  11/7/15). Both numbers are now removed from the entry and the height corrected to 40px. If the
+  concrete figures are wanted back, measure all three sizes in a browser in one sitting and record
+  the content height they were taken against.

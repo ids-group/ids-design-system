@@ -30,9 +30,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   out at 89px and 94px while the two ordinary ones take 438px and 530px of the same 1152px table.
   **You can now delete** the `::ng-deep ds-table { .table th, .table td { width: 1%; white-space: nowrap } }`
   block — the last reach into the table's markup a consumer had left, still marked in their tree as
-  `TODO(ds-shrink-to-content)`. Dragging the column's edge still wins, because that is a deliberate
-  pixel width; and a `'content'` column has no clip width, so `truncate` on it is a no-op rather than an
-  ellipsis against 240px.
+  `TODO(ds-shrink-to-content)`. Dragging a column's edge still wins, because that is a deliberate
+  pixel width — but note it wins for the WHOLE table at once: on a `resizableColumns` table the first
+  drag anywhere locks a measured pixel width onto every column that has not got one, `'content'`
+  columns included, and only `Home` on that column's own handle gives the mode back. A `'content'`
+  column also has no clip width, so `truncate` on it is a no-op rather than an ellipsis against 240px
+  (the `title` tooltip and the click-to-popover it comes with are still emitted).
 
 - **`ds-table` takes `[loading]="true"` and picks the treatment itself** — skeleton rows while it has
   nothing on screen, overlay once there are rows. `'skeleton'` and `'overlay'` still pin either one
@@ -51,9 +54,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   pushed two screens' filter rows out of the table and onto the page, where a search + status pair reads
   as page furniture one card away from the rows it narrows. **Project a handful of controls and the row
   lays them out** (flex, wrap, 8px gap), so the ordinary case needs no CSS of yours; **project one
-  element of your own** and it gets the full row width, so your layout is the only one in play. The row
+  element of your own** and it stretches to fill the slot, so your layout is the only one in play — the
+  slot is the row minus the Export button, and the whole row when `exportButton` is off. The row
   **takes itself out** when nothing filled it and `exportButton` is off, so a table that uses neither is
-  pixel-identical. Filters that belong to the PAGE still belong in a `ds-filter-bar` above it.
+  pixel-identical — though the `div` itself is now always rendered and hidden in CSS, so a
+  `ds-table > :first-child` selector or a DOM snapshot sees it. Filters that belong to the PAGE still
+  belong in a `ds-filter-bar` above it.
 
 - **`runExport()`, `exporting()` and `exportStatus()` are public**, so the Export button can live in a
   page header, a filter bar or the new toolbar slot and still run the library's path — the
@@ -61,14 +67,23 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   only public export method was `exportCsv()`, which serialises the rows the table HOLDS: on a
   server-paged grid that is one page, so a consumer's own button silently exported a fraction of the
   data. Leave `exportButton` off and drive it yourself:
-  `<ds-button [loading]="table.exporting()" (pressed)="table.runExport()">`.
+  `<ds-button [loading]="table.exporting()" (pressed)="table.runExport()">`. That pairing wants an
+  `exportFetcher`: without one, `runExport()` falls through to `exportCsv()` synchronously and never
+  touches `exporting`/`exportStatus`, so an external button bound to them shows no progress at all.
+  The two signals are read-only — a subclass that used to `.set()` them (they were protected writables)
+  drives them through `runExport()` now.
 
-- **`provideDsConfig` answers six more inputs, so an app stops restating itself.** New sections:
+- **`provideDsConfig` answers seven more inputs, so an app stops restating itself.** Five new sections:
   `control.size` (honoured by button, icon-button, input, textarea, select, autocomplete, search,
-  date/time picker, number stepper, checkbox, radio, switch and field-group), `card.elevation`,
-  `card.padding`, `table.stickyScrollbar`, `table.bordered`, `icon.size` and `badge.withDot`.
+  date/time picker, number stepper, checkbox, radio, switch and field-group), `card.elevation` and
+  `card.padding`, `table.stickyScrollbar` and `table.bordered`, `icon.size`, and `badge.withDot`.
   Precedence is **input → config → built-in**, so a screen that differs still binds the attribute and
-  wins. **No default moved** — an app that provides nothing renders exactly as before. **You can now
+  wins. **No default moved** — an app that provides nothing renders exactly as before, with one edge
+  worth knowing: the booleans that swapped `booleanAttribute` for a nullable transform
+  (`table.bordered`, `table.stickyScrollbar`, `badge.withDot`, and `dividers` on both modal components)
+  used to read a binding evaluating to `null`/`undefined` as `false`, and now read it as *unset* — so it
+  falls through to the config and then the built-in, which for `dividers` is `true`. A literal
+  `[bordered]="false"` is unaffected. **You can now
   delete** the attribute an app repeats on every element: one consumer binds `[stickyScrollbar]="true"`
   on all 35 of its tables and `size="sm"` on 146 buttons, which is a house default written 146 times,
   and each new element is one forgotten binding away from looking wrong. `control.size` is a different
@@ -81,23 +96,29 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   did. The three option types share a new exported `DsOption<T>` — they were three near-identical
   interfaces, which is exactly why `icon` existed on one picker for a release. Each keeps its own
   name (`SelectOption`, `MultiSelectOption`, `AutocompleteOption`), so nothing you import changes.
-  **The shared shape also gave `ds-autocomplete` a `disabled` option, and it now behaves.**
-  `AutocompleteOption` never had the field; inheriting it exposed the gap that the component ignored it,
-  so it was implemented rather than documented away: a disabled row greys out through the panel's own
-  `.is-disabled` skin, reports `aria-disabled`, refuses the click, and **the arrow keys step OVER it** —
+  `AutocompleteOption` also gains `disabled?`, and `MultiSelectOption` gains `icon?`, from the same
+  shared shape.
+  **`ds-autocomplete` now acts on a `disabled` option**, where it used to ignore the flag entirely: the
+  row carries `.is-disabled` and `aria-disabled`, refuses the click, and **the arrow keys step OVER it** —
   including when the panel opens or the filter re-runs, so the active row is never one that Enter would
-  ignore. Same behaviour as `ds-select` and `ds-multi-select`, which have honoured it all along.
+  ignore. Behaviourally this matches `ds-select` and `ds-multi-select`, which have honoured it all along.
+  **It does not yet LOOK disabled**, and that is the one gap to know about: the grey-out lives in the
+  shared `.ds-dropdown-panel` skin, and this component's overlay deliberately does not take that pane
+  class, so the row keeps ordinary text colour and still lights up on hover. Its new option icon is
+  unstyled for the same reason. Both are tracked; until then, treat the flag as behavioural.
 
 - **`maxVisibleChips="fit"` on `ds-autocomplete` and `ds-multi-select`** caps the chips by measured
   width instead of a count: one line holds as many as the trigger is wide, the rest collapse into
-  "+N more", and the split is redone whenever the trigger resizes. Opt-in and additive — the input
-  still takes a number and still defaults to `null` (show everything). Choose by what has to stay
-  predictable: a number pins the trigger's HEIGHT whatever the width, `"fit"` pins the width and
-  lets the count move. **You can now delete** a `ResizeObserver`, container query or per-breakpoint
+  "+N more", and the split is redone whenever the trigger resizes. **It is also the new default** — see
+  the Changed entry below for what that moves and how to opt out. Choose between the three by what has
+  to stay predictable: `"fit"` lets the count follow the width, a NUMBER adds an upper bound on top of
+  the same measuring, and `null` is the only mode that shows every chip and the only one that never
+  measures. **You can now delete** a `ResizeObserver`, container query or per-breakpoint
   `maxVisibleChips` number written to keep a chip trigger on one line — and a `max-height` +
   `overflow: hidden` cap, which clips a chip mid-glyph and hides the count instead of dropping whole
-  chips. Adopting the release costs nothing if you never ask for it: the measurement runs only in
-  `"fit"` mode, so a page full of pickers on the default does not observe or force layout.
+  chips. The measurement is not free but it is bounded: it runs only while a trigger holds a selection,
+  widths are cached per selection, and a geometry guard skips the re-measure when neither width nor
+  count moved.
 
 - **`--ds-dropdown-panel-radius` — the lever 0.9.0's notes promised and never shipped.** That release
   said an 8px select panel could be restored with `--ds-select-panel-radius`; no such token existed,
@@ -106,11 +127,20 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   encourage, while `--ds-radius-panel` moves modal, popover and date picker too. Defaults to that
   role, so an untouched theme is unchanged, and it is forwarded onto the portaled pane — scope it with
   a selector (`ds-select { --ds-dropdown-panel-radius: 8px }`) and only that panel moves. Verified
-  in a browser: one select at 3px, the other 34 on the 12px role.
+  in a browser: one select at 3px, the other 34 on the 12px role. **Two panels read it, not three:**
+  `ds-select` and `ds-autocomplete`. `ds-multi-select`'s panel hardcodes `--radius-md` and is reached by
+  neither this token nor `--ds-radius-panel`, so it stays at 8px whatever you set.
 
-- **The 0.8.0 and 0.9.0 migration manifests were corrected**, so re-read them if you subclass a DS
-  component and migrated before 2026-08-11: 0.9.0's named no member collisions at all while sixteen
-  classes had grown, and 0.8.0's missed the private `saveLayout` that actually stopped a build.
+- **Two migration manifests were corrected and three more were written**, so re-read them if you
+  subclass a DS component or upgrade across a version you skipped. `0.9.0`'s named no member collisions
+  at all — the note that now fills the gap lists **fifteen** classes whose member surface had grown, plus
+  four newly exported symbols that can shadow a local name — and `0.8.0`'s missed the private
+  `saveLayout` that actually stopped a build (`restoreLayout` went in beside it). **`0.6.1`, `0.6.2` and
+  `0.9.1` had no manifest at all**, and now every released version carries one: the auto-update planner
+  prefers a manifest and otherwise re-derives the plan from changelog prose on every run, which is what
+  an upgrade crossing those three used to do. `0.6.2`'s turned out to hold something actionable that no
+  machine-readable file had ever stated — a `ds-bottom-sheet` with nothing focusable inside it stopped
+  closing on Escape — which is exactly the kind a "just fixes" patch is assumed not to have.
 
 - **`ds-avatar` takes a `name`, and the rule that reads it is replaceable.** One binding now does both
   jobs a caller used to wire by hand: it derives the initials and seeds the tint. **The tint hashes the
@@ -135,20 +165,27 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   it out into four bindings.
 
 - **`rememberLastTab` on `ds-tabs` — reopen the tab a screen was last left on.** Off by default, and
-  inert without `urlParam`, which supplies the names: a remembered INDEX would repoint the moment a tab
-  is inserted. Stored per path in `sessionStorage`, so tomorrow is a fresh visit. **A link always wins** —
-  the query parameter is read first, and memory only fills the gap the first tab deliberately leaves.
-  Tab one is remembered too, or going back to it would be forgotten. **You can now delete** a helper
-  that kept the last tab per path.
+  inert without `urlParam` (and outside a routed context), because the parameter supplies the names: a
+  remembered INDEX would repoint the moment a tab is inserted. Stored under
+  `ds-tabs:{path}:{param}` in `sessionStorage`, so two strips on one path stay apart and tomorrow is a
+  fresh visit. **A link always wins** — the query parameter is read first, and memory answers whenever
+  it is absent, which is any arrival at the bare path, the deliberately-empty first tab included.
+  Tab one is remembered too, or going back to it would be forgotten. Only a user's own click or
+  keypress writes the memory; a host driving `selectedIndex` writes neither it nor the URL, as before.
+  **You can now delete** a helper that kept the last tab per path.
 
 - **`DS_CONFIG.modal.dividers` — turn modal rules off for a whole app in one declaration.**
   `provideDsConfig({ modal: { dividers: false } })` instead of a binding on every `<ds-modal>`, with an
   explicit `[dividers]` on an element still winning. It also reaches where an attribute cannot: a
   `ModalService` confirm renders a `ds-modal-card` with no `ds-modal` ancestor to bind, and the injected
-  default gets there (verified — the confirm's card comes out `no-dividers`). **You can now delete** a
+  default gets there (verified — the confirm's card comes out `no-dividers`). One limit on that: the
+  service is `providedIn: 'root'` and builds the confirm's injector from the root, so only a ROOT-level
+  `provideDsConfig` reaches it — a route- or component-scoped one does not. **You can now delete** a
   `dividers` binding repeated per modal, and any `!important` reach into `.modal > .header|.body|.actions`
   written because the token swap left the padding stacked. Note `[dividers]` now reads
-  `boolean | null` internally so "unset" is distinguishable from `false`; bindings are unaffected.
+  `boolean | null` internally so "unset" is distinguishable from `false`. A literal `[dividers]="false"`
+  is unaffected; a binding that can evaluate to `null`/`undefined` is not, since that used to mean
+  "off" and now means "unset", which resolves to `true`.
 
 - **`triggerSize` on `ds-filter-bar`, to match its "+N" trigger to the filters beside it.** Default
   `md`, so nothing moves. The bar cannot work this out for itself — `dsFilterItem` carries a width and
@@ -162,8 +199,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   which is what a wrapped `debounceTime` usually gets wrong: emptying the field, the Clear button, and
   Enter — the last flushing a keystroke still in flight so `submitted` carries what the reader can see.
   Emptying also cancels a pending keystroke, so type-then-clear cannot land the stale query a moment
-  later. A host writing `value` mid-typing wins and cancels the timer. **You can now delete** a
-  debounce wrapper around this control.
+  later. A host writing `value` mid-typing wins and cancels the timer. The Clear button follows what is
+  ON SCREEN rather than the debounced `value`, so at a non-zero delay it appears on the first keystroke
+  instead of after the wait. **You can now delete** a debounce wrapper around this control.
 
 - **`--ds-stat-value-white-space` and `--ds-stat-value-font-size`, for a tile whose value is a phrase.**
   The value line is `nowrap`, which is right for the number `ds-stat` was built around and wrong for a
@@ -191,7 +229,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`ds-password-rules`: a pending rule is an empty circle, and a rule fades as it passes.** The
   pending glyph was `minus`, which at 14px beside 12px text read as a stray em-dash rather than an
   unticked box; it is now `circle` — the empty counterpart of the check it turns into. A `circle` icon
-  joins the set (52 now), available to anything else that wants one. The row also transitions its
+  joins the set (86 now), available to anything else that wants one. The row also transitions its
   colour over `--duration-base` instead of snapping, because the reader is looking at the field they
   are typing in, so an instant change says a rule flipped but not which one. No reduced-motion guard
   is needed: the duration tokens are already zeroed globally. Row spacing is unchanged at
@@ -215,8 +253,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   did. Pasting a full code is unaffected — it cancels the native input, so nothing ever reaches the box.
 
 - **A `warning` now shows on the control, and one rule drives all nine bordered fields.** `warning="…"`
-  coloured the message and left the box untouched — no `.warning` rule existed anywhere in the library —
-  which is what a phone screenshot caught. It now takes a `--warning-text` border. Not `--warning`:
+  coloured the message and left the box untouched — `.warning` was styled in `ds-field-message` and in
+  the banner-shaped components, and on none of the nine bordered controls — which is what a phone
+  screenshot caught. It now takes a `--warning-text` border. Not `--warning`:
   that is `--yellow-400`, **1.47:1** against a white field where WCAG 1.4.11 asks 3:1 for a component
   boundary, so the obvious mirror of the error recipe would have drawn a border nobody can see;
   `--warning-text` is the first rung of the ramp that clears it, at 4.59:1. Border only, deliberately —
@@ -227,75 +266,96 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   attribute: five painted the error box as border + fill and four as a border alone;
   **`ds-autocomplete` reached for a `--border-error` token that does not exist**, so an invalid
   autocomplete drew a *near-black* border (`rgb(22,26,40)` — `border-color` falling back to
-  `currentColor`) instead of a red one; and the same state was spelled three ways
-  (`.error` on the wrapper, `:host(.invalid)`, `&.invalid` on the box). **What changes visually:**
+  `currentColor`) instead of a red one; and the same state was spelled three ways — `.error` on the
+  wrapper in `ds-input` and `ds-textarea`, `.error` on the box itself in `ds-select`, the two pickers and
+  `ds-autocomplete`, and `:host(.invalid)` in `ds-color-picker` and `ds-otp-input`. **What changes visually:**
   `ds-autocomplete` finally shows red, and `ds-multi-select`, `ds-color-picker` and `ds-otp-input` gain
-  the tinted fill their five siblings already had. Every per-component override token that shipped in
-  0.7.x (`--ds-input-bg-color-error`, `--ds-select-focus-shadow-error`, …) still wins — the mixin takes
-  them as arguments rather than replacing them with the family token.
+  the tinted fill their five siblings already had. One precedence moved with the shared rule: the ladder
+  is now error → warning → success, so an `ds-input` carrying both `[success]="true"` and a `warning`
+  string paints the warning, where it used to paint the success and ignore the warning entirely. Every
+  per-component override token that shipped in 0.7.x (`--ds-input-bg-color-error`,
+  `--ds-select-focus-shadow-error`, …) still wins — the mixin takes them as arguments rather than
+  replacing them with the family token. The `.error` / `.success` wrapper classes are **still emitted**
+  by `ds-input`, `ds-textarea`, `ds-select` and the two pickers, so a selector of yours still matches —
+  but the library no longer paints through them, so a rule written to stack on top of the DS one now
+  stands alone.
 
-  **DELETE-LIST:** the dead `.invalid` host class on `ds-color-picker`, `ds-otp-input` and
-  `ds-multi-select` is gone, since nothing styled it any more. If you selected it from outside, use
-  `[data-field-state="error"]`. `ds-checkbox`, `ds-radio`, `ds-radio-group`, `ds-switch` and `ds-slider`
-  bind the same attribute but keep message-only treatment: they have no bordered box, and their
-  existing paint is untouched.
+  **DELETE-LIST:** the dead `.invalid` host class on `ds-color-picker` and `ds-otp-input` is gone, since
+  nothing styled it any more; if you selected it from outside, use `[data-field-state="error"]`.
+  `ds-multi-select` loses the same class from its internal `.field-trigger` — it was never on the host,
+  so `ds-multi-select.invalid` never matched from outside anyway. **The attribute is on those nine and
+  only those nine.** `ds-checkbox`, `ds-radio`, `ds-radio-group` and `ds-switch` do not carry it: they
+  have no bordered box, they signal through `aria-invalid` and `ds-field-message`, and their paint is
+  untouched. Nor does `ds-slider`, which keeps its own `:host(.invalid)` binding and still colours its
+  fill and thumb `--error` — so a selector written against `[data-field-state]` will not reach any of
+  the five.
 
 - **Binding `error` now tints the control, not just the message.** Every field that takes an `error`
-  string — all 15, via the shared `resolveFieldMessage` — put a red message under a box that stayed
+  string — all 14, via the shared `resolveFieldMessage` — put a red message under a box that stayed
   neutral grey, because the invalid state was computed from `[invalid]` and from validator `errors` but
   not from an explicit `error`. That contradicted the input's own contract ("binding it says the
   consumer has already decided this field is in error") and it is what a phone screenshot caught: a red
   line under an untouched field. `error="…"` now drives the red border, the tinted fill, the error focus
-  ring and `aria-invalid`, exactly as `[invalid]="true"` always did. **If you were binding both**
+  ring and `aria-invalid`, exactly as `[invalid]="true"` always did — the border and fill on the nine
+  bordered fields, and `aria-invalid` plus the message state on the other five, which have no box to
+  paint. **If you were binding both**
   (`[invalid]="hasError" error="…"`) nothing changes. **If you were binding `error` alone and relying on
   the box staying neutral**, that is now the error box — drop to `warning` for an advisory message, or
   bind `hint` and leave `error` empty.
 
 - **A field inside `ds-field-group` no longer pins its value to the top of the row.** Found by Stas
   testing the docs on a phone, and it affected **every segment except `ds-button`**: the value sat
-  against the top edge instead of the vertical centre, off by 10px in a 39px row (7px at `size="sm"`,
-  13px at `size="lg"`). The group stretches its segments to one row height, but a segment's host is a
-  block, so the `height: 100%` each one set on its bordered box resolved against `auto` — the box kept
-  its 22px content height, and the value with it. `ds-button` was exempt only because its host already
-  declared `display: inline-flex`. Every segment now measures dead centre at all three sizes. The six
-  `.in-group` blocks — byte-identical apart from the box's class name, which is why the defect sat in
+  against the top edge instead of the vertical centre. The group stretches its segments to one row
+  height, but a segment's host is a block, so the `height: 100%` each one set on its bordered box
+  resolved against `auto` — the box kept its own content height, and the value with it. `ds-button`
+  escaped the defect only because its host already declared `display: inline-flex`; its block was
+  rewritten with the rest all the same, to `flex: 1; height: auto`. Every segment now centres at all
+  three sizes. The six `.in-group` blocks — byte-identical apart from the box's class name, which is why the defect sat in
   five of them at once — are now one `field-group-segment` mixin, so the next change to segment
   chrome cannot land in some of them and miss the rest.
 
 - **`components.md` had drifted, and it ships inside the package.** The file `tools/build-schematics.mjs`
   copies into `dist/ds/` for a consumer's own agents to read was still documenting the API and token names
-  of two renames ago: **37 of the 97 `--ds-*` tokens it named no longer exist** (`--ds-button-fg`,
+  of two renames ago: **46 of the 94 `--ds-*` tokens it named no longer exist** (`--ds-button-fg`,
   `--ds-sidenav-item-bg-hover`, the whole `--ds-pagehdr-*` family, …), `ds-button` was described with its
   pre-2026-06 single `variant` axis (`'primary' | 'secondary' | 'tertiary' | …`) instead of
   `color` × `variant`, and the topbar section documented a `--ds-topbar-margin-b` that **has never
   existed** — telling readers the topbar owns the gap below it and that pages must not add their own.
-  Every name is now the shipped one, verified against `src/lib` rather than assumed, and the two
-  paragraphs are rewritten from the components' actual API.
+  Every name in the body is now the shipped one, verified against `src/lib` rather than assumed, and the
+  two paragraphs are rewritten from the components' actual API. The file's own header still carries the
+  older warning that its `ds-button` section is out of date — that line now contradicts the section
+  beneath it and is being cleared separately.
 
 - **An outlined button no longer paints its own white background.** `ds-button variant="outline"`,
   `ds-icon-button variant="outlined"` and the outlined half of `ds-split-button` defaulted their fill to
   `--surface-default`, which is invisible on a white page and wrong everywhere else: on a tinted card, a
   table toolbar or an alert the button read as a white sticker laid over the surface instead of a control
   drawn on it. The fill is now `transparent`, which is what Material 3 and Bootstrap both specify for this
-  variant. Hover still tints (`--c-subtitle` is opaque), and the disabled state stays transparent as well —
-  mixing a transparent fill toward the disabled surface would have produced a 72%-alpha box, so the border
-  and label carry it, as they do on ghost. **If a button of yours sits on a photo, a gradient or any busy
-  ground and relied on that white fill**, set it back per instance:
-  `--ds-button-bg-color: var(--surface-default)`.
+  variant. Hover still tints — `--c-subtitle` on `ds-button`, `--surface-secondary` on the other two, all
+  opaque. On `ds-button` and `ds-icon-button` the disabled state stays transparent as well, because mixing
+  a transparent fill toward the disabled surface would have produced a 72%-alpha box, so the border and
+  label carry it, as they do on ghost; a disabled `ds-split-button` is the exception and still paints
+  `--surface-muted`, which this change did not reach. **If a button of yours sits on a photo, a gradient
+  or any busy ground and relied on that white fill**, set it back per instance:
+  `--ds-button-bg-color: var(--surface-default)`, or `--ds-icon-button-bg-color` /
+  `--ds-split-button-outline-bg-color` for the other two.
 
 - **Everything focusable now gets the DS focus ring, not the browser's black outline.** The library
-  styled focus on the elements that remembered to — 45 of 71 component stylesheets — and everything else
+  styled focus on the elements that remembered to — 45 of 81 component stylesheets — and everything else
   fell through to `outline: auto`, which Chrome paints black: the close button inside `ds-alert`,
   `ds-banner` and `ds-drawer`, a link in projected content, and any plain `<button>` an app writes itself.
-  One base rule now covers them, `:where(:focus-visible)` resolving `--ds-control-focus-shadow`, written at
-  **zero specificity** so every component rule and every app rule still out-ranks it. The `data-focus`
-  switch is unaffected — verified in all five modes (default, `ring`, `field`, `edge`, `outline`), the last
-  of which still replaces the shadow with a real outline. **If you deliberately suppressed a focus ring**
-  by leaving an element unstyled, it will now show one; give that element `box-shadow: none` explicitly.
+  One base rule now covers them: `:where(:focus-visible)` sets `outline: none` and resolves
+  `--ds-control-focus-shadow`, written at **zero specificity** so every component rule and every app rule
+  still out-ranks it. The `data-focus` switch is unaffected — all five modes (default, `ring`, `field`,
+  `edge`, `outline`) behave as before, the last replacing the shadow with a real outline at a higher
+  specificity. **If you deliberately suppressed a focus ring** by leaving an element unstyled, it will now
+  show one; give that element `box-shadow: none` explicitly. Note the rule also drops the outline such an
+  element used to get from the browser, so if an `outline` was what you wanted there, declare it yourself.
 
 - **A disabled `ds-button` / `ds-icon-button` now reads as disabled on a COLOURED accent.** One label recipe
-  for every variant — `oklch(from accent 70% 0.035 h)` — replacing the 58% default plus the 52% overrides
-  tonal and outline carried. Those sat right where a saturated accent already is, so the disabled label
+  for every variant — `oklch(from accent 70% 0.035 h)` — replacing the 58% default, and on `ds-button` the
+  52% overrides that tonal and outline carried (`ds-icon-button` only ever had the base). Those sat right
+  where a saturated accent already is, so the disabled label
   differed from the live one by **1.16–1.60:1** on four of the five variants; only `color="neutral"` was
   safe, because its enabled label is nearly black. Now **2.40–2.68:1** across every variant and colour.
   Measured, not guessed: the whole matrix (5 variants x 3 colours x rest/hover/active/disabled, both
@@ -306,9 +366,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   if you have it:** an override retuning `--opacity-muted` on `ds-button` or `ds-icon-button` never did
   anything — neither component reads that token.
 
-- **A disabled option was dimmed twice, and had nearly disappeared.** `ds-select`, `ds-date-picker`,
-  `ds-time-picker`, `ds-menu-item` and the shared dropdown row each set `--text-disabled` AND
-  `opacity: 0.6` on top of it. Measured in the light theme: that lands at **1.68:1** against the
+- **A disabled control was dimmed twice, and had nearly disappeared.** Five places each set
+  `--text-disabled` AND `opacity: 0.6` on top of it: the closed triggers of `ds-select`,
+  `ds-date-picker` and `ds-time-picker`, plus two genuine rows — `ds-menu-item` and the shared dropdown
+  option. Measured in the light theme: that lands at **1.68:1** against the
   surface, where the colour alone gives **2.53:1** and an enabled row sits at 11.15:1 — so the state was
   never in danger of being missed, the text was. The opacity is gone from those five; the colour carries
   the state, which is what it was chosen for. Where opacity IS the only signal — a disabled calendar day,
@@ -335,8 +396,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   none"), so it is now withheld whenever `loading` is anything but `false`. **You can delete the guard
   you wrote for this** — and check the ones you did not write: of one consumer's 14 overlay-loading
   tables, 9 were shipping the sentence during a load, because branching failure-vs-empty looks complete
-  while saying nothing about loading. If you deliberately want copy during a load, that is what the
-  `[empty]` slot's own content plus `loading="skeleton"` express.
+  while saying nothing about loading. Note this closes the door on the `[empty]` slot during a load
+  rather than opening another one: there is no `loading` value that renders it, so copy you want a
+  reader to see WHILE a load runs has to come from your own page, above or around the table.
 
 - **Releasing the mouse on the backdrop closed `ds-modal` and `ds-bottom-sheet`, even when the press
   started inside the dialog.** Select a sentence in the body and let go past the edge, or overshoot with
@@ -348,7 +410,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   its own outside-click. `ds-drawer` and the `ModalService` confirm were never affected (their scrim is
   a SIBLING of the panel, so the common ancestor is a third element) and are unchanged — all four were
   re-checked. **If a test of yours dismisses a dialog with `backdropEl.click()`**, it now needs
-  `pointerdown` + `pointerup` on the backdrop; a real mouse or touch has always sent both.
+  `pointerdown` + `pointerup` on the backdrop, both with the primary button; a real mouse or touch has
+  always sent both. One side effect on `ds-bottom-sheet`: the sheet no longer stops click propagation
+  (the guard it needed for the old `click` listener is gone with it), so a click inside the sheet now
+  reaches an ancestor handler of yours, the sheet being rendered inline rather than portaled.
 
 - **`ds-filter-bar` clipped the focus ring of its first and last inline filter.** The measured row was
   `overflow: hidden` and each slot is sized to exactly the width `dsFilterItem` declared, so the row's
@@ -380,7 +445,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   not enough, and a library cannot set it for you. So `ds-auth-layout`'s notch padding and
   `ds-bottom-sheet`'s home-indicator padding have been inert in every app that never added it. Both
   component pages now say so and show the tag, and the docs site sets it, so the behaviour can be seen
-  rather than described.
+  rather than described. **One real fix rode along:** `ds-bottom-sheet` was calling
+  `env(safe-area-inset-bottom)` with no fallback inside a `padding` shorthand, and an engine that does
+  not know the variable throws out the whole declaration — taking the sheet's horizontal padding with
+  it. It now reads `env(safe-area-inset-bottom, 0px)`, as its siblings already did.
 
 ### Changed
 
@@ -391,8 +459,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   it is a real piece of motion work, so it goes. **Migration is deleting the attribute:**
   `[floating]="true"` → nothing, and the label renders above the field like every other field in the
   library. One thing to re-check when you do: a floating input stood at `--hit-touch` (48px at default
-  density) and now takes the ordinary size scale (39px at `md`), so a row whose height was built around
-  one moves. Gone with it are the five internal tokens only this variant read
+  density) and now takes the ordinary size scale (`--field-h-md` → `--hit-cozy`, 40px at default
+  density), so a row whose height was built around one moves. Gone with it are the five internal tokens only this variant read
   (`--field-h-floating`, `--field-floating-label-fs`, `--field-floating-label-lh`,
   `--field-floating-label-top`, `--field-floating-pad-t`) — overriding them is now inert.
   `--ds-elevation-floating` is a different token for toasts and is untouched.
@@ -416,24 +484,41 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   things `ds-alert`'s variant drives, so a status dialog and a status alert on one screen cannot
   disagree. The default icon matters: a tint alone signals by colour only, which fails the
   don't-rely-on-colour rule. `icon` still overrides the pick, and `error`/`warning` default the
-  dialog to `alertdialog` (an explicit `dialogRole` still wins). `dialogRole` itself is now
-  `'dialog' | 'alertdialog' | null` and defaults to `null` rather than `'dialog'`, so "unset" is
-  distinguishable from a deliberate `dialog`; what renders is unchanged unless you set a status.
+  dialog to `alertdialog`. `dialogRole` lives on `ds-modal-card` only — it is now
+  `'dialog' | 'alertdialog' | null`, defaulting to `null` rather than `'dialog'` so "unset" is
+  distinguishable from a deliberate `dialog`, and an explicit value still wins. `ds-modal` has no such
+  input, so `<ds-modal status="error">` becomes an `alertdialog` with nothing to override it. What
+  renders is unchanged unless you set a status. Three tokens come with the tints:
+  `--ds-modal-title-text-color-warning`, `-success` and `-info`, joining the `-error` that already
+  existed.
 
 - **Chips cap by width by default.** `maxVisibleChips` on `ds-autocomplete` and `ds-multi-select`
   now defaults to `"fit"` instead of "show everything": the trigger keeps as many chips as it is
   wide and collapses the rest into "+N more". A trigger that grew a line per selection was pushing
-  the rest of the form down the page. **To keep the old behaviour, bind
-  `[maxVisibleChips]="null"`**; a NUMBER still caps at exactly that many.
+  the rest of the form down the page. **To keep the old behaviour, bind `[maxVisibleChips]="null"`.**
+  Two more things moved with the default, and both are easy to miss. A trigger in any measuring mode is
+  now single-line (`flex-wrap: nowrap`), and its chips are held to one line each and clipped rather than
+  wrapped — so a chip carrying more than a short label gets squeezed, where `null` still wraps the row.
+  And **`[maxVisibleChips]="0"` has inverted**: it used to mean "show them all" and now means "show
+  none", putting the whole selection behind `+N more`. If you have a `0` anywhere, it was almost
+  certainly written for the old meaning; `null` is what that meant.
 
 - **`size` is now `DsSize | null` on the fourteen controls that take it**, so an unbound `size` can
   fall through to `DS_CONFIG.control.size`. **Nothing changes in a template** — `size="sm"` binds as
   before and an unbound control still renders `md`. **What changes is reading it back:** `size()` now
-  returns `null` when nothing was bound, where it used to return `'md'`. If you read a control's
-  `size()` — from a host, a test, or a `viewChild` — read the public `sizeResolved()` instead. Same for
-  `ds-card`'s `elevation`, `ds-icon`'s `size` and `ds-badge`'s `withDot`. **If you implement
-  `DsFieldGroupContext`**, its member is now `sizeResolved` rather than `size`, for the same reason: a
-  segment must not have to resolve the group's size a second time.
+  returns `null` when nothing was bound, where it used to return `'md'`. The same went for
+  `ds-card`'s `elevation` and `padding`, `ds-icon`'s `size`, `ds-badge`'s `withDot`, `ds-table`'s
+  `bordered` and `stickyScrollbar`, `dividers` on both modal components, and `brand` / `logoLetter` /
+  `tagline` on `ds-sidenav` and `ds-auth-layout` — all of them now answer `null` for "nothing bound"
+  rather than the old default. **There is no public accessor for the resolved value**, and this is the
+  awkward part of the release: each component holds a `sizeResolved()` (or `elevationResolved()`,
+  `withDotResolved()`, …) but declares it `protected`, so reading it from a host, a test or a
+  `viewChild` does not compile. `ds-field-group` is the single exception, where `sizeResolved` is
+  public. Until that is opened up, a host that needs to know what a control is rendering at should keep
+  the value it bound, or resolve `DS_CONFIG.control.size` itself — the fallbacks are unchanged
+  (`'md'`, `'flat'`, `16`, `false`). **If you implement `DsFieldGroupContext`**, its member is now
+  `sizeResolved` rather than `size`, for the same reason: a segment must not have to resolve the
+  group's size a second time.
 
 - **`[data-density="ultra-compact"]` now compresses surface padding too** — `--ds-container-pad`,
   the inner padding `ds-card` and `ds-stat` share, drops from 24px to 16px in that tier only.
@@ -459,24 +544,30 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   explicit width on your logo, add `width: auto` yourself to keep the old scaling.
 
 - **The chips of both pickers now render inside a `<span class="chip-row">`** rather than directly
-  in the trigger — the element the width measurement needs. **Layout is unchanged**: outside `"fit"`
-  the wrapper is `display: contents`, so it adds no box and the chips stay flex items of the trigger,
-  identical in spacing, wrapping and height. What breaks is a CSS override that walks the structure:
+  in the trigger — the element the width measurement needs. **On `[maxVisibleChips]="null"` it is a
+  wrapper and nothing more**: `display: contents`, so it adds no box and the chips stay flex items of
+  the trigger, identical in spacing, wrapping and height. In the measuring modes — which includes the
+  new default — the row becomes a `nowrap` flex box that clips, which is how the cap is enforced.
+  Either way, what breaks is a CSS override that walks the structure:
   `.autocomplete-trigger > ds-tag`, `:nth-child` written against the trigger's children, or
   `ds-tag + .autocomplete-input` adjacency — the chips are no longer siblings of the filter input,
-  the addon slots or the chevron. Drop the combinator or insert `.chip-row`. Chips carry `data-chip`
+  the addon slots or the chevron. Drop the combinator or insert `.chip-row`. Multi-select's trigger is
+  `.field-trigger`, not `.trigger`, if you are rewriting a selector against it. Chips carry `data-chip`
   and the marker `data-chip-overflow`; the measurement finds them that way, so leave them in place.
 
 - **If you EXTEND a DS component, this is the release that will break you.** `npm run class-surface`
   against 0.9.1 reports **27 exported classes whose member surface grew** — among them `ButtonComponent`,
   `TableComponent`, `ModalComponent`, `SearchComponent`, `AvatarComponent`, `IconComponent`, both
   pickers, and every control that gained `sizeResolved`. A subclass declaring any of those names now
-  fails with TS4114. **Four classes also LOST members**, which is the case a subclass notices differently
+  fails with TS4114. **Five classes also LOST members**, which is the case a subclass notices differently
   — an `override` that now overrides nothing: `ModalComponent.error` and `.onBackdrop`,
-  `ModalCardComponent.error`, `BottomSheetComponent.stop`, and `TableComponent.exporting` /
-  `.exportStatus` (those two still exist, but as public readonly signals rather than the protected
-  writables a subclass could set). Subclassing a DS component remains unsupported, and this is the third
-  release running where it broke someone, so it is stated in full rather than by example.
+  `ModalCardComponent.error`, `BottomSheetComponent.stop`, `InputComponent.floating`, and
+  `TableComponent.exporting` / `.exportStatus` (those two still exist, but as public readonly signals
+  rather than the protected writables a subclass could set). Subclassing a DS component remains
+  unsupported, and this is the third release running where it broke someone, so it is stated in full
+  rather than by example. `class-surface` sees only names it can parse as fields or methods, so a plain
+  `private pending: … = null` is invisible to it — `SearchComponent` grew two of those (`pending`,
+  `pushed`) on top of the seven it reports.
 
 ## 0.9.1 — 2026-08-10
 
