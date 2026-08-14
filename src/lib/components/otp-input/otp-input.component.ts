@@ -129,12 +129,18 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
 
       return;
     }
+    // Every branch writes element.value itself. `[value]` cannot be relied on to
+    // undo what the browser put in the box: Angular diffs the binding against the
+    // value IT last wrote, so typing a second character into a filled cell leaves
+    // that cell's signal unchanged ('1' both times) — the DOM write is skipped and
+    // the browser's own "12" stays on screen while the model already reads 1, 2.
     if (cleaned.length === 1) {
       this.writeCell(index, cleaned);
       element.value = cleaned;
       this.focusBox(index + 1);
     } else {
       this.distribute(cleaned, index);
+      element.value = cleaned[0];
     }
   }
 
