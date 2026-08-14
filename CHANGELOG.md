@@ -188,6 +188,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **`ds-otp-input` no longer shows two digits in one cell.** Typing a second character into a cell that
+  already held one left `12` sitting in that box while the model had already split it correctly across
+  two cells — so what the user read and what the form held disagreed. The distribution was never the
+  bug: `[value]` was. Angular diffs a binding against the value *it* last wrote, and the typed-in cell's
+  signal is unchanged by the split (`'1'` before and after), so the DOM write was skipped and the
+  browser's own `"12"` survived. That branch now writes the element itself, like the other two already
+  did. Pasting a full code is unaffected — it cancels the native input, so nothing ever reaches the box.
+
 - **A `warning` now shows on the control, and one rule drives all nine bordered fields.** `warning="…"`
   coloured the message and left the box untouched — no `.warning` rule existed anywhere in the library —
   which is what a phone screenshot caught. It now takes a `--warning-text` border. Not `--warning`:
