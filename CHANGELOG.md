@@ -515,6 +515,22 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **`avatarTint` switches from OKLCH to `hsl(H 50% 62%)` with white initials, always.** The seeded
+  tints read as dull, and every set of initials came out black. The auto-contrast was not the fault:
+  measured across the hue circle, the old `oklch(62% 0.14 h)` put every hue's luminance between 0.218
+  and 0.271 against a 0.179 black/white crossover, so black was genuinely the better pick every time
+  (5.4–6.5:1) — the switch was right, the lightness never let it switch. The new recipe is pinkmoon's
+  own, adopted deliberately: HSL lightness is not perceptually even, so yellows land far lighter than
+  blues, and that unevenness is exactly what makes the row read as bright.
+  **It is a knowing trade against contrast.** White on the lighter hues measures as little as
+  **1.65:1**, under the 4.5:1 WCAG AA asks of text — verified across the full 20–300° range, where all
+  29 sampled hues fall short. Suitable where the avatar sits beside a name that is written out anyway;
+  where the initials are the only identifier, pass your own `lightness` / `foreground`.
+  **API:** the `chroma` option is gone, replaced by `saturation` (HSL %, default 50). `lightness` keeps
+  its name and its default of 62 but now means **HSL** lightness, so an existing numeric override will
+  land somewhere different — re-pick it rather than assuming it carried over. `foreground` now defaults
+  to `#fff` instead of auto-choosing; pass it explicitly to get anything else. `avoidHues` is unchanged.
+
 - **`ds-input`'s `floating` label is removed, with no replacement.** It only ever did half the job: the
   label was drawn inside a taller control, but it never moved out of the field on focus — the animation
   from inside-the-box to above-it *is* the pattern, and without it an empty field reads as a

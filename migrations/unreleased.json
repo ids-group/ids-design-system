@@ -303,6 +303,22 @@
         "alertdialog",
         "role=\"dialog\""
       ]
+    },
+    {
+      "id": "avatar-tint-chroma-to-saturation",
+      "kind": "removed-api",
+      "old": "avatarTint(seed, { chroma })",
+      "new": "avatarTint(seed, { saturation })",
+      "note": "avatarTint now produces hsl(H 50% 62%) with a pinned white foreground, replacing oklch(62% 0.14 H) with an auto-chosen black/white foreground. THREE option changes: (1) `chroma` is REMOVED -- use `saturation`, an HSL percentage, default 50; a leftover `chroma` is now silently ignored, so this one does not fail the build. (2) `lightness` keeps its name AND its default of 62, but now means HSL lightness rather than OKLCH lightness -- the same number produces a different colour, so re-pick any override rather than assuming it carried across. (3) `foreground` now defaults to '#fff' instead of picking black-or-white by luminance; pass it explicitly for anything else. `avoidHues` and the seed hashing are unchanged, so a given seed keeps its hue. ACCESSIBILITY, deliberate and accepted: white initials on the lighter hues measure as little as 1.65:1, below the 4.5:1 WCAG AA asks of text -- all 29 sampled hues in the 20-300 range fall short. If your avatars carry initials as the ONLY identifier, override `lightness` (about 50) and keep white, which measures 5.3-6.6:1.",
+      "searchHints": [
+        "avatarTint",
+        "chroma",
+        "AvatarTintOptions",
+        "oklch",
+        "avoidHues",
+        "lightness",
+        "foreground"
+      ]
     }
   ],
   "informational": [
