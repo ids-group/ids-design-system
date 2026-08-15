@@ -240,6 +240,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **The collapsed `ds-sidenav` stopped squashing its items into a lozenge.** Every item in the rail
+  measured **20×40** where the rail gives it 40×40, so the active item's blue tile rendered as a
+  vertical bean with the orange rail bar down one side of it — and the alert dot, positioned from the
+  item's corner, landed above the glyph's middle instead of beside it. One cause for both:
+  `:host(.collapsed)` set `align-items: center`, which stops a flex child stretching, so each projected
+  `ds-sidenav-item` and `ds-sidenav-group` shrank to its 20px icon and the `width: 100%` on `.item`
+  resolved against *that*. The rail no longer centres its children — `.brand` already centres its own
+  contents, which is all that line was there for. Items now measure 39×40 (the rail's 64px less its
+  padding and border). The dot is anchored to the GLYPH's top-right corner rather than the tile's, via a
+  new `--sidenav-collapsed-glyph`, so it stays put if the rail width ever changes.
+  **ACTION** only if you relied on a projected child of a collapsed `ds-sidenav` sizing to its own
+  content — a custom element in the rail now stretches to the full 40px column.
+
 - **`ds-time-picker`: the time you just picked stopped looking selected.** Hovering a chosen hour or
   minute painted it with the neutral hover fill while it kept the selected white text — white on pale
   grey, unreadable. Pure specificity: `.opt:hover:not(:disabled)` scores (0,3,0) and out-ranked
