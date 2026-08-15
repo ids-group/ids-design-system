@@ -48,7 +48,12 @@
   text-align: center;
   transition: background-color var(--duration-fast) var(--ease-standard);
 
-  &:hover:not(:disabled) {
+  // `:not(.is-selected)` is load-bearing, not tidiness: `.opt:hover:not(:disabled)`
+  // scores (0,3,0) and out-ranked `.opt.is-selected` at (0,2,0), so the neutral
+  // hover fill painted over the selected fill while the selected TEXT colour
+  // stayed — white on pale grey. On a touch screen the last-tapped cell keeps
+  // `:hover` until something else is tapped, so a just-picked minute sat unreadable.
+  &:hover:not(:disabled, .is-selected) {
     background-color: var(--_time-picker-option-bg-color-hover);
   }
 

@@ -6939,6 +6939,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": false,
         "description": "A complete time was picked, as `HH:mm`. Not emitted while only one column has moved."
+      },
+      {
+        "name": "partPicked",
+        "kind": "output",
+        "type": "TimeColumnId",
+        "union": [
+          "hours",
+          "minutes",
+          "period"
+        ],
+        "default": null,
+        "required": false,
+        "description": "Which column the pick came from. `timeChange` alone cannot say: it carries a whole time, and a host that wants to close once the user has been through both columns cannot infer the difference between \"chose the same hour again\" and \"did not touch hours\". Emitted immediately after `timeChange`."
       }
     ]
   },

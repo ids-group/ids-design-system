@@ -39,7 +39,10 @@ import {
   type DsFieldError,
   type DsFieldErrorsInput,
 } from '../field-errors';
-import { TimeColumnsComponent } from '../time-columns/time-columns.component';
+import {
+  TimeColumnsComponent,
+  type TimeColumnId,
+} from '../time-columns/time-columns.component';
 import { DS_CONFIG } from '../../config/ds-config';
 import {
   clampToRange,
@@ -174,6 +177,12 @@ export class TimePickerComponent
   protected readonly uid = `ds-timepicker-${++nextId}`;
   protected readonly labelId = `${this.uid}-label`;
   protected readonly openSegment = signal<Segment | null>(null);
+  // Which columns the user has been through since THIS opening. In single mode
+  // the panel has no Done button, so it closes itself once both halves of a time
+  // have been chosen — "picked an hour and a minute" is the completion. Reset on
+  // open, so re-opening a field that already holds a value asks for both again
+  // rather than closing on the first tap.
+  private readonly pickedParts = signal<ReadonlySet<TimeColumnId>>(new Set());
   private overlayRef: OverlayRef | null = null;
 
   protected readonly singleTrigger =
@@ -331,6 +340,7 @@ export class TimePickerComponent
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
     this.openSegment.set(segment);
+    this.pickedParts.set(new Set());
     afterNextRender(() => this.columns()?.focusSelected(), {
       injector: this.injector,
     });
@@ -390,6 +400,18 @@ export class TimePickerComponent
       return;
     }
     this.value.set(next);
+  }
+
+  protected onPartPicked(part: TimeColumnId): void {
+    const seen = new Set(this.pickedParts()).add(part);
+    this.pickedParts.set(seen);
+    if (
+      this.mode() === 'single' &&
+      seen.has('hours') &&
+      seen.has('minutes')
+    ) {
+      this.close('select');
+    }
   }
 
   protected setNow(): void {

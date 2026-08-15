@@ -143,6 +143,7 @@
       [maxTime]="panelMaxTime()"
       [disabledTime]="disabledTime()"
       (timeChange)="onPick($event)"
+      (partPicked)="onPartPicked($event)"
     />
 
     <div class="time-footer">
@@ -154,13 +155,15 @@
         Now
       </button>
 
-      <button
-        type="button"
-        class="time-action primary"
-        (click)="onEscape()"
-      >
-        Done
-      </button>
+      @if (mode() === 'range') {
+        <button
+          type="button"
+          class="time-action primary"
+          (click)="onEscape()"
+        >
+          Done
+        </button>
+      }
     </div>
   </div>
 </ng-template>
