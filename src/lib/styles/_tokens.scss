@@ -467,6 +467,7 @@
   --sidenav-pad-brand-b:     var(--space-6);             /* logo bottom padding */
   --sidenav-logo-size:       var(--hit-sm);          /* 28px — square brand mark */
   --sidenav-collapsed-item:  var(--hit-cozy);        /* 40px — collapsed nav-item hit area */
+  --sidenav-collapsed-glyph: var(--icon-lg);         /* 20px — matches the size the item template renders its icon at */
   --sidenav-section-pad-b:   var(--space-1-5);           /* nav-section bottom padding */
   --sidenav-item-rail-width: 3px;                    /* active-item left rail */
 

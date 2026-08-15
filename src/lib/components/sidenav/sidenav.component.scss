@@ -72,8 +72,12 @@
 :host(.collapsed) {
   width: var(--_sidenav-width-collapsed);
   padding: var(--space-3);
-  align-items: center;
   overflow-x: clip;
+
+  /* NOT `align-items: center`. That stopped the projected items and groups from
+     stretching, so each shrank to its icon — 20px inside a 40px rail — and the
+     `width: 100%` on `.item` resolved against that, turning the active tile into a
+     20x40 lozenge. `.brand` centres its own contents, so nothing here needed it. */
 
   .brand {
     padding: var(--sidenav-pad-brand-y) 0 var(--sidenav-pad-brand-b);

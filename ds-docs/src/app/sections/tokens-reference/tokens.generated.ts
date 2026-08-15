@@ -4819,6 +4819,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Sidenav collapsed item hit size (--hit-cozy)."
       },
       {
+        "name": "--sidenav-collapsed-glyph",
+        "value": "var(--icon-lg)",
+        "notes": "20px — the icon size the collapsed rail's items render at, and what the alert dot is positioned against so it rides the glyph's corner rather than the tile's."
+      },
+      {
         "name": "--sidenav-section-pad-b",
         "value": "var(--space-1-5)",
         "notes": "Sidenav section heading bottom padding (--space-1-5)."

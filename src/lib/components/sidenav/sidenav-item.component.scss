@@ -132,10 +132,15 @@
       display: none;
     }
 
+    /* The dot rides the GLYPH's top-right corner, not the tile's. Anchored to the
+       tile it sat 4px clear of a 20px glyph and would drift further on any wider
+       rail — the template renders that glyph at 20px, centred, so its corner is
+       half its size out from the tile's centre. */
     .alert {
       position: absolute;
-      top: var(--space-1-5);
-      right: var(--space-1-5);
+      top: calc(50% - var(--sidenav-collapsed-glyph) / 2);
+      left: calc(50% + var(--sidenav-collapsed-glyph) / 2);
+      transform: translate(-50%, -50%);
       margin: 0;
     }
   }

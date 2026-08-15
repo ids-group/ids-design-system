@@ -1256,5 +1256,6 @@
   "--yellow-50": "Yellow ramp — stop 50.",
   "--yellow-500": "Yellow ramp — stop 500.",
   "--yellow-600": "Yellow ramp — stop 600.",
-  "--yellow-700": "Yellow ramp — stop 700."
+  "--yellow-700": "Yellow ramp — stop 700.",
+  "--sidenav-collapsed-glyph": "20px — the icon size the collapsed rail's items render at, and what the alert dot is positioned against so it rides the glyph's corner rather than the tile's."
 }
