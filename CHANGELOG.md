@@ -286,10 +286,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   did. Pasting a full code is unaffected — it cancels the native input, so nothing ever reaches the box.
 
 - **A `warning` now shows on the control, and one rule drives all nine bordered fields.** `warning="…"`
-  coloured the message and left the box untouched — which is what a phone screenshot caught. Seven
-  stylesheets styled `.warning` and not one belonged to a bordered field: `ds-field-message`, the
-  message this describes, plus `ds-alert`, `ds-banner`, `ds-modal`, `ds-progress`, `ds-sidenav-footer`
-  and `ds-toast`. It now takes a `--warning-text` border. Not `--warning`:
+  coloured the message and left the box untouched — which is what a phone screenshot caught. On 0.9.1
+  six stylesheets styled `.warning` and not one belonged to a bordered field: `ds-field-message`, the
+  message this describes, plus `ds-alert`, `ds-banner`, `ds-progress`, `ds-sidenav-footer` and
+  `ds-toast`. It now takes a `--warning-text` border. Not `--warning`:
   that is `--yellow-400`, **1.47:1** against a white field where WCAG 1.4.11 asks 3:1 for a component
   boundary, so the obvious mirror of the error recipe would have drawn a border nobody can see;
   `--warning-text` is the first rung of the ramp that clears it, at 4.59:1. Border only, deliberately —
@@ -352,13 +352,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   line box inside a 40px row, and the value with it. `ds-button`
   escaped the defect only because its host already declared `display: inline-flex`; its block was
   rewritten with the rest all the same, to `flex: 1; height: auto`. Every segment now centres at all
-  three sizes. The six `.in-group` blocks — byte-identical apart from the box's class name, which is
+  three sizes. The six `.in-group` blocks — identical declaration for declaration apart from the box's
+  class name, which is
   why the defect sat in five of them at once — are now one `field-group-segment` mixin, so the next
   change to segment chrome cannot land in some of them and miss the rest.
 
 - **`components.md` had drifted, and it ships inside the package.** The file `tools/build-schematics.mjs`
   copies into `dist/ds/` for a consumer's own agents to read was still documenting the API and token names
-  of two renames ago: **46 of the 94 `--ds-*` tokens it named no longer exist** (`--ds-button-fg`,
+  of two renames ago: **46 of the 92 `--ds-*` tokens it named no longer exist** (`--ds-button-fg`,
   `--ds-sidenav-item-bg-hover`, the whole `--ds-pagehdr-*` family, …), `ds-button` was described with its
   pre-2026-06 single `variant` axis (`'primary' | 'secondary' | 'tertiary' | …`) instead of
   `color` × `variant`, and the topbar section documented a `--ds-topbar-margin-b` that **has never
@@ -402,10 +403,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   52% overrides that tonal and outline carried (`ds-icon-button` only ever had the base). Those sat right
   where a saturated accent already is, so the disabled label
   differed from the live one by **1.16–1.60:1** on four of the five variants; only `color="neutral"` was
-  safe, because its enabled label is nearly black. Now **2.40–2.68:1** across every variant and colour.
-  Measured, not guessed: the whole matrix (5 variants x 3 colours x rest/hover/active/disabled, both
-  themes) is in `presentations/disabled-recipe.html`. **The trade, stated:** the disabled label is fainter
-  against its own background than it was — 2.1–2.7:1 where the old recipe gave 4.3–5.2 — which is the point,
+  safe, because its enabled label is nearly black. Now **2.40–2.71:1** on the coloured variants that
+  were failing, and higher still on `neutral`, which reaches 6.46:1.
+  Measured, not guessed: the matrix is in `presentations/disabled-recipe.html` — 5 variants x 3 colours
+  x rest/hover/active/disabled in light, and a narrower primary-only sweep in dark. **The trade,
+  stated:** the disabled label is fainter
+  against its own background than it was — 2.1–2.7:1 where the old recipe gave 3.4–5.2 — which is the point,
   and disabled text is exempt from the WCAG contrast floor. **Override per component if you disagree:**
   `--ds-button-label-color-disabled` / `--ds-icon-button-icon-color-disabled` still win. **And delete this
   if you have it:** an override retuning `--opacity-muted` on `ds-button` or `ds-icon-button` never did
@@ -415,7 +418,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `--text-disabled` AND `opacity: 0.6` on top of it: the closed triggers of `ds-select`,
   `ds-date-picker` and `ds-time-picker`, plus two genuine rows — `ds-menu-item` and the shared dropdown
   option. Measured in the light theme: that lands at **1.68:1** against the
-  surface, where the colour alone gives **2.53:1** and an enabled control sits at 11.15:1 — so the state was
+  surface, where the colour alone gives **2.53:1** and an enabled control sits at 17.32:1 — so the
+  state was
   never in danger of being missed, the text was. The opacity is gone from those five; the colour carries
   the state, which is what it was chosen for. Where opacity IS the only signal — a disabled calendar day,
   `ds-toggle-button` — it now reads `--opacity-disabled` (0.5) instead of `--opacity-muted` (0.6), the
