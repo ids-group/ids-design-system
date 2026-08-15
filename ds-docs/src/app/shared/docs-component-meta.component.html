@@ -4,19 +4,9 @@
   <div class="meta">
     <div class="row">
       <span class="chip tagchip">
-        <span class="k">
-          {{ api.isElement ? 'tag' : 'attr' }}
-        </span>
-
         <span class="tag">
           {{ api.isElement ? '<' + api.selector + '>' : api.selector }}
         </span>
-      </span>
-
-      <span class="chip">
-        <span class="k">
-          class
-        </span>{{ api.className }}
       </span>
     </div>
 
@@ -25,21 +15,5 @@
         {{ api.summary }}
       </p>
     }
-
-    <div class="importbar">
-      <code class="imp">
-        import {{ '{' }} {{ api.importName }} {{ '}' }} from '{{
-          api.importPath
-        }}';
-      </code>
-
-      <button
-        type="button"
-        class="copy"
-        (click)="copy(api.importName, api.importPath)"
-      >
-        {{ copied() ? 'Copied ✓' : 'Copy' }}
-      </button>
-    </div>
   </div>
 }
