@@ -134,13 +134,28 @@
 
   <p class="block-desc t-s">
     Pass <code class="t-mono-inline">seed</code> (an email or name) for a
-    deterministic OKLCH colour — the same person always gets the same tint
-    across apps, and the initials auto-pick black or white for contrast. The
+    deterministic <code class="t-mono-inline">hsl(H 50% 62%)</code> colour — the
+    same person always gets the same tint across apps — with WHITE initials on
+    every one. The
     helpers <code class="t-mono-inline">avatarTint</code> and
     <code class="t-mono-inline">
       initialsFrom
     </code> (which also accepts a
     single full name) are exported for use outside the component.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      The trade this makes, stated plainly.
+    </strong>
+    HSL lightness is not perceptually even, so a yellow lands far lighter than a
+    blue at the same 62% — and that unevenness is what makes the row read as
+    bright rather than uniform. White initials on the lighter hues measure as
+    little as <strong>1.65:1</strong>, under the 4.5:1 WCAG AA asks of text. Use
+    it where the avatar is decoration beside a name that is written out anyway;
+    where the initials are the only identifier, pass your own
+    <code class="t-mono-inline">lightness</code> and
+    <code class="t-mono-inline">foreground</code>.
   </p>
 
   <p class="block-desc t-s">
