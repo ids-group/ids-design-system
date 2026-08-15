@@ -780,3 +780,13 @@ below is a documentation gap any more — each is a real thing to fix.
   11/7/15). Both numbers are now removed from the entry and the height corrected to 40px. If the
   concrete figures are wanted back, measure all three sizes in a browser in one sitting and record
   the content height they were taken against.
+
+- [ ] **[P3] `ds-stat`'s `value` cannot take Angular's own `number` pipe.** `StatComponent.value` is
+  `InputSignal<string | number>`, while `DecimalPipe.transform` returns `string | null`, so
+  `[value]="count | number"` fails typecheck under `strictTemplates` with
+  `TS2322: Type 'string | null' is not assignable to type 'string | number'`. Consumers fall back to
+  `count.toLocaleString('en-US')` inside the template, which hardcodes the locale instead of reading
+  `LOCALE_ID` and re-evaluates on every change-detection pass where a pure pipe would be cached.
+  Widening the input to `string | number | null` (an absent value rendering as nothing, which is what
+  an empty string already does) would let the idiomatic form work. Found in mm-broker-platform's
+  platform-admin, where both idioms now sit on the same KPI row for exactly this reason.
