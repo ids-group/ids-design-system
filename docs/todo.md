@@ -790,3 +790,19 @@ below is a documentation gap any more — each is a real thing to fix.
   Widening the input to `string | number | null` (an absent value rendering as nothing, which is what
   an empty string already does) would let the idiomatic form work. Found in mm-broker-platform's
   platform-admin, where both idioms now sit on the same KPI row for exactly this reason.
+
+## Three contrast figures in this file are wrong, and the changelog no longer matches them (2026-08-16)
+
+- [ ] **[P3] Correct the disabled-dimming and disabled-recipe numbers here, or they will be copied out again.**
+  Re-derived from the palette and from `presentations/disabled-recipe.html` parsed by column, while
+  adversarially reviewing the 0.9.1..HEAD changelog:
+  - **"an enabled row is 11.15:1"** (`todo.md` under the `--opacity-muted` audit, and `done.md`
+    alongside it) is `--text-secondary`. All five of the places that entry names paint their enabled
+    text `--text-primary` → `--neutral-900` → `--cool-gray-900` `#161A28`, which on `#FFF` is
+    **17.32:1**. 1.68:1 and 2.53:1 in the same sentence are both correct.
+  - **"1.16–1.60 → 2.40–2.68:1 on `primary`/`error`"** — the new ceiling is **2.71** (`error`/`solid`,
+    column C). 2.40 is right.
+  - **"the trade … 2.1–2.7:1, was 4.3–5.2"** — the OLD range over the same 15 cells is **3.38–5.23**;
+    4.3 drops the three `solid` rows, which sit at 3.38/3.39/3.40. The new range 2.11–2.71 is right.
+  The CHANGELOG and `migrations/unreleased.json` now carry the corrected figures, so this file is the
+  only place the old ones survive — which is exactly how they reached the changelog in the first place.
