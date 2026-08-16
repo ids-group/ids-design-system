@@ -1392,15 +1392,17 @@
     reference.
   </p>
 
-  <ds-button
-    color="neutral"
-    variant="outline"
-    size="sm"
-    icon="download"
-    (pressed)="exportTable.exportCsv('records.csv')"
-  >
-    Export CSV
-  </ds-button>
+  <div class="export-row">
+    <ds-button
+      color="neutral"
+      variant="outline"
+      size="sm"
+      icon="download"
+      (pressed)="exportTable.exportCsv('records.csv')"
+    >
+      Export CSV
+    </ds-button>
+  </div>
 
   <ds-table
     #exportTable

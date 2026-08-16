@@ -91,8 +91,11 @@ export class TableSection {
   // project / id / status carry custom cell templates (bold, mono, badge).
   protected readonly defaultColumns: TableColumn<EventRow>[] = [
     { key: 'project', label: 'Record' },
-    { key: 'id', label: 'ID' },
-    { key: 'date', label: 'Dates' },
+    // A fixed-format identifier and a date range are exactly what width: 'content'
+    // is for: on a phone the auto layout squeezed them to 68px and 76px and broke
+    // ORD-2026-0142 across three lines, which took every row to six lines tall.
+    { key: 'id', label: 'ID', width: 'content' },
+    { key: 'date', label: 'Dates', width: 'content' },
     { key: 'venue', label: 'Venue' },
     { key: 'status', label: 'Status' },
     { key: 'capacity', label: 'Capacity', align: 'right' },
