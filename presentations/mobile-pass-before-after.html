@@ -36,25 +36,26 @@
   }
   .cap.before { color: var(--error-text); }
   .cap.after { color: var(--success-text); }
-  .side img, .side iframe {
+  .side img {
     width: 412px; height: 780px; display: block;
     border: var(--border-width-default) solid var(--border-default);
     border-radius: var(--radius-md);
     background: #fff;
   }
   .side img { object-fit: cover; object-position: top center; }
-  .side iframe { border-color: var(--success); }
+  .side .after-shot { border-color: var(--success); }
   .pending { color: var(--text-tertiary); font-style: italic; }
 </style>
 <main>
 <h1>Mobile pass — before and after</h1>
 
-<p>Left is the screenshot you sent on 13 Aug. Right is <b>live</b> — a real 412px viewport onto the
-built docs, scrolled to the same place — so it stays honest as the code changes rather than becoming
-another stale picture.</p>
+<p>Left is the screenshot you sent on 13 Aug. Right is the same place on the same page, captured at
+the same 412px, after the fix.</p>
 
-<div class="note"><b>This page needs the local server.</b> It loads both halves from
-<code>localhost:4298</code>; open it at <code>localhost:4298/decks/mobile-pass-before-after.html</code>.
+<div class="note"><b>This page needs the local server.</b> Neither set of images lives in the repo —
+both are served from <code>localhost:4298</code>, so open it at
+<code>localhost:4298/decks/mobile-pass-before-after.html</code>. Re-capture the right-hand column after
+further changes; it is a picture, not a live view.
 Items 8 and the ten screenshots after 26 are not here: 8 you skipped, and 27–36 you have not walked
 through yet — untouched on purpose.</p>
 
@@ -63,6 +64,7 @@ through yet — untouched on purpose.</p>
 
 <script>
   const ORIGINALS = '/before/';
+  const CAPTURES = '/after/';
   const SUFFIX = '_2026-08-13_23-32-52.jpg';
 
   // `find` is text the deck scrolls the live pane to — matched against headings.
@@ -125,7 +127,7 @@ through yet — untouched on purpose.</p>
 
   const host = document.getElementById('items');
 
-  for (const item of ITEMS) {
+  ITEMS.forEach((item, index) => {
     const section = document.createElement('section');
     section.className = 'item';
     section.innerHTML = `
@@ -137,45 +139,12 @@ through yet — untouched on purpose.</p>
           <img src="${ORIGINALS}photo_${item.photo}${SUFFIX}" alt="before">
         </div>
         <div class="side">
-          <span class="cap after">After — live at 412px</span>
-          <iframe data-route="${item.route}" data-find="${item.find}" loading="lazy"></iframe>
+          <span class="cap after">After — same place, 412px</span>
+          <img src="${CAPTURES}after-${String(index + 1).padStart(2, '0')}.png"
+               class="after-shot" alt="after" loading="lazy">
         </div>
       </div>`;
     host.appendChild(section);
-  }
+  });
 
-  // Load each live pane only when it comes into view, then scroll it to the
-  // heading the item is about. Same origin, so the scroll can be driven directly.
-  const observer = new IntersectionObserver((entries) => {
-    for (const entry of entries) {
-      if (!entry.isIntersecting) continue;
-      const frame = entry.target;
-      observer.unobserve(frame);
-      frame.src = frame.dataset.route;
-      frame.addEventListener('load', () => {
-        // ds-docs scrolls `main.content`, not the document, so scrollIntoView on a
-        // heading moves nothing. Drive that container directly, and retry while the
-        // SPA is still rendering its sections.
-        let attempts = 0;
-        const settle = setInterval(() => {
-          const doc = frame.contentDocument;
-          const scroller = doc?.querySelector('main.content');
-          const needle = frame.dataset.find.toLowerCase();
-          const heading = doc
-            ? [...doc.querySelectorAll('h2, h3')].find((h) => h.textContent.toLowerCase().includes(needle))
-            : null;
-          if (scroller && heading) {
-            scroller.scrollTop +=
-              heading.getBoundingClientRect().top - scroller.getBoundingClientRect().top - 8;
-            clearInterval(settle);
-
-            return;
-          }
-          if (++attempts > 20) clearInterval(settle);
-        }, 400);
-      });
-    }
-  }, { rootMargin: '400px' });
-
-  for (const frame of document.querySelectorAll('iframe')) observer.observe(frame);
 </script>
