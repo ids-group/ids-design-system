@@ -36,9 +36,16 @@ function show(ref, path) {
 // A member a subclass can collide with: a signal-based field, or a method at class
 // depth. `constructor` is excluded — it does not take `override` and only ever adds
 // noise to the report.
-// Any `readonly x = <call>` at class depth, not an allowlist of Angular's own
-// factories: a field built by a DS helper (`chipFit(...)`) collides just the same.
-const FIELD = /^ {2}(?:protected |public |private )?readonly (\w+) = \w+[(<]/gm;
+// ANY `readonly x = …` at class depth, whatever the right-hand side. It used to
+// demand a call (`= \w+[(<]`) on the reasoning that members come from factories, and
+// that quietly hid 39 fields across the library — every `readonly x = this.y.z`, and
+// every literal. `controlState`, added to nine field components in one pass, was
+// invisible to this report because it reads a property rather than calling anything,
+// and it collides in a subclass exactly like `sizeResolved` does. `readonly` is not
+// legal in an object literal or an interface initialiser, so class depth plus the
+// keyword is enough to be sure this is a member.
+const FIELD =
+  /^ {2}(?:protected |public |private )?readonly (\w+)(?:\s*:[^=\n]+)? = /gm;
 const METHOD = /^ {2}(?:protected |public |private )?(?:override )?(?:async )?(\w+)\(/gm;
 const NOT_A_MEMBER = new Set(['constructor', 'if', 'for', 'while', 'switch', 'catch', 'return']);
 const FIRST_CLASS = /^export (?:abstract )?class /m;
