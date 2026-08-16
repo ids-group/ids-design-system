@@ -377,10 +377,11 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 - **A field inside `ds-field-group` no longer pins its value to the top of the row.** Found by Stas
   testing the docs on a phone, and it affected **every segment except `ds-button`**: the value sat
-  against the top edge instead of the vertical centre, off by 10px in a 40px row at `md`. The group
-  stretches its segments to one row height, but a segment's host is a block, so the `height: 100%` each
-  one set on its bordered box resolved against `auto` — the box kept its own content height, a 19.6px
-  line box inside a 40px row, and the value with it. `ds-button`
+  against the top edge instead of the vertical centre — **5px out at `sm`, 9px at `md`, 13px at `lg`**,
+  measured in one sitting against the 21.6px content height the box fell back to on the 32/40/48 row
+  scale. The group stretches its segments to one row height, but a segment's host is a block, so the
+  `height: 100%` each one set on its bordered box resolved against `auto` — the box kept that content
+  height, and the value with it. `ds-button`
   escaped the defect only because its host already declared `display: inline-flex`; its block was
   rewritten with the rest all the same, to `flex: 1; height: auto`. Every segment now centres at all
   three sizes. The six `.in-group` blocks — identical declaration for declaration apart from the box's

@@ -772,15 +772,13 @@ below is a documentation gap any more — each is a real thing to fix.
   the generated stat token description says an unwrapped phrase value is "clipped" when `.stat` sets
   no `overflow` and it actually escapes the tile.
 
-- [ ] **[P3] Re-measure the `ds-field-group` segment offsets, or leave them out for good.** The
-  CHANGELOG used to say the value sat "off by 10px in a 39px row (7px at `sm`, 13px at `lg`)". Two
-  problems: `--field-h-md` resolves through `--hit-cozy` to **40px**, not 39, at every density tier
-  (24/32/40/48 — none yields 39); and the three offsets are mutually inconsistent, since a single
-  content height cannot produce 10/7/13 against a 32/40/48 scale (22px gives 9/5/13, 18px gives
-  11/7/15). Both numbers are now removed from the entry and the height corrected to 40px. If the
-  concrete figures are wanted back, measure all three sizes in a browser in one sitting and record
-  the content height they were taken against.
-
+- [x] **DONE 2026-08-17 — [P3] Re-measured the `ds-field-group` segment offsets; the figures are back, and
+  the surviving one was wrong too.** Measured all three sizes in one sitting by restoring the pre-fix
+  geometry in the browser: the box falls back to a **21.6px** content height, the rows are exactly
+  **32 / 40 / 48** (the earlier 31/39/47 were border rounding), so the offsets are **5 / 9 / 13**.
+  That confirms this item's own arithmetic — a single content height cannot give 10/7/13 — and also
+  corrects the one number the entry had kept: `md` is **9px**, not 10. The CHANGELOG now carries all
+  three plus the content height they were taken against, as this item asked.
 - [ ] **[P3] `ds-stat`'s `value` cannot take Angular's own `number` pipe.** `StatComponent.value` is
   `InputSignal<string | number>`, while `DecimalPipe.transform` returns `string | null`, so
   `[value]="count | number"` fails typecheck under `strictTemplates` with
