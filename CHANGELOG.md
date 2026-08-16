@@ -240,6 +240,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A field in error no longer tints itself inside a `ds-field-group`, and an invalid group draws a red
+  border rather than a near-black one.** Two faults the field-state work left behind, both found by an
+  adversarial re-read of this changelog. The state rules are included at the end of each stylesheet and
+  score the same `(0,3,0)` as the `.in-group` block that strips a segment's chrome, so source order
+  alone decided: measured, the border stayed 0 (`border: 0` zeroes the width, so a later `border-color`
+  paints nothing) but the FILL came back, tinting one segment pink mid-row — the exact thing a group
+  exists to prevent. All three states now carry `:not(.in-group)`. Separately `ds-field-group` itself
+  read `var(--border-error)`, **a token declared nowhere**, so `[invalid]` fell through to
+  `currentColor`; it now resolves through a new `--ds-field-group-border-color-error`, defaulting to
+  `--error`, matching every other colour the component publishes.
+
 - **`ds-timeline-item`'s marker sits level with its heading.** The node is 28px and the heading's line
   box is 19.6px, and both started at the row's top edge — so the circle's centre sat **4.2px** below the
   heading's and read as floating between the heading and the time beneath it. The node column is now
