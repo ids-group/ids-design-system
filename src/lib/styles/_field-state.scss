@@ -27,7 +27,14 @@
   $warning-border: var(--warning-text),
   $success-border: var(--success)
 ) {
-  :host([data-field-state='error']) #{$box} {
+  // `:not(.in-group)` inside the :host() argument, on all three: a segment of a
+  // ds-field-group has given its border, radius and fill to the group, and this
+  // mixin is included at the END of each stylesheet — same (0,3,0) specificity as
+  // the `.in-group` block, so source order alone would let the state paint win.
+  // Measured: the border stayed 0 (`border: 0` zeroes the width, so a later
+  // border-color paints nothing) but the FILL came back, tinting one segment pink
+  // mid-row. The group carries the row's own `invalid`.
+  :host([data-field-state='error']:not(.in-group)) #{$box} {
     border-color: #{$error-border};
     background-color: #{$error-bg};
 
@@ -40,11 +47,11 @@
   // --warning is yellow-400, 1.47:1 against a white field — invisible as a
   // boundary, where WCAG 1.4.11 asks 3:1. --warning-text (yellow-700) is the
   // first rung of the ramp that clears it, at 4.59:1.
-  :host([data-field-state='warning']) #{$box} {
+  :host([data-field-state='warning']:not(.in-group)) #{$box} {
     border-color: #{$warning-border};
   }
 
-  :host([data-field-state='success']) #{$box} {
+  :host([data-field-state='success']:not(.in-group)) #{$box} {
     border-color: #{$success-border};
   }
 }

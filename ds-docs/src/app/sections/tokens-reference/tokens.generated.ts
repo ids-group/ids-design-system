@@ -3316,6 +3316,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Border colour while any segment has focus (default --accent)."
       },
       {
+        "name": "--ds-field-group-border-color-error",
+        "value": "var(--error)",
+        "notes": "Border colour of a ds-field-group marked invalid. Defaults to --error; the group draws the row's one border, so its segments never paint their own."
+      },
+      {
         "name": "--ds-field-group-radius",
         "value": "var(--ds-radius-control)",
         "notes": "Corner radius of the group (default --ds-radius-control); the end segments are clipped to it."
