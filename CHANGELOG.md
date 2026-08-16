@@ -240,6 +240,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **`ds-timeline-item`'s marker sits level with its heading.** The node is 28px and the heading's line
+  box is 19.6px, and both started at the row's top edge — so the circle's centre sat **4.2px** below the
+  heading's and read as floating between the heading and the time beneath it. The node column is now
+  pulled up by half the difference, computed from the same `--font-size-s` / `--line-height-base` pair
+  the heading uses, so retuning the heading moves the marker with it. Measured across all ten items on
+  the docs page: every one now aligns to 0.
+
 - **The collapsed `ds-sidenav` stopped squashing its items into a lozenge.** Every item in the rail
   measured **20×40** where the rail gives it 40×40, so the active item's blue tile rendered as a
   vertical bean with the orange rail bar down one side of it — and the alert dot, positioned from the
