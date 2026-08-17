@@ -669,18 +669,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   and the marker `data-chip-overflow`; the measurement finds them that way, so leave them in place.
 
 - **If you EXTEND a DS component, this is the release that will break you.** `npm run class-surface`
-  against 0.9.1 reports **27 exported classes whose member surface grew** — among them `ButtonComponent`,
+  against 0.9.1 reports **30 exported classes whose member surface grew** — among them `ButtonComponent`,
   `TableComponent`, `ModalComponent`, `SearchComponent`, `AvatarComponent`, `IconComponent`, both
-  pickers, and every control that gained `sizeResolved`. A subclass declaring any of those names now
-  fails with TS4114. **Five classes also LOST members**, which is the case a subclass notices differently
-  — an `override` that now overrides nothing: `ModalComponent.error` and `.onBackdrop`,
-  `ModalCardComponent.error`, `BottomSheetComponent.stop`, `InputComponent.floating`, and
-  `TableComponent.exporting` / `.exportStatus` (those two still exist, but as public readonly signals
-  rather than the protected writables a subclass could set). Subclassing a DS component remains
+  pickers, every bordered field that gained `controlState`, and every control that gained
+  `sizeResolved`. A subclass declaring any of those names now fails with TS4114. **Four classes also
+  LOST members**, which is the case a subclass notices differently — an `override` that now overrides
+  nothing: `ModalComponent.error` and `.onBackdrop`, `ModalCardComponent.error`,
+  `BottomSheetComponent.stop` and `InputComponent.floating`. Subclassing a DS component remains
   unsupported, and this is the third release running where it broke someone, so it is stated in full
-  rather than by example. `class-surface` sees only names it can parse as fields or methods, so a plain
-  `private pending: … = null` is invisible to it — `SearchComponent` grew two of those (`pending`,
-  `pushed`) on top of the seven it reports.
+  rather than by example. **Two kinds of break the report cannot see**, so check them by hand:
+  a member whose SIGNATURE changed keeps its name — `TableComponent.exporting` and `.exportStatus`
+  are still there, but as public readonly signals rather than the protected writables a subclass
+  could `.set()` — and a plain `private pending: … = null` is not a field the parser recognises, which
+  is how `SearchComponent`'s `pending` and `pushed` sit outside its reported seven.
 
 ## 0.9.1 — 2026-08-10
 
