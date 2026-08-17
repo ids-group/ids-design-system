@@ -727,7 +727,11 @@ below is a documentation gap any more — each is a real thing to fix.
   styled inside `.ds-dropdown-panel`. Decide: take the pane class, or give the component its own
   `.is-disabled` / `.option-icon` rules.
 
-- [ ] **[P1] `ds-field-group` still reads `--border-error`, a token that has never existed.**
+- [x] **DONE 2026-08-17 — [P1] `ds-field-group` read `--border-error`, a token that has never existed.**
+  Confirmed by grep before fixing: declared in no file, so `[invalid]` fell through to `currentColor`
+  and drew a near-black border. Now resolves through a new public
+  `--ds-field-group-border-color-error` (default `--error`), matching every other colour this
+  component publishes. Measured after: `rgb(219,31,31)`. ORIGINAL NOTE:
   `field-group.component.scss:53` — `:host(.invalid) { border-color: var(--border-error); }`. This
   is byte-for-byte the `ds-autocomplete` defect that `823c9b64` fixed, missed in the same sweep, so
   `[invalid]="true"` on a group still draws a near-black `currentColor` border (`#161A28`) instead
@@ -748,7 +752,13 @@ below is a documentation gap any more — each is a real thing to fix.
   `border-radius: var(--radius-md)`. So that panel is the one place neither the new token nor
   `--ds-radius-panel` has ever reached, and it stays at 8px while the other two move.
 
-- [ ] **[P2] Cascade risk: a bordered field inside `ds-field-group` may repaint its own state
+- [x] **DONE 2026-08-17 — [P2] A bordered field inside `ds-field-group` repainted its own state.**
+  Real, but not as described, and my own reading was wrong too: the BORDER never came back, because
+  `.in-group` sets `border: 0` and a later `border-color` has no width to paint. What came back was the
+  FILL — `rgba(0,0,0,0)` to `rgb(254,241,241)` — tinting one segment pink mid-row. Cause as suspected:
+  the state rules tie `.in-group` at (0,3,0) and the mixin is included last. All three states now carry
+  `:not(.in-group)` inside the `:host()` argument. Verified the paint still works outside a group.
+  ORIGINAL NOTE: Cascade risk: a bordered field inside `ds-field-group` may repaint its own state
   chrome.** In `input`, `select`, `date-picker` and `autocomplete`, the `field-state` include now
   sits AFTER the `field-group-segment` include, and `:host(.in-group) .control` ties on specificity
   with `:host([data-field-state='error']) .control`, so source order favours `field-state`. Before
