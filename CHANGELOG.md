@@ -107,13 +107,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   row carries `.is-disabled` and `aria-disabled`, refuses the click, and **the arrow keys step OVER it** —
   including when the panel opens or the filter re-runs, so the active row is never one that Enter would
   ignore. Behaviourally this matches `ds-select` and `ds-multi-select`, which have honoured it all along.
-  **It does not yet LOOK disabled**, and that is the one gap to know about: the grey-out lives in the
-  shared `.ds-dropdown-panel` skin, and this component's overlay deliberately does not take that pane
-  class, so the row keeps ordinary text colour and still lights up on hover. Its new option icon is
-  unstyled for the same reason — and so is `ds-multi-select`'s, which draws its own `.panel` rather than
-  the shared skin, so its glyph inherits `--text-primary` instead of `--icon-default` and can be
-  squeezed by a long label. `ds-select` is the only picker whose option icon is fully dressed. All of
-  it is tracked; until then, treat the disabled flag as behavioural.
+  The row greys out too: measured in the open panel it comes out `rgb(155,163,180)` against
+  `rgb(22,26,40)` for an enabled one, so the state is not subtle.
 
 - **`maxVisibleChips="fit"` on `ds-autocomplete` and `ds-multi-select`** caps the chips by measured
   width instead of a count: one line holds as many as the trigger is wide, the rest collapse into
