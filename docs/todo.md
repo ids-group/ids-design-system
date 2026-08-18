@@ -1,5 +1,19 @@
 # DS — improvements backlog
 
+- [ ] **[P3] A table row publishes only its background on hover, so a cell that must react in TEXT reaches
+  past the API (mm-broker, 2026-08-19).** `--ds-table-row-hover-bg-color` and its `-active`/`-pressed`/
+  `-selected`/`-stripe` siblings are the whole hover surface: there is no hook for a cell's own colour, so
+  four list screens whose row opens a record write `:host ::ng-deep ds-table tr:hover .cell-name { color:
+  var(--accent); text-decoration: underline }`. The pattern is not decorative — with `rowInteractive` the
+  whole row is the control, and the name is what tells the reader *what* will open; leaving it inert makes
+  the row look unclickable, and a `cursor: pointer` alone does not say which text is the target. Four
+  screens do it identically (brokers, campaigns, carriers, employer-groups), which is the usual sign it
+  belongs upstream. **Ask:** either `--ds-table-row-hover-text-color` applied to the row (the cheap half),
+  or — better, since only one cell is the target — let `TableColumn` carry the intent, e.g. `interactive?:
+  boolean`, and give that cell `--ds-table-cell-link-color` / `-decoration` on row hover. Their
+  `::ng-deep` is the last table reach that no token can replace; the other two are already filed
+  (`width: 'content'`, the toolbar slot) and shipped.
+
 ## Open, in priority order
 
 **Bugs — something shipped misbehaves**
