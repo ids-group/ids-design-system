@@ -49,8 +49,33 @@
   th, td { border: 1px solid var(--border-default); padding: var(--space-2); vertical-align: top; text-align: left; }
   thead th { background: var(--surface-secondary); font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans); }
   tbody th { width: 26ch; font-weight: var(--font-weight-semibold); }
+  .opt:has(.chosen) {
+    border: 2px solid #22A33C; border-radius: var(--ds-radius-panel);
+    background-image: linear-gradient(#ECFAEE, #ECFAEE);
+    padding: var(--space-3); margin: calc(var(--space-3) * -1);
+  }
+  .cap.chosen::after {
+    content: ' — ВЫБРАНО';
+    color: var(--success-text);
+    letter-spacing: var(--letter-spacing-wider);
+  }
+  .verdict {
+    border: 2px solid #22A33C; border-radius: var(--ds-radius-panel);
+    background-image: linear-gradient(#ECFAEE, #ECFAEE);
+    padding: var(--space-4); margin: var(--space-4) 0;
+  }
+  .verdict b { color: #156822; }
 </style>
 <main>
+<div class="verdict">
+<b>ВЫБРАНО 2026-08-13:</b> warning — вариант <b>D</b> (только рамка <code>--warning-text</code>),
+success — вариант <b>A</b> (зелёная рамка, как было). Оба отгружены, заливки ни у того ни у другого;
+у <code>error</code> осталась рамка ПЛЮС заливка, поэтому лестница «ошибка громче всего» держится.
+<br><br>
+<b>Что осталось нерешённым — ты сам отложил:</b> заливка для warning и success. Это варианты
+<b>B</b> (только заливка) и <b>C</b> (заливка + тёмная рамка) ниже. Смотреть их надо в блоке
+«warning рядом с error»: вопрос не «видно ли», а «остаётся ли warning слабее error».
+</div>
 <h1>Validation on the control itself</h1>
 
 <p><b>The complaint, and what was actually true.</b> Stas, testing the docs on a phone: only the text
@@ -157,7 +182,7 @@ candidate can be judged against the treatment it has to sit beside in the same f
   </div>
 
   <div class="opt">
-    <span class="cap">D · border only, no fill</span>
+    <span class="cap chosen">D · border only, no fill</span>
     <div class="fld">
       <span class="lbl" style="color:#4A5169">Workspace name</span>
       <div class="box" style="border-color:#8A7400; color:#161A28">acme-uk</div>
@@ -220,7 +245,7 @@ anything.</p>
 14 fields, so today it cannot be used consistently in a form at all.</p>
 <div class="row">
   <div class="opt">
-    <span class="cap">A · green border only (today)</span>
+    <span class="cap chosen">A · green border only (today)</span>
     <div class="fld">
       <span class="lbl" style="color:#4A5169">Slug</span>
       <div class="box" style="border-color:#22A33C; color:#161A28">acme-uk</div>
