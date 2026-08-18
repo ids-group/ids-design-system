@@ -486,6 +486,8 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
 
 ## Component API / portfolio
 
+- [ ] **[P3] `ds-list-item` cannot express a row that has its own control AND a row-level action (Stas 2026-08-18, mm-broker Set Up Carriers).** Read from the template, not guessed: `#content` holds `[leading]`, the title/subtitle body and `[trailing]`, and BOTH branches render it — so with `clickable` every projected node lands inside `<button class="activator">`. A row that carries a checkbox plus a row-level "choose this one" action therefore has no shape here: nesting the checkbox in the button is invalid and its click also fires `activated`, while dropping `clickable` loses `cursor`, `:hover` and `:focus-visible` (all scoped to `button.activator`) and `aria-current` (only on the button — `selected` alone just sets the host class). The consumer keeps a hand-rolled `<ul>` for exactly this reason, so the component is skipped where it would otherwise fit. **Ask:** render `[leading]` (and ideally `[trailing]`) OUTSIDE the activator, so the row can be a control and still hold controls — that is the master/detail selector shape: a checkbox on the left, the row selecting what the right pane shows. A `ds-list-item` in that shape would replace the consumer's list wholesale.
+
 - [ ] **[P3] CDK Menu adoption (option B) — parked.** ONLY if/when nested submenus, a menubar, or context menus are needed. `ds-menu` = native roving + `DsOverlayCloseRef` (verified still native, 2026-07-24 — correct for flat menus). Plan: `docs/superpowers/cdk-menu-adoption.md`. When we move, prefer `@angular/aria` `ngMenu` over CDK Menu; gated on a real need or `@angular/aria` going stable.
 
 # Records — kept so they are not "simplified" away
