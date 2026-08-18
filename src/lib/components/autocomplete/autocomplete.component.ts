@@ -280,11 +280,9 @@ export class AutocompleteComponent<T = unknown>
     return this.allOptions().filter((option) => selectedSet.has(option.value));
   });
 
-  /** True for BOTH `'fit'` and a number: a number is a ceiling, not a promise —
-   *  "at most N" — so the row still measures and shows only what the trigger is
-   *  wide enough for. Without that, a phone-width trigger honoured the count and
-   *  wrapped the text input onto a second line, which is the one thing the cap
-   *  exists to prevent. `null` opts out of measuring and grows, as documented. */
+  /** True for BOTH `'fit'` and a number: a number is a ceiling ("at most N"), not a
+   *  promise, so the row still measures and shows only what the width allows. Only
+   *  `null` opts out of measuring. */
   protected readonly fitsChipsToWidth = computed(
     () => this.maxVisibleChips() !== null,
   );

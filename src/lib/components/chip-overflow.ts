@@ -10,23 +10,14 @@ import {
 /**
  * How many chips fit one line of a trigger, measured rather than guessed.
  *
- * `ds-filter-bar` splits from each item's DECLARED width and refuses to measure,
- * because anything that did not fit would flash before being taken away. A chip
- * has no declared width, so this has to measure — and what makes that safe is the
- * ROW: `nowrap` with `overflow: hidden` clips the doomed chips for the frame they
- * exist, and clipping moves nothing. The flash filter-bar avoids is a WRAP.
+ * INVARIANT: nothing here may measure something the cut itself changes, or the
+ * measurement feeds back into its own input and the split never settles — a hung
+ * page, not a wrong number. Hence the space comes off the TRIGGER, never the row,
+ * and the "+N more" marker gets a fixed reserve rather than a measurement.
  *
- * THE RULE, because breaking it froze a real page twice: nothing here may measure
- * something the cut itself changes, or the measurement feeds back into its own
- * input and the split never settles. That is why the space is taken from the
- * TRIGGER rather than from the row, which is sized by its content, and why the
- * "+N more" marker gets a fixed reserve rather than a measurement, its text being
- * the count itself.
- *
- * The caller owes two things, both held up by the `chip-row` style block: chips
+ * The caller owes two things, both enforced by the `chip-row` style block: chips
  * carry `data-chip`, and they sit in a row of their own that is a direct child of
- * the trigger. `enabled` is not a convenience — measuring forces layout, so a
- * picker left on the wrapping default must not pay for a mode it does not use.
+ * the trigger. `enabled` gates the whole thing because measuring forces layout.
  */
 
 /** Room held for "+N more", in em so a retuned type scale carries. Measured at

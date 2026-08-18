@@ -26,11 +26,9 @@ export interface DsConfig {
     format?: '24h' | '12h';
   };
   avatar?: {
-    /** How `ds-avatar` turns its `name` into initials, app-wide. The built-in
-     *  rule takes the first two words, which is a Latin-script guess and nothing
-     *  more: reading a name is a cultural convention rather than a UI decision, so
-     *  an app that knows its own — first+surname for people, first two words for
-     *  organisations — provides it here instead of asking the library to guess. */
+    /** How `ds-avatar` turns its `name` into initials, app-wide. The built-in rule
+     *  takes the first two words — a Latin-script guess. Reading a name is a cultural
+     *  convention, so an app that knows its own provides it here. */
     initials?: (name: string) => string;
   };
   brand?: {
@@ -49,24 +47,17 @@ export interface DsConfig {
        screen needs one. */
   };
   modal?: {
-    /** Default for `dividers` on `ds-modal` and `ds-modal-card` — the rules under
-     *  the header and over the actions, and the padding they were sized for.
-     *  Default `true`. Here rather than only per-element because it is a
-     *  whole-app opinion in practice, and because a `ModalService` confirm
-     *  renders a card with no `ds-modal` ancestor to bind: an attribute cannot
-     *  reach it, an injected default can. */
+    /** Default for `dividers` on `ds-modal` and `ds-modal-card`. Default `true`.
+     *  Configurable app-wide because a `ModalService` confirm renders a card with no
+     *  `ds-modal` ancestor to bind — an attribute cannot reach it. */
     dividers?: boolean;
   };
   control?: {
-    /** Default `size` for the controls on the field-height contract — button,
-     *  icon-button, input, textarea, select, multi-select, autocomplete, search,
-     *  date/time picker, number stepper, checkbox, radio, switch and field-group.
-     *  Default `'md'`.
+    /** Default `size` for every control on the field-height contract. Default `'md'`.
      *
-     *  Not the same axis as `[data-density]`: that tier rewrites hit targets and
-     *  padding in CSS for a route, this picks which of the three declared sizes a
-     *  control renders at. An app whose house control is `sm` sets it once here
-     *  instead of on every element; a screen that differs still binds `size`. */
+     *  A different axis from `[data-density]`: that tier rewrites hit targets and
+     *  padding in CSS, this picks which of the three declared sizes a control renders
+     *  at. A screen that differs still binds `size` per element. */
     size?: DsSize;
   };
   card?: {

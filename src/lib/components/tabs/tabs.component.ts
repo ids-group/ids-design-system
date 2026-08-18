@@ -97,14 +97,11 @@ export class TabsComponent {
    */
   readonly urlParam = input<string>('');
 
-  /** Reopen the tab this screen was last left on, per path, from
-   *  `sessionStorage`. Off by default and only does anything alongside
-   *  `urlParam`, which supplies the names — a remembered INDEX would repoint the
-   *  moment a tab is inserted, the same reason the parameter carries names.
-   *
-   *  A link always wins: the parameter is consulted first, and memory only fills
-   *  the gap the first tab deliberately leaves in the URL. Session, not local, so
-   *  a tab reopened tomorrow is a fresh visit rather than a stale one. */
+  /** Reopen the tab this screen was last left on, per path, from `sessionStorage`.
+   *  Off by default, and needs `urlParam` for the names — a remembered INDEX would
+   *  repoint the moment a tab is inserted. A link always wins: the parameter is read
+   *  first, memory only fills the gap the first tab leaves in the URL. Session, not
+   *  local, so tomorrow is a fresh visit. */
   readonly rememberLastTab = input(false, { transform: booleanAttribute });
 
   /** Emitted when a close button is clicked. Carries the tab's value input, or

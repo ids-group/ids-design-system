@@ -159,20 +159,18 @@ export class TableComponent<T extends object> {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
   /** false — no loading state.
-   *  `true` — the table picks: skeleton rows while it has nothing to show,
-   *  overlay once rows are on screen. Prefer this; which one is right is a
-   *  function of the row count, and the table is the only place holding both
-   *  halves of that.
+   *  `true` — the table picks: skeleton rows while it has nothing to show, overlay
+   *  once rows are on screen. Prefer it; the right choice is a function of the row
+   *  count, which only the table holds.
    *  'skeleton' — first-load placeholder; rows are replaced with shimmer
    *  rows that read the global --skeleton-shimmer-x driver.
    *  'overlay'  — re-fetch indicator; existing rows stay visible behind
    *  a translucent overlay with a centred spinner. Pin either one only to
    *  override the rule deliberately. */
   readonly loading = input<boolean | 'skeleton' | 'overlay'>(false);
-  /** The mode actually rendered — the two treatments are not interchangeable, so
-   *  `true` resolves rather than picking a favourite: replacing visible rows with
-   *  placeholders throws away what the reader is looking at, and dimming an empty
-   *  card announces nothing about what is coming. */
+  /** The mode actually rendered. Skeletons replace what the reader is looking at and
+   *  an overlay on an empty card says nothing, so `true` resolves per state rather
+   *  than picking a favourite. */
   protected readonly loadingMode = computed<'skeleton' | 'overlay' | false>(
     () => {
       const loading = this.loading();
@@ -212,22 +210,14 @@ export class TableComponent<T extends object> {
   /** Emitted for `[(sortDir)]`. */
   readonly sortDirChange = output<SortDir>();
   /**
-   * What the header actually marks, and what a client sort reads.
+   * What the header marks, and what a client sort reads.
    *
-   * Not the inputs directly, and not a `model` either: a header click applies
-   * optimistically, and Angular writes an input only when the bound EXPRESSION
-   * changed — it diffs against the last value it wrote, which an internal `.set()`
-   * never updates. So a host that answers a cleared sort with its own default
-   * silently failed to restore us whenever one half of that default equalled what
-   * it last bound: third click on another column, host says `owner`/`desc`, `desc`
-   * was already bound, and the direction stayed `null` — sorted rows under a header
-   * marking nothing.
-   *
-   * `linkedSignal` over BOTH inputs fixes it by construction: a change in either
-   * one re-seeds the pair from the inputs, so the direction arrives with the key
-   * even when the direction alone would have looked unchanged. A host that binds
-   * neither never re-seeds, so the optimistic state survives and a table sorting
-   * its own rows is unaffected.
+   * `linkedSignal` over BOTH inputs, not a `model`: Angular writes an input only
+   * when the bound expression changed, diffing against the value IT last wrote, and
+   * an internal `.set()` never updates that slot. Seeding from both means a host
+   * answering with its own default re-seeds the pair even when one half of that
+   * default equals what it last bound. A host that binds neither never re-seeds, so
+   * the optimistic state survives.
    */
   private readonly sortState = linkedSignal<{
     readonly key: string | null;

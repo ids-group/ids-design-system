@@ -5831,7 +5831,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "false — no loading state. `true` — the table picks: skeleton rows while it has nothing to show, overlay once rows are on screen. Prefer this; which one is right is a function of the row count, and the table is the only place holding both halves of that. 'skeleton' — first-load placeholder; rows are replaced with shimmer rows that read the global --skeleton-shimmer-x driver. 'overlay' — re-fetch indicator; existing rows stay visible behind a translucent overlay with a centred spinner. Pin either one only to override the rule deliberately."
+        "description": "false — no loading state. `true` — the table picks: skeleton rows while it has nothing to show, overlay once rows are on screen. Prefer it; the right choice is a function of the row count, which only the table holds. 'skeleton' — first-load placeholder; rows are replaced with shimmer rows that read the global --skeleton-shimmer-x driver. 'overlay' — re-fetch indicator; existing rows stay visible behind a translucent overlay with a centred spinner. Pin either one only to override the rule deliberately."
       },
       {
         "name": "stickyHeader",
@@ -6502,7 +6502,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Reopen the tab this screen was last left on, per path, from `sessionStorage`. Off by default and only does anything alongside `urlParam`, which supplies the names — a remembered INDEX would repoint the moment a tab is inserted, the same reason the parameter carries names. A link always wins: the parameter is consulted first, and memory only fills the gap the first tab deliberately leaves in the URL. Session, not local, so a tab reopened tomorrow is a fresh visit rather than a stale one."
+        "description": "Reopen the tab this screen was last left on, per path, from `sessionStorage`. Off by default, and needs `urlParam` for the names — a remembered INDEX would repoint the moment a tab is inserted. A link always wins: the parameter is read first, memory only fills the gap the first tab leaves in the URL. Session, not local, so tomorrow is a fresh visit."
       }
     ],
     "outputs": [
