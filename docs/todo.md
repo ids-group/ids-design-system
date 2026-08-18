@@ -717,7 +717,14 @@ Eight defects the prose review turned up in the code itself. The CHANGELOG and
 `migrations/unreleased.json` were corrected to describe what the code actually does, so nothing
 below is a documentation gap any more — each is a real thing to fix.
 
-- [ ] **[P1] `ds-autocomplete`'s disabled option has no visual treatment at all.** The component
+- [x] **NOT A DEFECT, checked 2026-08-18 — [P1] `ds-autocomplete`'s disabled option was said to have
+  no visual treatment at all.** It has one, and it arrives from the global `ds.scss`: `optionClass()`
+  puts `is-disabled` on the row, and `_dropdown-overlay.scss` paints it `--text-disabled` with
+  `cursor: not-allowed`. Measured in the open panel: **rgb(155,163,180)** against **rgb(22,26,40)**
+  for an enabled row — 2.53:1 vs 17.32:1 on the panel, so the difference is not subtle. Nothing to
+  fix; the finding was a hypothesis that reading the component's own stylesheet alone would seem to
+  confirm, because the rule lives in the shared partial rather than in the component.
+  ORIGINAL NOTE: The component
   honours `disabled` behaviourally (aria-disabled, click refused, arrow keys skip it) but the
   grey-out lives in `.ds-dropdown-panel .option.is-disabled` in `_dropdown-overlay.scss`, and
   `autocomplete.component.ts:500` opens its overlay with `'ds-overlay-pane'` ONLY, so the skin never
