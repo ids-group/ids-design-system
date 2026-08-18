@@ -831,3 +831,53 @@ below is a documentation gap any more — each is a real thing to fix.
     4.3 drops the three `solid` rows, which sit at 3.38/3.39/3.40. The new range 2.11–2.71 is right.
   The CHANGELOG and `migrations/unreleased.json` now carry the corrected figures, so this file is the
   only place the old ones survive — which is exactly how they reached the changelog in the first place.
+
+## `TableRowAction` cannot express a per-row menu, so `rowActions` is adopted nowhere (from mm-broker, 2026-08-18)
+
+- [ ] **[P2] `ds-table`'s row-action column has shipped since 0.6.3 and mm-broker uses it in ZERO of its
+  eleven row menus.** Not from ignorance — every one of those menus varies its ITEMS by row, and the item
+  contract is `{ id, label, icon?, error?, disabled?(row) }`, which can only grey an item that is always
+  there. Counted against the eleven menus, four things are missing and two of them are blocking:
+  - **`hidden?: (row) => boolean` — blocks 8.** Items are swapped, not greyed: a draft campaign offers
+    Edit + Launch, a live one offers Revert + Delete; a partner offers Deactivate **or** Reactivate,
+    never both. Expressed with `disabled` alone, every screen grows a permanently grey half — which is
+    the dead control their ARCHITECTURE §7 forbids outright, so this is not a style preference. Two
+    screens additionally render no trigger at all for a row with no applicable actions, so "every item
+    hidden" has to collapse the kebab rather than open an empty menu.
+  - **`disabledReason?: string | (row) => string` — blocks 4.** Where an item IS greyed they say why
+    (`viewBlockedReason`, `resendBlockedReason`, `deactivateBlockedReason`, "this licence is
+    registry-verified"). Today each screen renders that sentence itself inside its own menu. A greyed
+    item with no reason is the same §7 failure as a dead button, so shipping `hidden` without this just
+    moves the problem.
+  - **`label: string | (row) => string` — blocks 4.** One action, two wordings: Deactivate/Reactivate,
+    Activate/Deactivate, Add fee/Edit fee. Workable as two ids each with its own `hidden`, so this is
+    the cheapest of the four to decline.
+  - **a divider or `group` — blocks 2.** Two menus separate the destructive tail with `ds-menu-divider`.
+    Droppable by ordering if the DS would rather not take it.
+
+  **What it buys, and why it is worth a P2 rather than a papercut:** eleven hand-rolled
+  `button` + `ds-popover` + `ds-menu` blocks disappear, and with them seven bespoke triggers that
+  re-implement `ds-icon-button` under three different class names (`action-button`, `action-btn`,
+  `row-actions`) plus their per-page CSS. The feature already exists; only the item contract keeps every
+  consumer writing the menu by hand. Until `hidden` and `disabledReason` land, migrating any screen is a
+  visible regression rather than a refactor, so none will move.
+
+## `ds-date-picker` keeps its own "Enter a valid date" through an external `value` change (from mm-broker MBP-219, 2026-08-18)
+
+- [ ] **[P2] A consumer that clears or replaces `value` cannot clear the picker's own error.**
+  `typedInvalid` / `rangeInvalid` are set from the typing paths (`applyEditedText`, `onFieldBlur`,
+  `applyRangeText`) and cleared only by those and `applyPreset`. The constructor's `value → text` effect
+  re-renders the field but touches neither, so `value.set(null)` leaves **"Enter a valid date
+  (MM/DD/YYYY)" standing over an empty field**. Read in the 0.9.1 bundle, not inferred.
+  `error` outranks the message but is no help here: a consumer that has just cleared the field has no
+  error of its own to bind, and binding an empty string falls straight back to the picker's.
+
+  **The only consumer workaround is destroying the control.** mm-broker's Create Campaign modal now tears
+  its whole body down on `ds-modal`'s `closed` purely to get a fresh picker on the next opening — and
+  that has a hole: reopening inside the 300 ms leave animation makes the modal cancel the close, `closed`
+  never fires, and the stale error survives. Their Add Employee dialog is a second call site with no
+  workaround at all, so a mistyped date of birth still reads "Enter a valid date" over an empty field the
+  next time it opens.
+
+  **Ask:** clear both flags when `value` changes from outside the control (the same effect that
+  re-renders the text). Two consumer workarounds come out the day it lands.
