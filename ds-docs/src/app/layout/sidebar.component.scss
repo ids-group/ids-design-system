@@ -62,8 +62,11 @@
   // Never squeezed by the narrowing rail, and fading IN only once the width has
   // made room - hence the delay on the way in and none on the way out.
   flex: 0 0 auto;
+
+  // The delay matches the rail's OPENING duration, not the fade's own: the text
+  // may only start once the width has finished making room for it.
   transition: opacity var(--duration-fast) var(--ease-standard)
-    var(--duration-fast);
+    var(--duration-base);
 }
 .toc.is-collapsed .brand-text {
   // visibility, not just opacity: a collapsed rail must not read its brand name
