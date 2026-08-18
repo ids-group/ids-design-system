@@ -298,7 +298,11 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
   - **a divider or `group` — blocks 2.** Two menus separate the destructive tail with `ds-menu-divider`.
     Droppable by ordering if the DS would rather not take it.
 
-  - **a token on the kebab itself — needed only if a consumer may recolour it.** `.row-actions-btn`
+  - [x] **DONE 2026-08-18 — a token on the kebab itself.** Three resolvers, covering the column
+    picker too since it shares the rule: `--ds-table-icon-btn-color`,
+    `--ds-table-icon-btn-color-hover`, `--ds-table-icon-btn-focus-color`, each defaulting to what
+    was hardcoded. mm-broker's teal row menu is now expressible without repainting
+    `--icon-default` app-wide. ORIGINAL NOTE: a token on the kebab itself — `.row-actions-btn`
     hardcodes `color: var(--icon-default)`, hover `var(--icon-strong)` and an `--accent` focus outline,
     with no `--ds-table-row-action-*` to override, and it is not a `ds-icon-button` so the icon-button
     properties do not reach it. mm-broker's design asks for a teal row menu and four of their screens

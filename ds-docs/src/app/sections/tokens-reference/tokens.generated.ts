@@ -5786,6 +5786,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Active sort caret."
       },
       {
+        "name": "--ds-table-icon-btn-color",
+        "value": "var(--icon-default)",
+        "notes": "Icon colour of ds-table's own icon buttons — the row-action kebab and the column picker. Defaults to --icon-default. Neither is a ds-icon-button, so the icon-button tokens do not reach them."
+      },
+      {
+        "name": "--ds-table-icon-btn-color-hover",
+        "value": "var(--icon-strong)",
+        "notes": "Hover icon colour for ds-table's row-action kebab and column picker. Defaults to --icon-strong."
+      },
+      {
+        "name": "--ds-table-icon-btn-focus-color",
+        "value": "var(--accent)",
+        "notes": "Focus-outline colour for ds-table's row-action kebab and column picker. Defaults to --accent."
+      },
+      {
         "name": "--ds-table-cell-pad-x",
         "value": "var(--table-cell-pad-x)",
         "notes": "Cell horizontal padding."

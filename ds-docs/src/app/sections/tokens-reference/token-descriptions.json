@@ -1258,5 +1258,8 @@
   "--yellow-600": "Yellow ramp — stop 600.",
   "--yellow-700": "Yellow ramp — stop 700.",
   "--sidenav-collapsed-glyph": "20px — the icon size the collapsed rail's items render at, and what the alert dot is positioned against so it rides the glyph's corner rather than the tile's.",
-  "--ds-field-group-border-color-error": "Border colour of a ds-field-group marked invalid. Defaults to --error; the group draws the row's one border, so its segments never paint their own."
+  "--ds-field-group-border-color-error": "Border colour of a ds-field-group marked invalid. Defaults to --error; the group draws the row's one border, so its segments never paint their own.",
+  "--ds-table-icon-btn-color": "Icon colour of ds-table's own icon buttons — the row-action kebab and the column picker. Defaults to --icon-default. Neither is a ds-icon-button, so the icon-button tokens do not reach them.",
+  "--ds-table-icon-btn-color-hover": "Hover icon colour for ds-table's row-action kebab and column picker. Defaults to --icon-strong.",
+  "--ds-table-icon-btn-focus-color": "Focus-outline colour for ds-table's row-action kebab and column picker. Defaults to --accent."
 }

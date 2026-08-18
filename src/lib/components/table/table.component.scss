@@ -131,6 +131,9 @@
   --_table-head-fs:         var(--ds-table-head-fs,         var(--font-size-xs));
   --_table-divider:         var(--ds-table-divider,         var(--border-divider));
   --_table-sort-active-icon-color:  var(--ds-table-sort-active-icon-color,  var(--accent));
+  --_table-icon-btn-color: var(--ds-table-icon-btn-color, var(--icon-default));
+  --_table-icon-btn-color-hover: var(--ds-table-icon-btn-color-hover, var(--icon-strong));
+  --_table-icon-btn-focus-color: var(--ds-table-icon-btn-focus-color, var(--accent));
   --_table-cell-pad-x:      var(--ds-table-cell-pad-x,      var(--table-cell-pad-x));
   --_table-cell-pad-y:      var(--ds-table-cell-pad-y,      var(--table-cell-pad-y));
 
@@ -372,16 +375,16 @@
     border: 0;
     background: none;
     cursor: pointer;
-    color: var(--icon-default);
+    color: var(--_table-icon-btn-color);
     border-radius: var(--ds-radius-inner);
     transition: color var(--duration-fast) var(--ease-standard);
 
     &:hover {
-      color: var(--icon-strong);
+      color: var(--_table-icon-btn-color-hover);
     }
 
     &:focus-visible {
-      outline: var(--border-width-strong, 2px) solid var(--accent);
+      outline: var(--border-width-strong, 2px) solid var(--_table-icon-btn-focus-color);
       outline-offset: var(--focus-ring-offset);
     }
   }

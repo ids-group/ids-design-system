@@ -1,0 +1,7 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    "ds-table's row-action kebab and column-picker trigger now read --ds-table-icon-btn-color, --ds-table-icon-btn-color-hover and --ds-table-icon-btn-focus-color, each defaulting to the value that was previously hardcoded (--icon-default, --icon-strong, --accent). Purely additive. ACTION only if you recoloured your own row trigger and are now adopting rowActions: set these three instead of repainting --icon-default globally."
+  ]
+}

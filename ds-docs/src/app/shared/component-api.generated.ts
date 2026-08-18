@@ -2760,7 +2760,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "inputMode",
         "kind": "input",
-        "type": "| 'none'\n    | 'text'\n    | 'decimal'\n    | 'numeric'\n    | 'tel'\n    | 'search'\n    | 'email'\n    | 'url'\n    | null",
+        "type": "| 'none'\r\n    | 'text'\r\n    | 'decimal'\r\n    | 'numeric'\r\n    | 'tel'\r\n    | 'search'\r\n    | 'email'\r\n    | 'url'\r\n    | null",
         "union": [
           "none",
           "text",
@@ -5925,7 +5925,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "(label: string, dir: SortDir) => string",
         "union": null,
-        "default": "(label, dir) =>\n      dir\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\n        : `Sorting cleared`",
+        "default": "(label, dir) =>\r\n      dir\r\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\r\n        : `Sorting cleared`",
         "required": false,
         "description": "Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing."
       },
@@ -6273,7 +6273,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "rowExpandTemplate",
         "kind": "input",
-        "type": "TemplateRef<{\n    $implicit: unknown;\n    row: unknown;\n  }> | null",
+        "type": "TemplateRef<{\r\n    $implicit: unknown;\r\n    row: unknown;\r\n  }> | null",
         "union": null,
         "default": "null",
         "required": false,

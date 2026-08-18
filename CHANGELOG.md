@@ -8,6 +8,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **`ds-table`'s own icon buttons are themeable.** The row-action kebab and the column-picker trigger
+  hardcoded `--icon-default`, `--icon-strong` on hover and an `--accent` focus outline, and neither is a
+  `ds-icon-button`, so the icon-button tokens never reached them — a consumer whose design calls for a
+  teal row menu had no supported way to get one short of repainting `--icon-default` for the whole app.
+  Three resolvers now cover both: `--ds-table-icon-btn-color`, `--ds-table-icon-btn-color-hover` and
+  `--ds-table-icon-btn-focus-color`, defaulting to exactly what was hardcoded, so nothing moves unless
+  you set them.
+
 ## 0.10.0 — 2026-08-18
 
 ### Added
