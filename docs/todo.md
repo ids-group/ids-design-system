@@ -2,7 +2,7 @@
 
 ## Open, in priority order
 
-**Bugs — something shipped misbehaves** — Highest: each one is wrong in code a consumer already has.
+**Bugs — something shipped misbehaves**
 
 - P1 · The resolved-size signals are `protected`, so the documented migration path does not
 - P2 · A menu item's hover / error fill has square corners over the popover's rounded ones
@@ -16,33 +16,34 @@
 - P3 · Cosmetic, in passing
 - P3 · `ds-stat`'s `value` cannot take Angular's own `number` pipe
 
-**Asks — a consumer or Stas asked for it** — Requests, not defects. Ordered by who is blocked.
+**Asks — a consumer or Stas asked for it**
 
-- P2 · Four overrides came out IDENTICAL in two independently-built apps — that is evidence about our defaults, not abo
+- P2 · Four overrides came out IDENTICAL in two independently-built apps — that is evidence about our defaults,
 - P2 · `ds-sidenav-item` active state — solid accent pill → quiet wash + coloured label?
 - P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial bundle
 - P2 · `ds-table`'s row-action column has shipped since 0.6.3 and mm-broker uses it in ZERO of its
 - P3 · `ds-table` — row-expansion parity polish vs PrimeNG
 - P3 · `ds-number-stepper` — optional numeric formatting
 - P3 · `ds-menu-item` — a native secondary line, so an action can state a limitation without hover or focus
+- P3 · `ds-list-item` cannot express a row that has its own control AND a row-level action
 - P3 · Build a deck for the tinted-fill variants of `warning` and `success`, and re-decide
 
-**Decisions — waiting on Stas, not on work** — Nothing moves until a verdict; the work behind each is scoped.
+**Decisions — waiting on Stas, not on work**
 
 - P2 · The breaking batch after 0.9.0 — decide it as ONE story, because it is four surprises otherwise
 - P2 · Width-based overflow as the DEFAULT for anything that lists items in a row
-- P2 · Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `col
+- P2 · Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest w
 - P2 · `.ds-interactive` — global state-interaction contract
 - P2 · Theme recipe vs hand-tuned picks — alignment decision
-- P2 · Shared picker internals — SURVEYED 2026-08-05, and the premise is wrong: it is THREE components, not six, and th
-- P2 · Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes land
-- P3 · Three signal-forms contract members are unimplemented, and all three are blocked on a LOOK, not on wiring
+- P2 · Shared picker internals — SURVEYED 2026-08-05, and the premise is wrong: it is THREE components, not six
+- P2 · Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking chan
+- P3 · Three signal-forms contract members are unimplemented, and all three are blocked on a LOOK, not on wirin
 - P3 · Three deferred DEFAULT changes for the batch after 0.9.0
 
-**Parked — asked, and deliberately not now** — Stas said keep it in the backlog. Left untouched on purpose.
+**Parked — asked, and deliberately not now**
 
 - P3 · Inspect mode — ASKED 2026-08-05, Stas: NOT NOW
-- P3 · Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck attached
+- P3 · Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck a
 - P3 · Image / lightbox
 - P3 · Splitter — ASKED 2026-08-05, Stas: keep in the backlog for now
 - P3 · CascadeSelect — ASKED 2026-08-05, Stas: keep in the backlog for now
@@ -50,7 +51,7 @@
 - P3 · MED cluster — ASKED 2026-08-05, Stas: keep in the backlog
 - P3 · CDK Menu adoption
 
-**Records — kept so they are not "simplified" away** — Not work. Deleting one invites the mistake back.
+**Records — kept so they are not "simplified" away**
 
 - P3 · topbar → `role="banner"`
 
@@ -323,6 +324,8 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 - [ ] **[P3] `ds-menu-item` — a native secondary line, so an action can state a limitation without hover or focus (Stas 2026-08-17, mm-broker MBP-134).** Measured in broker-portal: **7** menu items across 4 files project a `<span class="item-reason">` as a second line inside the item, and the same five-line rule — `display: block; max-width: 14rem; color: var(--text-tertiary); font-size: var(--font-size-2xs)` — is copy-pasted in **4** component stylesheets. It works only because the default `<ng-content>` sits inside the item's own label `<span>` (`menu-item.component.html`), which is also the flaw: the reason lands **inside the accessible name** rather than as a description, and each consumer picks its own width cap. **What exists today, and is NOT the gap:** `disabled`'s own doc comment says the item stays keyboard-focusable "so a `[dsTooltip]` explaining why can be reached and shown" — and that is true, `TooltipDirective` binds `focusin` and writes `aria-describedby`, so the tooltip IS reachable by keyboard. What it cannot be is *visible without hover or focus*, which is exactly what a standing "this will not be saved" notice needs; that is the whole ask. **Ask:** a `description` (or `reason`) input rendered under the label and styled once here — block, 2xs, tertiary, with the width cap as a token instead of a consumer's `14rem` — plus a decision on whether it joins the accessible name or becomes `aria-describedby`. **The workaround is fine meanwhile**, so build this only if a second consumer repeats the pattern, or if the accessible-name relationship above is judged wrong.
 
 
+- [ ] **[P3] `ds-list-item` cannot express a row that has its own control AND a row-level action (Stas 2026-08-18, mm-broker Set Up Carriers).** Read from the template, not guessed: `#content` holds `[leading]`, the title/subtitle body and `[trailing]`, and BOTH branches render it — so with `clickable` every projected node lands inside `<button class="activator">`. A row that carries a checkbox plus a row-level "choose this one" action therefore has no shape here: nesting the checkbox in the button is invalid and its click also fires `activated`, while dropping `clickable` loses `cursor`, `:hover` and `:focus-visible` (all scoped to `button.activator`) and `aria-current` (only on the button — `selected` alone just sets the host class). The consumer keeps a hand-rolled `<ul>` for exactly this reason, so the component is skipped where it would otherwise fit. **Ask:** render `[leading]` (and ideally `[trailing]`) OUTSIDE the activator, so the row can be a control and still hold controls — that is the master/detail selector shape: a checkbox on the left, the row selecting what the right pane shows. A `ds-list-item` in that shape would replace the consumer's list wholesale.
+
 ## Validation on the control: warning got a border, but the FILL was never judged (2026-08-13)
 
 - [ ] **[P3] Build a deck for the tinted-fill variants of `warning` and `success`, and re-decide.**
@@ -485,8 +488,6 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
 
 
 ## Component API / portfolio
-
-- [ ] **[P3] `ds-list-item` cannot express a row that has its own control AND a row-level action (Stas 2026-08-18, mm-broker Set Up Carriers).** Read from the template, not guessed: `#content` holds `[leading]`, the title/subtitle body and `[trailing]`, and BOTH branches render it — so with `clickable` every projected node lands inside `<button class="activator">`. A row that carries a checkbox plus a row-level "choose this one" action therefore has no shape here: nesting the checkbox in the button is invalid and its click also fires `activated`, while dropping `clickable` loses `cursor`, `:hover` and `:focus-visible` (all scoped to `button.activator`) and `aria-current` (only on the button — `selected` alone just sets the host class). The consumer keeps a hand-rolled `<ul>` for exactly this reason, so the component is skipped where it would otherwise fit. **Ask:** render `[leading]` (and ideally `[trailing]`) OUTSIDE the activator, so the row can be a control and still hold controls — that is the master/detail selector shape: a checkbox on the left, the row selecting what the right pane shows. A `ds-list-item` in that shape would replace the consumer's list wholesale.
 
 - [ ] **[P3] CDK Menu adoption (option B) — parked.** ONLY if/when nested submenus, a menubar, or context menus are needed. `ds-menu` = native roving + `DsOverlayCloseRef` (verified still native, 2026-07-24 — correct for flat menus). Plan: `docs/superpowers/cdk-menu-adoption.md`. When we move, prefer `@angular/aria` `ngMenu` over CDK Menu; gated on a real need or `@angular/aria` going stable.
 
