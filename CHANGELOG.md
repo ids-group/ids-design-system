@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.10.0 — 2026-08-18
+
 ### Added
 
 - **A capped chip trigger no longer grows a second line on a narrow screen.** Found by Stas testing the
