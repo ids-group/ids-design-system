@@ -240,6 +240,33 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A card no longer eats the Enter and Space of everything inside it.** `ds-card` bound
+  `(keydown.enter)` and `(keydown.space)` on its `<article>` with an unconditional `preventDefault()`,
+  and keydown bubbles — so a card cancelled the DEFAULT ACTION of both keys for its whole subtree, on
+  every card, not only the `elevation="interactive"` ones that are supposed to answer a key at all.
+  Measured on a sign-in screen made of `ds-card` + `ds-input` + `ds-checkbox`, driven with real key
+  events: Enter in the password field sent **no request at all** — the form could only be submitted by
+  clicking the button — Space did not toggle the "Remember me" box, Enter on a link inside the card did
+  not follow it, and a space could not be typed into a text field, so `John` + Space + `Smith` came out
+  as `JohnSmith`. Both handlers now run only on an interactive card, and only when the key landed on
+  the card itself rather than on something projected into it.
+
+- **A table row's own controls answer the keyboard again.** `onRowKey` consumed Enter and Space for
+  every target inside an interactive `<tr>`, so the row's select checkbox could not be toggled with
+  Space and a cell's button could not be activated with Enter — the row-actions button carries a
+  `stopPropagation` workaround for exactly this. The row now opens only on a key pressed on the row
+  itself.
+
+- **`ds-menu`'s type-ahead no longer swallows a projected field's typing.** Every printable character
+  reaching the menu jumped focus to an item and was consumed, which left a search or filter input
+  placed inside a menu impossible to type into. Keys from a text-entry control now pass through.
+
+- **`ds-radio-group` no longer swallows Enter, so a form still submits from inside it.** The group
+  handled Enter as "select the focused radio" and prevented its default, which is neither native radio
+  behaviour nor what APG asks for — and inside a form it silently removed the keyboard's way to submit.
+  Enter is no longer handled; Space still selects. A text field sitting among the radios (the
+  `Other: ___` row) also keeps its own keys now.
+
 - **A field in error no longer tints itself inside a `ds-field-group`, and an invalid group draws a red
   border rather than a near-black one.** Two faults the field-state work left behind, both found by an
   adversarial re-read of this changelog. The state rules are included at the end of each stylesheet and

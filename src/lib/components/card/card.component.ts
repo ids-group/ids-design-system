@@ -51,4 +51,15 @@ export class CardComponent {
       this.pressed.emit(event);
     }
   }
+
+  // Keydown reaches the card from everything projected into it, so consuming it
+  // unconditionally cancelled the descendant's own default action — a form's
+  // Enter submit, a checkbox's Space, a typed space.
+  protected onActivationKey(event: Event): void {
+    if (!this.interactive() || event.target !== event.currentTarget) {
+      return;
+    }
+    event.preventDefault();
+    (event.currentTarget as HTMLElement).click();
+  }
 }

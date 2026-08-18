@@ -1716,7 +1716,9 @@ export class TableComponent<T extends object> {
   }
 
   protected onRowKey(row: T, event: Event): void {
-    if (!this.rowInteractive()) {
+    // Only the row's own key opens the row: a key pressed on a control inside a
+    // cell belongs to that control (Space on the select box, Enter on a button).
+    if (!this.rowInteractive() || event.target !== event.currentTarget) {
       return;
     }
     event.preventDefault();
