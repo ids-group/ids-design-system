@@ -297,6 +297,15 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
   - **a divider or `group` — blocks 2.** Two menus separate the destructive tail with `ds-menu-divider`.
     Droppable by ordering if the DS would rather not take it.
 
+  - **a token on the kebab itself — needed only if a consumer may recolour it.** `.row-actions-btn`
+    hardcodes `color: var(--icon-default)`, hover `var(--icon-strong)` and an `--accent` focus outline,
+    with no `--ds-table-row-action-*` to override, and it is not a `ds-icon-button` so the icon-button
+    properties do not reach it. mm-broker's design asks for a teal row menu and four of their screens
+    already do that to their own trigger; on migrating, those four would silently turn grey with no
+    supported way back short of repainting `--icon-default` globally. Either expose the property or
+    tell consumers the kebab is not themeable, so they can settle the question before migrating —
+    right now "adopt rowActions" and "keep the design's teal" are simply incompatible.
+
   **What it buys, and why it is worth a P2 rather than a papercut:** eleven hand-rolled
   `button` + `ds-popover` + `ds-menu` blocks disappear, and with them seven bespoke triggers that
   re-implement `ds-icon-button` under three different class names (`action-button`, `action-btn`,
