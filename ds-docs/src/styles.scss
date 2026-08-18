@@ -49,9 +49,6 @@ html, body { height: 100%; margin: 0; }
 @media (width >= #{bp.$bp-lg}) {
   :root.ds-docs-sidebar-collapsed app-root .side {
     width: 48px;
-
-    // Closing is 67% of the 180ms opening: taking something off screen should
-    // beat putting it on, because the decision is already made.
     transition-duration: var(--duration-fast);
   }
 }

@@ -1,24 +1,10 @@
-// How a field's control paints its validation state.
+// Keyed off `data-field-state` on the host, which each field binds from
+// `resolveFieldMessage`'s `controlState`. The tinted-fill variant of warning and
+// success is parked in docs/todo.md.
 //
-// ONE definition for all nine bordered fields, keyed off `data-field-state` on
-// the host — the attribute every field binds from `resolveFieldMessage`'s
-// `controlState`. Before this each component wrote its own rules and they had
-// drifted apart: five spelled the error box as border + tinted fill, four as a
-// border alone, `ds-autocomplete` reached for a `--border-error` token that does
-// not exist (so an invalid autocomplete drew a near-black border), and three
-// different selectors — `.error` on the wrapper, `:host(.invalid)`, `&.invalid`
-// on the box — meant the same thing.
-//
-// The ladder is deliberate: an error blocks submission and gets border + fill,
-// while warning and success are advisory and get the border only, so an error
-// still reads as the loudest thing in a form that has all three. Stas chose
-// border-only on 2026-08-13; the tinted-fill variant is parked in docs/todo.md.
-//
-// `$box` is the component's bordered element — `.control`, `.trigger`, `.cell`.
-// The colour arguments exist so a component that already publishes its own
-// override tokens (`--ds-input-bg-color-error`, `--ds-select-focus-shadow-error`,
-// shipped since 0.7.x) keeps them: it passes its private resolver and the
-// consumer's override still wins. Everything else takes the family token.
+// The colour arguments exist so a component can pass its own `--ds-<name>-*-error`
+// resolver: hardcoding the family token here would silently drop overrides
+// published since 0.7.x.
 @mixin field-state(
   $box,
   $error-border: var(--error),
@@ -27,13 +13,8 @@
   $warning-border: var(--warning-text),
   $success-border: var(--success)
 ) {
-  // `:not(.in-group)` inside the :host() argument, on all three: a segment of a
-  // ds-field-group has given its border, radius and fill to the group, and this
-  // mixin is included at the END of each stylesheet — same (0,3,0) specificity as
-  // the `.in-group` block, so source order alone would let the state paint win.
-  // Measured: the border stayed 0 (`border: 0` zeroes the width, so a later
-  // border-color paints nothing) but the FILL came back, tinting one segment pink
-  // mid-row. The group carries the row's own `invalid`.
+  // `:not(.in-group)` on all three: a segment ties `.in-group` at (0,3,0) and this
+  // mixin is included last, so without it the fill repaints one segment mid-row.
   :host([data-field-state='error']:not(.in-group)) #{$box} {
     border-color: #{$error-border};
     background-color: #{$error-bg};

@@ -36,14 +36,10 @@ function show(ref, path) {
 // A member a subclass can collide with: a signal-based field, or a method at class
 // depth. `constructor` is excluded — it does not take `override` and only ever adds
 // noise to the report.
-// ANY `readonly x = …` at class depth, whatever the right-hand side. It used to
-// demand a call (`= \w+[(<]`) on the reasoning that members come from factories, and
-// that quietly hid 39 fields across the library — every `readonly x = this.y.z`, and
-// every literal. `controlState`, added to nine field components in one pass, was
-// invisible to this report because it reads a property rather than calling anything,
-// and it collides in a subclass exactly like `sizeResolved` does. `readonly` is not
-// legal in an object literal or an interface initialiser, so class depth plus the
-// keyword is enough to be sure this is a member.
+// ANY right-hand side, deliberately: narrowing this to factory calls hides every
+// `readonly x = this.y.z` and every literal, and those collide in a subclass just the
+// same. `readonly` is illegal in an object literal, so class depth plus the keyword
+// is enough to be sure this is a member.
 const FIELD =
   /^ {2}(?:protected |public |private )?readonly (\w+)(?:\s*:[^=\n]+)? = /gm;
 const METHOD = /^ {2}(?:protected |public |private )?(?:override )?(?:async )?(\w+)\(/gm;

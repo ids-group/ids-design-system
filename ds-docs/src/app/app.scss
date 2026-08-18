@@ -27,10 +27,7 @@
     width: 280px;
     min-width: 0;
 
-    // Duration sits on the state being animated INTO, so the two directions can
-    // differ: this rule is the expanded state, so it times the OPENING at
-    // --duration-base — the same 180ms ds-sidenav uses, and inside the 150-300ms
-    // band. Closing is timed on the collapsed rule in styles.scss.
+    // Opening only; closing is timed on the collapsed rule in styles.scss.
     transition: width var(--duration-base) var(--ease-standard);
   }
 }

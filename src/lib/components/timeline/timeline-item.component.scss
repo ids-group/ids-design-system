@@ -21,12 +21,8 @@
   flex-direction: column;
   align-items: center;
 
-  /* The node is 28px and the heading's line box is 19.6px, and both started at the
-     row's top edge — so the circle's centre sat 4.2px below the heading's, which
-     reads as the marker floating between the heading and the time under it. Pull
-     the column up by half the difference so the two centres agree. Same
-     font/line-height pair as `.heading` below, deliberately: a retuned heading
-     must move the node with it. */
+  /* Centres the node on the heading's first line, not on the whole item. Reads the
+     same font/line-height pair as `.heading`, so retuning the heading moves it. */
   margin-top: calc(
     (var(--font-size-s) * var(--line-height-base) - var(--_timeline-node-size)) / 2
   );

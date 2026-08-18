@@ -16,14 +16,11 @@ export interface AvatarTintOptions {
 /** Deterministic `{ bg, fg }` tint for a seed string (an email, a name), so the
  *  same person always gets the same colour.
  *
- *  The background is `hsl(H 50% 62%)` and the text is WHITE, always — the recipe
- *  Stas chose on 2026-08-16, ported from pinkmoon's own avatar. It is a
- *  deliberate trade: HSL lightness is not perceptually even, so yellows and
- *  greens come out far lighter than blues and purples, and that unevenness is
- *  what makes the set read as bright rather than uniform. The cost is contrast —
- *  white on the lighter hues measures as little as 1.65:1, under the 4.5:1 WCAG
- *  AA asks of text. Pair it with a name elsewhere on screen wherever the initials
- *  carry meaning, or pass `lightness` down and `foreground` to suit.
+ *  The background is `hsl(H 50% 62%)` and the text is always WHITE. HSL lightness is
+ *  not perceptually even, so the set reads bright — at the cost of contrast: white on
+ *  the lighter hues measures as little as 1.65:1, under the 4.5:1 WCAG AA asks of
+ *  text. Where the initials are the only identifier, pass your own `lightness`
+ *  (about 50) and keep white, which measures 5.3-6.6:1.
  *
  *  Pass to `ds-avatar`'s `tint`, or let the component derive it via `seed`. */
 export function avatarTint(

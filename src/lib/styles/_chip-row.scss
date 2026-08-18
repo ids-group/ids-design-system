@@ -1,9 +1,5 @@
-// One chip row for the two multi-value triggers.
-//
-// By default the container is `display: contents`, so it adds no box and a
-// trigger that wraps its chips lays out exactly as it did before this element
-// existed — the whole point, since both pickers shipped wrapping and consumers
-// style against that.
+// `display: contents` by default: the wrapper adds no box, so a trigger that wraps
+// its chips lays out as if it were not there — consumers style against that.
 //
 // Fit mode needs `min-width: 0` with `overflow: hidden`: a flex item refuses to
 // shrink below its content, so without them the frame that renders every chip —

@@ -89,11 +89,9 @@ export interface DsFieldMessageResolution {
   /** `invalid` folded together with whatever the control reports. */
   readonly invalid: Signal<boolean>;
   /**
-   * The state the CONTROL paints, for `[attr.data-field-state]`. Not the same
-   * signal as `message().state`: a field can be in a state with nothing to say
-   * (`[invalid]` and no text) or have text in a state the box does not paint,
-   * so tying the box to the message line would drop the first and over-report
-   * the second.
+   * The state the CONTROL paints, for `[attr.data-field-state]`. Deliberately not
+   * `message().state`: a field can be in a state with nothing to say, and can have
+   * text in a state the box does not paint.
    */
   readonly controlState: Signal<FieldMessageState | null>;
 }
@@ -161,9 +159,6 @@ export function resolveFieldMessage(
     return textFor(current, config.field?.errorMessages);
   });
 
-  // `error` counts as invalid on its own: binding a string to it IS the decision
-  // that the field is in error, so leaving the control untinted put a red message
-  // under a neutral box.
   const invalid = computed(
     () =>
       sources.invalid() ||

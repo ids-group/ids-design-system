@@ -58,13 +58,10 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-
-  // Never squeezed by the narrowing rail, and fading IN only once the width has
-  // made room - hence the delay on the way in and none on the way out.
   flex: 0 0 auto;
 
-  // The delay matches the rail's OPENING duration, not the fade's own: the text
-  // may only start once the width has finished making room for it.
+  // Delay = the rail's opening duration: the text may not start before the
+  // width has made room.
   transition: opacity var(--duration-fast) var(--ease-standard)
     var(--duration-base);
 }
