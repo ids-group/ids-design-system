@@ -1,11 +1,6 @@
-import type { IconName } from '../../icons/icons.data';
+import type { DsOption } from '../../core/option';
 
-export interface SelectOption {
-  label: string;
-  value: string;
-  disabled?: boolean;
-  icon?: IconName;
-}
+export interface SelectOption extends DsOption<string> {}
 
 export interface SelectOptionGroup {
   label: string;

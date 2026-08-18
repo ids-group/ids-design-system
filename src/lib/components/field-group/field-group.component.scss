@@ -7,6 +7,7 @@
   --_field-group-bg-color: var(--ds-field-group-bg-color, var(--surface-default));
   --_field-group-border-color: var(--ds-field-group-border-color, var(--border-default));
   --_field-group-border-color-focus: var(--ds-field-group-border-color-focus, var(--accent));
+  --_field-group-border-color-error: var(--ds-field-group-border-color-error, var(--error));
   --_field-group-radius: var(--ds-field-group-radius, var(--ds-radius-control));
   --_field-group-focus-shadow: var(--ds-field-group-focus-shadow, var(--ds-field-focus-shadow));
   --_field-group-divider-color: var(--ds-field-group-divider-color, var(--border-divider));
@@ -50,7 +51,10 @@
   box-shadow: var(--_field-group-focus-shadow);
 }
 
-:host(.invalid) { border-color: var(--border-error); }
+/* Was `var(--border-error)`, a token declared nowhere: border-color fell through to
+   currentColor and an invalid group drew a near-black border. Same dead name that
+   ds-autocomplete carried. */
+:host(.invalid) { border-color: var(--_field-group-border-color-error); }
 
 :host(.disabled) {
   background-color: var(--surface-disabled);

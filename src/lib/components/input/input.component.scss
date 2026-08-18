@@ -1,8 +1,10 @@
 // Ported from vendor/claude-design-ds components.css (FIELD block); textarea/
-// select/number-stepper/floating-label rules are intentionally out of scope here.
+// select/number-stepper rules are intentionally out of scope here.
 @use '../../styles/press' as press;
 @use '../../styles/field-label' as field-label;
 @use '../../styles/field-box' as field-box;
+@use '../../styles/field-group-segment' as field-group-segment;
+@use '../../styles/field-state' as field-state;
 
 :host {
   /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
@@ -24,7 +26,7 @@
 
   // Shipped in 0.7.x, so they still win — but they now fall through to the family
   // token instead of straight to the raw scale, which is what lets one
-  // --ds-field-label-* retune reach ds-input too. Also feeds .floating-label.
+  // --ds-field-label-* retune reach ds-input too.
   --_input-label-color:    var(--ds-input-label-color,    var(--ds-field-label-color,       var(--text-secondary)));
   --_input-label-fs:       var(--ds-input-label-fs,       var(--ds-field-label-font-size,   var(--font-size-xs)));
   --_input-label-fw:       var(--ds-input-label-fw,       var(--ds-field-label-weight,      var(--font-weight-bold)));
@@ -173,23 +175,6 @@
     input { cursor: default; }
   }
 
-  &.error {
-    .control {
-      background-color: var(--_input-bg-color-error);
-      border-color: var(--_input-border-error);
-
-      &:focus-within {
-        box-shadow: var(--_input-focus-shadow-error);
-      }
-    }
-  }
-
-  &.success {
-    .control {
-      border-color: var(--_input-border-success);
-    }
-  }
-
   &.sm .control {
     @include field-box.field-box-height(sm);
 
@@ -266,23 +251,6 @@
     flex-shrink: 0;
     margin-left: auto;
   }
-
-  /* Floating label — label sits inside a taller control instead of stacked above. */
-  &.floating .control {
-    height: var(--field-h-floating);
-    padding-top: var(--field-floating-pad-t);
-    padding-bottom: var(--space-1-5);
-    position: relative;
-  }
-  &.floating .floating-label {
-    position: absolute;
-    top: var(--field-floating-label-top);
-    left: var(--_input-pad-x);
-    font: var(--font-weight-bold) var(--field-floating-label-fs) / var(--field-floating-label-lh) var(--font-sans);
-    color: var(--_input-label-color);
-    letter-spacing: var(--letter-spacing-wide);
-    pointer-events: none;
-  }
 }
 
 /* Segment of a ds-field-group. The group draws the border, the radius and the
@@ -292,26 +260,13 @@
    and message row are suppressed: they would break the glued line, and a
    group-level label is not built yet. */
 :host(.in-group) {
-  width: auto;
-
-  .label,
-  ds-field-message {
-    display: none;
-  }
-
-  .control {
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    height: 100%;
-
-    &:hover,
-    &:focus,
-    &:focus-visible,
-    &:focus-within {
-      border: 0;
-      box-shadow: none;
-      outline: 0;
-    }
-  }
+  @include field-group-segment.field-group-segment('.control');
 }
+
+@include field-state.field-state(
+  '.control',
+    $error-border: var(--_input-border-error),
+    $error-bg: var(--_input-bg-color-error),
+    $error-focus-shadow: var(--_input-focus-shadow-error),
+    $success-border: var(--_input-border-success),
+);

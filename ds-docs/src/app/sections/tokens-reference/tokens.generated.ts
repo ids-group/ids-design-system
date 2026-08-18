@@ -1355,7 +1355,7 @@ export const SPACING: readonly SpacingRow[] = [
   {
     "name": "--ds-container-pad",
     "value": "var(--space-6)",
-    "notes": "Default inner padding for card / stat."
+    "notes": "Default inner padding for card / stat, 24px. Retune it once here instead of per component; ultra-compact density drops it to 16px."
   }
 ];
 
@@ -1560,7 +1560,7 @@ export const DENSITY_HIT: readonly SizeRow[] = [
   {
     "name": "--hit-touch",
     "value": "48px",
-    "notes": "Mobile-friendly, floating-label fields."
+    "notes": "Mobile-friendly hit target."
   }
 ];
 
@@ -1681,13 +1681,13 @@ export const MISC_OPACITY: readonly MiscRow[] = [
     "name": "--opacity-disabled",
     "value": "0.5",
     "renderAs": "opacity",
-    "notes": "Full disabled state on interactive components."
+    "notes": "Full disabled state where opacity is the ONLY signal — a calendar day, a toggle button. A control that already swaps to --text-disabled must not stack this on top."
   },
   {
     "name": "--opacity-muted",
     "value": "0.6",
     "renderAs": "opacity",
-    "notes": "Legacy alias — being phased out."
+    "notes": "Legacy alias (0.6). No component reads it — disabled states use --text-disabled with --opacity-disabled."
   },
   {
     "name": "--opacity-text-disabled",
@@ -1997,7 +1997,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-autocomplete-panel-radius",
-        "value": "var(--ds-radius-panel)",
+        "value": "var(--ds-dropdown-panel-radius, var(--ds-radius-panel))",
         "notes": "Autocomplete dropdown panel corner radius (default --ds-radius-panel). Forwarded onto the portaled pane on open."
       },
       {
@@ -2472,17 +2472,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-button-bg-color-disabled",
         "value": "oklch(from var(--_button-accent) 92% 0.03 h)",
-        "notes": "Disabled fill — per-variant muted tint: A (flat pale) for solid + text; secondary/tertiary/outline use B = color-mix(fill 28%, surface-disabled)."
+        "notes": "Disabled fill. Per variant: a flat pale tint of the accent for solid; color-mix(fill 28%, surface-disabled) for tonal; transparent for ghost, outline and text."
       },
       {
         "name": "--ds-button-label-color-disabled",
-        "value": "oklch(from var(--_button-accent) 58% 0.035 h)",
-        "notes": "Disabled label — low-chroma tint of the accent hue."
+        "value": "oklch(from var(--_button-accent) 70% 0.035 h)",
+        "notes": "Disabled label — ONE recipe for every variant, oklch(from accent 70% 0.035 h). 70% because the old 58%/52% pair sat where a saturated accent already is, so a disabled coloured button barely differed from its live self."
       },
       {
         "name": "--ds-button-border-disabled",
         "value": "oklch(from var(--_button-accent) 86% 0.04 h)",
-        "notes": "Disabled border (B variants: color-mix(border 55%))."
+        "notes": "Disabled border — a pale tint of the accent for solid, color-mix(border 55%, surface-disabled) for outline."
       },
       {
         "name": "--ds-control-focus-shadow-error",
@@ -3128,9 +3128,9 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "The check glyph on a selected row (default --primary)."
       },
       {
-        "name": "--ds-radius-panel",
-        "value": "—",
-        "notes": "Radius role for floating and container surfaces — menus, popovers, cards, modals, drawers, sheets. Defaults to --radius-lg."
+        "name": "--ds-dropdown-panel-radius",
+        "value": "var(--ds-radius-panel)",
+        "notes": "Corner of the connected dropdown panel behind ds-select, ds-multi-select and ds-autocomplete (defaults to the --ds-radius-panel role). The middle lever between retuning one picker, which the library does not encourage, and moving every panel — modal, popover, date picker — with the role. Scope it with a selector (`ds-select { … }`); it is forwarded onto the portaled pane, so a host-scoped value reaches it."
       }
     ]
   },
@@ -3316,6 +3316,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Border colour while any segment has focus (default --accent)."
       },
       {
+        "name": "--ds-field-group-border-color-error",
+        "value": "var(--error)",
+        "notes": "Border colour of a ds-field-group marked invalid. Defaults to --error; the group draws the row's one border, so its segments never paint their own."
+      },
+      {
         "name": "--ds-field-group-radius",
         "value": "var(--ds-radius-control)",
         "notes": "Corner radius of the group (default --ds-radius-control); the end segments are clipped to it."
@@ -3419,12 +3424,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-icon-button-bg-color-disabled",
         "value": "transparent",
-        "notes": "Disabled fill — boxless for standard; tonal/outlined use color-mix(fill 28%, surface-disabled)."
+        "notes": "Disabled fill — boxless for standard, a pale accent tint for filled, color-mix(fill 28%, surface-disabled) for tonal, transparent for outlined."
       },
       {
         "name": "--ds-icon-button-icon-color-disabled",
-        "value": "oklch(from var(--_icon-button-accent) 58% 0.035 h)",
-        "notes": "Disabled icon — low-chroma tint of the accent hue."
+        "value": "oklch(from var(--_icon-button-accent) 70% 0.035 h)",
+        "notes": "Disabled icon — same single recipe as ds-button's label, oklch(from accent 70% 0.035 h). It matters more here: there is no word to read, only a 16px glyph."
       },
       {
         "name": "--ds-icon-button-border-disabled",
@@ -3806,7 +3811,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-modal-title-text-color-error",
         "value": "var(--error-text)",
-        "notes": "Danger title colour."
+        "notes": "Title colour when status=\"error\"."
+      },
+      {
+        "name": "--ds-modal-title-text-color-warning",
+        "value": "var(--warning-text)",
+        "notes": "Title colour when status=\"warning\"."
+      },
+      {
+        "name": "--ds-modal-title-text-color-success",
+        "value": "var(--success-text)",
+        "notes": "Title colour when status=\"success\"."
+      },
+      {
+        "name": "--ds-modal-title-text-color-info",
+        "value": "var(--info-text)",
+        "notes": "Title colour when status=\"info\"."
       },
       {
         "name": "--ds-modal-title-weight",
@@ -4203,7 +4223,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-page-header-title-fs",
         "value": "var(--font-size-h3)",
-        "notes": "Title size."
+        "notes": "Title size — 28px, dropping to 22px below the mobile breakpoint. Raise it for a brand-scale header; 28px is the productive-UI rung."
       },
       {
         "name": "--ds-page-header-title-gap",
@@ -4769,6 +4789,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Brand mark label."
       },
       {
+        "name": "--ds-sidenav-brand-max-height",
+        "value": "none",
+        "notes": "Height cap for a logo projected into the [brand] slot; `none` by default, so an oversized logo sets the brand row's height until you set this. Height only — an image with no CSS width keeps its ratio on its own."
+      },
+      {
         "name": "--sidenav-w",
         "value": "240px",
         "notes": "Sidenav geometry — expanded width (240px)."
@@ -4797,6 +4822,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--sidenav-collapsed-item",
         "value": "var(--hit-cozy)",
         "notes": "Sidenav collapsed item hit size (--hit-cozy)."
+      },
+      {
+        "name": "--sidenav-collapsed-glyph",
+        "value": "var(--icon-lg)",
+        "notes": "20px — the icon size the collapsed rail's items render at, and what the alert dot is positioned against so it rides the glyph's corner rather than the tile's."
       },
       {
         "name": "--sidenav-section-pad-b",
@@ -4980,8 +5010,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-split-button-outline-bg-color",
-        "value": "var(--surface-default)",
-        "notes": "Outline split button surface fill (defaults to --surface-default)."
+        "value": "transparent",
+        "notes": "Fill of the outlined split button. Transparent by default, so it adopts the surface it sits on."
       },
       {
         "name": "--ds-split-button-outline-border-color",
@@ -5024,6 +5054,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-stat-value-color",
         "value": "var(--text-primary)",
         "notes": "Value colour."
+      },
+      {
+        "name": "--ds-stat-value-font-size",
+        "value": "var(--font-size-h2)",
+        "notes": "Value size. Applies at every `size`, not just the default — the sm/lg variants move this token rather than restating font-size, so one override reaches all three."
+      },
+      {
+        "name": "--ds-stat-value-white-space",
+        "value": "nowrap",
+        "notes": "Wrapping of the value line (default `nowrap`). Set `normal` when the value is a phrase — a date range or a status — rather than the number the tile was built around; without it the text is clipped."
       },
       {
         "name": "--ds-stat-up-color",
@@ -6883,6 +6923,11 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "length"
   },
   {
+    "name": "--ds-radius-panel",
+    "value": "var(--radius-lg)",
+    "kind": "length"
+  },
+  {
     "name": "--ds-radius-pill",
     "value": "var(--radius-pill)",
     "kind": "length"
@@ -6903,33 +6948,8 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "color"
   },
   {
-    "name": "--field-floating-label-fs",
-    "value": "var(--font-size-2xs)",
-    "kind": "other"
-  },
-  {
-    "name": "--field-floating-label-lh",
-    "value": "14px",
-    "kind": "length"
-  },
-  {
-    "name": "--field-floating-label-top",
-    "value": "8px",
-    "kind": "length"
-  },
-  {
-    "name": "--field-floating-pad-t",
-    "value": "18px",
-    "kind": "length"
-  },
-  {
     "name": "--field-gap-req",
     "value": "var(--space-1)",
-    "kind": "length"
-  },
-  {
-    "name": "--field-h-floating",
-    "value": "var(--hit-touch)",
     "kind": "length"
   },
   {

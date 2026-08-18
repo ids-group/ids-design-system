@@ -423,6 +423,68 @@
   />
 
   <h3 class="block-title t-h4">
+    Loading · let the table choose
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [loading]="true"
+    </code> resolves the two above by the
+    row count: skeleton while there is nothing on screen, overlay once there is.
+    <strong>
+      Prefer it.
+    </strong> Which treatment is right is not a preference —
+    replacing visible rows with placeholders throws away what the reader is looking
+    at, and dimming an empty card announces nothing about what is coming — and the
+    table is the only place that holds both halves of the condition. Every list
+    screen was otherwise writing the same
+    <code class="t-mono-inline">
+      items().length > 0 ? 'overlay' : 'skeleton'
+    </code> line; one
+    consumer feature had three copies of it.
+  </p>
+
+  <p class="block-desc t-s">
+    Both tables below are
+    <code class="t-mono-inline">
+      [loading]="true"
+    </code>. They differ only
+    in whether they have rows.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-table
+          [data]="noRows"
+          [columns]="loadingColumns"
+          [loading]="true"
+          [stickyHeader]="false"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        no rows yet → skeleton
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell__stage">
+        <ds-table
+          [data]="events"
+          [columns]="loadingColumns"
+          [loading]="true"
+          [stickyHeader]="false"
+        />
+      </div>
+
+      <div class="state-cell__label">
+        rows on screen → overlay
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Empty states
   </h3>
 
@@ -545,6 +607,40 @@
         Retry
       </ds-button>
     </ds-empty-state>
+  </ds-table>
+
+  <div class="block-sub t-overline">
+    e · Zero rows WHILE loading — the table says nothing
+  </div>
+
+  <p class="block-desc t-s">
+    The empty state is a claim about the data — “there are none” — so the table
+    withholds it until it has finished asking. Both loading modes suppress it:
+    the same table with
+    <code class="t-mono-inline">
+      [loading]="'overlay'"
+    </code> and zero
+    rows shows its spinner and no message, where it used to paint “No records
+    match your filters” underneath one. <strong>You do not need a guard of your
+    own</strong> — a consumer audit found 9 of 14 overlay-loading tables shipping
+    that sentence during a load, because branching failure-vs-empty looks complete
+    while saying nothing about loading.
+  </p>
+
+  <ds-table
+    caption="Records"
+    [data]="noRows"
+    [columns]="loadingColumns"
+    [loading]="'overlay'"
+    [stickyHeader]="false"
+  >
+    <ds-empty-state
+      empty
+      variant="none"
+      icon="search"
+      title="No matches for your filters"
+      body="This message is bound, and deliberately not shown while the load is in flight."
+    />
   </ds-table>
 
   <h3 class="block-title t-h4">
@@ -1026,6 +1122,169 @@
   />
 
   <h3 class="block-title t-h4">
+    Toolbar slot · the export button anywhere
+  </h3>
+
+  <p class="block-desc t-s">
+    A row above the table, filled through one
+    <code class="t-mono-inline">
+      [toolbar]
+    </code> slot, for controls that act on
+    THIS table: a search box, a status filter, a refresh. Project a handful of
+    controls and the row lays them out — flex, wrap, 8px gap — so the ordinary case
+    needs no CSS of yours. Project one element of your own instead and the layout
+    is entirely yours; the row's flex then has a single child and stays out of the
+    way. It disappears when nothing filled it and
+    <code class="t-mono-inline">
+      exportButton
+    </code> is off, so a table that uses
+    neither is unchanged. Filters that belong to the PAGE still belong in a
+    <code class="t-mono-inline">
+      ds-filter-bar
+    </code> above it — the slot is for
+    the ones that would otherwise read as page furniture one card away from the
+    rows they narrow.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      One slot rather than a start/end pair, and that was a correction.
+    </strong> The
+    fork this replaces had exactly one, its right-hand side being the component's
+    own buttons — and all four screens that used it projected a container of their
+    own anyway, each writing the same four declarations. A second slot would have
+    been API nobody had asked for, and the layout it promised to own is one the
+    consumer writes regardless when their case differs.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      The export button does not have to live there either.
+    </strong>
+
+    <code class="t-mono-inline">
+      runExport()
+    </code> is public and so are
+    <code class="t-mono-inline">
+      exporting()
+    </code> and
+    <code class="t-mono-inline">
+      exportStatus()
+    </code>, so a button in a page
+    header or a filter bar runs the same path — the
+    <code class="t-mono-inline">
+      exportFetcher
+    </code> call, the download, the
+    in-flight state and the live-region announcement. Leave
+    <code class="t-mono-inline">
+      exportButton
+    </code> off and drive it yourself.
+  </p>
+
+  <ds-table
+    #toolbarTable
+    caption="Projects"
+    sortMode="client"
+    [data]="projectRows"
+    [columns]="projectColumns"
+    [exportFetcher]="slowExportFetcher"
+  >
+    <ds-search
+      toolbar
+      size="sm"
+      placeholder="Search projects…"
+      ariaLabel="Search projects"
+      [debounce]="300"
+    />
+
+    <ds-button
+      toolbar
+      color="neutral"
+      variant="outline"
+      size="sm"
+      icon="download"
+      [loading]="toolbarTable.exporting()"
+      (pressed)="toolbarTable.runExport()"
+    >
+      Export
+    </ds-button>
+  </ds-table>
+
+  <h3 class="block-title t-h4">
+    Sizing a column to its content
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      width: 'content'
+    </code> on a column sizes it to its
+    widest cell and stops it wrapping, leaving the slack to the columns that should
+    absorb it. An auto-layout table spreads leftover width evenly, so a status or a
+    figure ends up as wide as its own header while the name column that should take
+    the space does not. A pixel
+    <code class="t-mono-inline">
+      width
+    </code> cannot express that — pin one
+    column and the rest still spread. Below, Status and Budget are
+    <code class="t-mono-inline">
+      'content'
+    </code>; Project and Owner share what is
+    left. Dragging a column's edge still wins, since that is a deliberate pixel width.
+  </p>
+
+  <ds-table
+    caption="Projects"
+    [data]="projectRows"
+    [columns]="fitColumns"
+    [resizableColumns]="true"
+  />
+
+  <h3 class="block-title t-h4">
+    Server sort · a host that answers with its own default
+  </h3>
+
+  <p class="block-desc t-s">
+    The shape a server-paged list actually has:
+    <code class="t-mono-inline">
+      [sortKey]
+    </code> and
+    <code class="t-mono-inline">
+      [sortDir]
+    </code> are bound ONE-WAY from the
+    host's own state (usually a computed over the URL), and
+    <code class="t-mono-inline">
+      (sortChange)
+    </code> is where it hears about a
+    click. This host's default is
+    <strong>
+      Owner descending
+    </strong>, and it answers a
+    cleared sort by returning to it — the case that used to leave the header
+    marking nothing over sorted rows.
+  </p>
+
+  <p class="block-desc t-s">
+    Third click on the same column clears it, so watch the header: after the clear
+    the highlight must land back on
+    <strong>
+      Owner ▼
+    </strong>. Host state:
+    <code class="t-mono-inline">
+      {{ serverSortKey() }} · {{ serverSortDir() ?? 'null' }}
+    </code>
+  </p>
+
+  <ds-table
+    caption="Projects"
+    sortMode="server"
+    [data]="serverSortedRows()"
+    [columns]="serverSortColumns"
+    [sortKey]="serverSortKey()"
+    [sortDir]="serverSortDir()"
+    (sortChange)="onServerSort($event)"
+  />
+
+  <h3 class="block-title t-h4">
     Column filters
   </h3>
 
@@ -1133,15 +1392,17 @@
     reference.
   </p>
 
-  <ds-button
-    color="neutral"
-    variant="outline"
-    size="sm"
-    icon="download"
-    (pressed)="exportTable.exportCsv('records.csv')"
-  >
-    Export CSV
-  </ds-button>
+  <div class="export-row">
+    <ds-button
+      color="neutral"
+      variant="outline"
+      size="sm"
+      icon="download"
+      (pressed)="exportTable.exportCsv('records.csv')"
+    >
+      Export CSV
+    </ds-button>
+  </div>
 
   <ds-table
     #exportTable

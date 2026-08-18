@@ -4,7 +4,6 @@
   aria-haspopup="listbox"
   [attr.role]="open() ? 'group' : 'combobox'"
   [class.open]="open()"
-  [class.invalid]="invalidResolved()"
   [class.disabled]="isDisabled()"
   [attr.aria-invalid]="invalidResolved() ? 'true' : null"
   [attr.aria-describedby]="hintId()"
@@ -20,22 +19,25 @@
       {{ placeholder() }}
     </span>
   } @else {
-    @for (option of visibleChips(); track option.value) {
-      <ds-tag
-        variant="neutral"
-        closable
-        [closeLabel]="'Remove ' + option.label"
-        (closed)="removeValue(option.value)"
-      >
-        {{ option.label }}
-      </ds-tag>
-    }
+    <span #chipRow class="chip-row" [class.fit]="fitsChipsToWidth()">
+      @for (option of visibleChips(); track option.value) {
+        <ds-tag
+          data-chip
+          variant="neutral"
+          closable
+          [closeLabel]="'Remove ' + option.label"
+          (closed)="removeValue(option.value)"
+        >
+          {{ option.label }}
+        </ds-tag>
+      }
 
-    @if (overflowCount() > 0) {
-      <span class="overflow">
-        +{{ overflowCount() }} more
-      </span>
-    }
+      @if (overflowCount() > 0) {
+        <span class="overflow" data-chip-overflow>
+          +{{ overflowCount() }} more
+        </span>
+      }
+    </span>
   }
 
   <ds-icon
@@ -144,6 +146,14 @@
                 />
               }
             </span>
+
+            @if (option.icon) {
+              <ds-icon
+                class="option-icon"
+                [name]="option.icon"
+                [size]="16"
+              />
+            }
 
             <span class="option-label">
               {{ option.label }}

@@ -217,6 +217,51 @@
   <pre class="t-mono-block">{{ consumerSnippet }}</pre>
 
   <h3 class="block-title t-h4">
+    App-level defaults — <code class="t-mono-inline">provideDsConfig</code>
+  </h3>
+
+  <p class="block-desc t-s">
+    Tokens answer “what does it look like”. This answers the other repetition:
+    <strong>
+      an input whose value an app writes identically on every element.
+    </strong>
+    One consumer binds
+    <code class="t-mono-inline">
+      [stickyScrollbar]="true"
+    </code> on all 35 of
+    its tables and
+    <code class="t-mono-inline">
+      size="sm"
+    </code> on 146 buttons — not
+    a per-element decision, a house default restated 146 times, and every new
+    element is one forgotten binding away from looking wrong.
+  </p>
+
+  <p class="block-desc t-s">
+    Precedence is <strong>input → config → built-in</strong>, so a screen that
+    differs still binds the attribute and wins. Nothing changes for an app that
+    provides nothing: every built-in default is what it always was. Provide it at
+    the app root, on a <code class="t-mono-inline">Route</code>, or on a component
+    — the config resolves through the injector chain and a nested call MERGES with
+    the one above it, section by section.
+  </p>
+
+  <pre class="t-mono-block">{{ configSnippet }}</pre>
+
+  <p class="block-desc t-s">
+    <strong>
+      <code class="t-mono-inline">
+        control.size
+      </code> is not the same axis as
+      <code class="t-mono-inline">
+        [data-density]
+      </code>.
+    </strong> The density tier
+    rewrites hit targets and padding in CSS for a route; this picks which of the
+    three declared sizes a control renders at. An app can use both.
+  </p>
+
+  <h3 class="block-title t-h4">
     Worked example — a square brand
   </h3>
 

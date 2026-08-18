@@ -1,4 +1,6 @@
 @use '../../styles/field-box' as field-box;
+@use '../../styles/chip-row' as chip-row;
+@use '../../styles/field-state' as field-state;
 
 :host {
   // Flex column + gap so the hint/error (ds-field-message) sits the canonical
@@ -25,6 +27,16 @@
 .field-trigger {
   display: flex;
   flex-wrap: wrap;
+
+  /* Wrapping is what an UNCAPPED trigger does — a line per selection. With a cap
+     it is the failure the cap exists to prevent: a flex container that wraps
+     never shrinks its chip row, it moves the text input to a second line
+     instead, which is what a phone-width trigger did. `:has()` keys off the
+     measured row so the rule follows the mode without a second class. */
+  &:has(> .chip-row.fit) {
+    flex-wrap: nowrap;
+  }
+
   align-items: center;
   gap: var(--space-1-5);
 
@@ -54,10 +66,6 @@
     box-shadow: var(--accent-focus-field);
   }
 
-  &.invalid {
-    border-color: var(--error);
-  }
-
   &.disabled {
     background-color: var(--surface-muted);
     color: var(--text-disabled);
@@ -67,6 +75,10 @@
 
 .placeholder {
   color: var(--text-tertiary);
+}
+
+.chip-row {
+  @include chip-row.chip-row;
 }
 
 .overflow {
@@ -227,3 +239,7 @@
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   text-align: center;
 }
+
+@include field-state.field-state(
+  '.field-trigger',
+);

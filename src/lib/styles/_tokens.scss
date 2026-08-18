@@ -217,7 +217,8 @@
      Each token has a real consumer in the codebase; symmetric "unused"
      numeric stops are deliberately omitted. */
   --opacity-disabled:        0.5;   /* full disabled state on interactive components */
-  --opacity-muted:           0.6;   /* legacy alias — being phased out in favour of --text-* roles */
+  --opacity-muted:           0.6;   /* legacy alias, no component reads it since the disabled
+                                       states moved onto --text-disabled + --opacity-disabled */
   --opacity-text-disabled:   0.38;  /* disabled text alpha (WCAG-derived) */
   --opacity-scrim:           0.55;  /* modal/drawer backdrop overlay (light theme) */
   --opacity-state-hover:     0.08;  /* hover layer over surface (overlay vs surface swap) */
@@ -302,7 +303,7 @@
   --hit-min:   32px;   /* dense desktop default (alias of --hit-cozy-tier-0) */
   --hit-cozy:  40px;   /* default control height */
   --hit-comfy: 44px;   /* WCAG min for touch */
-  --hit-touch: 48px;   /* mobile-friendly — also used by floating-label fields */
+  --hit-touch: 48px;   /* mobile-friendly */
 
   --icon-2xs: 10px;
   --icon-xs:  12px;
@@ -436,11 +437,7 @@
   --field-h-sm:        var(--hit-min);
   --field-h-md:        var(--hit-cozy);
   --field-h-lg:        var(--hit-touch);
-  --field-h-floating:  var(--hit-touch);
   --field-textarea-min: 96px;
-  --field-floating-label-fs: var(--font-size-2xs);
-  --field-floating-label-lh: 14px;
-  --field-floating-label-top: 8px;
   --field-num-stepper-w: var(--space-8);
 
   /* OTP / PIN input — one box per digit. */
@@ -470,6 +467,7 @@
   --sidenav-pad-brand-b:     var(--space-6);             /* logo bottom padding */
   --sidenav-logo-size:       var(--hit-sm);          /* 28px — square brand mark */
   --sidenav-collapsed-item:  var(--hit-cozy);        /* 40px — collapsed nav-item hit area */
+  --sidenav-collapsed-glyph: var(--icon-lg);         /* 20px — matches the size the item template renders its icon at */
   --sidenav-section-pad-b:   var(--space-1-5);           /* nav-section bottom padding */
   --sidenav-item-rail-width: 3px;                    /* active-item left rail */
 
@@ -485,7 +483,6 @@
 
   /* Field internals */
   --field-textarea-rows-min: 60px;                   /* min-h for inline textarea inside the field wrapper */
-  --field-floating-pad-t:    18px;                   /* top padding when --floating, leaves room for label */
   --field-select-pad-r:      var(--space-6);             /* select chevron clearance */
   --field-affix-overlap:     var(--border-width-default);     /* affix bleed over field border */
 
@@ -679,7 +676,6 @@
   --badge-dot-size:    4px;
   --status-dot-size:   5px;
   --sidenav-w:         200px;
-  --field-floating-label-top: 4px;
   --segmented-btn-h:   20px;
 
   /* Ultra also compresses field + table padding (tighter than compact/comfy). */
@@ -688,6 +684,10 @@
   --table-cell-pad-x:  var(--space-2);
   --table-cell-pad-y:  var(--space-1);
   --table-head-pad-y:  var(--space-1);
+
+  /* One rung, not two: a card's frame reads as padding lost long before its cells
+     do, so 24 → 16 while the cells inside it go 16 → 8. */
+  --ds-container-pad:  var(--space-4);
 }
 [data-density="compact"] {
   --hit-cozy:  32px;
@@ -700,7 +700,6 @@
   --badge-dot-size: 5px;
   --status-dot-size: 6px;
   --sidenav-w: 220px;
-  --field-floating-label-top: 6px;
   --segmented-btn-h: 24px;
 }
 [data-density="cozy"] {

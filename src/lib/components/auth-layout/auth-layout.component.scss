@@ -119,15 +119,15 @@
      attribute, not this component's (same reason as ds-field-group); anchored on
      `.brand` so it compiles to a scoped rule and not a global one, and matched by
      the slot's own attribute as a DIRECT child so a logo's inner markup is left
-     alone. NOTE: ds-sidenav's identical `[brand]` slot is deliberately
-     unconstrained, so these two diverge until that is settled. */
+     alone. ds-sidenav's identical slot carries the same rule. */
   ::ng-deep > [brand] {
     /* `none` by default: constraining a projected logo that consumers already ship
        unconstrained would silently resize it. Opt in with the tile's own size —
        `--ds-auth-layout-brand-max-height: var(--ds-auth-layout-mark-size)` — or any
-       height. ds-sidenav's identical slot is unconstrained too. */
+       height. Height ALONE on purpose: an <img> with no CSS width keeps its ratio
+       under max-height already, so the `width: auto` this used to carry could only
+       ever out-rank a width the consumer set on their own logo. */
     max-height: var(--ds-auth-layout-brand-max-height, none);
-    width: auto;
   }
 }
 

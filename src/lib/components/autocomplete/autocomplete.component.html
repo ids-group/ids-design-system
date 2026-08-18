@@ -2,7 +2,7 @@
 <div
   #trigger
   class="autocomplete-trigger"
-  [class]="size()"
+  [class]="sizeResolved()"
   [class.open]="isOpen()"
   [class.disabled]="isDisabled()"
   [class.error]="invalidResolved()"
@@ -13,21 +13,24 @@
   </span>
 
   @if (multiple()) {
-    @for (selectedOption of visibleTags(); track selectedOption.value) {
-      <ds-tag
-        [closable]="true"
-        [closeLabel]="'Remove ' + selectedOption.label"
-        (closed)="remove(selectedOption.value)"
-      >
-        {{ selectedOption.label }}
-      </ds-tag>
-    }
+    <span #chipRow class="chip-row" [class.fit]="fitsChipsToWidth()">
+      @for (selectedOption of visibleTags(); track selectedOption.value) {
+        <ds-tag
+          data-chip
+          [closable]="true"
+          [closeLabel]="'Remove ' + selectedOption.label"
+          (closed)="remove(selectedOption.value)"
+        >
+          {{ selectedOption.label }}
+        </ds-tag>
+      }
 
-    @if (overflowCount() > 0) {
-      <span class="overflow">
-        +{{ overflowCount() }} more
-      </span>
-    }
+      @if (overflowCount() > 0) {
+        <span class="overflow" data-chip-overflow>
+          +{{ overflowCount() }} more
+        </span>
+      }
+    </span>
   } @else if (displayLabel()) {
     <span class="autocomplete-value">
       {{ displayLabel() }}
@@ -110,8 +113,11 @@
               [id]="optionId(flatIndexOf(option))"
               [class.is-active]="flatIndexOf(option) === activeIndex()"
               [attr.aria-selected]="isSelected(option)"
+              [attr.aria-disabled]="option.disabled ? 'true' : null"
               (click)="onPick(option)"
-              (mouseenter)="activeIndex.set(flatIndexOf(option))"
+              (mouseenter)="
+                option.disabled || activeIndex.set(flatIndexOf(option))
+              "
             >
               @if (multiple()) {
                 <span
@@ -125,6 +131,14 @@
                     />
                   }
                 </span>
+              }
+
+              @if (option.icon) {
+                <ds-icon
+                  class="option-icon"
+                  [name]="option.icon"
+                  [size]="16"
+                />
               }
 
               <span class="option-label">
@@ -151,8 +165,9 @@
           [id]="optionId(i)"
           [class.is-active]="i === activeIndex()"
           [attr.aria-selected]="isSelected(option)"
+          [attr.aria-disabled]="option.disabled ? 'true' : null"
           (click)="onPick(option)"
-          (mouseenter)="activeIndex.set(i)"
+          (mouseenter)="option.disabled || activeIndex.set(i)"
         >
           @if (multiple()) {
             <span
@@ -166,6 +181,14 @@
                 />
               }
             </span>
+          }
+
+          @if (option.icon) {
+            <ds-icon
+              class="option-icon"
+              [name]="option.icon"
+              [size]="16"
+            />
           }
 
           <span class="option-label">

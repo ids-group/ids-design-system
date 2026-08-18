@@ -127,6 +127,86 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Status
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      status
+    </code> takes the same
+    <code class="t-mono-inline">
+      DsStatus
+    </code> vocabulary as the rest of the
+    library, and one word drives four things: the icon-badge tint, the title
+    colour, the DEFAULT icon and the ARIA role. The icon comes with the status on
+    purpose — a tint alone signals by colour only, which a colour-blind reader
+    cannot act on. Pass
+    <code class="t-mono-inline">
+      icon
+    </code> to override the glyph, or
+    <code class="t-mono-inline">
+      dialogRole
+    </code> to override the role.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      error
+    </code> and
+    <code class="t-mono-inline">
+      warning
+    </code> resolve to
+    <code class="t-mono-inline">
+      alertdialog
+    </code> — the role for a dialog that interrupts
+    with something the reader must act on — and everything else stays
+    <code class="t-mono-inline">
+      dialog
+    </code>. Same split
+    <code class="t-mono-inline">
+      ds-alert
+    </code> makes between
+    <code class="t-mono-inline">
+      alert
+    </code> and
+    <code class="t-mono-inline">
+      status
+    </code>.
+  </p>
+
+  <div class="modal-grid modal-grid--2">
+    @for (specimen of statusSpecimens; track specimen.status) {
+      <div class="state-cell">
+        <div class="state-cell__stage">
+          <ds-modal-card
+            size="sm"
+            [title]="specimen.title"
+            [status]="specimen.status"
+            [showClose]="false"
+          >
+            <span body>
+              {{ specimen.body }}
+            </span>
+
+            <ng-container actions>
+              <ds-button
+                color="neutral"
+                variant="outline"
+              >
+                Close
+              </ds-button>
+            </ng-container>
+          </ds-modal-card>
+        </div>
+
+        <div class="state-cell__label">
+          {{ specimen.status }} · {{ specimen.role }}
+        </div>
+      </div>
+    }
+  </div>
+
+  <h3 class="block-title t-h4">
     Without dividers
   </h3>
 
@@ -141,6 +221,34 @@
     </code> —
     leaves the header and body padding stacked into a gap sized for a rule that
     is no longer drawn.
+  </p>
+
+  <p class="block-desc t-s">
+    Which padding collapses is deliberate: the BODY's goes to zero and the header
+    and actions keep theirs. The body is the scroll container, so a gap living in
+    its padding would scroll away and content would meet the title; the header's
+    own padding-bottom cannot, so it separates the two at every scroll position.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      For a whole-app opinion, set it once
+    </strong> —
+    <code class="t-mono-inline">
+      provideDsConfig(&#123; modal: &#123; dividers: false &#125; &#125;)
+    </code>
+    rather than a binding on every modal. It also reaches where an attribute
+    cannot: a <code class="t-mono-inline">ModalService</code> confirm renders a
+    <code class="t-mono-inline">
+      ds-modal-card
+    </code> with no
+    <code class="t-mono-inline">
+      ds-modal
+    </code> ancestor to bind, and the injected
+    default gets there. An explicit
+    <code class="t-mono-inline">
+      [dividers]
+    </code> on the element still wins.
   </p>
 
   <div class="modal-grid modal-grid--2">
@@ -409,6 +517,22 @@
     while keeping <kbd>Esc</kbd> active.
   </p>
 
+  <p class="block-desc t-s">
+    <strong>
+      A backdrop dismissal needs the press AND the release on the backdrop.
+    </strong>
+    Selecting text in the body and letting go past the edge does not close the
+    dialog, and neither does a slider drag that overshoots — the browser reports
+    that gesture as a click on the backdrop, which is what used to dismiss it.
+    <code class="t-mono-inline">
+      ds-bottom-sheet
+    </code> behaves the same way;
+    <code class="t-mono-inline">
+      ds-drawer
+    </code> never had the problem, because its
+    scrim is a sibling of the panel rather than its parent.
+  </p>
+
   <div class="modal-grid modal-grid--1">
     <div class="state-cell">
       <div class="state-cell__stage">
@@ -500,7 +624,7 @@
         <ds-modal-card
           title="Delete record?"
           size="sm"
-          [error]="true"
+          status="error"
           [showClose]="false"
         >
           <span body>

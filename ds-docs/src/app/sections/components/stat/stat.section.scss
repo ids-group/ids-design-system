@@ -7,7 +7,26 @@
       gap: var(--space-4);
       margin-top: var(--space-3);
 
+      /* Stays two-up on a phone rather than collapsing to one. A stat tile holds a
+         short label and a number, so one-per-row left it stretched across 332px
+         with the content hugging the left and half the tile empty — which is how
+         it read on a 412px screen. Two 158px tiles fill the row; the label wraps
+         to a second line, which is what a real dashboard does at that width. */
       @include bp.down(lg) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    /* Narrow on purpose: the point of the pair is that the untouched tile clips,
+       which a full-width row would hide. */
+    .phrase-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 240px));
+      gap: var(--space-4);
+      margin-top: var(--space-3);
 
       @include bp.down(xs) { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    .stat-phrase {
+      --ds-stat-value-white-space: normal;
+      --ds-stat-value-font-size: var(--font-size-h5);
     }

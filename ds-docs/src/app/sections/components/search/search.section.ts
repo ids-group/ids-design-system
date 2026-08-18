@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { SearchComponent } from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
@@ -15,6 +15,8 @@ import {
   styleUrls: ['../../../shared/section-demo.scss', './search.section.scss'],
 })
 export class SearchSection {
+  protected readonly debounced = signal('');
+
   protected readonly truncationRules: TruncationRule[] = [
     {
       field: 'Query',

@@ -15,6 +15,7 @@ import {
 import { ButtonComponent } from '../button/button.component';
 import { PopoverComponent } from '../popover/popover.component';
 import { ProjectionDroppedDirective } from '../projection-dropped.directive';
+import type { DsSize } from '../../core/size';
 import { FilterItemDirective } from './filter-item.directive';
 
 // Room kept for the "+N more" trigger, which only exists once something has
@@ -74,6 +75,11 @@ export class FilterBarComponent {
   readonly moreLabel = input<string>('more');
   /** Accessible name of the overflow panel. */
   readonly panelLabel = input<string>('More filters');
+  /** Height of the "+N" trigger, to match the filters beside it. The bar cannot
+   *  infer this: `dsFilterItem` carries a WIDTH, and the filters are arbitrary
+   *  projected controls whose own `size` it never sees — so a row of `sm` filters
+   *  got an `md` trigger standing 8px taller under `align-items: flex-end`. */
+  readonly triggerSize = input<DsSize>('md');
 
   protected readonly devMode = isDevMode();
 

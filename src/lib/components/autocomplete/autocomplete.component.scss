@@ -2,6 +2,9 @@
    TemplatePortal so its DOM carries this component's encapsulation attrs.
    Both halves are styled here. */
 @use '../../styles/field-box' as field-box;
+@use '../../styles/chip-row' as chip-row;
+@use '../../styles/field-group-segment' as field-group-segment;
+@use '../../styles/field-state' as field-state;
 
 :host {
   --_autocomplete-focus-shadow: var(--ds-autocomplete-focus-shadow, var(--ds-field-focus-shadow));
@@ -46,6 +49,16 @@
   cursor: text;
   text-align: left;
   flex-wrap: wrap;
+
+  /* Wrapping is what an UNCAPPED trigger does — a line per selection. With a cap
+     it is the failure the cap exists to prevent: a flex container that wraps
+     never shrinks its chip row, it moves the text input to a second line
+     instead, which is what a phone-width trigger did. `:has()` keys off the
+     measured row so the rule follows the mode without a second class. */
+  &:has(> .chip-row.fit) {
+    flex-wrap: nowrap;
+  }
+
   transition: border-color var(--duration-fast) var(--ease-standard);
 
   /* Same contract as ds-input's addon slots, down to the class names — a leading
@@ -67,8 +80,6 @@
     outline: 0;
   }
 
-  &.error { border-color: var(--border-error); }
-
   &.disabled {
     background: var(--surface-disabled);
     border-color: var(--border-disabled);
@@ -84,6 +95,10 @@
      size sets min-height; the default (md) lives on the base rule above. */
   &.sm { @include field-box.field-box-height(sm, min-height); }
   &.lg { @include field-box.field-box-height(lg, min-height); }
+}
+
+.chip-row {
+  @include chip-row.chip-row;
 }
 
 /* Same treatment as ds-multi-select's overflow marker — the two triggers are the
@@ -132,7 +147,11 @@
      into document.body (outside :host), so :host-scoped custom props never
      inherit down to it and background would collapse to transparent. */
   --_autocomplete-panel-bg-color: var(--ds-autocomplete-panel-bg-color, var(--surface-overlay));
-  --_autocomplete-panel-radius: var(--ds-autocomplete-panel-radius, var(--ds-radius-panel));
+
+  /* Its own hook first, then the shared dropdown lever, then the role — so this
+     panel and the ds-select ones move together when a consumer reaches for
+     --ds-dropdown-panel-radius, which is the level that lever belongs at. */
+  --_autocomplete-panel-radius: var(--ds-autocomplete-panel-radius, var(--ds-dropdown-panel-radius, var(--ds-radius-panel)));
   --_autocomplete-panel-maxh: var(--ds-autocomplete-panel-maxh, var(--picker-maxh));
   --_autocomplete-option-bg-color-hover: var(--ds-autocomplete-option-bg-color-hover, var(--surface-secondary));
 
@@ -237,26 +256,9 @@
 /* Segment of a ds-field-group — see input.component.scss for why. The group
    draws the border, the radius and the one shared focus ring. */
 :host(.in-group) {
-  width: auto;
-
-  .label,
-  ds-field-message {
-    display: none;
-  }
-
-  .autocomplete-trigger {
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    height: 100%;
-
-    &:hover,
-    &:focus,
-    &:focus-visible,
-    &:focus-within {
-      border: 0;
-      box-shadow: none;
-      outline: 0;
-    }
-  }
+  @include field-group-segment.field-group-segment('.autocomplete-trigger');
 }
+
+@include field-state.field-state(
+  '.autocomplete-trigger',
+);

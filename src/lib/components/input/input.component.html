@@ -1,5 +1,5 @@
 <div [class]="wrapperClasses()">
-  @if (label() && !floating()) {
+  @if (label()) {
     <label
       class="label"
       [attr.for]="uid"
@@ -27,15 +27,6 @@
     class="control"
     dsFieldClickFocus
   >
-    @if (floating() && label()) {
-      <label
-        class="floating-label"
-        [attr.for]="uid"
-      >
-        {{ label() }}
-      </label>
-    }
-
     <span class="addon-slot prefix">
       <ng-content select="[dsInputPrefix]"></ng-content>
     </span>

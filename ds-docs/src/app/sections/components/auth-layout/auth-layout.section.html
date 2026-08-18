@@ -31,6 +31,43 @@
   </p>
 
   <p class="block-desc t-s">
+    <strong>
+      Set the brand once, not per screen.
+    </strong>
+
+    <code class="t-mono-inline">
+      provideDsConfig(&#123; brand: &#123; name, logoLetter, tagline &#125; &#125;)
+    </code>
+    answers all three for this layout AND for
+    <code class="t-mono-inline">
+      ds-sidenav
+    </code>, which asks the same
+    questions — an app that has six auth screens was binding the same values six
+    times. Each field resolves on its own: an element input beats the config, so
+    one screen can differ without restating the rest, and
+    <code class="t-mono-inline">
+      brand=""
+    </code> drops the wordmark while a
+    <code class="t-mono-inline">
+      logoLetter
+    </code> in the config still paints its
+    tile. Clear both to give a screen no brand row at all.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      The two-tone wordmark stays projected
+    </strong> — there is deliberately no
+    accent in the config. A config can only carry a string, so an accent would have
+    to be found by splitting that string back apart, which is exactly the guessing
+    <code class="t-mono-inline">
+      [dsBrandName]
+    </code> exists to avoid. Provide the
+    plain name in the config and project the accented version on the screens that
+    want one; the projection wins over both.
+  </p>
+
+  <p class="block-desc t-s">
     Everything inside the card is yours: the default slot projects straight into
     it, and the layout deliberately leaves your headings and form alone so its
     type scale never fights your screen's. The support line goes into
@@ -218,5 +255,32 @@
     reach of any scrolling; auto margins collapse to zero instead, so the form
     pins to the top padding edge and scrolls from there. Both demos above are the
     real component with that token lowered to fit this page.
+  </p>
+
+  <h3 class="block-title t-h4">
+    The notch needs one line from YOUR app
+  </h3>
+
+  <p class="block-desc t-s">
+    This layout pads itself by
+    <code class="t-mono-inline">
+      env(safe-area-inset-*)
+    </code>, so a
+    notched phone in landscape does not put the card under the cutout — and
+    <code class="t-mono-inline">
+      ds-bottom-sheet
+    </code> does the same for the home
+    indicator. Those insets are <strong>0 until the host document opts in</strong>,
+    and a library cannot do it for you: it lives in the viewport meta tag, which
+    belongs to your <code class="t-mono-inline">index.html</code>.
+  </p>
+
+  <pre class="t-mono-block"><code>&lt;!-- your index.html --&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" /&gt;</code></pre>
+
+  <p class="block-desc t-s">
+    Without it a cutout is not enough — the browser simply reports 0 for every
+    inset and the padding you see is the plain one. This site sets it, so the
+    behaviour above is the real thing rather than a description of it.
   </p>
 </docs-section>

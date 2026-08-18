@@ -1,3 +1,5 @@
+@use 'styles/breakpoints' as bp;
+
     .muted { color: var(--text-secondary); }
     .pad { padding: var(--space-3) 0; }
 
@@ -8,12 +10,26 @@
       gap: var(--space-4);
       align-items: start;
       margin-top: var(--space-4);
+
+      /* The label column is a fixed 120px, which is 36% of the 332px a phone
+         leaves — the demo beside it ends up narrower than the caption. Stack, as
+         every other section's grid does at its own breakpoint. */
+      @include bp.down(xs) {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--space-2);
+      }
     }
     .variant-row__label {
       color: var(--text-tertiary);
       padding-top: var(--space-3);
     }
     .variant-row__stage { display: block; min-width: 0; max-width: 100%; overflow-x: auto; }
+
+    /* Four rows carry no label — "With count badge", "Closable", "Vertical",
+       "Lazy" — and a lone child lands in the grid's FIRST column, which is the
+       120px one meant for the label. At 412px that pinned those demos to 120px of
+       332 and read as "the component renders at a third of the screen". */
+    .variant-row__stage:only-child { grid-column: 1 / -1; }
     .scrollable-demo { max-width: 420px; }
 
     /* State pins — force a visual state on live ds-tabs by reading the

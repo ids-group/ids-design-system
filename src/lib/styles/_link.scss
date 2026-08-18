@@ -47,6 +47,27 @@
     flex-shrink: 0;
   }
 
+  /* ds-button warns `variant="text"` off in favour of this class, and an action
+     that is not navigation has to be a <button> — which arrives with UA chrome
+     none of the rules above touch (measured: 13.3px inside 14px text, plus padding
+     and an outset border). `:where()` keeps the reset at this class's specificity,
+     so a consumer's rule still wins on source order.
+
+     Absences are deliberate and invisible in code: no `font-weight`, so `.quiet` /
+     `.standalone` keep deciding it, and no `display`, because inline-block is what
+     lays a standalone button out predictably. `appearance` is the reverse — no
+     effect in Chrome, needed where native chrome outlives a zeroed border. */
+  &:where(button) {
+    appearance: none;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    text-align: inherit;
+  }
+
   &.quiet {
     color: var(--text-secondary);
 

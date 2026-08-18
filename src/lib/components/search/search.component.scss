@@ -5,6 +5,7 @@
 // through emulated encapsulation (PIN-475 double-focus-ring root cause).
 
 @use '../../styles/press' as press;
+@use '../../styles/field-group-segment' as field-group-segment;
 
 :host {
   /* Public --ds-search-* are read with fallbacks, never declared — consumer overrides inherit in.
@@ -114,26 +115,5 @@
 /* Segment of a ds-field-group — see input.component.scss for why. The group
    draws the border, the radius and the one shared focus ring. */
 :host(.in-group) {
-  width: auto;
-
-  .label,
-  ds-field-message {
-    display: none;
-  }
-
-  .search {
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    height: 100%;
-
-    &:hover,
-    &:focus,
-    &:focus-visible,
-    &:focus-within {
-      border: 0;
-      box-shadow: none;
-      outline: 0;
-    }
-  }
+  @include field-group-segment.field-group-segment('.search');
 }

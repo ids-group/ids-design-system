@@ -49,5 +49,6 @@ html, body { height: 100%; margin: 0; }
 @media (width >= #{bp.$bp-lg}) {
   :root.ds-docs-sidebar-collapsed app-root .side {
     width: 48px;
+    transition-duration: var(--duration-fast);
   }
 }

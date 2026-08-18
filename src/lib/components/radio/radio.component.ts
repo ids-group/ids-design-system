@@ -20,6 +20,7 @@ import {
 } from '../field-errors';
 import type { DsSize } from '../../core/size';
 import { resolveReserveMessage } from '../field-defaults';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 @Component({
   selector: 'ds-radio',
@@ -69,8 +70,14 @@ export class RadioComponent {
   protected readonly reserveMessageResolved = resolveReserveMessage(
     this.reserveMessage,
   );
-  /** Control size — sm/md/lg. */
-  readonly size = input<DsSize>('md');
+  /** Control size — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  protected readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
   /** Marks the radio required — shows an asterisk on the label and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Inline label rendered beside the dot and wired via for/id. Omit to bring
@@ -107,7 +114,7 @@ export class RadioComponent {
   );
 
   protected readonly fieldClass = computed(
-    () => `radio-field size-${this.size()}`,
+    () => `radio-field size-${this.sizeResolved()}`,
   );
 
   /** Exposed so the group can implement roving tabindex. */

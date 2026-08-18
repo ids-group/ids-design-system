@@ -25,6 +25,11 @@
   gap: var(--space-2-5);
   margin-bottom: var(--space-6);
   letter-spacing: var(--letter-spacing-snug);
+
+  // The text keeps its full intrinsic width at every step of the width animation,
+  // so it has to be cut off rather than reflowed. `clip`, not `hidden`: hidden
+  // would make this a scroll container and swallow the rail's own scrolling.
+  overflow: clip;
 }
 .toc.is-collapsed .brand {
   flex-direction: column;
@@ -53,6 +58,19 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  flex: 0 0 auto;
+
+  // Delay = the rail's opening duration: the text may not start before the
+  // width has made room.
+  transition: opacity var(--duration-fast) var(--ease-standard)
+    var(--duration-base);
+}
+.toc.is-collapsed .brand-text {
+  // visibility, not just opacity: a collapsed rail must not read its brand name
+  // to a screen reader either.
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity var(--duration-instant) var(--ease-standard);
 }
 .brand-name {
   font: var(--font-weight-extrabold) var(--font-size-h5) / 1 var(--font-sans);
@@ -64,6 +82,13 @@
   color: var(--text-tertiary);
   letter-spacing: var(--letter-spacing-wider);
   text-transform: uppercase;
+}
+
+// The whole point: with the text free to wrap, every frame of the width animation
+// re-laid it out - measured 31px tall at 280px wide, 60px at anything under 240.
+.brand-name,
+.brand small {
+  white-space: nowrap;
 }
 
 .group {

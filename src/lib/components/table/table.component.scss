@@ -1,3 +1,5 @@
+@use '../../styles/visually-hidden' as visually-hidden;
+
 /* `.table.skeleton-mode` is the row-level loading flag — named distinctly so it
    does not shadow the global `.skeleton` cell-shimmer class. */
 
@@ -10,15 +12,7 @@
 
 // Visually-hidden but screen-reader-available (table caption + loading status).
 .visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
+  @include visually-hidden.visually-hidden;
 }
 
 /* Opt-in outer frame via `[bordered]="true"` — gives standalone tables
@@ -157,6 +151,17 @@
   font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--text-primary);
   background-color: var(--_table-bg-color);
+
+  /* width: 'content' — the shrink-to-fit idiom, spelled once here instead of in
+     every consumer's ::ng-deep. `width: 1%` is the trick: a table lays out at
+     least the content width, so an under-sized request collapses the column onto
+     its widest cell and hands the slack to the columns that can use it. nowrap
+     stops that cell wrapping to defeat the point. */
+  th.fit-content,
+  td.fit-content {
+    width: 1%;
+    white-space: nowrap;
+  }
 
   thead th {
     text-align: left;
@@ -806,6 +811,40 @@
 
 .table-toolbar {
   display: flex;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
   margin-bottom: var(--space-2);
+
+  /* The row is always in the markup now that it holds a slot, so it has to take
+     itself out when nothing filled it and the export button is off — otherwise
+     every table pays its margin. `:not(:has(*))` rather than `:empty`, which a
+     single whitespace text node defeats. */
+  &:not(:has(.toolbar-slot > *, > ds-button)) {
+    display: none;
+  }
+}
+
+/* Lays out a HANDFUL of projected controls so the simple case needs no CSS at
+   all — every consumer of the fork this replaces wrote these same four
+   declarations, wrap included. Project one element of your own instead and the
+   flex has a single child, so your layout is untouched. */
+.toolbar-slot {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+
+  /* One projected element means the consumer brought their own layout, so give it
+     the whole row — otherwise a `justify-content: space-between` of theirs has
+     nothing to distribute. Pierces encapsulation because projected nodes carry the
+     CONSUMER's attribute, not this component's (same reason as ds-auth-layout's
+     brand slot); anchored here so it compiles scoped rather than global, and a
+     DIRECT child so their inner markup is left alone. */
+  ::ng-deep > :only-child {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
 }

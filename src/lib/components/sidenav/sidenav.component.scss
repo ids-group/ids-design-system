@@ -38,6 +38,19 @@
 
   /* No brand text and no projected [brand] logo → collapse the row. */
   &:empty { display: none; }
+
+  /* Pierces encapsulation because projected nodes carry the CONSUMER's attribute,
+     not this component's; anchored on `.brand` so it compiles scoped rather than
+     global, and matched as a DIRECT child so a logo's inner markup is left alone. */
+  ::ng-deep > [brand] {
+    /* `none` by default: constraining a projected logo that consumers already ship
+       unconstrained would silently resize it. Opt in with the tile's own size —
+       `--ds-sidenav-brand-max-height: var(--sidenav-logo-size)` — or any height.
+       Height ALONE on purpose: an <img> with no CSS width keeps its ratio under
+       max-height already, so a `width: auto` here would only ever out-rank a width
+       the consumer set on their own logo. */
+    max-height: var(--ds-sidenav-brand-max-height, none);
+  }
 }
 
 .mark {
@@ -59,8 +72,12 @@
 :host(.collapsed) {
   width: var(--_sidenav-width-collapsed);
   padding: var(--space-3);
-  align-items: center;
   overflow-x: clip;
+
+  /* NOT `align-items: center`. That stopped the projected items and groups from
+     stretching, so each shrank to its icon — 20px inside a 40px rail — and the
+     `width: 100%` on `.item` resolved against that, turning the active tile into a
+     20x40 lozenge. `.brand` centres its own contents, so nothing here needed it. */
 
   .brand {
     padding: var(--sidenav-pad-brand-y) 0 var(--sidenav-pad-brand-b);

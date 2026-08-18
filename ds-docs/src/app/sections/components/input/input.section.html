@@ -6,7 +6,7 @@
   <docs-truncation [rules]="truncationRules" />
 
   <span lede>
-    Single-line text, prefix/suffix add-ons, floating label, six states.
+    Single-line text, prefix/suffix add-ons, six states.
   </span>
 
   <h3 class="block-title t-h4">
@@ -160,7 +160,7 @@
   </div>
 
   <h3 class="block-title t-h4">
-    Variant states — prefix · suffix · floating
+    Variant states — prefix · suffix
   </h3>
 
   <div class="states states--cols-2">
@@ -204,37 +204,10 @@
         Suffix
       </div>
     </div>
-
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <ds-input
-          label="Record name"
-          [floating]="true"
-        />
-      </div>
-
-      <div class="state-cell__label">
-        Floating · empty
-      </div>
-    </div>
-
-    <div class="state-cell">
-      <div class="state-cell__stage">
-        <ds-input
-          label="Project name"
-          value="Project Alpha 2026"
-          [floating]="true"
-        />
-      </div>
-
-      <div class="state-cell__label">
-        Floating · filled
-      </div>
-    </div>
   </div>
 
   <h3 class="block-title t-h4">
-    With icon · prefix · suffix · floating
+    With icon · prefix · suffix
   </h3>
 
   <p class="block-desc t-s">
@@ -298,18 +271,6 @@
         people
       </span>
     </ds-input>
-
-    <ds-input
-      label="Project name"
-      value="Project Alpha 2026"
-      [floating]="true"
-    />
-
-    <ds-input
-      label="Project ID"
-      value="EVT-2026-0142"
-      [floating]="true"
-    />
   </div>
 
   <h3 class="block-title t-h4">
@@ -448,6 +409,17 @@
     the field's height never depends on how many of them you bound. All three
     fields below carry the same <code class="t-mono-inline"> hint </code>; the
     second adds a warning and the third adds both.
+  </p>
+
+  <p class="block-desc t-s">
+    The control paints the state too, not only the line under it. An error takes a
+    red border AND a tinted fill because it blocks submission; a warning and a
+    success take the border alone, so an error still reads as the loudest thing in
+    a form holding all three. One rule drives all nine bordered fields, off a
+    <code class="t-mono-inline">
+      data-field-state
+    </code> attribute on the host —
+    style against that attribute rather than a class if you need to extend it.
   </p>
 
   <div class="grid-3">

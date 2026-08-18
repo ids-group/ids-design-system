@@ -26,6 +26,20 @@ export class MultiSelectSection {
     'research',
     'marketing',
   ]);
+  protected readonly fitted = signal<string[]>([
+    'design',
+    'frontend',
+    'research',
+    'marketing',
+  ]);
+
+  protected readonly priorityOptions: MultiSelectOption[] = [
+    { label: 'Critical', value: 'critical', icon: 'flag' },
+    { label: 'High', value: 'high', icon: 'chevronUp' },
+    { label: 'Medium', value: 'medium', icon: 'minus' },
+    { label: 'Low', value: 'low', icon: 'chevronDown' },
+  ];
+  protected readonly priority = signal<string[]>(['critical']);
 
   protected readonly tagOptions: MultiSelectOption[] = [
     { label: 'Design', value: 'design' },

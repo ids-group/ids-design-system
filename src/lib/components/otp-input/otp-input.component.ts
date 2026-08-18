@@ -39,9 +39,9 @@ export type OtpMode = 'numeric' | 'alphanumeric';
     },
   ],
   host: {
+    '[attr.data-field-state]': 'controlState()',
     role: 'group',
     '[attr.aria-label]': 'ariaLabel()',
-    '[class.invalid]': 'invalidResolved()',
     '[attr.aria-describedby]': 'hintId()',
   },
 })
@@ -106,6 +106,7 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
   protected readonly isDisabled = computed(
@@ -128,12 +129,16 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
 
       return;
     }
+    // Every branch writes element.value itself: Angular diffs `[value]` against the
+    // value IT last wrote, so a split that leaves this cell's signal unchanged skips
+    // the DOM write and the browser's own text stays on screen.
     if (cleaned.length === 1) {
       this.writeCell(index, cleaned);
       element.value = cleaned;
       this.focusBox(index + 1);
     } else {
       this.distribute(cleaned, index);
+      element.value = cleaned[0];
     }
   }
 

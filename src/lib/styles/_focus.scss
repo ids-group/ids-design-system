@@ -15,6 +15,14 @@
 // Windows High Contrast DROPS box-shadow, so a shadow-only indicator disappears
 // entirely there. This is the one place that gap can be closed once.
 
+// Base indicator for anything focusable that styles none itself, so it cannot fall
+// through to the browser default. `:where()` keeps it at ZERO specificity, so every
+// component and app rule still wins.
+:where(:focus-visible) {
+  outline: none;
+  box-shadow: var(--ds-control-focus-shadow);
+}
+
 :root[data-focus='ring'] {
   --ds-field-focus-shadow: var(--focus-ring);
   --ds-field-focus-shadow-error: var(--focus-ring-error);

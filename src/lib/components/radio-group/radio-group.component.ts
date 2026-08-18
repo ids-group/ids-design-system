@@ -25,6 +25,7 @@ import {
   type RadioGroupContract,
 } from './radio-group.token';
 import { resolveReserveMessage } from '../field-defaults';
+import { isTextEntryTarget } from '../../core/key-target';
 
 @Component({
   selector: 'ds-radio-group',
@@ -154,16 +155,15 @@ export class RadioGroupComponent
 
   protected onKeydown(event: KeyboardEvent): void {
     const key = event.key;
+    // Enter is deliberately absent: the group sits in forms, where Enter is the
+    // submit and swallowing it leaves the form with no keyboard way out.
     if (
-      ![
-        'ArrowDown',
-        'ArrowRight',
-        'ArrowUp',
-        'ArrowLeft',
-        ' ',
-        'Enter',
-      ].includes(key)
+      !['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft', ' '].includes(key)
     ) {
+      return;
+    }
+    // A text field beside the radios (the "Other: ___" row) types its own keys.
+    if (isTextEntryTarget(event)) {
       return;
     }
 
@@ -174,7 +174,7 @@ export class RadioGroupComponent
 
     event.preventDefault();
 
-    if (key === ' ' || key === 'Enter') {
+    if (key === ' ') {
       // Select whichever radio currently has DOM focus.
       const allRadios = this.radios() as unknown as RadioGroupChild[];
       const focused = allRadios.find((radio) => {

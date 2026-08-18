@@ -16,6 +16,19 @@
   margin-top: var(--space-3);
 }
 
+/* A real resize handle, so the fit-to-width split can be watched moving rather
+   than described. */
+.autocomplete-resizable {
+  resize: horizontal;
+  overflow: auto;
+  min-width: 220px;
+  max-width: 100%;
+  width: 460px;
+  padding: var(--space-2);
+  border: var(--border-width-default) dashed var(--border-default);
+  border-radius: var(--ds-radius-panel);
+}
+
 .autocomplete-field-label {
   font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   color: var(--text-primary);

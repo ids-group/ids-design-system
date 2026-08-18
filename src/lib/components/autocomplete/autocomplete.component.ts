@@ -28,6 +28,7 @@ import {
   dropdownOverlay,
   prepareOverlayEnter,
 } from '../overlay-motion';
+import { chipFit } from '../chip-overflow';
 import { IconComponent } from '../../icons/icon.component';
 import { TagComponent } from '../tag/tag.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
@@ -46,6 +47,7 @@ import type {
 import type { DsSize } from '../../core/size';
 import { resolveReserveMessage } from '../field-defaults';
 import { inFieldGroup } from '../field-group/field-group.token';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 let nextId = 0;
 
@@ -57,6 +59,7 @@ let nextId = 0;
   styleUrl: './autocomplete.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   host: {
+    '[attr.data-field-state]': 'controlState()',
     '[class.in-group]': 'inGroup',
     '[class.content-width]': "width() === 'content'",
   },
@@ -99,14 +102,23 @@ export class AutocompleteComponent<T = unknown>
   /** Draws the trailing chevron. Turn it off for a search field, where an arrow
    *  invites a click that would list everything instead of searching. */
   readonly showChevron = input(true, { transform: booleanAttribute });
-  /** Caps the number of chips shown before collapsing the rest into "+N more" — 0/null shows all.
-   *  Same name and semantics as `ds-multi-select`: without it a trigger grows a
-   *  line per selection and pushes the rest of the form down the page. */
-  readonly maxVisibleChips = input<number | null>(null, {
-    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  /** How the chips collapse when they outgrow one line. `"fit"` (the default)
+   *  measures and shows as many as the trigger is wide, the rest behind "+N more".
+   *  A NUMBER caps at exactly that many, which is what you want when the trigger's
+   *  height must be predictable whatever the width. `null` shows every chip and
+   *  lets the trigger grow a line per selection. */
+  readonly maxVisibleChips = input<number | 'fit' | null>('fit', {
+    transform: (raw: unknown) =>
+      raw === 'fit' ? 'fit' : raw == null ? null : numberAttribute(raw),
   });
-  /** Trigger height — sm/md/lg. */
-  readonly size = input<DsSize>('md');
+  /** Trigger height — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  protected readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
   /** Trigger width — `fill` stretches to the container, `content` hugs the value. */
   readonly width = input<AutocompleteWidth>('fill');
   /** Placeholder shown in the input when empty. */
@@ -165,6 +177,7 @@ export class AutocompleteComponent<T = unknown>
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
   protected readonly query = signal('');
@@ -176,6 +189,7 @@ export class AutocompleteComponent<T = unknown>
     viewChild.required<ElementRef<HTMLInputElement>>('filter');
   protected readonly panelTpl =
     viewChild.required<TemplateRef<unknown>>('panel');
+  private readonly chipRow = viewChild<ElementRef<HTMLElement>>('chipRow');
   private overlayRef: OverlayRef | null = null;
 
   protected readonly uid = `ds-autocomplete-${++nextId}`;
@@ -266,23 +280,44 @@ export class AutocompleteComponent<T = unknown>
     return this.allOptions().filter((option) => selectedSet.has(option.value));
   });
 
+  /** True for BOTH `'fit'` and a number: a number is a ceiling ("at most N"), not a
+   *  promise, so the row still measures and shows only what the width allows. Only
+   *  `null` opts out of measuring. */
+  protected readonly fitsChipsToWidth = computed(
+    () => this.maxVisibleChips() !== null,
+  );
+  /** How many chips the row is ASKED to render before measuring: everything for
+   *  `'fit'`, the ceiling for a number. It has to be the ceiling and not the
+   *  selection, because the measurement caches chip widths from a render that
+   *  holds them all — with a numeric cap that render never happens, the cache
+   *  never fills, and the fit fell back to "show them all" without a word. */
+  private readonly chipBudget = computed(() => {
+    const max = this.maxVisibleChips();
+    const total = this.selectedTags().length;
+
+    return typeof max === 'number' ? Math.min(Math.max(max, 0), total) : total;
+  });
+  private readonly chipsThatFit = chipFit(
+    this.chipBudget,
+    this.chipRow,
+    this.fitsChipsToWidth,
+    computed(() => this.selectedTags().length),
+  );
+
   /** What the trigger renders. Separate from `selectedTags`, which stays the
    *  full selection: Backspace removes the last SELECTED chip, and capping the
    *  list it reads would silently make it remove the last VISIBLE one instead. */
   protected readonly visibleTags = computed(() => {
-    const max = this.maxVisibleChips();
     const tags = this.selectedTags();
 
-    return max && max > 0 ? tags.slice(0, max) : tags;
+    return this.maxVisibleChips() === null
+      ? tags
+      : tags.slice(0, this.chipsThatFit());
   });
 
-  protected readonly overflowCount = computed<number>(() => {
-    const max = this.maxVisibleChips();
-
-    return max && max > 0
-      ? Math.max(0, this.selectedTags().length - max)
-      : 0;
-  });
+  protected readonly overflowCount = computed<number>(
+    () => this.selectedTags().length - this.visibleTags().length,
+  );
 
   protected readonly displayLabel = computed(() => {
     if (this.multiple()) {
@@ -325,9 +360,37 @@ export class AutocompleteComponent<T = unknown>
     if (this.multiple()) {
       parts.push('multi');
     }
-    void option;
+    if (option.disabled) {
+      parts.push('is-disabled');
+    }
 
     return parts.join(' ');
+  }
+
+  /** First option a reader can actually act on — -1 when the list is empty or
+   *  every option is disabled. */
+  private firstEnabledIndex(): number {
+    return this.visibleOptions().findIndex((option) => !option.disabled);
+  }
+
+  /** Arrow keys step OVER a disabled option rather than landing on it — an active
+   *  row Enter refuses to act on is a dead end the reader has to guess their way
+   *  out of. `step` is +1/-1; the create row (past the last option) is always
+   *  reachable. Returns -1 when every option is disabled. */
+  private nextEnabledIndex(from: number, step: number, slots: number): number {
+    if (!slots) {
+      return -1;
+    }
+    const options = this.visibleOptions();
+    for (let hop = 1; hop <= slots; hop++) {
+      const candidate = (from + step * hop + slots * hop) % slots;
+      const option = options[candidate];
+      if (!option || !option.disabled) {
+        return candidate;
+      }
+    }
+
+    return -1;
   }
 
   /** Flat index of the given option within the visible (filtered) list. */
@@ -374,7 +437,7 @@ export class AutocompleteComponent<T = unknown>
           return;
         }
         this.activeIndex.set(
-          totalSlots ? (this.activeIndex() + 1) % totalSlots : -1,
+          this.nextEnabledIndex(this.activeIndex(), 1, totalSlots),
         );
         break;
       case 'ArrowUp':
@@ -385,7 +448,7 @@ export class AutocompleteComponent<T = unknown>
           return;
         }
         this.activeIndex.set(
-          totalSlots ? (this.activeIndex() - 1 + totalSlots) % totalSlots : -1,
+          this.nextEnabledIndex(this.activeIndex(), -1, totalSlots),
         );
         break;
       case 'Enter': {
@@ -473,7 +536,7 @@ export class AutocompleteComponent<T = unknown>
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
     this.isOpen.set(true);
-    this.activeIndex.set(this.visibleOptions().length ? 0 : -1);
+    this.activeIndex.set(this.firstEnabledIndex());
   }
 
   protected close(cause: DsOverlayCloseCause = 'select'): void {
@@ -481,6 +544,14 @@ export class AutocompleteComponent<T = unknown>
     this.overlayRef = null;
     this.isOpen.set(false);
     this.activeIndex.set(-1);
+    // Here rather than in onPick, which is only half the paths: dismissing after
+    // typing over a settled value strands the text the same way. The input
+    // collapses to zero width whenever a label is on display, so anything left in
+    // `query` goes INVISIBLE while it still narrows the next open. Empty in multi
+    // mode, where the input never collapses and the text stays honest.
+    if (this.displayLabel()) {
+      this.query.set('');
+    }
     this.markTouched();
   }
 
@@ -513,10 +584,13 @@ export class AutocompleteComponent<T = unknown>
 
   protected onFilter(event: Event): void {
     this.query.set((event.target as HTMLInputElement).value);
-    this.activeIndex.set(0);
+    this.activeIndex.set(this.firstEnabledIndex());
   }
 
   protected onPick(option: AutocompleteOption<T>): void {
+    if (option.disabled) {
+      return;
+    }
     if (this.multiple()) {
       const current = (this.value() as readonly T[] | null) ?? [];
       const next = current.includes(option.value)

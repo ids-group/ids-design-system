@@ -28,6 +28,7 @@ import type { InputType } from './input.types';
 import type { DsSize } from '../../core/size';
 import { inFieldGroup } from '../field-group/field-group.token';
 import { resolveReserveMessage } from '../field-defaults';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 @Component({
   selector: 'ds-input',
@@ -39,7 +40,10 @@ import { resolveReserveMessage } from '../field-defaults';
     FieldMessageComponent,
     FieldClickFocusDirective,
   ],
-  host: { '[class.in-group]': 'inGroup' },
+  host: {
+    '[attr.data-field-state]': 'controlState()',
+    '[class.in-group]': 'inGroup',
+  },
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -57,14 +61,19 @@ export class InputComponent extends DsControlValueAccessor<string> {
    *  ring, so .in-group strips this control back to its bare contents. */
   protected readonly inGroup = inFieldGroup();
 
-
   /** Text value, two-way bound. */
   readonly value = model<string>('');
   /** Native input type — also affects the default clear button and password toggle. */
   readonly type = input<InputType>('text');
-  /** Field height — sm/md/lg. */
-  readonly size = input<DsSize>('md');
-  /** Label shown above the field, or inside it when `floating`. */
+  /** Field height — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  protected readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
+  /** Label shown above the field. */
   readonly label = input<string>('');
   /** Helper text shown below the field. */
   readonly hint = input<string>('');
@@ -119,9 +128,6 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Shows a trailing spinner — e.g. async validation in flight. The input
    *  stays editable; pair with a `hint` like "Checking availability…". */
   readonly loading = input(false, { transform: booleanAttribute });
-  /** Floating-label variant — the label sits inside a taller control instead
-   *  of stacked above it. */
-  readonly floating = input(false, { transform: booleanAttribute });
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Shows an "(optional)" marker next to the label (ignored when `required`). */
@@ -162,9 +168,16 @@ export class InputComponent extends DsControlValueAccessor<string> {
     transform: optionalBound,
   });
   /** Native `pattern` attribute — signal forms sends the schema's RegExp list. */
-  readonly pattern = input<readonly RegExp[], readonly RegExp[] | string | undefined>([], {
+  readonly pattern = input<
+    readonly RegExp[],
+    readonly RegExp[] | string | undefined
+  >([], {
     transform: (value) =>
-      value === undefined ? [] : typeof value === 'string' ? [new RegExp(value)] : value,
+      value === undefined
+        ? []
+        : typeof value === 'string'
+          ? [new RegExp(value)]
+          : value,
   });
   /** Mobile keyboard hints — forwarded to the native input as attributes. */
   readonly enterKeyHint = input<
@@ -215,7 +228,10 @@ export class InputComponent extends DsControlValueAccessor<string> {
       return null;
     }
 
-    return expressions.map((expression) => `(?=${expression.source})`).join('') + '.*';
+    return (
+      expressions.map((expression) => `(?=${expression.source})`).join('') +
+      '.*'
+    );
   });
   protected readonly uid = nextControlId('ds-input');
   protected readonly hintId = computed(() =>
@@ -237,6 +253,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
   /** Only name via aria-label when there's no visible `<label for>`. */
   protected readonly resolvedAriaLabel = computed(() =>
@@ -272,10 +289,10 @@ export class InputComponent extends DsControlValueAccessor<string> {
 
   protected readonly wrapperClasses = computed(() => {
     const parts = ['field'];
-    if (this.size() === 'sm') {
+    if (this.sizeResolved() === 'sm') {
       parts.push('sm');
     }
-    if (this.size() === 'lg') {
+    if (this.sizeResolved() === 'lg') {
       parts.push('lg');
     }
     if (this.invalidResolved()) {
@@ -291,9 +308,6 @@ export class InputComponent extends DsControlValueAccessor<string> {
     }
     if (this.loading()) {
       parts.push('loading');
-    }
-    if (this.floating()) {
-      parts.push('floating');
     }
 
     return parts.join(' ');

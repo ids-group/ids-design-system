@@ -22,7 +22,8 @@ import type {
   TimeFormat,
 } from '../time-picker/time-picker.types';
 
-type ColumnId = 'hours' | 'minutes' | 'period';
+/** Which of the panel's listbox columns a pick came from. */
+export type TimeColumnId = 'hours' | 'minutes' | 'period';
 interface Cell<T> {
   value: T;
   label: string;
@@ -61,6 +62,11 @@ export class TimeColumnsComponent {
   readonly disabledTime = input<((time: string) => boolean) | null>(null);
   /** A complete time was picked, as `HH:mm`. Not emitted while only one column has moved. */
   readonly timeChange = output<string>();
+  /** Which column the pick came from. `timeChange` alone cannot say: it carries a
+   *  whole time, and a host that wants to close once the user has been through
+   *  both columns cannot infer the difference between "chose the same hour again"
+   *  and "did not touch hours". Emitted immediately after `timeChange`. */
+  readonly partPicked = output<TimeColumnId>();
 
   private readonly hourButtons =
     viewChildren<ElementRef<HTMLButtonElement>>('hourOpt');
@@ -147,14 +153,14 @@ export class TimeColumnsComponent {
     }
     const hour24 = this.toH24(cell.value);
     const parsed = this.parsedValue();
-    this.emit(hour24, parsed ? parsed.m : this.firstEnabledMinute(hour24));
+    this.emit(hour24, parsed ? parsed.m : this.firstEnabledMinute(hour24), 'hours');
   }
 
   protected selectMinute(cell: Cell<number>): void {
     if (cell.disabled) {
       return;
     }
-    this.emit(this.baseHour(), cell.value);
+    this.emit(this.baseHour(), cell.value, 'minutes');
   }
 
   protected selectPeriod(cell: Cell<'AM' | 'PM'>): void {
@@ -166,10 +172,10 @@ export class TimeColumnsComponent {
       ? to12h(parsed.h).h
       : this.firstEnabledHour12(cell.value);
     const hour24 = from12h(hour12, cell.value);
-    this.emit(hour24, parsed ? parsed.m : this.firstEnabledMinute(hour24));
+    this.emit(hour24, parsed ? parsed.m : this.firstEnabledMinute(hour24), 'period');
   }
 
-  protected onKey(event: KeyboardEvent, column: ColumnId, index: number): void {
+  protected onKey(event: KeyboardEvent, column: TimeColumnId, index: number): void {
     const cells = this.cellsFor(column);
     let target = -1;
     switch (event.key) {
@@ -258,8 +264,9 @@ export class TimeColumnsComponent {
     return hours ?? 12;
   }
 
-  private emit(hour24: number, minute: number): void {
+  private emit(hour24: number, minute: number, part: TimeColumnId): void {
     this.timeChange.emit(`${pad2(hour24)}:${pad2(minute)}`);
+    this.partPicked.emit(part);
   }
 
   private entryIndex(
@@ -290,7 +297,7 @@ export class TimeColumnsComponent {
     return -1;
   }
 
-  private cellsFor(column: ColumnId): readonly { disabled: boolean }[] {
+  private cellsFor(column: TimeColumnId): readonly { disabled: boolean }[] {
     if (column === 'hours') {
       return this.hourCells();
     }
@@ -301,7 +308,7 @@ export class TimeColumnsComponent {
     return this.periodCells();
   }
 
-  private buttonsFor(column: ColumnId) {
+  private buttonsFor(column: TimeColumnId) {
     if (column === 'hours') {
       return this.hourButtons;
     }
@@ -312,7 +319,7 @@ export class TimeColumnsComponent {
     return this.periodButtons;
   }
 
-  private selectAt(column: ColumnId, index: number): void {
+  private selectAt(column: TimeColumnId, index: number): void {
     if (column === 'hours') {
       this.selectHour(this.hourCells()[index]);
     } else if (column === 'minutes') {
@@ -322,8 +329,8 @@ export class TimeColumnsComponent {
     }
   }
 
-  private siblingColumn(column: ColumnId, step: number): ColumnId {
-    const order: ColumnId[] = this.is12h()
+  private siblingColumn(column: TimeColumnId, step: number): TimeColumnId {
+    const order: TimeColumnId[] = this.is12h()
       ? ['hours', 'minutes', 'period']
       : ['hours', 'minutes'];
     const next = order.indexOf(column) + step;
@@ -331,7 +338,7 @@ export class TimeColumnsComponent {
     return order[Math.min(Math.max(next, 0), order.length - 1)];
   }
 
-  private focusColumn(column: ColumnId): void {
+  private focusColumn(column: TimeColumnId): void {
     const entry =
       column === 'hours'
         ? this.hourEntry()

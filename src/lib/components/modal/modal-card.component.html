@@ -1,14 +1,13 @@
 <div
   aria-modal="true"
-  [attr.role]="dialogRole()"
+  [attr.role]="resolvedRole()"
   [class]="classes()"
   [attr.aria-labelledby]="titleId"
 >
   <div class="header">
-    @if (icon(); as iconName) {
+    @if (resolvedIcon(); as iconName) {
       <span
-        class="icon-badge"
-        [class.error]="error()"
+        [class]="status() ? 'icon-badge ' + status() : 'icon-badge'"
       >
         <ds-icon
           [name]="iconName"

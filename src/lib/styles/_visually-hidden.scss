@@ -1,0 +1,14 @@
+// `position: absolute` needs a positioned ancestor: without one the node resolves
+// against the initial containing block and can grow the consuming page's root
+// scroller into a second scrollbar.
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

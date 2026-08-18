@@ -139,6 +139,14 @@ resolution: rename the subclass's own member, or add `override` where the base's
 match. Keep the feature bullets themselves in `informational` — the item is the collision, not the
 feature.
 
+**Do not compile that list by eye — run `npm run class-surface`.** It diffs the exported member
+surface between the last tag and HEAD and prints it per class. Twice now the list was assembled by
+reading the diff and twice it was wrong in a way a consumer found first: 0.8.0 named the public
+additions but not the private `saveLayout` that broke their build, and 0.9.0 shipped with no entry
+while sixteen classes had grown. Two things the tool cannot see, so check them by hand: a member
+whose SIGNATURE changed (same name, so it compiles and then misbehaves — `TableComponent.isStriped()`
+went window-relative to absolute) and a member that moved to a base class.
+
 ## Per-entry checklist
 
 - [ ] `id` is a stable, unique kebab slug.

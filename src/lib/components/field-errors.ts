@@ -88,6 +88,12 @@ export interface DsFieldMessageResolution {
   readonly message: Signal<DsFieldMessage>;
   /** `invalid` folded together with whatever the control reports. */
   readonly invalid: Signal<boolean>;
+  /**
+   * The state the CONTROL paints, for `[attr.data-field-state]`. Deliberately not
+   * `message().state`: a field can be in a state with nothing to say, and can have
+   * text in a state the box does not paint.
+   */
+  readonly controlState: Signal<FieldMessageState | null>;
 }
 
 const EMPTY_MESSAGE: DsFieldMessage = { text: '', state: 'default' };
@@ -154,7 +160,10 @@ export function resolveFieldMessage(
   });
 
   const invalid = computed(
-    () => sources.invalid() || (errors().length > 0 && interacted()),
+    () =>
+      sources.invalid() ||
+      sources.error().trim().length > 0 ||
+      (errors().length > 0 && interacted()),
   );
 
   const message = computed<DsFieldMessage>(() => {
@@ -181,7 +190,18 @@ export function resolveFieldMessage(
     };
   });
 
-  return { message, invalid };
+  const paintedState = computed<FieldMessageState | null>(() => {
+    if (invalid()) {
+      return 'error';
+    }
+    if (sources.warning().trim()) {
+      return 'warning';
+    }
+
+    return sources.success?.() ? 'success' : null;
+  });
+
+  return { message, invalid, controlState: paintedState };
 }
 
 /**

@@ -39,7 +39,10 @@ import {
   type DsFieldError,
   type DsFieldErrorsInput,
 } from '../field-errors';
-import { TimeColumnsComponent } from '../time-columns/time-columns.component';
+import {
+  TimeColumnsComponent,
+  type TimeColumnId,
+} from '../time-columns/time-columns.component';
 import { DS_CONFIG } from '../../config/ds-config';
 import {
   clampToRange,
@@ -56,6 +59,7 @@ import type {
 } from './time-picker.types';
 import type { DsSize } from '../../core/size';
 import { resolveReserveMessage } from '../field-defaults';
+import { resolveWithConfig } from '../../core/config-defaults';
 
 type Segment = 'single' | 'start' | 'end';
 let nextId = 0;
@@ -74,7 +78,10 @@ let nextId = 0;
       multi: true,
     },
   ],
-  host: { '[class.full-width]': 'fullWidth()' },
+  host: {
+    '[attr.data-field-state]': 'controlState()',
+    '[class.full-width]': 'fullWidth()',
+  },
 })
 export class TimePickerComponent
   extends DsControlValueAccessor<string | TimeRangeValue | null>
@@ -110,8 +117,14 @@ export class TimePickerComponent
   readonly maxTime = input<string | null>(null);
   /** Predicate marking individual times unselectable. */
   readonly disabledTime = input<((time: string) => boolean) | null>(null);
-  /** Trigger height — sm/md/lg. */
-  readonly size = input<DsSize>('md');
+  /** Trigger height — sm/md/lg.
+   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  readonly size = input<DsSize | null>(null);
+  protected readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'md' as DsSize,
+  );
   /** Stretch the trigger to fill its container instead of hugging its content —
    *  opt in when the field shares a grid/flex track with inputs. */
   readonly fullWidth = input(false, { transform: booleanAttribute });
@@ -164,6 +177,12 @@ export class TimePickerComponent
   protected readonly uid = `ds-timepicker-${++nextId}`;
   protected readonly labelId = `${this.uid}-label`;
   protected readonly openSegment = signal<Segment | null>(null);
+  // Which columns the user has been through since THIS opening. In single mode
+  // the panel has no Done button, so it closes itself once both halves of a time
+  // have been chosen — "picked an hour and a minute" is the completion. Reset on
+  // open, so re-opening a field that already holds a value asks for both again
+  // rather than closing on the first tap.
+  private readonly pickedParts = signal<ReadonlySet<TimeColumnId>>(new Set());
   private overlayRef: OverlayRef | null = null;
 
   protected readonly singleTrigger =
@@ -192,6 +211,7 @@ export class TimePickerComponent
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
   protected readonly resolvedFormat = computed<TimeFormat>(
     () => this.format() ?? this.config.timePicker?.format ?? '24h',
@@ -214,7 +234,7 @@ export class TimePickerComponent
 
   protected readonly triggerClasses = computed(() => {
     const parts = ['trigger'];
-    const size = this.size();
+    const size = this.sizeResolved();
     if (size !== 'md') {
       parts.push(size);
     }
@@ -320,6 +340,7 @@ export class TimePickerComponent
     });
     this.overlayRef.attach(new TemplatePortal(this.panelTpl(), this.vcr));
     this.openSegment.set(segment);
+    this.pickedParts.set(new Set());
     afterNextRender(() => this.columns()?.focusSelected(), {
       injector: this.injector,
     });
@@ -379,6 +400,18 @@ export class TimePickerComponent
       return;
     }
     this.value.set(next);
+  }
+
+  protected onPartPicked(part: TimeColumnId): void {
+    const seen = new Set(this.pickedParts()).add(part);
+    this.pickedParts.set(seen);
+    if (
+      this.mode() === 'single' &&
+      seen.has('hours') &&
+      seen.has('minutes')
+    ) {
+      this.close('select');
+    }
   }
 
   protected setNow(): void {

@@ -11,12 +11,14 @@ import {
   effect,
   inject,
   input,
+  linkedSignal,
   model,
   output,
   signal,
   viewChild,
 } from '@angular/core';
 import { devWarn } from '../../core/dev-warning';
+import { resolveWithConfig } from '../../core/config-defaults';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   CdkDrag,
@@ -128,11 +130,11 @@ function compareSortValues(
   styleUrl: './table.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   host: {
-    '[class.bordered]': 'bordered()',
+    '[class.bordered]': 'borderedResolved()',
     '[class.selectable]': 'selectable()',
     '[class.pinned]': 'stickyFirstColumn()',
     '[class.expandable]': 'expandableRows()',
-    '[class.sticky-scrollbar]': 'stickyScrollbar()',
+    '[class.sticky-scrollbar]': 'stickyScrollbarResolved()',
     '[class.resizable]': 'resizableColumns()',
   },
 })
@@ -151,14 +153,37 @@ export class TableComponent<T extends object> {
   /** Opt-in outer border + radius. Off by default so tables flush inside a
    *  `<ds-card padding="none">` (workspaces, programs-list) don't double-border.
    *  When `true`, the scroll-wrap gets a `var(--border-default)` outline and
-   *  `var(--radius-md)` radius — useful when the table stands alone in a padded card. */
-  readonly bordered = input(false, { transform: booleanAttribute });
-  /** false  — no loading state.
+   *  `var(--radius-md)` radius — useful when the table stands alone in a padded card.
+   *  Unset falls back to `DS_CONFIG.table.bordered`, then `false`. */
+  readonly bordered = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  /** false — no loading state.
+   *  `true` — the table picks: skeleton rows while it has nothing to show, overlay
+   *  once rows are on screen. Prefer it; the right choice is a function of the row
+   *  count, which only the table holds.
    *  'skeleton' — first-load placeholder; rows are replaced with shimmer
    *  rows that read the global --skeleton-shimmer-x driver.
    *  'overlay'  — re-fetch indicator; existing rows stay visible behind
-   *  a translucent overlay with a centred spinner. */
-  readonly loading = input<false | 'skeleton' | 'overlay'>(false);
+   *  a translucent overlay with a centred spinner. Pin either one only to
+   *  override the rule deliberately. */
+  readonly loading = input<boolean | 'skeleton' | 'overlay'>(false);
+  /** The mode actually rendered. Skeletons replace what the reader is looking at and
+   *  an overlay on an empty card says nothing, so `true` resolves per state rather
+   *  than picking a favourite. */
+  protected readonly loadingMode = computed<'skeleton' | 'overlay' | false>(
+    () => {
+      const loading = this.loading();
+      if (loading === false) {
+        return false;
+      }
+      if (loading === true) {
+        return this.filteredData().length ? 'overlay' : 'skeleton';
+      }
+
+      return loading;
+    },
+  );
   /** Keeps the header row pinned while the body scrolls. */
   readonly stickyHeader = input(true, { transform: booleanAttribute });
   /** Caps the scroll body height (any CSS length, e.g. `'320px'`) and scrolls it
@@ -174,10 +199,32 @@ export class TableComponent<T extends object> {
   readonly animateHeight = input(false, { transform: booleanAttribute });
   /** Two-way set of currently selected row ids. */
   readonly selectedIds = model<Set<string>>(new Set<string>());
-  /** Column key currently sorted by; `null` when unsorted. */
-  readonly sortKey = model<string | null>(null);
+  /** Column key currently sorted by; `null` when unsorted. Two-way bindable
+   *  (`[(sortKey)]`) or one-way from your own state with `(sortChange)`. */
+  readonly sortKey = input<string | null>(null);
+  /** Emitted for `[(sortKey)]`. `sortChange` carries the same click with both
+   *  halves at once, which is usually the one to listen to. */
+  readonly sortKeyChange = output<string | null>();
   /** Sort direction for `sortKey`. */
-  readonly sortDir = model<SortDir>(null);
+  readonly sortDir = input<SortDir>(null);
+  /** Emitted for `[(sortDir)]`. */
+  readonly sortDirChange = output<SortDir>();
+  /**
+   * What the header marks, and what a client sort reads.
+   *
+   * `linkedSignal` over BOTH inputs, not a `model`: Angular writes an input only
+   * when the bound expression changed, diffing against the value IT last wrote, and
+   * an internal `.set()` never updates that slot. Seeding from both means a host
+   * answering with its own default re-seeds the pair even when one half of that
+   * default equals what it last bound. A host that binds neither never re-seeds, so
+   * the optimistic state survives.
+   */
+  private readonly sortState = linkedSignal<{
+    readonly key: string | null;
+    readonly dir: SortDir;
+  }>(() => ({ key: this.sortKey(), dir: this.sortDir() }));
+  protected readonly activeSortKey = computed(() => this.sortState().key);
+  protected readonly activeSortDir = computed(() => this.sortState().dir);
   /** Sort states a column cycles through on click. Default includes null
    *  (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g.
    *  server-paged lists). */
@@ -249,8 +296,9 @@ export class TableComponent<T extends object> {
    *  table, not per route instance. */
   readonly storageKey = input<string>('');
 
-  /** Render an export button above the table. Off by default; `exportCsv()`
-   *  stays available for a consumer's own button. */
+  /** Render an export button in the table's toolbar row. Off by default. Leave it
+   *  off and drive `runExport()` from your own button — in a page header, a filter
+   *  bar, the `[toolbar]` slot — reading `exporting()` for its loading state. */
   readonly exportButton = input(false, { transform: booleanAttribute });
   /** Filename the export button downloads as. */
   readonly exportFilename = input<string>('table.csv');
@@ -269,16 +317,22 @@ export class TableComponent<T extends object> {
   /** Fires when `exportFetcher` rejects. Without it a failed export is silent —
    *  the button simply re-enables and no file arrives. */
   readonly exportFailed = output<unknown>();
-  /** True while `exportFetcher` is in flight, so the button can disable itself. */
-  protected readonly exporting = signal(false);
+  private readonly exportingState = signal(false);
+  /** True while `exportFetcher` is in flight. Public so a button OUTSIDE the table
+   *  can show the same in-flight state as the built-in one. */
+  readonly exporting = this.exportingState.asReadonly();
+  private readonly exportStatusState = signal('');
   /** Announced in the table's live region while an export is running or after it
    *  failed, so the button's own disabled state is not the only signal. */
-  protected readonly exportStatus = signal('');
+  readonly exportStatus = this.exportStatusState.asReadonly();
 
   /** Keeps the horizontal scrollbar reachable on tall tables: the scroll
    *  container's native bar is hidden and a proxy stuck to the bottom of the
-   *  nearest scroll ancestor mirrors it both ways. Off by default. */
-  readonly stickyScrollbar = input(false, { transform: booleanAttribute });
+   *  nearest scroll ancestor mirrors it both ways. Off by default. Unset falls
+   *  back to `DS_CONFIG.table.stickyScrollbar`, then `false`. */
+  readonly stickyScrollbar = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
 
   /** Rows per page. `null` (default) disables pagination — all rows render. */
   readonly pageSize = model<number | null>(null);
@@ -325,6 +379,16 @@ export class TableComponent<T extends object> {
   );
   protected readonly sortModeResolved = computed<TableSortMode>(
     () => this.sortMode() ?? 'server',
+  );
+  protected readonly borderedResolved = resolveWithConfig(
+    this.bordered,
+    (config) => config.table?.bordered,
+    false,
+  );
+  protected readonly stickyScrollbarResolved = resolveWithConfig(
+    this.stickyScrollbar,
+    (config) => config.table?.stickyScrollbar,
+    false,
   );
   /** Pin the first data column (and the select column) on horizontal scroll. */
   readonly stickyFirstColumn = input(false, { transform: booleanAttribute });
@@ -425,7 +489,7 @@ export class TableComponent<T extends object> {
 
   protected readonly tableClasses = computed(() => {
     const parts = ['table'];
-    if (this.loading() === 'skeleton') {
+    if (this.loadingMode() === 'skeleton') {
       parts.push('skeleton-mode');
     }
     if (this.stickyHeader()) {
@@ -445,10 +509,17 @@ export class TableComponent<T extends object> {
   });
 
   protected readonly isSkeletonLoading = computed(
-    () => this.loading() === 'skeleton',
+    () => this.loadingMode() === 'skeleton',
   );
   protected readonly isOverlayLoading = computed(
-    () => this.loading() === 'overlay',
+    () => this.loadingMode() === 'overlay',
+  );
+  /** The empty row is a CLAIM about the data — "there are none" — so it must not
+   *  appear while the table is still asking. Only `skeleton` used to suppress it,
+   *  and `overlay` is the mode a list uses on every read after the first, so a
+   *  zero-row reload painted "No rows yet" under the spinner. */
+  protected readonly showsEmptyRow = computed(
+    () => this.loadingMode() === false && !this.filteredData().length,
   );
 
   protected readonly effectiveHiddenKeys = computed<ReadonlySet<string>>(
@@ -765,9 +836,32 @@ export class TableComponent<T extends object> {
     startWidth: number;
   } | null = null;
 
-  /** Resolved pixel width for a column: a drag override wins, else `column.width`. */
+  /** Resolved pixel width for a column: a drag override wins, else `column.width`
+   *  when that is a number. `'content'` is not a pixel value — it is carried by a
+   *  class instead, see `fitsContent`. */
   protected columnWidth(col: TableColumn<T>): number | null {
-    return this.columnWidths().get(col.key) ?? col.width ?? null;
+    const dragged = this.columnWidths().get(col.key);
+    if (dragged !== undefined) {
+      return dragged;
+    }
+
+    return typeof col.width === 'number' ? col.width : null;
+  }
+
+  /** Shrink-to-content mode, unless the user has dragged this column — a drag is a
+   *  deliberate pixel width and must win over the declared intent. */
+  protected fitsContent(col: TableColumn<T>): boolean {
+    return col.width === 'content' && !this.columnWidths().has(col.key);
+  }
+
+  /** Clip width for `truncate`. `'content'` has no clip width — the column is as
+   *  wide as its widest cell, so there is nothing to ellipsis against. */
+  protected clipWidth(col: TableColumn<T>): number | null {
+    return typeof col.width === 'number'
+      ? col.width
+      : col.width === 'content'
+        ? null
+        : 240;
   }
 
   protected onResizeStart(col: TableColumn<T>, event: PointerEvent): void {
@@ -957,8 +1051,8 @@ export class TableComponent<T extends object> {
     if (this.sortModeResolved() !== 'client') {
       return rows;
     }
-    const key = this.sortKey();
-    const dir = this.sortDir();
+    const key = this.activeSortKey();
+    const dir = this.activeSortDir();
     if (!key || !dir) {
       return rows;
     }
@@ -1021,7 +1115,7 @@ export class TableComponent<T extends object> {
    * unsorted first render is silent; only real changes speak.
    */
   protected readonly statusMessage = computed<string>(() => {
-    if (this.loading() !== false) {
+    if (this.loadingMode() !== false) {
       return 'Loading…';
     }
     const exportState = this.exportStatus();
@@ -1034,8 +1128,8 @@ export class TableComponent<T extends object> {
   });
 
   private readonly sortMessage = computed<string>(() => {
-    const key = this.sortKey();
-    const dir = this.sortDir();
+    const key = this.activeSortKey();
+    const dir = this.activeSortDir();
     if (!key) {
       return '';
     }
@@ -1074,7 +1168,9 @@ export class TableComponent<T extends object> {
    *  ones that have arrived — otherwise the spacers shrink to the loaded slice
    *  and the scrollbar lies about the length of the list. */
   protected readonly virtualCount = computed(() =>
-    this.lazy() ? (this.total() ?? this.displayData().length) : this.displayData().length,
+    this.lazy()
+      ? (this.total() ?? this.displayData().length)
+      : this.displayData().length,
   );
 
   /** `null` when not virtualizing — the row loop then walks `displayData()` whole. */
@@ -1117,20 +1213,20 @@ export class TableComponent<T extends object> {
    * for. Outside lazy mode every slot is filled, so the extra object per visible
    * row buys uniformity for the ~25 rows windowing keeps in the DOM.
    */
-  protected readonly rowSlots = computed<readonly { row: T | null; index: number }[]>(
-    () => {
-      const window = this.virtualWindow();
-      const data = this.displayData();
-      const start = window ? window.start : 0;
-      const end = window ? window.end : data.length;
-      const slots: { row: T | null; index: number }[] = [];
-      for (let index = start; index < end; index++) {
-        slots.push({ row: data[index] ?? null, index });
-      }
+  protected readonly rowSlots = computed<
+    readonly { row: T | null; index: number }[]
+  >(() => {
+    const window = this.virtualWindow();
+    const data = this.displayData();
+    const start = window ? window.start : 0;
+    const end = window ? window.end : data.length;
+    const slots: { row: T | null; index: number }[] = [];
+    for (let index = start; index < end; index++) {
+      slots.push({ row: data[index] ?? null, index });
+    }
 
-      return slots;
-    },
-  );
+    return slots;
+  });
 
   /** Zebra striping cannot come from `:nth-child` while windowing — the parity
    *  of a rendered row depends on its ABSOLUTE index, and the spacer rows are
@@ -1610,7 +1706,9 @@ export class TableComponent<T extends object> {
   }
 
   protected onRowKey(row: T, event: Event): void {
-    if (!this.rowInteractive()) {
+    // Only the row's own key opens the row: a key pressed on a control inside a
+    // cell belongs to that control (Space on the select box, Enter on a button).
+    if (!this.rowInteractive() || event.target !== event.currentTarget) {
       return;
     }
     event.preventDefault();
@@ -1647,8 +1745,8 @@ export class TableComponent<T extends object> {
     if (!this.sortableCol(col)) {
       return null;
     }
-    if (this.sortKey() === col.key && this.sortDir()) {
-      return this.sortDir() === 'asc' ? 'ascending' : 'descending';
+    if (this.activeSortKey() === col.key && this.activeSortDir()) {
+      return this.activeSortDir() === 'asc' ? 'ascending' : 'descending';
     }
 
     return 'none';
@@ -1659,19 +1757,19 @@ export class TableComponent<T extends object> {
       return;
     }
     const order = this.sortingOrder();
-    const currentKey = this.sortKey();
+    const currentKey = this.activeSortKey();
     let dir: SortDir;
     if (currentKey !== col.key) {
       dir = order[0] ?? null;
     } else {
-      const currentIndex = order.indexOf(this.sortDir());
+      const currentIndex = order.indexOf(this.activeSortDir());
       dir = order[(currentIndex + 1) % order.length] ?? null;
     }
-    // The key survives "unsorted" (`sortDir === null` alone means that): nulling
-    // it desynced a host that maps off back to its own default sort, because on
-    // the default column that write is a no-op for Angular's binding diff.
-    this.sortKey.set(col.key);
-    this.sortDir.set(dir);
+    // The key survives "unsorted" — `dir === null` alone means that. Nulling it too
+    // desynced a host that maps off `sortKey` back to its own default sort.
+    this.sortState.set({ key: col.key, dir });
+    this.sortKeyChange.emit(col.key);
+    this.sortDirChange.emit(dir);
     this.sortChange.emit({ key: col.key, dir });
   }
 
@@ -1680,19 +1778,19 @@ export class TableComponent<T extends object> {
     if (this.sortableCol(col)) {
       parts.push('sortable');
     }
-    if (this.sortKey() === col.key && this.sortDir()) {
-      parts.push(`sorted-${this.sortDir()}`);
+    if (this.activeSortKey() === col.key && this.activeSortDir()) {
+      parts.push(`sorted-${this.activeSortDir()}`);
     }
 
     return parts.join(' ');
   }
 
   protected sortIcon(col: TableColumn<T>): 'sortAsc' | 'sortDesc' | 'sort' {
-    if (this.sortKey() !== col.key || !this.sortDir()) {
+    if (this.activeSortKey() !== col.key || !this.activeSortDir()) {
       return 'sort';
     }
 
-    return this.sortDir() === 'asc' ? 'sortAsc' : 'sortDesc';
+    return this.activeSortDir() === 'asc' ? 'sortAsc' : 'sortDesc';
   }
 
   protected cellValue(row: T, col: TableColumn<T>): string {
@@ -1703,9 +1801,10 @@ export class TableComponent<T extends object> {
     return String((row as Record<string, unknown>)[col.key] ?? '');
   }
 
-  /** Exports the visible columns of the filtered + sorted rows (all rows, not
-   *  just the current page) as a CSV download. Call from a consumer button:
-   *  `<ds-button (pressed)="table.exportCsv()">`. */
+  /** Serialises the visible columns of the rows the TABLE HOLDS as a CSV download.
+   *  On a server-paged table that is one page — prefer `runExport()`, which goes
+   *  through `exportFetcher` and exports the whole set. Pass `rows` to serialise a
+   *  set you fetched yourself. */
   exportCsv(filename = 'table.csv', rows?: readonly T[]): void {
     if (typeof document === 'undefined') {
       return;
@@ -1788,17 +1887,20 @@ export class TableComponent<T extends object> {
     }
   }
 
-  /** Export button handler: awaits `exportFetcher` when one is given, so a
-   *  server-paged table exports the whole set rather than the page it holds. */
-  protected async runExport(): Promise<void> {
+  /** Runs the export the built-in button runs: awaits `exportFetcher` when one is
+   *  given — so a server-paged table exports the whole set rather than the page it
+   *  holds — downloads the result, drives `exporting`, writes the live region and
+   *  emits `exportFailed`. Public so the button can live anywhere:
+   *  `<ds-button [loading]="table.exporting()" (pressed)="table.runExport()">`. */
+  async runExport(): Promise<void> {
     const fetcher = this.exportFetcher();
     if (!fetcher) {
       this.exportCsv(this.exportFilename());
 
       return;
     }
-    this.exporting.set(true);
-    this.exportStatus.set('Preparing export…');
+    this.exportingState.set(true);
+    this.exportStatusState.set('Preparing export…');
     try {
       const result = await fetcher();
       if (typeof result === 'string' || result instanceof Blob) {
@@ -1806,14 +1908,14 @@ export class TableComponent<T extends object> {
       } else {
         this.exportCsv(this.exportFilename(), result);
       }
-      this.exportStatus.set('Export ready');
+      this.exportStatusState.set('Export ready');
     } catch (error) {
       // Swallowing this is what made a failed export indistinguishable from a
       // slow one: the button re-enabled and no file ever arrived.
-      this.exportStatus.set('Export failed');
+      this.exportStatusState.set('Export failed');
       this.exportFailed.emit(error);
     } finally {
-      this.exporting.set(false);
+      this.exportingState.set(false);
     }
   }
 

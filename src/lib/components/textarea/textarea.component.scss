@@ -1,4 +1,5 @@
 @use '../../styles/field-label' as field-label;
+@use '../../styles/field-state' as field-state;
 
 /* ============================================================
    FIELD (multiline text input subset)
@@ -106,23 +107,6 @@
     textarea { cursor: default; }
   }
 
-  &.error {
-    .control {
-      background-color: var(--_input-bg-color-error);
-      border-color: var(--_input-border-error);
-
-      &:focus-within {
-        box-shadow: var(--_input-focus-shadow-error);
-      }
-    }
-  }
-
-  &.success {
-    .control {
-      border-color: var(--_input-border-success);
-    }
-  }
-
   /* Sizes — only padding scales; height stays driven by rows + resize. The inner
      textarea's vertical pad is set with the pins at the end of this file, which
      out-rank anything declared here. */
@@ -171,3 +155,11 @@
 :host .field.lg .control textarea {
   padding-block: var(--space-4);
 }
+
+@include field-state.field-state(
+  '.control',
+    $error-border: var(--_input-border-error),
+    $error-bg: var(--_input-bg-color-error),
+    $error-focus-shadow: var(--_input-focus-shadow-error),
+    $success-border: var(--_input-border-success),
+);

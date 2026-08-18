@@ -190,6 +190,12 @@
     <li>
       Segmented control button height
     </li>
+
+    <li>
+      Field, table-cell and surface padding
+      (<code class="t-mono-inline">--ds-container-pad</code>) —
+      <code class="t-mono-inline">ultra-compact</code> only
+    </li>
   </ul>
 
   <h3 class="block-title t-h4">
@@ -243,5 +249,37 @@
     padding but <strong>not the type scale</strong> — the line box stays 19.6px
     at a 14px font. Compact is unaffected in practice (33px against 32px). If you
     need a genuinely 24px row, shrink the type for that container as well.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      Padding follows the tier only at the bottom.
+    </strong>
+
+    <code class="t-mono-inline">
+      compact
+    </code> and
+    <code class="t-mono-inline">
+      comfy
+    </code> resize
+    controls and leave padding alone;
+    <code class="t-mono-inline">
+      ultra-compact
+    </code> also
+    compresses field padding, table cells and
+    <code class="t-mono-inline">
+      --ds-container-pad
+    </code> — the inner padding
+    <code class="t-mono-inline">
+      ds-card
+    </code> and
+    <code class="t-mono-inline">
+      ds-stat
+    </code> share — from 24px to 16px. For a
+    surface padding between the two rungs, set that one token at
+    <code class="t-mono-inline">
+      :root
+    </code>; it is the lever both components
+    default to.
   </p>
 </docs-section>

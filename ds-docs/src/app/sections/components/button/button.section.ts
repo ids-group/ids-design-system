@@ -1,5 +1,10 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { ButtonComponent, ToggleButtonComponent, type ButtonVariant } from 'ds';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  ButtonComponent,
+  SwitchComponent,
+  ToggleButtonComponent,
+  type ButtonVariant,
+} from 'ds';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import {
   DocsMatrixComponent,
@@ -23,6 +28,7 @@ interface VariantSpec {
     DocsSectionComponent,
     DocsMatrixComponent,
     DocsTruncationComponent,
+    SwitchComponent,
     ToggleButtonComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
@@ -30,6 +36,10 @@ interface VariantSpec {
   styleUrl: './button.section.scss',
 })
 export class ButtonSection {
+  /** Flips every cell of the colour x variant matrix to disabled, so the state can
+   *  be compared against its live self without leaving the page. */
+  protected readonly matrixDisabled = signal(false);
+
   /** Columns of the color × variant matrix. */
   protected readonly variants: readonly ButtonVariant[] = [
     'solid',

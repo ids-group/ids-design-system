@@ -9,6 +9,7 @@ import {
   ModalCardComponent,
   ModalComponent,
   ModalService,
+  type DsStatus,
 } from 'ds';
 import {
   DocsTruncationComponent,
@@ -55,6 +56,38 @@ export class ModalSection {
       field: 'Form fields inside body',
       behaviour:
         'Inherit field truncation rules. Hints wrap to 2 lines; errors never clip.',
+    },
+  ];
+
+  protected readonly statusSpecimens: {
+    status: DsStatus;
+    role: string;
+    title: string;
+    body: string;
+  }[] = [
+    {
+      status: 'error',
+      role: 'alertdialog',
+      title: 'Payment failed',
+      body: 'The card issuer declined the transaction. Nothing was charged.',
+    },
+    {
+      status: 'warning',
+      role: 'alertdialog',
+      title: 'Cover lapses in 3 days',
+      body: 'Renew before 15 Mar or the fleet policy stops mid-journey.',
+    },
+    {
+      status: 'success',
+      role: 'dialog',
+      title: 'Policy issued',
+      body: 'Documents are on their way to the broker and the insured.',
+    },
+    {
+      status: 'info',
+      role: 'dialog',
+      title: 'Scheduled maintenance',
+      body: 'Quoting is read-only on Sunday between 02:00 and 04:00 GMT.',
     },
   ];
 

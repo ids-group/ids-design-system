@@ -20,6 +20,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  /* Centres the node on the heading's first line, not on the whole item. Reads the
+     same font/line-height pair as `.heading`, so retuning the heading moves it. */
+  margin-top: calc(
+    (var(--font-size-s) * var(--line-height-base) - var(--_timeline-node-size)) / 2
+  );
 }
 
 .node {

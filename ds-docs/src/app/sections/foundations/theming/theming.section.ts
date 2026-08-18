@@ -50,4 +50,25 @@ mq.addEventListener('change', apply);`;
 
 // optional brand overlay on top
 @use './app/styles/brand-acme';`;
+
+  protected readonly configSnippet = `// app.config.ts — say it once, not on every element
+providers: [
+  provideDsConfig({
+    control: { size: 'sm' },              // button, field, picker, checkbox…
+    card: { elevation: 'raised', padding: 'lg' },
+    table: { stickyScrollbar: true, bordered: true },
+    icon: { size: 18 },
+    badge: { withDot: true },
+    modal: { dividers: false },
+    field: { reserveMessage: true },
+    brand: { name: 'Acme', tagline: 'Cover, sorted' },
+    datePicker: { locale: 'en-GB', firstDayOfWeek: 1 },
+    timePicker: { format: '12h' },
+    breadcrumbs: { separator: 'chevronRight' },
+    avatar: { initials: (name) => name.slice(0, 2).toUpperCase() },
+  }),
+]
+
+// A screen that differs still binds the attribute, and it wins:
+// <ds-button size="lg">  <ds-table [stickyScrollbar]="false">`;
 }

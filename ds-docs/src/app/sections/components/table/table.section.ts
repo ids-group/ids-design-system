@@ -1,10 +1,11 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import { Component, ViewEncapsulation, computed, signal } from '@angular/core';
 import {
   BadgeComponent,
   ButtonComponent,
   CellTemplateDirective,
   DrawerComponent,
   EmptyStateComponent,
+  SearchComponent,
   TableComponent,
   type TableCellEditEvent,
   type TableColumn,
@@ -62,6 +63,7 @@ const BULK_STATUSES = ['Open', 'Pending', 'Closed'];
     DocsTruncationComponent,
     DrawerComponent,
     EmptyStateComponent,
+    SearchComponent,
     TableComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
@@ -89,8 +91,11 @@ export class TableSection {
   // project / id / status carry custom cell templates (bold, mono, badge).
   protected readonly defaultColumns: TableColumn<EventRow>[] = [
     { key: 'project', label: 'Record' },
-    { key: 'id', label: 'ID' },
-    { key: 'date', label: 'Dates' },
+    // A fixed-format identifier and a date range are exactly what width: 'content'
+    // is for: on a phone the auto layout squeezed them to 68px and 76px and broke
+    // ORD-2026-0142 across three lines, which took every row to six lines tall.
+    { key: 'id', label: 'ID', width: 'content' },
+    { key: 'date', label: 'Dates', width: 'content' },
     { key: 'venue', label: 'Venue' },
     { key: 'status', label: 'Status' },
     { key: 'capacity', label: 'Capacity', align: 'right' },
@@ -362,6 +367,69 @@ export class TableSection {
 
   protected readonly projectSelected = signal(new Set<string>());
 
+  /** Status and Budget shrink to their content; Project absorbs the slack. */
+  protected readonly fitColumns: TableColumn<ProjectRow>[] = [
+    { key: 'project', label: 'Project' },
+    { key: 'owner', label: 'Owner' },
+    { key: 'status', label: 'Status', width: 'content' },
+    {
+      key: 'budget',
+      label: 'Budget',
+      align: 'right',
+      width: 'content',
+      cell: (row) => '£' + row.budget.toLocaleString(),
+    },
+  ];
+
+  protected readonly serverSortColumns: TableColumn<ProjectRow>[] = [
+    { key: 'project', label: 'Project', sortable: true },
+    { key: 'owner', label: 'Owner', sortable: true },
+    { key: 'status', label: 'Status', sortable: true },
+  ];
+  /** The host's own sort state, one-way bound into the table — a stand-in for the
+   *  computed over the URL a real list keeps. Its default is owner/desc, and a
+   *  cleared sort returns to it, which is the case that used to desync. */
+  protected readonly serverSortKey = signal<string>('owner');
+  protected readonly serverSortDir = signal<'asc' | 'desc' | null>('desc');
+  protected readonly serverSortedRows = computed<readonly ProjectRow[]>(() => {
+    const key = this.serverSortKey() as keyof ProjectRow;
+    const dir = this.serverSortDir();
+    const rows = this.projectRows.slice(0, 6);
+    if (!dir) {
+      return rows;
+    }
+
+    return rows.sort(
+      (left, right) =>
+        String(left[key]).localeCompare(String(right[key])) *
+        (dir === 'asc' ? 1 : -1),
+    );
+  });
+
+  protected onServerSort(event: {
+    key: string;
+    dir: 'asc' | 'desc' | null;
+  }): void {
+    if (!event.dir) {
+      this.serverSortKey.set('owner');
+      this.serverSortDir.set('desc');
+
+      return;
+    }
+    this.serverSortKey.set(event.key);
+    this.serverSortDir.set(event.dir);
+  }
+
+  /** Slow on purpose: the demo is about the in-flight state an OUTSIDE button
+   *  can now read, which a fetch that resolves at once never shows. */
+  protected readonly slowExportFetcher = async (): Promise<
+    readonly ProjectRow[]
+  > => {
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+
+    return this.projectRows;
+  };
+
   protected readonly expandColumns: TableColumn<EventRow>[] = [
     { key: 'project', label: 'Record' },
     { key: 'date', label: 'Dates' },
@@ -498,7 +566,11 @@ export class TableSection {
     setTimeout(() => {
       this.lazyRows.update((rows) => {
         const next = rows.slice();
-        for (let index = range.first; index < range.first + range.rows; index++) {
+        for (
+          let index = range.first;
+          index < range.first + range.rows;
+          index++
+        ) {
           next[index] = this.bulkRows[index];
         }
 

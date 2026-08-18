@@ -62,3 +62,10 @@
     .expand-detail__value {
       color: var(--text-primary);
     }
+
+    /* The export button is a bare sibling of the table — the demo is about the
+       PUBLIC method, so it deliberately sits outside the [toolbar] slot — and with
+       nothing between them its bottom edge touched the table header. */
+    .export-row {
+      margin-bottom: var(--space-3);
+    }

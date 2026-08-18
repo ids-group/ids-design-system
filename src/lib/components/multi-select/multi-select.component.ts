@@ -18,6 +18,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { chipFit } from '../chip-overflow';
 import { IconComponent } from '../../icons/icon.component';
 import { TagComponent } from '../tag/tag.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
@@ -48,6 +49,9 @@ import { resolveReserveMessage } from '../field-defaults';
   imports: [IconComponent, TagComponent, FieldMessageComponent],
   templateUrl: './multi-select.component.html',
   styleUrl: './multi-select.component.scss',
+  host: {
+    '[attr.data-field-state]': 'controlState()',
+  },
   encapsulation: ViewEncapsulation.Emulated,
   providers: [
     {
@@ -80,9 +84,14 @@ export class MultiSelectComponent
   readonly placeholder = input<string>('Select…');
   /** Placeholder for the in-panel filter input. */
   readonly searchPlaceholder = input<string>('Filter…');
-  /** Caps the number of chips shown before collapsing the rest into "+N more" — 0/null shows all. */
-  readonly maxVisibleChips = input<number | null>(null, {
-    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  /** How the chips collapse when they outgrow one line. `"fit"` (the default)
+   *  measures and shows as many as the trigger is wide, the rest behind "+N more".
+   *  A NUMBER caps at exactly that many, which is what you want when the trigger's
+   *  height must be predictable whatever the width. `null` shows every chip and
+   *  lets the trigger grow a line per selection. */
+  readonly maxVisibleChips = input<number | 'fit' | null>('fit', {
+    transform: (raw: unknown) =>
+      raw === 'fit' ? 'fit' : raw == null ? null : numberAttribute(raw),
   });
   /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
@@ -131,6 +140,7 @@ export class MultiSelectComponent
     viewChild<ElementRef<HTMLInputElement>>('search');
   protected readonly panelTpl =
     viewChild.required<TemplateRef<unknown>>('panel');
+  private readonly chipRow = viewChild<ElementRef<HTMLElement>>('chipRow');
 
   protected readonly open = signal(false);
   protected readonly filter = signal('');
@@ -158,20 +168,43 @@ export class MultiSelectComponent
     return this.options().filter((option) => selected.includes(option.value));
   });
 
-  protected readonly visibleChips = computed<MultiSelectOption[]>(() => {
+  /** True for BOTH `'fit'` and a number: a number is a ceiling, not a promise —
+   *  "at most N" — so the row still measures and shows only what the trigger is
+   *  wide enough for. Without that, a phone-width trigger honoured the count and
+   *  wrapped the text input onto a second line, which is the one thing the cap
+   *  exists to prevent. `null` opts out of measuring and grows, as documented. */
+  protected readonly fitsChipsToWidth = computed(
+    () => this.maxVisibleChips() !== null,
+  );
+  /** How many chips the row is ASKED to render before measuring: everything for
+   *  `'fit'`, the ceiling for a number. It has to be the ceiling and not the
+   *  selection, because the measurement caches chip widths from a render that
+   *  holds them all — with a numeric cap that render never happens, the cache
+   *  never fills, and the fit fell back to "show them all" without a word. */
+  private readonly chipBudget = computed(() => {
     const max = this.maxVisibleChips();
+    const total = this.selectedOptions().length;
+
+    return typeof max === 'number' ? Math.min(Math.max(max, 0), total) : total;
+  });
+  private readonly chipsThatFit = chipFit(
+    this.chipBudget,
+    this.chipRow,
+    this.fitsChipsToWidth,
+    computed(() => this.selectedOptions().length),
+  );
+
+  protected readonly visibleChips = computed<MultiSelectOption[]>(() => {
     const selected = this.selectedOptions();
 
-    return max && max > 0 ? selected.slice(0, max) : selected;
+    return this.maxVisibleChips() === null
+      ? selected
+      : selected.slice(0, this.chipsThatFit());
   });
 
-  protected readonly overflowCount = computed<number>(() => {
-    const max = this.maxVisibleChips();
-
-    return max && max > 0
-      ? Math.max(0, this.selectedOptions().length - max)
-      : 0;
-  });
+  protected readonly overflowCount = computed<number>(
+    () => this.selectedOptions().length - this.visibleChips().length,
+  );
 
   protected readonly filteredOptions = computed<MultiSelectOption[]>(() => {
     const query = this.filter().trim().toLowerCase();
@@ -205,6 +238,7 @@ export class MultiSelectComponent
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
+  protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
   // Select-all reflects the currently filter-matching, enabled options.

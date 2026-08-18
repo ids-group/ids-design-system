@@ -44,8 +44,15 @@ export interface TableColumn<T = unknown> {
    *  in the title tooltip, and clicking a clipped cell opens it in a popover.
    *  Text cells only — template cells own their overflow. */
   truncate?: boolean;
-  /** Column width in px — also the clip width for `truncate`. */
-  width?: number;
+  /** Column width in px — also the clip width for `truncate`.
+   *
+   *  `'content'` instead sizes the column to its widest cell and stops it wrapping,
+   *  leaving the remaining width to the columns that should absorb it. An
+   *  auto-layout table spreads slack evenly, so a short column (a status, a count,
+   *  an actions cell) ends up as wide as its own header while the name column that
+   *  should take the slack does not. A pixel width cannot express that — pin one
+   *  column and the rest still spread. Dragging the column's edge overrides it. */
+  width?: number | 'content';
   align?: 'left' | 'right' | 'center';
   cell?: (row: T) => string;
   /** Sort this column by a DOMAIN value instead of the rendered text. Without

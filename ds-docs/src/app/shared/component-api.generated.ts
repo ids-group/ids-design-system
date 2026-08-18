@@ -219,29 +219,29 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "brand",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "''",
+        "default": "null",
         "required": false,
-        "description": "Wordmark beside the letter-mark tile. For a logo image/SVG, project it into the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`."
+        "description": "Wordmark beside the letter-mark tile. For a logo image/SVG, project it into the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`. Unset falls back to `DS_CONFIG.brand.name` — six auth screens answer this identically. Each field resolves on its own, so `brand=\"\"` drops the wordmark but a `logoLetter` in the config still paints its tile; clear both to give one screen no brand row."
       },
       {
         "name": "logoLetter",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "''",
+        "default": "null",
         "required": false,
-        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`."
+        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`."
       },
       {
         "name": "tagline",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "''",
+        "default": "null",
         "required": false,
-        "description": "One line under the wordmark naming the product or audience."
+        "description": "One line under the wordmark naming the product or audience. Unset falls back to `DS_CONFIG.brand.tagline`."
       },
       {
         "name": "cardElevation",
@@ -353,24 +353,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "maxVisibleChips",
         "kind": "input",
-        "type": "number | null",
+        "type": "number | 'fit' | null",
         "union": null,
-        "default": "null",
+        "default": "'fit'",
         "required": false,
-        "description": "Caps the number of chips shown before collapsing the rest into \"+N more\" — 0/null shows all. Same name and semantics as `ds-multi-select`: without it a trigger grows a line per selection and pushes the rest of the form down the page."
+        "description": "How the chips collapse when they outgrow one line. `\"fit\"` (the default) measures and shows as many as the trigger is wide, the rest behind \"+N more\". A NUMBER caps at exactly that many, which is what you want when the trigger's height must be predictable whatever the width. `null` shows every chip and lets the trigger grow a line per selection."
       },
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Trigger height — sm/md/lg."
+        "description": "Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "width",
@@ -527,7 +527,25 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Fallback text shown when there's no `imageUrl`."
+        "description": "Fallback text shown when there's no `imageUrl`. Wins over anything derived from `name`, so a caller that already has the letters keeps passing them."
+      },
+      {
+        "name": "name",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "The person or thing this avatar stands for. One binding covers both jobs the caller used to wire by hand: the initials, and the seed the tint hashes. The tint keys on the NAME, never on the initials — two letters collide wholesale, so every Alice Brown and Adam Bell would share one colour."
+      },
+      {
+        "name": "initialsRule",
+        "kind": "input",
+        "type": "((name: string) => string) | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Replaces the built-in rule for turning `name` into initials, for one avatar or one table of them. Falls back to `DS_CONFIG.avatar.initials`, then to `initialsFrom` — first two words, a Latin-script guess the library does not pretend is universal."
       },
       {
         "name": "imageUrl",
@@ -586,7 +604,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Seed for a deterministic tint (e.g. an email or name) used when no explicit `tint` is set — the same seed always yields the same colour."
+        "description": "Seed for a deterministic tint (e.g. an email) used when no explicit `tint` is set — the same seed always yields the same colour. Defaults to `name`; set it explicitly when identity is an id or an email rather than the display name."
       },
       {
         "name": "avoidHues",
@@ -653,11 +671,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "withDot",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Shows a status dot; only rendered when `count` is unset."
+        "description": "Leading status dot. Unset falls back to `DS_CONFIG.badge.withDot`, then `false`."
       },
       {
         "name": "solid",
@@ -948,15 +966,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Button height — sm/md/lg."
+        "description": "Button height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "type",
@@ -1229,16 +1247,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "elevation",
         "kind": "input",
-        "type": "CardElevation",
+        "type": "CardElevation | null",
         "union": [
           "flat",
           "raised",
           "hover",
           "interactive"
         ],
-        "default": "'flat'",
+        "default": "null",
         "required": false,
-        "description": "Visual treatment; `interactive` makes the card clickable and emits `pressed`."
+        "description": "Visual treatment; `interactive` makes the card clickable and emits `pressed`. Unset falls back to `DS_CONFIG.card.elevation`, then `'flat'`."
       },
       {
         "name": "padding",
@@ -1252,7 +1270,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Inner padding preset; `null` keeps the card's default padding."
+        "description": "Inner padding preset. Unset falls back to `DS_CONFIG.card.padding`, then the card's own padding."
       }
     ],
     "outputs": [
@@ -1397,15 +1415,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Checkbox size — sm/md/lg."
+        "description": "Checkbox size — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "required",
@@ -1583,15 +1601,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Trigger height — sm/md/lg."
+        "description": "Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "fullWidth",
@@ -2140,15 +2158,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Segment height — the field family's scale, so a group lines up with a plain field beside it."
+        "description": "Segment height — the field family's scale, so a group lines up with a plain field beside it. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "invalid",
@@ -2270,6 +2288,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'More filters'",
         "required": false,
         "description": "Accessible name of the overflow panel."
+      },
+      {
+        "name": "triggerSize",
+        "kind": "input",
+        "type": "DsSize",
+        "union": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "'md'",
+        "required": false,
+        "description": "Height of the \"+N\" trigger, to match the filters beside it. The bar cannot infer this: `dsFilterItem` carries a WIDTH, and the filters are arbitrary projected controls whose own `size` it never sees — so a row of `sm` filters got an `md` trigger standing 8px taller under `align-items: flex-end`."
       }
     ],
     "outputs": []
@@ -2336,15 +2367,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Button size — sm/md/lg, matches the field/button height scale."
+        "description": "Button size — sm/md/lg, matches the field/button height scale. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "type",
@@ -2456,15 +2487,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Field height — sm/md/lg."
+        "description": "Field height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "label",
@@ -2473,7 +2504,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Label shown above the field, or inside it when `floating`."
+        "description": "Label shown above the field."
       },
       {
         "name": "hint",
@@ -2591,15 +2622,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Shows a trailing spinner — e.g. async validation in flight. The input stays editable; pair with a `hint` like \"Checking availability…\"."
-      },
-      {
-        "name": "floating",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Floating-label variant — the label sits inside a taller control instead of stacked above it."
       },
       {
         "name": "required",
@@ -3200,13 +3222,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Card width — sm/md/lg/xl/fullscreen."
       },
       {
-        "name": "error",
+        "name": "status",
         "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
+        "type": "DsStatus | null",
+        "union": [
+          "info",
+          "success",
+          "warning",
+          "error"
+        ],
+        "default": "null",
         "required": false,
-        "description": "Renders the error styling (icon badge and card accent)."
+        "description": "Severity — drives the icon-badge tint, the title colour, the DEFAULT icon and the ARIA role, which is the same set `ds-alert`'s variant drives. Null (the default) is a neutral dialog. It picks an icon as well as a tint because a tint alone signals by colour only; `icon` overrides the pick. `false` and `undefined` land on null too, so a template can bind the short `[status]=\"isDangerous && 'error'\"` instead of spelling out the ternary."
       },
       {
         "name": "title",
@@ -3238,11 +3265,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dividers",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for."
+        "description": "Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for. Unset falls back to `DS_CONFIG.modal.dividers`, then `true`."
       },
       {
         "name": "icon",
@@ -3251,19 +3278,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Icon badge shown next to the title."
+        "description": "Icon badge shown next to the title. Overrides the icon `status` would pick."
       },
       {
         "name": "dialogRole",
         "kind": "input",
-        "type": "'dialog' | 'alertdialog'",
+        "type": "'dialog' | 'alertdialog' | null",
         "union": [
           "dialog",
           "alertdialog"
         ],
-        "default": "'dialog'",
+        "default": "null",
         "required": false,
-        "description": "ARIA role for the dialog element."
+        "description": "ARIA role. Unset, an error or warning becomes `alertdialog` — the role for a dialog that interrupts with something the reader must act on — and anything else stays `dialog`. Same split `ds-alert` makes between `alert` and `status`."
       }
     ],
     "outputs": [
@@ -3313,13 +3340,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Dialog width — sm/md/lg/xl/fullscreen."
       },
       {
-        "name": "error",
+        "name": "status",
         "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
+        "type": "DsStatus | null",
+        "union": [
+          "info",
+          "success",
+          "warning",
+          "error"
+        ],
+        "default": "null",
         "required": false,
-        "description": "Renders the error styling on the modal card."
+        "description": "Severity, forwarded to the card — drives its icon-badge tint, title colour, default icon and ARIA role. Null (default) is a neutral dialog. `false` and `undefined` land on null too, so `[status]=\"isDangerous && 'error'\"` binds."
       },
       {
         "name": "title",
@@ -3342,11 +3374,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dividers",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "true",
+        "default": "null",
         "required": false,
-        "description": "Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for."
+        "description": "Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for. Unset falls back to `DS_CONFIG.modal.dividers`, then `true`."
       },
       {
         "name": "closeOnBackdrop",
@@ -3458,11 +3490,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "maxVisibleChips",
         "kind": "input",
-        "type": "number | null",
+        "type": "number | 'fit' | null",
         "union": null,
-        "default": "null",
+        "default": "'fit'",
         "required": false,
-        "description": "Caps the number of chips shown before collapsing the rest into \"+N more\" — 0/null shows all."
+        "description": "How the chips collapse when they outgrow one line. `\"fit\"` (the default) measures and shows as many as the trigger is wide, the rest behind \"+N more\". A NUMBER caps at exactly that many, which is what you want when the trigger's height must be predictable whatever the width. `null` shows every chip and lets the trigger grow a line per selection."
       },
       {
         "name": "disabled",
@@ -3606,15 +3638,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Control height — sm/md/lg."
+        "description": "Control height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "disabled",
@@ -4248,15 +4280,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Control size — sm/md/lg."
+        "description": "Control size — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "required",
@@ -4476,15 +4508,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Control height. `md` (default) keeps the 36px search-row height; `sm` (32px) aligns search with dense toolbars beside `sm` inputs/buttons; `lg` is touch."
+        "description": "Control height. `md` (default) keeps the 36px search-row height; `sm` (32px) aligns search with dense toolbars beside `sm` inputs/buttons; `lg` is touch. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+      },
+      {
+        "name": "debounce",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds to hold each keystroke back before `value` updates — 0 (default) writes on every keystroke, exactly as this control always has. Clearing the field BYPASSES the delay, which is the part a plain `debounceTime` gets wrong: emptying a search is a deliberate act, and making the user wait 200ms to see the full list back reads as a hang. Enter flushes for the same reason. What the input SHOWS is never delayed."
       }
     ],
     "outputs": [
@@ -4588,15 +4629,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Trigger height — sm/md/lg."
+        "description": "Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "label",
@@ -4767,20 +4808,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "brand",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "''",
+        "default": "null",
         "required": false,
-        "description": "Brand text at the top of the rail (auto letter-mark + name). For a custom logo image/SVG, project it into the `[brand]` slot instead."
+        "description": "Brand text at the top of the rail (auto letter-mark + name). For a custom logo image/SVG, project it into the `[brand]` slot instead. Unset falls back to `DS_CONFIG.brand.name`. Each field resolves on its own, so `brand=\"\"` drops the wordmark while a `logoLetter` in the config still paints its tile."
       },
       {
         "name": "logoLetter",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "''",
+        "default": "null",
         "required": false,
-        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`."
+        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"MyAdmin\" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`."
       }
     ],
     "outputs": []
@@ -5697,15 +5738,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Switch size — sm/md/lg."
+        "description": "Switch size — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "required",
@@ -5777,24 +5818,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "bordered",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Opt-in outer border + radius. Off by default so tables flush inside a `<ds-card padding=\"none\">` (workspaces, programs-list) don't double-border. When `true`, the scroll-wrap gets a `var(--border-default)` outline and `var(--radius-md)` radius — useful when the table stands alone in a padded card."
+        "description": "Opt-in outer border + radius. Off by default so tables flush inside a `<ds-card padding=\"none\">` (workspaces, programs-list) don't double-border. When `true`, the scroll-wrap gets a `var(--border-default)` outline and `var(--radius-md)` radius — useful when the table stands alone in a padded card. Unset falls back to `DS_CONFIG.table.bordered`, then `false`."
       },
       {
         "name": "loading",
         "kind": "input",
-        "type": "false | 'skeleton' | 'overlay'",
-        "union": [
-          "false",
-          "skeleton",
-          "overlay"
-        ],
+        "type": "boolean | 'skeleton' | 'overlay'",
+        "union": null,
         "default": "false",
         "required": false,
-        "description": "false — no loading state. 'skeleton' — first-load placeholder; rows are replaced with shimmer rows that read the global --skeleton-shimmer-x driver. 'overlay' — re-fetch indicator; existing rows stay visible behind a translucent overlay with a centred spinner."
+        "description": "false — no loading state. `true` — the table picks: skeleton rows while it has nothing to show, overlay once rows are on screen. Prefer it; the right choice is a function of the row count, which only the table holds. 'skeleton' — first-load placeholder; rows are replaced with shimmer rows that read the global --skeleton-shimmer-x driver. 'overlay' — re-fetch indicator; existing rows stay visible behind a translucent overlay with a centred spinner. Pin either one only to override the rule deliberately."
       },
       {
         "name": "stickyHeader",
@@ -5855,16 +5892,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       },
       {
         "name": "sortKey",
-        "kind": "model",
+        "kind": "input",
         "type": "string | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Column key currently sorted by; `null` when unsorted."
+        "description": "Column key currently sorted by; `null` when unsorted. Two-way bindable (`[(sortKey)]`) or one-way from your own state with `(sortChange)`."
       },
       {
         "name": "sortDir",
-        "kind": "model",
+        "kind": "input",
         "type": "SortDir",
         "union": [
           "asc",
@@ -6025,7 +6062,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Render an export button above the table. Off by default; `exportCsv()` stays available for a consumer's own button."
+        "description": "Render an export button in the table's toolbar row. Off by default. Leave it off and drive `runExport()` from your own button — in a page header, a filter bar, the `[toolbar]` slot — reading `exporting()` for its loading state."
       },
       {
         "name": "exportFilename",
@@ -6048,11 +6085,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "stickyScrollbar",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Keeps the horizontal scrollbar reachable on tall tables: the scroll container's native bar is hidden and a proxy stuck to the bottom of the nearest scroll ancestor mirrors it both ways. Off by default."
+        "description": "Keeps the horizontal scrollbar reachable on tall tables: the scroll container's native bar is hidden and a proxy stuck to the bottom of the nearest scroll ancestor mirrors it both ways. Off by default. Unset falls back to `DS_CONFIG.table.stickyScrollbar`, then `false`."
       },
       {
         "name": "pageSize",
@@ -6245,6 +6282,27 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": [
       {
+        "name": "sortKeyChange",
+        "kind": "output",
+        "type": "string | null",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Emitted for `[(sortKey)]`. `sortChange` carries the same click with both halves at once, which is usually the one to listen to."
+      },
+      {
+        "name": "sortDirChange",
+        "kind": "output",
+        "type": "SortDir",
+        "union": [
+          "asc",
+          "desc"
+        ],
+        "default": null,
+        "required": false,
+        "description": "Emitted for `[(sortDir)]`."
+      },
+      {
         "name": "exportFailed",
         "kind": "output",
         "type": "unknown",
@@ -6436,6 +6494,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Keep the active tab in a query parameter, so it survives F5, a shared link and the Back button: `urlParam=\"tab\"` gives `?tab=activity`. Empty (the default) leaves the URL alone, and the strip works exactly as before. The names come from each `ds-tab`'s `value` (falling back to its `label`), so there is no second list to keep in step. **Names, not indices** — writing `?tab=1` would silently repoint every old link the moment a tab is inserted. The FIRST tab writes no parameter and every write REPLACES the history entry, so a pristine screen keeps a clean address and flipping tabs does not fill the Back button. An unknown or missing name lands on the first tab rather than throwing: a URL is user input, and a stale bookmark should still open the screen. Outside a routed context the input is inert. Nothing router-shaped is even resolved until you set it — no DI lookup and, more to the point, no subscription — so a strip that never uses this costs exactly what it did before the input existed."
+      },
+      {
+        "name": "rememberLastTab",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Reopen the tab this screen was last left on, per path, from `sessionStorage`. Off by default, and needs `urlParam` for the names — a remembered INDEX would repoint the moment a tab is inserted. A link always wins: the parameter is read first, memory only fills the gap the first tab leaves in the URL. Session, not local, so tomorrow is a fresh visit."
       }
     ],
     "outputs": [
@@ -6561,15 +6628,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Field height — sm/md/lg."
+        "description": "Field height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "label",
@@ -6872,6 +6939,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": false,
         "description": "A complete time was picked, as `HH:mm`. Not emitted while only one column has moved."
+      },
+      {
+        "name": "partPicked",
+        "kind": "output",
+        "type": "TimeColumnId",
+        "union": [
+          "hours",
+          "minutes",
+          "period"
+        ],
+        "default": null,
+        "required": false,
+        "description": "Which column the pick came from. `timeChange` alone cannot say: it carries a whole time, and a host that wants to close once the user has been through both columns cannot infer the difference between \"chose the same hour again\" and \"did not touch hours\". Emitted immediately after `timeChange`."
       }
     ]
   },
@@ -6954,15 +7034,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "size",
         "kind": "input",
-        "type": "DsSize",
+        "type": "DsSize | null",
         "union": [
           "sm",
           "md",
           "lg"
         ],
-        "default": "'md'",
+        "default": "null",
         "required": false,
-        "description": "Trigger height — sm/md/lg."
+        "description": "Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "fullWidth",

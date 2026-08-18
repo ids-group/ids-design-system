@@ -26,6 +26,19 @@ const PRODUCTS: readonly AutocompleteOption<string>[] = [
   { value: 'mixers', label: 'Mixers' },
 ];
 
+const CHANNELS: readonly AutocompleteOption<string>[] = [
+  { value: 'broker', label: 'Broker portal', icon: 'users' },
+  {
+    value: 'api',
+    label: 'Partner API — not enabled',
+    icon: 'link',
+    disabled: true,
+  },
+  { value: 'direct', label: 'Direct — web', icon: 'globe' },
+  { value: 'phone', label: 'Telephone', icon: 'phone' },
+  { value: 'post', label: 'Post', icon: 'mail' },
+];
+
 const VENUE_GROUPS: AutocompleteOptionGroup<string>[] = [
   {
     label: 'Arenas',
@@ -68,7 +81,9 @@ const VENUE_GROUPS: AutocompleteOptionGroup<string>[] = [
 export class AutocompleteSection {
   protected readonly members = MEMBERS;
   protected readonly products = PRODUCTS;
+  protected readonly channels = CHANNELS;
   protected readonly venueGroups = VENUE_GROUPS;
+  protected readonly channelValue = signal<string | null>('broker');
   protected readonly memberValue = signal<string | null>('festi');
   protected readonly productsValue = signal<readonly string[]>([
     'beer',
@@ -76,6 +91,12 @@ export class AutocompleteSection {
     'spirits',
   ]);
   protected readonly cappedProductsValue = signal<readonly string[]>([
+    'beer',
+    'cider',
+    'spirits',
+    'wine',
+  ]);
+  protected readonly fitProductsValue = signal<readonly string[]>([
     'beer',
     'cider',
     'spirits',

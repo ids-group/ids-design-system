@@ -7,7 +7,10 @@
   --_modal-shadow:          var(--ds-modal-shadow,          var(--ds-elevation-modal));
   --_modal-divider:         var(--ds-modal-divider,         var(--border-divider));
   --_modal-title-text-color:        var(--ds-modal-title-text-color,        var(--text-primary));
-  --_modal-title-text-color-error:  var(--ds-modal-title-text-color-error,  var(--error-text));
+  --_modal-title-text-color-error: var(--ds-modal-title-text-color-error, var(--error-text));
+  --_modal-title-text-color-warning: var(--ds-modal-title-text-color-warning, var(--warning-text));
+  --_modal-title-text-color-success: var(--ds-modal-title-text-color-success, var(--success-text));
+  --_modal-title-text-color-info: var(--ds-modal-title-text-color-info, var(--info-text));
   --_modal-title-weight: var(--ds-modal-title-weight, var(--font-weight-bold));
   --_modal-title-font-size: var(--ds-modal-title-font-size, var(--font-size-h5));
   --_modal-subtitle-text-color: var(--ds-modal-subtitle-text-color, var(--text-secondary));
@@ -92,10 +95,12 @@
     background-color: var(--_modal-icon-badge-bg-color);
     color: var(--_modal-icon-badge-icon-color);
 
-    &.error {
-      background-color: var(--error-subtitle);
-      color: var(--error);
-    }
+    /* One pair per severity, from the same families ds-alert reads, so a status
+       dialog and a status alert on one screen cannot disagree. */
+    &.error   { background-color: var(--error-subtitle);   color: var(--error); }
+    &.warning { background-color: var(--warning-subtitle); color: var(--warning); }
+    &.success { background-color: var(--success-subtitle); color: var(--success); }
+    &.info    { background-color: var(--info-subtitle);    color: var(--info); }
   }
 
   // Owns the flex slot the title used to hold, so an optional eyebrow stacks
@@ -178,9 +183,10 @@
     .actions { border-top-width: 0; }
   }
 
-  &.error {
-    .title { color: var(--_modal-title-text-color-error); }
-  }
+  &.error   { .title { color: var(--_modal-title-text-color-error); } }
+  &.warning { .title { color: var(--_modal-title-text-color-warning); } }
+  &.success { .title { color: var(--_modal-title-text-color-success); } }
+  &.info    { .title { color: var(--_modal-title-text-color-info); } }
 
   .impact {
     margin-top: var(--space-3);

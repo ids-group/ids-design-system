@@ -107,7 +107,7 @@ export class PasswordRulesComponent {
           ? 'failed'
           : 'pending';
       const icon: IconName =
-        state === 'met' ? 'check' : state === 'failed' ? 'x' : 'minus';
+        state === 'met' ? 'check' : state === 'failed' ? 'x' : 'circle';
 
       return { label: rule.label, state, icon, announced: ANNOUNCED[state] };
     });

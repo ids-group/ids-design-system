@@ -3,7 +3,8 @@
   <div
     [class]="preview.staticPreview() ? 'modal-static' : 'modal-backdrop'"
     [class.closing]="closing()"
-    (click)="onBackdrop($event)"
+    (pointerdown)="backdropPress.down($event)"
+    (pointerup)="onBackdropRelease($event)"
     (keydown.escape)="onEscape()"
     (animationend)="onLeaveEnd($event)"
   >
@@ -11,10 +12,10 @@
       [cdkTrapFocus]="!preview.staticPreview()"
       [cdkTrapFocusAutoCapture]="!preview.staticPreview()"
       [size]="size()"
-      [error]="error()"
+      [status]="status()"
       [title]="title()"
       [subtitle]="subtitle()"
-      [dividers]="dividers()"
+      [dividers]="dividersResolved()"
       (closed)="onClose()"
     >
       <ng-container eyebrow>

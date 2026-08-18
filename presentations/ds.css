@@ -891,7 +891,8 @@
      Each token has a real consumer in the codebase; symmetric "unused"
      numeric stops are deliberately omitted. */
   --opacity-disabled: 0.5; /* full disabled state on interactive components */
-  --opacity-muted: 0.6; /* legacy alias — being phased out in favour of --text-* roles */
+  --opacity-muted: 0.6; /* legacy alias, no component reads it since the disabled
+   states moved onto --text-disabled + --opacity-disabled */
   --opacity-text-disabled: 0.38; /* disabled text alpha (WCAG-derived) */
   --opacity-scrim: 0.55; /* modal/drawer backdrop overlay (light theme) */
   --opacity-state-hover: 0.08; /* hover layer over surface (overlay vs surface swap) */
@@ -968,7 +969,7 @@
   --hit-min: 32px; /* dense desktop default (alias of --hit-cozy-tier-0) */
   --hit-cozy: 40px; /* default control height */
   --hit-comfy: 44px; /* WCAG min for touch */
-  --hit-touch: 48px; /* mobile-friendly — also used by floating-label fields */
+  --hit-touch: 48px; /* mobile-friendly */
   --icon-2xs: 10px;
   --icon-xs: 12px;
   --icon-sm: 14px;
@@ -1066,6 +1067,8 @@
   --modal-w-xl: 1024px;
   --modal-w-fullscreen: calc(100vw - var(--space-6));
   --modal-h-fullscreen: calc(100vh - var(--space-6));
+  /* Auth layout */
+  --auth-card-w: 420px;
   /* Drawer */
   --drawer-w-sm: 320px;
   --drawer-w-md: 480px;
@@ -1078,14 +1081,8 @@
   --field-h-sm: var(--hit-min);
   --field-h-md: var(--hit-cozy);
   --field-h-lg: var(--hit-touch);
-  --field-h-floating: var(--hit-touch);
   --field-textarea-min: 96px;
-  --field-floating-label-fs: var(--font-size-2xs);
-  --field-floating-label-lh: 14px;
-  --field-floating-label-top: 8px;
   --field-num-stepper-w: var(--space-8);
-  /* Search */
-  --search-h: var(--hit-md);
   /* OTP / PIN input — one box per digit. */
   --otp-cell-w: var(--space-12); /* 48px */
   --otp-cell-h: var(--space-14); /* 56px */
@@ -1120,7 +1117,6 @@
   --bottom-sheet-handle-h: 4px;
   /* Field internals */
   --field-textarea-rows-min: 60px; /* min-h for inline textarea inside the field wrapper */
-  --field-floating-pad-t: 18px; /* top padding when --floating, leaves room for label */
   --field-select-pad-r: var(--space-6); /* select chevron clearance */
   --field-affix-overlap: var(--border-width-default); /* affix bleed over field border */
   /* Button group */
@@ -1161,9 +1157,9 @@
   /* Empty state */
   --empty-icon-size: var(--space-16); /* 64px */
   --empty-body-maxw: 360px;
-  /* Combobox */
-  --combobox-offset: var(--space-1); /* gap below trigger */
-  --combobox-maxh: 280px; /* listbox max height */
+  /* Pickers — the listbox panel shared by autocomplete and multi-select. */
+  --picker-offset: var(--space-1); /* gap below trigger */
+  --picker-maxh: 280px; /* listbox max height */
   /* Command palette (cmdk) */
   --cmdk-w: 560px;
   --cmdk-list-maxh: var(--popover-maxh); /* alias — keeps cmdk + popover synced */
@@ -1279,7 +1275,6 @@
   --badge-dot-size: 4px;
   --status-dot-size: 5px;
   --sidenav-w: 200px;
-  --field-floating-label-top: 4px;
   --segmented-btn-h: 20px;
   /* Ultra also compresses field + table padding (tighter than compact/comfy). */
   --field-pad-x: var(--space-2);
@@ -1287,6 +1282,9 @@
   --table-cell-pad-x: var(--space-2);
   --table-cell-pad-y: var(--space-1);
   --table-head-pad-y: var(--space-1);
+  /* One rung, not two: a card's frame reads as padding lost long before its cells
+     do, so 24 → 16 while the cells inside it go 16 → 8. */
+  --ds-container-pad: var(--space-4);
 }
 
 [data-density=compact] {
@@ -1300,7 +1298,6 @@
   --badge-dot-size: 5px;
   --status-dot-size: 6px;
   --sidenav-w: 220px;
-  --field-floating-label-top: 6px;
   --segmented-btn-h: 24px;
 }
 
@@ -1700,6 +1697,28 @@ h1, h2, h3, h4, h5, h6 {
   color: currentcolor;
   flex-shrink: 0;
 }
+.link {
+  /* ds-button warns `variant="text"` off in favour of this class, and an action
+     that is not navigation has to be a <button> — which arrives with UA chrome
+     none of the rules above touch (measured: 13.3px inside 14px text, plus padding
+     and an outset border). `:where()` keeps the reset at this class's specificity,
+     so a consumer's rule still wins on source order.
+
+     Absences are deliberate and invisible in code: no `font-weight`, so `.quiet` /
+     `.standalone` keep deciding it, and no `display`, because inline-block is what
+     lays a standalone button out predictably. `appearance` is the reverse — no
+     effect in Chrome, needed where native chrome outlives a zeroed border. */
+}
+.link:where(button) {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  text-align: inherit;
+}
 .link.quiet {
   color: var(--text-secondary);
   /* Pull the underline down to match the muted text — the base rule sets
@@ -1728,6 +1747,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 .link.lg {
   font-size: var(--font-size-l);
+}
+
+:where(:focus-visible) {
+  outline: none;
+  box-shadow: var(--ds-control-focus-shadow);
 }
 
 :root[data-focus=ring] {
@@ -2007,11 +2031,30 @@ html {
   flex-shrink: 0;
 }
 
+.ds-dropdown-panel {
+  /* The selected row used to paint straight from the theme roles, so a brand that
+     wanted a different selected treatment had to RETARGET --primary-* inside this
+     panel — and then track which other content in it read the same role. Named
+     hooks instead; the defaults are those roles, so nothing moves and a retuned
+     palette still flows through. Panel-level, not per-component: one partial
+     paints the rows for select, autocomplete and multi-select alike. */
+  --_option-selected-bg-color: var(--ds-option-selected-bg-color, var(--primary-subtitle));
+  --_option-selected-label-color: var(--ds-option-selected-label-color, var(--primary-strong));
+  --_option-selected-bg-color-hover: var(--ds-option-selected-bg-color-hover, var(--primary-muted));
+  --_option-check-color: var(--ds-option-check-color, var(--primary));
+  /* Panel-level for the same reason as the option hooks above: retuning ONE
+     picker's corner is not a thing a design system should encourage, but moving
+     every panel — modal, popover, date picker — to reach the dropdowns is too
+     blunt. This is the middle lever, and `--ds-radius-panel` stays its default so
+     an untouched theme is unchanged. 0.9.0's notes promised a per-component
+     `--ds-select-panel-radius`, which never existed; this is what they meant. */
+  --_dropdown-panel-radius: var(--ds-dropdown-panel-radius, var(--ds-radius-panel));
+}
 .ds-dropdown-panel .dropdown-panel {
   width: 100%;
   background: var(--surface-overlay);
   border: var(--border-width-default) solid var(--border-default);
-  border-radius: var(--radius-md);
+  border-radius: var(--_dropdown-panel-radius);
   box-shadow: var(--shadow-popover);
   padding: var(--space-1);
   max-height: 320px;
@@ -2062,7 +2105,7 @@ html {
   font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
   color: var(--text-primary);
   cursor: pointer;
-  border-radius: var(--radius-sm);
+  border-radius: var(--ds-radius-inner);
   text-align: left;
   transition: background-color var(--duration-fast) var(--ease-standard);
 }
@@ -2078,30 +2121,35 @@ html {
   white-space: nowrap;
 }
 .ds-dropdown-panel .option .option-check {
-  color: var(--primary);
+  color: var(--_option-check-color);
   flex: 0 0 auto;
 }
 .ds-dropdown-panel .option:hover:not(.is-disabled, .is-selected), .ds-dropdown-panel .option.is-active:not(.is-disabled, .is-selected) {
   background: var(--surface-secondary);
+}
+.ds-dropdown-panel .option:active:not(.is-disabled) {
+  background: var(--surface-muted);
 }
 .ds-dropdown-panel .option:focus-visible {
   outline: none;
   box-shadow: var(--ds-control-focus-shadow);
 }
 .ds-dropdown-panel .option.is-selected {
-  background: var(--primary-subtitle);
-  color: var(--primary-strong);
+  background: var(--_option-selected-bg-color);
+  color: var(--_option-selected-label-color);
 }
 .ds-dropdown-panel .option.is-selected .option-icon {
-  color: var(--primary-strong);
+  color: var(--_option-selected-label-color);
 }
 .ds-dropdown-panel .option.is-selected:hover:not(.is-disabled), .ds-dropdown-panel .option.is-selected.is-active:not(.is-disabled) {
-  background: var(--primary-muted);
+  background: var(--_option-selected-bg-color-hover);
+}
+.ds-dropdown-panel .option.is-selected:active:not(.is-disabled) {
+  background: var(--_option-selected-bg-color);
 }
 .ds-dropdown-panel .option.is-disabled {
   color: var(--text-disabled);
   cursor: not-allowed;
-  opacity: var(--opacity-muted);
 }
 
 .cdk-global-overlay-wrapper:has(> .ds-toast-panel) {
@@ -2136,6 +2184,34 @@ html {
     transform: translate(var(--_ds-enter-x, 0), var(--_ds-enter-y, 0));
   }
 }
+/* ── Exits ───────────────────────────────────────────────────────────────── */
+/* Opacity only — the calmest exit, and what a scrim wants. */
+@keyframes ds-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+/* Shrinks away as it fades — the mirror of ds-scale-in. */
+@keyframes ds-scale-out {
+  to {
+    opacity: 0;
+    transform: scale(var(--_ds-exit-scale, var(--_ds-enter-scale, 0.96)));
+  }
+}
+/* Travels a short distance while fading — the mirror of ds-slide-in. */
+@keyframes ds-slide-out {
+  to {
+    opacity: 0;
+    transform: translate(var(--_ds-exit-x, var(--_ds-enter-x, 0)), var(--_ds-exit-y, var(--_ds-enter-y, 0)));
+  }
+}
+/* Edge-anchored travel with NO fade, for panels that slide fully off-screen
+   (drawer, bottom-sheet) where a fade would read as a flicker. */
+@keyframes ds-slide-edge-out {
+  to {
+    transform: translate(var(--_ds-exit-x, var(--_ds-enter-x, 0)), var(--_ds-exit-y, var(--_ds-enter-y, 0)));
+  }
+}
 .cdk-overlay-pane.ds-overlay-pane {
   /* Public --ds-overlay-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-slide-in);
@@ -2143,6 +2219,8 @@ html {
   --_overlay-enter-easing: var(--ds-overlay-enter-easing, var(--ds-motion-enter-panel-easing));
   --_overlay-enter-offset: var(--ds-overlay-enter-offset, 4px);
   --_ds-enter-scale: var(--ds-overlay-enter-scale, 0.96);
+  --_overlay-leave-duration: var(--ds-overlay-leave-duration, var(--ds-motion-exit-duration));
+  --_overlay-leave-easing: var(--ds-overlay-leave-easing, var(--ds-motion-exit-easing));
   --_ds-enter-x: 0px;
   --_ds-enter-y: calc(-1 * var(--_overlay-enter-offset));
   --_overlay-enter-origin: top center;
@@ -2172,7 +2250,33 @@ html {
   animation-timing-function: var(--_overlay-enter-easing);
   transform-origin: var(--_overlay-enter-origin);
 }
+.cdk-overlay-pane.ds-overlay-pane {
+  /* Leave, on an AMBIENT DISMISS only — Escape, a press outside, a scroll —
+     which `disposeWithLeave` marks by adding `ds-leaving`. Picking an option
+     still closes instantly: a fade on a deliberate choice reads as the panel
+     lagging behind it, which is why the old unconditional leave was cut. Opacity
+     only, no travel: a dismissal has nowhere to travel to, and movement would
+     re-add exactly the lag this avoids. Reduced motion zeroes the duration at
+     `:root`, so the animation still runs and `animationend` still tears down. */
+}
+.cdk-overlay-pane.ds-overlay-pane.ds-leaving {
+  /* A fading panel must not swallow the click aimed at what is behind it. */
+  pointer-events: none;
+}
+.cdk-overlay-pane.ds-overlay-pane.ds-leaving > * {
+  animation-name: ds-overlay-out;
+  animation-duration: var(--_overlay-leave-duration);
+  animation-timing-function: var(--_overlay-leave-easing);
+  animation-fill-mode: forwards;
+}
 
+/* Global, like the enter presets: a keyframe declared in a component stylesheet
+   is renamed by emulated encapsulation. */
+@keyframes ds-overlay-out {
+  to {
+    opacity: 0;
+  }
+}
 @property --skeleton-shimmer-x {
   syntax: "<length>";
   inherits: true;

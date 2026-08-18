@@ -9,6 +9,7 @@ import {
 import { CardComponent } from '../card/card.component';
 import type { CardElevation, CardPadding } from '../card/card.types';
 import { BrandNameDirective } from '../sidenav/brand-name.directive';
+import { resolveBrandValue } from '../brand-defaults';
 
 /**
  * Scaffold for the UNauthenticated screens — sign-in, forgot password, reset,
@@ -54,13 +55,28 @@ import { BrandNameDirective } from '../sidenav/brand-name.directive';
 })
 export class AuthLayoutComponent {
   /** Wordmark beside the letter-mark tile. For a logo image/SVG, project it into
-   *  the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`. */
-  readonly brand = input<string>('');
+   *  the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`.
+   *  Unset falls back to `DS_CONFIG.brand.name` — six auth screens answer this
+   *  identically. Each field resolves on its own, so `brand=""` drops the wordmark
+   *  but a `logoLetter` in the config still paints its tile; clear both to give one
+   *  screen no brand row. */
+  readonly brand = input<string | null>(null);
   /** Letter-mark glyph when it differs from the brand's first letter (e.g. an
-   *  "A" tile beside the "MyAdmin" wordmark). Empty = first letter of `brand`. */
-  readonly logoLetter = input<string>('');
-  /** One line under the wordmark naming the product or audience. */
-  readonly tagline = input<string>('');
+   *  "A" tile beside the "MyAdmin" wordmark). Empty = first letter of `brand`;
+   *  unset falls back to `DS_CONFIG.brand.logoLetter`. */
+  readonly logoLetter = input<string | null>(null);
+  /** One line under the wordmark naming the product or audience. Unset falls back
+   *  to `DS_CONFIG.brand.tagline`. */
+  readonly tagline = input<string | null>(null);
+
+  /** The template must read THIS, never the input beside it — that one is null
+   *  until bound, and the config default lives here. */
+  protected readonly brandName = resolveBrandValue(this.brand, 'name');
+  protected readonly letterGlyph = resolveBrandValue(
+    this.logoLetter,
+    'logoLetter',
+  );
+  protected readonly taglineText = resolveBrandValue(this.tagline, 'tagline');
   /** Card treatment. `flat` suits a screen that already sits on a tinted canvas. */
   readonly cardElevation = input<CardElevation>('raised');
   /** Card padding, passed through to `ds-card`. `md` tightens a short form. */
@@ -83,6 +99,6 @@ export class AuthLayoutComponent {
    *  starting with an astral character (an emoji, a rarer CJK glyph) yields half
    *  a surrogate pair and paints as tofu. */
   protected readonly markGlyph = computed(
-    () => this.logoLetter() || [...this.brand()][0] || '',
+    () => this.letterGlyph() || [...this.brandName()][0] || '',
   );
 }

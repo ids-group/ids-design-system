@@ -10,6 +10,12 @@
   --_stat-pad:         var(--ds-stat-pad,         var(--ds-container-pad));
   --_stat-label-color: var(--ds-stat-label-color, var(--text-tertiary));
   --_stat-value-color: var(--ds-stat-value-color, var(--text-primary));
+  --_stat-value-font-size: var(--ds-stat-value-font-size, var(--font-size-h2));
+
+  /* `nowrap` is right for the number this tile was built for and wrong for a
+     phrase: a date range ("Feb 1 – Feb 28, 2026") is a value too, and it was
+     reaching the projected [dsStatValue] slot only to argue its way back out. */
+  --_stat-value-white-space: var(--ds-stat-value-white-space, nowrap);
   --_stat-up-color:    var(--ds-stat-up-color,    var(--success-text));
   --_stat-down-color:  var(--ds-stat-down-color,  var(--error-text));
 
@@ -18,14 +24,21 @@
 
 :host(.error) .value { color: var(--error-text); }
 
-:host(.size-sm) .stat {
-  .label { font-size: var(--font-size-2xs); letter-spacing: var(--letter-spacing-wide); }
-  .value { font-size: var(--font-size-h4); }
+/* The size variants move the value's size through the SAME resolver rather than
+   restating font-size on `.value`, where they would out-rank the public hook and
+   make it work at md only. */
+:host(.size-sm) {
+  --_stat-value-font-size: var(--ds-stat-value-font-size, var(--font-size-h4));
 }
-:host(.size-lg) .stat {
-  .label { font-size: var(--font-size-s); }
-  .value { font-size: var(--font-size-h1); }
+:host(.size-lg) {
+  --_stat-value-font-size: var(--ds-stat-value-font-size, var(--font-size-h1));
 }
+
+:host(.size-sm) .stat .label {
+  font-size: var(--font-size-2xs);
+  letter-spacing: var(--letter-spacing-wide);
+}
+:host(.size-lg) .stat .label { font-size: var(--font-size-s); }
 
 .stat {
   background-color: var(--_stat-bg-color);
@@ -47,11 +60,11 @@
   }
 
   .value {
-    font: var(--font-weight-extrabold) var(--font-size-h2) / var(--line-height-flat) var(--font-sans);
+    font: var(--font-weight-extrabold) var(--_stat-value-font-size) / var(--line-height-flat) var(--font-sans);
     letter-spacing: var(--letter-spacing-snug);
     color: var(--_stat-value-color);
     margin: 0;
-    white-space: nowrap;
+    white-space: var(--_stat-value-white-space);
   }
 
   .delta {

@@ -1,0 +1,24 @@
+{
+  "version": "0.6.2",
+  "items": [
+    {
+      "id": "bottom-sheet-escape-scoped-to-panel",
+      "kind": "behavior",
+      "old": "ds-bottom-sheet",
+      "new": null,
+      "note": "ds-bottom-sheet's Escape handler moved from the DOCUMENT to its own panel, matching ds-modal and ds-drawer. Why it changed: with stacked overlays a background sheet was swallowing the Escape meant for whatever sat on top. ACTION, and it is a real one: Escape now has to land on the panel, which the focus trap arranges by auto-capturing focus inside it - so a sheet whose body contains NOTHING FOCUSABLE can no longer be closed with Escape. If you have such a sheet (a purely informational one, say), give it a focusable element: the close button in its header is enough. CHECK: open each sheet, press Escape without clicking anything first.",
+      "searchHints": [
+        "ds-bottom-sheet",
+        "bottom-sheet",
+        "keydown.escape",
+        "document:keydown"
+      ]
+    }
+  ],
+  "informational": [
+    "ds-sidenav takes a projected [brand] slot, so a real logo (img, SVG, any markup) can replace or sit beside the string `brand` input. The string input is unchanged and still renders its auto letter-mark. The brand row, previously gated on `brand` being set, now always renders and hides itself with :empty, so an empty rail looks exactly as it did.",
+    "DELETE-LIST: if you overlaid or absolutely positioned a logo on top of ds-sidenav's brand row because there was no slot for one -> project it into [brand] instead.",
+    "ds-date-picker mobile Backspace/Delete removes ONE digit and crosses separators, instead of wiping the whole segment. Gboard reports those keys with a full-segment composing region, which hit the editor's selection-clear branch and erased e.g. all of MM on one tap. Desktop behaviour was always correct and is unchanged.",
+    "ds-bottom-sheet no longer jolts host-app content up and back down as it opens. The entering panel, still translated below the frame, was contributing scrollable overflow to consumer shells that are a containing block for fixed descendants (a `filter`/`transform` ancestor plus overflow:hidden - a centred phone frame is the usual case), and the focus trap's scroll-into-view yanked that shell. The overlay now uses overflow:clip. DELETE-LIST: a scrollTop pin or a scroll-lock hack written against that jolt can go."
+  ]
+}

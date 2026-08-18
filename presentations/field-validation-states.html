@@ -1,0 +1,273 @@
+<meta charset="utf-8">
+<title>Validation on the control — warning, success, and what error already does</title>
+<link rel="stylesheet" href="ds.css">
+<style>
+  :root { color-scheme: light; }
+  body {
+    margin: 0; padding: var(--space-6);
+    background: var(--surface-default); color: var(--text-primary);
+    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  }
+  main { max-width: 1180px; margin: 0 auto; }
+  h1 { font: var(--font-weight-extrabold) var(--font-size-h3) / var(--line-height-tight) var(--font-sans); margin: 0 0 var(--space-2); }
+  h2 { font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans); margin: var(--space-7) 0 var(--space-2); }
+  p { max-width: 80ch; color: var(--text-secondary); }
+  b { color: var(--text-primary); }
+  code { font: var(--font-weight-medium) var(--font-size-xs) / 1 var(--font-mono); }
+  .note { border-left: 3px solid var(--primary); padding-left: var(--space-3); margin: var(--space-4) 0; }
+  .ask { border: 1px solid var(--primary); border-radius: var(--ds-radius-panel); padding: var(--space-4); margin: var(--space-5) 0; }
+  .ask li { margin-bottom: var(--space-2); }
+
+  .row { display: flex; flex-wrap: wrap; gap: var(--space-5); margin-top: var(--space-3); }
+  .opt { width: 268px; }
+  .opt > .cap {
+    display: block; margin-bottom: var(--space-2);
+    font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans);
+  }
+  .opt > .sub { display: block; color: var(--text-tertiary); font: var(--font-weight-regular) var(--font-size-2xs) / 1.7 var(--font-mono); }
+
+  /* Every painted surface is a background-image gradient and an inline colour, so
+     a force-dark browser cannot rewrite what is being judged. */
+  .fld { margin-bottom: var(--space-1); }
+  .lbl {
+    display: block; margin-bottom: var(--space-1);
+    font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans);
+    letter-spacing: var(--letter-spacing-wide);
+  }
+  .box {
+    display: flex; align-items: center; height: 39px; padding: 0 var(--space-3);
+    border: 1px solid; border-radius: var(--radius-md);
+    background-image: linear-gradient(#fff, #fff);
+    font: var(--font-weight-regular) var(--font-size-s) / 1 var(--font-sans);
+  }
+  .msg { display: block; margin-top: var(--space-1); font: var(--font-weight-regular) var(--font-size-xs) / 1.5 var(--font-sans); }
+  .ratio { display: block; margin-top: var(--space-1); font: var(--font-weight-bold) var(--font-size-2xs) / 1.8 var(--font-mono); }
+  .ratio.ok { color: #156822; }
+  .ratio.bad { color: #BA1717; }
+
+  table { border-collapse: collapse; width: 100%; margin-top: var(--space-3); }
+  th, td { border: 1px solid var(--border-default); padding: var(--space-2); vertical-align: top; text-align: left; }
+  thead th { background: var(--surface-secondary); font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans); }
+  tbody th { width: 26ch; font-weight: var(--font-weight-semibold); }
+</style>
+<main>
+<h1>Validation on the control itself</h1>
+
+<p><b>The complaint, and what was actually true.</b> Stas, testing the docs on a phone: only the text
+UNDER a field takes the state colour — the box, the label and the value do not. Measured on the built
+docs, that was right for two of the three states and wrong for one, and the one it was wrong about was
+a bug rather than a design gap.</p>
+
+<table>
+  <thead><tr><th>State</th><th>What the box did</th><th>Verdict</th></tr></thead>
+  <tbody>
+    <tr>
+      <th><code>[invalid]="true"</code></th>
+      <td>Red border <code>rgb(219,31,31)</code>, pink fill <code>rgb(254,241,241)</code>, red focus ring.</td>
+      <td>Already correct. Nothing to change.</td>
+    </tr>
+    <tr>
+      <th><code>error="some text"</code></th>
+      <td><b>Nothing</b> — grey border <code>rgb(220,225,234)</code>, white fill, red message underneath.</td>
+      <td><b>BUG, now fixed.</b> <code>invalid</code> was computed from <code>[invalid]</code> and from
+        validator <code>errors</code>, but not from an explicit <code>error</code> string — even though
+        that input's own documentation says binding it "says the consumer has already decided this
+        field is in error". A red message under a neutral box is what Stas photographed.</td>
+    </tr>
+    <tr>
+      <th><code>warning="some text"</code></th>
+      <td><b>Nothing.</b> No <code>.warning</code> class exists on any of the 15 field components.</td>
+      <td>Genuinely undesigned — the question below.</td>
+    </tr>
+    <tr>
+      <th><code>[success]="true"</code></th>
+      <td>Green border only, white fill.</td>
+      <td>Exists on <code>ds-input</code> ONLY, of 15 fields. The question below.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Why a warning cannot simply mirror the error recipe</h2>
+
+<p>The error box is <code>border: var(--error)</code> + <code>background: var(--error-subtitle)</code>.
+Applying the same two tokens to warning gives <code>--warning</code>, which is
+<code>--yellow-400</code> = <code>#F4D43A</code>. Against a white field that is <b>1.47:1</b> — WCAG
+1.4.11 asks <b>3:1</b> for the boundary of a UI component, so the "obvious" mirror produces a border a
+reader cannot see. The yellow ramp only clears 3:1 at <code>--yellow-700</code>.</p>
+
+<table>
+  <thead><tr><th>Border colour</th><th>Value</th><th>vs a white field</th></tr></thead>
+  <tbody>
+    <tr><th><code>--error</code> (red-500) — shipped</th><td><code>rgb(219,31,31)</code></td><td><span class="ratio ok">4.97:1 &nbsp;passes</span></td></tr>
+    <tr><th><code>--success</code> (green-500) — shipped</th><td><code>rgb(34,165,60)</code></td><td><span class="ratio ok">3.22:1 &nbsp;passes, barely</span></td></tr>
+    <tr><th><code>--warning</code> (yellow-400)</th><td><code>#F4D43A</code></td><td><span class="ratio bad">1.47:1 &nbsp;fails</span></td></tr>
+    <tr><th><code>--yellow-500</code></th><td><code>#E0BE00</code></td><td><span class="ratio bad">1.82:1 &nbsp;fails</span></td></tr>
+    <tr><th><code>--yellow-600</code></th><td><code>#B89B00</code></td><td><span class="ratio bad">2.72:1 &nbsp;fails</span></td></tr>
+    <tr><th><code>--warning-text</code> (yellow-700)</th><td><code>#8A7400</code></td><td><span class="ratio ok">4.59:1 &nbsp;passes</span></td></tr>
+  </tbody>
+</table>
+
+<div class="note"><b>How to read the specimens.</b> Each is a real 39px field box at <code>md</code>, painted
+with the exact colours named under it. The reference row at the top is the SHIPPED error box, so every
+candidate can be judged against the treatment it has to sit beside in the same form.</div>
+
+<h2>Reference — the shipped error box</h2>
+<div class="row">
+  <div class="opt">
+    <span class="cap">Error · shipped, unchanged</span>
+    <div class="fld">
+      <span class="lbl" style="color:#4A5169">Start date</span>
+      <div class="box" style="border-color:#DB1F1F; background-image:linear-gradient(#FEF1F1,#FEF1F1); color:#161A28">12/04/2026</div>
+      <span class="msg" style="color:#BA1717">Must be before end date</span>
+    </div>
+    <span class="sub">border --error · bg --error-subtitle</span>
+  </div>
+</div>
+
+<h2>Warning — four candidates</h2>
+<div class="row">
+  <div class="opt">
+    <span class="cap">A · nothing on the box (today)</span>
+    <div class="fld">
+      <span class="lbl" style="color:#4A5169">Workspace name</span>
+      <div class="box" style="border-color:#DCE1EA; color:#161A28">acme-uk</div>
+      <span class="msg" style="color:#8A7400">This name is close to an existing one</span>
+    </div>
+    <span class="sub">border unchanged · message only</span>
+  </div>
+
+  <div class="opt">
+    <span class="cap">B · tinted fill, neutral border</span>
+    <div class="fld">
+      <span class="lbl" style="color:#4A5169">Workspace name</span>
+      <div class="box" style="border-color:#DCE1EA; background-image:linear-gradient(#FFFBEA,#FFFBEA); color:#161A28">acme-uk</div>
+      <span class="msg" style="color:#8A7400">This name is close to an existing one</span>
+    </div>
+    <span class="sub">bg --warning-subtitle · border untouched</span>
+  </div>
+
+  <div class="opt">
+    <span class="cap">C · full mirror of error</span>
+    <div class="fld">
+      <span class="lbl" style="color:#4A5169">Workspace name</span>
+      <div class="box" style="border-color:#8A7400; background-image:linear-gradient(#FFFBEA,#FFFBEA); color:#161A28">acme-uk</div>
+      <span class="msg" style="color:#8A7400">This name is close to an existing one</span>
+    </div>
+    <span class="sub">border --warning-text (4.59:1) · bg --warning-subtitle</span>
+  </div>
+
+  <div class="opt">
+    <span class="cap">D · border only, no fill</span>
+    <div class="fld">
+      <span class="lbl" style="color:#4A5169">Workspace name</span>
+      <div class="box" style="border-color:#8A7400; color:#161A28">acme-uk</div>
+      <span class="msg" style="color:#8A7400">This name is close to an existing one</span>
+    </div>
+    <span class="sub">border --warning-text · white fill (matches success today)</span>
+  </div>
+</div>
+
+<h2>Warning beside error, in one form — the case that decides it</h2>
+<p>A warning is advisory and an error blocks submission. Whatever warning gets, it has to stay
+<b>visibly weaker</b> than error when the two sit in the same form, or the ladder stops meaning
+anything.</p>
+<div class="row">
+  <div class="opt">
+    <span class="cap">C beside error</span>
+    <div class="fld">
+      <span class="lbl" style="color:#4A5169">Workspace name</span>
+      <div class="box" style="border-color:#8A7400; background-image:linear-gradient(#FFFBEA,#FFFBEA); color:#161A28">acme-uk</div>
+      <span class="msg" style="color:#8A7400">Close to an existing one</span>
+    </div>
+    <div class="fld" style="margin-top:var(--space-3)">
+      <span class="lbl" style="color:#4A5169">Start date</span>
+      <div class="box" style="border-color:#DB1F1F; background-image:linear-gradient(#FEF1F1,#FEF1F1); color:#161A28">12/04/2026</div>
+      <span class="msg" style="color:#BA1717">Must be before end date</span>
+    </div>
+  </div>
+
+  <div class="opt">
+    <span class="cap">B beside error</span>
+    <div class="fld">
+      <span class="lbl" style="color:#4A5169">Workspace name</span>
+      <div class="box" style="border-color:#DCE1EA; background-image:linear-gradient(#FFFBEA,#FFFBEA); color:#161A28">acme-uk</div>
+      <span class="msg" style="color:#8A7400">Close to an existing one</span>
+    </div>
+    <div class="fld" style="margin-top:var(--space-3)">
+      <span class="lbl" style="color:#4A5169">Start date</span>
+      <div class="box" style="border-color:#DB1F1F; background-image:linear-gradient(#FEF1F1,#FEF1F1); color:#161A28">12/04/2026</div>
+      <span class="msg" style="color:#BA1717">Must be before end date</span>
+    </div>
+  </div>
+
+  <div class="opt">
+    <span class="cap">A beside error (today)</span>
+    <div class="fld">
+      <span class="lbl" style="color:#4A5169">Workspace name</span>
+      <div class="box" style="border-color:#DCE1EA; color:#161A28">acme-uk</div>
+      <span class="msg" style="color:#8A7400">Close to an existing one</span>
+    </div>
+    <div class="fld" style="margin-top:var(--space-3)">
+      <span class="lbl" style="color:#4A5169">Start date</span>
+      <div class="box" style="border-color:#DB1F1F; background-image:linear-gradient(#FEF1F1,#FEF1F1); color:#161A28">12/04/2026</div>
+      <span class="msg" style="color:#BA1717">Must be before end date</span>
+    </div>
+  </div>
+</div>
+
+<h2>Success — three candidates</h2>
+<p>Success has a second question attached: it exists on <code>ds-input</code> and on none of the other
+14 fields, so today it cannot be used consistently in a form at all.</p>
+<div class="row">
+  <div class="opt">
+    <span class="cap">A · green border only (today)</span>
+    <div class="fld">
+      <span class="lbl" style="color:#4A5169">Slug</span>
+      <div class="box" style="border-color:#22A33C; color:#161A28">acme-uk</div>
+      <span class="msg" style="color:#156822">Available</span>
+    </div>
+    <span class="sub">border --success · white fill</span>
+  </div>
+
+  <div class="opt">
+    <span class="cap">B · border + tinted fill</span>
+    <div class="fld">
+      <span class="lbl" style="color:#4A5169">Slug</span>
+      <div class="box" style="border-color:#22A33C; background-image:linear-gradient(#ECFAEE,#ECFAEE); color:#161A28">acme-uk</div>
+      <span class="msg" style="color:#156822">Available</span>
+    </div>
+    <span class="sub">border --success · bg --success-subtitle</span>
+  </div>
+
+  <div class="opt">
+    <span class="cap">C · message only, no box treatment</span>
+    <div class="fld">
+      <span class="lbl" style="color:#4A5169">Slug</span>
+      <div class="box" style="border-color:#DCE1EA; color:#161A28">acme-uk</div>
+      <span class="msg" style="color:#156822">Available</span>
+    </div>
+    <span class="sub">drop the [success] box styling entirely</span>
+  </div>
+</div>
+
+<h2>What about the label, the placeholder and the value?</h2>
+<p>Stas also asked whether the LABEL and the VALUE should take the state colour. They should not, and
+this is the one place to be firm about it: the value is the user's own text, and recolouring it to red
+makes a field the user is being asked to CORRECT harder to read at exactly the moment they must read
+it. Carbon, Material and the HIG all leave the value at body colour and carry state on the boundary,
+the fill and the message. The label is the same argument one step weaker — colouring it adds a third
+red object to a box that already has two.</p>
+
+<div class="ask">
+<b>What needs deciding</b>
+<ol>
+  <li><b>Warning on the box</b> — A (nothing, today), B (fill only), C (fill + dark amber border), or
+    D (border only)? The measurement rules out the naive <code>--warning</code> border at 1.47:1
+    whichever shape is chosen.</li>
+  <li><b>Success on the box</b> — A (border only, today), B (border + fill), or C (drop it)?</li>
+  <li><b>Success everywhere, or nowhere</b> — promote <code>[success]</code> to the other 14 fields so
+    a form can use it consistently, or remove it from <code>ds-input</code> so nothing offers a state
+    the rest cannot?</li>
+</ol>
+</div>
+</main>
