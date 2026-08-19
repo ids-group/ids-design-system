@@ -40,7 +40,7 @@
 - P3 · `ds-number-stepper` — optional numeric formatting
 - P3 · `ds-menu-item` — a native secondary line, so an action can state a limitation without hover or focus
 - P3 · `ds-list-item` cannot express a row that has its own control AND a row-level action
-- P3 · Build a deck for the tinted-fill variants of `warning` and `success`, and re-decide
+- P2 · `ds-field-message` claims `state` picks an icon, and it never does — two false doc comments over a real gap
 
 **Decisions — waiting on Stas, not on work**
 
@@ -491,17 +491,45 @@ itself. All three were found by RENDERING the built bundle; none of them fails a
 
 ## Validation on the control: warning got a border, but the FILL was never judged (2026-08-13)
 
-- [ ] **[P3] Build a deck for the tinted-fill variants of `warning` and `success`, and re-decide.**
-  Stas chose **border only** for both on 2026-08-13, from
-  `presentations/field-validation-states.html` — but explicitly parked the fill: "может быть я
-  передумаю про заливку потом когда посмотрю". The current ladder is error = border + fill,
-  warning/success = border only.
-  The variants to render, which the deck already has stubs for:
-  `warning` fill `--warning-subtitle` (#FFFBEA, 1.05:1 against a white field — the open worry is
-  whether it survives a phone screen in daylight) and `success` fill `--success-subtitle` (#ECFAEE).
-  Judge them **beside an error field in the same form**, since the question is not "is it visible"
-  but "does warning still read as weaker than error".
-  Not now — return to it deliberately.
+- [x] **DONE 2026-08-20 — the parked fill question is closed, and the answer is "keep the ladder".**
+  Stas chose **border only** for both on 2026-08-13 but parked the fill: "может быть я передумаю про
+  заливку потом когда посмотрю". Re-decided on evidence, not on another look: **six design systems
+  read from their own sources**, recorded in `presentations/field-validation-states.html`.
+  **Five of six put NO fill on error** — Material 3 (21 error tokens in
+  `_md-comp-filled-text-field.scss` and not one touches the container; the token does not exist),
+  Carbon (`fill: $support-error` on the icon, background stays `$field`), Spectrum
+  (`border-color-invalid` + alert icon), Bootstrap (`border-color` + the icon as a
+  `background-image`, no `background-color` in either invalid or valid), Ant (`borderColor:
+  colorError`, background stays `colorBgContainer`). **Only Polaris fills**
+  (`background-color: --p-color-bg-surface-critical`).
+  **Not one of the six fills warning or success.** Where warning exists it differs from error by hue
+  (Ant) or by icon colour alone (Carbon); where success exists it is QUIETER than error — Spectrum's
+  is a checkmark with no border change at all.
+  **Why the ladder is right rather than merely traditional:** NN/g recommends the tinted fill and
+  names its purpose — "to make it stand out on a long page with many form fields". That is
+  findability, which describes `error` only: the one state the user must locate and repair. And the
+  measurement kills it independently — #FFFBEA is **1.05:1** against a white field, #ECFAEE
+  **1.06:1**, below anything that could do the findability job. Adding them would flatten the
+  severity ladder and buy nothing.
+  **What the research turned up instead — see the new item below.** The one thing all four
+  icon-carrying systems have and we do not is a per-state ICON.
+
+- [ ] **[P2] `ds-field-message` claims `state` picks an icon, and it never does — two false doc
+  comments over a real gap.** `state`'s docblock says "Decides colour and icon" and `icon`'s says
+  "Overrides the glyph the `state` would pick" (`field-message.component.ts:26,31`). Neither is true:
+  the template renders `@if (icon())` against an input defaulting to `null`, and there is no computed
+  anywhere in the component, so **`state` decides colour only** and a glyph has to be passed by hand
+  on every field. Found while closing the fill question above.
+  **Why it matters beyond the wrong comment:** a per-state icon is what four of the six systems use to
+  separate the states — Spectrum, Bootstrap, Carbon and Ant all carry one in the field. NN/g requires
+  it as its own guideline, WCAG 1.4.1 (Use of Color) forbids resting a state on colour, and the
+  ui-ux-pro-max base says it twice: `color-not-only` ("Don't convey info by color alone (add
+  icon/text)") and `color-not-decorative-only` ("Functional color (error red, success green) must
+  include icon/text"). It is also the treatment that would give `warning` and `success` real
+  distinctness without any fill, which is exactly what the decision above declines to add.
+  **Decide two things:** whether `state` should default a glyph per state (breaking — every field
+  gains an icon it does not have today), and if so which glyphs. Fix the two comments either way,
+  since they are wrong right now.
 
 # Decisions — waiting on Stas, not on work
 
