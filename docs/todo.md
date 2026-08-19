@@ -317,12 +317,36 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 ---
 
 
+## `ds-search`'s debounce cannot be cancelled by a host-owned Clear (from mm-broker, 2026-08-19)
+
+- [ ] **[P2] `[debounce]` cancels an armed keystroke only when the host writes a DIFFERENT value, so
+  a Clear button outside the control cannot always drop one.** The cancel path is
+  `effect(() => { if (this.value() !== this.pushed) { this.cancel(); … } })`. That covers the case the
+  0.10.0 note describes — "a host resetting the field mid-typing has to win" — but only when the reset
+  changes the bound value. A list screen whose search term is not committed yet holds `''`: the user
+  types `abc` (timer armed, `value` still `''`), presses the page's own Clear, the host writes `''`
+  again, the signal does not change, no effect runs, and the keystroke lands ~300ms later on a screen
+  that was just cleared. Consumer-side there is nothing left to try: `''` is the only empty value, two
+  synchronous writes collapse, and a one-shot "swallow the next emit" flag mis-fires on the next real
+  search.
+  **Ask:** make the existing `clear()` public — it already does exactly the right three things
+  (`text.set('')`, `cancel()`, `push('')`) — or add a public `cancel()`. `focus()` was made public for
+  this same host-owned Clear button, and its docstring names the case: "a Clear button that disables
+  itself on activation". The same button needs to be able to drop the timer it is clearing.
+  mm-broker carries `TODO(ds-search-clear-cancel)` in `list-search.component.ts` until this lands.
+
+---
+
+
 ## A widened type is a breaking change the manifest does not carry (from mm-broker, 2026-08-19)
 
-- [ ] **[P2] 0.10.0 widened two public types, neither got a changelog line or a manifest entry, and
-  both stopped a consumer's build.** Found while running the auto-update workflow: the plan came
-  from `migrations/0.10.0.json` plus an LLM re-read of the whole prose block — 26 items, and the
-  only two changes that actually broke compilation were in neither.
+- [ ] **[P2] 0.10.0 widened two public types, neither carried as something a consumer could act on,
+  and both stopped a consumer's build.** Found while running the auto-update workflow: the plan came
+  from `migrations/0.10.0.json` plus an LLM re-read of the whole prose block. Both changes ARE in the
+  manifest — `width` as informational #43 ("now accepts the literal 'content'"), `bordered` inside the
+  `nullable-boolean-inputs-treat-null-as-unset` item — but each is described as a new capability or a
+  changed null meaning, so neither reads as "your code may stop compiling", and the apply pipeline had
+  nothing to do for either.
   **(1) `TableColumn.width` went `number` → `number | 'content'`.** This is the general case, not a
   subclassing one: the field is written by consumers *and read back*, so any arithmetic or numeric
   assignment on it stops compiling (`fixed[col.key] = col.width` → TS2322, `sum += col.width` →
