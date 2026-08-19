@@ -317,6 +317,48 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 ---
 
 
+## The universal focus ring has no answer for a clipping ancestor (from mm-broker, 2026-08-19)
+
+Three findings from adopting 0.10.0's `:where(:focus-visible) { outline: none; box-shadow:
+var(--ds-control-focus-shadow) }` across three apps and deleting the twenty rings the consumer drew
+itself. All three were found by RENDERING the built bundle; none of them fails a build or a grep.
+
+- [ ] **[P1] A `overflow: hidden` ancestor clips the ring away completely, and the element is then
+  focusable with NO indicator at all.** The ring is a box-shadow outside the border box, so any
+  clipping ancestor eats it — and clipping a card is the normal way to keep a full-bleed child inside a
+  rounded corner, which `ds-card` itself invites (`ds-card` + `padding: none` + a child that fills it).
+  Measured in four places in one consumer: three rows filling a `ds-card .card { overflow: hidden }`,
+  and a gradient CTA pill (`overflow: hidden` for its own animation) wrapping a full-width `ds-button`
+  — that last one is a DS component losing its own ring, not a consumer's hand-rolled control.
+  The workaround is to re-declare the token with `inset` shadows per scope, which every consumer will
+  have to rediscover:
+  `--ds-control-focus-shadow: inset 0 0 0 2px transparent, inset 0 0 0 4px <ring colour>`.
+  **Ask:** ship it as a family on the existing switch — `data-focus="inset"` beside `ring` / `field` /
+  `edge` / `outline` — so a subtree can opt in with one attribute, and/or publish an `--ds-*-focus-shadow-inset`
+  role that resolves the same colours. Either way the trap belongs in the docs page for the switch.
+
+- [ ] **[P2] `--focus-ring-inner: var(--surface-canvas)` assumes the focused element sits ON the
+  canvas.** The 2px gap is there to separate the ring from the element, so it has to match what is
+  BEHIND the element, and `--surface-canvas` is only that when nothing else intervenes. In a dark app
+  with white cards the gap paints the dark canvas colour as a rim around a white card, which reads as a
+  rendering artifact rather than a focus state — measured on a dark portal, and the fix that made it
+  correct everywhere was `--focus-ring-inner: transparent`, which takes whatever is actually behind.
+  **Ask:** default the inner ring to `transparent`. Nothing is lost on a canvas-coloured ground (the
+  gap resolves to the same pixels) and every other ground stops being wrong. If the current default is
+  deliberate — e.g. a guard against a busy photo background — say so where the token is documented.
+
+- [ ] **[P2] The 0.10.0 entry names two consumer cases and misses the common one.** It covers "you
+  relied on the element having NO indicator" and "you relied on the BROWSER's outline", but not the
+  case that actually bites: **an app rule that styles `:focus-visible` with an `outline` only**. That
+  rule keeps winning on `outline`, the base rule still supplies `box-shadow`, and the element renders
+  BOTH — a second ring in the app's colour around the DS ring. Fourteen sites in one consumer, all
+  invisible to the build and to grep.
+  **Ask:** add it to the entry with the one-line fix (`box-shadow: none` in that rule, or delete the
+  rule and retint the DS ring instead), since "delete your own ring" is the outcome the release wants.
+
+---
+
+
 ## `ds-search`'s debounce cannot be cancelled by a host-owned Clear (from mm-broker, 2026-08-19)
 
 - [ ] **[P2] `[debounce]` cancels an armed keystroke only when the host writes a DIFFERENT value, so
