@@ -608,6 +608,27 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **A disabled `ds-button` with `variant="ghost"` or `variant="text"` desaturates and moves toward
+  the surface, instead of taking the shared 70%-lightness label recipe.** New default:
+  `color-mix(in srgb, oklch(from <label> l 0.035 h) 40%, var(--surface-default))`. These are the two
+  variants with no container, so the label is the whole signal — and the shared recipe was failing
+  it, badly in dark. Measured against the enabled label: light **2.54 → 3.74:1**, dark
+  **1.11 → 2.85:1**. The dark number is the real defect: `--primary-strong` there is already light
+  (OKLCH L 67.9%), so a recipe that pins the disabled label at L 70% lands two points away from the
+  enabled one and the two differ in chroma alone.
+  **Both axes are load-bearing, and getting only one right is worse than it sounds.** Mixing toward
+  the surface without dropping chroma first raises saturation from 0.036 to **0.099** — the label
+  then reads as a lighter link rather than a dead control, because saturation is what carries
+  "interactive". Chroma lands at 0.012 (light) / 0.025 (dark).
+  **The trade:** the disabled label is fainter against its own ground — **1.82:1** light, 2.04:1
+  dark, where the old recipe gave 2.69 / 6.45. Disabled text is exempt from WCAG 1.4.3 and 1.4.11,
+  and Material ships the equivalent at 1.93:1, so this is inside practice — but it is the quietest
+  our disabled label has been.
+  **`solid` and `tonal` are unchanged**, deliberately: a white label mixed into a white surface does
+  not move, and tonal's disabled fill already carries the state on its own. **`outline` is unchanged
+  for now** even though its label shares the defect — its disabled border is only 1.30:1, so it is a
+  candidate. Consumers who set `--ds-button-label-color-disabled` are unaffected.
+
 - **`avatarTint` switches from OKLCH to `hsl(H 50% 62%)` with white initials, always.** The seeded
   tints read as dull, and every set of initials came out black. The auto-contrast was not the fault:
   measured across the hue circle, the old `oklch(62% 0.14 h)` put every hue's luminance between 0.218
