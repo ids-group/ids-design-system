@@ -290,6 +290,36 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 ---
 
 
+## A widened type is a breaking change the manifest does not carry (from mm-broker, 2026-08-19)
+
+- [ ] **[P2] 0.10.0 widened two public types, neither got a changelog line or a manifest entry, and
+  both stopped a consumer's build.** Found while running the auto-update workflow: the plan came
+  from `migrations/0.10.0.json` plus an LLM re-read of the whole prose block — 26 items, and the
+  only two changes that actually broke compilation were in neither.
+  **(1) `TableColumn.width` went `number` → `number | 'content'`.** This is the general case, not a
+  subclassing one: the field is written by consumers *and read back*, so any arithmetic or numeric
+  assignment on it stops compiling (`fixed[col.key] = col.width` → TS2322, `sum += col.width` →
+  TS2365). Widening is source-compatible for whoever SETS the field and breaking for whoever READS
+  it, which is exactly why it reads as non-breaking when the release notes are written.
+  **(2) `TableComponent.bordered` went `boolean` → `boolean | null`.** An `override` of it in a
+  subclass is no longer assignable — `InputSignalWithTransform<boolean, unknown>` against
+  `<boolean | null, unknown>` fails on the `equal` position, which is invariant, so the values being
+  compatible does not save it (TS2416). This half is subclass-only, and subclassing is documented as
+  unsupported — it is corroboration, not the ask.
+  **Why it matters beyond one consumer:** `migrations/AUTHORING.md` states the rule this misses —
+  *"a reader must be able to act on an entry without seeing the prose changelog"*. For these two
+  there was nothing to act on in either place, so the type-checker was the only finder, and it only
+  fires after the bump is already installed and the apply pass has run.
+  **Ask:** treat a widening of an exported type — an interface field, an input's accepted union, a
+  returned union — as a documented change with a manifest entry, the same as a rename. It does not
+  need a new `kind`; `behavior` carries it, with the note naming who breaks (readers, implementers)
+  rather than who does not (writers). A cheap generator-side check would catch the whole class:
+  `class-surface` already diffs member names between versions, and diffing member TYPES would have
+  surfaced both of these without anyone remembering to.
+
+---
+
+
 ## Component feature gaps
 
 - [ ] **[P2] One entry point for the whole library means a consumer cannot keep the DS out of their initial bundle (2026-08-03, Stas — mm-broker MBP-133 review).** _(Re-counted 2026-08-05: **85** exported `*Component` classes plus 9 directives (re-counted 2026-08-10; was 83 + 8 on 08-05), by `grep -rho 'export class .*Component' src/lib | sort -u`. The item said 73; the figure does not change the argument, but it is now stated with its method so nobody re-counts.)_ `ng-package.json` declares a single `entryFile`, so the package ships as one 1.25 MB `fesm2022` module behind a single `"."` export. `sideEffects: false` is set and tree-shaking works fine — unused components are dropped — but **chunking cannot happen**: esbuild splits by module, so it can never place two DS symbols in two different chunks. Measured in mm-broker: the app's eager composition root binds `NotificationService` to a toast implementation, that one runtime import of `ToastService` pins the whole retained DS graph into a chunk statically imported by `main`, and the result is **632 kB — about 88% of a 720 kB initial bundle** — even though every feature route is lazy and the only eagerly-needed symbol is one service. The consumer has no lever: the root is the only specifier, and moving the provider to a lazy route does not help because interceptors and the `ErrorHandler` resolve from the root injector. **Ask:** secondary entry points (ng-packagr supports a nested `ng-package.json` per folder). Even a coarse split would fix it — a services/overlay entry point carrying `ToastService`, `ModalService` and `BodyScrollLockService` separately from the component layer, so an eager root can import the service and leave 70-odd components lazy. Per-component entry points would be ideal but are a bigger change; the services split is the one that unblocks consumers. **Explicit non-goal:** nothing about the public API surface needs to change — same symbols, same names, just reachable through narrower specifiers. **RE-AUDITED 2026-08-03 → read `packaging-chunking-audit.md` before actioning this item; three claims above are wrong.** The mechanism is confirmed by controlled esbuild fixtures, but: this was never filed upstream (it is the consumer's own backlog item, with a consumer-side fix); "the consumer has no lever" is false (a dynamic `import()` keeps `main` clean — it just costs tree-shaking, measured +50%); and the 07-27 "tree-shaking already works" verdict is NOT overturned — placement and tree-shaking are orthogonal and both findings stand. The audit also merges this item with the "Packaging — secondary entry points" section below, which duplicates it with the opposite verdict.
