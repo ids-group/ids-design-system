@@ -367,10 +367,10 @@ it. Carbon, Material and the HIG all leave the value at body colour and carry st
 the fill and the message. The label is the same argument one step weaker — colouring it adds a third
 red object to a box that already has two.</p>
 
-<h2>Статус — что решено и что нет</h2>
+<h2>Статус</h2>
 
 <div class="verdict">
-<b>ЗАКРЫТО.</b>
+<b>ЗАКРЫТО — всё, что было в этой деке.</b>
 <br><br>
 <b>1. Warning на боксе</b> — вариант <b>D</b>, только рамка <code>--warning-text</code>. Отгружено.
 Заливку смотрели и отклонили: #FFFBEA даёт 1.05:1 к белому полю, а заливка существует ради
@@ -384,22 +384,22 @@ red object to a box that already has two.</p>
 пользователя, и перекрашивать его в красный там, где просят прочитать и исправить, — вред.
 </div>
 
-<div class="ask">
-<b>ОТКРЫТО — один пункт, и он про API, а не про цвет.</b>
+<div class="note">
+<b>Замечание об области, НЕ вопрос к решению.</b>
 <br><br>
-<b>Success есть только у <code>ds-input</code>.</b> Проверено: <code>readonly success = input</code>
-объявлен в одном компоненте из пятнадцати, а общий резолвер это прямо документирует —
-<code>field-errors.ts:78</code>, «Only <code>ds-input</code> has a success state today», и читает
-его через опциональный <code>sources.success?.()</code>.
+<code>[success]</code> есть только у <code>ds-input</code> — <code>readonly success = input</code>
+объявлен в одном компоненте из пятнадцати, и общий резолвер это документирует сам
+(<code>field-errors.ts:78</code>, «Only <code>ds-input</code> has a success state today»,
+читается через опциональный <code>sources.success?.()</code>).
 <br><br>
-Значит форма не может пользоваться success единообразно: на одном поле он есть, на остальных
-четырнадцати — нет.
+<b>Это не дефект, и трогать нечего.</b> Вход опциональный и по умолчанию <code>false</code>, так что
+он ничего не стоит, пока не включён. «Успешно провалидировано» — понятие текстового ввода: у
+чекбокса состояние либо есть, либо нет, и success там почти лишён смысла. То есть
+<code>ds-input</code> — естественное место, а не случайное.
 <br><br>
-<b>Два выхода:</b> (a) поднять <code>[success]</code> на остальные поля; (b) убрать его из
-<code>ds-input</code>, чтобы система не предлагала состояние, которое не держит.
-<br><br>
-<b>Что даёт исследование для этого решения:</b> success — самое НЕуниверсальное из трёх состояний.
-Из шести систем он есть у двух (Spectrum, Bootstrap), а у Material 3, Carbon, Ant и Polaris его нет
-вовсе. То есть вариант (b) — не обеднение, а норма отрасли.
+Поднимать на другие поля — только по запросу консюмера; ближайший осмысленный кандидат
+<code>ds-textarea</code>, тоже свободный текст. Статистика «success есть у 2 систем из 6»
+(Spectrum, Bootstrap; у Material 3, Carbon, Ant и Polaris нет вовсе) говорит о том, стоит ли
+раскатывать его широко — и не говорит ничего о том, надо ли удалять уже работающее.
 </div>
 </main>
