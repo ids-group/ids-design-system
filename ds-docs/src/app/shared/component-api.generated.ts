@@ -3009,7 +3009,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whole-row navigation: renders an inner button and emits `activated`."
+        "description": "Makes the row's text a button that emits `activated`. `[leading]` and `[trailing]` stay outside it, so a row can hold its own controls as well."
       },
       {
         "name": "selected",
@@ -3018,7 +3018,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Marks the row current via `aria-current`."
+        "description": "Marks the row current — `aria-current` and the selected tint."
       },
       {
         "name": "disabled",
@@ -3027,7 +3027,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Disables the row; only affects the button when `clickable`."
+        "description": "Disables the row's own button. Controls projected into `[leading]` or `[trailing]` keep their own disabled state."
       }
     ],
     "outputs": [
