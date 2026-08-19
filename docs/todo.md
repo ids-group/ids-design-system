@@ -132,6 +132,18 @@ below is a documentation gap any more — each is a real thing to fix.
   during the consumer's 0.10.0 upgrade, and `--opacity-muted` is now deleted from the token scale
   too (see `## Unreleased`), so the hijack is no longer expressible. What remains open here is only
   the question below.
+  **ASKED AGAIN 2026-08-19, and parked here rather than shipped.** The head asked to put 0.38 on
+  `--ds-button-label-color-disabled` directly. Measured on the consumer's real ground
+  (`--accent-deep: #00414b` on `#fcf8f9`), ghost `Clear`: enabled 10.73:1; the 58% recipe 4.01:1 —
+  the state that produced the original report; the shipped 70% recipe **2.50:1**; a 0.38 alpha
+  **2.10:1**. So the defect the ask names is already closed by 0.10.0, and 0.38 buys 0.4 of ratio.
+  Two things make it a real question anyway rather than a no: alpha is the ONE candidate this file
+  measured as having light/dark parity, and it is what Material and the UX skill say outright.
+  Against it: it was ruled out on 2026-08-13 by the same head, and expressed as a consumer pin it
+  would flatten the per-colour accent the recipe derives from `--_button-accent` — a disabled error
+  button would go teal. **If it is ever taken, it belongs here as one recipe for every variant
+  except solid, not as a pin in `platform-admin/_ds-overrides.scss`.** Rendered comparison of the
+  three states was built for the decision and is not committed anywhere.
 
 - [ ] **[P2] `--ds-dropdown-panel-radius` does not reach `ds-multi-select`.** Its panel element is
   `class="panel"`, not `.dropdown-panel`, and `multi-select.component.scss:108` hardcodes
