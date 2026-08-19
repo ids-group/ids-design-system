@@ -290,6 +290,29 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 ---
 
 
+## `ds-modal`'s padding is one `pad-y` per region, and a real layout needs per-side (from mm-broker, 2026-08-19)
+
+- [ ] **[P2] `DS_CONFIG.modal.dividers` landed and still could not retire the consumer's padding
+  override, because the shape it needs is not expressible.** The modal regions resolve
+  `padding: var(--_modal-header-pad-y) var(--_modal-pad-x)` and the same for `.body` / `.actions` —
+  ONE vertical value per region, applied to both edges. mm-broker's design wants
+  `header: space-6 space-6 0`, `body: space-4 space-6`, `actions: 0 space-6 space-6`: the header
+  pads only at the top and the actions row only at the bottom, so the body's own padding carries
+  the whole gap between them. Only `body` is symmetric, so only `body` can use
+  `--ds-modal-body-pad-y`; the other two stay as three `!important` rules on `.modal > .header` /
+  `> .actions`, reaching past the component into its internal class names — which is the thing the
+  token API exists to make unnecessary.
+  **Not a `no-dividers` gap:** turning dividers off already zeroes `--_modal-body-pad-y` and both
+  border widths, and that part works. This is purely that a single `pad-y` cannot express an
+  asymmetric region.
+  **Ask:** per-side tokens on the three regions — `--ds-modal-header-pad-top` /
+  `-pad-bottom`, and the same for `body` and `actions`, each defaulting to the existing `pad-y` so
+  nothing moves for anyone who does not set them. That retires the last `!important` block a
+  consumer holds against `ds-modal`, and it is the same shape the `[actions]` slot already invites.
+
+---
+
+
 ## A widened type is a breaking change the manifest does not carry (from mm-broker, 2026-08-19)
 
 - [ ] **[P2] 0.10.0 widened two public types, neither got a changelog line or a manifest entry, and
