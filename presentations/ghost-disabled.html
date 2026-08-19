@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>Ghost, disabled — what can carry the state when there is no box</title>
+<title>Ghost, disabled — why one lightness cannot serve two themes</title>
 <link rel="stylesheet" href="ds.css">
 <style>
   :root { color-scheme: light; }
@@ -11,14 +11,14 @@
   main { max-width: 1180px; margin: 0 auto; }
   h1 { font: var(--font-weight-extrabold) var(--font-size-h3) / var(--line-height-tight) var(--font-sans); margin: 0 0 var(--space-2); }
   h2 { font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans); margin: var(--space-6) 0 var(--space-2); }
-  p { max-width: 80ch; color: var(--text-secondary); }
+  p { max-width: 82ch; color: var(--text-secondary); }
   b { color: var(--text-primary); }
   code { font: var(--font-weight-medium) var(--font-size-xs) / 1 var(--font-mono); }
 
   table { border-collapse: collapse; width: 100%; margin-top: var(--space-3); }
   th, td { border: 1px solid var(--border-default); padding: var(--space-2); vertical-align: top; text-align: left; }
   thead th { background: var(--surface-secondary); font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans); }
-  tbody th { width: 22ch; font-weight: var(--font-weight-semibold); }
+  tbody th { width: 20ch; font-weight: var(--font-weight-semibold); }
 
   /* Every painted surface is a background-image gradient and an inline colour, so
      a force-dark browser cannot rewrite what is being judged. */
@@ -29,12 +29,12 @@
     font: var(--font-weight-extrabold) var(--font-size-s) / 1 var(--font-sans);
     letter-spacing: var(--letter-spacing-wide);
   }
+  .pair { display: inline-flex; gap: var(--space-2); padding: var(--space-2); border-radius: var(--radius-md); }
+  .onlight { background-image: linear-gradient(#FFFFFF, #FFFFFF); }
+  .ondark { background-image: linear-gradient(#171B24, #171B24); }
   .row { display: flex; flex-wrap: wrap; gap: var(--space-5); margin-top: var(--space-3); }
   .cand { width: 250px; }
-  .cap {
-    display: block; margin-bottom: var(--space-2);
-    font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans);
-  }
+  .cap { display: block; margin-bottom: var(--space-2); font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans); }
   .cap.win {
     color: var(--success-text);
     text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px;
@@ -42,223 +42,187 @@
   .cap.win::after { content: ' — РЕКОМЕНДАЦИЯ'; letter-spacing: var(--letter-spacing-wider); text-decoration: none; }
   .cap.dead { color: var(--error); }
   .cap.dead::after { content: ' — НЕ РАБОТАЕТ'; letter-spacing: var(--letter-spacing-wider); }
-  .stage { padding: var(--space-3) 0; }
+  .stage { padding: var(--space-2) 0; }
   .num { display: block; color: var(--text-tertiary); font: var(--font-weight-regular) var(--font-size-2xs) / 1.7 var(--font-mono); }
-  .verdict-num { display: block; font: var(--font-weight-bold) var(--font-size-2xs) / 1.8 var(--font-mono); }
-  .verdict-num.ok { color: #156822; }
-  .verdict-num.bad { color: #BA1717; }
+  .v { display: block; font: var(--font-weight-bold) var(--font-size-2xs) / 1.8 var(--font-mono); }
+  .v.ok { color: #156822; }
+  .v.bad { color: #BA1717; }
   .note { border-left: 3px solid var(--primary); padding-left: var(--space-3); margin: var(--space-4) 0; }
-  .frame {
-    border: 2px solid #22A33C; border-radius: var(--ds-radius-panel);
-    padding: var(--space-4); margin: var(--space-4) 0;
-  }
+  .frame { border: 2px solid #22A33C; border-radius: var(--ds-radius-panel); padding: var(--space-4); margin: var(--space-4) 0; }
   .frame b { color: #156822; }
+  .alarm { border: 2px solid #BA1717; border-radius: var(--ds-radius-panel); padding: var(--space-4); margin: var(--space-4) 0; }
+  .alarm b { color: #BA1717; }
 </style>
 <main>
 
-<div class="frame">
-<b>ВОПРОС:</b> у <code>ghost</code> в покое нет ни рамки, ни заливки. Значит выключённое
-состояние отличается от обычного <i>только цветом текста</i> — а по WCAG 1.4.1 и по
-собственному правилу скилла (<code>disabled-states</code>: анти-паттерн «Same style as enabled»)
-цвет не может быть единственным признаком.
-<br><br>
-<b>ЧТО ПОКАЗАЛИ ЗАМЕРЫ — путь «доработать цвет метки» закрыт.</b> Нейтральная метка
-<code>--text-disabled</code> #9BA3B4 и наша метка по рецепту C #949EB5 различаются на
-<b>1.06:1</b> — это один и тот же цвет. Carbon и Fluent решают ровно этой нейтральной меткой, и
-<i>мы её уже де-факто применяем</i>. Дальше по цвету двигаться некуда.
-<br><br>
-<b>ЗНАЧИТ признак должен быть НЕ цветовым</b> — то есть должна появиться форма. Отсюда и
-кандидаты ниже.
-</div>
-
 <h1>Ghost, disabled</h1>
 
-<h2>Что делают топовые системы — проверено по исходникам, не по маркетингу</h2>
+<div class="frame">
+<b>ОТВЕТ НА ВОПРОС «может просто ещё убавить цвет метки»: да, можно — и это именно то,
+что делает Material.</b> Он ставит метку disabled как цвет enabled при прозрачности 0.38.
+В переводе на наш акцент это #A9B8F8: разрыв с активной <b>3.54:1</b> при читаемости
+<b>1.93:1</b>. Мы сейчас на 2.54:1 при 2.69:1 — то есть <i>читаемее, чем Material, и хуже
+различимы</i>. Запас убавлять есть.
+<br><br>
+<b>Но одного этого мало, и вот почему.</b>
+</div>
+
+<div class="alarm">
+<b>НАЙДЕНО ПРИ ПРОСЧЁТЕ ТЁМНОЙ ТЕМЫ: там ghost сломан сильнее, чем в светлой.</b>
+<br><br>
+Активная метка ghost в тёмной теме — <code>--primary-strong</code> = <code>hsl(229 90% 72%)</code>
+= #778FF8, её <b>OKLCH L = 67.9%</b>. Рецепт C ставит выключенную на <b>L = 70%</b>.
+Разница — <b>две десятых процента светлоты</b>. Разрыв по яркости: <b>1.11:1</b>.
+<br><br>
+Различаются они только насыщенностью: 0.157 → 0.035, то есть синий становится
+серо-синим той же светлоты. Зрячий человек оттенок заметит, но по яркости там нет ничего,
+и для сниженного цветовосприятия — тоже почти ничего.
+<br><br>
+<b>И «убавить ещё» тёмную тему не лечит:</b> 74% → 1.29, 78% → 1.48, 82% → 1.69.
+Потому что в тёмной теме акцент <i>уже светлый</i>, и уходить надо ВНИЗ, а не вверх:
+55% → 1.63, 50% → 2.04.
+<br><br>
+<b>Отсюда главный вывод: одно фиксированное значение светлоты не может обслужить обе темы.</b>
+В светлой «выключено» = светлее акцента. В тёмной акцент сам светлый, значит «выключено» =
+темнее. Это и есть структурная причина, по которой тёмная тема заваливалась и в прошлый раз.
+</div>
+
+<h2>Светлая тема: сколько ещё можно убавить и что это стоит</h2>
 
 <table>
-<thead><tr><th>система</th><th>что получает выключенная безрамочная кнопка</th><th>чем достигнут сигнал</th></tr></thead>
+<thead><tr><th>L в рецепте</th><th>hex</th><th>разрыв с активной</th><th>читаемость на странице</th></tr></thead>
 <tbody>
-<tr><th scope="row">Material Design 3<span class="num">tokens/_md-comp-text-button.scss</span></th>
-<td>Контейнера нет. Всего 4 disabled-токена: <code>disabled-label-text-color</code>,
-<code>disabled-label-text-opacity</code>, <code>disabled-icon-color</code>,
-<code>disabled-icon-opacity</code>. Токена disabled-контейнера <b>не существует</b>.</td>
-<td><b>Прозрачность 0.38</b> — метка почти исчезает.</td></tr>
+<tr><th scope="row">70% — сегодня</th><td>#949EB5</td><td><span class="v">2.54:1</span></td><td><span class="v">2.69:1</span></td></tr>
+<tr><th scope="row">74%</th><td>#A1ABC2</td><td><span class="v">2.96:1</span></td><td><span class="v">2.30:1</span></td></tr>
+<tr><th scope="row">78%</th><td>#ADB7CF</td><td><span class="v ok">3.40:1</span></td><td><span class="v">2.01:1</span></td></tr>
+<tr><th scope="row">80%</th><td>#B3BED5</td><td><span class="v ok">3.65:1</span></td><td><span class="v">1.87:1</span></td></tr>
+<tr><th scope="row">Material, эквивалент</th><td>#A9B8F8</td><td><span class="v ok">3.54:1</span></td><td><span class="v">1.93:1</span></td></tr>
+<tr><th scope="row">85%</th><td>#C3CEE5</td><td><span class="v ok">4.31:1</span></td><td><span class="v bad">1.58:1</span></td></tr>
+</tbody>
+</table>
 
-<tr><th scope="row">IBM Carbon<span class="num">scss/components/button/_button.scss</span></th>
-<td><code>border-color: transparent; background: transparent; color: $text-disabled;</code> —
-явно прописано, что ни рамки, ни заливки.</td>
-<td><b>Нейтральный тон</b> <code>$text-disabled</code> — уход от акцентного оттенка в серый.</td></tr>
+<p>Обмен прямой: <b>чем больше разрыв, тем хуже читается сама выключенная метка.</b> WCAG 1.4.3
+и 1.4.11 выводят неактивные компоненты из-под требований контраста, так что 1.87–2.01 законно,
+и Material отгружает 1.93. <b>Но в тёмной теме этот столбец не помогает вообще.</b></p>
 
-<tr><th scope="row">Microsoft Fluent 2<span class="num">useButtonStyles.styles.ts</span></th>
-<td><code>subtle</code> и <code>transparent</code> в disabled:
-<code>backgroundColor: colorTransparentBackground</code>, <code>borderColor: 'transparent'</code>.</td>
-<td><b>Нейтральный тон</b> <code>colorNeutralForegroundDisabled</code>.</td></tr>
+<h2>Что решает обе темы одним выражением</h2>
+
+<p>Смешать метку не с фиксированной светлотой, а <b>с фоном</b>:
+<code>color-mix(in srgb, var(--_button-label-color) 45%, var(--surface-default))</code>.
+В светлой теме фон белый, значит метка уходит вверх; в тёмной фон #171B24, значит вниз.
+Направление выбирается само, потому что <code>--surface-default</code> у тем разный.</p>
+
+<table>
+<thead><tr><th>доля метки</th><th>светлая: разрыв / читаемость</th><th>тёмная: разрыв / читаемость</th></tr></thead>
+<tbody>
+<tr><th scope="row">сегодня, рецепт C</th>
+<td><span class="v">2.54:1 / 2.69:1</span></td>
+<td><span class="v bad">1.11:1 / 6.45:1</span></td></tr>
+<tr><th scope="row">55%</th><td><span class="v">2.53:1 / 2.70:1</span></td><td><span class="v ok">2.17:1 / 2.68:1</span></td></tr>
+<tr><th scope="row">50%</th><td><span class="v">2.79:1 / 2.45:1</span></td><td><span class="v ok">2.39:1 / 2.43:1</span></td></tr>
+<tr><th scope="row">45%</th><td><span class="v ok">3.07:1 / 2.22:1</span></td><td><span class="v ok">2.64:1 / 2.20:1</span></td></tr>
+<tr><th scope="row">40%</th><td><span class="v ok">3.41:1 / 2.00:1</span></td><td><span class="v ok">2.91:1 / 1.99:1</span></td></tr>
 </tbody>
 </table>
 
 <div class="note">
-<b>Вывод из таблицы, и он неудобный:</b> контейнер выключенной безрамочной кнопке
-<i>не даёт никто</i>. Но все трое делают метку однозначной — либо прозрачностью 0.38, либо
-уходом в нейтральный серый. Мы выбрали рецепт C, который <b>сохраняет оттенок</b>
-(«hue kept» — это в самом названии варианта), прозрачность ты отверг, а нейтральный тон мы
-де-факто уже и так показываем. Поэтому именно у нас метка сигналить перестала — не потому
-что мы отстали от практики, а потому что мы выбрали единственную ветку, где сигнал
-пришлось бы искать в форме.
+Обрати внимание на строку «сегодня» в тёмной колонке: читаемость <b>6.45:1</b>. Выключенная
+метка там <i>ярче, чем нужно активной</i> — светлый серо-синий на тёмном фоне. Именно поэтому
+она не выглядит выключенной. Смесь опускает её до 2.2–2.4, что и должно означать «погашено».
+<br><br>
+Это ровно тот кандидат <b>G</b> из прошлой деки, который мы отвергли — но отвергли из-за
+<code>solid</code>: там метка белая, и белое, смешанное с белым фоном, не меняется. У ghost и
+text такой проблемы нет. <b>solid остаётся на рецепте C, ghost и text получают смесь.</b>
 </div>
 
-<h2>Почему заливка и штатная disabled-рамка не годятся — числа против страницы #FFFFFF</h2>
-
-<table>
-<thead><tr><th>что рисуем</th><th>токен и значение</th><th>контраст к белой странице</th></tr></thead>
-<tbody>
-<tr><th scope="row">заливка</th><td><code>--surface-disabled</code> → <code>--neutral-100</code> #F1F4F9</td>
-<td><span class="verdict-num bad">1.10:1 — не видно</span></td></tr>
-<tr><th scope="row">рамка, как у outline</th><td><code>--border-disabled</code> → <code>--neutral-150</code> #E8ECF2</td>
-<td><span class="verdict-num bad">1.19:1 — не видно</span></td></tr>
-<tr><th scope="row">для сравнения: ховер ghost</th><td>#F0F3FF</td>
-<td><span class="verdict-num bad">1.11:1 — тоже почти не видно</span></td></tr>
-<tr><th scope="row">метка disabled (рецепт C)</th><td><code>oklch(from accent 70% 0.035 h)</code> → #949EB5</td>
-<td><span class="verdict-num ok">2.69:1</span></td></tr>
-<tr><th scope="row">метка enabled</th><td>#1D43ED</td>
-<td><span class="verdict-num ok">6.82:1</span></td></tr>
-</tbody>
-</table>
-
-<p>То есть <b>ни один существующий disabled-токен поверхности не способен нарисовать видимую
-форму</b> на белом фоне. Единственный тон в этой системе, который на белом читается и при этом
-уже означает «выключено» — это тон самой метки, #949EB5.</p>
-
-<h2>Кандидаты</h2>
+<h2>Как это выглядит</h2>
 
 <div class="row">
-
 <div class="cand">
-  <span class="cap">Как сейчас — enabled для сравнения</span>
-  <div class="stage">
+  <span class="cap">Сегодня — светлая</span>
+  <div class="stage"><span class="pair onlight">
     <span class="btn" style="border-color:transparent;color:#1D43ED">Clear</span>
-  </div>
-  <span class="num">#1D43ED · 6.82:1</span>
-  <span class="num">ни рамки, ни заливки</span>
-</div>
-
-<div class="cand">
-  <span class="cap">A · только метка (сегодня)</span>
-  <div class="stage">
     <span class="btn" style="border-color:transparent;color:#949EB5">Clear</span>
-  </div>
-  <span class="verdict-num bad">форма не изменилась</span>
-  <span class="num">разрыв с enabled 2.54:1</span>
-  <span class="num">сигнал = только цвет</span>
+  </span></div>
+  <span class="v">разрыв 2.54:1</span>
 </div>
 
 <div class="cand">
-  <span class="cap dead">B · рамка --border-disabled</span>
-  <div class="stage">
+  <span class="cap dead">Сегодня — тёмная</span>
+  <div class="stage"><span class="pair ondark">
+    <span class="btn" style="border-color:transparent;color:#778FF8">Clear</span>
+    <span class="btn" style="border-color:transparent;color:#969EB5">Clear</span>
+  </span></div>
+  <span class="v bad">разрыв 1.11:1</span>
+  <span class="num">вот это и есть баг</span>
+</div>
+
+<div class="cand">
+  <span class="cap win">Смесь 45% — светлая</span>
+  <div class="stage"><span class="pair onlight">
+    <span class="btn" style="border-color:transparent;color:#1D43ED">Clear</span>
+    <span class="btn" style="border-color:transparent;color:#99AAF7">Clear</span>
+  </span></div>
+  <span class="v ok">разрыв 3.07:1</span>
+</div>
+
+<div class="cand">
+  <span class="cap win">Смесь 45% — тёмная</span>
+  <div class="stage"><span class="pair ondark">
+    <span class="btn" style="border-color:transparent;color:#778FF8">Clear</span>
+    <span class="btn" style="border-color:transparent;color:#424F83">Clear</span>
+  </span></div>
+  <span class="v ok">разрыв 2.64:1</span>
+</div>
+</div>
+
+<h2>Если хочется признак НЕ цветовой — рамка, отдельно от вопроса выше</h2>
+
+<p>Смесь увеличивает разрыв, но признак остаётся цветовым. Если нужна форма, единственный тон,
+который на белом читается, — тон самой метки. Существующие токены не годятся, проверено:</p>
+
+<div class="row">
+<div class="cand">
+  <span class="cap dead">рамка --border-disabled</span>
+  <div class="stage"><span class="pair onlight">
     <span class="btn" style="border-color:#E8ECF2;color:#949EB5">Clear</span>
-  </div>
-  <span class="verdict-num bad">рамка 1.19:1</span>
-  <span class="num">#E8ECF2 на белом не читается</span>
-  <span class="num">твоя идея верна, токен слишком светлый</span>
+  </span></div>
+  <span class="v bad">#E8ECF2 — 1.19:1</span>
 </div>
-
 <div class="cand">
-  <span class="cap dead">C · заливка --surface-disabled</span>
-  <div class="stage">
+  <span class="cap dead">заливка --surface-disabled</span>
+  <div class="stage"><span class="pair onlight">
     <span class="btn" style="background-image:linear-gradient(#F1F4F9,#F1F4F9);border-color:transparent;color:#949EB5">Clear</span>
-  </div>
-  <span class="verdict-num bad">заливка 1.10:1</span>
-  <span class="num">#F1F4F9 на белом не читается</span>
+  </span></div>
+  <span class="v bad">#F1F4F9 — 1.10:1</span>
 </div>
-
 <div class="cand">
-  <span class="cap">D · рамка средним тоном</span>
-  <div class="stage">
-    <span class="btn" style="border-color:#CBD2DE;color:#949EB5">Clear</span>
-  </div>
-  <span class="verdict-num ok">рамка 1.52:1</span>
-  <span class="num">#CBD2DE — форма есть, но слабая</span>
-</div>
-
-<div class="cand">
-  <span class="cap win">E · рамка тоном самой метки</span>
-  <div class="stage">
+  <span class="cap">рамка тоном метки</span>
+  <div class="stage"><span class="pair onlight">
     <span class="btn" style="border-color:#949EB5;color:#949EB5">Clear</span>
-  </div>
-  <span class="verdict-num ok">рамка 2.69:1</span>
-  <span class="num">#949EB5 — один тон на метку и рамку</span>
-  <span class="num">форма появилась, сигнал не цветовой</span>
+  </span></div>
+  <span class="v ok">#949EB5 — 2.69:1</span>
+  <span class="num">форма появилась</span>
 </div>
-
-<div class="cand">
-  <span class="cap">F · рамка тоном метки + заливка</span>
-  <div class="stage">
-    <span class="btn" style="background-image:linear-gradient(#F1F4F9,#F1F4F9);border-color:#949EB5;color:#949EB5">Clear</span>
-  </div>
-  <span class="verdict-num ok">рамка 2.69:1</span>
-  <span class="num">заливка добавляет 1.10:1, т.е. ничего</span>
 </div>
-
-</div>
-
-<h2>Рядом, как это увидит пользователь на панели</h2>
-
-<p>Слева активная, справа выключенная — то, на что ты жаловался: сейчас разницу приходится
-искать.</p>
-
-<table>
-<thead><tr><th>вариант</th><th>активная рядом с выключенной</th><th>вопрос «какая из них выключена?»</th></tr></thead>
-<tbody>
-<tr><th scope="row">A · сегодня</th>
-<td>
-  <span class="btn" style="border-color:transparent;color:#1D43ED">Clear</span>
-  <span class="btn" style="border-color:transparent;color:#949EB5">Clear</span>
-</td>
-<td><span class="verdict-num bad">только по цвету текста</span></td></tr>
-
-<tr><th scope="row">D · рамка #CBD2DE</th>
-<td>
-  <span class="btn" style="border-color:transparent;color:#1D43ED">Clear</span>
-  <span class="btn" style="border-color:#CBD2DE;color:#949EB5">Clear</span>
-</td>
-<td><span class="verdict-num ok">форма + цвет</span></td></tr>
-
-<tr><th scope="row">E · рамка #949EB5</th>
-<td>
-  <span class="btn" style="border-color:transparent;color:#1D43ED">Clear</span>
-  <span class="btn" style="border-color:#949EB5;color:#949EB5">Clear</span>
-</td>
-<td><span class="verdict-num ok">форма + цвет, читается сразу</span></td></tr>
-</tbody>
-</table>
-
-<h2>Возражение, которое надо решить вместе с этим</h2>
 
 <div class="note">
-<b>Выключенный ghost станет ЗАМЕТНЕЕ выключенного outline.</b> Outline в disabled рисует рамку
-<code>--border-disabled</code> #E8ECF2 — это <b>1.19:1</b>. Предлагаемая рамка ghost #949EB5 —
-<b>2.69:1</b>, то есть вдвое отчётливее. Получится, что «самая тихая» кнопка в выключенном виде
-громче «обводочной».
+<b>Цена рамки, посчитано точно.</b> У outline выключенная рамка — не
+<code>--border-disabled</code>, а <code>color-mix(in srgb, var(--_button-border) 55%,
+var(--surface-disabled))</code> = <b>#DAE1FC, 1.30:1</b> в светлой теме. Рамка ghost тоном
+метки даёт 2.69:1 — <b>вдвое заметнее</b>. То есть «самая тихая» кнопка в выключенном виде
+станет громче «обводочной». Либо поднимать disabled-рамку обоим одним тоном (меняет вид
+outline во всех приложениях), либо принять расхождение.
 <br><br>
-<b>Из этого два выхода, и это отдельное решение:</b>
-<br>
-(1) один общий тон disabled-рамки для ghost и outline — поднять <code>--border-disabled</code>
-до читаемого и дать его обоим. Это меняет вид outline во всех приложениях.
-<br>
-(2) ghost получает рамку тоном метки, outline остаётся как есть — расхождение сохраняется,
-зато ничего чужого не двигается.
+Для справки: у outline даже <i>активная</i> рамка всего 1.49:1, так что она и в норме
+держится больше на метке, чем на обводке.
 </div>
 
-<h2>Что говорит скилл и почему это не закрывает вопрос</h2>
+<h2>Итог</h2>
 
-<p><code>disabled-states</code> в базе ui-ux-pro-max: <i>«Reduce opacity and change cursor»</i>,
-анти-паттерн <i>«Same style as enabled»</i>, плохой пример — <i>«Same style as enabled»</i>.
-Material говорит то же: 0.38 прозрачности. <b>Прозрачность ты отверг</b>, и по делу — она была
-единственным кандидатом с паритетом светлой и тёмной темы, но это отдельный разговор.
-Остаётся правило <code>state-clarity</code>: <i>«Make hover/pressed/disabled states visually
-distinct while staying on-style»</i>. Оно и требует формы, раз цвет исчерпан.</p>
-
-<p><b>WCAG:</b> 1.4.3 и 1.4.11 выводят неактивные компоненты из-под требований контраста, так что
-рамка на 2.69:1 законна и не обязана брать 3:1. Но 1.4.1 (Use of Color) остаётся в силе — именно
-он и запрещает нынешний вариант A, где признак только цветовой.</p>
+<p><b>Два независимых решения.</b> Первое — чинить рецепт метки: смесь с фоном 40–45% для ghost
+и text, потому что это единственный цветовой ход с паритетом тем и он заодно закрывает баг
+тёмной темы. Второе — добавлять ли форму: рамка тоном метки, если цветового признака мало.
+Одно другому не мешает.</p>
 
 </main>
