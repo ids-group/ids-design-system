@@ -31,18 +31,35 @@
       ]
     },
     {
-      "id": "button-ghost-text-disabled-label-recipe",
+      "id": "button-borderless-disabled-label-recipe",
       "kind": "behavior",
-      "old": "ds-button[variant=\"ghost\"][disabled], ds-button[variant=\"text\"][disabled]",
+      "old": "ds-button[variant=\"ghost\"][disabled], ds-button[variant=\"text\"][disabled], ds-button[variant=\"outline\"][disabled]",
       "new": "--ds-button-label-color-disabled (unchanged hook, new default)",
-      "note": "The DEFAULT disabled label colour changed for the two variants that have no container. Was the shared `oklch(from <accent> 70% 0.035 h)`; is now `color-mix(in srgb, <label> 40%, var(--surface-default))` -- the lightness now moves toward the surface instead of being pinned at 70%. WHY: pinned at 70% the disabled label was two points of OKLCH lightness from the enabled one in the DARK theme (--primary-strong is L 67.9% there), a 1.11:1 gap, so a disabled ghost was indistinguishable from an active one. A fixed lightness cannot serve both themes -- in light disabled is lighter than the accent, in dark the accent is already light so disabled must go darker; only the surface knows that direction. Measured after: light 2.54 -> 3.41:1, dark 1.11 -> 2.91:1. NO ACTION NEEDED unless you relied on the exact old colour: `--ds-button-label-color-disabled` is the same hook and still wins, so an app that already sets it sees no change. If you matched the old #949EB5 by hand anywhere (a mock, a screenshot test, a hand-written CSS twin of the disabled state), for the default primary it is now #A5B4F8 in light and #3D4979 in dark. Note the label stays tinted rather than going grey -- chroma rises with the mix (0.036 -> 0.099 in light) -- which was chosen deliberately. `variant=\"solid\"` and `variant=\"tonal\"` are NOT affected and keep the shared recipe; `variant=\"outline\"` is not affected either, for now.",
+      "note": "The DEFAULT disabled label colour changed for the three variants whose fill cannot carry the state. Was the shared `oklch(from <accent> 70% 0.035 h)`; is now `color-mix(in srgb, <label> 40%, var(--surface-default))` -- the lightness now moves toward the surface instead of being pinned at 70%. WHY: pinned at 70% the disabled label was two points of OKLCH lightness from the enabled one in the DARK theme (--primary-strong is L 67.9% there), a 1.11:1 gap, so a disabled ghost was indistinguishable from an active one. A fixed lightness cannot serve both themes -- in light disabled is lighter than the accent, in dark the accent is already light so disabled must go darker; only the surface knows that direction. Measured after: light 2.54 -> 3.41:1, dark 1.11 -> 2.91:1. `variant=\"outline\"` is included even though it has a border, because its DISABLED border resolves to only 1.30:1 against the page -- lower than its own enabled border at 1.49:1 -- so the label was carrying the state there too. NO ACTION NEEDED unless you relied on the exact old colour: `--ds-button-label-color-disabled` is the same hook and still wins, so an app that already sets it sees no change. If you matched the old #949EB5 by hand anywhere (a mock, a screenshot test, a hand-written CSS twin of the disabled state), for the default primary it is now #A5B4F8 in light and #3D4979 in dark. The label stays tinted rather than going grey -- chroma rises with the mix (0.036 -> 0.099 in light) -- which was chosen deliberately. LIMITATION: the mix target is --surface-default, a stand-in for the real backdrop, so a borderless button sitting on a tinted ground gets a label mixed against the page colour instead. `variant=\"solid\"` and `variant=\"tonal\"` are NOT affected and keep the shared recipe.",
       "searchHints": [
         "ds-button",
         "variant=\"ghost\"",
         "variant=\"text\"",
+        "variant=\"outline\"",
         "--ds-button-label-color-disabled",
         "label-color-disabled",
         "#949EB5",
+        "disabled",
+        "oklch"
+      ]
+    },
+    {
+      "id": "icon-button-standard-disabled-icon-recipe",
+      "kind": "behavior",
+      "old": "ds-icon-button[variant=\"standard\"][disabled]",
+      "new": "--ds-icon-button-icon-color-disabled (unchanged hook, new default)",
+      "note": "The DEFAULT disabled glyph colour changed for variant=\"standard\" ONLY -- the one variant with no fill and no border, so the glyph colour is the whole signal. Was the shared `oklch(from <accent> 70% 0.035 h)`; is now `color-mix(in srgb, <icon colour> 40%, var(--surface-default))`. WHY: pinned at L 70% the disabled glyph sat only ten points of OKLCH lightness from the enabled one in the DARK theme (the enabled glyph is --text-secondary at L 80% there), a 1.46:1 gap. Light was already fine at 4.17:1 because the enabled glyph is L 35% there -- this is a dark-theme fix. Measured after: light 4.17 -> 5.19:1, dark 1.46 -> 3.58:1. NO ACTION NEEDED unless you relied on the exact old colour: `--ds-icon-button-icon-color-disabled` is the same hook and still wins. If you matched the old value by hand, for the default it was #969EB5 (light) / #949EB5 (dark) and is now #AEB1B8 (light) / #575D69 (dark). variant=\"filled\", \"tonal\" and \"outlined\" are NOT affected and keep the shared recipe -- filled deliberately so, because its glyph is --c-on (white) and mixing white into a white surface would not move it.",
+      "searchHints": [
+        "ds-icon-button",
+        "variant=\"standard\"",
+        "--ds-icon-button-icon-color-disabled",
+        "icon-color-disabled",
+        "#969EB5",
         "disabled",
         "oklch"
       ]

@@ -100,8 +100,18 @@
     width: var(--_icon-button-size); height: var(--_icon-button-size);
   }
 
-  /* Variants re-bind the resolvers (consumer token still wins). `standard`
-     equals the base defaults (no block needed). */
+  /* Variants re-bind the resolvers (consumer token still wins). */
+  &.standard {
+    /* The only variant with no fill and no border, so the glyph's colour is the
+       whole disabled signal — and the base fixed-lightness recipe cannot carry it in
+       the dark theme, where the enabled icon is already light (OKLCH L 80%) and a
+       disabled one pinned at L 70% sits 1.46:1 away. Mixing toward the surface picks
+       the direction per theme instead: light 4.17 → 5.19:1, dark 1.46 → 3.58:1.
+       Scoped to this variant because filled's icon is --c-on — white mixed into a
+       white surface does not move at all. */
+    --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, color-mix(in srgb, var(--_icon-button-icon-color) 40%, var(--surface-default)));
+  }
+
   &.filled {
     --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--c-base));
     --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--c-on));

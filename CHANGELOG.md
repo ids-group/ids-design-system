@@ -608,11 +608,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
-- **A disabled `ds-button` with `variant="ghost"` or `variant="text"` mixes its label toward the
-  surface instead of taking the shared fixed-lightness recipe.** New default:
-  `color-mix(in srgb, <label> 40%, var(--surface-default))`. These are the two variants with no
-  container, so the label is the whole signal — and the shared recipe was failing it, badly in dark.
-  Measured against the enabled label: light **2.54 → 3.41:1**, dark **1.11 → 2.91:1**.
+- **A disabled `ds-button` with `variant="ghost"`, `variant="text"` or `variant="outline"` mixes its
+  label toward the surface instead of taking the shared fixed-lightness recipe.** New default:
+  `color-mix(in srgb, <label> 40%, var(--surface-default))`. These three share one accent source and
+  have no fill that could carry the state, so the label is the whole signal — and the shared recipe
+  was failing it, badly in dark. Measured against the enabled label: light **2.54 → 3.41:1**, dark
+  **1.11 → 2.91:1**. `outline` does have a border, but its disabled border resolves to only
+  **1.30:1** against the page — less than its own *enabled* border at 1.49:1 — so it never covered
+  for the label.
   **The dark number is the real defect.** `--primary-strong` there is already light (OKLCH L 67.9%),
   so a recipe pinning the disabled label at L 70% landed two points from the enabled one and the two
   differed in chroma alone. A fixed lightness cannot serve both themes: in light, disabled is
@@ -625,9 +628,25 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   mix (0.036 → 0.099 light), so the disabled label stays tinted rather than going grey; that was
   chosen deliberately over a desaturating variant after looking at both.
   **`solid` and `tonal` are unchanged**, deliberately: a white label mixed into a white surface does
-  not move, and tonal's disabled fill already carries the state on its own. **`outline` is unchanged
-  for now** even though its label shares the defect — its disabled border is only 1.30:1, so it is a
-  candidate. Consumers who set `--ds-button-label-color-disabled` are unaffected.
+  not move, and tonal's disabled fill already carries the state on its own. **Known limitation:** the
+  mix target is `--surface-default`, a stand-in for "whatever is behind" — CSS cannot read the actual
+  backdrop, so on a tinted ground (a card at `--surface-secondary`, an alert) the disabled label is
+  computed against the page colour rather than that ground. Consumers who set
+  `--ds-button-label-color-disabled` are unaffected.
+
+- **`ds-icon-button` with `variant="standard"` mixes its disabled glyph toward the surface too.**
+  New default on that variant only: `color-mix(in srgb, <icon colour> 40%, var(--surface-default))`.
+  Same defect as ghost, and it matters more here — there is no word to read, just a 16px glyph.
+  Measured: light **4.17 → 5.19:1**, dark **1.46 → 3.58:1**. Light was already healthy, because the
+  enabled glyph is `--text-secondary` at OKLCH L 35% and the old recipe moved it to L 70%; **dark was
+  the break**, where the enabled glyph is L 80% and a disabled one pinned at L 70% left ten points
+  and a 1.46:1 gap.
+  **Scoped to `standard` deliberately, and this is the trap worth knowing:** the resolver is declared
+  once on the base and no variant overrode it, so touching the base would have hit `filled` too —
+  whose glyph is `--c-on`, i.e. white, and white mixed into a white surface does not move at all,
+  which would have put an invisible white glyph on a pale disabled fill. `filled`, `tonal` and
+  `outlined` keep the base recipe unchanged. Consumers who set
+  `--ds-icon-button-icon-color-disabled` are unaffected.
 
 - **`avatarTint` switches from OKLCH to `hsl(H 50% 62%)` with white initials, always.** The seeded
   tints read as dull, and every set of initials came out black. The auto-contrast was not the fault:

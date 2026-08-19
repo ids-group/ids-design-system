@@ -138,10 +138,46 @@
 </tbody>
 </table>
 
-<div class="ask">
-<b>Вопрос по icon-button:</b> в светлой теме он и так здоров (4.17:1) — ломается только тёмная
-(1.46:1). Ставить смесь 40% на <code>standard</code>, или тебя устраивает как есть?
-Насыщенность здесь не пострадает: иконка уже серая (C 0.026–0.032).
+<div class="frame">
+<b>ОТГРУЖЕНО:</b> смесь 40% на <code>&amp;.standard</code>. Область ровно одна —
+<code>filled</code>, <code>tonal</code> и <code>outlined</code> остались на прежнем рецепте.
+<br><br>
+<b>Почему только standard:</b> у <code>filled</code> иконка это <code>--c-on</code>, то есть
+белая, а белое, смешанное с белым фоном, не двигается вообще — там смесь дала бы белую иконку на
+бледной заливке. Проверено в собранном CSS: у <code>.filled</code> переопределения нет, он
+наследует базовый <code>oklch</code>.
+</div>
+
+<h2>Outline</h2>
+
+<p>Метка у outline из того же <code>--c-strong</code>, что у ghost, значит в тёмной теме тот же
+разрыв <b>1.11:1</b>. Рамка спасает слабо: <b>#DAE1FC 1.30:1</b> в светлой,
+<b>#273155 1.36:1</b> в тёмной. Для сравнения, даже <i>активная</i> рамка — всего 1.49:1, то есть
+outline и в норме держится больше на метке. Рамка не менялась бы, только метка.</p>
+
+<table>
+<thead><tr><th>тема</th><th>активная</th><th>было</th><th>отгружено — смесь 40%</th></tr></thead>
+<tbody>
+<tr><th scope="row">Светлая</th>
+<td><span class="pair onlight"><span class="btn" style="border-color:#C8D2FE;color:#1D43ED">Cancel</span></span>
+<span class="num">рамка #C8D2FE 1.49:1</span></td>
+<td><span class="pair onlight"><span class="btn" style="border-color:#DAE1FC;color:#949EB5">Cancel</span></span>
+<span class="num">#949EB5</span><span class="v">2.54:1</span></td>
+<td><span class="pair onlight"><span class="btn" style="border-color:#DAE1FC;color:#A5B4F8">Cancel</span></span>
+<span class="num">#A5B4F8</span><span class="v ok">3.41:1</span></td></tr>
+
+<tr><th scope="row">Тёмная</th>
+<td><span class="pair ondark"><span class="btn" style="border-color:#2F3C74;color:#778FF8">Cancel</span></span>
+<span class="num">рамка #2F3C74 1.66:1</span></td>
+<td><span class="pair ondark"><span class="btn" style="border-color:#273155;color:#969EB5">Cancel</span></span>
+<span class="num">#969EB5</span><span class="v bad">1.11:1</span></td>
+<td><span class="pair ondark"><span class="btn" style="border-color:#273155;color:#3D4979">Cancel</span></span>
+<span class="num">#3D4979</span><span class="v ok">2.91:1</span></td></tr>
+</tbody>
+</table>
+
+<div class="frame">
+<b>ОТГРУЖЕНО:</b> outline тоже на смеси 40% — правый столбец. Рамка не менялась.
 </div>
 
 <h2>Статус</h2>
@@ -152,8 +188,10 @@
 <tr><th scope="row">рамка у ghost</th><td><b>ОТКЛОНЕНО ТОБОЙ</b> — только метка</td></tr>
 <tr><th scope="row">solid</th><td><b>БЕЗ ИЗМЕНЕНИЙ</b> — белая метка в белом фоне не двигается</td></tr>
 <tr><th scope="row">tonal</th><td><b>БЕЗ ИЗМЕНЕНИЙ</b> — выключенная заливка несёт состояние сама</td></tr>
-<tr><th scope="row">outline</th><td><b>ЖДЁТ ТЕБЯ</b> — тот же разрыв 1.11:1 в тёмной, рамка спасает слабо (1.30:1)</td></tr>
-<tr><th scope="row">ds-icon-button standard</th><td><b>ЖДЁТ ТЕБЯ</b> — таблица выше</td></tr>
+<tr><th scope="row">ds-icon-button standard</th><td><b>ОТГРУЖЕНО</b> — смесь 40%, только этот вариант</td></tr>
+<tr><th scope="row">ds-icon-button filled, tonal, outlined</th><td><b>БЕЗ ИЗМЕНЕНИЙ</b> — базовый рецепт; у filled иконка белая и смесь на ней не работает</td></tr>
+<tr><th scope="row">outline (ds-button)</th><td><b>ОТГРУЖЕНО</b> — смесь 40%, рамка без изменений</td></tr>
+<tr><th scope="row">на цветном фоне</th><td><b>ИЗВЕСТНОЕ ОГРАНИЧЕНИЕ</b> — цель смеси <code>--surface-default</code>, а не реальная подложка: CSS её прочитать не может, поэтому на карточке <code>--surface-secondary</code> метка считается от цвета страницы</td></tr>
 </tbody>
 </table>
 
