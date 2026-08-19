@@ -23,6 +23,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`[success]` now exists on the eight bordered fields that were missing it** — `ds-textarea`,
+  `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker`,
+  `ds-otp-input`, `ds-color-picker`. It was on `ds-input` alone, so a form could not use the state
+  consistently. Same shape as everywhere else: opt-in, `false` by default, painting the green border
+  the `field-state` mixin already had. The three box-less controls (`ds-checkbox`, `ds-radio-group`,
+  `ds-switch`) and `ds-slider` deliberately do NOT get it — they have no box for a border to appear
+  on, so the state would show in the message line alone and read as a different treatment.
+
 - **`ds-list-item` can hold its own controls: `[leading]` and `[trailing]` render OUTSIDE the row's
   button.** A row with a checkbox AND a row-level action had no shape here — every projected node went
   inside `<button class="activator">`, where a nested control is invalid HTML, its click bubbles into
@@ -633,6 +641,21 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   backdrop, so on a tinted ground (a card at `--surface-secondary`, an alert) the disabled label is
   computed against the page colour rather than that ground. Consumers who set
   `--ds-button-label-color-disabled` are unaffected.
+
+- **The seven inputs every field shares are declared once, in `DsFieldBase`.** `hint`, `error`,
+  `warning`, `errors`, `invalid`, `touched` and `reserveMessage` — plus the `reserveMessageResolved`
+  helper — were hand-copied into all fourteen fields, 98 declarations. **Nothing about the public API
+  changed:** every input keeps its name, type, default and documentation, and the docs API tables are
+  byte-identical apart from the eight new `success` rows (verified by diffing the generated
+  reference: 0 lost, 8 gained).
+  **Why it is worth knowing anyway:** the duplication had already drifted twice — `success` was
+  missing from eight fields, and `ds-date-picker` had quietly moved to a different `invalid` source.
+  A new state added to the base now reaches every field at once.
+  `DsControlValueAccessor` and `DsBooleanControlValueAccessor` extend the base (so single inheritance
+  still holds for the thirteen fields that already extended one of them) and `ds-radio` extends it
+  directly. Only the UNIVERSAL inputs moved: `success`, `label`, `required` and `optional` stay on the
+  components, because they exist on 9, 9, 7 and 5 fields respectively and lifting them would hand a
+  checkbox a `success` or a slider a `label` it never had.
 
 - **`ds-icon-button` with `variant="standard"` mixes its disabled glyph toward the surface too.**
   New default on that variant only: `color-mix(in srgb, <icon colour> 40%, var(--surface-default))`.

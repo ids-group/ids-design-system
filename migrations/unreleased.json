@@ -63,6 +63,37 @@
         "disabled",
         "oklch"
       ]
+    },
+    {
+      "id": "fields-success-on-bordered-fields",
+      "kind": "behavior",
+      "old": "ds-textarea, ds-select, ds-multi-select, ds-autocomplete, ds-date-picker, ds-time-picker, ds-otp-input, ds-color-picker",
+      "new": "[success] input (new, opt-in)",
+      "note": "These eight fields gained a `success` input; it existed only on `ds-input` before. NO ACTION NEEDED -- it is opt-in and defaults to false, so nothing changes until you bind it. It paints the green border the shared `field-state` mixin already carried, so the treatment matches ds-input exactly. NOT added to ds-checkbox, ds-radio-group, ds-switch or ds-slider: those have no bordered box, so the state would appear in the message line alone and read as a different treatment. If you were emulating a success state by hand on any of the eight (a green border via ::ng-deep, a custom class), you can drop it for [success].",
+      "searchHints": [
+        "success",
+        "ds-textarea",
+        "ds-select",
+        "ds-date-picker",
+        "data-field-state",
+        "field-state"
+      ]
+    },
+    {
+      "id": "fields-shared-base-class-members",
+      "kind": "behavior",
+      "old": "class MyField extends TextareaComponent (or any DS field)",
+      "new": "the same class, with hint/error/warning/errors/invalid/touched/reserveMessage inherited from DsFieldBase",
+      "note": "INTERNAL REFACTOR, no public API change -- listed only because it matters to SUBCLASSERS. The seven inputs every field shares (`hint`, `error`, `warning`, `errors`, `invalid`, `touched`, `reserveMessage`) plus the `reserveMessageResolved` helper are now declared once on a new `DsFieldBase` instead of being hand-copied into each of the fourteen fields. Every input keeps its name, type, default and documentation; the generated docs API reference was diffed and lost nothing. `DsControlValueAccessor` and `DsBooleanControlValueAccessor` now extend `DsFieldBase`, and `ds-radio` extends it directly. ACTION only if you SUBCLASS a DS field and declare a member with one of those seven names: it is now an inherited member rather than an own member, so an incompatible re-declaration fails to compile where it may previously have shadowed. Redeclaring with the same shape still works. `success`, `label`, `required` and `optional` were deliberately NOT lifted and remain per-component.",
+      "searchHints": [
+        "extends TextareaComponent",
+        "extends InputComponent",
+        "DsFieldBase",
+        "DsControlValueAccessor",
+        "reserveMessage",
+        "reserveMessageResolved",
+        "touched"
+      ]
     }
   ],
   "informational": [
