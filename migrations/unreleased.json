@@ -15,6 +15,7 @@
     }
   ],
   "informational": [
-    "ds-table's row-action kebab and column-picker trigger now read --ds-table-icon-btn-color, --ds-table-icon-btn-color-hover and --ds-table-icon-btn-focus-color, each defaulting to the value that was previously hardcoded (--icon-default, --icon-strong, --accent). Purely additive. ACTION only if you recoloured your own row trigger and are now adopting rowActions: set these three instead of repainting --icon-default globally."
+    "ds-table's row-action kebab and column-picker trigger now read --ds-table-icon-btn-color, --ds-table-icon-btn-color-hover and --ds-table-icon-btn-focus-color, each defaulting to the value that was previously hardcoded (--icon-default, --icon-strong, --accent). Purely additive. ACTION only if you recoloured your own row trigger and are now adopting rowActions: set these three instead of repainting --icon-default globally.",
+    "ds-modal and ds-modal-card take per-side padding: --ds-modal-header-pad-top/-pad-bottom, --ds-modal-body-pad-top/-pad-bottom and --ds-modal-actions-pad-top/-pad-bottom. Each defaults to its region's existing --ds-modal-<region>-pad-y, which still works and still sets both edges, so this is purely additive and nothing moves unless you set one. ACTION only if you have been reaching past the API to pad a region asymmetrically - a rule on .modal > .header / > .body / > .actions, most likely carrying !important because the component's own padding outranks a descendant selector: that rule can now be a token on the host instead."
   ]
 }

@@ -3943,6 +3943,36 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Vertical padding of the footer actions row. Worth tightening alongside --ds-modal-divider: transparent, which leaves spacing sized for dividers that are gone."
       },
       {
+        "name": "--ds-modal-header-pad-top",
+        "value": "var(--_modal-header-pad-y)",
+        "notes": "Padding on the modal's header, top edge only. Falls back to --ds-modal-header-pad-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-header-pad-bottom",
+        "value": "var(--_modal-header-pad-y)",
+        "notes": "Padding on the modal's header, bottom edge only. Falls back to --ds-modal-header-pad-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-body-pad-top",
+        "value": "var(--_modal-body-pad-y)",
+        "notes": "Padding on the modal's body, top edge only. Falls back to --ds-modal-body-pad-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-body-pad-bottom",
+        "value": "var(--_modal-body-pad-y)",
+        "notes": "Padding on the modal's body, bottom edge only. Falls back to --ds-modal-body-pad-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-actions-pad-top",
+        "value": "var(--_modal-actions-pad-y)",
+        "notes": "Padding on the modal's actions, top edge only. Falls back to --ds-modal-actions-pad-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-actions-pad-bottom",
+        "value": "var(--_modal-actions-pad-y)",
+        "notes": "Padding on the modal's actions, bottom edge only. Falls back to --ds-modal-actions-pad-y, which sets both."
+      },
+      {
         "name": "--ds-modal-enter-scale",
         "value": "0.97",
         "notes": "Start scale for the modal card with ds-scale-in (default 0.97)."

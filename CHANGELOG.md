@@ -23,6 +23,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **Per-side padding on `ds-modal` / `ds-modal-card`.** Each region resolved ONE `pad-y` applied to
+  both of its edges, so a layout whose header pads only at the top and whose actions row pads only
+  at the bottom — the body's own padding carrying the whole gap between them — could not be said
+  through the API at all. mm-broker has held three `!important` rules on `.modal > .header` /
+  `> .body` / `> .actions` for exactly this, reaching past the component into its internal class
+  names, and `DS_CONFIG.modal.dividers` could not retire them. Six new tokens —
+  `--ds-modal-header-pad-top` / `-pad-bottom` and the same for `body` and `actions` — each fall back
+  to their region's existing `pad-y`, so **nothing moves unless you set one**, and `--ds-modal-*-pad-y`
+  keeps working as the shorthand for both edges.
+
 - **`ds-table`'s own icon buttons are themeable.** The row-action kebab and the column-picker trigger
   hardcoded `--icon-default`, `--icon-strong` on hover and an `--accent` focus outline, and neither is a
   `ds-icon-button`, so the icon-button tokens never reached them — a consumer whose design calls for a

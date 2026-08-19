@@ -1260,5 +1260,11 @@
   "--ds-field-group-border-color-error": "Border colour of a ds-field-group marked invalid. Defaults to --error; the group draws the row's one border, so its segments never paint their own.",
   "--ds-table-icon-btn-color": "Icon colour of ds-table's own icon buttons — the row-action kebab and the column picker. Defaults to --icon-default. Neither is a ds-icon-button, so the icon-button tokens do not reach them.",
   "--ds-table-icon-btn-color-hover": "Hover icon colour for ds-table's row-action kebab and column picker. Defaults to --icon-strong.",
-  "--ds-table-icon-btn-focus-color": "Focus-outline colour for ds-table's row-action kebab and column picker. Defaults to --accent."
+  "--ds-table-icon-btn-focus-color": "Focus-outline colour for ds-table's row-action kebab and column picker. Defaults to --accent.",
+  "--ds-modal-header-pad-top": "Padding on the modal's header, top edge only. Falls back to --ds-modal-header-pad-y, which sets both.",
+  "--ds-modal-header-pad-bottom": "Padding on the modal's header, bottom edge only. Falls back to --ds-modal-header-pad-y, which sets both.",
+  "--ds-modal-body-pad-top": "Padding on the modal's body, top edge only. Falls back to --ds-modal-body-pad-y, which sets both.",
+  "--ds-modal-body-pad-bottom": "Padding on the modal's body, bottom edge only. Falls back to --ds-modal-body-pad-y, which sets both.",
+  "--ds-modal-actions-pad-top": "Padding on the modal's actions, top edge only. Falls back to --ds-modal-actions-pad-y, which sets both.",
+  "--ds-modal-actions-pad-bottom": "Padding on the modal's actions, bottom edge only. Falls back to --ds-modal-actions-pad-y, which sets both."
 }

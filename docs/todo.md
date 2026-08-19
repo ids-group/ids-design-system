@@ -292,7 +292,7 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 
 ## `ds-modal`'s padding is one `pad-y` per region, and a real layout needs per-side (from mm-broker, 2026-08-19)
 
-- [ ] **[P2] `DS_CONFIG.modal.dividers` landed and still could not retire the consumer's padding
+- [x] **[P2] SHIPPED 2026-08-19 (see `## Unreleased`). `DS_CONFIG.modal.dividers` landed and still could not retire the consumer's padding
   override, because the shape it needs is not expressible.** The modal regions resolve
   `padding: var(--_modal-header-pad-y) var(--_modal-pad-x)` and the same for `.body` / `.actions` —
   ONE vertical value per region, applied to both edges. mm-broker's design wants
@@ -309,6 +309,10 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
   `-pad-bottom`, and the same for `body` and `actions`, each defaulting to the existing `pad-y` so
   nothing moves for anyone who does not set them. That retires the last `!important` block a
   consumer holds against `ds-modal`, and it is the same shape the `[actions]` slot already invites.
+  **DONE the same day it was asked:** six tokens, `--ds-modal-<region>-pad-top` / `-pad-bottom` for
+  `header`, `body` and `actions`, each defaulting to that region's `pad-y`. Purely additive —
+  the shorthand still works and nothing moves unless a token is set. The consumer's three
+  `!important` rules can go on the release; until then their `TODO(ds-modal-pad-per-side)` stands.
 
 ---
 
