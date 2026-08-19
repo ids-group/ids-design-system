@@ -12,6 +12,23 @@
         "var(--opacity-muted",
         "opacity-muted"
       ]
+    },
+    {
+      "id": "list-item-slots-outside-activator",
+      "kind": "behavior",
+      "old": "ds-list-item ::ng-deep .activator",
+      "new": "ds-list-item (the host)",
+      "note": "ds-list-item's DOM changed: `[leading]` and `[trailing]` are now siblings of `.activator` rather than children of it, so a row can hold a checkbox or a kebab alongside a row-level action. NO INPUT OR OUTPUT CHANGED -- title, subtitle, clickable, selected, disabled and activated all behave as before, and a plain row looks identical. WHAT MOVED: the row's `display: flex`, its `--ds-list-item-pad-*` padding, its `--ds-list-item-gap`, the hover tint and the selected tint all sit on the HOST now; `.activator` is just the text button and has no padding of its own. ACTION: a `::ng-deep .activator` override that set padding, gap, background or hover now applies to the text only -- move it to `ds-list-item` itself. Also fixed alongside: `selected` set `aria-current` on the inner button, so it was inert whenever `clickable` was false; it is on the host now, which means a non-clickable row marked selected is finally announced as current.",
+      "searchHints": [
+        "ds-list-item",
+        ".activator",
+        "list-item-pad",
+        "list-item-gap",
+        "aria-current",
+        "leading",
+        "trailing",
+        "clickable"
+      ]
     }
   ],
   "informational": [

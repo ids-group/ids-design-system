@@ -23,6 +23,23 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-list-item` can hold its own controls: `[leading]` and `[trailing]` render OUTSIDE the row's
+  button.** A row with a checkbox AND a row-level action had no shape here — every projected node went
+  inside `<button class="activator">`, where a nested control is invalid HTML, its click bubbles into
+  `activated`, and a screen reader folds it into the button's name and never announces its checked
+  state. Dropping `clickable` was no answer either: `cursor`, `:hover`, `:focus-visible` and
+  `aria-current` all hung off that button. The row is now the flex container and the button wraps only
+  the text, so the master–detail shape works — a checkbox per row for a bulk action, the row itself
+  choosing what a detail pane shows, two independent targets.
+  **This stays a `role="list"`, deliberately not a `listbox`:** the ARIA spec is explicit that a
+  `listbox` option cannot hold interactive content, so a real listbox would have made the pattern
+  impossible rather than easier. `role="listitem"` carries no such restriction.
+  **`selected` also works properly now.** It set `aria-current` on the inner button, so it did nothing
+  at all unless `clickable` was on; `aria-current` sits on the host, which is the row that is current.
+  **BREAKING for CSS overrides only** — no API changed. `.activator` no longer carries the row's
+  padding, gap or hover tint: those moved to the host. A `::ng-deep .activator { padding: … }` now pads
+  the text alone, and a `::ng-deep .activator:hover` no longer paints the full row.
+
 - **Per-side padding on `ds-modal` / `ds-modal-card`.** Each region resolved ONE `pad-y` applied to
   both of its edges, so a layout whose header pads only at the top and whose actions row pads only
   at the bottom — the body's own padding carrying the whole gap between them — could not be said
