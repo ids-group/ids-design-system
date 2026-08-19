@@ -36,10 +36,7 @@ import { CalendarDayComponent } from '../calendar-day/calendar-day.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
 import {
-  normalizeFieldErrors,
   resolveFieldMessage,
-  type DsFieldError,
-  type DsFieldErrorsInput,
 } from '../field-errors';
 import { DS_CONFIG } from '../../config/ds-config';
 import {
@@ -72,7 +69,6 @@ import type {
   RangeValue,
 } from './date-picker.types';
 import type { DsSize } from '../../core/size';
-import { resolveReserveMessage } from '../field-defaults';
 import { inFieldGroup } from '../field-group/field-group.token';
 import { resolveWithConfig } from '../../core/config-defaults';
 
@@ -213,41 +209,12 @@ export class DatePickerComponent
   readonly placeholder = input<string>('Select date');
   /** Field label shown above the trigger. */
   readonly label = input<string>('');
-  /** Helper text shown below the field. */
-  readonly hint = input<string>('');
-  /** Error text. Shown immediately — binding it says the consumer has already
-   *  decided this field is in error. Takes precedence over `errors` and over the
-   *  picker's own "enter a valid date" message. */
-  readonly error = input<string>('');
-  /** Advisory text, shown when there is no error. */
-  readonly warning = input<string>('');
-  /** Validation errors, shown once the user has interacted. Bound automatically
-   *  by signal forms; reactive and template-driven forms are read through
-   *  `NgControl` and need nothing here. Accepts a string, one error, or an array. */
-  readonly errors = input<readonly DsFieldError[], DsFieldErrorsInput>([], {
-    transform: normalizeFieldErrors,
-  });
-  /** Whether the user has interacted with the field. Bound by signal forms; gates
-   *  `errors`, so a `required` error does not greet an untouched form. */
-  readonly touched = input(false, { transform: booleanAttribute });
-  /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Falls back to
-   *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
-   *  for a form that shows validation messages. */
-  readonly reserveMessage = input<boolean | null, unknown>(null, {
-    transform: (value) => (value == null ? null : booleanAttribute(value)),
-  });
-  protected readonly reserveMessageResolved = resolveReserveMessage(
-    this.reserveMessage,
-  );
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Shows an "(optional)" marker beside the label — ignored when `required` is set. */
   readonly optional = input(false, { transform: booleanAttribute });
   /** Disables the picker and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Applies error styling and marks the trigger `aria-invalid`. */
-  readonly invalid = input(false, { transform: booleanAttribute });
   /** Applies success styling to the field. */
   readonly success = input(false, { transform: booleanAttribute });
   /** Accessible name when no visible `label` is provided. */

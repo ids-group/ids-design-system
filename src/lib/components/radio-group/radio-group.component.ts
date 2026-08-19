@@ -12,10 +12,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
 import {
-  normalizeFieldErrors,
   resolveFieldMessage,
-  type DsFieldError,
-  type DsFieldErrorsInput,
 } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import { RadioComponent } from '../radio/radio.component';
@@ -24,7 +21,6 @@ import {
   type RadioGroupChild,
   type RadioGroupContract,
 } from './radio-group.token';
-import { resolveReserveMessage } from '../field-defaults';
 import { isTextEntryTarget } from '../../core/key-target';
 
 @Component({
@@ -63,34 +59,6 @@ export class RadioGroupComponent
   readonly name = input<string | null>(null);
   /** Disables the whole group. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Applies error styling and marks the group `aria-invalid`. */
-  readonly invalid = input(false, { transform: booleanAttribute });
-  /** Helper text shown below the group. */
-  readonly hint = input<string>('');
-  /** Error text. Shown immediately — binding it says the consumer has already
-   *  decided this field is in error. Takes precedence over `errors`. */
-  readonly error = input<string>('');
-  /** Advisory text, shown when there is no error. */
-  readonly warning = input<string>('');
-  /** Validation errors, shown once the user has interacted. Bound automatically
-   *  by signal forms; reactive and template-driven forms are read through
-   *  `NgControl` and need nothing here. Accepts a string, one error, or an array. */
-  readonly errors = input<readonly DsFieldError[], DsFieldErrorsInput>([], {
-    transform: normalizeFieldErrors,
-  });
-  /** Whether the user has interacted with the field. Bound by signal forms; gates
-   *  `errors`, so a `required` error does not greet an untouched form. */
-  readonly touched = input(false, { transform: booleanAttribute });
-  /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Falls back to
-   *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
-   *  for a form that shows validation messages. */
-  readonly reserveMessage = input<boolean | null, unknown>(null, {
-    transform: (value) => (value == null ? null : booleanAttribute(value)),
-  });
-  protected readonly reserveMessageResolved = resolveReserveMessage(
-    this.reserveMessage,
-  );
   /** Accessible name for the group when no visible label is provided. */
   readonly ariaLabel = input<string | null>(null);
   /** Visible group label; omit to supply your own. */

@@ -9,6 +9,7 @@ import {
   type ModelSignal,
 } from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
+import { DsFieldBase } from './field-base';
 
 /**
  * Value-bearing elements come FIRST, and that ordering is the whole point: the
@@ -42,9 +43,10 @@ function focusOwnControl(host: HTMLElement, options?: FocusOptions): void {
 @Directive({
   host: { '[style.display]': 'hidden() ? "none" : null' },
 })
-export abstract class DsControlValueAccessor<
-  T,
-> implements ControlValueAccessor {
+export abstract class DsControlValueAccessor<T>
+  extends DsFieldBase
+  implements ControlValueAccessor
+{
   /** The component's two-way value model. */
   abstract readonly value: ModelSignal<T>;
 
@@ -83,6 +85,7 @@ export abstract class DsControlValueAccessor<
   private hasSynced = false;
 
   constructor() {
+    super();
     effect(() => {
       const next = this.value();
       if (!this.hasSynced) {
@@ -135,7 +138,10 @@ export abstract class DsControlValueAccessor<
 @Directive({
   host: { '[style.display]': 'hidden() ? "none" : null' },
 })
-export abstract class DsBooleanControlValueAccessor implements ControlValueAccessor {
+export abstract class DsBooleanControlValueAccessor
+  extends DsFieldBase
+  implements ControlValueAccessor
+{
   /** The component's two-way checked model. */
   abstract readonly checked: ModelSignal<boolean>;
 
@@ -167,6 +173,7 @@ export abstract class DsBooleanControlValueAccessor implements ControlValueAcces
   private hasSynced = false;
 
   constructor() {
+    super();
     effect(() => {
       const next = this.checked();
       if (!this.hasSynced) {
