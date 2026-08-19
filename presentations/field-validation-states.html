@@ -24,7 +24,7 @@
     display: block; margin-bottom: var(--space-2);
     font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans);
   }
-  .opt > .sub { display: block; color: var(--text-tertiary); font: var(--font-weight-regular) var(--font-size-2xs) / 1.7 var(--font-mono); }
+  .opt > .sub, .sub { display: block; color: var(--text-tertiary); font: var(--font-weight-regular) var(--font-size-2xs) / 1.7 var(--font-mono); }
 
   /* Every painted surface is a background-image gradient and an inline colour, so
      a force-dark browser cannot rewrite what is being judged. */
@@ -71,14 +71,93 @@
 </style>
 <main>
 <div class="verdict">
-<b>ВЫБРАНО 2026-08-13:</b> warning — вариант <b>D</b> (только рамка <code>--warning-text</code>),
-success — вариант <b>A</b> (зелёная рамка, как было). Оба отгружены, заливки ни у того ни у другого;
-у <code>error</code> осталась рамка ПЛЮС заливка, поэтому лестница «ошибка громче всего» держится.
+<b>ИССЛЕДОВАНИЕ ПО ИСХОДНИКАМ ШЕСТИ СИСТЕМ, 2026-08-20. ВЫВОД: у нас правильно, менять нечего.</b>
 <br><br>
-<b>Что осталось нерешённым — ты сам отложил:</b> заливка для warning и success. Это варианты
-<b>B</b> (только заливка) и <b>C</b> (заливка + тёмная рамка) ниже. Смотреть их надо в блоке
-«warning рядом с error»: вопрос не «видно ли», а «остаётся ли warning слабее error».
+Отраслевой дефолт — <b>рамка БЕЗ заливки</b>: 5 систем из 6. Заливку на error ставит только
+Polaris. <b>Warning и success не заливает НИ ОДНА из шести.</b>
+<br><br>
+Наша лестница — error = рамка + заливка, warning и success = только рамка — совпадает с
+практикой в той части, где практика единодушна, и расходится там, где она разделена.
 </div>
+
+<h2>Что реально в коде этих систем</h2>
+
+<table>
+<thead><tr><th>система</th><th>что меняет error</th><th>заливка</th><th>warning / success</th></tr></thead>
+<tbody>
+<tr><th scope="row">Material 3<span class="sub">tokens/_md-comp-filled-text-field.scss</span></th>
+<td>21 error-токен: active-indicator, label, input-text, supporting-text, иконки, caret</td>
+<td><b>НЕТ</b> — токена error-контейнера не существует вообще</td>
+<td>нет ни того, ни другого</td></tr>
+
+<tr><th scope="row">IBM Carbon<span class="sub">components/text-input/_text-input.scss</span></th>
+<td>focus-outline + <code>fill: $support-error</code> на иконке</td>
+<td><b>НЕТ</b> — фон остаётся <code>$field</code></td>
+<td>warning ЕСТЬ, отличается от error <b>только цветом иконки</b></td></tr>
+
+<tr><th scope="row">Adobe Spectrum<span class="sub">components/textfield/index.css</span></th>
+<td><code>border-color-invalid</code> + иконка alert</td>
+<td><b>НЕТ</b></td>
+<td>success ЕСТЬ — <b>только галочка</b>, рамку даже не красит</td></tr>
+
+<tr><th scope="row">Bootstrap<span class="sub">scss/mixins/_forms.scss</span></th>
+<td><code>border-color</code> + иконка через <code>background-image</code></td>
+<td><b>НЕТ</b> — <code>background-color</code> не ставится ни в invalid, ни в valid</td>
+<td>valid — та же схема, что invalid</td></tr>
+
+<tr><th scope="row">Ant Design<span class="sub">components/input/style/variants.ts</span></th>
+<td><code>borderColor: colorError</code> + focus-тень + цвет affix-иконки</td>
+<td><b>НЕТ</b> — фон остаётся <code>colorBgContainer</code></td>
+<td>warning ЕСТЬ, схема та же, <b>отличается только оттенком</b></td></tr>
+
+<tr><th scope="row">Shopify Polaris<span class="sub">TextField.module.css</span></th>
+<td><code>border-color: --p-color-border-critical-secondary</code></td>
+<td><b>ЕСТЬ</b> — <code>background-color: --p-color-bg-surface-critical</code></td>
+<td>нет ни того, ни другого</td></tr>
+
+<tr><th scope="row">NN/g, рекомендация<span class="sub">errors-forms-design-guidelines</span></th>
+<td>—</td>
+<td><b>ЗА</b> — «полупрозрачный фон того же цвета»…</td>
+<td>…и причина названа прямо: <b>«чтобы поле нашлось на длинной странице со многими полями»</b></td></tr>
+</tbody>
+</table>
+
+<div class="verdict">
+<b>Почему из этого следует именно наша лестница, а не «заливку всем» или «заливку никому».</b>
+<br><br>
+Заливка нужна <b>не для громкости, а для находимости</b> — NN/g называет причину буквально.
+Это описание ровно <i>error</i>: единственного состояния, которое пользователь обязан найти и
+починить. Success искать не надо, warning — совет, а не блокер.
+<br><br>
+<b>Carbon, Ant и Spectrum подтверждают от противного:</b> там, где warning есть, он отличается от
+error только <i>оттенком или иконкой</i> — никто не добавляет вторую заливку. А success у Spectrum
+вообще тише error: одна галочка без рамки.
+<br><br>
+<b>И наш замер закрывает вопрос окончательно:</b> warning <code>--warning-subtitle</code> #FFFBEA
+даёт <b>1.05:1</b> к белому полю, success <code>--success-subtitle</code> #ECFAEE — <b>1.06:1</b>.
+Это ниже всего, на чём заливка вообще способна выполнить свою работу по находимости. То есть мы
+сплющили бы лестницу и не получили взамен ничего.
+</div>
+
+<div class="ask">
+<b>ЕДИНСТВЕННОЕ, ЧЕГО У НАС НЕТ, И ЭТО НЕ ВОПРОС ВКУСА — ИКОНКА В СОСТОЯНИИ.</b>
+<br><br>
+Её несут <b>Spectrum, Bootstrap, Carbon и Ant</b> — все четыре. NN/g требует её отдельным
+пунктом. WCAG 1.4.1 (Use of Color) запрещает держать состояние на цвете. И база ui-ux-pro-max
+говорит то же двумя правилами: <code>color-not-only</code> — «Don't convey info by color alone
+(add icon/text)» и <code>color-not-decorative-only</code> — «Functional color (error red, success
+green) must include icon/text».
+<br><br>
+<b>А у нас в <code>ds-field-message</code> два докблока врут:</b> <code>state</code> заявляет
+«Decides colour and icon», <code>icon</code> — «Overrides the glyph the <code>state</code> would
+pick». В шаблоне стоит <code>@if (icon())</code>, а <code>icon</code> по умолчанию
+<code>null</code>, computed'а в компоненте нет вообще. Значит <b>state не подставляет иконку
+никогда</b>, и её надо передать руками на каждом поле.
+<br><br>
+Именно иконка, а не заливка, дала бы warning и success различимость — и ровно так это сделано у
+четырёх систем из таблицы.
+</div>
+
 <h1>Validation on the control itself</h1>
 
 <p><b>The complaint, and what was actually true.</b> Stas, testing the docs on a phone: only the text
