@@ -49,14 +49,17 @@
   th, td { border: 1px solid var(--border-default); padding: var(--space-2); vertical-align: top; text-align: left; }
   thead th { background: var(--surface-secondary); font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans); }
   tbody th { width: 26ch; font-weight: var(--font-weight-semibold); }
-  .opt:has(.chosen) {
-    border: 2px solid #22A33C; border-radius: var(--ds-radius-panel);
-    background-image: linear-gradient(#ECFAEE, #ECFAEE);
-    padding: var(--space-3); margin: calc(var(--space-3) * -1);
+  /* Title only. A tint behind a specimen repaints the very fill being judged —
+     and the green wash this used to draw was #ECFAEE, which IS the success fill
+     under judgement two blocks down. */
+  .cap.chosen {
+    color: var(--success-text);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
   }
   .cap.chosen::after {
     content: ' — ВЫБРАНО';
-    color: var(--success-text);
     letter-spacing: var(--letter-spacing-wider);
   }
   .verdict {

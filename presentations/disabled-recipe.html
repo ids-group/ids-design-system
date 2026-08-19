@@ -45,10 +45,16 @@
     letter-spacing: var(--letter-spacing-wider);
     color: var(--success-text);
   }
-  th.chosen, td.chosen-col {
-    background-image: linear-gradient(#ECFAEE, #ECFAEE);
-    box-shadow: inset 3px 0 0 #22A33C, inset -3px 0 0 #22A33C;
+  /* Title only. `td.chosen-col` used to tint the whole column, which put a green
+     wash behind the button specimens whose fills are the thing being compared. */
+  th.chosen {
+    color: var(--success-text);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
   }
+  th.chosen .tok,
+  th.chosen::after { text-decoration: none; }
   .verdict {
     border: 2px solid #22A33C; border-radius: var(--ds-radius-panel);
     background-image: linear-gradient(#ECFAEE, #ECFAEE);
