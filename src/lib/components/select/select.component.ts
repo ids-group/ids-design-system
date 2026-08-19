@@ -118,6 +118,8 @@ export class SelectComponent
   );
   /** Applies error styling and marks the trigger `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
+  /** Applies success styling to the field. */
+  readonly success = input(false, { transform: booleanAttribute });
   /** Helper text shown below the trigger. */
   readonly hint = input<string>('');
   /** Error text. Shown immediately — binding it says the consumer has already
@@ -167,6 +169,7 @@ export class SelectComponent
     error: this.error,
     errors: this.errors,
     invalid: this.invalid,
+    success: this.success,
     touchedSelf: this.touchedSelf,
     touched: this.touched,
   });

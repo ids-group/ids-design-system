@@ -248,6 +248,8 @@ export class DatePickerComponent
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Applies error styling and marks the trigger `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
+  /** Applies success styling to the field. */
+  readonly success = input(false, { transform: booleanAttribute });
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
   /** Bounds for the year dropdown in the calendar header. */
@@ -309,6 +311,7 @@ export class DatePickerComponent
     error: this.localError,
     errors: this.errors,
     invalid: this.dateInvalid,
+    success: this.success,
     touchedSelf: this.touchedSelf,
     touched: this.touched,
   });

@@ -108,6 +108,8 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   );
   /** Applies error styling and marks the field `aria-invalid`. */
   readonly invalid = input(false, { transform: booleanAttribute });
+  /** Applies success styling to the field. */
+  readonly success = input(false, { transform: booleanAttribute });
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Shows an "(optional)" marker next to the label (ignored when `required`). */
@@ -173,6 +175,7 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     error: this.error,
     errors: this.errors,
     invalid: this.invalid,
+    success: this.success,
     touchedSelf: this.touchedSelf,
     touched: this.touched,
   });
