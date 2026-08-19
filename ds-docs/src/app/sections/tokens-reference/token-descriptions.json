@@ -1017,7 +1017,6 @@
   "--neutral-950": "Neutral ramp — stop 950 (aliases cool-gray-950).",
   "--neutral-h": "Neutral ramp hue channel (HSL substrate).",
   "--opacity-disabled": "Full disabled state where opacity is the ONLY signal — a calendar day, a toggle button. A control that already swaps to --text-disabled must not stack this on top.",
-  "--opacity-muted": "Legacy alias (0.6). No component reads it — disabled states use --text-disabled with --opacity-disabled.",
   "--opacity-scrim": "Modal/drawer backdrop overlay.",
   "--opacity-state-active": "Opacity for active/pressed state overlays (0.24).",
   "--opacity-state-hover": "Hover layer over surface.",

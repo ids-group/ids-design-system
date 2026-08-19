@@ -1684,12 +1684,6 @@ export const MISC_OPACITY: readonly MiscRow[] = [
     "notes": "Full disabled state where opacity is the ONLY signal — a calendar day, a toggle button. A control that already swaps to --text-disabled must not stack this on top."
   },
   {
-    "name": "--opacity-muted",
-    "value": "0.6",
-    "renderAs": "opacity",
-    "notes": "Legacy alias (0.6). No component reads it — disabled states use --text-disabled with --opacity-disabled."
-  },
-  {
     "name": "--opacity-text-disabled",
     "value": "0.38",
     "renderAs": "opacity",

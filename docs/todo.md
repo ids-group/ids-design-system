@@ -126,10 +126,12 @@ below is a documentation gap any more — each is a real thing to fix.
   keeping `cursor: not-allowed` and the semantic attribute as they are. Applies to every control that
   reuses the shared disabled rule, not just buttons — the ghost/text variants are simply where the
   0.6 is least survivable, because they have no fill to carry the state.
-  **Consumer workaround in place** (`platform-admin/src/styles/_ds-overrides.scss`): retuning
-  `--opacity-muted` to `--opacity-text-disabled` on `ds-button` / `ds-icon-button`. It works because
-  the DS reads that token at use-time, but it is a token hijack — it would also dim anything else
-  inside a button that legitimately wants "muted", so it should be deleted once the DS ships the fix.
+  **Consumer workaround GONE, and the token with it (2026-08-19).** The paragraph that stood here
+  said the override "works because the DS reads that token at use-time" — it does not, and point (1)
+  above had already measured that. The override was deleted from `platform-admin/_ds-overrides.scss`
+  during the consumer's 0.10.0 upgrade, and `--opacity-muted` is now deleted from the token scale
+  too (see `## Unreleased`), so the hijack is no longer expressible. What remains open here is only
+  the question below.
 
 - [ ] **[P2] `--ds-dropdown-panel-radius` does not reach `ds-multi-select`.** Its panel element is
   `class="panel"`, not `.dropdown-panel`, and `multi-select.component.scss:108` hardcodes

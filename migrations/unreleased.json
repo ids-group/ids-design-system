@@ -1,6 +1,19 @@
 {
   "version": "unreleased",
-  "items": [],
+  "items": [
+    {
+      "id": "opacity-muted-token-removed",
+      "kind": "removed-api",
+      "old": "--opacity-muted",
+      "new": null,
+      "note": "The --opacity-muted custom property (0.6) is deleted from the token scale. No component has read it since 0.10.0 moved the disabled states onto --text-disabled + --opacity-disabled, so REMOVING IT CHANGES NOTHING THE LIBRARY RENDERS. Two consumer cases. (1) You SET it - most likely on ds-button or ds-icon-button, the override 0.10.0's DELETE-LIST already warned about: delete the declaration, it was a no-op then and is a no-op now (those two resolve their disabled state from oklch(from accent ...) colours, and --ds-button-label-color-disabled / --ds-icon-button-icon-color-disabled are the real hooks). (2) You READ it in your own CSS, i.e. var(--opacity-muted) appears in a value you wrote: that now resolves to nothing and the declaration is dropped, so pick the token that names the job instead - --opacity-disabled (0.5) where opacity is the ONLY disabled signal, --opacity-text-disabled (0.38) for disabled text - or inline 0.6 if what you actually wanted was de-emphasis rather than a disabled state. Do not re-declare --opacity-muted yourself to keep it alive: 'muted' is a de-emphasis level and disabled is a state, and sharing one number between them is what put this token on the DELETE-LIST in the first place.",
+      "searchHints": [
+        "--opacity-muted",
+        "var(--opacity-muted",
+        "opacity-muted"
+      ]
+    }
+  ],
   "informational": [
     "ds-table's row-action kebab and column-picker trigger now read --ds-table-icon-btn-color, --ds-table-icon-btn-color-hover and --ds-table-icon-btn-focus-color, each defaulting to the value that was previously hardcoded (--icon-default, --icon-strong, --accent). Purely additive. ACTION only if you recoloured your own row trigger and are now adopting rowActions: set these three instead of repainting --icon-default globally."
   ]

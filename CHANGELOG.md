@@ -8,6 +8,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Removed
+
+- **`--opacity-muted` is gone from the token scale.** It was the last token in the file that no
+  component read: the disabled states moved onto `--text-disabled` + `--opacity-disabled` in
+  0.10.0, and it had been sitting there since, labelled a legacy alias. Keeping a dead number in a
+  purpose-named scale is worse than removing it — it invites exactly the override that 0.10.0's
+  DELETE-LIST had to warn about twice, where a consumer retunes it on `ds-button` /
+  `ds-icon-button` and gets a silent no-op. **Nothing in the library changes.** If you set it, drop
+  the declaration; if you READ it in your own CSS, inline the 0.6 or move to the token that names
+  the job — `--opacity-disabled` (0.5) for a disabled state where opacity is the only signal,
+  `--opacity-text-disabled` (0.38) for disabled text. The comment above the block claims every
+  token in it has a real consumer; that is true again.
+
 ### Added
 
 - **`ds-table`'s own icon buttons are themeable.** The row-action kebab and the column-picker trigger
