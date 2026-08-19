@@ -29,7 +29,8 @@
     font: var(--font-weight-extrabold) var(--font-size-s) / 1 var(--font-sans);
     letter-spacing: var(--letter-spacing-wide);
   }
-  .pair { display: inline-flex; gap: var(--space-2); padding: var(--space-2); border-radius: var(--radius-md); }
+  .btn.u { text-decoration: underline; text-underline-offset: 3px; border-color: transparent; min-width: 0; padding: 0 var(--space-2); }
+  .pair { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-2); border-radius: var(--radius-md); }
   .onlight { background-image: linear-gradient(#FFFFFF, #FFFFFF); }
   .ondark { background-image: linear-gradient(#171B24, #171B24); }
   .row { display: flex; flex-wrap: wrap; gap: var(--space-5); margin-top: var(--space-3); }
@@ -56,6 +57,153 @@
 <main>
 
 <h1>Ghost, disabled</h1>
+
+<h2>45% против 40%, обе темы, рядом</h2>
+
+<p>В каждой паре слева активная, справа выключенная — судить надо именно по паре, а не по
+выключенной в одиночку.</p>
+
+<table>
+<thead><tr><th>тема</th><th>сегодня (рецепт C)</th><th>смесь 45%</th><th>смесь 40%</th></tr></thead>
+<tbody>
+<tr><th scope="row">Светлая<span class="num">фон #FFFFFF<br>активная #1D43ED</span></th>
+<td>
+  <span class="pair onlight">
+    <span class="btn" style="border-color:transparent;color:#1D43ED">Clear</span>
+    <span class="btn" style="border-color:transparent;color:#949EB5">Clear</span>
+  </span>
+  <span class="num">#949EB5</span>
+  <span class="v">разрыв 2.54:1</span>
+  <span class="num">читаемость 2.69:1</span>
+</td>
+<td>
+  <span class="pair onlight">
+    <span class="btn" style="border-color:transparent;color:#1D43ED">Clear</span>
+    <span class="btn" style="border-color:transparent;color:#99AAF7">Clear</span>
+  </span>
+  <span class="num">#99AAF7</span>
+  <span class="v ok">разрыв 3.07:1</span>
+  <span class="num">читаемость 2.22:1</span>
+</td>
+<td>
+  <span class="pair onlight">
+    <span class="btn" style="border-color:transparent;color:#1D43ED">Clear</span>
+    <span class="btn" style="border-color:transparent;color:#A5B4F8">Clear</span>
+  </span>
+  <span class="num">#A5B4F8</span>
+  <span class="v ok">разрыв 3.41:1</span>
+  <span class="num">читаемость 2.00:1</span>
+</td></tr>
+
+<tr><th scope="row">Тёмная<span class="num">фон #171B24<br>активная #778FF8</span></th>
+<td>
+  <span class="pair ondark">
+    <span class="btn" style="border-color:transparent;color:#778FF8">Clear</span>
+    <span class="btn" style="border-color:transparent;color:#969EB5">Clear</span>
+  </span>
+  <span class="num">#969EB5</span>
+  <span class="v bad">разрыв 1.11:1</span>
+  <span class="num">читаемость 6.45:1 — ярче, чем надо</span>
+</td>
+<td>
+  <span class="pair ondark">
+    <span class="btn" style="border-color:transparent;color:#778FF8">Clear</span>
+    <span class="btn" style="border-color:transparent;color:#424F83">Clear</span>
+  </span>
+  <span class="num">#424F83</span>
+  <span class="v ok">разрыв 2.64:1</span>
+  <span class="num">читаемость 2.20:1</span>
+</td>
+<td>
+  <span class="pair ondark">
+    <span class="btn" style="border-color:transparent;color:#778FF8">Clear</span>
+    <span class="btn" style="border-color:transparent;color:#3D4979">Clear</span>
+  </span>
+  <span class="num">#3D4979</span>
+  <span class="v ok">разрыв 2.91:1</span>
+  <span class="num">читаемость 1.99:1</span>
+</td></tr>
+</tbody>
+</table>
+
+<h2>То же на варианте text — он подчёркнут, метка там единственный носитель</h2>
+
+<table>
+<thead><tr><th>тема</th><th>сегодня</th><th>смесь 45%</th><th>смесь 40%</th></tr></thead>
+<tbody>
+<tr><th scope="row">Светлая</th>
+<td><span class="pair onlight">
+  <span class="btn u" style="color:#1D43ED">Skip</span>
+  <span class="btn u" style="color:#949EB5">Skip</span>
+</span></td>
+<td><span class="pair onlight">
+  <span class="btn u" style="color:#1D43ED">Skip</span>
+  <span class="btn u" style="color:#99AAF7">Skip</span>
+</span></td>
+<td><span class="pair onlight">
+  <span class="btn u" style="color:#1D43ED">Skip</span>
+  <span class="btn u" style="color:#A5B4F8">Skip</span>
+</span></td></tr>
+<tr><th scope="row">Тёмная</th>
+<td><span class="pair ondark">
+  <span class="btn u" style="color:#778FF8">Skip</span>
+  <span class="btn u" style="color:#969EB5">Skip</span>
+</span></td>
+<td><span class="pair ondark">
+  <span class="btn u" style="color:#778FF8">Skip</span>
+  <span class="btn u" style="color:#424F83">Skip</span>
+</span></td>
+<td><span class="pair ondark">
+  <span class="btn u" style="color:#778FF8">Skip</span>
+  <span class="btn u" style="color:#3D4979">Skip</span>
+</span></td></tr>
+</tbody>
+</table>
+
+<h2>В реальном контексте — панель списка, откуда пришла жалоба</h2>
+
+<p>Выключенный <code>Clear</code> рядом с активной основной кнопкой: так его видит пользователь,
+и так проверяется, не выглядит ли он просто «ещё одной ссылкой».</p>
+
+<table>
+<thead><tr><th>тема</th><th>сегодня</th><th>смесь 45%</th><th>смесь 40%</th></tr></thead>
+<tbody>
+<tr><th scope="row">Светлая</th>
+<td><span class="pair onlight">
+  <span class="btn" style="background-image:linear-gradient(#2E54FF,#2E54FF);border-color:transparent;color:#FFFFFF">Apply</span>
+  <span class="btn" style="border-color:transparent;color:#949EB5">Clear</span>
+</span></td>
+<td><span class="pair onlight">
+  <span class="btn" style="background-image:linear-gradient(#2E54FF,#2E54FF);border-color:transparent;color:#FFFFFF">Apply</span>
+  <span class="btn" style="border-color:transparent;color:#99AAF7">Clear</span>
+</span></td>
+<td><span class="pair onlight">
+  <span class="btn" style="background-image:linear-gradient(#2E54FF,#2E54FF);border-color:transparent;color:#FFFFFF">Apply</span>
+  <span class="btn" style="border-color:transparent;color:#A5B4F8">Clear</span>
+</span></td></tr>
+<tr><th scope="row">Тёмная</th>
+<td><span class="pair ondark">
+  <span class="btn" style="background-image:linear-gradient(#2E54FF,#2E54FF);border-color:transparent;color:#FFFFFF">Apply</span>
+  <span class="btn" style="border-color:transparent;color:#969EB5">Clear</span>
+</span></td>
+<td><span class="pair ondark">
+  <span class="btn" style="background-image:linear-gradient(#2E54FF,#2E54FF);border-color:transparent;color:#FFFFFF">Apply</span>
+  <span class="btn" style="border-color:transparent;color:#424F83">Clear</span>
+</span></td>
+<td><span class="pair ondark">
+  <span class="btn" style="background-image:linear-gradient(#2E54FF,#2E54FF);border-color:transparent;color:#FFFFFF">Apply</span>
+  <span class="btn" style="border-color:transparent;color:#3D4979">Clear</span>
+</span></td></tr>
+</tbody>
+</table>
+
+<div class="note">
+<b>Разница между 45% и 40% небольшая по числам, но она в разные стороны для двух тем.</b>
+В светлой 40% заметно бледнее и ближе к тому, что отгружает Material (1.93:1). В тёмной 40%
+уже почти сливается с фоном — читаемость 1.99:1 против 2.20:1 у 45%, а фон там тёмный, то есть
+запаса вниз меньше. <b>45% — единственная точка, где ОБЕ темы держатся выше 2.2:1
+читаемости при разрыве больше 2.6:1.</b>
+</div>
 
 <div class="frame">
 <b>ОТВЕТ НА ВОПРОС «может просто ещё убавить цвет метки»: да, можно — и это именно то,
