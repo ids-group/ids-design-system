@@ -211,15 +211,13 @@
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
     --_button-border-disabled: var(--ds-button-border-disabled, transparent);
 
-    /* Two axes, and BOTH are load-bearing. Chroma drops to 0.035 because
-       saturation is what reads as interactive — a merely lighter accent looks like
-       a quieter link, not a dead control. Lightness then mixes toward the SURFACE,
-       because the direction has to flip per theme and only the surface knows it:
-       the dark accent is already light (OKLCH L 67.9%), so the shared fixed-70%
-       recipe lands two points from the enabled label — a 1.11:1 gap. Measured:
-       light 3.74:1, dark 2.85:1, chroma 0.012/0.025. Solid cannot use this (a white
-       label mixed into a white surface does not move), so it keeps the shared one. */
-    --_button-label-color-disabled: var(--ds-button-label-color-disabled, color-mix(in srgb, oklch(from var(--_button-label-color) l 0.035 h) 40%, var(--surface-default)));
+    /* Mixes toward the SURFACE rather than taking the shared fixed-lightness recipe,
+       because the direction has to flip per theme and only the surface knows it: the
+       dark accent is already light (OKLCH L 67.9%), so a recipe pinned at L 70% lands
+       two points from the enabled label — a 1.11:1 gap. Measured at 40%: light
+       3.41:1, dark 2.91:1. Solid cannot use this (a white label mixed into a white
+       surface does not move), so it keeps the shared recipe. */
+    --_button-label-color-disabled: var(--ds-button-label-color-disabled, color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default)));
   }
 
   /* Transparent, not --surface-default: an outlined button has to sit on whatever
@@ -254,7 +252,7 @@
     --_button-accent: var(--_button-label-color);
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
     --_button-border-disabled: var(--ds-button-border-disabled, transparent);
-    --_button-label-color-disabled: var(--ds-button-label-color-disabled, color-mix(in srgb, oklch(from var(--_button-label-color) l 0.035 h) 40%, var(--surface-default)));
+    --_button-label-color-disabled: var(--ds-button-label-color-disabled, color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default)));
 
     padding: 0; height: auto; width: auto;
     text-decoration: underline;

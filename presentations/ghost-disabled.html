@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>Ghost, disabled — desaturate, then move toward the surface</title>
+<title>Disabled без контейнера — ghost, text, icon-button</title>
 <link rel="stylesheet" href="ds.css">
 <style>
   :root { color-scheme: light; }
@@ -18,7 +18,7 @@
   table { border-collapse: collapse; width: 100%; margin-top: var(--space-3); }
   th, td { border: 1px solid var(--border-default); padding: var(--space-2); vertical-align: top; text-align: left; }
   thead th { background: var(--surface-secondary); font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans); }
-  tbody th { width: 16ch; font-weight: var(--font-weight-semibold); }
+  tbody th { width: 15ch; font-weight: var(--font-weight-semibold); }
 
   /* Every painted surface is a background-image gradient and an inline colour, so
      a force-dark browser cannot rewrite what is being judged. */
@@ -30,6 +30,12 @@
     letter-spacing: var(--letter-spacing-wide);
   }
   .btn.u { text-decoration: underline; text-underline-offset: 3px; min-width: 0; padding: 0 var(--space-2); }
+  .ico {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; min-width: 0; padding: 0;
+    border-radius: var(--radius-md); border: 1px solid transparent;
+    font: var(--font-weight-regular) 17px / 1 var(--font-sans);
+  }
   .pair { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-2); border-radius: var(--radius-md); }
   .onlight { background-image: linear-gradient(#FFFFFF, #FFFFFF); }
   .ondark { background-image: linear-gradient(#171B24, #171B24); }
@@ -39,105 +45,115 @@
   .v.bad { color: #BA1717; }
   .frame { border: 2px solid #22A33C; border-radius: var(--ds-radius-panel); padding: var(--space-4); margin: var(--space-4) 0; }
   .frame b { color: #156822; }
+  .mine { border-left: 3px solid var(--primary); padding-left: var(--space-3); margin: var(--space-4) 0; }
+  .ask { border: 1px solid var(--primary); border-radius: var(--ds-radius-panel); padding: var(--space-3) var(--space-4); margin: var(--space-4) 0; }
 </style>
 <main>
 
-<h1>Ghost и text, disabled</h1>
+<h1>Disabled там, где нет контейнера</h1>
 
 <div class="frame">
-<b>ОТГРУЖЕНО:</b> <code>color-mix(in srgb, oklch(from label l 0.035 h) 40%, var(--surface-default))</code>
+<b>ВЫБРАНО СТАСОМ 2026-08-19 и ОТГРУЖЕНО: смесь 40% с фоном</b> —
+<code>color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default))</code>
 для <code>.v-ghost</code> и <code>.v-text</code>.
 <br><br>
-<b>Две оси, обе обязательны.</b> Насыщенность в 0.035 — потому что именно она читается как
-«интерактивно». Светлота — смесью с фоном, потому что направление обязано меняться по теме.
+Светлая <b>2.54 → 3.41:1</b> · тёмная <b>1.11 → 2.91:1</b>.
 <br><br>
-Светлая 2.54 → <b>3.74:1</b> · тёмная 1.11 → <b>2.85:1</b>
+<b>Почему смесь, а не фиксированная светлота:</b> направление обязано меняться по теме. В тёмной
+акцент сам светлый (OKLCH L 67.9%), поэтому рецепт, прибитый к L 70%, ставил выключенную метку
+в двух десятых от активной. Фон это направление знает, фиксированное число — нет.
 </div>
 
-<h2>Почему одной светлоты не хватило</h2>
+<h2>ghost и text — до и после</h2>
 
 <table>
-<thead><tr><th>рецепт</th><th>светлая</th><th>тёмная</th><th>вывод</th></tr></thead>
-<tbody>
-<tr><th scope="row">было: oklch L70 C.035</th>
-<td><span class="num">#949EB5 · C 0.036</span><span class="v">разрыв 2.54:1</span></td>
-<td><span class="num">#969EB5 · C 0.035</span><span class="v bad">разрыв 1.11:1</span></td>
-<td>насыщенность верная, светлота в тёмной теме не двигается — акцент там сам светлый (L 68%), а рецепт ставит 70%</td></tr>
-
-<tr><th scope="row">смесь без обесцвечивания</th>
-<td><span class="num">#A5B4F8 · <b>C 0.099</b></span><span class="v">разрыв 3.41:1</span></td>
-<td><span class="num">#3D4979 · <b>C 0.082</b></span><span class="v">разрыв 2.91:1</span></td>
-<td><b>отклонено:</b> насыщенность выросла втрое, метка стала выглядеть как более светлая ссылка</td></tr>
-
-<tr><th scope="row">обесцветить, потом смесь 40%</th>
-<td><span class="num">#BCC0C8 · C 0.012</span><span class="v ok">разрыв 3.74:1</span></td>
-<td><span class="num">#474D5B · C 0.025</span><span class="v ok">разрыв 2.85:1</span></td>
-<td><b>взято:</b> и разрыв, и серость</td></tr>
-</tbody>
-</table>
-
-<h2>Как выглядит</h2>
-
-<table>
-<thead><tr><th>тема</th><th>было</th><th>отклонено</th><th>отгружено</th></tr></thead>
+<thead><tr><th></th><th>было (L70 фикс)</th><th>отгружено (смесь 40%)</th></tr></thead>
 <tbody>
 <tr><th scope="row">ghost, светлая</th>
-<td><span class="pair onlight"><span class="btn" style="color:#1D43ED">Clear</span><span class="btn" style="color:#949EB5">Clear</span></span></td>
-<td><span class="pair onlight"><span class="btn" style="color:#1D43ED">Clear</span><span class="btn" style="color:#A5B4F8">Clear</span></span></td>
-<td><span class="pair onlight"><span class="btn" style="color:#1D43ED">Clear</span><span class="btn" style="color:#BCC0C8">Clear</span></span></td></tr>
+<td><span class="pair onlight"><span class="btn" style="color:#1D43ED">Clear</span><span class="btn" style="color:#949EB5">Clear</span></span><span class="v">2.54:1</span></td>
+<td><span class="pair onlight"><span class="btn" style="color:#1D43ED">Clear</span><span class="btn" style="color:#A5B4F8">Clear</span></span><span class="v ok">3.41:1</span></td></tr>
 
 <tr><th scope="row">ghost, тёмная</th>
-<td><span class="pair ondark"><span class="btn" style="color:#778FF8">Clear</span><span class="btn" style="color:#969EB5">Clear</span></span></td>
-<td><span class="pair ondark"><span class="btn" style="color:#778FF8">Clear</span><span class="btn" style="color:#3D4979">Clear</span></span></td>
-<td><span class="pair ondark"><span class="btn" style="color:#778FF8">Clear</span><span class="btn" style="color:#474D5B">Clear</span></span></td></tr>
+<td><span class="pair ondark"><span class="btn" style="color:#778FF8">Clear</span><span class="btn" style="color:#969EB5">Clear</span></span><span class="v bad">1.11:1</span></td>
+<td><span class="pair ondark"><span class="btn" style="color:#778FF8">Clear</span><span class="btn" style="color:#3D4979">Clear</span></span><span class="v ok">2.91:1</span></td></tr>
 
 <tr><th scope="row">text, светлая</th>
 <td><span class="pair onlight"><span class="btn u" style="color:#1D43ED">Skip</span><span class="btn u" style="color:#949EB5">Skip</span></span></td>
-<td><span class="pair onlight"><span class="btn u" style="color:#1D43ED">Skip</span><span class="btn u" style="color:#A5B4F8">Skip</span></span></td>
-<td><span class="pair onlight"><span class="btn u" style="color:#1D43ED">Skip</span><span class="btn u" style="color:#BCC0C8">Skip</span></span></td></tr>
+<td><span class="pair onlight"><span class="btn u" style="color:#1D43ED">Skip</span><span class="btn u" style="color:#A5B4F8">Skip</span></span></td></tr>
 
 <tr><th scope="row">text, тёмная</th>
 <td><span class="pair ondark"><span class="btn u" style="color:#778FF8">Skip</span><span class="btn u" style="color:#969EB5">Skip</span></span></td>
-<td><span class="pair ondark"><span class="btn u" style="color:#778FF8">Skip</span><span class="btn u" style="color:#3D4979">Skip</span></span></td>
-<td><span class="pair ondark"><span class="btn u" style="color:#778FF8">Skip</span><span class="btn u" style="color:#474D5B">Skip</span></span></td></tr>
+<td><span class="pair ondark"><span class="btn u" style="color:#778FF8">Skip</span><span class="btn u" style="color:#3D4979">Skip</span></span></td></tr>
 
 <tr><th scope="row">в панели</th>
 <td><span class="pair onlight"><span class="btn" style="background-image:linear-gradient(#2E54FF,#2E54FF);color:#FFFFFF">Apply</span><span class="btn" style="color:#949EB5">Clear</span></span></td>
-<td><span class="pair onlight"><span class="btn" style="background-image:linear-gradient(#2E54FF,#2E54FF);color:#FFFFFF">Apply</span><span class="btn" style="color:#A5B4F8">Clear</span></span></td>
-<td><span class="pair onlight"><span class="btn" style="background-image:linear-gradient(#2E54FF,#2E54FF);color:#FFFFFF">Apply</span><span class="btn" style="color:#BCC0C8">Clear</span></span></td></tr>
+<td><span class="pair onlight"><span class="btn" style="background-image:linear-gradient(#2E54FF,#2E54FF);color:#FFFFFF">Apply</span><span class="btn" style="color:#A5B4F8">Clear</span></span></td></tr>
 </tbody>
 </table>
 
-<h2>Outline — тот же дефект, решать или нет</h2>
+<h2>Одно моё сомнение, решать тебе</h2>
 
-<p>Метка у outline из того же <code>--c-strong</code>, значит в тёмной теме тот же разрыв 1.11:1.
-Рамка его почти не спасает: <b>#DAE1FC 1.30:1</b> в светлой, <b>#273155 1.36:1</b> в тёмной.
-Рамка не меняется, только метка.</p>
+<div class="mine">
+Смесь сохраняет насыщенность пропорционально акценту: <b>0.036 → 0.099</b> в светлой,
+0.035 → 0.082 в тёмной. Я предполагал, что это плохо — что насыщенность читается как
+«интерактивно» и метка будет выглядеть светлой ссылкой. <b>Ты посмотрел и сказал, что смесь
+выглядит лучше, а серый хуже.</b> Оставляю здесь только как справку, если захочешь сравнить ещё
+раз; ничего не поменяно.
+</div>
 
 <table>
-<thead><tr><th>тема</th><th>активная</th><th>сегодня</th><th>со смесью</th></tr></thead>
+<thead><tr><th></th><th>отгружено — смесь 40%</th><th>справочно — обесцветить, потом смесь</th></tr></thead>
 <tbody>
-<tr><th scope="row">Светлая</th>
-<td><span class="pair onlight"><span class="btn" style="border-color:#C8D2FE;color:#1D43ED">Cancel</span></span></td>
-<td><span class="pair onlight"><span class="btn" style="border-color:#DAE1FC;color:#949EB5">Cancel</span></span><span class="v">2.54:1</span></td>
-<td><span class="pair onlight"><span class="btn" style="border-color:#DAE1FC;color:#BCC0C8">Cancel</span></span><span class="v ok">3.74:1</span></td></tr>
-<tr><th scope="row">Тёмная</th>
-<td><span class="pair ondark"><span class="btn" style="border-color:#2F3C74;color:#778FF8">Cancel</span></span></td>
-<td><span class="pair ondark"><span class="btn" style="border-color:#273155;color:#969EB5">Cancel</span></span><span class="v bad">1.11:1</span></td>
-<td><span class="pair ondark"><span class="btn" style="border-color:#273155;color:#BCC0C8">Cancel</span></span><span class="v ok">2.85:1</span></td></tr>
+<tr><th scope="row">светлая</th>
+<td><span class="pair onlight"><span class="btn" style="color:#1D43ED">Clear</span><span class="btn" style="color:#A5B4F8">Clear</span></span><span class="num">#A5B4F8 · C 0.099</span><span class="v ok">3.41:1</span></td>
+<td><span class="pair onlight"><span class="btn" style="color:#1D43ED">Clear</span><span class="btn" style="color:#BCC0C8">Clear</span></span><span class="num">#BCC0C8 · C 0.012</span><span class="v">3.74:1</span></td></tr>
+<tr><th scope="row">тёмная</th>
+<td><span class="pair ondark"><span class="btn" style="color:#778FF8">Clear</span><span class="btn" style="color:#3D4979">Clear</span></span><span class="num">#3D4979 · C 0.082</span><span class="v ok">2.91:1</span></td>
+<td><span class="pair ondark"><span class="btn" style="color:#778FF8">Clear</span><span class="btn" style="color:#474D5B">Clear</span></span><span class="num">#474D5B · C 0.025</span><span class="v">2.85:1</span></td></tr>
 </tbody>
 </table>
+
+<h2>ds-icon-button — тот же класс дефекта, но не там, где ждёшь</h2>
+
+<p>У варианта <code>standard</code> фон и рамка прозрачные, а иконка это
+<b><code>--text-secondary</code>, то есть уже серая, не акцентная</b>
+(<code>icon-button.component.scss:24</code>). Значит вопрос насыщенности здесь вообще не стоит —
+двигать надо только светлоту. Выключенная иконка берёт тот же
+<code>oklch(from accent 70% 0.035 h)</code> (<code>:39</code>).</p>
+
+<table>
+<thead><tr><th></th><th>сегодня (L70 фикс)</th><th>смесь 40%, как у ghost</th></tr></thead>
+<tbody>
+<tr><th scope="row">светлая<span class="num">активная #353B4D<br>L 35% · 11.15:1</span></th>
+<td><span class="pair onlight"><span class="ico" style="color:#353B4D">&#10005;</span><span class="ico" style="color:#969EB5">&#10005;</span></span>
+<span class="num">#969EB5</span><span class="v ok">разрыв 4.17:1 — здорово</span><span class="num">на фоне 2.67:1</span></td>
+<td><span class="pair onlight"><span class="ico" style="color:#353B4D">&#10005;</span><span class="ico" style="color:#AEB1B8">&#10005;</span></span>
+<span class="num">#AEB1B8</span><span class="v ok">разрыв 5.19:1</span><span class="num">на фоне 2.15:1</span></td></tr>
+
+<tr><th scope="row">тёмная<span class="num">активная #B7BFD0<br>L 80% · 9.34:1</span></th>
+<td><span class="pair ondark"><span class="ico" style="color:#B7BFD0">&#10005;</span><span class="ico" style="color:#949EB5">&#10005;</span></span>
+<span class="num">#949EB5</span><span class="v bad">разрыв 1.46:1 — вот дефект</span><span class="num">на фоне 6.41:1 — ярче, чем надо</span></td>
+<td><span class="pair ondark"><span class="ico" style="color:#B7BFD0">&#10005;</span><span class="ico" style="color:#575D69">&#10005;</span></span>
+<span class="num">#575D69</span><span class="v ok">разрыв 3.58:1</span><span class="num">на фоне 2.61:1</span></td></tr>
+</tbody>
+</table>
+
+<div class="ask">
+<b>Вопрос по icon-button:</b> в светлой теме он и так здоров (4.17:1) — ломается только тёмная
+(1.46:1). Ставить смесь 40% на <code>standard</code>, или тебя устраивает как есть?
+Насыщенность здесь не пострадает: иконка уже серая (C 0.026–0.032).
+</div>
 
 <h2>Статус</h2>
 
 <table>
 <tbody>
-<tr><th scope="row">ghost, text</th><td><b>СДЕЛАНО</b> — обесцветить + смесь 40%</td></tr>
-<tr><th scope="row">рамка у ghost</th><td><b>ОТКЛОНЕНО</b> — только метка, как у Material, Carbon и Fluent</td></tr>
+<tr><th scope="row">ghost, text</th><td><b>ОТГРУЖЕНО</b> — смесь 40%</td></tr>
+<tr><th scope="row">рамка у ghost</th><td><b>ОТКЛОНЕНО ТОБОЙ</b> — только метка</td></tr>
 <tr><th scope="row">solid</th><td><b>БЕЗ ИЗМЕНЕНИЙ</b> — белая метка в белом фоне не двигается</td></tr>
 <tr><th scope="row">tonal</th><td><b>БЕЗ ИЗМЕНЕНИЙ</b> — выключенная заливка несёт состояние сама</td></tr>
-<tr><th scope="row">outline</th><td><b>ЖДЁТ РЕШЕНИЯ</b> — таблица выше</td></tr>
-<tr><th scope="row">ds-icon-button</th><td><b>ЖДЁТ РЕШЕНИЯ</b> — фон и рамка прозрачные (<code>icon-button.component.scss:23,25</code>), иконка на том же рецепте 70% (<code>:39</code>). Тот же дефект, и подстраховки нет вовсе.</td></tr>
+<tr><th scope="row">outline</th><td><b>ЖДЁТ ТЕБЯ</b> — тот же разрыв 1.11:1 в тёмной, рамка спасает слабо (1.30:1)</td></tr>
+<tr><th scope="row">ds-icon-button standard</th><td><b>ЖДЁТ ТЕБЯ</b> — таблица выше</td></tr>
 </tbody>
 </table>
 
