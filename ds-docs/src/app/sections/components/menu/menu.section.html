@@ -62,6 +62,60 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Standing description
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      description
+    </code> puts a second line under the
+    label for a limitation the action carries. Unlike a
+    <code class="t-mono-inline">
+      [dsTooltip]
+    </code>, it is visible without hover or
+    focus — which is the whole point of a caveat like "will not be saved".
+    <br />
+    It reaches assistive tech as
+    <code class="t-mono-inline">
+      aria-describedby
+    </code>, not as part of the
+    item's name: the label names the action, the description describes it. So a
+    screen reader announces "Export as CSV" and then the caveat, rather than one
+    run-on name.
+  </p>
+
+  <div class="showcase-grid">
+    <div class="showcase-cell">
+      <div class="stage">
+        <ds-menu>
+          <ds-menu-item icon="download">
+            Export as CSV
+          </ds-menu-item>
+
+          <ds-menu-item
+            icon="file"
+            description="Only the first 1,000 rows"
+          >
+            Export as PDF
+          </ds-menu-item>
+
+          <ds-menu-item
+            icon="link"
+            description="Read-only in this workspace"
+            [disabled]="true"
+          >
+            Share a link
+          </ds-menu-item>
+        </ds-menu>
+      </div>
+
+      <div class="showcase-label">
+        Second line, no hover needed
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Dividers
   </h3>
 

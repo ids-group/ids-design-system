@@ -3202,6 +3202,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Renders the item muted — a secondary row like \"Sign out\" under a divider, still actionable but not competing with the items above it."
       },
       {
+        "name": "description",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "A standing second line under the label — a limitation the action carries (\"will not be saved\", \"read-only in this workspace\"). Visible without hover or focus, which is what separates it from a `[dsTooltip]`. Reaches assistive tech as `aria-describedby`, NOT as part of the item's name: the projected label names the action, and a caveat is a description of it. That is why the line is `aria-hidden` in the DOM and referenced by id — inside the button and visible, it would otherwise be concatenated into the name."
+      },
+      {
         "name": "submenu",
         "kind": "input",
         "type": "TemplateRef<unknown> | null",
