@@ -337,6 +337,29 @@
         "radio",
         "submit"
       ]
+    },
+    {
+      "id": "table-column-width-type-widened-for-readers",
+      "kind": "behavior",
+      "old": "TableColumn",
+      "new": null,
+      "note": "TYPE WIDENING, breaking for READERS of the field and invisible to writers: TableColumn.width went `width?: number` to `width?: number | 'content'`. Assigning a value INTO the column definition compiles exactly as before, but code that reads col.width back into a number position stops compiling: `sum += col.width` (TS2365), `fixed[col.key] = col.width` where the target is number (TS2322), a helper parameter typed `width: number`. ACTION: handle the new union member at the read site - `typeof col.width === 'number'` before arithmetic - or widen your own type to `number | 'content'`. Writers who never read the field back need no change; the capability itself is additive and described in this version's informational list. Added retroactively 2026-08-20 after a consumer's build was the first finder (AUTHORING.md, the widening rule).",
+      "searchHints": [
+        "TableColumn",
+        ".width"
+      ]
+    },
+    {
+      "id": "input-signal-types-widened-for-explicit-typings",
+      "kind": "behavior",
+      "old": "InputSignal",
+      "new": null,
+      "note": "TYPE-LEVEL counterpart of control-size-input-becomes-nullable and nullable-boolean-inputs-treat-null-as-unset: those two carry the VALUE semantics (what null means, what reads back); this entry carries the declarations TYPED against the old signal types, which stop compiling even where the values are compatible, because the equal type-parameter position of InputSignal / InputSignalWithTransform is invariant - TS2416 on a subclass override, TS2322 on an assignment to an explicitly typed variable, viewChild target or helper parameter. WIDENED THIS RELEASE (per npm run class-surface v0.9.1..v0.10.0): size DsSize -> DsSize | null on ds-button, ds-icon-button, ds-input, ds-textarea, ds-select, ds-autocomplete, ds-search, ds-date-picker, ds-time-picker, ds-number-stepper, ds-checkbox, ds-radio, ds-switch, ds-field-group; ds-icon size number -> number | null; bordered and stickyScrollbar on ds-table, withDot on ds-badge, dividers on ds-modal and ds-modal-card: boolean -> boolean | null (transform now nullable); ds-table loading false | 'skeleton' | 'overlay' -> boolean | 'skeleton' | 'overlay'; ds-card elevation CardElevation -> CardElevation | null; ds-modal-card dialogRole 'dialog' | 'alertdialog' -> nullable; brand / logoLetter / tagline on ds-auth-layout and ds-sidenav string -> string | null; maxVisibleChips on ds-autocomplete and ds-multi-select number | null -> number | 'fit' | null. ACTION: retype the declaration to the widened union, or drop the explicit annotation and let inference carry it; a subclass override is the unsupported case - rename the member or retype it to match. Templates and plain bindings are unaffected. Added retroactively 2026-08-20 (AUTHORING.md, the widening rule).",
+      "searchHints": [
+        "InputSignal",
+        "InputSignalWithTransform",
+        "extends "
+      ]
     }
   ],
   "informational": [
