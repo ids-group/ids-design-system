@@ -31,7 +31,7 @@
         placeholder="Add tags…"
         ariaLabel="Tags"
         [options]="tagOptions"
-        [maxVisibleChips]="null"
+        maxVisibleChips="all"
         [selectAll]="true"
         [(value)]="tags"
       />
@@ -54,7 +54,7 @@
     re-splitting on resize. A <strong>number</strong> is a CEILING — at most that
     many, and fewer when the trigger is too narrow to hold them beside the count
     and still fit what comes after; it measures for the same reason the default
-    does. Only <code>[maxVisibleChips]="null"</code> skips measuring: it shows
+    does. Only <code>maxVisibleChips="all"</code> skips measuring: it shows
     every chip and lets the trigger grow a line per selection. Same input and same default on
     <code>
       ds-autocomplete

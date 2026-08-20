@@ -106,7 +106,7 @@ export class SearchComponent extends DsControlValueAccessor<string> {
   /** Move keyboard focus to the search input. Public so a host can hand focus
    *  over deliberately — e.g. a Clear button that disables itself on activation
    *  would otherwise blur into `<body>` and restart Tab order at the top. */
-  focus(options?: FocusOptions): void {
+  override focus(options?: FocusOptions): void {
     this.inputEl()?.nativeElement.focus(options);
   }
 
