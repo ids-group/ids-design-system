@@ -114,6 +114,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A nullable binding on a message input no longer throws.** `hint`, `error`, `warning` and
+  `success` took a bare `string`, and the resolver called `.trim()` on whatever arrived — so
+  `[error]="form.errors?.message"` put `null` in and crashed the render with a `TypeError` the
+  moment the expression was empty. All four now transform at the input boundary, absorbing
+  `null`/`undefined` to `''` and trimming, so a blank binding simply means "no message". **You can
+  now delete** the `?? ''` you wrapped such a binding in.
+
 - **A `ds-menu` inside a `ds-popover` clips its rows to the panel's rounded corners.** The first and
   last row's fill — a hover tint, or the red of a destructive item — painted through the panel's
   corner, so a destructive last item showed **two square red corners under a rounded popover**.
@@ -171,6 +178,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   computed against the page colour rather than that ground. Consumers who set
   `--ds-button-label-color-disabled` are unaffected.
 ### Changed
+
+- **A disabled `ds-icon-button variant="standard"` mixes its glyph toward the surface too.** It is
+  the only icon-button variant with neither a fill nor a border, so the glyph's colour is the whole
+  disabled signal — and the shared fixed-lightness recipe could not carry it in dark, where the
+  enabled icon is already light (OKLCH L 80%) and a disabled one pinned at L 70% sat **1.46:1** away.
+  The new default is `color-mix(in srgb, <icon> 40%, var(--surface-default))`, the same mix the
+  borderless button variants take, which picks its direction per theme: light **4.17 → 5.19:1**, dark
+  **1.46 → 3.58:1**. Scoped to `standard` deliberately — `filled`'s icon is `--c-on`, and white
+  mixed into a white surface does not move at all. `--ds-icon-button-icon-color-disabled` is the same
+  hook as before and still wins; only the default under it changed.
 
 - **If you EXTEND a DS field component, read this before trusting `class-surface`.** The report
   against 0.10.0 says fourteen field components LOST eight members each — `hint`, `error`,
