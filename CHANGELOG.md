@@ -94,6 +94,83 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `--ds-table-icon-btn-focus-color`, defaulting to exactly what was hardcoded, so nothing moves unless
   you set them.
 
+### Fixed
+
+- **A `ds-menu` inside a `ds-popover` clips its rows to the panel's rounded corners.** The first and
+  last row's fill — a hover tint, or the red of a destructive item — painted through the panel's
+  corner, so a destructive last item showed **two square red corners under a rounded popover**.
+  **The cause was not a missing clip; it was a clip of the wrong shape.** `ds-menu` has
+  `overflow: hidden`, and that is what rounds the edge rows for a bare menu. But its
+  `:host-context(.popover)` block flattened `border-radius` to `--radius-flat` while leaving `overflow`
+  in force, so inside a popover the menu clipped its rows **square** and the panel's 12px corner
+  showed that square fill through it. The popover now publishes `--ds-menu-clip-radius` — its own
+  radius less the border it contains — and the menu clips to that, concentric at 11px inside a 12px
+  panel. A brand overriding `--ds-popover-radius` is followed automatically.
+  **Not fixed with `overflow: hidden` on the panel**, which was the obvious move: a submenu is a CDK
+  overlay portaled to `body`, so clipping the panel would not have reached it, and the panel's clip
+  would have cut an edge row's focus ring — the same defect fixed in `ds-filter-bar` this month.
+  Nothing else changes: the item radius token `--ds-menu-item-radius` still defaults to 0, because the
+  MENU owns the edge corners, not the row.
+
+- **Clearing or replacing `ds-date-picker`'s `value` from outside now clears the picker's own typing
+  error.** `typedInvalid` / `rangeInvalid` were set by the typing paths and cleared only by those and
+  `applyPreset`, so `value.set(null)` re-rendered the field to empty and left **"Enter a valid date
+  (MM/DD/YYYY)" standing over it**. `[error]` was no help: a consumer who has just cleared the field
+  has no error of its own to bind, and an empty string falls straight back to the picker's.
+  The `value → text` effect now clears both flags. It is the right place because every typing path
+  holds an `editing` guard while it runs, so reaching the effect means the value did NOT come from the
+  keyboard — and a leftover error no longer describes what the field is about to show. Verified that
+  neither typing path writes `value` on the invalid branch, so blur validation still stands.
+  **This retires two consumer workarounds.** One app was tearing down a whole modal body on `closed`
+  purely to get a fresh picker — and that had a hole, since reopening inside the 300 ms leave animation
+  cancels the close, `closed` never fires and the stale error survived. A second dialog had no
+  workaround at all, so a mistyped date of birth read "Enter a valid date" over an empty field the next
+  time it opened.
+
+- **A disabled `ds-button` with `variant="ghost"`, `variant="text"` or `variant="outline"` mixes its
+  label toward the surface instead of taking the shared fixed-lightness recipe.** New default:
+  `color-mix(in srgb, <label> 40%, var(--surface-default))`. These three share one accent source and
+  have no fill that could carry the state, so the label is the whole signal — and the shared recipe
+  was failing it, badly in dark. Measured against the enabled label: light **2.54 → 3.41:1**, dark
+  **1.11 → 2.91:1**. `outline` does have a border, but its disabled border resolves to only
+  **1.30:1** against the page — less than its own *enabled* border at 1.49:1 — so it never covered
+  for the label.
+  **The dark number is the real defect.** `--primary-strong` there is already light (OKLCH L 67.9%),
+  so a recipe pinning the disabled label at L 70% landed two points from the enabled one and the two
+  differed in chroma alone. A fixed lightness cannot serve both themes: in light, disabled is
+  lighter than the accent; in dark the accent is already light, so disabled has to go darker. The
+  surface knows that direction and a constant does not — which is the whole reason the mix target is
+  `--surface-default` rather than a number.
+  **The trade:** the disabled label is fainter against its own ground — **2.00:1** light, 1.99:1
+  dark, where the old recipe gave 2.69 / 6.45. Disabled text is exempt from WCAG 1.4.3 and 1.4.11
+  and Material ships its equivalent at 1.93:1, so this is inside practice. Chroma rises with the
+  mix (0.036 → 0.099 light), so the disabled label stays tinted rather than going grey; that was
+  chosen deliberately over a desaturating variant after looking at both.
+  **`solid` and `tonal` are unchanged**, deliberately: a white label mixed into a white surface does
+  not move, and tonal's disabled fill already carries the state on its own. **Known limitation:** the
+  mix target is `--surface-default`, a stand-in for "whatever is behind" — CSS cannot read the actual
+  backdrop, so on a tinted ground (a card at `--surface-secondary`, an alert) the disabled label is
+  computed against the page colour rather than that ground. Consumers who set
+  `--ds-button-label-color-disabled` are unaffected.
+### Changed
+
+- **If you EXTEND a DS field component, read this before trusting `class-surface`.** The report
+  against 0.10.0 says fourteen field components LOST eight members each — `hint`, `error`,
+  `warning`, `errors`, `invalid`, `touched`, `reserveMessage` and `reserveMessageResolved`.
+  **Nothing was removed.** Those inputs were declared once per component and are now declared once in
+  total, on a new internal `DsFieldBase`, which every field reaches either directly or through
+  `DsControlValueAccessor` / `DsBooleanControlValueAccessor`. All fourteen still carry all eight by
+  inheritance, so a template binding, a TS read and an existing `override` all behave exactly as
+  before. The tool counts declarations per FILE, and `migrations/AUTHORING.md` already names a member
+  that moved to a base class as one of the two things it cannot see — this release is that case.
+  What genuinely grew is smaller: **eight bordered fields gained `success`** (`ds-autocomplete`,
+  `ds-color-picker`, `ds-date-picker`, `ds-multi-select`, `ds-otp-input`, `ds-select`,
+  `ds-textarea`, `ds-time-picker`), `ds-input` having had it all along. A subclass declaring
+  `success` on one of those eight now fails with TS4114; declaring any of the eight moved names still
+  collides exactly as it did, because an inherited member collides the same way an own one does.
+  `DsFieldBase` is internal and deliberately not exported — it holds only the inputs every field has,
+  which is why `success`, `label`, `required` and `optional` stayed on the components.
+
 ## 0.10.0 — 2026-08-18
 
 ### Added
@@ -322,37 +399,6 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   it sits at `.link`'s own specificity and your rule still wins on source order.
 
 ### Fixed
-
-- **A `ds-menu` inside a `ds-popover` clips its rows to the panel's rounded corners.** The first and
-  last row's fill — a hover tint, or the red of a destructive item — painted through the panel's
-  corner, so a destructive last item showed **two square red corners under a rounded popover**.
-  **The cause was not a missing clip; it was a clip of the wrong shape.** `ds-menu` has
-  `overflow: hidden`, and that is what rounds the edge rows for a bare menu. But its
-  `:host-context(.popover)` block flattened `border-radius` to `--radius-flat` while leaving `overflow`
-  in force, so inside a popover the menu clipped its rows **square** and the panel's 12px corner
-  showed that square fill through it. The popover now publishes `--ds-menu-clip-radius` — its own
-  radius less the border it contains — and the menu clips to that, concentric at 11px inside a 12px
-  panel. A brand overriding `--ds-popover-radius` is followed automatically.
-  **Not fixed with `overflow: hidden` on the panel**, which was the obvious move: a submenu is a CDK
-  overlay portaled to `body`, so clipping the panel would not have reached it, and the panel's clip
-  would have cut an edge row's focus ring — the same defect fixed in `ds-filter-bar` this month.
-  Nothing else changes: the item radius token `--ds-menu-item-radius` still defaults to 0, because the
-  MENU owns the edge corners, not the row.
-
-- **Clearing or replacing `ds-date-picker`'s `value` from outside now clears the picker's own typing
-  error.** `typedInvalid` / `rangeInvalid` were set by the typing paths and cleared only by those and
-  `applyPreset`, so `value.set(null)` re-rendered the field to empty and left **"Enter a valid date
-  (MM/DD/YYYY)" standing over it**. `[error]` was no help: a consumer who has just cleared the field
-  has no error of its own to bind, and an empty string falls straight back to the picker's.
-  The `value → text` effect now clears both flags. It is the right place because every typing path
-  holds an `editing` guard while it runs, so reaching the effect means the value did NOT come from the
-  keyboard — and a leftover error no longer describes what the field is about to show. Verified that
-  neither typing path writes `value` on the invalid branch, so blur validation still stands.
-  **This retires two consumer workarounds.** One app was tearing down a whole modal body on `closed`
-  purely to get a fresh picker — and that had a hole, since reopening inside the 300 ms leave animation
-  cancels the close, `closed` never fires and the stale error survived. A second dialog had no
-  workaround at all, so a mistyped date of birth read "Enter a valid date" over an empty field the next
-  time it opened.
 
 - **A card no longer eats the Enter and Space of everything inside it.** `ds-card` bound
   `(keydown.enter)` and `(keydown.space)` on its `<article>` with an unconditional `preventDefault()`,
@@ -674,32 +720,6 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   component using these insets — already did on all four of its.
 
 ### Changed
-
-- **A disabled `ds-button` with `variant="ghost"`, `variant="text"` or `variant="outline"` mixes its
-  label toward the surface instead of taking the shared fixed-lightness recipe.** New default:
-  `color-mix(in srgb, <label> 40%, var(--surface-default))`. These three share one accent source and
-  have no fill that could carry the state, so the label is the whole signal — and the shared recipe
-  was failing it, badly in dark. Measured against the enabled label: light **2.54 → 3.41:1**, dark
-  **1.11 → 2.91:1**. `outline` does have a border, but its disabled border resolves to only
-  **1.30:1** against the page — less than its own *enabled* border at 1.49:1 — so it never covered
-  for the label.
-  **The dark number is the real defect.** `--primary-strong` there is already light (OKLCH L 67.9%),
-  so a recipe pinning the disabled label at L 70% landed two points from the enabled one and the two
-  differed in chroma alone. A fixed lightness cannot serve both themes: in light, disabled is
-  lighter than the accent; in dark the accent is already light, so disabled has to go darker. The
-  surface knows that direction and a constant does not — which is the whole reason the mix target is
-  `--surface-default` rather than a number.
-  **The trade:** the disabled label is fainter against its own ground — **2.00:1** light, 1.99:1
-  dark, where the old recipe gave 2.69 / 6.45. Disabled text is exempt from WCAG 1.4.3 and 1.4.11
-  and Material ships its equivalent at 1.93:1, so this is inside practice. Chroma rises with the
-  mix (0.036 → 0.099 light), so the disabled label stays tinted rather than going grey; that was
-  chosen deliberately over a desaturating variant after looking at both.
-  **`solid` and `tonal` are unchanged**, deliberately: a white label mixed into a white surface does
-  not move, and tonal's disabled fill already carries the state on its own. **Known limitation:** the
-  mix target is `--surface-default`, a stand-in for "whatever is behind" — CSS cannot read the actual
-  backdrop, so on a tinted ground (a card at `--surface-secondary`, an alert) the disabled label is
-  computed against the page colour rather than that ground. Consumers who set
-  `--ds-button-label-color-disabled` are unaffected.
 
 - **The seven inputs every field shares are declared once, in `DsFieldBase`.** `hint`, `error`,
   `warning`, `errors`, `invalid`, `touched` and `reserveMessage` — plus the `reserveMessageResolved`
