@@ -420,7 +420,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How the chips collapse when they outgrow one line. `\"fit\"` (the default) measures and shows as many as the trigger is wide, the rest behind \"+N more\". A NUMBER caps at exactly that many, which is what you want when the trigger's height must be predictable whatever the width. `\"all\"` shows every chip and lets the trigger grow a line per selection. Unset (`null`) means \"not deciding\", as it does on every other input in the library — it resolves to `\"fit\"`. It does NOT mean \"show all\": that is `\"all\"`, which is the loudest of the three modes and has to be asked for."
+        "description": "How the chips collapse when they outgrow one line. `\"fit\"` (the default) measures and shows as many as the trigger is wide, the rest behind \"+N more\". A NUMBER is a CEILING, not a promise: the row still measures, so you get at most that many and fewer when the trigger is narrow. `\"all\"` shows every chip and lets the trigger grow a line per selection. Unset (`null`) means \"not deciding\", as it does on every other input in the library — it resolves to `\"fit\"`. It does NOT mean \"show all\": that is `\"all\"`, which is the loudest of the three modes and has to be asked for."
       },
       {
         "name": "size",
@@ -545,7 +545,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "The person or thing this avatar stands for. One binding covers both jobs the caller used to wire by hand: the initials, and the seed the tint hashes. The tint keys on the NAME, never on the initials — two letters collide wholesale, so every Alice Brown and Adam Bell would share one colour."
+        "description": "The person or thing this avatar stands for — one binding drives both the initials and the seed the tint hashes. The tint keys on the NAME, never on the initials — two letters collide wholesale, so every Alice Brown and Adam Bell would share one colour."
       },
       {
         "name": "initialsRule",
@@ -3593,7 +3593,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How the chips collapse when they outgrow one line. `\"fit\"` (the default) measures and shows as many as the trigger is wide, the rest behind \"+N more\". A NUMBER caps at exactly that many, which is what you want when the trigger's height must be predictable whatever the width. `\"all\"` shows every chip and lets the trigger grow a line per selection. Unset (`null`) means \"not deciding\", as it does on every other input in the library — it resolves to `\"fit\"`. It does NOT mean \"show all\": that is `\"all\"`, which is the loudest of the three modes and has to be asked for."
+        "description": "How the chips collapse when they outgrow one line. `\"fit\"` (the default) measures and shows as many as the trigger is wide, the rest behind \"+N more\". A NUMBER is a CEILING, not a promise: the row still measures, so you get at most that many and fewer when the trigger is narrow. `\"all\"` shows every chip and lets the trigger grow a line per selection. Unset (`null`) means \"not deciding\", as it does on every other input in the library — it resolves to `\"fit\"`. It does NOT mean \"show all\": that is `\"all\"`, which is the loudest of the three modes and has to be asked for."
       },
       {
         "name": "disabled",
