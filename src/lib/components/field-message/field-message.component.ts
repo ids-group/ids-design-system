@@ -23,11 +23,12 @@ export type FieldMessageState = 'default' | 'error' | 'warning' | 'success';
 export class FieldMessageComponent {
   /** The one line under a field. Empty renders nothing (or reserved space, if the field asks). */
   readonly text = input<string>('');
-  /** Which role the line is playing — hint, error, warning or success. Decides colour and icon. */
+  /** Which role the line is playing — hint, error, warning or success. Decides the colour. */
   readonly state = input<FieldMessageState>('default');
   /** Id the field points `aria-describedby` at, so the message is announced with the control. */
   readonly messageId = input<string | null>(null);
-  /** Overrides the glyph the `state` would pick. */
+  /** Leading glyph. There is no per-state default: `state` sets the colour only, so
+   *  a field that wants an icon passes one. */
   readonly icon = input<IconName | null>(null);
   /** Reserve one line of height even when there's no `text`, so a field that
    *  gains/loses a message doesn't shift the layout below it. */
