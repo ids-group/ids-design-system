@@ -41,6 +41,8 @@
 - P3 · `ds-list-item` cannot express a row that has its own control AND a row-level action
 - P2 · `ds-field-message` claims `state` picks an icon, and it never does — two false doc comments over a real gap
 - P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely
+- P3 · `ds-search` and `ds-segmented` hold a value but cannot join a form
+- P3 · `ds-radio` standalone cannot bind to a form, by design — recorded, not a defect
 - P3 · Four box-less controls compute no `controlState`, so a state reaches the message but not the control
 
 **Decisions — waiting on Stas, not on work**
@@ -553,6 +555,12 @@ Nothing moves until a verdict; the work behind each is scoped.
 _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so a multi-select trigger grew a line per selection. `maxVisibleChips` ported from `ds-multi-select` under the same name. Checked the rest of the library — only those two components render a chip list, so nothing else needed it; the pinkmoon prototype the reporter half-remembered is the filter-bar "+N more", which is already `ds-filter-bar`._
 
 **P1 — real defects:**
+
+- [ ] **[P3] `ds-search` and `ds-segmented` hold a value but cannot join a form (audited 2026-08-20).** Both declare `readonly value = model<string>('')`, so `[(value)]` works — but neither provides `NG_VALUE_ACCESSOR`, neither extends a `ControlValueAccessor` base, and neither calls `resolveFieldMessage`. So `[formControl]` / `formControlName` / `ngModel` do not bind, and signal forms has nothing to bind to either. **`ds-segmented` is the more surprising one:** it is a value-bearing choice control, the same shape as `ds-radio-group`, which IS wired.
+  **The other thirteen are complete on both systems** — verified per component: NG_VALUE_ACCESSOR, a CVA base, `resolveFieldMessage`, `markTouched()` on blur, `disabled`, and the `readonly` alias wherever `readOnly` exists (3 of 3).
+  **Cheap now:** `extends DsControlValueAccessor<string>` + the NG_VALUE_ACCESSOR provider + `resolveFieldMessage` + a `ds-field-message` in the template. Same shape all thirteen already share. Not built — no consumer has asked, and `ds-search` in particular may be intended as a toolbar control rather than a form field.
+
+- [ ] **[P3] `ds-radio` standalone cannot bind to a form, by design — recorded so nobody "fixes" it blindly.** It participates in the field-message system but has no `NG_VALUE_ACCESSOR` and no CVA base: inside `ds-radio-group` the GROUP is the form control, which is correct. But `ds-radio` also exposes `checked = model()` for standalone use, and in that mode `[formControl]` does not bind. Either document that a standalone radio is `[(checked)]`-only, or give it its own accessor. Not a defect today — a gap between two supported usages.
 
 - [ ] **[P2] `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in, or say they are not fields (Stas asked 2026-08-20).** Audited, and they are not "fields missing a feature" — they never had the wrapper. **`ds-number-stepper`** exposes `value`, `min`, `max`, `step`, `size`, `disabled`, `ariaLabel` and nothing else; **`ds-dropzone`** exposes `accept`, `multiple`, `files`, `disabled`, `single` plus two outputs. Neither has `label`, `hint`, `error`, a `ds-field-message`, `resolveFieldMessage`, or the `field-label` mixin — verified by grep, all zero. Every other one of the fourteen fields has all of it.
   **So this is a feature addition, not a unification**, and that is why it is a decision rather than work: both would gain `label`, `hint`, `error`, `errors`, `invalid`, `touched`, `reserveMessage` (now one `extends DsFieldBase`), a message row, and the label/required/optional block.
