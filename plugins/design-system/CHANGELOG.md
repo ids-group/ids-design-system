@@ -4,6 +4,14 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.3.2 — 2026-08-20
+
+### Changed
+- Dedup pass over SKILL.md, no behavior change: the Guardrails recap section removed (every rule
+  already lives at its point of use; the unique `dist`/build-output clause folded into the sources
+  bullet), the step-7 re-check triple emphasis compressed to one sentence, and the two
+  "manual review is a last resort" paragraphs merged into the full-auto paragraph.
+
 ## 1.3.1 — 2026-07-13
 
 ### Changed

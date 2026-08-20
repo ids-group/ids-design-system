@@ -50,8 +50,11 @@ Keep at most **~8 subagents concurrent** (the platform's practical ceiling is ~1
 larger sets in waves, collecting each wave before launching the next.
 
 This workflow is **full-auto**: the applier attempts EVERY actionable change (mechanical AND
-behavioral). Primary semantic verification is YOUR job (opus) — you own the final green/not-green
-verdict, especially for behavioral fixes. Manual review is a LAST RESORT (Phase B step 9).
+behavioral) — a behavioral change is NOT sent to manual review just for being behavioral. Primary
+semantic verification is YOUR job (opus) — you own the final green/not-green verdict, especially
+for behavioral fixes. Manual review is a LAST RESORT (Phase B step 9), reached only when the auto
+attempt + auto-fix loop can't make an item green: the build still fails, opus can't confirm the
+behavioral fix, or the change is genuinely too convoluted to do safely.
 
 ## MigrationPlan schema
 
@@ -80,11 +83,6 @@ Every actionable item is **auto-applied**; items differ only in how they're VERI
 - **informational** = a documented change needing NO consumer code action (purely visual, nothing to
   edit) → not an item; the planner puts it in `informational` (an FYI line in the report).
 
-**Manual review is a LAST RESORT, not a default bucket.** An item lands there only when the auto
-attempt + auto-fix loop can't make it green (Phase B step 9): the build still fails, or opus can't
-confirm the behavioral fix is correct after the attempts, or the change is genuinely too convoluted
-to do safely. A behavioral change is NOT sent to manual just for being behavioral — it is attempted.
-
 ## Reading the DS sources (when the changelog isn't enough)
 
 When a question the changelog can't answer blocks an item — the exact union a new input accepts,
@@ -106,7 +104,8 @@ instead of guessing. Version-exactness decides WHERE:
   unions), `fesm2022/*.mjs` (compiled internals — class names, DOM structure), `themes/` +
   `styles/` (readable SCSS token sources), `CHANGELOG.md`. Before step 4 (bump) it holds the OLD
   version — authoritative for "what did this API mean before"; after step 4 it holds V. Subagents
-  may read it directly (editing it stays forbidden).
+  may read it directly; editing anything under `node_modules`, `dist` or build output stays
+  forbidden.
 - The docs site is a SPA — WebFetch cannot render it; don't rely on it for API questions.
 
 ## Run ledger (interruption-proofing)
@@ -303,9 +302,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 7. **Re-check (parallel, sonnet) — every item, ALWAYS.** Dispatch `ds-recheck` for each item,
    re-attaching its full MigrationItem by `id` from the plan (the applier's report is id-keyed only):
    grep for mechanical, semantic for behavioral (returns `migrated` + `confidence` + reasoned
-   `remaining`). **Run this step unconditionally** — even when your step-5 primary verify was already
-   green and even when you applied or fixed every item inline yourself. Re-check is an INDEPENDENT
-   second pass, not a fallback for when you're unsure; never skip it because you're confident. Each
+   `remaining`). **An INDEPENDENT second pass — run it even when step 5 was green and every fix was
+   your own inline edit.** Each
    `ds-recheck` greps the WHOLE source root for the item's `old` / `searchHints`, not just the finder's
    hits — so a file the finder never reported that still carries the old usage surfaces here as a
    real-miss. **A real-miss in an unreported file is a finder miss:** dispatch an applier for that file
@@ -340,14 +338,3 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
   behavioral change.
 - If stopped: which target/version, why, what to look at.
 - Suggested next step (review the branch / open a PR).
-
-## Guardrails
-
-- A file is NEVER shared between concurrent appliers — one `ds-migration-applier` per file or per
-  small disjoint batch (≤~5 files).
-- Never `git push`; never `git add -A`; stage only the exact pathspec from step 8.
-- Never edit files under `node_modules`, `dist`, or build output.
-- Pin the EXACT version `V`; use a mutating install (never a frozen/CI install).
-- Accept a changelog source only if its body contains version headings (`## <semver>`, any common
-  variant) for every chain version.
-- Prefer `AskUserQuestion` for setup decisions (which consumer, git strategy); else run autonomously.
