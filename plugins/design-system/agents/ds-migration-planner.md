@@ -69,8 +69,7 @@ Pick the kind that lets a downstream agent act mechanically. All specifics come 
 
 **Catch-all — the most important rule.** If you cannot confidently reduce a breaking/changed item
 to one of the mechanical kinds, classify it **`behavior`**. NEVER drop a documented change because
-it doesn't fit a kind — a `behavior` item is ATTEMPTED like everything else (full-auto) and only
-escalates to manual review if its attempt can't be verified; a dropped one is silently missed.
+it doesn't fit a kind — a dropped one is silently missed.
 Reading the changelog completely matters more than perfect kinds.
 
 ## `value-remap` specifics

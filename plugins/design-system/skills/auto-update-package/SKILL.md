@@ -64,9 +64,8 @@ behavioral fix, or the change is genuinely too convoluted to do safely.
   "informational": [ "..." ] }
 
 `kind` ∈ selector-rename | type-rename | input-rename | output-rename | token-rename |
-class-rename | value-remap | scss-api | code-add | removed-api | behavior. The planner decides
-actionability by CONTENT (any entry documenting a consumer-affecting change, wherever it sits in
-the block), not by section name. `new` is null for a removal or `behavior`; `map` is present only for
+class-rename | value-remap | scss-api | code-add | removed-api | behavior.
+`new` is null for a removal or `behavior`; `map` is present only for
 `value-remap`. The planner derives every specific FROM the changelog; when it can't confidently
 fit a change to a mechanical kind it classifies it `behavior` (catch-all) so nothing is dropped.
 `id` is a stable, unique slug.
@@ -218,8 +217,7 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    files carry the same items. The invariant is disjointness: a file is NEVER shared between
    concurrent appliers. Pass each applier the items affecting its file(s) **AND those files' finder
    hits** (`{loc, match, el, dynamic}`) so it edits the exact matched, element-scoped locations
-   instead of re-deriving them (re-deriving reintroduces the wrong-element false-positive the finder
-   exists to prevent). **This includes behavioral (`removed-api` / `behavior`) items — the applier
+   instead of re-deriving them by re-grepping. **This includes behavioral (`removed-api` / `behavior`) items — the applier
    ATTEMPTS them, not just mechanical ones.** For an item located by its `note` rather than by hits
    (e.g. a `code-add` to the app config or global styles), dispatch an applier for that described
    file. Collect `applied` / `needsReview`, and start the **touched-files union** (the commit
@@ -318,8 +316,7 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    lockfile, by explicit pathspec (never `git add -A`, never a bare directory). Commit
    `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration summary in the body
    (`-m` subject, `-m` body). Do not run any git command containing the word "push". Next version.
-9. **Stuck — LAST RESORT (cap hit, re-check still disagrees, or peer unsatisfied).** Only reached
-   after the auto attempt + auto-fix loop genuinely could not make the version green. **Stop the
+9. **Stuck — LAST RESORT (cap hit, re-check still disagrees, or peer unsatisfied).** **Stop the
    run.** Leave the partial edits in the working tree (do NOT roll back). Report the version reached,
    the failing output, and the specific items that couldn't be auto-resolved (with why) as the
    manual-review list. Await the user. (A peer-dependency mismatch stops here immediately — no
@@ -334,8 +331,7 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 - **Applied — human should eyeball:** behavioral edits that were applied but whose correctness is
   only visual (no build/grep signal) — committed, but worth a quick visual check.
 - **Needs manual review — should be EMPTY in a clean run:** ONLY the items the auto attempt +
-  auto-fix loop could not resolve, each with why. These are the last-resort escalations, not every
-  behavioral change.
+  auto-fix loop could not resolve, each with why.
 - If stopped: which target/version, why, what to look at.
 - Suggested next step (review the branch / open a PR).
 - **Team-setup offer.** If the target repo's committed `.claude/settings.json` does not already

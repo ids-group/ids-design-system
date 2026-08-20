@@ -21,10 +21,11 @@ source, agent); **major** = a change to the workflow's behavior contract. Bump `
 - Private-repo auth note corrected: `BITBUCKET_TOKEN` is not a documented mechanism for
   marketplace fetches; the working paths are the credentialed re-clone fallback (default
   credential-manager setups), an SSH marketplace URL, or a scoped git URL-rewrite token.
-- Dedup pass over SKILL.md, no behavior change: the Guardrails recap section removed (every rule
-  already lives at its point of use; the unique `dist`/build-output clause folded into the sources
-  bullet), the step-7 re-check triple emphasis compressed to one sentence, and the two
-  "manual review is a last resort" paragraphs merged into the full-auto paragraph.
+- Dedup pass over SKILL.md and the agent prompts, no behavior change: the Guardrails recap section
+  removed (every rule already lives at its point of use; the unique `dist`/build-output clause
+  folded into the sources bullet), the step-7 re-check triple emphasis compressed to one sentence,
+  the two "manual review is a last resort" paragraphs merged into the full-auto paragraph, and six
+  remaining single-line repeats trimmed across SKILL.md, the applier and the planner.
 
 ## 1.3.1 — 2026-07-13
 

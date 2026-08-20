@@ -45,7 +45,7 @@ do; you execute it.
     THIS file is that location (e.g. the app config, the global styles entry, the relevant usage).
     If you're not sure this is the right file, record `needsReview` instead of guessing.
   - **`removed-api`** and **`behavior`**: these need judgement, not a find/replace — but you ATTEMPT
-    them (this workflow is full-auto; manual review is a last resort). Follow the migration the `note`
+    them. Follow the migration the `note`
     describes and make the real code change — e.g. swap a removed API for its documented replacement,
     wrap an element in a newly-required container, restructure an attribute into a projected slot,
     update an event handler whose payload changed, or pin a changed default the consumer relied on.
