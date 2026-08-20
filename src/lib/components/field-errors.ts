@@ -46,6 +46,14 @@ export type DsFieldErrorsInput =
 const NO_ERRORS: readonly DsFieldError[] = [];
 
 /**
+ * The one reserved `DsFieldError.kind`. An error carrying it is advisory: it shows
+ * in the warning state and does NOT make the control invalid, which is how a form
+ * model can raise a non-blocking remark — Angular's own `AbstractControl` has no
+ * channel for one, only `errors` and the validity derived from it.
+ */
+export const DS_FIELD_WARNING_KIND = 'warning';
+
+/**
  * `errors` input transform. Accepts a bare string (so a consumer that already
  * has the text can pass it directly), a single error, or the array signal forms
  * assigns.
@@ -63,6 +71,10 @@ export function normalizeFieldErrors(
   return Array.isArray(value) ? value : [value as DsFieldError];
 }
 
+export function trimmedText(value: string | null | undefined): string {
+  return value?.trim() ?? '';
+}
+
 /** The single line a field shows below itself, already resolved. */
 export interface DsFieldMessage {
   readonly text: string;
@@ -75,8 +87,7 @@ export interface DsFieldMessageSources {
   error: Signal<string>;
   errors: Signal<readonly DsFieldError[]>;
   invalid: Signal<boolean>;
-  /** Only `ds-input` has a success state today. */
-  success?: Signal<boolean>;
+  success?: Signal<string>;
   /** The field's own touched state, if it tracks one (CVA blur). */
   touchedSelf?: Signal<boolean>;
   /** Bound by signal forms as part of the `FormUiControl` contract. */
@@ -117,17 +128,19 @@ const NO_CONTROL: ControlState = { errors: NO_ERRORS, touched: false };
  * 2. `errors` — validation errors. Shown once the user has interacted, so a
  *    `required` error does not greet an untouched form.
  * 3. `warning` — advisory, not blocking.
- * 4. `hint` — helper text, and the fallback carrier for `invalid` (see below).
+ * 4. `errors` whose kind is `DS_FIELD_WARNING_KIND` — the same, raised by the form model.
+ * 5. `success` — confirmation.
+ * 6. `hint` — helper text.
  *
  * Both form systems feed step 2 and neither needs the other. Signal forms binds
  * `errors` and `touched` by input name (`FormUiControl`); reactive and
  * template-driven forms expose the same through `NgControl`, read here. A given
  * field instance is driven by exactly one of them, so they cannot disagree.
  *
- * When something is invalid but no source produced TEXT, the `hint` renders in
- * the error state. That keeps the pre-existing `[invalid]="…" [hint]="errorText"`
- * idiom — which is what consumers had to write before `error` existed — working
- * unchanged.
+ * Every rung carries its OWN text, and `hint` is never recoloured into somebody
+ * else's state. `invalid` is the one input with no text on purpose: it paints the
+ * control and sets `aria-invalid` for when the message lives elsewhere — a
+ * form-level error summary, or one message for a whole field group.
  *
  * Call from a field initializer (an injection context).
  */
@@ -150,8 +163,19 @@ export function resolveFieldMessage(
       controlState().touched,
   );
 
+  // Both form systems land here, so one reserved kind serves both: signal forms
+  // assigns its own ValidationError[] (which already carries `kind`), and
+  // fromValidationErrors turns a reactive validator's `{ warning: 'text' }` KEY
+  // into the same kind.
+  const blocking = computed(() =>
+    errors().filter((error) => error.kind !== DS_FIELD_WARNING_KIND),
+  );
+  const advisory = computed(() =>
+    errors().filter((error) => error.kind === DS_FIELD_WARNING_KIND),
+  );
+
   const errorText = computed(() => {
-    const current = errors();
+    const current = blocking();
     if (!current.length || !interacted()) {
       return '';
     }
@@ -159,15 +183,28 @@ export function resolveFieldMessage(
     return textFor(current, config.field?.errorMessages);
   });
 
+  const advisoryText = computed(() => {
+    const current = advisory();
+    if (!current.length || !interacted()) {
+      return '';
+    }
+
+    return textFor(current, config.field?.errorMessages);
+  });
+
+  // Advisory errors are deliberately absent: a warning does not make a control
+  // invalid, so it never sets aria-invalid and never blocks a submit guard.
   const invalid = computed(
     () =>
       sources.invalid() ||
-      sources.error().trim().length > 0 ||
-      (errors().length > 0 && interacted()),
+      sources.error().length > 0 ||
+      (blocking().length > 0 && interacted()),
   );
 
+  // Message inputs trim via `trimmedText`, so a non-empty string here is real
+  // text — a new one declared without that transform breaks this quietly.
   const message = computed<DsFieldMessage>(() => {
-    const explicit = sources.error().trim();
+    const explicit = sources.error();
     if (explicit) {
       return { text: explicit, state: 'error' };
     }
@@ -175,26 +212,28 @@ export function resolveFieldMessage(
     if (fromErrors) {
       return { text: fromErrors, state: 'error' };
     }
-    const warning = sources.warning().trim();
+    const warning = sources.warning();
     if (warning) {
       return { text: warning, state: 'warning' };
     }
-    const hint = sources.hint().trim();
-    if (!hint) {
-      return EMPTY_MESSAGE;
+    const fromAdvisory = advisoryText();
+    if (fromAdvisory) {
+      return { text: fromAdvisory, state: 'warning' };
     }
+    const success = sources.success?.();
+    if (success) {
+      return { text: success, state: 'success' };
+    }
+    const hint = sources.hint();
 
-    return {
-      text: hint,
-      state: invalid() ? 'error' : sources.success?.() ? 'success' : 'default',
-    };
+    return hint ? { text: hint, state: 'default' } : EMPTY_MESSAGE;
   });
 
   const paintedState = computed<FieldMessageState | null>(() => {
     if (invalid()) {
       return 'error';
     }
-    if (sources.warning().trim()) {
+    if (sources.warning() || advisoryText()) {
       return 'warning';
     }
 
@@ -287,7 +326,7 @@ function textFor(
         .map((error) => `"${error.kind}"`)
         .join(
           ', ',
-        )}, so the field falls back to showing its hint in the error state - or, with no hint, an error style and no message at all. Give the validator a message — required(path, { message: '…' }) or { myError: 'text' } — or map the kind in provideDsConfig({ field: { errorMessages: … } }).`,
+        )}, so the field paints the state with NO message under it. Give the validator a message — required(path, { message: '…' }) or { myError: 'text' } — or map the kind in provideDsConfig({ field: { errorMessages: … } }).`,
     );
   }
 

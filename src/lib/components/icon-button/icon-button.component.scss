@@ -100,8 +100,16 @@
     width: var(--_icon-button-size); height: var(--_icon-button-size);
   }
 
-  /* Variants re-bind the resolvers (consumer token still wins). `standard`
-     equals the base defaults (no block needed). */
+  /* Variants re-bind the resolvers (consumer token still wins). */
+  &.standard {
+    /* No fill and no border here, so the glyph's colour is the whole disabled
+       signal — and the base's fixed lightness cannot carry it in dark, where the
+       enabled icon is already OKLCH L 80% against a disabled L 70%: a 1.46:1 gap.
+       Scoped to this variant, not the base, because filled's icon is --c-on and
+       white mixed into a white surface does not move. */
+    --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, color-mix(in srgb, var(--_icon-button-icon-color) 40%, var(--surface-default)));
+  }
+
   &.filled {
     --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--c-base));
     --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--c-on));

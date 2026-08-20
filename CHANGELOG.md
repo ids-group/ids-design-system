@@ -8,6 +8,225 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Removed
+
+- **`--opacity-muted` is gone from the token scale.** It was the last token in the file that no
+  component read: the disabled states moved onto `--text-disabled` + `--opacity-disabled` in
+  0.10.0, and it had been sitting there since, labelled a legacy alias. Keeping a dead number in a
+  purpose-named scale is worse than removing it — it invites exactly the override that 0.10.0's
+  DELETE-LIST had to warn about twice, where a consumer retunes it on `ds-button` /
+  `ds-icon-button` and gets a silent no-op. **Nothing in the library changes.** If you set it, drop
+  the declaration; if you READ it in your own CSS, inline the 0.6 or move to the token that names
+  the job — `--opacity-disabled` (0.5) for a disabled state where opacity is the only signal,
+  `--opacity-text-disabled` (0.38) for disabled text. The comment above the block claims every
+  token in it has a real consumer; that is true again.
+
+### Added
+
+- **`ds-segmented` joins the form systems, and gains a label and a message row.** It carried a value
+  and no form could bind it — no `NG_VALUE_ACCESSOR`, so `[(ngModel)]`, a `formControlName` and
+  signal forms all slid off it. It now extends `DsControlValueAccessor` and resolves its message
+  through the same `resolveFieldMessage` as every other field, mirroring `ds-radio-group`: `label`,
+  `hint`, `error`, `warning` and `errors` all behave as they do elsewhere, and `disabled` folds
+  together with the form's own disabled state. **The DOM grew a level to fit them:** the pill moved
+  off `:host` onto an inner `.track`, so the host can stack label, pill and message. The pill's own
+  tokens stayed on `:host` and inherit down, so a token override is unaffected — but a
+  `::ng-deep` rule written against the host AS the pill (a background, a border-radius, a grid) now
+  targets the stack instead, and wants `.track`.
+
+- **`invalid` paints the error state only — it no longer promotes `hint` to the error message.**
+  Every state carries its own text now, and `hint` is never recoloured into somebody else's state.
+  **BREAKING:** `[invalid]="true" hint="Must be before end date"` used to render that hint in red,
+  through `role="alert"`. It now renders a red border with a **grey** hint. Use
+  `error="Must be before end date"` instead — the state and the message come together.
+  **Why, beyond tidiness.** The idiom lost the actual hint: when both were set, the help text the
+  author wrote was replaced by the error rather than shown alongside it. It also announced help text
+  as an alert, and it made a template unreadable — whether `hint="…"` was a hint or an error depended
+  on a different attribute. It was the last input that borrowed another one's text; `success` stopped
+  doing it in the same release.
+  **`invalid` is not going away and still has its own job:** the error state with NO message, for when
+  the text lives elsewhere — a form-level error summary, or one message covering a whole
+  `ds-field-group` — plus `aria-invalid` for that case. Carbon and Material split the boolean from
+  the text the same way.
+  Our own docs taught the old idiom on 13 components (14 of 19 `[invalid]` bindings also bound
+  `hint`); all of them now use `error`.
+
+- **A form model can now raise a WARNING, not only an error** — `DS_FIELD_WARNING_KIND`, newly
+  exported. A validation error whose `kind` is `'warning'` paints the field's warning state and shows
+  its message, but leaves the control **valid**: `aria-invalid` stays off and a submit guard reading
+  validity is not blocked.
+  **Why it had to ride inside `errors`.** Angular's `AbstractControl` has no channel for an advisory
+  remark — it exposes `errors` and the validity derived from them, and nothing else. So there was no
+  way for a form to say "this is worth mentioning but not wrong": `warning` and `success` could only
+  be bound by hand from the consumer's own state.
+  **It works from both form systems with no new plumbing**, which is the point. A reactive or
+  template-driven validator returning `{ warning: 'Long runs of capitals are hard to scan' }` has its
+  KEY read as the kind; signal forms assigns its own `ValidationError[]`, which already carries a
+  `kind`. Both land in the same `errors` signal.
+  Ranked below the explicit `warning` input — the consumer's own string wins, exactly as `error` beats
+  `errors` — and shown only after the user has interacted, like any other validation message.
+  **`DsFieldError` and `DsFieldErrorsInput` are exported too**, so a typed validator can be written
+  against the shape the input accepts. Reserved-kind caveat: a validator already using the key
+  `warning` for a BLOCKING error now reads as advisory. Rename that key if you have one.
+
+- **`success` exists on all nine bordered fields, and it is now a STRING that carries its own text.**
+  Added to `ds-textarea`, `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`,
+  `ds-time-picker`, `ds-otp-input` and `ds-color-picker` — it was on `ds-input` alone, so a form could
+  not use the state consistently. The three box-less controls (`ds-checkbox`, `ds-radio-group`,
+  `ds-switch`) and `ds-slider` deliberately do NOT get it: they have no box for a border to appear on,
+  so the state would show in the message line alone and read as a different treatment.
+  **BREAKING for `ds-input`, the one field that already had it:** `success` was
+  `input(false, { transform: booleanAttribute })` and is now `input<string>('')`. Replace
+  `[success]="true" hint="Available"` with `success="Available"`.
+  **Why the type changed rather than staying a flag.** It was the only state that could not say
+  anything: `error` and `warning` carry their own text, and `success` was a boolean that recoloured
+  the `hint` green. So `success` was the one state whose message had to be smuggled through a
+  different input, and a reader of the template could not tell a green hint from a grey one. It is now
+  a fourth rung in the same ladder — `error` → `errors` → `warning` → **`success`** → `hint` — and
+  reads exactly like `warning`: the text IS the state, no second binding.
+  **What this removes:** a success border with no message, which is no longer expressible — exactly as
+  it never was for `warning`. `invalid` still exists as the flag partner of `error`, for the
+  `[invalid]="…" [hint]="…"` idiom that predates `error`.
+
+- **`ds-list-item` can hold its own controls: `[leading]` and `[trailing]` render OUTSIDE the row's
+  button.** A row with a checkbox AND a row-level action had no shape here — every projected node went
+  inside `<button class="activator">`, where a nested control is invalid HTML, its click bubbles into
+  `activated`, and a screen reader folds it into the button's name and never announces its checked
+  state. Dropping `clickable` was no answer either: `cursor`, `:hover`, `:focus-visible` and
+  `aria-current` all hung off that button. The row is now the flex container and the button wraps only
+  the text, so the master–detail shape works — a checkbox per row for a bulk action, the row itself
+  choosing what a detail pane shows, two independent targets.
+  **This stays a `role="list"`, deliberately not a `listbox`:** the ARIA spec is explicit that a
+  `listbox` option cannot hold interactive content, so a real listbox would have made the pattern
+  impossible rather than easier. `role="listitem"` carries no such restriction.
+  **`selected` also works properly now.** It set `aria-current` on the inner button, so it did nothing
+  at all unless `clickable` was on; `aria-current` sits on the host, which is the row that is current.
+  **BREAKING for CSS overrides only** — no API changed. `.activator` no longer carries the row's
+  padding, gap or hover tint: those moved to the host. A `::ng-deep .activator { padding: … }` now pads
+  the text alone, and a `::ng-deep .activator:hover` no longer paints the full row.
+
+- **Per-side padding on `ds-modal` / `ds-modal-card`.** Each region resolved ONE `pad-y` applied to
+  both of its edges, so a layout whose header pads only at the top and whose actions row pads only
+  at the bottom — the body's own padding carrying the whole gap between them — could not be said
+  through the API at all. mm-broker has held three `!important` rules on `.modal > .header` /
+  `> .body` / `> .actions` for exactly this, reaching past the component into its internal class
+  names, and `DS_CONFIG.modal.dividers` could not retire them. Six new tokens —
+  `--ds-modal-header-pad-top` / `-pad-bottom` and the same for `body` and `actions` — each fall back
+  to their region's existing `pad-y`, so **nothing moves unless you set one**, and `--ds-modal-*-pad-y`
+  keeps working as the shorthand for both edges.
+
+- **`ds-table`'s own icon buttons are themeable.** The row-action kebab and the column-picker trigger
+  hardcoded `--icon-default`, `--icon-strong` on hover and an `--accent` focus outline, and neither is a
+  `ds-icon-button`, so the icon-button tokens never reached them — a consumer whose design calls for a
+  teal row menu had no supported way to get one short of repainting `--icon-default` for the whole app.
+  Three resolvers now cover both: `--ds-table-icon-btn-color`, `--ds-table-icon-btn-color-hover` and
+  `--ds-table-icon-btn-focus-color`, defaulting to exactly what was hardcoded, so nothing moves unless
+  you set them.
+
+### Fixed
+
+- **`ds-field-message`'s docs claimed `state` picks an icon. It never did.** The input's docblock
+  said it "decides colour and icon" and `icon`'s said it "overrides the glyph the `state` would
+  pick" — but `icon` is a plain `input<IconName | null>(null)` with no per-state default, so a
+  consumer following the reference got a colour and no glyph. **Nothing in the library changes**: the
+  JSDoc and the generated API reference now say what the code does — `state` sets the colour, and a
+  field that wants an icon passes one.
+
+- **A nullable binding on a message input no longer throws.** `hint`, `error`, `warning` and
+  `success` took a bare `string`, and the resolver called `.trim()` on whatever arrived — so
+  `[error]="form.errors?.message"` put `null` in and crashed the render with a `TypeError` the
+  moment the expression was empty. All four now transform at the input boundary, absorbing
+  `null`/`undefined` to `''` and trimming, so a blank binding simply means "no message". **You can
+  now delete** the `?? ''` you wrapped such a binding in.
+
+- **A `ds-menu` inside a `ds-popover` clips its rows to the panel's rounded corners.** The first and
+  last row's fill — a hover tint, or the red of a destructive item — painted through the panel's
+  corner, so a destructive last item showed **two square red corners under a rounded popover**.
+  **The cause was not a missing clip; it was a clip of the wrong shape.** `ds-menu` has
+  `overflow: hidden`, and that is what rounds the edge rows for a bare menu. But its
+  `:host-context(.popover)` block flattened `border-radius` to `--radius-flat` while leaving `overflow`
+  in force, so inside a popover the menu clipped its rows **square** and the panel's 12px corner
+  showed that square fill through it. The popover now publishes `--ds-menu-clip-radius` — its own
+  radius less the border it contains — and the menu clips to that, concentric at 11px inside a 12px
+  panel. A brand overriding `--ds-popover-radius` is followed automatically.
+  **Not fixed with `overflow: hidden` on the panel**, which was the obvious move: a submenu is a CDK
+  overlay portaled to `body`, so clipping the panel would not have reached it, and the panel's clip
+  would have cut an edge row's focus ring — the same defect fixed in `ds-filter-bar` this month.
+  Nothing else changes: the item radius token `--ds-menu-item-radius` still defaults to 0, because the
+  MENU owns the edge corners, not the row.
+
+- **Clearing or replacing `ds-date-picker`'s `value` from outside now clears the picker's own typing
+  error.** `typedInvalid` / `rangeInvalid` were set by the typing paths and cleared only by those and
+  `applyPreset`, so `value.set(null)` re-rendered the field to empty and left **"Enter a valid date
+  (MM/DD/YYYY)" standing over it**. `[error]` was no help: a consumer who has just cleared the field
+  has no error of its own to bind, and an empty string falls straight back to the picker's.
+  The `value → text` effect now clears both flags. It is the right place because every typing path
+  holds an `editing` guard while it runs, so reaching the effect means the value did NOT come from the
+  keyboard — and a leftover error no longer describes what the field is about to show. Verified that
+  neither typing path writes `value` on the invalid branch, so blur validation still stands.
+  **This retires two consumer workarounds.** One app was tearing down a whole modal body on `closed`
+  purely to get a fresh picker — and that had a hole, since reopening inside the 300 ms leave animation
+  cancels the close, `closed` never fires and the stale error survived. A second dialog had no
+  workaround at all, so a mistyped date of birth read "Enter a valid date" over an empty field the next
+  time it opened.
+
+- **A disabled `ds-button` with `variant="ghost"`, `variant="text"` or `variant="outline"` mixes its
+  label toward the surface instead of taking the shared fixed-lightness recipe.** New default:
+  `color-mix(in srgb, <label> 40%, var(--surface-default))`. These three share one accent source and
+  have no fill that could carry the state, so the label is the whole signal — and the shared recipe
+  was failing it, badly in dark. Measured against the enabled label: light **2.54 → 3.41:1**, dark
+  **1.11 → 2.91:1**. `outline` does have a border, but its disabled border resolves to only
+  **1.30:1** against the page — less than its own *enabled* border at 1.49:1 — so it never covered
+  for the label.
+  **The dark number is the real defect.** `--primary-strong` there is already light (OKLCH L 67.9%),
+  so a recipe pinning the disabled label at L 70% landed two points from the enabled one and the two
+  differed in chroma alone. A fixed lightness cannot serve both themes: in light, disabled is
+  lighter than the accent; in dark the accent is already light, so disabled has to go darker. The
+  surface knows that direction and a constant does not — which is the whole reason the mix target is
+  `--surface-default` rather than a number.
+  **The trade:** the disabled label is fainter against its own ground — **2.00:1** light, 1.99:1
+  dark, where the old recipe gave 2.69 / 6.45. Disabled text is exempt from WCAG 1.4.3 and 1.4.11
+  and Material ships its equivalent at 1.93:1, so this is inside practice. Chroma rises with the
+  mix (0.036 → 0.099 light), so the disabled label stays tinted rather than going grey; that was
+  chosen deliberately over a desaturating variant after looking at both.
+  **`solid` and `tonal` are unchanged**, deliberately: a white label mixed into a white surface does
+  not move, and tonal's disabled fill already carries the state on its own. **Known limitation:** the
+  mix target is `--surface-default`, a stand-in for "whatever is behind" — CSS cannot read the actual
+  backdrop, so on a tinted ground (a card at `--surface-secondary`, an alert) the disabled label is
+  computed against the page colour rather than that ground. Consumers who set
+  `--ds-button-label-color-disabled` are unaffected.
+### Changed
+
+- **A disabled `ds-icon-button variant="standard"` mixes its glyph toward the surface too.** It is
+  the only icon-button variant with neither a fill nor a border, so the glyph's colour is the whole
+  disabled signal — and the shared fixed-lightness recipe could not carry it in dark, where the
+  enabled icon is already light (OKLCH L 80%) and a disabled one pinned at L 70% sat **1.46:1** away.
+  The new default is `color-mix(in srgb, <icon> 40%, var(--surface-default))`, the same mix the
+  borderless button variants take, which picks its direction per theme: light **4.17 → 5.19:1**, dark
+  **1.46 → 3.58:1**. Scoped to `standard` deliberately — `filled`'s icon is `--c-on`, and white
+  mixed into a white surface does not move at all. `--ds-icon-button-icon-color-disabled` is the same
+  hook as before and still wins; only the default under it changed.
+
+- **If you EXTEND a DS field component, read this before trusting `class-surface`.** The report
+  against 0.10.0 says fourteen field components LOST eight members each — `hint`, `error`,
+  `warning`, `errors`, `invalid`, `touched`, `reserveMessage` and `reserveMessageResolved`.
+  **Nothing was removed.** Those inputs were declared once per component and are now declared once in
+  total, on a new internal `DsFieldBase`, which every field reaches either directly or through
+  `DsControlValueAccessor` / `DsBooleanControlValueAccessor`. All fourteen still carry all eight by
+  inheritance, so a template binding, a TS read and an existing `override` all behave exactly as
+  before. The tool counts declarations per FILE, and `migrations/AUTHORING.md` already names a member
+  that moved to a base class as one of the two things it cannot see — this release is that case.
+  What genuinely grew is smaller: **eight bordered fields gained `success`** (`ds-autocomplete`,
+  `ds-color-picker`, `ds-date-picker`, `ds-multi-select`, `ds-otp-input`, `ds-select`,
+  `ds-textarea`, `ds-time-picker`), `ds-input` having had it all along. `ds-segmented`
+  is the tenth grown class and the one with real new surface — joining the form systems gave it
+  `label`, `disabled`, `isDisabled`, `message`, `invalidResolved`, `fieldMessage`, `hintId` and
+  `uid`. A subclass declaring
+  `success` on one of those eight now fails with TS4114; declaring any of the eight moved names still
+  collides exactly as it did, because an inherited member collides the same way an own one does.
+  `DsFieldBase` is internal and deliberately not exported — it holds only the inputs every field has,
+  which is why `success`, `label`, `required` and `optional` stayed on the components.
+
 ## 0.10.0 — 2026-08-18
 
 ### Added
@@ -557,6 +776,35 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   component using these insets — already did on all four of its.
 
 ### Changed
+
+- **The seven inputs every field shares are declared once, in `DsFieldBase`.** `hint`, `error`,
+  `warning`, `errors`, `invalid`, `touched` and `reserveMessage` — plus the `reserveMessageResolved`
+  helper — were hand-copied into all fourteen fields, 98 declarations. **Nothing about the public API
+  changed:** every input keeps its name, type, default and documentation, and the docs API tables are
+  byte-identical apart from the eight new `success` rows (verified by diffing the generated
+  reference: 0 lost, 8 gained).
+  **Why it is worth knowing anyway:** the duplication had already drifted twice — `success` was
+  missing from eight fields, and `ds-date-picker` had quietly moved to a different `invalid` source.
+  A new state added to the base now reaches every field at once.
+  `DsControlValueAccessor` and `DsBooleanControlValueAccessor` extend the base (so single inheritance
+  still holds for the thirteen fields that already extended one of them) and `ds-radio` extends it
+  directly. Only the UNIVERSAL inputs moved: `success`, `label`, `required` and `optional` stay on the
+  components, because they exist on 9, 9, 7 and 5 fields respectively and lifting them would hand a
+  checkbox a `success` or a slider a `label` it never had.
+
+- **`ds-icon-button` with `variant="standard"` mixes its disabled glyph toward the surface too.**
+  New default on that variant only: `color-mix(in srgb, <icon colour> 40%, var(--surface-default))`.
+  Same defect as ghost, and it matters more here — there is no word to read, just a 16px glyph.
+  Measured: light **4.17 → 5.19:1**, dark **1.46 → 3.58:1**. Light was already healthy, because the
+  enabled glyph is `--text-secondary` at OKLCH L 35% and the old recipe moved it to L 70%; **dark was
+  the break**, where the enabled glyph is L 80% and a disabled one pinned at L 70% left ten points
+  and a 1.46:1 gap.
+  **Scoped to `standard` deliberately, and this is the trap worth knowing:** the resolver is declared
+  once on the base and no variant overrode it, so touching the base would have hit `filled` too —
+  whose glyph is `--c-on`, i.e. white, and white mixed into a white surface does not move at all,
+  which would have put an invisible white glyph on a pale disabled fill. `filled`, `tonal` and
+  `outlined` keep the base recipe unchanged. Consumers who set
+  `--ds-icon-button-icon-color-disabled` are unaffected.
 
 - **`avatarTint` switches from OKLCH to `hsl(H 50% 62%)` with white initials, always.** The seeded
   tints read as dull, and every set of initials came out black. The auto-contrast was not the fault:

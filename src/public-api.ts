@@ -76,3 +76,8 @@ export * from './lib/components/radio-group';
 export * from './lib/components/switch';
 export * from './lib/components/static-preview.directive';
 export * from './lib/components/field-click-focus.directive';
+export {
+  DS_FIELD_WARNING_KIND,
+  type DsFieldError,
+  type DsFieldErrorsInput,
+} from './lib/components/field-errors';

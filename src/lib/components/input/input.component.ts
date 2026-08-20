@@ -16,18 +16,12 @@ import { IconComponent } from '../../icons/icon.component';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
-import {
-  normalizeFieldErrors,
-  resolveFieldMessage,
-  type DsFieldError,
-  type DsFieldErrorsInput,
-} from '../field-errors';
+import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
 import type { InputType } from './input.types';
 import type { DsSize } from '../../core/size';
 import { inFieldGroup } from '../field-group/field-group.token';
-import { resolveReserveMessage } from '../field-defaults';
 import { resolveWithConfig } from '../../core/config-defaults';
 
 @Component({
@@ -75,32 +69,6 @@ export class InputComponent extends DsControlValueAccessor<string> {
   );
   /** Label shown above the field. */
   readonly label = input<string>('');
-  /** Helper text shown below the field. */
-  readonly hint = input<string>('');
-  /** Error text. Shown immediately — binding it says the consumer has already
-   *  decided this field is in error. Takes precedence over `errors`. */
-  readonly error = input<string>('');
-  /** Advisory text, shown when there is no error. */
-  readonly warning = input<string>('');
-  /** Validation errors, shown once the user has interacted. Bound automatically
-   *  by signal forms; reactive and template-driven forms are read through
-   *  `NgControl` and need nothing here. Accepts a string, one error, or an array. */
-  readonly errors = input<readonly DsFieldError[], DsFieldErrorsInput>([], {
-    transform: normalizeFieldErrors,
-  });
-  /** Whether the user has interacted with the field. Bound by signal forms; gates
-   *  `errors`, so a `required` error does not greet an untouched form. */
-  readonly touched = input(false, { transform: booleanAttribute });
-  /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Falls back to
-   *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
-   *  for a form that shows validation messages. */
-  readonly reserveMessage = input<boolean | null, unknown>(null, {
-    transform: (value) => (value == null ? null : booleanAttribute(value)),
-  });
-  protected readonly reserveMessageResolved = resolveReserveMessage(
-    this.reserveMessage,
-  );
   /** Placeholder shown when empty. */
   readonly placeholder = input<string>('');
   /** Disables the field and blocks all interaction. */
@@ -121,10 +89,11 @@ export class InputComponent extends DsControlValueAccessor<string> {
   protected readonly isReadOnly = computed(
     () => this.readOnly() || this.readonlyBinding(),
   );
-  /** Applies error styling and marks the field `aria-invalid`. */
-  readonly invalid = input(false, { transform: booleanAttribute });
-  /** Applies success styling to the field. */
-  readonly success = input(false, { transform: booleanAttribute });
+  /** Confirmation text, shown when there is no error or warning — and it paints
+   *  the field's success border. A string like `warning`: the text IS the state. */
+  readonly success = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
   /** Shows a trailing spinner — e.g. async validation in flight. The input
    *  stays editable; pair with a `hint` like "Checking availability…". */
   readonly loading = input(false, { transform: booleanAttribute });
@@ -297,7 +266,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
     }
     if (this.invalidResolved()) {
       parts.push('error');
-    } else if (this.success()) {
+    } else if (this.success().trim()) {
       parts.push('success');
     }
     if (this.isDisabled()) {

@@ -24,8 +24,13 @@
 :host-context(.popover) {
   background: transparent;
   border: 0;
-  border-radius: var(--radius-flat);
   padding: 0;
+
+  // NOT flat: `overflow: hidden` from :host stays in force, so this radius is what
+  // shapes the first and last row's fill. Zero here clips them square and the
+  // panel's rounded corner shows that square fill through it. The fallback keeps
+  // any other .popover-classed container, which publishes nothing, as it was.
+  border-radius: var(--ds-menu-clip-radius, var(--radius-flat));
 }
 
 .menu {

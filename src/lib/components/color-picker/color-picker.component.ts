@@ -21,12 +21,7 @@ import { IconComponent } from '../../icons/icon.component';
 import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
-import {
-  normalizeFieldErrors,
-  resolveFieldMessage,
-  type DsFieldError,
-  type DsFieldErrorsInput,
-} from '../field-errors';
+import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import {
   closeOnOutsidePointer,
@@ -44,7 +39,6 @@ import {
   hsvToHex,
   normalizeHex,
 } from './color-picker.utils';
-import { resolveReserveMessage } from '../field-defaults';
 
 const DEFAULT_PRESETS: readonly string[] = [
   '#2F54FF',
@@ -110,34 +104,11 @@ export class ColorPickerComponent
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Accessible name for the trigger button and panel. */
   readonly ariaLabel = input<string>('Choose colour');
-  /** Applies error styling and marks the trigger `aria-invalid`. */
-  readonly invalid = input(false, { transform: booleanAttribute });
-  /** Helper text shown below the trigger. */
-  readonly hint = input<string>('');
-  /** Error text. Shown immediately — binding it says the consumer has already
-   *  decided this field is in error. Takes precedence over `errors`. */
-  readonly error = input<string>('');
-  /** Advisory text, shown when there is no error. */
-  readonly warning = input<string>('');
-  /** Validation errors, shown once the user has interacted. Bound automatically
-   *  by signal forms; reactive and template-driven forms are read through
-   *  `NgControl` and need nothing here. Accepts a string, one error, or an array. */
-  readonly errors = input<readonly DsFieldError[], DsFieldErrorsInput>([], {
-    transform: normalizeFieldErrors,
+  /** Confirmation text, shown when there is no error or warning — and it paints
+   *  the field's success border. A string like `warning`: the text IS the state. */
+  readonly success = input<string, string | null | undefined>('', {
+    transform: trimmedText,
   });
-  /** Whether the user has interacted with the field. Bound by signal forms; gates
-   *  `errors`, so a `required` error does not greet an untouched form. */
-  readonly touched = input(false, { transform: booleanAttribute });
-  /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Falls back to
-   *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
-   *  for a form that shows validation messages. */
-  readonly reserveMessage = input<boolean | null, unknown>(null, {
-    transform: (value) => (value == null ? null : booleanAttribute(value)),
-  });
-  protected readonly reserveMessageResolved = resolveReserveMessage(
-    this.reserveMessage,
-  );
 
   protected readonly trigger =
     viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
@@ -172,6 +143,7 @@ export class ColorPickerComponent
     error: this.error,
     errors: this.errors,
     invalid: this.invalid,
+    success: this.success,
     touchedSelf: this.touchedSelf,
     touched: this.touched,
   });

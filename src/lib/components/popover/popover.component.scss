@@ -31,6 +31,12 @@
   // would double-pad. Drop it when the popover hosts a menu.
   &:has(ds-menu) {
     padding: 0;
+
+    // Read by ds-menu, which clips its own rows — see its `:host-context(.popover)`
+    // block. Less the border, so the menu's clip is concentric with this panel's.
+    --ds-menu-clip-radius: calc(
+      var(--_popover-radius) - var(--border-width-default)
+    );
   }
 }
 

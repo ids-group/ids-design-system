@@ -1684,12 +1684,6 @@ export const MISC_OPACITY: readonly MiscRow[] = [
     "notes": "Full disabled state where opacity is the ONLY signal — a calendar day, a toggle button. A control that already swaps to --text-disabled must not stack this on top."
   },
   {
-    "name": "--opacity-muted",
-    "value": "0.6",
-    "renderAs": "opacity",
-    "notes": "Legacy alias (0.6). No component reads it — disabled states use --text-disabled with --opacity-disabled."
-  },
-  {
     "name": "--opacity-text-disabled",
     "value": "0.38",
     "renderAs": "opacity",
@@ -3767,6 +3761,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Gap between menu items."
       },
       {
+        "name": "--ds-menu-clip-radius",
+        "value": "var(--radius-flat)",
+        "notes": "Radius a ds-menu clips its rows to when it sits inside a rounded panel. Published by ds-popover as its own radius less the border it contains, so the rows stay concentric with the panel; a bare menu leaves it flat and rounds its edge rows from --ds-menu-radius instead."
+      },
+      {
         "name": "--menu-minw",
         "value": "200px",
         "notes": "Menu panel minimum width (200px)."
@@ -3947,6 +3946,36 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-modal-actions-pad-y",
         "value": "var(--space-4)",
         "notes": "Vertical padding of the footer actions row. Worth tightening alongside --ds-modal-divider: transparent, which leaves spacing sized for dividers that are gone."
+      },
+      {
+        "name": "--ds-modal-header-pad-top",
+        "value": "var(--_modal-header-pad-y)",
+        "notes": "Padding on the modal's header, top edge only. Falls back to --ds-modal-header-pad-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-header-pad-bottom",
+        "value": "var(--_modal-header-pad-y)",
+        "notes": "Padding on the modal's header, bottom edge only. Falls back to --ds-modal-header-pad-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-body-pad-top",
+        "value": "var(--_modal-body-pad-y)",
+        "notes": "Padding on the modal's body, top edge only. Falls back to --ds-modal-body-pad-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-body-pad-bottom",
+        "value": "var(--_modal-body-pad-y)",
+        "notes": "Padding on the modal's body, bottom edge only. Falls back to --ds-modal-body-pad-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-actions-pad-top",
+        "value": "var(--_modal-actions-pad-y)",
+        "notes": "Padding on the modal's actions, top edge only. Falls back to --ds-modal-actions-pad-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-actions-pad-bottom",
+        "value": "var(--_modal-actions-pad-y)",
+        "notes": "Padding on the modal's actions, bottom edge only. Falls back to --ds-modal-actions-pad-y, which sets both."
       },
       {
         "name": "--ds-modal-enter-scale",
@@ -5784,6 +5813,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-table-sort-active-icon-color",
         "value": "var(--accent)",
         "notes": "Active sort caret."
+      },
+      {
+        "name": "--ds-table-icon-btn-color",
+        "value": "var(--icon-default)",
+        "notes": "Icon colour of ds-table's own icon buttons — the row-action kebab and the column picker. Defaults to --icon-default. Neither is a ds-icon-button, so the icon-button tokens do not reach them."
+      },
+      {
+        "name": "--ds-table-icon-btn-color-hover",
+        "value": "var(--icon-strong)",
+        "notes": "Hover icon colour for ds-table's row-action kebab and column picker. Defaults to --icon-strong."
+      },
+      {
+        "name": "--ds-table-icon-btn-focus-color",
+        "value": "var(--accent)",
+        "notes": "Focus-outline colour for ds-table's row-action kebab and column picker. Defaults to --accent."
       },
       {
         "name": "--ds-table-cell-pad-x",

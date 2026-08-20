@@ -25,7 +25,8 @@
   // Square by design: the row is flush to its container (a bare ds-menu has no
   // padding, and .popover drops its own for a menu), so any radius here draws a
   // curve that cannot be concentric with the panel's and leaves slivers in the
-  // corners. The panel clips the fill instead. Token'd for a brand that wants it back.
+  // corners. The MENU clips the fill — it owns the rounded corners for the edge
+  // rows, not this. Token'd for a brand that wants it back.
   border-radius: var(--ds-menu-item-radius, 0);
   font: var(--_menu-item-label-weight) var(--_menu-item-label-font-size) / var(--line-height-base) var(--font-sans);
   color: var(--_menu-item-label-color);

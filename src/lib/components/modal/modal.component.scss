@@ -40,6 +40,16 @@
   --_modal-header-pad-y: var(--ds-modal-header-pad-y, var(--space-4));
   --_modal-body-pad-y: var(--ds-modal-body-pad-y, var(--space-5));
   --_modal-actions-pad-y: var(--ds-modal-actions-pad-y, var(--space-4));
+
+  /* Per-side, each falling back to its region's pad-y. One pad-y is applied to both
+     edges, so a header that pads only at the top could not be said without reaching
+     past the API into .header / .actions. */
+  --_modal-header-pad-top: var(--ds-modal-header-pad-top, var(--_modal-header-pad-y));
+  --_modal-header-pad-bottom: var(--ds-modal-header-pad-bottom, var(--_modal-header-pad-y));
+  --_modal-body-pad-top: var(--ds-modal-body-pad-top, var(--_modal-body-pad-y));
+  --_modal-body-pad-bottom: var(--ds-modal-body-pad-bottom, var(--_modal-body-pad-y));
+  --_modal-actions-pad-top: var(--ds-modal-actions-pad-top, var(--_modal-actions-pad-y));
+  --_modal-actions-pad-bottom: var(--ds-modal-actions-pad-bottom, var(--_modal-actions-pad-y));
   --_ds-enter-scale: var(--ds-modal-enter-scale, 0.97);
 
   display: contents;
@@ -80,7 +90,8 @@
     align-items: center;
     gap: var(--space-3);
     justify-content: space-between;
-    padding: var(--_modal-header-pad-y) var(--_modal-pad-x);
+    padding: var(--_modal-header-pad-top) var(--_modal-pad-x)
+      var(--_modal-header-pad-bottom);
     border-bottom: var(--border-width-default) solid var(--_modal-divider);
   }
 
@@ -157,7 +168,8 @@
   }
 
   .body {
-    padding: var(--_modal-body-pad-y) var(--_modal-pad-x);
+    padding: var(--_modal-body-pad-top) var(--_modal-pad-x)
+      var(--_modal-body-pad-bottom);
     overflow-y: auto;
   }
 
@@ -165,7 +177,8 @@
     display: flex;
     gap: var(--space-3);
     justify-content: flex-end;
-    padding: var(--_modal-actions-pad-y) var(--_modal-pad-x);
+    padding: var(--_modal-actions-pad-top) var(--_modal-pad-x)
+      var(--_modal-actions-pad-bottom);
     border-top: var(--border-width-default) solid var(--_modal-divider);
 
     // A read-only dialog projects nothing here — without this it still draws a

@@ -9,17 +9,14 @@ import {
   model,
   viewChild,
 } from '@angular/core';
+import { DsFieldBase } from '../field-base';
 import { nextControlId } from '../field-ids';
 import { RADIO_GROUP } from '../radio-group/radio-group.token';
 import { FieldMessageComponent } from '../field-message/field-message.component';
 import {
-  normalizeFieldErrors,
   resolveFieldMessage,
-  type DsFieldError,
-  type DsFieldErrorsInput,
 } from '../field-errors';
 import type { DsSize } from '../../core/size';
-import { resolveReserveMessage } from '../field-defaults';
 import { resolveWithConfig } from '../../core/config-defaults';
 
 @Component({
@@ -30,7 +27,7 @@ import { resolveWithConfig } from '../../core/config-defaults';
   styleUrl: './radio.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
 })
-export class RadioComponent {
+export class RadioComponent extends DsFieldBase {
   /** Standalone two-way binding. When inside ds-radio-group, isChecked() is
    *  derived from the group value instead. */
   readonly checked = model<boolean>(false);
@@ -42,34 +39,6 @@ export class RadioComponent {
   readonly value = input<unknown>('');
   /** Overrides the auto-generated id used for the input and its label's `for`. */
   readonly inputId = input<string | null>(null);
-  /** Applies error styling and marks the input `aria-invalid`. */
-  readonly invalid = input(false, { transform: booleanAttribute });
-  /** Helper text shown below the control. */
-  readonly hint = input<string>('');
-  /** Error text. Shown immediately — binding it says the consumer has already
-   *  decided this field is in error. Takes precedence over `errors`. */
-  readonly error = input<string>('');
-  /** Advisory text, shown when there is no error. */
-  readonly warning = input<string>('');
-  /** Validation errors, shown once the user has interacted. Bound automatically
-   *  by signal forms; reactive and template-driven forms are read through
-   *  `NgControl` and need nothing here. Accepts a string, one error, or an array. */
-  readonly errors = input<readonly DsFieldError[], DsFieldErrorsInput>([], {
-    transform: normalizeFieldErrors,
-  });
-  /** Whether the user has interacted with the field. Bound by signal forms; gates
-   *  `errors`, so a `required` error does not greet an untouched form. */
-  readonly touched = input(false, { transform: booleanAttribute });
-  /** Reserve the message-row height even when empty, so the field doesn't shift
-   *  the layout below it when a hint/error appears. Falls back to
-   *  `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide
-   *  for a form that shows validation messages. */
-  readonly reserveMessage = input<boolean | null, unknown>(null, {
-    transform: (value) => (value == null ? null : booleanAttribute(value)),
-  });
-  protected readonly reserveMessageResolved = resolveReserveMessage(
-    this.reserveMessage,
-  );
   /** Control size — sm/md/lg.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);

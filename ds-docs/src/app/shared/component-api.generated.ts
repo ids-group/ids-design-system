@@ -297,6 +297,69 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -403,67 +466,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Disables the trigger and blocks all interaction."
       },
       {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the field `aria-invalid`."
-      },
-      {
-        "name": "hint",
+        "name": "success",
         "kind": "input",
         "type": "string",
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
-      },
-      {
-        "name": "warning",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Advisory text, shown when there is no error."
-      },
-      {
-        "name": "errors",
-        "kind": "input",
-        "type": "readonly DsFieldError[]",
-        "union": null,
-        "default": "[]",
-        "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
-      },
-      {
-        "name": "touched",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "allowCreate",
@@ -1296,6 +1305,69 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -1350,69 +1422,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Overrides the generated id used by the native `<input>` and its `<label for>`."
       },
       {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the input `aria-invalid`."
-      },
-      {
-        "name": "hint",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Helper text shown below the checkbox."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
-      },
-      {
-        "name": "warning",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Advisory text, shown when there is no error."
-      },
-      {
-        "name": "errors",
-        "kind": "input",
-        "type": "readonly DsFieldError[]",
-        "union": null,
-        "default": "[]",
-        "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
-      },
-      {
-        "name": "touched",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
         "name": "size",
         "kind": "input",
         "type": "DsSize | null",
@@ -1456,6 +1465,69 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
       {
         "name": "hidden",
         "kind": "input",
@@ -1502,14 +1574,27 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Accessible name for the trigger button and panel."
       },
       {
-        "name": "invalid",
+        "name": "success",
         "kind": "input",
-        "type": "boolean",
+        "type": "string",
         "union": null,
-        "default": "false",
+        "default": "''",
         "required": false,
-        "description": "Applies error styling and marks the trigger `aria-invalid`."
-      },
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
+      }
+    ],
+    "outputs": []
+  },
+  "date-picker": {
+    "key": "date-picker",
+    "selector": "ds-date-picker",
+    "isElement": true,
+    "className": "DatePickerComponent",
+    "status": "stable",
+    "importName": "DatePickerComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
       {
         "name": "hint",
         "kind": "input",
@@ -1517,7 +1602,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the trigger."
+        "description": "Helper text shown below the field."
       },
       {
         "name": "error",
@@ -1547,6 +1632,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
       },
       {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
         "name": "touched",
         "kind": "input",
         "type": "boolean",
@@ -1563,20 +1657,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      }
-    ],
-    "outputs": []
-  },
-  "date-picker": {
-    "key": "date-picker",
-    "selector": "ds-date-picker",
-    "isElement": true,
-    "className": "DatePickerComponent",
-    "status": "stable",
-    "importName": "DatePickerComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": null,
-    "inputs": [
+      },
       {
         "name": "hidden",
         "kind": "input",
@@ -1648,60 +1729,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Field label shown above the trigger."
       },
       {
-        "name": "hint",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Helper text shown below the field."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors` and over the picker's own \"enter a valid date\" message."
-      },
-      {
-        "name": "warning",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Advisory text, shown when there is no error."
-      },
-      {
-        "name": "errors",
-        "kind": "input",
-        "type": "readonly DsFieldError[]",
-        "union": null,
-        "default": "[]",
-        "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
-      },
-      {
-        "name": "touched",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
         "name": "required",
         "kind": "input",
         "type": "boolean",
@@ -1729,13 +1756,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Disables the picker and blocks all interaction."
       },
       {
-        "name": "invalid",
+        "name": "success",
         "kind": "input",
-        "type": "boolean",
+        "type": "string",
         "union": null,
-        "default": "false",
+        "default": "''",
         "required": false,
-        "description": "Applies error styling and marks the trigger `aria-invalid`."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "ariaLabel",
@@ -2229,7 +2256,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'default'",
         "required": false,
-        "description": "Which role the line is playing — hint, error, warning or success. Decides colour and icon."
+        "description": "Which role the line is playing — hint, error, warning or success. Decides the colour."
       },
       {
         "name": "messageId",
@@ -2247,7 +2274,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Overrides the glyph the `state` would pick."
+        "description": "Leading glyph. There is no per-state default: `state` sets the colour only, so a field that wants an icon passes one."
       },
       {
         "name": "reserve",
@@ -2450,6 +2477,69 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -2507,60 +2597,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Label shown above the field."
       },
       {
-        "name": "hint",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Helper text shown below the field."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
-      },
-      {
-        "name": "warning",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Advisory text, shown when there is no error."
-      },
-      {
-        "name": "errors",
-        "kind": "input",
-        "type": "readonly DsFieldError[]",
-        "union": null,
-        "default": "[]",
-        "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
-      },
-      {
-        "name": "touched",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
         "name": "placeholder",
         "kind": "input",
         "type": "string",
@@ -2597,22 +2633,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
       },
       {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the field `aria-invalid`."
-      },
-      {
         "name": "success",
         "kind": "input",
-        "type": "boolean",
+        "type": "string",
         "union": null,
-        "default": "false",
+        "default": "''",
         "required": false,
-        "description": "Applies success styling to the field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "loading",
@@ -2760,7 +2787,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "inputMode",
         "kind": "input",
-        "type": "| 'none'\n    | 'text'\n    | 'decimal'\n    | 'numeric'\n    | 'tel'\n    | 'search'\n    | 'email'\n    | 'url'\n    | null",
+        "type": "| 'none'\r\n    | 'text'\r\n    | 'decimal'\r\n    | 'numeric'\r\n    | 'tel'\r\n    | 'search'\r\n    | 'email'\r\n    | 'url'\r\n    | null",
         "union": [
           "none",
           "text",
@@ -3009,7 +3036,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whole-row navigation: renders an inner button and emits `activated`."
+        "description": "Makes the row's text a button that emits `activated`. `[leading]` and `[trailing]` stay outside it, so a row can hold its own controls as well."
       },
       {
         "name": "selected",
@@ -3018,7 +3045,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Marks the row current via `aria-current`."
+        "description": "Marks the row current — `aria-current` and the selected tint."
       },
       {
         "name": "disabled",
@@ -3027,7 +3054,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Disables the row; only affects the button when `clickable`."
+        "description": "Disables the row's own button. Controls projected into `[leading]` or `[trailing]` keep their own disabled state."
       }
     ],
     "outputs": [
@@ -3443,6 +3470,69 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -3506,67 +3596,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Disables the trigger and blocks all interaction."
       },
       {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the field `aria-invalid`."
-      },
-      {
-        "name": "hint",
+        "name": "success",
         "kind": "input",
         "type": "string",
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the field."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
-      },
-      {
-        "name": "warning",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Advisory text, shown when there is no error."
-      },
-      {
-        "name": "errors",
-        "kind": "input",
-        "type": "readonly DsFieldError[]",
-        "union": null,
-        "default": "[]",
-        "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
-      },
-      {
-        "name": "touched",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "ariaLabel",
@@ -3680,6 +3716,69 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -3737,67 +3836,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Disables all cells and blocks interaction."
       },
       {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks each cell `aria-invalid`."
-      },
-      {
-        "name": "hint",
+        "name": "success",
         "kind": "input",
         "type": "string",
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the cells."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
-      },
-      {
-        "name": "warning",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Advisory text, shown when there is no error."
-      },
-      {
-        "name": "errors",
-        "kind": "input",
-        "type": "readonly DsFieldError[]",
-        "union": null,
-        "default": "[]",
-        "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
-      },
-      {
-        "name": "touched",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "ariaLabel",
@@ -4170,6 +4215,69 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
         "name": "checked",
         "kind": "model",
         "type": "boolean",
@@ -4213,69 +4321,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Overrides the auto-generated id used for the input and its label's `for`."
-      },
-      {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the input `aria-invalid`."
-      },
-      {
-        "name": "hint",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Helper text shown below the control."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
-      },
-      {
-        "name": "warning",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Advisory text, shown when there is no error."
-      },
-      {
-        "name": "errors",
-        "kind": "input",
-        "type": "readonly DsFieldError[]",
-        "union": null,
-        "default": "[]",
-        "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
-      },
-      {
-        "name": "touched",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "size",
@@ -4322,6 +4367,69 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -4356,69 +4464,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Disables the whole group."
-      },
-      {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the group `aria-invalid`."
-      },
-      {
-        "name": "hint",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Helper text shown below the group."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
-      },
-      {
-        "name": "warning",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Advisory text, shown when there is no error."
-      },
-      {
-        "name": "errors",
-        "kind": "input",
-        "type": "readonly DsFieldError[]",
-        "union": null,
-        "default": "[]",
-        "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
-      },
-      {
-        "name": "touched",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "ariaLabel",
@@ -4551,6 +4596,78 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
+        "name": "hidden",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
         "name": "options",
         "kind": "input",
         "type": "readonly SegmentedOption[]",
@@ -4576,6 +4693,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Accessible name for the segmented control (radiogroup role)."
+      },
+      {
+        "name": "label",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Visible label above the track; omit to supply your own."
+      },
+      {
+        "name": "disabled",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Disables every segment."
       }
     ],
     "outputs": []
@@ -4590,6 +4725,69 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "importPath": "@ids-group-ltd/ids-design-system",
     "summary": null,
     "inputs": [
+      {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
       {
         "name": "hidden",
         "kind": "input",
@@ -4676,67 +4874,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
       },
       {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the trigger `aria-invalid`."
-      },
-      {
-        "name": "hint",
+        "name": "success",
         "kind": "input",
         "type": "string",
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the trigger."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
-      },
-      {
-        "name": "warning",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Advisory text, shown when there is no error."
-      },
-      {
-        "name": "errors",
-        "kind": "input",
-        "type": "readonly DsFieldError[]",
-        "union": null,
-        "default": "[]",
-        "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
-      },
-      {
-        "name": "touched",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "required",
@@ -5134,6 +5278,69 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -5204,69 +5411,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Accessible name for the thumb(s) — suffixed \"minimum\"/\"maximum\" in `range` mode."
-      },
-      {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling."
-      },
-      {
-        "name": "hint",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Helper text shown below the slider."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
-      },
-      {
-        "name": "warning",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Advisory text, shown when there is no error."
-      },
-      {
-        "name": "errors",
-        "kind": "input",
-        "type": "readonly DsFieldError[]",
-        "union": null,
-        "default": "[]",
-        "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
-      },
-      {
-        "name": "touched",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       }
     ],
     "outputs": []
@@ -5615,6 +5759,69 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -5671,69 +5878,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Overrides the generated id used by the native `<input>` and its `<label for>`."
-      },
-      {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the input `aria-invalid`."
-      },
-      {
-        "name": "hint",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Helper text shown below the switch."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
-      },
-      {
-        "name": "warning",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Advisory text, shown when there is no error."
-      },
-      {
-        "name": "errors",
-        "kind": "input",
-        "type": "readonly DsFieldError[]",
-        "union": null,
-        "default": "[]",
-        "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
-      },
-      {
-        "name": "touched",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
         "name": "size",
@@ -5925,7 +6069,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "(label: string, dir: SortDir) => string",
         "union": null,
-        "default": "(label, dir) =>\n      dir\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\n        : `Sorting cleared`",
+        "default": "(label, dir) =>\r\n      dir\r\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\r\n        : `Sorting cleared`",
         "required": false,
         "description": "Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing."
       },
@@ -6273,7 +6417,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "rowExpandTemplate",
         "kind": "input",
-        "type": "TemplateRef<{\n    $implicit: unknown;\n    row: unknown;\n  }> | null",
+        "type": "TemplateRef<{\r\n    $implicit: unknown;\r\n    row: unknown;\r\n  }> | null",
         "union": null,
         "default": "null",
         "required": false,
@@ -6608,6 +6752,69 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -6648,60 +6855,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Label shown above the field."
       },
       {
-        "name": "hint",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Helper text shown below the field."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
-      },
-      {
-        "name": "warning",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Advisory text, shown when there is no error."
-      },
-      {
-        "name": "errors",
-        "kind": "input",
-        "type": "readonly DsFieldError[]",
-        "union": null,
-        "default": "[]",
-        "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
-      },
-      {
-        "name": "touched",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
-      },
-      {
         "name": "placeholder",
         "kind": "input",
         "type": "string",
@@ -6738,13 +6891,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
       },
       {
-        "name": "invalid",
+        "name": "success",
         "kind": "input",
-        "type": "boolean",
+        "type": "string",
         "union": null,
-        "default": "false",
+        "default": "''",
         "required": false,
-        "description": "Applies error styling and marks the field `aria-invalid`."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "required",
@@ -6966,6 +7119,69 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the field."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "errors",
+        "kind": "input",
+        "type": "readonly DsFieldError[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+      },
+      {
+        "name": "invalid",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own — for when the text lives elsewhere, such as a form-level error summary or one message covering a whole field group. Use `error` to show text."
+      },
+      {
+        "name": "touched",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+      },
+      {
         "name": "hidden",
         "kind": "input",
         "type": "boolean",
@@ -7090,67 +7306,13 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Disables the picker and blocks all interaction."
       },
       {
-        "name": "invalid",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Applies error styling and marks the trigger `aria-invalid`."
-      },
-      {
-        "name": "hint",
+        "name": "success",
         "kind": "input",
         "type": "string",
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Helper text shown below the picker."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Error text. Shown immediately — binding it says the consumer has already decided this field is in error. Takes precedence over `errors`."
-      },
-      {
-        "name": "warning",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "''",
-        "required": false,
-        "description": "Advisory text, shown when there is no error."
-      },
-      {
-        "name": "errors",
-        "kind": "input",
-        "type": "readonly DsFieldError[]",
-        "union": null,
-        "default": "[]",
-        "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
-      },
-      {
-        "name": "touched",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
-      },
-      {
-        "name": "reserveMessage",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "placeholder",
