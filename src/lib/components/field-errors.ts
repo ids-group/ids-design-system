@@ -75,8 +75,10 @@ export interface DsFieldMessageSources {
   error: Signal<string>;
   errors: Signal<readonly DsFieldError[]>;
   invalid: Signal<boolean>;
-  /** Only `ds-input` has a success state today. */
-  success?: Signal<boolean>;
+  /** Confirmation text. A string like `warning`, not a flag: the text IS the
+   *  state, so there is no success without something to say. The nine bordered
+   *  fields supply it; the box-less controls have no border to paint. */
+  success?: Signal<string>;
   /** The field's own touched state, if it tracks one (CVA blur). */
   touchedSelf?: Signal<boolean>;
   /** Bound by signal forms as part of the `FormUiControl` contract. */
@@ -179,15 +181,16 @@ export function resolveFieldMessage(
     if (warning) {
       return { text: warning, state: 'warning' };
     }
+    const success = sources.success?.().trim();
+    if (success) {
+      return { text: success, state: 'success' };
+    }
     const hint = sources.hint().trim();
     if (!hint) {
       return EMPTY_MESSAGE;
     }
 
-    return {
-      text: hint,
-      state: invalid() ? 'error' : sources.success?.() ? 'success' : 'default',
-    };
+    return { text: hint, state: invalid() ? 'error' : 'default' };
   });
 
   const paintedState = computed<FieldMessageState | null>(() => {
@@ -198,7 +201,7 @@ export function resolveFieldMessage(
       return 'warning';
     }
 
-    return sources.success?.() ? 'success' : null;
+    return sources.success?.().trim() ? 'success' : null;
   });
 
   return { message, invalid, controlState: paintedState };

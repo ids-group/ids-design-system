@@ -215,8 +215,9 @@ export class DatePickerComponent
   readonly optional = input(false, { transform: booleanAttribute });
   /** Disables the picker and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Applies success styling to the field. */
-  readonly success = input(false, { transform: booleanAttribute });
+  /** Confirmation text, shown when there is no error or warning — and it paints
+   *  the field's success border. A string like `warning`: the text IS the state. */
+  readonly success = input<string>('');
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
   /** Bounds for the year dropdown in the calendar header. */

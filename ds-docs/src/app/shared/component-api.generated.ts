@@ -468,11 +468,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "success",
         "kind": "input",
-        "type": "boolean",
+        "type": "string",
         "union": null,
-        "default": "false",
+        "default": "''",
         "required": false,
-        "description": "Applies success styling to the field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "allowCreate",
@@ -1576,11 +1576,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "success",
         "kind": "input",
-        "type": "boolean",
+        "type": "string",
         "union": null,
-        "default": "false",
+        "default": "''",
         "required": false,
-        "description": "Applies success styling to the field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       }
     ],
     "outputs": []
@@ -1758,11 +1758,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "success",
         "kind": "input",
-        "type": "boolean",
+        "type": "string",
         "union": null,
-        "default": "false",
+        "default": "''",
         "required": false,
-        "description": "Applies success styling to the field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "ariaLabel",
@@ -2635,11 +2635,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "success",
         "kind": "input",
-        "type": "boolean",
+        "type": "string",
         "union": null,
-        "default": "false",
+        "default": "''",
         "required": false,
-        "description": "Applies success styling to the field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "loading",
@@ -3598,11 +3598,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "success",
         "kind": "input",
-        "type": "boolean",
+        "type": "string",
         "union": null,
-        "default": "false",
+        "default": "''",
         "required": false,
-        "description": "Applies success styling to the field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "ariaLabel",
@@ -3838,11 +3838,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "success",
         "kind": "input",
-        "type": "boolean",
+        "type": "string",
         "union": null,
-        "default": "false",
+        "default": "''",
         "required": false,
-        "description": "Applies success styling to the field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "ariaLabel",
@@ -4786,11 +4786,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "success",
         "kind": "input",
-        "type": "boolean",
+        "type": "string",
         "union": null,
-        "default": "false",
+        "default": "''",
         "required": false,
-        "description": "Applies success styling to the field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "required",
@@ -6803,11 +6803,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "success",
         "kind": "input",
-        "type": "boolean",
+        "type": "string",
         "union": null,
-        "default": "false",
+        "default": "''",
         "required": false,
-        "description": "Applies success styling to the field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "required",
@@ -7218,11 +7218,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "success",
         "kind": "input",
-        "type": "boolean",
+        "type": "string",
         "union": null,
-        "default": "false",
+        "default": "''",
         "required": false,
-        "description": "Applies success styling to the field."
+        "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
       },
       {
         "name": "placeholder",

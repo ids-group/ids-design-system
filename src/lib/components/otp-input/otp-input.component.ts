@@ -52,8 +52,9 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
   readonly mask = input(false, { transform: booleanAttribute });
   /** Disables all cells and blocks interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Applies success styling to the field. */
-  readonly success = input(false, { transform: booleanAttribute });
+  /** Confirmation text, shown when there is no error or warning — and it paints
+   *  the field's success border. A string like `warning`: the text IS the state. */
+  readonly success = input<string>('');
   /** Accessible group label for the cell row. */
   readonly ariaLabel = input<string>('Verification code');
   /** Fires once, with the full code, on the partial → complete transition. */

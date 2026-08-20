@@ -106,8 +106,9 @@ export class ColorPickerComponent
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Accessible name for the trigger button and panel. */
   readonly ariaLabel = input<string>('Choose colour');
-  /** Applies success styling to the field. */
-  readonly success = input(false, { transform: booleanAttribute });
+  /** Confirmation text, shown when there is no error or warning — and it paints
+   *  the field's success border. A string like `warning`: the text IS the state. */
+  readonly success = input<string>('');
 
   protected readonly trigger =
     viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
