@@ -26,12 +26,10 @@
   border: 0;
   padding: 0;
 
-  // NOT flat. `overflow: hidden` above stays in force here, so this radius is
-  // what shapes the first and last row's fill — a zero here clipped them SQUARE
-  // and the panel's rounded corner showed the square fill through it, which on a
-  // destructive last item read as two square red corners under a round popover.
-  // The panel publishes its own radius as --ds-menu-clip-radius; the fallback
-  // keeps any other .popover-classed container behaving as before.
+  // NOT flat: `overflow: hidden` from :host stays in force, so this radius is what
+  // shapes the first and last row's fill. Zero here clips them square and the
+  // panel's rounded corner shows that square fill through it. The fallback keeps
+  // any other .popover-classed container, which publishes nothing, as it was.
   border-radius: var(--ds-menu-clip-radius, var(--radius-flat));
 }
 

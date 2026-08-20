@@ -130,11 +130,9 @@ export class DatePickerComponent
       if (this.editing) {
         return;
       }
-      // Reaching here means the value did NOT come from the keyboard — every typing
-      // path holds `editing` while it runs — so a "Enter a valid date" left over from
-      // an earlier typo no longer describes what the field is about to show. Without
-      // this, `value.set(null)` cleared the text and left the error standing, and the
-      // only consumer escape was destroying the control.
+      // Every typing path holds `editing` while it runs, so reaching here means the
+      // value did NOT come from the keyboard and a leftover typing error no longer
+      // describes what the field is about to show.
       this.typedInvalid.set(false);
       this.rangeInvalid.set(false);
       if (this.mode() === 'single') {

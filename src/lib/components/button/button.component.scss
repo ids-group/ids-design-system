@@ -211,12 +211,10 @@
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
     --_button-border-disabled: var(--ds-button-border-disabled, transparent);
 
-    /* Mixes toward the SURFACE rather than taking the shared fixed-lightness recipe,
-       because the direction has to flip per theme and only the surface knows it: the
-       dark accent is already light (OKLCH L 67.9%), so a recipe pinned at L 70% lands
-       two points from the enabled label — a 1.11:1 gap. Measured at 40%: light
-       3.41:1, dark 2.91:1. Solid cannot use this (a white label mixed into a white
-       surface does not move), so it keeps the shared recipe. */
+    /* The direction has to flip per theme and only the surface knows it: the dark
+       accent is already light (OKLCH L 67.9%), so the shared recipe's fixed L 70%
+       lands two points from the enabled label — a 1.11:1 gap. Solid cannot use this
+       at all, a white label mixed into a white surface does not move. */
     --_button-label-color-disabled: var(--ds-button-label-color-disabled, color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default)));
   }
 
@@ -241,10 +239,9 @@
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
     --_button-border-disabled: var(--ds-button-border-disabled, color-mix(in srgb, var(--_button-border) 55%, var(--surface-disabled)));
 
-    /* Same surface mix as ghost, for the same reason: the label shares ghost's
-       accent source, so a fixed lightness left it 1.11:1 from the enabled one in
-       dark. The border above cannot cover for that — it resolves to 1.30:1 against
-       the page, so this variant's state is carried by the label too. */
+    /* Same mix as ghost, same reason. The border above does not cover for it: at
+       1.30:1 against the page it is fainter than this variant's own enabled border,
+       so the label carries the state here too. */
     --_button-label-color-disabled: var(--ds-button-label-color-disabled, color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default)));
   }
 

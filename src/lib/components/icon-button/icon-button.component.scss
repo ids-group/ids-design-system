@@ -102,13 +102,11 @@
 
   /* Variants re-bind the resolvers (consumer token still wins). */
   &.standard {
-    /* The only variant with no fill and no border, so the glyph's colour is the
-       whole disabled signal — and the base fixed-lightness recipe cannot carry it in
-       the dark theme, where the enabled icon is already light (OKLCH L 80%) and a
-       disabled one pinned at L 70% sits 1.46:1 away. Mixing toward the surface picks
-       the direction per theme instead: light 4.17 → 5.19:1, dark 1.46 → 3.58:1.
-       Scoped to this variant because filled's icon is --c-on — white mixed into a
-       white surface does not move at all. */
+    /* No fill and no border here, so the glyph's colour is the whole disabled
+       signal — and the base's fixed lightness cannot carry it in dark, where the
+       enabled icon is already OKLCH L 80% against a disabled L 70%: a 1.46:1 gap.
+       Scoped to this variant, not the base, because filled's icon is --c-on and
+       white mixed into a white surface does not move. */
     --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, color-mix(in srgb, var(--_icon-button-icon-color) 40%, var(--surface-default)));
   }
 

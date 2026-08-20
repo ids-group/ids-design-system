@@ -40,9 +40,10 @@
   --_modal-header-pad-y: var(--ds-modal-header-pad-y, var(--space-4));
   --_modal-body-pad-y: var(--ds-modal-body-pad-y, var(--space-5));
   --_modal-actions-pad-y: var(--ds-modal-actions-pad-y, var(--space-4));
-  /* Per-side, each falling back to its region's pad-y, so a layout whose header pads only at the
-     top and whose actions row pads only at the bottom can say so. One pad-y cannot: it is applied
-     to both edges, and the consumer is left reaching past the API into .header / .actions. */
+
+  /* Per-side, each falling back to its region's pad-y. One pad-y is applied to both
+     edges, so a header that pads only at the top could not be said without reaching
+     past the API into .header / .actions. */
   --_modal-header-pad-top: var(--ds-modal-header-pad-top, var(--_modal-header-pad-y));
   --_modal-header-pad-bottom: var(--ds-modal-header-pad-bottom, var(--_modal-header-pad-y));
   --_modal-body-pad-top: var(--ds-modal-body-pad-top, var(--_modal-body-pad-y));

@@ -63,12 +63,6 @@ export function normalizeFieldErrors(
   return Array.isArray(value) ? value : [value as DsFieldError];
 }
 
-/**
- * Normalises a message input at the boundary, so nothing downstream re-checks
- * for whitespace: a blank binding means "no message", and that is decided once
- * here rather than at every read. Also absorbs `null`/`undefined`, which a
- * `[error]="maybeNull"` binding used to push straight into a `.trim()` call.
- */
 export function trimmedText(value: string | null | undefined): string {
   return value?.trim() ?? '';
 }
@@ -85,9 +79,6 @@ export interface DsFieldMessageSources {
   error: Signal<string>;
   errors: Signal<readonly DsFieldError[]>;
   invalid: Signal<boolean>;
-  /** Confirmation text. A string like `warning`, not a flag: the text IS the
-   *  state, so there is no success without something to say. The nine bordered
-   *  fields supply it; the box-less controls have no border to paint. */
   success?: Signal<string>;
   /** The field's own touched state, if it tracks one (CVA blur). */
   touchedSelf?: Signal<boolean>;
@@ -137,12 +128,10 @@ const NO_CONTROL: ControlState = { errors: NO_ERRORS, touched: false };
  * template-driven forms expose the same through `NgControl`, read here. A given
  * field instance is driven by exactly one of them, so they cannot disagree.
  *
- * Every rung above carries its OWN text, and `hint` is never recoloured into
- * somebody else's state. `invalid` is deliberately the one input with no text: it
- * paints the control and sets `aria-invalid` for the case where the message lives
- * elsewhere — a form-level error summary, or one message for a whole field group.
- * It used to promote `hint` to the error state, which lost the actual hint and
- * announced help text through `role="alert"`.
+ * Every rung carries its OWN text, and `hint` is never recoloured into somebody
+ * else's state. `invalid` is the one input with no text on purpose: it paints the
+ * control and sets `aria-invalid` for when the message lives elsewhere — a
+ * form-level error summary, or one message for a whole field group.
  *
  * Call from a field initializer (an injection context).
  */
@@ -181,8 +170,8 @@ export function resolveFieldMessage(
       (errors().length > 0 && interacted()),
   );
 
-  // Every text source arrives already trimmed — `trimmedText` normalises at the
-  // input boundary — so a non-empty string here means a real message.
+  // Message inputs trim via `trimmedText`, so a non-empty string here is real
+  // text — a new one declared without that transform breaks this quietly.
   const message = computed<DsFieldMessage>(() => {
     const explicit = sources.error();
     if (explicit) {
