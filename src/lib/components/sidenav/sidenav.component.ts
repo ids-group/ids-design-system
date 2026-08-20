@@ -25,6 +25,11 @@ import { SIDENAV, type SidenavContract } from './sidenav.token';
 export class SidenavComponent implements SidenavContract {
   /** Collapses the rail to icon-only width; read by nested `ds-sidenav-item`/`ds-sidenav-group`. */
   readonly collapsed = input(false, { transform: booleanAttribute });
+  /** Whether the ACTIVE item draws its edge marker, for the whole sidenav. Off
+   *  leaves the active state on the fill and the label alone — check that is still
+   *  distinguishable before turning it off. An individual `ds-sidenav-item` can
+   *  override this with its own `rail`. */
+  readonly rail = input(true, { transform: booleanAttribute });
   /** Brand text at the top of the rail (auto letter-mark + name). For a custom
    *  logo image/SVG, project it into the `[brand]` slot instead. Unset falls back
    *  to `DS_CONFIG.brand.name`. Each field resolves on its own, so `brand=""` drops

@@ -5040,6 +5040,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Collapses the rail to icon-only width; read by nested `ds-sidenav-item`/`ds-sidenav-group`."
       },
       {
+        "name": "rail",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Whether the ACTIVE item draws its edge marker, for the whole sidenav. Off leaves the active state on the fill and the label alone — check that is still distinguishable before turning it off. An individual `ds-sidenav-item` can override this with its own `rail`."
+      },
+      {
         "name": "brand",
         "kind": "input",
         "type": "string | null",
@@ -5190,6 +5199,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Disables the item — non-navigable and styled as inactive."
+      },
+      {
+        "name": "rail",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether THIS item draws its edge marker when active. Unset follows the parent `ds-sidenav`, then on — the same \"null means not deciding\" reading as the rest of the library, so a sidenav-wide `[rail]=\"false\"` is not fought per item."
       }
     ],
     "outputs": [

@@ -4774,17 +4774,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-sidenav-item-bg-color-active",
-        "value": "var(--accent)",
+        "value": "var(--accent-subtitle)",
         "notes": "Active item fill."
       },
       {
         "name": "--ds-sidenav-item-label-color-active",
-        "value": "var(--text-on-primary)",
+        "value": "var(--accent-strong)",
         "notes": "Active item label."
       },
       {
         "name": "--ds-sidenav-item-bg-color-active-hover",
-        "value": "color-mix(in srgb, var(--_sidenav-item-bg-color-active) 88%, white)",
+        "value": "var(--accent-muted)",
         "notes": "Active item hover fill."
       },
       {
