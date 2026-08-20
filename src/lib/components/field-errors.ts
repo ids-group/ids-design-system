@@ -129,17 +129,20 @@ const NO_CONTROL: ControlState = { errors: NO_ERRORS, touched: false };
  * 2. `errors` — validation errors. Shown once the user has interacted, so a
  *    `required` error does not greet an untouched form.
  * 3. `warning` — advisory, not blocking.
- * 4. `hint` — helper text, and the fallback carrier for `invalid` (see below).
+ * 4. `success` — confirmation.
+ * 5. `hint` — helper text.
  *
  * Both form systems feed step 2 and neither needs the other. Signal forms binds
  * `errors` and `touched` by input name (`FormUiControl`); reactive and
  * template-driven forms expose the same through `NgControl`, read here. A given
  * field instance is driven by exactly one of them, so they cannot disagree.
  *
- * When something is invalid but no source produced TEXT, the `hint` renders in
- * the error state. That keeps the pre-existing `[invalid]="…" [hint]="errorText"`
- * idiom — which is what consumers had to write before `error` existed — working
- * unchanged.
+ * Every rung above carries its OWN text, and `hint` is never recoloured into
+ * somebody else's state. `invalid` is deliberately the one input with no text: it
+ * paints the control and sets `aria-invalid` for the case where the message lives
+ * elsewhere — a form-level error summary, or one message for a whole field group.
+ * It used to promote `hint` to the error state, which lost the actual hint and
+ * announced help text through `role="alert"`.
  *
  * Call from a field initializer (an injection context).
  */
@@ -198,11 +201,8 @@ export function resolveFieldMessage(
       return { text: success, state: 'success' };
     }
     const hint = sources.hint();
-    if (!hint) {
-      return EMPTY_MESSAGE;
-    }
 
-    return { text: hint, state: invalid() ? 'error' : 'default' };
+    return hint ? { text: hint, state: 'default' } : EMPTY_MESSAGE;
   });
 
   const paintedState = computed<FieldMessageState | null>(() => {

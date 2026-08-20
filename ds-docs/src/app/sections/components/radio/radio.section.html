@@ -162,8 +162,7 @@
 
     <ds-radio
       label="Preferred contact"
-      hint="A selection is required to continue."
-      [invalid]="true"
+      error="A selection is required to continue."
     />
   </div>
 
@@ -208,8 +207,7 @@
 
     <ds-radio-group
       label="Schedule type"
-      hint="A selection is required."
-      [invalid]="true"
+      error="A selection is required."
       [(value)]="invalidGroupValue"
     >
       <ds-radio

@@ -43,7 +43,9 @@ export abstract class DsFieldBase {
   readonly errors = input<readonly DsFieldError[], DsFieldErrorsInput>([], {
     transform: normalizeFieldErrors,
   });
-  /** Applies error styling and marks the field `aria-invalid`. */
+  /** Paints the error state and sets `aria-invalid`, WITHOUT a message of its own
+   *  — for when the text lives elsewhere, such as a form-level error summary or
+   *  one message covering a whole field group. Use `error` to show text. */
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Whether the user has interacted with the field. Bound by signal forms; gates
    *  `errors`, so a `required` error does not greet an untouched form. */
