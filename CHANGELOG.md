@@ -23,6 +23,23 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`invalid` paints the error state only — it no longer promotes `hint` to the error message.**
+  Every state carries its own text now, and `hint` is never recoloured into somebody else's state.
+  **BREAKING:** `[invalid]="true" hint="Must be before end date"` used to render that hint in red,
+  through `role="alert"`. It now renders a red border with a **grey** hint. Use
+  `error="Must be before end date"` instead — the state and the message come together.
+  **Why, beyond tidiness.** The idiom lost the actual hint: when both were set, the help text the
+  author wrote was replaced by the error rather than shown alongside it. It also announced help text
+  as an alert, and it made a template unreadable — whether `hint="…"` was a hint or an error depended
+  on a different attribute. It was the last input that borrowed another one's text; `success` stopped
+  doing it in the same release.
+  **`invalid` is not going away and still has its own job:** the error state with NO message, for when
+  the text lives elsewhere — a form-level error summary, or one message covering a whole
+  `ds-field-group` — plus `aria-invalid` for that case. Carbon and Material split the boolean from
+  the text the same way.
+  Our own docs taught the old idiom on 13 components (14 of 19 `[invalid]` bindings also bound
+  `hint`); all of them now use `error`.
+
 - **`success` exists on all nine bordered fields, and it is now a STRING that carries its own text.**
   Added to `ds-textarea`, `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`,
   `ds-time-picker`, `ds-otp-input` and `ds-color-picker` — it was on `ds-input` alone, so a form could

@@ -97,6 +97,23 @@
         "reserveMessageResolved",
         "touched"
       ]
+    },
+    {
+      "id": "fields-invalid-no-longer-recolours-hint",
+      "kind": "behavior",
+      "old": "[invalid]=\"true\" hint=\"<message>\"",
+      "new": "error=\"<message>\"",
+      "note": "BREAKING. `invalid` used to promote `hint` to the ERROR state -- a red message rendered through role=\"alert\". It now paints the control and sets aria-invalid only, and `hint` stays a neutral grey hint. ACTION: wherever a field binds `[invalid]` together with `hint` and expected the hint to read as the error, move the text to `error` and drop the `[invalid]` binding -- `error` implies the invalid state. So `[invalid]=\"true\" hint=\"Must be before end date\"` becomes `error=\"Must be before end date\"`. A dynamic form is `[error]=\"showError() ? 'Must be before end date' : ''\"`. WHY: the idiom lost the real hint (with both set, the help text was replaced rather than shown alongside), announced help text as an alert, and made a template unreadable because whether `hint` was a hint or an error depended on another attribute. It was the last input borrowing another's text. NO ACTION when `[invalid]` is used WITHOUT `hint` -- that is still supported and is exactly what the input is for: the error state with the message living elsewhere (a form-level error summary, one message for a whole ds-field-group), plus aria-invalid. `invalid` is not deprecated.",
+      "searchHints": [
+        "[invalid]",
+        "invalid",
+        "hint=",
+        "[hint]",
+        "error=",
+        "[error]",
+        "aria-invalid",
+        "role=\"alert\""
+      ]
     }
   ],
   "informational": [
