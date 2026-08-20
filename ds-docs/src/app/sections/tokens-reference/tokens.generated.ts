@@ -3731,6 +3731,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Menu item label size."
       },
       {
+        "name": "--ds-menu-item-description-color",
+        "value": "var(--text-tertiary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-menu-item-description-font-size",
+        "value": "var(--font-size-2xs)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-menu-item-description-max-width",
+        "value": "14rem",
+        "notes": ""
+      },
+      {
         "name": "--ds-menu-item-radius",
         "value": "0",
         "notes": "Corner radius of a menu row (default 0). Square by design: rows sit flush inside the panel, whose own radius is --ds-menu-radius."
@@ -3759,6 +3774,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-menu-gap",
         "value": "var(--space-0-5)",
         "notes": "Gap between menu items."
+      },
+      {
+        "name": "--ds-menu-radius",
+        "value": "var(--radius-md)",
+        "notes": ""
       },
       {
         "name": "--ds-menu-clip-radius",

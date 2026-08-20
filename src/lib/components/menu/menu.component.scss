@@ -10,7 +10,7 @@
   max-width: var(--_menu-max-width);
   background: var(--_menu-bg-color);
   border: var(--border-width-default) solid var(--_menu-border-color);
-  border-radius: var(--radius-md);
+  border-radius: var(--ds-menu-radius, var(--radius-md));
 
   // No padding, and clip: rows run edge to edge, so this radius is what rounds
   // the first and last row's hover fill.
