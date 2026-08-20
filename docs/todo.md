@@ -442,8 +442,16 @@ itself. All three were found by RENDERING the built bundle; none of them fails a
 
 ## A widened type is a breaking change the manifest does not carry (from mm-broker, 2026-08-19)
 
-- [ ] **[P2] 0.10.0 widened two public types, neither carried as something a consumer could act on,
-  and both stopped a consumer's build.** Found while running the auto-update workflow: the plan came
+- [x] **[P2] DONE 2026-08-20, both halves of the ask: `AUTHORING.md` now carries the widening rule
+  (widening → its own `behavior` entry naming who breaks — readers and overriders, not writers —
+  plus a kind-table row and a checklist line), and `tools/class-surface-diff.mjs` diffs member
+  TYPES, not just names: annotated fields, `input`/`model`/`output` initializers, exported
+  interface members, type aliases and `extends` clauses, with an optional `[head]` ref. Verified
+  retroactively on v0.9.1..v0.10.0: both widenings named below surface (`TableColumn.width`,
+  `bordered`), plus ones nobody had listed (`sortDir`/`sortKey` model→input, `loading` union,
+  `runExport` protected→public). Original finding: 0.10.0 widened two public types, neither
+  carried as something a consumer could act on, and both stopped a consumer's build.** Found while
+  running the auto-update workflow: the plan came
   from `migrations/0.10.0.json` plus an LLM re-read of the whole prose block. Both changes ARE in the
   manifest — `width` as informational #43 ("now accepts the literal 'content'"), `bordered` inside the
   `nullable-boolean-inputs-treat-null-as-unset` item — but each is described as a new capability or a

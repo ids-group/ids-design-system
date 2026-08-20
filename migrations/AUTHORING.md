@@ -108,6 +108,7 @@ family with "point the channel back at `--primary-h/s/l` to keep the old look".)
 | new code the consumer must ADD | `code-add` (snippet in `new`, site in `note`, `searchHints` locate it) |
 | API removed WITH a replacement path | `removed-api` |
 | needs a code edit but not a find/replace (wrap, restructure, changed default/timing/event payload) | `behavior` |
+| type of an existing exported member widened or changed | `behavior` (see the widening rule below) |
 | documented but needs NO consumer code edit (additive / visual-only / internal) | NOT an item → `informational` |
 
 **Catch-all:** if you can't confidently fit a breaking/changed entry to a mechanical kind, make it
@@ -139,13 +140,28 @@ resolution: rename the subclass's own member, or add `override` where the base's
 match. Keep the feature bullets themselves in `informational` — the item is the collision, not the
 feature.
 
-**Do not compile that list by eye — run `npm run class-surface`.** It diffs the exported member
-surface between the last tag and HEAD and prints it per class. Twice now the list was assembled by
-reading the diff and twice it was wrong in a way a consumer found first: 0.8.0 named the public
-additions but not the private `saveLayout` that broke their build, and 0.9.0 shipped with no entry
-while sixteen classes had grown. Two things the tool cannot see, so check them by hand: a member
-whose SIGNATURE changed (same name, so it compiles and then misbehaves — `TableComponent.isStriped()`
-went window-relative to absolute) and a member that moved to a base class.
+**Widening an exported type is actionable, and it will not look it.** A field on an exported
+interface going `number` → `number | 'content'`, an input going `boolean` → `boolean | null`, a
+returned union growing a member — each is source-compatible for whoever WRITES the value and
+breaking for whoever READS it back (`sum += col.width` → TS2365) or overrides it in a subclass
+(the `equal` position of `InputSignalWithTransform` is invariant, so TS2416 fires even when the
+values are compatible). That asymmetry is exactly why release notes describe a widening as a new
+capability: 0.10.0 shipped two of these with nothing actionable in the manifest, and the
+consumer's type-checker was the only finder — firing only after the bump was already installed.
+Emit a `behavior` entry per widened type naming who breaks (readers and overriders — not the
+writers, who are fine), with the resolution in the `note`: usually "handle the new union member
+where the field is read back", with the literal old → new type.
+
+**Do not compile either list by eye — run `npm run class-surface`.** It diffs the exported surface
+between the last tag and HEAD (`[base] [head]` overrides both ends) and prints it per class:
+gained/lost member names AND changed types — annotated fields, `input`/`model`/`output`
+initializers, exported interface members, type aliases and `extends` clauses. Twice the names list
+was assembled by reading the diff and twice it was wrong in a way a consumer found first (0.8.0's
+private `saveLayout`, 0.9.0's sixteen grown classes); the type diff exists because 0.10.0 then
+shipped two widenings the same way. What it still cannot see, so check by hand: a member whose
+BEHAVIOR changed under an unchanged signature (`TableComponent.isStriped()` went window-relative
+to absolute), and a CLASS member that moved to a base class (interface members that move get a
+"check the base" hint).
 
 ## Per-entry checklist
 
@@ -157,4 +173,6 @@ went window-relative to absolute) and a member that moved to a base class.
 - [ ] Default-value / timing / event-payload changes are their own `behavior` entry with restore info.
 - [ ] Substring-colliding renames: longer has its own entry; shorter's `note` says "rename longer first".
 - [ ] Non-mechanical entries carry the decision rule + where to read the real new name, not "review".
+- [ ] Widened/changed exported types each have a `behavior` entry naming who breaks
+      (run `npm run class-surface` — do not assemble the list by eye).
 - [ ] Nothing documented in the block is silently dropped (actionable → item; else → `informational`).
