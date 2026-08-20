@@ -338,3 +338,14 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
   behavioral change.
 - If stopped: which target/version, why, what to look at.
 - Suggested next step (review the branch / open a PR).
+- **One-time team-setup offer.** If the target repo's committed `.claude/settings.json` does not
+  already declare the `ids` marketplace, offer (AskUserQuestion) to set up team-wide
+  auto-install/auto-update of this plugin. On yes, MERGE these keys into the existing file (create
+  it if absent; never clobber other keys):
+  `"extraKnownMarketplaces": { "ids": { "source": { "source": "url", "url": "https://bitbucket.org/itband/ids-design-system.git" }, "autoUpdate": true } }`
+  and `"enabledPlugins": { "design-system@ids": true }` — everyone who trusts the repo then gets
+  the plugin installed and background-updated automatically (details: the plugin README's "Team
+  setup" section). Commit it separately by pathspec
+  (`chore(claude): auto-install the ids design-system plugin for the team`). Skip the offer
+  silently when the entry already exists; in dry-run make no edit — add a one-line pointer to the
+  report instead.

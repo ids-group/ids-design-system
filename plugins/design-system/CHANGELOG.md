@@ -4,12 +4,18 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
-## 1.3.2 — 2026-08-20
+## 1.4.0 — 2026-08-20
+
+(Absorbs an unpublished 1.3.2 — the dedup pass and README corrections below never shipped alone.)
 
 ### Added
-- README "Team setup" section: committed `extraKnownMarketplaces` (+`autoUpdate: true`) +
-  `enabledPlugins` in a consumer repo's `.claude/settings.json` auto-installs and auto-updates the
-  plugin for the whole team — possible because the plugin is a relative-path marketplace source.
+- **Phase C team-setup offer**: at the end of a run, if the consumer repo's committed
+  `.claude/settings.json` does not declare the `ids` marketplace, the orchestrator offers to merge
+  in `extraKnownMarketplaces` (+`autoUpdate: true`) + `enabledPlugins` and commit it — after which
+  the whole team gets the plugin auto-installed and background-updated. Idempotent (silent when
+  already configured); dry-run only reports the pointer, no edit.
+- README "Team setup" section: the same recipe documented for hand-rolling — possible because the
+  plugin is a relative-path marketplace source.
 
 ### Changed
 - Private-repo auth note corrected: `BITBUCKET_TOKEN` is not a documented mechanism for
