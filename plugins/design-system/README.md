@@ -43,11 +43,10 @@ Commit this to a consumer repo's `.claude/settings.json`:
 ```
 
 Everyone who opens that repo (and trusts the folder) gets the marketplace added and the plugin
-installed — no `/plugin` commands. The plugin auto-installs because its marketplace source is a
-relative path in this repo; externally-sourced plugins would still need a manual install.
-`autoUpdate: true` refreshes the marketplace in the background shortly after session start, and a
-new plugin version is picked up automatically — the install cache is keyed by `plugin.json`
-version, which this repo bumps on every published change.
+installed — no `/plugin` commands (auto-install works because the plugin lives in the marketplace
+repo itself, as a relative-path source). `autoUpdate: true` refreshes the marketplace in the
+background shortly after session start; new plugin versions are picked up automatically because
+every published change bumps `plugin.json`.
 
 ## Private-repository note
 
@@ -59,8 +58,7 @@ manager setup (the Windows default) auto-update works with no extra configuratio
 background update still cannot authenticate: add the marketplace by SSH URL
 (`git@bitbucket.org:itband/ids-design-system.git` — `ssh-agent` keys work non-interactively), or
 scope a git URL-rewrite with a read-only repository access token. `BITBUCKET_TOKEN` is not a
-documented mechanism for marketplace fetches — do not rely on it (this README used to recommend
-it; corrected 2026-08-20).
+documented mechanism for marketplace fetches — do not rely on it.
 
 ## What's inside
 
