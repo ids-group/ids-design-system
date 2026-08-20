@@ -323,6 +323,22 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A `ds-menu` inside a `ds-popover` clips its rows to the panel's rounded corners.** The first and
+  last row's fill — a hover tint, or the red of a destructive item — painted through the panel's
+  corner, so a destructive last item showed **two square red corners under a rounded popover**.
+  **The cause was not a missing clip; it was a clip of the wrong shape.** `ds-menu` has
+  `overflow: hidden`, and that is what rounds the edge rows for a bare menu. But its
+  `:host-context(.popover)` block flattened `border-radius` to `--radius-flat` while leaving `overflow`
+  in force, so inside a popover the menu clipped its rows **square** and the panel's 12px corner
+  showed that square fill through it. The popover now publishes `--ds-menu-clip-radius` — its own
+  radius less the border it contains — and the menu clips to that, concentric at 11px inside a 12px
+  panel. A brand overriding `--ds-popover-radius` is followed automatically.
+  **Not fixed with `overflow: hidden` on the panel**, which was the obvious move: a submenu is a CDK
+  overlay portaled to `body`, so clipping the panel would not have reached it, and the panel's clip
+  would have cut an edge row's focus ring — the same defect fixed in `ds-filter-bar` this month.
+  Nothing else changes: the item radius token `--ds-menu-item-radius` still defaults to 0, because the
+  MENU owns the edge corners, not the row.
+
 - **Clearing or replacing `ds-date-picker`'s `value` from outside now clears the picker's own typing
   error.** `typedInvalid` / `rangeInvalid` were set by the typing paths and cleared only by those and
   `applyPreset`, so `value.set(null)` re-rendered the field to empty and left **"Enter a valid date
