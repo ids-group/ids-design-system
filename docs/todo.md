@@ -353,6 +353,29 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 ---
 
 
+## `maxVisibleChips: null` means a decision where the rest of 0.10.0 made `null` mean "unset" (from mm-broker, 2026-08-20)
+
+- [ ] **[P3] The same literal now reads two opposite ways across the library.** 0.10.0 deliberately gave
+  `null` a service meaning on **22 inputs** — `ds-table` `bordered` / `stickyScrollbar` / `sortMode` /
+  `filterMode`, `ds-badge withDot`, `ds-card` `elevation` / `padding`, `ds-icon size`, `size` on the
+  eleven controls that resolve `config.control?.size`, and `ds-modal-card dialogRole`, whose own entry
+  says the point was "so 'unset' is distinguishable from a deliberate 'dialog'". On every one of those
+  `null` means *I am not deciding — read the config, then your built-in*. On `maxVisibleChips` it means
+  the opposite: *show every chip and let the trigger grow*, which is the most opinionated of its three
+  modes. A consumer who has just learned the new convention reads `[maxVisibleChips]="null"` as "use
+  the default" and gets the one behaviour the default is not.
+  **It also blocks the config section this input is a candidate for.** Chip collapse is a whole-app
+  opinion in the same way `table.bordered` is; the moment `DS_CONFIG.autocomplete.maxVisibleChips`
+  exists, `null` cannot mean both "use the config" and "show all".
+  **Ask:** accept a named mode — `number | 'fit' | 'all' | null` — so the three modes all have names
+  (`'fit'` measures, a number caps, `'all'` shows everything) and `null` is free to mean unset like
+  everywhere else. Please do NOT silently remap `null` to unset in the same release: it is a behaviour
+  flip for anyone who set it (mm-broker has one). Ship `'all'`, keep `null` working as its alias, note
+  it as legacy, and remap only in a major. mm-broker carries `TODO(ds-chips-all)` on its one call site.
+
+---
+
+
 ## The universal focus ring has no answer for a clipping ancestor (from mm-broker, 2026-08-19)
 
 Three findings from adopting 0.10.0's `:where(:focus-visible) { outline: none; box-shadow:
