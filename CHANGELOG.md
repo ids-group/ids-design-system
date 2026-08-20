@@ -23,13 +23,24 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
-- **`[success]` now exists on the eight bordered fields that were missing it** — `ds-textarea`,
-  `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`, `ds-time-picker`,
-  `ds-otp-input`, `ds-color-picker`. It was on `ds-input` alone, so a form could not use the state
-  consistently. Same shape as everywhere else: opt-in, `false` by default, painting the green border
-  the `field-state` mixin already had. The three box-less controls (`ds-checkbox`, `ds-radio-group`,
-  `ds-switch`) and `ds-slider` deliberately do NOT get it — they have no box for a border to appear
-  on, so the state would show in the message line alone and read as a different treatment.
+- **`success` exists on all nine bordered fields, and it is now a STRING that carries its own text.**
+  Added to `ds-textarea`, `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`,
+  `ds-time-picker`, `ds-otp-input` and `ds-color-picker` — it was on `ds-input` alone, so a form could
+  not use the state consistently. The three box-less controls (`ds-checkbox`, `ds-radio-group`,
+  `ds-switch`) and `ds-slider` deliberately do NOT get it: they have no box for a border to appear on,
+  so the state would show in the message line alone and read as a different treatment.
+  **BREAKING for `ds-input`, the one field that already had it:** `success` was
+  `input(false, { transform: booleanAttribute })` and is now `input<string>('')`. Replace
+  `[success]="true" hint="Available"` with `success="Available"`.
+  **Why the type changed rather than staying a flag.** It was the only state that could not say
+  anything: `error` and `warning` carry their own text, and `success` was a boolean that recoloured
+  the `hint` green. So `success` was the one state whose message had to be smuggled through a
+  different input, and a reader of the template could not tell a green hint from a grey one. It is now
+  a fourth rung in the same ladder — `error` → `errors` → `warning` → **`success`** → `hint` — and
+  reads exactly like `warning`: the text IS the state, no second binding.
+  **What this removes:** a success border with no message, which is no longer expressible — exactly as
+  it never was for `warning`. `invalid` still exists as the flag partner of `error`, for the
+  `[invalid]="…" [hint]="…"` idiom that predates `error`.
 
 - **`ds-list-item` can hold its own controls: `[leading]` and `[trailing]` render OUTSIDE the row's
   button.** A row with a checkbox AND a row-level action had no shape here — every projected node went

@@ -65,18 +65,21 @@
       ]
     },
     {
-      "id": "fields-success-on-bordered-fields",
-      "kind": "behavior",
-      "old": "ds-textarea, ds-select, ds-multi-select, ds-autocomplete, ds-date-picker, ds-time-picker, ds-otp-input, ds-color-picker",
-      "new": "[success] input (new, opt-in)",
-      "note": "These eight fields gained a `success` input; it existed only on `ds-input` before. NO ACTION NEEDED -- it is opt-in and defaults to false, so nothing changes until you bind it. It paints the green border the shared `field-state` mixin already carried, so the treatment matches ds-input exactly. NOT added to ds-checkbox, ds-radio-group, ds-switch or ds-slider: those have no bordered box, so the state would appear in the message line alone and read as a different treatment. If you were emulating a success state by hand on any of the eight (a green border via ::ng-deep, a custom class), you can drop it for [success].",
+      "id": "fields-success-is-a-string",
+      "kind": "value-remap",
+      "old": "ds-input [success]=\"true\"",
+      "new": "ds-input success=\"<text>\"",
+      "note": "TWO changes in one, and only the first needs edits. (1) BREAKING on `ds-input`: `success` was `input(false, { transform: booleanAttribute })` and is now `input<string>('')`. A `[success]=\"true\"` binding now sets the literal text \"true\" as the message. Replace `[success]=\"true\" hint=\"Available\"` with `success=\"Available\"` -- the text moves out of `hint` and into `success`. A `[success]=\"someBoolean\"` binding must become `[success]=\"someBoolean ? 'Looks good' : ''\"`, since an empty string is now what means \"no success state\". (2) ADDITIVE: the same `success` input now also exists on ds-textarea, ds-select, ds-multi-select, ds-autocomplete, ds-date-picker, ds-time-picker, ds-otp-input and ds-color-picker, which had no success state at all. WHY THE TYPE CHANGED: `error` and `warning` already carried their own text, so `success` was the only state that could not say anything -- it was a flag that recoloured `hint` green, which meant the message had to be smuggled through a different input. It is now the fourth rung of the same ladder: error, errors, warning, success, hint. CONSEQUENCE: a success border with NO message is no longer expressible, exactly as it never was for `warning`. NOT added to ds-checkbox, ds-radio-group, ds-switch or ds-slider -- they have no bordered box, so the state would appear in the message line alone. `invalid` is unchanged and remains the flag partner of `error`.",
       "searchHints": [
         "success",
+        "[success]",
+        "ds-input",
         "ds-textarea",
         "ds-select",
         "ds-date-picker",
         "data-field-state",
-        "field-state"
+        "field-state",
+        "hint"
       ]
     },
     {
