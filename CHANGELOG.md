@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.10.1 — 2026-08-20
+
 ### Removed
 
 - **`--opacity-muted` is gone from the token scale.** It was the last token in the file that no
