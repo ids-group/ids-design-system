@@ -23,6 +23,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`ds-segmented` joins the form systems, and gains a label and a message row.** It carried a value
+  and no form could bind it — no `NG_VALUE_ACCESSOR`, so `[(ngModel)]`, a `formControlName` and
+  signal forms all slid off it. It now extends `DsControlValueAccessor` and resolves its message
+  through the same `resolveFieldMessage` as every other field, mirroring `ds-radio-group`: `label`,
+  `hint`, `error`, `warning` and `errors` all behave as they do elsewhere, and `disabled` folds
+  together with the form's own disabled state. **The DOM grew a level to fit them:** the pill moved
+  off `:host` onto an inner `.track`, so the host can stack label, pill and message. The pill's own
+  tokens stayed on `:host` and inherit down, so a token override is unaffected — but a
+  `::ng-deep` rule written against the host AS the pill (a background, a border-radius, a grid) now
+  targets the stack instead, and wants `.track`.
+
 - **`invalid` paints the error state only — it no longer promotes `hint` to the error message.**
   Every state carries its own text now, and `hint` is never recoloured into somebody else's state.
   **BREAKING:** `[invalid]="true" hint="Must be before end date"` used to render that hint in red,
@@ -207,7 +218,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   that moved to a base class as one of the two things it cannot see — this release is that case.
   What genuinely grew is smaller: **eight bordered fields gained `success`** (`ds-autocomplete`,
   `ds-color-picker`, `ds-date-picker`, `ds-multi-select`, `ds-otp-input`, `ds-select`,
-  `ds-textarea`, `ds-time-picker`), `ds-input` having had it all along. A subclass declaring
+  `ds-textarea`, `ds-time-picker`), `ds-input` having had it all along. `ds-segmented`
+  is the tenth grown class and the one with real new surface — joining the form systems gave it
+  `label`, `disabled`, `isDisabled`, `message`, `invalidResolved`, `fieldMessage`, `hintId` and
+  `uid`. A subclass declaring
   `success` on one of those eight now fails with TS4114; declaring any of the eight moved names still
   collides exactly as it did, because an inherited member collides the same way an own one does.
   `DsFieldBase` is internal and deliberately not exported — it holds only the inputs every field has,
