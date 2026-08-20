@@ -323,6 +323,21 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **Clearing or replacing `ds-date-picker`'s `value` from outside now clears the picker's own typing
+  error.** `typedInvalid` / `rangeInvalid` were set by the typing paths and cleared only by those and
+  `applyPreset`, so `value.set(null)` re-rendered the field to empty and left **"Enter a valid date
+  (MM/DD/YYYY)" standing over it**. `[error]` was no help: a consumer who has just cleared the field
+  has no error of its own to bind, and an empty string falls straight back to the picker's.
+  The `value → text` effect now clears both flags. It is the right place because every typing path
+  holds an `editing` guard while it runs, so reaching the effect means the value did NOT come from the
+  keyboard — and a leftover error no longer describes what the field is about to show. Verified that
+  neither typing path writes `value` on the invalid branch, so blur validation still stands.
+  **This retires two consumer workarounds.** One app was tearing down a whole modal body on `closed`
+  purely to get a fresh picker — and that had a hole, since reopening inside the 300 ms leave animation
+  cancels the close, `closed` never fires and the stale error survived. A second dialog had no
+  workaround at all, so a mistyped date of birth read "Enter a valid date" over an empty field the next
+  time it opened.
+
 - **A card no longer eats the Enter and Space of everything inside it.** `ds-card` bound
   `(keydown.enter)` and `(keydown.space)` on its `<article>` with an unconditional `preventDefault()`,
   and keydown bubbles — so a card cancelled the DEFAULT ACTION of both keys for its whole subtree, on

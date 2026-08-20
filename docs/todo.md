@@ -161,7 +161,7 @@ below is a documentation gap any more — each is a real thing to fix.
 
 ## `ds-date-picker` keeps its own "Enter a valid date" through an external `value` change (from mm-broker MBP-219, 2026-08-18)
 
-- [ ] **[P2] A consumer that clears or replaces `value` cannot clear the picker's own error.**
+- [x] **DONE 2026-08-20 — the `value -> text` effect now clears both flags.** Placed there because every typing path holds an `editing` guard while it runs, so reaching the effect means the value did NOT come from the keyboard. Verified first that neither typing path writes `value` on its invalid branch, so blur validation is untouched. Checked the siblings: no other field carries its own internal invalid flag, so there was nothing adjacent to sweep. ORIGINAL:
   `typedInvalid` / `rangeInvalid` are set from the typing paths (`applyEditedText`, `onFieldBlur`,
   `applyRangeText`) and cleared only by those and `applyPreset`. The constructor's `value → text` effect
   re-renders the field but touches neither, so `value.set(null)` leaves **"Enter a valid date
