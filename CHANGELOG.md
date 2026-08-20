@@ -40,6 +40,24 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   Our own docs taught the old idiom on 13 components (14 of 19 `[invalid]` bindings also bound
   `hint`); all of them now use `error`.
 
+- **A form model can now raise a WARNING, not only an error** — `DS_FIELD_WARNING_KIND`, newly
+  exported. A validation error whose `kind` is `'warning'` paints the field's warning state and shows
+  its message, but leaves the control **valid**: `aria-invalid` stays off and a submit guard reading
+  validity is not blocked.
+  **Why it had to ride inside `errors`.** Angular's `AbstractControl` has no channel for an advisory
+  remark — it exposes `errors` and the validity derived from them, and nothing else. So there was no
+  way for a form to say "this is worth mentioning but not wrong": `warning` and `success` could only
+  be bound by hand from the consumer's own state.
+  **It works from both form systems with no new plumbing**, which is the point. A reactive or
+  template-driven validator returning `{ warning: 'Long runs of capitals are hard to scan' }` has its
+  KEY read as the kind; signal forms assigns its own `ValidationError[]`, which already carries a
+  `kind`. Both land in the same `errors` signal.
+  Ranked below the explicit `warning` input — the consumer's own string wins, exactly as `error` beats
+  `errors` — and shown only after the user has interacted, like any other validation message.
+  **`DsFieldError` and `DsFieldErrorsInput` are exported too**, so a typed validator can be written
+  against the shape the input accepts. Reserved-kind caveat: a validator already using the key
+  `warning` for a BLOCKING error now reads as advisory. Rename that key if you have one.
+
 - **`success` exists on all nine bordered fields, and it is now a STRING that carries its own text.**
   Added to `ds-textarea`, `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-date-picker`,
   `ds-time-picker`, `ds-otp-input` and `ds-color-picker` — it was on `ds-input` alone, so a form could

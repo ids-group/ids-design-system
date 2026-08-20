@@ -114,6 +114,22 @@
         "aria-invalid",
         "role=\"alert\""
       ]
+    },
+    {
+      "id": "fields-warning-kind-is-reserved",
+      "kind": "behavior",
+      "old": "a validator returning { warning: ... }",
+      "new": "the same, now treated as ADVISORY rather than blocking",
+      "note": "The DsFieldError kind `warning` is now RESERVED, exported as DS_FIELD_WARNING_KIND. An error carrying it paints the field's warning state and shows its message, but leaves the control valid: aria-invalid stays off and a submit guard reading validity is not blocked. MOSTLY ADDITIVE -- it gives a form model a way to raise a non-blocking remark, which Angular's AbstractControl has no channel for. ACTION ONLY IF you already have a validator using the key `warning` (reactive/template-driven) or a signal-forms ValidationError with kind 'warning' for a BLOCKING error: it now reads as advisory, so the field stops being invalid and the submit stops being blocked. Rename that key to anything else -- e.g. `warningLimit`, `softLimit` -- and the old behaviour returns. Ranked below the explicit `warning` input, and shown only after interaction like any other validation message. DsFieldError and DsFieldErrorsInput are now exported as well, for writing a typed validator.",
+      "searchHints": [
+        "warning",
+        "DS_FIELD_WARNING_KIND",
+        "ValidationErrors",
+        "ValidationError",
+        "errors",
+        "DsFieldError",
+        "aria-invalid"
+      ]
     }
   ],
   "informational": [
