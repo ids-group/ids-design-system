@@ -147,9 +147,51 @@ marker off with <code>--ds-sidenav-item-rail: transparent</code>.</p>
 <p><b>What the wash costs and buys.</b> The solid pill is unmistakable at a glance and survives a
 squint; the wash is quieter, which is what both teams wanted in a rail that is on screen all day
 next to real content. The wash's label carries the state at <b>#1D43ED on #F0F3FF</b>, and the
-active row stops being the loudest object on the page. The third column keeps the rail marker, so
-the state is not colour-only — worth considering, since the apps turned it off and left the wash
-carrying everything.</p>
+active row stops being the loudest object on the page.</p>
+
+<h2>What the systems actually do — read from their own sources</h2>
+
+<table>
+<thead><tr><th>system</th><th>active item fill</th><th>label</th><th>second signal</th></tr></thead>
+<tbody>
+<tr><th scope="row">Material Design 3<span class="num">tokens/versions/v0_192/_md-comp-navigation-drawer.scss</span></th>
+<td><code>secondary-container</code> — a tinted WASH, not the primary accent</td>
+<td><code>on-secondary-container</code> — a coloured label</td>
+<td>the token is literally named <code>active-indicator-color</code></td></tr>
+
+<tr><th scope="row">IBM Carbon<span class="num">components/ui-shell/side-nav/_side-nav.scss</span></th>
+<td><code>$background-selected</code> — a subtle selected wash</td>
+<td><code>$text-primary</code>, and <b>font-weight 600</b></td>
+<td><b>3px left border</b>, <code>$border-interactive</code></td></tr>
+
+<tr><th scope="row">ids-design-system today</th>
+<td><b><code>--accent</code> #2E54FF — a solid brand fill</b></td>
+<td><code>--text-on-primary</code> #FFFFFF</td>
+<td>rail marker, on by default</td></tr>
+
+<tr><th scope="row">Both consumer apps</th>
+<td><code>--accent-subtitle</code> #F0F3FF — the wash</td>
+<td><code>--accent-strong</code> #1D43ED</td>
+<td><b>NONE — they set the rail transparent</b></td></tr>
+</tbody>
+</table>
+
+<div class="ask">
+<b>The evidence splits the question in two, and the two halves point opposite ways.</b>
+<br><br>
+<b>On the fill, the apps are right and we are the outlier.</b> Neither Material nor Carbon fills the
+active item with the brand accent; both use a quiet selected wash with a coloured or bolder label.
+Two teams reached for it independently because it is what the rest of the industry does.
+<br><br>
+<b>On the second signal, the apps are wrong.</b> Carbon keeps a 3px bar AND bumps the weight to 600;
+Material's wash is named an <i>indicator</i>. The apps turned our rail off, so their active state is
+carried by colour alone — which is exactly what the ui-ux-pro-max rule
+<code>nav-state-active</code> warns against: it lists <i>colour, weight, indicator</i>, plural.
+<br><br>
+<b>So the third column above is the recommendation:</b> take the wash and the coloured label, and
+KEEP the rail. That would make the DS default match the industry on the fill and beat both consumer
+overrides on the signal — and both apps could then delete their override instead of extending it.
+</div>
 
 <div class="ask">
 <b>Four separate verdicts, not one.</b> 1–3 are single tokens and reversible; 4 changes how every
