@@ -114,6 +114,13 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **`ds-field-message`'s docs claimed `state` picks an icon. It never did.** The input's docblock
+  said it "decides colour and icon" and `icon`'s said it "overrides the glyph the `state` would
+  pick" — but `icon` is a plain `input<IconName | null>(null)` with no per-state default, so a
+  consumer following the reference got a colour and no glyph. **Nothing in the library changes**: the
+  JSDoc and the generated API reference now say what the code does — `state` sets the colour, and a
+  field that wants an icon passes one.
+
 - **A nullable binding on a message input no longer throws.** `hint`, `error`, `warning` and
   `success` took a bare `string`, and the resolver called `.trim()` on whatever arrived — so
   `[error]="form.errors?.message"` put `null` in and crashed the render with a `TypeError` the
