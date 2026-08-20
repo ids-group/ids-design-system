@@ -41,7 +41,7 @@
 - P3 · `ds-list-item` cannot express a row that has its own control AND a row-level action
 - P2 · `ds-field-message` claims `state` picks an icon, and it never does — two false doc comments over a real gap
 - P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely
-- P2 · `variant="tonal"` has NO disabled signal in the dark theme — label 1.11:1, fill 1.20:1, both dead
+- P2 · `variant="tonal"` disabled rests on desaturation alone in dark — label 1.11:1, fill 1.20:1
 - P3 · `ds-search` and `ds-segmented` hold a value but cannot join a form
 - P3 · `ds-radio` standalone cannot bind to a form, by design — recorded, not a defect
 - P3 · Four box-less controls compute no `controlState`, so a state reaches the message but not the control
@@ -181,6 +181,38 @@ below is a documentation gap any more — each is a real thing to fix.
   **Ask:** clear both flags when `value` changes from outside the control (the same effect that
   re-renders the text). Two consumer workarounds come out the day it lands.
 
+
+
+## `TableComponent.onRowKey` opens the row from a key pressed on a control inside it (from mm-broker MBP-146, 2026-08-20)
+
+- [ ] **The guard is already on `dev` and missing from published 0.9.1.** `dev`'s
+  `table.component.ts:1708` reads:
+
+  ```ts
+  protected onRowKey(row: T, event: Event): void {
+    // Only the row's own key opens the row: a key pressed on a control inside a
+    // cell belongs to that control (Space on the select box, Enter on a button).
+    if (!this.rowInteractive() || event.target !== event.currentTarget) {
+      return;
+    }
+    event.preventDefault();
+    this.rowClicked.emit(row);
+  }
+  ```
+
+  The 0.9.1 bundle has the same method **without** the `event.target !== event.currentTarget` half, so
+  on the published version Enter or Space on a row-action kebab both opens the menu and emits
+  `rowClicked`. Consumers hit this on ten interactive tables; mm-broker now overrides `onRowKey` in its
+  `ids-data-table` fork and carries `TODO(ds-row-key-guard)` to remove the override at the next bump.
+
+  **The ask: cut a release that carries the guard**, and treat it as a fix rather than a change — the
+  behaviour it removes is a bug, not an API. Nothing else is needed from the DS side.
+
+  Worth knowing while you are in there: **the click path must not get the same treatment.** A row click
+  legitimately lands on a cell's own text, so `event.target !== event.currentTarget` there would kill
+  row clicking outright. `onRowClick`'s existing guards (`closest('input')` plus a live text selection)
+  are the right shape, and consumers keep `$event.stopPropagation()` on each in-row control's own
+  handler for that path.
 
 ## ds-app-layout (SHIPPED 2026-07-24) — post-merge polish
 
@@ -557,10 +589,11 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 
 **P1 — real defects:**
 
-- [ ] **[P2] `variant="tonal"` has NO disabled signal in the dark theme — measured in the browser 2026-08-20, and it invalidates the reason tonal was excluded from the surface-mix fix.** Live on `/components/button` with `<html data-theme="dark">`: label enabled `#778FF8` → disabled `#979EB5`, gap **1.11:1**; fill enabled `#28325D` → disabled `#21273D`, gap **1.20:1**. Both axes are dead, so a disabled tonal button in dark is indistinguishable from an enabled one — the exact defect just fixed for ghost/text/outline.
-  **The excluded-because rationale was wrong, and it was mine.** Tonal was kept on the shared fixed-lightness recipe on the grounds that "its disabled fill already carries the state on its own". That figure (4.32:1 fill movement) was measured in the LIGHT theme and carried into dark without re-measuring. In dark the fill moves 1.20:1, which is nothing. Recorded in the CHANGELOG entry too, which needs correcting when this is decided.
-  **`solid` is NOT affected:** its disabled fill measures `#2E54FF` → `#DBE5F9`, a 4.33:1 move, because the recipe's L 92% is a near-white regardless of theme. Worth its own look though — a disabled solid button is a bright pale-blue pill on a dark page, identical in both themes.
-  **The fix is the one already shipped elsewhere:** `color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default))` on `.v-tonal`. Needs Stas, because excluding tonal was his decision taken on my wrong claim.
+- [ ] **[P2] `variant="tonal"` disabled rests on DESATURATION alone in the dark theme — no luminance change on either axis (browser-measured 2026-08-20).** Live on `/components/button` with `<html data-theme="dark">`: label enabled `#778FF8` → disabled `#979EB5`, gap **1.11:1**; fill enabled `#28325D` → disabled `#21273D`, gap **1.20:1**.
+  **Checked against the screen before writing this, and the first draft said "no signal at all" — that was too strong.** Side-by-side with the Disabled toggle off, the state DOES read: the enabled labels are vivid (blue / orange / violet) and the disabled ones wash out to grey. The difference is almost entirely chroma, which the eye picks up at equal luminance. So this is not invisible — it is the "colour alone" case, weaker than the ghost/outline treatment now beside it.
+  **What IS wrong is the reason tonal was excluded, and that was mine.** Tonal stayed on the shared fixed-lightness recipe because "its disabled fill already carries the state on its own" — a claim resting on a 4.32:1 fill movement measured in the LIGHT theme and carried into dark unchecked. In dark the fill moves 1.20:1. The CHANGELOG entry repeats that claim and needs correcting whichever way this goes.
+  **`solid` is NOT affected:** its disabled fill measures `#2E54FF` → `#DBE5F9`, a 4.33:1 move, because the recipe's L 92% is near-white in any theme. Its own oddity, worth a separate look: a disabled solid is a bright pale-blue pill on a dark page, identical in both themes.
+  **If it should change, the fix is the one already shipped elsewhere:** `color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default))` on `.v-tonal`. Needs Stas — he chose the grey-vs-mix question once already, on the light theme, and preferred the tinted mix.
 
 - [ ] **[P3] `ds-search` and `ds-segmented` hold a value but cannot join a form (audited 2026-08-20).** Both declare `readonly value = model<string>('')`, so `[(value)]` works — but neither provides `NG_VALUE_ACCESSOR`, neither extends a `ControlValueAccessor` base, and neither calls `resolveFieldMessage`. So `[formControl]` / `formControlName` / `ngModel` do not bind, and signal forms has nothing to bind to either. **`ds-segmented` is the more surprising one:** it is a value-bearing choice control, the same shape as `ds-radio-group`, which IS wired.
   **The other thirteen are complete on both systems** — verified per component: NG_VALUE_ACCESSOR, a CVA base, `resolveFieldMessage`, `markTouched()` on blur, `disabled`, and the `readonly` alias wherever `readOnly` exists (3 of 3).
