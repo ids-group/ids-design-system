@@ -41,6 +41,7 @@
 - P3 · `ds-list-item` cannot express a row that has its own control AND a row-level action
 - P2 · `ds-field-message` claims `state` picks an icon, and it never does — two false doc comments over a real gap
 - P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely
+- P2 · `variant="tonal"` has NO disabled signal in the dark theme — label 1.11:1, fill 1.20:1, both dead
 - P2 · `variant="tonal"` disabled rests on desaturation alone in dark — label 1.11:1, fill 1.20:1
 - P3 · `ds-search` and `ds-segmented` hold a value but cannot join a form
 - P3 · `ds-radio` standalone cannot bind to a form, by design — recorded, not a defect
@@ -612,6 +613,10 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 
 **P1 — real defects:**
 
+- [ ] **[P2] `variant="tonal"` has NO disabled signal in the dark theme — measured in the browser 2026-08-20, and it invalidates the reason tonal was excluded from the surface-mix fix.** Live on `/components/button` with `<html data-theme="dark">`: label enabled `#778FF8` → disabled `#979EB5`, gap **1.11:1**; fill enabled `#28325D` → disabled `#21273D`, gap **1.20:1**. Both axes are dead, so a disabled tonal button in dark is indistinguishable from an enabled one — the exact defect just fixed for ghost/text/outline.
+  **The excluded-because rationale was wrong, and it was mine.** Tonal was kept on the shared fixed-lightness recipe on the grounds that "its disabled fill already carries the state on its own". That figure (4.32:1 fill movement) was measured in the LIGHT theme and carried into dark without re-measuring. In dark the fill moves 1.20:1, which is nothing. Recorded in the CHANGELOG entry too, which needs correcting when this is decided.
+  **`solid` is NOT affected:** its disabled fill measures `#2E54FF` → `#DBE5F9`, a 4.33:1 move, because the recipe's L 92% is a near-white regardless of theme. Worth its own look though — a disabled solid button is a bright pale-blue pill on a dark page, identical in both themes.
+  **The fix is the one already shipped elsewhere:** `color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default))` on `.v-tonal`. Needs Stas, because excluding tonal was his decision taken on my wrong claim.
 - [ ] **[P2] `variant="tonal"` disabled rests on DESATURATION alone in the dark theme — no luminance change on either axis (browser-measured 2026-08-20).** Live on `/components/button` with `<html data-theme="dark">`: label enabled `#778FF8` → disabled `#979EB5`, gap **1.11:1**; fill enabled `#28325D` → disabled `#21273D`, gap **1.20:1**.
   **Checked against the screen before writing this, and the first draft said "no signal at all" — that was too strong.** Side-by-side with the Disabled toggle off, the state DOES read: the enabled labels are vivid (blue / orange / violet) and the disabled ones wash out to grey. The difference is almost entirely chroma, which the eye picks up at equal luminance. So this is not invisible — it is the "colour alone" case, weaker than the ghost/outline treatment now beside it.
   **What IS wrong is the reason tonal was excluded, and that was mine.** Tonal stayed on the shared fixed-lightness recipe because "its disabled fill already carries the state on its own" — a claim resting on a 4.32:1 fill movement measured in the LIGHT theme and carried into dark unchecked. In dark the fill moves 1.20:1. The CHANGELOG entry repeats that claim and needs correcting whichever way this goes.
