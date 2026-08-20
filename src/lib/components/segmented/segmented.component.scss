@@ -40,9 +40,6 @@
   @include field-label.field-label;
 }
 
-/* The pill lives here rather than on :host, which now stacks label / pill /
-   message like every other field. The --ds-segmented-* tokens are still declared
-   on :host and inherit down, so consumer overrides are unaffected. */
 .track {
   display: inline-flex;
   width: fit-content;
