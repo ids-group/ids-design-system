@@ -2,6 +2,7 @@ import { Directive, booleanAttribute, input } from '@angular/core';
 import { resolveReserveMessage } from './field-defaults';
 import {
   normalizeFieldErrors,
+  trimmedText,
   type DsFieldError,
   type DsFieldErrorsInput,
 } from './field-errors';
@@ -24,12 +25,18 @@ import {
 @Directive()
 export abstract class DsFieldBase {
   /** Helper text shown below the field. */
-  readonly hint = input<string>('');
+  readonly hint = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
   /** Error text. Shown immediately — binding it says the consumer has already
    *  decided this field is in error. Takes precedence over `errors`. */
-  readonly error = input<string>('');
+  readonly error = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
   /** Advisory text, shown when there is no error. */
-  readonly warning = input<string>('');
+  readonly warning = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
   /** Validation errors, shown once the user has interacted. Bound automatically
    *  by signal forms; reactive and template-driven forms are read through
    *  `NgControl` and need nothing here. Accepts a string, one error, or an array. */

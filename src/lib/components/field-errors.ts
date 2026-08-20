@@ -63,6 +63,16 @@ export function normalizeFieldErrors(
   return Array.isArray(value) ? value : [value as DsFieldError];
 }
 
+/**
+ * Normalises a message input at the boundary, so nothing downstream re-checks
+ * for whitespace: a blank binding means "no message", and that is decided once
+ * here rather than at every read. Also absorbs `null`/`undefined`, which a
+ * `[error]="maybeNull"` binding used to push straight into a `.trim()` call.
+ */
+export function trimmedText(value: string | null | undefined): string {
+  return value?.trim() ?? '';
+}
+
 /** The single line a field shows below itself, already resolved. */
 export interface DsFieldMessage {
   readonly text: string;
@@ -164,12 +174,14 @@ export function resolveFieldMessage(
   const invalid = computed(
     () =>
       sources.invalid() ||
-      sources.error().trim().length > 0 ||
+      sources.error().length > 0 ||
       (errors().length > 0 && interacted()),
   );
 
+  // Every text source arrives already trimmed — `trimmedText` normalises at the
+  // input boundary — so a non-empty string here means a real message.
   const message = computed<DsFieldMessage>(() => {
-    const explicit = sources.error().trim();
+    const explicit = sources.error();
     if (explicit) {
       return { text: explicit, state: 'error' };
     }
@@ -177,15 +189,15 @@ export function resolveFieldMessage(
     if (fromErrors) {
       return { text: fromErrors, state: 'error' };
     }
-    const warning = sources.warning().trim();
+    const warning = sources.warning();
     if (warning) {
       return { text: warning, state: 'warning' };
     }
-    const success = sources.success?.().trim();
+    const success = sources.success?.();
     if (success) {
       return { text: success, state: 'success' };
     }
-    const hint = sources.hint().trim();
+    const hint = sources.hint();
     if (!hint) {
       return EMPTY_MESSAGE;
     }
@@ -197,11 +209,11 @@ export function resolveFieldMessage(
     if (invalid()) {
       return 'error';
     }
-    if (sources.warning().trim()) {
+    if (sources.warning()) {
       return 'warning';
     }
 
-    return sources.success?.().trim() ? 'success' : null;
+    return sources.success?.() ? 'success' : null;
   });
 
   return { message, invalid, controlState: paintedState };

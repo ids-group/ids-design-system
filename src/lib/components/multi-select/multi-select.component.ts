@@ -33,9 +33,7 @@ import {
   prepareOverlayEnter,
 } from '../overlay-motion';
 import { FieldMessageComponent } from '../field-message/field-message.component';
-import {
-  resolveFieldMessage,
-} from '../field-errors';
+import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import type { MultiSelectOption } from './multi-select.types';
 
@@ -93,7 +91,9 @@ export class MultiSelectComponent
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Confirmation text, shown when there is no error or warning — and it paints
    *  the field's success border. A string like `warning`: the text IS the state. */
-  readonly success = input<string>('');
+  readonly success = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
   /** Accessible name for the trigger — falls back to `placeholder`. */
   readonly ariaLabel = input<string | null>(null);
   /** Shows a "Select all" row that toggles every filter-matching, enabled option. */

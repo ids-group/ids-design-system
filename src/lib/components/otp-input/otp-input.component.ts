@@ -13,9 +13,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
-import {
-  resolveFieldMessage,
-} from '../field-errors';
+import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
 
 export type OtpMode = 'numeric' | 'alphanumeric';
@@ -54,7 +52,9 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Confirmation text, shown when there is no error or warning — and it paints
    *  the field's success border. A string like `warning`: the text IS the state. */
-  readonly success = input<string>('');
+  readonly success = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
   /** Accessible group label for the cell row. */
   readonly ariaLabel = input<string>('Verification code');
   /** Fires once, with the full code, on the partial → complete transition. */

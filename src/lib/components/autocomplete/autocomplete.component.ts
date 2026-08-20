@@ -33,9 +33,7 @@ import { IconComponent } from '../../icons/icon.component';
 import { TagComponent } from '../tag/tag.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
-import {
-  resolveFieldMessage,
-} from '../field-errors';
+import { resolveFieldMessage, trimmedText } from '../field-errors';
 import type {
   AutocompleteOption,
   AutocompleteOptionGroup,
@@ -123,7 +121,9 @@ export class AutocompleteComponent<T = unknown>
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Confirmation text, shown when there is no error or warning — and it paints
    *  the field's success border. A string like `warning`: the text IS the state. */
-  readonly success = input<string>('');
+  readonly success = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
   /** Shows a "Create «text»" row when the typed text matches no option. */
   readonly allowCreate = input(false, { transform: booleanAttribute });
   /** Accessible name for the input. */

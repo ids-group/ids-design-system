@@ -21,9 +21,7 @@ import { IconComponent } from '../../icons/icon.component';
 import { DsOverlayCloseRef } from '../../overlay/ds-overlay-close-ref';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
-import {
-  resolveFieldMessage,
-} from '../field-errors';
+import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import {
   closeOnOutsidePointer,
@@ -108,7 +106,9 @@ export class ColorPickerComponent
   readonly ariaLabel = input<string>('Choose colour');
   /** Confirmation text, shown when there is no error or warning — and it paints
    *  the field's success border. A string like `warning`: the text IS the state. */
-  readonly success = input<string>('');
+  readonly success = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
 
   protected readonly trigger =
     viewChild.required<ElementRef<HTMLButtonElement>>('trigger');

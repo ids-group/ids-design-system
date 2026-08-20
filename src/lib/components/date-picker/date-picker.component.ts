@@ -35,9 +35,7 @@ import { IconComponent } from '../../icons/icon.component';
 import { CalendarDayComponent } from '../calendar-day/calendar-day.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
-import {
-  resolveFieldMessage,
-} from '../field-errors';
+import { resolveFieldMessage, trimmedText } from '../field-errors';
 import { DS_CONFIG } from '../../config/ds-config';
 import {
   type DateFormatSpec,
@@ -217,7 +215,9 @@ export class DatePickerComponent
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Confirmation text, shown when there is no error or warning — and it paints
    *  the field's success border. A string like `warning`: the text IS the state. */
-  readonly success = input<string>('');
+  readonly success = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
   /** Bounds for the year dropdown in the calendar header. */

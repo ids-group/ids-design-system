@@ -33,9 +33,7 @@ import {
 import { IconComponent } from '../../icons/icon.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
-import {
-  resolveFieldMessage,
-} from '../field-errors';
+import { resolveFieldMessage, trimmedText } from '../field-errors';
 import {
   TimeColumnsComponent,
   type TimeColumnId,
@@ -135,7 +133,9 @@ export class TimePickerComponent
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Confirmation text, shown when there is no error or warning — and it paints
    *  the field's success border. A string like `warning`: the text IS the state. */
-  readonly success = input<string>('');
+  readonly success = input<string, string | null | undefined>('', {
+    transform: trimmedText,
+  });
   /** Shown in the trigger when no time is set. */
   readonly placeholder = input<string>('--:--');
   /** Shows an inline clear button when a value is set — single mode only. */
@@ -377,11 +377,7 @@ export class TimePickerComponent
   protected onPartPicked(part: TimeColumnId): void {
     const seen = new Set(this.pickedParts()).add(part);
     this.pickedParts.set(seen);
-    if (
-      this.mode() === 'single' &&
-      seen.has('hours') &&
-      seen.has('minutes')
-    ) {
+    if (this.mode() === 'single' && seen.has('hours') && seen.has('minutes')) {
       this.close('select');
     }
   }
