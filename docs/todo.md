@@ -41,6 +41,7 @@
 - P3 · `ds-list-item` cannot express a row that has its own control AND a row-level action
 - P2 · `ds-field-message` claims `state` picks an icon, and it never does — two false doc comments over a real gap
 - P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely
+- P2 · `variant="tonal"` has NO disabled signal in the dark theme — label 1.11:1, fill 1.20:1, both dead
 - P3 · `ds-search` and `ds-segmented` hold a value but cannot join a form
 - P3 · `ds-radio` standalone cannot bind to a form, by design — recorded, not a defect
 - P3 · Four box-less controls compute no `controlState`, so a state reaches the message but not the control
@@ -555,6 +556,11 @@ Nothing moves until a verdict; the work behind each is scoped.
 _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so a multi-select trigger grew a line per selection. `maxVisibleChips` ported from `ds-multi-select` under the same name. Checked the rest of the library — only those two components render a chip list, so nothing else needed it; the pinkmoon prototype the reporter half-remembered is the filter-bar "+N more", which is already `ds-filter-bar`._
 
 **P1 — real defects:**
+
+- [ ] **[P2] `variant="tonal"` has NO disabled signal in the dark theme — measured in the browser 2026-08-20, and it invalidates the reason tonal was excluded from the surface-mix fix.** Live on `/components/button` with `<html data-theme="dark">`: label enabled `#778FF8` → disabled `#979EB5`, gap **1.11:1**; fill enabled `#28325D` → disabled `#21273D`, gap **1.20:1**. Both axes are dead, so a disabled tonal button in dark is indistinguishable from an enabled one — the exact defect just fixed for ghost/text/outline.
+  **The excluded-because rationale was wrong, and it was mine.** Tonal was kept on the shared fixed-lightness recipe on the grounds that "its disabled fill already carries the state on its own". That figure (4.32:1 fill movement) was measured in the LIGHT theme and carried into dark without re-measuring. In dark the fill moves 1.20:1, which is nothing. Recorded in the CHANGELOG entry too, which needs correcting when this is decided.
+  **`solid` is NOT affected:** its disabled fill measures `#2E54FF` → `#DBE5F9`, a 4.33:1 move, because the recipe's L 92% is a near-white regardless of theme. Worth its own look though — a disabled solid button is a bright pale-blue pill on a dark page, identical in both themes.
+  **The fix is the one already shipped elsewhere:** `color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default))` on `.v-tonal`. Needs Stas, because excluding tonal was his decision taken on my wrong claim.
 
 - [ ] **[P3] `ds-search` and `ds-segmented` hold a value but cannot join a form (audited 2026-08-20).** Both declare `readonly value = model<string>('')`, so `[(value)]` works — but neither provides `NG_VALUE_ACCESSOR`, neither extends a `ControlValueAccessor` base, and neither calls `resolveFieldMessage`. So `[formControl]` / `formControlName` / `ngModel` do not bind, and signal forms has nothing to bind to either. **`ds-segmented` is the more surprising one:** it is a value-bearing choice control, the same shape as `ds-radio-group`, which IS wired.
   **The other thirteen are complete on both systems** — verified per component: NG_VALUE_ACCESSOR, a CVA base, `resolveFieldMessage`, `markTouched()` on blur, `disabled`, and the `readonly` alias wherever `readOnly` exists (3 of 3).
