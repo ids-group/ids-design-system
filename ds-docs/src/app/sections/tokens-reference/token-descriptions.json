@@ -1266,5 +1266,6 @@
   "--ds-modal-body-pad-top": "Padding on the modal's body, top edge only. Falls back to --ds-modal-body-pad-y, which sets both.",
   "--ds-modal-body-pad-bottom": "Padding on the modal's body, bottom edge only. Falls back to --ds-modal-body-pad-y, which sets both.",
   "--ds-modal-actions-pad-top": "Padding on the modal's actions, top edge only. Falls back to --ds-modal-actions-pad-y, which sets both.",
-  "--ds-modal-actions-pad-bottom": "Padding on the modal's actions, bottom edge only. Falls back to --ds-modal-actions-pad-y, which sets both."
+  "--ds-modal-actions-pad-bottom": "Padding on the modal's actions, bottom edge only. Falls back to --ds-modal-actions-pad-y, which sets both.",
+  "--ds-menu-clip-radius": "Radius a ds-menu clips its rows to when it sits inside a rounded panel. Published by ds-popover as its own radius less the border it contains, so the rows stay concentric with the panel; a bare menu leaves it flat and rounds its edge rows from --ds-menu-radius instead."
 }

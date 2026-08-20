@@ -3761,6 +3761,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Gap between menu items."
       },
       {
+        "name": "--ds-menu-clip-radius",
+        "value": "var(--radius-flat)",
+        "notes": "Radius a ds-menu clips its rows to when it sits inside a rounded panel. Published by ds-popover as its own radius less the border it contains, so the rows stay concentric with the panel; a bare menu leaves it flat and rounds its edge rows from --ds-menu-radius instead."
+      },
+      {
         "name": "--menu-minw",
         "value": "200px",
         "notes": "Menu panel minimum width (200px)."
