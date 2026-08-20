@@ -26,13 +26,41 @@ make green. Migration plans come from the DS's shipped `migrations/<version>.jso
 a version has one (deterministic), falling back to reading the prose changelog. A skill-scoped
 hook hard-blocks `git push` for the duration of a run — you review the branch and push yourself.
 
+## Team setup — auto-install and auto-update, zero per-user steps
+
+Commit this to a consumer repo's `.claude/settings.json`:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "ids": {
+      "source": { "source": "url", "url": "https://bitbucket.org/itband/ids-design-system.git" },
+      "autoUpdate": true
+    }
+  },
+  "enabledPlugins": { "design-system@ids": true }
+}
+```
+
+Everyone who opens that repo (and trusts the folder) gets the marketplace added and the plugin
+installed — no `/plugin` commands. The plugin auto-installs because its marketplace source is a
+relative path in this repo; externally-sourced plugins would still need a manual install.
+`autoUpdate: true` refreshes the marketplace in the background shortly after session start, and a
+new plugin version is picked up automatically — the install cache is keyed by `plugin.json`
+version, which this repo bumps on every published change.
+
 ## Private-repository note
 
-`itband/ids-design-system` is a **private** Bitbucket repo. Manual `/plugin marketplace add` and
-`/plugin install` work through your existing git credentials (the same ones that let you
-`git clone` it). **Background auto-update of the plugin at startup does not use git credential
-helpers** — for that, set a `BITBUCKET_TOKEN` environment variable (a Bitbucket app password or
-repository access token). Manual install/update needs nothing extra.
+`itband/ids-design-system` is a **private** Bitbucket repo. Manual `/plugin marketplace add` /
+`install` / `update` work through your existing git credentials (the same ones that let you
+`git clone` it). The background auto-update pull runs WITHOUT git credential helpers — but when
+that pull fails it falls back to a fresh clone, which DOES use them, so with a normal credential
+manager setup (the Windows default) auto-update works with no extra configuration. If the
+background update still cannot authenticate: add the marketplace by SSH URL
+(`git@bitbucket.org:itband/ids-design-system.git` — `ssh-agent` keys work non-interactively), or
+scope a git URL-rewrite with a read-only repository access token. `BITBUCKET_TOKEN` is not a
+documented mechanism for marketplace fetches — do not rely on it (this README used to recommend
+it; corrected 2026-08-20).
 
 ## What's inside
 
