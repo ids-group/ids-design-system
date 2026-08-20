@@ -478,7 +478,48 @@
       placeholder="Try “admin”"
       [formControl]="handleControl"
     />
+
+    <ds-input
+      label="Display name"
+      hint="Shown on invoices"
+      [formControl]="displayControl"
+    />
   </div>
+
+  <p class="block-desc t-s">
+    <b>
+      A form can raise a WARNING, not only an error.
+    </b> "Display name" above
+    runs a validator that returns
+    <code class="t-mono-inline">
+      {{ '{' }} warning: 'Long runs of capitals are hard to scan' {{ '}' }}
+    </code>
+    — the reserved kind exported as
+    <code class="t-mono-inline">
+      DS_FIELD_WARNING_KIND
+    </code>. The field paints
+    the warning state and shows the text, but stays VALID:
+    <code class="t-mono-inline">
+      aria-invalid
+    </code> is not set and a submit guard
+    reading validity is not blocked. Angular's
+    <code class="t-mono-inline">
+      AbstractControl
+    </code> has no channel for an advisory
+    remark — only
+    <code class="t-mono-inline">
+      errors
+    </code> and the validity derived from
+    it — so this rides in
+    <code class="t-mono-inline">
+      errors
+    </code> under a kind the DS treats as
+    non-blocking. It works from both form systems: a reactive validator's KEY
+    becomes the kind, and signal forms' own
+    <code class="t-mono-inline">
+      ValidationError
+    </code> already carries one.
+  </p>
 
   <p class="block-desc t-s">
     The text for

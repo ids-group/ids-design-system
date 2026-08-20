@@ -6,6 +6,7 @@ import {
   type ValidationErrors,
 } from '@angular/forms';
 import {
+  DS_FIELD_WARNING_KIND,
   IconComponent,
   InputComponent,
   ReserveMessagesDirective,
@@ -28,6 +29,16 @@ function handleTaken(control: {
   // which is the point of the demo, not a shortcut.
   return TAKEN_HANDLES.includes(value)
     ? { taken: 'That handle is already taken' }
+    : null;
+}
+
+const SHOUTY = /[A-Z]{4,}/;
+
+function shoutyName(control: {
+  value: string | null;
+}): ValidationErrors | null {
+  return SHOUTY.test(control.value ?? '')
+    ? { [DS_FIELD_WARNING_KIND]: 'Long runs of capitals are hard to scan' }
     : null;
 }
 
@@ -62,6 +73,9 @@ export class InputSection {
     Validators.minLength(3),
   ]);
   protected readonly handleControl = new FormControl('', [handleTaken]);
+  protected readonly displayControl = new FormControl('ACME HOLDINGS', [
+    shoutyName,
+  ]);
 
   protected readonly truncationRules: TruncationRule[] = [
     {

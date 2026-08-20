@@ -46,6 +46,14 @@ export type DsFieldErrorsInput =
 const NO_ERRORS: readonly DsFieldError[] = [];
 
 /**
+ * The one reserved `DsFieldError.kind`. An error carrying it is advisory: it shows
+ * in the warning state and does NOT make the control invalid, which is how a form
+ * model can raise a non-blocking remark — Angular's own `AbstractControl` has no
+ * channel for one, only `errors` and the validity derived from it.
+ */
+export const DS_FIELD_WARNING_KIND = 'warning';
+
+/**
  * `errors` input transform. Accepts a bare string (so a consumer that already
  * has the text can pass it directly), a single error, or the array signal forms
  * assigns.
@@ -120,8 +128,9 @@ const NO_CONTROL: ControlState = { errors: NO_ERRORS, touched: false };
  * 2. `errors` — validation errors. Shown once the user has interacted, so a
  *    `required` error does not greet an untouched form.
  * 3. `warning` — advisory, not blocking.
- * 4. `success` — confirmation.
- * 5. `hint` — helper text.
+ * 4. `errors` whose kind is `DS_FIELD_WARNING_KIND` — the same, raised by the form model.
+ * 5. `success` — confirmation.
+ * 6. `hint` — helper text.
  *
  * Both form systems feed step 2 and neither needs the other. Signal forms binds
  * `errors` and `touched` by input name (`FormUiControl`); reactive and
@@ -154,8 +163,19 @@ export function resolveFieldMessage(
       controlState().touched,
   );
 
+  // Both form systems land here, so one reserved kind serves both: signal forms
+  // assigns its own ValidationError[] (which already carries `kind`), and
+  // fromValidationErrors turns a reactive validator's `{ warning: 'text' }` KEY
+  // into the same kind.
+  const blocking = computed(() =>
+    errors().filter((error) => error.kind !== DS_FIELD_WARNING_KIND),
+  );
+  const advisory = computed(() =>
+    errors().filter((error) => error.kind === DS_FIELD_WARNING_KIND),
+  );
+
   const errorText = computed(() => {
-    const current = errors();
+    const current = blocking();
     if (!current.length || !interacted()) {
       return '';
     }
@@ -163,11 +183,22 @@ export function resolveFieldMessage(
     return textFor(current, config.field?.errorMessages);
   });
 
+  const advisoryText = computed(() => {
+    const current = advisory();
+    if (!current.length || !interacted()) {
+      return '';
+    }
+
+    return textFor(current, config.field?.errorMessages);
+  });
+
+  // Advisory errors are deliberately absent: a warning does not make a control
+  // invalid, so it never sets aria-invalid and never blocks a submit guard.
   const invalid = computed(
     () =>
       sources.invalid() ||
       sources.error().length > 0 ||
-      (errors().length > 0 && interacted()),
+      (blocking().length > 0 && interacted()),
   );
 
   // Message inputs trim via `trimmedText`, so a non-empty string here is real
@@ -185,6 +216,10 @@ export function resolveFieldMessage(
     if (warning) {
       return { text: warning, state: 'warning' };
     }
+    const fromAdvisory = advisoryText();
+    if (fromAdvisory) {
+      return { text: fromAdvisory, state: 'warning' };
+    }
     const success = sources.success?.();
     if (success) {
       return { text: success, state: 'success' };
@@ -198,7 +233,7 @@ export function resolveFieldMessage(
     if (invalid()) {
       return 'error';
     }
-    if (sources.warning()) {
+    if (sources.warning() || advisoryText()) {
       return 'warning';
     }
 
@@ -291,7 +326,7 @@ function textFor(
         .map((error) => `"${error.kind}"`)
         .join(
           ', ',
-        )}, so the field falls back to showing its hint in the error state - or, with no hint, an error style and no message at all. Give the validator a message — required(path, { message: '…' }) or { myError: 'text' } — or map the kind in provideDsConfig({ field: { errorMessages: … } }).`,
+        )}, so the field paints the state with NO message under it. Give the validator a message — required(path, { message: '…' }) or { myError: 'text' } — or map the kind in provideDsConfig({ field: { errorMessages: … } }).`,
     );
   }
 
