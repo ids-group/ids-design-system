@@ -515,9 +515,9 @@ export class TableComponent<T extends object> {
     () => this.loadingMode() === 'overlay',
   );
   /** The empty row is a CLAIM about the data — "there are none" — so it must not
-   *  appear while the table is still asking. Only `skeleton` used to suppress it,
-   *  and `overlay` is the mode a list uses on every read after the first, so a
-   *  zero-row reload painted "No rows yet" under the spinner. */
+   *  appear while the table is still asking, in EITHER loading mode. `overlay` is
+   *  what a list uses on every read after the first, so suppressing only under
+   *  `skeleton` paints "No rows yet" under the spinner on a zero-row reload. */
   protected readonly showsEmptyRow = computed(
     () => this.loadingMode() === false && !this.filteredData().length,
   );
