@@ -28,8 +28,15 @@ import { resolveWithConfig } from '../../core/config-defaults';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class RadioComponent extends DsFieldBase {
-  /** Standalone two-way binding. When inside ds-radio-group, isChecked() is
-   *  derived from the group value instead. */
+  /** Standalone two-way binding, and the ONLY way to drive a lone radio: this
+   *  component is deliberately not a `ControlValueAccessor`, so `[formControl]` and
+   *  `ngModel` do not bind to it. Inside `ds-radio-group` the GROUP is the form
+   *  control — a radio is one option of a choice, not a value of its own — and a
+   *  second accessor on the option would fight it. A lone radio in a form binds
+   *  through `[(checked)]`, or becomes a one-option `ds-radio-group`.
+   *
+   *  When inside `ds-radio-group`, `isChecked()` derives from the group value and
+   *  this input is not read. */
   readonly checked = model<boolean>(false);
   /** Disables the radio; a disabled parent `ds-radio-group` also disables it. */
   readonly disabled = input(false, { transform: booleanAttribute });
