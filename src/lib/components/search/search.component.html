@@ -17,8 +17,10 @@
     [placeholder]="placeholder()"
     [attr.aria-label]="ariaLabel() || placeholder() || null"
     [ngModel]="text()"
+    [disabled]="isDisabled()"
     (ngModelChange)="onText($event)"
     (keydown.enter)="onSubmit()"
+    (blur)="markTouched()"
   />
 
   @if (clearable() && text()) {
@@ -26,6 +28,7 @@
       type="button"
       class="search-clear"
       aria-label="Clear search"
+      [disabled]="isDisabled()"
       (click)="clear()"
     >
       <ds-icon

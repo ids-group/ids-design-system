@@ -50,6 +50,21 @@
     box-shadow: var(--_search-focus-shadow);
   }
 
+  // `:has(:disabled)` rather than a host class: the disabled state arrives on the
+  // inner <input> (from the input, or from a form calling setDisabledState), and
+  // the shell is what carries the border and fill. Placed after :hover so a
+  // pointer over a dead field does not light the border.
+  &:has(.search-input:disabled) {
+    background-color: var(--surface-disabled);
+    border-color: var(--border-disabled);
+    cursor: not-allowed;
+
+    .search-input,
+    .icon {
+      color: var(--text-disabled);
+    }
+  }
+
   .icon {
     width: var(--icon-md);
     height: var(--icon-md);

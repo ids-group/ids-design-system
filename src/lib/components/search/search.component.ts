@@ -3,7 +3,9 @@ import {
   ElementRef,
   ViewEncapsulation,
   booleanAttribute,
+  computed,
   effect,
+  forwardRef,
   input,
   model,
   numberAttribute,
@@ -11,8 +13,9 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
+import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
 import type { DsSize } from '../../core/size';
 import { inFieldGroup } from '../field-group/field-group.token';
@@ -26,8 +29,15 @@ import { resolveWithConfig } from '../../core/config-defaults';
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => SearchComponent),
+      multi: true,
+    },
+  ],
 })
-export class SearchComponent {
+export class SearchComponent extends DsControlValueAccessor<string> {
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */
   protected readonly inGroup = inFieldGroup();
@@ -44,6 +54,10 @@ export class SearchComponent {
   readonly clearable = input(false, { transform: booleanAttribute });
   /** Accessible name for the input (placeholder is not a reliable label). */
   readonly ariaLabel = input<string>('');
+  /** Disables the input and the clear button. */
+  readonly disabled = input(false, { transform: booleanAttribute });
+
+  readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
   /** Control height. `md` (default) keeps the 36px search-row height; `sm` (32px)
    *  aligns search with dense toolbars beside `sm` inputs/buttons; `lg` is touch.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
@@ -78,6 +92,7 @@ export class SearchComponent {
   private pushed = this.value();
 
   constructor() {
+    super();
     effect(() => {
       const incoming = this.value();
       if (incoming !== this.pushed) {
