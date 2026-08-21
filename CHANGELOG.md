@@ -158,11 +158,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   server-paged screens kept sorting by a column whose header showed no sort. `surface` and `detect`
   make that item searchable in the artifact that actually changes; `verify` gives a behavioural entry
   the positive assertion a re-check can test, since there is no removed symbol whose absence proves
-  anything. `0.7.1`'s two entries, `0.8.0`'s and `0.9.0`'s sort-mode pair (which reverse each other,
-  and now link both ways) carry the new fields as worked examples; earlier manifests keep their shape
-  and the plugin's planner fills the fields in from each note. `npm run migration-lint` enforces the
-  contract and the release preflight runs it, so a manifest that cannot be acted on stops a release
-  instead of reaching a consumer.
+  anything. **Every published manifest was back-filled the same day:** 167 items across 19 releases
+  got a `surface`, every behavioural one a `verify`, every changed default a `restore`, and the 32
+  prose `DELETE-LIST:` lines became `deleteList` arrays with a greppable `find` each — four of those
+  "lines" turned out to be the words "the DELETE-LIST" inside ordinary prose. Two default flips that
+  reverse each other now link both ways: `0.7.0` / `0.7.1` on `reserveMessage`, and `0.8.0` / `0.9.0`
+  on the table's sort mode. `npm run migration-lint` enforces the contract with no warning level, and
+  both the release preflight and the PR gate run it, so a manifest nobody can act on stops the
+  pipeline instead of reaching a consumer. Three CHANGELOG blocks also gained the "What you can now
+  DELETE" table their manifests had been carrying alone — 0.10.0's nineteen rows, 0.10.1's and
+  0.6.2's.
 
 ### Fixed
 
@@ -2637,6 +2642,15 @@ genuine gap worth reporting.
   content projected into the drawer body can't sink under the scrim. No public API or token change:
   scrim click-to-close, panel-scoped plus document-level Escape, `animationend` teardown, and the focus
   trap are all unchanged.
+
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a workaround this release made unnecessary.
+
+| If you have | Delete it, because |
+| --- | --- |
+| A logo overlaid or absolutely positioned on top of ds-sidenav's brand row, written when there was no slot for one. | project it into `[brand]` |
+| A scrollTop pin or a scroll-lock hack written against the content jolt an opening sheet used to cause in a shell that is a containing block for fixed descendants. | nothing - the entering panel no longer contributes that overflow |
 
 ## 0.6.1 — 2026-07-16
 

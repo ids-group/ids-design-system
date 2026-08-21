@@ -10,7 +10,8 @@
       "searchHints": [
         "<ds-combobox",
         "ds-combobox"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "combobox-component-class-rename",
@@ -20,7 +21,8 @@
       "note": "TS import/reference rename only.",
       "searchHints": [
         "ComboboxComponent"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "combobox-option-type-rename",
@@ -30,7 +32,8 @@
       "note": "TS type rename. Beware token boundaries: ComboboxOptionGroup contains ComboboxOption — rename the longer identifier first (its own item).",
       "searchHints": [
         "ComboboxOption"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "combobox-option-group-type-rename",
@@ -40,7 +43,8 @@
       "note": "TS type rename.",
       "searchHints": [
         "ComboboxOptionGroup"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "combobox-size-type-rename",
@@ -50,7 +54,8 @@
       "note": "TS type rename.",
       "searchHints": [
         "ComboboxSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "combobox-width-type-rename",
@@ -60,7 +65,8 @@
       "note": "TS type rename.",
       "searchHints": [
         "ComboboxWidth"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "combobox-token-prefix-rename",
@@ -70,7 +76,8 @@
       "note": "Prefix rename covering --ds-combobox-focus-shadow / -maxw / -input-minw; replace within each full suffixed name.",
       "searchHints": [
         "--ds-combobox-"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "combobox-docs-anchor",
@@ -80,7 +87,15 @@
       "note": "Docs-site anchor renamed #combobox -> #autocomplete; update any hardcoded documentation links in consumer code/README.",
       "searchHints": [
         "#combobox"
-      ]
+      ],
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "detect": [
+        "#combobox"
+      ],
+      "verify": "No documentation link in the consumer (code, README, a help panel) still points at the #combobox anchor."
     },
     {
       "id": "dropdown-removed-use-select",
@@ -91,7 +106,8 @@
       "searchHints": [
         "<ds-dropdown",
         "ds-dropdown"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "dropdown-error-input-rename",
@@ -102,7 +118,8 @@
       "searchHints": [
         "[error]=",
         "error=\""
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "dropdown-option-groups-fold",
@@ -112,7 +129,16 @@
       "note": "[optionGroups]=\"groups\" is gone on ds-select — pass groups inline in [options]: SelectItem = SelectOption | SelectOptionGroup, so merge the flat options and the groups into one [options] array (order = desired render order).",
       "searchHints": [
         "[optionGroups]="
-      ]
+      ],
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "detect": [
+        "optionGroups",
+        "[optionGroups]"
+      ],
+      "verify": "No ds-select binds optionGroups; the groups sit inside [options] in render order."
     },
     {
       "id": "dropdown-component-class-rename",
@@ -122,7 +148,8 @@
       "note": "TS import/reference rename.",
       "searchHints": [
         "DropdownComponent"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "dropdown-option-type-rename",
@@ -132,7 +159,8 @@
       "note": "TS type rename. Token boundaries: DropdownOptionGroup contains DropdownOption — rename the longer identifier first.",
       "searchHints": [
         "DropdownOption"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "dropdown-option-group-type-rename",
@@ -142,7 +170,8 @@
       "note": "TS type rename.",
       "searchHints": [
         "DropdownOptionGroup"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "dropdown-size-type-rename",
@@ -152,7 +181,8 @@
       "note": "TS type rename.",
       "searchHints": [
         "DropdownSize"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "datepicker-token-prefix-rename",
@@ -162,7 +192,8 @@
       "note": "Prefix normalized to match the selector (~14 tokens). Names only — CSS property and defaults byte-identical. Replace within each full suffixed name.",
       "searchHints": [
         "--ds-datepicker-"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "statusdot-token-prefix-rename",
@@ -172,7 +203,8 @@
       "note": "Prefix normalized (color, size). Names only.",
       "searchHints": [
         "--ds-statusdot-"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "pagehdr-token-prefix-rename",
@@ -182,7 +214,8 @@
       "note": "Prefix normalized (~10 tokens: eyebrow/title/subtitle/meta/crumb colors, meta-icon-color, divider, title-fs, title-gap). Names only.",
       "searchHints": [
         "--ds-pagehdr-"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "avatargroup-token-prefix-rename",
@@ -192,7 +225,8 @@
       "note": "Prefix normalized (overlap, ring, overflow-bg-color, overflow-label-color). Names only.",
       "searchHints": [
         "--ds-avatargroup-"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "search-inner-input-class-rename",
@@ -202,7 +236,8 @@
       "note": "ds-search's inner input class renamed (over-generic .input let consumer global styles leak in). Only consumer STYLING that targeted the undocumented internal class is affected — scope strictly to selectors under ds-search.",
       "searchHints": [
         "ds-search"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "date-picker-trigger-text-input-default",
@@ -212,7 +247,17 @@
       "note": "Trigger is now an editable masked text input by default (allowInput defaults true) with a trailing calendar icon, and the field sizes to CONTENT width (was full-width). Pass [allowInput]=\"false\" for the old click-only field; set a width on the host to stretch. Usually no code change — flag for visual review (eyeball).",
       "searchHints": [
         "<ds-date-picker"
-      ]
+      ],
+      "surface": [
+        "template",
+        "style"
+      ],
+      "detect": [
+        "ds-date-picker",
+        "allowInput"
+      ],
+      "restore": "[allowInput]=\"false\" for the click-only field, plus a width on the host to stretch it",
+      "verify": "Every date picker either takes the editable masked trigger at content width, or says otherwise with [allowInput]=\"false\" and a width."
     },
     {
       "id": "date-picker-locale-default-en-us",
@@ -223,7 +268,18 @@
       "searchHints": [
         "<ds-date-picker",
         "toLocaleDateString"
-      ]
+      ],
+      "surface": [
+        "template",
+        "config"
+      ],
+      "detect": [
+        "ds-date-picker",
+        "locale",
+        "datePicker"
+      ],
+      "restore": "[locale] per picker, or provideDsConfig({ datePicker: { locale: '<bcp47>' } })",
+      "verify": "A screen whose readers are not en-US sets the locale rather than inheriting the new default."
     },
     {
       "id": "search-fills-container-default",
@@ -233,7 +289,10 @@
       "note": "Default max-width changed 320px -> none (ds-search now stretches like the rest of the field family). If the 320px cap was relied on, set --ds-search-maxw: 320px on the host/theme. Usually visual-review only.",
       "searchHints": [
         "<ds-search"
-      ]
+      ],
+      "surface": "style",
+      "restore": "--ds-search-maxw: 320px on the host or the theme",
+      "verify": "Every search box is meant to stretch with its container, or pins the old 320px cap."
     },
     {
       "id": "card-interactive-keyboard-activation",
@@ -244,7 +303,17 @@
       "searchHints": [
         "elevation=\"interactive\"",
         "elevation=interactive"
-      ]
+      ],
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "detect": [
+        "elevation=\"interactive\"",
+        "keydown",
+        "role=\"button\""
+      ],
+      "verify": "No interactive card carries a hand-rolled keyboard activation beside the built-in one - two handlers on one card fire twice."
     }
   ],
   "informational": [

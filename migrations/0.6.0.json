@@ -10,7 +10,8 @@
       "searchHints": [
         "styles/breakpoints",
         "@use '@ids-group-ltd/ids-design-system/styles/breakpoints'"
-      ]
+      ],
+      "surface": "style"
     }
   ],
   "informational": [

@@ -21,7 +21,8 @@
         "success": "color=\"success\"",
         "warning": "color=\"warning\"",
         "text": "variant=\"text\""
-      }
+      },
+      "surface": "template"
     },
     {
       "id": "ds-button-size-legacy-tier",
@@ -38,7 +39,9 @@
         "s": "size=\"sm\"",
         "m": "size=\"sm\"",
         "l": "size=\"md\""
-      }
+      },
+      "surface": "template",
+      "restore": "nothing to restore - the 24px tier is gone; its callers take sm (32px), and an attribute-less button keeps the same 40px it had as `l`"
     },
     {
       "id": "ds-button-ts-types-retyped",
@@ -49,7 +52,13 @@
       "searchHints": [
         "ButtonVariant",
         "ButtonColor"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "ButtonVariant",
+        "ButtonColor"
+      ],
+      "verify": "Nothing types a hue with ButtonVariant: the fill vocabulary and the hue live in two unions now, and a field or method feeding [variant] carries the fill one."
     },
     {
       "id": "reactive-radio-needs-radio-group",
@@ -61,7 +70,14 @@
         "<ds-radio",
         "formControlName",
         "[(ngModel)]"
-      ]
+      ],
+      "surface": "template",
+      "detect": [
+        "ds-radio",
+        "formControlName",
+        "[(ngModel)]"
+      ],
+      "verify": "Every radio group bound into a form sits inside a ds-radio-group that owns the control, the name and the roving tabindex."
     },
     {
       "id": "input-hint-color-token",
@@ -71,7 +87,8 @@
       "note": "Field helper/error text is now rendered by the shared ds-field-message; the new hook applies to EVERY field's helper/error line, not just input.",
       "searchHints": [
         "--ds-input-hint-color"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "input-hint-fs-token",
@@ -81,7 +98,8 @@
       "note": "Same field-message consolidation as input-hint-color-token.",
       "searchHints": [
         "--ds-input-hint-fs"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "bottom-sheet-closed-after-animation",
@@ -92,7 +110,13 @@
       "searchHints": [
         "<ds-bottom-sheet",
         "(closed)"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "(closed)",
+        "ds-bottom-sheet"
+      ],
+      "verify": "No (closed) handler assumes it fires synchronously on the click - an immediate re-open or a focus move now lands after the leave animation."
     },
     {
       "id": "button-pressed-shadow-default-none",
@@ -102,7 +126,10 @@
       "note": "The old faint pressed halo now defaults to `none` (press feedback became darken + micro scale-down). Only consumers who RELIED on the halo act: set --ds-button-pressed-shadow explicitly to re-enable. No usage -> no action.",
       "searchHints": [
         "--ds-button-pressed-shadow"
-      ]
+      ],
+      "surface": "style",
+      "restore": "--ds-button-pressed-shadow: <the old halo value>",
+      "verify": "Nothing relied on the pressed halo; a screen that wants it sets the token."
     },
     {
       "id": "button-icon-button-disabled-tint-default",
@@ -113,7 +140,10 @@
       "searchHints": [
         "<ds-button",
         "<ds-icon-button"
-      ]
+      ],
+      "surface": "style",
+      "restore": "the per-variant disabled colour hooks pinned to the old flat values",
+      "verify": "The disabled state of every variant in use was looked at once - it derives from the variant's own colour now rather than one shared grey."
     },
     {
       "id": "modal-drawer-close-animates",
@@ -124,7 +154,15 @@
       "searchHints": [
         "<ds-modal",
         "<ds-drawer"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "(closed)",
+        "(openChange)",
+        "ds-modal",
+        "ds-drawer"
+      ],
+      "verify": "No teardown or focus move assumes the dismiss is synchronous: close-related outputs fire at the END of the leave animation."
     },
     {
       "id": "styles-tokens-a-la-carte-needs-breakpoints",
@@ -135,7 +173,8 @@
       "searchHints": [
         "styles/tokens",
         "@use '@ids-group-ltd/ids-design-system/styles/tokens'"
-      ]
+      ],
+      "surface": "style"
     }
   ],
   "informational": [
