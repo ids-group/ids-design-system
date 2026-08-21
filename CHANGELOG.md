@@ -59,6 +59,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **If you EXTEND a DS component, seven classes grew and three members changed type.**
+  `npm run class-surface` against 0.10.1: `AutocompleteComponent` and `MultiSelectComponent`
+  (`chipsMode`, `showsEveryChip`), `MenuItemComponent` (`description`, `descriptionId`),
+  `SearchComponent` (`disabled`, `isDisabled`), `SidenavItemComponent` (`rail`, `railResolved`),
+  `SidenavComponent` (`rail`) and `TableComponent` (`actionReason`, `actionsFor`, `hasActionsFor`,
+  `visibleRowActions`). A subclass declaring any of those names now fails with TS4114. **Nothing was
+  removed this time.** Three members kept their name and changed type, which is the case that compiles
+  for a caller and breaks an overrider: `maxVisibleChips` on both pickers (widened to
+  `number | 'fit' | 'all' | null`, default moved to `null` — see the entry above),
+  `SearchComponent.clear` (`protected` → public, so a subclass that narrowed it to `protected` no
+  longer satisfies the base), and `TimeColumnsComponent.onKey` (its parameter list changed).
+  `SearchComponent.focus` also picked up `override`, which is internal and needs nothing.
+
 - **Every readback that resolves through `DS_CONFIG` is now public.** `sizeResolved` on fourteen
   controls, plus `elevationResolved` / `paddingResolved` (card), `withDotResolved` (badge),
   `borderedResolved` / `stickyScrollbarResolved` (table), `dividersResolved` (both modals),

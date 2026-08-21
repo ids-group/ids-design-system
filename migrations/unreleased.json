@@ -5,8 +5,8 @@
       "id": "resolved-readbacks-are-public",
       "kind": "behavior",
       "old": "class MyThing extends ButtonComponent (or any DS component)",
-      "new": "the same class, with the config-resolved readbacks now PUBLIC members",
-      "note": "Every readback that resolves through DS_CONFIG changed from `protected` to public: `sizeResolved` on fourteen controls, `elevationResolved` and `paddingResolved` (ds-card), `withDotResolved` (ds-badge), `borderedResolved` and `stickyScrollbarResolved` (ds-table), `dividersResolved` (ds-modal and ds-modal-card), `reserveMessageResolved` (every field, via DsFieldBase), the date/time picker locale and format resolvers, and `brandName` / `letterGlyph` / `taglineText` (ds-sidenav, ds-auth-layout). WHY: 0.10.0 told consumers to read `sizeResolved()` now that `size()` returns null when unbound, and that did not compile -- reading it from a host, a test or a viewChild was TS2445. NO ACTION for a consumer that composes. ACTION only if you SUBCLASS a DS component and declare a member with one of those names: it is now a public member of the base, so an incompatible re-declaration needs `override` or a rename. Members a host can derive from its own bindings stay protected on purpose: `invalidResolved`, `railResolved`, `sortModeResolved`, `filterModeResolved`.",
+      "new": null,
+      "note": "Every readback that resolves through DS_CONFIG changed from `protected` to public: `sizeResolved` on fourteen controls, `elevationResolved` and `paddingResolved` (ds-card), `withDotResolved` (ds-badge), `borderedResolved` and `stickyScrollbarResolved` (ds-table), `dividersResolved` (ds-modal and ds-modal-card), `reserveMessageResolved` (every field, via DsFieldBase), the date/time picker locale and format resolvers, and `brandName` / `letterGlyph` / `taglineText` (ds-sidenav, ds-auth-layout). WHY: 0.10.0 told consumers to read `sizeResolved()` now that `size()` returns null when unbound, and that did not compile -- reading it from a host, a test or a viewChild was TS2445. NO ACTION for a consumer that composes. ACTION only if you SUBCLASS a DS component and declare a member with one of those names: it is now a public member of the base, so an incompatible re-declaration needs `override` or a rename. Members a host can derive from its own bindings stay protected on purpose: `invalidResolved`, `railResolved`, `sortModeResolved`, `filterModeResolved`. TARGET: the same class, with the config-resolved readbacks now PUBLIC members",
       "searchHints": [
         "sizeResolved",
         "elevationResolved",
@@ -24,8 +24,8 @@
       "id": "focus-ring-inner-transparent",
       "kind": "behavior",
       "old": "--focus-ring-inner: var(--surface-canvas)",
-      "new": "--focus-ring-inner: transparent",
-      "note": "The 2px gap between an element and its focus ring no longer paints a named surface; it is transparent, so it shows whatever is actually behind. NO ACTION on a canvas-coloured ground -- the same pixels show through. It CHANGES what you see where the focused element sits on something else: a white card in a dark app used to get a dark rim around it, which read as a rendering artifact. If you deliberately relied on an opaque gap -- e.g. to hold the ring off a busy photo background -- set `--focus-ring-inner` back to a colour on that scope. Also new and unrelated to this remap: `data-focus=\"inset\"` draws the same ring INSIDE the border box, for a subtree under an `overflow: hidden` ancestor that would otherwise clip the ring away entirely. Unlike the other focus styles it is not pinned to :root -- set it on the clipping element.",
+      "new": null,
+      "note": "The 2px gap between an element and its focus ring no longer paints a named surface; it is transparent, so it shows whatever is actually behind. NO ACTION on a canvas-coloured ground -- the same pixels show through. It CHANGES what you see where the focused element sits on something else: a white card in a dark app used to get a dark rim around it, which read as a rendering artifact. If you deliberately relied on an opaque gap -- e.g. to hold the ring off a busy photo background -- set `--focus-ring-inner` back to a colour on that scope. Also new and unrelated to this remap: `data-focus=\"inset\"` draws the same ring INSIDE the border box, for a subtree under an `overflow: hidden` ancestor that would otherwise clip the ring away entirely. Unlike the other focus styles it is not pinned to :root -- set it on the clipping element. TARGET: --focus-ring-inner: transparent",
       "searchHints": [
         "--focus-ring-inner",
         "focus-ring",
@@ -71,8 +71,8 @@
       "id": "max-visible-chips-type-widened",
       "kind": "behavior",
       "old": "maxVisibleChips: number | 'fit' | null",
-      "new": "maxVisibleChips: number | 'fit' | 'all' | null",
-      "note": "TYPE WIDENING on ds-autocomplete and ds-multi-select, breaking for READERS and OVERRIDERS, not for writers - the same asymmetry 0.10.0's two widenings had, where the consumer's type-checker was the only finder. A binding compiles as before; what stops compiling is an explicitly typed declaration that has to accept the value (`const cap: number | 'fit' | null = ...`, a helper parameter, a viewChild target) and a subclass override, because the `equal` type-parameter position of InputSignalWithTransform is invariant (TS2416). ACTION: retype to `number | 'fit' | 'all' | null`, or drop the annotation and let inference carry it. The VALUE change that comes with it is the separate max-visible-chips-null-is-unset-* pair; this entry is only the declaration.",
+      "new": null,
+      "note": "TYPE WIDENING on ds-autocomplete and ds-multi-select, breaking for READERS and OVERRIDERS, not for writers - the same asymmetry 0.10.0's two widenings had, where the consumer's type-checker was the only finder. A binding compiles as before; what stops compiling is an explicitly typed declaration that has to accept the value (`const cap: number | 'fit' | null = ...`, a helper parameter, a viewChild target) and a subclass override, because the `equal` type-parameter position of InputSignalWithTransform is invariant (TS2416). ACTION: retype to `number | 'fit' | 'all' | null`, or drop the annotation and let inference carry it. The VALUE change that comes with it is the separate max-visible-chips-null-is-unset-* pair; this entry is only the declaration. TARGET: maxVisibleChips: number | 'fit' | 'all' | null",
       "searchHints": [
         "maxVisibleChips",
         "InputSignalWithTransform",
@@ -109,6 +109,32 @@
         "extends MenuItemComponent",
         "override ",
         "TS4114"
+      ]
+    },
+    {
+      "id": "search-clear-becomes-public",
+      "kind": "behavior",
+      "old": "SearchComponent.clear",
+      "new": null,
+      "note": "CHANGED TYPE, same name: SearchComponent.clear went from `protected clear(): void` to a public `clear(): void`. For a CALLER this is purely additive — the method is now reachable, which is the point (see the ds-search.clear() entry). It breaks an OVERRIDER: a subclass that redeclared `protected clear()` no longer satisfies the base, because a derived class cannot narrow a public member to protected (TS2445-class error). ACTION: drop the `protected` keyword on your override, or rename your own method. SearchComponent.focus separately picked up an `override` modifier, which changes nothing for a consumer.",
+      "searchHints": [
+        "extends SearchComponent",
+        "clear()",
+        "protected clear",
+        "ds-search"
+      ]
+    },
+    {
+      "id": "time-columns-onkey-signature",
+      "kind": "behavior",
+      "old": "TimeColumnsComponent.onKey",
+      "new": null,
+      "note": "CHANGED TYPE, same name: TimeColumnsComponent.onKey's parameter list changed. It is `protected`, so no consumer calls it and templates are unaffected; it is listed because an overriding subclass now has a signature that does not match the base (TS2416). ACTION: read the current declaration in time-columns.component.ts and match it, or drop the override — the component is internal to ds-time-picker and subclassing it was never supported.",
+      "searchHints": [
+        "extends TimeColumnsComponent",
+        "onKey",
+        "ds-time-columns",
+        "ds-time-picker"
       ]
     }
   ],
