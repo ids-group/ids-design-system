@@ -11,6 +11,31 @@ same class of defect: **guidance that could not be followed** — a focus ring t
 a clipping ancestor, and a migration path that did not compile. The other pattern worth keeping: two
 of these eight were found by the CHANGELOG re-review rather than by using the library.
 
+- [x] **DONE 2026-08-21 — `npm run check-docs-links`, inside `extract-docs`, so the build fails instead of the click.**
+  Walks every `routerLink="/…"` in `ds-docs/src/**/*.html` and resolves it against NAV, read out of
+  `nav.config.ts` as text (it runs BEFORE the build it guards, so importing the TS is not an option).
+  Catches all three shapes and says which is which: a group path where an anchor belongs, an anchor that
+  is not in NAV, and a `fragment` that an area redirect drops. **Proved by injecting one of each and
+  watching it exit 1** — which also caught a bug in the checker itself: the fragment scan crossed into
+  the next element and blamed the wrong link, so it is now bounded by `[^<>]`. Passes clean at 13 groups
+  / 105 anchors. The dev-time `console.warn` on a null `def()` was NOT added: the build gate covers our
+  own links, and a warning would only fire for whoever already clicked.
+  ORIGINAL: [P3] Nothing catches a docs link that points at no section, and the failure looks like a dead click.**
+  `:area/:anchor` matches ANY pair, so `/components/actions` — a group PATH rather than an item anchor —
+  is a route hit with nothing to render; `SectionGroupPage` then does
+  `navigateByUrl("/", { replaceUrl: true })`, so the reader lands back on Start here and the address bar
+  keeps no trace. That redirect is deliberate (better than a blank page) and it is also what hides the
+  defect: no 404, no console warning, nothing in a build or a grep. **Eight links shipped wrong for
+  exactly that reason** and were fixed on 2026-08-21 — one bounced home, seven named a `fragment` that an
+  area redirect silently drops, landing on the group's first section instead of the named one.
+  **Ask:** a prebuild check beside the extractors — walk every `routerLink="/…"` literal in
+  `ds-docs/src/**/*.html`, resolve it against `NAV`, and fail the build on a miss. It would have caught
+  all eight, it is the same shape as the dead-token and class-surface audits this repo already runs, and
+  the alternative is that the next wrong link waits for someone to click it. Also worth deciding: log a
+  `console.warn` in dev when `def()` is null, so a bad URL says so instead of quietly going home.
+
+Highest: each one is wrong in code a consumer already has.
+
 - [x] **DONE 2026-08-21 — the column carries the intent, not the row: `TableColumn.interactive`.** The ask offered two shapes and this is the one it recommended, for the reason it gave: only ONE cell is the target, so a row-level `--ds-table-row-hover-text-color` would paint every cell to signal one. `interactive: true` marks the column; its cell takes `--ds-table-cell-link-color` (default `--accent`) plus `--ds-table-cell-link-decoration` (default `underline`) while the row is hovered. **Both signals, deliberately** — `color-not-only` and WCAG 1.4.1 both forbid resting it on hue, and the four screens that hand-rolled this had already written the underline themselves. **Scoped to `.clickable`**, so a column marked `interactive` on a passive table does nothing: that is the same rule the row tint follows, and it exists so a tint cannot promise a click that never happens. Off by default. Specimen on `/components/table` uses a pinned hover so the state is visible without a pointer, measured accent #2E54FF + underline on the marked cell against the default text on its neighbour. This was the consumer's LAST table `::ng-deep`; the other two they had (`width: 'content'`, the toolbar slot) shipped earlier.
   ORIGINAL: [P3] A table row publishes only its background on hover, so a cell that must react in TEXT reaches
   past the API (mm-broker, 2026-08-19).** `--ds-table-row-hover-bg-color` and its `-active`/`-pressed`/

@@ -5,7 +5,6 @@
 
 **Bugs — something shipped misbehaves**
 
-- P3 · Nothing catches a docs link that points at no section, and the failure looks like a dead click.
 - P3 · `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing my
 
 **Asks — a consumer or Stas asked for it**
@@ -63,25 +62,13 @@
 
 
 
+
+
+
+
+
+
 # Bugs — something shipped misbehaves
-
-## A wrong internal link in ds-docs fails silently — the route matches and the page redirects home (found by Stas, 2026-08-21)
-
-- [ ] **[P3] Nothing catches a docs link that points at no section, and the failure looks like a dead click.**
-  `:area/:anchor` matches ANY pair, so `/components/actions` — a group PATH rather than an item anchor —
-  is a route hit with nothing to render; `SectionGroupPage` then does
-  `navigateByUrl("/", { replaceUrl: true })`, so the reader lands back on Start here and the address bar
-  keeps no trace. That redirect is deliberate (better than a blank page) and it is also what hides the
-  defect: no 404, no console warning, nothing in a build or a grep. **Eight links shipped wrong for
-  exactly that reason** and were fixed on 2026-08-21 — one bounced home, seven named a `fragment` that an
-  area redirect silently drops, landing on the group's first section instead of the named one.
-  **Ask:** a prebuild check beside the extractors — walk every `routerLink="/…"` literal in
-  `ds-docs/src/**/*.html`, resolve it against `NAV`, and fail the build on a miss. It would have caught
-  all eight, it is the same shape as the dead-token and class-surface audits this repo already runs, and
-  the alternative is that the next wrong link waits for someone to click it. Also worth deciding: log a
-  `console.warn` in dev when `def()` is null, so a bad URL says so instead of quietly going home.
-
-Highest: each one is wrong in code a consumer already has.
 
 ## ds-app-layout (SHIPPED 2026-07-24) — post-merge polish
 
@@ -157,6 +144,13 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 ## Component feature gaps
 
 - [ ] **[P2] One entry point for the whole library means a consumer cannot keep the DS out of their initial bundle (2026-08-03, Stas — mm-broker MBP-133 review).** _(Re-counted 2026-08-05: **85** exported `*Component` classes plus 9 directives (re-counted 2026-08-10; was 83 + 8 on 08-05), by `grep -rho 'export class .*Component' src/lib | sort -u`. The item said 73; the figure does not change the argument, but it is now stated with its method so nobody re-counts.)_ `ng-package.json` declares a single `entryFile`, so the package ships as one 1.25 MB `fesm2022` module behind a single `"."` export. `sideEffects: false` is set and tree-shaking works fine — unused components are dropped — but **chunking cannot happen**: esbuild splits by module, so it can never place two DS symbols in two different chunks. Measured in mm-broker: the app's eager composition root binds `NotificationService` to a toast implementation, that one runtime import of `ToastService` pins the whole retained DS graph into a chunk statically imported by `main`, and the result is **632 kB — about 88% of a 720 kB initial bundle** — even though every feature route is lazy and the only eagerly-needed symbol is one service. The consumer has no lever: the root is the only specifier, and moving the provider to a lazy route does not help because interceptors and the `ErrorHandler` resolve from the root injector. **Ask:** secondary entry points (ng-packagr supports a nested `ng-package.json` per folder). Even a coarse split would fix it — a services/overlay entry point carrying `ToastService`, `ModalService` and `BodyScrollLockService` separately from the component layer, so an eager root can import the service and leave 70-odd components lazy. Per-component entry points would be ideal but are a bigger change; the services split is the one that unblocks consumers. **Explicit non-goal:** nothing about the public API surface needs to change — same symbols, same names, just reachable through narrower specifiers. **RE-AUDITED 2026-08-03 → read `packaging-chunking-audit.md` before actioning this item; three claims above are wrong.** The mechanism is confirmed by controlled esbuild fixtures, but: this was never filed upstream (it is the consumer's own backlog item, with a consumer-side fix); "the consumer has no lever" is false (a dynamic `import()` keeps `main` clean — it just costs tree-shaking, measured +50%); and the 07-27 "tree-shaking already works" verdict is NOT overturned — placement and tree-shaking are orthogonal and both findings stand. The audit also merges this item with the "Packaging — secondary entry points" section below, which duplicates it with the opposite verdict.
+  **DEFERRED by Stas 2026-08-21, with a deck instead of a build — `presentations/packaging-entry-points.html`.**
+  It draws the mechanism (one FESM is one module, so placement cannot happen), the three esbuild fixtures
+  as bars scaled to their measured sizes, the grep counts that isolate the cause, and all four options
+  with what each costs in placement AND tree-shaking. Recommendation on the deck is B (one services entry
+  point) and only B: the sole option measured to fix placement without losing tree-shaking, and a major
+  either way, so it sequences with the breaking batch. The deck also names what would overturn that — a
+  consumer whose EAGER root needs a component rather than a service, which is D's case.
 
   **DECIDED 2026-08-05: option B from `packaging-chunking-audit.md` §7 — one services entry point, root `public-api.ts` kept as a facade.** It is the only option the fixtures measured as fixing chunk PLACEMENT without losing tree-shaking, and it is non-breaking: same symbols, same names, no cross-entry deep-import refactor across 73 folders. **Two things to get right when building it, both found while deciding:** (1) the entry point is NOT as narrow as its name — `ToastService` imports `ToastRegionComponent` and `ModalService` imports `ModalConfirmComponent`, so the entry necessarily carries those components and their own deps; that still fixes the reported problem, because the ~70 components the app touches only from lazy routes stop being pinned into `main`, but the eager cost is the toast+modal graph rather than three classes. (2) The secondary entry must OWN the source and the root must re-export FROM it — if both entries export the same source, a consumer importing from both gets two class identities and DI silently resolves two different services. **CORRECTED 2026-08-05, before anyone builds it: option B is NOT implementable as the audit describes it, and the audit is wrong on this point because it measured synthetic fixtures rather than the real import graph.** Followed the actual chain: `ToastService` → `ToastRegionComponent` → `ToastComponent` → `IconComponent` + `SpinnerComponent`; `ModalService` → `ModalConfirmComponent` → `ButtonComponent` + `ModalCardComponent` → `IconComponent`. So a services entry point must OWN button, icon, icons.data, spinner, toast and modal-card — and every other component needs those same leaves, so the ROOT would have to import them from the services entry. ng-packagr forbids cycles between entry points, so there is no arrangement where a small services entry sits beside an unchanged root. What that shape actually is: a LAYERED set of entries — `core` (icon, button, spinner, overlay primitives) ← `services` ← `components` — which is the audit's option D, described there as a separate large refactor, and it changes how every consumer imports. **So the live choice is A, C or D — not B. Described 2026-08-05 at Stas's request and DELIBERATELY LEFT OPEN: nothing here is urgent (no consumer is blocked, only sub-optimally chunked), and each option's cost lands somewhere different.**
 
@@ -234,6 +228,16 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 ## Validation on the control: warning got a border, but the FILL was never judged (2026-08-13)
 
 - [ ] **[P2] Should `state` DEFAULT a per-state glyph? (narrowed 2026-08-20 — the false docblocks are fixed, the design question is not.)** The two lies are gone: `state` now says it decides the colour, and `icon` says there is no per-state default. What remains is the call the original item wrapped around them. **The case for defaulting a glyph:** four of the six systems audited for the fill question carry a per-state icon in the field — Spectrum, Bootstrap, Carbon and Ant — NN/g requires it as its own guideline, WCAG 1.4.1 forbids resting a state on colour, and the ui-ux-pro-max base says it twice (`color-not-only`, `color-not-decorative-only`). It is also what would give `warning` and `success` real distinctness without the fill we declined to add. **The cost:** breaking by appearance on every field at once, and a glyph choice per state. ORIGINAL: [P2] `ds-field-message` claims `state` picks an icon, and it never does — two false doc
+  **DECK 2026-08-21 — `presentations/field-message-glyph.html`, and Stas asked for exactly this before deciding.**
+  Four sections: the four states with and without a glyph in LIGHT, the same in DARK (where the ramp is
+  lighter and hue does more of the work), a five-field settings form to show the cost, and a third option
+  the item did not carry. Every colour in it is the measured token value, and the glyphs are the real
+  `error` / `warn` / `success` / `info` paths from `icons.data.ts`, not stand-ins.
+  **The deck adds option C — glyphs on error/warning/success, nothing on `hint` — and recommends it.**
+  The busy column in the deck's section 3 is entirely hint, and hint is the resting text rather than a
+  state, so C buys the distinctness where warning and success are confusable and leaves an ordinary form
+  untouched. Option D (a `DS_CONFIG` switch, off by default) is written up as the postpone-it choice.
+  Still needs the verdict; still a visual breaking change wherever a state IS set, so it rides the batch.
   comments over a real gap.** `state`'s docblock says "Decides colour and icon" and `icon`'s says
   "Overrides the glyph the `state` would pick" (`field-message.component.ts:26,31`). Neither is true:
   the template renders `@if (icon())` against an input defaulting to `null`, and there is no computed
@@ -256,15 +260,16 @@ Nothing moves until a verdict; the work behind each is scoped.
 
 ## Priority board (2026-08-21 actualization — replaces the 08-20 one, supersedes the 08-10 one below)
 
-**29 open: no P1, 10 P2, 19 P3 — and for the first time since this board started, nothing is a P1.**
-Thirteen of the 29 sit under *Decisions*, so no work there is blocked on anything but a verdict; eight
+**28 open: no P1, 10 P2, 18 P3 — and for the first time since this board started, nothing is a P1.**
+Thirteen of the 28 sit under *Decisions*, so no work there is blocked on anything but a verdict; eight
 are *Parked* awaiting a first consumer ask, and one is a Record kept so it is not "simplified" away.
-**The bug list is down to two, and neither is a defect to fix blind:** the duplicated breakpoint
-decision is a record kept so nobody "simplifies" it, and the docs-link guard is an ask for a prebuild
-check. Of the five remaining asks, **two need a verdict rather than work** (packaging, the
-field-message glyph) and three are parked until a consumer pulls on them — so the queue is genuinely
-empty of things to build unbidden. mm-broker now has NO open table reach: `interactive` closed the
-last `::ng-deep` they had.
+**The bug list is ONE item, and it is a record rather than a defect** — the breakpoint decision that is
+deliberately made twice, kept so nobody "simplifies" it. The docs-link guard that was beside it
+shipped as `npm run check-docs-links`. Of the five remaining asks, **two need a verdict rather than
+work** and both now have a deck to look at first — `field-message-glyph.html` and
+`packaging-entry-points.html` — while three are parked until a consumer pulls on them. So the queue
+is genuinely empty of things to build unbidden. mm-broker has NO open table reach left:
+`interactive` closed the last `::ng-deep` they had.
 
 **Both P1s closed on 08-21, and they were the two worst kinds of defect.** The focus ring had no answer
 for a clipping ancestor — an element focusable with NO indicator, measured in four places in one app,
@@ -468,6 +473,10 @@ Not work. Deleting one invites the mistake back.
 ## A11y — decision record (deferred, NOT a bug)
 
 - [ ] **[P3] topbar → `role="banner"`** — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The bare `<header>` inside the generic custom element `<ds-topbar>` already maps to the `banner` landmark implicitly (**verified `topbar.component.html:1`, 2026-07-24**); an explicit role is flagged "unnecessary" by the W3C validator and would be WRONG if `<ds-topbar>` is nested in `main`/`section`/`article`/`aside`/`nav`. Kept as a decision record; only add if we adopt a deliberate defensive-robustness policy.
+
+
+
+
 
 
 
