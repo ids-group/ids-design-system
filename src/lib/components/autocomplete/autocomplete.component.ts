@@ -500,7 +500,7 @@ export class AutocompleteComponent<T = unknown>
     );
     closeOnOutsidePointer(
       this.overlayRef,
-      (target) => this.host.nativeElement.contains(target),
+      (target) => this.trigger().nativeElement.contains(target),
       () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll and CDK's scroll strategies miss a plain

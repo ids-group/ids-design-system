@@ -166,6 +166,15 @@ export class TimePickerComponent
     viewChild.required<TemplateRef<unknown>>('panel');
   protected readonly columns = viewChild(TimeColumnsComponent);
 
+  /** Any of the three trigger boxes, not the host: a range renders two and a single
+   *  one renders one, while the host also carries the label and the message row —
+   *  clicking those has to dismiss the panel (MBP-225). */
+  private insideATrigger(target: Node): boolean {
+    return [this.singleTrigger(), this.startTrigger(), this.endTrigger()].some(
+      (trigger) => trigger?.nativeElement.contains(target) ?? false,
+    );
+  }
+
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),
   );
@@ -291,7 +300,7 @@ export class TimePickerComponent
     );
     closeOnOutsidePointer(
       this.overlayRef,
-      (target) => this.host.nativeElement.contains(target),
+      (target) => this.insideATrigger(target),
       () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
