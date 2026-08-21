@@ -43,6 +43,8 @@
 
 
 
+
+
 ## Priority board (2026-08-21, second cut — the file was restructured with it)
 
 **24 open: 1 P1, 7 P2, 16 P3.** Eight are *Parked* awaiting a first consumer ask and one is a Record, so
@@ -55,7 +57,14 @@ two-way `[(sortKey)]` / `[(sortDir)]` form with the cost of the third click meas
 stopped listing components nobody can import — the extractor reads the export surface now, which took it
 from 84 entries to 80 and turned up FOUR internals where the item had named two.
 
-**The P1 is `Upgrade to Angular 22`, promoted today, and it is the only item where somebody cannot use
+**The P1 — `Upgrade to Angular 22` — was PROBED after the promotion, and the library compiles clean on
+22.1.3** (worktree `probe/angular-22`, `ngc` partial + strictTemplates, 0 errors). What the probe added is
+the price: **TypeScript 6.0 is mandatory** and the 22 CLI wants **Node ≥ 24.15.0** (this machine has
+24.13.0), so "move the repo" is three majors in one pass, while "widen the peer range" is now backed by a
+real compile. The item carries the full findings, including two claims it had flagged as unconfirmed —
+`touch` is real (an addition, not a rename) and `ngNoCva` needs nothing from us.
+
+**It is still the only item where somebody cannot use
 the library at all.** The peers declare `^21.2.0`, so an app on Angular 22 — out since 2026-06-03, and
 what a new app starts on — needs `--legacy-peer-deps` to install this package. Everything else on the
 board is about how well the library behaves, not whether it can be installed. It carries a real decision
@@ -204,6 +213,41 @@ Requests, not defects. Ordered by who is blocked.
   **P2 → P1, 2026-08-21:** this is the only item on the board where a consumer **cannot install the package at all** — the peers declare `^21.2.0`, which resolves `>=21.2.0 <22.0.0`, so an app on Angular 22 needs `--legacy-peer-deps`. Angular 22 has been out since 2026-06-03, and it is now the version a new app starts on. It was filed as a decision, and the decision part (when to move) is real, but the blocking part is not a preference. Nothing else here stops anyone from adopting a release.
   **Why this is not just a version bump.** (1) **Signal Forms went STABLE in 22.0.0** — it left `@experimental` two months ago, which retires the "wait for it to stabilise" reasoning that shaped the original item. (2) The 22.0.0 changelog carries a signal-forms breaking change — `min`/`max` rules no longer accept string values, numbers or `null` only — and the fix shipped today (`fc1714d5`) touches exactly `min`/`max`, so it wants re-testing on 22 rather than assuming it carries. (3) 22.0.0 also added `ngNoCva`, an opt-out from `ControlValueAccessor` interop; every DS control provides a CVA **and** satisfies `FormValueControl`, so it is worth checking which path Angular 22 actually picks for our controls and whether the two ever race. There was a real bug of this shape in the 22 line (`angular/angular#67847`, CVA `writeValue` called back after `onChange`, infinite loop — fixed).
   **RE-VERIFY ON 22, specifically:** the whole Practice → Signal Forms page against 22 · `min`/`max`/`maxLength` write-type widening · the `readonly` alias · `hidden` on both CVA bases · whether `ngNoCva` should be set anywhere · whether the `touched` mechanism changed (one third-party source reports a v21 `touchedChange` → v22 `touch` output rename; NOT confirmed against the official changelog, so confirm it before relying on either).
+  **PROBED 2026-08-21 in a worktree (`C:/wt-ds-ng22`, branch `probe/angular-22`) — installed 22.1.3 and
+  compiled, rather than reasoning about it. Nothing in `dev` was touched.**
+  **The library compiles CLEAN on Angular 22.1.3.** `ngc -p tsconfig.lib.prod.json` in partial mode with
+  `strictTemplates` on: zero errors, 240 `.d.ts` emitted. So no component code stands in the way — which
+  was the open question behind the whole item.
+  **Three costs the item did not have, and they change the size of the "move the repo" option:**
+  (1) **TypeScript 6.0 is mandatory** — `@angular/compiler-cli@22.1.3` declares `typescript: ">=6.0 <6.1"`,
+  so the upgrade drags a TS major with its own migration in behind it (we are on `~5.9.2`).
+  (2) **Node ≥ 24.15.0** — the 22 CLI refuses to run on this machine's 24.13.0 ("requires v22.22.3 or
+  v24.15.0 or v26.0.0"), so every dev machine and CI needs the bump before `ng build` works at all.
+  (3) Three tsconfig fixes TS 6.0 demands: an explicit `rootDir`, `sourceMap` beside `inlineSources`, and
+  `ignoreDeprecations: "6.0"` for the deprecated `baseUrl`. Cheap, but they are edits, not flags.
+  **`touch` is CONFIRMED, and it is an addition rather than the rename the third-party source reported.**
+  22.1.3's `FormUiControl` declares `readonly touch?: OutputRef<void>`; we declare no `touch` output
+  anywhere (grep: zero `output(` in `control-value-accessor.ts`), so nothing was renamed out from under us
+  — adopting it would be new surface, and the current touched reporting keeps flowing through the CVA.
+  **`ngNoCva` needs nothing from us.** It is a selector EXCLUSION on ANGULAR'S OWN accessors
+  (`input:not([type=checkbox]):not([ngNoCva])[formControlName]`, and the two `select` ones), so it governs
+  whether Angular's built-in accessor attaches to a NATIVE element. Our controls provide their own
+  `NG_VALUE_ACCESSOR` on a custom element that those selectors never match. Consumer-side knob, not ours.
+  **`min`/`max` mismatch is real but NOT a 22 regression — checked against 21 as a control.** 22 types the
+  contract members as `NonNullable<TValue> | undefined` while ours read `number | null`, and a direct
+  `const x: FormValueControl<string> = inputComponent` assertion fails on **both** 21 and 22, with
+  byte-identical errors: `errors` first (our `DsFieldErrorsInput` transform is contravariant against
+  Angular's `unknown`), then `min` on the stepper. So the assertion is stricter than what `[field]`
+  actually requires — it is a pre-existing property of taking DS-shaped errors as an input, not something
+  the upgrade breaks. **Do not read it as a blocker.**
+  **NOT verified, and it needs the Node bump first:** the docs app never built on 22 (CLI gate), so the
+  whole Practice → Signal Forms page is still unexercised there, and so is anything runtime — the CVA
+  interop race, `readonly`, `hidden`, the touched mechanism end to end.
+  **What this does to the decision.** Widening the peer range to `^21.2.0 || ^22.0.0` is now backed by a
+compile on 22 rather than by hope, which is most of the objection to it. Moving the repo is a bigger job
+  than the item assumed: Angular 22 + TS 6 + Node — three majors in one pass. The cheap-and-honest middle
+  is to widen the peers, keep building on 21, and say in the release notes that 22 is compiled-but-not-
+  runtime-verified until the Node bump lands.
   **The decision is the peer range, and it should be made BEFORE 0.9.0 is cut**, since that is what the release publishes: widen to `^21.2.0 || ^22.0.0` (cheap, but claims a compatibility nobody has tested) or move the repo to 22 (honest, costs a real upgrade pass). **Context for the call:** Angular Material has NOT shipped signal-forms support (`angular/components#32072` still open), PrimeNG deliberately waited for stable and is repairing `[formField]` typing in 22.0.1, and Spartan has shipped it — so on this axis the DS is currently ahead of both libraries its consumers compare it to, and that lead is worth keeping installable.
 
 - [ ] **[P3] Three signal-forms contract members are unimplemented, and all three are blocked on a LOOK, not on wiring.** `pending` — what does a field with an async validator in flight look like? `ds-input` has a spinner; nothing else does. `dirty` — the library renders "edited" nowhere today, so there is no treatment to bind to. `disabledReasons` — a tooltip on a disabled control, or ignored? Each is one input once the appearance is decided, so decide the appearance first. _(`focus()` was the fourth and SHIPPED 2026-08-10: a resolver on both control-value-accessor bases, verified on all twelve controls that lacked one.)_
@@ -369,6 +413,7 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 ## A11y — decision record (deferred, NOT a bug)
 
 - [ ] **[P3] topbar → `role="banner"`** — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The bare `<header>` inside the generic custom element `<ds-topbar>` already maps to the `banner` landmark implicitly (**verified `topbar.component.html:1`, 2026-07-24**); an explicit role is flagged "unnecessary" by the W3C validator and would be WRONG if `<ds-topbar>` is nested in `main`/`section`/`article`/`aside`/`nav`. Kept as a decision record; only add if we adopt a deliberate defensive-robustness policy.
+
 
 
 
