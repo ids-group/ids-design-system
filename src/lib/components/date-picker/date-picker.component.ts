@@ -198,7 +198,7 @@ export class DatePickerComponent
   /** Trigger height — sm/md/lg.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
-  protected readonly sizeResolved = resolveWithConfig(
+  readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,
@@ -292,7 +292,7 @@ export class DatePickerComponent
   protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
-  protected readonly resolvedLocale = computed(
+  readonly resolvedLocale = computed(
     () => this.locale() ?? this.config.datePicker?.locale ?? 'en-US',
   );
   protected readonly resolvedFirstDay = computed(

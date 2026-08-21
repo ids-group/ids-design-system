@@ -10,9 +10,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsBooleanControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
-import {
-  resolveFieldMessage,
-} from '../field-errors';
+import { resolveFieldMessage } from '../field-errors';
 import { nextControlId } from '../field-ids';
 import type { DsSize } from '../../core/size';
 import { resolveWithConfig } from '../../core/config-defaults';
@@ -46,7 +44,7 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
   /** Switch size — sm/md/lg.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
-  protected readonly sizeResolved = resolveWithConfig(
+  readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,

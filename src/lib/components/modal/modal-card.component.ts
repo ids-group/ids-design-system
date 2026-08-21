@@ -48,7 +48,7 @@ export class ModalCardComponent {
   readonly dividers = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
-  protected readonly dividersResolved = resolveDividers(this.dividers);
+  readonly dividersResolved = resolveDividers(this.dividers);
   /** Icon badge shown next to the title. Overrides the icon `status` would pick. */
   readonly icon = input<IconName | null>(null);
   /** ARIA role. Unset, an error or warning becomes `alertdialog` — the role for a

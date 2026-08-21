@@ -42,11 +42,8 @@ export class SidenavComponent implements SidenavContract {
 
   /** The template must read THIS, never the input beside it — that one is null
    *  until bound, and the config default lives here. */
-  protected readonly brandName = resolveBrandValue(this.brand, 'name');
-  protected readonly letterGlyph = resolveBrandValue(
-    this.logoLetter,
-    'logoLetter',
-  );
+  readonly brandName = resolveBrandValue(this.brand, 'name');
+  readonly letterGlyph = resolveBrandValue(this.logoLetter, 'logoLetter');
 
   /** Projected `[dsBrandName]` wordmark markup, when the consumer provides one. */
   protected readonly brandNameRef = contentChild(BrandNameDirective);

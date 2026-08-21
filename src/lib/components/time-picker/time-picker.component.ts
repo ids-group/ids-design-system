@@ -114,7 +114,7 @@ export class TimePickerComponent
   /** Trigger height — sm/md/lg.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
-  protected readonly sizeResolved = resolveWithConfig(
+  readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,
@@ -185,7 +185,7 @@ export class TimePickerComponent
   protected readonly message = this.fieldMessage.message;
   protected readonly controlState = this.fieldMessage.controlState;
   protected readonly invalidResolved = this.fieldMessage.invalid;
-  protected readonly resolvedFormat = computed<TimeFormat>(
+  readonly resolvedFormat = computed<TimeFormat>(
     () => this.format() ?? this.config.timePicker?.format ?? '24h',
   );
 

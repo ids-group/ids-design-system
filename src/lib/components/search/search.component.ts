@@ -62,7 +62,7 @@ export class SearchComponent extends DsControlValueAccessor<string> {
    *  aligns search with dense toolbars beside `sm` inputs/buttons; `lg` is touch.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
-  protected readonly sizeResolved = resolveWithConfig(
+  readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,

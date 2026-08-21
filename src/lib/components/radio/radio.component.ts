@@ -13,9 +13,7 @@ import { DsFieldBase } from '../field-base';
 import { nextControlId } from '../field-ids';
 import { RADIO_GROUP } from '../radio-group/radio-group.token';
 import { FieldMessageComponent } from '../field-message/field-message.component';
-import {
-  resolveFieldMessage,
-} from '../field-errors';
+import { resolveFieldMessage } from '../field-errors';
 import type { DsSize } from '../../core/size';
 import { resolveWithConfig } from '../../core/config-defaults';
 
@@ -49,7 +47,7 @@ export class RadioComponent extends DsFieldBase {
   /** Control size — sm/md/lg.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
-  protected readonly sizeResolved = resolveWithConfig(
+  readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,

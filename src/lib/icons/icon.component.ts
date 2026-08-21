@@ -47,8 +47,7 @@ import { resolveWithConfig } from '../core/config-defaults';
       [attr.aria-label]="ariaLabel()"
       [attr.aria-hidden]="ariaLabel() ? null : 'true'"
       [innerHTML]="paths()"
-    >
-    </svg>
+    ></svg>
   `,
 })
 export class IconComponent {
@@ -61,7 +60,7 @@ export class IconComponent {
   readonly size = input<number | null, unknown>(null, {
     transform: (value) => (value == null ? null : numberAttribute(value)),
   });
-  protected readonly sizeResolved = resolveWithConfig(
+  readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.icon?.size,
     16,

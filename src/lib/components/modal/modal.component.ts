@@ -59,7 +59,7 @@ export class ModalComponent implements OnDestroy {
   });
   /** Resolved here and passed down, so the card is told rather than resolving a
    *  second time — the two would disagree if a provider sat between them. */
-  protected readonly dividersResolved = resolveDividers(this.dividers);
+  readonly dividersResolved = resolveDividers(this.dividers);
   /** When false, clicking the scrim does not close the modal. */
   readonly closeOnBackdrop = input(true, { transform: booleanAttribute });
   /** When true, neither backdrop click nor Escape closes the modal — only programmatic or explicit close button. */

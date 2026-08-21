@@ -380,12 +380,12 @@ export class TableComponent<T extends object> {
   protected readonly sortModeResolved = computed<TableSortMode>(
     () => this.sortMode() ?? 'server',
   );
-  protected readonly borderedResolved = resolveWithConfig(
+  readonly borderedResolved = resolveWithConfig(
     this.bordered,
     (config) => config.table?.bordered,
     false,
   );
-  protected readonly stickyScrollbarResolved = resolveWithConfig(
+  readonly stickyScrollbarResolved = resolveWithConfig(
     this.stickyScrollbar,
     (config) => config.table?.stickyScrollbar,
     false,

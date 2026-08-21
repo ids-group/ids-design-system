@@ -67,11 +67,7 @@ export class BreadcrumbsComponent {
     // so counting only the first would render one crumb more than asked for.
     const tail = items.slice(items.length - (max - 2));
 
-    return [
-      items[0],
-      { label: `… ${items.length - max + 1} more` },
-      ...tail,
-    ];
+    return [items[0], { label: `… ${items.length - max + 1} more` }, ...tail];
   });
   protected readonly effectiveSeparator = computed<IconName>(
     () => this.separator() ?? this.cfg.breadcrumbs?.separator ?? 'chevronRight',

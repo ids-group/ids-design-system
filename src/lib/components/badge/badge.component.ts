@@ -27,7 +27,7 @@ export class BadgeComponent {
   readonly withDot = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
-  protected readonly withDotResolved = resolveWithConfig(
+  readonly withDotResolved = resolveWithConfig(
     this.withDot,
     (config) => config.badge?.withDot,
     false,

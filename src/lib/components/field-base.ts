@@ -54,7 +54,5 @@ export abstract class DsFieldBase {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
 
-  protected readonly reserveMessageResolved = resolveReserveMessage(
-    this.reserveMessage,
-  );
+  readonly reserveMessageResolved = resolveReserveMessage(this.reserveMessage);
 }
