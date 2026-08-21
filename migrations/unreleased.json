@@ -136,6 +136,23 @@
         "ds-time-columns",
         "ds-time-picker"
       ]
+    },
+    {
+      "id": "overlay-outside-guard-tests-the-trigger",
+      "kind": "behavior",
+      "old": "ds-select",
+      "new": null,
+      "note": "BEHAVIOUR CHANGE, narrow but test-visible. Five overlays now test their TRIGGER, not the whole host, in the outside-pointer guard: ds-select, ds-multi-select, ds-autocomplete, ds-time-picker and ds-color-picker. A press in the host's own empty width — the label, the message row, the slack beside a content-width trigger — used to be treated as INSIDE and left the panel open; it now dismisses, which is the ds-date-picker fix from 0.10.1 (MBP-225) applied to its siblings. NO ACTION in normal use: it removes a dead zone rather than adding one, and a press on the trigger itself still keeps the panel open, which is what that exception exists for (the caret, and re-focus). ACTION where a TEST or a scripted flow relied on the old dead zone — clicking a picker's LABEL while its panel is open, to focus or assert without closing it — that press now closes the panel, so the assertion after it sees a closed overlay. Retarget such a click at the trigger, or assert the closed state instead. ds-time-picker checks whichever of its three trigger boxes are present, since a range renders two.",
+      "searchHints": [
+        "ds-select",
+        "ds-multi-select",
+        "ds-autocomplete",
+        "ds-time-picker",
+        "ds-color-picker",
+        ".click(",
+        "label",
+        "panel"
+      ]
     }
   ],
   "informational": [
@@ -155,7 +172,6 @@
     "DELETE-LIST: if you have `--ds-sidenav-item-rail: transparent` or a `::ng-deep` box-shadow reset to hide the active rail -> `[rail]=\"false\"` on `ds-sidenav`",
     "DELETE-LIST: if you have a `::ng-deep` border-radius rule on a bare `ds-menu` -> `--ds-menu-radius`",
     "ds-button variant=\"tonal\": the disabled label now uses the same 40% mix toward --surface-default as ghost / text / outline, instead of the shared oklch(from accent 70% ...) recipe. Visual only, no action. It fixes the dark theme, where the old recipe left the disabled label 1.11:1 from the enabled one (a hue going grey and nothing else); the state gap is now 2.90:1 dark and 3.39:1 light, and the label keeps its hue. --ds-button-label-color-disabled still overrides it.",
-    "DELETE-LIST: if you have `--ds-button-label-color-disabled` set on a tonal button to make its disabled state visible (most likely only in the dark theme) -> the default recipe now carries it",
-    "Five overlays now dismiss on a press in the host's own empty width: ds-select, ds-multi-select, ds-autocomplete, ds-time-picker and ds-color-picker test their TRIGGER in the outside-pointer guard instead of the whole host, which is the ds-date-picker fix from 0.10.1 (MBP-225) applied to its siblings. NO ACTION in normal use - it removes a dead zone rather than adding one. It IS a behaviour change if a test or a flow depended on a press on the LABEL of an open picker leaving the panel up: it now closes. A press on the trigger still keeps the panel open, which is what that exception is for (the caret, and re-focus). ds-time-picker checks whichever of its three trigger boxes are present, since a range renders two."
+    "DELETE-LIST: if you have `--ds-button-label-color-disabled` set on a tonal button to make its disabled state visible (most likely only in the dark theme) -> the default recipe now carries it"
   ]
 }

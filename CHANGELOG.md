@@ -125,6 +125,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **`components.md` was missing two layouts and naming three sidenav defaults that are not the
+  defaults.** The digest `tools/build-schematics.mjs` copies into `dist/ds/` is what a consumer's own
+  agent reads to answer "what does this library have", and `ds-app-layout` and `ds-auth-layout` were
+  absent from it entirely — an agent asked to build a shell or a sign-in screen could not find either
+  and had no way to know they existed. It also named `--primary`, `--text-on-primary` and
+  `--secondary` as the active sidenav item's defaults, which the wash rework in this same release
+  replaced. Both are corrected. Three smaller claims went with them: the search page said two things
+  skip the debounce where the code and this changelog both say three, the `--ds-stat-value-white-space`
+  description said an unwrapped phrase is clipped when it escapes the tile instead, and `ds-badge`
+  carried a superseded docblock. **No API changed** — only what the shipped documentation says about it.
+
 - **Five more overlays dismiss on a click in the host's own empty width.** `ds-select`,
   `ds-multi-select`, `ds-autocomplete`, `ds-time-picker` and `ds-color-picker` all tested the whole
   HOST in their outside-pointer guard, which is the defect `ds-date-picker` was fixed for in 0.10.1
