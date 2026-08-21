@@ -12,7 +12,8 @@
         "styles/ds",
         "@use 'styles/",
         "ids-design-system/styles"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "table-sortkey-non-null-when-unsorted",
@@ -61,7 +62,10 @@
         "dsReserveMessages"
       ],
       "restore": "provideDsConfig({ field: { reserveMessage: true } })",
-      "verify": "Every surviving `[reserveMessage]=\"false\"` sits under a `dsReserveMessages` host or an app config that turns the flag ON - anywhere else it restates the new default and does nothing."
+      "verify": "Every surviving `[reserveMessage]=\"false\"` sits under a `dsReserveMessages` host or an app config that turns the flag ON - anywhere else it restates the new default and does nothing.",
+      "supersedes": [
+        "0.7.0#field-reserve-message-default-on"
+      ]
     },
     {
       "id": "ds-config-nested-provide-merges",
@@ -73,7 +77,12 @@
         "provideDsConfig",
         "DS_CONFIG",
         "providers: [provideDsConfig"
-      ]
+      ],
+      "surface": "config",
+      "detect": [
+        "provideDsConfig"
+      ],
+      "verify": "No nested provideDsConfig relies on RESETTING a section it does not name - a nested call merges now, so a reset has to spell the section out."
     },
     {
       "id": "exported-classes-gained-members",
@@ -96,7 +105,14 @@
         "extends AppLayoutComponent",
         "extends ",
         "override readonly"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "extends TableComponent",
+        "extends ",
+        "onOpen"
+      ],
+      "verify": "A typecheck reports no TS4114 / TS2415 / TS2416 on any class extending a DS component; a subclass that overrode TooltipDirective.onOpen has moved its body to onPointerEnter / onFocusIn."
     },
     {
       "id": "app-layout-scroll-reset-path-only",
@@ -109,7 +125,14 @@
         "scrollToTop",
         "ds-app-layout",
         "NavigationEnd"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "LayoutScrollService",
+        "scrollToTop",
+        "NavigationEnd"
+      ],
+      "verify": "No screen depended on the blanket scroll reset: one that needs the top after a filter change calls LayoutScrollService.scrollToTop() from that handler."
     },
     {
       "id": "modal-title-flex-moved-to-heading",
@@ -123,7 +146,8 @@
         ".modal-card .title",
         ".title",
         "flex: 1"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "table-client-sort-blanks-last-and-numeric-collation",
@@ -138,7 +162,17 @@
         "sortDir",
         "[columns]",
         "TableColumn"
-      ]
+      ],
+      "surface": [
+        "typescript",
+        "template"
+      ],
+      "detect": [
+        "sortValue",
+        "TableColumn",
+        "localeCompare"
+      ],
+      "verify": "No client-sorted screen depended on blanks sorting FIRST or on pure lexical order for strings with digits; where it did, a per-column sortValue says so."
     }
   ],
   "informational": [
