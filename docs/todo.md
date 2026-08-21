@@ -4,8 +4,6 @@
 
 **Bugs — something shipped misbehaves**
 
-- P3 · Two components a consumer cannot import appear in the docs API reference (found by the 2026-08-20 docs
-- P3 · `ds-table`'s two-way `[(sortKey)]` / `[(sortDir)]` form is available but never demonstrated (same
 - P3 · `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing my
 
 **Asks — a consumer or Stas asked for it**
@@ -42,6 +40,8 @@
 **Records — kept so they are not "simplified" away**
 
 - P3 · topbar → `role="banner"` — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The
+
+
 
 ## Priority board (2026-08-21, second cut — the file was restructured with it)
 
@@ -95,13 +95,6 @@ rather than re-reading our own API.
 # Bugs — something shipped misbehaves
 
 Highest: each one is wrong in code — or in a surface — a consumer already reads.
-
-## Docs surface — two inaccuracies from the 2026-08-20 audit
-
-- [ ] **[P3] Two components a consumer cannot import appear in the docs API reference (found by the 2026-08-20 docs audit).** `ds-modal-confirm` (ModalConfirmComponent) and `ds-time-columns` (TimeColumnsComponent) are listed in `component-api.generated.ts` with a full input table, so the reference presents them as usable API. Verified against the published types: both appear as internal `declare` blocks but neither is in the package export list, so `import { ModalConfirmComponent }` does not resolve. `tools/extract-component-api.mjs` collects every `@Component` under `src/lib/components` without consulting the export surface.
-  **Two fixes, pick one:** (a) teach the extractor to skip a class absent from the public export list — accurate, but it must follow the component barrels or it will drop legitimately-exported components; (b) add an `internal` value to `ComponentStatus` (today `'stable' | 'new' | 'deprecated'`) and mark these two in `component-api-descriptions.json`, which also gives a home for the next internal. Neither is urgent: nothing is wrong, the reference is just wider than the API.
-
-- [ ] **[P3] `ds-table`'s two-way `[(sortKey)]` / `[(sortDir)]` form is available but never demonstrated (same audit).** `sortKey`/`sortDir` are inputs and `sortKeyChange`/`sortDirChange` are hand-declared outputs, so Angular's banana-in-a-box works — which is the natural shape for server-side sorting where the host owns the state, exactly what the 0.10.0 server-sort demo is about. The demo binds `[sortKey]` one-way and observes `(sortChange)` instead, so the two-way form is invisible. One line of prose or switching that demo would cover it.
 
 ## ds-app-layout — the one knowingly duplicated decision
 
@@ -370,4 +363,6 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 ## A11y — decision record (deferred, NOT a bug)
 
 - [ ] **[P3] topbar → `role="banner"`** — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The bare `<header>` inside the generic custom element `<ds-topbar>` already maps to the `banner` landmark implicitly (**verified `topbar.component.html:1`, 2026-07-24**); an explicit role is flagged "unnecessary" by the W3C validator and would be WRONG if `<ds-topbar>` is nested in `main`/`section`/`article`/`aside`/`nav`. Kept as a decision record; only add if we adopt a deliberate defensive-robustness policy.
+
+
 
