@@ -105,7 +105,11 @@
   width: 100%;
   background-color: var(--_panel-bg-color);
   border: var(--border-width-default) solid var(--border-default);
-  border-radius: var(--radius-md);
+
+  // Same chain the shared dropdown overlay resolves. This panel is `.panel`, not
+  // `.dropdown-panel`, so it never picked up that rule and sat at a hardcoded 8px
+  // while the other two connected panels followed the token.
+  border-radius: var(--ds-dropdown-panel-radius, var(--ds-radius-panel));
   box-shadow: var(--shadow-popover);
   overflow: hidden;
 }
