@@ -79,21 +79,20 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   empty default, and the four pipes now have a demo on the docs page — which is also the test, since
   that section compiles under `strictTemplates`.
 
-- **If you EXTEND a DS component, seven classes grew and three members changed type.**
+- **If you EXTEND a DS component, eight classes grew and four members changed type.**
   `npm run class-surface` against 0.10.1: `AutocompleteComponent` and `MultiSelectComponent`
   (`chipsMode`, `showsEveryChip`), `MenuItemComponent` (`description`, `descriptionId`),
   `SearchComponent` (`disabled`, `isDisabled`), `SidenavItemComponent` (`rail`, `railResolved`),
-  `SidenavComponent` (`rail`) and `TableComponent` (`actionReason`, `actionsFor`, `hasActionsFor`,
-  `visibleRowActions`). A subclass declaring any of those names now fails with TS4114. **Nothing was
-  removed this time.** Three members kept their name and changed type, which is the case that compiles
-  for a caller and breaks an overrider: `maxVisibleChips` on both pickers (widened to
-  `number | 'fit' | 'all' | null`, default moved to `null` — see the entry above),
+  `SidenavComponent` (`rail`), `TableComponent` (`actionReason`, `actionsFor`, `hasActionsFor`,
+  `visibleRowActions`) and `TimePickerComponent` (`insideATrigger`). A subclass declaring any of
+  those names now fails with TS4114 — or TS2415, since a redeclared private collides just as a public
+  one does. **Nothing was removed this time.** Four members kept their name and changed type, which is
+  the case that compiles for a caller and breaks an overrider: `maxVisibleChips` on both pickers
+  (widened to `number | 'fit' | 'all' | null`, default moved to `null` — see the entry above),
   `SearchComponent.clear` (`protected` → public, so a subclass that narrowed it to `protected` no
-  longer satisfies the base), and `TimeColumnsComponent.onKey` (its parameter list changed).
+  longer satisfies the base), `StatComponent.value` (widened to `string | number | null` — its own
+  entry above) and `TimeColumnsComponent.onKey` (its parameter list changed).
   `SearchComponent.focus` also picked up `override`, which is internal and needs nothing.
-  Re-run after the day's later fixes, two more show up: `TimePickerComponent.insideATrigger` (private —
-  a redeclared private fails with TS2415 just as a public one does) and `StatComponent.value`, widened to
-  `string | number | null` under its own entry above.
 
 - **Every readback that resolves through `DS_CONFIG` is now public.** `sizeResolved` on fourteen
   controls, plus `elevationResolved` / `paddingResolved` (card), `withDotResolved` (badge),
@@ -1268,14 +1267,17 @@ genuine gap worth reporting.
 
 ### Changed (breaking, visual)
 
-- **The `ds-select` / `ds-multi-select` dropdown panel has a 12px corner, was 8px.** It was the one panel
+- **The `ds-select` dropdown panel has a 12px corner, was 8px.** It was the one panel
   outside the radius role layer — modal, popover, date picker, time picker, autocomplete, bottom sheet, card,
   stat and page footer all resolve `--ds-radius-panel` — so it disagreed with its siblings by 4px and could
   not be retuned through the role consumers are told to use. Restore with `--ds-radius-panel: 8px`,
   which moves every panel together. _(Corrected 2026-08-11: this note first offered
   `--ds-select-panel-radius: 8px` as a way to restore just this panel. That token does not exist —
   the dropdown resolves `--ds-radius-panel` directly — so setting it does nothing. `ds-autocomplete`
-  does have a per-panel `--ds-autocomplete-panel-radius`; the two dropdowns do not.)_
+  does have a per-panel `--ds-autocomplete-panel-radius`; the two dropdowns do not.)_ _(Corrected 2026-08-21: the headline named `ds-multi-select` as well. That panel never
+  moved — it is a separate `.panel` element carrying a hardcoded `border-radius: var(--radius-md)`
+  that the shared rule never reached, so it stayed at 8px through 0.9.0, 0.10.0 and 0.10.1 and joins
+  the chain only in the release after 0.10.1.)_
 
 - **Seven exit `@keyframes` are gone, replaced by four global presets.** `modal-out`, `ds-sheet-fade-out`
   and `drawer-scrim-out` become `ds-fade-out`; `ds-sheet-down` and the four `drawer-panel-close-*` become
