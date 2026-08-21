@@ -3,6 +3,18 @@
 Standalone, single-file HTML decks (design decisions, comparisons, status pages).
 Open any `*.html` directly in a browser — they link the shared `ds.css`.
 
+## One deck is a test harness, not a deck
+
+`overlay-guard-check.html` drives the docs app instead of illustrating a decision: it iframes five
+component pages in turn, presses each overlay trigger, then presses the one place inside the host that
+is not the trigger, and prints the pane count and `aria-expanded` before and after. Run it headless —
+`chrome --headless=new --virtual-time-budget=120000 --dump-dom
+http://localhost:4298/decks/overlay-guard-check.html`
+— and read the `<pre id="out">` block. **It has to run in a VISIBLE frame:** a background tab clamps
+timers and never finishes a leave animation, so the same probe reads false there. Keep it: it is the
+regression test for the outside-pointer guard, and reverting one component to `host.contains` is how you
+check the harness still detects the defect.
+
 ## ds.css is generated from the design system
 
 `ds.css` is **not hand-written** — it is a direct compile of the library's token
