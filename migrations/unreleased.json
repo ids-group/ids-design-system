@@ -18,7 +18,9 @@
         "brandName",
         "letterGlyph",
         "extends ButtonComponent"
-      ]
+      ],
+      "surface": "typescript",
+      "verify": "No consumer subclass redeclares a `*Resolved` readback as protected, and a host that reads `sizeResolved()` off a DS component compiles."
     },
     {
       "id": "focus-ring-inner-transparent",
@@ -33,7 +35,10 @@
         "surface-canvas",
         "overflow: hidden",
         "--ds-control-focus-shadow"
-      ]
+      ],
+      "surface": "style",
+      "restore": "--focus-ring-inner: var(--surface-canvas);",
+      "verify": "No stylesheet still assumes an opaque ring gap: `--focus-ring-inner` is either unset, or set deliberately on the non-canvas ground that needs it."
     },
     {
       "id": "max-visible-chips-null-is-unset-multi-select",
@@ -49,7 +54,16 @@
       "map": {
         "null": "maxVisibleChips=\"all\"",
         "fit": "maxVisibleChips=\"fit\""
-      }
+      },
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "detect": [
+        "[maxVisibleChips]=\"null\"",
+        "maxVisibleChips",
+        "'fit'"
+      ]
     },
     {
       "id": "max-visible-chips-null-is-unset-autocomplete",
@@ -65,7 +79,16 @@
       "map": {
         "null": "maxVisibleChips=\"all\"",
         "fit": "maxVisibleChips=\"fit\""
-      }
+      },
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "detect": [
+        "[maxVisibleChips]=\"null\"",
+        "maxVisibleChips",
+        "'fit'"
+      ]
     },
     {
       "id": "max-visible-chips-type-widened",
@@ -78,7 +101,14 @@
         "InputSignalWithTransform",
         "extends MultiSelectComponent",
         "extends AutocompleteComponent"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "number | 'fit' | null",
+        "number | 'fit'",
+        "maxVisibleChips"
+      ],
+      "verify": "Every explicit annotation that has to hold a maxVisibleChips value accepts 'all', and no subclass override declares the old union."
     },
     {
       "id": "sidenav-active-item-is-a-wash",
@@ -92,7 +122,10 @@
         "--ds-sidenav-item-rail",
         "ds-sidenav-item",
         "SidenavContract"
-      ]
+      ],
+      "surface": "style",
+      "restore": "ds-sidenav-item { --ds-sidenav-item-bg-color-active: var(--accent); --ds-sidenav-item-label-color-active: var(--text-on-primary); }",
+      "verify": "The app either has no --ds-sidenav-item-*-active override, or the override it keeps is one it still wants beside the new wash default."
     },
     {
       "id": "exported-class-members-grew",
@@ -110,7 +143,14 @@
         "override ",
         "TS4114",
         "extends TimePickerComponent"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "extends TableComponent",
+        "extends SearchComponent",
+        "extends "
+      ],
+      "verify": "A typecheck of the consumer reports no TS4114 / TS2415 / TS2416 on any class that extends a DS component."
     },
     {
       "id": "search-clear-becomes-public",
@@ -123,7 +163,13 @@
         "clear()",
         "protected clear",
         "ds-search"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "protected clear(",
+        "extends SearchComponent"
+      ],
+      "verify": "No SearchComponent subclass declares `protected clear()`."
     },
     {
       "id": "time-columns-onkey-signature",
@@ -136,7 +182,13 @@
         "onKey",
         "ds-time-columns",
         "ds-time-picker"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "onKey(",
+        "extends TimeColumnsComponent"
+      ],
+      "verify": "No TimeColumnsComponent subclass overrides `onKey` with the old parameter list."
     },
     {
       "id": "overlay-outside-guard-tests-the-trigger",
@@ -153,7 +205,14 @@
         ".click(",
         "label",
         "panel"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "pointerdown",
+        "mousedown",
+        "dispatchEvent"
+      ],
+      "verify": "No test asserts that a press on an overlay host's own padding (label, message row, slack beside the trigger) leaves the panel open."
     },
     {
       "id": "stat-value-type-widened",
@@ -167,7 +226,14 @@
         "StatComponent",
         "[value]",
         "extends StatComponent"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "string | number",
+        "ds-stat",
+        "value()"
+      ],
+      "verify": "Every explicit annotation that reads a `ds-stat` value accepts null."
     }
   ],
   "informational": [
@@ -175,21 +241,123 @@
     "ds-menu-item: new `description` input renders a standing second line and wires `aria-describedby`. If you hand-rolled that line by projecting your own span into the item, move it to the input -- yours lands INSIDE the accessible name, the input's does not.",
     "ds-search: `clear()` is now public. A host-owned Clear button should call it rather than writing '' into `value`, which does not cancel an armed debounce when the text already matches what the control last pushed.",
     "ds-multi-select: its panel now honours `--ds-dropdown-panel-radius` (it was hardcoded at 8px). If you set that token and wondered why one of the three connected panels ignored it, this is why -- no action needed beyond re-checking the value looks right on all three.",
-    "DELETE-LIST: if you have a hand-rolled second line inside a `ds-menu-item` (a projected span plus a `max-width` around 14rem, and probably no `aria-describedby`) -> the `description` input, capped by `--ds-menu-item-description-max-width`",
-    "DELETE-LIST: if you have `overflow: visible` forced back onto an element that needs to clip, or your own inset box-shadow standing in for a focus ring -> `data-focus=\"inset\"` on the clipping element",
-    "DELETE-LIST: if you have a border-radius override aimed at `ds-multi-select .panel` alone, because the token moved the other two panels and not that one -> `--ds-dropdown-panel-radius` now reaches all three",
-    "DELETE-LIST: if you have a timer of your own around a `ds-search` Clear button, or a value you write twice to make the debounce let go -> `clear()`",
-    "DELETE-LIST: if you have a `sizeResolved()`-shaped copy of the DS_CONFIG fallback chain in your own host (`this.size() ?? config.control?.size ?? 'md'`) -> read the component's now-public resolver instead",
     "ds-search joins both form systems: NG_VALUE_ACCESSOR + DsControlValueAccessor, so [(ngModel)], formControlName and a signal form now bind it, and a new `disabled` input folds together with the form's own disabled state (the shell paints the disabled surface, which it never did). Its own [(value)] is unchanged. Deliberately NO label and no message row - a toolbar filter is not a validated field.",
     "ds-menu: new --ds-menu-radius, defaulting to --radius-md, which is what the component hardcoded. Nothing moves. Inside a ds-popover the menu still clips to --ds-menu-clip-radius, published by the popover.",
     "maxVisibleChips gained an 'all' mode on ds-autocomplete and ds-multi-select - render every chip, no measuring. Additive on its own; the actionable half is that null no longer means that (see max-visible-chips-null-is-unset-*).",
-    "DELETE-LIST: if you have your own wash replacing the solid active sidenav pill (a --ds-sidenav-item-bg-color-active override plus a matching label colour) -> compare it against the new default and drop it if they agree",
-    "DELETE-LIST: if you have `--ds-sidenav-item-rail: transparent` or a `::ng-deep` box-shadow reset to hide the active rail -> `[rail]=\"false\"` on `ds-sidenav`",
-    "DELETE-LIST: if you have a `::ng-deep` border-radius rule on a bare `ds-menu` -> `--ds-menu-radius`",
     "ds-button variant=\"tonal\": the disabled label now uses the same 40% mix toward --surface-default as ghost / text / outline, instead of the shared oklch(from accent 70% ...) recipe. Visual only, no action. It fixes the dark theme, where the old recipe left the disabled label 1.11:1 from the enabled one (a hue going grey and nothing else); the state gap is now 2.90:1 dark and 3.39:1 light, and the label keeps its hue. --ds-button-label-color-disabled still overrides it.",
-    "DELETE-LIST: if you have `--ds-button-label-color-disabled` set on a tonal button to make its disabled state visible (most likely only in the dark theme) -> the default recipe now carries it",
-    "DELETE-LIST: if you have `count.toLocaleString('en-US')` (or any hand-rolled formatting) inside a ds-stat binding because `[value]=\"count | number\"` would not typecheck -> the pipe binds now, and it reads LOCALE_ID instead of a pinned locale",
-    "ds-table: TableColumn gained `interactive?: boolean`. The marked column's cell takes --ds-table-cell-link-color (default --accent) and --ds-table-cell-link-decoration (default underline) while its row is hovered, on a rowInteractive table only. Purely additive - an existing column config renders exactly as before. Reach for it on the cell whose TEXT names what the row opens; the row tint says the row is clickable and nothing else said which text was the target.",
-    "DELETE-LIST: if you have a `::ng-deep ds-table tr:hover .some-cell { color; text-decoration }` rule to make one cell read as the row's link target -> `interactive: true` on that column, retuned with `--ds-table-cell-link-color` / `--ds-table-cell-link-decoration`"
+    "ds-table: TableColumn gained `interactive?: boolean`. The marked column's cell takes --ds-table-cell-link-color (default --accent) and --ds-table-cell-link-decoration (default underline) while its row is hovered, on a rowInteractive table only. Purely additive - an existing column config renders exactly as before. Reach for it on the cell whose TEXT names what the row opens; the row tint says the row is clickable and nothing else said which text was the target."
+  ],
+  "deleteList": [
+    {
+      "id": "menu-item-hand-rolled-second-line",
+      "surface": [
+        "template",
+        "style"
+      ],
+      "find": [
+        "ds-menu-item",
+        "max-width: 14rem"
+      ],
+      "why": "A projected span plus a width cap standing in for a second line on a menu item, usually with no aria-describedby.",
+      "replaceWith": "the `description` input, capped by --ds-menu-item-description-max-width"
+    },
+    {
+      "id": "focus-ring-clipping-workaround",
+      "surface": "style",
+      "find": [
+        "overflow: visible",
+        "inset 0 0 0 2px"
+      ],
+      "why": "overflow forced back onto an element that needs to clip, or a hand-rolled inset shadow standing in for the focus ring the clip ate.",
+      "replaceWith": "data-focus=\"inset\" on the clipping element"
+    },
+    {
+      "id": "multi-select-panel-radius-override",
+      "surface": "style",
+      "find": [
+        "ds-multi-select .panel",
+        "--ds-multi-select-panel"
+      ],
+      "why": "The panel radius reached two of the three dropdowns, so the third was retuned by hand.",
+      "replaceWith": "--ds-dropdown-panel-radius, which now reaches all three"
+    },
+    {
+      "id": "search-clear-timer",
+      "surface": "typescript",
+      "find": [
+        "setTimeout",
+        "ds-search"
+      ],
+      "why": "A timer around a Clear button, or a value written twice to make the debounce let go.",
+      "replaceWith": "clear()"
+    },
+    {
+      "id": "hand-rolled-config-fallback",
+      "surface": "typescript",
+      "find": [
+        "?? config.control?.size",
+        "config.control?.size"
+      ],
+      "why": "A copy of the DS_CONFIG fallback chain in the host, written when the resolver was protected.",
+      "replaceWith": "the component's now-public *Resolved readback"
+    },
+    {
+      "id": "sidenav-active-wash-override",
+      "surface": "style",
+      "find": [
+        "--ds-sidenav-item-bg-color-active"
+      ],
+      "why": "A wash replacing the old solid active pill is what the default draws now.",
+      "replaceWith": "nothing - compare the override with the new default and drop it if they agree"
+    },
+    {
+      "id": "sidenav-rail-hidden-by-css",
+      "surface": "style",
+      "find": [
+        "--ds-sidenav-item-rail: transparent",
+        "--ds-sidenav-item-rail"
+      ],
+      "why": "Hiding the active rail through a token or a ::ng-deep shadow reset.",
+      "replaceWith": "[rail]=\"false\" on ds-sidenav"
+    },
+    {
+      "id": "menu-radius-deep-rule",
+      "surface": "style",
+      "find": [
+        "ds-menu",
+        "border-radius"
+      ],
+      "why": "A ::ng-deep radius rule on a bare ds-menu, written when the panel had no hook.",
+      "replaceWith": "--ds-menu-radius"
+    },
+    {
+      "id": "tonal-disabled-label-pin",
+      "surface": "style",
+      "find": [
+        "--ds-button-label-color-disabled"
+      ],
+      "why": "Pinned to make a tonal button's disabled state visible, most often in the dark theme only.",
+      "replaceWith": "the default disabled-label recipe"
+    },
+    {
+      "id": "stat-value-hand-formatting",
+      "surface": "template",
+      "find": [
+        "toLocaleString('en-US')",
+        "toLocaleString("
+      ],
+      "why": "Hand-rolled formatting inside a ds-stat binding, because `[value]=\"count | number\"` did not typecheck while value was `string | number`.",
+      "replaceWith": "the number pipe, which reads LOCALE_ID instead of a pinned locale"
+    },
+    {
+      "id": "table-cell-link-deep-rule",
+      "surface": "style",
+      "find": [
+        "ds-table tr:hover",
+        "::ng-deep ds-table"
+      ],
+      "why": "A deep hover rule making one cell read as the row's link target.",
+      "replaceWith": "interactive: true on that column, retuned with --ds-table-cell-link-color and --ds-table-cell-link-decoration"
+    }
   ]
 }

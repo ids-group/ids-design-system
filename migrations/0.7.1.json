@@ -19,14 +19,24 @@
       "kind": "behavior",
       "old": "ds-table[sortKey]",
       "new": null,
-      "note": "`ds-table` no longer nulls `sortKey` when the sort cycle reaches \"unsorted\" — the key keeps naming the column the user last touched and `sortDir === null` alone means unsorted. Fixes a header desync for hosts that map \"off\" back to their own default sort. ACTION: any host that treats a non-null `sortKey` as \"a sort is active\" must gate on `sortDir` instead — e.g. `if (sortKey())` becomes `if (sortDir())`, and a server query built as `orderBy: sortKey()` must skip the clause when `sortDir()` is null. Hosts that already read both, or that pass `sortingOrder: ['asc','desc']` (no unsorted state), need no change. The table's own rendering (icons, aria-sort) and its client-side sorting were already gated on `sortDir` and are unchanged.",
+      "note": "`ds-table` no longer nulls `sortKey` when the sort cycle reaches \"unsorted\" — the key keeps naming the column the user last touched and `sortDir === null` alone means unsorted. Fixes a header desync for hosts that map \"off\" back to their own default sort. ACTION: any host that treats a non-null `sortKey` as \"a sort is active\" must gate on `sortDir` instead — e.g. `if (sortKey())` becomes `if (sortDir())`, and a server query built as `orderBy: sortKey()` must skip the clause when `sortDir()` is null. Hosts that already read both, or that pass `sortingOrder: ['asc','desc']` (no unsorted state), need no change. The table's own rendering (icons, aria-sort) and its client-side sorting were already gated on `sortDir` and are unchanged. WHERE TO LOOK, because this item finds nothing in a template: the code that breaks is the HOST'S OWN - a store, a page class, a query builder - and it names no DS symbol at all. mm-broker had three of them (2026-08-21), each written as `sorting: store.sortKey() ? { path: store.sortKey()!, order: store.sortDir() ?? 'Asc' } : undefined`, and all three kept ordering a server-paged list by the last column the reader touched while its header showed no sort. Grep the consumer's `.ts` for the `detect` shapes, not their templates for `ds-table`.",
       "searchHints": [
         "sortKey",
         "sortDir",
         "sortChange",
         "(sortChange)",
         "[(sortKey)]"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "sortKey() ?",
+        "sortKey ?",
+        "orderBy: sortKey",
+        "if (sortKey",
+        "sortKey()!",
+        "sortDir() ?? 'Asc'"
+      ],
+      "verify": "No host builds a sort clause from the key alone: every place that turns (sortChange) into a query gates on the DIRECTION (`sortDir`), and a store that keeps both nulls the clause when the direction is null."
     },
     {
       "id": "field-reserve-message-default-off",
@@ -40,7 +50,18 @@
         "provideDsConfig",
         "field: {",
         "DS_CONFIG"
-      ]
+      ],
+      "surface": [
+        "template",
+        "config"
+      ],
+      "detect": [
+        "[reserveMessage]",
+        "reserveMessage",
+        "dsReserveMessages"
+      ],
+      "restore": "provideDsConfig({ field: { reserveMessage: true } })",
+      "verify": "Every surviving `[reserveMessage]=\"false\"` sits under a `dsReserveMessages` host or an app config that turns the flag ON - anywhere else it restates the new default and does nothing."
     },
     {
       "id": "ds-config-nested-provide-merges",
@@ -141,5 +162,26 @@
     "Known gap, not a regression: `--ds-overlay-enter-scale` is the one entrance token NOT forwarded onto a portaled overlay pane, so setting it per instance (`ds-select { --ds-overlay-enter-scale: 0.9 }`) has no effect on select / autocomplete / multi-select / date / time / colour picker / popover / tooltip / menu submenu panels. Scope it globally until it is forwarded; the other four (-enter-keyframes / -duration / -easing / -offset) do forward.",
     "Bugfix, no action: `dsTooltip` now puts `aria-describedby` on the element that actually took focus (recorded from the bubbling `focusin`) rather than unconditionally on its host, so a tooltip on a host that is not itself focusable — `ds-menu-item` carries `role=\"none\"` and holds the real button inside — finally reaches a screen reader. A pointer-only open still describes the host.",
     "Visual-only fixes: `ds-pagination` pins its internal rows-per-page select to `reserveMessage: false` (it inherited the app default and pushed the pager off the page buttons' baseline), and `ds-stat`'s card fills a stretched host so a KPI row with mixed captions paints equal-height tiles. Consumers can drop the global workarounds for both (`ds-pagination ds-field-message { display: none }` and `ds-stat { height: 100% }`)."
+  ],
+  "deleteList": [
+    {
+      "id": "reserve-message-false-opt-outs",
+      "surface": "template",
+      "find": [
+        "[reserveMessage]=\"false\""
+      ],
+      "why": "The default is FALSE again, so an opt-out binding only restates it - unless the field sits under a `dsReserveMessages` host or an app config that turns it on, where the binding is still the way back out. mm-broker carried six, three of them dead (2026-08-21).",
+      "replaceWith": "nothing - delete the binding where no host reserves"
+    },
+    {
+      "id": "reserved-gap-compensation",
+      "surface": "style",
+      "find": [
+        "gap: var(--space-1)",
+        "margin-top: -"
+      ],
+      "why": "A tighter sub-stack or a negative margin added to swallow the reserved message row is now over-tightening a form that no longer reserves it.",
+      "replaceWith": "the normal 16px field stack"
+    }
   ]
 }
