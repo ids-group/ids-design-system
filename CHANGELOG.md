@@ -457,6 +457,14 @@ workaround written against a hook that only landed in this release.
   `DsFieldBase` is internal and deliberately not exported — it holds only the inputs every field has,
   which is why `success`, `label`, `required` and `optional` stayed on the components.
 
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a workaround this release made unnecessary.
+
+| If you have | Delete it, because |
+| --- | --- |
+| A `?? ''` guard wrapped around a message binding - `[error]="form.errors?.message ?? ''"` - added because a null pushed into `hint` / `error` / `warning` / `success` threw a TypeError during render. | nothing - bind the expression directly, the inputs absorb null now |
+
 ## 0.10.0 — 2026-08-18
 
 ### Added
@@ -1190,6 +1198,32 @@ workaround written against a hook that only landed in this release.
   are still there, but as public readonly signals rather than the protected writables a subclass
   could `.set()` — and a plain `private pending: … = null` is not a field the parser recognises, which
   is how `SearchComponent`'s `pending` and `pushed` sit outside its reported seven.
+
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a workaround this release made unnecessary.
+
+| If you have | Delete it, because |
+| --- | --- |
+| A `ResizeObserver`, a container query or a hand-tuned per-breakpoint `maxVisibleChips` number, keeping a chip trigger on one line. | `maxVisibleChips="fit"`, which re-splits on any width change rather than at the breakpoints you listed |
+| A `max-height` plus `overflow: hidden` on a chip trigger, stopping it growing a line per selection - it clips a chip mid-glyph and hides the count. | `maxVisibleChips` (a number, or `"fit"`), which drops whole chips and reports how many are hidden |
+| Your own `max-height` on a logo projected into `ds-sidenav`'s `[brand]` slot, or a wrapper sized to hold it. | `--ds-sidenav-brand-max-height` (default `none`, so nothing changes until you set it) |
+| A global rule against `.ds-dropdown-panel` or `.cdk-overlay-pane` to change a dropdown corner. | `--ds-dropdown-panel-radius`, which scopes to one picker when written under a component selector |
+| A query for `ds-autocomplete`'s inner `<input>` plus a synthetic `input` event, clearing leftover filter text after a pick. | `clear()` - and the component clears that text itself now |
+| A local `.link-button` class, or a padding / border / background / font reset on `button.link` in your overrides. | the global `.link` class with `.inline` / `.standalone` / `.sm` / `.xs` |
+| A `[dsStatValue]` projection used only to set `white-space: normal` or a smaller font size on a TEXT value. | the two hooks on the ordinary `value` input - keep the slot for a value that is genuinely another component, like a badge |
+| A wrapper around `ds-search` adding a typing debounce (typically 200ms) with an immediate path when the field empties. | `[debounce]`, which does both plus the Enter flush |
+| `--ds-button-height` / `--ds-button-font-size` / `--ds-button-pad-x` pinned under `ds-filter-bar` to force its trigger smaller. | `triggerSize="sm"` |
+| `[dividers]="false"` repeated on every modal (one consumer had 41), or a reach into `.modal > .header` / `.body` / `.actions` with `!important` because hiding the rules left the padding stacked. | `provideDsConfig({ modal: { dividers: false } })`, which drops the rules AND the padding that existed to clear them |
+| A helper keeping the last visited tab per path in `sessionStorage`. | `rememberLastTab` on `ds-tabs` (needs `urlParam`, which supplies the names) |
+| An adapter component that injects a brand object and fans it out into `brand` / `logoLetter` / `tagline` bindings on each auth screen. | `provideDsConfig({ brand: … })`; the accent stays a `[dsBrandName]` projection instead of a `brandAccent` string plus an `indexOf` split |
+| The `ds-avatar` wiring around your own initials helper (the helper itself stays yours). | `[name]` plus one `[initialsRule]` |
+| An attribute repeated identically on every element - one consumer binds `[stickyScrollbar]="true"` on all 35 of its tables and `size="sm"` on 146 buttons. | `provideDsConfig` with the matching section (`table`, `control.size`, …) |
+| A button wired to `exportCsv()` on a SERVER-PAGED table - it serialises the rows the table holds, so the file is one page. | `runExport()` with an `exportFetcher` |
+| The computed beside every list table - `items().length > 0 ? 'overlay' : 'skeleton'` - one consumer feature carried three copies of it. | `[loading]="true"`, which resolves the treatment itself; pin a value only where you mean to override the rule |
+| An override retuning `--opacity-muted` to compensate for a washed-out disabled state. That token is a de-emphasis level for hints and secondary text and carries no disabled state at all - and on `ds-button` / `ds-icon-button` it was always inert, because neither ever read it. | `--ds-button-label-color-disabled` / `--ds-icon-button-icon-color-disabled` |
+| A `::ng-deep ds-table { .table th, .table td { width: 1%; white-space: nowrap } }` override - the shrink-to-content idiom. | `TableColumn.width: 'content'` |
+| A `stopPropagation()` on a control inside a clickable row, added so the row would not steal the control's KEY. Read each hit before deleting: a CLICK still bubbles (`onRowClick` only skips a target inside an `<input>`), so a click-path guard stays. | nothing on the key path - `onRowKey` now requires `target === currentTarget` |
 
 ## 0.9.1 — 2026-08-10
 
