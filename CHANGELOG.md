@@ -88,7 +88,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   those names now fails with TS4114 — or TS2415, since a redeclared private collides just as a public
   one does. **Nothing was removed this time.** Four members kept their name and changed type, which is
   the case that compiles for a caller and breaks an overrider: `maxVisibleChips` on both pickers
-  (widened to `number | 'fit' | 'all' | null`, default moved to `null` — see the entry above),
+  (widened to `number | 'fit' | 'all' | null`, default now `null`),
   `SearchComponent.clear` (`protected` → public, so a subclass that narrowed it to `protected` no
   longer satisfies the base), `StatComponent.value` (widened to `string | number | null` — its own
   entry above) and `TimeColumnsComponent.onKey` (its parameter list changed).
@@ -392,11 +392,7 @@ workaround written against a hook that only landed in this release.
   chosen deliberately over a desaturating variant after looking at both.
   **`solid` and `tonal` are unchanged**, deliberately: a white label mixed into a white surface does
   not move, and tonal's disabled fill already carries the state on its own.
-  _(Corrected 2026-08-21: the tonal half of that was measured in the LIGHT theme — a 4.32:1 fill move —
-  and carried into dark unchecked, where the fill moves 1.20:1 and the label 1.11:1. Tonal takes the same
-  mix from the next release; see its entry under Unreleased. `solid` still cannot use it.)_
-  **Known limitation:** the
-  mix target is `--surface-default`, a stand-in for "whatever is behind" — CSS cannot read the actual
+  **Known limitation:** the mix target is `--surface-default`, a stand-in for "whatever is behind" — CSS cannot read the actual
   backdrop, so on a tinted ground (a card at `--surface-secondary`, an alert) the disabled label is
   computed against the page colour rather than that ground. Consumers who set
   `--ds-button-label-color-disabled` are unaffected.
@@ -502,10 +498,7 @@ workaround written against a hook that only landed in this release.
   The two signals are read-only — a subclass that used to `.set()` them (they were protected writables)
   drives them through `runExport()` now.
 
-- **`provideDsConfig` answers seven more inputs in this entry alone, so an app stops restating
-  itself.** Five of the release's eight new sections — `avatar`, `brand` and `modal` have their own
-  entries:
-  `control.size` (honoured by button, icon-button, input, textarea, select, autocomplete, search,
+- **`provideDsConfig` answers seven more inputs, so an app stops restating itself.** Five new sections: `control.size` (honoured by button, icon-button, input, textarea, select, autocomplete, search,
   date/time picker, number stepper, checkbox, radio, switch and field-group), `card.elevation` and
   `card.padding`, `table.stickyScrollbar` and `table.bordered`, `icon.size`, and `badge.withDot`.
   Precedence is **input → config → built-in**, so a screen that differs still binds the attribute and
@@ -552,7 +545,7 @@ workaround written against a hook that only landed in this release.
 
 - **`--ds-dropdown-panel-radius` — the lever 0.9.0's notes promised and never shipped.** That release
   said an 8px select panel could be restored with `--ds-select-panel-radius`; no such token existed,
-  so the advice did nothing (the note has been corrected). This is the honest version, and it is
+  so the advice did nothing. This is the honest version, and it is
   panel-level rather than per-component on purpose: retuning one picker's corner is not a thing to
   encourage, while `--ds-radius-panel` moves modal, popover and date picker too. Defaults to that
   role, so an untouched theme is unchanged, and it is forwarded onto the portaled pane — scope it with
@@ -1267,17 +1260,14 @@ genuine gap worth reporting.
 
 ### Changed (breaking, visual)
 
-- **The `ds-select` dropdown panel has a 12px corner, was 8px.** It was the one panel
-  outside the radius role layer — modal, popover, date picker, time picker, autocomplete, bottom sheet, card,
-  stat and page footer all resolve `--ds-radius-panel` — so it disagreed with its siblings by 4px and could
+- **The `ds-select` dropdown panel has a 12px corner, was 8px.** It was the one panel outside the
+  radius role layer — modal, popover, date picker, time picker, autocomplete, bottom sheet, stat and
+  page footer all resolve `--ds-radius-panel` — so it disagreed with its siblings by 4px and could
   not be retuned through the role consumers are told to use. Restore with `--ds-radius-panel: 8px`,
-  which moves every panel together. _(Corrected 2026-08-11: this note first offered
-  `--ds-select-panel-radius: 8px` as a way to restore just this panel. That token does not exist —
-  the dropdown resolves `--ds-radius-panel` directly — so setting it does nothing. `ds-autocomplete`
-  does have a per-panel `--ds-autocomplete-panel-radius`; the two dropdowns do not.)_ _(Corrected 2026-08-21: the headline named `ds-multi-select` as well. That panel never
-  moved — it is a separate `.panel` element carrying a hardcoded `border-radius: var(--radius-md)`
-  that the shared rule never reached, so it stayed at 8px through 0.9.0, 0.10.0 and 0.10.1 and joins
-  the chain only in the release after 0.10.1.)_
+  which moves every panel together; there is no per-panel token for the select, and
+  `--ds-select-panel-radius` does not exist. `ds-multi-select` is not part of this: its panel is a
+  separate element with a hardcoded `border-radius: var(--radius-md)` that the shared rule does not
+  reach, so it stays at 8px.
 
 - **Seven exit `@keyframes` are gone, replaced by four global presets.** `modal-out`, `ds-sheet-fade-out`
   and `drawer-scrim-out` become `ds-fade-out`; `ds-sheet-down` and the four `drawer-panel-close-*` become

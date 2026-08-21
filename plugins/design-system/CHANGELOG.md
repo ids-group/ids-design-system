@@ -6,8 +6,6 @@ source, agent); **major** = a change to the workflow's behavior contract. Bump `
 
 ## 1.4.0 — 2026-08-20
 
-(Absorbs an unpublished 1.3.2 — the dedup pass and README corrections below never shipped alone.)
-
 ### Added
 - **Phase C team-setup offer**: at the end of a run, if the consumer repo's committed
   `.claude/settings.json` does not declare the `ids` marketplace, the orchestrator offers to merge
@@ -18,9 +16,9 @@ source, agent); **major** = a change to the workflow's behavior contract. Bump `
   plugin is a relative-path marketplace source.
 
 ### Changed
-- Private-repo auth note corrected: `BITBUCKET_TOKEN` is not a documented mechanism for
-  marketplace fetches; the working paths are the credentialed re-clone fallback (default
-  credential-manager setups), an SSH marketplace URL, or a scoped git URL-rewrite token.
+- Private-repo auth: `BITBUCKET_TOKEN` is not a documented mechanism for marketplace fetches. The
+  working paths are the credentialed re-clone fallback (the default on credential-manager setups),
+  an SSH marketplace URL, or a scoped git URL-rewrite token.
 - Dedup pass over SKILL.md and the agent prompts, no behavior change: the Guardrails recap section
   removed (every rule already lives at its point of use; the unique `dist`/build-output clause
   folded into the sources bullet), the step-7 re-check triple emphasis compressed to one sentence,
