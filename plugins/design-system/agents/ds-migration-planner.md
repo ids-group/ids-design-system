@@ -22,6 +22,16 @@ enrich `informational` and APPEND items for documented changes the manifest miss
 appended item's `note`), but never silently rewrite the manifest's own items. Manifest missing or
 malformed → derive the plan from the prose block as below.
 
+**A manifest from before 2026-08-21 carries no `surface` / `detect` / `verify`, and passing those
+items through as-is is how an undetectable one reaches the finder.** So for every item that lacks
+them, ADD the fields from what the item's own `note` already says — this is enrichment, not a
+rewrite: you are not changing the migration, you are stating where to look for it. Read the note for
+the artifact it describes (a store, a query, a stylesheet, a template) and for the shapes it quotes;
+a note that says "a server query built as `orderBy: sortKey()` must skip the clause when `sortDir()`
+is null" is handing you both `surface: "typescript"` and two `detect` strings. Same for a top-level
+`deleteList`: build it from the `DELETE-LIST:` prose lines in `informational`, whose `find` is
+whatever consumer-side shape the sentence names.
+
 ## What to read
 - **Decide actionability by CONTENT, not by section name.** An entry is actionable when it documents
   a change after which existing consumer code no longer works or behaves as before — something
@@ -88,6 +98,34 @@ Reading the changelog completely matters more than perfect kinds.
 - If the changelog says values move to a different attribute, note that DYNAMIC bindings
   (`[attr]="expr"`) resolving to those values must be rebound too — flag it in `note`.
 
+## Detectability: `surface`, `detect`, `verify`, `restore`
+
+An item can be correct, complete and still locate NOTHING — the one failure nobody sees. 0.7.1's
+`table-sortkey-non-null-when-unsorted` named `ds-table[sortKey]` as its target while the code that
+breaks was the consumer's own store (`sorting: store.sortKey() ? … : undefined`, with no DS symbol in
+sight): the finder returned zero hits, the item was recorded not-applicable, and the re-check's clean
+grep confirmed that verdict. Emit these four fields so it cannot repeat.
+
+- **`surface`** (every item) — which artifact of the CONSUMER's changes: `"template"`,
+  `"typescript"`, `"style"`, `"config"`, or `"none"` when the only action is to look at a screen; an
+  array where a change genuinely spans two. Never omit it — a missing surface and a deliberate
+  `none` must not read alike.
+- **`detect`** (required on `behavior` / `removed-api` whose surface is not `template`/`none`) — the
+  shapes to grep for, written the way the CONSUMER writes them rather than the way we name the API:
+  `"orderBy: sortKey"`, `"sortKey() ?"`, `"?? config.control?.size"`, `"protected clear("`. If every
+  locator you can think of is a DS symbol while the affected code lives in their TypeScript, the item
+  is not detectable yet — say so in the `note` instead of shipping a locator that cannot fire.
+- **`verify`** (required on `behavior` / `removed-api`) — the positive assertion a re-checker can
+  test, because here no absent symbol proves anything: *"every place that turns (sortChange) into a
+  query gates on the direction, not the key"*.
+- **`restore`** (on a changed default) — the literal snippet that brings the old behaviour back, or
+  `null` when there is none.
+
+Also emit **`deleteList`** at the top level for what the release made UNNECESSARY:
+`{ id, surface, find, why, replaceWith }`, `find` being the consumer's own shape. A release note says
+what broke and never what became redundant — 45 such entries shipped as prose across 0.9.0 and
+0.10.0 and the loop acted on none of them.
+
 ## searchHints & id
 `searchHints` are concrete strings a grep can find in consumer `.html` / `.ts` / `.scss` — the old
 selector, binding, type name, class, token prefix, or attribute value exactly as written in code.
@@ -104,10 +142,17 @@ Return ONLY a fenced ```json block:
 {
   "version": "<the version>",
   "items": [ { "id", "kind", "old", "new", "note", "searchHints": [],
-               "map": { "<oldValue>": "<replacement token | null>" } } ],
+               "map": { "<oldValue>": "<replacement token | null>" },
+               "surface": "template | typescript | style | config | none",
+               "detect": [], "verify": "<positive assertion>", "restore": "<snippet | null>",
+               "supersedes": ["<version>#<id>"], "supersededBy": ["<version>#<id>"] } ],
+  "deleteList": [ { "id", "surface", "find": [], "why", "replaceWith" } ],
   "informational": [ "<one-line summary of each Added/Fixed group>" ]
 }
 
-`map` is present ONLY on `value-remap` items; `new` may be null (removals / behavior). `informational`
-is consumed directly by the orchestrator for the final report (no other subagent reads it). No
-preamble, no prose outside the JSON block.
+`map` is present ONLY on `value-remap` items; `new` may be null (removals / behavior). `surface` is
+on every item; `detect` and `verify` on every behavioural one (see above); `restore` wherever a
+default moved; `supersedes` / `supersededBy` where a later release reverses an earlier item's
+guidance, as `<version>#<id>` both ways. `informational` is consumed directly by the orchestrator for
+the final report (no other subagent reads it), and `deleteList` drives its own pass. No preamble, no
+prose outside the JSON block.
