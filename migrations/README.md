@@ -101,10 +101,11 @@ just impossible to locate from what they carried:
 
 Hence `surface`, `detect`, `verify` and `restore`: say WHERE the consumer's code changes, what that
 code LOOKS like when it names nothing of ours, what proves the change landed, and how to get the old
-behaviour back. **`tools/migration-lint.mjs` enforces it** — run `npm run migration-lint` (the
-`preversion` hook runs it too, so a release cannot be cut on a manifest that fails). Manifests up to
-0.10.1 predate these fields, so their gaps report as warnings and the back-fill is tracked in
-`docs/todo.md`; `--strict` promotes those warnings to errors once it is done.
+behaviour back. **`tools/migration-lint.mjs` enforces it** — run `npm run migration-lint`; the
+`preversion` hook and the PR gate both run it, so neither a release nor a merge can carry a manifest
+nobody can act on. **Every published manifest was back-filled to this contract on 2026-08-21** (167
+items across 19 releases, 32 prose delete lines into arrays), so there is no legacy tier and no
+warning level: a gap is an error wherever it appears.
 
 **Authoring:** drafted at release time alongside the CHANGELOG entry (the `/changelog` workflow
 drafts it from the release diff; the release author reviews). The prose changelog stays canonical

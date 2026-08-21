@@ -27,23 +27,18 @@
 // (`verify`), what became redundant (`deleteList`), and which earlier item it
 // reverses (`supersedes`).
 //
+// Every published manifest was back-filled to this contract on 2026-08-21, so
+// there is no legacy tier: a gap is an error wherever it appears.
+//
 // Usage:
-//   node tools/migration-lint.mjs                 all manifests
+//   node tools/migration-lint.mjs                          all manifests
 //   node tools/migration-lint.mjs migrations/0.9.0.json …   specific files
-//   node tools/migration-lint.mjs --strict        legacy warnings fail too
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const MIGRATIONS = join(ROOT, 'migrations');
-
-// Manifests authored before the contract grew `surface` / `verify` / `detect`.
-// They are linted for schema, and their missing detectability fields are
-// WARNINGS so the back-fill can land release by release (docs/todo.md tracks
-// it). Everything newer — including unreleased.json — is held to the full
-// contract, because a new release is where a miss is still cheap to prevent.
-const LEGACY_THROUGH = '0.10.1';
 
 const KINDS = new Set([
   'selector-rename',
@@ -78,13 +73,6 @@ const RENAMES = new Set([
   'class-rename',
 ]);
 
-const semver = (version) => version.split('.').map(Number);
-const isNewer = (a, b) => {
-  const [x, y, z] = semver(a);
-  const [p, q, r] = semver(b);
-  return x !== p ? x > p : y !== q ? y > q : z > r;
-};
-
 /** A hint that only ever appears in OUR sources cannot locate a consumer's own
  *  code — which is the whole failure this linter is named after. */
 const isDsSymbol = (hint) =>
@@ -111,9 +99,7 @@ const targets = new Set(
   ),
 );
 
-const strict = process.argv.includes('--strict');
 const errors = [];
-const warnings = [];
 const manifests = new Map();
 
 const report = (list, file, code, message) =>
@@ -149,16 +135,10 @@ for (const [name, manifest] of manifests) {
     report(errors, file, 'M005', 'no `informational` array (use [] when there is nothing)');
   }
 
-  // A legacy manifest predates the detectability fields; it is still held to
-  // every schema rule, and its gaps are reported as warnings.
-  const legacy =
-    !unreleased && typeof version === 'string' && !isNewer(version, LEGACY_THROUGH);
-  const gap = legacy ? warnings : errors;
-
   const seen = new Set();
   for (const item of manifest.items ?? []) {
     const id = item.id ?? '<no id>';
-    const at = (code, message, list = errors) => report(list, file, code, `${id}: ${message}`);
+    const at = (code, message) => report(errors, file, code, `${id}: ${message}`);
 
     if (typeof item.id !== 'string' || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(item.id)) {
       at('M010', 'id is not a stable kebab slug');
@@ -196,7 +176,7 @@ for (const [name, manifest] of manifests) {
     // --- detectability ------------------------------------------------------
     const surfaces = [item.surface ?? []].flat();
     if (item.surface === undefined) {
-      at('M020', 'no `surface` — say where the consumer\'s code changes', gap);
+      at('M020', 'no `surface` — say where the consumer\'s code changes');
     } else if (!surfaces.length || surfaces.some((one) => !SURFACES.has(one))) {
       at('M021', `unknown surface ${JSON.stringify(item.surface)}`);
     }
@@ -206,7 +186,6 @@ for (const [name, manifest] of manifests) {
         'M022',
         'no `verify` — a behavioural item has no old symbol to grep, so the recheck ' +
           'has nothing to prove it landed',
-        gap,
       );
     }
 
@@ -225,7 +204,6 @@ for (const [name, manifest] of manifests) {
         'M023',
         `every locator names the DS (${locators.slice(0, 3).join(', ')}) while surface is ` +
           `"${item.surface}" — add \`detect\` shapes written the way the CONSUMER writes them`,
-        gap,
       );
     }
 
@@ -234,7 +212,6 @@ for (const [name, manifest] of manifests) {
         'M024',
         'reads as a changed default with no `restore` — give the literal snippet, ' +
           'or state "restore": null when there is no way back',
-        gap,
       );
     }
 
@@ -280,7 +257,7 @@ for (const [name, manifest] of manifests) {
   ).length;
   if (prose && !(manifest.deleteList ?? []).length) {
     report(
-      gap,
+      errors,
       file,
       'M033',
       `${prose} DELETE-LIST line(s) live only in prose — mirror them into \`deleteList\``,
@@ -289,17 +266,10 @@ for (const [name, manifest] of manifests) {
 }
 
 for (const line of errors) console.error(`migration-lint: ERROR  ${line}`);
-for (const line of warnings) console.warn(`migration-lint: warn   ${line}`);
 
-const legacyNote = warnings.length
-  ? ` (${warnings.length} warning${warnings.length === 1 ? '' : 's'} on legacy manifests — see docs/todo.md)`
-  : '';
-
-if (errors.length || (strict && warnings.length)) {
-  console.error(
-    `migration-lint: FAILED — ${errors.length} error(s)${strict ? `, ${warnings.length} warning(s)` : legacyNote}`,
-  );
+if (errors.length) {
+  console.error(`migration-lint: FAILED — ${errors.length} error(s)`);
   process.exit(1);
 }
 
-console.log(`migration-lint: ${targets.size} manifest(s) OK${legacyNote}`);
+console.log(`migration-lint: ${targets.size} manifest(s) OK`);

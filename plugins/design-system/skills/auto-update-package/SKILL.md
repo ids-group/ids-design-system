@@ -81,8 +81,9 @@ the affected code names no DS symbol at all; `verify` is the positive assertion 
 when there is no old identifier to miss; `restore` is the way back from a changed default;
 `supersedes` / `supersededBy` link an item to the later one that reverses it. `deleteList` is what the
 release made UNNECESSARY, with a greppable `find` — a separate pass, not an item.
-Manifests published up to 0.10.1 predate these fields: the planner enriches those items from their
-own `note` rather than passing them through undetectable.
+Every manifest in the DS repo carries these fields, but a consumer's `node_modules` copy can predate
+them (the fields shipped in the release after 0.10.1): when they are missing, the planner enriches
+those items from their own `note` rather than passing them through undetectable.
 
 Every actionable item is **auto-applied**; items differ only in how they're VERIFIED:
 - **mechanical** = the rename kinds + `value-remap` + `scss-api` + `code-add` → verified by grep

@@ -4,6 +4,37 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Shipped 2026-08-21 evening (session — the manifests said what changed, not where to look)
+
+Opened and closed in one sitting, because the item measured itself: the lint that found the gap counted
+258 of them, and the count is the to-do list.
+
+- [x] **DONE 2026-08-21 — every published manifest carries the detectability fields, and there is no
+  warning level left to hide behind.** 167 items across 19 releases got a `surface`; every behavioural
+  one a `verify`; every changed default a `restore`; and the 32 prose `DELETE-LIST:` lines became
+  `deleteList` arrays with a greppable `find` each. **Why the fields exist at all:** mm-broker walked
+  0.6.0 → 0.10.1 with the plugin and a review afterwards found two entries the whole find/apply/recheck
+  loop had passed over in silence. `0.7.1#table-sortkey-non-null-when-unsorted` named
+  `ds-table[sortKey]`, which no consumer binds, while the code that breaks was their own store —
+  `sorting: store.sortKey() ? { path: store.sortKey()!, … } : undefined` — so the finder returned zero
+  hits, the item was recorded not-applicable, and the re-check's clean grep CONFIRMED it. Three
+  server-paged screens kept ordering by a column whose header showed no sort.
+  **Three things the sweep turned up that were not in the plan.** (1) Four of the "24 DELETE-LIST lines"
+  in 0.10.0 were the words *the DELETE-LIST* inside ordinary prose — trimming on the bare marker would
+  have cut four informational lines in half, so the marker is `DELETE-LIST:` with the colon. (2) Two
+  default flips reverse each other and said so nowhere: 0.7.0 turned `reserveMessage` on and 0.7.1 turned
+  it back off; 0.8.0 told consumers to declare `sortMode="server"` and 0.9.0 made that the default again.
+  Both pairs now link `supersedes` / `supersededBy`, which the lint resolves. (3) The CHANGELOG carried
+  a "What you can now DELETE" table for exactly two versions while the manifests held delete entries for
+  five — 0.10.0's nineteen rows, 0.10.1's and 0.6.2's were generated from the arrays so the two copies
+  cannot drift, and Unreleased's table was five rows against eleven entries.
+  **What holds it:** `npm run migration-lint` (34 rules, no warning tier), run by the release preflight
+  AND as a hard gate in `ci-pr.sh`. The rule that nearly went wrong is worth keeping in mind — M023
+  fired on a stylesheet item whose only locators were `--ds-*` tokens, which is exactly how a consumer
+  writes them there, so it is scoped to a `typescript` or `config` surface now.
+  ORIGINAL: [P3] 20 published manifests predate `surface` / `detect` / `verify`, and
+  `npm run migration-lint` reports 258 warnings across them (2026-08-21).
+
 ## Shipped 2026-08-21 (session — the assigned batch of eight)
 
 Moved out of `todo.md` on 2026-08-21. Both P1s on the board were in this batch, and both were the

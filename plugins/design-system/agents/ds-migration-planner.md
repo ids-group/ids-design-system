@@ -22,9 +22,10 @@ enrich `informational` and APPEND items for documented changes the manifest miss
 appended item's `note`), but never silently rewrite the manifest's own items. Manifest missing or
 malformed → derive the plan from the prose block as below.
 
-**A manifest from before 2026-08-21 carries no `surface` / `detect` / `verify`, and passing those
-items through as-is is how an undetectable one reaches the finder.** So for every item that lacks
-them, ADD the fields from what the item's own `note` already says — this is enrichment, not a
+**A manifest that carries no `surface` / `detect` / `verify` predates the contract (the fields landed
+2026-08-21 and every manifest in the DS repo has them; a copy inside an older `node_modules` will
+not), and passing those items through as-is is how an undetectable one reaches the finder.** So for
+every item that lacks them, ADD the fields from what the item's own `note` already says — this is enrichment, not a
 rewrite: you are not changing the migration, you are stating where to look for it. Read the note for
 the artifact it describes (a store, a query, a stylesheet, a template) and for the shapes it quotes;
 a note that says "a server query built as `orderBy: sortKey()` must skip the clause when `sortDir()`

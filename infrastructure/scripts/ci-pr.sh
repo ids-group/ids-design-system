@@ -5,9 +5,10 @@
 #
 # Triggered manually via the `validate` custom pipeline — not on every PR.
 #
-# build  -> fails the step if the library or docs don't compile
-# lint   -> report-only (prettier/stylelint/eslint), never fails the step while
-#           the repo carries pre-existing lint debt
+# build          -> fails the step if the library or docs don't compile
+# migration-lint -> fails the step; migrations/ has no debt to carry
+# lint           -> report-only (prettier/stylelint/eslint), never fails the step
+#                   while the repo carries pre-existing lint debt
 set -e
 
 cd "$(dirname "$0")/../.."
@@ -15,6 +16,13 @@ cd "$(dirname "$0")/../.."
 
 setup_bun
 install_deps
+
+# A hard gate, and it runs before the slow work: the manifests are what a
+# consumer's upgrade actually executes, the check needs no build, and an
+# undetectable entry is the one defect that reaches them in silence (two did,
+# in 0.7.1).
+echo "===== migration-lint ====="
+node tools/migration-lint.mjs
 
 log_dir="$(mktemp -d)"
 
