@@ -147,6 +147,21 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **A field bound with signal forms threw once per field, and then showed an error it had already
+  cleared.** `resolveFieldMessage` subscribes to `NgControl`'s `events` stream to follow reactive and
+  template-driven forms. The `NgControl` that signal forms bridges carries no such stream, so the
+  subscription threw `TypeError: Cannot read properties of undefined (reading 'pipe')` — four times on
+  our own Practice → Signal Forms page, swallowed into the console. **The second half is what a user
+  saw:** the throw left that snapshot frozen at first render, and the message resolver falls back to it
+  whenever the live errors go empty — so a field that had just become VALID went on showing its FIRST
+  failure, with `aria-invalid="true"`. Measured through CDP with real input: empty → "We need an email",
+  `nope` → "That does not look like an email address", a valid address → **the required message again**.
+  Now the `NgControl` path bows out entirely when it has no live stream, leaving the component's own
+  inputs — which is where a signal-forms field's errors and touched arrive — as the single source. The
+  same sequence now clears the message and drops `aria-invalid`. **Reactive and template-driven forms are
+  untouched** and were re-checked on `/components/input`: too short, empty and valid each render
+  correctly, as before.
+
 - **`components.md` was missing two layouts and naming three sidenav defaults that are not the
   defaults.** The digest `tools/build-schematics.mjs` copies into `dist/ds/` is what a consumer's own
   agent reads to answer "what does this library have", and `ds-app-layout` and `ds-auth-layout` were
