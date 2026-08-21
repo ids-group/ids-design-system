@@ -7,7 +7,6 @@
 
 - P3 · Nothing catches a docs link that points at no section, and the failure looks like a dead click.
 - P3 · `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing my
-- P3 · `ds-stat`'s `value` cannot take Angular's own `number` pipe. `StatComponent.value` is
 
 **Asks — a consumer or Stas asked for it**
 
@@ -61,6 +60,8 @@
 
 
 
+
+
 # Bugs — something shipped misbehaves
 
 ## A wrong internal link in ds-docs fails silently — the route matches and the page redirects home (found by Stas, 2026-08-21)
@@ -96,15 +97,6 @@ Highest: each one is wrong in code a consumer already has.
 
 
 
-- [ ] **[P3] `ds-stat`'s `value` cannot take Angular's own `number` pipe.** `StatComponent.value` is
-  `InputSignal<string | number>`, while `DecimalPipe.transform` returns `string | null`, so
-  `[value]="count | number"` fails typecheck under `strictTemplates` with
-  `TS2322: Type 'string | null' is not assignable to type 'string | number'`. Consumers fall back to
-  `count.toLocaleString('en-US')` inside the template, which hardcodes the locale instead of reading
-  `LOCALE_ID` and re-evaluates on every change-detection pass where a pure pipe would be cached.
-  Widening the input to `string | number | null` (an absent value rendering as nothing, which is what
-  an empty string already does) would let the idiomatic form work. Found in mm-broker-platform's
-  platform-admin, where both idioms now sit on the same KPI row for exactly this reason.
 
 # Asks — a consumer or Stas asked for it
 
@@ -279,12 +271,12 @@ Nothing moves until a verdict; the work behind each is scoped.
 
 ## Priority board (2026-08-21 actualization — replaces the 08-20 one, supersedes the 08-10 one below)
 
-**31 open: no P1, 10 P2, 21 P3 — and for the first time since this board started, nothing is a P1.**
-Thirteen of the 31 sit under *Decisions*, so no work there is blocked on anything but a verdict; eight
+**30 open: no P1, 10 P2, 20 P3 — and for the first time since this board started, nothing is a P1.**
+Thirteen of the 30 sit under *Decisions*, so no work there is blocked on anything but a verdict; eight
 are *Parked* awaiting a first consumer ask, and one is a Record kept so it is not "simplified" away.
-The live queue is **three bugs and six asks**, and every one of the three is a P3 — two of them are
-deliberate records (the duplicated breakpoint decision, the docs-link guard) rather than things to fix
-blind.
+**The bug list is down to two, and neither is a defect to fix blind:** the duplicated breakpoint
+decision is a record kept so nobody "simplifies" it, and the docs-link guard is an ask for a prebuild
+check. So the live queue is really the six asks, of which two need a verdict rather than work.
 
 **Both P1s closed on 08-21, and they were the two worst kinds of defect.** The focus ring had no answer
 for a clipping ancestor — an element focusable with NO indicator, measured in four places in one app,
@@ -488,6 +480,8 @@ Not work. Deleting one invites the mistake back.
 ## A11y — decision record (deferred, NOT a bug)
 
 - [ ] **[P3] topbar → `role="banner"`** — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The bare `<header>` inside the generic custom element `<ds-topbar>` already maps to the `banner` landmark implicitly (**verified `topbar.component.html:1`, 2026-07-24**); an explicit role is flagged "unnecessary" by the W3C validator and would be WRONG if `<ds-topbar>` is nested in `main`/`section`/`article`/`aside`/`nav`. Kept as a decision record; only add if we adopt a deliberate defensive-robustness policy.
+
+
 
 
 

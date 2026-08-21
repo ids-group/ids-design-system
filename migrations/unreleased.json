@@ -153,6 +153,20 @@
         "label",
         "panel"
       ]
+    },
+    {
+      "id": "stat-value-type-widened",
+      "kind": "behavior",
+      "old": "ds-stat[value]",
+      "new": null,
+      "note": "TYPE WIDENING, breaking for READERS and OVERRIDERS and invisible to writers: StatComponent.value went `string | number` to `string | number | null`. Every existing binding compiles unchanged and nothing renders differently (null renders as nothing, like the empty-string default). ACTION only where the type is written down: an explicitly typed declaration that has to accept it (`const shown: string | number = stat.value()`), a helper parameter, or a subclass override, which fails with TS2416 because the `equal` type-parameter position of InputSignal is invariant - retype to `string | number | null`, or drop the annotation. WHY it was widened: Angular's number / currency / percent / date pipes are all typed `string | null`, so `[value]=\"count | number\"` failed strictTemplates with TS2322 and pushed consumers to `count.toLocaleString('en-US')` in the template, which pins a locale instead of reading LOCALE_ID. If you have that workaround, the pipe is now the better form. TARGET: value: string | number | null",
+      "searchHints": [
+        "ds-stat",
+        "toLocaleString",
+        "StatComponent",
+        "[value]",
+        "extends StatComponent"
+      ]
     }
   ],
   "informational": [
@@ -172,6 +186,7 @@
     "DELETE-LIST: if you have `--ds-sidenav-item-rail: transparent` or a `::ng-deep` box-shadow reset to hide the active rail -> `[rail]=\"false\"` on `ds-sidenav`",
     "DELETE-LIST: if you have a `::ng-deep` border-radius rule on a bare `ds-menu` -> `--ds-menu-radius`",
     "ds-button variant=\"tonal\": the disabled label now uses the same 40% mix toward --surface-default as ghost / text / outline, instead of the shared oklch(from accent 70% ...) recipe. Visual only, no action. It fixes the dark theme, where the old recipe left the disabled label 1.11:1 from the enabled one (a hue going grey and nothing else); the state gap is now 2.90:1 dark and 3.39:1 light, and the label keeps its hue. --ds-button-label-color-disabled still overrides it.",
-    "DELETE-LIST: if you have `--ds-button-label-color-disabled` set on a tonal button to make its disabled state visible (most likely only in the dark theme) -> the default recipe now carries it"
+    "DELETE-LIST: if you have `--ds-button-label-color-disabled` set on a tonal button to make its disabled state visible (most likely only in the dark theme) -> the default recipe now carries it",
+    "DELETE-LIST: if you have `count.toLocaleString('en-US')` (or any hand-rolled formatting) inside a ds-stat binding because `[value]=\"count | number\"` would not typecheck -> the pipe binds now, and it reads LOCALE_ID instead of a pinned locale"
   ]
 }

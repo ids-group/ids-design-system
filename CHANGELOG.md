@@ -59,6 +59,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **`ds-stat`'s `value` takes `string | number | null`, so Angular's own pipes bind to it.**
+  `number`, `currency`, `percent` and `date` are all typed `string | null`, so
+  `[value]="count | number"` failed `strictTemplates` with TS2322 and consumers wrote
+  `count.toLocaleString('en-US')` in the template instead — which pins a locale rather than reading
+  `LOCALE_ID`, and re-runs on every change-detection pass where a pure pipe is cached. One consumer's
+  KPI row carries both idioms side by side for exactly this reason. `null` renders as nothing, like the
+  empty default, and the four pipes now have a demo on the docs page — which is also the test, since
+  that section compiles under `strictTemplates`.
+
 - **If you EXTEND a DS component, seven classes grew and three members changed type.**
   `npm run class-surface` against 0.10.1: `AutocompleteComponent` and `MultiSelectComponent`
   (`chipsMode`, `showsEveryChip`), `MenuItemComponent` (`description`, `descriptionId`),

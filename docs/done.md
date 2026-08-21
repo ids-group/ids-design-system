@@ -11,6 +11,17 @@ same class of defect: **guidance that could not be followed** — a focus ring t
 a clipping ancestor, and a migration path that did not compile. The other pattern worth keeping: two
 of these eight were found by the CHANGELOG re-review rather than by using the library.
 
+- [x] **DONE 2026-08-21 — `string | number | null`, and the docs page is the test.** One character of type, and the four pipes now bind: `number`, `currency`, `percent` and `date` are each declared `string | null`, which is why the idiomatic form failed and the workaround spread. A demo of all four sits on `/components/stat` and renders `147,238 · £4,830,000 · 87% · Sep 1, 2026` — worth having as a demo rather than a line of prose because **that section compiles under `strictTemplates`, so the demo IS the regression test** for the thing that was broken. The widening is in the manifest as `stat-value-type-widened`: writers are unaffected, a reader or a subclass override with the old annotation is not, and the DELETE-LIST names the `toLocaleString('en-US')` it replaces.
+  ORIGINAL: [P3] `ds-stat`'s `value` cannot take Angular's own `number` pipe.** `StatComponent.value` is
+  `InputSignal<string | number>`, while `DecimalPipe.transform` returns `string | null`, so
+  `[value]="count | number"` fails typecheck under `strictTemplates` with
+  `TS2322: Type 'string | null' is not assignable to type 'string | number'`. Consumers fall back to
+  `count.toLocaleString('en-US')` inside the template, which hardcodes the locale instead of reading
+  `LOCALE_ID` and re-evaluates on every change-detection pass where a pure pipe would be cached.
+  Widening the input to `string | number | null` (an absent value rendering as nothing, which is what
+  an empty string already does) would let the idiomatic form work. Found in mm-broker-platform's
+  platform-admin, where both idioms now sit on the same KPI row for exactly this reason.
+
 - [x] **DONE 2026-08-21 — both surfaces, and `components.md` gained the two layouts it never had.** `ds-app-layout` and `ds-auth-layout` now have entries (inputs, slots, tokens, plus the one trap each: the app layout owns the scroll CONTAINER, and `landmark="main"` is only for a page with no other `<main>`), which matters because that file ships in the package and is what a consumer's agent reads. Two stale claims went with it: the `ds-sidenav-item` token line still named `--primary` / `--text-on-primary` / `--secondary` as the active defaults, which **today's wash and rail change had just falsified again** — it now names `--accent-subtitle` / `--accent-strong` and the new `-active-hover` — and `ds-sidenav` was missing `rail` and `logoLetter` entirely. In `done.md`, "the same letter-mark tile" now says what is actually shared: the COLOUR. The rail mark is 28px/weight 800 against 24–32px/weight 700, on two separate token pairs, so retinting means setting both.
   ORIGINAL: [P3] Two documentation surfaces still carry claims corrected elsewhere.** `docs/done.md:191`
   repeats "the same letter-mark tile" (the tile is 28px/weight 800 in the rail versus 24-32px/weight 700
