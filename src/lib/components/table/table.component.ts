@@ -1636,6 +1636,37 @@ export class TableComponent<T extends object> {
     return row !== null && !!action.disabled?.(row);
   }
 
+  /** Items that apply to `row`. Called from the trigger's own gate as well as the
+   *  menu, so a row with nothing applicable shows no kebab instead of an empty one. */
+  protected actionsFor(row: T): readonly TableRowAction<T>[] {
+    return this.rowActions().filter((action) => !action.hidden?.(row));
+  }
+
+  protected hasActionsFor(row: T): boolean {
+    return this.actionsFor(row).length > 0;
+  }
+
+  /** What the open menu renders — the items applying to the row it was opened for. */
+  protected readonly visibleRowActions = computed<readonly TableRowAction<T>[]>(
+    () => {
+      const row = this.menuRow();
+
+      return row === null ? [] : this.actionsFor(row);
+    },
+  );
+
+  /** Empty unless the item is actually disabled for this row: a reason on a live
+   *  item would read as a caveat on something that works. */
+  protected actionReason(action: TableRowAction<T>): string {
+    const row = this.menuRow();
+    if (row === null || !action.disabled?.(row)) {
+      return '';
+    }
+    const reason = action.disabledReason;
+
+    return typeof reason === 'function' ? reason(row) : (reason ?? '');
+  }
+
   protected onRowAction(action: TableRowAction<T>): void {
     const row = this.menuRow();
     if (row === null) {

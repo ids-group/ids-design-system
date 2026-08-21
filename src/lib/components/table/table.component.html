@@ -339,7 +339,7 @@
 
                 @if (hasUtilityColumn()) {
                   <td class="actions-col">
-                    @if (hasRowActions()) {
+                    @if (hasRowActions() && hasActionsFor(row)) {
                       <button
                         type="button"
                         class="row-actions-btn"
@@ -597,11 +597,12 @@
     align="end"
   >
     <ds-menu>
-      @for (action of rowActions(); track action.id) {
+      @for (action of visibleRowActions(); track action.id) {
         <ds-menu-item
           [icon]="action.icon ?? null"
           [error]="action.error ?? false"
           [disabled]="isActionDisabled(action)"
+          [description]="actionReason(action)"
           (pressed)="onRowAction(action)"
         >
           {{ action.label }}

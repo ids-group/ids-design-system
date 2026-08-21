@@ -462,6 +462,13 @@ export class TableSection {
       icon: 'trash',
       error: true,
       disabled: (row) => row.status === 'completed',
+      disabledReason: 'A completed run is kept for the audit trail',
+    },
+    {
+      id: 'relaunch',
+      label: 'Relaunch',
+      icon: 'refresh',
+      hidden: (row) => row.status !== 'completed',
     },
   ];
 

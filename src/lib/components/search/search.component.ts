@@ -130,7 +130,13 @@ export class SearchComponent extends DsControlValueAccessor<string> {
     this.submitted.emit(this.value());
   }
 
-  protected clear(): void {
+  /** Empties the field, DROPS any armed keystroke, and publishes '' immediately.
+   *  Public for the same reason `focus()` is: a host-owned Clear button outside the
+   *  control needs it. Writing `''` into `value` is not equivalent — the effect
+   *  that watches `value` only cancels the timer when the incoming text DIFFERS
+   *  from what this control last pushed, so clearing an already-empty-looking field
+   *  mid-debounce left the keystroke armed. */
+  clear(): void {
     this.text.set('');
     this.cancel();
     this.push('');

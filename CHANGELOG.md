@@ -684,6 +684,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   specificity. **If you deliberately suppressed a focus ring** by leaving an element unstyled, it will now
   show one; give that element `box-shadow: none` explicitly. Note the rule also drops the outline such an
   element used to get from the browser, so if an `outline` was what you wanted there, declare it yourself.
+  **The case that actually bites, added 2026-08-21 after a consumer hit it fourteen times:** an app rule
+  that styles `:focus-visible` with an **`outline` only**. That rule keeps winning on `outline`, but it
+  says nothing about `box-shadow`, so the base rule still supplies one and the element renders **both** —
+  a second ring in the app's colour around the DS ring. Nothing fails a build and nothing greps for it:
+  the app rule looks untouched because it is. Add `box-shadow: none` to that rule, or — better, and what
+  this release is for — delete the rule and retint the DS ring through `--ds-control-focus-shadow`.
 
 - **A disabled `ds-button` / `ds-icon-button` now reads as disabled on a COLOURED accent.** One label recipe
   for every variant — `oklch(from accent 70% 0.035 h)` — replacing the 58% default, and on `ds-button` the

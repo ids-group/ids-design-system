@@ -917,7 +917,25 @@
     <code class="t-mono-inline">
       disabled
     </code> predicate greys items out
-    (here Delete is blocked for completed records). The kebab stops propagation,
+    (here Delete is blocked for completed records), and
+    <code class="t-mono-inline">
+      disabledReason
+    </code> puts the WHY on the item's
+    second line — a greyed item that does not say why is the same dead control as a
+    greyed button.
+    <br />
+    Where an action does not APPLY to a row, use
+    <code class="t-mono-inline">
+      hidden
+    </code> rather than
+    <code class="t-mono-inline">
+      disabled
+    </code>: greying leaves every row with a
+    permanently dead half, which is what happens when one status offers Edit +
+    Launch and another Revert + Delete. Relaunch below is hidden except on
+    completed records. <b>If every item of a row is hidden the kebab is not
+    rendered at all</b>, so a row with nothing applicable does not open an empty
+    menu. The kebab stops propagation,
     so on a <code class="t-mono-inline"> [rowInteractive] </code> table a menu
     click never fires <code class="t-mono-inline"> (rowClicked) </code>. A
     hand-built action column with no visible header should give its

@@ -91,6 +91,17 @@ export interface TableRowAction<T = unknown> {
   error?: boolean;
   /** Per-row predicate — return true to disable the item for that row. */
   disabled?: (row: T) => boolean;
+  /** Per-row predicate — return true to leave the item OUT for that row. Use it
+   *  where the action does not apply rather than `disabled`, which greys an item
+   *  that is always there: a draft offers Edit + Launch and a live one Revert +
+   *  Delete, so greying leaves every row with a permanently dead half. When every
+   *  item of a row is hidden the kebab is not rendered at all, rather than opening
+   *  an empty menu. */
+  hidden?: (row: T) => boolean;
+  /** Why the item is disabled, shown as the item's second line. Only read when
+   *  `disabled` returns true for the row — a greyed item that does not say why is
+   *  the same dead control as a greyed button. */
+  disabledReason?: string | ((row: T) => string);
 }
 
 export interface TableRowActionEvent<T = unknown> {
