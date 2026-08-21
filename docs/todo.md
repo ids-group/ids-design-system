@@ -22,7 +22,6 @@
 
 **Decisions — waiting on Stas, not on work**
 
-- P2 · `variant="tonal"` disabled rests on DESATURATION alone in the dark theme — no luminance change on
 - P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in, or
 - P2 · The breaking batch after 0.9.0 — decide it as ONE story, because it is four surprises otherwise (filed
 - P2 · Width-based overflow as the DEFAULT for anything that lists items in a row (Stas 2026-08-07).
@@ -51,6 +50,8 @@
 **Records — kept so they are not "simplified" away**
 
 - P3 · topbar → `role="banner"` — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The
+
+
 
 
 
@@ -285,8 +286,8 @@ Nothing moves until a verdict; the work behind each is scoped.
 
 ## Priority board (2026-08-21 actualization — replaces the 08-20 one, supersedes the 08-10 one below)
 
-**34 open: no P1, 11 P2, 23 P3 — and for the first time since this board started, nothing is a P1.**
-Fourteen of the 34 sit under *Decisions*, so no work there is blocked on anything but a verdict; eight
+**33 open: no P1, 10 P2, 23 P3 — and for the first time since this board started, nothing is a P1.**
+Thirteen of the 33 sit under *Decisions*, so no work there is blocked on anything but a verdict; eight
 are *Parked* awaiting a first consumer ask, and one is a Record kept so it is not "simplified" away.
 The live queue is **five bugs and six asks**.
 
@@ -306,14 +307,14 @@ focus-ring pair above; and the 0.10.0 entry now names the outline-only case that
 times. What is left of their reports is one P3 by choice — the five overlay siblings of MBP-225, whose
 dead zone is only the label strip.
 
-**Where the risk is now: four breaking changes are queued unreleased, and none of them fails a build.**
+**Where the risk is now: six unreleased changes a consumer discovers by LOOKING, not by building.**
 `maxVisibleChips: null` remapped from "show every chip" to "unset"; the sidenav active item is a wash
-instead of a solid pill; `--focus-ring-inner` is `transparent`; and the readbacks going public collide
-with any subclass that happens to use one of those names. Three of the four are visual or semantic, so
-a consumer discovers them by LOOKING — which is the argument for cutting sooner rather than
-accumulating more. On this repo policy that is **0.11.0**. mm-broker was last recorded on **0.9.1**, so
-they would swallow three releases at once; the manifest carries every item, which is what makes that
-survivable.
+instead of a solid pill; its rail moved from `--secondary` to `--accent-strong`; `--focus-ring-inner`
+is `transparent`; tonal's disabled label takes the 40% mix; and the readbacks going public collide with
+any subclass using one of those names. **Stas decided on 2026-08-21 to HOLD the cut** and add more to
+the batch first, so 0.11.0 grows before it ships — which makes the manifest the thing that has to stay
+complete, since mm-broker was last recorded on **0.9.1** and will swallow three releases at once. Every
+item above is in `migrations/unreleased.json` today.
 
 **What the last two days keep teaching, worth reading before opening anything new.** A number measured
 in ONE theme carried into the other unchecked — three times, all wrong. A comment or docblock that
@@ -340,11 +341,6 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 
 **P1 — real defects:**
 
-- [ ] **[P2] `variant="tonal"` disabled rests on DESATURATION alone in the dark theme — no luminance change on either axis (browser-measured 2026-08-20).** Live on `/components/button` with `<html data-theme="dark">`: label enabled `#778FF8` → disabled `#979EB5`, gap **1.11:1**; fill enabled `#28325D` → disabled `#21273D`, gap **1.20:1**.
-  **Checked against the screen before writing this, and the first draft said "no signal at all" — that was too strong.** Side-by-side with the Disabled toggle off, the state DOES read: the enabled labels are vivid (blue / orange / violet) and the disabled ones wash out to grey. The difference is almost entirely chroma, which the eye picks up at equal luminance. So this is not invisible — it is the "colour alone" case, weaker than the ghost/outline treatment now beside it.
-  **What IS wrong is the reason tonal was excluded, and that was mine.** Tonal stayed on the shared fixed-lightness recipe because "its disabled fill already carries the state on its own" — a claim resting on a 4.32:1 fill movement measured in the LIGHT theme and carried into dark unchecked. In dark the fill moves 1.20:1. The CHANGELOG entry repeats that claim and needs correcting whichever way this goes.
-  **`solid` is NOT affected:** its disabled fill measures `#2E54FF` → `#DBE5F9`, a 4.33:1 move, because the recipe's L 92% is near-white in any theme. Its own oddity, worth a separate look: a disabled solid is a bright pale-blue pill on a dark page, identical in both themes.
-  **If it should change, the fix is the one already shipped elsewhere:** `color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default))` on `.v-tonal`. Needs Stas — he chose the grey-vs-mix question once already, on the light theme, and preferred the tinted mix.
 
 - [ ] **[P3] Two components a consumer cannot import appear in the docs API reference (found by the 2026-08-20 docs audit).** `ds-modal-confirm` (ModalConfirmComponent) and `ds-time-columns` (TimeColumnsComponent) are listed in `component-api.generated.ts` with a full input table, so the reference presents them as usable API. Verified against the published types: both appear as internal `declare` blocks but neither is in the package export list, so `import { ModalConfirmComponent }` does not resolve. `tools/extract-component-api.mjs` collects every `@Component` under `src/lib/components` without consulting the export surface.
   **Two fixes, pick one:** (a) teach the extractor to skip a class absent from the public export list — accurate, but it must follow the component barrels or it will drop legitimately-exported components; (b) add an `internal` value to `ComponentStatus` (today `'stable' | 'new' | 'deprecated'`) and mark these two in `component-api-descriptions.json`, which also gives a home for the next internal. Neither is urgent: nothing is wrong, the reference is just wider than the API.
@@ -497,6 +493,8 @@ Not work. Deleting one invites the mistake back.
 ## A11y — decision record (deferred, NOT a bug)
 
 - [ ] **[P3] topbar → `role="banner"`** — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The bare `<header>` inside the generic custom element `<ds-topbar>` already maps to the `banner` landmark implicitly (**verified `topbar.component.html:1`, 2026-07-24**); an explicit role is flagged "unnecessary" by the W3C validator and would be WRONG if `<ds-topbar>` is nested in `main`/`section`/`article`/`aside`/`nav`. Kept as a decision record; only add if we adopt a deliberate defensive-robustness policy.
+
+
 
 
 

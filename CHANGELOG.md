@@ -110,7 +110,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   Neither fills with the brand accent. Ours is `--accent-subtitle` behind an `--accent-strong` label,
   and hover deepens toward the accent (`--accent-muted`) instead of lightening toward white — the old
   88%-toward-white mix was invisible on a wash. **The state still does not rest on colour alone:** the
-  edge rail and the weight bump both stay. Every `--ds-sidenav-item-*-active` token keeps its name, so
+  edge rail and the weight bump both stay — and **the rail is now `--accent-strong`, the active label's
+  own colour, instead of `--secondary`.** An orange bar across a monochrome-blue row measured **2.33:1**
+  on the light wash, under the 3:1 floor a non-text indicator needs; the accent measures 6.16:1 light and
+  5.28:1 dark. Carbon's indicator is the interactive colour and Material's IS the wash — neither
+  introduces a second hue. Restore the old bar with `--ds-sidenav-item-rail: var(--secondary)`.
+  Every `--ds-sidenav-item-*-active` token keeps its name, so
   an app that already retuned them keeps its own look and needs no edit.
   **`[rail]="false"` on `ds-sidenav`** drops the edge marker for every item, and an item can override
   it for itself (`[rail]` on `ds-sidenav-item`, unset = follow the parent). The old route was
@@ -119,6 +124,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   the library is expected to implement it.
 
 ### Fixed
+
+- **`variant="tonal"` now reads as disabled in the dark theme, where it rested on desaturation alone.**
+  Measured on `/components/button`: the disabled label was **1.11:1** from the enabled one (#778ff8 →
+  #979eb5) and the fill **1.20:1**, so the only signal was a hue going grey — and the label sat at 5.51:1
+  on its own fill, which reads as a live control. Tonal now takes the same 40% label mix ghost, text and
+  outline already use, toward `--surface-default`: the state gap becomes **2.90:1** in dark and **3.39:1**
+  in light, and the label keeps its hue instead of turning grey. **Toward the surface and not toward
+  tonal's own fill, even though the label sits on that fill** — the disabled fill has already moved
+  toward the label, so mixing into it yields only 2.56:1. The fill itself still barely moves (1.09:1
+  light, 1.20:1 dark) and does not need to: the label carries the state, which is the same division of
+  labour the transparent variants shipped with in 0.10.1. Override with
+  `--ds-button-label-color-disabled` as before.
 
 - **`ds-multi-select`'s panel follows `--ds-dropdown-panel-radius` like the other two.** Its panel
   element is `class="panel"`, not `.dropdown-panel`, so it never picked up the shared overlay rule and
@@ -330,7 +347,11 @@ workaround written against a hook that only landed in this release.
   mix (0.036 → 0.099 light), so the disabled label stays tinted rather than going grey; that was
   chosen deliberately over a desaturating variant after looking at both.
   **`solid` and `tonal` are unchanged**, deliberately: a white label mixed into a white surface does
-  not move, and tonal's disabled fill already carries the state on its own. **Known limitation:** the
+  not move, and tonal's disabled fill already carries the state on its own.
+  _(Corrected 2026-08-21: the tonal half of that was measured in the LIGHT theme — a 4.32:1 fill move —
+  and carried into dark unchecked, where the fill moves 1.20:1 and the label 1.11:1. Tonal takes the same
+  mix from the next release; see its entry under Unreleased. `solid` still cannot use it.)_
+  **Known limitation:** the
   mix target is `--surface-default`, a stand-in for "whatever is behind" — CSS cannot read the actual
   backdrop, so on a tinted ground (a card at `--surface-secondary`, an alert) the disabled label is
   computed against the page colour rather than that ground. Consumers who set
