@@ -45,9 +45,15 @@
 
 ## Priority board (2026-08-21, second cut — the file was restructured with it)
 
-**26 open: 1 P1, 7 P2, 18 P3.** Eight are *Parked* awaiting a first consumer ask and one is a Record, so
-the live board is **17 items — and 9 of those are Decisions**, which means the queue of things to BUILD
-unbidden is three bugs and five asks, of which two asks are themselves waiting on a verdict.
+**24 open: 1 P1, 7 P2, 16 P3.** Eight are *Parked* awaiting a first consumer ask and one is a Record, so
+the live board is **15 items — and 9 of those are Decisions**. The queue of things to BUILD unbidden is
+**one bug and five asks**, and of those five two are waiting on a verdict with a deck attached while three
+are gated on a first consumer ask. So: nothing is left to build without a decision.
+
+**Closed after the cut above, the same day:** both docs-surface items. `ds-table` gained a demo of the
+two-way `[(sortKey)]` / `[(sortDir)]` form with the cost of the third click measured, and the API reference
+stopped listing components nobody can import — the extractor reads the export surface now, which took it
+from 84 entries to 80 and turned up FOUR internals where the item had named two.
 
 **The P1 is `Upgrade to Angular 22`, promoted today, and it is the only item where somebody cannot use
 the library at all.** The peers declare `^21.2.0`, so an app on Angular 22 — out since 2026-06-03, and
