@@ -32,8 +32,10 @@ source, agent); **major** = a change to the workflow's behavior contract. Bump `
 
 ### Changed
 - The planner emits the new fields (`surface`, `detect`, `verify`, `restore`, `supersedes` /
-  `supersededBy`, top-level `deleteList`) and, for a manifest published before 2026-08-21, ENRICHES
-  each item from its own `note` instead of passing an undetectable item downstream.
+  `supersededBy`, top-level `deleteList`) and, where a manifest lacks them, ENRICHES each item from
+  its own `note` instead of passing an undetectable item downstream. Every manifest in the DS repo
+  carries the fields as of 2026-08-21, but the copy inside an older `node_modules` will not — which
+  is exactly the one a consumer's run reads first.
 
 ## 1.4.0 — 2026-08-20
 
