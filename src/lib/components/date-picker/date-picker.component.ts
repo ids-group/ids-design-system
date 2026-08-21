@@ -749,9 +749,10 @@ export class DatePickerComponent
       this.host.nativeElement,
       this.panelTokens,
     );
+    // The anchor, not the host: a stretched host's empty width must dismiss (MBP-225).
     closeOnOutsidePointer(
       this.overlayRef,
-      (target) => this.host.nativeElement.contains(target),
+      (target) => this.anchor().nativeElement.contains(target),
       () => this.close('dismiss'),
     );
     // No backdrop catches a page scroll, and CDK's scroll strategies don't see a

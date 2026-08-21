@@ -185,6 +185,21 @@ below is a documentation gap any more — each is a real thing to fix.
 
 
 
+## Five more overlays treat the whole host as "the trigger" in their outside-click guard (from mm-broker MBP-225, 2026-08-20)
+
+- [ ] `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-time-picker` and `ds-color-picker` all
+  pass `(target) => this.host.nativeElement.contains(target)` to `closeOnOutsidePointer`, the same
+  predicate the date picker had when MBP-225 was filed: a click on host area that is not the trigger
+  box — the label, the message row, any empty width a consumer's layout gives the host — is swallowed
+  instead of dismissing the panel. The date picker was the one with a *wide* dead zone (its trigger
+  hugs the mask while the host stretches), and only it got the fix — its guard now tests the
+  `anchor`. The other five keep the host predicate; their triggers normally fill the host, so the
+  dead area is just the label/message strip, which is why nobody has filed it. `ds-popover` already
+  does it right (`trigger.contains`). **Ask:** decide whether label-click-keeps-panel-open is a
+  behaviour anyone relies on; if not, move each to its trigger/anchor element like the date picker
+  and popover. NOT applied with the MBP-225 fix on purpose — that change was scoped to the reported
+  component.
+
 ## `TableComponent.onRowKey` opens the row from a key pressed on a control inside it (from mm-broker MBP-146, 2026-08-20)
 
 - [ ] **The guard is already on `dev` and missing from published 0.9.1.** `dev`'s
