@@ -1,0 +1,132 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "resolved-readbacks-are-public",
+      "kind": "behavior",
+      "old": "class MyThing extends ButtonComponent (or any DS component)",
+      "new": "the same class, with the config-resolved readbacks now PUBLIC members",
+      "note": "Every readback that resolves through DS_CONFIG changed from `protected` to public: `sizeResolved` on fourteen controls, `elevationResolved` and `paddingResolved` (ds-card), `withDotResolved` (ds-badge), `borderedResolved` and `stickyScrollbarResolved` (ds-table), `dividersResolved` (ds-modal and ds-modal-card), `reserveMessageResolved` (every field, via DsFieldBase), the date/time picker locale and format resolvers, and `brandName` / `letterGlyph` / `taglineText` (ds-sidenav, ds-auth-layout). WHY: 0.10.0 told consumers to read `sizeResolved()` now that `size()` returns null when unbound, and that did not compile -- reading it from a host, a test or a viewChild was TS2445. NO ACTION for a consumer that composes. ACTION only if you SUBCLASS a DS component and declare a member with one of those names: it is now a public member of the base, so an incompatible re-declaration needs `override` or a rename. Members a host can derive from its own bindings stay protected on purpose: `invalidResolved`, `railResolved`, `sortModeResolved`, `filterModeResolved`.",
+      "searchHints": [
+        "sizeResolved",
+        "elevationResolved",
+        "paddingResolved",
+        "withDotResolved",
+        "borderedResolved",
+        "dividersResolved",
+        "reserveMessageResolved",
+        "brandName",
+        "letterGlyph",
+        "extends ButtonComponent"
+      ]
+    },
+    {
+      "id": "focus-ring-inner-transparent",
+      "kind": "behavior",
+      "old": "--focus-ring-inner: var(--surface-canvas)",
+      "new": "--focus-ring-inner: transparent",
+      "note": "The 2px gap between an element and its focus ring no longer paints a named surface; it is transparent, so it shows whatever is actually behind. NO ACTION on a canvas-coloured ground -- the same pixels show through. It CHANGES what you see where the focused element sits on something else: a white card in a dark app used to get a dark rim around it, which read as a rendering artifact. If you deliberately relied on an opaque gap -- e.g. to hold the ring off a busy photo background -- set `--focus-ring-inner` back to a colour on that scope. Also new and unrelated to this remap: `data-focus=\"inset\"` draws the same ring INSIDE the border box, for a subtree under an `overflow: hidden` ancestor that would otherwise clip the ring away entirely. Unlike the other focus styles it is not pinned to :root -- set it on the clipping element.",
+      "searchHints": [
+        "--focus-ring-inner",
+        "focus-ring",
+        "data-focus",
+        "surface-canvas",
+        "overflow: hidden",
+        "--ds-control-focus-shadow"
+      ]
+    },
+    {
+      "id": "max-visible-chips-null-is-unset-multi-select",
+      "kind": "value-remap",
+      "old": "ds-multi-select[maxVisibleChips]",
+      "new": null,
+      "note": "BREAKING VALUE REMAP. `null` used to be the LOUDEST setting - render every chip and let the trigger wrap - and it now means 'unset', resolving to 'fit' (measure the trigger, show what fits) like every other nullable input since 0.10.0. Bind the new 'all' mode to keep the old behaviour. This covers the ATTRIBUTE and the BINDING form alike: [maxVisibleChips]=\"null\", [maxVisibleChips]=\"undefined\", and any expression, field or method that can EVALUATE to null feeding that binding - retype those to `number | 'fit' | 'all' | null` and return 'all' where they meant show-them-all. A numeric value is unchanged (still a ceiling, still measured), 'fit' is unchanged, and leaving the input unbound is unchanged because 'fit' was already the default.",
+      "searchHints": [
+        "maxVisibleChips",
+        "[maxVisibleChips]",
+        "maxVisibleChips="
+      ],
+      "map": {
+        "null": "maxVisibleChips=\"all\"",
+        "fit": "maxVisibleChips=\"fit\""
+      }
+    },
+    {
+      "id": "max-visible-chips-null-is-unset-autocomplete",
+      "kind": "value-remap",
+      "old": "ds-autocomplete[maxVisibleChips]",
+      "new": null,
+      "note": "BREAKING VALUE REMAP. `null` used to be the LOUDEST setting - render every chip and let the trigger wrap - and it now means 'unset', resolving to 'fit' (measure the trigger, show what fits) like every other nullable input since 0.10.0. Bind the new 'all' mode to keep the old behaviour. This covers the ATTRIBUTE and the BINDING form alike: [maxVisibleChips]=\"null\", [maxVisibleChips]=\"undefined\", and any expression, field or method that can EVALUATE to null feeding that binding - retype those to `number | 'fit' | 'all' | null` and return 'all' where they meant show-them-all. A numeric value is unchanged (still a ceiling, still measured), 'fit' is unchanged, and leaving the input unbound is unchanged because 'fit' was already the default.",
+      "searchHints": [
+        "maxVisibleChips",
+        "[maxVisibleChips]",
+        "maxVisibleChips="
+      ],
+      "map": {
+        "null": "maxVisibleChips=\"all\"",
+        "fit": "maxVisibleChips=\"fit\""
+      }
+    },
+    {
+      "id": "max-visible-chips-type-widened",
+      "kind": "behavior",
+      "old": "maxVisibleChips: number | 'fit' | null",
+      "new": "maxVisibleChips: number | 'fit' | 'all' | null",
+      "note": "TYPE WIDENING on ds-autocomplete and ds-multi-select, breaking for READERS and OVERRIDERS, not for writers - the same asymmetry 0.10.0's two widenings had, where the consumer's type-checker was the only finder. A binding compiles as before; what stops compiling is an explicitly typed declaration that has to accept the value (`const cap: number | 'fit' | null = ...`, a helper parameter, a viewChild target) and a subclass override, because the `equal` type-parameter position of InputSignalWithTransform is invariant (TS2416). ACTION: retype to `number | 'fit' | 'all' | null`, or drop the annotation and let inference carry it. The VALUE change that comes with it is the separate max-visible-chips-null-is-unset-* pair; this entry is only the declaration.",
+      "searchHints": [
+        "maxVisibleChips",
+        "InputSignalWithTransform",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent"
+      ]
+    },
+    {
+      "id": "sidenav-active-item-is-a-wash",
+      "kind": "behavior",
+      "old": "--ds-sidenav-item-bg-color-active",
+      "new": null,
+      "note": "VISUAL CHANGE with no required edit, plus one override that should now GO. The active ds-sidenav-item filled with --accent and labelled itself --text-on-primary; it is now a wash (--accent-subtitle) behind an --accent-strong label, and the active-hover mix goes toward the accent (--accent-muted) instead of 88% toward white, which was invisible on a wash. Material fills its drawer's active item with secondary-container and Carbon with $background-selected; neither uses the brand accent. NO TOKEN WAS RENAMED - every --ds-sidenav-item-*-active hook keeps its name, so an app that already retuned them looks exactly as it did and needs no change. ACTION only if you replaced the solid pill yourself (two apps did): compare your override against the new default and drop it if they now agree, since keeping it means maintaining a copy of the DS default. SEPARATELY: the edge rail is an input now - [rail]=\"false\" on ds-sidenav drops it for every item and [rail] on ds-sidenav-item overrides that per item (unset = follow the parent). If you hid the rail with `--ds-sidenav-item-rail: transparent` or a ::ng-deep box-shadow reset, both still work, but the input is the supported route. SidenavContract gained a required `rail: () => boolean` member - only relevant if you provide the SIDENAV token yourself, which nothing outside the library is expected to do.",
+      "searchHints": [
+        "--ds-sidenav-item-bg-color-active",
+        "--ds-sidenav-item-label-color-active",
+        "--ds-sidenav-item-rail",
+        "ds-sidenav-item",
+        "SidenavContract"
+      ]
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "extends TableComponent",
+      "new": null,
+      "note": "This release's class-member-collision entry, the counterpart of 0.8.0's, 0.9.0's and 0.10.0's: subclassing a DS component is unsupported (design-system.md), but where it happens a new base member with the same name stops the build - TS4114 demands `override`, TS2415 fires on a redeclared private. GAINED MEMBERS, per `npm run class-surface` against v0.10.1: AutocompleteComponent and MultiSelectComponent (chipsMode, showsEveryChip); MenuItemComponent (description, descriptionId); SearchComponent (disabled, isDisabled); SidenavComponent (rail); SidenavItemComponent (rail, railResolved); TableComponent (actionReason, actionsFor, hasActionsFor, visibleRowActions). NO members were lost. CHANGED SIGNATURES, which collide differently: SearchComponent.clear() went protected to public and SearchComponent.focus() now carries `override` (it overrides the CVA base) - a subclass that redeclared either needs `override` and a compatible signature. ACTION: rename the subclass's own member, or add `override` where the base's semantics genuinely match. The separate resolved-readbacks-are-public entry covers the protected-to-public sweep across fourteen classes, which collides the same way. Consumers who only use the <ds-...> elements in templates need no change.",
+      "searchHints": [
+        "extends TableComponent",
+        "extends SearchComponent",
+        "extends SidenavItemComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent",
+        "extends MenuItemComponent",
+        "override ",
+        "TS4114"
+      ]
+    }
+  ],
+  "informational": [
+    "ds-table: `TableRowAction` gained `hidden?: (row) => boolean` and `disabledReason?: string | ((row) => string)`. Purely additive -- an existing config behaves exactly as before. Reach for `hidden` where an action does not APPLY to a row rather than `disabled`, which greys an item that is always present; a row with every item hidden now renders no kebab instead of an empty menu.",
+    "ds-menu-item: new `description` input renders a standing second line and wires `aria-describedby`. If you hand-rolled that line by projecting your own span into the item, move it to the input -- yours lands INSIDE the accessible name, the input's does not.",
+    "ds-search: `clear()` is now public. A host-owned Clear button should call it rather than writing '' into `value`, which does not cancel an armed debounce when the text already matches what the control last pushed.",
+    "ds-multi-select: its panel now honours `--ds-dropdown-panel-radius` (it was hardcoded at 8px). If you set that token and wondered why one of the three connected panels ignored it, this is why -- no action needed beyond re-checking the value looks right on all three.",
+    "DELETE-LIST: if you have a hand-rolled second line inside a `ds-menu-item` (a projected span plus a `max-width` around 14rem, and probably no `aria-describedby`) -> the `description` input, capped by `--ds-menu-item-description-max-width`",
+    "DELETE-LIST: if you have `overflow: visible` forced back onto an element that needs to clip, or your own inset box-shadow standing in for a focus ring -> `data-focus=\"inset\"` on the clipping element",
+    "DELETE-LIST: if you have a border-radius override aimed at `ds-multi-select .panel` alone, because the token moved the other two panels and not that one -> `--ds-dropdown-panel-radius` now reaches all three",
+    "DELETE-LIST: if you have a timer of your own around a `ds-search` Clear button, or a value you write twice to make the debounce let go -> `clear()`",
+    "DELETE-LIST: if you have a `sizeResolved()`-shaped copy of the DS_CONFIG fallback chain in your own host (`this.size() ?? config.control?.size ?? 'md'`) -> read the component's now-public resolver instead",
+    "ds-search joins both form systems: NG_VALUE_ACCESSOR + DsControlValueAccessor, so [(ngModel)], formControlName and a signal form now bind it, and a new `disabled` input folds together with the form's own disabled state (the shell paints the disabled surface, which it never did). Its own [(value)] is unchanged. Deliberately NO label and no message row - a toolbar filter is not a validated field.",
+    "ds-menu: new --ds-menu-radius, defaulting to --radius-md, which is what the component hardcoded. Nothing moves. Inside a ds-popover the menu still clips to --ds-menu-clip-radius, published by the popover.",
+    "maxVisibleChips gained an 'all' mode on ds-autocomplete and ds-multi-select - render every chip, no measuring. Additive on its own; the actionable half is that null no longer means that (see max-visible-chips-null-is-unset-*).",
+    "DELETE-LIST: if you have your own wash replacing the solid active sidenav pill (a --ds-sidenav-item-bg-color-active override plus a matching label colour) -> compare it against the new default and drop it if they agree",
+    "DELETE-LIST: if you have `--ds-sidenav-item-rail: transparent` or a `::ng-deep` box-shadow reset to hide the active rail -> `[rail]=\"false\"` on `ds-sidenav`",
+    "DELETE-LIST: if you have a `::ng-deep` border-radius rule on a bare `ds-menu` -> `--ds-menu-radius`"
+  ]
+}

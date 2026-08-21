@@ -8,7 +8,109 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **`TableRowAction` can vary its items per row: `hidden` and `disabledReason`.** The contract could
+  only GREY an item that was always there, so a menu whose items swap by status — a draft offering Edit
+  + Launch where a live record offers Revert + Delete — grew a permanently dead half on every row. That
+  is why the row-action column shipped in 0.6.3 and one consumer adopted it in **zero** of eleven row
+  menus. `hidden?: (row) => boolean` leaves the item out instead, and **a row with every item hidden
+  renders no kebab at all** rather than opening an empty menu. `disabledReason?: string | ((row) =>
+  string)` puts the why on the item's second line, read only when `disabled` returns true for that row —
+  a reason on a live item would read as a caveat on something that works.
+
+- **`ds-menu-item` takes a `description` — a standing second line under the label.** For a limitation
+  the action carries ("only the first 1,000 rows", "read-only in this workspace"), visible without hover
+  or focus, which is what separates it from a `[dsTooltip]`. **It reaches assistive tech as
+  `aria-describedby`, not as part of the item's name:** the line is `aria-hidden` and referenced by id,
+  so the projected label alone names the action. Seven items across four files in one consumer
+  hand-rolled this with the same five-line rule; the width cap is now
+  `--ds-menu-item-description-max-width` instead of each app's own `14rem`.
+
+- **`data-focus="inset"` — a focus style that survives a clipping ancestor.** The ring is a box-shadow
+  outside the border box, so any `overflow: hidden` ancestor ate it and left the element focusable with
+  **no indicator at all** — measured in four places in one app, one of them a `ds-button` inside a
+  wrapper that clips for its own animation. Clipping a card to hold a full-bleed child inside a rounded
+  corner is normal, and `ds-card` + `padding: none` invites exactly that. **Unlike the other four focus
+  styles this one is NOT pinned to `:root`:** a clip is a local problem, so the attribute works wherever
+  you set it and the declarations inherit into the subtree. Put it on the clipping element.
+
+- **`ds-search.clear()` is public.** It empties the field, DROPS an armed keystroke and publishes `''`
+  at once — which writing `''` into `value` does not do: the effect watching `value` cancels the timer
+  only when the incoming text DIFFERS from what the control last pushed, so a host-owned Clear button
+  could not always drop the debounce it was clearing. Public for the same reason `focus()` is, and the
+  same button needs both.
+
+- **`ds-search` binds to a form — both systems — and a disabled search now looks disabled.** It held a
+  value that nothing could bind: no `NG_VALUE_ACCESSOR`, so `[(ngModel)]`, a `formControlName` and a
+  signal form all slid off it while its own `[(value)]` kept working. It extends
+  `DsControlValueAccessor` now, like every other control that carries a value, and a new `disabled`
+  input folds together with the form's own disabled state. The shell paints the disabled surface from
+  the inner input's state, which it never did — a disabled search looked live and still took a click.
+  **Deliberately no label and no message row.** A toolbar filter is not a validated field, and giving
+  it the field chrome would restyle every toolbar it sits in; reach for `ds-input` where a search
+  needs a label.
+
+- **`--ds-menu-radius` — the bare `ds-menu` corner, which two token descriptions already promised.**
+  The component hardcoded `var(--radius-md)` while `token-descriptions.json` referred to
+  `--ds-menu-radius` as though it were public; the dead-token audit caught it. Same default, so
+  nothing moves — this only makes the documented hook real. The panelled case stays separate: inside a
+  `ds-popover` the menu clips to `--ds-menu-clip-radius`, which the popover publishes.
+
+### Changed
+
+- **Every readback that resolves through `DS_CONFIG` is now public.** `sizeResolved` on fourteen
+  controls, plus `elevationResolved` / `paddingResolved` (card), `withDotResolved` (badge),
+  `borderedResolved` / `stickyScrollbarResolved` (table), `dividersResolved` (both modals),
+  `reserveMessageResolved` (every field), the picker locale/format resolvers, and
+  `brandName` / `letterGlyph` / `taglineText` (sidenav, auth-layout). They were `protected`, so the
+  migration path 0.10.0 published — "read `sizeResolved()` now that `size()` returns null when unbound"
+  — did not compile: reading one from a host, a test or a `viewChild` was TS2445.
+  **The line is `DS_CONFIG`, and it is deliberate.** A host cannot recompute an app-level default, so
+  that readback has to be public. Members a host CAN derive from its own bindings stay closed:
+  `invalidResolved`, `railResolved`, `sortModeResolved`, `filterModeResolved`.
+  **Subclassers:** these are new public names on the classes, so a subclass that happens to use one now
+  needs `override`. Composition remains the supported route.
+
+- **The focus ring's inner gap is `transparent`, not `--surface-canvas`.** The 2px band exists to
+  separate the ring from the element, so it has to match what is actually BEHIND — and a named surface
+  only is that when nothing intervenes. In a dark app with white cards it painted the dark canvas as a
+  rim around a white card, reading as a rendering artifact rather than a focus state. Transparent costs
+  nothing on a canvas-coloured ground (the same pixels show through) and is right on every other.
+
+- **`maxVisibleChips`: `null` means "unset" now, and `'all'` is the mode that shows every chip.**
+  `ds-autocomplete` and `ds-multi-select` took `number | 'fit' | null`, in which `null` was the
+  LOUDEST setting — render every chip and let the trigger wrap — while 0.10.0 gave `null` a service
+  meaning on twenty-two other inputs: not deciding, fall through to the default. The three modes are
+  named now: `'fit'` measures the trigger and shows what fits, a number is a ceiling that is still
+  measured ("at most N"), `'all'` renders the lot. **BREAKING: `[maxVisibleChips]="null"` used to show
+  every chip and now resolves to `'fit'`** — bind `maxVisibleChips="all"` for the old behaviour. Leaving
+  it unbound behaves exactly as before, since `'fit'` was already the default, and `null` now leaves
+  room for a `DS_CONFIG` slot to answer it app-wide.
+
+- **The active `ds-sidenav-item` is a tinted wash with a coloured label, not a solid brand pill** — and
+  the edge rail is an input rather than a token you blank out. The item filled with `--accent` and put
+  `--text-on-primary` on its label, making the loudest element on the screen out of a state that only
+  says "you are here"; two apps independently replaced it, which is the signal that decided this.
+  Material fills its navigation drawer's active item with `secondary-container` and labels it
+  `on-secondary-container`; Carbon uses `$background-selected` with a border and a weight bump.
+  Neither fills with the brand accent. Ours is `--accent-subtitle` behind an `--accent-strong` label,
+  and hover deepens toward the accent (`--accent-muted`) instead of lightening toward white — the old
+  88%-toward-white mix was invisible on a wash. **The state still does not rest on colour alone:** the
+  edge rail and the weight bump both stay. Every `--ds-sidenav-item-*-active` token keeps its name, so
+  an app that already retuned them keeps its own look and needs no edit.
+  **`[rail]="false"` on `ds-sidenav`** drops the edge marker for every item, and an item can override
+  it for itself (`[rail]` on `ds-sidenav-item`, unset = follow the parent). The old route was
+  `--ds-sidenav-item-rail: transparent` or a `::ng-deep` box-shadow reset — both still work, but the
+  input says what it means. `SidenavContract` gained a `rail: () => boolean` member; nothing outside
+  the library is expected to implement it.
+
 ### Fixed
+
+- **`ds-multi-select`'s panel follows `--ds-dropdown-panel-radius` like the other two.** Its panel
+  element is `class="panel"`, not `.dropdown-panel`, so it never picked up the shared overlay rule and
+  sat at a hardcoded `--radius-md` (8px) while `ds-select` and `ds-autocomplete` moved with the token. It
+  now resolves the same chain, so a brand that rounds its dropdowns rounds all three.
 
 - **`ds-date-picker`: a click on the host's own empty width now dismisses the open calendar.** The
   outside-pointer guard treated the whole host element as the trigger, but the visible trigger box
@@ -17,6 +119,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   calendar open with no visible reason (mm-broker MBP-225). The guard now tests the trigger box
   itself: a press on the field or its calendar glyph still keeps the panel up, while the label, the
   message row and the host's empty width dismiss it like any other outside click.
+
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a
+workaround written against a hook that only landed in this release.
+
+| If you have | Delete it, because |
+| --- | --- |
+| A hand-rolled second line inside a `ds-menu-item` — a projected span, a `max-width` near `14rem`, and probably no `aria-describedby` | The `description` input, capped by `--ds-menu-item-description-max-width` |
+| `overflow: visible` forced back onto an element that needs to clip, or your own inset shadow standing in for a focus ring | `data-focus="inset"` on the clipping element |
+| A `border-radius` override aimed at `ds-multi-select .panel` alone | `--ds-dropdown-panel-radius` now reaches all three connected panels |
+| A timer of your own around a `ds-search` Clear button, or a value written twice to make the debounce let go | `clear()` |
+| A copy of the config fallback chain in your own host — `this.size() ?? config.control?.size ?? 'md'` | The component's resolver is public now; read `sizeResolved()` |
 
 ## 0.10.1 — 2026-08-20
 
