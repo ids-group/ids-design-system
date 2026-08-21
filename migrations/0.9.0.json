@@ -13,7 +13,9 @@
         "drawer-panel-close",
         "drawer-scrim-out",
         "ds-sheet-fade-out"
-      ]
+      ],
+      "surface": "style",
+      "verify": "No global stylesheet names one of the seven removed exit keyframes, and any --ds-*-leave-keyframes points at a GLOBAL @keyframes (a component-scoped name is renamed by Angular and will not resolve)."
     },
     {
       "id": "dropdown-panel-radius",
@@ -39,7 +41,8 @@
       "note": "Component renamed (shipped as ds-auth-shell in the tagged 0.8.0 source, its only release under that name). \"Shell\" is not this library's word for a layout: the app-level one was renamed ds-app-shell -> ds-app-layout in 0.7.0, and calling the auth counterpart a shell put the split vocabulary back. ACTION: rename the element and its closing tag. Behaviour, inputs and slots are unchanged - brand, logoLetter, tagline, cardElevation, cardPadding, [brand], [dsBrandName] and dsAuthSupport all keep their names. Also rename the class and the tokens (separate entries below).",
       "searchHints": [
         "ds-auth-shell"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "auth-shell-class-to-auth-layout",
@@ -49,7 +52,8 @@
       "note": "The exported component class renamed alongside the ds-auth-shell -> ds-auth-layout selector. Update imports and any type references. No members changed.",
       "searchHints": [
         "AuthShellComponent"
-      ]
+      ],
+      "surface": "typescript"
     },
     {
       "id": "auth-shell-tokens-to-auth-layout",
@@ -59,7 +63,8 @@
       "note": "Prefix rename for the six component tokens: --ds-auth-shell-min-height / -card-max-width / -gap / -bg-color / -mark-bg-color / -mark-label-color -> --ds-auth-layout-*. Values and defaults are unchanged. DS-owned tokens only (no others ship under this prefix); a consumer's own --ds-auth-shell-* variable is out of scope. EXCLUDED, do not rename: the global scale token --auth-card-w, the fallback behind -card-max-width, which carries no --ds-auth-shell- prefix and keeps its name. Confirm the new name exists in the installed package.",
       "searchHints": [
         "--ds-auth-shell-"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "search-height-joins-field-scale",
@@ -71,7 +76,10 @@
         "ds-search",
         "--ds-search-height",
         "--search-h"
-      ]
+      ],
+      "surface": "style",
+      "restore": "ds-search { --ds-search-height: 36px; }",
+      "verify": "No toolbar assumes a 36px search box: it either takes the 40px field height or pins --ds-search-height / --ds-field-height deliberately."
     },
     {
       "id": "search-h-token-removed",
@@ -81,7 +89,12 @@
       "note": "The global --search-h token is gone; it existed only to hold ds-search's 36px and nothing reads it any more. Its replacements, in precedence order: --ds-search-height (retunes search alone) and --ds-field-height (levels the whole field family). If you declared --search-h to resize search, that declaration is now inert - swap it for --ds-search-height with the same value. Reading it in your own CSS resolves to nothing. The --hit-md scale token it pointed at (36px) is untouched and still available.",
       "searchHints": [
         "--search-h"
-      ]
+      ],
+      "surface": "style",
+      "detect": [
+        "--search-h"
+      ],
+      "verify": "No stylesheet declares or reads --search-h; a search resize goes through --ds-search-height, a whole-family one through --ds-field-height."
     },
     {
       "id": "table-sort-filter-mode-default-server",
@@ -113,7 +126,17 @@
         "ds-number-stepper",
         "size=\"lg\"",
         "--hit-comfy"
-      ]
+      ],
+      "surface": [
+        "template",
+        "style"
+      ],
+      "detect": [
+        "ds-number-stepper",
+        "size=\"lg\""
+      ],
+      "restore": "ds-number-stepper { --ds-field-height: 44px; }",
+      "verify": "Every size=\"lg\" stepper is meant to stand 48px beside a large input, or pins --ds-field-height back to 44px."
     },
     {
       "id": "tabs-url-param-adoption",
@@ -126,7 +149,17 @@
         "ds-tabs",
         "tabChanged",
         "queryParamMap"
-      ]
+      ],
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "detect": [
+        "urlParam",
+        "queryParamMap",
+        "ds-tab"
+      ],
+      "verify": "For every strip that adopts urlParam: each ds-tab declares a `value`, no two strips on a screen share a parameter name, and the hand-rolled queryParamMap + navigate() wiring it replaces is gone."
     },
     {
       "id": "exported-class-members-grew",
@@ -152,7 +185,14 @@
         "isStriped",
         "TS4114",
         "distinctValuesOf"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "extends TableComponent",
+        "extends ",
+        "override "
+      ],
+      "verify": "A typecheck reports no TS4114 / TS2415 / TS2416 on any class extending a DS component; a subclass that overrode isStriped() reads an ABSOLUTE row index now."
     }
   ],
   "informational": [
@@ -187,27 +227,227 @@
     "ds-date-picker keeps its trigger indicator while the panel is open (an \"open\" class alongside the focus rules). Visual only, NO ACTION. If you styled .trigger:focus-within yourself to work around the trigger going dark, you can drop it.",
     "ds-autocomplete in single mode collapses its filter input once a value is chosen and the panel is closed, so the field reads as a picker instead of a text box. Visual only, NO ACTION. Clicking the field still opens the panel and expands the input, and typing still filters. If you set --ds-autocomplete-input-minw to work around the empty box, you can drop it.",
     "ds-date-picker: clicking the calendar glyph no longer moves focus into the day grid. It now behaves like a click on the field - with allowInput (the default) the caret stays in the field, and a read-only field still focuses the grid. No action; ArrowDown on the field enters the grid as before. If you scripted tests that assumed a glyph click lands focus on a day button, they need updating.",
-    "WHAT YOU CAN NOW DELETE - the half a release note usually leaves out. Two dogfooding audits (mm-ecm 2026-08-06, mm-broker 2026-08-07) read consumer stylesheets as a record of what this library made them write, and both found the same thing: most of the workarounds were written against hooks that ALREADY existed, because a release note says what broke and never says what became unnecessary. Each line below is SEARCH-FOR -> WHY IT CAN GO. None of it is required: skipping it leaves working code that is merely redundant. How to sweep for the rest: grep your styles for ::ng-deep, !important, and any selector naming a DS internal class (.button, .trigger, .option, .modal) - each hit is either an entry below or a genuine gap worth reporting.",
-    "DELETE-LIST: if you have `.button.button.button { … }` or rules against `.v-outline` / `.c-secondary` -> `ds-button` reflects `[data-variant]` and `[data-color]` on the HOST. Use `ds-button[data-variant=\"outline\"]`",
-    "DELETE-LIST: if you have `--radius-sm: 0` to square a checkbox -> `--ds-checkbox-radius`",
-    "DELETE-LIST: if you have `.title.title { font-size }` inside a modal -> `--ds-modal-title-font-size`",
-    "DELETE-LIST: if you have Pagination label type overrides -> `--ds-pagination-label-*`",
-    "DELETE-LIST: if you have `.size { display: none }` on a pager -> `[showPageSize]=\"false\"` — and it is now forwarded through `ds-table` too",
-    "DELETE-LIST: if you have `.actions:empty { display: none }` on a modal -> The library already ships it",
-    "DELETE-LIST: if you have `--ds-modal-divider: transparent`, plus whatever you rewrote the modal padding to afterwards -> `[dividers]=\"false\"` — it drops the rules *and* the padding that existed to clear them",
-    "DELETE-LIST: if you have A defensive hover rule on the selected dropdown row -> The `:not(.is-selected)` branch already handles it",
-    "DELETE-LIST: if you have `ds-menu-divider { padding: 0 }` -> `--ds-menu-divider-spacing`, which already defaults to 0",
-    "DELETE-LIST: if you have A dozen scattered `--ds-*-radius: 0` -> For a fully square brand, four lines: `--radius-sm/md/lg/xl: 0` (leave `--radius-pill`). Measured — the three ROLES alone leave options, clear buttons and dropdown panels rounded; they are the tool for squaring one family and keeping another. Worked example on the Theming page",
-    "DELETE-LIST: if you have A global rule squaring `.ds-overlay-pane` -> Radius and elevation roles now travel onto portaled panes when the host overrides them",
-    "DELETE-LIST: if you have Absolutely positioning a search glyph over an autocomplete, or hiding `.autocomplete-chevron` -> `dsAutocompletePrefix` and `[showChevron]=\"false\"`",
-    "DELETE-LIST: if you have Querying the autocomplete's inner `<input>` and dispatching a synthetic `input` event to clear it -> `clear()`",
-    "DELETE-LIST: if you have A hand-built KPI tile whose value is a badge -> `ds-stat` takes a projected `[dsStatValue]`",
-    "DELETE-LIST: if you have A pinned `--ds-search-height` (or any sibling) to get a shorter control row -> `density=\"compact\"` on the container — every field control is 32px there, measured",
-    "DELETE-LIST: if you have A hand-rolled `.scrim` + `.panel` dialog, written because the modal header could not hold a badge or a second line -> `ds-modal` projects `[title-badge]` and takes a `subtitle`. You get back the focus trap, focus restore, the scroll lock, Escape and the footer",
-    "DELETE-LIST: if you have `[value]=\"f.x().value()\" (valueChange)=\"f.x().value.set($event)\"` on every field of a signal form -> `[formField]=\"f.x\"` — the control implements the contract already",
-    "DELETE-LIST: if you have `white-space: normal` forced onto a badge in a table cell -> `--ds-badge-white-space`",
-    "DELETE-LIST: if you have `::ng-deep .card { height: 100% }` for equal-height cards -> The card's box fills a stretched host on its own",
-    "DELETE-LIST: if you have `!important` on `ds-table` cell padding under `density=\"compact\"` -> Compact no longer out-specifies the padding hooks",
-    "DELETE-LIST: if you have A wrapper around `ds-table` for sort/range announcements, keyboard column resize, or a header filter the checklist cannot express -> All three ship: the live region, the `role=\"separator\"` handle, and `dsHeaderFilter`"
+    "WHAT YOU CAN NOW DELETE - the half a release note usually leaves out. Two dogfooding audits (mm-ecm 2026-08-06, mm-broker 2026-08-07) read consumer stylesheets as a record of what this library made them write, and both found the same thing: most of the workarounds were written against hooks that ALREADY existed, because a release note says what broke and never says what became unnecessary. Each line below is SEARCH-FOR -> WHY IT CAN GO. None of it is required: skipping it leaves working code that is merely redundant. How to sweep for the rest: grep your styles for ::ng-deep, !important, and any selector naming a DS internal class (.button, .trigger, .option, .modal) - each hit is either an entry below or a genuine gap worth reporting."
+  ],
+  "deleteList": [
+    {
+      "id": "button-variant-class-selectors",
+      "surface": "style",
+      "find": [
+        ".button.button.button",
+        ".v-outline",
+        ".c-secondary"
+      ],
+      "why": "`.button.button.button { … }` or rules against `.v-outline` / `.c-secondary`",
+      "replaceWith": "`ds-button` reflects `[data-variant]` and `[data-color]` on the HOST. Use `ds-button[data-variant=\"outline\"]`"
+    },
+    {
+      "id": "checkbox-squared-by-radius-token",
+      "surface": "style",
+      "find": [
+        "--radius-sm: 0"
+      ],
+      "why": "`--radius-sm: 0` to square a checkbox",
+      "replaceWith": "`--ds-checkbox-radius`"
+    },
+    {
+      "id": "modal-title-font-size-override",
+      "surface": "style",
+      "find": [
+        ".title.title",
+        ".modal .title"
+      ],
+      "why": "`.title.title { font-size }` inside a modal",
+      "replaceWith": "`--ds-modal-title-font-size`"
+    },
+    {
+      "id": "pagination-label-type-overrides",
+      "surface": "style",
+      "find": [
+        "ds-pagination",
+        "--ds-pagination-label"
+      ],
+      "why": "Pagination label type overrides",
+      "replaceWith": "`--ds-pagination-label-*`"
+    },
+    {
+      "id": "pager-size-select-hidden",
+      "surface": "style",
+      "find": [
+        ".size",
+        "display: none"
+      ],
+      "why": "`.size { display: none }` on a pager",
+      "replaceWith": "`[showPageSize]=\"false\"` — and it is now forwarded through `ds-table` too"
+    },
+    {
+      "id": "modal-empty-actions-hidden",
+      "surface": "style",
+      "find": [
+        ".actions:empty"
+      ],
+      "why": "`.actions:empty { display: none }` on a modal",
+      "replaceWith": "The library already ships it"
+    },
+    {
+      "id": "modal-divider-transparent-plus-padding",
+      "surface": "style",
+      "find": [
+        "--ds-modal-divider",
+        "!important"
+      ],
+      "why": "`--ds-modal-divider: transparent`, plus whatever you rewrote the modal padding to afterwards",
+      "replaceWith": "`[dividers]=\"false\"` — it drops the rules *and* the padding that existed to clear them"
+    },
+    {
+      "id": "dropdown-selected-row-hover-guard",
+      "surface": "style",
+      "find": [
+        "is-selected",
+        ":hover"
+      ],
+      "why": "A defensive hover rule on the selected dropdown row",
+      "replaceWith": "The `:not(.is-selected)` branch already handles it"
+    },
+    {
+      "id": "menu-divider-padding-zero",
+      "surface": "style",
+      "find": [
+        "ds-menu-divider",
+        "padding: 0"
+      ],
+      "why": "`ds-menu-divider { padding: 0 }`",
+      "replaceWith": "`--ds-menu-divider-spacing`, which already defaults to 0"
+    },
+    {
+      "id": "scattered-radius-zero-overrides",
+      "surface": "style",
+      "find": [
+        "-radius: 0"
+      ],
+      "why": "A dozen scattered `--ds-*-radius: 0`",
+      "replaceWith": "For a fully square brand, four lines: `--radius-sm/md/lg/xl: 0` (leave `--radius-pill`). Measured — the three ROLES alone leave options, clear buttons and dropdown panels rounded; they are the tool for squaring one family and keeping another. Worked example on the Theming page"
+    },
+    {
+      "id": "overlay-pane-squared-globally",
+      "surface": "style",
+      "find": [
+        ".ds-overlay-pane"
+      ],
+      "why": "A global rule squaring `.ds-overlay-pane`",
+      "replaceWith": "Radius and elevation roles now travel onto portaled panes when the host overrides them"
+    },
+    {
+      "id": "autocomplete-prefix-and-chevron-hacks",
+      "surface": [
+        "template",
+        "style"
+      ],
+      "find": [
+        ".autocomplete-chevron",
+        "position: absolute"
+      ],
+      "why": "Absolutely positioning a search glyph over an autocomplete, or hiding `.autocomplete-chevron`",
+      "replaceWith": "`dsAutocompletePrefix` and `[showChevron]=\"false\"`"
+    },
+    {
+      "id": "autocomplete-synthetic-input-clear",
+      "surface": "typescript",
+      "find": [
+        "new Event('input'",
+        "dispatchEvent",
+        "querySelector"
+      ],
+      "why": "Querying the autocomplete's inner `<input>` and dispatching a synthetic `input` event to clear it",
+      "replaceWith": "`clear()`"
+    },
+    {
+      "id": "hand-built-kpi-tile",
+      "surface": "template",
+      "find": [
+        "ds-stat",
+        "kpi",
+        "ds-badge"
+      ],
+      "why": "A hand-built KPI tile whose value is a badge",
+      "replaceWith": "`ds-stat` takes a projected `[dsStatValue]`"
+    },
+    {
+      "id": "search-height-pinned-for-a-short-row",
+      "surface": "style",
+      "find": [
+        "--ds-search-height",
+        "density="
+      ],
+      "why": "A pinned `--ds-search-height` (or any sibling) to get a shorter control row",
+      "replaceWith": "`density=\"compact\"` on the container — every field control is 32px there, measured"
+    },
+    {
+      "id": "hand-rolled-scrim-panel-dialog",
+      "surface": [
+        "template",
+        "style"
+      ],
+      "find": [
+        ".scrim",
+        ".panel"
+      ],
+      "why": "A hand-rolled `.scrim` + `.panel` dialog, written because the modal header could not hold a badge or a second line",
+      "replaceWith": "`ds-modal` projects `[title-badge]` and takes a `subtitle`. You get back the focus trap, focus restore, the scroll lock, Escape and the footer"
+    },
+    {
+      "id": "signal-form-field-wiring",
+      "surface": "template",
+      "find": [
+        ".value.set($event)",
+        "(valueChange)=\"f."
+      ],
+      "why": "`[value]=\"f.x().value()\" (valueChange)=\"f.x().value.set($event)\"` on every field of a signal form",
+      "replaceWith": "`[formField]=\"f.x\"` — the control implements the contract already"
+    },
+    {
+      "id": "badge-wrapping-in-a-cell",
+      "surface": "style",
+      "find": [
+        "white-space: normal",
+        "ds-badge"
+      ],
+      "why": "`white-space: normal` forced onto a badge in a table cell",
+      "replaceWith": "`--ds-badge-white-space`"
+    },
+    {
+      "id": "equal-height-card-deep-rule",
+      "surface": "style",
+      "find": [
+        "::ng-deep .card",
+        "height: 100%"
+      ],
+      "why": "`::ng-deep .card { height: 100% }` for equal-height cards",
+      "replaceWith": "The card's box fills a stretched host on its own"
+    },
+    {
+      "id": "compact-cell-padding-important",
+      "surface": "style",
+      "find": [
+        "!important",
+        "density="
+      ],
+      "why": "`!important` on `ds-table` cell padding under `density=\"compact\"`",
+      "replaceWith": "Compact no longer out-specifies the padding hooks"
+    },
+    {
+      "id": "table-wrapper-for-a11y-and-filters",
+      "surface": [
+        "typescript",
+        "template"
+      ],
+      "find": [
+        "aria-live",
+        "role=\"separator\"",
+        "ds-table"
+      ],
+      "why": "A wrapper around `ds-table` for sort/range announcements, keyboard column resize, or a header filter the checklist cannot express",
+      "replaceWith": "All three ship: the live region, the `role=\"separator\"` handle, and `dsHeaderFilter`"
+    }
   ]
 }

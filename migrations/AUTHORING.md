@@ -92,9 +92,11 @@ looks defective:
   "typescript"]` for a value remap whose values also come from a typed field). A missing `surface`
   and a deliberate `none` must never read the same to a finder — that ambiguity is what let a
   TypeScript-surface item be searched as a template item.
-- **`detect` carries the CONSUMER's shapes, not ours.** The moment a `behavior` item's surface is
-  anything but `template`, `old` and `searchHints` stop being enough: our symbol names appear in
-  their templates and not in the code that has to change. Write the shapes the way they write them —
+- **`detect` carries the CONSUMER's shapes, not ours.** Once a `behavior` item's surface reaches
+  their `typescript` or their app `config`, `old` and `searchHints` stop being enough: our symbol
+  names appear in their templates and not in the logic that has to change. (A `style` surface is the
+  exception — in a stylesheet they write our token names verbatim, so `--ds-search-height` is already
+  the locator.) Write the shapes the way they write them —
   `orderBy: sortKey`, `sortKey() ?`, `?? config.control?.size`, `protected clear(` — and expect them
   to be imperfect; they are recall seeds for a semantic pass, not a find/replace.
 - **`verify` is the positive assertion.** For a rename, "the old name is gone" is proof. For a

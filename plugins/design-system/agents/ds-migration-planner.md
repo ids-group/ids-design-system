@@ -110,7 +110,8 @@ grep confirmed that verdict. Emit these four fields so it cannot repeat.
   `"typescript"`, `"style"`, `"config"`, or `"none"` when the only action is to look at a screen; an
   array where a change genuinely spans two. Never omit it — a missing surface and a deliberate
   `none` must not read alike.
-- **`detect`** (required on `behavior` / `removed-api` whose surface is not `template`/`none`) — the
+- **`detect`** (required on `behavior` / `removed-api` whose surface includes `typescript` or
+  `config`; a `style` surface is exempt, since a stylesheet names our tokens verbatim) — the
   shapes to grep for, written the way the CONSUMER writes them rather than the way we name the API:
   `"orderBy: sortKey"`, `"sortKey() ?"`, `"?? config.control?.size"`, `"protected clear("`. If every
   locator you can think of is a DS symbol while the affected code lives in their TypeScript, the item

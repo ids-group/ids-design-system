@@ -210,13 +210,14 @@ for (const [name, manifest] of manifests) {
       );
     }
 
-    // The sortKey trap: the item is about the consumer's own code, and every
-    // string that could find it names the DS instead.
+    // The sortKey trap: the item is about the consumer's own LOGIC, and every
+    // string that could find it names the DS instead. Scoped to the surfaces
+    // where that is a real gap — in a stylesheet the consumer writes our token
+    // names verbatim, so `--ds-search-height` IS the locator there.
     const locators = [...hints, ...detect, ...(item.old ? [item.old] : [])];
     if (
       BEHAVIOURAL.has(item.kind) &&
-      surfaces.length &&
-      surfaces.some((one) => one !== 'template' && one !== 'none') &&
+      surfaces.some((one) => one === 'typescript' || one === 'config') &&
       locators.length &&
       locators.every(isDsSymbol)
     ) {

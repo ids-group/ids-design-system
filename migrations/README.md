@@ -31,7 +31,9 @@ One file per released version — `migrations/<version>.json` — mirroring that
   statement, not a hint: `none` and "the author forgot" must not read the same to a finder.
 - **`detect`** — the shapes to grep for when `old` is a DS symbol the affected code never mentions.
   Written the way the consumer writes it (`orderBy: sortKey`, `?? config.control?.size`), not the
-  way we do. Mandatory on a `behavior` / `removed-api` item whose surface is not `template`/`none`.
+  way we do. Mandatory on a `behavior` / `removed-api` item whose surface includes `typescript` or
+  `config`; a `style` surface is exempt, because there the consumer writes our token names verbatim
+  and `--ds-search-height` IS the locator.
 - **`verify`** — the positive assertion that proves the migration landed, for the items where
   "the old symbol is gone" proves nothing because there was never a symbol to remove.
 - **`restore`** — the literal snippet that brings the old behaviour back on a changed default, or an
