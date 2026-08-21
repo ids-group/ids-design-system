@@ -5,9 +5,8 @@
 
 **Bugs — something shipped misbehaves**
 
+- P3 · Nothing catches a docs link that points at no section, and the failure looks like a dead click.
 - P3 · `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing my
-- P3 · Two documentation surfaces still carry claims corrected elsewhere. `docs/done.md:191`
-- P3 · Cosmetic, in passing. `badge.component.ts:25-26` carries two consecutive JSDoc blocks
 - P3 · `ds-stat`'s `value` cannot take Angular's own `number` pipe. `StatComponent.value` is
 
 **Asks — a consumer or Stas asked for it**
@@ -58,7 +57,27 @@
 
 
 
+
+
+
+
 # Bugs — something shipped misbehaves
+
+## A wrong internal link in ds-docs fails silently — the route matches and the page redirects home (found by Stas, 2026-08-21)
+
+- [ ] **[P3] Nothing catches a docs link that points at no section, and the failure looks like a dead click.**
+  `:area/:anchor` matches ANY pair, so `/components/actions` — a group PATH rather than an item anchor —
+  is a route hit with nothing to render; `SectionGroupPage` then does
+  `navigateByUrl("/", { replaceUrl: true })`, so the reader lands back on Start here and the address bar
+  keeps no trace. That redirect is deliberate (better than a blank page) and it is also what hides the
+  defect: no 404, no console warning, nothing in a build or a grep. **Eight links shipped wrong for
+  exactly that reason** and were fixed on 2026-08-21 — one bounced home, seven named a `fragment` that an
+  area redirect silently drops, landing on the group's first section instead of the named one.
+  **Ask:** a prebuild check beside the extractors — walk every `routerLink="/…"` literal in
+  `ds-docs/src/**/*.html`, resolve it against `NAV`, and fail the build on a miss. It would have caught
+  all eight, it is the same shape as the dead-token and class-surface audits this repo already runs, and
+  the alternative is that the next wrong link waits for someone to click it. Also worth deciding: log a
+  `console.warn` in dev when `def()` is null, so a bad URL says so instead of quietly going home.
 
 Highest: each one is wrong in code a consumer already has.
 
@@ -75,18 +94,7 @@ Highest: each one is wrong in code a consumer already has.
 > fixes shipped, and the false comments were corrected. What follows is what was deliberately NOT
 > done in that pass, each with the reason, so none of it is rediscovered from scratch.
 
-- [ ] **[P3] Two documentation surfaces still carry claims corrected elsewhere.** `docs/done.md:191`
-  repeats "the same letter-mark tile" (the tile is 28px/weight 800 in the rail versus 24-32px/weight 700
-  in the auth layout, with separate token hooks, so retinting the mark means setting both). And
-  `components.md` — which ships inside the npm package and is what a consumer's agent reads — has **no
-  `ds-auth-layout` or `ds-app-layout` entry at all**, while its `ds-sidenav*` block still names the
-  pre-rename `--ds-sidenav-mark-bg` / `-fg` tokens.
 
-- [ ] **[P3] Cosmetic, in passing.** `badge.component.ts:25-26` carries two consecutive JSDoc blocks
-  on `withDot`, the first being the pre-change text, and it feeds the generated API table. The
-  ds-docs search section says "Two things skip the timer" where code and changelog say three, and
-  the generated stat token description says an unwrapped phrase value is "clipped" when `.stat` sets
-  no `overflow` and it actually escapes the tile.
 
 - [ ] **[P3] `ds-stat`'s `value` cannot take Angular's own `number` pipe.** `StatComponent.value` is
   `InputSignal<string | number>`, while `DecimalPipe.transform` returns `string | null`, so
@@ -271,10 +279,12 @@ Nothing moves until a verdict; the work behind each is scoped.
 
 ## Priority board (2026-08-21 actualization — replaces the 08-20 one, supersedes the 08-10 one below)
 
-**32 open: no P1, 10 P2, 22 P3 — and for the first time since this board started, nothing is a P1.**
-Thirteen of the 32 sit under *Decisions*, so no work there is blocked on anything but a verdict; eight
+**31 open: no P1, 10 P2, 21 P3 — and for the first time since this board started, nothing is a P1.**
+Thirteen of the 31 sit under *Decisions*, so no work there is blocked on anything but a verdict; eight
 are *Parked* awaiting a first consumer ask, and one is a Record kept so it is not "simplified" away.
-The live queue is **four bugs and six asks**, and every one of the four is a P3.
+The live queue is **three bugs and six asks**, and every one of the three is a P3 — two of them are
+deliberate records (the duplicated breakpoint decision, the docs-link guard) rather than things to fix
+blind.
 
 **Both P1s closed on 08-21, and they were the two worst kinds of defect.** The focus ring had no answer
 for a clipping ancestor — an element focusable with NO indicator, measured in four places in one app,
@@ -478,6 +488,9 @@ Not work. Deleting one invites the mistake back.
 ## A11y — decision record (deferred, NOT a bug)
 
 - [ ] **[P3] topbar → `role="banner"`** — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The bare `<header>` inside the generic custom element `<ds-topbar>` already maps to the `banner` landmark implicitly (**verified `topbar.component.html:1`, 2026-07-24**); an explicit role is flagged "unnecessary" by the W3C validator and would be WRONG if `<ds-topbar>` is nested in `main`/`section`/`article`/`aside`/`nav`. Kept as a decision record; only add if we adopt a deliberate defensive-robustness policy.
+
+
+
 
 
 

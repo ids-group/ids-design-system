@@ -11,6 +11,21 @@ same class of defect: **guidance that could not be followed** — a focus ring t
 a clipping ancestor, and a migration path that did not compile. The other pattern worth keeping: two
 of these eight were found by the CHANGELOG re-review rather than by using the library.
 
+- [x] **DONE 2026-08-21 — both surfaces, and `components.md` gained the two layouts it never had.** `ds-app-layout` and `ds-auth-layout` now have entries (inputs, slots, tokens, plus the one trap each: the app layout owns the scroll CONTAINER, and `landmark="main"` is only for a page with no other `<main>`), which matters because that file ships in the package and is what a consumer's agent reads. Two stale claims went with it: the `ds-sidenav-item` token line still named `--primary` / `--text-on-primary` / `--secondary` as the active defaults, which **today's wash and rail change had just falsified again** — it now names `--accent-subtitle` / `--accent-strong` and the new `-active-hover` — and `ds-sidenav` was missing `rail` and `logoLetter` entirely. In `done.md`, "the same letter-mark tile" now says what is actually shared: the COLOUR. The rail mark is 28px/weight 800 against 24–32px/weight 700, on two separate token pairs, so retinting means setting both.
+  ORIGINAL: [P3] Two documentation surfaces still carry claims corrected elsewhere.** `docs/done.md:191`
+  repeats "the same letter-mark tile" (the tile is 28px/weight 800 in the rail versus 24-32px/weight 700
+  in the auth layout, with separate token hooks, so retinting the mark means setting both). And
+  `components.md` — which ships inside the npm package and is what a consumer's agent reads — has **no
+  `ds-auth-layout` or `ds-app-layout` entry at all**, while its `ds-sidenav*` block still names the
+  pre-rename `--ds-sidenav-mark-bg` / `-fg` tokens.
+
+- [x] **DONE 2026-08-21 — three of them, and each was a different way for prose to outlive its code.** `badge.component.ts` carried two consecutive docblocks on `withDot` (the older one held the fact the newer had dropped — the dot renders only while `count` is unset — so they merged rather than one being deleted), and it feeds the generated API table, which is now regenerated. The search page said **two** things skip the debounce where there are three; the third is the `clear()` this session made public, so the paragraph now names it and says why writing `''` into `value` is not the same. And `--ds-stat-value-white-space` claimed an unwrapped phrase is "clipped" when `.stat` sets no `overflow` at all — it ESCAPES the tile, which is the opposite failure and the one worth warning about.
+  ORIGINAL: [P3] Cosmetic, in passing.** `badge.component.ts:25-26` carries two consecutive JSDoc blocks
+  on `withDot`, the first being the pre-change text, and it feeds the generated API table. The
+  ds-docs search section says "Two things skip the timer" where code and changelog say three, and
+  the generated stat token description says an unwrapped phrase value is "clipped" when `.stat` sets
+  no `overflow` and it actually escapes the tile.
+
 - [x] **DONE 2026-08-21 — all five follow `ds-date-picker`: the guard tests the trigger, not the host.** The open question the item held — "is label-click-keeps-the-panel-open something anyone relies on" — was already answered by shipping that fix on the date picker in 0.10.1, so the siblings follow rather than diverge. `ds-select`, `ds-multi-select`, `ds-autocomplete` and `ds-color-picker` each own a single `#trigger` viewChild and now test it; `ds-time-picker` has THREE trigger boxes (single, range start, range end) and tests whichever are present, so a range picker keeps both of its own boxes exempt. **Verification is partial and worth stating:** a label press on `ds-select` was observed dismissing the panel, but the browser session froze twice mid-run (window minimised, CDP evaluation stalling), so the other four are covered by the build and by the identical shape rather than by a click. Worst case if one is wrong is a dismiss that used to be swallowed — the direction the fix wants. 
   ORIGINAL: [P3] Five more overlays treat the whole host as "the trigger" in their outside-click guard.**
   `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-time-picker` and `ds-color-picker` all
