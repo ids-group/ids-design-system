@@ -6,6 +6,7 @@
 
 - P3 · Two components a consumer cannot import appear in the docs API reference (found by the 2026-08-20 docs
 - P3 · `ds-table`'s two-way `[(sortKey)]` / `[(sortDir)]` form is available but never demonstrated (same
+- P3 · 20 published manifests predate the detectability fields — 258 lint warnings to back-fill (2026-08-21)
 - P3 · `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing my
 
 **Asks — a consumer or Stas asked for it**
@@ -45,9 +46,10 @@
 
 ## Priority board (2026-08-21, second cut — the file was restructured with it)
 
-**26 open: 1 P1, 7 P2, 18 P3.** Eight are *Parked* awaiting a first consumer ask and one is a Record, so
-the live board is **17 items — and 9 of those are Decisions**, which means the queue of things to BUILD
-unbidden is three bugs and five asks, of which two asks are themselves waiting on a verdict.
+**27 open: 1 P1, 7 P2, 19 P3.** Eight are *Parked* awaiting a first consumer ask and one is a Record, so
+the live board is **18 items — and 9 of those are Decisions**, which means the queue of things to BUILD
+unbidden is four bugs and five asks, of which two asks are themselves waiting on a verdict. (The
+twenty-seventh arrived on 08-21 evening: the manifest back-fill the new `migration-lint` measures.)
 
 **The P1 is `Upgrade to Angular 22`, promoted today, and it is the only item where somebody cannot use
 the library at all.** The peers declare `^21.2.0`, so an app on Angular 22 — out since 2026-06-03, and
@@ -81,10 +83,12 @@ about; the two long records (mm-broker read as a record, the 08-10 board reasoni
 which is what that section is for; and the index at the top is generated from the items rather than
 hand-kept, so it cannot drift again.
 
-**Where the release risk is.** `migrations/unreleased.json` carries **11 actionable items and 20
-informational lines** on top of 0.10.1, six of them changes a consumer discovers by LOOKING rather than
-by building. Stas held the cut on 08-21 to add more to the batch first, so the manifest is the thing that
-has to stay complete — mm-broker was last recorded on 0.9.1 and will swallow three releases at once.
+**Where the release risk is.** `migrations/unreleased.json` carries **11 actionable items, 11
+`deleteList` entries and 9 informational lines** on top of 0.10.1, six of them changes a consumer
+discovers by LOOKING rather than by building. (Recounted 2026-08-21 evening: the 11 prose
+`DELETE-LIST:` lines became the structured array, which is where the informational count went.) Stas
+held the cut on 08-21 to add more to the batch first, so the manifest is the thing that has to stay
+complete — mm-broker was last recorded on 0.9.1 and will swallow three releases at once.
 
 **Two habits this session kept catching, worth reading before opening anything new.** A number measured
 in ONE theme carried into the other unchecked (three times, all wrong — the latest being the claim that
@@ -102,6 +106,11 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   **Two fixes, pick one:** (a) teach the extractor to skip a class absent from the public export list — accurate, but it must follow the component barrels or it will drop legitimately-exported components; (b) add an `internal` value to `ComponentStatus` (today `'stable' | 'new' | 'deprecated'`) and mark these two in `component-api-descriptions.json`, which also gives a home for the next internal. Neither is urgent: nothing is wrong, the reference is just wider than the API.
 
 - [ ] **[P3] `ds-table`'s two-way `[(sortKey)]` / `[(sortDir)]` form is available but never demonstrated (same audit).** `sortKey`/`sortDir` are inputs and `sortKeyChange`/`sortDirChange` are hand-declared outputs, so Angular's banana-in-a-box works — which is the natural shape for server-side sorting where the host owns the state, exactly what the 0.10.0 server-sort demo is about. The demo binds `[sortKey]` one-way and observes `(sortChange)` instead, so the two-way form is invisible. One line of prose or switching that demo would cover it.
+
+## Migration manifests — the back-fill the new lint measures
+
+- [ ] **[P3] 20 published manifests predate `surface` / `detect` / `verify`, and `npm run migration-lint` reports 258 warnings across them (2026-08-21).** The fields exist because mm-broker's 0.6.0 → 0.10.1 upgrade passed over two entries in silence — `0.7.1#table-sortkey-non-null-when-unsorted` pointed at `ds-table[sortKey]` while the code that breaks was the consumer's own store, so the finder's zero hits read as "not applicable" and the re-check's clean grep agreed. The contract, the lint and the plugin's three agents now cover it forward, and `0.7.1`, `0.8.0` and `0.9.0`'s sort-mode pair carry the fields as worked examples. What is left is the rest: every legacy item wants a `surface`, every behavioural one a `verify`, every changed default a `restore`, and 45 prose `DELETE-LIST:` lines in 0.9.0 and 0.10.0 want mirroring into `deleteList`.
+  **Not urgent, and cheap in slices — one version per sitting, from the newest back** (0.10.1 and 0.10.0 are the ones a consumer will read next). The gaps are warnings by design so the gate stays green while it happens; `npm run migration-lint --strict` is what closes this item, and it belongs in CI once the count is zero. **Do not do it by pattern-matching the notes:** the field that matters is `detect`, and a wrong shape there is worse than none — it turns "we could not find it" into "we looked and it is not there".
 
 ## ds-app-layout — the one knowingly duplicated decision
 

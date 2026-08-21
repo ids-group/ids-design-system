@@ -146,6 +146,24 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   input says what it means. `SidenavContract` gained a `rail: () => boolean` member; nothing outside
   the library is expected to implement it.
 
+- **The shipped migration manifests say WHERE to look, not only what changed — and a lint now holds
+  them to it.** `migrations/<version>.json` (the files `dist/ds/migrations/` carries into your
+  `node_modules`, which the auto-update plugin runs) gained `surface`, `detect`, `verify`, `restore`,
+  `supersedes` / `supersededBy`, and a structured `deleteList`. The reason is a consumer upgrade that
+  went 0.6.0 → 0.10.1 and passed over two entries in silence: `0.7.1`'s
+  `table-sortkey-non-null-when-unsorted` pointed at `ds-table[sortKey]`, which appears in nobody's
+  template, while the code that breaks was their own store —
+  `sorting: store.sortKey() ? { path: store.sortKey()!, … } : undefined` — so the search found
+  nothing, the item was recorded not-applicable, and the re-check's clean grep agreed. Three
+  server-paged screens kept sorting by a column whose header showed no sort. `surface` and `detect`
+  make that item searchable in the artifact that actually changes; `verify` gives a behavioural entry
+  the positive assertion a re-check can test, since there is no removed symbol whose absence proves
+  anything. `0.7.1`'s two entries, `0.8.0`'s and `0.9.0`'s sort-mode pair (which reverse each other,
+  and now link both ways) carry the new fields as worked examples; earlier manifests keep their shape
+  and the plugin's planner fills the fields in from each note. `npm run migration-lint` enforces the
+  contract and the release preflight runs it, so a manifest that cannot be acted on stops a release
+  instead of reaching a consumer.
+
 ### Fixed
 
 - **`components.md` was missing two layouts and naming three sidenav defaults that are not the
@@ -207,6 +225,12 @@ workaround written against a hook that only landed in this release.
 | A `border-radius` override aimed at `ds-multi-select .panel` alone | `--ds-dropdown-panel-radius` now reaches all three connected panels |
 | A timer of your own around a `ds-search` Clear button, or a value written twice to make the debounce let go | `clear()` |
 | A copy of the config fallback chain in your own host — `this.size() ?? config.control?.size ?? 'md'` | The component's resolver is public now; read `sizeResolved()` |
+| Your own wash replacing the solid active sidenav pill — a `--ds-sidenav-item-bg-color-active` override plus a matching label colour | That IS the default now; compare yours against it and drop it if they agree |
+| `--ds-sidenav-item-rail: transparent`, or a `::ng-deep` box-shadow reset to hide the active rail | `[rail]="false"` on `ds-sidenav` |
+| A `::ng-deep` `border-radius` rule on a bare `ds-menu` | `--ds-menu-radius` |
+| `--ds-button-label-color-disabled` pinned on a tonal button to make its disabled state visible, most likely only in the dark theme | The default disabled-label recipe carries it |
+| `count.toLocaleString('en-US')` (or any hand-rolled formatting) inside a `ds-stat` binding, because `[value]="count \| number"` would not typecheck | The pipe binds now, and it reads `LOCALE_ID` instead of a pinned locale |
+| A `::ng-deep ds-table tr:hover .some-cell { color; text-decoration }` rule to make one cell read as the row's link target | `interactive: true` on that column, retuned with `--ds-table-cell-link-color` / `--ds-table-cell-link-decoration` |
 
 ## 0.10.1 — 2026-08-20
 
