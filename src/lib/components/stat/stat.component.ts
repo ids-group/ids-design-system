@@ -37,8 +37,14 @@ export class StatComponent {
    *
    *  Namespaced, unlike `[delta]`: twenty components in this library have a
    *  `value` input, so a bare `value` attribute used to slot one of them in
-   *  would also set that input to the empty string. */
-  readonly value = input<string | number>('');
+   *  would also set that input to the empty string.
+   *
+   *  Takes `null` so `[value]="count | number"` typechecks: Angular's own
+   *  `number`/`date`/`percent` pipes are typed `string | null`, and without the null the
+   *  idiomatic form fails `strictTemplates` and pushes consumers to `toLocaleString()` in
+   *  the template — which hardcodes a locale instead of reading LOCALE_ID. Renders as
+   *  nothing, like the empty default. */
+  readonly value = input<string | number | null>('');
   /** Change amount; sign drives the up/down arrow and color. */
   readonly delta = input<number | null>(null);
   /** Suffix appended after the delta's magnitude, e.g. "vs last month". */

@@ -5660,11 +5660,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "value",
         "kind": "input",
-        "type": "string | number",
+        "type": "string | number | null",
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Headline metric; `unit` is appended directly after it. Optional because the value can be PROJECTED instead — `[dsStatValue]` takes a badge, a status dot, anything a tile needs where a number would go. The input is the fallback, the same shape `[delta]` already has. Namespaced, unlike `[delta]`: twenty components in this library have a `value` input, so a bare `value` attribute used to slot one of them in would also set that input to the empty string."
+        "description": "Headline metric; `unit` is appended directly after it. Optional because the value can be PROJECTED instead — `[dsStatValue]` takes a badge, a status dot, anything a tile needs where a number would go. The input is the fallback, the same shape `[delta]` already has. Namespaced, unlike `[delta]`: twenty components in this library have a `value` input, so a bare `value` attribute used to slot one of them in would also set that input to the empty string. Takes `null` so `[value]=\"count | number\"` typechecks: Angular's own `number`/`date`/`percent` pipes are typed `string | null`, and without the null the idiomatic form fails `strictTemplates` and pushes consumers to `toLocaleString()` in the template — which hardcodes a locale instead of reading LOCALE_ID. Renders as nothing, like the empty default."
       },
       {
         "name": "delta",
