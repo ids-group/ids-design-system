@@ -663,7 +663,7 @@
   "--ds-sidenav-item-label-color-hover": "Item hover label.",
   "--ds-sidenav-item-label-weight": "Item label font-weight (defaults to --font-weight-semibold).",
   "--ds-sidenav-item-radius": "Item radius.",
-  "--ds-sidenav-item-rail": "Active item rail accent.",
+  "--ds-sidenav-item-rail": "Edge marker on the active item (defaults to --accent-strong, the same colour as the active label). It is the second signal beside the wash, so the state does not rest on colour alone — turn it off with [rail] on ds-sidenav or ds-sidenav-item rather than painting it transparent.",
   "--ds-sidenav-mark-bg-color": "Brand mark fill.",
   "--ds-sidenav-mark-label-color": "Brand mark label.",
   "--ds-sidenav-width": "Expanded width.",

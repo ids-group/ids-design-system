@@ -19,7 +19,7 @@
   /* Toward the accent, not toward white: hovering a pale wash has to deepen it,
      and the old mix lightened whatever it was given — invisible on a wash. */
   --_sidenav-item-bg-color-active-hover: var(--ds-sidenav-item-bg-color-active-hover, var(--accent-muted));
-  --_sidenav-item-rail:            var(--ds-sidenav-item-rail,            var(--secondary));
+  --_sidenav-item-rail:            var(--ds-sidenav-item-rail,            var(--accent-strong));
   --_sidenav-item-radius:          var(--ds-sidenav-item-radius,          var(--ds-radius-control));
   --_sidenav-alert-color:          var(--ds-sidenav-alert-color,          var(--error));
   --_sidenav-item-focus-shadow:    var(--ds-sidenav-item-focus-shadow,    var(--ds-control-focus-shadow));

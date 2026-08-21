@@ -296,9 +296,14 @@
   /* Focus rings.
      Outer halos use hsla() composed from brand/danger HSL channels
      so re-skinning --primary-h propagates into focus state.
-     The inner halo reads --surface-canvas so the ring stays visible
-     in both light and dark themes (canvas flips, ring adapts). */
-  --focus-ring-inner: var(--surface-canvas);
+
+     The inner halo is TRANSPARENT, not a colour: its job is to separate the ring
+     from the element, so it has to match whatever is actually behind — which a
+     named surface only is when nothing intervenes. Painting --surface-canvas here
+     drew a dark rim around a white card in a dark app, reading as a rendering
+     artifact rather than a focus state. Transparent costs nothing on a canvas
+     ground (the same pixels show through) and is correct on every other. */
+  --focus-ring-inner: transparent;
   --focus-ring-outer-h: var(--primary-h);
   --focus-ring-outer-s: var(--primary-s);
   --focus-ring-outer-l: var(--primary-l);
@@ -312,6 +317,17 @@
   --focus-ring-error:
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
+  /* Same ring drawn INSIDE the border box, for a subtree under a clipping
+     ancestor. An outset shadow is outside the box, so any `overflow: hidden`
+     ancestor eats it and leaves the element focusable with no indicator at all —
+     and clipping is the normal way to hold a full-bleed child inside a rounded
+     card. Reached through `[data-focus="inset"]`, not by re-declaring the role. */
+  --focus-ring-inset:
+    inset 0 0 0 2px var(--focus-ring-inner),
+    inset 0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha));
+  --focus-ring-inset-error:
+    inset 0 0 0 2px var(--focus-ring-inner),
+    inset 0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
   /* Field focus — coloured halo only (no double-ring). Derived from
      brand HSL so it tracks rebrand. Alpha is a token so dark themes
      can boost it for legibility. */
@@ -562,9 +578,14 @@
   /* Focus rings.
      Outer halos use hsla() composed from brand/danger HSL channels
      so re-skinning --primary-h propagates into focus state.
-     The inner halo reads --surface-canvas so the ring stays visible
-     in both light and dark themes (canvas flips, ring adapts). */
-  --focus-ring-inner: var(--surface-canvas);
+
+     The inner halo is TRANSPARENT, not a colour: its job is to separate the ring
+     from the element, so it has to match whatever is actually behind — which a
+     named surface only is when nothing intervenes. Painting --surface-canvas here
+     drew a dark rim around a white card in a dark app, reading as a rendering
+     artifact rather than a focus state. Transparent costs nothing on a canvas
+     ground (the same pixels show through) and is correct on every other. */
+  --focus-ring-inner: transparent;
   --focus-ring-outer-h: var(--primary-h);
   --focus-ring-outer-s: var(--primary-s);
   --focus-ring-outer-l: var(--primary-l);
@@ -578,6 +599,17 @@
   --focus-ring-error:
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
+  /* Same ring drawn INSIDE the border box, for a subtree under a clipping
+     ancestor. An outset shadow is outside the box, so any `overflow: hidden`
+     ancestor eats it and leaves the element focusable with no indicator at all —
+     and clipping is the normal way to hold a full-bleed child inside a rounded
+     card. Reached through `[data-focus="inset"]`, not by re-declaring the role. */
+  --focus-ring-inset:
+    inset 0 0 0 2px var(--focus-ring-inner),
+    inset 0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha));
+  --focus-ring-inset-error:
+    inset 0 0 0 2px var(--focus-ring-inner),
+    inset 0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
   /* Field focus — coloured halo only (no double-ring). Derived from
      brand HSL so it tracks rebrand. Alpha is a token so dark themes
      can boost it for legibility. */
@@ -891,8 +923,6 @@
      Each token has a real consumer in the codebase; symmetric "unused"
      numeric stops are deliberately omitted. */
   --opacity-disabled: 0.5; /* full disabled state on interactive components */
-  --opacity-muted: 0.6; /* legacy alias, no component reads it since the disabled
-   states moved onto --text-disabled + --opacity-disabled */
   --opacity-text-disabled: 0.38; /* disabled text alpha (WCAG-derived) */
   --opacity-scrim: 0.55; /* modal/drawer backdrop overlay (light theme) */
   --opacity-state-hover: 0.08; /* hover layer over surface (overlay vs surface swap) */
@@ -1106,6 +1136,7 @@
   --sidenav-pad-brand-b: var(--space-6); /* logo bottom padding */
   --sidenav-logo-size: var(--hit-sm); /* 28px — square brand mark */
   --sidenav-collapsed-item: var(--hit-cozy); /* 40px — collapsed nav-item hit area */
+  --sidenav-collapsed-glyph: var(--icon-lg); /* 20px — matches the size the item template renders its icon at */
   --sidenav-section-pad-b: var(--space-1-5); /* nav-section bottom padding */
   --sidenav-item-rail-width: 3px; /* active-item left rail */
   /* Form section grid */
@@ -1770,6 +1801,13 @@ h1, h2, h3, h4, h5, h6 {
   --ds-control-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
   --ds-control-focus-shadow-error: 0 0 0 var(--border-width-default)
     var(--error);
+}
+
+[data-focus=inset] {
+  --ds-field-focus-shadow: var(--focus-ring-inset);
+  --ds-field-focus-shadow-error: var(--focus-ring-inset-error);
+  --ds-control-focus-shadow: var(--focus-ring-inset);
+  --ds-control-focus-shadow-error: var(--focus-ring-inset-error);
 }
 
 :root[data-focus=outline] {

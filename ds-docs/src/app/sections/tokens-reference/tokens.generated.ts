@@ -4799,8 +4799,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-sidenav-item-rail",
-        "value": "var(--secondary)",
-        "notes": "Active item rail accent."
+        "value": "var(--accent-strong)",
+        "notes": "Edge marker on the active item (defaults to --accent-strong, the same colour as the active label). It is the second signal beside the wash, so the state does not rest on colour alone — turn it off with [rail] on ds-sidenav or ds-sidenav-item rather than painting it transparent."
       },
       {
         "name": "--ds-sidenav-item-radius",
