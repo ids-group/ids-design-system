@@ -99,7 +99,7 @@
       "kind": "behavior",
       "old": "extends TableComponent",
       "new": null,
-      "note": "This release's class-member-collision entry, the counterpart of 0.8.0's, 0.9.0's and 0.10.0's: subclassing a DS component is unsupported (design-system.md), but where it happens a new base member with the same name stops the build - TS4114 demands `override`, TS2415 fires on a redeclared private. GAINED MEMBERS, per `npm run class-surface` against v0.10.1: AutocompleteComponent and MultiSelectComponent (chipsMode, showsEveryChip); MenuItemComponent (description, descriptionId); SearchComponent (disabled, isDisabled); SidenavComponent (rail); SidenavItemComponent (rail, railResolved); TableComponent (actionReason, actionsFor, hasActionsFor, visibleRowActions). NO members were lost. CHANGED SIGNATURES, which collide differently: SearchComponent.clear() went protected to public and SearchComponent.focus() now carries `override` (it overrides the CVA base) - a subclass that redeclared either needs `override` and a compatible signature. ACTION: rename the subclass's own member, or add `override` where the base's semantics genuinely match. The separate resolved-readbacks-are-public entry covers the protected-to-public sweep across fourteen classes, which collides the same way. Consumers who only use the <ds-...> elements in templates need no change.",
+      "note": "This release's class-member-collision entry, the counterpart of 0.8.0's, 0.9.0's and 0.10.0's: subclassing a DS component is unsupported (design-system.md), but where it happens a new base member with the same name stops the build - TS4114 demands `override`, TS2415 fires on a redeclared private. GAINED MEMBERS, per `npm run class-surface` against v0.10.1: AutocompleteComponent and MultiSelectComponent (chipsMode, showsEveryChip); MenuItemComponent (description, descriptionId); SearchComponent (disabled, isDisabled); SidenavComponent (rail); SidenavItemComponent (rail, railResolved); TableComponent (actionReason, actionsFor, hasActionsFor, visibleRowActions). NO members were lost. CHANGED SIGNATURES, which collide differently: SearchComponent.clear() went protected to public and SearchComponent.focus() now carries `override` (it overrides the CVA base) - a subclass that redeclared either needs `override` and a compatible signature. ACTION: rename the subclass's own member, or add `override` where the base's semantics genuinely match. The separate resolved-readbacks-are-public entry covers the protected-to-public sweep across fourteen classes, which collides the same way. Consumers who only use the <ds-...> elements in templates need no change. LATER THE SAME DAY, from a second `npm run class-surface` run after the overlay-guard fix: TimeColumnsComponent is unchanged but TimePickerComponent also gained the private `insideATrigger` - a redeclared private fails with TS2415 exactly like a public collision, which is why a private counts here at all.",
       "searchHints": [
         "extends TableComponent",
         "extends SearchComponent",
@@ -108,7 +108,8 @@
         "extends AutocompleteComponent",
         "extends MenuItemComponent",
         "override ",
-        "TS4114"
+        "TS4114",
+        "extends TimePickerComponent"
       ]
     },
     {

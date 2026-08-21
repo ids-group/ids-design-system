@@ -91,6 +91,9 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   `SearchComponent.clear` (`protected` → public, so a subclass that narrowed it to `protected` no
   longer satisfies the base), and `TimeColumnsComponent.onKey` (its parameter list changed).
   `SearchComponent.focus` also picked up `override`, which is internal and needs nothing.
+  Re-run after the day's later fixes, two more show up: `TimePickerComponent.insideATrigger` (private —
+  a redeclared private fails with TS2415 just as a public one does) and `StatComponent.value`, widened to
+  `string | number | null` under its own entry above.
 
 - **Every readback that resolves through `DS_CONFIG` is now public.** `sizeResolved` on fourteen
   controls, plus `elevationResolved` / `paddingResolved` (card), `withDotResolved` (badge),
