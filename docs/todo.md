@@ -28,6 +28,7 @@
 - P3 · Two stale strings that outlived the code
 - P3 · Cosmetic, in passing
 - P3 · `ds-stat`'s `value` cannot take Angular's own `number` pipe
+- P3 · Five more overlays treat the whole host as "the trigger" in their outside-click guard
 
 **Asks — a consumer or Stas asked for it**
 
@@ -113,30 +114,6 @@ below is a documentation gap any more — each is a real thing to fix.
   into `dist/ds/`, so consumers' agents read it.
 
 
-## `ds-date-picker` keeps its own "Enter a valid date" through an external `value` change (from mm-broker MBP-219, 2026-08-18)
-
-<<<<<<< HEAD
-=======
-- [x] **DONE 2026-08-20 — the `value -> text` effect now clears both flags.** Placed there because every typing path holds an `editing` guard while it runs, so reaching the effect means the value did NOT come from the keyboard. Verified first that neither typing path writes `value` on its invalid branch, so blur validation is untouched. Checked the siblings: no other field carries its own internal invalid flag, so there was nothing adjacent to sweep. ORIGINAL:
-  `typedInvalid` / `rangeInvalid` are set from the typing paths (`applyEditedText`, `onFieldBlur`,
-  `applyRangeText`) and cleared only by those and `applyPreset`. The constructor's `value → text` effect
-  re-renders the field but touches neither, so `value.set(null)` leaves **"Enter a valid date
-  (MM/DD/YYYY)" standing over an empty field**. Read in the 0.9.1 bundle, not inferred.
-  `error` outranks the message but is no help here: a consumer that has just cleared the field has no
-  error of its own to bind, and binding an empty string falls straight back to the picker's.
-
-  **The only consumer workaround is destroying the control.** mm-broker's Create Campaign modal now tears
-  its whole body down on `ds-modal`'s `closed` purely to get a fresh picker on the next opening — and
-  that has a hole: reopening inside the 300 ms leave animation makes the modal cancel the close, `closed`
-  never fires, and the stale error survives. Their Add Employee dialog is a second call site with no
-  workaround at all, so a mistyped date of birth still reads "Enter a valid date" over an empty field the
-  next time it opens.
-
-  **Ask:** clear both flags when `value` changes from outside the control (the same effect that
-  re-renders the text). Two consumer workarounds come out the day it lands.
-
-
-
 ## Five more overlays treat the whole host as "the trigger" in their outside-click guard (from mm-broker MBP-225, 2026-08-20)
 
 - [ ] `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-time-picker` and `ds-color-picker` all
@@ -152,7 +129,6 @@ below is a documentation gap any more — each is a real thing to fix.
   and popover. NOT applied with the MBP-225 fix on purpose — that change was scoped to the reported
   component.
 
->>>>>>> date-picker-outside-click
 ## `TableComponent.onRowKey` opens the row from a key pressed on a control inside it (from mm-broker MBP-146, 2026-08-20)
 
 ## ds-app-layout (SHIPPED 2026-07-24) — post-merge polish
