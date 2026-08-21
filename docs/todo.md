@@ -40,7 +40,6 @@
 - P3 · `ds-list-item` cannot express a row that has its own control AND a row-level action
 - P2 · `ds-field-message` claims `state` picks an icon, and it never does — two false doc comments over a real gap
 - P2 · `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely
-- P2 · `variant="tonal"` has NO disabled signal in the dark theme — label 1.11:1, fill 1.20:1, both dead
 - P2 · `variant="tonal"` disabled rests on desaturation alone in dark — label 1.11:1, fill 1.20:1
 - P3 · `ds-search` and `ds-segmented` hold a value but cannot join a form
 - P3 · `ds-radio` standalone cannot bind to a form, by design — recorded, not a defect
@@ -116,6 +115,44 @@ below is a documentation gap any more — each is a real thing to fix.
 
 ## `ds-date-picker` keeps its own "Enter a valid date" through an external `value` change (from mm-broker MBP-219, 2026-08-18)
 
+<<<<<<< HEAD
+=======
+- [x] **DONE 2026-08-20 — the `value -> text` effect now clears both flags.** Placed there because every typing path holds an `editing` guard while it runs, so reaching the effect means the value did NOT come from the keyboard. Verified first that neither typing path writes `value` on its invalid branch, so blur validation is untouched. Checked the siblings: no other field carries its own internal invalid flag, so there was nothing adjacent to sweep. ORIGINAL:
+  `typedInvalid` / `rangeInvalid` are set from the typing paths (`applyEditedText`, `onFieldBlur`,
+  `applyRangeText`) and cleared only by those and `applyPreset`. The constructor's `value → text` effect
+  re-renders the field but touches neither, so `value.set(null)` leaves **"Enter a valid date
+  (MM/DD/YYYY)" standing over an empty field**. Read in the 0.9.1 bundle, not inferred.
+  `error` outranks the message but is no help here: a consumer that has just cleared the field has no
+  error of its own to bind, and binding an empty string falls straight back to the picker's.
+
+  **The only consumer workaround is destroying the control.** mm-broker's Create Campaign modal now tears
+  its whole body down on `ds-modal`'s `closed` purely to get a fresh picker on the next opening — and
+  that has a hole: reopening inside the 300 ms leave animation makes the modal cancel the close, `closed`
+  never fires, and the stale error survives. Their Add Employee dialog is a second call site with no
+  workaround at all, so a mistyped date of birth still reads "Enter a valid date" over an empty field the
+  next time it opens.
+
+  **Ask:** clear both flags when `value` changes from outside the control (the same effect that
+  re-renders the text). Two consumer workarounds come out the day it lands.
+
+
+
+## Five more overlays treat the whole host as "the trigger" in their outside-click guard (from mm-broker MBP-225, 2026-08-20)
+
+- [ ] `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-time-picker` and `ds-color-picker` all
+  pass `(target) => this.host.nativeElement.contains(target)` to `closeOnOutsidePointer`, the same
+  predicate the date picker had when MBP-225 was filed: a click on host area that is not the trigger
+  box — the label, the message row, any empty width a consumer's layout gives the host — is swallowed
+  instead of dismissing the panel. The date picker was the one with a *wide* dead zone (its trigger
+  hugs the mask while the host stretches), and only it got the fix — its guard now tests the
+  `anchor`. The other five keep the host predicate; their triggers normally fill the host, so the
+  dead area is just the label/message strip, which is why nobody has filed it. `ds-popover` already
+  does it right (`trigger.contains`). **Ask:** decide whether label-click-keeps-panel-open is a
+  behaviour anyone relies on; if not, move each to its trigger/anchor element like the date picker
+  and popover. NOT applied with the MBP-225 fix on purpose — that change was scoped to the reported
+  component.
+
+>>>>>>> date-picker-outside-click
 ## `TableComponent.onRowKey` opens the row from a key pressed on a control inside it (from mm-broker MBP-146, 2026-08-20)
 
 ## ds-app-layout (SHIPPED 2026-07-24) — post-merge polish
@@ -424,10 +461,6 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 
 **P1 — real defects:**
 
-- [ ] **[P2] `variant="tonal"` has NO disabled signal in the dark theme — measured in the browser 2026-08-20, and it invalidates the reason tonal was excluded from the surface-mix fix.** Live on `/components/button` with `<html data-theme="dark">`: label enabled `#778FF8` → disabled `#979EB5`, gap **1.11:1**; fill enabled `#28325D` → disabled `#21273D`, gap **1.20:1**. Both axes are dead, so a disabled tonal button in dark is indistinguishable from an enabled one — the exact defect just fixed for ghost/text/outline.
-  **The excluded-because rationale was wrong, and it was mine.** Tonal was kept on the shared fixed-lightness recipe on the grounds that "its disabled fill already carries the state on its own". That figure (4.32:1 fill movement) was measured in the LIGHT theme and carried into dark without re-measuring. In dark the fill moves 1.20:1, which is nothing. Recorded in the CHANGELOG entry too, which needs correcting when this is decided.
-  **`solid` is NOT affected:** its disabled fill measures `#2E54FF` → `#DBE5F9`, a 4.33:1 move, because the recipe's L 92% is a near-white regardless of theme. Worth its own look though — a disabled solid button is a bright pale-blue pill on a dark page, identical in both themes.
-  **The fix is the one already shipped elsewhere:** `color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default))` on `.v-tonal`. Needs Stas, because excluding tonal was his decision taken on my wrong claim.
 - [ ] **[P2] `variant="tonal"` disabled rests on DESATURATION alone in the dark theme — no luminance change on either axis (browser-measured 2026-08-20).** Live on `/components/button` with `<html data-theme="dark">`: label enabled `#778FF8` → disabled `#979EB5`, gap **1.11:1**; fill enabled `#28325D` → disabled `#21273D`, gap **1.20:1**.
   **Checked against the screen before writing this, and the first draft said "no signal at all" — that was too strong.** Side-by-side with the Disabled toggle off, the state DOES read: the enabled labels are vivid (blue / orange / violet) and the disabled ones wash out to grey. The difference is almost entirely chroma, which the eye picks up at equal luminance. So this is not invisible — it is the "colour alone" case, weaker than the ghost/outline treatment now beside it.
   **What IS wrong is the reason tonal was excluded, and that was mine.** Tonal stayed on the shared fixed-lightness recipe because "its disabled fill already carries the state on its own" — a claim resting on a 4.32:1 fill movement measured in the LIGHT theme and carried into dark unchecked. In dark the fill moves 1.20:1. The CHANGELOG entry repeats that claim and needs correcting whichever way this goes.

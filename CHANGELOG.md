@@ -8,6 +8,16 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Fixed
+
+- **`ds-date-picker`: a click on the host's own empty width now dismisses the open calendar.** The
+  outside-pointer guard treated the whole host element as the trigger, but the visible trigger box
+  hugs its mask while the host takes whatever a consumer's layout gives it — `flex-grow: 1` beside a
+  Clear button leaves a wide bare strip between the field and the button, and a click there kept the
+  calendar open with no visible reason (mm-broker MBP-225). The guard now tests the trigger box
+  itself: a press on the field or its calendar glyph still keeps the panel up, while the label, the
+  message row and the host's empty width dismiss it like any other outside click.
+
 ## 0.10.1 — 2026-08-20
 
 ### Removed
