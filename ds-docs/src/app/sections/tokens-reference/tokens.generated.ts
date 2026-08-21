@@ -5122,7 +5122,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-stat-value-white-space",
         "value": "nowrap",
-        "notes": "Wrapping of the value line (default `nowrap`). Set `normal` when the value is a phrase — a date range or a status — rather than the number the tile was built around; without it the text is clipped."
+        "notes": "Wrapping of the value line (default `nowrap`). Set `normal` when the value is a phrase — a date range or a status — rather than the number the tile was built around. Without it the line does not wrap and, since `.stat` sets no `overflow`, the text runs OUT of the tile rather than being clipped inside it."
       },
       {
         "name": "--ds-stat-up-color",

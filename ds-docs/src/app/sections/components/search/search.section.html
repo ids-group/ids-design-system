@@ -156,18 +156,36 @@
   </p>
 
   <p class="block-desc t-s">
-    Two things deliberately skip the timer, and they are the reason a wrapped
+    Three things deliberately skip the timer, and they are the reason a wrapped
     <code class="t-mono-inline">
       debounceTime
     </code> usually feels wrong.
     <strong>
       Clearing the field
     </strong> — emptying a search is a deliberate act, and
-    waiting 200ms to see the whole list back reads as a hang — and
+    waiting 200ms to see the whole list back reads as a hang;
     <strong>
       Enter
     </strong>, which flushes whatever is still in flight so you search
-    what you can see. What the input SHOWS is never delayed either way.
+    what you can see; and
+    <strong>
+      the public
+      <code class="t-mono-inline">
+        clear()
+      </code>
+    </strong>, for a Clear button that lives outside the control — it empties the field,
+    drops an armed keystroke and publishes
+    <code class="t-mono-inline">
+      ''
+    </code> at once. Writing
+    <code class="t-mono-inline">
+      ''
+    </code> into
+    <code class="t-mono-inline">
+      value
+    </code> is NOT the same: the timer is cancelled only when the incoming text differs
+    from what the control last pushed, so clearing an already-empty-looking field left the
+    keystroke armed. What the input SHOWS is never delayed by any of the three.
   </p>
 
   <div class="demo-stack">

@@ -684,7 +684,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Leading status dot. Unset falls back to `DS_CONFIG.badge.withDot`, then `false`."
+        "description": "Leading status dot, rendered only while `count` is unset — a count replaces the badge's whole content. Unset falls back to `DS_CONFIG.badge.withDot`, then `false`."
       },
       {
         "name": "solid",

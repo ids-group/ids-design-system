@@ -259,7 +259,7 @@ The companion `<ds-toast-region>` lives inside the `ToastService` (see Services)
 ### Layout & navigation
 
 #### `<ds-sidenav>` — `SidenavComponent`
-Inputs: `collapsed: boolean = false`, `brand: string = ''` (renders a letter mark + name; omit to project custom content)
+Inputs: `collapsed: boolean = false`, `brand: string | null = null` (renders a letter mark + name; omit to project custom content, or set `DS_CONFIG.brand.name`), `logoLetter: string | null = null` (the mark's glyph; derived from `brand` when unset), `rail: boolean = true` (whether an active item draws its edge marker — turn it off here rather than painting `--ds-sidenav-item-rail` transparent)
 Content: default slot for groups/items + custom brand/footer rows
 Tokens: `--ds-sidenav-bg-color`, `--ds-sidenav-border`, `--ds-sidenav-width`, `--ds-sidenav-width-collapsed`, `--ds-sidenav-mark-bg-color`, `--ds-sidenav-mark-label-color`
 
@@ -269,14 +269,27 @@ Content slots: default (items); `[ds-group-icon]` (custom group icon when not us
 When `expandable=true` renders header button with toggle + caret; collapses body when not expanded.
 
 #### `<ds-sidenav-item>` — `SidenavItemComponent`
-Inputs: `icon: IconName | null = null` (optional — falls back to `[icon]` slot), `label: required string`, `href: string = ''`, `routerLink: string | readonly unknown[] | null = null`, `active: boolean = false`, `badge: number | null = null`, `hasAlert: boolean = false`
+Inputs: `icon: IconName | null = null` (optional — falls back to `[icon]` slot), `label: required string`, `href: string = ''`, `routerLink: string | readonly unknown[] | null = null`, `active: boolean = false`, `badge: number | null = null`, `hasAlert: boolean = false`, `rail: boolean | null = null` (draws the active item's edge marker; unset follows the parent `ds-sidenav`)
 Content slots: `[icon]` (custom icon when not using a DS IconName), `[trailing]` (right-aligned chrome — badges, indicators, kbd shortcuts)
-Tokens (on `:host`): `--ds-sidenav-item-label-color`, `--ds-sidenav-item-label-color-hover`, `--ds-sidenav-item-bg-color-hover`, `--ds-sidenav-item-bg-color-active` (default: `--primary`), `--ds-sidenav-item-label-color-active` (default: `--text-on-primary`), `--ds-sidenav-item-rail` (left rail, default: `--secondary`), `--ds-sidenav-item-radius`, `--ds-sidenav-alert-color`
+Tokens (on `:host`): `--ds-sidenav-item-label-color`, `--ds-sidenav-item-label-color-hover`, `--ds-sidenav-item-bg-color-hover`, `--ds-sidenav-item-bg-color-active` (default: `--accent-subtitle` — a wash, not a solid pill), `--ds-sidenav-item-label-color-active` (default: `--accent-strong`), `--ds-sidenav-item-bg-color-active-hover` (default: `--accent-muted`, deepening toward the accent), `--ds-sidenav-item-rail` (left rail, default: `--accent-strong`), `--ds-sidenav-item-radius`, `--ds-sidenav-alert-color`
 
 #### `<ds-topbar>` — `TopBarComponent`
 No inputs.
 Content slots: `[title]`, `[breadcrumbs]`, `[search]`, `[actions]`. Sits at `--topbar-h` height.
 Tokens (on `:host`): `--ds-topbar-height`, `--ds-topbar-bg-color`, `--ds-topbar-border`, `--ds-topbar-title-text-color`, plus the `--ds-topbar-crumb-*` set for the breadcrumb row. **The topbar owns no bottom gap** — it has no margin token and sets no margin; spacing to the next block belongs to the page or to `ds-app-layout`'s content padding. (This paragraph previously documented a `--ds-topbar-margin-b` that has never existed in the shipped component.)
+
+#### `<ds-app-layout>` — `AppLayoutComponent`
+Inputs: `topbarSpan: 'content' | 'full' = 'content'`, `railOpen: model<boolean> = false` (the overlay rail below `--bp-lg`), `railLabel: string = 'Navigation'`, `restoreScroll: boolean = false`, `restoreScrollTimeout: number = 2000` (ms), `scrollReset: 'path' | 'always' | 'never' = 'path'`
+Content slots: `[sidenav]`, `[topbar]`, default (the page)
+Reads: `railId` and the read-only `railOverlay` signal, for a consumer-built burger; `dsRailTrigger` wires one for you.
+Tokens: `--ds-app-layout-pad-x`, `--ds-app-layout-pad-y`, `--ds-app-layout-content-max-width`, `--ds-app-layout-height`, `--ds-app-layout-rail-bg-color`, `--ds-app-layout-rail-shadow`, `--ds-app-layout-scrim-color`
+It owns the app's scroll CONTAINER, so a screen that needs to move the scroll calls `LayoutScrollService` rather than touching `window`.
+
+#### `<ds-auth-layout>` — `AuthLayoutComponent`
+Inputs: `brand: string | null = null`, `logoLetter: string | null = null`, `tagline: string | null = null` (all three fall back to `DS_CONFIG.brand`), `cardElevation: CardElevation = 'raised'`, `cardPadding: CardPadding = 'lg'`, `landmark: 'main' | 'none' = 'none'`
+Content slots: `[brand]` (replaces the whole mark row), `[dsBrandName]` (the name beside the generated mark), default (the card body), `[dsAuthSupport]` (the line under the card)
+Tokens: `--ds-auth-layout-min-height`, `--ds-auth-layout-bg-color`, `--ds-auth-layout-gap`, `--ds-auth-layout-pad-block`, `--ds-auth-layout-card-max-width`, `--ds-auth-layout-mark-size`, `--ds-auth-layout-mark-radius`, `--ds-auth-layout-mark-bg-color`, `--ds-auth-layout-mark-label-color`
+`landmark="main"` only when the page has no other `<main>`; the sign-in card is not automatically the document's main landmark.
 
 #### `<ds-page-header>` — `PageHeaderComponent`
 Inputs: `eyebrow: string = ''`, `title: required string`, `subtitle: string = ''`, `compact: boolean = false`, `divider: boolean = false`, `metaDivider: boolean = false`
