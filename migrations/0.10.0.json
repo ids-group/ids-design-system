@@ -270,13 +270,15 @@
       "kind": "behavior",
       "old": ":focus-visible",
       "new": null,
-      "note": "A single zero-specificity base rule - :where(:focus-visible) { outline: none; box-shadow: var(--ds-control-focus-shadow) } - now gives the DS focus ring to ANY focusable element that does not style focus itself, including an app's own bare <button>, a link in projected content, and the close buttons inside ds-alert / ds-banner / ds-drawer. Before, those fell through to the browser default. ACTION only if you deliberately relied on an element having NO focus indicator: give it box-shadow: none explicitly. Note the rule also sets outline: none, so an element that was relying on the BROWSER's outline loses it - declare your own outline if that is what you wanted. Written with :where() so every component rule and every app rule still out-ranks it, and the data-focus switch is unaffected.",
+      "note": "A single zero-specificity base rule - :where(:focus-visible) { outline: none; box-shadow: var(--ds-control-focus-shadow) } - now gives the DS focus ring to ANY focusable element that does not style focus itself, including an app's own bare <button>, a link in projected content, and the close buttons inside ds-alert / ds-banner / ds-drawer. Before, those fell through to the browser default. ACTION only if you deliberately relied on an element having NO focus indicator: give it box-shadow: none explicitly. Note the rule also sets outline: none, so an element that was relying on the BROWSER's outline loses it - declare your own outline if that is what you wanted. Written with :where() so every component rule and every app rule still out-ranks it, and the data-focus switch is unaffected. THE CASE THAT ACTUALLY BITES, added retroactively 2026-08-21 after a consumer hit it fourteen times and neither the build nor a grep saw it: an app rule that styles :focus-visible with an OUTLINE ONLY. It keeps winning on outline, but it says nothing about box-shadow, so the base rule still supplies one and the element renders BOTH - a second ring in the app's colour around the DS ring. The app rule looks untouched because it is. FIND IT by grepping your styles for ':focus-visible' and reading each rule's declarations: a rule that sets outline (or outline-color / outline-offset) and no box-shadow is a hit. ACTION: add `box-shadow: none` to that rule, or - better, and what this release is for - delete the rule and retint the DS ring through --ds-control-focus-shadow.",
       "searchHints": [
         ":focus-visible",
         ":focus",
         "outline: none",
         "box-shadow: none",
-        "--ds-control-focus-shadow"
+        "--ds-control-focus-shadow",
+        "outline-color",
+        "outline-offset"
       ]
     },
     {

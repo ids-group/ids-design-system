@@ -4,6 +4,92 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Shipped 2026-08-21 (session — the assigned batch of eight)
+
+Moved out of `todo.md` on 2026-08-21. Both P1s on the board were in this batch, and both were the
+same class of defect: **guidance that could not be followed** — a focus ring the DS itself lost inside
+a clipping ancestor, and a migration path that did not compile. The other pattern worth keeping: two
+of these eight were found by the CHANGELOG re-review rather than by using the library.
+
+- [x] **DONE 2026-08-21 — public, across fourteen classes, and the four a host can derive stay closed.** Every readback that resolves through `DS_CONFIG` is public now: `sizeResolved` on the fourteen controls, `elevationResolved` / `paddingResolved` (card), `withDotResolved` (badge), `borderedResolved` / `stickyScrollbarResolved` (table), `dividersResolved` (both modals), `reserveMessageResolved` (every field, through `DsFieldBase`), the picker locale/format resolvers, and `brandName` / `letterGlyph` / `taglineText`. **The line is `DS_CONFIG`, and it is the whole argument:** a host cannot recompute an app-level default, so that readback has to be public; a host CAN derive `invalidResolved`, `railResolved`, `sortModeResolved` and `filterModeResolved` from its own bindings, so those stayed `protected`. Subclass collisions are carried in the manifest as `resolved-readbacks-are-public`, written from `npm run class-surface`. Commit `812e41d0`.
+  ORIGINAL: [P1] The resolved-size signals are `protected`, so the documented migration path does not
+  compile.** `size()` now returns `null` when unbound, and the replacement a host is told to read —
+  `sizeResolved()` — is `protected` on 13 of the 14 controls (public only on `FieldGroupComponent`),
+  as are `elevationResolved` / `paddingResolved` (card), `sizeResolved` (icon), `withDotResolved`
+  (badge), `borderedResolved` / `stickyScrollbarResolved` (table), `dividersResolved` (both modals)
+  and `brandName` / `letterGlyph` / `taglineText` (sidenav, auth-layout). Reading any of them from a
+  host, a test or a `viewChild` is TS2445. Either make them public — which is what the release notes
+  wanted to say — or keep them closed and accept that the readback has no answer. The CHANGELOG now
+  states the second, honestly; the first is the better product.
+
+- [x] **DONE 2026-08-21 — the ring survives a clipping ancestor, via `data-focus="inset"`.** Shipped as the fifth member of the existing switch, in `src/lib/styles/_focus.scss`, with two new roles (`--focus-ring-inset`, `--focus-ring-inset-error`). **Deliberately NOT pinned to `:root` like the other four:** a clip is a local problem, so the attribute works wherever it is set and the declarations inherit into the subtree — put it on the clipping element. Documented on the focus page as the trap it is, not as an option. Commit `7c37a8f9`.
+  ORIGINAL: [P1] A `overflow: hidden` ancestor clips the ring away completely, and the element is then
+  focusable with NO indicator at all.** The ring is a box-shadow outside the border box, so any
+  clipping ancestor eats it — and clipping a card is the normal way to keep a full-bleed child inside a
+  rounded corner, which `ds-card` itself invites (`ds-card` + `padding: none` + a child that fills it).
+  Measured in four places in one consumer: three rows filling a `ds-card .card { overflow: hidden }`,
+  and a gradient CTA pill (`overflow: hidden` for its own animation) wrapping a full-width `ds-button`
+  — that last one is a DS component losing its own ring, not a consumer's hand-rolled control.
+  The workaround is to re-declare the token with `inset` shadows per scope, which every consumer will
+  have to rediscover:
+  `--ds-control-focus-shadow: inset 0 0 0 2px transparent, inset 0 0 0 4px <ring colour>`.
+  **Ask:** ship it as a family on the existing switch — `data-focus="inset"` beside `ring` / `field` /
+  `edge` / `outline` — so a subtree can opt in with one attribute, and/or publish an `--ds-*-focus-shadow-inset`
+  role that resolves the same colours. Either way the trap belongs in the docs page for the switch.
+
+- [x] **DONE 2026-08-21 — `--focus-ring-inner: transparent`, exactly as asked.** The gap now shows whatever is actually behind the element. Nothing changes on a canvas-coloured ground (the same pixels resolve), and the dark-app/white-card case stops painting a dark rim that read as a rendering artifact. The change is in the manifest as `focus-ring-inner-transparent` with the restore for anyone who wanted an opaque gap over a busy background. Commit `7c37a8f9`.
+  ORIGINAL: [P2] `--focus-ring-inner: var(--surface-canvas)` assumes the focused element sits ON the
+  canvas.** The 2px gap is there to separate the ring from the element, so it has to match what is
+  BEHIND the element, and `--surface-canvas` is only that when nothing else intervenes. In a dark app
+  with white cards the gap paints the dark canvas colour as a rim around a white card, which reads as a
+  rendering artifact rather than a focus state — measured on a dark portal, and the fix that made it
+  correct everywhere was `--focus-ring-inner: transparent`, which takes whatever is actually behind.
+  **Ask:** default the inner ring to `transparent`. Nothing is lost on a canvas-coloured ground (the
+  gap resolves to the same pixels) and every other ground stops being wrong. If the current default is
+  deliberate — e.g. a guard against a busy photo background — say so where the token is documented.
+
+- [x] **DONE 2026-08-21 — the outline-only case is now in the 0.10.0 entry, prose and manifest both.** Added to the released 0.10.0 block ("the case that actually bites") and appended to `universal-focus-ring-base-rule` in `migrations/0.10.0.json`, with the way to FIND it — grep `:focus-visible`, and any rule that sets `outline` and no `box-shadow` is a hit — since neither a build nor a plain grep sees it. Amending a released manifest is the established practice here; `0.10.0.json` already carries two retroactive entries. `:focus-visible`, `outline-color` and `outline-offset` joined its `searchHints`.
+  ORIGINAL: [P2] The 0.10.0 entry names two consumer cases and misses the common one.** It covers "you
+  relied on the element having NO indicator" and "you relied on the BROWSER's outline", but not the
+  case that actually bites: **an app rule that styles `:focus-visible` with an `outline` only**. That
+  rule keeps winning on `outline`, the base rule still supplies `box-shadow`, and the element renders
+  BOTH — a second ring in the app's colour around the DS ring. Fourteen sites in one consumer, all
+  invisible to the build and to grep.
+  **Ask:** add it to the entry with the one-line fix (`box-shadow: none` in that rule, or delete the
+  rule and retint the DS ring instead), since "delete your own ring" is the outcome the release wants.
+
+- [x] **DONE 2026-08-21 — `clear()` is public, which was the ask.** It does the three things the item named (`text.set('')`, `cancel()`, `push('')`) and returns focus to the input, since the × disappears with the last character. Writing `''` into `value` is still not equivalent, and the docstring now says why: the effect that watches `value` cancels the timer only when the incoming text DIFFERS from what the control last pushed. mm-broker can drop `TODO(ds-search-clear-cancel)`. Commit `5e452878`.
+  ORIGINAL: [P2] `[debounce]` cancels an armed keystroke only when the host writes a DIFFERENT value, so
+  a Clear button outside the control cannot always drop one.** The cancel path is
+  `effect(() => { if (this.value() !== this.pushed) { this.cancel(); … } })`. That covers the case the
+  0.10.0 note describes — "a host resetting the field mid-typing has to win" — but only when the reset
+  changes the bound value. A list screen whose search term is not committed yet holds `''`: the user
+  types `abc` (timer armed, `value` still `''`), presses the page's own Clear, the host writes `''`
+  again, the signal does not change, no effect runs, and the keystroke lands ~300ms later on a screen
+  that was just cleared. Consumer-side there is nothing left to try: `''` is the only empty value, two
+  synchronous writes collapse, and a one-shot "swallow the next emit" flag mis-fires on the next real
+  search.
+  **Ask:** make the existing `clear()` public — it already does exactly the right three things
+  (`text.set('')`, `cancel()`, `push('')`) — or add a public `cancel()`. `focus()` was made public for
+  this same host-owned Clear button, and its docstring names the case: "a Clear button that disables
+  itself on activation". The same button needs to be able to drop the timer it is clearing.
+  mm-broker carries `TODO(ds-search-clear-cancel)` in `list-search.component.ts` until this lands.
+
+- [x] **DONE 2026-08-21 — the panel resolves the same chain as the other two.** `--ds-dropdown-panel-radius` now reaches `ds-multi-select`; it was the one panel of the three sitting at a hardcoded `--radius-md`, because its element is `class="panel"` and never picked up the shared overlay rule. Commit `cd4a14ce`.
+  ORIGINAL: [P2] `--ds-dropdown-panel-radius` does not reach `ds-multi-select`.** Its panel element is
+  `class="panel"`, not `.dropdown-panel`, and `multi-select.component.scss:108` hardcodes
+  `border-radius: var(--radius-md)`. So that panel is the one place neither the new token nor
+  `--ds-radius-panel` has ever reached, and it stays at 8px while the other two move.
+
+- [x] **DONE 2026-08-21 — the header no longer contradicts its own body.** The blockquote stopped warning that the `ds-button` section documents a pre-`color`×`variant` API that `b69a83d2` had already rewritten, the dead `-fg` name is gone, and the disabled-recipe sentence now describes the split that actually shipped. The file goes into `dist/ds/` through `tools/build-schematics.mjs`, so a consumer's agent reads it — which is why a stale warning there is worse than none. Commit `cd4a14ce`.
+  ORIGINAL: [P2] `components.md`'s header contradicts its own body, and the file ships.** Line 123 still
+  warns that the `ds-button` section documents the pre-`color`×`variant` API and the pre-rename
+  token names — which is exactly what `b69a83d2` rewrote — and still names the dead `-fg`. The
+  "Re-verified 2026-08-05" stamp was not moved either. `tools/build-schematics.mjs` copies this file
+  into `dist/ds/`, so consumers' agents read it.
+
+- [x] **DONE 2026-08-21 — `hidden` and `disabledReason` shipped; the two cheap halves stay declined, split out as a P3.** `TableRowAction` takes `hidden?: (row) => boolean` and `disabledReason?: string | ((row) => string)`, and **a row whose every item is hidden renders no kebab** rather than opening an empty menu — the two that blocked 8 and 4 of the eleven menus. The reason line is read only where `disabled` returns true for that row: a reason on a live item would read as a caveat on something that works. `label`-as-a-function and the divider are the two the original called cheapest to decline, and they stay open as their own P3 in `todo.md` rather than being dropped — the next word on them should come from a migrated screen, now that migration is possible at all. Commit `5e452878`. The parent item stays in `todo.md` too, ticked, since those children are still open.
+
 ## Shipped 2026-08-19/20 (session — field states, the disabled recipe, and six assigned items)
 
 Moved out of `todo.md` on 2026-08-20. Two things repeat across this batch: **a claim measured in
@@ -1495,4 +1581,5 @@ Completed items are archived in `done.md` (last archive pass **2026-08-10**; bef
   That confirms this item's own arithmetic — a single content height cannot give 10/7/13 — and also
   corrects the one number the entry had kept: `md` is **9px**, not 10. The CHANGELOG now carries all
   three plus the content height they were taken against, as this item asked.
+
 
