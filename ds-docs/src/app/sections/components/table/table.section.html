@@ -1347,6 +1347,62 @@
   />
 
   <h3 class="block-title t-h4">
+    The same thing two-way, when the host has no opinion to defend
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      sortKey
+    </code> and
+    <code class="t-mono-inline">
+      sortDir
+    </code> each have a matching
+    <code class="t-mono-inline">
+      Change
+    </code> output, so
+    <code class="t-mono-inline">
+      [(sortKey)]
+    </code> and
+    <code class="t-mono-inline">
+      [(sortDir)]
+    </code> work: the table writes the
+    host's state and the host reads it back, with no handler to write. Below is the
+    demo above with the handler deleted and nothing else changed.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      What you give up is the third click.
+    </strong>
+    Clearing a sort sets
+    <code class="t-mono-inline">
+      sortDir
+    </code> to
+    <code class="t-mono-inline">
+      null
+    </code> and the rows come back
+    unsorted, because there is nowhere left to say "then fall back to Owner
+    descending". Prefer two-way where any sort state is equally valid — a saved view,
+    a URL you round-trip — and the one-way pair plus
+    <code class="t-mono-inline">
+      (sortChange)
+    </code> where the host owns a default
+    it has to be able to restore. Host state:
+    <code class="t-mono-inline">
+      {{ twoWaySortKey() }} · {{ twoWaySortDir() ?? 'null' }}
+    </code>
+  </p>
+
+  <ds-table
+    caption="Projects, two-way sort"
+    sortMode="server"
+    [data]="twoWaySortedRows()"
+    [columns]="serverSortColumns"
+    [(sortKey)]="twoWaySortKey"
+    [(sortDir)]="twoWaySortDir"
+  />
+
+  <h3 class="block-title t-h4">
     Column filters
   </h3>
 
