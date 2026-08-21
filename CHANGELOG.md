@@ -125,6 +125,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **Five more overlays dismiss on a click in the host's own empty width.** `ds-select`,
+  `ds-multi-select`, `ds-autocomplete`, `ds-time-picker` and `ds-color-picker` all tested the whole
+  HOST in their outside-pointer guard, which is the defect `ds-date-picker` was fixed for in 0.10.1
+  (MBP-225): the trigger box hugs its own content while the host takes whatever width a consumer's
+  layout gives it, so the label, the message row and any bare strip beside the trigger swallowed the
+  dismiss instead of performing it. Each guard now tests its TRIGGER, as `ds-popover` always did;
+  `ds-time-picker` tests whichever of its three triggers are present, since a range renders two.
+  **Behaviour change if you relied on it:** a press on the label of an open picker now closes the
+  panel. A press on the trigger still keeps it open, which is what that exception exists for (the
+  caret, and re-focus).
+
 - **`variant="tonal"` now reads as disabled in the dark theme, where it rested on desaturation alone.**
   Measured on `/components/button`: the disabled label was **1.11:1** from the enabled one (#778ff8 →
   #979eb5) and the fill **1.20:1**, so the only signal was a hue going grey — and the label sat at 5.51:1

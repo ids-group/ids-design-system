@@ -5,7 +5,6 @@
 
 **Bugs — something shipped misbehaves**
 
-- P3 · Five more overlays treat the whole host as "the trigger" in their outside-click guard.
 - P3 · `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing my
 - P3 · Two documentation surfaces still carry claims corrected elsewhere. `docs/done.md:191`
 - P3 · Cosmetic, in passing. `badge.component.ts:25-26` carries two consecutive JSDoc blocks
@@ -57,25 +56,11 @@
 
 
 
+
+
 # Bugs — something shipped misbehaves
 
 Highest: each one is wrong in code a consumer already has.
-
-## Five more overlays treat the whole host as "the trigger" in their outside-click guard (from mm-broker MBP-225, 2026-08-20)
-
-- [ ] **[P3] Five more overlays treat the whole host as "the trigger" in their outside-click guard.**
-  `ds-select`, `ds-multi-select`, `ds-autocomplete`, `ds-time-picker` and `ds-color-picker` all
-  pass `(target) => this.host.nativeElement.contains(target)` to `closeOnOutsidePointer`, the same
-  predicate the date picker had when MBP-225 was filed: a click on host area that is not the trigger
-  box — the label, the message row, any empty width a consumer's layout gives the host — is swallowed
-  instead of dismissing the panel. The date picker was the one with a *wide* dead zone (its trigger
-  hugs the mask while the host stretches), and only it got the fix — its guard now tests the
-  `anchor`. The other five keep the host predicate; their triggers normally fill the host, so the
-  dead area is just the label/message strip, which is why nobody has filed it. `ds-popover` already
-  does it right (`trigger.contains`). **Ask:** decide whether label-click-keeps-panel-open is a
-  behaviour anyone relies on; if not, move each to its trigger/anchor element like the date picker
-  and popover. NOT applied with the MBP-225 fix on purpose — that change was scoped to the reported
-  component.
 
 ## ds-app-layout (SHIPPED 2026-07-24) — post-merge polish
 
@@ -286,10 +271,10 @@ Nothing moves until a verdict; the work behind each is scoped.
 
 ## Priority board (2026-08-21 actualization — replaces the 08-20 one, supersedes the 08-10 one below)
 
-**33 open: no P1, 10 P2, 23 P3 — and for the first time since this board started, nothing is a P1.**
-Thirteen of the 33 sit under *Decisions*, so no work there is blocked on anything but a verdict; eight
+**32 open: no P1, 10 P2, 22 P3 — and for the first time since this board started, nothing is a P1.**
+Thirteen of the 32 sit under *Decisions*, so no work there is blocked on anything but a verdict; eight
 are *Parked* awaiting a first consumer ask, and one is a Record kept so it is not "simplified" away.
-The live queue is **five bugs and six asks**.
+The live queue is **four bugs and six asks**, and every one of the four is a P3.
 
 **Both P1s closed on 08-21, and they were the two worst kinds of defect.** The focus ring had no answer
 for a clipping ancestor — an element focusable with NO indicator, measured in four places in one app,
@@ -493,6 +478,8 @@ Not work. Deleting one invites the mistake back.
 ## A11y — decision record (deferred, NOT a bug)
 
 - [ ] **[P3] topbar → `role="banner"`** — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The bare `<header>` inside the generic custom element `<ds-topbar>` already maps to the `banner` landmark implicitly (**verified `topbar.component.html:1`, 2026-07-24**); an explicit role is flagged "unnecessary" by the W3C validator and would be WRONG if `<ds-topbar>` is nested in `main`/`section`/`article`/`aside`/`nav`. Kept as a decision record; only add if we adopt a deliberate defensive-robustness policy.
+
+
 
 
 
