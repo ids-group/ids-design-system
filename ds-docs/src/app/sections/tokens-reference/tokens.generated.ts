@@ -5820,6 +5820,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Zebra odd-row stripe fill."
       },
       {
+        "name": "--ds-table-cell-link-color",
+        "value": "var(--accent)",
+        "notes": "Colour a cell marked `interactive: true` takes while its row is hovered on a `rowInteractive` table (default --accent). It names WHICH text opens the record, where the row tint only says the row is clickable."
+      },
+      {
+        "name": "--ds-table-cell-link-decoration",
+        "value": "underline",
+        "notes": "Decoration on that same cell (default `underline`), so the target is not signalled by hue alone. Set `none` only if something else in the row carries the signal."
+      },
+      {
         "name": "--ds-table-head-text-color",
         "value": "var(--text-secondary)",
         "notes": "Head label."

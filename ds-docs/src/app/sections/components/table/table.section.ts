@@ -112,6 +112,11 @@ export class TableSection {
     { key: 'project', label: 'Record' },
   ];
 
+  protected readonly linkCellColumns: TableColumn<EventRow>[] = [
+    { key: 'project', label: 'Record', interactive: true },
+    { key: 'venue', label: 'Venue' },
+  ];
+
   protected readonly sortStateColumns: TableColumn<EventRow>[] = [
     { key: 'project', label: 'Record', sortable: true },
   ];

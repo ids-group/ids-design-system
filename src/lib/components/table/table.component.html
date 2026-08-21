@@ -284,6 +284,7 @@
                     [class.numeric]="col.align === 'right'"
                     [class.pin-first]="first && stickyFirstColumn()"
                     [class.editable-cell]="col.editable"
+                    [class.interactive-cell]="col.interactive"
                     [class.fit-content]="fitsContent(col)"
                     (dblclick)="startEdit(row, col, $event)"
                   >

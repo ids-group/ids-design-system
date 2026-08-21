@@ -42,6 +42,8 @@
        statically so the showcase can display them side by side. */
     :host ::ng-deep .pin-row-hover ds-table tbody tr td { background-color: var(--_table-row-hover-bg-color); }
     :host ::ng-deep .pin-row-pressed ds-table tbody tr td { background-color: var(--_table-row-pressed-bg-color); }
+    :host ::ng-deep .pin-cell-link ds-table tbody tr td { background-color: var(--_table-row-hover-bg-color); }
+    :host ::ng-deep .pin-cell-link ds-table tbody tr td.interactive-cell { color: var(--_table-cell-link-color); text-decoration: var(--_table-cell-link-decoration); }
 
     /* Expandable rows — detail panel layout. */
     .expand-detail {

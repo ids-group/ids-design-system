@@ -69,6 +69,12 @@ export interface TableColumn<T = unknown> {
   /** Let the user toggle the column in the header column picker — the picker
    *  button appears once at least one column is hideable. */
   hideable?: boolean;
+  /** Marks the cell whose TEXT tells the reader what the row opens, so it takes a link
+   *  colour and underline while the row is hovered. Only has an effect on a
+   *  `rowInteractive` table: on a passive one every hover treatment is suppressed on
+   *  purpose, so a tint cannot promise a click that does not happen. Style it with
+   *  `--ds-table-cell-link-color` / `--ds-table-cell-link-decoration`. */
+  interactive?: boolean;
   /** Initial visibility: start hidden. The column picker (or a bound
    *  `hiddenKeys` set) owns the state from then on; a hidden column stays
    *  available to `filterable` matching and sorting. */
