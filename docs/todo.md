@@ -206,11 +206,6 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 
 **Pile two — genuine gaps, verified against `dev` today.** _(BOTH are now CLOSED and archived: the region padding, Option A on 08-07 and Option B — `[dividers]` — on 08-10; the status treatment on 08-12, as `status: DsStatus` with the tinted header. See the batch record above and `done.md`.)_
 
-- [ ] **[P2] `ds-sidenav-item` active state — solid accent pill → quiet wash + coloured label? (split out of the four-override item above on 2026-08-12, at Stas's request: "оставь но не удаляй пункт, ещё раз надо будет обсудить потом".)** Both mm-broker portals undo our active treatment the same way, and there are FIVE declarations, not the four the parent item counted: `--ds-sidenav-item-rail: transparent` plus `--ds-sidenav-item-label-weight: var(--font-weight-bold)` on top of the wash and the label colour.
-  **What they agree on is a SHAPE, not a value.** broker-portal uses its own `--nav-active-bg`/`--nav-active-fg`; platform-admin uses `--primary-subtitle` + `--primary`. So the shared conclusion is "a quiet wash, a coloured label, no rail" — the DS could adopt that by deriving the wash from the accent family it already owns, and must not adopt either app's palette.
-  **Why this one survived the cull while C1–C3 closed:** the others were a brand rung, a contrast floor and a shared token. This one is a genuine question about how loud a default should be, and emphasis is cheaper to add than to take away — a solid accent pill on every rail item is a strong opinion that both portals removed. But the same correction applies: the two portals are one workspace, so this is one opinion, and it is not a mandate.
-  **Visual breaking change if it moves**, so it belongs in a batch, not a drive-by. **Needs a second conversation with Stas.**
-
 ---
 
 
@@ -220,24 +215,6 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 
 
 ## `maxVisibleChips: null` means a decision where the rest of 0.10.0 made `null` mean "unset" (from mm-broker, 2026-08-20)
-
-- [ ] **[P3] The same literal now reads two opposite ways across the library.** 0.10.0 deliberately gave
-  `null` a service meaning on **22 inputs** — `ds-table` `bordered` / `stickyScrollbar` / `sortMode` /
-  `filterMode`, `ds-badge withDot`, `ds-card` `elevation` / `padding`, `ds-icon size`, `size` on the
-  eleven controls that resolve `config.control?.size`, and `ds-modal-card dialogRole`, whose own entry
-  says the point was "so 'unset' is distinguishable from a deliberate 'dialog'". On every one of those
-  `null` means *I am not deciding — read the config, then your built-in*. On `maxVisibleChips` it means
-  the opposite: *show every chip and let the trigger grow*, which is the most opinionated of its three
-  modes. A consumer who has just learned the new convention reads `[maxVisibleChips]="null"` as "use
-  the default" and gets the one behaviour the default is not.
-  **It also blocks the config section this input is a candidate for.** Chip collapse is a whole-app
-  opinion in the same way `table.bordered` is; the moment `DS_CONFIG.autocomplete.maxVisibleChips`
-  exists, `null` cannot mean both "use the config" and "show all".
-  **Ask:** accept a named mode — `number | 'fit' | 'all' | null` — so the three modes all have names
-  (`'fit'` measures, a number caps, `'all'` shows everything) and `null` is free to mean unset like
-  everywhere else. Please do NOT silently remap `null` to unset in the same release: it is a behaviour
-  flip for anyone who set it (mm-broker has one). Ship `'all'`, keep `null` working as its alias, note
-  it as legacy, and remap only in a major. mm-broker carries `TODO(ds-chips-all)` on its one call site.
 
 ---
 
@@ -375,7 +352,7 @@ itself. All three were found by RENDERING the built bundle; none of them fails a
 
 ## Validation on the control: warning got a border, but the FILL was never judged (2026-08-13)
 
-- [ ] **[P2] `ds-field-message` claims `state` picks an icon, and it never does — two false doc
+- [ ] **[P2] Should `state` DEFAULT a per-state glyph? (narrowed 2026-08-20 — the false docblocks are fixed, the design question is not.)** The two lies are gone: `state` now says it decides the colour, and `icon` says there is no per-state default. What remains is the call the original item wrapped around them. **The case for defaulting a glyph:** four of the six systems audited for the fill question carry a per-state icon in the field — Spectrum, Bootstrap, Carbon and Ant — NN/g requires it as its own guideline, WCAG 1.4.1 forbids resting a state on colour, and the ui-ux-pro-max base says it twice (`color-not-only`, `color-not-decorative-only`). It is also what would give `warning` and `success` real distinctness without the fill we declined to add. **The cost:** breaking by appearance on every field at once, and a glyph choice per state. ORIGINAL: [P2] `ds-field-message` claims `state` picks an icon, and it never does — two false doc
   comments over a real gap.** `state`'s docblock says "Decides colour and icon" and `icon`'s says
   "Overrides the glyph the `state` would pick" (`field-message.component.ts:26,31`). Neither is true:
   the template renders `@if (icon())` against an input defaulting to `null`, and there is no computed
@@ -398,7 +375,7 @@ Nothing moves until a verdict; the work behind each is scoped.
 
 ## Priority board (2026-08-20 actualization — supersedes the 08-10 one below)
 
-**43 open: 2 P1, 19 P2, 22 P3 — and the shape matters more than the count.** Fifteen sit under
+**41 open: 2 P1, 18 P2, 21 P3 — and the shape matters more than the count.** Fifteen sit under
 *Decisions*, which means no work is blocked on me; eight are *Parked* awaiting a first consumer ask.
 So the live queue is **eight bugs and eleven asks**, and of those asks only ONE is still a consumer
 waiting on us.

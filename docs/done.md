@@ -11,6 +11,32 @@ one theme was carried into the other unchecked** (the tonal fill, the neutral la
 comment or docblock outlived the code it described** (four separate cases, all caught by screening
 rather than reading).
 
+- [x] **DONE 2026-08-20 — the wash SHIPPED, and the research is why.** Read from the systems' own sources: Material's navigation drawer fills its active item with `secondary-container` and labels it `on-secondary-container`, naming the token `active-indicator-color`; Carbon uses `$background-selected` plus a 3px `$border-interactive` left border plus font-weight 600. **Neither fills with the brand accent**, so our solid pill was the outlier and the two apps that replaced it landed on the norm. Now `--accent-subtitle` #F0F3FF with an `--accent-strong` #1D43ED label, measured live at 6.16:1.
+  **The rail stays ON, which is where both apps went wrong:** they set it transparent, leaving the state on colour alone — against `nav-state-active`, which lists colour, weight AND indicator. Kept, and `[rail]` is now an INPUT on `ds-sidenav` (whole rail) and `ds-sidenav-item` (per item, `null` follows the parent) so turning it off is API rather than hiding it with a token.
+  **Also fixed in passing:** the active hover was `color-mix(active-bg 88%, white)`, which LIGHTENS — fine under a solid pill, invisible under a wash. Now `--accent-muted`, so hover deepens.
+  **Left open deliberately:** the rail is still `--secondary` #FF7B2E, an orange bar in a now monochrome-blue row (2.33:1 on the wash, against 6.16:1 for a blue one). Carbon's indicator is the interactive colour; Material's IS the wash. Neither introduces a second hue. Stas approved "wash + rail", not "wash + blue rail", so it was not changed. ORIGINAL: [P2] `ds-sidenav-item` active state — solid accent pill → quiet wash + coloured label? (split out of the four-override item above on 2026-08-12, at Stas's request: "оставь но не удаляй пункт, ещё раз надо будет обсудить потом".)** Both mm-broker portals undo our active treatment the same way, and there are FIVE declarations, not the four the parent item counted: `--ds-sidenav-item-rail: transparent` plus `--ds-sidenav-item-label-weight: var(--font-weight-bold)` on top of the wash and the label colour.
+  **What they agree on is a SHAPE, not a value.** broker-portal uses its own `--nav-active-bg`/`--nav-active-fg`; platform-admin uses `--primary-subtitle` + `--primary`. So the shared conclusion is "a quiet wash, a coloured label, no rail" — the DS could adopt that by deriving the wash from the accent family it already owns, and must not adopt either app's palette.
+  **Why this one survived the cull while C1–C3 closed:** the others were a brand rung, a contrast floor and a shared token. This one is a genuine question about how loud a default should be, and emphasis is cheaper to add than to take away — a solid accent pill on every rail item is a strong opinion that both portals removed. But the same correction applies: the two portals are one workspace, so this is one opinion, and it is not a mandate.
+  **Visual breaking change if it moves**, so it belongs in a batch, not a drive-by. **Needs a second conversation with Stas.**
+
+- [x] **DONE 2026-08-20 — three named modes, and `null` now means unset like everywhere else.** `maxVisibleChips` accepts `number | 'fit' | 'all' | null`: `'fit'` measures, a number is a ceiling, `'all'` shows everything, and unset resolves to `'fit'` with room left for a `DS_CONFIG` slot. **Stas overrode the ask on one point** — it asked to keep `null` working as a legacy alias and remap only in a major; he said drop the compatibility now, so `null` is unset immediately. BREAKING for anyone who set `[maxVisibleChips]="null"` to mean "show all"; mm-broker has one such call site carrying `TODO(ds-chips-all)`. Docs demos moved to `maxVisibleChips="all"`. ORIGINAL: [P3] The same literal now reads two opposite ways across the library.** 0.10.0 deliberately gave
+  `null` a service meaning on **22 inputs** — `ds-table` `bordered` / `stickyScrollbar` / `sortMode` /
+  `filterMode`, `ds-badge withDot`, `ds-card` `elevation` / `padding`, `ds-icon size`, `size` on the
+  eleven controls that resolve `config.control?.size`, and `ds-modal-card dialogRole`, whose own entry
+  says the point was "so 'unset' is distinguishable from a deliberate 'dialog'". On every one of those
+  `null` means *I am not deciding — read the config, then your built-in*. On `maxVisibleChips` it means
+  the opposite: *show every chip and let the trigger grow*, which is the most opinionated of its three
+  modes. A consumer who has just learned the new convention reads `[maxVisibleChips]="null"` as "use
+  the default" and gets the one behaviour the default is not.
+  **It also blocks the config section this input is a candidate for.** Chip collapse is a whole-app
+  opinion in the same way `table.bordered` is; the moment `DS_CONFIG.autocomplete.maxVisibleChips`
+  exists, `null` cannot mean both "use the config" and "show all".
+  **Ask:** accept a named mode — `number | 'fit' | 'all' | null` — so the three modes all have names
+  (`'fit'` measures, a number caps, `'all'` shows everything) and `null` is free to mean unset like
+  everywhere else. Please do NOT silently remap `null` to unset in the same release: it is a behaviour
+  flip for anyone who set it (mm-broker has one). Ship `'all'`, keep `null` working as its alias, note
+  it as legacy, and remap only in a major. mm-broker carries `TODO(ds-chips-all)` on its one call site.
+
 - [x] **CLOSED 2026-08-20 — the button half got its verdict, and `--opacity-muted` no longer exists.**
   **The remaining open question was "do ghost/text lose the underline or gain a faint fill", and the answer is neither.** Stas rejected a border outright; the fix is on the LABEL, and the label moved to `color-mix(in srgb, <label> 40%, var(--surface-default))` on `.v-ghost`, `.v-text` and `.v-outline`, plus the same on `ds-icon-button`'s `&.standard`. Measured live in the browser: light 2.54 → **3.4:1**, dark 1.11 → **2.9:1**, matching the computed 3.41 / 2.91 to within a unit.
   **Why the mix and not a fixed lightness** — the direction has to flip per theme and only the surface knows it: in dark the accent is already OKLCH L 67.9%, so the shared L-70% recipe landed two points from the enabled label. A fixed number cannot serve both themes.
