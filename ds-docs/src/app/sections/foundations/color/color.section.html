@@ -667,6 +667,89 @@
   </p>
 
   <h3 class="block-title t-h4">
+    A clipping ancestor eats the ring — <code class="t-mono-inline">data-focus="inset"</code> is the answer
+  </h3>
+
+  <p class="block-desc t-s">
+    Every style above draws OUTSIDE the border box, so an ancestor with
+    <code class="t-mono-inline">
+      overflow: hidden
+    </code> cuts the indicator away and leaves
+    the element focusable with nothing to see. That ancestor is not exotic: clipping
+    a card is how a full-bleed child stays inside a rounded corner, and
+    <code class="t-mono-inline">
+      ds-card
+    </code> with
+    <code class="t-mono-inline">
+      padding="none"
+    </code> invites it.
+    <code class="t-mono-inline">
+      inset
+    </code> draws the same two rings INSIDE the box
+    instead, where nothing can clip them.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      It is the one style not pinned to
+      <code class="t-mono-inline">
+        &lt;html&gt;
+      </code>.
+    </strong>
+    A clip is local, so put the attribute on the clipping element and the two roles
+    inherit into everything below it — Tab into both wells to see it. Setting it
+    brand-wide would move every ring inside its control, which is a different look,
+    not a fix.
+  </p>
+
+  <div class="halo-stage">
+    <div class="halo-cell">
+      <div class="clip-well">
+        <button
+          class="clip-fill"
+          type="button"
+        >
+          Tab here — no ring
+        </button>
+      </div>
+
+      <div class="halo-cell__label">
+        <div class="halo-cell__title">
+          clipped, default
+        </div>
+
+        <code class="t-mono-inline">
+          overflow: hidden
+        </code>
+      </div>
+    </div>
+
+    <div class="halo-cell">
+      <div
+        class="clip-well"
+        data-focus="inset"
+      >
+        <button
+          class="clip-fill"
+          type="button"
+        >
+          Tab here — ring inside
+        </button>
+      </div>
+
+      <div class="halo-cell__label">
+        <div class="halo-cell__title">
+          clipped, inset
+        </div>
+
+        <code class="t-mono-inline">
+          data-focus="inset"
+        </code>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Surface contrast
   </h3>
 
