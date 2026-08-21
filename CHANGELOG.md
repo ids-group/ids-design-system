@@ -10,6 +10,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`TableColumn.interactive` — the cell that says WHICH text opens the record.** On a
+  `[rowInteractive]` table the whole row is the control, so the hover tint says "clickable" and
+  nothing says what the click leads to; a `cursor: pointer` does not name a target. Mark the column
+  `interactive: true` and its cell takes a link colour plus an underline while the row is hovered —
+  **both, never hue alone** — through `--ds-table-cell-link-color` (default `--accent`) and
+  `--ds-table-cell-link-decoration` (default `underline`). Off unless a column asks for it, and inert
+  on a passive table for the same reason the row tint is: nothing should promise a click that does not
+  happen. Four list screens in one consumer had written this as
+  `:host ::ng-deep ds-table tr:hover .cell-name { color: var(--accent); text-decoration: underline }`,
+  which was their last table reach that no token could replace.
+
 - **`TableRowAction` can vary its items per row: `hidden` and `disabledReason`.** The contract could
   only GREY an item that was always there, so a menu whose items swap by status — a draft offering Edit
   + Launch where a live record offers Revert + Delete — grew a permanently dead half on every row. That

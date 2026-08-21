@@ -12,7 +12,6 @@
 
 - P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial bundle
 - P2 · Should `state` DEFAULT a per-state glyph? (narrowed 2026-08-20 — the false docblocks are fixed, the
-- P3 · A table row publishes only its background on hover, so a cell that must react in TEXT reaches
 - P3 · The two row-action halves left open on purpose: a per-row `label`, and a divider or
 - P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion). Base
 - P3 · `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref
@@ -47,6 +46,8 @@
 **Records — kept so they are not "simplified" away**
 
 - P3 · topbar → `role="banner"` — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The
+
+
 
 
 
@@ -101,22 +102,6 @@ Highest: each one is wrong in code a consumer already has.
 # Asks — a consumer or Stas asked for it
 
 Requests, not defects. Ordered by who is blocked.
-
-## A row publishes only its background on hover, so a cell that must react in TEXT reaches past the API (from mm-broker, 2026-08-19)
-
-- [ ] **[P3] A table row publishes only its background on hover, so a cell that must react in TEXT reaches
-  past the API (mm-broker, 2026-08-19).** `--ds-table-row-hover-bg-color` and its `-active`/`-pressed`/
-  `-selected`/`-stripe` siblings are the whole hover surface: there is no hook for a cell's own colour, so
-  four list screens whose row opens a record write `:host ::ng-deep ds-table tr:hover .cell-name { color:
-  var(--accent); text-decoration: underline }`. The pattern is not decorative — with `rowInteractive` the
-  whole row is the control, and the name is what tells the reader *what* will open; leaving it inert makes
-  the row look unclickable, and a `cursor: pointer` alone does not say which text is the target. Four
-  screens do it identically (brokers, campaigns, carriers, employer-groups), which is the usual sign it
-  belongs upstream. **Ask:** either `--ds-table-row-hover-text-color` applied to the row (the cheap half),
-  or — better, since only one cell is the target — let `TableColumn` carry the intent, e.g. `interactive?:
-  boolean`, and give that cell `--ds-table-cell-link-color` / `-decoration` on row hover. Their
-  `::ng-deep` is the last table reach that no token can replace; the other two are already filed
-  (`width: 'content'`, the toolbar slot) and shipped.
 
 ## From mm-broker's `_ds-overrides.scss`, read as a record (2026-08-07)
 
@@ -271,12 +256,15 @@ Nothing moves until a verdict; the work behind each is scoped.
 
 ## Priority board (2026-08-21 actualization — replaces the 08-20 one, supersedes the 08-10 one below)
 
-**30 open: no P1, 10 P2, 20 P3 — and for the first time since this board started, nothing is a P1.**
-Thirteen of the 30 sit under *Decisions*, so no work there is blocked on anything but a verdict; eight
+**29 open: no P1, 10 P2, 19 P3 — and for the first time since this board started, nothing is a P1.**
+Thirteen of the 29 sit under *Decisions*, so no work there is blocked on anything but a verdict; eight
 are *Parked* awaiting a first consumer ask, and one is a Record kept so it is not "simplified" away.
 **The bug list is down to two, and neither is a defect to fix blind:** the duplicated breakpoint
 decision is a record kept so nobody "simplifies" it, and the docs-link guard is an ask for a prebuild
-check. So the live queue is really the six asks, of which two need a verdict rather than work.
+check. Of the five remaining asks, **two need a verdict rather than work** (packaging, the
+field-message glyph) and three are parked until a consumer pulls on them — so the queue is genuinely
+empty of things to build unbidden. mm-broker now has NO open table reach: `interactive` closed the
+last `::ng-deep` they had.
 
 **Both P1s closed on 08-21, and they were the two worst kinds of defect.** The focus ring had no answer
 for a clipping ancestor — an element focusable with NO indicator, measured in four places in one app,
@@ -480,6 +468,8 @@ Not work. Deleting one invites the mistake back.
 ## A11y — decision record (deferred, NOT a bug)
 
 - [ ] **[P3] topbar → `role="banner"`** — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The bare `<header>` inside the generic custom element `<ds-topbar>` already maps to the `banner` landmark implicitly (**verified `topbar.component.html:1`, 2026-07-24**); an explicit role is flagged "unnecessary" by the W3C validator and would be WRONG if `<ds-topbar>` is nested in `main`/`section`/`article`/`aside`/`nav`. Kept as a decision record; only add if we adopt a deliberate defensive-robustness policy.
+
+
 
 
 

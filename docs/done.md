@@ -11,6 +11,21 @@ same class of defect: **guidance that could not be followed** — a focus ring t
 a clipping ancestor, and a migration path that did not compile. The other pattern worth keeping: two
 of these eight were found by the CHANGELOG re-review rather than by using the library.
 
+- [x] **DONE 2026-08-21 — the column carries the intent, not the row: `TableColumn.interactive`.** The ask offered two shapes and this is the one it recommended, for the reason it gave: only ONE cell is the target, so a row-level `--ds-table-row-hover-text-color` would paint every cell to signal one. `interactive: true` marks the column; its cell takes `--ds-table-cell-link-color` (default `--accent`) plus `--ds-table-cell-link-decoration` (default `underline`) while the row is hovered. **Both signals, deliberately** — `color-not-only` and WCAG 1.4.1 both forbid resting it on hue, and the four screens that hand-rolled this had already written the underline themselves. **Scoped to `.clickable`**, so a column marked `interactive` on a passive table does nothing: that is the same rule the row tint follows, and it exists so a tint cannot promise a click that never happens. Off by default. Specimen on `/components/table` uses a pinned hover so the state is visible without a pointer, measured accent #2E54FF + underline on the marked cell against the default text on its neighbour. This was the consumer's LAST table `::ng-deep`; the other two they had (`width: 'content'`, the toolbar slot) shipped earlier.
+  ORIGINAL: [P3] A table row publishes only its background on hover, so a cell that must react in TEXT reaches
+  past the API (mm-broker, 2026-08-19).** `--ds-table-row-hover-bg-color` and its `-active`/`-pressed`/
+  `-selected`/`-stripe` siblings are the whole hover surface: there is no hook for a cell's own colour, so
+  four list screens whose row opens a record write `:host ::ng-deep ds-table tr:hover .cell-name { color:
+  var(--accent); text-decoration: underline }`. The pattern is not decorative — with `rowInteractive` the
+  whole row is the control, and the name is what tells the reader *what* will open; leaving it inert makes
+  the row look unclickable, and a `cursor: pointer` alone does not say which text is the target. Four
+  screens do it identically (brokers, campaigns, carriers, employer-groups), which is the usual sign it
+  belongs upstream. **Ask:** either `--ds-table-row-hover-text-color` applied to the row (the cheap half),
+  or — better, since only one cell is the target — let `TableColumn` carry the intent, e.g. `interactive?:
+  boolean`, and give that cell `--ds-table-cell-link-color` / `-decoration` on row hover. Their
+  `::ng-deep` is the last table reach that no token can replace; the other two are already filed
+  (`width: 'content'`, the toolbar slot) and shipped.
+
 - [x] **DONE 2026-08-21 — `string | number | null`, and the docs page is the test.** One character of type, and the four pipes now bind: `number`, `currency`, `percent` and `date` are each declared `string | null`, which is why the idiomatic form failed and the workaround spread. A demo of all four sits on `/components/stat` and renders `147,238 · £4,830,000 · 87% · Sep 1, 2026` — worth having as a demo rather than a line of prose because **that section compiles under `strictTemplates`, so the demo IS the regression test** for the thing that was broken. The widening is in the manifest as `stat-value-type-widened`: writers are unaffected, a reader or a subclass override with the old annotation is not, and the DELETE-LIST names the `toLocaleString('en-US')` it replaces.
   ORIGINAL: [P3] `ds-stat`'s `value` cannot take Angular's own `number` pipe.** `StatComponent.value` is
   `InputSignal<string | number>`, while `DecimalPipe.transform` returns `string | null`, so
