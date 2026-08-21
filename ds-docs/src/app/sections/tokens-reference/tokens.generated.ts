@@ -469,7 +469,7 @@ export const SEMANTIC_FOCUS: readonly ColourRow[] = [
   },
   {
     "name": "--focus-ring-inner",
-    "value": "var(--surface-canvas)",
+    "value": "transparent",
     "notes": "Inner ring band (reads canvas — flips with theme)."
   },
   {
@@ -492,6 +492,16 @@ export const SEMANTIC_FOCUS: readonly ColourRow[] = [
     "name": "--focus-ring-error",
     "value": "0 0 0 2px var(--focus-ring-inner),\r\n    0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%)",
     "notes": "Focus ring shadow for invalid/error controls."
+  },
+  {
+    "name": "--focus-ring-inset",
+    "value": "inset 0 0 0 2px var(--focus-ring-inner),\r\n    inset 0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha))",
+    "notes": ""
+  },
+  {
+    "name": "--focus-ring-inset-error",
+    "value": "inset 0 0 0 2px var(--focus-ring-inner),\r\n    inset 0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%)",
+    "notes": ""
   },
   {
     "name": "--focus-field-alpha",
