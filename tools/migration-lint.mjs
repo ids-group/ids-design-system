@@ -82,6 +82,10 @@ const isDsSymbol = (hint) =>
   /^@ids-group-ltd\//.test(hint) ||
   /^@use ['"]@ids-group-ltd\//.test(hint);
 
+// A version cannot describe its own future; a later manifest carries the reversal.
+const FORWARD_PROSE =
+  /next release|later release|a later version|the release after|read the next|reversed later|in a future (release|version)/i;
+
 const DEFAULT_CHANGE = /DEFAULT CHANGED|CHANGED DEFAULT|defaults? (?:\S+ )?(?:to|now|FALSE|TRUE)\b|now defaults/i;
 
 const everyManifest = () =>
@@ -215,10 +219,27 @@ for (const [name, manifest] of manifests) {
       );
     }
 
-    // Both directions are declared, because both readers exist: a chain walker
-    // needs to know an item was reversed later, and a consumer landing on the
-    // later item needs to know what it undoes.
-    for (const field of ['supersedes', 'supersededBy']) {
+    // A manifest describes ONE step, and a version cannot know its own future:
+    // an upgrade walks 0.9.0 -> 0.10.0 -> 0.10.1 one file at a time, and the
+    // earlier file is frozen when the later one is written. So the link only
+    // ever points BACK, from the item that reverses to the item it reverses.
+    if (item.supersededBy !== undefined) {
+      at(
+        'M028',
+        'supersededBy points at a future version, which the file cannot know — ' +
+          'declare `supersedes` on the LATER item instead',
+      );
+    }
+    if (FORWARD_PROSE.test(`${item.note ?? ''} ${item.restore ?? ''}`)) {
+      at(
+        'M029',
+        'the note or restore refers to a later release — an upgrade applies this ' +
+          'file on its own, so say what is true HERE and let the later manifest ' +
+          'carry its own reversal',
+      );
+    }
+
+    for (const field of ['supersedes']) {
       for (const reference of item[field] ?? []) {
         const [otherVersion, otherId] = String(reference).split('#');
         const other = manifests.get(otherVersion);

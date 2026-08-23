@@ -13,7 +13,7 @@ One file per released version — `migrations/<version>.json` — mirroring that
                "detect": ["<shape written the way the CONSUMER writes it>", "..."],
                "verify": "<the positive assertion that proves this landed>",
                "restore": "<literal snippet that brings the old behaviour back | null>",
-               "supersedes": ["<version>#<id>"], "supersededBy": ["<version>#<id>"] } ],
+               "supersedes": ["<version>#<id>"] } ],
   "deleteList": [ { "id": "<slug>", "surface": "<surface>", "find": ["<shape>", "..."],
                     "why": "<what made it unnecessary>",
                     "replaceWith": "<the API that replaces it>" } ],
@@ -38,9 +38,11 @@ One file per released version — `migrations/<version>.json` — mirroring that
   "the old symbol is gone" proves nothing because there was never a symbol to remove.
 - **`restore`** — the literal snippet that brings the old behaviour back on a changed default, or an
   explicit `null` when there is no way back.
-- **`supersedes` / `supersededBy`** — `<version>#<id>` links between an item and the later one that
-  reverses its guidance. Both directions are declared: a chain walker needs to know an item was
-  undone, and a consumer landing on the later item needs to know what it undoes.
+- **`supersedes`** — `<version>#<id>`, declared on the item that REVERSES an earlier one. It points
+  BACKWARD only. An upgrade walks one version at a time and each manifest is frozen when the next is
+  written, so a file cannot name its own future: there is no `supersededBy`, and a note that says
+  "in the next release" is a defect (M028, M029). The reversal is described in full by the later
+  item, which is the one an upgrade reaches second.
 - **`deleteList`** — the structured form of "what you can now delete" (see below).
 
 **Why:** the auto-update plugin reads the prose changelog with an LLM planner — correct, but

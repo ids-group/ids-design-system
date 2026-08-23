@@ -290,10 +290,7 @@
         "reserveMessage"
       ],
       "restore": "[reserveMessage]=\"false\" per field",
-      "verify": "Form vertical rhythm was re-read with the reserved row present: a tightly stacked pair does not read as a gap.",
-      "supersededBy": [
-        "0.7.1#field-reserve-message-default-off"
-      ]
+      "verify": "Form vertical rhythm was re-read with the reserved row present: a tightly stacked pair does not read as a gap."
     },
     {
       "id": "table-component-subclass-member-collisions",

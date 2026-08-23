@@ -128,7 +128,7 @@
         "chips"
       ],
       "surface": "template",
-      "restore": "[maxVisibleChips]=\"null\" - but read the next release first, where null becomes \"unset\" and the explicit \"all\" is what shows every chip",
+      "restore": "[maxVisibleChips]=\"null\"",
       "verify": "Every multi-value trigger either accepts the measured \"fit\" default or says what it wants; no screen assumes the trigger grows a line per selection."
     },
     {

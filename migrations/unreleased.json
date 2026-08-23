@@ -6,7 +6,7 @@
       "kind": "behavior",
       "old": "class MyThing extends ButtonComponent (or any DS component)",
       "new": null,
-      "note": "Every readback that resolves through DS_CONFIG changed from `protected` to public: `sizeResolved` on fourteen controls, `elevationResolved` and `paddingResolved` (ds-card), `withDotResolved` (ds-badge), `borderedResolved` and `stickyScrollbarResolved` (ds-table), `dividersResolved` (ds-modal and ds-modal-card), `reserveMessageResolved` (every field, via DsFieldBase), the date/time picker locale and format resolvers, and `brandName` / `letterGlyph` / `taglineText` (ds-sidenav, ds-auth-layout). WHY: 0.10.0 told consumers to read `sizeResolved()` now that `size()` returns null when unbound, and that did not compile -- reading it from a host, a test or a viewChild was TS2445. NO ACTION for a consumer that composes. ACTION only if you SUBCLASS a DS component and declare a member with one of those names: it is now a public member of the base, so an incompatible re-declaration needs `override` or a rename. Members a host can derive from its own bindings stay protected on purpose: `invalidResolved`, `railResolved`, `sortModeResolved`, `filterModeResolved`. TARGET: the same class, with the config-resolved readbacks now PUBLIC members",
+      "note": "Every readback that resolves through DS_CONFIG changed from `protected` to public: `sizeResolved` on fourteen controls, `elevationResolved` and `paddingResolved` (ds-card), `withDotResolved` (ds-badge), `borderedResolved` and `stickyScrollbarResolved` (ds-table), `dividersResolved` (ds-modal and ds-modal-card), `reserveMessageResolved` (every field, via DsFieldBase), the date/time picker locale and format resolvers, and `brandName` / `letterGlyph` / `taglineText` (ds-sidenav, ds-auth-layout). WHY: 0.10.0 told consumers to read `sizeResolved()` now that `size()` returns null when unbound, and that did not compile -- reading it from a host, a test or a viewChild was TS2445. NO ACTION for a consumer that composes. ACTION only if you SUBCLASS a DS component and declare a member with one of those names: it is now a public member of the base, so an incompatible re-declaration needs `override` or a rename. Members a host can derive from its own bindings stay protected on purpose: `invalidResolved`, `railResolved`, `sortModeResolved`, `filterModeResolved`. TARGET: the same class, with the config-resolved readbacks now PUBLIC members SUPERSEDES the 0.10.0 guidance: that release said there was no public accessor and told you to keep the value you bound or resolve DS_CONFIG yourself. There is one now — read sizeResolved() (and the other *Resolved members) directly and drop the workaround.",
       "searchHints": [
         "sizeResolved",
         "elevationResolved",
@@ -20,7 +20,10 @@
         "extends ButtonComponent"
       ],
       "surface": "typescript",
-      "verify": "No consumer subclass redeclares a `*Resolved` readback as protected, and a host that reads `sizeResolved()` off a DS component compiles."
+      "verify": "No consumer subclass redeclares a `*Resolved` readback as protected, and a host that reads `sizeResolved()` off a DS component compiles.",
+      "supersedes": [
+        "0.10.0#control-size-input-becomes-nullable"
+      ]
     },
     {
       "id": "focus-ring-inner-transparent",
@@ -45,7 +48,7 @@
       "kind": "value-remap",
       "old": "ds-multi-select[maxVisibleChips]",
       "new": null,
-      "note": "BREAKING VALUE REMAP. `null` used to be the LOUDEST setting - render every chip and let the trigger wrap - and it now means 'unset', resolving to 'fit' (measure the trigger, show what fits) like every other nullable input since 0.10.0. Bind the new 'all' mode to keep the old behaviour. This covers the ATTRIBUTE and the BINDING form alike: [maxVisibleChips]=\"null\", [maxVisibleChips]=\"undefined\", and any expression, field or method that can EVALUATE to null feeding that binding - retype those to `number | 'fit' | 'all' | null` and return 'all' where they meant show-them-all. A numeric value is unchanged (still a ceiling, still measured), 'fit' is unchanged, and leaving the input unbound is unchanged because 'fit' was already the default.",
+      "note": "BREAKING VALUE REMAP. `null` used to be the LOUDEST setting - render every chip and let the trigger wrap - and it now means 'unset', resolving to 'fit' (measure the trigger, show what fits) like every other nullable input since 0.10.0. Bind the new 'all' mode to keep the old behaviour. This covers the ATTRIBUTE and the BINDING form alike: [maxVisibleChips]=\"null\", [maxVisibleChips]=\"undefined\", and any expression, field or method that can EVALUATE to null feeding that binding - retype those to `number | 'fit' | 'all' | null` and return 'all' where they meant show-them-all. A numeric value is unchanged (still a ceiling, still measured), 'fit' is unchanged, and leaving the input unbound is unchanged because 'fit' was already the default. SUPERSEDES the 0.10.0 guidance: that release told you to bind [maxVisibleChips]=\"null\" to keep every chip. If you did, that binding now means \"unset\" and resolves to \"fit\" — change it to \"all\".",
       "searchHints": [
         "maxVisibleChips",
         "[maxVisibleChips]",
@@ -63,6 +66,9 @@
         "[maxVisibleChips]=\"null\"",
         "maxVisibleChips",
         "'fit'"
+      ],
+      "supersedes": [
+        "0.10.0#chips-cap-by-width-by-default"
       ]
     },
     {
@@ -70,7 +76,7 @@
       "kind": "value-remap",
       "old": "ds-autocomplete[maxVisibleChips]",
       "new": null,
-      "note": "BREAKING VALUE REMAP. `null` used to be the LOUDEST setting - render every chip and let the trigger wrap - and it now means 'unset', resolving to 'fit' (measure the trigger, show what fits) like every other nullable input since 0.10.0. Bind the new 'all' mode to keep the old behaviour. This covers the ATTRIBUTE and the BINDING form alike: [maxVisibleChips]=\"null\", [maxVisibleChips]=\"undefined\", and any expression, field or method that can EVALUATE to null feeding that binding - retype those to `number | 'fit' | 'all' | null` and return 'all' where they meant show-them-all. A numeric value is unchanged (still a ceiling, still measured), 'fit' is unchanged, and leaving the input unbound is unchanged because 'fit' was already the default.",
+      "note": "BREAKING VALUE REMAP. `null` used to be the LOUDEST setting - render every chip and let the trigger wrap - and it now means 'unset', resolving to 'fit' (measure the trigger, show what fits) like every other nullable input since 0.10.0. Bind the new 'all' mode to keep the old behaviour. This covers the ATTRIBUTE and the BINDING form alike: [maxVisibleChips]=\"null\", [maxVisibleChips]=\"undefined\", and any expression, field or method that can EVALUATE to null feeding that binding - retype those to `number | 'fit' | 'all' | null` and return 'all' where they meant show-them-all. A numeric value is unchanged (still a ceiling, still measured), 'fit' is unchanged, and leaving the input unbound is unchanged because 'fit' was already the default. SUPERSEDES the 0.10.0 guidance: that release told you to bind [maxVisibleChips]=\"null\" to keep every chip. If you did, that binding now means \"unset\" and resolves to \"fit\" — change it to \"all\".",
       "searchHints": [
         "maxVisibleChips",
         "[maxVisibleChips]",
@@ -88,6 +94,9 @@
         "[maxVisibleChips]=\"null\"",
         "maxVisibleChips",
         "'fit'"
+      ],
+      "supersedes": [
+        "0.10.0#chips-cap-by-width-by-default"
       ]
     },
     {
