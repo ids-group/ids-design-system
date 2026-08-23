@@ -14,7 +14,8 @@
         "--chart-hover-bg",
         "--chart-tooltip-bg",
         "--status-"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "fg-tokens-renamed-semantic",
@@ -26,7 +27,13 @@
         "-fg:",
         "-fg)",
         "--status-"
-      ]
+      ],
+      "surface": "style",
+      "detect": [
+        "-fg",
+        "--ds-"
+      ],
+      "verify": "No stylesheet declares or reads a --ds-*-fg token; each one names the semantic replacement its component reads (-text-color / -label-color / -icon-color)."
     },
     {
       "id": "stepper-labels-now-visible",
@@ -37,7 +44,16 @@
       "searchHints": [
         "<ds-stepper",
         "[steps]"
-      ]
+      ],
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "detect": [
+        "ds-stepper",
+        "steps"
+      ],
+      "verify": "Every caption passed in [steps] is written to be READ on screen, not only announced - they render visibly now."
     }
   ],
   "informational": [

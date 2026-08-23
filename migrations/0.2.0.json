@@ -7,7 +7,10 @@
       "old": "--border-subtle",
       "new": "--border-subtitle",
       "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename (8 families).",
-      "searchHints": ["--border-subtle"]
+      "searchHints": [
+        "--border-subtle"
+      ],
+      "surface": "style"
     },
     {
       "id": "primary-subtle-token-rename",
@@ -15,7 +18,10 @@
       "old": "--primary-subtle",
       "new": "--primary-subtitle",
       "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
-      "searchHints": ["--primary-subtle"]
+      "searchHints": [
+        "--primary-subtle"
+      ],
+      "surface": "style"
     },
     {
       "id": "secondary-subtle-token-rename",
@@ -23,7 +29,10 @@
       "old": "--secondary-subtle",
       "new": "--secondary-subtitle",
       "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
-      "searchHints": ["--secondary-subtle"]
+      "searchHints": [
+        "--secondary-subtle"
+      ],
+      "surface": "style"
     },
     {
       "id": "tertiary-subtle-token-rename",
@@ -31,7 +40,10 @@
       "old": "--tertiary-subtle",
       "new": "--tertiary-subtitle",
       "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
-      "searchHints": ["--tertiary-subtle"]
+      "searchHints": [
+        "--tertiary-subtle"
+      ],
+      "surface": "style"
     },
     {
       "id": "success-subtle-token-rename",
@@ -39,7 +51,10 @@
       "old": "--success-subtle",
       "new": "--success-subtitle",
       "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
-      "searchHints": ["--success-subtle"]
+      "searchHints": [
+        "--success-subtle"
+      ],
+      "surface": "style"
     },
     {
       "id": "warning-subtle-token-rename",
@@ -47,7 +62,10 @@
       "old": "--warning-subtle",
       "new": "--warning-subtitle",
       "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
-      "searchHints": ["--warning-subtle"]
+      "searchHints": [
+        "--warning-subtle"
+      ],
+      "surface": "style"
     },
     {
       "id": "error-subtle-token-rename",
@@ -55,7 +73,10 @@
       "old": "--error-subtle",
       "new": "--error-subtitle",
       "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
-      "searchHints": ["--error-subtle"]
+      "searchHints": [
+        "--error-subtle"
+      ],
+      "surface": "style"
     },
     {
       "id": "info-subtle-token-rename",
@@ -63,7 +84,10 @@
       "old": "--info-subtle",
       "new": "--info-subtitle",
       "note": "Part of the --*-subtle -> --*-subtitle semantic-token rename.",
-      "searchHints": ["--info-subtle"]
+      "searchHints": [
+        "--info-subtle"
+      ],
+      "surface": "style"
     }
   ],
   "informational": [

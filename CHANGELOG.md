@@ -145,6 +145,29 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   input says what it means. `SidenavContract` gained a `rail: () => boolean` member; nothing outside
   the library is expected to implement it.
 
+- **The shipped migration manifests say WHERE to look, not only what changed — and a lint now holds
+  them to it.** `migrations/<version>.json` (the files `dist/ds/migrations/` carries into your
+  `node_modules`, which the auto-update plugin runs) gained `surface`, `detect`, `verify`, `restore`,
+  `supersedes` / `supersededBy`, and a structured `deleteList`. The reason is a consumer upgrade that
+  went 0.6.0 → 0.10.1 and passed over two entries in silence: `0.7.1`'s
+  `table-sortkey-non-null-when-unsorted` pointed at `ds-table[sortKey]`, which appears in nobody's
+  template, while the code that breaks was their own store —
+  `sorting: store.sortKey() ? { path: store.sortKey()!, … } : undefined` — so the search found
+  nothing, the item was recorded not-applicable, and the re-check's clean grep agreed. Three
+  server-paged screens kept sorting by a column whose header showed no sort. `surface` and `detect`
+  make that item searchable in the artifact that actually changes; `verify` gives a behavioural entry
+  the positive assertion a re-check can test, since there is no removed symbol whose absence proves
+  anything. **Every published manifest was back-filled the same day:** 167 items across 19 releases
+  got a `surface`, every behavioural one a `verify`, every changed default a `restore`, and the 32
+  prose `DELETE-LIST:` lines became `deleteList` arrays with a greppable `find` each — four of those
+  "lines" turned out to be the words "the DELETE-LIST" inside ordinary prose. Two default flips that
+  reverse each other now link both ways: `0.7.0` / `0.7.1` on `reserveMessage`, and `0.8.0` / `0.9.0`
+  on the table's sort mode. `npm run migration-lint` enforces the contract with no warning level, and
+  both the release preflight and the PR gate run it, so a manifest nobody can act on stops the
+  pipeline instead of reaching a consumer. Three CHANGELOG blocks also gained the "What you can now
+  DELETE" table their manifests had been carrying alone — 0.10.0's nineteen rows, 0.10.1's and
+  0.6.2's.
+
 ### Fixed
 
 - **A field bound with signal forms threw once per field, and then showed an error it had already
@@ -221,6 +244,12 @@ workaround written against a hook that only landed in this release.
 | A `border-radius` override aimed at `ds-multi-select .panel` alone | `--ds-dropdown-panel-radius` now reaches all three connected panels |
 | A timer of your own around a `ds-search` Clear button, or a value written twice to make the debounce let go | `clear()` |
 | A copy of the config fallback chain in your own host — `this.size() ?? config.control?.size ?? 'md'` | The component's resolver is public now; read `sizeResolved()` |
+| Your own wash replacing the solid active sidenav pill — a `--ds-sidenav-item-bg-color-active` override plus a matching label colour | That IS the default now; compare yours against it and drop it if they agree |
+| `--ds-sidenav-item-rail: transparent`, or a `::ng-deep` box-shadow reset to hide the active rail | `[rail]="false"` on `ds-sidenav` |
+| A `::ng-deep` `border-radius` rule on a bare `ds-menu` | `--ds-menu-radius` |
+| `--ds-button-label-color-disabled` pinned on a tonal button to make its disabled state visible, most likely only in the dark theme | The default disabled-label recipe carries it |
+| `count.toLocaleString('en-US')` (or any hand-rolled formatting) inside a `ds-stat` binding, because `[value]="count \| number"` would not typecheck | The pipe binds now, and it reads `LOCALE_ID` instead of a pinned locale |
+| A `::ng-deep ds-table tr:hover .some-cell { color; text-decoration }` rule to make one cell read as the row's link target | `interactive: true` on that column, retuned with `--ds-table-cell-link-color` / `--ds-table-cell-link-decoration` |
 
 ## 0.10.1 — 2026-08-20
 
@@ -442,6 +471,14 @@ workaround written against a hook that only landed in this release.
   collides exactly as it did, because an inherited member collides the same way an own one does.
   `DsFieldBase` is internal and deliberately not exported — it holds only the inputs every field has,
   which is why `success`, `label`, `required` and `optional` stayed on the components.
+
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a workaround this release made unnecessary.
+
+| If you have | Delete it, because |
+| --- | --- |
+| A `?? ''` guard wrapped around a message binding - `[error]="form.errors?.message ?? ''"` - added because a null pushed into `hint` / `error` / `warning` / `success` threw a TypeError during render. | nothing - bind the expression directly, the inputs absorb null now |
 
 ## 0.10.0 — 2026-08-18
 
@@ -1173,6 +1210,32 @@ workaround written against a hook that only landed in this release.
   are still there, but as public readonly signals rather than the protected writables a subclass
   could `.set()` — and a plain `private pending: … = null` is not a field the parser recognises, which
   is how `SearchComponent`'s `pending` and `pushed` sit outside its reported seven.
+
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a workaround this release made unnecessary.
+
+| If you have | Delete it, because |
+| --- | --- |
+| A `ResizeObserver`, a container query or a hand-tuned per-breakpoint `maxVisibleChips` number, keeping a chip trigger on one line. | `maxVisibleChips="fit"`, which re-splits on any width change rather than at the breakpoints you listed |
+| A `max-height` plus `overflow: hidden` on a chip trigger, stopping it growing a line per selection - it clips a chip mid-glyph and hides the count. | `maxVisibleChips` (a number, or `"fit"`), which drops whole chips and reports how many are hidden |
+| Your own `max-height` on a logo projected into `ds-sidenav`'s `[brand]` slot, or a wrapper sized to hold it. | `--ds-sidenav-brand-max-height` (default `none`, so nothing changes until you set it) |
+| A global rule against `.ds-dropdown-panel` or `.cdk-overlay-pane` to change a dropdown corner. | `--ds-dropdown-panel-radius`, which scopes to one picker when written under a component selector |
+| A query for `ds-autocomplete`'s inner `<input>` plus a synthetic `input` event, clearing leftover filter text after a pick. | `clear()` - and the component clears that text itself now |
+| A local `.link-button` class, or a padding / border / background / font reset on `button.link` in your overrides. | the global `.link` class with `.inline` / `.standalone` / `.sm` / `.xs` |
+| A `[dsStatValue]` projection used only to set `white-space: normal` or a smaller font size on a TEXT value. | the two hooks on the ordinary `value` input - keep the slot for a value that is genuinely another component, like a badge |
+| A wrapper around `ds-search` adding a typing debounce (typically 200ms) with an immediate path when the field empties. | `[debounce]`, which does both plus the Enter flush |
+| `--ds-button-height` / `--ds-button-font-size` / `--ds-button-pad-x` pinned under `ds-filter-bar` to force its trigger smaller. | `triggerSize="sm"` |
+| `[dividers]="false"` repeated on every modal (one consumer had 41), or a reach into `.modal > .header` / `.body` / `.actions` with `!important` because hiding the rules left the padding stacked. | `provideDsConfig({ modal: { dividers: false } })`, which drops the rules AND the padding that existed to clear them |
+| A helper keeping the last visited tab per path in `sessionStorage`. | `rememberLastTab` on `ds-tabs` (needs `urlParam`, which supplies the names) |
+| An adapter component that injects a brand object and fans it out into `brand` / `logoLetter` / `tagline` bindings on each auth screen. | `provideDsConfig({ brand: … })`; the accent stays a `[dsBrandName]` projection instead of a `brandAccent` string plus an `indexOf` split |
+| The `ds-avatar` wiring around your own initials helper (the helper itself stays yours). | `[name]` plus one `[initialsRule]` |
+| An attribute repeated identically on every element - one consumer binds `[stickyScrollbar]="true"` on all 35 of its tables and `size="sm"` on 146 buttons. | `provideDsConfig` with the matching section (`table`, `control.size`, …) |
+| A button wired to `exportCsv()` on a SERVER-PAGED table - it serialises the rows the table holds, so the file is one page. | `runExport()` with an `exportFetcher` |
+| The computed beside every list table - `items().length > 0 ? 'overlay' : 'skeleton'` - one consumer feature carried three copies of it. | `[loading]="true"`, which resolves the treatment itself; pin a value only where you mean to override the rule |
+| An override retuning `--opacity-muted` to compensate for a washed-out disabled state. That token is a de-emphasis level for hints and secondary text and carries no disabled state at all - and on `ds-button` / `ds-icon-button` it was always inert, because neither ever read it. | `--ds-button-label-color-disabled` / `--ds-icon-button-icon-color-disabled` |
+| A `::ng-deep ds-table { .table th, .table td { width: 1%; white-space: nowrap } }` override - the shrink-to-content idiom. | `TableColumn.width: 'content'` |
+| A `stopPropagation()` on a control inside a clickable row, added so the row would not steal the control's KEY. Read each hit before deleting: a CLICK still bubbles (`onRowClick` only skips a target inside an `<input>`), so a click-path guard stays. | nothing on the key path - `onRowKey` now requires `target === currentTarget` |
 
 ## 0.9.1 — 2026-08-10
 
@@ -2586,6 +2649,15 @@ genuine gap worth reporting.
   content projected into the drawer body can't sink under the scrim. No public API or token change:
   scrim click-to-close, panel-scoped plus document-level Escape, `animationend` teardown, and the focus
   trap are all unchanged.
+
+### What you can now DELETE
+
+None of this is required — skipping it leaves working code that is merely redundant. Each row is a workaround this release made unnecessary.
+
+| If you have | Delete it, because |
+| --- | --- |
+| A logo overlaid or absolutely positioned on top of ds-sidenav's brand row, written when there was no slot for one. | project it into `[brand]` |
+| A scrollTop pin or a scroll-lock hack written against the content jolt an opening sheet used to cause in a shell that is a containing block for fixed descendants. | nothing - the entering panel no longer contributes that overflow |
 
 ## 0.6.1 — 2026-07-16
 

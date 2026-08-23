@@ -96,10 +96,12 @@ about; the two long records (mm-broker read as a record, the 08-10 board reasoni
 which is what that section is for; and the index at the top is generated from the items rather than
 hand-kept, so it cannot drift again.
 
-**Where the release risk is.** `migrations/unreleased.json` carries **11 actionable items and 20
-informational lines** on top of 0.10.1, six of them changes a consumer discovers by LOOKING rather than
-by building. Stas held the cut on 08-21 to add more to the batch first, so the manifest is the thing that
-has to stay complete — mm-broker was last recorded on 0.9.1 and will swallow three releases at once.
+**Where the release risk is.** `migrations/unreleased.json` carries **11 actionable items, 11
+`deleteList` entries and 9 informational lines** on top of 0.10.1, six of them changes a consumer
+discovers by LOOKING rather than by building. (Recounted 2026-08-21 evening: the 11 prose
+`DELETE-LIST:` lines became the structured array, which is where the informational count went.) Stas
+held the cut on 08-21 to add more to the batch first, so the manifest is the thing that has to stay
+complete — mm-broker was last recorded on 0.9.1 and will swallow three releases at once.
 
 **Two habits this session kept catching, worth reading before opening anything new.** A number measured
 in ONE theme carried into the other unchecked (three times, all wrong — the latest being the claim that

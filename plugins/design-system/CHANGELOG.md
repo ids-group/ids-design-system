@@ -4,6 +4,39 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.5.0 — 2026-08-21
+
+### Added
+- **A behavioural item is no longer dropped on zero hits (Phase B step 2).** An item whose `surface`
+  is not the template is about the CONSUMER's own code, which routinely names nothing of ours: zero
+  hits now means "these shapes did not match this consumer's spelling", and the orchestrator does a
+  semantic pass over the named surface instead of recording not-applicable. This is the exact hole
+  that let mm-broker's 0.6.0 → 0.10.1 upgrade pass over `0.7.1#table-sortkey-non-null-when-unsorted`:
+  it targets `ds-table[sortKey]`, which no consumer binds, while the code that breaks reads
+  `sorting: store.sortKey() ? { path: store.sortKey()!, … } : undefined` in a store file. The finder
+  found nothing, the item was written off, and the re-check's clean grep confirmed it — three
+  server-paged screens kept ordering by a column whose header showed no sort.
+- **Delete-list pass (new Phase B step 8).** The plan's `deleteList` is swept once the items are
+  green: grep each entry's `find` over its surface, judge each hit (a workaround can still be
+  load-bearing — `[reserveMessage]="false"` is dead against the new default and REQUIRED under a
+  `dsReserveMessages` host), delete what is dead, and report both halves. 45 such entries shipped as
+  prose across DS 0.9.0 and 0.10.0 and the loop had acted on none of them.
+- **The finder reads `surface` and `detect`**: it searches the artifact the item names, treats the
+  consumer-shaped `detect` strings as the primary locator there, does not element-scope them, and
+  reports `{ hits: [], searched: [...] }` on a behavioural miss so the weaker claim stays visible.
+- **The re-checker tests `verify`.** For a behavioural item "grep for `old` came back clean" is no
+  longer evidence of anything: the item's `verify` sentence is the assertion, and one with no
+  verifiable assertion comes back `confidence: "low"` instead of green.
+- **Supersession is honoured**: an item the plan marks `supersededBy` a version inside the chain is
+  skipped with that reason recorded, so a run stops doing work the next version undoes.
+
+### Changed
+- The planner emits the new fields (`surface`, `detect`, `verify`, `restore`, `supersedes` /
+  `supersededBy`, top-level `deleteList`) and, where a manifest lacks them, ENRICHES each item from
+  its own `note` instead of passing an undetectable item downstream. Every manifest in the DS repo
+  carries the fields as of 2026-08-21, but the copy inside an older `node_modules` will not — which
+  is exactly the one a consumer's run reads first.
+
 ## 1.4.0 — 2026-08-20
 
 ### Added

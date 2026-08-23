@@ -10,7 +10,8 @@
       "searchHints": [
         "[defaultMonth]",
         "defaultMonth"
-      ]
+      ],
+      "surface": "template"
     },
     {
       "id": "table-passive-row-hover-removed",
@@ -21,7 +22,14 @@
       "searchHints": [
         "<ds-table",
         "rowInteractive"
-      ]
+      ],
+      "surface": "style",
+      "detect": [
+        "rowInteractive",
+        "tr:hover"
+      ],
+      "restore": "ds-table tbody tr:hover td { background-color: var(--surface-secondary); }",
+      "verify": "Every table whose rows are clickable sets [rowInteractive] (that is what draws the tint now), and a passive table that must keep an always-on hover carries the restore rule deliberately."
     },
     {
       "id": "table-component-subclass-member-collisions",
@@ -32,7 +40,15 @@
       "searchHints": [
         "extends TableComponent",
         "extends "
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "extends TableComponent",
+        "extends ",
+        "zebra",
+        "exportCsv"
+      ],
+      "verify": "A typecheck reports no TS4114 / TS2416 on a TableComponent subclass; every kept name uses `override` with a base-compatible signature."
     }
   ],
   "informational": [

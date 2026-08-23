@@ -15,7 +15,10 @@
         "sortable: true",
         "TableColumn",
         "ds-table"
-      ]
+      ],
+      "surface": "template",
+      "verify": "Every `<ds-table>` that binds `total` either declares sortMode=\"server\" or leaves it unset (both resolve to server), and every table that holds all its rows AND has a sortable column declares sortMode=\"client\".",
+      "restore": "sortMode=\"server\" on a table that should only emit (sortChange) and sort nothing itself"
     },
     {
       "id": "exported-class-members-grew",
@@ -39,7 +42,15 @@
         "override readonly",
         "saveLayout",
         "TS4114"
-      ]
+      ],
+      "surface": "typescript",
+      "detect": [
+        "extends InputComponent",
+        "extends TableComponent",
+        "extends ",
+        "saveLayout"
+      ],
+      "verify": "A typecheck reports no TS4114 / TS2415 / TS2416 on any class extending a DS component - including a PRIVATE collision (saveLayout / restoreLayout on the table) and a subclass that overrode the removed protected `messageState`."
     },
     {
       "id": "select-label-class-renamed-to-label",
@@ -53,7 +64,8 @@
         "ds-select",
         "label",
         "field-label"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "radio-group-label-class-and-type",
@@ -67,7 +79,9 @@
         "ds-radio-group",
         "radio-group",
         "label"
-      ]
+      ],
+      "surface": "style",
+      "restore": "ds-radio-group { --ds-field-label-weight: var(--font-weight-medium); --ds-field-label-font-size: var(--font-size-s); }"
     },
     {
       "id": "ng-add-schematic-now-loads",
@@ -81,7 +95,13 @@
         "styles/ds",
         "@use '@ids-group-ltd",
         "schematics"
-      ]
+      ],
+      "surface": "style",
+      "detect": [
+        "@use '@ids-group-ltd/ids-design-system/styles/ds'",
+        "styles/ds"
+      ],
+      "verify": "The app's global stylesheet contains the DS styles entry exactly once - by hand or through `ng add`, which prepends the same line and skips when it is there."
     },
     {
       "id": "menu-item-radius-default-now-square",
@@ -95,7 +115,10 @@
         "--ds-menu-item-radius",
         "menu-item",
         "ds-popover"
-      ]
+      ],
+      "surface": "style",
+      "restore": "ds-menu { --ds-menu-item-radius: var(--radius-md); padding: var(--space-1); } - both, because a radius with no panel padding has nothing to curve away from",
+      "verify": "No menu is left with a rounded row highlight and no panel padding (the one combination to avoid), and nothing depends on the old 8px hover fill."
     },
     {
       "id": "menu-divider-spacing-default-now-zero",
@@ -108,7 +131,10 @@
         "--ds-menu-divider-spacing",
         "menu-divider",
         "ds-menu"
-      ]
+      ],
+      "surface": "style",
+      "restore": "ds-menu { --ds-menu-divider-spacing: var(--space-1); }",
+      "verify": "Every menu that uses ds-menu-divider reads as intended with the line taking one row's place instead of adding a second gap."
     },
     {
       "id": "time-picker-panel-radius-now-panel-role",
@@ -122,7 +148,10 @@
         "--ds-time-picker-trigger-radius",
         "time-panel",
         "time-picker"
-      ]
+      ],
+      "surface": "style",
+      "restore": "ds-time-picker { --ds-time-picker-panel-radius: var(--radius-md); }",
+      "verify": "A time picker beside a date picker draws the same corner, or the app pins the old 8px deliberately."
     },
     {
       "id": "focus-partial-needs-use-line",
@@ -137,7 +166,8 @@
         "ids-design-system/styles",
         "data-focus",
         "forced-colors"
-      ]
+      ],
+      "surface": "style"
     },
     {
       "id": "combobox-tokens-renamed-to-picker",
@@ -149,7 +179,13 @@
         "--combobox-offset",
         "--combobox-maxh",
         "combobox"
-      ]
+      ],
+      "surface": "style",
+      "detect": [
+        "--combobox-offset",
+        "--combobox-maxh"
+      ],
+      "verify": "No stylesheet declares --combobox-offset or --combobox-maxh; a panel override names --picker-offset / --picker-maxh."
     }
   ],
   "informational": [
