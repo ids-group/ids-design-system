@@ -5,13 +5,13 @@
 **Bugs — something shipped misbehaves**
 
 - P2 · Every option list shaves the descenders off its own labels — `line-height: 1` inside a box that clips
-  (from mm-broker MBP-245, 2026-08-20)
+- P3 · Two components a consumer cannot import appear in the docs API reference (found by the 2026-08-20 docs
+- P3 · `ds-table`'s two-way `[(sortKey)]` / `[(sortDir)]` form is available but never demonstrated (same
 - P3 · `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing my
 
 **Asks — a consumer or Stas asked for it**
 
 - P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial bundle
-- P2 · Should `state` DEFAULT a per-state glyph? (narrowed 2026-08-20 — the false docblocks are fixed, the
 - P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion). Base
 - P3 · `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref
 - P3 · The two row-action halves left open on purpose: a per-row `label`, and a divider or
@@ -30,6 +30,7 @@
 
 **Parked — asked, and deliberately not now**
 
+- P3 · `--icon-xs/sm/md/lg` exist (12/14/16/20) and `ds-icon` cannot be sized by them. It takes
 - P3 · Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below). A
 - P3 · Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck
 - P3 · Image / lightbox. No demand stated; overlay/motion infra (`modal`/`drawer`/`overlay-motion.ts`) exists
@@ -41,7 +42,12 @@
 
 **Records — kept so they are not "simplified" away**
 
+- P2 · A `ds-table` row can only be opened by clicking the row, and that affordance is invisible.
 - P3 · topbar → `role="banner"` — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The
+
+
+
+
 
 
 
@@ -49,7 +55,7 @@
 
 ## Priority board (2026-08-21, second cut — the file was restructured with it)
 
-**24 open: 1 P1, 7 P2, 16 P3.** Eight are *Parked* awaiting a first consumer ask and one is a Record, so
+**28 open: 1 P1, 8 P2, 19 P3** (recount 2026-08-24 — includes what the parallel migration-manifest work filed, and the ds-icon sizing idea this session parked). Eight are *Parked* awaiting a first consumer ask and one is a Record, so
 the live board is **15 items — and 9 of those are Decisions**. The queue of things to BUILD unbidden is
 **one bug and five asks**, and of those five two are waiting on a verdict with a deck attached while three
 are gated on a first consumer ask. So: nothing is left to build without a decision.
@@ -121,6 +127,11 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   **Three fixes, and the geometry decides.** The option row is `8px + 14px + 8px = 30px` today. (a) `line-height: var(--line-height-base)` on `.option-label` → 19.6px, row **35.6px (+5.6)** — correct, and a visual change on every dropdown in the library, after which `--ds-dropdown-panel-maxh` shows fewer rows. (b) the same, with `.option` padding-block cut to `var(--space-1)` → **27.6px (−2.4)** or `var(--space-1-5)` → **31.6px (+1.6)**; no token lands on 30px (5.2px would). (c) `overflow: clip` + `overflow-clip-margin: var(--space-1)` on `.option-label` — **geometry untouched and the ellipsis still applies**, since `text-overflow` reads any non-`visible` overflow, and 4px covers the measured 2.86/2.00. It needs a support call: `overflow-clip-margin` is Chrome/Edge 90+, Firefox 102+, Safari 16+, and where it is absent `clip` degrades to exactly today's shave rather than to anything worse. **(c) unless the row height is meant to move anyway** — then (a) is the honest one.
   Invisible to the DOM and to the accessibility tree: `textContent` is complete and only the painted glyph is clipped, so a regression check has to compare the label element's height against `Range.getBoundingClientRect().height`, never the text. Reproduce on `/components/select`; the consumer's screen was Platform Admin → Users → Invite New User → Select user role, where "Agent" is one of two options and the shaved tail is unmissable.
 
+- [ ] **[P3] Two components a consumer cannot import appear in the docs API reference (found by the 2026-08-20 docs audit).** `ds-modal-confirm` (ModalConfirmComponent) and `ds-time-columns` (TimeColumnsComponent) are listed in `component-api.generated.ts` with a full input table, so the reference presents them as usable API. Verified against the published types: both appear as internal `declare` blocks but neither is in the package export list, so `import { ModalConfirmComponent }` does not resolve. `tools/extract-component-api.mjs` collects every `@Component` under `src/lib/components` without consulting the export surface.
+  **Two fixes, pick one:** (a) teach the extractor to skip a class absent from the public export list — accurate, but it must follow the component barrels or it will drop legitimately-exported components; (b) add an `internal` value to `ComponentStatus` (today `'stable' | 'new' | 'deprecated'`) and mark these two in `component-api-descriptions.json`, which also gives a home for the next internal. Neither is urgent: nothing is wrong, the reference is just wider than the API.
+
+- [ ] **[P3] `ds-table`'s two-way `[(sortKey)]` / `[(sortDir)]` form is available but never demonstrated (same audit).** `sortKey`/`sortDir` are inputs and `sortKeyChange`/`sortDirChange` are hand-declared outputs, so Angular's banana-in-a-box works — which is the natural shape for server-side sorting where the host owns the state, exactly what the 0.10.0 server-sort demo is about. The demo binds `[sortKey]` one-way and observes `(sortChange)` instead, so the two-way form is invisible. One line of prose or switching that demo would cover it.
+
 ## ds-app-layout — the one knowingly duplicated decision
 
 > The parent shipped 2026-07-24 (as `ds-app-shell`, renamed in 0.7.0) with `ds-sidenav-footer` and the brand row; spec at `.claude/superpowers/specs/2026-07-24-ds-app-shell-design.md`. Only the record below is left.
@@ -188,32 +199,6 @@ Requests, not defects. Ordered by who is blocked.
 
 ## Validation on the control: warning got a border, but the FILL was never judged (2026-08-13)
 
-- [ ] **[P2] Should `state` DEFAULT a per-state glyph? (narrowed 2026-08-20 — the false docblocks are fixed, the design question is not.)** The two lies are gone: `state` now says it decides the colour, and `icon` says there is no per-state default. What remains is the call the original item wrapped around them. **The case for defaulting a glyph:** four of the six systems audited for the fill question carry a per-state icon in the field — Spectrum, Bootstrap, Carbon and Ant — NN/g requires it as its own guideline, WCAG 1.4.1 forbids resting a state on colour, and the ui-ux-pro-max base says it twice (`color-not-only`, `color-not-decorative-only`). It is also what would give `warning` and `success` real distinctness without the fill we declined to add. **The cost:** breaking by appearance on every field at once, and a glyph choice per state. ORIGINAL: [P2] `ds-field-message` claims `state` picks an icon, and it never does — two false doc
-  **DECK 2026-08-21 — `presentations/field-message-glyph.html`, and Stas asked for exactly this before deciding.**
-  Four sections: the four states with and without a glyph in LIGHT, the same in DARK (where the ramp is
-  lighter and hue does more of the work), a five-field settings form to show the cost, and a third option
-  the item did not carry. Every colour in it is the measured token value, and the glyphs are the real
-  `error` / `warn` / `success` / `info` paths from `icons.data.ts`, not stand-ins.
-  **The deck adds option C — glyphs on error/warning/success, nothing on `hint` — and recommends it.**
-  The busy column in the deck's section 3 is entirely hint, and hint is the resting text rather than a
-  state, so C buys the distinctness where warning and success are confusable and leaves an ordinary form
-  untouched. Option D (a `DS_CONFIG` switch, off by default) is written up as the postpone-it choice.
-  Still needs the verdict; still a visual breaking change wherever a state IS set, so it rides the batch.
-  comments over a real gap.** `state`'s docblock says "Decides colour and icon" and `icon`'s says
-  "Overrides the glyph the `state` would pick" (`field-message.component.ts:26,31`). Neither is true:
-  the template renders `@if (icon())` against an input defaulting to `null`, and there is no computed
-  anywhere in the component, so **`state` decides colour only** and a glyph has to be passed by hand
-  on every field. Found while closing the fill question above.
-  **Why it matters beyond the wrong comment:** a per-state icon is what four of the six systems use to
-  separate the states — Spectrum, Bootstrap, Carbon and Ant all carry one in the field. NN/g requires
-  it as its own guideline, WCAG 1.4.1 (Use of Color) forbids resting a state on colour, and the
-  ui-ux-pro-max base says it twice: `color-not-only` ("Don't convey info by color alone (add
-  icon/text)") and `color-not-decorative-only` ("Functional color (error red, success green) must
-  include icon/text"). It is also the treatment that would give `warning` and `success` real
-  distinctness without any fill, which is exactly what the decision above declines to add.
-  **Decide two things:** whether `state` should default a glyph per state (breaking — every field
-  gains an icon it does not have today), and if so which glyphs. Fix the two comments either way,
-  since they are wrong right now.
 
 # Decisions — waiting on Stas, not on work
 
@@ -310,6 +295,21 @@ Nothing moves until a verdict; the work behind each is scoped.
   two font-size tokens to EXIST first, since neither is exposed today.
 
 # Parked — asked, and deliberately not now
+
+## ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)
+
+- [ ] **[P3] `--icon-xs/sm/md/lg` exist (12/14/16/20) and `ds-icon` cannot be sized by them.** It takes
+  a NUMBER (`size`, falling back to `DS_CONFIG.icon.size`) and writes `width`/`height` attributes, while
+  publishing `--ds-icon-size` OUTWARD as an inline custom property. So the scale is only usable by
+  hand-written CSS on someone else's svg, and an ancestor cannot say "icons in here are 14px" the way it
+  can say that about every other dimension in the library. **Found while adding the field-message state
+  glyph:** the natural hook would have been a CSS token, and the only route to one was `::ng-deep` into
+  `ds-icon`'s template — so that feature took a config value instead, and the glyph is a hardcoded 14px.
+  **The shape of the fix:** size the svg from `var(--ds-icon-size, <attr fallback>)` in `ds-icon`'s own
+  (global) styles, and set the inline `--ds-icon-size` ONLY when `size` is explicitly bound — an unbound
+  icon then inherits whatever an ancestor declares, and a bound one still wins. **Not urgent and not
+  free:** it changes how every icon in 90-odd components resolves its size, so it wants its own pass and
+  a look at the pages that mix icon sizes in one row.
 
 Stas said keep it in the backlog. Left untouched on purpose.
 
@@ -424,6 +424,24 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 
 - [ ] **[P3] topbar → `role="banner"`** — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The bare `<header>` inside the generic custom element `<ds-topbar>` already maps to the `banner` landmark implicitly (**verified `topbar.component.html:1`, 2026-07-24**); an explicit role is flagged "unnecessary" by the W3C validator and would be WRONG if `<ds-topbar>` is nested in `main`/`section`/`article`/`aside`/`nav`. Kept as a decision record; only add if we adopt a deliberate defensive-robustness policy.
 
+
+
+
+
+- [ ] **[P2] A `ds-table` row can only be opened by clicking the row, and that affordance is invisible.**
+  `rowInteractive` gives the `<tr>` a tabindex, Enter/Space and an accessible name, which is the
+  keyboard half — but nothing on screen says the row leads anywhere, and a screen reader still
+  announces a table row, not a link. Consumers compensate by repeating the destination as a
+  `View Details` item in the row's overflow menu (six lists in mm-broker's broker portal do this),
+  which is a menu entry that performs navigation rather than an action. The accessibility literature
+  is against the row-as-control shape itself: Adrian Roselli's "Don't Turn a Table into an ARIA Grid
+  Just for a Clickable Row" and oidaisdes.org's "How to Create an Accessible Table with Clickable
+  Rows" both land on the same answer — put the control **in a cell**, as a real link. What the table
+  is missing is a way to render one cell's value as a link (a `link` column kind, or a documented
+  cell-template contract for it) so the record's name becomes the way in: visible, in the tab order
+  as a link, and openable in a new tab with Ctrl/Cmd-click — which a row click cannot offer. Then
+  `rowInteractive` becomes an enhancement on top of a working link rather than the only path, and the
+  consumers can drop the duplicated menu item.
 
 
 

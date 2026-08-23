@@ -35,6 +35,37 @@ Opened and closed in one sitting, because the item measured itself: the lint tha
   ORIGINAL: [P3] 20 published manifests predate `surface` / `detect` / `verify`, and
   `npm run migration-lint` reports 258 warnings across them (2026-08-21).
 
+- [x] **DONE 2026-08-24 — C shipped as the DEFAULT, configurable per state, which is neither of the four options the deck listed.** Stas read the deck and picked C, then improved it: instead of D's switch-off-by-default, C IS the default and every state is switchable on its own. `DS_CONFIG.field.stateIcons` takes `{ error, warning, success, hint }` where each key is independent — a name replaces the glyph, `false` removes it — plus `stateIcons: false` as the one line back to the old look. `messageIcon` on all fifteen field components wins over both. 
+  **His correction that saved a bad API:** I had proposed `stateIconSize?: number` in the config, and he asked why, since there is a token scale. He was right that the scale exists — `--icon-xs/sm/md/lg` = 12/14/16/20 — and I was wrong to invent a second vocabulary for it. What the check turned up: `ds-icon` does not READ that scale, it takes a number and writes `width`/`height` attributes while publishing `--ds-icon-size` outward. So the knob is gone: the glyph is 14px = `--icon-sm`, and "size icons from CSS" is a separate change to `ds-icon` (only set the inline var when `size` is actually bound), filed rather than smuggled in here.
+  **Two hooks that were needed, and one that was not.** `--ds-field-message-icon-gap`, and `--ds-field-message-icon-offset` — the row is `align-items: flex-start` now, and the offset centres the glyph on the FIRST line rather than the block, computed from the two tokens that set that line so it survives a retuned message type. Measured on a forced wrap: two lines, glyph centre 0px from the first line, −8px from the block centre, which is the old behaviour it replaces.
+  **Verified live through CDP, not by reasoning:** all four states on `/components/input` — error #BA1717, warning #8A7400, success #156822 glyphs present, 25 hint rows with none — the same four in dark (#F58484 / #F5CA47 / #69D37E), both instance overrides, and a scoped `provideDsConfig` where error was off and hint on. **That last one cost me a wrong probe first:** two `provideDsConfig` calls in one `providers` array do NOT merge — both resolve their parent with `skipSelf`, so the later wins and the earlier vanishes. Real trap, now documented on the function and in the manifest.
+  ORIGINAL: [P2] Should `state` DEFAULT a per-state glyph? (narrowed 2026-08-20 — the false docblocks are fixed, the design question is not.)** The two lies are gone: `state` now says it decides the colour, and `icon` says there is no per-state default. What remains is the call the original item wrapped around them. **The case for defaulting a glyph:** four of the six systems audited for the fill question carry a per-state icon in the field — Spectrum, Bootstrap, Carbon and Ant — NN/g requires it as its own guideline, WCAG 1.4.1 forbids resting a state on colour, and the ui-ux-pro-max base says it twice (`color-not-only`, `color-not-decorative-only`). It is also what would give `warning` and `success` real distinctness without the fill we declined to add. **The cost:** breaking by appearance on every field at once, and a glyph choice per state. ORIGINAL: [P2] `ds-field-message` claims `state` picks an icon, and it never does — two false doc
+  **DECK 2026-08-21 — `presentations/field-message-glyph.html`, and Stas asked for exactly this before deciding.**
+  Four sections: the four states with and without a glyph in LIGHT, the same in DARK (where the ramp is
+  lighter and hue does more of the work), a five-field settings form to show the cost, and a third option
+  the item did not carry. Every colour in it is the measured token value, and the glyphs are the real
+  `error` / `warn` / `success` / `info` paths from `icons.data.ts`, not stand-ins.
+  **The deck adds option C — glyphs on error/warning/success, nothing on `hint` — and recommends it.**
+  The busy column in the deck's section 3 is entirely hint, and hint is the resting text rather than a
+  state, so C buys the distinctness where warning and success are confusable and leaves an ordinary form
+  untouched. Option D (a `DS_CONFIG` switch, off by default) is written up as the postpone-it choice.
+  Still needs the verdict; still a visual breaking change wherever a state IS set, so it rides the batch.
+  comments over a real gap.** `state`'s docblock says "Decides colour and icon" and `icon`'s says
+  "Overrides the glyph the `state` would pick" (`field-message.component.ts:26,31`). Neither is true:
+  the template renders `@if (icon())` against an input defaulting to `null`, and there is no computed
+  anywhere in the component, so **`state` decides colour only** and a glyph has to be passed by hand
+  on every field. Found while closing the fill question above.
+  **Why it matters beyond the wrong comment:** a per-state icon is what four of the six systems use to
+  separate the states — Spectrum, Bootstrap, Carbon and Ant all carry one in the field. NN/g requires
+  it as its own guideline, WCAG 1.4.1 (Use of Color) forbids resting a state on colour, and the
+  ui-ux-pro-max base says it twice: `color-not-only` ("Don't convey info by color alone (add
+  icon/text)") and `color-not-decorative-only` ("Functional color (error red, success green) must
+  include icon/text"). It is also the treatment that would give `warning` and `success` real
+  distinctness without any fill, which is exactly what the decision above declines to add.
+  **Decide two things:** whether `state` should default a glyph per state (breaking — every field
+  gains an icon it does not have today), and if so which glyphs. Fix the two comments either way,
+  since they are wrong right now.
+
 ## Shipped 2026-08-21 (session — the assigned batch of eight)
 
 Moved out of `todo.md` on 2026-08-21. Both P1s on the board were in this batch, and both were the
