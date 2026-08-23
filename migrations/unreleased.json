@@ -141,7 +141,7 @@
       "kind": "behavior",
       "old": "extends TableComponent",
       "new": null,
-      "note": "This release's class-member-collision entry, the counterpart of 0.8.0's, 0.9.0's and 0.10.0's: subclassing a DS component is unsupported (design-system.md), but where it happens a new base member with the same name stops the build - TS4114 demands `override`, TS2415 fires on a redeclared private. GAINED MEMBERS, per `npm run class-surface` against v0.10.1: AutocompleteComponent and MultiSelectComponent (chipsMode, showsEveryChip); MenuItemComponent (description, descriptionId); SearchComponent (disabled, isDisabled); SidenavComponent (rail); SidenavItemComponent (rail, railResolved); TableComponent (actionReason, actionsFor, hasActionsFor, visibleRowActions). NO members were lost. CHANGED SIGNATURES, which collide differently: SearchComponent.clear() went protected to public and SearchComponent.focus() now carries `override` (it overrides the CVA base) - a subclass that redeclared either needs `override` and a compatible signature. ACTION: rename the subclass's own member, or add `override` where the base's semantics genuinely match. The separate resolved-readbacks-are-public entry covers the protected-to-public sweep across fourteen classes, which collides the same way. Consumers who only use the <ds-...> elements in templates need no change. LATER THE SAME DAY, from a second `npm run class-surface` run after the overlay-guard fix: TimeColumnsComponent is unchanged but TimePickerComponent also gained the private `insideATrigger` - a redeclared private fails with TS2415 exactly like a public collision, which is why a private counts here at all.",
+      "note": "This release's class-member-collision entry, the counterpart of 0.8.0's, 0.9.0's and 0.10.0's: subclassing a DS component is unsupported (design-system.md), but where it happens a new base member with the same name stops the build - TS4114 demands `override`, TS2415 fires on a redeclared private. GAINED MEMBERS, per `npm run class-surface` against v0.10.1: AutocompleteComponent and MultiSelectComponent (chipsMode, showsEveryChip); MenuItemComponent (description, descriptionId); SearchComponent (disabled, isDisabled); SidenavComponent (rail); SidenavItemComponent (rail, railResolved); TableComponent (actionReason, actionsFor, hasActionsFor, visibleRowActions). NO members were lost. CHANGED SIGNATURES, which collide differently: SearchComponent.clear() went protected to public and SearchComponent.focus() now carries `override` (it overrides the CVA base) - a subclass that redeclared either needs `override` and a compatible signature. ACTION: rename the subclass's own member, or add `override` where the base's semantics genuinely match. The separate resolved-readbacks-are-public entry covers the protected-to-public sweep across fourteen classes, which collides the same way. Consumers who only use the <ds-...> elements in templates need no change. LATER THE SAME DAY, from a second `npm run class-surface` run after the overlay-guard fix: TimeColumnsComponent is unchanged but TimePickerComponent also gained the private `insideATrigger` - a redeclared private fails with TS2415 exactly like a public collision, which is why a private counts here at all. AND, from the state-glyph work: `messageIcon` on all FIFTEEN field components (AutocompleteComponent, CheckboxComponent, ColorPickerComponent, DatePickerComponent, InputComponent, MultiSelectComponent, OtpInputComponent, RadioComponent, RadioGroupComponent, SegmentedComponent, SelectComponent, SliderComponent, SwitchComponent, TextareaComponent, TimePickerComponent), plus `iconResolved` and `config` on FieldMessageComponent - which is internal and not exported, so it only matters to a fork.",
       "searchHints": [
         "extends TableComponent",
         "extends SearchComponent",
@@ -151,7 +151,9 @@
         "extends MenuItemComponent",
         "override ",
         "TS4114",
-        "extends TimePickerComponent"
+        "extends TimePickerComponent",
+        "messageIcon",
+        "extends InputComponent"
       ],
       "surface": "typescript",
       "detect": [
@@ -243,6 +245,25 @@
         "value()"
       ],
       "verify": "Every explicit annotation that reads a `ds-stat` value accepts null."
+    },
+    {
+      "id": "field-message-state-icons",
+      "kind": "behavior",
+      "old": "ds-field-message",
+      "new": null,
+      "note": "APPEARANCE CHANGE on every field that shows a state: the message line now leads with a glyph for `error` (icon `error`), `warning` (`warn`) and `success` (`success`). The `hint` line is unchanged - no glyph - because it is the resting text rather than a state, and it is the majority of rows on a real form. NO CODE ACTION for anyone who wants it. THE ONE LINE BACK, if you do not: `provideDsConfig({ field: { stateIcons: false } })` at the root. Per state instead of all: `stateIcons: { warning: false }` turns one off, `stateIcons: { hint: 'info' }` turns the hint line on, and an IconName replaces a glyph rather than removing it - each key independent. Per FIELD: every one of the fifteen field components gained a `messageIcon` input which wins over the config - `[messageIcon]=\"false\"` drops the glyph on that field alone, `messageIcon=\"info\"` replaces it. TWO NEW CSS HOOKS: --ds-field-message-icon-gap and --ds-field-message-icon-offset. ALSO CHANGED in the same row: `align-items` went `center` to `flex-start`, so a message that WRAPS keeps its glyph beside the first line instead of centred on the block - if you had compensated for the old centring with your own margin on that row, drop it. The glyph size is not a token (ds-icon takes a number): it is 14px, matching --icon-sm.",
+      "searchHints": [
+        "ds-field-message",
+        "--ds-field-message",
+        "stateIcons",
+        "messageIcon",
+        "field-message"
+      ],
+      "surface": [
+        "template",
+        "style"
+      ],
+      "verify": "Every field showing error / warning / success renders a 14px glyph before its message text and hint rows render none; an app that set stateIcons:false shows no glyph on any state; a field with [messageIcon]=\"false\" shows none while its neighbours do."
     }
   ],
   "informational": [
@@ -255,7 +276,8 @@
     "maxVisibleChips gained an 'all' mode on ds-autocomplete and ds-multi-select - render every chip, no measuring. Additive on its own; the actionable half is that null no longer means that (see max-visible-chips-null-is-unset-*).",
     "ds-button variant=\"tonal\": the disabled label now uses the same 40% mix toward --surface-default as ghost / text / outline, instead of the shared oklch(from accent 70% ...) recipe. Visual only, no action. It fixes the dark theme, where the old recipe left the disabled label 1.11:1 from the enabled one (a hue going grey and nothing else); the state gap is now 2.90:1 dark and 3.39:1 light, and the label keeps its hue. --ds-button-label-color-disabled still overrides it.",
     "ds-table: TableColumn gained `interactive?: boolean`. The marked column's cell takes --ds-table-cell-link-color (default --accent) and --ds-table-cell-link-decoration (default underline) while its row is hovered, on a rowInteractive table only. Purely additive - an existing column config renders exactly as before. Reach for it on the cell whose TEXT names what the row opens; the row tint says the row is clickable and nothing else said which text was the target.",
-    "ds fields on the SIGNAL FORMS path: they threw once per field (NgControl bridge has no events stream) and then displayed the first validation failure forever, because the frozen snapshot was the fallback whenever live errors went empty. Fixed - the NgControl path now bows out when it has no live stream. No consumer action: if you bind [field] on a DS control, upgrade and the console noise and the stale message both go. Reactive and template-driven forms are unchanged."
+    "ds fields on the SIGNAL FORMS path: they threw once per field (NgControl bridge has no events stream) and then displayed the first validation failure forever, because the frozen snapshot was the fallback whenever live errors went empty. Fixed - the NgControl path now bows out when it has no live stream. No consumer action: if you bind [field] on a DS control, upgrade and the console noise and the stale message both go. Reactive and template-driven forms are unchanged.",
+    "DS_CONFIG: provideDsConfig() must be called ONCE per injector. Two calls in the same `providers` array do not merge - both resolve their parent with skipSelf, so the later wins and the earlier is silently lost. Merging happens across injector LEVELS (a route or component inheriting the app's config), not within one array. Documented on the function after it bit us in our own docs app."
   ],
   "deleteList": [
     {
@@ -368,6 +390,20 @@
       ],
       "why": "A deep hover rule making one cell read as the row's link target.",
       "replaceWith": "interactive: true on that column, retuned with --ds-table-cell-link-color and --ds-table-cell-link-decoration"
+    },
+    {
+      "id": "field-state-icon-hand-rolled",
+      "surface": [
+        "template",
+        "style"
+      ],
+      "find": [
+        "ds-icon",
+        "field-message",
+        "align-items: center"
+      ],
+      "why": "A glyph rendered by hand beside a field's error or warning text, or a margin nudge added to line one up against the old centred message row.",
+      "replaceWith": "the built-in state glyph (error / warning / success carry one now), retuned through DS_CONFIG.field.stateIcons or messageIcon, with --ds-field-message-icon-gap / -offset for the spacing"
     }
   ]
 }

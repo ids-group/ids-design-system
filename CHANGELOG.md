@@ -70,6 +70,25 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **A field's message line now carries a glyph for `error`, `warning` and `success` — and not for
+  `hint`.** Colour was the whole signal before, and in the light theme warning (#8A7400) against success
+  (#156822) is a hue apart and nothing else: WCAG 1.4.1 is about exactly that, and four of the six
+  systems audited for the fill question carry a per-state icon in the field. **`hint` deliberately stays
+  bare** — it is the resting text rather than a state, and it is the majority of rows on any real form
+  (25 of 43 on our own input page), so a glyph there is noise rather than signal.
+  **Per state, independently, app-wide:**
+  `provideDsConfig({ field: { stateIcons: { warning: false, hint: 'info' } } })` — a name replaces the
+  glyph, `false` removes it, each key is independent of the others, and **`stateIcons: false` is the one
+  line back to how fields looked before**. **Per field:** `messageIcon` on all fifteen field components
+  wins over both — `[messageIcon]="false"` drops the glyph on that field alone.
+  **Two new hooks:** `--ds-field-message-icon-gap`, and `--ds-field-message-icon-offset`, which centres
+  the glyph on the FIRST line rather than the block — the row is `align-items: flex-start` now, so a
+  message that wraps keeps its glyph beside the first line instead of floating in the middle. The offset
+  defaults to a calc over the two tokens that set that line, so it survives a retuned message type.
+  **The size is not a token, on purpose:** `ds-icon` takes a number and writes `width`/`height`
+  attributes, so a CSS hook would mean reaching into another component's template. The glyph is 14px
+  (`--icon-sm`, under the 12px message text); making icon size CSS-driven is a separate change to
+  `ds-icon`.
 - **`ds-stat`'s `value` takes `string | number | null`, so Angular's own pipes bind to it.**
   `number`, `currency`, `percent` and `date` are all typed `string | null`, so
   `[value]="count | number"` failed `strictTemplates` with TS2322 and consumers wrote
