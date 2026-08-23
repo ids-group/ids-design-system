@@ -11,6 +11,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { optionalBound } from '../../core/field-bounds';
+import type { IconName } from '../../icons/icons.data';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
 import { SpinnerComponent } from '../spinner/spinner.component';
@@ -50,6 +51,11 @@ import { resolveWithConfig } from '../../core/config-defaults';
   ],
 })
 export class InputComponent extends DsControlValueAccessor<string> {
+  /** Glyph on the message line, overriding what the state resolves to. Unset
+   *  follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field
+   *  alone. */
+  readonly messageIcon = input<IconName | false | null>(null);
+
   private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */

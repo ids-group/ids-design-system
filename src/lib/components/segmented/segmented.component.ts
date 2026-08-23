@@ -10,6 +10,7 @@ import {
   viewChildren,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import type { IconName } from '../../icons/icons.data';
 import { IconComponent } from '../../icons/icon.component';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
@@ -39,6 +40,11 @@ import type { SegmentedOption } from './segmented.types';
   ],
 })
 export class SegmentedComponent extends DsControlValueAccessor<string> {
+  /** Glyph on the message line, overriding what the state resolves to. Unset
+   *  follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field
+   *  alone. */
+  readonly messageIcon = input<IconName | false | null>(null);
+
   /** Segments to render — each needs a `label` and `value`, optional `icon`/`disabled`. */
   readonly options = input<readonly SegmentedOption[]>([]);
   /** Selected segment's `value`, two-way bound. */

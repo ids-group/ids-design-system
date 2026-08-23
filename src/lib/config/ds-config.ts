@@ -16,6 +16,27 @@ export interface DsConfig {
      *  on the error itself always wins, so one shared map here plus a per-case
      *  override at the validator covers both. Unmapped kinds warn in dev. */
     errorMessages?: Record<string, string>;
+    /** Leading glyph on a field's message line, per state. Defaults carry one for
+     *  the three states that mean something — `error`, `warn`, `success` — and NONE
+     *  for `hint`, which is the resting text rather than a state: a form where every
+     *  field carries an info circle reads as noise. Each key is independent, so
+     *  `{ warning: false, hint: 'info' }` turns one off and the other on. A glyph name
+     *  replaces the default; `false` removes it. `stateIcons: false` removes all four,
+     *  which is the one-line way back to how fields looked before 0.11.
+     *
+     *  WHY a glyph at all: colour alone carried error / warning / success, and in the
+     *  light theme warning (#8A7400) against success (#156822) is a hue apart and
+     *  nothing else. WCAG 1.4.1 forbids resting a state on colour, and four of the six
+     *  systems audited for the fill question carry a per-state icon in the field. */
+    stateIcons?:
+      | false
+      | {
+          error?: IconName | false;
+          warning?: IconName | false;
+          success?: IconName | false;
+          /** The `default` state — the hint line. Off unless set. */
+          hint?: IconName | false;
+        };
   };
   breadcrumbs?: {
     separator?: IconName;
@@ -111,6 +132,10 @@ export const DS_CONFIG = new InjectionToken<DsConfig>('DS_CONFIG', {
  * A nested call MERGES with the config above it, section by section, so
  * scoping one flag cannot silently drop unrelated app-level settings. Only the
  * keys you name are replaced.
+ *
+ * ONE call per injector, though: two in the SAME `providers` array both resolve
+ * their parent with `skipSelf`, so the later one wins and the earlier is silently
+ * lost. Merging happens across injector levels, not within one array.
  */
 export function provideDsConfig(config: DsConfig): Provider {
   return { provide: DS_CONFIG, useFactory: () => inheritDsConfig(config) };

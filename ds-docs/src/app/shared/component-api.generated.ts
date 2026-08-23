@@ -369,6 +369,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
+      },
+      {
         "name": "options",
         "kind": "input",
         "type": "readonly AutocompleteOption<T>[]",
@@ -1255,6 +1264,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Hides the control — see the note on `DsControlValueAccessor.hidden`."
       },
       {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
+      },
+      {
         "name": "checked",
         "kind": "model",
         "type": "boolean",
@@ -1416,6 +1434,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "string",
@@ -1544,6 +1571,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "mode",
@@ -2362,6 +2398,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "value",
@@ -3354,6 +3399,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "string[]",
@@ -3598,6 +3652,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "value",
@@ -4090,6 +4153,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Reserve the message-row height even when empty, so the field doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off — opt in per field, or app-wide for a form that shows validation messages."
       },
       {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
+      },
+      {
         "name": "checked",
         "kind": "model",
         "type": "boolean",
@@ -4249,6 +4321,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "value",
@@ -4561,6 +4642,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
+      },
+      {
         "name": "options",
         "kind": "input",
         "type": "readonly SegmentedOption[]",
@@ -4689,6 +4779,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "value",
@@ -5261,6 +5360,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "SliderValue",
@@ -5740,6 +5848,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Hides the control — see the note on `DsControlValueAccessor.hidden`."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "checked",
@@ -6735,6 +6852,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
       },
       {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
+      },
+      {
         "name": "value",
         "kind": "model",
         "type": "string",
@@ -7007,6 +7133,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Hides the control. On the base so signal forms reaches every control at once. Inline `display`, not the `hidden` attribute — each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field alone."
       },
       {
         "name": "value",

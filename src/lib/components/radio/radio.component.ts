@@ -10,6 +10,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { DsFieldBase } from '../field-base';
+import type { IconName } from '../../icons/icons.data';
 import { nextControlId } from '../field-ids';
 import { RADIO_GROUP } from '../radio-group/radio-group.token';
 import { FieldMessageComponent } from '../field-message/field-message.component';
@@ -26,6 +27,11 @@ import { resolveWithConfig } from '../../core/config-defaults';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class RadioComponent extends DsFieldBase {
+  /** Glyph on the message line, overriding what the state resolves to. Unset
+   *  follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field
+   *  alone. */
+  readonly messageIcon = input<IconName | false | null>(null);
+
   /** Standalone two-way binding, and the ONLY way to drive a lone radio: this
    *  component is deliberately not a `ControlValueAccessor`, so `[formControl]` and
    *  `ngModel` do not bind to it. Inside `ds-radio-group` the GROUP is the form

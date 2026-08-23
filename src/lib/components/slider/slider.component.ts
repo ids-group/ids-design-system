@@ -11,6 +11,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import type { IconName } from '../../icons/icons.data';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
 import { resolveFieldMessage } from '../field-errors';
@@ -39,6 +40,11 @@ type SliderValue = number | readonly [number, number];
   },
 })
 export class SliderComponent extends DsControlValueAccessor<SliderValue> {
+  /** Glyph on the message line, overriding what the state resolves to. Unset
+   *  follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field
+   *  alone. */
+  readonly messageIcon = input<IconName | false | null>(null);
+
   /** Current value, or `[low, high]` when `range`. Two-way bound. */
   readonly value = model<SliderValue>(0);
   /** Minimum selectable value. */

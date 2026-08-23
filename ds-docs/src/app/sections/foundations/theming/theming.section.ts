@@ -60,7 +60,12 @@ providers: [
     icon: { size: 18 },
     badge: { withDot: true },
     modal: { dividers: false },
-    field: { reserveMessage: true },
+    field: {
+      reserveMessage: true,
+      // Per state, independent of each other: error / warning / success carry a
+      // glyph by default and the hint line does not.
+      stateIcons: { warning: false, hint: 'info' },
+    },
     brand: { name: 'Acme', tagline: 'Cover, sorted' },
     datePicker: { locale: 'en-GB', firstDayOfWeek: 1 },
     timePicker: { format: '12h' },

@@ -3350,6 +3350,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-field-message-font-size",
         "value": "var(--font-size-xs)",
         "notes": "Helper-text size."
+      },
+      {
+        "name": "--ds-field-message-icon-gap",
+        "value": "var(--space-1)",
+        "notes": ""
       }
     ]
   },

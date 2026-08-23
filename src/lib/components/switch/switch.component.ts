@@ -8,6 +8,7 @@ import {
   model,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import type { IconName } from '../../icons/icons.data';
 import { DsBooleanControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
 import { resolveFieldMessage } from '../field-errors';
@@ -31,6 +32,11 @@ import { resolveWithConfig } from '../../core/config-defaults';
   ],
 })
 export class SwitchComponent extends DsBooleanControlValueAccessor {
+  /** Glyph on the message line, overriding what the state resolves to. Unset
+   *  follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field
+   *  alone. */
+  readonly messageIcon = input<IconName | false | null>(null);
+
   /** On/off state, two-way bound. */
   readonly checked = model<boolean>(false);
   /** Disables the switch and blocks all interaction. */
