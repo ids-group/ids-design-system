@@ -496,12 +496,12 @@ export const SEMANTIC_FOCUS: readonly ColourRow[] = [
   {
     "name": "--focus-ring-inset",
     "value": "inset 0 0 0 2px var(--focus-ring-inner),\r\n    inset 0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha))",
-    "notes": ""
+    "notes": "The focus ring drawn INSIDE the border box, for a subtree under data-focus=\"inset\". Same two rings and colours as --focus-ring; only the direction differs, so an overflow:hidden ancestor cannot clip it away."
   },
   {
     "name": "--focus-ring-inset-error",
     "value": "inset 0 0 0 2px var(--focus-ring-inner),\r\n    inset 0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%)",
-    "notes": ""
+    "notes": "The inset ring in the error colour, for a field that is invalid while focused under data-focus=\"inset\"."
   },
   {
     "name": "--focus-field-alpha",
@@ -3354,7 +3354,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-field-message-icon-gap",
         "value": "var(--space-1)",
-        "notes": ""
+        "notes": "Space between the state glyph and the message text (default --space-1). Also the row gap when there is no glyph, since the row holds nothing else."
       }
     ]
   },
@@ -3743,17 +3743,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-menu-item-description-color",
         "value": "var(--text-tertiary)",
-        "notes": ""
+        "notes": "Colour of a ds-menu-item `description` — the standing second line under the label (default --text-tertiary, quieter than the label so the action still reads first)."
       },
       {
         "name": "--ds-menu-item-description-font-size",
         "value": "var(--font-size-2xs)",
-        "notes": ""
+        "notes": "Type size of that second line (default --font-size-xs)."
       },
       {
         "name": "--ds-menu-item-description-max-width",
         "value": "14rem",
-        "notes": ""
+        "notes": "Where the description wraps (default 14rem). It exists because the line is prose, and an unbounded one would stretch the menu to the width of its longest sentence."
       },
       {
         "name": "--ds-menu-item-radius",
@@ -3788,7 +3788,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-menu-radius",
         "value": "var(--radius-md)",
-        "notes": ""
+        "notes": "Corner of a bare ds-menu (default --radius-md, which is what the component hardcoded before). Inside a ds-popover the menu clips to --ds-menu-clip-radius instead, published by the popover."
       },
       {
         "name": "--ds-menu-clip-radius",
