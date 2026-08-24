@@ -21,6 +21,37 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
   ORIGINAL: [P2] Every presentation deck renders in a substitute font, so a deck that judges type is lying (found 2026-08-24 while building the glyph-clip deck).** `presentations/ds.css` is compiled from `src/lib/styles/ds.scss`, so it carries the library's eight `@font-face` rules with their source-relative `url('./fonts/*.woff2')` — but `build:deck-css` copies the CSS alone and there is no `presentations/fonts/`. Measured in Chrome: all eight faces report `status: "error"`, `/decks/fonts/mulish-latin-400-normal.woff2` answers 404, and every deck falls back to `sans-serif`. The README's claim that the decks are honest consumers of the DS holds for tokens and fails for type — and it also poisons `document.fonts.check()` for any deck that tries to verify its own font.
   **Fix:** have `build:deck-css` copy `src/lib/styles/fonts/` next to the CSS (five Mulish weights + three JetBrains Mono), or rewrite the `url()`s to a path the docs server answers. `ellipsis-glyph-clip.html` works around it locally by re-declaring the three faces it needs and showing a banner when they fail — a per-deck patch, not the fix.
 
+- [x] **DONE 2026-08-24 — a column can BE a link, so the row no longer has to be the control.**
+  `TableColumn.link: (row) => string | readonly unknown[] | null` renders that column's value as a real
+  `<a [routerLink]>`. Verified on the built docs: 6 rows, **5 rendered as links and the one `planning` row
+  as plain text** (the `null` branch, which is what keeps a partly-reachable list in one column); the link
+  carries `href="/components/table;record=Project%20Alpha"`, is a tab stop, takes the base focus ring, and
+  paints `--ds-table-cell-link-color` + underline **without hover** — unlike `interactive`, whose tint a
+  keyboard or touch user never sees.
+  **Clicking the link fires the row handler ZERO times** (measured with a spy on the `<tr>`), so it composes
+  with `rowInteractive` instead of double-navigating. Both together cost two tab stops per row, which the
+  docs now say outright, recommending the link alone on a long list.
+  **`RouterLink` is imported by the table but instantiated only inside the `link` branch**, so an app with no
+  router provided still renders a table — the directive is never constructed. External URLs stay a
+  `[dsCellTemplate]` case on purpose rather than adding a second `href` knob nobody asked for.
+  Shipped with the demo (the interactive-cell block gained a link block beneath it), `components.md`, a
+  CHANGELOG `Added` entry and an informational migration note telling consumers the duplicated
+  `View Details` menu item can go.
+  ORIGINAL: [P2] A `ds-table` row can only be opened by clicking the row, and that affordance is invisible.**
+  `rowInteractive` gives the `<tr>` a tabindex, Enter/Space and an accessible name, which is the
+  keyboard half — but nothing on screen says the row leads anywhere, and a screen reader still
+  announces a table row, not a link. Consumers compensate by repeating the destination as a
+  `View Details` item in the row's overflow menu (six lists in mm-broker's broker portal do this),
+  which is a menu entry that performs navigation rather than an action. The accessibility literature
+  is against the row-as-control shape itself: Adrian Roselli's "Don't Turn a Table into an ARIA Grid
+  Just for a Clickable Row" and oidaisdes.org's "How to Create an Accessible Table with Clickable
+  Rows" both land on the same answer — put the control **in a cell**, as a real link. What the table
+  is missing is a way to render one cell's value as a link (a `link` column kind, or a documented
+  cell-template contract for it) so the record's name becomes the way in: visible, in the tab order
+  as a link, and openable in a new tab with Ctrl/Cmd-click — which a row click cannot offer. Then
+  `rowInteractive` becomes an enhancement on top of a working link rather than the only path, and the
+  consumers can drop the duplicated menu item.
+
 ## Shipped 2026-08-21 evening (session — the manifests said what changed, not where to look)
 
 Opened and closed in one sitting, because the item measured itself: the lint that found the gap counted

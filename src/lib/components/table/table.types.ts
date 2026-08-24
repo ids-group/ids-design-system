@@ -73,8 +73,26 @@ export interface TableColumn<T = unknown> {
    *  colour and underline while the row is hovered. Only has an effect on a
    *  `rowInteractive` table: on a passive one every hover treatment is suppressed on
    *  purpose, so a tint cannot promise a click that does not happen. Style it with
-   *  `--ds-table-cell-link-color` / `--ds-table-cell-link-decoration`. */
+   *  `--ds-table-cell-link-color` / `--ds-table-cell-link-decoration`.
+   *
+   *  Prefer `link` where the row leads somewhere: a tint appears only on hover, which
+   *  a keyboard or touch user never sees. */
   interactive?: boolean;
+  /** Renders this column's value as a real `<a>`, which is the accessible way to say
+   *  a row leads somewhere: it is visible without hovering, lands in the tab order as
+   *  a link rather than as a table row, and opens in a new tab on Ctrl/Cmd-click —
+   *  none of which a clickable `<tr>` can offer.
+   *
+   *  Return an Angular route target (a string, or the array form for dynamic
+   *  segments); `null` / `undefined` leaves that row's cell as plain text, so a list
+   *  where only some rows are reachable needs no second column. For an external URL,
+   *  render the cell through a `[cell]` template instead — this takes route targets
+   *  only, and the router is touched at all only once a column sets `link`.
+   *
+   *  Composes with `rowInteractive`: the link stops its own click from reaching the
+   *  row, so the row handler fires for the rest of the row and the link navigates
+   *  once. Style it with the same `--ds-table-cell-link-*` tokens as `interactive`. */
+  link?: (row: T) => string | readonly unknown[] | null | undefined;
   /** Initial visibility: start hidden. The column picker (or a bound
    *  `hiddenKeys` set) owns the state from then on; a hidden column stays
    *  available to `filterable` matching and sorting. */

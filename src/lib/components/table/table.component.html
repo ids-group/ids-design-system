@@ -330,8 +330,24 @@
                         [attr.title]="cellValue(row, col)"
                         (click)="onCellClipClick(row, col, $event)"
                       >
-                        {{ cellValue(row, col) }}
+                        @if (cellLink(row, col); as target) {
+                          <a
+                            class="cell-link"
+                            [routerLink]="target"
+                            (click)="$event.stopPropagation()"
+                            >{{ cellValue(row, col) }}</a
+                          >
+                        } @else {
+                          {{ cellValue(row, col) }}
+                        }
                       </span>
+                    } @else if (cellLink(row, col); as target) {
+                      <a
+                        class="cell-link"
+                        [routerLink]="target"
+                        (click)="$event.stopPropagation()"
+                        >{{ cellValue(row, col) }}</a
+                      >
                     } @else {
                       {{ cellValue(row, col) }}
                     }

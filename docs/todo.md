@@ -5,7 +5,6 @@
 **Asks — a consumer or Stas asked for it**
 
 - P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial
-- P2 · A `ds-table` row can only be opened by clicking the row, and that affordance is invisible.
 - P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).
 - P3 · `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref
 - P3 · The two row-action halves left open on purpose: a per-row `label`, and a divider or
@@ -137,20 +136,6 @@ Requests, not defects. Ordered by who is blocked.
 
 ## `ds-table` — the row is the only way in, and it is not a link (from mm-broker, recorded 2026-08-21)
 
-- [ ] **[P2] A `ds-table` row can only be opened by clicking the row, and that affordance is invisible.**
-  `rowInteractive` gives the `<tr>` a tabindex, Enter/Space and an accessible name, which is the
-  keyboard half — but nothing on screen says the row leads anywhere, and a screen reader still
-  announces a table row, not a link. Consumers compensate by repeating the destination as a
-  `View Details` item in the row's overflow menu (six lists in mm-broker's broker portal do this),
-  which is a menu entry that performs navigation rather than an action. The accessibility literature
-  is against the row-as-control shape itself: Adrian Roselli's "Don't Turn a Table into an ARIA Grid
-  Just for a Clickable Row" and oidaisdes.org's "How to Create an Accessible Table with Clickable
-  Rows" both land on the same answer — put the control **in a cell**, as a real link. What the table
-  is missing is a way to render one cell's value as a link (a `link` column kind, or a documented
-  cell-template contract for it) so the record's name becomes the way in: visible, in the tab order
-  as a link, and openable in a new tab with Ctrl/Cmd-click — which a row click cannot offer. Then
-  `rowInteractive` becomes an enhancement on top of a working link rather than the only path, and the
-  consumers can drop the duplicated menu item.
 
 ## `TableRowAction` cannot express a per-row menu, so `rowActions` is adopted nowhere (from mm-broker, 2026-08-18)
 

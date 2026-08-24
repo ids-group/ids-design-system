@@ -315,6 +315,14 @@
         text-decoration: var(--_table-cell-link-decoration);
       }
 
+      /* Unlike `interactive-cell` this is NOT gated on hover: a link a reader only
+         sees once the pointer is over the row is invisible to a keyboard or touch
+         user, which is the whole reason the column kind exists. */
+      td .cell-link {
+        color: var(--_table-cell-link-color);
+        text-decoration: var(--_table-cell-link-decoration);
+      }
+
       &.selected td {
         background-color: var(--_table-row-selected-bg-color);
       }

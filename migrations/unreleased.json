@@ -4,7 +4,8 @@
   "informational": [
     "`--ds-field-message-icon-offset` and `--ds-time-picker-focus-shadow` are public, overridable, and listed in the token reference. Nothing changed in the components - if you hand-rolled around either because it looked unsupported, the override works and the workaround can go. They belong with the twelve named under 0.10.3.",
     "If you applied 0.10.2 before its manifest was completed, two of its notes were reachable only from the CHANGELOG. First: components.md, the digest dist/ds carries for your own agent, had named --primary, --text-on-primary and --secondary as the active ds-sidenav-item defaults - the wash replaced them, so an override written against those three does not do what it looks like.",
-    "Second: `data-focus=\"inset\"` (shipped in 0.10.2) draws the focus ring INSIDE the border box, for a subtree under an overflow:hidden ancestor that would otherwise clip it away entirely. It is the only focus style not pinned to :root - set it on the clipping element."
+    "Second: `data-focus=\"inset\"` (shipped in 0.10.2) draws the focus ring INSIDE the border box, for a subtree under an overflow:hidden ancestor that would otherwise clip it away entirely. It is the only focus style not pinned to :root - set it on the clipping element.",
+    "ds-table columns take a new optional `link: (row) => string | readonly unknown[] | null`. Purely additive - nothing changes without it. Where you compensated for an invisible row click by repeating the destination as a 'View Details' item in the row overflow menu, that item can go: give the name column `link` instead and the destination becomes a real <a> - tabbable as a link, Ctrl/Cmd-clickable, and announced as a link rather than as a table row. If you also set `rowInteractive`, note the pair costs two tab stops per row; the link alone is usually the better trade on a long list."
   ],
   "deleteList": []
 }

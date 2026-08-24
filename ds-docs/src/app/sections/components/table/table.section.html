@@ -292,6 +292,69 @@
   </div>
 
   <h3 class="block-title t-h4">
+    A cell that IS a link — the accessible way to say a row leads somewhere
+  </h3>
+
+  <p class="block-desc t-s">
+    <strong>
+      A clickable row cannot be a link.
+    </strong>
+    It has no href, so it never appears in the tab order as a link, a screen reader
+    announces a table row, and Ctrl/Cmd-click cannot open it in a new tab — and the
+    hover tint above is invisible to a keyboard or touch user. Give the column a
+    <code class="t-mono-inline">
+      link
+    </code> function returning an Angular route target and the
+    value renders as a real
+    <code class="t-mono-inline">
+      &lt;a&gt;
+    </code>: visible without hovering, tabbable, and
+    Ctrl-clickable. Return
+    <code class="t-mono-inline">
+      null
+    </code> for a row that leads nowhere and that cell stays
+    plain text, so a partly-reachable list needs no second column. External URLs go
+    through a
+    <code class="t-mono-inline">
+      [cell]
+    </code> template instead — this takes route targets only,
+    and the router is touched at all only once a column sets
+    <code class="t-mono-inline">
+      link
+    </code>.
+  </p>
+
+  <p class="block-desc t-s">
+    It composes with
+    <code class="t-mono-inline">
+      rowInteractive
+    </code>: the link stops its own click from
+    reaching the row, so clicking the name navigates once and the rest of the row still
+    fires the row handler. That is the shape the accessibility literature lands on —
+    Roselli’s "Don’t Turn a Table into an ARIA Grid Just for a Clickable Row" — with the
+    row click left as an enhancement on top of a control that works without it.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      Both together cost two tab stops per row
+    </strong>
+    — the row and the link — so on a long list drop
+    <code class="t-mono-inline">
+      rowInteractive
+    </code> once the link is there and keep one stop per
+    row. Keep both only where the row click is genuinely worth the second stop.
+  </p>
+
+  <ds-table
+    caption="Records, with the name as a link"
+    [data]="events"
+    [columns]="linkColumns"
+    [rowInteractive]="true"
+    [stickyHeader]="false"
+  />
+
+  <h3 class="block-title t-h4">
     Row selection · bulk-action bar
   </h3>
 
