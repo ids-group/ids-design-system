@@ -67,7 +67,8 @@
   td.bad { color: #B3261E; font-weight: var(--font-weight-bold); }
   td.ok { color: #156822; font-weight: var(--font-weight-bold); }
 
-  /* ---- the specimen: a faithful copy of styles/_dropdown-overlay.scss ---- */
+  /* A copy of styles/_dropdown-overlay.scss — keep the two in step or the deck
+     stops arguing about the real component. */
   .panel {
     width: 268px; padding: var(--space-1);
     border: 1px solid var(--border-default); border-radius: var(--ds-radius-panel);
@@ -83,7 +84,6 @@
   }
   .option-label { flex: 1; min-width: 0; text-overflow: ellipsis; white-space: nowrap; }
 
-  /* The four states under comparison. Only the label rule differs. */
   .v-bug .option-label { overflow: hidden; }
   .v-clip .option-label { overflow: clip; overflow-clip-margin: var(--space-1); }
   .v-pad .option-label { overflow: hidden; padding-block: 3px; margin-block: -3px; }
@@ -110,9 +110,8 @@
   .readout .hit { color: #B3261E; font-weight: var(--font-weight-bold); }
   .readout .miss { color: #156822; font-weight: var(--font-weight-bold); }
 
-  /* The differentiator: a background on the LABEL, which is what makes (e)'s
-     inflated box visible. Painted as an image so a force-dark browser cannot
-     recolour the thing being judged. */
+  /* An image, not a colour: a force-dark browser recolours backgrounds and would
+     repaint the very thing being judged. */
   .tinted .option-label { background-image: linear-gradient(#D6E4FF, #D6E4FF); border-radius: 2px; }
 </style>
 <main>
@@ -339,27 +338,23 @@
     probe.textContent = 'Ёлкин Афанасий — уступка';
     probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap';
     document.body.appendChild(probe);
-    // Probed at the weight the specimen actually uses: Mulish's 400 and 500 do not
-    // report the same glyph box, so probing 400 would print a number this page's
-    // own rows contradict.
+    // Probed at weight 500 and at 14px — the specimen's own weight and size. Mulish
+    // reports a different glyph box per weight, and hinting keeps the ratio from
+    // scaling: at 100px it reads 1.253 while the rows below measure 17.6 at 14px.
     const measureIn = (family, size) => {
       probe.style.font = '500 ' + size + 'px/1 ' + family;
       const rect = glyphRect(probe);
       return { ratio: rect.height / size, height: rect.height, width: rect.width };
     };
-    // The ratio is read AT 14px, the size under discussion: hinting keeps it from
-    // scaling perfectly, so probing at 100px prints 1.253 while the rows below
-    // measure 17.6 — a headline its own specimens would contradict. The
-    // font-loaded check probes at 100px instead, where a width difference is loud.
+    // The font-loaded check probes at 100px instead, where a width gap is loud.
     const withMulish = measureIn('Mulish, sans-serif', 14);
     const loudMulish = measureIn('Mulish, sans-serif', 100);
     const loudFallback = measureIn('sans-serif', 100);
     probe.remove();
 
-    // `document.fonts.check()` is useless here: ds.css declares its own Mulish faces
-    // whose files 404, and one errored face for the family makes check() report false
-    // even though this deck's own @font-face loaded. Compare rendered widths instead —
-    // if dropping Mulish from the stack changes nothing, it was never rendering.
+    // `document.fonts.check()` is useless here: ds.css declares Mulish faces whose
+    // files 404, and one errored face for a family makes check() report false even
+    // when this deck's own face loaded. Compare rendered widths instead.
     if (Math.abs(loudMulish.width - loudFallback.width) < 0.5) {
       document.getElementById('font-warn').classList.add('show');
     }
