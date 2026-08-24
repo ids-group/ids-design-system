@@ -79,8 +79,10 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   **Per state, independently, app-wide:**
   `provideDsConfig({ field: { stateIcons: { warning: false, hint: 'info' } } })` — a name replaces the
   glyph, `false` removes it, each key is independent of the others, and **`stateIcons: false` is the one
-  line back to how fields looked before**. **Per field:** `messageIcon` on all fifteen field components
-  wins over both — `[messageIcon]="false"` drops the glyph on that field alone.
+  line back to how fields looked before**. **Per field:** `messageIcon` wins over both —
+  `[messageIcon]="false"` drops the glyph on that field alone. It is declared once on the shared
+  field base, so it reaches all fifteen fields that render a message row — and `ds-search`, which
+  inherits the base for its form binding and renders none, where it does nothing.
   **Two new hooks:** `--ds-field-message-icon-gap`, and `--ds-field-message-icon-offset`, which centres
   the glyph on the FIRST line rather than the block — the row is `align-items: flex-start` now, so a
   message that wraps keeps its glyph beside the first line instead of floating in the middle. The offset
