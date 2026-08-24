@@ -65,8 +65,8 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
   rounded ones, the clipped card shows them following the radius.
   `clip`, not `hidden`, is what the docs and the token description recommend — it keeps the card out of the
   scroll-container business. Shipped with a side-by-side demo, `components.md`, a CHANGELOG `Added` entry,
-  and a `deleteList` row so the four `::ng-deep ds-card .card { overflow: hidden }` copies in the consumer
-  can go.
+  and a `deleteList` row so the five `::ng-deep ds-card .card { overflow: hidden }` copies in the consumer
+  can go — five, not four: the consumer recounted by grep on 2026-08-24 and found `rider-option` too.
   ORIGINAL: ## `ds-card` cannot clip its own box, so a full-bleed child pokes past the radius (from mm-broker, 2026-08-24)
 
 - [ ] **[P3] A card that holds a full-bleed child needs `overflow` on the card's INNER box, and no hook

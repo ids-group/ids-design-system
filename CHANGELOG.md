@@ -13,7 +13,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **`--ds-card-overflow`, so a card can hold a full-bleed child inside its own radius.** A child whose
   background runs to the card's edge — an image, a grey footer strip — paints its square corners over
   the card's rounded ones, and the host cannot fix it: the rounded box is `ds-card`'s inner element, out
-  of reach. Four screens in one consumer's portal carried the same
+  of reach. Five screens in one consumer's portal carried the same
   `:host ::ng-deep ds-card .card { overflow: hidden }` to get at it; that rule can go.
   **Set `--ds-card-overflow: clip`** — `clip` rather than `hidden`, so the card does not also become a
   scroll container.
