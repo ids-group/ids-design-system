@@ -2,9 +2,6 @@
 
 ## Open, in priority order
 
-**Bugs — something shipped misbehaves**
-
-
 **Asks — a consumer or Stas asked for it**
 
 - P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial
@@ -45,10 +42,11 @@
 
 ## Priority board (2026-08-24, recut after 0.10.2)
 
-**26 open: 1 P1, 8 P2, 17 P3.** Nine are *Parked* awaiting a first consumer ask and two are Records, so
-the live board is **15 items — and 9 of those are Decisions**. What is left to BUILD is **one bug and
-five asks**; of the five, one has a deck waiting on a verdict, three are gated on a first consumer ask,
-and exactly one is buildable today with nothing pending on it.
+**25 open: 1 P1, 7 P2, 17 P3.** Nine are *Parked* awaiting a first consumer ask and two are Records, so
+the live board is **14 items — and 9 of those are Decisions**. **`# Bugs` is empty:** nothing shipped
+is known to misbehave. What is left to BUILD is **five asks**; of them, one has a deck waiting on a
+verdict, three are gated on a first consumer ask, and exactly one is buildable today with nothing
+pending on it.
 
 **The one buildable item, and it spent three days filed as "not work".** A `ds-table` row can be opened
 only by clicking the row, and nothing on screen says so — six lists in mm-broker's broker portal
@@ -57,14 +55,6 @@ agrees on the shape of the fix (Roselli, oidaisdes.org): put the control **in a 
 so the record's name becomes the way in — visible, in the tab order, and Ctrl-clickable, which a row
 click cannot offer. It sat under `# Records`, whose own header reads "Not work", and the index therefore
 listed it as a record. Moved to `# Asks` today; the work is a `link` column kind, unblocked.
-
-**Raised to P2 today: the decks are lying about type.** `build:deck-css` compiles `ds.scss` into
-`presentations/ds.css`, which carries eight `@font-face` rules resolving `./fonts/*.woff2`, and
-`presentations/fonts/` does not exist — so every deck renders in a substitute face. Four decks are
-attached to decisions still open (packaging, the colour engine, the interaction contract,
-`ds-select` native multi). A deck that judges TYPE is then corrupted evidence outright, and the rest
-shift metrically under the wrong face. This repo settles visual questions from decks, which is what
-makes it more than a papercut; the fix is one copy step in the build script.
 
 **Two items left the board without being worked, and that is the finding.** Both were closed and
 archived on 08-21 — the docs API reference listing components nobody can import, and the missing
@@ -117,8 +107,6 @@ rather than re-reading our own API.
 # Bugs — something shipped misbehaves
 
 Highest: each one is wrong in code — or in a surface — a consumer already reads.
-
-
 
 # Asks — a consumer or Stas asked for it
 
