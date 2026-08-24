@@ -22,12 +22,11 @@ export interface DsConfig {
      *  field carries an info circle reads as noise. Each key is independent, so
      *  `{ warning: false, hint: 'info' }` turns one off and the other on. A glyph name
      *  replaces the default; `false` removes it. `stateIcons: false` removes all four,
-     *  which is the one-line way back to how fields looked before 0.11.
+     *  which is the one-line way to turn the glyphs off entirely.
      *
      *  WHY a glyph at all: colour alone carried error / warning / success, and in the
-     *  light theme warning (#8A7400) against success (#156822) is a hue apart and
-     *  nothing else. WCAG 1.4.1 forbids resting a state on colour, and four of the six
-     *  systems audited for the fill question carry a per-state icon in the field. */
+     *  light theme warning (#8A7400) and success (#156822) differ by hue and nothing
+     *  else — which WCAG 1.4.1 forbids a state from resting on. */
     stateIcons?:
       | false
       | {

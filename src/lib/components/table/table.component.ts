@@ -1646,7 +1646,6 @@ export class TableComponent<T extends object> {
     return this.actionsFor(row).length > 0;
   }
 
-  /** What the open menu renders — the items applying to the row it was opened for. */
   protected readonly visibleRowActions = computed<readonly TableRowAction<T>[]>(
     () => {
       const row = this.menuRow();

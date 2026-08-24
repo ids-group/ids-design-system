@@ -27,10 +27,8 @@ const TRIGGER_ELEMENTS = `button${NOT_ROVED}, [tabindex="0"]${NOT_ROVED}`;
 /**
  * The `ControlValueAccessor` half of a DS value control, with no message API
  * attached. `DsControlValueAccessor` is this plus `DsFieldBase`; a control that
- * holds a value and renders no message row — `ds-search`, which is a toolbar
- * filter rather than a validated field — takes this directly, so it stops
- * advertising `hint` / `error` / `warning` / `reserveMessage` / `messageIcon`
- * inputs that nothing in its template reads.
+ * holds a value and renders no message row — `ds-search`, a toolbar filter rather
+ * than a validated field — takes this directly and gets no message inputs with it.
  *
  * The model arrives as a THUNK, not a signal: on a base class `value` is abstract
  * and on a component it is a field initialiser, so it does not exist yet when this
