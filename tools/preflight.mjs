@@ -48,8 +48,8 @@ try {
   fail('migrations/ failed the manifest lint (errors above).');
 }
 
-// A shell that forgets to silence the base focus indicator ships a field with two
-// rings, which is what 0.10.0 and 0.10.2 each did to a component nobody measured.
+// 0.10.0 and 0.10.2 each shipped a field with two focus rings, and both were found
+// by measuring in a browser rather than by reading the styles.
 try {
   execSync('node tools/check-focus-rings.mjs', { stdio: 'inherit' });
 } catch {

@@ -45,9 +45,6 @@
     border-color: var(--_search-border-hover);
   }
 
-  /* Named control, not a blanket. The blanket this replaces also silenced
-     `.search-clear`, a real tab stop: focusing it then changed nothing on screen,
-     so a keyboard user could not tell the × had focus. */
   @include focus.owns-the-focus-ring('.search-input');
   &:focus-within {
     background-color: var(--_search-bg-color-focus);

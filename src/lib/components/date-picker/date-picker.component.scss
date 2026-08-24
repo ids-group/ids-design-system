@@ -105,11 +105,10 @@
     box-shadow: none;
   }
 
-  /* Named controls, not a blanket — the blanket this replaces silenced a real tab
-     stop in ds-search. Both of these are listed on purpose: `.calendar-toggle` is
-     `tabindex="-1"` and `aria-hidden`, so it is not a stop a keyboard user lands on
-     and must not paint a ring of its own. */
   @include focus.owns-the-focus-ring('.date-input');
+
+  /* Listed too, unlike a clear button: the toggle is `tabindex="-1"` and
+     `aria-hidden`, so it is not a stop a keyboard user lands on. */
   @include focus.owns-the-focus-ring('.calendar-toggle');
 
   &:focus-within,

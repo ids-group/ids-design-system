@@ -76,8 +76,6 @@
 
   &:hover:not(.disabled) { border-color: var(--border-strong); }
 
-  /* Named control, not a blanket: a chip's close button in this box is a tab stop
-     and keeps its own ring. */
   @include focus.owns-the-focus-ring('.autocomplete-input');
   &:focus-within:not(.disabled) {
     border-color: var(--_autocomplete-border-color-focus);

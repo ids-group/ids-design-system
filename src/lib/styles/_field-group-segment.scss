@@ -26,10 +26,8 @@
       outline: 0;
     }
 
-    /* No blanket reset here on purpose. The block above clears the segment BOX,
-       and each field component silences its own named control via
-       focus.owns-the-focus-ring — which leaves a tab stop inside a segment (a
-       clear button) with the ring it needs. A blanket used to sit here and took
-       those rings away too. */
+    /* No blanket reset here on purpose: the block above clears the segment BOX and
+       each field silences its own control, which leaves a tab stop inside a segment
+       the ring it needs. */
   }
 }

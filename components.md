@@ -112,6 +112,11 @@ The DS aggregate (`@use 'styles/ds'`) forwards the full stack: theme primitives 
 - Skeleton shimmer (`_skeleton-shimmer.scss`): drives the global `--skeleton-shimmer-x` keyframe used by `<ds-skeleton>` and table skeleton rows.
 - Dropdown overlay (`_dropdown-overlay.scss`): styles the `.ds-dropdown-panel` class used by select/dropdown/combobox/date-picker CDK portals — these panels live outside the host's encapsulated tree, so the styles must be global.
 
+**Two mixins for building your own composite controls.** Mixin-only partials, so they emit nothing and are NOT part of the `styles/ds` aggregate — `@use` them where you need them.
+
+- `@use 'styles/focus' as focus;` → `focus.owns-the-focus-ring($control)`. Include it in a shell that paints its own ring on `:focus-within`, naming the ONE control inside that must not paint the base indicator too. `outline: 0` cannot do this — the base indicator is a box-shadow — and a box-wide reset instead of a named control silences the tab stops inside the box (a clear button, a stepper arrow), which leaves a keyboard user unable to tell what has focus. See Foundations → Colour → Focus for the worked example.
+- `@use 'styles/text-clip' as text-clip;` → `text-clip.single-line-ellipsis`. A one-line label that truncates with an ellipsis. Use it instead of hand-writing `overflow: hidden; text-overflow: ellipsis`: with a line-height under the font's glyph box (Mulish measures 1.257em, so `--line-height-flat` and `--line-height-tight` both qualify) that `hidden` shaves the top and bottom off every glyph.
+
 ---
 
 ## Components

@@ -23,26 +23,15 @@
 // silence the inner element, because a shadow is what this rule sets and `outline: 0`
 // cannot cancel a shadow — leave it and the field paints two rings, one round the inner
 // control and one round the box. Include `owns-the-focus-ring` below to do it.
-//
-// There used to be a list of the shells here. It was written from a read of the code,
-// missed input and textarea for two releases, and a browser sweep of 9,968 focusable
-// elements found them — so tools/check-focus-rings.mjs reads the code instead and the
-// list is gone.
 :where(:focus-visible) {
   outline: none;
   box-shadow: var(--ds-control-focus-shadow);
 }
 
-// What a ringed shell includes to silence the base rule on the ONE control it
-// speaks for. `$control` is required and must be a real selector, never a blanket:
-// a shell-wide reset also hits the tab stops living in the box — a clear button, a
-// stepper arrow — and then tabbing from the field to that button changes nothing on
-// screen, which is the same defect from the other side. Verified as such: with
-// ds-search's blanket reset in place, focusing its clear button left every measured
-// paint property identical.
-//
-// Checked by tools/check-focus-rings.mjs — a component that paints a focus shadow
-// on `:focus-within` must include this.
+// `$control` names ONE control and must never be a blanket: a box-wide reset also
+// silences the tab stops living in the box — a clear button, a stepper arrow — and
+// then tabbing from the field to that button changes nothing on screen.
+// Enforced by tools/check-focus-rings.mjs.
 @mixin owns-the-focus-ring($control) {
   #{$control}:where(:focus-visible) {
     box-shadow: none;

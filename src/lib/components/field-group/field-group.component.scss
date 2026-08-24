@@ -46,10 +46,8 @@
 
 /* ONE ring for the whole group: each segment suppresses its own, so focusing
    any of them lights the shared chrome instead of drawing a box mid-row.
-   focus-ring-guard: the group owns no control of its own — every segment is
-   another component, and each silences its own via focus.owns-the-focus-ring.
-   A blanket reset here used to do it and took the ring off tab stops inside a
-   segment too. */
+   focus-ring-guard: the group owns no control of its own — every segment is another
+   component, and each silences its own via focus.owns-the-focus-ring. */
 
 :host(:focus-within:not(.disabled)) {
   border-color: var(--_field-group-border-color-focus);

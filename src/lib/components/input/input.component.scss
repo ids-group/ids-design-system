@@ -159,8 +159,6 @@
       box-shadow: var(--_input-focus-shadow);
     }
 
-    /* Named control, not a blanket: `clear-btn` and `password-toggle` live in this
-       box and are real tab stops, so they keep their own ring. */
     @include focus.owns-the-focus-ring('input');
   }
 

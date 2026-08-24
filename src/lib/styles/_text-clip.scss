@@ -1,15 +1,10 @@
-// Single-line text that truncates with an ellipsis. Mixin-only, so it is NOT
-// forwarded from `ds.scss` — components `@use` it directly, like `chip-row`.
-
 @mixin single-line-ellipsis {
   /* `clip` with a margin, not `hidden`: an ellipsis box needs a non-`visible`
-     overflow, and where the line box is tighter than the font's glyph box that
-     overflow eats the glyph. Mulish measures 1.257em, so --line-height-flat (1)
-     and -tight (1.1) are both under it — at 14px the shave was 2.13px above the
-     cap line and 1.47px below the baseline, on EVERY label, not only the ones
-     with descenders (MBP-245). The margin returns that room without moving any
-     geometry, and `text-overflow` reads any non-`visible` overflow, so the
-     ellipsis still applies. */
+     overflow, and where the line box is tighter than the glyph box that overflow
+     eats the glyph. Mulish measures 1.257em, so --line-height-flat (1) and -tight
+     (1.1) are both under it and shave EVERY label, not only the ones with
+     descenders (MBP-245). `text-overflow` reads any non-`visible` overflow, so the
+     ellipsis still applies under `clip`. */
   overflow: clip;
   overflow-clip-margin: var(--space-1);
   text-overflow: ellipsis;
