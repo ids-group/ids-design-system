@@ -1,4 +1,3 @@
-// tools/extract-component-api.mjs
 // AST-parses src/lib/components/*.component.ts (TS syntax tree, no type-checker),
 // resolves literal union aliases across src/lib (incl. Exclude/Extract over core
 // vocab like DsStatus), merges the editorial JSON, and emits a typed

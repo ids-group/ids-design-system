@@ -1,4 +1,3 @@
-// tools/migration-lint.mjs
 //
 // Every migrations/<version>.json, checked against the contract in
 // migrations/README.md. It exists because NOTHING validated these files: a
@@ -27,8 +26,8 @@
 // (`verify`), what became redundant (`deleteList`), and which earlier item it
 // reverses (`supersedes`).
 //
-// Every published manifest was back-filled to this contract on 2026-08-21, so
-// there is no legacy tier: a gap is an error wherever it appears.
+// There is no legacy tier: every published manifest meets this contract, so a gap is
+// an error wherever it appears.
 //
 // Usage:
 //   node tools/migration-lint.mjs                          all manifests

@@ -1,4 +1,3 @@
-// tools/extract-tokens.mjs
 import { readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
