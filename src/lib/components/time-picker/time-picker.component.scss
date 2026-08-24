@@ -185,7 +185,11 @@
   background: var(--ds-time-picker-bg-color, var(--surface-overlay));
   border: var(--border-width-default) solid
     var(--ds-time-picker-border, var(--border-default));
-  border-radius: var(--_time-picker-panel-radius);
+
+  /* Public token direct, like the three declarations around it: the private one is
+     declared on :host and this panel is portaled out of it, so reading `--_…` here
+     resolved to nothing and the radius fell back to 0 — square corners. */
+  border-radius: var(--ds-time-picker-panel-radius, var(--ds-radius-panel));
   box-shadow: var(--ds-time-picker-shadow, var(--ds-elevation-overlay));
   padding: var(--space-2);
   gap: var(--space-1);
@@ -226,9 +230,12 @@
     color: var(--accent);
   }
 
+  /* Public token direct, like the panel's other declarations: this button renders in
+     the portaled panel, where the :host-declared `--_time-picker-focus-shadow` does
+     not resolve, and an unresolvable var made `box-shadow` its initial `none`. */
   &:focus-visible {
     outline: none;
-    box-shadow: var(--_time-picker-focus-shadow);
+    box-shadow: var(--ds-time-picker-focus-shadow, var(--ds-control-focus-shadow));
   }
 }
 

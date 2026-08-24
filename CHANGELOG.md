@@ -33,6 +33,18 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   every computed shadow is final — found exactly these two and nothing else in the library. The reset
   stays scoped to the field element, so `clear-btn` and `password-toggle` inside the same box keep
   their own rings; they are real tab stops.
+- **Two buttons inside portaled panels had no focus indicator, and one panel had square corners — a
+  private token read from outside the host that declares it.** `ds-date-picker`'s `.period-trigger`
+  (the month/year header, `tabindex="0"`) and `ds-time-picker`'s `.time-action` both did
+  `box-shadow: var(--_…-focus-shadow)` beside `outline: none`. Those private tokens are declared on
+  `:host`, the panels are portaled out of it by the CDK, so the `var()` resolved to nothing — and an
+  unresolvable `var()` makes `box-shadow` its initial value, `none`. Measured: resting and focused
+  paint were byte-identical on both, so a keyboard user landing there saw nothing. Another WCAG 2.4.7
+  failure, and older than the 0.10.x focus work. `ds-time-picker`'s panel `border-radius` read the
+  same way and fell back to `0`, so the panel rendered square instead of `--ds-radius-panel`.
+  **Found by opening each overlay and probing inside it** — the earlier sweeps only ever saw
+  focusables that exist while the overlay is closed. `ds-select`, `ds-multi-select` and
+  `ds-autocomplete` panels were checked the same way and are clean.
 - **`ds-search`'s clear button had no focus indicator at all — introduced by 0.10.2's own ring fix.**
   That fix silenced the base indicator with a shell-wide reset, which also hit `.search-clear`, a
   `tabindex="0"` tab stop. Measured: with the field's halo already lit, tabbing from the input to the

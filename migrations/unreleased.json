@@ -25,18 +25,46 @@
       "surface": "style",
       "note": "ACCESSIBILITY FIX, no action: 0.10.2's ring fix silenced the base focus indicator with a shell-wide reset, which also hit .search-clear - a tabindex=0 tab stop. Tabbing from the input to the clear button changed nothing on screen (box-shadow, outline, border, background and colour all identical), so a keyboard user could not tell the button had focus: a WCAG 2.4.7 failure. Every shell now names the single control it silences, so tab stops inside a field box keep their own ring. ACTION only if you re-added a ring to that button yourself - that rule can go.",
       "verify": "Type into a ds-search so the clear button appears, then Tab: the × shows its own ring on top of the field halo. Same for a chip close button in ds-autocomplete or ds-multi-select, and for the arrows in ds-number-stepper.",
-      "searchHints": ["search-clear", "ds-search", "focus-visible", "box-shadow"]
+      "searchHints": [
+        "search-clear",
+        "ds-search",
+        "focus-visible",
+        "box-shadow"
+      ]
+    },
+    {
+      "id": "portaled-panel-focus-indicator",
+      "kind": "behavior",
+      "old": "ds-date-picker, ds-time-picker",
+      "new": null,
+      "surface": "style",
+      "note": "ACCESSIBILITY FIX, no action: two tabbable buttons inside the portaled panels had no focus indicator at all, and one panel had square corners. Both read a private --_*-focus-shadow token declared on :host while the panel is portaled out of the host by the CDK, so the var() resolved to nothing and box-shadow fell back to its initial value none - with outline: none beside it, nothing was left. ds-time-picker's panel border-radius read the same way and fell back to 0. ACTION only if you worked around either: a rule adding a ring to .period-trigger or .time-action, or a border-radius forced onto .time-panel, can go.",
+      "verify": "Open the ds-date-picker calendar and Tab to the month/year header: it shows a focus ring. Open the ds-time-picker panel and Tab to its action button: same. The time-picker panel has rounded corners.",
+      "searchHints": [
+        "period-trigger",
+        "time-action",
+        "time-panel",
+        "--ds-date-picker-focus-shadow",
+        "--ds-time-picker-focus-shadow",
+        "--ds-time-picker-panel-radius"
+      ]
     }
   ],
   "informational": [
     "The shell list in styles/_focus.scss is now maintained from a measurement, not from a read of the code: it had been wrong for two releases. If you add a component that paints its own ring on :focus-within, suppress the base rule on the control it speaks for - `outline: 0` cannot do it, because the base indicator is a box-shadow.",
-    "Two authoring mixins are now documented for consumers building their own composite controls: `focus.owns-the-focus-ring($control)` in styles/focus, and `text-clip.single-line-ellipsis` in styles/text-clip. Both are opt-in - no existing code changes."
+    "Two authoring mixins are now documented for consumers building their own composite controls: `focus.owns-the-focus-ring($control)` in styles/focus, and `text-clip.single-line-ellipsis` in styles/text-clip. Both are opt-in - no existing code changes.",
+    "A private --_* token declared on :host does not reach a CDK-portaled panel, and an unresolvable var() silently becomes the property's initial value - none for box-shadow, 0 for border-radius. If you style a DS panel from your own CSS, read the PUBLIC --ds-* token there, not the private one."
   ],
   "deleteList": [
     {
       "id": "input-double-ring-workaround",
       "surface": "style",
-      "find": ["ds-input input", "ds-textarea textarea", "--ds-input-focus-shadow", "box-shadow: none"],
+      "find": [
+        "ds-input input",
+        "ds-textarea textarea",
+        "--ds-input-focus-shadow",
+        "box-shadow: none"
+      ],
       "why": "A rule killing one of the two focus rings a ds-input or ds-textarea used to paint - typically box-shadow: none on the inner input, or --ds-input-focus-shadow re-declared as none to hide the doubling.",
       "replaceWith": "nothing - the component now paints one ring on its own"
     }

@@ -246,6 +246,11 @@
   --_date-picker-width: var(--ds-date-picker-width, var(--date-picker-w));
   --_date-picker-panel-radius: var(--ds-date-picker-panel-radius, var(--ds-radius-panel));
 
+  /* Re-declared for the PORTAL: the :host copy does not inherit out here, and the
+     period trigger's `:focus-visible` read it as nothing — an unresolvable var makes
+     `box-shadow` its initial `none`, which left a tabbable button with no indicator. */
+  --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
+
   background-color: var(--_date-picker-bg-color);
   border: var(--border-width-default) solid var(--_date-picker-border);
   border-radius: var(--_date-picker-panel-radius);
