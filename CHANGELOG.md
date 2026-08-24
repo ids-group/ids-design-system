@@ -212,6 +212,30 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Fixed
 
+- **One focus ring per field, not two.** Since 0.10.0 the universal `:where(:focus-visible)` rule has
+  given every focusable element a `box-shadow`, and these shells paint their own on `:focus-within` —
+  `outline: 0`, which each inner control already had, cannot cancel a shadow. So a focused field drew a
+  tight ring around its inner control AND a halo around the box. Measured on five shapes: `ds-search`,
+  `ds-autocomplete`, `ds-date-picker`, `ds-number-stepper`, and any field inside a `ds-field-group`
+  (fixed once in the shared segment mixin). It is the same trap 0.10.0 warned consumers about — an app
+  rule that styles focus with an `outline` only — landing in our own components.
+  **The reset is scoped to the control the shell speaks for, deliberately.** A `ds-number-stepper` step
+  button keeps its own ring, and so does a chip's close button: those are `tabindex="0"` tab stops, and
+  the halo is already on, so it cannot say which of them focus moved to. The date picker's calendar
+  toggle is `tabindex="-1"` and correctly loses its ring.
+
+- **A flat line box stopped shaving descenders off clipped labels** (mm-broker MBP-245). `.option` sets
+  `line-height: 1` while `.option-label` adds the `overflow: hidden` its ellipsis needs and no padding,
+  so the label box was exactly the font size tall and the glyph box was taller: measured **2.13px above
+  the cap line and 1.47px below the baseline** clipped, on every option rather than only the ones with a
+  descender. Fixed with `overflow: clip` plus a `var(--space-1)` clip margin, which **moves no geometry**
+  — the option row stays 30px, the multi-select row 36px, the table row 38px.
+  **Six sites:** the shared dropdown overlay (`ds-select`, `ds-autocomplete`), `ds-multi-select`'s own
+  copy, `.cell-clip` in `ds-table` and `.label` in `ds-breadcrumbs` (both measured), and the `.crumb`
+  rules in `ds-topbar` / `ds-page-header`, which share the shape and are unreachable in our own docs.
+  **Two behaviours checked rather than assumed:** the ellipsis still applies (`text-overflow` reads any
+  non-`visible` overflow), and `ds-table`'s clipped-cell popover still fires, since `scrollWidth >
+  clientWidth` still reports true under `clip`.
 - **A field bound with signal forms threw once per field, and then showed an error it had already
   cleared.** `resolveFieldMessage` subscribes to `NgControl`'s `events` stream to follow reactive and
   template-driven forms. The `NgControl` that signal forms bridges carries no such stream, so the

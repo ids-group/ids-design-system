@@ -135,6 +135,11 @@ text rather than a state. Retune app-wide with `DS_CONFIG.field.stateIcons` (per
 `messageIcon: IconName | false | null`, which wins over the config. Spacing hooks:
 `--ds-field-message-icon-gap`, `--ds-field-message-icon-offset`.
 
+**`ds-search` is deliberately NOT on that list.** It binds to a form like the others — `[formControl]`,
+`formControlName`, `[(ngModel)]`, signal forms, plus its own `[(value)]` — and it takes `disabled` and
+`hidden`, but it renders no message row and therefore takes none of the message inputs. A toolbar filter
+is not a validated field; where a search needs a label or an error line, use `ds-input`.
+
 #### `<ds-button>` — `ButtonComponent`
 Inputs: **two orthogonal axes** — `color: ButtonColor = 'primary'` (`'primary' | 'secondary' | 'tertiary' | 'neutral' | 'error' | 'success' | 'warning'`) and `variant: ButtonVariant = 'solid'` (`'solid' | 'tonal' | 'outline' | 'ghost' | 'text'`). Plus `size: DsSize | null = null` (unset resolves `DS_CONFIG.control.size`, then `md`), `type: 'button' | 'submit' | 'reset' = 'button'`, `disabled`, `loading`, `fullWidth`, `icon: IconName | null`.
 Axis meaning: **variant is loudness** (solid > tonal > outline/ghost/text), **color is hue** — every pair renders, and the UX-discouraged ones dev-warn (see `DISCOURAGED_COMBOS`). Only solid and tonal paint a fill: outline, ghost and text are TRANSPARENT, so they adopt the surface they sit on. Disabled splits by whether the fill can carry the state: `solid` and `tonal` keep `oklch(from accent 70% 0.035 h)`, while `outline`, `ghost` and `text` — the three with no fill of their own — mix the label toward the surface, `color-mix(in srgb, <label> 40%, var(--surface-default))`, because a fixed lightness cannot serve both themes. (History: the single `variant` axis was split into color × variant in 2026-06; `danger`→`error`, `link`→`text`, the old `ghost`→`outline`.)
@@ -198,9 +203,11 @@ Inputs: `options: readonly ComboboxOption<T>[]` (`{ value: T, label: string }`),
 In multi mode, selected values render as `<ds-tag closable>` chips above the trigger.
 
 #### `<ds-search>` — `SearchComponent`
-Pre-styled search input with built-in icon.
-Inputs: `value: model<string>`, `placeholder: string = 'Search'`, `shortcut: string = ''` (rendered as a hint pill, e.g. `⌘K`), `showIcon: boolean = true`
+Pre-styled search input with built-in icon. A form control, but not a field: no label, no message row.
+Inputs: `value: model<string>`, `placeholder: string = 'Search'`, `shortcut: string = ''` (rendered as a hint pill, e.g. `⌘K`), `showIcon: boolean = true`, `clearable: boolean = false`, `ariaLabel: string = ''`, `disabled: boolean = false`, `hidden: boolean = false`, `size: DsSize | null = null`, `debounce: number = 0` (ms held before `value` updates; clearing, Enter and `clear()` all skip the timer)
 Output: `(submitted): string` — emits the current value on Enter / form submit
+Methods: `clear()` — empties the field, drops an armed keystroke and publishes `''` at once, which writing `''` into `value` does not; `focus()`.
+Binds through `NG_VALUE_ACCESSOR`, taking the CVA plumbing without `DsFieldBase` — so `hint` / `error` / `warning` / `errors` / `invalid` / `touched` / `reserveMessage` / `messageIcon` are NOT inputs here.
 
 #### `<ds-date-picker>` — `DatePickerComponent`
 Inputs: `mode: 'single' | 'range' = 'single'`, `size: 'sm' | 'md' | 'lg' = 'md'`, `value: model<Date | RangeValue | null>` (`RangeValue = [Date | null, Date | null]`), `placeholder: string = 'Select date'`, `label: string = ''`, `hint: string = ''`, `required: boolean = false`, `optional: boolean = false`

@@ -284,6 +284,38 @@
         "reserveMessage",
         "messageIcon"
       ]
+    },
+    {
+      "id": "one-focus-ring-per-field",
+      "kind": "behavior",
+      "old": "ds-search, ds-autocomplete, ds-date-picker, ds-number-stepper, ds-field-group",
+      "new": null,
+      "surface": "style",
+      "note": "APPEARANCE FIX, no action: a focused field drew TWO rings - a tight one around the inner control (the universal :where(:focus-visible) box-shadow shipped in 0.10.0) and the halo the shell paints on :focus-within. The inner one is now suppressed where the shell speaks for the control. ACTION only if you wrote a workaround: a rule that killed one of the two rings (box-shadow: none on an inner input, or a re-declared --ds-field-focus-shadow meant to hide the doubling) can go. Deliberately NOT suppressed: a ds-number-stepper step button and a chip close button keep their own ring, because both are tabindex=0 tab stops that the shell halo cannot distinguish.",
+      "verify": "A focused ds-search, ds-autocomplete, ds-date-picker or ds-input inside a ds-field-group shows exactly one ring; a step button inside ds-number-stepper still shows its own when tabbed to.",
+      "searchHints": [
+        "--ds-field-focus-shadow",
+        "--ds-control-focus-shadow",
+        "box-shadow: none",
+        "focus-visible",
+        "ds-field-group"
+      ]
+    },
+    {
+      "id": "clipped-labels-keep-their-descenders",
+      "kind": "behavior",
+      "old": ".option-label, .cell-clip, .crumb, ds-breadcrumbs .label",
+      "new": null,
+      "surface": "style",
+      "note": "APPEARANCE FIX, no action, no geometry change (option row 30px, multi-select 36px, table row 38px are all unchanged): every clipped label sat in a line-height:1 box with no padding, so 2.13px above the cap line and 1.47px below the baseline were cut - MBP-245. They now use overflow: clip with a --space-1 clip margin. ACTION only if you worked around it: a padding-block or line-height override added to an option label, a table cell clip or a breadcrumb to get the descenders back can go. NOTE for a consumer with the same shape in their own CSS: overflow: clip keeps text-overflow: ellipsis working and keeps scrollWidth > clientWidth reporting true, both checked in Chromium, so a clip-detection test does not need changing. Where overflow-clip-margin is unsupported, clip degrades to exactly the old shave.",
+      "verify": "An option list, a clipped table cell and a breadcrumb render full descenders (the tail of a g is complete) at unchanged row heights.",
+      "searchHints": [
+        "option-label",
+        "cell-clip",
+        "overflow: hidden",
+        "line-height: 1",
+        "text-overflow"
+      ]
     }
   ],
   "informational": [
@@ -424,6 +456,27 @@
       ],
       "why": "A glyph rendered by hand beside a field's error or warning text, or a margin nudge added to line one up against the old centred message row.",
       "replaceWith": "the built-in state glyph (error / warning / success carry one now), retuned through DS_CONFIG.field.stateIcons or messageIcon, with --ds-field-message-icon-gap / -offset for the spacing"
+    },
+    {
+      "id": "double-focus-ring-workaround",
+      "surface": "style",
+      "find": [
+        "box-shadow: none",
+        "--ds-field-focus-shadow"
+      ],
+      "why": "A rule that killed one of the two focus rings a field used to paint - on an inner input, or by re-declaring the field focus shadow.",
+      "replaceWith": "nothing: the field paints one ring now"
+    },
+    {
+      "id": "descender-clip-workaround",
+      "surface": "style",
+      "find": [
+        "padding-block",
+        "line-height",
+        "option-label"
+      ],
+      "why": "A padding or line-height override added to an option label, a clipped table cell or a breadcrumb to stop the descenders being shaved.",
+      "replaceWith": "nothing: the clip carries a --space-1 margin now, at the same row height"
     }
   ]
 }
