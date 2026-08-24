@@ -255,7 +255,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 - **The shipped migration manifests say WHERE to look, not only what changed — and a lint now holds
   them to it.** `migrations/<version>.json` (the files `dist/ds/migrations/` carries into your
   `node_modules`, which the auto-update plugin runs) gained `surface`, `detect`, `verify`, `restore`,
-  `supersedes` / `supersededBy`, and a structured `deleteList`. The reason is a consumer upgrade that
+  `supersedes`, and a structured `deleteList`. The reason is a consumer upgrade that
   went 0.6.0 → 0.10.1 and passed over two entries in silence: `0.7.1`'s
   `table-sortkey-non-null-when-unsorted` pointed at `ds-table[sortKey]`, which appears in nobody's
   template, while the code that breaks was their own store —
@@ -268,7 +268,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   got a `surface`, every behavioural one a `verify`, every changed default a `restore`, and the 32
   prose `DELETE-LIST:` lines became `deleteList` arrays with a greppable `find` each — four of those
   "lines" turned out to be the words "the DELETE-LIST" inside ordinary prose. Two default flips that
-  reverse each other now link both ways: `0.7.0` / `0.7.1` on `reserveMessage`, and `0.8.0` / `0.9.0`
+  reverse each other are linked by `supersedes` on the LATER item, one way only because a published
+  manifest cannot know its own future: `0.7.0` / `0.7.1` on `reserveMessage`, and `0.8.0` / `0.9.0`
   on the table's sort mode. `npm run migration-lint` enforces the contract with no warning level, and
   both the release preflight and the PR gate run it, so a manifest nobody can act on stops the
   pipeline instead of reaching a consumer. Three CHANGELOG blocks also gained the "What you can now
