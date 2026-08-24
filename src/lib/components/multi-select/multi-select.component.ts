@@ -16,7 +16,6 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import type { IconName } from '../../icons/icons.data';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { chipFit } from '../chip-overflow';
@@ -60,10 +59,6 @@ export class MultiSelectComponent
   extends DsControlValueAccessor<string[]>
   implements OnDestroy
 {
-  /** Glyph on the message line, overriding what the state resolves to. Unset
-   *  follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field
-   *  alone. */
-  readonly messageIcon = input<IconName | false | null>(null);
 
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);

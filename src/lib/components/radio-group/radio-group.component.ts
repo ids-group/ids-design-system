@@ -9,7 +9,6 @@ import {
   model,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import type { IconName } from '../../icons/icons.data';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
 import { resolveFieldMessage } from '../field-errors';
@@ -52,10 +51,6 @@ export class RadioGroupComponent
   extends DsControlValueAccessor<unknown>
   implements RadioGroupContract
 {
-  /** Glyph on the message line, overriding what the state resolves to. Unset
-   *  follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field
-   *  alone. */
-  readonly messageIcon = input<IconName | false | null>(null);
 
   /** Selected radio value; two-way bound. */
   readonly value = model<unknown>(null);

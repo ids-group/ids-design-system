@@ -18,7 +18,6 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import type { IconName } from '../../icons/icons.data';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { A11yModule } from '@angular/cdk/a11y';
@@ -115,10 +114,6 @@ export class DatePickerComponent
   extends DsControlValueAccessor<Date | RangeValue | null>
   implements OnDestroy
 {
-  /** Glyph on the message line, overriding what the state resolves to. Unset
-   *  follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field
-   *  alone. */
-  readonly messageIcon = input<IconName | false | null>(null);
 
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */

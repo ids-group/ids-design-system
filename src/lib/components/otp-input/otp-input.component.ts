@@ -11,7 +11,6 @@ import {
   viewChildren,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import type { IconName } from '../../icons/icons.data';
 import { DsControlValueAccessor } from '../control-value-accessor';
 import { FieldMessageComponent } from '../field-message/field-message.component';
 import { resolveFieldMessage, trimmedText } from '../field-errors';
@@ -41,10 +40,6 @@ export type OtpMode = 'numeric' | 'alphanumeric';
   },
 })
 export class OtpInputComponent extends DsControlValueAccessor<string> {
-  /** Glyph on the message line, overriding what the state resolves to. Unset
-   *  follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph on this field
-   *  alone. */
-  readonly messageIcon = input<IconName | false | null>(null);
 
   /** Entered code, two-way bound. */
   readonly value = model<string>('');
