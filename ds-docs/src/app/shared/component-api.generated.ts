@@ -4396,7 +4396,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control, the way every other DS control does — it arrived with the CVA base and stays here, since it belongs to the forms contract rather than to the message API this component deliberately does not have. Inline `display`, not the attribute: the host sets its own, which the weaker UA rule would lose to."
+        "description": "Hides the control, as every other DS control does. Inline `display`, not the attribute: the host sets its own, which the weaker UA rule would lose to."
       },
       {
         "name": "value",
