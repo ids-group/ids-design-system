@@ -7,6 +7,7 @@ import {
   input,
   signal,
   type ModelSignal,
+  type WritableSignal,
 } from '@angular/core';
 import type { ControlValueAccessor } from '@angular/forms';
 import { DsFieldBase } from './field-base';
@@ -22,6 +23,79 @@ import { DsFieldBase } from './field-base';
 const NOT_ROVED = ':not([tabindex="-1"]):not([disabled])';
 const VALUE_ELEMENTS = `input:not([type="hidden"])${NOT_ROVED}, textarea${NOT_ROVED}`;
 const TRIGGER_ELEMENTS = `button${NOT_ROVED}, [tabindex="0"]${NOT_ROVED}`;
+
+/**
+ * The `ControlValueAccessor` half of a DS value control, with no message API
+ * attached. `DsControlValueAccessor` is this plus `DsFieldBase`; a control that
+ * holds a value and renders no message row — `ds-search`, which is a toolbar
+ * filter rather than a validated field — takes this directly, so it stops
+ * advertising `hint` / `error` / `warning` / `reserveMessage` / `messageIcon`
+ * inputs that nothing in its template reads.
+ *
+ * The model arrives as a THUNK, not a signal: on a base class `value` is abstract
+ * and on a component it is a field initialiser, so it does not exist yet when this
+ * runs. Every read defers to call time, which is also when the effect first runs.
+ *
+ * Must be called from an injection context (it owns an `effect`).
+ */
+export function valueControlBridge<T>(model: () => ModelSignal<T>): {
+  readonly formDisabled: WritableSignal<boolean>;
+  readonly touchedSelf: WritableSignal<boolean>;
+  markTouched(): void;
+  writeValue(next: T): void;
+  registerOnChange(fn: (next: T) => void): void;
+  registerOnTouched(fn: () => void): void;
+  setDisabledState(isDisabled: boolean): void;
+} {
+  const formDisabled = signal(false);
+  const touchedSelf = signal(false);
+  let onChange: (next: T) => void = () => {};
+  let onTouched: () => void = () => {};
+  // Last value synced with the forms API. Guards the watching effect from echoing
+  // a form-driven write back as a user change (which would dirty the control or
+  // loop), while still emitting every genuine model change.
+  let synced: T | undefined;
+  let hasSynced = false;
+
+  effect(() => {
+    const next = model()();
+    if (!hasSynced) {
+      // Adopt the initial value once, silently — never emit on init.
+      hasSynced = true;
+      synced = next;
+
+      return;
+    }
+    if (Object.is(next, synced)) {
+      return;
+    }
+    synced = next;
+    onChange(next);
+  });
+
+  return {
+    formDisabled,
+    touchedSelf,
+    markTouched: () => {
+      touchedSelf.set(true);
+      onTouched();
+    },
+    writeValue: (next: T) => {
+      hasSynced = true;
+      synced = next;
+      model().set(next);
+    },
+    registerOnChange: (fn: (next: T) => void) => {
+      onChange = fn;
+    },
+    registerOnTouched: (fn: () => void) => {
+      onTouched = fn;
+    },
+    setDisabledState: (isDisabled: boolean) => {
+      formDisabled.set(isDisabled);
+    },
+  };
+}
 
 function focusOwnControl(host: HTMLElement, options?: FocusOptions): void {
   const target =
@@ -68,63 +142,34 @@ export abstract class DsControlValueAccessor<T>
     focusOwnControl(this.hostElement.nativeElement, options);
   }
 
+  private readonly bridge = valueControlBridge<T>(() => this.value);
+
   /** Driven by the forms API via `setDisabledState`. */
-  protected readonly formDisabled = signal(false);
+  protected readonly formDisabled = this.bridge.formDisabled;
 
   // Separate from the control's `touched`, which only exists once `NgControl`
   // resolves — too late to gate the first blur.
-  protected readonly touchedSelf = signal(false);
-
-  private onChange: (value: T) => void = () => {};
-  private onTouched: () => void = () => {};
-
-  // Last value synced with the forms API. Guards the value-watching effect from
-  // echoing a form-driven write back as a user change (which would dirty the
-  // control or loop), while still emitting every genuine model change.
-  private synced: T | undefined;
-  private hasSynced = false;
-
-  constructor() {
-    super();
-    effect(() => {
-      const next = this.value();
-      if (!this.hasSynced) {
-        // Adopt the initial value once, silently — never emit on init.
-        this.hasSynced = true;
-        this.synced = next;
-
-        return;
-      }
-      if (Object.is(next, this.synced)) {
-        return;
-      }
-      this.synced = next;
-      this.onChange(next);
-    });
-  }
+  protected readonly touchedSelf = this.bridge.touchedSelf;
 
   /** Call from a blur handler so the control reports `ng-touched`. */
   protected markTouched(): void {
-    this.touchedSelf.set(true);
-    this.onTouched();
+    this.bridge.markTouched();
   }
 
   writeValue(value: T): void {
-    this.hasSynced = true;
-    this.synced = value;
-    this.value.set(value);
+    this.bridge.writeValue(value);
   }
 
   registerOnChange(fn: (value: T) => void): void {
-    this.onChange = fn;
+    this.bridge.registerOnChange(fn);
   }
 
   registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
+    this.bridge.registerOnTouched(fn);
   }
 
   setDisabledState(isDisabled: boolean): void {
-    this.formDisabled.set(isDisabled);
+    this.bridge.setDisabledState(isDisabled);
   }
 }
 

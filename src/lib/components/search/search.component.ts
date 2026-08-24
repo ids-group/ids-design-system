@@ -13,9 +13,13 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+  type ControlValueAccessor,
+} from '@angular/forms';
 import { IconComponent } from '../../icons/icon.component';
-import { DsControlValueAccessor } from '../control-value-accessor';
+import { valueControlBridge } from '../control-value-accessor';
 import { FieldClickFocusDirective } from '../field-click-focus.directive';
 import type { DsSize } from '../../core/size';
 import { inFieldGroup } from '../field-group/field-group.token';
@@ -25,7 +29,10 @@ import { resolveWithConfig } from '../../core/config-defaults';
   selector: 'ds-search',
   standalone: true,
   imports: [FormsModule, IconComponent, FieldClickFocusDirective],
-  host: { '[class.in-group]': 'inGroup' },
+  host: {
+    '[class.in-group]': 'inGroup',
+    '[style.display]': 'hidden() ? "none" : null',
+  },
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -37,10 +44,28 @@ import { resolveWithConfig } from '../../core/config-defaults';
     },
   ],
 })
-export class SearchComponent extends DsControlValueAccessor<string> {
+/**
+ * Takes the CVA bridge rather than `DsControlValueAccessor`, which also carries
+ * `DsFieldBase`: a search box is a toolbar filter, not a validated field, so it has
+ * no message row — and inheriting `hint` / `error` / `warning` / `reserveMessage` /
+ * `messageIcon` meant the API reference advertised five inputs nothing here reads.
+ * Where a search needs a label or an error line, that is what `ds-input` is for.
+ */
+export class SearchComponent implements ControlValueAccessor {
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */
   protected readonly inGroup = inFieldGroup();
+
+  private readonly bridge = valueControlBridge<string>(() => this.value);
+
+  /** Hides the control, the way every other DS control does — it arrived with the
+   *  CVA base and stays here, since it belongs to the forms contract rather than to
+   *  the message API this component deliberately does not have. Inline `display`,
+   *  not the attribute: the host sets its own, which the weaker UA rule would lose to. */
+  readonly hidden = input(false, { transform: booleanAttribute });
+
+  /** Driven by the forms API — OR'd into `isDisabled` like every other control. */
+  protected readonly formDisabled = this.bridge.formDisabled;
 
   /** Search text, two-way bound. */
   readonly value = model<string>('');
@@ -92,7 +117,6 @@ export class SearchComponent extends DsControlValueAccessor<string> {
   private pushed = this.value();
 
   constructor() {
-    super();
     effect(() => {
       const incoming = this.value();
       if (incoming !== this.pushed) {
@@ -106,7 +130,7 @@ export class SearchComponent extends DsControlValueAccessor<string> {
   /** Move keyboard focus to the search input. Public so a host can hand focus
    *  over deliberately — e.g. a Clear button that disables itself on activation
    *  would otherwise blur into `<body>` and restart Tab order at the top. */
-  override focus(options?: FocusOptions): void {
+  focus(options?: FocusOptions): void {
     this.inputEl()?.nativeElement.focus(options);
   }
 
@@ -156,6 +180,27 @@ export class SearchComponent extends DsControlValueAccessor<string> {
   private push(next: string): void {
     this.pushed = next;
     this.value.set(next);
+  }
+
+  writeValue(next: string): void {
+    this.bridge.writeValue(next);
+  }
+
+  registerOnChange(fn: (next: string) => void): void {
+    this.bridge.registerOnChange(fn);
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.bridge.registerOnTouched(fn);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.bridge.setDisabledState(isDisabled);
+  }
+
+  /** Reported to the forms API on blur, so a search inside a form goes `ng-touched`. */
+  protected markTouched(): void {
+    this.bridge.markTouched();
   }
 
   private cancel(): void {
