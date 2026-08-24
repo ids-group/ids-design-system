@@ -32,6 +32,7 @@
     "class-surface": "node tools/class-surface-diff.mjs",
     "check-docs-links": "node tools/check-docs-links.mjs",
     "migration-lint": "node tools/migration-lint.mjs",
+    "migration-lint:selftest": "node tools/migration-lint-selftest.mjs",
     "check-focus-rings": "node tools/check-focus-rings.mjs",
     "extract-docs": "npm run extract-tokens && npm run extract-component-api && npm run check-docs-links",
     "build:docs": "npm run extract-docs && ng build ds-docs",

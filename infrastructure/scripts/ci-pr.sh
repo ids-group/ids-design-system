@@ -24,6 +24,9 @@ install_deps
 echo "===== migration-lint ====="
 node tools/migration-lint.mjs
 
+echo "===== migration-lint selftest ====="
+node tools/migration-lint-selftest.mjs
+
 log_dir="$(mktemp -d)"
 
 echo "Building (lib -> docs) and linting in parallel..."
