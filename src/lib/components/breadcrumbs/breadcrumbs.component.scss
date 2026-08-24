@@ -1,3 +1,5 @@
+@use '../../styles/text-clip' as text-clip;
+
 :host {
   /* Public --ds-breadcrumbs-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_breadcrumbs-label-color:           var(--ds-breadcrumbs-label-color,           var(--text-tertiary));
@@ -64,11 +66,8 @@
   }
 
   .label {
-    /* MEASURED clipping, same numbers as the option label: the same flat-line-box shave as the option label — see the note in styles/_dropdown-overlay.scss. */
-    overflow: clip;
-    overflow-clip-margin: var(--space-1);
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    @include text-clip.single-line-ellipsis;
+
     max-width: 16ch;
   }
 

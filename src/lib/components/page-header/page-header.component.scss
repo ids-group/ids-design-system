@@ -1,6 +1,7 @@
 // Ported from vendor/claude-design-ds components-extras.css (.page-hdr, lines 636-706).
 // patterns.css's .page-header is a dropped duplicate, not the source.
 @use '../../styles/breakpoints' as bp;
+@use '../../styles/text-clip' as text-clip;
 
 :host {
   /* Public --ds-page-header-* are read with fallbacks, never declared — consumer overrides inherit in. */
@@ -101,12 +102,8 @@
     align-items: center;
     gap: var(--space-1);
 
-    /* By shape, like the topbar crumb — same reasoning, same inertness where
-       nothing overhangs. */
-    overflow: clip;
-    overflow-clip-margin: var(--space-1);
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    @include text-clip.single-line-ellipsis;
+
     max-width: 24ch;
     transition: color var(--duration-fast) var(--ease-standard);
 

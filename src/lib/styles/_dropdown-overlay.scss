@@ -4,6 +4,8 @@
 // `panelClass: 'ds-dropdown-panel'` on the overlay config; this partial
 // declares the matching rules so the portaled panel renders styled.
 
+@use 'text-clip' as text-clip;
+
 .ds-dropdown-panel {
   /* The selected row used to paint straight from the theme roles, so a brand that
      wanted a different selected treatment had to RETARGET --primary-* inside this
@@ -102,19 +104,7 @@
       flex: 1;
       min-width: 0;
 
-      /* `clip` with a margin instead of `hidden`: the row's line box is
-         --line-height-flat, so a padding-less label box is exactly the font size
-         tall while the glyph box is taller — measured at 14px Manrope, 2.86px was
-         shaved above the cap line and 2.00px below the baseline, so every option
-         lost its descenders, not just the ones that have them (MBP-245). The
-         margin gives the glyph its room back without touching the 30px row.
-         `text-overflow` reads any non-`visible` overflow, so the ellipsis still
-         applies; where `overflow-clip-margin` is unsupported this degrades to
-         exactly the old shave rather than to anything worse. */
-      overflow: clip;
-      overflow-clip-margin: var(--space-1);
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      @include text-clip.single-line-ellipsis;
     }
 
     .option-check {

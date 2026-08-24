@@ -1,3 +1,5 @@
+@use '../../styles/text-clip' as text-clip;
+
 :host {
   /* Public --ds-topbar-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_topbar-height:   var(--ds-topbar-height,   var(--topbar-h));
@@ -58,14 +60,8 @@
     align-items: center;
     gap: var(--space-1);
 
-    /* Same shape as the two measured sites — a padding-less ellipsis box inside a
-       flat line box. Not reproducible in our own docs (they project ds-breadcrumbs
-       here rather than bare crumbs), so this is the fix applied by shape; where
-       nothing overhangs, a clip margin changes nothing. */
-    overflow: clip;
-    overflow-clip-margin: var(--space-1);
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    @include text-clip.single-line-ellipsis;
+
     max-width: 24ch;
     transition: color var(--duration-fast) var(--ease-standard);
 

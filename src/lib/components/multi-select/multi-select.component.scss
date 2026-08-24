@@ -1,6 +1,7 @@
 @use '../../styles/field-box' as field-box;
 @use '../../styles/chip-row' as chip-row;
 @use '../../styles/field-state' as field-state;
+@use '../../styles/text-clip' as text-clip;
 
 :host {
   // Flex column + gap so the hint/error (ds-field-message) sits the canonical
@@ -233,12 +234,7 @@
   flex: 1;
   min-width: 0;
 
-  /* Its own copy of the shared option row, so it needs the same descender fix —
-     see the note in styles/_dropdown-overlay.scss. */
-  overflow: clip;
-  overflow-clip-margin: var(--space-1);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  @include text-clip.single-line-ellipsis;
 }
 
 .empty {

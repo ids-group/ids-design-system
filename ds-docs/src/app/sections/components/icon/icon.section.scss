@@ -1,3 +1,4 @@
+@use 'styles/text-clip' as text-clip;
 
     .link { color: var(--primary); text-decoration: underline; text-underline-offset: 2px; }
 
@@ -44,12 +45,8 @@
       font-size: var(--font-size-xs);
       color: var(--text-secondary);
 
-      /* Same shave the option labels had: this sits on a `.t-mono-inline` chip,
-         whose line box is flat, so `hidden` cut the descenders off the icon names. */
-      overflow: clip;
-      overflow-clip-margin: var(--space-1);
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      @include text-clip.single-line-ellipsis;
+
       min-width: 0;
     }
 
