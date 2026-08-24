@@ -140,9 +140,7 @@
 
 /* Vertical padding lives on the textarea, not the box: `.sm`/`.lg` above zero the
    control's own padding-block through the shorthand. One rule per size on purpose —
-   a single pin out-ranks the size variants and flattens all three to md. The `:host`
-   prefix is a leftover from a docs specimen that used to leak `.field`/`.control`
-   in; that specimen is gone, so the prefix could go too. */
+   a single pin out-ranks the size variants and flattens all three to md. */
 :host .field .control textarea {
   padding-block: var(--_input-pad-y);
 }
