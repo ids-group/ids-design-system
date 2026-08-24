@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>Причина отказа на кнопке — почему одного [description] мало</title>
+<title>Причина отказа на кнопке</title>
 <link rel="stylesheet" href="ds.css">
 <style>
   :root { color-scheme: light; }
@@ -8,396 +8,290 @@
     background: var(--surface-default); color: var(--text-primary);
     font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   }
-  main { max-width: 1180px; margin: 0 auto; }
-  h1 { font: var(--font-weight-extrabold) var(--font-size-h3) / var(--line-height-tight) var(--font-sans); margin: 0 0 var(--space-2); }
-  h2 { font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans); margin: var(--space-6) 0 var(--space-2); }
-  p { max-width: 84ch; color: var(--text-secondary); }
+  main { max-width: 1080px; margin: 0 auto; }
+  h1 { font: var(--font-weight-extrabold) var(--font-size-h3) / var(--line-height-tight) var(--font-sans); margin: 0 0 var(--space-1); }
+  h2 { font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans); margin: var(--space-6) 0 var(--space-3); }
+  .lede { font-size: var(--font-size-m); color: var(--text-secondary); margin: 0 0 var(--space-2); max-width: 74ch; }
+  p { max-width: 78ch; color: var(--text-secondary); }
   b { color: var(--text-primary); }
   code { font: var(--font-weight-medium) var(--font-size-xs) / 1 var(--font-mono); }
-  .note { border-left: 3px solid var(--primary); padding-left: var(--space-3); margin: var(--space-4) 0; }
-  .ask { border: 1px solid var(--primary); border-radius: var(--ds-radius-panel); padding: var(--space-4); margin: var(--space-5) 0; }
-  .ask li { margin-bottom: var(--space-2); }
 
-  table { border-collapse: collapse; width: 100%; margin-top: var(--space-3); }
-  th, td { border: 1px solid var(--border-default); padding: var(--space-2); vertical-align: top; text-align: left; }
-  thead th { background: var(--surface-secondary); font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans); }
-  td.yes { color: #156822; font-weight: var(--font-weight-bold); }
-  td.no { color: #B3261E; font-weight: var(--font-weight-bold); }
+  /* Colours are painted as images so a force-dark browser cannot repaint the very
+     thing that carries the meaning here. */
+  .problem {
+    background-image: linear-gradient(#FDECEA, #FDECEA);
+    border-left: 4px solid #B3261E; color: #7A1A12;
+    padding: var(--space-3) var(--space-4); border-radius: var(--ds-radius-inner);
+    margin: var(--space-3) 0; max-width: 78ch;
+  }
+  .problem b { color: #7A1A12; }
 
-  .cases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); align-items: start; }
-  .case { display: grid; gap: var(--space-3); }
-  .case > .cap { font: var(--font-weight-bold) var(--font-size-xs) / 1.4 var(--font-sans); }
-  .case > .cap .sub { display: block; font: var(--font-weight-regular) var(--font-size-2xs) / 1.6 var(--font-mono); color: var(--text-tertiary); }
+  .decision {
+    border: 2px solid #2E54FF; border-radius: var(--ds-radius-panel);
+    background-image: linear-gradient(#F4F6FF, #F4F6FF);
+    padding: var(--space-4) var(--space-5); margin: var(--space-6) 0;
+  }
+  .decision__flag {
+    display: inline-block; margin-bottom: var(--space-2);
+    background-image: linear-gradient(#2E54FF, #2E54FF); color: #FFFFFF;
+    padding: var(--space-1) var(--space-3); border-radius: var(--radius-pill, 999px);
+    font: var(--font-weight-extrabold) var(--font-size-2xs) / 1.6 var(--font-sans);
+    letter-spacing: var(--letter-spacing-wider); text-transform: uppercase;
+  }
+  .decision h2 { margin: 0 0 var(--space-1); }
+
+  .options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); margin-top: var(--space-4); }
+  .option { border-radius: var(--ds-radius-panel); padding: var(--space-4); border: 2px solid; }
+  .option__tag {
+    display: inline-block; padding: var(--space-0-5) var(--space-2); border-radius: var(--radius-sm);
+    font: var(--font-weight-extrabold) var(--font-size-2xs) / 1.6 var(--font-mono);
+    color: #FFFFFF; margin-bottom: var(--space-2);
+  }
+  .option h3 { font: var(--font-weight-bold) var(--font-size-s) / 1.4 var(--font-sans); margin: 0 0 var(--space-1); }
+  .option p { margin: 0; font-size: var(--font-size-xs); max-width: none; }
+  .option--a { border-color: #2E54FF; background-image: linear-gradient(#F4F6FF, #F4F6FF); }
+  .option--a .option__tag { background-image: linear-gradient(#2E54FF, #2E54FF); }
+  .option--b { border-color: #B26A00; background-image: linear-gradient(#FFF6E8, #FFF6E8); }
+  .option--b .option__tag { background-image: linear-gradient(#B26A00, #B26A00); }
+
+  table { border-collapse: collapse; width: 100%; margin-top: var(--space-2); }
+  th, td { border: 1px solid var(--border-default); padding: var(--space-2) var(--space-3); vertical-align: top; text-align: left; }
+  thead th { background-image: linear-gradient(#F2F4F8, #F2F4F8); font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans); }
+  tbody th { width: 20ch; font-weight: var(--font-weight-semibold); }
+
+  .cases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); align-items: start; }
+  .case { display: grid; gap: var(--space-2); }
+  .cap { font: var(--font-weight-bold) var(--font-size-xs) / 1.4 var(--font-sans); }
+  .cap .sub { display: block; font: var(--font-weight-regular) var(--font-size-2xs) / 1.6 var(--font-mono); color: var(--text-tertiary); }
   .stage {
     border: 1px solid var(--border-subtle); border-radius: var(--ds-radius-panel);
     background-image: linear-gradient(#FFFFFF, #FFFFFF);
-    padding: var(--space-4); min-height: 116px;
-    display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2);
+    padding: var(--space-4); display: flex; align-items: flex-start;
   }
+  .verdict {
+    font: var(--font-weight-bold) var(--font-size-2xs) / 1.6 var(--font-sans);
+    padding: var(--space-2) var(--space-3); border-radius: var(--ds-radius-inner);
+    background-image: linear-gradient(#ECFAEE, #ECFAEE); color: #156822;
+  }
+  .verdict.bad { background-image: linear-gradient(#FDECEA, #FDECEA); color: #7A1A12; }
 
-  /* Faithful copies of the two components' rendered DOM — the button's box and the
-     menu item's two-line body are what the whole question is about, so they are
-     built from the same tokens rather than approximated. */
+  /* The two components' real DOM: the button's box and the menu item's second line
+     are what is being judged, so both are built from the same tokens. */
   .button {
     display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
     min-height: var(--field-h-md); padding: var(--space-2) var(--space-4);
     border: var(--border-width-default) solid transparent; border-radius: var(--ds-radius-control);
     font: var(--font-weight-extrabold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     letter-spacing: var(--letter-spacing-wide);
-    background-color: var(--primary); color: var(--text-on-primary);
-    cursor: pointer;
+    background-color: var(--primary); color: var(--text-on-primary); cursor: pointer;
   }
   .button[disabled], .button[aria-disabled='true'] {
-    background-color: var(--surface-disabled);
-    color: var(--text-disabled);
-    cursor: not-allowed;
+    background-color: var(--surface-disabled); color: var(--text-disabled); cursor: not-allowed;
   }
-  .button.two-line {
-    flex-direction: column; align-items: flex-start; gap: 2px;
-    padding-block: var(--space-2);
-  }
+  .button.two-line { flex-direction: column; align-items: flex-start; gap: 2px; }
   .button .reason {
     font: var(--font-weight-medium) var(--font-size-2xs) / var(--line-height-tight) var(--font-sans);
-    letter-spacing: normal;
+    letter-spacing: normal; color: var(--text-disabled);
+  }
+  .menu-item {
+    display: flex; padding: var(--space-2) var(--space-3); border: 0; background: transparent;
+    text-align: left; cursor: not-allowed;
+    font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
     color: var(--text-disabled);
   }
-
-  .menu-item {
-    display: flex; align-items: flex-start; gap: var(--space-2);
-    padding: var(--space-2) var(--space-3); border: 0; border-radius: var(--ds-radius-inner);
-    background: transparent; width: 100%; text-align: left; cursor: pointer;
-    font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-    color: var(--text-primary);
-  }
-  .menu-item[aria-disabled='true'] { color: var(--text-disabled); cursor: not-allowed; }
   .menu-item-body { display: flex; flex-direction: column; align-items: flex-start; }
   .menu-item-description {
     font: var(--font-weight-regular) var(--font-size-2xs) / var(--line-height-tight) var(--font-sans);
-    color: var(--text-tertiary); max-width: 14rem;
+    color: var(--text-tertiary);
   }
-  .aside-reason {
-    font: var(--font-weight-regular) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
-    color: var(--text-tertiary); max-width: 26ch;
+  .field-message {
+    font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
+    color: var(--error-text); margin-top: var(--space-1-5);
   }
-
-  .readout { font: var(--font-weight-regular) var(--font-size-2xs) / 1.9 var(--font-mono); color: var(--text-secondary); }
-  .readout .hit { color: #B3261E; font-weight: var(--font-weight-bold); }
-  .readout .miss { color: #156822; font-weight: var(--font-weight-bold); }
-  .says {
-    margin-top: var(--space-1);
-    padding: var(--space-2) var(--space-3);
-    border-radius: var(--ds-radius-inner);
-    background-image: linear-gradient(#F2F4F8, #F2F4F8);
-    font: var(--font-weight-regular) var(--font-size-2xs) / 1.7 var(--font-mono);
-    color: var(--text-primary);
-  }
-  .says.silent { background-image: linear-gradient(#FDECEA, #FDECEA); color: #7A1A12; }
 </style>
 <main>
 
 <h1>Причина отказа на кнопке</h1>
-<p>
-  Паттерн один и тот же: действие недоступно — «приглашение ещё не принято», «это последний
-  активный админ» — приложение гасит контрол и обязано сказать, почему. Сегодня причина живёт
-  в тултипе, то есть её надо <b>искать мышью</b>. Дека показывает, почему решение от пункта меню
-  нельзя просто скопировать, и приходит к тому, что отказы бывают <b>двух разных родов</b> и
-  лечатся по-разному. Все замеры ниже страница делает сама, по живому DOM.
+<p class="lede">
+  Кнопка выключена, и приложение обязано сказать почему.
 </p>
 
-<h2>1 · Что уже работает: <code>ds-menu-item</code></h2>
-<p>
-  В 0.10.2 у пункта меню появился <code>[description]</code>. Он даёт вторую строку —
-  видимую <b>без ховера</b> — и уходит в ассистивные технологии как
-  <code>aria-describedby</code>, то есть как <b>описание</b>, а не как часть имени.
-  Консьюмер в тот же день удалил два обхода на <code>[dsTooltip]</code>.
-</p>
-
-<div class="cases">
-  <div class="case">
-    <div class="cap">Пункт меню, отключённый<span class="sub">aria-disabled + описание</span></div>
-    <div class="stage" style="min-height: auto">
-      <button
-        class="menu-item"
-        type="button"
-        role="menuitem"
-        aria-disabled="true"
-        aria-describedby="mi-desc"
-        data-probe="menu-item"
-      >
-        <span class="menu-item-body">
-          Отправить приглашение заново
-          <span class="menu-item-description" id="mi-desc" aria-hidden="true">
-            Приглашение ещё не принято
-          </span>
-        </span>
-      </button>
-    </div>
-    <div class="readout" data-readout="menu-item"></div>
-  </div>
+<div class="problem">
+  <b>Проблема.</b> Сегодня причина живёт в тултипе: чтобы её узнать, надо навести мышь.
+  С клавиатуры и с тача — никак. На экране не написано ничего.
 </div>
 
-<h2>2 · Почему у кнопки так не выйдет</h2>
+<h2>1 · Замер: до выключенной кнопки не добраться</h2>
+<div class="cases" id="focus"></div>
 <p>
-  <code>ds-menu-item</code> ставит <code>aria-disabled</code> и <b>остаётся фокусируемым</b>.
-  <code>ds-button</code> ставит <b>нативный</b> <code>disabled</code>
-  (<code>[disabled]="disabled() || loading()"</code>). Разница замерена ниже: у первой фокус
-  ложится, у второй — <b>нет</b>, и Tab её пропускает. Обрати внимание: свойство
-  <code>tabIndex</code> у обеих читается как 0, поэтому судить по нему нельзя — судить надо по
-  тому, становится ли элемент <code>document.activeElement</code>.
-</p>
-<p>
-  <b>Точности ради, без преувеличения:</b> «скринридер её вообще не увидит» — неверно. В режиме
-  чтения страницы он выключенную кнопку встретит и объявит как недоступную. Чего он не может —
-  дойти до неё табом, а описание, привязанное к выключенному контролу, читается ненадёжно и
-  по-разному в разных программах. Плюс клавиатурный пользователь <b>без</b> скринридера не
-  получит вообще ничего: для него такой кнопки на пути просто нет.
+  По свойству <code>tabIndex</code> судить нельзя — у всех трёх оно <code>0</code>.
+  Считается только то, становится ли элемент <code>document.activeElement</code>.
 </p>
 
-<div class="cases" id="stages"></div>
-
-<h2>3 · Что мы вообще чиним</h2>
-<p>
-  Сегодня причина живёт в <code>[dsTooltip]</code>. Чтобы её узнать, надо <b>навести мышь</b>:
-  на экране не написано ничего, клавиатурой не добраться, с тача — тем более. Чиним именно это:
-  причина должна быть <b>на экране постоянно</b>, а не по ховеру.
-</p>
-<p class="note">
-  Это не только вкусовщина: Carbon формулирует прямо — <b>то, без чего задачу не выполнить,
-  должно быть в постоянно видимом helper text, а не в тултипе</b>, потому что тултип исчезает,
-  как только увели курсор. Запрос «покажите тултип на выключенной кнопке» там висит открытым
-  и приходит, по их словам, чуть ли не еженедельно — то есть индустрия упирается в ту же стену.
-</p>
-
-<h2>4 · Развилка не в том, где текст, а в том, какой это отказ</h2>
-<p>
-  Два разных случая, и они требуют разного:
-</p>
+<h2>2 · Отказы бывают двух родов</h2>
 <table>
   <thead>
-    <tr><th>Какой отказ</th><th>Пример</th><th>Кнопка</th><th>Где причина</th><th>Почему так</th></tr>
+    <tr><th>Род отказа</th><th>Пример</th><th>Кнопка</th><th>Причина</th></tr>
   </thead>
   <tbody>
     <tr>
-      <th>Устойчивый — не изменится, пока пользователь на этом экране</th>
-      <td>нет бэкенд-возможности; прав не хватает; запись в состоянии, из которого действие невозможно</td>
-      <td>остаётся выключенной, но через <code>aria-disabled</code> — иначе до неё не добраться</td>
+      <th>Устойчивый<br><span style="font-weight: 400; color: var(--text-tertiary)">не изменится на этом экране</span></th>
+      <td>нет бэкенда, не хватает прав</td>
+      <td>выключена через <code>aria-disabled</code></td>
       <td><b>внутри кнопки</b>, второй строкой</td>
-      <td>причина такая же постоянная, как и сама недоступность: она часть контрола, а не реакция на ввод</td>
     </tr>
     <tr>
-      <th>Временный — снимется, как только пользователь что-то сделает</th>
-      <td>форма не заполнена; не выбрана строка; не принято соглашение</td>
-      <td><b>не выключать вовсе</b></td>
-      <td><b>под контролом</b>, как field message</td>
-      <td>это сообщение о состоянии ФОРМЫ, а не о кнопке; оно меняется по ходу и должно жить там же, где остальные сообщения формы</td>
+      <th>Временный<br><span style="font-weight: 400; color: var(--text-tertiary)">снимется действием пользователя</span></th>
+      <td>форма не заполнена</td>
+      <td><b>не выключать</b></td>
+      <td><b>под контролом</b>, как <code>ds-field-message</code></td>
     </tr>
   </tbody>
 </table>
 
-<p class="note">
-  Нижняя строка — это не новая идея, а <b>наше собственное правило</b>: сабмит гейтится только на
-  «поля непусты и не в полёте», а валидность судится <b>внутри обработчика</b>, и ошибки
-  показываются инлайн. Ровно к этому же приходит Adrian Roselli: не выключать контрол, а гасить
-  отправку и отвечать сообщением — «disabling fields is no replacement for good instructions and
-  error messages». То есть у временного случая правильный ответ — <b>вообще не тот компонент</b>:
-  это <code>ds-field-message</code> под формой, а не вход на кнопке.
-</p>
-
-<h2>5 · Что делать с длинным текстом</h2>
-<p>
-  Вторая строка внутри кнопки — это <b>её ширина и высота</b>. Короткая причина («нет прав»,
-  «приглашение не принято») туда ложится; длинная — нет: кнопка либо расползается, либо
-  обрезает текст, а обрезать причину нельзя — она и есть та информация, ради которой всё
-  затевалось.
-</p>
-<div class="cases" id="length"></div>
-<p class="note">
-  Отсюда простое правило вместо догадки: <b>внутрь кнопки — только то, что помещается в одну
-  строку</b>; всё, что длиннее, идёт под контрол как сообщение, где может переноситься. Это тот же
-  принцип, что и в общем правиле про усечение: перенос лучше обрезки, а обрезать можно только то,
-  что доступно целиком где-то ещё.
-</p>
-
-<div class="ask">
-  <b>Итог, который я предлагаю зафиксировать:</b>
-  <ul>
-    <li><b>Устойчивый отказ</b> → <code>description</code> на кнопке + режим <code>aria-disabled</code>.
-      Причина видна сразу, кнопка остаётся достижимой, клик глохнет в обработчике — механика уже
-      работает в <code>ds-menu-item</code>.</li>
-    <li><b>Временный отказ</b> → кнопку <b>не выключать</b>, причину показывать под формой через
-      <code>ds-field-message</code>. Нового API не нужно — нужен рецепт в доках, потому что сегодня
-      консьюмеры вместо этого гасят кнопку.</li>
-    <li><b>Тултип как носитель причины — убираем из обоих случаев.</b> Он требует ховера, то есть не
-      существует для клавиатуры и тача.</li>
-    <li><b>Длинная причина</b> всегда идёт под контрол, а не внутрь кнопки.</li>
-  </ul>
+<div class="cases" style="margin-top: var(--space-4)">
+  <div class="case">
+    <div class="cap">Устойчивый<span class="sub">причина внутри</span></div>
+    <div class="stage">
+      <button type="button" class="button two-line" aria-disabled="true" aria-describedby="r-fixed">
+        <span>Отправить заново</span>
+        <span class="reason" id="r-fixed" aria-hidden="true">Нет прав</span>
+      </button>
+    </div>
+  </div>
+  <div class="case">
+    <div class="cap">Временный<span class="sub">кнопка активна, причина снизу</span></div>
+    <div class="stage" style="flex-direction: column; align-items: flex-start">
+      <button type="button" class="button">Сохранить</button>
+      <span class="field-message">Заполните телефон и адрес</span>
+    </div>
+  </div>
+  <div class="case">
+    <div class="cap">Как решено в меню<span class="sub">ds-menu-item, 0.10.2</span></div>
+    <div class="stage">
+      <button type="button" class="menu-item" role="menuitem" aria-disabled="true" aria-describedby="r-menu">
+        <span class="menu-item-body">
+          Отправить приглашение заново
+          <span class="menu-item-description" id="r-menu" aria-hidden="true">Приглашение ещё не принято</span>
+        </span>
+      </button>
+    </div>
+  </div>
 </div>
+
+<h2>3 · Длина решает, где текст</h2>
+<div class="cases" id="length"></div>
+
+<div class="decision">
+  <span class="decision__flag">Нужно твоё решение</span>
+  <h2 style="margin-top: 0">Что делаем с устойчивым отказом</h2>
+  <p style="margin: 0">
+    По временному отказу вопроса нет: кнопку не гасим, пишем под формой — это уже наше
+    правило про формы. Выбрать надо только форму для устойчивого.
+  </p>
+
+  <div class="options">
+    <div class="option option--a">
+      <span class="option__tag">A — рекомендую</span>
+      <h3>Вход <code>description</code> + режим <code>aria-disabled</code></h3>
+      <p>
+        Причина видна сразу, кнопка достижима с клавиатуры, клик глохнет в обработчике.
+        Механика уже работает в <code>ds-menu-item</code>.
+        <br><br>
+        <b>Цена:</b> кнопка выше на строку; нужен новый вход в API.
+      </p>
+    </div>
+    <div class="option option--b">
+      <span class="option__tag">B — только рецепт</span>
+      <h3>Ничего не добавлять в API</h3>
+      <p>
+        Задокументировать «причина рядом с контролом, кнопку не гасить» и для устойчивого
+        случая тоже.
+        <br><br>
+        <b>Цена:</b> консьюмер переписывает три экрана сам, DS не отвечает на вопрос,
+        который ему задали дважды.
+      </p>
+    </div>
+  </div>
+</div>
+
+<h2>Откуда взято</h2>
+<p>
+  Carbon: то, без чего задачу не выполнить, живёт в постоянно видимом тексте, а не в тултипе.
+  Roselli: не выключать контрол, а гасить отправку и отвечать сообщением.
+</p>
+
 </main>
 <script>
-  // What a screen reader can reach: an element it can land on. A natively disabled
-  // button is out of the tab order and skipped, so any aria-describedby on it is
-  // dead text — that is the whole argument of this deck, applied uniformly below.
-  const reachable = (element) => !element.disabled && element.tabIndex >= 0;
-
-  const announcement = (element) => {
-    // The accessible name skips aria-hidden descendants, which is exactly where the
-    // description span lives — computing it from raw textContent would glue the two
-    // together and make this deck argue the wrong thing.
-    const visibleName = (node) => {
-      const clone = node.cloneNode(true);
-      for (const hidden of clone.querySelectorAll('[aria-hidden="true"]')) hidden.remove();
-      return clone.textContent ?? '';
-    };
-    const name = (element.getAttribute('aria-label') || visibleName(element))
-      .replace(/\s+/g, ' ')
-      .trim();
-    const describedBy = element.getAttribute('aria-describedby');
-    const description = describedBy ? document.getElementById(describedBy)?.textContent.replace(/\s+/g, ' ').trim() : '';
-    const state = element.disabled || element.getAttribute('aria-disabled') === 'true' ? ', недоступно' : '';
-    return { name, description, state };
-  };
-
-  const render = (element, into) => {
-    // Measured, not assumed: `tabIndex` reads 0 on a natively disabled button too, so
-    // the honest discriminator is whether focus actually lands on it.
+  // `tabIndex` reads 0 on a natively disabled button too, so the only honest test is
+  // whether focus actually lands.
+  const focusLands = (element) => {
     document.activeElement?.blur();
     element.focus();
-    const focusLands = document.activeElement === element;
+    const landed = document.activeElement === element;
     element.blur();
-    const canReach = reachable(element);
-    const { name, description, state } = announcement(element);
-    const readout = document.querySelector(`[data-readout="${into}"]`) ?? element.closest('.case').querySelector('.readout');
-    const says = canReach
-      ? `«${name}${state}. ${description || '—'}»`
-      : 'клавиатурой сюда не попасть; в режиме чтения страницы скринридер объявит «кнопка, недоступна», а описание читается ненадёжно';
-    readout.innerHTML =
-      `фокус ложится: <span class="${focusLands ? 'miss' : 'hit'}">${focusLands ? 'да' : 'нет'}</span>` +
-      ` · в таб-порядке: ${canReach ? 'да' : 'нет'}` +
-      ` · ${element.disabled ? 'disabled' : element.getAttribute('aria-disabled') === 'true' ? 'aria-disabled' : 'активна'}` +
-      `<div class="says${canReach ? '' : ' silent'}">${says}</div>`;
-    return { canReach, focusLands, description: Boolean(description) };
+    return landed;
   };
 
-  render(document.querySelector('[data-probe="menu-item"]'), 'menu-item');
-
-  const CASES = [
-    {
-      key: 'A',
-      title: 'A · description + aria-disabled',
-      sub: 'вторая строка внутри кнопки',
-      build: () => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'button two-line';
-        button.setAttribute('aria-disabled', 'true');
-        button.setAttribute('aria-describedby', 'a-desc');
-        button.innerHTML =
-          '<span data-name>Отправить заново</span><span class="reason" id="a-desc" aria-hidden="true">Приглашение ещё не принято</span>';
-        return { node: button, aside: null };
-      },
-      box: 'выше на одну строку',
-      cost: 'глушить клик в обработчике',
-    },
-    {
-      key: 'B',
-      title: 'B · describedBy на внешний текст',
-      sub: 'кнопка нативно disabled',
-      build: () => {
-        const wrap = document.createDocumentFragment();
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'button';
-        button.disabled = true;
-        button.setAttribute('aria-describedby', 'b-desc');
-        button.append('Отправить заново');
-        const aside = document.createElement('div');
-        aside.className = 'aside-reason';
-        aside.id = 'b-desc';
-        aside.textContent = 'Приглашение ещё не принято';
-        wrap.append(button, aside);
-        return { node: wrap, aside, probe: button };
-      },
-      box: 'не меняется',
-      cost: 'приложение рисует текст само',
-    },
-    {
-      key: 'C',
-      title: 'C · рецепт: причина рядом, кнопка активна',
-      sub: 'ничего нового в API',
-      build: () => {
-        const wrap = document.createDocumentFragment();
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'button';
-        button.setAttribute('aria-describedby', 'c-desc');
-        button.append('Отправить заново');
-        const aside = document.createElement('div');
-        aside.className = 'aside-reason';
-        aside.id = 'c-desc';
-        aside.textContent = 'Приглашение ещё не принято — отправка откажет';
-        wrap.append(button, aside);
-        return { node: wrap, aside, probe: button };
-      },
-      box: 'не меняется',
-      cost: 'отказ живёт в обработчике, кнопка выглядит рабочей',
-    },
+  const FOCUS_CASES = [
+    ['ds-menu-item', 'aria-disabled', (node) => node.setAttribute('aria-disabled', 'true')],
+    ['ds-button сейчас', 'нативный disabled', (node) => { node.disabled = true; }],
+    ['ds-button по варианту A', 'aria-disabled', (node) => node.setAttribute('aria-disabled', 'true')],
   ];
 
-  const stages = document.getElementById('stages');
-  const results = [];
-
-  for (const entry of CASES) {
+  const focusRow = document.getElementById('focus');
+  for (const [title, sub, apply] of FOCUS_CASES) {
     const wrap = document.createElement('div');
     wrap.className = 'case';
-    wrap.innerHTML = `<div class="cap">${entry.title}<span class="sub">${entry.sub}</span></div>`;
+    wrap.innerHTML = `<div class="cap">${title}<span class="sub">${sub}</span></div>`;
     const stage = document.createElement('div');
     stage.className = 'stage';
-    const built = entry.build();
-    stage.appendChild(built.node);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'button';
+    button.textContent = 'Отправить заново';
+    apply(button);
+    stage.appendChild(button);
     wrap.appendChild(stage);
-    const readout = document.createElement('div');
-    readout.className = 'readout';
-    wrap.appendChild(readout);
-    stages.appendChild(wrap);
+    // In the document BEFORE the test: focus never lands on a detached element, which
+    // would make every case read as unreachable.
+    focusRow.appendChild(wrap);
 
-    const probe = built.probe ?? stage.querySelector('button');
-    const measured = render(probe, entry.key);
-    results.push({ ...entry, ...measured, visible: true });
+    const landed = focusLands(button);
+    const verdict = document.createElement('div');
+    verdict.className = landed ? 'verdict' : 'verdict bad';
+    verdict.textContent = landed ? 'фокус ложится — причину услышат' : 'фокус НЕ ложится — причина недостижима';
+    wrap.appendChild(verdict);
   }
 
-  // The length demo: the same reason at three lengths, measured against the button it
-  // sits in — the point is where a second line stops fitting, not how it looks.
   const LENGTHS = [
-    ['Короткая', 'Нет прав'],
-    ['Средняя', 'Приглашение ещё не принято'],
-    ['Длинная', 'Действие недоступно, пока администратор не подтвердит организацию и не выдаст роль'],
+    'Нет прав',
+    'Приглашение ещё не принято',
+    'Действие недоступно, пока администратор не подтвердит организацию',
   ];
-  const length = document.getElementById('length');
-  for (const [label, reason] of LENGTHS) {
+  const lengthRow = document.getElementById('length');
+  for (const reason of LENGTHS) {
     const wrap = document.createElement('div');
     wrap.className = 'case';
-    wrap.innerHTML = `<div class="cap">${label}<span class="sub">${reason.length} символов</span></div>`;
+    wrap.innerHTML = `<div class="cap">${reason.length} символов</div>`;
     const stage = document.createElement('div');
     stage.className = 'stage';
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'button two-line';
     button.setAttribute('aria-disabled', 'true');
-    button.innerHTML = `<span data-name>Отправить заново</span><span class="reason">${reason}</span>`;
+    button.innerHTML = `<span>Отправить заново</span><span class="reason">${reason}</span>`;
     stage.appendChild(button);
     wrap.appendChild(stage);
-    const readout = document.createElement('div');
-    readout.className = 'readout';
-    wrap.appendChild(readout);
-    length.appendChild(wrap);
+    lengthRow.appendChild(wrap);
 
-    const box = button.getBoundingClientRect();
     const line = button.querySelector('.reason');
     const lines = Math.round(line.getBoundingClientRect().height / parseFloat(getComputedStyle(line).lineHeight));
-    readout.innerHTML =
-      `ширина кнопки ${Math.round(box.width)}px · высота ${Math.round(box.height)}px · причина в ${lines} строк${lines === 1 ? 'у' : 'и'}` +
-      (lines > 1
-        ? '<div class="says silent">не помещается в строку — этой причине место под контролом</div>'
-        : '<div class="says">помещается — можно внутри кнопки</div>');
+    const width = Math.round(button.getBoundingClientRect().width);
+    const verdict = document.createElement('div');
+    verdict.className = lines === 1 ? 'verdict' : 'verdict bad';
+    verdict.textContent =
+      lines === 1 ? `одна строка, кнопка ${width}px — можно внутри` : `${lines} строки, кнопка ${width}px — только под контрол`;
+    wrap.appendChild(verdict);
   }
 </script>
