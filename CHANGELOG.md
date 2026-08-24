@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.10.2 — 2026-08-24
+
 ### Added
 
 - **`TableColumn.interactive` — the cell that says WHICH text opens the record.** On a
