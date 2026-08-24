@@ -97,11 +97,11 @@
 
 <h1>Причина отказа на кнопке</h1>
 <p>
-  Паттерн один и тот же: сервер отказывает — «приглашение ещё не принято», «это последний
-  активный админ» — приложение гасит контрол и обязано сказать, почему. У пункта меню это
-  уже закрыто, у кнопки — нет. Дека объясняет, почему нельзя просто скопировать решение,
-  и чем три варианта отличаются на деле. Все пометки ниже проставлены скриптом страницы
-  по живому DOM, не руками.
+  Паттерн один и тот же: действие недоступно — «приглашение ещё не принято», «это последний
+  активный админ» — приложение гасит контрол и обязано сказать, почему. Сегодня причина живёт
+  в тултипе, то есть её надо <b>искать мышью</b>. Дека показывает, почему решение от пункта меню
+  нельзя просто скопировать, и приходит к тому, что отказы бывают <b>двух разных родов</b> и
+  лечатся по-разному. Все замеры ниже страница делает сама, по живому DOM.
 </p>
 
 <h2>1 · Что уже работает: <code>ds-menu-item</code></h2>
@@ -140,53 +140,98 @@
 <p>
   <code>ds-menu-item</code> ставит <code>aria-disabled</code> и <b>остаётся фокусируемым</b>.
   <code>ds-button</code> ставит <b>нативный</b> <code>disabled</code>
-  (<code>[disabled]="disabled() || loading()"</code>) — такая кнопка выпадает из таб-порядка,
-  скринридер до неё не доходит, и <code>aria-describedby</code> на ней не читается никогда.
-  Значит дело не в том, что у кнопки «нет входа для текста»: пока она нативно отключена,
-  <b>любая</b> привязка описания к ней мертва.
+  (<code>[disabled]="disabled() || loading()"</code>). Разница замерена ниже: у первой фокус
+  ложится, у второй — <b>нет</b>, и Tab её пропускает. Обрати внимание: свойство
+  <code>tabIndex</code> у обеих читается как 0, поэтому судить по нему нельзя — судить надо по
+  тому, становится ли элемент <code>document.activeElement</code>.
+</p>
+<p>
+  <b>Точности ради, без преувеличения:</b> «скринридер её вообще не увидит» — неверно. В режиме
+  чтения страницы он выключенную кнопку встретит и объявит как недоступную. Чего он не может —
+  дойти до неё табом, а описание, привязанное к выключенному контролу, читается ненадёжно и
+  по-разному в разных программах. Плюс клавиатурный пользователь <b>без</b> скринридера не
+  получит вообще ничего: для него такой кнопки на пути просто нет.
 </p>
 
 <div class="cases" id="stages"></div>
 
-<h2>3 · Чем варианты отличаются на самом деле</h2>
+<h2>3 · Что мы вообще чиним</h2>
+<p>
+  Сегодня причина живёт в <code>[dsTooltip]</code>. Чтобы её узнать, надо <b>навести мышь</b>:
+  на экране не написано ничего, клавиатурой не добраться, с тача — тем более. Чиним именно это:
+  причина должна быть <b>на экране постоянно</b>, а не по ховеру.
+</p>
+<p class="note">
+  Это не только вкусовщина: Carbon формулирует прямо — <b>то, без чего задачу не выполнить,
+  должно быть в постоянно видимом helper text, а не в тултипе</b>, потому что тултип исчезает,
+  как только увели курсор. Запрос «покажите тултип на выключенной кнопке» там висит открытым
+  и приходит, по их словам, чуть ли не еженедельно — то есть индустрия упирается в ту же стену.
+</p>
+
+<h2>4 · Развилка не в том, где текст, а в том, какой это отказ</h2>
+<p>
+  Два разных случая, и они требуют разного:
+</p>
 <table>
   <thead>
-    <tr>
-      <th>Вариант</th>
-      <th>Видно без ховера</th>
-      <th>В таб-порядке</th>
-      <th>Причина доходит до AT</th>
-      <th>Коробка кнопки</th>
-      <th>Что придётся сделать</th>
-    </tr>
+    <tr><th>Какой отказ</th><th>Пример</th><th>Кнопка</th><th>Где причина</th><th>Почему так</th></tr>
   </thead>
-  <tbody id="matrix"></tbody>
+  <tbody>
+    <tr>
+      <th>Устойчивый — не изменится, пока пользователь на этом экране</th>
+      <td>нет бэкенд-возможности; прав не хватает; запись в состоянии, из которого действие невозможно</td>
+      <td>остаётся выключенной, но через <code>aria-disabled</code> — иначе до неё не добраться</td>
+      <td><b>внутри кнопки</b>, второй строкой</td>
+      <td>причина такая же постоянная, как и сама недоступность: она часть контрола, а не реакция на ввод</td>
+    </tr>
+    <tr>
+      <th>Временный — снимется, как только пользователь что-то сделает</th>
+      <td>форма не заполнена; не выбрана строка; не принято соглашение</td>
+      <td><b>не выключать вовсе</b></td>
+      <td><b>под контролом</b>, как field message</td>
+      <td>это сообщение о состоянии ФОРМЫ, а не о кнопке; оно меняется по ходу и должно жить там же, где остальные сообщения формы</td>
+    </tr>
+  </tbody>
 </table>
 
 <p class="note">
-  Четвёртой строки «как сейчас» в таблице нет намеренно: сегодня у кнопки нет вообще никакого
-  ответа — причина живёт в <code>[dsTooltip]</code>, который требует ховера, то есть доходит
-  до мыши и ни до чего больше.
+  Нижняя строка — это не новая идея, а <b>наше собственное правило</b>: сабмит гейтится только на
+  «поля непусты и не в полёте», а валидность судится <b>внутри обработчика</b>, и ошибки
+  показываются инлайн. Ровно к этому же приходит Adrian Roselli: не выключать контрол, а гасить
+  отправку и отвечать сообщением — «disabling fields is no replacement for good instructions and
+  error messages». То есть у временного случая правильный ответ — <b>вообще не тот компонент</b>:
+  это <code>ds-field-message</code> под формой, а не вход на кнопке.
+</p>
+
+<h2>5 · Что делать с длинным текстом</h2>
+<p>
+  Вторая строка внутри кнопки — это <b>её ширина и высота</b>. Короткая причина («нет прав»,
+  «приглашение не принято») туда ложится; длинная — нет: кнопка либо расползается, либо
+  обрезает текст, а обрезать причину нельзя — она и есть та информация, ради которой всё
+  затевалось.
+</p>
+<div class="cases" id="length"></div>
+<p class="note">
+  Отсюда простое правило вместо догадки: <b>внутрь кнопки — только то, что помещается в одну
+  строку</b>; всё, что длиннее, идёт под контрол как сообщение, где может переноситься. Это тот же
+  принцип, что и в общем правиле про усечение: перенос лучше обрезки, а обрезать можно только то,
+  что доступно целиком где-то ещё.
 </p>
 
 <div class="ask">
-  <b>Рекомендую A</b>, и вот на чём это держится:
+  <b>Итог, который я предлагаю зафиксировать:</b>
   <ul>
-    <li><b>B не решает главного.</b> Коробка кнопки не меняется — но пока кнопка нативно
-      <code>disabled</code>, ссылка на внешний текст не озвучивается. B становится рабочим
-      только вместе с тем же переходом на <code>aria-disabled</code>, то есть это A с текстом
-      снаружи, а не отдельный вариант.</li>
-    <li><b>C честно закрывает случай без нового API</b> — и остаётся правильным ответом там, где
-      причина длинная. Но три экрана консьюмер переписывает сам, а DS так и не даёт ответа на
-      вопрос, который ему задали дважды.</li>
-    <li><b>Цена A названа прямо:</b> вторая строка меняет высоту кнопки, и кнопка перестаёт быть
-      нативно отключённой — клик надо глушить в обработчике, иначе форма отправится. Ровно это
-      уже делает <code>ds-menu-item</code>, так что механика в библиотеке есть и проверена.</li>
-    <li><b>Дефолт не двигается.</b> Без <code>description</code> кнопка остаётся нативно
-      <code>disabled</code>, как сейчас — новый режим включает только явный вход.</li>
+    <li><b>Устойчивый отказ</b> → <code>description</code> на кнопке + режим <code>aria-disabled</code>.
+      Причина видна сразу, кнопка остаётся достижимой, клик глохнет в обработчике — механика уже
+      работает в <code>ds-menu-item</code>.</li>
+    <li><b>Временный отказ</b> → кнопку <b>не выключать</b>, причину показывать под формой через
+      <code>ds-field-message</code>. Нового API не нужно — нужен рецепт в доках, потому что сегодня
+      консьюмеры вместо этого гасят кнопку.</li>
+    <li><b>Тултип как носитель причины — убираем из обоих случаев.</b> Он требует ховера, то есть не
+      существует для клавиатуры и тача.</li>
+    <li><b>Длинная причина</b> всегда идёт под контрол, а не внутрь кнопки.</li>
   </ul>
 </div>
-
 </main>
 <script>
   // What a screen reader can reach: an element it can land on. A natively disabled
@@ -213,18 +258,24 @@
   };
 
   const render = (element, into) => {
+    // Measured, not assumed: `tabIndex` reads 0 on a natively disabled button too, so
+    // the honest discriminator is whether focus actually lands on it.
+    document.activeElement?.blur();
+    element.focus();
+    const focusLands = document.activeElement === element;
+    element.blur();
     const canReach = reachable(element);
     const { name, description, state } = announcement(element);
     const readout = document.querySelector(`[data-readout="${into}"]`) ?? element.closest('.case').querySelector('.readout');
     const says = canReach
       ? `«${name}${state}. ${description || '—'}»`
-      : 'скринридер сюда не попадает — ничего';
+      : 'клавиатурой сюда не попасть; в режиме чтения страницы скринридер объявит «кнопка, недоступна», а описание читается ненадёжно';
     readout.innerHTML =
-      `в таб-порядке: <span class="${canReach ? 'miss' : 'hit'}">${canReach ? 'да' : 'нет'}</span>` +
-      ` · tabindex ${element.tabIndex}` +
+      `фокус ложится: <span class="${focusLands ? 'miss' : 'hit'}">${focusLands ? 'да' : 'нет'}</span>` +
+      ` · в таб-порядке: ${canReach ? 'да' : 'нет'}` +
       ` · ${element.disabled ? 'disabled' : element.getAttribute('aria-disabled') === 'true' ? 'aria-disabled' : 'активна'}` +
       `<div class="says${canReach ? '' : ' silent'}">${says}</div>`;
-    return { canReach, description: Boolean(description) };
+    return { canReach, focusLands, description: Boolean(description) };
   };
 
   render(document.querySelector('[data-probe="menu-item"]'), 'menu-item');
@@ -293,7 +344,6 @@
   ];
 
   const stages = document.getElementById('stages');
-  const matrix = document.getElementById('matrix');
   const results = [];
 
   for (const entry of CASES) {
@@ -315,15 +365,39 @@
     results.push({ ...entry, ...measured, visible: true });
   }
 
-  matrix.innerHTML = results
-    .map(
-      (entry) =>
-        `<tr><th>${entry.title}</th>` +
-        `<td class="yes">да</td>` +
-        `<td class="${entry.canReach ? 'yes' : 'no'}">${entry.canReach ? 'да' : 'нет'}</td>` +
-        `<td class="${entry.canReach && entry.description ? 'yes' : 'no'}">${entry.canReach && entry.description ? 'да' : 'нет'}</td>` +
-        `<td>${entry.box}</td>` +
-        `<td>${entry.cost}</td></tr>`,
-    )
-    .join('');
+  // The length demo: the same reason at three lengths, measured against the button it
+  // sits in — the point is where a second line stops fitting, not how it looks.
+  const LENGTHS = [
+    ['Короткая', 'Нет прав'],
+    ['Средняя', 'Приглашение ещё не принято'],
+    ['Длинная', 'Действие недоступно, пока администратор не подтвердит организацию и не выдаст роль'],
+  ];
+  const length = document.getElementById('length');
+  for (const [label, reason] of LENGTHS) {
+    const wrap = document.createElement('div');
+    wrap.className = 'case';
+    wrap.innerHTML = `<div class="cap">${label}<span class="sub">${reason.length} символов</span></div>`;
+    const stage = document.createElement('div');
+    stage.className = 'stage';
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'button two-line';
+    button.setAttribute('aria-disabled', 'true');
+    button.innerHTML = `<span data-name>Отправить заново</span><span class="reason">${reason}</span>`;
+    stage.appendChild(button);
+    wrap.appendChild(stage);
+    const readout = document.createElement('div');
+    readout.className = 'readout';
+    wrap.appendChild(readout);
+    length.appendChild(wrap);
+
+    const box = button.getBoundingClientRect();
+    const line = button.querySelector('.reason');
+    const lines = Math.round(line.getBoundingClientRect().height / parseFloat(getComputedStyle(line).lineHeight));
+    readout.innerHTML =
+      `ширина кнопки ${Math.round(box.width)}px · высота ${Math.round(box.height)}px · причина в ${lines} строк${lines === 1 ? 'у' : 'и'}` +
+      (lines > 1
+        ? '<div class="says silent">не помещается в строку — этой причине место под контролом</div>'
+        : '<div class="says">помещается — можно внутри кнопки</div>');
+  }
 </script>

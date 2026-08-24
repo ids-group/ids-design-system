@@ -157,11 +157,44 @@ Requests, not defects. Ordered by who is blocked.
   consumer also carries a `blocked-action` mixin whose whole comment is "`ds-button` has no caption
   slot — only `ds-menu-item` holds a second line — so the reason is a sibling". **Ask:** the same
   `description` shape on `ds-button` (and `ds-icon-button`, where the label is already invisible), with
-  the same `aria-describedby` wiring. **Worth deciding rather than assuming:** a button's second line
-  changes its box, so the honest alternatives are a standing caption (like the menu item), an
-  `aria-describedby` that names an element the app already renders beside the button, or a documented
-  "put the reason next to the control, not in it" recipe. Any of the three closes it; today there is no
-  answer at all.
+  the same `aria-describedby` wiring.
+
+  **DECIDED 2026-08-25 (Stas), and the axis moved.** The question is not where the text goes, it is
+  WHAT KIND of refusal it is — and the two kinds want different components:
+
+  · **Standing refusal** — will not change while the user is on this screen (the backend capability is
+    absent, the role is missing, the record is in a state the action cannot touch). The reason belongs
+    INSIDE the button as a second line, because it is as permanent as the unavailability itself.
+    Needs `description` + an `aria-disabled` mode: a natively `disabled` button cannot be focused at
+    all (measured — `document.activeElement` never becomes it, Tab skips it), and a keyboard user
+    without a screen reader then gets nothing whatsoever.
+  · **Transient refusal** — clears as soon as the user does something (form incomplete, nothing
+    selected, terms not accepted). **Do not disable the button.** The reason is a statement about the
+    FORM, not about the button, so it belongs under the control as a `ds-field-message` alongside the
+    other form messages. No new API — a documented recipe, because consumers reach for `disabled`
+    instead today.
+
+  **Long text has a measured rule, not a guess.** In the deck at a default button: an 8-character and
+  a 26-character reason each fit one line (168px / 190px wide); an 82-character one wraps to two lines
+  and pushes the button to 348px. So: one line fits inside the button, anything longer goes under the
+  control where it can wrap. Truncating a refusal reason is not an option — it is the whole payload.
+
+  **The tooltip is out of both branches** (Stas, and the literature agrees): it needs hover, so it does
+  not exist for keyboard or touch. Carbon states the general rule — information without which the task
+  cannot be completed belongs in always-visible helper text, not a tooltip — and its "tooltip on a
+  disabled button" request has stayed open with near-weekly duplicates. Adrian Roselli goes further and
+  argues against disabling at all: prevent the submit and answer with a message, since "disabling
+  fields is no replacement for good instructions and error messages". React Spectrum's own answer to
+  the same request is `aria-disabled` + swallowing the event + a data attribute for styling, which is
+  exactly the standing-refusal mechanics above.
+  **This repo already agrees with the transient branch**: the house forms rule gates submit on presence
+  and not-in-flight only, judges validity inside the handler and shows errors inline.
+
+  Deck: `presentations/button-refusal-reason.html` (each specimen measures its own focus behaviour).
+  Variant "reason as a sibling element referenced by `aria-describedby`, button left natively disabled"
+  was REJECTED: measured, focus never lands, so the reference is never announced — it only works
+  together with the same `aria-disabled` switch, which makes it the standing-refusal branch with the
+  text moved outside.
 
 
 ## `TableRowAction` cannot express a per-row menu, so `rowActions` is adopted nowhere (from mm-broker, 2026-08-18)
