@@ -199,6 +199,35 @@ measurement, and a grep of `ds.scss` against a sentence that claimed the opposit
   is meant to stay chrome-free. Not urgent, but it grows: the fifth dead input arrived with the
   messageIcon move, and every future universal field input will land on it too.
 
+- [x] **DONE 2026-08-24 — the delete contract now has a rule that can actually fire, and eight prose
+  instructions got the rows they were promising.** The ask named M033 as narrow; it is worse than
+  narrow. M033 triggers only on an `informational` line that STARTS with `DELETE-LIST`, and the 08-21
+  back-fill converted every one of those into a structured array — so **zero lines across 22 manifests
+  could reach it. The rule was inert.** Its second guard was wrong too: `&& !deleteList.length`
+  silenced it whenever the file held any structured row at all, which is exactly the state every
+  manifest is in.
+  **What the measurement found.** A pattern of second person plus a delete verb ("if you … it can go",
+  "you can drop that") matches **ten** sentences and no false positives — the shape without the second
+  person also catches `deleteList[].find for code that is now redundant`, which is prose about the
+  FIELD. Of the ten, `0.9.0` alone carried **five** and four had no row behind them; `0.6.1` and
+  `0.8.0` had one each with an empty `deleteList`.
+  **The rule is the citation, not the shape.** A shape test alone goes quiet as soon as the file holds
+  one unrelated entry — which is why the `link` column slipped past with `card-overflow` sitting right
+  there. **M034** requires such a sentence to name its row as `(delete list: <id>)` and checks the id
+  exists in that file. Proved by removing one citation: the lint fails, restores clean.
+  **Back-filled: six new rows** — `date-picker-touch-bypass-workaround` (0.6.1),
+  `table-sticky-corner-zindex-workaround` (0.8.0), `dropdown-option-active-override`,
+  `table-export-failure-wrapper`, `date-picker-trigger-focus-within-override` and
+  `autocomplete-input-minw-override` (0.9.0), plus `row-menu-view-details-duplicate` for the link
+  column. **One row was NOT written:** the fourteen-token line promised a deletion nothing can locate —
+  a hand-rolled value contains no DS symbol, so a `find` on our token name is the sortKey trap again.
+  It says what is supported instead. **And one I had to take back:** `table-compact-padding-important`
+  duplicated `compact-cell-padding-important`, already in 0.9.0 — I back-filled without reading the 21
+  rows already there.
+  ORIGINAL: [P2] `migrations/unreleased.json` carries the same instruction twice, in two forms, and only
+  one of them can be acted on — TableColumn.link's "that item can go" lived in informational prose while
+  --ds-card-overflow got a structured deleteList row.
+
 - [x] **DONE 2026-08-24 — one focus ring per field, and the shell list that caused the miss is gone.**
   0.10.2 shipped the pass that suppresses the inner ring, and it missed `ds-input` and `ds-textarea` —
   the two plainest fields in the library. **Why it missed them:** the pass trusted a hand-written list

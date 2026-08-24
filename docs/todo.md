@@ -7,7 +7,6 @@
 - P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial
 - P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).
 - P3 · A refusal reason on `ds-button` reaches a mouse only — `ds-menu-item` got `[description]`, buttons
-- P2 · A release that makes a workaround redundant says so in prose, and prose is not executed
 - P3 · `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref
 - P3 · The two row-action halves left open on purpose: a per-row `label`, and a divider or
 
@@ -43,7 +42,7 @@
 
 ## Priority board (2026-08-24, recut after 0.10.2)
 
-**27 open: 1 P1, 7 P2, 19 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
+**25 open: 1 P1, 6 P2, 18 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
 first consumer ask and two are Records, so the live board is **16 items — and 9 of those are
 Decisions**. **`# Bugs` is empty:** nothing shipped is known to misbehave. What is left to BUILD is
 **seven asks**; of them, one has a deck waiting on a
@@ -144,26 +143,6 @@ Requests, not defects. Ordered by who is blocked.
 
 - [ ] **[P3] `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber.** Today it's a raw `value: number` + `min`/`max`/`step` + spinner, no display formatting. PrimeNG InputNumber's value-add is a formatted numeric field: thousands grouping, fixed decimals, currency/percent, locale-aware, parsed back to a number on edit. Add opt-in `mode` (decimal/currency/percent) + `locale`/`currency`/`minFractionDigits`/`maxFractionDigits`/`useGrouping`; format on display/blur, parse on focus/input. Masking prior art in-house: [[reference-masked-input-dom-writeback]] (pinkmoon phone/w3w imperative `element.value` write-back). No active request — likely pulled by the financial-admin consumers (mm-broker admin, pinkmoon amounts/rates/%); gate on the first such form.
 
-
-## A release that makes a workaround redundant says so in prose, and prose is not executed (from mm-broker, 2026-08-24)
-
-- [ ] **[P2] `migrations/unreleased.json` carries the same instruction twice, in two forms, and only one
-  of them can be acted on.** `--ds-card-overflow` got a structured `deleteList` row — id, `surface`,
-  greppable `find`, `why`, `replaceWith`. `TableColumn.link` got the same kind of instruction as an
-  `informational` sentence: "Where you compensated for an invisible row click by repeating the
-  destination as a 'View Details' item in the row overflow menu, that item can go." Seven sites in that
-  consumer match it, and nothing in the upgrade loop will find them: the finder searches for the item's
-  own symbols, and `link` is an ADDITION, so its hits are zero by construction. **This is the exact
-  failure the delete-list contract was written for** — 0.10.0 shipped 24 delete instructions as prose
-  and a human reading all 63 informational strings is what found them.
-  **`tools/migration-lint.mjs` does not catch this one either**, and that is the part worth fixing
-  first: M033 only fires on an `informational` line that starts with `DELETE-LIST`, so an instruction
-  written as an ordinary sentence passes. **Ask:** (a) give the link column its own `deleteList` row
-  (`find: ["View Details", "ds-menu-item"]`, `surface: "template"`, `replaceWith`: the naming column's
-  `link`), and (b) teach the lint to read `informational` for the shapes that mean deletion — "can go",
-  "no longer needed", "the workaround", "you can drop" — and demand a `deleteList` id whenever one
-  appears. Authoring rule, in one line: **if a release makes consumer code redundant, the manifest says
-  so in `deleteList` or not at all.**
 
 ## A refusal reason on `ds-button` reaches a mouse only (from mm-broker, 2026-08-24)
 

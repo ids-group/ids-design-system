@@ -265,10 +265,37 @@ for (const [name, manifest] of manifests) {
     }
   }
 
+  // Second person plus one of these verbs is an instruction to delete consumer code, and prose
+  // is not executed: 0.9.0 shipped five of them, four with no row to run. Requiring the sentence
+  // to name its row is what makes the pair machine-checkable — a shape test alone passes as soon
+  // as the file holds any unrelated `deleteList` entry.
+  const DELETE_SHAPE =
+    /\b(?:that (?:item|rule|override|copy)|those copies|the workaround|it) can go\b|\byou can now delete\b|\byou can drop\b|\bcan now be removed\b|\bno longer needed\b/i;
+  const knownDeleteIds = new Set((manifest.deleteList ?? []).map((entry) => entry.id));
+  for (const line of manifest.informational ?? []) {
+    const sentences = String(line).split(/(?<=\.)\s+/);
+    const guilty = sentences.find(
+      (one) => DELETE_SHAPE.test(one) && /\byou(?:r|rs)?\b/i.test(one),
+    );
+    if (!guilty) continue;
+    const cited = String(line).match(/\(delete list: ([a-z0-9-]+)\)/);
+    if (!cited) {
+      report(
+        errors,
+        file,
+        'M034',
+        'informational tells the consumer to delete something but names no row — add a `deleteList` entry and cite it as "(delete list: <id>)": ' +
+          JSON.stringify(guilty.trim().slice(0, 70)),
+      );
+    } else if (!knownDeleteIds.has(cited[1])) {
+      report(errors, file, 'M034', 'informational cites "' + cited[1] + '", which is no `deleteList` id in this file');
+    }
+  }
+
   const prose = (manifest.informational ?? []).filter((line) =>
     /^DELETE-LIST/.test(String(line)),
   ).length;
-  if (prose && !(manifest.deleteList ?? []).length) {
+  if (prose) {
     report(
       errors,
       file,
