@@ -98,8 +98,7 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   glyph, `false` removes it, each key is independent of the others, and **`stateIcons: false` is the one
   line back to how fields looked before**. **Per field:** `messageIcon` wins over both —
   `[messageIcon]="false"` drops the glyph on that field alone. It is declared once on the shared
-  field base, so it reaches all fifteen fields that render a message row — and `ds-search`, which
-  inherits the base for its form binding and renders none, where it does nothing.
+  field base, so it reaches all fifteen fields that render a message row.
   **Two new hooks:** `--ds-field-message-icon-gap`, and `--ds-field-message-icon-offset`, which centres
   the glyph on the FIRST line rather than the block — the row is `align-items: flex-start` now, so a
   message that wraps keeps its glyph beside the first line instead of floating in the middle. The offset
@@ -117,24 +116,28 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   empty default, and the four pipes now have a demo on the docs page — which is also the test, since
   that section compiles under `strictTemplates`.
 
-- **If you EXTEND a DS component, ten classes grew and six members changed type.** `npm run
+- **If you EXTEND a DS component, eleven classes grew and six members changed type.** `npm run
   class-surface` against 0.10.1: `DsFieldBase` (`messageIcon` — the state glyph, declared once for
-  every field rather than per component), `FieldMessageComponent` (`config`, `iconResolved`),
-  `AutocompleteComponent` and `MultiSelectComponent` (`chipsMode`, `showsEveryChip`),
-  `MenuItemComponent` (`description`, `descriptionId`), `SearchComponent` (`disabled`,
-  `isDisabled`), `SidenavItemComponent` (`rail`, `railResolved`), `SidenavComponent` (`rail`),
-  `TableComponent` (`actionReason`, `actionsFor`, `hasActionsFor`, `visibleRowActions`) and
-  `TimePickerComponent` (`insideATrigger`). A subclass declaring any of those names now fails with
-  TS4114 — or TS2415, since a redeclared private collides just as a public one does, and a name on
-  `DsFieldBase` reaches every field through it. **Nothing was removed.** Six members kept their
-  name and changed type, which is the case that compiles for a caller and breaks an overrider:
-  `maxVisibleChips` on both pickers (widened to `number | 'fit' | 'all' | null`, default now
-  `null`), `FieldMessageComponent.icon` (widened to `IconName | false | null`, so `false` can mean
-  "no glyph" against a state that supplies one), `DsConfig.field` (its shape grew the glyph
-  defaults), `SearchComponent.clear` (`protected` → public, so a subclass that narrowed it to
-  `protected` no longer satisfies the base), `StatComponent.value` (widened to
-  `string | number | null`) and `TimeColumnsComponent.onKey` (its parameter list changed).
-  `SearchComponent.focus` also picked up `override`, which is internal and needs nothing.
+  every field rather than per component), `DsControlValueAccessor` (`bridge`),
+  `FieldMessageComponent` (`config`, `iconResolved`), `AutocompleteComponent` and
+  `MultiSelectComponent` (`chipsMode`, `showsEveryChip`), `MenuItemComponent` (`description`,
+  `descriptionId`), `SearchComponent` (the CVA surface it now declares itself: `bridge`,
+  `disabled`, `formDisabled`, `hidden`, `isDisabled`, `markTouched`, `registerOnChange`,
+  `registerOnTouched`, `setDisabledState`, `writeValue`), `SidenavItemComponent` (`rail`,
+  `railResolved`), `SidenavComponent` (`rail`), `TableComponent` (`actionReason`, `actionsFor`,
+  `hasActionsFor`, `visibleRowActions`) and `TimePickerComponent` (`insideATrigger`). A subclass
+  declaring any of those names now fails with TS4114 — or TS2415, since a redeclared private
+  collides just as a public one does, and a name on `DsFieldBase` reaches every field through it.
+  **Six members kept their name and changed type**, which is the case that compiles for a caller
+  and breaks an overrider: `maxVisibleChips` on both pickers (widened to
+  `number | 'fit' | 'all' | null`, default now `null`), `FieldMessageComponent.icon` (widened to
+  `IconName | false | null`, so `false` can mean "no glyph" against a state that supplies one),
+  `DsConfig.field` (its shape grew the glyph defaults), `SearchComponent.clear` (`protected` →
+  public), `StatComponent.value` (widened to `string | number | null`) and
+  `TimeColumnsComponent.onKey` (its parameter list changed). **What the report does NOT show:**
+  `ds-search` no longer extends the field base, so it loses eight inherited inputs — the tool
+  compares declarations per file and a dropped `extends` moves nothing, so that break is documented
+  in its own entry above and not here.
 
 - **Every readback that resolves through `DS_CONFIG` is now public.** `sizeResolved` on fourteen
   controls, plus `elevationResolved` / `paddingResolved` (card), `withDotResolved` (badge),
