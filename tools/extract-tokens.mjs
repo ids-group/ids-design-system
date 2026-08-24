@@ -29,7 +29,10 @@ function extractComponentTokens(scssText, component) {
   const out = [];
   const seen = new Set();
   let idx = 0;
-  while ((idx = scssText.indexOf('var(--ds-', idx)) !== -1) {
+  // `var(` and not `var(--ds-`: a resolver wrapped across lines puts a newline
+  // between them, and searching the joined string silently dropped the token from
+  // the reference. The name filter below does the narrowing.
+  while ((idx = scssText.indexOf('var(', idx)) !== -1) {
     const { name, fallback, endIndex } = parseVarCall(scssText, idx);
     idx = endIndex;
     if (!name.startsWith('--ds-') || seen.has(name)) continue;

@@ -3355,6 +3355,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-field-message-icon-gap",
         "value": "var(--space-1)",
         "notes": "Space between the state glyph and the message text (default --space-1). Also the row gap when there is no glyph, since the row holds nothing else."
+      },
+      {
+        "name": "--ds-field-message-icon-offset",
+        "value": "calc((var(--_field-message-font-size) * var(--line-height-base) - var(--icon-sm)) / 2)",
+        "notes": "Top offset that centres the 14px glyph on the FIRST line of the message rather than on the whole block, which matters once a message wraps. Defaults to a calc over --ds-field-message-font-size and --line-height-base, so it still holds if the message type is retuned; set a length to override."
       }
     ]
   },
@@ -3563,6 +3568,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-container-max",
         "value": "var(--col-cap-content)",
         "notes": "Page container max width (defaults to --col-cap-content)."
+      },
+      {
+        "name": "--ds-container-pad-x",
+        "value": "clamp(var(--space-4), 4vw, var(--space-6))",
+        "notes": "Horizontal page padding, fluid: clamp(--space-4, 4vw, --space-6). The vertical counterpart is --ds-container-pad."
       },
       {
         "name": "--ds-inline-gap",
@@ -4070,6 +4080,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Multi-select control surface fill (defaults to --surface-default)."
       },
       {
+        "name": "--ds-multi-select-border-color",
+        "value": "var(--border-default)",
+        "notes": "Multi-select trigger border (defaults to --border-default)."
+      },
+      {
         "name": "--ds-multi-select-radius",
         "value": "var(--ds-radius-control)",
         "notes": "Multi-select control corner radius (defaults to --radius-md)."
@@ -4078,6 +4093,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-multi-select-text-color",
         "value": "var(--text-primary)",
         "notes": "Multi-select selected-value text colour (defaults to --text-primary)."
+      },
+      {
+        "name": "--ds-multi-select-border-color-focus",
+        "value": "var(--accent)",
+        "notes": "Multi-select trigger border while the field holds focus (defaults to --accent)."
       },
       {
         "name": "--ds-multi-select-panel-bg-color",
@@ -4634,6 +4654,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Segmented control track fill (defaults to --surface-secondary)."
       },
       {
+        "name": "--ds-segmented-selected-bg-color",
+        "value": "var(--surface-default)",
+        "notes": "Fill of the selected segment, which reads as a raised chip on the track (defaults to --surface-default)."
+      },
+      {
+        "name": "--ds-segmented-selected-label-color",
+        "value": "var(--text-primary)",
+        "notes": "Label colour of the selected segment (defaults to --text-primary)."
+      },
+      {
         "name": "--ds-segmented-label-color",
         "value": "var(--text-secondary)",
         "notes": "Segmented control label colour (defaults to --text-secondary)."
@@ -4652,6 +4682,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-segmented-r-inner",
         "value": "var(--segmented-r-inner)",
         "notes": "Segmented control button corner radius (defaults to --segmented-r-inner)."
+      },
+      {
+        "name": "--ds-segmented-radius",
+        "value": "calc(var(--_segmented-r-inner) + var(--_segmented-pad))",
+        "notes": "Outer radius of the segmented track. Defaults to the inner radius plus the track padding, so the selected chip and the track stay concentric — set both if you override this."
       },
       {
         "name": "--ds-segmented-selected-shadow",
@@ -6236,6 +6271,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-time-picker-option-bg-color-selected",
+        "value": "var(--accent)",
+        "notes": "Fill of the selected hour/minute option in the panel (defaults to --accent)."
+      },
+      {
+        "name": "--ds-time-picker-option-text-color-selected",
+        "value": "var(--accent-on)",
+        "notes": "Label colour of the selected option (defaults to --accent-on)."
+      },
+      {
+        "name": "--ds-time-picker-option-bg-color-hover",
+        "value": "var(--surface-secondary)",
+        "notes": "Option fill on hover (defaults to --surface-secondary)."
+      },
+      {
         "name": "--ds-time-picker-column-width",
         "value": "3rem",
         "notes": "Min width of each column."
@@ -6244,6 +6294,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-time-picker-column-height",
         "value": "13.5rem",
         "notes": "Max height of each scroll column."
+      },
+      {
+        "name": "--ds-time-picker-focus-shadow",
+        "value": "var(--ds-control-focus-shadow, var(--focus-ring))",
+        "notes": "Time picker focus ring shadow (defaults to --ds-control-focus-shadow) — read directly by the portaled panel, where a :host-scoped private token cannot reach."
       }
     ]
   },
@@ -6252,6 +6307,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "selector": ".time-picker",
     "description": "",
     "tokens": [
+      {
+        "name": "--ds-time-picker-trigger-bg-color",
+        "value": "var(--surface-default)",
+        "notes": "Time-picker trigger fill (defaults to --surface-default)."
+      },
+      {
+        "name": "--ds-time-picker-trigger-border",
+        "value": "var(--border-default)",
+        "notes": "Time-picker trigger border (defaults to --border-default)."
+      },
+      {
+        "name": "--ds-time-picker-trigger-color",
+        "value": "var(--text-primary)",
+        "notes": "Time-picker trigger text colour (defaults to --text-primary)."
+      },
       {
         "name": "--ds-time-picker-trigger-radius",
         "value": "var(--ds-radius-control)",

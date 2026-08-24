@@ -8,6 +8,7 @@
   --_field-message-color:     var(--ds-field-message-color,     var(--text-tertiary));
   --_field-message-font-size: var(--ds-field-message-font-size, var(--font-size-xs));
   --_field-message-icon-gap: var(--ds-field-message-icon-gap, var(--space-1));
+  --_field-message-icon-offset: var(--ds-field-message-icon-offset, calc((var(--_field-message-font-size) * var(--line-height-base) - var(--icon-sm)) / 2));
 
   display: flex;
 
@@ -23,10 +24,7 @@
      line rather than the block, computed from the two tokens that decide that line
      so it still holds if a consumer retunes the message type. */
   .message-icon {
-    margin-top: var(
-      --ds-field-message-icon-offset,
-      calc((var(--_field-message-font-size) * var(--line-height-base) - var(--icon-sm)) / 2)
-    );
+    margin-top: var(--_field-message-icon-offset);
   }
 
   &.error   { color: var(--error-text); }
