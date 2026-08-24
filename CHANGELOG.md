@@ -8,6 +8,8 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+## 0.10.3 — 2026-08-24
+
 ### Added
 
 - **Two SCSS mixins for building your own composite controls** (`components.md` § Global helper
