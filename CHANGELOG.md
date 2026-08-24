@@ -8,6 +8,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Fixed
+
+- **`ds-input` and `ds-textarea` were the two shells 0.10.2's ring fix missed.** Same defect and same
+  cause as "One focus ring per field, not two" below: the universal `:where(:focus-visible)` shadow
+  lands on the inner element, the box paints its own halo on `:focus-within`, and the `outline: 0`
+  both already had cannot cancel a shadow. So the two plainest fields in the library went on drawing
+  a 4px control ring around the `<input>`/`<textarea>` **and** a 3px field halo around the box.
+  **They were missed because that pass trusted the shell list written in `styles/_focus.scss` rather
+  than measuring.** A browser sweep — 9,968 focusable elements over 64 pages, transitions disabled so
+  every computed shadow is final — found exactly these two and nothing else in the library. The reset
+  stays scoped to the field element, so `clear-btn` and `password-toggle` inside the same box keep
+  their own rings; they are real tab stops.
+
 ## 0.10.2 — 2026-08-24
 
 ### Added

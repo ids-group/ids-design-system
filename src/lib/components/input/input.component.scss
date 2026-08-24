@@ -86,6 +86,13 @@
       font: var(--font-weight-regular) var(--_input-fs) / var(--line-height-base) var(--font-sans);
       color: var(--_input-text-color);
 
+      /* The box owns the ring — see the note in styles/_focus.scss. The
+         `outline: 0` above cannot cancel the base rule's box-shadow, so without
+         this the field paints two: this element's and the box's halo. */
+      &:where(:focus-visible) {
+        box-shadow: none;
+      }
+
       &::placeholder {
         color: var(--_input-placeholder);
       }

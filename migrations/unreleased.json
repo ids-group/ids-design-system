@@ -1,0 +1,33 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "one-focus-ring-per-field-input-textarea",
+      "kind": "behavior",
+      "old": "ds-input, ds-textarea",
+      "new": null,
+      "surface": "style",
+      "note": "APPEARANCE FIX, no action: the two shells 0.10.2's one-focus-ring-per-field pass missed. A focused ds-input or ds-textarea drew TWO rings - the 4px control ring the universal :where(:focus-visible) rule puts on the inner input/textarea, plus the 3px field halo the box paints on :focus-within. The inner one is now suppressed. ACTION only if you wrote a workaround: a rule that killed one of the two (box-shadow: none on an inner input, a re-declared --ds-input-focus-shadow meant to hide the doubling) can go. Deliberately NOT suppressed: the clear button and the password toggle inside the same box keep their own ring, because both are real tab stops the box halo cannot distinguish.",
+      "verify": "Tab into a ds-input and a ds-textarea: each shows exactly one ring, the halo around the box. Tab on to the clear button or password toggle inside that field and a second, tighter ring appears on the button - that one is intended.",
+      "searchHints": [
+        "--ds-input-focus-shadow",
+        "--ds-field-focus-shadow",
+        "--ds-control-focus-shadow",
+        "box-shadow: none",
+        "focus-visible"
+      ]
+    }
+  ],
+  "informational": [
+    "The shell list in styles/_focus.scss is now maintained from a measurement, not from a read of the code: it had been wrong for two releases. If you add a component that paints its own ring on :focus-within, suppress the base rule on the control it speaks for - `outline: 0` cannot do it, because the base indicator is a box-shadow."
+  ],
+  "deleteList": [
+    {
+      "id": "input-double-ring-workaround",
+      "surface": "style",
+      "find": ["ds-input input", "ds-textarea textarea", "--ds-input-focus-shadow", "box-shadow: none"],
+      "why": "A rule killing one of the two focus rings a ds-input or ds-textarea used to paint - typically box-shadow: none on the inner input, or --ds-input-focus-shadow re-declared as none to hide the doubling.",
+      "replaceWith": "nothing - the component now paints one ring on its own"
+    }
+  ]
+}

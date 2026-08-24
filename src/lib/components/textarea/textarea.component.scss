@@ -76,6 +76,13 @@
       min-height: var(--field-textarea-rows-min, 60px);
       padding: var(--_input-pad-y) 0;
 
+      /* The box owns the ring — see the note in styles/_focus.scss. The
+         `outline: 0` above cannot cancel the base rule's box-shadow, so without
+         this the field paints two: this element's and the box's halo. */
+      &:where(:focus-visible) {
+        box-shadow: none;
+      }
+
       &::placeholder {
         color: var(--_input-placeholder);
       }

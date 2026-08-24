@@ -23,7 +23,15 @@
 // silence the inner element, because a shadow is what this rule sets and `outline: 0`
 // cannot cancel a shadow — leave it and the field paints two rings, one round the inner
 // control and one round the box. The shells that do it: autocomplete, date-picker,
-// field-group, number-stepper, search.
+// field-group, input, number-stepper, search, textarea.
+//
+// This list was written from a read of the code and MISSED input and textarea for two
+// releases; a browser sweep of 9,968 focusable elements over 64 pages found them. Trust
+// the sweep, not the list: focus each control and count the shadows that appear.
+//
+// A tab stop INSIDE a shell keeps its own ring on purpose — a number-stepper arrow, a
+// clear button, a password toggle — so the reset targets the field element itself, never
+// everything inside the box.
 :where(:focus-visible) {
   outline: none;
   box-shadow: var(--ds-control-focus-shadow);
