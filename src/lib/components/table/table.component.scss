@@ -365,7 +365,13 @@
        layout can't stretch the column to fit the full text. */
     .cell-clip {
       display: block;
-      overflow: hidden;
+
+      /* MEASURED clipping the same 2.13px above and 1.47px below: the same flat-line-box shave as the option label — see the note in styles/_dropdown-overlay.scss.
+         `scrollWidth > clientWidth` still reports true under `clip`, checked in
+         Chromium — which matters here because that is how a clipped cell earns its
+         full-text popover. */
+      overflow: clip;
+      overflow-clip-margin: var(--space-1);
       text-overflow: ellipsis;
       white-space: nowrap;
     }

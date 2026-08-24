@@ -57,7 +57,13 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
-    overflow: hidden;
+
+    /* Same shape as the two measured sites — a padding-less ellipsis box inside a
+       flat line box. Not reproducible in our own docs (they project ds-breadcrumbs
+       here rather than bare crumbs), so this is the fix applied by shape; where
+       nothing overhangs, a clip margin changes nothing. */
+    overflow: clip;
+    overflow-clip-margin: var(--space-1);
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 24ch;

@@ -64,7 +64,9 @@
   }
 
   .label {
-    overflow: hidden;
+    /* MEASURED clipping, same numbers as the option label: the same flat-line-box shave as the option label — see the note in styles/_dropdown-overlay.scss. */
+    overflow: clip;
+    overflow-clip-margin: var(--space-1);
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 16ch;

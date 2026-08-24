@@ -100,7 +100,11 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
-    overflow: hidden;
+
+    /* By shape, like the topbar crumb — same reasoning, same inertness where
+       nothing overhangs. */
+    overflow: clip;
+    overflow-clip-margin: var(--space-1);
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 24ch;
