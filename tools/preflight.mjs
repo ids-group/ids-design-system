@@ -48,4 +48,12 @@ try {
   fail('migrations/ failed the manifest lint (errors above).');
 }
 
+// A shell that forgets to silence the base focus indicator ships a field with two
+// rings, which is what 0.10.0 and 0.10.2 each did to a component nobody measured.
+try {
+  execSync('node tools/check-focus-rings.mjs', { stdio: 'inherit' });
+} catch {
+  fail('a ringed shell does not silence the base focus indicator (errors above).');
+}
+
 console.log('preflight: all checks passed.');

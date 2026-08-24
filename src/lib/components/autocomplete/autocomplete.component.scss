@@ -3,6 +3,7 @@
    Both halves are styled here. */
 @use '../../styles/field-box' as field-box;
 @use '../../styles/chip-row' as chip-row;
+@use '../../styles/focus' as focus;
 @use '../../styles/field-group-segment' as field-group-segment;
 @use '../../styles/field-state' as field-state;
 
@@ -75,11 +76,9 @@
 
   &:hover:not(.disabled) { border-color: var(--border-strong); }
 
-  /* The shell owns the ring; the inner control must not draw the universal one too.
-     See styles/_focus.scss for why `outline: 0` cannot cancel it. */
-  :where(:focus-visible) {
-    box-shadow: none;
-  }
+  /* Named control, not a blanket: a chip's close button in this box is a tab stop
+     and keeps its own ring. */
+  @include focus.owns-the-focus-ring('.autocomplete-input');
   &:focus-within:not(.disabled) {
     border-color: var(--_autocomplete-border-color-focus);
     box-shadow: var(--_autocomplete-focus-shadow);

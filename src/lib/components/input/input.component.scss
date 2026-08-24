@@ -5,6 +5,7 @@
 @use '../../styles/field-box' as field-box;
 @use '../../styles/field-group-segment' as field-group-segment;
 @use '../../styles/field-state' as field-state;
+@use '../../styles/focus' as focus;
 
 :host {
   /* Public --ds-input-* are read with fallbacks, never declared — consumer overrides inherit in. */
@@ -86,13 +87,6 @@
       font: var(--font-weight-regular) var(--_input-fs) / var(--line-height-base) var(--font-sans);
       color: var(--_input-text-color);
 
-      /* The box owns the ring — see the note in styles/_focus.scss. The
-         `outline: 0` above cannot cancel the base rule's box-shadow, so without
-         this the field paints two: this element's and the box's halo. */
-      &:where(:focus-visible) {
-        box-shadow: none;
-      }
-
       &::placeholder {
         color: var(--_input-placeholder);
       }
@@ -164,6 +158,10 @@
       border-color: var(--_input-border-focus);
       box-shadow: var(--_input-focus-shadow);
     }
+
+    /* Named control, not a blanket: `clear-btn` and `password-toggle` live in this
+       box and are real tab stops, so they keep their own ring. */
+    @include focus.owns-the-focus-ring('input');
   }
 
   &.disabled {

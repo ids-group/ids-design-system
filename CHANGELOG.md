@@ -20,6 +20,17 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   every computed shadow is final — found exactly these two and nothing else in the library. The reset
   stays scoped to the field element, so `clear-btn` and `password-toggle` inside the same box keep
   their own rings; they are real tab stops.
+- **`ds-search`'s clear button had no focus indicator at all — introduced by 0.10.2's own ring fix.**
+  That fix silenced the base indicator with a shell-wide reset, which also hit `.search-clear`, a
+  `tabindex="0"` tab stop. Measured: with the field's halo already lit, tabbing from the input to the
+  × changed **no** paint property anywhere on screen — box-shadow, outline, border, background and
+  colour were byte-identical in both states, so a keyboard user could not tell the × had focus. A
+  WCAG 2.4.7 failure, and the same defect as the double ring seen from the other side. Every shell now
+  names the one control it speaks for through the new `focus.owns-the-focus-ring($control)` mixin
+  instead of blanketing its box, and `ds-field-group` drops its blanket entirely — each segment
+  already silences its own. `tools/check-focus-rings.mjs` fails the build when a component paints a
+  ring on `:focus-within` without silencing the base rule; it replaces the hand-kept shell list in
+  `styles/_focus.scss` that had been wrong for two releases.
 
 ## 0.10.2 — 2026-08-24
 

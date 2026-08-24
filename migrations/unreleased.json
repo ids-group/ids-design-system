@@ -16,6 +16,16 @@
         "box-shadow: none",
         "focus-visible"
       ]
+    },
+    {
+      "id": "search-clear-button-focus-indicator",
+      "kind": "behavior",
+      "old": "ds-search",
+      "new": null,
+      "surface": "style",
+      "note": "ACCESSIBILITY FIX, no action: 0.10.2's ring fix silenced the base focus indicator with a shell-wide reset, which also hit .search-clear - a tabindex=0 tab stop. Tabbing from the input to the clear button changed nothing on screen (box-shadow, outline, border, background and colour all identical), so a keyboard user could not tell the button had focus: a WCAG 2.4.7 failure. Every shell now names the single control it silences, so tab stops inside a field box keep their own ring. ACTION only if you re-added a ring to that button yourself - that rule can go.",
+      "verify": "Type into a ds-search so the clear button appears, then Tab: the × shows its own ring on top of the field halo. Same for a chip close button in ds-autocomplete or ds-multi-select, and for the arrows in ds-number-stepper.",
+      "searchHints": ["search-clear", "ds-search", "focus-visible", "box-shadow"]
     }
   ],
   "informational": [

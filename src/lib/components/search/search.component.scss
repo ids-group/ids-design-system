@@ -6,6 +6,7 @@
 
 @use '../../styles/press' as press;
 @use '../../styles/field-group-segment' as field-group-segment;
+@use '../../styles/focus' as focus;
 
 :host {
   /* Public --ds-search-* are read with fallbacks, never declared — consumer overrides inherit in.
@@ -44,11 +45,10 @@
     border-color: var(--_search-border-hover);
   }
 
-  /* The shell owns the ring; the inner control must not draw the universal one too.
-     See styles/_focus.scss for why `outline: 0` cannot cancel it. */
-  :where(:focus-visible) {
-    box-shadow: none;
-  }
+  /* Named control, not a blanket. The blanket this replaces also silenced
+     `.search-clear`, a real tab stop: focusing it then changed nothing on screen,
+     so a keyboard user could not tell the × had focus. */
+  @include focus.owns-the-focus-ring('.search-input');
   &:focus-within {
     background-color: var(--_search-bg-color-focus);
     border-color: var(--_search-border-focus);

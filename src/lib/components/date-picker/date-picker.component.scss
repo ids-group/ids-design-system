@@ -5,6 +5,7 @@
 @use '../../styles/field-group-segment' as field-group-segment;
 @use '../../styles/field-state' as field-state;
 @use '../../styles/visually-hidden' as visually-hidden;
+@use '../../styles/focus' as focus;
 
 :host {
   --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
@@ -100,12 +101,17 @@
     border-color: var(--border-strong);
   }
 
-  &:focus-visible,
-  /* The shell owns the ring; the inner control must not draw the universal one too.
-     See styles/_focus.scss for why `outline: 0` cannot cancel it. */
-  :where(:focus-visible) {
+  &:focus-visible {
     box-shadow: none;
   }
+
+  /* Named controls, not a blanket — the blanket this replaces silenced a real tab
+     stop in ds-search. Both of these are listed on purpose: `.calendar-toggle` is
+     `tabindex="-1"` and `aria-hidden`, so it is not a stop a keyboard user lands on
+     and must not paint a ring of its own. */
+  @include focus.owns-the-focus-ring('.date-input');
+  @include focus.owns-the-focus-ring('.calendar-toggle');
+
   &:focus-within,
   &.open {
     outline: none;
