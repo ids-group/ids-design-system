@@ -10,6 +10,15 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`--ds-button-shadow` and `--ds-button-shadow-hover` — the rest state finally has a hook.** Focus and
+  pressed already had one (`--ds-button-focus-shadow`, `--ds-button-pressed-shadow`); the resting shadow
+  did not, which is the only reason a consumer styling its option buttons as a screen's primary surface
+  still had a `::ng-deep ds-button button` rule at all — `background`, `color`, `font-weight` and
+  `border` were already tokens. That block becomes four token lines and the deep selector goes.
+  **Both default to `none`**, so nothing moves until an app asks. `-shadow-hover` falls back to
+  `-shadow`, so setting the resting one alone keeps the button steady under the pointer, and the focus
+  ring and pressed halo still win while those states are on.
+
 - **`--ds-card-overflow`, so a card can hold a full-bleed child inside its own radius.** A child whose
   background runs to the card's edge — an image, a grey footer strip — paints its square corners over
   the card's rounded ones, and the host cannot fix it: the rounded box is `ds-card`'s inner element, out
@@ -41,6 +50,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   Table into an ARIA Grid Just for a Clickable Row" argues for, with the row click as an enhancement on
   top of a control that already works.
 
+### Changed
+
+- **If you EXTEND a DS component, `TableComponent` grew one member: `cellLink`.** `npm run
+  class-surface` against 0.10.3. It backs the new `link` column, resolving a column’s `link(row)` to
+  the value the template binds. A subclass that happens to declare the same name now fails with
+  TS4114 (“must have an ‘override’ modifier”), or TS2415 if the signature differs — and `protected` is
+  no protection, since a redeclared protected member collides exactly as a public one does.
+  Subclassing a DS component stays unsupported (`components.md` § Components); compose instead.
 ## 0.10.3 — 2026-08-24
 
 ### Added

@@ -84,6 +84,28 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
   sibling reach (`::ng-deep .card { height: 100% }`) by making the card's box fill a stretched host;
   this is the next `.card` reach in the same consumer.
 
+- [x] **DONE 2026-08-24 — `--ds-button-shadow` + `--ds-button-shadow-hover`, both default `none`.**
+  The ask asked for the rest hook and offered `-shadow-hover` "if the state matrix wants symmetry" — it does,
+  and the hover one falls back to the resting value, so setting one keeps the button steady under the pointer
+  instead of dropping its shadow on hover.
+  **Measured on the built docs, four checks:** rest is `none` by default (nothing moves for anyone), the focus
+  ring still wins by default, the hook paints at rest once set, and **the focus ring still wins over a resting
+  shadow** — which was the risk of putting a `box-shadow` on the base rule at all. The hover fallback was
+  checked separately: with only `--ds-button-shadow` set, `--_button-shadow-hover` resolves to the same value.
+  Shipped with token descriptions, `components.md`, a CHANGELOG `Added` entry and a `deleteList` row for the
+  `::ng-deep ds-button button` rule this removes.
+  ORIGINAL: ## `ds-button` has no resting shadow hook, which is why one consumer reaches its inner element (from mm-broker, 2026-08-24)
+
+- [ ] **[P3] Four of the five properties a consumer needed are tokens; the fifth keeps the `::ng-deep`
+  alive.** mm-broker's employee coverage-tier screen makes its option buttons the screen's primary
+  surface: `background`, `color`, `font-weight` and `border` all have hooks
+  (`--ds-button-bg-color`, `-label-color`, `-weight`, `-border`), so the only reason the rule is
+  `::ng-deep ds-button button` at all is a resting `box-shadow` — the component publishes
+  `--ds-button-focus-shadow` and `--ds-button-pressed-shadow` and nothing for the rest state. **Ask:**
+  `--ds-button-shadow` (and, if the state matrix wants symmetry, `-shadow-hover`), which would let that
+  block become four token lines and remove the last deep selector on `ds-button` in that app. Small,
+  and it is the kind of gap that only shows up as a deep selector nobody reports.
+
 ## Shipped 2026-08-21 evening (session — the manifests said what changed, not where to look)
 
 Opened and closed in one sitting, because the item measured itself: the lint that found the gap counted

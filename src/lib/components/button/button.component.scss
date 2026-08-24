@@ -43,6 +43,12 @@
      pressed halo is opt-in now (default none) — set --ds-button-pressed-shadow. */
   --_button-press-scale: var(--ds-button-press-scale, 0.98);
   --_button-pressed-shadow: var(--ds-button-pressed-shadow, none);
+
+  /* Rest and hover default to `none`, so a button carries no shadow unless an app
+     asks for one. They exist because focus and pressed already had hooks: without
+     these two the only way to give a button a resting shadow was a deep selector. */
+  --_button-shadow:       var(--ds-button-shadow,       none);
+  --_button-shadow-hover: var(--ds-button-shadow-hover, var(--_button-shadow));
   --_button-radius:    var(--ds-button-radius,    var(--ds-radius-control));
 
   /* Type + box, same read-never-declare rule as the colour resolvers above: a
@@ -88,6 +94,7 @@
   white-space: nowrap;
   user-select: none;
   position: relative;
+  box-shadow: var(--_button-shadow);
   transition:
     background var(--duration-fast) var(--ease-standard),
     border-color var(--duration-fast) var(--ease-standard),
@@ -95,7 +102,7 @@
     transform var(--duration-instant) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard);
 
-  &:hover  { background-color: var(--_button-bg-color-hover); }
+  &:hover  { background-color: var(--_button-bg-color-hover); box-shadow: var(--_button-shadow-hover); }
   &:active { background-color: var(--_button-bg-color-active); box-shadow: var(--_button-pressed-shadow); transform: scale(var(--_button-press-scale)); }
   &:focus-visible { outline: none; box-shadow: var(--_button-focus-shadow); z-index: var(--btn-focus-z); }
 

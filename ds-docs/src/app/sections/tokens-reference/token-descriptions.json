@@ -273,6 +273,8 @@
   "--ds-button-press-scale": "Press scale-down on :active (set 1 to disable).",
   "--ds-button-pressed-shadow": "Opt-in pressed halo (default off) — set to re-enable a ring on press.",
   "--ds-button-radius": "Corner radius.",
+  "--ds-button-shadow": "Resting shadow — `none` by default, so a button carries one only where an app asks. Focus and pressed keep their own hooks and still win while those states are on.",
+  "--ds-button-shadow-hover": "Shadow on hover. Falls back to `--ds-button-shadow`, so setting the resting one alone keeps the button steady under the pointer.",
   "--ds-button-tracking": "Label letter-spacing (default --letter-spacing-wide).",
   "--ds-button-weight": "Label weight (default extrabold).",
   "--ds-card-bg-color": "Card fill.",

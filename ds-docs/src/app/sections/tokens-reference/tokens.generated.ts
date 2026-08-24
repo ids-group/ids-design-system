@@ -2439,6 +2439,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Opt-in pressed halo (default off) — set to re-enable a ring on press."
       },
       {
+        "name": "--ds-button-shadow",
+        "value": "none",
+        "notes": "Resting shadow — `none` by default, so a button carries one only where an app asks. Focus and pressed keep their own hooks and still win while those states are on."
+      },
+      {
+        "name": "--ds-button-shadow-hover",
+        "value": "var(--_button-shadow)",
+        "notes": "Shadow on hover. Falls back to `--ds-button-shadow`, so setting the resting one alone keeps the button steady under the pointer."
+      },
+      {
         "name": "--ds-button-radius",
         "value": "var(--ds-radius-control)",
         "notes": "Corner radius."

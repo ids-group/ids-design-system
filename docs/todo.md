@@ -8,7 +8,6 @@
 - P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).
 - P3 · A refusal reason on `ds-button` reaches a mouse only — `ds-menu-item` got `[description]`, buttons
 - P2 · A release that makes a workaround redundant says so in prose, and prose is not executed
-- P3 · `ds-button` has no resting shadow hook, which is why one consumer still reaches its inner element
 - P3 · `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref
 - P3 · The two row-action halves left open on purpose: a per-row `label`, and a divider or
 
@@ -185,17 +184,6 @@ Requests, not defects. Ordered by who is blocked.
   "put the reason next to the control, not in it" recipe. Any of the three closes it; today there is no
   answer at all.
 
-## `ds-button` has no resting shadow hook, which is why one consumer reaches its inner element (from mm-broker, 2026-08-24)
-
-- [ ] **[P3] Four of the five properties a consumer needed are tokens; the fifth keeps the `::ng-deep`
-  alive.** mm-broker's employee coverage-tier screen makes its option buttons the screen's primary
-  surface: `background`, `color`, `font-weight` and `border` all have hooks
-  (`--ds-button-bg-color`, `-label-color`, `-weight`, `-border`), so the only reason the rule is
-  `::ng-deep ds-button button` at all is a resting `box-shadow` — the component publishes
-  `--ds-button-focus-shadow` and `--ds-button-pressed-shadow` and nothing for the rest state. **Ask:**
-  `--ds-button-shadow` (and, if the state matrix wants symmetry, `-shadow-hover`), which would let that
-  block become four token lines and remove the last deep selector on `ds-button` in that app. Small,
-  and it is the kind of gap that only shows up as a deep selector nobody reports.
 
 ## `TableRowAction` cannot express a per-row menu, so `rowActions` is adopted nowhere (from mm-broker, 2026-08-18)
 
