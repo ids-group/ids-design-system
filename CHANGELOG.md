@@ -98,26 +98,24 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   empty default, and the four pipes now have a demo on the docs page — which is also the test, since
   that section compiles under `strictTemplates`.
 
-- **If you EXTEND a DS component, 21 classes grew and six members changed type.** `npm run
-  class-surface` against 0.10.1. Most of it is one member on many classes: **`messageIcon` on the
-  fourteen fields that gained a state glyph** — autocomplete, checkbox, color-picker, date-picker,
-  input, multi-select, otp-input, radio, radio-group, search, segmented, select, slider, switch,
-  textarea and time-picker. The rest is per-component: `FieldMessageComponent` (`config`,
-  `iconResolved`), `AutocompleteComponent` and `MultiSelectComponent` (`chipsMode`,
-  `showsEveryChip`), `MenuItemComponent` (`description`, `descriptionId`), `SearchComponent`
-  (`disabled`, `isDisabled`), `SidenavItemComponent` (`rail`, `railResolved`), `SidenavComponent`
-  (`rail`), `TableComponent` (`actionReason`, `actionsFor`, `hasActionsFor`, `visibleRowActions`)
-  and `TimePickerComponent` (`insideATrigger`). A subclass declaring any of those names now fails
-  with TS4114 — or TS2415, since a redeclared private collides just as a public one does.
-  **Nothing was removed.** Six members kept their name and changed type, which is the case that
-  compiles for a caller and breaks an overrider: `maxVisibleChips` on both pickers (widened to
-  `number | 'fit' | 'all' | null`, default now `null`), `FieldMessageComponent.icon` (widened to
-  `IconName | false | null`, so `false` can mean "no glyph" against a state that supplies one),
-  `DsConfig.field` (its shape grew the glyph defaults), `SearchComponent.clear` (`protected` →
-  public, so a subclass that narrowed it to `protected` no longer satisfies the base),
-  `StatComponent.value` (widened to `string | number | null`) and `TimeColumnsComponent.onKey`
-  (its parameter list changed). `SearchComponent.focus` also picked up `override`, which is
-  internal and needs nothing.
+- **If you EXTEND a DS component, ten classes grew and six members changed type.** `npm run
+  class-surface` against 0.10.1: `DsFieldBase` (`messageIcon` — the state glyph, declared once for
+  every field rather than per component), `FieldMessageComponent` (`config`, `iconResolved`),
+  `AutocompleteComponent` and `MultiSelectComponent` (`chipsMode`, `showsEveryChip`),
+  `MenuItemComponent` (`description`, `descriptionId`), `SearchComponent` (`disabled`,
+  `isDisabled`), `SidenavItemComponent` (`rail`, `railResolved`), `SidenavComponent` (`rail`),
+  `TableComponent` (`actionReason`, `actionsFor`, `hasActionsFor`, `visibleRowActions`) and
+  `TimePickerComponent` (`insideATrigger`). A subclass declaring any of those names now fails with
+  TS4114 — or TS2415, since a redeclared private collides just as a public one does, and a name on
+  `DsFieldBase` reaches every field through it. **Nothing was removed.** Six members kept their
+  name and changed type, which is the case that compiles for a caller and breaks an overrider:
+  `maxVisibleChips` on both pickers (widened to `number | 'fit' | 'all' | null`, default now
+  `null`), `FieldMessageComponent.icon` (widened to `IconName | false | null`, so `false` can mean
+  "no glyph" against a state that supplies one), `DsConfig.field` (its shape grew the glyph
+  defaults), `SearchComponent.clear` (`protected` → public, so a subclass that narrowed it to
+  `protected` no longer satisfies the base), `StatComponent.value` (widened to
+  `string | number | null`) and `TimeColumnsComponent.onKey` (its parameter list changed).
+  `SearchComponent.focus` also picked up `override`, which is internal and needs nothing.
 
 - **Every readback that resolves through `DS_CONFIG` is now public.** `sizeResolved` on fourteen
   controls, plus `elevationResolved` / `paddingResolved` (card), `withDotResolved` (badge),

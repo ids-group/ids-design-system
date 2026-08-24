@@ -430,3 +430,17 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
   `rowInteractive` becomes an enhancement on top of a working link rather than the only path, and the
   consumers can drop the duplicated menu item.
 
+
+## `ds-search` advertises five message inputs it never renders (2026-08-24)
+
+- [ ] **[P2] `ds-search` extends the field base for the form binding and inherits a message API it has
+  no row for.** Since `e7cf9a50` it extends `DsControlValueAccessor` → `DsFieldBase`, so the generated
+  API reference lists `hint`, `error`, `warning`, `reserveMessage` and now `messageIcon` on it. Its
+  template renders no `ds-field-message` and its class reads none of them — `grep` for `hint()`,
+  `error()`, `warning()` or `resolveFieldMessage` in `search.component.*` returns nothing. A consumer
+  binding `error="Too short"` on a `ds-search` gets silence, and the reference told them it would work.
+  **Two ways out, and it is a product call:** (a) give `ds-search` the message row every other field
+  has — it is a form control now, so validation text is the consistent answer; or (b) split the base so
+  a control can take the CVA plumbing without the message inputs, which is the honest shape if search
+  is meant to stay chrome-free. Not urgent, but it grows: the fifth dead input arrived with the
+  messageIcon move, and every future universal field input will land on it too.
