@@ -271,7 +271,7 @@ for (const [name, manifest] of manifests) {
   // as the file holds any unrelated `deleteList` entry.
   const DELETE_SHAPE =
     /\b(?:that (?:item|rule|override|copy)|those copies|the workaround|it) can go\b|\byou (?:can|may) (?:now )?(?:delete|remove|drop|unset)\b|\byou no longer need\b|\bdelete that\b|\bremove it\b|\bcan now be removed\b|\bno longer needed\b/i;
-  const DELETE_MARKER = /\(DELETE-LIST\)|DELETE-LIST MATERIAL/;
+  const DELETE_MARKER = /\(DELETE-LIST\)|DELETE-LIST MATERIAL|^DELETE-LIST/;
   const knownDeleteIds = new Set((manifest.deleteList ?? []).map((entry) => entry.id));
   for (const line of manifest.informational ?? []) {
     const sentences = String(line).split(/(?<=\.)\s+/);
@@ -293,18 +293,6 @@ for (const [name, manifest] of manifests) {
     } else if (!knownDeleteIds.has(cited[1])) {
       report(errors, file, 'M034', 'informational cites "' + cited[1] + '", which is no `deleteList` id in this file');
     }
-  }
-
-  const prose = (manifest.informational ?? []).filter((line) =>
-    /^DELETE-LIST/.test(String(line)),
-  ).length;
-  if (prose) {
-    report(
-      errors,
-      file,
-      'M033',
-      `${prose} DELETE-LIST line(s) live only in prose — mirror them into \`deleteList\``,
-    );
   }
 }
 

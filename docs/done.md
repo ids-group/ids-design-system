@@ -201,8 +201,8 @@ measurement, and a grep of `ds.scss` against a sentence that claimed the opposit
 
 - [x] **DONE 2026-08-24 — the delete contract now has a rule that can actually fire, and eight prose
   instructions got the rows they were promising.** The ask named M033 as narrow; it is worse than
-  narrow, and the reason is not the one the first pass reported. M033 triggers only on an
-  `informational` line that STARTS with `DELETE-LIST` — but the marker never went away, it is written
+  narrow, and the reason is not the one the first pass reported. M033 fired only on an
+  `informational` line that STARTED with `DELETE-LIST` — but the marker never went away, it is written
   **mid-line**: `(DELETE-LIST)` as a trailing tag on four 0.10.0 entries, `DELETE-LIST MATERIAL` inside
   two 0.9.0 sentences. **Seven lines carry the marker and not one of them starts with it, so M033 could
   not match a single line from the day the convention settled. The rule was inert against the very
@@ -235,7 +235,9 @@ measurement, and a grep of `ds.scss` against a sentence that claimed the opposit
   Final sweep: the only sentences left are one that says to ADD a value (`pass one explicitly`, matched
   on the word "unset") and one already covered by its line's citation. **Thirteen rows written across
   0.6.1, 0.8.0, 0.9.0, 0.10.0 and unreleased; 18 informational lines now cite a row; 76 rows total.**
-  Both branches of the rule proved by removing a citation and restoring it. **One row was NOT written:** the fourteen-token line promised a deletion nothing can locate —
+  Both branches of the rule proved by removing a citation and restoring it. **M033 is deleted:** its
+  one spelling is folded into M034, and a rule that cannot fire is the trap this whole episode came
+  from — the next reader trusts the name and stops looking. **One row was NOT written:** the fourteen-token line promised a deletion nothing can locate —
   a hand-rolled value contains no DS symbol, so a `find` on our token name is the sortKey trap again.
   It says what is supported instead. **And one I had to take back:** `table-compact-padding-important`
   duplicated `compact-cell-padding-important`, already in 0.9.0 — I back-filled without reading the 21

@@ -169,7 +169,9 @@ Two things to get right, both learned from the 45 prose entries that nothing act
   as `(delete list: <id>)`. Prose is not executed: 0.9.0 shipped five such sentences and four had no
   row behind them. The citation is what a tool can check — a shape test alone goes quiet as soon as
   the file holds any unrelated entry. If the thing to delete cannot be given a greppable `find` at
-  all, do not promise the deletion: say what is supported instead. (lint, M034)
+  all, do not promise the deletion: say what is supported instead. The older spellings — a trailing
+  `(DELETE-LIST)` tag, `DELETE-LIST MATERIAL` mid-sentence — mark the instruction but link nothing, so
+  they now require the citation like any other sentence. (lint, M034)
 - **Say when the workaround is still legitimate.** `[reserveMessage]="false"` is dead under the new
   default and load-bearing under a `dsReserveMessages` host — the entry that omits that turns a
   cleanup into a regression.
