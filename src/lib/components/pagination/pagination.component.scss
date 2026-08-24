@@ -1,7 +1,6 @@
 @use '../../styles/press' as press;
 
 :host {
-  /* Public --ds-pagination-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_pagination-btn-bg-color:       var(--ds-pagination-btn-bg-color,       var(--surface-default));
   --_pagination-btn-bg-color-hover: var(--ds-pagination-btn-bg-color-hover, var(--surface-secondary));
   --_pagination-btn-label-color:       var(--ds-pagination-btn-label-color,       var(--text-secondary));

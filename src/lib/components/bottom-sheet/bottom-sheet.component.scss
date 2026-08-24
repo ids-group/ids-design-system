@@ -1,5 +1,4 @@
 :host {
-  /* Public --ds-bottom-sheet-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_bottom-sheet-maxw: var(--ds-bottom-sheet-maxw, 480px);
   --_bottom-sheet-maxh: var(--ds-bottom-sheet-maxh, 80%);
   --_bottom-sheet-radius: var(--ds-bottom-sheet-radius, var(--ds-radius-panel));

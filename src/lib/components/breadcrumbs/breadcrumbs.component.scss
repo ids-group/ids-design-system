@@ -1,7 +1,6 @@
 @use '../../styles/text-clip' as text-clip;
 
 :host {
-  /* Public --ds-breadcrumbs-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_breadcrumbs-label-color:           var(--ds-breadcrumbs-label-color,           var(--text-tertiary));
   --_breadcrumbs-label-color-hover:     var(--ds-breadcrumbs-label-color-hover,     var(--accent));
   --_breadcrumbs-separator-icon-color: var(--ds-breadcrumbs-separator-icon-color, var(--icon-muted));

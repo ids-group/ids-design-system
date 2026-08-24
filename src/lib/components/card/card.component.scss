@@ -3,7 +3,6 @@
 :host {
   display: block;
 
-  /* Public --ds-card-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_card-bg-color:           var(--ds-card-bg-color,           var(--surface-default));
   --_card-border:       var(--ds-card-border,       var(--border-divider));
   --_card-radius:       var(--ds-card-radius,       var(--ds-radius-panel));

@@ -26,7 +26,6 @@
 }
 
 .scroll-wrap {
-  /* Public --ds-table-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_table-border: var(--ds-table-border, var(--border-default));
   --_table-radius: var(--ds-table-radius, var(--ds-radius-control));
   --_table-bg-color:     var(--ds-table-bg-color,     var(--surface-default));
@@ -119,7 +118,6 @@
 }
 
 .table {
-  /* Public --ds-table-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_table-min-width: var(--ds-table-min-width, 0);
   --_table-bg-color:              var(--ds-table-bg-color,              var(--surface-default));
   --_table-row-hover-bg-color:    var(--ds-table-row-hover-bg-color,    var(--surface-secondary));

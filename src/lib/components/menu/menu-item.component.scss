@@ -1,5 +1,4 @@
 :host {
-  /* Public --ds-menu-item-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_menu-item-label-color: var(--ds-menu-item-label-color, var(--text-primary));
   --_menu-item-focus-shadow: var(--ds-menu-item-focus-shadow, var(--ds-control-focus-shadow));
   --_menu-item-hover-bg-color: var(--ds-menu-item-hover-bg-color, var(--surface-secondary));

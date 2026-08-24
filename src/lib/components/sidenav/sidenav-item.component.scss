@@ -3,7 +3,6 @@
 // Tokens on :host so consumer overrides (ds-sidenav-item { --ds-…: … }) win
 // against the inner .item rule's specificity.
 :host {
-  /* Public --ds-sidenav-item-* / --ds-sidenav-alert-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_sidenav-item-label-color:              var(--ds-sidenav-item-label-color,              var(--text-secondary));
   --_sidenav-item-label-color-hover:        var(--ds-sidenav-item-label-color-hover,        var(--text-primary));
   --_sidenav-item-label-weight: var(--ds-sidenav-item-label-weight, var(--font-weight-semibold));

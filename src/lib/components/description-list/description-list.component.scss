@@ -1,5 +1,4 @@
-/* Public --ds-description-list-* are read with fallbacks, never declared. The
-   resolved label width / gaps inherit down to ds-description-item children. */
+/* The resolved label width and gaps inherit down to ds-description-item children. */
 
 :host {
   --_dl-label-w: var(--ds-description-list-label-w, var(--dl-spec-label-w));

@@ -3,7 +3,6 @@
    Ported verbatim from vendor/claude-design-ds/components.css (lines 1159–1169).
    ============================================================ */
 :host {
-  /* Public --ds-stat-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_stat-bg-color:          var(--ds-stat-bg-color,          var(--surface-default));
   --_stat-border:      var(--ds-stat-border,      var(--border-divider));
   --_stat-radius:      var(--ds-stat-radius,      var(--ds-radius-panel));

@@ -1,7 +1,6 @@
 @use '../../styles/press' as press;
 @use '../../styles/field-label' as field-label;
 
-/* Public --ds-segmented-* are read with fallbacks, never declared. */
 
 :host {
   --_segmented-bg-color: var(--ds-segmented-bg-color, var(--surface-secondary));

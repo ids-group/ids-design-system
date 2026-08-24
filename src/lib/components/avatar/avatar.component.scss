@@ -2,7 +2,6 @@
 // via ::ng-deep — emulated encapsulation otherwise scopes the two stylesheets
 // independently.
 :host {
-  /* Public --ds-avatar-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_avatar-size:       var(--ds-avatar-size,       var(--avatar-md));
   --_avatar-bg-color:         var(--ds-avatar-bg-color,         var(--accent-muted));
   --_avatar-label-color:         var(--ds-avatar-label-color,         var(--accent-strong));

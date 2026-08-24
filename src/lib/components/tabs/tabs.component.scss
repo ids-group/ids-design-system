@@ -1,7 +1,6 @@
 @use '../../styles/press' as press;
 
 :host {
-  /* Public --ds-tab*-/-tabs-* are read with fallbacks, never declared — consumer overrides inherit in. */
   --_tabs-divider:          var(--ds-tabs-divider,          var(--border-divider));
   --_tab-pad-x:             var(--ds-tab-pad-x,             var(--space-4));
   --_tab-pad-y:             var(--ds-tab-pad-y,             var(--space-3));
