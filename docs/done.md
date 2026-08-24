@@ -52,6 +52,38 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
   `rowInteractive` becomes an enhancement on top of a working link rather than the only path, and the
   consumers can drop the duplicated menu item.
 
+- [x] **DONE 2026-08-24 — `--ds-card-overflow`, opt-in rather than the clip-by-default the ask preferred.**
+  The ask argued for clipping every card and giving the rare one an opt-out. Rejected on the library's own
+  evidence: Foundations → Colour already names `ds-card` with `padding="none"` as THE example of a clipping
+  ancestor eating a focus ring, and `data-focus="inset"` exists as the escape hatch. Clipping by default
+  would have created that hazard on every card in every consumer, so the hook defaults to `visible` and the
+  docs pair the opt-in with `data-focus="inset"`.
+  **Proven visually, after two instruments failed.** `elementFromPoint` reported the strip as hit in BOTH
+  cards — hit-testing works off the rectangular box, while the difference here is in painting — and a
+  corner-geometry probe was inconclusive at a 12px radius. Bumping both demo cards to a 40px radius made it
+  unmistakable in a screenshot: the default card shows the strip's SQUARE corners crossing the card's
+  rounded ones, the clipped card shows them following the radius.
+  `clip`, not `hidden`, is what the docs and the token description recommend — it keeps the card out of the
+  scroll-container business. Shipped with a side-by-side demo, `components.md`, a CHANGELOG `Added` entry,
+  and a `deleteList` row so the four `::ng-deep ds-card .card { overflow: hidden }` copies in the consumer
+  can go.
+  ORIGINAL: ## `ds-card` cannot clip its own box, so a full-bleed child pokes past the radius (from mm-broker, 2026-08-24)
+
+- [ ] **[P3] A card that holds a full-bleed child needs `overflow` on the card's INNER box, and no hook
+  reaches it.** `ds-card` publishes `--ds-card-bg-color`, `-border`, `-focus-shadow`, `-hover-lift`,
+  `-pad`, `-radius`, `-shadow` and `-shadow-hover` — everything except the one property that makes a
+  rounded card hold a child whose background runs to its edge. Put a grey footer strip or an image at
+  the bottom of a card and its square corners paint over the card's own radius; the host's `overflow`
+  cannot help, because the rounded element is the DS's inner `.card`, not the host. **Five screens in
+  mm-broker's employee portal carry the same four-line workaround**, and it is the one shape they have
+  left: `:host ::ng-deep ds-card .card { overflow: hidden }` (`product-card`, `rider-option`,
+  `wizard-plan`, `wizard-product`, `review.desktop`) — recounted by grep on 2026-08-24, the first
+  count missed `rider-option`. **Ask:** either a `--ds-card-overflow` hook, or — better, since
+  a rounded box with a full-bleed child has no other correct rendering — clip by default and give the
+  rare card that must overflow the opt-out. Prior art in this backlog: 0.10.0's delete-list closed the
+  sibling reach (`::ng-deep .card { height: 100% }`) by making the card's box fill a stretched host;
+  this is the next `.card` reach in the same consumer.
+
 ## Shipped 2026-08-21 evening (session — the manifests said what changed, not where to look)
 
 Opened and closed in one sitting, because the item measured itself: the lint that found the gap counted

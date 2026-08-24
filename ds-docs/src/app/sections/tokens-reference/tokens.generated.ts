@@ -2623,6 +2623,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Translate-Y on hover."
       },
       {
+        "name": "--ds-card-overflow",
+        "value": "visible",
+        "notes": "Overflow of the card's own rounded box — `visible` by default. Set `clip` where a full-bleed child (an image, a footer strip) would otherwise paint its square corners over the card's radius; `clip` rather than `hidden` keeps it from becoming a scroll container. A clipped card also cuts the focus ring of any child at its edge, so pair it with `data-focus=\"inset\"` on the card."
+      },
+      {
         "name": "--card-hover-lift",
         "value": "1px",
         "notes": "Card hover translateY distance (1px)."

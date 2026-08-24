@@ -279,6 +279,7 @@
   "--ds-card-border": "Card border.",
   "--ds-card-focus-shadow": "Focus halo on interactive cards.",
   "--ds-card-hover-lift": "Translate-Y on hover.",
+  "--ds-card-overflow": "Overflow of the card's own rounded box — `visible` by default. Set `clip` where a full-bleed child (an image, a footer strip) would otherwise paint its square corners over the card's radius; `clip` rather than `hidden` keeps it from becoming a scroll container. A clipped card also cuts the focus ring of any child at its edge, so pair it with `data-focus=\"inset\"` on the card.",
   "--ds-card-pad": "Inner padding.",
   "--ds-card-radius": "Corner radius.",
   "--ds-card-shadow": "Default (flat).",

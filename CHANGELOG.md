@@ -10,6 +10,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+- **`--ds-card-overflow`, so a card can hold a full-bleed child inside its own radius.** A child whose
+  background runs to the card's edge — an image, a grey footer strip — paints its square corners over
+  the card's rounded ones, and the host cannot fix it: the rounded box is `ds-card`'s inner element, out
+  of reach. Four screens in one consumer's portal carried the same
+  `:host ::ng-deep ds-card .card { overflow: hidden }` to get at it; that rule can go.
+  **Set `--ds-card-overflow: clip`** — `clip` rather than `hidden`, so the card does not also become a
+  scroll container.
+  **Opt-in, not the new default.** Clipping every card would cut the focus ring off any child sitting at
+  its edge: the ring is an outset shadow, and `ds-card` with `padding="none"` is the exact example
+  Foundations → Colour already gives for a clipping ancestor. Where a clipped card holds focusable
+  content, pair it with `data-focus="inset"` and the indicator moves inside the box instead of
+  disappearing.
+
 - **`ds-table` column `link` — a cell that IS a link, so a row can say where it leads.** Until now the
   only way in was clicking the row: `rowInteractive` gives the `<tr>` a tabindex and Enter/Space, but a
   row has no href, so it never enters the tab order **as a link**, a screen reader announces a table

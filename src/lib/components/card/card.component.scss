@@ -11,6 +11,7 @@
   --_card-shadow-hover: var(--ds-card-shadow-hover, var(--shadow-1));
   --_card-focus-shadow: var(--ds-card-focus-shadow, var(--ds-control-focus-shadow));
   --_card-hover-lift:   var(--ds-card-hover-lift,   var(--card-hover-lift));
+  --_card-overflow:     var(--ds-card-overflow,     visible);
 }
 
 .card {
@@ -19,6 +20,12 @@
   border-radius: var(--_card-radius);
   padding: var(--_card-pad);
   box-shadow: var(--_card-shadow);
+
+  /* `visible` by default and NOT clipped: the rounded box here is the card, so a
+     consumer cannot reach it from the host, but clipping every card would eat the
+     focus ring of any child sitting at its edge — which is the case Foundations →
+     Colour names, with `data-focus="inset"` as the answer for a card that opts in. */
+  overflow: var(--_card-overflow);
 
   // Fills a stretched host, so a grid row of cards with unequal content paints
   // equal-height boxes instead of a stretched host wrapping a short box. Same

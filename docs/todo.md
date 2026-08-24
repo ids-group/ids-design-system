@@ -6,7 +6,6 @@
 
 - P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial
 - P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).
-- P3 · `ds-card` cannot clip its own box, so a full-bleed child pokes past the radius (four workarounds
 - P3 · A refusal reason on `ds-button` reaches a mouse only — `ds-menu-item` got `[description]`, buttons
 - P3 · `ds-button` has no resting shadow hook, which is why one consumer still reaches its inner element
 - P3 · `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref
@@ -53,13 +52,15 @@ verdict, three are gated on a first consumer ask, and three arrived on 08-24 eve
 missing resting shadow hook. **All three were found as `::ng-deep` residue rather than reported, which
 is the transferable part: a deep selector a consumer still carries IS an unfiled ask.**
 
-**The one buildable item, and it spent three days filed as "not work".** A `ds-table` row can be opened
-only by clicking the row, and nothing on screen says so — six lists in mm-broker's broker portal
-compensate by repeating the destination as a `View Details` entry in the overflow menu. The literature
-agrees on the shape of the fix (Roselli, oidaisdes.org): put the control **in a cell**, as a real link,
-so the record's name becomes the way in — visible, in the tab order, and Ctrl-clickable, which a row
-click cannot offer. It sat under `# Records`, whose own header reads "Not work", and the index therefore
-listed it as a record. Moved to `# Asks` today; the work is a `link` column kind, unblocked.
+**The one buildable item spent three days filed as "not work" — and was built the same day it was
+reclassified.** A `ds-table` row could be opened only by clicking the row, and nothing on screen said
+so — seven lists in mm-broker (six in the broker portal, one in the admin) compensate by repeating the
+destination as a `View Details` entry in the overflow menu. The literature agrees on the shape of the
+fix (Roselli, oidaisdes.org): put the control **in a cell**, as a real link, so the record's name
+becomes the way in — visible, in the tab order, and Ctrl-clickable, which a row click cannot offer. It
+sat under `# Records`, whose own header reads "Not work", so the index listed it as a record. Moved to
+`# Asks`, built as `TableColumn.link` and archived to [[done]] the same day; **it is unreleased**, and
+the consumer marks each of its seven sites with a `TODO(ds-table-link)` to delete at that bump.
 
 **Two items left the board without being worked, and that is the finding.** Both were closed and
 archived on 08-21 — the docs API reference listing components nobody can import, and the missing
@@ -140,21 +141,6 @@ Requests, not defects. Ordered by who is blocked.
 
 - [ ] **[P3] `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber.** Today it's a raw `value: number` + `min`/`max`/`step` + spinner, no display formatting. PrimeNG InputNumber's value-add is a formatted numeric field: thousands grouping, fixed decimals, currency/percent, locale-aware, parsed back to a number on edit. Add opt-in `mode` (decimal/currency/percent) + `locale`/`currency`/`minFractionDigits`/`maxFractionDigits`/`useGrouping`; format on display/blur, parse on focus/input. Masking prior art in-house: [[reference-masked-input-dom-writeback]] (pinkmoon phone/w3w imperative `element.value` write-back). No active request — likely pulled by the financial-admin consumers (mm-broker admin, pinkmoon amounts/rates/%); gate on the first such form.
 
-## `ds-card` cannot clip its own box, so a full-bleed child pokes past the radius (from mm-broker, 2026-08-24)
-
-- [ ] **[P3] A card that holds a full-bleed child needs `overflow` on the card's INNER box, and no hook
-  reaches it.** `ds-card` publishes `--ds-card-bg-color`, `-border`, `-focus-shadow`, `-hover-lift`,
-  `-pad`, `-radius`, `-shadow` and `-shadow-hover` — everything except the one property that makes a
-  rounded card hold a child whose background runs to its edge. Put a grey footer strip or an image at
-  the bottom of a card and its square corners paint over the card's own radius; the host's `overflow`
-  cannot help, because the rounded element is the DS's inner `.card`, not the host. **Four screens in
-  mm-broker's employee portal carry the same four-line workaround**, and it is the one shape they have
-  left: `:host ::ng-deep ds-card .card { overflow: hidden }` (`product-card`, `wizard-plan`,
-  `wizard-product`, `review.desktop`). **Ask:** either a `--ds-card-overflow` hook, or — better, since
-  a rounded box with a full-bleed child has no other correct rendering — clip by default and give the
-  rare card that must overflow the opt-out. Prior art in this backlog: 0.10.0's delete-list closed the
-  sibling reach (`::ng-deep .card { height: 100% }`) by making the card's box fill a stretched host;
-  this is the next `.card` reach in the same consumer.
 
 ## A refusal reason on `ds-button` reaches a mouse only (from mm-broker, 2026-08-24)
 
