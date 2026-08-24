@@ -1,0 +1,8 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    "`--ds-field-message-icon-offset` and `--ds-time-picker-focus-shadow` are public, overridable, and listed in the token reference. Nothing changed in the components - if you hand-rolled around either because it looked unsupported, the override works and the workaround can go. They belong with the twelve named under 0.10.3."
+  ],
+  "deleteList": []
+}

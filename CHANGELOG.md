@@ -35,13 +35,14 @@ While the package is on `0.x`, minor releases may contain breaking changes.
   every computed shadow is final — found exactly these two and nothing else in the library. The reset
   stays scoped to the field element, so `clear-btn` and `password-toggle` inside the same box keep
   their own rings; they are real tab stops.
-- **The token reference was missing 11 public tokens that were always overridable.**
+- **The token reference was missing 14 public tokens that were always overridable.**
   `tools/extract-tokens.mjs` searched for the literal `var(--ds-`, so any resolver whose declaration
   wrapped across lines put a newline between `var(` and the name and the token silently never reached
   the reference. Newly listed and described: `--ds-container-pad-x`, `--ds-multi-select-border-color`
   (+`-focus`), `--ds-segmented-selected-bg-color` / `-label-color` / `--ds-segmented-radius`,
-  `--ds-time-picker-option-bg-color-selected` / `-text-color-selected` / `-bg-color-hover`, and
-  `--ds-time-picker-trigger-bg-color` / `-border` / `-color`. Nothing changed in the components —
+  `--ds-time-picker-option-bg-color-selected` / `-text-color-selected` / `-bg-color-hover`,
+  `--ds-time-picker-trigger-bg-color` / `-border` / `-color`, `--ds-field-message-icon-offset` and
+  `--ds-time-picker-focus-shadow`. Nothing changed in the components —
   these overrides already worked; only the documentation was blind to them.
 - **Two buttons inside portaled panels had no focus indicator, and one panel had square corners — a
   private token read from outside the host that declares it.** `ds-date-picker`'s `.period-trigger`
