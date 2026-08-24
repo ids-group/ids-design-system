@@ -4,7 +4,6 @@
 
 **Bugs — something shipped misbehaves**
 
-- P2 · Every option list shaves the descenders off its own labels — `line-height: 1` inside a box that clips
 - P3 · Two components a consumer cannot import appear in the docs API reference (found by the 2026-08-20 docs
 - P3 · `ds-table`'s two-way `[(sortKey)]` / `[(sortDir)]` form is available but never demonstrated (same
 - P3 · `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing my
@@ -45,9 +44,11 @@
 - P2 · A `ds-table` row can only be opened by clicking the row, and that affordance is invisible.
 - P3 · topbar → `role="banner"` — VALIDATED-REDUNDANT & DEFERRED (Stas 2026-07-06 "пропусти, не удаляй"). The
 
+
+
 ## Priority board (2026-08-21, second cut — the file was restructured with it)
 
-**28 open: 1 P1, 8 P2, 19 P3** (recount 2026-08-24 — includes what the parallel migration-manifest work filed, and the ds-icon sizing idea this session parked). Nine are *Parked* awaiting a first consumer ask and two are Records, so
+**27 open: 1 P1, 7 P2, 19 P3** (recount 2026-08-24, after the two consumer asks that arrived and closed the same day — the clipped descenders and the ds-search message API). Nine are *Parked* awaiting a first consumer ask and two are Records, so
 the live board is **15 items — and 9 of those are Decisions**. The queue of things to BUILD unbidden is
 **one bug and five asks**, and of those five two are waiting on a verdict with a deck attached while three
 are gated on a first consumer ask. So: nothing is left to build without a decision.
@@ -113,11 +114,6 @@ rather than re-reading our own API.
 
 Highest: each one is wrong in code — or in a surface — a consumer already reads.
 
-- [ ] **[P2] Every option list shaves the descenders off its own labels — `line-height: 1` inside a box that clips (from mm-broker MBP-245, 2026-08-20).** `.option` sets `font: … / var(--line-height-flat) …` (`_dropdown-overlay.scss:89`, and `--line-height-flat: 1`) while `.option-label` adds the `overflow: hidden` its ellipsis needs and carries no padding of its own (`:101-107`), so the label box is exactly the font size tall and the glyph box is taller. Measured live in Chromium at `--font-size-s: 14px`: box **14.00px**, glyph box **18.86px**, clipped **2.86px above the cap line and 2.00px below the baseline** — the tail of the `g` in "Agent" reads as a broken glyph, and every option in the list is clipped, not only the ones with a descender. **The contrast that isolates it is our own:** the closed trigger resolves `--line-height-base` (`select.component.scss:54`) and paints the same word intact, which is why the defect only shows while the panel is open.
-  **Two copies of the same shape.** The shared rule covers `ds-select` and `ds-autocomplete`; `ds-multi-select` carries its own `.option` / `.option-label` pair with the same values (`multi-select.component.scss:167` and `:232`), so a fix in `_dropdown-overlay.scss` alone leaves it clipping. `.optgroup-label` is safe — `padding: var(--space-2) var(--space-3) var(--space-1)` gives the glyph room, and it is uppercase anyway.
-  **Found by the same structural test and NOT measured:** `.cell-clip` in `ds-table` (a padding-less block inside `td { line-height: var(--line-height-flat) }` — `table.component.scss:280,369`), `.crumb` in `ds-topbar` (`:47,61`) and in `ds-page-header` (`:90,104`), `.label` in `ds-breadcrumbs` (`:18,68`). Each is an `overflow: hidden` box with no padding-block inside a flat line box. Checked and NOT affected: the autocomplete panel row (`:179`), `ds-sidenav-item` and `ds-tree` all resolve `--line-height-base`; `ds-sidenav-footer`'s three truncating labels declare only a font size and inherit their line-height, so they follow the host and were not judged.
-  **Three fixes, and the geometry decides.** The option row is `8px + 14px + 8px = 30px` today. (a) `line-height: var(--line-height-base)` on `.option-label` → 19.6px, row **35.6px (+5.6)** — correct, and a visual change on every dropdown in the library, after which `--ds-dropdown-panel-maxh` shows fewer rows. (b) the same, with `.option` padding-block cut to `var(--space-1)` → **27.6px (−2.4)** or `var(--space-1-5)` → **31.6px (+1.6)**; no token lands on 30px (5.2px would). (c) `overflow: clip` + `overflow-clip-margin: var(--space-1)` on `.option-label` — **geometry untouched and the ellipsis still applies**, since `text-overflow` reads any non-`visible` overflow, and 4px covers the measured 2.86/2.00. It needs a support call: `overflow-clip-margin` is Chrome/Edge 90+, Firefox 102+, Safari 16+, and where it is absent `clip` degrades to exactly today's shave rather than to anything worse. **(c) unless the row height is meant to move anyway** — then (a) is the honest one.
-  Invisible to the DOM and to the accessibility tree: `textContent` is complete and only the painted glyph is clipped, so a regression check has to compare the label element's height against `Range.getBoundingClientRect().height`, never the text. Reproduce on `/components/select`; the consumer's screen was Platform Admin → Users → Invite New User → Select user role, where "Agent" is one of two options and the shaved tail is unmissable.
 
 - [ ] **[P3] Two components a consumer cannot import appear in the docs API reference (found by the 2026-08-20 docs audit).** `ds-modal-confirm` (ModalConfirmComponent) and `ds-time-columns` (TimeColumnsComponent) are listed in `component-api.generated.ts` with a full input table, so the reference presents them as usable API. Verified against the published types: both appear as internal `declare` blocks but neither is in the package export list, so `import { ModalConfirmComponent }` does not resolve. `tools/extract-component-api.mjs` collects every `@Component` under `src/lib/components` without consulting the export surface.
   **Two fixes, pick one:** (a) teach the extractor to skip a class absent from the public export list — accurate, but it must follow the component barrels or it will drop legitimately-exported components; (b) add an `internal` value to `ComponentStatus` (today `'stable' | 'new' | 'deprecated'`) and mark these two in `component-api-descriptions.json`, which also gives a home for the next internal. Neither is urgent: nothing is wrong, the reference is just wider than the API.
@@ -431,16 +427,4 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
   consumers can drop the duplicated menu item.
 
 
-## `ds-search` advertises five message inputs it never renders (2026-08-24)
 
-- [ ] **[P2] `ds-search` extends the field base for the form binding and inherits a message API it has
-  no row for.** Since `e7cf9a50` it extends `DsControlValueAccessor` → `DsFieldBase`, so the generated
-  API reference lists `hint`, `error`, `warning`, `reserveMessage` and now `messageIcon` on it. Its
-  template renders no `ds-field-message` and its class reads none of them — `grep` for `hint()`,
-  `error()`, `warning()` or `resolveFieldMessage` in `search.component.*` returns nothing. A consumer
-  binding `error="Too short"` on a `ds-search` gets silence, and the reference told them it would work.
-  **Two ways out, and it is a product call:** (a) give `ds-search` the message row every other field
-  has — it is a form control now, so validation text is the consistent answer; or (b) split the base so
-  a control can take the CVA plumbing without the message inputs, which is the honest shape if search
-  is meant to stay chrome-free. Not urgent, but it grows: the fifth dead input arrived with the
-  messageIcon move, and every future universal field input will land on it too.

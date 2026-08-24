@@ -70,6 +70,23 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Changed
 
+- **`ds-search` no longer takes the field message inputs, because it never rendered them.**
+  Since it gained form binding it extended `DsControlValueAccessor`, which sits on `DsFieldBase` — so
+  the API reference advertised `hint`, `error`, `warning`, `errors`, `invalid`, `touched`,
+  `reserveMessage` and `messageIcon` on a component whose template has no `ds-field-message` and whose
+  class reads none of them. **A consumer binding `error="Too short"` on a `ds-search` got silence, and
+  the reference had told them it would work.** Those eight inputs are gone from it now; the reference
+  lists the ten it actually implements.
+  **BREAKING only if you bound one:** it used to compile and do nothing, and now it is a template type
+  error, which is the point. Where a search needs a label or an error line, that is `ds-input` — a
+  toolbar filter is not a validated field, which is the same reasoning that kept the message row off it
+  in the first place.
+  **How the split works, since it is a shape other controls may want:** the `ControlValueAccessor`
+  plumbing is now `valueControlBridge()`, a function rather than a base class, so a control can bind to
+  a form without inheriting the message API. `DsControlValueAccessor` is that function plus
+  `DsFieldBase` and delegates to it, so the logic exists once rather than twice. `hidden` stayed on
+  `ds-search`: it belongs to the forms contract — signal forms reaches every control through it — not to
+  the message API.
 - **A field's message line now carries a glyph for `error`, `warning` and `success` — and not for
   `hint`.** Colour was the whole signal before, and in the light theme warning (#8A7400) against success
   (#156822) is a hue apart and nothing else: WCAG 1.4.1 is about exactly that, and four of the six

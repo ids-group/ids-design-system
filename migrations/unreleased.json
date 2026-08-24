@@ -264,6 +264,26 @@
         "style"
       ],
       "verify": "Every field showing error / warning / success renders a 14px glyph before its message text and hint rows render none; an app that set stateIcons:false shows no glyph on any state; a field with [messageIcon]=\"false\" shows none while its neighbours do."
+    },
+    {
+      "id": "search-drops-the-message-inputs",
+      "kind": "removed-api",
+      "old": "ds-search[hint]",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "note": "REMOVED from ds-search, which never rendered any of them: hint, error, warning, errors, invalid, touched, reserveMessage, messageIcon (and the reserveMessageResolved readback). They arrived by inheritance when search gained form binding - it extended DsControlValueAccessor, which sits on DsFieldBase - so the API reference advertised eight inputs whose values nothing read. ACTION: delete the binding. It used to compile and do nothing; it is now a template type error, which is the whole point of the change. If the field genuinely needs a label or a validation line, use ds-input - ds-search is a toolbar filter and deliberately has no message row. NOT affected: value, disabled, hidden, size, debounce, clearable, placeholder, shortcut, showIcon, ariaLabel, and the CVA itself - formControl / formControlName / ngModel / signal forms all still bind. INVISIBLE TO class-surface, recorded by hand: the tool reads per-file declarations, and these were never declared in search.component.ts.",
+      "verify": "Binding hint/error/warning/errors/invalid/touched/reserveMessage/messageIcon on a ds-search fails to compile, while formControl binding and the disabled surface still work.",
+      "searchHints": [
+        "ds-search",
+        "<ds-search",
+        "error=",
+        "hint=",
+        "reserveMessage",
+        "messageIcon"
+      ]
     }
   ],
   "informational": [
