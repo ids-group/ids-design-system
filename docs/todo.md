@@ -4,6 +4,7 @@
 
 **Bugs — something shipped misbehaves**
 
+- P3 · Every presentation deck renders in a substitute font, so a deck that judges type is lying (found
 - P3 · Two components a consumer cannot import appear in the docs API reference (found by the 2026-08-20 docs
 - P3 · `ds-table`'s two-way `[(sortKey)]` / `[(sortDir)]` form is available but never demonstrated (same
 - P3 · `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing my
@@ -114,6 +115,9 @@ rather than re-reading our own API.
 
 Highest: each one is wrong in code — or in a surface — a consumer already reads.
 
+
+- [ ] **[P3] Every presentation deck renders in a substitute font, so a deck that judges type is lying (found 2026-08-24 while building the glyph-clip deck).** `presentations/ds.css` is compiled from `src/lib/styles/ds.scss`, so it carries the library's eight `@font-face` rules with their source-relative `url('./fonts/*.woff2')` — but `build:deck-css` copies the CSS alone and there is no `presentations/fonts/`. Measured in Chrome: all eight faces report `status: "error"`, `/decks/fonts/mulish-latin-400-normal.woff2` answers 404, and every deck falls back to `sans-serif`. The README's claim that the decks are honest consumers of the DS holds for tokens and fails for type — and it also poisons `document.fonts.check()` for any deck that tries to verify its own font.
+  **Fix:** have `build:deck-css` copy `src/lib/styles/fonts/` next to the CSS (five Mulish weights + three JetBrains Mono), or rewrite the `url()`s to a path the docs server answers. `ellipsis-glyph-clip.html` works around it locally by re-declaring the three faces it needs and showing a banner when they fail — a per-deck patch, not the fix.
 
 - [ ] **[P3] Two components a consumer cannot import appear in the docs API reference (found by the 2026-08-20 docs audit).** `ds-modal-confirm` (ModalConfirmComponent) and `ds-time-columns` (TimeColumnsComponent) are listed in `component-api.generated.ts` with a full input table, so the reference presents them as usable API. Verified against the published types: both appear as internal `declare` blocks but neither is in the package export list, so `import { ModalConfirmComponent }` does not resolve. `tools/extract-component-api.mjs` collects every `@Component` under `src/lib/components` without consulting the export surface.
   **Two fixes, pick one:** (a) teach the extractor to skip a class absent from the public export list — accurate, but it must follow the component barrels or it will drop legitimately-exported components; (b) add an `internal` value to `ComponentStatus` (today `'stable' | 'new' | 'deprecated'`) and mark these two in `component-api-descriptions.json`, which also gives a home for the next internal. Neither is urgent: nothing is wrong, the reference is just wider than the API.
