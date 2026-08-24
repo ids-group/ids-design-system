@@ -6,6 +6,9 @@
 
 - P2 · One entry point for the whole library means a consumer cannot keep the DS out of their initial
 - P3 · `ds-table` — row-expansion parity polish vs PrimeNG (ref https://primeng.dev/table#row-expansion).
+- P3 · `ds-card` cannot clip its own box, so a full-bleed child pokes past the radius (four workarounds
+- P3 · A refusal reason on `ds-button` reaches a mouse only — `ds-menu-item` got `[description]`, buttons
+- P3 · `ds-button` has no resting shadow hook, which is why one consumer still reaches its inner element
 - P3 · `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref
 - P3 · The two row-action halves left open on purpose: a per-row `label`, and a divider or
 
@@ -41,11 +44,14 @@
 
 ## Priority board (2026-08-24, recut after 0.10.2)
 
-**25 open: 1 P1, 7 P2, 17 P3.** Nine are *Parked* awaiting a first consumer ask and two are Records, so
-the live board is **14 items — and 9 of those are Decisions**. **`# Bugs` is empty:** nothing shipped
-is known to misbehave. What is left to BUILD is **five asks**; of them, one has a deck waiting on a
-verdict, three are gated on a first consumer ask, and exactly one is buildable today with nothing
-pending on it.
+**27 open: 1 P1, 6 P2, 20 P3** (counted from the index, not by hand). Nine are *Parked* awaiting a
+first consumer ask and two are Records, so the live board is **16 items — and 9 of those are
+Decisions**. **`# Bugs` is empty:** nothing shipped is known to misbehave. What is left to BUILD is
+**seven asks**; of them, one has a deck waiting on a
+verdict, three are gated on a first consumer ask, and three arrived on 08-24 evening from mm-broker on
+0.10.3 — a card that cannot clip its own box, a refusal reason with nowhere to go on a button, and a
+missing resting shadow hook. **All three were found as `::ng-deep` residue rather than reported, which
+is the transferable part: a deep selector a consumer still carries IS an unfiled ask.**
 
 **The one buildable item, and it spent three days filed as "not work".** A `ds-table` row can be opened
 only by clicking the row, and nothing on screen says so — six lists in mm-broker's broker portal
@@ -134,8 +140,52 @@ Requests, not defects. Ordered by who is blocked.
 
 - [ ] **[P3] `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber.** Today it's a raw `value: number` + `min`/`max`/`step` + spinner, no display formatting. PrimeNG InputNumber's value-add is a formatted numeric field: thousands grouping, fixed decimals, currency/percent, locale-aware, parsed back to a number on edit. Add opt-in `mode` (decimal/currency/percent) + `locale`/`currency`/`minFractionDigits`/`maxFractionDigits`/`useGrouping`; format on display/blur, parse on focus/input. Masking prior art in-house: [[reference-masked-input-dom-writeback]] (pinkmoon phone/w3w imperative `element.value` write-back). No active request — likely pulled by the financial-admin consumers (mm-broker admin, pinkmoon amounts/rates/%); gate on the first such form.
 
-## `ds-table` — the row is the only way in, and it is not a link (from mm-broker, recorded 2026-08-21)
+## `ds-card` cannot clip its own box, so a full-bleed child pokes past the radius (from mm-broker, 2026-08-24)
 
+- [ ] **[P3] A card that holds a full-bleed child needs `overflow` on the card's INNER box, and no hook
+  reaches it.** `ds-card` publishes `--ds-card-bg-color`, `-border`, `-focus-shadow`, `-hover-lift`,
+  `-pad`, `-radius`, `-shadow` and `-shadow-hover` — everything except the one property that makes a
+  rounded card hold a child whose background runs to its edge. Put a grey footer strip or an image at
+  the bottom of a card and its square corners paint over the card's own radius; the host's `overflow`
+  cannot help, because the rounded element is the DS's inner `.card`, not the host. **Four screens in
+  mm-broker's employee portal carry the same four-line workaround**, and it is the one shape they have
+  left: `:host ::ng-deep ds-card .card { overflow: hidden }` (`product-card`, `wizard-plan`,
+  `wizard-product`, `review.desktop`). **Ask:** either a `--ds-card-overflow` hook, or — better, since
+  a rounded box with a full-bleed child has no other correct rendering — clip by default and give the
+  rare card that must overflow the opt-out. Prior art in this backlog: 0.10.0's delete-list closed the
+  sibling reach (`::ng-deep .card { height: 100% }`) by making the card's box fill a stretched host;
+  this is the next `.card` reach in the same consumer.
+
+## A refusal reason on `ds-button` reaches a mouse only (from mm-broker, 2026-08-24)
+
+- [ ] **[P3] `ds-menu-item` got `[description]` in 0.10.2 and it closed this for menus; a disabled
+  BUTTON still has nowhere to say why.** The pattern is a control the server refuses — "the invitation
+  has not been accepted yet", "this is the last active admin" — where the app disables it and has to
+  say why. On a menu item the new input does it properly: visible without hover, and reaching assistive
+  tech as `aria-describedby` rather than as part of the name. mm-broker adopted it the day 0.10.2
+  landed and deleted two `[dsTooltip]`-based workarounds with their `TODO(disabled-reason)` markers.
+  **The third site is a `ds-button` and could not be fixed**: `[dsTooltip]` needs hover, and a disabled
+  button cannot be focused to announce itself, so the reason reaches a mouse and nothing else. That
+  consumer also carries a `blocked-action` mixin whose whole comment is "`ds-button` has no caption
+  slot — only `ds-menu-item` holds a second line — so the reason is a sibling". **Ask:** the same
+  `description` shape on `ds-button` (and `ds-icon-button`, where the label is already invisible), with
+  the same `aria-describedby` wiring. **Worth deciding rather than assuming:** a button's second line
+  changes its box, so the honest alternatives are a standing caption (like the menu item), an
+  `aria-describedby` that names an element the app already renders beside the button, or a documented
+  "put the reason next to the control, not in it" recipe. Any of the three closes it; today there is no
+  answer at all.
+
+## `ds-button` has no resting shadow hook, which is why one consumer reaches its inner element (from mm-broker, 2026-08-24)
+
+- [ ] **[P3] Four of the five properties a consumer needed are tokens; the fifth keeps the `::ng-deep`
+  alive.** mm-broker's employee coverage-tier screen makes its option buttons the screen's primary
+  surface: `background`, `color`, `font-weight` and `border` all have hooks
+  (`--ds-button-bg-color`, `-label-color`, `-weight`, `-border`), so the only reason the rule is
+  `::ng-deep ds-button button` at all is a resting `box-shadow` — the component publishes
+  `--ds-button-focus-shadow` and `--ds-button-pressed-shadow` and nothing for the rest state. **Ask:**
+  `--ds-button-shadow` (and, if the state matrix wants symmetry, `-shadow-hover`), which would let that
+  block become four token lines and remove the last deep selector on `ds-button` in that app. Small,
+  and it is the kind of gap that only shows up as a deep selector nobody reports.
 
 ## `TableRowAction` cannot express a per-row menu, so `rowActions` is adopted nowhere (from mm-broker, 2026-08-18)
 
