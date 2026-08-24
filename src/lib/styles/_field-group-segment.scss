@@ -26,13 +26,8 @@
       outline: 0;
     }
 
-    /* The GROUP owns the ring for the whole row, so nothing inside a segment may
-       draw one: styles/_focus.scss gives every focusable a box-shadow at zero
-       specificity, and the block above only clears it from the segment BOX — the
-       native input inside it kept its own, so a field group painted two rings, a
-       tight one around the control and the halo around the row. */
-    :where(:focus-visible) {
-      box-shadow: none;
-    }
+    /* No blanket reset here on purpose: the block above clears the segment BOX and
+       each field silences its own control, which leaves a tab stop inside a segment
+       the ring it needs. */
   }
 }

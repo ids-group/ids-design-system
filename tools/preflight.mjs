@@ -39,13 +39,20 @@ if (!unreleased) fail("no '## Unreleased' section in CHANGELOG.md.");
 const hasEntry = unreleased[1].split('\n').some((line) => line.trim().startsWith('-'));
 if (!hasEntry) fail("'## Unreleased' is empty — add release notes before releasing.");
 
-// The manifest is what a consumer's upgrade actually runs, and until 2026-08-21
-// nothing checked it: two 0.7.1 entries shipped undetectable and an upgrade
-// passed over them in silence. Lint before the version is cut, never after.
+// The manifest is what a consumer's upgrade actually runs, and an undetectable item
+// passes the whole find/apply/recheck loop in silence. Lint before the cut.
 try {
   execSync('node tools/migration-lint.mjs', { stdio: 'inherit' });
 } catch {
   fail('migrations/ failed the manifest lint (errors above).');
+}
+
+// Two releases shipped a field with two focus rings; both were found by measuring in
+// a browser, not by reading the styles.
+try {
+  execSync('node tools/check-focus-rings.mjs', { stdio: 'inherit' });
+} catch {
+  fail('a ringed shell does not silence the base focus indicator (errors above).');
 }
 
 console.log('preflight: all checks passed.');

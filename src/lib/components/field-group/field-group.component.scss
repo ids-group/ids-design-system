@@ -23,9 +23,8 @@
   border: var(--border-width-default) solid var(--_field-group-border-color);
   border-radius: var(--_field-group-radius);
 
-  /* Clips each end segment to the group's corners. Safe here for the same
-     reason it is on ds-number-stepper: every panel a segment opens is portaled
-     to the body, so nothing that needs to escape is inside this box. */
+  /* Clips each end segment to the group's corners. Safe to clip because every panel
+     a segment opens is portaled to the body — nothing that must escape is in here. */
   overflow: hidden;
   transition: border-color var(--duration-fast) var(--ease-standard);
 
@@ -45,21 +44,15 @@
 }
 
 /* ONE ring for the whole group: each segment suppresses its own, so focusing
-   any of them lights the shared chrome instead of drawing a box mid-row. */
+   any of them lights the shared chrome instead of drawing a box mid-row.
+   focus-ring-guard: the group owns no control of its own — every segment is another
+   component, and each silences its own via focus.owns-the-focus-ring. */
 
-/* The shell owns the ring; the inner control must not draw the universal one too.
-   See styles/_focus.scss for why `outline: 0` cannot cancel it. */
-:where(:focus-visible) {
-  box-shadow: none;
-}
 :host(:focus-within:not(.disabled)) {
   border-color: var(--_field-group-border-color-focus);
   box-shadow: var(--_field-group-focus-shadow);
 }
 
-/* Was `var(--border-error)`, a token declared nowhere: border-color fell through to
-   currentColor and an invalid group drew a near-black border. Same dead name that
-   ds-autocomplete carried. */
 :host(.invalid) { border-color: var(--_field-group-border-color-error); }
 
 :host(.disabled) {
@@ -67,12 +60,11 @@
   border-color: var(--border-disabled);
 }
 
-/* Projected content carries the CONSUMER's encapsulation attribute, so it can
-   only be reached with ::ng-deep — the same reason ds-input styles its addons
-   this way. Scoped under :host, so nothing here escapes the group. */
+/* Projected content carries the CONSUMER's encapsulation attribute, so ::ng-deep is
+   the only way to reach it. Scoped under :host so nothing here escapes the group. */
 :host ::ng-deep > * {
-  /* Hug by default; `grow` takes the slack. A segment that filled the row by
-     default would leave no room for the one the consumer actually meant. */
+  /* Hug by default, `grow` takes the slack: a segment that filled the row by default
+     would leave no room for the one the consumer actually meant. */
   flex: 0 0 auto;
   min-width: 0;
 }

@@ -24,7 +24,7 @@ Opened and closed in one sitting, because the item measured itself: the lint tha
   have cut four informational lines in half, so the marker is `DELETE-LIST:` with the colon. (2) Two
   default flips reverse each other and said so nowhere: 0.7.0 turned `reserveMessage` on and 0.7.1 turned
   it back off; 0.8.0 told consumers to declare `sortMode="server"` and 0.9.0 made that the default again.
-  Both pairs now link `supersedes` / `supersededBy`, which the lint resolves. (3) The CHANGELOG carried
+  Both pairs are linked by `supersedes` on the LATER item, which the lint resolves. (3) The CHANGELOG carried
   a "What you can now DELETE" table for exactly two versions while the manifests held delete entries for
   five — 0.10.0's nineteen rows, 0.10.1's and 0.6.2's were generated from the arrays so the two copies
   cannot drift, and Unreleased's table was five rows against eleven entries.
@@ -34,6 +34,12 @@ Opened and closed in one sitting, because the item measured itself: the lint tha
   writes them there, so it is scoped to a `typescript` or `config` surface now.
   ORIGINAL: [P3] 20 published manifests predate `surface` / `detect` / `verify`, and
   `npm run migration-lint` reports 258 warnings across them (2026-08-21).
+
+## Shipped 2026-08-24 (session — four decks answered, and a focus indicator that doubled then vanished)
+
+0.10.2 was cut at the end of this day. The pattern worth keeping from it: three of these six were found
+by MEASURING rather than by reading the code — a 9,968-element focus sweep, a forced-wrap glyph
+measurement, and a grep of `ds.scss` against a sentence that claimed the opposite.
 
 - [x] **DONE 2026-08-24 — C shipped as the DEFAULT, configurable per state, which is neither of the four options the deck listed.** Stas read the deck and picked C, then improved it: instead of D's switch-off-by-default, C IS the default and every state is switchable on its own. `DS_CONFIG.field.stateIcons` takes `{ error, warning, success, hint }` where each key is independent — a name replaces the glyph, `false` removes it — plus `stateIcons: false` as the one line back to the old look. `messageIcon` on all fifteen field components wins over both. 
   **His correction that saved a bad API:** I had proposed `stateIconSize?: number` in the config, and he asked why, since there is a token scale. He was right that the scale exists — `--icon-xs/sm/md/lg` = 12/14/16/20 — and I was wrong to invent a second vocabulary for it. What the check turned up: `ds-icon` does not READ that scale, it takes a number and writes `width`/`height` attributes while publishing `--ds-icon-size` outward. So the knob is gone: the glyph is 14px = `--icon-sm`, and "size icons from CSS" is a separate change to `ds-icon` (only set the inline var when `size` is actually bound), filed rather than smuggled in here.
@@ -90,6 +96,46 @@ Opened and closed in one sitting, because the item measured itself: the lint tha
   a control can take the CVA plumbing without the message inputs, which is the honest shape if search
   is meant to stay chrome-free. Not urgent, but it grows: the fifth dead input arrived with the
   messageIcon move, and every future universal field input will land on it too.
+
+- [x] **DONE 2026-08-24 — one focus ring per field, and the shell list that caused the miss is gone.**
+  0.10.2 shipped the pass that suppresses the inner ring, and it missed `ds-input` and `ds-textarea` —
+  the two plainest fields in the library. **Why it missed them:** the pass trusted a hand-written list
+  of ringed shells in `styles/_focus.scss`, and that list had never named those two. A browser sweep of
+  **9,968 focusable elements over 64 pages**, transitions disabled so every computed shadow is final,
+  found exactly those two and nothing else. **Then the fix cut the other way:** the shell-wide reset it
+  used also hit `.search-clear`, a `tabindex="0"` tab stop, so tabbing from a `ds-search` input to its ×
+  changed **no** paint property anywhere on screen — box-shadow, outline, border, background and colour
+  byte-identical in both states. A WCAG 2.4.7 failure, and the same defect seen from the other side.
+  **What holds it now:** `focus.owns-the-focus-ring($control)` names the ONE control a shell speaks for,
+  never a blanket, and `tools/check-focus-rings.mjs` fails the build when a component paints a ring on
+  `:focus-within` without silencing the base rule — 7 ringed shells OK, 1 waived (`ds-field-group` owns
+  no control of its own; every segment is another component). It is the seventh gate in the release
+  preflight. The hand-kept list is deleted: a list written from a read of the code was wrong for two
+  releases, and nothing but a measurement would have said so.
+
+- [x] **DONE 2026-08-24 — the two authoring mixins are public surface, and `components.md` said the
+  opposite about one of them.** The new block in `components.md` claimed both partials are "Mixin-only
+  … they emit nothing and are NOT part of the `styles/ds` aggregate". True for `styles/text-clip` (zero
+  hits in `ds.scss`); **false for `styles/focus`**, which is `@forward`ed at `ds.scss:26` and emits seven
+  blocks of CSS — the base `:where(:focus-visible)` indicator, six `data-focus` switches, and the
+  forced-colors rule. It would have shipped: `tools/build-schematics.mjs:85` copies `components.md` into
+  the package. The claim is now per-partial, where each half is true. **The CHANGELOG also had no
+  `### Added`.** `owns-the-focus-ring` did not exist at v0.10.2, and `single-line-ellipsis` had never
+  appeared in the changelog at all — it was born in a `refactor` commit as internal dedup. **What settled
+  whether they belong there:** `field-state`, `field-group-segment`, `visually-hidden` and `chip-row` have
+  **zero** mentions in `components.md`, which is why past releases correctly named them only inside a
+  `### Fixed` entry. These two are now advertised to consumers, so they crossed into public surface —
+  which makes the next release a minor rather than a patch.
+
+- [x] **DONE 2026-08-24 — a manifest cannot reference its own future, and two chains pointed the wrong
+  way.** The detectability sweep had linked reversed default-flips in BOTH directions: `supersedes` on
+  the later item and `supersededBy` on the earlier one. The earlier one is wrong in principle — a
+  published manifest cannot know what a later release will do to it, and a reader who has only that
+  version's file cannot act on a pointer into a version that does not exist yet. Direction is now
+  backward-only, enforced: **M028** errors on any `supersededBy`, and **M029** errors when a `note` or
+  `restore` describes a later release in prose. Both chains were relinked and every published manifest
+  re-read by hand for forward references — the prose ones do not match a schema check, so a grep was not
+  enough. 21 manifests pass.
 
 ## Shipped 2026-08-21 (session — the assigned batch of eight)
 

@@ -1,4 +1,3 @@
-// tools/extract-component-api.mjs
 // AST-parses src/lib/components/*.component.ts (TS syntax tree, no type-checker),
 // resolves literal union aliases across src/lib (incl. Exclude/Extract over core
 // vocab like DsStatus), merges the editorial JSON, and emits a typed
@@ -229,11 +228,9 @@ function collectProps(classInfo, classIndex, aliases, seen = new Map()) {
   return seen;
 }
 
-// Class names the package actually exports. The reference listed ds-modal-confirm
-// and ds-time-columns with full input tables while neither is importable, because
-// this file collected every @Component under src/lib/components. Reading
-// public-api.ts and the barrels it names keeps an internal component out instead
-// of presenting it as usable API.
+// Class names the package actually exports, read from public-api.ts and the barrels
+// it names. Without it every @Component under src/lib/components lands in the
+// reference, including internal ones a consumer cannot import.
 function exportedClassNames() {
   const publicApi = join(ROOT, 'src/public-api.ts');
   const barrels = [...readFileSync(publicApi, 'utf8').matchAll(/from '\.\/(lib\/[^']+)'/g)]
@@ -254,7 +251,6 @@ function exportedClassNames() {
   return names;
 }
 
-// ---- run --------------------------------------------------------------------
 const files = walkFiles(COMPONENTS, '.component.ts');
 // Base classes (e.g. control-value-accessor.ts's DsBooleanControlValueAccessor)
 // live outside the *.component.ts glob — index every *.ts so `extends` resolves.

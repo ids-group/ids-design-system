@@ -1,11 +1,10 @@
-// Ported from vendor/claude-design-ds/components.css ".search" block.
-// Source markup uses bare descendants (.search input, .search kbd).
-// Our port introduces explicit nested elements .search-input and .kbd —
-// scoped naming keeps consumer global `.input` resets from leaking in
-// through emulated encapsulation (PIN-475 double-focus-ring root cause).
+// `.search-input` and `.kbd` rather than bare `input` / `kbd` descendants: emulated
+// encapsulation does not stop a consumer's global `.input` reset from reaching in,
+// which is what caused the PIN-475 double focus ring.
 
 @use '../../styles/press' as press;
 @use '../../styles/field-group-segment' as field-group-segment;
+@use '../../styles/focus' as focus;
 
 :host {
   /* Public --ds-search-* are read with fallbacks, never declared — consumer overrides inherit in.
@@ -44,21 +43,16 @@
     border-color: var(--_search-border-hover);
   }
 
-  /* The shell owns the ring; the inner control must not draw the universal one too.
-     See styles/_focus.scss for why `outline: 0` cannot cancel it. */
-  :where(:focus-visible) {
-    box-shadow: none;
-  }
+  @include focus.owns-the-focus-ring('.search-input');
   &:focus-within {
     background-color: var(--_search-bg-color-focus);
     border-color: var(--_search-border-focus);
     box-shadow: var(--_search-focus-shadow);
   }
 
-  // `:has(:disabled)` rather than a host class: the disabled state arrives on the
-  // inner <input> (from the input, or from a form calling setDisabledState), and
-  // the shell is what carries the border and fill. Placed after :hover so a
-  // pointer over a dead field does not light the border.
+  // `:has(:disabled)` rather than a host class: the state arrives on the inner
+  // <input> (bound, or from a form calling setDisabledState) while the shell carries
+  // the border. After :hover, so a pointer over a dead field does not light it.
   &:has(.search-input:disabled) {
     background-color: var(--surface-disabled);
     border-color: var(--border-disabled);
@@ -124,9 +118,8 @@
     color: var(--text-tertiary);
   }
 
-  /* Search sits in control rows beside input/select/button, so it takes the same
-     scale they do. It used to default to its own 36px, which left it a step short
-     of every neighbour — ds-button resolves --field-h-md like the fields. */
+  /* The field scale, not a scale of its own: search sits in control rows beside
+     input/select/button, and ds-button resolves --field-h-md like the fields do. */
   &.sm { --_search-height: var(--ds-search-height, var(--ds-field-height, var(--field-h-sm))); }
   &.md { --_search-height: var(--ds-search-height, var(--ds-field-height, var(--field-h-md))); }
   &.lg { --_search-height: var(--ds-search-height, var(--ds-field-height, var(--field-h-lg))); }

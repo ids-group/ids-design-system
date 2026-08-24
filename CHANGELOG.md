@@ -8,6 +8,63 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **Two SCSS mixins for building your own composite controls** (`components.md` § Global helper
+  classes). `focus.owns-the-focus-ring($control)` — include it in a shell that paints its own ring
+  on `:focus-within`, naming the ONE control inside that must not paint the base indicator too.
+  `outline: 0` cannot do that, because the base indicator is a box-shadow, and a box-wide reset
+  instead silences the tab stops living in the box — a clear button, a stepper arrow. It is the
+  mixin `tools/check-focus-rings.mjs` checks for. `text-clip.single-line-ellipsis` — a one-line
+  label that truncates with an ellipsis, via `overflow: clip` plus `overflow-clip-margin`, because
+  `hidden` under a line-height tighter than the font glyph box shaves the top and bottom off every
+  glyph. `@use 'styles/focus'` / `@use 'styles/text-clip'` to reach them; a mixin emits nothing until
+  it is included.
+
+### Fixed
+
+- **`ds-input` and `ds-textarea` were the two shells 0.10.2's ring fix missed.** Same defect and same
+  cause as "One focus ring per field, not two" below: the universal `:where(:focus-visible)` shadow
+  lands on the inner element, the box paints its own halo on `:focus-within`, and the `outline: 0`
+  both already had cannot cancel a shadow. So the two plainest fields in the library went on drawing
+  a 4px control ring around the `<input>`/`<textarea>` **and** a 3px field halo around the box.
+  **They were missed because that pass trusted the shell list written in `styles/_focus.scss` rather
+  than measuring.** A browser sweep — 9,968 focusable elements over 64 pages, transitions disabled so
+  every computed shadow is final — found exactly these two and nothing else in the library. The reset
+  stays scoped to the field element, so `clear-btn` and `password-toggle` inside the same box keep
+  their own rings; they are real tab stops.
+- **The token reference was missing 11 public tokens that were always overridable.**
+  `tools/extract-tokens.mjs` searched for the literal `var(--ds-`, so any resolver whose declaration
+  wrapped across lines put a newline between `var(` and the name and the token silently never reached
+  the reference. Newly listed and described: `--ds-container-pad-x`, `--ds-multi-select-border-color`
+  (+`-focus`), `--ds-segmented-selected-bg-color` / `-label-color` / `--ds-segmented-radius`,
+  `--ds-time-picker-option-bg-color-selected` / `-text-color-selected` / `-bg-color-hover`, and
+  `--ds-time-picker-trigger-bg-color` / `-border` / `-color`. Nothing changed in the components —
+  these overrides already worked; only the documentation was blind to them.
+- **Two buttons inside portaled panels had no focus indicator, and one panel had square corners — a
+  private token read from outside the host that declares it.** `ds-date-picker`'s `.period-trigger`
+  (the month/year header, `tabindex="0"`) and `ds-time-picker`'s `.time-action` both did
+  `box-shadow: var(--_…-focus-shadow)` beside `outline: none`. Those private tokens are declared on
+  `:host`, the panels are portaled out of it by the CDK, so the `var()` resolved to nothing — and an
+  unresolvable `var()` makes `box-shadow` its initial value, `none`. Measured: resting and focused
+  paint were byte-identical on both, so a keyboard user landing there saw nothing. Another WCAG 2.4.7
+  failure, and older than the 0.10.x focus work. `ds-time-picker`'s panel `border-radius` read the
+  same way and fell back to `0`, so the panel rendered square instead of `--ds-radius-panel`.
+  **Found by opening each overlay and probing inside it** — the earlier sweeps only ever saw
+  focusables that exist while the overlay is closed. `ds-select`, `ds-multi-select` and
+  `ds-autocomplete` panels were checked the same way and are clean.
+- **`ds-search`'s clear button had no focus indicator at all — introduced by 0.10.2's own ring fix.**
+  That fix silenced the base indicator with a shell-wide reset, which also hit `.search-clear`, a
+  `tabindex="0"` tab stop. Measured: with the field's halo already lit, tabbing from the input to the
+  × changed **no** paint property anywhere on screen — box-shadow, outline, border, background and
+  colour were byte-identical in both states, so a keyboard user could not tell the × had focus. A
+  WCAG 2.4.7 failure, and the same defect as the double ring seen from the other side. Every shell now
+  names the one control it speaks for through the new `focus.owns-the-focus-ring($control)` mixin
+  instead of blanketing its box, and `ds-field-group` drops its blanket entirely — each segment
+  already silences its own. `tools/check-focus-rings.mjs` fails the build when a component paints a
+  ring on `:focus-within` without silencing the base rule; it replaces the hand-kept shell list in
+  `styles/_focus.scss` that had been wrong for two releases.
+
 ## 0.10.2 — 2026-08-24
 
 ### Added

@@ -1,4 +1,5 @@
 @use '../../styles/field-box' as field-box;
+@use '../../styles/focus' as focus;
 
 :host {
   --_number-stepper-focus-shadow: var(--ds-number-stepper-focus-shadow, var(--ds-field-focus-shadow));
@@ -17,13 +18,7 @@
   border-radius: var(--radius-md);
   overflow: hidden;
 
-  /* The VALUE input only: the shell rings on :focus-within, so silencing the inner
-     one (see styles/_focus.scss). The BUTTONS keep theirs — they are `tabindex="0"`,
-     and a keyboard user tabbing input → minus → plus needs each stop to say where
-     focus went, which the shell halo cannot: it is already on. */
-  .qty:where(:focus-visible) {
-    box-shadow: none;
-  }
+  @include focus.owns-the-focus-ring('.qty');
   &:focus-within {
     border-color: var(--accent);
     box-shadow: var(--_number-stepper-focus-shadow);

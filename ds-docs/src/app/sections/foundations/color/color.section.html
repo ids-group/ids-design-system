@@ -637,6 +637,50 @@
     without an indicator.
   </p>
 
+  <h3 class="block-title t-h4">
+    Building your own ringed shell? Silence the control inside — and name it
+  </h3>
+
+  <p class="block-desc t-s">
+    <strong>
+      The base rule is a box-shadow, so
+      <code class="t-mono-inline">
+        outline: 0
+      </code> cannot cancel it.
+    </strong>
+    If your composite control paints a ring on
+    <code class="t-mono-inline">
+      :focus-within
+    </code> — a field box, a segmented row,
+    a toolbar cell — the element inside it still gets the base ring, and the result
+    is two: a tight one on the control and the halo on the box. This is the trap the
+    DS itself fell into twice, in
+    <code class="t-mono-inline">
+      ds-input
+    </code> and
+    <code class="t-mono-inline">
+      ds-textarea
+    </code>, both found by measuring in a
+    browser rather than by reading the styles.
+  </p>
+
+  <p class="block-desc t-s">
+    <strong>
+      Silence one named control, never the whole box.
+    </strong>
+    A box-wide reset also hits the tab stops living inside — a clear button, a
+    password toggle, a stepper arrow — and then tabbing from the field to that button
+    changes nothing on screen, so a keyboard user cannot tell what has focus. That is
+    a WCAG 2.4.7 failure, and it is the same defect seen from the other side. The DS
+    ships
+    <code class="t-mono-inline">
+      focus.owns-the-focus-ring($control)
+    </code> for its own
+    shells and fails its build when one is missing.
+  </p>
+
+  <pre class="t-mono-block">{{ shellRingSnippet }}</pre>
+
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       outline

@@ -1,10 +1,10 @@
-/* Ported from claude-design-ds/components.css. */
 @use '../../styles/breakpoints' as bp;
 @use '../../styles/field-label' as field-label;
 @use '../../styles/field-box' as field-box;
 @use '../../styles/field-group-segment' as field-group-segment;
 @use '../../styles/field-state' as field-state;
 @use '../../styles/visually-hidden' as visually-hidden;
+@use '../../styles/focus' as focus;
 
 :host {
   --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
@@ -16,15 +16,14 @@
   --_date-picker-trigger-radius: var(--ds-date-picker-trigger-radius, var(--ds-radius-control));
   --_date-picker-trigger-pad-x: var(--ds-date-picker-trigger-pad-x, var(--field-pad-x));
 
-  /* Mono by default: the ghost mask paints the placeholder glyphs and the real
-     value sits behind it, so fixed-width digits are what keep the two in step. */
+  /* Mono by default: the ghost mask paints the placeholders and the real value sits
+     behind it, so only fixed-width digits keep the two in step. */
   --_date-picker-value-font-family: var(--ds-date-picker-value-font-family, var(--font-mono));
   --_date-picker-value-font-size: var(--ds-date-picker-value-font-size, var(--font-size-s));
   --_date-picker-value-weight: var(--ds-date-picker-value-weight, var(--font-weight-regular));
 
-  /* Hug the field's content width; a consumer opts into wider by setting a
-     width on the host. Prevents an outer grid/flex column from stretching a
-     date field across its whole track. */
+  /* Hugs its content so an outer grid or flex track cannot stretch the field; a
+     consumer opts into wider by setting a width on the host. */
   display: block;
   width: fit-content;
   max-width: 100%;
@@ -37,9 +36,8 @@
     width: 100%;
   }
 
-  // Stretching the trigger alone leaves the value + calendar glyph packed at the
-  // left; the wrap has to take the slack so the affordance lands on the right
-  // edge — where ds-time-picker's and ds-select's do, one vertical line down a row.
+  // The wrap has to take the slack too, or the value and glyph stay packed left and
+  // the affordance no longer lines up with ds-time-picker and ds-select down a row.
   .input-wrap {
     flex: 1;
   }
@@ -84,9 +82,8 @@
   border: var(--border-width-default) solid var(--_date-picker-trigger-border-color);
   border-radius: var(--_date-picker-trigger-radius);
 
-  /* --field-pad-x, not --space-3: the two are equal at default density but the
-     token shrinks under [data-density] and the literal did not, so a picker beside
-     a ds-input drifted 8px wider the moment a consumer set a density. */
+  /* --field-pad-x, not --space-3: equal at default density, but only the token
+     shrinks under [data-density] — the literal drifted 8px from a ds-input beside it. */
   padding: 0 var(--_date-picker-trigger-pad-x);
 
   @include field-box.field-box-height(md);
@@ -100,12 +97,16 @@
     border-color: var(--border-strong);
   }
 
-  &:focus-visible,
-  /* The shell owns the ring; the inner control must not draw the universal one too.
-     See styles/_focus.scss for why `outline: 0` cannot cancel it. */
-  :where(:focus-visible) {
+  &:focus-visible {
     box-shadow: none;
   }
+
+  @include focus.owns-the-focus-ring('.date-input');
+
+  /* Listed too, unlike a clear button: the toggle is `tabindex="-1"` and
+     `aria-hidden`, so it is not a stop a keyboard user lands on. */
+  @include focus.owns-the-focus-ring('.calendar-toggle');
+
   &:focus-within,
   &.open {
     outline: none;
@@ -141,12 +142,9 @@
   align-items: center;
 }
 
-/* Per-slot overlay: paints every glyph the field shows — digits at normal
-   weight, unfilled positions (format letters or `_` padding) muted. It sits
-   ABOVE the input, which is fully transparent (see .masked below), so the
-   caret and click-to-position still work against the real (fixed-width)
-   value while only the overlay is visible. Shares the input's value font so
-   digits and placeholders stay equal width and aligned 1:1. */
+/* Paints every glyph the field shows, sitting ABOVE a fully transparent input, so
+   the native caret and click-to-position still work against the real value while
+   only this overlay is visible. Shares the input's font or the two drift apart. */
 .mask-ghost {
   position: absolute;
   inset: 0;
@@ -170,10 +168,8 @@
 }
 
 .date-input {
-  /* Width is driven by the `size` attribute (the mask length) so the field
-     hugs its content instead of stretching. Fixed-width digits are what keep the
-     typed value landing on the ghost mask's placeholder positions — hence the
-     mono default plus tabular-nums below. */
+  /* Width comes from the `size` attribute, which the component sets to the mask
+     length, so the field hugs its content instead of stretching. */
   width: auto;
   border: none;
   background: transparent;
@@ -189,9 +185,8 @@
   padding: 0;
   outline: none;
 
-  /* The mask-ghost overlay paints every visible glyph; the real value stays
-     in the DOM (fixed-width, `_`-padded) purely so the native caret and
-     click-to-position land on the right slot. */
+  /* Transparent, not hidden: the value must stay in the DOM for the native caret
+     and click-to-position to land on the right slot. */
   &.masked {
     color: transparent;
     caret-color: var(--_date-picker-trigger-label-color);
@@ -240,6 +235,11 @@
   --_date-picker-nav-icon-color: var(--ds-date-picker-nav-icon-color, var(--icon-default));
   --_date-picker-width: var(--ds-date-picker-width, var(--date-picker-w));
   --_date-picker-panel-radius: var(--ds-date-picker-panel-radius, var(--ds-radius-panel));
+
+  /* Re-declared for the PORTAL: the :host copy does not inherit out here, and the
+     period trigger's `:focus-visible` read it as nothing — an unresolvable var makes
+     `box-shadow` its initial `none`, which left a tabbable button with no indicator. */
+  --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-control-focus-shadow));
 
   background-color: var(--_date-picker-bg-color);
   border: var(--border-width-default) solid var(--_date-picker-border);
@@ -392,15 +392,14 @@
   .grid {
     display: grid;
 
-    /* minmax(0, 1fr) lets tracks shrink below the cell's intrinsic width so a
-       narrow panel (e.g. a brand theme with wider tokens) can't push the
-       Sunday column outside the overlay. */
+    /* minmax(0, 1fr), so tracks can shrink below the cell's intrinsic width — a brand
+       theme with wider tokens would otherwise push the Sunday column out of the panel. */
     grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: var(--date-picker-cell-gap);
   }
 
-  /* role="row" wrappers stay out of the layout so the day/header cells remain
-     the direct grid items of the 7-column track. */
+  /* The role="row" wrappers stay out of the layout, or the cells stop being direct
+     grid items of the 7-column track. */
   .dow-row,
   .week {
     display: contents;
@@ -415,14 +414,12 @@
     letter-spacing: var(--letter-spacing-wider);
   }
 
-  /* Day-cell styles now live in calendar-day.component.scss (the grid renders
-     <ds-calendar-day>). The --_date-picker-day-* resolvers above stay — the
-     month/year picker cells and nav buttons read them. */
+  /* Day-cell styles live in calendar-day.component.scss. The --_date-picker-day-*
+     resolvers above stay: the month/year cells and nav buttons read them. */
 
   &.has-presets {
-    /* Presets are an ADDITIONAL column — the panel grows so the calendar keeps
-       its full width (otherwise the 7-day grid squeezes and the weekday row
-       collapses). */
+    /* The panel grows rather than sharing its width: squeezing the 7-day grid
+       collapses the weekday row. */
     display: flex;
     flex-direction: row;
     gap: var(--space-3);
@@ -478,9 +475,8 @@
     }
   }
 
-  /* Phones: the presets column can't sit beside the day grid without
-     overflowing the viewport — stack it above the calendar body instead and
-     cap the whole panel so it never exceeds the screen. */
+  /* On a phone the presets column cannot sit beside the day grid without overflowing
+     the viewport, so it stacks above and the panel takes a cap. */
   @include bp.down(sm) {
     max-width: calc(100vw - var(--space-4));
 
