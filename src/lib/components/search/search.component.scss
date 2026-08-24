@@ -44,12 +44,8 @@
     border-color: var(--_search-border-hover);
   }
 
-  /* The shell above owns the focus ring, so nothing inside it may draw the
-     universal one too: styles/_focus.scss gives every focusable a box-shadow at
-     zero specificity, and the `outline: 0` these controls already had cannot
-     cancel a shadow. Without this the field painted TWO rings, one around the
-     inner control and one around the box. `:where()` keeps the reset at the
-     shell's own specificity rather than raising it. */
+  /* The shell owns the ring; the inner control must not draw the universal one too.
+     See styles/_focus.scss for why `outline: 0` cannot cancel it. */
   :where(:focus-visible) {
     box-shadow: none;
   }
