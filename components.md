@@ -124,6 +124,17 @@ Every entry below names its exported class (`ButtonComponent`, `TableComponent<T
 
 ### Form & input
 
+**Shared by every field** (input, textarea, select, multi-select, autocomplete, date/time/colour picker,
+checkbox, radio, radio-group, switch, slider, segmented, OTP): `label`, `hint`, `error`, `warning`,
+`errors`, `invalid`, `touched`, `reserveMessage` — and one message line under the control that renders
+whichever of them wins. The ladder is error → errors → warning → advisory errors → success → hint.
+
+`error`, `warning` and `success` lead that line with a glyph; `hint` does not, because it is the resting
+text rather than a state. Retune app-wide with `DS_CONFIG.field.stateIcons` (per state, independent —
+`false` removes one, an `IconName` replaces it, `stateIcons: false` removes all four), or per field with
+`messageIcon: IconName | false | null`, which wins over the config. Spacing hooks:
+`--ds-field-message-icon-gap`, `--ds-field-message-icon-offset`.
+
 #### `<ds-button>` — `ButtonComponent`
 Inputs: **two orthogonal axes** — `color: ButtonColor = 'primary'` (`'primary' | 'secondary' | 'tertiary' | 'neutral' | 'error' | 'success' | 'warning'`) and `variant: ButtonVariant = 'solid'` (`'solid' | 'tonal' | 'outline' | 'ghost' | 'text'`). Plus `size: DsSize | null = null` (unset resolves `DS_CONFIG.control.size`, then `md`), `type: 'button' | 'submit' | 'reset' = 'button'`, `disabled`, `loading`, `fullWidth`, `icon: IconName | null`.
 Axis meaning: **variant is loudness** (solid > tonal > outline/ghost/text), **color is hue** — every pair renders, and the UX-discouraged ones dev-warn (see `DISCOURAGED_COMBOS`). Only solid and tonal paint a fill: outline, ghost and text are TRANSPARENT, so they adopt the surface they sit on. Disabled splits by whether the fill can carry the state: `solid` and `tonal` keep `oklch(from accent 70% 0.035 h)`, while `outline`, `ghost` and `text` — the three with no fill of their own — mix the label toward the surface, `color-mix(in srgb, <label> 40%, var(--surface-default))`, because a fixed lightness cannot serve both themes. (History: the single `variant` axis was split into color × variant in 2026-06; `danger`→`error`, `link`→`text`, the old `ghost`→`outline`.)
@@ -449,19 +460,43 @@ bootstrapApplication(AppComponent, {
 
 `DsConfig` shape (see `src/lib/config/ds-config.ts`):
 
+Twelve sections. `src/lib/config/ds-config.ts` is the source of truth — each key carries its own
+doc comment there, including why it is an app-level decision at all.
+
 ```ts
 interface DsConfig {
-  breadcrumbs?: {
-    separator?: IconName;
-    clickable?: boolean;
+  field?: {
+    reserveMessage?: boolean;              // keep a message line of space when empty
+    errorMessages?: Record<string, string>; // fallback text per validation-error kind
+    stateIcons?: false | {                 // the message line's leading glyph, per state
+      error?: IconName | false;            // default: `error`
+      warning?: IconName | false;          // default: `warn`
+      success?: IconName | false;          // default: `success`
+      hint?: IconName | false;             // default: NONE — hint is not a state
+    };
   };
+  control?: { size?: DsSize };             // every control on the field-height contract
+  card?: { elevation?: CardElevation; padding?: CardPadding };
+  table?: { stickyScrollbar?: boolean; bordered?: boolean };
+  modal?: { dividers?: boolean };          // reaches a ModalService confirm, which has no host to bind
+  icon?: { size?: number };
+  badge?: { withDot?: boolean };
+  breadcrumbs?: { separator?: IconName; clickable?: boolean };
+  datePicker?: { locale?: string; dateFormat?: string; firstDayOfWeek?: number };
+  timePicker?: { format?: '24h' | '12h' };
+  avatar?: { initials?: (name: string) => string };
+  brand?: { name?: string; logoLetter?: string; tagline?: string };
 }
 ```
 
-Currently consumed by:
-- `<ds-breadcrumbs>` — `[separator]` / `[clickable]` inputs fall back to `breadcrumbs.separator` / `breadcrumbs.clickable` from config, then to `'chevronRight'` / `true`.
+Precedence is always: **explicit input → config → component default.** A component publishes what it
+resolved as a public readback (`sizeResolved()`, `dividersResolved()`, …) so a host can read the
+effective value rather than re-deriving the chain.
 
-Add more sections to `DsConfig` as we extract reusable defaults; the precedence chain is always: explicit input → config → component default.
+**Call `provideDsConfig` once per injector.** Two calls in the same `providers` array do NOT merge —
+both resolve their parent with `skipSelf`, so the later wins and the earlier is silently lost. Merging
+happens across injector LEVELS: a route or component inherits the app's config and overrides only the
+keys it names.
 
 ---
 
