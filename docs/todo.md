@@ -4,7 +4,6 @@
 
 **Bugs — something shipped misbehaves**
 
-- P2 · Every presentation deck renders in a substitute font, so a deck that judges type is lying (found
 
 **Asks — a consumer or Stas asked for it**
 
@@ -120,8 +119,6 @@ rather than re-reading our own API.
 Highest: each one is wrong in code — or in a surface — a consumer already reads.
 
 
-- [ ] **[P2] Every presentation deck renders in a substitute font, so a deck that judges type is lying (found 2026-08-24 while building the glyph-clip deck).** `presentations/ds.css` is compiled from `src/lib/styles/ds.scss`, so it carries the library's eight `@font-face` rules with their source-relative `url('./fonts/*.woff2')` — but `build:deck-css` copies the CSS alone and there is no `presentations/fonts/`. Measured in Chrome: all eight faces report `status: "error"`, `/decks/fonts/mulish-latin-400-normal.woff2` answers 404, and every deck falls back to `sans-serif`. The README's claim that the decks are honest consumers of the DS holds for tokens and fails for type — and it also poisons `document.fonts.check()` for any deck that tries to verify its own font.
-  **Fix:** have `build:deck-css` copy `src/lib/styles/fonts/` next to the CSS (five Mulish weights + three JetBrains Mono), or rewrite the `url()`s to a path the docs server answers. `ellipsis-glyph-clip.html` works around it locally by re-declaring the three faces it needs and showing a banner when they fail — a per-deck patch, not the fix.
 
 # Asks — a consumer or Stas asked for it
 

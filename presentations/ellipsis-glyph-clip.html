@@ -2,37 +2,6 @@
 <title>MBP-245 — три способа перестать срезать глифы</title>
 <link rel="stylesheet" href="ds.css">
 <style>
-  /* ds.css points @font-face at ./fonts/*.woff2, which is not copied next to it —
-     so every deck has silently rendered in the fallback face. This deck is ABOUT
-     font metrics, so it re-declares the source with the dev server's path as a
-     fallback entry and shouts (#font-warn) if neither resolved. */
-  @font-face {
-    font-family: Mulish;
-    font-style: normal;
-    font-weight: 400;
-    font-display: block;
-    src:
-      url('fonts/mulish-latin-400-normal.woff2') format('woff2'),
-      url('/media/mulish-latin-400-normal-DY2CU5DS.woff2') format('woff2');
-  }
-  @font-face {
-    font-family: Mulish;
-    font-style: normal;
-    font-weight: 500;
-    font-display: block;
-    src:
-      url('fonts/mulish-latin-500-normal.woff2') format('woff2'),
-      url('/media/mulish-latin-500-normal-5H5XJHM4.woff2') format('woff2');
-  }
-  @font-face {
-    font-family: Mulish;
-    font-style: normal;
-    font-weight: 800;
-    font-display: block;
-    src:
-      url('fonts/mulish-latin-800-normal.woff2') format('woff2'),
-      url('/media/mulish-latin-800-normal-AHHOOCJ4.woff2') format('woff2');
-  }
 
   :root { color-scheme: light; }
   body {
@@ -232,12 +201,12 @@
 
 <h2>7 · Что дека нашла попутно</h2>
 <p>
-  <code>presentations/ds.css</code> объявляет <code>@font-face</code> с путём
-  <code>./fonts/*.woff2</code>, но каталога <code>fonts/</code> рядом с ним нет, и
-  <code>/decks/fonts/…</code> отдаёт 404 — то есть <b>все деки до этой рендерились подменным
-  шрифтом</b>. Для деки про цвет это безразлично, для деки про метрики шрифта — нет, поэтому здесь
-  <code>@font-face</code> переобъявлен и добавлен красный баннер. Починка самого
-  <code>build:deck-css</code> — отдельная задача, в этой партии не делал.
+  <code>presentations/ds.css</code> объявлял <code>@font-face</code> с путём
+  <code>./fonts/*.woff2</code>, а каталога рядом не было — <b>все деки до этой рендерились
+  подменным шрифтом</b>. Для деки про цвет это безразлично, для деки про метрики шрифта —
+  нет. Починено в <code>build:deck-css</code>: шаг сборки копирует шрифты рядом с CSS и
+  падает, если <code>ds.css</code> ссылается на файл, которого нет. Красный баннер выше
+  остался — теперь как проверка на регрессию, а не как костыль.
 </p>
 
 </main>

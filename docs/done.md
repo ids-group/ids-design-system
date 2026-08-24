@@ -4,6 +4,23 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+- [x] **DONE 2026-08-24 — the decks stopped lying about type, and the step now fails instead of falling back.**
+  `build:deck-css` became `tools/build-deck-css.mjs`: it compiles `ds.scss` through the sass JS API, copies
+  `src/lib/styles/fonts/` next to the CSS, and **exits non-zero if any `url()` in the output has no file beside it**.
+  Both the CSS and the 8 woff2 files are committed, matching the choice already made for `ds.css` — a deck has to be
+  honest straight out of a clone.
+  **Verified on the served deck:** all 8 faces report `status: "loaded"`, every `/decks/fonts/*.woff2` answers 200,
+  the rendered face is Mulish, and `ellipsis-glyph-clip.html` reports the same 1.257em / 17.60px / 3.60px it did with
+  its own shim — so the numbers it argued from were right, they were just propped up by a per-deck workaround. That
+  shim is now deleted and its red banner kept as a regression check.
+  **Two things went wrong on the way, both mine.** The first version shelled out to the `sass` CLI and died with
+  `spawnSync npx.cmd EINVAL` — Node 24 on Windows will not spawn a `.cmd` shim without a shell — so it uses the JS
+  API and no subprocess. And the first control run could not fail: the check validated the copy it had just made.
+  Re-run against the case that actually happens — a `@font-face` whose woff2 is missing from the SOURCE folder — it
+  reports the file by name and exits 1.
+  ORIGINAL: [P2] Every presentation deck renders in a substitute font, so a deck that judges type is lying (found 2026-08-24 while building the glyph-clip deck).** `presentations/ds.css` is compiled from `src/lib/styles/ds.scss`, so it carries the library's eight `@font-face` rules with their source-relative `url('./fonts/*.woff2')` — but `build:deck-css` copies the CSS alone and there is no `presentations/fonts/`. Measured in Chrome: all eight faces report `status: "error"`, `/decks/fonts/mulish-latin-400-normal.woff2` answers 404, and every deck falls back to `sans-serif`. The README's claim that the decks are honest consumers of the DS holds for tokens and fails for type — and it also poisons `document.fonts.check()` for any deck that tries to verify its own font.
+  **Fix:** have `build:deck-css` copy `src/lib/styles/fonts/` next to the CSS (five Mulish weights + three JetBrains Mono), or rewrite the `url()`s to a path the docs server answers. `ellipsis-glyph-clip.html` works around it locally by re-declaring the three faces it needs and showing a banner when they fail — a per-deck patch, not the fix.
+
 ## Shipped 2026-08-21 evening (session — the manifests said what changed, not where to look)
 
 Opened and closed in one sitting, because the item measured itself: the lint that found the gap counted
