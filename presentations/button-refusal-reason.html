@@ -1,0 +1,329 @@
+<meta charset="utf-8">
+<title>Причина отказа на кнопке — почему одного [description] мало</title>
+<link rel="stylesheet" href="ds.css">
+<style>
+  :root { color-scheme: light; }
+  body {
+    margin: 0; padding: var(--space-6);
+    background: var(--surface-default); color: var(--text-primary);
+    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  }
+  main { max-width: 1180px; margin: 0 auto; }
+  h1 { font: var(--font-weight-extrabold) var(--font-size-h3) / var(--line-height-tight) var(--font-sans); margin: 0 0 var(--space-2); }
+  h2 { font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans); margin: var(--space-6) 0 var(--space-2); }
+  p { max-width: 84ch; color: var(--text-secondary); }
+  b { color: var(--text-primary); }
+  code { font: var(--font-weight-medium) var(--font-size-xs) / 1 var(--font-mono); }
+  .note { border-left: 3px solid var(--primary); padding-left: var(--space-3); margin: var(--space-4) 0; }
+  .ask { border: 1px solid var(--primary); border-radius: var(--ds-radius-panel); padding: var(--space-4); margin: var(--space-5) 0; }
+  .ask li { margin-bottom: var(--space-2); }
+
+  table { border-collapse: collapse; width: 100%; margin-top: var(--space-3); }
+  th, td { border: 1px solid var(--border-default); padding: var(--space-2); vertical-align: top; text-align: left; }
+  thead th { background: var(--surface-secondary); font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans); }
+  td.yes { color: #156822; font-weight: var(--font-weight-bold); }
+  td.no { color: #B3261E; font-weight: var(--font-weight-bold); }
+
+  .cases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); align-items: start; }
+  .case { display: grid; gap: var(--space-3); }
+  .case > .cap { font: var(--font-weight-bold) var(--font-size-xs) / 1.4 var(--font-sans); }
+  .case > .cap .sub { display: block; font: var(--font-weight-regular) var(--font-size-2xs) / 1.6 var(--font-mono); color: var(--text-tertiary); }
+  .stage {
+    border: 1px solid var(--border-subtle); border-radius: var(--ds-radius-panel);
+    background-image: linear-gradient(#FFFFFF, #FFFFFF);
+    padding: var(--space-4); min-height: 116px;
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2);
+  }
+
+  /* Faithful copies of the two components' rendered DOM — the button's box and the
+     menu item's two-line body are what the whole question is about, so they are
+     built from the same tokens rather than approximated. */
+  .button {
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+    min-height: var(--field-h-md); padding: var(--space-2) var(--space-4);
+    border: var(--border-width-default) solid transparent; border-radius: var(--ds-radius-control);
+    font: var(--font-weight-extrabold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
+    letter-spacing: var(--letter-spacing-wide);
+    background-color: var(--primary); color: var(--text-on-primary);
+    cursor: pointer;
+  }
+  .button[disabled], .button[aria-disabled='true'] {
+    background-color: var(--surface-disabled);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+  }
+  .button.two-line {
+    flex-direction: column; align-items: flex-start; gap: 2px;
+    padding-block: var(--space-2);
+  }
+  .button .reason {
+    font: var(--font-weight-medium) var(--font-size-2xs) / var(--line-height-tight) var(--font-sans);
+    letter-spacing: normal;
+    color: var(--text-disabled);
+  }
+
+  .menu-item {
+    display: flex; align-items: flex-start; gap: var(--space-2);
+    padding: var(--space-2) var(--space-3); border: 0; border-radius: var(--ds-radius-inner);
+    background: transparent; width: 100%; text-align: left; cursor: pointer;
+    font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
+    color: var(--text-primary);
+  }
+  .menu-item[aria-disabled='true'] { color: var(--text-disabled); cursor: not-allowed; }
+  .menu-item-body { display: flex; flex-direction: column; align-items: flex-start; }
+  .menu-item-description {
+    font: var(--font-weight-regular) var(--font-size-2xs) / var(--line-height-tight) var(--font-sans);
+    color: var(--text-tertiary); max-width: 14rem;
+  }
+  .aside-reason {
+    font: var(--font-weight-regular) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
+    color: var(--text-tertiary); max-width: 26ch;
+  }
+
+  .readout { font: var(--font-weight-regular) var(--font-size-2xs) / 1.9 var(--font-mono); color: var(--text-secondary); }
+  .readout .hit { color: #B3261E; font-weight: var(--font-weight-bold); }
+  .readout .miss { color: #156822; font-weight: var(--font-weight-bold); }
+  .says {
+    margin-top: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--ds-radius-inner);
+    background-image: linear-gradient(#F2F4F8, #F2F4F8);
+    font: var(--font-weight-regular) var(--font-size-2xs) / 1.7 var(--font-mono);
+    color: var(--text-primary);
+  }
+  .says.silent { background-image: linear-gradient(#FDECEA, #FDECEA); color: #7A1A12; }
+</style>
+<main>
+
+<h1>Причина отказа на кнопке</h1>
+<p>
+  Паттерн один и тот же: сервер отказывает — «приглашение ещё не принято», «это последний
+  активный админ» — приложение гасит контрол и обязано сказать, почему. У пункта меню это
+  уже закрыто, у кнопки — нет. Дека объясняет, почему нельзя просто скопировать решение,
+  и чем три варианта отличаются на деле. Все пометки ниже проставлены скриптом страницы
+  по живому DOM, не руками.
+</p>
+
+<h2>1 · Что уже работает: <code>ds-menu-item</code></h2>
+<p>
+  В 0.10.2 у пункта меню появился <code>[description]</code>. Он даёт вторую строку —
+  видимую <b>без ховера</b> — и уходит в ассистивные технологии как
+  <code>aria-describedby</code>, то есть как <b>описание</b>, а не как часть имени.
+  Консьюмер в тот же день удалил два обхода на <code>[dsTooltip]</code>.
+</p>
+
+<div class="cases">
+  <div class="case">
+    <div class="cap">Пункт меню, отключённый<span class="sub">aria-disabled + описание</span></div>
+    <div class="stage" style="min-height: auto">
+      <button
+        class="menu-item"
+        type="button"
+        role="menuitem"
+        aria-disabled="true"
+        aria-describedby="mi-desc"
+        data-probe="menu-item"
+      >
+        <span class="menu-item-body">
+          Отправить приглашение заново
+          <span class="menu-item-description" id="mi-desc" aria-hidden="true">
+            Приглашение ещё не принято
+          </span>
+        </span>
+      </button>
+    </div>
+    <div class="readout" data-readout="menu-item"></div>
+  </div>
+</div>
+
+<h2>2 · Почему у кнопки так не выйдет</h2>
+<p>
+  <code>ds-menu-item</code> ставит <code>aria-disabled</code> и <b>остаётся фокусируемым</b>.
+  <code>ds-button</code> ставит <b>нативный</b> <code>disabled</code>
+  (<code>[disabled]="disabled() || loading()"</code>) — такая кнопка выпадает из таб-порядка,
+  скринридер до неё не доходит, и <code>aria-describedby</code> на ней не читается никогда.
+  Значит дело не в том, что у кнопки «нет входа для текста»: пока она нативно отключена,
+  <b>любая</b> привязка описания к ней мертва.
+</p>
+
+<div class="cases" id="stages"></div>
+
+<h2>3 · Чем варианты отличаются на самом деле</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Вариант</th>
+      <th>Видно без ховера</th>
+      <th>В таб-порядке</th>
+      <th>Причина доходит до AT</th>
+      <th>Коробка кнопки</th>
+      <th>Что придётся сделать</th>
+    </tr>
+  </thead>
+  <tbody id="matrix"></tbody>
+</table>
+
+<p class="note">
+  Четвёртой строки «как сейчас» в таблице нет намеренно: сегодня у кнопки нет вообще никакого
+  ответа — причина живёт в <code>[dsTooltip]</code>, который требует ховера, то есть доходит
+  до мыши и ни до чего больше.
+</p>
+
+<div class="ask">
+  <b>Рекомендую A</b>, и вот на чём это держится:
+  <ul>
+    <li><b>B не решает главного.</b> Коробка кнопки не меняется — но пока кнопка нативно
+      <code>disabled</code>, ссылка на внешний текст не озвучивается. B становится рабочим
+      только вместе с тем же переходом на <code>aria-disabled</code>, то есть это A с текстом
+      снаружи, а не отдельный вариант.</li>
+    <li><b>C честно закрывает случай без нового API</b> — и остаётся правильным ответом там, где
+      причина длинная. Но три экрана консьюмер переписывает сам, а DS так и не даёт ответа на
+      вопрос, который ему задали дважды.</li>
+    <li><b>Цена A названа прямо:</b> вторая строка меняет высоту кнопки, и кнопка перестаёт быть
+      нативно отключённой — клик надо глушить в обработчике, иначе форма отправится. Ровно это
+      уже делает <code>ds-menu-item</code>, так что механика в библиотеке есть и проверена.</li>
+    <li><b>Дефолт не двигается.</b> Без <code>description</code> кнопка остаётся нативно
+      <code>disabled</code>, как сейчас — новый режим включает только явный вход.</li>
+  </ul>
+</div>
+
+</main>
+<script>
+  // What a screen reader can reach: an element it can land on. A natively disabled
+  // button is out of the tab order and skipped, so any aria-describedby on it is
+  // dead text — that is the whole argument of this deck, applied uniformly below.
+  const reachable = (element) => !element.disabled && element.tabIndex >= 0;
+
+  const announcement = (element) => {
+    // The accessible name skips aria-hidden descendants, which is exactly where the
+    // description span lives — computing it from raw textContent would glue the two
+    // together and make this deck argue the wrong thing.
+    const visibleName = (node) => {
+      const clone = node.cloneNode(true);
+      for (const hidden of clone.querySelectorAll('[aria-hidden="true"]')) hidden.remove();
+      return clone.textContent ?? '';
+    };
+    const name = (element.getAttribute('aria-label') || visibleName(element))
+      .replace(/\s+/g, ' ')
+      .trim();
+    const describedBy = element.getAttribute('aria-describedby');
+    const description = describedBy ? document.getElementById(describedBy)?.textContent.replace(/\s+/g, ' ').trim() : '';
+    const state = element.disabled || element.getAttribute('aria-disabled') === 'true' ? ', недоступно' : '';
+    return { name, description, state };
+  };
+
+  const render = (element, into) => {
+    const canReach = reachable(element);
+    const { name, description, state } = announcement(element);
+    const readout = document.querySelector(`[data-readout="${into}"]`) ?? element.closest('.case').querySelector('.readout');
+    const says = canReach
+      ? `«${name}${state}. ${description || '—'}»`
+      : 'скринридер сюда не попадает — ничего';
+    readout.innerHTML =
+      `в таб-порядке: <span class="${canReach ? 'miss' : 'hit'}">${canReach ? 'да' : 'нет'}</span>` +
+      ` · tabindex ${element.tabIndex}` +
+      ` · ${element.disabled ? 'disabled' : element.getAttribute('aria-disabled') === 'true' ? 'aria-disabled' : 'активна'}` +
+      `<div class="says${canReach ? '' : ' silent'}">${says}</div>`;
+    return { canReach, description: Boolean(description) };
+  };
+
+  render(document.querySelector('[data-probe="menu-item"]'), 'menu-item');
+
+  const CASES = [
+    {
+      key: 'A',
+      title: 'A · description + aria-disabled',
+      sub: 'вторая строка внутри кнопки',
+      build: () => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'button two-line';
+        button.setAttribute('aria-disabled', 'true');
+        button.setAttribute('aria-describedby', 'a-desc');
+        button.innerHTML =
+          '<span data-name>Отправить заново</span><span class="reason" id="a-desc" aria-hidden="true">Приглашение ещё не принято</span>';
+        return { node: button, aside: null };
+      },
+      box: 'выше на одну строку',
+      cost: 'глушить клик в обработчике',
+    },
+    {
+      key: 'B',
+      title: 'B · describedBy на внешний текст',
+      sub: 'кнопка нативно disabled',
+      build: () => {
+        const wrap = document.createDocumentFragment();
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'button';
+        button.disabled = true;
+        button.setAttribute('aria-describedby', 'b-desc');
+        button.append('Отправить заново');
+        const aside = document.createElement('div');
+        aside.className = 'aside-reason';
+        aside.id = 'b-desc';
+        aside.textContent = 'Приглашение ещё не принято';
+        wrap.append(button, aside);
+        return { node: wrap, aside, probe: button };
+      },
+      box: 'не меняется',
+      cost: 'приложение рисует текст само',
+    },
+    {
+      key: 'C',
+      title: 'C · рецепт: причина рядом, кнопка активна',
+      sub: 'ничего нового в API',
+      build: () => {
+        const wrap = document.createDocumentFragment();
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'button';
+        button.setAttribute('aria-describedby', 'c-desc');
+        button.append('Отправить заново');
+        const aside = document.createElement('div');
+        aside.className = 'aside-reason';
+        aside.id = 'c-desc';
+        aside.textContent = 'Приглашение ещё не принято — отправка откажет';
+        wrap.append(button, aside);
+        return { node: wrap, aside, probe: button };
+      },
+      box: 'не меняется',
+      cost: 'отказ живёт в обработчике, кнопка выглядит рабочей',
+    },
+  ];
+
+  const stages = document.getElementById('stages');
+  const matrix = document.getElementById('matrix');
+  const results = [];
+
+  for (const entry of CASES) {
+    const wrap = document.createElement('div');
+    wrap.className = 'case';
+    wrap.innerHTML = `<div class="cap">${entry.title}<span class="sub">${entry.sub}</span></div>`;
+    const stage = document.createElement('div');
+    stage.className = 'stage';
+    const built = entry.build();
+    stage.appendChild(built.node);
+    wrap.appendChild(stage);
+    const readout = document.createElement('div');
+    readout.className = 'readout';
+    wrap.appendChild(readout);
+    stages.appendChild(wrap);
+
+    const probe = built.probe ?? stage.querySelector('button');
+    const measured = render(probe, entry.key);
+    results.push({ ...entry, ...measured, visible: true });
+  }
+
+  matrix.innerHTML = results
+    .map(
+      (entry) =>
+        `<tr><th>${entry.title}</th>` +
+        `<td class="yes">да</td>` +
+        `<td class="${entry.canReach ? 'yes' : 'no'}">${entry.canReach ? 'да' : 'нет'}</td>` +
+        `<td class="${entry.canReach && entry.description ? 'yes' : 'no'}">${entry.canReach && entry.description ? 'да' : 'нет'}</td>` +
+        `<td>${entry.box}</td>` +
+        `<td>${entry.cost}</td></tr>`,
+    )
+    .join('');
+</script>
