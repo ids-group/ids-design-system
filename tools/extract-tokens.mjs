@@ -4,9 +4,8 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-/** Given text and the index of the "v" in a `var(--ds-...` occurrence, return
- *  the token name, its fallback expression (trimmed), and the index just past
- *  the matching close paren. Handles nested parens in the fallback. */
+/** Parses one `var(…)` from the index of its "v". Counts parens, so a fallback that
+ *  nests further `var()` or `calc()` calls is returned whole. */
 function parseVarCall(text, varIndex) {
   const open = text.indexOf('(', varIndex);
   let depth = 0;
@@ -99,9 +98,8 @@ const titleCase = (s) =>
     .replace(/(^|-)([a-z])/g, (_, d, c) => (d ? ' ' : '') + c.toUpperCase())
     .trim();
 
-// --ds-t-* are per-axis override hooks on the .t-* type utilities (reads inside
-// _typography.scss, not :root declarations). Templating the note from the name
-// keeps all ~90 out of the undescribed list without hand-writing each.
+// --ds-t-* are per-axis hooks on the .t-* utilities, read inside _typography.scss
+// rather than declared, so the note is templated from the name instead of by hand.
 const T_PROPS = [
   'font-weight',
   'font-size',
@@ -172,10 +170,8 @@ const comp = compFiles.flatMap((f) =>
   extractComponentTokens(readFileSync(f, 'utf8'), basename(dirname(f))),
 );
 
-// Global partials that expose --ds-* hooks the same way a component does, via
-// read-with-fallback. findScss only walks *.component.scss, so tokens declared
-// in a shared partial were invisible here — and an undocumented public token is
-// the discoverability failure the whole reference exists to prevent.
+// findScss only walks *.component.scss, so a public hook exposed by a shared partial
+// has to be listed here or the reference never sees it.
 const sharedPartials = [['src/lib/styles/_dropdown-overlay.scss', 'dropdown-panel']];
 comp.push(
   ...sharedPartials.flatMap(([path, group]) =>
@@ -216,17 +212,14 @@ const typographyHooks = extractComponentTokens(
   readIf(join(ROOT, 'src/lib/styles/_typography.scss')),
   't',
 );
-// Overlay-pane motion hooks: read in a GLOBAL partial (the pane is portaled
-// outside every component, so its rule can't live in one), grouped under
-// 'overlay'. Without this they'd be invisible to the reference entirely.
+// The pane is portaled outside every component, so its rule lives in a global
+// partial — invisible to the component sweep, hence listed here under 'overlay'.
 const overlayMotionHooks = extractComponentTokens(
   readIf(join(ROOT, 'src/lib/styles/_overlay-motion.scss')),
   'overlay',
 );
-// --ds-field-label-* are read in a MIXIN, included by every field rather than
-// declared in any one component's stylesheet, so the *.component.scss sweep
-// cannot see them. Grouped under 'field': they are the family's contract, not
-// one component's.
+// Read in a MIXIN every field includes, so no component stylesheet declares them.
+// Grouped under 'field': the contract is the family's, not one component's.
 const fieldLabelHooks = extractComponentTokens(
   readIf(join(ROOT, 'src/lib/styles/_field-label.scss')),
   'field',

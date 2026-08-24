@@ -4,21 +4,14 @@
 // manifest could ship malformed, or — the case that actually cost a consumer a
 // day — well-formed and undetectable.
 //
-// mm-broker upgraded 0.6.0 -> 0.10.1 in one branch (2026-08-21) and the review
-// after it found two items that the whole find/apply/recheck loop had passed
-// over in silence:
+// Two shapes get through a find/apply/recheck loop in silence, and the rules below
+// exist for them:
 //
-//   0.7.1 table-sortkey-non-null-when-unsorted — `old` was `ds-table[sortKey]`
-//   and every searchHint named the DS. The code that breaks is the HOST's:
-//   `sorting: store.sortKey() ? { path: sortKey()!, order: sortDir() ?? 'Asc' }`
-//   in a store file, which mentions no DS symbol at all. The finder reported
-//   zero hits, the orchestrator recorded not-applicable, and the recheck's
-//   clean grep CONFIRMED it. Three server-paged screens kept sorting by a
-//   column whose header showed no sort.
-//
-//   0.7.1 field-reserve-message-default-off — the note said the now-redundant
-//   `[reserveMessage]="false"` bindings could go, at word 150 of 200, with no
-//   structured delete entry. Three of them survived the upgrade.
+//   · the breaking code names no DS symbol at all — it is the HOST's expression
+//     around a DS input — so DS-named search hints return zero hits and the clean
+//     recheck grep CONFIRMS the false negative;
+//   · an instruction to delete something now redundant, written as prose inside a
+//     long note instead of a structured entry, is simply never executed.
 //
 // So the rules below are about DETECTABILITY, not spelling: an item has to say
 // WHERE a consumer's own code changes (`surface`), what that code LOOKS like

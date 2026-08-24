@@ -18,10 +18,6 @@
   border-radius: var(--radius-md);
   overflow: hidden;
 
-  /* The VALUE input only: the shell rings on :focus-within, so silencing the inner
-     one (see styles/_focus.scss). The BUTTONS keep theirs — they are `tabindex="0"`,
-     and a keyboard user tabbing input → minus → plus needs each stop to say where
-     focus went, which the shell halo cannot: it is already on. */
   @include focus.owns-the-focus-ring('.qty');
   &:focus-within {
     border-color: var(--accent);

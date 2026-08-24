@@ -1,6 +1,6 @@
-/* Autocomplete — trigger lives on host; listbox panel is rendered via
-   TemplatePortal so its DOM carries this component's encapsulation attrs.
-   Both halves are styled here. */
+/* The listbox panel is portaled through a TemplatePortal, so its DOM still carries
+   this component's encapsulation attributes — which is why both halves are styled
+   here rather than the panel living in a global partial. */
 @use '../../styles/field-box' as field-box;
 @use '../../styles/chip-row' as chip-row;
 @use '../../styles/focus' as focus;
@@ -16,8 +16,8 @@
   --_autocomplete-radius: var(--ds-autocomplete-radius, var(--ds-radius-control));
   --_autocomplete-border-color-focus: var(--ds-autocomplete-border-color-focus, var(--accent));
 
-  // Flex column + gap so the hint/error (ds-field-message) sits the canonical
-  // --space-1-5 below the trigger, matching input/textarea/select/date-picker.
+  // The message gap is the field family's, so a form row of mixed field types keeps
+  // one rhythm — input, textarea, select and date-picker all use --field-label-gap.
   display: flex;
   flex-direction: column;
   gap: var(--field-label-gap);
@@ -26,9 +26,9 @@
   position: relative;
 }
 
-/* width="content" — hug chips/value + the min typing area instead of filling
-   the container. The maxw resolver re-defaults to 100% so chips wrap at the
-   parent edge; an explicit --ds-autocomplete-maxw still wins in both modes. */
+/* Hugs its chips and typing area instead of filling the container. The maxw resolver
+   re-defaults to 100% so chips still wrap at the parent edge, and an explicit
+   --ds-autocomplete-maxw wins in both modes. */
 :host(.content-width) {
   --_autocomplete-maxw: var(--ds-autocomplete-maxw, 100%);
 
@@ -51,19 +51,17 @@
   text-align: left;
   flex-wrap: wrap;
 
-  /* Wrapping is what an UNCAPPED trigger does — a line per selection. With a cap
-     it is the failure the cap exists to prevent: a flex container that wraps
-     never shrinks its chip row, it moves the text input to a second line
-     instead, which is what a phone-width trigger did. `:has()` keys off the
-     measured row so the rule follows the mode without a second class. */
+  /* A wrapping flex container never shrinks its chip row — it pushes the text input
+     to a second line, which is exactly what the cap exists to prevent. `:has()` keys
+     off the measured row, so the mode drives the rule without a second class. */
   &:has(> .chip-row.fit) {
     flex-wrap: nowrap;
   }
 
   transition: border-color var(--duration-fast) var(--ease-standard);
 
-  /* Same contract as ds-input's addon slots, down to the class names — a leading
-     search glyph belongs in one place across the field family, not two. */
+  /* ds-input's addon class names on purpose: a consumer styling a leading glyph
+     writes one rule for the whole field family. */
   .addon-slot {
     display: inline-flex;
     align-items: center;
@@ -94,8 +92,8 @@
     .autocomplete-chevron { color: var(--text-disabled); }
   }
 
-  /* Density — mirror ds-select (sm 32 / md 40 / lg 48). Multi chips wrap, so
-     size sets min-height; the default (md) lives on the base rule above. */
+  /* min-height, not height: multi chips wrap, so a size sets the floor and the row
+     grows past it. */
   &.sm { @include field-box.field-box-height(sm, min-height); }
   &.lg { @include field-box.field-box-height(lg, min-height); }
 }
@@ -104,8 +102,6 @@
   @include chip-row.chip-row;
 }
 
-/* Same treatment as ds-multi-select's overflow marker — the two triggers are the
-   same control to a reader, and should not differ on how the count looks. */
 .overflow {
   color: var(--text-secondary);
   font-weight: var(--font-weight-semibold);
@@ -121,11 +117,9 @@
   flex: 1;
   min-width: var(--_autocomplete-input-minw);
 
-  /* Single mode with a value and the panel closed: the field has nothing to
-     filter yet, and an empty 80px text area sitting beside the chosen label is
-     what made this read as a free-text input rather than a picker. Collapsed,
-     not removed — it keeps focus, so clicking the field (which focuses it) opens
-     the panel and expands it again, and typing still filters. */
+  /* Collapsed, not removed: the input keeps focus, so clicking the field opens the
+     panel and expands it again, and typing still filters. Removing it would drop
+     focus and break both. */
   &.collapsed {
     flex: 0 0 0;
     min-width: 0;
@@ -146,21 +140,17 @@
 }
 
 .autocomplete-list {
-  /* Panel + option resolvers live here, NOT on :host — the panel is portaled
-     into document.body (outside :host), so :host-scoped custom props never
-     inherit down to it and background would collapse to transparent. */
+  /* Resolvers live here, NOT on :host: the panel is portaled into document.body, so
+     a :host-scoped custom property never inherits down to it and every value that
+     read one would collapse to its initial. */
   --_autocomplete-panel-bg-color: var(--ds-autocomplete-panel-bg-color, var(--surface-overlay));
 
-  /* Its own hook first, then the shared dropdown lever, then the role — so this
-     panel and the ds-select ones move together when a consumer reaches for
-     --ds-dropdown-panel-radius, which is the level that lever belongs at. */
   --_autocomplete-panel-radius: var(--ds-autocomplete-panel-radius, var(--ds-dropdown-panel-radius, var(--ds-radius-panel)));
   --_autocomplete-panel-maxh: var(--ds-autocomplete-panel-maxh, var(--picker-maxh));
   --_autocomplete-option-bg-color-hover: var(--ds-autocomplete-option-bg-color-hover, var(--surface-secondary));
 
-  /* Fill the cdk-overlay-pane width (set from trigger.getBoundingClientRect()
-     in autocomplete.component.ts). Without `width: 100%` the panel shrinks
-     to its own option content width inside the absolutely-positioned pane. */
+  /* Fills the pane, whose width the component sets from the trigger's rect. Without
+     it the panel shrinks to its own content inside that absolutely-positioned pane. */
   width: 100%;
   list-style: none;
   padding: 0;
@@ -206,8 +196,8 @@
       white-space: nowrap;
     }
 
-    /* Self-styled multi checkbox (mirrors ds-multi-select). A unique class so
-       the global `.check` specimen can't leak its border/box onto the option. */
+    /* A painted `<span>`, not a ds-checkbox: the option row is the button, so a real
+       control in it would add a second tab stop inside one tab stop. */
     .check-box {
       flex: none;
       display: inline-flex;
