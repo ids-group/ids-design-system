@@ -8,6 +8,19 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Added
+
+- **Two SCSS mixins for building your own composite controls** (`components.md` § Global helper
+  classes). `focus.owns-the-focus-ring($control)` — include it in a shell that paints its own ring
+  on `:focus-within`, naming the ONE control inside that must not paint the base indicator too.
+  `outline: 0` cannot do that, because the base indicator is a box-shadow, and a box-wide reset
+  instead silences the tab stops living in the box — a clear button, a stepper arrow. It is the
+  mixin `tools/check-focus-rings.mjs` checks for. `text-clip.single-line-ellipsis` — a one-line
+  label that truncates with an ellipsis, via `overflow: clip` plus `overflow-clip-margin`, because
+  `hidden` under a line-height tighter than the font glyph box shaves the top and bottom off every
+  glyph. `@use 'styles/focus'` / `@use 'styles/text-clip'` to reach them; a mixin emits nothing until
+  it is included.
+
 ### Fixed
 
 - **`ds-input` and `ds-textarea` were the two shells 0.10.2's ring fix missed.** Same defect and same
